@@ -1030,14 +1030,6 @@
 								<File Id="java_vm_option.e" Name="JAVA_V~3.E" LongName="java_vm_option.e" />
 							</Component>
 						</Directory>
-						<Directory Id="spec12" Name="spec">
-							<Directory Id="bcb16" Name="bcb">
-								<Directory Id="lib17" Name="lib" />
-							</Directory>
-							<Directory Id="msc14" Name="msc">
-								<Directory Id="lib15" Name="lib" />
-							</Directory>
-						</Directory>
 					</Directory>
 					<Directory Id="lex" Name="lex">
 						<Component Id="lex" Guid="0FB26E97-8DEF-4E67-93EE-2AB49546C6D9">

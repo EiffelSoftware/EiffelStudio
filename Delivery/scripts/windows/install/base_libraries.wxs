@@ -1355,15 +1355,17 @@
 							</Component>
 						</Directory>
 						<Directory Id="spec11" Name="spec">
-							<Directory Id="bcb12" Name="bcb">
-								<Directory Id="lib24" Name="lib">
-									<Component Id="lib24" Guid="88DA2D1B-1EEA-46C0-A7E5-7F37B2627A6D">
-										<File Id="odbc_store.lib35" Name="ODBC_S~3.LIB" LongName="odbc_store.lib" />
-										<File Id="oracle_store.lib2" Name="ORACLE~2.LIB" LongName="oracle_store.lib" />
-										<File Id="il_odbc_store.lib" Name="IL_ODB~1.LIB" LongName="il_odbc_store.lib" KeyPath="yes" />
-									</Component>
+							<?if $(var.IsWin64)="no" ?>
+								<Directory Id="bcb12" Name="bcb">
+									<Directory Id="lib24" Name="lib">
+										<Component Id="lib24" Guid="88DA2D1B-1EEA-46C0-A7E5-7F37B2627A6D">
+											<File Id="odbc_store.lib35" Name="ODBC_S~3.LIB" LongName="odbc_store.lib" />
+											<File Id="oracle_store.lib2" Name="ORACLE~2.LIB" LongName="oracle_store.lib" />
+											<File Id="il_odbc_store.lib" Name="IL_ODB~1.LIB" LongName="il_odbc_store.lib" KeyPath="yes" />
+										</Component>
+									</Directory>
 								</Directory>
-							</Directory>
+							<?endif?>
 							<Directory Id="msc13" Name="msc">
 								<Directory Id="lib23" Name="lib">
 									<Component Id="lib23" Guid="5FD4A935-31BD-4B5C-8911-C704A2B6915D">
@@ -1760,15 +1762,17 @@
 									</Component>
 								</Directory>
 							</Directory>
-							<Directory Id="bcb" Name="bcb">
-								<Directory Id="lib7" Name="lib">
-									<Component Id="lib7" Guid="E9027B4D-22C1-4575-8D49-9E23B879314C">
-										<File Id="net.lib" Name="net.lib" KeyPath="yes" />
-										<File Id="mtnet.lib6" Name="mtnet.lib" />
-										<File Id="ilnet.lib" Name="ilnet.lib" />
-									</Component>
+							<?if $(var.IsWin64)="no" ?>
+								<Directory Id="bcb" Name="bcb">
+									<Directory Id="lib7" Name="lib">
+										<Component Id="lib7" Guid="E9027B4D-22C1-4575-8D49-9E23B879314C">
+											<File Id="net.lib" Name="net.lib" KeyPath="yes" />
+											<File Id="mtnet.lib6" Name="mtnet.lib" />
+											<File Id="ilnet.lib" Name="ilnet.lib" />
+										</Component>
+									</Directory>
 								</Directory>
-							</Directory>
+							<?endif?>
 						</Directory>
 						<Directory Id="transfer" Name="transfer">
 							<Directory Id="transactions" Name="TRANSA~1" LongName="transactions">

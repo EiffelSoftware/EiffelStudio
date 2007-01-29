@@ -236,7 +236,12 @@ feature {NONE} -- ecdbgd status
 					create dlg.make_with_text ("The Eiffel debugger daemon is dead,%N" +
 						"If you were debugging, the session is about to be terminated")
 					dlg.show
-					dead_handler.execute
+					if dead_handler /= Void then
+							--| It occurs on linux, dead_handler is Void
+							--| it seems even if the debugger is stopped
+							--| the timeout still occurs ...
+						dead_handler.execute
+					end
 				elseif ecdbgd_alive_checking_timer /= Void then
 					ecdbgd_alive_checking_timer.set_interval (old_delay)
 				end

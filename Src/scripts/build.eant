@@ -60,6 +60,8 @@
 		<echo message="       ----------"/>
 		<echo message=" geant ${opt} clean_compile_all"/>
 		<echo message=" geant ${opt} finalize_compile_all"/>
+		<echo message=" geant ${opt} clean_es_cleaner"/>
+		<echo message=" geant ${opt} finalize_es_cleaner"/>
 		<echo message="       ----------"/>
 		<echo message=" geant ${opt} build_es"/>
 	</target>
@@ -250,6 +252,18 @@
 	<target name="finalize_compile_all" depend="init">
 		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="compile_all" />
+		</geant>
+	</target>
+
+	<!-- es_cleaner -->
+	<target name="clean_es_cleaner" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
+			<argument name="executable_target" value="es_cleaner" />
+		</geant>
+	</target>
+	<target name="finalize_es_cleaner" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
+			<argument name="executable_target" value="es_cleaner" />
 		</geant>
 	</target>
 	

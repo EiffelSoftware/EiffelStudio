@@ -77,8 +77,8 @@
 
 	<target name="extract_gobo" depend="init">
 		<echo message="Extracting Gobo"/>
-		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_35_win.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="${is_windows}" />
-		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_35_unix.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" unless="${is_windows}" />
+		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_35_win.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" if="${is_windows}" />
+		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_35_unix.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" unless="${is_windows}" />
 
 		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" variable="tmp_available"/>
 		<exec executable="bzip2 -dc gobo.tbz2 | tar xf -" dir="${ISE_LIBRARY}${path_separator}library"

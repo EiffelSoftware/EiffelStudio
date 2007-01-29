@@ -180,10 +180,6 @@ feature {NONE} -- Implementation helper
 			l_type_a := type_a_generator.evaluate_type (a_local_item.type, a_class)
 			type_a_checker.init_for_checking (a_rout_i, a_class, Void, Void)
 			l_type_a := type_a_checker.solved (l_type_a, Void)
-			check
-				l_type_a_not_void: l_type_a /= Void
-				l_type_a_valid: l_type_a.is_valid and l_type_a.has_associated_class
-			end
 			if l_type_a /= Void and then l_type_a.has_associated_class then
 				Result := l_type_a.associated_class
 			end

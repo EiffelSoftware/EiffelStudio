@@ -207,7 +207,7 @@ feature {NONE} -- Preference Strings
 	keep_metric_detailed_result_string: STRING is "tools.metric_tool.keep_metric_detailed_result"
 	check_warning_string: STRING is "tools.metric_tool.check_defined_warning"
 	warning_background_color_string: STRING is "tools.metric_tool.warning_background_color"
-	metric_information_in_result_panel_string: STRING is "tools.metric_tool.metric_information_in_result_panel"
+	metric_information_in_result_panel_string: STRING is "tools.metric_tool.maximize_metric_result_area"
 
 feature {NONE} -- Implementation
 

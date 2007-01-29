@@ -14,8 +14,8 @@ msgid "Chart"
 msgstr ""
 
 msgid ""
-"Class $1 has syntax error.\n"
-"Code generation cancelled."
+"Do not ask again, and always cancel C compilation, terminate external "
+"command when exiting."
 msgstr ""
 
 msgid "Basque (Basque)"
@@ -33,10 +33,13 @@ msgstr ""
 msgid "There is already a class with the same name."
 msgstr ""
 
-msgid "Enable Breakpoints"
+msgid "Exceptions"
 msgstr ""
 
 msgid "Variable metric name is missing."
+msgstr ""
+
+msgid "'$1' is not a valid feature name.\n"
 msgstr ""
 
 msgid "Display a warning when the call stack depth reaches:"
@@ -54,10 +57,10 @@ msgstr ""
 msgid "Te&xt"
 msgstr ""
 
-msgid "Culture of the assembly."
+msgid "Toggle visibility of feature signature"
 msgstr ""
 
-msgid "Remove Breakpoints"
+msgid "Polish (Poland)"
 msgstr ""
 
 msgid "$1 is not in cluster."
@@ -66,7 +69,13 @@ msgstr ""
 msgid "Select a file for user-defined metrics backup:"
 msgstr ""
 
+msgid "Reset Tools layout"
+msgstr ""
+
 msgid "Path"
+msgstr ""
+
+msgid "Change color"
 msgstr ""
 
 msgid ""
@@ -77,7 +86,13 @@ msgstr ""
 msgid "-"
 msgstr ""
 
+msgid "Some classes were edited since last compilation"
+msgstr ""
+
 msgid "Domain item type is missing."
+msgstr ""
+
+msgid "$1 of class $2"
 msgstr ""
 
 msgid "melt the system"
@@ -86,7 +101,7 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-msgid "Show stop points"
+msgid "basic"
 msgstr ""
 
 msgid "Tajik (Tajikistan)"
@@ -133,6 +148,11 @@ msgid ""
 "Select a 5.6 or older version of an Eiffel project."
 msgstr ""
 
+msgid ""
+"There is already a feature with this name in class $1. This would lead to a "
+"conflict."
+msgstr ""
+
 msgid "Find &Added Classes && Recompile"
 msgstr ""
 
@@ -151,17 +171,16 @@ msgstr ""
 msgid "Selected assemblies Name"
 msgstr ""
 
-msgid "Enabled"
+msgid "Create a new class"
 msgstr ""
 
 msgid "Cancel"
 msgstr ""
 
-msgid ""
-"Too many crierion section specified. Only one criterion section is expected."
+msgid "Cannot find cluster $1."
 msgstr ""
 
-msgid "Cannot find cluster $1."
+msgid "< Back "
 msgstr ""
 
 msgid "Retrieve supplier classes"
@@ -170,6 +189,9 @@ msgstr ""
 msgid ""
 "This feature export clause contains errors.\n"
 "Try editing it to have more information."
+msgstr ""
+
+msgid "Open Layout"
 msgstr ""
 
 msgid "Root cluster, class, feature of the system."
@@ -195,6 +217,13 @@ msgid ""
 "To continue, click Next."
 msgstr ""
 
+msgid ""
+"The file you have supplied as existring Execution Provide does\n"
+"not exist or is not valid. Please provide a valid file or generate\n"
+"a new one.\n"
+"Click Back and select a valid file or choose the generate option."
+msgstr ""
+
 msgid "&Dynamic Library Builder..."
 msgstr ""
 
@@ -211,6 +240,9 @@ msgid "Company"
 msgstr ""
 
 msgid "Set as default"
+msgstr ""
+
+msgid "Feature Properties"
 msgstr ""
 
 msgid "Project already exist"
@@ -267,13 +299,13 @@ msgstr ""
 msgid "Note: Metric is not saved."
 msgstr ""
 
-msgid "E&xit"
-msgstr ""
-
 msgid "Feature Relation"
 msgstr ""
 
 msgid "Relations"
+msgstr ""
+
+msgid "Input domain item appears."
 msgstr ""
 
 msgid "Input domain invalid"
@@ -291,13 +323,13 @@ msgstr ""
 msgid "Version from class $1"
 msgstr ""
 
-msgid "Make sure to specify a non-empty string for a text criterion."
+msgid "$1 preferences"
 msgstr ""
 
 msgid "$1 is not a feature of $2"
 msgstr ""
 
-msgid "Choose one target among: "
+msgid "Client stiffness:"
 msgstr ""
 
 msgid ""
@@ -341,12 +373,6 @@ msgid ""
 " a Frame-based or a Dialog based window"
 msgstr ""
 
-msgid "$1 matches of $2 total preferences"
-msgstr ""
-
-msgid " enabled"
-msgstr ""
-
 msgid "French (Switzerland)"
 msgstr ""
 
@@ -359,9 +385,6 @@ msgstr ""
 msgid "Cu&t\tCtrl+X"
 msgstr ""
 
-msgid "Compile to have information"
-msgstr ""
-
 msgid "Background Workbench C Compilation Succeeded"
 msgstr ""
 
@@ -371,7 +394,7 @@ msgstr ""
 msgid "Creat&ions"
 msgstr ""
 
-msgid "Flat View"
+msgid "E&xit"
 msgstr ""
 
 msgid "Welsh (United Kingdom)"
@@ -380,7 +403,10 @@ msgstr ""
 msgid "Incompatible Types Equality"
 msgstr ""
 
-msgid "Profile Query Window"
+msgid "Do not ask again, and always terminate external command when exiting."
+msgstr ""
+
+msgid "Feature list"
 msgstr ""
 
 msgid "Overflow Prevention"
@@ -398,7 +424,10 @@ msgstr ""
 msgid "show the suppliers of a class"
 msgstr ""
 
-msgid "Are you sure you want to quit $1?"
+msgid "Retrieve only syntactially referenced client classes"
+msgstr ""
+
+msgid "Back to previous menu"
 msgstr ""
 
 msgid "An empty class name is not valid.\n"
@@ -410,7 +439,7 @@ msgid ""
 "corrupt classes and lost information!"
 msgstr ""
 
-msgid "Should unused code be removed?"
+msgid "Don't ask me again and always finalize."
 msgstr ""
 
 msgid "Select All"
@@ -422,7 +451,7 @@ msgid ""
 "Use right click for both pick and drop actions."
 msgstr ""
 
-msgid "Maltese (Malta)"
+msgid "Physics settings"
 msgstr ""
 
 msgid "Save this dynamic library definition"
@@ -431,13 +460,22 @@ msgstr ""
 msgid "Precompilation Wizard"
 msgstr ""
 
+msgid ""
+"C-compilation produced errors.\n"
+"Run your Makefile utility program from the directory `$1`\n"
+"to see what went wrong.\n"
+"\n"
+"Click OK to terminate.\n"
+"Click Cancel to open a command line console.\n"
+msgstr ""
+
 msgid "Tamazight (Algeria, Latin)"
 msgstr ""
 
-msgid "Workbench mode"
+msgid "basic text view"
 msgstr ""
 
-msgid "basic text view"
+msgid "Spanish (Spain)"
 msgstr ""
 
 msgid "Specify arguments"
@@ -446,10 +484,13 @@ msgstr ""
 msgid "Viewpoints: "
 msgstr ""
 
-msgid "Sami (Northern, Norway)"
+msgid "Backup Found"
 msgstr ""
 
 msgid "K'iche (Guatemala)"
+msgstr ""
+
+msgid "Profile"
 msgstr ""
 
 msgid "Unable to initialize the project generated by the wizard"
@@ -481,10 +522,13 @@ msgid ""
 "The total active query:\n"
 msgstr ""
 
+msgid "Exception Handling"
+msgstr ""
+
 msgid "Move selected row up"
 msgstr ""
 
-msgid "External editor not defined"
+msgid "$1 of $2"
 msgstr ""
 
 msgid "Put Two Handles Right"
@@ -499,6 +543,9 @@ msgstr ""
 msgid "Name of the target."
 msgstr ""
 
+msgid "Standard Buttons"
+msgstr ""
+
 msgid "Refactoring: Class Rename"
 msgstr ""
 
@@ -506,9 +553,6 @@ msgid "Add Override Cluster"
 msgstr ""
 
 msgid "Project Settings"
-msgstr ""
-
-msgid "Kyrgyz"
 msgstr ""
 
 msgid "Search folder for classes recursively?"
@@ -531,10 +575,7 @@ msgstr ""
 msgid "Link the context tool to the other components"
 msgstr ""
 
-msgid "Evaluation"
-msgstr ""
-
-msgid "Find P&revious Selection"
+msgid "Start With Arguments"
 msgstr ""
 
 msgid ""
@@ -585,7 +626,7 @@ msgstr ""
 msgid "Location Error"
 msgstr ""
 
-msgid "Switches and Query"
+msgid "Background C Compilation in Progress"
 msgstr ""
 
 msgid "Extracting $1 of feature `$2'..."
@@ -603,13 +644,16 @@ msgstr ""
 msgid "Cannot write file: $1."
 msgstr ""
 
+msgid "You must finalize your project first."
+msgstr ""
+
 msgid "Assembly Name"
 msgstr ""
 
 msgid "Clients of Class "
 msgstr ""
 
-msgid "Compile"
+msgid "profile #"
 msgstr ""
 
 msgid "Lower Sorbian (Germany)"
@@ -666,6 +710,9 @@ msgstr ""
 msgid "Signing Key"
 msgstr ""
 
+msgid "class $1 $2 attribute expected"
+msgstr ""
+
 msgid "Sesotho sa Leboa/Northern Sotho (South Africa)"
 msgstr ""
 
@@ -683,10 +730,10 @@ msgid ""
 "Either use pick and drop or target the editor to the feature to pull up."
 msgstr ""
 
-msgid "Move item down"
+msgid "Up to depth of"
 msgstr ""
 
-msgid "Pause application at current point"
+msgid "Configuration Loading Message"
 msgstr ""
 
 msgid "Spanish (Puerto Rico)"
@@ -753,7 +800,15 @@ msgstr ""
 msgid "Afrikaans (South Africa)"
 msgstr ""
 
-msgid "Add a new command"
+msgid ""
+"Incompatible version for project compiled in: $1.\n"
+"$2 version is $3.\n"
+"Project was compiled with version $4.\n"
+"\n"
+"Click OK to convert this project to version $5.\n"
+msgstr ""
+
+msgid "Warn about usage of onces in generics?"
 msgstr ""
 
 msgid "Create new client-supplier links"
@@ -768,7 +823,7 @@ msgstr ""
 msgid "Corsican (France)"
 msgstr ""
 
-msgid "Remove the selected feature from this dynamic library definition"
+msgid "Select Cluster"
 msgstr ""
 
 msgid "As object"
@@ -780,7 +835,9 @@ msgstr ""
 msgid "Enforce unique class names"
 msgstr ""
 
-msgid "Cluster with name $1 already exists in the universe."
+msgid ""
+"An inheritance cycle was created.\n"
+"Do you still want to add this link?"
 msgstr ""
 
 msgid "Use current environment value"
@@ -801,7 +858,13 @@ msgstr ""
 msgid "Referenced metric(s): $1 not selected."
 msgstr ""
 
+msgid "Don't ask me again and always replace all"
+msgstr ""
+
 msgid "Cannot open file: $1."
+msgstr ""
+
+msgid "--> Remove current value"
 msgstr ""
 
 msgid "Frisian"
@@ -861,7 +924,7 @@ msgstr ""
 msgid "Toggle visibility of feature alias name"
 msgstr ""
 
-msgid "Raise all unsaved windows"
+msgid " => Could not find feature {$1}.$2 \n"
 msgstr ""
 
 msgid "Set maximum call stack depth"
@@ -879,7 +942,7 @@ msgstr ""
 msgid "&Unindent Selection\tShift+Tab"
 msgstr ""
 
-msgid "You can put \"not\" before a criterion name to negate it"
+msgid "Only classes in same cluster"
 msgstr ""
 
 msgid "manipulate subqueries"
@@ -891,10 +954,10 @@ msgstr ""
 msgid "Dummy"
 msgstr ""
 
-msgid "Spanish (Ecuador)"
+msgid "Synchronize context"
 msgstr ""
 
-msgid "Do not ask again, and always terminate freezing when needed."
+msgid "Deselect All Metrics"
 msgstr ""
 
 msgid "F&avorites"
@@ -909,7 +972,7 @@ msgstr ""
 msgid "Exiting will stop the debugger."
 msgstr ""
 
-msgid "Hungarian (Hungary)"
+msgid "Metrics definition file:"
 msgstr ""
 
 msgid "Select input domain:"
@@ -918,13 +981,13 @@ msgstr ""
 msgid "Metric Archive"
 msgstr ""
 
-msgid "New Name:"
+msgid "Danish (Denmark)"
 msgstr ""
 
 msgid "Slovak (Slovakia)"
 msgstr ""
 
-msgid "All Classes"
+msgid "Set to U&ppercase\tCtrl+U"
 msgstr ""
 
 msgid "show the clients of a class"
@@ -973,6 +1036,9 @@ msgid ""
 "Are you sure this is what you want?"
 msgstr ""
 
+msgid "Project Bar"
+msgstr ""
+
 msgid "Cluster"
 msgstr ""
 
@@ -994,7 +1060,7 @@ msgstr ""
 msgid "Please specify a compiled class (or * for all classes)."
 msgstr ""
 
-msgid "&Compile"
+msgid "Maximum displayed string size"
 msgstr ""
 
 msgid "Expand All"
@@ -1010,6 +1076,12 @@ msgid "Delete selected row"
 msgstr ""
 
 msgid "Renames occurances of the class name in any class. (Slow)"
+msgstr ""
+
+msgid "Quit"
+msgstr ""
+
+msgid "Regexp"
 msgstr ""
 
 msgid ""
@@ -1058,13 +1130,10 @@ msgstr ""
 msgid "Double click to go to first occurrence"
 msgstr ""
 
-msgid "Toggle &Line Numbers"
-msgstr ""
-
 msgid "Russian (Russia)"
 msgstr ""
 
-msgid "Step into a routine"
+msgid "Backup User-defined Metrics"
 msgstr ""
 
 msgid "S&ystem Info"
@@ -1073,13 +1142,13 @@ msgstr ""
 msgid "< Back"
 msgstr ""
 
-msgid "Evaluate postcondition assertions?"
+msgid "Toggle &Line Numbers"
 msgstr ""
 
-msgid ""
-"Are you sure you want to redo the refactoring?\n"
-" If classes have been modified since the undo of the refactoring this can "
-"lead to corrupt classes and lost information!"
+msgid "Update"
+msgstr ""
+
+msgid "Watch tool :: error message"
 msgstr ""
 
 msgid "Collapse all selected level(s)"
@@ -1108,9 +1177,6 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Swedish"
-msgstr ""
-
 msgid "Type Mapping"
 msgstr ""
 
@@ -1120,17 +1186,23 @@ msgstr ""
 msgid "C&reators"
 msgstr ""
 
+msgid "Icelandic"
+msgstr ""
+
 msgid "in $1 class"
 msgid_plural "in $1 classes"
 msgstr[0] ""
 
+msgid "You can put \"not\" before a criterion name to negate it"
+msgstr ""
+
 msgid "Vietnamese"
 msgstr ""
 
-msgid "Renames only occurances of the class name in compiled classes."
+msgid "Welsh"
 msgstr ""
 
-msgid "descendants"
+msgid "Renames only occurances of the class name in compiled classes."
 msgstr ""
 
 msgid "Find &Previous"
@@ -1165,6 +1237,9 @@ msgstr ""
 msgid "Search for: "
 msgstr ""
 
+msgid "Stop and restart the application?"
+msgstr ""
+
 msgid "Run command hidden"
 msgstr ""
 
@@ -1174,15 +1249,23 @@ msgstr ""
 msgid "Automatically go to result panel after metric evaluation?"
 msgstr ""
 
+msgid " Try again?"
+msgstr ""
+
 msgid "E&mbed in \"Debug...\"\tCtrl+D"
 msgstr ""
 
-msgid "&Stop Application"
+msgid "$1 matches of $2 total preferences"
 msgstr ""
 
 msgid ""
 "Coefficient \"$1\" for numerator metric is invalid. A real number is "
 "expected."
+msgstr ""
+
+msgid ""
+"Cannot delete cluster $1\n"
+"because it is read only."
 msgstr ""
 
 msgid "assignees"
@@ -1207,6 +1290,9 @@ msgstr ""
 msgid "This project has more than one target: "
 msgstr ""
 
+msgid "show the short form of a class"
+msgstr ""
+
 msgid "Keep grid layout"
 msgstr ""
 
@@ -1229,6 +1315,9 @@ msgstr ""
 msgid "Arabic (Morocco)"
 msgstr ""
 
+msgid "Spanish (Guatemala)"
+msgstr ""
+
 msgid "Should names of folders in recursive clusters be used as namespaces?"
 msgstr ""
 
@@ -1238,13 +1327,19 @@ msgstr ""
 msgid "Restore Default"
 msgstr ""
 
-msgid "$1 of $2"
+msgid ""
+"You must choose at least one library.\n"
+"\n"
+"If you want to precompile one or more libraries, click Back\n"
+"and add the libraries you want to precompile into the right list\n"
+"\n"
+"If you don't want to precompile any library, click Cancel"
 msgstr ""
 
 msgid "Should generated assemblies be marked as CLS compliant?"
 msgstr ""
 
-msgid "Set to U&ppercase\tCtrl+U"
+msgid "Set Current Layout As Default"
 msgstr ""
 
 msgid "Current hit count:"
@@ -1285,13 +1380,18 @@ msgstr ""
 msgid "default"
 msgstr ""
 
+msgid "File $1 is corrupted"
+msgstr ""
+
 msgid "Irish"
 msgstr ""
 
 msgid "Rollback?"
 msgstr ""
 
-msgid "Enter Condition"
+msgid ""
+"Only syntactically referenced supplier/client class attribute \"$1\" is "
+"invalid. A boolean value is expected."
 msgstr ""
 
 msgid "Description:"
@@ -1300,13 +1400,10 @@ msgstr ""
 msgid "Add class suppliers to diagram"
 msgstr ""
 
-msgid "show the ancestor versions of a feature"
-msgstr ""
-
 msgid "&Callers"
 msgstr ""
 
-msgid "Feature Properties"
+msgid "Select another view if you want to save current placement."
 msgstr ""
 
 msgid "Override"
@@ -1330,15 +1427,7 @@ msgstr ""
 msgid "New WEL Application Wizard"
 msgstr ""
 
-msgid ""
-"Maximal number of instructions in a feature for the feature to be inlined."
-msgstr ""
-
-msgid ""
-"No valid creation routine\n"
-"could be found for this class.\n"
-"Please make sure the chosen class\n"
-"has a creation routine taking no argument."
+msgid " => Could not find class {$1}. \n"
 msgstr ""
 
 msgid "Disable Breakpoints"
@@ -1369,7 +1458,7 @@ msgid ""
 "Are you sure this is what you want?"
 msgstr ""
 
-msgid "Metric definition error wizard"
+msgid "Do not ask again, and always convert old projects"
 msgstr ""
 
 msgid "Only assignees"
@@ -1386,7 +1475,10 @@ msgid ""
 "expected."
 msgstr ""
 
-msgid "False"
+msgid "--> Operator index followed by operator ('and' or 'or'): "
+msgstr ""
+
+msgid "Are you sure you want to quit $1?"
 msgstr ""
 
 msgid "Overriding"
@@ -1398,7 +1490,7 @@ msgstr ""
 msgid "Select recalculatable history items"
 msgstr ""
 
-msgid "Finnish (Finland)"
+msgid "Exclude Rules"
 msgstr ""
 
 msgid " of "
@@ -1456,21 +1548,21 @@ msgstr ""
 msgid "Greenlandic (Greenland)"
 msgstr ""
 
-msgid "Read-only project: cannot compile."
-msgstr ""
-
 msgid "Select a File"
 msgstr ""
 
 msgid "Building tree view ..."
 msgstr ""
 
-msgid "Toggle visibility of feature signature"
+msgid "No system was defined.\n"
 msgstr ""
 
 msgid ""
 "Extracting the homonyms\n"
 "may take a long time."
+msgstr ""
+
+msgid "Step out"
 msgstr ""
 
 msgid "Check"
@@ -1479,7 +1571,10 @@ msgstr ""
 msgid "Pick and drop items like group/class/feature here"
 msgstr ""
 
-msgid "Tibetan (Bhutan)"
+msgid "Raise all windows"
+msgstr ""
+
+msgid "Pause application at current point"
 msgstr ""
 
 msgid "Reload metrics"
@@ -1488,13 +1583,16 @@ msgstr ""
 msgid "Select the diagrams to generate"
 msgstr ""
 
-msgid "Use regular expression?"
+msgid "Start application without stopping at breakpoints"
+msgstr ""
+
+msgid " => No breakpoint addition\n"
 msgstr ""
 
 msgid "Tajik"
 msgstr ""
 
-msgid "Set Center Class"
+msgid "Do not ask again, and always terminate finalizing when needed."
 msgstr ""
 
 msgid "Make sure that referenced metric exists and is valid."
@@ -1518,9 +1616,7 @@ msgstr ""
 msgid "File name (`Ace.ace' is the default): "
 msgstr ""
 
-msgid ""
-"There is already a feature with this name in class $1. This would lead to a "
-"conflict."
+msgid "&Tools"
 msgstr ""
 
 msgid "Configuration Loading Error"
@@ -1529,25 +1625,25 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-msgid "profile #"
-msgstr ""
-
 msgid "Tatar (Russia)"
 msgstr ""
 
 msgid "Feature properties"
 msgstr ""
 
-msgid "Exclude platform(s)"
+msgid " [0] Cancel \n"
 msgstr ""
 
 msgid "show indexing clauses of classes"
 msgstr ""
 
+msgid "Set working directory"
+msgstr ""
+
 msgid "Display limit reached"
 msgstr ""
 
-msgid "Lin&k Context Tool"
+msgid "Attribute \"case_sensitive\" is missing."
 msgstr ""
 
 msgid "Default precompiles"
@@ -1566,6 +1662,9 @@ msgid "Khmer (Cambodia)"
 msgstr ""
 
 msgid "New Window"
+msgstr ""
+
+msgid "Remove currently selected object"
 msgstr ""
 
 msgid "Current metric result may not be up-to-date"
@@ -1592,29 +1691,10 @@ msgstr ""
 msgid "Target: $1"
 msgstr ""
 
-msgid ""
-"Cluster $1 will be permanently\n"
-"removed from the system.\n"
-"\n"
-"Are you sure this is what you want?"
-msgstr ""
-
 msgid "auto"
 msgstr ""
 
-msgid ""
-"You must choose at least one library.\n"
-"\n"
-"If you want to precompile one or more libraries, click Back\n"
-"and add the libraries you want to precompile into the right list\n"
-"\n"
-"If you don't want to precompile any library, click Cancel"
-msgstr ""
-
-msgid ""
-"\n"
-" A favorite folder name cannot contain any ot the following characters: \n"
-" ( ) * "
+msgid "System is running (ignoring breakpoints)"
 msgstr ""
 
 msgid "Deselect recalculatable history items"
@@ -1650,7 +1730,7 @@ msgstr ""
 msgid "Eiffel Compilation Failed"
 msgstr ""
 
-msgid "&Enable All Breakpoints"
+msgid "Name of the current project"
 msgstr ""
 
 msgid "Error message :"
@@ -1673,9 +1753,7 @@ msgid ""
 "Please select another one."
 msgstr ""
 
-msgid ""
-"Backup failed for some files.\n"
-"The state of the system was too damaged."
+msgid "Select the Compilation mode."
 msgstr ""
 
 msgid "Minimize All"
@@ -1690,13 +1768,18 @@ msgstr ""
 msgid "Bottom reached."
 msgstr ""
 
-msgid "Enter location for new project: "
+msgid ""
+"'$1' is not a valid directory and/or cannot be created\n"
+"Please choose a valid and writable directory."
 msgstr ""
 
 msgid "Add class"
 msgstr ""
 
 msgid "Add Target"
+msgstr ""
+
+msgid "Link or not the context tool to other components"
 msgstr ""
 
 msgid "Sami (Lule, Norway)"
@@ -1723,18 +1806,19 @@ msgstr ""
 msgid "specify the target"
 msgstr ""
 
-msgid "Minimize all windows"
+msgid "Set Center Class"
 msgstr ""
 
-msgid ""
-"Cannot delete cluster $1\n"
-"because it is read only."
+msgid "Question"
+msgstr ""
+
+msgid "Repulsion:"
 msgstr ""
 
 msgid "Total Time"
 msgstr ""
 
-msgid "Lao (Lao PDR)"
+msgid "Open a new context window"
 msgstr ""
 
 msgid "Confirmation"
@@ -1767,13 +1851,16 @@ msgid ""
 "Click Back and select a valid file or Click Abort."
 msgstr ""
 
-msgid "Spanish (Honduras)"
+msgid "Error occurred..."
 msgstr ""
 
 msgid "Select &All\tCtrl+A"
 msgstr ""
 
 msgid "&Go to..."
+msgstr ""
+
+msgid "Multithreaded"
 msgstr ""
 
 msgid "Do not ask me again and always save modified metric"
@@ -1785,12 +1872,13 @@ msgstr ""
 msgid "Number of Calls"
 msgstr ""
 
-msgid ""
-"Coefficient for denominator metric is zero. A non-zero real numer is "
-"expected."
+msgid " => This is not a valid boolean condition. \n"
 msgstr ""
 
 msgid "Cannot compile project: no valid target found."
+msgstr ""
+
+msgid "Delayed domain item appears."
 msgstr ""
 
 msgid "Use Application Options"
@@ -1809,6 +1897,9 @@ msgid "Arabic (Jordan)"
 msgstr ""
 
 msgid "&Comment\tCtrl+K"
+msgstr ""
+
+msgid "Arabic (Egypt)"
 msgstr ""
 
 msgid "No result available."
@@ -1835,10 +1926,16 @@ msgstr ""
 msgid "Feature version setting:"
 msgstr ""
 
+msgid "Armenian (Armenia)"
+msgstr ""
+
 msgid "Compiled configuration is not up to date, please recompile."
 msgstr ""
 
 msgid "show a filtered form (troff, ...) of the class text"
+msgstr ""
+
+msgid "Value of element $1 is not valid."
 msgstr ""
 
 msgid "Console application"
@@ -1853,7 +1950,20 @@ msgstr ""
 msgid "English (Singapore)"
 msgstr ""
 
+msgid "Greek (Greece)"
+msgstr ""
+
 msgid "&Guided Tour"
+msgstr ""
+
+msgid ""
+"Linear metric is of the form:\n"
+"\n"
+"\ta * metric1 + b * metric2 + c * metric3 + ...\n"
+"\n"
+"a, b, c are coefficients and \n"
+"metric1, metric2, metric3 are variable metrics.\n"
+"\n"
 msgstr ""
 
 msgid "Expand an Object"
@@ -1862,7 +1972,7 @@ msgstr ""
 msgid "Erase Class '$1'"
 msgstr ""
 
-msgid "Regexp"
+msgid "Include"
 msgstr ""
 
 msgid "Are warnings enabled?"
@@ -1899,16 +2009,22 @@ msgstr ""
 msgid "Please enter a positive integer value."
 msgstr ""
 
+msgid "class? $1, $2 attributes expected"
+msgstr ""
+
 msgid "System name: "
 msgstr ""
 
 msgid ".NET Namespace"
 msgstr ""
 
+msgid "Overwrite Layout"
+msgstr ""
+
 msgid "Bengali"
 msgstr ""
 
-msgid "Backup Found"
+msgid "Updating $1"
 msgstr ""
 
 msgid "German (Liechtenstein)"
@@ -1922,7 +2038,7 @@ msgid ""
 "goes through degree $1."
 msgstr ""
 
-msgid "Executable is up-to-date"
+msgid "Organize Favorites"
 msgstr ""
 
 msgid "Replace all"
@@ -1994,13 +2110,16 @@ msgid ""
 "pick and drop actions."
 msgstr ""
 
-msgid "The following environment variables are not set:\n"
+msgid "Back to parent menu"
 msgstr ""
 
 msgid "Invariant"
 msgstr ""
 
 msgid "Precompilation Progress"
+msgstr ""
+
+msgid "Enable breakpoint"
 msgstr ""
 
 msgid "Add"
@@ -2023,7 +2142,15 @@ msgstr ""
 msgid "new"
 msgstr ""
 
+msgid ""
+"C-compilation manager launch failed.\n"
+"Check if finish_freezing$1 exists and works correctly."
+msgstr ""
+
 msgid "Execute the application one line at a time"
+msgstr ""
+
+msgid "Put handle left"
 msgstr ""
 
 msgid "Icelandic (Iceland)"
@@ -2035,7 +2162,7 @@ msgstr ""
 msgid "--> File name: "
 msgstr ""
 
-msgid "Edit an expression"
+msgid "$1 of feature `$2' of class $3"
 msgstr ""
 
 msgid "Override the detected platform to use in conditions."
@@ -2053,6 +2180,9 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
+msgid "Exploring clients of $1"
+msgstr ""
+
 msgid "Go back"
 msgstr ""
 
@@ -2068,6 +2198,9 @@ msgstr ""
 msgid "Sami (Skolt, Finland)"
 msgstr ""
 
+msgid "W_code"
+msgstr ""
+
 msgid ""
 "This command requires a directory.\n"
 "It cannot be executed."
@@ -2079,6 +2212,9 @@ msgstr ""
 msgid "Filter value \"$1\" is invalid."
 msgstr ""
 
+msgid "View "
+msgstr ""
+
 msgid "Client class"
 msgstr ""
 
@@ -2088,19 +2224,19 @@ msgstr ""
 msgid "E&xternals"
 msgstr ""
 
-msgid "English (Trinidad and Tobago)"
-msgstr ""
-
-msgid "Context"
+msgid "Copy call stack to clipboard"
 msgstr ""
 
 msgid "Punjabi (India)"
 msgstr ""
 
-msgid "$1 of class $2"
+msgid "Generate default feature clauses"
 msgstr ""
 
 msgid "There is no items available at this index.\n"
+msgstr ""
+
+msgid "Select an existing metric archive file"
 msgstr ""
 
 msgid "Choose Libraries to precompile"
@@ -2109,7 +2245,7 @@ msgstr ""
 msgid "Compare"
 msgstr ""
 
-msgid "Greek (Greece)"
+msgid "Compile"
 msgstr ""
 
 msgid "Back"
@@ -2136,21 +2272,22 @@ msgstr ""
 msgid "Function"
 msgstr ""
 
-msgid "Multithreaded"
+msgid "Background Finalized C compilation Failed"
+msgstr ""
+
+msgid "cluster? $1, $2 attribute expected"
+msgstr ""
+
+msgid "Move Midpoint"
 msgstr ""
 
 msgid "Internal error ($1): Submit bug at http://support.eiffel.com"
 msgstr ""
 
-msgid ""
-"Incompatible version for project compiled in: $1.\n"
-"$2 version is $3.\n"
-"Project was compiled with version $4.\n"
-"\n"
-"Click OK to convert this project to version $5.\n"
+msgid "Browse..."
 msgstr ""
 
-msgid "Browse..."
+msgid "Spanish (Ecuador)"
 msgstr ""
 
 msgid "Attribute \"regular_expression\" is missing."
@@ -2165,9 +2302,15 @@ msgstr ""
 msgid "value tester"
 msgstr ""
 
+msgid "Do you really want to delete current view?"
+msgstr ""
+
 msgid ""
 "No system was generated.\n"
 "Please make sure the C compilation ended correctly."
+msgstr ""
+
+msgid "Arabic (Bahrain)"
 msgstr ""
 
 msgid "&Crop Diagram"
@@ -2189,16 +2332,16 @@ msgid ""
 "Click Back and choose a valid creation routine name."
 msgstr ""
 
-msgid "Toggle between UML and BON view"
+msgid "callstack"
 msgstr ""
 
 msgid "deferred"
 msgstr ""
 
-msgid ""
-"Please chose a .NET name for the creation routine.\n"
-"The .NET name is the name that will be used\n"
-"by other .NET components when calling this routine."
+msgid "&Find..."
+msgstr ""
+
+msgid "Selected text is not a correct file name."
 msgstr ""
 
 msgid "&Disable All Breakpoints"
@@ -2208,6 +2351,12 @@ msgid "Bulgarian (Bulgaria)"
 msgstr ""
 
 msgid "Target "
+msgstr ""
+
+msgid ""
+"Please chose a .NET name for the creation routine.\n"
+"The .NET name is the name that will be used\n"
+"by other .NET components when calling this routine."
 msgstr ""
 
 msgid "Show BON"
@@ -2255,7 +2404,13 @@ msgid ""
 "Project was compiled with version $4."
 msgstr ""
 
+msgid "Reset user settings"
+msgstr ""
+
 msgid "Renaming Unknown Class"
+msgstr ""
+
+msgid "Pull Up"
 msgstr ""
 
 msgid "Armenian"
@@ -2267,9 +2422,6 @@ msgstr ""
 msgid "Do not show again"
 msgstr ""
 
-msgid "Assignment on Formal/Expanded"
-msgstr ""
-
 msgid "&Debugging Tools"
 msgstr ""
 
@@ -2278,13 +2430,16 @@ msgid ""
 "new .NET Application Wizard"
 msgstr ""
 
-msgid "Please choose a folder."
+msgid "Thai (Thailand)"
 msgstr ""
 
 msgid "Most recent CLR Version"
 msgstr ""
 
-msgid "expanded"
+msgid "Archive comparison result:"
+msgstr ""
+
+msgid "External Commands"
 msgstr ""
 
 msgid "Unknown menu $1.\n"
@@ -2311,6 +2466,11 @@ msgstr ""
 msgid "edit the config file"
 msgstr ""
 
+msgid ""
+"This command requires a file name.\n"
+"It cannot be executed."
+msgstr ""
+
 msgid "&Paste\tCtrl+V"
 msgstr ""
 
@@ -2320,13 +2480,19 @@ msgstr ""
 msgid "Numerator metric \"$1\" is not defined."
 msgstr ""
 
-msgid "Include Cluster '$1'"
+msgid ""
+"Unable to load the ace file `$1'.\n"
+"For the following reasons:\n"
+"$2"
 msgstr ""
 
-msgid "$1 of feature `$2' of class $3"
+msgid "Value \"$1\" of attribute \"type\" is invalid."
 msgstr ""
 
-msgid "Close"
+msgid "Retrieve default color."
+msgstr ""
+
+msgid "Config and cluster details"
 msgstr ""
 
 msgid "Compile W&orkbench C Code"
@@ -2341,15 +2507,16 @@ msgstr ""
 msgid "Cut"
 msgstr ""
 
+msgid "Sami (Lule, Sweden)"
+msgstr ""
+
 msgid "--> Subquery index: "
 msgstr ""
 
 msgid "Disable all breakpoints"
 msgstr ""
 
-msgid ""
-"Invalid choice\n"
-"\n"
+msgid "finalize the system (discard assertions by default)"
 msgstr ""
 
 msgid "German (Switzerland)"
@@ -2362,6 +2529,9 @@ msgid "Serbian"
 msgstr ""
 
 msgid "Remove current selected metric"
+msgstr ""
+
+msgid "Remove condition"
 msgstr ""
 
 msgid "Indent selected row using an \"AND\" criterion"
@@ -2385,13 +2555,19 @@ msgstr ""
 msgid "show the flat form of a class"
 msgstr ""
 
-msgid "Remove currently selected object"
+msgid "&Windows"
 msgstr ""
 
-msgid "System is being compiled"
+msgid "show the classes in alphabetic order"
+msgstr ""
+
+msgid "Sub-clusters"
 msgstr ""
 
 msgid "Application will ignore all breakpoints."
+msgstr ""
+
+msgid "Metric definition"
 msgstr ""
 
 msgid "Turn on physics"
@@ -2416,6 +2592,9 @@ msgid ""
 "\n"
 "is not writable.\n"
 "Please check permissions."
+msgstr ""
+
+msgid "English (Malaysia)"
 msgstr ""
 
 msgid "Pr&operties"
@@ -2445,7 +2624,13 @@ msgstr ""
 msgid "Belarusian (Belarus)"
 msgstr ""
 
+msgid "Exclude platform(s)"
+msgstr ""
+
 msgid "Add new variable"
+msgstr ""
+
+msgid "Select the information you need and formulate your query."
 msgstr ""
 
 msgid "$1 match"
@@ -2453,6 +2638,9 @@ msgid_plural "$1 matches"
 msgstr[0] ""
 
 msgid "Evaluate invariant assertions?"
+msgstr ""
+
+msgid "No cluster was selected. Please select a cluster to create a class."
 msgstr ""
 
 msgid "Save &All"
@@ -2479,7 +2667,7 @@ msgstr ""
 msgid "Include Class '$1'"
 msgstr ""
 
-msgid ".NET"
+msgid "Add condition"
 msgstr ""
 
 msgid "convert profiler output files"
@@ -2491,7 +2679,7 @@ msgstr ""
 msgid "Toggle visibility of cluster legend"
 msgstr ""
 
-msgid "Select the Compilation mode."
+msgid "Add..."
 msgstr ""
 
 msgid "Assembly "
@@ -2512,13 +2700,23 @@ msgstr ""
 msgid "&Reset Current View"
 msgstr ""
 
+msgid "Save C Compilation output to file"
+msgstr ""
+
 msgid "clients"
 msgstr ""
 
-msgid "Information cannot be retrieved."
+msgid "Display parameters"
 msgstr ""
 
 msgid "Feature "
+msgstr ""
+
+msgid ""
+"No valid creation routine\n"
+"could be found for this class.\n"
+"Please make sure the chosen class\n"
+"has a creation routine taking no argument."
 msgstr ""
 
 msgid ""
@@ -2587,7 +2785,7 @@ msgstr ""
 msgid "Run-time information record"
 msgstr ""
 
-msgid "Nepali (India)"
+msgid "Or"
 msgstr ""
 
 msgid "Italian (Italy)"
@@ -2625,17 +2823,19 @@ msgstr ""
 msgid "Link Tool"
 msgstr ""
 
+msgid "*** Modify breakpoint $1 ***"
+msgstr ""
+
 msgid "Executable"
 msgstr ""
 
-msgid "start the graphical environment"
+msgid "Tibetan (Bhutan)"
 msgstr ""
 
 msgid "Original metric name"
 msgstr ""
 
-msgid ""
-"Does this task have to finish successful for the compilation to continue?"
+msgid "Display information"
 msgstr ""
 
 msgid "Malay (Malaysia)"
@@ -2644,9 +2844,7 @@ msgstr ""
 msgid "First chance"
 msgstr ""
 
-msgid ""
-"Directory $1\n"
-"does not exist."
+msgid " output of time spent in a function itself"
 msgstr ""
 
 msgid ""
@@ -2703,9 +2901,6 @@ msgstr ""
 msgid "Re&move All Breakpoints"
 msgstr ""
 
-msgid "View"
-msgstr ""
-
 msgid ""
 "Choose the libraries you want to precompile.\n"
 "You can even add your own library."
@@ -2715,9 +2910,6 @@ msgid "Select a fully compiled feature to have information about it."
 msgstr ""
 
 msgid "Auto-Complete"
-msgstr ""
-
-msgid "Value \"$1\" of attribute \"type\" is invalid."
 msgstr ""
 
 msgid "Spanish (Chile)"
@@ -2764,13 +2956,14 @@ msgstr ""
 msgid "Feature Name"
 msgstr ""
 
-msgid "suppliers"
+msgid ""
+"Too many crierion section specified. Only one criterion section is expected."
 msgstr ""
 
 msgid "Assembly Culture"
 msgstr ""
 
-msgid "Archive comparison result:"
+msgid "Remove input domain item."
 msgstr ""
 
 msgid "Break when the hit count is equal to"
@@ -2794,22 +2987,25 @@ msgstr ""
 msgid "Keep detailed result when recalculating archive?"
 msgstr ""
 
+msgid "Set environment"
+msgstr ""
+
 msgid "Put Two Handles Left"
 msgstr ""
 
-msgid "Create Folder..."
+msgid "Remove Right Angles"
 msgstr ""
 
 msgid "&Preferences..."
 msgstr ""
 
-msgid "Start application without stopping at breakpoints"
+msgid "do not convert clusters into libraries"
 msgstr ""
 
 msgid "Choose a Class"
 msgstr ""
 
-msgid "You must finalize your project first."
+msgid "Apply changes to view named: "
 msgstr ""
 
 msgid "Serbian (Bosnia and Herzegovina, Latin)"
@@ -2833,7 +3029,14 @@ msgstr ""
 msgid "Norwegian"
 msgstr ""
 
-msgid "Evaluate check assertions?"
+msgid ""
+"Classes:  $1\n"
+"CS_Links: $2\n"
+"I_Links:  $3\n"
+"Clusters: $4\n"
+"Physics ms: $5\n"
+"Draw ms: $6\n"
+"Draws: $7"
 msgstr ""
 
 msgid "Add class ancestors to diagram"
@@ -2907,6 +3110,9 @@ msgstr ""
 msgid "Save As..."
 msgstr ""
 
+msgid "&Run Workbench System"
+msgstr ""
+
 msgid "Are simplified address expressions enabled?"
 msgstr ""
 
@@ -2920,6 +3126,9 @@ msgid "You must select an Ace file first\n"
 msgstr ""
 
 msgid "Cursor position (line:column)"
+msgstr ""
+
+msgid "File: '$1' cannot be read."
 msgstr ""
 
 msgid "An error occurred while loading the configuration for your profiler."
@@ -2975,7 +3184,7 @@ msgstr ""
 msgid "Retrieve indirect client classes"
 msgstr ""
 
-msgid "Warn about usage of onces in generics?"
+msgid "Synchronizing class relations"
 msgstr ""
 
 msgid "Stop Application"
@@ -3028,15 +3237,13 @@ msgstr ""
 msgid "Completed: "
 msgstr ""
 
-msgid ""
-"New environment value for $1 will be used\n"
-"because of the -stop/-batch option.\n"
+msgid "Choose an icon for you project."
+msgstr ""
+
+msgid "Select a target/group/folder/class to show information about it."
 msgstr ""
 
 msgid "Select Integral Metrics"
-msgstr ""
-
-msgid "Edit Project"
 msgstr ""
 
 msgid "Precompilation Wizard Error"
@@ -3048,16 +3255,19 @@ msgstr ""
 msgid "Corsican"
 msgstr ""
 
-msgid "Action:"
+msgid "Warning"
 msgstr ""
 
-msgid "(re)compile the C code generated by finalize"
+msgid "Step next"
 msgstr ""
 
 msgid "From $1"
 msgstr ""
 
 msgid "constant value"
+msgstr ""
+
+msgid "English (Trinidad and Tobago)"
 msgstr ""
 
 msgid "Step completed"
@@ -3072,16 +3282,13 @@ msgstr ""
 msgid "Precompile"
 msgstr ""
 
-msgid ""
-"Environment variable '$1' has changed\n"
-"\n"
-"Old value: $2\n"
-"New value: $3\n"
-"\n"
-"Should the new value be used?"
+msgid "Run Workbench"
 msgstr ""
 
 msgid "Are you sure you want to remove $1 and any children of it?"
+msgstr ""
+
+msgid "Top-level"
 msgstr ""
 
 msgid "C&ontract"
@@ -3114,7 +3321,7 @@ msgstr ""
 msgid "No views are available for this cluster"
 msgstr ""
 
-msgid "Azeri (Azerbaijan, Latin)"
+msgid "status"
 msgstr ""
 
 msgid "Options"
@@ -3124,6 +3331,9 @@ msgid "Launch Without Stopping"
 msgstr ""
 
 msgid "The feature name is not valid."
+msgstr ""
+
+msgid "Edit an expression"
 msgstr ""
 
 msgid ""
@@ -3188,9 +3398,6 @@ msgid ""
 "Cannot invoke C compilation."
 msgstr ""
 
-msgid "No system was defined.\n"
-msgstr ""
-
 msgid "Metric name cannot be empty"
 msgstr ""
 
@@ -3203,7 +3410,13 @@ msgstr ""
 msgid "interface view"
 msgstr ""
 
-msgid "Thai (Thailand)"
+msgid "External editor not defined"
+msgstr ""
+
+msgid "Exploring suppliers of $1"
+msgstr ""
+
+msgid "expanded"
 msgstr ""
 
 msgid "reset all values to their defaults"
@@ -3247,7 +3460,7 @@ msgstr ""
 msgid "Stop metric archive evaluation"
 msgstr ""
 
-msgid "Apply Application Optimizations"
+msgid "Evaluation"
 msgstr ""
 
 msgid "Insert text here"
@@ -3277,6 +3490,9 @@ msgstr ""
 msgid "Ex&ported"
 msgstr ""
 
+msgid "Finnish (Finland)"
+msgstr ""
+
 msgid "Add new external"
 msgstr ""
 
@@ -3284,6 +3500,12 @@ msgid "Use inherited value."
 msgstr ""
 
 msgid "Remove metric "
+msgstr ""
+
+msgid "Azeri (Azerbaijan, Latin)"
+msgstr ""
+
+msgid "Add breakpoint"
 msgstr ""
 
 msgid "Zoom"
@@ -3307,16 +3529,16 @@ msgstr ""
 msgid "Down"
 msgstr ""
 
-msgid "Inuktitut"
+msgid "Show ancestor classes?"
 msgstr ""
 
-msgid "Expand selected level(s)"
+msgid "Inuktitut"
 msgstr ""
 
 msgid "Undo (Ctrl+Z)"
 msgstr ""
 
-msgid "Top-level"
+msgid "Current editor"
 msgstr ""
 
 msgid "No class in any cluster matches this name."
@@ -3337,7 +3559,7 @@ msgstr ""
 msgid "Choose New Slice Limits for Special Objects"
 msgstr ""
 
-msgid "Do not ask again, and always convert old projects"
+msgid "Yakut (Russia)"
 msgstr ""
 
 msgid "Filter result which is not visible from input domain"
@@ -3362,10 +3584,13 @@ msgstr ""
 msgid "Index:"
 msgstr ""
 
+msgid "External command not launched."
+msgstr ""
+
 msgid "show the routines of a class"
 msgstr ""
 
-msgid "Collapse selected level(s)"
+msgid "Main Editor Views"
 msgstr ""
 
 msgid "Base value"
@@ -3386,19 +3611,22 @@ msgstr ""
 msgid "show the descendants of a class"
 msgstr ""
 
-msgid "Mi&nimize"
+msgid "Build"
 msgstr ""
 
 msgid "Afrikaans"
 msgstr ""
 
-msgid "Link or not the context tool to other components"
+msgid "&Introduction to Eiffel"
+msgstr ""
+
+msgid "Nepali (India)"
 msgstr ""
 
 msgid "Create new aggregate client-supplier links"
 msgstr ""
 
-msgid "Spanish (Spain)"
+msgid "Project"
 msgstr ""
 
 msgid "Forward"
@@ -3430,22 +3658,24 @@ msgstr ""
 msgid "Type of the task."
 msgstr ""
 
-msgid ""
-"Unable to load the ace file `$1'.\n"
-"For the following reasons:\n"
-"$2"
-msgstr ""
-
 msgid "Warn about renamings of unknown classes?"
 msgstr ""
 
 msgid "Relation for value tester is missing."
 msgstr ""
 
+msgid "Application launched"
+msgstr ""
+
 msgid "Background Finalized C Compilation Succeeded"
 msgstr ""
 
-msgid "Stop and restart the application?"
+msgid "Append"
+msgstr ""
+
+msgid ""
+"Class $1 has syntax error.\n"
+"Code generation cancelled."
 msgstr ""
 
 msgid " error"
@@ -3484,9 +3714,6 @@ msgstr ""
 msgid "Unnamed Debugs"
 msgstr ""
 
-msgid "Select Cluster"
-msgstr ""
-
 msgid "Bashkir (Russia)"
 msgstr ""
 
@@ -3506,9 +3733,6 @@ msgid "Wolof (Senegal)"
 msgstr ""
 
 msgid "yank (save) output of last command to a file"
-msgstr ""
-
-msgid "Romanian (Romania)"
 msgstr ""
 
 msgid "ISE Eiffel: Session aborted\n"
@@ -3558,13 +3782,7 @@ msgstr ""
 msgid "Hebrew"
 msgstr ""
 
-msgid "&Help"
-msgstr ""
-
-msgid ""
-"Cannot add a cluster to cluster\n"
-"$1\n"
-"because it is read only."
+msgid "Only creators"
 msgstr ""
 
 msgid "Hindi (India)"
@@ -3580,6 +3798,13 @@ msgid "Replace Name in Strings"
 msgstr ""
 
 msgid "New name"
+msgstr ""
+
+msgid ""
+"A C Compilation and an external command are currently running.\n"
+"They need to be terminated before EiffelStudio can exist.\n"
+"\n"
+"Cancel C compilation, terminate external command and exit?\n"
 msgstr ""
 
 msgid "Detailed Result"
@@ -3606,7 +3831,7 @@ msgstr ""
 msgid "homonyms"
 msgstr ""
 
-msgid "add a subquery"
+msgid ".NET"
 msgstr ""
 
 msgid "Remove Class/Cluster"
@@ -3630,16 +3855,13 @@ msgstr ""
 msgid "Cluster options "
 msgstr ""
 
-msgid "Build"
+msgid "Lin&k Context Tool"
 msgstr ""
 
 msgid "Please enter a feature name."
 msgstr ""
 
-msgid "&Windows"
-msgstr ""
-
-msgid "Estonian"
+msgid "Pause application"
 msgstr ""
 
 msgid "Add Post Compilation Task"
@@ -3660,7 +3882,13 @@ msgstr ""
 msgid "Show UML"
 msgstr ""
 
+msgid "Please choose a folder."
+msgstr ""
+
 msgid "And-term 1"
+msgstr ""
+
+msgid "Project icon"
 msgstr ""
 
 msgid "Yi (PRC)"
@@ -3689,10 +3917,13 @@ msgstr ""
 msgid "No feature in this class matches this name."
 msgstr ""
 
+msgid "Telugu"
+msgstr ""
+
 msgid "already exists."
 msgstr ""
 
-msgid "Welsh"
+msgid "Do not ask again, and always cancel C Compilation when exiting."
 msgstr ""
 
 msgid "Import Metrics"
@@ -3704,6 +3935,9 @@ msgstr ""
 msgid "Urdu (Pakistan)"
 msgstr ""
 
+msgid "Select metric:"
+msgstr ""
+
 msgid "Erase Midpoint"
 msgstr ""
 
@@ -3711,9 +3945,6 @@ msgid "information about a profiled run"
 msgstr ""
 
 msgid "Version"
-msgstr ""
-
-msgid "Yakut (Russia)"
 msgstr ""
 
 msgid "Turkmen (Turkmenistan)"
@@ -3745,10 +3976,10 @@ msgstr ""
 msgid "Invalid folder name"
 msgstr ""
 
-msgid "Frame application"
+msgid "Remove selected expressions"
 msgstr ""
 
-msgid "Armenian (Armenia)"
+msgid "suppliers"
 msgstr ""
 
 msgid "Do not ask me again and always remove selected metric"
@@ -3757,19 +3988,13 @@ msgstr ""
 msgid "Recursive definition for metric name \"$1\"."
 msgstr ""
 
-msgid "Spanish (Colombia)"
-msgstr ""
-
 msgid "Show text labels"
-msgstr ""
-
-msgid "Warning"
 msgstr ""
 
 msgid "Additional details"
 msgstr ""
 
-msgid "Select a Directory"
+msgid "Show stop points"
 msgstr ""
 
 msgid "Whole word"
@@ -3779,7 +4004,7 @@ msgid ""
 "Value \"$1\" of attribute \"value\" is invalid. A real number is expected."
 msgstr ""
 
-msgid "&Close"
+msgid "Command terminated"
 msgstr ""
 
 msgid "(no_class)"
@@ -3788,7 +4013,7 @@ msgstr ""
 msgid "Call&ees"
 msgstr ""
 
-msgid "No feature named $1 could be found in class $2."
+msgid "&Stop Application"
 msgstr ""
 
 msgid "Add Pre Compilation Task"
@@ -3800,10 +4025,14 @@ msgstr ""
 msgid "Find: "
 msgstr ""
 
-msgid "Polish (Poland)"
+msgid "Enable Breakpoints"
 msgstr ""
 
-msgid "Arabic (Tunisia)"
+msgid ""
+"Cluster $1 will be permanently\n"
+"removed from the system.\n"
+"\n"
+"Are you sure this is what you want?"
 msgstr ""
 
 msgid "Finish"
@@ -3818,7 +4047,7 @@ msgstr ""
 msgid "Metric Definition File:"
 msgstr ""
 
-msgid "English (Malaysia)"
+msgid "Deselect Recalculatable"
 msgstr ""
 
 msgid "Display information concerning current system"
@@ -3827,20 +4056,10 @@ msgstr ""
 msgid "Line"
 msgstr ""
 
-msgid ""
-"Using this wizard you can analyze the result of a profiling.\n"
-"\n"
-"Profiling a system is used to analyze its run-time properties\n"
-"and in particular the cost of each routine: number of calls,\n"
-"time spent, etc. The profiler is a precious tool to understand\n"
-"and optimize a system.\n"
-"\n"
-"To continue you need to have already executed your system\n"
-"with the profiler activated. If this is not the case, please\n"
-"refer to the documentation on how to profile a system.\n"
-"\n"
-"\n"
-"To continue, click Next."
+msgid "&Close"
+msgstr ""
+
+msgid "display the cluster hierarchy of the system"
 msgstr ""
 
 msgid "Current object"
@@ -3861,13 +4080,19 @@ msgstr ""
 msgid "Move Cluster '$1'"
 msgstr ""
 
-msgid "Short Name"
+msgid "Launching..."
+msgstr ""
+
+msgid ""
+"Are you sure you want to redo the refactoring?\n"
+" If classes have been modified since the undo of the refactoring this can "
+"lead to corrupt classes and lost information!"
 msgstr ""
 
 msgid "overwrite any existing old project"
 msgstr ""
 
-msgid " Try again?"
+msgid "Put two handles left"
 msgstr ""
 
 msgid "Hausa (Nigeria, Latin)"
@@ -3879,6 +4104,12 @@ msgstr ""
 msgid "Enable Profiles"
 msgstr ""
 
+msgid "Open the Eiffel Assembly Cache browser tool"
+msgstr ""
+
+msgid "Root Class Name Error"
+msgstr ""
+
 msgid "Unused Locals"
 msgstr ""
 
@@ -3888,7 +4119,7 @@ msgstr ""
 msgid "Swahili"
 msgstr ""
 
-msgid "W_code"
+msgid "Default libraries"
 msgstr ""
 
 msgid "Tree View"
@@ -3903,10 +4134,15 @@ msgstr ""
 msgid "Change class name and generics"
 msgstr ""
 
-msgid "Recompile override clusters"
+msgid "Delete command"
 msgstr ""
 
 msgid "Folder "
+msgstr ""
+
+msgid ""
+"Backup failed for some files.\n"
+"The state of the system was too damaged."
 msgstr ""
 
 msgid "Metadata Cache Path"
@@ -3920,7 +4156,7 @@ msgid ""
 "Code generation cancelled."
 msgstr ""
 
-msgid "change the boolean operator"
+msgid "Refresh tools"
 msgstr ""
 
 msgid "Italian (Switzerland)"
@@ -3941,16 +4177,16 @@ msgstr ""
 msgid "Switch to Flat View"
 msgstr ""
 
-msgid "Japanese (Japan)"
+msgid "Please fill in the 'Location' field."
 msgstr ""
 
 msgid "Sami (Inari, Finland)"
 msgstr ""
 
-msgid "&New"
+msgid "Send last calculated metric value to history"
 msgstr ""
 
-msgid "show the short form of a class"
+msgid "Setup feature domain"
 msgstr ""
 
 msgid "Set &Conditional Breakpoint"
@@ -3971,22 +4207,38 @@ msgstr ""
 msgid "Select current metric archive file"
 msgstr ""
 
-msgid "Locate currently edited class or cluster"
+msgid "Setup domain"
 msgstr ""
 
-msgid "Save call stack to a text file"
+msgid "Open a dynamic library definition"
 msgstr ""
 
-msgid "Precompilations done !"
+msgid ""
+"Using this wizard you can analyze the result of a profiling.\n"
+"\n"
+"Profiling a system is used to analyze its run-time properties\n"
+"and in particular the cost of each routine: number of calls,\n"
+"time spent, etc. The profiler is a precious tool to understand\n"
+"and optimize a system.\n"
+"\n"
+"To continue you need to have already executed your system\n"
+"with the profiler activated. If this is not the case, please\n"
+"refer to the documentation on how to profile a system.\n"
+"\n"
+"\n"
+"To continue, click Next."
 msgstr ""
 
 msgid "Searching selected file..."
 msgstr ""
 
-msgid "is invalid"
+msgid "--< Debugger menu :: Breakpoints >--"
 msgstr ""
 
 msgid "Uzbek (Uzbekistan, Latin)"
+msgstr ""
+
+msgid "Finish Freezing Status"
 msgstr ""
 
 msgid "English (India)"
@@ -3998,7 +4250,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-msgid "Start With Arguments"
+msgid "False"
 msgstr ""
 
 msgid "Break always"
@@ -4065,13 +4317,14 @@ msgstr ""
 msgid "Yi"
 msgstr ""
 
-msgid "Check defined warnings when archive is recalculated?"
+msgid "Enter or select a name to save the current layout as."
 msgstr ""
 
 msgid "Referenced metric(s): $1 not found."
 msgstr ""
 
-msgid "Arabic"
+msgid ""
+"Does this task have to finish successful for the compilation to continue?"
 msgstr ""
 
 msgid "No metric is selected."
@@ -4092,13 +4345,13 @@ msgstr ""
 msgid "Alsatian"
 msgstr ""
 
-msgid "Setup domain"
-msgstr ""
-
 msgid "Bye"
 msgstr ""
 
 msgid "&Export Diagram to PNG"
+msgstr ""
+
+msgid "Setswana/Tswana"
 msgstr ""
 
 msgid "Turkmen"
@@ -4119,13 +4372,10 @@ msgstr ""
 msgid "Evaluating..."
 msgstr ""
 
-msgid "show the classes in alphabetic order"
-msgstr ""
-
 msgid "Metric name \"$1\" is invalid."
 msgstr ""
 
-msgid "Raise all windows"
+msgid "Expand selected level(s)"
 msgstr ""
 
 msgid "Implicit exception pending"
@@ -4155,22 +4405,17 @@ msgid ""
 "Variable metric is missng. At least one variable metric should be defined."
 msgstr ""
 
-msgid "Ratio"
-msgstr ""
-
 msgid ""
-"The root class name that you have specified does not conform\n"
-"the lace specification.\n"
 "\n"
-"A valid root class name is not empty and only contains letters,\n"
-"digits, and underscores. The first character must\n"
-"be a letter.\n"
-"\n"
-"Click Back and choose a valid root class name."
+" A favorite folder name cannot contain any ot the following characters: \n"
+" ( ) * "
 msgstr ""
 
 msgid ""
 "Value \"$1\" of attribute \"negation\" is invalid. A boolean is expected."
+msgstr ""
+
+msgid "Stop application"
 msgstr ""
 
 msgid "Metric name is empty."
@@ -4191,7 +4436,13 @@ msgstr ""
 msgid "ratio metric"
 msgstr ""
 
+msgid "Kill application"
+msgstr ""
+
 msgid "--> Compile type (default: `workbench'): "
+msgstr ""
+
+msgid " -> break index: "
 msgstr ""
 
 msgid "Folder \"$1\" (ID = \"$2\") is invalid."
@@ -4217,7 +4468,7 @@ msgid ""
 "Either use pick and drop or target the editor to the feature or class."
 msgstr ""
 
-msgid "< Back "
+msgid "Workbench mode"
 msgstr ""
 
 msgid ""
@@ -4234,9 +4485,6 @@ msgstr ""
 msgid "Click `Finish' to generate the documentation."
 msgstr ""
 
-msgid "Exceptions"
-msgstr ""
-
 msgid "Show "
 msgstr ""
 
@@ -4251,7 +4499,10 @@ msgstr ""
 msgid "Backup user-defined metrics"
 msgstr ""
 
-msgid "Pull Up"
+msgid "Tibetan"
+msgstr ""
+
+msgid "hits: "
 msgstr ""
 
 msgid ""
@@ -4270,9 +4521,7 @@ msgid ""
 "Please select a different class name."
 msgstr ""
 
-msgid ""
-"This command requires a file name.\n"
-"It cannot be executed."
+msgid "Choose one target among: "
 msgstr ""
 
 msgid ""
@@ -4286,19 +4535,22 @@ msgstr ""
 msgid "English (Australia)"
 msgstr ""
 
+msgid "Open Watch tool menu"
+msgstr ""
+
 msgid "Bosnian (Bosnia and Herzegovina, Latin)"
 msgstr ""
 
 msgid "Continue"
 msgstr ""
 
-msgid "Command terminated"
+msgid "Evaluate check assertions?"
 msgstr ""
 
 msgid "Launch Precompilations"
 msgstr ""
 
-msgid "Do you really want to delete current view?"
+msgid "Copyright"
 msgstr ""
 
 msgid "No metric archive is selected."
@@ -4315,7 +4567,12 @@ msgid ""
 "specified file browser"
 msgstr ""
 
-msgid "External Commands"
+msgid ""
+"Welcome to the\n"
+"Precompilation Wizard"
+msgstr ""
+
+msgid "All Classes"
 msgstr ""
 
 msgid "Force right angles"
@@ -4384,19 +4641,19 @@ msgstr ""
 msgid "Error on expression : \"$1\""
 msgstr ""
 
-msgid "Send last calculated metric value to history"
+msgid "Romanian (Romania)"
 msgstr ""
 
 msgid "Several classes have the same name:\n"
 msgstr ""
 
-msgid ""
-"The file $1\n"
-"either cannot be read or does not represent\n"
-"a valid dynamic library definition."
+msgid "Precompilations done !"
 msgstr ""
 
-msgid "Project icon"
+msgid "Unable to write file: $1"
+msgstr ""
+
+msgid "File $1 cannot not be open"
 msgstr ""
 
 msgid ""
@@ -4408,6 +4665,11 @@ msgid "Show only:"
 msgstr ""
 
 msgid "Inactive subqueries"
+msgstr ""
+
+msgid ""
+"'$1' is not a valid address.\n"
+"Addresses only make sense while an application is stopped."
 msgstr ""
 
 msgid "A&ssigners"
@@ -4442,15 +4704,13 @@ msgstr ""
 msgid "Retrieve normally referenced supplier classes"
 msgstr ""
 
-msgid ""
-"'$1' is not a valid directory and/or cannot be created\n"
-"Please choose a valid and writable directory."
-msgstr ""
-
 msgid "All senders"
 msgstr ""
 
 msgid "Unknown option $1.\n"
+msgstr ""
+
+msgid "Run without stop point"
 msgstr ""
 
 msgid "Compile project"
@@ -4471,11 +4731,6 @@ msgid "Refactoring Bar"
 msgstr ""
 
 msgid "Creation procedure:"
-msgstr ""
-
-msgid ""
-"Welcome to the\n"
-"Precompilation Wizard"
 msgstr ""
 
 msgid "Spanish (Nicaragua)"
@@ -4502,7 +4757,7 @@ msgstr ""
 msgid "Available libraries:"
 msgstr ""
 
-msgid "Match case?"
+msgid "Conditions for this group to be used."
 msgstr ""
 
 msgid "Finalized mode"
@@ -4534,7 +4789,7 @@ msgstr ""
 msgid "Khmer"
 msgstr ""
 
-msgid "Could not save diagram to $1"
+msgid "System is being compiled"
 msgstr ""
 
 msgid "Cluster hierarchy"
@@ -4543,9 +4798,7 @@ msgstr ""
 msgid "Pre Compilation Tasks"
 msgstr ""
 
-msgid ""
-"\tdefault (no option): quick melt the system.\n"
-"\n"
+msgid "is invalid"
 msgstr ""
 
 msgid "Criterion \"$1\" of unit \"$2\" doesn't exits."
@@ -4554,14 +4807,16 @@ msgstr ""
 msgid "Export diagram to PNG"
 msgstr ""
 
+msgid "--- History discarded ---"
+msgstr ""
+
 msgid "Creation Procedure"
 msgstr ""
 
-msgid "Reset current view"
+msgid "Show unchanged features from class ANY?"
 msgstr ""
 
-msgid ""
-"You can create an executable file (.exe) or  dynamic-link library (.dll)"
+msgid "--> Environment variables: "
 msgstr ""
 
 msgid ""
@@ -4595,16 +4850,13 @@ msgstr ""
 msgid "Sami (Southern, Sweden)"
 msgstr ""
 
-msgid "Ukrainian (Ukraine)"
+msgid " -> feature name: (*=all feature)"
 msgstr ""
 
 msgid "Remove and-term"
 msgstr ""
 
 msgid "Show selective text on the right of buttons"
-msgstr ""
-
-msgid "CLS Compliant"
 msgstr ""
 
 msgid "Capture"
@@ -4631,7 +4883,10 @@ msgstr ""
 msgid "$1(not an Eiffel class file)   located in $2"
 msgstr ""
 
-msgid "Show normal referenced classes?"
+msgid "Information cannot be retrieved."
+msgstr ""
+
+msgid "Other"
 msgstr ""
 
 msgid "Too many \"domain\" section specified. Only one is expected."
@@ -4661,11 +4916,7 @@ msgstr ""
 msgid "Building flat view ..."
 msgstr ""
 
-msgid ""
-"The file you have supplied as existring Execution Provide does\n"
-"not exist or is not valid. Please provide a valid file or generate\n"
-"a new one.\n"
-"Click Back and select a valid file or choose the generate option."
+msgid "Exception raised"
 msgstr ""
 
 msgid "group item"
@@ -4677,7 +4928,7 @@ msgstr ""
 msgid "Select at least one language."
 msgstr ""
 
-msgid "Create a new expression"
+msgid "Short Name"
 msgstr ""
 
 msgid ""
@@ -4707,14 +4958,16 @@ msgid "Auto expressions"
 msgstr ""
 
 msgid ""
+"Alias is invalid.\n"
+"Please check that it is a valid C identifier."
+msgstr ""
+
+msgid ""
 "Cannot create file:\n"
 "$1."
 msgstr ""
 
 msgid "Undo Refactoring"
-msgstr ""
-
-msgid "Main Editor Views"
 msgstr ""
 
 msgid "   $1 replaced in $2 class"
@@ -4737,6 +4990,9 @@ msgstr ""
 msgid "Czech (Czech Republic)"
 msgstr ""
 
+msgid " -> Enter new condition (empty to cancel) :"
+msgstr ""
+
 msgid "linear"
 msgstr ""
 
@@ -4745,7 +5001,7 @@ msgid ""
 "Application Wizard"
 msgstr ""
 
-msgid "Add a precompile"
+msgid "Only current version"
 msgstr ""
 
 msgid "Uncomment selected lines"
@@ -4760,9 +5016,6 @@ msgstr ""
 msgid "Execution Profile"
 msgstr ""
 
-msgid "Rename"
-msgstr ""
-
 msgid "File already exists.\n"
 msgstr ""
 
@@ -4775,10 +5028,10 @@ msgstr ""
 msgid "Are debug clauses globally enabled?"
 msgstr ""
 
-msgid "File: '$1' cannot be read."
+msgid "Mohawk"
 msgstr ""
 
-msgid "Exception raised"
+msgid "--( condition: \"$1\")--"
 msgstr ""
 
 msgid "&Copy\tCtrl+C"
@@ -4855,7 +5108,7 @@ msgstr ""
 msgid "Select All Metrics"
 msgstr ""
 
-msgid "Save C Compilation output to file"
+msgid "Collapse selected level(s)"
 msgstr ""
 
 msgid "Add rule"
@@ -4864,7 +5117,10 @@ msgstr ""
 msgid "Find &Next"
 msgstr ""
 
-msgid "Update"
+msgid "Mohawk (Canada)"
+msgstr ""
+
+msgid "Create Folder..."
 msgstr ""
 
 msgid "Hide Signature"
@@ -4874,6 +5130,15 @@ msgid "Class text has syntax error"
 msgstr ""
 
 msgid "Conditions for this external."
+msgstr ""
+
+msgid ""
+"Environment variable '$1' has changed\n"
+"\n"
+"Old value: $2\n"
+"New value: $3\n"
+"\n"
+"Should the new value be used?"
 msgstr ""
 
 msgid "Previous value: `$1'\n"
@@ -4888,13 +5153,20 @@ msgstr ""
 msgid "Target used if system is used as a library."
 msgstr ""
 
-msgid "Don't ask me again and always replace all"
+msgid ""
+"Make sure unit of every variable metric is same as that of the linear metric."
 msgstr ""
 
 msgid "&Edit"
 msgstr ""
 
+msgid "Save All"
+msgstr ""
+
 msgid "&New Project..."
+msgstr ""
+
+msgid "Action:"
 msgstr ""
 
 msgid "Add Cluster"
@@ -4912,10 +5184,10 @@ msgstr ""
 msgid "Syriac"
 msgstr ""
 
-msgid "&Customize Standard Toolbar..."
+msgid "Element $1 expected but not found."
 msgstr ""
 
-msgid "Item expires. Try saving file and searching again."
+msgid "&Customize Standard Toolbar..."
 msgstr ""
 
 msgid "Add Inheritance Relation Between '$1' and '$2'"
@@ -4931,6 +5203,9 @@ msgid "---"
 msgstr ""
 
 msgid "Display an expanded view of objects"
+msgstr ""
+
+msgid "Item expires. Try searching again."
 msgstr ""
 
 msgid "Loading metrics..."
@@ -4994,7 +5269,7 @@ msgstr ""
 msgid "Value:"
 msgstr ""
 
-msgid "Move Midpoint"
+msgid "Remove the selected feature from this dynamic library definition"
 msgstr ""
 
 msgid "ancestor versions"
@@ -5023,7 +5298,13 @@ msgstr ""
 msgid "Error occurred (double click to see details)"
 msgstr ""
 
+msgid "Telugu (India)"
+msgstr ""
+
 msgid "Fix the problem and restart the wizard."
+msgstr ""
+
+msgid "Arabic"
 msgstr ""
 
 msgid "Run"
@@ -5043,13 +5324,13 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-msgid "Telugu"
+msgid "Pashto"
 msgstr ""
 
 msgid "These parameters are invalid."
 msgstr ""
 
-msgid "Windows"
+msgid "start the graphical environment"
 msgstr ""
 
 msgid "English (United States)"
@@ -5058,7 +5339,12 @@ msgstr ""
 msgid "Classes per Module"
 msgstr ""
 
-msgid "Click Finish to generate and compile this project"
+msgid "Exploring ancestors of $1"
+msgstr ""
+
+msgid ""
+"Directory $1\n"
+"does not exist."
 msgstr ""
 
 msgid "Ukrainian"
@@ -5082,6 +5368,9 @@ msgstr ""
 msgid "Debugging Options"
 msgstr ""
 
+msgid " => Added breakpoint {$1}.$2@$3 \n"
+msgstr ""
+
 msgid ""
 "Go to F_code directory of this system, or right click to open F_code in "
 "specified file browser"
@@ -5091,6 +5380,9 @@ msgid "Wolof"
 msgstr ""
 
 msgid "Edit Library Configuration"
+msgstr ""
+
+msgid "Stiffness ($1%)"
 msgstr ""
 
 msgid "Assembly"
@@ -5114,13 +5406,16 @@ msgstr ""
 msgid "Spanish (Argentina)"
 msgstr ""
 
+msgid "Remove handles"
+msgstr ""
+
 msgid "Degree:"
 msgstr ""
 
 msgid "No file name is selected."
 msgstr ""
 
-msgid "Open a dynamic library definition"
+msgid "Total Progress: "
 msgstr ""
 
 msgid "&Ancestor Versions"
@@ -5137,7 +5432,7 @@ msgstr ""
 msgid "Description of the target."
 msgstr ""
 
-msgid "Show unchanged features from class ANY?"
+msgid "Reset current view"
 msgstr ""
 
 msgid "Open a new editor window"
@@ -5159,6 +5454,9 @@ msgid "Spanish (Bolivia)"
 msgstr ""
 
 msgid "Targeted CLR Version:"
+msgstr ""
+
+msgid "Warn about usage of obsolete features?"
 msgstr ""
 
 msgid "&Out of Routine"
@@ -5220,7 +5518,7 @@ msgid ""
 "\t\t\t\tNo strings are allowed here.\n"
 msgstr ""
 
-msgid "Disable or restore Assertion checking handling during debugging"
+msgid "Warn about usage of obsolete classes?"
 msgstr ""
 
 msgid "Must succeed"
@@ -5235,13 +5533,10 @@ msgstr ""
 msgid "Library Name"
 msgstr ""
 
-msgid "Updating $1"
-msgstr ""
-
 msgid "Scope <<"
 msgstr ""
 
-msgid "Some classes were edited since last compilation"
+msgid "Clone selected metric to a new metric"
 msgstr ""
 
 msgid "--> Arguments: "
@@ -5262,16 +5557,24 @@ msgstr ""
 msgid "New Favorite Class..."
 msgstr ""
 
+msgid "Mapudungun"
+msgstr ""
+
 msgid "Copy of "
 msgstr ""
 
 msgid "Do not ask again, and always compile C code"
 msgstr ""
 
-msgid "Create a new class"
+msgid "Latvian (Latvia)"
 msgstr ""
 
-msgid "Metrics definition file:"
+msgid ""
+"File has been changed by another tool/editor\n"
+"Do you want to load the changes?"
+msgstr ""
+
+msgid "Step into"
 msgstr ""
 
 msgid "Type"
@@ -5283,7 +5586,7 @@ msgstr ""
 msgid "Assembly Public Key Token"
 msgstr ""
 
-msgid "Assembly Version"
+msgid "&Contents"
 msgstr ""
 
 msgid "Select format for output"
@@ -5315,6 +5618,9 @@ msgstr ""
 msgid "Breakpoint index:"
 msgstr ""
 
+msgid "Minimize all windows"
+msgstr ""
+
 msgid "Edit the properties of the selected feature"
 msgstr ""
 
@@ -5342,9 +5648,7 @@ msgstr ""
 msgid "Use current environment variables"
 msgstr ""
 
-msgid ""
-"A class figure(s) must either be selected\n"
-"or dropped on this button via right clicking."
+msgid "Ignore"
 msgstr ""
 
 msgid "The Makefile.SH is more recent than the system."
@@ -5364,6 +5668,9 @@ msgstr ""
 msgid "Hide clusters"
 msgstr ""
 
+msgid "&Creators"
+msgstr ""
+
 msgid ""
 "No value entered. Do you want to: \n"
 "D: delete the previous value\n"
@@ -5374,28 +5681,13 @@ msgstr ""
 msgid "Item [$1] is attached to \"$2\""
 msgstr ""
 
-msgid ""
-"Alias is invalid.\n"
-"Please check that it is a valid C identifier."
+msgid "Background C Compilation Succeeded"
 msgstr ""
 
-msgid "Creation Routine Name Error"
+msgid "Spanish (Honduras)"
 msgstr ""
 
 msgid "'$1' is an invalid or not supported syntax."
-msgstr ""
-
-msgid ""
-"You can include the value of an expression in the message by\n"
-"placing it in curly braces, suce as \"The value of x i {x}.\".\n"
-"To insert a curly brace, use \"\\{\". To insert a backslash, use \"\\\\\".\n"
-"\n"
-"The following special keywords will be replaced with their current values:\n"
-"\t$ADDRESS - current object address\n"
-"\t$CALLSTACK - current call stack\n"
-"\t$CLASS - current class name\n"
-"\t$FEATURE - current feature name\n"
-"\t$THREADID - current thread id"
 msgstr ""
 
 msgid "OLD_NAME"
@@ -5421,14 +5713,15 @@ msgstr ""
 msgid "Select working directory"
 msgstr ""
 
-msgid ""
-"'$1' is not a valid address.\n"
-"Addresses only make sense while an application is stopped."
+msgid "Match case?"
 msgstr ""
 
 msgid ""
 "Completing the New .NET\n"
 "Application Wizard"
+msgstr ""
+
+msgid "SOURCE name attribute expected"
 msgstr ""
 
 msgid "System properties"
@@ -5443,10 +5736,10 @@ msgstr ""
 msgid "Exception handling"
 msgstr ""
 
-msgid "Faroese (Faroe Islands)"
+msgid "Double click to go to result panel"
 msgstr ""
 
-msgid "Don't ask me again and always finalize."
+msgid "Faroese (Faroe Islands)"
 msgstr ""
 
 msgid "&Editor"
@@ -5458,10 +5751,13 @@ msgstr ""
 msgid "Azeri"
 msgstr ""
 
+msgid "Slovenian (Slovenia)"
+msgstr ""
+
 msgid "Loaded project: "
 msgstr ""
 
-msgid "Tibetan"
+msgid "Inheritance stiffness (100%)"
 msgstr ""
 
 msgid "&Implementers"
@@ -5493,17 +5789,19 @@ msgstr ""
 msgid "&Refactoring"
 msgstr ""
 
+msgid "Locate currently edited class or cluster"
+msgstr ""
+
 msgid "library"
 msgstr ""
 
 msgid "Background Finalized C Compilation Terminated"
 msgstr ""
 
-msgid ""
-"Make sure unit of every variable metric is same as that of the linear metric."
+msgid "EXPRESSION: "
 msgstr ""
 
-msgid "EXPRESSION: "
+msgid "exception"
 msgstr ""
 
 msgid "Malayalam"
@@ -5515,7 +5813,7 @@ msgstr ""
 msgid "Background Workbench C Compilation Launch Failed"
 msgstr ""
 
-msgid "finalize the system (discard assertions by default)"
+msgid "Japanese (Japan)"
 msgstr ""
 
 msgid "Open a project"
@@ -5530,6 +5828,9 @@ msgstr ""
 msgid "U&ncomment\tCtrl+Shift+K"
 msgstr ""
 
+msgid "The following environment variables are not set:\n"
+msgstr ""
+
 msgid "Select a class which is fully compiled to have information about it."
 msgstr ""
 
@@ -5542,7 +5843,7 @@ msgstr ""
 msgid "Hebrew (Israel)"
 msgstr ""
 
-msgid "Or"
+msgid "Do not ask again, and always terminate freezing when needed."
 msgstr ""
 
 msgid "Descendant Time"
@@ -5561,9 +5862,6 @@ msgid "Divehi"
 msgstr ""
 
 msgid "C&lickable"
-msgstr ""
-
-msgid "--> Operator index followed by operator ('and' or 'or'): "
 msgstr ""
 
 msgid "Dutch"
@@ -5604,7 +5902,7 @@ msgid ""
 "examine its current status."
 msgstr ""
 
-msgid "Sami (Lule, Sweden)"
+msgid "Start and stop at breakpoints"
 msgstr ""
 
 msgid "Initial match reached."
@@ -5633,10 +5931,7 @@ msgstr ""
 msgid "Use Recursive Cluster Name as Namespace"
 msgstr ""
 
-msgid ""
-"Please drop a class on this button.\n"
-"Use right click for both\n"
-"pick and drop actions."
+msgid "Center attraction:"
 msgstr ""
 
 msgid ""
@@ -5647,9 +5942,6 @@ msgid ""
 msgstr ""
 
 msgid "(no_cluster)"
-msgstr ""
-
-msgid "Configuration Loading Message"
 msgstr ""
 
 msgid "&Remove This Breakpoint"
@@ -5670,6 +5962,9 @@ msgstr ""
 msgid "implementers"
 msgstr ""
 
+msgid "Debugger environment closed\n"
+msgstr ""
+
 msgid "Please save output after external command has exited."
 msgstr ""
 
@@ -5679,7 +5974,7 @@ msgstr ""
 msgid "Alphabetical class list"
 msgstr ""
 
-msgid "Slovak"
+msgid "Pause"
 msgstr ""
 
 msgid ".NET (msil)"
@@ -5702,9 +5997,6 @@ msgstr ""
 msgid "Add Client-Supplier Relation Between '$1' and '$2'"
 msgstr ""
 
-msgid "Select a target/group/folder/class to show information about it."
-msgstr ""
-
 msgid "Project documentation"
 msgstr ""
 
@@ -5714,16 +6006,16 @@ msgstr ""
 msgid "&Delete Current View"
 msgstr ""
 
-msgid "Arabic (Yemen)"
+msgid "Creation Routine Name Error"
 msgstr ""
 
-msgid "Launching..."
+msgid "Arabic (Yemen)"
 msgstr ""
 
 msgid "Restrictors"
 msgstr ""
 
-msgid "Question"
+msgid "Assignment on Formal/Expanded"
 msgstr ""
 
 msgid "Is this an abstract target that cannot be used to compile?"
@@ -5752,7 +6044,7 @@ msgstr ""
 msgid "show classes modified since last compilation"
 msgstr ""
 
-msgid "Root Class Name Error"
+msgid "Irish (Ireland)"
 msgstr ""
 
 msgid "Alsatian (France)"
@@ -5761,16 +6053,16 @@ msgstr ""
 msgid "Too many value retrievers nodes. Only one is expected."
 msgstr ""
 
+msgid "Help Tool"
+msgstr ""
+
 msgid "English (Canada)"
 msgstr ""
 
-msgid "Copyright"
+msgid "Close"
 msgstr ""
 
 msgid "Turkish"
-msgstr ""
-
-msgid "Total Progress: "
 msgstr ""
 
 msgid "Set"
@@ -5794,7 +6086,7 @@ msgstr ""
 msgid "Undo last action"
 msgstr ""
 
-msgid "Open the Eiffel Assembly Cache browser tool"
+msgid "Show class location?"
 msgstr ""
 
 msgid ""
@@ -5834,16 +6126,35 @@ msgstr ""
 msgid "&How to's"
 msgstr ""
 
-msgid "Copy call stack to clipboard"
+msgid "Put two handles right"
 msgstr ""
 
-msgid "Switch to high quality"
+msgid "Ratio"
 msgstr ""
 
-msgid "Add..."
+msgid ""
+"You can include the value of an expression in the message by\n"
+"placing it in curly braces, suce as \"The value of x i {x}.\".\n"
+"To insert a curly brace, use \"\\{\". To insert a backslash, use \"\\\\\".\n"
+"\n"
+"The following special keywords will be replaced with their current values:\n"
+"\t$HITCOUNT - breakpoint's hit count\n"
+"\t$ADDRESS - current object address\n"
+"\t$CALLSTACK - current call stack\n"
+"\t$CLASS - current class name\n"
+"\t$FEATURE - current feature name\n"
+"\t$THREADID - current thread id"
+msgstr ""
+
+msgid "Oriya (India)"
 msgstr ""
 
 msgid "Open selected file name in specified external editor"
+msgstr ""
+
+msgid ""
+"Coefficient for denominator metric is zero. A non-zero real numer is "
+"expected."
 msgstr ""
 
 msgid "German (Germany)"
@@ -5866,10 +6177,10 @@ msgid ""
 "expected."
 msgstr ""
 
-msgid "Choose an icon for you project."
+msgid "Inheritance stiffness:"
 msgstr ""
 
-msgid "Please fill in the 'Location' field."
+msgid " -> Current condition: \"$1\" \n"
 msgstr ""
 
 msgid "Edit"
@@ -5884,6 +6195,9 @@ msgid "$1 is not a valid class name\n"
 msgstr ""
 
 msgid "  (precompiled)"
+msgstr ""
+
+msgid "Maltese (Malta)"
 msgstr ""
 
 msgid "Step Out"
@@ -5926,16 +6240,22 @@ msgstr ""
 msgid "&Project Bar"
 msgstr ""
 
+msgid "Flat View"
+msgstr ""
+
 msgid "Should the generated executable use a shared library of the runtime?"
 msgstr ""
 
 msgid "An empty feature name is not valid.\n"
 msgstr ""
 
-msgid "Setup criterion domain properties"
+msgid "Add a precompile"
 msgstr ""
 
 msgid "Original value is \"$1=$2\""
+msgstr ""
+
+msgid "Should unused code be removed?"
 msgstr ""
 
 msgid "Setswana/Tswana (South Africa)"
@@ -5983,6 +6303,15 @@ msgstr ""
 msgid "Albanian (Albania)"
 msgstr ""
 
+msgid "Synchronizing classes"
+msgstr ""
+
+msgid ""
+"The file $1\n"
+"either cannot be read or does not represent\n"
+"a valid dynamic library definition."
+msgstr ""
+
 msgid "Number of States"
 msgstr ""
 
@@ -5998,6 +6327,9 @@ msgid ""
 msgstr ""
 
 msgid "&Object"
+msgstr ""
+
+msgid "Background C Compilation Launched"
 msgstr ""
 
 msgid ""
@@ -6028,10 +6360,13 @@ msgstr ""
 msgid "Unknown application status"
 msgstr ""
 
+msgid "Windows"
+msgstr ""
+
 msgid "Analyzing metric archive(s)..."
 msgstr ""
 
-msgid "Selected text is not a correct file name."
+msgid "Start without stopping at breakpoints"
 msgstr ""
 
 msgid "Select a Run-time information record to generate the Execution profile"
@@ -6070,6 +6405,9 @@ msgstr ""
 msgid "Add Project..."
 msgstr ""
 
+msgid "Save Layout As..."
+msgstr ""
+
 msgid "File location"
 msgstr ""
 
@@ -6094,10 +6432,22 @@ msgstr ""
 msgid "Retrieve only syntactially referenced supplier classes"
 msgstr ""
 
+msgid "--> Working directory: "
+msgstr ""
+
 msgid "Enable High Quality"
 msgstr ""
 
 msgid "UnHandled"
+msgstr ""
+
+msgid "Synchronizing cluster relations"
+msgstr ""
+
+msgid "Set arguments"
+msgstr ""
+
+msgid "Could not save diagram to $1"
 msgstr ""
 
 msgid ""
@@ -6117,33 +6467,41 @@ msgstr ""
 msgid "freeze the system"
 msgstr ""
 
-msgid "Pashto"
+msgid "Apply Application Optimizations"
 msgstr ""
 
 msgid "Customize Re&factoring Toolbar..."
 msgstr ""
 
+msgid "Super-clusters"
+msgstr ""
+
 msgid "E&dit Condition"
 msgstr ""
 
-msgid ""
-"Only syntactically referenced supplier/client class attribute \"$1\" is "
-"invalid. A boolean value is expected."
+msgid "Show Alias Name"
 msgstr ""
 
 msgid "Invalid Names Error"
 msgstr ""
 
+msgid ""
+"An external command is currently running.\n"
+"It need to be terminated before EiffelStudio can exist.\n"
+"\n"
+"Terminate external command and exit?\n"
+msgstr ""
+
 msgid "When the breakpoint is hit:"
 msgstr ""
 
-msgid "Irish (Ireland)"
+msgid " => New condition applied. \n"
 msgstr ""
 
 msgid "Display result in percentage? (Only applicable for ratio metrics)"
 msgstr ""
 
-msgid "Only creators"
+msgid "Add new metric value retriever"
 msgstr ""
 
 msgid "Class Options"
@@ -6153,6 +6511,9 @@ msgid "Spanish (Dominican Republic)"
 msgstr ""
 
 msgid "'$1' is not a file."
+msgstr ""
+
+msgid "A layout with the name '$1' already exists. Do you want to overwrite?"
 msgstr ""
 
 msgid ""
@@ -6187,6 +6548,9 @@ msgstr ""
 msgid "Restore Defaults"
 msgstr ""
 
+msgid "add a subquery"
+msgstr ""
+
 msgid "Click Finish to generate this project."
 msgstr ""
 
@@ -6198,7 +6562,7 @@ msgid ""
 "Not all items inside could be loaded."
 msgstr ""
 
-msgid "Select an existing metric archive file"
+msgid "Select a Directory"
 msgstr ""
 
 msgid "Show supplier links"
@@ -6207,12 +6571,13 @@ msgstr ""
 msgid "Greek"
 msgstr ""
 
+msgid "--< Debugger execution menu >--"
+msgstr ""
+
 msgid "Move to Folder..."
 msgstr ""
 
-msgid ""
-"File has been changed by another tool/editor\n"
-"Do you want to load the changes?"
+msgid "Editor"
 msgstr ""
 
 msgid "Should inlining be enabled?"
@@ -6230,13 +6595,16 @@ msgstr ""
 msgid "Start application and stop at breakpoints"
 msgstr ""
 
-msgid "Function Time"
+msgid "Include Cluster '$1'"
 msgstr ""
 
 msgid "Root Class"
 msgstr ""
 
 msgid "Metric List:"
+msgstr ""
+
+msgid "No feature named $1 could be found in class $2."
 msgstr ""
 
 msgid "UUID \"$1\" is invalid."
@@ -6268,7 +6636,7 @@ msgstr ""
 msgid "No previous value\n"
 msgstr ""
 
-msgid "Deselect Recalculatable"
+msgid "Synchronizing links"
 msgstr ""
 
 msgid "Previous value"
@@ -6287,9 +6655,6 @@ msgid "Client group"
 msgstr ""
 
 msgid "Enable/Disable expressions"
-msgstr ""
-
-msgid "Define quick metric"
 msgstr ""
 
 msgid "Select Depths"
@@ -6319,13 +6684,27 @@ msgstr ""
 msgid "Edit Object content"
 msgstr ""
 
-msgid "Do not ask again, and always terminate finalizing when needed."
+msgid "Compile to have information"
 msgstr ""
 
 msgid "Classes to Go:"
 msgstr ""
 
+msgid ""
+"The root class name that you have specified does not conform\n"
+"the lace specification.\n"
+"\n"
+"A valid root class name is not empty and only contains letters,\n"
+"digits, and underscores. The first character must\n"
+"be a letter.\n"
+"\n"
+"Click Back and choose a valid root class name."
+msgstr ""
+
 msgid "Denominator metric \"$1\" is not defined."
+msgstr ""
+
+msgid "Setup criterion domain properties"
 msgstr ""
 
 msgid "&Print"
@@ -6334,7 +6713,10 @@ msgstr ""
 msgid "Root class name"
 msgstr ""
 
-msgid "Synchronize context"
+msgid "Constructing Diagram for $1"
+msgstr ""
+
+msgid "Item expires. Try saving file and searching again."
 msgstr ""
 
 msgid "Restore Assertion Checking"
@@ -6355,13 +6737,13 @@ msgstr ""
 msgid "Missing Class Export"
 msgstr ""
 
-msgid "Profile"
+msgid " enabled"
 msgstr ""
 
-msgid "Force 32bits"
+msgid "Difference"
 msgstr ""
 
-msgid "Background C Compilation Failed"
+msgid "Read-only project: cannot compile."
 msgstr ""
 
 msgid "Invalid target, select the target you want: "
@@ -6373,7 +6755,7 @@ msgstr ""
 msgid "Reference value"
 msgstr ""
 
-msgid "&Creators"
+msgid "Display Exception Trace"
 msgstr ""
 
 msgid ""
@@ -6389,10 +6771,13 @@ msgid ""
 "finalized executable?"
 msgstr ""
 
-msgid "Luxembourgish"
+msgid "<None>"
 msgstr ""
 
 msgid "Undo not possible."
+msgstr ""
+
+msgid "Cluster with name $1 already exists in the universe."
 msgstr ""
 
 msgid "Save Cop&y As..."
@@ -6407,9 +6792,6 @@ msgstr ""
 msgid "Chinese (Taiwan)"
 msgstr ""
 
-msgid "$1 preferences"
-msgstr ""
-
 msgid "Command output:\n"
 msgstr ""
 
@@ -6422,16 +6804,25 @@ msgstr ""
 msgid "Target Selection"
 msgstr ""
 
-msgid "Stop application"
+msgid "Retry"
+msgstr ""
+
+msgid "arguments"
 msgstr ""
 
 msgid "Generate text form of all classes in system"
+msgstr ""
+
+msgid "Application exited"
 msgstr ""
 
 msgid "Inuktitut (Canada, Syllabics)"
 msgstr ""
 
 msgid "Execution Profile Error"
+msgstr ""
+
+msgid "Use most recent CLR Version:"
 msgstr ""
 
 msgid "Creation routine name"
@@ -6472,9 +6863,6 @@ msgstr ""
 msgid "New Editor"
 msgstr ""
 
-msgid "Other"
-msgstr ""
-
 msgid "Deselect Integral Metrics"
 msgstr ""
 
@@ -6505,7 +6893,7 @@ msgstr ""
 msgid "Backup"
 msgstr ""
 
-msgid "Background C Compilation Succeeded"
+msgid "Assembly Version"
 msgstr ""
 
 msgid "Add and-term"
@@ -6514,10 +6902,13 @@ msgstr ""
 msgid "Could not save file into '$1'"
 msgstr ""
 
+msgid "Enabled"
+msgstr ""
+
 msgid "&Homonyms"
 msgstr ""
 
-msgid "Use most recent CLR Version:"
+msgid "Lao (Lao PDR)"
 msgstr ""
 
 msgid ""
@@ -6528,7 +6919,7 @@ msgstr ""
 msgid "&Standard Buttons"
 msgstr ""
 
-msgid "Help Tool"
+msgid "Save Backup"
 msgstr ""
 
 msgid "Search for group/class/feature"
@@ -6548,9 +6939,6 @@ msgid ""
 "Application Wizard"
 msgstr ""
 
-msgid "Redo"
-msgstr ""
-
 msgid "&Ignore Breakpoints"
 msgstr ""
 
@@ -6558,9 +6946,6 @@ msgid "Warn about usage of old syntax?"
 msgstr ""
 
 msgid "stop on error"
-msgstr ""
-
-msgid "Product"
 msgstr ""
 
 msgid "Quechua (Peru)"
@@ -6602,10 +6987,13 @@ msgstr ""
 msgid "Please clear this window after c compilation has exited."
 msgstr ""
 
-msgid "Check the validity of the library definition"
+msgid "&Compile"
 msgstr ""
 
 msgid "Available criterion list"
+msgstr ""
+
+msgid "Step into a routine"
 msgstr ""
 
 msgid "Hide labels"
@@ -6626,7 +7014,9 @@ msgstr ""
 msgid "Evaluate loop assertions?"
 msgstr ""
 
-msgid "Setswana/Tswana"
+msgid ""
+"A class figure(s) must either be selected\n"
+"or dropped on this button via right clicking."
 msgstr ""
 
 msgid "Display a message about how to deal with the metric definition error"
@@ -6641,9 +7031,7 @@ msgstr ""
 msgid "Tool&bars"
 msgstr ""
 
-msgid ""
-"Value \"$1\" of attribute \"indirect\" is invalid. A boolean value is "
-"expected."
+msgid "Toggle between UML and BON view"
 msgstr ""
 
 msgid ""
@@ -6651,10 +7039,13 @@ msgid ""
 "been changed by hand)"
 msgstr ""
 
-msgid "Watch tool :: error message"
+msgid "Setup value criterion"
 msgstr ""
 
 msgid "Maximum Call Stack Depth"
+msgstr ""
+
+msgid " -> class name: "
 msgstr ""
 
 msgid "Grid column layout"
@@ -6671,10 +7062,10 @@ msgstr ""
 msgid "&Remove Current Item"
 msgstr ""
 
-msgid "Pre Compilation"
+msgid "Disable or restore Assertion checking handling during debugging"
 msgstr ""
 
-msgid "Hausa"
+msgid "Pre Compilation"
 msgstr ""
 
 msgid "Project location"
@@ -6694,10 +7085,7 @@ msgstr ""
 msgid "create documents from the system"
 msgstr ""
 
-msgid "No cluster was selected. Please select a cluster to create a class."
-msgstr ""
-
-msgid "The class name is not valid."
+msgid "Culture of the assembly."
 msgstr ""
 
 msgid "Generate Eiffel-friendly names"
@@ -6718,7 +7106,7 @@ msgstr ""
 msgid "Finnish"
 msgstr ""
 
-msgid "display the cluster hierarchy of the system"
+msgid "&Enable All Breakpoints"
 msgstr ""
 
 msgid "Menu Bar"
@@ -6742,7 +7130,7 @@ msgstr ""
 msgid "Could not save file to specified location."
 msgstr ""
 
-msgid "Mohawk (Canada)"
+msgid "--< Debugger main menu >--"
 msgstr ""
 
 msgid "Create a new window"
@@ -6754,7 +7142,7 @@ msgstr ""
 msgid "Swedish (Sweden)"
 msgstr ""
 
-msgid "&Find..."
+msgid "&Help"
 msgstr ""
 
 msgid ""
@@ -6767,10 +7155,10 @@ msgstr ""
 msgid "Faroese"
 msgstr ""
 
-msgid "Editor"
+msgid "CLS Compliant"
 msgstr ""
 
-msgid "Exception Handling"
+msgid "Product"
 msgstr ""
 
 msgid "Disable assertion checking"
@@ -6779,7 +7167,7 @@ msgstr ""
 msgid "Metric named \"$1\" already exists in your metrics."
 msgstr ""
 
-msgid "Reset user settings"
+msgid "Profile Query Window"
 msgstr ""
 
 msgid "No errors were found."
@@ -6791,7 +7179,10 @@ msgstr ""
 msgid " output of time spent in descendants of a function"
 msgstr ""
 
-msgid " output of time spent in a function itself"
+msgid "System is running"
+msgstr ""
+
+msgid "Breakpoints control"
 msgstr ""
 
 msgid "$1 $2 $3 is active"
@@ -6836,7 +7227,7 @@ msgstr ""
 msgid "Current value"
 msgstr ""
 
-msgid "Select metric:"
+msgid "The class name is not valid."
 msgstr ""
 
 msgid "Output Name"
@@ -6849,6 +7240,9 @@ msgid "Portuguese"
 msgstr ""
 
 msgid "--> Profile information file name (default: `profinfo'): "
+msgstr ""
+
+msgid "Recompile override clusters"
 msgstr ""
 
 msgid "Groups this cluster depends on."
@@ -6882,19 +7276,19 @@ msgid ""
 "Please wait until then before calling this command."
 msgstr ""
 
-msgid "do not convert clusters into libraries"
+msgid "Context"
 msgstr ""
 
 msgid "Properties"
 msgstr ""
 
-msgid "Arabic (Bahrain)"
+msgid "Remove delayed domain item."
 msgstr ""
 
 msgid "Library "
 msgstr ""
 
-msgid "Select the information you need and formulate your query."
+msgid "Add a new command"
 msgstr ""
 
 msgid "elements."
@@ -6911,13 +7305,16 @@ msgstr ""
 msgid "Collapse All"
 msgstr ""
 
-msgid "Should the generated binary be IL verifiable?"
+msgid "Dari"
 msgstr ""
 
-msgid "Display Exception Trace"
+msgid "Index must be an integer.\n"
 msgstr ""
 
-msgid "Exclude Rules"
+msgid "Make sure to specify a non-empty string for a text criterion."
+msgstr ""
+
+msgid "Zoom "
 msgstr ""
 
 msgid "Metric archive calculation finished."
@@ -6929,7 +7326,9 @@ msgstr ""
 msgid "New Ed&itor Window"
 msgstr ""
 
-msgid "'$1' is not a valid feature name.\n"
+msgid ""
+"Value \"$1\" of attribute \"indirect\" is invalid. A boolean value is "
+"expected."
 msgstr ""
 
 msgid "Add Library"
@@ -6946,10 +7345,10 @@ msgid ""
 "relation criterion."
 msgstr ""
 
-msgid "Remove Right Angles"
+msgid "Class is not editable.\n"
 msgstr ""
 
-msgid "Open Watch tool menu"
+msgid "Command line:"
 msgstr ""
 
 msgid "Zoom in"
@@ -6958,7 +7357,10 @@ msgstr ""
 msgid "Dynamic runtime"
 msgstr ""
 
-msgid "Background C Compilation in Progress"
+msgid " --> Expression: "
+msgstr ""
+
+msgid "No debugging for DLL system"
 msgstr ""
 
 msgid ""
@@ -6984,7 +7386,7 @@ msgstr ""
 msgid "Version of the .NET runtime to use."
 msgstr ""
 
-msgid "&Contents"
+msgid "Enter location for new project: "
 msgstr ""
 
 msgid "Load"
@@ -6999,7 +7401,7 @@ msgstr ""
 msgid "'$1' is not a valid cluster name.\n"
 msgstr ""
 
-msgid "Add new metric value retriever"
+msgid "Spanish (Colombia)"
 msgstr ""
 
 msgid "&Routines"
@@ -7030,6 +7432,9 @@ msgid ""
 "has no feature named \"$2\"."
 msgstr ""
 
+msgid "Luxembourgish"
+msgstr ""
+
 msgid ""
 "You can generate the Execution Profile from a Run-time Information Record\n"
 "created by a profiler, or you can reuse an existing Execution Profile if "
@@ -7052,7 +7457,10 @@ msgstr ""
 msgid "show this help message"
 msgstr ""
 
-msgid "Show ancestor classes?"
+msgid "Redo"
+msgstr ""
+
+msgid "Create a new expression"
 msgstr ""
 
 msgid "Customize Toolbar"
@@ -7064,13 +7472,16 @@ msgstr ""
 msgid "F_code"
 msgstr ""
 
+msgid "Please specify a class name."
+msgstr ""
+
 msgid "Could not save diagram to specified location."
 msgstr ""
 
-msgid "Setup feature domain"
+msgid "Korean"
 msgstr ""
 
-msgid "Korean"
+msgid "Run to next stop point"
 msgstr ""
 
 msgid "Wizard to precompile libraries"
@@ -7109,13 +7520,15 @@ msgstr ""
 msgid "Conte&xt"
 msgstr ""
 
-msgid "Background Finalized C compilation Failed"
+msgid ""
+"Invalid choice\n"
+"\n"
 msgstr ""
 
 msgid "Location of this group."
 msgstr ""
 
-msgid "Latvian (Latvia)"
+msgid "Threads"
 msgstr ""
 
 msgid "Show static callers"
@@ -7145,6 +7558,12 @@ msgstr ""
 msgid "new_value"
 msgstr ""
 
+msgid "Sami (Northern, Norway)"
+msgstr ""
+
+msgid "Disable breakpoint"
+msgstr ""
+
 msgid ""
 "Source file cannot be moved.\n"
 "Please make sure that:\n"
@@ -7157,6 +7576,9 @@ msgid "Finalize..."
 msgstr ""
 
 msgid "Show clusters"
+msgstr ""
+
+msgid "*** $1 Breakpoints *** \n"
 msgstr ""
 
 msgid "Could not convert file '$1' into new configuration format."
@@ -7193,7 +7615,10 @@ msgstr ""
 msgid "Arabic (Kuwait)"
 msgstr ""
 
-msgid "External command not launched."
+msgid "finish_freezing Launch Error"
+msgstr ""
+
+msgid "Frame application"
 msgstr ""
 
 msgid "&Freeze..."
@@ -7202,13 +7627,13 @@ msgstr ""
 msgid "Assemblies"
 msgstr ""
 
-msgid "Save Backup"
+msgid "Estonian"
 msgstr ""
 
 msgid "creators"
 msgstr ""
 
-msgid "Only current version"
+msgid "Executable is up-to-date"
 msgstr ""
 
 msgid "Project is not readable. Check permissions."
@@ -7223,10 +7648,10 @@ msgid ""
 "and the backup file deleted."
 msgstr ""
 
-msgid "Show class location?"
+msgid "On object"
 msgstr ""
 
-msgid "On object"
+msgid "Metric definition error wizard"
 msgstr ""
 
 msgid "Search"
@@ -7257,6 +7682,9 @@ msgid "Object"
 msgstr ""
 
 msgid "Hidden"
+msgstr ""
+
+msgid "Modify existing breakpoint"
 msgstr ""
 
 msgid "Hide cluster legend"
@@ -7296,16 +7724,13 @@ msgstr ""
 msgid "--> Class name: "
 msgstr ""
 
-msgid "Generate default feature clauses"
-msgstr ""
-
-msgid "Warn about usage of obsolete features?"
+msgid "Show normal referenced classes?"
 msgstr ""
 
 msgid "Bashkir"
 msgstr ""
 
-msgid "Show Alias Name"
+msgid "Remove Breakpoints"
 msgstr ""
 
 msgid "Custom"
@@ -7315,6 +7740,9 @@ msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
 msgstr ""
 
 msgid "Includes:"
+msgstr ""
+
+msgid "Repulsion ($1%)"
 msgstr ""
 
 msgid "--> Filename(s): "
@@ -7340,6 +7768,11 @@ msgstr ""
 msgid "Root Cluster"
 msgstr ""
 
+msgid ""
+"Go to project directory of this system, or right click to open that "
+"directory in specified file browser"
+msgstr ""
+
 msgid "Context ..."
 msgstr ""
 
@@ -7361,10 +7794,17 @@ msgstr ""
 msgid "Cannot create directroy: $1."
 msgstr ""
 
-msgid "Deselect All Metrics"
+msgid "Enter Condition"
 msgstr ""
 
-msgid "Attribute \"case_sensitive\" is missing."
+msgid "Check the validity of the library definition"
+msgstr ""
+
+msgid ""
+"A C Compilation is currently running.\n"
+"It needs to be terminated before EiffelStudio can exist.\n"
+"\n"
+"Cancel C compilation and exit?\n"
 msgstr ""
 
 msgid "Numerator metric is missing."
@@ -7387,7 +7827,7 @@ msgstr ""
 msgid "Add Precompile"
 msgstr ""
 
-msgid "Current editor"
+msgid "Hausa"
 msgstr ""
 
 msgid ""
@@ -7396,7 +7836,7 @@ msgid ""
 "may lead to inconsistent information, or to an unexpected behavior."
 msgstr ""
 
-msgid "Retrieve only syntactially referenced client classes"
+msgid "Rename"
 msgstr ""
 
 msgid "Retrieve normally referenced client classes"
@@ -7405,19 +7845,28 @@ msgstr ""
 msgid "Precompilation &Wizard..."
 msgstr ""
 
-msgid "Double click to go to result panel"
+msgid "change the boolean operator"
 msgstr ""
 
 msgid "Index"
 msgstr ""
 
-msgid "Remove selected expressions"
+msgid "Background C Compilation Failed"
 msgstr ""
 
 msgid "Absolute path to use as base for relative paths."
 msgstr ""
 
+msgid ""
+"Cannot add a cluster to cluster\n"
+"$1\n"
+"because it is read only."
+msgstr ""
+
 msgid "Add &Precompile"
+msgstr ""
+
+msgid "Text option: "
 msgstr ""
 
 msgid "Remove anchor"
@@ -7426,22 +7875,22 @@ msgstr ""
 msgid "Find in Cluster Tree"
 msgstr ""
 
-msgid "Organize Favorites"
+msgid "French"
 msgstr ""
 
-msgid "French"
+msgid "Mi&nimize"
 msgstr ""
 
 msgid "Group"
 msgstr ""
 
-msgid "Slovenian (Slovenia)"
+msgid "--< Debugger menu :: Display >--"
 msgstr ""
 
 msgid "Mongolian"
 msgstr ""
 
-msgid "Text option: "
+msgid "All classes in same cluster"
 msgstr ""
 
 msgid "Root class .NET name"
@@ -7450,10 +7899,13 @@ msgstr ""
 msgid ".NET Runtime Version"
 msgstr ""
 
-msgid "Background C Compilation Launched"
+msgid "Stiffness:"
 msgstr ""
 
-msgid "&Introduction to Eiffel"
+msgid "Evaluate postcondition assertions?"
+msgstr ""
+
+msgid "Should the generated binary be IL verifiable?"
 msgstr ""
 
 msgid ""
@@ -7461,10 +7913,19 @@ msgid ""
 "$1"
 msgstr ""
 
+msgid "Uzbek"
+msgstr ""
+
 msgid "Japanese"
 msgstr ""
 
+msgid "Define quick metric (or drop a basic metric here as a template)"
+msgstr ""
+
 msgid "$1 is not in the system\n"
+msgstr ""
+
+msgid "Open layout error. Opening default layout instead."
 msgstr ""
 
 msgid "Sanskrit"
@@ -7479,7 +7940,7 @@ msgstr ""
 msgid "go back to parent menu"
 msgstr ""
 
-msgid "Please specify a class name."
+msgid "Move item down"
 msgstr ""
 
 msgid ""
@@ -7510,6 +7971,9 @@ msgstr ""
 msgid "Removing metrics..."
 msgstr ""
 
+msgid "Click Finish to generate and compile this project"
+msgstr ""
+
 msgid "Hide inheritance links"
 msgstr ""
 
@@ -7522,7 +7986,7 @@ msgstr ""
 msgid "Select depth of relations"
 msgstr ""
 
-msgid "Setup value criterion"
+msgid "Kyrgyz"
 msgstr ""
 
 msgid "Address Expression"
@@ -7533,13 +7997,16 @@ msgid ""
 "Choose among the following target(s): "
 msgstr ""
 
-msgid "Open a new context window"
+msgid ""
+"Maximal number of instructions in a feature for the feature to be inlined."
 msgstr ""
 
 msgid "New Context"
 msgstr ""
 
-msgid "Maximum displayed string size"
+msgid ""
+"New environment value for $1 will be used\n"
+"because of the -stop/-batch option.\n"
 msgstr ""
 
 msgid "Force inheritance on child elements."
@@ -7563,10 +8030,13 @@ msgstr ""
 msgid "Lithuanian (Lithuania)"
 msgstr ""
 
+msgid "Exploring descendants of $1"
+msgstr ""
+
 msgid "Switch to hexadecimal format"
 msgstr ""
 
-msgid "Delete command"
+msgid "Slovak"
 msgstr ""
 
 msgid "Rename Class '$1' Locally to '$2'"
@@ -7593,19 +8063,28 @@ msgstr ""
 msgid "Run finalized system"
 msgstr ""
 
+msgid "Ukrainian (Ukraine)"
+msgstr ""
+
 msgid "Replace with..."
 msgstr ""
 
 msgid "Precompiling $1 library: "
 msgstr ""
 
-msgid "Arabic (Egypt)"
+msgid "Do nothing"
 msgstr ""
 
-msgid "Mohawk"
+msgid ""
+"Please drop a class on this button.\n"
+"Use right click for both\n"
+"pick and drop actions."
 msgstr ""
 
 msgid "Kyrgyz (Kyrgyzstan)"
+msgstr ""
+
+msgid "Run workbench system"
 msgstr ""
 
 msgid "&External Commands..."
@@ -7638,7 +8117,7 @@ msgstr ""
 msgid "A&ttributes"
 msgstr ""
 
-msgid "Danish (Denmark)"
+msgid "Remove breakpoint"
 msgstr ""
 
 msgid ""
@@ -7656,6 +8135,9 @@ msgid ": incorrect options\n"
 msgstr ""
 
 msgid "assigners"
+msgstr ""
+
+msgid "Synchronizing diagram tool: "
 msgstr ""
 
 msgid "Address Bar"
@@ -7714,13 +8196,13 @@ msgstr ""
 msgid "Debug"
 msgstr ""
 
-msgid "Index must be an integer.\n"
+msgid "Function Time"
 msgstr ""
 
 msgid "Ready for queries..."
 msgstr ""
 
-msgid "Conditions for this group to be used."
+msgid "(re)compile the C code generated by finalize"
 msgstr ""
 
 msgid "Spanish (United States)"
@@ -7741,6 +8223,9 @@ msgstr ""
 msgid "Empty Root Class .NET Name Error"
 msgstr ""
 
+msgid "Save call stack to a text file"
+msgstr ""
+
 msgid "Arabic (Lebanon)"
 msgstr ""
 
@@ -7750,9 +8235,6 @@ msgid ""
 " - Click No  to compile the Eiffel system (no C compilation)\n"
 " - Click Cancel to abort\n"
 "\n"
-msgstr ""
-
-msgid "Dari"
 msgstr ""
 
 msgid "Name"
@@ -7765,6 +8247,12 @@ msgid "Value \"$1\" of attribute \"time\" is invalid."
 msgstr ""
 
 msgid "Too many \"value_tester\" sections. Only one is expected."
+msgstr ""
+
+msgid "Existing Layouts:"
+msgstr ""
+
+msgid "TARGET name attribute expected"
 msgstr ""
 
 msgid "attributes"
@@ -7794,7 +8282,7 @@ msgstr ""
 msgid "Match case"
 msgstr ""
 
-msgid "Telugu (India)"
+msgid "Put handle right"
 msgstr ""
 
 msgid "clickable view"
@@ -7815,10 +8303,10 @@ msgstr ""
 msgid "Quechua (Bolivia)"
 msgstr ""
 
-msgid "Ignore"
+msgid "Removing unneeded items"
 msgstr ""
 
-msgid "Mapudungun"
+msgid " (ignoring breakpoints)"
 msgstr ""
 
 msgid "Search Report"
@@ -7877,13 +8365,13 @@ msgstr ""
 msgid "New breakpoint(s) to commit"
 msgstr ""
 
-msgid "Uzbek"
+msgid "Synchronizing clusters"
 msgstr ""
 
 msgid "Debugging"
 msgstr ""
 
-msgid "&Hide Favorites"
+msgid "  -> Entry disabled \n"
 msgstr ""
 
 msgid "&Go to"
@@ -7913,9 +8401,6 @@ msgstr ""
 msgid "Do not ask again, and always build precompile"
 msgstr ""
 
-msgid "basic"
-msgstr ""
-
 msgid "Warn about missing classes in export clauses (VTCM)?"
 msgstr ""
 
@@ -7934,16 +8419,19 @@ msgstr ""
 msgid "Step In&to"
 msgstr ""
 
+msgid "WARNING: the console based debugger is experimental!!\n"
+msgstr ""
+
 msgid "Fit to screen"
 msgstr ""
 
 msgid "[Unnamed feature clause]"
 msgstr ""
 
-msgid "Icelandic"
+msgid "Center attraction ($1%)"
 msgstr ""
 
-msgid "Save All"
+msgid "&Hide Favorites"
 msgstr ""
 
 msgid "Old Syntax"
@@ -7973,7 +8461,7 @@ msgstr ""
 msgid "Dependency"
 msgstr ""
 
-msgid "Metric definition"
+msgid "show the ancestor versions of a feature"
 msgstr ""
 
 msgid "Do not ask again, and always discard assertions when finalizing"
@@ -8006,13 +8494,13 @@ msgstr ""
 msgid "All breakpoints together"
 msgstr ""
 
-msgid "Item expires. Try searching again."
+msgid "Find P&revious Selection"
 msgstr ""
 
-msgid "Difference"
+msgid "Add ->"
 msgstr ""
 
-msgid "Default libraries"
+msgid "Arabic (Tunisia)"
 msgstr ""
 
 msgid "Do not ask again, and always save files before compiling"
@@ -8037,9 +8525,6 @@ msgid ""
 "Key to be able to add the generated binary to the Global Assembly Cache "
 "(GAC). \n"
 "Chose a new, non existing filename to create a new key file."
-msgstr ""
-
-msgid "Append"
 msgstr ""
 
 msgid "Maximum index displayed"
@@ -8076,13 +8561,16 @@ msgstr ""
 msgid "About $1"
 msgstr ""
 
-msgid "Spanish (Guatemala)"
+msgid "locals"
 msgstr ""
 
 msgid "Chinese (Macao SAR)"
 msgstr ""
 
-msgid "Pause"
+msgid "Deselect all history items"
+msgstr ""
+
+msgid "Help Topic could not be displayed, please check Eiffel Installation"
 msgstr ""
 
 msgid "Spanish (Uruguay)"
@@ -8091,10 +8579,11 @@ msgstr ""
 msgid "<unset>"
 msgstr ""
 
-msgid "for the next objects you will add in the object tree."
+msgid ""
+"You can create an executable file (.exe) or  dynamic-link library (.dll)"
 msgstr ""
 
-msgid "Backup User-defined Metrics"
+msgid "for the next objects you will add in the object tree."
 msgstr ""
 
 msgid "Stop the application?"
@@ -8106,7 +8595,9 @@ msgstr ""
 msgid "Current version and all its descendant versions"
 msgstr ""
 
-msgid "Command line:"
+msgid ""
+"\tdefault (no option): quick melt the system.\n"
+"\n"
 msgstr ""
 
 msgid ""
@@ -8135,10 +8626,10 @@ msgstr ""
 msgid "Project name"
 msgstr ""
 
-msgid "Change color"
+msgid "Debugger environment started\n"
 msgstr ""
 
-msgid "Add ->"
+msgid "Expression evaluation"
 msgstr ""
 
 msgid "Clusters"
@@ -8153,7 +8644,7 @@ msgstr ""
 msgid "Add Object"
 msgstr ""
 
-msgid "Name of the current project"
+msgid "descendants"
 msgstr ""
 
 msgid "Amharic"
@@ -8180,13 +8671,13 @@ msgstr ""
 msgid "Setup criterion text properties"
 msgstr ""
 
+msgid "*** Parameters ***\n"
+msgstr ""
+
 msgid "Groups this override is overriding."
 msgstr ""
 
 msgid "Type input data here"
-msgstr ""
-
-msgid "Oriya (India)"
 msgstr ""
 
 msgid "&Indent Selection\tTab"
@@ -8198,7 +8689,7 @@ msgstr ""
 msgid "Add Make"
 msgstr ""
 
-msgid "Threads"
+msgid "New Name:"
 msgstr ""
 
 msgid "User-defined metrics backup finished."
@@ -8216,13 +8707,22 @@ msgstr ""
 msgid "Trademark"
 msgstr ""
 
+msgid "Raise all unsaved windows"
+msgstr ""
+
 msgid "specify the compilation directory"
+msgstr ""
+
+msgid "Switches and Query"
 msgstr ""
 
 msgid "Vision2 Application Appearance"
 msgstr ""
 
 msgid "IL Verifiable"
+msgstr ""
+
+msgid "list breakpoints"
 msgstr ""
 
 msgid ""
@@ -8233,7 +8733,7 @@ msgid ""
 "Please select a different class name."
 msgstr ""
 
-msgid "Config and cluster details"
+msgid "Force 32bits"
 msgstr ""
 
 msgid ""
@@ -8253,13 +8753,13 @@ msgstr ""
 msgid "Directory where the command will be executed."
 msgstr ""
 
+msgid "&New"
+msgstr ""
+
 msgid "Reset"
 msgstr ""
 
 msgid "Callers from client class"
-msgstr ""
-
-msgid "Clone selected metric to a new metric"
 msgstr ""
 
 msgid "Too many arguments. The following arguments will be ignored:"
@@ -8274,7 +8774,7 @@ msgstr ""
 msgid "Double click to see Exception or Ctrl-C to copy to clipboard"
 msgstr ""
 
-msgid "Project Bar"
+msgid "Edit Project"
 msgstr ""
 
 msgid "Resources"
@@ -8311,9 +8811,6 @@ msgstr ""
 msgid "Stop metric evaluation"
 msgstr ""
 
-msgid "Warn about usage of obsolete classes?"
-msgstr ""
-
 msgid "Croatian (Croatia)"
 msgstr ""
 
@@ -8326,16 +8823,13 @@ msgstr ""
 msgid "Interrupted by user"
 msgstr ""
 
-msgid "Include"
-msgstr ""
-
 msgid "Alias"
 msgstr ""
 
 msgid "Cannot create file: "
 msgstr ""
 
-msgid "Deselect all history items"
+msgid "Hungarian (Hungary)"
 msgstr ""
 
 msgid "Set to &Lowercase\tCtrl+Shift+U"
@@ -8389,7 +8883,7 @@ msgstr ""
 msgid "Put Handle Left"
 msgstr ""
 
-msgid "Retry"
+msgid "Swedish"
 msgstr ""
 
 msgid "Redo Refactoring"
@@ -8412,7 +8906,7 @@ msgstr ""
 msgid "Read-only project: cannot compile.\n"
 msgstr ""
 
-msgid "&Tools"
+msgid "Check defined warnings when archive is recalculated?"
 msgstr ""
 
 msgid ""
@@ -8427,22 +8921,19 @@ msgstr ""
 msgid "No features in this file"
 msgstr ""
 
-msgid ""
-"Linear metric is of the form:\n"
-"\n"
-"\ta * metric1 + b * metric2 + c * metric3 + ...\n"
-"\n"
-"a, b, c are coefficients and \n"
-"metric1, metric2, metric3 are variable metrics.\n"
-"\n"
-msgstr ""
+msgid "$1 hit"
+msgid_plural "$1 hits"
+msgstr[0] ""
 
 msgid ""
 "$1 does not exist.\n"
 "Execution impossible.\n"
 msgstr ""
 
-msgid "Standard Buttons"
+msgid "Switch to high quality"
+msgstr ""
+
+msgid "Use regular expression?"
 msgstr ""
 
 msgid "Current archive value may not up-to-date"

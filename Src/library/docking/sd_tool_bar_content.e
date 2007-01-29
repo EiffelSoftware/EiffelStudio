@@ -50,6 +50,7 @@ feature {NONE} -- Initlization
 
 	make_with_tool_bar (a_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR) is
 			-- Creation method. A helper function, actually SD_TOOL_BAR_ZONE only appcept EV_TOOL_BAR_ITEMs.
+			-- Warning: use this method will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
 			a_title_not_void: a_title /= Void
 			a_tool_bar_not_void: a_tool_bar /= Void
@@ -79,8 +80,7 @@ feature {NONE} -- Initlization
 
 	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING_GENERAL): SD_TOOL_BAR_ITEM is
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
-		obsolete
-			"Warning: use this method to convert pixmap in `a_ev_item' will lose alpha data, which will show nothing when use AlphaBlend functions!"
+			-- Warning: use this method to convert pixmap in `a_ev_item' will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
 			not_void: a_ev_item /= Void
 		local

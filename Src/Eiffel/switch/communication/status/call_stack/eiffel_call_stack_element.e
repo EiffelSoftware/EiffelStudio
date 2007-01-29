@@ -184,9 +184,7 @@ feature {NONE} -- Implementation helper
 				l_type_a_not_void: l_type_a /= Void
 				l_type_a_valid: l_type_a.is_valid and l_type_a.has_associated_class
 			end
-			if l_type_a = Void then
-				Result := Void
-			else
+			if l_type_a /= Void and then l_type_a.has_associated_class then
 				Result := l_type_a.associated_class
 			end
 		end

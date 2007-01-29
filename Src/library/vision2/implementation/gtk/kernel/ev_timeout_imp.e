@@ -61,7 +61,7 @@ feature -- Access
 
 			if an_interval > 0 then
 				timeout_connection_id :=
-					App_implementation.gtk_marshal.c_ev_gtk_callback_marshal_timeout_connect (
+					{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_timeout_connect (
 						an_interval, timeout_agent_internal
 					)
 			end

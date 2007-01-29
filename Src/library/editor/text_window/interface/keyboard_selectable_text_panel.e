@@ -362,13 +362,17 @@ feature -- Observation
 	add_cursor_observer (txt_observer: TEXT_OBSERVER) is
 			-- Add observer of `text_displayed' for cursor position changes.
 		do
-			text_displayed.add_cursor_observer (txt_observer)
+			if text_displayed /= Void then
+				text_displayed.add_cursor_observer (txt_observer)
+			end
 		end
 
 	remove_observer (txt_observer: TEXT_OBSERVER) is
 			-- Remove observer of `text_displayed'.
 		do
-			text_displayed.remove_observer (txt_observer)
+			if text_displayed /= Void then
+				text_displayed.remove_observer (txt_observer)
+			end
 		end
 
 	on_text_loaded is

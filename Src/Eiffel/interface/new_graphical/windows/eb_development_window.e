@@ -1644,11 +1644,13 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			text_loaded: not is_empty
 		local
 			l, c, v: INTEGER
+			ed: EB_EDITOR
 		do
-			if editors_manager.current_editor /= Void then
-				l := editors_manager.current_editor.cursor_y_position
-				c := editors_manager.current_editor.cursor_x_position
-				v := editors_manager.current_editor.cursor_visible_x_position
+			ed := editors_manager.current_editor
+			if ed /= Void then
+				l := ed.cursor_y_position
+				c := ed.cursor_x_position
+				v := ed.cursor_visible_x_position
 			end
 			status_bar.set_cursor_position (l, c, v)
 		end
@@ -1659,6 +1661,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			l_feature: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			l_classc_stone: CLASSC_STONE
+			ed: EB_SMART_EDITOR
 		do
 				-- we may have been called from a timer and have to deactivate the timer
 			if context_refreshing_timer /= Void then
@@ -1668,8 +1671,12 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 					-- We only do that for the clickable view
 				l_classc_stone ?= stone
 				if l_classc_stone /= Void then
-					if editors_manager.current_editor.text_displayed /= Void then
-						l_feature := editors_manager.current_editor.text_displayed.current_feature_containing
+					ed := editors_manager.current_editor
+					if
+						ed /= Void
+						and then ed.text_displayed /= Void
+					then
+						l_feature := ed.text_displayed.current_feature_containing
 						if l_feature /= Void then
 							set_editing_location_by_feature (l_feature.name)
 						else

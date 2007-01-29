@@ -62,92 +62,103 @@ feature -- Status setting
 			-- Change the observed editor.
 		require
 			valid_editor: ed /= Void
+		local
+			l_current_editor: like current_editor
+			l_textdisp: EDITABLE_TEXT
+			ecmds: like editor_commands
+			scmds: like selection_commands
 		do
-			if current_editor /= Void then
-				current_editor.remove_observer (Current)
+			l_current_editor := current_editor
+			if l_current_editor /= Void then
+				l_current_editor.remove_observer (Current)
 			end
+
 			current_editor := ed
-			if current_editor.text_displayed.is_notifying then
-				current_editor.text_displayed.post_notify_actions.extend (agent add_observers)
+			l_current_editor := current_editor
+			l_textdisp := l_current_editor.text_displayed
+			if l_textdisp /= Void and then l_textdisp.is_notifying then
+				l_textdisp.post_notify_actions.extend (agent add_observers)
 			else
-				current_editor.add_edition_observer (Current)
-				current_editor.add_selection_observer (Current)
+				l_current_editor.add_edition_observer (Current)
+				l_current_editor.add_selection_observer (Current)
 			end
 					-- Since the current editor has changed,
 					-- it may be in a different state than the current state,
 					-- and we have to update the state and send events accordingly....*sigh*
 			if text_state = 0 then
-				if current_editor.text_is_fully_loaded then
+				if l_current_editor.text_is_fully_loaded then
 					on_text_loaded
 					on_text_fully_loaded
 				end
 			elseif text_state = 1 then
-				if current_editor.text_is_fully_loaded then
+				if l_current_editor.text_is_fully_loaded then
 					on_text_fully_loaded
-				elseif current_editor.is_empty then
+				elseif l_current_editor.is_empty then
 					on_text_reset
 				end
 			else
 					-- State was fully loaded.
-				if current_editor.is_empty then
+				if l_current_editor.is_empty then
 					on_text_reset
 				end
 			end
 			if selection_state = 0 then
-				if current_editor.has_selection then
+				if l_current_editor.has_selection then
 					on_selection_begun
 				end
 			else
 					-- Selection state is there is a selection.
-				if not current_editor.has_selection then
+				if not l_current_editor.has_selection then
 					on_selection_finished
 				end
 			end
 			if edition_state = 0 then
-				if current_editor.changed then
+				if l_current_editor.changed then
 						--| True is safer for the diagram.
 					on_text_edited (True)
 				end
 			else
-				if not current_editor.changed then
+				if not l_current_editor.changed then
 					on_text_back_to_its_last_saved_state
 				end
 			end
 
 				-- Now for the "editability" of the editor...
-			if current_editor.is_editable then
+			ecmds := editor_commands
+			scmds := selection_commands
+			if l_current_editor.is_editable then
 				from
-					editor_commands.start
+					ecmds.start
 				until
-					editor_commands.after
+					ecmds.after
 				loop
-					editor_commands.item.on_editable
-					editor_commands.forth
+					ecmds.item.on_editable
+					ecmds.forth
 				end
 				from
-					selection_commands.start
+					scmds.start
 				until
-					selection_commands.after
+					scmds.after
 				loop
-					selection_commands.item.on_editable
-					selection_commands.forth
+					scmds.item.on_editable
+					scmds.forth
 				end
 			else
 				from
-					editor_commands.start
+					ecmds.start
 				until
-					editor_commands.after
+					ecmds.after
 				loop
-					editor_commands.item.on_not_editable
-					editor_commands.forth
+					ecmds.item.on_not_editable
+					ecmds.forth
 				end
 				from
-					selection_commands.start
+					scmds.start
 				until
-					selection_commands.after
+					scmds.after
 				loop
-					selection_commands.item.on_not_editable
-					selection_commands.forth
+					scmds.item.on_not_editable
+					scmds.forth
 				end
 			end
 		ensure
@@ -194,42 +205,48 @@ feature {NONE} -- Event handling
 
 	on_text_fully_loaded is
 			-- The main editor has just been reloaded.
+		local
+			ecmds: like editor_commands
+			scmds: like selection_commands
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
 			text_state := 2
+			ecmds := editor_commands
+			scmds := selection_commands
+
 			if current_editor.is_editable then
 				from
-					editor_commands.start
+					ecmds.start
 				until
-					editor_commands.after
+					ecmds.after
 				loop
-					editor_commands.item.on_editable
-					editor_commands.forth
+					ecmds.item.on_editable
+					ecmds.forth
 				end
 				from
-					selection_commands.start
+					scmds.start
 				until
-					selection_commands.after
+					scmds.after
 				loop
-					selection_commands.item.on_editable
-					selection_commands.forth
+					scmds.item.on_editable
+					scmds.forth
 				end
 			else
 				from
-					editor_commands.start
+					ecmds.start
 				until
-					editor_commands.after
+					ecmds.after
 				loop
-					editor_commands.item.on_not_editable
-					editor_commands.forth
+					ecmds.item.on_not_editable
+					ecmds.forth
 				end
 				from
-					selection_commands.start
+					scmds.start
 				until
-					selection_commands.after
+					scmds.after
 				loop
-					selection_commands.item.on_not_editable
-					selection_commands.forth
+					scmds.item.on_not_editable
+					scmds.forth
 				end
 			end
 		end
@@ -272,18 +289,21 @@ feature {NONE} -- Implementation
 
 	internal_recycle is
 			-- Destroy references to `Current'.
+		local
+			scmds: like selection_commands
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
 			editor_commands.wipe_out
 			from
-				selection_commands.start
+				scmds := selection_commands
+				scmds.start
 			until
-				selection_commands.after
+				scmds.after
 			loop
-				selection_commands.item.recycle
-				selection_commands.forth
+				scmds.item.recycle
+				scmds.forth
 			end
-			selection_commands.wipe_out
+			scmds.wipe_out
 			current_editor := Void
 		end
 

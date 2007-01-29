@@ -98,7 +98,6 @@ feature{NONE} -- Callbacks
 				inspect
 					current_tag.item
 				when t_metric then
-					current_archive_node.set_input_domain (current_domain)
 					archive.extend (current_archive_node)
 					remove_domain_receiver_from_stack
 				when t_domain then
@@ -213,8 +212,8 @@ feature{NONE} -- Process
 					l_uuid_str,
 					l_filter_value
 				)
-					domain_receiver_stack.extend ([agent current_archive_node.set_input_domain, False])
-					tester_receiver_stack.extend ([agent current_archive_node.set_value_tester, False])
+				domain_receiver_stack.extend ([agent current_archive_node.set_input_domain, False])
+				tester_receiver_stack.extend ([agent current_archive_node.set_value_tester, False])
 			end
 		end
 

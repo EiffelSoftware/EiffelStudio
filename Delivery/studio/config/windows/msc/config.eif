@@ -40,8 +40,8 @@ mtldflags: "-STACK:5000000 -NODEFAULTLIB:libc"
 ccldflags: "-STACK:5000000 -NODEFAULTLIB:libc"
 console_flags: "-SUBSYSTEM:CONSOLE"
 windows_flags: "-SUBSYSTEM:WINDOWS"
-ldsharedflags: "-dll -incremental:no"
-mtldsharedflags: "-dll -incremental:no"
+ldsharedflags: "-dll -incremental:no -NODEFAULTLIB:libc"
+mtldsharedflags: "-dll -incremental:no -NODEFAULTLIB:libc"
 
 -- eiffel run-time specification
 prefix: "$(ISE_C_COMPILER)\"

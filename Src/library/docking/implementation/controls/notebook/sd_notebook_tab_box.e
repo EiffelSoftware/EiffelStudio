@@ -190,82 +190,98 @@ feature {NONE} -- Agents
 			-- Handle expose actions.
 		local
 			l_target: EV_RECTANGLE
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			from
 				create l_target.make (a_x, a_y, a_width, a_height)
-				internal_tabs.start
+				l_snapshot := internal_tabs.twin
+				l_snapshot.start
 			until
-				internal_tabs.after
+				l_snapshot.after
 			loop
-				if l_target.intersects (internal_tabs.item.rectangle) then
-					internal_tabs.item.on_expose
+				l_item := l_snapshot.item
+				if l_target.intersects (l_item.rectangle) then
+					l_item.on_expose
 				end
-				internal_tabs.forth
+				l_snapshot.forth
 			end
 		end
 
 	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer motion actions.
+		local
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
-
 			if captured_tab /= Void then
 				captured_tab.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			elseif pointer_entered then
 				from
-					internal_tabs.start
+					l_snapshot := internal_tabs
+					l_snapshot.start
 				until
-					internal_tabs.after
+					l_snapshot.after
 				loop
-					if internal_tabs.item.is_displayed then
-						if internal_tabs.item.rectangle.has_x_y (a_x, a_y) and internal_tabs.item.is_hot then
-							internal_tabs.item.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						elseif internal_tabs.item.rectangle.has_x_y (a_x, a_y) then
-							internal_tabs.item.on_pointer_enter
-						elseif internal_tabs.item.is_hot then
-							internal_tabs.item.on_pointer_leave
+					l_item := l_snapshot.item
+					if l_item.is_displayed then
+						if l_item.rectangle.has_x_y (a_x, a_y) and l_item.is_hot then
+							l_item.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						elseif l_item.rectangle.has_x_y (a_x, a_y) then
+							l_item.on_pointer_enter
+						elseif l_item.is_hot then
+							l_item.on_pointer_leave
 						end
 					end
-					internal_tabs.forth
+					l_snapshot.forth
 				end
 			end
 		end
 
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer press actions.
+		local
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			if captured_tab /= Void then
 				captured_tab.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			else
 				from
-					internal_tabs.start
+					l_snapshot := internal_tabs.twin
+					l_snapshot.start
 				until
-					-- the internal_tabs.index maybe 2 more than internal_tabs.count?
-					-- So we can't use after here.
-					internal_tabs.index > internal_tabs.count
+					l_snapshot.after
 				loop
-					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) and internal_tabs.item.is_displayed then
-						internal_tabs.item.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					l_item := l_snapshot.item
+					if l_item.rectangle.has_x_y (a_x, a_y) and l_item.is_displayed then
+						l_item.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
-					internal_tabs.forth
+					l_snapshot.forth
 				end
 			end
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer release actions.
+		local
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			if captured_tab /= Void then
 				captured_tab.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			else
 				from
-					internal_tabs.start
+					l_snapshot := internal_tabs
+					l_snapshot.start
 				until
-					internal_tabs.after
+					l_snapshot.after
 				loop
-					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) and internal_tabs.item.is_displayed then
-						internal_tabs.item.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					l_item := l_snapshot.item
+					if l_item.rectangle.has_x_y (a_x, a_y) and l_item.is_displayed then
+						l_item.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
-					internal_tabs.forth
+					l_snapshot.forth
 				end
 			end
 		end
@@ -276,21 +292,25 @@ feature {NONE} -- Agents
 			l_screen: EV_SCREEN
 			l_x: INTEGER
 			l_found: BOOLEAN
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			pointer_entered := True
 			if captured_tab = Void then
 				create l_screen
 				l_x := l_screen.pointer_position.x - screen_x
 				from
-					internal_tabs.start
+					l_snapshot := internal_tabs
+					l_snapshot.start
 				until
-					internal_tabs.after or l_found
+					l_snapshot.after or l_found
 				loop
-					if l_x < internal_tabs.item.x + internal_tabs.item.width then
+					l_item := l_snapshot.item
+					if l_x < l_item.x + l_item.width then
 						l_found := True
-						internal_tabs.item.on_pointer_enter
+						l_item.on_pointer_enter
 					end
-					internal_tabs.forth
+					l_snapshot.forth
 				end
 			end
 		ensure
@@ -303,22 +323,26 @@ feature {NONE} -- Agents
 			entered: pointer_entered = True
 		local
 			l_found: BOOLEAN
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			pointer_entered := False
 			if captured_tab = Void then
 				from
-					internal_tabs.start
+					l_snapshot := internal_tabs
+					l_snapshot.start
 				until
-					internal_tabs.after or l_found
+					l_snapshot.after or l_found
 				loop
-					if internal_tabs.item.is_hot  then
+					l_item := l_snapshot.item
+					if l_item.is_hot  then
 						l_found := True
-						internal_tabs.item.on_pointer_leave
+						l_item.on_pointer_leave
 					end
-					if internal_tabs.islast and l_found = False then
-						internal_tabs.item.on_pointer_leave
+					if l_snapshot.islast and l_found = False then
+						l_item.on_pointer_leave
 					end
-					internal_tabs.forth
+					l_snapshot.forth
 				end
 			end
 		ensure
@@ -358,16 +382,21 @@ feature -- Implementation
 			--  Tab at `a_x' which is relative position
 		require
 			valid: a_x >= 0 and a_x <= width
+		local
+			l_snapshot: like internal_tabs
+			l_item: SD_NOTEBOOK_TAB
 		do
 			from
-				internal_tabs.start
+				l_snapshot := internal_tabs
+				l_snapshot.start
 			until
-				internal_tabs.after or Result /= Void
+				l_snapshot.after or Result /= Void
 			loop
-				if item_x (internal_tabs.item) <= a_x and a_x <= item_x (internal_tabs.item) + internal_tabs.item.width then
-					Result := internal_tabs.item
+				l_item := l_snapshot.item
+				if item_x (l_item) <= a_x and a_x <= item_x (l_item) + l_item.width then
+					Result := l_item
 				end
-				internal_tabs.forth
+				l_snapshot.forth
 			end
 		ensure
 			not_void: Result /= Void

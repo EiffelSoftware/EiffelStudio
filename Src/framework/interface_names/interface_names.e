@@ -650,7 +650,7 @@ feature -- Label texts
 		do
 			Result := locale.format_string (locale.translate("The class $1 is not writable."), [a_class])
 		end
-	l_class_is_not_editable: STRING_GENERAL is	do Result := locale.translate ("Class is note editable.%N") end
+	l_class_is_not_editable: STRING_GENERAL is	do Result := locale.translate ("Class is not editable.%N") end
 	l_class_is_not_in_anymore (a_class_name, a_group_id: STRING): STRING is
 		do
 			Result := "Class " + a_class_name + " is not in " + a_group_id + " anymore."
@@ -727,7 +727,7 @@ feature -- Label texts
 								%Cancel C compilation, terminate external command and exit?%N")	end
 	l_c_compilation_running: STRING_GENERAL is
 		do Result := locale.translate("A C Compilation is currently running.%N%
-								%It need to be terminated before EiffelStudio can exist.%N%N%
+								%It needs to be terminated before EiffelStudio can exist.%N%N%
 								%Cancel C compilation and exit?%N")	end
 	l_external_command_running: STRING_GENERAL is
 		do Result := locale.translate("An external command is currently running.%N%
@@ -1361,8 +1361,7 @@ feature -- Label texts
 	l_save_layout_name: STRING_GENERAL is do Result := locale.translate ("Enter or select a name to save the current layout as.") end
 	l_layout_name: STRING_GENERAL is do Result := locale.translate ("Name:") end
 	l_existing_layout_names: STRING_GENERAL is do Result := locale.translate ("Existing Layouts:") end
-	l_overwrite_layout: STRING_GENERAL is do Result := locale.translate ("A layout with the name '") end
-	l_overwrite_layout_2: STRING_GENERAL is do Result := locale.translate ("' already exists. Do you want to overwrite?") end
+	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
 
 feature -- Label text, no translation (for the editor)

@@ -112,7 +112,7 @@
 	<PREF NAME="tools.metric_tool.keep_metric_detailed_result" DESCRIPTION="Keep metric detailed result?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>	
-	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;196;181</COLOR></PREF>	
+	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>	
 
 	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locates?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>

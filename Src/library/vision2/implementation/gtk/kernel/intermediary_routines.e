@@ -20,7 +20,7 @@ feature -- Timeout intermediary agent routine
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
 			a_timeout_imp ?= eif_id_object (a_object_id)
-			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.is_timeout_executing then
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.is_timeout_executing and then a_timeout_imp.interval > 0 then
 					-- Timeout may possibly have been gc'ed.
 				a_timeout_imp.app_implementation.do_once_on_idle (agent a_timeout_imp.on_timeout)
 					-- We call timeout action on idle as not giving back gtk control from a timeout

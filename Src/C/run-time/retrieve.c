@@ -2339,8 +2339,8 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 		count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) new_obj;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
 			l_item++;
 			count--;
 			for (; count > 0; count--, l_item++) {
@@ -5014,10 +5014,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	}
 
 	l_item = (EIF_TYPED_ELEMENT *) addr;
-		/* Don't forget that first element of TUPLE is just a placeholder
-		 * to avoid offset computation from Eiffel code */
-	l_item++;
-	count--;
+		/* Don't forget that first element of TUPLE is the BOOLEAN
+		 * `object_comparison' attribute. */
 	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
 		for (; count > 0; count--, l_item++) {
 			ridr_multi_char(&l_type, 1);

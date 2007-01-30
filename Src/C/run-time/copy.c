@@ -425,16 +425,13 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) clone;
 			EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
-			l_target++;
-			l_source++;
-			count--;
-			for (; count > 0; count--, l_target++, l_source++) {
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
+			for (offset = 0; count > 0; count--, l_target++, l_source++, offset +=sizeof(EIF_TYPED_ELEMENT)) {
 				if (eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) {
 					c_field = eif_reference_tuple_item(l_target);
 					if (c_field) {
-						rdeepclone(c_field, (EIF_REFERENCE) &eif_reference_tuple_item(l_target), 0);
+						rdeepclone(c_field, clone, offset);
 					}
 				}
 			}

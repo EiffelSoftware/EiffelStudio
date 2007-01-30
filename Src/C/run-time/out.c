@@ -553,6 +553,8 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 
 	REQUIRE("Is tuple", HEADER(object)->ov_flags & EO_TUPLE);
 
+		/* Don't forget that first element of TUPLE is the BOOLEAN
+		 * `object_comparison' attribute which we don't print here. */
 	for (; i < count; i++) {
 		write_tab(tab + 1);
 		sprintf(buffero, "%ld: ", (long) i);

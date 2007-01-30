@@ -1068,8 +1068,9 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 			zone->ov_flags |= EO_REF;
 		}
 			/* Initialize type information held in TUPLE instance*/
-			/* Don't forget that first element of TUPLE is just a placeholder
-			 * to avoid offset computation from Eiffel code */
+			/* Don't forget that first element of TUPLE is the BOOLEAN
+			 * `object_comparison' attribute. */
+		l_item->type = EIF_BOOLEAN_CODE;
 		l_item++;
 		for (i = 1; i < count; i++,l_item++) {
 			l_item->type = eif_gen_typecode_with_dftype((int16)ftype, i);

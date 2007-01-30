@@ -340,8 +340,8 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
 			l_item++;
 			count--;
 			for (; count > 0; count--, l_item++) {
@@ -898,8 +898,8 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
 			l_item++;
 			count = RT_SPECIAL_COUNT(object) - 1;
 			for (; count > 0; count--, l_item++) {
@@ -998,8 +998,8 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
 			l_item++;
 			count--;
 			for (; count > 0; count--, l_item++) {

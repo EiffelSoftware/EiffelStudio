@@ -244,8 +244,8 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			count = RT_SPECIAL_COUNT_WITH_INFO (o_ptr);
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
-					/* Don't forget that first element of TUPLE is just a placeholder
-					 * to avoid offset computation from Eiffel code */
+					/* Don't forget that first element of TUPLE is the BOOLEAN
+					 * `object_comparison' attribute. */
 				l_item++;
 				count--;
 				for (; count > 0; count--, l_item++) {

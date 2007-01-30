@@ -283,11 +283,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	if (s_flags & EO_TUPLE) {
 		EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
 		EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) target;
-			/* Don't forget that first element of TUPLE is just a placeholder
-			 * to avoid offset computation from Eiffel code */
-		l_source++;
-		l_target++;
-		count--;
+			/* Don't forget that first element of TUPLE is the BOOLEAN
+			 * `object_comparison' attribute. */
 		for (; count > 0; count--, l_source++, l_target++) {
 			if
 				((eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) &&
@@ -421,11 +418,8 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 		if (flags & EO_TUPLE) {
 			EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
 			EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) target;
-				/* Don't forget that first element of TUPLE is just a placeholder
-				 * to avoid offset computation from Eiffel code */
-			l_source++;
-			l_target++;
-			count--;
+				/* Don't forget that first element of TUPLE is the BOOLEAN
+				 * `object_comparison' attribute. */
 			for (; count > 0; count--, l_source++, l_target++) {
 				if
 					((eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) &&

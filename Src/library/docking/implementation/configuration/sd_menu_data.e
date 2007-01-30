@@ -81,6 +81,7 @@ feature -- Docking datas
 			a_title_not_void: a_title /= Void
 		local
 			l_row_data: like tool_bar_data
+			l_item: TUPLE [title: STRING_GENERAL]
 		do
 			from
 				rows.start
@@ -93,7 +94,8 @@ feature -- Docking datas
 				until
 					l_row_data.after or Result /= Void
 				loop
-					if (l_row_data.item @ 1).is_equal (a_title) then
+					l_item := l_row_data.item
+					if l_item.title.is_equal (a_title) then
 						Result := l_row_data
 					end
 

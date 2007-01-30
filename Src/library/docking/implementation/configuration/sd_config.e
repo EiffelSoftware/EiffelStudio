@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature {NONE} -- Initlization
+feature {NONE} -- Initialization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
@@ -83,6 +83,7 @@ feature -- Save/Open inner container data.
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_called: BOOLEAN
 			l_retried: BOOLEAN
+			l_cmd: SD_DOCKING_MANAGER_COMMAND
 		do
 			internal_docking_manager.property.set_is_opening_config (True)
 			if not l_retried then
@@ -114,11 +115,12 @@ feature -- Save/Open inner container data.
 
 					l_file.close
 
-					internal_docking_manager.command.resize (True)
-					internal_docking_manager.command.remove_empty_split_area
-					internal_docking_manager.command.update_title_bar
-					internal_docking_manager.command.remove_auto_hide_zones (False)
-					internal_docking_manager.command.unlock_update
+					l_cmd := internal_docking_manager.command
+					l_cmd.resize (True)
+					l_cmd.remove_empty_split_area
+					l_cmd.update_title_bar
+					l_cmd.remove_auto_hide_zones (False)
+					l_cmd.unlock_update
 					Result := True
 				end
 			end
@@ -524,8 +526,10 @@ feature {NONE} -- Implementation for save config.
 		local
 			l_tool_bar_data: SD_TOOL_BAR_DATA
 			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
+			l_float_tool_bars_item: SD_FLOATING_TOOL_BAR_ZONE
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
+			l_tool_bar_contents_item: SD_TOOL_BAR_CONTENT
 		do
 			-- Top
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.top)
@@ -547,12 +551,13 @@ feature {NONE} -- Implementation for save config.
 			until
 				l_float_tool_bars.after
 			loop
-				l_tool_bar_zone := l_float_tool_bars.item.zone
+				l_float_tool_bars_item := l_float_tool_bars.item
+				l_tool_bar_zone := l_float_tool_bars_item.zone
 				create l_tool_bar_data.make
 				l_tool_bar_data.set_floating (True)
 				l_tool_bar_data.set_title (l_tool_bar_zone.content.title)
-				l_tool_bar_data.set_screen_x_y (l_float_tool_bars.item.screen_x, l_float_tool_bars.item.screen_y)
-				l_tool_bar_data.set_last_state (l_float_tool_bars.item.zone.assistant.last_state)
+				l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
+				l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
 				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
 				a_tool_bar_datas.extend (l_tool_bar_data)
 				l_float_tool_bars.forth
@@ -565,14 +570,18 @@ feature {NONE} -- Implementation for save config.
 			until
 				l_tool_bar_contents.after
 			loop
-				if not l_tool_bar_contents.item.is_visible then
+				l_tool_bar_contents_item := l_tool_bar_contents.item
+				if not l_tool_bar_contents_item.is_visible then
 					create l_tool_bar_data.make
 					l_tool_bar_data.set_visible (False)
 					l_tool_bar_data.set_floating (False)
-					l_tool_bar_data.set_title (l_tool_bar_contents.item.title)
+					l_tool_bar_data.set_title (l_tool_bar_contents_item.title)
 
-					if l_tool_bar_contents.item.zone /= Void and then l_tool_bar_contents.item.zone.assistant.last_state /= Void then
-						l_tool_bar_data.set_last_state (l_tool_bar_contents.item.zone.assistant.last_state)
+					if
+						l_tool_bar_contents_item.zone /= Void
+						and then l_tool_bar_contents_item.zone.assistant.last_state /= Void
+					then
+						l_tool_bar_data.set_last_state (l_tool_bar_contents_item.zone.assistant.last_state)
 					end
 					a_tool_bar_datas.extend (l_tool_bar_data)
 				end
@@ -588,6 +597,7 @@ feature {NONE} -- Implementation for save config.
 			l_tool_bar_area: EV_CONTAINER
 			l_rows: LINEAR [EV_WIDGET]
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar: SD_TOOL_BAR_ROW
 			l_row_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 		do
@@ -609,7 +619,8 @@ feature {NONE} -- Implementation for save config.
 				until
 					l_tool_bars.after
 				loop
-					l_row_data.extend ([l_tool_bars.item_for_iteration.content.title, l_tool_bars.item_for_iteration.position, l_tool_bars.item_for_iteration.assistant.last_state])
+					l_zone := l_tool_bars.item_for_iteration
+					l_row_data.extend ([l_zone.content.title, l_zone.position, l_zone.assistant.last_state])
 					l_tool_bars.forth
 				end
 				l_rows.forth
@@ -702,6 +713,7 @@ feature {NONE} -- Implementation for open config.
 			container_not_full: not internal_docking_manager.query.inner_container_main.full
 		local
 			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+			l_datas_item: SD_INNER_CONTAINER_DATA
 			l_split: EV_SPLIT_AREA
 			l_floating_state: SD_FLOATING_STATE
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -712,17 +724,18 @@ feature {NONE} -- Implementation for open config.
 			until
 				l_datas.after
 			loop
+				l_datas_item := l_datas.item
 				if l_datas.index = 1 then
-					if l_datas.item /= Void then
-						open_inner_container_data (l_datas.item, internal_docking_manager.query.inner_container_main)
+					if l_datas_item /= Void then
+						open_inner_container_data (l_datas_item, internal_docking_manager.query.inner_container_main)
 					end
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
-					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager, l_datas.item.is_visible)
-					l_floating_state.set_last_floating_height (l_datas.item.height)
-					l_floating_state.set_last_floating_width (l_datas.item.width)
-					l_floating_state.set_size (l_datas.item.width, l_datas.item.height)
-					open_inner_container_data (l_datas.item, l_floating_state.inner_container)
+					create l_floating_state.make (l_datas_item.screen_x, l_datas_item.screen_y, internal_docking_manager, l_datas_item.is_visible)
+					l_floating_state.set_last_floating_height (l_datas_item.height)
+					l_floating_state.set_last_floating_width (l_datas_item.width)
+					l_floating_state.set_size (l_datas_item.width, l_datas_item.height)
+					open_inner_container_data (l_datas_item, l_floating_state.inner_container)
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
@@ -730,7 +743,7 @@ feature {NONE} -- Implementation for open config.
 					l_split ?= l_multi_dock_area.item
 				end
 				if l_split /= Void then
-					open_inner_container_data_split_position (l_datas.item, l_split)
+					open_inner_container_data_split_position (l_datas_item, l_split)
 				end
 				l_datas.forth
 			end
@@ -756,11 +769,14 @@ feature {NONE} -- Implementation for open config.
 
 	clean_up_tool_bar_containers is
 			-- Wipe out all tool bar containers.
+		local
+			l_cont: SD_TOOL_BAR_CONTAINER
 		do
-			internal_docking_manager.tool_bar_container.top.wipe_out
-			internal_docking_manager.tool_bar_container.bottom.wipe_out
-			internal_docking_manager.tool_bar_container.left.wipe_out
-			internal_docking_manager.tool_bar_container.right.wipe_out
+			l_cont := internal_docking_manager.tool_bar_container
+			l_cont.top.wipe_out
+			l_cont.bottom.wipe_out
+			l_cont.left.wipe_out
+			l_cont.right.wipe_out
 		end
 
 	clear_up_containers is
@@ -768,8 +784,11 @@ feature {NONE} -- Implementation for open config.
 		local
 			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
+			l_parent: EV_CONTAINER
 			l_floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_query: SD_DOCKING_MANAGER_QUERY
 		do
 			internal_docking_manager.command.remove_auto_hide_zones (False)
 			l_all_main_containers := internal_docking_manager.inner_containers
@@ -787,34 +806,35 @@ feature {NONE} -- Implementation for open config.
 			end
 
 			-- Remove auto hide panel widgets.
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).tab_stubs.wipe_out
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).set_minimum_height (0)
+			l_query := internal_docking_manager.query
+			l_query.auto_hide_panel ({SD_ENUMERATION}.top).tab_stubs.wipe_out
+			l_query.auto_hide_panel ({SD_ENUMERATION}.top).set_minimum_height (0)
 
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).tab_stubs.wipe_out
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_minimum_height (0)
+			l_query.auto_hide_panel ({SD_ENUMERATION}.bottom).tab_stubs.wipe_out
+			l_query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_minimum_height (0)
 
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.left).tab_stubs.wipe_out
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.left).set_minimum_width (0)
+			l_query.auto_hide_panel ({SD_ENUMERATION}.left).tab_stubs.wipe_out
+			l_query.auto_hide_panel ({SD_ENUMERATION}.left).set_minimum_width (0)
 
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.right).tab_stubs.wipe_out
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.right).set_minimum_width (0)
+			l_query.auto_hide_panel ({SD_ENUMERATION}.right).tab_stubs.wipe_out
+			l_query.auto_hide_panel ({SD_ENUMERATION}.right).set_minimum_width (0)
 
+			l_zones := internal_docking_manager.zones.zones
 			if top_container /= Void then
 				-- We are only restore tools datas now.
-				from
-					l_zones := internal_docking_manager.zones.zones.twin
-					l_zones.start
-				until
-					l_zones.after
-				loop
-					if l_zones.item.content.type /= {SD_ENUMERATION}.editor then
-						internal_docking_manager.zones.zones.start
-						internal_docking_manager.zones.zones.prune (l_zones.item)
-					end
-					l_zones.forth
-				end
+                from
+                    l_zones.start
+                until
+                    l_zones.after
+                loop
+                    if l_zones.item.content.type /= {SD_ENUMERATION}.editor then
+                    	l_zones.remove
+					else
+                    	l_zones.forth
+                    end
+                end
 			else
-				internal_docking_manager.zones.zones.wipe_out
+				l_zones.wipe_out
 			end
 
 			-- Remove tool bar containers
@@ -838,16 +858,18 @@ feature {NONE} -- Implementation for open config.
 			until
 				l_all_contents.after
 			loop
+				l_content := l_all_contents.item
+				l_parent := l_content.user_widget.parent
 				if top_container /= Void then
 					-- We only restore tools config now.
-					if l_all_contents.item.type /= {SD_ENUMERATION}.editor then
-						if l_all_contents.item.user_widget.parent /= Void then
-							l_all_contents.item.user_widget.parent.prune_all (l_all_contents.item.user_widget)
+					if l_content.type /= {SD_ENUMERATION}.editor then
+						if l_parent /= Void then
+							l_parent.prune_all (l_content.user_widget)
 						end
 					end
 				else
-					if l_all_contents.item.user_widget.parent /= Void then
-						l_all_contents.item.user_widget.parent.prune_all (l_all_contents.item.user_widget)
+					if l_parent /= Void then
+						l_parent.prune_all (l_content.user_widget)
 					end
 				end
 
@@ -905,6 +927,7 @@ feature {NONE} -- Implementation for open config.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_content: SD_CONTENT
+			l_parent: EV_CONTAINER
 			l_place_holder_widget: EV_WIDGET
 		do
 			l_contents := internal_docking_manager.contents
@@ -915,8 +938,9 @@ feature {NONE} -- Implementation for open config.
 			loop
 				l_content := l_contents.item
 				if l_content.type = {SD_ENUMERATION}.editor then
-					if l_content.user_widget.parent /= Void	then
-						l_content.user_widget.parent.prune (l_content.user_widget)
+					l_parent := l_content.user_widget.parent
+					if l_parent /= Void	then
+						l_parent.prune (l_content.user_widget)
 					end
 					-- Maybe uesr_widget is hidden because minimize.
 					l_content.user_widget.show
@@ -924,8 +948,11 @@ feature {NONE} -- Implementation for open config.
 				l_contents.forth
 			end
 			l_place_holder_widget := internal_docking_manager.zones.place_holder_content.user_widget
-			if l_place_holder_widget /= Void and then l_place_holder_widget.parent /= Void then
-				l_place_holder_widget.parent.prune (l_place_holder_widget)
+			if l_place_holder_widget /= Void then
+				l_parent := l_place_holder_widget.parent
+				if l_parent /= Void then
+					l_parent.prune (l_place_holder_widget)
+				end
 			end
 		end
 
@@ -1074,7 +1101,8 @@ feature {NONE} -- Implementation for open config.
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: SD_CONTENT
 			l_panel: SD_AUTO_HIDE_PANEL
-			l_list: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER]]
+			l_list: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
+			l_list_item: TUPLE [title: STRING_GENERAL; wh: INTEGER; w: INTEGER; h:INTEGER]
 			l_list_for_state: ARRAYED_LIST [STRING_GENERAL]
 			l_tab_group: ARRAYED_LIST [SD_CONTENT]
 			l_temp_data: SD_INNER_CONTAINER_DATA
@@ -1095,27 +1123,29 @@ feature {NONE} -- Implementation for open config.
 					until
 						l_list.after
 					loop
-						l_list_for_state.extend ((l_list.item[1]).out)
+						l_list_item := l_list.item
+						l_list_for_state.extend (l_list_item.title.twin)
 						l_list.forth
 					end
 					l_list.start
 				until
 					l_list.after
 				loop
-					l_string ?= l_list.item[1]
+					l_list_item := l_list.item
+					l_string := l_list_item.title
 					check not_void: l_string /= Void end
 					l_content := internal_docking_manager.query.content_by_title_for_restore (l_string)
 					-- If we don't find SD_CONTENT last saved, ignore it.
 					if l_content /= Void then
 						l_content.set_visible (True)
 						create l_auto_hide_state.make (l_content, a_direction)
-						l_auto_hide_state.set_last_floating_width (l_list.item.integer_32_item (3))
-						l_auto_hide_state.set_last_floating_height (l_list.item.integer_32_item (4))
+						l_auto_hide_state.set_last_floating_width (l_list_item.w)
+						l_auto_hide_state.set_last_floating_height (l_list_item.h)
 						create l_temp_data
 						l_temp_data.set_titles (l_list_for_state)
 						l_temp_data.set_direction (a_direction)
 						l_auto_hide_state.restore (l_temp_data, l_panel)
-						l_auto_hide_state.set_width_height (l_list.item.integer_32_item (2))
+						l_auto_hide_state.set_width_height (l_list_item.wh)
 						l_tab_group.extend (l_content)
 					end
 					l_list.forth
@@ -1134,8 +1164,10 @@ feature {NONE} -- Implementation for open config.
 		require
 			a_tool_bar_datas_not_void: a_tool_bar_datas /= Void
 		local
+			l_data: SD_TOOL_BAR_DATA
 			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_content: SD_TOOL_BAR_CONTENT
+			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
 			-- Top
 			a_tool_bar_datas.start
@@ -1154,17 +1186,19 @@ feature {NONE} -- Implementation for open config.
 			from
 				a_tool_bar_datas.forth
 			until
-				a_tool_bar_datas.after or not a_tool_bar_datas.item.is_floating
+				a_tool_bar_datas.after or else not a_tool_bar_datas.item.is_floating
 			loop
-				check is_floating_tool_bar_data: a_tool_bar_datas.item.is_floating end
-				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
+				l_data := a_tool_bar_datas.item
+				check is_floating_tool_bar_data: l_data.is_floating end
+				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
 				create l_tool_bar.make (False, internal_docking_manager, False)
 				l_tool_bar.extend (l_content)
-				l_tool_bar.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y, a_tool_bar_datas.item.is_visible)
-				l_content.set_visible (a_tool_bar_datas.item.is_visible)
-				l_tool_bar.assistant.set_last_state (a_tool_bar_datas.item.last_state)
-				if a_tool_bar_datas.item.last_state.floating_group_info /= Void then
-					l_tool_bar.floating_tool_bar.assistant.position_groups (a_tool_bar_datas.item.last_state.floating_group_info)
+				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
+				l_content.set_visible (l_data.is_visible)
+				l_state := l_data.last_state
+				l_tool_bar.assistant.set_last_state (l_state)
+				if l_state.floating_group_info /= Void then
+					l_tool_bar.floating_tool_bar.assistant.position_groups (l_state.floating_group_info)
 				end
 				a_tool_bar_datas.forth
 			end
@@ -1174,18 +1208,21 @@ feature {NONE} -- Implementation for open config.
 			until
 				a_tool_bar_datas.after
 			loop
-				check is_hidden_docking: not a_tool_bar_datas.item.is_floating and not a_tool_bar_datas.item.is_visible end
-				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
-				if a_tool_bar_datas.item.last_state /= Void then
-					create l_tool_bar.make (a_tool_bar_datas.item.last_state.is_vertical, internal_docking_manager, False)
+				l_data := a_tool_bar_datas.item
+				check is_hidden_docking: not l_data.is_floating and not l_data.is_visible end
+				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
+				l_state := l_data.last_state
+				if l_state /= Void then
+					create l_tool_bar.make (l_state.is_vertical, internal_docking_manager, False)
 				else
 					create l_tool_bar.make (False, internal_docking_manager, False)
 				end
 				l_tool_bar.extend (l_content)
 				l_content.set_zone (l_tool_bar)
 				l_content.set_visible (False)
-				if a_tool_bar_datas.item.last_state /= Void and then a_tool_bar_datas.item.last_state.is_docking_state_recorded then
-					l_content.zone.assistant.set_last_state (a_tool_bar_datas.item.last_state)
+				l_state := l_data.last_state
+				if l_state /= Void and then l_state.is_docking_state_recorded then
+					l_content.zone.assistant.set_last_state (l_state)
 				end
 				a_tool_bar_datas.forth
 			end
@@ -1200,7 +1237,8 @@ feature {NONE} -- Implementation for open config.
 		local
 			l_tool_bar_container: EV_CONTAINER
 			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]]
-			l_row: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER]]
+			l_row: ARRAYED_LIST [TUPLE [STRING_GENERAL,INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+			l_row_item: TUPLE [title: STRING_GENERAL; pos: INTEGER; state: SD_TOOL_BAR_ZONE_STATE]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
@@ -1227,13 +1265,14 @@ feature {NONE} -- Implementation for open config.
 				until
 					l_row.after
 				loop
-					l_string ?= l_row.item @ 1
+					l_row_item := l_row.item
+					l_string := l_row_item.title
 					check not_void: l_string /= Void end
 					l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_string)
 					check l_content_not_void: l_content /= Void end
 					create l_tool_bar_zone.make (False, internal_docking_manager, False)
 
-					l_state ?= l_row.item.item (3)
+					l_state ?= l_row_item.state
 					check not_void: l_state /= Void end
 					l_tool_bar_zone.assistant.set_last_state (l_state)
 
@@ -1247,7 +1286,7 @@ feature {NONE} -- Implementation for open config.
 
 					l_tool_bar_row.extend (l_tool_bar_zone)
 					l_tool_bar_row.record_state
-					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone.tool_bar, l_row.item.integer_32_item (2))
+					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone.tool_bar, l_row_item.pos)
 					l_tool_bar_zone.assistant.record_docking_state
 					l_row.forth
 				end
@@ -1274,10 +1313,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

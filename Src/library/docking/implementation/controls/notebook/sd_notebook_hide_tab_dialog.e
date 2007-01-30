@@ -69,7 +69,7 @@ feature {NONE}  -- Initlization
 		ensure
 			set: internal_notebook = a_note_book
 			extended: has_dialog (top_box) and internal_vertical_box.has (internal_text_box)
-				and internal_vertical_box.has (internal_tool_bar)
+				and internal_vertical_box.has (internal_scroll_area) and internal_scroll_area.has (internal_tool_bar)
 		end
 
 feature -- Command

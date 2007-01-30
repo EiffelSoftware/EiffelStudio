@@ -364,7 +364,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_gtk_window_imp: EV_GTK_WINDOW_IMP is
 			-- Window implementation that `Current' is contained within (if any)
 		local
 			wind_ptr: POINTER
@@ -373,6 +373,12 @@ feature {EV_ANY_I} -- Implementation
 			if wind_ptr /= NULL then
 				Result ?= eif_object_from_c (wind_ptr)
 			end
+		end		
+
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window implementation that `Current' is contained within (if any)
+		do
+			Result ?= top_level_gtk_window_imp
 		end
 
 	top_level_window: EV_WINDOW is
@@ -380,7 +386,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			a_window_imp: EV_WINDOW_IMP
 		do
-			a_window_imp := top_level_window_imp
+			a_window_imp ?= top_level_gtk_window_imp
 			if a_window_imp /= Void then
 				Result := a_window_imp.interface
 			end

@@ -46,7 +46,7 @@ feature{NONE} -- C externals
 				}
 				if (GdipCreateSolidFill) {
 					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (ARGB, GpSolidFill **)) GdipCreateSolidFill)
-								((ARGB *) $a_gdip_color,
+								((ARGB) $a_gdip_color,
 								(GpSolidFill **) &l_result);
 				}				
 				return (EIF_POINTER) l_result;

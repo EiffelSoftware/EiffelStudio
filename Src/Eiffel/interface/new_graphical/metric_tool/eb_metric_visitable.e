@@ -28,12 +28,13 @@ feature -- Access
 			a_callback_attached: a_callback /= Void
 		local
 			l_xml_writer: EB_METRIC_XML_WRITER
+			l_error: EB_METRIC_ERROR
 		do
 			a_callback.set_first_parsed_node (Void)
 			create l_xml_writer.make
 			l_xml_writer.append_text (Current)
-			parse_from_string (l_xml_writer.text, a_callback)
-			if not a_callback.has_error then
+			l_error := parse_from_string (l_xml_writer.text, a_callback)
+			if l_error = Void then
 				Result ?= a_callback.first_parsed_node
 			end
 		end

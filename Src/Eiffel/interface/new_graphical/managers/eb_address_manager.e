@@ -69,6 +69,8 @@ feature {NONE} -- Initialization
 			enable_accept_general_group
 				-- Create the widget.
 			build_interface
+
+			create label_changed_actions
 		end
 
 	build_interface is
@@ -310,6 +312,9 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	label_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Label text change actions.
 
 feature -- Status report
 
@@ -2218,6 +2223,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					end
 				end
 			end
+			label_changed_actions.call ([])
 		end
 
 	update_combos is

@@ -142,6 +142,14 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := metric_information_in_result_panel_preference.value
 		end
 
+	highlight_background_color: EV_COLOR is
+			-- Background color for highlighted text or grid row
+		do
+			Result := highlight_background_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Setting
 
 	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
@@ -189,6 +197,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	check_warning_preference: BOOLEAN_PREFERENCE
 	warning_background_color_preference: COLOR_PREFERENCE
 	metric_information_in_result_panel_preference: BOOLEAN_PREFERENCE
+	highlight_background_color_preference: COLOR_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -208,6 +217,7 @@ feature {NONE} -- Preference Strings
 	check_warning_string: STRING is "tools.metric_tool.check_defined_warning"
 	warning_background_color_string: STRING is "tools.metric_tool.warning_background_color"
 	metric_information_in_result_panel_string: STRING is "tools.metric_tool.maximize_metric_result_area"
+	highlight_background_color_string: STRING is "tools.metric_tool.highlight_background_color"
 
 feature {NONE} -- Implementation
 
@@ -236,8 +246,9 @@ feature {NONE} -- Implementation
 			keep_archive_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_archive_detailed_result_string, False)
 			keep_metric_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_metric_detailed_result_string, True)
 			check_warning_preference := l_manager.new_boolean_preference_value (l_manager, check_warning_string, False)
-			warning_background_color_preference := l_manager.new_color_preference_value (l_manager, warning_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (253, 196, 181))
+			warning_background_color_preference := l_manager.new_color_preference_value (l_manager, warning_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (253, 209, 199))
 			metric_information_in_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, metric_information_in_result_panel_string, True)
+			highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, highlight_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
 		end
 
 	preferences: PREFERENCES

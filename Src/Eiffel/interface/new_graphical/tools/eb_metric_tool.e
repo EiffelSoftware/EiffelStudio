@@ -120,6 +120,7 @@ feature -- Actions
 				end
 				set_is_shown (True)
 				on_tab_change
+				set_title (Void)
 			end
 		end
 
@@ -567,6 +568,18 @@ feature{NONE} -- Implementation
 
 feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 
+	is_tool_opened: BOOLEAN is
+			-- Is Current tool opened?
+		do
+			Result := content.is_visible
+		end
+
+	is_tool_visible: BOOLEAN is
+			-- Is Current tool visible?
+		do
+			Result := widget.is_displayed
+		end
+
 	set_title (a_result: STRING_GENERAL) is
 			-- Set title of Current tool.
 			-- If `a_result' is not Void, display it on title.
@@ -574,10 +587,12 @@ feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 			l_name: STRING_32
 		do
 			l_name := interface_names.t_metric_tool.as_string_32
-			if a_result /= Void then
-				l_name.append (ti_l_parenthesis.as_string_32)
-				l_name.append (a_result.as_string_32)
-				l_name.append (ti_r_parenthesis.as_string_32)
+			if is_tool_opened and then not is_tool_visible then
+				if a_result /= Void then
+					l_name.append (ti_l_parenthesis.as_string_32)
+					l_name.append (a_result.as_string_32)
+					l_name.append (ti_r_parenthesis.as_string_32)
+				end
 			end
 			content.set_short_title (l_name)
 		end

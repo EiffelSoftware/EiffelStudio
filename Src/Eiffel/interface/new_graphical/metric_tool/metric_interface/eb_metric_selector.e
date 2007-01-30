@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			else
 				create selection_status.make (0)
 			end
+			create expansion_status.make (12)
 			create metric_name_list.make
 			create metric_name_row_table.make (30)
 			create input_cache.make (20)
@@ -62,6 +63,7 @@ feature {NONE} -- Initialization
 			create delayed_timeout.make (agent delayed_search_metric, 10)
 			default_create
 			enable_tooltip_contain_go_to_definition_message
+			set_should_unit_be_expanded (False)
 		ensure
 			is_selectable_set: is_selectable = a_selectable
 			metric_name_list_attached: metric_name_list /= Void
@@ -256,6 +258,10 @@ feature -- Status report
 	should_tooltip_contain_go_to_definition_message: BOOLEAN
 			-- Should tooltip of metric contain "go to definition" message?
 			-- Default: True
+
+	should_unit_be_expanded: BOOLEAN
+			-- Should unit be expanded?
+			-- Default: False
 
 feature{NONE} -- Actions
 
@@ -538,6 +544,14 @@ feature -- setting
 			invalid_metric_selection_disabled: not should_invalid_metric_be_selected
 		end
 
+	set_should_unit_be_expanded (b: BOOLEAN) is
+			-- Set `should_unit_be_expanded' with `b'.
+		do
+			should_unit_be_expanded := b
+		ensure
+			should_unit_be_expanded_set: should_unit_be_expanded = b
+		end
+
 feature -- Basic operations
 
 	select_metric (a_name: STRING) is
@@ -668,6 +682,7 @@ feature -- Metric management
 			l_unit: QL_METRIC_UNIT
 			l_unit_row_list: like unit_row_list
 		do
+			store_expansion_status
 			l_unit_row_list := unit_row_list
 			l_unit_row_list.wipe_out
 			if metric_grid.row_count > 0 then
@@ -692,7 +707,10 @@ feature -- Metric management
 						l_row.set_data (l_unit)
 						l_unit_row_list.extend (l_row)
 						l_metric_list.do_all (agent load_metric (?, l_row))
-						if l_row.is_expandable then
+						if
+							l_row.is_expandable and then
+							(should_unit_be_expanded or else (expansion_status.has (l_unit) and then expansion_status.item (l_unit)))
+						then
 							l_row.expand
 						end
 					end
@@ -1083,6 +1101,43 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	store_expansion_status is
+			-- Store expansion status of every unit in Current selector into `expansion_status'.
+		local
+			l_unit_rows: like unit_row_list
+			l_row: EV_GRID_ROW
+			l_expansion_status: like expansion_status
+			l_unit: QL_METRIC_UNIT
+		do
+			l_expansion_status := expansion_status
+			l_expansion_status.wipe_out
+			if tree_view_checkbox.is_selected then
+				l_unit_rows := unit_row_list
+				from
+					l_unit_rows.start
+				until
+					l_unit_rows.after
+				loop
+					l_row := l_unit_rows.item
+					if l_row /= Void and then l_row.parent = metric_grid then
+						l_unit ?= l_row.data
+						if l_unit /= Void then
+							l_expansion_status.put (l_row.is_expandable and then l_row.is_expanded, l_unit)
+						end
+					end
+					l_unit_rows.forth
+				end
+			end
+		end
+
+	expansion_status: HASH_TABLE [BOOLEAN, QL_METRIC_UNIT]
+			-- Expansion status for every unit lised in Current selector.
+			-- Indexed by metric unit. If value is True, means that the grid row for that unit is expaned
+			-- when last time expansion status is checked.
+
+	cached_key_field_window: EV_POPUP_WINDOW
+			-- Popup window to display `cached_key_field'			
+
 feature{NONE} -- Key shortcuts
 
 	move_unit_up_key_shortcut: ES_KEY_SHORTCUT
@@ -1103,6 +1158,7 @@ invariant
 	input_cache_attached: input_cache /= Void
 	unit_row_list_attached: unit_row_list /= Void
 	delayed_timeout_attached: delayed_timeout /= Void
+	expansion_status_attached: expansion_status /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

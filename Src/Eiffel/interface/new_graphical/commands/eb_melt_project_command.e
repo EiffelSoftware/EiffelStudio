@@ -234,12 +234,17 @@ feature -- Execution
 
 	execute is
 			-- Recompile the project, start C compilation if necessarry.
+		local
+			l_content: SD_CONTENT
 		do
 			if is_sensitive then
 				if process_manager.is_c_compilation_running then
 					process_manager.confirm_process_termination (agent go_on_compile, Void, window_manager.last_focused_development_window.window)
 				else
-					window_manager.last_focused_development_window.tools.output_tool.content.set_focus
+					l_content := window_manager.last_focused_development_window.tools.output_tool.content
+					if preferences.development_window_data.output_tool_prompted then
+						l_content.set_focus
+					end
 					go_on_compile
 				end
 			end

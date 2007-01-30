@@ -11,6 +11,9 @@ class
 
 inherit
 	WEL_GDIP_ANY
+		redefine
+			destroy_item
+		end
 
 create
 	make
@@ -25,6 +28,24 @@ feature{NONE} -- Initlization
 			default_create
 			item := c_gdip_string_format_get_generic_default (gdi_plus_handle, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+feature -- Destroy
+
+	destroy_item is
+			-- Free Current Gdi+ object memory.
+		local
+			l_null: POINTER
+			l_result: INTEGER
+		do
+			check
+				item_valid: item /= l_null implies gdi_plus_handle /= l_null
+			end
+			if gdi_plus_handle /= l_null then
+				l_result := c_gdip_delete_string_format (gdi_plus_handle, item)
+				check ok: l_result = {WEL_GDIP_STATUS}.ok end
+				item := default_pointer
+			end
 		end
 
 feature{NONE} -- C externals
@@ -50,6 +71,30 @@ feature{NONE} -- C externals
 								((GpStringFormat  **) &l_result);
 				}
 				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
+	c_gdip_delete_string_format (a_gdiplus_handle, a_format: POINTER): INTEGER is
+			-- Get default
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDeleteStringFormat = NULL;
+				EIF_INTEGER Result = 1;
+				
+				if (!GdipDeleteStringFormat) {
+					GdipDeleteStringFormat = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDeleteStringFormat");
+				}
+				if (GdipDeleteStringFormat) {
+					Result = (EIF_INTEGER) (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpStringFormat  *)) GdipDeleteStringFormat)
+								((GpStringFormat  *) $a_format);
+				}
+				return Result;
 			}
 			]"
 		end

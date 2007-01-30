@@ -61,6 +61,7 @@ feature {NONE}-- Initialization
 			create result_grid_holder
 			create l_ev_horizontal_box_2
 			create result_lable
+			create result_lbl
 			create result_cell
 			create tool_bar
 			create result_grid_area
@@ -102,6 +103,7 @@ feature {NONE}-- Initialization
 			extend (result_grid_holder)
 			result_grid_holder.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (result_lable)
+			l_ev_horizontal_box_2.extend (result_lbl)
 			l_ev_horizontal_box_2.extend (result_cell)
 			l_ev_horizontal_box_2.extend (tool_bar)
 			result_grid_holder.extend (result_grid_area)
@@ -182,10 +184,14 @@ feature {NONE}-- Initialization
 			input_grid_area.set_border_width (1)
 			result_grid_holder.set_padding (3)
 			result_grid_holder.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.set_padding (3)
 			l_ev_horizontal_box_2.disable_item_expand (result_lable)
+			l_ev_horizontal_box_2.disable_item_expand (result_lbl)
 			l_ev_horizontal_box_2.disable_item_expand (tool_bar)
 			result_lable.set_text ("Result:")
 			result_lable.align_text_left
+			result_lbl.set_minimum_width (150)
+			result_lbl.align_text_left
 			result_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			result_grid_area.set_border_width (1)
 			l_ev_cell_7.set_minimum_width (15)
@@ -219,7 +225,7 @@ feature -- Access
 	input_area, input_grid_area, result_grid_holder, result_grid_area: EV_VERTICAL_BOX
 	metric_lbl,
 	type_lbl, type_name_text, unit_lbl, unit_name_text, value_lbl, update_warning_lbl,
-	input_lbl, result_lable: EV_LABEL
+	input_lbl, result_lable, result_lbl: EV_LABEL
 	metric_name_text, value_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

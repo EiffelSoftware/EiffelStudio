@@ -145,16 +145,7 @@ feature -- Setting
 				metric_validity_checker.check_metric_validity (l_metric, True)
 				l_validity := metric_validity_checker.error_table.item (l_metric.name)
 			end
-			if l_validity = Void then
-				status_area.status_text.set_text (metric_names.t_metric_valid)
-				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
-				status_area.show_to_do_message_btn.disable_sensitive
-			else
-				status_area.status_text.set_text (l_validity.message_with_location)
-				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
-				status_area.show_to_do_message_btn.enable_sensitive
-			end
-			status_area.set_to_do_message (l_validity)
+			status_area.set_validity (l_validity)
 		end
 
 feature -- Access

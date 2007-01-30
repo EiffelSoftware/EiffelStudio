@@ -11,6 +11,9 @@ class
 
 inherit
 	EB_METRIC_STATUS_AREA_IMP
+		export
+			{NONE}all
+		end
 
 	EB_METRIC_INTERFACE_PROVIDER
 		undefine
@@ -54,7 +57,7 @@ feature{NONE} -- Initialization
 			create l_text
 			status_text.disable_edit
 			status_text.set_background_color (l_text.background_color)
-			status_lbl.set_text (metric_names.t_status)
+			status_lbl.set_text (metric_names.coloned_string (metric_names.t_status, True))
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, status_text, metric_tool_window)
 			show_to_do_message_btn.set_pixmap (pixmaps.icon_pixmaps.command_error_info_icon)
 			show_to_do_message_btn.set_tooltip (metric_names.f_show_to_do_message)
@@ -63,11 +66,29 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_to_do_message (a_error: EB_METRIC_ERROR) is
-			-- Set to-do message with `a_error'.`to_do'.
+	set_validity (a_error: EB_METRIC_ERROR) is
+			-- Set Current status area to display validity information contained in `a_error'.
+			-- `a_error' is Void means the metric is valid.
+		local
+			l_text: EV_TEXT
 		do
 			error := a_error
-			on_open_to_do_dialog (False)
+			if error = Void then
+					-- Valid case
+				create l_text
+				status_text.set_background_color (l_text.background_color)
+				status_text.set_text (metric_names.t_metric_valid)
+				status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
+				show_to_do_message_btn.disable_sensitive
+				to_do_dialog.load_text (Void, "", "")
+			else
+					-- Invalid case
+				status_text.set_background_color (preferences.metric_tool_data.warning_background_color)
+				status_text.set_text (error.message_with_location)
+				status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
+				show_to_do_message_btn.enable_sensitive
+				to_do_dialog.load_text (error.message, error.location, error.to_do)
+			end
 		end
 
 feature{NONE} -- Actions
@@ -75,15 +96,7 @@ feature{NONE} -- Actions
 	on_open_to_do_dialog (a_force: BOOLEAN) is
 			-- Action to be performed to open a dialog to display help information about how to solve current metric definition error
 			-- If `a_force' is True, display `to_do_dialog', otherwise, don't display `to_do_dialog' if it is hidden.
-		local
-			l_str: STRING_32
 		do
-			if error = Void then
-				create l_str.make (0)
-				to_do_dialog.load_text (l_str, l_str.twin, l_str.twin)
-			else
-				to_do_dialog.load_text (error.message, error.location, error.to_do)
-			end
 			if not to_do_dialog.is_displayed and then a_force then
 				to_do_dialog.show_relative_to_window (metric_tool_window)
 			end

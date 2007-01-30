@@ -710,7 +710,7 @@ feature{NONE} -- Implementation/Data
 	newly_changed_row_background_color: EV_COLOR is
 			-- Background color for newly changed rows
 		do
-			Result := preferences.debug_tool_data.row_highlight_background_color
+			Result := preferences.metric_tool_data.highlight_background_color
 		end
 
 	normal_row_background_color: EV_COLOR is

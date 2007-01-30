@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 			grid.set_column_count_to (1)
 			grid.set_minimum_width (100)
 			grid.enable_multiple_row_selection
+			grid.set_tooltip (metric_names.t_drop_program_elements)
 
 			grid_support := new_grid_support (grid)
 			grid_support.enable_ctrl_right_click_to_open_new_window

@@ -361,7 +361,6 @@ feature -- Actions
 		local
 			l_retried: BOOLEAN
 			l_value: DOUBLE
-			l_value_text: STRING
 			l_metric_basic: EB_METRIC_BASIC
 			l_metric: like current_selected_metric
 			l_input_domain: EB_METRIC_DOMAIN
@@ -405,9 +404,10 @@ feature -- Actions
 				set_last_value (l_value)
 				set_is_last_evaluation_successful (True)
 				display_status_message ("")
-				metric_value_text.set_data (l_value)
-				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
-				metric_value_text.set_text (l_value_text)
+				set_metric_value (metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected), l_value)
+--				metric_value_text.set_data (l_value)
+--				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
+--				metric_value_text.set_text (l_value_text)
 					-- Setup metric tool title.
 				create l_value_string.make (10)
 				l_value_string.append_double (l_value)
@@ -427,7 +427,7 @@ feature -- Actions
 		rescue
 			l_retried := True
 			display_status
-			metric_value_text.set_text (metric_names.e_undefined_value)
+			set_metric_value (metric_names.e_undefined_value, Void)
 			metric_tool.set_title (Void)
 			setup_evaluation_environment (False)
 			metric_manager.on_metric_evaluation_stops (Current)
@@ -572,8 +572,48 @@ feature -- Actions
 			end
 		end
 
+feature {NONE} -- Implementation/Data
 
-feature {NONE} -- Implementation
+	domain_generator_internal: QL_DOMAIN_GENERATOR
+			-- Domain generator used to setup metric evaluation
+
+	uuid: UUID is
+			-- Current UUID used for quick metric
+		local
+			l_uuid_generator: UUID_GENERATOR
+		do
+			if uuid_internal = Void then
+				create l_uuid_generator
+				uuid_internal := l_uuid_generator.generate_uuid
+			end
+			Result := uuid_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	detailed_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	filter_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	auto_go_to_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	show_percent_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+		-- Buttons used in tool bar
+
+	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+			-- Agent of `stop_metric_evaluation_agnet'
+
+	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+			-- Agent of `process_gui'
+
+	uuid_internal: like uuid
+			-- Implementation of `uuid'	
+
+	domain_selector: EB_METRIC_DOMAIN_SELECTOR
+			-- Domain selector
+
+	metric_selector: EB_METRIC_SELECTOR
+			-- Metric selector
+
+	metric_definer: EB_BASIC_METRIC_DEFINITION_AREA
+			-- Basic metric definition area
 
 	quick_metric (a_criterion: EB_METRIC_CRITERION; a_appliable: BOOLEAN): like current_selected_metric is
 			-- Metric defined in quick metric panel
@@ -596,14 +636,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	domain_selector: EB_METRIC_DOMAIN_SELECTOR
-			-- Domain selector
-
-	metric_selector: EB_METRIC_SELECTOR
-			-- Metric selector
-
-	metric_definer: EB_BASIC_METRIC_DEFINITION_AREA
-			-- Basic metric definition area
+feature {NONE} -- Implementation
 
 	setup_evaluation_environment (a_start: BOOLEAN) is
 			-- Setup metric evaluation environment.
@@ -628,12 +661,6 @@ feature {NONE} -- Implementation
 				l_generator.set_interval (20)
 			end
 		end
-
-	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
-			-- Agent of `stop_metric_evaluation_agnet'
-
-	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
-			-- Agent of `process_gui'
 
 	refresh_metric_text is
 			-- Refresh text displayed in metric value text field.			
@@ -667,9 +694,6 @@ feature {NONE} -- Implementation
 			unit_combo.select_actions.extend (agent on_unit_selection_change)
 		end
 
-	domain_generator_internal: QL_DOMAIN_GENERATOR
-			-- Domain generator used to setup metric evaluation
-
 	stop_metric_evaluation (a_msg: STRING_GENERAL) is
 			-- Stop metric evaluation.
 			-- `a_msg' contains reason for the stoppage.
@@ -700,41 +724,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	uuid: UUID is
-			-- Current UUID used for quick metric
-		local
-			l_uuid_generator: UUID_GENERATOR
+	set_metric_value (a_value: STRING_GENERAL; a_data: ANY) is
+			-- Set `a_value' into `metric_value_text'.
+		require
+			a_value_attached: a_value /= Void
 		do
-			if uuid_internal = Void then
-				create l_uuid_generator
-				uuid_internal := l_uuid_generator.generate_uuid
-			end
-			Result := uuid_internal
-		ensure
-			result_attached: Result /= Void
+			metric_value_text.set_text (a_value)
+			metric_value_text.set_data (a_data)
 		end
-
-	uuid_internal: like uuid
-			-- Implementation of `uuid'		
-
-	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
-			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
-		do
-			set_is_up_to_date (False)
-			set_is_send_to_history_status_up_to_date (False)
-			update_ui
-		end
-
-	on_filter_result_changed is
-			-- Action to be performed when selection status of `detailed_result_btn' changes
-		do
-			preferences.metric_tool_data.keep_metric_detailed_result_preference.set_value (detailed_result_btn.is_selected)
-		end
-
-	detailed_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
-	filter_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
-	auto_go_to_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
-	show_percent_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 
 feature {NONE} -- Recycle
 
@@ -853,6 +850,20 @@ feature{NONE} -- Actions
 			update_ui
 		end
 
+	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
+		do
+			set_is_up_to_date (False)
+			set_is_send_to_history_status_up_to_date (False)
+			update_ui
+		end
+
+	on_filter_result_changed is
+			-- Action to be performed when selection status of `detailed_result_btn' changes
+		do
+			preferences.metric_tool_data.keep_metric_detailed_result_preference.set_value (detailed_result_btn.is_selected)
+		end
+
 feature-- UI Update
 
 	current_selected_metric: EB_METRIC is
@@ -932,9 +943,6 @@ feature-- UI Update
 							set_is_metric_reloaded (False)
 							metric_selector.load_metrics (True)
 							metric_selector.try_to_selected_last_metric
-							if metric_selector.last_selected_metric = Void then
-								metric_selector.select_first_metric
-							end
 						end
 						quick_metric_btn.enable_sensitive
 						filter_result_btn.enable_sensitive

@@ -130,7 +130,9 @@ feature {NONE} -- Initialization
 			append_drop_actions (
 				<<toolbar_cell,
 				  tree_grid.grid,
-				  flat_grid.grid>>
+				  flat_grid.grid>>,
+				 metric_tool
+
 			)
 			switch_grid
 		end

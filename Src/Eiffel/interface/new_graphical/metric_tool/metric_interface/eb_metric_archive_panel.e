@@ -98,6 +98,20 @@ feature {NONE} -- Initialization
 			open_file_dialog.filters.extend (["*.xml", "XML files"])
 			open_file_dialog.filters.extend (["*.*", "All files"])
 			set_is_metric_reloaded (True)
+
+			append_drop_actions (
+				<<
+					comparison_area_cell,
+					empty_cell,
+					empty_cell2,
+					comparison_toolbar_cell,
+					comparison_area,
+					reference_empty_area,
+					current_archive_empty_area,
+					comparison_empty_cell
+				>>,
+				metric_tool
+			)
 		end
 
 	user_initialization is
@@ -156,18 +170,6 @@ feature {NONE} -- Initialization
 			current_archive_lbl.set_text (metric_names.t_select_current_archive)
 
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
-			append_drop_actions (
-				<<
-					comparison_area_cell,
-					empty_cell,
-					empty_cell2,
-					comparison_toolbar_cell,
-					comparison_area,
-					reference_empty_area,
-					current_archive_empty_area,
-					comparison_empty_cell
-				>>
-			)
 		end
 
 feature -- Access

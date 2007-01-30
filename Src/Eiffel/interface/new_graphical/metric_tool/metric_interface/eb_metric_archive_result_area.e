@@ -128,11 +128,11 @@ feature {NONE} -- Initialization
 			grid_wrapper.enable_copy
 			extend (grid_wrapper.component_widget)
 
-				-- Delete following in docking EiffelStudio.
-			metric_panel.append_drop_actions (
+			append_drop_actions (
 				<<result_grid,
 				  l_cell
-				>>
+				>>,
+				metric_tool
 			)
 			drop_actions.extend (agent metric_panel.drop_cluster)
 			drop_actions.extend (agent metric_panel.drop_class)

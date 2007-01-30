@@ -254,74 +254,18 @@ feature -- Pick and drop
 		do
 			l_feature_stone ?= a_pebble
 			if l_feature_stone /= Void then
-				drop_feature (l_feature_stone)
+				drop_feature (l_feature_stone, metric_tool)
 			else
 				l_class_stone ?= a_pebble
 				if l_class_stone /= Void then
-					drop_class (l_class_stone)
+					drop_class (l_class_stone, metric_tool)
 				else
 					l_cluster_stone ?= a_pebble
 					if l_cluster_stone /= Void then
-						drop_cluster (l_cluster_stone)
+						drop_cluster (l_cluster_stone, metric_tool)
 					end
 				end
 			end
-		end
-
-	drop_class (st: CLASSI_STONE) is
-			-- Action to be performed when `st' is dropped on current panel.
-		require
-			st_valid: st /= Void
-		local
-			conv_fst: FEATURE_STONE
-		do
-			conv_fst ?= st
-			if conv_fst = Void then
-				metric_tool.develop_window.tools.class_tool.set_stone (st)
-				metric_tool.develop_window.tools.class_tool.content.show
-				metric_tool.develop_window.tools.class_tool.content.set_focus
-				metric_tool.develop_window.tools.class_tool.set_focus
-			else
-				-- The stone is already dropped through `drop_feature'.
-			end
-		end
-
-	drop_feature (st: FEATURE_STONE) is
-			-- Action to be performed when `st' is dropped on current panel.
-		require
-			st_valid: st /= Void
-		do
-			metric_tool.develop_window.tools.features_relation_tool.set_stone (st)
-			metric_tool.develop_window.tools.features_relation_tool.content.show
-			metric_tool.develop_window.tools.features_relation_tool.content.set_focus
-			metric_tool.develop_window.tools.features_relation_tool.set_focus
-		end
-
-	drop_cluster (st: CLUSTER_STONE) is
-			-- Action to be performed when `st' is dropped on current panel.
-		require
-			st_valid: st /= Void
-		do
-			metric_tool.develop_window.tools.launch_stone (st)
-		end
-
-	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES) is
-			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into `a_action_holder'.
-		require
-			a_action_holder_attached: a_action_holder /= Void
-		do
-			a_action_holder.drop_actions.extend (agent drop_class)
-			a_action_holder.drop_actions.extend (agent drop_feature)
-			a_action_holder.drop_actions.extend (agent drop_cluster)
-		end
-
-	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]) is
-			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into every item in `a_action_holders'.
-		require
-			a_action_holders_attached: a_action_holders /= Void
-			a_action_holders_valid: not a_action_holders.has (Void)
-		do
-			a_action_holders.do_all (agent extend_drop_actions)
 		end
 
 feature{NONE} -- Implementation

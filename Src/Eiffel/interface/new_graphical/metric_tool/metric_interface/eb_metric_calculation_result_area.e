@@ -190,7 +190,7 @@ feature {NONE} -- Initialization
 			grid_wrapper.enable_copy
 
 				-- Delete following in docking EiffelStudio.
-			metric_panel.append_drop_actions (
+			append_drop_actions (
 				<<
 					result_grid,
 					information_bar_empty_area,
@@ -198,7 +198,8 @@ feature {NONE} -- Initialization
 					input_cell,
 					empty_cell,
 					result_cell
-				>>
+				>>,
+				metric_tool
 				)
 			create l_text
 			metric_name_text.set_background_color (l_text.background_color)

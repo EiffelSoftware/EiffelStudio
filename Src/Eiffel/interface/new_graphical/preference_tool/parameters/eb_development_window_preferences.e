@@ -241,6 +241,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := show_all_applicable_docking_indicators_preference.value
 		end
 
+	output_tool_prompted: BOOLEAN is
+			-- If show up output tool if start compiling?
+		do
+			Result := output_tool_prompted_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	estudio_dbg_menu_allowed_preference: BOOLEAN_PREFERENCE
@@ -342,6 +348,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	show_all_applicable_docking_indicators_preference: BOOLEAN_PREFERENCE
 			-- If we need to show all feedback indicators when dragging a zone?
+
+	output_tool_prompted_preference: BOOLEAN_PREFERENCE
+			-- If show up output tool if start compiling?
 
 feature -- Element change
 
@@ -457,6 +466,7 @@ feature {NONE} -- Preference Strings
 	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
 	auto_hide_animation_speed_string: STRING is "interface.development_window.auto_hide_animation_speed"
 	show_all_applicable_docking_indicators_string: STRING is "interface.development_window.show_all_applicable_docking_indicators"
+	output_tool_prompted_string: STRING is "interface.development_window.output_tool_prompted"
 
 	estudio_dbg_menu_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_allowed"
 	estudio_dbg_menu_accelerator_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_accelerator_allowed"
@@ -506,6 +516,7 @@ feature {NONE} -- Implementation
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
 			auto_hide_animation_speed_preference := l_manager.new_integer_preference_value (l_manager, auto_hide_animation_speed_string, 50)
 			show_all_applicable_docking_indicators_preference := l_manager.new_boolean_preference_value (l_manager, show_all_applicable_docking_indicators_string, True)
+			output_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, output_tool_prompted_string, False)
 
 			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
 			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)

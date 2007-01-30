@@ -36,7 +36,7 @@ feature -- Initialization
 			build_observer_lists
 			development_window := a_dev_win
 			docking_manager := a_dev_win.docking_manager
-			docking_manager.tab_drop_actions.extend (agent create_editor_beside_content)
+			docking_manager.tab_drop_actions.extend (agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
 			create_editor
 		ensure
 			editors_internal_not_void: editors_internal /= Void

@@ -64,7 +64,12 @@ feature -- Informations
 			dir_entries: ARRAYED_LIST[STRING]
 		do
 			create Result.make
+				-- This is the Linux location.
 			create directory.make ("/usr/share/i18n/locales/")
+			if not directory.exists then
+					-- This is the Solaris location.
+				directory.make ("/usr/lib/locale")
+			end
 			if directory.exists then
 					-- if it does not exist, unfortunately the system
 					-- does not follow POSIX

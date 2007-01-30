@@ -36,7 +36,7 @@ feature -- Initialization
 				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
-			accelerator.actions.extend (agent (development_window.address_manager).on_new_tab_command)
+			enable_sensitive
 		ensure
 			development_window_attached: development_window = dev_window
 		end
@@ -46,7 +46,35 @@ feature -- Execution
 	execute is
 			-- Create new tab.
 		do
-			editors_manager.create_editor
+			execute_with_stone_content (Void, Void)
+		end
+
+	execute_with_stone (a_stone: STONE) is
+			-- Execute with `a_stone'.
+		do
+			execute_with_stone_content (a_stone, Void)
+		end
+
+	execute_with_stone_content (a_stone: STONE; a_content: SD_CONTENT) is
+			-- Create a new tab which stone is `a_stone' and create at side of `a_content' if exists.
+		local
+			l_editor : EB_SMART_EDITOR
+		do
+			if is_sensitive then
+				l_editor := editors_manager.editor_with_stone (a_stone)
+				if l_editor = Void and a_content = Void then
+					editors_manager.create_editor
+					editors_manager.select_editor (editors_manager.last_created_editor)
+				elseif l_editor = Void and a_content /= Void then
+					editors_manager.create_editor_beside_content (a_stone, a_content)
+					editors_manager.select_editor (editors_manager.last_created_editor)
+				else
+					editors_manager.select_editor (l_editor)
+				end
+
+				development_window.set_stone (a_stone)
+				development_window.address_manager.on_new_tab_command
+			end
 		end
 
 feature -- Items
@@ -73,21 +101,6 @@ feature -- Items
 		end
 
 feature {NONE} -- Implementation
-
-	execute_with_stone (a_stone: STONE) is
-			-- Execute with `a_stone'.
-		local
-			l_editor : EB_SMART_EDITOR
-		do
-			l_editor := editors_manager.editor_with_stone (a_stone)
-			if l_editor = Void then
-				execute
-				editors_manager.select_editor (editors_manager.last_created_editor)
-			else
-				editors_manager.select_editor (l_editor)
-			end
-			development_window.set_stone (a_stone)
-		end
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

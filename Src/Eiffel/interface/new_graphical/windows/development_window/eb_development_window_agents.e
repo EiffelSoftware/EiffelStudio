@@ -274,8 +274,6 @@ feature {NONE} -- Implementation
 			if develop_window.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.enable_sensitive
 			end
-			develop_window.commands.new_tab_cmd.enable_sensitive
-
 			develop_window.commands.new_class_cmd.enable_sensitive
 			develop_window.commands.new_library_cmd.enable_sensitive
 			develop_window.commands.new_assembly_cmd.enable_sensitive
@@ -303,7 +301,6 @@ feature {NONE} -- Implementation
 			if develop_window.has_profiler then
 				develop_window.commands.show_profiler.disable_sensitive
 			end
-			develop_window.commands.new_tab_cmd.disable_sensitive
 			develop_window.commands.new_class_cmd.disable_sensitive
 			develop_window.commands.new_library_cmd.disable_sensitive
 			develop_window.commands.new_assembly_cmd.disable_sensitive

@@ -1315,6 +1315,7 @@ test	named-tuple-validation	tuple002	tcf	pass tuple
 test	named-tuple-as-argument	tuple003	tcf	pass tuple
 test	tuple-hashcode		tuple004	tcf	pass tuple
 test	tuple-comparison	tuple005	tcf	pass tuple
+test	tuple-twining		tuple006	tcf	pass tuple
 
 -- Systematic validity tests
 
@@ -1573,26 +1574,26 @@ test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
 test	supplier-preconditions assert001 tcf pass execution
 
 -- Multi Constraint Tests
--- test	multi-constraint-basics				multicon001 tcf pass multiconstraint
--- test	multi-constraint-creation			multicon002 tcf pass multiconstraint
--- test	multi-constraint-renaming			multicon003 tcf pass multiconstraint
--- test	multi-constraint-inheritance		multicon004 tcf pass multiconstraint
--- test	multi-constraint-assertions			multicon005 tcf pass multiconstraint
--- test	multi-constraint-tuple				multicon006 tcf pass multiconstraint
--- test	multi-constraint-anchor				multicon007 tcf pass multiconstraint
--- test	multi-constraint-root				multicon008 tcf pass multiconstraint
--- test	multi-constraint-agents				multicon009 tcf pass multiconstraint
--- test	multi-constraint-inline-agents		multicon010 tcf pass multiconstraint
+test	multi-constraint-basics				multicon001 tcf pass multiconstraint
+test	multi-constraint-creation			multicon002 tcf pass multiconstraint
+test	multi-constraint-renaming			multicon003 tcf pass multiconstraint
+test	multi-constraint-inheritance		multicon004 tcf pass multiconstraint
+test	multi-constraint-assertions			multicon005 tcf pass multiconstraint
+test	multi-constraint-tuple				multicon006 tcf pass multiconstraint
+test	multi-constraint-anchor				multicon007 tcf pass multiconstraint
+test	multi-constraint-root				multicon008 tcf pass multiconstraint
+test	multi-constraint-agents				multicon009 tcf pass multiconstraint
+test	multi-constraint-inline-agents		multicon010 tcf pass multiconstraint
 
--- test	multi-constraint-vtgc				multicon013 tcf pass multiconstraint
--- test	multi-constraint-vtmc				multicon014 tcf pass multiconstraint
--- test	multi-constraint-vtgd				multicon015 tcf pass multiconstraint
--- test	multi-constraint-vtgd-create		multicon020 tcf pass multiconstraint
--- test	multi-constraint-add-gen-constraint	multicon021 tcf pass multiconstraint
--- test	multi-constraint-renaming1			multicon022 tcf pass multiconstraint
--- test	multi-constraint-renaming2			multicon023 tcf pass multiconstraint
--- test	multi-constraint-check-constraints	multicon024 tcf pass multiconstraint
--- test	multi-constraint-actual-type		multicon025 tcf pass multiconstraint
+test	multi-constraint-vtgc				multicon013 tcf pass multiconstraint
+test	multi-constraint-vtmc				multicon014 tcf pass multiconstraint
+test	multi-constraint-vtgd				multicon015 tcf pass multiconstraint
+test	multi-constraint-vtgd-create		multicon020 tcf pass multiconstraint
+test	multi-constraint-add-gen-constraint	multicon021 tcf pass multiconstraint
+test	multi-constraint-renaming1			multicon022 tcf pass multiconstraint
+test	multi-constraint-renaming2			multicon023 tcf pass multiconstraint
+test	multi-constraint-check-constraints	multicon024 tcf pass multiconstraint
+test	multi-constraint-actual-type		multicon025 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -134,6 +134,11 @@ feature -- Command
 			set: content.state.last_floating_height = a_height
 		end
 
+	update_mini_tool_bar_size is
+			-- Update mini tool bar size since client programmers mini tool bar widget size changed.
+		do
+		end
+
 feature -- Query
 
 	state: SD_STATE is

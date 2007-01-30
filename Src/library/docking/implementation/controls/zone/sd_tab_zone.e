@@ -20,7 +20,8 @@ inherit
 			set_max,
 			set_focus_color,
 			set_non_focus_selection_color,
-			save_content_title
+			save_content_title,
+			update_mini_tool_bar_size
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -230,6 +231,12 @@ feature -- Command
 			else
 				internal_notebook.set_content_position (a_content, a_index)
 			end
+		end
+
+	update_mini_tool_bar_size is
+			-- Redefine
+		do
+			internal_title_bar.update_fixed_size
 		end
 
 feature {SD_CONFIG_MEDIATOR} --

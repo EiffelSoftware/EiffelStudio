@@ -8,7 +8,7 @@ msgstr ""
 "Last-Translator: \n"
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-01-29 16:03+0100\n"
+"PO-Revision-Date: 2007-01-30 18:17+0100\n"
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
 
@@ -279,7 +279,7 @@ msgid "Breton (France)"
 msgstr "Breton"
 
 msgid "Makefiles"
-msgstr ""
+msgstr "Makefiles"
 
 msgid "&Save"
 msgstr "&Enregistrer"
@@ -315,7 +315,7 @@ msgid "Input domain invalid"
 msgstr ""
 
 msgid "Displayed buttons"
-msgstr ""
+msgstr "Boutons affichés"
 
 msgid "Old name"
 msgstr "Ancien nom"
@@ -330,7 +330,7 @@ msgid "$1 preferences"
 msgstr "$1 préférences"
 
 msgid "$1 is not a feature of $2"
-msgstr ""
+msgstr "$1n'est pas une routine de $2"
 
 msgid "Client stiffness:"
 msgstr ""
@@ -431,10 +431,10 @@ msgid "Retrieve only syntactially referenced client classes"
 msgstr ""
 
 msgid "Back to previous menu"
-msgstr ""
+msgstr "Retour au menu précédent"
 
 msgid "An empty class name is not valid.\n"
-msgstr ""
+msgstr "Un nom de classe vide n'est pas valide.\n"
 
 msgid ""
 "Are you sure you want to undo the refactoring?\n"
@@ -470,6 +470,12 @@ msgid ""
 "Click OK to terminate.\n"
 "Click Cancel to open a command line console.\n"
 msgstr ""
+"La compilation C a produit des erreurs.\n"
+"Lancer votre outil de Makefile depuis le répertoire `$1`\n"
+"pour voir ce qui le problème.\n"
+"\n"
+"Cliquer sur OK pour terminer.\n"
+"Clique sur Annuler pour ouvrir une console en ligne de commande.\n"
 
 msgid "Tamazight (Algeria, Latin)"
 msgstr ""
@@ -629,7 +635,7 @@ msgid "Location Error"
 msgstr "Erreur d'emplacement"
 
 msgid "Background C Compilation in Progress"
-msgstr "La compilation C est lancée tâche de fond"
+msgstr "La compilation C est lancée en tâche de fond"
 
 msgid "Extracting $1 of feature `$2'..."
 msgstr "Extraire $1 de la routine `$2'..."
@@ -638,7 +644,7 @@ msgid "Environment"
 msgstr "Environnement"
 
 msgid "Criterion"
-msgstr ""
+msgstr "Critère"
 
 msgid "Warning: Modifications will be taken into account"
 msgstr ""
@@ -647,7 +653,7 @@ msgid "Cannot write file: $1."
 msgstr "Impossible d'écrire le fichier: $1"
 
 msgid "You must finalize your project first."
-msgstr ""
+msgstr "Vous devez d'abord finaliser votre projet."
 
 msgid "Assembly Name"
 msgstr "Nom de l'assemblée"
@@ -1167,13 +1173,12 @@ msgstr "Commentaire"
 msgid "invariants"
 msgstr "invariants"
 
-#, fuzzy
 msgid ""
 "Cannot create directory:\n"
 "$1."
 msgstr ""
-"Impossible de créer le fichier %s.\n"
-"%s"
+"Impossible de créer le répertoire:\n"
+"$1."
 
 msgid "This command will stop the debugger."
 msgstr "Cette commande va arrêter le débogueur"
@@ -1479,7 +1484,7 @@ msgid "--> Operator index followed by operator ('and' or 'or'): "
 msgstr ""
 
 msgid "Are you sure you want to quit $1?"
-msgstr ""
+msgstr "Etes vous certain de vouloir quitter $1 ?"
 
 msgid "Overriding"
 msgstr ""
@@ -1497,13 +1502,13 @@ msgid " of "
 msgstr " de "
 
 msgid "Watch Tool"
-msgstr ""
+msgstr "Evaluateur"
 
 msgid "When hits ..."
-msgstr ""
+msgstr "Quand atteint ..."
 
 msgid "<- Remove"
-msgstr ""
+msgstr "<- Supprimer"
 
 msgid "Inlining Size"
 msgstr ""
@@ -1534,11 +1539,12 @@ msgstr ""
 msgid "(Double click to go to definition)"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "$1\n"
 "is not a plain file."
-msgstr "$1 n'est pas une grappe."
+msgstr ""
+"$1\n"
+"n'est pas un fichier texte."
 
 msgid "Finalize"
 msgstr "Finaliser"
@@ -1556,7 +1562,7 @@ msgid "Building tree view ..."
 msgstr ""
 
 msgid "No system was defined.\n"
-msgstr ""
+msgstr "Aucun système n'est définie.\n"
 
 msgid ""
 "Extracting the homonyms\n"
@@ -1948,7 +1954,7 @@ msgid "TYPE: "
 msgstr "TYPE: "
 
 msgid "Command is running"
-msgstr ""
+msgstr "Commande en cours d'exécution"
 
 msgid "English (Singapore)"
 msgstr ""
@@ -2054,13 +2060,13 @@ msgid "Post Compilation Tasks"
 msgstr ""
 
 msgid "Local"
-msgstr ""
+msgstr "Local"
 
 msgid "Russian"
 msgstr ""
 
 msgid "Break when the hit count is a multiple of"
-msgstr ""
+msgstr "S'arrêter quand le nombre d'arrêt est un multiple de"
 
 msgid "Unit name \"$1\" is invalid."
 msgstr ""
@@ -2068,13 +2074,12 @@ msgstr ""
 msgid "Operator must be 'and' or 'or'.\n"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Some files have not been saved.\n"
 "Do you want to save them before compiling?\n"
 msgstr ""
 "Des fichiers n'ont pas été sauvegardés.\n"
-"Voulez vous les sauvegarder avant de quitter ?"
+"Voulez vous les sauvegarder avant de compiler?\n"
 
 msgid "Current metric has been modified, save it?"
 msgstr ""
@@ -2089,7 +2094,7 @@ msgid "Retrieve client classes"
 msgstr ""
 
 msgid "error message"
-msgstr ""
+msgstr "message d'erreur"
 
 msgid ""
 "Using this wizard you can create a project (executable\n"
@@ -2117,7 +2122,7 @@ msgid ""
 msgstr ""
 
 msgid "Back to parent menu"
-msgstr ""
+msgstr "Retour au menu parent"
 
 msgid "Invariant"
 msgstr ""
@@ -2146,12 +2151,14 @@ msgid "Metric name is missing in metric definition."
 msgstr ""
 
 msgid "new"
-msgstr ""
+msgstr "nouveau"
 
 msgid ""
 "C-compilation manager launch failed.\n"
 "Check if finish_freezing$1 exists and works correctly."
 msgstr ""
+"Le gestionnaire de compilation C ne s'est pas lancé.\n"
+"Vérifier si finish_freezing$1 existe et fonctionne correctement."
 
 msgid "Execute the application one line at a time"
 msgstr "Exécuter l'application une ligne à la fois"
@@ -2166,7 +2173,7 @@ msgid "Dynamic Library Builder"
 msgstr ""
 
 msgid "--> File name: "
-msgstr ""
+msgstr "--> Nom de fichier: "
 
 msgid "$1 of feature `$2' of class $3"
 msgstr ""
@@ -2184,7 +2191,7 @@ msgid "Onces in Generics"
 msgstr ""
 
 msgid "Preferences"
-msgstr ""
+msgstr "Préfèrences"
 
 msgid "Exploring clients of $1"
 msgstr ""
@@ -2315,6 +2322,8 @@ msgid ""
 "No system was generated.\n"
 "Please make sure the C compilation ended correctly."
 msgstr ""
+"Aucun système na été généré.\n"
+"Merci de vérifier que la compilation C s'est terminé correctement."
 
 msgid "Arabic (Bahrain)"
 msgstr ""
@@ -2339,7 +2348,7 @@ msgid ""
 msgstr ""
 
 msgid "callstack"
-msgstr ""
+msgstr "Pile des appels"
 
 msgid "deferred"
 msgstr ""
@@ -2384,10 +2393,10 @@ msgid "Background Workbench C Compilation Terminated"
 msgstr ""
 
 msgid "Grid \"$1\""
-msgstr ""
+msgstr "Grille \"$1\""
 
 msgid "Closing the window will stop the debugger."
-msgstr ""
+msgstr "Fermer la fenêtre terminera le débogueur."
 
 msgid "callers"
 msgstr "appelants"
@@ -2399,7 +2408,7 @@ msgid "&Open...\tCtrl+O"
 msgstr "&Ouvrir...\tCtrl+O"
 
 msgid "Change"
-msgstr ""
+msgstr "Changer"
 
 msgid "Open Original File"
 msgstr "Ouvrir le Fichier Original"
@@ -2431,13 +2440,12 @@ msgstr "Ne plus montrer"
 msgid "&Debugging Tools"
 msgstr "Outils de %Debogguage"
 
-#, fuzzy
 msgid ""
 "Welcome to the\n"
 "new .NET Application Wizard"
 msgstr ""
 "Bienvenue dans le nouvel assistant\n"
-" pour les applications WEL"
+" des applications .NET"
 
 msgid "Thai (Thailand)"
 msgstr ""
@@ -2541,7 +2549,7 @@ msgid "Remove current selected metric"
 msgstr "Supprimer la métrique sélectionnée"
 
 msgid "Remove condition"
-msgstr ""
+msgstr "Supprimer la condition"
 
 msgid "Indent selected row using an \"AND\" criterion"
 msgstr ""
@@ -2574,7 +2582,7 @@ msgid "Sub-clusters"
 msgstr ""
 
 msgid "Application will ignore all breakpoints."
-msgstr ""
+msgstr "L'application ignorera tous les points d'arrêt."
 
 msgid "Metric definition"
 msgstr ""
@@ -2625,7 +2633,7 @@ msgid "Lao"
 msgstr ""
 
 msgid "<= compiler version <= "
-msgstr ""
+msgstr "<= version du compilateur <= "
 
 msgid "Belarusian (Belarus)"
 msgstr ""
@@ -2675,7 +2683,7 @@ msgid "Include Class '$1'"
 msgstr ""
 
 msgid "Add condition"
-msgstr ""
+msgstr "Ajouter une condition"
 
 msgid "convert profiler output files"
 msgstr ""
@@ -2714,7 +2722,7 @@ msgid "clients"
 msgstr "clients"
 
 msgid "Display parameters"
-msgstr ""
+msgstr "Afficher les paramêtres"
 
 msgid "Feature "
 msgstr "Routine "
@@ -2755,7 +2763,7 @@ msgid ""
 msgstr ""
 
 msgid "Run Finalized"
-msgstr ""
+msgstr "Lancer la version finalisée"
 
 msgid "Invalid tag."
 msgstr ""
@@ -2779,7 +2787,7 @@ msgid "Feature:"
 msgstr "Routine:"
 
 msgid "Step out of a routine"
-msgstr ""
+msgstr "Sortir de la routine"
 
 msgid "Dynamic-Link Library"
 msgstr ""
@@ -2809,7 +2817,7 @@ msgid "Please fill in the 'System Name' field."
 msgstr ""
 
 msgid "\"$1\" is not a compiled class."
-msgstr ""
+msgstr "\"$1\" n'est pas une classe compilée."
 
 msgid ""
 "This command requires a class name.\n"
@@ -2841,7 +2849,7 @@ msgid "Original metric name"
 msgstr ""
 
 msgid "Display information"
-msgstr ""
+msgstr "Afficher information"
 
 msgid "Malay (Malaysia)"
 msgstr ""
@@ -2923,7 +2931,7 @@ msgid "Spanish (Chile)"
 msgstr ""
 
 msgid "Library"
-msgstr ""
+msgstr "Bibliothèque"
 
 msgid "(re)compile the C code generated by freeze"
 msgstr ""
@@ -2973,10 +2981,10 @@ msgid "Remove input domain item."
 msgstr ""
 
 msgid "Break when the hit count is equal to"
-msgstr ""
+msgstr "S'arrêter quand le nombre d'arrêt est égal à"
 
 msgid "Once routines"
-msgstr ""
+msgstr "Routines Once"
 
 msgid "English (Philippines)"
 msgstr ""
@@ -3082,7 +3090,7 @@ msgid ""
 msgstr ""
 
 msgid "metric"
-msgstr ""
+msgstr "métrique"
 
 msgid "precompile the system"
 msgstr ""
@@ -3114,10 +3122,10 @@ msgid "Albanian"
 msgstr ""
 
 msgid "Save As..."
-msgstr ""
+msgstr "Sauvegarder Sous..."
 
 msgid "&Run Workbench System"
-msgstr ""
+msgstr "Lance&r le système Workbench"
 
 msgid "Are simplified address expressions enabled?"
 msgstr ""
@@ -3289,7 +3297,7 @@ msgid "Precompile"
 msgstr "Précompiler"
 
 msgid "Run Workbench"
-msgstr ""
+msgstr "Lancer la version workbench"
 
 msgid "Are you sure you want to remove $1 and any children of it?"
 msgstr ""
@@ -3328,7 +3336,7 @@ msgid "No views are available for this cluster"
 msgstr ""
 
 msgid "status"
-msgstr ""
+msgstr "status"
 
 msgid "Options"
 msgstr "Options"
@@ -3348,7 +3356,7 @@ msgid ""
 msgstr ""
 
 msgid "debug the system"
-msgstr ""
+msgstr "déboguer le système"
 
 msgid "Condition:"
 msgstr "Condition:"
@@ -3559,7 +3567,7 @@ msgid "Query:"
 msgstr ""
 
 msgid "Class Header"
-msgstr ""
+msgstr "Entête de Classe"
 
 msgid "Choose New Slice Limits for Special Objects"
 msgstr ""
@@ -3571,13 +3579,13 @@ msgid "Filter result which is not visible from input domain"
 msgstr ""
 
 msgid "Filter: "
-msgstr ""
+msgstr "Filtre: "
 
 msgid "Selected cluster is read only. Please select a writable cluster for class creation."
 msgstr ""
 
 msgid "The text of this class cannot be modified."
-msgstr ""
+msgstr "Le texte de cette classe ne peut être modifié."
 
 msgid ""
 "Some files have not been saved.\n"
@@ -3593,7 +3601,7 @@ msgid "External command not launched."
 msgstr "La commande externe n'est pas lancée"
 
 msgid "show the routines of a class"
-msgstr ""
+msgstr "Montrer les routines d'une classe"
 
 msgid "Main Editor Views"
 msgstr ""
@@ -3605,7 +3613,7 @@ msgid "Text in text criterion is empty."
 msgstr ""
 
 msgid "Trace"
-msgstr ""
+msgstr "Trace"
 
 msgid "Select type of new links"
 msgstr ""
@@ -3632,7 +3640,7 @@ msgid "Create new aggregate client-supplier links"
 msgstr ""
 
 msgid "Project"
-msgstr ""
+msgstr "Projet"
 
 msgid "Forward"
 msgstr "En avant"
@@ -3646,20 +3654,21 @@ msgstr ""
 msgid "Make sure coefficient for denominator metric is a non-zero real number."
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Could not save the library definition to\n"
 "$1."
-msgstr "Vérifier la validité de la définition de la bibliothèque"
+msgstr ""
+"Impossible d'enregistrer la définition de la bibliothèque dans\n"
+"$1."
 
 msgid " (REQUIRES RESTART)"
 msgstr "(Nécessite un redémarrage)"
 
 msgid "Metrics"
-msgstr ""
+msgstr "Métriques"
 
 msgid "$1 $2 $3 is inactive"
-msgstr ""
+msgstr "$1 $2 $3 est inactif"
 
 msgid "Type of the task."
 msgstr "Type de la tâche."
@@ -3674,7 +3683,7 @@ msgid "Application launched"
 msgstr "Application lancée"
 
 msgid "Background Finalized C Compilation Succeeded"
-msgstr ""
+msgstr "La compilation en tâche de fond du C du code finalisé est réussie"
 
 msgid "Append"
 msgstr ""
@@ -3706,13 +3715,13 @@ msgid "Add all ->"
 msgstr ""
 
 msgid "External Command"
-msgstr ""
+msgstr "Commande externe"
 
 msgid "Text Generators"
 msgstr ""
 
 msgid "Open a file"
-msgstr ""
+msgstr "Ouvrir un fichier"
 
 msgid "Clean"
 msgstr "Nettoyer"
@@ -3733,7 +3742,7 @@ msgid "Show only synctactically referenced classes?"
 msgstr ""
 
 msgid "Add your own library..."
-msgstr ""
+msgstr "Ajouter votre propre bibliothèque"
 
 msgid "Wolof (Senegal)"
 msgstr ""
@@ -3742,7 +3751,7 @@ msgid "yank (save) output of last command to a file"
 msgstr ""
 
 msgid "ISE Eiffel: Session aborted\n"
-msgstr ""
+msgstr "ISE Eiffel: Session échouée\n"
 
 msgid "Add scope"
 msgstr ""
@@ -3756,7 +3765,7 @@ msgid ""
 msgstr ""
 
 msgid "Libraries to precompile:"
-msgstr ""
+msgstr "Bibliothèques à précompiler:"
 
 msgid "Marathi (India)"
 msgstr ""
@@ -3765,7 +3774,7 @@ msgid "variable metric"
 msgstr "variable de la métrique"
 
 msgid "Metric name is missing."
-msgstr ""
+msgstr "Il manque le nom de la métrique."
 
 msgid "Remove all breakpoints"
 msgstr "Supprimer tous les points d'arrêt"
@@ -3774,10 +3783,10 @@ msgid "Reuse or Generate an Execution Profile."
 msgstr ""
 
 msgid "Complete &Word"
-msgstr ""
+msgstr "Complèter &Mot"
 
 msgid "Add Resource"
-msgstr ""
+msgstr "Ajouter Ressource"
 
 msgid "Arabic (Saudi Arabia)"
 msgstr ""
@@ -3789,7 +3798,7 @@ msgid "Hebrew"
 msgstr ""
 
 msgid "Only creators"
-msgstr ""
+msgstr "Seulement les créateurs"
 
 msgid "Hindi (India)"
 msgstr ""
@@ -3801,7 +3810,7 @@ msgid "&Add to Favorites"
 msgstr "&Ajouter aux favoris"
 
 msgid "Replace Name in Strings"
-msgstr ""
+msgstr "Remplace le Nom dans les Chaînes"
 
 msgid "New name"
 msgstr "Nouveau nom"
@@ -3850,7 +3859,7 @@ msgid "Switch to decimal format"
 msgstr "Basculer vers le format décimal"
 
 msgid "&Minimize All"
-msgstr ""
+msgstr "Tout &Minimiser"
 
 msgid " output of percentage of time spent in a feature"
 msgstr ""
@@ -3886,7 +3895,7 @@ msgid "&OK"
 msgstr "&Ok"
 
 msgid "Show UML"
-msgstr ""
+msgstr "Afficher UML"
 
 msgid "Please choose a folder."
 msgstr ""
@@ -3901,15 +3910,14 @@ msgid "Yi (PRC)"
 msgstr ""
 
 msgid "&Step-by-Step"
-msgstr ""
+msgstr "&Pas-à-Pas"
 
-#, fuzzy
 msgid ""
 "\n"
 "   + address     = <$1>"
 msgstr ""
 "\n"
-"   + Module = $1"
+"   + addresse     = <$1>"
 
 msgid "Xhosa/isiXhosa"
 msgstr ""
@@ -3921,7 +3929,7 @@ msgid "Recompile Overrides"
 msgstr ""
 
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 msgid "No feature in this class matches this name."
 msgstr ""
@@ -3939,13 +3947,13 @@ msgid "Import Metrics"
 msgstr "Importer Métriques"
 
 msgid "Compilation was not successful."
-msgstr ""
+msgstr "La compilation a échoué."
 
 msgid "Urdu (Pakistan)"
 msgstr ""
 
 msgid "Select metric:"
-msgstr ""
+msgstr "Sélectionner une métrique:"
 
 msgid "Erase Midpoint"
 msgstr ""
@@ -3963,7 +3971,7 @@ msgid "Execution interrupted"
 msgstr "Exécution interrompue"
 
 msgid "Display breakpoints separated by status"
-msgstr ""
+msgstr "Afficher les points d'arrêt triés par status"
 
 msgid "feature formats and information"
 msgstr ""
@@ -3974,13 +3982,13 @@ msgid ""
 msgstr ""
 
 msgid "Add L&ibrary..."
-msgstr ""
+msgstr "Ajouter Bib&liothèque..."
 
 msgid "Argument"
 msgstr "Argument"
 
 msgid "Interrupted because Eiffel complication starts"
-msgstr ""
+msgstr "Interrompue parce que la compilation Eiffel a démarré"
 
 msgid "Invalid folder name"
 msgstr ""
@@ -4013,7 +4021,7 @@ msgid "Value \"$1\" of attribute \"value\" is invalid. A real number is expected
 msgstr ""
 
 msgid "Command terminated"
-msgstr ""
+msgstr "Commande terminée"
 
 msgid "(no_class)"
 msgstr "(aucune_classe)"
@@ -4031,7 +4039,7 @@ msgid "Hide Assigner Command Name"
 msgstr ""
 
 msgid "Find: "
-msgstr ""
+msgstr "Chercher:"
 
 msgid "Enable Breakpoints"
 msgstr "Activer Points d'Arrêt"
@@ -4059,7 +4067,7 @@ msgid "Deselect Recalculatable"
 msgstr ""
 
 msgid "Display information concerning current system"
-msgstr ""
+msgstr "Afficher les informations sur le système courant"
 
 msgid "Line"
 msgstr "Ligne"
@@ -4106,7 +4114,7 @@ msgid "Hausa (Nigeria, Latin)"
 msgstr ""
 
 msgid "Text was saved"
-msgstr ""
+msgstr "Le texte est sauvegardé"
 
 msgid "Enable Profiles"
 msgstr "Activerles Profiles"
@@ -4509,13 +4517,12 @@ msgstr ""
 msgid "hits: "
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Welcome to the New Vision2\n"
 "Application Wizard"
 msgstr ""
 "Bienvenue dans le nouvel assistant\n"
-" pour les applications WEL"
+" des applications VISION2"
 
 msgid "Choose name for new configuration file"
 msgstr ""
@@ -4572,11 +4579,12 @@ msgstr ""
 msgid "Go to W_code directory of this system, or right click to open W_code in specified file browser"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Welcome to the\n"
 "Precompilation Wizard"
-msgstr "Bienvenue dans l'assistant du Profiler"
+msgstr ""
+"Bienvenue dans \n"
+"l'assistant de Précompilation"
 
 msgid "All Classes"
 msgstr ""
@@ -4824,11 +4832,12 @@ msgstr ""
 msgid "--> Environment variables: "
 msgstr "--> Variables d'environment: "
 
-#, fuzzy
 msgid ""
 "$1\n"
 "is not a directory."
-msgstr "'$1' n'est pas une condition."
+msgstr ""
+"$1\n"
+"n'est pas un répertoire."
 
 msgid "Background C Compilation Terminated"
 msgstr ""
@@ -4839,12 +4848,11 @@ msgstr ""
 msgid "General"
 msgstr "Général"
 
-#, fuzzy
 msgid ""
 "File: $1 already exists.\n"
 "Do you wish to overwrite it?"
 msgstr ""
-"Le fichier « %s » existe déjà.\n"
+"Le fichier: $1 existe déjà.\n"
 "Voulez-vous l'écraser ?"
 
 msgid "Error "
@@ -4971,13 +4979,12 @@ msgid ""
 "Please check that it is a valid C identifier."
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Cannot create file:\n"
 "$1."
 msgstr ""
-"Impossible de créer le fichier %s.\n"
-"%s"
+"Impossible de créer le fichier:\n"
+"$1."
 
 msgid "Undo Refactoring"
 msgstr ""
@@ -5351,13 +5358,12 @@ msgstr ""
 msgid "Exploring ancestors of $1"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Directory $1\n"
 "does not exist."
 msgstr ""
-"$1: Fichier inexistant!\n"
-"\n"
+"Répertoire $1\n"
+"inexistant."
 
 msgid "Ukrainian"
 msgstr ""
@@ -6926,13 +6932,12 @@ msgstr "Non évalué"
 msgid "Special type mappings."
 msgstr "Associations des types spéciaux"
 
-#, fuzzy
 msgid ""
 "Welcome to the New Wizard\n"
 "Application Wizard"
 msgstr ""
 "Bienvenue dans le nouvel assistant\n"
-" pour les applications WEL"
+" des applications WEL"
 
 msgid "&Ignore Breakpoints"
 msgstr "&Ignorer Points d'Arrêt"
@@ -8323,11 +8328,12 @@ msgstr ""
 msgid "Location where information about external assemblies is stored."
 msgstr ""
 
-#, fuzzy
 msgid ""
 "\n"
 "Options:\n"
-msgstr "Options:"
+msgstr ""
+"\n"
+"Options:\n"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -8770,11 +8776,12 @@ msgstr ""
 msgid "Zoom Out"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "\"$1\"\n"
 "is not a compiled class."
-msgstr "$1 n'est pas un nom de classe valide\n"
+msgstr ""
+"\"$1\"\n"
+"n'est pas une classe compilée."
 
 msgid "St&art"
 msgstr ""

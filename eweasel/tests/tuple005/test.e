@@ -8,6 +8,7 @@ feature
 	make is
 		local
 			t1, t2: TUPLE [INTEGER, CHARACTER, STRING]
+			l_mem: MEMORY
 		do
 			t1 := [1, 'c', "My TEST"]
 			t2 := [1, 'c', "My TEST"]
@@ -53,6 +54,13 @@ feature
 			io.put_string ("is_equal? ")
 			io.put_boolean (t1.is_equal (t2))
 			io.new_line
+
+				-- Check that setting the `object_comparison' boolean does not mess up the GC.
+			t1.compare_references
+			t2.compare_references
+			create l_mem
+			l_mem.collect
+			l_mem.full_collect
 		end
 
 end -- class TEST

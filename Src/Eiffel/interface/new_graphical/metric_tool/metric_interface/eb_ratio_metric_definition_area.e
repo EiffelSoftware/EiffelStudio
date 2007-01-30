@@ -62,6 +62,12 @@ feature {NONE} -- Initialization
 			set_unit (a_unit)
 			set_mode (a_mode)
 			setup_editor
+			append_drop_actions (
+				<<expression_lbl_empty_area,
+				  ratio_definition_empty_area
+				>>,
+				metric_tool
+			)
 		ensure
 			metric_tool_set: metric_tool = a_tool
 			metric_panel_set: metric_panel = a_panel
@@ -95,13 +101,6 @@ feature {NONE} -- Initialization
 			denominator_coefficient_txt.set_background_color (l_text.background_color)
 
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
-
-				-- Delete following in docking EiffelStudio.
-			metric_panel.append_drop_actions (
-				<<expression_lbl_empty_area,
-				  ratio_definition_empty_area
-				>>
-			)
 		end
 
 feature -- Status report

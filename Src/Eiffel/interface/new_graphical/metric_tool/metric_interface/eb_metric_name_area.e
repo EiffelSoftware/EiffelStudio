@@ -76,8 +76,9 @@ feature {NONE} -- Initialization
 			description_text.key_press_actions.extend (agent on_key_pressed (?, description_text))
 
 				-- Delete following in docking EiffelStudio.
-			metric_panel.append_drop_actions (
-				<<name_empty_area>>
+			append_drop_actions (
+				<<name_empty_area>>,
+				metric_tool
 			)
 		end
 

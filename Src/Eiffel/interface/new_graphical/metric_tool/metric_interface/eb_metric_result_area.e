@@ -122,9 +122,9 @@ feature {NONE} -- Initialization
 			dummy_text.set_background_color (l_text.background_color)
 			dummy_area.show
 
-				-- Delete following in docking EiffelStudio.
 			append_drop_actions (
-				<<dummy_text>>
+				<<dummy_text>>,
+				metric_tool
 			)
 		end
 

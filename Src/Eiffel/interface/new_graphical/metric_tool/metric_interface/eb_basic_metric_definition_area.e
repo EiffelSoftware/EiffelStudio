@@ -74,9 +74,18 @@ feature {NONE} -- Initialization
 			set_metric_tool (a_tool)
 			set_metric_panel (a_panel)
 			default_create
-			setup_editor
+
 			set_mode (a_mode)
 			set_unit (a_unit)
+			setup_editor
+
+			append_drop_actions (
+				<<criterion_definition_empty_area,
+				  lbl_empty_area,
+				  expression_lbl_empty_area
+				>>,
+				metric_tool
+			)
 		ensure
 			change_actions_attached: change_actions_internal /= Void
 			metric_tool_set: metric_tool = a_tool
@@ -143,12 +152,6 @@ feature {NONE} -- Initialization
 			criterion_lbl.set_text (metric_names.t_metric_criterion_definition)
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 
-			metric_panel.append_drop_actions (
-				<<criterion_definition_empty_area,
-				  lbl_empty_area,
-				  expression_lbl_empty_area
-				>>
-			)
 			add_current_target_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
 			add_current_target_item_btn.set_tooltip (metric_names.f_application_scope)
 			add_current_target_item_btn.select_actions.extend (agent on_add_domain_item (agent new_current_application_target_domain_item))

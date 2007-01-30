@@ -86,6 +86,20 @@ feature {NONE} -- Initialization
 			metric_editor_table.put (linear_metric_definition_area, linear_metric_type)
 			metric_editor_table.put (ratio_metric_definition_area, ratio_metric_type)
 			set_is_metric_reloaded (True)
+
+			append_drop_actions (
+				<<
+					no_metric_area,
+					toolbar_area,
+					metric_definition_area,
+					definer_area_cell,
+					definer_cell,
+					definer_area,
+					basic_metric_definition_area.criterion_definition_empty_area,
+					basic_metric_definition_area.expression_lbl_empty_area
+				>>,
+				metric_tool
+			)
 		ensure
 			metric_tool_set: metric_tool = a_tool
 		end
@@ -154,18 +168,6 @@ feature {NONE} -- Initialization
 			import_btn.set_tooltip (metric_names.f_import_metrics)
 			import_btn.select_actions.extend (agent on_import_metrics)
 
-			append_drop_actions (
-				<<
-					no_metric_area,
-					toolbar_area,
-					metric_definition_area,
-					definer_area_cell,
-					definer_cell,
-					definer_area,
-					basic_metric_definition_area.criterion_definition_empty_area,
-					basic_metric_definition_area.expression_lbl_empty_area
-				>>
-			)
 			select_metric_lbl.set_text (metric_names.t_select_metric)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 		end

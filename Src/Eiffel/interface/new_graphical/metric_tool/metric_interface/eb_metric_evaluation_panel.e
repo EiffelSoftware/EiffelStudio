@@ -188,7 +188,6 @@ feature {NONE} -- Initialization
 			auto_go_to_result_btn.set_pixmap (pixmaps.icon_pixmaps.context_link_icon)
 			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
 
-				-- Delete following in Docking EiffelStudio.
 			append_drop_actions (
 				<<
 					toolbar_empty_area,
@@ -198,7 +197,8 @@ feature {NONE} -- Initialization
 					choose_metric_lbl_cell,
 					metric_definer.criterion_definition_empty_area,
 					metric_definer.expression_lbl_empty_area
-				>>
+				>>,
+				metric_tool
 			)
 			metric_value_text.set_font (bold_font)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)

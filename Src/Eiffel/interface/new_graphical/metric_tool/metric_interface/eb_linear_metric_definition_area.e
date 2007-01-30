@@ -62,6 +62,13 @@ feature {NONE} -- Initialization
 			set_mode (a_mode)
 			set_unit (a_unit)
 			setup_editor
+			append_drop_actions (
+				<<linear_lbl_empty_area,
+				  linear_definition_empty_area,
+				  expression_lbl_empty_area
+				>>,
+				metric_tool
+			)
 		ensure
 			metric_tool_set: metric_tool = a_tool
 			metric_panel_set: metric_panel = a_panel
@@ -122,13 +129,6 @@ feature {NONE} -- Initialization
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 			metric_definition_lbl.set_text (metric_names.t_metric_definition.as_string_32 + ":")
 
-				-- Delete following in docking EiffelStudio.
-			metric_panel.append_drop_actions (
-				<<linear_lbl_empty_area,
-				  linear_definition_empty_area,
-				  expression_lbl_empty_area
-				>>
-			)
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_up_shortcut /= Void

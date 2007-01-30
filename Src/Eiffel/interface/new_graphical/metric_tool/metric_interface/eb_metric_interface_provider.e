@@ -600,6 +600,68 @@ feature{NONE} -- Font
 			result_attached: Result /= Void
 		end
 
+feature -- Pick and drop
+
+	drop_class (st: CLASSI_STONE; a_metric_tool: EB_METRIC_TOOL) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+			a_metric_tool_attached: a_metric_tool /= Void
+		local
+			conv_fst: FEATURE_STONE
+		do
+			conv_fst ?= st
+			if conv_fst = Void then
+				a_metric_tool.develop_window.tools.class_tool.set_stone (st)
+				a_metric_tool.develop_window.tools.class_tool.content.show
+				a_metric_tool.develop_window.tools.class_tool.content.set_focus
+				a_metric_tool.develop_window.tools.class_tool.set_focus
+			else
+				-- The stone is already dropped through `drop_feature'.
+			end
+		end
+
+	drop_feature (st: FEATURE_STONE; a_metric_tool: EB_METRIC_TOOL) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+			a_metric_tool_attached: a_metric_tool /= Void
+		do
+			a_metric_tool.develop_window.tools.features_relation_tool.set_stone (st)
+			a_metric_tool.develop_window.tools.features_relation_tool.content.show
+			a_metric_tool.develop_window.tools.features_relation_tool.content.set_focus
+			a_metric_tool.develop_window.tools.features_relation_tool.set_focus
+		end
+
+	drop_cluster (st: CLUSTER_STONE; a_metric_tool: EB_METRIC_TOOL) is
+			-- Action to be performed when `st' is dropped on current panel.
+		require
+			st_valid: st /= Void
+			a_metric_tool_attached: a_metric_tool /= Void
+		do
+			a_metric_tool.develop_window.tools.launch_stone (st)
+		end
+
+	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_metric_tool: EB_METRIC_TOOL) is
+			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into `a_action_holder'.
+		require
+			a_action_holder_attached: a_action_holder /= Void
+			a_metric_tool_attached: a_metric_tool /= Void
+		do
+			a_action_holder.drop_actions.extend (agent drop_class (?, a_metric_tool))
+			a_action_holder.drop_actions.extend (agent drop_feature (?, a_metric_tool))
+			a_action_holder.drop_actions.extend (agent drop_cluster (?, a_metric_tool))
+		end
+
+	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: EB_METRIC_TOOL) is
+			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into every item in `a_action_holders'.
+		require
+			a_action_holders_attached: a_action_holders /= Void
+			a_action_holders_valid: not a_action_holders.has (Void)
+		do
+			a_action_holders.do_all (agent extend_drop_actions (?, a_metric_tool))
+		end
+
 feature{NONE} -- Implementation
 
 	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is

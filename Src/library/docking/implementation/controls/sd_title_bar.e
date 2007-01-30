@@ -369,6 +369,9 @@ feature {NONE} -- Agents
 				else
 					if a_width - tool_bar_width >= 0 then
 						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+						if internal_tool_bar.has (mini_tool_bar_indicator) then
+							internal_tool_bar.prune (mini_tool_bar_indicator)
+						end
 					end
 
 				end

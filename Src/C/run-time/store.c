@@ -920,8 +920,8 @@ rt_private void st_store(EIF_REFERENCE object)
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
-					/* Don't forget that first element of TUPLE is just a placeholder
-					 * to avoid offset computation from Eiffel code */
+					/* Don't forget that first element of TUPLE is the BOOLEAN
+					 * `object_comparison' attribute. */
 				l_item++;
 				count--;
 				for (; count > 0; count--, l_item++) {
@@ -1337,14 +1337,13 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 	/* Storing TUPLE. Version for independent store */
 {
 	EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
-	unsigned int count = RT_SPECIAL_COUNT(object) - 1; /* Always one non-used element in TUPLE */
+	unsigned int count = RT_SPECIAL_COUNT(object);
 	char l_type;
 
 	REQUIRE ("TUPLE object", HEADER(object)->ov_flags & EO_TUPLE);
 
-		/* Don't forget that first element of TUPLE is just a placeholder
-		 * to avoid offset computation from Eiffel code */
-	l_item++;
+		/* Don't forget that first element of TUPLE is the BOOLEAN
+		 * `object_comparison' attribute. */
 	for (; count > 0; count--, l_item++) {
 			/* For each tuple element we store its type first, and then the associated value */
 		l_type = eif_tuple_item_type(l_item);

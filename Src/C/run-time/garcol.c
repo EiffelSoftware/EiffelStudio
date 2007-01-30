@@ -2274,8 +2274,8 @@ marked: /* Goto label needed to avoid code duplication */
 
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
-					/* Don't forget that first element of TUPLE is just a placeholder
-					 * to avoid offset computation from Eiffel code */
+					/* Don't forget that first element of TUPLE is the BOOLEAN
+					 * `object_comparison' attribute. */
 				l_item++;
 				offset--;
 				if (rt_g_data.status & (GC_PART | GC_GEN)) {
@@ -3768,8 +3768,8 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 
 			if (flags & EO_TUPLE) {
 				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
-					/* Don't forget that first element of TUPLE is just a placeholder
-					 * to avoid offset computation from Eiffel code */
+					/* Don't forget that first element of TUPLE is the BOOLEAN
+					 * `object_comparison' attribute. */
 				l_item++;
 				offset--;
 				if (gen_scavenge & GS_ON) {

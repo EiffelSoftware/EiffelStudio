@@ -1219,8 +1219,8 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 		/* Send the items within the bounds */
 	if (count > 0) {
 		EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
-			/* Don't forget that first element of TUPLE is just a placeholder
-			 * to avoid offset computation from Eiffel code */
+			/* Don't forget that first element of TUPLE is the BOOLEAN
+			 * `object_comparison' attribute which we don't display for now. */
 		l_item++;
 		for (i = 1; count > 0; count--, i++, l_item++) {
 			sprintf (buffer, "%d", i);

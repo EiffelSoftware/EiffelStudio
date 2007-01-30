@@ -1012,8 +1012,8 @@ rt_shared int eif_tuple_is_atomic (EIF_REFERENCE obj)
 	CHECK("Tuple object", HEADER(obj)->ov_flags & EO_TUPLE);
 	count = RT_SPECIAL_COUNT(obj);
 
-		/* Don't forget that first element of TUPLE is just a placeholder
-		 * to avoid offset computation from Eiffel code */
+		/* Don't forget that first element of TUPLE is the BOOLEAN
+		 * `object_comparison' attribute. */
 	l_item++;
 	for (; count > 0 ; count--) {
 		if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {

@@ -12,6 +12,8 @@ class
 inherit
 	EB_METRIC_SHARED
 
+	SHARED_BENCH_NAMES
+
 create
 	make
 
@@ -36,6 +38,9 @@ feature -- Access
 	location: STRING_GENERAL
 			-- Location where current error occurs
 
+	file_location: STRING_GENERAL
+			-- File location if Current error occurs in a file
+
 	message_with_location: STRING_GENERAL is
 			-- `message' with `location' (if any)
 		local
@@ -44,8 +49,14 @@ feature -- Access
 			create l_str.make (message.count + 64)
 			l_str.append (message)
 			if location /= Void then
-				l_str.append (metric_names.space_separator)
+				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.location_string (location))
+			end
+			if file_location /= Void then
+				l_str.append (metric_names.new_line_separator)
+				l_str.append (metric_names.coloned_string (names.l_file_location, True))
+				l_str.append (metric_names.space_separator)
+				l_str.append (file_location)
 			end
 			Result := l_str
 		ensure
@@ -87,6 +98,20 @@ feature -- Setting
 			end
 		ensure
 			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies to_do /= Void)
+		end
+
+	set_file_location (a_file_location: like file_location) is
+			-- Set `file_location' with `a_file_location'.
+		do
+			if a_file_location = Void then
+				file_location := Void
+			else
+				file_location := a_file_location.twin
+			end
+		ensure
+			file_location_set:
+				(a_file_location = Void implies file_location = Void) and then
+				(a_file_location /= Void implies (file_location /= Void and then file_location.is_equal (a_file_location)))
 		end
 
 invariant

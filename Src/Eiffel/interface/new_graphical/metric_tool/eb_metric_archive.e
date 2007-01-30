@@ -184,6 +184,8 @@ feature -- Archive manipulation
 			if not has_error then
 				l_loaded_archive := l_callback.archive
 				l_loaded_archive.do_all (agent insert_archive_node)
+			else
+				backup_file (a_file_name)
 			end
 		end
 

@@ -44,10 +44,14 @@ feature -- Basic operations
 				end
 				create Result.make (metric_names.err_file_not_readable (a_file))
 			end
+			if Result /= Void then
+				Result.set_file_location (a_file)
+			end
 		end
 
-	parse_from_string (a_xml: STRING; a_callback: XM_CALLBACKS) is
+	parse_from_string (a_xml: STRING; a_callback: EB_LOAD_METRIC_CALLBACKS): EB_METRIC_ERROR is
 			-- Parse XML stored in `a_xml' using `a_callback'.
+			-- error during parsing will be returned. Return Void if no error occurred.
 		require
 			a_xml_attached: a_xml /= Void
 			a_callback_attached: a_callback /= Void
@@ -59,6 +63,52 @@ feature -- Basic operations
 			create l_ns_cb.set_next (a_callback)
 			l_parser.set_callbacks (l_ns_cb)
 			l_parser.parse_from_string (a_xml)
+			if a_callback.has_error then
+				Result := a_callback.last_error
+			end
+		end
+
+	backup_file (a_file: STRING) is
+			-- Backup file `a_file'.
+			-- `a_file' is not guaranteed to be backuped maybe because `a_file' doesn't exists or is not readable, or
+			-- the chosen backup file name is not writable.
+		require
+			a_file_attached: a_file /= Void
+		local
+			l_file: RAW_FILE
+			l_backup_file: RAW_FILE
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_file.make (a_file)
+				if l_file.exists and then l_file.is_readable then
+					l_file.open_read
+					create l_backup_file.make_open_write (backup_file_name (a_file))
+					l_file.copy_to (l_backup_file)
+					l_backup_file.close
+					l_file.close
+				end
+			end
+		rescue
+			l_retried := True
+			if l_file /= Void and then l_file.is_open_read then
+				l_file.close
+			end
+			if l_backup_file /= Void and then l_backup_file.is_open_write then
+				l_file.close
+			end
+			retry
+		end
+
+	backup_file_name (a_file: STRING): STRING is
+			-- Backup file name for `a_file'.
+		require
+			a_file_attached: a_file /= Void
+		do
+			create Result.make_from_string (a_file)
+			Result.append (".bak")
+		ensure
+			result_attached: Result /= Void
 		end
 
 indexing

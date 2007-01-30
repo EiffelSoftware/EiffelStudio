@@ -303,8 +303,9 @@ feature -- Save/Open inner container data.
 			if not l_has_place_holder then
 				check has_place_holder: internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
 				l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
-				check not_void: l_place_holder_zone /= Void end
-				l_parent := l_place_holder_zone.parent
+				if l_place_holder_zone /= Void then
+				-- l_place_holder_zone maybe void because open_config fail.
+					l_parent := l_place_holder_zone.parent
 
 					l_split ?= l_parent
 					if l_split /= Void then
@@ -319,11 +320,13 @@ feature -- Save/Open inner container data.
 					if l_split /= Void then
 						l_split.set_proportion (l_split_position)
 					end
-
+				end
 				internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
 				internal_docking_manager.zones.place_holder_content.close
-				internal_docking_manager.query.inner_container_main.update_middle_container
-				internal_docking_manager.command.resize (False)
+				if l_place_holder_zone /= Void then
+					internal_docking_manager.query.inner_container_main.update_middle_container
+					internal_docking_manager.command.resize (False)
+				end
 			end
 			top_container := Void
 		ensure

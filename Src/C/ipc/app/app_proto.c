@@ -1165,6 +1165,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					/* Special of reference. */
 				EIF_BOOLEAN is_void = EIF_FALSE;
 				EIF_BOOLEAN is_special = EIF_FALSE;
+				EIF_BOOLEAN is_tuple = EIF_FALSE;
 				uint32 sk_type = SK_REF;
 				for (o_ref = (char *) ((char **)object + sp_start),
 							sp_index = sp_start; sp_index <= sp_end; 
@@ -1183,13 +1184,40 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 						app_twrite (&sk_type, sizeof(uint32));
 						app_twrite (&reference, sizeof(EIF_POINTER));
 						sk_type = SK_REF;
-					} else {
+
 						dtype = Dtype(reference);
 						app_twrite (&sk_type, sizeof(uint32));
+
 						app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 						app_twrite (&is_void, sizeof(EIF_BOOLEAN));
 						app_twrite (&dtype, sizeof(int32));
 						app_twrite (&reference, sizeof(EIF_POINTER));
+
+						is_special = EIF_FALSE;
+					} else {
+						dtype = Dtype(reference);
+						app_twrite (&sk_type, sizeof(uint32));
+						if (HEADER(reference)->ov_flags & EO_SPEC) {
+							is_special = EIF_TRUE;
+							is_tuple = EIF_TEST(HEADER(reference)->ov_flags & EO_TUPLE);
+
+							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
+							if (is_tuple) {
+								app_twrite (&dtype, sizeof(int32));
+								app_twrite (&reference, sizeof(EIF_POINTER));
+								is_tuple = EIF_FALSE;
+							} else {
+								rec_sinspect (reference, EIF_TRUE);
+							}
+							is_special = EIF_FALSE;
+						} else {
+							app_twrite (&is_special, sizeof(EIF_BOOLEAN));
+							app_twrite (&is_void, sizeof(EIF_BOOLEAN));
+
+							app_twrite (&dtype, sizeof(int32));
+							app_twrite (&reference, sizeof(EIF_POINTER));
+						}
 					}
 				}
 			}

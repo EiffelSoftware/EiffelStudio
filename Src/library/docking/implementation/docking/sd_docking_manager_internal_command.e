@@ -208,6 +208,32 @@ feature -- Commands
 			end
 		end
 
+	update_mini_tool_bar_size (a_content: SD_CONTENT) is
+			-- Update all zones' title bar size for mini tool bar widgets new size.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_zone: SD_ZONE
+		do
+			if a_content /= Void then
+				l_zone := a_content.state.zone
+				if l_zone /= Void then
+					l_zone.update_mini_tool_bar_size
+				end
+			else
+				from
+					l_zones := internal_docking_manager.zones.zones.twin
+					l_zones.start
+				until
+					l_zones.after
+				loop
+					if l_zones.item /= Void then
+						l_zones.item.update_mini_tool_bar_size
+					end
+					l_zones.forth
+				end
+			end
+		end
+
 	on_zone_navigation (a_shift_pressed: BOOLEAN) is
 			-- User request to show zone navigation.
 		local

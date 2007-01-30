@@ -139,7 +139,7 @@ feature -- Command
 			end
 			-- We restoring docking layout, `fixed' maybe destroyed.
 			if not fixed.is_destroyed then
-				on_fixed_resize (0, 0, fixed.width, fixed.height)
+				internal_update_fixed_size
 			end
 		ensure
 			set: a_show = internal_tool_bar.has (normal_max)
@@ -161,7 +161,7 @@ feature -- Command
 			end
 			-- We restoring docking layout, `fixed' maybe destroyed.
 			if not fixed.is_destroyed then
-				on_fixed_resize (0, 0, fixed.width, fixed.height)
+				internal_update_fixed_size
 			end
 		ensure
 			set: a_show = internal_tool_bar.has (stick)
@@ -214,7 +214,10 @@ feature -- Command
 				fixed.prune (internal_custom_widget)
 			end
 			internal_custom_widget := a_widget
-			on_fixed_resize (0, 0, fixed.width, fixed.height)
+			internal_update_fixed_size
+
+			-- `a_widget' will not have resize actions since it was in EV_FIXED.
+			--	a_widget.resize_actions.force_extend (agent update_fixed_size)
 		ensure
 			set: internal_custom_widget = a_widget
 		end
@@ -224,9 +227,24 @@ feature -- Command
 		do
 			fixed.prune (internal_custom_widget)
 			internal_custom_widget := Void
-			on_fixed_resize (0, 0, fixed.width, fixed.height)
+			internal_update_fixed_size
 		ensure
 			wuped_out: internal_custom_widget = Void
+		end
+
+	update_fixed_size is
+			-- Update fixed sizes.
+			-- Different from `internal_update_fixed_size', this feature will force `internal_custom_widget' recalculate its size.
+		do
+			if not is_resizing then
+				is_resizing := True
+				-- This is to make sure item in `fixed' is resized, otherwise items inside mini tool bar size is incorrect
+				if fixed.has (internal_custom_widget) then
+					fixed.prune (internal_custom_widget)
+				end
+				on_fixed_resize (0, 0, fixed.width, fixed.height)
+				is_resizing := False
+			end
 		end
 
 	destroy is
@@ -338,7 +356,7 @@ feature {NONE} -- Agents
 				viewport.set_item_width (a_width)
 
 				if internal_custom_widget /= Void then
-					if a_width >= tool_bar_width + internal_custom_widget.width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
+					if a_width >= tool_bar_width + internal_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
 						-- There is enough space for mini tool bar.
 						if internal_tool_bar.has (mini_tool_bar_indicator) then
 							internal_tool_bar.prune (mini_tool_bar_indicator)
@@ -350,8 +368,8 @@ feature {NONE} -- Agents
 							end
 							fixed.extend (internal_custom_widget)
 						end
-						fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.width)
-						fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.width, a_height)
+						fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.minimum_width)
+						fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.minimum_width, a_height)
 					else
 						-- There is not enough space for mini tool bar.
 						if not internal_tool_bar.has (mini_tool_bar_indicator) then
@@ -379,11 +397,7 @@ feature {NONE} -- Agents
 				fixed.set_item_x_position (internal_title, 0)
 				fixed.set_item_x_position (internal_tool_bar, a_width - tool_bar_width)
 			end
-
 		end
-
-	ignore_resize: BOOLEAN
-			-- If ignore resize actions?
 
 	on_stick_select is
 			-- Notify clients when user click stick button.
@@ -419,6 +433,12 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
+
+	ignore_resize: BOOLEAN
+			-- If ignore resize actions?
+
+	is_resizing: BOOLEAN
+			-- If `update_fixed_size' or `internal_update_fixed_size' is executing.
 
 	internal_border: SD_CELL_WITH_BORDER
 			-- Internal border
@@ -467,6 +487,16 @@ feature {NONE} -- Implementation
 			Result := internal_mini_tool_bar_indicator
 		ensure
 			not_void: Result /= Void
+		end
+
+	internal_update_fixed_size is
+			-- Different from `update_fixed_size', this feature will not force `internal_custom_widget' recalculate it's size.
+		do
+			if not is_resizing then
+				is_resizing := True
+				on_fixed_resize (0, 0, fixed.width, fixed.height)
+				is_resizing := False
+			end
 		end
 
 	internal_mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON

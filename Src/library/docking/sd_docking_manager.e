@@ -228,6 +228,13 @@ feature -- Command
 			set: query.inner_container_main.background_color.is_equal (a_color)
 		end
 
+	update_mini_tool_bar_size (a_content: SD_CONTENT) is
+			-- After mini tool bar widget size changes, update mini tool bar size to best fit new size of mini tool bar widget.
+			-- `a_content' can be void if not known.
+		do
+			command.update_mini_tool_bar_size (a_content)
+		end
+
 	destroy is
 			-- Destroy all underline objects.
 		do

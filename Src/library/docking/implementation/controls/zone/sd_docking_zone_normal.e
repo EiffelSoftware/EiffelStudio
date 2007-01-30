@@ -18,6 +18,7 @@ inherit
 			on_focus_out,
 			on_normal_max_window,
 			update_user_widget,
+			update_mini_tool_bar_size,
 			set_non_focus_selection_color
 		end
 create
@@ -167,6 +168,12 @@ feature {NONE} -- Implementation
 			-- Redefine
 		do
 			window.set_user_widget (content.user_widget)
+		end
+
+	update_mini_tool_bar_size is
+			-- Redefine
+		do
+			window.title_bar.update_fixed_size
 		end
 
 invariant

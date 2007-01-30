@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 			mini_toolbar.extend (address_manager.header_info)
 			mini_toolbar.extend (history_toolbar)
+			address_manager.label_changed_actions.extend (agent (develop_window.docking_manager).update_mini_tool_bar_size (content))
 		end
 
 	build_interface is

@@ -83,45 +83,56 @@ feature {NONE} -- Agents
 
 	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle expose action.
+		local
+			l_stock_colors: EV_STOCK_COLORS
 		do
 			clear
+			create l_stock_colors
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				set_foreground_color (l_stock_colors.white)
 				draw_segment (0, 0, 0, height)
-				set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				set_foreground_color (l_stock_colors.black)
 				draw_segment (width - 1, 0, width - 1, height - 1)
 			else
-				set_foreground_color ((create {EV_STOCK_COLORS}).white)
+				set_foreground_color (l_stock_colors.white)
 				draw_segment (0, 0, width - 1, 0)
-				set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				set_foreground_color (l_stock_colors.black)
 				draw_segment (0, height - 1, width - 1, height - 1)
 			end
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Handle the resize window action.
+		local
+			l_scr_boundary: like screen_boundary
+			l_left, l_right, l_top, l_bottom: INTEGER
 		do
 			if resizing then
 				-- Clear the graph last drawn.
 
 				clear_graph_last_drawn
 
+				l_scr_boundary := screen_boundary
 				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-					if a_screen_x > screen_boundary.left and a_screen_x < screen_boundary.right then
+					l_left := l_scr_boundary.left
+					l_right := l_scr_boundary.right
+					if a_screen_x > l_left and a_screen_x < l_right then
 						last_screen_pointer_position := a_screen_x
-					elseif a_screen_x <= screen_boundary.left then
-						last_screen_pointer_position := screen_boundary.left
+					elseif a_screen_x <= l_left then
+						last_screen_pointer_position := l_left
 					else
-						last_screen_pointer_position := screen_boundary.right
+						last_screen_pointer_position := l_right
 					end
 					internal_shared.feedback.draw_line_area (last_screen_pointer_position, screen_y, width, height)
 				else
-					if a_screen_y > screen_boundary.top and a_screen_y < screen_boundary.bottom then
+					l_top := l_scr_boundary.top
+					l_bottom := l_scr_boundary.bottom
+					if a_screen_y > l_top and a_screen_y < l_bottom then
 						last_screen_pointer_position := a_screen_y
-					elseif a_screen_y <= screen_boundary.top then
-						last_screen_pointer_position := screen_boundary.top
-					elseif a_screen_y >= screen_boundary.bottom then
-						last_screen_pointer_position := screen_boundary.bottom
+					elseif a_screen_y <= l_top then
+						last_screen_pointer_position := l_top
+					elseif a_screen_y >= l_bottom then
+						last_screen_pointer_position := l_bottom
 					end
 					internal_shared.feedback.draw_line_area (screen_x, last_screen_pointer_position, width, height)
 				end

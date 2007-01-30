@@ -204,7 +204,7 @@ feature -- Commands
 				if l_inner_container_snapshot.item /= Void then
 					l_inner_container_snapshot.item.update_title_bar
 				end
-					l_inner_container_snapshot.forth
+				l_inner_container_snapshot.forth
 			end
 		end
 
@@ -239,10 +239,12 @@ feature -- Commands
 		local
 			l_dialog: SD_ZONE_NAVIGATION_DIALOG
 			l_x, l_y: INTEGER
+			l_win: EV_WINDOW
 		do
 			create l_dialog.make (a_shift_pressed, internal_docking_manager)
-			l_x := internal_docking_manager.main_window.screen_x + internal_docking_manager.main_window.width // 2 - l_dialog.width // 2
-			l_y := internal_docking_manager.main_window.screen_y + internal_docking_manager.main_window.height // 2 - l_dialog.height // 2
+			l_win := internal_docking_manager.main_window
+			l_x := l_win.screen_x + l_win.width // 2 - l_dialog.width // 2
+			l_y := l_win.screen_y + l_win.height // 2 - l_dialog.height // 2
 			l_dialog.set_position (l_x, l_y)
 			l_dialog.show
 		end

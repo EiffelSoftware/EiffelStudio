@@ -461,35 +461,6 @@ feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP, EV_APPLICATION_IMP} -- Imp
 			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
 		end
 
-	grab_keyboard_and_mouse is
-			-- Perform a global mouse and keyboard grab.
-		local
-			i: INTEGER
-		do
-			i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-				1,
-				{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_button_press_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum |
-				{EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
-				,
-				null,
-				null,
-				0
-			)
-			i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True, 0)
-		end
-
-	release_keyboard_and_mouse is
-			-- Release mouse and keyboard grab.
-		do
-			{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
-				0 -- guint32 time
-			)
-			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
-		end
-
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	on_focus_changed (a_has_focus: BOOLEAN) is

@@ -84,7 +84,6 @@ char odbc_user_name[40];
 
 short odbc_tranNumber=0; /* number of transaction opened at present */
 
-rt_private int odbc_first_descriptor_available (void);
 rt_private void change_to_low(char *buf, int length);
 
 int is_null_data;
@@ -584,7 +583,7 @@ void odbc_start_order (int no_desc)
 			SQLBindCol(hstmt, 9, SQL_C_SSHORT, &DecimalDigits, 0, &cbDecimalDigits);
 			SQLBindCol(hstmt, 10, SQL_C_SSHORT, &NumPrecRadix, 0, &cbNumPrecRadix);
 			SQLBindCol(hstmt, 11, SQL_C_SSHORT, &Nullable, 0, &cbNullable);
-			while(TRUE) {
+			while(1) {
 				rc = SQLFetch(hstmt);
 				if (rc == SQL_ERROR || rc == SQL_SUCCESS_WITH_INFO) {
 					odbc_error_handler(hstmt[no_desc],7);

@@ -30,14 +30,7 @@ feature -- Access
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
-
-	generate_as_include: BOOLEAN
-			-- Indicates if fragment should be generated as an include
-		require
-			can_read_options: can_read_options
-		deferred
-		end
-
+		
 	generate_single_file_components: BOOLEAN
 			-- Indicates if components should contain only one file
 		require

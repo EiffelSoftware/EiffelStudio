@@ -284,20 +284,19 @@ feature {NONE} -- Updates
 			--| I don't want to break everything so I just add this event.
 		local
 			cur: CURSOR
-			l_list: like edition_observer_list
 		do
-			from
-				cur := edition_observer_list.cursor
-				l_list := edition_observer_list.twin
-				edition_observer_list.go_to (cur)
-
-				l_list.start
+			is_notifying := True
+			cur := edition_observer_list.cursor
+			from 
+				edition_observer_list.start
 			until
-				l_list.after
+				edition_observer_list.after
 			loop
-				l_list.item.on_text_fully_loaded
-				l_list.forth
+				edition_observer_list.item.on_text_fully_loaded
+				edition_observer_list.forth
 			end
+			edition_observer_list.go_to (cur)
+			is_notifying := False
 			execute_post_notify_actions
 		end
 

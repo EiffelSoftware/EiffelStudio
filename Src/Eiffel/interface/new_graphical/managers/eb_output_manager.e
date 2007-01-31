@@ -154,11 +154,6 @@ feature -- Basic Operations / Information message
 		deferred
 		end
 
-	display_welcome_info is
-			-- Display information on how to launch $EiffelGraphicalCompiler$.
-		deferred
-		end
-
 	display_application_status is
 			-- Display the application status.
 		deferred

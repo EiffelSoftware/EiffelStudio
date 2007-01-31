@@ -113,21 +113,8 @@ feature {NONE} -- Implementation
 				l_interface ?= interface
 				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
---				top_level_window_imp.grab_keyboard_and_mouse
 				App_implementation.disable_debugger
-				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
-					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
-					1,
-					{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum |
-					{EV_GTK_EXTERNALS}.gdk_button_press_mask_enum |
-					{EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum |
-					{EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
-					,
-					null,
-					null,
-					0
-				)
-				i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
+				grab_keyboard_and_mouse
 			end
 		end
 
@@ -137,10 +124,7 @@ feature {NONE} -- Implementation
 		do
 			if has_capture then
 				{EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-				{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
-					0 -- guint32 time
-				)
-				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+				release_keyboard_and_mouse
 				App_implementation.enable_debugger
 				App_implementation.set_captured_widget (Void)
 			end
@@ -151,6 +135,37 @@ feature {NONE} -- Implementation
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (event_widget) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM or else
 			{EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM
+		end
+
+	grab_keyboard_and_mouse is
+			-- Perform a global mouse and keyboard grab.
+		local
+			i: INTEGER
+			l_gdk_window: POINTER
+		do
+			l_gdk_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget)
+			i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
+				l_gdk_window,
+				1,
+				{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum |
+				{EV_GTK_EXTERNALS}.gdk_button_press_mask_enum |
+				{EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum |
+				{EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
+				,
+				null,
+				null,
+				0
+			)
+			i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab (l_gdk_window, True, 0)
+		end
+
+	release_keyboard_and_mouse is
+			-- Release mouse and keyboard grab.
+		do
+			{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
+				0 -- guint32 time
+			)
+			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 		end
 
 feature -- Implementation

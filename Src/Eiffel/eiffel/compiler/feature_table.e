@@ -585,8 +585,9 @@ end
 
 					removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
 					remove (key_for_iteration)
+				else
+					forth
 				end
-				forth
 			end
 		end
 

@@ -19,6 +19,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} execute, successful
+		redefine
+			display_logo
 		end
 
 	I_OPTIONS
@@ -298,7 +300,26 @@ feature {NONE} -- Usage
 			-- Type of lose argument, used in usage information.
 			-- A type is a short description of the argument. I.E. "Configuration File"
 
-feature -- Switch names
+feature {NONE} -- Output
+
+	display_logo is
+			-- Displays copyright information
+		do
+			if successful then
+				if not display_help then
+					{SYSTEM_CONSOLE}.write_line ("<!--")
+					{SYSTEM_CONSOLE}.write_line
+				end
+				Precursor {ARGUMENT_SINGLE_PARSER}
+				if not display_help then
+					{SYSTEM_CONSOLE}.write_line ("-->")
+				end
+			else
+				Precursor {ARGUMENT_SINGLE_PARSER}
+			end
+		end
+
+feature {NONE} -- Switch names
 
 	one_file_per_component_switch: STRING = "s"
 	recursive_switch: STRING = "r"

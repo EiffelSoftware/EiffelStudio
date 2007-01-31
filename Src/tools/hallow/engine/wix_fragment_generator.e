@@ -56,11 +56,7 @@ feature {NONE} -- Element generation
 			l_dir: DIRECTORY_INFO
 		do
 				-- Start generation					
-			if a_options.generate_as_include then
-				a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
-			else
-				a_writer.write_start_element ({WIX_CONSTANTS}.wix_tag, {WIX_CONSTANTS}.wix_ns)
-			end
+			a_writer.write_start_element ({WIX_CONSTANTS}.wix_tag, {WIX_CONSTANTS}.wix_ns)
 			a_writer.write_start_element ({WIX_CONSTANTS}.fragment_tag)
 			a_writer.write_start_element ({WIX_CONSTANTS}.directory_ref_tag)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, a_options.directory_ref_name)
@@ -340,7 +336,8 @@ feature {NONE} -- Attribute generation
 				end
 
 					-- Ensure path uniqueness
-				l_base_name := format_identifier (Result)
+				Result := format_identifier (Result)
+				l_base_name := Result
 				from i := 2 until not name_table.contains (Result) loop
 					Result := {SYSTEM_STRING}.concat (l_base_name, i)
 				end
@@ -369,9 +366,9 @@ feature {NONE} -- Attribute generation
 			l_count := a_id.length
 
 				-- Must begin with a letter or underscore
-			c := a_id.chars (1)
-			if  not({DOTNET_CHARACTER}.is_letter (c) or c = '_') then
-				l_sb.set_chars (1, '_')
+			c := a_id.chars (0)
+			if not ({DOTNET_CHARACTER}.is_letter (c) or c = '_') then
+				l_sb.set_chars (0, '_')
 			end
 
 				-- Check all other character

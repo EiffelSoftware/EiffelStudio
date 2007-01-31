@@ -24,7 +24,6 @@ feature -- Element names
 	directory_tag: SYSTEM_STRING = "Directory"
 	file_tag: SYSTEM_STRING = "File"
 	fragment_tag: SYSTEM_STRING = "Fragment"
-	include_tag: SYSTEM_STRING = "Include"
 	wix_tag: SYSTEM_STRING = "Wix"
 
 feature -- Attribute names

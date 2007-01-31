@@ -55,12 +55,6 @@ feature -- Access
 			Result := l_dir.full_name
 		end
 
-	frozen generate_as_include: BOOLEAN
-			-- Indicates if fragment should be generated as an include
-		once
-			Result := has_option (generate_as_include_switch)
-		end
-
 	frozen generate_single_file_components: BOOLEAN
 			-- Indicates if components should contain only one file
 		once
@@ -266,7 +260,6 @@ feature {NONE} -- Usage
 			-- (export status {NONE})
 		do
 			create Result.make (8)
-			Result.extend (create {ARGUMENT_SWITCH}.make (generate_as_include_switch, "Generates a WiX 'Include' document instead of the default 'Wix' document element.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursively include all subdirectories and files.", True, False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
@@ -295,7 +288,6 @@ feature {NONE} -- Usage
 
 feature -- Switch names
 
-	generate_as_include_switch: STRING = "i"
 	one_file_per_component_switch: STRING = "s"
 	recursive_switch: STRING = "r"
 	no_guid_generation_switch: STRING = "g"

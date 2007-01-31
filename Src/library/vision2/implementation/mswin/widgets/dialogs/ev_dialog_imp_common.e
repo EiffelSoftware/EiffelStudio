@@ -29,7 +29,6 @@ inherit
 			show_relative_to_window
 		redefine
 			interface, process_message,
-			wel_move_and_resize,
 			wel_destroy_window,
 			on_wm_command,
 			forbid_resize, allow_resize,

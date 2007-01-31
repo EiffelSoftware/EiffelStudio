@@ -204,20 +204,21 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			if pixel_buffer /= Void then
 				a_item.set_pixel_buffer (pixel_buffer)
 			end
-			a_item.set_tooltip (tooltip)
 			a_item.set_description (description)
 			if is_sensitive then
 				a_item.enable_sensitive
 			else
 				a_item.disable_sensitive
 			end
-			l_tt := tooltip.twin
 			if accelerator /= Void then
+				l_tt := tooltip.twin
 				l_tt.append (opening_parenthesis)
 				l_tt.append (accelerator.out)
 				l_tt.append (closing_parenthesis)
+				a_item.set_tooltip (l_tt)
+			else
+				a_item.set_tooltip (tooltip)
 			end
-			a_item.set_tooltip (l_tt)
 		end
 
 	remove_toolbar_item (a_toolbar_item: like new_toolbar_item) is

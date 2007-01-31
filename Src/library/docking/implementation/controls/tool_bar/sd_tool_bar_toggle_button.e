@@ -22,6 +22,7 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make is
 			-- Creation method
 		do
@@ -56,7 +57,7 @@ feature -- Command
 		end
 
 feature {NONE} -- Agents
-	
+
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer press actions.
 		do

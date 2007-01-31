@@ -455,6 +455,7 @@ feature {NONE} -- debugging
 				activate_debugger_environment (True)
 				app_exec := manager.application
 				app_exec.set_execution_mode (a_execution_mode)
+				app_exec.on_application_before_launching
 				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
 				if manager.application_is_executing then
 					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then

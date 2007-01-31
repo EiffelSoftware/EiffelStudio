@@ -14,7 +14,7 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			Step_into as execution_mode
+			User_stop_points as execution_mode
 		redefine
 			internal_execute,
 			tooltext
@@ -30,10 +30,15 @@ feature -- Initialization
 	internal_execute (a_execution_mode: INTEGER) is
 			-- Execute.
 		local
-			ag: PROCEDURE [ANY, TUPLE]
+			pre_ag, ag: PROCEDURE [ANY, TUPLE]
 		do
 			if eb_debugger_manager.application_is_executing then
-				eb_debugger_manager.enable_keep_raised
+				if not eb_debugger_manager.debug_mode_forced then
+					eb_debugger_manager.force_debug_mode
+					pre_ag := agent eb_debugger_manager.unforce_debug_mode
+					eb_debugger_manager.application_prelaunching_actions.extend (pre_ag)
+					eb_debugger_manager.application_prelaunching_actions.prune_when_called (pre_ag)
+				end
 
 				if delayed_run_action = Void then
 					create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
@@ -46,6 +51,10 @@ feature -- Initialization
 				ask_and_kill
 
 				if not kill_requested then
+					if pre_ag /= Void then
+						eb_debugger_manager.unforce_debug_mode
+						eb_debugger_manager.application_prelaunching_actions.prune_when_called (pre_ag)
+					end
 					eb_debugger_manager.application_quit_actions.prune_all (ag)
 				end
 			else

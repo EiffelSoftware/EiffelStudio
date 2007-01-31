@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			set_default_parameters
 
 			create application_quit_actions
+			create application_prelaunching_actions
 			create debug_info.make
 			create controller.make (Current)
 			create observers.make (3)
@@ -87,6 +88,8 @@ feature -- Application execution
 		end
 
 	application_initialized: BOOLEAN
+
+	application_launching_in_progress: BOOLEAN
 
 	application: APPLICATION_EXECUTION
 
@@ -839,12 +842,15 @@ feature -- Debugging events
 				bl.item_for_iteration.reset_session_data
 				bl.forth
 			end
+			application_launching_in_progress := True
+			application_prelaunching_actions.call (Void)
 		end
 
 	on_application_launched is
 		local
 			s: STRING_GENERAL
 		do
+			application_launching_in_progress := False
 			incremente_debugging_operation_id
 			application_status.set_max_depth (maximum_stack_depth)
 
@@ -908,6 +914,8 @@ feature -- Debugging events
 				--| Display running mode, only if ignoring bp
 			if application.execution_mode = {EXEC_MODES}.No_stop_points then
 				debugger_status_message (debugger_names.t_Running_no_stop_points)
+			else
+				debugger_status_message (debugger_names.t_Running)
 			end
 
 				--| Observers
@@ -916,6 +924,7 @@ feature -- Debugging events
 
 	on_application_quit is
 		do
+			application_launching_in_progress := False
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit %N")
 			end
@@ -951,7 +960,11 @@ feature -- Debugging events
 
 feature -- Actions
 
+	application_prelaunching_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions to be process just before starting the debuggee.
+
 	application_quit_actions: ACTION_SEQUENCE [TUPLE]
+			-- Actions to be process when the debuggee exits.
 
 feature {NONE} -- Implementation
 

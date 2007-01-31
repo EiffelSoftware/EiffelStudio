@@ -8074,6 +8074,13 @@ feature
 			"send_event"
 		end
 
+	frozen gdk_event_any_struct_window (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventAny): EIF_POINTER"
+		alias
+			"window"
+		end
+
 	frozen gdk_event_any_struct_type (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GdkEventAny): EIF_INTEGER"

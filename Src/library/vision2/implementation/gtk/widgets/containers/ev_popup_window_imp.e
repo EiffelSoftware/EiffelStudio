@@ -31,11 +31,11 @@ inherit
 			has_focus,
 			internal_enable_border,
 			internal_disable_border,
-			on_mouse_button_event,
 			grab_keyboard_and_mouse,
 			release_keyboard_and_mouse,
 			allow_resize,
-			forbid_resize
+			forbid_resize,
+			on_focus_changed
 		end
 
 create
@@ -70,12 +70,23 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Called from focus intermediary agents when focus for `Current' has changed.
+			-- if `a_has_focus' then `Current' has just received focus.
+		do
+			if a_has_focus then
+				app_implementation.set_focused_popup_window (Current)
+			else
+				app_implementation.set_focused_popup_window (Void)
+			end
+			Precursor {EV_WINDOW_IMP} (a_has_focus)
+		end
+
 	grab_keyboard_and_mouse is
 			-- Perform a global mouse and keyboard grab.
 		do
 			if not is_disconnected_from_window_manager then
-				Precursor;
-				{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
+				Precursor
 			end
 		end
 
@@ -83,34 +94,11 @@ feature {EV_ANY_I} -- Implementation
 			-- Release mouse and keyboard grab.
 		do
 			if not is_disconnected_from_window_manager then
-				Precursor;
-				{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
+				Precursor
 			end
 		end
 
 feature {NONE} -- implementation
-
-	on_mouse_button_event (a_type: INTEGER_32; a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
-			-- A mouse event has occurred.
-		do
-			Precursor (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
-				if
-					a_screen_x >= x_position and then
-					a_screen_x <= (x_position + width) and then
-					a_screen_y >= y_position and then
-					a_screen_y <= (y_position + height)
-				then
-					grab_keyboard_and_mouse
-				else
-						-- Emulate WM handling when clicking off window.
-					if has_focus then
-						release_keyboard_and_mouse
-					end
-					{EV_GTK_EXTERNALS}.gtk_window_set_focus (c_object, default_pointer)
-				end
-			end
-		end
 
 	allow_resize
 			-- Allow user resizing of `Current'.
@@ -139,6 +127,8 @@ feature {NONE} -- implementation
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
 		end
 
+feature {EV_APPLICATION_IMP} -- Implementation
+
 	show is
 			-- Map the Window to the screen.
 		do
@@ -159,7 +149,27 @@ feature {NONE} -- implementation
 			-- Does Current have the keyboard focus?
 		do
 			if not is_disconnected_from_window_manager then
-				Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object
+				Result := app_implementation.focused_popup_window = Current
+			end
+		end
+
+	handle_mouse_button_event (a_type: INTEGER_32; a_button: INTEGER_32; a_screen_x, a_screen_y: INTEGER_32) is
+			-- A mouse event has occurred.
+		do
+			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
+				if
+					a_screen_x >= x_position and then
+					a_screen_x <= (x_position + width) and then
+					a_screen_y >= y_position and then
+					a_screen_y <= (y_position + height)
+				then
+					grab_keyboard_and_mouse
+				else
+						-- Emulate WM handling when clicking off window.
+					if has_focus then
+						release_keyboard_and_mouse
+					end
+				end
 			end
 		end
 

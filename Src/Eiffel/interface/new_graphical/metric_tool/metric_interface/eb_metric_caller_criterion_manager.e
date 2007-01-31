@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	property_item: EB_METRIC_GRID_DOMAIN_ITEM [BOOLEAN] is
+	property_item: EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [BOOLEAN]] is
 			-- Grid item used to display properties
 		do
 			if property_item_internal = Void then
@@ -43,14 +43,20 @@ feature -- Properties management
 			-- Load porperties from `a_criterion' into current manager
 		do
 			Precursor (a_criterion)
-			property_item.set_value (a_criterion.only_current_version)
+			property_item.set_value ([a_criterion.only_current_version])
 		end
 
 	store_properties (a_criterion: like criterion_type) is
 			-- Store properties in current manager into `a_criterion'.
+		local
+			l_value: TUPLE [only_current_version: BOOLEAN]
 		do
 			Precursor (a_criterion)
-			if property_item.value then
+			l_value := property_item.value
+			if l_value = Void then
+				l_value := [True]
+			end
+			if l_value.only_current_version then
 				a_criterion.enable_only_current_version
 			else
 				a_criterion.disable_only_current_version

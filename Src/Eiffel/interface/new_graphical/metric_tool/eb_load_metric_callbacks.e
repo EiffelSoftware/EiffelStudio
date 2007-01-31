@@ -74,6 +74,9 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	xml_parser: XM_PARSER
+			-- XML parser which is using current callback
+
 feature -- Status report
 
 	has_error: BOOLEAN is
@@ -117,6 +120,14 @@ feature -- Setting
 			is_for_whole_file := b
 		ensure
 			is_for_whole_file_set: is_for_whole_file = b
+		end
+
+	set_xml_parser (a_parser: like xml_parser) is
+			-- Set `xml_parser' with `a_parser'.
+		do
+			xml_parser := a_parser
+		ensure
+			xml_parser_set: xml_parser = a_parser
 		end
 
 feature -- Callbacks
@@ -354,9 +365,15 @@ feature{NONE} -- Implementation
 
 	create_last_error (a_message: STRING_GENERAL) is
 			-- Create `last_error' with `a_message'.
+		local
+			l_position: XM_POSITION
 		do
 			create last_error.make (a_message)
 			last_error.set_location (location)
+			if xml_parser /= Void then
+				l_position := xml_parser.position
+				last_error.set_xml_location ([l_position.column, l_position.row])
+			end
 		ensure
 			has_error: has_error
 		end

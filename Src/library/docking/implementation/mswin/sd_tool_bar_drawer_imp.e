@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			l_font_button ?= a_arguments.item
 
 			if l_button /= Void and then l_button.text /= Void and l_button.tool_bar /= Void then
-				l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline
+				l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline | {WEL_DT_CONSTANTS}.dt_word_ellipsis
 				l_text_vision_rect := l_button.text_rectangle
 				create l_text_rect.make (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.right, l_text_vision_rect.bottom)
 

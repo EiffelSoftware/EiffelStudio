@@ -168,12 +168,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		local
 			l_left, l_top, l_width, l_height: INTEGER
 		do
-			l_left := tool_bar.item_x (Current)
-			if pixmap /= Void then
-				l_left := l_left + {SD_TOOL_BAR}.padding_width + icon_width + {SD_TOOL_BAR}.padding_width
-			else
-				l_left := l_left + {SD_TOOL_BAR}.padding_width
-			end
+			l_left := text_left
 			l_width := text_width
 			l_top := tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width
 			l_height := tool_bar.row_height - 2 * {SD_TOOL_BAR}.border_width
@@ -311,6 +306,23 @@ feature{SD_TOOL_BAR} -- Implementation
 				Result := Result + pixel_buffer.width
 			elseif pixmap /= Void then
 				Result := Result + pixmap.width
+			end
+		end
+
+	text_left: INTEGER is
+			-- Text left start position
+		do
+			Result := tool_bar.item_x (Current)
+			Result := Result + width_before_text
+		end
+
+	width_before_text: INTEGER is
+			-- Width before text left side
+		do
+			if pixmap /= Void then
+				Result := {SD_TOOL_BAR}.padding_width + icon_width + {SD_TOOL_BAR}.padding_width
+			else
+				Result := {SD_TOOL_BAR}.padding_width
 			end
 		end
 

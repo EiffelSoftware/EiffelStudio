@@ -33,7 +33,9 @@ feature -- Basic operations
 			create l_file.make (a_file)
 			l_file.open_read
 			if l_file.exists and then l_file.is_open_read then
+				a_callback.set_xml_parser (l_parser)
 				l_parser.parse_from_stream (l_file)
+				a_callback.set_xml_parser (Void)
 				l_file.close
 				if a_callback.has_error then
 					Result := a_callback.last_error

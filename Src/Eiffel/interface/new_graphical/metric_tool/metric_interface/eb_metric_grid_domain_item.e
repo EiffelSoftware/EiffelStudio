@@ -55,7 +55,9 @@ feature -- Access
 			-- Domain contained in Current
 		do
 			create Result.make
-			Result.append (domain_internal)
+			if domain_internal /= Void then
+				Result.append (domain_internal)
+			end
 		ensure
 			result_attached: Result /= Void
 		end

@@ -52,6 +52,10 @@ feature -- Access
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.location_string (location))
 			end
+			if is_xml_location_set then
+				l_str.append (metric_names.new_line_separator)
+				l_str.append (metric_names.xml_position (xml_column, xml_row))
+			end
 			if file_location /= Void then
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.coloned_string (names.l_file_location, True))
@@ -61,6 +65,42 @@ feature -- Access
 			Result := l_str
 		ensure
 			result_attached: Result /= Void
+		end
+
+	xml_location: TUPLE [column: INTEGER; row: INTEGER]
+			-- Location in xml file where Current error happened
+
+	xml_row: INTEGER is
+			-- 	Row in `xml_location'.
+		require
+			xml_location_set: is_xml_location_set
+		do
+			Result := xml_location.row
+		end
+
+	xml_column: INTEGER is
+			-- 	Row in `xml_location'.
+		require
+			xml_location_set: is_xml_location_set
+		do
+			Result := xml_location.column
+		end
+
+feature -- Status report
+
+	is_xml_location_set: BOOLEAN is
+			-- Is `xml_location' set?
+			-- Not set if Current error is not related to xml file.
+		do
+			Result := xml_location /= Void
+		ensure
+			good_result: Result implies xml_location /= Void and then (not Result implies xml_location = Void)
+		end
+
+	is_file_location_set: BOOLEAN is
+			-- Is `file_location' set?
+		do
+			Result := file_location /= Void
 		end
 
 feature -- Setting
@@ -112,6 +152,14 @@ feature -- Setting
 			file_location_set:
 				(a_file_location = Void implies file_location = Void) and then
 				(a_file_location /= Void implies (file_location /= Void and then file_location.is_equal (a_file_location)))
+		end
+
+	set_xml_location (a_location: like xml_location) is
+			-- Set `xml_location' with `a_location'.
+		do
+			xml_location := a_location
+		ensure
+			xml_location_set: xml_location = a_location
 		end
 
 invariant

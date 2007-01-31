@@ -10,7 +10,7 @@ class
 	EB_METRIC_GRID_CALLER_CALLEE_DIALOG
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [BOOLEAN]
+	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE[BOOLEAN]]
 		redefine
 			initialize,
 			on_ok,
@@ -61,10 +61,13 @@ feature{NONE} -- Action
 	on_show is
 			-- Action to be performed when dialog is displayed
 		local
-			l_value: BOOLEAN
+			l_value: TUPLE[only_current: BOOLEAN]
 		do
 			l_value := value
-			if l_value.item then
+			if l_value = Void then
+				l_value := [True]
+			end
+			if l_value.only_current then
 				only_current_version_radio.enable_select
 			else
 				descendant_version_radio.enable_select
@@ -75,7 +78,7 @@ feature{NONE} -- Action
 			-- Ok was pressed.
 		do
 			Precursor
-			set_value (only_current_version_radio.is_selected)
+			set_value ([only_current_version_radio.is_selected])
 			ok_actions.call ([])
 		end
 

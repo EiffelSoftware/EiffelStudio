@@ -23,6 +23,7 @@ feature -- Basic operations
 			l_writer: XML_TEXT_WRITER
 		do
 			reset
+
 			create l_writer.make (a_stream)
 			l_writer.set_formatting ({FORMATTING}.indented)
 			generate_root (a_options, l_writer)
@@ -55,8 +56,6 @@ feature {NONE} -- Element generation
 			l_dir: DIRECTORY_INFO
 		do
 				-- Start generation					
-			a_writer.write_start_document
-
 			if a_options.generate_as_include then
 				a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
 			else
@@ -78,7 +77,6 @@ feature {NONE} -- Element generation
 			a_writer.write_end_element
 			a_writer.write_end_element
 			a_writer.write_end_element
-			a_writer.write_end_document
 		end
 
 	generate_directory (a_dir: DIRECTORY_INFO; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
@@ -202,7 +200,7 @@ feature {NONE} -- Element generation
 			a_content_gen_has_attached_target: a_content_gen.target /= Void
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.component_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix))
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.guid_attribute, guid (a_options))
 
 			a_content_gen.call ([a_options, a_writer])
@@ -250,6 +248,7 @@ feature {NONE} -- Element generation
 			a_file_exists: a_file.exists
 		local
 			l_name: SYSTEM_STRING
+			l_id: INTEGER
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.file_tag)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_file.full_name, a_options, {WIX_CONSTANTS}.file_tag, Void))
@@ -259,9 +258,13 @@ feature {NONE} -- Element generation
 			if {SYSTEM_STRING}.compare (l_name, a_file.name, True, {CULTURE_INFO}.invariant_culture) /= 0 then
 				a_writer.write_attribute_string ({WIX_CONSTANTS}.long_name_attribute, a_file.name)
 			end
+
+			l_id := 1
 			if a_options.use_disk_id then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.disk_id_attribute, {SYSTEM_CONVERT}.to_string (a_options.disk_id))
+				l_id := a_options.disk_id
 			end
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.disk_id_attribute, {SYSTEM_CONVERT}.to_string (l_id))
+
 			if a_options.use_src_specifier then
 				a_writer.write_attribute_string ({WIX_CONSTANTS}.src_attribute, format_path (a_file.full_name, a_options))
 			end
@@ -337,7 +340,7 @@ feature {NONE} -- Attribute generation
 				end
 
 					-- Ensure path uniqueness
-				l_base_name := Result
+				l_base_name := format_identifier (Result)
 				from i := 2 until not name_table.contains (Result) loop
 					Result := {SYSTEM_STRING}.concat (l_base_name, i)
 				end
@@ -346,6 +349,40 @@ feature {NONE} -- Attribute generation
 				Result := {SYSTEM_STRING}.concat (a_tag_name.to_lower ({CULTURE_INFO}.invariant_culture), underscore, get_count (a_tag_name))
 				increase_count (a_tag_name)
 			end
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+		end
+
+	format_identifier (a_id: SYSTEM_STRING): SYSTEM_STRING is
+			-- Formats identifier `a_id' to to ensure a valid WiX identifier
+			--
+			-- `a_id': An identifier
+			-- `Result': A valid WiX identifier
+		require
+			not_a_id_is_empty: not {SYSTEM_STRING}.is_null_or_empty (a_id)
+		local
+			l_sb: STRING_BUILDER
+			l_count, i: INTEGER
+			c: CHARACTER
+		do
+			create l_sb.make (a_id)
+			l_count := a_id.length
+
+				-- Must begin with a letter or underscore
+			c := a_id.chars (1)
+			if  not({DOTNET_CHARACTER}.is_letter (c) or c = '_') then
+				l_sb.set_chars (1, '_')
+			end
+
+				-- Check all other character
+			from i := 1 until i = l_count loop
+				c := a_id.chars (i)
+				if not ({DOTNET_CHARACTER}.is_letter_or_digit (c) or c = '_' or c = '.') then
+					l_sb.set_chars (i, '_')
+				end
+				i := i + 1
+			end
+			Result := l_sb.to_string
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end

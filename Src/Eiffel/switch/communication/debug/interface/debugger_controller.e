@@ -190,7 +190,7 @@ feature -- Debug Operation
 						end
 					elseif make_f.exists then
 							-- There is no application.
-						warning (Warning_messages.w_No_system_generated)
+						warning (Warning_messages.w_No_system_generated (uf.name))
 					elseif Eiffel_project.Lace.compile_all_classes then
 						warning (Warning_messages.w_None_system)
 					else

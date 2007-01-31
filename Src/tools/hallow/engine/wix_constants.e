@@ -34,7 +34,7 @@ feature -- Attribute names
 	id_attribute: SYSTEM_STRING = "Id"
 	long_name_attribute: SYSTEM_STRING = "LongName"
 	name_attribute: SYSTEM_STRING = "Name"
-	source_file_attribute: SYSTEM_STRING = "SourceFile"
+	file_source_attribute: SYSTEM_STRING = "FileSource"
 	src_attribute: SYSTEM_STRING = "src"
 
 feature -- Defaults

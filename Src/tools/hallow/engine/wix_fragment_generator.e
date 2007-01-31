@@ -69,7 +69,7 @@ feature {NONE} -- Element generation
 			create l_dir.make (a_options.directory)
 			if not a_options.use_src_specifier then
 
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.source_file_attribute, format_path (l_dir.full_name, a_options))
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
 			end
 
 			generate_directory_content (l_dir, a_options, a_writer)
@@ -106,7 +106,7 @@ feature {NONE} -- Element generation
 			end
 
 			if not a_options.use_src_specifier then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.source_file_attribute, format_path (a_dir.full_name, a_options))
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (a_dir.full_name, a_options))
 			end
 
 			generate_directory_content (a_dir, a_options, a_writer)

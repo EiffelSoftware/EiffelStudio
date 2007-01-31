@@ -42,7 +42,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	frozen directory: SYSTEM_STRING
-			-- Start directory to scan for directories files
+			-- Full path to start directory to scan for directories files
+		local
+			l_dir: DIRECTORY_INFO
+		once
+			Result := user_directory
+			create l_dir.make (Result)
+			Result := l_dir.full_name
+		end
+
+	frozen user_directory: SYSTEM_STRING
+			-- Start directory to scan for directories files, specified by the user.
 		local
 			l_dir: DIRECTORY_INFO
 		once
@@ -51,8 +61,6 @@ feature -- Access
 			else
 				Result := {ENVIRONMENT}.current_directory
 			end
-			create l_dir.make (Result)
-			Result := l_dir.full_name
 		end
 
 	frozen generate_single_file_components: BOOLEAN
@@ -110,7 +118,11 @@ feature -- Access
 	frozen directory_alias: SYSTEM_STRING
 			-- The user specified directory alias
 		once
-			Result := option_of_name (directory_alias_switch).value
+			if has_option (directory_alias_switch) then
+				Result := option_of_name (directory_alias_switch).value
+			else
+				Result := user_directory
+			end
 		end
 
 	frozen disk_id: NATURAL_8
@@ -211,7 +223,7 @@ feature -- Status report
 	frozen use_directory_alias: BOOLEAN
 			-- Indicates if user specified a directory alias
 		once
-			Result := has_option (directory_alias_switch)
+			Result := True
 		end
 
 	frozen use_disk_id: BOOLEAN

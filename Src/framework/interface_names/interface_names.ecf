@@ -11,6 +11,19 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
-		<cluster name="interface_names" location=".\" recursive="true"/>
+		<cluster name="interface_names" location=".\" recursive="false">
+			<cluster name="console_help" location="console_help\" recursive="false">
+				<cluster name="unix" location="console_help\unix\">
+					<condition>
+						<platform excluded_value="windows"/>
+					</condition>
+				</cluster>
+				<cluster name="windows" location="console_help\windows\">
+					<condition>
+						<platform excluded_value="unix"/>
+					</condition>
+				</cluster>
+			</cluster>
+		</cluster>
 	</target>
 </system>

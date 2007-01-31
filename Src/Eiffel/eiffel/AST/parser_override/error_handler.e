@@ -49,7 +49,6 @@ feature -- Status
 			Result := not error_list.is_empty
 		end
 
-
 feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
 
 	insert_interrupt_error (is_during_comp: BOOLEAN) is

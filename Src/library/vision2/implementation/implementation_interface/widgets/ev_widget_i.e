@@ -211,7 +211,7 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies
-				interface.minimum_width = a_minimum_width
+				(a_minimum_width > 0 implies interface.minimum_width = a_minimum_width or a_minimum_width = 0 implies (interface.minimum_width <= 1))
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
@@ -221,7 +221,7 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_height_assigned: is_usable implies
-				interface.minimum_height = a_minimum_height
+				(a_minimum_height > 0 implies interface.minimum_height = a_minimum_height or a_minimum_height = 0 implies (interface.minimum_height <= 1))
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -233,9 +233,9 @@ feature -- Element change
 		deferred
 		ensure
 			minimum_width_assigned: is_usable implies
-				interface.minimum_width = a_minimum_width
+				(a_minimum_width > 0 implies interface.minimum_width = a_minimum_width or a_minimum_width = 0 implies (interface.minimum_width <= 1))
 			minimum_height_assigned: is_usable implies
-				interface.minimum_height = a_minimum_height
+				(a_minimum_height > 0 implies interface.minimum_height = a_minimum_height or a_minimum_height = 0 implies (interface.minimum_height <= 1))
 		end
 
 feature -- Measurement

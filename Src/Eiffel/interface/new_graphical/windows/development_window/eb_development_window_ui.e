@@ -47,10 +47,11 @@ feature -- Settings
 	set_current_editor (a_editor: like current_editor) is
 			-- Set `current_editor'
 		do
-			current_editor := a_editor
-
-			-- We should call command_controller set_current_editor to update cut and copy menu/toolbar items states.
-			develop_window.command_controller.set_current_editor (a_editor)
+			if current_editor /= a_editor then
+				current_editor := a_editor
+				-- We should call command_controller set_current_editor to update cut and copy menu/toolbar items states.	
+				develop_window.command_controller.set_current_editor (a_editor)
+			end
 		ensure
 			set: current_editor = a_editor
 		end

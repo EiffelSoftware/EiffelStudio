@@ -62,6 +62,7 @@ feature -- Status setting
 			-- Change the observed editor.
 		require
 			valid_editor: ed /= Void
+			not_same: not is_same_as_current_editor (ed)
 		local
 			l_current_editor: like current_editor
 			l_textdisp: EDITABLE_TEXT
@@ -187,6 +188,15 @@ feature -- Status setting
 			cmd_now_known: selection_commands.has (cmd)
 		end
 
+feature -- Contract support
+
+	is_same_as_current_editor (a_editor: EB_EDITOR): BOOLEAN is
+			-- Check if `current_editor' same as `a_editor'
+			-- This can make sure not breaking the arrayed list looping of `on_text_fully_loaded' from TEXT_OBSERVER_MANAGER.
+		do
+			Result := current_editor = a_editor
+		end
+
 feature {NONE} -- Event handling
 
 	on_text_reset is
@@ -308,7 +318,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_observers is
-			--
+			-- Add observers
 		do
 			current_editor.add_edition_observer (Current)
 			current_editor.add_selection_observer (Current)

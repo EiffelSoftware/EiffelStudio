@@ -162,6 +162,8 @@ feature -- Titles
 	t_add_new_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Add new metric value retriever") end
 	t_use_external_delayed: STRING_GENERAL is do Result := locale.translate ("Use external delayed domain") end
 	t_warning: STRING_GENERAL is do Result := locale.translate ("Warning") end
+	t_row: STRING_GENERAL is do Result := locale.translate ("row") end
+	t_column: STRING_GENERAL is do Result := locale.translate ("column") end
 
 feature -- Titles for editor token
 
@@ -1287,6 +1289,18 @@ feature -- Utilities
 				Result := a_string.twin
 			end
 			Result.append (colon)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	xml_position (a_column: INTEGER; a_row: INTEGER): STRING_GENERAL is
+			-- Xml position: Column: `a_column', row: `a_row'
+		do
+			Result := coloned_string (t_column, True)
+			Result.append (a_column.out)
+			Result.append (comma_separator)
+			Result.append (coloned_string (t_row, False))
+			Result.append (a_row.out)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -266,7 +266,7 @@ feature {NONE} -- Usage
 			-- (export status {NONE})
 		do
 			create Result.make (8)
-			Result.extend (create {ARGUMENT_SWITCH}.make (generate_as_include_switch, "Generates a WiX 'Include' fragment instead of the default 'Fragment' element.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (generate_as_include_switch, "Generates a WiX 'Include' document instead of the default 'Wix' document element.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursively include all subdirectories and files.", True, False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
@@ -280,7 +280,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_directory_ref_switch, "Use to specify alternative 'DirectoryRef' base reference, to the default TARGETDIR.", True, False, "reference", "A directory reference name", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_alias_switch, "Use to specify a directory alias to use when generating paths.", True, False, "alias", "A directory path alias", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (no_guid_generation_switch, "Enumlates Tallow in putting PUT-GUID-HERE where components expected a GUID.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (use_src_switch, "Use to force use of deprecated 'src' attribute for 'Directory' and 'File' elements.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (use_src_switch, "Use to force use of deprecated 'src' attribute for 'File' elements.", True, False))
 		end
 
 	loose_argument_name: STRING = "directory"

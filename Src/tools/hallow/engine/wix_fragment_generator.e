@@ -91,7 +91,7 @@ feature {NONE} -- Element generation
 			l_name: SYSTEM_STRING
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
 
 			l_name := get_short_path_name (a_dir.full_name, a_options)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, l_name)
@@ -196,7 +196,7 @@ feature {NONE} -- Element generation
 			a_content_gen_has_attached_target: a_content_gen.target /= Void
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.component_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix, False))
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.guid_attribute, guid (a_options))
 
 			a_content_gen.call ([a_options, a_writer])
@@ -247,7 +247,7 @@ feature {NONE} -- Element generation
 			l_id: INTEGER
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.file_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_file.full_name, a_options, {WIX_CONSTANTS}.file_tag, Void))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_file.full_name, a_options, {WIX_CONSTANTS}.file_tag, Void, False))
 
 			l_name := get_short_path_name (a_file.full_name, a_options)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, l_name)
@@ -289,13 +289,14 @@ feature {NONE} -- Attribute generation
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	semantic_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS; a_tag_name: SYSTEM_STRING; a_prefix: SYSTEM_STRING): SYSTEM_STRING is
+	semantic_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS; a_tag_name: SYSTEM_STRING; a_prefix: SYSTEM_STRING; a_use_short_name: BOOLEAN): SYSTEM_STRING is
 			-- Create a name based on specified user options `a_options'
 			--
 			-- `a_path': Full path to disk item to create a semantic name for.
 			-- `a_options': Options that determine how the resulting name should be generated.
 			-- `a_tag_name': A XML element tag name representing the name of the element the name is generated for.
 			-- `a_prefix': An optional prefix to prepend a semantic generated name.
+			-- `a_use_short_name': Uses a short name for size constraints.
 			-- `Result': A generated name
 		require
 			not_a_path_is_empty: not {SYSTEM_STRING}.is_null_or_empty (a_path)
@@ -307,13 +308,27 @@ feature {NONE} -- Attribute generation
 			l_prefix: SYSTEM_STRING
 			l_base_name: SYSTEM_STRING
 			l_sb: STRING_BUILDER
+			l_cd: SYSTEM_STRING
+			l_path: SYSTEM_STRING
+			l_dir: SYSTEM_STRING
 			i: NATURAL_64
 		do
 			if a_options.use_semantic_names then
 
 					-- Removed root directory and separator/device character from path
 				if a_options.directory.length < a_path.length then
-					create l_sb.make (a_path.substring (a_options.directory.length + 1))
+					l_path := a_path.substring (a_options.directory.length + 1)
+					if a_use_short_name then
+						l_dir := {PATH}.get_directory_name (l_path)
+						if not {SYSTEM_STRING}.is_null_or_empty (l_dir) then
+							l_cd := {ENVIRONMENT}.current_directory
+							{ENVIRONMENT}.current_directory := a_options.directory
+							l_path := {SYSTEM_STRING}.concat (get_short_path (l_dir, a_options), {SYSTEM_CONVERT}.to_string ({PATH}.directory_separator_char), {PATH}.get_file_name (l_path))
+							{ENVIRONMENT}.current_directory := l_cd
+						end
+					end
+
+					create l_sb.make (l_path)
 					l_sb := l_sb.replace ({PATH}.directory_separator_char, '.')
 					l_sb := l_sb.replace ({PATH}.alt_directory_separator_char, '.')
 					l_sb := l_sb.replace ({PATH}.volume_separator_char, '.')
@@ -341,7 +356,13 @@ feature {NONE} -- Attribute generation
 				from i := 2 until not name_table.contains (Result) loop
 					Result := {SYSTEM_STRING}.concat (l_base_name, i)
 				end
-				name_table.add (Result, True)
+
+				if not a_use_short_name and then Result.length > max_wix_id_length then
+						-- Name is too long so try using a shorter name
+					Result := semantic_name (a_path, a_options, a_tag_name, a_prefix, True)
+				else
+					name_table.add (Result, True)
+				end
 			else
 				Result := {SYSTEM_STRING}.concat (a_tag_name.to_lower ({CULTURE_INFO}.invariant_culture), underscore, get_count (a_tag_name))
 				increase_count (a_tag_name)
@@ -589,10 +610,44 @@ feature {NONE} -- Counters
 	file_count: NATURAL_32
 			-- File name counter
 
-feature {NONE} -- Native methods
+feature {NONE} -- Path utilities
 
 	frozen get_short_path_name (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
-			-- Retrieves the short path file or directory name or `a_path' using the options `a_options' to indicate
+			-- Retrieves the short path file or directory name of `a_path' using the options `a_options' to indicate
+			-- how the path is returned.
+		require
+			not_a_path_is_empty: not {SYSTEM_STRING}.is_null_or_empty (a_path)
+			a_path_exists: {SYSTEM_FILE}.exists (a_path) or {SYSTEM_DIRECTORY}.exists (a_path)
+			a_options_attached: a_options /= Void
+			can_read_options_a_options: a_options.can_read_options
+		do
+			Result := {PATH}.get_file_name (internal_get_short_path (a_path, a_options))
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+		end
+
+	frozen get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+			-- Retrieves the short path to a file or a directory of `a_path' using the options `a_options' to indicate
+			-- how the path is returned.
+		require
+			not_a_path_is_empty: not {SYSTEM_STRING}.is_null_or_empty (a_path)
+			a_path_exists: {SYSTEM_FILE}.exists (a_path) or {SYSTEM_DIRECTORY}.exists (a_path)
+			a_options_attached: a_options /= Void
+			can_read_options_a_options: a_options.can_read_options
+		local
+			l_sb: STRING_BUILDER
+		do
+			create l_sb.make (internal_get_short_path (a_path, a_options))
+			l_sb := l_sb.replace ({PATH}.volume_separator_char, '_')
+			l_sb := l_sb.replace ({PATH}.directory_separator_char, '_')
+			l_sb := l_sb.replace ({PATH}.alt_directory_separator_char, '_')
+			Result := l_sb.to_string
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+		end
+
+	frozen internal_get_short_path (a_path: SYSTEM_STRING; a_options: I_OPTIONS): SYSTEM_STRING is
+			-- Retrieves the short path to a file or a directory of `a_path' using the options `a_options' to indicate
 			-- how the path is returned.
 		require
 			not_a_path_is_empty: not {SYSTEM_STRING}.is_null_or_empty (a_path)
@@ -615,9 +670,9 @@ feature {NONE} -- Native methods
 				l_len := {NATIVE_METHODS}.get_short_path_name (l_long, l_short, l_len)
 				check l_len_positive: l_len > 0 end
 				if l_len > 0 then
-					Result := {PATH}.get_file_name ({MARSHAL}.ptr_to_string_uni (l_short, l_len))
+					Result := {MARSHAL}.ptr_to_string_uni (l_short, l_len)
 					if a_options.swap_tilda then
-						Result := Result.replace ("~", "_")
+						Result := Result.replace ('~', '_')
 					end
 				end
 			end
@@ -642,6 +697,9 @@ feature {NONE} -- Constants
 	directory_prefix: SYSTEM_STRING = "Dir."
 	component_prefix: SYSTEM_STRING = "Comp."
 	underscore: SYSTEM_STRING = "_"
+
+	max_wix_id_length: INTEGER = 72
+			-- Maximum length allowed for WiX identifiers
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

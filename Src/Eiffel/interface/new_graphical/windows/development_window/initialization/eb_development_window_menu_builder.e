@@ -728,6 +728,16 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.add_recyclable (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
+				-- Discover melt
+			l_command_menu_item := develop_window.discover_melt_cmd.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+				-- Override scan
+			l_command_menu_item := develop_window.override_scan_cmd.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
 				-- Freeze
 			l_command_menu_item := develop_window.Freeze_project_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)

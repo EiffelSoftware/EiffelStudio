@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			-- Add all content label to Current.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_label: SD_TOOL_BAR_RADIO_BUTTON
+			l_label: SD_TOOL_BAR_WIDTH_BUTTON
 			l_pass_first_editor, l_pass_second_editor: BOOLEAN
 			l_first_label, l_last_label, l_first_tool_label, l_last_tool_label: SD_TOOL_BAR_RADIO_BUTTON
 			l_tools_count, l_files_count: INTEGER
@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 			loop
 				create l_label.make
 				l_label.set_wrap (True)
+				l_label.set_maximum_width (internal_max_item_width)
 				l_label.set_data (l_contents.item)
 
 				l_label.select_actions.extend (agent select_label_and_destroy (l_label))
@@ -870,6 +871,9 @@ feature {NONE} -- Implementation command
 
 	internal_max_height: INTEGER is 300
 			-- Max height
+
+	internal_max_item_width: INTEGER is 161
+			-- Max width of a tool bar item which represent a SD_CONTENT.
 
 invariant
 	internal_docking_manager_not_void: internal_docking_manager /= Void

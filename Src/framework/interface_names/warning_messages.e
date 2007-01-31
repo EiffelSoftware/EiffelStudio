@@ -948,8 +948,11 @@ feature -- Warning messages
 			Result := locale.format_string (locale.translate ("No feature named $1 could be found in class $2."), [feature_name, class_name])
 		end
 
-	w_No_system_generated: STRING_GENERAL is do Result := locale.translate ("No system was generated.%N%
-						%Please make sure the C compilation ended correctly.") end
+	w_No_system_generated (a_system_name: STRING): STRING_GENERAL is
+		do
+			Result := locale.format_string (locale.translate (
+				"Could not find $1.%NPlease make sure the C compilation ended correctly."), [a_system_name])
+		end
 
 	w_No_system: STRING_GENERAL is do Result := locale.translate ("No system was defined.%NCannot launch the application.") end
 

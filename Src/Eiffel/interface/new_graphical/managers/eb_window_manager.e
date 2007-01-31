@@ -535,6 +535,8 @@ feature -- Actions on all windows
 			melt_project_cmd.enable_sensitive
 			terminate_c_compilation_cmd.disable_sensitive
 			refactoring_manager.enable_sensitive
+			override_scan_cmd.enable_sensitive
+			discover_melt_cmd.enable_sensitive
 
 			project_cancel_cmd.disable_sensitive
 			if process_manager.is_c_compilation_running then
@@ -949,6 +951,8 @@ feature -- Events
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
 			Project_cancel_cmd.enable_sensitive
+			override_scan_cmd.disable_sensitive
+			discover_melt_cmd.disable_sensitive
 			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
 			compile_start_actions.call ([])
@@ -962,6 +966,8 @@ feature -- Events
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
+			override_scan_cmd.disable_sensitive
+			discover_melt_cmd.disable_sensitive
 			for_all (agent c_compilation_start_action)
 		end
 
@@ -972,6 +978,8 @@ feature -- Events
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
+			override_scan_cmd.enable_sensitive
+			discover_melt_cmd.enable_sensitive
 			for_all (agent c_compilation_stop_action)
 		end
 
@@ -1009,6 +1017,8 @@ feature -- Events
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
 			System_cmd.enable_sensitive
+			override_scan_cmd.enable_sensitive
+			discover_melt_cmd.enable_sensitive
 			for_all (agent create_project_action)
 		end
 
@@ -1023,6 +1033,8 @@ feature -- Events
 					Precompilation_cmd.enable_sensitive
 					Run_project_cmd.disable_sensitive
 					Run_finalized_cmd.disable_sensitive
+					override_scan_cmd.disable_sensitive
+					discover_melt_cmd.disable_sensitive
 				else
 					Melt_project_cmd.enable_sensitive
 					Freeze_project_cmd.enable_sensitive
@@ -1030,6 +1042,8 @@ feature -- Events
 					Precompilation_cmd.disable_sensitive
 					Run_project_cmd.enable_sensitive
 					Run_finalized_cmd.enable_sensitive
+					override_scan_cmd.enable_sensitive
+					discover_melt_cmd.enable_sensitive
 				end
 				System_cmd.enable_sensitive
 				Export_cmd.enable_sensitive
@@ -1043,6 +1057,8 @@ feature -- Events
 				Export_cmd.disable_sensitive
 				Document_cmd.disable_sensitive
 				Run_project_cmd.disable_sensitive
+				override_scan_cmd.disable_sensitive
+				discover_melt_cmd.disable_sensitive
 			end
 			load_favorites
 				-- Recreate window configuration from last session of project if any.
@@ -1068,6 +1084,8 @@ feature -- Events
 			Document_cmd.disable_sensitive
 			Run_project_cmd.disable_sensitive
 			Run_finalized_cmd.disable_sensitive
+			override_scan_cmd.disable_sensitive
+			discover_melt_cmd.disable_sensitive
 		end
 
 feature {NONE} -- Implementation

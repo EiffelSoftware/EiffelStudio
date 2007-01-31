@@ -1137,6 +1137,12 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				then
 					Eb_debugger_manager.application.kill
 				end
+				if eb_debugger_manager.debug_mode_forced then
+					eb_debugger_manager.unforce_debug_mode
+				end
+				if eb_debugger_manager.raised then
+					eb_debugger_manager.unraise
+				end
 
 					-- Save width & height.
 				save_window_state

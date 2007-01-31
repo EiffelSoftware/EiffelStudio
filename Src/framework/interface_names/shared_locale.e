@@ -11,9 +11,6 @@ indexing
 class
 	SHARED_LOCALE
 
-inherit
-	PLATFORM
-
 feature -- Access
 
 	locale: I18N_LOCALE is
@@ -70,18 +67,16 @@ feature -- Output
 		local
 			l_string: STRING_GENERAL
 		do
-			if is_windows then
-				l_string := encoding_utf16.convert_to (system_encoding, a_str)
-			else
-				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
-			end
-			if l_string /= Void then
-				check
-					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
+			if a_str /= Void then
+				l_string := encoding_utf16.convert_to (console_encoding, a_str)
+				if l_string /= Void then
+					check
+						l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
+					end
+					io.put_string (l_string.as_string_8)
+				else
+					io.put_string (a_str.as_string_8)
 				end
-				io.put_string (l_string.as_string_8)
-			else
-				io.put_string (a_str.as_string_8)
 			end
 		end
 
@@ -91,11 +86,7 @@ feature -- Output
 		local
 			l_string: STRING_GENERAL
 		do
-			if is_windows then
-				l_string := encoding_utf16.convert_to (system_encoding, a_str)
-			else
-				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
-			end
+			l_string := encoding_utf16.convert_to (console_encoding, a_str)
 			if l_string /= Void then
 				check
 					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
@@ -111,29 +102,50 @@ feature {NONE} -- Implementation
 	locale_internal: CELL [I18N_LOCALE] is
 		once
 			create Result
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	system_locale: I18N_LOCALE
 		once
 			Result := locale_manager.get_system_locale
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	system_encoding: ENCODING is
-			-- System encoding.
+			-- System encoding which is from system locale.
 		once
 			create Result.make (system_locale.info.code_page)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	console_encoding: ENCODING is
+			-- Encoding of console output
+		local
+			l_cp_i: CONSOLE_CODE_PAGE_I
+		once
+			create {CONSOLE_CODE_PAGE_IMP}l_cp_i
+			create Result.make (l_cp_i.console_code_page)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	encoding_utf16: ENCODING is
 			-- UTF-16 encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	encoding_utf8: ENCODING is
 			-- UTF-8 encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- File saving
@@ -148,11 +160,7 @@ feature -- File saving
 		local
 			l_string: STRING_GENERAL
 		do
-			if is_windows then
-				l_string := encoding_utf16.convert_to (system_encoding, a_str)
-			else
-				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
-			end
+			l_string := encoding_utf16.convert_to (system_encoding, a_str)
 			if l_string /= Void then
 				check
 					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8

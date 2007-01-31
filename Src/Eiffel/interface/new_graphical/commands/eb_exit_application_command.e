@@ -14,7 +14,7 @@ inherit
 	PROJECT_CONTEXT
 		export {NONE} all end
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 		export {NONE} all end
 
 	EB_SHARED_MANAGERS
@@ -99,6 +99,12 @@ feature {NONE} -- Callbacks
 				-- If an application was being debugged, kill it.
 			if Debugger_manager.application_is_executing then
 				Debugger_manager.application.kill
+			end
+			if Eb_debugger_manager.debug_mode_forced then
+				Eb_debugger_manager.unforce_debug_mode
+			end
+			if Eb_debugger_manager.raised then
+				Eb_debugger_manager.unraise
 			end
 				-- If we are going to kill the application, we'd better warn project observers that the project will
 				-- soon be unloaded before EiffelStudio is destroyed.

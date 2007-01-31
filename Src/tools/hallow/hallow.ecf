@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="hallow" uuid="F3C1601B-9912-470D-8D12-D1AD2BDFB63E">
+	<target name="hallow">
+		<description>A WiX tool for generating XML fragements for file directory structures.</description>
+		<root cluster="hallow" class="APPLICATION" feature="make"/>
+		<version major="1" minor="0" release="0" build="0" company="Eiffel Software" copyright="Eiffel Software 2007"/>
+		<option warning="true" msil_application_optimize="true" namespace="EiffelSoftware.Tools">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+		</option>
+		<setting name="cls_compliant" value="false"/>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="hallow"/>
+		<setting name="force_32bits" value="true"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="msil_use_optimized_precompile" value="true"/>
+		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false">
+			<option namespace="EiffelSoftware.Framework">
+			</option>
+		</library>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option namespace="EiffelSoftware.Library">
+			</option>
+		</library>
+		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf">
+			<option namespace="EiffelSoftware.Framework">
+			</option>
+		</library>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
+		<assembly name="system.xml" location="$ISE_DOTNET_FRAMEWORK\System.XML.dll"/>
+		<cluster name="hallow" location=".\" recursive="true">
+			<option namespace="WiX">
+			</option>
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

@@ -49,7 +49,7 @@ feature -- Settings
 		do
 			if current_editor /= a_editor then
 				current_editor := a_editor
-				-- We should call command_controller set_current_editor to update cut and copy menu/toolbar items states.	
+					-- We should call command_controller set_current_editor to update cut and copy menu/toolbar items states.
 				develop_window.command_controller.set_current_editor (a_editor)
 			end
 		ensure

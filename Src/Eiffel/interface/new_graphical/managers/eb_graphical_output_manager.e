@@ -165,10 +165,8 @@ feature -- Basic Operations / Information message
 			l_error: BOOLEAN
 		do
 			force_display
-			if Workbench.is_already_compiled then
-				clear_general
-			end
-			start_processing (false)
+			clear_general
+			start_processing (true)
 			if Workbench.is_already_compiled then
 				l_error := structured_system_info (Current)
 			else
@@ -180,14 +178,6 @@ feature -- Basic Operations / Information message
 			if l_error then
 				clear_general
 			end
-		end
-
-	display_welcome_info is
-			-- Display information on how to launch $EiffelGraphicalCompiler$.
-		do
-			start_processing (false)
-			welcome_info (Current)
-			end_processing
 		end
 
 	display_application_status is

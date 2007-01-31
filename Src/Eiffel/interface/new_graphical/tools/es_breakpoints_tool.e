@@ -19,6 +19,7 @@ inherit
 			attach_to_docking_manager,
 			mini_toolbar,
 			build_mini_toolbar,
+			build_docking_content,
 			show
 		end
 
@@ -136,6 +137,14 @@ feature {NONE} -- Initialization
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+		do
+			Precursor {EB_TOOL} (a_docking_manager)
+			check content_not_void : content /= Void end
+			content.drop_actions.extend (agent on_stone_dropped)
+			content.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
+		end
+
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
@@ -145,7 +154,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
-			check friend_created: develop_window.tools.cluster_tool /= Void end
+			check friend_created: develop_window.tools.breakpoints_tool /= Void end
 		end
 
 feature -- Properties
@@ -305,7 +314,7 @@ feature -- Events
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
-			if grid.is_displayed then
+			if grid.is_displayed and grid.is_sensitive then
 				grid.set_focus
 			end
 		end

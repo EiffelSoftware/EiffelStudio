@@ -255,6 +255,7 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 			Result.extend (assertion_checking_handler_cmd.new_menu_item)
+			Result.extend (force_debug_mode_cmd.new_menu_item)
 
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
@@ -300,7 +301,7 @@ feature -- tools management
 		do
 			m := w.menus.debugging_tools_menu
 			m.wipe_out
-			if raised then
+			if raised or debug_mode_forced then
 				l_tools := menuable_debugging_tools
 				if not l_tools.is_empty then
 					from
@@ -487,9 +488,8 @@ feature -- Status report
 	raised: BOOLEAN
 			-- Are the debugging tools currently raised?
 
-	keep_raised: BOOLEAN
-			-- Do we keep interface raised when application quit ?
-			-- needed for restart
+	debug_mode_forced: BOOLEAN
+			-- Do we force debugger interface to stay raised ?
 
 feature -- Output
 
@@ -504,8 +504,9 @@ feature -- Output
 		local
 			w_dlg: EV_WARNING_DIALOG
 		do
-			Precursor {DEBUGGER_MANAGER} (m)
-			if ev_application /= Void then
+			if ev_application = Void then
+				Precursor {DEBUGGER_MANAGER} (m)
+			else
 				create w_dlg.make_with_text (m)
 				if window_manager.last_focused_development_window /= Void then
 					w_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -607,11 +608,24 @@ feature -- Change
 
 feature -- Status setting
 
-	enable_keep_raised is
-			-- Keep interface raised
-			-- needed for restart feature
+	force_debug_mode is
+			-- Force debug mode
 		do
-			keep_raised := True
+			debug_mode_forced := True
+			if not raised then
+				raise
+			end
+		end
+
+	unforce_debug_mode is
+			-- unForce debug mode
+		require
+			debug_mode_forced = True
+		do
+			debug_mode_forced := False
+			if raised and not application_is_executing then
+				unraise
+			end
 		end
 
 	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is
@@ -697,11 +711,15 @@ feature -- Status setting
 			nwt: INTEGER
 			l_unlock: BOOLEAN
 		do
-			disable_debugging_commands (False)
+			force_debug_mode_cmd.disable_sensitive
 			initialize_debugging_window
 			check
 				debugging_window_set: debugging_window /= Void
 			end
+
+				--| Switching popup
+			popup_switching_mode
+
 			if ev_application.locked_window = Void then
 				l_unlock := True
 				debugging_window.window.lock_update
@@ -808,10 +826,11 @@ feature -- Status setting
 			end
 
 			raised := True
-			update_all_debugging_tools_menu
 			if l_unlock then
 				debugging_window.window.unlock_update
 			end
+			unpopup_switching_mode
+			force_debug_mode_cmd.enable_sensitive
 		ensure
 			raised
 		end
@@ -868,6 +887,11 @@ feature -- Status setting
 			split: EV_SPLIT_AREA
 			l_unlock: BOOLEAN
 		do
+			force_debug_mode_cmd.disable_sensitive
+
+				--| Switching popup
+			popup_switching_mode
+
 			if ev_application.locked_window = Void then
 				l_unlock := True
 				debugging_window.window.lock_update
@@ -918,12 +942,12 @@ feature -- Status setting
 				-- Free and recycle tools
 			raised := False
 
-			enable_debugging_commands
-			update_all_debugging_tools_menu
 			debugging_window.restore_tools_docking_layout
 			if l_unlock then
 				debugging_window.window.unlock_update
 			end
+			unpopup_switching_mode
+			force_debug_mode_cmd.enable_sensitive
 		ensure
 			not raised
 		end
@@ -991,6 +1015,45 @@ feature -- Status setting
 			end
 		end
 
+feature {NONE} -- Raise/unraise notification
+
+	popup_switching_mode is
+		local
+			popup: EV_POPUP_WINDOW
+			lab: EV_LABEL
+			w,h, pw,ph: INTEGER
+		do
+			if debugging_window /= Void then
+				create popup
+				create lab
+				if raised then
+					lab.set_text (interface_names.l_Switching_to_normal_mode)
+				else
+					lab.set_text (interface_names.l_Switching_to_debug_mode)
+				end
+				popup.extend (lab)
+				lab.refresh_now
+				w := debugging_window.window.width
+				h := debugging_window.window.height
+				pw := lab.font.string_width (lab.text) + 30
+				ph := lab.font.height + 30
+				popup.set_size (pw, ph)
+				popup.set_position (debugging_window.window.x_position + (w - pw) // 2, debugging_window.window.y_position + (h - ph) // 2)
+				popup.show_relative_to_window (debugging_window.window)
+				popup.refresh_now
+				switching_mode_popup := popup
+			end
+		end
+
+	unpopup_switching_mode is
+		do
+			if switching_mode_popup /= Void then
+				switching_mode_popup.destroy
+			end
+		end
+
+	switching_mode_popup: EV_POPUP_WINDOW
+
 feature -- Debugging events
 
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
@@ -1026,11 +1089,14 @@ feature -- Debugging events
 			-- Application is about to be launched.
 		do
 			Precursor
+			disable_debugging_commands (False)
 		end
 
 	on_application_launched is
 			-- Application has just been launched.
 		do
+			update_all_debugging_tools_menu
+
 			Precursor
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched %N")
@@ -1197,6 +1263,7 @@ feature -- Debugging events
 			end
 			was_executing := application_is_executing
 			Precursor
+
 			if was_executing then
 					-- Modify the debugging window display.
 				window_manager.quick_refresh_all_margins
@@ -1209,26 +1276,32 @@ feature -- Debugging events
 				if debugging_window.destroyed then
 					debugging_window := Void
 					raised := False
-				elseif not keep_raised then
+					debug_mode_forced := False
+					force_debug_mode_cmd.set_select (False)
+				elseif not debug_mode_forced then
 					unraise
 					debugging_window := Void
 				end
-				keep_raised := False
+
+				enable_debugging_commands
+				update_all_debugging_tools_menu
 
 					-- Make related buttons insensitive.
 				stop_cmd.disable_sensitive
 				quit_cmd.disable_sensitive
 				restart_cmd.disable_sensitive
-				no_stop_cmd.enable_sensitive
 				debug_cmd.enable_sensitive
 				debug_cmd.set_launched (False)
+				no_stop_cmd.enable_sensitive
 
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
+
 				set_critical_stack_depth_cmd.enable_sensitive
 				assertion_checking_handler_cmd.reset
 			end
+
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit : done%N")
 			end
@@ -1313,6 +1386,8 @@ feature {NONE} -- Implementation
 
 	options_cmd: EB_DEBUG_OPTIONS_CMD
 
+	force_debug_mode_cmd: EB_FORCE_DEBUG_MODE_CMD
+
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.
 
@@ -1392,7 +1467,9 @@ feature {NONE} -- Implementation
 			create assertion_checking_handler_cmd.make
 			assertion_checking_handler_cmd.enable_sensitive
 			toolbarable_commands.extend (assertion_checking_handler_cmd)
-
+			create force_debug_mode_cmd.make (Current)
+			force_debug_mode_cmd.enable_sensitive
+			toolbarable_commands.extend (force_debug_mode_cmd)
 
 			create options_cmd.make (Current)
 			toolbarable_commands.extend (options_cmd)
@@ -1468,6 +1545,7 @@ feature {NONE} -- Implementation
 			else
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
+
 				clear_bkpt.enable_sensitive
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
@@ -1482,7 +1560,7 @@ feature {NONE} -- Implementation
 		end
 
 	disable_commands_on_project_unloaded is
-			-- Enable commands when a project has been closed.
+			-- Disable commands when a project has been closed.
 		do
 			clear_bkpt.disable_sensitive
 			enable_bkpt.disable_sensitive
@@ -1496,6 +1574,7 @@ feature {NONE} -- Implementation
 
 			display_error_help_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
+
 			options_cmd.disable_sensitive
 		end
 

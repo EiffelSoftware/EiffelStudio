@@ -229,6 +229,7 @@ feature -- Execution
 						dbg.add_on_stopped_action (
 							agent dbg.set_breakpoint_status (f, index, old_bp_status),	True
 						)
+							--| FIXME: what about hit_count condition ?
 						if old_bp_status /= 0 and cond /= Void then
 								-- Restore condition after we stopped, otherwise if the evaluation
 								-- does not evaluate to True then it will not stopped.

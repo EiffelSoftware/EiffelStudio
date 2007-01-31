@@ -235,7 +235,6 @@ feature -- Execution
 		local
 			l_envstr: STRING_32
 		do
-			on_application_before_launching
 			l_envstr := environment_variables_to_string (environment_variables_updated_with (env))
 			run_with_env_string (args, cwd, l_envstr)
 		ensure

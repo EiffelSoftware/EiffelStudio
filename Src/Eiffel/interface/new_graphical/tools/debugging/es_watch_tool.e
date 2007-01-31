@@ -1176,13 +1176,10 @@ feature -- Update
 
 	update is
 			-- Display current execution status.
-		local
-			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
-			l_status := debugger_manager.application_status
-			if l_status /= Void then
-				process_real_update_on_idle (l_status.is_stopped)
+			if debugger_manager.application_is_executing then
+				process_real_update_on_idle (debugger_manager.application_is_stopped)
 			else
 				watches_grid.reset_layout_recorded_values
 			end

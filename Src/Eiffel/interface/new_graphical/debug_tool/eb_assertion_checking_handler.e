@@ -11,7 +11,7 @@ class
 	EB_ASSERTION_CHECKING_HANDLER_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	EB_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND
 		redefine
 			tooltext
 		end
@@ -67,11 +67,17 @@ feature -- Execution
 					assertion_checking_changed := True
 					app_exec.disable_assertion_check
 				end
+				set_select (assertion_checking_changed)
 			end
 			update_graphical
 		end
 
 	assertion_checking_changed: BOOLEAN
+
+	is_selected: BOOLEAN is
+		do
+			Result := assertion_checking_changed
+		end
 
 feature -- Change text
 

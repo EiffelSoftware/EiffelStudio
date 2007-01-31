@@ -156,11 +156,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
-			a_cs: EV_GTK_C_STRING
 		do
 			if not is_destroyed then
-				a_cs := width_request_string
-				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
+				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, width_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
 					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
@@ -179,11 +177,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
-			a_cs: EV_GTK_C_STRING
 		do
 			if not is_destroyed then
-				a_cs := height_request_string
-				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
+				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, height_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
 					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
@@ -373,7 +369,7 @@ feature {EV_ANY_I} -- Implementation
 			if wind_ptr /= NULL then
 				Result ?= eif_object_from_c (wind_ptr)
 			end
-		end		
+		end
 
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Window implementation that `Current' is contained within (if any)

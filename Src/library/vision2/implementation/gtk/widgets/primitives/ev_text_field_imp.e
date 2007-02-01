@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize `Current'.
 		do
-			align_text_left
+			align_text_right
 			Precursor
 		end
 

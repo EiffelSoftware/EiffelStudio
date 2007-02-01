@@ -310,7 +310,8 @@ feature {NONE} -- Attribute generation
 			l_sb: STRING_BUILDER
 			l_cd: SYSTEM_STRING
 			l_path: SYSTEM_STRING
-			l_dir: SYSTEM_STRING
+			l_len: INTEGER
+			l_index: SYSTEM_STRING
 			i: NATURAL_64
 		do
 			if a_options.use_semantic_names then
@@ -319,13 +320,10 @@ feature {NONE} -- Attribute generation
 				if a_options.directory.length < a_path.length then
 					l_path := a_path.substring (a_options.directory.length + 1)
 					if a_use_short_name then
-						l_dir := {PATH}.get_directory_name (l_path)
-						if not {SYSTEM_STRING}.is_null_or_empty (l_dir) then
-							l_cd := {ENVIRONMENT}.current_directory
-							{ENVIRONMENT}.current_directory := a_options.directory
-							l_path := {SYSTEM_STRING}.concat (get_short_path (l_dir, a_options), {SYSTEM_CONVERT}.to_string ({PATH}.directory_separator_char), {PATH}.get_file_name (l_path))
-							{ENVIRONMENT}.current_directory := l_cd
-						end
+						l_cd := {ENVIRONMENT}.current_directory
+						{ENVIRONMENT}.current_directory := a_options.directory
+						l_path := get_short_path (l_path, a_options)
+						{ENVIRONMENT}.current_directory := l_cd
 					end
 
 					create l_sb.make (l_path)
@@ -350,14 +348,28 @@ feature {NONE} -- Attribute generation
 					Result := {SYSTEM_STRING}.concat (l_prefix, l_name)
 				end
 
-					-- Ensure path uniqueness
-				Result := format_identifier (Result)
-				l_base_name := Result
-				from i := 2 until not name_table.contains (Result) loop
-					Result := {SYSTEM_STRING}.concat (l_base_name, i)
+				if a_options.for_merge_modules then
+					l_len := max_wix_module_id_length
+				else
+					l_len := max_wix_id_length
 				end
 
-				if not a_use_short_name and then Result.length > max_wix_id_length then
+					-- Ensure path uniqueness
+				Result := format_identifier (Result)
+				if a_use_short_name and Result.length > l_len then
+					Result := Result.substring (0, l_len - 1)
+				end
+				l_base_name := Result
+				from i := 2 until not name_table.contains (Result) loop
+					l_index := {SYSTEM_CONVERT}.to_string (i)
+					if a_use_short_name and l_base_name.length + l_index.length > l_len then
+						l_base_name := l_base_name.substring (0, (l_len - 1) - l_index.length)
+					end
+					Result := {SYSTEM_STRING}.concat (l_base_name, l_index)
+					i := i + 1
+				end
+
+				if not a_use_short_name and then Result.length > l_len then
 						-- Name is too long so try using a shorter name
 					Result := semantic_name (a_path, a_options, a_tag_name, a_prefix, True)
 				else
@@ -634,14 +646,8 @@ feature {NONE} -- Path utilities
 			a_path_exists: {SYSTEM_FILE}.exists (a_path) or {SYSTEM_DIRECTORY}.exists (a_path)
 			a_options_attached: a_options /= Void
 			can_read_options_a_options: a_options.can_read_options
-		local
-			l_sb: STRING_BUILDER
 		do
-			create l_sb.make (internal_get_short_path (a_path, a_options))
-			l_sb := l_sb.replace ({PATH}.volume_separator_char, '_')
-			l_sb := l_sb.replace ({PATH}.directory_separator_char, '_')
-			l_sb := l_sb.replace ({PATH}.alt_directory_separator_char, '_')
-			Result := l_sb.to_string
+			Result := internal_get_short_path (a_path, a_options)
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
@@ -699,6 +705,7 @@ feature {NONE} -- Constants
 	underscore: SYSTEM_STRING = "_"
 
 	max_wix_id_length: INTEGER = 72
+	max_wix_module_id_length: INTEGER = 33
 			-- Maximum length allowed for WiX identifiers
 
 ;indexing

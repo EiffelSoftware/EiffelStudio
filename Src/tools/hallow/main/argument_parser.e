@@ -258,6 +258,12 @@ feature -- Status report
 			Result := has_option (directory_exclude_pattern_switch)
 		end
 
+	frozen for_merge_modules: BOOLEAN
+			-- Indicates if the content is to be generated for use with merge modules
+		once
+			Result := has_option (merge_module_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING = "Hallow, Windows Installer Xml Tool"
@@ -282,6 +288,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over th include pattern when matching.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (verbal_name_generation_semantics_switch, "Generates semantic 'Name' attribute values for 'Component', 'Directory' and 'File' elements.", True, False, "prefix", "Semantic name prefix string", True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Used to force generator to respect that the content is destined for a merge module (creates short Ids.)", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (swap_tilda_switch, "Swaps '~' for '_' in generated short names, to supress candle warnings.", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", True, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_directory_ref_switch, "Use to specify alternative 'DirectoryRef' base reference, to the default TARGETDIR.", True, False, "reference", "A directory reference name", False))
@@ -307,6 +314,7 @@ feature {NONE} -- Output
 		do
 			if successful then
 				if not display_help then
+					{SYSTEM_CONSOLE}.write_line ("<?xml version=%"1.0%" encoding=%"utf-8%"?>")
 					{SYSTEM_CONSOLE}.write_line ("<!--")
 					{SYSTEM_CONSOLE}.write_line
 				end
@@ -335,6 +343,7 @@ feature {NONE} -- Switch names
 	directory_include_pattern_switch: STRING = "di"
 	directory_exclude_pattern_switch: STRING = "de"
 	exclude_pattern_priority_switch: STRING = "ep+"
+	merge_module_switch: STRING = "m"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

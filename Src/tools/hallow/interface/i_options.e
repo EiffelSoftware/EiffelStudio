@@ -30,7 +30,7 @@ feature -- Access
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
-		
+
 	generate_single_file_components: BOOLEAN
 			-- Indicates if components should contain only one file
 		require
@@ -154,6 +154,13 @@ feature -- Access
 
 	use_exclude_pattern_priority: BOOLEAN is
 			-- Indicates if the exclude pattern should take priority over the include pattern
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
+	for_merge_modules: BOOLEAN
+			-- Indicates if the content is to be generated for use with merge modules
 		require
 			can_read_options: can_read_options
 		deferred

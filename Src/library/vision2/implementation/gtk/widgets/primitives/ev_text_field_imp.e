@@ -22,7 +22,8 @@ inherit
 			create_change_actions,
 			needs_event_box,
 			on_key_event,
-			set_minimum_width_in_characters
+			set_minimum_width_in_characters,
+			initialize
 		end
 
 	EV_FONTABLE_IMP
@@ -62,6 +63,13 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text (once "")
+		end
+
+	initialize
+			-- Initialize `Current'.
+		do
+			align_text_left
+			Precursor
 		end
 
 feature -- Access
@@ -123,18 +131,21 @@ feature -- Status setting
 			-- Make text left aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 0.0)
 		end
 
 	align_text_right
 			-- Make text right aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 1.0)
 		end
 
 	align_text_center
 			-- Make text center aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 0.5)
 		end
 
 feature -- Status Report

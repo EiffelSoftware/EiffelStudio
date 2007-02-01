@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			l_stream.close
 
 				-- Send output to console
-			{SYSTEM_CONSOLE}.write_line ("<?xml version=%"1.0%" encoding=%"utf-8%"?>")
 			{SYSTEM_CONSOLE}.write_line (l_stream.to_string)
 		end
 

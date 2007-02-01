@@ -189,11 +189,15 @@ feature {NONE} -- Implementation
 			l_available_locales: LIST [I18N_LOCALE_ID]
 			l_str: STRING
 			l_added_pre: HASH_TABLE [STRING, STRING]
+			l_found, l_is_unselected: BOOLEAN
 		do
 			if is_gui then
 				l_select_lang := locale_id_preference.selected_value
 				if l_select_lang = Void then
+						-- If selected locale is Void, we try looking for en_US.
 					l_select_lang := "en_US"
+				elseif l_select_lang.is_equal (default_string) then
+					l_is_unselected := True
 				end
 				l_available_locales := locale_manager.available_locales
 				create l_id.make_from_string (l_select_lang)
@@ -217,24 +221,37 @@ feature {NONE} -- Implementation
 								l_available_lang.extend (';')
 							end
 							l_added_pre.force (l_str, l_str)
-							if l_available_locales.item.is_equal (l_id) then
+							if l_available_locales.item.is_equal (l_id) and then not l_is_unselected then
 									-- Set this item selected.
+									-- And activate this locale.
 								set_locale_with_id (l_str)
 								l_str := "[" + l_str + "]"
+								l_found := True
 							end
 							l_available_lang.append (l_str)
 						end
 					end
 					l_available_locales.forth
 				end
-				if l_available_lang.is_empty then
-					l_available_lang := "en_US"
+				if not l_available_lang.is_empty then
+					l_available_lang.extend (';')
+				end
+				if not l_found then
+						-- If previous selected locale is not found anymore,
+						-- or neither possible try of "en_US" is found,
+						-- We select "Unselected" entry, and set locale to be empty.
+					l_available_lang.append ("[" + default_string + "]")
+					set_empty_locale
+				else
+					l_available_lang.append (default_string)
 				end
 				locale_id_preference.set_value_from_string (l_available_lang)
 			else
 				set_system_locale
 			end
 		end
+
+	default_string: STRING is "Unselected";
 
 invariant
 	preferences_not_void: preferences /= Void

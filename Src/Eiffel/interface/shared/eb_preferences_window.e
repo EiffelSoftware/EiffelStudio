@@ -399,6 +399,7 @@ feature {NONE} -- Widget initialization
 					l_displayed_names.force (l_displayed_name, l_array.item (i))
 					i := i + 1
 				end
+				l_displayed_names.force (names.l_unselected, "Unselected")
 				Result.set_displayed_value (l_displayed_names)
 			end
 		end

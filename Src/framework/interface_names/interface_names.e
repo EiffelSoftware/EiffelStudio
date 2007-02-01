@@ -281,7 +281,7 @@ feature -- Accelerator, focus label and menu name
 	f_Debug_run: STRING_GENERAL is				do Result := locale.translate("Run")	end
 	m_Debug_run: STRING_GENERAL is				do Result := locale.translate("&Run%TCtrl+R")	end
 	m_Debug_run_new: STRING_GENERAL is			do Result := locale.translate("St&art")	end
-	
+
 	m_Force_debug_mode: STRING_GENERAL is		do Result := locale.translate("Force Debug Mode")	end
 	m_Launch_With_Arguments: STRING_GENERAL is	do Result := locale.translate("Start With Arguments")	end
 	f_diagram_delete: STRING_GENERAL is			do Result := locale.translate("Delete")	end
@@ -1078,6 +1078,7 @@ feature -- Label texts
 	l_Unknown_status: STRING_GENERAL is			do Result := locale.translate("Unknown application status")	end
 	l_Unknown_class_name: STRING_GENERAL is		do Result := locale.translate("Unknown class name")	end
 	l_unhandled: STRING_GENERAL is 				do Result := locale.translate ("UnHandled") end
+	l_unselected: STRING_GENERAL is 				do Result := locale.translate ("Unselected") end
 	l_up_to_depth_of: STRING_GENERAL is 				do Result := locale.translate ("Up to depth of") end
 	l_Use_existing_profile: STRING_GENERAL is	do Result := locale.translate("Use existing profile: ")	end
 	l_Use_regular_expression: STRING_GENERAL is do Result := locale.translate("Use regular expression")	end

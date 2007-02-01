@@ -326,7 +326,7 @@ feature -- Element change
 			implementation.set_minimum_width (a_minimum_width)
 			minimum_width_set_by_user := True
 		ensure
-			minimum_width_assigned: a_minimum_width > 0 implies minimum_width = a_minimum_width or a_minimum_width = 0 implies (minimum_width <= 1)
+			minimum_width_assigned: (a_minimum_width > 0 implies minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (minimum_width <= 1))
 			minimum_width_set_by_user_set: minimum_width_set_by_user
 		end
 
@@ -342,7 +342,7 @@ feature -- Element change
 			implementation.set_minimum_height (a_minimum_height)
 			minimum_height_set_by_user := True
 		ensure
-			minimum_height_assigned: a_minimum_height > 0 implies minimum_height = a_minimum_height or a_minimum_height = 0 implies (minimum_height <= 1)
+			minimum_height_assigned: (a_minimum_height > 0 implies minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (minimum_height <= 1))
 			minimum_height_set_by_user_set: minimum_height_set_by_user
 		end
 
@@ -361,8 +361,8 @@ feature -- Element change
 			minimum_height_set_by_user := True
 			minimum_width_set_by_user := True
 		ensure
-			minimum_width_assigned: a_minimum_width > 0 implies minimum_width = a_minimum_width or a_minimum_width = 0 implies (minimum_width <= 1)
-			minimum_height_assigned: a_minimum_height > 0 implies minimum_height = a_minimum_height or a_minimum_height = 0 implies (minimum_height <= 1)
+			minimum_width_assigned: (a_minimum_width > 0 implies minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (minimum_width <= 1))
+			minimum_height_assigned: (a_minimum_height > 0 implies minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (minimum_height <= 1))
 			minimum_height_set_by_user_set: minimum_height_set_by_user
 			minimum_width_set_by_user_set: minimum_width_set_by_user
 		end

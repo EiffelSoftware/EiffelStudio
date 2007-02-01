@@ -186,6 +186,35 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 		end
 
+feature -- Alignment
+
+	text_alignment: INTEGER
+			-- Current text alignment. Possible value are
+			--	* Text_alignment_left
+			--	* Text_alignment_right
+			--	* Text_alignment_center
+		do
+			Result := text_field.text_alignment
+		end
+
+	align_text_center
+			-- Display text centered.
+		do
+			text_field.align_text_center
+		end
+
+	align_text_right
+			-- Display text right aligned.
+		do
+			text_field.align_text_right
+		end
+
+	align_text_left
+			-- Display text left aligned.
+		do
+			text_field.align_text_left
+		end
+
 feature -- Access
 
 	text_field: EV_INTERNAL_COMBO_FIELD_IMP

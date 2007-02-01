@@ -175,6 +175,28 @@ feature {NONE} -- Initialization
 			arrows_not_void: internal_arrows_control /= Void
 		end
 
+feature -- Alignment
+
+	text_alignment: INTEGER
+		do
+			Result := internal_text_field.text_alignment
+		end
+
+	align_text_center
+		do
+			internal_text_field.align_text_center
+		end
+
+	align_text_right
+		do
+			internal_text_field.align_text_right
+		end
+
+	align_text_left
+		do
+			internal_text_field.align_text_left
+		end
+
 feature {EV_ANY_I} -- Access
 
 	default_style: INTEGER is

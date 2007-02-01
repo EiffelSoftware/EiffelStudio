@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 				register_current_window
 				set_default_window_procedure
 			end
+			align_text_left
 		end
 
 feature -- Access
@@ -63,6 +64,47 @@ feature -- Access
 			Result ?= wel_parent
 		ensure
 			parent_not_void: parent /= Void
+		end
+
+feature -- Alignment
+
+	text_alignment: INTEGER
+			-- Current text alignment. Possible value are
+			--	* Text_alignment_left
+			--	* Text_alignment_right
+			--	* Text_alignment_center		
+
+	align_text_center
+			-- Display text centered.
+		local
+			l_style: like style
+		do
+			l_style := clear_flag (style, ss_left | ss_right)
+			l_style := l_style | ss_center
+			set_style (l_style)
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+		end
+
+	align_text_right
+			-- Display text right aligned.
+		local
+			l_style: like style
+		do
+			l_style := clear_flag (style, ss_left | ss_center)
+			l_style := l_style | ss_right
+			set_style (l_style)
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+		end
+
+	align_text_left
+			-- Display text left aligned.
+		local
+			l_style: like style
+		do
+			l_style := clear_flag (style, ss_center | ss_right)
+			l_style := l_style | ss_left
+			set_style (l_style)
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
 		end
 
 feature {NONE} -- Implementation

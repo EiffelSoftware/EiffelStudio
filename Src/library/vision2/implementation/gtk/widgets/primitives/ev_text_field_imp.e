@@ -119,19 +119,40 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
-	capacity: INTEGER is
-			-- Return the maximum number of characters that the
-			-- user may enter.
+	align_text_left
+			-- Make text left aligned.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+		end
+
+	align_text_right
+			-- Make text right aligned.
+		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+		end
+
+	align_text_center
+			-- Make text center aligned.
+		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
 		end
 
 feature -- Status Report
+
+	text_alignment: INTEGER
+		-- Text alignment of `Current'.
 
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+		end
+
+	capacity: INTEGER is
+			-- Return the maximum number of characters that the
+			-- user may enter.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation

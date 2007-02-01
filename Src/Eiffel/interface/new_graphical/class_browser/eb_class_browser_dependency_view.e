@@ -415,7 +415,7 @@ feature -- Notification
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
-					sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
+					sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
 					disable_force_multi_column_sorting
 					enable_auto_sort_order_change
 					set_has_grid_been_binded_for_current_data (True)
@@ -752,7 +752,7 @@ feature{NONE} -- Grid binding
 
 							-- Expand rows.
 						if l_grid_has_been_binded_for_current_data then
-							l_dependency_row ?= a_base_row.data
+							l_dependency_row ?= a_level.data
 							if l_dependency_row /= Void then
 								if l_dependency_row.is_expanded then
 									a_base_row.expand

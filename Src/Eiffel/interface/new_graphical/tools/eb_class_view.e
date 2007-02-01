@@ -66,10 +66,8 @@ feature {NONE} -- Initialization
 			l_drop_actions.extend (agent drop_stone)
 			create l_flat_browser.make (a_tool, l_drop_actions)
 			l_flat_browser.set_sorting_status (l_flat_browser.sorted_columns_from_string (preferences.class_browser_data.class_flat_view_sorting_order))
-			create l_inheritance_browser.make_with_flag (a_tool, l_drop_actions, True)
-			l_inheritance_browser.set_sorting_status (l_inheritance_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
-			create l_reference_browser.make_with_flag (a_tool, l_drop_actions, False)
-			l_reference_browser.set_sorting_status (l_reference_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
+			create l_inheritance_browser.make_with_flag (a_tool, l_drop_actions, True, preferences.class_browser_data.class_tree_view_sorting_order_preference)
+			create l_reference_browser.make_with_flag (a_tool, l_drop_actions, False, preferences.class_browser_data.class_client_view_sorting_order_preference)
 			l_reference_browser.retrieve_data_actions.extend (agent refresh)
 			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)

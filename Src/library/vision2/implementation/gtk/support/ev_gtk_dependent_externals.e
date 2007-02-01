@@ -634,6 +634,11 @@ feature -- Externals
 			"C signature (GtkEntry*, gboolean) use <gtk/gtk.h>"
 		end
 
+	frozen gtk_entry_set_alignment (a_entry: POINTER; a_alignment: REAL_32)
+		external
+			"C signature (GtkEntry*, gfloat) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_file_chooser_set_current_folder (a_dialog: POINTER; a_folder: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"

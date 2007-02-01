@@ -66,6 +66,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := class_tree_view_sorting_order_preference.value
 		end
 
+	class_client_view_sorting_order: STRING is
+			-- String representation of class client view sorting order
+		do
+			Result := class_client_view_sorting_order_preference.value
+		end
+
 	feature_view_sorting_order: STRING is
 			-- String representation of feature view sorting order
 		do
@@ -147,6 +153,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_tooltip_preference: BOOLEAN_PREFERENCE
 	class_flat_view_sorting_order_preference: STRING_PREFERENCE
 	class_tree_view_sorting_order_preference: STRING_PREFERENCE
+	class_client_view_sorting_order_preference: STRING_PREFERENCE
 	feature_view_sorting_order_preference: STRING_PREFERENCE
 	dependency_view_sorting_order_preference: STRING_PREFERENCE
 	show_item_path_preference: BOOLEAN_PREFERENCE
@@ -168,6 +175,7 @@ feature {NONE} -- Preference Strings
 	show_tooltip_string: STRING is "tools.class_browser.show_tooltip"
 	class_flat_view_sorting_order_string: STRING is "tools.class_browser.class_flat_view_sorting_order"
 	class_tree_view_sorting_order_string: STRING is "tools.class_browser.class_flat_tree_sorting_order"
+	class_client_view_sorting_order_string: STRING is "tools.class_browser.class_flat_client_sorting_order"
 	feature_view_sorting_order_string: STRING is "tools.class_browser.feature_view_sorting_order"
 	dependency_view_sorting_order_string: STRING is "tools.class_browser.dependency_view_sorting_order"
 	show_item_path_string: STRING is "tools.class_browser.show_item_path"
@@ -196,6 +204,7 @@ feature {NONE} -- Implementation
 			class_flat_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, class_flat_view_sorting_order_string, "2:1")
 			class_flat_view_sorting_order_preference.set_hidden (True)
 			class_tree_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, class_tree_view_sorting_order_string, "1:1")
+			class_client_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, class_client_view_sorting_order_string, "1:1")
 			class_tree_view_sorting_order_preference.set_hidden (True)
 			feature_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, feature_view_sorting_order_string, "2:1")
 			feature_view_sorting_order_preference.set_hidden (True)

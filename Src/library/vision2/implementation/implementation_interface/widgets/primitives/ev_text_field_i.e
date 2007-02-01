@@ -1,21 +1,26 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision text field. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXT_FIELD_I
-	
+
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
 			interface
 		end
-	
-	EV_FONTABLE_I	
+
+	EV_FONTABLE_I
+		redefine
+			interface
+		end
+
+	EV_TEXT_ALIGNABLE_I
 		redefine
 			interface
 		end

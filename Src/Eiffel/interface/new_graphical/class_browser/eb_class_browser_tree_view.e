@@ -31,12 +31,20 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN) is
+	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN; a_sorting_order_preference: like sorting_order_preference) is
 			-- Initialize.
+		require
+			a_dev_window_attached: a_dev_window /= Void
+			a_drop_actions_attached: a_drop_actions /= Void
+			a_sorting_order_preference_attached: a_sorting_order_preference /= Void
 		do
+			sorting_order_preference := a_sorting_order_preference
 			make (a_dev_window, a_drop_actions)
 			is_tree_view_enabled := a_tree_view_enabled
-			setup_sorting_for_location
+			if is_flat_view_enabled then
+				setup_sorting_for_location
+			end
+			set_sorting_status (sorted_columns_from_string (sorting_order_preference.value))
 		ensure
 			is_tree_view_enabled_set: is_tree_view_enabled = a_tree_view_enabled
 			grid_sorting_setting_correct: is_sorting_setting_valid
@@ -118,6 +126,9 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
+
+	sorting_order_preference: STRING_PREFERENCE
+			-- Preference to store sorting order
 
 feature -- Actions
 
@@ -242,14 +253,16 @@ feature -- Actions
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
 		do
-			preferences.class_browser_data.class_tree_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
+			sorting_order_preference.set_value (string_representation_of_sorted_columns)
 		end
 
 	on_show_path_changed is
 			-- Action to be performed when selection status of `display_path_button' changes
 		do
 			is_up_to_date := False
-			setup_sorting_for_location
+			if is_flat_view_enabled then
+				setup_sorting_for_location
+			end
 			if data /= Void then
 				bind_grid
 			end
@@ -290,7 +303,7 @@ feature -- Notification
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
-					sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
+					sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
 					disable_force_multi_column_sorting
 					enable_auto_sort_order_change
 				else
@@ -679,7 +692,6 @@ feature{NONE} -- Implementation
 				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
 				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
 				display_path_button_internal.select_actions.extend (agent on_show_path_changed)
-				on_show_path_changed
 			end
 			Result := display_path_button_internal
 		ensure
@@ -721,8 +733,10 @@ feature{NONE} -- Implementation
 
 	setup_sorting_for_location is
 			-- Set sorting information for location column.
+		require
+			is_flat_view_enabled: is_flat_view_enabled
 		do
-			if is_flat_view_enabled and then display_path_button.is_selected then
+			if display_path_button.is_selected then
 				if not is_column_sortable (location_column_index) then
 					set_sort_info (location_column_index, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
 				end
@@ -792,6 +806,9 @@ feature{NONE} -- Initialization
 
 	location_column_index: INTEGER is 2;
 			-- Index of location column
+
+invariant
+	sorting_order_preference_attached: sorting_order_preference /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -18,7 +18,7 @@ feature -- Access
         do
 			Result := locale_internal.item
 			if Result = Void then
-				Result := system_locale
+				Result := empty_locale
 				locale_internal.put (Result)
 			end
 		ensure
@@ -49,7 +49,7 @@ feature -- Status change
 			if locale_manager.has_locale (l_id) then
 				locale_internal.put (locale_manager.get_locale (l_id))
 			else
-				locale_internal.put (system_locale)
+				locale_internal.put (empty_locale)
 			end
 		end
 
@@ -57,6 +57,12 @@ feature -- Status change
 			-- Set `locale' `system_locale'
 		do
 			locale_internal.put (system_locale)
+		end
+
+	set_empty_locale is
+			-- Set locale to be an empty locale.
+		do
+			locale_internal.put (empty_locale)
 		end
 
 feature -- Output
@@ -109,6 +115,13 @@ feature {NONE} -- Implementation
 	system_locale: I18N_LOCALE
 		once
 			Result := locale_manager.get_system_locale
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	empty_locale: I18N_LOCALE
+		once
+			Result := locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (""))
 		ensure
 			result_not_void: Result /= Void
 		end

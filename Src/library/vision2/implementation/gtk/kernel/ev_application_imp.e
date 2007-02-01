@@ -869,12 +869,12 @@ feature -- Implementation
 		do
 			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			l_stored_display_data := stored_display_data
-			l_stored_display_data.put_pointer (temp_ptr, 1)
-			l_stored_display_data.put_integer (temp_x, 2)
-			l_stored_display_data.put_integer (temp_y, 3)
-			l_stored_display_data.put_integer (temp_mask, 4)
-			l_stored_display_data.put_integer (temp_x, 5)
-			l_stored_display_data.put_integer (temp_y, 6)
+			l_stored_display_data.window := temp_ptr
+			l_stored_display_data.x := temp_x
+			l_stored_display_data.y := temp_y
+			l_stored_display_data.mask := temp_mask
+			l_stored_display_data.originating_x := temp_x
+			l_stored_display_data.originating_y := temp_y
 		end
 
 	use_stored_display_data: BOOLEAN

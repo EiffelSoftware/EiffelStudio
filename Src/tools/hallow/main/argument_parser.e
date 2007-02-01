@@ -288,7 +288,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over th include pattern when matching.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (verbal_name_generation_semantics_switch, "Generates semantic 'Name' attribute values for 'Component', 'Directory' and 'File' elements.", True, False, "prefix", "Semantic name prefix string", True))
-			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Used to force generator to respect that the content is destined for a merge module (creates short Ids.)", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates short Ids.)", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (swap_tilda_switch, "Swaps '~' for '_' in generated short names, to supress candle warnings.", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", True, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_directory_ref_switch, "Use to specify alternative 'DirectoryRef' base reference, to the default TARGETDIR.", True, False, "reference", "A directory reference name", False))

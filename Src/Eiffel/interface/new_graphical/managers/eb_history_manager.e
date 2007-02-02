@@ -170,6 +170,27 @@ feature -- Status report
 			Result := (not is_empty) and (i >= 1) and (i <= count)
 		end
 
+	has (a_stone: STONE): BOOLEAN is
+			-- Does current has `a_stone'?
+		local
+			l_history: like history
+			l_index: INTEGER
+		do
+			l_history := history
+			l_index := l_history.index
+			from
+				l_history.start
+			until
+				l_history.after or else Result
+			loop
+				if l_history.item /= Void and then a_stone.same_as (l_history.item) then
+					Result := True
+				end
+				l_history.forth
+			end
+			l_history.go_i_th (l_index)
+		end
+
 feature -- Element change
 
 	back is
@@ -260,6 +281,33 @@ feature -- Element change
 				index_active := initial
 				notify_observers (notify_move, Void, index_active)
 			end
+		end
+
+	navigate_to (a_stone: STONE) is
+			-- Navigate to `a_stone'.
+		require
+			has_a_stone: has (a_stone)
+		local
+			l_history: like history
+			l_item: STONE
+			l_found: BOOLEAN
+		do
+			l_history := history.twin
+			from
+				l_history.start
+			until
+				l_history.after or else l_found
+			loop
+				l_item := l_history.item
+				if l_item /= Void and then a_stone.same_as (l_item) then
+					index_active := l_history.index
+					notify_observers (notify_remove, l_item, index_active)
+					l_found := True
+				end
+				l_history.forth
+			end
+		ensure
+			active_is_a_stone: a_stone.same_as (active)
 		end
 
 	extend (a_stone: STONE) is

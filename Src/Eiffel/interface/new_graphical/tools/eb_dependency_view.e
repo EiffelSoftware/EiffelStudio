@@ -518,56 +518,58 @@ feature {NONE} -- Implementation
 		do
 			if not is_last_stone_processed then
 				new_stone := last_stone
-				fst ?= new_stone
-				cst ?= new_stone
-				ist ?= new_stone
-				cluster_stone ?= new_stone
-				target_stone ?= new_stone
-					-- If `new_stone' is a feature stone, take the associated class.
-				if fst /= Void and then fst.e_feature /= Void then
-					create cst.make (fst.e_feature.associated_class)
-					l_stone := cst
-				elseif cst /= Void or else ist /= Void then
-					if cst /= Void then
-						type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-							(not cst.e_class.is_true_external and is_stone_external)
-					elseif ist /= Void then
-						type_changed := (ist.class_i.is_external_class and not is_stone_external) or
-							(not ist.class_i.is_external_class and is_stone_external)
+				if new_stone /= Void then
+					fst ?= new_stone
+					cst ?= new_stone
+					ist ?= new_stone
+					cluster_stone ?= new_stone
+					target_stone ?= new_stone
+						-- If `new_stone' is a feature stone, take the associated class.
+					if fst /= Void and then fst.e_feature /= Void then
+						create cst.make (fst.e_feature.associated_class)
+						l_stone := cst
+					elseif cst /= Void or else ist /= Void then
+						if cst /= Void then
+							type_changed := (cst.e_class.is_true_external and not is_stone_external) or
+								(not cst.e_class.is_true_external and is_stone_external)
+						elseif ist /= Void then
+							type_changed := (ist.class_i.is_external_class and not is_stone_external) or
+								(not ist.class_i.is_external_class and is_stone_external)
+						end
+
+						if type_changed then
+							-- Toggle stone flag.
+			            	is_stone_external := not is_stone_external
+			            end
+
+			            	-- Update formatters.
+			            if is_stone_external and cst /= Void then
+							enable_dotnet_formatters (True)
+						else
+							enable_dotnet_formatters (False)
+						end
+						if cst /= Void then
+							update_viewpoints (cst.e_class)
+						end
+						l_stone := cst
+					elseif target_stone /= Void or else cluster_stone /= Void then
+						l_stone := new_stone
 					end
 
-					if type_changed then
-						-- Toggle stone flag.
-		            	is_stone_external := not is_stone_external
-		            end
-
-		            	-- Update formatters.
-		            if is_stone_external and cst /= Void then
-						enable_dotnet_formatters (True)
-					else
-						enable_dotnet_formatters (False)
+					if l_stone = Void or else internal_stone = Void or else not is_stone_equal (l_stone, internal_stone) then
+							-- Set the stones.
+						from
+							managed_formatters.start
+						until
+							managed_formatters.after
+						loop
+							managed_formatters.item.set_stone (l_stone)
+							managed_formatters.forth
+						end
 					end
-					if cst /= Void then
-						update_viewpoints (cst.e_class)
-					end
-					l_stone := cst
-				elseif target_stone /= Void or else cluster_stone /= Void then
-					l_stone := new_stone
+					internal_stone := l_stone
+					history_manager.extend (stone)
 				end
-
-				if l_stone = Void or else internal_stone = Void or else not is_stone_equal (l_stone, internal_stone) then
-						-- Set the stones.
-					from
-						managed_formatters.start
-					until
-						managed_formatters.after
-					loop
-						managed_formatters.item.set_stone (l_stone)
-						managed_formatters.forth
-					end
-				end
-				internal_stone := l_stone
-				history_manager.extend (stone)
 				Precursor
 			end
 		end

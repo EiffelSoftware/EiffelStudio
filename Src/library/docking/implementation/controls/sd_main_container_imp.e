@@ -81,14 +81,12 @@ feature {NONE}-- Initialization
 
 			l_ev_horizontal_box_1.disable_item_expand (left_top)
 			l_ev_horizontal_box_1.disable_item_expand (right_top)
---			left_top.set_minimum_width (auto_hide_bar_width)
---			right_top.set_minimum_width (auto_hide_bar_width)
+
 			l_ev_horizontal_box_2.disable_item_expand (left_bar)
 			l_ev_horizontal_box_2.disable_item_expand (right_bar)
 			l_ev_horizontal_box_3.disable_item_expand (left_bottom)
 			l_ev_horizontal_box_3.disable_item_expand (right_bottom)
---			left_bottom.set_minimum_width (auto_hide_bar_width)
---			right_bottom.set_minimum_width (auto_hide_bar_width)
+
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (l_ev_horizontal_box_3)
 

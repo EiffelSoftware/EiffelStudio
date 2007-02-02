@@ -129,6 +129,10 @@ feature -- Properties
 			Result := condition_type = Condition_is_type_has_changed
 		end
 
+	continue_on_condition_failure: BOOLEAN
+			-- Continue execution when condition failed to be evaluated ?
+			-- Default: stop.
+
 	message: STRING
 			-- Message to be print when Current is reached.
 			-- If Void, no message is printed.
@@ -155,9 +159,10 @@ feature -- Access
 			eval: DBG_EXPRESSION_EVALUATOR
 			ncv: like last_condition_value
 		do
-			Result := True
 			eval := condition.expression_evaluator
-			if not eval.error_occurred then
+			if eval.error_occurred then
+				Result := not continue_on_condition_failure
+			else
 				inspect condition_type
 				when Condition_is_type_is_true then
 					Result := eval.final_result_is_true_boolean_value
@@ -167,6 +172,7 @@ feature -- Access
 						or else (not ncv.same_as (last_condition_value))
 					last_condition_value:= ncv
 				else
+					Result := True
 				end
 			end
 		end
@@ -201,6 +207,12 @@ feature {NONE} -- Internal value
 			-- Last condition's value			
 
 feature -- Change
+
+	set_continue_on_condition_failure (b: BOOLEAN) is
+			-- Set `continue_on_condition_failure' to `b'
+		do
+			continue_on_condition_failure := b
+		end
 
 	set_continue_execution (b: BOOLEAN) is
 			-- Set `continue_execution' to `b'

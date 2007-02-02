@@ -11,7 +11,7 @@ class
 inherit
 	AST_FEATURE_CHECKER_GENERATOR
 		redefine
---			process_un_old_as ,
+			process_un_old_as ,
 			check_type
 		end
 
@@ -77,20 +77,19 @@ feature {NONE} -- Implementation: type validation
 			last_type := l_type
 		end
 
---| Commented for now, maybe used later
---	process_un_old_as (l_as: UN_OLD_AS) is
---		local
---			b: BOOLEAN
---		do
---			b := is_checking_postcondition
---			if not b then
---				set_is_checking_postcondition (True)
---			end
---			Precursor (l_as)
---			if not b then
---				set_is_checking_postcondition (b)
---			end
---		end
+	process_un_old_as (l_as: UN_OLD_AS) is
+		local
+			b: BOOLEAN
+		do
+			b := is_checking_postcondition
+			if not b then
+				set_is_checking_postcondition (True)
+			end
+			Precursor (l_as)
+			if not b then
+				set_is_checking_postcondition (b)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

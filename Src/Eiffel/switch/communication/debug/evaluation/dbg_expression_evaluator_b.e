@@ -405,15 +405,48 @@ feature {NONE} -- EXPR_B evaluation
 		local
 			l_bin_equal_b: BIN_EQUAL_B
 			l_nested_b: NESTED_B
+			l_bool_binary_b: BOOL_BINARY_B
 		do
 			l_bin_equal_b ?= a_binary_b
 			if l_bin_equal_b /= Void then
 				evaluate_bin_equal_b (l_bin_equal_b)
-			elseif a_binary_b.access /= Void then
-				l_nested_b := a_binary_b.nested_b
-				evaluate_nested_b (l_nested_b)
 			else
-				notify_error_not_implemented (a_binary_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
+				l_bool_binary_b ?= a_binary_b
+				if l_bool_binary_b /= Void then
+					evaluate_bool_binary_b (l_bool_binary_b)
+				elseif a_binary_b.access /= Void then
+					l_nested_b := a_binary_b.nested_b
+					evaluate_nested_b (l_nested_b)
+				else
+					notify_error_not_implemented (a_binary_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
+				end
+			end
+		end
+
+	evaluate_bool_binary_b (a_bool_binary_b: BOOL_BINARY_B) is
+		local
+			l_nested_b: NESTED_B
+			l_b_and_then_b: B_AND_THEN_B
+			l_b_or_else_b: B_OR_ELSE_B
+			l_lazy_eval: BOOLEAN
+			l_lazy_value: BOOLEAN
+		do
+			if a_bool_binary_b.access /= Void then
+				l_b_and_then_b ?= a_bool_binary_b
+				if l_b_and_then_b /= Void then
+					l_lazy_eval := not l_b_and_then_b.is_and
+					l_lazy_value := False
+				else
+					l_b_or_else_b ?= a_bool_binary_b
+					if l_b_or_else_b /= Void then
+						l_lazy_eval := not l_b_or_else_b.is_or
+						l_lazy_value := True
+					end
+				end
+				l_nested_b := a_bool_binary_b.nested_b
+				evaluate_boolean_nested_b (l_nested_b, l_lazy_eval, l_lazy_value)
+			else
+				notify_error_not_implemented (a_bool_binary_b.generator + "/BOOL_BINARY_B" + Cst_error_not_yet_ready)
 			end
 		end
 
@@ -457,6 +490,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_un_minus_b: UN_MINUS_B
 			l_un_plus_b: UN_PLUS_B
 			l_un_not_b: UN_NOT_B
+			l_un_old_b: UN_OLD_B
 		do
 			l_un_not_b ?= a_unary_b
 			if l_un_not_b /= Void then
@@ -470,7 +504,12 @@ feature {NONE} -- EXPR_B evaluation
 					if l_un_plus_b /= Void then
 						evaluate_nested_b (l_un_plus_b.nested_b)
 					else
-						notify_error_not_implemented (a_unary_b.generator + " = UNARY_B" + Cst_error_not_yet_ready)
+						l_un_old_b ?= a_unary_b
+						if l_un_old_b /= Void then
+							evaluate_un_old_b (l_un_old_b)
+						else
+							notify_error_not_implemented (a_unary_b.generator + " = UNARY_B" + Cst_error_not_yet_ready)
+						end
 					end
 				end
 			end
@@ -531,6 +570,46 @@ feature {NONE} -- EXPR_B evaluation
 					end
 				end
 			end
+		end
+
+	evaluate_boolean_nested_b (a_nested_b: NESTED_B; a_is_lazy: BOOLEAN; a_lazy_value: BOOLEAN) is
+			-- Evaluate nested expression with boolean expression
+			-- if `a_is_lazy' is True, only evaluate first part
+			-- if first value is `a_lazy_value'
+			--| i.e: for and then , is_lazy=True, and lazy_value=False
+			--       for or else, is_lazy=true, and lazy_value=True
+		local
+			l_tmp_target_backup: like tmp_target
+			l_target: ACCESS_B
+			l_target_value: DUMP_VALUE
+			l_boolean_value: DUMP_VALUE_BASIC
+			l_message_value: DUMP_VALUE
+			l_message: CALL_B
+		do
+			l_tmp_target_backup := tmp_target
+
+			l_target := a_nested_b.target
+			l_target_value := standalone_evaluation_expr_b (l_target)
+
+			if not error_occurred then
+				check is_boolean_value: l_target_value.is_type_boolean end
+				l_boolean_value ?= l_target_value
+				check is_boolean_dump_value: l_boolean_value /= Void end
+				if
+					a_is_lazy and then l_boolean_value.value_boolean = a_lazy_value
+				then
+					tmp_result_value := l_target_value
+				else
+					tmp_target := l_target_value
+					l_message := a_nested_b.message
+					l_message_value := standalone_evaluation_expr_b (l_message)
+
+					if not error_occurred then
+						tmp_result_value := l_message_value
+					end
+				end
+			end
+			tmp_target := l_tmp_target_backup
 		end
 
 	evaluate_nested_b (a_nested_b: NESTED_B) is
@@ -979,6 +1058,12 @@ feature {NONE} -- EXPR_B evaluation
 				end
 				tmp_result_static_type := context_class
 			end
+		end
+
+	evaluate_un_old_b (a_un_old_b: UN_OLD_B) is
+		local
+		do
+			notify_error_not_implemented (a_un_old_b.generator + " = UN_OLD_B" + Cst_error_not_yet_ready)
 		end
 
 feature {NONE} -- Concrete evaluation

@@ -50,6 +50,7 @@ feature -- Button texts
 	b_cluster_diagram: STRING_GENERAL is				do Result := locale.translate("Cluster diagrams (may take a long time!)")	end
 	b_cluster_hierarchy: STRING_GENERAL is				do Result := locale.translate("Cluster hierarchy")	end
 	b_Continue_anyway: STRING_GENERAL is				do Result := locale.translate("Continue Anyway")	end
+	b_Continue_on_condition_failure: STRING_GENERAL is  do Result := locale.translate("Continue if evaluation fails")	end
 	b_Create: STRING_GENERAL is							do Result := locale.translate("Create")	end
 	b_Create_folder: STRING_GENERAL is					do Result := locale.translate("Create Folder...")	end
 	b_Delete_command: STRING_GENERAL is					do Result := locale.translate("Delete")	end
@@ -57,13 +58,13 @@ feature -- Button texts
 	b_Debugging_options: STRING_GENERAL is				do Result := locale.translate ("Debugging options") end
 	b_Discard_assertions: STRING_GENERAL is				do Result := locale.translate("Discard Assertions")	end
 	b_Display_Exception_Trace: STRING_GENERAL is		do Result := locale.translate("Display Exception Trace")	end
-	b_do_nothing: STRING_GENERAL is 						do Result := locale.translate("Do nothing")	end
+	b_do_nothing: STRING_GENERAL is 					do Result := locale.translate("Do nothing")	end
 	b_Down_text: STRING_GENERAL is 						do Result := locale.translate("Down")	end
 	b_Edit_ace: STRING_GENERAL is						do Result := locale.translate("Edit")	end
 	b_Edit_command: STRING_GENERAL is					do Result := locale.translate("Edit...")	end
 	b_Eiffel_features: STRING_GENERAL is				do Result := locale.translate("Eiffel Features")	end
 
-	b_Force_debug_mode: STRING_GENERAL is					do Result := locale.translate("Force Debug Mode")	end
+	b_Force_debug_mode: STRING_GENERAL is				do Result := locale.translate("Force Debug Mode")	end
 
 	b_Feature_name: STRING_GENERAL is					do Result := locale.translate("Feature Name")	end
 	b_Finish: STRING_GENERAL is							do Result := locale.translate("Finish")	end

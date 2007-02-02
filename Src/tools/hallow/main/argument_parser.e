@@ -83,38 +83,10 @@ feature -- Access
 			Result := option_of_name (verbal_name_generation_semantics_switch).value
 		end
 
-	frozen swap_tilda: BOOLEAN
-			-- Indicates if the tilda '~' should be replaced in short names to avoid candle warnings
-		once
-			Result := has_option (swap_tilda_switch)
-		end
-
 	frozen include_subdirectories: BOOLEAN
 			-- Indicates if all subdirectories and files should be included.
 		once
 			Result := has_option (recursive_switch)
-		end
-
-	frozen use_src_specifier: BOOLEAN
-			-- Indicates if the 'src' attribute should be used instead of 'FileSource'
-		once
-			Result := has_option (use_src_switch)
-		end
-
-	frozen generate_guids: BOOLEAN
-			-- Indicates if GUIDs should be generated for components
-		once
-			Result := not has_option (no_guid_generation_switch)
-		end
-
-	frozen directory_ref_name: SYSTEM_STRING
-			-- The user specified root directory reference name
-		once
-			if has_option (root_directory_ref_switch) then
-				Result := option_of_name (root_directory_ref_switch).value
-			else
-				Result := "TARGETDIR"
-			end
 		end
 
 	frozen directory_alias: SYSTEM_STRING
@@ -141,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	file_include_pattern: REGEX is
+	frozen file_include_pattern: REGEX is
 			-- Pattern to use to include files
 		local
 			l_buffer: STRING
@@ -157,7 +129,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	file_excluded_pattern: REGEX is
+	frozen file_excluded_pattern: REGEX is
 			-- Pattern to use to exclude files
 		local
 			l_buffer: STRING
@@ -173,7 +145,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	directory_include_pattern: REGEX is
+	frozen directory_include_pattern: REGEX is
 			-- Pattern to use to include directories
 		local
 			l_buffer: STRING
@@ -189,7 +161,7 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	directory_excluded_pattern: REGEX is
+	frozen directory_excluded_pattern: REGEX is
 			-- Pattern to use to exnclude directories
 		local
 			l_buffer: STRING
@@ -205,10 +177,16 @@ feature -- Access
 			create Result.make (l_buffer)
 		end
 
-	use_exclude_pattern_priority: BOOLEAN is
+	frozen use_exclude_pattern_priority: BOOLEAN is
 			-- Indicates if the exclude pattern should take priority over the include pattern
 		do
 			Result := has_option (exclude_pattern_priority_switch)
+		end
+
+	frozen for_merge_modules: BOOLEAN
+			-- Indicates if the content is to be generated for use with merge modules
+		once
+			Result := has_option (merge_module_switch)
 		end
 
 feature -- Status report
@@ -258,15 +236,9 @@ feature -- Status report
 			Result := has_option (directory_exclude_pattern_switch)
 		end
 
-	frozen for_merge_modules: BOOLEAN
-			-- Indicates if the content is to be generated for use with merge modules
-		once
-			Result := has_option (merge_module_switch)
-		end
-
 feature {NONE} -- Usage
 
-	name: STRING = "Hallow, Windows Installer Xml Tool"
+	name: STRING = "Hallow, Windows Installer Xml v3.0 Tool"
 			-- Full name of application
 
 	version: STRING
@@ -288,13 +260,9 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over th include pattern when matching.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (verbal_name_generation_semantics_switch, "Generates semantic 'Name' attribute values for 'Component', 'Directory' and 'File' elements.", True, False, "prefix", "Semantic name prefix string", True))
-			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates short Ids.)", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (swap_tilda_switch, "Swaps '~' for '_' in generated short names, to supress candle warnings.", True, False))
-			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", True, 1, {NATURAL_8}.max_value))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_directory_ref_switch, "Use to specify alternative 'DirectoryRef' base reference, to the default TARGETDIR.", True, False, "reference", "A directory reference name", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates shorter Ids.)", True, False))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", False, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_alias_switch, "Use to specify a directory alias to use when generating paths.", True, False, "alias", "A directory path alias", False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (no_guid_generation_switch, "Enumlates Tallow in putting PUT-GUID-HERE where components expected a GUID.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (use_src_switch, "Use to force use of deprecated 'src' attribute for 'File' elements.", True, False))
 		end
 
 	loose_argument_name: STRING = "directory"
@@ -331,13 +299,9 @@ feature {NONE} -- Switch names
 
 	one_file_per_component_switch: STRING = "s"
 	recursive_switch: STRING = "r"
-	no_guid_generation_switch: STRING = "g"
 	directory_alias_switch: STRING = "a"
-	root_directory_ref_switch: STRING = "b"
-	swap_tilda_switch: STRING = "~"
 	verbal_name_generation_semantics_switch: STRING = "n"
-	use_src_switch: STRING = "c"
-	disk_id_switch: STRING = "d"
+	disk_id_switch: STRING = "k"
 	file_include_pattern_switch: STRING = "fi"
 	file_exclude_pattern_switch: STRING = "fe"
 	directory_include_pattern_switch: STRING = "di"

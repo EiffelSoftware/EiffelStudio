@@ -15,7 +15,7 @@ inherit
 
 feature -- Namespace
 
-	wix_ns: SYSTEM_STRING = "http://schemas.microsoft.com/wix/2003/01/wi"
+	wix_ns: SYSTEM_STRING = "http://schemas.microsoft.com/wix/2006/wi"
 
 feature -- Element names
 
@@ -23,22 +23,15 @@ feature -- Element names
 	directory_ref_tag: SYSTEM_STRING = "DirectoryRef"
 	directory_tag: SYSTEM_STRING = "Directory"
 	file_tag: SYSTEM_STRING = "File"
-	fragment_tag: SYSTEM_STRING = "Fragment"
-	wix_tag: SYSTEM_STRING = "Wix"
+	include_tag: SYSTEM_STRING = "Include"
 
 feature -- Attribute names
 
 	disk_id_attribute: SYSTEM_STRING = "DiskId"
 	guid_attribute: SYSTEM_STRING = "Guid"
 	id_attribute: SYSTEM_STRING = "Id"
-	long_name_attribute: SYSTEM_STRING = "LongName"
 	name_attribute: SYSTEM_STRING = "Name"
 	file_source_attribute: SYSTEM_STRING = "FileSource"
-	src_attribute: SYSTEM_STRING = "src"
-
-feature -- Defaults
-
-	target_dir: SYSTEM_STRING = "TARGETDIR"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

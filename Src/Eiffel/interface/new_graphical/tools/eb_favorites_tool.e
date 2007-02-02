@@ -104,9 +104,14 @@ feature -- Command
 
 	show is
 			-- Show tool.
+		local
+			w: EV_WIDGET
 		do
 			Precursor {EB_TOOL}
-			favorites_manager.widget.set_focus
+			w := favorites_manager.widget
+			if w /= Void and then w.is_displayed and then w.is_sensitive then
+				favorites_manager.widget.set_focus
+			end
 		end
 
 feature -- Memory management

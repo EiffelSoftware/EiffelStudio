@@ -217,6 +217,7 @@ feature -- operation on conditions
 			vb, vb2: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			rb_is_true, rb_has_changed: EV_RADIO_BUTTON
+			cb_cont_on_cond_failure: EV_CHECK_BUTTON
 			bp: BREAKPOINT
 		do
 				-- Create all widgets.
@@ -238,6 +239,8 @@ feature -- operation on conditions
 			create tf.make
 			create rb_is_true.make_with_text (Interface_names.l_Is_true)
 			create rb_has_changed.make_with_text (Interface_names.l_Has_changed)
+			create cb_cont_on_cond_failure.make_with_text (Interface_names.b_Continue_on_condition_failure)
+
 			create lab
 
 				-- Code completion
@@ -252,7 +255,7 @@ feature -- operation on conditions
 				-- Layout all widgets
 
 			create vb2
-			vb2.set_padding (Layout_constants.Small_padding_size)
+--			vb2.set_padding (Layout_constants.Small_padding_size)
 			vb2.set_border_width (Layout_constants.Small_border_size)
 			fr.extend (vb2)
 			vb2.extend (tf)
@@ -260,9 +263,22 @@ feature -- operation on conditions
 			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (create {EV_CELL})
 			hb.extend (rb_is_true)
+			hb.disable_item_expand (rb_is_true)
 			hb.extend (rb_has_changed)
+			hb.disable_item_expand (rb_has_changed)
 			vb2.extend (hb)
 			vb2.disable_item_expand (hb)
+
+			vb2.extend (create {EV_HORIZONTAL_SEPARATOR})
+			vb2.disable_item_expand (vb2.last)
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (create {EV_CELL})
+			hb.extend (cb_cont_on_cond_failure)
+			hb.disable_item_expand (cb_cont_on_cond_failure)
+			vb2.extend (hb)
+			vb2.disable_item_expand (hb)
+
 			vb.extend (fr)
 			vb.disable_item_expand (fr)
 			vb.extend (lab)
@@ -293,10 +309,15 @@ feature -- operation on conditions
 				else
 					rb_is_true.enable_select
 				end
+				if bp.continue_on_condition_failure then
+					cb_cont_on_cond_failure.enable_select
+				else
+					cb_cont_on_cond_failure.disable_select
+				end
 			end
 
 				-- Set up actions
-			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, rb_is_true, rb_has_changed, tf, lab))
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, rb_is_true, rb_has_changed, cb_cont_on_cond_failure, tf, lab))
 			if bp /= Void then
 				removeb.select_actions.extend (agent remove_condition_from_breakpoint (f, pos))
 				removeb.select_actions.extend (agent d.destroy)
@@ -314,7 +335,9 @@ feature -- operation on conditions
 			Debugger_manager.notify_breakpoints_changes
 		end
 
-	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_rb_is_true, a_rb_has_changed: EV_SELECTABLE;
+	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG;
+				a_rb_is_true, a_rb_has_changed: EV_SELECTABLE;
+				a_cb_cont_on_cond_failure: EV_SELECTABLE;
 			a_input: EV_TEXTABLE; a_output: EV_LABEL) is
 			-- Attempt to create a conditional breakpoint.
 		local
@@ -352,6 +375,7 @@ feature -- operation on conditions
 				else
 					check should_not_occur: False end
 				end
+				bp.set_continue_on_condition_failure (a_cb_cont_on_cond_failure.is_selected)
 			else
 				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text))
 			end

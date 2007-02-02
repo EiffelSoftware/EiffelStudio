@@ -29,7 +29,6 @@ feature {NONE}  -- Initlization
 			l_key: EV_KEY
 			l_acc: EV_ACCELERATOR
 			l_window: EV_TITLED_WINDOW
-			l_plat: PLATFORM
 		do
 			internal_docking_manager := a_docking_manager
 			create locked_windows.make_default
@@ -37,12 +36,6 @@ feature {NONE}  -- Initlization
 			create internal_shared
 			-- Initialize zone navigation accelerator key.
 			create l_key.make_with_code (internal_shared.zone_navigation_accelerator_key)
-
-			-- This is tempory fix for "Ctrl + Tab" accelerator not work not Linux
-			create l_plat
-			if l_plat.is_unix then
-				create l_key.make_with_code ({EV_KEY_CONSTANTS}.key_8)
-			end
 
 			create l_acc.make_with_key_combination (l_key, internal_shared.zone_navigation_accelerator_ctrl, internal_shared.zone_navigation_accelerator_alt, internal_shared.zone_navigation_accelerator_shift)
 			l_acc.actions.extend (agent on_zone_navigation (False))

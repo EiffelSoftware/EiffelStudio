@@ -140,6 +140,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			align_text_left
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
 
 				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP

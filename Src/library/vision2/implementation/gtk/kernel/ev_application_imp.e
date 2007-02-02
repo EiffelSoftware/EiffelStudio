@@ -229,6 +229,14 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_SCROLL%N")
 						end
+						if focused_popup_window /= Void then
+							focused_popup_window.handle_mouse_button_event (
+								{EV_GTK_EXTERNALS}.gdk_button_press_enum,
+								2,
+								{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_x_root (gdk_event).truncated_to_integer,
+								{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer
+								)
+						end
 						user_events_processed_from_underlying_toolkit := True
 						l_propagate_event := True
 					when GDK_PROXIMITY_IN, GDK_PROXIMITY_OUT then

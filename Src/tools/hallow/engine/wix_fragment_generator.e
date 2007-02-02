@@ -56,22 +56,12 @@ feature {NONE} -- Element generation
 			l_dir: DIRECTORY_INFO
 		do
 				-- Start generation					
-			a_writer.write_start_element ({WIX_CONSTANTS}.wix_tag, {WIX_CONSTANTS}.wix_ns)
-			a_writer.write_start_element ({WIX_CONSTANTS}.fragment_tag)
-			a_writer.write_start_element ({WIX_CONSTANTS}.directory_ref_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, a_options.directory_ref_name)
+			a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
 
 			create l_dir.make (a_options.directory)
-			if not a_options.use_src_specifier then
-
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
-			end
-
 			generate_directory_content (l_dir, a_options, a_writer)
 
 				-- End generation
-			a_writer.write_end_element
-			a_writer.write_end_element
 			a_writer.write_end_element
 		end
 
@@ -94,14 +84,8 @@ feature {NONE} -- Element generation
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
 
 			l_name := get_short_path_name (a_dir.full_name, a_options)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, l_name)
-			if {SYSTEM_STRING}.compare (l_name, a_dir.name, True, {CULTURE_INFO}.invariant_culture) /= 0 then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.long_name_attribute, a_dir.name)
-			end
-
-			if not a_options.use_src_specifier then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (a_dir.full_name, a_options))
-			end
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, a_dir.name)
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (a_dir.full_name, a_options))
 
 			generate_directory_content (a_dir, a_options, a_writer)
 
@@ -123,22 +107,26 @@ feature {NONE} -- Element generation
 		local
 			l_files: NATIVE_ARRAY [FILE_INFO]
 			l_dirs: NATIVE_ARRAY [DIRECTORY_INFO]
+			l_add_files: BOOLEAN
 			l_count, i: INTEGER
 		do
 				-- Generate files
-			l_files := a_dir.get_files
+			l_add_files := a_options.use_directory_include_pattern implies a_options.directory_include_pattern.is_match (a_dir.full_name)
+			if l_add_files then
+				l_files := a_dir.get_files
 
-			if l_files.count > 0 then
-				l_files := files_for_options (l_files, a_options)
-				l_count := l_files.count
-				if l_count > 0 then
-					if a_options.generate_single_file_components then
-						from i := 0 until i = l_count loop
-							generate_component (l_files.item (i).full_name, agent generate_file (l_files.item (i), ?, ?), a_options, a_writer)
-							i := i + 1
+				if l_files.count > 0 then
+					l_files := files_for_options (l_files, a_options)
+					l_count := l_files.count
+					if l_count > 0 then
+						if a_options.generate_single_file_components then
+							from i := 0 until i = l_count loop
+								generate_component (l_files.item (i).full_name, agent generate_file (l_files.item (i), ?, ?), a_options, a_writer)
+								i := i + 1
+							end
+						else
+							generate_component (a_dir.full_name, agent generate_files (l_files, ?, ?), a_options, a_writer)
 						end
-					else
-						generate_component (a_dir.full_name, agent generate_files (l_files, ?, ?), a_options, a_writer)
 					end
 				end
 			end
@@ -250,19 +238,14 @@ feature {NONE} -- Element generation
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_file.full_name, a_options, {WIX_CONSTANTS}.file_tag, Void, False))
 
 			l_name := get_short_path_name (a_file.full_name, a_options)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, l_name)
-			if {SYSTEM_STRING}.compare (l_name, a_file.name, True, {CULTURE_INFO}.invariant_culture) /= 0 then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.long_name_attribute, a_file.name)
-			end
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, a_file.name)
 
-			l_id := 1
-			if a_options.use_disk_id then
-				l_id := a_options.disk_id
-			end
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.disk_id_attribute, {SYSTEM_CONVERT}.to_string (l_id))
-
-			if a_options.use_src_specifier then
-				a_writer.write_attribute_string ({WIX_CONSTANTS}.src_attribute, format_path (a_file.full_name, a_options))
+			if not a_options.for_merge_modules then
+				l_id := 1
+				if a_options.use_disk_id then
+					l_id := a_options.disk_id
+				end
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.disk_id_attribute, {SYSTEM_CONVERT}.to_string (l_id))
 			end
 
 			a_writer.write_end_element
@@ -280,11 +263,7 @@ feature {NONE} -- Attribute generation
 			a_options_attached: a_options /= Void
 			can_read_options_a_options: a_options.can_read_options
 		do
-			if a_options.generate_guids then
-				Result := {GUID}.new_guid.to_string ("D").to_upper
-			else
-				Result := default_guid
-			end
+			Result := {GUID}.new_guid.to_string ("D").to_upper
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
@@ -480,7 +459,7 @@ feature {NONE} --
 					l_add := True
 
 					l_fi := a_files.item (i)
-					l_name := l_fi.name
+					l_name := l_fi.full_name
 					if l_ex then
 						l_add := not l_eexp.is_match (l_name)
 					end
@@ -542,15 +521,16 @@ feature {NONE} --
 					l_add := True
 
 					l_di := a_dirs.item (i)
-					l_name := l_di.name
+					l_name := l_di.full_name
 					if l_ex then
 						l_add := not l_eexp.is_match (l_name)
 					end
-					if l_inc and then (l_ex implies not l_add) then
-						if l_ep_priority implies l_add then
-							l_add := l_iexp.is_match (l_name)
-						end
-					end
+				-- Now handled when adding files.
+--					if l_inc and then (l_ex implies not l_add) then
+--						if l_ep_priority implies l_add then
+--							l_add := l_iexp.is_match (l_name)
+--						end
+--					end
 
 					if l_add then
 						l_result.extend (l_di)
@@ -571,6 +551,11 @@ feature {NONE} -- Tables
 			-- Table used to prevent name clashes.
 			-- Key: Name
 			-- Value: Boolean, always True if table contain a name
+
+	directory_table: HASHTABLE
+			-- Table of directories to include
+			-- Key: Directory path
+			-- Value: Boolean
 
 feature {NONE} -- Counters
 
@@ -677,9 +662,6 @@ feature {NONE} -- Path utilities
 				check l_len_positive: l_len > 0 end
 				if l_len > 0 then
 					Result := {MARSHAL}.ptr_to_string_uni (l_short, l_len)
-					if a_options.swap_tilda then
-						Result := Result.replace ('~', '_')
-					end
 				end
 			end
 
@@ -699,13 +681,12 @@ feature {NONE} -- Path utilities
 
 feature {NONE} -- Constants
 
-	default_guid: SYSTEM_STRING = "PUT-GUID-HERE"
 	directory_prefix: SYSTEM_STRING = "Dir."
 	component_prefix: SYSTEM_STRING = "Comp."
 	underscore: SYSTEM_STRING = "_"
 
 	max_wix_id_length: INTEGER = 72
-	max_wix_module_id_length: INTEGER = 33
+	max_wix_module_id_length: INTEGER = 35
 			-- Maximum length allowed for WiX identifiers
 
 ;indexing

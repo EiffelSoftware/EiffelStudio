@@ -55,41 +55,11 @@ feature -- Access
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	swap_tilda: BOOLEAN
-			-- Indicates if the tilda '~' should be replaced in short names to avoid candle warnings
-		require
-			can_read_options: can_read_options
-		deferred
-		end
-
 	include_subdirectories: BOOLEAN
 			-- Indicates if all subdirectories and files should be included.
 		require
 			can_read_options: can_read_options
 		deferred
-		end
-
-	use_src_specifier: BOOLEAN
-			-- Indicates if the 'src' attribute should be used instead of 'FileSource'
-		require
-			can_read_options: can_read_options
-		deferred
-		end
-
-	generate_guids: BOOLEAN
-			-- Indicates if GUIDs should be generated for components
-		require
-			can_read_options: can_read_options
-		deferred
-		end
-
-	directory_ref_name: SYSTEM_STRING
-			-- The user specified root directory reference name
-		require
-			can_read_options: can_read_options
-		deferred
-		ensure
-			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
 	directory_alias: SYSTEM_STRING

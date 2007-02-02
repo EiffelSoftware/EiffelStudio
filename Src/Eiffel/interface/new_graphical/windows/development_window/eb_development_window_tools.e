@@ -32,7 +32,6 @@ feature -- Commands
 			-- Dispatch stone to tools.
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
-			develop_window.history_manager.extend (a_stone)
 			develop_window.eb_debugger_manager.set_stone (a_stone)
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)

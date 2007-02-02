@@ -249,55 +249,57 @@ feature -- Status setting
 		do
 			if not is_last_stone_processed then
 				new_stone := last_stone
-				fst ?= new_stone
-				if fst /= Void then
-					type_changed := (fst.e_class.is_true_external and not is_stone_external) or
-						(not fst.e_class.is_true_external and is_stone_external)
+				if new_stone /= Void then
+					fst ?= new_stone
+					if fst /= Void then
+						type_changed := (fst.e_class.is_true_external and not is_stone_external) or
+							(not fst.e_class.is_true_external and is_stone_external)
 
-				end
-
-					-- Toggle stone flag.
-				if type_changed then
-					is_stone_external := not is_stone_external
-				end
-
-					-- Update formatters.
-	            if is_stone_external then
-					enable_dotnet_formatters (True)
-				else
-					enable_dotnet_formatters (False)
-				end
-				if fst /= Void then
-					update_viewpoints (fst.e_class)
-				end
-				if fst = Void then
-					managed_formatters.first.enable_sensitive
-					from
-						managed_formatters.start
-					until
-						managed_formatters.after
-					loop
-						managed_formatters.item.set_stone (fst)
-						managed_formatters.forth
 					end
-					internal_stone := Void
-					history_manager.extend (new_stone)
-				elseif
-					internal_stone = Void or else
-					(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
-				then
-					from
-						managed_formatters.start
-					until
-						managed_formatters.after
-					loop
-						managed_formatters.item.set_stone (fst)
-						managed_formatters.forth
+
+						-- Toggle stone flag.
+					if type_changed then
+						is_stone_external := not is_stone_external
 					end
-					internal_stone := fst
-					history_manager.extend (new_stone)
+
+						-- Update formatters.
+		            if is_stone_external then
+						enable_dotnet_formatters (True)
+					else
+						enable_dotnet_formatters (False)
+					end
+					if fst /= Void then
+						update_viewpoints (fst.e_class)
+					end
+					if fst = Void then
+						managed_formatters.first.enable_sensitive
+						from
+							managed_formatters.start
+						until
+							managed_formatters.after
+						loop
+							managed_formatters.item.set_stone (fst)
+							managed_formatters.forth
+						end
+						internal_stone := Void
+						history_manager.extend (new_stone)
+					elseif
+						internal_stone = Void or else
+						(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
+					then
+						from
+							managed_formatters.start
+						until
+							managed_formatters.after
+						loop
+							managed_formatters.item.set_stone (fst)
+							managed_formatters.forth
+						end
+						internal_stone := fst
+						history_manager.extend (new_stone)
+					end
+					flat_formatter.show_debugged_line
 				end
-				flat_formatter.show_debugged_line
 				Precursor
 			end
 		end
@@ -318,7 +320,7 @@ feature -- Status setting
 				if cst /= Void then
 					cl := cst.e_class
 					ofst ?= stone
-					if ofst /= Void and cl /= Void then
+					if ofst /= Void and then cl /= Void and then not cl.is_equal (ofst.e_class) then
 						new_f := ofst.e_feature.ancestor_version (cl)
 						if new_f /= Void then
 							launch_stone (create {FEATURE_STONE}.make (new_f))

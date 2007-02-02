@@ -606,16 +606,20 @@ feature -- Basic operation
 					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
 			end
 
-			if not l_ignore_event then
-				if l_popup_parent /= Void then
+				-- Handle popup window focusing.
+			if l_popup_parent = Void then
+				l_popup_parent := focused_popup_window
+			end
+			if l_popup_parent /= Void then
 					l_popup_parent.handle_mouse_button_event (
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer,
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
 					)
-				end
+			end
 
+			if not l_ignore_event then
 				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
 				if l_pnd_item /= Void then
 					l_pnd_item.on_mouse_button_event (

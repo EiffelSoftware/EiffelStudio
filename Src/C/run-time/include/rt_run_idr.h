@@ -54,6 +54,8 @@ extern void ridr_multi_char (EIF_CHARACTER *obj, size_t num);
 extern void widr_multi_char (EIF_CHARACTER *obj, size_t num);
 extern void ridr_multi_any (char *obj, size_t num);
 extern void widr_multi_any (char *obj, size_t num);
+extern void ridr_multi_ptr (char *obj, size_t num);
+extern void widr_multi_ptr (char *obj, size_t num);
 extern void ridr_multi_int8 (EIF_INTEGER_8 *obj, size_t num);
 extern void widr_multi_int8 (EIF_INTEGER_8 *obj, size_t num);
 extern void ridr_multi_int16 (EIF_INTEGER_16 *obj, size_t num);

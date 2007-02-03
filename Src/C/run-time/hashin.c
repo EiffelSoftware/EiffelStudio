@@ -79,7 +79,7 @@ rt_public int ht_create(struct htable *ht, size_t n, size_t sval)
 		return -1;					/* Malloc failed */
 	ht->h_keys = (rt_uint_ptr *) array;		/* Where array of keys is stored */
 
-	array = (char *) eif_malloc(hsize * sval);			/* Mallocs array of values */
+	array = (char *) eif_calloc(hsize, sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
 		eif_free(ht->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
@@ -262,7 +262,7 @@ rt_public void ht_remove(struct htable *ht, rt_uint_ptr key)
 
 rt_public int ht_xtend(struct htable *ht)
 {
-	/* The H table 'ht' is full and needs resizing. We add 50% of old size and
+	/* The H table 'ht' is full and needs resizing. We add 100% of old size and
 	 * copy the old table in the new one, before freeing the old one. Note that
 	 * h_create multiplies the number we give by 5/4, so 5/4*3/2 yields ~2, i.e.
 	 * the final size will be the double of the previous one (modulo next prime
@@ -278,7 +278,7 @@ rt_public int ht_xtend(struct htable *ht)
 
 	size = ht->h_size;
 	sval = ht->h_sval;
-	if (-1 == ht_create(&new_ht, size + (size / 2), sval))
+	if (-1 == ht_create(&new_ht, size * 2, sval))
 		return -1;		/* Extension of H table failed */
 
 	key = ht->h_keys;				/* Start of array of keys */
@@ -311,6 +311,8 @@ rt_public void ht_free(struct htable *ht)
 
 	eif_free(ht->h_values);
 	eif_free(ht->h_keys);
+	ht->h_values = NULL;
+	ht->h_keys = NULL;
 	eif_rt_xfree((char *) ht);
 }
 

@@ -189,6 +189,10 @@ typedef struct tag_rt_globals
 	size_t idrf_buffer_size_cx;
 	IDRF idrf_cx;
 	int (*run_idr_read_func_cx) (IDR *);
+#ifdef EIF_64_BITS
+	struct htable *idr_ref_table_cx;
+	rt_uint_ptr idr_ref_table_counter_cx;
+#endif
 
 		/* store.c */
 	long object_count_cx;
@@ -413,6 +417,10 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define idrf_buffer_size	(rt_globals->idrf_buffer_size_cx)
 #define idrf				(rt_globals->idrf_cx)
 #define run_idr_read_func	(rt_globals->run_idr_read_func_cx)
+#ifdef EIF_64_BITS
+#define idr_ref_table		(rt_globals->idr_ref_table_cx)
+#define idr_ref_table_counter		(rt_globals->idr_ref_table_counter_cx)
+#endif
 
 	/* store.c */
 #define object_count					(rt_globals->object_count_cx)

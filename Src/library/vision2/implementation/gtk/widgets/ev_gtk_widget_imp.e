@@ -221,7 +221,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				a_cursor_imp ?= a_cursor.implementation
 				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 			end
-			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			if a_window = default_pointer then
+					-- The widget hasn't been realized so we do the realization
+					-- to have a GdkWindow to set the pointer to.
+				{EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+				a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
+			end
 			if a_window /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
 			end

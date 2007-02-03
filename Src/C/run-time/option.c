@@ -594,10 +594,9 @@ void initprf(void)
 			enomem();
 
 			/* Create H table */
-		if (!ht_create(class_table, 10, sizeof(struct feat_table)))
-			ht_zero(class_table);		/* Lucky! */
-		else
+		if (ht_create(class_table, 10, sizeof(struct feat_table))) {
 			eraise("Hashtable creation failure", EN_FATAL);
+		}
 
 		prof_stack_init();		/* Initialize stack */
 
@@ -1090,9 +1089,7 @@ void update_class_table(struct prof_info *item)
 				enomem(MTC_NOARG);	/* Bad Luck */
 
 				/* Create H table internal structures */
-			if(!ht_create(f_t->htab, 10, sizeof(struct prof_info)))
-				ht_zero(f_t->htab);	/* Zero it out */
-			else {
+			if(ht_create(f_t->htab, 10, sizeof(struct prof_info))) {
 					/* Something is wrotten */
 				eraise("Hashtable creation failure", EN_FATAL);
 			}

@@ -1241,9 +1241,9 @@ rt_private struct htable *create_hash_table (int32 count, int size)
 			eif_rt_xmalloc (sizeof (struct htable), C_T, GC_OFF);
 	if (result == NULL)
 		xraise (EN_MEM);
-	if (ht_create (result, count, size) == -1)
+	if (ht_create (result, count, size) == -1) {
 		xraise (EN_MEM);
-	ht_zero (result);
+	}
 	return result;
 }
 
@@ -2058,7 +2058,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 		EIF_REFERENCE oldadd;
 		type_descriptor *conv;
 
-		/* Read address in storing system and object flags (w/dynamic type) */
+			/* Read address in storing system and object flags (w/dynamic type) */
 		ridr_multi_any ((char *) &oldadd, 1);
 		ridr_norm_int (&flags);
 		crflags = rt_id_read_cid (flags);
@@ -4435,7 +4435,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 #endif
 					break;
 				case SK_POINTER:
-					ridr_multi_any (object + attrib_offset, 1);
+					ridr_multi_ptr (object + attrib_offset, 1);
 					if (eif_discard_pointer_values) {
 						*(EIF_POINTER *) (object + attrib_offset) = NULL;
 					}
@@ -4500,7 +4500,7 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
 						break;
 					case SK_POINTER:
-						ridr_multi_any (object, count);
+						ridr_multi_ptr (object, count);
 						if (eif_discard_pointer_values) {
 							memset (object, 0, count * sizeof(EIF_POINTER));
 						}
@@ -4770,7 +4770,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				}
 				break;
 			case SK_POINTER:
-				ridr_multi_any ((char *) &value.vptr, 1);
+				ridr_multi_ptr ((char *) &value.vptr, 1);
 				if (attr_address != NULL) {
 					if (! eif_discard_pointer_values)
 						*(EIF_POINTER *) attr_address = value.vptr;
@@ -4971,7 +4971,7 @@ rt_private EIF_REFERENCE object_rread_special (
 				break;
 
 			case SK_POINTER:
-				ridr_multi_any (addr, count);
+				ridr_multi_ptr (addr, count);
 				if (eif_discard_pointer_values)
 					memset (addr, 0, count * sizeof (EIF_POINTER));
 				break;
@@ -5034,7 +5034,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
-				case EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+				case EIF_POINTER_CODE: ridr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
 				case EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
 				default:
 					eise_io ("Recoverable retrieve: unsupported tuple element type.");
@@ -5053,7 +5053,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case OLD_EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
-				case OLD_EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+				case OLD_EIF_POINTER_CODE: ridr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
 				case OLD_EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
 				default:
 					eise_io ("Recoverable retrieve: unsupported tuple element type.");

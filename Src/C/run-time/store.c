@@ -63,12 +63,6 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #endif
 #include "rt_assert.h"
 
-/* Sections of code enclosed with #ifdef RECOVERABLE_SCAFFOLDING should be
- * able to be removed, once we are satisfied that the original independent
- * store and retrieve are no longer necessary.
- */
-#define RECOVERABLE_SCAFFOLDING
-#ifdef RECOVERABLE_SCAFFOLDING
 #ifdef DARREN		/* for doing in-editor compilation for errors */
 # define RECOVERABLE_DEBUG
 # undef RTXD
@@ -76,7 +70,6 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 # undef RTXSC
 # define RTXSC ;
 # define lint
-#endif
 #endif
 #ifdef RECOVERABLE_DEBUG
 #ifndef EIF_THREADS
@@ -190,9 +183,7 @@ rt_shared void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void make_header(void);				/* Make header */
 rt_public void rmake_header(void);
-#ifdef RECOVERABLE_SCAFFOLDING
 rt_public void imake_header(void);				/* Make header */
-#endif
 rt_private void object_write (char *object, uint32);
 rt_private void gen_object_write (char *object, uint32);
 rt_private void st_write_cid (uint32);
@@ -521,7 +512,8 @@ rt_public EIF_INTEGER stream_estore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_R
 	*buffer = store_stream_buffer;
 	rt_reset_store ();
 	*real_size = (EIF_INTEGER) store_stream_buffer_position;
-	return store_stream_buffer_size;
+	CHECK("not too big", store_stream_buffer_size <= 0x7FFFFFFF);
+	return (EIF_INTEGER) store_stream_buffer_size;
 }
 
 /* General store */
@@ -567,7 +559,8 @@ rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 
 	rt_reset_store ();
 	*real_size = (EIF_INTEGER) store_stream_buffer_position;
-	return store_stream_buffer_size;
+	CHECK("not too big", store_stream_buffer_size <= 0x7FFFFFFF);
+	return (EIF_INTEGER) store_stream_buffer_size;
 }
 
 rt_public void basic_general_free_store (EIF_REFERENCE object)
@@ -576,7 +569,6 @@ rt_public void basic_general_free_store (EIF_REFERENCE object)
 	internal_store(object);
 }
 
-#ifdef RECOVERABLE_SCAFFOLDING
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_is_new_recoverable_format" return_type="EIF_BOOLEAN" export="private">
@@ -600,7 +592,6 @@ rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
 	RT_GET_CONTEXT
 	eif_is_new_recoverable_format = state;
 }
-#endif
 
 /* Independent store */
 /* Use file decscriptor so sockets and files can be used for storage
@@ -611,9 +602,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 	RT_GET_CONTEXT
 	s_fides = (int) file_desc;
 
-#ifdef RECOVERABLE_SCAFFOLDING
   if (eif_is_new_recoverable_format) {
-#endif
 	rt_init_store (
 		NULL,
 		char_write,
@@ -621,7 +610,6 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 		ist_write,
 		rmake_header,
 		RECOVER_ACCOUNT);
-#ifdef RECOVERABLE_SCAFFOLDING
   } else {
 	rt_init_store (
 		NULL,
@@ -631,7 +619,6 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 		imake_header,
 		INDEPEND_ACCOUNT);
   }
-#endif
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
@@ -652,12 +639,7 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
 	RT_GET_CONTEXT
-#ifdef RECOVERABLE_SCAFFOLDING
   if (eif_is_new_recoverable_format) {
-#ifdef RECOVERABLE_DEBUG
-	printf ("Storing in new recoverable format\n");
-#endif
-#endif
 	rt_init_store (
 		NULL,
 		stream_write,
@@ -665,11 +647,7 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		ist_write,
 		rmake_header,
 		RECOVER_ACCOUNT);
-#ifdef RECOVERABLE_SCAFFOLDING
   } else {
-#ifdef RECOVERABLE_DEBUG
-	printf ("Storing in old independent format\n");
-#endif
 	rt_init_store (
 		NULL,
 		stream_write,
@@ -678,7 +656,6 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		imake_header,
 		INDEPEND_ACCOUNT);
   }
-#endif
 
 	store_stream_buffer = *buffer;
 	store_stream_buffer_size = size;
@@ -700,7 +677,8 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	*buffer = store_stream_buffer;
 	rt_reset_store ();
 	*real_size = (EIF_INTEGER) store_stream_buffer_position;
-	return store_stream_buffer_size;
+	CHECK("not too big", store_stream_buffer_size <= 0x7FFFFFFF);
+	return (EIF_INTEGER) store_stream_buffer_size;
 }
 
 rt_public void independent_free_store (EIF_REFERENCE object)
@@ -1362,7 +1340,7 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case EIF_INTEGER_16_CODE: widr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_64_CODE: widr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
-			case EIF_POINTER_CODE: widr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+			case EIF_POINTER_CODE: widr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
 			case EIF_WIDE_CHAR_CODE: widr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
 			default:
 				eise_io("Independent store: unexpected tuple element type");
@@ -1415,8 +1393,8 @@ rt_private void object_write(char * object, uint32 fflags)
 				case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
 				case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
 				case SK_EXP: ist_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags); break;
-				case SK_REF:
-				case SK_POINTER: widr_multi_any (object + attrib_offset, 1); break;
+				case SK_REF: widr_multi_any (object + attrib_offset, 1); break;
+				case SK_POINTER: widr_multi_ptr (object + attrib_offset, 1); break;
 				case SK_BIT:
 					{
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
@@ -1490,7 +1468,7 @@ rt_private void object_write(char * object, uint32 fflags)
 						case SK_INT16: widr_multi_int16 (((EIF_INTEGER_16 *)object), count); break;
 						case SK_INT32: widr_multi_int32 (((EIF_INTEGER_32 *)object), count); break;
 						case SK_INT64: widr_multi_int64 (((EIF_INTEGER_64 *)object), count); break;
-						case SK_POINTER: widr_multi_any (object, count); break;
+						case SK_POINTER: widr_multi_ptr (object, count); break;
 						case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
 						case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)object, count); break;
 						case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)object, count); break;
@@ -1731,7 +1709,6 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
-#ifdef RECOVERABLE_SCAFFOLDING
 rt_public void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
@@ -1866,7 +1843,6 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
 }
-#endif
 
 /*
 doc:	<routine name="cecil_info_for_dynamic_type" export="private">

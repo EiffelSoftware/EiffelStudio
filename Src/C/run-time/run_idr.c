@@ -71,6 +71,7 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #include "eif_size.h"	/* Needed for R64SIZ */
 #include "rt_malloc.h"
 #include "rt_assert.h"
+#include "rt_hashin.h"
 
 #ifndef EIF_THREADS
 /*
@@ -124,6 +125,19 @@ doc:		<fixme>Is this really needed now? I don't see any other possible function 
 doc:	</attribute>
 */
 rt_private int (*run_idr_read_func) (IDR *bu);
+
+#ifdef EIF_64_BITS
+/*
+doc:	<attribute name="idr_ref_table" return_type="struct htable *" export="shared">
+doc:		<summary>Table used for converting 64-bit Eiffel references into 32-bit values.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_private struct htable *idr_ref_table = NULL;
+rt_private rt_uint_ptr idr_ref_table_counter = 0;
+#endif
 #endif
 
 rt_private int run_idr_read (IDR *bu);
@@ -176,12 +190,30 @@ rt_public void run_idr_init (size_t idrf_size, int type)
 	if (type) {
 		idr_setpos (&idrf.i_encode, sizeof(int32));
 	}
+
+#ifdef EIF_64_BITS
+	idr_ref_table_counter = 0;
+	idr_ref_table = (struct htable*) eif_rt_xmalloc (sizeof (struct htable), C_T, GC_OFF);
+	if (idr_ref_table == NULL) {
+		eraise ("Cannot allocate 64-32 mapping table", EN_MEM);
+		xraise (EN_MEM);
+	} else {
+		if (ht_create (idr_ref_table, 10000, sizeof(rt_uint_ptr)) == -1) {
+			eraise ("Cannot create 64-32 mapping table", EN_MEM);
+		}
+	}
+#endif
 }
 
 rt_public void run_idr_destroy (void)
 {
 	RT_GET_CONTEXT
 	idrf_destroy(&idrf);
+#ifdef EIF_64_BITS
+	ht_free (idr_ref_table);
+	idr_ref_table = NULL;
+	idr_ref_table_counter = 0;
+#endif
 }
 
 rt_private int run_idr_read (IDR *bu)
@@ -570,6 +602,97 @@ rt_public void widr_multi_char (EIF_CHARACTER *obj, size_t num)
 
 rt_public void ridr_multi_any (char *obj, size_t num)
 {
+	ridr_multi_ptr (obj, num);
+}
+
+#ifdef EIF_64_BITS
+rt_private rt_uint_ptr mapped_address (rt_uint_ptr val)
+	/* If address of `val' does not fit on 31-bit we map it with `idr_ref_table'.
+	 * The idea is that all addresses above 0x7FFFFFFF are mapped to the address
+	 * 0xF???????? and the one below 0x7FFFFFFF remains as is. */
+{
+	RT_GET_CONTEXT
+	rt_uint_ptr l_obj = val;
+
+	if (l_obj > 0x7FFFFFFF) {
+		rt_uint_ptr *l_slot = (rt_uint_ptr *) ht_first (idr_ref_table, val);
+		if (l_slot && (*l_slot != 0)) {
+			l_obj = *l_slot;
+		} else {
+			idr_ref_table_counter++;
+			CHECK("not too big counter", idr_ref_table_counter <= 0x7FFFFFFF);
+			l_obj = 0xF0000000 | idr_ref_table_counter;
+			if (!l_slot) {
+				ht_force (idr_ref_table, (rt_uint_ptr) val,  &l_obj);
+			} else {
+				*l_slot = l_obj;
+			}
+		}
+	}
+	return l_obj;
+}
+#endif
+
+rt_public void widr_multi_any (char *obj, size_t num)
+{
+	RT_GET_CONTEXT
+	size_t cap = idrf_buffer_size / sizeof (char *);
+	char s = (char) sizeof (char *);
+#ifdef EIF_64_BITS
+	rt_uint_ptr l_obj;
+	rt_uint_ptr *lptr = (rt_uint_ptr *) obj;
+	size_t i;
+#endif
+
+	check_capacity (&idrf.i_encode, sizeof (char));
+	memcpy (idrf.i_encode.i_ptr, &s, sizeof (char));
+	idrf.i_encode.i_ptr += sizeof (char);
+
+#ifdef EIF_64_BITS
+	if ((num - cap) <= 0) {
+		check_capacity (&idrf.i_encode, num * sizeof (char *));
+		for (i = num; i > 0; i--, lptr++) {
+			l_obj = mapped_address (*(rt_uint_ptr *) lptr);
+			run_uint_ptr (&idrf.i_encode, &l_obj, 1, sizeof (char *));
+		}
+	} else {
+		size_t count = num / cap;
+		size_t left_over = num % cap;
+		rt_uint_ptr *lptr = (rt_uint_ptr *) obj;
+		while (count) {
+			check_capacity (&idrf.i_encode, cap * sizeof (char *));
+			for (i = cap; i > 0; i--, lptr++) {
+				l_obj = mapped_address (*(rt_uint_ptr *) lptr);
+				run_uint_ptr (&idrf.i_encode, &l_obj, 1, sizeof (char *));
+			}
+			count--;
+		}
+		check_capacity (&idrf.i_encode, left_over * sizeof (char *));
+		for (i = left_over; i > 0; i--, lptr++) {
+			l_obj = mapped_address (*(rt_uint_ptr *) lptr);
+			run_uint_ptr (&idrf.i_encode, &l_obj, 1, sizeof (char *));
+		}
+	}
+#else
+	if ((num - cap) <= 0) {
+		run_uint_ptr (&idrf.i_encode, obj, num, sizeof (char *));
+	} else {
+		size_t count = num / cap;
+		size_t left_over = num % cap;
+		rt_uint_ptr *lptr = (rt_uint_ptr *) obj;
+
+		while (count) {
+			run_uint_ptr (&idrf.i_encode, lptr, cap, sizeof (char *));
+			lptr += cap;
+			count--;
+		}
+		run_uint_ptr (&idrf.i_encode, lptr, left_over, sizeof (char *));
+	}
+#endif
+}
+
+rt_public void ridr_multi_ptr (char *obj, size_t num)
+{
 	RT_GET_CONTEXT
 	size_t cap;
 	char s;
@@ -595,7 +718,7 @@ rt_public void ridr_multi_any (char *obj, size_t num)
 	}
 }
 
-rt_public void widr_multi_any (char *obj, size_t num)
+rt_public void widr_multi_ptr (char *obj, size_t num)
 {
 	RT_GET_CONTEXT
 	size_t cap = idrf_buffer_size / sizeof (char *);
@@ -620,6 +743,7 @@ rt_public void widr_multi_any (char *obj, size_t num)
 		run_uint_ptr (&idrf.i_encode, lptr, left_over, sizeof (char *));
 	}
 }
+
 
 rt_public void ridr_multi_int8 (EIF_INTEGER_8 *obj, size_t num)
 {

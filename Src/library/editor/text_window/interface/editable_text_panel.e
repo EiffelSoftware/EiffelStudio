@@ -897,6 +897,7 @@ feature {NONE} -- Text Loading
 		do
 			Precursor {SELECTABLE_TEXT_PANEL}
 			date_of_file_when_loaded := 0
+			size_of_file_when_loaded := 0
 			file_name := Void
 		end
 

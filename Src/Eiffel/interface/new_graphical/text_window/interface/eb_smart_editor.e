@@ -82,15 +82,17 @@ feature -- Content change
 			-- `file_name' is left unchanged.
 		local
 			f_n: FILE_NAME
-			f_d, f_d_c: INTEGER
+			f_d, f_d_c, f_s: INTEGER
 		do
 			f_n := file_name
 			f_d := date_of_file_when_loaded
+			f_s := size_of_file_when_loaded
 			f_d_c := date_when_checked
 			load_text (s)
 			text_displayed.set_changed (True, False)
 			file_name := f_n
 			date_of_file_when_loaded := f_d
+			size_of_file_when_loaded := f_s
 			date_when_checked := f_d_c
 		end
 

@@ -158,6 +158,9 @@ feature -- Access
 	file_name: FILE_NAME
 			-- Name of the currently opened file, if any.
 
+	size_of_file_when_loaded: INTEGER
+			-- Number of bytes in current file when it was loaded.
+
 	date_of_file_when_loaded: INTEGER
 			-- Date of current file when it was loaded.
 
@@ -409,7 +412,8 @@ feature -- File Properties
 			if not retried then
 				Result := True
 				if file_loaded and file_exists then
-					Result := date_of_file_when_loaded = file_date_ticks
+					Result := date_of_file_when_loaded = file_date_ticks and
+						size_of_file_when_loaded = file_size
 				end
 				file_date_already_checked := True
 			else
@@ -542,6 +546,8 @@ feature -- Basic Operations
 		local
 		    l_file: RAW_FILE
 		    l_doc_type: STRING
+		    l_date: like date_of_file_when_loaded
+			l_size: like size_of_file_when_loaded
   	   	do
   	   		editor_drawing_area.disable_sensitive
   	   			-- Check the document type of the file to load.
@@ -555,6 +561,10 @@ feature -- Basic Operations
   	   		create l_file.make (a_filename)
   	   		if l_file.exists then
   	   		    l_file.open_read
+  	   		    	-- Record date when opening the file since if the file
+  	   		    	-- has changed after the close operation we won't read it again.
+				l_date := l_file.date
+				l_size := l_file.count
   	   		    if l_file.is_empty then
   	   		    	load_text ("")
   	   		    else
@@ -563,7 +573,8 @@ feature -- Basic Operations
   	   		    end
   	   		    l_file.close
   	   		    create file_name.make_from_string (a_filename)
-  	   		    date_of_file_when_loaded := l_file.date
+  	   		    date_of_file_when_loaded := l_date
+				size_of_file_when_loaded := l_size
   	   		else
   	   			reset
   	   			load_text ("")
@@ -1494,9 +1505,19 @@ feature -- Implementation
 			l_file: RAW_FILE
 		do
 			create l_file.make (file_name.string)
-			if l_file.exists then
-				Result := l_file.date
-			end
+			Result := l_file.date
+		end
+
+	file_size: INTEGER is
+			-- Retrieve file count
+		require
+			file_loaded: file_loaded
+			file_exists: file_exists
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (file_name.string)
+			Result := l_file.count
 		end
 
 	file_exists: BOOLEAN is
@@ -1520,6 +1541,7 @@ feature -- Implementation
 		do
 			text_displayed.set_changed (True, False)
 			date_of_file_when_loaded := file_date_ticks
+			size_of_file_when_loaded := file_size
 		end
 
 feature {NONE} -- Implementation

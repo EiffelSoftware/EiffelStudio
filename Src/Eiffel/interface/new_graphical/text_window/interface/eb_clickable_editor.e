@@ -564,6 +564,7 @@ feature -- Update
 				create file.make (file_name)
 				if file.exists then
 					date_of_file_when_loaded := file.date
+					size_of_file_when_loaded := file_size
 				end
 			end
 		end

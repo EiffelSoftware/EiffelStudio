@@ -75,6 +75,11 @@ External_declaration:
 				root_node := $2
 				root_node.set_is_blocking_call ($1)
 			}
+	|	TE_STATIC TE_BUILT_IN
+			{
+				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
+			}
+
 	|	TE_BUILT_IN
 			{
 				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)

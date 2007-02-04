@@ -412,6 +412,9 @@ feature {NONE} -- Semantic actions
 			when 77 then
 					--|#line <not available> "external.y"
 				yy_do_action_77
+			when 78 then
+					--|#line <not available> "external.y"
+				yy_do_action_78
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown rule id: ")
@@ -517,9 +520,9 @@ end
 				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
 			
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
+	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 + 1
-	yyvsp1 := yyvsp1 -1
+	yyvsp1 := yyvsp1 -2
 	if yyvsp2 >= yyvsc2 then
 		if yyvs2 = Void then
 			debug ("GEYACC")
@@ -550,6 +553,42 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
+				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
+	yyvsp2 := yyvsp2 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
+end
+		end
+
+	yy_do_action_7 is
+			--|#line <not available> "external.y"
+		local
+			yyval2: EXTERNAL_EXTENSION_AS
+		do
+--|#line <not available> "external.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
+end
+
 				root_node := yyvs2.item (yyvsp2)
 			
 if yy_parsing_status = yyContinue then
@@ -558,7 +597,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_7 is
+	yy_do_action_8 is
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -593,7 +632,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_8 is
+	yy_do_action_9 is
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -629,7 +668,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_9 is
+	yy_do_action_10 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -666,7 +705,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_10 is
+	yy_do_action_11 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -706,7 +745,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_11 is
+	yy_do_action_12 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -745,7 +784,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_12 is
+	yy_do_action_13 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -782,7 +821,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_13 is
+	yy_do_action_14 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -800,7 +839,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_14 is
+	yy_do_action_15 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -840,7 +879,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_15 is
+	yy_do_action_16 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -879,7 +918,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_16 is
+	yy_do_action_17 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -916,7 +955,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_17 is
+	yy_do_action_18 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -954,7 +993,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_18 is
+	yy_do_action_19 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -993,7 +1032,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_19 is
+	yy_do_action_20 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1032,7 +1071,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_20 is
+	yy_do_action_21 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1071,7 +1110,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_21 is
+	yy_do_action_22 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1112,7 +1151,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_22 is
+	yy_do_action_23 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1153,7 +1192,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_23 is
+	yy_do_action_24 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1187,7 +1226,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_24 is
+	yy_do_action_25 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1222,7 +1261,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_25 is
+	yy_do_action_26 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1261,7 +1300,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_26 is
+	yy_do_action_27 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1300,7 +1339,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_27 is
+	yy_do_action_28 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1339,7 +1378,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_28 is
+	yy_do_action_29 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1378,7 +1417,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_29 is
+	yy_do_action_30 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1417,7 +1456,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_30 is
+	yy_do_action_31 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1456,7 +1495,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_31 is
+	yy_do_action_32 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1495,7 +1534,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_32 is
+	yy_do_action_33 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1534,7 +1573,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_33 is
+	yy_do_action_34 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1573,7 +1612,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_34 is
+	yy_do_action_35 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1612,7 +1651,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_35 is
+	yy_do_action_36 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1651,7 +1690,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_36 is
+	yy_do_action_37 is
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1690,7 +1729,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_37 is
+	yy_do_action_38 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1726,7 +1765,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_38 is
+	yy_do_action_39 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1762,7 +1801,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_39 is
+	yy_do_action_40 is
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1796,7 +1835,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_40 is
+	yy_do_action_41 is
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1813,7 +1852,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_41 is
+	yy_do_action_42 is
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1851,7 +1890,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_42 is
+	yy_do_action_43 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1885,7 +1924,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_43 is
+	yy_do_action_44 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1902,7 +1941,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_44 is
+	yy_do_action_45 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1920,7 +1959,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_45 is
+	yy_do_action_46 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1954,7 +1993,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_46 is
+	yy_do_action_47 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1971,7 +2010,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_47 is
+	yy_do_action_48 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2008,7 +2047,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_48 is
+	yy_do_action_49 is
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2029,7 +2068,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_49 is
+	yy_do_action_50 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2063,7 +2102,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_50 is
+	yy_do_action_51 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2081,7 +2120,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_51 is
+	yy_do_action_52 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2121,7 +2160,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_52 is
+	yy_do_action_53 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2162,7 +2201,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_53 is
+	yy_do_action_54 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2202,7 +2241,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_54 is
+	yy_do_action_55 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2242,7 +2281,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_55 is
+	yy_do_action_56 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2282,7 +2321,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_56 is
+	yy_do_action_57 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2322,7 +2361,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_57 is
+	yy_do_action_58 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2362,7 +2401,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_58 is
+	yy_do_action_59 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2402,7 +2441,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_59 is
+	yy_do_action_60 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2436,7 +2475,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_60 is
+	yy_do_action_61 is
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2455,7 +2494,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_61 is
+	yy_do_action_62 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -2489,7 +2528,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_62 is
+	yy_do_action_63 is
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -2507,7 +2546,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_63 is
+	yy_do_action_64 is
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -2541,7 +2580,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_64 is
+	yy_do_action_65 is
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -2576,7 +2615,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_65 is
+	yy_do_action_66 is
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2610,7 +2649,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_66 is
+	yy_do_action_67 is
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2627,7 +2666,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_67 is
+	yy_do_action_68 is
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2645,7 +2684,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_68 is
+	yy_do_action_69 is
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2682,7 +2721,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_69 is
+	yy_do_action_70 is
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2700,42 +2739,6 @@ if yy_parsing_status = yyContinue then
 	yyvsp1 := yyvsp1 -1
 	yyvsp5 := yyvsp5 -1
 	yyvs8.put (yyval8, yyvsp8)
-end
-		end
-
-	yy_do_action_70 is
-			--|#line <not available> "external.y"
-		local
-			yyval5: ID_AS
-		do
---|#line <not available> "external.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
-end
-
-			yyval5 := new_double_quote_id_as (token_buffer)
-		
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp5 := yyvsp5 + 1
-	yyvsp1 := yyvsp1 -3
-	if yyvsp5 >= yyvsc5 then
-		if yyvs5 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs5")
-			end
-			create yyspecial_routines5
-			yyvsc5 := yyInitial_yyvs_size
-			yyvs5 := yyspecial_routines5.make (yyvsc5)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs5")
-			end
-			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
-			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
-		end
-	end
-	yyvs5.put (yyval5, yyvsp5)
 end
 		end
 
@@ -2785,7 +2788,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-			yyval5 := new_system_id_as (token_buffer)
+			yyval5 := new_double_quote_id_as (token_buffer)
 		
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
@@ -2857,6 +2860,42 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
+			yyval5 := new_system_id_as (token_buffer)
+		
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp5 := yyvsp5 + 1
+	yyvsp1 := yyvsp1 -3
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
+end
+		end
+
+	yy_do_action_75 is
+			--|#line <not available> "external.y"
+		local
+			yyval5: ID_AS
+		do
+--|#line <not available> "external.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
+end
+
 			yyval5 := new_double_quote_id_as (token_buffer)
 		
 if yy_parsing_status = yyContinue then
@@ -2883,7 +2922,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_75 is
+	yy_do_action_76 is
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2919,7 +2958,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_76 is
+	yy_do_action_77 is
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2955,7 +2994,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_77 is
+	yy_do_action_78 is
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2994,7 +3033,7 @@ end
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 185 then
+			when 187 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -3045,39 +3084,39 @@ feature {NONE} -- Table templates
 	yyr1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    0,   45,   45,   45,   45,   45,   45,   67,   67,   46,
-			   46,   46,   46,   47,   47,   47,   47,   51,   51,   51,
-			   51,   48,   49,   62,   62,   50,   50,   50,   50,   50,
-			   50,   50,   50,   50,   50,   50,   50,   66,   66,   52,
-			   52,   53,   68,   68,   69,   70,   70,   71,   71,   54,
-			   54,   55,   55,   55,   55,   55,   55,   55,   55,   56,
-			   56,   61,   61,   60,   60,   63,   63,   64,   65,   65,
-			   58,   58,   58,   58,   58,   59,   59,   57, yyDummy>>)
+			    0,   45,   45,   45,   45,   45,   45,   45,   67,   67,
+			   46,   46,   46,   46,   47,   47,   47,   47,   51,   51,
+			   51,   51,   48,   49,   62,   62,   50,   50,   50,   50,
+			   50,   50,   50,   50,   50,   50,   50,   50,   66,   66,
+			   52,   52,   53,   68,   68,   69,   70,   70,   71,   71,
+			   54,   54,   55,   55,   55,   55,   55,   55,   55,   55,
+			   56,   56,   61,   61,   60,   60,   63,   63,   64,   65,
+			   65,   58,   58,   58,   58,   58,   59,   59,   57, yyDummy>>)
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    2,    1,    1,    1,    1,    1,    1,    2,    7,    6,
-			    6,    6,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    3,    3,    1,    1,    2,    2,
-			    1,    1,    1,    1,    1,    1,    1,    2,    2,    5,
-			    1,    1,    1,    2,    3,    3,    3,    3,    3,    1,
-			    9,    9,    3,    3,    3,    3,    3,    3,    3,    1,
-			    1,    1,    5,    5,    1,    1,    1,    1,    4,    5,
-			    5,    5,    3,    5,    1,    8,    8,    3,    4,    3,
-			    8,    8,    1,    1,    1,    1,    4,    9,    9,    1,
-			    4,    1,    1,    1,    1,    1,    1,    1,    5,    1,
+			    2,    1,    1,    1,    1,    1,    1,    1,    2,    7,
+			    6,    1,    6,    6,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    3,    3,    1,    1,
+			    2,    2,    1,    1,    1,    1,    1,    1,    1,    2,
+			    2,    5,    1,    1,    1,    2,    3,    3,    3,    3,
+			    3,    1,    9,    9,    3,    3,    3,    3,    3,    3,
+			    3,    1,    1,    1,    5,    5,    1,    1,    1,    1,
+			    4,    5,    5,    5,    3,    5,    1,    8,    8,    3,
+			    4,    3,    8,    8,    1,    1,    1,    1,    4,    9,
+			    9,    1,    4,    1,    1,    1,    1,    1,    1,    1,
 
-			    1,    7,    7,    5,    5,    1,    1,    1,    5,    5,
-			    1,    7,    3,    3,    8,    3,    1,    1,    1,    5,
-			    8,    8,    1,    8,    5,    5,    5,    5,    1,    1,
-			    4,    5,    5,    5,    5,    5,    5,    5,    1,    3,
-			    3,    7,    7,    5,    5,    5,    7,    7,    5,    1,
-			    1,    6,    8,    8,    8,    1,    1,    1,    1,    1,
-			    5,    4,    8,    8,    6,    6,    7,    7,    7,    6,
-			    6,    1,    4,    1,    1,    1,    1,    5,    4,    6,
-			    6,    6,    4,    8,    8,    2,    1,    1, yyDummy>>)
+			    5,    1,    1,    7,    7,    5,    5,    1,    1,    1,
+			    5,    5,    1,    7,    3,    3,    8,    3,    1,    1,
+			    1,    5,    8,    8,    1,    8,    5,    5,    5,    5,
+			    1,    1,    4,    5,    5,    5,    5,    5,    5,    5,
+			    1,    3,    3,    7,    7,    5,    5,    5,    7,    7,
+			    5,    1,    1,    6,    8,    8,    8,    1,    1,    1,
+			    1,    1,    5,    4,    8,    8,    6,    6,    7,    7,
+			    7,    6,    6,    1,    4,    1,    1,    1,    1,    5,
+			    4,    6,    6,    6,    4,    8,    8,    2,    1,    1, yyDummy>>)
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
@@ -3093,123 +3132,123 @@ feature {NONE} -- Table templates
 	yydefact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    7,   38,   37,    7,    7,    8,    5,    6,   39,    0,
-			    0,   39,   39,   39,   39,   39,   42,   39,   39,   39,
-			   39,   39,   39,   39,    0,   40,    0,    0,    3,    4,
-			   77,    0,    0,    0,   39,    0,   65,    2,   13,   39,
-			    0,   39,   65,    1,   65,    0,    0,    0,    0,   45,
-			   49,   43,    0,    0,    0,    0,    0,    0,    0,    0,
-			   76,    0,   23,   23,    0,    0,    0,    0,    0,   61,
-			   39,   39,    0,   39,    0,   16,   66,    0,    0,    0,
-			   12,    9,    0,    0,    0,    0,   47,    0,   46,    0,
-			   41,    0,    0,    0,    0,    0,    0,    0,   25,    0,
+			    8,    0,   39,   38,    8,    8,    9,    6,    7,   40,
+			    0,    5,    0,   40,   40,   40,   40,   40,   43,   40,
+			   40,   40,   40,   40,   40,   40,    0,   41,    0,    0,
+			    3,    4,   78,    0,    0,    0,   40,    0,   66,    2,
+			   14,   40,    0,   40,   66,    1,   66,    0,    0,    0,
+			    0,   46,   50,   44,    0,    0,    0,    0,    0,    0,
+			    0,    0,   77,    0,   24,   24,    0,    0,    0,    0,
+			    0,   62,   40,   40,    0,   40,    0,   17,   67,    0,
+			    0,    0,   13,   10,    0,    0,    0,    0,   48,    0,
+			   47,    0,   42,    0,    0,    0,    0,    0,    0,    0,
 
-			   24,   39,   39,   61,   61,    0,    0,    0,   61,   61,
-			    0,   63,    0,    0,   15,    0,   74,    0,    0,   68,
-			   67,   17,    0,   11,   31,   29,   27,   33,   44,    0,
-			   50,   35,   32,   36,   26,   28,   34,   30,   75,   65,
-			   65,   63,   63,   61,   61,   61,   63,   63,   59,   62,
-			   64,   51,   18,   20,   19,    0,    0,    0,    0,    0,
-			   59,   48,   22,   21,   54,   53,   63,   63,   63,   55,
-			   52,    0,    0,   71,   70,   73,   72,   69,    0,   58,
-			   57,   56,   60,   14,   10,    0,    0,    0, yyDummy>>)
+			   26,    0,   25,   40,   40,   62,   62,    0,    0,    0,
+			   62,   62,    0,   64,    0,    0,   16,    0,   75,    0,
+			    0,   69,   68,   18,    0,   12,   32,   30,   28,   34,
+			   45,    0,   51,   36,   33,   37,   27,   29,   35,   31,
+			   76,   66,   66,   64,   64,   62,   62,   62,   64,   64,
+			   60,   63,   65,   52,   19,   21,   20,    0,    0,    0,
+			    0,    0,   60,   49,   23,   22,   55,   54,   64,   64,
+			   64,   56,   53,    0,    0,   72,   71,   74,   73,   70,
+			    0,   59,   58,   57,   61,   15,   11,    0,    0,    0, yyDummy>>)
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			  185,   43,   37,   28,   29,    7,   38,   24,   25,   90,
-			   68,  172,   69,  119,   62,  151,  111,  101,   75,   76,
-			  120,    8,    9,   50,   51,   87,   88, yyDummy>>)
+			  187,   45,   39,   30,   31,    8,   40,   26,   27,   92,
+			   70,  174,   71,  121,   64,  153,  113,  103,   77,   78,
+			  122,    9,   10,   52,   53,   89,   90, yyDummy>>)
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   55, -32768, -32768,  124,  124, -32768, -32768, -32768,  118,   71,
-			    4,   75,   45,   45,   45,   45,  130,   45,   45,   45,
-			   45,   45,   45,   45,  115, -32768,  -11,  -11, -32768, -32768,
-			 -32768,  -10,   25,   25,   45,   25,  -17, -32768, -32768,   45,
-			  -10,   45,  -17, -32768,  -17,  114,  113,  105,   99,  -10,
-			  129, -32768,   96,   93,   88,   87,   86,   85,   77,   25,
-			 -32768,   61,   79,   79,   25,   25,   26,   25,   92, -32768,
-			   45,   45,  -17,   45,   -7, -32768, -32768,  -17,   91,  -17,
-			 -32768, -32768,   25,   25,   25,   25, -32768,   97,   94,  -10,
-			 -32768,   25,   25,   25,   25,   25,   25,   25, -32768,   82,
+			  125,  126, -32768, -32768,   98,   98, -32768, -32768, -32768,  132,
+			   13, -32768,  112,  -10,   40,   40,   40,   40,  102,   40,
+			   40,   40,   40,   40,   40,   40,   86, -32768,   -8,   -8,
+			 -32768, -32768, -32768,   27,   26,   26,   40,   26,  -21, -32768,
+			 -32768,   40,   27,   40,  -21, -32768,  -21,   85,   77,   70,
+			   63,   27,   91, -32768,   62,   60,   58,   57,   53,   51,
+			   50,   26, -32768,   48,   61,   61,   26,   26,  -12,   26,
+			   67, -32768,   40,   40,  -21,   40,   -9, -32768, -32768,  -21,
+			   66,  -21, -32768, -32768,   26,   26,   26,   26, -32768,   74,
+			   72,   27, -32768,   26,   26,   26,   26,   26,   26,   26,
 
-			 -32768,   45,   45, -32768, -32768,   25,   25,   25, -32768, -32768,
-			   25,   -3,  -17,  -17, -32768,  -17, -32768,   36,  -25, -32768,
-			   66, -32768,   25, -32768, -32768, -32768, -32768, -32768, -32768,  -10,
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  -17,
-			  -17,   -3,   -3, -32768, -32768, -32768,   -3,   -3,    7, -32768,
-			 -32768, -32768, -32768, -32768, -32768,   52,   35,   42,   30,   -7,
-			    7, -32768, -32768, -32768, -32768, -32768,   -3,   -3,   -3, -32768,
-			 -32768,  -10,  -17, -32768, -32768, -32768, -32768, -32768,  -17, -32768,
-			 -32768, -32768, -32768, -32768, -32768,   20,   14, -32768, yyDummy>>)
+			 -32768,   64, -32768,   40,   40, -32768, -32768,   26,   26,   26,
+			 -32768, -32768,   26,   10,  -21,  -21, -32768,  -21, -32768,    4,
+			   -5, -32768,   65, -32768,   26, -32768, -32768, -32768, -32768, -32768,
+			 -32768,   27, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			 -32768,  -21,  -21,   10,   10, -32768, -32768, -32768,   10,   10,
+			    2, -32768, -32768, -32768, -32768, -32768, -32768,   52,   41,   33,
+			   18,   -9,    2, -32768, -32768, -32768, -32768, -32768,   10,   10,
+			   10, -32768, -32768,   27,  -21, -32768, -32768, -32768, -32768, -32768,
+			  -21, -32768, -32768, -32768, -32768, -32768, -32768,   19,    6, -32768, yyDummy>>)
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768,  103, -32768, -32768,
-			  -40,    1,   -9,    0,  131, -107,  -92,   73,  -29,  -69,
-			 -32768, -32768,   90, -32768, -32768, -32768, -32768, yyDummy>>)
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768,  101, -32768, -32768,
+			  -42,  -19,  -11,  -23,  106, -107,  -94,   43,  -31,  -71,
+			 -32768, -32768,   55, -32768, -32768, -32768, -32768, yyDummy>>)
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   78,   39,   61,  114,  118,  150,  117,  149,  121,   86,
-			  123,  141,  142,   80,  187,   81,  146,  147,  158,  157,
-			  186,   36,   35,   70,   71,   74,   73,   67,   34,   66,
-			   65,   64,   60,   30,  164,  165,  116,   33,   32,  169,
-			  170,   31,  176,  152,  153,  171,  154,   30,  174,  130,
-			   98,  166,  167,  168,  175,  103,  104,  108,  109,  179,
-			  180,  181,    6,  107,    5,  173,  106,  105,   30,   30,
-			    4,    3,  159,  124,  125,  126,  127,   16,    2,  156,
-			  155,    1,  131,  132,  133,  134,  135,  136,  137,  161,
-			   27,   26,   42,   10,   11,  138,  143,  144,  145,   41,
+			   80,   41,  120,  116,  119,   63,  189,   44,  123,   88,
+			  125,  143,  144,   82,   43,   83,  148,  149,  152,  188,
+			  151,   76,   18,   72,   73,  109,   75,   42,  108,  107,
+			  178,   32,   29,   28,  118,   62,  166,  167,  160,  159,
+			  173,  171,  172,  154,  155,  177,  156,  158,  157,  132,
+			  100,  168,  169,  170,  176,  105,  106,  110,  111,   12,
+			   13,  181,  182,  183,   69,  175,   68,   67,   66,   32,
+			   32,  161,   18,  126,  127,  128,  129,  140,  131,  130,
+			  124,  112,  133,  134,  135,  136,  137,  138,  139,  163,
+			  102,  101,   99,   98,   91,   97,  145,  146,  147,   96,
 
-			  129,  148,  128,  183,   99,  122,  110,   16,  100,  184,
-			  162,  163,   40,  160,   44,   45,   46,   47,   48,   97,
-			   52,   53,   54,   55,   56,   57,   58,   96,   95,   94,
-			   93,  182,   89,    5,   49,   92,  102,   72,   91,   23,
-			   22,   85,   77,   21,   79,   20,   19,   84,   18,   17,
-			   16,   15,   14,   13,   12,   83,   82,   59,   63,  177,
-			    0,  178,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,  112,  113,    0,  115,    0,    0,    0,
+			   95,  150,   94,  185,   93,   87,   51,    6,  104,  186,
+			  164,  165,   86,  162,   46,   47,   48,   49,   50,   85,
+			   54,   55,   56,   57,   58,   59,   60,   84,   61,   38,
+			   37,  184,    7,   11,    6,   65,   36,   74,  179,    0,
+			    5,    4,   79,  180,   81,   35,   34,    0,    3,   33,
+			    0,    2,    0,   25,   24,   32,    0,   23,    1,   22,
+			   21,    0,   20,   19,   18,   17,   16,   15,   14,    0,
+			    0,    0,    0,  114,  115,    0,  117,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 
-			    0,    0,    0,    0,  139,  140, yyDummy>>)
+			    0,    0,    0,    0,  141,  142, yyDummy>>)
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   40,   10,   13,   72,   11,    8,   13,   10,   77,   49,
-			   79,  103,  104,   42,    0,   44,  108,  109,   43,   44,
-			    0,   17,   18,   32,   33,   42,   35,   37,   24,   39,
-			   40,   41,   43,   43,  141,  142,   43,   33,   34,  146,
-			  147,   37,   12,  112,  113,   38,  115,   43,   13,   89,
-			   59,  143,  144,  145,   12,   64,   65,   66,   67,  166,
-			  167,  168,    7,   37,    9,   13,   40,   41,   43,   43,
-			   15,   16,    6,   82,   83,   84,   85,   32,   23,   43,
-			   44,   26,   91,   92,   93,   94,   95,   96,   97,  129,
-			   19,   20,   17,    3,    4,   13,  105,  106,  107,   24,
+			   42,   12,   11,   74,   13,   13,    0,   17,   79,   51,
+			   81,  105,  106,   44,   24,   46,  110,  111,    8,    0,
+			   10,   42,   32,   34,   35,   37,   37,   37,   40,   41,
+			   12,   43,   19,   20,   43,   43,  143,  144,   43,   44,
+			   38,  148,  149,  114,  115,   12,  117,   43,   44,   91,
+			   61,  145,  146,  147,   13,   66,   67,   68,   69,    4,
+			    5,  168,  169,  170,   37,   13,   39,   40,   41,   43,
+			   43,    6,   32,   84,   85,   86,   87,   13,    6,    5,
+			   14,   14,   93,   94,   95,   96,   97,   98,   99,  131,
+			   29,   43,   42,   42,    3,   42,  107,  108,  109,   42,
 
-			    6,  110,    5,  172,   43,   14,   14,   32,   29,  178,
-			  139,  140,   37,  122,   11,   12,   13,   14,   15,   42,
-			   17,   18,   19,   20,   21,   22,   23,   42,   42,   42,
-			   42,  171,    3,    9,    4,   42,   63,   34,   42,   21,
-			   22,   42,   39,   25,   41,   27,   28,   42,   30,   31,
-			   32,   33,   34,   35,   36,   42,   42,   42,   27,  159,
-			   -1,  160,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   70,   71,   -1,   73,   -1,   -1,   -1,
+			   42,  112,   42,  174,   42,   42,    4,    9,   65,  180,
+			  141,  142,   42,  124,   13,   14,   15,   16,   17,   42,
+			   19,   20,   21,   22,   23,   24,   25,   42,   42,   17,
+			   18,  173,    7,    7,    9,   29,   24,   36,  161,   -1,
+			   15,   16,   41,  162,   43,   33,   34,   -1,   23,   37,
+			   -1,   26,   -1,   21,   22,   43,   -1,   25,   33,   27,
+			   28,   -1,   30,   31,   32,   33,   34,   35,   36,   -1,
+			   -1,   -1,   -1,   72,   73,   -1,   75,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 
-			   -1,   -1,   -1,   -1,  101,  102, yyDummy>>)
+			   -1,   -1,   -1,   -1,  103,  104, yyDummy>>)
 		end
 
 feature {NONE} -- Semantic value stacks
@@ -3324,7 +3363,7 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 187
+	yyFinal: INTEGER is 189
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768

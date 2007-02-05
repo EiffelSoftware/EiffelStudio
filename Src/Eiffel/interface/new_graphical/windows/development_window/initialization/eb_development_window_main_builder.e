@@ -863,7 +863,7 @@ feature{NONE} -- Implementation
 				develop_window.commands.show_tool_commands.force (l_show_cmd, l_diagram_tool)
 				develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 
-				create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d), True, True, False)
+				create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_i), True, True, False)
 				l_accel.actions.extend (agent l_show_cmd.execute)
 				l_show_cmd.set_accelerator (l_accel)
 			end

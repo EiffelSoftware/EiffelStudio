@@ -137,9 +137,12 @@ feature -- Command
 		end
 
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
-			-- Draw `a_pixle_buffer' to current at `a_rect'.
+			-- Draw `a_pixel_buffer' to current at `a_rect'.
+		local
+			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
 		do
-			check not_implemented: False end
+			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 
 feature -- Query

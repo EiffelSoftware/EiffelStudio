@@ -2460,6 +2460,11 @@ feature -- Externals
 			"C signature (GdkPixbuf*, GdkPixbuf*, int, int, int, int, double, double, double, double, GdkInterpType, int) use <gtk/gtk.h>"
 		end
 
+	frozen gdk_pixbuf_copy_area (src: POINTER; src_x, src_y, a_width, a_height: INTEGER; dest: POINTER; dest_x, dest_y: INTEGER) is
+		external
+			"C signature (GdkPixbuf*, int, int, int, int, GdkPixbuf*, int, int) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_widget_render_icon (a_widget, a_stock_id: POINTER; a_icon_size: INTEGER; a_detail: POINTER): POINTER is
 		external
 			"C signature (GtkWidget*, gchar*, GtkIconSize, gchar*): GdkPixbuf* use <gtk/gtk.h>"

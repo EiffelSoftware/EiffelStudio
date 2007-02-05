@@ -14,12 +14,23 @@ inherit
 	OUTPUT_WINDOW
 
 	PLAIN_TEXT_FILE
+		rename
+			put_string as file_put_string,
+			putstring as file_putstring
+		end
 
 	PLATFORM_CONSTANTS
 
 create
-
 	make
+
+feature -- Element change
+
+	put_string (s: STRING_GENERAL) is
+			--
+		do
+			file_put_string (s.as_string_8)
+		end
 
 feature -- Output
 

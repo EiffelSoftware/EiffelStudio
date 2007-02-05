@@ -141,6 +141,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		do
 			if has_focus then
 				release_keyboard_and_mouse
+					-- We reset the focused popup window here in case hide is called as part of destroy
+					-- in which case the focus out event will not be called.
+				app_implementation.set_focused_popup_window (Void)
 			end
 			Precursor;
 		end

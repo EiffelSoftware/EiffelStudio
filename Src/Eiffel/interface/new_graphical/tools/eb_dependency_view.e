@@ -195,7 +195,11 @@ feature -- Status setting
 	launch_stone (st: STONE) is
 			-- Notify the development window of a new stone.
 		do
-			develop_window.tools.launch_stone (st)
+			if develop_window.unified_stone then
+				develop_window.set_stone (st)
+			else
+				develop_window.tools.set_stone (st)
+			end
 		end
 
 	on_select is

@@ -1373,7 +1373,11 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 	launch_stone (a_stone: STONE) is
 			-- Launch stone.
 		do
-			develop_window.tools.set_stone (a_stone)
+			if develop_window.unified_stone then
+				develop_window.set_stone (a_stone)
+			else
+				develop_window.tools.set_stone (a_stone)
+			end
 		end
 
 	is_link_client, is_link_inheritance, is_link_aggregate: BOOLEAN
@@ -1402,7 +1406,7 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 			is_link_aggregate := False
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_TOOLS} -- Context tool
+feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 
 	on_select is
 			-- Current became selected in notebook.

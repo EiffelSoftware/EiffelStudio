@@ -15,7 +15,6 @@ inherit
 			manager,
 			before_starting,
 			after_starting,
-			warning,
 			if_confirmed_do,
 			discardable_if_confirmed_do,
 			activate_debugger_environment
@@ -67,15 +66,6 @@ feature
 	after_starting is
 		do
 			Precursor
-		end
-
-	warning (msg: STRING_GENERAL) is
-		local
-			wd: EB_WARNING_DIALOG
-		do
-			create wd.make_with_text (msg)
-			wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-			Precursor {DEBUGGER_CONTROLLER} (msg)
 		end
 
 	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is

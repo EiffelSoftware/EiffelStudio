@@ -197,6 +197,7 @@ feature -- Dotnet creation
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_string_for_dotnet_value (a_eifnet_dsv)
+			init_value (Result)
 		end
 
 	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE is
@@ -206,6 +207,7 @@ feature -- Dotnet creation
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_object_for_dotnet_value (a_eifnet_drv)
+			init_value (Result)
 		end
 
 	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE is
@@ -215,6 +217,7 @@ feature -- Dotnet creation
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_native_array_object_for_dotnet_value (a_eifnet_dnav)
+			init_value (Result)
 		end
 
 invariant

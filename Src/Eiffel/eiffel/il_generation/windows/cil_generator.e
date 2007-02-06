@@ -858,6 +858,7 @@ feature {NONE} -- Type description
 				root_feat := a_class.feature_table.item (System.root_creation_name)
 				l_decl_type := cil_generator.implemented_type (root_feat.written_in,
 					root_class_type.type)
+				context.init (root_class_type)
 				cil_generator.define_entry_point (
 					root_class_type,
 					l_decl_type.associated_class_type,

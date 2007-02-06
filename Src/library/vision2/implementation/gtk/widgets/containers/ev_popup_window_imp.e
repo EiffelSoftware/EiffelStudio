@@ -133,7 +133,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- Map the Window to the screen.
 		do
 			Precursor
-			grab_keyboard_and_mouse
+			if not has_focus then
+				grab_keyboard_and_mouse
+			end
 		end
 
 	hide is

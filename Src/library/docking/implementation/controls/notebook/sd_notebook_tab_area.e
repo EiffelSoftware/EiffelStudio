@@ -42,7 +42,7 @@ feature {NONE}  -- Initlization
 
 			create internal_tool_bar.make
 			create internal_auto_hide_indicator.make
-			internal_auto_hide_indicator.set_tooltip (internal_shared.tooltip_notebook_hidden_tab_indicator)
+			internal_auto_hide_indicator.set_tooltip (internal_shared.interface_names.tooltip_notebook_hidden_tab_indicator)
 
 			create tab_box.make
 			extend_horizontal_box (tab_box)

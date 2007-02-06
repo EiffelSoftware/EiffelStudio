@@ -21,12 +21,11 @@ feature -- Initialization
 	make is
 		local
 			l_constants: EV_LAYOUT_CONSTANTS
-			l_shared: SD_SHARED
 		do
 			create l_constants
-			create l_shared
-			make_with_title ("Customize Toolbar")
-			set_icon_pixmap (l_shared.icons.tool_bar_customize_dialog)
+			create internal_shared
+			make_with_title (internal_shared.interface_names.tool_bar_customize_title)
+			set_icon_pixmap (internal_shared.icons.tool_bar_customize_dialog)
 			w_width := l_constants.dialog_unit_to_pixels(560)
 			w_height := l_constants.dialog_unit_to_pixels(360)
 			close_request_actions.wipe_out
@@ -68,33 +67,33 @@ feature -- Initialization
 			current_list.select_actions.extend (agent on_current_select)
 			current_list.deselect_actions.extend (agent on_current_deselect)
 
-			create pool_label.make_with_text ("Available buttons")
+			create pool_label.make_with_text (internal_shared.interface_names.available_buttons)
 			pool_label.align_text_left
-			create current_label.make_with_text ("Displayed buttons")
+			create current_label.make_with_text (internal_shared.interface_names.displayed_buttons)
 			current_label.align_text_left
 
-			create add_button.make_with_text ("Add ->")
+			create add_button.make_with_text (internal_shared.interface_names.add_button)
 			add_button.select_actions.extend (agent add_to_displayed)
 			l_layout_constants.set_default_size_for_button (add_button)
 
 			add_button.disable_sensitive
-			create remove_button.make_with_text ("<- Remove")
+			create remove_button.make_with_text (internal_shared.interface_names.remove_button)
 			l_layout_constants.set_default_size_for_button (remove_button)
 			remove_button.select_actions.extend (agent remove_from_displayed)
 			remove_button.disable_sensitive
-			create up_button.make_with_text ("Up")
+			create up_button.make_with_text (internal_shared.interface_names.move_button_up)
 			l_layout_constants.set_default_size_for_button (up_button)
 			up_button.select_actions.extend (agent move_up)
 			up_button.disable_sensitive
-			create down_button.make_with_text ("Down")
+			create down_button.make_with_text (internal_shared.interface_names.move_button_down)
 			l_layout_constants.set_default_size_for_button (down_button)
 			down_button.select_actions.extend (agent move_down)
 			down_button.disable_sensitive
-			create ok_button.make_with_text ("Ok")
+			create ok_button.make_with_text (internal_shared.interface_names.ok)
 			l_layout_constants.set_default_size_for_button (ok_button)
 			ok_button.select_actions.extend (agent generate_toolbar)
 			ok_button.select_actions.extend (agent exit)
-			create cancel_button.make_with_text ("Cancel")
+			create cancel_button.make_with_text (internal_shared.interface_names.cancel)
 			cancel_button.select_actions.extend (agent exit)
 			l_layout_constants.set_default_size_for_button (cancel_button)
 
@@ -514,6 +513,9 @@ feature {NONE} -- Internal data
 				a_toolbar.forth
 			end -- loop
 		end
+
+	internal_shared: SD_SHARED;
+			-- All singletons.
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

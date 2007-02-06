@@ -35,6 +35,27 @@ feature -- Access
 			set: internal_icons = a_icons
 		end
 
+	interface_names: SD_INTERFACE_NAMES is
+			-- All interface names
+		do
+			if internal_interface_names = Void then
+				create internal_interface_names
+			end
+			Result := internal_interface_names
+		ensure
+			not_void: Result /= Void
+		end
+
+	set_interface_names (a_names: like internal_interface_names) is
+			-- Set `internal_interface_names' with `a_names'
+		require
+			not_void: a_names /= Void
+		do
+			internal_interface_names := a_names
+		ensure
+			set: internal_interface_names = a_names
+		end
+
 	feedback: SD_FEEDBACK_DRAWER is
 			-- SD_DRAW_FEEDBACK instance which is draw things on the desktop.
 		once
@@ -448,86 +469,11 @@ feature -- Constants
 	Notebook_minimum_width: INTEGER is 77
 			-- Minimumu width for SD_NOTEBOOK, it's useful when a zone is minimized.	
 
-	Editor_place_holder_content_name: STRING_GENERAL is
-			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
-		once
-			Result := "docking manager editor place holder"
-		end
-
 	Zone_navigation_column_count: INTEGER is 8
 			-- How many items per column in zone navigation dialog which is normally activated by Ctrl + Tab.
 
 	Auto_hide_tab_stub_show_delay: INTEGER is 1000
 			-- Auto hide tab stub delay time in milliseconds.
-
-	Zone_navigation_left_column_name: STRING_GENERAL is
-			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
-		once
-			Result := "Tools"
-		end
-
-	Zone_navigation_right_column_name: STRING_GENERAL is
-			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
-		once
-			Result := "Targets"
-		end
-
-	Tooltip_mini_toolbar_stick: STRING_GENERAL is
-			-- Tooltip for mini toolbar pin buttons.
-		once
-			Result := "Auto Hide"
-		end
-	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
-			-- Tooltip for mini toolbar unpin buttons.
-		once
-			Result := "Auto Hide"
-		end
-	Tooltip_mini_toolbar_maximize: STRING_GENERAL is
-			-- Tooltip for mini toolbar maximize buttons.
-		once
-			Result :=  "Maximize"
-		end
-	Tooltip_mini_toolbar_restore: STRING_GENERAL is
-			-- Tooltip for mini toolbar restore buttons.
-		once
-			Result := "Restore"
-		end
-	Tooltip_mini_toolbar_minimize: STRING_GENERAL is
-			-- Tooltip for mini toolbar minimize buttons.
-		once
-			Result :=  "Minimize"
-		end
-	Tooltip_mini_toolbar_close: STRING_GENERAL is
-			-- Tooltip for mini toolbar close buttons.
-		once
-			Result := "Close"
-		end
-	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_GENERAL is
-			-- Tooltip for mini toolbar hidden tool bar indicators.
-		once
-			Result := "Show Mini Toolbar"
-		end
-	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_GENERAL is
-			-- Tooltip for mini toolbar hidden tab indicators.
-		once
-			Result := "Show List"
-		end
-	Tooltip_toolbar_tail_indicator: STRING_GENERAL is
-			-- Tooltip for tool bar tail indicators.
-		once
-			Result := "Toolbar Options"
-		end
-	Tooltip_toolbar_floating_close: STRING_GENERAL is
-			-- Tooltip for tool bar close button.
-		once
-			Result := "Close"
-		end
-
-	Tooltip_notebook_hidden_tab_indicator: STRING_GENERAL is
-			-- Tooltip for notebook hidden tab indicator.
-		once
-			Result := "Show List"
-		end
 
 feature {NONE} -- Implementation
 
@@ -537,8 +483,11 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	internal_icons: SD_ICONS_SINGLETON;
+	internal_icons: SD_ICONS_SINGLETON
 			-- Icons.
+
+	internal_interface_names: SD_INTERFACE_NAMES
+			-- Interface names.
 
 	Show_all_feedback_indicator_cell: CELL [BOOLEAN] is
 			-- Singleton cell for show_all_feedback_indicator.

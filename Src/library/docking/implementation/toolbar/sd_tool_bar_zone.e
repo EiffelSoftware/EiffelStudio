@@ -231,7 +231,7 @@ feature -- Command
 			extend_one_item (tail_indicator)
 			tail_indicator.set_pixmap (internal_shared.icons.tool_bar_customize_indicator)
 			tail_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_customize_indicator_buffer)
-			tail_indicator.set_tooltip (internal_shared.tooltip_toolbar_tail_indicator)
+			tail_indicator.set_tooltip (internal_shared.interface_names.tooltip_toolbar_tail_indicator)
 			tail_indicator.select_actions.extend (agent assistant.on_tail_indicator_selected)
 
 			compute_minmum_size

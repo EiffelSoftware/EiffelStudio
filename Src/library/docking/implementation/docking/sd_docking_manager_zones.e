@@ -32,7 +32,7 @@ feature {NONE}  -- Initlization
 		do
 			create l_shared
 			create place_holder_widget
-			create place_holder_content.make_with_widget (place_holder_widget, l_shared.Editor_place_holder_content_name)
+			create place_holder_content.make_with_widget (place_holder_widget, l_shared.interface_names.Editor_place_holder_content_name)
 			place_holder_content.set_type ({SD_ENUMERATION}.place_holder)
 		end
 

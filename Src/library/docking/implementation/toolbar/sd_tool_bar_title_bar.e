@@ -49,9 +49,9 @@ feature {NONE} -- Initialization
 			tool_bar.compute_minmum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)
-			customize.set_tooltip (l_shared.tooltip_toolbar_tail_indicator)
+			customize.set_tooltip (l_shared.interface_names.tooltip_toolbar_tail_indicator)
 			close.set_pixmap (l_shared.icons.tool_bar_floating_close)
-			close.set_tooltip (l_shared.tooltip_toolbar_floating_close)
+			close.set_tooltip (l_shared.interface_names.tooltip_toolbar_floating_close)
 			tool_bar.compute_minmum_size
 		end
 

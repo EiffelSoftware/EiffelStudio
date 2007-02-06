@@ -47,16 +47,16 @@ feature {NONE} -- Initlization
 
 			create stick
 			stick.set_pixmap (internal_shared.icons.unstick)
-			stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
+			stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 
 			set_stick (False)
 
 			create normal_max
 			normal_max.set_pixmap (internal_shared.icons.maximize)
-			normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
+			normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 			create close
 			close.set_pixmap (internal_shared.icons.close)
-			close.set_tooltip (internal_shared.tooltip_mini_toolbar_close)
+			close.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_close)
 
 			stick.select_actions.extend (agent on_stick_select)
 			normal_max.select_actions.extend (agent on_normal_max)
@@ -94,10 +94,10 @@ feature -- Command
 		do
 			if a_stick then
 				stick.set_pixmap (internal_shared.icons.stick)
-				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick)
+				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick)
 			else
 				stick.set_pixmap (internal_shared.icons.unstick)
-				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
+				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 			end
 			is_stick := a_stick
 		ensure
@@ -109,10 +109,10 @@ feature -- Command
 		do
 			if a_max then
 				normal_max.set_pixmap (internal_shared.icons.normal)
-				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
+				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			else
 				normal_max.set_pixmap (internal_shared.icons.maximize)
-				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
+				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 			end
 			is_max := a_max
 		ensure
@@ -404,10 +404,10 @@ feature {NONE} -- Agents
 		do
 			if  is_stick then
 				stick.set_pixmap (internal_shared.icons.unstick)
-				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
+				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 			else
 				stick.set_pixmap (internal_shared.icons.stick)
-				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick)
+				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick)
 			end
 			stick_select_actions.call ([])
 		end
@@ -417,10 +417,10 @@ feature {NONE} -- Agents
 		do
 			if is_max then
 				normal_max.set_pixmap (internal_shared.icons.maximize)
-				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
+				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 			else
 				normal_max.set_pixmap (internal_shared.icons.normal)
-				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
+				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			end
 
 			normal_max_actions.call ([])
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			if internal_mini_tool_bar_indicator = Void then
 				create internal_mini_tool_bar_indicator
 				internal_mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
-				internal_mini_tool_bar_indicator.set_tooltip (internal_shared.tooltip_mini_toolbar_hidden_toolbar_indicator)
+				internal_mini_tool_bar_indicator.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
 				internal_mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
 			end
 			Result := internal_mini_tool_bar_indicator

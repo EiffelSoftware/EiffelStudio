@@ -101,7 +101,7 @@ feature {NONE}-- Initialization
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_tools_label.set_font (internal_font)
-			internal_tools_label.set_text (l_shared.Zone_navigation_left_column_name)
+			internal_tools_label.set_text (l_shared.interface_names.Zone_navigation_left_column_name)
 			create internal_font
 			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
 			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
@@ -109,7 +109,7 @@ feature {NONE}-- Initialization
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_files_label.set_font (internal_font)
-			internal_files_label.set_text (l_shared.Zone_navigation_right_column_name)
+			internal_files_label.set_text (l_shared.interface_names.Zone_navigation_right_column_name)
 			internal_info_box.disable_item_expand (full_title)
 			internal_info_box.disable_item_expand (description)
 			internal_info_box.disable_item_expand (detail)

@@ -114,7 +114,9 @@ feature {NONE} -- Implementation
 				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
 				App_implementation.disable_debugger
-				grab_keyboard_and_mouse
+				if app_implementation.focused_popup_window /= top_level_window_imp then
+					grab_keyboard_and_mouse
+				end
 			end
 		end
 
@@ -124,7 +126,9 @@ feature {NONE} -- Implementation
 		do
 			if has_capture then
 				{EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
-				release_keyboard_and_mouse
+				if app_implementation.focused_popup_window /= top_level_window_imp then
+					release_keyboard_and_mouse
+				end
 				App_implementation.enable_debugger
 				App_implementation.set_captured_widget (Void)
 			end

@@ -98,15 +98,6 @@ feature {NONE} -- Implementation
 	associated_class: CLASS_I;
 			-- Corresponding class
 
-	just_class_name_style: EB_CLASS_EDITOR_TOKEN_STYLE is
-			-- Editor token style to generate just class name for `associated_class'
-		once
-			create Result
-			Result.enable_just_name
-		ensure
-			result_attached: Result /= Void
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -128,6 +128,17 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
+	just_class_name_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+			-- Editor token style to generate class information (just class name).
+			-- e.g., HASH_TABLE.
+			-- Note: Do not change setting of this style.
+		once
+			create Result
+			Result.enable_just_name
+		ensure
+			result_attached: Result /= Void
+		end
+
 	short_generic_class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
 			-- Editor token style to generate class information in short generic form.
 			-- e.g., HASH_TABLE [G, H -> ...].

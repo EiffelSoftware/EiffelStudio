@@ -348,7 +348,7 @@ feature -- Implementation
 					internal_set_pointer_style (pointer_style)
 				else
 						-- Reset the cursors.
-					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), NULL)
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_pointer)
 				end
 			end
 

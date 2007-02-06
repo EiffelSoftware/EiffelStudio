@@ -148,15 +148,15 @@ feature -- Miscellaneous
 
 			inspect Debugger_manager.breakpoint_status (pebble_routine, pebble_index)
 
-			when {DEBUG_INFO}.breakpoint_not_set then
+			when {DEBUGGER_DATA}.breakpoint_not_set then
 				pixmaps := icon_group_bp_slot
-			when {DEBUG_INFO}.breakpoint_set then
+			when {DEBUGGER_DATA}.breakpoint_set then
 				pixmaps := icon_group_bp_enabled
-			when {DEBUG_INFO}.breakpoint_disabled then
+			when {DEBUGGER_DATA}.breakpoint_disabled then
 				pixmaps := icon_group_bp_disabled
-			when {DEBUG_INFO}.breakpoint_condition_set then
+			when {DEBUGGER_DATA}.breakpoint_condition_set then
 				pixmaps := icon_group_bp_enabled_condition
-			when {DEBUG_INFO}.breakpoint_condition_disabled then
+			when {DEBUGGER_DATA}.breakpoint_condition_disabled then
 				pixmaps := icon_group_bp_disabled_condition
 			end
 

@@ -623,7 +623,10 @@ feature -- Status setting
 			debug_mode_forced = True
 		do
 			debug_mode_forced := False
-			if raised and not application_is_executing then
+			if raised
+				and not application_launching_in_progress
+				and not application_is_executing
+			then
 				unraise
 			end
 		end
@@ -881,7 +884,7 @@ feature -- Status setting
 	unraise is
 			-- Make the debug tools disappear from `a_window'.
 		require
-			raised
+			debugger_raised: raised
 		local
 			i: INTEGER
 			split: EV_SPLIT_AREA
@@ -1025,6 +1028,7 @@ feature {NONE} -- Raise/unraise notification
 		do
 			if debugging_window /= Void then
 				create popup
+				popup.enable_border
 				create lab
 				if raised then
 					lab.set_text (interface_names.l_Switching_to_normal_mode)

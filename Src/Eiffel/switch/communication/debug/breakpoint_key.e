@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end
 
-feature {DEBUG_INFO} -- Change
+feature {DEBUGGER_DATA} -- Change
 
 	set_is_corrupted (b: like is_corrupted) is
 			-- Set `is_corrupted' to `b'

@@ -37,7 +37,7 @@ inherit
 create
 	make
 
-feature {DEBUG_INFO, BREAK_LIST} -- Creation
+feature {BREAK_LIST} -- Creation
 
 	make (a_feature: E_FEATURE; a_breakable_index: INTEGER) is
 			-- Create a breakpoint in the feature `a_feature'
@@ -488,7 +488,7 @@ feature -- Condition change
 			condition := Void
 		end
 
-feature {DEBUG_INFO} -- Saving protocol.
+feature {DEBUGGER_DATA} -- Saving protocol.
 
 	prepare_for_save is
 			-- To be used before storing breakpoints: we store the condition as the string only.

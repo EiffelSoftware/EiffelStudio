@@ -201,7 +201,7 @@ feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION
 		require
 			is_running: is_running
 		do
-			Debugger_manager.debug_info.restore
+			Debugger_manager.debugger_data.restore
 
 			clean_on_process_termination
 

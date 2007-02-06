@@ -105,7 +105,7 @@ feature -- output
 			s: STRING
 			arr: ARRAY [BREAKPOINT]
 		do
-			bl := debug_info.breakpoints
+			bl := debugger_data.breakpoints
 			from
 				i := 1
 				if on_select_proc /= Void then
@@ -357,7 +357,7 @@ feature -- Breakpoints management
 					end
 				else
 					if s.item (1) = '*' then
-						debug_info.enable_breakpoints_in_class (cc)
+						debugger_data.enable_breakpoints_in_class (cc)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
@@ -389,7 +389,7 @@ feature -- Breakpoints management
 						end
 					end
 					if i > 0 then
-						debug_info.enable_breakpoint (fe, i)
+						debugger_data.enable_breakpoint (fe, i)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
 					end

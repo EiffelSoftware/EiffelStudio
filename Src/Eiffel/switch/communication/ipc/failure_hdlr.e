@@ -30,7 +30,7 @@ feature
 			debug ("DEBUGGER")
 				io.error.put_string ("Failure happened%N")
 			end
-			Debugger_manager.debug_info.restore
+			Debugger_manager.debugger_data.restore
 		end
 
 indexing

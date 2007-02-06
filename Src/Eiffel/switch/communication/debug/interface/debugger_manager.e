@@ -21,7 +21,7 @@ inherit
 
 	BREAKPOINTS_MANAGER
 		redefine
-			clear_debugging_information
+			clear_breakpoints
 		end
 
 	SHARED_BENCH_NAMES
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 			create application_quit_actions
 			create application_prelaunching_actions
-			create debug_info.make
+			create debugger_data.make
 			create controller.make (Current)
 			create observers.make (3)
 			create implementation.make (Current)
@@ -159,24 +159,24 @@ feature -- Debug info access
 			Result.add_extension (Debug_info_extension)
 		end
 
-	load_debug_info is
+	load_debugger_data is
 			-- Load debug information (so far only the breakpoints)
 		do
-			if debug_info = Void then
-				create debug_info.make
+			if debugger_data = Void then
+				create debugger_data.make
 			end
-			debug_info.load (debug_info_filename)
+			debugger_data.load (debug_info_filename)
 			implementation.load_system_dependent_debug_info
 			resynchronize_breakpoints
 		end
 
-	save_debug_info is
+	save_debugger_data is
 			-- Save debug information (so far only the breakpoints)
 		do
-			if debug_info = Void then
-				create debug_info.make
+			if debugger_data = Void then
+				create debugger_data.make
 			end
-			debug_info.save (debug_info_filename)
+			debugger_data.save (debug_info_filename)
 		rescue
 			set_error_message ("Unable to save project properties%N%
 					%Cause: Unable to open " + debug_info_filename + " for writing")
@@ -346,7 +346,7 @@ feature -- Breakpoints management
 			retry
 		end
 
-	clear_debugging_information	is
+	clear_breakpoints is
 		do
 			if application_is_executing then
 					-- Need to individually remove the breakpoints
@@ -354,7 +354,7 @@ feature -- Breakpoints management
 					-- not stop.
 				Precursor {BREAKPOINTS_MANAGER}
 			else
-				debug_info.wipe_out
+				debugger_data.wipe_out_all_breakpoints
 			end
 		end
 
@@ -369,7 +369,7 @@ feature -- Breakpoints management
 
 feature -- Properties
 
-	debug_info: DEBUG_INFO
+	debugger_data: DEBUGGER_DATA
 			-- Debugger information (mainly breakpoints).
 
 	controller: DEBUGGER_CONTROLLER
@@ -484,7 +484,7 @@ feature -- Exception handling
 	exceptions_handler: DBG_EXCEPTION_HANDLER is
 			-- Exception handler used during debugging.
 		do
-			Result := internal_exceptions_handler
+			Result := debugger_data.exceptions_handler
 			if Result = Void then
 				if is_classic_project then
 					create Result.make_handling_by_code
@@ -493,11 +493,11 @@ feature -- Exception handling
 				else
 					check False end
 				end
-				internal_exceptions_handler := Result
+				debugger_data.set_exceptions_handler (Result)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
-
-	internal_exceptions_handler: like exceptions_handler
 
 feature -- Events helpers
 
@@ -834,7 +834,7 @@ feature -- Debugging events
 			debugging_operation_id := 0
 			compute_class_c_data
 			from
-				bl := debug_info.breakpoints
+				bl := debugger_data.breakpoints
 				bl.start
 			until
 				bl.after
@@ -941,7 +941,7 @@ feature -- Debugging events
 				application_status.clear_kept_objects
 
 					--| Save debug info
-				save_debug_info
+				save_debugger_data
 			end
 
 			if has_stopped_action then
@@ -1030,7 +1030,7 @@ invariant
 
 	application_initialized_not_void: application_initialized implies application /= Void
 	application /= Void implies application.debugger_manager = Current
-	debug_info /= Void
+	debugger_data /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

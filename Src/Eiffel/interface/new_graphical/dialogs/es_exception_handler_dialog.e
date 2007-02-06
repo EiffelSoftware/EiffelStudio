@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 			handling_external_checking.select_actions.extend (agent on_external_handling_changed)
 			set_default_cancel_button (cancel_button)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
+
+
 		end
 
 feature -- Properties
@@ -75,20 +77,15 @@ feature -- Access
 				end
 				exceptions_handling.forth
 			end
+			if exception_handler.ignoring_external_exception then
+				handling_external_checking.enable_select
+			else
+				handling_external_checking.disable_select
+			end
 			if exception_handler.enabled then
 				handling_checkbox.enable_select
 			else
 				handling_checkbox.disable_select
-			end
-			if exception_handler.ignoring_external_exception then
-				handling_external_checking.enable_select
-			else
-				handling_external_checking.disable_select
-			end
-			if exception_handler.ignoring_external_exception then
-				handling_external_checking.enable_select
-			else
-				handling_external_checking.disable_select
 			end
 		end
 

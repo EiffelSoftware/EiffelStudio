@@ -45,9 +45,32 @@ create {DEBUGGER_MANAGER}
 feature {NONE} -- Initialization
 
 	make_with_debugger (dbg: like debugger_manager) is
+		local
+			l_ipc: like ipc_engine
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
-			create ipc_engine.make (debugger_manager)
+			check debugger_manager_not_void: debugger_manager /= Void end
+			l_ipc := ipc_engine
+			if l_ipc = Void then
+				create l_ipc.make (debugger_manager)
+				ipc_engine_cell.put (l_ipc)
+			else
+				l_ipc.change_debugger_manager (debugger_manager)
+			end
+		end
+
+feature {NONE} -- IPC implementation
+
+	ipc_engine: IPC_ENGINE is
+			-- IPC engine, used to control the ecdbgd debugger daemon.
+		do
+			Result := Ipc_engine_cell.item
+		end
+
+	Ipc_engine_cell: CELL [IPC_ENGINE] is
+			-- cell containing `ipc_engine'.
+		once
+			create Result
 		end
 
 feature -- recycling data
@@ -336,11 +359,6 @@ feature {APPLICATION_STATUS}
 		once
 			create Result.make (Rqst_cont)
 		end
-
-feature {NONE} -- IPC implementation
-
-	ipc_engine: IPC_ENGINE
-			-- IPC engine, used to control the ecdbgd debugger daemon.
 
 invariant
 

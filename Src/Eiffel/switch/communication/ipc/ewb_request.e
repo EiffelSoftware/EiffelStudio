@@ -47,7 +47,7 @@ feature -- Update
 			status := app.status
 
 				-- remove breakpoint that are now useless.
-			Debugger_manager.update_debug_info
+			Debugger_manager.update_debugger_data
 
 			inspect app.execution_mode
 			when {EXEC_MODES}.No_stop_points then

@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager
-			bpm.clear_debugging_information
+			bpm.clear_breakpoints
 			if bpm.error_in_bkpts then
 				create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 				id.show_modal_to_window (window_manager.last_focused_development_window.window)

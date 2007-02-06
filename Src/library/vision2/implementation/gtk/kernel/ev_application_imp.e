@@ -584,6 +584,7 @@ feature -- Basic operation
 			l_popup_parent: EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
 			l_grab_widget: POINTER
+			l_text_component_imp: EV_TEXT_COMPONENT_IMP
 		do
 			use_stored_display_data := True
 			l_stored_display_data := stored_display_data
@@ -605,11 +606,13 @@ feature -- Basic operation
 			if l_pnd_item /= Void then
 				l_top_level_window_imp ?= l_pnd_item.top_level_window_imp
 				l_popup_parent ?= l_top_level_window_imp
-
+				if l_popup_parent /= Void then
+					l_text_component_imp ?= l_pnd_item
+				end	
 					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling) unless PND is activated.
 					-- or if the widget is insensitive or the top level window has a modal child.
 				l_ignore_event :=
-					l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
+					l_popup_parent /= Void and then l_text_component_imp /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
 					not {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (l_pnd_item.c_object) or else
 					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
 			end

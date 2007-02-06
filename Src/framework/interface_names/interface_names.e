@@ -528,6 +528,7 @@ feature -- Accelerator, focus label and menu name
 	m_set_default_layout: STRING_GENERAL is do Result := locale.translate ("Set Current Layout As Default") end
 	m_save_layout_as: STRING_GENERAL is do Result := locale.translate ("Save Layout As...") end
 	m_open_layout: STRING_GENERAL is do Result := locale.translate ("Open Layout") end
+	l_choose_class_version: STRING_GENERAL is do Result := locale.translate ("Choose one version from the following:") end
 
 feature -- Toggles
 
@@ -1373,6 +1374,7 @@ feature -- Label texts
 	l_existing_layout_names: STRING_GENERAL is do Result := locale.translate ("Existing Layouts:") end
 	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
+	h_click_to_open: STRING_GENERAL is do Result := locale.translate ("Click to open") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -1652,6 +1654,7 @@ feature -- Title part
 	t_Save_layout_as: STRING_GENERAL is 				do Result := locale.translate ("Save Layout As...") end
 	t_Open_layout: STRING_GENERAL is					do Result := locale.translate ("Open Layout") end
 	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translate ("Overwrite Layout") end
+	t_open_c_file: STRING_GENERAL is					do Result := locale.translate ("Open C file") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 
@@ -1799,6 +1802,7 @@ feature -- Description texts
 	e_save_c_compilation_output: STRING_GENERAL is do Result := locale.translate("Save C Compilation output to file")	end
 	e_go_to_w_code_dir: STRING_GENERAL is do Result := locale.translate("Go to W_code directory of this system, or right click to open W_code in specified file browser")	end
 	e_go_to_f_code_dir: STRING_GENERAL is do Result := locale.translate("Go to F_code directory of this system, or right click to open F_code in specified file browser")	end
+	e_open_c_file: STRING_GENERAL is do Result := locale.translate ("Drop a class/feature here to open its corresponding C file/function in external editor.") end
 	e_go_to_project_dir: STRING_GENERAL is do Result := locale.translate ("Go to project directory of this system, or right click to open that directory in specified file browser") end
 	e_f_code: STRING_GENERAL is do Result := locale.translate("F_code")	end
 	e_w_code: STRING_GENERAL is do Result := locale.translate("W_code")	end

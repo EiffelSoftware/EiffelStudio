@@ -39,6 +39,15 @@ feature {NONE} -- Initialization
 		require
 			dbg_not_void: dbg /= Void
 		do
+			change_debugger_manager (dbg)
+		end
+
+feature {APPLICATION_EXECUTION_CLASSIC} -- Change
+
+	change_debugger_manager (dbg: like debugger_manager) is
+		require
+			dbg_not_void: dbg /= Void
+		do
 			debugger_manager := dbg
 		end
 

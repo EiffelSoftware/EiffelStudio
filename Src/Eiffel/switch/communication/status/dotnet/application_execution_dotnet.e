@@ -496,7 +496,7 @@ feature -- Control execution
 			end
 
 			bpm := Debugger_manager
-			bpm.update_debug_info
+			bpm.update_debugger_data
 			inspect execution_mode
 			when {EXEC_MODES}.no_stop_points then
 				send_no_breakpoints

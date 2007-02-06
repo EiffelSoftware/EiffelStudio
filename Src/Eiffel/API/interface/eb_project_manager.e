@@ -104,7 +104,7 @@ feature -- Basic operations
 			l_load_agents: like load_agents
 		do
 				-- Load application context (command line and breakpoints)
-			Debugger_manager.load_debug_info
+			Debugger_manager.load_debugger_data
 			is_project_loaded := True
 
 			from
@@ -154,7 +154,7 @@ feature -- Basic operations
 			is_project_loaded := False
 			is_created := False
 				-- Save breakpoint status and command line.
-			Debugger_manager.save_debug_info
+			Debugger_manager.save_debugger_data
 
 			from
 					-- We need to twin the list as items may be removed as a result or iteration.
@@ -205,7 +205,7 @@ feature -- Basic operations
 				end
 
 					-- Save breakpoint status and command line.
-				Debugger_manager.save_debug_info
+				Debugger_manager.save_debugger_data
 			end
 		end
 

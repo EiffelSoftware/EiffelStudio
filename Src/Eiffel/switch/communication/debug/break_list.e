@@ -72,21 +72,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Query
-
-	has_enabled_breakpoints: BOOLEAN is
-			-- Does this breakpoints list contains at least one enabled bp ?
-		do
-			from
-				start
-			until
-				after or Result
-			loop
-				Result := item_for_iteration.is_enabled
-				forth
-			end
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

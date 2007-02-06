@@ -179,6 +179,14 @@ feature -- Handler dialog by code
 			handler_dialog.set_default_cancel_button (bt)
 			handler_dialog.set_size (300, 400)
 			disable_grid
+
+			if app_excep_handler.ignoring_external_exception then
+				cb_ignore_external.enable_select
+			end
+
+			if app_excep_handler.enabled then
+				cb_handle_exception.enable_select
+			end
 		end
 
 	pixmap_for_role (r: INTEGER): EV_PIXMAP is

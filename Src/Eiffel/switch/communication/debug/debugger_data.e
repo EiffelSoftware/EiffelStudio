@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DEBUG_INFO
+class DEBUGGER_DATA
 
 inherit
 	ANY
@@ -30,11 +30,35 @@ feature {NONE} -- Initialization
 
 feature -- global
 
-	wipe_out is
-			-- Empty Current.
+	prepare_breakpoints_for_save
+		local
+			bplst: like breakpoints
 		do
-				-- re-create an empty list
-			create breakpoints.make
+			restore
+			from
+				bplst := breakpoints
+				bplst.start
+			until
+				bplst.after
+			loop
+				bplst.item_for_iteration.prepare_for_save
+				bplst.forth
+			end
+		end
+
+	reload_all_breakpoints is
+		local
+			bplst: like breakpoints
+		do
+			from
+				bplst := breakpoints
+				bplst.start
+			until
+				bplst.after
+			loop
+				bplst.item_for_iteration.reload
+				bplst.forth
+			end
 		end
 
 	save (raw_filename: FILE_NAME) is
@@ -49,33 +73,15 @@ feature -- global
 			if not retried then
 					-- Reset information about the application
 					-- contained in the breakpoints.
-				restore
-
-				from
-					breakpoints.start
-				until
-					breakpoints.after
-				loop
-						-- Compact the conditions.
-					breakpoints.item_for_iteration.prepare_for_save
-					breakpoints.forth
-				end
+				prepare_breakpoints_for_save
 
 					-- save all breakpoints
 				create raw_file.make (raw_filename)
 				raw_file.open_write
-				raw_file.independent_store (breakpoints)
+				raw_file.independent_store ([breakpoints, exceptions_handler])
 				raw_file.close
 
-				from
-					breakpoints.start
-				until
-					breakpoints.after
-				loop
-						-- Restore the conditions.
-					breakpoints.item_for_iteration.reload
-					breakpoints.forth
-				end
+				reload_all_breakpoints
 			end
 		rescue
 			retried := True
@@ -89,30 +95,26 @@ feature -- global
 			valid_filename: raw_filename /= Void and then not raw_filename.is_empty
 		local
 			raw_file: RAW_FILE
+			obj: TUPLE [breakpoints: like breakpoints; exceptions_handler: like exceptions_handler]
 			retried: BOOLEAN
 		do
 			if not retried then
 				create raw_file.make(raw_filename)
 				if raw_file.exists and then raw_file.is_readable then
 					raw_file.open_read
-					breakpoints ?= raw_file.retrieved
+					obj ?= raw_file.retrieved
 					raw_file.close
+					if obj /= Void then
+						breakpoints := obj.breakpoints
+						exceptions_handler := obj.exceptions_handler
+					end
 				end
 
 				if breakpoints /= Void then
 						-- Reset information about the application
 						-- contained in the breakpoints (if any).
 					restore
-
-					from
-						breakpoints.start
-					until
-						breakpoints.after
-					loop
-							-- Restore the conditions.
-						breakpoints.item_for_iteration.reload
-						breakpoints.forth
-					end
+					reload_all_breakpoints
 				end
 			end
 			if breakpoints = Void then
@@ -144,41 +146,54 @@ feature -- global
 			-- see BREAKPOINT/is_not_useful for further comments
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 				-- remove useless breakpoints
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.is_not_useful or not bp.is_valid then
-					breakpoints.remove (bp)
-					breakpoints.start
+					bplst.remove (bp)
+					bplst.start
 				else
-					breakpoints.forth
+					bplst.forth
 				end
 			end
 		end
 
-feature -- Status
+feature -- Exception filtering
+
+	exceptions_handler: DBG_EXCEPTION_HANDLER
+
+	set_exceptions_handler (e: like exceptions_handler) is
+		do
+			exceptions_handler := e
+		end
+
+feature -- Breakpoints Status
 
 	has_breakpoints: BOOLEAN is
 			-- Does the program have a breakpoint (enabled or disabled) ?
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 
 				-- look for the first breakpoint set and enabled
 			from
-				breakpoints.start
+				bplst :=  breakpoints
+				bplst.start
 			until
-				breakpoints.after or Result
+				bplst.after or Result
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				Result := bp.is_set and bp.is_valid
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -186,17 +201,19 @@ feature -- Status
 			-- Does the program have a breakpoint set?
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- look for the first breakpoint set and enabled
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after or Result
+				bplst.after or Result
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				Result := bp.is_enabled and bp.is_valid
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -204,17 +221,19 @@ feature -- Status
 			-- Does the program have an enabled breakpoint?
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- look for the first breakpoint set and disabled
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after or Result
+				bplst.after or Result
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				Result := bp.is_disabled and bp.is_valid
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -223,17 +242,26 @@ feature -- Status
 
 feature -- changing all breakpoints
 
+	wipe_out_all_breakpoints is
+			-- Clear breakpoints list
+		do
+			breakpoints.wipe_out
+		end
+
 	remove_all_breakpoints is
 			-- Remove all breakpoints which are currently set (enabled/disabled)
+		local
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				breakpoints.item_for_iteration.discard
-				breakpoints.forth
+				bplst.item_for_iteration.discard
+				bplst.forth
 			end
 		end
 
@@ -241,18 +269,20 @@ feature -- changing all breakpoints
 			-- enable all breakpoints which are currently set and disabled
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 			from
+				bplst := breakpoints
 				breakpoints.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.is_disabled then
 					bp.enable
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -260,57 +290,60 @@ feature -- changing all breakpoints
 			-- disable all breakpoints which are currently set and enabled
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.is_enabled then
 					bp.disable
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
 feature -- changing breakpoints for a feature
 
-	add_breakpoints_for_feature (feat: E_FEATURE; a_list: LIST [INTEGER]) is
-			-- Add all the breakpoints `a_list' for feature `feat'.
-		local
-			id: INTEGER
-			bp: BREAKPOINT
-		do
-			error_in_bkpts := False
-			from
-				a_list.start
-			until
-				a_list.after
-			loop
-				id := a_list.item
+--	add_breakpoints_for_feature (feat: E_FEATURE; a_list: LIST [INTEGER]) is
+--			-- Add all the breakpoints `a_list' for feature `feat'.
+--		local
+--			id: INTEGER
+--			bp: BREAKPOINT
+--		do
+--			error_in_bkpts := False
+--			from
+--				a_list.start
+--			until
+--				a_list.after
+--			loop
+--				id := a_list.item
 
-				-- create breakpoint
-				-- by default, at creation the breakpoint is set and enabled
-				create bp.make (feat, id)
+--				-- create breakpoint
+--				-- by default, at creation the breakpoint is set and enabled
+--				create bp.make (feat, id)
 
-				-- add the breakpoint. if it was already in the hashtable, we replace
-				-- the old version with the new one, and we send it again to the application
-				if not bp.is_corrupted then
-					breakpoints.add_breakpoint (bp)
-				else
-					error_in_bkpts := True
-				end
-				a_list.forth
-			end
-		end
+--				-- add the breakpoint. if it was already in the hashtable, we replace
+--				-- the old version with the new one, and we send it again to the application
+--				if not bp.is_corrupted then
+--					breakpoints.add_breakpoint (bp)
+--				else
+--					error_in_bkpts := True
+--				end
+--				a_list.forth
+--			end
+--		end
 
 	remove_breakpoints_in_feature (f: E_FEATURE) is
 			-- remove all breakpoints set for feature 'f'
 		local
 			f_body_index: INTEGER
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
@@ -320,15 +353,16 @@ feature -- changing breakpoints for a feature
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
+					bp := bplst.item_for_iteration
 					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.discard
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			else
 				error_in_bkpts := True
@@ -343,6 +377,7 @@ feature -- changing breakpoints for a feature
 		local
 			f_body_index: INTEGER
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
@@ -352,15 +387,16 @@ feature -- changing breakpoints for a feature
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
+					bp := bplst.item_for_iteration
 					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.disable
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			else
 				error_in_bkpts := True
@@ -375,6 +411,7 @@ feature -- changing breakpoints for a feature
 		local
 			f_body_index: INTEGER
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
@@ -384,15 +421,16 @@ feature -- changing breakpoints for a feature
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
+					bp := bplst.item_for_iteration
 					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.enable
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			else
 				error_in_bkpts := True
@@ -460,6 +498,7 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -471,15 +510,16 @@ feature -- getting breakpoints status for a feature
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint set in this feature
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
-					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
-						Result.extend(bp.breakable_line_number)
+					bp := bplst.item_for_iteration
+					if bp.body_index.is_equal (f_body_index) and then bp.is_set then
+						Result.extend (bp.breakable_line_number)
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			end
 		ensure
@@ -488,15 +528,16 @@ feature -- getting breakpoints status for a feature
 			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
-				if bp.routine.is_equal(f) then
+				bp := bplst.item_for_iteration
+				if bp.routine.is_equal (f) then
 					bp.discard
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 				-- remove unused breakpoints
 			update
@@ -511,6 +552,7 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -522,15 +564,16 @@ feature -- getting breakpoints status for a feature
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint disabled in this feature
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
-					if bp.body_index.is_equal(f_body_index) and then bp.is_disabled then
-						Result.extend(bp.breakable_line_number)
+					bp := bplst.item_for_iteration
+					if bp.body_index.is_equal (f_body_index) and then bp.is_disabled then
+						Result.extend (bp.breakable_line_number)
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			end
 		ensure
@@ -539,15 +582,16 @@ feature -- getting breakpoints status for a feature
 			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
-				if bp.is_corrupted or else bp.routine.is_equal(f) then
+				bp := bplst.item_for_iteration
+				if bp.is_corrupted or else bp.routine.is_equal (f) then
 					bp.discard
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 				-- remove unused breakpoints
 			update
@@ -562,6 +606,7 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -573,15 +618,16 @@ feature -- getting breakpoints status for a feature
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint enabled in this feature
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
-					if bp.body_index.is_equal(f_body_index) and then bp.is_enabled then
-						Result.extend(bp.breakable_line_number)
+					bp := bplst.item_for_iteration
+					if bp.body_index.is_equal (f_body_index) and then bp.is_enabled then
+						Result.extend (bp.breakable_line_number)
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			end
 		ensure
@@ -590,15 +636,16 @@ feature -- getting breakpoints status for a feature
 			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.is_corrupted or else bp.routine.is_equal(f) then
 					bp.discard
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 				-- remove unused breakpoints
 			update
@@ -613,20 +660,22 @@ feature -- changing breakpoints for a class
 			-- remove all breakpoints set for class 'c'
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for class 'c'
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
-				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
+				bp := bplst.item_for_iteration
+				if bp.routine.associated_class.is_equal (c) and then bp.is_set then
 					bp.discard
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -634,20 +683,22 @@ feature -- changing breakpoints for a class
 			-- disable all breakpoints set for feature 'f'
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for class 'c'
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
 					bp.disable
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -655,20 +706,22 @@ feature -- changing breakpoints for a class
 			-- enable all breakpoints set for feature 'f'
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for class 'c'
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
-				if bp.routine.associated_class.is_equal(c) and then bp.is_set then
+				bp := bplst.item_for_iteration
+				if bp.routine.associated_class.is_equal (c) and then bp.is_set then
 					bp.enable
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		end
 
@@ -993,6 +1046,8 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 
 	resynchronize_breakpoints is
 			-- Resychronize the breakpoints after a compilation.
+		local
+			bplst: like breakpoints
 		do
 			error_in_bkpts := False
 				-- Remove useless breakpoints.
@@ -1000,12 +1055,13 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 
 				-- update every breakpoint
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				synchronize_breakpoint (breakpoints.item_for_iteration)
-				breakpoints.forth
+				synchronize_breakpoint (bplst.item_for_iteration)
+				bplst.forth
 			end
 
 				-- Remove useless breakpoints (the synchronization
@@ -1082,32 +1138,11 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 			retry
 		end
 
-	feature_bp_list (list: LINKED_LIST [E_FEATURE]): FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]] is
-			-- Create a list with features and breakpoints
-		local
-			f: E_FEATURE;
-			cell2: CELL2 [E_FEATURE, LIST [INTEGER]]
-		do
-			error_in_bkpts := False
-			from
-				create Result.make_filled (list.count)
-				Result.start;
-				list.start
-			until
-				list.after
-			loop
-				f := list.item;
-				create cell2.make (f, breakpoints_set_for (f));
-				Result.replace (cell2);
-				Result.forth;
-				list.forth
-			end
-		end
-
 	features_with_breakpoint_set: LIST [E_FEATURE] is
 			-- list of all feature with a breakpoint set (enabled or disabled)
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
 			known_features: ARRAYED_LIST [INTEGER]
 			body_index: INTEGER
 		do
@@ -1116,11 +1151,12 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 			create known_features.make(5)
 
 			from
-				breakpoints.start
+				bplst := breakpoints
+				bplst.start
 			until
-				breakpoints.after
+				bplst.after
 			loop
-				bp := breakpoints.item_for_iteration
+				bp := bplst.item_for_iteration
 				if bp.is_set and not bp.is_corrupted and then bp.is_valid then
 					body_index := bp.body_index
 						-- have we already added the feature corresponding to this breakpoint ?
@@ -1131,7 +1167,7 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 						Result.extend (bp.routine)
 					end
 				end
-				breakpoints.forth
+				bplst.forth
 			end
 		ensure
 			non_void_result: Result /= Void

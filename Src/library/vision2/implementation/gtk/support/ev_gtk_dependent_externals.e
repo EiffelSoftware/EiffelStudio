@@ -10,6 +10,11 @@ class
 
 feature -- Externals
 
+	frozen gdk_window_set_accept_focus (a_window: POINTER; a_accept: BOOLEAN)
+		external
+			"C signature (GdkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_window_get_state (a_window: POINTER): INTEGER
 		external
 			"C signature (GdkWindow*): GdkWindowState use <gtk/gtk.h>"

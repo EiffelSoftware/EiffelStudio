@@ -31,6 +31,12 @@ feature -- Access
 
 feature -- Change
 
+	toggle_is_checked is
+			-- Toggel checkbox status
+		do
+			implementation.toggle_is_checked
+		end
+
 	set_is_checked (b: BOOLEAN) is
 			-- Set checkbox status
 		do

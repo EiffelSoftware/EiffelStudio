@@ -52,10 +52,10 @@ feature {NONE} -- Initialization
 			grid.enable_single_row_selection
 			grid_container.extend (grid)
 			grid.set_column_count_to (4)
-			grid.column (1).set_title (l_name)
-			grid.column (2).set_title (l_type)
-			grid.column (3).set_title (l_status)
-			grid.column (4).set_title (l_literal_value)
+			grid.column (col_name_index).set_title (l_name)
+			grid.column (col_type_index).set_title (l_type)
+			grid.column (col_status_index).set_title (l_status)
+			grid.column (col_value_index).set_title (l_literal_value)
 			enable_tree_view
 
 				-- Agents
@@ -75,6 +75,7 @@ feature {NONE} -- Initialization
 			display_update_agent := agent on_preference_changed_externally
 			view_toggle_button.select_actions.extend (agent toggle_view)
 		end
+
 
 	user_initialization is
 			-- Called by `initialize'.
@@ -257,7 +258,7 @@ feature {NONE} -- Events
 				a_item.set_text (a_item.text + " (" + auto_value + ")")
 			end
 
-			l_gitem := a_item.row.item (4)
+			l_gitem := a_item.row.item (col_value_index)
 			if l_gitem /= Void then
 				l_prefwidget ?= l_gitem.data
 				if l_prefwidget /= Void then
@@ -320,10 +321,10 @@ feature {NONE} -- Events
 		do
 			if a_item /= Void then
 				l_col_index := a_item.column.index
-				if l_col_index = 1 or l_col_index = 2 or l_col_index = 3 then
+				if l_col_index = col_name_index or l_col_index = col_type_index or l_col_index = col_status_index then
 					l_bool_preference ?= a_item.row.data
 					if l_bool_preference /= Void then
-						l_combo_widget ?= a_item.row.item (4)
+						l_combo_widget ?= a_item.row.item (col_value_index)
 						if l_combo_widget /= Void then
 							l_combo_widget.set_text ((not l_bool_preference.value).out)
 							l_combo_widget.deactivate_actions.call ([])
@@ -338,17 +339,20 @@ feature {NONE} -- Events
 		local
 			l_pref: PREFERENCE
 			l_preference_widget: PREFERENCE_WIDGET
+			l_boolean_widget: EV_GRID_CHECKABLE_LABEL_ITEM
 			l_row: EV_GRID_ROW
 		do
 			if k /= Void then
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+				inspect
+					k.code
+				when {EV_KEY_CONSTANTS}.key_enter then
 					if not grid.selected_rows.is_empty then
 						l_row :=  grid.selected_rows.first
 						l_pref ?= l_row.data
 						if l_pref /= Void then
-							check l_row.count >= 4 end
-							if l_row.count >= 4 and then l_row.item (4) /= Void then
-								l_preference_widget ?= l_row.item (4).data
+							check l_row.count >= col_value_index end
+							if l_row.count >= col_value_index and then l_row.item (col_value_index) /= Void then
+								l_preference_widget ?= l_row.item (col_value_index).data
 								if l_preference_widget /= Void then
 									l_preference_widget.show
 								end
@@ -361,6 +365,17 @@ feature {NONE} -- Events
 							end
 						end
 					end
+				when {EV_KEY_CONSTANTS}.key_space then
+					if not grid.selected_rows.is_empty then
+						l_row :=  grid.selected_rows.first
+						if l_row.count >= col_value_index and then l_row.item (col_value_index) /= Void then
+							l_boolean_widget ?= l_row.item (col_value_index)
+							if l_boolean_widget /= Void then
+								l_boolean_widget.toggle_is_checked
+							end
+						end
+					end
+				else
 				end
 			end
 		end
@@ -381,10 +396,20 @@ feature {NONE} -- Events
 			-- Dialog was resized
 		local
 			l_width: INTEGER
+			cnb, c: INTEGER
 		do
-			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)
-			if not resized_columns_list.item (4) then
-				grid.column (4).set_width (l_width.max (0))
+			cnb := grid.column_count
+			l_width := grid.width
+			from
+				c := 1
+			until
+				c < cnb
+			loop
+				l_width := l_width - grid.column (c).width
+				c := c + 1
+			end
+			if not resized_columns_list.item (cnb) then
+				grid.column (cnb).set_width (l_width.max (0))
 			end
 		end
 
@@ -719,10 +744,10 @@ feature {NONE} -- Implementation
 			initialize_row_for_preference (l_row, a_pref)
 
 				-- Add Items
-			l_row.set_item (1, preference_name_column (a_pref))
-			l_row.set_item (2, preference_type_column (a_pref))
-			l_row.set_item (3, preference_status_column (a_pref))
-			l_row.set_item (4, preference_value_column (a_pref))
+			l_row.set_item (col_name_index, preference_name_column (a_pref))
+			l_row.set_item (col_type_index, preference_type_column (a_pref))
+			l_row.set_item (col_status_index, preference_status_column (a_pref))
+			l_row.set_item (col_value_index, preference_value_column (a_pref))
 		end
 
 	node_expanded (a_row: EV_GRID_ROW) is
@@ -854,27 +879,27 @@ feature {NONE} -- Implementation
 			l_preference: PREFERENCE
 			w: INTEGER
 			nb: INTEGER
+			cnb, c: INTEGER
 		do
 			nb := grid.row_count
 			if nb > 0 then
 				grid.row (1).enable_select
-				l_column := grid.column (1)
-				if not resized_columns_list.item (1) then
-					w := l_column.required_width_of_item_span (1, nb)
-					l_column.set_width (w + column_border_space)
+				from
+					cnb := grid.column_count
+					c := 1
+				until
+					c < cnb --| do no process last column
+				loop
+					l_column := grid.column (c)
+					if not resized_columns_list.item (c) then
+						w := l_column.required_width_of_item_span (1, nb)
+						l_column.set_width (w + column_border_space)
+					end
+					c := c + 1
 				end
-				l_column := grid.column (2)
-				if not resized_columns_list.item (2) then
-					w := l_column.required_width_of_item_span (1, nb)
-					l_column.set_width (w + column_border_space)
-				end
-				l_column := grid.column (3)
-				if not resized_columns_list.item (3) then
-					w := l_column.required_width_of_item_span (1, nb)
-					l_column.set_width (w + column_border_space)
-				end
+
 				on_window_resize
-				l_preference ?= grid.row (1).data
+				l_preference ?= grid.row (col_name_index).data
 				if l_preference /= Void then
 					show_preference_description (l_preference)
 				end
@@ -1224,13 +1249,13 @@ feature {NONE} -- Filtering
 
 			if l_preference /= Void then
 				inspect c
-				when 1 then
+				when col_name_index then
 					Result := preference_name_column (l_preference)
-				when 2 then
+				when col_type_index then
 					Result := preference_type_column (l_preference)
-				when 3 then
+				when col_status_index then
 					Result := preference_status_column (l_preference)
-				when 4 then
+				when col_value_index then
 					Result := preference_value_column (l_preference)
 				else
 					-- Should not get here.
@@ -1318,6 +1343,18 @@ feature {NONE} -- Private attributes
 
 	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
 			-- Agent to be called when preference is changed outside	
+
+	col_name_index: INTEGER is 1
+			-- column index for name.
+
+	col_type_index: INTEGER is 2
+			-- column index for type.
+
+	col_status_index: INTEGER is 3
+			-- column index for status.
+
+	col_value_index: INTEGER is 4
+			-- column index for value.
 
 	resized_columns_list: ARRAY [BOOLEAN] is
 			-- List of booleans for each column indicating if it has been user resizedat all.

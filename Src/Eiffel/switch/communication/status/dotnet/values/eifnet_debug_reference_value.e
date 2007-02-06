@@ -149,7 +149,11 @@ feature -- Access
 						if Result = Void then
 								--| This means we are dealing with an external type (dotnet)
 							internal_dynamic_class := icd_value_info.value_class_c
-							Result := internal_dynamic_class.types.first
+							if internal_dynamic_class /= Void then
+								Result := internal_dynamic_class.types.first
+							else
+								fixme ("Debugger: dynamic class is Void, but should not ... dotnet")
+							end
 							is_external_type := True
 						end
 					else

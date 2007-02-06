@@ -166,6 +166,10 @@ feature -- Command
 			floating_tool_bar.extend (Current)
 
 			prune (tail_indicator)
+
+			-- We have to compute minimum width, because the tail tool bar option button is removed.
+			compute_minmum_size
+
 			floating_tool_bar.set_position (a_screen_x, a_screen_y)
 			if assistant.last_state.floating_group_info /= Void then
 				floating_tool_bar.assistant.position_groups (assistant.last_state.floating_group_info)

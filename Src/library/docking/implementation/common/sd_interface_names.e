@@ -145,7 +145,7 @@ feature -- Tool bar customize dialog strings
 	ok: STRING_GENERAL is
 			-- Ok button text.
 		do
-			Result := "Ok"
+			Result := "OK"
 		end
 
 	cancel: STRING_GENERAL is

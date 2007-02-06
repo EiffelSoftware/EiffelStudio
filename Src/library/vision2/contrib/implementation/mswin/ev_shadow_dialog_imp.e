@@ -25,9 +25,14 @@ feature {NONE} -- Implementation
 
 	class_style: INTEGER is
 			-- Redefine
+		local
+			l_win: WEL_WINDOWS_VERSION
 		do
 			Result := Precursor {EV_UNTITLED_DIALOG_IMP}
-			Result := Result | cs_dropshadow
+			create l_win
+			if l_win.is_windows_xp_compatible then
+				Result := Result | cs_dropshadow
+			end
 		end
 
 	new_class_name: STRING_32 is

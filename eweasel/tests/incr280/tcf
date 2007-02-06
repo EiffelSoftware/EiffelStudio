@@ -1,0 +1,22 @@
+test_name console-setting-change
+test_description Changing setting of application from "window" to "console" should not cause compiler crash.
+
+copy_raw	test.e $CLUSTER test.e
+
+define CONSOLE_APPLICATION "False"
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+define CONSOLE_APPLICATION "True"
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_c
+execute_result	ok
+compare		exec_output_c output
+
+test_end

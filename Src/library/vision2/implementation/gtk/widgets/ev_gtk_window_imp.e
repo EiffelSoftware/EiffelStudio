@@ -133,7 +133,6 @@ feature {NONE} -- Implementation
 			-- Set vertical offset to parent to `a_y'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x, a_y)
-			configure_event_pending := True
 		end
 
 	configure_event_pending: BOOLEAN

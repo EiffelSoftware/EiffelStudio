@@ -38,6 +38,7 @@ feature {NONE}  -- Initlization
 		do
 			default_create
 			disable_user_resize
+			disable_border
 			create internal_vertical_box
 			create l_shared
 			internal_vertical_box.set_border_width (l_shared.border_width)
@@ -52,6 +53,9 @@ feature {NONE}  -- Initlization
 			internal_tool_bar.compute_minmum_size
 
 			parent_tool_bar := a_tool_bar
+
+			-- If we don't call this, the height will be 2 pixels less on Windows.
+			set_height (item.minimum_height)
 		ensure
 			set: parent_tool_bar = a_tool_bar
 		end

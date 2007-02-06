@@ -57,6 +57,12 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
 			checked_changed_actions.call ([interface])
 		end
 
+	toggle_is_checked is
+			-- Toggle selected status
+		do
+			set_is_checked (not is_checked)
+		end
+
 feature {EV_GRID_DRAWER_I} -- Implementation
 
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
@@ -246,7 +252,7 @@ feature {NONE} -- Implementation
 		do
 			if a_but = 1 then
 				if a_x <= check_figure_size then
-					set_is_checked (not is_checked)
+					toggle_is_checked
 				end
 			end
 		end

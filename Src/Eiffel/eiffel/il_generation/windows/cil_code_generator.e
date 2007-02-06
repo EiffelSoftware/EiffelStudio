@@ -3687,7 +3687,7 @@ feature -- IL Generation
 						if l_cur_sig.item (i) /= l_inh_sig.item (i) then
 							l_type_i := argument_actual_type (l_args.item.type_i)
 							if l_type_i.is_basic then
-								l_parent_arg_type_i := argument_actual_type_in (cur_feat.arguments [i].type_i, parent_type)
+								l_parent_arg_type_i := argument_actual_type_in (inh_feat.arguments [i].type_i, parent_type)
 									-- Do nothing if a TYPED_POINTER derivation is being reattached to another TYPED_POINTER derivation.
 								if not l_parent_arg_type_i.is_basic then
 									generate_load_address (l_type_i)
@@ -4465,7 +4465,7 @@ feature -- Variables access
 	put_type_instance (a_type: TYPE_I) is
 			-- Put instance of System.Type corresponding to `a_type' on stack.
 		do
-			put_type_token (a_type.static_type_id)
+			put_type_token (a_type.external_id)
 			internal_generate_external_call (current_module.mscorlib_token, 0,
 				system_type_class_name, "GetTypeFromHandle",
 				static_type, << type_handle_class_name >>,

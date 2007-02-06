@@ -49,6 +49,12 @@ inherit
 
 	SHARED_FLAGS
 
+	SYSTEM_CONSTANTS
+
+	SHARED_CODE_FILES
+
+	SHARED_GENERATION
+
 create
 	make
 
@@ -123,16 +129,16 @@ feature{NONE} -- Initialization
 			w_code_btn.set_text (interface_names.e_w_code)
 			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
-			w_code_btn.set_tooltip (interface_names.e_go_to_w_code_dir)
+			w_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_w_code_dir, interface_names.e_open_c_file))
 			w_code_btn.pointer_button_press_actions.extend (agent on_open_w_code_in_file_browser)
-			w_code_btn.drop_actions.extend (agent on_pebble_drop)
+			w_code_btn.drop_actions.extend (agent on_open_c_file (?, True))
 
 			f_code_btn.set_text (interface_names.e_f_code)
 			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
 			f_code_btn.pointer_button_press_actions.extend (agent on_open_f_code_in_file_browser)
-			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)
-			f_code_btn.drop_actions.extend (agent on_pebble_drop)
+			f_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_f_code_dir, interface_names.e_open_c_file))
+			f_code_btn.drop_actions.extend (agent on_open_c_file (?, False))
 
 			project_dir_btn.set_text (interface_names.e_open_project)
 			project_dir_btn.set_pixmap (pixmaps.icon_pixmaps.document_eiffel_project_icon)
@@ -301,13 +307,13 @@ feature -- Action
 	on_go_to_w_code is
 			-- Go to W_code directory of current Eiffel system.		
 		do
-			go_to_dir (project_location.workbench_path)
+			go_to_dir (file_location (True))
 		end
 
 	on_go_to_f_code is
 			-- Go to F_code directory of current Eiffel system.
 		do
-			go_to_dir (project_location.final_path)
+			go_to_dir (file_location (False))
 		end
 
 	on_open_selected_text_in_external_editor is
@@ -385,9 +391,12 @@ feature -- Action
 	on_go_to_project_dir is
 			-- Go to project directory of current Eiffel system.
 		do
-			go_to_dir (project_location.path)
+			if workbench.system_defined then
+				go_to_dir (project_location.path)
+			else
+				show_no_system_defined_dlg
+			end
 		end
-
 
 	on_open_project_dir_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Action to be performed when open project in file browser
@@ -420,6 +429,38 @@ feature -- Action
 			end
 			if l_path /= Void then
 				open_dir_in_file_browser (l_path)
+			end
+		end
+
+	on_open_c_file (a_pebble: ANY; a_workbench: BOOLEAN) is
+			-- Action to be performed to open generated c file for stone `a_pebble'.
+			-- `a_workbench' is True means workbench mode, otherwise finalized mode.
+		local
+			l_class_stone: CLASSC_STONE
+			l_feature_stone: FEATURE_STONE
+			l_mapper: EB_EIFFEL_C_FUNCTION_MAPPER
+			l_table: HASH_TABLE [CLASS_TYPE, STRING]
+		do
+			if workbench.system_defined then
+				l_feature_stone ?= a_pebble
+				if l_feature_stone /= Void then
+					create l_mapper.create_with_feature (l_feature_stone.e_feature, a_workbench)
+				else
+					l_class_stone ?= a_pebble
+					if l_class_stone /= Void then
+						create l_mapper.create_with_class (l_class_stone.e_class, a_workbench)
+					end
+				end
+				if l_mapper /= Void then
+					l_table := l_mapper.valid_c_file_table
+					if l_table.count = 1 then
+						l_table.start
+						open_c_file_in_editor (l_table.key_for_iteration, l_mapper.line_number (l_table.key_for_iteration))
+					elseif l_table.count > 1 then
+						c_file_dialog.set_mapper (l_mapper)
+						c_file_dialog.show_modal_to_window (develop_window.window)
+					end
+				end
 			end
 		end
 
@@ -488,13 +529,10 @@ feature{NONE}	-- Implementation
 
 	go_to_dir (a_dir: STRING) is
 			-- Open a console and go to directory `a_dir'.
-		require
-			a_dir_not_void: a_dir /= Void
-			a_dir_not_empty: not a_dir.is_empty
 		local
 			prc_launcher: EB_PROCESS_LAUNCHER
 		do
-			if workbench.system_defined then
+			if a_dir /= Void and then not a_dir.is_empty then
 				prc_launcher := external_launcher
 				prc_launcher.open_console_in_dir (a_dir)
 			else
@@ -656,6 +694,21 @@ feature{NONE}	-- Implementation
 			message_set: message_label.text.is_equal (a_msg)
 		end
 
+	open_c_file_in_editor (a_file_name: STRING; a_line_number: INTEGER) is
+			-- Open `a_file_name' in external editor and scroll to line `a_line_number'.
+		local
+			l_shell_command: STRING
+			req: COMMAND_EXECUTOR
+		do
+			l_shell_command := preferences.misc_data.external_editor_command.twin
+			if l_shell_command /= Void and then not l_shell_command.is_empty then
+				l_shell_command.replace_substring_all ("$target", a_file_name)
+				l_shell_command.replace_substring_all ("$line", a_line_number.out)
+				create req
+				req.execute (l_shell_command)
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
@@ -725,6 +778,48 @@ feature{NONE} -- Implementation
 
 	message_label: EV_LABEL;
 			-- Status message label
+
+	file_location (a_bench: BOOLEAN): STRING is
+			-- Workbench location of Current project if `a_bench' is True,
+			-- otherwise finalized location.
+			-- Void if no project has been initialized.
+		do
+			if workbench.system_defined then
+				if a_bench then
+					Result := project_location.workbench_path
+				else
+					Result := project_location.final_path
+				end
+			end
+		end
+
+	c_file_dialog: EB_C_FUNCTION_LIST_DIALOG is
+			-- Dialog to choose among different class versions
+		do
+			if c_file_dialog_internal = Void then
+				create c_file_dialog_internal
+			end
+			Result := c_file_dialog_internal
+			Result.set_open_file_agent (agent open_c_file_in_editor)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	c_file_dialog_internal: like c_file_dialog
+			-- Implementation of `c_file_dialog'
+
+	concatenated_tooltip (a_first, a_second: STRING_GENERAL): STRING_GENERAL is
+			-- Tooltip which is `a_first' concatenated with `a_second' with a new-line character in between
+		require
+			a_first_attached: a_first /= Void
+			a_second_attached: a_second /= Void
+		do
+			Result := a_first.twin
+			Result.append ("%N")
+			Result.append (a_second)
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature {NONE} -- Recycle
 

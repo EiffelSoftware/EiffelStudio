@@ -99,6 +99,7 @@ feature -- Command
 			-- Destroy Current if no zone in.
 		local
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
+			l_env: EV_ENVIRONMENT
 		do
 			if not is_destroyed then
 				if internal_inner_container.readable and then all_zones.count > 0 then
@@ -128,7 +129,11 @@ feature -- Command
 					-- No widget in `Current'.
 					internal_floating_state.docking_manager.command.prune_inner_container (internal_inner_container)
 					internal_floating_state.docking_manager.zones.zones.prune (Current)
-					destroy
+
+					-- We don't call `destroy' directly here, because if window destroy and creating very fast,
+					-- Windows will not clear window area after destroy a window.
+					create l_env
+					l_env.application.do_once_on_idle (agent destroy)
 				end
 			end
 		end

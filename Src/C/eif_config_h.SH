@@ -706,6 +706,7 @@ $inttypes_include
 #define EIF_T3D		8
 #define EIF_HPPA	9
 #define EIF_MIPS	10
+#define EIF_MIPS_64	11
 
 /* Define EIF_ARCH value */
 #define EIF_ARCH $eif_arch

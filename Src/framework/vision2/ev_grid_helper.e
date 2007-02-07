@@ -225,6 +225,26 @@ feature -- Access
 			a_row.subrow_count_recursive = 0
 		end
 
+	grid_remove_and_clear_subrows_from_until (a_row: EV_GRID_ROW; a_until_row: EV_GRID_ROW) is
+			-- Remove all subrows of `a_row' and clear the subrows
+			-- as much as possible
+			-- but do not clear `a_row'
+		require
+			a_row /= Void
+			a_until_row.parent_row = a_row
+		local
+			g: EV_GRID
+		do
+			g := a_row.parent
+			if g /= Void then
+				if a_row.subrow_count > 0 then
+					g.remove_rows (a_row.index + 1, a_until_row.index - 1)
+				end
+			end
+		ensure
+			a_row.subrow (1) = a_until_row
+		end
+
 	grid_remove_and_clear_all_rows (g: EV_GRID) is
 		require
 			g /= Void

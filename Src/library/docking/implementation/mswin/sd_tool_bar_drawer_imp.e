@@ -371,13 +371,18 @@ feature {NONE} -- Implementation
 			l_forground_color: EV_COLOR_IMP
 			l_button: SD_TOOL_BAR_BUTTON
 			l_font_button: SD_TOOL_BAR_FONT_BUTTON
+			l_width_button: SD_TOOL_BAR_WIDTH_BUTTON
 			l_font_imp: EV_FONT_IMP
 		do
 			l_button ?= a_arguments.item
 			l_font_button ?= a_arguments.item
-
+			l_width_button ?= a_arguments.item
 			if l_button /= Void and then l_button.text /= Void and l_button.tool_bar /= Void then
-				l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline | {WEL_DT_CONSTANTS}.dt_word_ellipsis
+				if l_width_button /= Void then
+					l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline | {WEL_DT_CONSTANTS}.dt_word_ellipsis
+				else
+					l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline
+				end
 				l_text_vision_rect := l_button.text_rectangle
 				create l_text_rect.make (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.right, l_text_vision_rect.bottom)
 

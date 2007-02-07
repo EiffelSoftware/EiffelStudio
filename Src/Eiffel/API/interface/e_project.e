@@ -550,8 +550,11 @@ feature -- Update
 				set_error_status (Ok_status)
 				is_compiling_ref.set_item (True)
 				Comp_system.finalize_system (keep_assertions)
-					-- False because we are not precompiling here.
-				Workbench.save_project (False)
+				if successful then
+						-- No point on trying to save a cancelled (i.e. non successful compilation).
+						-- False because we are not precompiling here.
+					Workbench.save_project (False)
+				end
 				is_compiling_ref.set_item (False)
 				Compilation_modes.reset_modes
 			end

@@ -141,6 +141,7 @@ feature{NONE} -- Implementation
 			l_shared: SD_SHARED
 			l_icons: EB_SD_ICONS
 		do
+				-- Set icons for docking library.
 			create l_shared
 			create l_icons.make
 			l_shared.set_icons (l_icons)

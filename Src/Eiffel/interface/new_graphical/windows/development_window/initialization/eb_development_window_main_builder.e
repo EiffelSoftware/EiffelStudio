@@ -571,8 +571,18 @@ feature -- Command
 
 			l_docking_manager: SD_DOCKING_MANAGER
 			l_editors_manager: EB_EDITORS_MANAGER
+			l_names: EB_DOCKING_NAMES
+			l_sd_shared: SD_SHARED
+
 		do
 			develop_window.lock_update
+
+				-- Set interface names for docking library.
+			create l_sd_shared
+			create l_names
+			l_sd_shared.set_interface_names (l_names)
+
+				-- Initialize docking manager.
 			create l_docking_manager.make (develop_window.panel, develop_window.window)
 			develop_window.set_docking_manager (l_docking_manager)
 			if {PLATFORM}.is_windows then

@@ -1,180 +1,156 @@
 indexing
-	description: "[
-						All interface names used by Smart Docking library.
-						Client programmers can inherit this class to provide his own names.
-						Call set_interface_names from SD_SHARED to set singleton.
-																							]"
+	description: "Default interface names used by Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
+	SD_DEFAULT_INTERFACE_NAMES
+
+inherit
 	SD_INTERFACE_NAMES
 
 feature -- Enumeration
 
 	Editor_place_holder_content_name: STRING_GENERAL is
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "docking manager editor place holder"
 		end
 
 	Zone_navigation_left_column_name: STRING_GENERAL is
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Tools"
 		end
 
 	Zone_navigation_right_column_name: STRING_GENERAL is
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Targets"
 		end
 
 	Tooltip_mini_toolbar_stick: STRING_GENERAL is
 			-- Tooltip for mini toolbar pin buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Auto Hide"
 		end
 
 	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Auto Hide"
 		end
 
 	Tooltip_mini_toolbar_maximize: STRING_GENERAL is
 			-- Tooltip for mini toolbar maximize buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result :=  "Maximize"
 		end
 
 	Tooltip_mini_toolbar_restore: STRING_GENERAL is
 			-- Tooltip for mini toolbar restore buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Restore"
 		end
 
 	Tooltip_mini_toolbar_minimize: STRING_GENERAL is
 			-- Tooltip for mini toolbar minimize buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result :=  "Minimize"
 		end
 
 	Tooltip_mini_toolbar_close: STRING_GENERAL is
 			-- Tooltip for mini toolbar close buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Close"
 		end
 
 	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tool bar indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Show Mini Toolbar"
 		end
 
 	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tab indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Show List"
 		end
 
 	Tooltip_toolbar_tail_indicator: STRING_GENERAL is
 			-- Tooltip for tool bar tail indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Toolbar Options"
 		end
 
 	Tooltip_toolbar_floating_close: STRING_GENERAL is
 			-- Tooltip for tool bar close button.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Close"
 		end
 
 	Tooltip_notebook_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for notebook hidden tab indicator.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Show List"
 		end
 
 feature -- Tool bar customize dialog strings
 
 	tool_bar_customize_title: STRING_GENERAL is
 			-- Tool bar customize dialog title.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Customize Toolbar"
 		end
 
 	available_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Available buttons"
 		end
 
 	displayed_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Displayed buttons"
 		end
 
 	add_button: STRING_GENERAL is
 			-- Tool bar customize dialog add button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Add ->"
 		end
 
 	remove_button: STRING_GENERAL is
 			-- Tool bar customize dialog remove button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "<- Remove"
 		end
 
 	move_button_up: STRING_GENERAL is
 			-- Tool bar customize dialog move button up button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Up"
 		end
 
 	move_button_down: STRING_GENERAL is
 			-- Tool bar customize dialog move button down button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Down"
 		end
 
 	ok: STRING_GENERAL is
 			-- Ok button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "OK"
 		end
 
 	cancel: STRING_GENERAL is
 			-- Cancel button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := "Cancel"
 		end
 
 indexing

@@ -1,186 +1,181 @@
 indexing
-	description: "[
-						All interface names used by Smart Docking library.
-						Client programmers can inherit this class to provide his own names.
-						Call set_interface_names from SD_SHARED to set singleton.
-																							]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Names used in docking library."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SD_INTERFACE_NAMES
+class
+	DOCKING_NAMES
 
-feature -- Enumeration
+inherit
+	SHARED_LOCALE
+
+feature -- Access
 
 	Editor_place_holder_content_name: STRING_GENERAL is
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("docking manager editor place holder")
 		end
 
 	Zone_navigation_left_column_name: STRING_GENERAL is
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Tools")
 		end
 
 	Zone_navigation_right_column_name: STRING_GENERAL is
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Targets")
 		end
 
 	Tooltip_mini_toolbar_stick: STRING_GENERAL is
 			-- Tooltip for mini toolbar pin buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Auto Hide")
 		end
 
 	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Auto Hide")
 		end
 
 	Tooltip_mini_toolbar_maximize: STRING_GENERAL is
 			-- Tooltip for mini toolbar maximize buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result :=  locale.translate ("Maximize")
 		end
 
 	Tooltip_mini_toolbar_restore: STRING_GENERAL is
 			-- Tooltip for mini toolbar restore buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Restore")
 		end
 
 	Tooltip_mini_toolbar_minimize: STRING_GENERAL is
 			-- Tooltip for mini toolbar minimize buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result :=  locale.translate ("Minimize")
 		end
 
 	Tooltip_mini_toolbar_close: STRING_GENERAL is
 			-- Tooltip for mini toolbar close buttons.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Close")
 		end
 
 	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tool bar indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Show Mini Toolbar")
 		end
 
 	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tab indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Show List")
 		end
 
 	Tooltip_toolbar_tail_indicator: STRING_GENERAL is
 			-- Tooltip for tool bar tail indicators.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Toolbar Options")
 		end
 
 	Tooltip_toolbar_floating_close: STRING_GENERAL is
 			-- Tooltip for tool bar close button.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Close")
 		end
 
 	Tooltip_notebook_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for notebook hidden tab indicator.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Show List")
 		end
 
 feature -- Tool bar customize dialog strings
 
 	tool_bar_customize_title: STRING_GENERAL is
 			-- Tool bar customize dialog title.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Customize Toolbar")
 		end
 
 	available_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Available buttons")
 		end
 
 	displayed_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Displayed buttons")
 		end
 
 	add_button: STRING_GENERAL is
 			-- Tool bar customize dialog add button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Add ->")
 		end
 
 	remove_button: STRING_GENERAL is
 			-- Tool bar customize dialog remove button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("<- Remove")
 		end
 
 	move_button_up: STRING_GENERAL is
 			-- Tool bar customize dialog move button up button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Up")
 		end
 
 	move_button_down: STRING_GENERAL is
 			-- Tool bar customize dialog move button down button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Down")
 		end
 
 	ok: STRING_GENERAL is
 			-- Ok button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("OK")
 		end
 
 	cancel: STRING_GENERAL is
 			-- Cancel button text.
-		deferred
-		ensure
-			Result_not_void: Result /= Void
+		do
+			Result := locale.translate ("Cancel")
 		end
 
 indexing
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
 	source: "[
 			 Eiffel Software
 			 356 Storke Road, Goleta, CA 93117 USA
@@ -188,10 +183,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

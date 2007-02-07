@@ -17,7 +17,7 @@ inherit
 			{NONE}
 				arrayed_list_make
 			{EV_GRID_ARRAYED_LIST, EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
-				area
+				area, subarray
 		redefine
 			grow,
 			default_create

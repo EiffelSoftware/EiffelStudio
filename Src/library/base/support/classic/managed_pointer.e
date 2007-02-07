@@ -746,7 +746,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_64_le (pos)
 		end
 
-	put_real_32_le (v: REAL; pos: INTEGER_32)
+	put_real_32_le (v: REAL; pos: INTEGER) is
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -763,7 +763,7 @@ feature -- Element change: Little-endian format
 			inserted: v = read_real_32_le (pos)
 		end
 
-	put_real_64_le (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_le (v: DOUBLE; pos: INTEGER) is
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1015,7 +1015,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
-	put_real_32_be (v: REAL; pos: INTEGER_32)
+	put_real_32_be (v: REAL; pos: INTEGER) is
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1032,7 +1032,7 @@ feature -- Element change: Big-endian format
 			inserted: v = read_real_32_be (pos)
 		end
 
-	put_real_64_be (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_be (v: DOUBLE; pos: INTEGER) is
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0

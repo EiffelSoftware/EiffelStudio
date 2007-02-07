@@ -163,7 +163,7 @@ feature -- Actions
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			l_shortcut := preferences.editor_data.shortcuts.item ("shortcut_" + i.out)
+			l_shortcut := preferences.external_command_data.shortcuts.item ("shortcut_" + i.out)
 			accelerators.put (create{EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift), i)
 			accelerators.item (i).actions.extend (agent execute_command_at_position (i))
 		end

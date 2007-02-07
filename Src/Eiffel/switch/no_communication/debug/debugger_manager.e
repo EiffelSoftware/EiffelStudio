@@ -20,12 +20,12 @@ feature -- Initialization
 
 feature -- File access
 
-	load_debug_info is
+	load_debugger_data is
 			-- Load debug information (so far only the breakpoints)
 		do
 		end
 
-	save_debug_info is
+	save_debugger_data is
 			-- Save debug information (so far only the breakpoints)
 		do
 		end

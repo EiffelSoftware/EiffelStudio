@@ -110,7 +110,7 @@ feature -- Assembler
 				l_id.set_index (f_name.internal_name.index)
 				create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 			end
-			if target_feature.is_frozen then
+			if l_frozen_keyword /= Void then
 				f_name.set_frozen_keyword (l_frozen_keyword)
 			end
 			create eiffel_list.make (1);

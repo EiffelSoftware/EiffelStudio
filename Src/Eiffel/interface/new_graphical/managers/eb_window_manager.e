@@ -1197,39 +1197,20 @@ feature {NONE} -- Implementation
 	raise_unsaved_action (a_window: EB_WINDOW) is
 			-- Action to be performed on `item' in `raise_non_saved'.
 		local
-			a_textable_window: EB_TEXTABLE_WINDOW
 			a_dev: EB_DEVELOPMENT_WINDOW
 		do
-			a_textable_window ?= a_window
-			if a_textable_window /= Void and then
-			   a_textable_window.text_area.changed
-			then
+			a_dev ?= a_window
+			if a_dev /= Void and then a_dev.changed then
 				a_window.show
-			else
-				a_dev ?= a_window
-				if
-					a_dev /= Void
-				and then
-					a_dev.changed
-				then
-					a_window.show
-				end
 			end
 		end
 
 	save_action (a_window: EB_WINDOW) is
 			-- Action to be performed on `item' in `save_all'.
 		local
-			a_textable_window: EB_TEXTABLE_WINDOW
 			a_dev_window: EB_DEVELOPMENT_WINDOW
 			conv_dll: EB_DYNAMIC_LIB_WINDOW
 		do
-			a_textable_window ?= a_window
-			if a_textable_window /= Void and then
-			   a_textable_window.text_area.changed
-			then
-				a_textable_window.save_text
-			end
 			a_dev_window ?= a_window
 			if a_dev_window /= Void and then
 			   a_dev_window.changed

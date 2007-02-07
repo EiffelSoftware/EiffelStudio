@@ -53,11 +53,6 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a new window.
-		do
-		end
-
 	init_size_and_position is
 			-- Initialize the size and position of the window.
 		do

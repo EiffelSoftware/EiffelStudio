@@ -20,14 +20,11 @@ inherit
 			{EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_ADDRESS_MANAGER}
 				Warning_messages, Interface_names,
 				init_commands, Pixmaps
-			{EB_DEVELOPMENT_WINDOW_DIRECTOR}
-				make
 			{EB_DEVELOPMENT_WINDOW_COMMANDS, EB_TOOL, EB_STONE_CHECKER}
 				Debugger_manager
 			{EB_STONE_FIRST_CHECKER}
 				Ev_application
 		redefine
-			make,
 			refresh,
 			internal_recycle,
 			destroy_imp,

@@ -11,7 +11,6 @@ class
 inherit
 	EB_WINDOW
 		redefine
-			make,
 			refresh,
 			build_file_menu,
 			build_edit_menu,
@@ -50,8 +49,43 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new tool with `man' as manager.
 		do
-			Precursor {EB_WINDOW}
+				-- Vision2 initialization
+			create window
+			window.show_actions.extend (agent window_displayed)
+			init_size_and_position
+			window.close_request_actions.wipe_out
+			window.close_request_actions.put_front (agent destroy)
+			window.set_icon_pixmap (pixmap)
+
+				-- Initialize commands and connect them.
+			init_commands
+
+				-- Build widget system & menus.
+			build_interface
+			build_menus
+
+				-- Set up the minimize title if it's not done
+			if minimized_title = Void or else minimized_title.is_empty then
+				set_minimized_title (title)
+			end
+			create help_engine.make
+
+			window.focus_in_actions.extend (agent window_manager.set_focused_window (Current))
+
+			initialized := True
+
 			create exports.make (10)
+		end
+
+	build_menus is
+			-- Build all menus.
+		do
+				-- Build each menu
+			build_file_menu
+			build_edit_menu
+
+				-- Build the menu bar.
+			build_menu_bar
 		end
 
 	build_interface is

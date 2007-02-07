@@ -35,7 +35,7 @@ feature -- nl_langinfo
 	unix_get_locale_info (a_int: INTEGER): POINTER is
 			--
 		external
-			"C inline use <langinfo.h>, <iconv.h>"
+			"C inline use <eif_langinfo.h>, <iconv.h>"
 		alias
 			"[
 				char *dname;
@@ -58,8 +58,14 @@ feature -- nl_langinfo
 
 					wrptr = res;   /* duplicate pointers because they */
 					inptr = dname; /* get modified by iconv */
-
-					char *charset = nl_langinfo (CODESET);   /*get charset used by current locale */
+					
+					/*get charset used by current locale */
+					#ifdef EIF_OS == EIF_OPENBSD
+						char *charset = nl_langinfo (CODESET);
+					#else
+						char *charset = locale_charset ();
+					#endif
+					
 					cd = iconv_open ("UTF-8", charset);
 					if (cd == (iconv_t)(-1)) {
 							perror("iconv_open");
@@ -118,10 +124,14 @@ feature {NONE} -- Implementation: C externals
 	c_current_codeset: POINTER is
 			-- Current codeset name.
 		external
-			"C inline use <langinfo.h>"
+			"C inline use <eif_langinfo.h>"
 		alias
 			"[
-				return nl_langinfo (CODESET);
+				#ifdef EIF_OS == EIF_OPENBSD
+					return nl_langinfo (CODESET);
+				#else
+					return locale_charset ();
+				#endif
 			]"
 		end
 

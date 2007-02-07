@@ -2081,10 +2081,13 @@ feature -- Status report
 			-- Row indexes that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
+		local
+			l_visible_row_count: INTEGER
 		do
 			perform_vertical_computation
-			if visible_indexes_to_row_indexes /= Void then
-				Result := visible_indexes_to_row_indexes.twin
+			l_visible_row_count := visible_row_count
+			if visible_indexes_to_row_indexes /= Void and then l_visible_row_count > 0 then
+				create Result.make_from_array (visible_indexes_to_row_indexes.subarray (1, l_visible_row_count))
 			else
 				create Result.make (0)
 			end
@@ -2728,7 +2731,7 @@ feature -- Measurements
 	visible_row_count: INTEGER is
 			-- Number of visible rows in `Current'. When `is_tree_enabled',
 			-- a number of rows may be within a collapsed parent row, so these
-			-- are ignored
+			-- are ignored.
 		do
 			if uses_row_offsets then
 				Result := computed_visible_row_count

@@ -2379,6 +2379,18 @@ feature -- Measurements
 			result_not_negative: Result >= 0
 		end
 
+	visible_row_count: INTEGER is
+			-- Number of visible rows in `Current'. When `is_tree_enabled',
+			-- a number of rows may be within a collapsed parent row, so these
+			-- are ignored.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.visible_row_count
+		ensure
+			result_not_negative: Result >= 0
+		end
+
 	tree_node_spacing: INTEGER is
 			-- Spacing value used around the expand/collapse node of a
 			-- subrow. For example, to determine the height available for the node image

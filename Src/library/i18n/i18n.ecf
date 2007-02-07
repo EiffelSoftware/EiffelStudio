@@ -16,6 +16,11 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="vweq" enabled="false"/>
 		</option>
+		<external_include location=".\include\eif_langinfo.h">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>

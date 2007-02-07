@@ -139,7 +139,7 @@ feature -- Execution
 							-- However, forbidding it completely may be too frustating.
 						create wd.make_with_text (Warning_messages.w_Debug_not_compiled)
 						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
-						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application)
+						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application (execution_mode))
 						wd.set_default_push_button (wd.button (interface_names.b_cancel))
 						wd.show_modal_to_window (Window_manager.last_focused_window.window)
 					elseif not Debugger_manager.can_debug then
@@ -148,7 +148,7 @@ feature -- Execution
 							-- However, forbidding it completely may be too frustating.
 						create wd.make_with_text (Warning_messages.w_Removed_class_debug)
 						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
-						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application)
+						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application (execution_mode))
 						wd.set_default_push_button (wd.button (interface_names.b_cancel))
 						wd.show_modal_to_window (Window_manager.last_focused_window.window)
 					else

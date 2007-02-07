@@ -55,6 +55,24 @@ feature -- Access
 		-- Text field used to edit `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
+feature -- Action
+
+	deactivate is
+			-- Cleanup from previous call to activate.
+		do
+			if text_field /= Void then
+				text_field.focus_out_actions.wipe_out
+				if not user_cancelled_activation and then (validation_agent = Void or else validation_agent.item ([text_field.text])) then
+					set_text (text_field.text)
+				end
+				Precursor {EV_GRID_LABEL_ITEM}
+				if text_field /= Void then
+					text_field.destroy
+					text_field := Void
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
@@ -134,22 +152,6 @@ feature {NONE} -- Implementation
 			text_field.set_focus
 			user_cancelled_activation := False
 			text_field.key_press_actions.extend (agent handle_key)
-		end
-
-	deactivate is
-			-- Cleanup from previous call to activate.
-		do
-			if text_field /= Void then
-				text_field.focus_out_actions.wipe_out
-				if not user_cancelled_activation and then (validation_agent = Void or else validation_agent.item ([text_field.text])) then
-					set_text (text_field.text)
-				end
-				Precursor {EV_GRID_LABEL_ITEM}
-				if text_field /= Void then
-					text_field.destroy
-					text_field := Void
-				end
-			end
 		end
 
 invariant

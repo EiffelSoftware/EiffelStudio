@@ -60,10 +60,10 @@ feature -- nl_langinfo
 					inptr = dname; /* get modified by iconv */
 					
 					/*get charset used by current locale */
-					#ifdef EIF_OS == EIF_OPENBSD
-						char *charset = nl_langinfo (CODESET);
-					#else
+					#if EIF_OS == EIF_OPENBSD
 						char *charset = locale_charset ();
+					#else
+						char *charset = nl_langinfo (CODESET);
 					#endif
 					
 					cd = iconv_open ("UTF-8", charset);
@@ -127,10 +127,10 @@ feature {NONE} -- Implementation: C externals
 			"C inline use <eif_langinfo.h>"
 		alias
 			"[
-				#ifdef EIF_OS == EIF_OPENBSD
-					return nl_langinfo (CODESET);
-				#else
+				#if EIF_OS == EIF_OPENBSD
 					return locale_charset ();
+				#else
+					return nl_langinfo (CODESET);
 				#endif
 			]"
 		end

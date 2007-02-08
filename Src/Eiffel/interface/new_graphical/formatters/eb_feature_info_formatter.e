@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 	header: STRING_GENERAL is
 			-- Header displayed when current formatter is selected.
 		do
-			if associated_feature /= Void then
+			if associated_feature /= Void and then associated_feature.associated_class /= Void then
 				Result := Interface_names.l_Header_feature (capital_command_name, associated_feature.name, associated_feature.associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_No_feature

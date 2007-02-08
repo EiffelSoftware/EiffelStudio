@@ -134,16 +134,16 @@ feature -- Basic operations
 			end
 			menu.extend (item)
 
-			if bp /= Void then
-					-- "Disable"
-				create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-				item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
-				item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
-				if bp.is_disabled then
-					item.disable_sensitive
-				end
-				menu.extend (item)
+				-- "Disable"
+			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
+			item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
+			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			if bp /= Void and then bp.is_disabled then
+				item.disable_sensitive
+			end
+			menu.extend (item)
 
+			if bp /= Void then
 					-- "Remove"
 				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
 				item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))

@@ -1735,7 +1735,7 @@ feature {NONE} -- Implementation
 			if progress_bar /= Void then
 				create env
 				progress_bar.set_proportion (value)
-				env.application.process_events
+				env.application.process_graphical_events
 			end
 		end
 

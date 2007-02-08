@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			-- unless Build is running in Wizard mode.
 		do
 			components.status_bar.set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
-			environment.application.process_events
+			environment.application.process_graphical_events
 		end
 
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is

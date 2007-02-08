@@ -59,6 +59,7 @@ feature -- Status setting
 				timed_text_timer.destroy
 				timed_text_timer := Void
 			end
+			status_bar_label.refresh_now
 		end
 
 	set_timed_status_text (a_text: STRING) is

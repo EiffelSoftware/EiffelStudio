@@ -410,14 +410,14 @@ feature -- File Properties
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := True
 				if file_loaded and file_exists then
 					Result := date_of_file_when_loaded = file_date_ticks and
 						size_of_file_when_loaded = file_size
 				end
 				file_date_already_checked := True
 			else
-				Result := True
+					-- If a failure occur, we are not up to date.
+				Result := False
 			end
 		rescue
 			retried := True
@@ -534,52 +534,51 @@ feature -- Basic Operations
 		end
 
 	redraw_current_screen is
-			-- Redraw the current screen.  Do not scroll or move the cursor, just redraw.
+			-- Redraw the current screen. Do not scroll or move the cursor, just redraw.
 		do
 			set_first_line_displayed (first_line_displayed, True)
 		end
 
 	load_file (a_filename: STRING) is
-	        -- Load contents of `a_filename'
+			-- Load contents of `a_filename'
 		require
 			filename_not_void: a_filename /= Void
 		local
-		    l_file: RAW_FILE
-		    l_doc_type: STRING
-		    l_date: like date_of_file_when_loaded
+			l_file: RAW_FILE
+			l_doc_type: STRING
+			l_date: like date_of_file_when_loaded
 			l_size: like size_of_file_when_loaded
-  	   	do
-  	   		editor_drawing_area.disable_sensitive
-  	   			-- Check the document type of the file to load.
-  	   		l_doc_type := a_filename.substring (a_filename.last_index_of ('.', a_filename.count) + 1, a_filename.count)
-  	   		if l_doc_type /= Void and then known_document_type (l_doc_type) then
+		do
+			editor_drawing_area.disable_sensitive
+				-- Check the document type of the file to load.
+			l_doc_type := a_filename.substring (a_filename.last_index_of ('.', a_filename.count) + 1, a_filename.count)
+			if l_doc_type /= Void and then known_document_type (l_doc_type) then
 				set_current_document_class (get_class_from_type (l_doc_type))
 			else
-			    set_current_document_class (default_document_class)
-  	   		end
+				set_current_document_class (default_document_class)
+			end
 
-  	   		create l_file.make (a_filename)
-  	   		if l_file.exists then
-  	   		    l_file.open_read
-  	   		    	-- Record date when opening the file since if the file
-  	   		    	-- has changed after the close operation we won't read it again.
+			create l_file.make (a_filename)
+			if l_file.exists then
+				l_file.open_read
+					-- Record date when opening the file since if the file
+					-- has changed after the close operation we won't read it again.
 				l_date := l_file.date
 				l_size := l_file.count
-  	   		    if l_file.is_empty then
-  	   		    	load_text ("")
-  	   		    else
-	  	   		    l_file.read_stream (l_file.count)
-	  	   		    load_text (l_file.last_string)
-  	   		    end
-  	   		    l_file.close
-  	   		    create file_name.make_from_string (a_filename)
-  	   		    date_of_file_when_loaded := l_date
-				size_of_file_when_loaded := l_size
-  	   		else
-  	   			reset
-  	   			load_text ("")
-  	   		end
-  	  	end
+				if l_file.is_empty then
+					load_text ("")
+				else
+					l_file.read_stream (l_file.count)
+					load_text (l_file.last_string)
+				end
+				l_file.close
+			else
+				load_text ("File: " + a_filename + "%Ndoes not exist.")
+			end
+			create file_name.make_from_string (a_filename)
+			date_of_file_when_loaded := l_date
+			size_of_file_when_loaded := l_size
+		end
 
 	load_text (s: STRING) is
 			-- Display `s'.			
@@ -636,7 +635,9 @@ feature -- Basic Operations
 		do
 			is_checking_modifications := True
 
-			if not file_is_up_to_date then
+			if not file_exists then
+				reload
+			elseif not file_is_up_to_date then
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
 					create dialog.make_with_text ("This file has been modified by another editor.")

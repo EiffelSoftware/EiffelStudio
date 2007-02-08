@@ -24,7 +24,8 @@ feature {DEBUG_VALUE_EXPORTER} -- Constants
 	eifnet_debug_unknown_type_value_id: INTEGER is 20
 	eifnet_debug_native_array_value_id: INTEGER is 21
 	exception_debug_value_id: INTEGER is 30
-	dummy_message_debug_value_id: INTEGER is 31
+	procedure_return_debug_value_id: INTEGER is 31
+	dummy_message_debug_value_id: INTEGER is 32
 
 feature {NONE} -- Readme
 

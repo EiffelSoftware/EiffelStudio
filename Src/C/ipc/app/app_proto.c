@@ -695,8 +695,10 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 			} else {
 				app_twrite("false", 5);
 					/* Result */
-				send_once_result(sp, OResult, (int) what->op_second);	/* Send result back to ewb */
-														/* the last argument is the expected type */
+				if (((int) what->op_second) != 0) {
+					send_once_result(sp, OResult, (int) what->op_second);	/* Send result back to ewb */
+															/* the last argument is the expected type */
+				}
 			}
 		} else {
 			app_twrite("false", 5);

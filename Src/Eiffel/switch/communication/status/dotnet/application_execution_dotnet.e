@@ -401,6 +401,7 @@ feature -- Query
 			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			exc_dv: EXCEPTION_DEBUG_VALUE
+			proc_dv: PROCEDURE_RETURN_DEBUG_VALUE
 			odv: ABSTRACT_DEBUG_VALUE
 			icdv: ICOR_DEBUG_VALUE
 			l_icdframe: ICOR_DEBUG_FRAME
@@ -418,44 +419,55 @@ feature -- Query
 					--| Get the once's value
 				l_feat := flist.item.associated_feature_i
 				check l_feat.type /= Void end
-				if l_feat.argument_count > 0 then
-					create err_dv.make_with_name  (l_feat.feature_name)
-					err_dv.set_message ("Could not evaluate once with arguments...")
-					odv := err_dv
-				else
-					l_class := l_feat.written_class
-					icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
-					if l_eifnet_debugger.last_once_available then
-						if not l_eifnet_debugger.last_once_already_called then
-							create err_dv.make_with_name  (l_feat.feature_name)
-							err_dv.set_message (Interface_names.le_Not_yet_called)
-							err_dv.set_display_kind (Void_value)
-							odv := err_dv
-						elseif l_eifnet_debugger.last_once_failed then
-							create exc_dv.make_with_name (l_feat.feature_name)
-							exc_dv.set_tag ("An exception occurred during the once execution")
-							exc_dv.set_exception_value (debug_value_from_icdv (icdv, Void))
---							err_dv.set_display_kind (Exception_message_value)
-							odv := exc_dv
-						elseif icdv /= Void then
-							odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
-							odv.set_name (l_feat.feature_name)
-						else
-								--| This case occurs when we enter into the once's code
-								--| then the once is Called
-								--| but the once's data are not yet initialized and set
-								--| then the once' value is not yet available
-							create err_dv.make_with_name  (l_feat.feature_name)
-							err_dv.set_message ("Could not retrieve information (once is being called)")
-							err_dv.set_display_kind (Void_value)
-							odv := err_dv
-						end
-					else
+				l_class := l_feat.written_class
+				icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
+				if l_eifnet_debugger.last_once_available then
+					if not l_eifnet_debugger.last_once_already_called then
 						create err_dv.make_with_name  (l_feat.feature_name)
 						err_dv.set_message (Interface_names.le_Not_yet_called)
 						err_dv.set_display_kind (Void_value)
+						if l_feat.is_function then
+							err_dv.set_display_kind (Void_value)
+						else
+							err_dv.set_display_kind (Procedure_return_message_value)
+						end
+						odv := err_dv
+					elseif l_eifnet_debugger.last_once_failed then
+						create exc_dv.make_with_name (l_feat.feature_name)
+						exc_dv.set_tag ("An exception occurred during the once execution")
+						exc_dv.set_exception_value (debug_value_from_icdv (icdv, Void))
+						odv := exc_dv
+					elseif icdv /= Void then
+						odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
+						odv.set_name (l_feat.feature_name)
+					elseif not l_feat.is_function then
+						create proc_dv.make_with_name (l_feat.feature_name)
+						odv := proc_dv
+					else
+							--| This case occurs when we enter into the once's code
+							--| then the once is Called
+							--| but the once's data are not yet initialized and set
+							--| then the once' value is not yet available
+						create err_dv.make_with_name  (l_feat.feature_name)
+						err_dv.set_message ("Could not retrieve information (once is being called)")
+						err_dv.set_display_kind (Void_value)
+						if l_feat.is_function then
+							err_dv.set_display_kind (Void_value)
+						else
+							err_dv.set_display_kind (Procedure_return_message_value)
+						end
 						odv := err_dv
 					end
+				else
+					create err_dv.make_with_name  (l_feat.feature_name)
+					err_dv.set_message (Interface_names.le_Not_yet_called)
+					err_dv.set_display_kind (Void_value)
+					if l_feat.is_function then
+						err_dv.set_display_kind (Void_value)
+					else
+						err_dv.set_display_kind (Procedure_return_message_value)
+					end
+					odv := err_dv
 				end
 				Result.put (odv, i)
 				i := i + 1

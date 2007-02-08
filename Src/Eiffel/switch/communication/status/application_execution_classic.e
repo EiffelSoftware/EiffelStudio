@@ -276,11 +276,16 @@ feature -- Query
 					else
 						create err_dv.make_with_name  (l_feat.feature_name)
 						err_dv.set_message ("Could not retrieve information (once is being called or once failed)")
+						odv := err_dv
 					end
 				else
 					create err_dv.make_with_name  (l_feat.feature_name)
 					err_dv.set_message (Interface_names.le_Not_yet_called)
-					err_dv.set_display_kind (Void_value)
+					if l_feat.is_function then
+						err_dv.set_display_kind (Void_value)
+					else
+						err_dv.set_display_kind (Procedure_return_message_value)
+					end
 					odv := err_dv
 				end
 				Result.put (odv, i)

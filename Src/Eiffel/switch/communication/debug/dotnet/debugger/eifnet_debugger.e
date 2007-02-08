@@ -2208,7 +2208,11 @@ feature -- Specific function evaluation
 						last_once_failed := True
 					end
 
-					if not last_once_failed and then l_result_token /= 0 then
+					if
+						a_feat.is_function
+						and then not last_once_failed
+						and then l_result_token /= 0
+					then
 						Result := l_data_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 					end
 				else

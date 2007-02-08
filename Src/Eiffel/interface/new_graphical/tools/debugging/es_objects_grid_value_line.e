@@ -155,7 +155,7 @@ feature -- Query
 			Result := object.sorted_children
 		end
 
-	sorted_once_functions: LIST [E_FEATURE] is
+	sorted_once_routines: LIST [E_FEATURE] is
 		local
 			l_class: CLASS_C
 		do
@@ -165,7 +165,7 @@ feature -- Query
 				--| ANSWER : because of external class in dotnet system
 				--| Should be fixed now by using SYSTEM_OBJECT for unknown type
 			else
-				Result := l_class.once_functions
+				Result := l_class.once_routines
 			end
 		end
 
@@ -207,7 +207,7 @@ feature -- Graphical changes
 					if dv.kind = Error_message_value then
 						dmdv ?= dv
 						set_value (dmdv.display_message)
-						set_type (once "Invalid data")
+						set_type (once "No information")
 						set_pixmap (Icons @ (dmdv.display_kind))
 					elseif dv.kind = Exception_message_value then
 						excdv ?= dv
@@ -224,6 +224,10 @@ feature -- Graphical changes
 						if excdv.debug_value /= Void then
 							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
 						end
+					elseif dv.kind = Procedure_return_message_value then
+						set_value (interface_names.l_called)
+						set_type (once "")
+						set_pixmap (Icons @ (dv.kind))
 					else
 						last_dump_value := dv.dump_value
 						set_value (last_dump_value.output_for_debugger)

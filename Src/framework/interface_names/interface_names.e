@@ -914,6 +914,7 @@ feature -- Label texts
 	l_no_views_are_available: STRING_GENERAL is 		do Result := locale.translate ("No views are available for this cluster") end
 	l_Not_in_system_no_info: STRING_GENERAL is	do Result := locale.translate("Select a class which is fully compiled to have information about it.")	end
 	l_Not_yet_called: STRING_GENERAL is			do Result := locale.translate("Not yet called")	end
+	l_Called: STRING_GENERAL is			do Result := locale.translate("Called")	end
 	l_in_n_classes (n: INTEGER): STRING_GENERAL is
 		do
 			Result := locale.format_string (locale.translate_plural ("in $1 class", "in $1 classes", n), [n])
@@ -928,7 +929,7 @@ feature -- Label texts
 	l_On_object: STRING_GENERAL is				do Result := locale.translate("On object")	end
 	l_As_object: STRING_GENERAL is				do Result := locale.translate("As object")	end
 	l_Onces: STRING_GENERAL is					do Result := locale.translate("once routines and constants")	end
-	l_Once_functions: STRING_GENERAL is			do Result := locale.translate("Once routines")	end
+	l_Once_routines: STRING_GENERAL is			do Result := locale.translate("Once routines")	end
 	l_only_classes_in_same_cluster: STRING_GENERAL is			do Result := locale.translate("Only classes in same cluster")	end
 	l_open: STRING_GENERAL is					do Result := locale.translate("Open")	end
 	l_Open_a_project: STRING_GENERAL is			do Result := locale.translate("Open a project")	end

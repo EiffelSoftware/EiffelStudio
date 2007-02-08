@@ -114,13 +114,6 @@ feature -- Recycling
 			-- in order to free special data (for instance dotnet references)
 		do
 			unattach
-			if attributes_row /= Void then
-				attributes_row.set_data (Void)
-				if attributes_row.parent /= Void then
-					attributes_row.clear
-				end
-				attributes_row := Void
-			end
 			if onces_row /= Void then
 				onces_row.set_data (Void)
 				if onces_row.parent /= Void then
@@ -205,7 +198,6 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			row_attributes_filled := False
 			row_onces_filled := False
 
-			attributes_row := Void
 			onces_row := Void
 
 			internal_items_stone_data := Void
@@ -459,8 +451,8 @@ feature -- Properties change
 			if row /= Void then
 				row_attributes_filled := False
 				reset_special_attributes_values
-				if attributes_row /= Void then
-					fill_attributes (attributes_row)
+				if row /= Void then
+					fill_attributes (row)
 				end
 			end
 			if old_r <= g.row_count then
@@ -759,7 +751,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Filling
 
-	attributes_row: EV_GRID_ROW
 	onces_row: EV_GRID_ROW
 
 	row_items_filled: BOOLEAN
@@ -777,11 +768,6 @@ feature {NONE} -- Filling
 				if not row_items_filled then
 					fill_items (row)
 				end
-			elseif a_row = attributes_row then
-				display_attributes := True
-				if not row_attributes_filled then
-					fill_attributes (attributes_row)
-				end
 			elseif a_row = onces_row then
 				display_onces := True
 				if not row_onces_filled then
@@ -795,8 +781,6 @@ feature {NONE} -- Filling
 		do
 			if a_row = row then
 				display := False
-			elseif a_row = attributes_row then
-				display_attributes := False
 			elseif a_row = onces_row then
 				display_onces := False
 			end
@@ -829,20 +813,9 @@ feature {NONE} -- Filling
 			row_items_filled := True
 			grid_remove_and_clear_subrows_from (a_row)
 			grid := a_row.parent
-			if has_attributes_values then
-				glab := folder_label_item (Interface_names.l_Object_attributes)
-				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_attribute_icon)
 
-				i := a_row.index + a_row.subrow_count_recursive + 1
-				grid.insert_new_row_parented (i, a_row)
-				attributes_row := grid.row (i)
-				attributes_row.set_item (1, glab)
+			fill_attributes (a_row)
 
-					--| Add expand actions.
-				attributes_row.expand_actions.extend (agent on_row_expand (attributes_row))
-				attributes_row.collapse_actions.extend (agent on_row_collapse (attributes_row))
-				attributes_row.ensure_expandable
-			end
 			if has_once_functions then
 				glab := folder_label_item (Interface_names.l_Once_functions)
 				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_once_icon)
@@ -862,15 +835,6 @@ feature {NONE} -- Filling
 			end
 			if a_row.is_expanded then
 				if
-					display_attributes
-					and attributes_row /= Void
-					and then attributes_row.parent /= Void
-					and then attributes_row.is_expandable
-					and then not attributes_row.is_expanded
-				then
-					attributes_row.expand
-				end
-				if
 					display_onces
 					and onces_row /= Void
 					and then onces_row.parent /= Void
@@ -885,7 +849,7 @@ feature {NONE} -- Filling
 	fill_attributes (a_row: EV_GRID_ROW) is
 			-- Fill attributes_row with the attributes related to Current	
 		require
-			a_row = attributes_row
+			a_row = row
 			attributes_not_filled_yet: not row_attributes_filled
 		local
 			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
@@ -900,14 +864,18 @@ feature {NONE} -- Filling
 		do
 			row_attributes_filled := True
 				-- We remove the dummy item.
-			grid_remove_and_clear_subrows_from (a_row)
+			if onces_row /= Void then
+				grid_remove_and_clear_subrows_from_until (a_row, onces_row)
+			else
+				grid_remove_and_clear_subrows_from (a_row)
+			end
 			vlist := sorted_attributes_values
 			if vlist /= Void and then not vlist.is_empty then
 					--| better being sure it won't happen |--
 				check
 					vlist /= Void
 				end
-				grid := attributes_row.parent
+				grid := a_row.parent
 
 				from
 					l_row_index := a_row.index
@@ -928,8 +896,8 @@ feature {NONE} -- Filling
 							es_glab.set_text (es_glab.text + " (" + object_spec_lower.out + ")")
 						end
 						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
-						i := attributes_row.index + 1
-						grid.insert_new_row_parented (i, attributes_row)
+						i := a_row.index + 1
+						grid.insert_new_row_parented (i, a_row)
 						grid.set_item (Col_name_index, i, es_glab)
 					end
 					if
@@ -938,8 +906,13 @@ feature {NONE} -- Filling
 					then
 						es_glab := slice_label_item (Interface_names.l_More_items)
 						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
-						i := attributes_row.index + attributes_row.subrow_count_recursive + 1
-						grid.insert_new_row_parented (i, attributes_row)
+						if onces_row /= Void then
+							i := onces_row.index
+						else
+							i := a_row.index + a_row.subrow_count_recursive + 1
+						end
+
+						grid.insert_new_row_parented (i, a_row)
 						grid.set_item (Col_name_index, i, es_glab)
 					end
 				end

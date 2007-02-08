@@ -37,8 +37,6 @@ feature -- Access
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
-		local
-			s: STRING_GENERAL
 		do
 			Result := Debugger_manager.Dump_value_factory.new_procedure_return_value (Current)
 		end

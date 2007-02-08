@@ -314,7 +314,7 @@ stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
-
+			l_state_void: SD_STATE_VOID
 		do
 			zone.show
 			show_all_split_parent (zone)
@@ -324,6 +324,14 @@ stick (a_direction: INTEGER) is
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.show
 				l_multi_dock_area.update_title_bar
+			end
+
+			if not zone.is_displayed then
+				-- `parent_floating_zone' doesn't exist on screen anymore, it was destroyed when open_config (from SD_CONFIG_MEDIATOR),
+				-- and current content doesn't have layout information restored when open_config, so let it use SD_STATE_VOID's default behavior.
+				create l_state_void.make (content)
+				change_state (l_state_void)
+				l_state_void.show
 			end
 		end
 

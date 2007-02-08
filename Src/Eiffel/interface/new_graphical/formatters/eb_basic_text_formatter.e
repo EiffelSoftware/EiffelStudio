@@ -65,7 +65,6 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		local
-			class_file: RAW_FILE
 			f_name: STRING
 		do
 			if
@@ -75,24 +74,18 @@ feature -- Formatting
 			then
 				display_temp_header
 				setup_viewpoint
-				create class_file.make (classi.file_name)
-				if class_file.exists then
-					if not equal (classi.file_name, editor.file_name) then
-						editor.set_stone (stone)
-						editor.load_file (classi.file_name)
-						go_to_position
-					end
-					if editor.load_file_error then
-						f_name := editor.file_name
-						editor.clear_window
-						if f_name = Void or else f_name.is_empty then
-							f_name := classi.file_name
-						end
-						editor.display_message (Warning_messages.w_Cannot_read_file (f_name).out)
-					end
-				else
+				if not equal (classi.file_name, editor.file_name) then
+					editor.set_stone (stone)
+					editor.load_file (classi.file_name)
+					go_to_position
+				end
+				if editor.load_file_error then
+					f_name := editor.file_name
 					editor.clear_window
-					editor.display_message (Warning_messages.w_file_not_exist (classi.file_name))
+					if f_name = Void or else f_name.is_empty then
+						f_name := classi.file_name
+					end
+					editor.display_message (Warning_messages.w_Cannot_read_file (f_name).out)
 				end
 				is_editable :=	not classi.is_read_only and not editor.load_file_error
 				editor.set_read_only (not is_editable)

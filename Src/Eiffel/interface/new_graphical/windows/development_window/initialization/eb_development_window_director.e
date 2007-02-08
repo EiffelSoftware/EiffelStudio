@@ -125,23 +125,23 @@ feature -- Command
 					develop_window.editors_manager.current_editor.display_line_when_ready (a_session_data.editor_position, False)
 				end
 			end
-					-- Presumption is made that if the strings are not void then they represent
-					-- valid entities in the project.
-				l_cluster_string := a_session_data.context_cluster_string
-				l_class_string := a_session_data.context_class_string
-				l_feature_string := a_session_data.context_feature_string
-				if l_feature_string /= Void then
-					develop_window.tools.features_relation_tool.address_manager.feature_address.set_text (l_feature_string)
-					develop_window.tools.features_relation_tool.address_manager.class_address.set_text (l_class_string)
-					develop_window.tools.features_relation_tool.address_manager.execute_with_feature
-				elseif l_class_string /= Void then
-					develop_window.tools.class_tool.address_manager.class_address.set_text (l_cluster_string)
-					develop_window.tools.class_tool.address_manager.execute_with_class
-				elseif l_cluster_string /= Void then
-					-- FIXIT: We only cluster information available, which tool should we put it?
-					develop_window.tools.class_tool.address_manager.cluster_address.set_text (l_cluster_string)
-					develop_window.tools.class_tool.address_manager.execute_with_cluster
-				end
+				-- Presumption is made that if the strings are not void then they represent
+				-- valid entities in the project.
+			l_cluster_string := a_session_data.context_cluster_string
+			l_class_string := a_session_data.context_class_string
+			l_feature_string := a_session_data.context_feature_string
+			if l_feature_string /= Void then
+				develop_window.tools.features_relation_tool.address_manager.feature_address.set_text (l_feature_string)
+				develop_window.tools.features_relation_tool.address_manager.class_address.set_text (l_class_string)
+				develop_window.tools.features_relation_tool.address_manager.execute_with_feature
+			elseif l_class_string /= Void then
+				develop_window.tools.class_tool.address_manager.class_address.set_text (l_class_string)
+				develop_window.tools.class_tool.address_manager.execute_with_class
+			elseif l_cluster_string /= Void then
+				-- FIXIT: We only cluster information available, which tool should we put it?
+				develop_window.tools.class_tool.address_manager.cluster_address.set_text (l_cluster_string)
+				develop_window.tools.class_tool.address_manager.execute_with_cluster
+			end
 		end
 
 feature -- Query

@@ -786,7 +786,10 @@ feature -- Window management
 
 			save_editors_docking_layout
 
-			if tools.class_tool /= Void then
+				-- |FIXME: Principly, we need to save more than feature relation tool,
+				-- because it is now possible that class based tools (Class, Diagram, Dependency) are targeting a class while
+				-- a feature based tool (Feature Relation) is targeting nothing.
+			if tools.features_relation_tool /= Void then
 				a_window_data.save_context_data (tools.features_relation_tool.address_manager.cluster_label_text, tools.features_relation_tool.address_manager.class_label_text, tools.features_relation_tool.address_manager.feature_label_text, 1)
 			end
 

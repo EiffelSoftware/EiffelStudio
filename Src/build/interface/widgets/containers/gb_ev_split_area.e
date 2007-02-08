@@ -81,8 +81,9 @@ feature {GB_CODE_GENERATOR} -- Output
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
 					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
 				elseif element_info.data.is_equal ("2") then
-					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
+						-- Always enabled a split item first since both cannot be disabled at the same time.
 					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
 				end
 			end
 		end
@@ -102,20 +103,22 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			if element_info /= Void then
 				second ?= object.real_display_object
 				if element_info.data.is_equal ("0") then
-					first.disable_item_expand (first.first)
-					first.disable_item_expand (first.second)
-					second.disable_item_expand (second.first)
-					second.disable_item_expand (second.second)
-				elseif element_info.data.is_equal ("1") then
-					first.disable_item_expand (first.second)
 					first.enable_item_expand (first.first)
-					second.disable_item_expand (second.second)
-					second.enable_item_expand (second.first)
-				elseif element_info.data.is_equal ("2") then
-					first.disable_item_expand (first.first)
 					first.enable_item_expand (first.second)
-					second.disable_item_expand (second.first)
+					second.enable_item_expand (second.first)
 					second.enable_item_expand (second.second)
+				elseif element_info.data.is_equal ("1") then
+						-- Always enabled a split item first since both cannot be disabled at the same time.
+					first.enable_item_expand (first.first)
+					first.disable_item_expand (first.second)
+					second.enable_item_expand (second.first)
+					second.disable_item_expand (second.second)
+				elseif element_info.data.is_equal ("2") then
+						-- Always enabled a split item first since both cannot be disabled at the same time.
+					first.enable_item_expand (first.second)
+					first.disable_item_expand (first.first)
+					second.enable_item_expand (second.second)
+					second.disable_item_expand (second.first)
 				else
 					check
 						invalid_data: False

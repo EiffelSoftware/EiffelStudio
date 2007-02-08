@@ -85,7 +85,7 @@ feature -- Basic operation
 			components.system_status.block
 			components.events.import_project_start_actions.call (Void)
 			initial_selection := components.tools.widget_selector.selected_window
-			application.process_events
+			application.process_graphical_events
 			initialize_load_output
 				-- Clear History, as it is no longer possible to go back
 				-- after importing a system.
@@ -103,7 +103,7 @@ feature -- Basic operation
 			end
 				-- Build deferred parts.
 			deferred_builder.build
-			application.process_events
+			application.process_graphical_events
 			if initial_selection /= Void then
 				initial_selection.tree_item.enable_select
 			end
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			until
 				element.off
 			loop
-				Application.process_events
+				Application.process_graphical_events
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
@@ -841,7 +841,7 @@ feature {NONE} -- Implementation
 			create load_timer.make_with_interval (250)
 			load_timer.actions.extend (agent update_status_bar)
 		 	components.status_bar.set_status_text ("Importing    -")
-		 	environment.application.process_events
+		 	environment.application.process_graphical_events
 		end
 
 	update_status_bar is

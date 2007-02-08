@@ -1079,7 +1079,7 @@ feature {GB_OBJECT} -- Implementation
 			end
 			if application.is_launched then
 					-- Force the newly displayed window to redraw immediately.
-				application.process_events
+				application.process_graphical_events
 			end
 		end
 

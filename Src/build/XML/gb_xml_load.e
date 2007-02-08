@@ -273,7 +273,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			until
 				element.off
 			loop
-				Application.process_events
+				Application.process_graphical_events
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			create load_timer.make_with_interval (250)
 			load_timer.actions.extend (agent update_status_bar)
 		 	components.status_bar.set_status_text ("Loading    -")
-		 	environment.application.process_events
+		 	environment.application.process_graphical_events
 		end
 
 	update_status_bar is

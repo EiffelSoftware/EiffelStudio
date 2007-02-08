@@ -146,9 +146,7 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `True' and update display.
 		do
 			margin.show_breakpoints
-			if margin_container.is_empty then
-				margin_container.put (margin.widget)
-			end
+			margin_container.show
 			margin.refresh_now
 		end
 
@@ -156,9 +154,7 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
 			margin.hide_breakpoints
-			if not line_numbers_visible and then not margin_container.is_empty then
-				margin_container.prune (margin.widget)
-			end
+			margin_container.hide
 			margin.refresh_now
 		end
 

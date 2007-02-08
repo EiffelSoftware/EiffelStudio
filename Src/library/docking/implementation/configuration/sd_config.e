@@ -223,6 +223,9 @@ feature -- Save/Open inner container data.
 				internal_docking_manager.zones.place_holder_content.close
 			end
 
+			-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
+			internal_docking_manager.query.inner_container_main.remove_empty_split_area
+
 			internal_docking_manager.query.inner_container_main.update_middle_container
 			internal_docking_manager.command.unlock_update
 			internal_docking_manager.property.set_is_opening_config (False)

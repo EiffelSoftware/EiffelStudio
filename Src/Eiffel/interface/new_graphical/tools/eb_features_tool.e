@@ -287,7 +287,7 @@ feature -- Element change
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
 							if classc_stone.e_class.is_precompiled then
 								current_class := classc_stone.e_class.ast
-							else
+							elseif classc_stone.e_class.eiffel_class_c.file_is_readable then
 								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
 							end
 							if current_class /= Void then

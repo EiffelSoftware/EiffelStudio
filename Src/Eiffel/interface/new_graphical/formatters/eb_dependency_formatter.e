@@ -33,15 +33,12 @@ feature -- Access
 	widget: EV_WIDGET is
 			-- Graphical representation of the information provided.
 		do
-			if associated_stone = Void or browser = Void then
+			if stone = Void or browser = Void then
 				Result := empty_widget
 			else
 				Result := browser.widget
 			end
 		end
-
-	associated_stone: STONE
-			-- Stone associated with current formatter
 
 	final_stone_from_stone (a_stone: STONE): STONE is
 			-- Final stone from `a_stone'.
@@ -154,11 +151,11 @@ feature -- Properties
 			l_feature_stone: FEATURE_STONE
 			l_group: CONF_GROUP
 		do
-			if associated_stone /= Void and then is_stone_valid (associated_stone) then
-				l_feature_stone ?= associated_stone
-				l_class_stone ?= associated_stone
-				l_cluster_stone ?= associated_stone
-				l_target_stone ?= associated_stone
+			if stone /= Void and then is_stone_valid (stone) then
+				l_feature_stone ?= stone
+				l_class_stone ?= stone
+				l_cluster_stone ?= stone
+				l_target_stone ?= stone
 				create Result.make (64)
 				if l_feature_stone /= Void then
 					Result.append (l_feature_stone.e_feature.name)
@@ -193,11 +190,11 @@ feature -- Status setting
 		do
 			force_stone (new_stone)
 			if is_stone_valid (new_stone) then
-				associated_stone := new_stone
+				stone := new_stone
 				must_format := True
 				format
 			else
-				associated_stone := Void
+				stone := Void
 				reset_display
 			end
 			if
@@ -249,29 +246,29 @@ feature {NONE} -- Implementation
 		local
 			l_str: STRING_GENERAL
 		do
-			if associated_stone /= Void then
-				l_str := name_of_stone (associated_stone)
+			if stone /= Void then
+				l_str := name_of_stone (stone)
 			else
 				l_str := ""
 			end
-			Result := interface_names.l_Header_dependency (command_name, l_str)
+			Result := interface_names.l_temp_header_dependency (command_name, l_str)
 		end
 
 	header: STRING_GENERAL is
 			-- Header displayed when current formatter is selected.
 		do
-			if associated_stone /= Void then
-				Result := interface_names.l_Header_dependency (capital_command_name, name_of_stone (associated_stone))
+			if stone /= Void then
+				Result := interface_names.l_Header_dependency (capital_command_name, name_of_stone (stone))
 			else
 				Result := Interface_names.l_select_element_to_show_info
 			end
 		end
 
-	class_domain_from_associated_stone: QL_CLASS_DOMAIN is
-			-- Query language class domain from `associated_stone'.
+	class_domain_from_stone: QL_CLASS_DOMAIN is
+			-- Query language class domain from `stone'.
 		require
-			associated_stone_attached: associated_stone /= Void
-			associated_stone_valid: is_stone_valid (associated_stone)
+			stone_attached: stone /= Void
+			stone_valid: is_stone_valid (stone)
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
 			l_domain_item: EB_DOMAIN_ITEM
@@ -279,7 +276,7 @@ feature {NONE} -- Implementation
 			l_criterion: QL_CLASS_CRITERION
 		do
 			l_criterion := class_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_compiled, [])
-			l_domain_item := domain_item_from_stone (final_stone_from_stone (associated_stone))
+			l_domain_item := domain_item_from_stone (final_stone_from_stone (stone))
 			if l_domain_item.is_folder_item then
 				l_folder_item ?= l_domain_item
 				if browser.recursive_button.is_selected then
@@ -303,8 +300,8 @@ feature {NONE} -- Implementation
 	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION is
 			-- Criterion to filter dependency classes
 		require
-			associated_stone_attached: associated_stone /= Void
-			associated_stone_valid: is_stone_valid (associated_stone)
+			stone_attached: stone /= Void
+			stone_valid: is_stone_valid (stone)
 			a_domain_attached: a_domain /= Void
 			browser_attached: browser /= Void
 		deferred
@@ -315,8 +312,8 @@ feature {NONE} -- Implementation
 	generate_result is
 			-- Generate result.
 		require
-			associated_stone_attached: associated_stone /= Void
-			associated_stone_valid: is_stone_valid (associated_stone)
+			stone_attached: stone /= Void
+			stone_valid: is_stone_valid (stone)
 		local
 			l_dep: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
 			l_target_domain: QL_TARGET_DOMAIN
@@ -337,7 +334,7 @@ feature {NONE} -- Implementation
 					-- Generate dependency table `l_dep'.
 					-- `l_dep' is a hash table whose key is ql group items and value is another hash table whose key is class in that ql group, and value is
 					-- a set of classes who depend on this class.
-				l_source_domain := class_domain_from_associated_stone
+				l_source_domain := class_domain_from_stone
 				from
 					l_target_domain := system_target_domain
 					l_source_domain.start

@@ -484,6 +484,15 @@ feature -- Access
 	archive_history: EB_METRIC_ARCHIVE
 			-- Archive history
 
+	on_compile_start_agent: PROCEDURE [ANY, TUPLE] is
+			-- Agent for `on_compile_start'
+		do
+			if on_compile_start_agent_internal = Void then
+				on_compile_start_agent_internal := agent on_compile_start
+			end
+			Result := on_compile_start_agent_internal
+		end
+
 feature -- Access/Sorting order
 
 	ascending_order: INTEGER is 1
@@ -1092,6 +1101,9 @@ feature{NONE} -- Implementation
 			end
 			l_metrics.go_to (l_cursor)
 		end
+
+	on_compile_start_agent_internal: like on_compile_start_agent
+			-- Implementation of `on_compile_start_agent'
 
 invariant
 	metrics_attached: metrics /= Void

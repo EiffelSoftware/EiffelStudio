@@ -321,6 +321,27 @@ feature{NONE} -- Color
 			Result := a_row.parent_row.background_color
 		end
 
+	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Set background color for `a_grid_row' which contains `a_archive_node'.
+		local
+			l_parent_row: EV_GRID_ROW
+		do
+			if newly_changed_archives.has (a_archive_node) then
+				if a_archive_node.is_last_warning_check_successful then
+					a_grid_row.set_background_color (newly_changed_row_background_color)
+				else
+					a_grid_row.set_background_color (warning_row_background_color)
+				end
+			else
+				l_parent_row := a_grid_row.parent_row
+				if l_parent_row /= Void then
+					a_grid_row.set_background_color (l_parent_row.background_color)
+				else
+					a_grid_row.set_background_color (normal_row_background_color)
+				end
+			end
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

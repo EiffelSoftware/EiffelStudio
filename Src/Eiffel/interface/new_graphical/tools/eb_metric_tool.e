@@ -78,6 +78,9 @@ feature -- Initialization
 			metric_notebook.drop_actions.set_veto_pebble_function (agent on_tab_droppable)
 			widget.extend (metric_notebook)
 			install_agents (metric_manager)
+			if not window_manager.compile_start_actions.has (metric_manager.on_compile_start_agent) then
+				window_manager.compile_start_actions.extend (metric_manager.on_compile_start_agent)
+			end
 		end
 
 	build_interface is

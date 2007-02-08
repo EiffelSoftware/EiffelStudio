@@ -52,13 +52,13 @@ feature -- Formatting
 	format is
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
-			if associated_stone /= Void and then selected and then displayed then
+			if stone /= Void and then selected and then displayed then
 				display_temp_header
 				if not widget.is_displayed then
 					widget.show
 				end
 				setup_viewpoint
-				browser.prepare_for_client_view (name_of_stone (associated_stone))
+				browser.prepare_for_client_view (name_of_stone (stone))
 				generate_result
 				display_header
 			end

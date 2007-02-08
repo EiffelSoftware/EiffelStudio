@@ -197,6 +197,20 @@ feature{NONE} -- Implementation
 			Precursor
 		end
 
+	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Set background color for `a_grid_row' which contains `a_archive_node'.
+		do
+			if newly_changed_archives.has (a_archive_node) then
+				if a_archive_node.is_last_warning_check_successful then
+					a_grid_row.set_background_color (newly_changed_row_background_color)
+				else
+					a_grid_row.set_background_color (warning_row_background_color)
+				end
+			else
+				a_grid_row.set_background_color (normal_row_background_color)
+			end
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

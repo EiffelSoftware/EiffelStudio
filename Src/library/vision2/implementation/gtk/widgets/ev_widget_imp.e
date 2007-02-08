@@ -360,8 +360,14 @@ feature {NONE} -- Implementation
 
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Abstracted implementation for minimum size setting.
+		local
+			l_viewport_parent: EV_VIEWPORT_IMP
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
+			l_viewport_parent ?= parent_imp
+			if l_viewport_parent /= Void then
+				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
+			end
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is

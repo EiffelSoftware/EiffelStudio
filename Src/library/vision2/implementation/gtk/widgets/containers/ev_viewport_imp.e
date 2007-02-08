@@ -148,7 +148,7 @@ feature -- Element change
 			w_imp ?= item.implementation
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{EV_GTK_EXTERNALS}.gtk_container_check_resize (l_parent_box)
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (viewport)
 		end
 
 feature {NONE} -- Implementation

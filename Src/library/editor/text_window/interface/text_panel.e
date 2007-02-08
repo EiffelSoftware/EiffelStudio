@@ -82,6 +82,8 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			l_parent: EV_HORIZONTAL_BOX
 		do
 				-- First display the first line...
 			first_line_displayed := 1
@@ -94,7 +96,15 @@ feature {NONE} -- Initialization
 			main_vbox.set_background_color (editor_preferences.normal_background_color)
 			inner_hbox.set_background_color (editor_preferences.normal_background_color)
 
+				-- Create the margin and associate it with `margin_container'.
 			create margin.make_with_panel (Current)
+			l_parent ?= margin_container.parent
+			check l_parent_not_void: l_parent /= Void end
+			l_parent.prune (margin_container)
+			margin_container := margin.margin_viewport
+			l_parent.put_front (margin_container)
+			l_parent.disable_item_expand (margin_container)
+
 			editor_drawing_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 
 				-- Viewport Events
@@ -436,19 +446,13 @@ feature -- Status setting
 	        -- Refresh line number display in Current and update display
 		do
 			if has_margin then
-				if margin_container.is_empty then
-					-- One of line numbers or breakpoints must be visible
-					margin_container.put (margin.widget)
-				end
+				margin_container.show
 			else
-				if not margin_container.is_empty then
-					-- Nothing needs displaying so just prune
-					margin_container.prune (margin.widget)
-				end
+				margin_container.hide
 			end
 			refresh_now
 	   	ensure
-	   		widget_displayed: has_margin implies not margin_container.is_empty
+			widget_displayed: has_margin implies margin_container.is_displayed
 	   	end
 
 	enable_line_numbers is

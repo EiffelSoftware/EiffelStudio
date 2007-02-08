@@ -144,12 +144,9 @@ feature -- Element change
 		local
 			w_imp: EV_WIDGET_IMP
 			l_parent_box: POINTER
-			l_allocation: POINTER
-			l_c_object: POINTER
 		do
 			w_imp ?= item.implementation
-			l_c_object := w_imp.c_object
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
 			{EV_GTK_EXTERNALS}.gtk_container_check_resize (l_parent_box)
 		end

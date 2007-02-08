@@ -220,8 +220,25 @@ feature -- Status setting
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to class formatters.
+		local
+			fs: FEATURE_STONE
+			cs: CLASSC_STONE
 		do
-			set_last_stone (new_stone)
+			fs ?= new_stone
+			if fs /= Void then
+				check
+					feature_not_void: fs.e_feature /= Void
+					class_not_void: fs.e_feature.associated_class /= Void
+				end
+				create cs.make (fs.e_feature.associated_class)
+			end
+			if cs /= Void then
+					-- Take the class of the feature.
+					-- We do not extend a feature stone into a class tool.
+				set_last_stone (cs)
+			else
+				set_last_stone (new_stone)
+			end
 			if widget.is_displayed then
 				force_last_stone
 			end
@@ -286,17 +303,6 @@ feature -- Status setting
 				end
 				Precursor
 			end
-		end
-
-	launch_stone (st: CLASSI_STONE) is
-			-- Notify the development window of a new stone.
-		do
-			if develop_window.unified_stone then
-				develop_window.set_stone (st)
-			else
-				develop_window.tools.set_stone (st)
-			end
-			set_focus
 		end
 
 	on_select is
@@ -617,14 +623,24 @@ feature {NONE} -- Implementation
 			fst: FEATURE_STONE
 		do
 			fst ?= st
-			if fst /= Void then
-				develop_window.tools.features_relation_tool.set_stone (st)
-				develop_window.tools.features_relation_tool.content.show
-				develop_window.tools.features_relation_tool.content.set_focus
-				develop_window.tools.features_relation_tool.set_focus
+			decide_tool_to_display (st)
+			develop_window.tools.set_stone (st)
+			if fst /= Void and then address_manager /= Void then
+				address_manager.hide_address_bar
+			end
+		end
+
+	decide_tool_to_display (a_st: STONE) is
+			-- Decide which tool to display.
+		local
+			fs: FEATURE_STONE
+		do
+			fs ?= a_st
+			if fs /= Void then
+				develop_window.tools.show_default_tool_of_feature
 			else
-				launch_stone (st)
-				content.set_focus
+				show
+				set_focus
 			end
 		end
 

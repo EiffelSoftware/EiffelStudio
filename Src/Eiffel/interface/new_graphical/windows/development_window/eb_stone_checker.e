@@ -39,6 +39,9 @@ feature -- Command
 			cur_wid := develop_window.window
 			prepare (a_stone)
 
+				-- History moving is not going to be cancelled.
+			develop_window.set_history_moving_cancelled (False)
+
 			handle_break_error_ace_external_file_stone (a_stone)
 			if
 				develop_window.stone /= Void and then

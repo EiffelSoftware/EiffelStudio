@@ -54,12 +54,15 @@ feature -- Command
 			end
 
 			if editor = Void then
-				save_needed := true
+				save_needed := True
 			end
 
 				-- Update the history.
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
+
+				-- If it is not cancelled, we set it back in EB_STONE_CHECKER
+			develop_window.set_history_moving_cancelled (True)
 
 			if
 				conv_brkstone = Void and

@@ -17,7 +17,8 @@ inherit
 			close,
 			build_mini_toolbar,
 			mini_toolbar,
-			force_last_stone
+			force_last_stone,
+			build_docking_content
 		end
 
 	WIDGET_OWNER
@@ -91,6 +92,13 @@ feature {NONE} -- Initialization
 			make_with_tool (develop_window)
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content.
+		do
+			Precursor {EB_TOOL} (a_docking_manager)
+			content.drop_actions.extend (agent drop_stone)
 		end
 
 feature -- Access
@@ -184,21 +192,42 @@ feature -- Status report
 feature -- Status setting
 
 	set_stone (new_stone: STONE) is
-			-- Send a stone to class formatters.
+			-- Send a stone to formatters.
+		local
+			fs: FEATURE_STONE
+			cs: CLASSC_STONE
 		do
-			set_last_stone (new_stone)
+			fs ?= new_stone
+			if fs /= Void then
+				check
+					feature_not_void: fs.e_feature /= Void
+					class_not_void: fs.e_feature.associated_class /= Void
+				end
+				create cs.make (fs.e_feature.associated_class)
+			end
+			if cs /= Void then
+					-- Take the class of the feature.
+					-- We do not extend a feature stone into a class tool.
+				set_last_stone (cs)
+			else
+				set_last_stone (new_stone)
+			end
 			if widget.is_displayed then
 				force_last_stone
 			end
 		end
 
-	launch_stone (st: STONE) is
-			-- Notify the development window of a new stone.
+	decide_tool_to_display (a_st: STONE) is
+			-- Decide which tool to display.
+		local
+			fs: FEATURE_STONE
 		do
-			if develop_window.unified_stone then
-				develop_window.set_stone (st)
+			fs ?= a_st
+			if fs /= Void then
+				develop_window.tools.show_default_tool_of_feature
 			else
-				develop_window.tools.set_stone (st)
+				show
+				set_focus
 			end
 		end
 
@@ -483,11 +512,16 @@ feature {NONE} -- Implementation
 		local
 			fst: FEATURE_STONE
 		do
-			fst ?= st
-			if fst /= Void then
-				develop_window.tools.features_relation_tool.pop_default_formatter
+			decide_tool_to_display (st)
+			if develop_window.unified_stone then
+				develop_window.set_stone (st)
+			else
+				develop_window.tools.set_stone (st)
 			end
-			launch_stone (st)
+			fst ?= st
+			if fst /= Void and then address_manager /= Void then
+				address_manager.hide_address_bar
+			end
 		end
 
 	outer_container: EV_CELL

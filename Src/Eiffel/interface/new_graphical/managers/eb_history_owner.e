@@ -50,6 +50,18 @@ feature -- Status setting
 			set_stone (a_stone)
 		end
 
+	set_history_moving_cancelled (a_cancel: BOOLEAN) is
+			-- Set `history_moving_cancelled' with `a_cancel'.
+		do
+			history_moving_cancelled := a_cancel
+		ensure
+			set: history_moving_cancelled = a_cancel
+		end
+
+feature -- Status report
+
+	history_moving_cancelled: BOOLEAN;
+			-- Is history moving cancelled?
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

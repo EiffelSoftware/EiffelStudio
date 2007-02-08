@@ -756,6 +756,12 @@ feature -- Updating
 			end
 		end
 
+	hide_address_bar is
+			-- Hide address bar dialog.
+		do
+			address_dialog.hide
+		end
+
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Execution
 
 	execute_with_cluster is

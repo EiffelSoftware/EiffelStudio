@@ -38,10 +38,14 @@ feature {NONE} -- Creation
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
-	file_name: FILE_NAME
-			-- Filename that the development window is currently targeted to.
+	current_target: STRING
+			-- Class or group the development window is currently targeting.
+			-- We save the ID of a class or a cluster.
 
-	open_classes: HASH_TABLE [FILE_NAME, STRING]
+	current_target_type: BOOLEAN
+			-- Class if False, otherwise a group
+
+	open_classes: HASH_TABLE [STRING, STRING]
 			-- Open classes
 			-- 1st parametar is class name
 			-- 2nd parameter is docking content unique name
@@ -131,14 +135,20 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 feature {EB_DEVELOPMENT_WINDOW} -- Element change
 
-	save_filename (a_filename: like file_name) is
-			-- Save the filename that the window is currently targeted to.
-		require
-			a_filename_not_void: a_filename /= Void
+	save_current_target (a_current_target: like current_target; a_type: BOOLEAN) is
+			-- Save the object that the window is currently targeting.
 		do
-			file_name := a_filename.twin
+			if a_current_target /= Void then
+				current_target := a_current_target.twin
+			else
+				current_target := Void
+			end
+			current_target_type := a_type
 		ensure
-			file_name_cloned: file_name /= a_filename and then file_name.is_equal (a_filename)
+			current_target_cloned: a_current_target /= Void implies
+									(current_target /= a_current_target and then
+									current_target.is_equal (a_current_target))
+			type_set: current_target_type = a_type
 		end
 
 	save_open_classes (a_open_classes: like open_classes) is

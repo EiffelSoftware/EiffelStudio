@@ -122,6 +122,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		end
+
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
 
@@ -752,17 +757,29 @@ feature -- Window management
 			-- Save session data of `Current' to session object `a_session'.
 		local
 			a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
-			a_class_i: CLASSI_STONE
+			a_class_stone: CLASSI_STONE
+			a_cluster_stone: CLUSTER_STONE
 		do
 			save_window_state
 			create a_window_data.make_from_window_data (preferences.development_window_data)
 
-			a_class_i ?= stone
-			if a_class_i /= Void then
-				a_window_data.save_filename (a_class_i.file_name)
+			a_class_stone ?= stone
+			a_cluster_stone ?= stone
+			if a_class_stone /= Void then
+				a_window_data.save_current_target (id_of_class (a_class_stone.class_i.config_class), False)
+			elseif a_cluster_stone /= Void then
+				a_window_data.save_current_target (id_of_group (a_cluster_stone.group), True)
+			else
+				a_window_data.save_current_target (Void, False)
+			end
+			if a_class_stone /= Void or else a_cluster_stone /= Void then
 				if editors_manager.current_editor /= Void then
 					a_window_data.save_editor_position (editors_manager.current_editor.text_displayed.current_line_number)
+				else
+					a_window_data.save_editor_position (0)
 				end
+			else
+				a_window_data.save_editor_position (0)
 			end
 
 			save_editors_to_session_data (a_window_data)
@@ -780,12 +797,15 @@ feature -- Window management
 	save_editors_to_session_data (a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
 			-- Save editor number, open classes and open clusters.
 		local
-			l_open_classes: HASH_TABLE [FILE_NAME, STRING]
+			l_open_classes: HASH_TABLE [STRING, STRING]
+			l_open_clusters: HASH_TABLE [STRING, STRING]
 		do
 			l_open_classes := editors_manager.open_classes
 			l_open_classes.merge (editors_manager.open_fake_classes)
+			l_open_clusters := editors_manager.open_clusters
+			l_open_clusters.merge (editors_manager.open_fake_clusters)
 			a_window_data.save_open_classes (l_open_classes)
-			a_window_data.save_open_clusters (editors_manager.open_clusters)
+			a_window_data.save_open_clusters (l_open_clusters)
 		end
 
 	save_tools_docking_layout is

@@ -17,6 +17,8 @@ inherit
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
+	EB_SHARED_ID_SOLUTION
+
 create
 	make
 
@@ -185,11 +187,12 @@ feature -- Access
 	last_created_editor: like current_editor
 			-- Last created editor
 
-	open_classes: HASH_TABLE [FILE_NAME, STRING] is
-			-- Open classes.
+	open_classes: HASH_TABLE [STRING, STRING] is
+			-- Open classes. [ID, title]
 		local
 			l_classc_stone: CLASSC_STONE
 			l_editors: like editors
+			l_id: STRING
 		do
 			create Result.make (editors_internal.count)
 			l_editors := editors
@@ -200,7 +203,12 @@ feature -- Access
 			loop
 				l_classc_stone ?= l_editors.item.stone
 				if l_classc_stone /= Void then
-					Result.put (l_classc_stone.file_name, l_editors.item.docking_content.unique_title.as_string_8)
+					check
+						class_not_void: l_classc_stone.class_i /= Void
+						config_class_not_void: l_classc_stone.class_i.config_class /= Void
+					end
+					l_id := id_of_class (l_classc_stone.class_i.config_class)
+					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
@@ -208,12 +216,13 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_fake_classes: HASH_TABLE [FILE_NAME, STRING] is
-			-- Opened classes that in fake editors.
+	open_fake_classes: HASH_TABLE [STRING, STRING] is
+			-- Opened classes that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_fake_editor: EB_FAKE_SMART_EDITOR_CELL
 			l_classc_stone: CLASSC_STONE
+			l_id: STRING
 		do
 			create Result.make (1)
 			from
@@ -226,8 +235,14 @@ feature -- Access
 					l_fake_editor ?= l_contents.item.user_widget
 					if l_fake_editor /= Void then
 						l_classc_stone ?= l_fake_editor.stone
-						check only_class_editor_can_fake: l_classc_stone /= Void end
-						Result.put (l_classc_stone.file_name, l_contents.item.unique_title.as_string_8)
+						if l_classc_stone /= Void then
+							check
+								class_not_void: l_classc_stone.class_i /= Void
+								config_class_not_void: l_classc_stone.class_i.config_class /= Void
+							end
+							l_id := id_of_class (l_classc_stone.class_i.config_class)
+							Result.put (l_id, l_contents.item.unique_title.as_string_8)
+						end
 					end
 				end
 				l_contents.forth
@@ -237,10 +252,11 @@ feature -- Access
 		end
 
 	open_clusters: HASH_TABLE [STRING, STRING] is
-			-- Open clusters.
+			-- Open clusters. [ID, title]
 		local
 			l_cluster_stone: CLUSTER_STONE
 			l_editors: like editors
+			l_id: STRING
 		do
 			create Result.make (editors_internal.count)
 			l_editors := editors
@@ -251,10 +267,42 @@ feature -- Access
 			loop
 				l_cluster_stone ?= l_editors.item.stone
 				if l_cluster_stone /= Void then
-					Result.put (l_cluster_stone.cluster_i.cluster_name.as_string_8, l_editors.item.docking_content.unique_title.as_string_8)
+					l_id := id_of_group (l_cluster_stone.group)
+					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
+		end
+
+	open_fake_clusters: HASH_TABLE [STRING, STRING] is
+			-- Opened clusters that in fake editors. [ID, title]
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_fake_editor: EB_FAKE_SMART_EDITOR_CELL
+			l_cluster_stone: CLUSTER_STONE
+			l_id: STRING
+		do
+			create Result.make (1)
+			from
+				l_contents := docking_manager.contents.twin
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					l_fake_editor ?= l_contents.item.user_widget
+					if l_fake_editor /= Void then
+						l_cluster_stone ?= l_fake_editor.stone
+						if l_cluster_stone /= Void then
+							l_id := id_of_group (l_cluster_stone.group)
+							Result.put (l_id, l_contents.item.unique_title.as_string_8)
+						end
+					end
+				end
+				l_contents.forth
+			end
+		ensure
+			not_void: Result /= Void
 		end
 
 feature -- Access actions
@@ -508,7 +556,7 @@ feature -- Element change
 			end
 		end
 
-	restore_editors (a_open_classes: HASH_TABLE [FILE_NAME, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN is
+	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN is
 			-- Restore editors.
 			-- If really have editors to open, then result is True, otherwise is False
 		require
@@ -518,8 +566,9 @@ feature -- Element change
 			l_classi_stone: CLASSI_STONE
 			l_classc_stone: CLASSC_STONE
 			l_cluster_stone: CLUSTER_STONE
-			l_classi: CLASS_I
-			l_cluster: CLUSTER_I
+			l_conf_class: CONF_CLASS
+			l_class_i: CLASS_I
+			l_group: CONF_GROUP
 			l_content: SD_CONTENT
 			l_editor_numbers: ARRAYED_LIST [INTEGER]
 			l_classes: LIST [CLASS_I]
@@ -530,32 +579,33 @@ feature -- Element change
 				is_opening_editors := True
 
 				create l_editor_numbers.make (a_open_classes.count + a_open_clusters.count)
-				create fake_editors.make (5)
-					-- Restore open classese.
+				create fake_editors.make (10)
+					-- Restore open classes.
 				from
 					a_open_classes.start
 				until
 					a_open_classes.after
 				loop
-					-- FIXIT: maybe same name class here
-					l_classes := eiffel_universe.classes_with_name (build_class_name (a_open_classes.item_for_iteration))
-					if not l_classes.is_empty then
-						l_classi ?= l_classes.first
-					end
-					if l_classi /= Void then
-						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration, l_content)
+					l_conf_class := class_of_id (a_open_classes.item_for_iteration)
+					if l_conf_class /= Void then
+						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration)
 
 						fake_editors.extend (last_created_editor)
 
-						l_content.set_long_title (l_classi.name)
-						l_content.set_short_title (l_classi.name)
-						l_content.set_pixmap (pixmap_from_class_i (l_classi))
+						l_content.set_long_title (l_conf_class.name)
+						l_content.set_short_title (l_conf_class.name)
+
+						l_class_i ?= l_conf_class
+						check
+							l_class_i_not_void: l_class_i /= Void
+						end
+						l_content.set_pixmap (pixmap_from_class_i (l_class_i))
 						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.key_for_iteration))
-						if l_classi.is_compiled then
-							create l_classc_stone.make (l_classi.compiled_class)
+						if l_class_i.is_compiled then
+							create l_classc_stone.make (l_class_i.compiled_class)
 							last_created_editor.set_stone (l_classc_stone)
 						else
-							create l_classi_stone.make (l_classi)
+							create l_classi_stone.make (l_class_i)
 							last_created_editor.set_stone (l_classi_stone)
 						end
 						Result := True
@@ -568,16 +618,16 @@ feature -- Element change
 				until
 					a_open_clusters.after
 				loop
-					l_cluster := eiffel_universe.cluster_of_name (a_open_clusters.item_for_iteration)
-					if l_cluster /= Void then
-						create l_cluster_stone.make (l_cluster)
-						init_editor
-						l_content := create_docking_content (a_open_clusters.key_for_iteration, last_created_editor, exist_content)
-
+					l_group := group_of_id (a_open_clusters.item_for_iteration)
+					if l_group /= Void then
+						create l_cluster_stone.make (l_group)
+						l_content := create_docking_content_fake_one (a_open_clusters.key_for_iteration)
+						fake_editors.extend (last_created_editor)
+						l_content.set_long_title (l_group.name)
+						l_content.set_short_title (l_group.name)
+						l_content.set_pixmap (pixmap_from_group (l_group))
 						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_clusters.key_for_iteration))
-						last_created_editor.set_docking_content (l_content)
-						l_content.set_focus
-						development_window.set_stone (l_cluster_stone)
+						last_created_editor.set_stone (l_cluster_stone)
 						Result := True
 					end
 					a_open_clusters.forth
@@ -890,7 +940,7 @@ feature {NONE}-- Implementation
 			create_docking_content_not_void: Result /= Void
 		end
 
-	create_docking_content_fake_one (a_unique_title: STRING; a_content: SD_CONTENT): SD_CONTENT is
+	create_docking_content_fake_one (a_unique_title: STRING): SD_CONTENT is
 			-- Create a fake docking content.
 		require
 			not_void: a_unique_title /= Void

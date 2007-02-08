@@ -129,18 +129,22 @@ feature {DBG_EVALUATOR} -- Interface
 				--| Classic
 			once_r := Once_request
 			if once_r.already_called (f) then
-				res := once_r.once_result (f)
-				if once_r.last_failed then
-					notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": " + once_r.last_exception_meaning)
-				else
-					if res /= Void then
-						last_result_value := res.dump_value
-						last_result_static_type := f.type.associated_class
+				if f.is_function then
+					res := once_r.once_result (f)
+					if once_r.last_failed then
+						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": " + once_r.last_exception_meaning)
 					else
-						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": an exception occurred")
+						if res /= Void then
+							last_result_value := res.dump_value
+							last_result_static_type := f.type.associated_class
+						else
+							notify_error (cst_error_exception_during_evaluation, "Once function " + f.feature_name + ": an exception occurred")
+						end
 					end
+					once_r.clear_last_values
+				else
+					notify_error (cst_error_exception_during_evaluation, "Once procedure " + f.feature_name + ": can not evaluate once procedure yet")
 				end
-				once_r.clear_last_values
 			else
 				notify_error (cst_error_occurred, "Once feature " + f.feature_name + ": not yet called")
 			end

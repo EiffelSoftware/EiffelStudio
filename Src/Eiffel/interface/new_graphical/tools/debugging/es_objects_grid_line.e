@@ -282,11 +282,11 @@ feature -- Query
 		deferred
 		end
 
-	has_once_functions: BOOLEAN is
+	has_once_routine: BOOLEAN is
 		local
 			list: LIST [ANY]
 		do
-			list := sorted_once_functions
+			list := sorted_once_routines
 			Result := list /= Void and then not list.is_empty
 		end
 
@@ -298,7 +298,7 @@ feature -- Query
 		deferred
 		end
 
-	sorted_once_functions: LIST [E_FEATURE] is
+	sorted_once_routines: LIST [E_FEATURE] is
 		deferred
 		end
 
@@ -451,7 +451,7 @@ feature -- Properties change
 			if row /= Void then
 				row_attributes_filled := False
 				reset_special_attributes_values
-				if row /= Void then
+				if row /= Void and display_attributes then
 					fill_attributes (row)
 				end
 			end
@@ -814,10 +814,12 @@ feature {NONE} -- Filling
 			grid_remove_and_clear_subrows_from (a_row)
 			grid := a_row.parent
 
-			fill_attributes (a_row)
+			if display_attributes then
+				fill_attributes (a_row)
+			end
 
-			if has_once_functions then
-				glab := folder_label_item (Interface_names.l_Once_functions)
+			if has_once_routine then
+				glab := folder_label_item (Interface_names.l_Once_routines)
 				grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.feature_once_icon)
 
 				i := a_row.index + a_row.subrow_count_recursive + 1
@@ -944,7 +946,7 @@ feature {NONE} -- Filling
 
 			-- We remove the dummy item.
 			grid_remove_and_clear_subrows_from (a_row)
-			flist := sorted_once_functions
+			flist := sorted_once_routines
 			check
 				flist /= Void and then not flist.is_empty
 			end

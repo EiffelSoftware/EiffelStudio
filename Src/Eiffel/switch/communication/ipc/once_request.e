@@ -100,20 +100,19 @@ end
 			end
 		end
 
-	once_result (once_function: FEATURE_I): ABSTRACT_DEBUG_VALUE is
-			-- Result of `once_function'
+	once_result (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+			-- Result of `once_routine'
 		require
-			exists: once_function /= Void
-			is_once: once_function.is_once
-			is_function: once_function.type /= Void
-			result_exists: already_called (once_function)
+			exists: once_routine /= Void
+			is_once: once_routine.is_once
+			result_exists: already_called (once_routine)
 		do
 			debug ("debugger_ipc")
-				print (generator + ".once_result (" + once_function.feature_name + ") : start %N")
+				print (generator + ".once_result (" + once_routine.feature_name + ") : start %N")
 			end
-			Result := once_data (once_function)
+			Result := once_data (once_routine)
 			debug ("debugger_ipc")
-				print (generator + ".once_result (" + once_function.feature_name + ") : done %N")
+				print (generator + ".once_result (" + once_routine.feature_name + ") : done %N")
 			end
 		ensure
 			result_exists: Result /= Void
@@ -129,7 +128,6 @@ feature -- Implementation
 		require
 			exists: once_routine /= Void
 			is_once: once_routine.is_once
-			is_function: once_routine.type /= Void
 		local
 			l_index: INTEGER
 			l_type: TYPE_A
@@ -138,6 +136,7 @@ feature -- Implementation
 			l_const: CONSTANT_I
 			exc_v: EXCEPTION_DEBUG_VALUE
 			err_v: DUMMY_MESSAGE_DEBUG_VALUE
+			proc_v: PROCEDURE_RETURN_DEBUG_VALUE
 			l_once_nature: INTEGER
 		do
 			clear_last_values
@@ -146,20 +145,24 @@ feature -- Implementation
 				debug ("debugger_ipc")
 					print ("### feature is of type : " + once_routine.generating_type + "%N")
 				end
-				l_once_func ?= once_routine
-				if l_once_func /= Void then
-					l_type := l_once_func.type
-				else
-					l_const ?= once_routine
-					if l_const /= Void then
-						l_type := l_const.type
+				if once_routine.is_function and once_routine.type /= Void then
+					l_once_func ?= once_routine
+					if l_once_func /= Void then
+						l_type := l_once_func.type
+					else
+						l_const ?= once_routine
+						if l_const /= Void then
+							l_type := l_const.type
+						end
 					end
-				end
-				if l_type /= Void then
-					l_type_value := l_type.type_i.sk_value
+					if l_type /= Void then
+						l_type_value := l_type.type_i.sk_value
+					end
+				else
+					l_type_value := 0
 				end
 				debug ("debugger_ipc")
-					print ("### Called [type="+l_type_value.out+"]?%N")
+					print ("### Called [type=" + l_type_value.out + "]?%N")
 				end
 				if once_routine.is_process_relative then
 					l_once_nature := out_data_per_process
@@ -176,27 +179,32 @@ feature -- Implementation
 				last_failed := c_tread.to_boolean
 				if not last_failed then
 					debug ("debugger_ipc")
-						print ("### Result of type["+ l_type_value.out +" ~ 0x" + l_type_value.to_hex_string+"] ?%N")
+						print ("### Result of type[" + l_type_value.out +" ~ 0x" + l_type_value.to_hex_string+"] ?%N")
 					end
-					recv_value (Current)
-					if is_exception_trace then
-						get_exception_trace
-						create exc_v.make_with_name (once_routine.feature_name)
-						exc_v.set_tag ("Exception occurred")
-						exc_v.set_message (exception_trace)
-						Result := exc_v
-						reset_recv_value
+					if l_type_value = 0 then
+						create proc_v.make_with_name (once_routine.feature_name)
+						Result := proc_v
 					else
-						Result := item
-						clear_item
-						if Result /= Void then
-							last_result := Result
-							Result.set_name (once_routine.feature_name)
-							Result.set_hector_addr
+						recv_value (Current)
+						if is_exception_trace then
+							get_exception_trace
+							create exc_v.make_with_name (once_routine.feature_name)
+							exc_v.set_tag ("Exception occurred")
+							exc_v.set_message (exception_trace)
+							Result := exc_v
+							reset_recv_value
 						else
-							create err_v.make_with_name (once_routine.feature_name)
-							err_v.set_message ("Error : unable to retrieve the data.")
-							Result := err_v
+							Result := item
+							clear_item
+							if Result /= Void then
+								last_result := Result
+								Result.set_name (once_routine.feature_name)
+								Result.set_hector_addr
+							else
+								create err_v.make_with_name (once_routine.feature_name)
+								err_v.set_message ("Error : unable to retrieve the data.")
+								Result := err_v
+							end
 						end
 					end
 				else

@@ -2929,7 +2929,7 @@ feature -- Access
 		end
 
 	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE] is
-			-- List of once functions
+			-- List of once functions.
 		local
 			f_table: FEATURE_TABLE
 			feat: FEATURE_I
@@ -2945,6 +2945,33 @@ feature -- Access
 			loop
 				feat := f_table.item_for_iteration
 				if feat.is_once and then feat.is_function then
+					Result.put_front (feat.api_feature (cid))
+				end
+				f_table.forth
+			end
+			Result.sort
+		ensure
+			non_void_result: Result /= Void
+			result_sorted: Result.sorted
+		end
+
+	once_routines: SORTED_TWO_WAY_LIST [E_FEATURE] is
+			-- List of once features (functions and procedures).
+		local
+			f_table: FEATURE_TABLE
+			feat: FEATURE_I
+			cid: INTEGER
+		do
+			cid := class_id
+			create Result.make
+			f_table := feature_table
+			from
+				f_table.start
+			until
+				f_table.after
+			loop
+				feat := f_table.item_for_iteration
+				if feat.is_once then
 					Result.put_front (feat.api_feature (cid))
 				end
 				f_table.forth

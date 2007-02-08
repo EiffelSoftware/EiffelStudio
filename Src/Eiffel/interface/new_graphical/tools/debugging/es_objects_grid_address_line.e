@@ -98,10 +98,10 @@ feature -- Query
 			end
 		end
 
-	sorted_once_functions: LIST [E_FEATURE] is
+	sorted_once_routines: LIST [E_FEATURE] is
 		do
 			if object_dynamic_class /= Void then
-				Result := object_dynamic_class.once_functions
+				Result := object_dynamic_class.once_routines
 			end
 		end
 

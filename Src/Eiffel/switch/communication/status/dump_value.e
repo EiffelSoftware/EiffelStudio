@@ -126,6 +126,13 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			dynamic_class := value_exception.dynamic_class
 		end
 
+	set_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE) is
+		do
+			procedure_return_value := value
+			type := Type_procedure_return
+			dynamic_class := Void
+		end
+
 feature -- Dotnet creation
 
 	set_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
@@ -998,6 +1005,8 @@ feature -- Access
 				end
 			when Type_pointer then
 				Result := value_pointer.out
+			when Type_procedure_return then
+				Result := "Procedure returned"
 			else
 				Result := ""
 			end
@@ -1135,7 +1144,7 @@ feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUAT
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
 	value_string    : STRING_32 -- String value
 	value_exception : EXCEPTION_DEBUG_VALUE
-
+	procedure_return_value: PROCEDURE_RETURN_DEBUG_VALUE
 
 	type: INTEGER
 		-- type discrimant, possible values are Type_XXXX

@@ -188,6 +188,13 @@ feature -- Access
 			init_value (Result)
 		end
 
+	new_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE): DUMP_VALUE is
+		do
+			create Result.make_empty (debugger_manager)
+			Result.set_procedure_return_value (value)
+			init_value (Result)
+		end
+
 feature -- Dotnet creation
 
 	new_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE): DUMP_VALUE is

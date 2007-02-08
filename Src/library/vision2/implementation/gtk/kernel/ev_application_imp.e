@@ -579,11 +579,9 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
 			l_stored_display_data: like stored_display_data
-			l_any_imp: EV_ANY_IMP
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_popup_parent: EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
-			l_grab_widget: POINTER
 			l_text_component_imp: EV_TEXT_COMPONENT_IMP
 		do
 			use_stored_display_data := True
@@ -608,7 +606,7 @@ feature -- Basic operation
 				l_popup_parent ?= l_top_level_window_imp
 				if l_popup_parent /= Void then
 					l_text_component_imp ?= l_pnd_item
-				end	
+				end
 					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling) unless PND is activated.
 					-- or if the widget is insensitive or the top level window has a modal child.
 				l_ignore_event :=

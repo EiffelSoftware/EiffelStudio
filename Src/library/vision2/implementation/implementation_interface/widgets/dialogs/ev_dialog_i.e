@@ -180,11 +180,6 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 
 feature -- Basic operations
 
-	block is
-			-- Wait until window is closed by the user.
-		deferred
-		end
-
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show and wait until window is closed.
 			-- `Current' is show modal with respect to `a_window'.

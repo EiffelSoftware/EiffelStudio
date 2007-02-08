@@ -32,14 +32,18 @@ feature -- Commands
 			-- Dispatch stone to tools.
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
-			develop_window.eb_debugger_manager.set_stone (a_stone)
-			features_relation_tool.set_stone (a_stone)
-			class_tool.set_stone (a_stone)
-			dependency_tool.set_stone (a_stone)
-			if develop_window.has_case then
-				 diagram_tool.set_stone (a_stone)
+			if develop_window.unified_stone then
+				develop_window.set_stone (a_stone)
+			else
+				develop_window.eb_debugger_manager.set_stone (a_stone)
+				features_relation_tool.set_stone (a_stone)
+				class_tool.set_stone (a_stone)
+				dependency_tool.set_stone (a_stone)
+				if develop_window.has_case then
+					 diagram_tool.set_stone (a_stone)
+				end
+				stone := a_stone
 			end
-			stone := a_stone
 		end
 
 	synchronize is
@@ -81,6 +85,20 @@ feature -- Commands
 			end
 			class_tool.refresh
 			features_relation_tool.refresh
+		end
+
+	show_default_tool_of_feature
+		do
+			features_relation_tool.show
+			features_relation_tool.pop_default_formatter
+			features_relation_tool.set_focus
+		end
+
+	show_default_tool_of_class
+		do
+			class_tool.show
+			class_tool.pop_default_formatter
+			class_tool.set_focus
 		end
 
 feature -- Query

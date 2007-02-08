@@ -246,7 +246,6 @@ feature {NONE} -- Implementation
 			on_shown
 		end
 
-
 	on_shown is
 			-- Perform update actions when the tool is displayed.
 		do

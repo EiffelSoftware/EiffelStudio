@@ -20,7 +20,8 @@ inherit
 			pixmap,
 			mini_toolbar,
 			build_mini_toolbar,
-			build_docking_content
+			build_docking_content,
+			force_last_stone
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -112,6 +113,7 @@ feature {NONE} -- Initialization
 			create {EIFFEL_INHERITANCE_LAYOUT} layout.make_with_world (empty_world)
 			is_rebuild_world_needed := False
 			update_excluded_class_figures
+			empty_world.drop_actions.extend (agent decide_tool_to_display)
 			empty_world.drop_actions.extend (agent on_cluster_drop)
 			empty_world.drop_actions.extend (agent on_class_drop)
 			create force_directed_layout.make_with_world (empty_world)
@@ -295,7 +297,6 @@ feature {NONE} -- Initialization
 				a_command_list.forth
 			end
 		end
-
 
 	build_tool_bar is
 			-- Create diagram option bar.
@@ -527,6 +528,7 @@ feature {NONE} -- Initialization
 			-- Build dockable content.
 		do
 			Precursor {EB_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent decide_tool_to_display)
 			content.drop_actions.extend (agent center_diagram_cmd.execute_with_class_stone)
 			content.drop_actions.extend (agent center_diagram_cmd.execute_with_cluster_stone)
 		end
@@ -1373,6 +1375,7 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 	launch_stone (a_stone: STONE) is
 			-- Launch stone.
 		do
+			decide_tool_to_display (a_stone)
 			if develop_window.unified_stone then
 				develop_window.set_stone (a_stone)
 			else
@@ -1435,14 +1438,46 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			end
 		end
 
-	set_stone (a_stone: STONE) is
-			-- Assign `a_stone' as new stone.
+	set_stone (new_stone: STONE) is
+			-- Simply change last stone.
+			-- If current widget is displayed, the stone is forced.
+			-- Choose default tool to load a feature stone.
+		local
+			fs: FEATURE_STONE
+			cs: CLASSC_STONE
 		do
-			if a_stone /= Void then
-				history_manager.extend (a_stone)
-				stone := a_stone
-				class_stone ?= a_stone
-				cluster_stone ?= a_stone
+			fs ?= new_stone
+			if fs /= Void then
+				if address_manager /= Void then
+					address_manager.hide_address_bar
+				end
+				check
+					feature_not_void: fs.e_feature /= Void
+					associated_class_not_void: fs.e_feature.associated_class /= Void
+				end
+				create cs.make (fs.e_feature.associated_class)
+			end
+			if cs /= Void then
+					-- If it is a feature stone, we take the class of the feature.
+					-- We do not extend a feature stone into diagram tool.
+				set_last_stone (cs)
+			else
+				set_last_stone (new_stone)
+			end
+
+			if widget.is_displayed then
+				force_last_stone
+			end
+		end
+
+	force_last_stone is
+			-- Force last stone.
+		do
+			if last_stone /= Void then
+				history_manager.extend (last_stone)
+				stone := last_stone
+				class_stone ?= last_stone
+				cluster_stone ?= last_stone
 				if widget.is_displayed then
 					if class_stone /= Void then
 						-- create a new class view
@@ -1476,6 +1511,21 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 				end
 			else
 				clear_area
+			end
+			Precursor {EB_TOOL}
+		end
+
+	decide_tool_to_display (a_st: STONE) is
+			-- Decide which tool to display.
+		local
+			fs: FEATURE_STONE
+		do
+			fs ?= a_st
+			if fs /= Void then
+				develop_window.tools.show_default_tool_of_feature
+			else
+				show
+				set_focus
 			end
 		end
 

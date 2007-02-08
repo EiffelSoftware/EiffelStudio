@@ -245,17 +245,13 @@ feature -- Status setting
 		local
 			fst: FEATURE_STONE
 			type_changed: BOOLEAN
-			new_stone: like last_stone
 		do
 			if not is_last_stone_processed then
-				new_stone := last_stone
-				if new_stone /= Void then
-					fst ?= new_stone
-					if fst /= Void then
-						type_changed := (fst.e_class.is_true_external and not is_stone_external) or
-							(not fst.e_class.is_true_external and is_stone_external)
-
-					end
+				fst ?= last_stone
+					-- Avoid class stone from extending to the history.
+				if fst /= Void then
+					type_changed := (fst.e_class.is_true_external and not is_stone_external) or
+						(not fst.e_class.is_true_external and is_stone_external)
 
 						-- Toggle stone flag.
 					if type_changed then
@@ -268,22 +264,8 @@ feature -- Status setting
 					else
 						enable_dotnet_formatters (False)
 					end
-					if fst /= Void then
-						update_viewpoints (fst.e_class)
-					end
-					if fst = Void then
-						managed_formatters.first.enable_sensitive
-						from
-							managed_formatters.start
-						until
-							managed_formatters.after
-						loop
-							managed_formatters.item.set_stone (fst)
-							managed_formatters.forth
-						end
-						internal_stone := Void
-						history_manager.extend (new_stone)
-					elseif
+					update_viewpoints (fst.e_class)
+					if
 						internal_stone = Void or else
 						(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
 					then
@@ -296,7 +278,7 @@ feature -- Status setting
 							managed_formatters.forth
 						end
 						internal_stone := fst
-						history_manager.extend (new_stone)
+						history_manager.extend (fst)
 					end
 					flat_formatter.show_debugged_line
 				end
@@ -308,7 +290,7 @@ feature -- Status setting
 			-- Test if there is a feature with the same name (or routine id?)
 			-- in the dropped class.
 		local
-			fst, ofst: FEATURE_STONE
+			fst, ofst, new_fs: FEATURE_STONE
 			new_f: E_FEATURE
 			cst: CLASSC_STONE
 			cl: CLASS_C
@@ -320,16 +302,12 @@ feature -- Status setting
 				if cst /= Void then
 					cl := cst.e_class
 					ofst ?= stone
-					if ofst /= Void and then cl /= Void and then not cl.is_equal (ofst.e_class) then
+					if ofst /= Void and then cl /= Void then
 						new_f := ofst.e_feature.ancestor_version (cl)
 						if new_f /= Void then
-							launch_stone (create {FEATURE_STONE}.make (new_f))
+							create new_fs.make (new_f)
 							found := True
 						end
-					end
-					if not found then
-						develop_window.tools.class_tool.show
-						develop_window.tools.class_tool.pop_default_formatter
 					end
 				end
 				if not found and ofst /= Void then
@@ -337,30 +315,24 @@ feature -- Status setting
 					output_line.set_text (Warning_messages.w_No_such_feature_in_this_class (
 						ofst.feature_name, st.class_i.name))
 				end
-				if not found then
-					develop_window.tools.class_tool.set_stone (st)
-					develop_window.tools.class_tool.content.show
-					develop_window.tools.class_tool.content.set_focus
-					develop_window.tools.class_tool.set_focus
-				end
-			else
-				launch_stone (fst)
 			end
-		end
 
-	launch_stone (st: STONE) is
-			-- Notify the development window of a new stone.
-		require
-			valid_stone: st /= Void
-		do
+				-- Class tool is the default tool to display a class stone
+				-- when ancestor of old feature is not found in the class stone.
+			if fst = Void and then not found then
+				develop_window.tools.show_default_tool_of_class
+			else
+				develop_window.tools.show_default_tool_of_feature
+			end
+
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
 			else
-				develop_window.tools.set_stone (st)
-			end
-			if content.is_visible then
-				set_focus
-				content.set_focus
+				if not found then
+					develop_window.tools.set_stone (st)
+				else
+					develop_window.tools.set_stone (new_fs)
+				end
 			end
 		end
 

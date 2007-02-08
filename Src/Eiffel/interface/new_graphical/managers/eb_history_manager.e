@@ -218,11 +218,12 @@ feature -- Element change
 			index_active := index_active + 1
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
-			if not equal (target.stone, active) then
+			if target.history_moving_cancelled then
 					-- The user cancelled the set_stone.
 					-- We must go back to our previous position.
 				index_active := initial
 				notify_observers (notify_move, Void, index_active)
+				target.set_history_moving_cancelled (False)
 			end
 		end
 
@@ -252,11 +253,12 @@ feature -- Element change
 			index_active := index_active - 1
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
-			if not equal (target.stone, active) then
+			if target.history_moving_cancelled then
 					-- The user cancelled the set_stone.
 					-- We must go back to our previous position.
 				index_active := initial
 				notify_observers (notify_move, Void, index_active)
+				target.set_history_moving_cancelled (False)
 			end
 		end
 
@@ -275,11 +277,12 @@ feature -- Element change
 			index_active := i
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
-			if not target.stone.is_equal (active) then
+			if target.history_moving_cancelled then
 					-- The user cancelled the set_stone.
 					-- We must go back to our previous position.
 				index_active := initial
 				notify_observers (notify_move, Void, index_active)
+				target.set_history_moving_cancelled (False)
 			end
 		end
 
@@ -291,7 +294,9 @@ feature -- Element change
 			l_history: like history
 			l_item: STONE
 			l_found: BOOLEAN
+			initial: INTEGER
 		do
+			initial := index_active
 			l_history := history.twin
 			from
 				l_history.start
@@ -305,6 +310,13 @@ feature -- Element change
 					l_found := True
 				end
 				l_history.forth
+			end
+			if target.history_moving_cancelled then
+					-- The user cancelled the set_stone.
+					-- We must go back to our previous position.
+				index_active := initial
+				notify_observers (notify_move, Void, index_active)
+				target.set_history_moving_cancelled (False)
 			end
 		ensure
 			active_is_a_stone: a_stone.same_as (active)

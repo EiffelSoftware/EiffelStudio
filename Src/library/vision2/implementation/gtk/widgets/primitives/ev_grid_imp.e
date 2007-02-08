@@ -172,7 +172,10 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end
 
-	text_style, base_style, fg_style, bg_style: INTEGER is unique
+	text_style: INTEGER is 1
+	base_style: INTEGER is 2
+	fg_style: INTEGER is 3
+	bg_style: INTEGER is 4;
 		-- Different coloring styles used in gtk.
 
 feature {EV_ANY_I} -- Implementation

@@ -1132,6 +1132,14 @@ feature -- Label texts
 			Result := locale.format_string (locale.translate ("$1 of $2"), [a_command_name, a_object_name])
 		end
 
+	l_temp_header_dependency (a_command_name, a_object_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_command_name_not_void: a_command_name /= Void
+			a_object_name: a_object_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("Extracting $1 of $2 ..."), [a_command_name, a_object_name])
+		end
+
 	l_history_discarded_string: STRING_GENERAL is do Result := locale.translate ("--- History discarded ---") end
 
 	l_item_is_attached_to (a_title, a_name: STRING_GENERAL): STRING_GENERAL is

@@ -93,7 +93,6 @@ feature {NONE} -- Implementation
 	enable_capture is
 			-- Grab all the mouse and keyboard events.
 		local
-			i: INTEGER
 			l_interface: EV_WIDGET
 			l_grab_widget: POINTER
 		do

@@ -160,11 +160,13 @@
 		<copy dir="${OUTPUT_DIR}" file="estudio${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
+		<available dir="${OUTPUT_DIR}" resource="escln${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="escln${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
 
-
-		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
-			<fileset include="@(*.dll)" />
-		</copy>
+		<available dir="${OUTPUT_DIR}" resource="compile_all${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="compile_all${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
 
 		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
 		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
@@ -181,6 +183,9 @@
 	</target>
 
 	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >
+		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
+			<fileset include="@(*.dll)" />
+		</copy>
 		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="wel_hook.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true" />

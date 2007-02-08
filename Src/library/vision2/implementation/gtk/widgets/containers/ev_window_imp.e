@@ -175,15 +175,11 @@ feature -- Status setting
 			if not is_show_requested then
 				call_show_actions := True
 				Precursor {EV_GTK_WINDOW_IMP}
-				is_positioned := True
 			end
 			if blocking_window /= Void then
 				set_blocking_window (Void)
 			end
 		end
-
-	is_positioned: BOOLEAN
-		-- Has the Window been previously positioned on screen?
 
 	call_show_actions: BOOLEAN
 		-- Should the show actions be called?

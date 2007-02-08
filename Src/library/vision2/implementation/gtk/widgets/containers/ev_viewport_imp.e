@@ -151,14 +151,7 @@ feature -- Element change
 			l_c_object := w_imp.c_object
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			if {EV_GTK_EXTERNALS}.gtk_is_container (l_c_object) then
-				{EV_GTK_EXTERNALS}.gtk_container_check_resize (c_object)
-			else
-				l_allocation := {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (l_c_object)
-				{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_width (l_allocation, a_width)
-				{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_height (l_allocation, a_height)
-				{EV_GTK_EXTERNALS}.gtk_widget_queue_resize (l_c_object)
-			end
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (l_parent_box)
 		end
 
 feature {NONE} -- Implementation

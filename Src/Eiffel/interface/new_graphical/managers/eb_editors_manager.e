@@ -571,7 +571,6 @@ feature -- Element change
 			l_group: CONF_GROUP
 			l_content: SD_CONTENT
 			l_editor_numbers: ARRAYED_LIST [INTEGER]
-			l_classes: LIST [CLASS_I]
 		do
 			-- After this operation, the place holder zone will be inserted by docking library
 			close_all_editor

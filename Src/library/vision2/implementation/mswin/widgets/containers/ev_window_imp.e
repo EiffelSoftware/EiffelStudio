@@ -404,22 +404,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operations
-
-	block is
-			-- Wait until `Current' is closed by the user.
-		local
-			app: EV_APPLICATION
-		do
-			app := Environment.application
-
-				-- Wait until window is closed.
-			from until is_destroyed or else not is_displayed loop
-				app.process_events
-				app.sleep (100)
-			end
-		end
-
 feature -- Status Report
 
 	has_focus: BOOLEAN is

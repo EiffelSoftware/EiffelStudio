@@ -649,6 +649,7 @@ feature -- Element change
 	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
 		local
+			l_txt: STRING_32
 			a_cs: EV_GTK_C_STRING
 			a_column_ptr: POINTER
 		do
@@ -659,7 +660,9 @@ feature -- Element change
 			check
 				a_column_not_null: a_column_ptr /= default_pointer
 			end
-			a_cs := a_txt
+			l_txt := a_txt.as_string_32
+			l_txt.replace_substring_all (once "_", once "__")
+			a_cs := l_txt
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
 

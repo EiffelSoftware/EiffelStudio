@@ -32,6 +32,12 @@ inherit
 			{NONE}all
 		end
 
+	EXCEPTIONS
+		rename
+			ignore as exce_ignore,
+			catch as exec_catch
+		end
+
 create
 	make, make_with_command_line
 
@@ -230,21 +236,30 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			l_cnt: INTEGER
 			l_left: INTEGER
 			l_str: STRING
+			l_retried: BOOLEAN
 		do
-			input_mutex.lock
-			l_cnt := input_buffer.count
-			if l_cnt > 0 then
-				last_input_bytes := l_cnt.min (buffer_size)
-				create l_str.make (last_input_bytes)
-				l_left := l_cnt - last_input_bytes
-				l_str.append (input_buffer.substring (1, last_input_bytes))
-				input_buffer.keep_tail (l_left)
-			else
-				last_input_bytes := 0
+			if not l_retried and then not is_read_pipe_broken then
+				input_mutex.lock
+				l_cnt := input_buffer.count
+				if l_cnt > 0 then
+					last_input_bytes := l_cnt.min (buffer_size)
+					create l_str.make (last_input_bytes)
+					l_left := l_cnt - last_input_bytes
+					l_str.append (input_buffer.substring (1, last_input_bytes))
+					input_buffer.keep_tail (l_left)
+				else
+					last_input_bytes := 0
+				end
+				input_mutex.unlock
+				if l_str /= Void then
+					child_process.put_string (l_str)
+				end
 			end
-			input_mutex.unlock
-			if l_str /= Void then
-				child_process.put_string (l_str)
+		rescue
+			l_retried := True
+			if is_signal and then signal = sigpipe then
+				set_is_read_pipe_broken (True)
+				retry
 			end
 		end
 
@@ -312,6 +327,7 @@ feature {NONE}  -- Implementation
 			else
 				child_process.set_error_file_name (error_file_name)
 			end
+			set_is_read_pipe_broken (False)
 		end
 
 	initialize_after_launch is
@@ -468,6 +484,19 @@ feature {NONE} -- Implementation
 			else
 				Result := default_pointer
 			end
+		end
+
+feature{NONE} -- Error recovery
+
+	is_read_pipe_broken: BOOLEAN
+			-- Is pipe used for reading broken?
+
+	set_is_read_pipe_broken (b: BOOLEAN) is
+			-- Set `is_read_pipe_broken' with `b'.
+		do
+			is_read_pipe_broken := b
+		ensure
+			is_read_pipe_broken_set: is_read_pipe_broken = b
 		end
 
 invariant

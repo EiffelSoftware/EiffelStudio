@@ -141,6 +141,13 @@ feature -- Basic operations
 				old is_aborted_stack.is_equal (is_aborted_stack)
 		end
 
+	extend_kamikaze (an_item: like item) is
+			-- Extend `an_item' and remove it again after it is called.
+		do
+			extend (an_item)
+			prune_when_called (an_item)
+		end
+
 feature -- Access
 
 	name: STRING is

@@ -36,16 +36,14 @@ feature -- Initialization
 				if not eb_debugger_manager.debug_mode_forced then
 					eb_debugger_manager.force_debug_mode
 					pre_ag := agent eb_debugger_manager.unforce_debug_mode
-					eb_debugger_manager.application_prelaunching_actions.extend (pre_ag)
-					eb_debugger_manager.application_prelaunching_actions.prune_when_called (pre_ag)
+					eb_debugger_manager.application_prelaunching_actions.extend_kamikaze (pre_ag)
 				end
 
 				if delayed_run_action = Void then
 					create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
 				end
 				ag := agent delayed_run_action.request_call
-				eb_debugger_manager.application_quit_actions.extend (ag)
-				eb_debugger_manager.application_quit_actions.prune_when_called (ag)
+				eb_debugger_manager.application_quit_actions.extend_kamikaze (ag)
 
 				kill_requested := False
 				ask_and_kill
@@ -53,7 +51,7 @@ feature -- Initialization
 				if not kill_requested then
 					if pre_ag /= Void then
 						eb_debugger_manager.unforce_debug_mode
-						eb_debugger_manager.application_prelaunching_actions.prune_when_called (pre_ag)
+						eb_debugger_manager.application_prelaunching_actions.prune_all (pre_ag)
 					end
 					eb_debugger_manager.application_quit_actions.prune_all (ag)
 				end

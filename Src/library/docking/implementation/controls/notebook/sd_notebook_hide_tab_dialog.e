@@ -229,7 +229,7 @@ feature {NONE} -- Implementation agents.
 			end
 			disable_select_all_item
 			l_items := internal_tool_bar.items
-			if l_items.first /= Void then
+			if l_items.count > 0 and l_items.first /= Void then
 				l_label ?= l_items.first
 				check not_void: l_label /= Void end
 				l_label.enable_hot

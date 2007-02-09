@@ -11,12 +11,6 @@ class
 
 inherit
 	EB_GRID_EDITOR_TOKEN_ITEM
-
-	EVS_GRID_SEARCHABLE_ITEM
-		undefine
-			default_create,
-			copy,
-			is_equal
 		redefine
 			column_index,
 			row_index
@@ -74,13 +68,13 @@ feature -- Initialization
 					set_text_with_tokens (ql_name_style.text)
 				end
 				set_pixmap (pixmap_for_query_lanaguage_item (a_item))
-				image_internal := a_item.name
+				set_image (a_item.name)
 			else
 					-- Initialize current as a path item.
 				l_path_style := item_path_style
 				l_path_style.set_item (a_item)
 				set_text_with_tokens (l_path_style.text)
-				image_internal := text
+				set_image (text)
 			end
 		ensure
 			column_index_set: column_index = a_column_index
@@ -90,33 +84,13 @@ feature -- Initialization
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM is
-			-- EV_GRID item associated with current
-		do
-			Result := Current
-		end
-
 	column_index: INTEGER
 			-- Column index
 
 	row_index: INTEGER
 			-- Row index
 
-	image: STRING is
-			-- Image used in search
-		do
-			Result := image_internal
-		end
-
 feature{NONE} -- Implementation
-
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in `image'.
-		do
-		end
-
-	image_internal: like image
-			-- Implementation of `image'
 
 	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
 			-- Path style used to diplay path for query item

@@ -110,7 +110,7 @@ feature -- Query
 			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
 		end
 
-	grid_item : EB_GRID_COMPILER_ITEM is
+	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Corresponding grid item
 		local
 			l_style: like local_style

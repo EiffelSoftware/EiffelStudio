@@ -115,7 +115,7 @@ feature -- Access
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser in which current row is contained			
 
-	class_grid_item: EB_GRID_COMPILER_ITEM is
+	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Class item
 		do
 			if class_item_internal = Void then
@@ -129,7 +129,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	written_class_grid_item: EB_GRID_COMPILER_ITEM is
+	written_class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Written class item
 		require
 			writen_class_used: is_written_class_used
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	feature_grid_item: EB_GRID_COMPILER_ITEM is
+	feature_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Feature item
 		do
 			if feature_item_internal = Void  then

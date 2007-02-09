@@ -756,7 +756,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_expanded_row_icon (a_item: EB_GRID_COMPILER_ITEM; a_name: like name_type) is
+	set_expanded_row_icon (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_name: like name_type) is
 			-- Set pixmap of `a_item'.
 		do
 			a_item.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)

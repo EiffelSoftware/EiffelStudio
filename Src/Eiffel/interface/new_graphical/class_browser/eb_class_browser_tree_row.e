@@ -104,7 +104,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	class_grid_item: EB_GRID_COMPILER_ITEM is
+	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Class item
 		local
 			l_complete_generic_class_style: like complete_generic_class_no_star_style
@@ -132,7 +132,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	path_grid_item: EB_GRID_COMPILER_ITEM is
+	path_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Path item
 		local
 			l_path_style: like path_item_style

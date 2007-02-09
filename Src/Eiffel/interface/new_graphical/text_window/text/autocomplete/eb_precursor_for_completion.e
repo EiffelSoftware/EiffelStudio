@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Query
 
-	grid_item: EB_GRID_COMPILER_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Grid item
 		local
 			l_items: ARRAYED_LIST [EDITOR_TOKEN]

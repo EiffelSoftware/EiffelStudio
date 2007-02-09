@@ -52,6 +52,13 @@ inherit
 			default_create
 		end
 
+	EVS_GRID_SEARCHABLE_ITEM
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	default_create,
 	make_with_text
@@ -398,6 +405,47 @@ feature -- Setting
 			general_tooltip := Void
 		ensure
 			general_tooltip_removed: general_tooltip = Void
+		end
+
+feature -- Searchable
+
+	set_image (a_image: like image) is
+			-- Set `image' with `a_image'.
+		require
+			a_image_attached: a_image /= Void
+		do
+			create image_internal.make_from_string (a_image)
+		ensure
+			image_set: image /= Void and then image.is_equal (a_image)
+		end
+
+feature
+
+	image: STRING is
+			-- Image of current used in search
+		do
+			Result := image_internal
+			if Result = Void then
+				Result := ""
+			end
+		end
+
+feature{NONE}
+
+	grid_item: EV_GRID_ITEM is
+			-- EV_GRID item associated with current
+		do
+			Result := Current
+		end
+
+feature{NONE} -- Implementation
+
+	image_internal: like image
+			-- Implementation of `image'
+
+	internal_replace (original, new: STRING) is
+			-- Replace every occurrence of `original' with `new' in `image'.
+		do
 		end
 
 feature{NONE} -- Redraw

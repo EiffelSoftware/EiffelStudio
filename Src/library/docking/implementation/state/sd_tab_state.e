@@ -26,6 +26,7 @@ inherit
 			content_count_valid,
 			is_dock_at_top,
 			hide,
+			show,
 			has,
 			set_last_floating_width,
 			set_last_floating_height,
@@ -371,6 +372,19 @@ feature -- Redefine
 			create l_state.make (internal_content)
 			l_state.set_relative (zone.contents.last)
 			change_state (l_state)
+		end
+
+	show is
+			-- Redefine
+		local
+			l_state_void: SD_STATE_VOID
+		do
+			-- Current was SD_TAB_STATE before open_config (SD_CONFIG_MEDIATOR),
+			-- after open_config, client programmers will call this fucntion sometimes.
+			-- We use default void state behavior here.
+			create l_state_void.make (content)
+			change_state (l_state_void)
+			l_state_void.show
 		end
 
 	set_user_widget (a_widget: EV_WIDGET) is

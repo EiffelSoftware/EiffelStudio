@@ -16,6 +16,11 @@ inherit
 			default_style
 		end
 
+	EV_WEL_TOOLTIPABLE
+		redefine
+			tooltip_window
+		end
+
 create
 	make
 
@@ -28,6 +33,11 @@ feature {NONE} -- Implementation
 		do
 			Result := Ws_visible | Ws_child | Uds_arrowkeys |
 				Uds_setbuddyint | Uds_alignright
+		end
+
+	tooltip_window: WEL_WINDOW is
+		do
+			Result := Current
 		end
 
 indexing

@@ -39,6 +39,11 @@ inherit
 			on_getdlgcode
 		end
 
+	EV_WEL_TOOLTIPABLE
+		redefine
+			tooltip_window
+		end
+
 create
 	make_with_combo
 
@@ -288,6 +293,11 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
+	tooltip_window: WEL_WINDOW
+		do
+			Result := Current
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -299,8 +309,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_INTERNAL_COMBO_FIELD_IMP
+end
 

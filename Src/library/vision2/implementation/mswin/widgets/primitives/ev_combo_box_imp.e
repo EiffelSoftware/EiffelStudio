@@ -66,9 +66,9 @@ inherit
 			on_kill_focus,
 			set_foreground_color,
 			set_background_color,
-			tooltip_window,
 			destroy,
-			propagate_key_event_to_toplevel_window
+			propagate_key_event_to_toplevel_window,
+			set_tooltip
 		end
 
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -193,26 +193,32 @@ feature -- Alignment
 			--	* Text_alignment_left
 			--	* Text_alignment_right
 			--	* Text_alignment_center
-		do
-			Result := text_field.text_alignment
-		end
 
 	align_text_center
 			-- Display text centered.
 		do
-			text_field.align_text_center
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			if is_editable then
+				text_field.align_text_center
+			end
 		end
 
 	align_text_right
 			-- Display text right aligned.
 		do
-			text_field.align_text_right
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+			if is_editable then
+				text_field.align_text_right
+			end
 		end
 
 	align_text_left
 			-- Display text left aligned.
 		do
-			text_field.align_text_left
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			if is_editable then
+				text_field.align_text_left
+			end
 		end
 
 feature -- Access
@@ -384,6 +390,17 @@ feature -- Status setting
 			-- Set the caret position to `pos'.
 		do
 			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
+		end
+
+	set_tooltip (a_tooltip: STRING_GENERAL) is
+			-- Assign `a_tooltip' to tooltip.
+		do
+				-- We need to set the tooltip on all the components of the combobox.
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_tooltip)
+			if is_editable then
+				text_field.set_tooltip (a_tooltip)
+			end
+			combo.set_tooltip (a_tooltip)
 		end
 
 feature -- Basic operation
@@ -681,15 +698,18 @@ feature {NONE} -- Implementation
 		local
 			sensitive: BOOLEAN
 			s_item: EV_LIST_ITEM
+			l_tooltip: like tooltip
 		do
 			if is_editable then
 				sensitive := is_sensitive
 				s_item := selected_item
+				l_tooltip := tooltip
+				set_tooltip ("")
 				recreate_combo_box (Cbs_dropdownlist)
 
 					-- Remove the text field and create a combo.
-				text_field := Void
 				create combo.make_with_combo (Current)
+				text_field := Void
 				if not sensitive then
 					disable_sensitive
 				end
@@ -698,6 +718,18 @@ feature {NONE} -- Implementation
 				end
 				if foreground_color_imp /= Void then
 					set_foreground_color (foreground_color)
+				end
+
+					-- Restore tooltip
+				set_tooltip (l_tooltip)
+
+					-- Restore alignment
+				inspect text_alignment
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then align_text_left
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then align_text_center
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then align_text_right
+				else
+					check False end
 				end
 			end
 		end
@@ -707,15 +739,17 @@ feature {NONE} -- Implementation
 		local
 			sensitive: BOOLEAN
 			s_item: EV_LIST_ITEM
+			l_tooltip: like tooltip
 		do
 			if not is_editable then
 				sensitive := is_sensitive
 				s_item := selected_item
+				l_tooltip := tooltip
 				recreate_combo_box (Cbs_dropdown)
 
 					-- Remove the combo and create a text field.
 				create combo.make_with_combo (Current)
- 	 			create text_field.make_with_combo (Current)
+				create text_field.make_with_combo (Current)
 				if not sensitive then
 					disable_sensitive
 				end
@@ -724,6 +758,18 @@ feature {NONE} -- Implementation
 				end
 				if foreground_color_imp /= Void then
 					set_foreground_color (foreground_color)
+				end
+
+					-- Restore tooltip
+				set_tooltip (l_tooltip)
+
+					-- Restore alignment
+				inspect text_alignment
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left then align_text_left
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center then align_text_center
+				when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right then align_text_right
+				else
+					check False end
 				end
 			end
 		end
@@ -812,7 +858,7 @@ feature {NONE} -- Implementation
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'.
 		do
-			precursor {EV_TEXT_COMPONENT_IMP} (color)
+			Precursor {EV_TEXT_COMPONENT_IMP} (color)
 			if is_displayed then
 				if is_editable then
 					text_field.invalidate
@@ -826,13 +872,6 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
-		end
-
-	tooltip_window: WEL_WINDOW is
-			-- `Result' is WEL_WINDOW of `Current' used
-			-- to trigger tooltip events.
-		do
-			Result := window_of_item (text_field.item)
 		end
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
@@ -991,7 +1030,9 @@ feature {NONE} -- WEL Implementation
 			-- Hilight the text between `start_pos' and `end_pos'.
 			-- Both `start_pos' and `end_pos' are selected.
 		do
-			text_field.set_selection (start_pos, end_pos)
+			if is_editable then
+				text_field.set_selection (start_pos, end_pos)
+			end
 		end
 
 	wel_selection_start: INTEGER is
@@ -1034,8 +1075,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_COMBO_BOX_IMP
-
+end

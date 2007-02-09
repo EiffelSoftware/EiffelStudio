@@ -25,6 +25,30 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Broswer in which current row is displayed
 
+	class_stone (a_class: CLASS_C): STONE is
+			-- Class stone for `a_class'
+		require
+			a_class_attached: a_class /= Void
+		do
+			create{CLASSC_STONE} Result.make (a_class)
+		end
+
+	feature_stone (a_feature: E_FEATURE): STONE is
+			-- Feature stone associated with Current item
+		require
+			a_feature_attached: a_feature /= Void
+		do
+			create{FEATURE_STONE} Result.make (a_feature)
+		end
+
+	cluster_stone (a_group: CONF_GROUP): STONE is
+			-- Cluster stone from `a_group'
+		require
+			a_group_attached: a_group /= Void
+		do
+			create{CLUSTER_STONE} Result.make (a_group)
+		end
+
 feature -- Setting
 
 	set_browser (a_browser: like browser) is

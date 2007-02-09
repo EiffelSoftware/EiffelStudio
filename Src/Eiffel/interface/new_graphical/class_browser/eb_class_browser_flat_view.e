@@ -112,11 +112,18 @@ feature -- Actions
 			end
 		end
 
-	on_enter_pressed is
-			-- Action to be performed when enter key is pressed
-		do
-			on_expand_all_level
-		end
+--	on_enter_pressed is
+--			-- Action to be performed when enter key is pressed
+--		local
+--			l_item: EV_GRID_ITEM
+--		do
+--			l_item := item_to_put_in_editor
+--			if l_item /= Void then
+--				open_item_editor (l_item)
+--			else
+--				on_expand_all_level
+--			end
+--		end
 
 	on_key_pressed_in_feature_name_list (a_key: EV_KEY) is
 			-- Action to be performed when key pressed in `feature_name_list'.
@@ -776,6 +783,15 @@ feature{NONE} -- Implementation
 
 	wait_to_update_view_time: INTEGER is 500
 			-- Time interval (in milliseconds) to wait before we update view
+
+feature{NONE} -- Implementation/Stone
+
+	item_to_put_in_editor: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.			
+		do
+			Result := item_to_put_in_editor_for_single_item_grid
+		end
 
 invariant
 	filter_engine_attached: filter_engine /= Void

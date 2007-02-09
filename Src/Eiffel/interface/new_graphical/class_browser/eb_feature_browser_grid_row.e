@@ -122,7 +122,9 @@ feature -- Access
 				create class_item_internal
 				setup_class_item_with_short_signature (
 					class_item_internal, feature_item.class_c, short_class_tokens, short_class_image,
-					agent should_class_tooltip_be_displayed (feature_item.class_c), agent complete_class_name_tokens)
+					agent should_class_tooltip_be_displayed (feature_item.class_c), agent complete_class_name_tokens
+				)
+				class_item_internal.set_stone_function (agent class_stone (feature_item.class_c))
 			end
 			Result := class_item_internal
 		ensure
@@ -139,7 +141,9 @@ feature -- Access
 					create written_class_item_internal
 					setup_class_item_with_short_signature (
 						written_class_item_internal, feature_item.written_class, short_written_class_tokens, short_written_class_image,
-						agent should_class_tooltip_be_displayed (feature_item.written_class), agent complete_written_class_name_tokens)
+						agent should_class_tooltip_be_displayed (feature_item.written_class), agent complete_written_class_name_tokens
+					)
+					written_class_item_internal.set_stone_function (agent class_stone (feature_item.written_class))
 				end
 				Result := written_class_item_internal
 			end
@@ -152,7 +156,9 @@ feature -- Access
 				create feature_item_internal
 				setup_feature_signature_item (
 					feature_item_internal, feature_item.e_feature, feature_signature_tokens, feature_image,
-					agent should_feature_tooltip_be_displayed, agent feature_comment)
+					agent should_feature_tooltip_be_displayed, agent feature_comment
+				)
+				feature_item_internal.set_stone_function (agent feature_stone (feature_item.e_feature))
 			end
 			Result := feature_item_internal
 		ensure

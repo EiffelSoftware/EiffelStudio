@@ -36,6 +36,9 @@ feature{NONE} -- Initialization
 
 			feature_signature_style.set_ql_feature (feature_item)
 			feature_signature_tokens := feature_signature_style.text
+
+			class_item_internal.set_stone_function (agent class_stone (written_class))
+			feature_item_internal.set_stone_function (agent feature_stone (e_feature))
 		end
 
 feature -- Grid binding

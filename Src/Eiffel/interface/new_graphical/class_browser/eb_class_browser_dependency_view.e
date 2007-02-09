@@ -250,12 +250,6 @@ feature -- Actions
 			l_processed := on_predefined_key_pressed (a_key)
 		end
 
-	on_enter_pressed is
-			-- Action to be performed when enter key is pressed
-		do
-			on_expand_all_level
-		end
-
 	on_expand_all_level is
 			-- Action to be performed to recursively expand all selected rows.
 		do
@@ -1723,6 +1717,35 @@ feature{NONE} -- Initialization
 				create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False),
 				agent on_collapse_one_level_partly
 			)
+		end
+
+feature{NONE} -- Implementation/Stone
+
+	item_to_put_in_editor: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.			
+		local
+			l_rows: LIST [EV_GRID_ROW]
+			l_grid_row: EV_GRID_ROW
+			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_index: INTEGER
+		do
+			l_rows := grid.selected_rows
+			if l_rows.count = 1 then
+				l_grid_row := l_rows.first
+				if (not l_grid_row.is_expandable) or else l_grid_row.is_expanded then
+					l_row ?= l_grid_row.data
+					if l_row /= Void then
+						if not l_row.is_stone_set then
+							l_row.set_grid_item_stone
+						end
+						l_index := l_grid_row.index_of_first_item
+						if l_index /= 0 then
+							Result := l_grid_row.item (l_index)
+						end
+					end
+				end
+			end
 		end
 
 indexing

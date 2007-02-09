@@ -176,12 +176,6 @@ feature -- Actions
 			l_processed := on_predefined_key_pressed (a_key)
 		end
 
-	on_enter_pressed is
-			-- Action to be performed when enter key is pressed
-		do
-			on_expand_all_level
-		end
-
 	on_expand_all_level is
 			-- Action to be performed to recursively expand all selected rows.
 		do
@@ -806,6 +800,26 @@ feature{NONE} -- Initialization
 
 	location_column_index: INTEGER is 2;
 			-- Index of location column
+
+feature{NONE} -- Implementation/Stone
+
+	item_to_put_in_editor: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.
+		local
+			l_rows: LIST [EV_GRID_ROW]
+			l_grid_row: EV_GRID_ROW
+		do
+			l_rows := grid.selected_rows
+			if l_rows.count = 1 then
+				if l_rows.first.parent = grid then
+					l_grid_row := l_rows.first
+					if (not l_grid_row.is_expandable) or else (l_grid_row.is_expanded) then
+						Result := l_grid_row.item (1)
+					end
+				end
+			end
+		end
 
 invariant
 	sorting_order_preference_attached: sorting_order_preference /= Void

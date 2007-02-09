@@ -126,6 +126,7 @@ feature -- Access
 				end
 				class_item_internal := l_class_item_internal
 				class_item_internal.set_image (class_item_internal.text)
+				class_item_internal.set_stone_function (agent class_stone (class_item.class_c))
 			end
 			Result := class_item_internal
 		ensure

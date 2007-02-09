@@ -512,7 +512,15 @@ feature{NONE} -- Actions
 
 	on_enter_pressed is
 			-- Action to be performed when enter key is pressed
-		deferred
+		local
+			l_item: EV_GRID_ITEM
+		do
+			l_item := item_to_put_in_editor
+			if l_item /= Void then
+				open_item_editor (l_item)
+			else
+				on_expand_all_level
+			end
 		end
 
 	on_expand_all_level is
@@ -835,6 +843,47 @@ feature -- Tree hierarchy highlight
 
 	retrieve_data_actions_internal: like retrieve_data_actions
 			-- Implementation of `retrieve_data_actions'
+
+feature{NONE} -- Implementation/Stone
+
+	item_to_put_in_editor_for_single_item_grid: like item_to_put_in_editor is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.			
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_item: EV_GRID_ITEM
+		do
+			l_selected_items := grid.selected_items
+			if l_selected_items.count = 1 then
+			    l_item := l_selected_items.first
+			    if l_item.is_parented and then ((not l_item.row.is_expandable) or else l_item.row.is_expanded) then
+			    	Result := l_item
+			    end
+			end
+		end
+
+	item_to_put_in_editor: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.			
+		deferred
+		end
+
+	open_item_editor (a_item: EV_GRID_ITEM) is
+			-- If `a_item' is an editor token item and contains a valid stone, open that stone in editor.
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_stone: STONE
+		do
+			l_editor_token_item ?= a_item
+			if l_editor_token_item /= Void then
+				l_stone := l_editor_token_item.stone
+				if l_stone /= Void and then l_stone.is_valid then
+					development_window.set_stone (l_stone)
+				end
+			end
+		end
 
 invariant
 	development_window_attached: not is_recycled implies development_window /= Void

@@ -518,6 +518,44 @@ feature{NONE} -- Implementation
 			is_up_to_date_set: is_up_to_date = b
 		end
 
+feature{EB_CLASS_BROWSER_DEPENDENCY_VIEW} -- Stone
+
+	set_grid_item_stone is
+			-- Set stone for `item' into `grid_item'.
+		local
+			l_item: like item
+			l_class: QL_CLASS
+			l_feature: QL_REAL_FEATURE
+			l_group: QL_GROUP
+			l_stone: STONE
+		do
+			if row_type /= folder_row_type then
+				l_item := item
+				if l_item.is_class then
+					l_class ?= l_item
+					l_stone := class_stone (l_class.class_c)
+				elseif l_item.is_real_feature then
+					l_feature ?= l_item
+					l_stone := feature_stone (l_feature.e_feature)
+				elseif l_item.is_group then
+					l_group ?= l_item
+					l_stone := cluster_stone (l_group.group)
+				end
+				grid_item_internal.set_stone (l_stone)
+			end
+		end
+
+	is_stone_set: BOOLEAN
+			-- Is stone set into `grid_item'?
+
+	set_is_stone_set (b: BOOLEAN) is
+			-- Set `is_stone_set' with `b'.
+		do
+			is_stone_set := b
+		ensure
+			is_stone_set: is_stone_set = b
+		end
+
 invariant
 	item_attached: item /= Void
 	row_node_attached: row_node /= Void

@@ -140,6 +140,21 @@ feature -- Access
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
+	stone: STONE is
+			-- Stone attached to Current item
+			-- Result `stone_internal' if `stone_function' is not set,
+			-- otherwise invoke `stone_function' to get the actual stone.
+		do
+			if stone_function = Void then
+				Result := stone_internal
+			else
+				Result := stone_function.item ([])
+			end
+		end
+
+	stone_function: FUNCTION [ANY, TUPLE, STONE]
+			-- Function to fetch `stone'.
+
 feature -- Status report
 
 	is_trailer_adhesive_enabled: BOOLEAN
@@ -407,6 +422,22 @@ feature -- Setting
 			general_tooltip_removed: general_tooltip = Void
 		end
 
+	set_stone (a_stone: like stone) is
+			-- Set `stone' with `a_stone'.
+		do
+			stone_internal := a_stone
+		ensure
+			stone_set: stone_internal = a_stone
+		end
+
+	set_stone_function (a_function: like stone_function) is
+			-- Set `stone_function' with `a_function'.
+		do
+			stone_function := a_function
+		ensure
+			stone_function_set: stone_function = a_function
+		end
+
 feature -- Searchable
 
 	set_image (a_image: like image) is
@@ -419,8 +450,6 @@ feature -- Searchable
 			image_set: image /= Void and then image.is_equal (a_image)
 		end
 
-feature
-
 	image: STRING is
 			-- Image of current used in search
 		do
@@ -428,14 +457,6 @@ feature
 			if Result = Void then
 				Result := ""
 			end
-		end
-
-feature{NONE}
-
-	grid_item: EV_GRID_ITEM is
-			-- EV_GRID item associated with current
-		do
-			Result := Current
 		end
 
 feature{NONE} -- Implementation
@@ -914,6 +935,15 @@ feature{NONE} -- Implementation
 
 	veto_general_tooltip_agent_internal: like veto_general_tooltip_agent
 			-- Implementation of `veto_general_tooltip_agent'
+
+	grid_item: EV_GRID_ITEM is
+			-- EV_GRID item associated with current
+		do
+			Result := Current
+		end
+
+	stone_internal: like stone
+			-- Implementation of `stone' if `stone_function' is not Set.
 
 feature{NONE} -- Action type constants
 

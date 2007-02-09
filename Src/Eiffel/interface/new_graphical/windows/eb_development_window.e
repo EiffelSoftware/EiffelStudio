@@ -1091,7 +1091,7 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 				if a_stone /= Void then
 					l_class_stone ?= a_stone
 					l_cluster_stone ?= a_stone
-					if l_class_stone /= Void then
+					if l_class_stone /= Void and then l_class_stone.is_valid then
 						editors_manager.current_editor.docking_content.set_pixmap (pixmap_from_class_i (l_class_stone.class_i))
 						editors_manager.current_editor.docking_content.set_short_title (l_class_stone.class_name)
 						editors_manager.current_editor.docking_content.set_long_title (l_class_stone.class_name)
@@ -1104,7 +1104,6 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 					end
 				end
 			end
-
 		end
 
 feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses

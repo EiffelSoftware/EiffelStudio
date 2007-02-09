@@ -1461,9 +1461,9 @@ feature {NONE} -- Implementation
 				add_event_connection ("%T-- Close the application when an interface close")
 				add_event_connection ("%T-- request is recieved on `Current'. i.e. the cross is clicked.")
 				if info.generate_as_client then
-					add_event_connection (Client_window_string + ".close_request_actions.extend (agent " + Client_window_string + ".destroy)")
+					add_event_connection (Client_window_string + ".close_request_actions.extend (agent " + Client_window_string + ".destroy_and_exit_if_last)")
 				else
-					add_event_connection ("close_request_actions.extend (agent destroy)")
+					add_event_connection ("close_request_actions.extend (agent destroy_and_exit_if_last)")
 				end
 			end
 		end

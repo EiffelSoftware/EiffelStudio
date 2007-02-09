@@ -19,12 +19,14 @@ inherit
 
 	EB_TOOL
 		rename
-			make as make_tool
+			make as make_tool,
+			mini_toolbar as mini_toolbar_box,
+			build_mini_toolbar as build_mini_toolbar_box
 		redefine
 			menu_name,
 			pixmap,
-			mini_toolbar,
-			build_mini_toolbar,
+			mini_toolbar_box,
+			build_mini_toolbar_box,
 			build_docking_content,
 			show
 		end
@@ -233,6 +235,15 @@ feature {NONE} -- Interface
 			g.set_pre_activation_action (agent pre_activate_cell)
 		end
 
+	build_mini_toolbar_box is
+		do
+			create mini_toolbar_box
+			build_header_box
+			build_mini_toolbar
+			mini_toolbar_box.extend (header_box)
+			mini_toolbar_box.extend (mini_toolbar)
+		end
+
 	build_mini_toolbar is
 			-- Build associated tool bar
 		local
@@ -240,7 +251,6 @@ feature {NONE} -- Interface
 			scmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar
-
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
@@ -430,6 +440,8 @@ feature -- preference
 
 feature -- Access
 
+	mini_toolbar_box: EV_HORIZONTAL_BOX
+
 	mini_toolbar: EV_TOOL_BAR
 			-- Associated mini tool bar.
 
@@ -507,11 +519,6 @@ feature {NONE} -- Notebook item's behavior
 			hbox := header_box
 			if header_text_label = Void or else header_text_label.parent /= hbox then
 				clean_header_box
-				create sep
-				sep.set_minimum_width (30)
-				hbox.extend (sep)
-				hbox.disable_item_expand (sep)
-
 				create header_class_label
 				header_class_label.set_foreground_color (preferences.editor_data.class_text_color)
 				hbox.extend (header_class_label)
@@ -526,7 +533,10 @@ feature {NONE} -- Notebook item's behavior
 				hbox.extend (header_feature_label)
 				hbox.disable_item_expand (header_feature_label)
 
-				hbox.extend (create {EV_CELL})
+				create sep
+				sep.set_minimum_width (30)
+				hbox.extend (sep)
+				hbox.disable_item_expand (sep)
 			end
 			check
 				header_class_label /= Void
@@ -570,8 +580,13 @@ feature {NONE} -- Notebook item's behavior
 				header_class_label.remove_text
 				header_text_label.set_text (Interface_names.l_System_not_running)
 				header_feature_label.remove_text
-
 			end
+			header_class_label.refresh_now
+			header_text_label.refresh_now
+			header_feature_label.refresh_now
+			header_box.refresh_now
+
+			develop_window.docking_manager.update_mini_tool_bar_size (content)
 		end
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
@@ -797,12 +812,12 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 
 feature {NONE} -- grid Layout Implementation
 
-	keep_object_reference_fixed (addr: STRING) is
-		do
-			if debugger_manager.application_is_executing then
-				debugger_manager.application_status.keep_object (addr)
-			end
-		end
+--	keep_object_reference_fixed (addr: STRING) is
+--		do
+--			if debugger_manager.application_is_executing then
+--				debugger_manager.application_status.keep_object (addr)
+--			end
+--		end
 
 	cleaning_delay: INTEGER
 			-- Number of milliseconds waited before clearing debug output.
@@ -1097,18 +1112,18 @@ feature {NONE} -- Current objects grid Implementation
 
 feature {NONE} -- Impl : Debugged objects grid specifics
 
-	debugged_object_key_action (k: EV_KEY) is
-			-- Actions performed when a key is pressed on a top-level object.
-			-- Handle `Del'.
-		do
-			inspect
-				k.code
-			when {EV_KEY_CONSTANTS}.key_delete then
-				remove_debugged_object_cmd.execute
-			else
+--	debugged_object_key_action (k: EV_KEY) is
+--			-- Actions performed when a key is pressed on a top-level object.
+--			-- Handle `Del'.
+--		do
+--			inspect
+--				k.code
+--			when {EV_KEY_CONSTANTS}.key_delete then
+--				remove_debugged_object_cmd.execute
+--			else
 
-			end
-		end
+--			end
+--		end
 
 	object_stone_dropped_on_grid (a_grid: like objects_grid; st: OBJECT_STONE) is
 		local
@@ -1333,25 +1348,25 @@ feature {NONE} -- Impl : Stack objects grid
 			build_exception_info (a_target_grid)
 		end
 
-	build_stack_objects (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
-			-- Create the tree that contains locals (Result) and parameters.
-		require
-			cse_not_void: cse /= Void
-		do
-				--| Build other stack part
-			build_arguments_row (a_target_grid, cse)
-			if internal_arguments_row /= Void and expand_args then
-				internal_arguments_row.expand
-			end
-			build_locals_row (a_target_grid, cse)
-			if internal_locals_row /= Void and expand_locals then
-				internal_locals_row.expand
-			end
-			build_result_row (a_target_grid, cse)
-			if internal_result_row /= Void and expand_result then
-				internal_result_row.expand
-			end
-		end
+--	build_stack_objects (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
+--			-- Create the tree that contains locals (Result) and parameters.
+--		require
+--			cse_not_void: cse /= Void
+--		do
+--				--| Build other stack part
+--			build_arguments_row (a_target_grid, cse)
+--			if internal_arguments_row /= Void and expand_args then
+--				internal_arguments_row.expand
+--			end
+--			build_locals_row (a_target_grid, cse)
+--			if internal_locals_row /= Void and expand_locals then
+--				internal_locals_row.expand
+--			end
+--			build_result_row (a_target_grid, cse)
+--			if internal_result_row /= Void and expand_result then
+--				internal_result_row.expand
+--			end
+--		end
 
 	show_exception_dialog (a_tag, a_msg: STRING) is
 		local
@@ -1594,10 +1609,10 @@ feature {NONE} -- Impl : Stack objects grid
 			Result := st /= Void
 		end
 
-	on_drop_stack_element (a_item: EV_GRID_ITEM; st: CALL_STACK_STONE) is
-		do
-			drop_stack_element (st)
-		end
+--	on_drop_stack_element (a_item: EV_GRID_ITEM; st: CALL_STACK_STONE) is
+--		do
+--			drop_stack_element (st)
+--		end
 
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.

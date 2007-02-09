@@ -1263,6 +1263,9 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 				disable_editors_command
 				tools.features_tool.set_stone (Void)
 				set_title (window_manager.new_title)
+				if not window.is_destroyed and window.is_displayed and window.is_sensitive then
+					window.set_focus
+				end
 			end
 		end
 

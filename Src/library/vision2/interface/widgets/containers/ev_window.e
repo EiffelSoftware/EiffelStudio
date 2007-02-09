@@ -45,6 +45,13 @@ inherit
 			implementation
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			copy, default_create, is_equal
+		end
+
 create
 	default_create,
 	make_with_title
@@ -175,6 +182,18 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_border_enabled
+		end
+
+feature -- Command
+
+	destroy_and_exit_if_last is
+			-- Destroy current window and destroy instance of EV_APPLICATION if
+			-- no more top level windows remain in the system.
+		do
+			destroy
+			if ev_application.windows.is_empty then
+				ev_application.destroy
+			end
 		end
 
 feature -- Status setting

@@ -1484,6 +1484,7 @@ feature -- Title part
 	t_Slice_limits: STRING_GENERAL is					do Result := locale.translate("Choose New Slice Limits for Special Objects")	end
 	t_System: STRING_GENERAL is							do Result := locale.translate("Project Settings")	end
 	t_target_selection: STRING_GENERAL is 				do Result := locale.translate ("Target Selection") end
+	t_this_file_has_been_modified: STRING_GENERAL is 	do Result := locale.translate ("This file has been modified by another editor.") end
 	t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translate("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translate("Auto-Complete")	end
 	t_Diagram_class_header: STRING_GENERAL is			do Result := locale.translate("Class Header")	end

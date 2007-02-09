@@ -25,7 +25,8 @@ inherit
 			initialize_editor_context,
 			reference_window,
 			internal_recycle,
-			show_warning_message
+			show_warning_message,
+			check_document_modifications_and_reload
 		end
 
 	EB_SHARED_MANAGERS
@@ -200,6 +201,49 @@ feature -- Text Loading
 				end
 			end
 			Precursor {EDITABLE_TEXT_PANEL} (s)
+		end
+
+	check_document_modifications_and_reload is
+			-- Check if current stone is changed and reload.
+		local
+			dialog: EV_INFORMATION_DIALOG
+			button_labels: ARRAY [STRING_GENERAL]
+			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+			l_class_stone: CLASSI_STONE
+		do
+			is_checking_modifications := True
+
+				-- After refactoring, the stone is possibly changed,
+				-- and file name is possibly changed.
+			l_class_stone ?= stone
+			if l_class_stone /= Void then
+				if not file_name.is_equal (l_class_stone.class_i.file_name) then
+					file_name := l_class_stone.class_i.file_name
+				end
+			end
+
+			if not file_exists then
+				reload
+			elseif not file_is_up_to_date then
+				if changed or not editor_preferences.automatic_update then
+						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
+					create dialog.make_with_text (interface_names.t_this_file_has_been_modified)
+					create button_labels.make (1, 2)
+					create actions.make (1, 2)
+					button_labels.put (interface_names.b_Reload, 1)
+					actions.put (agent reload, 1)
+					button_labels.put (interface_names.b_Continue_anyway, 2)
+					actions.put (agent continue_editing, 2)
+					dialog.set_buttons_and_actions (button_labels, actions)
+					dialog.set_default_push_button (dialog.button (button_labels @ 1))
+					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
+					dialog.set_title (interface_names.t_External_edition)
+					dialog.show_modal_to_window (reference_window)
+				elseif editor_preferences.automatic_update and not changed then
+					reload
+				end
+			end
+			is_checking_modifications := False
 		end
 
 feature -- Stonable

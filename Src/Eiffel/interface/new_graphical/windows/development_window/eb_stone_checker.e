@@ -67,6 +67,7 @@ feature {NONE} -- Implementation functions
 			-- Try to assign different kinds of stones.
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
+			l_editor: like current_editor
 		do
 			if cur_wid = Void then
 				--| Do nothing.
@@ -80,8 +81,9 @@ feature {NONE} -- Implementation functions
 			old_class_stone ?= develop_window.stone
 			develop_window.old_set_stone (a_stone)
 			text_loaded := develop_window.is_text_loaded
-			if current_editor /= Void then
-				current_editor.set_stone (a_stone)
+			l_editor := current_editor
+			if l_editor /= Void then
+				l_editor.set_stone (a_stone)
 			end
 
 			conv_brkstone ?= a_stone

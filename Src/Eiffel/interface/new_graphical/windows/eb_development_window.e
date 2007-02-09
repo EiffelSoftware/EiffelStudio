@@ -362,6 +362,10 @@ feature -- Update
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
+
+			set_stone (st)
+
+				-- Reload possible class after the stone is set.
 			l_text_area := editors_manager.current_editor
 			if l_text_area /= Void then
 				l_text_area.update_click_list (False)
@@ -370,7 +374,6 @@ feature -- Update
 				end
 			end
 
-			set_stone (st)
 			update_save_symbol
 			address_manager.refresh
 			during_synchronization := False

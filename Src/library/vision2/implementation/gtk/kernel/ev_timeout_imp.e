@@ -40,6 +40,7 @@ feature -- Initialization
 			-- Initialize `Current'.
 		do
 			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
+			on_timeout_agent := agent on_timeout
 			set_is_initialized (True)
 		end
 
@@ -77,6 +78,9 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
 		end
+
+	on_timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE]
+		-- Reusable timeout for adding to idle actions.
 
 feature {NONE} -- Implementation
 

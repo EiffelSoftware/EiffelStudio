@@ -33,23 +33,25 @@ feature -- Command
 			-- Display text associated with `a_stone', if any and if possible
 		local
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+			l_editors_manager: EB_EDITORS_MANAGER
 		do
 			old_class_stone ?= develop_window.stone
 			feature_stone ?= a_stone
 			ef_stone ?= a_stone
 			new_class_stone ?= a_stone
 			cluster_st ?= a_stone
-			editor := develop_window.editors_manager.editor_with_stone (a_stone)
+			l_editors_manager := develop_window.editors_manager
+			editor := l_editors_manager.editor_with_stone (a_stone)
 
 			if editor /= Void then
-				develop_window.editors_manager.editor_switched_actions.block
+				l_editors_manager.editor_switched_actions.block
 				editor.docking_content.set_focus
-				develop_window.editors_manager.editor_switched_actions.resume
+				l_editors_manager.editor_switched_actions.resume
 			else
-				if develop_window.editors_manager.editor_count = 0 then
+				if l_editors_manager.editor_count = 0 then
 					-- FIXIT: remove the following line if we reaaly decided we can have void editor
-					develop_window.editors_manager.create_editor
-					develop_window.editors_manager.last_created_editor.docking_content.set_focus
+					l_editors_manager.create_editor
+					l_editors_manager.last_created_editor.docking_content.set_focus
 				end
 			end
 
@@ -81,14 +83,14 @@ feature -- Command
 			end
 
 				-- Refresh editor in main formatters.
-			if develop_window.editors_manager.current_editor /= Void then
+			if l_editors_manager.current_editor /= Void then
 				from
 					l_managed_main_formatters := develop_window.managed_main_formatters
 					l_managed_main_formatters.start
 				until
 					l_managed_main_formatters.after
 				loop
-					l_managed_main_formatters.item.set_editor (develop_window.editors_manager.current_editor)
+					l_managed_main_formatters.item.set_editor (l_editors_manager.current_editor)
 					l_managed_main_formatters.forth
 				end
 			end
@@ -113,8 +115,8 @@ feature -- Command
 					conv_ferrst ?= feature_stone
 					if develop_window.feature_stone_already_processed and conv_ferrst /= Void then
 							-- Scroll to the line of the error.
-						if not develop_window.during_synchronization and then develop_window.editors_manager.current_editor /= Void then
-							develop_window.editors_manager.current_editor.display_line_when_ready (conv_ferrst.line_number, True)
+						if not develop_window.during_synchronization and then l_editors_manager.current_editor /= Void then
+							l_editors_manager.current_editor.display_line_when_ready (conv_ferrst.line_number, True)
 						end
 					end
 				end
@@ -143,8 +145,8 @@ feature -- Command
 					develop_window.address_manager.refresh
 				end
 			end
-			if develop_window.editors_manager.current_editor /= Void and then not develop_window.editors_manager.current_editor.has_focus then
-				develop_window.ev_application.do_once_on_idle (agent (develop_window.editors_manager.current_editor).set_focus)
+			if l_editors_manager.current_editor /= Void and then not l_editors_manager.current_editor.has_focus then
+				develop_window.ev_application.do_once_on_idle (agent (l_editors_manager.current_editor).set_focus)
 			end
 		end
 

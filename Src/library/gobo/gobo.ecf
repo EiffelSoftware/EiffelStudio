@@ -18,21 +18,30 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="gobo_kernel" location="library\kernel\" recursive="true"/>
-		<cluster name="gobo_lexical" location="library\lexical\" recursive="true"/>
-		<cluster name="gobo_math" location="library\math\" recursive="true"/>
-		<cluster name="gobo_parse" location="library\parse\" recursive="true"/>
-		<cluster name="gobo_pattern" location="library\pattern\" recursive="true"/>
-		<cluster name="gobo_regexp" location="library\regexp\" recursive="true"/>
-		<cluster name="gobo_string" location="library\string\" recursive="true"/>
-		<cluster name="gobo_structure" location="library\structure\" recursive="true"/>
-		<cluster name="gobo_time" location="library\time\" recursive="true"/>
-		<cluster name="gobo_tools" location="library\tools\" recursive="true"/>
-		<cluster name="gobo_utility" location="library\utility\" recursive="true"/>
-		<cluster name="gobo_xml" location="library\xml\" recursive="true">
+		<cluster name="gobo_kernel" location="..\gobo_svn\library\kernel\" recursive="true" >
+			<cluster name="gobo_kernel_spec" location="library\kernel\spec" recursive="true"/>
+		</cluster>
+		<cluster name="gobo_lexical" location="..\gobo_svn\library\lexical\" recursive="true">
+			<cluster name="gobo_lexical_generated" location="library\lexical" recursive="true"/>
+		</cluster>
+		<cluster name="gobo_math" location="..\gobo_svn\library\math\" recursive="true"/>
+		<cluster name="gobo_parse" location="..\gobo_svn\library\parse\" recursive="true">
+			<cluster name="gobo_parse_generated" location="library\parse\" recursive="true"/>
+		</cluster>
+		<cluster name="gobo_pattern" location="..\gobo_svn\library\pattern\" recursive="true"/>
+		<cluster name="gobo_regexp" location="..\gobo_svn\library\regexp\" recursive="true"/>
+		<cluster name="gobo_string" location="..\gobo_svn\library\string\" recursive="true"/>
+		<cluster name="gobo_structure" location="..\gobo_svn\library\structure\" recursive="true"/>
+		<cluster name="gobo_time" location="..\gobo_svn\library\time\" recursive="true"/>
+		<cluster name="gobo_tools" location="..\gobo_svn\library\tools\" recursive="true">
+			<cluster name="gobo_tools_generated" location="library\tools\" recursive="true"/>
+		</cluster>
+		<cluster name="gobo_utility" location="..\gobo_svn\library\utility\" recursive="true"/>
+		<cluster name="gobo_xml" location="..\gobo_svn\library\xml\" recursive="true">
 			<file_rule>
 				<exclude>/expat$</exclude>
 			</file_rule>
+			<cluster name="gobo_xml_generated" location="library\xml\" recursive="true"/>
 		</cluster>
 	</target>
 </system>

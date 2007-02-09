@@ -276,6 +276,31 @@ feature -- Queries
 				--| NOTA: Result can be void
 		end
 
+	value_class_i: CLASS_I is
+			-- CLASS_I related to this Current value
+		require
+			has_object_interface: has_object_interface
+			value_module_file_name_valid: value_module_file_name /= Void
+			value_class_token_valid: value_class_token > 0
+		local
+			ct: CLASS_TYPE
+			an: STRING -- assembly name
+			cn: STRING  -- class name
+		do
+			ct := value_class_type
+			if ct /= Void then
+				Result := ct.associated_class.original_class
+			else
+				cn := value_class_name
+				an := value_icd_module.get_assembly.get_name
+				an := only_file_name_without_extension (an)
+					--| FIXME jfiat 2004/04/02 : maybe having
+					--| eiffel_universe.class_from_assembly_filename (...
+				Result := eiffel_universe.class_from_assembly (an, cn)
+			end
+			--| Note: Result can be Void for certain external dotnet class type.
+		end
+
 	value_class_c: CLASS_C is
 			-- CLASS_C related to this Current value
 		require
@@ -284,23 +309,18 @@ feature -- Queries
 			value_class_token_valid: value_class_token > 0
 		local
 			ct: CLASS_TYPE
-			an: STRING -- assembly name
 			ci: CLASS_I
-			cn: STRING  -- class name
 		do
 			ct := value_class_type
 			if ct /= Void then
 				Result := ct.associated_class
-			else
-				cn := value_class_name
-				an := value_icd_module.get_assembly.get_name
-				an := only_file_name_without_extension (an)
-					--| FIXME jfiat 2004/04/02 : maybe having
-					--| eiffel_universe.class_from_assembly_filename (...
-				ci := eiffel_universe.class_from_assembly (an, cn)
+			end
+			if Result = Void then
+				ci := value_class_i
 				if ci /= Void then
 					Result := ci.compiled_class
-				else
+				end
+				if Result = Void then
 					fixme ("FIXME JFIAT: Ugly .. but for now .. far enought")
 					Result := debugger_manager.compiler_data.system_object_class_c
 				end

@@ -1875,6 +1875,7 @@
 										<File Id="ev_fontable_imp.e" Name="EV_FON~9.E" LongName="ev_fontable_imp.e" />
 										<File Id="ev_tooltipable_imp.e" Name="EV_TOO~L.E" LongName="ev_tooltipable_imp.e" />
 										<File Id="ev_dockable_target_imp.e" Name="EV_DOC~C.E" LongName="ev_dockable_target_imp.e" />
+										<File Id="ev_wel_tooltipable.e" Name="EV_WEL~1.E" LongName="ev_wel_tooltipable.e" />
 									</Component>
 								</Directory>
 								<Directory Id="items23" Name="items">

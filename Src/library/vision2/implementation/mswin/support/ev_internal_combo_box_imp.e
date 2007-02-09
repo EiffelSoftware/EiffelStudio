@@ -37,6 +37,11 @@ inherit
 			on_getdlgcode
 		end
 
+	EV_WEL_TOOLTIPABLE
+		redefine
+			tooltip_window
+		end
+
 	WEL_WM_CTLCOLOR_CONSTANTS
 		export
 			{NONE} all
@@ -306,6 +311,11 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
+	tooltip_window: WEL_WINDOW
+		do
+			Result := Current
+		end
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
@@ -327,8 +337,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_INTERNAL_COMBO_FIELD_IMP
+end
 

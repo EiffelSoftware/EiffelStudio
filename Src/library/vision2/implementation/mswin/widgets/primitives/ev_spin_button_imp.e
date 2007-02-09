@@ -63,7 +63,8 @@ inherit
 			pointer_motion_actions,
 			resize_actions,
 			tooltip_window,
-			on_set_focus
+			on_set_focus,
+			set_tooltip
 		end
 
 	WEL_CONTROL_WINDOW
@@ -277,6 +278,12 @@ feature -- Setting
 			-- Set focus to Current, ie its internal associated text field.
 		do
 			internal_text_field.set_focus
+		end
+
+	set_tooltip (a_tooltip: STRING_GENERAL) is
+		do
+			Precursor {EV_GAUGE_IMP} (a_tooltip)
+			internal_arrows_control.set_tooltip (a_tooltip)
 		end
 
 feature {NONE} -- Access

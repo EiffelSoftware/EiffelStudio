@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-	grid_item: EB_GRID_COMPILER_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Grid item
 		local
 			l_style: like feature_style

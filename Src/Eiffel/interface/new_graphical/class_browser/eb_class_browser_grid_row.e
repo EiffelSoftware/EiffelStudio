@@ -58,7 +58,7 @@ feature -- Row expanding
 
 feature -- General tooltip
 
-	new_general_tooltip (a_item: EB_GRID_COMPILER_ITEM; a_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN]): EB_EDITOR_TOKEN_TOOLTIP is
+	new_general_tooltip (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN]): EB_EDITOR_TOKEN_TOOLTIP is
 			-- New general tooltip for `a_item'.
 			-- `a_veto_function' is the function to decide if display of the tooltip should be vetoed.
 		require
@@ -89,7 +89,7 @@ feature -- General tooltip
 
 feature{NONE} -- Implementation
 
-	setup_feature_signature_item (a_item: EB_GRID_COMPILER_ITEM; a_feature: E_FEATURE; a_text_tokens: LIST [EDITOR_TOKEN];
+	setup_feature_signature_item (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_feature: E_FEATURE; a_text_tokens: LIST [EDITOR_TOKEN];
 								  a_image: STRING; a_tooltip_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN];
 								  a_comment_agent: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]) is
 			-- Setup `a_item' to display information `a_feature' in its full signature form whose text comes from `a_text_tokens'.
@@ -114,7 +114,7 @@ feature{NONE} -- Implementation
 			a_item.set_general_tooltip (l_tooltip)
 		end
 
-	setup_class_item_with_short_signature (a_item: EB_GRID_COMPILER_ITEM; a_class_c: CLASS_C; a_text_tokens: LIST [EDITOR_TOKEN]; a_image: STRING;
+	setup_class_item_with_short_signature (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_class_c: CLASS_C; a_text_tokens: LIST [EDITOR_TOKEN]; a_image: STRING;
 										   a_tooltip_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN];
 										   a_full_signature_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]) is
 			-- Setup `a_item' to display information about `a_class_c' in short generic form whose text comes from `a_text_tokens'.

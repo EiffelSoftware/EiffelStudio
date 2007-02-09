@@ -492,7 +492,7 @@ feature{NONE} -- Update
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
-			l_compiler_item: EB_GRID_COMPILER_ITEM
+			l_compiler_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_item: EV_GRID_ITEM
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_grid_row: EV_GRID_ROW

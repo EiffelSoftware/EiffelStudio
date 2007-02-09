@@ -56,7 +56,7 @@ feature -- Access
 	image: STRING
 			-- Image of current row used in grid search
 
-	grid_item: EB_GRID_COMPILER_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Grid item to be displayed
 		local
 			l_text: LIST [EDITOR_TOKEN]
@@ -72,7 +72,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	feature_list_item: EB_GRID_COMPILER_ITEM is
+	feature_list_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Grid item to display `feature_list'
 		require
 			feature_list_attached: feature_list /= Void

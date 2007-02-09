@@ -598,7 +598,7 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	branch_item (a_branch_id: INTEGER): EB_GRID_COMPILER_ITEM is
+	branch_item (a_branch_id: INTEGER): EB_GRID_EDITOR_TOKEN_ITEM is
 			-- A grid item to display branch id
 		do
 			create Result

@@ -602,7 +602,7 @@ feature{NONE} -- Grid binding
 		require
 			grid_is_empty: grid.row_count = 0
 		local
-			l_grid_item: EB_GRID_COMPILER_ITEM
+			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_domain_item: EB_DOMAIN_ITEM
 		do
 			l_domain_item := domain_item_from_stone (starting_element)

@@ -74,7 +74,7 @@ feature -- Access
 			Result := Current.out.twin
 		end
 
-	grid_item : EB_GRID_COMPILER_ITEM is
+	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Corresponding grid item
 		local
 			l_class: CLASS_C

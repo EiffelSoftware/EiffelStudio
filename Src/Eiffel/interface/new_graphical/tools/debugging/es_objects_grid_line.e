@@ -1039,7 +1039,7 @@ feature {NONE} -- Agent filling
 			ag_fi: FEATURE_I
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
-			gf: EB_GRID_COMPILER_ITEM
+			gf: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			grid := a_row.parent
 			from

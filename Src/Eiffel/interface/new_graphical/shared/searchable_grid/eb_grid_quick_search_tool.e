@@ -99,16 +99,24 @@ feature -- Registration/Implementation
 
 feature -- Display
 
+	set_focus_on_keyword_field is
+			-- Set focus on `keyword_field'.
+		do
+			keyword_field.set_focus
+		end
+
 	show_tool is
 			-- Display current search tool.
 		do
+			show_tool_actions.call ([])
 			show
-			keyword_field.set_focus
+			set_focus_on_keyword_field
 		end
 
 	hide_tool is
 			-- Hide current search tool.
 		do
+			hide_tool_actions.call ([])
 			hide
 		end
 
@@ -170,6 +178,49 @@ feature -- Setting
 			store_keyword_accelerator := a_accelerator
 		ensure
 			store_keyword_accelerator_set: store_keyword_accelerator = a_accelerator
+		end
+
+	set_keyword (a_keyword: like keyword) is
+			-- Set `keyword' with `a_keyword'.
+		require
+			a_keyword_attached: a_keyword /= Void
+		do
+			keyword_field.set_text (a_keyword)
+			keyword_field.set_caret_position (a_keyword.count + 1)
+		ensure
+			keyword_set: keyword /= Void and then keyword.is_equal (a_keyword)
+		end
+
+feature -- Access
+
+	keyword: STRING_32 is
+			-- Current keyword
+		do
+			Result := keyword_field.text
+		ensure
+			result_attached: Result /= Void
+		end
+
+	show_tool_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed when Current search tool is displayed
+		do
+			if show_tool_actions_internal = Void then
+				create show_tool_actions_internal
+			end
+			Result := show_tool_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	hide_tool_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed when Current search tool is hidden
+		do
+			if hide_tool_actions_internal = Void then
+				create hide_tool_actions_internal
+			end
+			Result := hide_tool_actions_internal
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report
@@ -243,6 +294,9 @@ feature{NONE} -- Actions
 		local
 			l_component: like searchable_component
 			l_acc: EV_ACCELERATOR
+			l_done: BOOLEAN
+			l_keyword: STRING_32
+			l_key_str: STRING
 		do
 			l_component := searchable_component
 			if l_component.is_search_enabled then
@@ -257,16 +311,45 @@ feature{NONE} -- Actions
 					else
 						keyword_field.set_focus
 					end
+					l_done := True
 				end
 					-- Key accelerator to search previous
-				l_acc := search_previous_accelerator
-				if l_acc /= Void and then is_accelerator_matched (a_key, l_acc) then
-					search_previous (False)
+				if not l_done then
+					l_acc := search_previous_accelerator
+					if l_acc /= Void and then is_accelerator_matched (a_key, l_acc) then
+						search_previous (False)
+						l_done := True
+					end
 				end
 					-- Key accelerator to search next
-				l_acc := search_next_accelerator
-				if l_acc /= Void and then is_accelerator_matched (a_key, l_acc) then
-					search_next (False)
+				if not l_done then
+					l_acc := search_next_accelerator
+					if l_acc /= Void and then is_accelerator_matched (a_key, l_acc) then
+						search_next (False)
+						l_done := True
+					end
+				end
+
+				if not l_done and then l_component.is_direct_start_search_enabled then
+					l_key_str := a_key.out
+					if l_key_str.count = 1 then
+						if ev_application.shift_pressed then
+							l_key_str.to_upper
+						end
+						if is_displayed then
+							if keyword_field.has_focus then
+								l_keyword := keyword.twin
+								l_keyword.append (l_key_str)
+								set_keyword (l_keyword)
+							else
+								set_keyword (l_key_str)
+								set_focus_on_keyword_field
+							end
+						else
+							show_tool
+							set_keyword (l_key_str)
+						end
+					end
 				end
 			end
 		end
@@ -535,6 +618,12 @@ feature{NONE} -- Implementation
 
 	wait_to_search_time: INTEGER is 500
 			-- Time (in milliseconds) delayed to start search when user inputs keyword
+
+	show_tool_actions_internal: like show_tool_actions
+			-- Implementation of `show_tool_actions'
+
+	hide_tool_actions_internal: like hide_tool_actions
+			-- Implementation of `hide_tool_actions'
 
 invariant
 	search_bar_position_correct:

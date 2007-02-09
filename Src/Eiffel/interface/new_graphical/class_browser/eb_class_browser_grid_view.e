@@ -93,6 +93,8 @@ feature{NONE} -- Initialization
 			color_or_font_change_actions.extend (agent on_color_or_font_changed)
 			synchronize_color_or_font_change_with_editor
 			synchronize_scroll_behavior_with_editor
+			enable_direct_start_search
+			quick_search_bar.hide_tool_actions.extend (agent do grid.set_focus end)
 		end
 
 feature -- Setting

@@ -188,6 +188,7 @@ feature {NONE} -- Initialization
 			grid_wrapper.set_item_text_function (agent text_of_grid_item)
 			grid_wrapper.set_select_all_action (agent select_all_action)
 			grid_wrapper.enable_copy
+			grid_wrapper.enable_direct_start_search
 
 				-- Delete following in docking EiffelStudio.
 			append_drop_actions (
@@ -672,11 +673,7 @@ feature{NONE}	-- Implementation
 				l_grid.remove_selection
 				l_grid_item.ensure_visible
 				if a_selected then
-					if l_grid.is_single_item_selection_enabled then
-						l_grid_item.enable_select
-					elseif l_grid.is_single_row_selection_enabled then
-						l_grid_item.row.enable_select
-					end
+					l_grid_item.row.enable_select
 				end
 			end
 		end

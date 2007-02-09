@@ -60,6 +60,12 @@ feature -- Status report
 	is_replace_enabled: BOOLEAN
 			-- Is replacement through advanced search panel enabled?
 
+	is_direct_start_search_enabled: BOOLEAN
+			-- Is direct start search mode enabled?
+			-- Direct start search mode means that if a key is pressed in `searchable_component'.`grid',
+			-- Current quick search bar will be prompted automatically
+			-- Default: False
+
 feature -- Access
 
 	component_widget: EV_WIDGET is
@@ -139,6 +145,24 @@ feature -- Search tool
 			end
 		ensure
 			a_tool_removed: not registered_search_tool.has (a_tool)
+		end
+
+	enable_direct_start_search is
+			-- Enable direct start search mode.
+			-- For more information of direct start search mode, see `is_direct_start_search_enabled'.			
+		do
+			is_direct_start_search_enabled := True
+		ensure
+			direct_start_search_mode_enabled: is_direct_start_search_enabled
+		end
+
+	disable_direct_start_search is
+			-- Disable direct start search mode.
+			-- For more information of direct start search mode, see `is_direct_start_search_enabled'.			
+		do
+			is_direct_start_search_enabled := False
+		ensure
+			direct_start_search_mode_disabled: not is_direct_start_search_enabled
 		end
 
 feature{NONE} -- Implementation

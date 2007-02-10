@@ -33,7 +33,7 @@ feature {NONE} -- Access
 		do
 			create Result.make (256)
 			Result.append ("HKEY_LOCAL_MACHINE\SOFTWARE\")
-			if {VS_SETUP}.is_windows_x64 then
+			if {C_CONFIG_MANAGER}.is_windows_x64 then
 				Result.append ("Wow6432Node\")
 			end
 			Result.append (product_reg_path)

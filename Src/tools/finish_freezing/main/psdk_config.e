@@ -1,5 +1,5 @@
 indexing
-	description: "Specialized configiration for Microsoft PlatformSDK's."
+	description: "Specialized configiration for Microsoft Platform/WindowsSDK's."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";

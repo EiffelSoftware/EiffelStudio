@@ -28,30 +28,13 @@ feature -- Initialization
 			-- Create and setup environment variables for currently installed
 			-- version of Visual Studio.
 		local
-			l_configs: like configs
+			l_man: C_CONFIG_MANAGER
 			l_config: C_CONFIG
-			l_stop: BOOLEAN
 		do
-				-- Retrieve configurations
-			if is_windows_x64 then
-				l_configs := configs (a_force_32bit_generation)
-			else
-				l_configs := configs (True)
-			end
-
-				-- Synchronize environment variables
-			from l_configs.start until l_configs.after or l_stop loop
-				l_config := l_configs.item
-				l_stop := l_config.exists
-				if not l_stop then
-					l_config := Void
-					l_configs.forth
-				end
-			end
-
-			if l_stop then
+			create l_man.make (a_force_32bit_generation)
+			if l_man.has_applicable_config then
 					-- Synchronize with configuration
-				check l_config_attached: l_config /= Void end
+				l_config := l_man.best_configuration
 				synchronize_variable (path_var_name, l_config.path_var)
 				synchronize_variable (include_var_name, l_config.include_var)
 				synchronize_variable (lib_var_name, l_config.lib_var)
@@ -115,37 +98,6 @@ feature -- Implementation
 					check l_success: l_success end
 				end
 			end
-
-		end
-
-feature {NONE} -- Access
-
-	configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG] is
-			-- Visual Studio configuration for x64/x86 platforms
-		require
-			a_use_32bit_for_x86: not is_windows_x64 implies not a_use_32bit
-		do
-			create Result.make (5)
-			Result.extend (create {PSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit))
-			if not is_windows_x64 then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True))
-			end
-
-		ensure
-			result_attached: Result /= Void
-		end
-
-feature -- Externals
-
-	is_windows_x64: BOOLEAN is
-			-- Is Current running on Windows 64 bits?
-		external
-			"C macro use %"eif_eiffel.h%""
-		alias
-			"EIF_IS_64_BITS"
 		end
 
 feature {NONE} -- Externals

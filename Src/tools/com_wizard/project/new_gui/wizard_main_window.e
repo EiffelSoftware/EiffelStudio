@@ -695,12 +695,6 @@ feature {NONE} -- Private Access
 			Result := <<'*', '?', ':', '<', '>', '|', '\', '"'>>
 		end
 
-	Ev_application: EV_APPLICATION is
-			-- Vision2 application
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

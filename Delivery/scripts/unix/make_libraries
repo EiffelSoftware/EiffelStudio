@@ -14,6 +14,8 @@ remtrace event
 exprt $DEFAULT_ORIGO_SVN/Src/library/event event 
 remtrace gobo
 exprt $DEFAULT_ORIGO_SVN/Src/library/gobo gobo
+fullrd gobo/svn
+copy gobo/gobo_release.ecf gobo/gobo.ecf
 remtrace gobo_extension
 exprt $DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension 
 remtrace graph

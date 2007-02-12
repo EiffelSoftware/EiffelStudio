@@ -85,7 +85,7 @@ feature -- Icons
 		end
 
 	hide_tab_indicator_buffer (a_hide_number: INTEGER): EV_PIXEL_BUFFER is
-			-- Hide tab indicator.
+			-- Hide tab indicator pixel buffer.
 		require
 			vaild: a_hide_number >= 0 and a_hide_number < 1000
 		deferred
@@ -95,7 +95,8 @@ feature -- Icons
 
 	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
 			-- Hide tab indicator.
-		obsolete "Use hide_tab_indicator_buffer instead"
+			-- If `hide_tab_indicator_buffer' available, then docking library will not use this feature.
+			-- Because on Linux draw text on EV_PIXEL_BUFFER is not available now, then Smart Docking library will use this feature.
 		do
 		end
 

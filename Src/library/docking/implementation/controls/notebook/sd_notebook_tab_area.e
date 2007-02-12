@@ -41,6 +41,8 @@ feature {NONE}  -- Initlization
 			end
 
 			create internal_tool_bar.make
+			internal_tool_bar.set_row_height (internal_shared.notebook_tab_height + 3)
+
 			create internal_auto_hide_indicator.make
 			internal_auto_hide_indicator.set_tooltip (internal_shared.interface_names.tooltip_notebook_hidden_tab_indicator)
 
@@ -52,7 +54,6 @@ feature {NONE}  -- Initlization
 			disable_item_expand (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
-			internal_auto_hide_indicator.set_pixel_buffer (internal_shared.icons.hide_tab_indicator_buffer (0))
 			internal_tool_bar.compute_minmum_size
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
@@ -342,10 +343,19 @@ feature {NONE}  -- Implementation functions
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 --			l_tabs: like all_tabs -- FIXIT: If uselike, then 'l_tabs.item.set_enough_space' will not clickable.
 			l_only_tab: SD_NOTEBOOK_TAB
+			l_platform: PLATFORM
 		do
 			l_tabs := all_tabs
 			if internal_tabs_not_shown.count > 0 then
-				internal_auto_hide_indicator.set_pixel_buffer (internal_shared.icons.hide_tab_indicator_buffer (internal_tabs_not_shown.count))
+				create l_platform
+				if l_platform.is_windows then
+					internal_auto_hide_indicator.set_pixel_buffer (internal_shared.icons.hide_tab_indicator_buffer (internal_tabs_not_shown.count))
+				else
+					-- We use EV_PIXMAP instead of EV_PIXEL_BUFFER on Linux, because draw_text is not available for Linux.
+					internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (internal_tabs_not_shown.count))
+					internal_auto_hide_indicator.update
+				end
+
 				internal_tool_bar.compute_minmum_size
 				internal_tool_bar.show
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then

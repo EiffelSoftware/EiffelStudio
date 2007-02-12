@@ -12,7 +12,8 @@ inherit
 
 	SD_ICONS_SINGLETON
 		redefine
-			tool_bar_separator_icon
+			tool_bar_separator_icon,
+			hide_tab_indicator
 		end
 
 	EB_SHARED_PIXMAPS
@@ -119,6 +120,42 @@ feature -- Implementation
 
 			Result.draw_text (a_hide_number.out, l_font, l_point)
 		end
+
+	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
+			-- Redefine
+		local
+			l_orignal: EV_PIXMAP
+			l_colors: EV_STOCK_COLORS
+			l_font: EV_FONT
+		do
+			l_orignal := mini_pixmaps.toolbar_expand_icon
+			Result := l_orignal.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal.width, l_orignal.height))
+
+			create l_colors
+			Result.set_background_color (l_colors.default_background_color)
+
+			if a_hide_number < 10 then
+				Result.set_size (18, 16)
+			elseif a_hide_number < 100 then
+				Result.set_size (21, 16)
+			else
+				Result.set_size (24, 16)
+			end
+
+			create l_font
+			l_font.set_height_in_points (7)
+			l_font.set_family ({EV_FONT_CONSTANTS}.family_roman)
+			Result.set_font (l_font)
+
+			if a_hide_number < 10 then
+				Result.draw_text_top_left (Result.width - 7, 2, a_hide_number.out)
+			elseif a_hide_number < 100 then
+				Result.draw_text_top_left (Result.width - 11, 2, a_hide_number.out)
+			else
+				Result.draw_text_top_left (Result.width - 15, 2, a_hide_number.out)
+			end
+		end
+
 
 	tool_bar_indicator: EV_PIXMAP is
 			-- Redefine.

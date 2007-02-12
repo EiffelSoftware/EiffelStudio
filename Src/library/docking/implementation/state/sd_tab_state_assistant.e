@@ -20,6 +20,7 @@ feature {NONE} -- Initlization
 		do
 			state := a_tab_state
 			internal_docking_manager := a_docking_manager
+			create internal_shared
 		ensure
 			set: state = a_tab_state
 			set: internal_docking_manager = a_docking_manager
@@ -47,7 +48,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				l_parent := state.tab_zone.parent
 				state.tab_zone.prune (l_content, False)
 				internal_docking_manager.command.unlock_update
-				create l_docking_state.make (l_content, {SD_ENUMERATION}.left, {SD_SHARED}.title_bar_height)
+				create l_docking_state.make (l_content, {SD_ENUMERATION}.left,  internal_shared.title_bar_height)
 				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 				l_content.change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (state.zone, False)
@@ -349,13 +350,17 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	first_move_to_docking_zone: BOOLEAN;
+	internal_shared: SD_SHARED
+			-- All singletons.
+
+	first_move_to_docking_zone: BOOLEAN
 			-- When moving to a docking zone, first time is different.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager.
 
 invariant
+	not_void: internal_shared /= Void
 	not_void: state /= Void
 	not_void: internal_docking_manager /= Void
 

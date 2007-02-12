@@ -57,7 +57,7 @@ feature {NONE}  -- Initlization
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
 			set_minimum_width (0)
-			set_minimum_height (internal_shared.zone_minmum_height + 3)
+			set_minimum_height (internal_shared.notebook_tab_height + 3)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 			set: internal_notebook = a_notebook

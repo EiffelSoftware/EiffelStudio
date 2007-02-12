@@ -156,7 +156,6 @@ feature -- Implementation
 			end
 		end
 
-
 	tool_bar_indicator: EV_PIXMAP is
 			-- Redefine.
 		do

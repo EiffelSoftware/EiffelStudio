@@ -183,6 +183,7 @@ feature {NONE} -- Implementation
 						-- Arguments initialization
 					l_proc.init_arg (l_as.arguments, current_class)
 				end
+				l_proc.set_has_rescue_clause (l_routine.has_rescue)
 				l_proc.init_assertion_flags (l_routine)
 				if l_routine.obsolete_message /= Void then
 					l_proc.set_obsolete_message (l_routine.obsolete_message.value)
@@ -268,6 +269,7 @@ feature {NONE} -- Implementation
 							-- Arguments initialization
 						l_func.init_arg (l_as.arguments, current_class)
 					end
+					l_func.set_has_rescue_clause (l_routine.has_rescue)
 					l_func.init_assertion_flags (l_routine)
 					if l_routine.obsolete_message /= Void then
 						l_func.set_obsolete_message (l_routine.obsolete_message.value)

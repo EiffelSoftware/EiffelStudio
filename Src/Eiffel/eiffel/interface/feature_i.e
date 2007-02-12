@@ -624,6 +624,13 @@ feature -- Setting
 			is_fake_inline_agent_set: is_fake_inline_agent = b
 		end
 
+	frozen set_has_rescue_clause (b: BOOLEAN) is
+			-- Assign `b' to `has_rescue_clause'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (b, has_rescue_clause_mask)
+		ensure
+			has_rescue_clause_set: has_rescue_clause = b
+		end
 
 	set_is_selected (b: BOOLEAN) is
 			-- Assign `b' to `is_selected'.
@@ -1078,6 +1085,12 @@ feature -- Conveniences
 			-- Is postcondition block of feature a redefined one ?
 		do
 			Result := feature_flags & is_fake_inline_agent_mask = is_fake_inline_agent_mask
+		end
+
+	frozen has_rescue_clause: BOOLEAN is
+			-- Has rescue clause ?
+		do
+			Result := feature_flags & has_rescue_clause_mask = has_rescue_clause_mask
 		end
 
 	is_invariant: BOOLEAN is
@@ -2201,6 +2214,7 @@ feature -- Undefinition
 			Result.set_is_binary (is_binary)
 			Result.set_is_unary (is_unary)
 			Result.set_has_convert_mark (has_convert_mark)
+			Result.set_has_rescue_clause (has_rescue_clause)
 
 			if is_external then
 				ext ?= Current
@@ -2617,6 +2631,7 @@ feature {NONE} -- Implementation
 	has_property_getter_mask: INTEGER_32 is 0x4000
 	has_property_setter_mask: INTEGER_32 is 0x8000
 	is_fake_inline_agent_mask: INTEGER_32 is 0x10000
+	has_rescue_clause_mask: INTEGER_32 is 0x20000
 			-- Mask used for each feature property.
 
 feature {INHERIT_TABLE} -- Access

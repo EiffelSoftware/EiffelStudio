@@ -436,6 +436,30 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 3))
 		end
 
+	frozen callstack_is_melted_icon: EV_PIXMAP is
+			-- Access to 'is melted' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (9, 3))
+		end
+
+	frozen callstack_is_melted_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'is melted' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 3))
+		end
+
+	frozen callstack_has_rescue_icon: EV_PIXMAP is
+			-- Access to 'has rescue' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 3))
+		end
+
+	frozen callstack_has_rescue_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'has rescue' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 3))
+		end
+
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once

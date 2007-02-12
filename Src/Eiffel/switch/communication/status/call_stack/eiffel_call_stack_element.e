@@ -73,6 +73,11 @@ feature -- Properties
 			Result := r /= Void and then r.is_function
 		end
 
+	has_rescue: BOOLEAN is
+		do
+			Result := routine_i /= Void and then routine_i.has_rescue_clause
+		end
+
 	result_value: ABSTRACT_DEBUG_VALUE is
 			-- Result value of routine
 		do

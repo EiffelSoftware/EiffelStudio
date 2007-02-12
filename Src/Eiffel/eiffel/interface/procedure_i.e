@@ -165,6 +165,7 @@ feature -- Initialization
 			other.set_has_precondition (has_precondition)
 			other.set_has_postcondition (has_postcondition)
 			other.set_assert_id_set (assert_id_set)
+			other.set_has_rescue_clause (has_rescue_clause)
 		end
 
 	check_local_names (a_body: BODY_AS) is

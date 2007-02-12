@@ -190,7 +190,7 @@ feature -- Properties
 	data: ANY
 			-- User data.
 
-feature {NONE} -- Implementation
+feature {SD_NOTEBOOK_TAB_AREA} -- Implementation
 
 	update is
 			-- Redraw Current

@@ -55,7 +55,6 @@ feature -- Redefine
 			l_tool_bar_imp: EV_DRAWING_AREA_IMP
 			l_rect: EV_RECTANGLE
 			l_button: SD_TOOL_BAR_BUTTON
-			l_c_string: EV_GTK_C_STRING
 		do
 			l_tool_bar_imp ?= a_arguments.tool_bar.implementation
 			check not_void: l_tool_bar_imp /= Void end

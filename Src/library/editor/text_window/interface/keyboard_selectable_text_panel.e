@@ -620,12 +620,7 @@ feature {NONE} -- Handle keystrokes
 
 			when Key_end then
 					-- End key action
-				if shifted_key and then l_cursor.line.first_token = l_cursor.token and then l_cursor.pos_in_token = 1 then
-					basic_cursor_move (agent l_cursor.go_end_line)
-					basic_cursor_move (agent l_cursor.go_right_char)
-				else
-					basic_cursor_move (agent l_cursor.go_end_line)
-				end
+				basic_cursor_move (agent l_cursor.go_end_line)
 
 			when Key_page_up then
 					-- Page up

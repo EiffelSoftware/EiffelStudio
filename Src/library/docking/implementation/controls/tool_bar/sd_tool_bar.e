@@ -192,8 +192,19 @@ feature -- Query
 	padding_width: INTEGER is 4
 			-- Padding width.
 
-	standard_height: INTEGER is 23
+	standard_height: INTEGER is
 			-- Standard tool bar height.
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := 23
+			else
+				-- On Linux it's a little bit bigger.
+				Result := 25
+			end
+		end
 
 feature -- Contract support
 

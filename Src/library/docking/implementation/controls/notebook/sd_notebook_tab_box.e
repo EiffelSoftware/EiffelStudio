@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_leave_actions.extend (agent on_pointer_leave)
-			set_minimum_height (internal_shared.title_bar_height)
+			set_minimum_height (internal_shared.Notebook_tab_height)
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_drop_actions_veto_pebble)

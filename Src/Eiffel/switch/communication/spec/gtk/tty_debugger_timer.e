@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make (dmi: TTY_DEBUGGER_MANAGER_IMP) is
 		do
 			tty_dbg_manager_imp := dmi
-			create actions.make
+			create actions
 
 			if gtk_init_check then
 				marshal_init (Current, $marshal)

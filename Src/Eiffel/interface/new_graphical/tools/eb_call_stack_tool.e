@@ -724,7 +724,9 @@ feature {NONE} -- Implementation
 			e_cse: EIFFEL_CALL_STACK_ELEMENT
 			ext_cse: EXTERNAL_CALL_STACK_ELEMENT
 			dotnet_cse: CALL_STACK_ELEMENT_DOTNET
-			l_feature_info: STRING
+			l_feature_name: STRING
+			l_is_melted: BOOLEAN
+			l_has_rescue: BOOLEAN
 			l_class_info: STRING
 			l_orig_class_info: STRING_GENERAL
 			l_same_name: BOOLEAN
@@ -732,6 +734,7 @@ feature {NONE} -- Implementation
 			l_obj_address_info: STRING
 			l_extra_info: STRING
 			glab: EV_GRID_LABEL_ITEM
+			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
 		do
 			create l_tooltip.make (10)
@@ -745,13 +748,12 @@ feature {NONE} -- Implementation
 			end
 
 				--| Routine name
-			l_feature_info := elem.routine_name
-			if l_feature_info /= Void then
-				l_feature_info := l_feature_info.twin
-			else
-				create l_feature_info.make_empty
+			l_feature_name := elem.routine_name
+			if l_feature_name /= Void then
+				l_feature_name := l_feature_name.twin
 			end
-			l_tooltip.append (l_feature_info)
+
+			l_tooltip.append (l_feature_name)
 
 				--| Break Index
 			l_breakindex_info := elem.break_index.out
@@ -772,8 +774,12 @@ feature {NONE} -- Implementation
 				end
 
 					--| Routine name
-				if e_cse.is_melted then
-					l_feature_info.append_string ("*")
+				l_has_rescue := e_cse.has_rescue
+				if l_has_rescue then
+					l_tooltip.append_string ("%N   + feature has a rescue clause")
+				end
+				l_is_melted := e_cse.is_melted
+				if l_is_melted then
 					l_tooltip.append_string (interface_names.l_compilation_equal_melted)
 				end
 
@@ -804,7 +810,19 @@ feature {NONE} -- Implementation
 			end
 
 				--| Fill columns
-			create glab.make_with_text (l_feature_info)
+			if l_is_melted or l_has_rescue then
+				create glabp.make_with_text (l_feature_name)
+				glabp.set_pixmaps_on_right_count (2)
+				if l_is_melted then
+					glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
+				end
+				if l_has_rescue then
+					glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_has_rescue_icon, 2)
+				end
+				glab := glabp
+			else
+				create glab.make_with_text (l_feature_name)
+			end
 			glab.set_tooltip (l_tooltip)
 			a_row.set_item (1, glab)
 

@@ -21,6 +21,11 @@ feature -- Properties
 	abort: BOOLEAN
 			-- Does the user want to abort the command?
 
+feature -- Status report
+
+	has_failure: BOOLEAN
+			-- Did last read operation fail?
+
 feature -- Input/output
 
 	termination_requested: BOOLEAN is
@@ -29,8 +34,12 @@ feature -- Input/output
 		do
 			localized_print_error (("%N").as_string_32 + ewb_names.err_press_return_to_resume + ("%N").as_string_32)
 			wait_for_return
-			str := io.last_string.as_lower
-			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
+			if has_failure then
+				Result := True
+			else
+				str := io.last_string.as_lower
+				Result := ((str.count >= 1) and then (str.item (1) = 'q'))
+			end
 		end
 
 	confirmed (message: STRING_GENERAL): BOOLEAN is
@@ -48,8 +57,19 @@ feature -- Input/output
 		end
 
 	wait_for_return is
+			-- Wait for an input. Set `has_failure' if nothing can be read.
+		local
+			retried: BOOLEAN
 		do
-			io.read_line
+			if not retried then
+				io.read_line
+				has_failure := False
+			else
+				has_failure := True
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	get_last_input is

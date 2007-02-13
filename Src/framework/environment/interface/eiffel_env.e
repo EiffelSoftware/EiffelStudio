@@ -478,6 +478,8 @@ feature -- Access: file name
 			else
 				Result.extend (application_name)
 			end
+		ensure
+			shared_application_path_not_void: Result /= Void
 		end
 
 	Lib_application_path: DIRECTORY_NAME is
@@ -493,6 +495,8 @@ feature -- Access: file name
 			else
 				Result.extend (application_name)
 			end
+		ensure
+			lib_application_path_not_void: Result /= Void
 		end
 
 	Help_path: DIRECTORY_NAME is

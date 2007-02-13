@@ -762,6 +762,9 @@ feature -- Window management
 			a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			a_class_stone: CLASSI_STONE
 			a_cluster_stone: CLUSTER_STONE
+			l_class_id, l_feature_id: STRING
+			l_feature_stone: FEATURE_STONE
+			l_class_stone: CLASSI_STONE
 		do
 			save_window_state
 			create a_window_data.make_from_window_data (preferences.development_window_data)
@@ -789,12 +792,22 @@ feature -- Window management
 
 			save_editors_docking_layout
 
-				-- |FIXME: Principly, we need to save more than feature relation tool,
-				-- because it is now possible that class based tools (Class, Diagram, Dependency) are targeting a class while
-				-- a feature based tool (Feature Relation) is targeting nothing.
 			if tools.features_relation_tool /= Void then
-				a_window_data.save_context_data (tools.features_relation_tool.address_manager.cluster_label_text, tools.features_relation_tool.address_manager.class_label_text, tools.features_relation_tool.address_manager.feature_label_text, 1)
+				l_feature_stone ?= tools.features_relation_tool.stone
+				if l_feature_stone /= Void then
+					l_feature_id := id_of_feature (l_feature_stone.e_feature)
+				end
 			end
+			if tools.class_tool /= Void then
+				l_class_stone ?= tools.class_tool.stone
+				if l_class_stone /= Void then
+					check
+						class_not_void: l_class_stone.class_i.config_class /= Void
+					end
+					l_class_id := id_of_class (l_class_stone.class_i.config_class)
+				end
+			end
+			a_window_data.save_context_data (l_class_id, l_feature_id, 1)
 
  				-- Add the session data of `Current' to the session object.
 			a_session.window_session_data.extend (a_window_data)

@@ -34,6 +34,7 @@ feature -- Basic operations
 			-- Resets internal for new generation
 		do
 			create name_table.make (512, {STRING_COMPARER}.invariant_culture_ignore_case)
+			create component_names.make
 			component_count := 1
 			directory_count := 1
 			file_count := 1
@@ -55,13 +56,60 @@ feature {NONE} -- Element generation
 		local
 			l_dir: DIRECTORY_INFO
 		do
+			create l_dir.make (a_options.directory)
+
+			if a_options.generate_x64_preprocessors then
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_ifndef, "IsWin64")
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_ifdef, "x64")
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_define, "IsWin64 = %"yes%"")
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_else, Void)
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_define, "IsWin64 = %"no%"")
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_endif, Void)
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_endif, Void)
+			end
+
 				-- Start generation					
 			a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
+
+			a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (l_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, ".")
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
 
 			create l_dir.make (a_options.directory)
 			generate_directory_content (l_dir, a_options, a_writer)
 
+			a_writer.write_end_element
+
+			if a_options.group_components then
+				generate_component_group (a_options, a_writer)
+			end
+
 				-- End generation
+			a_writer.write_end_element
+		end
+
+	generate_component_group (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
+			-- Generates a ComponentGroup element
+			--
+			-- `a_options': The options that determine how the element is generated.
+			-- `a_writer': The writer that the generated element will be written to.
+		require
+			a_options_attached: a_options /= Void
+			group_components: a_options.group_components
+			can_read_options_a_options: a_options.can_read_options
+			a_writer_attached: a_writer /= Void
+		local
+			l_enum: STRING_ENUMERATOR
+		do
+			a_writer.write_start_element ({WIX_CONSTANTS}.component_group_tag)
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, a_options.component_group_name)
+			l_enum := component_names.get_enumerator
+			from l_enum.reset until not l_enum.move_next loop
+				a_writer.write_start_element ({WIX_CONSTANTS}.component_ref_tag)
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, l_enum.current_)
+				a_writer.write_end_element
+			end
 			a_writer.write_end_element
 		end
 
@@ -182,10 +230,19 @@ feature {NONE} -- Element generation
 			a_writer_attached: a_writer /= Void
 			a_content_gen_attached: a_content_gen /= Void
 			a_content_gen_has_attached_target: a_content_gen.target /= Void
+		local
+			l_name: SYSTEM_STRING
+			i: INTEGER
 		do
+			l_name := semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix, False)
+			i := component_names.add (l_name)
 			a_writer.write_start_element ({WIX_CONSTANTS}.component_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_path, a_options, {WIX_CONSTANTS}.component_tag, component_prefix, False))
+			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, l_name)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.guid_attribute, guid (a_options))
+
+			if a_options.generate_x64_preprocessors then
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.win64_attribute, "$(var.IsWin64)")
+			end
 
 			a_content_gen.call ([a_options, a_writer])
 
@@ -556,6 +613,9 @@ feature {NONE} -- Tables
 			-- Table of directories to include
 			-- Key: Directory path
 			-- Value: Boolean
+
+	component_names: STRING_COLLECTION
+			-- Collection of generated components
 
 feature {NONE} -- Counters
 

@@ -6,7 +6,7 @@ indexing
 	revision: "$revision$"
 
 class
-	PSDK_CONFIG
+	WSDK_CONFIG
 
 inherit
 	MSCL_CONFIG

@@ -95,7 +95,7 @@ feature {NONE} -- Access
 			a_use_32bit_for_x86: not is_windows_x64 implies not a_use_32bit
 		do
 			create Result.make (5)
-			Result.extend (create {PSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit))
 			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit))
 			if not is_windows_x64 then
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True))

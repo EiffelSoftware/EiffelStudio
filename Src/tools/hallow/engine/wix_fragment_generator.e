@@ -69,24 +69,48 @@ feature {NONE} -- Element generation
 			end
 
 				-- Start generation					
-			a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
+			if a_options.generate_include then
+				a_writer.write_start_element ({WIX_CONSTANTS}.include_tag, {WIX_CONSTANTS}.wix_ns)
+			else
+				a_writer.write_start_element ({WIX_CONSTANTS}.wix_tag, {WIX_CONSTANTS}.wix_ns)
+				a_writer.write_start_element ({WIX_CONSTANTS}.fragment_tag, {WIX_CONSTANTS}.wix_ns)
+			end
 
-			a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (l_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, ".")
-			a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
+			if a_options.use_conditional_expression then
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_ifdef, a_options.conditional_expression)
+			end
 
-			create l_dir.make (a_options.directory)
+			if a_options.use_root_directory_ref then
+				a_writer.write_start_element ({WIX_CONSTANTS}.directory_ref_tag)
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, a_options.root_directory_ref_id)
+			else
+				a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (l_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
+				if a_options.generate_include then
+					a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, ".")
+				else
+					a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, l_dir.name)
+				end
+				a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (l_dir.full_name, a_options))
+			end
+
 			generate_directory_content (l_dir, a_options, a_writer)
 
 			a_writer.write_end_element
 
-			if a_options.group_components then
+			if a_options.use_grouped_components then
 				generate_component_group (a_options, a_writer)
+			end
+
+			if a_options.use_conditional_expression then
+				a_writer.write_processing_instruction ({WIX_CONSTANTS}.pi_endif, Void)
 			end
 
 				-- End generation
 			a_writer.write_end_element
+			if not a_options.generate_include then
+				a_writer.write_end_element
+			end
 		end
 
 	generate_component_group (a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER) is
@@ -96,7 +120,7 @@ feature {NONE} -- Element generation
 			-- `a_writer': The writer that the generated element will be written to.
 		require
 			a_options_attached: a_options /= Void
-			group_components: a_options.group_components
+			use_grouped_components: a_options.use_grouped_components
 			can_read_options_a_options: a_options.can_read_options
 			a_writer_attached: a_writer /= Void
 		local

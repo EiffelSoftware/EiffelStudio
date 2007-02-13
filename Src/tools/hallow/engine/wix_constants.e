@@ -21,11 +21,13 @@ feature -- Element names
 
 	component_tag: SYSTEM_STRING = "Component"
 	component_group_tag: SYSTEM_STRING = "ComponentGroup"
-	component_ref_tag: SYSTEM_STRING = "Component"
+	component_ref_tag: SYSTEM_STRING = "ComponentRef"
 	directory_ref_tag: SYSTEM_STRING = "DirectoryRef"
 	directory_tag: SYSTEM_STRING = "Directory"
 	file_tag: SYSTEM_STRING = "File"
+	fragment_tag: SYSTEM_STRING = "Fragment"
 	include_tag: SYSTEM_STRING = "Include"
+	wix_tag: SYSTEM_STRING = "Wix"
 
 feature -- Attribute names
 

@@ -24,19 +24,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_batch_file: like batch_file_name; a_args: like batch_arguments) is
+	make (a_batch_file: like batch_file_name; a_args: like batch_arguments; a_options: like batch_options) is
 			-- Initialize parser from source batch file `a_batch_file'
 		require
 			a_batch_file_attached: a_batch_file /= Void
 			not_a_batch_file_is_empty: not a_batch_file.is_empty
 			a_batch_file_exists: (create {PLAIN_TEXT_FILE}.make (a_batch_file)).exists
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
+			a_options_not_void: a_options /= Void
 		do
 			batch_file_name := a_batch_file
 			batch_arguments := a_args
+			batch_options := a_options
 		ensure
 			batch_file_name_set: batch_file_name = a_batch_file
 			batch_arguments_set: batch_arguments = a_args
+			batch_options_set: batch_options = a_options
 		end
 
 feature -- Access
@@ -72,6 +75,9 @@ feature {NONE} -- Access
 
 	batch_arguments: STRING
 			-- Arguments for `batch_file_name' or Void if none.
+
+	batch_options: STRING
+			-- Option to the COMSPEC DOS prompt.
 
 feature {NONE} -- Basic operations
 
@@ -135,7 +141,9 @@ feature {NONE} -- Basic operations
 						-- Execute batch file using command executable
 					create l_cmd.make (l_com_spec.count + 4 + l_file_name.count)
 					l_cmd.append (l_com_spec)
-					l_cmd.append (" /V:ON /c ")
+					l_cmd.append_character (' ')
+					l_cmd.append (batch_options)
+					l_cmd.append (" /c ")
 					l_cmd.append (l_file_name)
 
 					create l_launcher
@@ -145,25 +153,30 @@ feature {NONE} -- Basic operations
 					check l_file_is_closed: l_file.is_closed end
 					l_file.delete
 
-					create l_file.make (l_eval_file_name)
-					if l_file.exists then
-						l_file.open_read
-						if l_file.count > 0 then
-							l_appliable := applicable_variables
-							from l_file.start until l_file.end_of_file loop
-								l_file.read_line
-								l_line := l_file.last_string
-								if l_line /= Void and then not l_line.is_empty then
-									l_pair := parse_variable_name_value_pair (l_file.last_string)
-									if l_pair.name /= Void and then l_appliable.has (l_pair.name) and then l_pair.value /= Void then
-										l_result.extend (l_pair.value, l_pair.name)
+					if l_launcher.last_process_result = 0 then
+						create l_file.make (l_eval_file_name)
+						if l_file.exists then
+							l_file.open_read
+							if l_file.count > 0 then
+								l_appliable := applicable_variables
+								from l_file.start until l_file.end_of_file loop
+									l_file.read_line
+									l_line := l_file.last_string
+									if l_line /= Void and then not l_line.is_empty then
+										l_pair := parse_variable_name_value_pair (l_file.last_string)
+										if
+											l_pair.value /= Void and
+											(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+										then
+											l_result.extend (l_pair.value, l_pair.name.as_upper)
+										end
 									end
 								end
 							end
-						end
 
-						l_file.close
-						l_file.delete
+							l_file.close
+							l_file.delete
+						end
 					end
 				end
 
@@ -217,9 +230,6 @@ feature {NONE} -- Basic operations
 
 			create Result.make (256)
 			Result.append ("@ECHO OFF%N")
-			Result.append ("SET PATH=%N")
-			Result.append ("SET INCLUDE=%N")
-			Result.append ("SET LIB=%N")
 			Result.append ("CALL %"")
 			Result.append (batch_file_name)
 			Result.append ("%" ")
@@ -228,7 +238,7 @@ feature {NONE} -- Basic operations
 			end
 			Result.append (" > ")
 			Result.append (a_out)
-			Result.append ("%NSET > ")
+			Result.append ("|| CANCEL 1%NSET > ")
 			Result.append (a_out)
 		ensure
 			result_attached: Result /= Void

@@ -1,80 +1,49 @@
 indexing
-	description: "Specialized configiration for Microsoft Platform/WindowsSDK's."
+	description: "finish freezing layout"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	WSDK_CONFIG
+	FINISH_FREEZING_EIFFEL_LAYOUT
 
 inherit
-	MSCL_CONFIG
+	EIFFEL_ENV
 		redefine
-			batch_file_arguments, batch_file_options
+			shared_application_path
 		end
 
-create
-	make
+feature -- Access
 
-feature {NONE} -- Access
+	application_name: STRING is "finish_freezing";
 
-	batch_file_name: STRING is
-			-- Absolute path to an environment configuration batch script
-		do
-			create Result.make (256)
-			Result.append (install_path)
-			Result.append ("Bin\SetEnv.cmd")
+	shared_application_path: DIRECTORY_NAME is
+			-- Location of shared files specific for the current application (platform independent).
+		once
+			Result := shared_path.twin
+			Result.extend (short_studio_name)
 		end
 
-	batch_file_arguments: STRING is
-			-- Arguments for `batch_file_name' execution
-		do
-			create Result.make (10)
-			Result.append ("/Release ")
-			if use_32bit then
-				Result.append ("/x86")
-			else
-				Result.append ("/x64")
-			end
-		end
-
-	batch_file_options: STRING is
-			-- Option to the COMSPEC DOS prompt.
-		do
-			Result := "/V:ON"
-		end
-
-	full_product_reg_path: STRING is
-			-- Absolute product registry location
-		do
-			create Result.make (256)
-			Result.append ("HKEY_LOCAL_MACHINE\SOFTWARE\")
-			Result.append (product_reg_path)
-		end
-
-	install_path_value_name: STRING = "InstallationFolder"
-			-- Key value name for install location
-
-;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -87,5 +56,4 @@ feature {NONE} -- Access
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 end

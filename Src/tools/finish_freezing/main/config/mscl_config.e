@@ -43,7 +43,7 @@ feature {NONE} -- Initalization
 			if exists then
 				l_file_name := batch_file_name
 				if (create {RAW_FILE}.make (l_file_name)).exists then
-					create l_parser.make (l_file_name, batch_file_arguments)
+					create l_parser.make (l_file_name, batch_file_arguments, batch_file_options)
 					extend_variable (path_var_name, l_parser.path)
 					extend_variable (include_var_name, l_parser.include)
 					extend_variable (lib_var_name, l_parser.lib)
@@ -103,6 +103,16 @@ feature {NONE} -- Access
 		do
 		ensure
 			not_result_sis_empty: Result /= Void implies not Result.is_empty
+		end
+
+	batch_file_options: STRING is
+			-- Option to the COMSPEC DOS prompt.
+		require
+			exists: exists
+		do
+			create Result.make_empty
+		ensure
+			batch_file_options_not_void: Result /= Void
 		end
 
 	product_reg_path: STRING

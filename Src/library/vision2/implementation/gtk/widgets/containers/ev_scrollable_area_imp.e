@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (viewport, fixed_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (scrolled_window, 1, 1)
 		end
 
 	needs_event_box: BOOLEAN is True

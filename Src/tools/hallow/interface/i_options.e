@@ -136,18 +136,11 @@ feature -- Access
 		deferred
 		end
 
-	group_components: BOOLEAN
-			-- Indicates if a ComponentGroup element should be added to group all generated components
-		require
-			can_read_options: can_read_options
-		deferred
-		end
-
 	component_group_name: SYSTEM_STRING
 			-- The component group name
 		require
 			can_read_options: can_read_options
-			group_components: group_components
+			use_grouped_components: use_grouped_components
 		deferred
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
@@ -158,6 +151,33 @@ feature -- Access
 		require
 			can_read_options: can_read_options
 		deferred
+		end
+
+	generate_include: BOOLEAN
+			-- Indicates if generated code should be a WiX include instead of a fragment
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
+	root_directory_ref_id: SYSTEM_STRING
+			-- Root directories reference name
+		require
+			can_read_options: can_read_options
+			use_root_directory_ref: use_root_directory_ref
+		deferred
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+		end
+
+	conditional_expression: SYSTEM_STRING
+			-- Conditional expression used in a preprocessor, which wraps all generated meaniful content
+		require
+			can_read_options: can_read_options
+			use_conditional_expression: use_conditional_expression
+		deferred
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
 feature -- Status report
@@ -213,6 +233,25 @@ feature -- Status report
 			-- Indicates if a directory exclude pattern should be used.
 		require
 			can_read_options: can_read_options
+		deferred
+		end
+
+	use_grouped_components: BOOLEAN
+			-- Indicates if a ComponentGroup element should be added to group all generated components
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
+	use_root_directory_ref: BOOLEAN
+			-- Indicates if a root DirectoryRef should be used
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
+	use_conditional_expression: BOOLEAN
+			-- Indicates if a conditional expression preprocessor should be used
 		deferred
 		end
 

@@ -189,12 +189,6 @@ feature -- Access
 			Result := has_option (merge_module_switch)
 		end
 
-	frozen group_components: BOOLEAN
-			-- Indicates if a ComponentGroup element should be added to group all generated components
-		once
-			Result := has_option (group_components_switch)
-		end
-
 	frozen component_group_name: SYSTEM_STRING
 			-- The component group name
 		once
@@ -205,6 +199,24 @@ feature -- Access
 			-- Indicates if x64 specific preprocessors should be generated
 		do
 			Result := has_option (x64_switch)
+		end
+
+	frozen generate_include: BOOLEAN
+			-- Indicates if generated code should be a WiX include instead of a fragment
+		do
+			Result := has_option (generate_include_switch)
+		end
+
+	frozen root_directory_ref_id: SYSTEM_STRING
+			-- Root directories reference name
+		do
+			Result := option_of_name (directory_ref_switch).value
+		end
+
+	frozen conditional_expression: SYSTEM_STRING
+			-- Conditional expression used in a preprocessor, which wraps all generated meaniful content
+		do
+			Result := option_of_name (conditional_expression_switch).value
 		end
 
 feature -- Status report
@@ -254,6 +266,24 @@ feature -- Status report
 			Result := has_option (directory_exclude_pattern_switch)
 		end
 
+	frozen use_grouped_components: BOOLEAN
+			-- Indicates if a ComponentGroup element should be added to group all generated components
+		once
+			Result := has_option (group_components_switch)
+		end
+
+	frozen use_root_directory_ref: BOOLEAN
+			-- Indicates if a root DirectoryRef should be used
+		once
+			Result := has_option (directory_ref_switch)
+		end
+
+	frozen use_conditional_expression: BOOLEAN
+			-- Indicates if a conditional expression preprocessor should be used
+		do
+			Result := has_option (conditional_expression_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING = "Hallow, Windows Installer Xml v3.0 Tool"
@@ -270,20 +300,22 @@ feature {NONE} -- Usage
 			-- (export status {NONE})
 		do
 			create Result.make (8)
-
+			Result.extend (create {ARGUMENT_SWITCH}.make (generate_include_switch, "Generated a WiX Include definition instead of a Fragment.", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (conditional_expression_switch, "Use to generate a preprocessor condition for the generated content", True, False, "expression", "A preprocessor symbol that must be defined to include content", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursively include all subdirectories and files.", True, False))
-			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
-			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
-			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_include_pattern_switch, "Regular expression to include select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
-			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_exclude_pattern_switch, "Regular expression to exclude select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over th include pattern when matching.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (group_components_switch, "Groups all generated components in a 'ComponentGroup' element", True, False, "name", "A component group name", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (verbal_name_generation_semantics_switch, "Generates semantic 'Name' attribute values for 'Component', 'Directory' and 'File' elements.", True, False, "prefix", "Semantic name prefix string", True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates shorter Ids.)", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", False, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_alias_switch, "Use to specify a directory alias to use when generating paths.", True, False, "alias", "A directory path alias", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_ref_switch, "Used to specify a root directory reference .", True, False, "Id", "A Directory identifer", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x64_switch, "Add preprocessor to allow components to be compiled as Win64 components", True, False))
+			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
+			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
+			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_include_pattern_switch, "Regular expression to include select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
+			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_exclude_pattern_switch, "Regular expression to exclude select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over the include pattern when matching.", True, False))
 		end
 
 	loose_argument_name: STRING = "directory"
@@ -318,6 +350,8 @@ feature {NONE} -- Output
 
 feature {NONE} -- Switch names
 
+	generate_include_switch: STRING = "i"
+	directory_ref_switch: STRING = "dr"
 	one_file_per_component_switch: STRING = "s"
 	recursive_switch: STRING = "r"
 	directory_alias_switch: STRING = "a"
@@ -327,10 +361,11 @@ feature {NONE} -- Switch names
 	file_exclude_pattern_switch: STRING = "fe"
 	directory_include_pattern_switch: STRING = "di"
 	directory_exclude_pattern_switch: STRING = "de"
-	exclude_pattern_priority_switch: STRING = "ep+"
+	exclude_pattern_priority_switch: STRING = "epp"
 	merge_module_switch: STRING = "m"
 	group_components_switch: STRING = "g"
 	x64_switch: STRING = "x64"
+	conditional_expression_switch: STRING = "c"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -61,7 +61,7 @@ feature -- Query
 			until
 				contents.after or Result /= Void
 			loop
-				if contents.item.title.as_string_32.is_equal (a_title.as_string_32) then
+				if contents.item.unique_title.as_string_32.is_equal (a_title.as_string_32) then
 					Result := contents.item
 				end
 				contents.forth

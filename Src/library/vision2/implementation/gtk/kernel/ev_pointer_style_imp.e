@@ -205,7 +205,7 @@ feature -- Implementation
 			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-				Result := default_pointer--{EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then

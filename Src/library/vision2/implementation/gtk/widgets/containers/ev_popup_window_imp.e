@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 
 				-- This completely disconnects the window from the window manager.
 			{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
+--			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
 			disable_border
 			disable_user_resize
 			set_background_color ((create {EV_STOCK_COLORS}).black)
@@ -145,7 +146,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 				release_keyboard_and_mouse
 					-- We reset the focused popup window here in case hide is called as part of destroy
 					-- in which case the focus out event will not be called.
-				app_implementation.set_focused_popup_window (Void)
+				if is_in_destroy then
+					app_implementation.set_focused_popup_window (Void)
+				end
 			end
 			Precursor;
 		end

@@ -57,6 +57,8 @@ feature -- Access
 		deferred
 		end
 
+	last_save_failed: BOOLEAN
+
 feature -- Status Settings
 
 	set_file_name (a_filename: FILE_NAME) is
@@ -94,6 +96,14 @@ feature -- Status Settings
 --				stone_b.set_pebble (new_stone)
 --			end
 --| END FIXME
+		end
+
+	set_last_save_failed (a_fail: BOOLEAN) is
+			-- Set `last_save_failed' with `a_fail'.
+		do
+			last_save_failed := a_fail
+		ensure
+			set: a_fail = last_save_failed
 		end
 
 	reset_stone is

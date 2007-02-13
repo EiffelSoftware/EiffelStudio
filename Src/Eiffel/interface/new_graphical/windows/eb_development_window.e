@@ -672,9 +672,10 @@ feature -- Resource Update
 			save_dialog: EB_CONFIRM_SAVE_DIALOG
 		do
 			save_canceled := True
+			set_last_save_failed (False)
 			text_saved := False
-			create save_dialog.make_and_launch (Current,Current)
-			if not save_canceled and then syntax_is_correct then
+			create save_dialog.make_and_launch (Current, Current)
+			if not last_save_failed and then not save_canceled and then syntax_is_correct then
 				an_action.call(Void)
 			end
 		end

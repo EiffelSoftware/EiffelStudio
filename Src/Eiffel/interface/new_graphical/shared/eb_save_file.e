@@ -17,11 +17,15 @@ inherit
 
 	SHARED_WORKBENCH
 
-	EB_SHARED_PREFERENCES
+	SYSTEM_CONSTANTS
 		export
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -59,67 +63,87 @@ feature -- Basic operations
 			aok, create_backup, new_created: BOOLEAN
 			tmp_name: STRING
 			wd: EB_WARNING_DIALOG
+			l_retry: BOOLEAN
 		do
-				-- Always assume a saving is successful.
-			last_saving_success := True
-			create new_file.make (a_file_name)
+			if not l_retry then
+					-- Always assume a saving is successful.
+				last_saving_success := True
+				create new_file.make (a_file_name)
 
-			aok := True
-			if not new_file.exists then
-				if not new_file.is_creatable then
-					aok := False
-					create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				aok := True
+				if not new_file.exists then
+					if not new_file.is_creatable then
+						aok := False
+						last_saving_success := False
+						create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					else
+						new_created := True
+					end
 				else
-					new_created := True
+					if not new_file.is_plain then
+						aok := False
+						last_saving_success := False
+						create wd.make_with_text (warning_messages.w_not_a_plain_file (new_file.name))
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					elseif not new_file.is_writable then
+						aok := False
+						last_saving_success := False
+						create wd.make_with_text (warning_messages.w_not_writable (new_file.name))
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					end
+				end
+
+				-- Create a backup of the file in case there will be a problem during the savings.
+				tmp_name := a_file_name.twin
+				tmp_name.append (".swp")
+				create tmp_file.make (tmp_name)
+				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
+				if not create_backup then
+					tmp_file := new_file
+				end
+				if aok then
+					tmp_file.open_write
+					if not a_text.is_empty then
+						a_text.prune_all ('%R')
+						if a_text.item (a_text.count) /= '%N' then
+							-- Add a carriage return like `vi' if there's none at the end
+							a_text.extend ('%N')
+						end
+						if preferences.misc_data.text_mode_is_windows then
+							a_text.replace_substring_all ("%N", "%R%N")
+						end
+						tmp_file.put_string (a_text)
+					end
+					tmp_file.close
+					if create_backup then
+						robust_rename (tmp_file, a_file_name)
+					elseif last_saving_success then
+						create new_file.make (tmp_name)
+						if new_file.exists then
+							robust_delete (new_file)
+						end
+					end
+					if last_saving_success then
+						last_saving_date := tmp_file.date
+					end
+					workbench.set_changed
 				end
 			else
-				if not new_file.is_plain then
-					aok := False
-					create wd.make_with_text (warning_messages.w_not_a_plain_file (new_file.name))
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				elseif not new_file.is_writable then
-					aok := False
-					create wd.make_with_text (warning_messages.w_not_writable (new_file.name))
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				if tmp_file /= Void and then not tmp_file.is_closed then
+					tmp_file.close
 				end
+				if new_file /= Void and then not new_file.is_closed then
+					new_file.close
+				end
+				create wd.make_with_text (warning_messages.w_Not_creatable_choose_to_save (new_file.name))
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				file_save_as (a_text)
+				last_saving_success := False
 			end
-
-			-- Create a backup of the file in case there will be a problem during the savings.
-			tmp_name := a_file_name.twin
-			tmp_name.append (".swp")
-			create tmp_file.make (tmp_name)
-			create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
-			if not create_backup then
-				tmp_file := new_file
-			end
-			if aok then
-				tmp_file.open_write
-				if not a_text.is_empty then
-					a_text.prune_all ('%R')
-					if a_text.item (a_text.count) /= '%N' then
-						-- Add a carriage return like `vi' if there's none at the end
-						a_text.extend ('%N')
-					end
-					if preferences.misc_data.text_mode_is_windows then
-						a_text.replace_substring_all ("%N", "%R%N")
-					end
-					tmp_file.put_string (a_text)
-				end
-				tmp_file.close
-				if create_backup then
-					robust_rename (tmp_file, a_file_name)
-				elseif last_saving_success then
-					create new_file.make (tmp_name)
-					if new_file.exists then
-						robust_delete (new_file)
-					end
-				end
-				if last_saving_success then
-					last_saving_date := tmp_file.date
-				end
-				workbench.set_changed
-			end
+		rescue
+			l_retry := True
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -148,7 +172,7 @@ feature {NONE} -- Implementation
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		local
 			l_retried, l_user_ask_for_retry: BOOLEAN
-			l_ed: EV_ERROR_DIALOG
+			l_ed: EB_ERROR_DIALOG
 			l_win: EV_WINDOW
 			l_editor: EB_SMART_EDITOR
 		do
@@ -179,6 +203,29 @@ feature {NONE} -- Implementation
 		rescue
 			l_retried := True
 			retry
+		end
+
+	file_save_as (a_text: STRING) is
+			-- Save `a_text' in a file.
+		local
+			fsd: EB_FILE_SAVE_DIALOG
+			l_pref: STRING_PREFERENCE
+		do
+			l_pref := preferences.dialog_data.last_saved_save_file_as_directory_preference
+			if l_pref.value = Void or else l_pref.value.is_empty then
+				l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+			end
+			create fsd.make_with_preference (l_pref)
+			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text))
+			fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
+		end
+
+	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING)
+		local
+			l_save_file: EB_SAVE_FILE
+		do
+			create l_save_file
+			l_save_file.save (a_fsd.file_name, a_text)
 		end
 
 indexing

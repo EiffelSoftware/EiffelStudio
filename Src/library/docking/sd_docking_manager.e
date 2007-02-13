@@ -257,7 +257,7 @@ feature -- Contract support
 			l_file: RAW_FILE
 		do
 			create l_file.make (a_file_name.as_string_8)
-			Result := l_file.exists
+			Result := l_file.exists and then l_file.is_readable
 		end
 
 	window_valid (a_window: EV_WINDOW): BOOLEAN is

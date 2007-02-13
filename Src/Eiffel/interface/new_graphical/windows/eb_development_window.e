@@ -1769,7 +1769,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			l_editor: EB_EDITOR
 		do
-			l_editor := editors_manager.current_editor
+			l_editor := ui.current_editor
 			if l_editor /= Void and then not l_editor.is_empty then
 				l_editor.select_all
 			end
@@ -1812,7 +1812,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= editors_manager.current_editor
+				cv_ced ?= ui.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_next
 				end
@@ -1827,7 +1827,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= editors_manager.current_editor
+				cv_ced ?= ui.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_previous
 				end
@@ -1841,7 +1841,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= editors_manager.current_editor
+			cv_ced := ui.current_editor
 			if cv_ced /= Void then
 				cv_ced.find_next_selection
 			end
@@ -1852,7 +1852,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= editors_manager.current_editor
+			cv_ced := ui.current_editor
 			if cv_ced /= Void then
 				cv_ced.find_previous_selection
 			end

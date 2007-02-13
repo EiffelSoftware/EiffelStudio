@@ -473,6 +473,9 @@ feature {NONE} -- Implementation
 		do
 			l_search_tool := search_tool
 			l_search_tool.set_check_class_succeed (True)
+			if not text_displayed.has_selection then
+				select_current_token
+			end
 			if text_displayed.has_selection then
 				l_search_tool.force_new_search
 				l_incremental_search := l_search_tool.is_incremental_search

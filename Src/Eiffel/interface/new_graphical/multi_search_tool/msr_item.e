@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	MSR_ITEM	
+	MSR_ITEM
 
 feature {NONE} -- Initialization
 
@@ -14,13 +14,12 @@ feature {NONE} -- Initialization
 			-- Initialization
 		require
 			name_attached: a_name /= Void
-			not_name_is_empty: not a_name.is_empty
 			path_attached: a_path /= Void
 			text_attached: a_text /= Void
 		do
 			create children_internal.make (0)
 			start_index_in_context_text_internal := 1
-			
+
 			class_name := a_name
 			path := a_path
 			source_text_internal := a_text
@@ -37,24 +36,24 @@ feature -- Access
 
 	path : FILE_NAME
 			-- File path `source_text' locates
-			
+
 	source_text: STRING is
 			-- Once searched in this text
 		do
 			Result := source_text_internal.real_string
 		ensure
 			source_text_attached: Result /= Void
-		end		
-			
+		end
+
 	data: ANY
 			-- Any data related to current		
-		
+
 	children: DYNAMIC_LIST [MSR_ITEM] is
 			-- Children of current item
 		do
 			Result := children_internal
 		end
-		
+
 	date: INTEGER
 			-- Date of lastest source text before current made.
 
@@ -80,7 +79,7 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
+
 	set_data (a_data: like data) is
 			-- Set `data' with `a_data'.
 		do
@@ -88,13 +87,13 @@ feature -- Element change
 		ensure
 			data_set: data = a_data
 		end
-	
+
 	set_date (a_date: INTEGER) is
 			-- Set `date' with a_date
 		do
 			date := a_date
 		end
-		
+
 	set_source_text_real_string (a_string: STRING) is
 			-- Set the actual string of `source_text'.
 		require
@@ -104,16 +103,16 @@ feature -- Element change
 			source_text_internal.set_real_string (a_string)
 		ensure
 			source_text_set: source_text.is_equal (a_string)
-		end		
-	
-	set_start_index_in_context_text (p_position: INTEGER) is	
+		end
+
+	set_start_index_in_context_text (p_position: INTEGER) is
 			-- Start position in the present context.
 		require
 			p_position_larger_than_zero: p_position > 0
 		do
 			start_index_in_context_text_internal := p_position
 		end
-		
+
 feature {MSR_SEARCH_TEXT_STRATEGY, MSR_SEARCH_CLASS_STRATEGY} -- Element change
 
 	set_children (a_children: like children_internal) is
@@ -125,18 +124,18 @@ feature {MSR_SEARCH_TEXT_STRATEGY, MSR_SEARCH_CLASS_STRATEGY} -- Element change
 		ensure
 			children_set: children = a_children
 		end
-	
+
 feature {NONE} -- Implementation
 
 	start_index_in_context_text_internal : INTEGER
 			-- Start position in the present context
-			
+
 	children_internal: ARRAYED_LIST [MSR_TEXT_ITEM]
 			-- Children, typically text items in a class item or submatches in text items
-			
+
 	source_text_internal: MSR_STRING_ADAPTER
 			-- Once searched in this text.
-	
+
 invariant
 	start_index_in_context_text_internal_than_zero: start_index_in_context_text_internal > 0
 	children_internal_attached: children_internal /= Void

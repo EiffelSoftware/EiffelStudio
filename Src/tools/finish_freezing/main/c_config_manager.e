@@ -47,14 +47,13 @@ feature -- Status report
 			l_configs: like configs
 			l_config: C_CONFIG
 			l_cursor: CURSOR
-			l_stop: BOOLEAN
 		do
 			l_configs := configs
 			l_cursor := l_configs.cursor
-			from l_configs.start until l_configs.after or l_stop loop
+			from l_configs.start until l_configs.after or Result loop
 				l_config := l_configs.item
-				l_stop := l_config.exists
-				if not l_stop then
+				Result := l_config.exists
+				if not Result then
 					l_config := Void
 					l_configs.forth
 				end

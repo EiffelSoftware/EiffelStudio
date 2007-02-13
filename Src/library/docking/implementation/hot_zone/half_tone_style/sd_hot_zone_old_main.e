@@ -10,10 +10,6 @@ class
 
 inherit
 	SD_HOT_ZONE
-	SD_SHARED
-		export
-			{NONE} all
-		end
 
 create
 	make

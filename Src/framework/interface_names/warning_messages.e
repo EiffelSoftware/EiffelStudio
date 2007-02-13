@@ -186,11 +186,18 @@ feature -- File warnings
 			Result := locale.format_string (locale.translate ("File: $1 cannot be created.%NPlease check permissions."), [file_name])
 		end
 
+	w_Not_creatable_choose_to_save (file_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("File: $1 is not writable, neither .swp file.%NPlease choose a place to save."), [file_name])
+		end
+
 	w_Not_writable (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			Result := locale.format_string (locale.translate ("%Nis not writable.%NPlease check permissions."), [file_name])
+			Result := locale.format_string (locale.translate ("%N$1 is not writable.%NPlease check permissions."), [file_name])
 		end
 
 	w_Still_referenced (a_class_name: STRING_GENERAL; referenced_classes: STRING_GENERAL): STRING_GENERAL is

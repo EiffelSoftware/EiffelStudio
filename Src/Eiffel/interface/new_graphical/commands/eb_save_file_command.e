@@ -41,9 +41,6 @@ inherit
 		end
 
 	EB_SAVE_FILE
-		export
-			{NONE} all
-		end
 
 create
 	make
@@ -92,6 +89,8 @@ feature -- Execution
 						target.set_last_saving_date (last_saving_date)
 						target.on_text_saved
 						target.update_save_symbol
+					else
+						target.set_last_save_failed (True)
 					end
 				end
 			end

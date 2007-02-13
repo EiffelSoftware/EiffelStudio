@@ -192,7 +192,6 @@ feature {NONE} -- Variable caching
 
 invariant
 	variable_table_attached: is_initialized implies variable_table /= Void
-	variable_table_compares_objects: variable_table /= Void implies variable_table.object_comparison
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

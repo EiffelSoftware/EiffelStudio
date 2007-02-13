@@ -31,7 +31,7 @@ feature -- Access
 		do
 			Result := internal_configs
 			if Result = Void then
-				Result := create_configs (for_32bit)
+				Result := create_configs (for_32bit or not is_windows_x64)
 				internal_configs := Result
 			end
 		ensure
@@ -92,7 +92,7 @@ feature {NONE} -- Access
 	create_configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG] is
 			-- Visual Studio configuration for x64/x86 platforms
 		require
-			a_use_32bit_for_x86: not is_windows_x64 implies not a_use_32bit
+			a_use_32bit_for_x86: not a_use_32bit implies not is_windows_x64
 		do
 			create Result.make (5)
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit))
@@ -102,7 +102,6 @@ feature {NONE} -- Access
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True))
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True))
 			end
-
 		ensure
 			result_attached: Result /= Void
 		end

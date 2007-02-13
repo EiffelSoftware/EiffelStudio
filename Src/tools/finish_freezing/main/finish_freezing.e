@@ -25,7 +25,7 @@ feature -- Initialization
 			-- Creation
 		local
 			l_parser: ARGUMENT_PARSER
-			l_layout: EC_EIFFEL_LAYOUT
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			create l_layout
 			l_layout.check_environment_variable
@@ -103,30 +103,19 @@ feature -- Initialization
 						l_msg := "Internal error during Makefile translation preparation.%N%N%
 								%Please report this problem to Eiffel Software at:%N%
 								%http://support.eiffel.com"
-						if not a_parser.silent then
-							create status_box.make_fatal (l_msg)
-						else
-							io.put_string (l_msg)
-							io.default_output.flush
-						end
+						io.put_string (l_msg)
+						io.default_output.flush
 					else
 						if translator.has_makefile_sh then
-							if not a_parser.silent then
-								make_util := translator.options.get_string ("make", "make utility")
-								create status_box.make (make_util, retried, c_error, False, False)
-							else
-								if not c_error then
-										-- For eweasel processing
-									io.put_string ("C compilation completed%N")
-								end
-								io.default_output.flush
-							end
-						else
-							if a_parser.silent and translator.is_il_code and not c_error then
+							if not c_error then
 									-- For eweasel processing
 								io.put_string ("C compilation completed%N")
-								io.default_output.flush
 							end
+							io.default_output.flush
+						elseif translator.is_il_code and not c_error then
+								-- For eweasel processing
+							io.put_string ("C compilation completed%N")
+							io.default_output.flush
 						end
 					end
 				end

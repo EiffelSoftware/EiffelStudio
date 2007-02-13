@@ -14,7 +14,7 @@
 	<target name="finish_freezing" extends="c_config_library">
 		<root class="FINISH_FREEZING" feature="make"/>
 		<option trace="false" profile="false" debug="false">
-			<assertions precondition="true" postcondition="true" check="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
 		<setting name="dead_code_removal" value="True"/>

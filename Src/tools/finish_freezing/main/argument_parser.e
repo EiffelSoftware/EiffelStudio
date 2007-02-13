@@ -53,14 +53,6 @@ feature -- Access
 			Result := has_option (generate_only_switch)
 		end
 
-	silent: BOOLEAN is
-			-- Indicates if ui should be surpressed
-		require
-			successful: successful
-		once
-			Result := has_option (silent_switch)
-		end
-
 	force_32bit_code_generation: BOOLEAN is
 			-- Indicates if 32 bit code should be generated
 		require
@@ -133,11 +125,13 @@ feature {NONE} -- Switches
 
 	location_switch: STRING is "location"
 	generate_only_switch: STRING is "generate_only"
-	silent_switch: STRING is "silent"
 	library_switch: STRING is "library"
-	nproc_switch: STRING is "nproc";
-	x86_switch: STRING is "x86";
+	nproc_switch: STRING is "nproc"
+	x86_switch: STRING is "x86"
 			-- Argument switches
+
+	silent_switch: STRING is "silent";
+			-- Obsolete switch be kept for backward compatibility
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

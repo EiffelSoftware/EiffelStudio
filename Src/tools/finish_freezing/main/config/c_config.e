@@ -1,9 +1,9 @@
 indexing
 	description: "An abstract environment configuration for a C/C++ compiler."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$date: $"
+	revision: "$revision: $"
 
 deferred class
 	C_CONFIG
@@ -193,7 +193,7 @@ feature {NONE} -- Variable caching
 invariant
 	variable_table_attached: is_initialized implies variable_table /= Void
 
-;indexing
+indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

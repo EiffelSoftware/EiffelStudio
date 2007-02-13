@@ -531,19 +531,6 @@ feature -- Access: file name
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
 
-	Config_eif: FILE_NAME is
-		require
-			windows: platform.is_windows
-			is_valid_environment: is_valid_environment
-		once
-			create Result.make_from_string (Config_path)
-			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
-			Result.set_file_name ("config")
-			Result.add_extension ("eif")
-		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
-		end
-
 	Generation_templates_path: DIRECTORY_NAME is
 			-- Location of templates used in code generation.
 		require

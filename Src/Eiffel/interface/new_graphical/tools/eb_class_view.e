@@ -216,6 +216,9 @@ feature -- Access
 			end
 		end
 
+	stone: CLASSC_STONE
+			-- Currently managed stone.
+
 feature -- Status setting
 
 	set_stone (new_stone: STONE) is
@@ -643,9 +646,6 @@ feature {NONE} -- Implementation
 				set_focus
 			end
 		end
-
-	stone: CLASSC_STONE
-			-- Currently managed stone.
 
 	window: EV_WINDOW is
 			-- Window dialogs can refer to.

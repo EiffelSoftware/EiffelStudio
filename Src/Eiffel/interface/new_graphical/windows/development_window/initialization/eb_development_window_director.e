@@ -80,9 +80,10 @@ feature -- Command
 			l_class_c_stone: CLASSC_STONE
 			l_class_i_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
-			l_cluster_string, l_class_string, l_feature_string: STRING
+			l_class_id, l_feature_id: STRING
 			l_has_editor_restored: BOOLEAN
-			l_address_manager: EB_ADDRESS_MANAGER
+			l_feature: E_FEATURE
+			l_feature_stone: FEATURE_STONE
 		do
 			if a_dev_window = Void then
 				internal_construct
@@ -122,32 +123,29 @@ feature -- Command
 						develop_window.set_stone (l_cluster_stone)
 					end
 				end
-				if 
-					a_session_data.editor_position > 0 
+				if
+					a_session_data.editor_position > 0
 					and then develop_window.editors_manager.current_editor /= Void
 				then
 					develop_window.editors_manager.current_editor.display_line_when_ready (a_session_data.editor_position, False)
 				end
 			end
-				-- Presumption is made that if the strings are not void then they represent
-				-- valid entities in the project.
-			l_cluster_string := a_session_data.context_cluster_string
-			l_class_string := a_session_data.context_class_string
-			l_feature_string := a_session_data.context_feature_string
-			if l_feature_string /= Void then
-				l_address_manager := develop_window.tools.features_relation_tool.address_manager
-				l_address_manager.feature_address.set_text (l_feature_string)
-				l_address_manager.class_address.set_text (l_class_string)
-				l_address_manager.execute_with_feature
-			elseif l_class_string /= Void then
-				l_address_manager := develop_window.tools.class_tool.address_manager
-				l_address_manager.class_address.set_text (l_class_string)
-				l_address_manager.execute_with_class
-			elseif l_cluster_string /= Void then
-				-- FIXIT: We only cluster information available, which tool should we put it?
-				l_address_manager := develop_window.tools.class_tool.address_manager
-				l_address_manager.cluster_address.set_text (l_cluster_string)
-				l_address_manager.execute_with_cluster
+
+			l_class_id := a_session_data.class_class_id
+			l_feature_id := a_session_data.feature_relation_feature_id
+			if l_feature_id /= Void then
+				l_feature := feature_of_id (l_feature_id)
+				if l_feature /= Void then
+					create l_feature_stone.make (l_feature)
+					develop_window.tools.set_stone (l_feature_stone)
+				end
+			end
+			if l_class_id /= Void then
+				l_class_i ?= class_of_id (l_class_id)
+				if l_class_i /= Void then
+					create l_class_i_stone.make (l_class_i)
+					develop_window.tools.set_stone (l_class_i_stone)
+				end
 			end
 		end
 

@@ -55,14 +55,11 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 			-- 1st parametar is cluster name
 			-- 2nd parameter is docking content unique name			
 
-	context_cluster_string: STRING
-			-- String representing any targeted cluster in the context pane.
+	feature_relation_feature_id: STRING
+			-- ID of the feature targeted in Feature relation tool.
 
-	context_class_string: STRING
-			-- String representing any targeted class in the context pane.
-
-	context_feature_string: STRING
-			-- String representing any targeted feature in the context pane.
+	class_class_id: STRING
+			-- ID of the class targeted in Class tool.
 
 	context_tab_index: INTEGER
 			-- Index of the selected tab in the context pane.
@@ -171,13 +168,18 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			open_clusters_not_void: open_clusters /= Void
 		end
 
-	save_context_data (a_cluster_string, a_class_string, a_feature_string: STRING; a_tab_index: INTEGER) is
+	save_context_data (a_class_id, a_feature_id: STRING; a_tab_index: INTEGER) is
 			-- Save the context information of the window.
+			-- Feature in feature relation tool.
+			-- Class in class tool. There is no need to save classes targeted in other tools
+			-- Because the class is propagated when setting.
 		do
-			context_cluster_string := a_cluster_string
-			context_class_string := a_class_string
-			context_feature_string := a_feature_string
+			class_class_id := a_class_id
+			feature_relation_feature_id := a_feature_id
 			context_tab_index := a_tab_index
+		ensure
+			class_class_id_set: class_class_id = a_class_id
+			feature_relation_feature_id_set: feature_relation_feature_id = a_feature_id
 		end
 
 	save_editor_position (a_position: INTEGER) is

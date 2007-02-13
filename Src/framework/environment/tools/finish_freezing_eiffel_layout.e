@@ -25,6 +25,31 @@ feature -- Access
 			Result.extend (short_studio_name)
 		end
 
+	config_eif: FILE_NAME is
+			-- Location of `cofig.eif' file.
+		require
+			windows: platform.is_windows
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (config_eif_path)
+			Result.set_file_name ("config")
+			Result.add_extension ("eif")
+		ensure
+			config_eif_not_void_or_empty: Result /= Void and not Result.is_empty
+		end
+
+	config_eif_path: DIRECTORY_NAME is
+			-- Path to directory containing `config.eif'.
+		require
+			windows: platform.is_windows
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (Config_path)
+			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
+		ensure
+			config_eif_path_not_void_or_empty: Result /= Void and not Result.is_empty
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

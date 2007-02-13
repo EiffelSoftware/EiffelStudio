@@ -14,6 +14,8 @@ inherit
 			batch_file_arguments, batch_file_options
 		end
 
+	EIFFEL_LAYOUT
+
 create
 	make
 
@@ -21,17 +23,22 @@ feature {NONE} -- Access
 
 	batch_file_name: STRING is
 			-- Absolute path to an environment configuration batch script
+		local
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
+			l_layout ?= eiffel_layout
+			check layout_not_void: l_layout /= Void end
 			create Result.make (256)
-			Result.append (install_path)
-			Result.append ("Bin\SetEnv.cmd")
+			Result.append (l_layout.config_eif_path)
+			Result.append ("\windows_sdk_v6.0.bat")
 		end
 
 	batch_file_arguments: STRING is
 			-- Arguments for `batch_file_name' execution
 		do
 			create Result.make (10)
-			Result.append ("/Release ")
+			Result.append ("%"" + install_path + "%"")
+			Result.append (" /Release ")
 			if use_32bit then
 				Result.append ("/x86")
 			else

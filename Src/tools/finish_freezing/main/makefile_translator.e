@@ -152,9 +152,12 @@ feature -- Execution
 			-- read options from config.eif
 		local
 			reader: RESOURCE_PARSER
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			create reader
-			reader.parse_file (eiffel_layout.Config_eif, options)
+			l_layout ?= eiffel_layout
+			check layout_not_void: l_layout /= Void end
+			reader.parse_file (l_layout.Config_eif, options)
 		end
 
 	translate is

@@ -47,6 +47,9 @@ feature {NONE} -- Initalization
 					extend_variable (path_var_name, l_parser.path)
 					extend_variable (include_var_name, l_parser.include)
 					extend_variable (lib_var_name, l_parser.lib)
+				else
+						-- Reset `internal_reg_key' to default value.
+					reset_key
 				end
 			end
 		end
@@ -58,8 +61,19 @@ feature {NONE} -- Clean up
 			-- reclaims an object.
 		do
 			if internal_reg_key /= default_pointer then
-				registry.close_key (internal_reg_key)
+				reset_key
 			end
+		end
+
+	reset_key is
+			-- Reset `ionternal_reg_key'.
+		require
+			internal_reg_key_computed: internal_reg_key /= default_pointer
+		do
+			registry.close_key (internal_reg_key)
+			internal_reg_key := default_pointer
+		ensure
+			internal_reg_key_reset: internal_reg_key = default_pointer
 		end
 
 feature -- Access

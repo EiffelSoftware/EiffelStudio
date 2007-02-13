@@ -235,6 +235,12 @@ feature -- Command
 			command.update_mini_tool_bar_size (a_content)
 		end
 
+	close_editor_place_holder is
+			-- Close editors place holder zone.
+		do
+			zones.place_holder_content.close
+		end
+
 	destroy is
 			-- Destroy all underline objects.
 		do

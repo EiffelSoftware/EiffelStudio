@@ -300,6 +300,7 @@
 							<Directory Id="msc" Name="msc">
 								<Component Id="msc" Guid="98D070ED-51E0-439B-854A-8C56FE79E506">
 									<File Id="config.eif2" Name="config.eif" KeyPath="yes" />
+									<File Id="windows_sdk_v6.0.bat" Name="WINDOW~1.BAT" LongName="windows_sdk_v6.0.bat" />
 									<File Id="eiffel.rc7" Name="eiffel.rc" />
 									<File Id="appl.ico9" Name="appl.ico" />
 								</Component>

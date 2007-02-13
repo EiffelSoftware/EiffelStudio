@@ -189,6 +189,24 @@ feature -- Access
 			Result := has_option (merge_module_switch)
 		end
 
+	frozen group_components: BOOLEAN
+			-- Indicates if a ComponentGroup element should be added to group all generated components
+		once
+			Result := has_option (group_components_switch)
+		end
+
+	frozen component_group_name: SYSTEM_STRING
+			-- The component group name
+		once
+			Result := option_of_name (group_components_switch).value
+		end
+
+	frozen generate_x64_preprocessors: BOOLEAN
+			-- Indicates if x64 specific preprocessors should be generated
+		do
+			Result := has_option (x64_switch)
+		end
+
 feature -- Status report
 
 	frozen has_semantic_name_prefix: BOOLEAN
@@ -252,17 +270,20 @@ feature {NONE} -- Usage
 			-- (export status {NONE})
 		do
 			create Result.make (8)
+
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursively include all subdirectories and files.", True, False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_include_pattern_switch, "Regular expression to include select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (file_exclude_pattern_switch, "Regular expression to exclude select files.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_include_pattern_switch, "Regular expression to include select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_REGEX_SWITCH}.make (directory_exclude_pattern_switch, "Regular expression to exclude select directories.", True, True, "expr", "A Microsoft .NET regular expression.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (exclude_pattern_priority_switch, "Gives the exclude pattern priority over th include pattern when matching.", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (group_components_switch, "Groups all generated components in a 'ComponentGroup' element", True, False, "name", "A component group name", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (verbal_name_generation_semantics_switch, "Generates semantic 'Name' attribute values for 'Component', 'Directory' and 'File' elements.", True, False, "prefix", "Semantic name prefix string", True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (merge_module_switch, "Use to force generator to respect that the content is destined for a merge module (creates shorter Ids.)", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (disk_id_switch, "Use to specify the 'DiskId' to package component files into, '1' is the default.", True, False, "id", "An ID corresponding to a 'Media' ID.", False, 1, {NATURAL_8}.max_value))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (directory_alias_switch, "Use to specify a directory alias to use when generating paths.", True, False, "alias", "A directory path alias", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (x64_switch, "Add preprocessor to allow components to be compiled as Win64 components", True, False))
 		end
 
 	loose_argument_name: STRING = "directory"
@@ -308,6 +329,8 @@ feature {NONE} -- Switch names
 	directory_exclude_pattern_switch: STRING = "de"
 	exclude_pattern_priority_switch: STRING = "ep+"
 	merge_module_switch: STRING = "m"
+	group_components_switch: STRING = "g"
+	x64_switch: STRING = "x64"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

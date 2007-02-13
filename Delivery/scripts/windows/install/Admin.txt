@@ -1,0 +1,46 @@
+1.0 ADMIN/NON INTERACTIVE INSTALLATIONS:
+----------------------------------------
+
+If you want to install EiffelStudio/EiffelEnvision in admin mode without any interactions, such
+the case of multiple installations please read the following:
+
+1.1 Installer Properties
+------------------------
+
+1.1.1 Require Properties
+
+There are a number of variables that *have* to be set to install successfully. These are detailed below:
+
+    - * SELECTEDCCOMPILER : Either "msc", for using a preinstalled Microsoft C/C++ compiler or "bcb" to install and use the Borland C/C++ compiler.
+                            NOTE: The Borland compiler can only be used for the x86 version of EiffelStudio.
+
+    - PID                 : For Enterprise editions of any installer a personal identifier is require, which is in the form of a CD-KEY for the
+                            installing application. For GPL/Free Trial installations this information is not required.
+
+1.1.2 Optional Properties
+                           
+There are also a number of properties that can be optionally defined, but should be defined for they sake of sanity:
+    
+    - INSTALLDIR          : This is the installed location of the application being installed by the installer and should end in a directory
+                            separator character '\'
+    
+    - * EIFFELPROJECTSDIR : Use to specify and alternative EiffelStudio project's directory path. The path should end in a directory
+                            separator character '\'
+            
+    - * PRECOMPILE        : Use to specify the level of precompilation. Either "none", for no precompilation. "base", for precompiling EiffelBase
+                            only. "wel", for precompiling EiffelBase and the Windows Eiffel Library. "vision2", for compiling EiffelBase, WEL and
+                            EiffelVision2. The default is "vision2"
+                            
+2.0 ADVANCED USER INTERACTION:
+------------------------------
+
+For special purposes it may be necessary to access installer pages that may not be visible during an installation. Below outlines the install
+
+2.1 C/C++ Compiler Configuration
+--------------------------------
+* Setting the property SHOWCCONFIG=1 via a command line installation will show the C/C++ compiler configuration page.
+
+3.0 END NOTE:
+-------------
+
+All those properties marked with an asterix '*' indicate that the property is only effective for EiffelStudio installations.

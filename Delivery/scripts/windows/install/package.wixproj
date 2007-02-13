@@ -1,0 +1,118 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">x86</Configuration>
+    <ProductVersion>3.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>package</OutputName>
+    <OutputType>Package</OutputType>
+    <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
+    <Name>package</Name>
+    <ProjectGuid>{01a951f7-ba79-4006-8629-27ffcb510ff0}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'x86' ">
+    <OutputPath>bin\x86\</OutputPath>
+    <IntermediateOutputPath>bin\x86\</IntermediateOutputPath>
+    <DefineConstants>x86;EiffelStudio</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'x64' ">
+    <OutputPath>bin\x64\</OutputPath>
+    <IntermediateOutputPath>bin\x64\</IntermediateOutputPath>
+    <DefineConstants>x64;EiffelStudio</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>True</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <AllowIdenticalRows>False</AllowIdenticalRows>
+    <CabinetCachePath>
+    </CabinetCachePath>
+    <CabinetCreationThreadCount>2</CabinetCreationThreadCount>
+    <Cultures>
+    </Cultures>
+    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
+    <LinkerPedantic>True</LinkerPedantic>
+    <ReuseCabinetCache>False</ReuseCabinetCache>
+    <SetMsiAssemblyNameFileVersion>False</SetMsiAssemblyNameFileVersion>
+    <SuppressAclReset>False</SuppressAclReset>
+    <SuppressAssemblies>False</SuppressAssemblies>
+    <SuppressDefaultAdminSequenceActions>False</SuppressDefaultAdminSequenceActions>
+    <SuppressDefaultAdvSequenceActions>False</SuppressDefaultAdvSequenceActions>
+    <SuppressDefaultUISequenceActions>False</SuppressDefaultUISequenceActions>
+    <SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
+    <SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
+    <SuppressFiles>False</SuppressFiles>
+    <SuppressIces>
+    </SuppressIces>
+    <LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
+    <SuppressLayout>False</SuppressLayout>
+    <SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
+    <LinkerSuppressSchemaValidation>False</LinkerSuppressSchemaValidation>
+    <LinkerSuppressSpecificWarnings>
+    </LinkerSuppressSpecificWarnings>
+    <SuppressValidation>False</SuppressValidation>
+    <LinkerTreatWarningsAsErrors>False</LinkerTreatWarningsAsErrors>
+    <LinkerVerboseOutput>True</LinkerVerboseOutput>
+    <WixVariables>
+    </WixVariables>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AppSearches.wxs" />
+    <Compile Include="CustomActions.wxs" />
+    <Compile Include="interface\Configuration.wxs" />
+    <Compile Include="interface\DialogExitSuccess.wxs" />
+    <Compile Include="interface\DialogFatalError.wxs" />
+    <Compile Include="interface\DialogMissingMsCompiler.wxs" />
+    <Compile Include="interface\DialogProgress.wxs" />
+    <Compile Include="interface\DialogSelectFolder.wxs" />
+    <Compile Include="interface\DialogUserExit.wxs" />
+    <Compile Include="interface\DialogFilesInUse.wxs" />
+    <Compile Include="interface\DialogVerifyReadyInstall.wxs" />
+    <Compile Include="interface\DialogViewLicenseAgreement.wxs" />
+    <Compile Include="interface\DialogWelcome.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogCCompilerChoice.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogMissingFx.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogPrecompileChoice.wxs" />
+    <Compile Include="interface\eiffelstudio\DialogSelectProjectFolder.wxs" />
+    <Compile Include="interface\PromptBrowse.wxs" />
+    <Compile Include="interface\PromptCancelInstall.wxs" />
+    <Compile Include="interface\PromptCancelLicense.wxs" />
+    <Compile Include="interface\PromptError.wxs" />
+    <Compile Include="interface\PromptOutOfDiskSpace.wxs" />
+    <Compile Include="interface\PromptOutOfRollbackDiskSpace.wxs" />
+    <Compile Include="interface\PromptViewLicenseAgreement.wxs" />
+    <Compile Include="Package.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin.txt" />
+    <Content Include="content\eiffelenvision\Components.wxi" />
+    <Content Include="content\eiffelenvision\Features.wxi" />
+    <Compile Include="content\eiffelenvision\EiffelEnvisionPackage.wxs" />
+    <Content Include="content\eiffelstudio\Components.wxi" />
+    <Content Include="content\eiffelstudio\Features.wxi" />
+    <Compile Include="content\eiffelstudio\EiffelStudioPackage.wxs" />
+    <Content Include="includes\Preprocessors.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="content\eiffelstudio" />
+    <Folder Include="content\eiffelenvision" />
+    <Folder Include="includes" />
+    <Folder Include="interface" />
+    <Folder Include="interface\eiffelstudio" />
+    <Folder Include="interface\eiffelenvision" />
+    <Folder Include="content" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+</Project>

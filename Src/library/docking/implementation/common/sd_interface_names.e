@@ -163,6 +163,13 @@ feature -- Tool bar customize dialog strings
 			Result_not_void: Result /= Void
 		end
 
+	separator: STRING_GENERAL is
+			-- Tool bar separator name which appeared in tool bar customize dialog.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	ok: STRING_GENERAL is
 			-- Ok button text.
 		deferred

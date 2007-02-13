@@ -141,6 +141,12 @@ feature -- Tool bar customize dialog strings
 			Result := "Down"
 		end
 
+	separator: STRING_GENERAL is
+			-- Tool bar separator name which appeared in tool bar customize dialog.
+		do
+			Result := "Separator"
+		end
+
 	ok: STRING_GENERAL is
 			-- Ok button text.
 		do

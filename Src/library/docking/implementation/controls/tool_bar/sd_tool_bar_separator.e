@@ -24,12 +24,12 @@ feature {NONE} -- Initlization
 		local
 			l_shared: SD_SHARED
 		do
+			create l_shared
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive := True
 			is_displayed := True
-			description := "Separator"
+			description := l_shared.interface_names.separator
 			name := generating_type
-			create l_shared
 			pixmap := l_shared.icons.tool_bar_separator_icon
 		end
 

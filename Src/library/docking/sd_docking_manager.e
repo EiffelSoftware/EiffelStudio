@@ -256,7 +256,7 @@ feature -- Contract support
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make_open_read (a_file_name.as_string_8)
+			create l_file.make (a_file_name.as_string_8)
 			Result := l_file.exists
 		end
 

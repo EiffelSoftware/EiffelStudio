@@ -136,6 +136,30 @@ feature -- Access
 		deferred
 		end
 
+	group_components: BOOLEAN
+			-- Indicates if a ComponentGroup element should be added to group all generated components
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
+	component_group_name: SYSTEM_STRING
+			-- The component group name
+		require
+			can_read_options: can_read_options
+			group_components: group_components
+		deferred
+		ensure
+			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+		end
+
+	generate_x64_preprocessors: BOOLEAN
+			-- Indicates if x64 specific preprocessors should be generated
+		require
+			can_read_options: can_read_options
+		deferred
+		end
+
 feature -- Status report
 
 	can_read_options: BOOLEAN

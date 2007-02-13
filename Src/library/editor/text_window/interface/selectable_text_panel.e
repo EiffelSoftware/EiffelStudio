@@ -222,22 +222,7 @@ feature {NONE} -- Handle mouse clicks
 				mouse_up_delayed := False
 				if click_count /= 1 then
 					if click_count = 2 then
-						empty_word_selection := False
-						stop := l_cursor.twin
-						text_displayed.set_selection_cursor (l_cursor)
-						text_displayed.selection_cursor.go_start_word
-						l_cursor.go_end_word
-						text_displayed.enable_selection
-						if l_cursor.is_equal (text_displayed.selection_cursor) then
-							l_cursor.go_right_char_no_down_line
-							l_cursor.go_end_word
-							if l_cursor.is_equal (text_displayed.selection_cursor) then
-								text_displayed.disable_selection
-								empty_word_selection := True
-								l_cursor := stop
-							end
-						end
-						invalidate_line (l_cursor.y_in_lines, False)
+						select_current_token
 					elseif editor_preferences.quadruple_click_enabled and then click_count > 3 then
 						select_all
 					else
@@ -249,6 +234,30 @@ feature {NONE} -- Handle mouse clicks
 					end
 				end
 			end
+		end
+
+	select_current_token is
+			-- Select the token where current cursor is.
+		local
+			stop, l_cursor: like cursor_type
+		do
+			l_cursor := text_displayed.cursor
+			empty_word_selection := False
+			stop := l_cursor.twin
+			text_displayed.set_selection_cursor (l_cursor)
+			text_displayed.selection_cursor.go_start_word
+			l_cursor.go_end_word
+			text_displayed.enable_selection
+			if l_cursor.is_equal (text_displayed.selection_cursor) then
+				l_cursor.go_right_char_no_down_line
+				l_cursor.go_end_word
+				if l_cursor.is_equal (text_displayed.selection_cursor) then
+					text_displayed.disable_selection
+					empty_word_selection := True
+					l_cursor := stop
+				end
+			end
+			invalidate_line (l_cursor.y_in_lines, False)
 		end
 
 	mouse_time_out_action is

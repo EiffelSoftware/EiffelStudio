@@ -29,7 +29,6 @@ feature -- Initialization
 			-- Initialization
 		require
 			name_attached: a_name /= Void
-			not_name_is_empty: not a_name.is_empty
 			path_attached: a_path /= Void
 			text_attached: a_text /= Void
 			a_start_positive: a_start >= 0

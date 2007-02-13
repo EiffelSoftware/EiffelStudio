@@ -445,26 +445,28 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_sub_menu.extend (l_command_menu_item)
 
 				-- Find selection forward
-			create l_os_cmd.make (develop_window)
+			create l_cmd.make
 			l_string := develop_window.Interface_names.m_find_next_selection
 			l_string.append ("%T")
 			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("search_selection_forward").display_string.as_string_32)
-			l_os_cmd.set_menu_name (l_string)
-			l_os_cmd.add_agent (agent develop_window.find_next_selection)
-			l_command_menu_item := l_os_cmd.new_menu_item
-			l_command_controller.add_selection_command (l_os_cmd)
+			l_cmd.set_menu_name (l_string)
+			l_cmd.add_agent (agent develop_window.find_next_selection)
+			l_command_menu_item := l_cmd.new_menu_item
+			l_command_controller.add_edition_command (l_cmd)
+			develop_window.commands.editor_commands.extend (l_cmd)
 			develop_window.add_recyclable (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 
 				-- Find selection backward
-			create l_os_cmd.make (develop_window)
+			create l_cmd.make
 			l_string := develop_window.Interface_names.m_find_previous_selection
 			l_string.append ("%T")
 			l_string.append (develop_window.preferences.editor_data.shortcuts.item ("search_selection_backward").display_string.as_string_32)
-			l_os_cmd.set_menu_name (l_string)
-			l_os_cmd.add_agent (agent develop_window.find_next_selection)
-			l_command_menu_item := l_os_cmd.new_menu_item
-			l_command_controller.add_selection_command (l_os_cmd)
+			l_cmd.set_menu_name (l_string)
+			l_cmd.add_agent (agent develop_window.find_next_selection)
+			l_command_menu_item := l_cmd.new_menu_item
+			l_command_controller.add_edition_command (l_cmd)
+			develop_window.commands.editor_commands.extend (l_cmd)
 			develop_window.add_recyclable (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 

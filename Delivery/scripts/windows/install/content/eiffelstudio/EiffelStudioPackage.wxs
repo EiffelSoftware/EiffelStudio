@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include ..\..\includes\Preprocessors.wxi?>
+  <?ifdef EiffelStudio?>
+
+  <!--
+    This include document is included under the Package node so you are free to define new directories, properties and features.
+    Note: A directory is created for INSTALLDIR and TARGETDIR so please use DirectoryRef to reference them.
+  -->
+  <Fragment>
+    
+    <!-- PACKAGE COMPONENTS -->
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="PersonalFolder" Name="PersonalFolder">
+        <Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
+          <Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)" >
+            <Registry Root="HKCU" Key="Software\ISE\Eiffel60\ec" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Id="Reg.ec.projects_dir" Type="string" />
+            <Registry Root="HKCU" Key="Software\ISE\Eiffel60\wizard" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" KeyPath="yes" Id="Reg.wizards.projects_dir" Type="string" />
+            <CreateFolder />
+            <RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall"/>
+          </Component>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+    <!-- END PACKAGE COMPONENTS -->
+
+    <!-- ADDITIONAL PACKAGE CONTENT -->
+    <CustomAction Id="is_gdi_plus_installed" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
+    <CustomAction Id="prepare_finalize_setup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
+    <CustomAction Id="finalize_setup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
+    <?ifdef Enterprise?>
+      <CustomAction Id="is_cd_key_valid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
+      <CustomAction Id="retrieve_cd_key" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
+    <?endif?>
+    <CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
+    <CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
+    <CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
+
+    <AdminUISequence>
+      <Custom Action="RESET_CHECKCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+      <Custom Action="RESET_HASMSCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->      
+    </AdminUISequence>
+    <InstallUISequence>
+      <Custom Action="RESET_CHECKCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+      <Custom Action="RESET_HASMSCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+      <?ifdef Enterprise?>
+        <Custom Action="retrieve_cd_key" Before="AppSearch"/>
+      <?endif?>
+    </InstallUISequence>
+
+    <!-- INSTALL SEQUENCING -->
+    <AdminExecuteSequence>
+      <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+      <Custom Action="is_gdi_plus_installed" Before="CostInitialize"/>
+      <?ifdef Enterprise?>
+        <Custom Action="retrieve_cd_key" Before="CostInitialize"/>
+      <?endif?>
+    </AdminExecuteSequence>
+    <InstallExecuteSequence>
+      <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+      <Custom Action="is_gdi_plus_installed" Before="CostInitialize"/>
+      <?ifdef Enterprise?>
+        <Custom Action="retrieve_cd_key" Before="CostInitialize"/>
+      <?endif?>
+    </InstallExecuteSequence>
+    <!-- END INSTALL SEQUENCING -->
+    
+    
+    <!-- END ADDITIONAL PACKAGE CONTENT -->
+
+  </Fragment>
+  
+  <?endif?>
+</Wix>

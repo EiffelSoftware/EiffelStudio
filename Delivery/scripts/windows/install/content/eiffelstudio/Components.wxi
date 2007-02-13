@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include includes\Preprocessors.wxi?>
+  
+  <!--
+    For a package's components that reside under the default installation location (INSTALLDIR),
+    This include is expanded inside the Directory element for the built INSTALLDIR location.
+  -->
+  
+  <!-- PACKAGE COMPONENTS -->
+  <Component Id="Comp.root" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
+    <File Id="File.Test" Name="Components.wxi" Source="C:\Documents and Settings\Paul Bates\My Documents\SharpDevelop Projects\VisualProject\content\eiffelstudio\Components.wxi" KeyPath="yes"/>
+  </Component>
+
+  <?ifndef x64?>
+  <Merge Id="Mod.gdi_plus" Language="1033" SourceFile="msms\$(var.Platform)\GDIPlus.msm" DiskId="1" />
+  <?endif?>
+  <!-- END PACKAGE COMPONENTS -->
+  
+</Include>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include includes\Preprocessors.wxi?>
+  
+  <Fragment>
+    <!-- BINARIES -->
+    <Binary Id="setup.dll" SourceFile="$(sys.SOURCEFILEDIR)binaries\$(var.Platform)\setup.dll" />
+    <!-- END BINARIES -->
+		
+		<!-- CUSTOM ACTIONS -->
+		<CustomAction Id="EvaluateCCompiler" BinaryKey="setup.dll" DllEntry="evaluate_c_compiler" Return="check"  Execute="immediate"/>
+    <CustomAction Id="ShowCCompilerHowTo" BinaryKey="setup.dll" DllEntry="show_c_compiler_how_to" Return="ignore"  Execute="immediate"/>
+    <!-- END CUSTOM ACTIONS -->
+
+    <CustomAction Id="SET_INSTALLDIR" Property="INSTALLDIR" Value="[INSTALLDIR]" Execute="firstSequence" />
+</Fragment>
+</Wix>

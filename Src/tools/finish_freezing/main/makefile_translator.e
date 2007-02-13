@@ -61,7 +61,7 @@ feature -- Initialization
 					create vs_setup.make (a_force_32bit)
 				elseif eiffel_layout.eiffel_c_compiler.is_equal ("bcb") then
 						-- Borland C compiler.
-					create borland_setup.make
+					create borland_setup
 				end
 			else
 				error_msg.append ("Could not launch finish_freezing. Make%N")

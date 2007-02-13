@@ -191,7 +191,7 @@ feature -- Command
 			-- Open a docking config from a_named_file.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_exist: file_exist (a_file)
+			a_file_readable: is_file_readable (a_file)
 		local
 			l_config: SD_CONFIG_MEDIATOR
 		do
@@ -251,7 +251,7 @@ feature -- Command
 
 feature -- Contract support
 
-	file_exist (a_file_name: STRING_GENERAL): BOOLEAN is
+	is_file_readable (a_file_name: STRING_GENERAL): BOOLEAN is
 			-- Does `a_file_name' exist?
 		local
 			l_file: RAW_FILE

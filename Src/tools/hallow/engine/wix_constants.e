@@ -20,6 +20,8 @@ feature -- Namespace
 feature -- Element names
 
 	component_tag: SYSTEM_STRING = "Component"
+	component_group_tag: SYSTEM_STRING = "ComponentGroup"
+	component_ref_tag: SYSTEM_STRING = "Component"
 	directory_ref_tag: SYSTEM_STRING = "DirectoryRef"
 	directory_tag: SYSTEM_STRING = "Directory"
 	file_tag: SYSTEM_STRING = "File"
@@ -32,6 +34,15 @@ feature -- Attribute names
 	id_attribute: SYSTEM_STRING = "Id"
 	name_attribute: SYSTEM_STRING = "Name"
 	file_source_attribute: SYSTEM_STRING = "FileSource"
+	win64_attribute: SYSTEM_STRING = "Win64"
+
+feature -- Preprocessor names
+
+	pi_ifndef: SYSTEM_STRING = "ifndef"
+	pi_ifdef: SYSTEM_STRING = "ifdef"
+	pi_define: SYSTEM_STRING = "define"
+	pi_else: SYSTEM_STRING = "else"
+	pi_endif: SYSTEM_STRING = "endif"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

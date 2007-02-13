@@ -17,15 +17,17 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_items (a_title: STRING_GENERAL; a_items: like items) is
+	make_with_items (a_unique_title: STRING_GENERAL; a_items: like items) is
 			-- Creation method.
 		require
-			a_title_not_void: a_title /= Void
+			a_title_not_void: a_unique_title /= Void
 			a_items_not_void: a_items /= Void
 		local
 			l_button: EV_TOOL_BAR_BUTTON
 		do
-			title := a_title
+			unique_title := a_unique_title
+			-- We set display title same as unique title by default.
+			title := a_unique_title
 			items := a_items
 
 			create tool_bar_items_texts.make (items.count)
@@ -44,15 +46,15 @@ feature {NONE} -- Initlization
 				items.forth
 			end
 		ensure
-			set: title = a_title
+			set: unique_title = a_unique_title
 			set: items = a_items
 		end
 
-	make_with_tool_bar (a_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR) is
+	make_with_tool_bar (a_unique_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR) is
 			-- Creation method. A helper function, actually SD_TOOL_BAR_ZONE only appcept EV_TOOL_BAR_ITEMs.
 			-- Warning: use this method will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
-			a_title_not_void: a_title /= Void
+			a_title_not_void: a_unique_title /= Void
 			a_tool_bar_not_void: a_tool_bar /= Void
 		local
 			l_item: EV_TOOL_BAR_ITEM
@@ -72,9 +74,9 @@ feature {NONE} -- Initlization
 				l_temp_items.extend (convert_to_sd_item (l_item, a_tool_bar.index.out))
 				a_tool_bar.forth
 			end
-			make_with_items (a_title, l_temp_items)
+			make_with_items (a_unique_title, l_temp_items)
 		ensure
-			set: a_title = title
+			set: a_unique_title = unique_title
 			set: a_tool_bar.count = items.count
 		end
 
@@ -174,6 +176,16 @@ feature -- Command
 			end
 		end
 
+	set_title (a_display_title: STRING_GENERAL) is
+			-- Set `title' with `a_display_title'
+		require
+			not_void: a_display_title /= Void
+		do
+			title := a_display_title
+		ensure
+			set: title = a_display_title
+		end
+
 	set_top (a_direction: INTEGER) is
 			-- Set dock at `a_direction'
 		require
@@ -191,8 +203,12 @@ feature -- Command
 
 feature -- Query
 
+	unique_title: STRING_GENERAL
+			-- Unique tool bar title.
+			-- It's used for store/open layout datas, so it should not be changed.
+
 	title: STRING_GENERAL
-			-- Tool bar title.
+			-- Title for display.
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current'.
@@ -373,7 +389,7 @@ feature -- Query
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := title.hash_code
+			Result := unique_title.hash_code
 		end
 
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,

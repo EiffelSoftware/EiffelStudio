@@ -828,7 +828,7 @@ feature{NONE} -- Implementation
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 			develop_window.add_recyclable (l_cluster_tool)
 
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, True, False)
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_u), True, True, False)
 			l_accel.actions.extend (agent l_show_cmd.execute)
 			l_show_cmd.set_accelerator (l_accel)
 		end

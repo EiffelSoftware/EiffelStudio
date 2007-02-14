@@ -12,12 +12,6 @@ inherit
 
 feature -- Access
 
-	Editor_place_holder_content_name: STRING_GENERAL is
-			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
-		do
-			Result := locale.translate ("docking manager editor place holder")
-		end
-
 	Zone_navigation_left_column_name: STRING_GENERAL is
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
 		do

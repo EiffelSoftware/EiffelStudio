@@ -190,7 +190,6 @@ feature {NONE} -- INSTR_B evaluation
 
 	evaluate_call_b (a_call_b: CALL_B) is
 		local
-			value: PROCEDURE_RETURN_DEBUG_VALUE
 			l_access_b: ACCESS_B
 			l_nested_b: NESTED_B
 		do

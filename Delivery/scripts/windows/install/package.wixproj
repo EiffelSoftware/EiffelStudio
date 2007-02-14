@@ -69,7 +69,6 @@
     </WixVariables>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AppSearches.wxs" />
     <Compile Include="CustomActions.wxs" />
     <Compile Include="interface\Configuration.wxs" />
     <Compile Include="interface\DialogExitSuccess.wxs" />
@@ -97,11 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin.txt" />
-    <Content Include="content\eiffelenvision\Components.wxi" />
-    <Content Include="content\eiffelenvision\Features.wxi" />
     <Compile Include="content\eiffelenvision\EiffelEnvisionPackage.wxs" />
-    <Content Include="content\eiffelstudio\Components.wxi" />
-    <Content Include="content\eiffelstudio\Features.wxi" />
     <Compile Include="content\eiffelstudio\EiffelStudioPackage.wxs" />
     <Content Include="includes\Preprocessors.wxi" />
   </ItemGroup>

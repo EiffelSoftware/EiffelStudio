@@ -37,13 +37,18 @@
     <!-- END ADD REMOVE PROGRAM -->
 
     <!-- PROPERTIES -->
+    <?ifdef x64?>
+      <Property Id="ISEPLATFORM">win64</Property>
+    <?else?>
+      <Property Id="ISEPLATFORM">windows</Property>
+    <?endif?>
     <Property Id="INSTALLDIR" Secure="yes" />
-    <Property Id="EIFFELPROJECTDIR" Secure="yes" />
     <Property Id="INSTALLCURL">http://eiffelsoftware.origo.ethz.ch/index.php/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="CHECKCCOMPILER"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>   <!-- Determines if a C/C++ compiler should be checked -->
     <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found-->
     <Property Id="CANCCOMPILE">0</Property>                                                                               <!-- Indicates if a MSC C/C++ can actually be used-->
     <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>bcb<?else?>msc<?endif?></Property>                             <!-- Type of C/C++ compiler -->
+    <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
     <!-- END PROPERTIES -->
 
     <!-- INSTALL DESCRIPTION -->
@@ -51,36 +56,20 @@
       <Directory Id="$(var.PrgFiles)" Name="$(var.PrgFiles)">
         <Directory Id="Dir.EiffelSoftware" Name="Eiffel Software">
           <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
-            <?ifdef EiffelStudio?>
-              <?include content\eiffelstudio\Components.wxi?>
-            <?endif?>
-            <?ifdef EiffelEnvision?>
-              <?include content\eiffelenvision\Components.wxi?>
-            <?endif?>
           </Directory>
         </Directory>
       </Directory>
     </Directory>
 
-    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="3" ConfigurableDirectory="INSTALLDIR">
-      <ComponentRef Id="Comp.root"/>
-      <?ifdef EiffelStudio?>
-        <?include content\eiffelstudio\Features.wxi?>
-      <?endif?>
-      <?ifdef EiffelEnvision?>
-        <?include content\eiffelenvision\Features.wxi?>
-      <?endif?>
+    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
     </Feature>
-    
     <!-- END INSTALL DESCRIPTION -->
 
     <!-- INSTALL SEQUENCING -->
-    <AdminExecuteSequence>
-      <Custom Action="CanPerformCCompilation" Before="CostInitialize"/>
-    </AdminExecuteSequence>
     <InstallExecuteSequence>
-      <Custom Action="CanPerformCCompilation" Before="CostInitialize"/>
     </InstallExecuteSequence>
+    <AdminExecuteSequence>
+    </AdminExecuteSequence>
     <!-- END INSTALL SEQUENCING -->
 
     <!-- USER INTERFACE -->

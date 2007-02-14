@@ -33,11 +33,10 @@
       <?endif?>
       <?ifdef x64?>
         <?define ProductGuid = "53A5D62A-38C7-4367-B7D5-B062CAB0ACBF" ?>
-        <?define ProductName = "EiffelStudio 6.0 (x64) $(var.Edition)" ?>
       <?else?>
         <?define ProductGuid = "A543BA14-8DE7-4181-A415-131A075DA9E4" ?>
-        <?define ProductName = "EiffelStudio 6.0 (x86) $(var.Edition)" ?>
       <?endif?>
+      <?define ProductName = "EiffelStudio 6.0 ($(var.Platform)) $(var.Edition)" ?>
       <?define UpgradeGuid = "247223FD-0FB2-4077-86D9-AC90E5E27A64" ?>
       <?define Product = "EiffelStudio" ?>
       <?define ProductVersion = "6.0" ?>
@@ -54,11 +53,10 @@
       <?endif?>
       <?ifdef x64?>
         <?define ProductGuid = "A8D26619-266C-49C3-A257-F9F8C4F958A0" ?>
-        <?define ProductName = "EiffelEnvision 2.8 (x64) $(var.Edition)" ?>
         <?else?>
         <?define ProductGuid = "C0FD2907-AC52-42C6-8420-1D37A400C770" ?>
-        <?define ProductName = "EiffelEnvision 2.8 (x86) $(var.Edition)" ?>
       <?endif?>
+      <?define ProductName = "EiffelEnvision 2.8 ($(var.Platform)) $(var.Edition)" ?>
       <?define UpgradeGuid = "F98A29ED-2E72-45E8-8F45-E936B25774DB" ?>
       <?define Product = "EiffelEnvision" ?>
       <?define ProductVersion = "2.8" ?>

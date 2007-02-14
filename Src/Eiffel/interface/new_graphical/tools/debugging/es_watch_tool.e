@@ -133,6 +133,18 @@ feature {NONE} -- Initialization
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
 
+			create toggle_auto_behavior_cmd.make
+			toggle_auto_behavior_cmd.set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
+			toggle_auto_behavior_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
+			toggle_auto_behavior_cmd.set_name ("AutoExpression")
+			toggle_auto_behavior_cmd.set_menu_name (interface_names.m_auto_expressions)
+			toggle_auto_behavior_cmd.set_tooltip (interface_names.m_auto_expressions)
+			toggle_auto_behavior_cmd.add_action (agent toggle_auto_expressions)
+			toggle_auto_behavior_cmd.set_is_selected_function (agent auto_expression_enabled)
+			toggle_auto_behavior_cmd.enable_sensitive
+			mini_toolbar.extend (toggle_auto_behavior_cmd.new_mini_toolbar_item)
+
+
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.new_expression_icon)
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
@@ -493,14 +505,11 @@ feature {NONE} -- Event handling
 		do
 			create m
 				--| Auto expressions
-			create mci
-			mci.set_text (interface_names.m_auto_expressions)
-			if auto_expression_enabled then
-				mci.enable_select
+			if toggle_auto_behavior_cmd /= Void then
+				mci := toggle_auto_behavior_cmd.new_menu_item
+				m.extend (mci)
+				m.extend (create {EV_MENU_SEPARATOR})
 			end
-			mci.select_actions.extend (agent toggle_auto_expressions (not auto_expression_enabled))
-			m.extend (mci)
-			m.extend (create {EV_MENU_SEPARATOR})
 
 				--| Watch management
 			create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
@@ -550,9 +559,9 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	toggle_auto_expressions (is_auto: BOOLEAN) is
+	toggle_auto_expressions is
 		do
-			if is_auto then
+			if not auto_expression_enabled then
 				auto_expression_enabled := True
 				disable_commands_on_expressions
 				create_expression_cmd.disable_sensitive
@@ -1028,21 +1037,25 @@ feature {NONE} -- Event handling
 					expr.set_unevaluated
 				end
 			end
-			expr_item := new_watched_item_from_expression (expr, watches_grid)
-			watched_items.extend (expr_item)
+			if auto_expression_enabled and expr.error_occurred then
+				-- Do not display it
+			else
+				expr_item := new_watched_item_from_expression (expr, watches_grid)
+				watched_items.extend (expr_item)
 
-			if expr_item /= Void and then expr_item.row /= Void then
-				if
-					not expr_item.compute_grid_display_done
-					and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))
-				then
-					expr_item.compute_grid_display
+				if expr_item /= Void and then expr_item.row /= Void then
+					if
+						not expr_item.compute_grid_display_done
+						and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))
+					then
+						expr_item.compute_grid_display
+					end
+					watches_grid.remove_selection
+					if expr_item.row.is_displayed then
+						expr_item.row.ensure_visible
+					end
+					expr_item.row.enable_select
 				end
-				watches_grid.remove_selection
-				if expr_item.row.is_displayed then
-					expr_item.row.ensure_visible
-				end
-				expr_item.row.enable_select
 			end
 		end
 
@@ -1074,6 +1087,9 @@ feature {NONE} -- Implementation: internal data
 
 	toggle_state_of_expression_cmd: EB_STANDARD_CMD
 			-- Command that enable/disable a new expression
+
+	toggle_auto_behavior_cmd: EB_STANDARD_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND
+			-- Command that activate/deactivate auto expressions.
 
 	move_up_cmd, move_down_cmd: EB_STANDARD_CMD
 			-- Move selected item up or down.

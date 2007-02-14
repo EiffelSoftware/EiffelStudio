@@ -166,18 +166,67 @@ feature -- Type checking
 			end
 		end
 
-
 	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
 			-- Type check `an_exp' in the context of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 			an_exp_not_void: an_exp /= Void
+		local
+			l_exp_call: EXPR_CALL_AS
+			l_instr_as: INSTR_CALL_AS
+			errlst: LIST [ERROR]
+			errcur: CURSOR
+			l_vkcn_error: VKCN
+			l_has_vkcn_error: BOOLEAN
+			retried: BOOLEAN
+		do
+			if not retried then
+				expression_or_instruction_type_check_and_code (a_feature, an_exp)
+			end
+			if retried or error_handler.has_error then
+					--| Check if any VKCN error
+				errlst := error_handler.error_list
+				errcur := errlst.cursor
+				from
+					errlst.start
+					l_has_vkcn_error := False
+				until
+					errlst.after or l_has_vkcn_error
+				loop
+					l_vkcn_error ?= errlst.item
+					l_has_vkcn_error := l_vkcn_error /= Void
+					errlst.forth
+				end
+				errlst.go_to (errcur)
+
+					--| If any VKCN .. then let's try to check it as an instruction
+				if l_has_vkcn_error then
+					l_exp_call ?= an_exp
+					if l_exp_call /= Void then
+						error_handler.wipe_out
+						create l_instr_as.initialize (l_exp_call.call)
+						expression_or_instruction_type_check_and_code (a_feature, l_instr_as)
+					end
+				end
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
+		end
+
+	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL) is
+			-- Type check `an_ast' in the context of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			an_ast_not_void: an_ast /= Void
 		do
 			type_a_checker.init_for_checking (a_feature, context.current_class, Void, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset
-			an_exp.process (Current)
+			an_ast.process (Current)
 		end
 
 	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is

@@ -416,6 +416,9 @@ feature -- Call stack
 			if ecse /= Void and then ecse.is_melted then
 				st.add_string ("*")
 			end
+			if ecse /= Void and then ecse.has_rescue then
+				st.add_string ("R")
+			end
 			if oc /= Void then
 				st.add_feature_name (cse.routine_name, oc)
 				if oc /= c then

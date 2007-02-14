@@ -39,7 +39,6 @@ feature -- Parsing
 					check
 						expression_ast /= Void
 					end
-
 				end
 			else
 				debug ("debugger_evaluator")

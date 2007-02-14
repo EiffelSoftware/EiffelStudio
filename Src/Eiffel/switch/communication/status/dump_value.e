@@ -925,7 +925,7 @@ feature -- Access
 					Result := dynamic_class.name_in_upper
 				end
 			else
-				Result := "ANY"
+				Result := "NONE"
 			end
 		ensure
 			Result_not_void: Result /= Void

@@ -822,7 +822,7 @@ feature -- Status setting
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			split ?= objects_tool.widget
 			if split /= Void then
-				if 0 <= objects_split_proportion and objects_split_proportion <= 1then
+				if 0 <= objects_split_proportion and objects_split_proportion <= 1 then
 					split.set_proportion (objects_split_proportion)
 				end
 				split := Void
@@ -1747,8 +1747,13 @@ feature {NONE} -- Implementation
 			-- Restore standard debug docking layout.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
 		do
-			if debugging_window.tools.features_relation_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+			l_tools := debugging_window.tools
+			if
+				l_tools.features_relation_tool.content.is_visible
+				and l_tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide
+			then
 				-- But it is possible that is auto hide state.
 				objects_tool.content.set_relative (debugging_window.tools.features_relation_tool.content, {SD_ENUMERATION}.bottom)
 			else
@@ -1763,16 +1768,25 @@ feature {NONE} -- Implementation
 				watch_tool_list.item.content.set_tab_with (objects_tool.content, False)
 				watch_tool_list.forth
 			end
+			if objects_tool.content.is_visible then
+				objects_tool.content.set_focus
+			end
 
-			if debugging_window.tools.features_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				call_stack_tool.content.set_relative (debugging_window.tools.features_tool.content, {SD_ENUMERATION}.bottom)
-			elseif debugging_window.tools.cluster_tool.content.is_visible and debugging_window.tools.cluster_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				call_stack_tool.content.set_relative (debugging_window.tools.cluster_tool.content, {SD_ENUMERATION}.bottom)
+			if
+				l_tools.features_tool.content.is_visible
+				and l_tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide
+			then
+				call_stack_tool.content.set_relative (l_tools.features_tool.content, {SD_ENUMERATION}.bottom)
+			elseif
+				l_tools.cluster_tool.content.is_visible
+				and l_tools.cluster_tool.content.state_value /= {SD_ENUMERATION}.auto_hide
+			then
+				call_stack_tool.content.set_relative (l_tools.cluster_tool.content, {SD_ENUMERATION}.bottom)
 			else
 				call_stack_tool.content.set_top ({SD_ENUMERATION}.left)
 			end
 
-			-- Minimize all editors
+				--| Minimize all editors
 			from
 				l_contents := debugging_window.docking_manager.contents
 				l_contents.start

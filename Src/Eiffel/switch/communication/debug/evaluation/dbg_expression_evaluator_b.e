@@ -112,8 +112,9 @@ feature -- Evaluation
 					l_error_occurred := True
 				else
 						--| Compute and get `expression_byte_node'
-					get_expression_byte_node
-					l_error_occurred := error_occurred or else expression_byte_node = Void
+					get_byte_node
+					l_error_occurred := error_occurred
+							or else (expression_byte_node = Void and instruction_byte_node = Void)
 				end
 
 					--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
@@ -129,7 +130,11 @@ feature -- Evaluation
 					clean_temp_data
 
 						--| concrete evaluation
-					process_expression_evaluation (expression_byte_node)
+					if expression_byte_node /= Void then
+						process_expression_evaluation (expression_byte_node)
+					else
+						process_instruction_evaluation (instruction_byte_node)
+					end
 
 						--| Process result
 					if tmp_result_value /= Void then
@@ -166,6 +171,40 @@ feature -- Evaluation
 			tmp_result_static_type := Void
 			tmp_result_value := Void
 			tmp_target := Void
+		end
+
+feature {NONE} -- INSTR_B evaluation
+
+	process_instruction_evaluation (a_instr_b: INSTR_B) is
+		local
+			l_instr_call_b: INSTR_CALL_B
+		do
+
+			l_instr_call_b ?= a_instr_b
+			if l_instr_call_b /= Void then
+				evaluate_call_b (l_instr_call_b.call)
+			else
+				notify_error_evaluation (a_instr_b.generator + ": Instruction evaluation not yet available")
+			end
+		end
+
+	evaluate_call_b (a_call_b: CALL_B) is
+		local
+			value: PROCEDURE_RETURN_DEBUG_VALUE
+			l_access_b: ACCESS_B
+			l_nested_b: NESTED_B
+		do
+			l_access_b ?= a_call_b
+			if l_access_b /= Void then
+				evaluate_access_b (l_access_b)
+			else
+				l_nested_b ?= a_call_b
+				if l_nested_b /= Void then
+					evaluate_nested_b (l_nested_b)
+				else
+					notify_error_evaluation (a_call_b.generator + ": Not yet available")
+				end
+			end
 		end
 
 feature {NONE} -- EXPR_B evaluation
@@ -715,9 +754,9 @@ feature {NONE} -- EXPR_B evaluation
 			params.extend (dv)
 			if not error_occurred then
 				if tmp_target /= Void then
-					evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
+					evaluate_routine (tmp_target.value_address, tmp_target, cl, fi, params)
 				else
-					evaluate_function (context_address, Void, cl, fi, params)
+					evaluate_routine (context_address, Void, cl, fi, params)
 				end
 			else
 				notify_error_evaluation (a_tuple_access_b.generator + Cst_error_report_to_support)
@@ -791,14 +830,14 @@ feature {NONE} -- EXPR_B evaluation
 							evaluate_once (fi)
 						elseif fi.is_constant then
 							evaluate_constant (fi)
-						elseif fi.is_function then
+						elseif fi.is_routine then
 								--| parameters ...
 							params := parameter_values_from_parameters_b (a_feature_b.parameters)
 							if not error_occurred then
 								if tmp_target /= Void then
-									evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
+									evaluate_routine (tmp_target.value_address, tmp_target, cl, fi, params)
 								else
-									evaluate_function (context_address, Void, cl, fi, params)
+									evaluate_routine (context_address, Void, cl, fi, params)
 								end
 							end
 						elseif fi.is_attribute then
@@ -856,9 +895,9 @@ feature {NONE} -- EXPR_B evaluation
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
 						if not error_occurred then
 							if tmp_target /= Void then
-								evaluate_function (tmp_target.value_address, tmp_target, Void, fi, params)
+								evaluate_routine (tmp_target.value_address, tmp_target, Void, fi, params)
 							elseif context_address /= Void then
-								evaluate_function (context_address, Void, Void, fi, params)
+								evaluate_routine (context_address, Void, Void, fi, params)
 							else
 								evaluate_static_function (fi, cl, params)
 							end
@@ -1102,7 +1141,6 @@ feature {NONE} -- Concrete evaluation
 		require
 			feature_not_void: f /= Void
 --			f_is_once: f.is_once
---			f_is_once: f.is_once
 		do
 			prepare_evaluation
 			Dbg_evaluator.evaluate_once (f)
@@ -1139,7 +1177,7 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -1150,7 +1188,7 @@ feature {NONE} -- Concrete evaluation
 					)
 			else
 				prepare_evaluation
-				Dbg_evaluator.evaluate_function (a_addr, a_target, cl, f, params)
+				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params)
 				retrieve_evaluation
 			end
 		end
@@ -1261,24 +1299,34 @@ feature -- Change Context
 				end
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
-					reset_expression_byte_node
+					reset_byte_node
 				end
 			end
 		end
 
 feature -- Access
 
-	expression_byte_node_computed: BOOLEAN
+	byte_node_computed: BOOLEAN
+
+	byte_node: BYTE_NODE is
+		do
+			Result := internal_byte_node
+			if not byte_node_computed then
+				check internal_byte_node = Void end
+				get_byte_node
+				check byte_node_computed end
+				Result := internal_byte_node
+			end
+		end
 
 	expression_byte_node: EXPR_B is
 		do
-			Result := internal_expression_byte_node
-			if not expression_byte_node_computed then
-				check internal_expression_byte_node = Void end
-				get_expression_byte_node
-				check expression_byte_node_computed end
-				Result := internal_expression_byte_node
-			end
+			Result ?= byte_node
+		end
+
+	instruction_byte_node: INSTR_B is
+		do
+			Result ?= byte_node
 		end
 
 	is_boolean_expression (f: FEATURE_I): BOOLEAN is
@@ -1287,14 +1335,14 @@ feature -- Access
 			old_context_feature: like context_feature
 			old_context_class: like context_class
 			old_context_class_type: like context_class_type
-			old_int_expression_byte_note: like internal_expression_byte_node
+			old_int_expression_byte_note: like internal_byte_node
 			bak_byte_code: BYTE_CODE
 		do
 				--| Backup current context and values
 			old_context_feature := context_feature
 			old_context_class := context_class
 			old_context_class_type := context_class_type
-			old_int_expression_byte_note := internal_expression_byte_node
+			old_int_expression_byte_note := internal_byte_node
 
 				--| Removed any potential error due to previous evaluation
 			error_handler.wipe_out
@@ -1304,7 +1352,7 @@ feature -- Access
 			set_context_data (f, f.written_class, Void)
 
 				--| Get expression_byte_node
-			get_expression_byte_node
+			get_byte_node
 			if not error_occurred and then expression_byte_node /= Void then
 --| Since the Byte_context is used only by debugger and code generation
 --| there is no need to restore previous context
@@ -1350,7 +1398,7 @@ feature -- Access
 					old_context_class := context_class
 				end
 				set_context_data (old_context_feature, old_context_class, old_context_class_type)
-				internal_expression_byte_node := old_int_expression_byte_note
+				internal_byte_node := old_int_expression_byte_note
 			end
 		end
 
@@ -1379,8 +1427,8 @@ feature {NONE} -- Implementation
 			Inst_context.set_group (cl.group)
 		end
 
-	get_expression_byte_node is
-			-- get expression byte node depending of the context
+	get_byte_node is
+			-- get byte node depending of the context
 		require
 			context_feature_not_void: on_context implies context_feature /= Void
 			context_class_not_void: context_class /= Void
@@ -1393,13 +1441,13 @@ feature {NONE} -- Implementation
 			bak_byte_code: BYTE_CODE
 			bak_cc, l_cl: CLASS_C
 		do
-			expression_byte_node_computed := True
+			byte_node_computed := True
 			if not retried then
-				if internal_expression_byte_node = Void then
+				if internal_byte_node = Void then
 					error_handler.wipe_out
 
 					debug ("debugger_trace_eval_data")
-						print (generator + ".get_expression_byte_node from ["+dbg_expression.expression+"]%N")
+						print (generator + ".get_expression_byte_node from [" + dbg_expression.expression + "]%N")
 						print ("%T%T on_context: " + on_context.out +"%N")
 						print ("%T%T on_class  : " + on_class.out +"%N")
 						print ("%T%T on_object : " + on_object.out +"%N")
@@ -1413,8 +1461,8 @@ feature {NONE} -- Implementation
 							print ("%T%T context_feature : " + context_feature.feature_name +"%N")
 						end
 					end
-						--| If we want to recompute the `expression_byte_node',
-						--| we need to call `reset_expression_byte_nod'
+						--| If we want to recompute the `byte_node',
+						--| we need to call `reset_byte_node'
 
 					if context_class /= Void then
 						ast_context.clear_all
@@ -1463,7 +1511,7 @@ feature {NONE} -- Implementation
 							end
 						end
 							--| Compute and get `expression_byte_node'
-						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)
+						internal_byte_node := byte_node_from_ast (dbg_expression.expression_ast)
 							--| Reset Compiler context
 						if bak_cc /= Void then
 							System.set_current_class (bak_cc)
@@ -1482,13 +1530,13 @@ feature {NONE} -- Implementation
 				error_handler.wipe_out
 			end
 		ensure
-			expression_byte_node_computed: expression_byte_node_computed
+			expression_byte_node_computed: byte_node_computed
 		rescue
 			retried := True
 			retry
 		end
 
-	expression_byte_node_from_ast (exp: EXPR_AS): like expression_byte_node is
+	byte_node_from_ast (exp: EXPR_AS): like byte_node is
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
 			exp_not_void: exp /= Void
@@ -1514,7 +1562,6 @@ feature {NONE} -- Implementation
 					print ("%N")
 				end
 				dbg_expression_checker.expression_type_check_and_code (context_feature, exp)
-
 				Ast_context.set_is_ignoring_export (False)
 
 				if error_handler.has_error then
@@ -1523,7 +1570,7 @@ feature {NONE} -- Implementation
 					error_handler.wipe_out
 					Result := Void
 				else
-					Result ?= dbg_expression_checker.last_byte_node
+					Result := dbg_expression_checker.last_byte_node
 				end
 			else
 				ast_context.set_is_ignoring_export (False)
@@ -1545,12 +1592,12 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	reset_expression_byte_node is
+	reset_byte_node is
 		do
-			internal_expression_byte_node := Void
+			internal_byte_node := Void
 		end
 
-	internal_expression_byte_node: like expression_byte_node
+	internal_byte_node: like  byte_node
 
 	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
 		once

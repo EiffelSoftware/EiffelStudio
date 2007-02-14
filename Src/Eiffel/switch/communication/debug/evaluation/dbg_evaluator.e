@@ -189,7 +189,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -201,7 +201,7 @@ feature -- Concrete evaluation
 			l_err_msg: STRING
 		do
 			debug ("debugger_trace_eval")
-				print (generating_type + ".evaluate_function :%N")
+				print (generating_type + ".evaluate_routine :%N")
 				print ("%Taddr="); print (a_addr); print ("%N")
 				if a_target /= Void then
 					print ("%Ttarget=not Void : [")
@@ -265,7 +265,7 @@ feature -- Concrete evaluation
 					valid_dyn_type: l_dyntype /= Void
 				end
 
-				effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params)
+				effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params)
 				if last_result_value = Void then
 					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
 					if a_addr /= Void then
@@ -275,22 +275,27 @@ feature -- Concrete evaluation
 				end
 
 				if not error_occurred and then last_result_value /= Void then
-					at := f.type
-					if at.has_associated_class then
-						last_result_static_type := at.associated_class
-					end
-					if last_result_static_type = Void then
-						last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
-					end
-					if
-						last_result_static_type /= Void and then
-						last_result_static_type.is_basic and
-						last_result_value.address /= Void
-					then
-							-- We expected a basic type, but got a reference.
-							-- This happens in "2 + 2" because we convert the first 2
-							-- to a reference and therefore get a reference.
-						last_result_value := last_result_value.to_basic
+					if f.is_function then
+						at := f.type
+						if at.has_associated_class then
+							last_result_static_type := at.associated_class
+						end
+						if last_result_static_type = Void then
+							last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
+						end
+						if
+							last_result_static_type /= Void and then
+							last_result_static_type.is_basic and
+							last_result_value.address /= Void
+						then
+								-- We expected a basic type, but got a reference.
+								-- This happens in "2 + 2" because we convert the first 2
+								-- to a reference and therefore get a reference.
+							last_result_value := last_result_value.to_basic
+						end
+					else
+						-- `f' is a procedure, so we keep the last_result_value as it is
+						-- i.e: a procedure return value
 					end
 				end
 			end
@@ -316,12 +321,12 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 		end
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C;
 			params: LIST [DUMP_VALUE]) is
 		do
 			prepare_evaluation
-			implementation.effective_evaluate_function (
+			implementation.effective_evaluate_routine (
 								a_addr, a_target, f, realf, ctype, orig_class, params
 							)
 			retrieve_evaluation

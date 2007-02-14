@@ -147,7 +147,7 @@ feature {NONE} -- Error code id
 
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
 		require
 			realf /= Void

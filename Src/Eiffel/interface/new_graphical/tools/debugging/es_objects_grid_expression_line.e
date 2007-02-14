@@ -47,12 +47,17 @@ feature {NONE} -- Initialization
 					last_dump_value := expression_evaluator.final_result_value
 					if last_dump_value /= Void then
 						object_address := last_dump_value.address
+						object_dynamic_class := last_dump_value.dynamic_class
 					else
 						object_address := Void
+						object_dynamic_class := expression_evaluator.final_result_type
 					end
-					object_dynamic_class := expression_evaluator.final_result_type
+					if object_dynamic_class = Void then
+						object_dynamic_class := expression_evaluator.final_result_static_type
+					end
 					if object_dynamic_class /= Void then
 						object_is_special_value := object_dynamic_class.is_special
+								or object_dynamic_class.is_native_array
 					end
 				end
 			end

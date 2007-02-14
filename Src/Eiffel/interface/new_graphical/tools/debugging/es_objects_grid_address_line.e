@@ -33,7 +33,7 @@ feature {NONE}
 		do
 			make_with_grid (g)
 			object_dynamic_class := dtype
-			object_is_special_value := object_dynamic_class.is_special
+			object_is_special_value := object_dynamic_class.is_special or object_dynamic_class.is_native_array
 			set_object_address (add)
 		end
 

@@ -76,6 +76,9 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	user_can_resize: BOOLEAN is False
+		-- By default the user cannot resize standard dialogs.
+
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- `a_key' has either been pressed or released
 		do

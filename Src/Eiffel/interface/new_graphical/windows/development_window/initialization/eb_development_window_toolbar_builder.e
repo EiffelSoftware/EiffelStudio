@@ -43,9 +43,10 @@ feature -- Building commands
 			-- Retrieve items.
 			l_sd_toolbar := develop_window.development_window_data.retrieve_general_toolbar (develop_window.commands.toolbarable_commands)
 
-			l_tool_bar_name := develop_window.Interface_names.t_standard_toolbar
+			l_tool_bar_name := develop_window.Interface_names.to_standard_toolbar
 
 			create l_content.make_with_items (l_tool_bar_name, l_sd_toolbar)
+			l_content.set_title (develop_window.Interface_names.t_standard_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
 				-- Create the command to show/hide this toolbar.
@@ -100,11 +101,12 @@ feature -- Building commands
 			l_sd_items.merge (develop_window.address_manager.tool_bar_items)
 			l_sd_items.extend (l_tool_bar_item)
 
-			l_tool_bar_name := develop_window.Interface_names.t_address_toolbar
+			l_tool_bar_name := develop_window.Interface_names.to_address_toolbar
 
 			l_sd_items.extend (develop_window.address_manager.new_view_points_tool_bar_item)
 
 			create l_content.make_with_items (l_tool_bar_name, l_sd_items)
+			l_content.set_title (develop_window.Interface_names.t_address_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
 				-- Create the command to show/hide this toolbar.
@@ -144,9 +146,10 @@ feature -- Building commands
 
 			l_sd_items := develop_window.Eb_debugger_manager.new_toolbar
 
-			l_tool_bar_name := develop_window.Interface_names.t_project_toolbar
+			l_tool_bar_name := develop_window.Interface_names.to_project_toolbar
 
 			create l_content.make_with_items (l_tool_bar_name, l_sd_items)
+			l_content.set_title (develop_window.Interface_names.t_project_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 				-- Generate toolbar.
 
@@ -175,9 +178,10 @@ feature -- Building commands
 		do
 			l_tool_bar := develop_window.development_window_data.retrieve_refactoring_toolbar (develop_window.commands.toolbarable_commands)
 
-			l_tool_bar_name := develop_window.Interface_names.t_refactory_toolbar
+			l_tool_bar_name := develop_window.Interface_names.to_refactory_toolbar
 
 			create l_content.make_with_items (l_tool_bar_name, l_tool_bar)
+			l_content.set_title (develop_window.interface_names.t_refactory_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
 				-- Create the command to show/hide this toolbar.

@@ -54,6 +54,11 @@ feature {NONE}  -- Initlization
 			internal_border_for_tab_area.set_border_style ({SD_ENUMERATION}.top)
 			extend_vertical_box (internal_border_for_tab_area)
 			set_minimum_width ({SD_SHARED}.Notebook_minimum_width)
+
+			-- set_minimum_height is not needed on Windows.
+			-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
+			set_minimum_height ({SD_SHARED}.notebook_tab_height + 3)
+
 			internal_border_for_tab_area.extend (internal_tab_box)
 			internal_tab_box.set_gap (False)
 

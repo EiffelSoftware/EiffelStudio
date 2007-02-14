@@ -295,7 +295,8 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_widget: EV_WIDGET
 			l_second_parent: EV_CONTAINER
 		do
-			if state.tab_zone.count = 1 then
+			-- `a_parent' may be void if calling by `close' from SD_TAB_STATE on Linux.
+			if a_parent /= Void and then state.tab_zone.count = 1 then
 				l_split_area ?= state.tab_zone.parent
 				if l_split_area /= Void then
 					l_split_position := l_split_area.split_position

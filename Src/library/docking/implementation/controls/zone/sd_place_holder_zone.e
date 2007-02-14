@@ -80,7 +80,7 @@ feature -- Query
 			l_shared: SD_SHARED
 		do
 			create l_shared
-			Result := l_shared.interface_names.editor_place_holder_content_name
+			Result := l_shared.editor_place_holder_content_name
 		end
 
 	title_area: EV_RECTANGLE is

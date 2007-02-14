@@ -185,10 +185,15 @@ feature -- Query
 
 	rectangle: EV_RECTANGLE is
 			-- Current tab rectangle relative to `parent'.
-		require
-			parented: parent /= Void
 		do
-			create Result.make (x, 0, internal_width, height)
+			-- When closing all editor tabs by right click menu, this feature called by on_pointer_press from SD_NOTEBOOK_TAB_BOX,
+			-- parent maybe void sometimes. It's because pointer press actions delayed, the actions are executing after
+			-- the SD_NOTEBOOK_TAB_BOX destroyed.
+			if parent /= Void then
+				create Result.make (x, 0, internal_width, height)
+			else
+				create Result
+			end
 		ensure
 			not_void: Result /= Void
 		end

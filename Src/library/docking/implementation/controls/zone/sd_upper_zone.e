@@ -48,44 +48,45 @@ feature -- Command
 					check is_minimized: l_parent.is_minimized end
 
 					l_box ?= l_parent
-					check not_void: l_box /= Void end
-
-					if not l_box.is_item_expanded (l_parent.first) and not l_box.is_item_expanded (l_parent.second) then
-						-- We only need to expand ourself
-						l_box.enable_item_expand (Current)
-					else
-						-- Only Current is minimized, we need to change parent
-						l_parent_parent := l_parent.parent
-						save_parent_split_position (l_parent_parent)
-						if l_parent.first /= Current then
-							l_other := l_parent.first
-							l_first := False
+					-- If l_box is void here (is a split area), that means, SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.					
+					if l_box /= Void then
+						if not l_box.is_item_expanded (l_parent.first) and not l_box.is_item_expanded (l_parent.second) then
+							-- We only need to expand ourself
+							l_box.enable_item_expand (Current)
 						else
-							l_other := l_parent.second
-							l_first := True
-						end
-						internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
+							-- Only Current is minimized, we need to change parent
+							l_parent_parent := l_parent.parent
+							save_parent_split_position (l_parent_parent)
+							if l_parent.first /= Current then
+								l_other := l_parent.first
+								l_first := False
+							else
+								l_other := l_parent.second
+								l_first := True
+							end
+							internal_docking_manager.query.inner_container (Current).save_spliter_position (l_other)
 
-						l_parent_parent.prune (l_parent)
-						l_parent.wipe_out
-						l_new_parent := normal_container (l_parent)
-						l_parent_parent.extend (l_new_parent)
-						if l_first then
-							l_new_parent.extend (Current)
-							l_new_parent.extend (l_other)
-						else
-							l_new_parent.extend (l_other)
-							l_new_parent.extend (Current)
-						end
-						internal_docking_manager.command.resize (True)
+							l_parent_parent.prune (l_parent)
+							l_parent.wipe_out
+							l_new_parent := normal_container (l_parent)
+							l_parent_parent.extend (l_new_parent)
+							if l_first then
+								l_new_parent.extend (Current)
+								l_new_parent.extend (l_other)
+							else
+								l_new_parent.extend (l_other)
+								l_new_parent.extend (Current)
+							end
+							internal_docking_manager.command.resize (True)
 
-						restore_parent_split_position (l_parent_parent)
-						if l_parent.split_position >= l_new_parent.minimum_split_position and l_parent.split_position <= l_new_parent.maximum_split_position then
-							l_new_parent.set_split_position (l_parent.split_position)
-						end
+							restore_parent_split_position (l_parent_parent)
+							if l_parent.split_position >= l_new_parent.minimum_split_position and l_parent.split_position <= l_new_parent.maximum_split_position then
+								l_new_parent.set_split_position (l_parent.split_position)
+							end
 
-						if l_other /= Void then
-							internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
+							if l_other /= Void then
+								internal_docking_manager.query.inner_container (Current).restore_spliter_position (l_other)
+							end
 						end
 					end
 				end
@@ -94,7 +95,6 @@ feature -- Command
 				show_notebook_contents (True)
 				internal_notebook.set_show_minimized (is_minimized)
 				internal_docking_manager.query.inner_container (Current).update_middle_container
-
 			end
 			internal_docking_manager.command.unlock_update
 		ensure

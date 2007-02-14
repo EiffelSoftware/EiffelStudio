@@ -201,8 +201,11 @@ feature -- Redefine
 			else
 				assistant.dock_tab_at_top_level (a_multi_dock_area)
 			end
+
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
+			internal_docking_manager.query.inner_container_main.update_middle_container
+			internal_docking_manager.command.resize (True)
 			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
@@ -274,8 +277,6 @@ feature -- Redefine
 				if l_parent /= Void then
 					assistant.update_last_content_state (l_parent)
 				end
-
-				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			else
 				if floating_zone /= Void then
@@ -285,9 +286,10 @@ feature -- Redefine
 
 				assistant.change_zone_split_area_to_docking_zone (a_target_zone, a_direction)
 				internal_docking_manager.command.update_title_bar
-				internal_docking_manager.command.unlock_update
 			end
 
+			internal_docking_manager.query.inner_container_main.update_middle_container
+			internal_docking_manager.command.unlock_update
 		ensure then
 			parent_changed:
 		end

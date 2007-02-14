@@ -54,6 +54,11 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				internal_docking_manager.command.lock_update (state.zone, False)
 				update_last_content_state (l_parent)
 			end
+			internal_docking_manager.query.inner_container_main.recover_normal_for_only_one
+			-- After floating, left minmized editor zone(s) in SD_MULTI_DOCK_AREA, then we
+			-- have to resize.
+			internal_docking_manager.command.resize (True)
+
 			internal_docking_manager.command.unlock_update
 		end
 

@@ -189,6 +189,8 @@ feature -- Redefine.
 				end
 				internal_docking_manager.command.remove_empty_split_area
 				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.query.inner_container_main.update_middle_container
+				internal_docking_manager.command.resize (True)
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			end
@@ -248,8 +250,11 @@ stick (a_direction: INTEGER) is
 				internal_docking_manager.command.unlock_update
 			end
 			internal_docking_manager.command.update_title_bar
-		ensure then
---			floated: old zone.parent /= zone.parent
+
+			internal_docking_manager.query.inner_container_main.recover_normal_for_only_one
+			-- After floating, left minmized editor zones in SD_MULTI_DOCK_AREA, then we
+			-- have to resize.
+			internal_docking_manager.command.resize (True)
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
@@ -264,12 +269,12 @@ stick (a_direction: INTEGER) is
 				if zone.parent /= Void then
 					zone.parent.prune (zone)
 				end
-
 				internal_docking_manager.command.lock_update (a_target_zone, False)
 				l_called := True
 
 				change_zone_split_area_to_zone (a_target_zone, a_direction)
 				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.query.inner_container_main.update_middle_container
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			end

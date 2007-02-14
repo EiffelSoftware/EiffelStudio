@@ -18,6 +18,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="gobo_argument" location="svn\library\argument\" recursive="true"/>
 		<cluster name="gobo_kernel" location="svn\library\kernel\" recursive="true" >
 			<cluster name="gobo_kernel_spec" location="library\kernel\spec" recursive="true"/>
 		</cluster>

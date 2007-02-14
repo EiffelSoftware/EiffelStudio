@@ -1862,13 +1862,17 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 	cut_selection is
 			-- Cut the selection in the current editor.
 		do
-			editors_manager.current_editor.cut_selection
+			if ui.current_editor /= Void then
+				ui.current_editor.cut_selection
+			end
 		end
 
 	copy_selection is
 			-- Cut the selection in the current editor.
 		do
-			editors_manager.current_editor.copy_selection
+			if ui.current_editor /= Void then
+				ui.current_editor.copy_selection
+			end
 		end
 
 	toggle_formatting_marks is

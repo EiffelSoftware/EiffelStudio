@@ -39,7 +39,9 @@ feature -- Execution
 			-- Execute the copy/copy/paste operation
 		do
 				--| FIXME ARNAUD: waiting for Vision2 clipboard.
-			editor.paste
+			if editor /= Void then
+				editor.paste
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -77,7 +79,7 @@ feature {NONE} -- Implementation
 	editor: EB_EDITOR is
 			-- Editor corresponding to Current
 		do
-			Result := target.editors_manager.current_editor
+			Result := target.ui.current_editor
 		end
 
 	description: STRING_GENERAL is

@@ -152,6 +152,19 @@ feature -- Docking
 			docking_content := a_content
 		end
 
+feature -- Status report
+
+	is_main_editor: BOOLEAN
+			-- Is current main editor?
+
+feature -- Status setting
+
+	set_is_main_editor (a_b: BOOLEAN) is
+			-- Set `is_main_editor' with `a_b'.
+		do
+			is_main_editor := a_b
+		end
+
 feature -- Text Loading
 
 	load_file (a_filename: STRING) is

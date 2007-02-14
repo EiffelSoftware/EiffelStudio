@@ -9,7 +9,11 @@ class
 	EB_TOGGLE_LINE_NUMBERS_COMMAND
 
 inherit
-	EB_MENUABLE_COMMAND
+
+	EB_EDITOR_COMMAND
+		redefine
+			make
+		end
 
 	EB_SHARED_PREFERENCES
 		export
@@ -24,6 +28,7 @@ feature -- Initialization
 	make is
 			-- New command
 		do
+			Precursor {EB_EDITOR_COMMAND}
 			initialize
 		end
 
@@ -32,23 +37,19 @@ feature -- Execution
 	initialize is
 			-- Initialize
 		do
+			menu_name := Interface_names.m_line_numbers
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, False, False)
 			accelerator.actions.extend (agent execute)
+			execute_agents.extend (agent execute_toggle)
 			enable_sensitive
 		end
 
-	execute is
+	execute_toggle is
 			-- Execute the command.
 		do
-			preferences.editor_data.show_line_numbers_preference.set_value (not preferences.editor_data.show_line_numbers)
-		end
-
-feature {NONE} -- Implementation
-
-	menu_name: STRING_GENERAL is
-			-- Name as it appears in the menu (with & symbol).
-		do
-			Result := Interface_names.m_line_numbers
+			if is_sensitive then
+				preferences.editor_data.show_line_numbers_preference.set_value (not preferences.editor_data.show_line_numbers)
+			end
 		end
 
 indexing

@@ -367,7 +367,9 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Line numbers
 			create l_ln_cmd.make
+			l_ln_cmd.set_is_for_main_editors (True)
 			l_command_menu_item := l_ln_cmd.new_menu_item
+			l_command_controller.add_edition_command (l_ln_cmd)
 			develop_window.add_recyclable (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_ln_cmd)
@@ -393,7 +395,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create l_cmd.make
 			l_cmd.set_menu_name (develop_window.Interface_names.m_go_to)
 			l_cmd.add_agent (agent develop_window.goto)
-			l_cmd.set_needs_editable (True)
+			l_cmd.set_is_for_main_editors (True)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.add_recyclable (l_command_menu_item)

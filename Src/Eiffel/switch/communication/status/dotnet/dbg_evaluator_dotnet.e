@@ -102,7 +102,7 @@ feature {DBG_EVALUATOR} -- Interface
 					if l_icd_function = Void then
 						notify_error (Cst_error_unable_to_get_icd_function, Void)
 					else
-						last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external)
+						last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, l_ctype.is_external, f.is_function)
 						if error_occurred then
 							l_error_message := "%"" + realf.feature_name + "%" : "
 							if evaluation_aborted then
@@ -126,6 +126,13 @@ feature {DBG_EVALUATOR} -- Interface
 								l_error_message.append_string (" error occurred")
 							end
 							notify_error (Cst_error_occurred, l_error_message)
+						else
+							if not f.is_function then
+								check last_result_value = Void end
+								last_result_value := debugger_manager.dump_value_factory.new_procedure_return_value (
+										create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (f.feature_name)
+									)
+							end
 						end
 					end
 				end
@@ -239,7 +246,7 @@ feature {DBG_EVALUATOR} -- Interface
 				else
 						--| The current feature is used only for external function
 						--| Then we pass `True' to set the `is_external' argument.
-					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True)
+					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params, True, True)
 				end
 			end
 
@@ -253,7 +260,7 @@ feature {DBG_EVALUATOR} -- Interface
 			if not error_occurred and then last_result_value /= Void then
 				last_result_static_type := last_result_value.dynamic_class
 				if last_result_static_type = Void then
-					last_result_static_type:= Workbench.Eiffel_system.Any_class.compiled_class
+					last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
 				end
 				if
 					last_result_static_type /= Void and then
@@ -598,7 +605,7 @@ feature {NONE} -- Implementation
 	last_exception_trace: STRING
 
 	dotnet_evaluate_icd_function (target_icdv: ICOR_DEBUG_VALUE; func: ICOR_DEBUG_FUNCTION;
-					a_params: ARRAY [DUMP_VALUE]; is_external: BOOLEAN): DUMP_VALUE is
+					a_params: ARRAY [DUMP_VALUE]; is_external: BOOLEAN; expecting_result: BOOLEAN): DUMP_VALUE is
 		require
 			target_icdv /= Void
 			func /= Void
@@ -650,11 +657,16 @@ feature {NONE} -- Implementation
 					notify_error (Cst_error_occurred, Void)
 				end
 				if not error_occurred then
-					if l_result /= Void then
-						l_adv := debug_value_from_icdv (l_result, Void)
-						Result := l_adv.dump_value
+					if l_result /= Void or expecting_result then
+						if l_result /= Void then
+							l_adv := debug_value_from_icdv (l_result, Void)
+							Result := l_adv.dump_value
+						else
+							fixme("How come l_result is Void with no Error message ?")
+						end
 					else
-						fixme("How come l_result is Void with no Error message ?")
+						--| This might be a procedure return
+						--| then we return Void
 					end
 				end
 			end

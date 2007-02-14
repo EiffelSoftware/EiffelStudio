@@ -8,34 +8,129 @@
     Note: A directory is created for INSTALLDIR and TARGETDIR so please use DirectoryRef to reference them.
   -->
   <Fragment>
+
+    <!-- PROPERTIES -->
+    <Property Id="GDIPLUSNEEDED">1</Property>
+    <Property Id="PRECOMPILE">vision2</Property>
+    <Property Id="EIFFELPROJECTDIR" Secure="yes" />
+    <!-- END PROPERTIES -->
+
+    <!-- PACKAGE CONTENT -->
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="Comp.app_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
+        <RegistryKey Id="Reg.uninstall_product" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Root="HKLM"  Action="createAndRemoveOnUninstall">
+          <?ifdef x64?>
+            <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\win64\bin\estudio.exe,0" KeyPath="yes"/>
+            <?else?>
+            <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\windows\bin\estudio.exe,0" KeyPath="yes"/>
+          <?endif?>
+        </RegistryKey>
+      </Component>
+      <?ifdef Enterprise" ?>
+        <Merge Id="ec" Language="1033" SourceFile="msms\$(var.Platform)\ec_enterprise.msm" DiskId="1" />
+        <?else?>
+        <Merge Id="ec" Language="1033" SourceFile="msms\$(var.Platform)\ec_gpl.msm" DiskId="1" />
+      <?endif?>
+      <Merge Id="eiffel_com" Language="1033" SourceFile="msms\$(var.Platform)\eiffel_com.msm" DiskId="1" />
+      <Merge Id="esbuilder" Language="1033" SourceFile="msms\$(var.Platform)\esbuilder.msm" DiskId="1" />
+      <Merge Id="base_libraries" Language="1033" SourceFile="msms\$(var.Platform)\base_libraries.msm" DiskId="1" />
+      <?ifndef x64?>
+        <Merge Id="borland" Language="1033" SourceFile="msms\$(var.Platform)\borland.msm" DiskId="1" />
+      <?endif?>
+      <Merge Id="c_library" Language="1033" SourceFile="msms\$(var.Platform)\c_library.msm" DiskId="1" />
+      <Merge Id="dotnet" Language="1033" SourceFile="msms\$(var.Platform)\dotnet.msm" DiskId="1" />
+      <Merge Id="gobo" Language="1033" SourceFile="msms\$(var.Platform)\gobo.msm" DiskId="1" />
+      <Merge Id="gdiplus" Language="1033" SourceFile="msms\$(var.Platform)\gdiplus.msm" DiskId="1" />
+      <Merge Id="graphical_libraries" Language="1033" SourceFile="msms\$(var.Platform)\graphical_libraries.msm" DiskId="1" />
+      <Merge Id="studio_core" Language="1033" SourceFile="msms\$(var.Platform)\studio_core.msm" DiskId="1" />
+      <Merge Id="vision2_demo" Language="1033" SourceFile="msms\$(var.Platform)\vision2_demo.msm" DiskId="1" />
+    </DirectoryRef>
     
-    <!-- PACKAGE COMPONENTS -->
     <DirectoryRef Id="TARGETDIR">
       <Directory Id="PersonalFolder" Name="PersonalFolder">
         <Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
-          <Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)" >
-            <Registry Root="HKCU" Key="Software\ISE\Eiffel60\ec" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Id="Reg.ec.projects_dir" Type="string" />
-            <Registry Root="HKCU" Key="Software\ISE\Eiffel60\wizard" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" KeyPath="yes" Id="Reg.wizards.projects_dir" Type="string" />
+          <Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
+            <RegistryKey Id="Reg.eiffel.ex" Key="Software\ISE\Eiffel60\ec" Root="HKCU" Action="createAndRemoveOnUninstall">
+              <RegistryValue Id="RegVal.eiffel.ec.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string" KeyPath="yes"/>
+            </RegistryKey>
+            <RegistryKey Id="Reg.eiffel.wizards" Key="Software\ISE\Eiffel60\wizards" Root="HKCU" Action="createAndRemoveOnUninstall">
+              <RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
+            </RegistryKey>
             <CreateFolder />
             <RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall"/>
           </Component>
         </Directory>
       </Directory>
     </DirectoryRef>
-    <!-- END PACKAGE COMPONENTS -->
+    <!-- END PACKAGE CONTENT -->
 
-    <!-- ADDITIONAL PACKAGE CONTENT -->
-    <CustomAction Id="is_gdi_plus_installed" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
-    <CustomAction Id="prepare_finalize_setup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
-    <CustomAction Id="finalize_setup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
+    <!-- FEATURES -->
+    <FeatureRef Id="Feat.root">
+      <Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
+        <ComponentRef Id="Comp.app_icon" />
+        <ComponentRef Id="Comp.eiffel_projects" />
+      </Feature>
+
+      <Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="esbuilder" />
+      </Feature>
+
+      <Feature Id="Libraries" Title="Eiffel Libraries" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="base_libraries" />
+        <MergeRef Id="c_library" />
+        <MergeRef Id="graphical_libraries" />
+      </Feature>
+
+      <Feature Id="dotnet" Title=".NET components" TypicalDefault="install" Level="1" Display="hidden">
+        <Condition Level="0"><![CDATA[FXINSTALLROOT = "0"]]></Condition>
+        <MergeRef Id="dotnet" />
+      </Feature>
+
+      <Feature Id="gdiplus" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
+        <Condition Level="0"><![CDATA[GDIPLUSNEEDED = "0"]]></Condition>
+        <MergeRef Id="gdiplus" />
+      </Feature>
+
+      <Feature Id="EiffelStudio" Title="EiffelStudio" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="ec" />
+        <MergeRef Id="studio_core" />
+      </Feature>
+
+      <Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="eiffel_com" />
+      </Feature>
+
+      <Feature Id="Gobo" Title="Gobo - Eiffel tools and libraries" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="gobo" />
+      </Feature>
+
+      <Feature Id="vision2_demo" Title="EiffelVision2 Tour" TypicalDefault="install" Level="1" Display="hidden">
+        <MergeRef Id="vision2_demo" />
+      </Feature>
+
+      <?ifndef x64?>
+      <Feature Id="Borland" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
+        <Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
+        <MergeRef Id="borland" />
+      </Feature>
+      <?endif?>
+    </FeatureRef>
+    <!-- END FEATURES -->
+   
+    <!-- CUSTOM ACTIONS -->
+    <CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
+    <CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
+    <CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
     <?ifdef Enterprise?>
-      <CustomAction Id="is_cd_key_valid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
-      <CustomAction Id="retrieve_cd_key" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
+      <CustomAction Id="IsCdKeyValid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
+      <CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
     <?endif?>
     <CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
     <CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
     <CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
+    <!-- END CUSTOM ACTIONS -->
 
+    <!-- UI SEQUENCING -->
     <AdminUISequence>
       <Custom Action="RESET_CHECKCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
       <Custom Action="RESET_HASMSCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->      
@@ -44,30 +139,29 @@
       <Custom Action="RESET_CHECKCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
       <Custom Action="RESET_HASMSCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
       <?ifdef Enterprise?>
-        <Custom Action="retrieve_cd_key" Before="AppSearch"/>
+        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
       <?endif?>
     </InstallUISequence>
+    <!-- END UI SEQUENCING -->
 
     <!-- INSTALL SEQUENCING -->
     <AdminExecuteSequence>
       <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
-      <Custom Action="is_gdi_plus_installed" Before="CostInitialize"/>
+      <Custom Action="IsGdixInstalled" Before="CostInitialize"/>
       <?ifdef Enterprise?>
-        <Custom Action="retrieve_cd_key" Before="CostInitialize"/>
+        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
       <?endif?>
     </AdminExecuteSequence>
     <InstallExecuteSequence>
       <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
-      <Custom Action="is_gdi_plus_installed" Before="CostInitialize"/>
+      <Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
+      <Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
+      <Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
       <?ifdef Enterprise?>
-        <Custom Action="retrieve_cd_key" Before="CostInitialize"/>
+        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
       <?endif?>
     </InstallExecuteSequence>
     <!-- END INSTALL SEQUENCING -->
-    
-    
-    <!-- END ADDITIONAL PACKAGE CONTENT -->
-
   </Fragment>
   
   <?endif?>

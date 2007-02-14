@@ -1704,6 +1704,11 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_context: STRING is						"Context"
 	to_context_dot: STRING is					"Context ..."
 
+	to_Address_toolbar: STRING is				"Address Bar"
+	to_Standard_toolbar: STRING is				"Standard Buttons"
+	to_Project_toolbar: STRING is				"Project Bar"
+	to_Refactory_toolbar: STRING is				"Refactoring Bar"
+
 feature -- Description texts
 
 	e_Add_exported_feature: STRING_GENERAL is	do Result := locale.translate("Add a new feature to this dynamic library definition")	end

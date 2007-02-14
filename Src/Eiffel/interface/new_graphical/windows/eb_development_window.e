@@ -900,19 +900,19 @@ feature -- Window management
 			l_tool.content.set_split_proportion (0.2)
 
 			-- Tool bars
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_standard_toolbar)
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_address_toolbar)
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_address_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_project_toolbar)
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 
-			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_refactory_toolbar)
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_refactory_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 

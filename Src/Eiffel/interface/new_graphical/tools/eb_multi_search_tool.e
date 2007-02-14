@@ -1031,7 +1031,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			-- Focusing keyword field.
 			-- We record cursor position in the editor for incremental search.
 		do
-			if editor.text_displayed.cursor /= Void then
+			if editor /= Void and then editor.text_displayed.cursor /= Void then
 				incremental_search_start_pos := editor.text_displayed.cursor.pos_in_text
 			end
 		end

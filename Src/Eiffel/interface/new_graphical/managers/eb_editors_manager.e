@@ -342,6 +342,7 @@ feature -- Status report
 			l_editors: like editors_internal
 			l_classi_stone: CLASSI_STONE
 			l_external_file_stone: EXTERNAL_FILE_STONE
+			l_fn: FILE_NAME
 		do
 			l_editors := editors
 			from
@@ -352,12 +353,14 @@ feature -- Status report
 				l_classi_stone ?= l_editors.item.stone
 				l_external_file_stone ?= l_editors.item.stone
 				if l_classi_stone /= Void then
-					if l_classi_stone.file_name.string.is_equal (a_file_name) then
-						Result := true
+					l_fn := l_classi_stone.file_name
+					if l_fn /= Void and then l_fn.string.is_equal (a_file_name) then
+						Result := True
 					end
 				elseif l_external_file_stone /= Void then
-					if l_external_file_stone.file_name.string.is_equal (a_file_name) then
-						Result := true
+					l_fn := l_external_file_stone.file_name
+					if l_fn /= Void and then l_fn.string.is_equal (a_file_name) then
+						Result := True
 					end
 				end
 				l_editors.forth

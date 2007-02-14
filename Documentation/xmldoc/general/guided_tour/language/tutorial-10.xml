@@ -2282,7 +2282,7 @@
 			</code> should be of the form
 		</paragraph>
 <code_block>
-<feature_name>set_owner</feature_name> <symbol>(</symbol><local_variable>h</local_variable><symbol>:</symbol> <keyword>like Current</keyword><symbol>)</symbol> <keyword>is</keyword>
+<feature_name>set_owner</feature_name> <symbol>(</symbol><local_variable>h</local_variable><symbol>:</symbol> <keyword>like</keyword> <feature_name>owner</feature_name><symbol>)</symbol> <keyword>is</keyword>
 		<comment>-- Make h the account owner.</comment>
 		<comment>-- The rest as before:</comment>
 	<keyword>require</keyword>

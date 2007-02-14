@@ -2,13 +2,12 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
     <?ifdef EiffelStudio?>
-		  <Property Id="PRECOMPILE">vision2</Property>	
 		  <UI Id="UI.dialog_choose_precompile">
 			  <RadioButtonGroup Property="PRECOMPILE">
-				  <RadioButton Value="none" X="0" Y="0" Width="255" Height="14" Text="D&amp;o not precompile any libraries" />
-				  <RadioButton Value="base" X="0" Y="14" Width="255" Height="14" Text="&amp;Base" />
-				  <RadioButton Value="wel" X="0" Y="28" Width="255" Height="14" Text="Base and &amp;WEL" />
-				  <RadioButton Value="vision2" X="0" Y="42" Width="255" Height="14" Text="Base, WEL and Eiffel&amp;Vision2" />
+				  <RadioButton Value="none" X="0" Y="0" Width="154" Height="14" Text="D&amp;o not precompile any libraries" />
+				  <RadioButton Value="base" X="0" Y="14" Width="154" Height="14" Text="&amp;Base" />
+				  <RadioButton Value="wel" X="0" Y="28" Width="154" Height="14" Text="Base and &amp;WEL" />
+				  <RadioButton Value="vision2" X="0" Y="42" Width="154" Height="14" Text="Base, WEL and Eiffel&amp;Vision2" />
 			  </RadioButtonGroup>
   			
 			  <Dialog Id="DialogPrecompileChoice" Width="375" Height="220" Title="[ProductName]">

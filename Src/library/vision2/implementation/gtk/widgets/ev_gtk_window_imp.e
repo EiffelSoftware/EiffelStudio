@@ -92,6 +92,9 @@ feature {NONE} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, a_width, a_height)
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_width, a_height)
+			if not user_can_resize then
+				{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
+			end
 		end
 
 	width: INTEGER
@@ -249,6 +252,11 @@ feature -- Basic operations
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 
+	user_can_resize: BOOLEAN is
+			-- Can `Current' be resized by the user?
+		deferred
+		end
+
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- `a_key' has either been pressed or released
 		deferred
@@ -391,7 +399,7 @@ feature {EV_ANY_I} -- Implementation
 	forbid_resize is
 			-- Forbid the resize of the window.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1)
 		end
 
 indexing

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <UI Id="UI.dialog_missing_ms_compiler">
+        <Dialog Id="DialogMissingMsCompiler" Width="375" Height="220" Title="[ProductName]">
+          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_error.bmp" />
+          <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
+            <Text>[BigFont]Missing Microsoft C/C++ Compiler</Text>
+          </Control>
+          <Control Id="SubTitle" Type="Text" Height="13" Width="302" X="56" Y="35" Transparent="yes" NoPrefix="yes">
+            <Text>[SubTitleFont]The installer has detected missing software</Text>
+          </Control>
+          <Control Id="Description" Type="Text" X="9" Y="73" Width="356" Height="32" Transparent="yes">
+            <Text>[ProductName] requires a C/C++ compiler in order to completely compile Eiffel/Eiffel for .NET projects.</Text>
+          </Control>
+          <Control Id="Description2" Type="Text" Height="44" Width="356" X="9" Y="105" Transparent="yes" NoPrefix="yes">
+            <Text>A Microsoft C/C++ compiler is freely available to download and install. Please visit [INSTALLCURL] for up-to-date details on how to obtain and configure the Microsoft Windows SDK.</Text>
+          </Control>
+          <Control Id="View" Type="PushButton" X="276" Y="152" Width="90" Height="17" Text="[Button_ViewCompilerHowTo]">
+            <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
+          </Control>
+          <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Disabled="yes" Text="[Button_Back]" />
+          <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Next]">
+            <Publish Event="EndDialog" Value="Exit">1</Publish>
+          </Control>
+          <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Text="[Button_Cancel]">
+            <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
+          </Control>
+        </Dialog>
+      </UI>
+    </Fragment>
+  </Wix>
+  

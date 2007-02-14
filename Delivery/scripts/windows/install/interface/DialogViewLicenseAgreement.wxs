@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include ..\includes\Preprocessors.wxi?>
+  
+  <Fragment>
+    <UI Id="UI.dialog_license_agreement">
+			<Dialog Id="DialogViewLicenseAgreement" Width="375" Height="220" Title="[ProductName]">
+				<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop.bmp" />  
+				<Control Id="Title" Type="Text" X="55" Y="14" Width="300" Height="22" Transparent="yes" NoPrefix="yes">
+					<Text>[BigFont]End-User License Agreement</Text>
+				</Control>
+				<Control Id="Description" Type="Text" X="55" Y="37" Width="300" Height="15" Transparent="yes" NoPrefix="yes">
+					<Text>[SubTitleFont]Please read the following license agreement carefully!</Text>
+				</Control>
+        <Control Id="AgreementText" Type="ScrollableText" X="9" Y="70" Width="356" Height="84" Sunken="yes" TabSkip="no">
+          <Text SourceFile="licenses\$(var.Product)\$(var.LicenseFile)"></Text>
+        </Control>
+				<Control Id="ViewLarger" Type="PushButton" Height="17" Width="56" X="309" Y="158" Text="[Button_View]">
+					<Publish Event="SpawnDialog" Value="PromptViewLicenseAgreement">1</Publish>
+				</Control>
+        <Control Id="Agree" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Agree]">
+          <?ifdef EiffelStudio?>
+            <Publish Event="NewDialog" Value="DialogMissingFx"><![CDATA[FXINSTALLROOT = "0"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[FXINSTALLROOT <> "0" AND CHECKCCOMPILER = "1" AND HASMSCCOMPILER <> "1"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1")]]></Publish>
+          <?else?>
+          <?ifdef EiffelEnvision?>
+            <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[CHECKCCOMPILER <> "0" AND HASMSCCOMPILER = "0"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
+          <?else?>
+            <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
+          <?endif?>
+          <?endif?>
+        </Control>
+        <Control Id="Disagree" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Disagree]">
+          <Publish Event="SpawnDialog" Value="PromptCancelLicense">1</Publish>
+        </Control>
+        <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
+          <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
+        </Control>
+			</Dialog>
+		</UI>
+	</Fragment>
+</Wix>

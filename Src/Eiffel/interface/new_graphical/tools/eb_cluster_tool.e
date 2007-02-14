@@ -19,6 +19,7 @@ inherit
 			pixel_buffer,
 			mini_toolbar,
 			build_mini_toolbar,
+			build_docking_content,
 			show
 		end
 
@@ -89,6 +90,14 @@ feature {NONE} -- Initialization
 			end
 		ensure then
 			toolbar_exists: mini_toolbar /= Void
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+		do
+			Precursor {EB_TOOL} (a_docking_manager)
+			check content_not_void : content /= Void end
+			content.drop_actions.extend (agent show_class)
+			content.drop_actions.extend (agent show_group)
 		end
 
 feature -- Access
@@ -205,12 +214,18 @@ feature {NONE} -- Implementation
 			-- Display the class relative to `st' in the cluster tree.
 		do
 			widget.show_class (st.class_i)
+			if content /= Void and then content.is_visible then
+				content.set_focus
+			end
 		end
 
 	show_group (st: CLUSTER_STONE) is
 			-- Display the class relative to `st' in the cluster tree.
 		do
 			widget.show_subfolder (st.group, st.path)
+			if content /= Void and then content.is_visible then
+				content.set_focus
+			end
 		end
 
 	show_current_class_cluster is

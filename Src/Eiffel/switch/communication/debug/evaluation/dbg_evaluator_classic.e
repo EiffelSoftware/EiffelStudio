@@ -45,7 +45,7 @@ feature -- Concrete initialization
 
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
+	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
 		local
 			fi: FEATURE_I
@@ -112,10 +112,14 @@ feature {DBG_EVALUATOR} -- Interface
 							)
 					reset_recv_value
 				else
-					if item /= Void then
-						item.set_hector_addr
-						last_result_value := item.dump_value
-						clear_item
+					if fi.is_function then
+						if item /= Void then
+							item.set_hector_addr
+							last_result_value := item.dump_value
+							clear_item
+						end
+					else
+						last_result_value := debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name))
 					end
 				end
 			end

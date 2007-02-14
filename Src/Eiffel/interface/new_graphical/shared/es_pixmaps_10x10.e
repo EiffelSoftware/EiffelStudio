@@ -460,6 +460,18 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 3))
 		end
 
+	frozen watch_auto_icon: EV_PIXMAP is
+			-- Access to 'watch auto' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 3))
+		end
+
+	frozen watch_auto_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'watch auto' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 3))
+		end
+
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once

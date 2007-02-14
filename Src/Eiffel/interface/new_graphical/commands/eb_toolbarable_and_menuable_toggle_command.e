@@ -72,6 +72,12 @@ feature {NONE} -- Implementation
 			-- Create a new menu entry for this command.
 		do
 			Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (a_menu_item)
+				-- Create the menu item
+			if is_selected then
+				a_menu_item.enable_select
+			else
+				a_menu_item.disable_select
+			end
 			if pixmap /= Void then
 				a_menu_item.set_pixmap (pixmap)
 			end

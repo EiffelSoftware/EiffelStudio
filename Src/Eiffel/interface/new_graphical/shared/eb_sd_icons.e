@@ -287,13 +287,8 @@ feature -- Implementation
 
 	drag_pointer_center: EV_POINTER_STYLE is
 			-- Redefine
-		local
-			l_screen: EV_SCREEN
 		do
 			create Result.make_with_pixel_buffer (icon_cursors.docking_tabify_cursor_cursor_buffer, 16, 16)
-
-			create l_screen
-			l_screen.draw_pixmap (0, 0, icon_cursors.docking_tabify_cursor)
 		end
 
 	drag_pointer_float: EV_POINTER_STYLE is

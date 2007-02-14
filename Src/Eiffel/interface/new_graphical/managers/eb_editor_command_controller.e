@@ -68,6 +68,7 @@ feature -- Status setting
 			l_textdisp: EDITABLE_TEXT
 			ecmds: like editor_commands
 			scmds: like selection_commands
+			l_is_main_editor: BOOLEAN
 		do
 			l_current_editor := current_editor
 			if l_current_editor /= Void then
@@ -76,6 +77,7 @@ feature -- Status setting
 
 			current_editor := ed
 			l_current_editor := current_editor
+			l_is_main_editor := l_current_editor.is_main_editor
 			l_textdisp := l_current_editor.text_displayed
 			if l_textdisp /= Void and then l_textdisp.is_notifying then
 				l_textdisp.post_notify_actions.extend (agent add_observers)
@@ -133,7 +135,9 @@ feature -- Status setting
 				until
 					ecmds.after
 				loop
-					ecmds.item.on_editable
+					if ecmds.item.is_for_main_editor implies l_is_main_editor then
+						ecmds.item.on_editable
+					end
 					ecmds.forth
 				end
 				from
@@ -141,7 +145,9 @@ feature -- Status setting
 				until
 					scmds.after
 				loop
-					scmds.item.on_editable
+					if scmds.item.is_for_main_editor implies l_is_main_editor then
+						scmds.item.on_editable
+					end
 					scmds.forth
 				end
 			else
@@ -150,7 +156,9 @@ feature -- Status setting
 				until
 					ecmds.after
 				loop
-					ecmds.item.on_not_editable
+					if ecmds.item.is_for_main_editor implies l_is_main_editor then
+						ecmds.item.on_not_editable
+					end
 					ecmds.forth
 				end
 				from
@@ -158,7 +166,9 @@ feature -- Status setting
 				until
 					scmds.after
 				loop
-					scmds.item.on_not_editable
+					if scmds.item.is_for_main_editor implies l_is_main_editor then
+						scmds.item.on_not_editable
+					end
 					scmds.forth
 				end
 			end

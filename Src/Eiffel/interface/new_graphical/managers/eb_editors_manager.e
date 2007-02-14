@@ -888,6 +888,7 @@ feature {NONE}-- Implementation
 			-- Initial an editor.
 		do
 			create last_created_editor.make (development_window)
+			last_created_editor.set_is_main_editor (True)
 			last_created_editor.widget.set_minimum_size (0, 0)
 			add_observers (last_created_editor)
 			last_created_editor.drop_actions.extend (agent on_drop (?, last_created_editor))

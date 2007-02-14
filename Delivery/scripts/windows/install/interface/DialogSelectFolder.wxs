@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <UI Id="UI.dialog_browse_install_folder">
+			<Dialog Id="DialogSelectFolder" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
+				<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop.bmp" />
+        <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
+          <Text>[BigFont]Please Select an Installation Location.</Text>
+        </Control>
+        <Control Id="SubTitle" Type="Text" Height="13" Width="302" X="56" Y="35" Transparent="yes" NoPrefix="yes">
+          <Text>[SubTitleFont]Please indicate which libraries should be precompiled</Text>
+        </Control>
+        <Control Id="Description" Type="Text" X="9" Y="73" Width="356" Height="29" Transparent="yes" NoPrefix="yes">
+					<Text>To install in this folder, click "Next". To install to a different folder, enter it below or click "Browse".</Text>
+				</Control>
+        <Control Id="FolderText" Type="Text" X="29" Y="106" Width="34" Height="15" Transparent="yes">
+          <Text>&amp;Folder: </Text>
+        </Control>
+        <Control Id="FolderEdit" Type="PathEdit" X="67" Y="104" Width="237" Height="17" Property="INSTALLDIR" Sunken="yes"/>
+				<Control Id="Browse" Type="PushButton" X="309" Y="104" Width="56" Height="17" Text="[Button_Browse]">
+          <Publish Property="_BrowseProperty" Value="INSTALLDIR">1</Publish>
+          <Publish Event="SpawnDialog" Value="PromptBrowse">1</Publish>
+				</Control>
+        <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
+          <Publish Event="NewDialog" Value="DialogWelcome">1</Publish>
+        </Control>
+        <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
+          <?ifdef EiffelStudio?>
+            <Publish Event="NewDialog" Value="DialogCCompilerChoice"><![CDATA[CHECKCCOMPILER <> "1" AND HASMSCCOMPILER <> "1"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[CHECKCCOMPILER = "1" OR HASMSCCOMPILER = "1"]]></Publish>
+          <?else?>
+            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall">1</Publish>
+          <?endif?>
+        </Control>
+        <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
+          <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
+        </Control>
+			</Dialog>
+		</UI>
+	</Fragment>
+</Wix>

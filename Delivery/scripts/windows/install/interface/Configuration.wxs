@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include ..\includes\Preprocessors.wxi?>
+	<Fragment>
+    <!--BUTTON TEXT-->
+    <Property Id="Button_Back">&lt; &amp;Back</Property>
+    <Property Id="Button_Next">&amp;Next &gt;</Property>
+    <Property Id="Button_Finish">&amp;Finish</Property>
+
+    <Property Id="Button_OK">OK</Property>
+    <Property Id="Button_Cancel">Cancel</Property>
+
+    <Property Id="Button_Browse">Br&amp;owse...</Property>
+    <Property Id="Button_Exit">&amp;Exit</Property>
+    <Property Id="Button_Ignore">&amp;Ignore</Property>
+    <Property Id="Button_Install">&amp;Install</Property>
+    <Property Id="Button_Remove">&amp;Remove</Property>
+    <Property Id="Button_Repair">&amp;Repair</Property>
+    <Property Id="Button_Reset">&amp;Reset</Property>
+    <Property Id="Button_Resume">&amp;Resume</Property>
+    <Property Id="Button_Retry">&amp;Retry</Property>
+    <Property Id="Button_Return">&amp;Return</Property>
+
+    <Property Id="Button_Yes">&amp;Yes</Property>
+    <Property Id="Button_No">&amp;No</Property>
+    <Property Id="Button_Agree">&amp;Agree</Property>
+    <Property Id="Button_Disagree">&amp;Disagree</Property>
+    <Property Id="Button_View">&amp;View</Property>
+    <Property Id="Button_Close">&amp;Close</Property>
+    <Property Id="Button_ViewCompilerHowTo">&amp;View How To</Property>
+    <!--END BUTTON TEXT-->
+
+    <UI Id="UI.configuration">
+      <!-- FONT DEFINITION -->
+      <Property Id="TitleFont">{&amp;DlgFontBold8}</Property>
+      <Property Id="SubTitleFont">{&amp;DlgFont8}</Property>
+      <Property Id="BigFont">{&amp;VerdanaBold13}</Property>
+      <Property Id="DefaultUIFont">DlgFont8</Property>
+      <Property Id="ErrorDialog">PromptError</Property>
+
+      <TextStyle Id="DlgFont8" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="DlgFontBold8" FaceName="Tahoma" Size="8" Bold="yes" />
+      <TextStyle Id="VerdanaBold13" FaceName="Verdana" Size="13" Bold="yes" />
+      <!-- END FONT DEFINITION -->
+
+      <!-- USER INTERFACE SEQUENCING -->
+      <InstallUISequence>
+        <Custom Action="EvaluateCCompiler" After="AppSearch" />
+        <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"/>
+
+        <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR=""]]></Custom>
+
+        <Show Dialog="DialogWelcome" After="MigrateFeatureStates" />
+        <Show Dialog="DialogProgress" After="DialogWelcome" />
+
+        <Show Dialog="DialogUserExit" OnExit="cancel" />
+        <Show Dialog="DialogExitSuccess" OnExit="success" />
+        <Show Dialog="DialogFatalError" OnExit="error" />
+      </InstallUISequence>
+      <AdminUISequence>
+        <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR=""]]></Custom>
+        
+        <Custom Action="EvaluateCCompiler" Before="CostInitialize" />
+        <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"/>
+
+        <Show Dialog="DialogWelcome" After="CanPerformCCompilation"/>
+        <Show Dialog="DialogUserExit" OnExit="cancel" />
+        <Show Dialog="DialogExitSuccess" OnExit="success" />
+        <Show Dialog="DialogFatalError" OnExit="error" />
+      </AdminUISequence>
+      
+      <!-- END USER INTERFACE SEQUENCING -->
+      
+      <!-- BINARIES -->
+      <Binary Id="icon.ico" SourceFile="images\icon.ico"/>
+      <Binary Id="question.ico" SourceFile="images\question.ico"/>
+      <Binary Id="folder.ico" SourceFile="images\folder.ico"/>
+      <Binary Id="error.ico" SourceFile="images\error.ico"/>
+      <Binary Id="up.bmp" SourceFile="images\up.bmp"/>
+      <Binary Id="new.bmp" SourceFile="images\new.bmp"/>
+			<Binary Id="backdrop.bmp" SourceFile="images\$(var.Product)\backdrop.bmp"/>
+			<Binary Id="backdrop_error.bmp" SourceFile="images\$(var.Product)\backdrop_error.bmp"/>
+			<Binary Id="backdrop_info.bmp" SourceFile="images\$(var.Product)\backdrop_info.bmp"/>
+			<Binary Id="backdrop_warn.bmp" SourceFile="images\$(var.Product)\backdrop_warning.bmp"/>
+      <!-- END BINARIES -->
+
+      <!-- PRODUCT SPECIFIC -->
+      <?ifdef EiffelStudio?>
+        <Binary Id="backdrop_pre.bmp" SourceFile="images\$(var.Product)\backdrop_precompile.bmp"/>
+        <Binary Id="backdrop_prew.bmp" SourceFile="images\$(var.Product)\backdrop_precompile_warning.bmp"/>
+        <Binary Id="backdrop_c.bmp" SourceFile="images\$(var.Product)\backdrop_c_compiler.bmp"/>
+      <?endif?>
+      <!-- END PRODUCT SPECIFIC -->
+      
+      <!-- USER INTERFACE TEXT -->
+      <UIText Id="AbsentPath" />
+      <UIText Id="bytes">bytes</UIText>
+      <UIText Id="GB">GB</UIText>
+      <UIText Id="KB">KB</UIText>
+      <UIText Id="MB">MB</UIText>
+      <UIText Id="MenuAbsent">Entire feature will be unavailable</UIText>
+      <UIText Id="MenuAdvertise">Feature will be installed when required</UIText>
+      <UIText Id="MenuAllCD">Entire feature will be installed to run from CD</UIText>
+      <UIText Id="MenuAllLocal">Entire feature will be installed on local hard drive</UIText>
+      <UIText Id="MenuAllNetwork">Entire feature will be installed to run from network</UIText>
+      <UIText Id="MenuCD">Will be installed to run from CD</UIText>
+      <UIText Id="MenuLocal">Will be installed on local hard drive</UIText>
+      <UIText Id="MenuNetwork">Will be installed to run from network</UIText>
+      <UIText Id="ScriptInProgress">Gathering required information...</UIText>
+      <UIText Id="SelAbsentAbsent">This feature will remain uninstalled</UIText>
+      <UIText Id="SelAbsentAdvertise">This feature will be set to be installed when required</UIText>
+      <UIText Id="SelAbsentCD">This feature will be installed to run from CD</UIText>
+      <UIText Id="SelAbsentLocal">This feature will be installed on the local hard drive</UIText>
+      <UIText Id="SelAbsentNetwork">This feature will be installed to run from the network</UIText>
+      <UIText Id="SelAdvertiseAbsent">This feature will become unavailable</UIText>
+      <UIText Id="SelAdvertiseAdvertise">Will be installed when required</UIText>
+      <UIText Id="SelAdvertiseCD">This feature will be available to run from CD</UIText>
+      <UIText Id="SelAdvertiseLocal">This feature will be installed on your local hard drive</UIText>
+      <UIText Id="SelAdvertiseNetwork">This feature will be available to run from the network</UIText>
+      <UIText Id="SelCDAbsent">This feature will be uninstalled completely, you won't be able to run it from CD</UIText>
+      <UIText Id="SelCDAdvertise">This feature will change from run from CD state to set to be installed when required</UIText>
+      <UIText Id="SelCDCD">This feature will remain to be run from CD</UIText>
+      <UIText Id="SelCDLocal">This feature will change from run from CD state to be installed on the local hard drive</UIText>
+      <UIText Id="SelChildCostNeg">This feature frees up [1] on your hard drive.</UIText>
+      <UIText Id="SelChildCostPos">This feature requires [1] on your hard drive.</UIText>
+      <UIText Id="SelCostPending">Compiling cost for this feature...</UIText>
+      <UIText Id="SelLocalAbsent">This feature will be completely removed</UIText>
+      <UIText Id="SelLocalAdvertise">This feature will be removed from your local hard drive, but will be set to be installed when required</UIText>
+      <UIText Id="SelLocalCD">This feature will be removed from your local hard drive, but will be still available to run from CD</UIText>
+      <UIText Id="SelLocalLocal">This feature will remain on you local hard drive</UIText>
+      <UIText Id="SelLocalNetwork">This feature will be removed from your local hard drive, but will be still available to run from the network</UIText>
+      <UIText Id="SelNetworkAbsent">This feature will be uninstalled completely, you won't be able to run it from the network</UIText>
+      <UIText Id="SelNetworkAdvertise">This feature will change from run from network state to set to be installed when required</UIText>
+      <UIText Id="SelNetworkLocal">This feature will change from run from network state to be installed on the local hard drive</UIText>
+      <UIText Id="SelNetworkNetwork">This feature will remain to be run from the network</UIText>
+      <UIText Id="SelParentCostNegNeg">This feature frees up [1] on your hard drive. It has [2] of [3] subfeatures selected. The subfeatures free up [4] on your hard drive.</UIText>
+      <UIText Id="SelParentCostNegPos">This feature frees up [1] on your hard drive. It has [2] of [3] subfeatures selected. The subfeatures require [4] on your hard drive.</UIText>
+      <UIText Id="SelParentCostPosNeg">This feature requires [1] on your hard drive. It has [2] of [3] subfeatures selected. The subfeatures free up [4] on your hard drive.</UIText>
+      <UIText Id="SelParentCostPosPos">This feature requires [1] on your hard drive. It has [2] of [3] subfeatures selected. The subfeatures require [4] on your hard drive.</UIText>
+      <UIText Id="TimeRemaining">Time remaining: {[1] minutes }{[2] seconds}</UIText>
+      <UIText Id="VolumeCostAvailable">Available</UIText>
+      <UIText Id="VolumeCostDifference">Difference</UIText>
+      <UIText Id="VolumeCostRequired">Required</UIText>
+      <UIText Id="VolumeCostSize">Disk Size</UIText>
+      <UIText Id="VolumeCostVolume">Volume</UIText>
+      <!-- END USER INTERFACE TEXT -->
+		</UI>
+	</Fragment>
+</Wix>

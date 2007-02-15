@@ -530,6 +530,11 @@ feature -- Accelerator, focus label and menu name
 	m_open_layout: STRING_GENERAL is do Result := locale.translate ("Open Layout") end
 	l_choose_class_version: STRING_GENERAL is do Result := locale.translate ("Choose one version from the following:") end
 
+	f_show_tool (a_tool_name: STRING_GENERAL): STRING_GENERAL is
+			do
+				Result := locale.format_string (locale.translate ("Show $1"), [a_tool_name])
+			end
+
 feature -- Toggles
 
 	f_hide_alias: STRING_GENERAL is			do Result := locale.translate("Hide Alias Name")	end
@@ -1712,7 +1717,7 @@ feature -- Titles translation needless (Title Original) for preference strings.
 feature -- Description texts
 
 	e_Add_exported_feature: STRING_GENERAL is	do Result := locale.translate("Add a new feature to this dynamic library definition")	end
-	e_Bkpt_info: STRING_GENERAL is				do Result := locale.translate("Show/Hide information about breakpoints")	end
+	e_Bkpt_info: STRING_GENERAL is				do Result := locale.translate("Show information about breakpoints")	end
 	e_Check_exports: STRING_GENERAL is			do Result := locale.translate("Check the validity of the library definition")	end
 	e_Compilation_failed: STRING_GENERAL is		do Result := locale.translate("Eiffel Compilation Failed")	end
 	e_Compilation_succeeded: STRING_GENERAL is	do Result := locale.translate("Eiffel Compilation Succeeded")	end
@@ -1790,6 +1795,7 @@ feature -- Description texts
 	e_Remove_exported_feature: STRING_GENERAL is	do Result := locale.translate("Remove the selected feature from this dynamic library definition")	end
 	e_Remove_expressions: STRING_GENERAL is		do Result := locale.translate("Remove selected expressions")	end
 	e_Remove_object: STRING_GENERAL is			do Result := locale.translate("Remove currently selected object")	end
+	e_Restore_normal_mode: STRING_GENERAL is		do Result := locale.translate("Restore the environment to normal mode")	end
 	e_Running: STRING_GENERAL is				do Result := locale.translate("Application is running")	end
 	e_Running_no_stop_points: STRING_GENERAL is	do Result := locale.translate("Application is running (ignoring breakpoints)")	end
 	e_Save_call_stack: STRING_GENERAL is		do Result := locale.translate("Save call stack to a text file")	end

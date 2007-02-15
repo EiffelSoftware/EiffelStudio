@@ -49,7 +49,7 @@ feature -- Building commands
 			l_content.set_title (develop_window.Interface_names.t_standard_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
-				-- Create the command to show/hide this toolbar.
+				-- Create the command to show this toolbar.
 			create l_show_general_toolbar_command.make (l_content, develop_window.Interface_names.m_general_toolbar)
 			develop_window.commands.set_show_general_toolbar_command (l_show_general_toolbar_command)
 			develop_window.commands.show_toolbar_commands.force (l_show_general_toolbar_command, l_content)
@@ -109,7 +109,7 @@ feature -- Building commands
 			l_content.set_title (develop_window.Interface_names.t_address_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
-				-- Create the command to show/hide this toolbar.
+				-- Create the command to show this toolbar.
 			create l_show_address_toolbar_command.make (l_content, develop_window.Interface_names.m_address_toolbar)
 
 			develop_window.commands.show_toolbar_commands.force (l_show_address_toolbar_command, l_content)
@@ -153,7 +153,7 @@ feature -- Building commands
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 				-- Generate toolbar.
 
-				-- Create command to show/hide this toolbar.
+				-- Create command to show this toolbar.
 			create l_show_project_toolbar_command.make (l_content, develop_window.Interface_names.m_project_toolbar)
 			develop_window.commands.set_show_project_toolbar_command (l_show_project_toolbar_command)
 
@@ -184,7 +184,7 @@ feature -- Building commands
 			l_content.set_title (develop_window.interface_names.t_refactory_toolbar)
 			develop_window.docking_manager.tool_bar_manager.contents.extend (l_content)
 
-				-- Create the command to show/hide this toolbar.
+				-- Create the command to show this toolbar.
 			create l_show_tool_bar_command.make (l_content, develop_window.Interface_names.m_refactoring_toolbar)
 			develop_window.commands.set_show_refactoring_toolbar_command (l_show_tool_bar_command)
 			develop_window.commands.show_toolbar_commands.force (l_show_tool_bar_command, l_content)

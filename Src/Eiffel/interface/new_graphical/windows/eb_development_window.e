@@ -830,8 +830,16 @@ feature -- Window management
 
 	save_tools_docking_layout is
 			-- Save all tools docking layout.
+		local
+			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
-			docking_manager.save_tools_config (docking_config_tools_file)
+			l_eb_debugger_manager ?= debugger_manager
+			-- If directly exiting Eiffel Studio from EB_DEBUGGER_MANAGER, then we don't save the tools layout,
+			-- because current widgets layout is debug mode layout (not normal mode layout),
+			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
+			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
+				docking_manager.save_tools_config (docking_config_tools_file)
+			end
 		end
 
 	save_editors_docking_layout is

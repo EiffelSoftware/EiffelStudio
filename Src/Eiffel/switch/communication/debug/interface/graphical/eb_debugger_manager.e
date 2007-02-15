@@ -490,6 +490,9 @@ feature -- Status report
 	debug_mode_forced: BOOLEAN
 			-- Do we force debugger interface to stay raised ?
 
+	is_exiting_eiffel_studio: BOOLEAN
+			-- Is exiting Eiffel Studio now?
+
 feature -- Output
 
 	debugger_output_message (m: STRING_GENERAL) is
@@ -971,6 +974,12 @@ feature -- Status setting
 			end
 		end
 
+	enable_exiting_eiffel_studio is
+			-- Set `is_exiting_eiffel_studio' with true.
+		do
+			is_exiting_eiffel_studio := True
+		end
+
 feature {NONE} -- Raise/unraise notification
 
 	popup_switching_mode is
@@ -1212,6 +1221,7 @@ feature -- Debugging events
 
 	on_application_quit is
 			-- Application just quit.
+			-- This application means the debuggee.
 		local
 			was_executing: BOOLEAN
 		do
@@ -1235,6 +1245,9 @@ feature -- Debugging events
 					raised := False
 					debug_mode_forced := False
 					force_debug_mode_cmd.set_select (False)
+				elseif is_exiting_eiffel_studio then
+					save_debug_docking_layout
+					debugging_window := Void
 				elseif not debug_mode_forced then
 					unraise
 					debugging_window := Void

@@ -1,0 +1,4 @@
+feature set_item (i: INTEGER_8)
+	do
+		item := i
+	end

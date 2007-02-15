@@ -1,0 +1,4 @@
+feature set_item (i: NATURAL_8)
+	do
+		item := i
+	end

@@ -723,7 +723,6 @@ feature -- Command
 			-- Build system widget.
 		local
 			l_cell: EV_CELL
-			l_new_split_position: INTEGER
 			l_stb: EV_STATUS_BAR
 
 			l_favorites_manager: EB_FAVORITES_MANAGER
@@ -772,8 +771,6 @@ feature -- Command
 
 				-- Add the content of the window (left bar + right cell).
 			l_container.extend (l_panel)
-
-			l_new_split_position := develop_window.preferences.development_window_data.left_panel_width
 
 				-- Add a cell for spacing (we cannot use padding: there are toolbars coming).
 			create l_cell

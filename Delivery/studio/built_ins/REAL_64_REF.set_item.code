@@ -1,0 +1,4 @@
+feature set_item (d: REAL_64)
+	do
+		item := d
+	end

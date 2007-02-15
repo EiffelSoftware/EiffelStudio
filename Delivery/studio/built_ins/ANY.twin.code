@@ -1,0 +1,11 @@
+feature frozen twin: like Current
+		-- New object equal to `Current'
+		-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
+	local
+		l_temp: BOOLEAN
+	do
+		l_temp := {ISE_RUNTIME}.check_assert (False)
+		Result ?= {ISE_RUNTIME}.c_standard_clone ($Current)
+		Result.copy (Current)
+		l_temp := {ISE_RUNTIME}.check_assert (l_temp)
+	end

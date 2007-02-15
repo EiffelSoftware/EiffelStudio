@@ -1,0 +1,4 @@
+feature set_item (c: CHARACTER_8)
+	do
+		item := c
+	end

@@ -1,0 +1,3 @@
+feature frozen item alias "[]" (i: INTEGER): T assign put is
+	do
+	end

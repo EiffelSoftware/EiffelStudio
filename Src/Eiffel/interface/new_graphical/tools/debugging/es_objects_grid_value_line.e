@@ -90,8 +90,9 @@ feature {NONE} -- Object stone
 		local
 			cl: CLASS_C
 			fst: FEATURE_STONE
+			fost: FEATURE_ON_OBJECT_STONE
+			objst: OBJECT_STONE
 			ostn: STRING
-			addr: STRING
 			feat: E_FEATURE
 			t: like internal_item_stone_data_i_th
 		do
@@ -103,13 +104,15 @@ feature {NONE} -- Object stone
 					if cl /= Void then
 						feat := cl.feature_with_name (ostn)
 						if feat /= Void then
-							addr := related_line.object_address
-							create t
-							if addr /= Void then
-								create {FEATURED_OBJECT_STONE} fst.make (addr, feat)
-							else
-								create fst.make (feat)
+								--| Note: `related_line.object_address' can be Void
+							create fost.make (related_line.object_address, feat)
+							objst ?= internal_items_stone_data[0].stone
+							if objst /= Void then
+								fost.attach_object_stone (objst)
 							end
+							fst := fost
+
+							create t
 							t.stone := fst
 							t.accept_cursor := fst.stone_cursor
 							t.deny_cursor := fst.X_stone_cursor

@@ -135,6 +135,7 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
+			Result.drop_actions.extend (agent drop_feature_on_object_stone)
 			Result.drop_actions.extend (agent drop_object_stone)
 			Result.drop_actions.set_veto_pebble_function (agent is_resizable (?))
 		end
@@ -144,6 +145,7 @@ feature -- Basic operations
 		local
 			obj_grid_item: ES_OBJECTS_GRID_LINE
 			conv_obj: OBJECT_STONE
+			conv_fost: FEATURE_ON_OBJECT_STONE
 			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			l_item: EV_ANY
 			l_addr: STRING
@@ -151,6 +153,12 @@ feature -- Basic operations
 		do
 			if for_tool then
 				conv_obj ?= st
+				if conv_obj = Void then
+					conv_fost ?= st
+					if conv_fost /= Void then
+						conv_obj := conv_fost.object_stone
+					end
+				end
 				if conv_obj /= Void then
 					l_item ?= conv_obj.ev_item
 					if l_item /= Void then
@@ -446,6 +454,18 @@ feature {NONE} -- Implementation
 		end
 
 feature {ES_OBJECTS_GRID_LINE} -- Dropping action
+
+	drop_feature_on_object_stone (st: FEATURE_ON_OBJECT_STONE) is
+		require
+			st_not_void: st /= Void
+		local
+			objst: OBJECT_STONE
+		do
+			objst := st.object_stone
+			if objst /= Void then
+				drop_object_stone (objst)
+			end
+		end
 
 	drop_object_stone (st: OBJECT_STONE) is
 			-- Change the slice limits for the object

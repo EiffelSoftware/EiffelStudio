@@ -46,6 +46,24 @@ feature -- Commands
 			end
 		end
 
+	set_stone_and_pop_tool (a_stone: STONE) is
+			-- Set stone and show proper tool as context.
+		local
+			l_class_stone: CLASSI_STONE
+			l_feature_stone: FEATURE_STONE
+		do
+			set_stone (a_stone)
+			if a_stone /= Void then
+				l_class_stone ?= a_stone
+				l_feature_stone ?= a_stone
+				if l_feature_stone /= Void then
+					show_default_tool_of_feature
+				elseif l_class_stone /= Void then
+					show_default_tool_of_class
+				end
+			end
+		end
+
 	synchronize is
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.

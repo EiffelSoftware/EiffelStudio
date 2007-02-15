@@ -119,7 +119,7 @@ feature {NONE} -- Implementation agents.
 			when {EV_KEY_CONSTANTS}.Key_enter then
 				if current_focus_label /= Void then
 					l_selected_tab := find_tab_by_label (current_focus_label)
-					internal_notebook.select_item (internal_notebook.content_by_tab (l_selected_tab), True)
+					select_content (internal_notebook.content_by_tab (l_selected_tab))
 					l_stop := True
 				end
 				destroy
@@ -180,8 +180,7 @@ feature {NONE} -- Implementation agents.
 				l_old_content.focus_out_actions.call ([])
 			end
 
-			l_content.focus_in_actions.call ([])
-			internal_notebook.select_item (l_content, True)
+			select_content (l_content)
 
 			destroy
 		ensure
@@ -491,6 +490,15 @@ feature {NONE} -- Implementation functions.
 		do
 			Result := a_widget.screen_x <= a_screen_x and a_widget.screen_y <= a_screen_y and
 				a_widget.screen_x + a_widget.width >= a_screen_x and a_widget.screen_y + a_widget.height >= a_screen_y
+		end
+
+	select_content (a_content: SD_CONTENT) is
+			-- Select `a_content'
+		require
+			not_void: a_content /= Void
+		do
+			a_content.focus_in_actions.call ([])
+			internal_notebook.select_item (a_content, True)
 		end
 
 feature {NONE}  --Implementation attributes.

@@ -283,6 +283,7 @@ feature -- Accelerator, focus label and menu name
 	f_Debug_run: STRING_GENERAL is				do Result := locale.translate("Run")	end
 	m_Debug_run: STRING_GENERAL is				do Result := locale.translate("&Run%TCtrl+R")	end
 	m_Debug_run_new: STRING_GENERAL is			do Result := locale.translate("St&art")	end
+	m_Debug_run_continue: STRING_GENERAL is		do Result := locale.translate("Continue")	end
 
 	m_Force_debug_mode: STRING_GENERAL is		do Result := locale.translate("Force Debug Mode")	end
 	m_Launch_With_Arguments: STRING_GENERAL is	do Result := locale.translate("Start With Arguments")	end
@@ -1765,6 +1766,7 @@ feature -- Description texts
 	e_Edit_expression: STRING_GENERAL is		do Result := locale.translate("Edit an expression")	end
 	e_Edited: STRING_GENERAL is					do Result := locale.translate("Some classes were edited since last compilation")	end
 	e_Exec_debug: STRING_GENERAL is				do Result := locale.translate("Start application and stop at breakpoints")	end
+	e_Exec_debug_continue: STRING_GENERAL is	do Result := locale.translate("Continue application and stop at breakpoints")	end
 	e_Exec_kill: STRING_GENERAL is				do Result := locale.translate("Stop application")	end
 	e_Exec_into: STRING_GENERAL is				do Result := locale.translate("Step into a routine")	end
 	e_Exec_no_stop: STRING_GENERAL is			do Result := locale.translate("Start application without stopping at breakpoints")	end

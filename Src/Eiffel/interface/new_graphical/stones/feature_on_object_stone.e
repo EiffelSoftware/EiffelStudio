@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone representating a feature related to an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	FEATURED_OBJECT_STONE 
+	FEATURE_ON_OBJECT_STONE
 
 inherit
 	FEATURE_STONE
@@ -22,7 +22,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (addr: STRING; a_feature: E_FEATURE) is
@@ -31,9 +31,24 @@ feature {NONE} -- Initialization
 			object_address := addr
 		end
 
+feature -- Change
+
+	attach_object_stone (o: like object_stone) is
+			-- Attach `o' to Current's `object_stone'.
+		do
+			object_stone := o
+		end
+
+feature -- Attachement
+
+	object_stone: OBJECT_STONE
+		-- Object stone related to current feature's result
+		-- in debugger context
+
 feature -- Access
 
 	object_address: STRING
+		-- Address of the object referenced by current feature stone.
 
 	same_as (other: STONE): BOOLEAN is
 		local
@@ -41,12 +56,12 @@ feature -- Access
 		do
 			conv ?= other
 			if conv /= Void then
-				Result := Precursor {FEATURE_STONE} (conv) 
+				Result := Precursor {FEATURE_STONE} (conv)
 				if Result then
 					if object_address = Void and conv.object_address = Void then
 						Result := True
 					else
-						Result := object_address /= Void 
+						Result := object_address /= Void
 							and then conv.object_address /= Void
 							and then object_address.is_equal (conv.object_address)
 					end
@@ -73,12 +88,13 @@ feature -- Access
 				Result := cursors.cur_x_client_link
 			else
 				Result := Precursor {FEATURE_STONE}
-			end			
+			end
 		end
 
 	is_valid: BOOLEAN is
 		do
 			Result := Precursor {FEATURE_STONE}
+					and (object_stone = Void or else object_stone.is_valid)
 		end
 
 indexing

@@ -784,7 +784,7 @@ feature {NONE} -- Event handling
 			fst: FEATURE_STONE
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
-			fost: FEATURED_OBJECT_STONE
+			fost: FEATURE_ON_OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
 		do
@@ -793,6 +793,10 @@ feature {NONE} -- Event handling
 			if fost /= Void then
 				oname := fost.feature_name
 				if ev_application.ctrl_pressed then
+					ost := fost.object_stone
+					if ost /= Void then
+						on_element_drop (ost)
+					end
 				else
 					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
 				end

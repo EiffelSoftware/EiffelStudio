@@ -1355,7 +1355,7 @@ feature -- IL code generation
 		local
 			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external then
+			if not is_attribute and then not is_external and then not is_il_external then
 				if Byte_server.has (body_index) then
 					byte_code := Byte_server.item (body_index)
 					Result := byte_code.custom_attributes
@@ -1368,7 +1368,7 @@ feature -- IL code generation
 		local
 			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external then
+			if not is_attribute and then not is_external and then not is_il_external then
 				if Byte_server.has (body_index) then
 					byte_code := Byte_server.item (body_index)
 					Result := byte_code.class_custom_attributes
@@ -1381,7 +1381,7 @@ feature -- IL code generation
 		local
 			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external then
+			if not is_attribute and then not is_external and then not is_il_external then
 				if Byte_server.has (body_index) then
 					byte_code := Byte_server.item (body_index)
 					Result := byte_code.interface_custom_attributes

@@ -557,7 +557,7 @@ feature -- Resource Update
 					managed_main_formatters.after or l_end_loop
 				loop
 					l_formatter := managed_main_formatters.item
-					if l_formatter.selected and l_formatter.button.is_sensitive  then
+					if l_formatter.selected and l_formatter.is_button_sensitive  then
 						l_end_loop := True
 						view_points_combo.enable_sensitive
 					end
@@ -2045,7 +2045,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			l_line: INTEGER
 		do
 			l_formatter := selected_formatter
-			if l_formatter.button.is_sensitive and then
+			if l_formatter.is_button_sensitive and then
 				l_formatter /= managed_main_formatters.first and then
 				editors_manager.current_editor /= Void
 			then

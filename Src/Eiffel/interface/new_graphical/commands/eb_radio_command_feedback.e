@@ -83,12 +83,6 @@ feature -- Status setting
 
 feature -- Access
 
-	button: EV_TOOL_BAR_RADIO_BUTTON
-			-- Button on the toolbar.
-
-	sd_button: SD_TOOL_BAR_RADIO_BUTTON
-			-- Button on the toolbar.
-
 	menu_item: EV_RADIO_MENU_ITEM
 			-- Menu entry in the menu.
 
@@ -123,6 +117,27 @@ feature -- Implementation
 		do
 			Result := interface_names.is_string_general_lower (str)
 		end
+
+	is_button_sensitive: BOOLEAN is
+			-- Is button appear sensitive?
+		do
+			check
+				only_one_button_is_available: (button /= Void or sd_button /= Void) and not (button = Void and sd_button = Void)
+			end
+			if button /= Void then
+				Result := button.is_sensitive
+			elseif sd_button.is_sensitive then
+				Result := sd_button.is_sensitive
+			end
+		end
+
+feature {NONE} -- Access
+
+	button: EV_TOOL_BAR_RADIO_BUTTON
+			-- Button on the toolbar.
+
+	sd_button: SD_TOOL_BAR_RADIO_BUTTON
+			-- Button on the toolbar.
 
 feature {NONE} -- Implementation
 

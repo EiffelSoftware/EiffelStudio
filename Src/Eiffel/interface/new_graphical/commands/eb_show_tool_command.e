@@ -27,6 +27,8 @@ inherit
 			mini_pixmap
 		end
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -47,13 +49,14 @@ feature -- Access
 
 	tool: EB_TOOL
 			-- Tool managed.
-			
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for Current
+		local
+			l_string: STRING_GENERAL
 		do
-			Result := interface_names.f_hide.twin
-			Result.append (interface_names.f_show.twin)
-			Result.append (tool.content.long_title)
+			l_string := string_general_as_lower (tool.content.long_title.twin)
+			Result := interface_names.f_show_tool (l_string)
 		end
 
 	tooltext: STRING_GENERAL is
@@ -71,7 +74,7 @@ feature -- Access
 	description: STRING_GENERAL is
 			-- Description for current command.
 		do
-			Result := ("Show/hide ").as_string_32 + tool.content.short_title
+			Result := ("Show ").as_string_32 + tool.content.short_title
 		end
 
 	menu_name: STRING_GENERAL is

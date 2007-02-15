@@ -330,7 +330,7 @@ feature -- IL Generation
 						-- Generate code for current class only.
 					if feat /= Void and then feat.is_il_external then
 						if
-							implemented_feature_processor /= Void and then
+							inherited_feature_processor /= Void and then
 							inh_feat.is_deferred and then
 							not feat.written_class.conform_to (inh_feat.written_class)
 						then

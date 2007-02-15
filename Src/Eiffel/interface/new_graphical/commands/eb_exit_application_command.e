@@ -95,17 +95,20 @@ feature {NONE} -- Callbacks
 			-- Exit the application
 		local
 			l_err_dlg: EV_ERROR_DIALOG
+			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
-				-- If an application was being debugged, kill it.
+			l_eb_debugger_manager ?= Debugger_manager
+			if l_eb_debugger_manager /= Void and then l_eb_debugger_manager.raised then
+				l_eb_debugger_manager.enable_exiting_eiffel_studio
+			end
+				-- If an application was being debugged, kill it.			
 			if Debugger_manager.application_is_executing then
 				Debugger_manager.application.kill
 			end
 			if Eb_debugger_manager.debug_mode_forced then
 				Eb_debugger_manager.unforce_debug_mode
 			end
-			if Eb_debugger_manager.raised then
-				Eb_debugger_manager.unraise
-			end
+
 				-- If we are going to kill the application, we'd better warn project observers that the project will
 				-- soon be unloaded before EiffelStudio is destroyed.
 			if Workbench.Eiffel_project.initialized then

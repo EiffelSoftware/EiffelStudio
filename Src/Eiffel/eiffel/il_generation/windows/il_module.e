@@ -744,6 +744,7 @@ feature {NONE} -- Implementations: signatures
 			valid_type: a_type /= Void
 		local
 			l_native_array_type: NATIVE_ARRAY_TYPE_I
+			c: CL_TYPE_I
 		do
 			if a_is_by_ref then
 				a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
@@ -757,8 +758,22 @@ feature {NONE} -- Implementations: signatures
 					set_signature_type (a_sig, l_native_array_type.true_generics.item (1))
 				else
 					if a_type.is_expanded then
-						a_sig.set_type (a_type.element_type,
-							actual_class_type_token (a_type.implementation_id))
+							-- Correctly process classes mapped to built-in .NET types.
+						c ?= a_type
+						if
+							c /= Void and then
+							il_code_generator.il_module (c.associated_class_type) /= Current and then
+							assembly_token (c.associated_class_type) = mscorlib_token and then
+							il_code_generator.external_class_mapping.has (c.base_class.external_class_name)
+						then
+							c := il_code_generator.external_class_mapping.item (c.base_class.external_class_name)
+						end
+						if c /= Void and then c.is_basic then
+							a_sig.set_type (c.element_type, 0)
+						else
+							a_sig.set_type (a_type.element_type,
+								actual_class_type_token (a_type.implementation_id))
+						end
 					else
 						a_sig.set_type (a_type.element_type,
 							actual_class_type_token (a_type.static_type_id))
@@ -1363,8 +1378,7 @@ feature -- Metadata description
 						if not for_interface then
 							l_parents.force (actual_class_type_token (class_type.static_type_id), i)
 							i := i + 1
-						end
-						if class_c.is_generic then
+						elseif class_c.is_generic then
 							gen_type ?= class_type.type
 							gen_type.enumerate_interfaces (
 								agent (c: CLASS_TYPE; p: ARRAY [INTEGER])

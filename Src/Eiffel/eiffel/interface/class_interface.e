@@ -353,7 +353,8 @@ feature {NONE} -- Implementation
 				new_feat.feature_name_id /= inh_feat.feature_name_id or else
 				not new_feat.is_deferred and then new_feat.is_il_external and then
 					(inh_feat.is_il_external implies
-					(inh_feat.written_in /= new_feat.written_in or else inh_feat.written_feature_id /= new_feat.written_feature_id))
+					(inh_feat.written_in /= new_feat.written_in or else inh_feat.written_feature_id /= new_feat.written_feature_id)) and then
+					not new_feat.rout_id_set.has (inh_feat.rout_id_set.first)
 			if Result then
 				l_ext ?= new_feat.extension
 				if l_ext /= Void then

@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 
 					--| Graphical Preferences settings
 				objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
-				debug_splitter_position := preferences.debug_tool_data.main_splitter_position
 
 				display_agent_details := preferences.debug_tool_data.display_agent_details
 				preferences.debug_tool_data.display_agent_details_preference.typed_change_actions.extend (
@@ -562,12 +561,7 @@ feature -- Change
 			if conv_dev /= Void then
 				bp_tool := conv_dev.tools.breakpoints_tool
 				if bp_tool /= Void then
-					if bp_tool.shown then
-						bp_tool.close
-					else
-						bp_tool.show
-						bp_tool.refresh
-					end
+					bp_tool.show
 				end
 			end
 		end
@@ -582,9 +576,7 @@ feature -- Change
 			if conv_dev /= Void then
 				bp_tool := conv_dev.tools.breakpoints_tool
 				if bp_tool /= Void then
-					if bp_tool.shown then
-						bp_tool.refresh
-					elseif show_tool_if_closed then
+					if show_tool_if_closed then
 						bp_tool.show
 					end
 				end
@@ -729,27 +721,6 @@ feature -- Status setting
 			end
 			debugging_window.save_tools_docking_layout
 
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("Right normal layout: %N")
-	 			from
-	 				i := 1
-	 			until
-	 				i > normal_right_layout.count
-	 			loop
-	 				io.put_string (normal_right_layout @ i + "%N")
-	 				i := i + 1
-	 			end
-				io.put_string ("Left normal layout: %N")
-	 			from
-	 				i := 1
-	 			until
-	 				i > normal_left_layout.count
-	 			loop
-	 				io.put_string (normal_left_layout @ i + "%N")
-	 				i := i + 1
-	 			end
-			end
-
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
 
@@ -855,6 +826,8 @@ feature -- Status setting
 				-- FIXME: To be implemented.
 --			debugging_window.update_items_states
 --			debugging_window.update_menu_item_state
+
+			refresh_breakpoints_tool
 		end
 
 	save_debug_docking_layout is
@@ -906,27 +879,6 @@ feature -- Status setting
 				objects_split_proportion := split.split_position / split.width
 			end
 
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("Right debug layout: %N")
-	 			from
-	 				i := 1
-	 			until
-	 				i > debug_right_layout.count
-	 			loop
-	 				io.put_string (debug_right_layout @ i + "%N")
-	 				i := i + 1
-	 			end
-				io.put_string ("Left debug layout: %N")
-	 			from
-	 				i := 1
-	 			until
-	 				i > debug_left_layout.count
-	 			loop
-	 				io.put_string (debug_left_layout @ i + "%N")
-	 				i := i + 1
-	 			end
-			end
-
 			save_debug_docking_layout
 			objects_tool.content.close
 			Preferences.debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
@@ -946,6 +898,7 @@ feature -- Status setting
 			raised := False
 
 			debugging_window.restore_tools_docking_layout
+			refresh_breakpoints_tool
 			if l_unlock then
 				debugging_window.window.unlock_update
 			end
@@ -1345,17 +1298,6 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
 	display_error_help_cmd: EB_ERROR_INFORMATION_CMD
 			-- Command to pop up a dialog giving help on compilation errors.
 
-feature {EB_DEVELOPMENT_WINDOW} -- Implementation
-
-	save_original_layout is
-			-- Save original layout of development window to resources.
-			-- Called by the development window with the debugger when closed,
-			-- so that the original layout of the window is stored in the registry.
-		do
-			preferences.development_window_data.left_panel_layout_preference.set_value (normal_left_layout)
-			preferences.development_window_data.right_panel_layout_preference.set_value (normal_right_layout)
-		end
-
 feature -- Options
 
 	display_agent_details: BOOLEAN
@@ -1366,17 +1308,8 @@ feature {NONE} -- Implementation
 	saved_minimized: BOOLEAN
 			-- Was the editor in the debugging window minimized before the debug session started?
 
-	debug_right_layout, debug_left_layout: ARRAY [STRING]
-			-- Used to save the display of the debugging window during debugging sessions.
-
-	debug_splitter_position, normal_splitter_position: INTEGER
-			-- Used to save the position of the main splitter of the debugging window.
-
 	objects_split_proportion: REAL
 			-- Position of the splitter inside the object tool.
-
-	normal_right_layout, normal_left_layout: ARRAY [STRING]
-			-- Used to save the display of the debugging window outside debugging sessions.
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.
@@ -1797,6 +1730,17 @@ feature {NONE} -- Implementation
 					l_contents.item.minimize
 				end
 				l_contents.forth
+			end
+		end
+
+	refresh_breakpoints_tool is
+			-- Refresh breakpoint tool if needed.
+		local
+			l_tool: ES_BREAKPOINTS_TOOL
+		do
+			l_tool := debugging_window.tools.breakpoints_tool
+			if l_tool.content.is_visible then
+				l_tool.refresh
 			end
 		end
 

@@ -317,6 +317,7 @@ feature -- Events
 			if grid.is_displayed and grid.is_sensitive then
 				grid.set_focus
 			end
+			refresh
 		end
 
 feature -- Memory management

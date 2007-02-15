@@ -41,26 +41,6 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDO
 		deferred
 		end
 
-	left_panel_use_explorer_style: BOOLEAN is
-			-- Should there be only one tool in the left panel?
-		deferred
-		end
-
-	left_panel_width: INTEGER is
-			-- Width for the left panel.
-		deferred
-		end
-
-	left_panel_layout: ARRAY [STRING] is
-			-- Layout of the left panel of the window.
-		deferred
-		end
-
-	right_panel_layout: ARRAY [STRING] is
-			-- Layout of the left panel of the window.
-		deferred
-		end
-
 	show_general_toolbar: BOOLEAN is
 			-- Show the general toolbar (New, Save, Cut, ...)?
 		deferred

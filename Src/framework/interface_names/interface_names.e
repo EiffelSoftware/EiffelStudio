@@ -107,6 +107,7 @@ feature -- Button texts
 	b_Update: STRING_GENERAL is 						do Result := locale.translate("Update")	end
 	b_Compile: STRING_GENERAL is						do Result := locale.translate("Compile")	end
 	b_Launch: STRING_GENERAL is							do Result := locale.translate("Start")	end
+	b_Restart: STRING_GENERAL							do Result := locale.translate("Restart") end
 	b_Continue: STRING_GENERAL is						do Result := locale.translate("Continue")	end
 	b_Finalize: STRING_GENERAL is						do Result := locale.translate("Finalize")	end
 	b_Freeze: STRING_GENERAL is							do Result := locale.translate("Freeze")	end
@@ -529,7 +530,8 @@ feature -- Accelerator, focus label and menu name
 	m_save_layout_as: STRING_GENERAL is do Result := locale.translate ("Save Layout As...") end
 	m_open_layout: STRING_GENERAL is do Result := locale.translate ("Open Layout") end
 	l_choose_class_version: STRING_GENERAL is do Result := locale.translate ("Choose one version from the following:") end
-
+	m_restart_application: STRING_GENERAL is do Result := locale.translate ("Restart application") end
+	f_restart_application: STRING_GENERAL is do Result := locale.translate ("Restart application") end
 	f_show_tool (a_tool_name: STRING_GENERAL): STRING_GENERAL is
 			do
 				Result := locale.format_string (locale.translate ("Show $1"), [a_tool_name])

@@ -69,31 +69,6 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
 
-
-	left_panel_use_explorer_style: BOOLEAN is
-			-- Should there be only one tool in the left panel?
-		do
-			Result := left_panel_use_explorer_style_preference.value
-		end
-
-	left_panel_width: INTEGER is
-			-- Width for the left panel.
-		do
-			Result := left_panel_width_preference.value
-		end
-
-	left_panel_layout: ARRAY [STRING] is
-			-- Layout of the left panel of the window.
-		do
-			Result := left_panel_layout_preference.value
-		end
-
-	right_panel_layout: ARRAY [STRING] is
-			-- Layout of the left panel of the window.
-		do
-			Result := right_panel_layout_preference.value
-		end
-
 	show_general_toolbar: BOOLEAN is
 			-- Show the general toolbar (New, Save, Cut, ...)?
 		do
@@ -273,18 +248,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	is_maximized_preference: BOOLEAN_PREFERENCE
 			-- Is the development window maximized?
 
-	left_panel_use_explorer_style_preference: BOOLEAN_PREFERENCE
-			-- Should there be only one tool in the left panel?
-
-	left_panel_width_preference: INTEGER_PREFERENCE
-			-- Width for the left panel.
-
-	left_panel_layout_preference: ARRAY_PREFERENCE
-			-- Layout of the left panel of the window.
-
-	right_panel_layout_preference: ARRAY_PREFERENCE
-			-- Layout of the left panel of the window.
-
 	show_general_toolbar_preference: BOOLEAN_PREFERENCE
 			-- Show the general toolbar (New, Save, Cut, ...)?
 
@@ -383,30 +346,6 @@ feature -- Element change
 			preferences.save_preference (y_position_preference)
 		end
 
-	save_left_panel_width (a_width: INTEGER) is
-			-- Save the width of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		do
-			left_panel_width_preference.set_value (a_width)
-			preferences.save_preference (left_panel_width_preference)
-		end
-
-	save_left_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		do
-			left_panel_layout_preference.set_value (a_layout)
-			preferences.save_preference (left_panel_width_preference)
-		end
-
-	save_right_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		do
-			right_panel_layout_preference.set_value (a_layout)
-			preferences.save_preference (right_panel_layout_preference)
-		end
-
 	save_completion_list_size (a_width, a_height: INTEGER) is
 			-- Save the size of the completion list
 		do
@@ -486,10 +425,6 @@ feature {NONE} -- Implementation
 			x_position_preference := l_manager.new_integer_preference_value (l_manager, x_position_string, 10)
 			y_position_preference := l_manager.new_integer_preference_value (l_manager, y_position_string, 10)
 			is_maximized_preference := l_manager.new_boolean_preference_value (l_manager, is_maximized_string, False)
-			left_panel_use_explorer_style_preference := l_manager.new_boolean_preference_value (l_manager, left_panel_use_explorer_style_string, True)
-			left_panel_width_preference := l_manager.new_integer_preference_value (l_manager, left_panel_width_string, 100)
-			left_panel_layout_preference := l_manager.new_array_preference_value (l_manager, left_panel_layout_string, <<"Features", "visible", "0", "0", "0", "100", "Clusters", "visible", "0", "0", "0", "100">>)
-			right_panel_layout_preference := l_manager.new_array_preference_value (l_manager, right_panel_layout_string, <<"Search", "visible", "0", "0", "0", "200", "Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
 			general_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, general_toolbar_layout_string, <<"New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden;">>)
 			show_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_general_toolbar_string, True)
 			show_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_general_toolbar_string, False)
@@ -565,10 +500,6 @@ invariant
 	x_position_preference_not_void: x_position_preference /= Void
 	y_position_preference_not_void: y_position_preference /= Void
 	is_maximized_preference_not_void: is_maximized_preference /= Void
-	left_panel_use_explorer_style_preference_not_void: left_panel_use_explorer_style_preference /= Void
-	left_panel_width_preference_not_void: left_panel_width_preference /= Void
-	left_panel_layout_preference_not_void: left_panel_layout_preference /= Void
-	right_panel_layout_preference_not_void: right_panel_layout_preference /= Void
 	show_general_toolbar_preference_not_void: show_general_toolbar_preference /= Void
 	show_refactoring_toolbar_preference_not_void: show_refactoring_toolbar_preference /= Void
 	show_text_in_general_toolbar_preference_not_void: show_text_in_general_toolbar_preference /= Void

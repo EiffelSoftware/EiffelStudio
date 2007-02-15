@@ -62,12 +62,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
-	main_splitter_position: INTEGER is
-			-- Main splitter position.
-		do
-			Result := main_splitter_position_preference.value
-		end
-
 	local_vs_object_proportion: REAL is
 			-- What ratio should we have between the locals tree
 			-- and the objects tree in the object tool?
@@ -143,7 +137,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	always_compile_before_debug_preference: BOOLEAN_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	default_expanded_view_size_preference: INTEGER_PREFERENCE
-	main_splitter_position_preference: INTEGER_PREFERENCE
 	local_vs_object_proportion_preference: STRING_PREFERENCE
 	left_debug_layout_preference: ARRAY_PREFERENCE
 	right_debug_layout_preference: ARRAY_PREFERENCE
@@ -249,7 +242,6 @@ feature {NONE} -- Implementation
 			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
 			last_saved_stack_path_preference.set_hidden (True)
 			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 50)
-			main_splitter_position_preference := l_manager.new_integer_preference_value (l_manager, main_splitter_position_string, 250)
 			show_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_project_toolbar_string, True)
 			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_project_toolbar_string, True)
 			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
@@ -282,7 +274,6 @@ invariant
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
 	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
-	main_splitter_position_preference_not_void: main_splitter_position_preference /= Void
 	local_vs_object_proportion_preference_not_void: local_vs_object_proportion_preference /= Void
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void

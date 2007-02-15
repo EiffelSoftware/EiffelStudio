@@ -112,19 +112,19 @@ feature {NONE} -- Attributes
 	tooltext: STRING_GENERAL is
 			-- Default text displayed in toolbar button
 		do
-			Result := "Restart" --Interface_names.b_launch
+			Result := interface_names.b_restart
 		end
 
 	internal_tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
-			Result := "Restart" --Interface_names.e_Exec_debug
+			Result := Interface_names.f_restart_application
 		end
 
 	menu_name: STRING_GENERAL is
 			-- Name used in menu entry.
 		once
-			Result := "Restart" -- Interface_names.m_Debug_run_new
+			Result := Interface_names.m_restart_application
 		end
 
 indexing

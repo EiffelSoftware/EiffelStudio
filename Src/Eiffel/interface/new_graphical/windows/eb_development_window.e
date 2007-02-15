@@ -1667,10 +1667,32 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_B
 
 	send_stone_to_context is
 			-- Send current stone to the context tool.
+			-- Send current targeting feature to context tool if possible.
 			-- Used by `send_stone_to_context_cmd'.
+		local
+			l_feature_text: STRING
+			l_class_stone: CLASSI_STONE
+			l_feature_stone: FEATURE_STONE
+			l_class_c: CLASS_C
+			l_feature: E_FEATURE
 		do
-			if stone /= Void then
-				tools.set_stone (stone)
+			if address_manager /= Void then
+				l_feature_text := address_manager.feature_address.text.as_string_8
+			end
+			l_class_stone ?= stone
+			if l_class_stone /= Void then
+				l_class_c := l_class_stone.class_i.compiled_representation
+				if l_class_c /= Void then
+					if l_feature_text /= Void and then not l_feature_text.is_empty and then l_class_c.has_feature_table then
+						l_feature := l_class_c.feature_with_name (l_feature_text)
+					end
+					if l_feature /= Void then
+						create l_feature_stone.make (l_feature)
+						tools.set_stone_and_pop_tool (l_feature_stone)
+					else
+						tools.set_stone_and_pop_tool (stone)
+					end
+				end
 			end
 		end
 

@@ -92,9 +92,6 @@ feature {NONE} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, a_width, a_height)
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_width, a_height)
-			if not user_can_resize then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
-			end
 		end
 
 	width: INTEGER

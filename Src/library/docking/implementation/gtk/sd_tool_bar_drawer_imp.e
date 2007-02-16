@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			l_pixbuf: POINTER
 		do
 			l_button ?= a_arguments.item
-			if l_button /= Void and l_button.pixmap /= Void then
+			if l_button /= Void and l_button.pixmap /= Void and l_button.tool_bar /= Void then
 				-- We should render pixmap by theme.
 
 				l_position := l_button.pixmap_position

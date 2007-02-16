@@ -193,7 +193,7 @@ feature {NONE} -- Handle mouse clicks
 			cursors_set: cursors /= Void
 		local
 			old_l_number	: INTEGER
-			stop, l_cursor: like cursor_type
+			l_cursor: like cursor_type
 		do
 			l_cursor := text_displayed.cursor
 			old_l_number := l_cursor.y_in_lines

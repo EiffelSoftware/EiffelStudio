@@ -780,7 +780,7 @@ feature{NONE} -- Grid binding
 			a_grid_item_attached: a_grid_item /= Void
 		local
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
-			l_trailer: EB_GRID_PIXMAP_COMPONENT
+			l_trailer: ES_GRID_PIXMAP_COMPONENT
 		do
 			create l_trailer.make (a_pixmap)
 			create l_tooltip.make (l_trailer.pointer_enter_actions , l_trailer.pointer_leave_actions, agent a_grid_item.is_destroyed)

@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 		do
 			watch_id := a_watch_id
 			if a_title = Void or else a_title.is_empty then
-				set_title (interface_names.t_Watch_tool + " #" + watch_id.out)
+				set_title ((interface_names.t_Watch_tool).as_string_32 + " #" + watch_id.out)
 			else
 				set_title (a_title)
 			end

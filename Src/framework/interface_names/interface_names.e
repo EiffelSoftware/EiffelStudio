@@ -6,6 +6,7 @@ indexing
 	conventions:
 		"a_: Accelerator key combination; %
 		%b_: Button text; %
+		%c_: choices; %
 		%d_: Degree outputter; %
 		%f_: Focus label text (tooltips); %
 		%h_: Help text; %
@@ -175,6 +176,55 @@ feature -- Button texts
 	b_overwrite: STRING_GENERAL is						do Result := locale.translate("Overwrite") end
 	b_append: STRING_GENERAL is							do Result := locale.translate("Append") end
 	b_ignore: STRING_GENERAL is							do Result := locale.translate("Ignore") end
+
+feature -- Choices
+
+	c_right_click_receiver: HASH_TABLE [STRING_GENERAL, STRING] is
+			-- Choice names for the preference of right_click_receiver.
+		once
+			create Result.make (5)
+			Result.put (c_new_window, co_new_window)
+			Result.put (c_editor, co_editor)
+			Result.put (c_context, co_context)
+			Result.put (c_external_editor, co_external_editor)
+			Result.put (c_new_tab_editor, co_new_tab_editor)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	c_new_window: STRING_GENERAL is 		do Result := locale.translate ("New window") end
+	c_editor: STRING_GENERAL is 			do Result := locale.translate ("Current Editor") end
+	c_context: STRING_GENERAL is 			do Result := locale.translate ("Context") end
+	c_external_editor: STRING_GENERAL is 	do Result := locale.translate ("External Editor") end
+	c_new_tab_editor: STRING_GENERAL is 	do Result := locale.translate ("New tab editor") end
+
+	c_init_search_scope: HASH_TABLE [STRING_GENERAL, STRING] is
+			-- Choice names for the preference of tools.search_tool.init_scope.
+		once
+			create Result.make (3)
+			Result.put (l_current_editor, co_current_editor)
+			Result.put (l_whole_project, co_whole_project)
+			Result.put (l_custom, co_custom)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature -- Choice original (No translation)
+
+	co_new_window: STRING is "new_window"
+			-- Preference that indicates that stones should be launched to a new development window.
+	co_editor: STRING is "current_editor"
+			-- Preference that indicates that stones should be launched to the current editor.
+	co_context: STRING is "context"
+			-- Preference that indicates that stones should be launched to the current context tool.
+	co_external_editor: STRING is "external"
+			-- Preference that indicates that stones should be launched to the external editor.
+	co_new_tab_editor: STRING is "new_tab_editor"
+			-- Preference that indicates that stones should be launched to a new tab editor.
+
+	co_current_editor: STRING is 		"Current Editor"
+	co_whole_project: STRING is 		"Whole Project"
+	co_custom: STRING is 				"Custom"
 
 feature -- Graphical degree output
 

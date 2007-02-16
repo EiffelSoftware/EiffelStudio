@@ -378,6 +378,7 @@ feature {NONE} -- Widget initialization
 			i: INTEGER
 		do
 			Result := Precursor (a_pref)
+				-- Set display names for preferences of type LIST.
 			if a_pref = preferences.misc_data.locale_id_preference then
 				l_langs := locale_names.languages
 				l_locales := locale_names.locales
@@ -401,6 +402,10 @@ feature {NONE} -- Widget initialization
 				end
 				l_displayed_names.force (names.l_unselected, "Unselected")
 				Result.set_displayed_value (l_displayed_names)
+			elseif a_pref = preferences.development_window_data.ctrl_right_click_receiver_preference then
+				Result.set_displayed_value (names.c_right_click_receiver)
+			elseif a_pref = preferences.search_tool_data.init_scope_preference then
+				Result.set_displayed_value (names.c_init_search_scope)
 			end
 		end
 

@@ -446,6 +446,20 @@ feature -- Text processing
 			last_line.append_token (l_ast_token)
 		end
 
+	process_line (a_name: STRING; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is
+			-- Process `a_name' which represents a line of a class.
+		require
+			a_name_attached: a_name /= Void
+			a_line_number_positive: a_line_number > 0
+			a_class_i_attached: a_class_i /= Void
+		local
+			l_token: EDITOR_TOKEN_TEXT
+		do
+			create l_token.make (a_name)
+			l_token.set_pebble (create {LINE_STONE}.make_with_line (a_class_i, a_line_number, a_selected))
+			last_line.append_token (l_token)
+		end
+
 	add_new_line is
 			-- Add new line.
 		do

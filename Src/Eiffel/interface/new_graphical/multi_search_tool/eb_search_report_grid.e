@@ -591,48 +591,49 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				else
 					l_editor := search_tool.editor
 				end
---				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
-				if (not search_tool.is_item_source_changed (l_text_item)) then
-					l_start := l_text_item.start_index_in_unix_text
-					l_end := l_text_item.end_index_in_unix_text + 1
-					if l_end > l_start then
-						if l_editor.text_is_fully_loaded then
-							l_editor.select_region (l_start, l_end)
+				if l_editor /= Void then
+					if (not search_tool.is_item_source_changed (l_text_item)) then
+						l_start := l_text_item.start_index_in_unix_text
+						l_end := l_text_item.end_index_in_unix_text + 1
+						if l_end > l_start then
+							if l_editor.text_is_fully_loaded then
+								l_editor.select_region (l_start, l_end)
+							end
+						elseif l_end = l_start then
+							l_editor.text_displayed.cursor.go_to_position (l_end)
+							l_editor.deselect_all
 						end
-					elseif l_end = l_start then
-						l_editor.text_displayed.cursor.go_to_position (l_end)
-						l_editor.deselect_all
-					end
-					if l_editor.has_selection then
-						l_editor.show_selection (False)
-					end
-					if search_tool.saved_cursor /= 0 and then search_tool.saved_cursor = multi_search_performer.index then
-						search_tool.first_result_reached_actions.call ([True])
-					else
-						search_tool.first_result_reached_actions.call ([False])
-					end
-					if multi_search_performer.islast then
-						search_tool.bottom_reached_actions.call ([True])
+						if l_editor.has_selection then
+							l_editor.show_selection (False)
+						end
+						if search_tool.saved_cursor /= 0 and then search_tool.saved_cursor = multi_search_performer.index then
+							search_tool.first_result_reached_actions.call ([True])
+						else
+							search_tool.first_result_reached_actions.call ([False])
+						end
+						if multi_search_performer.islast then
+							search_tool.bottom_reached_actions.call ([True])
+						else
+							search_tool.bottom_reached_actions.call ([False])
+						end
+						l_editor.refresh_now
+						search_tool.report_tool.set_summary (report_summary_string)
+						search_tool.report_tool.set_new_search_button_visible (False)
+						if not search_tool.report_cursor_recorded then
+							search_tool.save_current_cursor
+							search_tool.set_report_cursor_recorded (True)
+						end
 					else
 						search_tool.bottom_reached_actions.call ([False])
+						search_tool.first_result_reached_actions.call ([False])
+						if search_tool.is_customized or search_tool.is_whole_project_searched then
+							l_saving_string := interface_names.l_try_saving_file_and_searching
+						else
+							l_saving_string := interface_names.l_try_searching
+						end
+						search_tool.report_tool.set_summary (report_summary_string.as_string_32 + "   " + l_saving_string)
+						search_tool.report_tool.set_new_search_button_visible (True)
 					end
-					l_editor.refresh_now
-					search_tool.report_tool.set_summary (report_summary_string)
-					search_tool.report_tool.set_new_search_button_visible (False)
-					if not search_tool.report_cursor_recorded then
-						search_tool.save_current_cursor
-						search_tool.set_report_cursor_recorded (True)
-					end
-				else
-					search_tool.bottom_reached_actions.call ([False])
-					search_tool.first_result_reached_actions.call ([False])
-					if search_tool.is_customized or search_tool.is_whole_project_searched then
-						l_saving_string := interface_names.l_try_saving_file_and_searching
-					else
-						l_saving_string := interface_names.l_try_searching
-					end
-					search_tool.report_tool.set_summary (report_summary_string.as_string_32 + "   " + l_saving_string)
-					search_tool.report_tool.set_new_search_button_visible (True)
 				end
 			else
 				search_tool.report_tool.set_summary (report_summary_string)

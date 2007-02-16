@@ -156,13 +156,17 @@ feature {NONE} -- Implementation
 	item_replaced is
 			-- One item replaced when replacing all.
 		do
-			smart_text.history_item_bind
+			if smart_text /= Void then
+				smart_text.history_item_bind
+			end
 		end
 
 	all_item_replaced is
 			-- Replace all is done.
 		do
-			smart_text.history_item_unbind
+			if smart_text /= Void then
+				smart_text.history_item_unbind
+			end
 		end
 
 	one_cluster_item_replaced (a_item: MSR_TEXT_ITEM) is
@@ -245,10 +249,9 @@ feature {NONE} -- Implementation
 		do
 			if a_item /= Void then
 				l_class ?= a_item.data
-				check
-					l_class_not_void: l_class /= Void
+				if l_class /= Void then
+					Result := not l_class.is_read_only
 				end
-				Result := not l_class.is_read_only
 			end
 		end
 
@@ -258,9 +261,8 @@ feature {NONE} -- Implementation
 	smart_text: SMART_TEXT is
 			-- Smart text in editor.
 		do
-			Result ?= editor.text_displayed
-			check
-				is_smart_text: Result /= Void
+			if editor /= Void then
+				Result ?= editor.text_displayed
 			end
 		end
 

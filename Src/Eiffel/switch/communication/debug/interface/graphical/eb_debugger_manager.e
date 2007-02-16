@@ -454,7 +454,7 @@ feature -- tools management
 			w /= Void
 		local
 			m: EV_MENU
-			mi: EV_CHECK_MENU_ITEM
+			mi: EV_MENU_ITEM
 			mn: STRING_GENERAL
 			l_tools: ARRAY [TUPLE [tool: EB_TOOL; acc: EV_ACCELERATOR]]
 			t: TUPLE [tool: EB_TOOL; acc: EV_ACCELERATOR]
@@ -484,9 +484,6 @@ feature -- tools management
 								create mi.make_with_text (l_tool.menu_name)
 							end
 							mi.set_data (l_tool.menu_name)
-							if l_tool.shown then
-								mi.enable_select
-							end
 							if l_tool.pixmap /= Void then
 								mi.set_pixmap (l_tool.pixmap)
 							end
@@ -543,7 +540,7 @@ feature -- tools management
 			window_manager.for_all_development_windows (agent update_debugging_tools_menu_from)
 		end
 
-	show_debugging_tools (mi: EV_CHECK_MENU_ITEM) is
+	show_debugging_tools (mi: EV_MENU_ITEM) is
 			-- Toggle display status of Tool related to `mit'
 		require
 			mi /= Void
@@ -573,11 +570,6 @@ feature -- tools management
 							l_acc.actions.call (Void)
 						else
 							l_tool.show
-						end
-						if l_tool.shown then
-							mi.select_actions.block
-							mi.enable_select
-							mi.select_actions.resume
 						end
 						i := l_tools.upper --| Exit the loop						
 					end

@@ -28,8 +28,7 @@ inherit
 			mini_toolbar_box,
 			build_mini_toolbar_box,
 			build_docking_content,
-			show,
-			close
+			show
 		end
 
 	EB_RECYCLABLE
@@ -723,12 +722,6 @@ feature -- Change
 			if not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
 				l_grid.set_focus
 			end
-		end
-
-	close is
-		do
-			Precursor
-			debugger_manager.update_all_debugging_tools_menu
 		end
 
 feature -- Status report

@@ -16,8 +16,7 @@ inherit
 			pixmap,
 			pixel_buffer,
 			mini_toolbar,
-			show,
-			close
+			show
 		end
 
 	EB_RECYCLABLE
@@ -194,12 +193,6 @@ feature -- Status setting
 			if grid.is_displayed and grid.is_sensitive then
 				grid.set_focus
 			end
-		end
-
-	close is
-		do
-			Precursor
-			eb_debugger_manager.update_all_debugging_tools_menu
 		end
 
 	reset_tool is

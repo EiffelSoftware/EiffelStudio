@@ -44,7 +44,7 @@ feature -- Command
 			l_graphical_debugger ?= debugger_manager
 			if l_graphical_debugger /= Void then
 				l_fn := docking_standard_layout_path.twin
-				if not l_graphical_debugger.application_is_executing then
+				if not l_graphical_debugger.raised then
 					l_fn.set_file_name (standard_tools_layout_name)
 				else
 					l_fn.set_file_name (standard_tools_debug_layout_name)

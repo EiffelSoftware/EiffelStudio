@@ -15,10 +15,6 @@
           <Control Id="Description" Type="Text" X="9" Y="73" Width="356" Height="29" Transparent="yes" NoPrefix="yes">
             <Text>To use this folder as the default new projects location, click "Next". To specify a different folder, enter it below of click "Browse".</Text>
           </Control>
-          <Control Id="FolderText" Type="Text" X="29" Y="106" Width="34" Height="15" Transparent="yes">
-            <Text>&amp;Folder: </Text>
-          </Control>
-          <Control Id="FolderEdit" Type="PathEdit" X="67" Y="104" Width="237" Height="17" Property="EIFFELPROJECTSDIR" Sunken="no" />
           <Control Id="Browse" Type="PushButton" X="309" Y="104" Width="56" Height="17" Text="[Button_Browse]">
             <Publish Property="_BrowseProperty" Value="EIFFELPROJECTSDIR">1</Publish>
             <Publish Event="SpawnDialog" Value="PromptBrowse">1</Publish>
@@ -32,6 +28,10 @@
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
           </Control>
+          <Control Id="FolderText" Type="Text" X="29" Y="106" Width="34" Height="15" Transparent="yes">
+            <Text>Folder: </Text>
+          </Control>
+          <Control Id="FolderEdit" Type="PathEdit" X="67" Y="104" Width="237" Height="17" Property="EIFFELPROJECTSDIR" Sunken="no" />
         </Dialog>
 		  </UI>
     <?endif?>

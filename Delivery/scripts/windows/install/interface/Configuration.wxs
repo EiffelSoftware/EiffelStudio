@@ -25,6 +25,7 @@
     <Property Id="Button_No">&amp;No</Property>
     <Property Id="Button_Agree">&amp;Agree</Property>
     <Property Id="Button_Disagree">&amp;Disagree</Property>
+    <Property Id="Button_DisagreeBack">&amp;Back</Property>
     <Property Id="Button_View">&amp;View</Property>
     <Property Id="Button_Close">&amp;Close</Property>
     <Property Id="Button_ViewCompilerHowTo">&amp;View How To</Property>

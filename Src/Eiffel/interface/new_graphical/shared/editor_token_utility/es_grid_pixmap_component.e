@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_PIXMAP_COMPONENT
+	ES_GRID_PIXMAP_COMPONENT
 
 inherit
 	ES_GRID_ITEM_COMPONENT

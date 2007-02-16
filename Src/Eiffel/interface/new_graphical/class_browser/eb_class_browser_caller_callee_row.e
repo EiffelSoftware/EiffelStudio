@@ -193,7 +193,7 @@ feature{NONE} -- Implementation/Data
 			-- Grid item to be displayed
 		local
 			l_grid_item: like grid_item_internal
-			l_trailer: EB_GRID_PIXMAP_COMPONENT
+			l_trailer: ES_GRID_PIXMAP_COMPONENT
 		do
 			if grid_item_internal = Void then
 				create l_grid_item

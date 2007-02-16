@@ -466,6 +466,11 @@ feature {NONE}  -- Implementation attributes
 					Result := l_avail_width
 				end
 			end
+			if Result <= 0 then
+				Result := 1
+			end
+		ensure
+			positive: Result > 0
 		end
 
 	is_draw_top_tab: BOOLEAN

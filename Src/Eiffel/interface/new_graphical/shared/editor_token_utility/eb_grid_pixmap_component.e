@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_EDITOR_TOKEN_PIXMAP_TRAILER
+	EB_GRID_PIXMAP_COMPONENT
 
 inherit
 	ES_GRID_ITEM_COMPONENT

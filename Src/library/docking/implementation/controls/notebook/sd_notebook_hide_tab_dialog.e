@@ -79,6 +79,10 @@ feature -- Command
 		do
 			init_search
 			update_size
+			if not {PLATFORM}.is_windows then
+					-- This is a temporary hack until resizing user resize disabled windows can be implemented.
+				set_minimum_size (width, height)
+			end
 		end
 
 	show is

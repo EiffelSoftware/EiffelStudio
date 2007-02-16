@@ -14,7 +14,10 @@ inherit
 	SD_NOTEBOOK_TAB_DRAWER_I
 		redefine
 			draw_pixmap_text_selected,
-			draw_pixmap_text_unselected
+			draw_pixmap_text_unselected,
+			expose_unselected,
+			expose_selected,
+			expose_hot
 		end
 
 	EV_BUTTON_IMP -- Only for export
@@ -38,18 +41,21 @@ feature -- Command
 	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw unselected notebook tab.
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, False)
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw selected notebook tab.
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, True)
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Draw hot notebook tab.
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, False)
 		end
 
@@ -105,9 +111,9 @@ feature -- Command
 					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 					a_pixmap.set_font (l_font)
 					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, close_clipping_width (a_width))
 					else
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, text_clipping_width (a_width))
 					end
 				end
 				-- Draw pixmap
@@ -123,7 +129,6 @@ feature -- Command
 			end
 		end
 
-
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
 			-- Redefine
 		local
@@ -136,12 +141,12 @@ feature -- Command
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
+				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text, close_clipping_width (a_width))
 			else
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
 				-- Draw text
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text)
+				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text, text_clipping_width (a_width))
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)

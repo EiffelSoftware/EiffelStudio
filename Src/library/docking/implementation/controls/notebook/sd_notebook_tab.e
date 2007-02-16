@@ -292,20 +292,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_expose is
 			-- Handle expose actions.
-		local
-			l_box: SD_NOTEBOOK_TAB_AREA
-			l_avail_width: INTEGER
 		do
-			l_box ?= parent.parent
-			check not_void: l_box /= Void end
-			l_avail_width := l_box.width
-			if l_avail_width > 0 then
-				if l_avail_width >= internal_width then
-					on_expose_with_width (internal_width)
-				else
-					on_expose_with_width (l_avail_width)
-				end
-			end
+			on_expose_with_width (drawing_width)
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -330,19 +318,18 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 					if not is_pointer_in_close_area and internal_width > 0 then
 						is_pointer_in_close_area := True
 						if is_selected then
-							internal_tab_drawer.expose_selected (internal_width, info)
+							internal_tab_drawer.expose_selected (drawing_width, info)
 						else
-							internal_tab_drawer.expose_hot (internal_width, info)
+							internal_tab_drawer.expose_hot (drawing_width, info)
 						end
-
 					end
 				else
 					if is_pointer_in_close_area and internal_width > 0 then
 						is_pointer_in_close_area := False
 						if is_selected then
-							internal_tab_drawer.expose_selected (internal_width, info)
+							internal_tab_drawer.expose_selected (drawing_width, info)
 						else
-							internal_tab_drawer.expose_hot (internal_width, info)
+							internal_tab_drawer.expose_hot (drawing_width, info)
 						end
 					end
 				end
@@ -409,6 +396,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			-- Handle pointer leave actions.
 		do
 			is_hot := False
+			is_pointer_in_close_area := False
 			on_expose
 		ensure
 			set: is_hot = False
@@ -461,6 +449,24 @@ feature {NONE}  -- Implementation attributes
 
 	internal_width: INTEGER
 			-- Width
+
+	drawing_width: INTEGER is
+			-- Width showig on the screen.
+		local
+			l_box: SD_NOTEBOOK_TAB_AREA
+			l_avail_width: INTEGER
+		do
+			l_box ?= parent.parent
+			check not_void: l_box /= Void end
+			l_avail_width := l_box.width
+			if l_avail_width > 0 then
+				if l_avail_width >= internal_width then
+					Result := internal_width
+				else
+					Result := l_avail_width
+				end
+			end
+		end
 
 	is_draw_top_tab: BOOLEAN
 			-- If current draw tab at top?

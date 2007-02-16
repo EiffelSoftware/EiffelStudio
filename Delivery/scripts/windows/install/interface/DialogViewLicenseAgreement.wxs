@@ -26,7 +26,7 @@
           <?else?>
           <?ifdef EiffelEnvision?>
             <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[CHECKCCOMPILER <> "0" AND HASMSCCOMPILER = "0"]]></Publish>
-            <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogVerifyReadyInstall"><![CDATA[CHECKCCOMPILER = "0" OR HASMSCCOMPILER <> "0"]]></Publish>
           <?else?>
             <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
           <?endif?>

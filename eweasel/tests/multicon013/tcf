@@ -18,33 +18,33 @@ copy_raw 	test.e $CLUSTER test.e
 
 ------------
 -- VTGC(1)
---define VIOLATE1 "like Current,"
---copy_sub 	multi.e $CLUSTER multi.e
---define VIOLATE1 ""
---compile_melted
---compile_result validity_error MULTI VTGC(1)
+define VIOLATE1 "like Current,"
+copy_sub 	multi.e $CLUSTER multi.e
+define VIOLATE1 ""
+compile_melted
+compile_result validity_error MULTI VTGC(1)
 
 ------------
--- VTGC(2)
+-- VTGC(2) and VTGC(3)
 
-define VIOLATE2 ""
+define VIOLATE2 "rename nonexistent as something end"
 copy_sub 	multi.e $CLUSTER multi.e
 define VIOLATE2 " rename default_create as numerics_default_create end"
-compile_melted
-compile_result validity_error MULTI VTGC(2)
+resume_compile
+compile_result validity_error MULTI VTGC(2) VTGC(3)
 
 ------------
 -- VTGC(3)
 define VIOLATE3 "non_existing_creation_feature,"
 copy_sub 	multi.e $CLUSTER multi.e
 define VIOLATE3 ""
-compile_melted
+resume_compile
 compile_result validity_error MULTI VTGC(3)
 
 ------------
 -- ok
 copy_sub 	multi.e $CLUSTER multi.e
-compile_melted
+resume_compile
 compile_result ok
 execute_work NONE exec_output1
 compare exec_output1 output1	

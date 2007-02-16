@@ -20,7 +20,7 @@ compile_result 	ok
 
 copy_raw 	test2_rev1.e $CLUSTER test2.e
 compile_melted
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTCG VTCG; TEST2 VTCG
 
 copy_raw 	test2_rev2.e $CLUSTER test2.e
 resume_compile

@@ -11,9 +11,15 @@ test_description After initial compilation, a constraint is added to an unconstr
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
-copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test1_rev1.e $CLUSTER test1.e
 
 compile_melted
+compile_result 	validity_error TEST1 VTGC(2)
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+
+resume_compile
 compile_result 	validity_error TEST1 VTGC(3)
+
 
 test_end

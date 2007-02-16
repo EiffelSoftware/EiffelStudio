@@ -45,7 +45,7 @@ feature -- Command
 				l_pointer_style := develop_window.window.pointer_style
 				create l_stock_pixmaps
 				develop_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
-				if l_graphical_debugger.application_is_executing then
+				if l_graphical_debugger.raised then
 					l_graphical_debugger.restore_standard_debug_docking_layout
 				else
 					develop_window.restore_standard_tools_docking_layout

@@ -57,7 +57,7 @@
               <RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
             </RegistryKey>
             <CreateFolder />
-            <RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall"/>
+            <RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
           </Component>
         </Directory>
       </Directory>

@@ -62,6 +62,8 @@ feature{NONE} -- Implementation
 			l_invariant: QL_INVARIANT
 			l_feature: QL_FEATURE
 			l_target: QL_TARGET
+			l_ql_code_item: QL_CODE_STRUCTURE_ITEM
+			l_line: QL_LINE
 		do
 			if a_item.is_class then
 				l_class ?= a_item
@@ -85,6 +87,12 @@ feature{NONE} -- Implementation
 			elseif a_item.is_target then
 				l_target ?= a_item
 				a_writer.process_target_name_text (l_target.name, l_target.target)
+			elseif a_item.is_line then
+				l_line ?= a_item
+				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_c.lace_class, False)
+			elseif a_item.is_code_structure then
+				l_ql_code_item ?= a_item
+				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, Void, False)
 			else
 				a_writer.add_string (a_item.name)
 			end

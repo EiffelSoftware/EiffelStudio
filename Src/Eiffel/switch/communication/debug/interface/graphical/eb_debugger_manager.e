@@ -835,7 +835,9 @@ feature -- Status setting
 	save_debug_docking_layout is
 			-- Save debug docking layout
 		do
-			debugging_window.docking_manager.save_tools_config (debugging_window.docking_debug_config_file)
+			if debugging_window /= Void then
+				debugging_window.docking_manager.save_tools_config (debugging_window.docking_debug_config_file)
+			end
 		end
 
 	restore_standard_debug_docking_layout is

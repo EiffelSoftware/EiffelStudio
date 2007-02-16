@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		end
+
 create
 	default_create
 
@@ -37,21 +42,21 @@ feature -- Basic operations
 		do
 			if st.is_storable then
 				pref := chosen_receiver
-				if pref.is_equal (new_window) then
+				if pref.is_equal (names.co_new_window) then
 					window_manager.create_window
 					window_manager.last_created_window.force_stone (st)
-				elseif pref.is_equal (editor) then
+				elseif pref.is_equal (names.co_editor) then
 					window_manager.last_focused_development_window.set_stone (st)
-				elseif pref.is_equal (context) then
+				elseif pref.is_equal (names.co_context) then
 					window_manager.last_focused_development_window.tools.set_stone (st)
-				elseif pref.is_equal (external_editor) then
+				elseif pref.is_equal (names.co_external_editor) then
 					cv_cst ?= st
 					if cv_cst /= Void then
 						process_class (cv_cst)
 					else
 						window_manager.last_focused_development_window.force_stone (st)
 					end
-				elseif pref.is_equal (new_tab_editor) then
+				elseif pref.is_equal (names.co_new_tab_editor) then
 					window_manager.last_focused_development_window.commands.new_tab_cmd.execute_with_stone (st)
 				end
 			else
@@ -71,21 +76,6 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 			lower_case: Result.is_equal (Result.as_lower)
 		end
-
-	new_window: STRING is "new_window"
-			-- Preference that indicates that stones should be launched to a new development window.
-
-	editor: STRING is "current_editor"
-			-- Preference that indicates that stones should be launched to the current editor.
-
-	context: STRING is "context"
-			-- Preference that indicates that stones should be launched to the current context tool.
-
-	external_editor: STRING is "external"
-			-- Preference that indicates that stones should be launched to the external editor.
-
-	new_tab_editor: STRING is "new_tab_editor"
-			-- Preference that indicates that stones should be launched to a new tab editor.
 
 	process_class (cs: CLASSI_STONE) is
 			-- Process class stone.

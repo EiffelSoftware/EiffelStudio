@@ -72,15 +72,12 @@ feature -- Access
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-			-- First token in current AST node
-		local
-			l_id_list: IDENTIFIER_LIST
+			-- First token in current AST node		
 		do
-			if a_list = Void then
+			check not id_list.id_list.is_empty end
+			Result := id_list.id_list.first.first_token (a_list)
+			if Result = Void then
 				Result := type.first_token (a_list)
-			else
-				l_id_list ?= id_list
-				Result := l_id_list.id_list.first_token (a_list)
 			end
 		end
 

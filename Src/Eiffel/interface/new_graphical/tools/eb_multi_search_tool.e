@@ -376,7 +376,7 @@ feature -- Action
 			if new_search_set or else
 				not multi_search_performer.is_search_launched or else
 				(not multi_search_performer.off and then
-				(editor.text_displayed.cursor /= Void and then
+				(is_editor_ready and then editor.text_displayed.cursor /= Void and then
 				(editor.text_displayed.cursor.pos_in_text > l_end or
 				editor.text_displayed.cursor.pos_in_text < l_start)))
 			then
@@ -390,7 +390,7 @@ feature -- Action
 				 	 end
 				 end
 			end
-			if editor.number_of_lines /= 0 then
+			if is_editor_ready and then editor.number_of_lines /= 0 then
 				if editor.is_editable then
 					if not multi_search_performer.off and not multi_search_performer.is_empty then
 						l_item ?= multi_search_performer.item
@@ -424,7 +424,7 @@ feature -- Action
 			hindered: BOOLEAN
 		do
 			if is_current_editor_searched then
-				if not editor.is_editable then
+				if is_editor_ready and then not editor.is_editable then
 					hindered := true
 					editor.display_not_editable_warning_message
 				end
@@ -524,7 +524,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 					if is_current_editor_searched then
 						Result := is_text_changed_in_editor
 					else
-						if editor.changed then
+						if is_editor_ready and then editor.changed then
 							Result := not changed_by_replace or changed_classes.has (l_class_i) or a_item.date /= l_class_i.date
 						else
 							Result := is_text_changed_in_editor or changed_classes.has (l_class_i) or a_item.date /= l_class_i.date
@@ -749,47 +749,49 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				elseif k.code = Key_escape then
 					develop_window.set_focus_to_main_editor
 				else
-					if search_forward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
-						if not keyword_field.text.is_empty and then search_only then
-							new_search_or_go_next
-							ev_application.do_once_on_idle (agent editor.set_focus)
-						end
-					elseif search_backward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
-						if not keyword_field.text.is_empty and then search_only then
-							temp_reverse := true
-							new_search_or_go_next
-							ev_application.do_once_on_idle (agent editor.set_focus)
-							temp_reverse := false
-						end
-					elseif search_previous_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
-						if editor.has_selection then
-							force_new_search
-							l_incremental_search := is_incremental_search
-							disable_incremental_search
-							set_current_searched (editor.text_displayed.selected_string)
-							if l_incremental_search then
-								enable_incremental_search
+					if is_editor_ready then
+						if search_forward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+							if not keyword_field.text.is_empty and then search_only then
+								new_search_or_go_next
+								ev_application.do_once_on_idle (agent editor.set_focus)
 							end
-						end
-						if not keyword_field.text.is_empty and then search_only then
-							temp_reverse := true
-							new_search_or_go_next
-							ev_application.do_once_on_idle (agent editor.set_focus)
-							temp_reverse := false
-						end
-					elseif search_next_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
-						if editor.has_selection then
-							force_new_search
-							l_incremental_search := is_incremental_search
-							disable_incremental_search
-							set_current_searched (editor.text_displayed.selected_string)
-							if l_incremental_search then
-								enable_incremental_search
+						elseif search_backward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+							if not keyword_field.text.is_empty and then search_only then
+								temp_reverse := true
+								new_search_or_go_next
+								ev_application.do_once_on_idle (agent editor.set_focus)
+								temp_reverse := false
 							end
-						end
-						if not keyword_field.text.is_empty and then search_only then
-							new_search_or_go_next
-							ev_application.do_once_on_idle (agent editor.set_focus)
+						elseif search_previous_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+							if editor.has_selection then
+								force_new_search
+								l_incremental_search := is_incremental_search
+								disable_incremental_search
+								set_current_searched (editor.text_displayed.selected_string)
+								if l_incremental_search then
+									enable_incremental_search
+								end
+							end
+							if not keyword_field.text.is_empty and then search_only then
+								temp_reverse := true
+								new_search_or_go_next
+								ev_application.do_once_on_idle (agent editor.set_focus)
+								temp_reverse := false
+							end
+						elseif search_next_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
+							if editor.has_selection then
+								force_new_search
+								l_incremental_search := is_incremental_search
+								disable_incremental_search
+								set_current_searched (editor.text_displayed.selected_string)
+								if l_incremental_search then
+									enable_incremental_search
+								end
+							end
+							if not keyword_field.text.is_empty and then search_only then
+								new_search_or_go_next
+								ev_application.do_once_on_idle (agent editor.set_focus)
+							end
 						end
 					end
 				end
@@ -945,7 +947,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				search_button.enable_sensitive
 				replace_button.enable_sensitive
 				replace_all_click_button.enable_sensitive
-				if not editor.is_empty and then is_incremental_search then
+				if is_editor_ready and then not editor.is_empty and then is_incremental_search then
 					l_editor := old_editor
 					old_editor := editor
 					incremental_search (keyword_field.text, incremental_search_start_pos, is_whole_word_matched)
@@ -971,7 +973,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 	retrieve_cursor is
 			-- Retrieve cursor position.
 		do
-			if editor.text_displayed.cursor /= Void then
+			if is_editor_ready and then editor.text_displayed.cursor /= Void then
 				editor.disable_selection
 				editor.text_displayed.cursor.go_to_position (incremental_search_start_pos)
 				editor.check_cursor_position
@@ -1031,7 +1033,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			-- Focusing keyword field.
 			-- We record cursor position in the editor for incremental search.
 		do
-			if editor /= Void and then editor.text_displayed.cursor /= Void then
+			if is_editor_ready then
 				incremental_search_start_pos := editor.text_displayed.cursor.pos_in_text
 			end
 		end
@@ -1080,7 +1082,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					if new_search_set or not multi_search_performer.is_search_launched then
 						search
 					end
-					if not editor.has_focus then
+					if is_editor_ready and then not editor.has_focus then
 						editor.set_focus
 					end
 				end
@@ -1102,7 +1104,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			l_text: STRING
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
-			if not editor.is_empty then
+			if is_editor_ready and then not editor.is_empty then
 				currently_searched := a_word
 				class_stone ?= editor.stone
 				if class_stone /= Void then
@@ -1167,7 +1169,9 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_searched := keyword_field.text
-			class_stone ?= editor.stone
+			if is_editor_ready then
+				class_stone ?= editor.stone
+			end
 			if class_stone /= Void then
 				class_i := class_stone.class_i
 				file_name := class_i.file_name
@@ -1179,7 +1183,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				class_name := "Not a class"
 				create file_name.make
 			end
-			if not editor.is_empty then
+			if is_editor_ready and then not editor.is_empty then
 				create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
 				multi_search_performer.set_search_strategy (text_strategy)
 				if case_sensitive_button.is_selected then
@@ -1218,7 +1222,9 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					-- search is possible but the search box is not shown
 					-- default options
 				currently_searched := keyword_field.text
-				class_stone ?= editor.stone
+				if is_editor_ready then
+					class_stone ?= editor.stone
+				end
 				if class_stone /= Void then
 					class_i := class_stone.class_i
 					file_name := class_i.file_name
@@ -1228,7 +1234,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					create file_name.make
 					create class_name.make_empty
 				end
-				if not editor.is_empty then
+				if is_editor_ready and then not editor.is_empty then
 					create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
 					multi_search_performer.set_search_strategy (text_strategy)
 					if is_case_sensitive then
@@ -1634,6 +1640,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	search_history_size: INTEGER is 10
 
+	is_editor_ready: BOOLEAN is
+			-- Is editor ready to be searched?
+		do
+			Result := editor /= Void and then
+					editor.text_displayed /= Void
+		end
+
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
 		local
@@ -1649,16 +1662,19 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				if l_class_stone /= Void then
 					l_class_i := l_class_stone.class_i
 				end
-				l_text := editor.text_displayed
-				if editor.text_displayed.has_selection then
-					if b then
-						l_pos := l_text.selection_start.pos_in_text
-					else
-						l_pos := l_text.selection_end.pos_in_text
+				if is_editor_ready then
+					l_text := editor.text_displayed
+					if editor.text_displayed.has_selection then
+						if b then
+							l_pos := l_text.selection_start.pos_in_text
+						else
+							l_pos := l_text.selection_end.pos_in_text
+						end
+					elseif l_text.cursor /= Void then
+						l_pos := l_text.cursor.pos_in_characters
 					end
-				elseif l_text.cursor /= Void then
-					l_pos := l_text.cursor.pos_in_characters
 				end
+
 				if not multi_search_performer.off then
 					l_text_item ?= multi_search_performer.item
 					if l_text_item /= Void and then ((old_editor = Void or old_editor = editor) implies is_item_source_changed (l_text_item)) then
@@ -1730,7 +1746,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				end
 				if not is_current_editor_searched and then
 					l_stone /= develop_window.stone and then
-					editor /= Void
+					is_editor_ready
 				then
 					editor.set_focus
 				end
@@ -1773,7 +1789,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				until
 					loaded_actions.count = 0 or loop_end
 				loop
-					if editor.text_is_fully_loaded or editor.is_empty then
+					if is_editor_ready and then editor.text_is_fully_loaded or editor.is_empty then
 						l_pro := loaded_actions.item
 						loaded_actions.remove
 						l_pro.call ([])
@@ -1905,7 +1921,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			else
 				l_editor := editor
 			end
-			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+			if l_editor /= Void and then multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item
 				if l_text_item /= Void then
 					l_start := l_text_item.start_index_in_unix_text

@@ -181,8 +181,7 @@ feature {NONE} -- Implementation agents.
 			end
 
 			select_content (l_content)
-
-			destroy
+			hide
 		ensure
 			destroyed: is_destroyed
 		end

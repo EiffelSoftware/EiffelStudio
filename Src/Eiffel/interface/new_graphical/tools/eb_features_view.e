@@ -58,6 +58,10 @@ feature {NONE} -- Initialization
 			l_browser: EB_FEATURE_BROWSER_GRID_VIEW
 			l_feature_content_formatter: EB_FEATURE_CONTENT_FORMATTER
 			l_drop_actions: EV_PND_ACTION_SEQUENCE
+			l_caller_browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
+			l_callee_browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
+			l_caller_formatter: EB_CALLERS_FORMATTER
+			l_callee_formatter: EB_CALLEES_FORMATTER
 		do
 			formatters := a_tool.managed_feature_formatters
 			create managed_formatters.make (10)
@@ -70,6 +74,8 @@ feature {NONE} -- Initialization
 			editor.drop_actions.extend (agent drop_stone)
 			create l_browser.make (a_tool, l_drop_actions)
 			l_browser.set_sorting_status (l_browser.sorted_columns_from_string (preferences.class_browser_data.feature_view_sorting_order))
+			create l_caller_browser.make (develop_window, l_drop_actions, preferences.class_browser_data.caller_sorting_order_preference, True)
+			create l_callee_browser.make (develop_window, l_drop_actions, preferences.class_browser_data.callee_sorting_order_preference, False)
 			from
 				formatters.start
 			until
@@ -96,6 +102,14 @@ feature {NONE} -- Initialization
 				l_feature_content_formatter ?= formatters.item
 				if l_feature_content_formatter /= Void then
 					l_feature_content_formatter.set_browser (l_browser)
+				end
+				l_caller_formatter ?= formatters.item
+				if l_caller_formatter /= Void then
+					l_caller_formatter.set_browser (l_caller_browser)
+				end
+				l_callee_formatter ?= formatters.item
+				if l_callee_formatter /= Void then
+					l_callee_formatter.set_browser (l_callee_browser)
 				end
 				managed_formatters.extend (l_formatter)
 				formatters.forth

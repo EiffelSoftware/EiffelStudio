@@ -13,7 +13,8 @@ inherit
 	EB_FEATURE_CONTENT_FORMATTER
 		redefine
 			is_dotnet_formatter,
-			format
+			format,
+			browser
 		end
 
 	EB_SHARED_PREFERENCES
@@ -42,6 +43,9 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showhomonyms
 		end
+
+	browser: EB_FEATURE_BROWSER_GRID_VIEW
+			-- Browser
 
 feature {NONE} -- Properties
 

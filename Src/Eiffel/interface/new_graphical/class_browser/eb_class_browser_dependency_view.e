@@ -13,7 +13,7 @@ class
 	EB_CLASS_BROWSER_DEPENDENCY_VIEW
 
 inherit
-	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_DEPENDENCY_ROW]
+	EB_CLASS_BROWSER_SORTABLE_TREE_VIEW [EB_CLASS_BROWSER_DEPENDENCY_ROW]
 		undefine
 			pixmap_from_group_path,
 			pixmap_from_group
@@ -224,99 +224,78 @@ feature -- Setting
 
 feature -- Actions
 
-	on_grid_focus_in is
-			-- Action to be performed when `grid' gets focus
-		do
-			if is_tree_node_highlight_enabled then
-				highlight_tree_on_grid_focus_change
-			end
-		end
+--	on_key_pressed (a_key: EV_KEY) is
+--			-- Action to be performed when some key is pressed in `grid'
+--		require
+--			a_key_attached: a_key /= Void
+--		local
+--			l_processed: BOOLEAN
+--		do
+--			l_processed := on_predefined_key_pressed (a_key)
+--		end
 
-	on_grid_focus_out is
-			-- Action to be performed when `grid' loses focus
-		do
-			if is_tree_node_highlight_enabled then
-				highlight_tree_on_grid_focus_change
-			end
-		end
+--	on_expand_all_level is
+--			-- Action to be performed to recursively expand all selected rows.
+--		do
+--			processed_rows.wipe_out
+--			do_all_in_rows (selected_rows, agent expand_row_recursively)
+--		end
 
-	on_key_pressed (a_key: EV_KEY) is
-			-- Action to be performed when some key is pressed in `grid'
-		require
-			a_key_attached: a_key /= Void
-		local
-			l_processed: BOOLEAN
-		do
-			l_processed := on_predefined_key_pressed (a_key)
-		end
+--	on_collapse_all_level is
+--			-- Action to be performed to recursively collapse all selected rows.
+--		do
+--			processed_rows.wipe_out
+--			do_all_in_rows (selected_rows, agent collapse_row_recursively)
+--		end
 
-	on_expand_all_level is
-			-- Action to be performed to recursively expand all selected rows.
-		do
-			processed_rows.wipe_out
-			do_all_in_rows (selected_rows, agent expand_row_recursively)
-		end
+--	on_expand_one_level is
+--			-- Action to be performed to expand all selected rows.
+--		local
+--			l_selected_rows: like selected_rows
+--			l_row: EV_GRID_ROW
+--			l_done: BOOLEAN
+--		do
+--			l_selected_rows := selected_rows
+--			if l_selected_rows.count = 1 then
+--				l_row := l_selected_rows.first
+--				if not l_row.is_expandable or else l_row.is_expanded then
+--					go_to_first_child (l_row)
+--					l_done := True
+--				end
+--			end
+--			if not l_done then
+--				processed_rows.wipe_out
+--				do_all_in_rows (selected_rows, agent expand_row)
+--			end
+--		end
 
-	on_collapse_all_level is
-			-- Action to be performed to recursively collapse all selected rows.
-		do
-			processed_rows.wipe_out
-			do_all_in_rows (selected_rows, agent collapse_row_recursively)
-		end
+--	on_collapse_one_level is
+--			-- Action to be performed to collapse all selected rows.
+--		local
+--			l_selected_rows: like selected_rows
+--			l_row: EV_GRID_ROW
+--			l_done: BOOLEAN
+--		do
+--			l_selected_rows := selected_rows
+--			if l_selected_rows.count = 1 then
+--				l_row := l_selected_rows.first
+--				if not l_row.is_expandable or else not l_row.is_expanded then
+--					go_to_parent (l_row)
+--					l_done := True
+--				end
+--			end
+--			if not l_done then
+--				processed_rows.wipe_out
+--				do_all_in_rows (l_selected_rows, agent collapse_row_normal)
+--			end
+--		end
 
-	on_expand_one_level is
-			-- Action to be performed to expand all selected rows.
-		local
-			l_selected_rows: like selected_rows
-			l_row: EV_GRID_ROW
-			l_done: BOOLEAN
-		do
-			l_selected_rows := selected_rows
-			if l_selected_rows.count = 1 then
-				l_row := l_selected_rows.first
-				if not l_row.is_expandable or else l_row.is_expanded then
-					go_to_first_child (l_row)
-					l_done := True
-				end
-			end
-			if not l_done then
-				processed_rows.wipe_out
-				do_all_in_rows (selected_rows, agent expand_row)
-			end
-		end
-
-	on_collapse_one_level is
-			-- Action to be performed to collapse all selected rows.
-		local
-			l_selected_rows: like selected_rows
-			l_row: EV_GRID_ROW
-			l_done: BOOLEAN
-		do
-			l_selected_rows := selected_rows
-			if l_selected_rows.count = 1 then
-				l_row := l_selected_rows.first
-				if not l_row.is_expandable or else not l_row.is_expanded then
-					go_to_parent (l_row)
-					l_done := True
-				end
-			end
-			if not l_done then
-				processed_rows.wipe_out
-				do_all_in_rows (l_selected_rows, agent collapse_row_normal)
-			end
-		end
-
-	on_collapse_one_level_partly is
-			-- Action to be performed to collapse on level but leave the first level of child rows open.
-		do
-			processed_rows.wipe_out
-			do_all_in_rows (selected_rows, agent collapse_row)
-		end
-
-	on_notify is
-			-- Action to be performed when `update' is called.
-		do
-		end
+--	on_collapse_one_level_partly is
+--			-- Action to be performed to collapse on level but leave the first level of child rows open.
+--		do
+--			processed_rows.wipe_out
+--			do_all_in_rows (selected_rows, agent collapse_row)
+--		end
 
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
@@ -438,57 +417,6 @@ feature -- Notification
 
 feature -- Sorting
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_DEPENDENCY_ROW]) is
-			-- Action to be performed when sort `a_column_list' using `a_comparator'.
-		require
-			a_column_list_attached: a_column_list /= Void
-			not_a_column_list_is_empty: not a_column_list.is_empty
-		local
-			l_array: ARRAY [INTEGER]
-		do
-			from
-				a_column_list.start
-			until
-				a_column_list.after
-			loop
-				l_array := level_sort_table.item (a_column_list.item)
-				check l_array /= Void end
-				l_array.do_all (agent sort_level (rows, ?, 1, a_comparator))
-				a_column_list.forth
-			end
-			bind_grid
-		end
-
-	sort_level (a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_current_level: INTEGER; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_DEPENDENCY_ROW]) is
-			-- Sort row level whose level index is specified by `a_level_index' starting from level `a_level' indexed by `a_level'.
-			-- `a_comparator' is used to decide row orders.
-		require
-			a_level_attached: a_level /= Void
-			a_comparator_attached: a_comparator /= Void
-		local
-			l_children: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-			l_sorter: DS_QUICK_SORTER [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-			l_comparater: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_agent: AGENT_BASED_EQUALITY_TESTER [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-		do
-			if a_current_level < a_level_index then
-				from
-					l_children := a_level.children
-					l_children.start
-				until
-					l_children.after
-				loop
-					sort_level (l_children.item_for_iteration, a_level_index, a_current_level + 1, a_comparator)
-					l_children.forth
-				end
-			else
-				l_comparater := a_comparator.new_agent_list_comparator (<<level_starting_column_index.i_th (a_level_index)>>)
-				create l_agent.make (agent tree_node_tester (?, ?, l_comparater))
-				create l_sorter.make (l_agent)
-				l_sorter.sort (a_level.children)
-			end
-		end
-
 	name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_row' and `b_row' according to order `a_order'
 		require
@@ -557,16 +485,6 @@ feature -- Sorting
 			end
 		end
 
-	tree_node_tester (a_node, b_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_DEPENDENCY_ROW]): BOOLEAN is
-			-- Tester to decide order of `a_node' and `b_node' according to comparator `a_comparator'.
-		require
-			a_node_attached: a_node /= Void
-			b_node_attached: b_node /= Void
-			a_comparator_attached: a_comparator /= Void
-		do
-			Result := a_comparator.less_than (a_node.data, b_node.data)
-		end
-
 feature -- Constants
 
 	group_column: INTEGER is 1
@@ -611,9 +529,6 @@ feature{NONE} -- Grid binding
 			first_row_binded: grid.row_count = 1
 		end
 
-	level_starting_column_index: ARRAYED_LIST [INTEGER]
-			-- Starting column index of levels indexed by level index.
-
 	level_row_type: ARRAYED_LIST [INTEGER]
 			-- List of row type indexed by level
 
@@ -623,10 +538,6 @@ feature{NONE} -- Grid binding
 			-- `referencer_class_column', `feature_column'.
 			-- Value of that key is the level-index for that column
 
-	level_sort_table: HASH_TABLE [ARRAY [INTEGER], INTEGER]
-			-- Table to store levels to be sorted when sorting a column
-			-- Key is column index, value is a list of levels to be sort to when the given column is sorted.
-
 	create_index_info is
 			-- Create `level_starting_column_index' and `level_row_type'
 		local
@@ -635,7 +546,7 @@ feature{NONE} -- Grid binding
 			b := categorize_folder_button.is_selected
 			if b then
 					-- If classes are categorized in their physical folder, we have 5 levels: group - folder - referencer class - referenced class - feature
-				create level_starting_column_index.make (5)
+				level_starting_column_index.wipe_out
 				level_starting_column_index.extend (1)
 				level_starting_column_index.extend (1)
 				level_starting_column_index.extend (2)
@@ -653,16 +564,16 @@ feature{NONE} -- Grid binding
 				column_level_table.put (3, referenced_class_column)
 				column_level_table.put (4, referencer_class_column)
 				column_level_table.put (5, feature_column)
-				create level_sort_table.make (4)
-				level_sort_table.put (<<1, 2>>, 1)
-				level_sort_table.put (<<3>>, 2)
-				level_sort_table.put (<<4>>, 3)
-				level_sort_table.put (<<5>>, 4)
+				levels_column_table.wipe_out
+				levels_column_table.put ((<<1, 2>>).linear_representation, 1)
+				levels_column_table.put ((<<3>>).linear_representation, 2)
+				levels_column_table.put ((<<4>>).linear_representation, 3)
+				levels_column_table.put ((<<5>>).linear_representation, 4)
 				create post_row_bind_action_table.make (1)
 				post_row_bind_action_table.force (agent ensure_row_expandable, 4)
 			else
 					-- If classes are not categorized in their physical folder, we have 4 levels: group - referencer class - referenced class - feature
-				create level_starting_column_index.make (4)
+				level_starting_column_index.wipe_out
 				level_starting_column_index.extend (1)
 				level_starting_column_index.extend (2)
 				level_starting_column_index.extend (3)
@@ -677,11 +588,11 @@ feature{NONE} -- Grid binding
 				column_level_table.put (2, referenced_class_column)
 				column_level_table.put (3, referencer_class_column)
 				column_level_table.put (4, feature_column)
-				create level_sort_table.make (4)
-				level_sort_table.put (<<1>>, 1)
-				level_sort_table.put (<<2>>, 2)
-				level_sort_table.put (<<3>>, 3)
-				level_sort_table.put (<<4>>, 4)
+				levels_column_table.wipe_out
+				levels_column_table.put ((<<1>>).linear_representation, 1)
+				levels_column_table.put ((<<2>>).linear_representation, 2)
+				levels_column_table.put ((<<3>>).linear_representation, 3)
+				levels_column_table.put ((<<4>>).linear_representation, 4)
 				create post_row_bind_action_table.make (1)
 				post_row_bind_action_table.force (agent ensure_row_expandable, 3)
 			end
@@ -817,11 +728,11 @@ feature{NONE} -- Grid binding
 					-- Sort features.
 				create l_order_list.make
 				l_order_list.extend (feature_column)
-				sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list))
+				sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list), feature_column)
 			else
 					-- If classes are related either by inheritance relationship or only syntactical references
-				a_row_node.data.grid_item.set_trailer_spacing (8)
-				a_row_node.data.grid_item.enable_adhesive_trailer
+				a_row_node.data.grid_item.set_component_spacing (8)
+				a_row_node.data.grid_item.enable_adhesive_component
 				if is_class_inheritance_related (a_referenced_class, a_referencer_class) then
 					if is_displaying_suppliers then
 						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_descendents_icon, interface_names.l_descendant_of, a_row_node.data.grid_item)
@@ -879,7 +790,7 @@ feature{NONE} -- Grid binding
 			l_tooltip.veto_tooltip_display_functions.extend (agent should_tooltip_be_displayed)
 			initialize_editor_token_tooltip (l_tooltip)
 			l_trailer.set_general_tooltip (l_tooltip)
-			a_grid_item.insert_trailer (l_trailer, 1)
+			a_grid_item.insert_component (l_trailer, 1)
 		end
 
 	mark_display is
@@ -1031,7 +942,8 @@ feature{NONE} -- Implementation
 	data_hierarchy: EB_TREE_NODE [QL_ITEM]
 			-- Tree hierarchy representation of `data'
 
-	rows: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW] is
+	-- Comments for rows:
+	-- rows: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW] is
 			-- Rows to be displayed
 			-- It is a tree hierarchy.
 			-- If `categorize_folder_button' is not selected:
@@ -1071,28 +983,6 @@ feature{NONE} -- Implementation
 			--		       +- MY_CLASS1
 			--				   |
 			--		           +- foo		make_from_string, count, as_lower			
-		do
-			if rows_internal = Void then
-				create rows_internal
-			end
-			Result := rows_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	rows_internal: like rows
-			-- Implementation of `rows'
-
-	selected_rows: LIST [EV_GRID_ROW] is
-			-- Selected rows in `grid'.
-			-- If empty, put the first row in `grid' in result.
-		do
-			Result := grid.selected_rows
-			if Result.is_empty and then grid.row_count > 0 then
-				create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (1)
-				Result.extend (grid.row (1))
-			end
-		end
 
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
@@ -1570,7 +1460,7 @@ feature{NONE} -- Implementation
 			inheritance_button.recycle
 			normal_referenced_button.recycle
 			syntactical_button.recycle
-			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
+			Precursor
 		end
 
 	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL is

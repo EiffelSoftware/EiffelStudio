@@ -10,12 +10,12 @@ class
 	EB_CALLERS_FORMATTER
 
 inherit
-	EB_FEATURE_TEXT_FORMATTER
+	EB_FEATURE_CONTENT_FORMATTER
 		rename
 			make as feature_formatter_make
 		redefine
-			feature_cmd,
-			is_dotnet_formatter
+			is_dotnet_formatter,
+			result_data
 		end
 
 	EB_SHARED_PREFERENCES
@@ -135,20 +135,30 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	create_feature_cmd is
-			-- Create `feature_cmd'.
-		require else
-			associated_feature_non_void: associated_feature /= Void
-		do
-			create feature_cmd.make (editor.text_displayed, associated_feature)
-			if preferences.feature_tool_data.show_all_callers then
-				feature_cmd.set_all_callers
-			end
-			feature_cmd.set_flag (flag)
-		end
-
 	has_breakpoints: BOOLEAN is False;
 			-- Should breakpoints be shown in Current?
+
+	result_data: QL_FEATURE_DOMAIN is
+			-- Result for Current formatter
+		local
+			l_worker: E_SHOW_CALLERS
+		do
+			create l_worker.make (Void, associated_feature)
+			l_worker.set_flag (flag)
+			l_worker.set_all_callers (preferences.feature_tool_data.show_all_callers)
+			l_worker.show_callers
+			Result := l_worker.features
+		end
+
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
+		do
+		end
+
+	rebuild_browser is
+			-- Rebuild `browser'.
+		do
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

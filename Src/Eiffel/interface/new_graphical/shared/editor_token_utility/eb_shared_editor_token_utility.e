@@ -18,6 +18,8 @@ inherit
 
 	EB_SHARED_MANAGERS
 
+	EB_EDITOR_TOKEN_IDS
+
 feature -- Editor token
 
 	string_representation_of_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]): STRING is
@@ -238,6 +240,23 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
+feature -- Editor token appearance
+
+	feature_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+			-- Feature appearance
+		once
+			Result := [editor_font_id, feature_text_color_id, feature_background_color_id]
+		ensure
+			result_attached: Result /= Void
+		end
+
+	assertion_tag_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+			-- Assertion tag appearance
+		once
+			Result := [editor_font_id, assertion_tag_text_color_id, assertion_tag_background_color_id]
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

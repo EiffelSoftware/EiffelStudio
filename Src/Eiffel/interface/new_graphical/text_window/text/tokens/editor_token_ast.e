@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a pixmap trailer displayed in a grid editor token item"
+	description: "Editor token that represents an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,80 +7,92 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_EDITOR_TOKEN_PIXMAP_TRAILER
+	EDITOR_TOKEN_AST
 
 inherit
-	ES_GRID_ITEM_COMPONENT
+	EDITOR_TOKEN_TEXT
+		undefine
+			max_color_id
+		redefine
+			text_color_id,
+			background_color_id,
+			font_id,
+			process
+		end
+
+	EB_EDITOR_TOKEN_IDS
 
 create
-	make
+	make,
+	make_with_appearance
 
 feature{NONE} -- Initialization
 
-	make (a_pixmap: like pixmap) is
-			-- Initialize `pixmap' with `a_pixmap'.
-		do
-			set_pixmap (a_pixmap)
-		ensure
-			pixmap_set: pixmap = a_pixmap
-		end
-
-feature -- Access
-
-	pixmap: EV_PIXMAP
-			-- Pixmap associated with Current
-
-	required_width: INTEGER is
-			-- Required width in pixel
-		do
-			Result := pixmap.width
-		ensure then
-			good_result: Result = pixmap.width
-		end
-
-	required_height: INTEGER is
-			-- Required height in pixel
-		do
-			Result := pixmap.height
-		ensure then
-			good_result: Result = pixmap.height
-		end
-
-feature -- Drawing
-
-	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER) is
-			-- Draw current trailer in `a_drawable' starting from (`a_start_x', `a_start_y').
-			-- `a_start_x' and `a_start_y' are 0-based.
-		do
-			a_drawable.draw_pixmap (a_start_x, a_start_y, pixmap)
-		end
-
-feature -- Setting
-
-	set_pixmap (a_pixmap: like pixmap) is
-			-- Set `pixmap' with `a_pixmap'.
+	make_with_appearance (a_text: STRING; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
+			-- Initialize.
 		require
-			a_pixmap_attached: a_pixmap /= Void
+			a_text_attached: a_text /= Void
+			a_appearance_attached: a_appearance /= Void
 		do
-			pixmap := a_pixmap
-		ensure
-			pixmap_set: pixmap = a_pixmap
+			make (a_text)
+			text_font_id_internal := a_appearance.a_font_id
+			text_color_id_internal := a_appearance.a_text_color_id
+			background_color_id_internal := a_appearance.a_background_color_id
+			is_new_appearance_set := True
 		end
 
-feature -- Actions
+feature -- Process
 
-	on_pick (a_x, a_y: INTEGER) is
-			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
+	process (a_visitor: TOKEN_VISITOR) is
+			-- Visitor
 		do
+			a_visitor.process_editor_token_text (Current)
 		end
 
-	on_pick_ended is
-			-- Action to be performed when pick-and-drop process ended
+feature -- Color
+
+	text_color_id: INTEGER is
 		do
+			if is_new_appearance_set then
+				Result := text_color_id_internal
+			else
+				Result := Precursor
+			end
 		end
 
-invariant
-	pixmap_attached: pixmap /= Void
+	background_color_id: INTEGER is
+		do
+			if is_new_appearance_set then
+				Result := background_color_id_internal
+			else
+				Result := Precursor
+			end
+		end
+
+	font_id: INTEGER is
+			-- Font id.
+		do
+			if is_new_appearance_set then
+				Result := text_font_id_internal
+			else
+				Result := Precursor
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	text_font_id_internal: INTEGER
+			-- Font id
+
+	text_color_id_internal: INTEGER
+			-- Text color id
+
+	background_color_id_internal: INTEGER
+			-- Text background color id
+
+	is_new_appearance_set: BOOLEAN;
+			-- Is new appearance set?
+			-- If not, Current editor token will use inherited font, text color and background color.
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -55,12 +55,12 @@ feature{ES_GRID_LIST_ITEM} -- Drawing
 			-- Draw Current component in `a_drawable' starting from (`a_x', `a_y').
 			-- The maximum width and height in pixel for Current is `a_max_width' and `a_max_height' respectively.
 		local
-			l_parent: like parent
+			l_parent: like grid_item
 			l_selected: BOOLEAN
 			l_focused: BOOLEAN
 			l_token_text: like editor_token_text
 		do
-			l_parent := parent
+			l_parent := grid_item
 			l_selected := l_parent.is_selected
 			l_focused := l_parent.parent.has_focus
 			l_token_text := editor_token_text

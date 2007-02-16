@@ -182,11 +182,6 @@ feature -- Actions
 			end
 		end
 
-	on_notify is
-			-- Action to be performed when `update' is called.
-		do
-		end
-
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
 		do

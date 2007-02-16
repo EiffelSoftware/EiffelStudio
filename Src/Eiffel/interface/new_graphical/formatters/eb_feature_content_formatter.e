@@ -50,7 +50,7 @@ feature -- Formatting
 
 feature -- Access
 
-	browser: EB_FEATURE_BROWSER_GRID_VIEW
+	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Browser where information gets displayed
 
 	widget: EV_WIDGET is
@@ -149,13 +149,11 @@ feature{NONE} -- Implementation
 	generate_result is
 			-- Generate result for display
 		local
-			l_domain: QL_FEATURE_DOMAIN
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				browser.set_trace (Void)
-				l_domain ?= system_target_domain.new_domain (domain_generator)
-				browser.update (Void, l_domain)
+				browser.update (Void, result_data)
 			else
 				browser.set_trace (exception_trace)
 				browser.update (Void, Void)
@@ -163,6 +161,12 @@ feature{NONE} -- Implementation
 		rescue
 			l_retried := True
 			retry
+		end
+
+	result_data: QL_FEATURE_DOMAIN is
+			-- Result for Current formatter
+		do
+			Result ?= system_target_domain.new_domain (domain_generator)
 		end
 
 	domain_generator: QL_DOMAIN_GENERATOR is

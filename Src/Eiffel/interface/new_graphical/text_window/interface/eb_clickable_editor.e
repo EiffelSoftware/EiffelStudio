@@ -239,6 +239,17 @@ feature -- Possibly delayed operations
 			end
 		end
 
+	select_region_when_ready (a_start_pos, a_end_pos: INTEGER) is
+			-- Select region between `a_start_pos' and `a_end_pos' when text is fully loaded.
+		do
+			if text_is_fully_loaded then
+				select_region (a_start_pos, a_end_pos)
+				show_selection (True)
+			else
+				after_reading_text_actions.extend (agent select_region_when_ready (a_start_pos, a_end_pos))
+			end
+		end
+
 	scroll_to_end_when_ready is
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded			
@@ -643,7 +654,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	gain_focus is
 			-- Update the editor as it has just gained the focus.
 		do

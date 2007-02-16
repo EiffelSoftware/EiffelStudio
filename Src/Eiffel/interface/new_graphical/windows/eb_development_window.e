@@ -1456,6 +1456,26 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
+	scroll_to_ast (a_ast: AST_EIFFEL; displayed_class: CLASS_I; a_selected: BOOLEAN) is
+			-- Scroll to `a_ast' in `displayed_class'.
+			-- If `a_selected' is True, select region of `a_ast'.
+		local
+			begin_index, offset: INTEGER
+			tmp_text: STRING
+		do
+			begin_index := a_ast.start_position
+			tmp_text := displayed_class.text
+			if tmp_text /= Void then
+				tmp_text := tmp_text.substring (1, begin_index)
+				offset := tmp_text.occurrences('%R')
+				if a_selected then
+					editors_manager.current_editor.select_region_when_ready (begin_index.item - offset, a_ast.end_position - offset + 1)
+				else
+					editors_manager.current_editor.scroll_to_when_ready (begin_index.item - offset)
+				end
+			end
+		end
+
 feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation
 
 	update_save_symbol is

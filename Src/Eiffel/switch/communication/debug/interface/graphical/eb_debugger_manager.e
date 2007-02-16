@@ -704,7 +704,6 @@ feature -- Status setting
 
 		local
 			split: EV_SPLIT_AREA
-			i: INTEGER
 			l_watch_tool: ES_WATCH_TOOL
 			nwt: INTEGER
 			l_unlock: BOOLEAN
@@ -862,7 +861,6 @@ feature -- Status setting
 		require
 			debugger_raised: raised
 		local
-			i: INTEGER
 			split: EV_SPLIT_AREA
 			l_unlock: BOOLEAN
 		do

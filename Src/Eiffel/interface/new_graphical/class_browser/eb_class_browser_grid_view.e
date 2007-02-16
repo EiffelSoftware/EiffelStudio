@@ -345,7 +345,6 @@ feature -- View update
 		do
 			data ?= a_data
 			is_up_to_date := False
-			on_notify
 			update_view
 		end
 
@@ -489,11 +488,6 @@ feature{NONE} -- Actions
 				text.set_font (font)
 				text.refresh_now
 			end
-		end
-
-	on_notify is
-			-- Action to be performed when `update' is called.
-		deferred
 		end
 
 	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is

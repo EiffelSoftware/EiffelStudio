@@ -191,13 +191,6 @@ feature -- Actions
 			do_all_in_items (grid.selected_items, agent collapse_item)
 		end
 
-	on_notify is
-			-- Action to be performed when `update' is called.
-		do
-			feature_name_list.set_text ("")
-			cancel_delayed_update_matches
-		end
-
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
 		do
@@ -391,6 +384,8 @@ feature{NONE} -- Update
 		local
 			l_msg: STRING_32
 		do
+			feature_name_list.set_text ("")
+			cancel_delayed_update_matches
 			if not is_up_to_date then
 				if data /= Void then
 					if is_displaying_class_any then

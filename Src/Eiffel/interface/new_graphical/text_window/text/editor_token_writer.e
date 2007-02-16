@@ -422,6 +422,30 @@ feature -- Text processing
 		do
 		end
 
+	process_ast (a_name: STRING; a_ast: AST_EIFFEL; a_written_class: CLASS_C; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]; a_for_feature_invocation: BOOLEAN) is
+			-- Process `a_ast' from `a_written_class'.
+			-- `a_name' is displayed name for `a_ast'.
+			-- `a_appearance' is new appearance (font, text color and background color) associated with `a_name', if Void, default values will be used.
+			-- If `a_for_feature_invocation' is True, mark stone contained in `a_name' as for feature invocation.
+		require
+			a_name_attached: a_name /= Void
+			a_ast_attached: a_ast /= Void
+			a_written_class_attached: a_written_class /= Void
+		local
+			l_ast_token: EDITOR_TOKEN_AST
+			l_stone: AST_STONE
+		do
+			if a_appearance /= Void then
+				create l_ast_token.make_with_appearance (a_name, a_appearance)
+			else
+				create l_ast_token.make (a_name)
+			end
+			create l_stone.make (a_written_class, a_ast)
+			l_stone.set_is_for_feature_invocation (a_for_feature_invocation)
+			l_ast_token.set_pebble (l_stone)
+			last_line.append_token (l_ast_token)
+		end
+
 	add_new_line is
 			-- Add new line.
 		do

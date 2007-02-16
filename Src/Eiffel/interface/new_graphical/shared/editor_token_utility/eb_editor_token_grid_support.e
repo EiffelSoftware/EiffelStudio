@@ -79,47 +79,49 @@ feature -- Access
 
 feature -- Pick and drop support for grid items
 
-	on_pick_start_from_grid_editor_token_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
 			-- Action performed when pick on `a_item'.
 			-- `a_grid_support' is responsible for managing pick and drop for `a_item'.
 		require
 			a_grid_support_attached: a_grid_support /= Void
 		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_data: like stone_and_index_from_editor_token_item
+			l_item: ES_GRID_PICKABLE_ITEM
 			l_grid: EV_GRID
+			l_stone: STONE
 		do
 			if a_item /= Void and then a_item.is_parented and then not ev_application.ctrl_pressed then
 				l_item ?= a_item
-				if l_item /= Void and then l_item.is_parented then
-					l_data := stone_and_index_from_editor_token_item (l_item)
-					if l_data /= Void then
-						l_grid := l_item.parent
-						a_grid_support.set_last_pebble (l_data.stone)
-						a_grid_support.set_last_picked_item (l_item)
+				if l_item /= Void and then l_item.grid_item.is_parented then
+					l_stone ?= l_item.on_pick
+					if l_stone /= Void then
+						l_grid := l_item.grid_item.parent
+						set_last_picked_item (l_item.grid_item)
+						set_last_pebble (l_stone)
+						a_grid_support.set_last_pebble (l_stone)
 						l_grid.remove_selection
-						l_grid.set_accept_cursor (l_data.stone.stone_cursor)
-						l_grid.set_deny_cursor (l_data.stone.x_stone_cursor)
-						l_item.set_last_picked_token (l_data.index)
-						l_item.redraw
+						l_grid.set_accept_cursor (l_stone.stone_cursor)
+						l_grid.set_deny_cursor (l_stone.x_stone_cursor)
+						l_item.grid_item.redraw
 					end
 				end
 			end
 		end
 
-	on_pick_ended_from_grid_editor_token_item (a_item: EV_GRID_ITEM) is
+	on_pick_ended_from_grid_pickable_item (a_item: EV_GRID_ITEM) is
 			-- Action performed when pick ends
 		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_item: ES_GRID_PICKABLE_ITEM
+			l_grid_item: EV_GRID_ITEM
 		do
 			l_item ?= a_item
 			if l_item /= Void then
-				l_item.set_last_picked_token (0)
-				if l_item.is_parented and then l_item.is_selectable then
-					l_item.enable_select
+				l_item.on_pick_ends
+				l_grid_item := l_item.grid_item
+				if l_grid_item.is_parented and then l_grid_item.is_selectable then
+					l_grid_item.enable_select
 				end
-				if l_item.is_parented then
-					l_item.redraw
+				if l_grid_item.is_parented then
+					l_grid_item.redraw
 				end
 			end
 		end
@@ -212,8 +214,8 @@ feature -- Setting
 			-- actions in `pick_end_actions' will be invoked when pick ends.
 		do
 			Precursor
-			pick_start_actions.extend (agent on_pick_start_from_grid_editor_token_item (?, Current))
-			pick_end_actions.extend (agent on_pick_ended_from_grid_editor_token_item)
+			pick_start_actions.extend (agent on_pick_start_from_grid_pickable_item (?, Current))
+			pick_end_actions.extend (agent on_pick_ended_from_grid_pickable_item)
 		end
 
 feature{NONE} -- Actions

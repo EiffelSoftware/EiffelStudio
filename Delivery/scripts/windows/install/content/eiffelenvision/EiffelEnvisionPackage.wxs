@@ -9,7 +9,278 @@
   -->
   <Fragment>
 
-  </Fragment>
+    <!-- PROPERTIES -->
+    <?ifndef VsName?>
+      <!-- Name of Visual Studio .NET to support -->
+      <?define VsName = "Visual Studio 2005"?>
+    <?endif?>
+    <?ifndef VsVersion?>
+      <!-- Version of Visual Studio .NET to support -->
+      <?define VsVersion = "8.0"?>
+    <?endif?>
+    <?ifndef LangName?>
+       <!-- Eiffel language name in visual studio -->
+      <?define LangName = "Eiffel"?>
+    <?endif?>
+    <Property Id="VSINSTALL">0<RegistrySearch Id="Reg.vs_install" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\$(var.VsVersion)\Setup\VS" Name="ProductDir" Win64="no" Type="directory"/></Property>
+    <!-- END PROPERTIES -->
 
+    <!-- LAUNCH CONDITIONS -->
+    <Condition Message="$(var.VsName) ($(var.VsVersion)) must be installed prior to installing [ProductName]."><![CDATA[INSTALLER or VSINSTALL <> "0"]]></Condition>
+    <!-- END LAUNCH CONDITIONS -->
+    
+    <!-- PACKAGE CONTENT -->
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="Comp.app_icon" Guid="CF78DCF4-D526-45BE-A4AD-C4A67427EDC4" Win64="$(var.IsWin64)">
+        <RegistryKey Id="Reg.uninstall_product" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Root="HKLM"  Action="createAndRemoveOnUninstall">
+          <?ifdef x64?>
+          <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]compiler\studio\spec\win64\bin\ecl.exe,0" KeyPath="yes"/>
+          <?else?>
+          <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]compiler\studio\spec\windows\bin\ecl.exe,0" KeyPath="yes"/>
+          <?endif?>
+        </RegistryKey>
+      </Component>
+      <Directory Id="Dir.bin" Name="Bin">
+        <Component Id="Comp.bin" Guid="425E30B8-6C4D-4D23-B531-DB8C83C39050" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.bin" On="uninstall" Directory="Dir.bin"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.compiler" Name="Compiler">
+        <Component Id="Comp.compiler" Guid="DB24E211-374C-4E3D-AA63-5B3F3CD630CF" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.compiler" On="uninstall" Directory="Dir.compiler"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.documentation" Name="Documentation">
+        <Component Id="Comp.documentation" Guid="D9C50E12-5DAD-4F7B-83C4-38DC599B1454" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.documentation" On="uninstall" Directory="Dir.documentation"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.eiffelpackages" Name="EiffelPackages">
+        <Component Id="Comp.eiffelpackages" Guid="12E717BB-DFB6-4F50-8C11-CD2FDE6F61EA" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.eiffelpackages" On="uninstall" Directory="Dir.eiffelpackages"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.eiffelprojectitems" Name="EiffelProjectItems">
+        <Component Id="Comp.eiffelprojectitems" Guid="C0D929A7-9551-4F75-B079-CC709A2FAFC1" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.eiffelprojectitems" On="uninstall" Directory="Dir.eiffelprojectitems"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.eiffelprojects" Name="EiffelProjects">
+        <Component Id="Comp.eiffelprojects" Guid="C4E6AC7C-43A6-4B5E-B05E-CF4DCFAEDF56" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.eiffelprojects" On="uninstall" Directory="Dir.eiffelprojects"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.snippets" Name="Snippets">
+        <Component Id="Comp.snippets" Guid="B3B2CB86-B2F1-481A-AE4C-9A92AD704F72" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.snippets" On="uninstall" Directory="Dir.snippets"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.examples" Name="Examples">
+        <Component Id="Comp.examples" Guid="CE2A79B0-239C-4B7F-A0A2-2F06E0B68F63" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.examples" On="uninstall" Directory="Dir.examples"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.libraries" Name="Libraries">
+        <Component Id="Comp.libraries" Guid="D945D360-AA72-44A9-8592-E2283A0C103E" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.libraries" On="uninstall" Directory="Dir.libraries"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.schema" Name="Schema">
+        <Component Id="Comp.schema" Guid="2697811E-23BE-481B-96FF-94FCF5648818" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.schema" On="uninstall" Directory="Dir.schema"/>
+        </Component>
+      </Directory>
+      <Directory Id="Dir.specifications" Name="Specifications">
+        <Component Id="Comp.specifications" Guid="8DF79E1E-B2A7-4AF0-B110-57232E22BFAF" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="Dir.specifications" On="uninstall" Directory="Dir.specifications"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="PersonalFolder" Name=".">
+        <Directory Id="Dir.user" Name="$(var.VsName)" >
+          
+          <!-- Code Snippets -->
+          <Directory Id="Dir.user.code_snippets" Name="Code Snippets">
+            <Directory Id="USERCODESNIPPETS" Name="$(var.LangName)">
+              <Component Id="Comp.user.code_snippets.eiffel" Guid="3C60E71D-A584-43AC-8C7B-F49690A192E0" Win64="$(var.IsWin64)">
+                <CreateFolder/>
+                <RemoveFolder Id="USERCODESNIPPETS" On="uninstall" Directory="USERCODESNIPPETS"/>
+                <RemoveFolder Id="Dir.user.code_snippets" On="uninstall" Directory="Dir.user.code_snippets"/>
+                <RemoveFolder Id="Dir.user" On="uninstall" Directory="Dir.user"/>
+                <RegistryKey Id="Reg.user.code_snippets" Key="Software\ISE\EiffelEnvision28" Root="HKCU"  Action="createAndRemoveOnUninstall">
+                  <RegistryValue Id="RegVal.user.code_snippets" Name="CodeSnippetsDir" Value="[USERCODESNIPPETS]" Type="string" KeyPath="yes"/>
+                </RegistryKey>
+              </Component>
+            </Directory>
+          </Directory>
+
+          <!-- Templates -->
+          <Directory Id="Dir.user.templates" Name="Templates">
+
+            <!-- ItemTemplates -->
+            <Directory Id="Dir.user.templates.item" Name="ItemTemplates">
+              <Directory Id="USERITEMTEMPLATES" Name="$(var.LangName)">
+                <Component Id="Comp.user.templates.item.eiffel" Guid="BEC152E6-CCE0-4F49-A6DD-7A74DA24B18B" Win64="$(var.IsWin64)">
+                  <CreateFolder/>
+                  <RemoveFolder Id="USERITEMTEMPLATES" On="uninstall" Directory="USERITEMTEMPLATES"/>
+                  <RemoveFolder Id="Dir.user.templates.item" On="uninstall" Directory="Dir.user.templates.item"/>
+                  <RemoveFolder Id="Dir.user.templates" On="uninstall" Directory="Dir.user.templates"/>
+                  <RegistryKey Id="Reg.user.templates.item" Key="Software\ISE\EiffelEnvision28" Root="HKCU"  Action="createAndRemoveOnUninstall">
+                    <RegistryValue Id="RegVal.user.templates.item" Name="CodeSnippetsDir" Value="[USERITEMTEMPLATES]" Type="string" KeyPath="yes"/>
+                  </RegistryKey>
+                </Component>
+              </Directory>
+            </Directory>
+            
+            <!-- ProjectTemplates -->
+            <Directory Id="Dir.user.templates.project" Name="ProjectTemplates">
+              <Directory Id="USERPROJECTTEMPLATES" Name="$(var.LangName)">
+                <Component Id="Comp.user.templates.project.eiffel" Guid="BB9FDEC8-256F-4392-9BAC-E323D536B2BF" Win64="$(var.IsWin64)">
+                  <CreateFolder/>
+                  <RemoveFolder Id="USERPROJECTTEMPLATES" On="uninstall" Directory="USERPROJECTTEMPLATES"/>
+                  <RemoveFolder Id="Dir.user.templates.project" On="uninstall" Directory="Dir.user.templates.project"/>
+                  <RegistryKey Id="Reg.user.templates.project" Key="Software\ISE\EiffelEnvision28" Root="HKCU"  Action="createAndRemoveOnUninstall">
+                    <RegistryValue Id="RegVal.user.templates.project" Name="CodeSnippetsDir" Value="[USERPROJECTTEMPLATES]" Type="string" KeyPath="yes"/>
+                  </RegistryKey>
+                </Component>
+              </Directory>
+            </Directory>
+            
+          </Directory>
+        </Directory>       
+      </Directory>
+    </DirectoryRef>
+    <!-- END PACKAGE CONTENT -->
+
+
+    <!-- COMPONENT GROUPS -->
+    <ComponentGroup Id="CompGrp.dir.bin">
+      <!-- Group for package/Eiffel tools -->
+      <ComponentRef Id="Comp.bin" />
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.compiler">
+      <!-- Group for compiler -->
+      <ComponentRef Id="Comp.compiler"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.package">
+      <!-- Group for EiffelEnvision package -->
+      <ComponentRef Id="Comp.eiffelpackages"/>
+      <ComponentRef Id="Comp.eiffelprojectitems"/>
+      <ComponentRef Id="Comp.eiffelprojects"/>
+      <ComponentRef Id="Comp.snippets"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.libraries">
+      <!-- Group for EiffelEnvision libraries -->
+      <ComponentRef Id="Comp.libraries"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.documentation">
+      <!-- Group for documentation -->
+      <ComponentRef Id="Comp.documentation"/>
+      <ComponentRef Id="Comp.schema"/>
+      <ComponentRef Id="Comp.specifications"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.examples">
+      <!-- Group for examples -->
+      <ComponentRef Id="Comp.examples"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CompGrp.dir.user">
+      <!-- Group for user information -->
+      <ComponentRef Id="Comp.user.code_snippets.eiffel"/>
+      <ComponentRef Id="Comp.user.templates.item.eiffel"/>
+      <ComponentRef Id="Comp.user.templates.project.eiffel"/>
+    </ComponentGroup>
+    <!-- END COMPONENT GROUPS -->
+    
+    <!-- FEATURES -->
+    <FeatureRef Id="Feat.root">
+      <ComponentRef Id="Comp.app_icon" />
+      <ComponentGroupRef Id="CompGrp.dir.user"/>   
+      <Feature Id="Feat.bin" Title="Additional Tools" Description="Additional tools and utilities to use in conjuntion with EiffelEnvision and the Eiffel for .NET compiler." Level="1" Absent="allow">
+        <ComponentGroupRef Id="CompGrp.dir.bin"/>
+        <ComponentGroupRef Id="CompGrp.bin"/>
+      </Feature>
+      <Feature Id="Feat.compiler" Title="Eiffel for .NET Compiler" Description="The Eiffel for .NET compiler and other compiler components." Level="1" Absent="disallow">
+        <ComponentGroupRef Id="CompGrp.dir.compiler"/>
+        <ComponentGroupRef Id="CompGrp.comp"/>
+        <ComponentGroupRef Id="CompGrp.compspec"/>
+      </Feature>
+      <Feature Id="Feat.package" Title="EiffelEnvision Core" Description="The core components used to plug [ProductName] into $(var.VsName)." Level="1" Absent="disallow">
+        <ComponentGroupRef Id="CompGrp.dir.package"/>
+        <ComponentGroupRef Id="CompGrp.eiffelpackages"/>
+        <ComponentGroupRef Id="CompGrp.eiffelprojectitems"/>
+        <ComponentGroupRef Id="CompGrp.eiffelprojects"/>
+        <ComponentGroupRef Id="CompGrp.snippets"/>
+        <Feature Id="Feat.package.library" Title="Libraries" Description="Library configuration files for quick reuse of source code libraries" Level="1" Absent="disallow">
+          <ComponentGroupRef Id="CompGrp.dir.libraries"/>
+          <ComponentGroupRef Id="CompGrp.libraries"/>
+        </Feature>
+        <Feature Id="Feat.package.msbuild" Title="MsBuild Integration" Description="The core components used to extend MsBuild to support compiling Eiffel for .NET projects" Level="1" Absent="disallow">
+        </Feature>
+      </Feature>
+      <Feature Id="Feat.documentation" Title="Documentation" Description="Documentation for [ProductName] and any installed tools" Level="1" Absent="allow">
+        <ComponentGroupRef Id="CompGrp.dir.documentation"/>
+        <ComponentGroupRef Id="CompGrp.documentation"/>
+        <ComponentGroupRef Id="CompGrp.schema"/>
+        <ComponentGroupRef Id="CompGrp.specifications"/>
+      </Feature>
+      <Feature Id="Feat.examples" Title="Examples" Description="Examples and How Tos to get you start with developing in Eiffel for .NET" Level="1" Absent="allow">
+        <ComponentGroupRef Id="CompGrp.dir.examples"/>
+        <ComponentGroupRef Id="CompGrp.examples"/>
+      </Feature>
+      </FeatureRef>
+    <!-- END FEATURES -->
+
+    <!-- CUSTOM ACTIONS -->
+    <CustomAction Id="SET_VSINSTALLDIR" Property="INSTALLDIR" Value="[VSINSTALL]$(var.LangName)"/>
+    <!-- END CUSTOM ACTIONS -->
+
+    <!-- UI SEQUENCING -->
+    <AdminUISequence>
+      <Custom Action="SET_VSINSTALLDIR" After="LaunchConditions"><![CDATA[NOT Installed]]></Custom>
+      <?ifdef Enterprise?>
+        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
+      <?endif?>
+    </AdminUISequence>
+    <InstallUISequence>
+      <Custom Action="SET_VSINSTALLDIR" After="LaunchConditions"><![CDATA[NOT Installed]]></Custom>
+      <?ifdef Enterprise?>
+        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
+      <?endif?>
+    </InstallUISequence>
+    <!-- END UI SEQUENCING -->
+
+    <!-- INSTALL SEQUENCING -->
+    <AdminExecuteSequence>
+      <?ifdef Enterprise?>
+        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
+      <?endif?>
+    </AdminExecuteSequence>
+    <InstallExecuteSequence>
+      <?ifdef Enterprise?>
+        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
+      <?endif?>
+    </InstallExecuteSequence>
+    <!-- END INSTALL SEQUENCING -->
+    
+  </Fragment>
   <?endif?>
 </Wix>

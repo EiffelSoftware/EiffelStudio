@@ -1234,24 +1234,27 @@ feature{NONE} -- Implementation
 			-- Setup debug tools accelerators.
 		local
 			l_acc: EV_ACCELERATOR
+			dbg_manager: EB_DEBUGGER_MANAGER
+			win: EB_VISION_WINDOW
 		do
+			dbg_manager := develop_window.eb_debugger_manager
+			win := develop_window.window
+
+				-- Call stack tool
+			l_acc := dbg_manager.show_call_stack_tool_accelerator
+			win.accelerators.extend (l_acc)
+
 				-- Object tool
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_j), True, True, False)
-			l_acc.actions.extend (agent (develop_window.eb_debugger_manager).show_object_tool)
-
-			develop_window.window.accelerators.extend (l_acc)
-
-				-- Watch tool
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_h), True, True, False)
-
-			l_acc.actions.extend (agent (develop_window.eb_debugger_manager).show_a_hidden_watch_tool)
-			develop_window.window.accelerators.extend (l_acc)
+			l_acc := dbg_manager.show_objects_tool_accelerator
+			win.accelerators.extend (l_acc)
 
 				-- Thread tool
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_p), True, True, False)
+			l_acc := dbg_manager.show_thread_tool_accelerator
+			win.accelerators.extend (l_acc)
 
-			l_acc.actions.extend (agent (develop_window.eb_debugger_manager).show_thread_tool)
-			develop_window.window.accelerators.extend (l_acc)
+				-- Watch tool
+			l_acc := dbg_manager.show_new_or_hidden_watch_tool_accelerator
+			win.accelerators.extend (l_acc)
 		end
 
 	setup_focus_editor_accelerators is

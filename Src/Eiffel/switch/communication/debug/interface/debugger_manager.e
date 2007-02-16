@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			create application_prelaunching_actions
 			create debugger_data.make
 			create controller.make (Current)
+			create dump_value_factory.make (Current)
 			create observers.make (3)
 			create implementation.make (Current)
 		end
@@ -140,13 +141,6 @@ feature -- Change
 		require
 			s /= Void
 		do
-		end
-
-feature -- Dump value factory
-
-	Dump_value_factory: DUMP_VALUE_FACTORY is
-		once
-			create Result.make (Current)
 		end
 
 feature -- Debug info access
@@ -374,6 +368,11 @@ feature -- Properties
 
 	controller: DEBUGGER_CONTROLLER
 			-- Debugger controller for run, resume ...
+
+	dump_value_factory: DUMP_VALUE_FACTORY
+			-- Dump value factory
+
+feature -- Status
 
 	can_debug: BOOLEAN
 			-- Is debugging allowed?

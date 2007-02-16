@@ -13,7 +13,10 @@ inherit
 		redefine
 			make,
 			draw_pixmap_text_selected,
-			draw_pixmap_text_unselected
+			draw_pixmap_text_unselected,
+			expose_selected,
+			expose_unselected,
+			expose_hot
 		end
 
 	EV_BUTTON_IMP
@@ -75,6 +78,7 @@ feature -- Commands
 	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Redefine
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, False)
 		end
 
@@ -88,6 +92,7 @@ feature -- Commands
 			l_bitmap: WEL_BITMAP
 			l_bitmap_dc: WEL_MEMORY_DC
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			start_draw
 
 			l_pixmap_imp ?= buffer_pixmap.implementation
@@ -115,6 +120,7 @@ feature -- Commands
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
 			-- Redefine
 		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, True)
 		end
 
@@ -473,12 +479,12 @@ feature{NONE} -- Implementation
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
+				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text, text_clipping_width (a_width))
 			else
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
 				-- Draw text
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, start_y_position_bottom, text)
+				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_bottom, text, text_clipping_width (a_width))
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)

@@ -1399,11 +1399,11 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			class_is_not_void: displayed_class /= Void
 			feat_as_is_not_void: feat_as /= Void
 		local
-			begin_index, offset: INTEGER
-			tmp_text: STRING
+			begin_index: INTEGER
 			l_feat_as: FEATURE_AS
 			l_feature: E_FEATURE
 			l_names: EIFFEL_LIST [FEATURE_NAME]
+			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
 		do
 			if not feat_as.is_il_external then
 				if not managed_main_formatters.first.selected then
@@ -1442,12 +1442,8 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 								-- We simply take the position of the first one.
 							begin_index := l_names.start_position
 						end
-						tmp_text := displayed_class.text
-						if tmp_text /= Void then
-							tmp_text := tmp_text.substring (1, begin_index)
-							offset := tmp_text.occurrences('%R')
-							editors_manager.current_editor.scroll_to_when_ready (begin_index.item - offset)
-						end
+						offset := relative_location_offset ([begin_index, 0], displayed_class)
+						editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
 					end
 				end
 			else
@@ -1460,20 +1456,49 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			-- Scroll to `a_ast' in `displayed_class'.
 			-- If `a_selected' is True, select region of `a_ast'.
 		local
-			begin_index, offset: INTEGER
-			tmp_text: STRING
+			begin_index: INTEGER
+			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
 		do
 			begin_index := a_ast.start_position
-			tmp_text := displayed_class.text
-			if tmp_text /= Void then
-				tmp_text := tmp_text.substring (1, begin_index)
-				offset := tmp_text.occurrences('%R')
-				if a_selected then
-					editors_manager.current_editor.select_region_when_ready (begin_index - offset, a_ast.end_position - offset + 1)
-				else
-					editors_manager.current_editor.scroll_to_when_ready (begin_index - offset)
-				end
+			offset := relative_location_offset ([begin_index, a_ast.end_position], displayed_class)
+
+			if a_selected then
+				editors_manager.current_editor.select_region_when_ready (begin_index - offset.start_offset, a_ast.end_position - offset.end_offset + 1)
+			else
+				editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
 			end
+		end
+
+	relative_location_offset (a_location: TUPLE [a_start_pos: INTEGER; a_end_pos: INTEGER]; a_displayed_class: CLASS_I): TUPLE [related_start_pos: INTEGER; related_end_pos: INTEGER] is
+			-- Relative editor location offset (the number of all '%R' removed) of `a_location' in context of `a_displayed_class'
+		require
+			a_location_attached: a_location /= Void
+			a_displayed_class_attached: a_displayed_class /= Void
+		local
+			class_text: STRING
+			tmp_text: STRING
+			begin_offset: INTEGER
+			end_offset: INTEGER
+			a_start_pos, a_end_pos: INTEGER
+		do
+			a_start_pos := a_location.a_start_pos
+			a_end_pos := a_location.a_end_pos
+
+			class_text := a_displayed_class.text
+			if class_text /= Void then
+				tmp_text := class_text.substring (1, a_start_pos)
+				begin_offset := tmp_text.occurrences('%R')
+
+				if a_start_pos >= a_end_pos then
+					tmp_text := class_text.substring (a_start_pos + 1, a_end_pos)
+					end_offset := tmp_text.occurrences ('%R')
+				end
+				Result := [begin_offset, begin_offset + end_offset]
+			else
+				Result := [0, 0]
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation

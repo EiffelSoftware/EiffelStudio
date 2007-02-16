@@ -3,7 +3,7 @@
 	<Fragment>
     <UI Id="UI.dialog_exit_success">
       <Dialog Id="DialogUserExit" Width="375" Height="220" Title="[ProductName]">
-        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_info.bmp" />
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_error.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="45" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont][ProductName] Installation Was Interrupted</Text>
         </Control>

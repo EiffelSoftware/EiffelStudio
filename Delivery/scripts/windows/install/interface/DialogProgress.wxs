@@ -13,7 +13,7 @@
 				<Control Id="ActionText" Type="Text" X="70" Y="107" Width="265" Height="10" Transparent="yes" NoPrefix="yes">
 					<Subscribe Event="ActionText" Attribute="Text" />
 				</Control>
-				<Control Id="ProgressBar" Type="ProgressBar" X="35" Y="122" Width="300" Height="22" ProgressBlocks="yes" Text="Progress done">
+				<Control Id="ProgressBar" Type="ProgressBar" X="35" Y="122" Width="300" Height="18" ProgressBlocks="yes" Text="Progress done">
 					<Subscribe Event="SetProgress" Attribute="Progress" />
 				</Control>
 				<Control Id="StatusLabel" Type="Text" X="35" Y="107" Width="35" Height="10" Text="Status:" Transparent="yes" NoPrefix="yes"/>

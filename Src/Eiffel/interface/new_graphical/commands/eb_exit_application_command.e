@@ -93,6 +93,7 @@ feature {NONE} -- Callbacks
 
 	exit_application is
 			-- Exit the application
+			-- This application means Eiffel Studio.
 		local
 			l_err_dlg: EV_ERROR_DIALOG
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
@@ -106,7 +107,7 @@ feature {NONE} -- Callbacks
 				Debugger_manager.application.kill
 			end
 			if Eb_debugger_manager.debug_mode_forced then
-				Eb_debugger_manager.unforce_debug_mode
+				Eb_debugger_manager.save_debug_docking_layout
 			end
 
 				-- If we are going to kill the application, we'd better warn project observers that the project will

@@ -54,8 +54,8 @@ feature -- Command
 			end
 				--| Debugging tools menu
 			develop_window.menus.set_debugging_tools_menu (develop_window.Eb_debugger_manager.new_debugging_tools_menu)
-			develop_window.menus.debug_menu.extend (create {EV_MENU_SEPARATOR})
-			develop_window.menus.debug_menu.extend (develop_window.menus.debugging_tools_menu)
+			develop_window.menus.debug_menu.put_front (create {EV_MENU_SEPARATOR})
+			develop_window.menus.debug_menu.put_front (develop_window.menus.debugging_tools_menu)
 			develop_window.menus.update_debug_menu
 		end
 

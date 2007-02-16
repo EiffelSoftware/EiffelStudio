@@ -60,15 +60,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_manager: like develop_window; a_title: like title; a_title_for_pre: like title_for_pre) is
+	make_with_title (a_manager: like develop_window; a_watch_id: INTEGER; a_title: like title; a_title_for_pre: like title_for_pre) is
 		do
+			watch_id := a_watch_id
 			if a_title = Void or else a_title.is_empty then
-				set_title (interface_names.t_Watch_tool)
-				set_title_for_pre (interface_names.to_Watch_tool)
+				set_title (interface_names.t_Watch_tool + " #" + watch_id.out)
 			else
 				set_title (a_title)
+			end
+			if a_title_for_pre = Void or else a_title_for_pre.is_empty then
+				set_title_for_pre (interface_names.to_Watch_tool + watch_id.out)
+			else
 				set_title_for_pre (a_title_for_pre)
 			end
+
 			auto_expression_enabled := False
 			make (a_manager)
 		end
@@ -80,7 +85,7 @@ feature {NONE} -- Initialization
 		do
 			create watched_items.make (10)
 
-			create esgrid.make_with_name (title, "watches")
+			create esgrid.make_with_name (title, "watches" + watch_id.out)
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
 			esgrid.set_default_columns_layout (<<
@@ -215,18 +220,21 @@ feature {NONE} -- Initialization
 			content.drop_actions.extend (agent on_element_drop)
 		end
 
+feature -- Properties
+
+	watch_id: INTEGER
+			-- Watch's identifier
+
 feature {EB_DEBUGGER_MANAGER} -- Closing
 
 	close is
 		do
-				-- We keep at least one watch tool.
-			if eb_debugger_manager.watch_tool_list.count > 1 then
-				Precursor
-				recycle
-				eb_debugger_manager.watch_tool_list.prune_all (Current)
-				eb_debugger_manager.assgin_watch_tool_unique_titles
-				content.close
-			end
+			Precursor
+			recycle
+			content.close
+			eb_debugger_manager.watch_tool_list.prune_all (Current)
+			eb_debugger_manager.assign_watch_tool_unique_titles
+			eb_debugger_manager.update_all_debugging_tools_menu
 		end
 
 feature -- Access
@@ -249,7 +257,11 @@ feature -- Access
 	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
-			Result := interface_names.m_Watch_tool
+			if title /= Void then
+				Result := title
+			else
+				Result := interface_names.m_Watch_tool
+			end
 		end
 
 	pixmap: EV_PIXMAP is

@@ -16,7 +16,8 @@ inherit
 			pixmap,
 			mini_toolbar,
 			build_mini_toolbar,
-			show
+			show,
+			close
 		end
 
 	EB_RECYCLABLE
@@ -374,6 +375,12 @@ feature -- Status setting
 			if stack_grid.is_sensitive then
 				stack_grid.set_focus
 			end
+		end
+
+	close is
+		do
+			Precursor
+			eb_debugger_manager.update_all_debugging_tools_menu
 		end
 
 feature -- Memory management

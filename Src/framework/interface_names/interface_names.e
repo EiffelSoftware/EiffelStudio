@@ -1406,6 +1406,7 @@ feature -- Label text, no translation (for the editor)
 	le_New_breakpoint: STRING is			"New breakpoint(s) to commit"
 	le_Stepped: STRING is				"Step completed"
 	le_Unknown_status: STRING is			"Unknown application status"
+	le_versions: STRING is 				"versions"
 
 feature -- Stone names
 

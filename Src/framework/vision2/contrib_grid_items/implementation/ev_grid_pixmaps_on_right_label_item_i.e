@@ -300,9 +300,7 @@ feature {NONE} -- Implementation
 	draw_pixmaps_on_right (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_spacing: INTEGER) is
 			-- Draw check box on `a_drawable'
 		local
-			l_coord: EV_COORDINATE
-			l_start_x, l_start_y: INTEGER
-			lw: INTEGER
+			l_start_x: INTEGER
 			i: INTEGER
 			pixs: like pixmaps_on_right
 			p: EV_PIXMAP

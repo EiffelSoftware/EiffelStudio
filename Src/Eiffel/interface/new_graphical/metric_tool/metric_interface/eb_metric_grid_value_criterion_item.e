@@ -113,7 +113,7 @@ feature{NONE} -- Implementation
 			expression_generator.generate_output (l_tester)
 			l_tokens.append (editor_token_output.generated_output)
 			if is_for_archive then
-				append_new_item (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
+				append_component (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
 			else
 					-- Prepare metric part
 				l_writer.new_line
@@ -130,11 +130,11 @@ feature{NONE} -- Implementation
 					l_writer.add (ti_comma)
 				end
 				l_tokens.append (l_writer.last_line.content)
-				append_new_item (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
+				append_component (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
 
 					-- Prepare input domain part.
 				if not domain.is_empty then
-					components_for_domain.do_all (agent append_new_item)
+					components_for_domain.do_all (agent append_component)
 				end
 			end
 		end

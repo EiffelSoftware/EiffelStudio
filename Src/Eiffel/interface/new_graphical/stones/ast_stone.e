@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a pixmap trailer displayed in a grid editor token item"
+	description: "Stone that represents an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,80 +7,58 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_EDITOR_TOKEN_PIXMAP_TRAILER
+	AST_STONE
 
 inherit
-	ES_GRID_ITEM_COMPONENT
+	CLASSC_STONE
+		rename
+			make as make_class_c
+		end
 
 create
 	make
 
 feature{NONE} -- Initialization
 
-	make (a_pixmap: like pixmap) is
-			-- Initialize `pixmap' with `a_pixmap'.
+	make (a_class_c: like e_class; a_ast: like ast) is
+			-- Initialize `e_class' with `a_class_c' and `ast' with `a_ast'.
+		require
+			a_class_c_attached: a_class_c /= Void
+			a_ast_attached: a_ast /= Void
 		do
-			set_pixmap (a_pixmap)
-		ensure
-			pixmap_set: pixmap = a_pixmap
+			make_class_c (a_class_c)
+			set_ast (a_ast)
 		end
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
-			-- Pixmap associated with Current
+	ast: AST_EIFFEL
+			-- AST node associated with Current stone
 
-	required_width: INTEGER is
-			-- Required width in pixel
-		do
-			Result := pixmap.width
-		ensure then
-			good_result: Result = pixmap.width
-		end
+feature -- Status report
 
-	required_height: INTEGER is
-			-- Required height in pixel
-		do
-			Result := pixmap.height
-		ensure then
-			good_result: Result = pixmap.height
-		end
-
-feature -- Drawing
-
-	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER) is
-			-- Draw current trailer in `a_drawable' starting from (`a_start_x', `a_start_y').
-			-- `a_start_x' and `a_start_y' are 0-based.
-		do
-			a_drawable.draw_pixmap (a_start_x, a_start_y, pixmap)
-		end
+	is_for_feature_invocation: BOOLEAN
+			-- Is Current a feature invocation stone?
 
 feature -- Setting
 
-	set_pixmap (a_pixmap: like pixmap) is
-			-- Set `pixmap' with `a_pixmap'.
+	set_ast (a_ast: like ast) is
+			-- Set `ast' with `a_ast'.
 		require
-			a_pixmap_attached: a_pixmap /= Void
+			a_ast_attached: a_ast /= Void
 		do
-			pixmap := a_pixmap
+			ast := a_ast
 		ensure
-			pixmap_set: pixmap = a_pixmap
+			ast_set: ast = a_ast
 		end
 
-feature -- Actions
-
-	on_pick (a_x, a_y: INTEGER) is
-			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
+	set_is_for_feature_invocation (b: BOOLEAN) is
+			-- Set `is_for_feature_invocation' with `b'.
 		do
+			is_for_feature_invocation := b
+		ensure
+			is_for_feature_invocation_set: is_for_feature_invocation = b
 		end
-
-	on_pick_ended is
-			-- Action to be performed when pick-and-drop process ended
-		do
-		end
-
-invariant
-	pixmap_attached: pixmap /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -18,6 +18,8 @@ inherit
 
 	EB_SHARED_FORMAT_TABLES
 
+	EB_EDITOR_TOKEN_IDS
+
 create
 	default_create,
 	make_with_feature,
@@ -372,16 +374,23 @@ feature{NONE} -- Implementation
 		require
 			a_writer_attached: a_writer /= Void
 			class_c_attached: class_c /= Void
+		local
+			l_inv: INVARIANT_AS
 		do
 			if is_overload_name_used and then overload_name /= Void then
 				if is_for_invariant then
 					a_writer.add_string (overload_name)
 				else
-					a_writer.process_feature_text (overload_name, e_feature, False)
+					a_writer.process_feature_text (overload_name, e_feature, True)
 				end
 			else
 				if is_for_invariant then
-					a_writer.add_string (invariant_name)
+					l_inv := written_class.invariant_ast
+					if l_inv /= Void then
+						a_writer.process_ast (invariant_name, l_inv, written_class, feature_appearance, False)
+					else
+						a_writer.add_string (invariant_name)
+					end
 				else
 					e_feature.append_full_name (a_writer)
 				end

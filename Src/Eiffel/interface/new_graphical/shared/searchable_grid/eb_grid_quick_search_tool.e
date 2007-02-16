@@ -330,7 +330,7 @@ feature{NONE} -- Actions
 					end
 				end
 
-				if not l_done and then l_component.is_direct_start_search_enabled then
+				if not l_done and then (not ev_application.ctrl_pressed) and then l_component.is_direct_start_search_enabled then
 					l_key_str := a_key.out
 					if l_key_str.count = 1 then
 						if ev_application.shift_pressed then

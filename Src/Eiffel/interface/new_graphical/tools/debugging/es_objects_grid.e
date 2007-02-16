@@ -22,7 +22,7 @@ inherit
 
 	EB_EDITOR_TOKEN_GRID_SUPPORT
 		rename
-			on_pick_start_from_grid_editor_token_item as on_pebble_function
+			on_pick_start_from_grid_pickable_item as on_pebble_function
 		undefine
 			default_create, copy
 		redefine

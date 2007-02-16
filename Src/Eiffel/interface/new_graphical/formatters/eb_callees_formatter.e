@@ -10,16 +10,34 @@ class
 	EB_CALLEES_FORMATTER
 
 inherit
-	EB_CALLERS_FORMATTER
+	EB_FEATURE_CONTENT_FORMATTER
+		rename
+			make as feature_formatter_make
 		redefine
-			create_feature_cmd,
-			symbol,
-			menu_name,
-			command_name
+			is_dotnet_formatter,
+			result_data,
+			browser
 		end
+
+	EB_SHARED_PREFERENCES
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_manager: like manager; a_flag: INTEGER_8) is
+			-- Create callers formatter associated with `a_manager' and which only
+			-- look for `a_flag' type callers.
+		require
+			a_manager_not_void: a_manager /= Void
+		do
+			flag := a_flag
+			feature_formatter_make (a_manager)
+		ensure
+			manager_set: manager = a_manager
+			flag_set: flag = a_flag
+		end
 
 feature -- Access
 
@@ -72,19 +90,75 @@ feature -- Access
 			Result := interface_names.string_general_as_lower (Result)
 		end
 
+	post_fix: STRING is
+			-- String symbol of the command, used as an extension when saving.
+		do
+			inspect flag
+			when {DEPEND_UNIT}.is_in_assignment_flag then
+				Result := "ass"
+			when {DEPEND_UNIT}.is_in_creation_flag then
+				Result := "cre"
+			else
+				Result := "cal"
+			end
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representation of the command.
+		once
+			inspect
+				flag
+			when {DEPEND_UNIT}.is_in_assignment_flag then
+				Result := pixmaps.icon_pixmaps.feature_assignees_icon_buffer
+			when {DEPEND_UNIT}.is_in_creation_flag then
+				Result := pixmaps.icon_pixmaps.feature_creaters_icon_buffer
+			else
+				Result := pixmaps.icon_pixmaps.feature_callees_icon_buffer
+			end
+		end
+
+	flag: INTEGER_8
+ 			-- Flag for type of callers.
+
+ 	browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
+ 			-- Browser
+
+feature -- Status report
+
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET XML types?
+		do
+			Result := True
+		end
+
+	has_breakpoints: BOOLEAN is False;
+			-- Should breakpoints be shown in Current?
+
 feature{NONE} -- Implementation
 
-	create_feature_cmd is
-			-- Create `feature_cmd'.
-		require else
-			associated_feature_non_void: associated_feature /= Void
+	internal_symbol: like symbol
+			-- Once per object storage for `symbol.
+
+	result_data: QL_FEATURE_DOMAIN is
+			-- Result for Current formatter
+		local
+			l_worker: E_SHOW_CALLERS
 		do
-			create feature_cmd.make (editor.text_displayed, associated_feature)
-			if preferences.feature_tool_data.show_all_callers then
-				feature_cmd.set_all_callers
-			end
-			feature_cmd.set_flag (flag)
-			feature_cmd.show_callees
+			create l_worker.make (Void, associated_feature)
+			l_worker.set_flag (flag)
+			l_worker.set_all_callers (preferences.feature_tool_data.show_all_callers)
+			l_worker.show_callees
+			Result := l_worker.features
+		end
+
+	criterion: QL_CRITERION is
+			-- Criterion of current formatter
+		do
+		end
+
+	rebuild_browser is
+			-- Rebuild `browser'.
+		do
 		end
 
 indexing

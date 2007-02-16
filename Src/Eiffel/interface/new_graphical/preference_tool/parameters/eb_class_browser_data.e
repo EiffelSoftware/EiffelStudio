@@ -144,6 +144,17 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := expand_categorized_folder_level_preference.value
 		end
 
+	caller_sorting_order: STRING is
+			-- Caller sorting order status
+		do
+			Result := caller_sorting_order_preference.value
+		end
+
+	callee_sorting_order: STRING is
+			-- Caller sorting order status
+		do
+			Result := callee_sorting_order_preference.value
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -166,6 +177,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	normal_referenced_class_preference: BOOLEAN_PREFERENCE
 	folder_search_recursive_preference: BOOLEAN_PREFERENCE
 	expand_categorized_folder_level_preference: BOOLEAN_PREFERENCE
+	caller_sorting_order_preference: STRING_PREFERENCE
+	callee_sorting_order_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -188,6 +201,8 @@ feature {NONE} -- Preference Strings
 	normal_referenced_class_string: STRING is "tools.class_browser.normal_referenced_classes"
 	folder_search_recursive_string: STRING is "tools.class_browser.folder_search_recursive"
 	expand_categorized_folder_level_string: STRING is "tools.class_browser.expand_categorized_folder_level"
+	caller_sorting_order_string: STRING is "tools.class_browser.caller_sorting_order"
+	callee_sorting_order_string: STRING is "tools.class_browser.callee_sorting_order"
 
 feature {NONE} -- Implementation
 
@@ -221,6 +236,8 @@ feature {NONE} -- Implementation
 			normal_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, normal_referenced_class_string, True)
 			folder_search_recursive_preference := l_manager.new_boolean_preference_value (l_manager, folder_search_recursive_string, True)
 			expand_categorized_folder_level_preference := l_manager.new_boolean_preference_value (l_manager, expand_categorized_folder_level_string, False)
+			caller_sorting_order_preference := l_manager.new_string_preference_value (l_manager, caller_sorting_order_string, "1:1")
+			callee_sorting_order_preference := l_manager.new_string_preference_value (l_manager, callee_sorting_order_string, "1:1")
 		end
 
 	preferences: PREFERENCES

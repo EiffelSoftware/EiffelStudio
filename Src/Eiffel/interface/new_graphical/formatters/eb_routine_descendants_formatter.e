@@ -12,7 +12,8 @@ class
 inherit
 	EB_FEATURE_CONTENT_FORMATTER
 		redefine
-			is_dotnet_formatter
+			is_dotnet_formatter,
+			browser
 		end
 
 create
@@ -39,6 +40,9 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showfuture
 		end
+
+	browser: EB_FEATURE_BROWSER_GRID_VIEW
+			-- Browser		
 
 feature {NONE} -- Properties
 

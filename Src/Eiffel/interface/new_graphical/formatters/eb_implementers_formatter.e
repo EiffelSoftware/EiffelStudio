@@ -12,7 +12,8 @@ class
 inherit
 	EB_FEATURE_CONTENT_FORMATTER
 		redefine
-			is_dotnet_formatter
+			is_dotnet_formatter,
+			browser
 		end
 
 create
@@ -56,6 +57,9 @@ feature {NONE} -- Properties
 		do
 			Result := True
 		end
+
+	browser: EB_FEATURE_BROWSER_GRID_VIEW
+			-- Browser		
 
 feature {NONE} -- Implementation
 

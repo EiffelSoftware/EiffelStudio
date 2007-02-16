@@ -245,8 +245,7 @@ feature{NONE} -- Implementation
 			-- Feature comment
 		do
 			if feature_comment_internal = Void then
-				feature_comment_style.set_ql_feature (feature_item)
-				feature_comment_internal := feature_comment_style.text
+				feature_comment_internal :=ql_feature_comment (feature_item)
 			end
 			Result := feature_comment_internal
 		ensure

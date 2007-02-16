@@ -96,9 +96,7 @@ feature {NONE} -- Implementation
 			-- after successfully retrieving the feature_i
 		do
 			create Result
-			if to_show_all_callers then
-				Result.set_all_callers
-			end
+			Result.set_all_callers (to_show_all_callers)
 			if is_assigners_only then
 				Result.set_flag ({DEPEND_UNIT}.is_in_assignment_flag)
 			elseif is_creators_only then

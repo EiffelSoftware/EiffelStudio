@@ -12,7 +12,6 @@ class
 inherit
 	ES_GRID_LIST_ITEM
 		redefine
-			item_type,
 			activate_action,
 			deactivate
 		end
@@ -46,7 +45,7 @@ feature{NONE} -- Implementation
 			default_create
 			set_domain (a_domain)
 			ellipsis_actions.extend (agent show_dialog)
-			enable_item_pebble
+			enable_component_pebble
 		end
 
 feature -- Access
@@ -268,9 +267,6 @@ feature {EV_GRID_I} -- Implementation
 
 feature{NONE} -- Implementation
 
-	item_type: ES_GRID_LIST_ITEM_COMPONENT
-			-- Anchor type
-
 	button: EV_BUTTON
 			-- Ellipsis button used to edit `Current' on activate.
 			-- Void when `Current' isn't being activated.
@@ -338,16 +334,16 @@ feature{NONE} -- Implementation
 	prepare_components is
 			-- Prepare components for display.
 		do
-			components_for_domain.do_all (agent append_new_item)
+			components_for_domain.do_all (agent append_component)
 		end
 
-	components_for_domain: LIST [ES_GRID_LIST_ITEM_COMPONENT] is
+	components_for_domain: LIST [ES_GRID_ITEM_COMPONENT] is
 			-- Component list for `domain'
 		local
 			l_domain: like domain_internal
 			l_item: EB_GRID_DOMAIN_ITEM_COMPONENT
 		do
-			create {LINKED_LIST [ES_GRID_LIST_ITEM_COMPONENT]}Result.make
+			create {LINKED_LIST [ES_GRID_ITEM_COMPONENT]}Result.make
 			from
 				l_domain := domain_internal
 				l_domain.start
@@ -365,11 +361,11 @@ feature{NONE} -- Implementation
 	update_ui is
 			-- Update UI.
 		local
-			l_items: like items
+			l_items: like components
 		do
 				-- Remove all existing components.
-			l_items := items
-			l_items.do_all (agent (a_item: like item_type) do a_item.set_parent (Void) end)
+			l_items := components
+			l_items.do_all (agent (a_item: like component_type) do a_item.set_grid_item (Void) end)
 			l_items.wipe_out
 
 				-- Retrieve new components.

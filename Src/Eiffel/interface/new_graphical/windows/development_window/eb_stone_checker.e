@@ -94,6 +94,7 @@ feature {NONE} -- Implementation functions
 
 			cluster_st ?= a_stone
 			new_class_stone ?= a_stone
+			ast_stone ?= a_stone
 
 				-- Refresh editor in stone.
 			develop_window.refresh_tab (a_stone)
@@ -317,6 +318,13 @@ feature {NONE} -- Implementation functions
 						if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
 							develop_window.scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
 						end
+					end
+				elseif ast_stone /= Void then
+					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
+						if develop_window.managed_main_formatters.first.selected then
+							develop_window.managed_main_formatters.first.enable_select
+						end
+						develop_window.scroll_to_ast (ast_stone.ast, ast_stone.class_i, ast_stone.is_for_feature_invocation)
 					end
 				else
 					cl_syntax_stone ?= a_stone
@@ -950,6 +958,9 @@ feature {NONE} -- Implementation attributes
 
 	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			-- Managed main formatters.
+
+	ast_stone: AST_STONE
+			-- AST stone
 
 feature {NONE} -- Implementation
 

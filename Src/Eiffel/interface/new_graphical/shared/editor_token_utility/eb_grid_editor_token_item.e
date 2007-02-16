@@ -15,22 +15,6 @@ inherit
 			initialize
 		end
 
-	EVS_TEXT_ALIGNABLE
-		undefine
-			copy,
-			is_equal,
-			default_create
-		end
-
-	EVS_BORDERED
-		export
-			{NONE}all
-		undefine
-			copy,
-			is_equal,
-			default_create
-		end
-
 	EB_SHARED_PREFERENCES
 		undefine
 			copy,
@@ -45,11 +29,14 @@ inherit
 			default_create
 		end
 
-	EVS_GRID_ITEM_HELPER
+	ES_GRID_LISTABLE_ITEM
 		undefine
 			copy,
 			is_equal,
 			default_create
+		redefine
+			set_last_picked_item,
+			required_component_width
 		end
 
 	EVS_GRID_SEARCHABLE_ITEM
@@ -87,10 +74,7 @@ feature{NONE} -- Initialization
 			set_spacing (2)
 			expose_actions.extend (agent perform_redraw)
 			setting_change_actions.extend (agent safe_redraw)
-			on_pointer_button_pressed_agent := agent on_pointer_button_pressed
-			on_pointer_double_press_agent := agent on_pointer_double_pressed
-			on_pointer_move_agent := agent on_pointer_move
-			on_pointer_leave_agent := agent on_pointer_leave
+			initialize_item
 			Precursor
 		end
 
@@ -111,35 +95,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	trailer_spacing: INTEGER_32
-			-- Space in pixel between text and the first trailer
-
-	trailer_padding: INTEGER_32
-			-- Space in pixel between two trailers
-
-	trailer_count: INTEGER_32
-			-- Number of trailers attached to Current
-		do
-			Result := trailers.count
-		ensure
-			good_result: Result = trailers.count
-		end
-
-	trailer (a_index: INTEGER_32): EB_GRID_EDITOR_TOKEN_ITEM_TRAILER
-			-- Trailer in `trailers' at position indexed by 1-based `a_index'
-		require
-			a_index_valid: a_index >= 1 and a_index <= trailer_count
-		do
-			Result := trailers.i_th (a_index)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	general_tooltip: EVS_GENERAL_TOOLTIP
-			-- General tooltip used to display information
-			-- Use this tooltip if normal tooltip provided cannot satisfy,
-			-- for example, you want to be able to pick and drop from/to tooltip.
-
 	stone: STONE is
 			-- Stone attached to Current item
 			-- Result `stone_internal' if `stone_function' is not set,
@@ -155,33 +110,36 @@ feature -- Access
 	stone_function: FUNCTION [ANY, TUPLE, STONE]
 			-- Function to fetch `stone'.
 
+	component_spacing: INTEGER
+			-- Space in pixel between text and the first trailer
+
 feature -- Status report
 
-	is_trailer_adhesive_enabled: BOOLEAN
-			-- Is trailer adhesive?
-			-- Trailer is adhesive means trailer appears right after text.
-			-- For example, following is a grid item with non-adhesive trailer:
+	is_component_adhesive_enabled: BOOLEAN
+			-- Is component adhesive?
+			-- component is adhesive means component appears right after text.
+			-- For example, following is a grid item with non-adhesive component:
 			-- +--------------------------------+
-			-- | Text                    Trailer|
+			-- | Text                    component|
 			-- +--------------------------------+
-			-- And following is a grid item with adhesive trailer:
+			-- And following is a grid item with adhesive component:
 			-- +--------------------------------+
-			-- | Text Trailer                   |
+			-- | Text component                   |
 			-- +--------------------------------+
 
-	is_trailer_display_ensured: BOOLEAN
-			-- Is display of `trailers' ensured?
-			-- A True value  means that text wil be truncated first to ensure that all (or most) part of `trailers'
+	is_component_display_ensured: BOOLEAN
+			-- Is display of `components' ensured?
+			-- A True value  means that text wil be truncated first to ensure that all (or most) part of `components'
 			-- can be displayed. A False value means that we first ensure that text is displayed mostly.
 
 	is_text_display_ensured: BOOLEAN is
 			-- Is display of `editor_token_text' ensured?
-			-- A True value means that all or most part of text in `editor_token_text' will be display first, and then `trailers'.
-			-- A False value means we try to display `trailers' first.
+			-- A True value means that all or most part of text in `editor_token_text' will be display first, and then `components'.
+			-- A False value means we try to display `components' first.
 		do
-			Result := not is_trailer_display_ensured
+			Result := not is_component_display_ensured
 		ensure
-			good_result: Result = not is_trailer_display_ensured
+			good_result: Result = not is_component_display_ensured
 		end
 
 	is_text_truncated: BOOLEAN is
@@ -189,13 +147,6 @@ feature -- Status report
 		do
 			Result := editor_token_text.is_text_truncated
 		end
-
-	is_pointer_in_trailer: BOOLEAN
-			-- Is pointer in trailer for the moment?
-			-- This query can be used to distinguish event source. For example,
-			-- When both `pointer_double_press_actions' of Current grid item and
-			-- `pointer_double_press_actions' of some trailer are invoked, this query will
-			-- return True if the pointer is actually clicked on some trailer.
 
 feature -- Setting
 
@@ -281,145 +232,55 @@ feature -- Setting
 			try_call_setting_change_actions
 		end
 
-	set_trailer_spacing (a_spacing: INTEGER_32)
-			-- Set `trailer_spacing' with `a_spacing'.
+	set_component_spacing (a_spacing: INTEGER_32)
+			-- Set `component_spacing' with `a_spacing'.
 		do
 			lock_update
-			trailer_spacing := a_spacing
+			component_spacing := a_spacing
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			trailer_spacing_set: trailer_spacing = a_spacing
+			component_spacing_set: component_spacing = a_spacing
 		end
 
-	set_trailer_padding (a_padding: INTEGER_32)
-			-- Set `trailer_padding' with `a_padding'.
+	enable_adhesive_component
+			-- Enable adhesive component.
 		do
 			lock_update
-			trailer_padding := a_padding
+			is_component_adhesive_enabled := True
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			trailer_padding_set: trailer_padding = a_padding
+			adhesive_component_enabled: is_component_adhesive_enabled
 		end
 
-	insert_trailer (a_trailer: EB_GRID_EDITOR_TOKEN_ITEM_TRAILER; a_index: INTEGER_32)
-			-- Insert `a_trailer' at 1-based position indexed by `a_index' in `trailers'.
-		require
-			a_trailer_valid: a_trailer /= Void and then not a_trailer.is_parented
-			a_index_valid: a_index >= 1 and then a_index <= trailer_count + 1
-		local
-			l_trailers: like trailers
+	disable_adhesive_component
+			-- Disable adhesive component.
 		do
 			lock_update
-			a_trailer.attach (Current)
-			if a_index <= trailer_count then
-				l_trailers := trailers
-				l_trailers.go_i_th (a_index)
-				l_trailers.put_left (a_trailer)
-			else
-				trailers.extend (a_trailer)
-			end
-			unlock_update
-			try_call_setting_change_actions
-			install_trailer_actions
-		ensure
-			trailer_inserted:
-				trailers.has (a_trailer) and then a_trailer.is_parented and then a_trailer.grid_item = Current and then
-				trailer_count = old trailer_count + 1
-		end
-
-	remove_trailer (a_index: INTEGER_32)
-			-- Remove trail from `trailers' at position indexed by `a_index'.
-		require
-			a_index_valid: a_index >= 1 and a_index <= trailer_count
-		local
-			l_trailers: like trailers
-		do
-			lock_update
-			l_trailers := trailers
-			l_trailers.go_i_th (a_index)
-			l_trailers.item.detach
-			l_trailers.remove
-			unlock_update
-			try_call_setting_change_actions
-			if l_trailers.is_empty then
-				uninstall_trailer_actions
-			end
-		ensure
-			trailer_removed: trailer_count = old trailer_count - 1
-		end
-
-	enable_adhesive_trailer
-			-- Enable adhesive trailer.
-		do
-			lock_update
-			is_trailer_adhesive_enabled := True
+			is_component_adhesive_enabled := False
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			adhesive_trailer_enabled: is_trailer_adhesive_enabled
+			adhesive_component_disabled: not is_component_adhesive_enabled
 		end
 
-	disable_adhesive_trailer
-			-- Disable adhesive trailer.
+	ensure_component_display is
+			-- Ensure display of `components'.
+			-- See `is_component_display_ensured' for more information.
 		do
-			lock_update
-			is_trailer_adhesive_enabled := False
-			unlock_update
-			try_call_setting_change_actions
+			is_component_display_ensured := True
 		ensure
-			adhesive_trailer_disabled: not is_trailer_adhesive_enabled
-		end
-
-	ensure_trailer_display is
-			-- Ensure display of `trailers'.
-			-- See `is_trailer_display_ensured' for more information.
-		do
-			is_trailer_display_ensured := True
-		ensure
-			trailer_display_ensured: is_trailer_display_ensured
+			component_display_ensured: is_component_display_ensured
 		end
 
 	ensure_text_display is
 			-- Ensure display of `editor_token_text'.
-			-- See `is_trailer_display_ensured' for more information.
+			-- See `is_component_display_ensured' for more information.
 		do
-			is_trailer_display_ensured := False
+			is_component_display_ensured := False
 		ensure
-			text_display_ensured: not is_trailer_display_ensured
-		end
-
-	set_general_tooltip (a_tooltip: like general_tooltip) is
-			-- Set `general_tooltip' with `a_tooltip' and enable it at the same time.
-			-- Note: If `trailers' is not empty and pointer is over a trailer area, this tooltip won't be displayed.
-		require
-			a_tooltip_attached: a_tooltip /= Void
-		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
-			end
-			general_tooltip := a_tooltip
-			if not general_tooltip.veto_tooltip_display_functions.has (veto_general_tooltip_agent) then
-				general_tooltip.veto_tooltip_display_functions.extend (veto_general_tooltip_agent)
-			end
-			general_tooltip.enable_tooltip
-		ensure
-			general_tooltip_set: general_tooltip = a_tooltip
-		end
-
-	remove_general_tooltip is
-			-- Remove `general_tooltip'.
-		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
-				if general_tooltip.veto_tooltip_display_functions.has (veto_general_tooltip_agent) then
-					general_tooltip.veto_tooltip_display_functions.prune_all (veto_general_tooltip_agent)
-				end
-			end
-			general_tooltip := Void
-		ensure
-			general_tooltip_removed: general_tooltip = Void
+			text_display_ensured: not is_component_display_ensured
 		end
 
 	set_stone (a_stone: like stone) is
@@ -469,18 +330,24 @@ feature{NONE} -- Implementation
 		do
 		end
 
+	required_component_width: INTEGER_32
+			-- Required width in pixel for displaying all attached `components'
+		do
+			Result := Precursor + component_spacing
+		end
+
 feature{NONE} -- Redraw
 
 	perform_redraw (a_drawable: EV_DRAWABLE)
 		local
 			l_x_offset: INTEGER
 			l_required_text_width: INTEGER
-			l_required_trailer_width: INTEGER
+			l_required_component_width: INTEGER
 			l_token_text: like editor_token_text
 			l_left_width: INTEGER
 			l_text_start_x: INTEGER
-			l_trailer_start_x: INTEGER
-			l_width_for_text_and_trailer: INTEGER
+			l_component_start_x: INTEGER
+			l_width_for_text_and_component: INTEGER
 			l_max_text_width: INTEGER
 		do
 			prepare_grid_area (a_drawable)
@@ -489,65 +356,65 @@ feature{NONE} -- Redraw
 				draw_pixmap (a_drawable, l_x_offset)
 				l_x_offset := pixmap.width + spacing
 			end
-				-- Calculate text position and trailer position.
+				-- Calculate text position and component position.
 			l_token_text := editor_token_text
 			l_required_text_width := l_token_text.required_width
-			l_required_trailer_width := required_trailer_width
+			l_required_component_width := required_component_width
 			l_left_width := (width - l_x_offset - right_border - border_line_width).max (1)
-			l_width_for_text_and_trailer := l_required_text_width + l_required_trailer_width
-			if l_required_trailer_width = 0 then
+			l_width_for_text_and_component := l_required_text_width + l_required_component_width
+			if l_required_component_width = 0 then
 				if is_center_aligned then
 					l_text_start_x := ((l_left_width - l_required_text_width) // 2).max (0)
 				elseif is_right_aligned then
 					l_text_start_x := (l_left_width - l_required_text_width).max (0)
 				end
 				l_max_text_width := l_left_width.max (1)
-			elseif l_left_width >= l_width_for_text_and_trailer then
+			elseif l_left_width >= l_width_for_text_and_component then
 				l_max_text_width := l_required_text_width
 				if is_left_aligned then
 					l_text_start_x := 0
-					if is_trailer_adhesive_enabled then
-						l_trailer_start_x := l_required_text_width
+					if is_component_adhesive_enabled then
+						l_component_start_x := l_required_text_width
 					else
-						l_trailer_start_x := (l_left_width - l_required_trailer_width).max (1)
+						l_component_start_x := (l_left_width - l_required_component_width).max (1)
 					end
 				elseif is_center_aligned then
-					l_text_start_x := ((l_left_width - l_width_for_text_and_trailer) // 2).max (0)
-					if is_trailer_adhesive_enabled then
-						l_trailer_start_x := (l_text_start_x + l_required_text_width).max (1)
+					l_text_start_x := ((l_left_width - l_width_for_text_and_component) // 2).max (0)
+					if is_component_adhesive_enabled then
+						l_component_start_x := (l_text_start_x + l_required_text_width).max (1)
 					else
-						l_trailer_start_x := (l_left_width - l_required_trailer_width).max (1)
+						l_component_start_x := (l_left_width - l_required_component_width).max (1)
 					end
 				elseif is_right_aligned then
-					l_text_start_x := (l_left_width - l_width_for_text_and_trailer).max (0)
-					l_trailer_start_x := (l_left_width - l_required_trailer_width).max (1)
+					l_text_start_x := (l_left_width - l_width_for_text_and_component).max (0)
+					l_component_start_x := (l_left_width - l_required_component_width).max (1)
 				end
-			elseif l_width_for_text_and_trailer > l_left_width and then l_left_width >= l_required_text_width  then
+			elseif l_width_for_text_and_component > l_left_width and then l_left_width >= l_required_text_width  then
 				l_text_start_x := 0
-				if is_trailer_display_ensured then
-					l_trailer_start_x := (l_left_width - l_required_trailer_width).max (1)
-					l_max_text_width := l_trailer_start_x
+				if is_component_display_ensured then
+					l_component_start_x := (l_left_width - l_required_component_width).max (1)
+					l_max_text_width := l_component_start_x
 				else
-					l_trailer_start_x := l_required_text_width
+					l_component_start_x := l_required_text_width
 					l_max_text_width := l_required_text_width
 				end
 			elseif l_left_width < l_required_text_width then
 				l_text_start_x := 0
-				if is_trailer_display_ensured then
-					l_trailer_start_x := (l_left_width - l_required_trailer_width).max (1)
-					l_max_text_width := l_trailer_start_x
+				if is_component_display_ensured then
+					l_component_start_x := (l_left_width - l_required_component_width).max (1)
+					l_max_text_width := l_component_start_x
 				else
 					l_max_text_width := l_left_width
-					l_trailer_start_x := l_left_width
+					l_component_start_x := l_left_width
 				end
 			else
 				check False end
 			end
 			l_text_start_x := l_text_start_x + l_x_offset
-			l_trailer_start_x := l_trailer_start_x + l_x_offset
+			l_component_start_x := l_component_start_x + l_x_offset
 			draw_text (a_drawable, l_text_start_x, l_max_text_width + l_text_start_x, parent.has_focus)
-			if l_required_trailer_width > 0 then
-				draw_trailers (a_drawable, l_trailer_start_x)
+			if l_required_component_width > 0 then
+				draw_components (a_drawable, l_component_start_x)
 			end
 		end
 
@@ -580,31 +447,6 @@ feature{NONE} -- Redraw
 			a_drawable.fill_rectangle (0, 0, width, height)
 		end
 
-feature{NONE} -- Owner actions
-
-	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Pointer enter actions of owner of current tooltip
-			-- Attach this to owner's `pointer_enter_actions'.
-		do
-			Result := pointer_enter_actions
-		end
-
-	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Pointer leave actions of owner of current tooltip
-			-- Attach this to owner's `pointer_leave_actions'.			
-		do
-			Result := pointer_leave_actions
-		end
-
-feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
-
-	is_owner_destroyed: BOOLEAN is
-			-- If owner destroyed
-			-- Attach this to owner's `is_destroyed'.
-		do
-			Result := is_destroyed
-		end
-
 feature{NONE} -- Implementation
 
 	editor_token_text_internal: like editor_token_text
@@ -617,7 +459,7 @@ feature{NONE} -- Implementation
 		local
 			l_required_width: INTEGER
 		do
-			l_required_width := border_line_width * 2 + left_border + right_border + editor_token_text.required_width + required_trailer_width
+			l_required_width := border_line_width * 2 + left_border + right_border + editor_token_text.required_width + required_component_width
 			if pixmap /= Void then
 				l_required_width := l_required_width + pixmap.width + spacing
 			end
@@ -642,19 +484,12 @@ feature{NONE} -- Implementation
 
 feature -- Pick and drop
 
-	last_picked_token: INTEGER
-			-- Index of picked token in `editor_token_text'
-			-- 0 means no token is picked.
-
-	set_last_picked_token (a_index: INTEGER) is
-			-- Set `last_picked_token' with `a_index'.
-		require
-			a_index_valid: a_index >= 0
+	set_last_picked_item (a_index: INTEGER) is
+			-- Set `last_picked_item' with `a_index'.
 		do
 			check a_index <= editor_token_text.tokens.count end
-			last_picked_token := a_index
-		ensure
-			last_picked_token_set: last_picked_token = a_index
+			last_picked_item := a_index
+			Precursor (a_index)
 		end
 
 	token_index_at_current_position: INTEGER is
@@ -678,79 +513,49 @@ feature -- Pick and drop
 			Result := editor_token_text.pebble (a_index)
 		end
 
+feature -- Pick and drop
+
+	on_pick: ANY is
+			-- Action to be performed when pick starts
+			-- Return value is the picked pebble if any.
+		local
+			l_index: INTEGER
+			l_stone: STONE
+		do
+			if is_component_pebble_enabled then
+				l_index := token_index_at_current_position
+				if l_index > 0 then
+					l_stone ?= editor_token_pebble (l_index)
+					if l_stone /= Void then
+						Result := l_stone
+						set_last_picked_item (l_index)
+					end
+				end
+			end
+		end
+
+	on_pick_ends is
+			-- Action to be performed hwne pick-and-drop finishes
+		do
+			if is_component_pebble_enabled then
+				set_last_picked_item (0)
+			end
+		end
+
 feature{NONE} -- Implementation
 
-	trailers: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM_TRAILER]
-			-- List of trails attached to Current item
+	required_width_for_text_and_component: INTEGER_32
+			-- Required width in pixel to display text and components.
 		do
-			if trailers_internal = Void then
-				create trailers_internal.make (1)
-			end
-			Result := trailers_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	trailers_internal: like trailers
-			-- Implementation of `trailers'
-
-	required_trailer_width: INTEGER_32
-			-- Required width in pixel for displaying all attached `trailers'
-		local
-			l_trailer: like trailers
-		do
-			l_trailer := trailers
-			if not l_trailer.is_empty then
-				from
-					l_trailer.start
-				until
-					l_trailer.after
-				loop
-					Result := Result + l_trailer.item.required_width
-					l_trailer.forth
-				end
-				Result := Result + trailer_spacing + (l_trailer.count - 1) * trailer_padding
-			end
+			Result := editor_token_text.required_width + required_component_width
 		ensure
 			result_attached: Result >= 0
 		end
 
-	required_trailer_height: INTEGER_32
-			-- Required height in pixel to display all attached `trailers'
-		local
-			l_trailer: like trailers
-			l_height: INTEGER_32
+	required_height_for_text_and_component: INTEGER_32
+			-- Required height in pixel to display text and components.	
 		do
-			l_trailer := trailers
-			if not l_trailer.is_empty then
-				from
-					l_trailer.start
-				until
-					l_trailer.after
-				loop
-					l_height := l_trailer.item.required_height
-					if l_height > Result then
-						Result := l_height
-					end
-					l_trailer.forth
-				end
-			end
-		ensure
-			result_attached: Result >= 0
-		end
-
-	required_width_for_text_and_trailer: INTEGER_32
-			-- Required width in pixel to display text and trailers.
-		do
-			Result := editor_token_text.required_width + required_trailer_width
-		ensure
-			result_attached: Result >= 0
-		end
-
-	required_height_for_text_and_trailer: INTEGER_32
-			-- Required height in pixel to display text and trailers.	
-		do
-			Result := editor_token_text.required_height.max (required_trailer_height)
+			Result := editor_token_text.required_height.max (required_component_height)
 		ensure
 			result_attached: Result >= 0
 		end
@@ -795,7 +600,7 @@ feature{NONE} -- Implementation
 				if is_selected then
 					l_token_text.display_selected (0, 0, a_drawable, a_focused)
 				else
-					l_token_text.display (0, 0, a_drawable, last_picked_token, a_focused)
+					l_token_text.display (0, 0, a_drawable, last_picked_item, a_focused)
 				end
 			end
 		end
@@ -814,46 +619,46 @@ feature{NONE} -- Implementation
 			good_result: Result = 1 or Result = 2 or Result = 3
 		end
 
-	draw_trailers (a_drawable: EV_DRAWABLE; a_start_x: INTEGER_32)
-			-- Draw `trailers' in `a_drawable' starting from `a_start_x'.
-			-- `trailers' are always vertically center aligned.
+	draw_components (a_drawable: EV_DRAWABLE; a_start_x: INTEGER_32)
+			-- Draw `components' in `a_drawable' starting from `a_start_x'.
+			-- `components' are always vertically center aligned.
 		require
 			a_drawable_attached: a_drawable /= Void
 		local
-			l_trailers: like trailers
+			l_components: like components
 			x, y: INTEGER_32
 			l_count: INTEGER_32
-			l_trailer_padding: INTEGER_32
-			l_trailer: EB_GRID_EDITOR_TOKEN_ITEM_TRAILER
-			l_trailer_position: like trailer_position
+			l_component_padding: INTEGER_32
+			l_component: like component_type
+			l_component_position: like component_position
 			l_width, l_height: INTEGER
 		do
-			l_trailers := trailers
-			if not l_trailers.is_empty then
+			l_components := components
+			if not l_components.is_empty then
 
 			end
-			l_trailer_position := trailer_position
-			if not l_trailers.is_empty then
-				l_trailer_position.wipe_out
-				l_trailer_padding := trailer_padding
+			l_component_position := component_position
+			if not l_components.is_empty then
+				l_component_position.wipe_out
+				l_component_padding := component_padding
 				from
-					x := a_start_x + trailer_spacing
-					l_count := l_trailers.count
-					l_trailers.start
+					x := a_start_x + component_spacing
+					l_count := l_components.count
+					l_components.start
 				until
-					l_trailers.after
+					l_components.after
 				loop
-					l_trailer := l_trailers.item
-					y := vertical_starting_position (l_trailer.required_height, 2, False)
-					l_width := l_trailer.required_width
-					l_height := l_trailer.required_height
-					l_trailer.draw (a_drawable, x, y)
-					l_trailer_position.extend (create {EV_RECTANGLE}.make (x, y, l_width, l_height))
-					x := x + l_trailer.required_width
-					if l_trailers.index < l_count then
-						x := x + l_trailer_padding
+					l_component := l_components.item
+					y := vertical_starting_position (l_component.required_height, 2, False)
+					l_width := l_component.required_width
+					l_height := l_component.required_height
+					l_component.display (a_drawable, x, y, l_width, l_height)
+					l_component_position.extend (create {EV_RECTANGLE}.make (x, y, l_width, l_height))
+					x := x + l_component.required_width
+					if l_components.index < l_count then
+						x := x + l_component_padding
 					end
-					l_trailers.forth
+					l_components.forth
 				end
 			end
 		end
@@ -886,279 +691,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	trailer_position: LINKED_LIST [EV_RECTANGLE] is
-			-- Position area of `trailers'
-		do
-			if trailer_position_internal = Void then
-				create trailer_position_internal.make
-			end
-			Result := trailer_position_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	trailer_position_internal: like trailer_position
-			-- Implementation of `trailer_position'
-
-	is_position_in_area (a_x, a_y: INTEGER; a_rec: EV_RECTANGLE): BOOLEAN is
-			-- Is position (`a_x', `a_y') in area defined by `a_rec'?
-		require
-			a_rec_attached: a_rec /= Void
-		do
-			Result := a_rec.has_x_y (a_x, a_y)
-		end
-
-	is_ponter_out_of_trailer: BOOLEAN is
-			-- Is pointer out of trailer area?
-		do
-			Result := not is_pointer_in_trailer
-		end
-
-	set_is_pointer_in_trailer (b: BOOLEAN) is
-			-- Set `is_ponter_in_trailer' with `b'.
-		do
-			is_pointer_in_trailer := b
-		ensure
-			is_pointer_in_trailer_set: is_pointer_in_trailer = b
-		end
-
-	veto_general_tooltip_agent: FUNCTION [ANY, TUPLE, BOOLEAN] is
-			-- Agent to veto `general_tooltip' display
-		do
-			if veto_general_tooltip_agent_internal = Void then
-				veto_general_tooltip_agent_internal := agent is_ponter_out_of_trailer
-			end
-			Result := veto_general_tooltip_agent_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	veto_general_tooltip_agent_internal: like veto_general_tooltip_agent
-			-- Implementation of `veto_general_tooltip_agent'
+	stone_internal: like stone
+			-- Implementation of `stone' if `stone_function' is not Set.
 
 	grid_item: EV_GRID_ITEM is
 			-- EV_GRID item associated with current
 		do
 			Result := Current
-		end
-
-	stone_internal: like stone
-			-- Implementation of `stone' if `stone_function' is not Set.
-
-feature{NONE} -- Action type constants
-
-	pointer_button_pressed_action_type: INTEGER is 1
-	pointer_double_press_action_type: INTEGER is 2
-	pointer_button_release_action_type: INTEGER is 3
-
-	is_action_type_valid (a_type: INTEGER): BOOLEAN is
-			-- Is `a_type' a valid action type?
-		do
-			Result :=
-				a_type = pointer_button_pressed_action_type or
-				a_type = pointer_double_press_action_type or
-				a_type = pointer_button_release_action_type
-		end
-
-feature{NONE} -- Trailer actions maintaining
-
-	install_trailer_actions is
-			-- Install actions used for trailers.
-		do
-			if not pointer_button_press_actions.has (on_pointer_button_pressed_agent) then
-				pointer_button_press_actions.extend (on_pointer_button_pressed_agent)
-			end
-			if not pointer_double_press_actions.has (on_pointer_double_press_agent) then
-				pointer_double_press_actions.extend (on_pointer_double_press_agent)
-			end
-			if not pointer_motion_actions.has (on_pointer_move_agent) then
-				pointer_motion_actions.extend (on_pointer_move_agent)
-			end
-			if not pointer_leave_actions.has (on_pointer_leave_agent) then
-				pointer_leave_actions.extend (on_pointer_leave_agent)
-			end
-			if not pointer_button_release_actions.has (on_pointer_button_releasd_agent) then
-				pointer_button_release_actions.extend (on_pointer_button_releasd_agent)
-			end
-			set_is_pointer_in_trailer (False)
-			trailer_position.wipe_out
-		end
-
-	uninstall_trailer_actions is
-			-- Uninstall actions used for trailers.
-		do
-			if pointer_button_press_actions.has (on_pointer_button_pressed_agent) then
-				pointer_button_press_actions.prune_all (on_pointer_button_pressed_agent)
-			end
-			if pointer_double_press_actions.has (on_pointer_double_press_agent) then
-				pointer_double_press_actions.prune_all (on_pointer_double_press_agent)
-			end
-			if pointer_motion_actions.has (on_pointer_move_agent) then
-				pointer_motion_actions.prune_all (on_pointer_move_agent)
-			end
-			if pointer_leave_actions.has (on_pointer_leave_agent) then
-				pointer_leave_actions.prune_all (on_pointer_leave_agent)
-			end
-			if pointer_button_release_actions.has (on_pointer_button_releasd_agent) then
-				pointer_button_release_actions.prune_all (on_pointer_button_releasd_agent)
-			end
-			set_is_pointer_in_trailer (False)
-		end
-
-	check_trailer_actions (x, y: INTEGER; a_action_type: INTEGER; a_arguments: TUPLE) is
-			-- Find a trailer which is under position (`x', `y') and call action whose type is `a_action_type' with arguments `a_arguments'.
-			-- (`x', `y') is relative to top-left corner of current grid item.
-		require
-			a_action_type_valid: is_action_type_valid (a_action_type)
-		local
-			l_trailer: EB_GRID_EDITOR_TOKEN_ITEM_TRAILER
-			l_trailers: like trailers
-			l_positions: like trailer_position
-			done: BOOLEAN
-		do
-			l_trailers := trailers
-			if not l_trailers.is_empty then
-				from
-					l_trailers.start
-					l_positions := trailer_position
-					l_positions.start
-				until
-					l_positions.after or done
-				loop
-					l_trailer := l_trailers.item
-					if not l_trailer.is_action_blocked then
-						if l_positions.item.has_x_y (x, y) then
-							call_agent (l_trailer, a_action_type, a_arguments)
-							done := True
-						end
-					end
-					l_positions.forth
-					l_trailers.forth
-				end
-			end
-		end
-
-	call_agent (a_trailer: EB_GRID_EDITOR_TOKEN_ITEM_TRAILER; a_action_type: INTEGER; a_arguments: TUPLE) is
-			-- Call actions of type `a_action_type' from `a_trailer_index'-th trailer in `trailers' with arguments `a_arguments'.
-		require
-			a_trailer_attached: a_trailer /= Void
-			a_action_type_valid: is_action_type_valid (a_action_type)
-		local
-			l_button_argument: TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]
-		do
-			inspect
-				a_action_type
-			when pointer_button_pressed_action_type  then
-				l_button_argument ?= a_arguments
-				a_trailer.pointer_button_press_actions.call (l_button_argument)
-			when pointer_double_press_action_type then
-				l_button_argument ?= a_arguments
-				a_trailer.pointer_double_press_actions.call (l_button_argument)
-			when pointer_button_release_action_type then
-				l_button_argument ?= a_arguments
-				a_trailer.pointer_button_release_actions.call (l_button_argument)
-			end
-		end
-
-feature{NONE} -- Actions for trailers
-
-	on_pointer_button_pressed_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
-			-- Agent of `on_pointer_button_pressed'
-
-	on_pointer_double_press_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
-			-- Agent of `on_pointer_double_pressed'			
-
-	on_pointer_button_releasd_agent: PROCEDURE [ANY, TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
-			-- Agent of `on_pointer_button_release'
-
-	on_pointer_leave_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_pointer_leave'
-
-	on_pointer_move_agent: PROCEDURE [ANY, TUPLE [x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]];
-			-- Agent of `on_pointer_move'
-
-	on_pointer_button_pressed (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer pressed
-		do
-			check_trailer_actions (x, y, pointer_button_pressed_action_type, [x, y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
-		end
-
-	on_pointer_double_pressed (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer pressed
-		do
-			check_trailer_actions (x, y, pointer_double_press_action_type, [x, y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
-		end
-
-	on_pointer_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer moves in current grid
-		do
-			on_pointer_move_internal (x, y, x_tilt, y_tilt, pressure, screen_x, screen_y, False)
-		end
-
-	on_pointer_move_internal (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_leave: BOOLEAN) is
-			-- Action to be performed when pointer moves on current item
-			-- `a_leave' means is this aciton called when pointer leaves current item.
-		local
-			l_trailer: EB_GRID_EDITOR_TOKEN_ITEM_TRAILER
-			l_trailers: like trailers
-			l_positions: like trailer_position
-			l_position: EV_RECTANGLE
-			l_pointer_in_trailer: BOOLEAN
-		do
-			l_trailers := trailers
-			if not l_trailers.is_empty then
-				l_pointer_in_trailer := is_pointer_in_trailer
-				from
-					set_is_pointer_in_trailer (False)
-					l_trailers.start
-					l_positions := trailer_position
-					l_positions.start
-				until
-					l_positions.after
-				loop
-					l_trailer := l_trailers.item
-					l_position := l_positions.item
-					if l_position.has_x_y (x, y) then
-						if not l_trailer.is_pointer_in then
-							l_trailer.set_is_pointer_in (True)
-							if not l_trailer.is_action_blocked then
-								l_trailer.pointer_enter_actions.call ([l_position.x - x , l_position.y - y, x_tilt, y_tilt, pressure, screen_x, screen_y])
-							end
-						end
-						if not is_pointer_in_trailer then
-							set_is_pointer_in_trailer (True)
-						end
-					else
-						if l_trailer.is_pointer_in then
-							l_trailer.set_is_pointer_in (False)
-							if not l_trailer.is_action_blocked then
-								l_trailer.pointer_leave_actions.call ([l_position.x - x , l_position.y - y, x_tilt, y_tilt, pressure, screen_x, screen_y])
-							end
-						end
-					end
-					l_positions.forth
-					l_trailers.forth
-				end
-				if not a_leave and then general_tooltip /= Void then
-					if l_pointer_in_trailer and then not is_pointer_in_trailer then
-						general_tooltip.force_enter
-					elseif not l_pointer_in_trailer and then l_pointer_in_trailer then
-						general_tooltip.force_leave
-					end
-				end
-			end
-		end
-
-	on_pointer_leave is
-			-- Action to be performed when pointer leaves current item
-		do
-			on_pointer_move_internal (-1, -1, 1, 0, 0, 0, 0, True)
-		end
-
-	on_pointer_button_release (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- Action to be performed when pointer button is released
-		do
-			check_trailer_actions (x, y, pointer_button_release_action_type, [x, y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
 		end
 
 indexing

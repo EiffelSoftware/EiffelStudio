@@ -21,6 +21,18 @@ inherit
 create
 	make, default_create
 
+feature -- Access
+
+	features: QL_FEATURE_DOMAIN is
+			-- Features as result of Current formatter
+		do
+			Result ?= system_target_domain.new_domain (domain_generator)
+			check Result /= Void end
+			if not Result.is_empty then
+				Result := Result.distinct
+			end
+		end
+
 feature -- Status report
 
 	to_show_all_callers: BOOLEAN;
@@ -35,12 +47,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_all_callers is
-			-- Set `to_show_all_callers' with True;
+	set_all_callers (b: BOOLEAN) is
+			-- Set `to_show_all_callers' with `b';
 		do
-			to_show_all_callers := True
+			to_show_all_callers := b
 		ensure
-			show_all_callers: to_show_all_callers
+			show_all_callers_set: to_show_all_callers = b
 		end
 
 	set_flag (a_flag: INTEGER_8) is
@@ -67,6 +79,14 @@ feature -- Status setting
 			callees_displayed: is_callee_displayed
 		end
 
+	set_current_feature (a_feature: like current_feature) is
+			-- Set `current_feature' with `a_feature'.
+		do
+			current_feature := a_feature
+		ensure
+			current_feature_set: current_feature = a_feature
+		end
+
 feature -- Execution
 
 	work is
@@ -80,10 +100,8 @@ feature -- Execution
 			l_last_caller_class_id: INTEGER
 			l_changed: BOOLEAN
 		do
-			l_domain ?= system_target_domain.new_domain (domain_generator)
-			check l_domain /= Void end
+			l_domain := features
 			if not l_domain.is_empty then
-				l_domain := l_domain.distinct
 				l_domain.sort (agent feature_name_tester)
 				l_formatter := text_formatter
 				from

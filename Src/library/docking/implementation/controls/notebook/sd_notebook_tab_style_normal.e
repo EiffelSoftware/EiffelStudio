@@ -27,7 +27,8 @@ feature -- Command
 			setted: pixmap /= Void
 			vaild: a_width > 0
 			not_void: a_tab_info /= Void
-		deferred
+		do
+			current_total_width := a_width
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
@@ -36,7 +37,8 @@ feature -- Command
 			setted: pixmap /= Void
 			vaild: a_width > 0
 			not_void: a_tab_info /= Void
-		deferred
+		do
+			current_total_width := a_width
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
@@ -45,7 +47,8 @@ feature -- Command
 			setted: pixmap /= Void
 			vaild: a_width > 0
 			not_void: a_tab_info /= Void
-		deferred
+		do
+			current_total_width := a_width
 		end
 
 feature -- Key setting
@@ -179,6 +182,9 @@ feature -- Properties
 			-- If Current the tabs which at top side.
 			-- Otherwise it's bottom side tabs.
 
+	current_total_width: INTEGER
+			-- Current total width during one drawing tab action.
+
 feature -- Size issues
 
 	start_x_separator_before_internal: INTEGER is
@@ -218,6 +224,8 @@ feature -- Size issues
 				if is_top_side_tab then
 					if is_enough_space then
 						Result := start_x_text_internal + l_width + padding_width
+					else
+						Result := current_total_width - close_width
 					end
 				end
 			end
@@ -280,9 +288,17 @@ feature -- Size issues
 		require
 			has_close_button: is_top_side_tab
 		do
-			create Result.make (start_x_close - close_background_expand, start_y_close - close_background_expand, internal_shared.icons.close.width + 2 * close_background_expand, internal_shared.icons.close.height + 2 * close_background_expand)
+			create Result.make (start_x_close - close_background_expand, start_y_close - close_background_expand, close_width, internal_shared.icons.close.height + 2 * close_background_expand)
 		ensure
 			not_void: Result /= Void
+		end
+
+	close_width: INTEGER is
+			-- Width of the close button.
+		require
+			has_close_button: is_top_side_tab
+		do
+			Result := internal_shared.icons.close.width + 2 * close_background_expand
 		end
 
 	close_rectangle_parent_box: EV_RECTANGLE is
@@ -292,6 +308,30 @@ feature -- Size issues
 			if internal_tab.parent /= Void then
 				Result.move (Result.x + internal_tab.x, Result.y)
 			end
+		end
+
+	text_clipping_width (a_total_width: INTEGER): INTEGER is
+			-- Clipping width of text when close button not exist
+		do
+			Result := a_total_width - start_x_text_internal
+			if Result < 0 then
+				Result := 0
+			end
+		ensure
+			positive: Result >= 0
+		end
+
+	close_clipping_width (a_total_width: INTEGER): INTEGER is
+			-- Clipping width of text when close button exist.
+		require
+			has_close_button: is_top_side_tab
+		do
+			Result := a_total_width - start_x_text_internal - close_width
+			if Result < 0 then
+				Result := 0
+			end
+		ensure
+			positive: Result >= 0
 		end
 
 feature {NONE} -- Implementation
@@ -338,7 +378,7 @@ feature {NONE} -- Implementation
 			not_void: a_pixmap /= Void
 		deferred
 		end
-		
+
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
 			-- Draw close button if possible
 		require

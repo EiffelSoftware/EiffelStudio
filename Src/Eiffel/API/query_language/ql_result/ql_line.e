@@ -136,12 +136,21 @@ feature -- Access
 
 	line_in_file: INTEGER is
 			-- Line number of current item in file
+		do
+			Result := code_structure.first_line + line_number - 1
+		end
+
+	code_structure: QL_CODE_STRUCTURE_ITEM is
+			-- Class associated with Current line
 		local
 			l_parent: QL_CODE_STRUCTURE_ITEM
 		do
-			l_parent ?= parent
-			check l_parent /= Void end
-			Result := l_parent.first_line + line_number - 1
+			if code_structure_internal = Void then
+				code_structure_internal ?= parent
+			end
+			Result := code_structure_internal
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report
@@ -307,6 +316,9 @@ feature{NONE} -- Implementation
 	is_comment_calculated: BOOLEAN
 			-- Has `is_comment' been calculated?
 
+	code_structure_internal: like code_structure
+			-- Implementation of `code_structure'
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -321,7 +333,6 @@ feature -- Comparison
 				(parent.same_type (other.parent) and then
 				 parent.is_equal (other.parent) and then
 				 line_number = other.line_number)
-
 		end
 
 invariant

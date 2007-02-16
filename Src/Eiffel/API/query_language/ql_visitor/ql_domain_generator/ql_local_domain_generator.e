@@ -89,7 +89,7 @@ feature -- Visit
 						until
 							i > l_cnt
 						loop
-							create l_local.make_with_ast (l_type_dec_as.item_name (i), l_type_dec_as, a_item)
+							create l_local.make_with_ast (l_type_dec_as.item_name (i), l_type_dec_as, a_item, a_item.written_class)
 							evaluate_item (l_local)
 							i := i + 1
 						end

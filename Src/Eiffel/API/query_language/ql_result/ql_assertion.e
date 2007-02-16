@@ -63,7 +63,7 @@ feature -- Access
 			if ast.tag = Void then
 				Result := ""
 			else
-				Result := ast.tag.out
+				Result := ast.tag.name
 			end
 		ensure then
 			good_result: (ast.tag = Void implies Result.is_equal ("")) and

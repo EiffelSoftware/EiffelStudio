@@ -1469,9 +1469,9 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				tmp_text := tmp_text.substring (1, begin_index)
 				offset := tmp_text.occurrences('%R')
 				if a_selected then
-					editors_manager.current_editor.select_region_when_ready (begin_index.item - offset, a_ast.end_position - offset + 1)
+					editors_manager.current_editor.select_region_when_ready (begin_index - offset, a_ast.end_position - offset + 1)
 				else
-					editors_manager.current_editor.scroll_to_when_ready (begin_index.item - offset)
+					editors_manager.current_editor.scroll_to_when_ready (begin_index - offset)
 				end
 			end
 		end

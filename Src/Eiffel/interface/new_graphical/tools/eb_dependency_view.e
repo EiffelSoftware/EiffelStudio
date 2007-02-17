@@ -98,7 +98,8 @@ feature {NONE} -- Initialization
 			-- Build docking content.
 		do
 			Precursor {EB_TOOL} (a_docking_manager)
-			content.drop_actions.extend (agent drop_stone)
+--			content.drop_actions.extend (agent drop_stone)
+			content.drop_actions.extend (agent on_item_dropped)
 		end
 
 feature -- Access
@@ -609,6 +610,17 @@ feature {NONE} -- Implementation
 					history_manager.extend (stone)
 				end
 				Precursor
+			end
+		end
+		
+	on_item_dropped (a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped
+		local
+			l_stone: STONE
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				drop_stone (l_stone)
 			end
 		end
 

@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'x64' ">
     <OutputPath>bin\x64\</OutputPath>
     <IntermediateOutputPath>bin\x64\</IntermediateOutputPath>
-    <DefineConstants>x64;EiffelStudio</DefineConstants>
+    <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
     <Pedantic>True</Pedantic>
@@ -96,7 +96,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin.txt" />
+    <Compile Include="content\eiffelenvision\Bin64.wxs" />
+    <Compile Include="content\eiffelenvision\Bin86.wxs" />
+    <Compile Include="content\eiffelenvision\Compiler.wxs" />
+    <Compile Include="content\eiffelenvision\Compiler64.wxs" />
+    <Compile Include="content\eiffelenvision\Compiler86.wxs" />
+    <Compile Include="content\eiffelenvision\Documentation.wxs" />
     <Compile Include="content\eiffelenvision\EiffelEnvisionPackage.wxs" />
+    <Compile Include="content\eiffelenvision\EiffelPackages.wxs" />
+    <Compile Include="content\eiffelenvision\EiffelProjectItems.wxs" />
+    <Compile Include="content\eiffelenvision\EiffelProjects.wxs" />
+    <Compile Include="content\eiffelenvision\Examples.wxs" />
+    <Compile Include="content\eiffelenvision\Libraries.wxs" />
+    <Compile Include="content\eiffelenvision\Libraries64.wxs" />
+    <Compile Include="content\eiffelenvision\Schema.wxs" />
+    <Compile Include="content\eiffelenvision\Snippets.wxs" />
+    <Compile Include="content\eiffelenvision\Specifications.wxs" />
     <Compile Include="content\eiffelstudio\EiffelStudioPackage.wxs" />
     <Content Include="includes\Preprocessors.wxi" />
   </ItemGroup>

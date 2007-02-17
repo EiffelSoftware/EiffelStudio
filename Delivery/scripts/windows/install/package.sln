@@ -3,16 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "package", "package.wixproj", "{01A951F7-BA79-4006-8629-27FFCB510FF0}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "redist", "redist\redist.wixproj", "{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 		x64|Any CPU = x64|Any CPU
 		x86|Any CPU = x86|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.Debug|Any CPU.ActiveCfg = x64|Any CPU
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.Debug|Any CPU.Build.0 = x64|Any CPU
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.Release|Any CPU.ActiveCfg = x64|Any CPU
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.Release|Any CPU.Build.0 = x64|Any CPU
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.x64|Any CPU.ActiveCfg = x64|Any CPU
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.x64|Any CPU.Build.0 = x64|Any CPU
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.x86|Any CPU.ActiveCfg = x86|Any CPU
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.x86|Any CPU.Build.0 = x86|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.Debug|Any CPU.ActiveCfg = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.Debug|Any CPU.Build.0 = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.Release|Any CPU.ActiveCfg = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.Release|Any CPU.Build.0 = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.x64|Any CPU.ActiveCfg = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.x64|Any CPU.Build.0 = x64|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.x86|Any CPU.ActiveCfg = x86|Any CPU
+		{6DFF62CF-B00E-41CD-85BC-11A80B49E2DA}.x86|Any CPU.Build.0 = x86|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

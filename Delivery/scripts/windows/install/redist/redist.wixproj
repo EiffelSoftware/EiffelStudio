@@ -1,0 +1,52 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">x64</Configuration>
+    <ProductVersion>3.0</ProductVersion>
+    <ProjectGuid>{6dff62cf-b00e-41cd-85bc-11a80b49e2da}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>Do Not Rename</OutputName>
+    <OutputType>Module</OutputType>
+    <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'x86' ">
+    <OutputName>Redist</OutputName>
+    <OutputPath>..\bin\x86\</OutputPath>
+    <IntermediateOutputPath>obj\x86\</IntermediateOutputPath>
+    <DefineConstants>Debug;x86;EiffelEnvision;Source=c:\test_environment</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'x64' ">
+    <OutputName>Redist64</OutputName>
+    <OutputPath>..\bin\x64\</OutputPath>
+    <IntermediateOutputPath>obj\x64\</IntermediateOutputPath>
+    <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Redist.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="eiffelenvision" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="eiffelenvision\Redist.wxi" />
+    <None Include="eiffelenvision\Redist64.wxi" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+</Project>

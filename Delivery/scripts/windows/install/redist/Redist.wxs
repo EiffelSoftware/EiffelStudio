@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Module Id="EiffelEnvisionRedist" Language="1033" Version="1.0.0.0">
+    <Package Id="E1FFE1C1-778D-44EB-9D36-EDF4E8D50D92" Manufacturer="Eiffel Software"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <?ifdef EiffelEnvision?>
+        <?ifdef x64?>
+          <?include eiffelenvision\Redist64.wxi?>
+        <?else?>
+          <?include eiffelenvision\Redist.wxi?>
+        <?endif?>
+      <?endif?>
+    </Directory>
+  </Module>
+</Wix>

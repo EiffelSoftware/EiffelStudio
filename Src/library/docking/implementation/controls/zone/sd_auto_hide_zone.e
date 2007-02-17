@@ -180,7 +180,7 @@ feature {NONE} -- For user docking
 
 feature -- Query
 
-	window: SD_WINDOW
+	window: SD_PANEL
 			-- Window.
 
 	has_focus: BOOLEAN is

@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	resize_bar: SD_RESIZE_BAR
 			-- Resize bar at the side.
 
-	window: SD_WINDOW
+	window: SD_PANEL
 			-- Window.
 
 	on_focus_out is

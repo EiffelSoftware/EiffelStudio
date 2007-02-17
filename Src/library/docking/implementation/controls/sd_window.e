@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_WINDOW
+	SD_PANEL
 
 inherit
 	EV_VERTICAL_BOX

@@ -9,7 +9,7 @@ class
 	SD_SIZABLE_POPUP_WINDOW
 
 inherit
-	EV_POPUP_WINDOW
+	SD_WINDOW
 		rename
 			extend as extend_sizeable_popup_window
 		redefine
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		local
 			l_styles: EV_STOCK_PIXMAPS
 		do
-			Precursor {EV_POPUP_WINDOW}
+			Precursor {SD_WINDOW}
 			init_border_box
 
 			create {EV_CELL} internal_padding_box

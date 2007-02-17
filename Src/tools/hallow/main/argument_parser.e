@@ -213,10 +213,17 @@ feature -- Access
 			Result := option_of_name (directory_ref_switch).value
 		end
 
-	frozen conditional_expression: SYSTEM_STRING
+	frozen conditional_expressions: NATIVE_ARRAY [SYSTEM_STRING]
 			-- Conditional expression used in a preprocessor, which wraps all generated meaniful content
+		local
+			l_values: LIST [STRING]
 		do
-			Result := option_of_name (conditional_expression_switch).value
+			l_values := options_values_of_name (conditional_expression_switch)
+			create Result.make (l_values.count)
+			from l_values.start until l_values.after loop
+				Result.put (l_values.index - 1, l_values.item)
+				l_values.forth
+			end
 		end
 
 feature -- Status report
@@ -278,7 +285,7 @@ feature -- Status report
 			Result := has_option (directory_ref_switch)
 		end
 
-	frozen use_conditional_expression: BOOLEAN
+	frozen use_conditional_expressions: BOOLEAN
 			-- Indicates if a conditional expression preprocessor should be used
 		do
 			Result := has_option (conditional_expression_switch)
@@ -301,7 +308,7 @@ feature {NONE} -- Usage
 		do
 			create Result.make (8)
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_include_switch, "Generated a WiX Include definition instead of a Fragment.", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (conditional_expression_switch, "Use to generate a preprocessor condition for the generated content", True, False, "expression", "A preprocessor symbol that must be defined to include content", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (conditional_expression_switch, "Use to generate a preprocessor condition for the generated content", True, True, "expressions", "A preprocessor symbol or expression", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursively include all subdirectories and files.", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (group_components_switch, "Groups all generated components in a 'ComponentGroup' element", True, False, "name", "A component group name", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (one_file_per_component_switch, "Use to force a single 'File' element to be generated per 'Component'.", True, False))

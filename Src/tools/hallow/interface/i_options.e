@@ -170,14 +170,15 @@ feature -- Access
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
 
-	conditional_expression: SYSTEM_STRING
+	conditional_expressions: NATIVE_ARRAY [SYSTEM_STRING]
 			-- Conditional expression used in a preprocessor, which wraps all generated meaniful content
 		require
 			can_read_options: can_read_options
-			use_conditional_expression: use_conditional_expression
+			use_conditional_expressions: use_conditional_expressions
 		deferred
 		ensure
-			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
+			result_attached: Result /= Void
+			not_result_is_empty: Result.length > 0
 		end
 
 feature -- Status report
@@ -250,7 +251,7 @@ feature -- Status report
 		deferred
 		end
 
-	use_conditional_expression: BOOLEAN
+	use_conditional_expressions: BOOLEAN
 			-- Indicates if a conditional expression preprocessor should be used
 		deferred
 		end

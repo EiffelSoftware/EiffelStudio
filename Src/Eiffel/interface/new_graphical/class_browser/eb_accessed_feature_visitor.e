@@ -148,8 +148,6 @@ feature{NONE} -- Implementation
 	check_accessor (l_as: ACCESS_FEAT_AS) is
 			-- Check if `l_as' is a accessor of `e_feature'.
 			-- If it is, store `l_as' into `accessors'.
-		local
-			l_id_as: ID_AS
 		do
 			if is_accessor (l_as.class_id, l_as.access_name) then
 				check last_class_c /= Void end

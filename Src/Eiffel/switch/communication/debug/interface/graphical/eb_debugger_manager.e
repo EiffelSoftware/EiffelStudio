@@ -232,7 +232,7 @@ feature {NONE} -- Initialization
 			l_acc: EV_ACCELERATOR
 		do
 			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s), True, True, False)
-			l_acc.actions.extend (agent show_objects_tool)
+			l_acc.actions.extend (agent show_call_stack_tool)
 			show_call_stack_tool_accelerator := l_acc
 
 			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_j), True, True, False)

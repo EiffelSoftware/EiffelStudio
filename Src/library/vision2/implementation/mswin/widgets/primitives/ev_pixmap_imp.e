@@ -1215,6 +1215,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 				if private_palette /= Void then
 					private_palette.increment_reference
 				end
+				copy_events_from_other (other_simple_imp)
 				update_needed := other_simple_imp.update_needed
 			else
 				other_imp ?= other_interface.implementation
@@ -1229,6 +1230,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 				end
 				private_width := private_bitmap.width
 				private_height := private_bitmap.height
+				copy_events_from_other (other_imp)
 				update_needed := False
 			end
 		end

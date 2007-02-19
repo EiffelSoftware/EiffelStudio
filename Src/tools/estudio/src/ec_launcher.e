@@ -227,7 +227,7 @@ feature -- Splash
 
 				create fn.make_from_string (eiffel_layout.bitmaps_path)
 				fn.extend ("png")
-				fn.set_file_name ("splash.png")
+				fn.set_file_name ("splash_shadow.png")
 				if file_exists (fn) then
 					splasher.set_splash_pixmap_filename (fn)
 				end

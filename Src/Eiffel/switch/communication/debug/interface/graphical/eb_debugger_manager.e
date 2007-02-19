@@ -1033,7 +1033,7 @@ feature -- Status setting
 					l_watch_tool := l_watch_tool_list.item
 					if l_watch_tool /= Void then
 						l_watch_tool.set_manager (debugging_window)
-						if l_tool /= Void and then l_watch_tool.content.target_content_shown (l_tool.content) then
+						if l_tool /= Void and then l_watch_tool.content /= Void and then l_watch_tool.content.target_content_shown (l_tool.content) then
 							l_watch_tool.attach_to_docking_manager_with (l_docking_manager, l_tool)
 						else
 							l_watch_tool.attach_to_docking_manager (l_docking_manager)

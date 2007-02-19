@@ -181,9 +181,12 @@ feature {NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 			l_content, l_value: STRING
 			l_index, l_index2: INTEGER
+			l_finish_freezing_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			Result := True
-			create l_file.make (eiffel_layout.config_eif)
+			create l_finish_freezing_layout
+			l_finish_freezing_layout.check_environment_variable
+			create l_file.make (l_finish_freezing_layout.config_eif)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)

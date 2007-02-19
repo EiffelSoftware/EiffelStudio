@@ -43,7 +43,7 @@
 			</file_rule>
 		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\com_wizard\root\"/>
-		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
+		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\" recursive="true"/>
 		<cluster name="wizard" location="$EIFFEL_SRC\tools\com_wizard\project\" recursive="true">
 			<file_rule>
 				<exclude>/new_gui$</exclude>

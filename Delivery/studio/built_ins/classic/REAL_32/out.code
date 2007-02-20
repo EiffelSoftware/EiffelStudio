@@ -1,4 +1,0 @@
-feature out: STRING is
-		do
-			Result := Precursor
-		end

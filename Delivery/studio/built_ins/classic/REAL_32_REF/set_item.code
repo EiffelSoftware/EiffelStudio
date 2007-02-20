@@ -1,4 +1,0 @@
-feature set_item (r: REAL_32)
-	do
-		item := r
-	end

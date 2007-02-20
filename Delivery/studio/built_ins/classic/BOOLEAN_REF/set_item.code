@@ -1,4 +1,0 @@
-feature set_item (b: BOOLEAN)
-	do
-		item := b
-	end

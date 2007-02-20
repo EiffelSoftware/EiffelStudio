@@ -1,4 +1,0 @@
-feature set_item (i: INTEGER_32)
-	do
-		item := i
-	end

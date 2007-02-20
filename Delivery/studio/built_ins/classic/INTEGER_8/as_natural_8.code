@@ -1,0 +1,4 @@
+feature as_natural_8: NATURAL_8
+		do
+			Result := Precursor
+		end

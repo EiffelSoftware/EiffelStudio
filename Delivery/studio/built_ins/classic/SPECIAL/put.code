@@ -1,3 +1,0 @@
-feature frozen put (v: T; i: INTEGER) is
-	do
-	end

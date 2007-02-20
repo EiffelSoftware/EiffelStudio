@@ -224,11 +224,11 @@ feature -- Basic operations
 									first_row_index := row_counter
 									first_row_index_set := True
 								end
-								if first_row_index_set and current_row.is_show_requested then
+								if first_row_index_set and (current_row = Void or else current_row.is_show_requested) then
 									Result.extend (row_counter)
 								end
 
-								if current_row.is_show_requested and then (not last_row_index_set and then (invalid_y_end) < i + current_height) then
+								if (current_row = Void or else current_row.is_show_requested) and then (not last_row_index_set and then (invalid_y_end) < i + current_height) then
 									last_row_index := row_counter
 									last_row_index_set := True
 								end

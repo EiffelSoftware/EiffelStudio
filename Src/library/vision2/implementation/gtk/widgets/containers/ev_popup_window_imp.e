@@ -53,16 +53,23 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
-			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 			client_area := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (client_area)
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, client_area)
+
+			if not override_redirect then
+				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
+				{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			end
+
+
 			Precursor {EV_WINDOW_IMP}
 
 				-- This completely disconnects the window from the window manager.
-			{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
---			{EV_GTK_EXTERNALS}.gtk_window_set_accept_focus (c_object, False)
+			if override_redirect then
+				{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
+			end
+
 			disable_border
 			disable_user_resize
 			set_background_color ((create {EV_STOCK_COLORS}).black)
@@ -71,14 +78,18 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	override_redirect: BOOLEAN is True
+
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
-			if a_has_focus then
-				app_implementation.set_focused_popup_window (Current)
-			else
-				app_implementation.set_focused_popup_window (Void)
+			if override_redirect then
+				if a_has_focus then
+					app_implementation.set_focused_popup_window (Current)
+				else
+					app_implementation.set_focused_popup_window (Void)
+				end
 			end
 			Precursor {EV_WINDOW_IMP} (a_has_focus)
 		end
@@ -134,20 +145,24 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- Map the Window to the screen.
 		do
 			Precursor
-			if not has_focus then
-				grab_keyboard_and_mouse
+			if override_redirect then
+				if not has_focus then
+					grab_keyboard_and_mouse
+				end
 			end
 		end
 
 	hide is
 			-- Unmap the Window from the screen.
 		do
-			if has_focus then
-				release_keyboard_and_mouse
-					-- We reset the focused popup window here in case hide is called as part of destroy
-					-- in which case the focus out event will not be called.
-				if is_in_destroy then
-					app_implementation.set_focused_popup_window (Void)
+			if override_redirect then
+				if has_focus then
+					release_keyboard_and_mouse
+						-- We reset the focused popup window here in case hide is called as part of destroy
+						-- in which case the focus out event will not be called.
+					if is_in_destroy then
+						app_implementation.set_focused_popup_window (Void)
+					end
 				end
 			end
 			Precursor;
@@ -156,26 +171,32 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	has_focus: BOOLEAN is
 			-- Does Current have the keyboard focus?
 		do
-			if not is_disconnected_from_window_manager then
-				Result := app_implementation.focused_popup_window = Current
+			if override_redirect then
+				if not is_disconnected_from_window_manager then
+					Result := app_implementation.focused_popup_window = Current
+				end
+			else
+				Result := Precursor
 			end
 		end
 
 	handle_mouse_button_event (a_type: INTEGER_32; a_button: INTEGER_32; a_screen_x, a_screen_y: INTEGER_32) is
 			-- A mouse event has occurred.
 		do
-			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
-				if
-					a_screen_x >= x_position and then
-					a_screen_x <= (x_position + width) and then
-					a_screen_y >= y_position and then
-					a_screen_y <= (y_position + height)
-				then
-					grab_keyboard_and_mouse
-				else
-						-- Emulate WM handling when clicking off window.
-					if has_focus then
-						release_keyboard_and_mouse
+			if override_redirect then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
+					if
+						a_screen_x >= x_position and then
+						a_screen_x <= (x_position + width) and then
+						a_screen_y >= y_position and then
+						a_screen_y <= (y_position + height)
+					then
+						grab_keyboard_and_mouse
+					else
+							-- Emulate WM handling when clicking off window.
+						if has_focus then
+							release_keyboard_and_mouse
+						end
 					end
 				end
 			end

@@ -12,13 +12,13 @@
         <Control Id="SubTitle" Type="Text" Height="13" Width="268" X="56" Y="35" Transparent="yes" NoPrefix="yes">
           <Text>[SubTitleFont]Please read the following license agreement carefully!</Text>
         </Control>
-        <Control Id="AgreementText" Type="ScrollableText" X="9" Y="58" Width="388" Height="280" Sunken="yes" TabSkip="no">
-          <Text SourceFile="licenses\$(var.Product)\$(var.LicenseFile)"></Text>
-        </Control>
-        <Control Id="ViewLarger" Type="PushButton" Height="17" Width="56" X="340" Y="342" Text="[Button_OK]" Default="yes" Cancel="yes">
+        <Control Id="Ok" Type="PushButton" Height="17" Width="56" X="340" Y="342" Text="[Button_OK]" Default="yes" Cancel="yes">
 					<Publish Event="EndDialog" Value="Return">1</Publish>
 				</Control>
-			</Dialog>
+        <Control Id="AgreementText" Type="ScrollableText" X="9" Y="58" Width="388" Height="280" Sunken="yes" TabSkip="no" >
+          <Text SourceFile="licenses\$(var.Product)\$(var.LicenseFile)"></Text>
+        </Control>
+      </Dialog>
 		</UI>
 	</Fragment>
 </Wix>

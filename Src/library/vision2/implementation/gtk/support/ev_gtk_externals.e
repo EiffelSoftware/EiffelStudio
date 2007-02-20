@@ -8060,6 +8060,13 @@ feature
 			"size"
 		end
 
+	frozen gdk_event_crossing_struct_mode (a_c_struct: POINTER): INTEGER
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventCrossing): EIF_INTEGER"
+		alias
+			"mode"
+		end
+
 	frozen gdk_event_focus_struct_in (a_c_struct: POINTER): INTEGER
 		external
 			"C [struct <gtk/gtk.h>] (GdkEventFocus): EIF_INTEGER"

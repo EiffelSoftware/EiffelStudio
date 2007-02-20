@@ -1,4 +1,0 @@
-feature floor_real_64: DOUBLE is
-		do
-			Result := Precursor
-		end

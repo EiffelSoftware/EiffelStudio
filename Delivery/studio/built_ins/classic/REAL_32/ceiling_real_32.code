@@ -1,4 +1,0 @@
-feature ceiling_real_32: DOUBLE is
-		do
-			Result := Precursor
-		end

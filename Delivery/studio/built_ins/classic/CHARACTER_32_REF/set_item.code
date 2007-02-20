@@ -1,4 +1,0 @@
-feature set_item (c: CHARACTER_32)
-	do
-		item := c
-	end

@@ -1,4 +1,0 @@
-feature set_item (p: POINTER)
-	do
-		item := p
-	end

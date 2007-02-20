@@ -1,4 +1,0 @@
-feature set_item (i: NATURAL_64)
-	do
-		item := i
-	end

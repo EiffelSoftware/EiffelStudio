@@ -117,7 +117,7 @@ feature -- Access
 			en := entry_name.to_cil
 			c := ent.count
 			from
-				
+
 			until
 				i = c or Result
 			loop
@@ -196,7 +196,7 @@ feature -- Conversion
 			end
 			create Result.make (c)
 			from
-				
+
 			until
 				i = c
 			loop
@@ -225,7 +225,7 @@ feature -- Status report
 				-- are symbolic representations but not effective directories.
 			Result := (count = 0)
 		end
-	
+
 	empty: BOOLEAN is
 			-- Is directory empty?
 		obsolete
@@ -236,8 +236,15 @@ feature -- Status report
 
 	exists: BOOLEAN is
 			-- Does the directory exist?
+		local
+			retried: BOOLEAN
 		do
-			Result := {SYSTEM_DIRECTORY}.exists (name.to_cil)
+			if not retried then
+				Result := {SYSTEM_DIRECTORY}.exists (name.to_cil)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	is_readable: BOOLEAN is
@@ -371,12 +378,12 @@ feature -- Removal
 			file_number: INTEGER)
 		is
 			-- Delete all files located in current directory and its
-			-- subdirectories. 
+			-- subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
 			-- been deleted and before the function exits.
 			-- `action' may be set to Void if you don't need it.
-			-- 
+			--
 			-- Same for `is_cancel_requested'.
 			-- Make it return `True' to cancel the operation.
 			-- `is_cancel_requested' may be set to Void if you don't need it.
@@ -472,7 +479,7 @@ feature -- Removal
 			directory_exists: exists
 		local
 			deleted_files: ARRAYED_LIST [STRING]
-		do	
+		do
 			delete_content_with_action (action, is_cancel_requested, file_number)
 			if (is_cancel_requested = Void) or else (not is_cancel_requested.item ([])) then
 				delete

@@ -525,7 +525,10 @@ feature{NONE} -- Process
 						l_operator_id := operator_name_table.item (l_operator_name)
 					end
 					if not has_error then
-						current_tester_item := [Void, l_operator_id]
+						create current_tester_item
+						current_tester_item.value_retriever := Void
+						current_tester_item.operator := l_operator_id
+
 						value_retriever_stack.extend ([agent set_current_tester_item, False])
 					end
 				end

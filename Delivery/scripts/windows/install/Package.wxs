@@ -19,7 +19,7 @@
     <!-- END PACKAGE -->
 
     <!-- MEDIA -->
-    <Media Id="1" EmbedCab="yes" DiskPrompt="Disc #1" Cabinet="data.cab" />
+    <Media Id="1" EmbedCab="yes" DiskPrompt="Disc #1" Cabinet="data.cab" CompressionLevel="high"/>
     <Property Id="DiskPrompt" Value="$(var.ProductName) Installation [1]" />
     <!-- END MEDIA -->
 

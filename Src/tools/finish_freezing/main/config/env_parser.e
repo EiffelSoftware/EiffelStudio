@@ -109,14 +109,14 @@ feature {NONE} -- Basic operations
 			l_appliable: like applicable_variables
 			l_line: STRING
 			l_result: HASH_TABLE [STRING, STRING]
-			retried: BOOLEAN
+			retry_count: INTEGER
 		do
 			Result := internal_variables_via_evaluation
 			if Result = Void then
 				create l_result.make (0)
 				l_result.compare_objects
 
-				if not retried then
+				if retry_count < 2 then
 					l_file_name := temp_batch_file_name
 					l_eval_file_name := env_eval_tmp_file_name
 
@@ -126,56 +126,58 @@ feature {NONE} -- Basic operations
 					l_file.flush
 					l_file.close
 
-						-- Retrieve command executable file name
-					l_com_spec := eiffel_layout.get_environment ("ComSpec")
-					if l_com_spec = Void or else l_com_spec.is_empty then
-							-- Fallback
+					l_com_spec := Void
+					if retry_count = 0 then
 						l_com_spec := cmd_exe_file_name
+					elseif retry_count = 1 then
+							-- CMD did not work out, try ComSpec
+							-- Retrieve command executable file name
+						l_com_spec := eiffel_layout.get_environment ("ComSpec")
 					end
 
-					check
-						l_com_spec_attached: l_com_spec /= Void
-						not_l_com_spec_is_empty: not l_com_spec.is_empty
-					end
+					if l_com_spec /= Void and then not l_com_spec.is_empty then
+							-- Execute batch file using command executable
+						create l_cmd.make (l_com_spec.count + 4 + l_file_name.count)
+						l_cmd.append (l_com_spec)
+						l_cmd.append_character (' ')
+						l_cmd.append (batch_options)
+						l_cmd.append (" /c ")
+						l_cmd.append (l_file_name)
 
-						-- Execute batch file using command executable
-					create l_cmd.make (l_com_spec.count + 4 + l_file_name.count)
-					l_cmd.append (l_com_spec)
-					l_cmd.append_character (' ')
-					l_cmd.append (batch_options)
-					l_cmd.append (" /c ")
-					l_cmd.append (l_file_name)
+						create l_launcher
+						l_launcher.run_hidden
+						l_launcher.launch (l_cmd, Void, Void)
 
-					create l_launcher
-					l_launcher.run_hidden
-					l_launcher.launch (l_cmd, Void, Void)
+						check l_file_is_closed: l_file.is_closed end
+						l_file.delete
+						l_file := Void
 
-					check l_file_is_closed: l_file.is_closed end
-					l_file.delete
-
-					if l_launcher.last_process_result = 0 then
-						create l_file.make (l_eval_file_name)
-						if l_file.exists then
-							l_file.open_read
-							if l_file.count > 0 then
-								l_appliable := applicable_variables
-								from l_file.start until l_file.end_of_file loop
-									l_file.read_line
-									l_line := l_file.last_string
-									if l_line /= Void and then not l_line.is_empty then
-										l_pair := parse_variable_name_value_pair (l_file.last_string)
-										if
-											l_pair.value /= Void and
-											(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
-										then
-											l_result.extend (l_pair.value, l_pair.name.as_upper)
+						if l_launcher.last_process_result = 0 then
+							create l_file.make (l_eval_file_name)
+							if l_file.exists then
+								l_file.open_read
+								if l_file.count > 0 then
+									l_appliable := applicable_variables
+									from l_file.start until l_file.end_of_file loop
+										l_file.read_line
+										l_line := l_file.last_string
+										if l_line /= Void and then not l_line.is_empty then
+											l_pair := parse_variable_name_value_pair (l_file.last_string)
+											if
+												l_pair.value /= Void and
+												(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+											then
+												l_result.extend (l_pair.value, l_pair.name.as_upper)
+											end
 										end
 									end
 								end
-							end
 
-							l_file.close
-							l_file.delete
+								l_file.close
+								l_file.delete
+							end
+						else
+							(create {EXCEPTIONS}).raise ("Unable to launch process")
 						end
 					end
 				end
@@ -197,8 +199,8 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 			internal_variables_via_evaluation_set: internal_variables_via_evaluation = Result
 		rescue
-			if not retried then
-				retried := True
+			if retry_count < 2 then
+				retry_count := retry_count + 1
 				retry
 			end
 		end
@@ -265,8 +267,20 @@ feature {NONE} -- Basic operations
 	env_eval_tmp_file_name: STRING = "env_eval.tmp"
 			-- File name of evaluated environment variables
 
-	cmd_exe_file_name: STRING = "cmd.exe"
+	cmd_exe_file_name: STRING is
 			-- File name of Command exe
+		once
+			create Result.make (256)
+			Result.append (eiffel_layout.get_environment ("SystemRoot"))
+			Result.append ("\system32\cmd.exe")
+			if not (create {RAW_FILE}.make (Result)).exists then
+					-- Try a command shell locatable in the user PATH variable.
+				Result := "cmd.exe"
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 
 feature {NONE} -- Internal implementation cache
 

@@ -39,22 +39,7 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
-feature -- Drawing Area intermediary agent routines
-
-	on_drawing_area_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER) is
-			-- Drawing area focus lost or gained
-		local
-			a_drawing_area_imp: EV_DRAWING_AREA_IMP
-		do
-			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			inspect
-				a_event_number
-			when 1 then
-				a_drawing_area_imp.set_focus
-			when 2 then
-				a_drawing_area_imp.lose_focus
-			end
-		end
+feature -- Expose actions intermediary agent routines
 
 	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
 			-- Area needs to be redrawn
@@ -188,19 +173,6 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			end
 		end
 
-feature -- Pointer intermediary agent routines	
-
-	pointer_enter_leave_action_intermediary (a_c_object: POINTER; a_enter_leave: BOOLEAN) is
-			-- Pointer entered
-		local
-			widget: EV_WIDGET_IMP
-		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if widget /= Void then
-				widget.on_pointer_enter_leave (a_enter_leave)
-			end
-		end
-
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			
 
 	color_dialog_on_ok_intermediary (a_c_object: POINTER) is
@@ -273,17 +245,6 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_font_dialog_imp.on_cancel
-		end
-
-feature {EV_ANY_IMP} -- Accelerator intermediary agent routines
-
-	accelerator_actions_internal_intermediary (a_c_object: POINTER) is
-			-- Intermediary agent for accelerator show action
-		local
-			a_accelerator_imp: EV_ACCELERATOR_IMP
-		do
-			a_accelerator_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_accelerator_imp.actions_internal.call (Void)
 		end
 
 indexing

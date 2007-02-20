@@ -4146,7 +4146,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- Resize `viewport' within `static_fixed' as the viewable
 			-- area of `Current' has changed.
 		do
-			static_fixed.implementation.set_item_size (viewport, a_width, a_height)
+			static_fixed.set_item_size (viewport, a_width, a_height)
 		end
 
 	static_fixed_viewport: EV_VIEWPORT

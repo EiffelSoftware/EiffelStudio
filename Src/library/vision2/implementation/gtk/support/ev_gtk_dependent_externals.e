@@ -50,6 +50,11 @@ feature -- Externals
 			"C signature (GdkRectangle*): GdkRegion* use <gtk/gtk.h>"
 		end
 
+	frozen gtk_window_set_type_hint (a_window: POINTER; a_hint: INTEGER) is
+		external
+			"C signature (GtkWindow*, GdkWindowTypeHint) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN) is
 		external
 			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"

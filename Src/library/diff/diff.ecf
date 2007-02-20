@@ -5,6 +5,8 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option namespace="EiffelSoftware.Library"/>
+		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="diff" location=".\" recursive="true"/>
 	</target>

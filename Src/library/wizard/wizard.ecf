@@ -5,6 +5,8 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option namespace="EiffelSoftware.Library.Wizard"/>
+		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\wizard\help\Clib">
 			<condition>
 				<platform value="windows"/>

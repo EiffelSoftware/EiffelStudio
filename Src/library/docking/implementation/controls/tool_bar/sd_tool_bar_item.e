@@ -194,7 +194,7 @@ feature -- Change
 
 	refresh_now is
 		do
-			tool_bar.update
+			update
 		end
 
 feature {SD_NOTEBOOK_TAB_AREA} -- Implementation

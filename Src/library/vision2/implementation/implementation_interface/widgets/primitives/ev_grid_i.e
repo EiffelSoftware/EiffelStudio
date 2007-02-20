@@ -3119,7 +3119,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						row_index := row_index + 1
 					end
-					if current_item.is_show_requested then
+					if current_item = Void or else current_item.is_show_requested then
 						visible_count := visible_count + 1
 					if current_item /= Void and not l_is_row_height_fixed then
 						current_row_offset := current_row_offset + current_item.height

@@ -332,11 +332,31 @@ feature {EV_ANY_I} -- Implementation
 							)
 							l_top_level_window_imp := Void
 						end
-					when GDK_ENTER_NOTIFY, GDK_LEAVE_NOTIFY then
+					when GDK_ENTER_NOTIFY then
 						debug ("GDK_EVENT")
-							print ("GDK_ENTER_LEAVE_NOTIFY%N")
+							print ("GDK_ENTER_NOTIFY%N")
 						end
 						l_call_event := False
+						if {EV_GTK_EXTERNALS}.gtk_widget_toplevel (event_widget) then
+--							print ("window enter notify%N")
+						end
+						l_gtk_widget_imp ?= eif_object_from_gtk_object (event_widget)
+						if l_gtk_widget_imp /= Void then
+							l_top_level_window_imp := l_gtk_widget_imp.top_level_window_imp
+							if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
+								{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							end
+							l_gtk_widget_imp := Void
+							l_top_level_window_imp := Void
+						end
+					when GDK_LEAVE_NOTIFY then
+						debug ("GDK_EVENT")
+							print ("GDK_LEAVE_NOTIFY%N")
+						end
+						l_call_event := False
+						if {EV_GTK_EXTERNALS}.gtk_widget_toplevel (event_widget) then
+--							print ("window leave notify%N")
+						end
 						l_gtk_widget_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_gtk_widget_imp /= Void then
 							l_top_level_window_imp := l_gtk_widget_imp.top_level_window_imp

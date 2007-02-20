@@ -137,17 +137,19 @@ feature -- Access
 			-- If `a_title' unique?
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_title32: STRING_32
 		do
 			Result := True
 			if docking_manager /= Void then
 				l_contents := docking_manager.contents
 				from
+					l_title32 := a_title.as_string_32
 					l_contents.start
 				until
 					l_contents.after or not Result
 				loop
 					if l_contents.item /= Current then
-						if l_contents.item.unique_title.as_string_32.is_equal (a_title.as_string_32) then
+						if l_contents.item.unique_title.as_string_32.is_equal (l_title32) then
 							Result := False
 						end
 					end
@@ -385,8 +387,8 @@ feature -- Set Position
 			-- Set `Current' tab with `a_content'.
 			-- If `a_left' then put new tab at left, otherwise put new tab at right
 		require
-			manager_has_content: manager_has_content (Current)
-			manager_has_content: manager_has_content (a_content)
+			manager_has_current_content: manager_has_content (Current)
+			manager_has_a_content: manager_has_content (a_content)
 			target_content_shown: target_content_shown (a_content)
 		local
 			l_tab_zone: SD_TAB_ZONE
@@ -517,8 +519,11 @@ feature -- States report
 
 	target_content_shown (a_target_content: SD_CONTENT): BOOLEAN is
 			-- If `a_target_content' shown ?
+		local
+			l_zone: SD_ZONE
 		do
-			Result := a_target_content.state.zone.parent /= Void
+			l_zone := a_target_content.state.zone
+			Result := l_zone /= Void and then l_zone.parent /= Void
 		end
 
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,

@@ -46,43 +46,20 @@ feature -- Event handling
 
 	create_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Create a pointer_button_release action sequence.
-			-- Attach to GTK "button-release-event" signal.
 		do
 			create Result
 		end
 
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.
-			-- Attach to GTK "enter-notify-event" signal.
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
-			app_imp := app_implementation
 			create Result
-			app_imp.gtk_marshal.signal_connect (
-				event_widget,
-				App_imp.enter_notify_event_string,
-				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, True),
-				Void,
-				False
-			)
 		end
 
 	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_leave action sequence.
-			-- Attach to GTK "leave-notify-event" signal.
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
-			app_imp := app_implementation
 			create Result
-			app_imp.gtk_marshal.signal_connect (
-				event_widget,
-				App_imp.leave_notify_event_string,
-				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, False),
-				Void,
-				False
-			)
 		end
 
 	create_key_press_actions: EV_KEY_ACTION_SEQUENCE is

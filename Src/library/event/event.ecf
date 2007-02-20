@@ -2,6 +2,8 @@
 	<target name="event">
 		<description>Event library</description>
 		<root all_classes="true"/>
+		<option namespace="EiffelSoftware.Library"/>
+		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<cluster name="event" location=".">

@@ -8,7 +8,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/include$</exclude>
 		</file_rule>
-		<option>
+		<option namespace="EiffelSoftware.Library">
 			<assertions precondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
@@ -16,6 +16,7 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="vweq" enabled="false"/>
 		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="encoding" location=".\">
 			<cluster name="implementation" location=".\implementation\">

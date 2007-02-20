@@ -27,18 +27,33 @@ feature {NONE} -- Access
 			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			l_layout ?= eiffel_layout
-			check layout_not_void: l_layout /= Void end
 			create Result.make (256)
-			Result.append (l_layout.config_eif_path)
-			Result.append ("\windows_sdk_v6.0.bat")
+			if l_layout /= Void then
+				Result.append (l_layout.config_eif_path)
+				Result.append ("\windows_sdk_v6.0.bat")
+			else
+					-- Default to using one found in SDK, typically happens for
+					-- library consumers that are used in install application or are used
+					-- with no product install base
+				Result.append (install_path)
+				Result.append ("Bin\SetEnv.cmd")
+			end
 		end
 
 	batch_file_arguments: STRING is
 			-- Arguments for `batch_file_name' execution
+		local
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			create Result.make (10)
-			Result.append ("%"" + install_path + "%"")
-			Result.append (" /Release ")
+			l_layout ?= eiffel_layout
+			if eiffel_layout /= Void then
+					-- Need to do the same check as in `batch_file_name' to ensure we do
+					-- not pass the install path as an argument when we are using the config library
+					-- in an environment that has no install-base (like an installation program)
+				Result.append ("%"" + install_path + "%" ")
+			end
+			Result.append ("/Release ")
 			if use_32bit then
 				Result.append ("/x86")
 			else

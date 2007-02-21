@@ -1053,6 +1053,20 @@ feature
 			"GDK_HINT_MAX_SIZE"
 		end
 
+	frozen gdk_hint_min_size_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_HINT_MIN_SIZE"
+		end
+
+	frozen gdk_hint_resize_inc_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_HINT_RESIZE_INC"
+		end
+
 	frozen gtk_realized_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

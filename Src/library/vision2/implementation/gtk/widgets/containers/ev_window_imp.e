@@ -164,8 +164,16 @@ feature -- Status setting
 
 	allow_resize is
 			-- Allow the resize of the window.
+		local
+			l_geometry: POINTER
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
+			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, maximum_width)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum | {EV_GTK_EXTERNALS}.gdk_hint_min_size_enum)
+			l_geometry.memory_free
 			internal_enable_border
 		end
 
@@ -201,30 +209,16 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_maximum_width (max_width: INTEGER) is
-			-- Set `maximum_width' to `max_width'.
-		local
-			a_geometry: POINTER
+	set_maximum_width (a_max_width: INTEGER) is
+			-- Set `maximum_width' to `a_max_width'.
 		do
-			a_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, max_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, maximum_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
-			a_geometry.memory_free
-			maximum_width := max_width
+			internal_set_maximum_size (a_max_width, maximum_height)
 		end
 
-	set_maximum_height (max_height: INTEGER) is
-			-- Set `maximum_height' to `max_height'.
-		local
-			a_geometry: POINTER
+	set_maximum_height (a_max_height: INTEGER) is
+			-- Set `maximum_height' to `a_max_height'.
 		do
-			a_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, maximum_width)
-			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, max_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
-			a_geometry.memory_free
-			maximum_height := max_height
+			internal_set_maximum_size (maximum_width, a_max_height)
 		end
 
 	set_title (new_title: STRING_GENERAL) is
@@ -323,6 +317,20 @@ feature {NONE} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, -1)
 			Precursor (a_minimum_width, a_minimum_height)
+		end
+
+	internal_set_maximum_size (a_max_width, a_max_height: INTEGER)
+			-- Set maximum width and height of `Current' to `a_max_width' and `a_max_height'.
+		local
+			l_geometry: POINTER
+		do
+			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
+			l_geometry.memory_free
+			maximum_width := a_max_width
+			maximum_height := a_max_height
 		end
 
 	previously_focused_widget: POINTER

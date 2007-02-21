@@ -89,31 +89,37 @@ feature {NONE} -- Implementation
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
+		local
+			l_width, l_height: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, a_width, a_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_width, a_height)
+				-- Set constraints so that resize does not break existing minimum sizing.
+			l_width := a_width.max (minimum_width)
+			l_height := a_height.max (minimum_height)
+			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, l_width, l_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
+
+				-- Set configure_event_pending to True so that dimensions are updated immediately.
+			configure_event_pending := True
 		end
 
 	width: INTEGER
 			-- Width of `Current'.
-		local
-			l_result: INTEGER_32
 		do
 			if configure_event_pending then
-				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $l_result, default_pointer)
+				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $Result, default_pointer)
+			else
+				Result := Precursor
 			end
-			Result := l_result.max (Precursor)
 		end
 
 	height: INTEGER
 			-- Height of `Current'.
-		local
-			l_result: INTEGER_32
 		do
 			if configure_event_pending then
-				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $l_result)
+				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $Result)
+			else
+				Result := Precursor
 			end
-			Result := l_result.max (Precursor)
 		end
 
 	set_x_position (a_x: INTEGER) is

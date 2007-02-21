@@ -8,8 +8,9 @@
 
 	<target name="logger">
 		<root all_classes="true" />
-
+		
 		<setting name="msil_generation" value="True"/>
+		<option namespace="EiffelSoftware.Helpers"/>
 
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -30,7 +31,7 @@
 			</file_rule>
 		</cluster>
 
-		<cluster name="logger_dotnet" location=".">
+		<cluster name="logger" location=".">
 			<condition><dotnet value="True"/></condition>
 		</cluster>
 	</target>

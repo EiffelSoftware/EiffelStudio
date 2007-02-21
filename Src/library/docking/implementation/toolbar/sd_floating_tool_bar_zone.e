@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	on_close_request is
 			-- Handle close request actions.
 		do
-			content.close_request_actions.call ([])
+			content.close_request_actions.call (Void)
 		end
 
 	on_customize is

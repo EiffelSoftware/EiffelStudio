@@ -355,11 +355,11 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 						internal_tab_drawer.expose_hot (internal_width, info)
 					end
 				else
-					select_actions.call ([])
+					select_actions.call (Void)
 				end
 
 			when 3 then
-				select_actions.call ([])
+				select_actions.call (Void)
 				create l_menu.make (internal_notebook)
 				l_menu.show_at (parent, a_x, a_y)
 			else
@@ -379,7 +379,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				else
 					internal_tab_drawer.expose_hot (internal_width, info)
 				end
-				close_actions.call ([])
+				close_actions.call (Void)
 			end
 		end
 

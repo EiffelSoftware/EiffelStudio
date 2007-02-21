@@ -248,7 +248,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			internal_docking_manager.command.unlock_update
 			if is_group_auto_hide_zone_showing then
 				-- We must show immediately
-				pointer_enter_actions.call ([])
+				pointer_enter_actions.call (Void)
 			else
 				delay_timer.actions.extend_kamikaze (agent on_delay_timer)
 				delay_timer.set_interval ({SD_SHARED}.auto_hide_tab_stub_show_delay)
@@ -258,7 +258,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer press actions
 		do
-			pointer_press_actions.call ([])
+			pointer_press_actions.call (Void)
 		end
 
 	on_delay_timer is
@@ -273,7 +273,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			create l_rect.make (screen_x, screen_y, width, height)
 			if l_rect.has_x_y (l_point.x, l_point.y) then
 				-- If pointer still in current area
-				pointer_enter_actions.call ([])
+				pointer_enter_actions.call (Void)
 			end
 			delay_timer.set_interval (0)
 		end

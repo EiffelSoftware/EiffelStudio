@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 			create custom_actions
 
 			tool_bar.set_row_height (l_shared.floating_title_bar_height)
-			tool_bar.compute_minmum_size
+			tool_bar.compute_minimum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)
 			customize.set_tooltip (l_shared.interface_names.tooltip_toolbar_tail_indicator)
 			close.set_pixmap (l_shared.icons.tool_bar_floating_close)
 			close.set_tooltip (l_shared.interface_names.tooltip_toolbar_floating_close)
-			tool_bar.compute_minmum_size
+			tool_bar.compute_minimum_size
 		end
 
 	init_pointer_double_press_actions is
@@ -127,19 +127,19 @@ feature {NONE} -- Implementation
 	on_pointer_double_press is
 			-- Handle pointer double press actions.
 		do
-			pointer_double_press_actions.call ([])
+			pointer_double_press_actions.call (Void)
 		end
 
 	on_close_selected is
 			-- Handle user press X button.
 		do
-			close_request_actions.call ([])
+			close_request_actions.call (Void)
 		end
 
 	on_custom_selected is
 			-- Handle user press down arrow button.
 		do
-			custom_actions.call ([])
+			custom_actions.call (Void)
 		end
 
 invariant

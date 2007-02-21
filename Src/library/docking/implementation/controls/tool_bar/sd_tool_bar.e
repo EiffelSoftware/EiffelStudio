@@ -114,11 +114,11 @@ feature -- Command
 			parent_void: a_item.tool_bar = Void
 		end
 
-	compute_minmum_size is
-			-- Compute `minmum_width' and `minmum_height'.
+	compute_minimum_size is
+			-- Compute `minmum_width' and `minimum_height'.
 		local
-			l_minmum_width: INTEGER
-			l_minmum_height: INTEGER
+			l_minimum_width: INTEGER
+			l_minimum_height: INTEGER
 			l_item: SD_TOOL_BAR_ITEM
 			l_items: like internal_items
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -128,7 +128,7 @@ feature -- Command
 				l_items := items
 				l_items.start
 				if l_items.count > 0 then
-					l_minmum_height := row_height
+					l_minimum_height := row_height
 				end
 			until
 				l_items.after
@@ -136,32 +136,32 @@ feature -- Command
 				l_item := l_items.item
 				l_separator ?= l_item
 				if l_items.index = l_items.count or l_item.is_wrap then
-					-- Minmum width only make sence in this case.
+					-- Minimum width only make sence in this case.
 					if l_separator /= Void then
 						-- It's a separator, we should calculate the item before
 						if l_item_before /= Void then
 							l_item := l_item_before
 						end
 					end
-					if l_minmum_width < l_item.rectangle.right then
-						l_minmum_width := l_item.rectangle.right
+					if l_minimum_width < l_item.rectangle.right then
+						l_minimum_width := l_item.rectangle.right
 					end
 				end
 				if l_items.index = l_items.count then
-					l_minmum_height := l_items.item.rectangle.bottom
+					l_minimum_height := l_item.rectangle.bottom
 				end
 
 				l_item_before := l_items.item
 				l_items.forth
 			end
 			debug ("docking")
-				print ("%NSD_TOOL_BAR compute minimum size minimum_width is: " + l_minmum_width.out)
-				print ("%NSD_TOOL_BAR compute minimum size minimum_height is: " + l_minmum_height.out)
+				print ("%NSD_TOOL_BAR compute minimum size minimum_width is: " + l_minimum_width.out)
+				print ("%NSD_TOOL_BAR compute minimum size minimum_height is: " + l_minimum_height.out)
 				print ("%N             items.count: " + l_items.count.out)
 			end
 
-			set_minimum_width (l_minmum_width)
-			set_minimum_height (l_minmum_height)
+			set_minimum_width (l_minimum_width)
+			set_minimum_height (l_minimum_height)
 		end
 
 	wipe_out is
@@ -265,6 +265,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			has: has (a_item)
 		local
 			l_stop: BOOLEAN
+			l_item: SD_TOOL_BAR_ITEM
 			l_items: like internal_items
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
@@ -275,14 +276,15 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			until
 				l_items.after or l_stop
 			loop
-				l_separator ?= l_items.item
-				if l_items.item /= a_item then
-					if l_items.item.is_wrap then
+				l_item := l_items.item
+				if l_item /= a_item then
+					if l_item.is_wrap then
 						Result := start_x
 					else
-						Result := Result + l_items.item.width
+						Result := Result + l_item.width
 					end
 				else
+					l_separator ?= l_item
 					l_stop := True
 					if l_separator /= Void and then l_separator.is_wrap then
 						Result := start_x
@@ -298,6 +300,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			has: has (a_item)
 		local
 			l_stop: BOOLEAN
+			l_item: SD_TOOL_BAR_ITEM
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_items: like internal_items
 		do
@@ -308,10 +311,11 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			until
 				l_items.after or l_stop
 			loop
-				l_separator ?= l_items.item
-				if l_items.item /= a_item then
-					if l_items.item.is_wrap then
-						Result := Result + l_items.item.height
+				l_item := l_items.item
+				l_separator ?= l_item
+				if l_item /= a_item then
+					if l_item.is_wrap then
+						Result := Result + l_item.height
 					end
 					if l_separator /= Void and then l_separator.is_wrap then
 						Result := Result + l_separator.width
@@ -319,7 +323,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 				else
 					l_stop := True
 					if l_separator /= Void and then l_separator.is_wrap then
-						Result := Result + l_items.item.height
+						Result := Result + l_item.height
 					end
 				end
 				l_items.forth
@@ -331,6 +335,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_rect: EV_RECTANGLE
+			l_item: SD_TOOL_BAR_ITEM
 		do
 			if width /= 0 and height /= 0 then
 				from
@@ -340,12 +345,13 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 					l_items.after
 				loop
 					-- item's tool bar query maybe Void, because it's hidden when not enough space to display.
-					if l_items.item.is_need_redraw and l_items.item.tool_bar /= Void then
-						l_rect := l_items.item.rectangle
+					l_item := l_items.item
+					if l_item.is_need_redraw and l_item.tool_bar /= Void then
+						l_rect := l_item.rectangle
 						drawer.start_draw (l_rect)
-						redraw_item (l_items.item)
+						redraw_item (l_item)
 						drawer.end_draw
-						l_items.item.disable_redraw
+						l_item.disable_redraw
 					end
 					l_items.forth
 				end
@@ -408,6 +414,7 @@ feature {NONE} -- Agents
 			-- Handle pointer motion actions.
 		local
 			l_items: like internal_items
+			l_item: SD_TOOL_BAR_ITEM
 		do
 			if pointer_entered then
 				from
@@ -416,11 +423,12 @@ feature {NONE} -- Agents
 				until
 					l_items.after
 				loop
-					l_items.item.on_pointer_motion (a_x, a_y)
-					l_items.item.on_pointer_motion_for_tooltip (a_x, a_y)
-					if l_items.item.is_need_redraw then
-						drawer.start_draw (l_items.item.rectangle)
-						redraw_item (l_items.item)
+					l_item := l_items.item
+					l_item.on_pointer_motion (a_x, a_y)
+					l_item.on_pointer_motion_for_tooltip (a_x, a_y)
+					if l_item.is_need_redraw then
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
 						drawer.end_draw
 					end
 					l_items.forth
@@ -432,6 +440,7 @@ feature {NONE} -- Agents
 			-- Handle pointer press actions.
 		local
 			l_items: like internal_items
+			l_item: SD_TOOL_BAR_ITEM
 		do
 			debug ("docking")
 				print ("%NSD_TOOL_BAR on_pointer_press")
@@ -444,10 +453,11 @@ feature {NONE} -- Agents
 				until
 					l_items.after
 				loop
-					l_items.item.on_pointer_press (a_x, a_y)
-					if l_items.item.is_need_redraw then
-						drawer.start_draw (l_items.item.rectangle)
-						redraw_item (l_items.item)
+					l_item := l_items.item
+					l_item.on_pointer_press (a_x, a_y)
+					if l_item.is_need_redraw then
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
 						drawer.end_draw
 					end
 					l_items.forth
@@ -475,6 +485,7 @@ feature {NONE} -- Agents
 			-- Handle pointer release actions.
 		local
 			l_items: like internal_items
+			l_item: SD_TOOL_BAR_ITEM
 		do
 
 			if a_button = 1 then
@@ -486,10 +497,11 @@ feature {NONE} -- Agents
 				until
 					l_items.after
 				loop
-					l_items.item.on_pointer_release (a_x, a_y)
-					if l_items.item.is_need_redraw then
-						drawer.start_draw (l_items.item.rectangle)
-						redraw_item (l_items.item)
+					l_item := l_items.item
+					l_item.on_pointer_release (a_x, a_y)
+					if l_item.is_need_redraw then
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
 						drawer.end_draw
 					end
 					l_items.forth
@@ -512,6 +524,7 @@ feature {NONE} -- Agents
 			-- Handle pointer leave actions.
 		local
 			l_items: like internal_items
+			l_item: SD_TOOL_BAR_ITEM
 		do
 			from
 				l_items := items
@@ -519,10 +532,11 @@ feature {NONE} -- Agents
 			until
 				l_items.after
 			loop
-				l_items.item.on_pointer_leave
-				if l_items.item.is_need_redraw then
-					drawer.start_draw (l_items.item.rectangle)
-					redraw_item (l_items.item)
+				l_item := l_items.item
+				l_item.on_pointer_leave
+				if l_item.is_need_redraw then
+					drawer.start_draw (l_item.rectangle)
+					redraw_item (l_item)
 					drawer.end_draw
 				end
 				l_items.forth
@@ -537,9 +551,11 @@ feature {NONE} -- Agents
 		local
 			l_screen: EV_SCREEN
 			l_item: SD_TOOL_BAR_ITEM
+			l_pointer_position: EV_COORDINATE
 		do
 			create l_screen
-			l_item := item_at_position (l_screen.pointer_position.x, l_screen.pointer_position.y)
+			l_pointer_position := l_screen.pointer_position
+			l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
 			if l_item /= Void then
 				l_item.drop_actions.call ([a_any])
 			end
@@ -550,10 +566,12 @@ feature {NONE} -- Agents
 		local
 			l_screen: EV_SCREEN
 			l_item: SD_TOOL_BAR_ITEM
+			l_pointer_position: EV_COORDINATE
 		do
 			create l_screen
-			if is_item_position_valid (l_screen.pointer_position.x, l_screen.pointer_position.y)  then
-				l_item := item_at_position (l_screen.pointer_position.x, l_screen.pointer_position.y)
+			l_pointer_position := l_screen.pointer_position
+			if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
+				l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
 				if l_item /= Void then
 					Result := l_item.drop_actions.accepts_pebble (a_any)
 				end
@@ -624,18 +642,21 @@ feature {SD_TOOL_BAR} -- Implementation
 			in_position: is_item_position_valid (a_screen_x, a_screen_y)
 		local
 			l_x, l_y: INTEGER
+			l_items: like internal_items
 		do
 			from
 				l_x := a_screen_x - screen_x
 				l_y := a_screen_y - screen_y
-				internal_items.start
+				l_items := internal_items
+				l_items.start
 			until
-				internal_items.after or Result /= Void
+				l_items.after or Result /= Void
 			loop
-				if internal_items.item.rectangle.has_x_y (l_x, l_y) then
-					Result := internal_items.item
+				Result := l_items.item
+				if not Result.rectangle.has_x_y (l_x, l_y) then
+					Result := Void
 				end
-				internal_items.forth
+				l_items.forth
 			end
 		end
 

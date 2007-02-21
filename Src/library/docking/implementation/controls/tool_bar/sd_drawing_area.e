@@ -22,7 +22,7 @@ inherit
 feature -- Command
 
 	enable_capture is
-			-- Redefiine
+			-- Redefine
 		do
 			setter.before_enable_capture
 			Precursor {EV_DRAWING_AREA}

@@ -91,7 +91,7 @@ feature -- Hanlde pointer events
 	cancel_tracing_pointer is
 			-- Cancel tracing pointer.
 		do
-			cancel_actions.call ([])
+			cancel_actions.call (Void)
 			clear_up
 		ensure
 			not_tracing: is_tracing = False
@@ -344,6 +344,7 @@ feature {NONE} -- Implementation functions
 		require
 			a_list_not_void: a_list /= Void
 		local
+			l_zone: SD_ZONE
 			l_hot_zone_source: SD_DOCKER_SOURCE
 			l_mutli_zone: SD_TAB_ZONE
 		do
@@ -352,14 +353,15 @@ feature {NONE} -- Implementation functions
 			until
 				a_list.after
 			loop
-				l_hot_zone_source ?= a_list.item
+				l_zone := a_list.item
+				l_hot_zone_source ?= l_zone
 				-- Ingore the classes we don't care.
-				if l_hot_zone_source /= Void and a_list.item.is_displayed then
-					l_mutli_zone ?= a_list.item
+				if l_hot_zone_source /= Void and l_zone.is_displayed then
+					l_mutli_zone ?= l_zone
 					if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then
-						add_hot_zone_on_type (a_list.item, l_hot_zone_source)
-					elseif a_list.item /= caller then
-						add_hot_zone_on_type (a_list.item, l_hot_zone_source)
+						add_hot_zone_on_type (l_zone, l_hot_zone_source)
+					elseif l_zone /= caller then
+						add_hot_zone_on_type (l_zone, l_hot_zone_source)
 					end
 				end
 				a_list.forth
@@ -393,7 +395,6 @@ feature {NONE} -- Implementation functions
 				hot_zones.after or l_drawed
 			loop
 				l_drawed := hot_zones.item.update_for_indicator (a_screen_x, a_screen_y)
-
 				hot_zones.forth
 			end
 
@@ -455,10 +456,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -83,7 +83,7 @@ feature {NONE} -- Implementation functions
 				end
 				a_groups_info.forth
 			end
-			zone.tool_bar.compute_minmum_size
+			zone.tool_bar.compute_minimum_size
 			to_minmum_size
 			debug ("docking")
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp END")

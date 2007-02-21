@@ -96,8 +96,9 @@ feature -- Querys
 
 			if Result = Void then
 				-- Maybe place holder content not be shown, we query it here.
-				if a_unique_title.as_string_32.is_equal (internal_docking_manager.zones.place_holder_content.unique_title.as_string_32) then
-					Result := internal_docking_manager.zones.place_holder_content
+				Result := internal_docking_manager.zones.place_holder_content
+				if not a_unique_title.as_string_32.is_equal (Result.unique_title.as_string_32) then
+					Result := Void
 				end
 			end
 		end
@@ -107,18 +108,19 @@ feature -- Querys
 		require
 			a_zone_not_void: a_zone /= Void
 		local
-			l_contaienrs: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
+			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
 			from
-				l_contaienrs := internal_docking_manager.inner_containers
-				l_contaienrs.start
+				l_containers := internal_docking_manager.inner_containers
+				l_containers.start
 			until
-				l_contaienrs.after or Result /= Void
+				l_containers.after or Result /= Void
 			loop
-				if l_contaienrs.item.has_recursive (a_zone) then
-					Result := l_contaienrs.item
+				Result := l_containers.item
+				if not Result.has_recursive (a_zone) then
+					Result := Void
 				end
-				l_contaienrs.forth
+				l_containers.forth
 			end
 			if Result = Void then
 				Result := inner_container_main

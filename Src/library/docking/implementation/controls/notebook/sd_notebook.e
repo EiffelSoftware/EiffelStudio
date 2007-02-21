@@ -163,7 +163,7 @@ feature -- Command
 			internal_tabs.extend (l_tab)
 			l_tab.set_drop_actions (a_content.drop_actions)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
-			l_tab.close_actions.extend (agent (a_content.close_request_actions).call ([]))
+			l_tab.close_actions.extend (agent (a_content.close_request_actions).call (Void))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)
 
@@ -201,7 +201,7 @@ feature -- Command
 
 				select_item (internal_contents.item, a_focus)
 				if a_focus then
-					selection_actions.call ([])
+					selection_actions.call (Void)
 				end
 			end
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
@@ -480,6 +480,7 @@ feature {NONE}  -- Implementation
 		local
 			l_in_tabs: BOOLEAN
 			l_tabs_snapshot: like internal_tabs
+			l_tab_item: SD_NOTEBOOK_TAB
 		do
 			-- FIXIT: This function should not be called on GTK.
 			-- 		  So actually this if clause is should not needed.
@@ -490,17 +491,15 @@ feature {NONE}  -- Implementation
 				until
 					l_tabs_snapshot.after or l_in_tabs
 				loop
-					if l_tabs_snapshot.item /= dragging_tab then
-						if tab_has_x_y (l_tabs_snapshot.item, a_screen_x, a_screen_y)  then
+					l_tab_item := l_tabs_snapshot.item
+					if l_tab_item /= dragging_tab then
+						if tab_has_x_y (l_tab_item, a_screen_x, a_screen_y)  then
 							l_in_tabs := True
 							internal_docking_manager.command.lock_update (Current, False)
-
-							swap_tabs_and_contents (dragging_tab, l_tabs_snapshot.item)
-
-							internal_tab_box.swap (dragging_tab, l_tabs_snapshot.item)
+							swap_tabs_and_contents (dragging_tab, l_tab_item)
+							internal_tab_box.swap (dragging_tab, l_tab_item)
 
 							-- Is already done by on_resize
-
 							internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 							internal_docking_manager.command.unlock_update
 						end
@@ -522,7 +521,7 @@ feature {NONE}  -- Implementation
 		do
 			select_item (content_by_tab (a_tab), True)
 			notify_tab (a_tab, True)
-			selection_actions.call ([])
+			selection_actions.call (Void)
 		end
 
 	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
@@ -539,16 +538,19 @@ feature {NONE}  -- Implementation
 
 	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN) is
 			-- Disable all tabs selection except `a_except'. Select `a_except'.
+		local
+			l_tab_item: SD_NOTEBOOK_TAB
 		do
 			from
 				internal_tabs.start
 			until
 				internal_tabs.after
 			loop
-				if internal_tabs.item = a_except then
-					internal_tabs.item.set_selected (True, a_focus)
+				l_tab_item := internal_tabs.item
+				if l_tab_item = a_except then
+					l_tab_item.set_selected (True, a_focus)
 				else
-					internal_tabs.item.set_selected (False, a_focus)
+					l_tab_item.set_selected (False, a_focus)
 				end
 
 				internal_tabs.forth

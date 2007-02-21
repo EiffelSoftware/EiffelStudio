@@ -162,7 +162,7 @@ feature -- Implementation
 			else
 				enable_non_focus_color
 			end
-			enable_color_actions.call ([])
+			enable_color_actions.call (Void)
 		end
 
 	on_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is

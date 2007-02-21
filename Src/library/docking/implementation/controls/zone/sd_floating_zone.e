@@ -421,11 +421,11 @@ feature {NONE} -- Agents
 					until
 						l_contents.after
 					loop
-						l_contents.item.close_request_actions.call ([])
+						l_contents.item.close_request_actions.call (Void)
 						l_contents.forth
 					end
 				else
-					l_zones.item.content.close_request_actions.call ([])
+					l_zones.item.content.close_request_actions.call (Void)
 				end
 
 				l_zones.forth

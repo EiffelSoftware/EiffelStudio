@@ -305,7 +305,7 @@ feature -- Set
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				state.set_focus (Current)
 				if internal_focus_in_actions /= Void then
-					internal_focus_in_actions.call ([])
+					internal_focus_in_actions.call (Void)
 				end
 			end
 		end
@@ -564,7 +564,7 @@ feature {SD_STATE} -- implementation
 			-- Notify focus in actions.
 		do
 			if internal_focus_in_actions /= Void then
-				internal_focus_in_actions.call ([])
+				internal_focus_in_actions.call (Void)
 			end
 		end
 

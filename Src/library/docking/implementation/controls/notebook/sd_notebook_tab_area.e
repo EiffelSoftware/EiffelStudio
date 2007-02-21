@@ -54,7 +54,7 @@ feature {NONE}  -- Initlization
 			disable_item_expand (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
-			internal_tool_bar.compute_minmum_size
+			internal_tool_bar.compute_minimum_size
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
 			set_minimum_width (0)
@@ -91,7 +91,9 @@ feature -- Command
 			-- Hide/show tabs base on space.
 		local
 			l_tabs, l_all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+			l_tab_item: SD_NOTEBOOK_TAB
 			l_tab_before: SD_NOTEBOOK_TAB
+			l_tab_item_info, l_tab_before_info: SD_NOTEBOOK_TAB_INFO
 		do
 			if a_width >= 0 then
 				ignore_resize := True
@@ -105,7 +107,6 @@ feature -- Command
 					l_tabs.after
 				loop
 					l_tabs.item.hide
-
 					l_tabs.forth
 				end
 
@@ -114,28 +115,31 @@ feature -- Command
 				until
 					l_all_tabs.after
 				loop
-					if not l_tabs.has (l_all_tabs.item) then
-						l_all_tabs.item.show
+					l_tab_item := l_all_tabs.item
+					if not l_tabs.has (l_tab_item) then
+						l_tab_item.show
+						l_tab_item_info	:= l_tab_item.info
 						if l_tab_before = Void then
-							l_all_tabs.item.info.set_tab_before (False)
-							l_all_tabs.item.info.set_tab_after (False)
+							l_tab_item_info.set_tab_before (False)
+							l_tab_item_info.set_tab_after (False)
 						else
-							l_tab_before.info.set_tab_after (True)
-							if l_all_tabs.item.is_selected then
-								l_tab_before.info.set_tab_after_selected (True)
+							l_tab_before_info	:= l_tab_before.info
+							l_tab_before_info.set_tab_after (True)
+							if l_tab_item.is_selected then
+								l_tab_before_info.set_tab_after_selected (True)
 							else
-								l_tab_before.info.set_tab_after_selected (False)
+								l_tab_before_info.set_tab_after_selected (False)
 							end
-							l_all_tabs.item.info.set_tab_before (True)
+							l_tab_item_info.set_tab_before (True)
 							if l_tab_before.is_selected then
-								l_all_tabs.item.info.set_tab_before_selected (True)
+								l_tab_item_info.set_tab_before_selected (True)
 							else
-								l_all_tabs.item.info.set_tab_before_selected (False)
+								l_tab_item_info.set_tab_before_selected (False)
 							end
-							l_all_tabs.item.info.set_tab_after (False)
+							l_tab_item_info.set_tab_after (False)
 						end
-						l_all_tabs.item.info.set_tab_after (False)
-						l_tab_before := l_all_tabs.item
+						l_tab_item_info.set_tab_after (False)
+						l_tab_before := l_tab_item
 						ignore_resize := True
 					end
 					l_all_tabs.forth
@@ -302,6 +306,7 @@ feature {NONE}  -- Implementation functions
 			l_total_width: INTEGER
 			l_enough: BOOLEAN
 			l_tabs: like all_tabs
+			l_tab: SD_NOTEBOOK_TAB
 		do
 			create internal_tabs_not_shown.make (1)
 			if not is_empty then
@@ -314,11 +319,11 @@ feature {NONE}  -- Implementation functions
 					until
 						l_tabs.before or l_enough
 					loop
-
-						if not l_tabs.item.is_selected then
+						l_tab := l_tabs.item
+						if not l_tab.is_selected then
 							if l_total_width > a_width then
-								internal_tabs_not_shown.extend (l_tabs.item)
-								l_total_width := l_total_width - l_tabs.item.prefered_size
+								internal_tabs_not_shown.extend (l_tab)
+								l_total_width := l_total_width - l_tab.prefered_size
 							else
 								l_enough := True
 							end
@@ -356,12 +361,15 @@ feature {NONE}  -- Implementation functions
 					internal_auto_hide_indicator.update
 				end
 
-				internal_tool_bar.compute_minmum_size
+				internal_tool_bar.compute_minimum_size
 				internal_tool_bar.show
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then
 					-- Only show one tab now.
 					l_only_tab := find_only_tab_shown
-					if a_width - internal_tool_bar.width >= 0 and a_width - internal_tool_bar.width < l_only_tab.prefered_size then
+					if
+						a_width - internal_tool_bar.width >= 0
+						and a_width - internal_tool_bar.width < l_only_tab.prefered_size
+					then
 						l_only_tab.set_width_not_enough_space (a_width - internal_tool_bar.width)
 					end
 				end
@@ -409,6 +417,7 @@ feature {NONE}  -- Implementation functions
 			only_show_one_tab: all_tabs.count - 1 = internal_tabs_not_shown.count
 		local
 			l_tabs, l_result: like all_tabs
+			l_tab: SD_NOTEBOOK_TAB
 		do
 			l_tabs := all_tabs
 			l_result := all_tabs
@@ -417,13 +426,14 @@ feature {NONE}  -- Implementation functions
 			until
 				l_tabs.after
 			loop
+				l_tab := l_tabs.item
 				from
 					internal_tabs_not_shown.start
 				until
 					internal_tabs_not_shown.after
 				loop
-					if internal_tabs_not_shown.item = l_tabs.item then
-						l_result.prune_all (l_tabs.item)
+					if internal_tabs_not_shown.item = l_tab then
+						l_result.prune_all (l_tab)
 					end
 					internal_tabs_not_shown.forth
 				end

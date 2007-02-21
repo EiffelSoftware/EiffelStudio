@@ -50,8 +50,9 @@ feature -- Zones managements
 				zones.after or
 				Result /= Void
 			loop
-				if zones.item.content = a_content then
-					Result := zones.item
+				Result := zones.item
+				if Result.content /= a_content then
+					Result := Void
 				end
 				zones.forth
 			end
@@ -69,8 +70,7 @@ feature -- Zones managements
 			from
 				zones.start
 			until
-				zones.after or
-				Result
+				zones.after or Result
 			loop
 				Result := zones.item.has (a_content)
 				zones.forth
@@ -111,6 +111,8 @@ feature -- Zones managements
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
+		local
+			l_parent: EV_CONTAINER
 		do
 			if a_zone.parent /= Void then
 				a_zone.parent.prune (a_zone)
@@ -119,8 +121,9 @@ feature -- Zones managements
 			zones.start
 			zones.prune (a_zone)
 
-			if a_zone.content.user_widget.parent /= Void then
-				a_zone.content.user_widget.parent.prune (a_zone.content.user_widget)
+			l_parent := a_zone.content.user_widget.parent
+			if l_parent /= Void then
+				l_parent.prune (a_zone.content.user_widget)
 			end
 		ensure
 			a_zone_pruned: not zones.has (a_zone)

@@ -94,8 +94,7 @@ feature -- Query
 					Result := Result + {SD_TOOL_BAR}.padding_width + text_width
 				end
 			end
-			Result := Result + icon_width
-			Result := Result + {SD_TOOL_BAR}.padding_width
+			Result := Result + icon_width + {SD_TOOL_BAR}.padding_width
 		end
 
 	text_width: INTEGER is
@@ -256,7 +255,7 @@ feature {SD_TOOL_BAR} -- Agents
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					state := {SD_TOOL_BAR_ITEM_STATE}.hot
 					is_need_redraw := True
-					select_actions.call ([])
+					select_actions.call (Void)
 				else
 					is_need_redraw := False
 				end

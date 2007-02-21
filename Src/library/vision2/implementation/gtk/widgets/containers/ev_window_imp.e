@@ -182,6 +182,12 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
+				if user_can_resize then
+					allow_resize
+				else
+						-- Forbid the window manager from resizing window.
+					forbid_resize
+				end
 				Precursor {EV_GTK_WINDOW_IMP}
 			end
 			if blocking_window /= Void then
@@ -203,6 +209,7 @@ feature -- Status setting
 				disable_capture
 				Precursor {EV_GTK_WINDOW_IMP}
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
+				allow_resize
 				set_position (a_x_pos, a_y_pos)
 			end
 		end

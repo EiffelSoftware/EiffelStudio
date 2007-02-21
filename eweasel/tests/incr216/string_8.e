@@ -488,6 +488,41 @@ feature -- Element change
 		do
 		end
 
+	append_integer_8 (i: INTEGER_8) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_integer_16 (i: INTEGER_16) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_integer_64 (i: INTEGER_64) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_natural_8 (i: NATURAL_8) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_natural_16 (i: NATURAL_16) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_natural_32 (i: NATURAL_32) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
+	append_natural_64 (i: NATURAL_64) is
+			-- Append the string representation of `i' at end.
+		do
+		end
+
 	append_real (r: REAL) is
 			-- Append the string representation of `r' at end.
 		do

@@ -11,12 +11,16 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 
+		<option namespace="EiffelSoftware.Helpers">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 
 		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>
-		<assembly name="system_" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system" location="${ISE_DOTNET_FRAMEWORK}\system.dll" prefix="SYSTEM_DLL_"/>
 
-		<cluster name="dotnet_resolver" location="." recursive="true">
+		<cluster name="assembly_resolver" location="." recursive="true">
 			<condition><dotnet value="True"/></condition>
 			<file_rule>
 				<exclude>/example$</exclude>

@@ -325,7 +325,6 @@ feature {NONE} -- Graphical initialization and changes
 			dialog.extend (cnt)
 
 				--| Finish setting up the dialog.
-			dialog.set_minimum_width (dialog.minimum_width.max (2 * sz))
 			dialog.set_width (dialog.minimum_width.max (3 * sz))
 			dialog.set_default_push_button (ok_button)
 			dialog.set_default_cancel_button (cb)

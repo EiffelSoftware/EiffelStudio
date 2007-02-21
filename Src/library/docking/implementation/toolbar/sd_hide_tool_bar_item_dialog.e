@@ -50,7 +50,7 @@ feature {NONE}  -- Initlization
 			init_hidden_items (a_hidden_items)
 			init_customize_label
 			init_close
-			internal_tool_bar.compute_minmum_size
+			internal_tool_bar.compute_minimum_size
 
 			parent_tool_bar := a_tool_bar
 

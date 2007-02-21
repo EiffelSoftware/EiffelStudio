@@ -325,7 +325,7 @@ feature {NONE} -- Agents for docker
 			internal_title_bar.set_title (l_content.long_title)
 			update_mini_tool_bar (l_content)
 			if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
-				l_content.internal_focus_in_actions.call ([])
+				l_content.internal_focus_in_actions.call (Void)
 			end
 			internal_docking_manager.property.set_last_focus_content (l_content)
 		ensure

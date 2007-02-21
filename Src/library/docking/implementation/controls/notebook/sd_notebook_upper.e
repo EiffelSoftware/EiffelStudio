@@ -201,19 +201,19 @@ feature {NONE}  -- Agents
 	on_normal_max_window is
 			-- Handle normal max window.
 		do
-			normal_max_actions.call ([])
+			normal_max_actions.call (Void)
 		end
 
 	on_minimize is
 			-- Handle minimize actions.
 		do
-			minimize_actions.call ([])
+			minimize_actions.call (Void)
 		end
 
 	on_minimize_all is
 			-- Handle minimize all actions.
 		do
-			minimize_all_actions.call ([])
+			minimize_all_actions.call (Void)
 		end
 
 	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is

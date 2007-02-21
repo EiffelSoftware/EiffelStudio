@@ -194,19 +194,19 @@ feature {NONE} -- Implemention
 	close is
 			-- Handle close window,
 		do
-			close_request_actions.call ([])
+			close_request_actions.call (Void)
 		end
 
 	on_normal_max_window is
 			-- Handle normal\max window.
 		do
-			normal_max_action.call ([])
+			normal_max_action.call (Void)
 		end
 
 	stick is
 			-- Handle stick window.
 		do
-			stick_actions.call ([])
+			stick_actions.call (Void)
 		end
 
 	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

@@ -61,7 +61,7 @@ feature {NONE}  -- Agents
 		require
 			not_void: a_content /= Void
 		do
-			a_content.close_request_actions.call ([])
+			a_content.close_request_actions.call (Void)
 		end
 
 	on_close_others (a_content: SD_CONTENT) is
@@ -78,7 +78,7 @@ feature {NONE}  -- Agents
 			until
 				l_contents.after
 			loop
-				l_contents.item.close_request_actions.call ([])
+				l_contents.item.close_request_actions.call (Void)
 				l_contents.forth
 			end
 		end
@@ -96,7 +96,7 @@ feature {NONE}  -- Agents
 			until
 				l_contents.after
 			loop
-				l_contents.item.close_request_actions.call ([])
+				l_contents.item.close_request_actions.call (Void)
 				l_contents.forth
 			end
 		end

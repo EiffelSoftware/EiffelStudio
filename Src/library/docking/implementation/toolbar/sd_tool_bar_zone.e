@@ -257,7 +257,7 @@ feature -- Command
 	compute_minmum_size is
 			-- Redefine
 		do
-			tool_bar.compute_minmum_size
+			tool_bar.compute_minimum_size
 			if row /= Void and row.has (tool_bar) then
 				row.set_item_size (tool_bar, tool_bar.minimum_width, tool_bar.minimum_height)
 			end

@@ -26,7 +26,7 @@ inherit
 			extend,
 			force,
 			prune,
-			compute_minmum_size,
+			compute_minimum_size,
 			wipe_out,
 			items,
 			has,
@@ -154,10 +154,10 @@ feature -- Command
 			end
 		end
 
-	compute_minmum_size is
+	compute_minimum_size is
 			-- Compute minimum size.
 		do
-			tool_bar.compute_minmum_size
+			tool_bar.compute_minimum_size
 			check has: has_fixed (tool_bar) end
 			set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
 			set_item_size (tool_bar, minimum_width, minimum_height)

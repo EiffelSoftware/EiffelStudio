@@ -409,7 +409,7 @@ feature {NONE} -- Agents
 				stick.set_pixmap (internal_shared.icons.stick)
 				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick)
 			end
-			stick_select_actions.call ([])
+			stick_select_actions.call (Void)
 		end
 
 	on_normal_max is
@@ -423,13 +423,13 @@ feature {NONE} -- Agents
 				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			end
 
-			normal_max_actions.call ([])
+			normal_max_actions.call (Void)
 		end
 
 	on_close is
 			-- Handle `close_request_actions'.
 		do
-			close_request_actions.call ([])
+			close_request_actions.call (Void)
 		end
 
 feature {NONE} -- Implementation

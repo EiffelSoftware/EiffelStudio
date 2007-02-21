@@ -83,12 +83,12 @@ feature {NONE} -- Agents
 						state := {SD_TOOL_BAR_ITEM_STATE}.hot_checked
 						last_state := {SD_TOOL_BAR_ITEM_STATE}.checked
 						is_need_redraw := True
-						select_actions.call ([])
+						select_actions.call (Void)
 					elseif last_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked or last_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
 						state := {SD_TOOL_BAR_ITEM_STATE}.hot
 						last_state := {SD_TOOL_BAR_ITEM_STATE}.normal
 						is_need_redraw := True
-						select_actions.call ([])
+						select_actions.call (Void)
 					end
 				else
 					is_need_redraw := False

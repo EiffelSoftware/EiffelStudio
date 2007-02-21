@@ -79,7 +79,7 @@ feature  -- Agents
 						internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
 						l_zones.item.on_focus_in (Void)
 						if l_zones.item.content.focus_in_actions /= Void then
-							l_zones.item.content.focus_in_actions.call ([])
+							l_zones.item.content.focus_in_actions.call (Void)
 						end
 					else
 						l_auto_hide_zone ?= internal_docking_manager.property.last_focus_content.state.zone

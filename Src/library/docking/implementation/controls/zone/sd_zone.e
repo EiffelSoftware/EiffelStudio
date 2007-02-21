@@ -202,7 +202,7 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 			if not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.set_title_focus (False)
 			end
-			content.focus_out_actions.call ([])
+			content.focus_out_actions.call (Void)
 		end
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 	on_close_request is
 			-- Handle close request actions.
 		do
-			content.close_request_actions.call ([])
+			content.close_request_actions.call (Void)
 		end
 
 	internal_docking_manager: SD_DOCKING_MANAGER

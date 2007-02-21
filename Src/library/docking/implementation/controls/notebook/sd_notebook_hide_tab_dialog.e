@@ -181,7 +181,7 @@ feature {NONE} -- Implementation agents.
 			l_content := internal_notebook.content_by_tab (items_and_tabs.i_th (a_index).notebook_tab)
 
 			if l_old_content /= Void and then l_content /= l_old_content then
-				l_old_content.focus_out_actions.call ([])
+				l_old_content.focus_out_actions.call (Void)
 			end
 
 			select_content (l_content)
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation functions.
 		do
 			create l_screen
 			l_max_height := (l_screen.height * max_screen_height_proportion).ceiling
-			internal_tool_bar.compute_minmum_size
+			internal_tool_bar.compute_minimum_size
 			internal_scroll_area.set_item_height (internal_tool_bar.minimum_height)
 			if minimum_height + internal_tool_bar.minimum_height  <= l_max_height then
 				set_height (minimum_height + internal_tool_bar.minimum_height)
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation functions.
 		require
 			not_void: a_content /= Void
 		do
-			a_content.focus_in_actions.call ([])
+			a_content.focus_in_actions.call (Void)
 			internal_notebook.select_item (a_content, True)
 		end
 

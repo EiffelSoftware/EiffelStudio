@@ -250,7 +250,7 @@ feature {NONE} -- Implementation functions
 			-- Cancel tracing pointer.
 		do
 			clean
-			cancel_actions.call ([])
+			cancel_actions.call (Void)
 		end
 
 	switch_to_reszing_mode (a_screen_x, a_screen_y: INTEGER) is

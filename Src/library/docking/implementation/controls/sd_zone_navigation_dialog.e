@@ -108,6 +108,7 @@ feature {NONE} -- Initialization
 			-- Add all content label to Current.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
 			l_label: SD_TOOL_BAR_WIDTH_BUTTON
 			l_pass_first_editor, l_pass_second_editor: BOOLEAN
 			l_first_label, l_last_label, l_first_tool_label, l_last_tool_label: SD_TOOL_BAR_RADIO_BUTTON
@@ -121,15 +122,16 @@ feature {NONE} -- Initialization
 			until
 				l_contents.after
 			loop
+				l_content := l_contents.item
 				create l_label.make
 				l_label.set_wrap (True)
 				l_label.set_maximum_width (internal_max_item_width)
-				l_label.set_data (l_contents.item)
+				l_label.set_data (l_content)
 
 				l_label.select_actions.extend (agent select_label_and_destroy (l_label))
-				l_label.set_pixmap (l_contents.item.pixmap)
-				l_label.set_text (l_contents.item.short_title)
-				if l_contents.item.type = {SD_ENUMERATION}.tool and l_contents.item.is_visible then
+				l_label.set_pixmap (l_content.pixmap)
+				l_label.set_text (l_content.short_title)
+				if l_content.type = {SD_ENUMERATION}.tool and l_content.is_visible then
 					if l_tools_count > {SD_SHARED}.zone_navigation_column_count then
 						l_tools_count := 1
 						add_new_column (False)
@@ -140,7 +142,7 @@ feature {NONE} -- Initialization
 						l_first_tool_label := l_label
 					end
 					l_last_tool_label := l_label
-				elseif l_contents.item.type = {SD_ENUMERATION}.editor and l_contents.item.is_visible then
+				elseif l_content.type = {SD_ENUMERATION}.editor and l_content.is_visible then
 					if l_files_count > {SD_SHARED}.zone_navigation_column_count then
 						l_files_count := 1
 						add_new_column (True)
@@ -157,7 +159,7 @@ feature {NONE} -- Initialization
 					end
 					l_last_label := l_label
 				else
-					check only_three_type: l_contents.item.is_visible implies l_contents.item.type = {SD_ENUMERATION}.place_holder end
+					check only_three_type: l_content.is_visible implies l_content.type = {SD_ENUMERATION}.place_holder end
 				end
 
 				l_contents.forth
@@ -252,15 +254,18 @@ feature {NONE} -- Initialization
 			-- Result is maximum size
 		require
 			not_void: a_columns /= Void
+		local
+			l_tool_bar: SD_TOOL_BAR
 		do
 			from
 				a_columns.start
 			until
 				a_columns.after
 			loop
-				a_columns.item.compute_minmum_size
-				if Result < a_columns.item.minimum_width then
-					Result := a_columns.item.minimum_width
+				l_tool_bar := a_columns.item
+				l_tool_bar.compute_minimum_size
+				if Result < l_tool_bar.minimum_width then
+					Result := l_tool_bar.minimum_width
 				end
 				a_columns.forth
 			end
@@ -499,7 +504,7 @@ feature {NONE} -- Implementation command
 			l_content ?= a_item.data
 			check not_void: l_content /= Void end
 			full_title.set_text (l_content.long_title)
-			if  l_content.description = Void then
+			if l_content.description = Void then
 				description.set_text ("No description available.")
 			else
 				description.set_text (l_content.description)

@@ -100,6 +100,11 @@ feature {NONE} -- Implementation
 
 				-- Set configure_event_pending to True so that dimensions are updated immediately.
 			configure_event_pending := True
+
+				-- If user cannot resize window then we recall `forbid_resize' which will update the dimensions.
+			if not user_can_resize then
+				forbid_resize
+			end
 		end
 
 	width: INTEGER
@@ -107,6 +112,7 @@ feature {NONE} -- Implementation
 		do
 			if configure_event_pending then
 				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $Result, default_pointer)
+				Result := Result.max (minimum_width)
 			else
 				Result := Precursor
 			end
@@ -117,6 +123,7 @@ feature {NONE} -- Implementation
 		do
 			if configure_event_pending then
 				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $Result)
+				Result := Result.max (minimum_height)
 			else
 				Result := Precursor
 			end
@@ -401,8 +408,19 @@ feature {EV_ANY_I} -- Implementation
 
 	forbid_resize is
 			-- Forbid the resize of the window.
+		local
+			l_geometry: POINTER
+			l_width, l_height: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1)
+			l_geometry := {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_allocate
+			l_width := width
+			l_height := height
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (l_geometry, l_width)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
+			{EV_GTK_EXTERNALS}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum | {EV_GTK_EXTERNALS}.gdk_hint_min_size_enum)
+			l_geometry.memory_free
 		end
 
 indexing

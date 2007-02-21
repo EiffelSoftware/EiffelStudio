@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			configure_event_pending := True
 
 				-- If user cannot resize window then we recall `forbid_resize' which will update the dimensions.
-			if not user_can_resize then
+			if is_displayed and then not user_can_resize then
 				forbid_resize
 			end
 		end

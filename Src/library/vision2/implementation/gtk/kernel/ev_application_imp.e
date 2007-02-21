@@ -352,6 +352,8 @@ feature {EV_ANY_I} -- Implementation
 									end
 									l_gtk_widget_imp := Void
 									l_top_level_window_imp := Void
+									l_gtk_widget_ptr := default_pointer
+									l_widget_imp := Void
 								end
 							end
 						end

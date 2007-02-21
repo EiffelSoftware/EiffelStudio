@@ -348,9 +348,7 @@ feature {EV_ANY_I} -- Implementation
 								if l_widget_imp /= Void then
 									l_top_level_window_imp := l_widget_imp.top_level_window_imp
 									if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
-										l_call_event := False
 										l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
-										--{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 									end
 									l_gtk_widget_imp := Void
 									l_top_level_window_imp := Void

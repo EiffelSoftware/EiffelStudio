@@ -101,11 +101,12 @@
 		<set name="eccmd" value="${eccmd} -target $ectarget" />
 		<set name="eccmd" value="${eccmd} -project_path $ecprojectpath" />
 
-		<!-- fixed geant bugs with arguments in if="" -->
+		<!-- fixed geant 3.4 bugs with arguments in if="" -->
 		<set name="ecfinalize" value="$ecfinalize" />
 		<set name="ecccompile" value="$ecccompile" />
 		<set name="ecclean" value="$ecclean" />
 		<set name="ecusesettings" value="$ecusesettings" />
+		<!-- fixed: end -->
 
 		<set name="eccmd" value="${eccmd} -finalize" 		if="$ecfinalize=true"/>
 		<set name="eccmd" value="${eccmd} -freeze" 			unless="$ecfinalize=true"/>
@@ -113,17 +114,27 @@
 		<set name="eccmd" value="${eccmd} -clean" 			if="$ecclean=true" />
 		<set name="eccmd" value="${eccmd} -use_settings" 	if="$ecusesettings=true" />
 
+		<!-- fixed geant 3.4 bugs with arguments in if="" -->
 		<unset name="ecfinalize" />
 		<unset name="ecccompile" />
 		<unset name="ecclean" />
 		<unset name="ecusesettings" />
+		<!-- fixed: end -->
 
 		<!-- 
 		<set name="eccmd" value="${eccmd} -use_settings " />
 		-->
 		<echo message="CMD=${eccmd}" />
 		<echo message="DIR=${ecdir}" />
+
+		<!-- fixed geant 3.4 bugs with arguments -->
+		<set name="ecdir" value="${ecdir}"  />
+		<!-- fixed: end -->
+
 		<exec executable="${eccmd}" dir="${ecdir}"  accept_errors="true" exit_code_variable="return_code" />
+		<!-- fixed geant 3.4 bugs with arguments -->
+		<unset name="ecdir" />
+		<!-- fixed: end -->
 		<unset name="eccmd" />
 	</target>
 

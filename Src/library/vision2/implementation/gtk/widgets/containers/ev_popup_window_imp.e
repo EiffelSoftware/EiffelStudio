@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, client_area)
 
 			if not override_redirect then
-				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
+--				{EV_GTK_EXTERNALS}.gtk_window_set_type_hint (c_object, {EV_GTK_ENUMS}.gdk_window_type_hint_popup_menu_enum)
 				{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 			end
 

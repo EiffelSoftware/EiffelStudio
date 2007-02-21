@@ -8,12 +8,12 @@ class
 
 feature -- C enums
 
-	frozen Gdk_window_type_hint_popup_menu_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GDK_WINDOW_TYPE_HINT_POPUP_MENU"
-		end
+--	frozen Gdk_window_type_hint_popup_menu_enum: INTEGER is
+--		external
+--			"C inline use <gtk/gtk.h>"
+--		alias
+--			"GDK_WINDOW_TYPE_HINT_POPUP_MENU"
+--		end
 
 	frozen Gtk_toplevel_enum: INTEGER is
 		external

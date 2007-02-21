@@ -70,7 +70,7 @@ feature -- Status Report
 	has_value: BOOLEAN is
 			-- Indicicate if option has an associated value.
 		do
-			Result := value /= Void or else not value.is_empty
+			Result := value /= Void and then not value.is_empty
 		ensure
 			result_base_true: Result implies (value /= Void and then not value.is_empty)
 		end

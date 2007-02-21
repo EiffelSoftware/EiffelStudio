@@ -11,7 +11,7 @@
           <Text>[SubTitleFont]Browse to the destination folder</Text>
         </Control>
         <Control Id="ComboLabel" Type="Text" X="9" Y="61" Width="44" Height="10" TabSkip="no" Text="&amp;Look in:" Transparent="yes" />
-        <Control Id="DirectoryCombo" Type="DirectoryCombo" X="45" Y="58" Width="210" Height="80" Property="TARGETDIR" Removable="yes" Fixed="yes" Remote="yes">
+        <Control Id="DirectoryCombo" Type="DirectoryCombo" X="45" Y="58" Width="210" Height="80" Property="TARGETDIR" Fixed="yes" Remote="yes" Indirect="yes">
           <Subscribe Event="IgnoreChange" Attribute="IgnoreChange" />
         </Control>
         <Control Id="Up" Type="PushButton" X="283" Y="58" Width="19" Height="19" Icon="yes" FixedSize="yes" IconSize="16" Text="up.bmp">
@@ -20,12 +20,11 @@
         <Control Id="NewFolder" Type="PushButton" X="305" Y="58" Width="19" Height="19" Icon="yes" FixedSize="yes" IconSize="16" Text="new.bmp">
           <Publish Event="DirectoryListNew" Value="0">1</Publish>
         </Control>
-        <Control Id="DirectoryList" Type="DirectoryList" X="9" Y="81" Width="315" Height="110" Property="_BrowseProperty" Sunken="yes" Indirect="yes" TabSkip="no">
-          <ListBox Property="_BrowseProperty" />
-        </Control>
+        <Control Id="DirectoryList" Type="DirectoryList" X="9" Y="81" Width="315" Height="110" Property="_BrowseProperty" Sunken="yes" Indirect="yes" TabSkip="no"/>
         <Control Id="PathLabel" Type="Text" X="9" Y="199" Width="56" Height="10" TabSkip="no" Text="&amp;Folder name:" Transparent="yes" />
         <Control Id="PathEdit" Type="PathEdit" X="68" Y="196" Width="256" Height="17" Property="_BrowseProperty" Indirect="yes" />
         <Control Id="OK" Type="PushButton" X="202" Y="223" Width="56" Height="17" Default="yes" Text="[Button_OK]">
+          <Publish Event="SetTargetPath" Value="[_BrowseProperty]">1</Publish>
           <Publish Event="EndDialog" Value="Return">1</Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="268" Y="223" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">

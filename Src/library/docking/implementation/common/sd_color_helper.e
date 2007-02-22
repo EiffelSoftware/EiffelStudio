@@ -10,8 +10,9 @@ class
 
 feature -- Saturation
 
-	build_color_with_lightness (a_color: EV_COLOR; a_lightness_increase: REAL): EV_COLOR is
+	color_with_lightness (a_color: EV_COLOR; a_lightness_increase: REAL): EV_COLOR is
 			-- Make a color from `a_color' with `a_lightness_increase'.
+			--| Note the Result must be twined when needed
 		require
 			a_lightness_valid: a_lightness_increase <= 1 and a_lightness_increase >= -1
 			a_color_attached: a_color /= Void
@@ -27,7 +28,8 @@ feature -- Saturation
 				new_g := light_decrease (a_color.green_8_bit, a_lightness_increase)
 				new_b := light_decrease (a_color.blue_8_bit, a_lightness_increase)
 			end
-			create Result.make_with_8_bit_rgb (new_r, new_g, new_b)
+			Result := tmp_color
+			Result.set_rgb_with_8_bit (new_r, new_g, new_b)
 		end
 
 	draw_round_before (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR) is
@@ -70,20 +72,24 @@ feature -- Saturation
 			not_void: a_area /= Void
 		local
 			l_count: INTEGER
-			l_pixmap: EV_PIXMAP
+			lx, aleft, aright, atop, abottom, awidth, aheight: INTEGER
 		do
 			if a_area.width > 0 and a_area.height > 0 then
+				aleft := a_area.left
+				aright := a_area.right
+				atop := a_area.top
+				abottom := a_area.bottom
+				awidth := a_area.width
 				from
-					create l_pixmap.make_with_size (a_area.width, a_area.height)
-					l_count := a_area.left
+					lx := aleft
 				until
-					l_count >= a_area.right
+					lx >= aright
 				loop
-					l_pixmap.set_foreground_color (color_mix (a_to_color, a_start_color, ((l_count - a_area.left) / a_area.width)))
-					l_pixmap.draw_segment (l_count - a_area.left, a_area.top, l_count - a_area.left, a_area.bottom)
-					l_count := l_count + 1
+					l_count := lx - aleft
+					a_drawing_area.set_foreground_color (color_mix (a_to_color, a_start_color, (l_count / awidth)))
+					a_drawing_area.draw_segment (lx, atop, lx, abottom)
+					lx := lx + 1
 				end
-				a_drawing_area.draw_pixmap (a_area.left, a_area.top, l_pixmap)
 			end
 		end
 
@@ -98,10 +104,8 @@ feature -- Saturation
 			r, g, b: INTEGER
 			l_color: EV_COLOR
 			l_lightness: REAL
-			l_color_helper: SD_COLOR_HELPER
 			l_light_diff: REAL
 		do
-			create l_color_helper
 			l_lightness := a_color.lightness
 			from
 				j := 0
@@ -121,19 +125,20 @@ feature -- Saturation
 						g := l_item.item (3 * i + 1)
 						b := l_item.item (3 * i + 2)
 						if r /= 255 or g /= 255 or b /= 255 then
-							create l_color.make_with_8_bit_rgb (r, g, b)
+							l_color := tmp_color
+							l_color.set_rgb_with_8_bit (r, g, b)
 							l_light_diff := l_color.lightness - l_lightness
 							if l_lightness = 0 or l_lightness = 1 then
 								if l_lightness = 0 then
-									create l_color.make_with_8_bit_rgb (0, 0, 0)
+									l_color.set_rgb_with_8_bit (0, 0, 0)
 								else
-									create l_color.make_with_8_bit_rgb (255, 255, 255)
+									l_color.set_rgb_with_8_bit (255, 255, 255)
 								end
 							else
 								if l_light_diff > 0 then
-									l_color := l_color_helper.build_color_with_lightness (a_color ,l_light_diff / (1 - l_lightness))
+									l_color := color_with_lightness (a_color, l_light_diff / (1 - l_lightness))
 								else
-									l_color := l_color_helper.build_color_with_lightness (a_color ,l_light_diff / l_lightness)
+									l_color := color_with_lightness (a_color, l_light_diff / l_lightness)
 								end
 							end
 							l_item.put (l_color.red_8_bit, 3 * i)
@@ -161,6 +166,7 @@ feature {NONE} -- Implementation
 
 	color_mix (a_first_color, a_second_color: EV_COLOR; a_percent: REAL): EV_COLOR is
 			-- Color mix with `a_first_color' and `a_second_color'.
+			--| This is a shared object, if needed don't forget to twin it.
 		require
 			a_first_color_not_void: a_first_color /= Void
 			a_second_color_not_void: a_second_color /= Void
@@ -171,7 +177,8 @@ feature {NONE} -- Implementation
 			l_r := a_first_color.red * a_percent + a_second_color.red * (1 - a_percent)
 			l_g := a_first_color.green * a_percent + a_second_color.green * (1 - a_percent)
 			l_b := a_first_color.blue * a_percent + a_second_color.blue * (1 - a_percent)
-			create Result.make_with_rgb (l_r, l_g, l_b)
+			Result := tmp_color
+			Result.set_rgb (l_r, l_g, l_b)
 		ensure
 			not_void: Result /= Void
 		end
@@ -187,6 +194,15 @@ feature {NONE} -- Implementation
 		do
 			Result := (a_color * (1 + a_lightness_increase)).rounded
 		end
+
+feature {NONE} -- Implementation : reuse
+
+	tmp_color: EV_COLOR is
+			-- Reuseable instance of EV_COLOR.
+		once
+			create Result
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -198,10 +214,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

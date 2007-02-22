@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 			default_background_color_cell.put (l_system_color.default_background_color)
 			create l_helper
-			non_focused_color_lightness_cell.put (l_helper.build_color_with_lightness (default_background_color, {SD_SHARED}.Auto_hide_panel_lightness))
+			non_focused_color_lightness_cell.put (l_helper.color_with_lightness (default_background_color, {SD_SHARED}.Auto_hide_panel_lightness).twin)
 
 			focused_color_cell.put (l_system_color.focused_selection_color)
 			focused_title_text_color_cell.put (l_system_color.focused_title_text_color)

@@ -281,6 +281,7 @@ feature -- Status report
 		local
 			l_path: STRING
 			l_namespace: STRING
+			l_local_namespace: STRING
 		do
 			if compiled_class.is_precompiled then
 				Result := internal_namespace
@@ -288,6 +289,8 @@ feature -- Status report
 					-- We need to clone as the result maybe used for string operation and we do not
 					-- want it to change some internal data from Current.
 				l_namespace := options.namespace
+				l_local_namespace := options.local_namespace
+
 				if l_namespace /= Void then
 					l_namespace := l_namespace.twin
 				end
@@ -306,7 +309,8 @@ feature -- Status report
 					else
 						Result := ""
 					end
-					if system.use_cluster_as_namespace then
+					if (l_local_namespace = Void or else l_local_namespace.is_empty) and then system.use_cluster_as_namespace then
+							-- Only add cluster namespace if there's not local namespace set.
 						if not Result.is_empty then
 							Result.append_character ('.')
 						end

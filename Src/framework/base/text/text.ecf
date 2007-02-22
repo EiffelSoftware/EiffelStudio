@@ -5,10 +5,11 @@
 		name="text" uuid="39E7841A-C1EE-4998-8788-CF718986CA91" library_target="text" >
 
 	<target name="text">
+		<option namespace="EiffelSoftware.Framework"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
-    <cluster name="text" location="."/>
+    	<cluster name="text" location="."/>
 	</target>
 </system>

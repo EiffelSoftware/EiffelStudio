@@ -12,8 +12,9 @@ sybase_store.lib: $(OBJ) sybase.h
 		lib /OUT:$@ $(OBJ)
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
 		if not exist ..\..\..\..\spec\msc mkdir ..\..\..\..\spec\msc
-		if not exist ..\..\..\..\spec\msc\lib mkdir ..\..\..\..\spec\msc\lib
-		copy sybase_store.lib ..\..\..\..\spec\msc\lib
+		if not exist ..\..\..\..\spec\msc\$(ISE_PLATFORM) mkdir ..\..\..\..\spec\msc\$(ISE_PLATFORM)
+		if not exist ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib
+		copy $@ ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib
 
 sybase.obj: sybase.c sybase.h
 

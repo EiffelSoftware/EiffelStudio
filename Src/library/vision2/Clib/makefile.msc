@@ -22,8 +22,9 @@ vision2.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
-	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
-	copy $@ ..\spec\msc\lib
+	if not exist ..\spec\msc\$(ISE_PLATFORM) mkdir ..\spec\msc\$(ISE_PLATFORM)
+	if not exist ..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\spec\msc\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\msc\$(ISE_PLATFORM)\lib
 	del $@
 	del *.obj
 
@@ -31,8 +32,9 @@ mtvision2.lib: $(MT_OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(MT_OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
-	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
-	copy $@ ..\spec\msc\lib
+	if not exist ..\spec\msc\$(ISE_PLATFORM) mkdir ..\spec\msc\$(ISE_PLATFORM)
+	if not exist ..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\spec\msc\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\msc\$(ISE_PLATFORM)\lib
 	del $@
 	del *.obj
 
@@ -40,8 +42,9 @@ ilvision2.lib: $(IL_OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(IL_OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
-	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
-	copy $@ ..\spec\msc\lib
+	if not exist ..\spec\msc\$(ISE_PLATFORM) mkdir ..\spec\msc\$(ISE_PLATFORM)
+	if not exist ..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\spec\msc\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\msc\$(ISE_PLATFORM)\lib
 	del $@
 	del *.obj
 

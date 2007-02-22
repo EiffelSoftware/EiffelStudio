@@ -18,6 +18,7 @@
 			<file_rule>
 				<exclude>/spec$</exclude>
 			</file_rule>
+			<option namespace="Environment"/>
 		</cluster>
 		<cluster name="unix" location="spec\unix\">
 			<condition>
@@ -28,6 +29,7 @@
 			<condition>
 				<platform value="windows"/>
 			</condition>
+			<option namespace="Environment"/>
 		</cluster>
 	</target>
 </system>

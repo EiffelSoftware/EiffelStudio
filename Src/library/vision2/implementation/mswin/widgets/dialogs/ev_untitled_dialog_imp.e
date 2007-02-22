@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			bit_op: WEL_BIT_OPERATIONS
 		do
 			Precursor {EV_DIALOG_IMP}
-				
+
 				-- Change the style of the window.
 			create bit_op
 			new_style := style
@@ -47,11 +47,8 @@ feature {NONE} -- Implementation
 			-- Compute extra minimum height that does not count `item'.
 		do
 			Result := Precursor {EV_DIALOG_IMP} - title_bar_height
-			if not user_can_resize then
-				Result := Result - 2 * dialog_window_frame_height
-			end
 		end
-		
+
 	has_title_bar: BOOLEAN is False
 			-- Does Current have a title bar?
 
@@ -81,7 +78,7 @@ feature {NONE} -- Implementation
 			create modeless_dialog_imp.make_with_dialog_window (Current)
 			interface.replace_implementation (modeless_dialog_imp)
 		end
-		
+
 	common_dialog_imp: EV_UNTITLED_DIALOG_IMP_COMMON is
 			-- Dialog implementation type common to all descendents.
 		do

@@ -17,7 +17,7 @@ indexing
 class
 	EV_INTERNAL_SILLY_WINDOW_IMP
 
-inherit 
+inherit
 	WEL_FRAME_WINDOW
 		redefine
 			on_wm_vscroll,
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
  				end
 			end
  		end
- 
+
  	on_wm_hscroll (wparam, lparam: POINTER) is
  			-- Wm_hscroll message.
  		local
@@ -154,11 +154,10 @@ feature {NONE} -- Implemetation
 			-- Is `w' a child of Current?
 		require
 			exists: exists
-			w_exists: w /= Void implies w.exists
 		local
 			hwnd, win: POINTER
 		do
-			if w /= Void then
+			if w /= Void and then w.exists then
 				from
 					hwnd := cwin_get_window (item, Gw_child)
 					win := w.item
@@ -170,7 +169,7 @@ feature {NONE} -- Implemetation
 				end
 			end
 		end
-		
+
 	class_requires_icon: BOOLEAN is
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise

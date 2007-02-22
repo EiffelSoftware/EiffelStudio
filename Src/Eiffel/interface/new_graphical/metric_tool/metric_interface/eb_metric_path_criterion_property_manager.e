@@ -27,7 +27,7 @@ feature -- Access
 			if property_item_internal = Void then
 				create property_item_internal
 				property_item_internal.pointer_double_press_actions.force_extend (agent property_item_internal.activate)
-				property_item_internal.deactivate_actions.extend (agent change_actions.call ([]))
+				property_item_internal.deactivate_actions.extend (agent change_actions.call (Void))
 				property_item_internal.set_tooltip (metric_names.f_insert_text_here)
 			end
 			Result := property_item_internal

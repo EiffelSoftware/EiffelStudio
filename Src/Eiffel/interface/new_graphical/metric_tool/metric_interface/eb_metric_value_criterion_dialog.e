@@ -198,14 +198,14 @@ feature{NONE} -- Actions
 		do
 			Precursor
 			set_value ([metric_setter.metric_name, use_external_delayed_domain_checkbox.is_selected, value_tester.criterion])
-			ok_actions.call ([])
+			ok_actions.call (Void)
 		end
 
 	on_cancel is
 			-- Cancel was pressed.
 		do
 			Precursor
-			cancel_actions.call ([])
+			cancel_actions.call (Void)
 		end
 
 invariant

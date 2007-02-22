@@ -129,14 +129,14 @@ feature{NONE} -- Actions
 		do
 			set_value ([name_text.text, case_sensitive_checkbox.is_selected, regular_expression_checkbox.is_selected])
 			Precursor {PROPERTY_DIALOG}
-			ok_actions.call ([])
+			ok_actions.call (Void)
 		end
 
 	on_cancel
 			-- Action to be performed when "Cancel" button is pressed
 		do
 			Precursor
-			cancel_actions.call ([])
+			cancel_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

@@ -185,7 +185,7 @@ feature -- Basic operation
 					remove_selection
 					l_new_row.enable_select
 				end
-				change_actions.call ([])
+				change_actions.call (Void)
 			end
 		end
 
@@ -236,7 +236,7 @@ feature -- Basic operation
 						end
 					end
 				end
-				change_actions.call ([])
+				change_actions.call (Void)
 			end
 		end
 
@@ -270,7 +270,7 @@ feature -- Basic operation
 					add_criterion_row (l_data.criterion, l_parent_row.grid_row.subrow (l_new_subrow_index), a_up, True)
 					remove_criterion_row (a_row, True, False)
 					change_actions.resume
-					change_actions.call ([])
+					change_actions.call (Void)
 				end
 			end
 		end
@@ -316,7 +316,7 @@ feature -- Basic operation
 				end
 			end
 			change_actions.resume
-			change_actions.call ([])
+			change_actions.call (Void)
 		end
 
 feature -- Status report
@@ -456,7 +456,7 @@ feature -- Actions
 					end
 				end
 				change_actions.resume
-				change_actions.call ([])
+				change_actions.call (Void)
 			end
 		end
 

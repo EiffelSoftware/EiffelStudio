@@ -229,7 +229,7 @@ feature{NONE}	-- Implementation
 			not_is_read_only: not is_read_only
 		do
 			if not is_read_only then
-				change_actions.call ([])
+				change_actions.call (Void)
 			end
 		end
 

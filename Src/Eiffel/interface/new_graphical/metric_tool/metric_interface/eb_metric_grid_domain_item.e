@@ -116,7 +116,7 @@ feature -- Setting
 		do
 			domain_internal := a_domain
 			update_ui
-			change_actions.call ([])
+			change_actions.call (Void)
 		end
 
 	set_value (a_value: like value) is
@@ -124,7 +124,7 @@ feature -- Setting
 		do
 			value := a_value
 			update_ui
-			change_actions.call ([])
+			change_actions.call (Void)
 		ensure
 			value_set: value = a_value
 		end
@@ -164,7 +164,7 @@ feature -- Setting
 						l_domain.extend (l_domain_item)
 						set_domain (l_domain)
 						if a_agent /= Void then
-							a_agent.call ([])
+							a_agent.call (Void)
 						end
 					end
 				end
@@ -316,8 +316,8 @@ feature{NONE} -- Implementation
 			set_value (a_dialog.value)
 			set_domain (a_dialog.domain)
 			change_actions.resume
-			change_actions.call ([])
-			dialog_ok_actions.call ([])
+			change_actions.call (Void)
+			dialog_ok_actions.call (Void)
 		end
 
 	on_dialog_cancel (a_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]) is
@@ -325,7 +325,7 @@ feature{NONE} -- Implementation
 		require
 			a_dialog_attached: a_dialog /= Void
 		do
-			dialog_cancel_actions.call ([])
+			dialog_cancel_actions.call (Void)
 		end
 
 	domain_internal: EB_METRIC_DOMAIN

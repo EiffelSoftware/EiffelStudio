@@ -29,7 +29,7 @@ feature -- Access
 				create property_item_internal.make (create {EB_METRIC_DOMAIN}.make)
 				property_item_internal.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, property_item_internal))
 				property_item_internal.dialog_ok_actions.extend (agent grid.resize_column (2, 0))
-				property_item_internal.dialog_ok_actions.extend (agent change_actions.call ([]))
+				property_item_internal.dialog_ok_actions.extend (agent change_actions.call (Void))
 				property_item_internal.set_tooltip (metric_names.f_pick_and_drop_items)
 				property_item_internal.set_dialog_function (agent dialog_function)
 			end

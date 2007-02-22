@@ -277,7 +277,7 @@ feature -- Actions
 	on_metric_change is
 			-- Action to be performed when metric changes (Either its definition or its description)
 		do
-			change_actions.call ([])
+			change_actions.call (Void)
 		end
 
 feature -- Access

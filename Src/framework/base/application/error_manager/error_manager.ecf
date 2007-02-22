@@ -3,8 +3,11 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
+		<option namespace="EiffelSoftware.Framework"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="text" location="../../text/text.ecf"/>
-		<cluster name="error_mananger" location=".\" recursive="true"/>
+		<cluster name="error_mananger" location=".\" recursive="true">
+			<option namespace="ErrorManager"/>
+		</cluster>
 	</target>
 </system>

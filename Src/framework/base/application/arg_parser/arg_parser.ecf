@@ -5,11 +5,14 @@
 		name="arg_parser" uuid="f2cc3814-b342-4e64-9830-a39f6c1448d7" library_target="arg_parser" >
 
 	<target name="arg_parser">
+		<option namespace="EiffelSoftware.Framework"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
 		<library name="text" location="../../text/text.ecf"/>
-		<cluster name="arg_parser" location="." recursive="true"/>
+		<cluster name="arg_parser" location="." recursive="true">
+			<option namespace="ArgumentParser"/>
+		</cluster>
 	</target>
 </system>

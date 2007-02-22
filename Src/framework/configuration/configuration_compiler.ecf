@@ -4,7 +4,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option>
+		<option namespace="EiffelSoftware.Framework.Ecf">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
@@ -21,7 +21,10 @@
 			<file_rule>
 				<exclude>/implementation$</exclude>
 			</file_rule>
-			<cluster name="implementation" location="$|implementation\" recursive="true"/>
+			<option namespace="Compiler"/>
+			<cluster name="implementation" location="$|implementation\" recursive="true">
+				<option namespace="Spec"/>
+			</cluster>
 		</cluster>
 	</target>
 </system>

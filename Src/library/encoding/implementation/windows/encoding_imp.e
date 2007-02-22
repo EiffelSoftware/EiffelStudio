@@ -143,13 +143,14 @@ feature {NONE} -- Implementation
 			    temp = malloc ((sizeof (LPSTR) * *$a_count_to_buffer));
 			    if (temp == NULL){
 			    	*$a_b = 0;
-			    	return;
+			    	return NULL;
 			    }
 			    			    	
 				WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, temp, *$a_count_to_buffer, NULL, NULL);
 				dw = GetLastError();
-				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER)
+				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
 					*$a_b = 0;
+				}
 				return (EIF_POINTER) temp;
 			]"
 		end
@@ -166,7 +167,7 @@ feature {NONE} -- Implementation
 			    temp = malloc ((sizeof (LPWSTR) * *$a_count_to_buffer));
 			    if (temp == NULL){
 			    	*$a_b = 0;
-			    	return;
+			    	return NULL;
 			    }
 			    
 				MultiByteToWideChar ($cpid,	0, $a_multi_byte, -1, temp, *$a_count_to_buffer);

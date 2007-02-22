@@ -93,6 +93,9 @@ feature -- Access, stored in configuration file
 	namespace: STRING
 			-- .NET namespace.
 
+	local_namespace: STRING
+			-- .NET namespace set in configuration file
+
 	is_profile: BOOLEAN
 			-- Do profile?
 
@@ -185,9 +188,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			else
 				namespace := a_namespace
 			end
+			local_namespace := namespace
 		ensure
 			namespace_set: a_namespace = Void or else not a_namespace.is_empty implies namespace = a_namespace
 			namespace_set: a_namespace /= Void and then a_namespace.is_empty implies namespace = Void
+			local_namespace: local_namespace = namespace
 		end
 
 	set_profile (a_enabled: BOOLEAN) is

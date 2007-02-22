@@ -361,7 +361,9 @@ feature -- Set Position
 		do
 			state.set_direction (a_direction)
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
-			set_focus
+			if is_visible then
+				set_focus
+			end
 		end
 
 	set_auto_hide (a_direction: INTEGER) is

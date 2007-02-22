@@ -326,7 +326,10 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 					check l_widget /= Void end
 					l_split_area ?= l_widget.parent
 					check l_split_area /= Void end
-					if l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position then
+					if
+						l_split_area.full and then
+						(l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position)
+					then
 						l_split_area.set_split_position (l_split_position)
 					end
 				end

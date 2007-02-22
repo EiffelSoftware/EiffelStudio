@@ -310,7 +310,7 @@ feature{NONE} -- Actions
 				move_unit_down_btn.disable_sensitive
 			else
 					-- A group row is selected.
-				group_selected_actions.call ([])
+				group_selected_actions.call (Void)
 				move_unit_up_btn.enable_sensitive
 				move_unit_down_btn.enable_sensitive
 			end

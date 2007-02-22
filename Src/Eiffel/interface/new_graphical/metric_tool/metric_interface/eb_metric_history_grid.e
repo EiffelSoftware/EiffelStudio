@@ -189,28 +189,28 @@ feature -- Actions
 			-- Action to be performed to select all history items
 		do
 			change_row_selection_status (agent (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN do Result := True end, True)
-			selection_change_actions.call ([])
+			selection_change_actions.call (Void)
 		end
 
 	on_deselect_all_history_items is
 			-- Action to be performed to deselect all history items
 		do
 			change_row_selection_status (agent (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN do Result := True end, False)
-			selection_change_actions.call ([])
+			selection_change_actions.call (Void)
 		end
 
 	on_select_all_recalculatable_history_items is
 			-- Action to be performed to select all recalculatable history items
 		do
 			change_row_selection_status (agent (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN do Result := a_archive_node.is_recalculatable end, True)
-			selection_change_actions.call ([])
+			selection_change_actions.call (Void)
 		end
 
 	on_deselect_all_recalculatable_history_items is
 			-- Action to be performed to deselect all recalculatable history items
 		do
 			change_row_selection_status (agent (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN do Result := a_archive_node.is_recalculatable end, False)
-			selection_change_actions.call ([])
+			selection_change_actions.call (Void)
 		end
 
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
@@ -247,7 +247,7 @@ feature -- Actions
 				end
 				selection_change_actions.resume
 				if l_changed then
-					selection_change_actions.call ([])
+					selection_change_actions.call (Void)
 				end
 			end
 		end
@@ -255,7 +255,7 @@ feature -- Actions
 	on_selection_changes (a_item: EV_GRID_CHECKABLE_LABEL_ITEM) is
 			-- On selection of rows changes
 		do
-			selection_change_actions.call ([])
+			selection_change_actions.call (Void)
 		end
 
 feature{NONE} -- Grid item generation
@@ -795,7 +795,7 @@ feature{NONE} -- Implementation/Operations
 				a_archive_node.set_input_domain (a_item.domain)
 				a_archive_node.set_is_value_valid (False)
 				a_archive_node.set_detailed_result (Void)
-				input_domain_change_actions.call ([])
+				input_domain_change_actions.call (Void)
 			end
 		end
 

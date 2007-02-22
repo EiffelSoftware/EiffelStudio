@@ -112,7 +112,7 @@ feature -- Loading
 			elseif a_criterion.is_text_criterion then
 				create {EB_METRIC_TEXT_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
 			end
-			property_manager.change_actions.extend (agent (grid.change_actions).call ([]))
+			property_manager.change_actions.extend (agent (grid.change_actions).call (Void))
 			property_manager.load_properties (a_criterion)
 			property_item := property_manager.property_item
 			bind (a_row)
@@ -453,14 +453,14 @@ feature{NONE} -- Actions
 					end
 					grid.resize_column (1, 0)
 				end
-				grid.change_actions.call ([])
+				grid.change_actions.call (Void)
 			end
 		end
 
 	on_property_item_deactivated is
 			-- Action to be performed when `property_item' deactivated.
 		do
-			grid.change_actions.call ([])
+			grid.change_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

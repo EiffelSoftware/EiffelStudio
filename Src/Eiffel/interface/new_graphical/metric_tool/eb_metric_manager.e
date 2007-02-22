@@ -543,7 +543,7 @@ feature -- Metric management
 				end
 
 				is_metric_loaded := True
-				metric_loaded_actions.call ([])
+				metric_loaded_actions.call (Void)
 			end
 		end
 
@@ -886,28 +886,28 @@ feature -- Actions
 			-- A new project has been loaded.
 		do
 			set_is_project_loaded (True)
-			project_load_actions.call ([])
+			project_load_actions.call (Void)
 		end
 
 	on_project_unloaded is
 			-- Current project has been closed.
 		do
 			set_is_project_loaded (False)
-			project_unload_actions.call ([])
+			project_unload_actions.call (Void)
 		end
 
 	on_compile_start is
 			-- Action to be performed when Eiffel compilation starts
 		do
 			set_is_eiffel_compiling (True)
-			compile_start_actions.call ([])
+			compile_start_actions.call (VOid)
 		end
 
 	on_compile_stop is
 			-- Action to be performed when Eiffel compilation stops
 		do
 			set_is_eiffel_compiling (False)
-			compile_stop_actions.call ([])
+			compile_stop_actions.call (Void)
 		end
 
 	on_metric_evaluation_starts (a_data: ANY) is

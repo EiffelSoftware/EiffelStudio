@@ -156,14 +156,14 @@ feature{NONE} -- Actions
 						normal_referenced_checkbox.is_selected,
 						syntactical_referenced_checkbox.is_selected]
 			)
-			ok_actions.call ([])
+			ok_actions.call (Void)
 		end
 
 	on_cancel is
 			-- Cancel was pressed.
 		do
 			Precursor
-			cancel_actions.call ([])
+			cancel_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

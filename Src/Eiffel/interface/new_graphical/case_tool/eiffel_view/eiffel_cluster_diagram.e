@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 						until
 							l_array_undo.after
 						loop
-							l_array_undo.item.call ([])
+							l_array_undo.item.call (Void)
 							l_array_undo.forth
 						end
 					end

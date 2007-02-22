@@ -44,7 +44,7 @@ feature -- Access
 			not_a_name_is_empty: not a_name.is_empty
 			criterion_exists: has_criterion (a_name, a_scope)
 		do
-			Result := criterion_table.item (a_scope).item (a_name).item ([])
+			Result := criterion_table.item (a_scope).item (a_name).item (Void)
 		ensure
 			result_attached: Result /= Void
 		end

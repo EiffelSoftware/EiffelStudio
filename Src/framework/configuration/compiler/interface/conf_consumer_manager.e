@@ -176,7 +176,7 @@ feature {NONE} -- Events
 	on_consume_assemblies is
 			-- Assemblies of are consumed.
 		do
-			consume_assembly_observer.call ([])
+			consume_assembly_observer.call (Void)
 		end
 
 feature {NONE} -- Implementation

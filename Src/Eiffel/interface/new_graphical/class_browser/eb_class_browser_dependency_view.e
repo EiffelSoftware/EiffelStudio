@@ -351,7 +351,7 @@ feature -- Actions
 		do
 			is_up_to_date := False
 			if data /= Void then
-				retrieve_data_actions.call ([])
+				retrieve_data_actions.call (Void)
 			end
 		end
 
@@ -616,7 +616,7 @@ feature{NONE} -- Grid binding
 				l_expansion_table.put (agent: BOOLEAN do Result := False end, 4)
 			end
 			if l_expansion_table.has (a_level_index) then
-				Result := l_expansion_table.item (a_level_index).item ([])
+				Result := l_expansion_table.item (a_level_index).item (Void)
 			end
 		end
 

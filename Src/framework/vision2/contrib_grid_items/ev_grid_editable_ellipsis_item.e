@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			else
 
 --				update_popup_dimensions (popup_window)
-				ellipsis_actions.call ([])
+				ellipsis_actions.call (Void)
 			end
 		ensure then
 			popup_window_set: popup_window /= Void

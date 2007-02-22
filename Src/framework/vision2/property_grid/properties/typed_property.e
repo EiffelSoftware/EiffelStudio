@@ -73,7 +73,7 @@ feature -- Update
 		do
 			if refresh_action /= Void then
 				change_value_actions.block
-				set_value (refresh_action.item ([]))
+				set_value (refresh_action.item (Void))
 				change_value_actions.resume
 			end
 		end
@@ -98,7 +98,7 @@ feature {NONE} -- Agents
 	on_use_inherited is
 			-- Called if we have to use the inherited value.
 		do
-			use_inherited_actions.call ([])
+			use_inherited_actions.call (Void)
 			refresh
 		end
 

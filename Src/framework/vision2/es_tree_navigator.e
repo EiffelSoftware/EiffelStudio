@@ -46,7 +46,7 @@ feature -- Call
 			until
 				l_agent_list.after
 			loop
-				l_agent_list.item.call ([])
+				l_agent_list.item.call (Void)
 				l_agent_list.forth
 			end
 		end

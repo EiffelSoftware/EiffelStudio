@@ -264,7 +264,7 @@ feature -- Actions
 		do
 			is_up_to_date := False
 			if data /= Void and then is_flat_view_enabled then
-				retrieve_data_actions.call ([])
+				retrieve_data_actions.call (Void)
 			end
 		end
 

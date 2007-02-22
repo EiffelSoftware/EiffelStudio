@@ -807,11 +807,11 @@ feature {NONE} -- Actions
 		do
 			if not a_recursive then
 				if expand_selected_rows_agent /= Void then
-					expand_selected_rows_agent.call ([])
+					expand_selected_rows_agent.call (Void)
 				end
 			else
 				if expand_selected_rows_recursive_agent /= Void then
-					expand_selected_rows_recursive_agent.call ([])
+					expand_selected_rows_recursive_agent.call (Void)
 				end
 			end
 		end
@@ -821,11 +821,11 @@ feature {NONE} -- Actions
 		do
 			if not a_recursive then
 				if collapse_selected_rows_agent /= Void then
-					collapse_selected_rows_agent.call ([])
+					collapse_selected_rows_agent.call (Void)
 				end
 			else
 				if collapse_selected_rows_recursive_agent /= Void then
-					collapse_selected_rows_recursive_agent.call ([])
+					collapse_selected_rows_recursive_agent.call (Void)
 				end
 			end
 		end
@@ -888,7 +888,7 @@ feature {NONE} -- Tree view behavior
 		local
 			l_rows: LIST [EV_GRID_ROW]
 		do
-			l_rows := selected_rows_function.item ([])
+			l_rows := selected_rows_function.item (Void)
 			if l_rows /= Void and then not l_rows.is_empty then
 				if a_recursive then
 					remove_unnecessary_rows (l_rows)
@@ -904,7 +904,7 @@ feature {NONE} -- Tree view behavior
 			l_rows: LIST [EV_GRID_ROW]
 			l_parent_row: EV_GRID_ROW
 		do
-			l_rows := selected_rows_function.item ([])
+			l_rows := selected_rows_function.item (Void)
 			if l_rows /= Void and then not l_rows.is_empty then
 				if l_rows.count = 1 and then (not l_rows.first.is_expandable or else not l_rows.first.is_expanded) then
 					l_parent_row := l_rows.first.parent_row

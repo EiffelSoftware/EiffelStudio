@@ -62,7 +62,7 @@ feature{NONE} -- Initialization
 			register_host (a_host, a_host_agents, True)
 		ensure
 			a_host_registered: has_host_registered (a_host)
-			value_synchronized: is_value_synchronized and then is_value_equal (current_value, a_host_agents.getter.item ([]))
+			value_synchronized: is_value_synchronized and then is_value_equal (current_value, a_host_agents.getter.item (Void))
 		end
 
 feature -- Access
@@ -103,7 +103,7 @@ feature -- Status report
 			until
 				l_agents.after or not Result
 			loop
-				Result := is_value_equal (l_current_value, l_agents.item_for_iteration.getter.item ([]))
+				Result := is_value_equal (l_current_value, l_agents.item_for_iteration.getter.item (Void))
 				l_agents.forth
 			end
 			l_agents.go_to (l_cursor)
@@ -161,7 +161,7 @@ feature -- Synchronization
 			l_value: like current_value
 			l_cursor: CURSOR
 		do
-			l_value := agents_of_host (a_host).getter.item ([])
+			l_value := agents_of_host (a_host).getter.item (Void)
 			if not is_value_equal (current_value, l_value) then
 				set_value (l_value)
 				l_hosts := hosts
@@ -221,8 +221,8 @@ feature -- Host registration
 			agents_registered: hosts_agents.item (hash_code_of_registered_host (a_host)) = a_host_agents
 			value_synchronized:
 				is_value_synchronized and then (
-					(a_force_synchronize implies is_value_equal (current_value, old (a_host_agents.getter.item ([])))) and then
-					(not a_force_synchronize implies is_value_equal (old current_value, a_host_agents.getter.item ([]))))
+					(a_force_synchronize implies is_value_equal (current_value, old (a_host_agents.getter.item (Void)))) and then
+					(not a_force_synchronize implies is_value_equal (old current_value, a_host_agents.getter.item (Void))))
 		end
 
 	deregister_host (a_host: ANY) is

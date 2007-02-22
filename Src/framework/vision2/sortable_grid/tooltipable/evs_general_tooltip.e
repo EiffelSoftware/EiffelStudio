@@ -86,7 +86,7 @@ feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 			l_func: like owner_destroy_function
 		do
 			l_func := owner_destroy_function
-			l_func.call ([])
+			l_func.call (Void)
 			Result := l_func.last_result
 		end
 
@@ -96,7 +96,7 @@ feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 			l_func: like widget_function
 		do
 			l_func := widget_function
-			l_func.call ([])
+			l_func.call (Void)
 			Result := l_func.last_result
 		end
 
@@ -124,7 +124,7 @@ feature{NONE} -- Implementation
 			l_func: like required_width_function
 		do
 			l_func := required_width_function
-			l_func.call ([])
+			l_func.call (Void)
 			Result := l_func.last_result
 		end
 
@@ -136,7 +136,7 @@ feature{NONE} -- Implementation
 			l_func: like required_height_function
 		do
 			l_func := required_height_function
-			l_func.call ([])
+			l_func.call (Void)
 			Result := l_func.last_result
 		end
 

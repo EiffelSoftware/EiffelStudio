@@ -229,7 +229,7 @@ feature {NONE} -- Agents
 			a_key_not_void: a_key /= Void
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter or a_key.code = {EV_KEY_CONSTANTS}.key_down then
-				ellipsis_actions.call ([])
+				ellipsis_actions.call (Void)
 			end
 		end
 

@@ -29,7 +29,7 @@ feature -- Metrics
 		require
 			a_unit_attached: a_unit /= Void
 		do
-			Result := metric_creator_table.item (a_unit).item ([])
+			Result := metric_creator_table.item (a_unit).item (Void)
 		ensure
 			a_unit_attached: a_unit /= Void
 		end

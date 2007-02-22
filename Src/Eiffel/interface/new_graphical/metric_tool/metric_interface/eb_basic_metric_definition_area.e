@@ -385,7 +385,7 @@ feature{NONE} -- Actions
 		do
 			if current_selected_grid_domain_item /= Void and then current_selected_grid_domain_item.is_parented then
 				create l_domain.make
-				l_domain.extend (a_domain_item_retrieval_agent.item ([]))
+				l_domain.extend (a_domain_item_retrieval_agent.item (Void))
 				current_selected_grid_domain_item.set_domain (l_domain)
 				on_change
 			end

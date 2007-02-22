@@ -524,7 +524,7 @@ feature {NONE} -- Actions
 		-- Agent called when process launched
 		do
 			if on_start_handler /= Void then
-				on_start_handler.call ([])
+				on_start_handler.call (Void)
 			end
 		end
 
@@ -532,7 +532,7 @@ feature {NONE} -- Actions
 			-- Agent called when process has been terminated
 		do
 			if on_terminate_handler /= Void then
-				on_terminate_handler.call ([])
+				on_terminate_handler.call (Void)
 			end
 		end
 
@@ -540,7 +540,7 @@ feature {NONE} -- Actions
 			-- Agent called when process has exited
 		do
 			if on_exit_handler /= Void then
-				on_exit_handler.call ([])
+				on_exit_handler.call (Void)
 			end
 		end
 
@@ -548,7 +548,7 @@ feature {NONE} -- Actions
 			-- Agent called when process launch failed
 		do
 			if on_fail_launch_handler /= Void then
-				on_fail_launch_handler.call ([])
+				on_fail_launch_handler.call (Void)
 			end
 		end
 
@@ -556,7 +556,7 @@ feature {NONE} -- Actions
 			-- Agent called when process launch succeeded
 		do
 			if on_successful_launch_handler /= Void then
-				on_successful_launch_handler.call ([])
+				on_successful_launch_handler.call (Void)
 			end
 		end
 

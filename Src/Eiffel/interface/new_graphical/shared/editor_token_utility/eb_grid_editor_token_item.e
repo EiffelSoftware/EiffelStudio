@@ -103,7 +103,7 @@ feature -- Access
 			if stone_function = Void then
 				Result := stone_internal
 			else
-				Result := stone_function.item ([])
+				Result := stone_function.item (Void)
 			end
 		end
 

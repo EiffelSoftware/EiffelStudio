@@ -50,7 +50,7 @@ feature -- Show
 			safe_register_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
 
 			if related_window_agent /= Void then
-				l_window := related_window_agent.item ([])
+				l_window := related_window_agent.item (Void)
 				if l_window = Void then
 					l_window := related_window
 				end

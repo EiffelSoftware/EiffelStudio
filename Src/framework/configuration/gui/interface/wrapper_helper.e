@@ -15,7 +15,7 @@ feature {NONE} -- Wrappers
 		require
 			a_call_not_void: a_call /= Void
 		do
-			a_call.call ([])
+			a_call.call (Void)
 		end
 
 	simple_wrapper (a_string: STRING_GENERAL; a_call: PROCEDURE [ANY, TUPLE [STRING]]) is
@@ -36,7 +36,7 @@ feature {NONE} -- Wrappers
 		require
 			a_call_not_void: a_call /= Void
 		do
-			a_call.call ([])
+			a_call.call (Void)
 		end
 
 indexing

@@ -12,9 +12,36 @@ class
 
 feature -- Constants
 
-	Comm10Envelope, C5Envelope, DLEnvelope, Folio, Executive, Letter, Legal, Ledger, Tabloid,
-	A0, A1, A2, A3, A4, A5, A6, A7, A8, A9,
-	B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10: INTEGER is unique
+	Comm10Envelope: INTEGER is 1
+	C5Envelope: INTEGER is 2
+	DLEnvelope: INTEGER is 3
+	Folio: INTEGER is 4
+	Executive: INTEGER is 5
+	Letter: INTEGER is 6
+	Legal: INTEGER is 7
+	Ledger: INTEGER is 8
+	Tabloid: INTEGER is 9
+	A0: INTEGER is 10
+	A1: INTEGER is 11
+	A2: INTEGER is 12
+	A3: INTEGER is 13
+	A4: INTEGER is 14
+	A5: INTEGER is 15
+	A6: INTEGER is 16
+	A7: INTEGER is 17
+	A8: INTEGER is 18
+	A9: INTEGER is 19
+	B0: INTEGER is 20
+	B1: INTEGER is 21
+	B2: INTEGER is 22
+	B3: INTEGER is 23
+	B4: INTEGER is 24
+	B5: INTEGER is 25
+	B6: INTEGER is 26
+	B7: INTEGER is 27
+	B8: INTEGER is 28
+	B9: INTEGER is 29
+	B10: INTEGER is 30
 		-- Valid page constants.
 
 feature -- Status report
@@ -136,7 +163,7 @@ feature -- Status report
 					Result := 2064
 				when B2 then
 					Result := 1460
-				when B3 then	
+				when B3 then
 					Result := 1032
 				when B4 then
 					Result := 729
@@ -209,7 +236,7 @@ feature -- Status report
 					Result := 2064
 				when B2 then
 					Result := 1460
-				when B3 then	
+				when B3 then
 					Result := 1032
 				when B4 then
 					Result := 729
@@ -271,7 +298,7 @@ feature -- Status report
 					Result := 4127
 				when B1 then
 					Result := 2920
-				when B2 then	
+				when B2 then
 					Result := 2064
 				when B3 then
 					Result:= 1460
@@ -282,20 +309,20 @@ feature -- Status report
 				when B6 then
 					Result := 516
 				when B7 then
-					Result := 363	
+					Result := 363
 				when B8 then
 					Result := 258
 				when B9 then
 					Result := 181
 				when B10 then
 					Result := 127
-				end	
+				end
 			end
 		end
-		
+
 	Default_left_margin: INTEGER is 20
 		-- Default size in pixels of the left side page margin.
-	
+
 	Default_bottom_margin: INTEGER is 20
 		-- Default size in pixels of the right side page margin.
 

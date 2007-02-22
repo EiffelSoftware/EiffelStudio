@@ -1098,7 +1098,8 @@ feature {EV_ANY_I} -- Implementation
 				-- The `Wm_ncactive' message is sent by windows when the
 				-- non client area of Current needs to be changed to indicate an
 				-- active or non active state (Blue or Grey as default).
-			if msg = Wm_ncactivate then
+			inspect msg
+			when wm_ncactivate then
 				if lparam.to_integer_32 = -1 then
 					-- This is a message send by ourself.
 					-- Windows will never sent wm_ncactive with lparam -1
@@ -1129,12 +1130,12 @@ feature {EV_ANY_I} -- Implementation
 
 					Result := on_wm_ncactivate (hwnd, wparam, lparam)
 				end
-			elseif msg = Wm_activate then
+			when Wm_activate then
 				window_on_wm_activate (wparam, lparam)
-			elseif msg = Wm_initmenupopup then
+			when Wm_initmenupopup then
 				create a_menu.make_by_pointer (wparam)
 				on_menu_opened (a_menu)
-			elseif msg = Wm_enteridle then
+			when Wm_enteridle then
 					--| FIXME This message is sent when `Current' has a modal dialog
 					--| as a child. This message is only sent once, and not repeatedly as
 					--| we require for the idle actions.

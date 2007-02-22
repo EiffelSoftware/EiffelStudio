@@ -149,7 +149,7 @@ feature {NONE} -- Agents
 
 				is_activated := True
 			else
-				ellipsis_actions.call ([])
+				ellipsis_actions.call (Void)
 			end
 		ensure then
 			popup_window_set: popup_window /= Void

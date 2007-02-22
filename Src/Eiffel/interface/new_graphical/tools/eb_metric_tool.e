@@ -237,7 +237,7 @@ feature -- Basic operations
 			metric_manager.store_userdefined_metrics
 			display_error_message
 			check_metric_validation
-			metric_loaded_actions.call ([])
+			metric_loaded_actions.call (Void)
 		end
 
 	display_error_message is
@@ -427,26 +427,26 @@ feature{NONE} -- Actions
 	on_project_loaded is
 			-- Action to be performed when project loaded
 		do
-			project_load_actions.call ([])
+			project_load_actions.call (Void)
 		end
 
 	on_project_unloaded is
 			-- Action to be performed when project unloaded
 		do
-			project_unload_actions.call ([])
+			project_unload_actions.call (Void)
 		end
 
 	on_compile_start is
 			-- Action to be performed when Eiffel compilation starts
 		do
-			compile_start_actions.call ([])
+			compile_start_actions.call (Void)
 		end
 
 	on_compile_stop is
 			-- Action to be performed when Eiffel compilation stops
 		do
 			is_metric_validation_checked.put (False)
-			compile_stop_actions.call ([])
+			compile_stop_actions.call (Void)
 		end
 
 	on_metric_evaluation_start (a_data: ANY) is
@@ -481,7 +481,7 @@ feature{NONE} -- Actions
 	on_metric_loaded is
 			-- Action to be performed when metrics loaded in `metric_manager'
 		do
-			metric_loaded_actions.call ([])
+			metric_loaded_actions.call (Void)
 		end
 
 	on_tab_droppable (a_pebble: ANY): BOOLEAN is

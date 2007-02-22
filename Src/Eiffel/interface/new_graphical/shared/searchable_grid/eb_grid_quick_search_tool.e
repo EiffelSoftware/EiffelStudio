@@ -108,7 +108,7 @@ feature -- Display
 	show_tool is
 			-- Display current search tool.
 		do
-			show_tool_actions.call ([])
+			show_tool_actions.call (Void)
 			show
 			set_focus_on_keyword_field
 		end
@@ -116,7 +116,7 @@ feature -- Display
 	hide_tool is
 			-- Hide current search tool.
 		do
-			hide_tool_actions.call ([])
+			hide_tool_actions.call (Void)
 			hide
 		end
 

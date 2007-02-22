@@ -205,7 +205,7 @@ feature -- Setting
 			-- Force `pointer_enter_agent' to be called.
 		do
 			if is_tooltip_enabled then
-				pointer_enter_agent.call ([])
+				pointer_enter_agent.call (Void)
 			end
 		end
 
@@ -213,7 +213,7 @@ feature -- Setting
 			-- Force `pointer_leave_agent' to be called.
 		do
 			if is_tooltip_enabled then
-				pointer_leave_agent.call ([])
+				pointer_leave_agent.call (Void)
 			end
 		end
 
@@ -453,7 +453,7 @@ feature{NONE} -- Tooltip show/hide
 			end
 			if l_show then
 				if not before_display_actions.is_empty then
-					before_display_actions.call ([])
+					before_display_actions.call (Void)
 				end
 				if not is_tooltip_display_vetoed then
 					if is_tooltip_displayed then
@@ -481,7 +481,7 @@ feature{NONE} -- Tooltip show/hide
 		do
 			if not is_tooltip_pined then
 				if not is_picking_from_tooltip and then force_tooltip_disappear_function /= Void then
-					force_tooltip_disappear_function.call ([])
+					force_tooltip_disappear_function.call (Void)
 					l_hide := force_tooltip_disappear_function.last_result
 				end
 				if not l_hide and then not (is_pointer_on_tooltip_enabled and then is_pointer_on_tooltip) and not is_pointer_on_owner then
@@ -697,7 +697,7 @@ feature{NONE} -- Implementation
 				until
 					l_func.after or Result
 				loop
-					Result := not l_func.item.item ([])
+					Result := not l_func.item.item (Void)
 					l_func.forth
 				end
 				if l_cursor /= Void then

@@ -2,9 +2,9 @@ indexing
 	description: "Object that is able to auto complete code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author: manus $"
-	date: "$Date: 2006-08-07 12:21:32 -0700 (Mon, 07 Aug 2006) $"
-	revision: "$Revision: 62302 $"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	CODE_COMPLETABLE
@@ -214,7 +214,7 @@ feature -- Basic operation
 			-- Prepare auto complete and show choice window directly.
 		do
 			if possibilities_provider /= Void then
-				precompletion_actions.call ([])
+				precompletion_actions.call (Void)
 				prepare_auto_complete
 				if possibilities_provider.completion_possible then
 					block_focus_out_actions

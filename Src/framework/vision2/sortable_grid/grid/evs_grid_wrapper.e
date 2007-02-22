@@ -405,7 +405,7 @@ feature -- Access
 			-- In this case, make sure `item_text_function' is set.
 		do
 			if selection_function /= Void then
-				Result := selection_function.item ([])
+				Result := selection_function.item (Void)
 			else
 				Result := default_selection_function
 			end
@@ -980,7 +980,7 @@ feature{NONE} -- Implementation
 		do
 			if grid.is_multiple_row_selection_enabled or grid.is_multiple_item_selection_enabled then
 				if select_all_action /= Void then
-					select_all_action.call ([])
+					select_all_action.call (Void)
 				else
 					default_select_all_action
 				end

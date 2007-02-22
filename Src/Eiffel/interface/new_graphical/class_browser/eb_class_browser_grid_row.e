@@ -114,7 +114,7 @@ feature -- General tooltip
 		local
 			l_text: LIST [EDITOR_TOKEN]
 		do
-			l_text := a_text_function.item ([])
+			l_text := a_text_function.item (Void)
 			if l_text = Void then
 				create {LINKED_LIST [EDITOR_TOKEN]} l_text.make
 			end

@@ -955,7 +955,7 @@ feature -- Events
 			discover_melt_cmd.disable_sensitive
 			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
-			compile_start_actions.call ([])
+			compile_start_actions.call (Void)
 		end
 
 	on_refactoring_start is

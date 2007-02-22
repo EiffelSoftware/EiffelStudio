@@ -46,7 +46,7 @@ feature -- Trigger events
 			until
 				start_actions.after
 			loop
-				start_actions.item.call ([])
+				start_actions.item.call (Void)
 				start_actions.forth
 			end
 		end
@@ -59,7 +59,7 @@ feature -- Trigger events
 			until
 				end_actions.after
 			loop
-				end_actions.item.call ([])
+				end_actions.item.call (Void)
 				end_actions.forth
 			end
 		end

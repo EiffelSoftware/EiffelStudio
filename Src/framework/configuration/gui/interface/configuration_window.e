@@ -277,7 +277,7 @@ feature {NONE} -- Agents
 			-- Quit without saving.
 		do
 			is_canceled := True
-			hide_actions.call ([])
+			hide_actions.call (Void)
 			hide
 		end
 
@@ -286,7 +286,7 @@ feature {NONE} -- Agents
 		do
 			conf_system.store
 			conf_system.set_file_date
-			hide_actions.call ([])
+			hide_actions.call (Void)
 			hide
 		end
 
@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 			-- Regenerate currently displayed data.
 		do
 			if refresh_current /= Void then
-				refresh_current.call ([])
+				refresh_current.call (Void)
 				set_focus
 				section_tree.set_focus
 			end

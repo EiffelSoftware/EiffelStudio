@@ -217,7 +217,7 @@ feature -- Pop up
 			end
 			display_header
 			if not popup_actions.is_empty then
-				popup_actions.call ([])
+				popup_actions.call (Void)
 			end
 		end
 
@@ -270,7 +270,7 @@ feature -- Commands
 			popup
 			fresh_old_formatter
 			format
-			post_execution_action.call ([])
+			post_execution_action.call (Void)
 		end
 
 	save_in_file is

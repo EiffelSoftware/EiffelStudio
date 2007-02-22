@@ -64,7 +64,7 @@ feature -- Value
 			l_basic_scope: QL_METRIC_BASIC_SCOPE_INFO
 		do
 			if value_initialize_function /= Void then
-				internal_value := value_initialize_function.item ([])
+				internal_value := value_initialize_function.item (Void)
 			else
 				internal_value := 0.0
 			end

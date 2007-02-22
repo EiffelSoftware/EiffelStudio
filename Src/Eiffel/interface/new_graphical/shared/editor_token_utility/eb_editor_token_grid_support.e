@@ -224,7 +224,7 @@ feature{NONE} -- Actions
 			-- Action to be performed when color or font in editor changes
 		do
 			if not color_or_font_change_actions.is_empty then
-				color_or_font_change_actions.call ([])
+				color_or_font_change_actions.call (Void)
 			end
 		end
 

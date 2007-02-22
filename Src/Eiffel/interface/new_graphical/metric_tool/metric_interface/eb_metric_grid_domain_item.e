@@ -181,7 +181,7 @@ feature -- Setting
 		local
 			l_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]
 		do
-			l_dialog := dialog_function.item ([])
+			l_dialog := dialog_function.item (Void)
 			if l_dialog /= Void then
 				l_dialog.ok_actions.wipe_out
 				l_dialog.ok_actions.extend (agent on_dialog_ok (l_dialog))

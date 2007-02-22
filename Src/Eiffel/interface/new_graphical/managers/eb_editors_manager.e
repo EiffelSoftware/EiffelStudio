@@ -537,7 +537,7 @@ feature -- Element change
 				l_editors.forth
 			end
 			create editors_internal.make (5)
-			editor_closed_actions.call ([])
+			editor_closed_actions.call (Void)
 		end
 
 	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]) is
@@ -859,7 +859,7 @@ feature {NONE}-- Implementation
 			editors_internal.prune_all (a_editor)
 			editor_number_factory.remove_editor_name (a_editor.docking_content.unique_title)
 			a_editor.docking_content.close
-			editor_closed_actions.call ([])
+			editor_closed_actions.call (Void)
 			a_editor.recycle
 			if editors_internal.is_empty then
 				last_created_editor := Void

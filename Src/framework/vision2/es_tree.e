@@ -105,11 +105,11 @@ feature {NONE} -- Actions
 		do
 			if not a_recursive then
 				if expand_selected_rows_agent /= Void then
-					expand_selected_rows_agent.call ([])
+					expand_selected_rows_agent.call (Void)
 				end
 			else
 				if expand_selected_rows_recursive_agent /= Void then
-					expand_selected_rows_recursive_agent.call ([])
+					expand_selected_rows_recursive_agent.call (Void)
 				end
 			end
 		end
@@ -119,11 +119,11 @@ feature {NONE} -- Actions
 		do
 			if not a_recursive then
 				if collapse_selected_rows_agent /= Void then
-					collapse_selected_rows_agent.call ([])
+					collapse_selected_rows_agent.call (Void)
 				end
 			else
 				if collapse_selected_rows_recursive_agent /= Void then
-					collapse_selected_rows_recursive_agent.call ([])
+					collapse_selected_rows_recursive_agent.call (Void)
 				end
 			end
 		end

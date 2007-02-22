@@ -67,7 +67,7 @@ feature -- Notification
 						l_observers.after
 					loop
 						l_observers.item.update (Current, a_data)
-						l_observers.item.actions.call ([])
+						l_observers.item.actions.call (Void)
 						l_observers.forth
 					end
 				end

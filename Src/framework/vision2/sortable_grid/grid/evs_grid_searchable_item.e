@@ -76,11 +76,11 @@ feature -- Replacement
 			end
 			if last_replace_successful then
 				if not replace_succeeded_actions.is_empty then
-					replace_succeeded_actions.call ([])
+					replace_succeeded_actions.call (Void)
 				end
 			else
 				if not replace_failed_actions.is_empty then
-					replace_failed_actions.call ([])
+					replace_failed_actions.call (Void)
 				end
 			end
 		end

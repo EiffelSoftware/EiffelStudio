@@ -719,7 +719,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 		do
 			Precursor {TEXT_OBSERVER}
 			if not loaded_actions.is_empty then
-				loaded_actions.call ([])
+				loaded_actions.call (Void)
 				loaded_actions.wipe_out
 			end
 			if is_current_editor_searched then
@@ -1792,7 +1792,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 					if is_editor_ready and then editor.text_is_fully_loaded or editor.is_empty then
 						l_pro := loaded_actions.item
 						loaded_actions.remove
-						l_pro.call ([])
+						l_pro.call (Void)
 					else
 						loop_end := true
 					end

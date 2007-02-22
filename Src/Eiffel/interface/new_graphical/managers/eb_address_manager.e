@@ -2229,7 +2229,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					end
 				end
 			end
-			label_changed_actions.call ([])
+			label_changed_actions.call (Void)
 		end
 
 	update_combos is

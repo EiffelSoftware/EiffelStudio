@@ -1,7 +1,7 @@
 class MY_ATTRIBUTE
 
 inherit
-	SYSTEM_ATTRIBUTE
+	NATIVE_ATTRIBUTE
 
 create
 	make

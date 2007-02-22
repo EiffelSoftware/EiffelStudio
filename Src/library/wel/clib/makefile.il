@@ -32,5 +32,6 @@ ilwel.lib: $(IL_OBJ)
 	lib /NOLOGO /OUT:$@ $(IL_OBJ)
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc
-	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
-	copy $@ ..\spec\msc\lib
+	if not exist ..\spec\msc\$(ISE_PLATFORM) mkdir ..\spec\msc\$(ISE_PLATFORM)
+	if not exist ..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\spec\msc\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\msc\$(ISE_PLATFORM)\lib

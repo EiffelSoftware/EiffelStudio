@@ -13,8 +13,9 @@ oracle_store.lib: $(OBJ) oracle.h
 		lib -OUT:$@ $(OBJ)  
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
 		if not exist ..\..\..\..\spec\msc mkdir ..\..\..\..\spec\msc
-		if not exist ..\..\..\..\spec\msc\lib mkdir ..\..\..\..\spec\msc\lib
-		copy oracle_store.lib ..\..\..\..\spec\msc\lib
+		if not exist ..\..\..\..\spec\msc\$(ISE_PLATFORM) mkdir ..\..\..\..\spec\msc\$(ISE_PLATFORM)
+		if not exist ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib mkdir ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib
+		copy $@ ..\..\..\..\spec\msc\$(ISE_PLATFORM)\lib
 
 oracle.obj: oracle.c oracle.h
 

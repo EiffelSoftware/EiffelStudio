@@ -3891,7 +3891,7 @@ feature {ANY}
 					end
 				else
 					horizontal_scroll_bar.value_range.resize_exactly (0, maximum_virtual_x_position)
-					horizontal_scroll_bar.set_leap (width)
+					horizontal_scroll_bar.set_leap (width.max (1))
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel horizontal
 							-- scrolling, we can set the position of the scroll bar exactly to match it's

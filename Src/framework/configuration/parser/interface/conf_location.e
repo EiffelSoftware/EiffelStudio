@@ -206,10 +206,12 @@ feature {NONE} -- Implementation
 			-- The fully resolved path with file name in internal format.
 		local
 			i, j, k: INTEGER
+			l_old_i: INTEGER
 			l_key: STRING
 			l_value: STRING
 			l_relative_base: STRING
 			l_offset: INTEGER
+			l_stop: BOOLEAN
 		do
 			Result := original_path.twin
 
@@ -225,8 +227,11 @@ feature {NONE} -- Implementation
 				l_offset := 1
 				i := Result.index_of ('$', l_offset)
 			until
-				i = 0
+				i = 0 or l_stop
 			loop
+				l_key := Void
+				l_old_i := i
+
 					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
 				if i /= 0 and then Result.item (i+1) = '{' then
 					j := Result.index_of ('}', i)
@@ -261,6 +266,10 @@ feature {NONE} -- Implementation
 				end
 
 				i := Result.index_of ('$', l_offset)
+				if i > 0 then
+						-- Check if last variable was extracted correctly
+					l_stop := l_old_i = i
+				end
 			end
 
 				-- handle relative path

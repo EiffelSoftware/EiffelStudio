@@ -17,6 +17,48 @@ inherit
 
 feature -- Element change
 
+	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_widget_parent_void: a_widget.parent = Void
+			a_widget_not_current: a_widget /= Current
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
+		do
+			extend (a_widget)
+			set_item_position (a_widget, a_x, a_y)
+			set_item_size (a_widget, a_width, a_height)
+		ensure
+			has_a_widget: has (a_widget)
+			parent_is_current: a_widget.parent = Current
+			count_increased: count = old count + 1
+			an_item_x_position_assigned: a_widget.x_position = a_x
+			an_item_y_position_assigned: a_widget.y_position = a_y
+			an_item_width_assigned: a_widget.width = a_width
+			an_item_height_assigned: a_widget.height = a_height
+		end
+
+	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
+		do
+			set_item_position (a_widget, a_x, a_y)
+			set_item_size (a_widget, a_width, a_height)
+		ensure
+			an_item_x_position_assigned: a_widget.x_position = a_x
+			an_item_y_position_assigned: a_widget.y_position = a_y
+			an_item_width_assigned: a_widget.width = a_width
+			an_item_height_assigned: a_widget.height = a_height
+		end
+
 	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
 			-- Set `a_widget.x_position' to `an_x'.
 		require

@@ -162,6 +162,24 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
 		end
 
+	disable_user_resize is
+			-- Forbid the resize of the window.
+		do
+			user_can_resize := False
+			if is_displayed then
+				forbid_resize
+			end
+		end
+
+	enable_user_resize is
+			-- Allow the resize of the window.
+		do
+			user_can_resize := True
+			if is_displayed then
+				allow_resize
+			end
+		end
+
 	allow_resize is
 			-- Allow the resize of the window.
 		local

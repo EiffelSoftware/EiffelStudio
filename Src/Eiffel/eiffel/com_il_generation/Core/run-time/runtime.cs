@@ -378,6 +378,12 @@ feature -- Redirection to feature of ANY class
 		return ANY.deep_equal (Current, some, other);
 	}
 
+	public static bool is_deep_equal (object Current, object other)
+		// Are `Current' and `other' attached to isomorphic object structures?
+	{
+		return ANY.deep_equal (Current, Current, other);
+	}
+
 	public static object deep_twin (object Current)
 		// New object structure recursively duplicated from Current.
 	{

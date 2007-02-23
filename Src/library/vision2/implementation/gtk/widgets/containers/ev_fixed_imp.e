@@ -15,7 +15,9 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface--,
+--			extend_with_position_and_size,
+--			set_item_position_and_size
 		end
 
 	EV_WIDGET_LIST_IMP
@@ -45,6 +47,21 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status setting
+
+--	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+--			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
+--		do
+--			extend (a_widget)
+--			set_item_position (a_widget, a_x, a_y)
+--			set_item_size (a_widget, a_width, a_height)
+--		end
+
+--	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+--			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
+--		do
+--			set_item_position (a_widget, a_x, a_y)
+--			set_item_size (a_widget, a_width, a_height)
+--		end
 
 	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
 			-- Set `a_widget.x_position' to `an_x'.
@@ -101,7 +118,6 @@ feature {EV_ANY_I} -- Implementation
 		local
 			glist, fixlist, fixitem: POINTER
 			temp_index: INTEGER
-			l_requisition: POINTER
 			l_parent_box: POINTER
 		do
 				-- We add a parent box to `a_child' and control its size via this as
@@ -114,8 +130,6 @@ feature {EV_ANY_I} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_add (l_parent_box, a_child)
 
 			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, l_parent_box)
-			l_requisition := {EV_GTK_EXTERNALS}.c_gtk_allocation_struct_allocate
-			{EV_GTK_EXTERNALS}.gtk_widget_get_child_requisition (a_child, l_requisition)
 			if a_position < count then
 				glist := {EV_GTK_EXTERNALS}.gtk_container_children (a_container)
 				temp_index := {EV_GTK_EXTERNALS}.g_list_index (glist, l_parent_box)

@@ -190,6 +190,64 @@ feature -- File Drop Handling
 			"DragQueryFile ((HDROP) $hdrop, (UINT) $ifile, (LPTSTR) $buffer_pointer, (UINT) $buffer_size)"
 		end
 
+feature -- Processes
+
+	frozen duplicate_handle (hsourceprocess, hsource, htargetprocess: POINTER; htarget: TYPED_POINTER [POINTER]; access: INTEGER; inherithandle: BOOLEAN; options: INTEGER): INTEGER is
+			-- SDK DuplicateHandle
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				return (EIF_INTEGER) DuplicateHandle (
+					(HANDLE) $hsourceprocess,
+					(HANDLE) $hsource,
+					(HANDLE) $htargetprocess,
+					(LPHANDLE) $htarget,
+					(DWORD) $access,
+					(BOOL) $inherithandle,
+					(DWORD) $options);
+			]"
+		end
+
+	frozen close_handle (a_handle: POINTER): INTEGER is
+			-- SDK CloseHandle
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_INTEGER) CloseHandle ((HANDLE) $a_handle);"
+		end
+
+	frozen get_current_process: POINTER is
+			-- SDK GetCurrentProcess
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) GetCurrentProcess();"
+		end
+
+	frozen wait_for_input_idle (hprocess: POINTER; ms: INTEGER): INTEGER is
+			-- SDK WaitForInputIdle
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_INTEGER) WaitForInputIdle ((HANDLE) $hprocess, (DWORD) $ms);"
+		end
+
+	frozen msg_wait_for_multiple_objects (n: INTEGER; phandles: POINTER; waitall: BOOLEAN; ms, mask: INTEGER): INTEGER is
+			-- SDK MsgWaitForMultipleObjects
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				return (EIF_INTEGER) MsgWaitForMultipleObjects(
+					(DWORD) $n,
+					(const HANDLE *) $phandles,
+					(BOOL) $waitall,
+					(DWORD) $ms,
+					(DWORD) $mask);
+			]"
+		end
+
 feature -- Scrolling
 
 	frozen set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is

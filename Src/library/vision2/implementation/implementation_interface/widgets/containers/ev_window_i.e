@@ -124,16 +124,12 @@ feature -- Status setting
 
 	disable_user_resize is
 			-- Forbid the resize of the window.
-		do
-			user_can_resize := False
-			forbid_resize
+		deferred
 		end
 
 	enable_user_resize is
 			-- Allow the resize of the window.
-		do
-			user_can_resize := True
-			allow_resize
+		deferred
 		end
 
 	forbid_resize is

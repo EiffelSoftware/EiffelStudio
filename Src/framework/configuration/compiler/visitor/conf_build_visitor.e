@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
 						if current_classes.has_key (l_name) then
-							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 						else
 							current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 								end
 								added_classes.force (l_class)
 								if current_classes.has_key (l_name) then
-									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
+									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 								else
 									current_classes.force (l_class, l_name)
 									current_classes_by_filename.force (l_class, l_file_name)

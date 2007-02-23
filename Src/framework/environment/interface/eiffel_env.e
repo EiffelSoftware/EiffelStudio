@@ -323,7 +323,8 @@ feature -- Access: file name
 			end
 			create Result.make_from_string (l_name)
 		ensure
-			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
+			result_not_void_or_empty: is_valid_environment implies
+				(Result /= Void and then not Result.is_empty)
 		end
 
 	Bin_path: DIRECTORY_NAME is
@@ -334,7 +335,7 @@ feature -- Access: file name
 			Result := Studio_path.twin
 			Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Eiffel_library: DIRECTORY_NAME is
@@ -344,7 +345,7 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (get_environment (ise_library_env))
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Eiffel_precomp: DIRECTORY_NAME is
@@ -354,7 +355,7 @@ feature -- Access: file name
 		do
 			create Result.make_from_string (get_environment (ise_precomp_env))
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Eiffel_precomp_mode (a_is_dotnet: BOOLEAN): DIRECTORY_NAME
@@ -507,7 +508,7 @@ feature -- Access: file name
 			Result := shared_application_path.twin
 			Result.extend ("help")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Templates_path: DIRECTORY_NAME is
@@ -518,7 +519,7 @@ feature -- Access: file name
 			Result := Help_path.twin
 			Result.extend ("defaults")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Config_path: DIRECTORY_NAME is
@@ -528,7 +529,7 @@ feature -- Access: file name
 			Result := shared_application_path.twin
 			Result.extend ("config")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Generation_templates_path: DIRECTORY_NAME is
@@ -539,7 +540,7 @@ feature -- Access: file name
 			Result := Config_path.twin
 			Result.extend_from_array (<<Eiffel_platform, "templates">>)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Bitmaps_path: DIRECTORY_NAME is
@@ -549,7 +550,7 @@ feature -- Access: file name
 			Result := shared_application_path.twin
 			Result.extend ("bitmaps")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Cursor_path: DIRECTORY_NAME is
@@ -559,7 +560,7 @@ feature -- Access: file name
 			Result := Bitmaps_path.twin
 			Result.extend ("cursor")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Assemblies_path: DIRECTORY_NAME is
@@ -570,7 +571,7 @@ feature -- Access: file name
 			Result := lib_path.twin
 			Result.extend_from_array (<<"dotnet", "assemblies">>)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Default_config_name: FILE_NAME is
@@ -580,7 +581,7 @@ feature -- Access: file name
 			create Result.make_from_string (Templates_path)
 			Result.set_file_name (Default_config_file)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Library_path: DIRECTORY_NAME is
@@ -590,7 +591,7 @@ feature -- Access: file name
 			Result := Eiffel_library.twin
 			Result.extend (library_directory_name)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Error_path: DIRECTORY_NAME is
@@ -600,7 +601,27 @@ feature -- Access: file name
 			Result := help_path.twin
 			Result.extend ("errors")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
+		end
+
+	built_ins_path (a_is_platform_neutral, a_is_dotnet: BOOLEAN): DIRECTORY_NAME is
+			-- Directory where implementation for `built_ins' are found.
+		require
+			is_valid_environment: is_valid_environment
+		do
+			Result := studio_path.twin
+			Result.extend ("built_ins")
+			if a_is_platform_neutral then
+				Result.extend ("neutral")
+			else
+				if a_is_dotnet then
+					Result.extend ("dotnet")
+				else
+					Result.extend ("classic")
+				end
+			end
+		ensure
+			built_ins_path_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Docs_path: DIRECTORY_NAME is
@@ -615,7 +636,7 @@ feature -- Access: file name
 			end
 			Result.extend ("docs")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	filter_path: DIRECTORY_NAME is
@@ -625,7 +646,7 @@ feature -- Access: file name
 			Result := shared_application_path.twin
 			Result.extend ("filters")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	profile_path: DIRECTORY_NAME is
@@ -636,7 +657,7 @@ feature -- Access: file name
 			Result := shared_application_path.twin
 			Result.extend ("profiler")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	language_path: DIRECTORY_NAME is
@@ -663,7 +684,7 @@ feature -- Access: file name
 			Result.extend ("metrics")
 			Result.set_file_name ("predefined_metrics.xml")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	New_project_wizards_path: DIRECTORY_NAME is
@@ -674,7 +695,7 @@ feature -- Access: file name
 			Result := lib_application_path.twin
 			Result.extend_from_array (<<"wizards", "new_projects">>)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	precompilation_wizard_resources_directory: DIRECTORY_NAME is
@@ -684,7 +705,7 @@ feature -- Access: file name
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "wizards", "others", "precompile">>)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	compiler_configuration: FILE_NAME is
@@ -698,7 +719,7 @@ feature -- Access: file name
 			Result.set_file_name ("general")
 			Result.add_extension ("cfg")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	msil_culture_name: FILE_NAME is
@@ -711,7 +732,7 @@ feature -- Access: file name
 			Result.extend_from_array (<<"eifinit", "spec", Platform_abstraction>>)
 			Result.set_file_name ("culture")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	tmp_directory: DIRECTORY_NAME is
@@ -749,7 +770,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Freeze_command_name: FILE_NAME is
@@ -764,7 +785,7 @@ feature -- Access: command name
 			end
 			Result.set_file_name (Finish_freezing_script)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	docking_standard_layout_path: FILE_NAME is
@@ -796,7 +817,7 @@ feature -- Access: command name
 			end
 			Result.set_file_name ("prelink")
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	ec_command_name: FILE_NAME is
@@ -812,7 +833,7 @@ feature -- Access: command name
 			end
 			Result.set_file_name (ec_name)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Estudio_command_name: FILE_NAME is
@@ -833,7 +854,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Ecdbgd_command_name: FILE_NAME is
@@ -851,7 +872,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Emake_command_name: FILE_NAME is
@@ -869,7 +890,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	Quick_finalize_command_name: FILE_NAME is
@@ -887,7 +908,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	x2c_command_name: FILE_NAME is
@@ -905,7 +926,7 @@ feature -- Access: command name
 				Result.add_extension (executable_suffix)
 			end
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Access: names
@@ -1064,7 +1085,7 @@ feature {NONE} -- Implementation
 			Result := eiffel_installation_dir_name.twin
 			Result.extend (short_studio_name)
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 feature {NONE} -- Environment access

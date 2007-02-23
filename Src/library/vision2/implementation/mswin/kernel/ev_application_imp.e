@@ -784,6 +784,7 @@ feature {NONE} -- Externals
 invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 	duplicated_message_not_void: duplicated_message /= Void
+	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

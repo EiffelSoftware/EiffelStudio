@@ -11,7 +11,8 @@ class
 inherit
 	EV_ANY_I
 		redefine
-			interface
+			interface,
+			is_destroyed
 		end
 
 	REFACTORING_HELPER
@@ -22,7 +23,8 @@ inherit
 	EV_DESELECTABLE_I
 		redefine
 			interface,
-			is_selectable
+			is_selectable,
+			is_destroyed
 		end
 
 	EV_GRID_ITEM_ACTION_SEQUENCES_I
@@ -231,7 +233,7 @@ feature -- Status setting
 			end
 
 				-- Request that `Current' be redrawn
-			if parent_i /= Void then
+			if parent_i /= Void and then not parent_i.is_destroyed then
 				parent_i.redraw_item (Current)
 			end
 		end
@@ -375,6 +377,12 @@ feature -- Status report
 			-- Is `Current' selectable?
 		do
 			Result := is_parented
+		end
+
+	is_destroyed: BOOLEAN is
+			-- Is `Current' destroyed?
+		do
+			Result := Precursor {EV_ANY_I} or (is_parented and then parent_i.is_destroyed)
 		end
 
 feature -- Element change

@@ -266,6 +266,20 @@ feature -- Status setting
 			set_maximum_height (32000)
 		end
 
+	disable_user_resize is
+			-- Forbid the resize of the window.
+		do
+			user_can_resize := False
+			forbid_resize
+		end
+
+	enable_user_resize is
+			-- Allow the resize of the window.
+		do
+			user_can_resize := True
+			allow_resize
+		end
+
 	forbid_resize is
 			-- Forbid the resize of `Current'.
 		local

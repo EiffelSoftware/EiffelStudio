@@ -11,6 +11,9 @@ class
 
 inherit
 	EV_APPLICATION_I
+		redefine
+			wait_for_input
+		end
 
  	WEL_APPLICATION
  		rename
@@ -60,7 +63,8 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create the application with `an_interface' interface.
 		local
-			l_result: BOOLEAN
+			l_result: INTEGER
+			l_process: POINTER
 		do
 			if {PLATFORM}.is_thread_capable then
 				create idle_action_mutex.make
@@ -77,7 +81,7 @@ feature {NONE} -- Initialization
 				-- we create any widgets. If this is not the case, then `themes_active' fails
 				-- during creation of the widgets, and those widgets created before a window
 				-- end up with a null theme handle.
-			l_result := silly_main_window.is_inside
+			silly_main_window.do_nothing
 			cwin_disable_xp_ghosting
 				-- Initialize the theme drawer to the correct version for
 				-- the current platform.
@@ -89,6 +93,13 @@ feature {NONE} -- Initialization
 			create duplicated_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
+
+				-- Get HANDLE to current process.
+				-- 0x2 stands for `DUPLICATE_SAME_ACCESS'.
+			l_process := {WEL_API}.get_current_process
+			l_result := {WEL_API}.duplicate_handle (l_process, l_process, l_process, $l_process, 0, False, 0x2)
+			check l_result_good: l_result /= 0 end
+			process_handle := l_process
 		end
 
 feature -- Access
@@ -490,11 +501,17 @@ feature -- Basic operation
 
 	destroy is
 			-- Destroy `Current' (End the application).
+		local
+			l_result: INTEGER
 		do
 			cwin_post_quit_message (0)
 			set_is_destroyed (True)
 			window_with_focus := Void
 			interface.destroy_actions.call (Void)
+				-- Destroy `process_handle'
+			l_result := {WEL_API}.close_handle (process_handle)
+			check l_result_ok: l_result /= 0 end
+			process_handle := default_pointer
 		end
 
 feature -- Tooltips
@@ -659,6 +676,21 @@ feature {NONE} -- Implementation
 			-- same value.
 		once
 			Create Result
+		end
+
+	process_handle: POINTER
+			-- HANDLE for current process.
+
+	wait_for_input (msec: INTEGER) is
+			-- Wait for at most `msec' milliseconds for an input.
+		local
+			l_result: INTEGER
+			l_process: POINTER
+		do
+			l_process := process_handle
+			l_result := {WEL_API}.msg_wait_for_multiple_objects (1, $l_process, False, msec,
+				{WEL_QS_CONSTANTS}.qs_allinput | {WEL_QS_CONSTANTS}.qs_allpostmessage)
+			check l_result_ok: l_result /= -1 end
 		end
 
 feature -- Public constants

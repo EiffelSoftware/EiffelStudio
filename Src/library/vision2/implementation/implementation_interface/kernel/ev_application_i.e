@@ -115,7 +115,7 @@ feature {EV_ANY_I} -- Implementation
 					l_locked := False
 					if a_relinquish_cpu then
 							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
-						sleep (cpu_relinquishment_time)
+						wait_for_input (cpu_relinquishment_time)
 					end
 				end
 			elseif l_retry_count = 1 then
@@ -839,6 +839,14 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			focused_widget: Result /= Void implies Result.has_focus
+		end
+
+	wait_for_input (msec: INTEGER) is
+			-- Wait for at most `msec' milliseconds for an input.
+		require
+			msec_non_negative: msec >= 0
+		do
+			sleep (msec)
 		end
 
 invariant

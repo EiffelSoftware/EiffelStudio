@@ -155,6 +155,16 @@ feature -- Access
 			end
 		end
 
+feature -- Externals
+
+	is_windows_x64: BOOLEAN is
+			-- Is Current running on Windows 64 bits?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_64_BITS"
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

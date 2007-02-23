@@ -31,6 +31,7 @@ feature -- Initialization
 			create system_dependent_directories.make (5)
 			create object_dependent_directories.make (50)
 			create dependent_directories.make (55)
+			force_32bit := a_force_32bit
 
 			eiffel_dir := short_path (eiffel_layout.eiffel_installation_dir_name)
 			processor_count := a_processor_count
@@ -72,6 +73,7 @@ feature -- Initialization
 			end
 		ensure
 			processor_count_set: processor_count = a_processor_count
+			force_32bit_set: force_32bit = a_force_32bit
 		end
 
 	launch_quick_compilation is
@@ -145,6 +147,9 @@ feature -- Access
 
 	processor_count: NATURAL_8
 			-- Number of processors to utilize
+
+	force_32bit: BOOLEAN
+			-- Indiciates if 32bit compilation should be forced
 
 feature -- Execution
 
@@ -1419,7 +1424,7 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_platform%N")
 			end
 
-			line.replace_substring_all ("$(ISE_PLATFORM)", eiffel_layout.eiffel_platform)
+			line.replace_substring_all ("$(ISE_PLATFORM)", get_replacement (once "ISE_PLATFORM"))
 		end
 
 	subst_compiler (line: STRING) is
@@ -1674,16 +1679,21 @@ feature {NONE} -- Implementation
 				io.put_string("%Tget_replacement%N")
 			end
 
-			if options.has (word) then
-				replacement := options.get_string (word, Void).twin
-				if not replacement.is_equal("$(INCLUDE_PATH)") then
-					search_and_replace (replacement)
-				end
-				Result := replacement
+			if ({FINISH_FREEZING}.is_windows_x64 and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
+					-- Replace ISE_PLAFORM to 32bit builds on x64 platforms
+				Result := once "windows"
 			else
-				Result := eiffel_layout.get_environment (word)
-				if Result /= Void and then not Result.is_empty then
-					Result := short_path (Result.twin)
+				if options.has (word) then
+					replacement := options.get_string (word, Void).twin
+					if not replacement.is_equal("$(INCLUDE_PATH)") then
+						search_and_replace (replacement)
+					end
+					Result := replacement
+				else
+					Result := eiffel_layout.get_environment (word)
+					if Result /= Void and then not Result.is_empty then
+						Result := short_path (Result.twin)
+					end
 				end
 			end
 		end

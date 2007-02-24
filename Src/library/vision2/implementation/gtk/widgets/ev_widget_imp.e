@@ -256,21 +256,67 @@ feature -- Element change
 
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
+		local
+			l_height: INTEGER
+			l_viewport_parent: EV_VIEWPORT_IMP
+			l_fixed_parent: EV_FIXED_IMP
 		do
-			internal_set_minimum_size (a_minimum_width, minimum_height)
+			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, height_request_string.item, $l_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, l_height)
+
+				-- If the parent is a fixed or scrollable area we need to update the item size.
+			l_viewport_parent ?= parent_imp
+			if l_viewport_parent /= Void then
+				l_viewport_parent.set_item_width (a_minimum_width.max (width))
+			else
+				l_fixed_parent ?= parent_imp
+				if l_fixed_parent /= Void then
+					l_fixed_parent.set_item_width (interface, a_minimum_width.max (width))
+				end
+			end
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height'.
+		local
+			l_width: INTEGER
+			l_viewport_parent: EV_VIEWPORT_IMP
+			l_fixed_parent: EV_FIXED_IMP
 		do
-			internal_set_minimum_size (minimum_width, a_minimum_height)
+			{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, width_request_string.item, $l_width)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_width, a_minimum_height)
+
+				-- If the parent is a fixed or scrollable area we need to update the item size.
+			l_viewport_parent ?= parent_imp
+			if l_viewport_parent /= Void then
+				l_viewport_parent.set_item_height (a_minimum_height.max (height))
+			else
+				l_fixed_parent ?= parent_imp
+				if l_fixed_parent /= Void then
+					l_fixed_parent.set_item_height (interface, a_minimum_height.max (height))
+				end
+			end
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
+		local
+			l_viewport_parent: EV_VIEWPORT_IMP
+			l_fixed_parent: EV_FIXED_IMP
 		do
-			internal_set_minimum_size (a_minimum_width, a_minimum_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
+
+				-- If the parent is a fixed or scrollable area we need to update the item size.
+			l_viewport_parent ?= parent_imp
+			if l_viewport_parent /= Void then
+				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
+			else
+				l_fixed_parent ?= parent_imp
+				if l_fixed_parent /= Void then
+					l_fixed_parent.set_item_size (interface, a_minimum_width.max (width), a_minimum_height.max (height))
+				end
+			end
 		end
 
 feature -- Measurement
@@ -357,24 +403,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Abstracted implementation for minimum size setting.
-		local
-			l_viewport_parent: EV_VIEWPORT_IMP
-			l_fixed_parent: EV_FIXED_IMP
-		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
-			l_viewport_parent ?= parent_imp
-			if l_viewport_parent /= Void then
-				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
-			else
-				l_fixed_parent ?= parent_imp
-				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_size (interface, a_minimum_width.max (width), a_minimum_height.max (height))
-				end
-			end
-		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.

@@ -15,9 +15,9 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface--,
---			extend_with_position_and_size,
---			set_item_position_and_size
+			interface,
+			extend_with_position_and_size,
+			set_item_position_and_size
 		end
 
 	EV_WIDGET_LIST_IMP
@@ -48,23 +48,43 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
---	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
---			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
---		do
---			extend (a_widget)
---			set_item_position (a_widget, a_x, a_y)
---			set_item_size (a_widget, a_width, a_height)
---		end
+	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
+		local
+			l_widget_imp: EV_WIDGET_IMP
+			l_parent_box: POINTER
+		do
+			l_widget_imp ?= a_widget.implementation
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (l_parent_box, False)
+			{EV_GTK_EXTERNALS}.gtk_container_add (l_parent_box, l_widget_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, l_parent_box)
+			child_array.go_i_th (count + 1)
+			child_array.put_left (a_widget)
+			on_new_item (l_widget_imp)
+			if index = count then
+				index := index + 1
+			end
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (l_parent_box)
+		end
 
---	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
---			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
---		do
---			set_item_position (a_widget, a_x, a_y)
---			set_item_size (a_widget, a_width, a_height)
---		end
+	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
+			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
+		local
+			l_parent_box: POINTER
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= a_widget.implementation
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (container_widget)
+		end
 
-	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
-			-- Set `a_widget.x_position' to `an_x'.
+	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
 			w_imp: EV_WIDGET_IMP
@@ -72,7 +92,7 @@ feature -- Status setting
 		do
 			w_imp ?= a_widget.implementation
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, an_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is

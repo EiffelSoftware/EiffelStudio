@@ -12,6 +12,6 @@
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<cluster name="kernel_classic" location="$CLUSTER"/>
+		<cluster name="kernel" location="$CLUSTER"/>
 	</target>
 </system>

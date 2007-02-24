@@ -34,7 +34,6 @@ inherit
 			make,
 			on_size_allocate,
 			hide,
-			internal_set_minimum_size,
 			on_widget_mapped,
 			destroy,
 			has_focus,
@@ -335,14 +334,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Set the minimum horizontal size to `a_minimum_width'.
-			-- Set the minimum vertical size to `a_minimum_height'.
-		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, -1)
-			Precursor (a_minimum_width, a_minimum_height)
-		end
 
 	internal_set_maximum_size (a_max_width, a_max_height: INTEGER)
 			-- Set maximum width and height of `Current' to `a_max_width' and `a_max_height'.

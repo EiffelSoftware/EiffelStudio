@@ -386,7 +386,10 @@ feature -- Completion-clickable initialization / update
 			click_tool.reset
 			classi_stone ?= stone
 			if classi_stone /= Void and then classi_stone.is_valid then
-				if classi_stone.class_name /= Void and then not classi_stone.class_i.is_external_class and then classi_stone.group /= Void then
+				if
+					classi_stone.class_name /= Void and then not classi_stone.class_i.is_external_class and then
+					classi_stone.group /= Void and then classi_stone.group.is_valid
+				then
 					click_tool.initialize (Current, classi_stone.class_i,
 						classi_stone.group, after_save)
 					current_class_is_clickable := click_tool.can_analyze_current_class

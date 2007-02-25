@@ -115,7 +115,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab);		/* Write sp
 rt_private void rec_twrite(register EIF_REFERENCE object, int tab);		/* Write tuple object */
 rt_private void buffer_allocate(void);	/* Allocate initial buffer */
 rt_public char *eif_out(EIF_REFERENCE object);		/* Build a copy of "tagged_out" for CECIL programmer. */
-rt_shared char *build_out(EIF_OBJECT object);		/* Build `tagged_out' string */
+rt_shared char *build_out(EIF_REFERENCE object);		/* Build `tagged_out' string */
 
 /*
  * Routine for printing representation
@@ -131,7 +131,7 @@ rt_public EIF_REFERENCE c_generator_of_type (EIF_INTEGER dftype)
 	return makestr (generator, strlen (generator));
 }
 
-rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)
+rt_public EIF_REFERENCE c_tagged_out(EIF_REFERENCE object)
 {
 	/* Write a tagged out printing in an string.
 	 * Return a pointer on an Eiffel string object.
@@ -148,26 +148,13 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)
 
 rt_public char *eif_out (EIF_REFERENCE object) 
 {
-	/* Like "build_out" but for CECIL programmer. Take a direct reference
-	 * as argument.
-	 */
-
-	RT_GET_CONTEXT
-	EIF_OBJECT i_object;	/* Safe indirection to object. */
-	
-	i_object = eif_protect (object);	/* Protect "object". */
-
-	tagged_out = build_out (i_object);	/* Build "tagged_out".*/
-
-	eif_wean (i_object);	/* We do not need a safe indirection any longer. */
-
-	return tagged_out;
-	
+	/* Like "build_out" but for CECIL programmer. */
+	return build_out (object);	/* Build "tagged_out".*/
 }	/* eif_out */
 
 	
 
-rt_shared char *build_out(EIF_OBJECT object)
+rt_shared char *build_out(EIF_REFERENCE object)
 {
 	/* Build up tagged out representation in a private global buffer */
 	RT_GET_CONTEXT
@@ -175,31 +162,27 @@ rt_shared char *build_out(EIF_OBJECT object)
 
 	buffer_allocate();	/* Allocation of `tagged_out' */
 
-	flags = HEADER(eif_access(object))->ov_flags;
+	flags = HEADER(object)->ov_flags;
 
 	if (flags & EO_SPEC) {
+			/* Special object */
+		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(object)),
+			(rt_uint_ptr) object);
+		write_out();
 		if (flags & EO_TUPLE) {
-			/* Special object */
-			sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(eif_access(object))),
-				(rt_uint_ptr) eif_access(object));
-			write_out();
 			/* Print recursively in `tagged_out' */
-			rec_twrite(eif_access(object), 0);
+			rec_twrite(object, 0);
 		} else {
-			/* Special object */
-			sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(eif_access(object))),
-				(rt_uint_ptr) eif_access(object));
-			write_out();
 			/* Print recursively in `tagged_out' */
-			rec_swrite(eif_access(object), 0);
+			rec_swrite(object, 0);
 		}
 	} else {
 		/* Print instance class name and object id */
 		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", System(Deif_bid(flags)).cn_generator,
-			(rt_uint_ptr) eif_access(object));
+			(rt_uint_ptr) object);
 		write_out();
 		/* Print recursively in `tagged_out' */
-		rec_write(eif_access(object), 0);
+		rec_write(object, 0);
 	}
 
 	*buffero = '\0';
@@ -779,7 +762,7 @@ rt_shared char *simple_out(struct item *val)
 	case SK_EXP:
 	case SK_REF:
 		eif_rt_xfree(tagged_out);							/* What a waste of CPU cycles */
-		return build_out((EIF_OBJECT)(&val->it_ref));	/* Only for the beauty of it */
+		return build_out(val->it_ref);	/* Only for the beauty of it */
 	case SK_VOID: sprintf(tagged_out, "Not an object!"); break;
 	case SK_BOOL: sprintf(tagged_out, "BOOLEAN = %s", val->it_char ? "True" : "False"); break;
 	case SK_CHAR: write_char(val->it_char, tagged_out); break;

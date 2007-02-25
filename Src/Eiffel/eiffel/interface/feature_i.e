@@ -377,6 +377,7 @@ feature -- Debugger access
 				l_routine ?= l_body.content
 				Result := l_routine.number_of_breakpoint_slots
 			end
+			Result := Result.max (1)
 		end
 
 	first_breakpoint_slot_index: INTEGER is
@@ -400,6 +401,7 @@ feature -- Debugger access
 					end
 				end
 			end
+			Result := Result.max (1)
 		end
 
 feature -- Status

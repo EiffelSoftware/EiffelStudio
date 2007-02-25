@@ -344,7 +344,6 @@ feature -- Access
 		do
 			if
 				(body_index /= 0) and then
-				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
 				(not is_deferred) and then
@@ -356,7 +355,6 @@ feature -- Access
 		ensure
 			debuggable_if: Result implies
 				(body_index /= 0) and then
-				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
 				(not is_deferred) and then
@@ -855,7 +853,7 @@ feature -- Output
 			Result := associated_class.has_types
 			if Result then
 				Result := (is_constant and is_once) or
-					(not is_external and then not is_attribute and then
+					(not is_attribute and then
 					not is_constant and then not is_deferred and then not is_unique)
 			end
 		end;

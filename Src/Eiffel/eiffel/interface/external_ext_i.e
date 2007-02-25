@@ -73,6 +73,18 @@ feature -- Status report
 		do
 		end
 
+	is_built_in: BOOLEAN is
+			-- Is current external a built_in one?
+		do
+		end
+
+	is_static: BOOLEAN is
+			-- Is current external callable statically, i.e. no need for current object?
+		do
+				-- Always true except for non-static built_in.
+			Result := True
+		end
+
 	has_signature: BOOLEAN is
 		do
 			Result := has_arg_list or has_return_type

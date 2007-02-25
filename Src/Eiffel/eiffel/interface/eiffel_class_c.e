@@ -604,7 +604,6 @@ feature -- Third pass: byte code production and type check
 							-- always melted
 						feature_changed := True
 					end
-
 					ast_context.set_current_feature (feature_i)
 
 						-- No type check for constants and attributes.

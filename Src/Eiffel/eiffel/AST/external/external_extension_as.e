@@ -9,11 +9,11 @@ deferred class EXTERNAL_EXTENSION_AS
 
 inherit
 	COMPILER_EXPORTER
-	
+
 	SHARED_AST_CONTEXT
 
 	SHARED_ERROR_HANDLER
-	
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ feature -- Properties
 
 	header_files: ARRAY [INTEGER]
 			-- Header files to include
-			
+
 	is_blocking_call: BOOLEAN
 			-- May current external call block execution? If so, in multithreaded
 			-- mode we need to ensure that GC will not be blocked waiting for the
@@ -136,7 +136,7 @@ feature -- Setting
 		ensure
 			is_blocking_call_set: is_blocking_call = v
 		end
-		
+
 feature {NONE} -- Implementation
 
 	parse_special_part is
@@ -232,7 +232,7 @@ end
 				from
 					start_pos := 1
 				until
-					unprocessed.is_empty 
+					unprocessed.is_empty
 				loop
 					end_pos := parse_file_name (unprocessed, start_pos)
 					if end_pos = 0 then

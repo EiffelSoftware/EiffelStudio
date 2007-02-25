@@ -224,6 +224,12 @@ feature -- Properties
 			Result := routine_body.is_external
 		end
 
+	is_built_in: BOOLEAN is
+			-- Is the routine body a built_in one?
+		do
+			Result := routine_body.is_built_in
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER

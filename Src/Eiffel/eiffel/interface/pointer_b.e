@@ -108,12 +108,8 @@ feature -- Validity
 						else
 						end
 					else
-						if l_feat.is_external then
-							-- To allow compilation of FreeELKS.
-						else
-							create special_error.make (typed_pointer_case_3, Current)
-							Error_handler.insert_error (special_error)
-						end
+						create special_error.make (typed_pointer_case_3, Current)
+						Error_handler.insert_error (special_error)
 					end
 				end
 

@@ -184,6 +184,11 @@ feature -- C code generation
 					-- should have an extension.
 				l_ext_not_void: l_ext /= Void
 			end
+			if l_ext.is_built_in then
+					-- We remove the hector variables that are not required in this case.
+					-- since all `built_in' are supposed to work directly on objects.
+				has_hector_variables := False
+			end
 
 			if not result_type.is_void then
 					-- Only creates a result when needed.

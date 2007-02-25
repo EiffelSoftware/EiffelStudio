@@ -73,7 +73,7 @@ feature -- Feature specific to ISE runtime.
 			"ediso"
 		end
 
-	frozen c_tagged_out (some: ANY): STRING is
+	frozen c_tagged_out (some: POINTER): STRING is
 			-- Printable representation of current object
 		external
 			"C use %"eif_out.h%""

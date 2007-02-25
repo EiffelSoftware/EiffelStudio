@@ -112,6 +112,18 @@ feature -- Byte code special generation
 				ba.append (Bc_cast_real64)
 			when to_real_32_type then
 				ba.append (Bc_cast_real32)
+			when floor_real_type then
+				ba.append (bc_cast_real64)
+				ba.append (bc_floor)
+				if basic_type.is_real_32 then
+					ba.append (bc_cast_real32)
+				end
+			when ceiling_real_type then
+				ba.append (bc_cast_real64)
+				ba.append (bc_ceil)
+				if basic_type.is_real_32 then
+					ba.append (bc_cast_real32)
+				end
 			when max_type then
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_max)
@@ -226,6 +238,20 @@ feature -- C special code generation
 				target.c_type.generate_conversion_to_real_32 (buffer)
 				target.print_register
 				buffer.put_character (')')
+			when ceiling_real_type then
+				basic_type.generate_cast (buffer)
+				buffer.put_string ("ceil ((double)")
+				target.print_register
+				buffer.put_character (')')
+					-- Add `<math.h>' for C declaration of `ceil'.
+				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
+			when floor_real_type then
+				basic_type.generate_cast (buffer)
+				buffer.put_string ("floor ((double)")
+				target.print_register
+				buffer.put_character (')')
+					-- Add `<math.h>' for C declaration of `floor'.
+				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
 			when out_type then
@@ -304,6 +330,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.truncated_to_integer_64_name_id)
 			Result.put (as_natural_8_type, {PREDEFINED_NAMES}.as_natural_8_name_id)
 			Result.put (as_natural_16_type, {PREDEFINED_NAMES}.as_natural_16_name_id)
 			Result.put (as_natural_32_type, {PREDEFINED_NAMES}.as_natural_32_name_id)
@@ -347,6 +374,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_space_type, {PREDEFINED_NAMES}.is_space_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
+			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_32_name_id)
+			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_64_name_id)
+			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_32_name_id)
+			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_64_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -393,6 +424,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_name_id)
 			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_32_name_id)
 			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.truncated_to_integer_64_name_id)
 			Result.put (as_natural_8_type, {PREDEFINED_NAMES}.as_natural_8_name_id)
 			Result.put (as_natural_16_type, {PREDEFINED_NAMES}.as_natural_16_name_id)
 			Result.put (as_natural_32_type, {PREDEFINED_NAMES}.as_natural_32_name_id)
@@ -409,6 +441,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
+			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_32_name_id)
+			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_64_name_id)
+			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_32_name_id)
+			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_64_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -468,7 +504,9 @@ feature {NONE} -- Fast access to feature name
 	set_bit_type: INTEGER is 51
 	is_space_type: INTEGER is 52
 	to_character_32_type: INTEGER is 53
-	max_type_id: INTEGER is 53
+	ceiling_real_type: INTEGER is 54
+	floor_real_type: INTEGER is 55
+	max_type_id: INTEGER is 55
 
 feature {NONE} -- Byte code generation
 

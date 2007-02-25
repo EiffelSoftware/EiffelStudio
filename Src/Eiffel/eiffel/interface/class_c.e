@@ -214,10 +214,9 @@ feature -- Access
 
 	is_debuggable: BOOLEAN is
 			-- Is the class able to be debugged?
-			-- (not if it doesn't have class types
-			-- or is a special class)
+			-- (not if it doesn't have class types)
 		do
-			Result := not is_basic and then has_types
+			Result := has_types
 		end
 
 	has_expanded: BOOLEAN

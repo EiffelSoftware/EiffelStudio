@@ -199,8 +199,8 @@ static  char    *names [] = {
 "BC_UINT16" ,
 "BC_UINT32" ,
 "BC_UINT64" ,
-"BC_NOTUSED_154" ,
-"BC_NOTUSED_155" ,
+"BC_FLOOR" ,
+"BC_CEIL" ,
 "BC_NOTUSED_156" ,
 "BC_NOTUSED_157" ,
 "BC_NOTUSED_158" ,
@@ -1054,6 +1054,10 @@ static  void    print_instructions ()
 			case BC_INT_BIT_OP:
 				/* For bit manipulations on INTEGERs */
 				fprintf (ofp,"%s",bit_op_names[get_char8(&ip)]);
+				break;
+
+			case BC_FLOOR:
+			case BC_CEIL:
 				break;
 
 /* Constants */

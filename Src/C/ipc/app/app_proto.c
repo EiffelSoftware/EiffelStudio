@@ -598,7 +598,7 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		return;
 	case IN_ADDRESS:				/* Address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
-		out = dview((EIF_OBJ) &addr);
+		out = dview(addr);
 		break;
 	case IN_LOCAL:					/* Local inspection */
 		val = ivalue(IV_LOCAL, what->op_second,0);

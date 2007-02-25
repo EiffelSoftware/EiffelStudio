@@ -955,7 +955,7 @@ debug ("ACTIVITY")
 	io.error.put_new_line;
 end;
 
-			Result := feature_i_generator.new_feature (yacc_feature, a_class)
+			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
 			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)

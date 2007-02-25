@@ -1,73 +1,50 @@
 indexing
-	description: "AST representation of an external structure."
+	description: "AST representation of an external built_in routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EXTERNAL_LANG_AS
+	BUILT_IN_AS
 
 inherit
-	AST_EIFFEL
+	EXTERNAL_AS
 		redefine
-			is_equivalent
+			is_built_in,
+			process
 		end
 
 create
 	initialize
 
-feature {NONE} -- Initialization
-
-	initialize (l: like language_name) is
-			-- Create a new EXTERNAL_LANGUAGE AST node.
-		require
-			l_not_void: l /= Void
-		do
-			language_name := l
-		ensure
-			language_name_set: language_name = l
-		end
-
 feature -- Visitor
 
+
 	process (v: AST_VISITOR) is
-			-- process current element.
+			-- Process current element.
 		do
-			v.process_external_lang_as (Current)
+			v.process_built_in_as (Current)
 		end
-
-feature -- Roundtrip/Token
-
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			Result := language_name.first_token (a_list)
-		end
-
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			Result := language_name.last_token (a_list)
-		end
-
-feature -- Attributes
-
-	language_name: STRING_AS;
-			-- Language name
-			-- might be replaced by external_declaration or external_definition
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is
-			-- Is current a built_in one?
-		do
-		end
+	is_built_in: BOOLEAN is True;
+			-- Is the routine body an external `built_in' one?
 
-feature -- Comparison
+feature -- Access
 
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
+	body: FEATURE_AS
+			-- Provided implementation if any.
+
+feature -- Settings
+
+	set_body (b: like body) is
+			-- Set `body' with `b'.
 		do
-			Result := language_name.is_equivalent (other.language_name)
+			body := b
+		ensure
+			body_set: body = b
 		end
 
 indexing
@@ -102,4 +79,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_LANG_AS
+end

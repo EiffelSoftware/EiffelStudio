@@ -1629,7 +1629,7 @@ rt_private void call_up(int level)
  * Viewing objects.
  */
 
-rt_shared char *dview(EIF_OBJECT root)
+rt_shared char *dview(EIF_REFERENCE root)
 {
 	/* Compute the tagged out form for object 'root' and return a pointer to
 	 * the location of the C buffer holding the string. Note that the

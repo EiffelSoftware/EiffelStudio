@@ -1317,7 +1317,7 @@ feature -- Class info
 							l_ext_class ?= l_cl_type.base_class
 						end
 					end
-					if l_class_type.type.is_basic and then l_class_type.type.meta_generic = Void then
+					if l_class_type.is_basic and then l_class_type.type.meta_generic = Void then
 							-- Use built-in type.
 						l_class_name := l_class_type.associated_class.external_class_name.twin
 					else
@@ -1685,13 +1685,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 
 				arg_type := argument_actual_type (feature_i.arguments.first.type_i)
 				if arg_type.is_expanded then
-						-- Load value of the value object to the stack.
-					if arg_type.is_basic then
-						generate_load_address (type_i)
-						generate_load_from_address_as_basic (type_i)
-					else
-						generate_unmetamorphose (arg_type)
-					end
+					generate_unmetamorphose (arg_type)
 				end
 				generate_feature_access (type_i, feature_i.feature_id, 1, True, True)
 
@@ -3494,11 +3488,7 @@ feature -- IL Generation
 			if type_i.is_expanded then
 					-- Stack contains a pointer to value type object.
 					-- Load a value of the object.
-				if type_i.is_basic then
-					generate_load_from_address_as_basic (type_i)
-				else
-					generate_load_from_address (type_i)
-				end
+				generate_load_from_address (type_i)
 					-- Now it has to be converted to a ... (see below)
 				if result_type_in (feat, current_class_type).is_expanded then
 						-- ... unboxed value.
@@ -5715,7 +5705,7 @@ feature -- Array manipulation
 			continue_loop_label: IL_LABEL
 			local_number: INTEGER
 		do
-			if actual_generic.type.is_true_expanded and then not actual_generic.is_external then
+			if actual_generic.is_true_expanded and not actual_generic.is_external then
 					-- Initialize elements with their default values:
 					-- int i = array.count;
 					-- while (i != 0) {

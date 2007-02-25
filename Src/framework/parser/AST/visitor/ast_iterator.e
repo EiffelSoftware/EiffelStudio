@@ -177,6 +177,12 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		do
+			process_external_as (l_as)
+		end
+
 	process_result_as (l_as: RESULT_AS) is
 		do
 				-- Nothing to be done

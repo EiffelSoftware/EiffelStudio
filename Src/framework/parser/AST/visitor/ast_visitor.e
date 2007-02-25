@@ -227,6 +227,13 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_result_as (l_as: RESULT_AS) is
 			-- Process `l_as'.
 		require

@@ -11,7 +11,7 @@ class
 inherit
 	ONE_GEN_TYPE_I
 		redefine
-			generic_derivation
+			internal_generic_derivation
 		end
 
 create
@@ -75,7 +75,7 @@ feature -- Access
 			Result.set_mark (declaration_mark)
 		end
 
-	generic_derivation: like Current is
+	internal_generic_derivation (a_level: INTEGER): like Current is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.
@@ -95,7 +95,7 @@ feature -- Access
 					cr_info := c
 				end
 			else
-				Result := Precursor {ONE_GEN_TYPE_I}
+				Result := Precursor {ONE_GEN_TYPE_I} (a_level)
 			end
 		end
 

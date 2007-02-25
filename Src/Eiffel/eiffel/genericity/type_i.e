@@ -116,12 +116,12 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	generic_derivation: TYPE_I is
+	frozen generic_derivation: CL_TYPE_I is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.
 		do
-			Result := Current
+			Result ?= internal_generic_derivation (0)
 		ensure
 			cleaned_not_void: Result /= Void
 		end
@@ -576,6 +576,18 @@ feature {NONE} -- Debug output
 			-- Output displayed in debugger.
 		do
 			Result := name
+		end
+
+feature {TYPE_I} -- Implementation
+
+	internal_generic_derivation (a_level: INTEGER): TYPE_I is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			Result := Current
+		ensure
+			cleaned_not_void: Result /= Void
 		end
 
 indexing

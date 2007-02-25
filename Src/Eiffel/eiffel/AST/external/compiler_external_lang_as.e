@@ -7,7 +7,7 @@ class COMPILER_EXTERNAL_LANG_AS
 inherit
 	EXTERNAL_LANG_AS
 		redefine
-			initialize
+			initialize, is_built_in
 		end
 
 	EXTERNAL_CONSTANTS
@@ -53,6 +53,17 @@ feature -- Access
 			--| It is enough to just compare `language_name' in `is_equivalent' since it stores
 			--| full external specification. And if it is the same specification
 			--| then it is the same external.
+
+feature -- Status report
+
+	is_built_in: BOOLEAN is
+			-- Is current a `built_in' one?
+		local
+			l_built_in: BUILT_IN_EXTENSION_AS
+		do
+			l_built_in ?= extension
+			Result := l_built_in /= Void
+		end
 
 feature -- Properties
 

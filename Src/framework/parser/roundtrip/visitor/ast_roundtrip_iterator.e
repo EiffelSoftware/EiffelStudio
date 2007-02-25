@@ -404,6 +404,12 @@ feature
 			end
 		end
 
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		do
+			process_external_as (l_as)
+		end
+
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 		do
 			safe_process (l_as.feature_name)

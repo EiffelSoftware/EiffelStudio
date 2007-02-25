@@ -13,6 +13,11 @@ inherit
 
 	AST_FEATURE_CHECKER_EXPORT
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -323,7 +328,7 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
-	check_inline_agent (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited: BOOLEAN) is
+	check_body (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited, a_is_for_inline_agent: BOOLEAN) is
 			-- Type check `a_feature' which represents an inline agent `a_body'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -334,7 +339,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 		do
 			break_point_slot_count := 0
 			l_routine_as ?= a_body.content
-			if not is_inherited then
+			if not a_is_inherited and then a_is_for_inline_agent then
 				if l_routine_as /= Void then
 					if l_routine_as.is_deferred or l_routine_as.is_external or l_routine_as.is_once then
 						create l_vpir
@@ -747,7 +752,7 @@ feature -- Roundtrip
 					create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
 					create l_feature_generator
-					l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
+					l_feature := l_feature_generator.new_feature (l_feature_as, 0, l_cur_class)
 					l_enclosing_feature := init_inline_agent_feature (l_feature, Void)
 					l_cur_feature := context.current_feature
 
@@ -832,8 +837,8 @@ feature -- Roundtrip
 			create l_feature_checker
 			l_feature_checker.init (context)
 			context.set_current_inline_agent_body (l_as.body)
-			l_feature_checker.check_inline_agent (
-				l_feature, l_as.body, is_byte_node_enabled, is_inherited)
+			l_feature_checker.check_body (
+				l_feature, l_as.body, is_byte_node_enabled, is_inherited, True)
 
 			l_body_code ?= l_feature_checker.last_byte_node
 
@@ -1290,7 +1295,20 @@ feature -- Implementation
 								create l_parameter
 								l_expr ?= l_arg_nodes.i_th (i)
 								l_parameter.set_expression (l_expr)
-								l_parameter.set_attachment_type (l_formal_arg_type.type_i)
+									-- Partial solution to the case of using Precursor in an expanded
+									-- class where some of the arguments are not expanded in the parent
+									-- class but are now in the current class (a typical example is
+									-- `prefix "not": like Current' defined in BOOLEAN_REF which is kept
+									-- as is in BOOLEAN). We need to remember that the original type
+									-- were not expanded otherwise we do not perform a proper code
+									-- generation.
+									-- This fix is incomplete since it does not take care of types
+									-- that are redefined as expanded.
+								if a_precursor_type /= Void and l_last_class.is_expanded then
+									l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type, a_precursor_type.associated_class.class_id).type_i)
+								else
+									l_parameter.set_attachment_type (l_formal_arg_type.type_i)
+								end
 								l_parameter_list.extend (l_parameter)
 
 								if is_checking_cas then
@@ -1778,6 +1796,39 @@ feature -- Implementation
 	process_body_as (l_as: BODY_AS) is
 		do
 			safe_process (l_as.content)
+		end
+
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		local
+			l_external: EXTERNAL_I
+			l_built_in_processor: BUILT_IN_PROCESSOR
+			l_feature_as: FEATURE_AS
+			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
+		do
+			if is_byte_node_enabled then
+				l_external ?= current_feature
+					-- If associated feature is not an external anymore, it means that it was interpreted
+					-- by our compiler as a real `built_in'.
+				if l_external = Void then
+					create l_built_in_processor.make (context.current_class, current_feature.feature_name, system.il_generation)
+					l_feature_as := l_built_in_processor.ast_node
+					if l_feature_as /= Void and then l_feature_as.body.content /= Void then
+							-- Only interprets the `built_in' implementation if this is not an attribute.
+						create l_feature_checker
+						l_feature_checker.init (context)
+						l_feature_checker.check_body (current_feature,
+							l_feature_as.body, True, False, False)
+						last_byte_node := l_feature_checker.last_byte_node
+						l_as.set_body (l_feature_as)
+ 					else
+ 							-- No implementation is provided, let's assume empty body.
+						create {STD_BYTE_CODE} last_byte_node
+					end
+				else
+					create {EXT_BYTE_CODE} last_byte_node.make (l_external.external_name_id)
+				end
+			end
 		end
 
 	process_result_as (l_as: RESULT_AS) is

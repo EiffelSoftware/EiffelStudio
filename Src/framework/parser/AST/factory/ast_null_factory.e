@@ -16,7 +16,7 @@ inherit
 			new_bin_eq_as, new_bin_free_as, new_bin_ge_as, new_bin_gt_as, new_bin_implies_as,
 			new_bin_le_as, new_bin_lt_as, new_bin_minus_as, new_bin_mod_as, new_bin_ne_as,
 			new_bin_or_as, new_bin_or_else_as, new_bin_plus_as, new_bin_power_as, new_bin_slash_as,
-			new_bin_star_as, new_bin_xor_as, new_bit_const_as, new_bits_as, new_bits_symbol_as,
+			new_bin_star_as, new_bin_xor_as, new_bit_const_as, new_bits_as, new_bits_symbol_as, new_built_in_as,
 			new_body_as, new_boolean_as, new_case_as, new_character_as, new_check_as, new_class_as,
 			new_class_type_as, new_client_as, new_constant_as, new_convert_feat_as, new_create_as,
 			new_creation_as, new_creation_expr_as, new_current_as, new_custom_attribute_as,
@@ -484,6 +484,11 @@ feature -- Access
 
 	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS is
 			-- New BOOLEAN AST node
+		do
+		end
+
+	new_built_in_as (l: EXTERNAL_LANG_AS; a: STRING_AS; e_as, a_as: KEYWORD_AS): BUILT_IN_AS is
+			-- New BUILT_IN AST node
 		do
 		end
 

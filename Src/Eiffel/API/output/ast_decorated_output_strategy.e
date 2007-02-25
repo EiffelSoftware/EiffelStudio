@@ -698,6 +698,48 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		local
+			l_routine: ROUTINE_AS
+			l_built_in_processor: BUILT_IN_PROCESSOR
+		do
+			if l_as.body = Void then
+				process_external_as (l_as)
+			else
+				l_routine ?= l_as.body.body.content
+				if l_routine /= Void then
+					if l_routine.locals /= Void then
+						text_formatter_decorator.process_keyword_text (ti_local_keyword, Void)
+						text_formatter_decorator.put_new_line
+						if l_routine.locals.count > 0 then
+							text_formatter_decorator.indent
+							text_formatter_decorator.set_separator (Void)
+							text_formatter_decorator.set_new_line_between_tokens
+							processing_locals := True
+							l_routine.locals.process (Current)
+							processing_locals := False
+							text_formatter_decorator.put_new_line
+							text_formatter_decorator.exdent
+						end
+					end
+					safe_process (l_routine.routine_body)
+					if l_routine.rescue_clause /= Void then
+						text_formatter_decorator.process_keyword_text (ti_rescue_keyword, Void)
+						text_formatter_decorator.indent
+						text_formatter_decorator.put_new_line
+						text_formatter_decorator.set_separator (Void)
+						text_formatter_decorator.set_new_line_between_tokens
+						if not l_routine.rescue_clause.is_empty then
+							format_compound (l_routine.rescue_clause)
+							text_formatter_decorator.put_new_line
+						end
+						text_formatter_decorator.exdent
+					end
+				end
+			end
+		end
+
 	process_result_as (l_as: RESULT_AS) is
 		local
 			l_feat: E_FEATURE
@@ -1188,7 +1230,7 @@ feature {NONE} -- Implementation
 					end
 					text_formatter_decorator.exdent
 				end
-				if not l_as.is_deferred and not l_as.is_external then
+				if not l_as.is_deferred then
 					put_breakable
 				end
 				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)

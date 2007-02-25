@@ -213,6 +213,8 @@ feature -- Setting
 				-- Routine id
 			rout_id := current_feature.rout_id_set.first
 			byte_code.set_rout_id (rout_id)
+				-- Written_id
+			byte_code.set_written_class_id (current_class.class_id)
 				-- Pattern id
 			byte_code.set_pattern_id (current_feature.pattern_id)
 				-- Local variable declarations

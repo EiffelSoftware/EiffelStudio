@@ -2760,7 +2760,7 @@ feature {NONE} -- IL generation
 								l_name := l_name.as_lower
 							end
 
-							if not l_types.item.is_external and then not l_types.item.type.is_basic then
+							if not l_types.item.is_external and then not l_types.item.is_basic then
 								if l_table.has (l_name) then
 										-- This name has already been inserted, we
 										-- record it in `l_conflicts' to report an error later.

@@ -1238,7 +1238,13 @@ External: TE_EXTERNAL
 			}
 		External_language External_name
 			{
-				if $4 /= Void then
+				if $3 /= Void and then $3.is_built_in then
+					if $4 /= Void then 
+						$$ := ast_factory.new_built_in_as ($3, $4.second, $1, $4.first)
+					else
+						$$ := ast_factory.new_built_in_as ($3, Void, $1, Void)
+					end
+				elseif $4 /= Void then
 					$$ := ast_factory.new_external_as ($3, $4.second, $1, $4.first)
 				else
 					$$ := ast_factory.new_external_as ($3, Void, $1, Void)

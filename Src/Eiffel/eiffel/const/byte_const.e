@@ -190,6 +190,8 @@ feature -- Access
 	Bc_cclone:		CHARACTER is '%/146/';
 	Bc_cequal:		CHARACTER is '%/147/';
 
+	bc_notused_148:		CHARACTER is '%/148/'
+
 		-- Object reattachment
 	Bc_box:			CHARACTER is '%/149/';
 
@@ -199,9 +201,10 @@ feature -- Access
 	Bc_uint32:			CHARACTER is '%/152/';
 	Bc_uint64:			CHARACTER is '%/153/';
 
+	Bc_floor:			CHARACTER is '%/154/';
+	Bc_ceil:			CHARACTER is '%/155/';
+
 		-- Unused opcode
-	Bc_notused_154:		CHARACTER is '%/154/';
-	Bc_notused_155:		CHARACTER is '%/155/';
 	Bc_notused_156:		CHARACTER is '%/156/';
 	Bc_notused_157: 	CHARACTER is '%/157/';
 	Bc_notused_158:		CHARACTER is '%/158/';

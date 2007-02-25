@@ -80,6 +80,9 @@ feature -- Access
 	rout_id: INTEGER
 			-- Routine id of the feature
 
+	written_class_id: INTEGER
+			-- Class ID where feature is written.
+
 	pattern_id: INTEGER
 			-- Pattern id of the feature
 
@@ -229,6 +232,14 @@ feature -- Settings
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i
+		end
+
+	set_written_class_id (i: like written_class_id) is
+			-- Assign `i' to `rout_id'.
+		do
+			written_class_id := i
+		ensure
+			written_class_id_set: written_class_id = i
 		end
 
 	set_pattern_id (i: INTEGER) is

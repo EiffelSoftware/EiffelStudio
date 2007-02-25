@@ -23,7 +23,7 @@ inherit
 			generate_expanded_creation,
 			generate_expanded_initialization,
 			generated_id,
-			generic_derivation,
+			internal_generic_derivation,
 			instantiated_description,
 			instantiation_in,
 			is_expanded,
@@ -97,7 +97,7 @@ feature -- Access
 			Result := System.class_of_id (class_id)
 		end
 
-	generic_derivation: CL_TYPE_I is
+	internal_generic_derivation (a_level: INTEGER): CL_TYPE_I is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.

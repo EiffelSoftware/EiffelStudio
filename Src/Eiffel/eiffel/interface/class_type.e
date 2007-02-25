@@ -84,6 +84,9 @@ feature {NONE} -- Initialization
 				t.base_class.original_class /= system.typed_pointer_class) implies
 				not t.has_formal
 		do
+			if t.is_basic then
+				basic_type ?= t
+			end
 			type := t.generic_derivation
 				-- Set creation info as if the type is used as "like Current".
 			if type = t then
@@ -103,7 +106,7 @@ feature {NONE} -- Initialization
 					implementation_id := Static_type_id_counter.next_id
 				end
 					-- Set `external_id'.
-				if type.is_basic and then associated_class.is_external and then not associated_class.is_typed_pointer then
+				if basic_type /= Void and then associated_class.is_external and then not associated_class.is_typed_pointer then
 						-- Basic types have a specific ID for external counterparts.
 					external_id := Static_type_id_counter.next_id
 				else
@@ -167,12 +170,26 @@ feature -- Access
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]
 
+	is_basic: BOOLEAN is
+			-- Is current class type a basci type?
+		do
+			Result := basic_type /= Void
+		end
+
 	is_expanded: BOOLEAN is
 			-- Is current class type expanded?
 		require
 			type_not_void: type /= Void
 		do
 			Result := type.is_expanded
+		end
+
+	is_true_expanded: BOOLEAN is
+			-- Is current class type expanded but not basic?
+		require
+			type_not_void: type /= Void
+		do
+			Result := type.is_true_expanded and basic_type = Void
 		end
 
 	is_generic: BOOLEAN is
@@ -254,6 +271,12 @@ feature -- Access
 			end
 			Result := type_number_int
 		end
+
+feature {NONE} -- Implementation: Access
+
+	basic_type: BASIC_I
+			-- If `type' is originally a basic type, we keep the BASIC_I instance
+			-- as it is used for certain queries (e.g. tuple_code).
 
 feature -- Status report
 
@@ -379,7 +402,11 @@ feature -- Settings
 			l_pos: INTEGER
 		do
 			internal_namespace := associated_class.original_class.actual_namespace.twin
-			internal_type_name := type.il_type_name (Void)
+			if basic_type /= Void then
+				internal_type_name := basic_type.il_type_name (Void)
+			else
+				internal_type_name := type.il_type_name (Void)
+			end
 			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
 			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
 			is_dotnet_name := System.dotnet_naming_convention
@@ -463,7 +490,11 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := type.il_type_name (Void)
+			if basic_type /= Void then
+				Result := basic_type.il_type_name (Void)
+			else
+				Result := type.il_type_name (Void)
+			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -475,7 +506,11 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := type.il_type_name ("Impl")
+			if basic_type /= Void then
+				Result := basic_type.il_type_name ("Impl")
+			else
+				Result := type.il_type_name ("Impl")
+			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -487,7 +522,11 @@ feature -- Conveniences
 		require
 			il_generation: System.il_generation
 		do
-			Result := type.il_type_name ("Create")
+			if basic_type /= Void then
+				Result := basic_type.il_type_name ("Create")
+			else
+				Result := type.il_type_name ("Create")
+			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
@@ -1257,7 +1296,7 @@ feature {NONE} -- Implementation
 			if is_expanded then
 					-- Use a reference counterpart as a parent to ensure
 					-- that reattachment of expanded to reference works
-					-- as expectde
+					-- as expected.
 				parent_type := type.reference_type
 				if parent_type.has_associated_class_type then
 					par_table.append_type (parent_type)
@@ -1904,7 +1943,13 @@ feature {NONE} -- Convenience
 			l_class := associated_class
 
 				-- From bit 0 to bit 3: we store `tuple_code'.
-			Result := type.tuple_code
+			if basic_type /= Void then
+					-- For basic types, we use `basic_type' as `type' only
+					-- contains the true expanded forms of basic types (i.e CL_TYPE_I).
+				Result := basic_type.tuple_code
+			else
+				Result := type.tuple_code
+			end
 
 				-- Bit 8: Store `is_declared_as_expanded'
 			if l_class.is_expanded then

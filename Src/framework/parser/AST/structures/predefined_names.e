@@ -179,6 +179,13 @@ feature -- Constants
 	precursor_name_id: INTEGER is 166
 	fast_item_name_id: INTEGER is 167
 	pointer_item_name_id: INTEGER is 168
+	eif_built_in_header_name_id: INTEGER is 169
+	truncated_to_integer_64_name_id: INTEGER is 170
+	ceiling_real_32_name_id: INTEGER is 171
+	ceiling_real_64_name_id: INTEGER is 172
+	floor_real_32_name_id: INTEGER is 173
+	floor_real_64_name_id: INTEGER is 174
+	is_deep_equal_name_id: INTEGER is 175
 
 feature -- Classification
 

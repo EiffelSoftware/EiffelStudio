@@ -25,6 +25,7 @@ inherit
 			process_string_as,
 			process_verbatim_string_as,
 			process_body_as,
+			process_built_in_as,
 			process_result_as,
 			process_current_as,
 			process_access_feat_as,
@@ -537,6 +538,12 @@ feature {NONE} -- Implementation
 				end
 			end
 			safe_process (l_as.content)
+		end
+
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		do
+			process_external_as (l_as)
 		end
 
 	process_result_as (l_as: RESULT_AS) is

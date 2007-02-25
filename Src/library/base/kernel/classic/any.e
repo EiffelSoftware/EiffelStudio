@@ -289,7 +289,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := {ISE_RUNTIME}.c_tagged_out (Current)
+			Result := {ISE_RUNTIME}.c_tagged_out ($Current)
 		ensure
 			out_not_void: Result /= Void
 		end

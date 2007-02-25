@@ -154,6 +154,11 @@ feature -- Implementation
 		do
 		end
 
+	process_built_in_as (l_as: BUILT_IN_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 	process_result_as (l_as: RESULT_AS) is
 		do
 		end

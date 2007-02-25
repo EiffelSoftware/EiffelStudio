@@ -330,6 +330,13 @@ feature {NONE} -- Implementation: access
 			put ("Precursor") check found_item = precursor_name_id end
 			put ("fast_item") check found_item = fast_item_name_id end
 			put ("pointer_item") check found_item = pointer_item_name_id end
+			put ("%"eif_built_in.h%"") check found_item = eif_built_in_header_name_id end
+			put ("truncated_to_integer_64") check found_item = truncated_to_integer_64_name_id end
+			put ("ceiling_real_32") check found_item = ceiling_real_32_name_id end
+			put ("ceiling_real_64") check found_item = ceiling_real_64_name_id end
+			put ("floor_real_32") check found_item = floor_real_32_name_id end
+			put ("floor_real_64") check found_item = floor_real_64_name_id end
+			put ("is_deep_equal") check found_item = is_deep_equal_name_id end
 		end
 
 invariant

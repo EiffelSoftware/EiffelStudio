@@ -240,6 +240,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_CCLONE		(unsigned char) 146
 #define BC_CEQUAL		(unsigned char) 147
 
+#define BC_NOTUSED_148		(unsigned char) 148
+
 /* Object reattachment */
 #define BC_BOX			(unsigned char) 149
 
@@ -247,8 +249,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_UINT16			(unsigned char) 151
 #define BC_UINT32			(unsigned char) 152
 #define BC_UINT64			(unsigned char) 153
-#define BC_NOTUSED_154		(unsigned char) 154
-#define BC_NOTUSED_155		(unsigned char) 155
+#define BC_FLOOR			(unsigned char) 154
+#define BC_CEIL				(unsigned char) 155
 #define BC_NOTUSED_156		(unsigned char) 156
 #define BC_NOTUSED_157		(unsigned char) 157
 #define BC_NOTUSED_158		(unsigned char) 158

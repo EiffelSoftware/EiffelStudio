@@ -20,7 +20,7 @@ inherit
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
-			generic_derivation,
+			internal_generic_derivation,
 			generate_cid,
 			has_actual,
 			has_formal,
@@ -411,7 +411,7 @@ feature -- Status Report
 			end
 		end
 
-	generic_derivation: like Current is
+	internal_generic_derivation (a_level: INTEGER): like Current is
 			-- Precise generic derivation of current type.
 		local
 			c: like cr_info
@@ -439,7 +439,7 @@ feature -- Status Report
 				if l_type.is_reference then
 					meta_gen.put (reference_c_type, i)
 				else
-					meta_gen.put (l_type.generic_derivation, i)
+					meta_gen.put (l_type.internal_generic_derivation (a_level + 1), i)
 				end
 
 				l_type := l_true.item (i)
@@ -454,7 +454,7 @@ feature -- Status Report
 							-- store the basic type data, rather than a formal
 							-- generic paramter to save some time at run-time
 							-- when computing the dynamic type.
-						true_gen.put (l_type.generic_derivation, i)
+						true_gen.put (l_type.internal_generic_derivation (a_level + 1), i)
 					end
 				end
 				i := i + 1

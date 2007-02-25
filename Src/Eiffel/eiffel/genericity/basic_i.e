@@ -17,7 +17,7 @@ inherit
 		redefine
 			is_basic, is_reference, c_type, is_consistent,
 			generate_cecil_value, generic_il_type_name,
-			true_reference_type
+			true_reference_type, internal_generic_derivation
 		end
 
 	TYPE_C
@@ -55,6 +55,18 @@ feature -- Access
 				Result.set_cr_info (cr_info)
 			end
 			Result.set_reference_mark
+		end
+
+	internal_generic_derivation (a_level: INTEGER): CL_TYPE_I is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			if a_level = 0 then
+				create Result.make (class_id)
+			else
+				Result := Precursor (a_level)
+			end
 		end
 
 	associated_reference_class_type: CLASS_TYPE is

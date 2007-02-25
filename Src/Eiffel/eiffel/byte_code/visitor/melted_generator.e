@@ -625,9 +625,10 @@ feature {NONE} -- Visitors
 			l_hector_b: HECTOR_B
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_nb_expr_address: INTEGER
-			l_pos: INTEGER
+			l_pos, r_id: INTEGER
 			l_cl_type: CL_TYPE_I
 			l_is_in_creation_call: like is_in_creation_call
+			l_rout_info: ROUT_INFO
 		do
 			l_is_in_creation_call := is_in_creation_call
 			is_in_creation_call := False
@@ -690,11 +691,19 @@ feature {NONE} -- Visitors
 			if a_node.is_static_call then
 				ba.append (bc_current)
 				l_cl_type ?= context.real_type (a_node.static_class_type)
-				ba.append (bc_extern)
-				ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
-				l_type_id := l_cl_type.associated_class_type.static_type_id - 1
-				ba.append_short_integer (l_type_id)
-				ba.append_short_integer (l_type_id)
+				if l_cl_type.base_class.is_precompiled then
+					r_id := a_node.routine_id
+					l_rout_info := System.rout_info_table.item (r_id)
+					ba.append (bc_pextern)
+					ba.append_integer (l_rout_info.origin)
+					ba.append_integer (l_rout_info.offset)
+				else
+					ba.append (bc_extern)
+					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
+					l_type_id := l_cl_type.associated_class_type.static_type_id - 1
+					ba.append_short_integer (l_type_id)
+				end
+				make_precursor_byte_code (a_node)
 			else
 				make_call_access_b (
 					a_node, bc_extern, bc_extern_inv, bc_pextern, bc_pextern_inv, l_is_in_creation_call)

@@ -2426,6 +2426,19 @@ rt_private void interpret(int flag, int where)
 		eif_interp_bit_operations();
 		break;
 
+	/* Real operations: ceil and floor */
+	case BC_CEIL:
+		last = otop();
+		CHECK("double_type", last->type == SK_REAL64)
+		last->it_double = ceil(last->it_double);
+		break;
+
+	case BC_FLOOR:
+		last = otop();
+		CHECK("double_type", last->type == SK_REAL64)
+		last->it_double = floor(last->it_double);
+		break;
+	
 	/*
 	 * Expanded comparison
  	 */

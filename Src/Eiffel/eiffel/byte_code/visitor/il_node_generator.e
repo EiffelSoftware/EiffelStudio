@@ -1502,7 +1502,7 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_cl_type: CL_TYPE_I
-			l_return_type: TYPE_I
+			l_orig_return_type, l_return_type: TYPE_I
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 			l_special_array_class_type: SPECIAL_CLASS_TYPE
 			l_is_special_handled: BOOLEAN
@@ -1510,7 +1510,7 @@ feature {NONE} -- Visitors
 			l_class_c: CLASS_C
 			l_real_metamorphose: BOOLEAN
 			l_need_generation: BOOLEAN
-			l_target_type: CL_TYPE_I
+			l_target_type, l_precursor_type: CL_TYPE_I
 			l_count: INTEGER
 			l_arg_type: CL_TYPE_I
 			l_is_call_on_any: BOOLEAN
@@ -1529,6 +1529,11 @@ feature {NONE} -- Visitors
 				valid_type: l_cl_type /= Void
 			end
 
+				-- Get the real type of `Precursor'.
+			if a_node.precursor_type /= Void then
+				l_precursor_type ?= context.real_type (a_node.precursor_type)
+			end
+
 				-- Let's find out if we are performing a call on a basic type
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
@@ -1540,7 +1545,7 @@ feature {NONE} -- Visitors
 				end
 				il_special_routines.generate_il (Current, a_node, l_cl_type, a_node.parameters)
 			else
-				l_is_call_on_any := a_node.is_any_feature and a_node.precursor_type = Void
+				l_is_call_on_any := a_node.is_any_feature and l_precursor_type = Void
 					-- Find location of feature.
 				if l_cl_type.is_expanded and then not l_cl_type.is_external and then not l_is_call_on_any then
 					if l_cl_type.base_class.is_typed_pointer then
@@ -1603,6 +1608,13 @@ feature {NONE} -- Visitors
 				elseif not a_node.is_first and then l_cl_type.is_basic then
 						-- Address of a value is required.
 					il_generator.generate_load_address (l_cl_type)
+				elseif a_node.is_first and then l_precursor_type /= Void and then context.context_class_type.is_expanded then
+					check
+						precursor_not_expanded: not l_precursor_type.is_expanded
+					end
+					il_generator.generate_load_from_address (context.context_class_type.type)
+					il_generator.generate_metamorphose (context.context_class_type.type)
+					il_generator.generate_check_cast (context.context_class_type.type, l_precursor_type)
 				end
 
 				if l_class_c.is_special then
@@ -1660,6 +1672,16 @@ feature {NONE} -- Visitors
 				end
 
 				l_return_type := context.real_type (a_node.type)
+					-- Special handling when precursor has a different expanded status
+					-- than current type. We need to find out the return type of the Precursor.
+				if l_precursor_type /= Void and then context.context_class_type.is_expanded then
+					context.change_class_type_context (l_precursor_type.associated_class_type,
+						l_precursor_type.associated_class_type)
+					l_orig_return_type := context.real_type (a_node.type)
+					context.restore_class_type_context
+				else
+					l_orig_return_type := l_return_type
+				end
 
 				l_need_generation := True
 
@@ -1708,7 +1730,17 @@ feature {NONE} -- Visitors
 				end
 			end
 
-			if l_is_nested_call then
+			if
+				l_precursor_type /= Void and then l_orig_return_type /= l_return_type and then
+				not l_orig_return_type.is_expanded and then l_return_type.is_expanded
+			then
+					-- Return type of precursor is not expanded, we need to make
+					-- an expanded out of it. Because the way it works, the value
+					-- we get from the Precursor call must be a boxed value.
+				il_generator.generate_check_cast (l_orig_return_type, l_return_type)
+				il_generator.generate_load_address (l_return_type)
+				il_generator.generate_load_from_address (l_return_type)
+			elseif l_is_nested_call then
 				l_return_type := context.real_type (a_node.type)
 				if l_return_type.is_true_expanded and then not l_return_type.type_a.associated_class.is_enum then
 						-- Pointer to value type is required.
@@ -3644,6 +3676,7 @@ feature {NONE} -- Implementation: Feature calls
 			when
 				{PREDEFINED_NAMES}.conforms_to_name_id,
 				{PREDEFINED_NAMES}.deep_equal_name_id,
+				{PREDEFINED_NAMES}.is_deep_equal_name_id,
 				{PREDEFINED_NAMES}.same_type_name_id,
 				{PREDEFINED_NAMES}.standard_equal_name_id,
 				{PREDEFINED_NAMES}.standard_is_equal_name_id
@@ -3744,6 +3777,7 @@ feature {NONE} -- Implementation: Feature calls
 			valid_feature_name:
 				a_feature_name_id = {PREDEFINED_NAMES}.conforms_to_name_id or
 				a_feature_name_id = {PREDEFINED_NAMES}.deep_equal_name_id or
+				a_feature_name_id = {PREDEFINED_NAMES}.is_deep_equal_name_id or
 				a_feature_name_id = {PREDEFINED_NAMES}.same_type_name_id or
 				a_feature_name_id = {PREDEFINED_NAMES}.standard_equal_name_id or
 				a_feature_name_id = {PREDEFINED_NAMES}.standard_is_equal_name_id
@@ -3767,7 +3801,8 @@ feature {NONE} -- Implementation: Feature calls
 			when
 				{PREDEFINED_NAMES}.conforms_to_name_id,
 				{PREDEFINED_NAMES}.same_type_name_id,
-				{PREDEFINED_NAMES}.standard_is_equal_name_id
+				{PREDEFINED_NAMES}.standard_is_equal_name_id,
+				{PREDEFINED_NAMES}.is_deep_equal_name_id
 			then
 				l_extension.set_argument_types (<<l_id, l_id>>)
 			when

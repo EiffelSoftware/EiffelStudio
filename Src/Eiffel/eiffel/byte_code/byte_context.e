@@ -1038,7 +1038,7 @@ feature -- Access
 			new_written_class_type_not_void: new_written_class_type /= Void
 			context_class_type_not_void: context_class_type /= Void
 			class_type_not_void: class_type /= Void
-			is_ancestor: -- new_context_class_type.type.type_a.is_conformant_to (new_written_class_type.type.type_a)
+			is_ancestor: -- new_context_cl_type.type_a.is_conformant_to (new_written_class_type.type.type_a)
 		do
 			class_type_stack.put (create {PAIR [CLASS_TYPE, CLASS_TYPE]}.make (context_class_type, class_type))
 			context_class_type := new_context_class_type

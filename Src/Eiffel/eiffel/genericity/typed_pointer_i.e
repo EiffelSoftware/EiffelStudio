@@ -18,7 +18,7 @@ inherit
 			has_true_formal, is_identical, generate_gen_type_il, make_full_type_byte_code_parameters,
 			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
-			debug_output, complete_instantiation_in, generic_derivation
+			debug_output, complete_instantiation_in, internal_generic_derivation
 		redefine
 			is_feature_pointer, name,
 			description, sk_value,
@@ -34,7 +34,7 @@ inherit
 		redefine
 			is_feature_pointer, description, sk_value,
 			element_type, tuple_code, true_reference_type,
-			name, hash_code, generic_derivation
+			name, hash_code, internal_generic_derivation
 		end
 
 create
@@ -94,7 +94,7 @@ feature -- Access
 			Result := {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
 		end
 
-	generic_derivation: like Current is
+	internal_generic_derivation (a_level: INTEGER): like Current is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.
@@ -111,10 +111,10 @@ feature -- Access
 				cr_info := c
 				Result.set_meta_generic (meta_generic.twin)
 				Result.set_true_generics (true_generics.twin)
-				Result.meta_generic.put (Result.meta_generic.item (1).generic_derivation, 1)
-				Result.true_generics.put (Result.true_generics.item (1).generic_derivation, 1)
+				Result.meta_generic.put (Result.meta_generic.item (1).internal_generic_derivation (a_level + 1), 1)
+				Result.true_generics.put (Result.true_generics.item (1).internal_generic_derivation (a_level + 1), 1)
 			else
-				Result := Precursor {ONE_GEN_TYPE_I}
+				Result := Precursor {ONE_GEN_TYPE_I} (a_level)
 			end
 		end
 

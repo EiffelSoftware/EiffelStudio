@@ -282,6 +282,7 @@ feature
 			macro_ext: MACRO_EXTENSION_I
 			struct_ext: STRUCT_EXTENSION_I
 			c_ext: C_EXTENSION_I
+			l_built_in: BUILT_IN_EXTENSION_I
 			buf: GENERATION_BUFFER
 			l_type: TYPE_I
 			l_args: like argument_types
@@ -312,6 +313,9 @@ feature
 				elseif extension.is_cpp then
 					cpp_ext ?= extension
 					cpp_ext.generate_access (external_name, parameters, l_type)
+				elseif extension.is_built_in then
+					l_built_in ?= extension
+					l_built_in.generate_access (external_name, written_in, gen_reg, parameters, l_type)
 				else
 					c_ext ?= extension
 					check

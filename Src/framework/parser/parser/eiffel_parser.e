@@ -7973,7 +7973,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs19.item (yyvsp19) /= Void then
+				if yyvs50.item (yyvsp50) /= Void and then yyvs50.item (yyvsp50).is_built_in then
+					if yyvs19.item (yyvsp19) /= Void then 
+						yyval49 := ast_factory.new_built_in_as (yyvs50.item (yyvsp50), yyvs19.item (yyvsp19).second, yyvs12.item (yyvsp12), yyvs19.item (yyvsp19).first)
+					else
+						yyval49 := ast_factory.new_built_in_as (yyvs50.item (yyvsp50), Void, yyvs12.item (yyvsp12), Void)
+					end
+				elseif yyvs19.item (yyvsp19) /= Void then
 					yyval49 := ast_factory.new_external_as (yyvs50.item (yyvsp50), yyvs19.item (yyvsp19).second, yyvs12.item (yyvsp12), yyvs19.item (yyvsp19).first)
 				else
 					yyval49 := ast_factory.new_external_as (yyvs50.item (yyvsp50), Void, yyvs12.item (yyvsp12), Void)

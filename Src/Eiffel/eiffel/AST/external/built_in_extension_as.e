@@ -1,73 +1,39 @@
 indexing
-	description: "AST representation of an external structure."
+	description: "Encapsulation of a inline external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EXTERNAL_LANG_AS
+class BUILT_IN_EXTENSION_AS
 
 inherit
-	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
+	EXTERNAL_EXTENSION_AS
 
 create
 	initialize
 
-feature {NONE} -- Initialization
+feature  -- Initialization
 
-	initialize (l: like language_name) is
-			-- Create a new EXTERNAL_LANGUAGE AST node.
-		require
-			l_not_void: l /= Void
+	initialize (v: like is_static) is
+			-- Create INLINE_EXTENSION_AS node.
 		do
-			language_name := l
+			is_static := v
 		ensure
-			language_name_set: language_name = l
+			is_static_set: is_static = v
 		end
 
-feature -- Visitor
+feature -- Properties
 
-	process (v: AST_VISITOR) is
-			-- process current element.
+	is_static: BOOLEAN
+			-- Is Current builtin static?
+
+feature -- Get inline extension
+
+	extension_i: BUILT_IN_EXTENSION_I is
+			-- BUILT_IN_EXTENSION_I corresponding to current extension
 		do
-			v.process_external_lang_as (Current)
-		end
-
-feature -- Roundtrip/Token
-
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			Result := language_name.first_token (a_list)
-		end
-
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			Result := language_name.last_token (a_list)
-		end
-
-feature -- Attributes
-
-	language_name: STRING_AS;
-			-- Language name
-			-- might be replaced by external_declaration or external_definition
-
-feature -- Status report
-
-	is_built_in: BOOLEAN is
-			-- Is current a built_in one?
-		do
-		end
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
-		do
-			Result := language_name.is_equivalent (other.language_name)
+			create Result.make (is_static)
 		end
 
 indexing
@@ -102,4 +68,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_LANG_AS
+end

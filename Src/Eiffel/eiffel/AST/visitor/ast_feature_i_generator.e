@@ -33,19 +33,22 @@ inherit
 
 feature -- Factory
 
-	new_feature (a_node: FEATURE_AS; a_class: CLASS_C): FEATURE_I is
-			-- Create associated FEATURE_I instance of `a_node'
+	new_feature (a_node: FEATURE_AS; a_name_id: INTEGER; a_class: CLASS_C): FEATURE_I is
+			-- Create associated FEATURE_I instance of `a_node'.
 		require
 			a_node_not_void: a_node /= Void
 			a_class_not_void: a_class /= Void
+			a_name_id_positive: a_name_id >= 0
 		local
 			l_once: ONCE_PROC_I
 		do
 			current_class := a_class
+			feature_name_id := a_name_id
 			process_body_as (a_node.body)
 			current_class := Void
 			Result := last_feature
 			last_feature := Void
+			feature_name_id := 0
 			if a_node.indexes /= Void then
 				if Result.is_once then
 					l_once ?= Result
@@ -74,6 +77,9 @@ feature {NONE} -- Implementation: Access
 	last_feature: FEATURE_I
 			-- Last computed feature
 
+	feature_name_id: INTEGER
+			-- Name of feature being processed
+
 	current_class: CLASS_C
 			-- Class in which a FEATURE_AS is converted into a FEATURE_I.
 
@@ -87,7 +93,6 @@ feature {NONE} -- Implementation
 			l_routine: ROUTINE_AS
 			l_def_func: DEF_FUNC_I
 			l_def_proc: DEF_PROC_I
-			l_dyn_func: DYN_FUNC_I
 			l_once_func: ONCE_FUNC_I
 			l_proc, l_func: PROCEDURE_I
 			l_extern_proc: EXTERNAL_I
@@ -103,6 +108,8 @@ feature {NONE} -- Implementation
 			l_is_deferred_external, l_is_attribute_external: BOOLEAN
 			l_result: FEATURE_I
 			l_assigner_name_id: INTEGER
+			l_built_in_processor: BUILT_IN_PROCESSOR
+			l_feature_as: FEATURE_AS
 		do
 			if l_as.assigner /= Void then
 				l_assigner_name_id := l_as.assigner.name_id
@@ -155,26 +162,40 @@ feature {NONE} -- Implementation
 					check
 						l_lang_not_void: l_lang /= Void
 					end
-					l_extension := l_lang.extension_i
-					if l_external_body.alias_name_id > 0 then
-						l_extension.set_alias_name_id (l_external_body.alias_name_id)
-					end
 
-					if System.il_generation then
-						l_il_ext ?= l_extension
-						l_is_deferred_external := l_il_ext /= Void and then
-							l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+					if l_routine.is_built_in then
+						create l_built_in_processor.make (current_class, Names_heap.item (feature_name_id), system.il_generation)
+						l_feature_as := l_built_in_processor.ast_node
 					end
-					if not l_is_deferred_external then
-						create l_extern_proc.make (l_extension)
-
-							-- if there's a macro or a signature then encapsulate
-						l_extern_proc.set_encapsulated (l_extension.need_encapsulation)
-						l_proc := l_extern_proc
+					if l_feature_as /= Void then
+						process_body_as (l_feature_as.body)
+						l_proc ?= last_feature
+						if l_proc = Void then
+								-- In case it is wrongly specified in the built_in spec.
+							create {DYN_PROC_I} l_proc
+						end
 					else
-						create l_def_proc
-						l_def_proc.set_extension (l_il_ext)
-						l_proc := l_def_proc
+						l_extension := l_lang.extension_i
+						if l_external_body.alias_name_id > 0 then
+							l_extension.set_alias_name_id (l_external_body.alias_name_id)
+						end
+
+						if System.il_generation then
+							l_il_ext ?= l_extension
+							l_is_deferred_external := l_il_ext /= Void and then
+								l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+						end
+						if not l_is_deferred_external then
+							create l_extern_proc.make (l_extension)
+
+								-- if there's a macro or a signature then encapsulate
+							l_extern_proc.set_encapsulated (l_extension.need_encapsulation)
+							l_proc := l_extern_proc
+						else
+							create l_def_proc
+							l_def_proc.set_extension (l_il_ext)
+							l_proc := l_def_proc
+						end
 					end
 				else
 					create {DYN_PROC_I} l_proc
@@ -194,77 +215,94 @@ feature {NONE} -- Implementation
 				l_routine ?= l_as.content
 				check
 					routine_exists: l_routine /= Void
+					type_exists: l_as.type /= Void
 				end
-				if l_routine.is_deferred then
-						-- Deferred function
-					create l_def_func
-					l_def_func.set_type (query_type (l_as.type) , l_assigner_name_id)
-					l_func := l_def_func
-				elseif l_routine.is_once then
-						-- Once function
-					create l_once_func
-					l_once_func.set_type (query_type (l_as.type), l_assigner_name_id)
-					l_func := l_once_func
-				elseif l_routine.is_external then
-
-						-- External procedure
-					l_external_body ?= l_routine.routine_body
-					l_lang ?= l_external_body.language_name
-					check
-						l_lang_not_void: l_lang /= Void
-					end
-					l_extension := l_lang.extension_i
-					if l_external_body.alias_name_id > 0 then
-						l_extension.set_alias_name_id (l_external_body.alias_name_id)
-					end
-
-					if System.il_generation then
-						l_il_ext ?= l_extension
-						l_is_deferred_external := l_il_ext /= Void and then
-							l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
-						l_is_attribute_external := l_il_ext /= Void and then
-							(l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Field_type or
-							l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Static_field_type)
-
-					end
-					if not l_is_deferred_external and not l_is_attribute_external then
-						create l_extern_func.make (l_extension)
-
-							-- if there's a macro or a signature then encapsulate
-						l_extern_func.set_encapsulated (l_extension.need_encapsulation)
-						l_extern_func.set_type (query_type (l_as.type), l_assigner_name_id)
-						l_func := l_extern_func
-					elseif l_is_attribute_external then
-						create l_attr.make
-						check
-							il_generation: System.il_generation
-							type_exists: l_as.type /= Void
+				if l_routine.is_built_in then
+					create l_built_in_processor.make (current_class, Names_heap.item (feature_name_id), system.il_generation)
+					l_feature_as := l_built_in_processor.ast_node
+					if l_feature_as /= Void then
+						process_body_as (l_feature_as.body)
+						if last_feature.is_constant or last_feature.is_attribute then
+							l_result := last_feature
+						else
+							l_func ?= last_feature
+							if l_func = Void then
+									-- In case it is wrongly specified in the built_in spec.
+								create {DYN_FUNC_I} l_func
+							end
 						end
-						l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
-						l_attr.set_is_empty (True)
-						l_attr.set_extension (l_il_ext)
-						l_result := l_attr
+					elseif current_class.is_basic then
+							-- All built_in in basic classes are empty routines if not specified otherwise.
+						create {DYN_FUNC_I} l_func
+					end
+				end
+				if l_result = Void and l_func = Void then
+					if l_routine.is_deferred then
+							-- Deferred function
+						create l_def_func
+						l_func := l_def_func
+					elseif l_routine.is_once then
+							-- Once function
+						create l_once_func
+						l_func := l_once_func
+					elseif l_routine.is_external then
+
+							-- External procedure
+						l_external_body ?= l_routine.routine_body
+						l_lang ?= l_external_body.language_name
+						check
+							l_lang_not_void: l_lang /= Void
+						end
+						l_extension := l_lang.extension_i
 						if l_external_body.alias_name_id > 0 then
-							l_result.set_private_external_name_id (l_external_body.alias_name_id)
+							l_extension.set_alias_name_id (l_external_body.alias_name_id)
+						end
+
+						if System.il_generation then
+							l_il_ext ?= l_extension
+							l_is_deferred_external := l_il_ext /= Void and then
+								l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+							l_is_attribute_external := l_il_ext /= Void and then
+								(l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Field_type or
+								l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Static_field_type)
+
+						end
+						if not l_is_deferred_external and not l_is_attribute_external then
+							create l_extern_func.make (l_extension)
+
+								-- if there's a macro or a signature then encapsulate
+							l_extern_func.set_encapsulated (l_extension.need_encapsulation)
+							l_func := l_extern_func
+						elseif l_is_attribute_external then
+							create l_attr.make
+							check
+								il_generation: System.il_generation
+								type_exists: l_as.type /= Void
+							end
+							l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
+							l_attr.set_is_empty (True)
+							l_attr.set_extension (l_il_ext)
+							l_result := l_attr
+							if l_external_body.alias_name_id > 0 then
+								l_result.set_private_external_name_id (l_external_body.alias_name_id)
+							end
+						else
+							check
+								il_generation: System.il_generation
+							end
+							create l_def_func
+							l_def_func.set_extension (l_il_ext)
+							l_func := l_def_func
+							if l_external_body.alias_name_id > 0 then
+								l_func.set_private_external_name_id (l_external_body.alias_name_id)
+							end
 						end
 					else
-						check
-							il_generation: System.il_generation
-						end
-						create l_def_func
-						l_def_func.set_extension (l_il_ext)
-						l_def_func.set_type (query_type (l_as.type), l_assigner_name_id)
-						l_func := l_def_func
-						if l_external_body.alias_name_id > 0 then
-							l_func.set_private_external_name_id (l_external_body.alias_name_id)
-						end
+						create {DYN_FUNC_I} l_func
 					end
-				else
-					create l_dyn_func
-					l_dyn_func.set_type (query_type (l_as.type), l_assigner_name_id)
-					l_func := l_dyn_func
 				end
-				if not l_is_attribute_external then
+				if l_result = Void then
+					check l_func_not_void: l_func /= Void end
 					if l_as.arguments /= Void then
 							-- Arguments initialization
 						l_func.init_arg (l_as.arguments, current_class)
@@ -274,6 +312,7 @@ feature {NONE} -- Implementation
 					if l_routine.obsolete_message /= Void then
 						l_func.set_obsolete_message (l_routine.obsolete_message.value)
 					end
+					l_func.set_type (query_type (l_as.type), l_assigner_name_id)
 					l_result := l_func
 					l_result.set_is_empty (l_as.content.is_empty)
 				end

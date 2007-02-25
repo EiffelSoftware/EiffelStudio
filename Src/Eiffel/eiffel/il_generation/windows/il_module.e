@@ -1049,7 +1049,7 @@ feature -- Metadata description
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
-			external_class_type: class_type.is_external or else class_type.type.is_basic
+			external_class_type: class_type.is_external or else class_type.is_basic
 		local
 			class_c: CLASS_C
 			l_native_array: NATIVE_ARRAY_CLASS_TYPE

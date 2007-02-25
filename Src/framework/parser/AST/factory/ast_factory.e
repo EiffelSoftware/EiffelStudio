@@ -754,6 +754,14 @@ feature -- Access
 			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
+	new_built_in_as (l: EXTERNAL_LANG_AS; a: STRING_AS; e_as, a_as: KEYWORD_AS): BUILT_IN_AS is
+			-- New BUILT_IN AST node
+		do
+			if l /= Void then
+				create Result.initialize (l, a, e_as, a_as)
+			end
+		end
+
 	new_case_as (i: EIFFEL_LIST [INTERVAL_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; w_as, t_as: KEYWORD_AS): CASE_AS is
 			-- New WHEN AST node
 		do

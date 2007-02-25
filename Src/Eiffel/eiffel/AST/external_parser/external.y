@@ -77,12 +77,12 @@ External_declaration:
 			}
 	|	TE_STATIC TE_BUILT_IN
 			{
-				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
+				create {BUILTIN_EXTENSION_AS} root_node.initialize (True)
 			}
 
 	|	TE_BUILT_IN
 			{
-				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
+				create {BUILTIN_EXTENSION_AS} root_node.initialize (False)
 			}
 	|	IL_specification
 			{

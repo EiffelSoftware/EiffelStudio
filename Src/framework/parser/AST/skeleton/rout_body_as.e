@@ -30,6 +30,11 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_built_in: BOOLEAN is
+			-- Is the routine body an external `built_in' one?
+		do
+		end
+
 feature -- Access
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is

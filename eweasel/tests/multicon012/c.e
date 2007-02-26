@@ -13,7 +13,7 @@ inherit
 		end
 	A
 create
-	default_create, make_c
+	default_create, make_b
 feature
 	make_c
 		do

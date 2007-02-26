@@ -5,9 +5,10 @@ creation
 feature
 	make 
 		local
-			test1: TEST1[C]
+			test2: TEST2[C]
 		do
-			test1 := test1
+			create test2
+			test2.test
 		end
 end
 

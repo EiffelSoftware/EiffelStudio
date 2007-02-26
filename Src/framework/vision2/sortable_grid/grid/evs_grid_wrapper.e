@@ -991,11 +991,16 @@ feature{NONE} -- Implementation
 			-- Action to be performed to deal with Ctr+A or Ctrl+C key press
 		require
 			a_key_attached: a_key /= Void
+		local
+			l_code: INTEGER
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_c and then ev_application.ctrl_pressed then
-				on_ctrl_c_pressed
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_a and then ev_application.ctrl_pressed then
-				on_ctrl_a_pressed
+			if ev_application.ctrl_pressed then
+				l_code := a_key.code
+				if l_code = {EV_KEY_CONSTANTS}.key_c or l_code = {EV_KEY_CONSTANTS}.key_insert then
+					on_ctrl_c_pressed
+				elseif l_code = {EV_KEY_CONSTANTS}.key_a then
+					on_ctrl_a_pressed
+				end
 			end
 		end
 

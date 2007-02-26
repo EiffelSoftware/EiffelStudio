@@ -53,7 +53,7 @@ exprt %DEFAULT_ORIGO_SVN/Src/library/wel wel
 iff not defined NO_COMPILE then
 	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
 	mkdir /s %INSTALL_DIR\library\vision2\spec\bcb\lib
-	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\lib
+	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\%ISE_PLATFORM\lib
 
 	remtrace Retrieve the header files
 	cdd %EIFFEL_SRC
@@ -76,9 +76,9 @@ iff not defined NO_COMPILE then
 	cd %INSTALL_DIR\C_library\libpng
 	all_makes
 	quick_move library\vision2\spec\bcb\lib\zlib.lib
-	quick_move library\vision2\spec\msc\lib\zlib.lib
+	quick_move library\vision2\spec\msc\%ISE_PLATFORM\lib\zlib.lib
 	quick_move library\vision2\spec\bcb\lib\libpng.lib
-	quick_move library\vision2\spec\msc\lib\libpng.lib
+	quick_move library\vision2\spec\msc\%ISE_PLATFORM\lib\libpng.lib
 	iff isdir %INSTALL_DIR\library\com then
 		remtrace com
 		cd %INSTALL_DIR\library\com\Clib

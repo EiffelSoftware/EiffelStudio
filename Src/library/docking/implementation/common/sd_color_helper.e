@@ -72,7 +72,7 @@ feature -- Saturation
 			not_void: a_area /= Void
 		local
 			l_count: INTEGER
-			lx, aleft, aright, atop, abottom, awidth, aheight: INTEGER
+			lx, aleft, aright, atop, abottom, awidth: INTEGER
 		do
 			if a_area.width > 0 and a_area.height > 0 then
 				aleft := a_area.left

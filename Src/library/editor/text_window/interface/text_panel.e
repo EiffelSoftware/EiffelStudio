@@ -452,7 +452,7 @@ feature -- Status setting
 			end
 			refresh_now
 	   	ensure
-			widget_displayed: has_margin implies margin_container.is_displayed
+			widget_displayed: has_margin = margin_container.is_show_requested
 	   	end
 
 	enable_line_numbers is

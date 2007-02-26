@@ -97,7 +97,7 @@ feature -- Command
 				develop_window.editors_manager.show_editors_possible
 			end
 				-- Attempt to reload last edited class of `Current'.
-			if a_session_data.current_target /= Void then
+			if a_session_data.current_target /= Void and then develop_window.editors_manager.editor_count > 0 then
 
 				if not a_session_data.current_target_type then
 						-- A class target

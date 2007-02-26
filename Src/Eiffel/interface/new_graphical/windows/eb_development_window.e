@@ -362,8 +362,9 @@ feature -- Update
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
-
-			set_stone (st)
+			if editors_manager.editor_count > 0 then
+				set_stone (st)
+			end
 
 				-- Reload possible class after the stone is set.
 			l_text_area := editors_manager.current_editor

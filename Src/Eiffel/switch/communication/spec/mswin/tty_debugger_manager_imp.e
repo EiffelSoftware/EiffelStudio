@@ -125,7 +125,7 @@ feature {NONE} -- Window related externals
 
 					WinClass.cbSize=sizeof(WNDCLASSEX);
 					WinClass.hInstance=hInst;
-					WinClass.lpszClassName="DummyTimerWindow";
+					WinClass.lpszClassName=L"DummyTimerWindow";
 					WinClass.lpfnWndProc=DefWindowProc;
 					WinClass.style=CS_HREDRAW | CS_VREDRAW;
 					WinClass.hIcon=LoadIcon(NULL, IDI_APPLICATION);
@@ -139,8 +139,8 @@ feature {NONE} -- Window related externals
 					successful = (int) RegisterClassEx(&WinClass);
 					if (successful) {
 					    dummy_window = CreateWindow(
-						        "DummyTimerWindow",
-						        "DummyTimerWindow",
+						        L"DummyTimerWindow",
+						        L"DummyTimerWindow",
 						        WS_OVERLAPPEDWINDOW,
 						        0,
 						        0,

@@ -142,8 +142,6 @@ feature -- Access
 
 	code_structure: QL_CODE_STRUCTURE_ITEM is
 			-- Class associated with Current line
-		local
-			l_parent: QL_CODE_STRUCTURE_ITEM
 		do
 			if code_structure_internal = Void then
 				code_structure_internal ?= parent

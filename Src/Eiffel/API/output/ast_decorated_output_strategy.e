@@ -702,7 +702,6 @@ feature {NONE} -- Implementation
 			-- Process `l_as'.
 		local
 			l_routine: ROUTINE_AS
-			l_built_in_processor: BUILT_IN_PROCESSOR
 		do
 			if l_as.body = Void then
 				process_external_as (l_as)

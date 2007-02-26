@@ -783,10 +783,10 @@ feature -- Window management
 				if editors_manager.current_editor /= Void then
 					a_window_data.save_editor_position (editors_manager.current_editor.text_displayed.current_line_number)
 				else
-					a_window_data.save_editor_position (0)
+					a_window_data.save_editor_position (1)
 				end
 			else
-				a_window_data.save_editor_position (0)
+				a_window_data.save_editor_position (1)
 			end
 
 			save_editors_to_session_data (a_window_data)

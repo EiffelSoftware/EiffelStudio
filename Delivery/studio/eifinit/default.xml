@@ -103,7 +103,7 @@
 
 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.hide_old_archive" DESCRIPTION="Should old archive items be hidden?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.keep_detailed_result" DESCRIPTION="Is detailed result kept when recalculation metric archive history?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.old_archive_age_in_days" DESCRIPTION="Age in days for an archive item to be considered old"><INTEGER>30</INTEGER></PREF>

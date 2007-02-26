@@ -1367,12 +1367,14 @@
 								</Directory>
 							<?endif?>
 							<Directory Id="msc13" Name="msc">
-								<Directory Id="lib23" Name="lib">
-									<Component Id="lib23" Guid="5FD4A935-31BD-4B5C-8911-C704A2B6915D">
-										<File Id="odbc_store.lib" Name="ODBC_S~1.LIB" LongName="odbc_store.lib" KeyPath="yes" />
-										<File Id="oracle_store.lib" Name="ORACLE~1.LIB" LongName="oracle_store.lib" />
-										<File Id="il_odbc_store.lib1" Name="IL_ODB~2.LIB" LongName="il_odbc_store.lib" />
-									</Component>
+								<Directory Id="platform1" Name="$(env.ISE_PLATFORM)">
+									<Directory Id="lib23" Name="lib">
+										<Component Id="lib23" Guid="5FD4A935-31BD-4B5C-8911-C704A2B6915D">
+											<File Id="odbc_store.lib" Name="ODBC_S~1.LIB" LongName="odbc_store.lib" KeyPath="yes" />
+											<File Id="oracle_store.lib" Name="ORACLE~1.LIB" LongName="oracle_store.lib" />
+											<File Id="il_odbc_store.lib1" Name="IL_ODB~2.LIB" LongName="il_odbc_store.lib" />
+										</Component>
+									</Directory>
 								</Directory>
 							</Directory>
 						</Directory>
@@ -1754,12 +1756,14 @@
 						</Directory>
 						<Directory Id="spec2" Name="spec">
 							<Directory Id="msc" Name="msc">
-								<Directory Id="lib" Name="lib">
-									<Component Id="lib" Guid="EAA91601-93AE-4694-81F7-DB29C981BAA8">
-										<File Id="mtnet.lib" Name="mtnet.lib" KeyPath="yes" />
-										<File Id="net.lib8" Name="net.lib" />
-										<File Id="ilnet.lib2" Name="ilnet.lib" />
-									</Component>
+								<Directory Id="platform2" Name="$(env.ISE_PLATFORM)">
+									<Directory Id="lib" Name="lib">
+										<Component Id="lib" Guid="EAA91601-93AE-4694-81F7-DB29C981BAA8">
+											<File Id="mtnet.lib" Name="mtnet.lib" KeyPath="yes" />
+											<File Id="net.lib8" Name="net.lib" />
+											<File Id="ilnet.lib2" Name="ilnet.lib" />
+										</Component>
+									</Directory>
 								</Directory>
 							</Directory>
 							<?if $(var.IsWin64)="no" ?>

@@ -122,13 +122,15 @@
 								</Directory>
 							<?endif?>
 							<Directory Id="msc" Name="msc">
-								<Directory Id="lib" Name="lib">
-									<Component Id="lib" Guid="A32F2CE4-CFBE-4794-9972-00285C58CCEF">
-										<File Id="com.lib" Name="com.lib" KeyPath="yes" />
-										<File Id="com_runtime.lib" Name="COM_RU~1.LIB" LongName="com_runtime.lib" />
-										<File Id="mtcom.lib" Name="mtcom.lib" />
-										<File Id="mtcom_runtime.lib1" Name="MTCOM_~2.LIB" LongName="mtcom_runtime.lib" />
-									</Component>
+								<Directory Id="platform1" Name="$(env.ISE_PLATFORM)">
+									<Directory Id="lib" Name="lib">
+										<Component Id="lib" Guid="A32F2CE4-CFBE-4794-9972-00285C58CCEF">
+											<File Id="com.lib" Name="com.lib" KeyPath="yes" />
+											<File Id="com_runtime.lib" Name="COM_RU~1.LIB" LongName="com_runtime.lib" />
+											<File Id="mtcom.lib" Name="mtcom.lib" />
+											<File Id="mtcom_runtime.lib1" Name="MTCOM_~2.LIB" LongName="mtcom_runtime.lib" />
+										</Component>
+									</Directory>
 								</Directory>
 							</Directory>
 							<Directory Id="windows" Name="windows">

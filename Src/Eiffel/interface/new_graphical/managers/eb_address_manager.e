@@ -1197,46 +1197,52 @@ feature {NONE} -- open new class
 			matcher: KMP_WILD
 			matching: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
-			current_group := Void
-			fname := cluster_address.text
-			if fname /= Void then
-				fname.left_adjust
-				fname.right_adjust
-			end
-			if fname = Void or else fname.is_empty then
-				process_cluster
-			else
-				fname.to_lower
-				create matcher.make_empty
-				matcher.set_pattern (fname)
-				if not matcher.has_wild_cards then
-					if is_general_group_acceptable then
-						current_group := universe.group_of_name (fname)
-					else
-						current_group := Universe.cluster_of_name (fname)
-					end
+			if workbench.system_defined then
+				current_group := Void
+				fname := cluster_address.text
+				if fname /= Void then
+					fname.left_adjust
+					fname.right_adjust
+				end
+				if fname = Void or else fname.is_empty then
 					process_cluster
-				elseif Universe.target /= Void then
-					from
+				else
+					fname.to_lower
+					create matcher.make_empty
+					matcher.set_pattern (fname)
+					if not matcher.has_wild_cards then
 						if is_general_group_acceptable then
-							cl := Universe.groups
+							current_group := universe.group_of_name (fname)
 						else
-							cl := Universe.target.clusters.linear_representation
+							current_group := Universe.cluster_of_name (fname)
 						end
-						cl.start
-						create matching.make
-					until
-						cl.after
-					loop
-						matcher.set_text (cl.item.name)
-						if matcher.pattern_matches then
-							matching.extend (cl.item)
+						process_cluster
+					elseif Universe.target /= Void then
+						from
+							if is_general_group_acceptable then
+								cl := Universe.groups
+							else
+								cl := Universe.target.clusters.linear_representation
+							end
+							cl.start
+							create matching.make
+						until
+							cl.after
+						loop
+							matcher.set_text (cl.item.name)
+							if matcher.pattern_matches then
+								matching.extend (cl.item)
+							end
+							cl.forth
 						end
-						cl.forth
+						matching.sort
+						group_list := matching
+						display_cluster_choice
 					end
-					matching.sort
-					group_list := matching
-					display_cluster_choice
+				end
+			else
+				if address_dialog /= Void and then address_dialog.is_displayed then
+					address_dialog.hide
 				end
 			end
 		end
@@ -1253,93 +1259,99 @@ feature {NONE} -- open new class
 			wd: EB_WARNING_DIALOG
 			l_classes: DS_HASH_SET [CLASS_I]
 		do
-			class_i := Void
-			cname := class_address.text
-			if cname /= Void then
-				cname.left_adjust
-				cname.right_adjust
-			end
-			if cname = Void or else cname.is_empty then
-				if choosing_class then
-					process_class
-				else
-					process_feature_class
+			if workbench.system_defined then
+				class_i := Void
+				cname := class_address.text
+				if cname /= Void then
+					cname.left_adjust
+					cname.right_adjust
 				end
-			else
-				cname.to_upper
-				create matcher.make_empty
-				matcher.set_pattern (cname)
-				if not matcher.has_wild_cards then
-					at_pos := cname.index_of ('@', 1)
-					if at_pos = cname.count then
-						cname.keep_head (cname.count - 1)
-						class_address.set_text (cname)
-						at_pos := 0
+				if cname = Void or else cname.is_empty then
+					if choosing_class then
+						process_class
+					else
+						process_feature_class
 					end
-					if at_pos = 0 then
-						if universe.target = Void then
-							class_list := Void
-						else
-							class_list := Universe.classes_with_name (cname)
+				else
+					cname.to_upper
+					create matcher.make_empty
+					matcher.set_pattern (cname)
+					if not matcher.has_wild_cards then
+						at_pos := cname.index_of ('@', 1)
+						if at_pos = cname.count then
+							cname.keep_head (cname.count - 1)
+							class_address.set_text (cname)
+							at_pos := 0
 						end
-						if class_list = Void or else class_list.is_empty then
-							class_list := Void
-							if choosing_class then
-								process_class
+						if at_pos = 0 then
+							if universe.target = Void then
+								class_list := Void
 							else
-								process_feature_class
+								class_list := Universe.classes_with_name (cname)
 							end
-						elseif class_list.count = 1 then
-							class_i := class_list.first
-							if choosing_class then
-								process_class
+							if class_list = Void or else class_list.is_empty then
+								class_list := Void
+								if choosing_class then
+									process_class
+								else
+									process_feature_class
+								end
+							elseif class_list.count = 1 then
+								class_i := class_list.first
+								if choosing_class then
+									process_class
+								else
+									process_feature_class
+								end
 							else
-								process_feature_class
+								display_class_choice
 							end
 						else
-							display_class_choice
+							cluster_name := cname.substring (at_pos + 1, cname.count)
+							if at_pos > 1 then
+								cname := cname.substring (1, at_pos - 1)
+							else
+								cname := ""
+							end
+							cluster := Universe.cluster_of_name (cluster_name)
+							if cluster = Void then
+								create wd.make_with_text (Warning_messages.w_Cannot_find_cluster (cluster_name))
+								wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+								if class_address.is_displayed then
+									class_address.set_focus
+									class_address.select_region (at_pos + 1, class_address.text_length)
+								end
+							else
+								class_i := cluster.classes.item (cname)
+								if choosing_class then
+									process_class
+								else
+									process_feature_class
+								end
+							end
 						end
 					else
-						cluster_name := cname.substring (at_pos + 1, cname.count)
-						if at_pos > 1 then
-							cname := cname.substring (1, at_pos - 1)
-						else
-							cname := ""
-						end
-						cluster := Universe.cluster_of_name (cluster_name)
-						if cluster = Void then
-							create wd.make_with_text (Warning_messages.w_Cannot_find_cluster (cluster_name))
-							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-							if class_address.is_displayed then
-								class_address.set_focus
-								class_address.select_region (at_pos + 1, class_address.text_length)
+						from
+							create sorted_classes.make
+							l_classes := universe.all_classes
+							l_classes.start
+						until
+							l_classes.after
+						loop
+							matcher.set_text (l_classes.item_for_iteration.name)
+							if matcher.pattern_matches then
+								sorted_classes.put_front (l_classes.item_for_iteration)
 							end
-						else
-							class_i := cluster.classes.item (cname)
-							if choosing_class then
-								process_class
-							else
-								process_feature_class
-							end
+							l_classes.forth
 						end
+						sorted_classes.sort
+						class_list := sorted_classes
+						display_class_choice
 					end
-				else
-					from
-						create sorted_classes.make
-						l_classes := universe.all_classes
-						l_classes.start
-					until
-						l_classes.after
-					loop
-						matcher.set_text (l_classes.item_for_iteration.name)
-						if matcher.pattern_matches then
-							sorted_classes.put_front (l_classes.item_for_iteration)
-						end
-						l_classes.forth
-					end
-					sorted_classes.sort
-					class_list := sorted_classes
-					display_class_choice
+				end
+			else
+				if address_dialog /= Void and then address_dialog.is_displayed then
+					address_dialog.hide
 				end
 			end
 		end

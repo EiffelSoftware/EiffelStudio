@@ -161,6 +161,9 @@ feature -- Status report
 			-- If `e_feature' is a constant,
 			-- should its specified value be displayed?
 
+	is_quote_enabled: BOOLEAN
+			-- Is quote around feature name enabled?
+
 feature -- Setting
 
 	set_overload_name (a_name: like overload_name) is
@@ -347,6 +350,22 @@ feature -- Setting
 			value_for_constant_disabled: not is_value_for_constant
 		end
 
+	enable_quote is
+			-- Enable quote arround feature name.
+		do
+			is_quote_enabled := True
+		ensure
+			quote_enabled: is_quote_enabled
+		end
+
+	disable_quote is
+			-- Disable quote arround feature name.
+		do
+			is_quote_enabled := False
+		ensure
+			quote_disabled: not is_quote_enabled
+		end
+
 feature{NONE} -- Implementation
 
 	invariant_name: STRING is
@@ -381,7 +400,7 @@ feature{NONE} -- Implementation
 				if is_for_invariant then
 					a_writer.add_string (overload_name)
 				else
-					a_writer.process_feature_text (overload_name, e_feature, True)
+					a_writer.process_feature_text (overload_name, e_feature, is_quote_enabled)
 				end
 			else
 				if is_for_invariant then

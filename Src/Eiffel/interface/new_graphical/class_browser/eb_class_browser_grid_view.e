@@ -546,13 +546,16 @@ feature{NONE} -- Actions
 			-- Action to be performed when `a_key' is pressed in `text'
 		require
 			a_key_attached: a_key /= Void
+		local
+			l_code: INTEGER
 		do
+			l_code := a_key.code
 			if ev_application.ctrl_pressed then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_a then
+				if l_code = {EV_KEY_CONSTANTS}.key_a then
 					if not text.text.is_empty then
 						text.select_all
 					end
-				elseif a_key.code = {EV_KEY_CONSTANTS}.key_c then
+				elseif l_code = {EV_KEY_CONSTANTS}.key_c or l_code = {EV_KEY_CONSTANTS}.key_insert then
 					if text.has_selection then
 						ev_application.clipboard.set_text (text.selected_text)
 					end

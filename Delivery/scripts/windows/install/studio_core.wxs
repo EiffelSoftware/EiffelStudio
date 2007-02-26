@@ -352,6 +352,7 @@
 								<File Id="smart_docking_icon_matrix_8_16_horizontal_png" Name="SMART_~3.PNG" LongName="smart_docking_icon_matrix_8_16_horizontal.png" />
 								<File Id="smart_docking_icon_matrix_16_8_png" Name="SMART_~1.PNG" LongName="smart_docking_icon_matrix_16_8.png" />
 								<File Id="splash_png" Name="splash.png" />
+								<File Id="splash_2_png" Name="SPLASH~1.PNG" LongName="splash_shadow.png"/>
 								<File Id="tool_bar_title_bar_png" Name="TOOL_B~2.PNG" LongName="tool_bar_title_bar.png" />
 								<File Id="tool_bar_title_bar_close_png" Name="TOOL_B~1.PNG" LongName="tool_bar_title_bar_close.png" />
 								<File Id="up_png" Name="up.png" />

@@ -11,7 +11,7 @@
           <Text>[SubTitleFont]Browse to the destination folder</Text>
         </Control>
         <Control Id="ComboLabel" Type="Text" X="9" Y="61" Width="44" Height="10" TabSkip="no" Text="&amp;Look in:" Transparent="yes" />
-        <Control Id="DirectoryCombo" Type="DirectoryCombo" X="45" Y="58" Width="210" Height="80" Property="TARGETDIR" Fixed="yes" Remote="yes" Indirect="yes">
+        <Control Id="DirectoryCombo" Type="DirectoryCombo" X="45" Y="58" Width="210" Height="80" Property="_BrowseProperty" Fixed="yes" Remote="yes" Indirect="yes">
           <Subscribe Event="IgnoreChange" Attribute="IgnoreChange" />
         </Control>
         <Control Id="Up" Type="PushButton" X="283" Y="58" Width="19" Height="19" Icon="yes" FixedSize="yes" IconSize="16" Text="up.bmp">

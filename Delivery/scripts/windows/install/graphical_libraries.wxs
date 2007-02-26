@@ -2283,14 +2283,16 @@
 								</Component>
 							</Directory>
 							<Directory Id="msc" Name="msc">
-								<Directory Id="lib" Name="lib">
-									<Component Id="ilvision2.lib" Guid="155D0956-74EF-4636-B9C6-3B2B4BDBE519">
-										<File Id="ilvision2.lib" Name="ILVISI~1.LIB" LongName="ilvision2.lib" KeyPath="yes" />
-										<File Id="vision2.lib91" Name="vision2.lib" />
-										<File Id="mtvision2.lib91" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
-										<File Id="zlib.lib104" Name="zlib.lib" />
-										<File Id="libpng.lib" Name="libpng.lib" />
-									</Component>
+								<Directory Id="platform1" Name="$(env.ISE_PLATFORM)">
+									<Directory Id="lib" Name="lib">
+										<Component Id="ilvision2.lib" Guid="155D0956-74EF-4636-B9C6-3B2B4BDBE519">
+											<File Id="ilvision2.lib" Name="ILVISI~1.LIB" LongName="ilvision2.lib" KeyPath="yes" />
+											<File Id="vision2.lib91" Name="vision2.lib" />
+											<File Id="mtvision2.lib91" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
+											<File Id="zlib.lib104" Name="zlib.lib" />
+											<File Id="libpng.lib" Name="libpng.lib" />
+										</Component>
+									</Directory>
 								</Directory>
 							</Directory>
 							<?if $(var.IsWin64)="no" ?>
@@ -2969,17 +2971,19 @@
 						</Directory>
 						<Directory Id="spec41" Name="spec">
 							<Directory Id="msc43" Name="msc">
-								<Directory Id="lib48" Name="lib">
-									<Component Id="ilwel.lib" Guid="FB351EF9-3CED-4322-8E2D-6B596764E561">
-										<File Id="ilwel.lib" Name="ilwel.lib" KeyPath="yes" />
-										<File Id="mtwel.lib" Name="mtwel.lib" />
-										<File Id="wel.lib" Name="wel.lib" />
-									</Component>
-								</Directory>
-								<Directory Id="dll50" Name="dll">
-									<Component Id="wel_hook.dll140" Guid="A048C3D8-93A9-4968-9AC1-13175BF4BF54">
-										<File Id="wel_hook.dll140" Name="wel_hook.dll" KeyPath="yes" />
-									</Component>
+								<Directory Id="platform2" Name="$(env.ISE_PLATFORM)">
+									<Directory Id="lib48" Name="lib">
+										<Component Id="ilwel.lib" Guid="FB351EF9-3CED-4322-8E2D-6B596764E561">
+											<File Id="ilwel.lib" Name="ilwel.lib" KeyPath="yes" />
+											<File Id="mtwel.lib" Name="mtwel.lib" />
+											<File Id="wel.lib" Name="wel.lib" />
+										</Component>
+									</Directory>
+									<Directory Id="dll50" Name="dll">
+										<Component Id="wel_hook.dll140" Guid="A048C3D8-93A9-4968-9AC1-13175BF4BF54">
+											<File Id="wel_hook.dll140" Name="wel_hook.dll" KeyPath="yes" />
+										</Component>
+									</Directory>
 								</Directory>
 							</Directory>
 							<?if $(var.IsWin64)="no" ?>

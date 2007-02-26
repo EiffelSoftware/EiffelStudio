@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 		local
 			l_worker: E_SHOW_CALLERS
 		do
-			create l_worker.make (Void, associated_feature)
+			create l_worker.make (create {EB_EDITOR_TOKEN_GENERATOR}.make, associated_feature)
 			l_worker.set_flag (flag)
 			l_worker.set_all_callers (preferences.feature_tool_data.show_all_callers)
 			l_worker.show_callers

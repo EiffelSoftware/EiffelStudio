@@ -250,10 +250,11 @@ feature -- Implementation
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void then
 				if not app_imp.is_in_transport then
+					call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+					l_call_events := False
 					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then is_dockable and then a_button = 1 then
 						l_dockable_source ?= Current
 						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						l_call_events := False
 					elseif
 						(a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)) or else
 						ready_for_pnd_menu (a_button, a_type) then
@@ -289,14 +290,12 @@ feature -- Implementation
 							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) then
 								l_configure_agent.call (Void)
 							end
-							l_call_events := False
 						end
 					end
 				else
 					l_current := Current
 					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.pick_and_drop_source = l_current then
 						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						l_call_events := False
 					end
 					l_dockable_source ?= l_current
 					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then

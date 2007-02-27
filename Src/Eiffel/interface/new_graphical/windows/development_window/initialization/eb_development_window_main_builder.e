@@ -585,11 +585,8 @@ feature -- Command
 				-- Initialize docking manager.
 			create l_docking_manager.make (develop_window.panel, develop_window.window)
 			develop_window.set_docking_manager (l_docking_manager)
-			if {PLATFORM}.is_windows then
-					-- On Gtk this overrides the default window background color which in turn
-					-- means that any splitters are drawn using this color.
-				develop_window.docking_manager.set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
-			end
+			develop_window.docking_manager.set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+
 				-- Build the features tool
 
 			build_features_tool

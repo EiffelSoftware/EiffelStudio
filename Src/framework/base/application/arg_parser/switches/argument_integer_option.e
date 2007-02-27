@@ -18,30 +18,38 @@ feature -- Access
 
 	integer_8_value: INTEGER_8 is
 			-- `value' as an {INTEGER_8}
+		require
+			has_value: has_value
 		do
 			Result := value.to_integer_8
 		end
 
 	integer_16_value: INTEGER_16 is
 			-- `value' as an {INTEGER_16}
+		require
+			has_value: has_value
 		do
 			Result := value.to_integer_16
 		end
 
 	integer_32_value: INTEGER_32 is
 			-- `value' as an {INTEGER_32}
+		require
+			has_value: has_value
 		do
 			Result := value.to_integer_32
 		end
 
 	integer_64_value: INTEGER_64 is
 			-- `value' as an {INTEGER_64}
+		require
+			has_value: has_value
 		do
 			Result := value.to_integer_64
 		end
 
 invariant
-	value_is_integer: value.is_integer
+	value_is_integer: has_value implies value.is_integer
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

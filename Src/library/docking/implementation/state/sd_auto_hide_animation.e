@@ -82,6 +82,10 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 				state.set_width_height (state.max_size_by_zone (state.width_height))
 				create l_zone.make (state.content, state.direction)
 				state.set_zone (l_zone)
+
+				-- This for Linux, to make sure no flashing when showing the zone.
+				l_zone.hide
+
 				-- Before add the zone to the fixed area, first clear the other zones in the area except the main_container.
 				internal_docking_manager.command.remove_auto_hide_zones (False)
 
@@ -288,6 +292,9 @@ feature {NONE} -- Implementation functions
 				else
 					internal_docking_manager.fixed_area.set_item_y_position (state.zone, state.zone.y_position - internal_show_step)
 				end
+			end
+			if not state.zone.is_displayed then
+				state.zone.show
 			end
 		end
 

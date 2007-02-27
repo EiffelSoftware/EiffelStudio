@@ -531,4 +531,4 @@ indexing
 
 
 
-end -- class TOOLBAR_EDITOR_BOX
+end -- class SD_TOOL_BAR_CUSTOMIZE_DIALOG

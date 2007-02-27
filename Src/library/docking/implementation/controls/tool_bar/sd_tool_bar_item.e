@@ -190,32 +190,6 @@ feature -- Properties
 	data: ANY
 			-- User data.
 
-feature -- Change
-
-	refresh_now is
-			-- Force Current to be refresh/drawn
-		local
-			l_items: LIST [SD_TOOL_BAR_ITEM]
-		do
-				--| FIXME: I guess there is nicer solution to handle the case
-				--| when the size of a toolbar item changes
-				--| for instance when changing the button's text
-			is_need_redraw := True
-			if tool_bar /= Void then
-				l_items := tool_bar.items
-				from
-					l_items.start
-					l_items.search (Current)
-				until
-					l_items.after
-				loop
-					l_items.item.enable_redraw
-					l_items.forth
-				end
-				tool_bar.update
-			end
-		end
-
 feature {SD_NOTEBOOK_TAB_AREA} -- Implementation
 
 	update is
@@ -234,12 +208,6 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
 		require
 			not_void: a_starting implies a_pebble /= Void
 		deferred
-		end
-
-	enable_redraw is
-			-- Set `is_need_redraw' True.	
-		do
-			is_need_redraw := True
 		end
 
 	disable_redraw is

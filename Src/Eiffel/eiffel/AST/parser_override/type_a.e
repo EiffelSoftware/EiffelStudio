@@ -273,7 +273,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	frozen is_deep_equal (other: TYPE_A): BOOLEAN is
+	frozen is_safe_equivalent (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still

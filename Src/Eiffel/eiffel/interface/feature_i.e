@@ -795,7 +795,7 @@ end
 						and then rout_id_set.same_as (other.rout_id_set)
 						and then is_origin = other.is_origin
 						and then body_index = other.body_index
-						and then type.is_deep_equal (other.type)
+						and then type.is_safe_equivalent (other.type)
 		end
 
 	is_valid: BOOLEAN is
@@ -1901,7 +1901,7 @@ end
 				-- `new_type' is the actual type of the join already
 				-- instantiated
 			new_type ?= type
-			if not new_type.is_deep_equal (old_type) then
+			if not new_type.is_safe_equivalent (old_type) then
 				create vdjr1
 				vdjr1.init (old_feature, Current)
 				vdjr1.set_type (new_type)
@@ -1926,7 +1926,7 @@ end
 				loop
 					old_type ?= old_arguments.i_th (i)
 					new_type ?= arguments.i_th (i)
-					if not new_type.is_deep_equal (old_type) then
+					if not new_type.is_safe_equivalent (old_type) then
 						create vdjr2
 						vdjr2.init (old_feature, Current)
 						vdjr2.set_type (new_type)
@@ -2025,7 +2025,7 @@ end
 		local
 			i, nb: INTEGER
 		do
-			Result := type.is_deep_equal (other.type)
+			Result := type.is_safe_equivalent (other.type)
 			from
 				nb := argument_count
 				Result := Result and then nb = other.argument_count
@@ -2034,7 +2034,7 @@ end
 			until
 				i > nb or else not Result
 			loop
-				Result := arguments.i_th (i).is_deep_equal (other.arguments.i_th (i))
+				Result := arguments.i_th (i).is_safe_equivalent (other.arguments.i_th (i))
 				i := i + 1
 			end
 		end

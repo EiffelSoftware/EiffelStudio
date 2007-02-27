@@ -18,30 +18,38 @@ feature -- Access
 
 	natural_8_value: NATURAL_8 is
 			-- `value' as an {NATURAL_8}
+		require
+			has_value: has_value
 		do
 			Result := value.to_natural_8
 		end
 
 	natural_16_value: NATURAL_16 is
 			-- `value' as an {NATURAL_16}
+		require
+			has_value: has_value
 		do
 			Result := value.to_natural_16
 		end
 
 	natural_32_value: NATURAL_32 is
 			-- `value' as an {NATURAL_32}
+		require
+			has_value: has_value
 		do
 			Result := value.to_natural_32
 		end
 
 	natural_64_value: NATURAL_64 is
 			-- `value' as an {NATURAL_64}
+		require
+			has_value: has_value
 		do
 			Result := value.to_natural_64
 		end
 
 invariant
-	value_is_natural: value.is_natural
+	value_is_natural: has_value implies value.is_natural
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

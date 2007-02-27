@@ -55,8 +55,6 @@ feature -- Access
 
 	frozen user_directory: SYSTEM_STRING
 			-- Start directory to scan for directories files, specified by the user.
-		local
-			l_dir: DIRECTORY_INFO
 		once
 			if has_loose_argument then
 				Result := values.first

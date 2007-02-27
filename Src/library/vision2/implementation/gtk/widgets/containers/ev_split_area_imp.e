@@ -112,13 +112,10 @@ feature -- Access
 
 	set_split_position (a_split_position: INTEGER) is
 			-- Set the position of the splitter.
-		local
-			l_allocation: POINTER
 		do
 			{EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
-				-- We force an allocation with its existing allocation, this makes the split position and children allocations update immediately.
-			l_allocation := {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (container_widget)
-			{EV_GTK_EXTERNALS}.gtk_widget_size_allocate (container_widget, l_allocation)
+				-- Force child allocation to update immediately.
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (container_widget)
 		end
 
 feature {NONE} -- Implementation

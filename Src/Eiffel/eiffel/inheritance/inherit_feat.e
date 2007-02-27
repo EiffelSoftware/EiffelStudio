@@ -458,7 +458,7 @@ feature
 							(features.item.parent.parent_type, written_id)
 							-- Same instantiated parent type for
 							-- sharing feature
-						Result := written_type.is_deep_equal (to_compair)
+						Result := written_type.is_safe_equivalent (to_compair)
 						features.forth
 					end
 				end

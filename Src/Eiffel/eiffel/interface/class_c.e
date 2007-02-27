@@ -1397,7 +1397,7 @@ feature -- Supplier checking
 						when 1 then
 							l_arg_type ?= l_creation_proc.arguments.first
 							l_arg_type := l_arg_type.instantiation_in (system.root_type, class_id).actual_type
-							l_error := not l_arg_type.is_deep_equal (Array_of_string)
+							l_error := not l_arg_type.is_safe_equivalent (Array_of_string)
 						else
 							l_error := True
 						end

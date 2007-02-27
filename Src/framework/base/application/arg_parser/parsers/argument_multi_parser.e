@@ -84,18 +84,19 @@ feature {NONE} -- Usage
 			else
 				l_arg := loose_argument_name_arg
 				l_args := l_arg + "[" + l_arg + ", ...]"
+				create Result.make (l_arg.count)
+				if accepts_no_loose_arguments then
+					Result.append_character ('[')
+				end
+				Result.append (l_args)
+				if accepts_no_loose_arguments then
+					Result.append_character (']')
+				end
+
 				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
 				if l_suffix /= Void then
-					create Result.make (l_arg.count + l_suffix.count + 1)
-					Result.append (l_suffix)
 					Result.append_character (' ')
-					if accepts_no_loose_arguments then
-						Result.append_character ('[')
-					end
-					Result.append (l_args)
-					if accepts_no_loose_arguments then
-						Result.append_character (']')
-					end
+					Result.append (l_suffix)
 				else
 					Result := l_args
 				end

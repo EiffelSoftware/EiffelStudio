@@ -55,10 +55,10 @@ feature {NONE} -- Usage
 				Result := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
 			else
 				l_arg := loose_argument_name_arg
+				create Result.make (l_arg.count)
+				Result.append (l_arg)
 				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
 				if l_suffix /= Void then
-					create Result.make (l_arg.count + l_suffix.count + 1)
-					Result.append (l_arg)
 					Result.append_character (' ')
 					Result.append (l_suffix)
 				else

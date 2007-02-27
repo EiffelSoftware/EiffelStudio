@@ -141,6 +141,8 @@ feature -- Commands
 				internal_docking_manager.command.lock_update (Void, True)
 			end
 
+			internal_docking_manager.command.recover_normal_state
+
 			if content /= internal_docking_manager.zones.place_holder_content then
 				add_place_holder
 			end

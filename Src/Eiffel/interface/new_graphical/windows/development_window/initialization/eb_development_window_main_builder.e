@@ -625,6 +625,9 @@ feature -- Command
 			end
 			develop_window.editors_manager.editor_switched_actions.extend (agent l_undo_redo_observer.on_changed)
 
+				-- Refresh cursor position.
+			develop_window.editors_manager.editor_switched_actions.extend (agent develop_window.refresh_cursor_position)
+
 				-- Following comments arr from non-docking Eiffel Studio
 				-- The minimim height masks a bug on windows to do with the sizing of the editors
 				-- scroll bars, which were affecting the resizing although they should not have done so.

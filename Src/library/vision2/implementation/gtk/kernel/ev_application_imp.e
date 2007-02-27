@@ -265,8 +265,8 @@ feature {EV_ANY_I} -- Implementation
 						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_top_level_window_imp /= Void then
 							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							l_top_level_window_imp.on_focus_changed ({EV_GTK_EXTERNALS}.gdk_event_focus_struct_in (gdk_event).to_boolean)
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							l_top_level_window_imp := Void
 						end
 					when GDK_CONFIGURE then

@@ -1755,17 +1755,19 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 
 	refresh_cursor_position is
 			-- Display the current cursor position in the status bar.
-		require
-			text_loaded: not is_empty
 		local
 			l, c, v: INTEGER
 			ed: EB_EDITOR
 		do
 			ed := editors_manager.current_editor
-			if ed /= Void then
+			if ed /= Void and then not ed.is_empty then
 				l := ed.cursor_y_position
 				c := ed.cursor_x_position
 				v := ed.cursor_visible_x_position
+			else
+				l := 0
+				c := 0
+				v := 0
 			end
 			status_bar.set_cursor_position (l, c, v)
 		end

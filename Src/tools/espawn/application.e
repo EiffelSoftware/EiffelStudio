@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			create l_layout
 			if not l_layout.is_eiffel_layout_defined then
-				l_layout.set_eiffel_layout (create {EC_EIFFEL_LAYOUT})
+				l_layout.set_eiffel_layout (create {FINISH_FREEZING_EIFFEL_LAYOUT})
 			end
 
 			create l_parser.make

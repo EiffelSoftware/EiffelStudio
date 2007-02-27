@@ -214,6 +214,7 @@ feature {NONE} -- Implementation
 			l_app_imp: EV_APPLICATION_IMP
 			l_button: SD_TOOL_BAR_BUTTON
 			l_text_rect: EV_RECTANGLE
+			l_state: INTEGER
 		do
 			l_button ?= a_arguments.item
 			if l_button /= Void and then l_button.text /= Void then
@@ -226,7 +227,12 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.pango_layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
 
 				l_text_rect := l_button.text_rectangle
-				c_gtk_paint_layout (a_gtk_object, to_gtk_state (a_arguments.item.state), l_text_rect.left, l_text_rect.top, l_text_rect.width, l_text_rect.height, l_pango_layout)
+				if a_arguments.item.is_sensitive then
+					l_state := to_gtk_state (a_arguments.item.state)
+				else
+					l_state := {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
+				end
+				c_gtk_paint_layout (a_gtk_object, l_state, l_text_rect.left, l_text_rect.top, l_text_rect.width, l_text_rect.height, l_pango_layout)
 			end
 
 		end
@@ -295,7 +301,7 @@ feature {NONE} -- Externals
 				PangoLayout* l_pango_layout = (PangoLayout*) $a_pango_layout;
 
 				gtk_paint_layout (l_widget->style, l_widget->window,
-					GTK_STATE_NORMAL, FALSE, &l_rect, l_widget, "label",
+					$a_gtk_state_type, FALSE, &l_rect, l_widget, "label",
 					$a_rect_x, $a_rect_y, l_pango_layout);
 			}
 			]"

@@ -155,12 +155,10 @@ feature -- Basic operations
 			wel_string := unicode_string (text)
 				-- We must check that a color has not been set. If one has, then the classic drawing routine must
 				-- be called to override the theme drawing color.
-			if foreground_color.interface.is_equal ((create {EV_STOCK_COLORS}).default_foreground_color) then
-				if is_sensitive then
-					cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, 0, a_content_rect.item)
-				else
-					cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, cwin_dtt_grayed, a_content_rect.item)
-				end
+				-- `cwin_draw_theme_text' can't draw grey disabled text. `cwin_dtt_grayed' not work. Set state_id to disabled state not work.
+				-- They all draw normal black text. So when not `is_sensitive' we use classic drawing routine.
+			if foreground_color.interface.is_equal ((create {EV_STOCK_COLORS}).default_foreground_color) and is_sensitive then
+				cwin_draw_theme_text (theme, a_hdc.item, a_part_id, a_state_id, wel_string.item, text.count, dw_text_flags, 0, a_content_rect.item)
 			else
 				classic_drawer.draw_text (theme, a_hdc, a_part_id, a_state_id, text, dw_text_flags, is_sensitive, a_content_rect, foreground_color)
 			end

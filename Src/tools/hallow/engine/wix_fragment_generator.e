@@ -167,13 +167,10 @@ feature {NONE} -- Element generation
 			a_writer_attached: a_writer /= Void
 			a_dir_attached: a_dir /= Void
 			a_dir_exists: a_dir.exists
-		local
-			l_name: SYSTEM_STRING
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.directory_tag)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_dir.full_name, a_options, {WIX_CONSTANTS}.directory_tag, directory_prefix, False))
 
-			l_name := get_short_path_name (a_dir.full_name, a_options)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, a_dir.name)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.file_source_attribute, format_path (a_dir.full_name, a_options))
 
@@ -334,13 +331,11 @@ feature {NONE} -- Element generation
 			a_file_attached: a_file /= Void
 			a_file_exists: a_file.exists
 		local
-			l_name: SYSTEM_STRING
 			l_id: INTEGER
 		do
 			a_writer.write_start_element ({WIX_CONSTANTS}.file_tag)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.id_attribute, semantic_name (a_file.full_name, a_options, {WIX_CONSTANTS}.file_tag, Void, False))
 
-			l_name := get_short_path_name (a_file.full_name, a_options)
 			a_writer.write_attribute_string ({WIX_CONSTANTS}.name_attribute, a_file.name)
 
 			if not a_options.for_merge_modules then

@@ -162,10 +162,13 @@ feature {NONE} -- Basic operations
 										l_file.read_line
 										l_line := l_file.last_string
 										if l_line /= Void and then not l_line.is_empty then
-											l_pair := parse_variable_name_value_pair (l_file.last_string)
+											l_pair := parse_variable_name_value_pair (l_line)
 											if
-												l_pair.value /= Void and
-												(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+												l_pair /= Void and then
+												(
+													l_pair.value /= Void and
+													(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+												)
 											then
 												l_result.extend (l_pair.value, l_pair.name.as_upper)
 											end
@@ -212,11 +215,11 @@ feature {NONE} -- Basic operations
 			a_string_not_empty: not a_string.is_empty
 			a_string_valid: a_string.occurrences ('=') >= 1
 		local
-			l_list: LIST [STRING]
+			p: INTEGER
 		do
-			l_list := a_string.split ('=')
-			if l_list.count = 2 then
-				Result := [l_list.first, l_list.i_th (2)]
+			p := a_string.index_of ('=', 1)
+			if p > 0 then
+				Result := [a_string.substring (1, p - 1), a_string.substring (p + 1, a_string.count)]
 			end
 		end
 

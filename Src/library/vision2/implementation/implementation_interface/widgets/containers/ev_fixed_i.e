@@ -33,7 +33,7 @@ feature -- Element change
 			set_item_size (a_widget, a_width, a_height)
 		ensure
 			has_a_widget: has (a_widget)
-			parent_is_current: a_widget.parent = Current
+			parent_is_current: a_widget.parent = interface
 			count_increased: count = old count + 1
 			an_item_x_position_assigned: a_widget.x_position = a_x
 			an_item_y_position_assigned: a_widget.y_position = a_y

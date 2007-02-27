@@ -54,7 +54,12 @@ inherit
 			start_x,
 			start_y,
 			redraw_item,
-			is_displayed
+			is_displayed,
+			update_size,
+			tooltip,
+			set_tooltip,
+			is_bridge_ok,
+			is_cloned
 		end
 
 	EV_FIXED
@@ -122,6 +127,7 @@ feature -- Command
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.extend (a_item)
+			a_item.set_tool_bar (Current)
 			l_widget_item ?= a_item
 			if l_widget_item /= Void then
 				extend_fixed (l_widget_item.widget)
@@ -181,6 +187,39 @@ feature -- Command
 			tool_bar.disable_capture
 		end
 
+	update_size is
+			-- Update `tool_bar' size if Current width changed.
+		local
+			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_parent: EV_CONTAINER
+			l_floating_zone: SD_FLOATING_TOOL_BAR_ZONE
+		do
+			compute_minimum_size
+			l_tool_bar_row ?= parent
+			if l_tool_bar_row /= Void then
+				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
+			else
+				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent.
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent := l_parent.parent
+					if l_parent /= Void then
+						l_parent := l_parent.parent
+						l_floating_zone ?= l_parent
+						if l_floating_zone /= Void then
+							l_floating_zone.set_size (l_floating_zone.minimum_width, l_floating_zone.minimum_height)
+						end
+					end
+				end
+			end
+		end
+
+	set_tooltip (a_tooltip: STRING_GENERAL) is
+			-- Assign `a_tooltip' to `tooltip'.
+		do
+			tool_bar.set_tooltip (a_tooltip)
+		end
+
 feature -- Query
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
@@ -225,6 +264,24 @@ feature -- Query
 			Result := tool_bar.expose_actions
 		end
 
+	tooltip: STRING_32 is
+			-- Tooltip.
+		do
+			Result := tool_bar.tooltip
+		end
+
+	is_bridge_ok (a_string: STRING_32): BOOLEAN is
+			-- Fake implementation for decorator pattern.
+		do
+			Result := True
+		end
+
+	is_cloned (a_string: STRING_32): BOOLEAN is
+			-- Fake implementation for decorator pattern.
+		do
+			Result := True
+		end
+
 feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -262,7 +319,7 @@ feature -- Contract support
 	is_parent_set (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
 			-- If `a_item' parent equal `tool_bar'?
 		do
-			Result := a_item.tool_bar = tool_bar
+			Result := a_item.tool_bar = Current
 		end
 
 	is_start_x_set (a_x: INTEGER): BOOLEAN is

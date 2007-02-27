@@ -35,6 +35,9 @@ feature -- Properties
 			-- Set `text', can set Void text.
 		do
 			text := a_text
+			if tool_bar /= Void then
+				tool_bar.update_size
+			end
 		ensure
 			set: text = a_text
 		end

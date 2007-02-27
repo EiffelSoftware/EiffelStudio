@@ -471,7 +471,9 @@ feature -- Basic operation
 			-- Show tool.
 		do
 			Precursor {EB_OUTPUT_TOOL}
-			set_focus
+			if widget /= Void and then widget.is_displayed and then widget.is_sensitive then
+				set_focus
+			end
 		end
 
 feature{NONE} -- Actions

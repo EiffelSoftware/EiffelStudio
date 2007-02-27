@@ -52,7 +52,8 @@ fullrd vision2/implementation/mswin
 if [ "$1" = "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
-	echo ""
+	cd vision2/implementation
+	exprt $DEFAULT_ORIGO_SVN/Src/library/vision2_for_gtk12 gtk --force 
 fi
 remtrace vision2_extension
 exprt $DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension

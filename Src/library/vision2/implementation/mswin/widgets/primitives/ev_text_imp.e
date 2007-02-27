@@ -384,7 +384,7 @@ feature -- Status Settings
 			nb: INTEGER
 			l_text: like wel_text
 		do
-				-- We cannot simply call `occurrances' on `wel_text' to determine how
+				-- We cannot simply call `occurrences' on `wel_text' to determine how
 				-- many new line characters there are before `pos' as each time one is
 				-- found, we must increase `pos' by one. This is because from the interface,
 				-- new lines are "%N" but on Windows they are "%R%N".

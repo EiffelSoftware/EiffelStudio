@@ -246,8 +246,8 @@ feature -- Graphical degree output
 feature -- Help text
 
 	h_No_help_available: STRING is				do Result := locale.translate("No help available for this element").out	end
-	h_refactoring_compiled: STRING is			do Result := locale.translate("Renames only occurances of the class name in compiled classes.").out	end
-	h_refactoring_all_classes: STRING is		do Result := locale.translate("Renames occurances of the class name in any class. (Slow)").out	end
+	h_refactoring_compiled: STRING is			do Result := locale.translate("Renames only occurrences of the class name in compiled classes.").out	end
+	h_refactoring_all_classes: STRING is		do Result := locale.translate("Renames occurrences of the class name in any class. (Slow)").out	end
 
 feature -- File names
 

@@ -112,19 +112,6 @@ feature -- Actions
 			end
 		end
 
---	on_enter_pressed is
---			-- Action to be performed when enter key is pressed
---		local
---			l_item: EV_GRID_ITEM
---		do
---			l_item := item_to_put_in_editor
---			if l_item /= Void then
---				open_item_editor (l_item)
---			else
---				on_expand_all_level
---			end
---		end
-
 	on_key_pressed_in_feature_name_list (a_key: EV_KEY) is
 			-- Action to be performed when key pressed in `feature_name_list'.
 		local

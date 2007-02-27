@@ -15,7 +15,8 @@ inherit
 			{NONE} all
 		redefine
 			process_access_feat_as,
-			process_access_assert_as
+			process_access_assert_as,
+			process_routine_creation_as
 		end
 
 	QL_UTILITY
@@ -146,10 +147,20 @@ feature{NONE} -- Implementation
 			-- Last processed class
 
 	check_accessor (l_as: ACCESS_FEAT_AS) is
-			-- Check if `l_as' is a accessor of `e_feature'.
+			-- Check if `l_as' is an accessor of `e_feature'.
 			-- If it is, store `l_as' into `accessors'.
 		do
 			if is_accessor (l_as.class_id, l_as.access_name) then
+				check last_class_c /= Void end
+				accessors.extend ([l_as.feature_name, last_class_c, should_assertion_be_checked])
+			end
+		end
+
+	check_accessor_for_routine_creation (l_as: ROUTINE_CREATION_AS) is
+			-- Check if `l_as' accesses `e_feature'.
+			-- If it is, store `l_as' into `accessors'.
+		do
+			if is_accessor (l_as.class_id, l_as.feature_name.name) then
 				check last_class_c /= Void end
 				accessors.extend ([l_as.feature_name, last_class_c, should_assertion_be_checked])
 			end
@@ -177,6 +188,12 @@ feature{NONE} -- Implementation/Process
 		do
 			last_class_c := a_assertion.written_class
 			a_assertion.ast.process (Current)
+		end
+
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+		do
+			check_accessor_for_routine_creation (l_as)
+			Precursor (l_as)
 		end
 
 invariant

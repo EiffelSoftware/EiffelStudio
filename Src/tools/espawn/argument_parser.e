@@ -125,7 +125,9 @@ feature {NONE} -- Usage
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration", True, False))
 			if {C_CONFIG_MANAGER}.is_windows_x64 then
-				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment, used in conjunction with -" + manual_switch + " switch.", True, False))
+				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment, ignored if -" + manual_switch + " is used.", True, False))
+			else
+				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, "Ineffective.", True, False))
 			end
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously", True, False, "count", "Number of processors to utilize", True, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ignore_switch, "Use to ignore failures", True, False))

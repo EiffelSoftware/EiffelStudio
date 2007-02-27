@@ -56,7 +56,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="$(var.PrgFiles)" Name="$(var.PrgFiles)">
         <Directory Id="Dir.EiffelSoftware" Name="Eiffel Software">
-          <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
+          <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
           </Directory>
         </Directory>
       </Directory>

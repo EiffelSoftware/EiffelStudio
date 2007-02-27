@@ -11,4 +11,10 @@ $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_L
 cd ../implementation/gtk/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
 
+if [ "$1" = "gtk" ]; then
+	# Copy GTK 1.2 implementation over gtk directory
+	cd $EIFFEL_SRC/library/vision2/implementation/
+	exprt $DEFAULT_ORIGO_SVN/Src/library/vision2_for_gtk12 gtk --force 
+fi
+
 cd $EIFFEL_SRC

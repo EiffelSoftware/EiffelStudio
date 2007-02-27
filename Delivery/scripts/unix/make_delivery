@@ -203,6 +203,8 @@ else
 fi
 
 remtrace Check out the documentation
+# When compiling for GTK 1.2, disable the building of the documentation
+# since on most machine GTK 1.2 is not installed.
 cd $INIT_DIR
 . make_xml_documentation
 

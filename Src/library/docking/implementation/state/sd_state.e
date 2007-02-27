@@ -442,6 +442,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	update_floating_zone_visible (a_show_floating: BOOLEAN) is
+			-- When `restore' for docking and tab state, we should update parent floating zone visible.
+		local
+			l_inner_container: SD_MULTI_DOCK_AREA
+			l_parent_floating_zone: SD_FLOATING_ZONE
+		do
+			l_inner_container := docking_manager.query.inner_container (zone)
+			l_parent_floating_zone := l_inner_container.parent_floating_zone
+			if l_parent_floating_zone /= Void and then not l_parent_floating_zone.is_displayed then
+				if a_show_floating then
+					l_parent_floating_zone.show
+				end
+			end
+		end
+
 	internal_content: SD_CONTENT
 			-- Content managed by `Current'.
 

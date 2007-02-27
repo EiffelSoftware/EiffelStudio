@@ -17,7 +17,7 @@ inherit
 			is_maximized as is_maximized_zone
 		export
 			{NONE} all
-			{ANY} has_focus, width, height, is_destroyed
+			{ANY} has_focus, width, height, is_destroyed, is_displayed
 			{SD_CONFIG_MEDIATOR} destroy
 		undefine
 			initialize,
@@ -319,11 +319,16 @@ feature {NONE} -- Implementation
 				l_split ?= a_container
 				check must_zone_or_split: l_split /= Void end
 				l_container ?= l_split.first
-				count_zone_display (l_container)
-
+				if l_container /= Void then
+					count_zone_display (l_container)
+				end
 				l_container := Void
 				l_container ?= l_split.second
-				count_zone_display (l_container)
+				-- When `open_inner_container_data', if a SD_CONTENT not is_visible, then SD_DOCKING_STATE.hide will execute,
+				-- At this time, updated title bar will be called, and l_container maybe void. Because it CONSTRUCTING widget layout.
+				if l_container /= Void then
+					count_zone_display (l_container)
+				end
 			end
 		end
 

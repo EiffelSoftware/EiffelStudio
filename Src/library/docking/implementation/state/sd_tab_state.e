@@ -188,6 +188,8 @@ feature -- Redefine
 
 			is_set_width_after_restore := True
 			is_set_height_after_restore := True
+
+			update_floating_zone_visible (a_data.is_visible)
 		ensure then
 			restored:
 		end

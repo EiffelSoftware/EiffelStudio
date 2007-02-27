@@ -45,10 +45,11 @@
     <Property Id="INSTALLDIR" Secure="yes" />
     <Property Id="INSTALLCURL">http://eiffelsoftware.origo.ethz.ch/index.php/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="CHECKCCOMPILER"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>   <!-- Determines if a C/C++ compiler should be checked -->
-    <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found-->
-    <Property Id="CANCCOMPILE">0</Property>                                                                               <!-- Indicates if a MSC C/C++ can actually be used-->
+    <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found -->
+    <Property Id="CANCCOMPILE">0</Property>                                                                               <!-- Indicates if a MSC C/C++ can actually be used -->
     <Property Id="SELECTEDCCOMPILER"><?ifdef EiffelStudio?>bcb<?else?>msc<?endif?></Property>                             <!-- Type of C/C++ compiler -->
     <Property Id="FXINSTALLROOT">0<RegistrySearch Id="RegFxPath" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
+    <Property Id="VIEWEDLICENSE">0</Property>                                                                             <!-- Indicates if the license agreement has been viewed -->
     <!-- END PROPERTIES -->
 
     <!-- INSTALL DESCRIPTION -->

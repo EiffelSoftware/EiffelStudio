@@ -34,13 +34,22 @@ feature {NONE} -- Initialization
 
 	init_border_box is
 			-- Initialize `internal_border_box'.
+		local
+			l_platform: PLATFORM
 		do
+			create l_platform
+
 			create {EV_VERTICAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_border_width)
 			extend_sizeable_popup_window (internal_border_box)
-			internal_border_box.pointer_motion_actions.extend (agent on_border_box_pointer_motion)
-			internal_border_box.pointer_button_press_actions.extend (agent on_border_pointer_press)
-			internal_border_box.pointer_button_release_actions.extend (agent on_border_pointer_release)
+
+			if l_platform.is_windows then
+				internal_border_box.pointer_motion_actions.extend (agent on_border_box_pointer_motion)
+				internal_border_box.pointer_button_press_actions.extend (agent on_border_pointer_press)
+				internal_border_box.pointer_button_release_actions.extend (agent on_border_pointer_release)
+			else
+				-- We use native resizing border on GTK.
+			end
 		end
 
 feature -- Command

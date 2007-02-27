@@ -164,6 +164,33 @@ feature -- Command
 			set_minimum_height (l_minimum_height)
 		end
 
+	update_size is
+			-- Update `tool_bar' size if Current width changed.
+		local
+			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_parent: EV_CONTAINER
+			l_floating_zone: SD_FLOATING_TOOL_BAR_ZONE
+		do
+			compute_minimum_size
+			l_tool_bar_row ?= parent
+			if l_tool_bar_row /= Void then
+				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
+			else
+				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent.
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent := l_parent.parent
+					if l_parent /= Void then
+						l_parent := l_parent.parent
+						l_floating_zone ?= l_parent
+						if l_floating_zone /= Void then
+							l_floating_zone.set_size (l_floating_zone.minimum_width, l_floating_zone.minimum_height)
+						end
+					end
+				end
+			end
+		end
+
 	wipe_out is
 			-- Wipe out
 		do

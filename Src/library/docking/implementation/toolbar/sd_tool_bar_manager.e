@@ -52,7 +52,7 @@ feature -- Query
 			-- All tool bar contents.
 
 	content_by_title (a_title: STRING_GENERAL): SD_TOOL_BAR_CONTENT is
-			-- SD_tool_bar_CONTENT which has `a_title'.
+			-- SD_TOOL_BAR_CONTENT which has `a_title'.
 		require
 			a_title_not_void: a_title /= Void
 		do

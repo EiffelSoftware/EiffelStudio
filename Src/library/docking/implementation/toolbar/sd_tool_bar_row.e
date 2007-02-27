@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} has, parent, count, prunable
-			{SD_TOOL_BAR_ZONE} set_item_size
+			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		end
 

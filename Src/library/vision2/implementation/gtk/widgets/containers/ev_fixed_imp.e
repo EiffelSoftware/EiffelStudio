@@ -68,6 +68,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (l_parent_box)
+			{EV_GTK_EXTERNALS}.gtk_container_check_resize (container_widget)
 		end
 
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)

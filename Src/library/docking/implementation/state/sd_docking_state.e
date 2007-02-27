@@ -104,7 +104,7 @@ feature -- Redefine.
 				restore_minimize
 			end
 
-			update_floating_zone_visible (a_data.is_visible)
+			update_floating_zone_visible (zone, a_data.is_visible)
 		end
 
 	record_state is

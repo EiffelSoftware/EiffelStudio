@@ -284,8 +284,13 @@ feature {NONE} -- Implementation
 			end
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
-				all_zones_in_current (l_split_area.first, a_zones)
-				all_zones_in_current (l_split_area.second, a_zones)
+				-- When restoring docking widget layout, this function called from `update_title_bar', widget strucutre maybe NOT full two fork tree structure.
+				if l_split_area.first /= Void then
+					all_zones_in_current (l_split_area.first, a_zones)
+				end
+				if l_split_area.second /= Void then
+					all_zones_in_current (l_split_area.second, a_zones)
+				end
 			end
 		end
 

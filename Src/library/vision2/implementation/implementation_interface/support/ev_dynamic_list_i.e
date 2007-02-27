@@ -64,7 +64,7 @@ feature -- Access
 			-- Result will be zero for all values of `i'
 			-- that are not equal to one
 		require
-			positive_occurances: i > 0
+			positive_occurrences: i > 0
 		local
 			an_index: INTEGER
 		do

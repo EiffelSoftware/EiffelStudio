@@ -79,7 +79,7 @@ feature -- Status Report
 			-- Indicates if switch is optional
 
 	allow_multiple: BOOLEAN
-			-- Indicated if mutiple occurances permitted
+			-- Indicated if mutiple occurrences permitted
 
 	is_hidden: BOOLEAN
 			-- Indicate if switch should be hidden

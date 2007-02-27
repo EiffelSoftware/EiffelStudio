@@ -1,5 +1,5 @@
 indexing
-	description: "Visitor that changes all occurances of a class name to a new name."
+	description: "Visitor that changes all occurrences of a class name to a new name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

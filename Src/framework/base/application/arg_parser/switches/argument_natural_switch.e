@@ -128,7 +128,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 	create_option: ARGUMENT_NATURAL_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make_with_value (name, min.out, Current)
+			create Result.make_with_value (name, Void, Current)
 		end
 
 	create_value_option (a_value: STRING): ARGUMENT_NATURAL_OPTION is

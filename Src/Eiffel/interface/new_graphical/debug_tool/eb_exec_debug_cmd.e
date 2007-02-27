@@ -86,7 +86,6 @@ feature -- Access
 				loop
 					l_sd_item := l_sd_lst.item
 					initialize_sd_toolbar_item (l_sd_item, not l_sd_item.text.is_empty)
-					l_sd_item.refresh_now
 					l_sd_lst.forth
 				end
 			end

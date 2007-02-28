@@ -26,7 +26,7 @@ feature -- Access
 			color: POINTER
 		do
 			if background_color_imp /= Void then
-				Result := background_color_imp.interface
+				Result := background_color_imp.interface.twin
 			else
 				color := background_color_pointer
 				create Result
@@ -44,7 +44,7 @@ feature -- Access
 			color: POINTER
 		do
 			if foreground_color_imp /= Void then
-				Result := foreground_color_imp.interface
+				Result := foreground_color_imp.interface.twin
 			else
 				color := foreground_color_pointer
 				create Result

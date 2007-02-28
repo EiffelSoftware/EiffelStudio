@@ -32,9 +32,10 @@ feature -- Access
 				Result := c_type_table.has_key (feature_name_id)
 				if Result then
 					function_type := c_type_table.found_item
-					if function_type = out_type and then target_type.is_char then
-						char ?= target_type
-						Result := not char.is_wide
+					if function_type = out_type and then target_type.is_character_32 then
+							-- Do not inline `out' on CHARACTER 32 because the code is only
+							-- provided in the Eiffel code.
+						Result := False
 					end
 				end
 			else

@@ -249,9 +249,21 @@ feature -- Status report
 		end
 
 	is_char: BOOLEAN is
-			-- Is the type a char type ?
+			-- Is the type a char type?
 		do
 			-- Do nothing
+		end
+
+	is_character_8: BOOLEAN is
+			-- Is the type a CHARACTER_8 type?
+		do
+
+		end
+
+	is_character_32: BOOLEAN is
+			-- Is the type a CHARACTER_32 type?
+		do
+
 		end
 
 	is_real_32: BOOLEAN is

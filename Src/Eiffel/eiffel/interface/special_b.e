@@ -158,7 +158,7 @@ feature -- Code generation
 				gen_param := gen_type.meta_generic.item (1)
 				if gen_param.is_char then
 					char_i ?= gen_param
-					if char_i.is_wide then
+					if char_i.is_character_32 then
 						wchar_dtype := dtype
 					else
 						char_dtype := dtype

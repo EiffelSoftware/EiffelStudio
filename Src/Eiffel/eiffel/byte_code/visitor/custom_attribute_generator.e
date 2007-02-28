@@ -274,7 +274,7 @@ feature {BYTE_NODE} -- Visitors
 					l_char_attached: l_char /= Void
 					l_char_type_attached: l_char_type /= Void
 				end
-				if l_char_type.is_wide then
+				if l_char_type.is_character_32 then
 					ca_blob.put_natural_32 (l_char.character_value.natural_32_code)
 				else
 					ca_blob.put_character (l_char.character_value.to_character_8)

@@ -10,14 +10,12 @@ test_name 	 lace-vd23-basic
 test_description Violate validity constraint VD23 by excluding a basic class in the Ace
 
 define		EXCLUDE "<exclude>integer_32.e</exclude>"
-define		EXCLUDE_CLASSIC ""
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 compile_melted
 compile_result	validity_error NONE VD23
 
-define		EXCLUDE ""
-define		EXCLUDE_CLASSIC "<exclude>any.e</exclude>"
+define		EXCLUDE "<exclude>any.e</exclude>"
 copy_sub 	Ace $TEST Ace
 resume_compile
 compile_result	validity_error NONE VD23

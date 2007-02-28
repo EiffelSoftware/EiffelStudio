@@ -33,11 +33,7 @@
 				$EXCLUDE
 			</file_rule>
 		</cluster>
-		<cluster name="kernel_classic" location="$KERNEL_CLASSIC\">
-			<file_rule>
-				$EXCLUDE_CLASSIC
-			</file_rule>
-		</cluster>
+		$KERNEL_DOTNET
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

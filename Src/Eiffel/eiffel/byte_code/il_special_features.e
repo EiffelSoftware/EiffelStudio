@@ -65,7 +65,10 @@ feature -- Access
 					if function_type = out_type then
 							-- {REAL_32}.out and {REAL_64}.out are processed
 							-- as non-built-in to avoid issues with locale settings.
-						Result := not target_type.is_real_32 and then not target_type.is_real_64
+							-- {CHARACTER_32}.out is processed as non-built-in since it shows
+							-- an hexadecimal representation of the character.
+						Result := not target_type.is_real_32 and then not target_type.is_real_64 and then
+							not target_type.is_character_32
 					end
 
 				else

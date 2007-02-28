@@ -244,11 +244,11 @@ feature -- Generate Dynamic Library
 			-- Generate "E1/egc_dynlib.o"
 			make_file.put_string ("%N")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/egc_dynlib.o: Makefile $(EIFTEMPLATES)/")
+			make_file.put_string ("/egc_dynlib.o: Makefile %"$(EIFTEMPLATES)/")
 			make_file.put_string (egc_dynlib_file)
-			make_file.put_string ("%N%T$(CP) $(EIFTEMPLATES)/")
+			make_file.put_string ("%"%N%T$(CP) %"$(EIFTEMPLATES)/")
 			make_file.put_string (egc_dynlib_file)
-			make_file.put_string (" ")
+			make_file.put_string ("%" ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/egc_dynlib.c")
 
@@ -576,7 +576,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.put_string ("-I$rt_include ")
+			make_file.put_string ("-I%"$rt_include%" ")
 			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
@@ -601,7 +601,7 @@ feature -- Generation, Header
 
 			generate_specific_defines
 
-			make_file.put_string ("-I$rt_include ")
+			make_file.put_string ("-I%"$rt_include%" ")
 			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
 
 			make_file.put_string ("LDFLAGS = $ldflags%N")
@@ -644,7 +644,7 @@ feature -- Generation, Header
 				%FILE_EXIST = $file_exist%N%
 				%RMDIR = $rmdir%N")
 
-			make_file.put_string ("X2C = $x2c%N")
+			make_file.put_string ("X2C = %"$x2c%"%N")
 			make_file.put_string ("SHAREDLINK = $sharedlink%N")
 			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
 			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
@@ -1087,10 +1087,11 @@ feature -- Generation (Linking rules)
 			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o: Makefile ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/Makefile $(EIFTEMPLATES)/")
+			make_file.put_string ("/Makefile %"$(EIFTEMPLATES)/")
 			make_file.put_string (emain_file)
-			make_file.put_string ("%N%T$(CP) $(EIFTEMPLATES)/")
+			make_file.put_string ("%"%N%T$(CP) %"$(EIFTEMPLATES)/")
 			make_file.put_string (emain_file)
+			make_file.put_character ('"')
 			make_file.put_character (' ')
 			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.c")
@@ -1316,10 +1317,10 @@ feature {NONE} -- Constants
 			-- Addition library if boehm is selected
 		do
 			if not system.uses_ise_gc_runtime and then system.external_runtime.as_lower.is_equal ("boehm") then
-				Result := " \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-boehm/"
+				Result := " %"\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-boehm/"
 				Result.append ("$prefix")
 				Result.append ("$boehmgclib")
-				Result.append ("$suffix")
+				Result.append ("$suffix%"")
 			else
 				Result := ""
 			end

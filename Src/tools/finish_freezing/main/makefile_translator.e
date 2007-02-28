@@ -33,7 +33,7 @@ feature -- Initialization
 			create dependent_directories.make (55)
 			force_32bit := a_force_32bit
 
-			eiffel_dir := short_path (eiffel_layout.eiffel_installation_dir_name)
+			eiffel_dir := eiffel_layout.eiffel_installation_dir_name
 			processor_count := a_processor_count
 
 			uses_precompiled := False
@@ -632,7 +632,6 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			l_need_test, is_emain, is_E1_makefile, is_E1_structure: BOOLEAN
-			emain_line: STRING
 			min: INTEGER
 			dependency: STRING
 			l_target_file: STRING
@@ -676,25 +675,16 @@ feature {NONE} -- Translation
 					makefile.put_string (directory_separator)
 					is_emain := True
 					l_need_test := False
-					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
-					if emain_line.count > 0 then
-						subst_eiffel (emain_line)
-						subst_platform (emain_line)
-						subst_dir_sep (emain_line)
-						makefile.put_string (options.get_string ("emain_obj_text", Void))
-						makefile.put_string (": Makefile ")
-						makefile.put_string (emain_line)
-						makefile.put_string ("%N%T$(MV) ")
-						makefile.put_string (emain_line)
-						makefile.put_character (' ')
-						makefile.put_string (dir)
-						makefile.put_string (directory_separator)
-						makefile.put_string ("emain.c%N")
-						read_next
-					else
-						makefile.put_string (options.get_string ("emain_obj_text", Void))
-						makefile.put_string (": Makefile%N")
-					end
+					subst_dir_sep (dependency)
+					makefile.put_string (options.get_string ("emain_obj_text", Void))
+					makefile.put_string (": ")
+					makefile.put_string (dependency)
+					makefile.put_new_line
+					read_next
+					lastline := makefile_sh.last_string.twin
+					subst_dir_sep (lastline)
+					makefile.put_string (lastline)
+					makefile.put_new_line
 				elseif filename.is_equal ("Makefile") and then dir.is_equal ("E1") then
 					is_E1_makefile := True
 				elseif filename.is_equal ("estructure") and then dir.is_equal ("E1") then
@@ -1659,6 +1649,7 @@ feature {NONE} -- Implementation
 				wordend > line.count
 				or else line.item (wordend) = ' '
 				or line.item (wordend) = '/'
+				or line.item (wordend) = '"'
 				or line.item (wordend) = '\'
 				or else line.item (wordend) = '%N'
 				or else line.item (wordend) = '%T'
@@ -1691,9 +1682,6 @@ feature {NONE} -- Implementation
 					Result := replacement
 				else
 					Result := eiffel_layout.get_environment (word)
-					if Result /= Void and then not Result.is_empty then
-						Result := short_path (Result.twin)
-					end
 				end
 			end
 		end

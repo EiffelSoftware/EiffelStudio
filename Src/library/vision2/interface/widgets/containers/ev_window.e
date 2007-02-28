@@ -412,6 +412,8 @@ feature {NONE} -- Implementation
 			create {EV_WINDOW_IMP} implementation.make (Current)
 		end
 
+feature {EV_IDENTIFIABLE} -- Implementation
+
 	identifier_path_separator: CHARACTER is
 			-- Character used to separate path to children.
 		once

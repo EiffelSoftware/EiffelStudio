@@ -28,6 +28,9 @@ create
 	default_create,
 	make
 
+create {EV_LITE_ACTION_SEQUENCE}
+	make_filled
+
 feature -- Basic operations
 
 	call (event_data: EVENT_DATA) is

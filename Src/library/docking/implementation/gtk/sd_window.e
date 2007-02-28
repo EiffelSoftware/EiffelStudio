@@ -11,7 +11,8 @@ class
 inherit
 	EV_WINDOW
 		redefine
-			create_implementation
+			create_implementation,
+			initialize
 		end
 
 feature {NONE} -- Implementation
@@ -20,6 +21,14 @@ feature {NONE} -- Implementation
 			-- Redefine
 		do
 			create {SD_WINDOW_IMP} implementation.make (Current)
+		end
+
+	initialize is
+			-- Redefine
+		do
+			Precursor {EV_WINDOW}
+			disable_border
+			disable_user_resize
 		end
 
 indexing

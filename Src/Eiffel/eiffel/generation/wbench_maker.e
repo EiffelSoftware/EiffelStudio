@@ -228,16 +228,18 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
+				-- We use " in case the path as spaces in it.
 			create Result.make (256)
 
 			if System.has_dynamic_runtime then
 				Result.append ("-L")
 			end
 
+			Result.append_character ('"')
 			Result.append (Lib_location)
 
 			if System.has_dynamic_runtime then
-				Result.append (" -l")
+				Result.append ("%" -l")
 			else
 				Result.append ("$prefix")
 			end
@@ -250,6 +252,10 @@ feature
 
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
+			end
+
+			if not System.has_dynamic_runtime then
+				Result.append_character ('"')
 			end
 
 			Result.append (boehm_library)

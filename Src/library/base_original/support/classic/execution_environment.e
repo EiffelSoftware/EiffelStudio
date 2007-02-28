@@ -109,8 +109,11 @@ feature -- Status setting
 
 	change_working_directory (path: STRING) is
 			-- Set the current directory to `path'
+		local
+			l_ext: ANY
 		do
-			return_code := eif_chdir (path.to_c)
+			l_ext := path.to_c
+			return_code := eif_chdir ($l_ext)
 		end
 
 	put (value, key: STRING) is
@@ -253,7 +256,7 @@ feature {NONE} -- External
 			"putenv"
 		end
 
-	eif_chdir (s: ANY): INTEGER is
+	eif_chdir (s: POINTER): INTEGER is
 			-- Set the current directory to `path'
 		external
 			"C use %"eif_dir.h%""

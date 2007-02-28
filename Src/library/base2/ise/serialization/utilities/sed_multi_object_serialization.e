@@ -9,6 +9,8 @@ class
 	SED_MULTI_OBJECT_SERIALIZATION
 
 inherit
+	ANY
+
 	SED_STORABLE_FACILITIES
 		export
 			{NONE} all

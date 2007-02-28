@@ -281,7 +281,7 @@ feature -- Size issues
 			-- Start y position of drawing a close button
 		local
 			l_platform: PLATFORM
-		once
+		do
 			create l_platform
 			if l_platform.is_windows then
 				Result := height - internal_shared.icons.close.height - close_background_expand * 2

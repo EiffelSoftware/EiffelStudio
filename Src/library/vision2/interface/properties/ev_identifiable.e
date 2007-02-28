@@ -105,7 +105,6 @@ feature {EV_IDENTIFIABLE} -- Implementation
 			Result := '.'
 		end
 
-
 feature {NONE} -- Implementation
 
 	internal_name: STRING

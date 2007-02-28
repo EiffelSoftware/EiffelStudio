@@ -349,6 +349,7 @@ stick (a_direction: INTEGER) is
 			l_spliter: EV_SPLIT_AREA
 		do
 			Precursor {SD_STATE}
+			internal_docking_manager.command.recover_normal_state
 			zone.hide
 			l_spliter ?= zone.parent
 			if l_spliter /= Void and then l_spliter.is_displayed then

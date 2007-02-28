@@ -11,8 +11,6 @@ feature -- Initialization
 
 	make is
 			-- Creation procedure.
-		local
-			i64: INTEGER_64
 		do
 				-- 8 bit
 			io.put_string ("8bit tests%N")

@@ -5,8 +5,7 @@ test_description Validity rules for semistrict operators.
 
 define EXCLUDE ""
 
-if DOTNET copy_sub Ace_dotnet $TEST Ace
-if not DOTNET copy_sub Ace $TEST Ace
+copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 copy_raw b.e    $CLUSTER b.e
 
@@ -62,8 +61,7 @@ compile_result validity_error C VFAV(4)
 
 define EXCLUDE "<exclude>boolean.e</exclude>"
 
-if DOTNET copy_sub Ace_dotnet $TEST Ace
-if not DOTNET copy_sub Ace $TEST Ace
+copy_sub Ace $TEST Ace
 copy_raw boolean.e $CLUSTER boolean.e
 
 -- Inheritance from BOOLEAN: error is reported twice because of implementation

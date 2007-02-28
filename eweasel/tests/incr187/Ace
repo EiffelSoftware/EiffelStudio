@@ -24,12 +24,11 @@
 		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF" />
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
-
 		<cluster name="access" location="$ACCESS\"/>
 		<cluster name="base" location="${ISE_EIFFEL}\library\base\">
-			<cluster name="kernel" location="$|kernel\"/>
-			<cluster name="kernel_classic" location="$KERNEL_CLASSIC\"/>
+			$KERNEL_CLASSIC
 		</cluster>
+		$KERNEL_DOTNET
 		<cluster name="cursor_tree" location="$CURSOR_TREE\"/>
 		<cluster name="cursors" location="$CURSORS\"/>
 		<cluster name="dispenser" location="$DISPENSER\"/>
@@ -41,7 +40,7 @@
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>
 		<cluster name="support" location="$SUPPORT\"/>
-		<cluster name="support_classic" location="$SUPPORT_CLASSIC\"/>
+		$SUPPORT_DOTNET
 		<cluster name="table" location="$TABLE\"/>
 		<cluster name="traversing" location="$TRAVERSING\"/>
 		<cluster name="tree" location="$TREE\"/>

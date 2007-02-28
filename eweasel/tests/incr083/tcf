@@ -9,18 +9,21 @@
 test_name 	 exclude-any-add-back
 test_description A system compiles correctly without a precompiled cluster.  Then file "any.e" is excluded from the kernel cluster.  After the VD23 errors are reported, the exclude clause is removed and compilation is resumed
 
-define		 EXCLUDE ""
+if DOTNET define EXCLUDE "<exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude>"
+if not DOTNET define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 EXCLUDE "<exclude>any.e</exclude>"
+if DOTNET define EXCLUDE "<exclude>any.e</exclude><exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude>"
+if not DOTNET define		 EXCLUDE "<exclude>any.e</exclude>"
 copy_sub 	 Ace $TEST Ace
 compile_melted
 compile_result 	 validity_error NONE VD23
 
-define		 EXCLUDE ""
+if DOTNET define EXCLUDE "<exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude>"
+if not DOTNET define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 resume_compile
 compile_result 	 ok

@@ -359,46 +359,6 @@ feature -- Element change
 			-- currently defined bounds; preserve existing items.
 		do
 			if i < lower then
---				auto_resize (i, upper)
-				--start
---				(agent (min_index, max_index: INTEGER)
---			-- Rearrange array so that it can accommodate
---			-- indices down to `min_index' and up to `max_index'.
---			-- Do not lose any previously entered item.
---			-- If area must be extended, ensure that space for at least
---			-- additional_space item is added.
---					require
---						valid_indices: min_index <= max_index
---					local
---						old_size, new_size: INTEGER
---						new_lower, new_upper: INTEGER
---					do
---						if empty_area then
---							new_lower := min_index
---							new_upper := max_index
---						else
---							new_lower := min_index.min (lower)
---							new_upper := max_index.max (upper)
---						end
---						new_size := new_upper - new_lower + 1
---						if not empty_area then
---							old_size := area.count
---							if new_size > old_size
---								 and new_size - old_size < additional_space
---							then
---								new_size := old_size + additional_space
---							end
---						end
---						if empty_area then
---							make_area (new_size)
---						elseif new_size > old_size or new_lower < lower then
---							area := area.aliased_resized_area_and_keep (new_size, lower - new_lower, capacity)
---						end
---						lower := new_lower
---						upper := new_upper
---					end (?, upper)).call ([i])
-
-				--end
 			elseif i > upper then
 				auto_resize (lower, i)
 			end
@@ -574,6 +534,8 @@ feature -- Resizing
 		local
 			old_size, new_size, old_count: INTEGER
 			new_lower, new_upper: INTEGER
+			offset: INTEGER
+			v: G
 		do
 			if empty_area then
 				new_lower := min_index
@@ -589,8 +551,15 @@ feature -- Resizing
 			end
 			if empty_area then
 				make_area (new_size)
-			elseif new_size > old_size or new_lower < lower then
-				area := area.aliased_resized_area_and_keep (new_size, lower - new_lower, old_count)
+			else
+				if new_size > old_size then
+					area := area.aliased_resized_area (new_size)
+				end
+				if new_lower < lower then
+					offset := lower - new_lower
+					area.move_data (0, offset, old_count)
+					area.fill_with (v, 0, offset - 1)
+				end
 			end
 			lower := new_lower
 			upper := new_upper
@@ -720,6 +689,8 @@ feature {NONE} -- Implementation
 		local
 			old_size, new_size: INTEGER
 			new_lower, new_upper: INTEGER
+			offset: INTEGER
+			v: G
 		do
 			if empty_area then
 				new_lower := min_index
@@ -739,8 +710,15 @@ feature {NONE} -- Implementation
 			end
 			if empty_area then
 				make_area (new_size)
-			elseif new_size > old_size or new_lower < lower then
-				area := area.aliased_resized_area_and_keep (new_size, lower - new_lower, capacity)
+			else
+				if new_size > old_size then
+					area := area.aliased_resized_area (new_size)
+				end
+				if new_lower < lower then
+					offset := lower - new_lower
+					area.move_data (0, offset, capacity)
+					area.fill_with (v, 0, offset - 1)
+				end
 			end
 			lower := new_lower
 			upper := new_upper

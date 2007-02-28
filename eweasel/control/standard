@@ -8,10 +8,11 @@
 
 -- Eiffelbase directories
 
-define_directory	BASE	 	$ISE_EIFFEL library base
+define_directory	BASE	 	$ISE_EIFFEL library base elks
+define_directory	BASE_ISE 	$ISE_EIFFEL library base ise
 define_directory	KERNEL		$BASE kernel
 define_directory	REFACTORING	$BASE refactoring
-define_directory	SERIALIZATION	$BASE serialization
+define_directory	SERIALIZATION	$BASE_ISE serialization
 define_directory	SUPPORT		$BASE support
 define_directory	ACCESS		$BASE structures access
 define_directory	CURSORS		$BASE structures cursors

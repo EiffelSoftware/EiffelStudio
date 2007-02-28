@@ -282,7 +282,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 				-- This will return `c_object' if not toplevel window is found in hierarchy.
-			if l_window /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_widget_toplevel (l_window) and then {EV_GTK_EXTERNALS}.gtk_window_has_toplevel_focus (l_window) then
+			if l_window /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_widget_toplevel (l_window) and then {EV_GTK_EXTERNALS}.gtk_window_is_active (l_window) then
 				l_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (l_window)
 				if l_widget /= default_pointer then
 					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)

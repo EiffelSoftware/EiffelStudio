@@ -149,9 +149,16 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			-- Pixmap position.
 		require
 			has_parent: tool_bar /= Void
+		local
+			l_platform: PLATFORM
 		do
 			if tool_bar /= Void then
-				create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width)
+				create l_platform
+				if l_platform.is_windows then
+					create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + tool_bar.border_width)
+				else
+					create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + pixmap_y_position)
+				end
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					Result.set_x (Result.x + 1)
 					Result.set_y (Result.y + 1)
@@ -163,18 +170,42 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			not_void: Result /= Void
 		end
 
+	pixmap_y_position: INTEGER is
+			-- Pixmap positon relative to Current.
+			-- This feature not be used on Windows temporary.
+		once
+			if pixel_buffer /= Void or pixmap /= Void then
+				Result := (tool_bar.standard_height / 2).ceiling
+				if pixel_buffer /= Void then
+					Result := Result - (pixel_buffer.height / 2).floor
+				else
+					-- pixmap not void
+					Result := Result - (pixmap.height / 2).floor
+				end
+			else
+				Result := tool_bar.border_width
+			end
+		end
+
 	text_rectangle: EV_RECTANGLE is
 			-- Text rectangle.
 		require
 			has_parent: tool_bar /= Void
 		local
 			l_left, l_top, l_width, l_height: INTEGER
+			l_platform: PLATFORM
 		do
 			if tool_bar /= Void then
 				l_left := text_left
 				l_width := text_width
-				l_top := tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width
-				l_height := tool_bar.row_height - 2 * {SD_TOOL_BAR}.border_width
+				create l_platform
+				if l_platform.is_windows then
+					l_top := tool_bar.item_y (Current) + tool_bar.border_width
+					l_height := tool_bar.row_height - 2 * tool_bar.border_width
+				else
+					l_top := tool_bar.item_y (Current) + tool_bar.border_width - 1
+					l_height := tool_bar.row_height - tool_bar.border_width
+				end
 
 				create Result.make (l_left, l_top, l_width, l_height)
 

@@ -38,6 +38,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
+			create internal_shared
 			internal_row_height := standard_height
 			create internal_items.make (1)
 			expose_actions.extend (agent on_expose)
@@ -52,21 +53,10 @@ feature {NONE} -- Initlization
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_veto_pebble_function)
 
-			create internal_shared
 			set_background_color (internal_shared.default_background_color)
 		end
 
 feature -- Properties
-
-	set_row_height (a_height: INTEGER) is
-			-- Set `row_height'
-		require
-			valid: a_height > 0
-		do
-			internal_row_height := a_height
-		ensure
-			set: is_row_height_set (a_height)
-		end
 
 	row_height: INTEGER is
 			-- Height of row.
@@ -213,8 +203,18 @@ feature -- Query
 			Result := internal_items.has (a_item)
 		end
 
-	border_width: INTEGER is 4
+	border_width: INTEGER is
 			-- Border width.
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := 4
+			else
+				Result := (internal_shared.tool_bar_font.height / 2).floor
+			end
+		end
 
 	padding_width: INTEGER is 4
 			-- Padding width.
@@ -228,8 +228,7 @@ feature -- Query
 			if l_platform.is_windows then
 				Result := 23
 			else
-				-- On Linux it's a little bit bigger.
-				Result := 25
+				Result := internal_shared.tool_bar_font.height + 2 * border_width
 			end
 		end
 

@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			create close_request_actions
 			create custom_actions
 
-			tool_bar.set_row_height (l_shared.floating_title_bar_height)
 			tool_bar.compute_minimum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)

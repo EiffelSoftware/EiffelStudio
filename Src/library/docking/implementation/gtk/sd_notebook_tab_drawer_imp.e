@@ -111,7 +111,7 @@ feature -- Command
 					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 					a_pixmap.set_font (l_font)
 					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, close_clipping_width (a_width))
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height + 1, text, close_clipping_width (a_width))
 					else
 						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, text_clipping_width (a_width))
 					end
@@ -119,9 +119,9 @@ feature -- Command
 				-- Draw pixmap
 				if is_draw_pixmap then
 					if is_top_side_tab then
-						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, pixmap_y_position + 1, pixmap)
 					else
-						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, pixmap_y_position + 1, pixmap)
 					end
 				end
 
@@ -140,16 +140,26 @@ feature -- Command
 			a_pixmap.set_font (l_font)
 			if is_top_side_tab then
 				-- Draw pixmap
-				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, pixmap_y_position, pixmap)
 				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text, close_clipping_width (a_width))
 			else
 				-- Draw pixmap
-				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, pixmap_y_position, pixmap)
 				-- Draw text
 				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text, text_clipping_width (a_width))
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)
+		end
+
+	pixmap_y_position: INTEGER is
+			-- Pixmap positon relative to Current.
+		do
+			if pixmap /= Void then
+				Result := (height / 2 - pixmap.height / 2).floor - 1
+			else
+				Result := start_y_position_text
+			end
 		end
 
 feature {NONE}  -- Implementation	
@@ -160,8 +170,11 @@ feature {NONE}  -- Implementation
 	start_y_position: INTEGER is 1
 			-- Redefine
 
-	start_y_position_text: INTEGER is 2
+	start_y_position_text: INTEGER is
 			-- Redefine
+		do
+			Result := internal_shared.tool_bar_font.height // 3 - 2
+		end
 
 	clear (a_width, a_x: INTEGER) is
 			-- Clear `internal_tab''s area.

@@ -57,7 +57,7 @@ feature {NONE}  -- Initlization
 
 			-- set_minimum_height is not needed on Windows.
 			-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
-			set_minimum_height ({SD_SHARED}.notebook_tab_height + 3)
+			set_minimum_height (internal_shared.notebook_tab_height + 3)
 
 			internal_border_for_tab_area.extend (internal_tab_box)
 			internal_tab_box.set_gap (False)

@@ -244,7 +244,7 @@ feature -- Execution
 				destroy
 			end
 			if rescued or else not success then
-				if is_displayed then
+				if not is_destroyed and then is_displayed then
 					display_error_message (Current)
 				else
 					display_error_message (parent_window)

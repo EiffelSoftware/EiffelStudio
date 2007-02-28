@@ -111,23 +111,36 @@ feature -- Access
 
 	foreground_color: EV_COLOR is
 			-- Color used to draw primitives.
+		local
+			l_red, l_green, l_blue: INTEGER
 		do
 			if internal_foreground_color /= Void then
-				Result := internal_foreground_color
+				l_red := internal_foreground_color.red_8_bit
+				l_green := internal_foreground_color.green_8_bit
+				l_blue := internal_foreground_color.blue_8_bit
 			else
-				create Result.make_with_rgb (0, 0, 0)
+					-- We default to black
 			end
+			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
 
 	background_color: EV_COLOR is
 			-- Color used for erasing of canvas.
 			-- Default: white.
+		local
+			l_red, l_green, l_blue: INTEGER
 		do
 			if internal_background_color /= Void then
-				Result := internal_background_color
+				l_red := internal_background_color.red_8_bit
+				l_green := internal_background_color.green_8_bit
+				l_blue := internal_background_color.blue_8_bit
 			else
-				create Result.make_with_rgb (1.0, 1.0, 1.0)
+					-- We default to white
+				l_red := 255
+				l_green := 255
+				l_blue := 255
 			end
+			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
 
 	line_width: INTEGER is
@@ -206,8 +219,13 @@ feature -- Element change
 		local
 			color_struct: POINTER
 		do
-			if internal_background_color /= a_color then
-				internal_background_color := a_color
+			if internal_background_color = Void then
+				create internal_background_color.make_with_8_bit_rgb (255, 255, 255)
+			end
+			if not internal_background_color.is_equal (a_color) then
+				internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
+				internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
+				internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
@@ -221,8 +239,13 @@ feature -- Element change
 		local
 			color_struct: POINTER
 		do
-			if internal_foreground_color /= a_color then
-				internal_foreground_color := a_color
+			if internal_foreground_color = Void then
+				create internal_foreground_color
+			end
+			if not internal_foreground_color.is_equal (a_color) then
+				internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
+				internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
+				internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
 				color_struct := App_implementation.reusable_color_struct
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)

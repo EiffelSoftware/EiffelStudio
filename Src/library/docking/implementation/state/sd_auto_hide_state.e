@@ -138,7 +138,7 @@ feature -- Redefine.
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
 			-- Redefine
 		do
-			tab_stub.on_redraw (0, 0, tab_stub.width, tab_stub.height)
+			tab_stub.on_expose (0, 0, tab_stub.width, tab_stub.height)
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is

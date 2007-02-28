@@ -279,8 +279,15 @@ feature -- Size issues
 
 	start_y_close: INTEGER is
 			-- Start y position of drawing a close button
-		do
-			Result := height  - internal_shared.icons.close.height - close_background_expand * 2
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := height - internal_shared.icons.close.height - close_background_expand * 2
+			else
+				Result :=(height / 2  - (internal_shared.icons.close.height - close_background_expand * 2) / 2).floor - 1
+			end
 		end
 
 	close_rectangle: EV_RECTANGLE is

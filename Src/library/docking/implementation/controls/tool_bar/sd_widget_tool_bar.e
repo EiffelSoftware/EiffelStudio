@@ -21,7 +21,6 @@ inherit
 			is_in_default_state,
 			is_equal
 		redefine
-			set_row_height,
 			row_height,
 			extend,
 			force,
@@ -106,12 +105,6 @@ feature {NONE} -- Initlization
 		end
 
 feature -- Properties
-
-	set_row_height (a_height: INTEGER) is
-			-- Set height of row.
-		do
-			tool_bar.set_row_height (a_height)
-		end
 
 	row_height: INTEGER is
 			--  Height of row.

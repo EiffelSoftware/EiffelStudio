@@ -38,7 +38,7 @@ feature {NONE} -- Initlization
 			end
 			content := a_content
 			create internal_drawing_area
-			internal_drawing_area.expose_actions.extend (agent on_redraw)
+			internal_drawing_area.expose_actions.extend (agent on_expose)
 
 			extend (internal_box)
 			internal_box.extend (internal_drawing_area)
@@ -54,7 +54,7 @@ feature {NONE} -- Initlization
 			init_separator (a_direction)
 			set_text (a_content.short_title)
 
-			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 
 			create pointer_press_actions
 			create delay_timer
@@ -149,7 +149,7 @@ feature -- Command
 			internal_text := a_text
 			set_text_size (internal_drawing_area.font.string_width (a_text))
 			update_size_internal
-			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
 			set: internal_text = a_text
 		end
@@ -216,7 +216,7 @@ feature -- Properties
 		do
 			is_show_text := a_show
 			update_size_internal
-			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
 			set: is_show_text = a_show
 		end
@@ -280,7 +280,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 feature {SD_AUTO_HIDE_STATE} -- Expose handling
 
-	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle redraw.
 		local
 			l_imp: EV_DRAWING_AREA_IMP
@@ -339,6 +339,8 @@ feature {NONE} -- Implementation
 
 	start_x_pixmap_internal: INTEGER is
 			-- Start x position when `on_draw' draw pixmap.
+		local
+			l_platform: PLATFORM
 		do
 			if is_draw_separator_left then
 				Result := Result + 1
@@ -346,36 +348,62 @@ feature {NONE} -- Implementation
 			if not is_vertical then
 				Result := Result + padding_width
 			else
-				Result := Result + 1
+				create l_platform
+				if l_platform.is_windows then
+					Result := Result + 1
+				else
+					Result := Result + (width / 2 - content.pixmap.width / 2).floor
+				end
 			end
 		end
 
 	start_y_pixmap_internal: INTEGER is
 			-- Start y position when `on_draw' draw pixmap.
+		local
+			l_platform: PLATFORM
 		do
 			if is_draw_separator_top then
 				Result := Result + 3
 			end
 			if is_vertical then
 				Result := Result + padding_width // 2
+			else
+				create l_platform
+				if not l_platform.is_windows then
+					Result := (height / 2 - content.pixmap.height / 2).floor
+				end
 			end
 		end
 
 	start_x_text_internal: INTEGER is
 			-- Start x position when `on_draw' draw text.
+		local
+			l_platform: PLATFORM
 		do
 			if not is_vertical then
 				Result := start_x_pixmap_internal + content.pixmap.width + padding_width
 			else
-				Result := start_x_pixmap_internal + padding_width
+				create l_platform
+				if l_platform.is_windows then
+					Result := start_x_pixmap_internal + padding_width
+				else
+					Result := (width / 2 + internal_shared.tool_bar_font.height / 2).floor - 8
+				end
 			end
 		end
 
 	start_y_text_internal: INTEGER is
 			-- Start y position when `on_draw' draw text.
+		local
+			l_platform: PLATFORM
 		do
 			if not is_vertical then
-				Result := start_y_pixmap_internal - 2 + padding_width // 2
+				create l_platform
+				if l_platform.is_windows then
+					Result := start_y_pixmap_internal - 2 + padding_width // 2
+				else
+					Result := (height / 2 - internal_shared.tool_bar_font.height / 2).floor - 1
+				end
 			else
 				Result := start_y_pixmap_internal + content.pixmap.height + padding_width // 2
 			end

@@ -41,7 +41,6 @@ feature {NONE}  -- Initlization
 			end
 
 			create internal_tool_bar.make
-			internal_tool_bar.set_row_height (internal_shared.notebook_tab_height + 3)
 
 			create internal_auto_hide_indicator.make
 			internal_auto_hide_indicator.set_tooltip (internal_shared.interface_names.tooltip_notebook_hidden_tab_indicator)

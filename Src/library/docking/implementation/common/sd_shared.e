@@ -366,8 +366,18 @@ feature -- Constants
 	Auto_hide_panel_lightness: REAL is 0.5
 			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
 
-	Auto_hide_panel_size: INTEGER is 20
+	Auto_hide_panel_size: INTEGER is
 			-- Width of auto hide panel.
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := 20
+			else
+				Result := notebook_tab_height
+			end
+		end
 
 	Auto_hide_panel_gap_size: INTEGER is 4
 			-- Auto hide panel's Gap size.
@@ -387,13 +397,22 @@ feature -- Constants
 			if l_platform.is_windows then
 				Result := 18
 			else
-				-- For Linux is a little bit bigger.
-				Result := 23
+				Result := tool_bar_font.height * 3 // 2 + 2
 			end
 		end
 
-	Notebook_tab_height: INTEGER is 18
+	Notebook_tab_height: INTEGER is
 			-- Notebook tab height.
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := 18
+			else
+				Result := tool_bar_font.height * 3 // 2
+			end
+		end
 
 	Zone_minmum_width: INTEGER is
 			-- Minmum width of a zone.

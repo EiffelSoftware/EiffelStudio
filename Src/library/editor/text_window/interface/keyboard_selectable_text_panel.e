@@ -929,7 +929,7 @@ feature {NONE} -- Implementation
 				set_first_line_displayed (cur_pos, False)
 			elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
 				l_fld := cur_pos - number_of_lines_displayed + 1
-				if l_fld <= text_displayed.number_of_lines.max (1) then
+				if l_fld <= text_displayed.number_of_lines.max (1) and vertical_scrollbar.value_range.has (l_fld) then
 					set_first_line_displayed (l_fld, False)
 				end
 			end

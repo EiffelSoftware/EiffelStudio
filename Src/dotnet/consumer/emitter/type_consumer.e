@@ -81,12 +81,16 @@ feature {NONE} -- Initialization
 
 			l_force_sealed := t.is_sealed
 			if not l_force_sealed and then (t.is_interface or t.is_abstract) then
-					-- For non-Eiffel compliant interfaces we need to force them to be frozen
-					-- so they cannot be descended, which would result in an incomplete interface
-					-- implementation, because of the non-compliant members
-				l_ab_type ?= checked_type (t)
-				if l_ab_type /= Void then
-					l_force_sealed := not l_ab_type.is_eiffel_compliant_interface
+					-- Enum and ValueType should not be decended from in Eiffel
+				l_force_sealed := t.equals_type (enum_type) or t.equals_type (value_type_type)
+				if not l_force_sealed then
+						-- For non-Eiffel compliant interfaces we need to force them to be frozen
+						-- so they cannot be descended, which would result in an incomplete interface
+						-- implementation, because of the non-compliant members
+					l_ab_type ?= checked_type (t)
+					if l_ab_type /= Void then
+						l_force_sealed := not l_ab_type.is_eiffel_compliant_interface
+					end
 				end
 			end
 
@@ -96,11 +100,11 @@ feature {NONE} -- Initialization
 					is_declaring_type_consumed: is_consumed_type (t.declaring_type)
 				end
 				create {CONSUMED_NESTED_TYPE} consumed_type.make (
-					dotnet_name, en, t.is_interface, t.is_abstract,
+					dotnet_name, en, t.is_interface, (not l_force_sealed and then t.is_abstract),
 					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces,
 					referenced_type_from_type (t.declaring_type))
 			else
-				create consumed_type.make (dotnet_name, en, t.is_interface, t.is_abstract,
+				create consumed_type.make (dotnet_name, en, t.is_interface, (not l_force_sealed and then t.is_abstract),
 					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces)
 			end
 
@@ -156,7 +160,6 @@ feature -- Access
 feature {NONE} --Implementation
 
 	overload_solver: OVERLOAD_SOLVER
-
 
 feature -- Status Report
 
@@ -1235,17 +1238,17 @@ feature {NONE} -- Added features for ENUM types.
 	Additional_enum_features: INTEGER is 3
 			-- Number of additional features for enum types.
 
-	infix_and_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	infix_and_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for `&' in enum type `t'.
 		require
-			enum_type_not_void: enum_type /= Void
+			a_enum_type_not_void: a_enum_type /= Void
 		local
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("other", "other", enum_type)
+			create l_arg.make ("other", "other", a_enum_type)
 			l_args := <<l_arg>>
-			create Result.make ("&", "&", "&", l_args, enum_type,
+			create Result.make ("&", "&", "&", l_args, a_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1255,21 +1258,21 @@ feature {NONE} -- Added features for ENUM types.
 				False,  -- is_new_slot
 				True,	-- is_virtual
 				False,	-- is_property_or_event
-				enum_type)
+				a_enum_type)
 			Result.set_is_artificially_added (True)
 		end
 
-	infix_or_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	infix_or_feature (a_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for `|' in enum type `t'.
 		require
-			enum_type_not_void: enum_type /= Void
+			a_enum_type_not_void: a_enum_type /= Void
 		local
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("other", "other", enum_type)
+			create l_arg.make ("other", "other", a_enum_type)
 			l_args := <<l_arg>>
-			create Result.make ("|", "|", "|", l_args, enum_type,
+			create Result.make ("|", "|", "|", l_args, a_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1279,21 +1282,21 @@ feature {NONE} -- Added features for ENUM types.
 				False,  -- is_new_slot
 				True,	-- is_virtual
 				False,	-- is_property_or_event
-				enum_type)
+				a_enum_type)
 			Result.set_is_artificially_added (True)
 		end
 
-	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE; underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	from_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for`from_integer' in enum type `t'.
 		require
-			enum_type_not_void: enum_type /= Void
+			a_enum_type_not_void: a_enum_type /= Void
 		local
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("a_value", "a_value", underlying_enum_type)
+			create l_arg.make ("a_value", "a_value", a_underlying_enum_type)
 			l_args := <<l_arg>>
-			create Result.make ("from_integer", "from_integer", "from_integer", l_args, enum_type,
+			create Result.make ("from_integer", "from_integer", "from_integer", l_args, a_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1303,19 +1306,19 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_new_slot
 				True,	-- is_virtual
 				False,	-- is_property_or_event
-				enum_type)
+				a_enum_type)
 			Result.set_is_artificially_added (True)
 		end
 
-	to_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE; underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	to_integer_feature (a_enum_type: CONSUMED_REFERENCED_TYPE; a_underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for`to_integer' in enum type `t'.
 		require
-			enum_type_not_void: enum_type /= Void
+			a_enum_type_not_void: a_enum_type /= Void
 		local
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			create l_args.make (1, 0)
-			create Result.make ("to_integer", "to_integer", "to_integer", l_args, underlying_enum_type,
+			create Result.make ("to_integer", "to_integer", "to_integer", l_args, a_underlying_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1325,7 +1328,7 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_new_slot
 				True,	-- is_virtual
 				False,	-- is_property_or_event
-				enum_type)
+				a_enum_type)
 			Result.set_is_artificially_added (True)
 		end
 
@@ -1409,6 +1412,22 @@ feature {NONE} -- Added features for ENUM types.
 			-- typeof (float)
 		once
 			Result := {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
+		end
+
+	enum_type: SYSTEM_TYPE is
+			-- typeof (System.Enum)
+		once
+			Result := {ENUM}
+		ensure
+			result_attached: Result /= Void
+		end
+
+	value_type_type: SYSTEM_TYPE is
+			-- typeof (System.ValueType)
+		once
+			Result := {VALUE_TYPE}
+		ensure
+			result_attached: Result /= Void
 		end
 
 indexing

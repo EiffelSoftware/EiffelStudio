@@ -311,12 +311,12 @@ rt_public EIF_CHARACTER eif_dir_separator (void)
 #endif
 }
 
-rt_public EIF_INTEGER eif_chdir (EIF_OBJECT path)
+rt_public EIF_INTEGER eif_chdir (char * path)
 {
 	/* Set current dir to `path'
 	 * Returns the error status
 	 */
-	return chdir (eif_access(path));
+	return chdir (path);
 }
 
 rt_public EIF_BOOLEAN eif_dir_exists(char *name)

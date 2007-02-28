@@ -75,7 +75,7 @@ rmdir: "rd"
 
 -- make program
 make: "nmake -s -nologo"
-command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=$(ISE_EIFFEL) -f %%i%""
+command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
 
 dpflags: ""
 
@@ -86,7 +86,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%Tlink @$appl.lnk%N%
 %%N%
 %..\..\..\$appl.rc:%N%
-%%Tif not exist ..\..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$appl.rc%N%
+%%Tif not exist ..\..\..\$appl.rc $(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" ..\..\..\$appl.rc%N%
 %%N%
 %$appl.res: ..\..\..\$appl.rc Makefile%N%
 %%Trc -r -fo$appl.res ..\..\..\$appl.rc%N%
@@ -112,8 +112,8 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tif exist driver.exe $(RM) driver.exe%N%
 %%Tif exist precomp.lib $(RM) precomp.lib%N%
 %%N%
-%driver.rc: $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%driver.rc: %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%"%N%
+%%T$(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" driver.rc%N%
 %%N%
 %driver.res: driver.rc%N%
 %%Trc -r driver.rc%N%
@@ -142,7 +142,7 @@ cecil_def: "%
 %%Tif exist $@ $(RM) $@%N%
 %%Techo LIBRARY c_$appl.dll > $@%N%
 %%Techo DESCRIPTION %'c_$appl.dll%' >> $@%N%
-%%Ttype $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\templates\cecil.def  >> $@"
+%%Ttype %"$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\templates\cecil.def%"  >> $@"
 
 cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
 	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"
@@ -157,7 +157,7 @@ il_system_compilation_line: "%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
 	%..\..\..\$(IL_RESOURCE).rc:%N%
-	%%Tif not exist ..\..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$(IL_RESOURCE).rc%N%
+	%%Tif not exist ..\..\..\$(IL_RESOURCE).rc $(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" ..\..\..\$(IL_RESOURCE).rc%N%
 	%%N%
 	%$(IL_RESOURCE).res: ..\..\..\$(IL_RESOURCE).rc Makefile%N%
 	%%Trc -r -fo$(IL_RESOURCE).res ..\..\..\$(IL_RESOURCE).rc%N"

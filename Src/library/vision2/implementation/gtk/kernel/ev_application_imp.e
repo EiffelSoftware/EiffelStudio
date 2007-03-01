@@ -518,8 +518,8 @@ feature -- Access
 			Result := keyboard_modifier_mask & {EV_GTK_EXTERNALS}.gdk_shift_mask_enum = {EV_GTK_EXTERNALS}.gdk_shift_mask_enum
 		end
 
-	caps_lock_pressed: BOOLEAN is
-			-- Is the Caps or Shift Lock key currently pressed?
+	caps_lock_on: BOOLEAN is
+			-- Is the Caps or Shift Lock key currently on?
 		do
 			Result := keyboard_modifier_mask & {EV_GTK_EXTERNALS}.gdk_lock_mask_enum = {EV_GTK_EXTERNALS}.gdk_lock_mask_enum
 		end

@@ -41,6 +41,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} set_position, set_size, screen_x, screen_y
+			{SD_DOCKING_MANAGER_COMMAND} accelerators
 		select
 			implementation,
 			show_allow_to_back

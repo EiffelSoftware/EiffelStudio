@@ -12,7 +12,7 @@
     <!-- PROPERTIES -->
     <Property Id="GDIPLUSNEEDED">1</Property>
     <Property Id="PRECOMPILE">vision2</Property>
-    <Property Id="EIFFELPROJECTDIR" Secure="yes" />
+    <Property Id="EIFFELPROJECTSDIR" Secure="yes" />
     <!-- END PROPERTIES -->
 
     <!-- PACKAGE CONTENT -->
@@ -26,24 +26,6 @@
           <?endif?>
         </RegistryKey>
       </Component>
-      <?ifdef Enterprise" ?>
-        <Merge Id="ec" Language="1033" SourceFile="msms\$(var.Platform)\ec_enterprise.msm" DiskId="1" />
-        <?else?>
-        <Merge Id="ec" Language="1033" SourceFile="msms\$(var.Platform)\ec_gpl.msm" DiskId="1" />
-      <?endif?>
-      <Merge Id="eiffel_com" Language="1033" SourceFile="msms\$(var.Platform)\eiffel_com.msm" DiskId="1" />
-      <Merge Id="esbuilder" Language="1033" SourceFile="msms\$(var.Platform)\esbuilder.msm" DiskId="1" />
-      <Merge Id="base_libraries" Language="1033" SourceFile="msms\$(var.Platform)\base_libraries.msm" DiskId="1" />
-      <?ifndef x64?>
-        <Merge Id="borland" Language="1033" SourceFile="msms\$(var.Platform)\borland.msm" DiskId="1" />
-      <?endif?>
-      <Merge Id="c_library" Language="1033" SourceFile="msms\$(var.Platform)\c_library.msm" DiskId="1" />
-      <Merge Id="dotnet" Language="1033" SourceFile="msms\$(var.Platform)\dotnet.msm" DiskId="1" />
-      <Merge Id="gobo" Language="1033" SourceFile="msms\$(var.Platform)\gobo.msm" DiskId="1" />
-      <Merge Id="gdiplus" Language="1033" SourceFile="msms\$(var.Platform)\gdiplus.msm" DiskId="1" />
-      <Merge Id="graphical_libraries" Language="1033" SourceFile="msms\$(var.Platform)\graphical_libraries.msm" DiskId="1" />
-      <Merge Id="studio_core" Language="1033" SourceFile="msms\$(var.Platform)\studio_core.msm" DiskId="1" />
-      <Merge Id="vision2_demo" Language="1033" SourceFile="msms\$(var.Platform)\vision2_demo.msm" DiskId="1" />
     </DirectoryRef>
     
     <DirectoryRef Id="TARGETDIR">
@@ -69,49 +51,32 @@
       <Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
         <ComponentRef Id="Comp.app_icon" />
         <ComponentRef Id="Comp.eiffel_projects" />
+        <ComponentGroupRef Id="Core"/>
+        <?ifdef Enterprise ?>
+          <ComponentGroupRef Id="enterprise_ec"/>
+        <?else?>
+          <ComponentGroupRef Id="gpl_ec"/>
+        <?endif?>
       </Feature>
 
-      <Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="esbuilder" />
+      <Feature Id="Examples_feature" Title="Examples" TypicalDefault="install" Level="1" Display="hidden">
+        <ComponentGroupRef Id="Core.examples"/>
       </Feature>
 
-      <Feature Id="Libraries" Title="Eiffel Libraries" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="base_libraries" />
-        <MergeRef Id="c_library" />
-        <MergeRef Id="graphical_libraries" />
+      <Feature Id="Library_feature" Title="Library" TypicalDefault="install" Level="1" Display="hidden">
+        <ComponentGroupRef Id="Core.library"/>
       </Feature>
 
-      <Feature Id="dotnet" Title=".NET components" TypicalDefault="install" Level="1" Display="hidden">
-        <Condition Level="0"><![CDATA[FXINSTALLROOT = "0"]]></Condition>
-        <MergeRef Id="dotnet" />
-      </Feature>
 
-      <Feature Id="gdiplus" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
+      <Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
         <Condition Level="0"><![CDATA[GDIPLUSNEEDED = "0"]]></Condition>
-        <MergeRef Id="gdiplus" />
-      </Feature>
-
-      <Feature Id="EiffelStudio" Title="EiffelStudio" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="ec" />
-        <MergeRef Id="studio_core" />
-      </Feature>
-
-      <Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="eiffel_com" />
-      </Feature>
-
-      <Feature Id="Gobo" Title="Gobo - Eiffel tools and libraries" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="gobo" />
-      </Feature>
-
-      <Feature Id="vision2_demo" Title="EiffelVision2 Tour" TypicalDefault="install" Level="1" Display="hidden">
-        <MergeRef Id="vision2_demo" />
+        <ComponentGroupRef Id="gdiplus"/>
       </Feature>
 
       <?ifndef x64?>
-      <Feature Id="Borland" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
-        <Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
-        <MergeRef Id="borland" />
+      <Feature Id="Borland_feature" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
+		  <Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
+		  <ComponentGroupRef Id="Borland"/>
       </Feature>
       <?endif?>
     </FeatureRef>

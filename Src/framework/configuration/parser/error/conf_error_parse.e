@@ -27,6 +27,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	message: STRING
+		-- Error text.
+		
+	file: STRING
+		-- File with error.
+		
+	row: INTEGER
+		-- Row of error.
+		
+	column: INTEGER;
+		-- Column of error.
+
 	text: STRING is
 			-- Error text.
 		do
@@ -55,16 +67,6 @@ feature -- Update
 			message := a_message
 		end
 
-feature {NONE} -- Implementation
-
-	message: STRING
-		-- Error text.
-	file: STRING
-		-- File with error.
-	row: INTEGER
-		-- Row of error.
-	column: INTEGER;
-		-- Column of error.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

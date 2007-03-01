@@ -1570,7 +1570,7 @@ feature {NONE} -- Implementation
 			 create Result
 		end
 
-	search_and_replace(line: STRING) is
+	search_and_replace (line: STRING) is
 			-- search words starting with $ and replace with option or env variable
 		local
 			wordstart: INTEGER
@@ -1600,11 +1600,12 @@ feature {NONE} -- Implementation
 				replacement := get_replacement (word)
 
 				if replacement /= Void then
-					if
+					if 
 						wordstart > 2 and then line.item (wordstart-1) = '\' and then
 						(line.item (wordstart-2) = '/' or
 						line.item(wordstart-2) = '\' or
 						line.item(wordstart-2) = ' ' or
+						line.item(wordstart-2) = '"' or
 						(line.item (wordstart-2) = 'I' and then line.item (wordstart-3) = '-'))
 					then
 						line.replace_substring (replacement, wordstart-1, wordstart+wordlength)

@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">x86</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">studio_ent_x86</Configuration>
     <ProductVersion>3.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>package</OutputName>
@@ -9,10 +9,10 @@
     <Name>package</Name>
     <ProjectGuid>{01a951f7-ba79-4006-8629-27ffcb510ff0}</ProjectGuid>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'x86' ">
-    <OutputPath>bin\x86\</OutputPath>
-    <IntermediateOutputPath>bin\x86\</IntermediateOutputPath>
-    <DefineConstants>x86;EiffelStudio</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_x64' ">
+    <OutputPath>bin\studio_gpl_x64\</OutputPath>
+    <IntermediateOutputPath>bin\studio_gpl_x64\</IntermediateOutputPath>
+    <DefineConstants>x64;EiffelStudio;IsePlatform=win64</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
     <Pedantic>False</Pedantic>
@@ -23,50 +23,47 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'x64' ">
-    <OutputPath>bin\x64\</OutputPath>
-    <IntermediateOutputPath>bin\x64\</IntermediateOutputPath>
-    <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_x86' ">
+    <OutputPath>bin\studio_gpl_x86\</OutputPath>
+    <IntermediateOutputPath>bin\studio_gpl_x86\</IntermediateOutputPath>
+    <DefineConstants>x86;EiffelStudio;IsePlatform=windows</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
-    <Pedantic>True</Pedantic>
+    <Pedantic>False</Pedantic>
     <ShowSourceTrace>False</ShowSourceTrace>
     <SuppressSchemaValidation>False</SuppressSchemaValidation>
     <SuppressSpecificWarnings>
     </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
-    <AllowIdenticalRows>False</AllowIdenticalRows>
-    <CabinetCachePath>
-    </CabinetCachePath>
-    <CabinetCreationThreadCount>2</CabinetCreationThreadCount>
-    <Cultures>
-    </Cultures>
-    <LeaveTemporaryFiles>True</LeaveTemporaryFiles>
-    <LinkerPedantic>True</LinkerPedantic>
-    <ReuseCabinetCache>False</ReuseCabinetCache>
-    <SetMsiAssemblyNameFileVersion>False</SetMsiAssemblyNameFileVersion>
-    <SuppressAclReset>False</SuppressAclReset>
-    <SuppressAssemblies>False</SuppressAssemblies>
-    <SuppressDefaultAdminSequenceActions>False</SuppressDefaultAdminSequenceActions>
-    <SuppressDefaultAdvSequenceActions>False</SuppressDefaultAdvSequenceActions>
-    <SuppressDefaultUISequenceActions>False</SuppressDefaultUISequenceActions>
-    <SuppressDroppingUnrealTables>False</SuppressDroppingUnrealTables>
-    <SuppressFileHashAndInfo>False</SuppressFileHashAndInfo>
-    <SuppressFiles>False</SuppressFiles>
-    <SuppressIces>
-    </SuppressIces>
-    <LinkerSuppressIntermediateFileVersionMatching>False</LinkerSuppressIntermediateFileVersionMatching>
-    <SuppressLayout>False</SuppressLayout>
-    <SuppressMsiAssemblyTableProcessing>False</SuppressMsiAssemblyTableProcessing>
-    <LinkerSuppressSchemaValidation>False</LinkerSuppressSchemaValidation>
-    <LinkerSuppressSpecificWarnings>
-    </LinkerSuppressSpecificWarnings>
-    <SuppressValidation>False</SuppressValidation>
-    <LinkerTreatWarningsAsErrors>False</LinkerTreatWarningsAsErrors>
-    <LinkerVerboseOutput>True</LinkerVerboseOutput>
-    <WixVariables>
-    </WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_ent_x64' ">
+    <OutputPath>bin\studio_ent_x64\</OutputPath>
+    <IntermediateOutputPath>bin\studio_ent_x64\</IntermediateOutputPath>
+    <DefineConstants>x64;EiffelStudio;Enterprise;IsePlatform=win64</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_ent_x86' ">
+    <OutputPath>bin\studio_ent_x86\</OutputPath>
+    <IntermediateOutputPath>bin\studio_ent_x86\</IntermediateOutputPath>
+    <DefineConstants>x86;EiffelStudio;Enterprise;IsePlatform=windows</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CustomActions.wxs" />
@@ -112,7 +109,12 @@
     <Compile Include="content\eiffelenvision\Schema.wxs" />
     <Compile Include="content\eiffelenvision\Snippets.wxs" />
     <Compile Include="content\eiffelenvision\Specifications.wxs" />
+    <Compile Include="content\eiffelstudio\borland.wxs" />
+    <Compile Include="content\eiffelstudio\core.wxs" />
     <Compile Include="content\eiffelstudio\EiffelStudioPackage.wxs" />
+    <Compile Include="content\eiffelstudio\enterprise_ec.wxs" />
+    <Compile Include="content\eiffelstudio\gdiplus.wxs" />
+    <Compile Include="content\eiffelstudio\gpl_ec.wxs" />
     <Content Include="includes\Preprocessors.wxi" />
   </ItemGroup>
   <ItemGroup>

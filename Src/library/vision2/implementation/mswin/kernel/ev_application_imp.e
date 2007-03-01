@@ -107,12 +107,13 @@ feature -- Access
 	key_pressed (virtual_key: INTEGER): BOOLEAN is
 			-- Is `virtual_key' currently pressed?
 		do
-			Result := cwin_get_keyboard_state (virtual_key) < 0
-				--| The high order bit of i will be set if the key is down.
-				--| If the high order bit of an INTEGER is set, then the
-				--| value is negative. The correct solution is
-				--|	Result := i & 0xF0000000 but this does not work with
-				--| 4.5. Julian.
+			Result := (cwin_get_keyboard_state (virtual_key) & 0xF000) = 0xF000
+		end
+
+	key_toggled (virtual_key: INTEGER): BOOLEAN is
+			-- Is `virtual_key' currently toggled?
+		do
+			Result := (cwin_get_keyboard_state (virtual_key) & 0x0001) = 0x0001
 		end
 
 	ctrl_pressed: BOOLEAN is
@@ -132,6 +133,12 @@ feature -- Access
 			-- Is shift key currently pressed?
 		do
 			Result := key_pressed (vk_shift)
+		end
+
+	caps_lock_on: BOOLEAN is
+			-- Is the caps lock key currently on?
+		do
+			Result := key_toggled (vk_capital)
 		end
 
 feature -- Basic operation
@@ -751,10 +758,10 @@ feature {NONE} -- Externals
 			"PostQuitMessage"
 		end
 
-	cwin_get_keyboard_state (virtual_key: INTEGER): INTEGER is
+	cwin_get_keyboard_state (virtual_key: INTEGER): INTEGER_16 is
 			-- `Result' is state of `virtual_key'.
 		external
-			"C [macro <windows.h>] (int): EIF_INTEGER"
+			"C [macro <windows.h>] (int): EIF_INTEGER_16"
 		alias
 			"GetKeyState"
 		end

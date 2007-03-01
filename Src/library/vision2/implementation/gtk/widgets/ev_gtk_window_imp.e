@@ -33,9 +33,6 @@ feature {NONE} -- Implementation
 
 	set_blocking_window (a_window: EV_WINDOW) is
 			-- Set as transient for `a_window'.
-		local
-			win_imp: EV_WINDOW_IMP
-			l_window: POINTER
 		do
 			if not is_destroyed then
 				if a_window /= Void then

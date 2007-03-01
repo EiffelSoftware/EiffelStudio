@@ -20,50 +20,50 @@ all:: build
 ###################################################################
 
 WXS = \
-	borland.wxs \
-	core.wxs \
-	examples.wxs \
-	libraries.wxs \
-	enterprise_ec.wxs \
-	gdiplus.wxs \
-	gpl_ec.wxs
+	studio_borland.wxs \
+	studio_core.wxs \
+	studio_examples.wxs \
+	studio_libraries.wxs \
+	studio_gdiplus.wxs \
+	studio_ent_ec.wxs \
+	studio_gpl_ec.wxs
 
 
 build: $(WXS)
 
-borland.wxs:
+studio_borland.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\BCC55" -dr:"Dir.BCC55" -g:"Borland" -r -n:"Borland." > $@.tmp
 	move $@.tmp $@
 
-core.wxs:
+studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
 		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
 		-g:"Core" -r -n:"Core." > $@.tmp
 	move $@.tmp $@
 
-examples.wxs:
+studio_examples.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\examples" \
 		-dr:"INSTALLDIR" -g:"Core.examples" -r -n:"Core.examples." > $@.tmp
 	move $@.tmp $@
 
-libraries.wxs:
+studio_libraries.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library" \
 		-dr:"INSTALLDIR" -g:"Core.library" -r -n:"Core.library." > $@.tmp
 	move $@.tmp $@
 
 
-gdiplus.wxs:
+studio_gdiplus.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases" \
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"gdiplus" -n:"gdiplus" \
 		-fi:gdiplus.dll -de:"\*" > $@.tmp
 	move $@.tmp $@
 
-enterprise_ec.wxs:
+studio_ent_ec.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\enterprise_version" \
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"enterprise_ec" -n:"Core." > $@.tmp
 	move $@.tmp $@
 
-gpl_ec.wxs:
+studio_gpl_ec.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\gpl_version" \
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"gpl_ec" -n:"Core." > $@.tmp
 	move $@.tmp $@

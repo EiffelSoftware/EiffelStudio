@@ -39,13 +39,14 @@ feature {NONE} -- Implementation
 		do
 			if not is_destroyed then
 				if a_window /= Void then
-					win_imp ?= a_window.implementation
-					l_window := win_imp.c_object
-					internal_blocking_window := win_imp
+					internal_blocking_window ?= a_window.implementation
+					internal_blocking_window.add_transient_child (Current)
 				else
-					internal_blocking_window := Void
+					if internal_blocking_window /= Void then
+						internal_blocking_window.remove_transient_child (Current)
+						internal_blocking_window := Void
+					end
 				end
-				{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, l_window)
 			else
 				internal_blocking_window := Void
 			end
@@ -315,8 +316,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 							if l_accel /= Void then
 								l_accel_imp ?= l_accel.implementation
 								if
-									l_accel_imp.modifier_mask & l_app_imp.keyboard_modifier_mask = l_accel_imp.modifier_mask and then
-									l_accel_imp.key.code = a_key.code
+									l_accel_imp.key.code = a_key.code and then
+									l_accel_imp.control_required = l_app_imp.ctrl_pressed and then
+									l_accel_imp.alt_required = l_app_imp.alt_pressed and then
+									l_accel_imp.shift_required = l_app_imp.shift_pressed
 								then
 									l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
 									l_exit := True

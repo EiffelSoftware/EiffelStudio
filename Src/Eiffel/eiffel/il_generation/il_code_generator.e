@@ -169,13 +169,12 @@ feature -- Object creation
 		deferred
 		end
 
-	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
-			-- Initialize an expanded variable of type `variable_class_type' assuming
-			-- that its address is currently on the evaluation stack.
+	create_expanded_object (t: CL_TYPE_I) is
+			-- Create an object of expanded type `t'.
 		require
-			variable_class_type_not_void: variable_class_type /= Void
-			variable_class_type_is_expanded: variable_class_type.is_expanded
-			variable_class_type_is_internal: not variable_class_type.is_external
+			t_attached: t /= Void
+			t_is_expanded: t.is_expanded
+			t_is_internal: not t.is_external
 		deferred
 		end
 
@@ -618,7 +617,7 @@ feature -- Array manipulation
 		deferred
 		end
 
-	generate_array_initialization (actual_generic: CLASS_TYPE) is
+	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
 			-- Initialize native array with actual parameter type
 			-- `actual_generic' on the top of the stack.
 		require

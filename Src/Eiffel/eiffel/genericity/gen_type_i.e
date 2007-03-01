@@ -21,6 +21,7 @@ inherit
 			generate_cid_init,
 			generate_gen_type_il,
 			internal_generic_derivation,
+			generic_il_type_name,
 			generate_cid,
 			has_actual,
 			has_formal,
@@ -115,12 +116,34 @@ feature -- Status Report
 			-- Are all the base classes still in the system ?
 		local
 			l_base_class: like base_class
+			g: TYPE_I
+			i: INTEGER
+			m: like meta_generic
+			t: like true_generics
 		do
 			l_base_class := base_class
 			Result := l_base_class /= Void and then
 				(l_base_class.generics /= Void and then
 					l_base_class.generics.count = meta_generic.count) and then
 				meta_generic.is_consistent
+			if Result then
+					-- Ensure that `true_generics' are consistent and
+					-- the reattachment semantics for `meta_generics' and `true_generics' matches
+				from
+					m := meta_generic
+					t := true_generics
+					i := t.count
+				until
+					i <= 0
+				loop
+					g := t.item (i)
+					if not g.is_consistent or else g.is_expanded /= m.item (i).is_expanded then
+						Result := False
+						i := 1
+					end
+					i := i - 1
+				end
+			end
 		end
 
 	is_valid (a_class: CLASS_C): BOOLEAN is
@@ -411,6 +434,12 @@ feature -- Status Report
 			end
 		end
 
+	generic_il_type_name: STRING is
+			-- Associated name to for naming in generic derivation.
+		do
+			Result := il_type_name (Void)
+		end
+
 	internal_generic_derivation (a_level: INTEGER): like Current is
 			-- Precise generic derivation of current type.
 		local
@@ -505,6 +534,7 @@ feature {GEN_TYPE_I} -- Generic conformance
 			i: INTEGER
 		do
 				-- Enumerate types where expanded parameters are replaced with reference ones.
+				-- Take into account only registered generic derivations.
 			from
 				i := n
 			until
@@ -519,7 +549,9 @@ feature {GEN_TYPE_I} -- Generic conformance
 					end
 					gen_type.true_generics [i] := cl_type.reference_type
 					gen_type.meta_generic [i] := reference_c_type
-					processor.call ([gen_type.associated_class_type])
+					if base_class.types.has_type (gen_type) then
+						processor.call ([gen_type.associated_class_type])
+					end
 					if i > 1 then
 						gen_type.enumerate_interfaces_recursively (processor, i - 1)
 					end
@@ -541,11 +573,10 @@ feature -- Generic conformance
 			-- 2. Ensure generated code works as expected.
 			-- 3. Remove validity rule that prevents reattaching derivations
 			-- with expanded parameters to derivations with reference parameters.
-			-- enumerate_interfaces_recursively (processor, meta_generic.count)
+--			enumerate_interfaces_recursively (processor, meta_generic.count)
 		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
-
 		local
 			i, up : INTEGER
 		do

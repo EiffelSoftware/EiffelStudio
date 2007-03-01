@@ -129,6 +129,10 @@ feature -- IL code generation
 				cl_type_i_not_void: cl_type_i /= Void
 			end
 			il_generator.generate_creation (cl_type_i)
+			if cl_type_i.is_expanded then
+					-- Load value of a boxed value type object.
+				il_generator.generate_unmetamorphose (cl_type_i)
+			end
 		end
 
 	generate_il_type is

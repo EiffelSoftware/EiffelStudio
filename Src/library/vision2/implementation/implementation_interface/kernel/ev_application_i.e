@@ -208,6 +208,11 @@ feature -- Access
 		deferred
 		end
 
+	caps_lock_on: BOOLEAN is
+			-- Is the Caps Lock key currently on?
+		deferred
+		end
+
 feature -- Element Change
 
 	set_invoke_garbage_collection_when_inactive (a_enabled: BOOLEAN)

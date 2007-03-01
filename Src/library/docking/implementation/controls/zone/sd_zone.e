@@ -182,7 +182,7 @@ feature -- Query
 			Result := False
 		end
 
-feature {SD_CONFIG_MEDIATOR} -- Save config.
+feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config.
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- save content(s) title(s) to `a_config_data'.

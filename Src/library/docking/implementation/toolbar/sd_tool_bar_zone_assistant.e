@@ -381,7 +381,7 @@ feature -- Command
 			end
 		end
 
-feature {SD_CONFIG_MEDIATOR} -- Special setting.
+feature {SD_OPEN_CONFIG_MEDIATOR} -- Special setting.
 
 	set_last_state (a_last_data: SD_TOOL_BAR_ZONE_STATE) is
 			-- Set `last_data'

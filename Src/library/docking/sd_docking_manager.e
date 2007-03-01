@@ -148,7 +148,7 @@ feature -- Command
 		require
 			a_file_not_void: a_file /= Void
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			l_config.save_config (a_file)
@@ -159,7 +159,7 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			l_config.save_editors_config (a_file)
@@ -170,7 +170,7 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			l_config.save_tools_config (a_file)
@@ -181,7 +181,7 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			l_config.save_tools_config_with_name (a_file, a_name)
@@ -193,7 +193,7 @@ feature -- Command
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			Result := l_config.open_config (a_file)
@@ -202,7 +202,7 @@ feature -- Command
 	open_editors_config (a_file: STRING_GENERAL) is
 			-- Open main window editor config.
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			l_config.open_editors_config (a_file)
@@ -211,7 +211,7 @@ feature -- Command
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
 			-- Save tools contents config.
 		local
-			l_config: SD_CONFIG_MEDIATOR
+			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
 			Result := l_config.open_tools_config (a_file)
@@ -294,7 +294,7 @@ feature -- Contract support
 		end
 
 feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
-		SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_TOOL_BAR_DOCKER_MEDIATOR,
+		SD_DOCKER_MEDIATOR, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_TOOL_BAR_DOCKER_MEDIATOR,
 	 	SD_TOOL_BAR_MANAGER, SD_AUTO_HIDE_PANEL, SD_TOOL_BAR_ZONE,
 	  	SD_TAB_STUB, SD_MULTI_DOCK_AREA, SD_DOCKING_MANAGER_AGENTS,
 	  	SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES, SD_AUTO_HIDE_ANIMATION,
@@ -318,12 +318,12 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
 			-- Manager help Current for zones issues.
 
 feature {SD_TOOL_BAR_HOT_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
-	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_ACCESS, SD_TOOL_BAR_DOCKER_MEDIATOR,
+	 SD_OPEN_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_ACCESS, SD_TOOL_BAR_DOCKER_MEDIATOR,
 	 SD_TOOL_BAR_MANAGER, SD_AUTO_HIDE_PANEL, SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS,
 	 SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND, SD_TOOL_BAR_ZONE_ASSISTANT,
 	 SD_DOCKING_MANAGER_ZONES, SD_NOTEBOOK_TAB_AREA, SD_NOTEBOOK_TAB, SD_AUTO_HIDE_ANIMATION,
 	 SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_DOCKING_MANAGER_PROPERTY,
-	 SD_ZONE_NAVIGATION_DIALOG}
+	 SD_ZONE_NAVIGATION_DIALOG, SD_SAVE_CONFIG_MEDIATOR}
 	 	 -- Library internal attributes.
 
 	tool_bar_container: SD_TOOL_BAR_CONTAINER

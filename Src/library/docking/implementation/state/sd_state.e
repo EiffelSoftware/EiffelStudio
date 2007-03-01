@@ -71,7 +71,7 @@ feature -- Properties
 		deferred
 		end
 
-feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
+feature {SD_OPEN_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set `internal_docking_manager'.

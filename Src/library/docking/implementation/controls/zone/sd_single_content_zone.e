@@ -32,7 +32,7 @@ feature -- Content issues.
 			Result := internal_content = a_content
 		end
 
-feature {SD_CONFIG_MEDIATOR} -- Save config.
+feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config.
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- Redefine.

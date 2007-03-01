@@ -689,6 +689,13 @@ feature
 			"GDK_SHIFT_MASK"
 		end
 
+	frozen gdk_lock_mask_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_LOCK_MASK"
+		end
+
 	frozen gdk_button_press_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -387,6 +387,7 @@ feature -- Memory management
 
 			exception.remove_text
 			exception.remove_tooltip
+			stop_cause.remove_text
 
 			clean_stack_grid
 		end

@@ -143,6 +143,22 @@ feature  -- Access
 
 feature -- Status setting
 
+	add_transient_child (a_child: EV_GTK_WINDOW_IMP)
+			-- Add `a_child' as transient child for `Current'.
+		require
+			a_child_not_void: a_child /= Void
+		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (a_child.c_object, c_object)
+		end
+
+	remove_transient_child (a_child: EV_GTK_WINDOW_IMP)
+			-- Remove `a_child' as transient child for `Current'.
+		require
+			a_child_not_void: a_child /= Void
+		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (a_child.c_object, default_pointer)
+		end
+
 	internal_disable_border is
 			-- Ensure no border is displayed around `Current'.
 		local

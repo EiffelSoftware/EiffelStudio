@@ -70,7 +70,6 @@ if [ $# -gt 0 ]; then
 fi
 
 if [ "$arg" != "-library" ]; then
-	echo "Preparing C compilation ..."
 	if [ -n "$ISE_EIFFEL" ]; then
 		$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/quick_finalize . o
 	else
@@ -91,7 +90,7 @@ sh Makefile.SH
 
 if [ "$arg"  = cecil -o "$arg" = "-cecil" ] ; then
 	echo Generating CECIL library ...
-	$make $make_args cecil && echo "C compilation completed"
+	$make -s $make_args cecil && echo "C compilation completed"
 else
-	$make $make_args && echo "C compilation completed"
+	$make -s $make_args && echo "C compilation completed"
 fi

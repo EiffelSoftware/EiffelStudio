@@ -8,37 +8,7 @@
     <OutputType>Module</OutputType>
     <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'x86' ">
-    <OutputName>Redist</OutputName>
-    <OutputPath>..\bin\x86\</OutputPath>
-    <IntermediateOutputPath>obj\x86\</IntermediateOutputPath>
-    <DefineConstants>Debug;x86;EiffelEnvision;Source=c:\test_environment</DefineConstants>
-    <IncludeSearchPaths>
-    </IncludeSearchPaths>
-    <Pedantic>False</Pedantic>
-    <ShowSourceTrace>False</ShowSourceTrace>
-    <SuppressSchemaValidation>False</SuppressSchemaValidation>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <VerboseOutput>False</VerboseOutput>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'x64' ">
-    <OutputName>Redist64</OutputName>
-    <OutputPath>..\bin\x64\</OutputPath>
-    <IntermediateOutputPath>obj\x64\</IntermediateOutputPath>
-    <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
-    <IncludeSearchPaths>
-    </IncludeSearchPaths>
-    <Pedantic>False</Pedantic>
-    <ShowSourceTrace>False</ShowSourceTrace>
-    <SuppressSchemaValidation>False</SuppressSchemaValidation>
-    <SuppressSpecificWarnings>
-    </SuppressSpecificWarnings>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <VerboseOutput>False</VerboseOutput>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'studio_x64' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_64' ">
     <OutputName>Redist64</OutputName>
     <IntermediateOutputPath>obj\x64\</IntermediateOutputPath>
     <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
@@ -51,9 +21,9 @@
     </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
-    <OutputPath>bin\studio_x64\</OutputPath>
+    <OutputPath>bin\studio_gpl_64\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'studio_x86' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_x86' ">
     <OutputName>Redist</OutputName>
     <IntermediateOutputPath>obj\x86\</IntermediateOutputPath>
     <DefineConstants>Debug;x86;EiffelEnvision;Source=c:\test_environment</DefineConstants>
@@ -66,7 +36,7 @@
     </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
-    <OutputPath>bin\studio_x86\</OutputPath>
+    <OutputPath>bin\studio_gpl_x86\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'studio_ent_x64' ">
     <OutputName>Redist64</OutputName>

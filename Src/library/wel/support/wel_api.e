@@ -71,6 +71,14 @@ feature -- Windows
 			"return EIF_TEST(SetWindowPos((HWND) $hwnd, (HWND) $hwnd_after, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (UINT) $flags));"
 		end
 
+	frozen get_focus: POINTER
+			-- SDK GetFocus
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) GetFocus();"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is

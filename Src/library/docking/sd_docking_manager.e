@@ -235,6 +235,12 @@ feature -- Command
 			command.update_mini_tool_bar_size (a_content)
 		end
 
+	proprogate_accelerators is
+			-- Proprogate `main_window' accelerators to all floating zones.
+		do
+			command.proporgate_accelerators
+		end
+
 	close_editor_place_holder is
 			-- Close editors place holder zone.
 		do

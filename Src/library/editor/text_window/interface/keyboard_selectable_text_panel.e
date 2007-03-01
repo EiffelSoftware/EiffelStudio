@@ -414,7 +414,7 @@ feature {NONE} -- Process Vision2 events
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
-			if ev_key /= Void and then not ignore_keyboard_input and then not alt_key then
+			if ev_key /= Void and then not ignore_keyboard_input then
 					-- Handle state key.
 
 				reset_blinking
@@ -426,9 +426,10 @@ feature {NONE} -- Process Vision2 events
 					key_action_timer.actions.wipe_out
 					key_action_timer.set_interval (40)
 					continue_key_action := True
-					if ctrled_key then
+					if ctrled_key and then not alt_key then
 						key_action_timer.actions.extend (agent repeat_ctrled_key (ev_key))
-					else
+					elseif not (not ctrled_key and not shifted_key and alt_key) then
+							-- Ignore the case only Alt is pressed.
 						key_action_timer.actions.extend (agent repeat_extended_key (ev_key))
 					end
 				end

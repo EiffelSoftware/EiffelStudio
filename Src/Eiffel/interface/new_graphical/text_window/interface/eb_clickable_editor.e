@@ -426,7 +426,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 		local
 			l_shortcuts: like matching_customizable_commands
 		do
-			l_shortcuts := matching_customizable_commands (ev_key.code, False, alt_key, shifted_key)
+			l_shortcuts := matching_customizable_commands (ev_key.code, ctrled_key, alt_key, shifted_key)
 				--| Fixme: When l_shortcuts is not empty, l_short_cuts.first can be void.
 			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
 				l_shortcuts.first.apply

@@ -1319,10 +1319,19 @@ feature -- Parent checking
 				-- are marked `single.
 			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1)
 			if System.il_generation and then l_old_is_single /= is_single then
-					-- Class has its `is_single' status changed. We have to
-					-- reset its `types' so that they are recomputed and we have
-					-- to remove existing types from `System.class_types'
+					-- Class has its `is_single' status changed.
+					-- We have to reset its `types' so that they are recomputed and
+					-- we have to remove existing types from `System.class_types'
 				remove_types
+					-- Force recompilation of all clients, as the code to create objects might have changed
+				from
+					clients.start
+				until
+					clients.after
+				loop
+					clients.item.melt_all
+					clients.forth
+				end
 			end
 			Error_handler.checksum
 		ensure
@@ -2048,18 +2057,23 @@ end
 			c: CL_TYPE_I
 			i: INTEGER
 			a: NATIVE_ARRAY_TYPE_I
+			r: GEN_TYPE_I
 		do
 			if types.has_type (data) then
 				Result := types.found_item
 			else
 					-- Found a new type for the class
 				Result := register_new_type (data)
-				a ?= data
-				if False then
-					-- TODO: see GEN_TYPE_I.enumerate_interfaces
-				-- if a = Void then
+				r ?= Result.type
+				check
+					r_attached: r /= Void
+				end
+				a ?= r
+--				if False then
+--					-- TODO: see GEN_TYPE_I.enumerate_interfaces
+				if a = Void and then system.is_precompiled then
 						-- Register all types where expanded parameters are replaced with reference ones.
-					t := data.true_generics
+					t := r.true_generics
 					from
 						i := n
 					until
@@ -2067,7 +2081,7 @@ end
 					loop
 						p := t [i]
 						if p.is_expanded then
-							g := data.duplicate
+							g := r.duplicate
 							c ?= p
 							check
 								c_attached: c /= Void
@@ -2075,6 +2089,7 @@ end
 							g.true_generics [i] := c.reference_type
 							g.meta_generic [i] := reference_c_type
 							register_generic_type (g, i - 1).do_nothing
+							update_types (g)
 						end
 						i := i - 1
 					end

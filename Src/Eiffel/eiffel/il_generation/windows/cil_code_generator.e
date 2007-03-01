@@ -4207,23 +4207,22 @@ feature -- Object creation
 				False)
 		end
 
-	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
-			-- Initialize an expanded variable of type `variable_class_type' assuming
-			-- that its address is currently on the evaluation stack.
+	create_expanded_object (t: CL_TYPE_I) is
+			-- Create an object of expanded type `t'.
 		local
 			creation_procedure: FEATURE_I
 		do
-			creation_procedure := variable_class_type.associated_class.creation_feature
-			if creation_procedure /= Void then
-					-- Duplicate current to call creation procedure.
-				duplicate_top
-			end
-				-- Initialize inner expanded attributes.
-			method_body.put_call ({MD_OPCODES}.call, constructor_token (variable_class_type.implementation_id), 0, False)
+				-- Initialize inner expanded attributes and set type information.
+			generate_creation (t)
+				-- Load address of a value type object.
+			generate_load_address (t)
 				-- Call creation procedure (if any).
+			creation_procedure := t.base_class.creation_feature
 			if creation_procedure /= Void then
-				generate_feature_access (variable_class_type.type, creation_procedure.feature_id, 0, False, False)
+				duplicate_top
+				generate_feature_access (t, creation_procedure.feature_id, 0, False, False)
 			end
+			generate_load_from_address (t)
 		end
 
 feature {IL_MODULE} -- Initialization of expanded attributes
@@ -4249,8 +4248,8 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 				attribute_type := desc.cl_type_i
 				if attribute_type.is_true_expanded and then not attribute_type.is_external then
 					duplicate_top
-					method_body.put_opcode_mdtoken ({MD_OPCODES}.ldflda, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
-					initialize_expanded_variable (attribute_type.associated_class_type)
+					create_expanded_object (attribute_type)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.stfld, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
 				end
 				skeleton.forth
 			end
@@ -4564,17 +4563,14 @@ feature -- Variables access
 				pop
 			end
 
-				-- Create reference class
+				-- Create a new (boxed) instance.
 			generate_creation (l_cl_type)
---			(create {CREATE_TYPE}.make (l_cl_type)).generate_il
 
 			if l_is_basic then
 					-- Call `set_item' from the _REF class
-				generate_metamorphose (l_cl_type)
 				duplicate_top
 				generate_load_address (l_cl_type)
 				generate_local (l_local_number)
-
 				l_feat := l_cl_type.base_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 				generate_feature_access (l_cl_type,
 					l_feat.feature_id, l_feat.argument_count, l_feat.has_return_value, False)
@@ -4599,6 +4595,7 @@ feature -- Variables access
 
 	generate_creation (cl_type_i: CL_TYPE_I) is
 			-- Generate IL code for a hardcoded creation type `cl_type_i'.
+			-- Expanded object will be boxed after creation.
 		local
 			gen_type_i: GEN_TYPE_I
 			local_index: INTEGER
@@ -4614,18 +4611,14 @@ feature -- Variables access
 				create_object (cl_type_i.implementation_id)
 			end
 			gen_type_i ?= cl_type_i
+			if cl_type_i.is_expanded then
+					-- Box expanded object.
+				generate_metamorphose (cl_type_i)
+			end
 			if gen_type_i /= Void then
-				if cl_type_i.is_expanded then
-						-- Box expanded object.
-					generate_metamorphose (cl_type_i)
-				end
 				duplicate_top
 				gen_type_i.generate_gen_type_il (Current, True)
 				assign_computed_type
-				if cl_type_i.is_expanded then
-						-- Load value of a value type object.
-					generate_unmetamorphose (cl_type_i)
-				end
 			end
 		end
 
@@ -5697,13 +5690,15 @@ feature -- Array manipulation
 			end
 		end
 
-	generate_array_initialization (actual_generic: CLASS_TYPE) is
+	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
 			-- Initialize native array with actual parameter type
 			-- `actual_generic' on the top of the stack.
 		local
 			enter_loop_label: IL_LABEL
 			continue_loop_label: IL_LABEL
-			local_number: INTEGER
+			array_variable: INTEGER
+			index_variable: INTEGER
+			cl_type_i: CL_TYPE_I
 		do
 			if actual_generic.is_true_expanded and not actual_generic.is_external then
 					-- Initialize elements with their default values:
@@ -5715,25 +5710,35 @@ feature -- Array manipulation
 					-- }
 				enter_loop_label := create_label
 				continue_loop_label := create_label
+				byte_context.add_local (array_type)
+				array_variable := byte_context.local_list.count
+				put_dummy_local_info (array_type, array_variable)
 				byte_context.add_local (int32_c_type)
-				local_number := byte_context.local_list.count
-				put_dummy_local_info (int32_c_type, local_number)
+				index_variable := byte_context.local_list.count
+				put_dummy_local_info (int32_c_type, index_variable)
 				duplicate_top
+				generate_local_assignment (array_variable)
 				generate_array_count
-				generate_local_assignment (local_number)
+				generate_local_assignment (index_variable)
 				branch_to (enter_loop_label)
 				mark_label (continue_loop_label)
-				duplicate_top
-				generate_local (local_number)
+				generate_local (array_variable)
+				generate_local (index_variable)
 				put_integer_8_constant (1)
 				generate_binary_operator (il_minus, False)
 				duplicate_top
-				generate_local_assignment (local_number)
+				generate_local_assignment (index_variable)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
-				initialize_expanded_variable (actual_generic)
+				cl_type_i ?= array_type.true_generics.item (1)
+				check
+					cl_type_i_attached: cl_type_i /= Void
+				end
+				create_expanded_object (cl_type_i)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stobj, actual_class_type_token (actual_generic.static_type_id))
 				mark_label (enter_loop_label)
-				generate_local (local_number)
+				generate_local (index_variable)
 				branch_on_true (continue_loop_label)
+				generate_local (array_variable)
 			end
 		end
 
@@ -6904,6 +6909,7 @@ feature {NONE} -- Implementation: generation
 			l_tuple_type: TUPLE_TYPE_I
 			l_formal_type: FORMAL_I
 			l_type_i: TYPE_I
+			l_org_type_i: TYPE_I
 			l_type_id, i, nb: INTEGER
 		do
 			l_type_i := a_type_feature.type.type_i
@@ -6914,7 +6920,17 @@ feature {NONE} -- Implementation: generation
 					-- If we have some formals, we are clearly in a generic class.
 				is_generic_type: l_type_i.has_true_formal implies current_class_type.is_generic
 			end
+			l_org_type_i := l_type_i
 			l_type_i := l_type_i.complete_instantiation_in (current_class_type)
+			if l_org_type_i.is_formal and then l_type_i.has_true_formal then
+					-- The case similar to "A [expanded B [G#1, G#2]]".
+					-- Because no features are generated to resolve G#1 and G#2,
+					-- the type is set to be a formal generic like for "A [G]"
+				debug ("fixme")
+					fixme ("Support the case of A [expanded B [G#1, G#2]]")
+				end
+				l_type_i := l_org_type_i
+			end
 
 			if l_type_i.is_formal then
 				l_formal_type ?= l_type_i

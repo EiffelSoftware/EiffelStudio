@@ -204,7 +204,7 @@ feature -- IL code generation
 						generic_type_id := cl_type.external_id
 					end
 					il_generator.generate_array_creation (generic_type_id)
-					il_generator.generate_array_initialization (generic_type)
+					il_generator.generate_array_initialization (array_type, generic_type)
 				end
 
 			when count_name_id then

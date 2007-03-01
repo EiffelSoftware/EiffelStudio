@@ -632,7 +632,7 @@ feature -- Menu mnenomics
 				     locale.translate("Restrictors"), locale.translate("Main Editor Views")>>
 		end
 	m_History: STRING_GENERAL is				do Result := locale.translate("&Go to")	end
-	m_Hit_count: STRING_GENERAL is				do Result := locale.translate("Hit count")	end
+	m_Hit_count: STRING_GENERAL is				do Result := locale.translate("Hit Count")	end
 	m_Maximize: STRING_GENERAL is				do Result := locale.translate("Ma&ximize")	end
 	m_Minimize: STRING_GENERAL is				do Result := locale.translate("Mi&nimize")	end
 	m_Minimize_all: STRING_GENERAL is			do Result := locale.translate("&Minimize All")	end
@@ -665,7 +665,7 @@ feature -- Menu mnenomics
 	m_Unify_stone: STRING_GENERAL is			do Result := locale.translate("Lin&k Context Tool")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
 
-	m_When_hits: STRING_GENERAL is				do Result := locale.translate("When hits ...")	end
+	m_When_hits: STRING_GENERAL is				do Result := locale.translate("When Hits ...")	end
 	m_Window: STRING_GENERAL is					do Result := locale.translate("&Window")	end
 	m_Refactoring: STRING_GENERAL is			do Result := locale.translate("&Refactoring")	end
 

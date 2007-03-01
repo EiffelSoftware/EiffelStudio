@@ -626,9 +626,13 @@ feature -- operation on message
 				)
 			okb.select_actions.extend (agent d.destroy)
 			cancelb.select_actions.extend (agent d.destroy)
-			resetb.select_actions.extend (agent bp.reset_hits_count)
-			resetb.select_actions.extend (agent lab.set_text (bp.hits_count.out))
-
+			resetb.select_actions.extend (agent (a_bp: BREAKPOINT; a_lab: EV_LABEL)
+					do
+						a_bp.reset_hits_count
+						a_lab.set_text (a_bp.hits_count.out)
+						a_lab.refresh_now
+					end(bp, lab)
+				)
 			d.set_default_push_button (okb)
 			d.set_default_cancel_button (cancelb)
 			d.show_actions.extend (agent combo.set_focus)

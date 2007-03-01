@@ -309,17 +309,19 @@ feature -- Header menu
 			mci: EV_CHECK_MENU_ITEM
 			hi: EV_HEADER_ITEM
 			gm: EV_MENU
+			s: STRING_GENERAL
 		do
 			create Result
 			if col /= Void then
 				hi := col.header_item
-				create mi.make_with_text (hi.text)
-			else
-				create mi.make_with_text ("Grid menu")
+				s := hi.text
 			end
+			if s = Void or else s.is_empty then
+				s := "Grid menu"
+			end
+			create mi.make_with_text (s)
 			mi.disable_sensitive
 			Result.extend (mi)
-
 
 			if col /= Void then
 				Result.extend (create {EV_MENU_SEPARATOR})

@@ -39,7 +39,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is pressed.
 		do
@@ -47,7 +46,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is double clicked.
@@ -57,7 +55,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is released.
 		do
@@ -66,7 +63,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer enters widget.
 		do
@@ -74,7 +70,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer leaves widget.
@@ -100,7 +95,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
 			-- Actions to be performed when a keyboard press generates a displayable character.
 		do
@@ -108,7 +102,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	key_release_actions: EV_KEY_ACTION_SEQUENCE is
 			-- Actions to be performed when a keyboard key is released.
@@ -118,7 +111,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.
 		do
@@ -127,7 +119,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
@@ -135,7 +126,6 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-
 
 	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Actions to be performed when size changes.
@@ -156,8 +146,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-

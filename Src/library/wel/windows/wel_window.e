@@ -164,7 +164,7 @@ feature -- Status report
 		local
 			p, null: POINTER
 		do
-			p := cwin_get_focus
+			p := {WEL_API}.get_focus
 			if p /= null then
 				Result := window_of_item (p)
 			end
@@ -1077,7 +1077,7 @@ feature -- Basic operations
 		end
 
 	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER): INTEGER is
-		obsolete "Use class WEL_MSG_BOX instead"
+		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -1096,7 +1096,7 @@ feature -- Basic operations
 		end
 
 	information_message_box (a_text, a_title: STRING_GENERAL) is
-		obsolete "Use class WEL_MSG_BOX instead"
+		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -1113,7 +1113,7 @@ feature -- Basic operations
 		end
 
 	warning_message_box (a_text, a_title: STRING_GENERAL) is
-		obsolete "Use class WEL_MSG_BOX instead"
+		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show a warning message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -1130,7 +1130,7 @@ feature -- Basic operations
 		end
 
 	error_message_box (a_text: STRING_GENERAL) is
-		obsolete "Use class WEL_MSG_BOX instead"
+		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
 		require
@@ -1145,7 +1145,7 @@ feature -- Basic operations
 		end
 
 	question_message_box (a_text, a_title: STRING_GENERAL): BOOLEAN is
-		obsolete "Use class WEL_MSG_BOX instead"
+		obsolete "Use class WEL_MSG_BOX instead."
 			-- Show a question message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- True is returned if the user answers yes, False
@@ -2202,7 +2202,7 @@ feature {NONE} -- Externals
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.
 		obsolete
-			"Use {WEL_API}.set_parent"
+			"Use {WEL_API}.set_parent instead."
 		external
 			"C [macro <winuser.h>] (HWND, HWND)"
 		alias
@@ -2292,6 +2292,8 @@ feature {NONE} -- Externals
 
 	cwin_get_focus: POINTER is
 			-- SDK GetFocus
+		obsolete
+			"Use {WEL_API}.get_focus instead."
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
@@ -2443,7 +2445,7 @@ feature {NONE} -- Externals
 	cwin_send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK SendMessage (with the result)
 		obsolete
-			"Use {WEL_API}.send_message_result instead"
+			"Use {WEL_API}.send_message_result instead."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_POINTER"
 		alias
@@ -2453,7 +2455,7 @@ feature {NONE} -- Externals
 	cwin_send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
 			-- SDK SendMessage (with the result)
 		obsolete
-			"Use {WEL_API}.send_message_result_integer instead"
+			"Use {WEL_API}.send_message_result_integer instead,"
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
 		alias
@@ -2463,7 +2465,7 @@ feature {NONE} -- Externals
 	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK SendMessage (without the result)
 		obsolete
-			"Use {WEL_API}.send_message instead"
+			"Use {WEL_API}.send_message instead."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
@@ -2473,7 +2475,7 @@ feature {NONE} -- Externals
 	cwin_post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		obsolete
-			"Use {WEL_API}.post_message_result instead"
+			"Use {WEL_API}.post_message_result instead."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, %
 				%WPARAM, LPARAM): EIF_BOOLEAN"
@@ -2484,7 +2486,7 @@ feature {NONE} -- Externals
 	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK PostMessage (without the result)
 		obsolete
-			"Use {WEL_API}.post_message instead"
+			"Use {WEL_API}.post_message instead."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
@@ -2503,7 +2505,7 @@ feature {NONE} -- Externals
 				repaint: BOOLEAN) is
 			-- SDK MoveWindow
 		obsolete
-			"Use {WEL_API}.move_window (x, y, w, h, b).do_nothing instead"
+			"Use {WEL_API}.move_window (x, y, w, h, b).do_nothing instead."
 		external
 			"C [macro %"wel.h%"] (HWND, int, int, int, int, BOOL)"
 		alias

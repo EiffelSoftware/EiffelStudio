@@ -291,6 +291,14 @@ feature -- Status report
 			Result := implementation.shift_pressed
 		end
 
+	caps_lock_on: BOOLEAN is
+			-- Is caps lock key currently on?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.caps_lock_on
+		end
+
 feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is

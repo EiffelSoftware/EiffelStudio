@@ -304,6 +304,57 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
+	only_one_editor_zone: SD_UPPER_ZONE is
+			-- If Current docking layout only have one editor zone (only one SD_DOCKING_ZONE_UPPER or SD_TAB_ZONE_UPPER)?
+			-- If yes, then the result is the only one editor zone.
+			-- If not only one, then result is Void.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_count: INTEGER
+			l_upper_zone: SD_UPPER_ZONE
+		do
+			from
+				l_zones := internal_docking_manager.zones.zones
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_upper_zone ?= l_zones.item
+				if l_upper_zone /= Void then
+					l_count := l_count + 1
+					Result := l_upper_zone
+				end
+				l_zones.forth
+			end
+			if not (l_count = 1) then
+				Result := Void
+			end
+		ensure
+			valid: editor_zone_count = 1 implies Result /= Void
+			valid: editor_zone_count /= 1 implies Result = Void
+		end
+
+	editor_zone_count: INTEGER is
+			-- How many editors zones (not editor content) now?
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_count: INTEGER
+			l_upper_zone: SD_UPPER_ZONE
+		do
+			from
+				l_zones := internal_docking_manager.zones.zones
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_upper_zone ?= l_zones.item
+				if l_upper_zone /= Void then
+					l_count := l_count + 1
+				end
+				l_zones.forth
+			end
+		end
+
 feature {NONE} -- Implemnetation
 
 	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE]) is

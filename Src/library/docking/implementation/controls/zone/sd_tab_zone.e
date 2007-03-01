@@ -239,7 +239,7 @@ feature -- Command
 			internal_title_bar.update_fixed_size
 		end
 
-feature {SD_CONFIG_MEDIATOR} --
+feature {SD_OPEN_CONFIG_MEDIATOR} --
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- Redefine.

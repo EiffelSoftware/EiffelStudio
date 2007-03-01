@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} has_focus, width, height, is_destroyed, is_displayed
-			{SD_CONFIG_MEDIATOR} destroy
+			{SD_OPEN_CONFIG_MEDIATOR} destroy
 		undefine
 			initialize,
 			Identifier_path_separator,
@@ -86,7 +86,7 @@ feature {NONE} -- Initlization
 			resize_actions.extend (agent on_resize)
 		end
 
-feature {SD_CONFIG_MEDIATOR} -- Save config
+feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 		do

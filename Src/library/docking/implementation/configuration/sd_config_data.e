@@ -61,6 +61,30 @@ feature -- Properties
 	tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]
 			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right.
 
+feature -- Data for only one editor zone
+
+	is_one_editor_zone: BOOLEAN
+			-- If only one editor zone in Current layout?
+
+	set_is_one_editor_zone (a_bool: BOOLEAN) is
+			-- Set `is_one_editor_zone' with `a_bool'
+		do
+			is_one_editor_zone := a_bool
+		ensure
+			set: is_one_editor_zone = a_bool
+		end
+
+	is_editor_minimized: BOOLEAN
+			-- If `is_one_editor_zone', is the only one editor zone minimized?
+
+	set_is_editor_minimized (a_bool: BOOLEAN) is
+			-- Set `is_editor_minimized' with `a_bool'
+		do
+			is_editor_minimized := a_bool
+		ensure
+			set: is_editor_minimized = a_bool
+		end
+
 feature {NONE}  -- Implementation
 
 	internal_inner_container_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]

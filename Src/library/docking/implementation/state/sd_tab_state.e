@@ -417,7 +417,7 @@ feature {SD_CONTENT} -- Redefine
 			tab_zone.set_pixmap (a_pixmap, a_content)
 		end
 
-feature {SD_CONFIG_MEDIATOR, SD_STATE} -- Redefine
+feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 	set_last_floating_width (a_int: INTEGER) is
 			-- Redefine

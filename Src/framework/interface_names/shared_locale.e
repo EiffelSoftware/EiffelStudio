@@ -40,6 +40,7 @@ feature -- Status change
 	set_locale_with_id (a_id: STRING) is
 			-- Set `locale' with `a_id'.
 			-- `a_id' is a Locale Id.
+			-- If locale of `a_id' not found, an empty locale is set.
 		require
 			a_id_not_void: a_id /= Void
 		local
@@ -51,6 +52,14 @@ feature -- Status change
 			else
 				locale_internal.put (empty_locale)
 			end
+		end
+
+	set_locale (a_locale: like locale) is
+			-- Set `locale' with `a_locale'.
+		require
+			a_locale_not_void: a_locale /= Void
+		do
+			locale_internal.put (a_locale)
 		end
 
 	set_system_locale is

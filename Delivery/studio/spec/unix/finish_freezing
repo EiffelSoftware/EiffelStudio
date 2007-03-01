@@ -1,6 +1,10 @@
 #!/bin/sh
 arg=none
 
+echo "Eiffel C/C++ Compilation Tool - Version 6.0"
+echo "Copyright Eiffel Software 1985-2007. All Rights Reserved"
+echo
+
 # default values for unix layout, so that no environment variables need to be set
 if [ -z "$ISE_EIFFEL" ]; then
 	if [ -z "$ISE_PREFIX" ]; then

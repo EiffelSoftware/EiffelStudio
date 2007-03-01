@@ -422,7 +422,7 @@ feature -- Sub makefile generation
 					make_file  := new_makefile
 					make_file.open_write
 						-- Generate main /bin/sh preamble
-					generate_sub_preamble
+					generate_sub_preamble (packet_name (sub_dir, i))
 						-- Customize main Makefile macros
 					generate_customization
 						-- How to produce a .o from a .c file
@@ -514,14 +514,15 @@ feature -- Generation, Header
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
 			make_file.put_string ("%
-				%echo %"Extracting %".%"/Makefile%
-								% (with variable substitutions)%"%N%
+				%echo %"Preparing C compilation...%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 
-	generate_sub_preamble is
+	generate_sub_preamble (a_directory: STRING) is
 			-- Generate leading part (directions to /bin/sh)
 			-- for subdirectory Makefiles.
+		require
+			a_directory_not_void: a_directory /= Void
 		do
 			make_file.put_string ("case $CONFIG in%N'')%N")
 			make_file.put_string ("%
@@ -536,8 +537,7 @@ feature -- Generation, Header
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
 			make_file.put_string ("%
-				%echo %"Extracting %".%"/Makefile%
-								% (with variable substitutions)%"%N%
+				%echo %"Compiling C code in " + a_directory + "...%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 

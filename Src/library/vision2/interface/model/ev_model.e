@@ -14,7 +14,7 @@ indexing
 
 deferred class
 	EV_MODEL
-	
+
 inherit
 	EV_MODEL_DOUBLE_MATH
 		export
@@ -23,21 +23,21 @@ inherit
 		redefine
 			default_create
 		end
-	
+
 	HASHABLE
 		rename
 			hash_code as id
 		undefine
 			default_create
 		end
-		
+
 	EV_ABSTRACT_PICK_AND_DROPABLE
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-	
+
 feature {NONE} -- initialization
 
 	default_create is
@@ -53,9 +53,9 @@ feature {NONE} -- initialization
 			is_center_valid := False
 			are_events_sended_to_group := True
 		end
-		
+
 feature -- Access
-	
+
 	x: INTEGER is
 			-- `X' position of the center on the screen.
 		do
@@ -64,7 +64,7 @@ feature -- Access
 			end
 			Result := center.x
 		end
-		
+
 	y: INTEGER is
 			-- `Y' position of the center on the screen .
 		do
@@ -73,7 +73,7 @@ feature -- Access
 			end
 			Result := center.y
 		end
-		
+
 	angle: DOUBLE is
 			-- `Current' has to be rotated around (`x',`y') for -`angle'
 			-- to be in upright position. Upright position has to
@@ -82,7 +82,7 @@ feature -- Access
 			-- scaled in the direction of the `x' direction of the screen.
 		deferred
 		end
-		
+
 	point_count: INTEGER is
 			-- Number of points needed to describe `Current'.
 			-- Without center.
@@ -91,7 +91,7 @@ feature -- Access
 		ensure
 			correct: Result = point_array.count
 		end
-		
+
 	id: INTEGER is
 			-- Unique id.
 		do
@@ -101,14 +101,14 @@ feature -- Access
 			end
 			Result := internal_hash_id
 		end
-		
+
 	pebble: ANY
 			-- Data to be transported by pick and drop mechanism.
 
 	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
-			
+
 	pointer_style: EV_POINTER_STYLE is
 			-- Cursor displayed when pointer is over this figure.
 		do
@@ -118,11 +118,11 @@ feature -- Access
 				Result := group.pointer_style
 			end
 		end
-		
+
 	group: EV_MODEL_GROUP
-			-- The group `Current' is part of. Void if `Current' is 
+			-- The group `Current' is part of. Void if `Current' is
 			-- not part of a group.
-			
+
 	world: EV_MODEL_WORLD is
 			-- The world `Current' is part of. Void if `Current' is
 			-- not part of a world
@@ -134,9 +134,9 @@ feature -- Access
 				end
 			end
 		end
-		
+
 feature -- Element change
-		
+
 	set_x (a_x: INTEGER) is
 			-- Set `x' to `an_x'.
 		local
@@ -145,7 +145,7 @@ feature -- Element change
 			l_coordinate: EV_COORDINATE
 			i, nb: INTEGER
 		do
-			a_delta_x := a_x - x	
+			a_delta_x := a_x - x
 			if a_delta_x /= 0 then
 				l_point_array := point_array
 				from
@@ -168,7 +168,7 @@ feature -- Element change
 			x_set: a_x = x
 			center_valid: is_center_valid
 		end
-		
+
 	set_y (a_y: INTEGER) is
 			-- Set `y' to `an_y'.
 		local
@@ -200,7 +200,7 @@ feature -- Element change
 			y_set: a_y = y
 			center_valid: is_center_valid
 		end
-		
+
 	set_x_y (a_x, a_y: INTEGER) is
 			-- Set `x' to `a_x' and `y' to `a_y'.
 		local
@@ -233,7 +233,7 @@ feature -- Element change
 			set: a_x = x and a_y = y
 			center_valid: is_center_valid
 		end
-		
+
 	rotate (an_angle: DOUBLE) is
 			-- Rotate around the center for `an_angle'.
 		require
@@ -248,7 +248,7 @@ feature -- Element change
 		ensure
 			center_valid: is_center_valid
 		end
-		
+
 	rotate_around (an_angle: DOUBLE; ax, ay: INTEGER) is
 			-- Rotate around (`ax', `ay') for `an_angle'.
 		require
@@ -263,7 +263,7 @@ feature -- Element change
 		ensure
 			center_valid: is_center_valid
 		end
-		
+
 	scale_x (a_scale_x: DOUBLE) is
 			-- Scale to x direction for `a_scale_x'.
 		require
@@ -279,7 +279,7 @@ feature -- Element change
 				group.center_invalidate
 			end
 		end
-		
+
 	scale_y (a_scale_y: DOUBLE) is
 			-- Scale to y direction for `a_scale_y'.
 		require
@@ -295,7 +295,7 @@ feature -- Element change
 				group.center_invalidate
 			end
 		end
-		
+
 	scale (a_scale: DOUBLE) is
 			-- Scale to x and y direction for `a_scale'.
 		require
@@ -305,14 +305,14 @@ feature -- Element change
 			if not is_center_valid then
 				set_center
 			end
-			
+
 			projection_matrix.scale (a_scale, a_scale, center.x_precise, center.y_precise, angle)
 			recursive_transform (projection_matrix)
 			if is_in_group and then group.is_center_valid then
 				group.center_invalidate
 			end
 		end
-		
+
 	scale_x_abs (a_scale_x: DOUBLE) is
 			-- Scale absolute to x direction for `a_scale_x'.
 			-- Do not rotate around `angle' first.
@@ -329,7 +329,7 @@ feature -- Element change
 				group.center_invalidate
 			end
 		end
-		
+
 	scale_y_abs (a_scale_y: DOUBLE) is
 			-- Scale to y direction for `a_scale_y'.
 			-- Do not rotate around `angle' first.
@@ -346,7 +346,7 @@ feature -- Element change
 				group.center_invalidate
 			end
 		end
-		
+
 	scale_abs (a_scale: DOUBLE) is
 			-- Scale to x and y direction for `a_scale'.
 			-- Do not rotate around `angle' first.
@@ -357,7 +357,7 @@ feature -- Element change
 			if not is_center_valid then
 				set_center
 			end
-			
+
 			projection_matrix.scale_abs (a_scale, a_scale, center.x_precise, center.y_precise)
 			recursive_transform (projection_matrix)
 			if is_in_group and then group.is_center_valid then
@@ -399,7 +399,7 @@ feature -- Element change
 		do
 			pebble_function := a_function
 		end
-	
+
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		require
@@ -423,24 +423,24 @@ feature -- Element change
 		do
 			deny_cursor := a_cursor
 		end
-		
+
 feature -- Status Report
 
 	is_rotatable: BOOLEAN is
 			-- Is this figure rotatable?
 		deferred
 		end
-		
+
 	is_scalable: BOOLEAN is
 			-- Is this figure scalable?
 		deferred
 		end
-		
+
 	is_transformable: BOOLEAN is
 			-- Is this figure transformable no matter what kind of transformation?
 		deferred
-		end	
-		
+		end
+
 	is_in_group: BOOLEAN is
 			-- Is `Current' part of a group?
 		do
@@ -448,7 +448,7 @@ feature -- Status Report
 		ensure
 			group_defines_is_in_group: Result = (group /= Void)
 		end
-			
+
 	is_in_world: BOOLEAN is
 			-- Is `Current' part of a world?
 		do
@@ -465,7 +465,7 @@ feature -- Status Report
 	deny_cursor: EV_POINTER_STYLE
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
-		
+
 	has_capture: BOOLEAN is
 			-- Are all events sent to `Current'?
 		do
@@ -487,13 +487,13 @@ feature -- Status Report
 
 	is_center_valid: BOOLEAN
 			-- Is the position of the center valid?
-			
+
 	are_events_sended_to_group: BOOLEAN
 			-- Are events for `pointer_motion_actions', `pointer_button_press_actions',
 			-- `pointer_double_press_actions',  `pointer_button_release_actions'
 			-- `pointer_enter_actions' and `pointer_leave_actions' send to `Current's
 			-- group (if any) even if `Current' catch the event. (Default True).
-		
+
 feature -- Status settings
 
 	enable_capture is
@@ -551,7 +551,7 @@ feature -- Status settings
 		ensure
 			insensitive_requested: not internal_is_sensitive
 		end
-		
+
 	disable_events_sended_to_group is
 			-- Set `are_events_sended_to_group' to False.
 		do
@@ -559,7 +559,7 @@ feature -- Status settings
 		ensure
 			events_blocked: not are_events_sended_to_group
 		end
-		
+
 	enable_events_sended_to_group is
 			-- Set `are_events_sended_to_group' to True.
 		do
@@ -578,7 +578,7 @@ feature -- Action sequences
 			end
 			Result := internal_pointer_motion_actions
 		end
-		
+
 	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when a pebble that fits this hole is
 			-- picked up from another source.
@@ -589,7 +589,7 @@ feature -- Action sequences
 			end
 			Result := internal_conforming_pick_actions
 		end
-		
+
 	pick_actions: EV_PND_START_ACTION_SEQUENCE is
 			-- Actions to be performed when `pebble' is picked up.
 		do
@@ -598,7 +598,7 @@ feature -- Action sequences
 			end
 			Result := internal_pick_actions
 		end
-		
+
 	drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to take when pick and drop transport drops on `Current'.
 		do
@@ -608,7 +608,7 @@ feature -- Action sequences
 			end
 			Result := internal_drop_actions
 		end
-	
+
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is pressed.
 		do
@@ -617,7 +617,7 @@ feature -- Action sequences
 			end
 			Result := internal_pointer_button_press_actions
 		end
-	
+
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is double clicked.
 		do
@@ -626,7 +626,7 @@ feature -- Action sequences
 			end
 			Result := internal_pointer_double_press_actions
 		end
-		
+
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is released.
 		do
@@ -635,7 +635,7 @@ feature -- Action sequences
 			end
 			Result := internal_pointer_button_release_actions
 		end
-		
+
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer enters widget.
 		do
@@ -699,7 +699,7 @@ feature -- Events
 						min_y := min_y.min (val)
 						i := i + 1
 					end
-					
+
 					ax := as_integer (min_x)
 					ay := as_integer (min_y)
 					w := as_integer (max_x) - ax + 1
@@ -725,7 +725,7 @@ feature --{EV_FIGURE} -- Status settings
 				end
 			end
 		end
-		
+
 feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 
 	point_array: SPECIAL [EV_COORDINATE]
@@ -749,7 +749,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 				internal_invalid_rectangle := bounding_box
 			end
 		end
-			
+
 	invalid_rectangle: EV_RECTANGLE is
 			-- Area that needs erasing.
 		do
@@ -770,11 +770,12 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 	internal_invalid_rectangle: EV_RECTANGLE
 			-- Area that needs updating.
 
-	real_pebble: ANY is
+
+	real_pebble (a_x, a_y: INTEGER): ANY is
 			-- Calculated `pebble'.
 		do
 			if pebble_function /= Void then
-				Result := pebble_function.item (Void)
+				Result := pebble_function.item ([a_x, a_y])
 			else
 				Result := pebble
 			end
@@ -793,12 +794,12 @@ feature {EV_MODEL, EV_MODEL_PROJECTION_ROUTINES}
 
 	valid: BOOLEAN
 			-- Is there no change to `Current'?
-			
+
 feature {EV_MODEL_GROUP} -- Figure group
 
 	set_group (a_group: EV_MODEL_GROUP) is
 			-- Set `group' to `a_group'
-		do		
+		do
 			if group /= Void and group /= a_group then
 				group.prune_all (Current)
 			end
@@ -807,7 +808,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			group_set: group = a_group
 			is_in_group_proper_defined: is_in_group = (a_group /= Void)
 		end
-		
+
 	unreference_group is
 			-- Set group to Void after removal from it.
 			-- Remove `Current' from `group'.
@@ -818,7 +819,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 		ensure
 			not_in_group: not is_in_group
 		end
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -876,7 +877,7 @@ feature {NONE} -- Contract support
 				i := i + 1
 			end
 		end
-		
+
 feature {EV_MODEL_WIDGET_PROJECTOR} -- Internal action Sequence
 
 	internal_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
@@ -911,13 +912,13 @@ feature {NONE} -- Implementation
 
 	internal_hash_id: INTEGER
 			-- Unique id if not 0
-			
+
 	counter: INTEGER_REF is
 			-- Id counter.
 		once
 			create Result
 		end
-	
+
 	projection_matrix: EV_MODEL_TRANSFORMATION is
 			-- The transformation used to rotate and scale.
 		do
@@ -926,16 +927,16 @@ feature {NONE} -- Implementation
 			end
 			Result := internal_projection_matrix
 		end
-		
+
 	internal_projection_matrix: like projection_matrix
 			-- Internal projection matrix.
-		
+
 	internal_pointer_style: EV_POINTER_STYLE
 			-- `pointer_style'.
-			
+
 	internal_is_sensitive: BOOLEAN
 			-- `is_sensitive'.
-			
+
 	default_colors: EV_STOCK_COLORS is
 			-- Eiffel Vision colors.
 		once
@@ -966,25 +967,25 @@ feature {NONE} -- Implementation
 				known_draw_ids.put (draw_id, generator)
 			end
 		end
-		
+
 	center: EV_COORDINATE
 			-- Position of the center.
-			
+
 	set_center is
 			-- Set the position of the center
 		deferred
 		ensure
 			center_valid: is_center_valid
 		end
-		
+
 	internal_bounding_box: EV_RECTANGLE
 			-- Used to speed up bounding box calculation.
-			
+
 invariant
 
 	point_array_exists: point_array /= Void
 	center_exists: center /= Void
-	x_is_center_x: x = center.x 
+	x_is_center_x: x = center.x
 	y_is_center_y: y = center.y
 	all_points_exist: all_points_exist (point_array)
 	projection_matrix_not_void: projection_matrix /= Void

@@ -22,7 +22,7 @@ feature -- Element change
 		require
 			a_widget_not_void: a_widget /= Void
 			a_widget_parent_void: a_widget.parent = Void
-			a_widget_not_current: a_widget /= interface
+			a_widget_not_current: a_widget.implementation /= Current
 			a_width_not_smaller_than_minimum_width:
 				a_width >= a_widget.minimum_width
 			a_height_not_smaller_than_minimum_height:

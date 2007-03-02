@@ -7,7 +7,7 @@ iff not isdir %DOCUMENT_DIR then
 	echo %DOCUMENT_DIR is not a directory
 	CANCEL
 endiff
-iff not isdir %INSTALL_DIR\docs then
+iff not isdir %STUDIO_DIR\docs then
 	echo No destination directory for the documentation
 	CANCEL
 endiff
@@ -106,10 +106,10 @@ doc_builder.exe -gen /xml2help -o /studio -t /mshtml -nohtml %DOCUMENT_DIR\xmldo
 cdd C:\doc\Html
 fullrd docs.chm
 hhc docs.hhp
-copy C:\doc\Html\docs.chm %INSTALL_DIR\docs\eiffel.chm
+copy C:\doc\Html\docs.chm %STUDIO_DIR\docs\eiffel.chm
 
 rem cdd %DOCUMENT_DIR
 rem doc_builder.exe -gen /xml2help -o /studio -t /mshtml %DOCUMENT_DIR\xmldoc\documentation.dpr
-rem copy C:\doc\Html\docs.chm %INSTALL_DIR\docs\eiffel.chm
+rem copy C:\doc\Html\docs.chm %STUDIO_DIR\docs\eiffel.chm
 
 

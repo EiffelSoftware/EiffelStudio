@@ -67,6 +67,7 @@ echo Current configuration:
 echo ISE_EIFFEL is %ISE_EIFFEL
 echo ISE_PLATFORM is %ISE_PLATFORM
 echo INSTALL_DIR is %INSTALL_DIR
+echo STUDIO_DIR is %STUDIO_DIR
 echo DOCUMENT_DIR is %DOCUMENT_DIR
 echo Log file is %INSTALL_LOG
 echo ec version is:
@@ -92,5 +93,5 @@ iff not defined NO_INSTALL .and. not defined NO_COMPILE .and. not defined NO_DOC
 endiff
 echo Type a key to continue, Ctrl-C or Esc to abort
 pause
-echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR, %DOCUMENT_DIR >> %INSTALL_LOG
+echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR, %STUDIO_DIR and %DOCUMENT_DIR >> %INSTALL_LOG
 echo -------------------------------- >> %INSTALL_LOG

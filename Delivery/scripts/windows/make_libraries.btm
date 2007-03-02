@@ -1,9 +1,11 @@
 remtrace Retrieve libraries
-cdd %INSTALL_DIR
+cdd %STUDIO_DIR
 md library
 cd library
 remtrace base
-exprt %DEFAULT_ORIGO_SVN/Src/library/base base
+exprt %DEFAULT_ORIGO_SVN/Src/library/base base_obsolete
+remtrace base2
+exprt %DEFAULT_ORIGO_SVN/Src/library/base2 base
 remtrace com
 exprt %DEFAULT_ORIGO_SVN/Src/library/com com
 remtrace Eiffel2Java
@@ -52,8 +54,8 @@ exprt %DEFAULT_ORIGO_SVN/Src/library/wel wel
 
 iff not defined NO_COMPILE then
 	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
-	mkdir /s %INSTALL_DIR\library\vision2\spec\bcb\lib
-	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\%ISE_PLATFORM\lib
+	mkdir /s %STUDIO_DIR\library\vision2\spec\bcb\lib
+	mkdir /s %STUDIO_DIR\library\vision2\spec\msc\%ISE_PLATFORM\lib
 
 	remtrace Retrieve the header files
 	cdd %EIFFEL_SRC
@@ -68,46 +70,46 @@ iff not defined NO_COMPILE then
 	endiff
 	set JDK_HOME=%EIFFEL_SRC\headers\apps\jdk1.1.8
 	set ORACLE_HOME=%EIFFEL_SRC\headers\apps\oracle
-	cdd %INSTALL_DIR
+	cdd %STUDIO_DIR
 	remtrace Compile the C code, and remove extra clib's
 	remtrace C_library
-	cd %INSTALL_DIR\C_library\zlib
+	cd %STUDIO_DIR\C_library\zlib
 	all_makes
-	cd %INSTALL_DIR\C_library\libpng
+	cd %STUDIO_DIR\C_library\libpng
 	all_makes
 	quick_move library\vision2\spec\bcb\lib\zlib.lib
 	quick_move library\vision2\spec\msc\%ISE_PLATFORM\lib\zlib.lib
 	quick_move library\vision2\spec\bcb\lib\libpng.lib
 	quick_move library\vision2\spec\msc\%ISE_PLATFORM\lib\libpng.lib
-	iff isdir %INSTALL_DIR\library\com then
+	iff isdir %STUDIO_DIR\library\com then
 		remtrace com
-		cd %INSTALL_DIR\library\com\Clib
+		cd %STUDIO_DIR\library\com\Clib
 		all_makes
-		cd %INSTALL_DIR\library\com\Clib_runtime
+		cd %STUDIO_DIR\library\com\Clib_runtime
 		all_makes
-		cd %INSTALL_DIR\library\com
+		cd %STUDIO_DIR\library\com
 		fullrd Clib
 		fullrd Clib_runtime
 	endiff
 	remtrace net
-	cd %INSTALL_DIR\library\net\Clib
+	cd %STUDIO_DIR\library\net\Clib
 	all_makes
 	remtrace store
-	cd %INSTALL_DIR\library\store\dbms\rdbms\odbc\clib
+	cd %STUDIO_DIR\library\store\dbms\rdbms\odbc\clib
 	all_makes
-	cd %INSTALL_DIR\library\store\dbms\rdbms\oracle\clib
+	cd %STUDIO_DIR\library\store\dbms\rdbms\oracle\clib
 	all_makes
 	remtrace vision2
-	cd %INSTALL_DIR\library\vision2\Clib
+	cd %STUDIO_DIR\library\vision2\Clib
 	all_makes
 	remtrace wel
-	cd %INSTALL_DIR\library\wel\clib
+	cd %STUDIO_DIR\library\wel\clib
 	all_makes
-	fullrf %INSTALL_DIR\library\wel\clib\make.log
+	fullrf %STUDIO_DIR\library\wel\clib\make.log
 else
 	quick_move /s library\com\spec
-	fullrd %INSTALL_DIR\library\com\Clib
-	fullrd %INSTALL_DIR\library\com\Clib_runtime
+	fullrd %STUDIO_DIR\library\com\Clib
+	fullrd %STUDIO_DIR\library\com\Clib_runtime
 	quick_move /s library\net\spec
 	quick_move /s library\store\spec
 	quick_move /s library\vision2\spec

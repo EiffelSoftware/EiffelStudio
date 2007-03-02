@@ -11,7 +11,7 @@ TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 if exist %INSTALL_LOG fullrf %INSTALL_LOG
 fullrf %INIT_DIR\examples_errors.log
-set ISE_EIFFEL=%INSTALL_DIR
+set ISE_EIFFEL=%STUDIO_DIR
 
 iff not defined ISE_PLATFORM then
 	set ISE_PLATFORM=windows
@@ -58,8 +58,8 @@ if exist subdirs.txt fullrf subdirs.txt &^
 dir /AD /b >> subdirs.txt &^
 for %t in (@subdirs.txt) do test_subdir %1 %t`
 
-cdd %INSTALL_DIR\examples
-test_subdirs %INSTALL_DIR\examples
+cdd %STUDIO_DIR\examples
+test_subdirs %STUDIO_DIR\examples
 
 :broken
 CANCEL

@@ -2,8 +2,6 @@ remtrace Compiling .NET components
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 
-mkdir %INSTALL_DIR\dotnet_binaries
-
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 iff not defined WIN64 then
@@ -11,7 +9,8 @@ call nmake dotnet_10
 else
 call nmake dotnet_20
 endiff
-copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
+copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
+copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer
@@ -26,8 +25,8 @@ iff not exist libEiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
-copy libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 set TARGET_NAME=
 cdd %EIFFEL_SRC

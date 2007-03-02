@@ -1,133 +1,237 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <?include ..\..\includes\Preprocessors.wxi?>
-  <?ifdef EiffelStudio?>
+	<?include ..\..\includes\Preprocessors.wxi?>
+	<?ifdef EiffelStudio?>
 
-  <!--
-    This include document is included under the Package node so you are free to define new directories, properties and features.
-    Note: A directory is created for INSTALLDIR and TARGETDIR so please use DirectoryRef to reference them.
-  -->
-  <Fragment>
+	<!--
+		This include document is included under the Package node so you are free to define new directories, properties and features.
+		Note: A directory is created for INSTALLDIR and TARGETDIR so please use DirectoryRef to reference them.
+	-->
+	<Fragment>
 
-    <!-- PROPERTIES -->
-    <Property Id="GDIPLUSNEEDED">1</Property>
-    <Property Id="PRECOMPILE">vision2</Property>
-    <Property Id="EIFFELPROJECTSDIR" Secure="yes" />
-    <!-- END PROPERTIES -->
+		<!-- PROPERTIES -->
+		<Property Id="GDIPLUSNEEDED">1</Property>
+		<Property Id="PRECOMPILE">vision2</Property>
+		<Property Id="EIFFELPROJECTSDIR" Secure="yes" />
+		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
+		<!-- END PROPERTIES -->
 
-    <!-- PACKAGE CONTENT -->
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="Comp.app_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
-        <RegistryKey Id="Reg.uninstall_product" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Root="HKLM"  Action="createAndRemoveOnUninstall">
-          <?ifdef x64?>
-            <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\win64\bin\estudio.exe,0" KeyPath="yes"/>
-            <?else?>
-            <RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\windows\bin\estudio.exe,0" KeyPath="yes"/>
-          <?endif?>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-    
-    <DirectoryRef Id="TARGETDIR">
-      <Directory Id="PersonalFolder" Name="PersonalFolder">
-        <Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
-          <Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
-            <RegistryKey Id="Reg.eiffel.ex" Key="Software\ISE\Eiffel60\ec" Root="HKCU" Action="createAndRemoveOnUninstall">
-              <RegistryValue Id="RegVal.eiffel.ec.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string" KeyPath="yes"/>
-            </RegistryKey>
-            <RegistryKey Id="Reg.eiffel.wizards" Key="Software\ISE\Eiffel60\wizards" Root="HKCU" Action="createAndRemoveOnUninstall">
-              <RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
-            </RegistryKey>
-            <CreateFolder />
-            <RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
-          </Component>
-        </Directory>
-      </Directory>
-    </DirectoryRef>
-    <!-- END PACKAGE CONTENT -->
+		<!-- PACKAGE CONTENT -->
+		<DirectoryRef Id="INSTALLDIR">
+				<!-- Registry settings for installation program -->
+			<Component Id="Comp.app_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
+				<RegistryKey Id="Reg.uninstall_product" Root="HKLM"	Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Action="createAndRemoveOnUninstall">
+					<?ifdef x64?>
+						<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\win64\bin\estudio.exe,0" KeyPath="yes"/>
+					<?else?>
+						<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\windows\bin\estudio.exe,0" KeyPath="yes"/>
+					<?endif?>
+				</RegistryKey>
+			</Component>
+				<!-- Registry settings for EiffelStudio and other tools-->
+			<Component Id="Comp.studio_registries" Guid="E6817659-E601-42F7-940B-5B8B9CC50AA3" Win64="$(var.IsWin64)">
+				<RegistryKey Id="Reg.eiffel" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.eiffel.ise_eiffel" Name="ISE_EIFFEL" Value="[INSTALLDIR]" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
+				</RegistryKey>
+				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKCU" Key="Software\ISE\Eiffel60\finish_freezing" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.eiffel.ff.ise_cflags" Name="ISE_CFLAGS" Value="" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ff.ise_sharedlibs" Name="ISE_SHAREDLIBS" Value="" Type="string"/>
+				</RegistryKey>
+				<RegistryKey Id="Reg.eiffel.wizards" Root="HKCU" Key="Software\ISE\Eiffel60\wizards" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
+				</RegistryKey>
+			</Component>
+				<!-- Registry settings for .NET consumer -->
+			<Component Id="Comp.studio_consumer" Guid="21889690-D448-4CD6-AA7C-9F914815CD33" Win64="$(var.IsWin64)">
+				<RegistryKey Id="Reg.clsid" Root="HKCR" Key="CLSID\{E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5}" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.clsid.default" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
+					<RegistryKey Id="Reg.clsid.1" Key="Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
+					<RegistryKey Id="Reg.clsid.2" Key="InprocServer32" Action="createAndRemoveOnUninstall" >
+						<RegistryValue Id="RegVal.clsid.inproc.1" Value="mscoree.dll" Type="string"/>
+						<RegistryValue Id="RegVal.clsid.inproc.2" Name="ThreadingModel" Value="Both" Type="string"/>
+						<RegistryValue Id="RegVal.clsid.inproc.3" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
+						<RegistryValue Id="RegVal.clsid.inproc.4" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
+						<RegistryValue Id="RegVal.clsid.inproc.5" Name="RuntimeVersion" Value="v1.0.3705" Type="string"/>
+						<RegistryKey Id="Reg.clsid.3" Key="6.0.6.5856" Action="createAndRemoveOnUninstall" >
+							<RegistryValue Id="RegVal.clsid.inproc.version.1" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
+							<RegistryValue Id="RegVal.clsid.inproc.version.2" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=6.0.6.5856, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string"/>
+							<RegistryValue Id="RegVal.clsid.inproc.version.3" Name="RuntimeVersion" Value="v1.0.3705" Type="string"/>
+						</RegistryKey>
+					</RegistryKey>
+					<RegistryKey Id="Reg.clsid.4" Key="ProgId" Action="createAndRemoveOnUninstall" >
+						<RegistryValue Id="RegVal.clsid.progid" Value="EiffelSoftware.MetadataConsumer.Interop.COM_CACHE_MANAGER" Type="string"/>
+					</RegistryKey>
+				</RegistryKey>
+				<RegistryKey Id="Reg.VS" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
+				</RegistryKey>
+			</Component>
+		</DirectoryRef>
+		
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="DesktopFolder" Name="." />
+			<Directory Id="ProgramMenuFolder" Name=".">
+				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($var.Platform))">
+					<Component  Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D"  Win64="$(var.IsWin64)">
+						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
+						<CreateFolder />
+						<RemoveFolder Id="EiffelStudio" On="uninstall" Directory="EiffelStudio"/>
+						<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="EiffelBuild"
+							Description="GUI Builder using EiffelVision2" Show="normal"
+							Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"
+							/>
+						<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion)"
+							Description="EiffelStudio development environment" Show="normal"
+							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+							/>
+						<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($var.Platform))"
+							Description="EiffelStudio development environment" Show="normal"
+							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+							/>
+					</Component>
+					<Directory Id="EiffelStudio.Documentation" Name="Documentation">
+						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D"  Win64="$(var.IsWin64)">
+							<RegistryKey Id="Reg.Dummy.2" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
+							<CreateFolder />
+							<RemoveFolder Id="EiffelStudio.Documentation" On="uninstall" Directory="EiffelStudio.Documentation"/>
+							<Shortcut Id="eiffel.chm1" Directory="EiffelStudio.Documentation" Name="Eiffel Developer Help Center"
+								Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Show="normal"
+								Target="[INSTALLDIR]docs\eiffel.chm"
+								/>
+							<Shortcut Id="ResourceBench_Documentation" Directory="EiffelStudio.Documentation" Name="ResourceBench Documentation" Show="normal"
+								Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[INSTALLDIR]docs\eiffel.chm::/tools/resource_bench/index.html"
+								/>
+							<Shortcut Id="EiffelCOM_Wizard" Directory="EiffelStudio.Documentation" Name="EiffelCOM Wizard Documentation" Show="normal"
+								Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[INSTALLDIR]docs\eiffel.chm::/tools/wizards/com/index.html"
+								/>
+							<Shortcut Id="vision2_demo.exe" Directory="EiffelStudio.Documentation" Name="EiffelVision2 Demo"
+								Description="EiffelVision2 overview presentation" Show="normal"
+								Target="[INSTALLDIR]vision2_tour\spec\$(var.IsePlatform)\bin\vision2_demo.exe"
+								/>
+						</Component>
+					</Directory>
+					<Directory Id="EiffelStudio.Tools" Name="Tools">
+						<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6"  Win64="$(var.IsWin64)">
+							<RegistryKey Id="Reg.Dummy.3" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
+							<CreateFolder />
+							<RemoveFolder Id="EiffelStudio.Tools" On="uninstall" Directory="EiffelStudio.Tools"/>
+							<Shortcut Id="com_wizard.exe" Directory="EiffelStudio.Tools" Name="EiffelCOM Wizard" 
+								Description="A wizard that helps you use and create COM components with Eiffel" Show="normal"
+								Target="[INSTALLDIR]wizards\com\com_wizard_launcher.exe"
+								/>
+							<Shortcut Id="he2.exe" Directory="EiffelStudio.Tools" Name="C constants to Eiffel class generator"
+								Description="A tool to extract constant definitions into Eiffel classes" Show="normal"
+								Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\h2e.exe"
+								/>
+							<Shortcut Id="rb.exe" Directory="EiffelStudio.Tools" Name="ResourceBench"
+								Description="A tool to convert .rc files into WEL classes" Show="normal"
+								Target="[INSTALLDIR]rb\bin\rb.exe"
+								/>
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+			<Directory Id="PersonalFolder" Name="PersonalFolder">
+				<Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
+					<Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
+						<RegistryKey Id="Reg.Dummy.4" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
+						<CreateFolder />
+						<RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
+					</Component>
+				</Directory>
+			</Directory>
+		</DirectoryRef>
+		<!-- END PACKAGE CONTENT -->
 
-    <!-- FEATURES -->
-    <FeatureRef Id="Feat.root">
-      <Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
-        <ComponentRef Id="Comp.app_icon" />
-        <ComponentRef Id="Comp.eiffel_projects" />
-        <ComponentGroupRef Id="Core"/>
-        <?ifdef Enterprise ?>
-          <ComponentGroupRef Id="enterprise_ec"/>
-        <?else?>
-          <ComponentGroupRef Id="gpl_ec"/>
-        <?endif?>
-      </Feature>
+		<!-- FEATURES -->
+		<FeatureRef Id="Feat.root">
+			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentRef Id="Comp.app_icon" />
+				<ComponentRef Id="Comp.studio_registries" />
+				<ComponentRef Id="Comp.studio_consumer" />
+				<ComponentRef Id="Comp.studio_shortcuts" />
+				<ComponentRef Id="Comp.studio_shortcuts.documentation" />
+				<ComponentRef Id="Comp.studio_shortcuts.tools" />
+				<ComponentRef Id="Comp.eiffel_projects" />
+				<ComponentGroupRef Id="Core"/>
+				<?ifdef Enterprise ?>
+					<ComponentGroupRef Id="enterprise_ec"/>
+				<?else?>
+					<ComponentGroupRef Id="gpl_ec"/>
+				<?endif?>
+			</Feature>
 
-      <Feature Id="Examples_feature" Title="Examples" TypicalDefault="install" Level="1" Display="hidden">
-        <ComponentGroupRef Id="Core.examples"/>
-      </Feature>
+			<Feature Id="Examples_feature" Title="Examples" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.examples"/>
+			</Feature>
 
-      <Feature Id="Library_feature" Title="Library" TypicalDefault="install" Level="1" Display="hidden">
-        <ComponentGroupRef Id="Core.library"/>
-      </Feature>
+			<Feature Id="Library_feature" Title="Library" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.library"/>
+			</Feature>
 
+			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
+				<Condition Level="0"><![CDATA[GDIPLUSNEEDED = "0"]]></Condition>
+				<ComponentGroupRef Id="gdiplus"/>
+			</Feature>
 
-      <Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">
-        <Condition Level="0"><![CDATA[GDIPLUSNEEDED = "0"]]></Condition>
-        <ComponentGroupRef Id="gdiplus"/>
-      </Feature>
+			<?ifndef x64?>
+			<Feature Id="Borland_feature" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
+				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
+				<ComponentGroupRef Id="Borland"/>
+			</Feature>
+			<?endif?>
+		</FeatureRef>
+		<!-- END FEATURES -->
+	 
+		<!-- CUSTOM ACTIONS -->
+		<CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
+		<CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
+		<CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
+		<?ifdef Enterprise?>
+			<CustomAction Id="IsCdKeyValid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
+			<CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
+		<?endif?>
+		<CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
+		<CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
+		<CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
+		<!-- END CUSTOM ACTIONS -->
 
-      <?ifndef x64?>
-      <Feature Id="Borland_feature" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
-		  <Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
-		  <ComponentGroupRef Id="Borland"/>
-      </Feature>
-      <?endif?>
-    </FeatureRef>
-    <!-- END FEATURES -->
-   
-    <!-- CUSTOM ACTIONS -->
-    <CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
-    <CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
-    <CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
-    <?ifdef Enterprise?>
-      <CustomAction Id="IsCdKeyValid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
-      <CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
-    <?endif?>
-    <CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
-    <CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
-    <CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
-    <!-- END CUSTOM ACTIONS -->
+		<!-- UI SEQUENCING -->
+		<AdminUISequence>
+			<Custom Action="RESET_CHECKCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+			<Custom Action="RESET_HASMSCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->			
+		</AdminUISequence>
+		<InstallUISequence>
+			<Custom Action="RESET_CHECKCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+			<Custom Action="RESET_HASMSCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
+			<?ifdef Enterprise?>
+				<Custom Action="RetrieveCdKey" Before="AppSearch"/>
+			<?endif?>
+		</InstallUISequence>
+		<!-- END UI SEQUENCING -->
 
-    <!-- UI SEQUENCING -->
-    <AdminUISequence>
-      <Custom Action="RESET_CHECKCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
-      <Custom Action="RESET_HASMSCCOMPILER" After="CostInitialize"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->      
-    </AdminUISequence>
-    <InstallUISequence>
-      <Custom Action="RESET_CHECKCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
-      <Custom Action="RESET_HASMSCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
-      <?endif?>
-    </InstallUISequence>
-    <!-- END UI SEQUENCING -->
-
-    <!-- INSTALL SEQUENCING -->
-    <AdminExecuteSequence>
-      <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
-      <Custom Action="IsGdixInstalled" Before="CostInitialize"/>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-      <?endif?>
-    </AdminExecuteSequence>
-    <InstallExecuteSequence>
-      <Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
-      <Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
-      <Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
-      <Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-      <?endif?>
-    </InstallExecuteSequence>
-    <!-- END INSTALL SEQUENCING -->
-  </Fragment>
-  
-  <?endif?>
+		<!-- INSTALL SEQUENCING -->
+		<AdminExecuteSequence>
+			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+			<Custom Action="IsGdixInstalled" Before="CostInitialize"/>
+			<?ifdef Enterprise?>
+				<Custom Action="RetrieveCdKey" Before="CostInitialize"/>
+			<?endif?>
+		</AdminExecuteSequence>
+		<InstallExecuteSequence>
+			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
+			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
+			<Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
+			<Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
+			<?ifdef Enterprise?>
+				<Custom Action="RetrieveCdKey" Before="CostInitialize"/>
+			<?endif?>
+		</InstallExecuteSequence>
+		<!-- END INSTALL SEQUENCING -->
+	</Fragment>
+	
+	<?endif?>
 </Wix>

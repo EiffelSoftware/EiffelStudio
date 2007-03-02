@@ -144,9 +144,8 @@ feature -- Object creation
 		do
 		end
 
-	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
-			-- Initialize an expanded variable of type `variable_class_type' assuming
-			-- that its address is currently on the evaluation stack.
+	create_expanded_object (t: CL_TYPE_I) is
+			-- Create an object of expanded type `t'.
 		do
 		end
 
@@ -492,7 +491,7 @@ feature -- Array manipulation
 		do
 		end
 
-	generate_array_initialization (actual_generic: CLASS_TYPE) is
+	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
 			-- Initialize native array with actual parameter type
 			-- `actual_generic' on the top of the stack.
 		do

@@ -112,10 +112,10 @@ feature {NONE} -- Implementation
 				l_interface ?= interface
 				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
-				App_implementation.disable_debugger
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					grab_keyboard_and_mouse
 				end
+				app_implementation.enable_debugger
 			end
 		end
 
@@ -128,9 +128,9 @@ feature {NONE} -- Implementation
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					release_keyboard_and_mouse
 				end
-				App_implementation.enable_debugger
 				App_implementation.set_captured_widget (Void)
 			end
+			App_implementation.enable_debugger
 		end
 
 	has_capture: BOOLEAN is
@@ -146,6 +146,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_gdk_window: POINTER
 		do
+			App_implementation.disable_debugger
 			l_gdk_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget)
 			i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 				l_gdk_window,
@@ -169,6 +170,7 @@ feature {NONE} -- Implementation
 				0 -- guint32 time
 			)
 			{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+			app_implementation.enable_debugger
 		end
 
 feature -- Implementation

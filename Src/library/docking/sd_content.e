@@ -349,6 +349,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (a_relative)
 			a_direction_valid: four_direction (a_direction)
 		do
+			set_visible (True)
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
    			set_focus
    		end
@@ -359,11 +360,10 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
+			set_visible (True)
 			state.set_direction (a_direction)
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
-			if is_visible then
-				set_focus
-			end
+			set_focus
 		end
 
 	set_auto_hide (a_direction: INTEGER) is
@@ -372,6 +372,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
+			set_visible (True)
 			state.stick (a_direction)
 			set_focus
 		end
@@ -381,6 +382,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 		do
+			set_visible (True)
 			state.float (a_screen_x, a_screen_y)
 			set_focus
 		end
@@ -396,6 +398,7 @@ feature -- Set Position
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
 		do
+			set_visible (True)
 			l_tab_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
 				if not a_left then
@@ -417,6 +420,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			editor_place_holder_in: manager_has_place_holder
 		do
+			set_visible (True)
 			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)
 			docking_manager.zones.place_holder_content.close
 			set_focus
@@ -600,8 +604,17 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 
 	set_visible (a_bool: BOOLEAN) is
 			-- Set `is_visible'
+		local
+			l_zone: SD_ZONE
 		do
 			is_visible := a_bool
+			if internal_user_widget /= Void and then not internal_user_widget.is_displayed then
+				internal_user_widget.show
+			end
+			l_zone := state.zone
+			if l_zone /= Void and then not l_zone.is_displayed then
+				l_zone.show
+			end
 		ensure
 			set: is_visible = a_bool
 		end

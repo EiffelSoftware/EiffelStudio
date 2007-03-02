@@ -108,6 +108,12 @@ feature {NONE} -- Event loop
 
 feature {EV_ANY_I} -- Implementation
 
+	wait_for_input (msec: INTEGER) is
+			-- Wait for at most `msec' milliseconds for an input.
+		do
+			sleep (msec)
+		end
+
 	process_underlying_toolkit_event_queue is
 			-- Process all pending GDK events and then dispatch GTK iteration until no more
 			-- events are pending.
@@ -918,15 +924,24 @@ feature -- Implementation
 	enable_debugger is
 			-- Enable the Eiffel debugger.
 		do
-			internal_set_debug_mode (saved_debug_mode)
+			if not debugger_is_disabled then
+				debugger_is_disabled := True
+				internal_set_debug_mode (saved_debug_mode)
+			end
 		end
 
 	disable_debugger is
 			-- Disable the Eiffel debugger.
 		do
-			saved_debug_mode := debug_mode
-			internal_set_debug_mode (0)
+			if debugger_is_disabled then
+				debugger_is_disabled := False
+				saved_debug_mode := debug_mode
+				internal_set_debug_mode (0)
+			end
 		end
+
+	debugger_is_disabled: BOOLEAN
+		-- Is the debugger disabled?
 
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 

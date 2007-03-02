@@ -91,7 +91,8 @@ endiff
 iff not defined NO_INSTALL .and. not defined NO_COMPILE .and. not defined NO_DOCUMENTATION then
 	echo All components will be recompiled
 endiff
-echo Type a key to continue, Ctrl-C or Esc to abort
-pause
+echo You have 60s to cancel this build
+echo Press Ctrl-C or Esc to abort
+sleep 60
 echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR, %STUDIO_DIR and %DOCUMENT_DIR >> %INSTALL_LOG
 echo -------------------------------- >> %INSTALL_LOG

@@ -15,39 +15,41 @@ feature -- Access
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := char_to_string (char, False)
+			Result := char_to_string (char, Void, False)
 		ensure
 			char_text_not_void: Result /= Void
-			refactoring_correct: Result.is_equal (old_char_text (char))
 		end
 
-	wchar_text (wchar: WIDE_CHARACTER): STRING_32 is
+	wchar_text (char32: CHARACTER_32): STRING_32 is
 			-- "Readable" representation of `wchar' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 		do
-			Result := code_to_string_32 (wchar.natural_32_code, False)
+			Result := char32_to_string_32 (char32, Void, False)
 		ensure
-			wchar_text_not_void: Result /= Void
+			char32_text_not_void: Result /= Void
 		end
 
 	eiffel_string (s: STRING): STRING is
 			-- "eiffel" representation of `s'
 			-- Translation of special characters
+			--| "%T" -> "%%T", "%N" -> "%%N", "%%" -> "%%%%"
+			--| but for printable char: "%A" -> "@", "%(" -> "["
+			--| follow ECMA 8.32.23				
 		require
 			s_not_void: s /= Void
 		local
-			value_char_area: SPECIAL [CHARACTER];
-			i, value_count: INTEGER;
+			l_area: SPECIAL [CHARACTER];
+			i, l_count: INTEGER;
 		do
 			from
-				value_char_area := s.area;
-				value_count := s.count
-				create Result.make (value_count);
+				l_area := s.area;
+				l_count := s.count
+				create Result.make (l_count);
 			until
-				i >= value_count
+				i >= l_count
 			loop
-				Result.append (char_to_string (value_char_area.item (i), True));
+				Result := char_to_string (l_area.item (i), Result, True)
 				i := i + 1
 			end
 		ensure
@@ -57,164 +59,365 @@ feature -- Access
 	eiffel_string_32 (s: STRING_32): STRING_32 is
 			-- "eiffel" representation of `s'
 			-- Translation of special characters
+			--| "%T" -> "%%T", "%N" -> "%%N", "%%" -> "%%%%"
+			--| but for printable char: "%A" -> "@", "%(" -> "["
+			--| follow ECMA 8.32.23		
 		require
 			s_not_void: s /= Void
 		local
-			value_wchar_area: SPECIAL [WIDE_CHARACTER];
-			i, value_count: INTEGER;
+			l_area: SPECIAL [CHARACTER_32];
+			i, l_count: INTEGER;
 		do
 			from
-				value_wchar_area := s.area;
-				value_count := s.count
-				create Result.make (value_count)
+				l_area := s.area;
+				l_count := s.count
+				create Result.make (l_count)
 			until
-				i >= value_count
+				i >= l_count
 			loop
-				Result.append (code_to_string_32 (value_wchar_area.item (i).natural_32_code, True));
+				Result := char32_to_string_32 (l_area.item (i), Result, True)
 				i := i + 1
 			end
 		ensure
 			eiffel_string_32_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature -- Unescape
 
-	code_to_string_32 (code: NATURAL_32; for_string: BOOLEAN): STRING_32 is
-			-- "Readable" representation of `code' using
-			-- special character convention when necessary;
-			-- Syntactically correct when quoted
-			-- If `for_string', do not escape '%'' else do not escape '"'.
+	last_unescaping_raised_error: BOOLEAN
+
+	unescaped_string (s: STRING): STRING is
+			-- Unescaped Eiffel String.
+			--| "%%T" -> "%T", "%%N" -> "%N", "%%%%" -> "%%"
+			--| but for printable char "%%A" -> "@", "%%(" -> "["
+			--| and "%/59/" -> ";"
+			--| follow ECMA 8.32.23
 		local
-			esc_char: CHARACTER
+			i: INTEGER
+			t: STRING
+			c: CHARACTER
+			error: BOOLEAN
+			l_count: INTEGER
+			l_area: SPECIAL [CHARACTER]
 		do
-			if for_string then
-				esc_char := '"'
-			else
-				esc_char := '%''
-			end
-			if
-				code = ('%N').natural_32_code
-				or else code = ('%T').natural_32_code
-				or else code = ('%%').natural_32_code
-				or else code = ('%R').natural_32_code
-				or else code = ('%F').natural_32_code
-				or else code = ('%B').natural_32_code
-				or else code = esc_char.natural_32_code
-			then
-					-- Conversion is taking place here, no need for twin.
-				Result := special_chars.item (code)
-			elseif code = ('%U').natural_32_code then
-				Result := "%%U"
-			else
-				if code < {ASCII}.First_printable.to_natural_32 then
-					create Result.make (6)
-					Result.append ("%%/")
-					Result.append_code (code)
-					Result.extend ('/')
+			from
+				last_unescaping_raised_error := False
+				l_count := s.count
+				l_area := s.area
+				create Result.make (l_count)
+				--| i := 0
+			until
+				i >= l_count
+			loop
+				c := l_area.item (i)
+				if c = '%%' then
+					if i = l_count - 1 then
+						--| Is last character
+						error := True
+						Result.append_character (c)
+					else
+						i := i + 1
+						c := l_area.item (i)
+						inspect c
+						when  'A' then Result.append_character ('%A') --| @
+						when  'B' then Result.append_character ('%B') --| BS : BackSpace
+						when  'C' then Result.append_character ('%C') --| ^
+						when  'D' then Result.append_character ('%D') --| $
+						when  'F' then Result.append_character ('%F') --| FF : Form Feed
+						when  'H' then Result.append_character ('%H') --| \
+						when  'L' then Result.append_character ('%L') --| ~
+						when  'N' then Result.append_character ('%N') --| NL (LF) : Newline
+						when  'Q' then Result.append_character ('%Q') --| `
+						when  'R' then Result.append_character ('%R') --| CR
+						when  'S' then Result.append_character ('%S') --| #
+						when  'T' then Result.append_character ('%T') --| HT : Horizontal Tab
+						when  'U' then Result.append_character ('%U') --| NUL : nUll
+						when  'V' then Result.append_character ('%V') --| | : Vertical bar
+						when '%%' then Result.append_character ('%%') --| %
+						when '%'' then Result.append_character ('%'') --| '
+						when '%"' then Result.append_character ('%"') --| "					
+						when '%(' then Result.append_character ('%(') --| [
+						when '%)' then Result.append_character ('%)') --| ]
+						when '%<' then Result.append_character ('%<') --| {
+						when '%>' then Result.append_character ('%>') --| }
+						when '/' then
+							from
+								i := i + 1
+								c := '%U'
+								create t.make_empty
+							until
+								c = '/' or error
+							loop
+								if i > l_count - 1 then
+									error := True
+								else
+									c := l_area.item (i)
+									if c /= '/' then
+										t.extend (c)
+									end
+								end
+								i := i + 1
+							end
+							if error then
+								Result.append_character ('%%')
+								Result.append_character ('/')
+								Result.append_string (t)
+								Result.append_character ('/')
+							elseif t.is_natural_32 then
+									--| For now %/0x3B/ or %/b1001/ is not yet accepted
+								Result.append_code (t.to_natural_32)
+							else
+								error := True
+								Result.append_character ('%%')
+								Result.append_character ('/')
+								Result.append_string (t)
+								Result.append_character ('/')
+							end
+						else
+							error := True
+							Result.append_character ('%%')
+							Result.append_character (c)
+						end
+					end
 				else
-					create Result.make (1)
-					Result.append_code (code)
+					Result.append_character (c)
 				end
+				i := i + 1
 			end
-		ensure
-			Result_not_void: Result /= Void
-			Result_different: Result /= code_to_string_32 (code, for_string)
+			last_unescaping_raised_error := error
 		end
 
-	char_to_string (char: CHARACTER; for_string: BOOLEAN): STRING is
+	unescaped_string_32 (s: STRING_32): STRING_32 is
+			-- Unescaped Eiffel String.
+			--| "%%T" -> "%T", "%%N" -> "%N", "%%%%" -> "%%"
+			--| but for printable char "%%A" -> "@", "%%(" -> "["
+			--| and "%/59/" -> ";"
+			--| follow ECMA 8.32.23
+		local
+			i: INTEGER
+			t: STRING_32
+			c: CHARACTER_32
+			error: BOOLEAN
+			l_count: INTEGER
+			l_area: SPECIAL [CHARACTER_32]
+		do
+			from
+				last_unescaping_raised_error := False
+				l_count := s.count
+				l_area := s.area
+				create Result.make (l_count)
+				--| i := 0
+			until
+				i >= l_count
+			loop
+				c := l_area.item (i)
+				if c = '%%' then
+					if i = l_count - 1 then
+						--| Is last character
+						error := True
+						Result.append_character (c)
+					else
+						i := i + 1
+						c := l_area.item (i)
+						inspect c
+						when  'A' then Result.append_character ('%A') --| @
+						when  'B' then Result.append_character ('%B') --| BS : BackSpace
+						when  'C' then Result.append_character ('%C') --| ^
+						when  'D' then Result.append_character ('%D') --| $
+						when  'F' then Result.append_character ('%F') --| FF : Form Feed
+						when  'H' then Result.append_character ('%H') --| \
+						when  'L' then Result.append_character ('%L') --| ~
+						when  'N' then Result.append_character ('%N') --| NL (LF) : Newline
+						when  'Q' then Result.append_character ('%Q') --| `
+						when  'R' then Result.append_character ('%R') --| CR
+						when  'S' then Result.append_character ('%S') --| #
+						when  'T' then Result.append_character ('%T') --| HT : Horizontal Tab
+						when  'U' then Result.append_character ('%U') --| NUL : nUll
+						when  'V' then Result.append_character ('%V') --| | : Vertical bar
+						when '%%' then Result.append_character ('%%') --| %
+						when '%'' then Result.append_character ('%'') --| '
+						when '%"' then Result.append_character ('%"') --| "					
+						when '%(' then Result.append_character ('%(') --| [
+						when '%)' then Result.append_character ('%)') --| ]
+						when '%<' then Result.append_character ('%<') --| {
+						when '%>' then Result.append_character ('%>') --| }
+						when '/' then
+							from
+								i := i + 1
+								c := '%U'
+								create t.make_empty
+							until
+								c = '/' or error
+							loop
+								if i > l_count - 1 then
+									error := True
+								else
+									c := l_area.item (i)
+									t.extend (c)
+								end
+								i := i + 1
+							end
+							if error then
+								Result.append_character ('%%')
+								Result.append_character ('/')
+								Result.append_string (t)
+								Result.append_character ('/')
+							elseif t.is_natural_32 then
+									--| For now %/0x3B/ or %/b1001/ is not yet accepted
+								Result.append_code (t.to_natural_32)
+							else
+								error := True
+								Result.append_character ('%%')
+								Result.append_character ('/')
+								Result.append_string (t)
+								Result.append_character ('/')
+							end
+						else
+							error := True
+							Result.append_character ('%%')
+							Result.append_character (c)
+						end
+					end
+				else
+					Result.append_character (c)
+				end
+				i := i + 1
+			end
+			last_unescaping_raised_error := error
+		end
+
+feature {NONE} -- Implementation
+
+	char32_to_string_32 (char: CHARACTER_32; a_result: STRING_32; for_string: BOOLEAN): STRING_32 is
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
 			-- If `for_string', do not escape '%'' else do not escape '"'.
+			--| If `a_result' /= Void, append char32 representation to `a_result' and return it.
 		local
-			code: INTEGER
-			esc_char: CHARACTER
+			code: NATURAL_32
 		do
-			if for_string then
-				esc_char := '"'
-			else
-				esc_char := '%''
+			Result := a_result
+			if Result = Void then
+				create Result.make_empty
 			end
-			if
-				char = '%N' or else char = '%T'
-				or else char = '%%'
-				or else char = '%R'
-				or else char = '%F'
-				or else char = '%B'
-				or else char = esc_char
-			then
-				create Result.make_from_string (special_chars.item (char.natural_32_code))
-			elseif char = '%U' then
-				Result := "%%U"
-			else
-				code := char.code;
-				if code < {ASCII}.First_printable then
-					create Result.make (6)
-					Result.append ("%%/")
-					Result.append_integer (code)
-					Result.extend ('/')
+
+			inspect char
+			when '%B' then
+				Result.append_character ('%%')
+				Result.append_character ('B')
+			when '%F' then
+				Result.append_character ('%%')
+				Result.append_character ('F')
+			when '%N' then
+				Result.append_character ('%%')
+				Result.append_character ('N')
+			when '%R' then
+				Result.append_character ('%%')
+				Result.append_character ('R')
+			when '%T' then
+				Result.append_character ('%%')
+				Result.append_character ('T')
+			when '%U' then
+				Result.append_character ('%%')
+				Result.append_character ('U')
+			when '%%' then
+				Result.append_character ('%%')
+				Result.append_character ('%%')
+			when '%'' then
+				if for_string then
+					Result.append_character (char)
 				else
-					Result := char.out
+					Result.append_character ('%%')
+					Result.append_character ('%'')
+				end
+			when '%"' then
+				if for_string then
+					Result.append_character ('%%')
+					Result.append_character ('"')
+				else
+					Result.append_character (char)
+				end
+			else
+				code := char.natural_32_code
+				if code < {ASCII}.First_printable.to_natural_32 then
+					Result.grow (Result.count + 6)
+					Result.append_string ("%%/")
+					Result.append_natural_32 (code);
+					Result.append_character ('/')
+				else
+					Result.append_code (code)
 				end
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_different: Result /= char_to_string (char, for_string)
+			Result_different: Result /= char32_to_string_32 (char, Void, for_string)
 		end
 
-	special_chars: HASH_TABLE [STRING, NATURAL_32] is
-			-- List of characters that need escaping.
-		once
-			create Result.make (8)
-			Result.put ("%%N", ('%N').natural_32_code)
-			Result.put ("%%T", ('%T').natural_32_code)
-			Result.put ("%%%%",('%%').natural_32_code)
-			Result.put ("%%R", ('%R').natural_32_code)
-			Result.put ("%%F", ('%F').natural_32_code)
-			Result.put ("%%B", ('%B').natural_32_code)
-			Result.put ("%%'", ('%'').natural_32_code)
-			Result.put ("%%%"", ('"').natural_32_code)
-		ensure
-			special_chars_not_void: Result /= Void
-		end
-
-	old_char_text (char: CHARACTER): STRING is
-			-- Kept for checking the new implementation.
+	char_to_string (char: CHARACTER; a_result: STRING; for_string: BOOLEAN): STRING is
+			-- "Readable" representation of `char' using
+			-- special character convention when necessary;
+			-- Syntactically correct when quoted
+			-- If `for_string', do not escape '%'' else do not escape '"'.
+			--| If `a_result' /= Void, append char32 representation to `a_result' and return it.			
 		local
 			code: INTEGER
 		do
+			Result := a_result
+			if Result = Void then
+				create Result.make_empty
+			end
+
 			inspect char
 			when '%B' then
-				Result := "%%B"
+				Result.append_character ('%%')
+				Result.append_character ('B')
 			when '%F' then
-				Result := "%%F"
+				Result.append_character ('%%')
+				Result.append_character ('F')
 			when '%N' then
-				Result := "%%N"
+				Result.append_character ('%%')
+				Result.append_character ('N')
 			when '%R' then
-				Result := "%%R"
+				Result.append_character ('%%')
+				Result.append_character ('R')
 			when '%T' then
-				Result := "%%T"
+				Result.append_character ('%%')
+				Result.append_character ('T')
 			when '%U' then
-				Result := "%%U"
+				Result.append_character ('%%')
+				Result.append_character ('U')
 			when '%%' then
-				Result := "%%%%"
+				Result.append_character ('%%')
+				Result.append_character ('%%')
 			when '%'' then
-				Result := "%%%'"
---			when '%"' then
---				Result := "%%%""
+				if for_string then
+					Result.append_character (char)
+				else
+					Result.append_character ('%%')
+					Result.append_character ('%'')
+				end
+			when '%"' then
+				if for_string then
+					Result.append_character ('%%')
+					Result.append_character ('"')
+				else
+					Result.append_character (char)
+				end
 			else
 				code := char.code;
 				if code < {ASCII}.First_printable then
-					create Result.make (6);
-					Result.append ("%%/");
+					Result.grow (Result.count + 6)
+					Result.append_string ("%%/")
 					Result.append_integer (code);
-					Result.extend ('/')
+					Result.append_character ('/')
 				else
-					Result := char.out
+					Result.append_string (char.out)
 				end
 			end
 		ensure
-			old_char_text_not_void: Result /= Void
+			Result_not_void: Result /= Void
+			Result_different: Result /= char_to_string (char, Void, for_string)
 		end
 
 indexing

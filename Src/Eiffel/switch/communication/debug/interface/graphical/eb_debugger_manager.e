@@ -437,6 +437,7 @@ feature -- tools management
 			Result [i] := [threads_tool, show_thread_tool_accelerator]
 			i := i + 1
 			Result [i] := [objects_tool, show_objects_tool_accelerator]
+
 		end
 
 	new_debugging_tools_menu: EV_MENU is
@@ -551,29 +552,33 @@ feature -- tools management
 			l_tools: ARRAY [TUPLE [tool: EB_TOOL; acc: EV_ACCELERATOR]]
 			i: INTEGER
 			s: STRING_GENERAL
+			s32: STRING_32
 		do
 			if raised then
 				l_tools := menuable_debugging_tools
-				from
-					s ?= mi.data
-					i := l_tools.lower
-				until
-					i > l_tools.upper
-				loop
-					t := l_tools [i]
-					if t /= Void then
-						l_tool := t.tool
-					end
-					if l_tool /= Void and then s.is_equal (l_tool.menu_name) then
-						l_acc := t.acc
-						if l_acc /= Void and then not l_acc.actions.is_empty then
-							l_acc.actions.call (Void)
-						else
-							l_tool.show
+				s ?= mi.data
+				if s /= Void then
+					from
+						s32 := s.as_string_32
+						i := l_tools.lower
+					until
+						i > l_tools.upper
+					loop
+						t := l_tools [i]
+						if t /= Void then
+							l_tool := t.tool
 						end
-						i := l_tools.upper --| Exit the loop						
+						if l_tool /= Void and then s32.is_equal (l_tool.menu_name.as_string_32) then
+							l_acc := t.acc
+							if l_acc /= Void and then not l_acc.actions.is_empty then
+								l_acc.actions.call (Void)
+							else
+								l_tool.show
+							end
+							i := l_tools.upper --| Exit the loop						
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		end
@@ -756,8 +761,10 @@ feature -- Output
 	debugger_output_message (m: STRING_GENERAL) is
 		do
 			check output_manager /= Void end
+			output_manager.start_processing (True)
 			output_manager.add_string (m)
 			output_manager.add_new_line
+			output_manager.end_processing
 		end
 
 	debugger_warning_message (m: STRING_GENERAL) is
@@ -778,7 +785,9 @@ feature -- Output
 
 	debugger_status_message (m: STRING_GENERAL) is
 		do
-			window_manager.display_message (m)
+			if m.index_of_code (('%N').natural_32_code, 1) = 0 then
+				window_manager.display_message (m)
+			end
 		end
 
 	display_application_status is
@@ -1454,7 +1463,6 @@ feature -- Debugging events
 				-- Fill in the stack tool.
 			call_stack_tool.request_update
 				-- Fill in the objects tool.
-
 			objects_tool.enable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
 

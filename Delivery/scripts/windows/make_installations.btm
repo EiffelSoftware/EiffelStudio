@@ -18,44 +18,46 @@ else
 	set WINNAME=x86
 endiff
 
-remtrace ---------------------------------------------
-remtrace Checkout and compile the hallow tool
-remtrace ---------------------------------------------
+iff .%1.==.. then
+	remtrace ---------------------------------------------
+	remtrace Checkout and compile the hallow tool
+	remtrace ---------------------------------------------
 
-cdd %EIFFEL_SRC\tools
-co %DEFAULT_ORIGO_SVN/Src/tools/hallow hallow
-cd %EIFFEL_SRC\tools\hallow
-clean_project
-finalize hallow.ecf
-cleanup_dotnet_eiffel hallow hallow.exe
-iff not exist libhallow.dll then
-	remtrace Couldnt generate hallow.exe
-	CANCEL
-else
-	move hallow.exe %INIT_DIR\install\bin
-	move libhallow.dll %INIT_DIR\install\bin
-	move eiffelsoftware.runtime.dll %INIT_DIR\install\bin
+	cdd %EIFFEL_SRC\tools
+	co %DEFAULT_ORIGO_SVN/Src/tools/hallow hallow
+	cd %EIFFEL_SRC\tools\hallow
+	clean_project
+	finalize hallow.ecf
+	cleanup_dotnet_eiffel hallow hallow.exe
+	iff not exist libhallow.dll then
+		remtrace Couldnt generate hallow.exe
+		CANCEL
+	else
+		move hallow.exe %INIT_DIR\install\bin
+		move libhallow.dll %INIT_DIR\install\bin
+		move eiffelsoftware.runtime.dll %INIT_DIR\install\bin
+	endiff
+
+	remtrace --------------------------------------------------
+	remtrace Recompile Custom actions for installation program
+	remtrace --------------------------------------------------
+
+	cdd %EIFFEL_SRC
+	cd tools
+	co %DEFAULT_ISE_SVN/Src/tools/setup setup
+	cd %EIFFEL_SRC\tools\setup\studio
+	clean_project
+	finalize setup.ecf
+	cleanup_eiffel setup setup.dll
+	iff not exist setup.dll then
+		remtrace Couldnt generate setup.dll
+		QUIT
+		CANCEL
+	endiff
+	safe_md %INIT_DIR\install\binaries
+	safe_md %INIT_DIR\install\binaries\%WINNAME
+	move setup.dll %INIT_DIR\install\binaries\%WINNAME
 endiff
-
-remtrace --------------------------------------------------
-remtrace Recompile Custom actions for installation program
-remtrace --------------------------------------------------
-
-cdd %EIFFEL_SRC
-cd tools
-co %DEFAULT_ISE_SVN/Src/tools/setup setup
-cd %EIFFEL_SRC\tools\setup\studio
-clean_project
-finalize setup.ecf
-cleanup_eiffel setup setup.dll
-iff not exist setup.dll then
-	remtrace Couldnt generate setup.dll
-	QUIT
-	CANCEL
-endiff
-safe_md %INIT_DIR\install\binaries
-safe_md %INIT_DIR\install\binaries\%WINNAME
-move setup.dll %INIT_DIR\install\binaries\%WINNAME
 
 remtrace ----------------------------------------------
 remtrace Building the MSIs

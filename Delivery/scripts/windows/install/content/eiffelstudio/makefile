@@ -38,6 +38,8 @@ studio_borland.wxs:
 studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
 		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
+		-fe:"\\EiffelStudio\\studio\\spec\\w.*\\estudio.exe$$" \
+		-fe:"\\EiffelStudio\\esbuilder\\spec\\w.*\\esbuilder.exe$$" \
 		-g:"Core" -r -n:"Core." > $@.tmp
 	move $@.tmp $@
 

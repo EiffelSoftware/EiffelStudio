@@ -21,26 +21,22 @@
 				<!-- Registry settings for installation program -->
 			<Component Id="Comp.app_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)">
 				<RegistryKey Id="Reg.uninstall_product" Root="HKLM"	Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Action="createAndRemoveOnUninstall">
-					<?ifdef x64?>
-						<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\win64\bin\estudio.exe,0" KeyPath="yes"/>
-					<?else?>
-						<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\windows\bin\estudio.exe,0" KeyPath="yes"/>
-					<?endif?>
+					<RegistryValue Id="RegVal.display_icon" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe,0" KeyPath="yes"/>
 				</RegistryKey>
 			</Component>
 				<!-- Registry settings for EiffelStudio and other tools-->
 			<Component Id="Comp.studio_registries" Guid="E6817659-E601-42F7-940B-5B8B9CC50AA3" Win64="$(var.IsWin64)">
-				<RegistryKey Id="Reg.eiffel" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel" Root="HKLM" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ise_eiffel" Name="ISE_EIFFEL" Value="[INSTALLDIR]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
 				</RegistryKey>
-				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKCU" Key="Software\ISE\Eiffel60\finish_freezing" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKLM" Key="Software\ISE\Eiffel60\finish_freezing" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ff.ise_cflags" Name="ISE_CFLAGS" Value="" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ff.ise_sharedlibs" Name="ISE_SHAREDLIBS" Value="" Type="string"/>
 				</RegistryKey>
-				<RegistryKey Id="Reg.eiffel.wizards" Root="HKCU" Key="Software\ISE\Eiffel60\wizards" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel.wizards" Root="HKLM" Key="Software\ISE\Eiffel60\wizards" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
 				</RegistryKey>
 			</Component>
@@ -73,10 +69,47 @@
 			<Directory Id="Dir.Core.library" Name="library"/>
 		</DirectoryRef>
 		
+			<!-- ProgIds -->
+		<DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
+			<Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
+					<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+                <File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
+				<ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
+					<Extension Id="bpr">
+						<MIME ContentType="text/xml" />
+						<Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
+					</Extension>
+				</ProgId>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
+			<Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
+					<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+                <File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
+				<ProgId Id="estudio_ecf.project" Description="EiffelBuild project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
+					<Extension Id="ecf">
+						<MIME ContentType="text/xml" />
+						<Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+					</Extension>
+				</ProgId>
+				<ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="2" >
+					<Extension Id="e" >
+						<MIME ContentType="text/plain" />
+					</Extension>
+				</ProgId>
+			</Component>
+		</DirectoryRef>
+
+
 		<DirectoryRef Id="TARGETDIR">
 			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($var.Platform))">
+						<!-- Shortcuts and file association -->
 					<Component  Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D"  Win64="$(var.IsWin64)">
 						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
@@ -158,6 +191,8 @@
 				<ComponentRef Id="Comp.studio_shortcuts.documentation" />
 				<ComponentRef Id="Comp.studio_shortcuts.tools" />
 				<ComponentRef Id="Comp.eiffel_projects" />
+				<ComponentRef Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
+				<ComponentRef Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
 				<ComponentGroupRef Id="Core"/>
 				<?ifdef Enterprise ?>
 					<ComponentGroupRef Id="enterprise_ec"/>

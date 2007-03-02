@@ -806,6 +806,15 @@ feature -- Generation, External archives and object files.
 					l_ext := include_paths.i_th (i)
 					if l_ext.is_enabled (universe.conf_state) then
 						l_path := l_ext.location
+						l_path.right_adjust
+						l_path.left_adjust
+						if not l_path.has (' ') and not l_path.has ('%T') then
+								-- If the path has no white space, then we can safely add the " around it
+								-- so that it will work in case the path is expanded with an environment
+								-- variable containing spaces.
+							l_path.prepend_character ('"')
+							l_path.append_character ('"')
+						end
 							-- all remaining $ are by choice so mask them
 						l_path.replace_substring_all ("$", "\$")
 							-- because its possible that they were already masked, correct double masking

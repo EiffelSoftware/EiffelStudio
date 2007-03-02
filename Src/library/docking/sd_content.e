@@ -497,6 +497,17 @@ feature -- Command
 			state.minimize
 		end
 
+	update_mini_tool_bar_size is
+			-- Update mini tool bar size
+		local
+			l_zone: SD_ZONE
+		do
+			l_zone := state.zone
+			if l_zone /= Void then
+				l_zone.update_mini_tool_bar_size
+			end
+		end
+
 feature -- States report
 
 	manager_has_content (a_content: SD_CONTENT): BOOLEAN is

@@ -208,10 +208,7 @@ feature -- Commands
 			l_zone: SD_ZONE
 		do
 			if a_content /= Void then
-				l_zone := a_content.state.zone
-				if l_zone /= Void then
-					l_zone.update_mini_tool_bar_size
-				end
+				a_content.update_mini_tool_bar_size
 			else
 				from
 					l_zones := internal_docking_manager.zones.zones.twin

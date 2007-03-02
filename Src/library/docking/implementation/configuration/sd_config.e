@@ -145,7 +145,7 @@ feature -- Open inner container data.
 			l_place_holder_zone: SD_ZONE
 			l_parent: EV_CONTAINER
 			l_split: EV_SPLIT_AREA
-			l_split_position: REAL
+			l_split_position: INTEGER
 			l_only_one_item: EV_WIDGET
 			l_temp_split: SD_VERTICAL_SPLIT_AREA
 			l_container: EV_CONTAINER
@@ -170,6 +170,9 @@ feature -- Open inner container data.
 				l_has_place_holder := True
 			end
 
+			l_config_data := config_data_from_file (a_file)
+			open_editor_minimized_data_unminimized (l_config_data)
+
 			-- Different from normal `open_config', we don't clear editors related things.
 			Result := open_config (a_file)
 
@@ -182,7 +185,7 @@ feature -- Open inner container data.
 
 					l_split ?= l_parent
 					if l_split /= Void then
-						l_split_position := l_split.split_position / l_split.maximum_split_position.max (1)
+						l_split_position := l_split.split_position
 					end
 					l_parent.prune (l_place_holder_zone)
 
@@ -191,7 +194,7 @@ feature -- Open inner container data.
 					end
 					l_parent.extend (top_container)
 					if l_split /= Void then
-						l_split.set_proportion (l_split_position)
+						l_split.set_split_position (l_split_position)
 					end
 				end
 				internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
@@ -204,8 +207,7 @@ feature -- Open inner container data.
 			top_container := Void
 
 			if Result then
-				l_config_data := config_data_from_file (a_file)
-				open_editor_minimized_data (l_config_data)
+				open_editor_minimized_data_minimize (l_config_data)
 			end
 		ensure
 			cleared: top_container = Void
@@ -880,8 +882,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_editor_minimized_data (a_config_data: SD_CONFIG_DATA) is
-			-- If only one editor zone, restore it's minimized state.
+	open_editor_minimized_data_unminimized (a_config_data: SD_CONFIG_DATA) is
+			-- Unminimized editor zone if `a_config_data' is unminimized.
 		require
 			not_void: a_config_data /= Void
 		local
@@ -889,7 +891,22 @@ feature {NONE} -- Implementation
 		do
 			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
 			if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
-				if a_config_data.is_editor_minimized /= l_editor_zone.is_minimized then
+				if not a_config_data.is_editor_minimized and l_editor_zone.is_minimized then
+					l_editor_zone.on_minimize
+				end
+			end
+		end
+
+	open_editor_minimized_data_minimize (a_config_data: SD_CONFIG_DATA) is
+			-- Minimized editor zone if `a_cofig_data' is minimized.
+		require
+			not_void: a_config_data /= Void
+		local
+			l_editor_zone: SD_UPPER_ZONE
+		do
+			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
+			if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
+				if a_config_data.is_editor_minimized and not l_editor_zone.is_minimized then
 					l_editor_zone.on_minimize
 				end
 			end

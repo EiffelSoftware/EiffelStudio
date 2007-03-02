@@ -266,7 +266,13 @@ feature {NONE} -- Implementation
 			a_config_data.set_is_horizontal_split_area (a_split_area.is_horizontal)
 
 			a_config_data.set_is_split_area (True)
-			a_config_data.set_is_minimized (a_split_area.is_minimized)
+
+			-- We don't save the split area minized state surround `top_container', this will handled by `save_editor_minimized_data' feature,
+			-- otherwise the split position when opening will not correct.
+			if a_split_area.first /= top_container and a_split_area.second /= top_container then
+				a_config_data.set_is_minimized (a_split_area.is_minimized)
+			end
+
 			check a_split_area.first /= Void end
 			create l_temp
 			a_config_data.set_children_left (l_temp)

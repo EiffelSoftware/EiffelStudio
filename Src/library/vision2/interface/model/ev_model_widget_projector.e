@@ -542,10 +542,10 @@ feature {NONE} -- Event implementation
 			mouse_move (a_x, a_y, 0.0, 0.0, 0.0, 0, 0)
 			fig := current_figure
 			if fig = Void or else ev_application.ctrl_pressed then
-				Result := world.real_pebble
+				Result := world.real_pebble (a_x, a_y)
 			elseif fig.is_sensitive then
 				from until Result /= Void or fig = Void loop
-					Result := fig.real_pebble
+					Result := fig.real_pebble (a_x, a_y)
 					if Result = Void then
 						fig := fig.group
 					end

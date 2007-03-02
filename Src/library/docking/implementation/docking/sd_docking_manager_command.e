@@ -240,7 +240,7 @@ feature -- Commands
 			l_dialog.show
 		end
 
-	proporgate_accelerators is
+	propagate_accelerators is
 			-- If `main_window' of SD_DOCKING_MANAGER accelerators changed, we update all floating zones accelerators.
 		local
 			l_zones: ARRAYED_LIST [SD_FLOATING_ZONE]

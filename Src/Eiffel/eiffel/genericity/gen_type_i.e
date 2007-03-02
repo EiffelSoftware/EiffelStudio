@@ -117,6 +117,7 @@ feature -- Status Report
 		local
 			l_base_class: like base_class
 			g: TYPE_I
+			h: TYPE_I
 			i: INTEGER
 			m: like meta_generic
 			t: like true_generics
@@ -137,7 +138,12 @@ feature -- Status Report
 					i <= 0
 				loop
 					g := t.item (i)
-					if not g.is_consistent or else g.is_expanded /= m.item (i).is_expanded then
+					h := m.item (i)
+					if
+						not g.is_consistent or else
+						h.is_expanded and then g.is_reference or else
+						g.is_expanded and then h.is_reference
+					then
 						Result := False
 						i := 1
 					end
@@ -477,7 +483,7 @@ feature -- Status Report
 				else
 						-- We have an expanded type
 					if l_type.is_true_expanded and then not system.il_generation then
-						true_gen.put (create {FORMAL_I}.make (True, False, i), i)
+						true_gen.put (create {FORMAL_I}.make (False, False, i), i)
 					else
 							-- We have a basic type, as an optimization, we
 							-- store the basic type data, rather than a formal

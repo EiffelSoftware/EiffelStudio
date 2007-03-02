@@ -850,8 +850,7 @@ feature {NONE} -- Implementation
 			-- Wait for at most `msec' milliseconds for an input.
 		require
 			msec_non_negative: msec >= 0
-		do
-			sleep (msec)
+		deferred
 		end
 
 invariant

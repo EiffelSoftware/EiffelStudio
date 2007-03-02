@@ -353,7 +353,7 @@ feature -- Basic operation
 			edit_cmd_detail_btn.enable_sensitive
 			hidden_btn.enable_sensitive
 			cmd_lst.enable_sensitive
-			develop_window.commands.Edit_external_commands_cmd.disable_sensitive
+			develop_window.commands.Edit_external_commands_cmd.enable_sensitive
 			save_output_btn.enable_sensitive
 			input_field.disable_sensitive
 			send_input_btn.disable_sensitive

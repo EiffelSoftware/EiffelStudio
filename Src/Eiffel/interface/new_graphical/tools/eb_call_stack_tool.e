@@ -1037,12 +1037,27 @@ feature {NONE} -- Implementation
 		local
 			l_output: YANK_STRING_WINDOW
 			retried: BOOLEAN
+			s: STRING
+			t: STRING
 		do
 			if not retried then
 					--| We generate the call stack.
 				create l_output.make;
 				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
-				ev_application.clipboard.set_text (l_output.stored_output)
+				create s.make_empty
+				t := exception_tag_text
+				if t /= Void and then not t.is_empty then
+					s.append_string ("EXCEPTION TAG:%N" + t + "%N")
+				end
+				t := exception_message_text
+				if t /= Void and then not t.is_empty then
+					s.append_string ("EXCEPTION MESSAGE:%N" + t + "%N")
+				end
+				t := l_output.stored_output
+				if t /= Void and then not t.is_empty then
+					s.append_string ("CALLSTACK:%N" + t)
+				end
+				ev_application.clipboard.set_text (s)
 				l_output.reset_output
 			end
 		rescue

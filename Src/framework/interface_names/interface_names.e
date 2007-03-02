@@ -1006,12 +1006,13 @@ feature -- Label texts
 		do
 			Result := locale.translate ("[
 					You can include the value of an expression in the message by
-					placing it in curly braces, suce as "The value of x i {x}.".
+					placing it in curly braces, such as "The value of x is {x}.".
 					To insert a curly brace, use "\{". To insert a backslash, use "\\".
 					
 					The following special keywords will be replaced with their current values:
 						$HITCOUNT - breakpoint's hit count
 						$ADDRESS - current object address
+						$CALL - current call
 						$CALLSTACK - current call stack
 						$CLASS - current class name
 						$FEATURE - current feature name

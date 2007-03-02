@@ -230,6 +230,8 @@ feature -- Breakpoints management
 			bp_message_not_void: bp.message /= Void
 		local
 			m: STRING
+			m_area: SPECIAL [CHARACTER]
+			m_max: INTEGER
 			cse: CALL_STACK_ELEMENT
 			expr: EB_EXPRESSION
 			i: INTEGER
@@ -244,35 +246,48 @@ feature -- Breakpoints management
 			if not retried then
 				m := bp.message
 				from
-					i := 1
-					create s.make (m.count)
+					i := 0 --| iterate on SPECIAL
+					s := character_routines.unescaped_string (m)
+					if not character_routines.last_unescaping_raised_error then
+						m := s
+					end
+					m_area := m.area
+					m_max := m.count - 1
+					create s.make (m_max + 1)
 					create v.make_empty
 				until
-					i > m.count
+					i > m_max
 				loop
 					is_escaped := False
-					c := m.item (i)
-					if c = '\' and i < m.count then
-						inspect m.item (i + 1)
+					c := m_area[i]
+					if c = '\' and i < m_max then
+						inspect m_area[i + 1]
 						when '{', '$', '\' then
 							i := i + 1
-							c := m.item (i)
+							c := m_area[i]
 							is_escaped := True
 						else
 							-- keep c as '\'
 						end
 					end
 					if in_keyword then
-						if not c.is_alpha or i = m.count then
-							in_keyword := False
+						if not c.is_alpha or else i = m_max then
+							if not c.is_alpha then
+								in_keyword := False
+							else
+								v.append_character (c)
+							end
+
 							if cse = Void then
 								cse := application_status.current_call_stack_element
 							end
 							if cse /= Void then
 								if v.is_case_insensitive_equal ("THREADID") then
 									s.append (cse.thread_id.out)
-								elseif v.is_case_insensitive_equal ("CALLSTACK") then
+								elseif v.is_case_insensitive_equal ("CALL") then
 									s.append (cse.to_string)
+								elseif v.is_case_insensitive_equal ("CALLSTACK") then
+									s.append (application_status.current_call_stack.to_string)
 								elseif v.is_case_insensitive_equal ("CLASS") and then cse.class_name /= Void then
 									s.append (cse.class_name)
 								elseif v.is_case_insensitive_equal ("FEATURE") and then cse.routine_name /= Void then
@@ -285,7 +300,11 @@ feature -- Breakpoints management
 									s.append ("$" + v.as_upper)
 								end
 							end
-							s.append_character (c)
+							if not in_keyword then
+								s.append_character (c)
+							else
+								in_keyword := False
+							end
 						else
 							v.append_character (c)
 						end
@@ -302,28 +321,16 @@ feature -- Breakpoints management
 						end
 					else
 						if c = '$' and not is_escaped then
-							if i > 1 and then m.item (i - 1) /= '\' then
+							if i = 0 or else m_area[i - 1] /= '\' then
 								in_keyword := True
 								v.wipe_out
 							end
-						elseif c = '{'  and not is_escaped then
-							if i > 1 and then m.item (i - 1) /= '\' then
+						elseif c = '{' and not is_escaped then
+							if i = 0 or else m_area[i - 1] /= '\' then
 								in_expression := True
 								v.wipe_out
 							end
 						else
-							if c = '%%' and not is_escaped and i < m.count then
-								inspect m.item (i + 1)
-								when 'N' then
-									i := i + 1
-									c := '%N'
-								when 'T' then
-									i := i + 1
-									c := '%T'
-								else
-									-- keep c as '\'
-								end
-							end
 							s.append_character (c)
 						end
 					end
@@ -1019,6 +1026,11 @@ feature -- Debuggee Objects management
 		end
 
 feature {APPLICATION_EXECUTION} -- specific implementation
+
+	Character_routines: CHARACTER_ROUTINES is
+		once
+			create Result
+		end
 
 	implementation: DEBUGGER_MANAGER_IMP;
 

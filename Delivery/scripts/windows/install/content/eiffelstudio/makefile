@@ -43,14 +43,13 @@ studio_core.wxs:
 
 studio_examples.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\examples" \
-		-dr:"INSTALLDIR" -g:"Core.examples" -r -n:"Core.examples." > $@.tmp
+		-dr:"Dir.Core.examples" -g:"Core.examples" -r -n:"Core.examples." > $@.tmp
 	move $@.tmp $@
 
 studio_libraries.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library" \
-		-dr:"INSTALLDIR" -g:"Core.library" -r -n:"Core.library." > $@.tmp
+		-dr:"Dir.Core.library" -g:"Core.library" -r -n:"Core.library." > $@.tmp
 	move $@.tmp $@
-
 
 studio_gdiplus.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases" \

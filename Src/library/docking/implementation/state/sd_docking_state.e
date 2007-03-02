@@ -104,7 +104,10 @@ feature -- Redefine.
 				restore_minimize
 			end
 
-			update_floating_zone_visible (zone, a_data.is_visible)
+			-- When SD_OPEN_CONFIG_MEDIATOR.open_inner_container_data, `zone' maybe void.
+			if zone /= Void then
+				update_floating_zone_visible (zone, a_data.is_visible)
+			end
 		end
 
 	record_state is

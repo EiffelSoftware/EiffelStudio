@@ -60,6 +60,27 @@ feature -- Properties
 		deferred
 		end
 
+feature -- Queries
+
+	to_string: STRING is
+		local
+			i: like item
+		do
+			create Result.make (0)
+			from
+				start
+			until
+				after
+			loop
+				i := item
+				if i /= Void then
+					Result.append_string (i.to_string)
+				end
+				Result.append_character ('%N')
+				forth
+			end
+		end
+
 invariant
 
 	empty_if_error: error_occurred implies is_empty

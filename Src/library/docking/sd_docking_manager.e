@@ -235,10 +235,10 @@ feature -- Command
 			command.update_mini_tool_bar_size (a_content)
 		end
 
-	proprogate_accelerators is
+	propagate_accelerators is
 			-- Proprogate `main_window' accelerators to all floating zones.
 		do
-			command.proporgate_accelerators
+			command.propagate_accelerators
 		end
 
 	close_editor_place_holder is

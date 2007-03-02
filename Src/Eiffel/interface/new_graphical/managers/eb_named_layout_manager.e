@@ -58,6 +58,7 @@ feature {NONE} -- Initlization
 						create l_file.make_open_read (l_fn)
 						check exist: l_file.exists end
 						create l_reader.make (l_file)
+						l_reader.set_for_reading
 						create l_facility
 						l_config_data ?= l_facility.retrieved (l_reader, True)
 

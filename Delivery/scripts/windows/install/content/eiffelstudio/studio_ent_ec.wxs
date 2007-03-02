@@ -1,6 +1,5 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-    <?ifdef EiffelEnvision?>
-    <?endif ?>
+  	<ComponentGroup Id="enterprise_ec" />
   </Fragment>
 </Wix>

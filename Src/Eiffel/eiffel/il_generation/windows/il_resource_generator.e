@@ -125,6 +125,7 @@ feature {NONE} -- Implementation
 			l_cmd: STRING
 			l_launch: WEL_PROCESS_LAUNCHER
 			l_exec: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 			l_virc: VIRC
 		do
 			create l_env.make (System.clr_runtime_version)
@@ -137,7 +138,8 @@ feature {NONE} -- Implementation
 					create l_launch
 					create l_exec
 					l_cmd := l_rc + " %"" + a_resource + "%" %"" + a_target + "%""
-					l_launch.launch (l_cmd, l_exec.current_working_directory, Void)
+					l_dir := (create {KL_WINDOWS_FILE_SYSTEM}.make).dirname (a_resource)
+					l_launch.launch (l_cmd, l_dir, Void)
 					if l_launch.last_process_result /= 0 then
 						create l_virc.make_failed (a_resource)
 					end

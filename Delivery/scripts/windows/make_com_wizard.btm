@@ -1,5 +1,5 @@
-mkdir %INSTALL_DIR\wizards\com\resources
-copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\resources
+mkdir %STUDIO_DIR\wizards\com\resources
+copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\com\resources
 
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\tools\com_wizard\root
@@ -10,7 +10,7 @@ iff not exist com_wizard.exe then
 	echo "Couldnt generate the COM wizard"
 	CANCEL
 endiff
-move com_wizard.exe %INSTALL_DIR\wizards\com
+move com_wizard.exe %STUDIO_DIR\wizards\com
 clean_project
 
 remtrace Compile COM wizard launcher for GUI mode.
@@ -21,4 +21,4 @@ iff not exist com_wizard_launcher.exe then
 	echo "Couldnt compile com_wizard_launcher.exe"
 	CANCEL
 endiff
-move com_wizard_launcher.exe %INSTALL_DIR\wizards\com
+move com_wizard_launcher.exe %STUDIO_DIR\wizards\com

@@ -12,5 +12,5 @@ iff not exist esbuilder.exe then
 	remtrace Could not finalize a new EiffelBuild
 	CANCEL
 else
-	move esbuilder.exe %INSTALL_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
+	move esbuilder.exe %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
 endiff

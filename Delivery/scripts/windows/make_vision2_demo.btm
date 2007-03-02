@@ -19,8 +19,8 @@ iff not exist vision2_demo.exe then
 	remtrace Could not finalize a new vision2_demo
 	CANCEL
 endiff
-move vision2_demo.exe %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM\bin
+move vision2_demo.exe %STUDIO_DIR\vision2_demo\spec\%ISE_PLATFORM\bin
 
-move /s %EIFFEL_SRC\vision2_demo\tests %INSTALL_DIR\vision2_demo\tests
-move /s %EIFFEL_SRC\vision2_demo\flatshort %INSTALL_DIR\vision2_demo\flatshort
-move %EIFFEL_SRC\vision2_demo\bitmaps\png\*.png %INSTALL_DIR\vision2_demo\bitmaps\png
+move /s %EIFFEL_SRC\vision2_demo\tests %STUDIO_DIR\vision2_demo\tests
+move /s %EIFFEL_SRC\vision2_demo\flatshort %STUDIO_DIR\vision2_demo\flatshort
+move %EIFFEL_SRC\vision2_demo\bitmaps\png\*.png %STUDIO_DIR\vision2_demo\bitmaps\png

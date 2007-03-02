@@ -338,7 +338,6 @@ feature -- Querys
 			-- How many editors zones (not editor content) now?
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_count: INTEGER
 			l_upper_zone: SD_UPPER_ZONE
 		do
 			from
@@ -349,7 +348,7 @@ feature -- Querys
 			loop
 				l_upper_zone ?= l_zones.item
 				if l_upper_zone /= Void then
-					l_count := l_count + 1
+					Result := Result + 1
 				end
 				l_zones.forth
 			end

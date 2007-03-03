@@ -3,9 +3,9 @@ cdd %STUDIO_DIR
 md library
 cd library
 remtrace base
-exprt %DEFAULT_ORIGO_SVN/Src/library/base base_obsolete
+exprt %DEFAULT_ORIGO_SVN/Src/library/base base
 remtrace base2
-exprt %DEFAULT_ORIGO_SVN/Src/library/base2 base
+exprt %DEFAULT_ORIGO_SVN/Src/library/base_original base_original
 remtrace com
 exprt %DEFAULT_ORIGO_SVN/Src/library/com com
 remtrace Eiffel2Java

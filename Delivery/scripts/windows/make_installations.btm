@@ -64,6 +64,9 @@ remtrace Building the MSIs
 remtrace ----------------------------------------------
 
 cdd %INIT_DIR\install\content\eiffelstudio
+safe_md %INSTALL_DIR\setups
+safe_md %INSTALL_DIR\setups\gpl
+safe_md %INSTALL_DIR\setups\enterprise
 
 remtrace Creating WIX files
 nmake /nologo clean

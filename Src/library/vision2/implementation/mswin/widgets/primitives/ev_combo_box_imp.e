@@ -184,7 +184,8 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			initialize_pixmaps
-		end
+ 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+ 		end
 
 feature -- Alignment
 
@@ -705,11 +706,11 @@ feature {NONE} -- Implementation
 				s_item := selected_item
 				l_tooltip := tooltip
 				set_tooltip ("")
+				text_field := Void
 				recreate_combo_box (Cbs_dropdownlist)
 
 					-- Remove the text field and create a combo.
 				create combo.make_with_combo (Current)
-				text_field := Void
 				if not sensitive then
 					disable_sensitive
 				end
@@ -1062,7 +1063,7 @@ feature {EV_ANY_I} -- Implementation
 
 invariant
 	combo_not_void: is_initialized implies combo /= Void
-	text_field_not_void: (is_initialized and then is_editable) implies text_field /= Void
+	text_field_not_void: text_field /= Void implies is_editable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

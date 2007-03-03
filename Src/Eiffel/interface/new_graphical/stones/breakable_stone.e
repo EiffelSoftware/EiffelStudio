@@ -375,7 +375,9 @@ feature -- operation on conditions
 				else
 					check should_not_occur: False end
 				end
-				bp.set_continue_on_condition_failure (a_cb_cont_on_cond_failure.is_selected)
+				if bp /= Void then
+					bp.set_continue_on_condition_failure (a_cb_cont_on_cond_failure.is_selected)
+				end
 			else
 				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text))
 			end

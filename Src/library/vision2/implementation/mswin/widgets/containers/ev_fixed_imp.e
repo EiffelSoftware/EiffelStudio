@@ -251,11 +251,7 @@ feature {NONE} -- Implementation
 			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
 				Precursor {EV_WIDGET_LIST_IMP} (type, child)
 			else
-				widget_imp ?= child
-				check
-					widget_imp_not_void: widget_imp /= Void
-				end
-				widget_imp.parent_ask_resize (child.width, child.height)
+				child.parent_ask_resize (child.child_cell.width, child.child_cell.height)
 			end
 		end
 

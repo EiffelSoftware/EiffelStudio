@@ -65,6 +65,9 @@
 					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
 				</RegistryKey>
 			</Component>
+			<?ifndef x64?>
+				<Directory Id="Dir.BCC55" Name="BCC55"/>
+			<?endif?>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.library" Name="library"/>
 		</DirectoryRef>

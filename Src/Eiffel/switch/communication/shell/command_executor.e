@@ -81,7 +81,6 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
 			create f_cmd.make_from_string (freeze_command)
-			f_cmd.append (" -silent")
 
 			Execution_environment.change_working_directory (c_code_dir)
 

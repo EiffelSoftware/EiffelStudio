@@ -70,6 +70,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
+			has_a_widget: has (a_widget)
 			a_width_not_smaller_than_minimum_width:
 				a_width >= a_widget.minimum_width
 			a_height_not_smaller_than_minimum_height:
@@ -87,6 +88,7 @@ feature -- Element change
 			-- Assign `an_x' to `a_widget.x_position'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 		do
 			implementation.set_item_x_position (a_widget, an_x)
@@ -98,6 +100,7 @@ feature -- Element change
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 		do
 			implementation.set_item_y_position (a_widget, a_y)
@@ -110,6 +113,7 @@ feature -- Element change
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 		do
 			implementation.set_item_position (a_widget, an_x, a_y)
@@ -122,6 +126,7 @@ feature -- Element change
 			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 			a_width_not_smaller_than_minimum_width:
 				a_width >= a_widget.minimum_width
@@ -135,6 +140,7 @@ feature -- Element change
 			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 			a_height_not_smaller_than_minimum_height:
 				a_height >= a_widget.minimum_height
@@ -149,6 +155,7 @@ feature -- Element change
 			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
+			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
 			a_width_not_smaller_than_minimum_width:
 				a_width >= a_widget.minimum_width

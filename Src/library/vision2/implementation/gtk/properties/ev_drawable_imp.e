@@ -888,9 +888,9 @@ feature {NONE} -- Implemention
 			until
 				i < 0
 			loop
-				l_area @ j := (l_coord_area @ i).y
+				l_area [j] := (l_coord_area @ i).y
 				j := j - 1
-				l_area @ j := (l_coord_area @ i).x
+				l_area [j] := (l_coord_area @ i).x
 				i := i - 1
 				j := j - 1
 			end

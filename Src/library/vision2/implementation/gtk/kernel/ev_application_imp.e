@@ -23,7 +23,7 @@ inherit
 		undefine
 			dispose
 		redefine
-			launch
+			launch, focused_widget
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -107,6 +107,40 @@ feature {NONE} -- Event loop
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	focused_widget: EV_WIDGET is
+			-- Widget with keyboard focus
+		local
+			current_windows: like windows
+			current_window: EV_WINDOW
+			l_window_imp: EV_WINDOW_IMP
+			l_widget_imp: EV_WIDGET_IMP
+			l_widget_ptr: POINTER
+		do
+			current_windows := windows
+			from
+				current_windows.start
+			until
+				current_windows.off or Result /= Void
+			loop
+				current_window := current_windows.item
+				if current_window.has_focus then
+					if current_window.full then
+						l_window_imp ?= current_window.implementation
+						l_widget_ptr := {EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (l_window_imp.c_object)
+						if l_widget_ptr /= default_pointer then
+							l_widget_imp ?= eif_object_from_gtk_object (l_widget_ptr)
+							if l_widget_imp /= Void then
+								Result := l_widget_imp.interface
+							end
+						end
+					else
+						Result := current_window
+					end
+				end
+				current_windows.forth
+			end
+		end
 
 	wait_for_input (msec: INTEGER) is
 			-- Wait for at most `msec' milliseconds for an input.

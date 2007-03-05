@@ -385,8 +385,8 @@ feature{NONE} -- Implementation
 			l_output := output
 			if a_criterion.is_negation_used then
 				l_output.put_normal_text (ti_l_parenthesis.as_string_32)
-				l_output.put_normal_text (ti_space.as_string_32)
 				l_output.put_keyword (ti_not_keyword.as_string_32)
+				l_output.put_normal_text (ti_space.as_string_32)
 			end
 		end
 

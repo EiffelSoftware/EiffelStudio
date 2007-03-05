@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			launcher: COMMAND_EXECUTOR
 		do
 			create launcher
-			launcher.execute (eiffel_layout.Estudio_command_name)
+			launcher.execute ("%"" + eiffel_layout.Estudio_command_name + "%"")
 			execute_die
 		end
 

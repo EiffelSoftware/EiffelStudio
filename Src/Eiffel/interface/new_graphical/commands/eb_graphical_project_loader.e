@@ -235,7 +235,7 @@ feature {NONE} -- Actions
 			not_has_error: not has_error
 		do
 			create Result.make (1024)
-			Result.append (eiffel_layout.estudio_command_name)
+			Result.append ("%"" + eiffel_layout.estudio_command_name + "%"")
 			Result.append (" -config %"")
 			Result.append (config_file_name)
 			Result.append ("%" -project_path %"")

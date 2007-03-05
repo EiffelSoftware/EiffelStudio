@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 					l_loader.compile_project
 				end
 			else
-				ebench_name := eiffel_layout.Estudio_command_name.twin
+				ebench_name := "%"" + eiffel_layout.Estudio_command_name + "%""
 				ebench_name.append (" -clean")
 				if dir_name /= Void and not dir_name.is_empty then
 					ebench_name.append (" -project_path %"")

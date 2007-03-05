@@ -152,6 +152,11 @@ feature {NONE} -- Interface
 			debugged_objects_grid := objects_grid (second_grid_id)
 
 			create split
+			split.pointer_double_press_actions.force_extend (agent (a_split: EV_SPLIT_AREA)
+					do
+						a_split.set_proportion (0.5)
+					end(split)
+				)
 
 				-- The `stack_objects_grid' and `debugged_objects_grid' are
 				-- inserted into a temporary box to provide a padding of one pixel
@@ -308,6 +313,7 @@ feature {NONE} -- Interface
 		local
 			m, sm: EV_MENU
 			mci: EV_CHECK_MENU_ITEM
+			l_has_all: BOOLEAN
 			og: like objects_grid
 			lid: STRING
 			i: INTEGER
@@ -323,7 +329,6 @@ feature {NONE} -- Interface
 					pos_titles[position_locals] := Interface_names.l_locals
 					pos_titles[position_result] := Interface_names.l_result
 					pos_titles[position_objects] := Interface_names.l_dropped_references
-
 					objects_grids.start
 				until
 					objects_grids.after
@@ -332,6 +337,7 @@ feature {NONE} -- Interface
 					create sm.make_with_text (og.name)
 					m.extend (sm)
 					from
+						l_has_all := True
 						lid := objects_grids.key_for_iteration
 						i := objects_grids_positions.lower
 					until
@@ -343,12 +349,29 @@ feature {NONE} -- Interface
 							mci.enable_select
 							mci.disable_sensitive
 						else
+							l_has_all := False
 							mci.disable_select
 							mci.select_actions.extend (agent assign_objects_grids_position (lid, i))
 						end
 						sm.extend (mci)
 						i := i + 1
 					end
+
+					create mci.make_with_text ("All")
+					if l_has_all then
+						mci.enable_select
+						mci.disable_sensitive
+					else
+						mci.disable_select
+						mci.enable_sensitive
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_current))
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_stack))
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_arguments))
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_locals))
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_result))
+						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_objects))
+					end
+					sm.put_front (mci)
 					objects_grids.forth
 				end
 

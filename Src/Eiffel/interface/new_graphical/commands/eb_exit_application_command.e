@@ -98,7 +98,7 @@ feature {NONE} -- Callbacks
 			l_err_dlg: EV_ERROR_DIALOG
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
-			l_eb_debugger_manager ?= Debugger_manager
+			l_eb_debugger_manager := eb_Debugger_manager
 			if l_eb_debugger_manager /= Void and then l_eb_debugger_manager.raised then
 				l_eb_debugger_manager.enable_exiting_eiffel_studio
 			end

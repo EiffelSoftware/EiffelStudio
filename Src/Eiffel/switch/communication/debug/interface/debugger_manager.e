@@ -575,10 +575,10 @@ feature -- Settings
 feature -- Access
 
 	application_status: APPLICATION_STATUS is
-		require
-			application_not_void: application_initialized
 		do
-			Result := application.status
+			if application /= Void then
+				Result := application.status
+			end
 		end
 
 	safe_application_is_stopped: BOOLEAN is

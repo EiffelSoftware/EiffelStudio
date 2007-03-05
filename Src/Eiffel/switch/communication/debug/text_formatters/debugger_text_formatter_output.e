@@ -121,6 +121,54 @@ feature -- Application status
 			tf.add_new_line
 		end
 
+	append_object (dobj: DEBUGGED_OBJECT; a_name: STRING; st: TEXT_FORMATTER) is
+			-- Display `dobj'
+		local
+			is_special_of_char: BOOLEAN
+			char_value: CHARACTER_VALUE
+			l_attr: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			dc: CLASS_C
+			n: STRING
+			add: STRING
+		do
+			dc := dobj.dtype
+			add := dobj.object_address
+			n := a_name
+
+			st.add_string (a_name)
+			st.add_string (Colon_space_str)
+			dc.append_name (st)
+			st.add_string (Left_address_delim)
+			if debugger_manager.safe_application_is_stopped then
+				st.add_address (add, n, dc)
+			else
+				st.add_string (add)
+			end
+			st.add_string (Right_address_delim)
+			st.add_new_line
+			l_attr := dobj.attributes
+			if l_attr /= Void then
+				st.add_indent
+				st.add_string ("-- Attributes --")
+				st.add_new_line
+
+				l_cursor := l_attr.new_cursor
+				l_cursor.start
+				from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					append_to (l_cursor.item, st, 2)
+					l_cursor.forth
+				end
+				st.add_indent
+				st.add_string ("-- end Attributes --");
+			end
+			st.add_new_line
+		end
+
 	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
 			-- Display the status of the running application.
 		local
@@ -463,6 +511,7 @@ feature {NONE} -- append_to implementation
 		local
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
+			l_items: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dc: CLASS_C
 			n: STRING
@@ -483,55 +532,60 @@ feature {NONE} -- append_to implementation
 				st.add_string (add)
 			end
 			st.add_string (Right_address_delim)
-			st.add_new_line
-			append_tabs (st, indent + 1)
-			st.add_string ("-- begin special object --")
-			st.add_new_line
-			if v.sp_lower > 0 then
-				append_tabs (st, indent + 2)
-				st.add_string ("... Items skipped ...")
+			l_items := v.items
+			if l_items /= Void then
 				st.add_new_line
+				append_tabs (st, indent + 1)
+				st.add_string ("-- begin special object --")
+				st.add_new_line
+
+				if v.sp_lower > 0 then
+					append_tabs (st, indent + 2)
+					st.add_string ("... Items skipped ...")
+					st.add_new_line
+				end
+
+				l_cursor := l_items.new_cursor
+				if l_items.count /= 0 then
+					l_cursor.start
+					char_value ?= l_cursor.item
+					is_special_of_char := char_value /= Void
+				end
+				if not is_special_of_char then
+					from
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						append_to (l_cursor.item, st, indent + 2)
+						l_cursor.forth
+					end;
+				else
+					st.add_string ("%"")
+					from
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						char_value ?= l_cursor.item
+						check
+							valid_character_element: char_value /= Void
+						end
+						st.add_char (char_value.value)
+						l_cursor.forth
+					end;
+					st.add_string ("%"")
+					st.add_new_line
+				end
+				if 0 <= v.sp_upper and v.sp_upper < v.capacity - 1 then
+					append_tabs (st, indent + 2);
+					st.add_string ("... More items ...");
+					st.add_new_line
+				end
+				append_tabs (st, indent + 1);
+				st.add_string ("-- end special object --");
 			end
 
-			l_cursor := v.items.new_cursor
-			if v.items.count /= 0 then
-				l_cursor.start
-				char_value ?= l_cursor.item
-				is_special_of_char := char_value /= Void
-			end
-			if not is_special_of_char then
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					append_to (l_cursor.item, st, indent + 2)
-					l_cursor.forth
-				end;
-			else
-				st.add_string ("%"")
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					char_value ?= l_cursor.item
-					check
-						valid_character_element: char_value /= Void
-					end
-					st.add_char (char_value.value)
-					l_cursor.forth
-				end;
-				st.add_string ("%"")
-				st.add_new_line
-			end
-			if 0 <= v.sp_upper and v.sp_upper < v.capacity - 1 then
-				append_tabs (st, indent + 2);
-				st.add_string ("... More items ...");
-				st.add_new_line
-			end;
-			append_tabs (st, indent + 1);
-			st.add_string ("-- end special object --");
 			st.add_new_line
 		end
 

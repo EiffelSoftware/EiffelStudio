@@ -101,15 +101,15 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_ecdbgd(char*id, int is_new_console_requested, char *ecdbgd_path, char *cwd, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, HANDLE *child_process_handle)
 #else
-rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *child_pid)
+rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
 					/* Where ProcessId is written (can be NULL if you don't need it) */
 {
-	/* Launch the child process 'cmd' and return the stream structure which can
+	/* Launch the child process 'ecdbgd_path' and return the stream structure which can
 	 * be used to communicate with the child. Note that this function only
 	 * returns in the parent process.
 	 */
@@ -126,14 +126,12 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 	PROCESS_INFORMATION	piProcInfo;
 	STARTUPINFO		siStartInfo;
 	SECURITY_ATTRIBUTES	saAttr;
-	DWORD l_startup_flags;
 
 	HANDLE uu_str [2];		/* Field to UUEncode  */
 	char *t_uu;				/* Result of UUEncode */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *startpath = NULL;	/* Paths for directory to start in */
-	char* cmdline;
+	char *cmdline;			/* Duplicate of command line since we need to add some special arguments. */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int r;
@@ -152,7 +150,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 	cmdline = malloc (strlen (ecdbgd_path) + uu_buffer_size);
 	strcpy (cmdline, ecdbgd_path);
 #else
-	argv = shword(cmd);					/* Split command into words */
+	argv = shword(ecdbd_path);					/* Split command into words */
 #endif
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
@@ -230,16 +228,6 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 	}
 	pp2c_write_to_dup = NULL;
 
-		/* Working directory */
-	if (cwd) {
-		chdir (cwd);
-		free (startpath);
-		startpath = getcwd (NULL, PATH_MAX);
-	} else {
-		startpath = strdup (ecdbgd_path);
-		*(strrchr (startpath, '\\')) = '\0';
-	}
-
 	/* Encode the pipes to start the child */
 	/* ... ' \"?' + UUENCODED2POINTERS + '?\"' */
 
@@ -253,7 +241,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 
 
 #ifdef USE_ADD_LOG
-		add_log(20, "Command line: %s %s", ecdbgd_path, cmdline);
+	add_log(20, "Command line: %s", cmdline);
 #endif
 
 	/* Set up members of STARTUPINFO structure. */
@@ -266,25 +254,15 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
 
-		/* FIXME or HACK: To enable the launched application to be in foreground */
-/*	create_dummy_window(); */
-
-		/* If we are launching the graphical version of the Eiffel compiler,
-		 * we use DETACHED_PROCESS since we do not want its DOS console
-		 * to appear. */
-	if (is_new_console_requested == 1) {
-		l_startup_flags = DETACHED_PROCESS;
-	} else {
-		l_startup_flags = CREATE_NEW_CONSOLE;
-	}
-	fSuccess = CreateProcess (ecdbgd_path,	/* Command 	*/
+	fSuccess = CreateProcess (
+		NULL,				/* Application's name */
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
 		TRUE,				/* Handles are inherited */
-		l_startup_flags,	/* Creation flags */
+		CREATE_NEW_CONSOLE,	/* Creation flags */
 		NULL,				/* Use parent's environment */
-		startpath,			/* Use cmd's current directory */
+		NULL,				/* Use parent's current directory */
 		&siStartInfo,		/* STARTUPINFO pointer */
 		&piProcInfo);		/* for PROCESS_INFORMATION */
 
@@ -294,7 +272,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 		add_log(20, "Error code %d", GetLastError());
 #endif
 		strcat (error_msg, "Cannot Launch the program \"");
-		strcat (error_msg, ecdbgd_path);
+		strcat (error_msg, cmdline);
 		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
 		MessageBox (NULL, error_msg, "Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
@@ -429,12 +407,6 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 		}
 		/* Now exec command. A successful launch should not return */
 		if (argv != (char **) 0) {
-
-				/* Working directory */
-			if (cwd) {
-				chdir (cwd);
-			}
-
 #ifdef EIF_VMS
 /*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
 			execv(argv[0], argv);
@@ -450,7 +422,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 		}
 #ifdef USE_ADD_LOG
 		else
-			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+			add_log(2, "ERROR out of memory: cannot exec '%s'", ecdbd_path);
 #endif
 		SPAWN_CHILD_FAILED(1);
 
@@ -548,12 +520,9 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *chi
 #ifdef EIF_WINDOWS
 	if (child_process_handle != NULL) {
 		*child_process_handle = piProcInfo.hProcess;
-		if (child_process_id!=NULL)
-			*child_process_id = piProcInfo.dwProcessId;
 	}
 
 	free (cmdline);
-	free (startpath);
 #else
 	if (child_pid != (Pid_t *) 0)
 		*child_pid = pid;

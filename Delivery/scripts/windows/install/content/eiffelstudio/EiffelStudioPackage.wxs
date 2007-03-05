@@ -111,7 +111,7 @@
 		<DirectoryRef Id="TARGETDIR">
 			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
-				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) $(var.Platform))">
+				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
 						<!-- Shortcuts and file association -->
 					<Component  Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D"  Win64="$(var.IsWin64)">
 						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall"/>
@@ -125,7 +125,7 @@
 							Description="EiffelStudio development environment" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>
-						<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) $(var.Platform))"
+						<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
 							Description="EiffelStudio development environment" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>

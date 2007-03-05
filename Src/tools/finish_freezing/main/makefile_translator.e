@@ -81,11 +81,13 @@ feature -- Initialization
 		local
 			quick_prg: STRING
 		do
-			quick_prg := eiffel_layout.Quick_finalize_command_name.twin
+			quick_prg := "%"" + eiffel_layout.Quick_finalize_command_name + "%""
 
 			quick_prg.append (" . " + options.get_string ("obj_file_ext", "obj"))
 
-			env.system (quick_prg)
+				-- On Windows, we need to surround the command with " since it is executed
+				-- by COMSPEC.
+			env.system ("%"" + quick_prg + "%"")
 		end
 
 feature -- Status report
@@ -189,7 +191,7 @@ feature -- Execution
 			end
 
 				-- Launch distributed make.
-			eiffel_make := eiffel_layout.Emake_command_name.twin
+			eiffel_make := "%"" + eiffel_layout.Emake_command_name + "%""
 
 			if processor_count > 0 then
 				eiffel_make.append (" -cpu ")
@@ -201,7 +203,9 @@ feature -- Execution
 			eiffel_make.append (command)
 			eiffel_make.append ("%"")
 
-			env.system (eiffel_make)
+				-- On Windows, we need to surround the command with " since it is executed
+				-- by COMSPEC.
+			env.system ("%"" + eiffel_make + "%"")
 		end
 
 feature {NONE} -- Translation
@@ -1600,7 +1604,7 @@ feature {NONE} -- Implementation
 				replacement := get_replacement (word)
 
 				if replacement /= Void then
-					if 
+					if
 						wordstart > 2 and then line.item (wordstart-1) = '\' and then
 						(line.item (wordstart-2) = '/' or
 						line.item(wordstart-2) = '\' or

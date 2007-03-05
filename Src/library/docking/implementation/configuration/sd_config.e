@@ -884,30 +884,30 @@ feature {NONE} -- Implementation
 
 	open_editor_minimized_data_unminimized (a_config_data: SD_CONFIG_DATA) is
 			-- Unminimized editor zone if `a_config_data' is unminimized.
-		require
-			not_void: a_config_data /= Void
 		local
 			l_editor_zone: SD_UPPER_ZONE
 		do
-			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
-			if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
-				if not a_config_data.is_editor_minimized and l_editor_zone.is_minimized then
-					l_editor_zone.on_minimize
+			if a_config_data /= Void then
+				l_editor_zone := internal_docking_manager.query.only_one_editor_zone
+				if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
+					if not a_config_data.is_editor_minimized and l_editor_zone.is_minimized then
+						l_editor_zone.on_minimize
+					end
 				end
 			end
 		end
 
 	open_editor_minimized_data_minimize (a_config_data: SD_CONFIG_DATA) is
 			-- Minimized editor zone if `a_cofig_data' is minimized.
-		require
-			not_void: a_config_data /= Void
 		local
 			l_editor_zone: SD_UPPER_ZONE
 		do
-			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
-			if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
-				if a_config_data.is_editor_minimized and not l_editor_zone.is_minimized then
-					l_editor_zone.on_minimize
+			if a_config_data /= Void then
+				l_editor_zone := internal_docking_manager.query.only_one_editor_zone
+				if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
+					if a_config_data.is_editor_minimized and not l_editor_zone.is_minimized then
+						l_editor_zone.on_minimize
+					end
 				end
 			end
 		end

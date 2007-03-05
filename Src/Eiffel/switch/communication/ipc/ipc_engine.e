@@ -59,8 +59,8 @@ feature -- Launching
 		require
 			ecdbgd_launched_only_if_not_closed: ec_dbg_launched implies not close_ecdbgd_on_end_of_debugging
 		local
-			cmd, cwd: STRING
-			cs_pname, cs_cmd, cs_cwd: C_STRING
+			cmd: STRING
+			cs_pname, cs_cmd: C_STRING
 			r: INTEGER
 		do
 			if ec_dbg_launched and then not is_ecdbgd_alive then
@@ -75,26 +75,16 @@ feature -- Launching
 				get_environment
 				if valid_ise_ecdbgd_executable then
 					create cmd.make_from_string (ise_ecdbgd_path)
-					if cmd.has (' ') then
-						cmd.prepend_character ('"')
-						cmd.append_character ('"')
-					end
-
-					create cwd.make_from_string (eiffel_layout.bin_path)
-					if cwd.has (' ') then
-						cwd.prepend_character ('"')
-						cwd.append_character ('"')
-					end
-
+					cmd.prepend_character ('"')
+					cmd.append_character ('"')
 					create cs_cmd.make (cmd)
-					create cs_cwd.make (cwd)
 					create cs_pname.make ("ecdbgd")
 
 					debug ("ipc")
 						io.put_string ("Launching ecdbgd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
 					end
 
-					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, cs_cwd.item, ise_timeout)
+					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
 					ec_dbg_launched := (r = 1)
 				else
 					ec_dbg_launched := False
@@ -301,10 +291,10 @@ feature {ANY} -- Constants
 
 feature {NONE} -- Externals
 
-	c_launch_ecdbgd (pprogn: POINTER; pcmd, pcwd: POINTER; timeout: INTEGER): INTEGER is
+	c_launch_ecdbgd (pprogn: POINTER; pcmd: POINTER; timeout: INTEGER): INTEGER is
 			-- launch classic Eiffel debugger component
 		external
-			"C signature (char* , char*, char*, int ): int"
+			"C signature (char* , char* , int ): int"
 		alias
 			"launch_ecdbgd"
 		end

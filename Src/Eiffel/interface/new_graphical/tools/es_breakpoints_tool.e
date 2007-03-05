@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			grid.enable_partial_dynamic_content
 			grid.set_dynamic_content_function (agent computed_grid_item)
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
+			grid.key_press_actions.extend (agent key_pressed_on_grid)
 
 			grid.set_column_count_to (3)
 			grid.column (1).set_title (interface_names.l_data)
@@ -831,6 +832,27 @@ feature {NONE} -- Impl bp
 
 				m.extend (mi)
 				m.show
+			end
+		end
+
+	key_pressed_on_grid (a_key: EV_KEY) is
+			--
+		local
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_bp: BREAKPOINT
+			bp_stone: BREAKABLE_STONE
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				l_selected_rows := grid.selected_rows
+				if not l_selected_rows.is_empty then
+					l_row := l_selected_rows.first
+					l_bp ?= l_row.data
+					if l_bp /= Void then
+						create bp_stone.make_from_breakpoint (l_bp)
+						bp_stone.display_bkpt_menu
+					end
+				end
 			end
 		end
 

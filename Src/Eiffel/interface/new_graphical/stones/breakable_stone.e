@@ -35,7 +35,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_breakpoint
 
 feature {NONE} -- Initialization
 
@@ -47,6 +48,14 @@ feature {NONE} -- Initialization
 			routine := e_feature
 			index := break_index
 		end -- make
+
+	make_from_breakpoint (a_bp: BREAKPOINT) is
+		require
+			bp_not_void: a_bp /= Void
+			bp_valid: a_bp.is_valid
+		do
+			make (a_bp.routine, a_bp.breakable_line_number)
+		end
 
 feature -- Properties
 

@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 			grid.enable_border
 			grid.enable_partial_dynamic_content
 			grid.set_dynamic_content_function (agent computed_grid_item)
+			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 
 			grid.set_column_count_to (3)
 			grid.column (1).set_title (interface_names.l_data)

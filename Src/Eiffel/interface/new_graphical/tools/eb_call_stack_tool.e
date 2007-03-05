@@ -68,7 +68,6 @@ feature {NONE} -- Initialization
 			box_exception: EV_HORIZONTAL_BOX
 			tb_exception: EV_TOOL_BAR
 			tb_but_exception: EV_TOOL_BAR_BUTTON
-			box_stop_cause: EV_HORIZONTAL_BOX
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
 		do
@@ -152,6 +151,7 @@ feature {NONE} -- Initialization
 
 			box2.extend (box_thread)
 			box2.disable_item_expand (box_thread)
+			display_box_thread (False)
 
 			box2.extend (box_exception)
 			box2.disable_item_expand (box_exception)
@@ -192,7 +192,6 @@ feature {NONE} -- Initialization
 				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			end
 			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
-
 
 			box.extend (stack_grid)
 
@@ -249,6 +248,7 @@ feature {NONE} -- Initialization
 feature -- Box management
 
 	box_thread: EV_HORIZONTAL_BOX
+	box_stop_cause: EV_HORIZONTAL_BOX
 
 	display_box_thread (b: BOOLEAN) is
 			-- Show or hide box related to available Thread ids
@@ -362,6 +362,8 @@ feature -- Status setting
 				refresh_threads_info
 				process_real_update_on_idle (l_is_stopped)
 			else
+				save_call_stack_cmd.disable_sensitive
+				copy_call_stack_cmd.disable_sensitive
 				display_stop_cause (False)
 				display_box_thread (False)
 			end
@@ -388,6 +390,10 @@ feature -- Memory management
 			exception.remove_text
 			exception.remove_tooltip
 			stop_cause.remove_text
+			display_box_thread (False)
+
+			save_call_stack_cmd.disable_sensitive
+			copy_call_stack_cmd.disable_sensitive
 
 			clean_stack_grid
 		end
@@ -511,6 +517,9 @@ feature {NONE} -- Implementation
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			request_clean_stack_grid
+			save_call_stack_cmd.disable_sensitive
+			copy_call_stack_cmd.disable_sensitive
+
 			if Debugger_manager.application_is_executing then
 				l_status := Debugger_manager.application_status
 				if dbg_was_stopped then
@@ -552,9 +561,6 @@ feature {NONE} -- Implementation
 						l_tooltipable_grid_row.set_item (1, glab)
 					end
 					stack_grid.request_columns_auto_resizing
-				else
-					save_call_stack_cmd.disable_sensitive
-					copy_call_stack_cmd.disable_sensitive
 				end
 			end
 		end
@@ -626,11 +632,17 @@ feature {NONE} -- Implementation
 	show_call_stack_message (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
+			wdlg: EB_WARNING_DIALOG
 		do
-			create dlg
-			dlg.set_exception_tag (exception_tag_text)
-			dlg.set_exception_message (exception_message_text)
-			dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			if debugger_manager.safe_application_is_stopped then
+				create dlg
+				dlg.set_exception_tag (exception_tag_text)
+				dlg.set_exception_message (exception_message_text)
+				dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			else
+				create wdlg.make_with_text (interface_names.l_Only_available_for_stopped_application)
+				wdlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			end
 		end
 
 	refresh_threads_info is
@@ -674,12 +686,23 @@ feature {NONE} -- Implementation
 	exception_tag_text: STRING_32 is
 			-- Text corresponding to the current exception.
 		local
+			l_status: APPLICATION_STATUS
 			s32: STRING_32
 		do
-			s32 := Debugger_manager.Application.status.exception_description
-			if s32 /= Void then
-				Result := s32
-			else
+			l_status := Debugger_manager.application_status
+			if l_status /= Void then
+				if l_status.exception_occurred then
+					s32 := l_status.exception_description
+					if s32 /= Void then
+						Result := s32
+					else
+						Result := ""
+					end
+				else
+					Result := "No exception occurred"
+				end
+			end
+			if Result = Void then
 				Result := ""
 			end
 
@@ -969,27 +992,34 @@ feature {NONE} -- Implementation
 			dlg: EB_QUESTION_DIALOG
 		do
 			if not retried then
-					--| We create a file (or open it).
-				fn := fd.file_name
-				fp := fd.file_path
-				create f.make (fn)
-				if f.exists then
-					create dlg.make_with_text (interface_names.l_file_exits (fn))
-					dlg.set_buttons_and_actions (<<interface_names.b_overwrite, interface_names.b_append, interface_names.b_cancel>>,
-							<<
-								agent save_call_stack_to_filename	(fp, fn, False),
-								agent save_call_stack_to_filename	(fp, fn, True),
-								agent dlg.destroy
-							 >>
-						)
-					dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				if debugger_manager.safe_application_is_stopped then
+						--| We create a file (or open it).
+					fn := fd.file_name
+					fp := fd.file_path
+					create f.make (fn)
+					if f.exists then
+						create dlg.make_with_text (interface_names.l_file_exits (fn))
+						dlg.set_buttons_and_actions (<<interface_names.b_overwrite, interface_names.b_append, interface_names.b_cancel>>,
+								<<
+									agent save_call_stack_to_filename	(fp, fn, False),
+									agent save_call_stack_to_filename	(fp, fn, True),
+									agent dlg.destroy
+								 >>
+							)
+						dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+					else
+						save_call_stack_to_filename	(fp, fn, False)
+					end
 				else
-					save_call_stack_to_filename	(fp, fn, False)
+					create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
+					wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 				end
 			else
 					-- The file name was probably incorrect (not creatable).
-				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
-				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				if fd /= Void then
+					create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
+					wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				end
 			end
 		rescue
 			retried := True
@@ -1041,24 +1071,32 @@ feature {NONE} -- Implementation
 			t: STRING
 		do
 			if not retried then
-					--| We generate the call stack.
-				create l_output.make;
-				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
-				create s.make_empty
-				t := exception_tag_text
-				if t /= Void and then not t.is_empty then
-					s.append_string ("EXCEPTION TAG:%N" + t + "%N")
+				if debugger_manager.safe_application_is_stopped then
+						--| We generate the call stack.
+					create l_output.make;
+					Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
+					create s.make_empty
+					if debugger_manager.application_status.exception_occurred then
+						t := exception_tag_text
+						if t /= Void and then not t.is_empty then
+							s.append_string ("EXCEPTION TAG:%N" + t + "%N")
+						end
+						t := exception_message_text
+						if t /= Void and then not t.is_empty then
+							s.append_string ("EXCEPTION MESSAGE:%N" + t + "%N")
+						end
+					end
+					t := l_output.stored_output
+					if t /= Void and then not t.is_empty then
+						s.append_string ("CALLSTACK:%N" + t)
+					end
+					ev_application.clipboard.set_text (s)
+					l_output.reset_output
+				else
+					ev_application.clipboard.set_text ("")
 				end
-				t := exception_message_text
-				if t /= Void and then not t.is_empty then
-					s.append_string ("EXCEPTION MESSAGE:%N" + t + "%N")
-				end
-				t := l_output.stored_output
-				if t /= Void and then not t.is_empty then
-					s.append_string ("CALLSTACK:%N" + t)
-				end
-				ev_application.clipboard.set_text (s)
-				l_output.reset_output
+			else
+				ev_application.clipboard.set_text ("")
 			end
 		rescue
 			retried := True
@@ -1087,44 +1125,49 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			l_status := Debugger_manager.application_status
-			if l_status /= Void and then l_status.is_stopped then
-				arr := l_status.all_thread_ids
-				if arr /= Void and then not arr.is_empty then
-					create m
+			if l_status /= Void then
+				if l_status.is_stopped then
+					arr := l_status.all_thread_ids
+					if arr /= Void and then not arr.is_empty then
+						create m
 
-					create mi.make_with_text_and_action ("Show threads panel", agent show_thread_panel)
-					m.extend (mi)
-					m.extend (create {EV_MENU_SEPARATOR})
-
-					from
-						arr.start
-					until
-						arr.after
-					loop
-						tid := arr.item
-						l_item_text := "0x" + tid.to_hex_string
-						s := l_status.thread_name (tid)
-						if s /= Void then
-							l_item_text.append_string (" - " + s)
-						end
-
-						create mi
-						if tid = l_status.current_thread_id then
-							mi.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
-						end
-						mi.set_text (l_item_text)
-						mi.set_data (tid)
-						mi.select_actions.extend (agent set_callstack_thread (tid))
+						create mi.make_with_text_and_action ("Show threads panel", agent show_thread_panel)
 						m.extend (mi)
-						arr.forth
+						m.extend (create {EV_MENU_SEPARATOR})
+
+						from
+							arr.start
+						until
+							arr.after
+						loop
+							tid := arr.item
+							l_item_text := "0x" + tid.to_hex_string
+							s := l_status.thread_name (tid)
+							if s /= Void then
+								l_item_text.append_string (" - " + s)
+							end
+
+							create mi
+							if tid = l_status.current_thread_id then
+								mi.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
+							end
+							mi.set_text (l_item_text)
+							mi.set_data (tid)
+							mi.select_actions.extend (agent set_callstack_thread (tid))
+							m.extend (mi)
+							arr.forth
+						end
+						m.show_at (lab, 0, thread_id.height)
+					else
+						create wd.make_with_text ("Sorry no information available on Threads for now")
+						wd.show
 					end
-					m.show_at (lab, 0, thread_id.height)
 				else
-					create wd.make_with_text ("Sorry no information available on Threads for now")
+					create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
 					wd.show
 				end
 			else
-				create wd.make_with_text ("Sorry you cannot change thread while execution is running")
+				create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
 				wd.show
 			end
 		end

@@ -707,6 +707,8 @@ feature -- Label texts
 	l_Continue_execution: STRING_GENERAL is			do Result := locale.translate("Continue execution")	end
 	l_Choose_folder: STRING_GENERAL is			do Result := locale.translate("Select the destination folder ")	end
 	l_one_target_among: STRING_GENERAL is			do Result := locale.translate("Choose one target among: ")	end
+	l_Only_available_for_stopped_application: STRING_GENERAL is do Result := locale.translate("This feature is only available when debugging, and when the debugged application is stopped.")	end
+
 	l_class: STRING_GENERAL is					do Result := locale.translate ("Class") end
 	l_class_colon: STRING_GENERAL is					do Result := locale.translate("Class:")	end
 	l_class_is_not_writable (a_class: STRING_GENERAL): STRING_GENERAL is

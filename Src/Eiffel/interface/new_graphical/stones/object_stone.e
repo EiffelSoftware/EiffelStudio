@@ -127,13 +127,6 @@ feature -- Status report
 			-- Graphical item representing `Current'
 			-- May be Void, even if `Current' is represented in an container widget.
 
-	tree_item: EV_TREE_ITEM is
-			-- Tree item representing `Current' in the object tree.
-			-- May be Void, even if `Current' is represented in the object tree.
-		do
-			Result ?= ev_item
-		end
-
 invariant
 
 	address_exists: object_address /= Void

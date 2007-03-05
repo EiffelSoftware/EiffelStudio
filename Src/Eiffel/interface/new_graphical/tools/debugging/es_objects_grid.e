@@ -427,6 +427,17 @@ feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJE
 			attach_debug_value_from_line_to_grid_row (a_row, dv, Void, a_title)
 		end
 
+	attach_dump_value_to_grid_row (a_row: EV_GRID_ROW; a_dumpv: DUMP_VALUE; a_title: STRING_GENERAL) is
+		local
+			litem: ES_OBJECTS_GRID_ADDRESS_LINE
+		do
+			create litem.make_with_dump_value (a_dumpv, Current)
+			if a_title /= Void then
+				litem.set_title (a_title)
+			end
+			litem.attach_to_row (a_row)
+		end
+
 	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_LINE is
 		require
 			a_row /= Void

@@ -93,6 +93,6 @@ iff not defined NO_INSTALL .and. not defined NO_COMPILE .and. not defined NO_DOC
 endiff
 echo You have 60s to cancel this build
 echo Press Ctrl-C or Esc to abort
-sleep 60
+delay /b 60
 echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR, %STUDIO_DIR and %DOCUMENT_DIR >> %INSTALL_LOG
 echo -------------------------------- >> %INSTALL_LOG

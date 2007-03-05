@@ -101,9 +101,9 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char*id, int is_new_console_requested, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_ecdbgd(char*id, int is_new_console_requested, char *ecdbgd_path, char *cwd, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, char *cwd, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
@@ -132,7 +132,8 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 	char *t_uu;				/* Result of UUEncode */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *startpath = NULL, *dotplace, *cmdline, *exe_path;	/* Paths for directory to start in */
+	char *startpath = NULL;	/* Paths for directory to start in */
+	char* cmdline;
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int r;
@@ -148,36 +149,8 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		/* We encode 2 pointers, plus '\"?' and '?\"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6;
 
-	exe_path = strdup(cmd);
-	/* Find the name of the command and place it in exe_path */
-	/* Find the args and place them in cmdline */
-	/* Set the starting  path to be the path of the executable io start_path */
-
-	/* FIXME jfiat [2006/06/15] : 
-	 * we should make sure the .exe is at the end of following by a space
-	 * indeed if the executable is  e:/test.exe/eiffel57/...../bin/estudio.exe ... 
-	 * this will fail															*/
-	for (dotplace = strchr (exe_path, '.');
-		dotplace && (strnicmp (dotplace, ".exe", 4) != 0) ;
-		dotplace = strchr (dotplace+1 , '.') )
-		;
-	if (!dotplace) {
-		printf ("Error no .exe in executable");
-		SPAWN_CHILD_FAILED(1);
-	}
-	*(dotplace + 4) = '\0';
-	if ( (strchr (exe_path, ' ') != NULL) && (strchr (exe_path,'"') == NULL) ) {
-		cmdline = malloc (strlen (cmd) + 3 + uu_buffer_size);
-		memset  (cmdline, 0, strlen(cmd) + 3);
-		strcpy (cmdline , "\"");
-		strcat (cmdline, exe_path);
-		strcat (cmdline, "\" ");
-		if (strlen (exe_path) != strlen (cmd))
-			strcat (cmdline, dotplace + 5);
-	} else {
-		cmdline = malloc (strlen (cmd) + uu_buffer_size);
-		strcpy (cmdline, cmd);
-	}
+	cmdline = malloc (strlen (ecdbgd_path) + uu_buffer_size);
+	strcpy (cmdline, ecdbgd_path);
 #else
 	argv = shword(cmd);					/* Split command into words */
 #endif
@@ -263,7 +236,7 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else {
-		startpath = strdup (exe_path);
+		startpath = strdup (ecdbgd_path);
 		*(strrchr (startpath, '\\')) = '\0';
 	}
 
@@ -280,7 +253,7 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 
 
 #ifdef USE_ADD_LOG
-		add_log(20, "Command line: %s %s", exe_path, cmdline);
+		add_log(20, "Command line: %s %s", ecdbgd_path, cmdline);
 #endif
 
 	/* Set up members of STARTUPINFO structure. */
@@ -304,7 +277,7 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 	} else {
 		l_startup_flags = CREATE_NEW_CONSOLE;
 	}
-	fSuccess = CreateProcess (exe_path,	/* Command 	*/
+	fSuccess = CreateProcess (ecdbgd_path,	/* Command 	*/
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
@@ -321,7 +294,7 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 		add_log(20, "Error code %d", GetLastError());
 #endif
 		strcat (error_msg, "Cannot Launch the program \"");
-		strcat (error_msg, exe_path);
+		strcat (error_msg, ecdbgd_path);
 		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
 		MessageBox (NULL, error_msg, "Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
@@ -580,7 +553,6 @@ rt_public STREAM *spawn_child(char*id, char *cmd, char *cwd, int handle_meltpath
 	}
 
 	free (cmdline);
-	free (exe_path);
 	free (startpath);
 #else
 	if (child_pid != (Pid_t *) 0)

@@ -138,7 +138,7 @@ rt_public int is_ecdbgd_alive (void)
 	return (ewb_active_check(ewb_data.d_cs, ewb_data.d_ecdbgd) == 0);
 }
 
-rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout) 
+rt_public int launch_ecdbgd (char* progn, char* cmd, char* cwd, int eif_timeout) 
 {
 	STREAM *sp;			/* Stream used to talk to the child "ecdbgd" */
 #ifdef EIF_WINDOWS
@@ -184,9 +184,9 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 
 #ifdef EIF_WINDOWS
 		/* First argument is 1 because we are launching the Eiffel compiler here. */
-	sp = spawn_child("dbg", 0, cmd, NULL, 0, &pid, NULL);	/* Bring "ecdbgd" to life */
+	sp = spawn_ecdbgd("dbg", 0, cmd, cwd, &pid, NULL);	/* Bring "ecdbgd" to life */
 #else
-	sp = spawn_child("dbg", cmd, NULL, 0, &pid);	/* Bring "ecdbgd" to life */
+	sp = spawn_ecdbgd("dbg", cmd, cwd, &pid);	/* Bring "ecdbgd" to life */
 #endif
 
 	if (sp == (STREAM *) 0) {

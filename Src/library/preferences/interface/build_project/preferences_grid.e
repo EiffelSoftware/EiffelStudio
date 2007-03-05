@@ -213,7 +213,7 @@ feature {NONE} -- Events
 				a_row.set_item (4, preference_value_column (a_pref))
 			end
 
-			if l_selected_row.parent /= Void and then not l_selected_row.is_selected then
+			if l_selected_row /= Void and then l_selected_row.parent /= Void and then not l_selected_row.is_selected then
 				l_selected_row.enable_select
 			end
 		end
@@ -1162,6 +1162,7 @@ feature {NONE} -- Filtering
 			in_flat_mode: not grid.is_tree_enabled
 		local
 			l_match_text: STRING_32
+			s32: STRING_32
 
 			l_preference: PREFERENCE
 			l_prefs: LIST [PREFERENCE]
@@ -1173,18 +1174,19 @@ feature {NONE} -- Filtering
 			if not grid.is_tree_enabled and not update_matches_requested then
 				l_prefs := preferences.preferences.linear_representation
 				l_match_text := filter_text_box.text
-
 				if l_match_text.is_empty then
 					matches := l_prefs
 				else
 					create {ARRAYED_LIST [PREFERENCE]} matches.make (l_prefs.count)
 					from
+						l_match_text.to_lower
 						l_prefs.start
 					until
 						l_prefs.after
 					loop
 						l_preference := l_prefs.item
-						if l_match_text = Void or else build_preference_name_to_display (l_preference).has_substring (l_match_text) then
+						s32 := build_preference_name_to_display (l_preference)
+						if s32 = Void or else s32.as_lower.has_substring (l_match_text) then
 							matches.extend (l_preference)
 						end
 						l_prefs.forth

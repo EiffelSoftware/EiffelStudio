@@ -105,10 +105,10 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does `Current' have the keyboard focus?
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_is_active (c_object)
+			Result := internal_has_focus
 		end
 
  	maximum_width: INTEGER
@@ -351,6 +351,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	internal_has_focus: BOOLEAN
+			-- Does `Current' have the keyboard focus?
+
 	internal_set_maximum_size (a_max_width, a_max_height: INTEGER)
 			-- Set maximum width and height of `Current' to `a_max_width' and `a_max_height'.
 		local
@@ -503,12 +506,13 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementat
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
+			internal_has_focus := a_has_focus
+			Precursor {EV_CELL_IMP} (a_has_focus)
 			if a_has_focus then
 				on_set_focus_event ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 			else
 				on_set_focus_event (default_pointer)
 			end
-			Precursor {EV_CELL_IMP} (a_has_focus)
 		end
 
 feature {EV_ACCELERATOR_IMP} -- Implementation

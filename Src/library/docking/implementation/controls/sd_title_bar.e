@@ -42,7 +42,9 @@ feature {NONE} -- Initlization
 			viewport.extend (fixed)
 
 			create internal_title.make
+			internal_title.set_font (internal_shared.tool_bar_font)
 			internal_title.set_focused_color (True)
+			internal_title.set_minimum_height (internal_shared.title_bar_height)
 			fixed.extend (internal_title)
 
 			create stick
@@ -177,6 +179,7 @@ feature -- Command
 			internal_title.refresh
 
 			internal_border.set_border_color (internal_title.hightlight_color)
+			update_baseline
 		ensure
 			is_focus_color_enable_set: is_focus_color_enable
 		end
@@ -192,6 +195,7 @@ feature -- Command
 			internal_title.refresh
 
 			internal_border.set_border_color (internal_title.hightlight_non_focus_color)
+			update_baseline
 		end
 
 	disable_focus_color is
@@ -202,6 +206,7 @@ feature -- Command
 			internal_title.set_disable_focus_background_color
 			internal_title.refresh
 			internal_border.set_border_color (internal_shared.border_color)
+			update_baseline
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable
 		end
@@ -247,6 +252,31 @@ feature -- Command
 			end
 		end
 
+	enable_baseline is
+			-- Set `is_baseline_enalbed' with True.
+		do
+			is_baseline_enalbed := True
+			update_baseline
+		end
+
+	disable_baseline is
+			-- Set `is_baseline_enalbed' with false.
+		do
+			is_baseline_enalbed := False
+			update_baseline
+		end
+
+	update_baseline is
+			-- Update baseline state and color.
+		do
+			if is_baseline_enalbed then
+				internal_border.set_show_border ({SD_ENUMERATION}.bottom, True)
+				internal_border.set_one_border_color ({SD_ENUMERATION}.bottom, internal_shared.border_color)
+			else
+				internal_border.set_show_border ({SD_ENUMERATION}.bottom, False)
+			end
+		end
+
 	destroy is
 			-- Destroy
 		do
@@ -289,6 +319,10 @@ feature -- Query
 		do
 			Result := internal_title.is_focus_color_enable
 		end
+
+	is_baseline_enalbed: BOOLEAN
+			-- If there is a extra baseline?
+			-- When used by SD_FLOATING_ZONE, we should added an axtra base line to make it looks beautiful.
 
 feature -- Actions
 

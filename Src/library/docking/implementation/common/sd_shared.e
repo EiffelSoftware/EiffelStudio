@@ -371,11 +371,10 @@ feature -- Constants
 		local
 			l_platform: PLATFORM
 		once
+			Result := notebook_tab_height
 			create l_platform
 			if l_platform.is_windows then
-				Result := 20
-			else
-				Result := notebook_tab_height
+				Result := Result + 2
 			end
 		end
 
@@ -390,15 +389,8 @@ feature -- Constants
 
 	title_bar_height: INTEGER is
 			-- Size of zone's title bar.
-		local
-			l_platform: PLATFORM
-		once
-			create l_platform
-			if l_platform.is_windows then
-				Result := 18
-			else
-				Result := tool_bar_font.height * 3 // 2 + 2
-			end
+		do
+			Result := tool_bar_font.height * 3 // 2 + 2
 		end
 
 	Notebook_tab_height: INTEGER is
@@ -406,11 +398,10 @@ feature -- Constants
 		local
 			l_platform: PLATFORM
 		once
+			Result := tool_bar_font.height * 3 // 2
 			create l_platform
 			if l_platform.is_windows then
-				Result := 18
-			else
-				Result := tool_bar_font.height * 3 // 2
+				Result := Result + 2
 			end
 		end
 
@@ -431,12 +422,6 @@ feature -- Constants
 
 	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
 			-- Tool bar hidden item dialog maximum allowed width.
-
-	Tool_bar_border_width: INTEGER is
-			--
-		do
-			Result := 10
-		end
 
 	Default_floating_window_width: INTEGER is 470
 			-- Default floating window width.
@@ -476,9 +461,6 @@ feature -- Constants
 
 	Feedback_tab_width: INTEGER is 60
 			-- When user dragging, the width of feedback rectangle for tab.
-
-	Floating_title_bar_height: INTEGER is 15
-			-- Height of SD_FLOATING_TOOL_BAR_ZONE's title bar.
 
 	Notebook_minimum_width: INTEGER is 77
 			-- Minimumu width for SD_NOTEBOOK, it's useful when a zone is minimized.	

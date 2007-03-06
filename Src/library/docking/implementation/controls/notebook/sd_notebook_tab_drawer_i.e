@@ -216,10 +216,11 @@ feature -- Size issues
 			l_width: INTEGER
 			l_font: EV_FONT
 		do
-			l_font := internal_tab.font
+			l_font := internal_shared.tool_bar_font
 			if l_font /= Void then
 				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				l_width := l_font.string_width (text)
+				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 
 				if is_top_side_tab then
 					if is_enough_space then
@@ -235,12 +236,18 @@ feature -- Size issues
 			-- Start x position where should draw tail area.
 		local
 			l_width: INTEGER
+			l_font: EV_FONT
 		do
 			if is_enough_space then
 				if is_top_side_tab then
 					Result := start_x_close + internal_shared.icons.close.width + padding_width
 				else
-					l_width := internal_tab.font.string_width (text)
+					l_font := internal_shared.tool_bar_font
+
+					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+					l_width := l_font.string_width (text)
+					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+
 					Result := start_x_text_internal + l_width + padding_width
 				end
 			else
@@ -282,11 +289,10 @@ feature -- Size issues
 		local
 			l_platform: PLATFORM
 		do
+			Result :=(height / 2  - (internal_shared.icons.close.height - close_background_expand * 2) / 2).floor - 1
 			create l_platform
 			if l_platform.is_windows then
-				Result := height - internal_shared.icons.close.height - close_background_expand * 2
-			else
-				Result :=(height / 2  - (internal_shared.icons.close.height - close_background_expand * 2) / 2).floor - 1
+				Result := Result - 2
 			end
 		end
 

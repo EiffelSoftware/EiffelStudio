@@ -95,6 +95,8 @@ feature {NONE} -- Initlization
 			not_void: a_tool_bar /= Void
 		do
 			default_create
+			create internal_shared
+			
 			tool_bar := a_tool_bar
 
 			extend_fixed (tool_bar)

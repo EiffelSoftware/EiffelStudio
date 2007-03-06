@@ -174,6 +174,26 @@ feature -- Command
 				and internal_border_left.background_color.is_equal (a_color) and internal_border_right.background_color.is_equal (a_color)
 		end
 
+	set_one_border_color (a_direction: INTEGER; a_color: EV_COLOR) is
+			-- Set border at `a_direction''s color to `a_color'.
+		require
+			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
+				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
+			not_void: a_color /= Void
+		do
+			inspect
+				a_direction
+			when {SD_ENUMERATION}.top then
+				internal_border_up.set_background_color (a_color)
+			when {SD_ENUMERATION}.bottom then
+				internal_border_bottom.set_background_color (a_color)
+			when {SD_ENUMERATION}.left then
+				internal_border_left.set_background_color (a_color)
+			when {SD_ENUMERATION}.right then
+				internal_border_right.set_background_color (a_color)
+			end
+		end
+
 	set_border_width (a_width: INTEGER) is
 			-- Set border width.
 		require

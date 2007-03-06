@@ -387,7 +387,9 @@ feature {NONE} -- Implementation functions.
 				until
 					l_tab_group.after
 				loop
-					l_tab_group.item.set_text_size (tab_groups_max_size.item)
+					if not internal_shared.show_all_tab_stub_text then
+						l_tab_group.item.set_text_size (tab_groups_max_size.item)
+					end
 					update_separators (l_tab_group.index = 1, l_tab_group.index = l_tab_group.count, l_tab_group.item)
 					l_tab_group.forth
 				end

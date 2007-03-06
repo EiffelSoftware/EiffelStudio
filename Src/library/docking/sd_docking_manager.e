@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			contents.extend (zones.place_holder_content)
 			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 			internal_shared.set_show_all_feedback_indicator (True)
+			internal_shared.set_show_tab_stub_text (True)
 
 			if {PLATFORM}.is_windows then
 				set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)

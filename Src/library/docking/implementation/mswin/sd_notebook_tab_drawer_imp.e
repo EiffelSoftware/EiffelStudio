@@ -467,14 +467,14 @@ feature{NONE} -- Implementation
 				end
 			end
 		end
+
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
 			-- Redefine
 		local
 			l_font: EV_FONT
 		do
 			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
-			l_font := a_pixmap.font
-			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+			l_font := internal_shared.tool_bar_font
 			a_pixmap.set_font (l_font)
 			if is_top_side_tab then
 				-- Draw pixmap
@@ -486,7 +486,6 @@ feature{NONE} -- Implementation
 				-- Draw text
 				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_bottom, text, text_clipping_width (a_width))
 			end
-
 			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
@@ -499,7 +498,7 @@ feature{NONE} -- Implementation
 				-- Draw text
 				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
-					l_font := a_pixmap.font
+					l_font := internal_shared.tool_bar_font
 					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 					a_pixmap.set_font (l_font)
 					if is_top_side_tab then
@@ -507,6 +506,7 @@ feature{NONE} -- Implementation
 					else
 						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, 1 + start_y_position_bottom, text, a_width - start_x_text_internal)
 					end
+					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 				end
 				-- Draw pixmap
 				if is_draw_pixmap then
@@ -526,14 +526,27 @@ feature {NONE} -- Attributes
 	gap_height: INTEGER is 2
 	 		-- Redefine
 
-	start_y_position: INTEGER is 0
+	start_y_position: INTEGER is
 	 		-- Redefine
+	 	do
+			if pixmap /= Void then
+				Result := (height / 2 - pixmap.height / 2).floor - 2
+			else
+				Result := start_y_position_text
+			end
+	 	end
 
-	start_y_position_bottom: INTEGER is 2
+	start_y_position_bottom: INTEGER is
 			-- Start y drawing bottom text position.
+		once
+			Result := internal_shared.tool_bar_font.height // 8
+		end
 
-	start_y_position_text: INTEGER is 3
-			-- Redefine
+	start_y_position_text: INTEGER is
+			-- Start y drawing top text positioion.
+		once
+			Result := internal_shared.tool_bar_font.height // 8 + 1
+		end
 
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer

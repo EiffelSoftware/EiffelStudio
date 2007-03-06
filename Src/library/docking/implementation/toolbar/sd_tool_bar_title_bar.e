@@ -32,9 +32,10 @@ feature {NONE} -- Initialization
 		do
 			create l_shared
 			tool_bar.set_background_color (l_shared.tool_bar_title_bar_color)
-			l_font := drawing_area.font
+			l_font := l_shared.tool_bar_font
 			l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 			drawing_area.set_font (l_font)
+			l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
 
 			drawing_area.expose_actions.extend (agent on_drawing_area_expose)
 

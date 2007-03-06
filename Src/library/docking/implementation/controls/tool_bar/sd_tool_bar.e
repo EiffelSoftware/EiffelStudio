@@ -208,11 +208,11 @@ feature -- Query
 		local
 			l_platform: PLATFORM
 		once
+			Result := (internal_shared.tool_bar_font.height / 2).floor
+
 			create l_platform
 			if l_platform.is_windows then
-				Result := 4
-			else
-				Result := (internal_shared.tool_bar_font.height / 2).floor
+				Result := Result + 1
 			end
 		end
 
@@ -221,15 +221,8 @@ feature -- Query
 
 	standard_height: INTEGER is
 			-- Standard tool bar height.
-		local
-			l_platform: PLATFORM
-		once
-			create l_platform
-			if l_platform.is_windows then
-				Result := 23
-			else
-				Result := internal_shared.tool_bar_font.height + 2 * border_width
-			end
+		do
+			Result := internal_shared.tool_bar_font.height + 2 * border_width
 		end
 
 feature -- Contract support

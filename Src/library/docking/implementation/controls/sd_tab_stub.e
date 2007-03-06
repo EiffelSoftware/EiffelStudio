@@ -147,7 +147,7 @@ feature -- Command
 			-- Set `title'.
 		do
 			internal_text := a_text
-			set_text_size (internal_drawing_area.font.string_width (a_text))
+			set_text_size (internal_shared.tool_bar_font.string_width (a_text))
 			update_size_internal
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
@@ -291,6 +291,7 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_pixmap_internal, content.pixmap)
 			if is_show_text then
 				internal_drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				internal_drawing_area.set_font (internal_shared.tool_bar_font)
 				if not is_vertical then
 					internal_drawing_area.draw_text_top_left (start_x_text_internal, start_y_text_internal, internal_text)
 				else
@@ -339,8 +340,6 @@ feature {NONE} -- Implementation
 
 	start_x_pixmap_internal: INTEGER is
 			-- Start x position when `on_draw' draw pixmap.
-		local
-			l_platform: PLATFORM
 		do
 			if is_draw_separator_left then
 				Result := Result + 1
@@ -348,19 +347,12 @@ feature {NONE} -- Implementation
 			if not is_vertical then
 				Result := Result + padding_width
 			else
-				create l_platform
-				if l_platform.is_windows then
-					Result := Result + 1
-				else
-					Result := Result + (width / 2 - content.pixmap.width / 2).floor
-				end
+				Result := Result + (width / 2 - content.pixmap.width / 2).floor
 			end
 		end
 
 	start_y_pixmap_internal: INTEGER is
 			-- Start y position when `on_draw' draw pixmap.
-		local
-			l_platform: PLATFORM
 		do
 			if is_draw_separator_top then
 				Result := Result + 3
@@ -368,10 +360,7 @@ feature {NONE} -- Implementation
 			if is_vertical then
 				Result := Result + padding_width // 2
 			else
-				create l_platform
-				if not l_platform.is_windows then
-					Result := (height / 2 - content.pixmap.height / 2).floor
-				end
+				Result := (height / 2 - content.pixmap.height / 2).floor
 			end
 		end
 
@@ -385,7 +374,7 @@ feature {NONE} -- Implementation
 			else
 				create l_platform
 				if l_platform.is_windows then
-					Result := start_x_pixmap_internal + padding_width
+					Result := (width / 2 - internal_shared.tool_bar_font.height / 2).floor + 3
 				else
 					Result := (width / 2 + internal_shared.tool_bar_font.height / 2).floor - 8
 				end
@@ -399,10 +388,9 @@ feature {NONE} -- Implementation
 		do
 			if not is_vertical then
 				create l_platform
+				Result := (height / 2 - internal_shared.tool_bar_font.height / 2).floor - 1
 				if l_platform.is_windows then
-					Result := start_y_pixmap_internal - 2 + padding_width // 2
-				else
-					Result := (height / 2 - internal_shared.tool_bar_font.height / 2).floor - 1
+					Result := Result - 1
 				end
 			else
 				Result := start_y_pixmap_internal + content.pixmap.height + padding_width // 2

@@ -149,16 +149,9 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			-- Pixmap position.
 		require
 			has_parent: tool_bar /= Void
-		local
-			l_platform: PLATFORM
 		do
 			if tool_bar /= Void then
-				create l_platform
-				if l_platform.is_windows then
-					create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + tool_bar.border_width)
-				else
-					create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + pixmap_y_position)
-				end
+				create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + pixmap_y_position)
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					Result.set_x (Result.x + 1)
 					Result.set_y (Result.y + 1)
@@ -198,14 +191,15 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			if tool_bar /= Void then
 				l_left := text_left
 				l_width := text_width
+
+				l_top := tool_bar.item_y (Current) + tool_bar.border_width - 1
+
 				create l_platform
 				if l_platform.is_windows then
-					l_top := tool_bar.item_y (Current) + tool_bar.border_width
-					l_height := tool_bar.row_height - 2 * tool_bar.border_width
-				else
-					l_top := tool_bar.item_y (Current) + tool_bar.border_width - 1
-					l_height := tool_bar.row_height - tool_bar.border_width
+					l_top := l_top - internal_shared.tool_bar_font.height // 3 + 1
 				end
+
+				l_height := tool_bar.row_height - tool_bar.border_width
 
 				create Result.make (l_left, l_top, l_width, l_height)
 

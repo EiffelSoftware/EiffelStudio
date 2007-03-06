@@ -70,6 +70,12 @@ feature {NONE} -- Initlization
 				l_parent.extend (tab_zone)
 			end
 
+			-- We should copy maximized informations from `a_target_zone'
+			if a_target_zone.is_maximized then
+				tab_zone.set_max (True)
+				tab_zone.set_widget_main_area (a_target_zone.main_area_widget, a_target_zone.main_area, a_target_zone.internal_parent, a_target_zone.internal_parent_split_position)
+			end
+
 			create l_target_zone_tab_state.make_with_tab_zone (a_target_zone.content, tab_zone, direction)
 			l_target_zone_tab_state.set_last_floating_height (a_target_zone.state.last_floating_height)
 			l_target_zone_tab_state.set_last_floating_width (a_target_zone.state.last_floating_width)

@@ -139,6 +139,23 @@ feature -- Command
 		do
 		end
 
+feature {SD_DOCKING_STATE, SD_TAB_STATE} -- Maximize state initlization
+
+	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
+			-- Set widget and main area which used for normal window.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_main_area_not_void: a_main_area /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			main_area_widget := a_widget
+			main_area := a_main_area
+			internal_parent := a_parent
+			internal_parent_split_position := a_split_position
+		ensure
+			set: main_area_widget = a_widget and main_area = a_main_area and internal_parent = a_parent and internal_parent_split_position = a_split_position
+		end
+
 feature -- Query
 
 	state: SD_STATE is
@@ -221,7 +238,7 @@ feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD
 			end
 		end
 
-feature {SD_TAB_STATE_ASSISTANT} -- Maximum issues.
+feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE} -- Maximum issues.
 
 	main_area_widget: EV_WIDGET
 			-- Other user widgets when `Current' is maximized.

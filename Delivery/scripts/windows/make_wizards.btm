@@ -1,4 +1,4 @@
 cdd %EIFFEL_SRC\help\wizards
-set DELIVERY=%INSTALL_DIR
+set DELIVERY=%STUDIO_DIR
 remtrace Launch the actual wizard compilation
 call make_wizards.btm

@@ -28,7 +28,6 @@ inherit
 			client_area,
 			show,
 			hide,
-			has_focus,
 			internal_enable_border,
 			internal_disable_border,
 			grab_keyboard_and_mouse,
@@ -166,18 +165,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 				end
 			end
 			Precursor;
-		end
-
-	has_focus: BOOLEAN is
-			-- Does Current have the keyboard focus?
-		do
-			if override_redirect then
-				if not is_disconnected_from_window_manager then
-					Result := app_implementation.focused_popup_window = Current
-				end
-			else
-				Result := Precursor
-			end
 		end
 
 	handle_mouse_button_event (a_type: INTEGER_32; a_button: INTEGER_32; a_screen_x, a_screen_y: INTEGER_32) is

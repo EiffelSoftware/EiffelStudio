@@ -74,6 +74,12 @@ feature -- Access
 			Result := Auto_hide_tab_slide_timer_interval_cell.item
 		end
 
+	show_all_tab_stub_text: BOOLEAN is
+			-- When more than one tab stubs stay together at side of main window, show inactive tab stub text?
+		do
+			Result := show_tab_stub_text_cell.item
+		end
+
 	tool_bar_font: EV_FONT is
 			-- Tool bar font
 		local
@@ -201,6 +207,14 @@ feature -- Status setting
 			auto_hide_tab_slide_timer_interval_cell.put (a_int)
 		ensure
 			set: auto_hide_tab_slide_timer_interval = a_int
+		end
+
+	set_show_tab_stub_text (a_bool: BOOLEAN) is
+			-- Set `show_tab_stub_text_cell' with `a_bool'
+		do
+			show_tab_stub_text_cell.put (a_bool)
+		ensure
+			set: show_all_tab_stub_text =  a_bool
 		end
 
 	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
@@ -549,6 +563,14 @@ feature {NONE} -- Implementation
 
 	allow_window_to_back_cell: CELL [BOOLEAN] is
 			-- Cell hold `allow_window_to_back'.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	show_tab_stub_text_cell: CELL [BOOLEAN] is
+			-- Cell hold `show_tab_stub_text'.
 		once
 			create Result
 		ensure

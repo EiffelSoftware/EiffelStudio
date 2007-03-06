@@ -214,7 +214,9 @@ feature -- Properties
 	set_show_text (a_show: BOOLEAN) is
 			-- If `a_show' True, show title. Vice visa.
 		do
-			is_show_text := a_show
+			if not internal_shared.show_all_tab_stub_text then
+				is_show_text := a_show
+			end
 			update_size_internal
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure

@@ -639,6 +639,7 @@ feature {NONE} -- Translation
 			min: INTEGER
 			dependency: STRING
 			l_target_file: STRING
+			l_precomps: STRING
 		do
 			debug ("progress")
 				io.put_string ("%Tdependencies%N")
@@ -822,6 +823,19 @@ feature {NONE} -- Translation
 			end
 
 			makefile.put_string ("%N%N")
+
+			from
+				lastline := makefile_sh.last_string.twin
+			until
+				lastline.count > ("PRECOMP_OBJECTS=").count and then
+				lastline.substring (1, ("PRECOMP_OBJECTS=").count).is_equal ("PRECOMP_OBJECTS=")
+			loop
+				read_next
+				lastline := makefile_sh.last_string.twin
+			end
+			l_precomps := get_precompile_libs (lastline)
+			makefile.put_string (l_precomps)
+			makefile.put_new_line
 		end
 
 	translate_line_subst is
@@ -890,7 +904,6 @@ feature {NONE} -- Translation
 		local
 			lastline: STRING
 			replacement: STRING -- what to replace with
-			selected_object: STRING -- what object section we're working on (e.g. E, F)
 			dir: STRING -- what directory it should be in (e.g. E1, F1)
 		do
 			debug ("progress")
@@ -951,16 +964,6 @@ feature {NONE} -- Translation
 				end
 
 				dir := dependent_directories.item.directory
-
-				selected_object := options.get_string ("objects__text", Void).twin
-
-				lastline.replace_substring_all ("$obj", selected_object)
-
-				if precompile then
-					lastline.replace_substring_all ("$dir_obj", env.current_working_directory)
-				else
-					lastline.replace_substring_all ("$dir_obj", dir)
-				end
 			end
 
 
@@ -1019,7 +1022,6 @@ feature {NONE} -- Translation
 			-- Translate application generation code.
 		local
 			lastline: STRING
-			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
 				io.put_string ("%Tappl%N")
@@ -1035,21 +1037,11 @@ feature {NONE} -- Translation
 				end
 			end
 
-			precompile_libs := get_libs (lastline)
-
 			-- precompile or make application?
 			if precompile then
-				if options.has ("precompile") then
-					lastline := options.get_string ("precompile", Void).twin
-				else
-					lastline := options.get_string ("precompile_text", Void).twin
-				end
+				lastline := options.get_string ("precompile", Void).twin
 			else
-				if options.has ("appl_make") then
-					lastline := options.get_string ("appl_make", Void).twin
-				else
-					lastline := options.get_string ("appl_text", Void).twin
-				end
+				lastline := options.get_string ("appl_make", Void).twin
 			end
 
 			debug ("translate_appl")
@@ -1073,12 +1065,6 @@ feature {NONE} -- Translation
 			subst_platform (lastline)
 			subst_compiler (lastline)
 
-			subst_precomp_libs (lastline, precompile_libs)
-			if lastline.substring_index ("$precompile_libs_command", 1) > 0 then
-				subst_precomp_libs_command (lastline, precompile_libs)
-			end
-			subst_library (lastline)
-
 			if not externals then
 				lastline.replace_substring_all ("$(EXTERNALS)", "")
 			end
@@ -1092,14 +1078,17 @@ feature {NONE} -- Translation
 			end
 
 			makefile.put_string (lastline)
-			makefile.put_new_line
+
+				-- Get rid of what comes after the application rule.
+			read_next
+			read_next
+			read_next
 		end
 
 	translate_cecil_and_dll is
 			-- Translate cecil.
 		local
 			lastline, previous_line: STRING
-			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
 				io.put_string ("%Tcecil%N")
@@ -1116,7 +1105,6 @@ feature {NONE} -- Translation
 			makefile.put_string (makefile_sh.last_string)
 			makefile.put_new_line
 
-			precompile_libs := get_libs (lastline)
 			if options.has ("cecil_make") then
 				lastline := options.get_string ("cecil_make", Void).twin
 			else
@@ -1132,9 +1120,7 @@ feature {NONE} -- Translation
 			end
 
 			lastline.replace_substring_all ("$appl", appl)
-			subst_library (lastline)
 			subst_eiffel (lastline)
-			subst_precomp_libs (lastline, precompile_libs)
 
 			debug ("translate_cecil_and_dll")
 				debug ("output")
@@ -1193,13 +1179,6 @@ feature {NONE} -- Translation
 			end
 
 				-- SHARED_CECIL_OBJECT
-			if uses_precompiled then
-				makefile.put_character ('%T')
-				makefile.put_string (precompile_libs)
-				makefile.put_string (options.get_string ("continuation", Void))
-				makefile.put_new_line
-			end
-
 			lastline.replace_substring_all (".o", object_extension)
 			makefile.put_string (lastline)
 			makefile.put_new_line
@@ -1315,13 +1294,6 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			end
 
-			if uses_precompiled then
-				makefile.put_character ('%T')
-				makefile.put_string (precompile_libs)
-				makefile.put_string (options.get_string ("continuation", Void))
-				makefile.put_new_line
-			end
-
 			previous_line.replace_substring_all (".o", object_extension)
 			subst_dir_sep (previous_line)
 			makefile.put_string (previous_line)
@@ -1433,19 +1405,6 @@ feature {NONE}	-- substitutions
 			end
 		end
 
-	subst_library  (line: STRING) is
-			-- Replace all occurrences of library name in `line'
-		local
-			library_name: STRING
-			default_net_lib: STRING
-		do
-			debug ("subst")
-				io.put_string("%Tsubst_library%N")
-			end
-
-			line.replace_substring_all ("$library", "$(EIFLIB)")
-		end
-
 	subst_dir_sep  (line: STRING) is
 			-- replace all occurrences of the directory separator in `line'
 		local
@@ -1505,60 +1464,6 @@ feature {NONE}	-- substitutions
 				line.replace_substring (options.get_string ("obj_file_ext", Void), start, start+2)
 			end
 		end
-
-	subst_precomp_libs (line: STRING; precompiled_libs: STRING) is
-			-- replace all occurrences of $precompilelibs with the neccessary precompiled libraries
-		do
-			debug ("subst")
-				io.put_string ("%Tsubst_precomp_libs%N")
-			end
-
-			if uses_precompiled then
-				line.replace_substring_all ("$precompilelibs", precompiled_libs)
-			else
-				line.replace_substring_all ("$precompilelibs", "")
-			end
-		end
-
-	subst_precomp_libs_command (line: STRING; precompiled_libs: STRING) is
-			-- replace all occurrences of $precompile_libs_command with the neccessary commands for a precompiled library
-		local
-			libs: STRING
-			lib_start_pos: INTEGER
-			command: STRING
-			lib: STRING
-		do
-			debug ("subst")
-				io.put_string ("%Tsubst_precomp_libs_command%N")
-			end
-
-			libs := precompiled_libs.twin
-
-			if uses_precompiled then
-				command := "%T"
-
-				from
-					lib_start_pos := libs.substring_index (" ", 1)
-				until
-					lib_start_pos < 1
-				loop
-					lib := libs.substring (1, lib_start_pos).twin
-					command.append (options.get_string ("precomp_lib_command_text", Void))
-					command.replace_substring_all ("$precompiled_library", lib)
-
-					libs.remove_head (lib_start_pos)
-					lib_start_pos := libs.substring_index (" ", 1)
-				end
-
-				command.append (options.get_string ("precomp_lib_command_text", Void))
-				command.replace_substring_all ("$precompiled_library", libs)
-
-				line.replace_substring_all ("$precompile_libs_command", command)
-			else
-				line.replace_substring_all ("$precompile_libs_command", "")
-			end
-		end
-
 
 feature {NONE} -- Implementation
 
@@ -1686,6 +1591,7 @@ feature {NONE} -- Implementation
 					end
 					Result := replacement
 				else
+						-- Note: Before we were taking the short path (rev#66961)
 					Result := eiffel_layout.get_environment (word)
 				end
 			end
@@ -1703,7 +1609,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_libs (line_to_search: STRING): STRING is
+	get_precompile_libs (line_to_search: STRING): STRING is
 			-- look for precompiled libraries, also checks
 			-- if application uses multithreading mechanism
 		local
@@ -1716,7 +1622,7 @@ feature {NONE} -- Implementation
 			preobj := "precomp.lib"
 
 			debug ("implementation")
-				io.put_string ("%Tget_libs%N")
+				io.put_string ("%Tget_precompile_libs%N")
 			end
 
 			line := line_to_search.twin
@@ -1729,16 +1635,13 @@ feature {NONE} -- Implementation
 				if precomp_lib_start > 0 then
 					uses_precompiled := True
 					Result.append (line.substring (1, precomp_lib_start - 2))
-					from
-					until
-						Result.item (1) > ' '
-					loop
-						Result.remove (1)
-					end
+					Result.left_adjust
 					Result.append (directory_separator)
 					Result.append ("$(ISE_C_COMPILER)")
 					Result.append (directory_separator)
-					Result.append ("precomp.lib")
+						-- We always put a " since it is guaranteed that they have a " in the original
+						-- Makefile.SH
+					Result.append ("precomp.lib%"")
 				else
 					uses_precompiled := False
 				end
@@ -1765,19 +1668,16 @@ feature {NONE} -- Implementation
 				if precomp_lib_start > 0 then
 					uses_precompiled := True
 					next_precomp_lib := line.substring (1, precomp_lib_start - 2)
-					from
-					until
-						next_precomp_lib.item (1) > ' '
-					loop
-						next_precomp_lib.remove (1)
-					end
+					next_precomp_lib.left_adjust
 					next_precomp_lib.append (directory_separator)
 					next_precomp_lib.append ("$(ISE_C_COMPILER)")
 					next_precomp_lib.append (directory_separator)
-					next_precomp_lib.append ("precomp.lib")
+						-- We always put a " since it is guaranteed that they have a " in the original
+						-- Makefile.SH
+					next_precomp_lib.append ("precomp.lib%"")
 
 					if not Result.is_empty then
-						Result.append_character (' ')
+						Result.append (" \%N%T")
 					end
 					Result.append (next_precomp_lib)
 				end

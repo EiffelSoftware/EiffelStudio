@@ -571,6 +571,8 @@ feature -- tools management
 			i: INTEGER
 			wt: ES_WATCH_TOOL
 			l_recyclable: EB_RECYCLABLE
+			l_bptool: ES_BREAKPOINTS_TOOL
+			l_show_cmd: EB_SHOW_TOOL_COMMAND
 		do
 			m := w.menus.debugging_tools_menu
 				-- Recycle existing menu items.
@@ -589,6 +591,13 @@ feature -- tools management
 			m.wipe_out
 
 			if raised then
+				if debugging_window /= Void then
+					l_bptool := debugging_window.tools.breakpoints_tool
+					l_show_cmd := debugging_window.commands.show_tool_commands.item (l_bptool)
+					mi := l_show_cmd.new_menu_item
+					m.extend (mi)
+					w.add_recyclable (mi)
+				end
 				mi := show_call_stack_tool_command.new_menu_item
 				m.extend (mi)
 				w.add_recyclable (mi)

@@ -21,7 +21,8 @@ inherit
 			new_toolbar_item,
 			new_sd_toolbar_item,
 			initialize_sd_toolbar_item,
-			new_mini_toolbar_item
+			new_mini_toolbar_item,
+			update
 		redefine
 			initialize_menu_item,
 			new_menu_item

@@ -27,11 +27,13 @@ feature -- Initialization
 
 	make (a_manager: like eb_debugger_manager) is
 			-- Initialize `Current'.
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			Precursor (a_manager)
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f11),
-				False, False, True)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("step_out_of_routine")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
 		end
 

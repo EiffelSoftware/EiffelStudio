@@ -28,15 +28,17 @@ feature -- Initialization
 
 	make (a_manager: like eb_debugger_manager) is
 			-- Initialize `Current'.
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			tooltext := Interface_names.b_launch
 			menu_name := Interface_names.m_Debug_run_new
 			internal_tooltip := Interface_names.e_Exec_debug
 
 			Precursor (a_manager)
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
-				False, False, False)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("run")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
 		end
 

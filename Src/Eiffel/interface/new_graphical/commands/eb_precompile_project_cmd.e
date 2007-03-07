@@ -38,6 +38,7 @@ feature {NONE} --Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EB_MELT_PROJECT_COMMAND}
+			set_referred_shortcut (Void)
 			accelerator := Void
 		end
 

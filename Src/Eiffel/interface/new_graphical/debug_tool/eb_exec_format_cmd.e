@@ -28,6 +28,11 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_manager: like eb_debugger_manager) is

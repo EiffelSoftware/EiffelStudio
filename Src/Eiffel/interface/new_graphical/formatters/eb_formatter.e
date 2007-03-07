@@ -13,6 +13,9 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 
 	EB_RADIO_COMMAND_FEEDBACK
+		redefine
+			update
+		end
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -130,6 +133,37 @@ feature -- Setting
 		deferred
 		end
 
+	update (a_window: EV_WINDOW) is
+			-- Update `accelerator' and interfaces according to `referred_shortcut'.
+		local
+			mname: STRING_GENERAL
+			tt: STRING_GENERAL
+		do
+			Precursor {EB_RADIO_COMMAND_FEEDBACK} (a_window)
+			if menu_item /= Void then
+				mname := menu_name.twin
+				if shortcut_available then
+					mname.append (tabulation)
+					mname.append (shortcut_string)
+				end
+				menu_item.set_text (mname)
+			end
+			tt := capital_command_name.twin
+			if shortcut_available then
+				tt.append (opening_parenthesis)
+				tt.append (shortcut_string)
+				tt.append (closing_parenthesis)
+			end
+			if button /= Void then
+				button.set_tooltip (tt)
+			end
+			if sd_button /= Void then
+				sd_button.set_tooltip (tt)
+				sd_button.set_name (capital_command_name)
+				sd_button.set_description (capital_command_name)
+			end
+		end
+
 feature -- Formatting
 
 	format is
@@ -158,9 +192,9 @@ feature -- Interface
 			mname: STRING_GENERAL
 		do
 			mname := menu_name.twin
-			if accelerator /= Void then
+			if shortcut_available then
 				mname.append (Tabulation)
-				mname.append (accelerator.out)
+				mname.append (shortcut_string)
 			end
 			create Result.make_with_text (mname)
 			set_menu_item (Result)
@@ -174,9 +208,9 @@ feature -- Interface
 			create Result
 			Result.set_pixmap (symbol @ 1)
 			tt := capital_command_name.twin
-			if accelerator /= Void then
+			if shortcut_available then
 				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
+				tt.append (shortcut_string)
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)
@@ -193,9 +227,9 @@ feature -- Interface
 			Result.set_pixmap (symbol @ 1)
 			Result.set_pixel_buffer (pixel_buffer)
 			tt := capital_command_name.twin
-			if accelerator /= Void then
+			if shortcut_available then
 				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
+				tt.append (shortcut_string)
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)

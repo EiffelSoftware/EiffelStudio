@@ -1,59 +1,67 @@
 indexing
-	description	: "Abstract notion of a command associated with a target"
+	description: "Objects represent shortcut that can not be changed by the user."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
-	EB_TARGET_COMMAND
+class
+	EB_FIXED_SHORTCUT
 
 inherit
-	EB_COMMAND
-		undefine
-			update
+	MANAGED_SHORTCUT
+		redefine
+			set_values
 		end
 
-	EB_RECYCLABLE
+create
+	make
 
-feature {NONE} -- Initialization
+feature -- Initialize
 
-	make (a_target: like target) is
-			-- Initialize the command with target `a_target'.
+	make (a_name: STRING_GENERAL; a_key: EV_KEY; a_alt, a_ctrl, a_shift: BOOLEAN) is
+			-- Initialize.
 		require
-			a_target_not_void: a_target /= Void
+			a_name_not_void: a_name /= Void
+			a_key_not_void: a_key /= Void
 		do
-			target := a_target
-			initialize
+			name := a_name
+			key := a_key
+			is_ctrl := a_ctrl
+			is_alt := a_alt
+			is_shift := a_shift
+			is_fixed := True
 		ensure
-			target_set: equal (a_target, target)
+			name_set: name = a_name
+			key_set: key = a_key
+			is_ctrl_set: is_ctrl = a_ctrl
+			is_alt_set: is_alt = a_alt
+			is_shift_set: is_shift = a_shift
+			is_fixed: is_fixed
 		end
 
-	initialize is
-			-- Initialize default values.
+feature -- Access
+
+	name: STRING_GENERAL
+
+	key: EV_KEY
+
+	is_ctrl: BOOLEAN
+
+	is_alt: BOOLEAN
+
+	is_shift: BOOLEAN;
+
+feature {NONE} -- Implemetation
+
+	set_values (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN) is
+			-- Do nothing.
 		do
-		end
-
-feature -- Properties
-
-	target: ANY
-			-- Target for the command.
-
-feature {NONE} -- Recyclable
-
-	internal_recycle is
-			-- Recycle
-		do
-			target := Void
-			if accelerator /= Void then
-				accelerator.actions.wipe_out
-				accelerator := Void
-			end
 		end
 
 invariant
-	target_not_void: not is_recycled implies target /= Void
+	name_set: name /= Void
+	key_set: key /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -87,4 +95,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FILEABLE_COMMAND
+end

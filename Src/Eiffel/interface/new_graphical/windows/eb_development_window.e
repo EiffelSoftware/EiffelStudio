@@ -26,6 +26,7 @@ inherit
 				Ev_application
 		redefine
 			refresh,
+			refresh_all_commands,
 			internal_recycle,
 			destroy_imp,
 			destroy,
@@ -491,6 +492,97 @@ feature -- Stone process
 			tools.refresh
 		end
 
+	refresh_all_commands is
+			-- Refresh all commands.
+			-- Calling on initializing window wipes in the window accelerators to which shortcuts related are wiped.
+		local
+			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
+			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]
+			l_simple_cmds: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
+			l_main_formatter: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+			i, l_upper: INTEGER
+		do
+				-- Editor commands
+			l_editor_commands := commands.editor_commands
+			from
+				l_editor_commands.start
+			until
+				l_editor_commands.after
+			loop
+				l_editor_commands.item.update (window)
+				l_editor_commands.forth
+			end
+
+				-- Update toolbarable commands
+				-- Show tool commands are included in toolbarable commands.
+			l_toolbarable_commands := commands.toolbarable_commands
+			from
+				l_toolbarable_commands.start
+			until
+				l_toolbarable_commands.after
+			loop
+				l_toolbarable_commands.item.update (window)
+				l_toolbarable_commands.forth
+			end
+
+				-- Update external commands
+			l_external_command := commands.Edit_external_commands_cmd.commands
+			from
+				i := l_external_command.lower
+				l_upper := l_external_command.upper
+			until
+				i > l_upper
+			loop
+				if l_external_command.item (i) /= Void then
+					l_external_command.item (i).update (window)
+				end
+				i := i + 1
+			end
+			if commands.Edit_external_commands_cmd.list_exists then
+				commands.Edit_external_commands_cmd.refresh_list
+			end
+
+				-- Update simple shortcut commands
+			l_simple_cmds := commands.simple_shortcut_commands
+			from
+				l_simple_cmds.start
+			until
+				l_simple_cmds.after
+			loop
+				l_simple_cmds.item.update (window)
+				l_simple_cmds.forth
+			end
+
+				-- Update main formatters shortcuts and interfaces
+			l_main_formatter := managed_main_formatters.twin
+			from
+				l_main_formatter.start
+			until
+				l_main_formatter.after
+			loop
+				l_main_formatter.item.update (window)
+				l_main_formatter.forth
+			end
+
+			check
+				docking_manager_not_void: docking_manager /= Void
+			end
+
+				-- Update project commands.
+			Melt_project_cmd.update (window)
+			discover_melt_cmd.update (window)
+			override_scan_cmd.update (window)
+			Freeze_project_cmd.update (window)
+			Finalize_project_cmd.update (window)
+			project_cancel_cmd.update (window)
+
+				-- Update debug commands
+			eb_debugger_manager.refresh_commands (Current)
+
+			docking_manager.propagate_accelerators
+		end
+
 	quick_refresh_editors is
 			-- Redraw editors' drawing area.
 		do
@@ -738,6 +830,16 @@ feature -- Resource Update
 					l_commands.item.disable_sensitive
 					l_commands.forth
 				end
+			end
+		end
+
+feature -- Recycler management
+
+	remove_recyclable (a_recyclable: EB_RECYCLABLE) is
+			-- Remove `a_recyclable' from `managed_recyclable_items'
+		do
+			if a_recyclable /= Void then
+				managed_recyclable_items.prune_all (a_recyclable)
 			end
 		end
 

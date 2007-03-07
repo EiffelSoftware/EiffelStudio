@@ -49,13 +49,16 @@ feature {NONE} -- Initialization
 			-- Create array of customizable commands.
 		do
 			create customizable_commands.make (6)
-			customizable_commands.put (agent search, "show_search_panel")
 			customizable_commands.put (agent quick_search, "show_quick_search_bar")
 			customizable_commands.put (agent replace, "show_search_and_replace_panel")
 			customizable_commands.put (agent find_next_selection, "search_selection_forward")
 			customizable_commands.put (agent find_previous_selection, "search_selection_backward")
 			customizable_commands.put (agent find_next, "search_forward")
 			customizable_commands.put (agent find_previous, "search_backward")
+			customizable_commands.put (agent run_if_editable (agent comment_selection), "comment")
+			customizable_commands.put (agent run_if_editable (agent uncomment_selection), "uncomment")
+			customizable_commands.put (agent run_if_editable (agent set_selection_case (False)), "set_to_uppercase")
+			customizable_commands.put (agent run_if_editable (agent set_selection_case (True)), "set_to_lowercase")
 		end
 
 feature -- Access

@@ -12,13 +12,15 @@ inherit
 	EB_TOOLBARABLE_COMMAND
 		redefine
 			disable_sensitive,
-			enable_sensitive
+			enable_sensitive,
+			update
 		end
 
 	EB_MENUABLE_COMMAND
 		redefine
 			disable_sensitive,
 			enable_sensitive,
+			update,
 			initialize_menu_item
 		end
 
@@ -122,6 +124,13 @@ feature -- Status setting
 
 				is_sensitive := False
 			end
+		end
+
+	update (a_window: EV_WINDOW) is
+			-- Update `accelerator' and interfaces according to `referred_shortcut'.
+		do
+			Precursor {EB_TOOLBARABLE_COMMAND} (a_window)
+			Precursor {EB_MENUABLE_COMMAND} (a_window)
 		end
 
 feature {NONE} -- Implementation

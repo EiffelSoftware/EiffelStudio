@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EB_GRAPHICAL_COMMAND
+		redefine
+			update
+		end
 
 	EB_TOOLBARABLE
 		redefine
@@ -121,6 +124,43 @@ feature -- Status setting
 			end
 		end
 
+	update (a_window: EV_WINDOW) is
+			-- Update `accelerator' and interfaces according to `referred_shortcut'.
+		local
+			l_items: like managed_toolbar_items
+			l_sd_items: like managed_sd_toolbar_items
+			l_tt: STRING_GENERAL
+		do
+			Precursor {EB_GRAPHICAL_COMMAND} (a_window)
+			if tooltip /= Void then
+				l_tt := tooltip.twin
+				if shortcut_available then
+					l_tt.append (opening_parenthesis)
+					l_tt.append (shortcut_string)
+					l_tt.append (closing_parenthesis)
+				end
+				from
+					l_items := managed_toolbar_items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_items.item.set_tooltip (l_tt)
+					l_items.forth
+				end
+				from
+					l_sd_items := managed_sd_toolbar_items
+					l_sd_items.start
+				until
+					l_sd_items.after
+				loop
+					l_sd_items.item.set_description (description)
+					l_sd_items.item.set_tooltip (l_tt)
+					l_sd_items.forth
+				end
+			end
+		end
+
 feature -- Basic operations
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
@@ -145,6 +185,8 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		require
 			mini_pixmap_not_void: mini_pixmap /= Void
+		local
+			l_tt: like tooltip
 		do
 			create Result.make (Current)
 			Result.set_pixmap (mini_pixmap)
@@ -153,7 +195,13 @@ feature -- Basic operations
 			else
 				Result.disable_sensitive
 			end
-			Result.set_tooltip (tooltip)
+			l_tt := tooltip.twin
+			if shortcut_available then
+				l_tt.append (opening_parenthesis)
+				l_tt.append (shortcut_string)
+				l_tt.append (closing_parenthesis)
+			end
+			Result.set_tooltip (l_tt)
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -174,9 +222,9 @@ feature {NONE} -- Implementation
 				a_item.disable_sensitive
 			end
 			l_tt := tooltip.twin
-			if accelerator /= Void then
+			if shortcut_available then
 				l_tt.append (opening_parenthesis)
-				l_tt.append (accelerator.out)
+				l_tt.append (shortcut_string)
 				l_tt.append (closing_parenthesis)
 			end
 			a_item.set_tooltip (l_tt)
@@ -210,10 +258,10 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			else
 				a_item.disable_sensitive
 			end
-			if accelerator /= Void then
+			if shortcut_available then
 				l_tt := tooltip.twin
 				l_tt.append (opening_parenthesis)
-				l_tt.append (accelerator.out)
+				l_tt.append (shortcut_string)
 				l_tt.append (closing_parenthesis)
 				a_item.set_tooltip (l_tt)
 			else

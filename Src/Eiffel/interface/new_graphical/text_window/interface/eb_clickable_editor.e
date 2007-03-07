@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			loop
 				l_shortcut := l_shortcuts.item_for_iteration
 				if l_shortcut.key.code = key_code then
-					if l_shortcut.is_alt = alt and l_shortcut.is_ctrl = ctrl and l_shortcut.is_shift = shift then
+					if l_shortcut.matches (create {EV_KEY}.make_with_code (key_code), alt, ctrl, shift) then
 						if customizable_commands.item (l_shortcuts.key_for_iteration) /= Void then
 							Result.extend (customizable_commands.item (l_shortcuts.key_for_iteration))
 						end

@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 					-- Automatically add `Current' to the list of commands.
 				commands.put (Current, index)
 			end
+
 			enable_sensitive
 			external_output_manager.synchronize_command_list (Current)
 		end
@@ -108,6 +109,7 @@ feature {NONE} -- Initialization
 					-- Automatically add `Current' to the list of commands.
 				commands.put (Current, index)
 			end
+
 			enable_sensitive
 			write_to_preference
 			external_output_manager.synchronize_command_list (Current)
@@ -145,6 +147,7 @@ feature {NONE} -- Initialization
 				is_valid
 			then
 				commands.put (Current, index)
+
 				enable_sensitive
 			end
 		end
@@ -541,8 +544,6 @@ feature -- Properties
 			Result.append (index.out.as_string_32)
 			Result.append ((" ").as_string_32)
 			Result.append (interface_names.escaped_string_for_menu_item (name).as_string_32)
-			Result.append (Tabulation.as_string_32)
-			Result.append ((create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index).out.as_string_32)
 		end
 
 	name: STRING
@@ -590,6 +591,18 @@ feature -- Status setting
 			old_index := -1
 			write_to_preference
 			external_output_manager.synchronize_command_list (Current)
+		end
+
+	setup_managed_shortcut (l_accelerators: ARRAY [EV_ACCELERATOR]) is
+			-- Setup `accelerator' and `managed_shortcut'
+		require
+			l_accelerators_not_void: l_accelerators /= Void
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			l_shortcut := preferences.external_command_data.shortcuts.item ("shortcut_" + index.out)
+			set_referred_shortcut (l_shortcut)
+			set_accelerator (l_accelerators.item (index))
 		end
 
 feature{EB_EXTERNAL_OUTPUT_TOOL} -- Status setting

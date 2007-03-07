@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 					s := preferences.external_command_data.i_th_external_preference_value (i)
 					if not s.is_empty and not s.is_equal (" ") then
 						create c.make_from_string (s)
+						c.setup_managed_shortcut (accelerators)
 					end
 					i := i + 1
 				end
@@ -154,6 +155,12 @@ feature -- Status report
 			Result.set_tooltip (tooltip)
 		end
 
+	list_exists: BOOLEAN is
+			-- Does `list' exist?
+		do
+			Result := list /= Void
+		end
+
 feature -- Actions
 
 	on_shortcut_change (i: INTEGER) is
@@ -189,6 +196,29 @@ feature -- Basic operations
 		do
 			if commands.item (a_pos) /= Void then
 				commands.item (a_pos).execute
+			end
+		end
+
+	refresh_list is
+			-- Rebuild the list of available commands.
+		require
+			list_exists: list_exists
+		local
+			i: INTEGER
+			litem: EV_LIST_ITEM
+		do
+			from
+				list.wipe_out
+			until
+				i > 9
+			loop
+				if commands @ i /= Void then
+					create litem
+					litem.set_text ((commands @ i).name)
+					litem.set_data (commands @ i)
+					list.extend (litem)
+				end
+				i := i + 1
 			end
 		end
 
@@ -339,29 +369,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refresh_list is
-			-- Rebuild the list of available commands.
-		require
-			list_exists: list /= Void
-		local
-			i: INTEGER
-			litem: EV_LIST_ITEM
-		do
-			from
-				list.wipe_out
-			until
-				i > 9
-			loop
-				if commands @ i /= Void then
-					create litem
-					litem.set_text ((commands @ i).name)
-					litem.set_data (commands @ i)
-					list.extend (litem)
-				end
-				i := i + 1
-			end
-		end
-
 	update_edit_buttons is
 			-- Update the sensitivity of the buttons that alter the list.
 		require
@@ -385,6 +392,7 @@ feature {NONE} -- Implementation
 			new_command: EB_EXTERNAL_COMMAND
 		do
 			create new_command.make (dialog)
+			new_command.setup_managed_shortcut (accelerators)
 			refresh_list
 			if not commands.has (Void) then
 				add_button.disable_sensitive

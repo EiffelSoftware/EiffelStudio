@@ -565,10 +565,6 @@ feature -- tools management
 			m: EV_MENU
 			mi: EB_COMMAND_MENU_ITEM
 			mn: STRING_GENERAL
-			l_tools: ARRAY [TUPLE [tool: EB_TOOL; acc: EV_ACCELERATOR]]
-			t: TUPLE [tool: EB_TOOL; acc: EV_ACCELERATOR]
-			l_tool: EB_TOOL
-			i: INTEGER
 			wt: ES_WATCH_TOOL
 			l_recyclable: EB_RECYCLABLE
 			l_bptool: ES_BREAKPOINTS_TOOL

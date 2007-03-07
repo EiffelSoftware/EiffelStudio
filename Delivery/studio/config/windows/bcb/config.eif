@@ -78,11 +78,11 @@ dpflags: ""
 
 continuation: "\"
 
-appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS)%N%
+appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $(OBJECTS)%N%
 %%Tif exist $@ $(RM) $@%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
-%$(EIFLIB) $precompile_libs_command $(LIBS) %
+%$(EIFLIB) $(PRECOMP_OBJECTS) $(LIBS) %
 %$(OBJECTS) $(EXTERNALS)%
 %,,$appl.res%N|%
 %%N%N%
@@ -95,11 +95,11 @@ appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS
 %%N"
 
 -- precompilation
-precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precompilelibs%N%
+precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib %N%
 %%Tif exist driver.exe $(RM) driver.exe%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
-%$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
+%$(EIFLIB) $(PRECOMP_OBJECTS) $(LIBS) $(OBJECTS) $(EXTERNALS) %
 %,,driver.res%N|%N%
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe .\$(ISE_C_COMPILER)\driver.exe%N%
@@ -118,7 +118,7 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$** %N%
 %%N"
 
-cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
+cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS)%N%
 %%Tif exist $@ $(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$**"
 
@@ -180,11 +180,6 @@ eobj_text: "$(OBJECTS"
 
 objects__text: "$(OBJECTS)"
 
--- text for precompilation
-precompile_text: "precompile $appl"
-
-appl_text: "appl_make $appl"
-
 cecil_text: "cecil_make $appl"
 
 -- platform 'parent' directory
@@ -212,8 +207,6 @@ driver_filename: "driver.exe"
 externals_text: "EXTERNALS"
 
 externals_continuation_text: "EXTERNALS =  \"
-
-precomp_lib_command_text: "$precompiled_library"
 
 start_test: "if not exist finished"
 

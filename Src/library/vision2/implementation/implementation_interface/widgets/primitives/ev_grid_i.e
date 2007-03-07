@@ -5199,7 +5199,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_make_item_visible: BOOLEAN
 		do
 
-			if is_selection_keyboard_handling_enabled then
+			if not is_destroyed and then is_selection_keyboard_handling_enabled then
 					-- Handle the selection events
 				if is_row_selection_enabled then
 					if last_selected_row /= Void and then last_selected_row.parent_i /= Void then
@@ -5222,15 +5222,17 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				end
 
 					-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
-				if prev_sel_item /= Void and then prev_sel_item.is_parented then
+				if prev_sel_item /= Void and then not prev_sel_item.is_destroyed and then prev_sel_item.is_parented then
 					if l_previously_expanded then
 						l_expansion_status_changed := not prev_sel_item.row.is_expanded
 					else
 						l_expansion_status_changed := prev_sel_item.row.is_expanded
 					end
+				else
+					prev_sel_item := Void
 				end
 						-- We always want to find an item above or below for row selection
-				if not l_expansion_status_changed and then prev_sel_item /= Void and then prev_sel_item.is_parented then
+				if not l_expansion_status_changed and then prev_sel_item /= Void then
 					a_sel_row := prev_sel_item.row
 					inspect
 						a_key.code

@@ -91,13 +91,12 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %$appl.res: ..\..\..\$appl.rc Makefile%N%
 %%Trc -r -fo$appl.res ..\..\..\$appl.rc%N%
 %%N%
-%$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res $precompilelibs Makefile%N%
+%$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res Makefile%N%
 %%Tif exist $@ $(RM) $@%N%
 %%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe > $@%N%
 %%T@echo e1\emain.obj >> $@%N%
-%%T@echo $library $(EXTERNALS) >> $@%N%
-%%T@echo $sharedlibs >> $@%N%
-%$precompile_libs_command%
+%%T@echo $(EIFLIB) $(EXTERNALS) >> $@%N%
+%%T@echo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%
 %%T@echo $appl.res >> $@%N%
 %$objects_redirection%N%
 %"
@@ -122,19 +121,18 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tif exist $@ $(RM) $@%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
-%driver.lnk: e1\emain.obj $(OBJECTS) driver.res $precompilelibs%N%
+%driver.lnk: e1\emain.obj $(OBJECTS) driver.res %N%
 %%Techo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe > $@%N%
 %%Techo e1\emain.obj >> $@%N%
-%%Techo $sharedlibs >> $@%N%
-%$precompile_libs_command%
+%%Techo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%
 %$objects_redirection%N%
 %%Techo $(EXTERNALS) $(EIFLIB) >> $@%N%
 %%Techo driver.res >> $@"
 
 -- cecil
-cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EIFLIB) $precompilelibs%N%
+cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EIFLIB) %N%
 %%Tif exist $@ $(RM) $@%N%
-%%Tlib -nologo -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
+%%Tlib -nologo -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $(PRECOMP_OBJECTS)"
 
 cecil_def: "%
 %DEF_FILE= c_$appl.def %N%
@@ -170,7 +168,7 @@ all: "all:: "
 intermediate_file_ext: "lib"
 
 make_intermediate: "%Tif exist $@ $(RM) $@%N%
-%%Tlib -nologo -OUT:$@ $obj%N%T$(CREATE_TEST)"
+%%Tlib -nologo -OUT:$@ $(OBJECTS)%N%T$(CREATE_TEST)"
 
 -- options below are for config internal use
 -- mind the spaces!
@@ -200,11 +198,6 @@ eobj_text: "$(OBJECTS"
 
 objects__text: "$(OBJECTS)"
 
--- text for precompilation
-precompile_text: "precompile $appl"
-
-appl_text: "appl_make $appl"
-
 cecil_text: "cecil_make $appl"
 
 -- platform 'parent' directory
@@ -230,8 +223,6 @@ driver_filename: "driver.exe"
 externals_text: "EXTERNALS"
 
 externals_continuation_text: "EXTERNALS =  \"
-
-precomp_lib_command_text: "@echo $precompiled_library >> $@%N%T"
 
 start_test: "if not exist finished"
 

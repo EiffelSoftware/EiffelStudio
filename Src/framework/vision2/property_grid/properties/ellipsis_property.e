@@ -105,8 +105,21 @@ feature {NONE} -- Agents
 	focus_lost is
 			-- Check if no other element in the popup has the focus.
 		do
-			if is_activated and then not has_focus and then is_parented then
-				deactivate
+			if {PLATFORM}.is_windows then
+				if not is_destroyed and then is_activated and then not has_focus and then is_parented then
+					deactivate
+				end
+			else
+					-- This is a hack for gtk Vision2 as focus out actions are fired
+					-- before focus in actions which means that no window has the focus
+					-- when focusing from one app window to the other and checking focus state
+					-- in the focus out actions.
+				(create {EV_ENVIRONMENT}).application.do_once_on_idle (agent do
+					if not is_destroyed and then is_activated and then not has_focus and then is_parented then
+						deactivate
+					end
+				end
+				)
 			end
 		end
 

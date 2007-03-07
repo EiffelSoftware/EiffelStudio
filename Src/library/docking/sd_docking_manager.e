@@ -142,6 +142,9 @@ feature -- Query
 			Result := query.is_title_unique (a_title)
 		end
 
+	is_locked: BOOLEAN
+			-- If zone can be docked?
+
 feature -- Command
 
 	save_config (a_file: STRING_GENERAL) is
@@ -246,6 +249,22 @@ feature -- Command
 			-- Close editors place holder zone.
 		do
 			zones.place_holder_content.close
+		end
+
+	lock is
+			-- Set `is_locked' to `True'.
+		do
+			is_locked := True
+		ensure
+			locked: is_locked = True
+		end
+
+	unlock is
+			-- Set `is_locked' to `False'.
+		do
+			is_locked := False
+		ensure
+			unlocked: is_locked = False
 		end
 
 	destroy is

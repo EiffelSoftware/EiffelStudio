@@ -106,7 +106,7 @@ feature {NONE} -- For redocker.
 			debug ("docking")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
-			create docker_mediator.make (Current, internal_docking_manager)
+			docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
 			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			setter.before_enable_capture

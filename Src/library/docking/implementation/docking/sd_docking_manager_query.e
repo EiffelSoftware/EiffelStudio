@@ -354,6 +354,21 @@ feature -- Querys
 			end
 		end
 
+	docker_mediator (a_caller: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_DOCKER_MEDIATOR is
+			-- Factory method.
+		require
+			not_void: a_caller /= Void
+			not_void: a_docking_manager /= Void
+		do
+			if not internal_docking_manager.is_locked then
+				create Result.make (a_caller, a_docking_manager)
+			else
+				create {SD_VOID_DOCKER_MEDIATOR} Result.make (a_caller, a_docking_manager)
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE} -- Implemnetation
 
 	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE]) is

@@ -55,6 +55,8 @@ feature -- Save inner container data.
 			save_tool_bar_datas (l_config_data.tool_bar_datas)
 
 			l_config_data.set_name (a_name)
+			l_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
+			l_config_data.set_is_tool_bar_locked (internal_docking_manager.tool_bar_manager.is_locked)
 
 			create l_writer.make (l_file)
 			create l_facility

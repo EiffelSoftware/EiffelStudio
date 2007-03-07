@@ -449,7 +449,7 @@ feature {NONE} -- Agents
 		do
 			pointer_press_offset_x := a_screen_x - screen_x
 			pointer_press_offset_y := a_screen_y - screen_y
-			create docker_mediator.make (Current, internal_docking_manager)
+			docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
 			enable_capture
 			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)

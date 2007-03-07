@@ -10,7 +10,7 @@ class
 
 inherit
 	ANY
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -84,35 +84,41 @@ feature -- Command
 		local
 			l_in_four_side: BOOLEAN
 		do
-			internal_last_screen_x := screen_x
-			internal_last_screen_y := screen_y
-			screen_x := a_screen_x
-			screen_y := a_screen_y
+			if not docking_manager.tool_bar_manager.is_locked then
+				internal_last_screen_x := screen_x
+				internal_last_screen_y := screen_y
+				screen_x := a_screen_x
+				screen_y := a_screen_y
 
-			if not is_resizing_mode then
-				if internal_dockable  then
-					-- Vertical easy drag area is different from horizontal easy drag area.
-					-- Otherwise, horizontal tool bar row hot area will cover vertical easy drag area, so there is no vertical easy drag area.
-					if not is_vertical_easy_drag_area (a_screen_y) then
-						l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
+				if not is_resizing_mode then
+					if internal_dockable  then
+						-- Vertical easy drag area is different from horizontal easy drag area.
+						-- Otherwise, horizontal tool bar row hot area will cover vertical easy drag area, so there is no vertical easy drag area.
+						if not is_vertical_easy_drag_area (a_screen_y) then
+							l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
+						end
 					end
-				end
-				if not l_in_four_side then
-					if not caller.is_floating then
-						float_tool_bar_zone (a_screen_x, a_screen_y)
+					if not l_in_four_side then
+						if not caller.is_floating then
+							float_tool_bar_zone (a_screen_x, a_screen_y)
+						end
+						if caller.is_floating then
+							caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
+						end
 					end
-					if caller.is_floating then
-						caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
-					end
-				end
-			else
-				if not caller.row.is_vertical then
-					caller.row.on_pointer_motion (a_screen_x)
 				else
-					caller.row.on_pointer_motion (a_screen_y)
+					if not caller.row.is_vertical then
+						caller.row.on_pointer_motion (a_screen_x)
+					else
+						caller.row.on_pointer_motion (a_screen_y)
+					end
+				end
+				switch_to_reszing_mode (a_screen_x, a_screen_y)
+			else
+				if caller.is_floating then
+					caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 				end
 			end
-			switch_to_reszing_mode (a_screen_x, a_screen_y)
 		end
 
 	apply_change (a_screen_x, a_screen_y: INTEGER) is

@@ -52,6 +52,18 @@ feature -- Open inner container data.
 					clean_up_tool_bars
 					set_all_visible
 
+					if l_config_data.is_docking_locked then
+						internal_docking_manager.lock
+					else
+						internal_docking_manager.unlock
+					end
+
+					if l_config_data.is_tool_bar_locked then
+						internal_docking_manager.tool_bar_manager.lock
+					else
+						internal_docking_manager.tool_bar_manager.unlock
+					end
+
 					check not internal_docking_manager.query.inner_container_main.full end
 					open_all_inner_containers_data (l_config_data)
 
@@ -79,6 +91,8 @@ feature -- Open inner container data.
 				clean_up_mini_tool_bar
 				clean_up_tool_bars
 				clear_up_containers
+				internal_docking_manager.unlock
+				internal_docking_manager.tool_bar_manager.unlock
 				if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 					internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
 				end

@@ -11,21 +11,21 @@ quick_compilation: True
 include_path: "$(INCLUDE_PATH)"
 
 -- C-compiler
-cc: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
-cpp: "$(ISE_EIFFEL)\BCC55\bin\bcc32"
+cc: "%"$(ISE_EIFFEL)\BCC55\bin\bcc32.exe%""
+cpp: "%"$(ISE_EIFFEL)\BCC55\bin\bcc32.exe%""
 
 -- C-linker
-sharedlink: "$(ISE_EIFFEL)\BCC55\bin\ilink32"
+sharedlink: "%"$(ISE_EIFFEL)\BCC55\bin\ilink32.exe%""
 
 -- optimization flags
 wkoptimize: ""
 optimize: "-O2"
 
 -- compiler flags
-ccflags: "-c -g0 -w- -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-cppflags: "-c -g0 -w- -P -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+ccflags: "-c -g0 -w- -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS) -I%"$(ISE_EIFFEL)\BCC55\include%" -L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%""
+mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS) -I%"$(ISE_EIFFEL)\BCC55\include%" -L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%""
+cppflags: "-c -g0 -w- -P -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS) -I%"$(ISE_EIFFEL)\BCC55\include%" -L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%""
+mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS) -I%"$(ISE_EIFFEL)\BCC55\include%" -L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%""
 shared_flags: "-DEIF_USE_DLL"
 il_flags: "-tWM -DEIF_IL_DLL"
 
@@ -36,7 +36,7 @@ ar: ""
 ld: ""
 ldflags: ""
 mtldflags: ""
-ccldflags: "-c -x -Tpe -L$(ISE_EIFFEL)\bcc55\lib -L$(ISE_EIFFEL)\bcc55\lib\psdk"
+ccldflags: "-c -x -Tpe -L%"$(ISE_EIFFEL)\bcc55\lib%" -L%"$(ISE_EIFFEL)\bcc55\lib\PSDK%""
 console_flags: "-ap"
 windows_flags: "-aa"
 ldsharedflags: "-Tpd -Gn"
@@ -71,8 +71,8 @@ file_exist: "if exist"
 rmdir: "rd"
 
 -- make program
-make: "$(ISE_EIFFEL)\BCC55\bin\make.exe"
-command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=$(ISE_EIFFEL) -f %%i%""
+make: "%"$(ISE_EIFFEL)\BCC55\bin\make.exe%""
+command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
 
 dpflags: ""
 
@@ -80,24 +80,24 @@ continuation: "\"
 
 appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $(OBJECTS)%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
+%%T%"$(ISE_EIFFEL)\bcc55\bin\ilink32.exe%" @&&|%N%
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
 %$(EIFLIB) $(PRECOMP_OBJECTS) $(LIBS) %
 %$(OBJECTS) $(EXTERNALS)%
 %,,$appl.res%N|%
 %%N%N%
 %..\..\..\$appl.rc:%N%
-%%Tif not exist ..\..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$appl.rc%N%
+%%Tif not exist ..\..\..\$appl.rc $(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" ..\..\..\$appl.rc%N%
 %%N%
 %%N%
 %$appl.res: ..\..\..\$appl.rc Makefile%N%
-%%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r -fo$appl.res ..\..\..\$appl.rc%N%
+%%T%"$(ISE_EIFFEL)\BCC55\bin\brc32.exe%" -I%"$(ISE_EIFFEL)\bcc55\include%" -r -fo$appl.res ..\..\..\$appl.rc%N%
 %%N"
 
 -- precompilation
 precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib %N%
 %%Tif exist driver.exe $(RM) driver.exe%N%
-%%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
+%%T%"$(ISE_EIFFEL)\bcc55\bin\ilink32.exe%" @&&|%N%
 %%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
 %$(EIFLIB) $(PRECOMP_OBJECTS) $(LIBS) $(OBJECTS) $(EXTERNALS) %
 %,,driver.res%N|%N%
@@ -107,20 +107,20 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib %N%
 %%Tif exist driver.exe $(RM) driver.exe%N%
 %%Tif exist precomp.lib $(RM) precomp.lib%N%
 %%N%
-%driver.rc: $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%N%
-%%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%driver.rc: %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%"%N%
+%%T$(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" driver.rc%N%
 %%N%
 %driver.res: driver.rc%N%
-%%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r driver.rc%N%
+%%T%"$(ISE_EIFFEL)\BCC55\bin\brc32.exe%" -I%"$(ISE_EIFFEL)\bcc55\include%" -r driver.rc%N%
 %%N%
 %precomp.lib: $(C_OBJECTS) $(EXTERNALS)%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$** %N%
+%%T&%"$(ISE_EIFFEL)\BCC55\bin\tlib.exe%" /p1024 $@ +$** %N%
 %%N"
 
 cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS)%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$**"
+%%T&%"$(ISE_EIFFEL)\BCC55\bin\tlib.exe%" /p1024 $@ +$**"
 
 il_system_compilation_line: "%
 	%ILSHAREDLIBS = IMPORT32 OLE2w32 CW32MT%N%
@@ -130,11 +130,11 @@ il_system_compilation_line: "%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
 	%..\..\..\$(IL_RESOURCE).rc:%N%
-	%%Tif not exist ..\..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$(IL_RESOURCE).rc%N%
+	%%Tif not exist ..\..\..\$(IL_RESOURCE).rc $(MV) %"$(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc%" ..\..\..\$(IL_RESOURCE).rc%N%
 	%%N%
 	%%N%
 	%$(IL_RESOURCE).res: ..\..\..\$(IL_RESOURCE).rc Makefile%N%
-	%%T$(ISE_EIFFEL)\BCC55\bin\brc32 -I$(ISE_EIFFEL)\bcc55\include -r -fo$(IL_RESOURCE).res ..\..\..\$(IL_RESOURCE).rc%N"
+	%%T%"$(ISE_EIFFEL)\BCC55\bin\brc32.exe%" -I%"$(ISE_EIFFEL)\bcc55\include%" -r -fo$(IL_RESOURCE).res ..\..\..\$(IL_RESOURCE).rc%N"
 
 completed: "%Techo done > completed.eif"
 
@@ -143,13 +143,13 @@ all: "all:: "
 intermediate_file_ext: "lib"
 
 make_intermediate: "%Tif exist $@ $(RM) $@%N%
-%%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p1024 $@ +$**%N%T$(CREATE_TEST)%
+%%T&%"$(ISE_EIFFEL)\BCC55\bin\tlib.exe%" /p1024 $@ +$**%N%T$(CREATE_TEST)%
 %%N%
 %.c.obj:%N%
 %%T$(CC) @&&|%N%T$(CFLAGS) $<%N|%
 %%N%N%
 %.x.obj:%N%
-%%T$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\x2c $< $*.c%N%
+%%T%"$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\x2c.exe%" $< $*.c%N%
 %%T$(CC) @&&|%N%T$(CFLAGS) $*.c%N|"
 
 -- options below are for config internal use

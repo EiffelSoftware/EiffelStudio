@@ -156,12 +156,17 @@ feature {NONE} -- Implementation
 			a_window: POINTER
 			i, a_x, a_y, a_screen_x, a_screen_y, l_width, l_height: INTEGER
 			l_screen: EV_SCREEN
+			gr: POINTER
 		do
 			a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 			if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
 				if reset_tooltip_position then
 					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
-					{EV_GTK_EXTERNALS}.gdk_drawable_get_size (a_window, $l_width, $l_height)
+					gr := reusable_requisition_struct.item
+					{EV_GTK_EXTERNALS}.gtk_widget_size_request (a_tip_win, gr)
+					l_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+					l_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
 					create l_screen
 					tooltip_initial_x := a_screen_x + a_x
 					tooltip_initial_y := a_screen_y + a_y
@@ -169,7 +174,7 @@ feature {NONE} -- Implementation
 						tooltip_initial_x := l_screen.width - l_width
 					end
 					if tooltip_initial_y + l_height > l_screen.height then
-						tooltip_initial_y := l_screen.height - l_height - tooltip_window_y_offset
+						tooltip_initial_y := l_screen.height - l_height - (2 * tooltip_window_y_offset)
 					end
 					reset_tooltip_position := False
 				end
@@ -178,7 +183,6 @@ feature {NONE} -- Implementation
 				show_tooltips_if_activated := False
 				tooltip_repeater.set_interval (0)
 			end
-			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 			if l_show_tooltips then
 				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y + tooltip_window_y_offset)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)

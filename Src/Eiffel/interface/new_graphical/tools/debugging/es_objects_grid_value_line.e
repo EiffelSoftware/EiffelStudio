@@ -106,9 +106,12 @@ feature {NONE} -- Object stone
 						if feat /= Void then
 								--| Note: `related_line.object_address' can be Void
 							create fost.make (related_line.object_address, feat)
-							objst ?= internal_items_stone_data[0].stone
-							if objst /= Void then
-								fost.attach_object_stone (objst)
+							t := internal_item_stone_data_i_th (0)
+							if t /= Void then
+								objst ?= t.stone
+								if objst /= Void then
+									fost.attach_object_stone (objst)
+								end
 							end
 							fst := fost
 
@@ -117,8 +120,8 @@ feature {NONE} -- Object stone
 							t.accept_cursor := fst.stone_cursor
 							t.deny_cursor := fst.X_stone_cursor
 							internal_items_stone_data[col_name_index] := t
-							if internal_items_stone_data[0] = Void then
-								internal_items_stone_data[0] := t
+							if internal_items_stone_data [0] = Void then
+								internal_items_stone_data [0] := t
 							end
 						end
 					end

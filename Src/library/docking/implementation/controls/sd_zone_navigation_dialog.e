@@ -214,7 +214,7 @@ feature {NONE} -- Initialization
 		end
 
 	set_scroll_area_item_size (a_box: EV_BOX; a_scroll_area: EV_SCROLLABLE_AREA) is
-			--
+			-- Set scroll area item minimum size.
 		require
 			not_void: a_box /= Void
 			not_void: a_scroll_area /= Void
@@ -500,19 +500,22 @@ feature {NONE} -- Implementation command
 			not_void: a_item /= Void
 		local
 			l_content: SD_CONTENT
+			l_env: EV_ENVIRONMENT
 		do
 			l_content ?= a_item.data
 			check not_void: l_content /= Void end
 			full_title.set_text (l_content.long_title)
 			if l_content.description = Void then
-				description.set_text ("No description available.")
+				description.set_text (internal_shared.interface_names.Zone_navigation_no_description_available)
 			else
 				description.set_text (l_content.description)
 			end
 			if l_content.detail = Void then
-				detail.set_text ("No detail available.")
+				detail.set_text (internal_shared.interface_names.Zone_navigation_no_detail_available)
 			else
-				detail.set_text (l_content.detail)
+				-- We have to do it in idle actions, otherwise dialog minimum height will not correct.
+				create l_env
+				l_env.application.do_once_on_idle (agent set_text (l_content.detail.as_string_8))
 			end
 		end
 
@@ -879,6 +882,124 @@ feature {NONE} -- Implementation command
 
 	internal_max_item_width: INTEGER is 161
 			-- Max width of a tool bar item which represent a SD_CONTENT.
+
+feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
+
+	set_text (tip: STRING) is
+			-- Display `tip' as a wrapped text within `detail'.
+			-- Replace all '%N' characters as spaces.
+		local
+			counter: INTEGER
+			font: EV_FONT
+			current_width: INTEGER
+			last_string: STRING
+			temp_string: STRING
+			modified_tip: STRING
+			lines: ARRAYED_LIST [STRING]
+			start_pos: INTEGER
+			output: STRING
+			maximum_string_width: INTEGER
+			lines_changed: BOOLEAN
+			all_space_indexes: ARRAYED_LIST [INTEGER]
+		do
+			create all_space_indexes.make (20)
+			create lines.make (4)
+			font := detail.font
+			modified_tip := tip.twin
+			modified_tip.replace_substring_all ("%N", " ")
+			modified_tip.append_character (' ')
+			maximum_string_width := width - 10
+
+				-- Set up all space indexes which stores the index of each space in the
+				-- text, as these are the wrapping criterion.
+				-- Note that if a word is contained that is longer than the width of the label,
+				-- this will probable lead to problems. No attempt to prevent this is made in the code.
+			from
+				counter := 1
+			until
+				counter > modified_tip.count
+			loop
+				if modified_tip.item (counter).is_equal(' ') then
+					all_space_indexes.extend (counter)
+				end
+				counter := counter + 1
+			end
+
+				-- Perform calculations to determine where wrapping must occur.
+			from
+				start_pos := 1
+				counter := 1
+			until
+				counter > all_space_indexes.count
+			loop
+				from
+					current_width := 0
+				until
+					current_width > maximum_string_width or
+					counter > all_space_indexes.count
+				loop
+
+					temp_string := modified_tip.substring (start_pos, all_space_indexes.i_th (counter) - 1)
+					current_width := font.string_width (temp_string)
+					if current_width <= maximum_string_width then
+						last_string := temp_string
+						counter := counter + 1
+					else
+						counter := counter - 1
+					end
+				end
+				if all_space_indexes.valid_index (counter) then
+					start_pos := all_space_indexes.i_th (counter) + 1
+				end
+				lines.extend (last_string)
+			end
+
+				-- Now determine if the contents of the line have actually changed.
+				-- If they have not, then there is no need to set the text again, as it
+				-- causes flicker.
+			from
+				lines.start
+				Previous_lines.start
+			until
+				lines.off or lines_changed or previous_lines.off
+			loop
+				if lines.item.count /= previous_lines.item.count then
+					lines_changed := True
+				end
+				lines.forth
+				Previous_lines.forth
+			end
+			if previous_lines.is_empty then
+				lines_changed := True
+			end
+
+				-- Now create and set the text on the label if
+				-- it needs to be changed.
+			if lines_changed then
+				output := ""
+				from
+					lines.start
+				until
+					lines.off
+				loop
+					output.append (lines.item)
+					if lines.index < lines.count then
+						output.append_character ('%N')
+					end
+					lines.forth
+				end
+				previous_lines.make_from_array (lines)
+				detail.set_text (output)
+			end
+		end
+
+	previous_lines: ARRAYED_LIST [STRING] is
+			-- Previous contents of lines displayed.
+			-- Used to prevent continuous redrawing of label when
+			-- nothign has changed.
+		once
+			create Result.make (20)
+		end
 
 invariant
 	internal_docking_manager_not_void: internal_docking_manager /= Void

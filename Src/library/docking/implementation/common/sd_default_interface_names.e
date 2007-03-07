@@ -91,6 +91,18 @@ feature -- Enumeration
 			Result := "Show List"
 		end
 
+	Zone_navigation_no_description_available: STRING_GENERAL is
+			-- Label text for zone navigation dialog.
+		do
+			Result := "No description available."
+		end
+
+	Zone_navigation_no_detail_available: STRING_GENERAL is
+			-- Label text for zone navigation dialog.
+		do
+			Result := "No detail available."
+		end
+
 feature -- Tool bar customize dialog strings
 
 	tool_bar_customize_title: STRING_GENERAL is

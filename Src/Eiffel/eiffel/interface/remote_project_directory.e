@@ -110,6 +110,8 @@ feature -- Access
 			-- Path of the COMP directory
 		do
 			Result := project_location.compilation_path
+		ensure
+			compilation_path_not_void: Result /= Void
 		end
 
 	project_epr_location: FILE_NAME is
@@ -117,18 +119,24 @@ feature -- Access
 			-- workbench is stored
 		do
 			Result := project_location.project_file_name
+		ensure
+			project_epr_location_not_void: Result /= Void
 		end
 
 	project_epr_file: PROJECT_EIFFEL_FILE is
 			-- File where the workbench is stored
 		do
 			Result := project_location.project_file
+		ensure
+			project_epr_file_not_void: Result /= Void
 		end
 
 	precomp_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the precompilation information is stored
 		do
 			create Result.make (project_location.precompilation_file_name)
+		ensure
+			precomp_eif_file_not_void: Result /= Void
 		end
 
 	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
@@ -141,6 +149,8 @@ feature -- Access
 			end
 			Result.set_file_name (Il_info_name)
 			Result.add_extension (Il_info_extension)
+		ensure
+			precomp_il_info_file_not_void: Result /= Void
 		end
 
 	precompiled_preobj: FILE_NAME is
@@ -148,6 +158,8 @@ feature -- Access
 		do
 			create Result.make_from_string (project_location.workbench_path)
 			Result.set_file_name (Preobj)
+		ensure
+			precompiled_preobj_not_void: Result /= Void
 		end
 
 	precompiled_driver: FILE_NAME is
@@ -155,6 +167,8 @@ feature -- Access
 		do
 			create Result.make_from_string (project_location.workbench_path)
 			Result.set_file_name (Driver)
+		ensure
+			precompiled_driver_not_void: Result /= Void
 		end
 
 	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is

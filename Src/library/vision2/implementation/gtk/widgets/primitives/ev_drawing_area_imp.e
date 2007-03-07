@@ -154,14 +154,23 @@ feature {NONE} -- Implementation
 			a_tip_win: POINTER
 			l_show_tooltips: BOOLEAN
 			a_window: POINTER
-			i, a_x, a_y, a_screen_x, a_screen_y: INTEGER
+			i, a_x, a_y, a_screen_x, a_screen_y, l_width, l_height: INTEGER
+			l_screen: EV_SCREEN
 		do
 			a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
 				if reset_tooltip_position then
 					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
+					{EV_GTK_EXTERNALS}.gdk_drawable_get_size (a_window, $l_width, $l_height)
+					create l_screen
 					tooltip_initial_x := a_screen_x + a_x
 					tooltip_initial_y := a_screen_y + a_y
+					if tooltip_initial_x + l_width > l_screen.width then
+						tooltip_initial_x := l_screen.width - l_width
+					end
+					if tooltip_initial_y + l_height > l_screen.height then
+						tooltip_initial_y := l_screen.height - l_height - tooltip_window_y_offset
+					end
 					reset_tooltip_position := False
 				end
 				l_show_tooltips := True

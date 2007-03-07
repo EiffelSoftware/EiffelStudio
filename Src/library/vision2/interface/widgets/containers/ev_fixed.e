@@ -47,12 +47,10 @@ feature -- Element change
 			a_widget_not_current: a_widget /= Current
 			a_widget_not_parent_of_current: not is_parent_recursive (a_widget)
 			a_widget_containable: may_contain (a_widget)
-			a_width_not_smaller_than_minimum_width:
-				a_width >= a_widget.minimum_width
-			a_height_not_smaller_than_minimum_height:
-				a_height >= a_widget.minimum_height
 		do
-			implementation.extend_with_position_and_size (a_widget, a_x, a_y, a_width, a_height)
+			implementation.extend_with_position_and_size (a_widget, a_x, a_y,
+				a_width.max (a_widget.minimum_width),
+				a_height.max (a_widget.minimum_height))
 		ensure
 			has_a_widget: has (a_widget)
 			parent_is_current: a_widget.parent = Current
@@ -61,8 +59,8 @@ feature -- Element change
 			cursor_not_moved: (index = old index) or (after and old after)
 			an_item_x_position_assigned: a_widget.x_position = a_x
 			an_item_y_position_assigned: a_widget.y_position = a_y
-			an_item_width_assigned: a_widget.width = a_width
-			an_item_height_assigned: a_widget.height = a_height
+			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
@@ -71,17 +69,15 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
-			a_width_not_smaller_than_minimum_width:
-				a_width >= a_widget.minimum_width
-			a_height_not_smaller_than_minimum_height:
-				a_height >= a_widget.minimum_height
 		do
-			implementation.set_item_position_and_size (a_widget, a_x, a_y, a_width, a_height)
+			implementation.set_item_position_and_size (a_widget, a_x, a_y,
+				a_width.max (a_widget.minimum_width),
+				a_height.max (a_widget.minimum_height))
 		ensure
 			an_item_x_position_assigned: a_widget.x_position = a_x
 			an_item_y_position_assigned: a_widget.y_position = a_y
-			an_item_width_assigned: a_widget.width = a_width
-			an_item_height_assigned: a_widget.height = a_height
+			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
@@ -128,12 +124,10 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
-			a_width_not_smaller_than_minimum_width:
-				a_width >= a_widget.minimum_width
 		do
-			implementation.set_item_width (a_widget, a_width)
+			implementation.set_item_width (a_widget, a_width.max (a_widget.minimum_width))
 		ensure
-			an_item_width_assigned: a_widget.width = a_width
+			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
 		end
 
 	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
@@ -142,12 +136,10 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
-			a_height_not_smaller_than_minimum_height:
-				a_height >= a_widget.minimum_height
 		do
-			implementation.set_item_height (a_widget, a_height)
+			implementation.set_item_height (a_widget, a_height.max (a_widget.minimum_height))
 		ensure
-			an_item_height_assigned: a_widget.height = a_height
+			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -157,15 +149,13 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_widget_not_void: a_widget /= Void
 			has_a_widget: has (a_widget)
-			a_width_not_smaller_than_minimum_width:
-				a_width >= a_widget.minimum_width
-			a_height_not_smaller_than_minimum_height:
-				a_height >= a_widget.minimum_height
 		do
-			implementation.set_item_size (a_widget, a_width, a_height)
+			implementation.set_item_size (a_widget,
+				a_width.max (a_widget.minimum_width),
+				a_height.max (a_widget.minimum_height))
 		ensure
-			an_item_width_assigned: a_widget.width = a_width
-			an_item_height_assigned: a_widget.height = a_height
+			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

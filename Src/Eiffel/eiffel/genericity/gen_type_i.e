@@ -536,33 +536,83 @@ feature {GEN_TYPE_I} -- Generic conformance
 		local
 			gen_type: GEN_TYPE_I
 			parameter: TYPE_I
+			other_parameter: TYPE_I
 			cl_type: CL_TYPE_I
+			types: TYPE_LIST
+			cursor: ARRAYED_LIST_CURSOR
 			i: INTEGER
 		do
 				-- Enumerate types where expanded parameters are replaced with reference ones.
 				-- Take into account only registered generic derivations.
-			from
-				i := n
-			until
-				i <= 0
-			loop
-				parameter := true_generics [i]
-				if parameter.is_expanded then
-					gen_type := duplicate
-					cl_type ?= parameter
-					check
-						cl_type_attached: cl_type /= Void
+			if n > 4  then
+					-- It's faster to scan registered class types rather than to generate conforming ones.
+				from
+					types := base_class.types
+					cursor := types.cursor
+					types.start
+				until
+					types.after
+				loop
+					cl_type := types.item.type
+						-- Check only types that differ from current one.
+					if cl_type /= Current then
+						gen_type ?= cl_type
+						check
+							gen_type_attached: gen_type /= Void
+						end
+							-- Ensure the type is reference.
+						if gen_type.is_reference then
+							from
+								i := meta_generic.count
+							until
+								i <= 0
+							loop
+								parameter := meta_generic.item (i)
+								other_parameter := gen_type.meta_generic.item (i)
+								if
+									parameter.same_as (other_parameter) or else
+									parameter.is_expanded and then other_parameter.same_as (reference_c_type)
+								then
+										-- Continue processing.
+								else
+										-- Types differ. Stop processing.
+									i := 0
+								end
+								i := i - 1
+							end
+							if i = 0 then
+								processor.call ([types.item])
+							end
+						end
 					end
-					gen_type.true_generics [i] := cl_type.reference_type
-					gen_type.meta_generic [i] := reference_c_type
-					if base_class.types.has_type (gen_type) then
-						processor.call ([gen_type.associated_class_type])
-					end
-					if i > 1 then
-						gen_type.enumerate_interfaces_recursively (processor, i - 1)
-					end
+					types.forth
 				end
-				i := i - 1
+				types.go_to (cursor)
+			else
+				from
+					i := n
+				until
+					i <= 0
+				loop
+					parameter := true_generics [i]
+					if parameter.is_expanded then
+						gen_type := duplicate
+						gen_type.set_reference_mark
+						cl_type ?= parameter
+						check
+							cl_type_attached: cl_type /= Void
+						end
+						gen_type.true_generics [i] := cl_type.reference_type
+						gen_type.meta_generic [i] := reference_c_type
+						if base_class.types.has_type (gen_type) then
+							processor.call ([gen_type.associated_class_type])
+						end
+						if i > 1 then
+							gen_type.enumerate_interfaces_recursively (processor, i - 1)
+						end
+					end
+					i := i - 1
+				end
 			end
 		end
 
@@ -579,7 +629,7 @@ feature -- Generic conformance
 			-- 2. Ensure generated code works as expected.
 			-- 3. Remove validity rule that prevents reattaching derivations
 			-- with expanded parameters to derivations with reference parameters.
---			enumerate_interfaces_recursively (processor, meta_generic.count)
+			enumerate_interfaces_recursively (processor, meta_generic.count)
 		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is

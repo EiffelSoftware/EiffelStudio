@@ -387,15 +387,15 @@ feature -- Actions
 					if detailed_result_btn.is_selected then
 						l_metric.enable_fill_domain
 					else
-						l_metric.disable_filter_result
+						l_metric.disable_fill_domain
 					end
 						-- Special setting for metric of line unit.
-					if l_metric.is_basic and then l_metric.unit = line_unit then
-						l_metric_basic ?= l_metric
-						if l_metric_basic.criteria = Void then
-							l_metric_basic.set_criteria (criterion_factory.metric_criterion (line_scope, query_language_names.ql_cri_true))
-						end
-					end
+--					if l_metric.is_basic and then l_metric.unit = line_unit then
+--						l_metric_basic ?= l_metric
+--						if l_metric_basic.criteria = Void then
+--							l_metric_basic.set_criteria (criterion_factory.metric_criterion (line_scope, query_language_names.ql_cri_true))
+--						end
+--					end
 				else
 					l_metric.disable_fill_domain
 				end

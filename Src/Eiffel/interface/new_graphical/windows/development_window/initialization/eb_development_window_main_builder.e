@@ -121,6 +121,8 @@ feature -- Command
 			l_save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
 			l_open_layout_command: EB_OPEN_LAYOUT_COMMAND
 			l_shortcut: SHORTCUT_PREFERENCE
+			l_lock_tool_bar_command: EB_LOCK_TOOL_BAR_COMMAND
+			l_lock_docking_command: EB_LOCK_DOCKING_COMMAND
 		do
 			-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
 			-- Non-docking Eiffel Studio was call Precursor
@@ -288,6 +290,12 @@ feature -- Command
 
 			create l_open_layout_command.make (develop_window)
 			develop_window.commands.set_open_layout_command (l_open_layout_command)
+
+			create l_lock_tool_bar_command.make (develop_window)
+			develop_window.commands.set_lock_tool_bar_command (l_lock_tool_bar_command)
+
+			create l_lock_docking_command.make (develop_window)
+			develop_window.commands.set_lock_docking_command (l_lock_docking_command)
 		end
 
 	set_up_accelerators is

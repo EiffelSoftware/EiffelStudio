@@ -1253,9 +1253,8 @@ feature -- Status setting
 			if not l_result then
 				restore_standard_debug_docking_layout
 			end
-				-- FIXME: To be implemented.
---			debugging_window.update_items_states
---			debugging_window.update_menu_item_state
+
+			debugging_window.menus.update_menu_lock_items
 
 			refresh_breakpoints_tool
 		end

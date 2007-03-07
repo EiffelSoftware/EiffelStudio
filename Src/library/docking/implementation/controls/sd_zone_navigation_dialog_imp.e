@@ -55,6 +55,7 @@ feature {NONE}-- Initialization
 			extend (internal_vertical_box_top_top)
 			internal_vertical_box_top_top.extend (internal_vertical_box_top)
 			internal_vertical_box_top.extend (internal_label_box)
+			internal_vertical_box_top.disable_item_expand (internal_label_box)
 			create l_vertical_box
 			internal_label_box.extend (l_vertical_box)
 			l_vertical_box.extend (internal_tools_label)
@@ -76,6 +77,7 @@ feature {NONE}-- Initialization
 			internal_files_box.extend (files_column)
 			internal_files_box.disable_item_expand (files_column)
 			internal_vertical_box_top.extend (internal_info_box_border)
+			internal_vertical_box_top.disable_item_expand (internal_info_box_border)
 			internal_info_box_border.extend (internal_info_box)
 			internal_info_box.extend (full_title)
 			internal_info_box.extend (description)

@@ -68,7 +68,56 @@ feature -- Query
 			end
 		end
 
+	is_locked: BOOLEAN
+			-- If docking disabled?
+
 feature -- Command
+
+	lock is
+			-- Disable drag area for docked tool bars.
+			-- Disable dock for floating tool bars.
+		local
+			l_zone: SD_TOOL_BAR_ZONE
+		do
+			from
+				contents.start
+			until
+				contents.after
+			loop
+				l_zone := contents.item.zone
+				if l_zone /= Void then
+					l_zone.disable_drag_area
+				end
+				contents.forth
+			end
+			internal_docking_manager.command.resize (True)
+			is_locked := True
+		ensure
+			locked: is_locked
+		end
+
+	unlock is
+			-- Enable drag area for docked tool bars.
+			-- Enable dock for floating tool bars.
+		local
+			l_zone: SD_TOOL_BAR_ZONE
+		do
+			from
+				contents.start
+			until
+				contents.after
+			loop
+				l_zone := contents.item.zone
+				if l_zone /= Void then
+					l_zone.enable_drag_area
+				end
+				contents.forth
+			end
+			internal_docking_manager.command.resize (True)
+			is_locked := False
+		ensure
+			unlocked: not is_locked
+		end
 
 	destroy is
 			-- Release hooks.

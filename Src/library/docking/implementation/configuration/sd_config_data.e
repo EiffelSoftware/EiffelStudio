@@ -36,14 +36,36 @@ feature -- Properties
 			set: name = a_name
 		end
 
+	set_is_docking_locked (a_bool: BOOLEAN) is
+			-- Set `is_docking_locked' with `a_bool'
+		do
+			is_docking_locked := a_bool
+		ensure
+			set: is_docking_locked = a_bool
+		end
+
+	is_docking_locked: BOOLEAN
+			-- If docking manager is locked?
+
+	set_is_tool_bar_locked (a_bool: BOOLEAN) is
+			--  Set `is_tool_bar_locked' with `a_bool'
+		do
+			is_tool_bar_locked := a_bool
+		ensure
+			set: is_tool_bar_locked = a_bool
+		end
+
+	is_tool_bar_locked: BOOLEAN
+			-- If tool bar manager is locked?
+
 	inner_container_datas: like internal_inner_container_datas is
-			--
+			-- Value of `internal_inner_container_datas'
 		do
 			Result := internal_inner_container_datas
 		end
 
 	set_inner_container_datas (a_data: like internal_inner_container_datas) is
-			--
+			-- Set `internal_inner_container_datas' with `a_data'.
 		require
 			a_data_not_void: a_data /= Void
 		do
@@ -53,7 +75,7 @@ feature -- Properties
 		end
 
 	auto_hide_panels_datas: like internal_auto_hide_zones_data is
-			--
+			-- Value of `auto_hide_panels_datas'
 		do
 			Result := internal_auto_hide_zones_data
 		end
@@ -88,8 +110,10 @@ feature -- Data for only one editor zone
 feature {NONE}  -- Implementation
 
 	internal_inner_container_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+			-- SD_MUTLI_DOCK_AREA layout datas.
 
 	internal_auto_hide_zones_data: SD_AUTO_HIDE_PANEL_DATA;
+			-- Auto hide zones datas.
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -340,7 +340,7 @@ feature {NONE} -- Agents for docker
 			l_tab_state: SD_TAB_STATE
 		do
 			is_drag_title_bar := True
-			create internal_docker_mediator.make (Current, internal_docking_manager)
+			internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
 			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			enable_capture
@@ -370,7 +370,7 @@ feature {NONE} -- Agents for docker
 	on_notebook_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle notebook drag actions.
 		do
-			create internal_docker_mediator.make (Current, internal_docking_manager)
+			internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
 			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 			enable_capture

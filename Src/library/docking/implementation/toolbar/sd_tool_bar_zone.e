@@ -50,8 +50,11 @@ feature {NONE} -- Initialization
 	init_drag_area is
 			-- Initlization of `drag_area'.
 		do
-			tool_bar.set_start_x (internal_drag_area_size)
-			create drag_area_rectangle.make (0, 0, tool_bar.start_x, tool_bar.row_height)
+			if not docking_manager.tool_bar_manager.is_locked then
+				set_drag_area (True)
+			else
+				disable_drag_area
+			end
 
 			tool_bar.expose_actions.extend (agent on_redraw_drag_area)
 
@@ -72,7 +75,10 @@ feature -- Command
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_widget_button: SD_TOOL_BAR_WIDGET_ITEM
 		do
-			set_drag_area (a_horizontal)
+			if not docking_manager.tool_bar_manager.is_locked then
+				set_drag_area (a_horizontal)
+			end
+
 			from
 				if not a_horizontal then
 					create internal_text.make (1)
@@ -146,6 +152,22 @@ feature -- Command
 			end
 		end
 
+	disable_drag_area is
+			-- Remove drag area which is located at head.
+		do
+			tool_bar.set_start_x (0)
+			tool_bar.set_start_y (0)
+			create drag_area_rectangle.make (0, 0, 0, 0)
+		end
+
+	enable_drag_area is
+			-- Show drag area which is located at the head.
+		do
+			if not is_floating then
+				set_drag_area (not is_vertical)
+			end
+		end
+
 	float (a_screen_x, a_screen_y: INTEGER; a_visible: BOOLEAN) is
 			-- Float to `a_screen_x' and `a_screen_y'.
 		do
@@ -154,10 +176,7 @@ feature -- Command
 			if is_vertical then
 				change_direction (True)
 			end
-			tool_bar.set_start_x (0)
-			tool_bar.set_start_y (0)
-			create drag_area_rectangle.make (0, 0, 0, 0)
-			tool_bar.redraw_rectangle (0, 0, {SD_TOOL_BAR_SEPARATOR}.width, tool_bar.row_height)
+			disable_drag_area
 
 			create floating_tool_bar.make (docking_manager)
 			if tool_bar.parent /= Void then
@@ -204,7 +223,11 @@ feature -- Command
 			if tool_bar.parent /= Void then
 				tool_bar.parent.prune (tool_bar)
 			end
-			set_drag_area (True)
+
+			if not docking_manager.tool_bar_manager.is_locked then
+				set_drag_area (True)
+			end
+
 			change_direction (True)
 			extend_one_item (tail_indicator)
 			compute_minmum_size

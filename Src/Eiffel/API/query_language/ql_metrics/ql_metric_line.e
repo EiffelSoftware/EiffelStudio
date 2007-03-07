@@ -58,16 +58,13 @@ feature{NONE} -- Implementation
 	basic_scope_table: HASH_TABLE [QL_METRIC_BASIC_SCOPE_INFO, QL_SCOPE] is
 			-- Table of domain generators per scope
 		do
-			if criterion = Void then
-					-- We use a faster algorithm to count line if no `criterion' is specified.
-				Result := fast_generator_table
-			else
-					-- With a criterion specified, calculate metric in normal way.
+			if is_fill_domain_enabled or else criterion /= Void then
+					-- With a criterion specified or detailed result is going to be kept, calculate metric in normal way.
 				Result := normal_generator_table
+			else
+					-- We use a faster algorithm to count line otherwise.
+				Result := fast_generator_table
 			end
-		ensure then
-			good_result: (criterion = Void implies Result = fast_generator_table) and
-						 (criterion /= Void implies Result = normal_generator_table)
 		end
 
 	fast_generator_table: like basic_scope_table

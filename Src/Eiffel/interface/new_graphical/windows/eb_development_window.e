@@ -951,20 +951,6 @@ feature -- Window management
 			docking_manager.save_editors_config (docking_config_editors_file)
 		end
 
-	open_tools_docking_layout is
-			-- Open tools docking layout.
-		local
-			l_result: BOOLEAN
-		do
-			l_result := docking_manager.open_tools_config (docking_config_tools_file)
-		end
-
-	open_editors_docking_layout is
-			-- Open editors docking layout.
-		do
-			docking_manager.open_editors_config (docking_config_editors_file)
-		end
-
 	internal_construct_standard_layout_by_code is
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
@@ -1046,6 +1032,7 @@ feature -- Window management
 			if not l_result then
 				restore_standard_tools_docking_layout
 			end
+			menus.update_menu_lock_items
 		end
 
 	restore_editors_docking_layout is
@@ -1083,6 +1070,7 @@ feature -- Window management
 			else
 				internal_construct_standard_layout_by_code
 			end
+			menus.update_menu_lock_items
 		rescue
 			retried := True
 			retry
@@ -2060,9 +2048,9 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		do
 			editors_manager.current_editor.toggle_view_invisible_symbols
 			if editors_manager.current_editor.view_invisible_symbols then
-				formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
+				menus.formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
 			else
-				formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)
+				menus.formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)
 			end
 		end
 
@@ -2243,28 +2231,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 			command_controller := a_controller
 		ensure
 			set: command_controller = a_controller
-		end
-
-	set_formatting_marks_command_menu_item (a_item: like formatting_marks_command_menu_item) is
-			-- Set `formatting_marks_command_menu_item'
-		do
-			formatting_marks_command_menu_item := a_item
-		ensure
-			set: formatting_marks_command_menu_item = a_item
-		end
-
-	formatting_marks_command_menu_item: EB_COMMAND_MENU_ITEM
-			-- Menu item used to shw/hide formatting marks.
-
-	number_of_displayed_external_commands: INTEGER
-			-- Number of external commands in the tools menu.
-
-	set_number_of_displayed_external_commands (a_number: INTEGER) is
-			-- Set `number_of_displayed_external_commands'
-		do
-			number_of_displayed_external_commands := a_number
-		ensure
-			set: number_of_displayed_external_commands = a_number
 		end
 
 	set_show_dynamic_lib_tool (a_cmd: like show_dynamic_lib_tool) is

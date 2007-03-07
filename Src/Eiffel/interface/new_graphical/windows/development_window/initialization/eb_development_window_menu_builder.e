@@ -620,13 +620,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 					l_cmd.set_menu_name (develop_window.Interface_names.m_hide_formatting_marks)
 				end
 			end
-			develop_window.set_formatting_marks_command_menu_item (l_cmd.new_menu_item)
+			develop_window.menus.set_formatting_marks_command_menu_item (l_cmd.new_menu_item)
 			l_command_controller.add_edition_command (l_cmd)
 			l_cmd.add_agent (agent develop_window.toggle_formatting_marks)
 			develop_window.commands.editor_commands.extend (l_cmd)
 
-			develop_window.add_recyclable (develop_window.formatting_marks_command_menu_item)
-			l_sub_menu.extend (develop_window.formatting_marks_command_menu_item)
+			develop_window.add_recyclable (develop_window.menus.formatting_marks_command_menu_item)
+			l_sub_menu.extend (develop_window.menus.formatting_marks_command_menu_item)
 
 			develop_window.menus.edit_menu.extend (l_sub_menu)
 		end
@@ -701,6 +701,17 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.add_recyclable (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+				-- Separator --------------------------------------
+			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
 			develop_window.add_recyclable (l_new_menu_item)
 		end
@@ -915,21 +926,21 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Remove all the external commands, which are at the end of the menu.
 			from
 				l_tools_menu := develop_window.menus.tools_menu
-				l_tools_menu.go_i_th (l_tools_menu.count + 1 - develop_window.number_of_displayed_external_commands)
+				l_tools_menu.go_i_th (l_tools_menu.count + 1 - develop_window.menus.number_of_displayed_external_commands)
 			until
 				l_tools_menu.after
 			loop
 				l_tools_menu.remove
 			end
 			l_ms := develop_window.commands.Edit_external_commands_cmd.menus
-			develop_window.set_number_of_displayed_external_commands (l_ms.count)
+			develop_window.menus.set_number_of_displayed_external_commands (l_ms.count)
 
 			if not l_ms.is_empty and not l_tools_menu.is_empty then
 				l_sep ?= l_tools_menu.last
 				if l_sep = Void then
 					create l_sep
 					l_tools_menu.extend (l_sep)
-					develop_window.set_number_of_displayed_external_commands (develop_window.number_of_displayed_external_commands + 1)
+					develop_window.menus.set_number_of_displayed_external_commands (develop_window.menus.number_of_displayed_external_commands + 1)
 				end
 			end
 

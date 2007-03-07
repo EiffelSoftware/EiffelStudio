@@ -24,6 +24,7 @@ inherit
 			grid,
 			build_filter_icons,
 			try_to_translate,
+			on_shortcut_modification_denied,
 			new_boolean_widget,
 			new_choice_widget,
 
@@ -39,6 +40,7 @@ inherit
 			no_description_text,
 			preferences_title,
 			restore_preference_string,
+			shortcut_modification_denied,
 			w_Preferences_delayed_resources,
 			l_tree_view,
 			f_switch_to_tree_view,
@@ -208,6 +210,7 @@ feature {NONE} -- Names
 	no_description_text: STRING_GENERAL is				do Result := names.l_no_description_text				end
 	preferences_title: STRING_GENERAL is				do Result := names.t_preference_window				end
 	restore_preference_string: STRING_GENERAL is		do Result := names.l_restore_preference_string		end
+	shortcut_modification_denied: STRING_GENERAL is		do Result := names.l_shortcut_modification_denied 	end
 	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := names.l_preferences_delayed_resources	end
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
@@ -358,6 +361,16 @@ feature {NONE} -- Implementation
 			-- Try to translate `a_string'.
 		do
 			Result := names.find_translation (a_string)
+		end
+
+	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
+			-- Shortcut modification denied.
+		local
+			l_error_dialog: EB_WARNING_DIALOG
+		do
+			create l_error_dialog
+			l_error_dialog.set_text (shortcut_modification_denied)
+			l_error_dialog.show_modal_to_window (parent_window)
 		end
 
 feature {NONE} -- Widget initialization

@@ -48,18 +48,6 @@ feature -- Access
 			Result := tooltip
 		end
 
-	shortcut_string: STRING is
-			-- String discribing shortcut combination for `Current'.
-		do
-			if accelerator = Void then
-				Result := ""
-			else
-				Result := " (" + accelerator.out + ")"
-			end
-		ensure
-			Result_exists: Result /= Void
-		end
-
 feature {NONE} -- Removal
 
 	internal_recycle is

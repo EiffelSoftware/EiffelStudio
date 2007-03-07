@@ -865,6 +865,10 @@ feature {NONE} -- Implementation
 								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
 								Result := l_shortcut_widget.change_item_widget
 								Result.set_data (l_shortcut_widget)
+								l_shortcut.overridden_actions.wipe_out
+								l_shortcut.overridden_actions.extend (agent on_shortcut_overriden (l_shortcut_widget))
+								l_shortcut.modification_deny_actions.wipe_out
+								l_shortcut.modification_deny_actions.extend (agent on_shortcut_modification_denied (l_shortcut))
 							end
 						end
 					end
@@ -1079,6 +1083,29 @@ feature {NONE} -- Implementation
 		ensure
 			g.row_count = 0
 			g.selected_rows.count = 0
+		end
+
+	on_shortcut_overriden (a_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET) is
+			-- Shortcut is overriden.
+		require
+			a_shortcut_widget_not_void: a_shortcut_widget /= Void
+		local
+			l_row: EV_GRID_ROW
+		do
+			l_row := a_shortcut_widget.change_item_widget.row
+			preference_changed_on_row (a_shortcut_widget.preference, l_row, True)
+		end
+
+	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
+			-- Shortcut modification denied.
+		require
+			a_shortcut_pref_not_void: a_shortcut_pref /= Void
+		local
+			l_error_dialog: EV_WARNING_DIALOG
+		do
+			create l_error_dialog
+			l_error_dialog.set_text (shortcut_modification_denied)
+			l_error_dialog.show_modal_to_window (parent_window)
 		end
 
 	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is

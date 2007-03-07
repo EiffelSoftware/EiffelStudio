@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create class_browser_data.make (a_preferences)
 			create external_command_data.make (a_preferences)
 			create metric_tool_data.make (a_preferences)
+			create misc_shortcut_data.make (a_preferences)
 		end
 
 feature -- Access
@@ -65,6 +66,9 @@ feature -- Access
 
 	metric_tool_data: EB_METRIC_TOOL_DATA
 			-- Preference data for metric tool
+
+	misc_shortcut_data: EB_MISC_SHORTCUT_DATA
+			-- Shortcuts other than editor shortcuts and external command shortcuts.
 
 invariant
 	dialog_data_not_void: dialog_data /= Void

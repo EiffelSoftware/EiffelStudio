@@ -22,6 +22,102 @@ feature -- Access
 	accelerator: EV_ACCELERATOR;
 			-- Key combination that executes `Current'.
 
+	referred_shortcut: MANAGED_SHORTCUT
+			-- A referred managed shortcut.
+
+	shortcut_string: STRING_GENERAL is
+			-- Shortcut string.
+		do
+			if referred_shortcut /= Void then
+				Result := referred_shortcut.display_string
+			elseif accelerator /= Void then
+				Result := accelerator.out
+			else
+				Result := ""
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	shortcut_available: BOOLEAN is
+			-- Is shortcut available?
+		do
+			if referred_shortcut /= Void then
+				Result := not referred_shortcut.is_wiped
+			elseif accelerator /= Void then
+				Result := True
+			end
+		end
+
+feature -- Status Change
+
+	set_referred_shortcut (a_shortcut: like referred_shortcut) is
+			-- Set `referred_shortcut' with `a_shortcut'.
+		do
+			referred_shortcut := a_shortcut
+		ensure
+			referred_shortcut_set: referred_shortcut = a_shortcut
+		end
+
+	update (a_window: EV_WINDOW) is
+			-- Update `accelerator' and interfaces according to `referred_shortcut'.
+		require
+			a_window_not_void: a_window /= Void
+		do
+			update_accelerator (a_window)
+		end
+
+feature {NONE} -- Implementation
+
+	update_accelerator (a_window: EV_WINDOW) is
+			-- Change `accelerator' according to `referred_shortcut' and
+			-- update it in `a_window'.
+		require
+			a_window_not_void: a_window /= Void
+		local
+			l_accelerators: EV_ACCELERATOR_LIST
+			l_accelerator: like accelerator
+			l_compare_object: BOOLEAN
+		do
+			if accelerator /= Void and then referred_shortcut /= Void then
+				l_accelerators := a_window.accelerators
+					-- Remove accelerator from related window.
+				l_compare_object := l_accelerators.object_comparison
+				l_accelerators.compare_references
+				if l_accelerators.has (accelerator) then
+					l_accelerators.prune_all (accelerator)
+				end
+				if l_compare_object then
+					l_accelerators.compare_objects
+				end
+
+					-- Modify `accelerator' accordingly
+				if not referred_shortcut.is_wiped then
+					l_accelerator := accelerator
+					l_accelerator.set_key (referred_shortcut.key)
+					if referred_shortcut.is_ctrl then
+						l_accelerator.enable_control_required
+					else
+						l_accelerator.disable_control_required
+					end
+					if referred_shortcut.is_alt then
+						l_accelerator.enable_alt_required
+					else
+						l_accelerator.disable_alt_required
+					end
+					if referred_shortcut.is_shift then
+						l_accelerator.enable_shift_required
+					else
+						l_accelerator.disable_shift_required
+					end
+						-- Add new accelerator to `a_window'
+					l_accelerators.extend (l_accelerator)
+				end
+			end
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -144,7 +144,7 @@ feature -- Building commands
 			-- The following is for new EB_EXEC_FORMAT_CMD' execute from command
 			develop_window.eb_debugger_manager.set_debugging_window (develop_window)
 
-			l_sd_items := develop_window.Eb_debugger_manager.new_toolbar
+			l_sd_items := develop_window.Eb_debugger_manager.new_toolbar (develop_window)
 
 			l_tool_bar_name := develop_window.Interface_names.to_project_toolbar
 

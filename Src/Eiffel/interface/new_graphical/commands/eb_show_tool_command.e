@@ -189,14 +189,30 @@ feature {NONE} -- Implementation
 
 	update_tooltip (toggle: EB_COMMAND_TOOL_BAR_BUTTON) is
 			-- Update tooltip of `toggle'.
+		local
+			l_tt: like tooltip
 		do
-			toggle.set_tooltip (tooltip)
+			l_tt := tooltip.twin
+			if shortcut_available then
+				l_tt.append (opening_parenthesis)
+				l_tt.append (shortcut_string)
+				l_tt.append (closing_parenthesis)
+			end
+			toggle.set_tooltip (l_tt)
 		end
 
 	update_sd_tooltip (a_toogle: EB_SD_COMMAND_TOOL_BAR_BUTTON) is
 			-- Update tooltip of `a_toggle'.
+		local
+			l_tt: like tooltip
 		do
-			a_toogle.set_tooltip (tooltip)
+			l_tt := tooltip.twin
+			if shortcut_available then
+				l_tt.append (opening_parenthesis)
+				l_tt.append (shortcut_string)
+				l_tt.append (closing_parenthesis)
+			end
+			a_toogle.set_tooltip (l_tt)
 		end
 
 feature {NONE} -- Implementation

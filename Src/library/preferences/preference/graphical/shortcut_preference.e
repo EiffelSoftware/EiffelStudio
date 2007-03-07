@@ -10,10 +10,15 @@ class
 
 inherit
 	TYPED_PREFERENCE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]]
+		redefine
+			is_default_value
+		end
 
 	PREFERENCE_CONSTANTS
 
 	EV_KEY_CONSTANTS
+
+	MANAGED_SHORTCUT
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
@@ -27,7 +32,9 @@ feature -- Access
 			Result.append (is_alt.out + shortcut_delimiter)
 			Result.append (is_ctrl.out + shortcut_delimiter)
 			Result.append (is_shift.out + shortcut_delimiter)
-			Result.append (key.out)
+			if not is_wiped then
+				Result.append (key.out)
+			end
 		end
 
 	string_type: STRING is
@@ -48,45 +55,6 @@ feature -- Access
 				create Result.make_with_code (l_key_code)
 			else
 				create Result
-			end
-		end
-
-	display_string: STRING is
-			-- Value of Current in nice diplay format:
-			-- `True+True+True+Key' becomes `Alt+Ctrl+Shift+Key'
-		require
-			has_value_string: valid_value_string (string_value)
-		local
-			values: LIST [STRING]
-			l_cnt: INTEGER
-			l_string: STRING
-		do
-			l_string := string_value
-			values := l_string.split ('+')
-			create Result.make_empty
-			from
-				l_cnt := 1
-			until
-				l_cnt > values.count
-			loop
-				inspect l_cnt - value.lower
-				when 0 then
-					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
-						Result.append (Alt_text + shortcut_delimiter)
-					end
-				when 1 then
-					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
-						Result.append (Ctrl_text + shortcut_delimiter)
-					end
-				when 2 then
-					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
-						Result.append (Shift_text + shortcut_delimiter)
-					end
-				when 3 then
-					Result.append (values.i_th (l_cnt).as_upper)
-				else
-				end
-				l_cnt := l_cnt + 1
 			end
 		end
 
@@ -194,10 +162,15 @@ feature -- Status Setting
 			l_string: STRING
 			l_value: like value
 			l_cnt: INTEGER
+			l_key_code: INTEGER
+			l_key: EV_KEY
+			l_alt, l_ctrl, l_shift: BOOLEAN
 		do
-			internal_value := [False, False, False, ""]
+			if internal_value = Void then
+				internal_value := [False, False, False, ""]
+			end
 			values := a_value.split ('+')
-			l_value := value
+			l_value := [False, False, False, ""]
 			from
 				l_cnt := 1
 			until
@@ -212,7 +185,23 @@ feature -- Status Setting
 				end
 				l_cnt := l_cnt + 1
 			end
-			set_value (internal_value)
+
+			l_string ?= l_value.reference_item (4)
+			l_key_code := key_code_from_key_string (l_string)
+			if l_key_code > 0 then
+				l_key := create {EV_KEY}.make_with_code (l_key_code)
+			end
+			l_alt := l_value.boolean_item (1)
+			l_ctrl := l_value.boolean_item (2)
+			l_shift := l_value.boolean_item (3)
+			if modifiable_with (l_key, l_alt, l_ctrl, l_shift) then
+					-- Managed shortcut value setting.
+				set_values (l_key, l_alt, l_ctrl, l_shift)
+					-- Preference value setting.
+				set_value (l_value)
+			else
+				modification_deny_actions.call (Void)
+			end
 		end
 
 feature -- Query
@@ -241,17 +230,11 @@ feature -- Query
 			Result := a_string /= Void and then a_string.split ('+').count = 4
 		end
 
-	matches (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN is
-			-- Do combinations of `a_key', `alt', `ctrl' an `shift' match Current?
-		local
-			s: STRING
+	is_default_value: BOOLEAN is
+			-- Is this preference value the same as the default value?
 		do
-			Result := (is_alt = alt)
-				and then (is_ctrl = ctrl)
-				and then (is_shift = shift)
-			if Result then
-				s ?= value.reference_item (4)
-				Result := s.is_case_insensitive_equal (key_strings.item (a_key.code))
+			if not is_wiped then
+				Result := Precursor {TYPED_PREFERENCE}
 			end
 		end
 

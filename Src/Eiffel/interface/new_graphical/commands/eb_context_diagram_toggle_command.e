@@ -23,7 +23,11 @@ feature -- Status setting
 					current_button.select_actions.resume
 				end
 				l_string := tooltip.twin
-				l_string.append (shortcut_string.as_string_32)
+				if not shortcut_string.is_empty then
+					l_string.append (" (")
+					l_string.append (shortcut_string.as_string_32)
+					l_string.append (")")
+				end
 				current_button.set_tooltip (l_string)
 			end
 		end
@@ -40,7 +44,11 @@ feature -- Status setting
 					current_button.select_actions.resume
 				end
 				l_string := tooltip.twin
-				l_string.append (shortcut_string.as_string_32)
+				if not shortcut_string.is_empty then
+					l_string.append (" (")
+					l_string.append (shortcut_string.as_string_32)
+					l_string.append (")")
+				end
 				current_button.set_tooltip (l_string)
 			end
 		end
@@ -55,8 +63,10 @@ feature -- Access
 		deferred
 		end
 
-	shortcut_string: STRING is
+	shortcut_string: STRING_GENERAL is
 		deferred
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

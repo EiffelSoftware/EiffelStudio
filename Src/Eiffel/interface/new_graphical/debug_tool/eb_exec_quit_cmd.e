@@ -30,11 +30,13 @@ feature {NONE} -- Initialization
 
 	make (a_manager: like debugger_manager)
 			-- Initialize `Current'.
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			debugger_manager := a_manager
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
-				False, False, True)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("stop_application")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
 		end
 

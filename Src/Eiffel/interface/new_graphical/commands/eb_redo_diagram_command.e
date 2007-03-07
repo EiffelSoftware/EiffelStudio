@@ -14,6 +14,11 @@ inherit
 			initialize
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -21,11 +26,13 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize default values.
+		local
+			l_shortcut: MANAGED_SHORTCUT
 		do
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y),
-				True, False, False)
+			l_shortcut := preferences.misc_shortcut_data.redo_shortcut
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator.actions.extend (agent execute)
+			set_referred_shortcut (l_shortcut)
 		end
 
 feature -- Basic operations

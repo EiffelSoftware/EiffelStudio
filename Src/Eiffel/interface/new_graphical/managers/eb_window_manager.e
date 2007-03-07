@@ -431,6 +431,12 @@ feature -- Actions on all windows
 			for_all (agent refresh_action)
 		end
 
+	refresh_commands is
+			-- Refresh all windows commands.
+		do
+			for_all (agent refresh_commands_action)
+		end
+
 	save_all is
 			-- Ask each window to save its content.
 		do
@@ -1126,6 +1132,12 @@ feature {NONE} -- Implementation
 		do
 			a_window.refresh
 			notify_observers (a_window, Notify_changed_window)
+		end
+
+	refresh_commands_action (a_window: EB_WINDOW)  is
+			-- Action to be performed on `item' in `refresh'.
+		do
+			a_window.refresh_all_commands
 		end
 
 	synchronize_breakpoints_action (a_window: EB_WINDOW) is

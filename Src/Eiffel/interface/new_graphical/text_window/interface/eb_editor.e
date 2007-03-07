@@ -18,7 +18,6 @@ inherit
 			font,
 			line_height
 		redefine
-			handle_extended_ctrled_key,
 			display_not_editable_warning_message,
 			load_file,
 			load_text,
@@ -290,31 +289,6 @@ feature {NONE} -- Memory Management
 		do
 			Precursor {EDITABLE_TEXT_PANEL}
 			dev_window := Void
-		end
-
-feature {NONE} -- Handle keystokes
-
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
- 			-- Process the push on Ctrl + an extended key.
-		do
-			inspect
-				ev_key.code
-
-			when Key_u then
-					-- Ctrl-U
-				run_if_editable (agent set_selection_case(shifted_key))
-
-			when Key_k then
-				if shifted_key then
-						-- Ctrl+Shift+K uncomment selection
-					run_if_editable (agent uncomment_selection)
-				else
-						-- Ctrl+K
-					run_if_editable (agent comment_selection)
-				end
-			else
-				Precursor (ev_key)
-			end
 		end
 
 feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text

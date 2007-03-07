@@ -31,7 +31,8 @@ inherit
 			choice_list,
 			on_key_down,
 			on_key_released,
-			set_expanded_row_icon
+			set_expanded_row_icon,
+			show
 		end
 
 	EB_CONSTANTS
@@ -315,6 +316,15 @@ feature -- Status report
 	mouse_wheel_scroll_size: INTEGER is
 		do
 			Result := preferences.editor_data.mouse_wheel_scroll_size
+		end
+
+feature -- Status change
+
+	show is
+			-- Show
+		do
+			Precursor {CODE_COMPLETION_WINDOW}
+			setup_accelerators
 		end
 
 feature {NONE} -- Option Preferences

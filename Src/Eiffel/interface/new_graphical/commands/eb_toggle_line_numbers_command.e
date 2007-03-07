@@ -36,11 +36,15 @@ feature -- Execution
 
 	initialize is
 			-- Initialize
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			menu_name := Interface_names.m_line_numbers
-			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, False, False)
+			l_shortcut := preferences.editor_data.shortcuts.item ("toggle_line_number_visibility")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator.actions.extend (agent execute)
 			execute_agents.extend (agent execute_toggle)
+			set_referred_shortcut (l_shortcut)
 			enable_sensitive
 		end
 

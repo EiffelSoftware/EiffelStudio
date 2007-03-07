@@ -22,6 +22,11 @@ inherit
 
 	EB_CONSTANTS
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make_with_style
 
@@ -31,14 +36,16 @@ feature {NONE} -- Initialization
 			-- Initialize default values.
 		require
 			valid_style: s = editor_style or s = default_style or s = context_style
+		local
+			l_shortcut: MANAGED_SHORTCUT
 		do
 			is_sensitive := True
 			style := s
 			if s = default_style then
-				create accelerator.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_n),
-					True, False, False)
+				l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("new_window")
+				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 				accelerator.actions.extend (agent execute)
+				set_referred_shortcut (l_shortcut)
 			end
 		end
 

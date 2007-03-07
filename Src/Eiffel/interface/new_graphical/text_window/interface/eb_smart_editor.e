@@ -414,24 +414,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 		do
 			code := ev_key.code
 			switch_auto_point := auto_point and then not (code = Key_ctrl or code = Key_shift or code = Key_left_meta or code = Key_right_meta)
-			if code = Key_i then
-				if not shifted_key then
-					if is_editable then
-						embed_in_block ("if  then", 3)
-					end
-				end
-			elseif code = Key_d then
-				if not shifted_key then
-					if is_editable then
-						embed_in_block ("debug", 5)
-					end
-				end
-			else
-				Precursor (ev_key)
-					-- if `auto_point' is true, user has called auto complete
-					-- we don't change the value. Else, its new value is set to False unless
-					-- only ctrl key was pressed
-			end
+			Precursor (ev_key)
+				-- if `auto_point' is true, user has called auto complete
+				-- we don't change the value. Else, its new value is set to False unless
+				-- only ctrl key was pressed
 			auto_point := auto_point xor switch_auto_point
 		end
 
@@ -790,13 +776,18 @@ feature {NONE} -- Implementation
 			create customizable_commands.make (11)
 			customizable_commands.put (agent complete_feature_name, "autocomplete")
 			customizable_commands.put (agent complete_class_name, "class_autocomplete")
-			customizable_commands.put (agent search, "show_search_panel")
 			customizable_commands.put (agent quick_search, "show_quick_search_bar")
 			customizable_commands.put (agent replace, "show_search_and_replace_panel")
 			customizable_commands.put (agent find_next_selection, "search_selection_forward")
 			customizable_commands.put (agent find_previous_selection, "search_selection_backward")
 			customizable_commands.put (agent find_next, "search_forward")
 			customizable_commands.put (agent find_previous, "search_backward")
+			customizable_commands.put (agent run_if_editable (agent comment_selection), "comment")
+			customizable_commands.put (agent run_if_editable (agent uncomment_selection), "uncomment")
+			customizable_commands.put (agent run_if_editable (agent set_selection_case (False)), "set_to_uppercase")
+			customizable_commands.put (agent run_if_editable (agent set_selection_case (True)), "set_to_lowercase")
+			customizable_commands.put (agent run_if_editable (agent embed_in_block ("if  then", 3)), "embed_if_clause")
+			customizable_commands.put (agent run_if_editable (agent embed_in_block ("debug", 5)), "embed_debug_clause")
 			customizable_commands.put (agent insert_customized_string (1), "customized_insertion_1")
 			customizable_commands.put (agent insert_customized_string (2), "customized_insertion_2")
 			customizable_commands.put (agent insert_customized_string (3), "customized_insertion_3")

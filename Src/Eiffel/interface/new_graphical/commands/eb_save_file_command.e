@@ -34,7 +34,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -49,12 +48,14 @@ feature -- Initialization
 
 	make (a_manager: like target) is
 			-- Create a formatter associated with `a_manager'.
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			Precursor (a_manager)
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_s),
-				True, False, False)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("save")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator.actions.extend (agent execute)
+			set_referred_shortcut (l_shortcut)
 			disable_sensitive
 		end
 

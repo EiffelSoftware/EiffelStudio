@@ -17,6 +17,8 @@ indexing
 		%s_: Stone names; %
 		%t_: Title (part); %
 		%e_: Short description, explanation; %
+		%s_: Stone names; %
+		%fs_: Fixed shortcut names; %
 		%wt_: Title for wizards step; %
 		%wb_: Body for wizards step; %
 		%ws_: Subtitle for wizards step"
@@ -293,7 +295,7 @@ feature -- Accelerator, focus label and menu name
 	f_Clear_breakpoints: STRING_GENERAL is		do Result := locale.translate("Remove all breakpoints")	end
 	m_Clear_breakpoints: STRING_GENERAL is		do Result := locale.translate("Re&move All Breakpoints")	end
 	f_close: STRING_GENERAL is					do Result := locale.translate("Close")	end
-	m_Comment: STRING_GENERAL is					do Result := locale.translate("&Comment%TCtrl+K")	end
+	m_Comment: STRING_GENERAL is					do Result := locale.translate("&Comment")	end
 	m_Compilation_C_Workbench: STRING_GENERAL is	do Result := locale.translate("Compile W&orkbench C Code")	end
 	m_Compilation_C_Final: STRING_GENERAL is		do Result := locale.translate("Compile F&inalized C Code")	end
 	m_Contents: STRING_GENERAL is				do Result := locale.translate("&Contents")	end
@@ -311,7 +313,7 @@ feature -- Accelerator, focus label and menu name
 	m_Copy: STRING_GENERAL is					do Result := locale.translate("&Copy%TCtrl+C")	end
 	f_Copy: STRING_GENERAL is					do Result := locale.translate("Copy (Ctrl+C)")	end
 	m_copy_of: STRING_GENERAL is					do Result := locale.translate("Copy of ")	end
-	m_Close: STRING_GENERAL is					do Result := locale.translate("&Close Window%TAlt+F4")	end
+	m_Close: STRING_GENERAL is					do Result := locale.translate("&Close Window")	end
 	m_Close_short: STRING_GENERAL is				do Result := locale.translate("&Close")	end
 	f_Create_new_cluster: STRING_GENERAL is		do Result := locale.translate("Add a cluster")	end
 	f_Create_new_library: STRING_GENERAL is		do Result := locale.translate("Add a library")	end
@@ -557,9 +559,9 @@ feature -- Accelerator, focus label and menu name
 	m_Showtext_new: STRING_GENERAL is			do Result := locale.translate("Te&xt")	end
 	m_System_new: STRING_GENERAL is				do Result := locale.translate("Project &Settings...")	end
 	m_Toolbars: STRING_GENERAL is				do Result := locale.translate("Tool&bars")	end
-	m_To_lower: STRING_GENERAL is				do Result := locale.translate("Set to &Lowercase%TCtrl+Shift+U")	end
-	m_To_upper: STRING_GENERAL is				do Result := locale.translate("Set to U&ppercase%TCtrl+U")	end
-	m_Uncomment: STRING_GENERAL is				do Result := locale.translate("U&ncomment%TCtrl+Shift+K")	end
+	m_To_lower: STRING_GENERAL is				do Result := locale.translate("Set to &Lowercase")	end
+	m_To_upper: STRING_GENERAL is				do Result := locale.translate("Set to U&ppercase")	end
+	m_Uncomment: STRING_GENERAL is				do Result := locale.translate("U&ncomment")	end
 	f_Uncomment: STRING_GENERAL is				do Result := locale.translate("Uncomment selected lines")	end
 	m_Undo: STRING_GENERAL is					do Result := locale.translate("&Undo%TCtrl+Z")	end
 	f_Undo: STRING_GENERAL is					do Result := locale.translate("Undo (Ctrl+Z)")	end
@@ -1442,6 +1444,7 @@ feature -- Label texts
 
 	h_search_for_class_recursively: STRING_GENERAL is do Result := locale.translate ("Search folder for classes recursively?") end
 	l_save_layout_name: STRING_GENERAL is do Result := locale.translate ("Enter or select a name to save the current layout as.") end
+	l_shortcut_modification_denied: STRING_GENERAL is do Result := locale.translate ("Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system.") end
 	l_layout_name: STRING_GENERAL is do Result := locale.translate ("Name:") end
 	l_existing_layout_names: STRING_GENERAL is do Result := locale.translate ("Existing Layouts:") end
 	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
@@ -1473,6 +1476,18 @@ feature -- Stone names
 	s_library_stone: STRING_GENERAL is			do Result := locale.translate("Library ")	end
 	s_target_stone: STRING_GENERAL is 			do Result := locale.translate("Target ")	end
 
+feature -- Fixed shortcut names
+
+	fs_focus_on_editor: STRING_GENERAL is			do Result := locale.translate ("Focus on current editor") end
+	fs_undo_command: STRING_GENERAL is				do Result := locale.translate ("Undo command") end
+	fs_redo_command: STRING_GENERAL is				do Result := locale.translate ("Redo command") end
+	fs_close_window: STRING_GENERAL is				do Result := locale.translate ("Close window") end
+	fs_cut: STRING_GENERAL is						do Result := locale.translate ("Cut") end
+	fs_copy: STRING_GENERAL is						do Result := locale.translate ("Copy") end
+	fs_paste: STRING_GENERAL is						do Result := locale.translate ("Paste") end
+	fs_select_all: STRING_GENERAL is				do Result := locale.translate ("Select all") end
+	fs_indent: STRING_GENERAL is					do Result := locale.translate ("Indent") end
+	fs_unindent: STRING_GENERAL is					do Result := locale.translate ("Unindent") end
 
 feature -- Title part
 

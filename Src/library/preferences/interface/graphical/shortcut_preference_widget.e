@@ -21,6 +21,9 @@ inherit
 		end
 
 	PREFERENCE_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make,

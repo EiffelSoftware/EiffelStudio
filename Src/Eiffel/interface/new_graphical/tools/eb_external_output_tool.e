@@ -545,6 +545,7 @@ feature{NONE} -- Actions
 					str.left_adjust
 					str.right_adjust
 					create ec.make_from_new_command_line (develop_window.window, str)
+					ec.setup_managed_shortcut (develop_window.commands.edit_external_commands_cmd.accelerators)
 				end
 			end
 			on_cmd_lst_text_change

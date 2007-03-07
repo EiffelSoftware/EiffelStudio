@@ -17,6 +17,11 @@ inherit
 			new_mini_toolbar_item
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 	EB_SHARED_WINDOW_MANAGER
 
 	EB_CONSTANTS
@@ -30,11 +35,13 @@ feature -- Initialization
 			-- Creation method.
 		require
 			dev_window_attached: dev_window /= Void
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			development_window := dev_window
-			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
-				True, False, False)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("new_tab")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
 			enable_sensitive
 		ensure

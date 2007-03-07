@@ -114,11 +114,13 @@ feature -- Command
 			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+			l_simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
 
 			l_reset_command: EB_RESET_LAYOUT_COMMAND
 			l_set_default_layout_command: EB_SET_DEFAULT_LAYOUT_COMMAND
 			l_save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
 			l_open_layout_command: EB_OPEN_LAYOUT_COMMAND
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
 			-- Non-docking Eiffel Studio was call Precursor
@@ -126,6 +128,9 @@ feature -- Command
 
 			create l_toolbarable_commands.make (15)
 			develop_window.commands.set_toolbarable_commands (l_toolbarable_commands)
+
+			create l_simple_shortcut_commands.make (10)
+			develop_window.commands.set_simple_shortcut_commands (l_simple_shortcut_commands)
 
 				-- Open, save, ...
 			create l_new_tab_cmd.make (develop_window)
@@ -243,11 +248,11 @@ feature -- Command
 			l_send_stone_to_context_cmd.set_name ("Send_to_context")
 			l_send_stone_to_context_cmd.set_tooltext (develop_window.Interface_names.b_send_stone_to_context)
 			l_send_stone_to_context_cmd.add_agent (agent develop_window.send_stone_to_context)
-			create l_accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_down), False, True, False
-			)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("send_to_context")
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			l_accel.actions.extend (agent develop_window.send_stone_to_context)
 			l_send_stone_to_context_cmd.set_accelerator (l_accel)
+			l_send_stone_to_context_cmd.set_referred_shortcut (l_shortcut)
 			l_send_stone_to_context_cmd.disable_sensitive
 			develop_window.commands.toolbarable_commands.extend (l_send_stone_to_context_cmd)
 
@@ -338,7 +343,6 @@ feature -- Command
 				end
 				l_show_tool_commands.forth
 			end
-			setup_debug_tools_accelerators
 
 				--| Accelerators related to external commands
 			from
@@ -353,13 +357,15 @@ feature -- Command
 			setup_focus_editor_accelerators
 			build_close_content_accelerator
 			setup_class_address_accelerators
+
+				-- Doing this removes accelerator from the window if related managed shortcuts are wiped.
+			develop_window.refresh_all_commands
 		end
 
 	build_formatters is
 			-- Build all formatters used.
 		local
 			l_form: EB_CLASS_TEXT_FORMATTER
-			l_accel: EV_ACCELERATOR
 
 			l_managed_class_formatters: ARRAYED_LIST [EB_CLASS_INFO_FORMATTER]
 			l_managed_feature_formatters: ARRAYED_LIST [EB_FEATURE_INFO_FORMATTER]
@@ -421,53 +427,23 @@ feature -- Command
 			develop_window.set_managed_main_formatters (l_managed_main_formatters)
 
 			create {EB_BASIC_TEXT_FORMATTER} l_form.make (develop_window)
-			create l_accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
-					True, False, True)
-			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (l_form))
-			l_form.set_accelerator (l_accel)
-			l_form.set_viewpoints (develop_window.view_points_combo)
-			l_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			setup_main_formatter (l_form, "basic_text_view")
 			l_managed_main_formatters.extend (l_form)
 
 			create {EB_CLICKABLE_FORMATTER} l_form.make (develop_window)
-			create l_accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_c),
-					True, False, True)
-			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (l_form))
-			l_form.set_accelerator (l_accel)
-			l_form.set_viewpoints (develop_window.view_points_combo)
-			l_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			setup_main_formatter (l_form, "clickable_text_view")
 			l_managed_main_formatters.extend (l_form)
 
 			create {EB_FLAT_FORMATTER} l_form.make (develop_window)
-			create l_accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f),
-					True, False, True)
-			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (l_form))
-			l_form.set_accelerator (l_accel)
-			l_form.set_viewpoints (develop_window.view_points_combo)
-			l_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			setup_main_formatter (l_form, "flat_view")
 			l_managed_main_formatters.extend (l_form)
 
 			create {EB_SHORT_FORMATTER} l_form.make (develop_window)
-			create l_accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_o),
-					True, False, True)
-			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (l_form))
-			l_form.set_accelerator (l_accel)
-			l_form.set_viewpoints (develop_window.view_points_combo)
-			l_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			setup_main_formatter (l_form, "contract_view")
 			l_managed_main_formatters.extend (l_form)
 
 			create {EB_FLAT_SHORT_FORMATTER} l_form.make (develop_window)
-			create l_accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_i),
-					True, False, True)
-			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (l_form))
-			l_form.set_accelerator (l_accel)
-			l_form.set_viewpoints (develop_window.view_points_combo)
-			l_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			setup_main_formatter (l_form, "interface_view")
 			l_managed_main_formatters.extend (l_form)
 		end
 
@@ -792,87 +768,43 @@ feature{NONE} -- Implementation
 			-- Build features tool
 		local
 			l_features_tool: EB_FEATURES_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_features_tool.make (develop_window)
 			develop_window.tools.set_features_tool (l_features_tool)
 
-			l_features_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			create l_show_cmd.make (develop_window, l_features_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_features_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-			develop_window.add_recyclable (l_features_tool)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_t), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_features_tool, "show_features_tool")
 		end
 
 	build_cluster_tool is
 				-- Build cluster tool
 		local
 			l_cluster_tool: EB_CLUSTER_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_cluster_tool.make (develop_window, develop_window)
 			develop_window.tools.set_cluster_tool (l_cluster_tool)
-			develop_window.tools.cluster_tool.attach_to_docking_manager (develop_window.docking_manager)
-			create l_show_cmd.make (develop_window, l_cluster_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_cluster_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-			develop_window.add_recyclable (l_cluster_tool)
 
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_u), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_cluster_tool, "show_clusters_tool")
 		end
 
 	build_output_tool is
 			-- Build output tool.
 		local
 			l_output_tool: EB_OUTPUT_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_output_tool.make (develop_window)
 			develop_window.tools.set_output_tool (l_output_tool)
-
-			l_output_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			create l_show_cmd.make (develop_window, l_output_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_output_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-			develop_window.add_recyclable (l_output_tool)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_o), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_output_tool, "show_output_tool")
 		end
 
 	build_diagram_tool is
 			-- Build diagram tool.
 		local
 			l_diagram_tool: EB_DIAGRAM_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			if develop_window.has_case then
 				create l_diagram_tool.make (develop_window)
 				develop_window.tools.set_diagram_tool (l_diagram_tool)
-				l_diagram_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-				develop_window.add_recyclable (l_diagram_tool)
-
-				create l_show_cmd.make (develop_window, l_diagram_tool)
-				develop_window.commands.show_tool_commands.force (l_show_cmd, l_diagram_tool)
-				develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-				create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_i), True, True, False)
-				l_accel.actions.extend (agent l_show_cmd.execute)
-				l_show_cmd.set_accelerator (l_accel)
+				setup_tool (l_diagram_tool, "show_diagram_tool")
 			end
 		end
 
@@ -880,184 +812,81 @@ feature{NONE} -- Implementation
 			-- Build class tool.
 		local
 			l_class_tool: EB_CLASS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_class_tool.make (develop_window)
 			develop_window.tools.set_class_tool (l_class_tool)
-
-			l_class_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_class_tool)
-
-			create l_show_cmd.make (develop_window, l_class_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_class_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_c), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_class_tool, "show_class_tool")
 		end
 
 	build_features_relation_tool is
 			-- Build features relation tool.
 		local
 			l_features_relation_tool: EB_FEATURES_RELATION_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_features_relation_tool.make (develop_window)
 			develop_window.tools.set_features_relation_tool (l_features_relation_tool)
-
-			l_features_relation_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_features_relation_tool)
-
-			create l_show_cmd.make (develop_window, l_features_relation_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_features_relation_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_v), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_features_relation_tool, "show_feature_relation_tool")
 		end
 
 	build_dependency_tool is
 			-- Build dependency tool.
 		local
 			l_dependency_tool: EB_DEPENDENCY_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_dependency_tool.make (develop_window)
 			develop_window.tools.set_dependency_tool (l_dependency_tool)
-
-			l_dependency_tool.attach_to_docking_manager (develop_window.docking_manager)
-			develop_window.add_recyclable (l_dependency_tool)
-
-			create l_show_cmd.make (develop_window, l_dependency_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_dependency_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_dependency_tool, "show_dependency_tool")
 		end
 
 	build_metric_tool is
 			-- Build metric tool.
 		local
 			l_metric_tool: EB_METRIC_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			check has_metric: develop_window.has_metrics end
 			create l_metric_tool.make (develop_window)
 			develop_window.tools.set_metric_tool (l_metric_tool)
-
-			l_metric_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_metric_tool)
-
-			create l_show_cmd.make (develop_window, l_metric_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_metric_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_m), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_metric_tool, "show_metric_tool")
 		end
 
 	build_external_output_tool is
 			-- Build external output tool.
 		local
 			l_external_output_tool: EB_EXTERNAL_OUTPUT_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_external_output_tool.make (develop_window)
 			develop_window.tools.set_external_output_tool (l_external_output_tool)
-
-			l_external_output_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_external_output_tool)
-
-			create l_show_cmd.make (develop_window, l_external_output_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_external_output_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_x), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_external_output_tool, "show_external_output_tool")
 		end
 
 	build_c_output_tool is
 			-- Build c output tool.
 		local
 			l_c_output_tool: EB_C_OUTPUT_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_c_output_tool.make (develop_window)
 			develop_window.tools.set_c_output_tool (l_c_output_tool)
-
-			l_c_output_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_c_output_tool)
-
-			create l_show_cmd.make (develop_window, l_c_output_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_c_output_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_0), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_c_output_tool, "show_c_output_tool")
 		end
 
 	build_warnings_tool is
 			-- Build warnings tool.
 		local
 			l_warnings_tool: EB_WARNINGS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_warnings_tool.make (develop_window)
 			develop_window.tools.set_warnings_tool (l_warnings_tool)
-
-			l_warnings_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_warnings_tool)
-
-			create l_show_cmd.make (develop_window, l_warnings_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_warnings_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_w), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_warnings_tool, "show_warning_tool")
 		end
 
 	build_errors_tool is
 			-- Build errors tool.
 		local
 			l_errors_tool: EB_ERRORS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_errors_tool.make (develop_window)
 			develop_window.tools.set_errors_tool (l_errors_tool)
-
-			l_errors_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_errors_tool)
-
-			create l_show_cmd.make (develop_window, l_errors_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_errors_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_e), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_errors_tool, "show_error_tool")
 		end
 
 	build_search_and_report_tool is
@@ -1065,9 +894,8 @@ feature{NONE} -- Implementation
 		local
 			l_search_tool: EB_MULTI_SEARCH_TOOL
 			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_show_report_cmd: EB_SHOW_TOOL_COMMAND
 			l_accel: EV_ACCELERATOR
-			l_shortcut_preference: SHORTCUT_PREFERENCE
+			l_shortcut: SHORTCUT_PREFERENCE
 			l_shared_preference: EB_SHARED_PREFERENCES
 			l_search_report_tool: EB_SEARCH_REPORT_TOOL
 		do
@@ -1077,24 +905,19 @@ feature{NONE} -- Implementation
 			l_search_tool.attach_to_docking_manager (develop_window.docking_manager)
 			create l_show_cmd.make (develop_window, l_search_tool)
 			create l_shared_preference
-			l_shortcut_preference := l_shared_preference.preferences.editor_data.shortcuts.item ("show_search_panel")
-			create l_accel.make_with_key_combination (l_shortcut_preference.key, l_shortcut_preference.is_ctrl, l_shortcut_preference.is_alt, l_shortcut_preference.is_shift)
+			l_shortcut := l_shared_preference.preferences.misc_shortcut_data.shortcuts.item ("show_search_tool")
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			l_accel.actions.extend (agent l_search_tool.prepare_search)
 			l_show_cmd.set_accelerator (l_accel)
+			l_show_cmd.set_referred_shortcut (l_shortcut)
 			develop_window.commands.show_tool_commands.force (l_show_cmd, l_search_tool)
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 			develop_window.add_recyclable (l_search_tool)
 
 				-- Report tool
 			l_search_report_tool := l_search_tool.report_tool
-			l_search_report_tool.attach_to_docking_manager (develop_window.docking_manager)
 			develop_window.tools.set_search_report_tool (l_search_report_tool)
-			create l_show_report_cmd.make (develop_window, l_search_report_tool)
-			develop_window.commands.show_tool_commands.force (l_show_report_cmd, l_search_report_tool)
-			develop_window.add_recyclable (l_search_report_tool)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_r), True, True, False)
-			l_accel.actions.extend (agent l_show_report_cmd.execute)
-			l_show_report_cmd.set_accelerator (l_accel)
+			setup_tool (l_search_report_tool, "show_search_report_tool")
 
 			l_search_tool.build_mini_toolbar
 			l_search_report_tool.build_mini_toolbar
@@ -1104,90 +927,82 @@ feature{NONE} -- Implementation
 			-- Build breakpoints tool.
 		local
 			l_breakpoints_tool: ES_BREAKPOINTS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_breakpoints_tool.make (develop_window)
 			develop_window.tools.set_breakpoints_tool (l_breakpoints_tool)
-
-			l_breakpoints_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_breakpoints_tool)
-
-			create l_show_cmd.make (develop_window, l_breakpoints_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_breakpoints_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_b), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_breakpoints_tool, "show_breakpoints_tool")
 		end
 
 	build_favorites_tool is
 			-- Build favorites tool.
 		local
 			l_favorites_tool: EB_FAVORITES_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_favorites_tool.make (develop_window, develop_window.favorites_manager)
 			develop_window.tools.set_favorites_tool (l_favorites_tool)
-			l_favorites_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_favorites_tool)
-
-			create l_show_cmd.make (develop_window, l_favorites_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_favorites_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, True, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_favorites_tool, "show_favorites_tool")
 		end
 
 	build_properties_tool is
 			-- Build properties tool.
 		local
 			l_properties_tool: EB_PROPERTIES_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_properties_tool.make (develop_window)
 			develop_window.tools.set_properties_tool (l_properties_tool)
-			l_properties_tool.attach_to_docking_manager (develop_window.docking_manager)
-
-			develop_window.add_recyclable (l_properties_tool)
-
-			create l_show_cmd.make (develop_window, l_properties_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_properties_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f4), False, False, False)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
+			setup_tool (l_properties_tool, "show_properties_tool")
 		end
 
 	build_windows_tool is
 			-- Build windows tool (formerly known as Selector tool).
 		local
 			l_windows_tool: EB_WINDOWS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
 		do
 			create l_windows_tool.make (develop_window)
 			develop_window.tools.set_windows_tool (l_windows_tool)
+			setup_tool (l_windows_tool, "show_windows_tool")
+		end
 
-			l_windows_tool.attach_to_docking_manager (develop_window.docking_manager)
+	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING) is
+			-- Setup tool.
+		require
+			a_tool_not_void: a_tool /= Void
+			a_shortcut_string_not_void: a_shortcut_string /= Void
+		local
+			l_show_cmd: EB_SHOW_TOOL_COMMAND
+			l_accel: EV_ACCELERATOR
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			a_tool.attach_to_docking_manager (develop_window.docking_manager)
 
-			develop_window.add_recyclable (l_windows_tool)
-
-			create l_show_cmd.make (develop_window, l_windows_tool)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_windows_tool)
+			create l_show_cmd.make (develop_window, a_tool)
+			develop_window.commands.show_tool_commands.force (l_show_cmd, a_tool)
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
+			develop_window.add_recyclable (a_tool)
 
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_n), True, True, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			l_accel.actions.extend (agent l_show_cmd.execute)
 			l_show_cmd.set_accelerator (l_accel)
+			l_show_cmd.set_referred_shortcut (l_shortcut)
+		end
+
+	setup_main_formatter (a_form: EB_CLASS_TEXT_FORMATTER; a_shortcut_string: STRING) is
+			-- Setup formatter.
+		require
+			a_form_not_void: a_form /= Void
+			a_shortcut_string_not_void: a_shortcut_string /= Void
+		local
+			l_accel: EV_ACCELERATOR
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			l_accel.actions.extend (agent develop_window.save_and_switch_formatter (a_form))
+			a_form.set_accelerator (l_accel)
+			a_form.set_viewpoints (develop_window.view_points_combo)
+			a_form.post_execution_action.extend (agent develop_window.update_viewpoints)
+			a_form.set_referred_shortcut (l_shortcut)
 		end
 
 	build_undo_redo_accelerators is
@@ -1195,17 +1010,18 @@ feature{NONE} -- Implementation
 		local
 			l_undo_accelerator: EV_ACCELERATOR
 			l_redo_accelerator: EV_ACCELERATOR
+			l_shortcut: EB_FIXED_SHORTCUT
 		do
-			create l_undo_accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_z), True, False, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.undo_shortcut
+			create l_undo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			develop_window.set_undo_accelerator (l_undo_accelerator)
 
 			if develop_window.has_case then
 				l_undo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.undo_cmd).on_ctrl_z)
 			end
 
-			create l_redo_accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_y), True, False, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.redo_shortcut
+			create l_redo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			if develop_window.has_case then
 				l_redo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.redo_cmd).on_ctrl_y)
 			end
@@ -1217,10 +1033,17 @@ feature{NONE} -- Implementation
 			-- Build content close accelerator.
 		local
 			l_acc: EV_ACCELERATOR
+			l_shortcut: SHORTCUT_PREFERENCE
+			l_cmd: EB_SIMPLE_SHORTCUT_COMMAND
 		do
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f4), True, False, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("close_focusing_docking_tool_or_editor")
+			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			l_acc.actions.extend (agent develop_window.close_focusing_content)
 			develop_window.window.accelerators.extend (l_acc)
+
+			create l_cmd.make (l_acc)
+			l_cmd.set_referred_shortcut (l_shortcut)
+			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
 		end
 
 	setup_editor_close_action is
@@ -1230,39 +1053,14 @@ feature{NONE} -- Implementation
 			develop_window.editors_manager.editor_closed_actions.extend (agent develop_window.all_editor_closed)
 		end
 
-	setup_debug_tools_accelerators is
-			-- Setup debug tools accelerators.
-		local
-			l_acc: EV_ACCELERATOR
-			dbg_manager: EB_DEBUGGER_MANAGER
-			win: EB_VISION_WINDOW
-		do
-			dbg_manager := develop_window.eb_debugger_manager
-			win := develop_window.window
-
-				-- Call stack tool
-			l_acc := dbg_manager.show_call_stack_tool_accelerator
-			win.accelerators.extend (l_acc)
-
-				-- Object tool
-			l_acc := dbg_manager.show_objects_tool_accelerator
-			win.accelerators.extend (l_acc)
-
-				-- Thread tool
-			l_acc := dbg_manager.show_thread_tool_accelerator
-			win.accelerators.extend (l_acc)
-
-				-- Watch tool
-			l_acc := dbg_manager.show_new_or_hidden_watch_tool_accelerator
-			win.accelerators.extend (l_acc)
-		end
-
 	setup_focus_editor_accelerators is
 			-- Setup accelerators of focusing current editor.
 		local
 			l_acc: EV_ACCELERATOR
+			l_shortcut: EB_FIXED_SHORTCUT
 		do
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.focus_editor_shortcut
+			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			l_acc.actions.extend (agent develop_window.set_focus_to_main_editor)
 			develop_window.window.accelerators.extend (l_acc)
 		end
@@ -1271,10 +1069,17 @@ feature{NONE} -- Implementation
 			-- Setup accelerators for focus class combo box.
 		local
 			l_acc: EV_ACCELERATOR
+			l_shortcut: SHORTCUT_PREFERENCE
+			l_cmd: EB_SIMPLE_SHORTCUT_COMMAND
 		do
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f6), False, False, False)
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("focus_on_class_address")
+			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			l_acc.actions.extend (agent ((develop_window.address_manager).class_address).set_focus)
 			develop_window.window.accelerators.extend (l_acc)
+
+			create l_cmd.make (l_acc)
+			l_cmd.set_referred_shortcut (l_shortcut)
+			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
 		end
 
 indexing

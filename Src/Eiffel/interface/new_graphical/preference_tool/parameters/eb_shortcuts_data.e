@@ -8,6 +8,9 @@ indexing
 deferred class
 	EB_SHORTCUTS_DATA
 
+inherit
+	EB_SHARED_WINDOW_MANAGER
+
 feature {NONE} -- Implementation
 
 	initialize_shortcuts_prefs (a_manager: EB_PREFERENCE_MANAGER) is
@@ -19,7 +22,9 @@ feature {NONE} -- Implementation
 			default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]
 			l_name: STRING
 			l_s_pref: SHORTCUT_PREFERENCE
-			l_default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
+			l_default_shortcut_actions: like default_shortcut_actions
+			l_shortcuts: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
+			l_group: MANAGED_SHORTCUT_GROUP
 		do
 			l_default_shortcut_actions := default_shortcut_actions
 			from
@@ -27,12 +32,22 @@ feature {NONE} -- Implementation
 			until
 				l_default_shortcut_actions.after
 			loop
-				action_name := default_shortcut_actions.key_for_iteration
-				default_value := default_shortcut_actions.item (action_name)
-				l_name := a_manager.namespace + "." + action_name
-				l_s_pref := a_manager.new_shortcut_preference_value (a_manager, l_name, default_value)
-				l_s_pref.change_actions.extend (agent update)
-				shortcuts.put (l_s_pref, action_name)
+				l_shortcuts := l_default_shortcut_actions.item.actions
+				l_group := l_default_shortcut_actions.item.group
+				from
+					l_shortcuts.start
+				until
+					l_shortcuts.after
+				loop
+					action_name := l_shortcuts.key_for_iteration
+					default_value := l_shortcuts.item (action_name)
+					l_name := a_manager.namespace + "." + action_name
+					l_s_pref := a_manager.new_shortcut_preference_value (a_manager, l_name, default_value)
+					l_s_pref.change_actions.extend (agent update)
+					l_s_pref.set_group (l_group)
+					shortcuts.put (l_s_pref, action_name)
+					l_shortcuts.forth
+				end
 				l_default_shortcut_actions.forth
 			end
 		end
@@ -44,8 +59,8 @@ feature {NONE} -- Implementation
 			shortcuts_not_void: Result /= Void
 		end
 
-	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
-			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]; group: MANAGED_SHORTCUT_GROUP]] is
+			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString) & shortcut group
 		deferred
 		ensure
 			default_shortcut_actions_not_void: Result /= Void
@@ -53,7 +68,24 @@ feature {NONE} -- Implementation
 
 	update is
 			-- Action called when updating preferences.
-		deferred
+		do
+			window_manager.refresh_commands
+		end
+
+feature -- Shortcut group
+
+	main_window_group: MANAGED_SHORTCUT_GROUP
+		once
+			create Result.make
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	completion_window_group: MANAGED_SHORTCUT_GROUP
+		once
+			create Result.make
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

@@ -154,9 +154,7 @@ feature {NONE} -- Preference Strings
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
-			l_platform: PLATFORM_CONSTANTS
 		do
-			create l_platform
 			create l_manager.make (preferences, "misc")
 
 			external_command_0_preference := l_manager.new_string_preference_value (l_manager, external_command_0_string, "")
@@ -180,34 +178,33 @@ feature {NONE} -- Preference Strings
 			external_command_9_preference := l_manager.new_string_preference_value (l_manager, external_command_9_string, "")
 			external_commands.put (external_command_9_preference, 9)
 
-			create l_manager.make (preferences, "general.external_commands")
+			create l_manager.make (preferences, "shortcuts.external_commands")
 			initialize_shortcuts_prefs (l_manager)
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
 
-	update is
-			-- Nothing to update
-		do
-		end
-
 feature {NONE} -- Shortcuts
 
-	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]] is
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
+		local
+			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		once
-			create Result.make (25)
-			Result.put ([True, False,  False, key_strings.item (Key_0).twin.as_string_8], "shortcut_0")
-			Result.put ([True, False,  False, key_strings.item (Key_1).twin.as_string_8], "shortcut_1")
-			Result.put ([True, False,  False, key_strings.item (Key_2).twin.as_string_8], "shortcut_2")
-			Result.put ([True, False,  False, key_strings.item (Key_3).twin.as_string_8], "shortcut_3")
-			Result.put ([True, False,  False, key_strings.item (Key_4).twin.as_string_8], "shortcut_4")
-			Result.put ([True, False,  False, key_strings.item (Key_5).twin.as_string_8], "shortcut_5")
-			Result.put ([True, False,  False, key_strings.item (Key_6).twin.as_string_8], "shortcut_6")
-			Result.put ([True, False,  False, key_strings.item (Key_7).twin.as_string_8], "shortcut_7")
-			Result.put ([True, False,  False, key_strings.item (Key_8).twin.as_string_8], "shortcut_8")
-			Result.put ([True, False,  False, key_strings.item (Key_9).twin.as_string_8], "shortcut_9")
+			create Result.make (1)
+			create l_hash.make (25)
+			l_hash.put ([True, False,  False, key_strings.item (Key_0).twin.as_string_8], "shortcut_0")
+			l_hash.put ([True, False,  False, key_strings.item (Key_1).twin.as_string_8], "shortcut_1")
+			l_hash.put ([True, False,  False, key_strings.item (Key_2).twin.as_string_8], "shortcut_2")
+			l_hash.put ([True, False,  False, key_strings.item (Key_3).twin.as_string_8], "shortcut_3")
+			l_hash.put ([True, False,  False, key_strings.item (Key_4).twin.as_string_8], "shortcut_4")
+			l_hash.put ([True, False,  False, key_strings.item (Key_5).twin.as_string_8], "shortcut_5")
+			l_hash.put ([True, False,  False, key_strings.item (Key_6).twin.as_string_8], "shortcut_6")
+			l_hash.put ([True, False,  False, key_strings.item (Key_7).twin.as_string_8], "shortcut_7")
+			l_hash.put ([True, False,  False, key_strings.item (Key_8).twin.as_string_8], "shortcut_8")
+			l_hash.put ([True, False,  False, key_strings.item (Key_9).twin.as_string_8], "shortcut_9")
+			Result.extend ([l_hash, main_window_group])
 		end
 
 invariant

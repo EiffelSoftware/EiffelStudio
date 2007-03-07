@@ -180,6 +180,7 @@ feature -- Query
 			if warnings_tool /= Void then
 				Result.extend (warnings_tool)
 			end
+			Result.append (develop_window.eb_debugger_manager.all_tools)
 		ensure
 			not_void: Result /= Void
 		end

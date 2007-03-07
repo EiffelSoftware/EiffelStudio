@@ -81,9 +81,9 @@ feature -- Status setting
 			execute
 
 			tt := tooltip.twin
-			if accelerator /= Void then
+			if shortcut_available then
 				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
+				tt.append (shortcut_string)
 				tt.append (Closing_parenthesis)
 			end
 			if internal_managed_toolbar_items /= Void then

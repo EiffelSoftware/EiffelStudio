@@ -1,59 +1,36 @@
 indexing
-	description	: "Abstract notion of a command associated with a target"
+	description: "Command invoked by shortcut"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
-	EB_TARGET_COMMAND
+class
+	EB_SIMPLE_SHORTCUT_COMMAND
 
 inherit
 	EB_COMMAND
-		undefine
-			update
-		end
 
-	EB_RECYCLABLE
+create
+	make
 
-feature {NONE} -- Initialization
+feature -- Init
 
-	make (a_target: like target) is
-			-- Initialize the command with target `a_target'.
-		require
-			a_target_not_void: a_target /= Void
+	make (a_acc: like accelerator) is
+			-- Set `accelerator' with `a_acc'.
 		do
-			target := a_target
-			initialize
+			accelerator := a_acc
 		ensure
-			target_set: equal (a_target, target)
+			accelerator_set: accelerator = a_acc
 		end
 
-	initialize is
-			-- Initialize default values.
+feature {NONE} -- Excution
+
+	execute is
+			-- Excution
 		do
+			-- Do nothing.
 		end
-
-feature -- Properties
-
-	target: ANY
-			-- Target for the command.
-
-feature {NONE} -- Recyclable
-
-	internal_recycle is
-			-- Recycle
-		do
-			target := Void
-			if accelerator /= Void then
-				accelerator.actions.wipe_out
-				accelerator := Void
-			end
-		end
-
-invariant
-	target_not_void: not is_recycled implies target /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -87,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FILEABLE_COMMAND
+end

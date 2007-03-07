@@ -148,6 +148,9 @@ feature -- Commands
 	show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			-- Commands to show/hide a toolbar.
 
+	simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
+			-- Simple shortcut commands.
+
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER, EB_DEVELOPMENT_WINDOW} -- Settings
 
 	set_save_as_cmd (a_cmd: like save_as_cmd) is
@@ -406,6 +409,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			save_layout_as_command := a_cmd
 		ensure
 			set: save_layout_as_command = a_cmd
+		end
+
+	set_simple_shortcut_commands (a_cmd: like simple_shortcut_commands) is
+			-- Set `save_layout_as_command'
+		do
+			simple_shortcut_commands := a_cmd
+		ensure
+			set: simple_shortcut_commands = a_cmd
 		end
 
 feature -- Recycle

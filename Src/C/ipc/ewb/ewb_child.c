@@ -150,7 +150,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 	cmdline = malloc (strlen (ecdbgd_path) + uu_buffer_size);
 	strcpy (cmdline, ecdbgd_path);
 #else
-	argv = shword(ecdbd_path);					/* Split command into words */
+	argv = shword(ecdbgd_path);					/* Split command into words */
 #endif
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
@@ -422,7 +422,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 		}
 #ifdef USE_ADD_LOG
 		else
-			add_log(2, "ERROR out of memory: cannot exec '%s'", ecdbd_path);
+			add_log(2, "ERROR out of memory: cannot exec '%s'", ecdbgd_path);
 #endif
 		SPAWN_CHILD_FAILED(1);
 

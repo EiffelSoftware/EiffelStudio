@@ -8,7 +8,7 @@ class WBENCH_MAKER
 inherit
 	MAKEFILE_GENERATOR
 		redefine
-			generate_specific_defines, generate_other_objects
+			generate_specific_defines, generate_precompile_objects
 		end;
 
 create
@@ -261,25 +261,34 @@ feature
 			Result.append (boehm_library)
 		end;
 
-	generate_other_objects is
+	generate_precompile_objects is
 		local
 			precomp: like Precompilation_directories
 			dir: REMOTE_PROJECT_DIRECTORY
+			l_path: STRING
+			l_first: BOOLEAN
 		do
 			if System.uses_precompiled then
 				from
 					precomp := Precompilation_directories;
 					precomp.start
+					l_first := True
 				until
 					precomp.after
 				loop
 					dir := precomp.item_for_iteration;
 					if dir.has_precompiled_preobj then
-						Make_file.put_string ("%T%T");
-						Make_file.put_string (dir.precompiled_preobj);
-						Make_file.put_character (' ');
-						Make_file.put_character (Continuation);
-						Make_file.put_new_line
+						if not l_first then
+							Make_file.put_character (' ');
+							Make_file.put_character (Continuation);
+							Make_file.put_new_line
+							Make_file.put_character ('%T')
+						else
+							l_first := False
+						end
+						l_path := dir.precompiled_preobj
+						safe_external_path (l_path, True)
+						Make_file.put_string (l_path);
 					end;
 					precomp.forth
 				end

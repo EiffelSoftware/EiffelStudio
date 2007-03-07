@@ -1251,6 +1251,7 @@ feature -- Metadata description
 			id: INTEGER
 			i: INTEGER
 			l_parents: ARRAY [INTEGER]
+			parent_count: CELL [INTEGER]
 			l_parent_class: CLASS_C
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
@@ -1365,14 +1366,19 @@ feature -- Metadata description
 						i := i + 1
 						if class_c.is_generic then
 							gen_type ?= interface_class_type.type
+							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
-								agent (c: CLASS_TYPE; p: ARRAY [INTEGER])
+								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
+									local
+										j: INTEGER
 									do
-										p.force (actual_class_type_token (c.static_type_id), p.count)
+										j := k.item
+										k.put (j + 1)
+										p.force (actual_class_type_token (c.static_type_id), j)
 									end
-								(?, l_parents)
+								(?, l_parents, parent_count)
 							)
-							i := l_parents.count
+							i := parent_count.item
 						end
 					else
 						if not for_interface then
@@ -1380,21 +1386,19 @@ feature -- Metadata description
 							i := i + 1
 						elseif class_c.is_generic then
 							gen_type ?= class_type.type
+							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
-								agent (c: CLASS_TYPE; p: ARRAY [INTEGER])
+								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
 									local
 										j: INTEGER
 									do
-											-- Replace the last entry if 0 or add a new one.
-										j := p.upper
-										if p.item (j) /= 0 then
-											j := j + 1
-										end
+										j := k.item
+										k.put (j + 1)
 										p.force (actual_class_type_token (c.static_type_id), j)
 									end
-								(?, l_parents)
+								(?, l_parents, parent_count)
 							)
-							i := l_parents.count
+							i := parent_count.item
 						end
 					end
 				end

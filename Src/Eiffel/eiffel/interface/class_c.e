@@ -497,7 +497,6 @@ feature -- Building conformance table
 			-- Build recursively the conformance table of class `cl.
 		require
 			good_argument: cl /= Void
-			conformance_table_exists: cl.conformance_table /= Void
 			topological_id_processed: topological_id > 0
 			conformance: topological_id <= cl.topological_id
 		local
@@ -1476,7 +1475,6 @@ feature -- Order relation for inheritance and topological sort
 			-- Is `other' an ancestor of Current?
 		require
 			good_argument: other /= Void
-			conformance_table_exists: conformance_table /= Void
 		local
 			otopid: INTEGER
 		do
@@ -1492,7 +1490,6 @@ feature -- Order relation for inheritance and topological sort
 			-- Is `other' an ancestor of Current ?
 		require
 			good_argument: other /= Void
-			conformance_table_exists: conformance_table /= Void
 		local
 			dep_class: CLASS_C
 			otopid: INTEGER
@@ -3934,6 +3931,7 @@ invariant
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
 	config_class_connection: original_class.compiled_class = Current
+	conformance_table_not_void: conformance_table /= Void
 
 		-- Invariants IL versus normal generation.
 	anchored_features_void_in_non_il_generation:

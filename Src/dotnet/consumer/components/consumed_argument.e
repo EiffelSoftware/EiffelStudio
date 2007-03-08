@@ -78,7 +78,7 @@ feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER} -- Comparison
 			-- Only compare arguments from same assembly as types are identified per assembly!
 		do
 			Result := other.dotnet_name.is_equal (dotnet_name) and
-						other.type.is_equal (type)
+						other.type.same_as (type)
 		end
 
 invariant

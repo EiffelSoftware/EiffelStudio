@@ -59,10 +59,10 @@ feature -- Access
 
 	dotnet_name: STRING
 			-- Type full name
-	
+
 	parent: CONSUMED_REFERENCED_TYPE
 			-- Parent type
-	
+
 	eiffel_name: STRING
 			-- Eiffel class name
 
@@ -74,15 +74,15 @@ feature -- Access
 
 	interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
-	
+
 	properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			-- Properties
-	
+
 	events: ARRAYED_LIST [CONSUMED_EVENT]
 			-- Events
 
 	procedures: ARRAYED_LIST [CONSUMED_PROCEDURE] is
-			-- All procedures in type. 
+			-- All procedures in type.
 			-- ie: immediate and inherited procedures, but also procedures associated
 			-- to a property or an event.
 		local
@@ -117,8 +117,8 @@ feature -- Access
 						Result.extend (internal_procedures.item)
 						internal_procedures.forth
 					end
-				end		
-				
+				end
+
 				if properties /= Void and then not properties.is_empty then
 					from
 						properties.start
@@ -132,7 +132,7 @@ feature -- Access
 						properties.forth
 					end
 				end
-				
+
 				if events /= Void and then not events.is_empty then
 					from
 						events.start
@@ -150,13 +150,13 @@ feature -- Access
 							Result.extend (l_event.adder)
 						end
 						events.forth
-					end					
+					end
 				end
 			end
 		end
 
 	functions: ARRAYED_LIST [CONSUMED_FUNCTION] is
-			-- All functions in type. 
+			-- All functions in type.
 			-- ie: immediate and inherited functions, but also functions associated
 			-- to a property or an event.
 		local
@@ -215,13 +215,13 @@ feature -- Status Setting
 		do
 			Result := internal_flags & Is_deferred_mask = Is_deferred_mask
 		end
-	
+
 	is_enum: BOOLEAN is
 			-- Is .NET type an enum?
 		do
 			Result := internal_flags & Is_enum_mask = Is_enum_mask
 		end
-	
+
 	is_frozen: BOOLEAN is
 			-- Is .NET type sealed?
 		do
@@ -245,7 +245,7 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			fields_set: fields = fi
 		end
-	
+
 	set_procedures (meth: like procedures) is
 			-- set `procedures' with `meth'.
 		require
@@ -255,7 +255,7 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			internal_procedures_set: internal_procedures = meth
 		end
-	
+
 	set_functions (func: like functions) is
 			-- set `functions' with `meth'.
 		require
@@ -275,7 +275,7 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			properties_set: properties = prop
 		end
-	
+
 	set_events (ev: like events) is
 			-- Set `events' with `ev'.
 		require
@@ -285,9 +285,9 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			events_set: events = ev
 		end
-		
+
 feature {TYPE_CONSUMER, ASSEMBLY_CONSUMER} -- Element settings
-	
+
 	set_constructors (cons: like constructors) is
 			-- set `constructors' with `cons'.
 		require
@@ -385,7 +385,7 @@ feature {NONE} -- Internal
 			if properties /= Void then
 				nb := nb + properties.count
 			end
-			
+
 			create Result.make (nb)
 			if fields /= Void then
 				consumed_a_type_entities (fields, a_immediate, Result)
@@ -416,23 +416,25 @@ feature {NONE} -- Internal
 			a_result_not_void: a_result /= Void
 		local
 			l_entity: CONSUMED_ENTITY
+			l_ref: like associated_reference_type
 		do
-			from 
+			from
 				a_features.start
+				l_ref := associated_reference_type
 			until
 				a_features.after
 			loop
 				l_entity := a_features.item
 				if
 					l_entity /= Void and then
-					(l_entity.declared_type.is_equal (associated_reference_type) = a_immediate)
+					(l_entity.declared_type.same_as (l_ref) = a_immediate)
 				then
 					a_result.extend (l_entity)
 				end
 				a_features.forth
 			end
 		end
- 			
+
 	internal_flags: INTEGER
 			-- Store status of current type.
 

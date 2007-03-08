@@ -163,9 +163,14 @@ feature -- Status setting
 			-- Ensure no border is displayed around `Current'.
 		local
 			l_decor: INTEGER
+			l_x, l_y: INTEGER
+			l_temp: INTEGER
 		do
+				-- We are disabling the border so we need to reset the position in the exact place
+			l_temp := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $l_x, $l_y)
 			l_decor := default_wm_decorations.bit_and ({EV_GTK_EXTERNALS}.gdk_decor_border_enum.bit_not)
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
+			set_position (l_x, l_y)
 		end
 
 	internal_enable_border is

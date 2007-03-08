@@ -8,6 +8,8 @@ indexing
 deferred class ERROR
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

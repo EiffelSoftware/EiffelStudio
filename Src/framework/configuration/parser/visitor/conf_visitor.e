@@ -9,6 +9,8 @@ deferred class
 	CONF_VISITOR
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		export
 			{NONE} all

@@ -10,6 +10,8 @@ class
 	QL_CRITERION_CHECKER
 
 inherit
+	ANY
+
 	QL_CRITERION_ITERATOR
 		export
 			{NONE} all

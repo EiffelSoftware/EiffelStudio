@@ -101,6 +101,16 @@ feature -- Access
 			good_result: Result = feature_path_marker
 		end
 
+	e_feature: E_FEATURE is
+			-- Feature associated with Current
+		do
+			check
+				should_not_arrive_here: False
+			end
+		ensure then
+			result_not_attached: Result = Void
+		end
+
 feature -- Status report
 
 	is_real_feature: BOOLEAN is False
@@ -123,18 +133,6 @@ feature -- Visit
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_invariant (Current)
-		end
-
-feature{QL_CRITERION} -- Feature body
-
-	e_feature: E_FEATURE is
-			-- Feature associated with Current
-		do
-			check
-				should_not_arrive_here: False
-			end
-		ensure then
-			result_not_attached: Result = Void
 		end
 
 invariant

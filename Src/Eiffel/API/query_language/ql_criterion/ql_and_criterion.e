@@ -90,9 +90,9 @@ feature{NONE} -- Implementation
 		require
 			intrinsic_domain_exists: has_intrinsic_domain
 		local
-			l_minuend_domain: QL_DOMAIN
-			l_subtrahend_domain: QL_DOMAIN
-			l_source_domain: QL_DOMAIN
+			l_minuend_domain: like intrinsic_domain
+			l_subtrahend_domain: like intrinsic_domain
+			l_source_domain: like intrinsic_domain
 			l_filter_cri: QL_CRITERION
 			l_old_used_in_domain_generator: QL_DOMAIN_GENERATOR
 		do

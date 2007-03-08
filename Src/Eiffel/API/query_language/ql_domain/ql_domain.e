@@ -502,11 +502,11 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [QL_ITEM]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [QL_ITEM]
+			l_item_set: DS_HASH_SET [like item_type]
+			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
-			l_item: QL_ITEM
+			l_item: like item_type
 		do
 			if a_other_domain.is_empty then
 				a_new_domain.content.fill (content)
@@ -541,11 +541,11 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [QL_ITEM]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [QL_ITEM]
+			l_item_set: DS_HASH_SET [like item_type]
+			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
-			l_item: QL_ITEM
+			l_item: like item_type
 		do
 			if not a_other_domain.is_empty then
 				create l_item_set.make (count)
@@ -577,11 +577,11 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [QL_ITEM]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [QL_ITEM]
+			l_item_set: DS_HASH_SET [like item_type]
+			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
-			l_item: QL_ITEM
+			l_item: like item_type
 		do
 			if a_other_domain.is_empty then
 				a_new_domain.content.fill (content)
@@ -642,7 +642,7 @@ feature{NONE} -- Implementation/Set operations
 
 feature{NONE} -- Item comparison
 
-	are_items_equivalent (a_item, b_item: QL_ITEM): BOOLEAN is
+	are_items_equivalent (a_item, b_item: like item_type): BOOLEAN is
 			-- Is `a_item' equal to `b_item'?
 		require
 			a_item_attached: a_item /= Void

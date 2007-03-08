@@ -7,6 +7,8 @@ class
 	USER_OPTIONS_FACTORY
 
 inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

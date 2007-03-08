@@ -18,6 +18,9 @@ inherit
 create
 	make
 
+create {CONF_CONDITION_LIST}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is

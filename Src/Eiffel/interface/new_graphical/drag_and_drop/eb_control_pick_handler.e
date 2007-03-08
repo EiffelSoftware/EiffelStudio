@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Handler for right pointer click when ctrl pressed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

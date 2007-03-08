@@ -40,6 +40,7 @@ feature -- Initialization
 			docking_manager := a_dev_win.docking_manager
 			docking_manager.tab_drop_actions.extend (agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
 			create_editor
+			docking_manager.main_area_drop_action.extend (agent create_editor_beside_content (?, Void))
 		ensure
 			editors_internal_not_void: editors_internal /= Void
 			editors_not_empty: not editors_internal.is_empty

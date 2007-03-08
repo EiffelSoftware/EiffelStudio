@@ -222,7 +222,7 @@ feature -- Command
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR) is
-			-- Set main area background color.
+			-- Set main area (editors' area) background color.
 		require
 			a_color_not_void: a_color /= Void
 		do
@@ -230,6 +230,15 @@ feature -- Command
 			 zones.place_holder_widget.set_background_color (a_color)
 		ensure
 			set: query.inner_container_main.background_color.is_equal (a_color)
+		end
+
+	main_area_drop_action: EV_PND_ACTION_SEQUENCE is
+			-- Main area (editor area) drop acitons.
+			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
+		do
+			Result := property.main_area_drop_actions
+		ensure
+			not_void: Result /= Void
 		end
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT) is
@@ -270,6 +279,7 @@ feature -- Command
 	destroy is
 			-- Destroy all underline objects.
 		do
+			property.destroy
 			agents.destroy
 			tool_bar_manager.destroy
 			contents.wipe_out
@@ -320,7 +330,7 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
 	  	SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES, SD_AUTO_HIDE_ANIMATION,
 	  	SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK, SD_ZONE_NAVIGATION_DIALOG,
 	  	SD_TAB_STATE_ASSISTANT, SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
-		SD_DEBUG_ACCESS, SD_UPPER_ZONE} -- Library internals querys.
+		SD_DEBUG_ACCESS, SD_UPPER_ZONE, SD_DOCKING_MANAGER_PROPERTY} -- Library internals querys.
 
 	query: SD_DOCKING_MANAGER_QUERY
 			-- Manager helper Current for querys.

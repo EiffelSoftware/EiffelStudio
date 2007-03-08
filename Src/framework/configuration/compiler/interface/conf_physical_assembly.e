@@ -17,7 +17,6 @@ inherit
 			name_by_class,
 			options,
 			is_group_equivalent,
-			class_type,
 			is_readonly,
 			accessible_groups,
 			add_condition,
@@ -426,11 +425,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
-feature {NONE} -- Type anchors
-
-	class_type: CONF_CLASS;
-			-- Class type anchor
 
 invariant
 	cache_path_set: cache_path /= Void

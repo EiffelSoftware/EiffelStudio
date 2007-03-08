@@ -1373,7 +1373,7 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
-				l_result := assembly.class_by_dotnet_name (l_type_name, c.assembly_id)
+				l_result ?= assembly.class_by_dotnet_name (l_type_name, c.assembly_id)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....

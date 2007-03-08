@@ -10,9 +10,6 @@ class
 
 inherit
 	CONF_PHYSICAL_ASSEMBLY
-		redefine
-			class_type
-		end
 
 create
 	make_from_consumed
@@ -64,9 +61,6 @@ feature -- Output
 			end
 		end
 
-feature {NONE} -- Class type anchor
-
-	class_type: EXTERNAL_CLASS_I;
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

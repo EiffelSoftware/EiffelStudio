@@ -571,8 +571,10 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configurati
 
 feature {NONE} -- Type anchors
 
-	class_type: CONF_CLASS
+	class_type: CONF_CLASS is
 			-- Class type anchor.
+		do
+		end
 
 feature {NONE} -- Implementation
 

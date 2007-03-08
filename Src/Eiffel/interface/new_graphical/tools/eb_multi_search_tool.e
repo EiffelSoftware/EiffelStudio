@@ -1789,7 +1789,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				until
 					loaded_actions.count = 0 or loop_end
 				loop
-					if is_editor_ready and then editor.text_is_fully_loaded or editor.is_empty then
+					if is_editor_ready and then (editor.text_is_fully_loaded or editor.is_empty) then
 						l_pro := loaded_actions.item
 						loaded_actions.remove
 						l_pro.call (Void)

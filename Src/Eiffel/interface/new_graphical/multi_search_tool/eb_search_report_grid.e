@@ -84,10 +84,10 @@ feature {EB_MULTI_SEARCH_TOOL} -- Access
 			-- List of header width.
 		once
 			create Result.make (4)
-			Result.extend (label_font.string_width (grid_head_class) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_found) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_context) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space)
+			Result.extend (label_font.string_width (grid_head_class) + column_border_space + column_border_space + 40)
+			Result.extend (label_font.string_width (grid_head_found) + column_border_space + column_border_space + 10)
+			Result.extend (label_font.string_width (grid_head_context) + column_border_space + column_border_space + 10)
+			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space + 10)
 		end
 
 		column_border_space: INTEGER is 8
@@ -158,6 +158,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 						end
 						i := l_row_count
 						create l_grid_label_item.make_with_text (l_item.class_name)
+						l_grid_label_item.set_tooltip (l_item.class_name)
 						l_class_i ?= l_class_item.data
 						if l_class_i /= Void then
 							l_grid_label_item.set_pixmap (pixmap_from_class_i (l_class_i))
@@ -192,6 +193,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 									new_label_item (replace_rnt_to_space (l_text_item.text)))
 							item (2, l_row_count).set_foreground_color (preferences.editor_data.operator_text_color)
 							create l_grid_drawable_item
+							l_grid_drawable_item.set_tooltip (l_text_item.context_text)
 							set_item (3, l_row_count, l_grid_drawable_item)
 							l_grid_drawable_item.expose_actions.extend (agent expose_drawable_action (?, l_item, row (l_row_count)))
 							l_grid_drawable_item.set_required_width (font.string_width (l_text_item.context_text))
@@ -248,7 +250,7 @@ feature {NONE} -- Interface
 			column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
 			column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			row_select_actions.extend (agent on_grid_row_selected)
+			key_release_actions.extend (agent on_key_released)
 			set_item_pebble_function (agent grid_pebble_function)
 			set_accept_cursor (Cursors.cur_class)
 			set_deny_cursor (Cursors.cur_x_class)
@@ -265,6 +267,7 @@ feature {NONE} -- Interface
 			create Result.make_with_text (a_string)
 			l_color := background_color
 			Result.set_foreground_color (row_text_color (l_color))
+			Result.set_tooltip (a_string)
 		ensure
 			new_item_not_void: Result /= Void
 		end
@@ -355,44 +358,11 @@ feature {NONE} -- Interface
 
 	adjust_grid_column_width is
 			-- Adjust grid column width to best fit visible area.
-		local
-			i: INTEGER
-			l_grid_width: INTEGER
-			col : EV_GRID_COLUMN
-			full_width: INTEGER
-			temp_width: INTEGER
-			l_width: INTEGER
-			l_required_width: ARRAYED_LIST [INTEGER]
 		do
-			if row_count /= 0 then
-				create l_required_width.make (column_count)
-				from
-					i := 1
-				until
-					i > column_count
-				loop
-					col := column (i)
-					l_required_width.extend (col.required_width_of_item_span (1, col.parent.row_count))
-					full_width := full_width + (header_width @ i).max (l_required_width @ i)
-					i := i + 1
-				end
-				l_grid_width := width
-				from
-					i := 1
-				until
-					i > column_count
-				loop
-					col := column (i)
-					temp_width := (header_width @ i).max (l_required_width @ i)
-					l_width := ((temp_width / full_width) * l_grid_width).floor
-					if l_width > temp_width then
-						l_width := temp_width
-					end
-					l_width := l_width-- + column_border_space
-					col.set_width (l_width)
-					i := i + 1
-				end
-			end
+			safe_resize_column_to_content (column (1), True, False)
+			safe_resize_column_to_content (column (2), True, False)
+			safe_resize_column_to_content (column (3), True, False)
+			safe_resize_column_to_content (column (4), True, False)
 		end
 
 feature {NONE} -- Stone
@@ -535,22 +505,34 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			until
 				i > a_row.count
 			loop
-				a_row.item (i).pointer_button_press_actions.extend (agent on_grid_row_clicked (?, ?, ?, ?, ?, ?, ?, ?, a_row))
+				a_row.item (i).pointer_double_press_actions.extend (agent on_grid_row_double_clicked (?, ?, ?, ?, ?, ?, ?, ?, a_row))
 				i := i + 1
 			end
 		end
 
-	on_grid_row_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW) is
+	on_grid_row_double_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW) is
 			-- A row is clicked by mouse pointer.
 		do
 			if not selected_rows.is_empty then
 				if selected_rows.first = a_row then
-					on_grid_row_selected (a_row)
+					go_to_line_of_editor (a_row)
 				end
 			end
 		end
 
-	on_grid_row_selected (a_row: EV_GRID_ROW) is
+	on_key_released (a_key: EV_KEY) is
+			-- On key released.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				if not selected_rows.is_empty then
+					go_to_line_of_editor (selected_rows.first)
+				end
+			end
+		end
+
+	go_to_line_of_editor (a_row: EV_GRID_ROW) is
 			-- Invoke when a row of the report grid selected
 		require
 			a_row_not_void: a_row /= Void

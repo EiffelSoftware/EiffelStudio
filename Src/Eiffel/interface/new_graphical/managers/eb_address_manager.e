@@ -1322,7 +1322,7 @@ feature {NONE} -- open new class
 									class_address.select_region (at_pos + 1, class_address.text_length)
 								end
 							else
-								class_i := cluster.classes.item (cname)
+								class_i ?= cluster.classes.item (cname)
 								if choosing_class then
 									process_class
 								else

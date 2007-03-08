@@ -82,7 +82,8 @@ feature -- Access
 							-- written as an Eiffel class, e.g. INTEGER, ....
 					Result := basic_type_mapping.item (l_name)
 					if Result = Void then
-						Result := assembly.class_by_dotnet_name (l_name, c.assembly_id)
+						Result ?= assembly.class_by_dotnet_name (l_name, c.assembly_id)
+						check has_result: Result /= Void end
 					end
 				end
 			end

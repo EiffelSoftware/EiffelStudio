@@ -9,6 +9,16 @@ class
 	CLUSTER_I
 
 inherit
+	CONF_CLUSTER
+		rename
+			name as cluster_name,
+			parent as parent_cluster,
+			children as sub_clusters
+		redefine
+			parent_cluster,
+			sub_clusters
+		end
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
@@ -23,25 +33,10 @@ inherit
 			is_equal
 		end
 
-	CONF_CLUSTER
-		rename
-			name as cluster_name,
-			parent as parent_cluster,
-			children as sub_clusters
-		redefine
-			classes,
-			parent_cluster,
-			sub_clusters
-		end
-
 create {CONF_COMP_FACTORY}
 	make
 
 feature -- Attributes
-
-	classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
-			-- Classes available in the cluster: key is the declared
-			-- name and entry is the class
 
 	parent_cluster: CLUSTER_I
 			-- Parent cluster of Current cluster

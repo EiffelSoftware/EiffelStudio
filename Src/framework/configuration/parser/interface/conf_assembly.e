@@ -18,7 +18,6 @@ inherit
 			name_by_class,
 			options,
 			is_group_equivalent,
-			class_type,
 			is_readonly,
 			accessible_groups,
 			location,
@@ -274,11 +273,6 @@ feature -- Visit
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
 		end
-
-feature {NONE} -- Type anchors
-
-	class_type: CONF_CLASS;
-			-- Class type anchor
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

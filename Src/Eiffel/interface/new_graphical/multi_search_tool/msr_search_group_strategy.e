@@ -69,7 +69,8 @@ feature -- Basic operatioin
 	launch is
 			-- Launch searching.
 		local
-			classes: HASH_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_class: CLASS_I
 			subcluster: ARRAYED_LIST [CLUSTER_I]
 			l_cluster: CLUSTER_I
 			l_cluster_strategy: MSR_SEARCH_CLUSTER_STRATEGY
@@ -119,21 +120,24 @@ feature -- Basic operatioin
 					until
 						classes.after
 					loop
-						create class_strategy.make (keyword,
-												surrounding_text_range_internal,
-												classes.item_for_iteration,
-												only_compiled_class_searched)
-						if case_sensitive then
-							class_strategy.set_case_sensitive
-						else
-							class_strategy.set_case_insensitive
-						end
-						class_strategy.set_regular_expression_used (is_regular_expression_used)
-						class_strategy.set_whole_word_matched (is_whole_word_matched)
-						class_strategy.launch
-						if class_strategy.is_launched then
-							item_matched_internal.finish
-							item_matched_internal.merge_right (class_strategy.item_matched)
+						l_class ?= classes.item_for_iteration
+						if l_class /= Void then
+							create class_strategy.make (keyword,
+													surrounding_text_range_internal,
+													l_class,
+													only_compiled_class_searched)
+							if case_sensitive then
+								class_strategy.set_case_sensitive
+							else
+								class_strategy.set_case_insensitive
+							end
+							class_strategy.set_regular_expression_used (is_regular_expression_used)
+							class_strategy.set_whole_word_matched (is_whole_word_matched)
+							class_strategy.launch
+							if class_strategy.is_launched then
+								item_matched_internal.finish
+								item_matched_internal.merge_right (class_strategy.item_matched)
+							end
 						end
 						classes.forth
 					end

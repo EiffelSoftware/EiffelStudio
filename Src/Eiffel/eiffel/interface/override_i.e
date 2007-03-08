@@ -15,7 +15,6 @@ inherit
 			parent as parent_cluster,
 			children as sub_clusters
 		redefine
-			classes,
 			parent_cluster,
 			sub_clusters
 		end
@@ -26,7 +25,6 @@ inherit
 			is_group_equivalent,
 			is_override
 		redefine
-			classes,
 			parent_cluster,
 			sub_clusters
 		end
@@ -35,10 +33,6 @@ create
 	make
 
 feature -- Attributes
-
-	classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
-			-- Classes available in the cluster: key is the declared
-			-- name and entry is the class
 
 	parent_cluster: CLUSTER_I
 			-- Parent cluster of Current cluster

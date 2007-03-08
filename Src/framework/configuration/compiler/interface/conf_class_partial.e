@@ -90,7 +90,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			base_location_set: base_location = a_location
 		end
 
-	rebuild_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: like base_location) is
+	rebuild_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location) is
 			-- Rebuild.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void

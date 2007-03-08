@@ -243,7 +243,7 @@ feature -- Roundtrip
 
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
 		local
-			l_strategy: like Current
+			l_strategy: AST_DECORATED_OUTPUT_STRATEGY
 			l_old_feature_comments: EIFFEL_COMMENTS
 			l_old_arguments: AST_EIFFEL
 			l_old_target_feature: FEATURE_I

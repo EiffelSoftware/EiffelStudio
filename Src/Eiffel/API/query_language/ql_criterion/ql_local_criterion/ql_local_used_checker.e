@@ -10,6 +10,8 @@ class
 	QL_LOCAL_USED_CHECKER
 
 inherit
+	ANY
+
 	AST_ITERATOR
 		export
 			{NONE}all

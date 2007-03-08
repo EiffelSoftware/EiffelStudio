@@ -1080,9 +1080,13 @@ feature {NONE} -- Translation
 			makefile.put_string (lastline)
 
 				-- Get rid of what comes after the application rule.
-			read_next
-			read_next
-			read_next
+			from
+			until
+				lastline.is_empty
+			loop
+				read_next
+				lastline := makefile_sh.last_string
+			end
 		end
 
 	translate_cecil_and_dll is

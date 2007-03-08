@@ -65,8 +65,20 @@ feature -- Properties
 			Result.append (l_current_list)
 		end
 
+	main_area_drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Main area (editor area) drop acitons.
+			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
+		local
+			l_zones: SD_DOCKING_MANAGER_ZONES
+		do
+			Result := internal_docking_manager.zones.place_holder_widget.drop_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 	is_opening_config: BOOLEAN
 			-- If current is opening layout config?
+
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 
@@ -102,6 +114,14 @@ feature {NONE}  -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
+
+feature -- Command
+
+	destroy is
+			-- Destory all underline objects
+		do
+			main_area_drop_actions.wipe_out
+		end
 
 invariant
 

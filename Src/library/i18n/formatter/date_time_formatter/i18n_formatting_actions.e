@@ -9,6 +9,8 @@ class
 	I18N_FORMATTING_ACTIONS
 
 inherit
+	ANY
+
 	SHARED_I18N_FORMATTING_UTILITY
 		export
 			{NONE} all

@@ -9,6 +9,8 @@ class
 	UTF8_READER_WRITER
 
 inherit
+	ANY
+
 	UC_IMPORTED_UTF8_ROUTINES
 		export
 			{NONE} all

@@ -9,6 +9,8 @@ class
 	I18N_LOCALE_MANAGER
 
 inherit
+	ANY
+
 	SHARED_I18N_URI_PARSER
 		export
 			{NONE} all

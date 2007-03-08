@@ -226,7 +226,7 @@ feature -- Basic Operations
 									i > count or not Result
 								loop
 									Result := method_list.item = method or i > 0 and then
-										not method_list.item.arguments.item (i).type.is_equal
+										not method_list.item.arguments.item (i).type.same_as
 											(method.arguments.item (i).type)
 									i := i + 1
 								end

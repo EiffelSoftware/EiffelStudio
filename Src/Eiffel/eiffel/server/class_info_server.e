@@ -8,6 +8,8 @@ indexing
 class CLASS_INFO_SERVER
 
 inherit
+	ANY
+
 	SHARED_SERVER
 		export
 			{NONE} all

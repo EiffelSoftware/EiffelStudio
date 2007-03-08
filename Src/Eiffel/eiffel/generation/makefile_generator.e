@@ -1309,6 +1309,7 @@ feature {NONE} -- Implementation
 			-- break existing code.
 		require
 			a_path_not_void: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
 		do
 			a_path.left_adjust
 			a_path.right_adjust
@@ -1318,9 +1319,14 @@ feature {NONE} -- Implementation
 			then
 					-- If the path has no white space, then we can safely add the " around it
 					-- so that it will work in case the path is expanded with an environment
-					-- variable containing spaces.
-				a_path.prepend_character ('"')
-				a_path.append_character ('"')
+					-- variable containing spaces. Of course we only do it if no " are already
+					-- present.
+				if a_path.item (1) /= '"' then
+					a_path.prepend_character ('"')
+				end
+				if a_path.item (a_path.count) /= '"' then
+					a_path.append_character ('"')
+				end
 			end
 		end
 

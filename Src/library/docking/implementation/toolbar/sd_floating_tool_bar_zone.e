@@ -9,7 +9,7 @@ class
 	SD_FLOATING_TOOL_BAR_ZONE
 
 inherit
-	EV_POPUP_WINDOW
+	SD_WINDOW
 		rename
 			show as show_allow_to_back,
 			extend as extend_to_dialog,

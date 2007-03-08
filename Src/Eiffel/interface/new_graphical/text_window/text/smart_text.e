@@ -662,7 +662,7 @@ feature -- Syntax completion
 		local
 			to_be_inserted: STRING
 			indent: STRING
-			char_nb, line_nb, char_offset, i: INTEGER
+			char_nb, line_nb, char_offset, i, start_sub: INTEGER
 			et, bt: like begin_line_tokens
 			ln: like line
 		do
@@ -720,9 +720,9 @@ feature -- Syntax completion
 					end
 					history.bind_current_item_to_next
 				end
-
+				start_sub := (char_nb + 1).max (1)
 				from
-					i := to_be_inserted.substring_index ("%%B", 1)
+					i := to_be_inserted.substring_index ("%%B", start_sub)
 				until
 					i = 0
 				loop
@@ -731,7 +731,7 @@ feature -- Syntax completion
 					if i > 1 and then to_be_inserted.item (i - 1) /= '%N' then
 						to_be_inserted.remove (i - 1)
 					end
-					i := to_be_inserted.substring_index ("%%B", 1)
+					i := to_be_inserted.substring_index ("%%B", start_sub)
 				end
 				char_offset := to_be_inserted.substring_index("$cursor$", 1)
 				if char_offset = 0 then

@@ -29,7 +29,7 @@ inherit
 			search as search_id
 		export
 			{NONE} all
-			{FEATURE_TABLE} keys, content, deleted_marks
+			{FEATURE_TABLE} keys, content, deleted_marks, has_default
 			{ANY}
 				after, conflict, count, cursor, forth, found,
 				found_item, go_to, has_id, has_key_id, item_for_iteration,

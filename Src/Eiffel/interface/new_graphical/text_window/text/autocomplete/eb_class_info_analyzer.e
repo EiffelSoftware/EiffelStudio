@@ -414,7 +414,7 @@ feature {NONE}-- Clickable/Editable implementation
 						error := current_token = Void
 						if not error then
 							processed_type := type_of_class_corresponding_to_current_token
-							skip_parenthesis ('{', '}')
+							skip_parenthesis (opening_brace, closing_brace)
 						end
 					end
 				elseif token_image_is_same_as_word (current_token, Opening_parenthesis) then
@@ -452,7 +452,7 @@ feature {NONE}-- Clickable/Editable implementation
 							error := error or else current_token = Void
 							if not error then
 								processed_type := type_of_class_corresponding_to_current_token
-								skip_parenthesis ('{', '}')
+								skip_parenthesis (opening_brace, closing_brace)
 								if processed_type /= Void and then processed_type.associated_class /= Void then
 									if processed_type.associated_class.has_feature_table then
 										Result := processed_type.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
@@ -514,8 +514,13 @@ feature {NONE}-- Clickable/Editable implementation
 				end
 				go_to_next_token
 				if not error and then token_image_is_same_as_word (current_token, Opening_parenthesis) then
-					skip_parenthesis ('(', ')')
+					skip_parenthesis (opening_parenthesis, closing_parenthesis)
 					go_to_next_token
+				end
+				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
+					skip_parenthesis (opening_bracket, closing_bracket)
+					go_to_next_token
+					processed_type := process_bracket_type (processed_type)
 				end
 				if not error then
 					if after_searched_token then
@@ -579,8 +584,13 @@ feature {NONE}-- Clickable/Editable implementation
 				end
 				go_to_next_token
 				if token_image_is_same_as_word (current_token, Opening_parenthesis) then
-					skip_parenthesis ('(', ')')
+					skip_parenthesis (opening_parenthesis, closing_parenthesis)
 					go_to_next_token
+				end
+				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
+					skip_parenthesis (opening_bracket, closing_bracket)
+					go_to_next_token
+					processed_type := process_bracket_type (processed_type)
 				end
 				error := error or else not (after_searched_token or else token_image_is_same_as_word (current_token, Period))
 				go_to_next_token
@@ -647,6 +657,11 @@ feature {NONE}-- Implementation
 			l_token : EDITOR_TOKEN
 			l_line: EDITOR_LINE
 		do
+			if token_image_is_same_as_word (current_token, closing_bracket) then
+				go_to_previous_token
+				skip_parenthesis_backward (opening_bracket, closing_bracket)
+				go_to_previous_token
+			end
 			go_to_previous_token
 			if current_token /= Void then
 				if
@@ -666,18 +681,21 @@ feature {NONE}-- Implementation
 						if token_image_is_same_as_word (current_token, Closing_parenthesis) then
 								-- if we find a closing parenthesis, we go directly to the corresponding
 								-- opening parenthesis
-							from
-								par_cnt:= - 1
-							until
-								par_cnt = 0 or else current_token = Void
-							loop
-								go_to_previous_token
-								if token_image_is_same_as_word (current_token, Closing_parenthesis) then
-									par_cnt:= par_cnt - 1
-								elseif token_image_is_same_as_word (current_token, Opening_parenthesis) then
-									par_cnt:= par_cnt + 1
-								end
-							end
+							go_to_previous_token
+							skip_parenthesis_backward (opening_parenthesis, closing_parenthesis)
+							error := current_token = Void
+								-- we reached the closing parenthesis
+								-- we go back one token further if parenthesis seem to be arguments
+							go_to_previous_token
+							stop := token_image_is_in_array (current_token, closing_separators) or else
+								token_image_is_in_array (current_token, parenthesis) or else
+									(is_keyword (current_token) and then not token_image_is_in_array (current_token, special_keywords))
+						end
+						if token_image_is_same_as_word (current_token, closing_bracket) then
+								-- if we find a closing parenthesis, we go directly to the corresponding
+								-- opening parenthesis
+							go_to_previous_token
+							skip_parenthesis_backward (opening_bracket, closing_bracket)
 							error := current_token = Void
 								-- we reached the closing parenthesis
 								-- we go back one token further if parenthesis seem to be arguments
@@ -1323,6 +1341,36 @@ feature {NONE}-- Implementation
 			end
 		end
 
+	process_bracket_type (a_processed_type: TYPE_A): TYPE_A
+			-- Process when encountering brackets.
+		require
+			a_process_type_not_void: a_processed_type /= Void
+		local
+			type: TYPE_A
+			l_feature: FEATURE_I
+
+		do
+			if a_processed_type.associated_class /= Void then
+				if a_processed_type.associated_class.has_feature_table then
+					l_feature := a_processed_type.associated_class.feature_table.alias_item (bracket_str)
+					error := l_feature = Void
+					if l_feature /= Void then
+						type := l_feature.type
+					end
+					if type /= Void then
+						if type.is_loose then
+							Result := type.instantiation_in (a_processed_type, a_processed_type.associated_class.class_id)
+							if Result /= Void then
+								Result := Result.actual_type
+							end
+						else
+							Result := type
+						end
+					end
+				end
+			end
+		end
+
 feature {NONE}-- Implementation
 
 	local_evaluated_type (a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A is
@@ -1522,13 +1570,13 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	skip_parenthesis (opening_char, closing_char: CHARACTER) is
+	skip_parenthesis (opening_char, closing_char: STRING) is
 		local
 			op, cl: STRING
 			par_cnt: INTEGER
 		do
-			op := opening_char.out
-			cl := closing_char.out
+			op := opening_char
+			cl := closing_char
 			from
 				par_cnt:= 1
 			until
@@ -1538,6 +1586,28 @@ feature {NONE}-- Implementation
 				if token_image_is_same_as_word (current_token, cl) then
 					par_cnt:= par_cnt - 1
 				elseif token_image_is_same_as_word (current_token, op) then
+					par_cnt:= par_cnt + 1
+				end
+			end
+			error := error or else current_token = Void
+		end
+
+	skip_parenthesis_backward (opening_char, closing_char: STRING) is
+		local
+			op, cl: STRING
+			par_cnt: INTEGER
+		do
+			op := opening_char
+			cl := closing_char
+			from
+				par_cnt:= 1
+			until
+				par_cnt = 0 or else current_token = Void
+			loop
+				go_to_previous_token
+				if token_image_is_same_as_word (current_token, op) then
+					par_cnt:= par_cnt - 1
+				elseif token_image_is_same_as_word (current_token, cl) then
 					par_cnt:= par_cnt + 1
 				end
 			end

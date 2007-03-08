@@ -1113,16 +1113,16 @@ feature {NONE} -- Implementation
 				if token_image_is_same_as_word (current_token, "create") then
 					go_to_next_token
 					is_create := True
-					error := not token_image_is_same_as_word (current_token, "{")
+					error := not token_image_is_same_as_word (current_token, opening_brace)
 					if not error then
 						go_to_next_token
 						error := current_token = Void
 						if not error then
 							Result := type_of_class_corresponding_to_current_token
-							skip_parenthesis ('{', '}')
+							skip_parenthesis (opening_brace, closing_brace)
 						end
 					end
-				elseif token_image_is_same_as_word (current_token, "(") then
+				elseif token_image_is_same_as_word (current_token, opening_parenthesis) then
 						-- if we find a closing parenthesis, we go directly to the corresponding
 						-- opening parenthesis
 					par_cnt:= 1
@@ -1133,9 +1133,9 @@ feature {NONE} -- Implementation
 					loop
 						go_to_next_token
 						exp.extend (current_token)
-						if token_image_is_same_as_word (current_token, ")") then
+						if token_image_is_same_as_word (current_token, closing_parenthesis) then
 							par_cnt:= par_cnt - 1
-						elseif token_image_is_same_as_word (current_token, "(") then
+						elseif token_image_is_same_as_word (current_token, opening_parenthesis) then
 							par_cnt:= par_cnt + 1
 						end
 					end
@@ -1152,12 +1152,12 @@ feature {NONE} -- Implementation
 					name := current_token.image.as_lower
 					if name.is_equal ("precursor") then
 						go_to_next_token
-						if token_image_is_same_as_word (current_token, "{") then
+						if token_image_is_same_as_word (current_token, opening_brace) then
 							go_to_next_token
 							error := error or else current_token = Void
 							if not error then
 								Result := type_of_class_corresponding_to_current_token
-								skip_parenthesis ('{', '}')
+								skip_parenthesis (opening_brace, closing_brace)
 								if Result /= Void and then Result.associated_class /= Void then
 									if Result.associated_class.has_feature_table then
 										feat := Result.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
@@ -1214,9 +1214,14 @@ feature {NONE} -- Implementation
 					end
 				end
 				go_to_next_token
-				if not error and then token_image_is_same_as_word (current_token, "(") then
-					skip_parenthesis ('(', ')')
+				if not error and then token_image_is_same_as_word (current_token, opening_parenthesis) then
+					skip_parenthesis (opening_parenthesis, closing_parenthesis)
 					go_to_next_token
+				end
+				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
+					skip_parenthesis (opening_bracket, closing_bracket)
+					go_to_next_token
+					Result := process_bracket_type (Result)
 				end
 				if not error then
 					if after_searched_token then
@@ -1280,9 +1285,14 @@ feature {NONE} -- Implementation
 					end
 				end
 				go_to_next_token
-				if token_image_is_same_as_word (current_token, "(") then
-					skip_parenthesis ('(', ')')
+				if token_image_is_same_as_word (current_token, opening_parenthesis) then
+					skip_parenthesis (opening_parenthesis, closing_parenthesis)
 					go_to_next_token
+				end
+				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
+					skip_parenthesis (opening_bracket, closing_bracket)
+					go_to_next_token
+					Result := process_bracket_type (Result)
 				end
 				error := error or else not (after_searched_token or else token_image_is_same_as_word (current_token, "."))
 				is_create := is_create and then after_searched_token

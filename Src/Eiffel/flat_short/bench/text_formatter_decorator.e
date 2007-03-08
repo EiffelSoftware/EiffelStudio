@@ -871,7 +871,7 @@ feature -- Text formatter decorator
 			text_formatter.process_class_name_text (text, a_class, a_quote)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		do
 			if not without_tabs and then not tabs_emitted then

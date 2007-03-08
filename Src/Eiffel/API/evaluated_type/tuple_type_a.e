@@ -11,7 +11,7 @@ inherit
 	GEN_TYPE_A
 		redefine
 			good_generics, error_generics, check_constraints,
-			is_tuple, conform_to, type_i, process
+			is_tuple, conform_to, type_i, process, valid_generic
 		end
 
 create
@@ -30,6 +30,31 @@ feature -- Properties
 	is_tuple: BOOLEAN is True
 
 feature {COMPILER_EXPORTER} -- Primitives
+
+	valid_generic (type: CL_TYPE_A): BOOLEAN is
+			-- Check generic parameters
+		local
+			i, nb: INTEGER
+			l_tuple: TUPLE_TYPE_A
+			l_tuple_generics: like generics
+		do
+			l_tuple ?= type
+			if l_tuple /= Void then
+				from
+					i := 1
+					l_tuple_generics := l_tuple.generics
+					nb := generics.count
+					Result := nb <= l_tuple_generics.count
+				until
+					i > nb or else not Result
+				loop
+					Result := l_tuple_generics.item (i).conform_to (generics.item (i))
+					i := i + 1
+				end
+			else
+				Result := Precursor {GEN_TYPE_A} (type)
+			end
+		end
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?

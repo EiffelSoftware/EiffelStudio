@@ -71,6 +71,12 @@ feature -- Fixed shortcuts
 			create Result.make (names.fs_redo_command, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), False, True, False)
 		end
 
+	debug_menu_shortcut: EB_FIXED_SHORTCUT is
+			-- Shortcut for debug menu
+		once
+			create Result.make (names.fs_debug_menu, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d), True, True, False)
+		end
+
 feature {NONE} -- Initializing fixed shortcuts
 
 	initialize_fixed_shortcuts is
@@ -81,6 +87,7 @@ feature {NONE} -- Initializing fixed shortcuts
 			undo_shortcut.set_group (main_window_group)
 			redo_shortcut.set_group (main_window_group)
 			close_window_shortcut.set_group (main_window_group)
+			debug_menu_shortcut.set_group (main_window_group)
 		end
 
 feature {NONE} -- Preference Strings

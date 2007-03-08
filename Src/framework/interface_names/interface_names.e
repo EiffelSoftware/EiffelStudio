@@ -1487,6 +1487,7 @@ feature -- Fixed shortcut names
 	fs_select_all: STRING_GENERAL is				do Result := locale.translate ("Select all") end
 	fs_indent: STRING_GENERAL is					do Result := locale.translate ("Indent") end
 	fs_unindent: STRING_GENERAL is					do Result := locale.translate ("Unindent") end
+	fs_debug_menu: STRING_GENERAL is				do Result := locale.translate ("Debug menu") end
 
 feature -- Title part
 

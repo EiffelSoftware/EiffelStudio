@@ -29,6 +29,7 @@ feature -- Command
 			build_project_menu
 			build_debug_menu
 			build_tools_menu
+			build_refactoring_menu
 			build_window_menu
 			build_help_menu
 				-- Build the menu bar.
@@ -62,6 +63,41 @@ feature -- Command
 			-- develop_window.menus.update_debug_menu
 		end
 
+	build_refactoring_menu is
+			-- Create and build `refactoring_menu'.
+		local
+			l_command_menu_item: EB_COMMAND_MENU_ITEM
+			l_refactoring_menu: EV_MENU
+		do
+			create l_refactoring_menu.make_with_text (develop_window.Interface_names.m_refactoring)
+			develop_window.menus.set_refactoring_menu (l_refactoring_menu)
+
+				-- Pull up command.
+			l_command_menu_item := develop_window.refactoring_manager.pull_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_refactoring_menu.extend (l_command_menu_item)
+
+				-- Rename command.
+			l_command_menu_item := develop_window.refactoring_manager.rename_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_refactoring_menu.extend (l_command_menu_item)
+
+				-- Separator -------------------------------------------------
+			l_refactoring_menu.extend (create {EV_MENU_SEPARATOR})
+
+				-- Undo command.
+			l_command_menu_item := develop_window.refactoring_manager.undo_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_refactoring_menu.extend (l_command_menu_item)
+
+				-- Redo command.
+			l_command_menu_item := develop_window.refactoring_manager.redo_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_refactoring_menu.extend (l_command_menu_item)
+		ensure
+			refactoring_menu_created: develop_window.menus.refactoring_menu /= Void
+		end
+
 	build_menu_bar is
 			-- Build the menu bar
 		local
@@ -93,6 +129,7 @@ feature -- Command
 				l_mb.extend (develop_window.menus.favorites_menu)
 				l_mb.extend (develop_window.menus.project_menu)
 				l_mb.extend (develop_window.menus.debug_menu)
+				l_mb.extend (develop_window.menus.refactoring_menu)
 			else
 				l_mb.extend (develop_window.menus.view_menu)
 			end

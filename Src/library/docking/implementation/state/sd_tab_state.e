@@ -187,9 +187,11 @@ feature -- Redefine
 			end
 
 			l_tab_zone ?= internal_content.state.zone
-			check not_void: l_tab_zone /= Void end
-			if l_tab_zone.contents.count >= l_selected_index then
-				l_tab_zone.select_item (l_tab_zone.contents.i_th (l_selected_index), False)
+			-- `l_tab_zone' maybe void (zone is docking zone), because `l_content' can't be found.
+			if l_tab_zone /= Void then
+				if l_tab_zone.contents.count >= l_selected_index then
+					l_tab_zone.select_item (l_tab_zone.contents.i_th (l_selected_index), False)
+				end
 			end
 
 			if a_data.is_minimized then
@@ -199,7 +201,7 @@ feature -- Redefine
 			is_set_width_after_restore := True
 			is_set_height_after_restore := True
 
-			update_floating_zone_visible (l_tab_zone, a_data.is_visible)
+			update_floating_zone_visible (internal_content.state.zone, a_data.is_visible)
 		ensure then
 			restored:
 		end
@@ -432,17 +434,19 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 			l_state: SD_TAB_STATE
 		do
 			if is_set_width_after_restore then
-				from
-					-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
-					l_state ?= content.state
-					check not_void: l_state /= Void end
-					l_contents := l_state.zone.contents
-					l_contents.start
-				until
-					l_contents.after
-				loop
-					l_contents.item.state.set_last_floating_width (a_int)
-					l_contents.forth
+				-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
+				l_state ?= content.state
+				-- Maybe `l_state' is docking state, because some SD_CONTENT can't be found during `restore'				
+				if l_state /= Void then
+					from
+						l_contents := l_state.zone.contents
+						l_contents.start
+					until
+						l_contents.after
+					loop
+						l_contents.item.state.set_last_floating_width (a_int)
+						l_contents.forth
+					end
 				end
 				is_set_width_after_restore := False
 			end
@@ -459,17 +463,19 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 			l_state: SD_TAB_STATE
 		do
 			if is_set_height_after_restore then
-				from
-					-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
-					l_state ?= content.state
-					check not_void: l_state /= Void end
-					l_contents := l_state.zone.contents
-					l_contents.start
-				until
-					l_contents.after
-				loop
-					l_contents.item.state.set_last_floating_height (a_int)
-					l_contents.forth
+				-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
+				l_state ?= content.state
+				-- Maybe `l_state' is docking state, because some SD_CONTENT can't be found during `restore'
+				if l_state /= Void then
+					from
+						l_contents := l_state.zone.contents
+						l_contents.start
+					until
+						l_contents.after
+					loop
+						l_contents.item.state.set_last_floating_height (a_int)
+						l_contents.forth
+					end
 				end
 				is_set_height_after_restore := False
 			end

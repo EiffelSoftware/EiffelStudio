@@ -41,6 +41,9 @@ feature -- Query
 	debug_menu: EV_MENU
 			-- Debug ID menu.
 
+	refactoring_menu: EV_MENU
+			-- Refactoring menu.
+
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
@@ -108,6 +111,14 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			debug_menu := a_menu
 		ensure
 			set: debug_menu = a_menu
+		end
+
+	set_refactoring_menu (a_menu: like refactoring_menu) is
+			-- Set `refactoring_menu'
+		do
+			refactoring_menu := a_menu
+		ensure
+			set: refactoring_menu = a_menu
 		end
 
 	set_debugging_tools_menu (a_menu: like debugging_tools_menu) is
@@ -240,6 +251,9 @@ feature -- Recycle
 			if debug_menu /= Void then
 				debug_menu.destroy
 			end
+			if refactoring_menu /= Void then
+				refactoring_menu.destroy
+			end
 			if debugging_tools_menu /= Void then
 				debugging_tools_menu.destroy
 			end
@@ -255,6 +269,7 @@ feature -- Recycle
 			format_menu := Void
 			compile_menu := Void
 			debug_menu := Void
+			refactoring_menu := Void
 			debugging_tools_menu := Void
 			favorites_menu := Void
 			view_menu := Void

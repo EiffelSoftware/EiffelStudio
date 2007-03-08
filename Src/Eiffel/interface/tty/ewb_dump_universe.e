@@ -24,45 +24,32 @@ feature
 
 	execute is
 		do
---			dump_cluster (Universe.clusters)
+			dump_cluster (Universe.all_classes)
 		end
 
-	dump_cluster (cs: LINEAR [CLUSTER_I]) is
+	dump_cluster (cs: DS_HASH_SET [CLASS_I]) is
 		local
-			l: LINEAR [CLASS_I]
-			s: STRING
 			fd: EWB_DUMP_FEATURES
+			l_class: CLASS_I
 		do
 			from
 				cs.start
 			until
 				cs.after
 			loop
-				if cs.item.sub_clusters /= Void then
-					dump_cluster (cs.item.sub_clusters)
-				end
-				if cs.item.classes /= Void then
-					from
-						l := cs.item.classes.linear_representation
-						l.start
-					until
-						l.after
-					loop
-						if l.item.is_compiled then
-							s := l.item.name
-							s.to_upper
-							print (s + "%N")
-							create fd.make (s)
-							fd.enable_operand_dump
-							fd.execute
-							print ("%N")
-						end
-						l.forth
-					end
+				l_class := cs.item_for_iteration
+				if
+					l_class /= Void and then
+					l_class.is_compiled
+				then
+					print (l_class.name + "%N")
+					create fd.make (l_class.name)
+					fd.enable_operand_dump
+					fd.execute
+					print ("%N")
 				end
 				cs.forth
 			end
-
 		end
 
 indexing

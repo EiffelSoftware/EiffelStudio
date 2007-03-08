@@ -27,45 +27,30 @@ feature
 	execute is
 			-- Dump class information.
 		do
---			dump_cluster (Universe.clusters)
+			dump_cluster (Universe.all_classes)
 		end
 
-	dump_cluster (cs: LINEAR [CLUSTER_I]) is
+	dump_cluster (cs: DS_HASH_SET [CLASS_I]) is
 			-- Recursive function called by `execute'.
 		local
-			l: LINEAR [CLASS_I]
-			s: STRING
+			l_class: CLASS_I
 		do
 			from
 				cs.start
 			until
 				cs.after
 			loop
-				if cs.item.sub_clusters /= Void then
-					dump_cluster (cs.item.sub_clusters)
-				end
-				if cs.item.classes /= Void then
-					from
-						l := cs.item.classes.linear_representation
-						l.start
-					until
-						l.after
-					loop
-						if
-							l.item.is_compiled and
-							not l.item.compiled_class.is_deferred and
-							l.item.compiled_class.creators.has ("default_create")
-						then
-							s := l.item.name
-							s.to_upper
-							print (s + "%N")
-						end
-						l.forth
-					end
+				l_class := cs.item_for_iteration
+				if
+					l_class /= Void and then
+					l_class.is_compiled and then
+					not l_class.compiled_class.is_deferred and then
+					l_class.compiled_class.allows_default_creation
+				then
+					print (l_class.name + "%N")
 				end
 				cs.forth
 			end
-
 		end
 
 indexing

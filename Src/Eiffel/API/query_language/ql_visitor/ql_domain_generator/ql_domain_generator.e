@@ -264,7 +264,7 @@ feature -- Domain visit
 			then
 					-- Evaluate result domain using optimization.
 				is_temp_domain_used := False
-				l_criterion.intrinsic_domain.content.do_all (agent on_item_satisfied_by_criterion ({QL_ITEM}?, False))
+				l_criterion.intrinsic_domain.content.do_all (agent on_item_satisfied_by_criterion ({like item_type}?, False))
 			else
 					-- Evaluate result domain without optimization.
 				is_temp_domain_used := True

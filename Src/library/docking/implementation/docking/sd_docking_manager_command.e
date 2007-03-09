@@ -205,7 +205,6 @@ feature -- Commands
 			-- Update all zones' title bar size for mini tool bar widgets new size.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_zone: SD_ZONE
 		do
 			if a_content /= Void then
 				a_content.update_mini_tool_bar_size

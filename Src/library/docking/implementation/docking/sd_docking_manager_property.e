@@ -68,8 +68,6 @@ feature -- Properties
 	main_area_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Main area (editor area) drop acitons.
 			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
-		local
-			l_zones: SD_DOCKING_MANAGER_ZONES
 		do
 			Result := internal_docking_manager.zones.place_holder_widget.drop_actions
 		ensure

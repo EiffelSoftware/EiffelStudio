@@ -8,7 +8,6 @@ class
 	ES_GRID_RESIZING_BEHAVIOR
 
 inherit
-
 	EV_SHARED_APPLICATION
 
 create
@@ -21,6 +20,8 @@ feature {NONE} -- Resizing : initialization
 			grid := g
 			edge_size := 3
 			create disabled_resize_columns.make_default
+			create header_resize_start_actions
+			create header_resize_end_actions
 		end
 
 feature -- Properties
@@ -33,6 +34,12 @@ feature -- Properties
 
 	disabled_resize_columns: DS_HASH_SET [INTEGER]
 			-- Columns that don't allow resizing.
+
+	header_resize_start_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM]]
+			-- Actions to be performed when resize starts
+
+	header_resize_end_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM]]
+			-- Actions to be performed when resize ends
 
 feature -- Change
 
@@ -209,6 +216,7 @@ feature {NONE} -- Actions
 	start_resizing (x_pos, y_pos: INTEGER_32) is
 		local
 			vx,vy: INTEGER_32
+			l_header: EV_HEADER_ITEM
 		do
 			is_resize_mode := True
 
@@ -228,9 +236,16 @@ feature {NONE} -- Actions
 			grid.pointer_button_press_actions.block
 			grid.pointer_button_release_actions.extend (release_resize_agent)
 			grid.pointer_leave_actions.extend (leave_resize_agent)
+
+			if resize_index > 0 and resize_index < grid.header.count then
+				l_header := grid.header.i_th (resize_index)
+			end
+			header_resize_start_actions.call ([l_header])
 		end
 
 	end_resizing is
+		local
+			l_header: EV_HEADER_ITEM
 		do
 			grid.pointer_button_release_actions.prune_all (release_resize_agent)
 			grid.pointer_leave_actions.prune_all (leave_resize_agent)
@@ -241,6 +256,11 @@ feature {NONE} -- Actions
 			grid.pointer_button_press_item_actions.resume
 			grid.pointer_button_press_actions.resume
 			is_resize_mode := False
+
+			if resize_index > 0 and resize_index < grid.header.count then
+				l_header := grid.header.i_th (resize_index)
+			end
+			header_resize_end_actions.call ([l_header])
 		end
 
 feature -- Status
@@ -263,6 +283,8 @@ feature {NONE} -- Implementation
 
 invariant
 	disabled_resize_columns_not_void: disabled_resize_columns /= Void
+	header_resize_start_actions_attached: header_resize_start_actions /= Void
+	header_resize_end_actions_attached: header_resize_end_actions /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -9,13 +9,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EVS_GRID_WRAPPER [G]
 
 inherit
 	EVS_UTILITY
 
 	EVS_GRID_UTILITY
+
+create
+	make
 
 feature{NONE} -- Initialization
 

@@ -75,6 +75,55 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	component_index_at_pointer_position: INTEGER is
+			-- 1-based Index component at current pointer position
+			-- 0 if no such component is fould.
+		local
+			l_coordinate: EV_COORDINATE
+			l_pos: like component_position
+			l_item: like component_type
+			l_rec: EV_RECTANGLE
+		do
+			l_coordinate := relative_pointer_position (grid_item)
+			l_pos := component_position
+			if not l_pos.is_empty then
+				from
+					l_pos.start
+				until
+					l_pos.after or Result > 0
+				loop
+					l_rec := l_pos.item
+					if l_rec.has_x_y (l_coordinate.x, l_coordinate.y) then
+						Result := l_pos.index
+					else
+						l_pos.forth
+					end
+				end
+			end
+		end
+
+	pick_component (i: INTEGER): ANY is
+			-- Try pick on the `i'-th component,
+			-- return picked pebble.
+		require
+			i_valid: i > 0
+		local
+			l_coordinate: EV_COORDINATE
+			l_item: like component_type
+			l_rec: EV_RECTANGLE
+			l_last_picked_item: INTEGER
+		do
+			if i <= component_position.count then
+				l_coordinate := relative_pointer_position (grid_item)
+				l_rec := component_position.i_th (i)
+				if i <= component_count then
+					l_item := component (i)
+					l_item.on_pick (l_coordinate.x - l_rec.x, l_coordinate.y - l_rec.y)
+					Result := l_item.last_pebble
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_pointer_in_component: BOOLEAN
@@ -387,7 +436,9 @@ feature{NONE} -- component actions maintaining
 						end
 					end
 					l_positions.forth
-					l_components.forth
+					if not l_components.after then
+						l_components.forth
+					end
 				end
 			end
 		end

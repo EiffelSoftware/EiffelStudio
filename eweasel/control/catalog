@@ -1033,6 +1033,7 @@ test	feature-call-on-basic-generic	exec266 tcf pass execution generic basic
 test	expanded-formal-attached-to-reference	exec267 tcf pass execution generic basic
 test	tuple-with-basic-type		exec268 tcf pass execution generic basic
 test	signed-unsigned-in-inspect	exec269 tcf pass execution inspect
+test	mixed-basic-type-operations	exec270 tcf pass execution inspect
 
 
 

@@ -997,6 +997,15 @@ feature -- Implementation
 		is
 			-- Process call to `a_name' in context of `a_type' with `a_params' if ANY.
 			-- If `is_static' it is a static call.
+			--
+			-- `a_type': Target on which feature is called
+			-- `a_precursor_type': Target type of precursor call, i.e Precursor {A_PRECURSOR_TARGET_TYPE} (a_params)
+			-- `a_name': Name of called feature
+			-- `a_feature': Feature object if alredy known
+			-- `a_params': List of parameters to the call
+			-- `is_static': Indicates a static call (C external or constant)
+			-- `is_qualified': True => Call of the form 'a.b' / False => Call of the form 'b'
+			-- `is_precursor': True => Call of the form Precursor {A_PRECURSOR_TYPE} (a_params)
 		require
 			a_type_not_void: a_type /= Void
 			a_precursor_type_not_void: is_precursor implies a_precursor_type /= Void

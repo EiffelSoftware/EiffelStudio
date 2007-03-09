@@ -64,6 +64,13 @@ inherit
 			{NONE} all
 		end
 
+	CONF_ACCESS
+
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 feature -- Loading
 
 	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN) is
@@ -243,6 +250,147 @@ feature -- Loading
 			if not has_error then
 				converted_file_name := config_file_name.twin
 			end
+		end
+
+	open_single_file_compilation_project (a_class_filename: STRING; a_libraries: LIST [STRING]; a_project_path: STRING; from_scratch: BOOLEAN) is
+			-- Open project for a single file compilation.
+			--
+			-- `a_class_filename': Filename of Eiffel class which acts as root
+			-- `a_libraries': List of libraries which should be included
+			-- `a_project_path': Path of project
+			-- `from_scratch': Indicates if a clean is requested before compilation
+		require
+			a_class_filename_not_void: a_class_filename /= Void
+		local
+			l_directory, l_filename, l_target_name, l_config_file_name: STRING
+			l_file: RAW_FILE
+			l_factory: CONF_FACTORY
+			l_system: CONF_SYSTEM
+			l_target: CONF_TARGET
+			l_root: CONF_ROOT
+			l_file_location: CONF_FILE_LOCATION
+			l_directory_location: CONF_DIRECTORY_LOCATION
+			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
+			l_precompile: CONF_PRECOMPILE
+			l_no_gui_library: BOOLEAN
+		do
+				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
+				-- This will be split into:
+				--   l_directory: 'path/to/file'
+				--   l_filename: 'hello_world.e'
+				--   l_target_name: 'hello_world'
+			l_directory := file_system.dirname (a_class_filename)
+			l_filename := file_system.basename (a_class_filename)
+			l_target_name := l_filename.twin
+			l_target_name.remove_tail (2)
+			l_config_file_name := file_system.pathname (l_directory, l_target_name + "." + config_extension)
+
+				-- Only create ecf if it does not exist yet
+			create l_file.make (l_config_file_name)
+			if not l_file.exists then
+				create l_factory
+
+					-- Configuration system
+				l_system := l_factory.new_system_generate_uuid (l_target_name)
+				l_system.set_file_name (l_config_file_name)
+
+					-- Configuration target
+				l_target := l_factory.new_target (l_target_name, l_system)
+				l_system.add_target (l_target)
+
+					-- Root class and feature
+				l_root := l_factory.new_root (l_target_name, l_target_name.as_upper, "make", False)
+				l_target.set_root (l_root)
+
+					-- Default to console application
+				l_target.update_setting ("console_application", "true")
+
+					-- Load libraries
+				if a_libraries /= Void and then a_libraries.count > 0 then
+						-- Check if there are no gui libraries
+					l_no_gui_library := a_libraries.for_all (
+						agent (a_library: STRING): BOOLEAN
+							require
+								a_library_not_void: a_library /= Void
+							do
+								Result := not (a_library.is_equal ("vision2") or a_library.is_equal ("wel"))
+							end
+					)
+					if not l_no_gui_library then
+						l_target.update_setting ("console_application", "false")
+					end
+
+						-- Todo: improve library adding. possible additions: a config file in $ISE_LIBRARY/config/xyz which
+						-- defines a mapping of library name to ecf files, e.g. as a ini file
+						-- At the moment this just takes the library name and assumes it is the directory and ecf name
+						-- in the '$ISE_LIBRARY/library' directory.
+					a_libraries.do_all (
+						agent (a_library: STRING; a_factory: CONF_FACTORY; a_target: CONF_TARGET)
+							require
+								a_library_not_void: a_library /= Void
+								a_factory_not_void: a_factory /= Void
+								a_target_not_void: a_target /= Void
+							local
+								ll_extension, ll_ecf_path: STRING
+								ll_file_location: CONF_FILE_LOCATION
+								ll_library: CONF_LIBRARY
+							do
+									-- Get extension of library argument
+								ll_extension := a_library.twin
+								ll_extension.keep_tail (4)
+								if ll_extension.is_equal ("." + config_extension) then
+										-- The library is specified as full path to ecf file, just add location
+									ll_file_location := a_factory.new_location_from_full_path (a_library, a_target)
+								else
+										-- The library is specified as name only. Guess location
+										-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
+									ll_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + "." + config_extension
+									ll_file_location := a_factory.new_location_from_full_path (ll_ecf_path, a_target)
+										-- Todo: check if location exist and raise an error if it does not
+
+										-- Todo: check if library can be used as precompile (e.g. Vision2)
+								end
+									-- Add library to ecf target
+								ll_library := a_factory.new_library (a_library, ll_file_location, a_target)
+								a_target.add_library (ll_library)
+							end
+							(?, l_factory, l_target)
+					)
+				end
+
+					-- Add 'current directory' as root cluster
+				l_directory_location := l_factory.new_location_from_path ("./", l_target)
+				l_cluster := l_factory.new_cluster (l_target_name, l_directory_location, l_target)
+				l_target.add_cluster (l_cluster)
+
+					-- Add base library
+				l_file_location := l_factory.new_location_from_full_path ("$ISE_LIBRARY/library/base/base.ecf", l_target)
+				l_library := l_factory.new_library ("base", l_file_location, l_target)
+				l_target.add_library (l_library)
+
+				if l_target.precompile = Void then
+						-- No precompile is set, add base as precompile
+					l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base.ecf", l_target)
+					l_target.set_precompile (l_precompile)
+				end
+
+					-- Safe config file to disk
+				l_system.store
+			else
+					-- ecf exists
+
+					-- Todo: load ecf and check if all specified libraries are added, otherwise add them and save
+
+					-- Load ecf
+					-- Load default target
+					-- If it does not exist, create the target (move above code which creates `l_target' into it's own feature to reuse this)
+					-- If it exists, check libraries and 'console_application' flag
+					-- If changes were necessary, save ecf
+			end
+
+				-- Now that an ecf exists, call the normal project loading with the new ecf.
+			open_project_file (l_config_file_name, l_target_name, a_project_path, from_scratch)
 		end
 
 feature -- Access

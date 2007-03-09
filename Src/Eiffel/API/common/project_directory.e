@@ -321,7 +321,47 @@ feature -- Files
 				internal_lock_file_name := Result
 			end
 		ensure
-			locl_file_name_not_void: Result /= Void
+			lock_file_name_not_void: Result /= Void
+		end
+
+	workbench_executable_file_name: FILE_NAME
+			-- Path to executable of workbench mode.
+		do
+			create Result.make_from_string (workbench_path)
+			Result.set_file_name (executable_file_name)
+		ensure
+			workbench_executable_file_name_not_void: Result /= Void
+		end
+
+	final_executable_file_name: FILE_NAME
+			-- Path to executable of finalized mode.
+		do
+			create Result.make_from_string (final_path)
+			Result.set_file_name (executable_file_name)
+		ensure
+			final_executable_file_name_not_void: Result /= Void
+		end
+
+	single_file_compilation_executable_file_name: FILE_NAME
+			-- Path to executable location after single file compilation mode.
+		do
+				-- The executable will be copied into the current working directory.
+			create Result.make
+			Result.set_file_name (executable_file_name)
+		ensure
+			single_file_compilation_executable_file_name_not_void: Result /= Void
+		end
+
+	executable_file_name: FILE_NAME
+			-- File name of executable.
+		do
+			if platform_constants.is_windows then
+				create Result.make_from_string (target + ".exe")
+			else
+				create Result.make_from_string (target)
+			end
+		ensure
+			executable_file_name_not_void: Result /= Void
 		end
 
 feature -- Status report

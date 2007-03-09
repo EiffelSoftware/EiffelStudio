@@ -106,6 +106,8 @@ feature {NONE}
 
 	Language_cmd_name: STRING is "language"
 
+	library_cmd_name: STRING is "library"
+
 	loop_cmd_name: STRING is "loop"
 
 	loop_help_cmd_name: STRING is "help"
@@ -159,6 +161,8 @@ feature {NONE}
 	short_cmd_name: STRING is "short"
 
 	show_subqueries_cmd_name: STRING is "show"
+
+	single_file_compilation_cmd_name: STRING is "class_file.e"
 
 	statistics_cmd_name: STRING is "statistics"
 

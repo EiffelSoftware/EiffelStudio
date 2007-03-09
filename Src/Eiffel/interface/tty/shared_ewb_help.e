@@ -112,6 +112,8 @@ feature {NONE}
 
 	Language_help: STRING_GENERAL is do Result := locale.translate ("specify language (eiffel, c, cycles)") end
 
+	library_help: STRING_GENERAL is do Result := locale.translate ("specify a library for single file compilation") end
+
 	loop_help: STRING_GENERAL is do Result := locale.translate ("run ec as a command loop") end
 
 	loop_help_help: STRING_GENERAL is do Result := locale.translate ("show list of commands") end
@@ -167,6 +169,8 @@ feature {NONE}
 	run_prof_help: STRING_GENERAL is do Result := locale.translate ("run the query") end
 
 	Self_sec_help: STRING_GENERAL is do Result := locale.translate (" output of time spent in a function itself") end
+
+	single_file_compilation_help: STRING_GENERAL is do Result := locale.translate ("specify a class file for single file compilation") end
 
 	short_help: STRING_GENERAL is do Result := locale.translate ("show the short form of a class") end
 

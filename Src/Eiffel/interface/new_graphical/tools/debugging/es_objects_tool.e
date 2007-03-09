@@ -279,9 +279,7 @@ feature {NONE} -- Interface
 			slices_cmd.enable_sensitive
 			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
 
-			create pretty_print_cmd.make
-			pretty_print_cmd.enable_sensitive
-			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (object_viewer_cmd.new_mini_toolbar_item)
 
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
@@ -760,7 +758,6 @@ feature -- Status Setting
 		do
 			reset_update_on_idle
 			displayed_objects.wipe_out
-			pretty_print_cmd.end_debug
 			if current_object /= Void then
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
@@ -942,6 +939,11 @@ feature {NONE} -- Commands Implementation
 	remove_debugged_object_cmd: EB_STANDARD_CMD
 			-- Command that is used to remove objects from the tree.
 
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+		do
+			Result := debugger_manager.object_viewer_cmd
+		end
+
 feature {NONE} -- Implementation
 
 	current_stack_element: CALL_STACK_ELEMENT is
@@ -982,7 +984,6 @@ feature {NONE} -- Implementation
 				l_status := l_app.status
 			end
 			if l_status /= Void then
-				pretty_print_cmd.refresh
 				if l_status.is_stopped and dbg_was_stopped then
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
 						from
@@ -1667,7 +1668,7 @@ feature {NONE} -- Impl : Stack objects grid
 				then
 					if grid.selected_rows.count > 0 then
 						ost ?= grid.grid_pebble_from_row_and_column (grid.selected_rows.first, Void)
-						pretty_print_cmd.set_stone (ost)
+						object_viewer_cmd.set_stone (ost)
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_enter then

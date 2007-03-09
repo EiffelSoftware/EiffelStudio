@@ -44,7 +44,6 @@ feature -- Initialization
 			-- Initialize `Current' and associate it with `tool'.
 		do
 			tool := a_tool
-			for_tool := True
 		end
 
 feature -- Access
@@ -82,13 +81,7 @@ feature -- Access
 feature -- Status report
 
 	tool: ES_OBJECTS_GRID_MANAGER
-			-- Object tool `Current' is associated with. `Void' iff not `for_tool'.
-
-	pretty_dlg: EB_PRETTY_PRINT_DIALOG
-			-- Dialog `Current' is associated with. `Void' iff `for_tool'.
-
-	for_tool: BOOLEAN
-			-- Is `Current' associated with an object tool or with a pretty print dialog?
+			-- Object tool `Current' is associated with. `Void' if not `for_tool'.
 
 	name: STRING is
 			-- Name of the command.
@@ -107,25 +100,23 @@ feature -- Execution
 	execute is
 			-- Change the default slice limits through a dialog box.
 		do
-			if for_tool then
-				get_slice_limits_on_global
+			get_slice_limits_on_global
 
-				debugger_manager.set_slices (slice_min, slice_max)
-				debugger_manager.set_displayed_string_size (displayed_string_size)
-				if set_as_default_requested then
-					set_as_default_requested := False
-					preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
-					preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
-					preferences.debugger_data.default_displayed_string_size_preference.set_value (debugger_manager.displayed_string_size)
-				end
+			debugger_manager.set_slices (slice_min, slice_max)
+			debugger_manager.set_displayed_string_size (displayed_string_size)
+			if set_as_default_requested then
+				set_as_default_requested := False
+				preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
+				preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
+				preferences.debugger_data.default_displayed_string_size_preference.set_value (debugger_manager.displayed_string_size)
+			end
 
-				debug ("debugger_interface")
-					io.put_string ("Messages are displayed%N")
-				end
-				if refresh_tools_requested then
-					refresh_tools_requested := False
-					eb_debugger_manager.refresh_objects_grids
-				end
+			debug ("debugger_interface")
+				io.put_string ("Messages are displayed%N")
+			end
+			if refresh_tools_requested then
+				refresh_tools_requested := False
+				eb_debugger_manager.refresh_objects_grids
 			end
 		end
 
@@ -146,49 +137,37 @@ feature -- Basic operations
 			obj_grid_item: ES_OBJECTS_GRID_LINE
 			conv_obj: OBJECT_STONE
 			conv_fost: FEATURE_ON_OBJECT_STONE
-			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			l_item: EV_ANY
 			l_addr: STRING
-			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
-			if for_tool then
-				conv_obj ?= st
-				if conv_obj = Void then
-					conv_fost ?= st
-					if conv_fost /= Void then
-						conv_obj := conv_fost.object_stone
-					end
+			conv_obj ?= st
+			if conv_obj = Void then
+				conv_fost ?= st
+				if conv_fost /= Void then
+					conv_obj := conv_fost.object_stone
 				end
-				if conv_obj /= Void then
-					l_item ?= conv_obj.ev_item
-					if l_item /= Void then
-						obj_grid_item ?= l_item.data
-					end
-					if obj_grid_item = Void and then tool /= Void and then conv_obj.object_address /= Void then
-						check
-							tool /= Void
-							-- XR: This shouldn't happen (no toolbar button for
-							-- this command in the pretty print dialog!)
-						end
-						l_addr := conv_obj.object_address
-						if l_addr /= Void then
-							obj_grid_item := tool.objects_grid_item (l_addr)
-						end
-					end
-					Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
+			end
+			obj_grid_item := object_grid_line_for (conv_obj)
+			Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
+		end
+
+	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_LINE is
+			-- Object grid line related to `ost if any.
+		local
+			obj_grid_item: ES_OBJECTS_GRID_LINE
+			l_item: EV_ANY
+			l_addr: STRING
+		do
+			if ost /= Void then
+				l_item := ost.ev_item
+				if l_item /= Void then
+					Result ?= l_item.data
 				end
-			else
-				l_addr := pretty_dlg.current_object.object_address
-				if debugger_manager.is_dotnet_project then
-						--| not working in case of not registered object
-					app_impl ?= debugger_manager.application
-					check app_impl /= Void end
-					if app_impl.know_about_kept_object (l_addr) then
-						nat_dv ?= app_impl.kept_object_item (l_addr)
+				if Result = Void	then
+					l_addr := ost.object_address
+					if tool /= Void	and l_addr /= Void then
+						Result := tool.objects_grid_item (l_addr)
 					end
-					Result := nat_dv /= Void
-				else
-					Result := debugged_object_manager.object_at_address_is_special (l_addr)
 				end
 			end
 		end
@@ -434,11 +413,7 @@ feature {NONE} -- Implementation
 			debug ("debugger_interface")
 				io.put_string ("displaying the dialog%N")
 			end
-			if for_tool then
-				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
-			else
-				dial.show_modal_to_window (pretty_dlg.dialog)
-			end
+			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
 	on_cb_disp_str_limit_cb (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD) is
@@ -482,21 +457,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 				io.put_string ("dropped stone%N")
 			end
 
-			l_item := st.ev_item
-			if l_item /= Void then
-				obj_grid_item ?= l_item.data
-			end
-			if obj_grid_item = Void and then tool /= Void and then st.object_address /= Void then
-				check
-					tool /= Void
-					-- XR: This shouldn't happen (no toolbar button for
-					-- this command in the pretty print dialog!)
-				end
-				l_st_addr := st.object_address
-				if l_st_addr /= Void then
-					obj_grid_item := tool.objects_grid_item (l_st_addr)
-				end
-			end
+			obj_grid_item := object_grid_line_for (st)
 			if obj_grid_item /= Void and then obj_grid_item.object_is_special_value then
 				debug ("debugger_interface")
 					io.put_string ("Objects grid item found%N")

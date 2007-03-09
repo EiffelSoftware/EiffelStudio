@@ -27,12 +27,12 @@ feature {NONE} -- Initialization
 
 	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialization
-		require
-			a_dev_window_attached: a_dev_window /= Void
 		do
 			dev_window := a_dev_window
 			check_search_bar_visible_procedure := agent check_search_bar_visible
-			dev_window.window.focus_in_actions.extend (check_search_bar_visible_procedure)
+			if dev_window /= Void then
+				dev_window.window.focus_in_actions.extend (check_search_bar_visible_procedure)
+			end
 			make_editor
 			initialize_customizable_commands
 		end
@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EB_EDITOR}
 			build_surrounding_widgets
-			build_search_bar
+			if dev_window /= Void then
+				build_search_bar
+			end
 		end
 
 	initialize_customizable_commands is
@@ -74,7 +76,9 @@ feature -- Access
 	search_tool: EB_MULTI_SEARCH_TOOL is
 			-- Current search tool.
 		do
-			Result := dev_window.tools.search_tool
+			if dev_window /= Void then
+				Result := dev_window.tools.search_tool
+			end
 		end
 
 feature -- Quick search bar basic operation
@@ -260,7 +264,7 @@ feature {NONE} -- Quick search bar.
 			-- Hide quick search bar.
 		do
 			Precursor {EB_EDITOR}
-			if not search_bar.is_destroyed and then search_bar.is_displayed then
+			if search_bar /= Void and then not search_bar.is_destroyed and then search_bar.is_displayed then
 				if not search_bar.has_focus_on_widgets and not focusing_search_bar then
 					hide_search_bar
 				else

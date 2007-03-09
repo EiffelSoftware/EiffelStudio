@@ -210,6 +210,14 @@ feature -- Status report
 			-- Is `last_stone' processed?
 			-- i.e., has `last_stone' been displayed in formatters of Current tool?
 
+	is_auto_hide: BOOLEAN is
+			-- Is current auto hide status?
+		do
+			if content /= Void then
+				Result := content.state_value = {SD_ENUMERATION}.auto_hide
+			end
+		end
+
 feature -- Status setting
 
 	close is

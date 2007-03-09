@@ -242,7 +242,7 @@ feature -- Status setting
 			else
 				set_last_stone (new_stone)
 			end
-			if widget.is_displayed then
+			if widget.is_displayed or else is_auto_hide then
 				force_last_stone
 			end
 		end

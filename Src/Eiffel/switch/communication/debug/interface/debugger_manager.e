@@ -827,7 +827,7 @@ feature -- Debugging events
 	incremente_debugging_operation_id is
 		do
 			if debugging_operation_id < {NATURAL_32}.max_value then
-				debugging_operation_id := (debugging_operation_id + 1)
+				debugging_operation_id := debugging_operation_id + 1
 			else
 				debugging_operation_id := 1
 			end

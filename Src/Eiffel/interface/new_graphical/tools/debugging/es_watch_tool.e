@@ -35,11 +35,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_PIXMAPS
 		export
 			{NONE} all
@@ -60,8 +55,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_manager: like develop_window; a_watch_id: INTEGER; a_title: like title; a_title_for_pre: like title_for_pre) is
+	make_with_title (a_manager: like develop_window; a_debugger: EB_DEBUGGER_MANAGER; a_watch_id: INTEGER; a_title: like title; a_title_for_pre: like title_for_pre) is
 		do
+			set_debugger_manager (a_debugger)
 			watch_id := a_watch_id
 			if a_title = Void or else a_title.is_empty then
 				set_title ((interface_names.t_Watch_tool).as_string_32 + " #" + watch_id.out)
@@ -179,9 +175,7 @@ feature {NONE} -- Initialization
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
 
-			create pretty_print_cmd.make
-			pretty_print_cmd.enable_sensitive
-			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (object_viewer_cmd.new_mini_toolbar_item)
 
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
@@ -232,9 +226,9 @@ feature {EB_DEBUGGER_MANAGER} -- Closing
 			Precursor
 			recycle
 			content.close
-			eb_debugger_manager.watch_tool_list.prune_all (Current)
-			eb_debugger_manager.assign_watch_tool_unique_titles
-			eb_debugger_manager.update_all_debugging_tools_menu
+			debugger_manager.watch_tool_list.prune_all (Current)
+			debugger_manager.assign_watch_tool_unique_titles
+			debugger_manager.update_all_debugging_tools_menu
 		end
 
 feature -- Access
@@ -276,7 +270,16 @@ feature -- Access
 	auto_expression_enabled: BOOLEAN
 			-- Is auto expression enabled ?
 
+	debugger_manager: EB_DEBUGGER_MANAGER
+			-- Manager in charge of all debugging operations.
+
 feature -- Change
+
+	set_debugger_manager (a_manager: like debugger_manager) is
+			-- Affect `a_manager' to `debugger_manager'.
+		do
+			debugger_manager := a_manager
+		end
 
 	set_title (a_title: like title) is
 		require
@@ -411,11 +414,10 @@ feature -- Status setting
 		end
 
 feature -- Memory management
+
 	reset_tool is
 		do
 			reset_update_on_idle
-			pretty_print_cmd.end_debug
-
 			recycle_expressions
 			watches_grid.reset_layout_manager
 			clean_watched_grid
@@ -526,8 +528,8 @@ feature {NONE} -- Event handling
 				--| Watch management
 			create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
 			m.extend (mi)
-			if Eb_debugger_manager.watch_tool_list.count > 1 then
-				create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent Eb_debugger_manager.close_watch_tool (Current))
+			if debugger_manager.watch_tool_list.count > 1 then
+				create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent debugger_manager.close_watch_tool (Current))
 				m.extend (mi)
 			end
 
@@ -539,8 +541,8 @@ feature {NONE} -- Event handling
 		local
 			wt: like Current
 		do
-			Eb_debugger_manager.create_new_watch_tool_inside_notebook (develop_window, Current)
-			wt := Eb_debugger_manager.watch_tool_list.last
+			debugger_manager.create_new_watch_tool_inside_notebook (develop_window, Current)
+			wt := debugger_manager.watch_tool_list.last
 			wt.update
 		end
 
@@ -552,7 +554,7 @@ feature {NONE} -- Event handling
 			l_text: STRING
 			debwin: EB_DEVELOPMENT_WINDOW
 		do
-			debwin := Eb_debugger_manager.debugging_window
+			debwin := debugger_manager.debugging_window
 			if debwin /= Void then
 				ce := debwin.ui.current_editor
 				if ce /= Void and then ce.has_selection then
@@ -638,7 +640,7 @@ feature {NONE} -- Event handling
 						check expr /= Void end
 						create dlg.make_with_expression (expr)
 						dlg.set_callback (agent refresh_expression (expr))
-						dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+						dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 					end
 					rows.forth
 				end
@@ -839,7 +841,7 @@ feature {NONE} -- Event handling
 			end
 			if dlg /= Void then
 				dlg.set_callback (agent add_expression_with_dialog (dlg))
-				dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 			end
 		end
 
@@ -924,7 +926,7 @@ feature {NONE} -- Event handling
 					then
 						if watches_grid.selected_rows.count > 0 then
 							ost ?= watches_grid.grid_pebble_from_row_and_column (watches_grid.selected_rows.first, Void)
-							pretty_print_cmd.set_stone (ost)
+							object_viewer_cmd.set_stone (ost)
 						end
 					end
 				when {EV_KEY_CONSTANTS}.key_numpad_subtract then
@@ -1113,6 +1115,11 @@ feature {NONE} -- Implementation: internal data
 	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+		do
+			Result := debugger_manager.object_viewer_cmd
+		end
+
 feature {EB_DEBUGGER_MANAGER} -- Grid
 
 	watches_grid: ES_OBJECTS_GRID
@@ -1226,8 +1233,8 @@ feature {NONE} -- Auto-completion
 		do
 			create l_provider.make (Void, Void)
 			l_provider.set_dynamic_context_functions (
-										agent eb_debugger_manager.current_debugging_class_c,
-										agent eb_debugger_manager.current_debugging_feature_as)
+										agent debugger_manager.current_debugging_class_c,
+										agent debugger_manager.current_debugging_feature_as)
 			a_item.set_completion_possibilities_provider (l_provider)
 		end
 
@@ -1339,7 +1346,7 @@ feature {NONE} -- Implementation
 			w_dlg: EB_INFORMATION_DIALOG
 		do
 			create w_dlg.make_with_text (txt)
-			w_dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 		end
 
 	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE is

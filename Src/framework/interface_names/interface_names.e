@@ -286,6 +286,7 @@ feature -- Accelerator, focus label and menu name
 	m_Break_when_hit_count_equal: STRING_GENERAL is			do Result := locale.translate("Break when the hit count is equal to")	end
 	m_Break_when_hit_count_multiple_of: STRING_GENERAL is	do Result := locale.translate("Break when the hit count is a multiple of")	end
 	m_Break_when_hit_count_greater: STRING_GENERAL is		do Result := locale.translate("Break when the hit count is greater than or equal to")	end
+	m_Object_viewer_tool: STRING_GENERAL is		do Result := locale.translate("Object viewer")	end
 
 	l_class_tree_assemblies: STRING_GENERAL is	do Result := locale.translate("Assemblies")	end
 	l_class_tree_clusters: STRING_GENERAL is	do Result := locale.translate("Clusters")	end
@@ -1181,6 +1182,24 @@ feature -- Label texts
 	l_user_set: STRING_GENERAL is				do Result := locale.translate ("user set") end
 	l_use_inherited: STRING_GENERAL is do Result := locale.translate ("Use inherited value.")	end
 	l_Value: STRING_GENERAL is					do Result := locale.translate("Value")	end
+
+	l_viewer_display_complete_object: STRING_GENERAL is do Result := locale.translate("Display Complete Object") end
+	l_viewer_enable_word_wrapping: STRING_GENERAL is do Result := locale.translate("Enable Word Wrapping") end
+	l_copy_text_to_clipboard: STRING_GENERAL is do Result := locale.translate("Copy Text To Clipboard") end
+	t_viewer_string_display: STRING_GENERAL is do Result := locale.translate("String Display") end
+	l_viewer_string_display_full_string_length (n: INTEGER): STRING_GENERAL is
+		do
+			Result := locale.format_string (locale.translate ("Full string length = $1"), [n])
+		end
+	l_dbg_unable_to_get_value_message: STRING_GENERAL is do Result := locale.translate("Sorry a problem occurred, %Nwe are not able to show you the value ...%N") end
+	l_slice_limits: STRING_GENERAL is do Result := locale.translate ("Slice limits") end
+	l_set_slice_values: STRING_GENERAL is do Result := locale.translate("Set Slice Values") end
+	l_to: STRING_GENERAL is do Result := locale.translate("to") end
+	t_viewer_object_dumper_title: STRING_GENERAL is do Result := locale.translate ("Object.dumped") end
+	t_viewer_object_browser_title: STRING_GENERAL is do Result := locale.translate ("Object.browse") end
+	l_viewer_drop_object_here: STRING_GENERAL is do Result := locale.translate ("<< Drop object here >>") end
+	l_select_viewer: STRING_GENERAL is do Result := locale.translate ("Select viewer") end
+
 	l_When_breakpoint_is_hit: STRING_GENERAL is	do Result := locale.translate("When the breakpoint is hit:")	end
 	l_Whole_project: STRING_GENERAL is			do Result := locale.translate("Whole project")	end
 	l_Whole_word: STRING_GENERAL is				do Result := locale.translate("Whole word")	end
@@ -1747,6 +1766,7 @@ feature -- Title part
 	t_Call_stack_tool: STRING_GENERAL is				do Result := locale.translate ("Call Stack")	end
 	t_Cluster_tool: STRING_GENERAL is					do Result := locale.translate ("Clusters")	end
 	t_Context_tool: STRING_GENERAL is					do Result := locale.translate ("Context")	end
+	t_Object_viewer_tool: STRING_GENERAL is			do Result := locale.translate ("Object viewer")	end
 	t_Favorites_tool: STRING_GENERAL is					do Result := locale.translate ("Favorites")	end
 	t_metric_tool: STRING_GENERAL is 					do Result := locale.translate ("Metrics")	end
 	t_Object_tool: STRING_GENERAL is					do Result := locale.translate ("Objects")	end
@@ -1796,6 +1816,7 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Search_Report_tool: STRING is			"Search Report"
 	to_Windows_tool: STRING is					"Windows"
 	to_Watch_tool: STRING is					"Watch"
+	to_Object_viewer_tool: STRING is			"Object Viewer"
 	to_Features_tool: STRING is					"Features"
 	to_Editor: STRING is						"Editor"
 	to_Debugging_tool: STRING is				"Debugging"

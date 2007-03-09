@@ -66,7 +66,7 @@ feature -- Generic
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.dummy_message_debug_value_id then
 				dummy_message_debug_value_append_type_and_value (dummy_message_debug_value (v), st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.debug_basic_value_id then
-				debug_basic_value_append_type_and_value (debug_basic_value (v), st)
+				debug_basic_value_append_type_and_value (v, st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.exception_debug_value_id then
 				exception_debug_value_append_type_and_value (exception_debug_value (v), st)
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.eifnet_debug_unknown_type_value_id then
@@ -732,7 +732,7 @@ feature {NONE} -- append_type_and_value implementation
 			end
 		end
 
-	debug_basic_value_append_type_and_value (v: DEBUG_BASIC_VALUE [ANY]; st: TEXT_FORMATTER) is
+	debug_basic_value_append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
 		do
 			v.dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
@@ -783,10 +783,6 @@ feature {NONE} -- Conversion
 			Result ?= v
 		end
 	dummy_message_debug_value (v: ABSTRACT_DEBUG_VALUE): DUMMY_MESSAGE_DEBUG_VALUE is
-		do
-			Result ?= v
-		end
-	debug_basic_value (v: ABSTRACT_DEBUG_VALUE): DEBUG_BASIC_VALUE [ANY] is
 		do
 			Result ?= v
 		end

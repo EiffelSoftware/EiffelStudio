@@ -75,7 +75,7 @@ feature {NONE} -- real_update
 		do
 			l_dbg_is_stopped := real_update_on_idle_called_on_stopped
 			debug ("update_on_idle")
-				print (generator +".real_update_on_idle : dbg_is_stopped="+l_dbg_is_stopped.out+"%N")
+				print (generator + ".real_update_on_idle : dbg_is_stopped=" + l_dbg_is_stopped.out + "%N")
 			end
 			cancel_process_real_update_on_idle
 			if real_update_allowed (l_dbg_is_stopped) then
@@ -148,6 +148,10 @@ feature {NONE} -- Implementation
 
 	update_on_idle_agent: PROCEDURE [ANY, TUPLE]; --TUPLE [BOOLEAN]]
 			-- Procedure used in the update on idle mecanism
+
+invariant
+
+	update_on_idle_agent_not_void: update_on_idle_agent /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -242,6 +242,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (Key_s).twin.as_string_8], "show_call_stack_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_p).twin.as_string_8], "show_threads_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_j).twin.as_string_8], "show_objects_tool")
+			l_hash.put ([True, True, False, key_strings.item (Key_w).twin.as_string_8], "show_object_viewer_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_h).twin.as_string_8], "show_watch_tool")
 			Result.extend ([l_hash, main_window_group])
 		end

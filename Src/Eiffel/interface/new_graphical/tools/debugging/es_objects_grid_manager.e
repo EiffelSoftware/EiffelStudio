@@ -16,8 +16,10 @@ feature -- cmd specific
 
 	hex_format_cmd: EB_HEX_FORMAT_CMD
 
-	pretty_print_cmd: EB_PRETTY_PRINT_CMD
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
 			-- Command that is used to display extended information concerning objects.
+		deferred
+		end
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
@@ -48,14 +50,14 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 			ost: OBJECT_STONE
 			p: ES_OBJECTS_GRID
 		do
-			if pretty_print_cmd /= Void then
+			if object_viewer_cmd /= Void then
 				evi ?= ei
 				if evi /= Void and then evi.is_parented and then evi.row /= Void then
 					p ?= ei.parent
 					if p /= Void then
 						ost ?= p.grid_pebble_from_cell (evi)
-						if ost /= Void and then pretty_print_cmd.accepts_stone (ost) then
-							evi.set_button_action (agent pretty_print_cmd.set_stone (ost))
+						if ost /= Void and then object_viewer_cmd.accepts_stone (ost) then
+							evi.set_button_action (agent object_viewer_cmd.set_stone (ost))
 						end
 					end
 				end

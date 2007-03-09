@@ -86,7 +86,6 @@ feature -- Properties
 feature {NONE} -- Object stone
 
 	get_items_stone_properties is
-
 		local
 			cl: CLASS_C
 			fst: FEATURE_STONE

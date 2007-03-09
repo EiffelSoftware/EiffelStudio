@@ -253,8 +253,10 @@ feature -- Text processing
 			stone: FEATURE_NAME_STONE
 		do
 			create tok.make (text.as_string_8)
-			create stone.make (text.as_string_8, a_class)
-			tok.set_pebble (stone)
+			if a_class /= Void then
+				create stone.make (text.as_string_8, a_class)
+				tok.set_pebble (stone)
+			end
 			last_line.append_token (tok)
 		end
 

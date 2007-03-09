@@ -39,6 +39,8 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
+			l_display: POINTER
+			l_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 
@@ -62,7 +64,7 @@ feature {NONE} -- Initialization
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 
-				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
+			--	{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
 
 				gtk_dependent_initialize
 				create window_oids.make
@@ -85,6 +87,8 @@ feature {NONE} -- Initialization
 
 					-- We do not want X Errors to exit the system so we ignore them indefinitely.
 				{EV_GTK_EXTERNALS}.gdk_error_trap_push
+
+				init_connection_number
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
@@ -142,10 +146,73 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	wait_for_input (msec: INTEGER) is
-			-- Wait for at most `msec' milliseconds for an input.
+	display_connection_number: INTEGER
+		-- Connection number of display.
+		-- This is a file descriptor from which we can poll for user events.
+
+	x11_display: POINTER
+		-- Pointer to the default X11 display used by `Current'.
+
+	init_connection_number
+			-- Initialize `display_connection_number'.
+		local
+			l_gdk_display: POINTER
 		do
-			sleep (msec)
+			l_gdk_display := {EV_GTK_EXTERNALS}.gdk_get_display
+			x11_display := gdk_drawable_xdisplay ({EV_GTK_EXTERNALS}.gdk_root_parent)
+			display_connection_number := connection_number (x11_display)
+		end
+
+	wait_for_input (msec: INTEGER) is
+			-- Wait for at most `msec' milliseconds for an event.
+		local
+			l_result: INTEGER
+		do
+			if xpending (x11_display) = 0 then
+					-- If there are no events then we wait for some.
+					-- The call to XPending will also flush any events in the buffer.
+				l_result := fd_select (display_connection_number, msec * 1000)
+			end
+		end
+
+	fd_select (a_fd, a_timeout: INTEGER): INTEGER
+		external
+			"C inline use <stdio.h>, <sys/time.h>, <sys/types.h>, <unistd.h>"
+		alias
+			"[
+				fd_set rfds;
+				struct timeval tv;
+				int retval;
+
+				FD_ZERO(&rfds);
+				FD_SET((int) $a_fd, &rfds);
+
+				tv.tv_sec = 0;
+				tv.tv_usec = (long) $a_timeout;
+
+ 				return select(1, &rfds, NULL, NULL, &tv);
+ 			]"
+		end
+
+	gdk_drawable_xdisplay (a_gdk_display: POINTER): POINTER
+		external
+			"C macro use <gdk/gdkx.h>"
+		alias
+			"GDK_DRAWABLE_XDISPLAY"
+		end
+
+	connection_number (a_x_display: POINTER): INTEGER
+		external
+			"C macro use <gdk/gdkx.h>"
+		alias
+			"ConnectionNumber"
+		end
+
+	xpending (a_x_display: POINTER): INTEGER
+		external
+			"C macro use <gdk/gdkx.h>"
+		alias
+			"XPending"
 		end
 
 	process_underlying_toolkit_event_queue is
@@ -389,6 +456,8 @@ feature {EV_ANY_I} -- Implementation
 									l_top_level_window_imp := l_widget_imp.top_level_window_imp
 									if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
 										l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
+									else
+										l_call_event := False
 									end
 									l_gtk_widget_imp := Void
 									l_top_level_window_imp := Void

@@ -320,6 +320,8 @@ test	convert-to-base-class-inherited3	valid200 tcf pass validity vycq convert
 test	formal-as-base-type-for-generic		valid201 tcf pass validity formal generic
 test	single-constraint-formal-renaming	valid202 tcf pass validity formal generic
 test	inherit-from-expanded	valid203 tcf pass validity frozen expanded
+test	recheck-assertion-feature-renamed	valid204 tcf pass validity 
+test	recursive-generic-constraint-with-creation	valid205 tcf pass validity
 
 
 

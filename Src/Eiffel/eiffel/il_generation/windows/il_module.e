@@ -1468,9 +1468,12 @@ feature -- Metadata description
 				il_code_generator.start_new_body (l_meth_token)
 				l_method_body := il_code_generator.method_body
 
-				if not class_type.is_expanded then
+				il_code_generator.generate_current
+				if class_type.is_expanded then
+						-- Zero out all the data.
+					l_method_body.put_opcode_mdtoken ({MD_OPCODES}.initobj, actual_class_type_token (class_type.implementation_id))
+				else
 						-- Call constructor from super-class for reference type
-					il_code_generator.generate_current
 					l_arg_count := signature.parameter_count
 					if external_token = 0 then
 						l_method_body.put_call ({MD_OPCODES}.Call,

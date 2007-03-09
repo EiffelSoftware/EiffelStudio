@@ -100,6 +100,7 @@ feature -- Initialization
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
+			l_generated_file, l_target_file: RAW_FILE
 		do
 			if not retried then
 						-- Read the resource files
@@ -138,7 +139,9 @@ feature -- Initialization
 						l_loader.set_should_stop_on_prompt (stop_on_error)
 						l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
 						l_loader.set_has_library_conversion (not has_no_library_conversion)
-						if old_project_file /= Void then
+						if is_single_file_compilation then
+							l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested)
+						elseif old_project_file /= Void then
 							l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
 						elseif old_ace_file /= Void then
 							l_loader.open_project_file (old_ace_file, Void, project_path, is_clean_requested)
@@ -162,6 +165,25 @@ feature -- Initialization
 								end
 							else
 								command.execute
+							end
+
+							if is_single_file_compilation and then l_loader.eiffel_project.successful then
+									-- Copy generated executable in single file compilation to project location
+								if is_finalizing then
+									create l_generated_file.make (l_loader.eiffel_project.project_directory.final_executable_file_name)
+								else
+									create l_generated_file.make (l_loader.eiffel_project.project_directory.workbench_executable_file_name)
+								end
+									-- Check if generated file exists. If the C compilation fails, the file will not be generated.
+								if l_generated_file.exists then
+									 -- If generated file exists, copy it to the target location
+									create l_target_file.make (l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
+									l_generated_file.open_read
+									l_target_file.open_write
+									l_generated_file.copy_to (l_target_file)
+									l_target_file.close
+									l_generated_file.close
+								end
 							end
 						end
 					end
@@ -244,6 +266,12 @@ feature -- Properties
 	option: STRING
 			-- Current option being analyzed
 
+	single_file_compilation_filename: STRING
+			-- File name of Eiffel class file in single file compilation mode
+
+	single_file_compilation_libraries: LIST [STRING]
+			-- List of specified libraries in single file compilation mode
+
 	is_finish_freezing_called: BOOLEAN
 			-- Should a freeze or a finalize call `finish_freezing' after generating
 			-- C code
@@ -251,11 +279,17 @@ feature -- Properties
 	is_precompiling: BOOLEAN
 			-- Should compilation actual precompile?
 
+	is_finalizing: BOOLEAN
+			-- Is finalized version compiled?
+
 	is_clean_requested: BOOLEAN
 			-- Should we recompile from scratch?
 
 	is_user_settings_requested: BOOLEAN
 			-- Should we compile without using the configuration file?
+
+	is_single_file_compilation: BOOLEAN
+			-- Is only a single file specified to compile?
 
 	has_no_library_conversion: BOOLEAN
 			-- Should we not convert clusters into libraries?
@@ -279,6 +313,7 @@ feature -- Properties
 			Result.put (flatshort_help, flatshort_cmd_name)
 			Result.put (help_help, help_cmd_name)
 			Result.put (implementers_help, implementers_cmd_name)
+			Result.put (library_help, library_cmd_name)
 			Result.put (loop_help, loop_cmd_name)
 			Result.put (melt_help, melt_cmd_name)
 			Result.put (overwrite_old_project_help, overwrite_old_project_cmd_name)
@@ -286,6 +321,7 @@ feature -- Properties
 			Result.put (project_path_help, project_path_cmd_name)
 			Result.put (quick_melt_help, quick_melt_cmd_name)
 			Result.put (short_help, short_cmd_name)
+			Result.put (single_file_compilation_help, single_file_compilation_cmd_name)
 			Result.put (stop_help, stop_cmd_name)
 			Result.put (suppliers_help, suppliers_cmd_name)
 			Result.put (target_help, target_cmd_name)
@@ -373,8 +409,9 @@ feature -- Output
 					%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
 			end
 			io.put_string ("%
-				%%T-config config.ecf | -target target |%N%
-				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name |%N%
+				%%T[-config config.ecf | -target target |%N%
+				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name] |%N%
+				%%T[class_file.e [-library library_name]] |%N%
 				%%T-stop | -no_library |%N%
 				%%T-project_path Project_directory_path | -file File]%N")
 		end
@@ -890,7 +927,10 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-project") then
-				if current_option < argument_count then
+				if is_single_file_compilation then
+						-- In single file compilation mode no ace file may be specified
+					option_error := True
+				elseif current_option < argument_count then
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
@@ -926,7 +966,10 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-ace") then
-				if current_option < argument_count then
+				if is_single_file_compilation then
+						-- In single file compilation mode no ace file may be specified
+					option_error := True
+				elseif current_option < argument_count then
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
@@ -938,7 +981,10 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-config") then
-				if current_option < argument_count then
+				if is_single_file_compilation then
+						-- In single file compilation mode no config file may be specified
+					option_error := True
+				elseif current_option < argument_count then
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
@@ -950,7 +996,10 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-target") then
-				if current_option < argument_count then
+				if is_single_file_compilation then
+						-- In single file compilation mode no target may be specified
+					option_error := True
+				elseif current_option < argument_count then
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
@@ -1044,6 +1093,34 @@ feature -- Update
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-library") then
+					-- This option is only valid if no other config options are set
+				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
+					if single_file_compilation_libraries = Void then
+						create {LINKED_LIST [STRING]}single_file_compilation_libraries.make
+					end
+					if current_option < argument_count then
+						current_option := current_option + 1
+						l_arg := argument (current_option)
+						if l_arg /= Void then
+							single_file_compilation_libraries.extend (l_arg)
+						else
+							option_error := True
+						end
+					end
+				else
+					option_error := True
+				end
+			elseif is_eiffel_class_file_name (option) then
+					-- This option is only valid if no other config options are set
+				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
+					single_file_compilation_filename := argument (current_option)
+					is_single_file_compilation := True
+						-- Implies finish freezing
+					is_finish_freezing_called := True
+				else
+					option_error := True
+				end
 			else
 				process_special_options
 			end
@@ -1076,7 +1153,7 @@ feature -- Update
 					else
 						create {EWB_FINALIZE} command.make (keep)
 					end
-
+					is_finalizing := True
 				end
 			else
 				option_error := True
@@ -1111,6 +1188,19 @@ feature {NONE} -- Implementation
 
 	config_file_name, target_name, project_path: STRING;
 			-- Name of the config file, target and path where project will be compiled.
+
+	is_eiffel_class_file_name (a_filename: STRING): BOOLEAN is
+			-- Is `a_filename' an Eiffel class file?
+			-- This checks if the filename has an 'e' extension.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			l_extension: STRING
+		do
+			l_extension := a_filename.twin
+			l_extension.keep_tail (2)
+			Result := l_extension.is_equal ("." + eiffel_extension)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

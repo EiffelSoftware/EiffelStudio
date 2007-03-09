@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_leave_actions.extend (agent on_pointer_leave)
+			pointer_double_press_actions.force_extend (agent clear_pressed_flag)
 			set_minimum_height (internal_shared.Notebook_tab_height)
 
 			drop_actions.extend (agent on_drop_action)
@@ -412,6 +413,22 @@ feature -- Implementation
 			l_relative_x := l_screen.pointer_position.x - screen_x
 			if l_relative_x >= 0 and l_relative_x <= width then
 				Result := tab_at (l_relative_x)
+			end
+		end
+
+	clear_pressed_flag is
+			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called.
+		local
+			l_tabs: like tabs
+		do
+			from
+				l_tabs := tabs
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				l_tabs.item.clear_pressed_flag
+				l_tabs.forth
 			end
 		end
 

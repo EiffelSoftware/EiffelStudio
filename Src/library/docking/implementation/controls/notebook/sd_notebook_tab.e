@@ -90,6 +90,12 @@ feature -- Command
 			internal_draw_pixmap := True
 		end
 
+	clear_pressed_flag is
+			-- Set `is_pointer_pressed' to False
+		do
+			is_pointer_pressed := False
+		end
+
 	hide is
 			-- Hide
 		do

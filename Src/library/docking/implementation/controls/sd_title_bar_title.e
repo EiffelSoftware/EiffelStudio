@@ -30,6 +30,11 @@ feature {NONE} -- Initlization
 			pointer_leave_actions.force_extend (agent on_pointer_leave)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
+			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the flag manually.
+			pointer_double_press_actions.force_extend (agent do
+				pressed := False
+			end)
+
 			create drag_actions
 		end
 

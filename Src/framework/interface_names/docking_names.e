@@ -93,13 +93,13 @@ feature -- Access
 	Zone_navigation_no_description_available: STRING_GENERAL is
 			-- Label text for zone navigation dialog.
 		do
-			Result := "No description available."
+			Result := locale.translate ("No description available.")
 		end
 
 	Zone_navigation_no_detail_available: STRING_GENERAL is
 			-- Label text for zone navigation dialog.
 		do
-			Result := "No detail available."
+			Result := locale.translate ("No detail available.")
 		end
 
 feature -- Tool bar customize dialog strings

@@ -171,7 +171,9 @@ feature -- Setting
 	store is
 			-- Store formatters in xml files.
 		do
-			store_descriptors (formatter_descriptors)
+			if has_formatters then
+				store_descriptors (formatter_descriptors)
+			end
 		end
 
 	create_formatter_file_dir (a_path: FILE_NAME) is

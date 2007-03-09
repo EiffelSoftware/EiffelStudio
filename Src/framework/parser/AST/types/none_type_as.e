@@ -19,6 +19,8 @@ create
 feature {NONE} -- Initialize
 
 	initialize (c: like class_name_literal) is
+		require
+			c_not_void: c /= Void
 		do
 			class_name_literal := c
 		ensure
@@ -42,21 +44,17 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void then
-				Result := Precursor (a_list)
-				if Result = Void then
-					Result := class_name_literal.first_token (a_list)
-				end
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := class_name_literal.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void then
-				Result := Precursor (a_list)
-				if Result = Void then
-					Result := class_name_literal.last_token (a_list)
-				end
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := class_name_literal.last_token (a_list)
 			end
 		end
 
@@ -69,8 +67,11 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is "NONE";
+	dump: STRING is "NONE"
 			-- Dumped trace
+
+invariant
+	class_name_literal_not_void: class_name_literal /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

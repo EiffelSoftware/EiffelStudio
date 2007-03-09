@@ -501,26 +501,6 @@ feature -- Error/warning message
 			Result := locale.translate ("UUID is missing.")
 		end
 
-	err_invalid_attribute (a_attribute: STRING_GENERAL): STRING_GENERAL is
-			-- Invalid attribute error
-		require
-			a_attribute_attached: a_attribute /= Void
-		do
-			Result := locale.format_string (locale.translate ("Invalid attribute %"$1%"."), [a_attribute])
-		ensure
-			result_attached: Result /= Void
-		end
-
-	err_invalid_tag_position (a_tag: STRING_GENERAL): STRING_GENERAL is
-			-- Invalid tag error
-		require
-			a_tag_attached: a_tag /= Void
-		do
-			Result := locale.format_string (locale.translate ("Invalid tag/tag position %"$1%"."), [a_tag])
-		ensure
-			result_attached: Result /= Void
-		end
-
 	err_uuid_invalid (a_invalid_uuid: STRING_GENERAL): STRING_GENERAL is
 			-- UUID invalid error
 		require
@@ -793,13 +773,13 @@ feature -- Error/warning message
 			a_criterion_name_attached: a_criterion_name /= Void
 			a_unit_name_attached: a_unit_name /= Void
 		do
-			Result := locale.format_string (locale.translate ("Criterion %"$1%" of unit %"$2%" doesn't exits."), [a_criterion_name, a_unit_name])
+			Result := locale.format_string (locale.translate ("Criterion %"$1%" of unit %"$2%" doesn't exists."), [a_criterion_name, a_unit_name])
 		ensure
 			result_attached: Result /= Void
 		end
 
 	err_domain_item_not_exist: STRING_GENERAL is
-			-- Domain item doesn't exits error
+			-- Domain item doesn't exists error
 		do
 			Result := locale.translate ("No domain item defined. At least one domain item should be defined in a relation criterion.")
 		ensure

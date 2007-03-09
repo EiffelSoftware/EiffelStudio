@@ -680,7 +680,7 @@
 	
 	<PREF NAME="shortcuts.file.new_tab" DESCRIPTION="Shortcut to create a new tabbed editor."><SHORTCUT Ctrl="True">T</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.file.new_window" DESCRIPTION="Shortcut to create a new development window."><SHORTCUT Ctrl="True">N</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.file.save" DESCRIPTION="Shortcut to save file current editing file."><SHORTCUT Ctrl="True">S</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.file.save" DESCRIPTION="Shortcut to save current editing file."><SHORTCUT Ctrl="True">S</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.file.save_all" DESCRIPTION="Shortcut to save all files."><SHORTCUT Ctrl="True" Shift="True">S</SHORTCUT></PREF>
 	
 	<PREF NAME="shortcuts.view.tools.show_search_tool" DESCRIPTION="Shortcut to display Search tool."><SHORTCUT Ctrl="True" Alt="True">F</SHORTCUT></PREF>

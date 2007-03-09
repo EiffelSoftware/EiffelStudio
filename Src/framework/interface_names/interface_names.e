@@ -588,6 +588,12 @@ feature -- Accelerator, focus label and menu name
 	l_choose_class_version: STRING_GENERAL is do Result := locale.translate ("Choose one version from the following:") end
 	m_restart_application: STRING_GENERAL is do Result := locale.translate ("Restart application") end
 	f_restart_application: STRING_GENERAL is do Result := locale.translate ("Restart application") end
+	t_setup_customized_formatter: STRING_GENERAL is do Result := locale.translate ("Setup Customized Formatters") end
+	f_customize_formatter: STRING_GENERAL is do Result := locale.translate ("Customize formatters") end
+	f_add_formatter: STRING_GENERAL is do Result := locale.translate ("Add customized formatter") end
+	f_remove_formatter: STRING_GENERAL is do Result := locale.translate ("Remove selected customized formatter") end
+	l_formatter: STRING_GENERAL is do Result := locale.translate ("Formatter") end
+	l_displayed_in: STRING_GENERAL is do Result := locale.translate ("Displayed in") end
 
 feature -- Toggles
 
@@ -1449,6 +1455,14 @@ feature -- Label texts
 	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
 	h_click_to_open: STRING_GENERAL is do Result := locale.translate ("Click to open") end
+	l_layout: STRING_GENERAL is do Result := locale.translate ("Layout") end
+	l_tooltip_lbl: STRING_GENERAL is do Result := locale.translate ("Tooltip") end
+	l_header: STRING_GENERAL is do Result := locale.translate ("Header") end
+	l_temp_header: STRING_GENERAL is do Result := locale.translate ("Temporary header") end
+	l_pixmap_file: STRING_GENERAL is do Result := locale.translate ("Pixmap File") end
+	l_metric_name: STRING_GENERAL is do Result := locale.translate ("Metric Name") end
+	l_metric_filter: STRING_GENERAL is do Result := locale.translate ("Metric Filter") end
+	l_eiffelstudio: STRING_GENERAL is do Result := locale.translate ("EiffelStudio") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -1744,6 +1758,8 @@ feature -- Title part
 	t_Open_layout: STRING_GENERAL is					do Result := locale.translate ("Open Layout") end
 	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translate ("Overwrite Layout") end
 	t_open_c_file: STRING_GENERAL is					do Result := locale.translate ("Open C file") end
+	t_reference_position: STRING_GENERAL is				do Result := locale.translate ("Position") end
+	t_customized_formatter_setup: STRING is 			do Result := locale.translate ("Customized Formatter Setup") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

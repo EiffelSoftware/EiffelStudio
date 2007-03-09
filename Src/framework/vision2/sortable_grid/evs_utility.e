@@ -33,14 +33,12 @@ feature{NONE} -- Agent registration
 			a_agent_attached: a_agent /= Void
 			a_action_sequence_attached: a_action_sequence /= Void
 		do
-			a_action_sequence.search (a_agent)
-			if not a_action_sequence.exhausted then
+			if a_action_sequence.has (a_agent) then
 				a_action_sequence.prune_all (a_agent)
 			end
 		ensure
 			a_agent_removed: not a_action_sequence.has (a_agent)
 		end
-
 
 feature -- Accelerator
 

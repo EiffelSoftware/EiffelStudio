@@ -46,35 +46,15 @@ feature -- Actions
 	on_pick: ANY is
 			-- Action to be performed when pick starts
 			-- Return value is the picked pebble if any.
-		local
-			l_coordinate: EV_COORDINATE
-			l_pos: like component_position
-			l_item: like component_type
-			l_rec: EV_RECTANGLE
 		do
 			if is_component_pebble_enabled then
-				l_coordinate := relative_pointer_position (Current)
-				l_pos := component_position
-				last_picked_item := 0
-				if not l_pos.is_empty then
-					from
-						l_pos.start
-					until
-						l_pos.after or last_picked_item > 0
-					loop
-						l_rec := l_pos.item
-						if l_rec.has_x_y (l_coordinate.x, l_coordinate.y) then
-							set_last_picked_item (l_pos.index)
-						else
-							l_pos.forth
-						end
+				set_last_picked_item (component_index_at_pointer_position)
+				if last_picked_item > 0 then
+					Result := pick_component (last_picked_item)
+					if Result = Void then
+						set_last_picked_item (0)
 					end
-					if last_picked_item > 0 then
-						l_item := component (last_picked_item)
-						l_item.on_pick (l_coordinate.x - l_rec.x, l_coordinate.y - l_rec.y)
-						Result := l_item.last_pebble
-						safe_redraw
-					end
+					safe_redraw
 				end
 			end
 		end

@@ -124,8 +124,12 @@ feature {NONE} -- Implementation
 	on_pointer_enter_leave (a_enter: BOOLEAN) is
 			-- The mouse pointer has either just entered or left `Current'.
 		do
-			update_tooltip (a_enter)
-			Precursor {EV_PRIMITIVE_IMP} (a_enter)
+			if not app_implementation.is_in_transport then
+				update_tooltip (a_enter)
+				Precursor {EV_PRIMITIVE_IMP} (a_enter)
+			else
+				update_tooltip (False)
+			end
 		end
 
 	update_tooltip (a_show_tooltip: BOOLEAN) is

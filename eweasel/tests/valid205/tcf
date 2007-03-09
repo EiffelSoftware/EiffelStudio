@@ -1,4 +1,4 @@
-test_name	recursive-generic-constraint with-creation
+test_name	recursive-generic-constraint-with-creation
 test_description A formal generic parameter is constraint to another one and specifies a creation routine. Currently the compiler generates VTCG6 error instead of accepting the code.
 
 copy_sub	Ace	$TEST Ace

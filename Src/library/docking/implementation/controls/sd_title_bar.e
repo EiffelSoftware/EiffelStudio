@@ -528,7 +528,8 @@ feature {NONE} -- Implementation
 		do
 			if not is_resizing then
 				is_resizing := True
-				on_fixed_resize (0, 0, fixed.width, fixed.height)
+				-- If we use fixed.width (or fixed.height) here, the width is a little bit smaller than actual when called from SD_DOCKING_STATE.show.
+				on_fixed_resize (0, 0, viewport.width, viewport.height)
 				is_resizing := False
 			end
 		end

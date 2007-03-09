@@ -44,6 +44,18 @@ feature -- Properties
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser		
 
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_feature_displayer, displayer_generators.feature_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.feature_view_sorting_order_preference
+		end
+
 feature {NONE} -- Properties
 
 	command_name: STRING_GENERAL is

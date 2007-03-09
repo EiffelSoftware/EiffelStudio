@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			compare_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
 			browse_reference_archive_btn.select_actions.extend (agent on_open_new_archive (agent on_comparison_archive_selected (reference_metric_archive_text)))
 			browse_current_archive_btn.select_actions.extend (agent on_open_new_archive (agent on_comparison_archive_selected (current_metric_archive_text)))
-			compare_btn.select_actions.extend (agent do show_feedback_dialog (metric_names.t_analysing_archive, agent on_compare_archives, metric_tool.feedback_dialog, metric_tool_window) end)
+			compare_btn.select_actions.extend (agent do metric_tool.show_feedback_dialog (metric_names.t_analysing_archive, agent on_compare_archives, metric_tool_window) end)
 			run_btn.set_tooltip (metric_names.f_start_archive)
 			stop_btn.set_tooltip (metric_names.f_stop_archive)
 			new_archive_browse_btn.set_tooltip (metric_names.f_select_exist_archive_file)
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			create l_file.make (l_file_name)
 			create l_dir.make (l_file_name)
 			if l_file.exists and then not l_file.is_directory then
-				show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool.feedback_dialog, metric_tool_window)
+				metric_tool.show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool_window)
 				l_archive := metric_manager.last_loaded_metric_archive
 				a_action.call ([True, not metric_manager.has_error, l_archive])
 				metric_manager.clear_last_error
@@ -926,9 +926,9 @@ feature{NONE} -- UI Update
 						archive_comparison_area.enable_sensitive
 						stop_btn.disable_sensitive
 						metric_selector.enable_sensitive
-						metric_tool.load_metrics (False, metric_names.t_loading_metrics)
+						metric_tool.load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 						if not metric_tool.is_metric_validation_checked.item then
-							metric_tool.check_metric_validation
+							metric_tool.check_metric_validation (metric_tool.develop_window)
 						end
 						if is_metric_reloaded then
 							set_is_metric_reloaded (False)

@@ -12,7 +12,7 @@ class
 inherit
 	EB_FEATURE_TEXT_FORMATTER
 		redefine
-			set_editor,
+			set_displayer,
 			feature_cmd,
 			generate_text,
 			set_stone,
@@ -30,14 +30,24 @@ create
 
 feature -- Status setting
 
-	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
-			-- Set `editor' to `an_editor'.
-			-- Used to share an editor between several formatters.
+	set_displayer (a_displayer: like displayer) is
+			-- Set `displayer' with `a_displayer'.
 		do
-			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
-			an_editor.enable_has_breakable_slots
-			editor.drop_actions.extend (agent on_breakable_drop)
+			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_displayer)
+			if displayer /= Void then
+				displayer.editor.enable_has_breakable_slots
+				displayer.editor.drop_actions.extend (agent on_breakable_drop)
+			end
 		end
+
+--	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
+--			-- Set `editor' to `an_editor'.
+--			-- Used to share an editor between several formatters.
+--		do
+--			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
+--			an_editor.enable_has_breakable_slots
+--			editor.drop_actions.extend (agent on_breakable_drop)
+--		end
 
 	set_stone (new_stone: FEATURE_STONE) is
 			-- Associate `Current' with class contained in `new_stone'.

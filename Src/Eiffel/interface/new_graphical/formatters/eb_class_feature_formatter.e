@@ -12,12 +12,30 @@ deferred class
 inherit
 	EB_CLASS_CONTENT_FORMATTER
 		redefine
+			browser,
 			is_class_feature_formatter
 		end
 
 	EXCEPTIONS
 
 	QL_SHARED
+
+feature -- Access
+
+	browser: EB_CLASS_BROWSER_FLAT_VIEW
+			-- Browser
+
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_class_feature_displayer, displayer_generators.class_feature_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.class_flat_view_sorting_order_preference
+		end
 
 feature -- Status report
 

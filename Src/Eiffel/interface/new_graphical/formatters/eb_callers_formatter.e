@@ -14,8 +14,10 @@ inherit
 		rename
 			make as feature_formatter_make
 		redefine
+			browser,
 			is_dotnet_formatter,
-			result_data
+			result_data,
+			generate_result
 		end
 
 	EB_SHARED_PREFERENCES
@@ -95,6 +97,22 @@ feature -- Properties
  	flag: INTEGER_8
  			-- Flag for type of callers.
 
+ 	browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
+ 			-- Browser
+
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_feature_caller_displayer, displayer_generators.feature_caller_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.caller_sorting_order_preference
+		end
+
+
 feature {NONE} -- Properties
 
 	internal_symbol: like symbol
@@ -135,7 +153,7 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	has_breakpoints: BOOLEAN is False;
+	has_breakpoints: BOOLEAN is False
 			-- Should breakpoints be shown in Current?
 
 	result_data: QL_FEATURE_DOMAIN is
@@ -158,6 +176,13 @@ feature {NONE} -- Implementation
 	rebuild_browser is
 			-- Rebuild `browser'.
 		do
+		end
+
+	generate_result is
+			-- Generate result for display
+		do
+			Precursor
+			browser.set_reference_type_name (command_name)
 		end
 
 indexing

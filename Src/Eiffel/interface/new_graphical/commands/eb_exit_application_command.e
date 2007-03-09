@@ -130,6 +130,11 @@ feature {NONE} -- Callbacks
 				l_err_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
 
+				-- Store customized formatters
+			if customized_formatter_manager.is_loaded then
+				customized_formatter_manager.store
+			end
+
 			window_manager.a_development_window.save_tools_docking_layout
 
 				-- Destroy all development windows.

@@ -39,6 +39,12 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_WORKBENCH
+
+	EB_SHARED_MANAGERS
+
+	EB_METRIC_SHARED
+
 feature {NONE} -- Initialization
 
 	make (a_manager: like develop_window) is

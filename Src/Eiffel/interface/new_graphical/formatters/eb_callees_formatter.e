@@ -16,7 +16,8 @@ inherit
 		redefine
 			is_dotnet_formatter,
 			result_data,
-			browser
+			browser,
+			generate_result
 		end
 
 	EB_SHARED_PREFERENCES
@@ -123,6 +124,18 @@ feature -- Access
  	browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
  			-- Browser
 
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_feature_callee_displayer, displayer_generators.feature_callee_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.callee_sorting_order_preference
+		end
+
 feature -- Status report
 
 	is_dotnet_formatter: BOOLEAN is
@@ -159,6 +172,13 @@ feature{NONE} -- Implementation
 	rebuild_browser is
 			-- Rebuild `browser'.
 		do
+		end
+
+	generate_result is
+			-- Generate result for display
+		do
+			Precursor
+			browser.set_reference_type_name (command_name)
 		end
 
 indexing

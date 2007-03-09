@@ -12,11 +12,13 @@ class
 inherit
 	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_FLAT_ROW]
 		redefine
+			make,
 			grid_selected_items,
 			data,
 			recycle_agents,
 			default_ensure_visible_action,
-			starting_element
+			starting_element,
+			update_view
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -25,6 +27,14 @@ inherit
 
 create
 	make
+
+feature{NONE} -- Initialization
+
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+			-- Initialize.
+		do
+			Precursor (a_dev_window, a_drop_actions)
+		end
 
 feature -- Actions
 
@@ -176,12 +186,6 @@ feature -- Actions
 			-- Action to be performed to collapse all selected rows.
 		do
 			do_all_in_items (grid.selected_items, agent collapse_item)
-		end
-
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
-			-- Action to be performed after a sorting
-		do
-			preferences.class_browser_data.class_flat_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
 		end
 
 feature{NONE} -- Sorting
@@ -368,52 +372,36 @@ feature{NONE} -- Update
 
 	update_view is
 			-- Update current view according to change in `model'.
-		local
-			l_msg: STRING_32
 		do
-			feature_name_list.set_text ("")
 			cancel_delayed_update_matches
-			if not is_up_to_date then
-				if data /= Void then
-					if is_displaying_class_any then
-						show_feature_from_any_button.enable_select
-						show_feature_from_any_button.disable_sensitive
-					else
-						show_feature_from_any_button.enable_sensitive
-					end
-					text.hide
-					component_widget.show
-					fill_rows
-					if last_sorted_column_internal = 0 then
-						expand_all_rows
-						last_sorted_column_internal := class_column
-					end
-					disable_auto_sort_order_change
-					enable_force_multi_column_sorting
-					if not sorted_columns.is_empty then
-						sort (0, 0, 1, 0, 0, 0, 0, 0, sorted_columns.last)
-					else
-						sort (0, 0, 1, 0, 0, 0, 0, 0, feature_column)
-					end
-					disable_force_multi_column_sorting
-					bind_grid
-					enable_auto_sort_order_change
-					if not has_grid_been_binded then
-						set_has_grid_been_binded (True)
-						auto_resize
-					end
-				else
-					component_widget.hide
-					text.show
-					l_msg := Warning_messages.w_Formatter_failed.twin
-					if trace /= Void then
-						l_msg.append ("%N")
-						l_msg.append (trace)
-					end
-					text.set_text (l_msg)
-				end
-				is_up_to_date := True
+			Precursor
+		end
+
+	provide_result is
+			-- Provide result displayed in Current view.
+		do
+			if is_displaying_class_any then
+				show_feature_from_any_button.enable_select
+				show_feature_from_any_button.disable_sensitive
+			else
+				show_feature_from_any_button.enable_sensitive
 			end
+			fill_rows
+			if last_sorted_column_internal = 0 then
+				expand_all_rows
+				last_sorted_column_internal := class_column
+			end
+			disable_auto_sort_order_change
+			enable_force_multi_column_sorting
+			if not sorted_columns.is_empty then
+				sort (0, 0, 1, 0, 0, 0, 0, 0, sorted_columns.last)
+			else
+				sort (0, 0, 1, 0, 0, 0, 0, 0, feature_column)
+			end
+			disable_force_multi_column_sorting
+			bind_grid
+			enable_auto_sort_order_change
+			try_auto_resize_grid (<<[150, 300, 1]>>)
 		end
 
 	bind_grid is
@@ -459,22 +447,6 @@ feature{NONE} -- Update
 			end
 			grid.row_expand_actions.force_extend (agent on_row_expanded)
 			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
-		end
-
-	auto_resize is
-			-- Auto resize columns to give a best view point.
-		local
-			l_requested_width: INTEGER
-		do
-			if grid.row_count > 0 then
-				l_requested_width := grid.column (1).required_width_of_item_span (1, grid.row_count)
-				if l_requested_width > 300 then
-					l_requested_width := 300
-				else
-					l_requested_width := l_requested_width + 10
-				end
-				grid.column (1).set_width (l_requested_width)
-			end
 		end
 
 	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is

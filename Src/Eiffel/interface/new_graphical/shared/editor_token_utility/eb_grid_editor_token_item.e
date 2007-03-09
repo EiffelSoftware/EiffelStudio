@@ -515,6 +515,17 @@ feature -- Pick and drop
 
 feature -- Pick and drop
 
+	is_pick_on_text: BOOLEAN
+			-- Did last pick happen on `editor_token_text' area?
+
+	set_is_pick_on_text (b: BOOLEAN) is
+			-- Set `is_pick_on_text' with `b'.
+		do
+			is_pick_on_text := b
+		ensure
+			is_pick_on_text_set: is_pick_on_text = b
+		end
+
 	on_pick: ANY is
 			-- Action to be performed when pick starts
 			-- Return value is the picked pebble if any.
@@ -522,13 +533,23 @@ feature -- Pick and drop
 			l_index: INTEGER
 			l_stone: STONE
 		do
-			if is_component_pebble_enabled then
-				l_index := token_index_at_current_position
+			l_index := token_index_at_current_position
+			if l_index > 0 then
+				l_stone ?= editor_token_pebble (l_index)
+				if l_stone /= Void then
+					Result := l_stone
+					set_is_pick_on_text (True)
+					set_last_picked_item (l_index)
+				end
+			elseif is_component_pebble_enabled then
+				l_index := component_index_at_pointer_position
 				if l_index > 0 then
-					l_stone ?= editor_token_pebble (l_index)
-					if l_stone /= Void then
-						Result := l_stone
-						set_last_picked_item (l_index)
+					set_last_picked_item (l_index)
+					Result := pick_component (l_index)
+					if Result = Void then
+						set_last_picked_item (0)
+					else
+						set_is_pick_on_text (False)
 					end
 				end
 			end
@@ -537,9 +558,12 @@ feature -- Pick and drop
 	on_pick_ends is
 			-- Action to be performed hwne pick-and-drop finishes
 		do
-			if is_component_pebble_enabled then
-				set_last_picked_item (0)
+			if not is_pick_on_text then
+				if last_picked_item > 0 and then last_picked_item <= component_count then
+					component (last_picked_item).on_pick_ended
+				end
 			end
+			set_last_picked_item (0)
 		end
 
 feature{NONE} -- Implementation
@@ -580,6 +604,7 @@ feature{NONE} -- Implementation
 			y: INTEGER_32
 			l_token_text: like editor_token_text
 			l_should_update: BOOLEAN
+			l_picked_item_index: INTEGER
 		do
 			l_token_text := editor_token_text
 			if not l_token_text.tokens.is_empty then
@@ -600,7 +625,10 @@ feature{NONE} -- Implementation
 				if is_selected then
 					l_token_text.display_selected (0, 0, a_drawable, a_focused)
 				else
-					l_token_text.display (0, 0, a_drawable, last_picked_item, a_focused)
+					if is_pick_on_text then
+						l_picked_item_index := last_picked_item
+					end
+					l_token_text.display (0, 0, a_drawable, l_picked_item_index, a_focused)
 				end
 			end
 		end

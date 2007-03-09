@@ -13,7 +13,8 @@ inherit
 
 	FILED_STONE
 		redefine
-			is_valid, synchronized_stone, same_as
+			is_valid, synchronized_stone, same_as,
+			stone_name
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -85,29 +86,11 @@ feature -- Properties
 			Result := Interface_names.s_Class_stone.as_string_32 + stone_signature
 		end
 
-	same_as (other: STONE): BOOLEAN is
-			-- Do `Current' and `other' represent the same class?
-		local
-			convcur: CLASSI_STONE
-		do
-			convcur ?= other
-			Result := convcur /= Void and then class_i.is_equal (convcur.class_i)
-				and then equal (class_i.config_class.overriden_by, convcur.class_i.config_class.overriden_by)
-		end
-
-feature -- Access
-
 	header: STRING_GENERAL is
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
 			Result := interface_names.l_classi_header (stone_signature, class_i.group.name, class_i.file_name)
-		end
-
-	is_valid: BOOLEAN is
-			-- Is `Current' a valid stone?
-		do
-			Result := class_i /= Void and class_i.is_valid
 		end
 
 	synchronized_stone: CLASSI_STONE is
@@ -122,6 +105,34 @@ feature -- Access
 					create {CLASSI_STONE} Result.make (class_i)
 				end
 			end
+		end
+
+	stone_name: STRING_GENERAL is
+			-- Name of Current stone
+		do
+			if is_valid then
+				Result := class_i.name.twin
+			else
+				Result := Precursor
+			end
+		end
+
+feature -- Status report
+
+	is_valid: BOOLEAN is
+			-- Is `Current' a valid stone?
+		do
+			Result := class_i /= Void and class_i.is_valid
+		end
+
+	same_as (other: STONE): BOOLEAN is
+			-- Do `Current' and `other' represent the same class?
+		local
+			convcur: CLASSI_STONE
+		do
+			convcur ?= other
+			Result := convcur /= Void and then class_i.is_equal (convcur.class_i)
+				and then equal (class_i.config_class.overriden_by, convcur.class_i.config_class.overriden_by)
 		end
 
 feature {NONE} -- Implementation

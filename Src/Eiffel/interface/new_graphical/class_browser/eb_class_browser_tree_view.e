@@ -31,23 +31,19 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN; a_sorting_order_preference: like sorting_order_preference) is
+	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN) is
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
 			a_drop_actions_attached: a_drop_actions /= Void
-			a_sorting_order_preference_attached: a_sorting_order_preference /= Void
 		do
-			sorting_order_preference := a_sorting_order_preference
 			make (a_dev_window, a_drop_actions)
 			is_tree_view_enabled := a_tree_view_enabled
 			if is_flat_view_enabled then
 				setup_sorting_for_location
 			end
-			set_sorting_status (sorted_columns_from_string (sorting_order_preference.value))
 		ensure
 			is_tree_view_enabled_set: is_tree_view_enabled = a_tree_view_enabled
-			grid_sorting_setting_correct: is_sorting_setting_valid
 		end
 
 feature -- Status report
@@ -126,9 +122,6 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
-
-	sorting_order_preference: STRING_PREFERENCE
-			-- Preference to store sorting order
 
 feature -- Actions
 
@@ -239,12 +232,6 @@ feature -- Actions
 			do_all_in_rows (selected_rows, agent collapse_row)
 		end
 
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
-			-- Action to be performed after a sorting
-		do
-			sorting_order_preference.set_value (string_representation_of_sorted_columns)
-		end
-
 	on_show_path_changed is
 			-- Action to be performed when selection status of `display_path_button' changes
 		do
@@ -277,36 +264,18 @@ feature -- Status report
 
 feature -- Notification
 
-	update_view is
-			-- Update current view according to change in `model'.
-		local
-			l_msg: STRING_32
+	provide_result is
+			-- Provide result displayed in Current view.
 		do
-			if not is_up_to_date then
-				if data /= Void then
-					text.hide
-					component_widget.show
-					fill_rows
-					if last_sorted_column_internal = 0 then
-						last_sorted_column_internal := class_name_column_index
-					end
-					disable_auto_sort_order_change
-					enable_force_multi_column_sorting
-					sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
-					disable_force_multi_column_sorting
-					enable_auto_sort_order_change
-				else
-					component_widget.hide
-					text.show
-					l_msg := Warning_messages.w_Formatter_failed.twin
-					if trace /= Void then
-						l_msg.append ("%N")
-						l_msg.append (trace)
-					end
-					text.set_text (l_msg)
-				end
-				is_up_to_date := True
+			fill_rows
+			if last_sorted_column_internal = 0 then
+				last_sorted_column_internal := class_name_column_index
 			end
+			disable_auto_sort_order_change
+			enable_force_multi_column_sorting
+			sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
+			disable_force_multi_column_sorting
+			enable_auto_sort_order_change
 		end
 
 feature -- Sorting
@@ -569,7 +538,6 @@ feature{NONE} -- Implementation
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 			l_rows: like rows
 			l_bg_color: EV_COLOR
-			l_size_table: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			l_is_path_displayed: BOOLEAN
 		do
 			l_bg_color := even_line_color
@@ -589,12 +557,7 @@ feature{NONE} -- Implementation
 				l_row.bind_row (Void, grid, l_bg_color, 0, l_is_path_displayed)
 				l_rows.forth
 			end
-			if not has_grid_been_binded then
-				set_has_grid_been_binded (True)
-				create l_size_table.make (1)
-				l_size_table.force ([500, 800], 1)
-				auto_resize_columns (grid, l_size_table)
-			end
+			try_auto_resize_grid (<<[500, 800, 1]>>)
 		end
 
 	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
@@ -801,23 +764,9 @@ feature{NONE} -- Implementation/Stone
 	item_to_put_in_editor: EV_GRID_ITEM is
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.
-		local
-			l_rows: LIST [EV_GRID_ROW]
-			l_grid_row: EV_GRID_ROW
 		do
-			l_rows := grid.selected_rows
-			if l_rows.count = 1 then
-				if l_rows.first.parent = grid then
-					l_grid_row := l_rows.first
-					if (not l_grid_row.is_expandable) or else (l_grid_row.is_expanded) then
-						Result := l_grid_row.item (1)
-					end
-				end
-			end
+			Result := item_to_put_in_editor_for_tree_row
 		end
-
-invariant
-	sorting_order_preference_attached: sorting_order_preference /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

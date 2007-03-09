@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Class syntax stone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,12 +20,13 @@ inherit
 			stone_signature,
 			history_name,
 			synchronized_stone,
-			is_storable
+			is_storable,
+			stone_name
 		redefine
 			same_as,
 			is_valid
 		end
-		
+
 	CLASSC_STONE
 		rename
 			make as cl_make,
@@ -58,7 +59,7 @@ feature -- Properties
 			Result := Precursor {SYNTAX_STONE} (other) and then
 				Precursor {CLASSC_STONE} (other)
 		end
-	
+
 	is_valid: BOOLEAN is
 			-- Is `Current' meaningful?
 		do

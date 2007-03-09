@@ -18,6 +18,7 @@ inherit
 			pixmap_from_group_path,
 			pixmap_from_group
 		redefine
+			make,
 			data,
 			default_ensure_visible_action,
 			recycle_agents,
@@ -41,6 +42,14 @@ inherit
 
 create
 	make
+
+feature{NONE} -- Initialization
+
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+			-- Initialize.
+		do
+			Precursor (a_dev_window, a_drop_actions)
+		end
 
 feature -- Access
 
@@ -224,85 +233,6 @@ feature -- Setting
 
 feature -- Actions
 
---	on_key_pressed (a_key: EV_KEY) is
---			-- Action to be performed when some key is pressed in `grid'
---		require
---			a_key_attached: a_key /= Void
---		local
---			l_processed: BOOLEAN
---		do
---			l_processed := on_predefined_key_pressed (a_key)
---		end
-
---	on_expand_all_level is
---			-- Action to be performed to recursively expand all selected rows.
---		do
---			processed_rows.wipe_out
---			do_all_in_rows (selected_rows, agent expand_row_recursively)
---		end
-
---	on_collapse_all_level is
---			-- Action to be performed to recursively collapse all selected rows.
---		do
---			processed_rows.wipe_out
---			do_all_in_rows (selected_rows, agent collapse_row_recursively)
---		end
-
---	on_expand_one_level is
---			-- Action to be performed to expand all selected rows.
---		local
---			l_selected_rows: like selected_rows
---			l_row: EV_GRID_ROW
---			l_done: BOOLEAN
---		do
---			l_selected_rows := selected_rows
---			if l_selected_rows.count = 1 then
---				l_row := l_selected_rows.first
---				if not l_row.is_expandable or else l_row.is_expanded then
---					go_to_first_child (l_row)
---					l_done := True
---				end
---			end
---			if not l_done then
---				processed_rows.wipe_out
---				do_all_in_rows (selected_rows, agent expand_row)
---			end
---		end
-
---	on_collapse_one_level is
---			-- Action to be performed to collapse all selected rows.
---		local
---			l_selected_rows: like selected_rows
---			l_row: EV_GRID_ROW
---			l_done: BOOLEAN
---		do
---			l_selected_rows := selected_rows
---			if l_selected_rows.count = 1 then
---				l_row := l_selected_rows.first
---				if not l_row.is_expandable or else not l_row.is_expanded then
---					go_to_parent (l_row)
---					l_done := True
---				end
---			end
---			if not l_done then
---				processed_rows.wipe_out
---				do_all_in_rows (l_selected_rows, agent collapse_row_normal)
---			end
---		end
-
---	on_collapse_one_level_partly is
---			-- Action to be performed to collapse on level but leave the first level of child rows open.
---		do
---			processed_rows.wipe_out
---			do_all_in_rows (selected_rows, agent collapse_row)
---		end
-
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
-			-- Action to be performed after a sorting
-		do
-			preferences.class_browser_data.dependency_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
-		end
-
 	on_categorized_folder_changed is
 			-- Action to be performed when selection status of `categorized_folder_button' changes
 		do
@@ -365,54 +295,29 @@ feature -- Actions
 
 feature -- Notification
 
-	update_view is
-			-- Update current view according to change in `model'.
+	provide_result is
+			-- Provide result displayed in Current view.
 		local
-			l_msg: STRING_32
-			l_resize_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER]
 			l_cluster_stone: CLUSTER_STONE
 		do
-			if not is_up_to_date then
-				set_has_grid_been_binded_for_current_data (False)
-				starting_element_group := domain_item_from_stone (starting_element).group
-				l_cluster_stone ?= starting_element
-				is_starting_element_folder := l_cluster_stone /= Void and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
-				if data /= Void then
-					text.hide
-					component_widget.show
-					retrieve_classes_in_starting_element
-					data_hierarchy := Void
-					fill_rows
-					if last_sorted_column_internal = 0 then
-						last_sorted_column_internal := 1
-					end
-					disable_auto_sort_order_change
-					enable_force_multi_column_sorting
-					sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
-					disable_force_multi_column_sorting
-					enable_auto_sort_order_change
-					set_has_grid_been_binded_for_current_data (True)
-					if not has_grid_been_binded then
-						set_has_grid_been_binded (True)
-						create l_resize_table.make (2)
-						l_resize_table.force ([150, 300], 1)
-						l_resize_table.force ([150, 300], 2)
-						l_resize_table.force ([150, 200], 3)
-						l_resize_table.force ([100, 200], 4)
-						auto_resize_columns (grid, l_resize_table)
-					end
-				else
-					component_widget.hide
-					text.show
-					l_msg := Warning_messages.w_Formatter_failed.twin
-					if trace /= Void then
-						l_msg.append ("%N")
-						l_msg.append (trace)
-					end
-					text.set_text (l_msg)
-				end
-				is_up_to_date := True
+			set_has_grid_been_binded_for_current_data (False)
+			starting_element_group := domain_item_from_stone (starting_element).group
+			l_cluster_stone ?= starting_element
+			is_starting_element_folder := l_cluster_stone /= Void and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
+
+			retrieve_classes_in_starting_element
+			data_hierarchy := Void
+			fill_rows
+			if last_sorted_column_internal = 0 then
+				last_sorted_column_internal := 1
 			end
+			disable_auto_sort_order_change
+			enable_force_multi_column_sorting
+			sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
+			disable_force_multi_column_sorting
+			enable_auto_sort_order_change
+			set_has_grid_been_binded_for_current_data (True)
+			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2], [150, 200, 3], [100, 200, 4]>>)
 		end
 
 feature -- Sorting

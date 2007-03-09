@@ -9,7 +9,8 @@ class
 inherit
 	STONE
 		redefine
-			is_valid
+			is_valid,
+			stone_name
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -74,6 +75,18 @@ feature -- Access
 		do
 			Result := stone_signature
 		end
+
+	stone_name: STRING_GENERAL is
+			-- Name of Current stone
+		do
+			if is_valid then
+				Result := target.name.twin
+			else
+				Result := Precursor
+			end
+		end
+
+feature -- Status report
 
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?

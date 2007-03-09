@@ -87,6 +87,12 @@ feature -- Status report
 			create Result
 		end
 
+	customized_formatter_manager: EB_CUSTOMIZED_FORMATTER_MANAGER is
+			-- Customized formatter manager
+		once
+			create Result.make
+		end
+
 feature {NONE} -- Implementation
 
 	Refactoring_manager: ERF_MANAGER is

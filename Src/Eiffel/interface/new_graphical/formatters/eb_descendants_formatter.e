@@ -12,8 +12,11 @@ inherit
 	EB_CLASS_HIERARCHY_FORMATTER
 		redefine
 			is_tree_node_highlight_enabled,
-			is_inheritance_formatter
+			is_inheritance_formatter,
+			browser
 		end
+
+	EB_CONSTANTS
 
 create
 	make
@@ -42,6 +45,23 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showdescendants
 		end
+
+	browser: EB_CLASS_BROWSER_TREE_VIEW
+			-- Browser
+			
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_class_tree_displayer, displayer_generators.class_tree_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.class_tree_view_sorting_order_preference
+		end
+
+feature -- Status report
 
 	is_tree_node_highlight_enabled: BOOLEAN is True
 			-- Is tree node highlight enabled?

@@ -350,25 +350,6 @@ feature -- Actions binding
 			a_text.key_press_actions.extend (agent on_key_pressed_on_non_editable_text_field (?, a_text, a_msg, a_window))
 		end
 
-feature -- Feedback dialog
-
-	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_INFORMATION_DIALOG; a_window: EV_WINDOW) is
-			-- Show a feedback information `a_dialog' modal to `a_window' to display information `a_msg'.
-			-- `a_agent' will be added into `on_show_actions' of that dialog.
-		require
-			a_msg_attached: a_msg /= Void
-			a_agent_attached: a_agent /= Void
-			a_dialog_attached: a_dialog /= Void
-			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
-			a_window_attached: a_window /= Void
-		do
-			a_dialog.set_title (a_msg)
-			a_dialog.set_text (a_msg)
-			a_dialog.show_actions.wipe_out
-			a_dialog.show_actions.extend (agent call_agent_and_then_hide (a_agent, a_dialog))
-			a_dialog.show_modal_to_window (a_window)
-		end
-
 feature -- Domain item
 
 	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
@@ -651,6 +632,15 @@ feature -- Pick and drop
 			a_action_holder.drop_actions.extend (agent drop_cluster (?, a_metric_tool))
 		end
 
+	tool_drop_actions (a_metric_tool: EB_METRIC_TOOL): EV_PND_ACTION_SEQUENCE is
+			-- Drop actions
+		do
+			create Result
+			Result.extend (agent drop_class (?, a_metric_tool))
+			Result.extend (agent drop_feature (?, a_metric_tool))
+			Result.extend (agent drop_cluster (?, a_metric_tool))
+		end
+
 	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: EB_METRIC_TOOL) is
 			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into every item in `a_action_holders'.
 		require
@@ -696,16 +686,16 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG) is
-			-- Call `a_agent' and then hide `a_dialog'.
-		require
-			a_agent_attached: a_agent /= Void
-			a_dialog_attached: a_dialog /= Void
-			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
-		do
-			a_agent.call (Void)
-			a_dialog.hide
-		end
+--	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG) is
+--			-- Call `a_agent' and then hide `a_dialog'.
+--		require
+--			a_agent_attached: a_agent /= Void
+--			a_dialog_attached: a_dialog /= Void
+--			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
+--		do
+--			a_agent.call (Void)
+--			a_dialog.hide
+--		end
 
 	activate_grid_item (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_grid_item: EV_GRID_ITEM) is
 			-- Action to be performed to activate `a_grid_item'

@@ -342,11 +342,11 @@ feature -- Update
 
 			tools.synchronize
 
-			if not unified_stone then
+--			if not unified_stone then
 
-			end
-			tools.class_tool.invalidate
-			tools.features_relation_tool.invalidate
+--			end
+--			tools.class_tool.invalidate
+--			tools.features_relation_tool.invalidate
 			if has_case then
 				tools.diagram_tool.synchronize
 			end

@@ -1,0 +1,630 @@
+indexing
+	description: "Class browser viewer to display result of a query language domain"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	EB_CLASS_BROWSER_DOMAIN_VIEW
+
+inherit
+	EB_CLASS_BROWSER_GRID_VIEW [EB_METRIC_RESULT_ROW]
+		redefine
+			data,
+			update,
+			internal_recycle
+		end
+
+	EB_CONSTANTS
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+	EVS_GRID_TWO_WAY_SORTING_ORDER
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+	QL_SHARED_NAMES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+	EB_STONE_UTILITY
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+create
+	make
+
+feature -- Access
+
+	control_bar: EV_WIDGET is
+			-- Widget of a control bar through which, certain control can be performed upon current view
+			-- Every view can provide a customized control bar. Normally a tool bar is placed in this area
+			-- through which behavior (such as tooltip display) of current view can be changed.
+		do
+		end
+
+	data: QL_DOMAIN
+			-- Data
+
+feature -- Status report
+
+	should_tooltip_be_displayed: BOOLEAN
+			-- Should tooltip be displayed?
+		do
+		end
+
+	should_headers_be_shown: BOOLEAN
+			-- Should headers of `grid' be shown?
+
+feature{NONE} -- Actions
+
+	on_expand_all_level is
+			-- Action to be performed to recursively expand all selected rows.
+		do
+		end
+
+	on_collapse_all_level is
+			-- Action to be performed to recursively collapse all selected rows.
+		do
+		end
+
+	on_expand_one_level is
+			-- Action to be performed to expand all selected rows.
+		do
+		end
+
+	on_collapse_one_level is
+			-- Action to be performed to collapse all selected rows.
+		do
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_processed: BOOLEAN
+		do
+			l_processed := on_predefined_key_pressed (a_key)
+		end
+
+feature -- Refresh
+
+	refresh is
+			-- Refresh.
+		do
+			fill_rows
+		end
+
+	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
+			-- Notification from `a_observable' indicating that `a_data' changed.
+		require else
+			a_observable_can_be_void: a_observable = Void
+		do
+			data ?= a_data
+			is_up_to_date := False
+			if data = Void then
+				create {QL_CLASS_DOMAIN}data.make
+				set_should_headers_be_shown (False)
+			else
+				set_should_headers_be_shown (True)
+			end
+			update_view
+		end
+
+feature -- Setting
+
+	set_should_headers_be_shown (b: BOOLEAN) is
+			-- Set `should_headers_be_shown' with `b'.
+		do
+			should_headers_be_shown := b
+		ensure
+			should_headers_be_shown_set: should_headers_be_shown = b
+		end
+
+feature{NONE} -- Implementation/Data
+
+	item_to_put_in_editor: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.			
+		do
+			Result := item_to_put_in_editor_for_single_item_grid
+		end
+
+	domain: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+			-- Domain to be displayed in Current
+
+	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			-- Supports editor token grid
+
+	item_function (x, y: INTEGER): EV_GRID_ITEM is
+			-- Grid item at position (`x', `y').
+		require
+			x_positive: x > 0 and x <= content.count
+			y_positive: y > 0
+		do
+			if domain /= Void then
+				if y <= domain.count then
+					Result := content.i_th (x).item (y)
+					if Result = Void then
+						read_content (y)
+						Result := content.i_th (x).item (y)
+					end
+				end
+			end
+		end
+
+	row_background_color (y: INTEGER): EV_COLOR is
+			-- Background color for items in row indexed by `y'
+		local
+			l_last_item: EB_METRIC_GRID_RESULT_ITEM
+			l_current_item: EB_METRIC_GRID_RESULT_ITEM
+			l_last_sorted_column: INTEGER
+		do
+			l_last_sorted_column := last_sorted_column
+			if l_last_sorted_column = 0 then
+					-- If no sort has been applied
+				Result := grid.background_color
+			else
+					-- If sort has been applied.
+				if y = 1 then
+					Result := odd_row_background_color
+				else
+					check y > 1 end
+					l_last_item ?= content.i_th (l_last_sorted_column).item (y - 1)
+					l_current_item ?= content.i_th (l_last_sorted_column).item (y)
+					if l_last_item = Void then
+						Result := odd_row_background_color
+					elseif l_current_item = Void then
+						Result := l_last_item.background_color
+						if Result = Void then
+							Result := odd_row_background_color
+						end
+					else
+						if l_last_item.image.is_equal (l_current_item.image) then
+							Result := l_last_item.background_color
+						else
+								-- Alternate row background here.
+							Result := next_row_background_color (l_last_item.background_color)
+						end
+					end
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	next_row_background_color (a_color: EV_COLOR): EV_COLOR is
+			-- Alternative row background color according to `a_color'
+		local
+			l_odd_color: like odd_row_background_color
+		do
+			l_odd_color := odd_row_background_color
+			if a_color = Void then
+				Result := l_odd_color
+			else
+				if a_color.is_equal (l_odd_color) then
+					Result := even_row_background_color
+				else
+					Result := l_odd_color
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	content: ARRAYED_LIST [HASH_TABLE [EV_GRID_ITEM, INTEGER]]
+			-- Content of `domain'
+			-- Key of the inner hash table is row index, value is the grid item.
+
+	read_content (y: INTEGER) is
+			-- Generate grid item from `domain'. `y' is the starting row.
+			-- `cache_row_count' items will be generated every time.
+		require
+			domain_attached: domain /= Void
+			y_valid: y > 0 and y <= domain.count
+		local
+			i, j: INTEGER
+			l_content: DS_LIST [EB_METRIC_RESULT_ROW]
+			l_tbl: HASH_TABLE [EV_GRID_ITEM, INTEGER]
+		do
+			from
+				i := y
+				j := (i + cache_row_count).min (domain.count)
+				l_tbl := content.i_th (1)
+				l_content := domain
+				l_content.go_i_th (i)
+			until
+				i > j
+			loop
+				if not l_tbl.has (i) then
+					generate_grid_item (i, l_content.item_for_iteration)
+				end
+				l_content.forth
+				i := i + 1
+			end
+		end
+
+	cache_row_count: INTEGER is 50
+			-- Cache row count
+
+	domain_type_name (a_domain: QL_DOMAIN): STRING is
+			-- Type name of `a_domain'
+		require
+			a_domain_attached: a_domain /= Void
+		do
+			if a_domain.is_target_domain then
+				Result := query_language_names.ql_target
+			elseif a_domain.is_group_domain then
+				Result := query_language_names.ql_group
+			elseif a_domain.is_class_domain then
+				Result := query_language_names.ql_class
+			elseif a_domain.is_generic_domain then
+				Result := query_language_names.ql_generic
+			elseif a_domain.is_feature_domain then
+				Result := query_language_names.ql_feature
+			elseif a_domain.is_argument_domain then
+				Result := query_language_names.ql_argument
+			elseif a_domain.is_local_domain then
+				Result := query_language_names.ql_local
+			elseif a_domain.is_assertion_domain then
+				Result := query_language_names.ql_assertion
+			elseif a_domain.is_line_domain then
+				Result := query_language_names.ql_line
+			elseif a_domain.is_quantity_domain then
+				Result := query_language_names.ql_quantity
+			end
+		ensure
+			good_result: Result /= Void and then not Result.is_empty
+		end
+
+	odd_row_background_color: EV_COLOR is
+			-- Background color for odd rows
+		do
+			Result := preferences.class_browser_data.odd_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	even_row_background_color: EV_COLOR is
+			-- Background color for even rows
+		do
+			Result := preferences.class_browser_data.even_row_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dynamic_grid_item_function (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			-- Grid item at position (`a_column', `a_row')
+		do
+			Result := grid.item (a_column, a_row)
+			if Result = Void then
+				Result := item_function (a_column, a_row)
+			end
+		end
+
+	invisible_items: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+			-- List of invisible result rows
+
+	last_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]
+			-- Last comparator
+
+feature{NONE} -- Implementation
+
+	provide_result is
+			-- Provide result displayed in Current view.
+		do
+			bind_grid
+			if is_column_sortable (last_sorted_column) then
+				disable_auto_sort_order_change
+				enable_force_multi_column_sorting
+				sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
+				disable_force_multi_column_sorting
+				enable_auto_sort_order_change
+			else
+				fill_rows
+			end
+		end
+
+	fill_rows is
+			-- Fill rows with `data'.
+		do
+			content.i_th (1).wipe_out
+			content.i_th (2).wipe_out
+			if grid.row_count > 0 then
+				grid.remove_rows (1, grid.row_count)
+			end
+			if domain /= Void then
+				grid.set_row_count_to (domain.count)
+			end
+			grid.refresh_now
+		end
+
+	bind_grid is
+			-- Bind grid.
+		local
+			l_content: LIST [QL_ITEM]
+			l_domain: like domain
+			a_domain: like data
+		do
+			a_domain := data
+			if a_domain /= Void then
+				if should_headers_be_shown then
+					grid.column (1).set_title (interface_names.first_character_as_upper (domain_type_name (a_domain).as_lower))
+					grid.column (2).set_title (interface_names.l_location)
+				else
+					grid.column (1).set_title ("")
+					grid.column (2).set_title ("")
+				end
+				create domain.make
+				l_domain := domain
+				from
+					l_content := a_domain.content
+					l_content.start
+				until
+					l_content.after
+				loop
+					l_domain.force_last (create {EB_METRIC_RESULT_ROW}.make(l_content.item))
+					l_content.forth
+				end
+			else
+				grid.column (1).set_title ("")
+				domain := Void
+			end
+			try_auto_resize_grid (<<[150, 300, 1]>>)
+		end
+
+	build_grid is
+			-- Build `grid'.
+		do
+			create content.make (2)
+			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
+			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
+			create invisible_items.make
+
+				-- Setup sortable `grid'.
+			create grid
+			grid.enable_multiple_item_selection
+			grid.enable_selection_on_single_button_click
+			grid.set_column_count_to (2)
+			grid.set_row_count_to (100)
+			grid.enable_partial_dynamic_content
+			grid.set_dynamic_content_function (agent item_function)
+			grid.key_press_actions.extend (agent on_key_pressed)
+			if drop_actions /= Void then
+				grid.drop_actions.fill (drop_actions)
+			end
+
+				-- Setup `editor_token_grid_support'.
+			create editor_token_grid_support.make_with_grid (grid)
+			editor_token_grid_support.enable_grid_item_pnd_support
+			editor_token_grid_support.color_or_font_change_actions.extend (agent on_color_or_font_changed)
+			editor_token_grid_support.synchronize_color_or_font_change_with_editor
+			editor_token_grid_support.synchronize_scroll_behavior_with_editor
+			editor_token_grid_support.enable_ctrl_right_click_to_open_new_window
+
+			set_grid_item_function (agent dynamic_grid_item_function)
+
+				-- Setup copy & paste function.
+			set_item_text_function (agent text_of_grid_item)
+			set_select_all_action (agent select_all)
+			enable_copy
+		end
+
+	build_sortable_and_searchable is
+			-- Build sortable and searchable facilities
+		local
+			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
+			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
+		do
+			old_make (grid)
+			create l_item_sort_info.make (agent item_order_tester, ascending_order)
+			create l_path_sort_info.make (agent path_order_tester, ascending_order)
+			l_item_sort_info.enable_auto_indicator
+			l_path_sort_info.enable_auto_indicator
+
+			set_sort_action (agent sort_agent)
+			set_sort_info (1, l_item_sort_info)
+			set_sort_info (2, l_path_sort_info)
+			set_ensure_visible_action (agent ensure_item_visible)
+			enable_auto_sort_order_change
+
+				-- Prepare search facilities
+			create quick_search_bar.make (development_window)
+			quick_search_bar.attach_tool (Current)
+			enable_search
+			enable_direct_start_search
+		end
+
+	generate_grid_item (a_y: INTEGER; a_item: EB_METRIC_RESULT_ROW) is
+			-- Generate grid items for row `a_y' from `a_item'.
+		require
+			domain_attached: domain /= Void
+			a_y_valid: a_y > 0 and a_y <= domain.count
+			a_item_attached: a_item /= Void
+		local
+			l_item: EB_METRIC_GRID_RESULT_ITEM
+			l_path_item: EB_METRIC_GRID_RESULT_ITEM
+			l_ql_item: QL_ITEM
+			l_row_background_color: EV_COLOR
+		do
+			l_ql_item := a_item.item
+			create l_item.make (l_ql_item, 1, a_y, False)
+			create l_path_item.make (l_ql_item, 2, a_y, True)
+
+			l_item.set_stone (stone_from_ql_item (l_ql_item))
+			l_path_item.set_stone (stone_from_ql_item (l_ql_item.parent))
+
+			content.i_th (1).force (l_item, a_y)
+			content.i_th (2).force (l_path_item, a_y)
+
+			l_row_background_color := row_background_color (a_y)
+			l_item.set_background_color (l_row_background_color)
+			l_path_item.set_background_color (l_row_background_color)
+		end
+
+	ensure_item_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
+			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
+		local
+			l_grid_item: EB_METRIC_GRID_RESULT_ITEM
+			l_grid: like grid
+		do
+			l_grid_item ?= a_item.grid_item
+			l_grid := grid
+
+			if l_grid_item /= Void and then not l_grid_item.is_destroyed and then l_grid_item.is_parented then
+			else
+				l_grid_item ?= item_function (a_item.column_index, a_item.row_index)
+				l_grid.set_item (a_item.column_index, a_item.row_index, l_grid_item)
+			end
+			if l_grid_item /= Void then
+				l_grid.remove_selection
+				l_grid_item.ensure_visible
+				if a_selected then
+					l_grid_item.row.enable_select
+				end
+			end
+		end
+
+	select_all is
+			-- Action to be performed to select all items in `grid'					
+		local
+			l_row_index: INTEGER
+			l_row_count: INTEGER
+			l_grid: like grid
+			l_row: EV_GRID_ROW
+		do
+			l_grid := grid
+			from
+				l_row_index := 1
+				l_row_count := l_grid.row_count
+			until
+				l_row_index > l_row_count
+			loop
+				l_row := l_grid.row (l_row_index)
+				if l_row.item (1) = Void then
+					l_row.set_item (1, item_function (1, l_row_index))
+				end
+				if l_row.item (2) = Void then
+					l_row.set_item (2, item_function (2, l_row_index))
+				end
+				l_grid.select_row (l_row_index)
+				l_row_index := l_row_index + 1
+			end
+		end
+
+feature{NONE} -- Implementation/Sorting
+
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
+		require
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty:
+		do
+			last_comparator := a_comparator
+			sort_domain (a_comparator)
+			fill_rows
+		end
+
+	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
+			-- Sort `domain' using `a_comparator'.
+		require
+			a_comparator_attached: a_comparator /= Void
+		local
+			l_sorter: DS_QUICK_SORTER [EB_METRIC_RESULT_ROW]
+			l_domain: like domain
+		do
+			l_domain := domain
+			if l_domain /= Void then
+				create l_sorter.make (a_comparator)
+				l_sorter.sort (l_domain)
+			end
+		end
+
+	item_order_tester (a_item, b_item: EB_METRIC_RESULT_ROW; a_order: INTEGER): BOOLEAN
+			-- Order tester for `a_item' and `b_item' using item name
+		require
+			a_item_attached: a_item /= Void
+			b_item_attached: b_item /= Void
+		do
+			if a_order = ascending_order then
+				Result := a_item.item.name < b_item.item.name
+			else
+				Result := a_item.item.name > b_item.item.name
+			end
+		end
+
+	path_order_tester (a_item, b_item: EB_METRIC_RESULT_ROW; a_order: INTEGER): BOOLEAN
+			-- Order tester for `a_item' and `b_item' using item path
+		require
+			a_item_attached: a_item /= Void
+			b_item_attached: b_item /= Void
+		do
+			if a_order = ascending_order then
+				Result := a_item.path < b_item.path
+			else
+				Result := a_item.path > b_item.path
+			end
+		end
+
+feature{NONE} -- Recycle
+
+	internal_recycle is
+			-- Recycle.
+		do
+			if not is_recycled then
+				Precursor
+				editor_token_grid_support.desynchronize_color_or_font_change_with_editor
+				editor_token_grid_support.desynchronize_scroll_behavior_with_editor
+			end
+		end
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+end

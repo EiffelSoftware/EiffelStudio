@@ -344,6 +344,7 @@ feature{NONE} -- Actions
 							else
 								set_keyword (l_key_str)
 								set_focus_on_keyword_field
+								keyword_field.deselect_all
 							end
 						else
 							show_tool

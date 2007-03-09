@@ -61,7 +61,7 @@ feature -- Basic Operations
 		do
 		end
 
-	process_warnings (warnings: LINKED_LIST [ERROR]) is
+	process_warnings (a_warnings: LINKED_LIST [ERROR]) is
 			-- Display contextual error information from `warnings'.
 		local
 			st: TEXT_FORMATTER
@@ -70,11 +70,11 @@ feature -- Basic Operations
 			st := text_area.text_displayed
 			if retried_count = 0 then
 				text_area.handle_before_processing (false)
-				if warnings.is_empty then
+				if a_warnings.is_empty then
 						-- There is no error in the list put a separation before the next message
 					display_separation_line (st)
 				end
-				display_error_list (st, warnings)
+				display_error_list (st, a_warnings)
 				text_area.handle_after_processing
 			else
 				if retried_count = 1 then
@@ -91,7 +91,7 @@ feature -- Basic Operations
 					text_area.handle_after_processing
 				end
 			end
-			set_title (warnings.count)
+			set_title (a_warnings.count)
 		end
 
 	show is

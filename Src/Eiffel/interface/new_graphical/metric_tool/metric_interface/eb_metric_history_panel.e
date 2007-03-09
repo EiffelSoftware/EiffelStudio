@@ -567,9 +567,9 @@ feature{NONE} -- UI Update
 						selector_toolbar.disable_sensitive
 						check_warning_btn.disable_sensitive
 					else
-						metric_tool.load_metrics (False, metric_names.t_loading_metrics)
+						metric_tool.load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 						if not metric_tool.is_metric_validation_checked.item then
-							metric_tool.check_metric_validation
+							metric_tool.check_metric_validation (metric_tool.develop_window)
 						end
 						inspect
 							grid_refresh_level

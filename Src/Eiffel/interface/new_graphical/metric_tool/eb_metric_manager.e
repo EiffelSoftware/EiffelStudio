@@ -182,18 +182,6 @@ feature -- Status report
 			Result := l_file.exists
 		end
 
---	is_last_predefined_metric_load_successful: BOOLEAN is
---			-- Is last predefined metric loading successful?
---		do
---			Result := last_predefined_metric_load_error = Void
---		end
-
---	is_last_userdefined_metric_load_successful: BOOLEAN is
---			-- Is last userdefined metric loading successful?
---		do
---			Result := last_userdefined_metric_load_error = Void
---		end
-
 	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN is
 			-- Are `a_metric_name' and `b_metric_name' equal?
 		require
@@ -284,7 +272,7 @@ feature -- Access
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (project_location.path)
+			create l_file_name.make_from_string (project_location.target_path)
 			l_file_name.extend ("metrics")
 			Result :=  l_file_name.out
 		ensure

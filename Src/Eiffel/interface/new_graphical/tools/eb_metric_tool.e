@@ -33,6 +33,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	EB_METRIC_TOOL_HELPER
+
 create
 	make
 
@@ -45,7 +47,6 @@ feature -- Initialization
 			create widget
 			create metric_notebook
 
-			create feedback_dialog
 			feedback_dialog.set_buttons (<<>>)
 
 			notify_project_loaded_agent := agent notify_project_loaded
@@ -119,7 +120,7 @@ feature -- Actions
 		do
 			if content.is_visible then
 				if workbench.system_defined and then workbench.is_already_compiled then
-					load_metrics (False, metric_names.t_loading_metrics)
+					load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 				end
 				set_is_shown (True)
 				on_tab_change
@@ -187,30 +188,17 @@ feature -- Basic operations
 			end
 		end
 
-	load_metrics (a_force: BOOLEAN; a_msg: STRING_GENERAL) is
+	load_metrics_and_display_error (a_force: BOOLEAN; a_msg: STRING_GENERAL) is
 			-- Load metrics is they are not already loaded.
 			-- If `a_force' is True, load metrics even thought they are already loaded.
 			-- When loading metrics, `a_msg' will be displayed in a dialog.
+			-- Error will be displayed if any.
 		require
 			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
 		do
-			if workbench.system_defined and then workbench.is_already_compiled then
-				if a_force or else not metric_manager.is_metric_loaded then
-					show_feedback_dialog (a_msg, agent metric_manager.load_metrics, feedback_dialog, develop_window.window)
-					display_error_message
-					check_metric_validation
-				end
-			end
-		end
-
-	check_metric_validation is
-			-- Check metric validation.
-		do
-			develop_window.window_manager.display_message (metric_names.t_checking_metric_vadility)
-			metric_manager.check_validation (True)
-			is_metric_validation_checked.put (True)
-			develop_window.window_manager.display_message ("")
+			load_metrics (a_force, a_msg, develop_window)
+			display_error_message
 		end
 
 	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN; a_filtered: BOOLEAN) is
@@ -236,24 +224,17 @@ feature -- Basic operations
 		do
 			metric_manager.store_userdefined_metrics
 			display_error_message
-			check_metric_validation
+			check_metric_validation (develop_window)
 			metric_loaded_actions.call (Void)
+			metric_manager.metric_loaded_actions.call (Void)
 		end
 
 	display_error_message is
 			-- Display error message from `metric_manager'.
-		local
-			l_dlg: EV_ERROR_DIALOG
 		do
 			if not metric_manager.is_exit_requested then
 				if metric_manager.has_error then
-					if feedback_dialog.is_show_requested then
-						feedback_dialog.hide
-					end
-					create l_dlg.make_with_text (metric_manager.last_error.message_with_location)
-					l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
-					l_dlg.show_relative_to_window (develop_window.window)
-					metric_manager.clear_last_error
+					show_error_message (agent metric_manager.last_error, agent metric_manager.clear_last_error, develop_window.window)
 				end
 			end
 		end
@@ -283,9 +264,6 @@ feature -- Access
 
 	widget: EV_VERTICAL_BOX
 			-- Graphical object of `Current'
-
-	feedback_dialog: EV_INFORMATION_DIALOG
-			-- Dialog to display feedback
 
 	metric_evaluation_panel: EB_METRIC_EVALUATION_PANEL
 			-- Metric evaluation panel
@@ -351,14 +329,6 @@ feature -- Status report
 
 	is_recompiled: BOOLEAN
 			-- Has system been recompiled?
-
-	is_metric_validation_checked: CELL [BOOLEAN] is
-			-- Is validation of metrica checked?
-		once
-			create Result.put (False)
-		ensure
-			result_attached: Result /= Void
-		end
 
 	is_eiffel_compiling: BOOLEAN is
 			-- Is eiffel compiling?

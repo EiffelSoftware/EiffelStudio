@@ -12,25 +12,49 @@ deferred class
 inherit
 	EB_FORMATTER
 		redefine
+			displayer,
 			internal_recycle
 		end
 
 feature -- Access
 
-	editor: EB_CLICKABLE_EDITOR
+	editor: EB_CLICKABLE_EDITOR is
 			-- Output editor.
+		do
+			if displayer /= Void then
+				Result := displayer.editor
+			end
+		ensure then
+			good_result: displayer /= Void implies Result = displayer.editor
+		end
+
+	new_editor (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like editor is
+			-- New Editor
+		do
+			create Result.make (a_dev_window)
+			Result.widget.set_border_width (1)
+			Result.widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			Result.disable_line_numbers
+			Result.drop_actions.append (a_drop_actions)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [agent displayer_generators.new_editor_displayer, displayer_generators.editor_displayer]
+		end
+
+	control_bar: EV_WIDGET is
+			-- Possible area to display a tool bar
+		do
+		end
+
+	displayer: EB_FORMATTER_EDITOR_DISPLAYER
+			-- Displayer used to display results of Current formatter
 
 feature -- Setting
-
-	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
-			-- Set `editor' to `an_editor'.
-			-- Used to share an editor between several formatters.
-		require
-			an_editor_non_void: an_editor /= Void
-		do
-			editor := an_editor
-			internal_widget := an_editor.widget
-		end
 
 	setup_viewpoint is
 			-- Setup viewpoint for formatting.
@@ -38,6 +62,12 @@ feature -- Setting
 			if viewpoints /= Void and then editor /= Void then
 				editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
 			end
+		end
+
+	set_displayer (a_displayer: like displayer) is
+			-- Set `a_displayer' into Current.
+		do
+			displayer := a_displayer
 		end
 
 feature -- Positioning
@@ -62,7 +92,7 @@ feature{NONE} -- Recycle
 			-- Recycle.
 		do
 			Precursor
-			editor := Void
+			displayer := Void
 		end
 
 indexing
@@ -95,6 +125,6 @@ indexing
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
-		]"		
+		]"
 
 end

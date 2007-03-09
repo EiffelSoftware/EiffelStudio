@@ -34,6 +34,7 @@ feature -- Command
 		local
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			l_editors_manager: EB_EDITORS_MANAGER
+			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 		do
 			old_class_stone ?= develop_window.stone
 			feature_stone ?= a_stone
@@ -82,15 +83,17 @@ feature -- Command
 				end
 			end
 
-				-- Refresh editor in main formatters.
+				-- Refresh editor in main formatters.			
 			if l_editors_manager.current_editor /= Void then
+				create l_editor_displayer.make (l_editors_manager.current_editor)
 				from
 					l_managed_main_formatters := develop_window.managed_main_formatters
 					l_managed_main_formatters.start
 				until
 					l_managed_main_formatters.after
 				loop
-					l_managed_main_formatters.item.set_editor (l_editors_manager.current_editor)
+					l_managed_main_formatters.item.set_displayer (l_editor_displayer)
+--					l_managed_main_formatters.item.set_editor (l_editors_manager.current_editor)
 					l_managed_main_formatters.forth
 				end
 			end

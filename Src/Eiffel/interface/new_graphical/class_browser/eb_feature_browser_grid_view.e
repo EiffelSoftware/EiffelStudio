@@ -12,6 +12,7 @@ class
 inherit
 	EB_CLASS_BROWSER_GRID_VIEW [EB_FEATURE_BROWSER_GRID_ROW]
 		redefine
+			make,
 			data,
 			recycle_agents,
 			default_ensure_visible_action
@@ -21,6 +22,14 @@ inherit
 
 create
 	make
+
+feature{NONE} -- Initialization
+
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+			-- Initialize.
+		do
+			Precursor (a_dev_window, a_drop_actions)
+		end
 
 feature -- Status report
 
@@ -102,13 +111,14 @@ feature -- Setting
 			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
 		do
 			if is_written_class_used then
-				grid.set_column_count_to (3)
 				grid.column (3).header_item.set_text (interface_names.l_version_from)
 				create l_written_class_sort_info.make (agent written_class_tester, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
 				set_sort_info (3, l_written_class_sort_info)
 			else
-				grid.set_column_count_to (2)
+				grid.column (3).header_item.set_text ("")
+				remove_sort_info (3)
+				grid.column (3).clear
 			end
 		end
 
@@ -180,12 +190,6 @@ feature -- Actions
 			if not l_done then
 				do_all_in_items (grid.selected_items, agent collapse_item)
 			end
-		end
-
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
-			-- Action to be performed after a sorting
-		do
-			preferences.class_browser_data.feature_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
 		end
 
 feature -- Access
@@ -268,11 +272,11 @@ feature{NONE} -- Initialization
 			-- Build `grid'.
 		do
 			create grid
+			grid.set_column_count_to (3)
 			if is_written_class_used then
-				grid.set_column_count_to (3)
 				grid.header.i_th (3).set_text (interface_names.l_version_from)
 			else
-				grid.set_column_count_to (2)
+				grid.header.i_th (3).set_text ("")
 			end
 			grid.enable_selection_on_single_button_click
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
@@ -317,80 +321,23 @@ feature{NONE} -- Initialization
 
 feature -- Notification
 
-	update_view is
-			-- Update current view according to change in `model'.
-		local
-			l_msg: STRING_32
+	provide_result is
+			-- Provide result displayed in Current view.
 		do
-			if not is_up_to_date then
-				if data /= Void then
-					text.hide
-					component_widget.show
-					fill_rows
-					if last_sorted_column_internal = 0 then
-						last_sorted_column_internal := class_column
-					end
-					disable_auto_sort_order_change
-					enable_force_multi_column_sorting
-					if not sorted_columns.is_empty and then is_last_sorted_column_valid (sorted_columns.last) then
-						sort (0, 0, 1, 0, 0, 0, 0, 0, sorted_columns.last)
-					else
-						sort (0, 0, 1, 0, 0, 0, 0, 0, class_column)
-					end
-					disable_force_multi_column_sorting
-					enable_auto_sort_order_change
-				else
-					component_widget.hide
-					text.show
-					l_msg := Warning_messages.w_Formatter_failed.twin
-					if trace /= Void then
-						l_msg.append ("%N")
-						l_msg.append (trace)
-					end
-					text.set_text (l_msg)
-				end
-				auto_resize
-				is_up_to_date := True
+			fill_rows
+			if last_sorted_column_internal = 0 then
+				last_sorted_column_internal := class_column
 			end
-		end
-
-	auto_resize is
-			-- Auto resize columns to give a best view point.
-		local
-			l_requested_width: INTEGER
-			l_font: EV_FONT
-			l_header_width: INTEGER
-		do
-			create l_font
-			if grid.row_count > 0 then
-				l_requested_width := grid.column (1).required_width_of_item_span (1, grid.row_count)
-				if l_requested_width > 300 then
-					l_requested_width := 300
-				else
-					l_header_width := l_font.string_width (grid.column (1).header_item.text)
-					if l_requested_width < l_header_width then
-						l_requested_width := l_header_width + 30
-					else
-						l_requested_width := l_requested_width + 10
-					end
-				end
-				grid.column (1).set_width (l_requested_width)
-				l_requested_width := grid.column (2).required_width_of_item_span (1, grid.row_count)
-				if l_requested_width > 500 then
-					l_requested_width := 500
-				else
-					l_header_width := l_font.string_width (grid.column (2).header_item.text)
-					if l_requested_width < l_header_width then
-						l_requested_width := l_header_width + 30
-					else
-						l_requested_width := l_requested_width + 10
-					end
-				end
-				grid.column (2).set_width (l_requested_width)
-				if grid.column_count > 2 and then grid.column (3).is_displayed then
-					grid.column (3).resize_to_content
-				end
+			disable_auto_sort_order_change
+			enable_force_multi_column_sorting
+			if not sorted_columns.is_empty and then is_last_sorted_column_valid (sorted_columns.last) then
+				sort (0, 0, 1, 0, 0, 0, 0, 0, sorted_columns.last)
+			else
+				sort (0, 0, 1, 0, 0, 0, 0, 0, class_column)
 			end
+			disable_force_multi_column_sorting
+			enable_auto_sort_order_change
+			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2]>>)
 		end
 
 	fill_rows is

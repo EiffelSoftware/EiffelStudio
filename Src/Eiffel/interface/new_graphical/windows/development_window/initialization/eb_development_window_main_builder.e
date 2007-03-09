@@ -402,6 +402,7 @@ feature -- Command
 			l_managed_feature_formatters: ARRAYED_LIST [EB_FEATURE_INFO_FORMATTER]
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			l_managed_dependency_formatters: ARRAYED_LIST [EB_DEPENDENCY_FORMATTER]
+			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 		do
 			from
 				l_managed_class_formatters := develop_window.managed_class_formatters
@@ -425,6 +426,7 @@ feature -- Command
 				end
 				l_managed_feature_formatters.forth
 			end
+			create l_editor_displayer.make (develop_window.editors_manager.current_editor)
 			from
 				l_managed_main_formatters := develop_window.managed_main_formatters
 				l_managed_main_formatters.start
@@ -432,7 +434,7 @@ feature -- Command
 				l_managed_main_formatters.after
 			loop
 				if develop_window.editors_manager.current_editor /= Void then
-					l_managed_main_formatters.item.set_editor (develop_window.editors_manager.current_editor)
+					l_managed_main_formatters.item.set_displayer (l_editor_displayer)
 				end
 				l_managed_main_formatters.item.on_shown
 				l_managed_main_formatters.forth

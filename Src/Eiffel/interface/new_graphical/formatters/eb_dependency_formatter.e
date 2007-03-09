@@ -10,9 +10,9 @@ deferred class
 	EB_DEPENDENCY_FORMATTER
 
 inherit
-	EB_FORMATTER
+	EB_BROWSER_FORMATTER
 		redefine
-			internal_recycle
+			browser
 		end
 
 	SHARED_FORMAT_INFO
@@ -25,10 +25,12 @@ inherit
 
 	QL_UTILITY
 
+	EB_STONE_UTILITY
+
 feature -- Access
 
 	browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
-			-- Browser in which dependencies are displayed
+			-- Browser used to display dependency results
 
 	widget: EV_WIDGET is
 			-- Graphical representation of the information provided.
@@ -57,6 +59,18 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+			-- Generator to generate proper `displayer' for Current formatter
+		do
+			Result := [ agent displayer_generators.new_dependency_displayer, displayer_generators.dependency_displayer]
+		end
+
+	sorting_status_preference: STRING_PREFERENCE is
+			-- Preference to store last sorting orders of Current formatter
+		do
+			Result := preferences.class_browser_data.dependency_view_sorting_order_preference
 		end
 
 feature -- Properties
@@ -93,85 +107,12 @@ feature -- Properties
 			end
 		end
 
-	name_of_stone (a_stone: STONE): STRING_32 is
-			-- Name of `a_stone'
-		require
-			a_stone_attached: a_stone /= Void
-			a_stone_valid: is_stone_valid (a_stone)
-		local
-			l_target_stone: TARGET_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_class_stone: CLASSC_STONE
-			l_feature_stone: FEATURE_STONE
-			l_group: CONF_GROUP
-		do
-			l_feature_stone ?= a_stone
-			l_class_stone ?= a_stone
-			l_cluster_stone ?= a_stone
-			l_target_stone ?= a_stone
-			create Result.make (64)
-			if l_feature_stone /= Void then
-				Result.append (interface_names.string_general_as_lower (interface_names.s_feature_stone))
-				Result.append (l_feature_stone.e_feature.name)
-			elseif l_class_stone /= Void then
-				Result.append (interface_names.string_general_as_lower (interface_names.s_class_stone))
-				Result.append (l_class_stone.class_name)
-			elseif l_cluster_stone /= Void then
-				if not l_cluster_stone.path.is_empty then
-						-- For a folder
-					Result.append (interface_names.string_general_as_lower (interface_names.s_folder_stone))
-					Result.append (l_cluster_stone.folder_name)
-				else
-						-- For a group
-					l_group := l_cluster_stone.group
-					if l_group.is_library then
-						Result.append (interface_names.string_general_as_lower (interface_names.s_library_stone))
-					elseif l_group.is_cluster then
-						Result.append (interface_names.string_general_as_lower (interface_names.s_cluster_stone))
-					elseif l_group.is_assembly then
-						Result.append (interface_names.string_general_as_lower (interface_names.s_assembly_stone))
-					end
-					Result.append (l_group.name)
-				end
-			elseif l_target_stone /= Void then
-				Result.append (interface_names.string_general_as_lower (interface_names.s_target_stone))
-				Result.append (l_target_stone.target.name)
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
 	element_name: STRING is
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
-		local
-			l_target_stone: TARGET_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_class_stone: CLASSC_STONE
-			l_feature_stone: FEATURE_STONE
-			l_group: CONF_GROUP
 		do
 			if stone /= Void and then is_stone_valid (stone) then
-				l_feature_stone ?= stone
-				l_class_stone ?= stone
-				l_cluster_stone ?= stone
-				l_target_stone ?= stone
-				create Result.make (64)
-				if l_feature_stone /= Void then
-					Result.append (l_feature_stone.e_feature.name)
-				elseif l_class_stone /= Void then
-					Result.append (l_class_stone.class_name)
-				elseif l_cluster_stone /= Void then
-					if not l_cluster_stone.path.is_empty then
-							-- For a folder
-						Result.append (l_cluster_stone.folder_name)
-					else
-							-- For a group
-						Result.append (l_group.name)
-					end
-				elseif l_target_stone /= Void then
-					Result.append (l_target_stone.target.name)
-				end
+				Result := stone.stone_name.as_string_8
 			end
 		end
 
@@ -214,16 +155,6 @@ feature -- Status setting
 			if browser /= Void then
 				browser.set_focus
 			end
-		end
-
-	set_browser (a_browser: like browser) is
-			-- Set `browser' with `a_browser'.
-		require
-			a_browser_attached: a_browser /= Void
-		do
-			browser := a_browser
-		ensure
-			browser_set: browser = a_browser
 		end
 
 	setup_viewpoint is
@@ -375,14 +306,6 @@ feature {NONE} -- Implementation
 				browser.set_trace (exception_trace)
 				browser.update (Void, Void)
 			end
-		end
-
-	internal_recycle is
-			-- Recycle
-		do
-			Precursor
-			browser.recycle
-			browser := Void
 		end
 
 indexing

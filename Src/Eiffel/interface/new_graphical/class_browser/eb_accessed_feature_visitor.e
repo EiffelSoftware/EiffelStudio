@@ -23,6 +23,8 @@ inherit
 
 	QL_SHARED
 
+	SHARED_TEXT_ITEMS
+
 create
 	make
 
@@ -137,7 +139,9 @@ feature{NONE} -- Implementation
 			l_feature: like e_feature
 		do
 			l_feature := e_feature
-			Result := a_feature_name.is_case_insensitive_equal (l_feature.name) and then ancestor_class_id_set.has (a_class_id)
+			Result := (a_feature_name.is_case_insensitive_equal (l_feature.name) or else
+					   a_feature_name.is_case_insensitive_equal (ti_Precursor_keyword))
+					  and then ancestor_class_id_set.has (a_class_id)
 		end
 
 	ancestor_class_id_set: DS_HASH_SET [INTEGER]

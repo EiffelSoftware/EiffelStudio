@@ -23,6 +23,8 @@ inherit
 
 	QL_SHARED_NAMES
 
+	EB_XML_PARSE_HELPER
+
 feature{NONE} -- Initialization
 
 	initialize is
@@ -58,16 +60,18 @@ feature -- Access
 			l_location_stack: like location_stack
 		do
 			create l_location.make (100)
-			from
-				l_location_stack := location_stack.duplicate (location_stack.count)
-			until
-				l_location_stack.is_empty
-			loop
-				if not l_location.is_empty then
-					l_location.prepend (metric_names.location_connector)
+			if not location_stack.is_empty then
+				from
+					l_location_stack := location_stack.duplicate (location_stack.count)
+				until
+					l_location_stack.is_empty
+				loop
+					if not l_location.is_empty then
+						l_location.prepend (metric_names.location_connector)
+					end
+					l_location.prepend (l_location_stack.item)
+					l_location_stack.remove
 				end
-				l_location.prepend (l_location_stack.item)
-				l_location_stack.remove
 			end
 			Result := l_location
 		ensure
@@ -159,7 +163,7 @@ feature -- Callbacks
 					l_tag := l_trans.item (a_local_part)
 				end
 				if l_tag = 0 then
-					create_last_error (metric_names.err_invalid_tag_position (a_local_part))
+					create_last_error (xml_names.err_invalid_tag_position (a_local_part))
 				else
 					current_tag.extend (l_tag)
 					element_stack.extend (a_local_part)
@@ -193,7 +197,7 @@ feature -- Callbacks
 						current_attributes.force (a_value, l_attribute)
 					else
 						location_stack.extend (metric_names.xml_location (element_stack.item, Void))
-						create_last_error (metric_names.err_invalid_attribute (a_local_part))
+						create_last_error (xml_names.err_invalid_attribute (a_local_part))
 					end
 				end
 			end
@@ -374,7 +378,7 @@ feature{NONE} -- Implementation
 				l_position := xml_parser.position
 				last_error.set_xml_location ([l_position.column, l_position.row])
 			end
-		ensure
+		ensure then
 			has_error: has_error
 		end
 
@@ -633,74 +637,6 @@ feature{NONE} -- Process
 			l_item.setter.call ([current_value_retriever])
 			l_item.is_called := True
 		end
-
-feature -- Value validity testing
-
-	test_ommitable_boolean_attribute (a_boolean_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]): BOOLEAN is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean' and return True
-			-- If `a_boolean_str' represents an invalid boolean value, fire an error with error message returned by `a_error_message' and return True.
-			-- If `a_boolean_str' is Void, do not set `last_tested_boolean' and return False.			
-		require
-			a_error_message_agent_attached: a_error_message_agent /= Void
-		do
-			if a_boolean_str /= Void then
-				test_non_void_boolean_attribute (a_boolean_str, a_error_message_agent.item ([a_boolean_str]))
-				Result := True
-			end
-		end
-
-	test_boolean_attribute (a_boolean_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]) is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
-			-- Otherwise if `a_boolean_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
-			-- if `a_boolean_str' is non-Void but is not a valid boolean, fire an error with error message given by `a_invalid_error_message'.
-		require
-			a_missing_error_message_attached: a_missing_error_message /= Void
-			a_error_message_agent_attached: a_invalid_error_message_agent /= Void
-		do
-			if a_boolean_str = Void then
-				create_last_error (a_missing_error_message)
-			else
-				test_non_void_boolean_attribute (a_boolean_str, a_invalid_error_message_agent.item ([a_boolean_str]))
-			end
-		end
-
-	test_non_void_boolean_attribute (a_boolean_str: STRING; a_error_message: STRING_GENERAL) is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
-			-- Otherwise fire an error with error message given by `a_error_message'.
-		require
-			a_boolean_str_attached: a_boolean_str /= Void
-			a_error_message_attached: a_error_message /= Void
-		do
-			if a_boolean_str.is_boolean then
-				last_tested_boolean := a_boolean_str.to_boolean
-			else
-				create_last_error (a_error_message)
-			end
-		ensure
-			last_tested_boolean_set: a_boolean_str.is_boolean implies last_tested_boolean = a_boolean_str.to_boolean
-		end
-
-	last_tested_boolean: BOOLEAN
-			-- Last boolean value successfully tested by `test_non_void_boolean_attribute'
-
-	test_non_void_double_attribute (a_double_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]) is
-			-- Test if `a_double_str' represents a valid double value. If so, store the boolean value in `last_tested_double'.
-			-- Otherwise fire an error with error message given by `a_error_message_agent'.
-		require
-			a_double_str_attached: a_double_str /= Void
-			a_error_message_agent_attached: a_error_message_agent /= Void
-		do
-			if a_double_str.is_double then
-				last_tested_double := a_double_str.to_double
-			else
-				create_last_error (a_error_message_agent.item ([a_double_str]))
-			end
-		ensure
-			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
-		end
-
-	last_tested_double: DOUBLE
-			-- Last double value successfully tested by `test_non_void_double_attribute'
 
 invariant
 	factory_attached: factory /= Void

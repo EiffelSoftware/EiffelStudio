@@ -361,7 +361,6 @@ feature -- Actions
 		local
 			l_retried: BOOLEAN
 			l_value: DOUBLE
-			l_metric_basic: EB_METRIC_BASIC
 			l_metric: like current_selected_metric
 			l_input_domain: EB_METRIC_DOMAIN
 			l_value_string: STRING_32
@@ -389,13 +388,6 @@ feature -- Actions
 					else
 						l_metric.disable_fill_domain
 					end
-						-- Special setting for metric of line unit.
---					if l_metric.is_basic and then l_metric.unit = line_unit then
---						l_metric_basic ?= l_metric
---						if l_metric_basic.criteria = Void then
---							l_metric_basic.set_criteria (criterion_factory.metric_criterion (line_scope, query_language_names.ql_cri_true))
---						end
---					end
 				else
 					l_metric.disable_fill_domain
 				end
@@ -405,9 +397,7 @@ feature -- Actions
 				set_is_last_evaluation_successful (True)
 				display_status_message ("")
 				set_metric_value (metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected), l_value)
---				metric_value_text.set_data (l_value)
---				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
---				metric_value_text.set_text (l_value_text)
+
 					-- Setup metric tool title.
 				create l_value_string.make (10)
 				l_value_string.append_double (l_value)
@@ -935,9 +925,9 @@ feature-- UI Update
 							stop_metric_btn.disable_sensitive
 						end
 					else
-						metric_tool.load_metrics (False, metric_names.t_loading_metrics)
+						metric_tool.load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 						if not metric_tool.is_metric_validation_checked.item then
-							metric_tool.check_metric_validation
+							metric_tool.check_metric_validation (metric_tool.develop_window)
 						end
 						if is_metric_reloaded then
 							set_is_metric_reloaded (False)

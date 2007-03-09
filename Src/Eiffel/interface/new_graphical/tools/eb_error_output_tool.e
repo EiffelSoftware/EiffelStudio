@@ -57,7 +57,7 @@ feature -- Basic Operations
 			set_title (0)
 		end
 
-	process_warnings (warnings: LINKED_LIST [ERROR]) is
+	process_warnings (a_warnings: LINKED_LIST [ERROR]) is
 			-- Do nothing.
 		do
 		end

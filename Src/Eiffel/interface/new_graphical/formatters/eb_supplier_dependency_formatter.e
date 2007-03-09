@@ -53,6 +53,7 @@ feature -- Formatting
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
 			if stone /= Void and then selected then
+				retrieve_sorting_order
 				display_temp_header
 				if not widget.is_displayed then
 					widget.show

@@ -231,12 +231,12 @@ feature -- Basic operation
 			end
 		end
 
-	process_warnings (warnings: LINKED_LIST [ERROR]) is
+	process_warnings (a_warnings: LINKED_LIST [ERROR]) is
 			-- Display contextual error information from `warnings'.
 		do
-			if not warnings.is_empty then
+			if not a_warnings.is_empty then
 				text_area.handle_before_processing (true)
-				warning_summary (warnings.count, text_area.text_displayed)
+				warning_summary (a_warnings.count, text_area.text_displayed)
 				text_area.handle_after_processing
 			end
 		end

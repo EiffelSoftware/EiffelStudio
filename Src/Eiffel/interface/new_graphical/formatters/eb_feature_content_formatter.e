@@ -10,8 +10,17 @@ deferred class
 	EB_FEATURE_CONTENT_FORMATTER
 
 inherit
+	EB_BROWSER_FORMATTER
+		rename
+			internal_recycle as browser_formatter_recycle
+		end
+
 	EB_FEATURE_INFO_FORMATTER
+		undefine
+			retrieve_sorting_order
 		redefine
+			internal_recycle
+		select
 			internal_recycle
 		end
 
@@ -37,6 +46,7 @@ feature -- Formatting
 			-- Refresh `widget'.
 		do
 			if associated_feature /= Void and then selected and then displayed then
+				retrieve_sorting_order
 				display_temp_header
 				if not widget.is_displayed then
 					widget.show
@@ -49,9 +59,6 @@ feature -- Formatting
 		end
 
 feature -- Access
-
-	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
-			-- Browser where information gets displayed
 
 	widget: EV_WIDGET is
 			-- Graphical representation of the information provided.
@@ -71,16 +78,6 @@ feature -- Setting
 			if browser /= Void then
 				browser.reset_display
 			end
-		end
-
-	set_browser (a_browser: like browser) is
-			-- Set `browser' with `a_browser'.
-		require
-			a_browser_attached: a_browser /= Void
-		do
-			browser := a_browser
-		ensure
-			browser_set: browser = a_browser
 		end
 
 	setup_viewpoint is
@@ -140,8 +137,7 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			Precursor {EB_FEATURE_INFO_FORMATTER}
-			browser.recycle
-			browser := Void
+			browser_formatter_recycle
 		end
 
 feature{NONE} -- Implementation

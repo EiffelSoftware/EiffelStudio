@@ -370,7 +370,7 @@ feature -- Actions
 	on_reload_metrics is
 			-- Action to be performed when reload metrics
 		do
-			metric_tool.load_metrics (True, metric_names.t_loading_metrics)
+			metric_tool.load_metrics_and_display_error (True, metric_names.t_loading_metrics)
 		end
 
 	on_open_user_defined_metric_file is
@@ -378,11 +378,19 @@ feature -- Actions
 		local
 			l_cmd_exec: COMMAND_EXECUTOR
 			l_cmd_string: STRING
+			l_file: STRING
+			l_platform: PLATFORM_CONSTANTS
 		do
 			if metric_manager.is_userdefined_metric_file_exist then
 				l_cmd_string := preferences.misc_data.external_editor_command.twin
 				if not l_cmd_string.is_empty then
-					l_cmd_string.replace_substring_all ("$target", metric_manager.userdefined_metrics_file)
+					l_file := metric_manager.userdefined_metrics_file.twin
+					create l_platform
+					if l_platform.is_windows and then l_file.has (' ') then
+						l_file.prepend_character ('"')
+						l_file.append_character ('"')
+					end
+					l_cmd_string.replace_substring_all ("$target", l_file)
 					l_cmd_string.replace_substring_all ("$line", "0")
 					create l_cmd_exec
 					l_cmd_exec.execute (l_cmd_string)
@@ -608,9 +616,9 @@ feature{NONE} -- UI Update
 					disable_sensitive
 				else
 					enable_sensitive
-					metric_tool.load_metrics (False, metric_names.t_loading_metrics)
+					metric_tool.load_metrics_and_display_error (False, metric_names.t_loading_metrics)
 					if not metric_tool.is_metric_validation_checked.item then
-						metric_tool.check_metric_validation
+						metric_tool.check_metric_validation (metric_tool.develop_window)
 					end
 					if is_metric_reloaded then
 						set_is_metric_reloaded (False)

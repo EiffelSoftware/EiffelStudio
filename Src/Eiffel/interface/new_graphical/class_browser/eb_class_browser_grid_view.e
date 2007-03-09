@@ -48,6 +48,7 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
+			a_drop_actions_attached: a_drop_actions /= Void
 		do
 			development_window := a_dev_window
 			drop_actions := a_drop_actions
@@ -57,6 +58,9 @@ feature{NONE} -- Initialization
 			grid.set_expand_selected_rows_recursive_agent (agent on_expand_all_level)
 			grid.set_collapse_selected_rows_agent (agent on_collapse_one_level)
 			grid.set_collapse_selected_rows_recursive_agent (agent on_collapse_all_level)
+			grid.header.item_resize_start_actions.extend (agent on_column_resize_by_user_start)
+			grid.header.item_resize_end_actions.extend (agent on_column_resize_by_user_end (?, False))
+			grid.resizing_behavior.header_resize_end_actions.extend (agent on_column_resize_by_user_end (?, True))
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 			set_item_text_function (agent text_of_grid_item)
 			enable_copy
@@ -99,10 +103,10 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_starting_element (a_class: like starting_element) is
+	set_starting_element (a_class: ANY) is
 			-- Set `start_class' with `a_class'.
 		do
-			starting_element := a_class
+			starting_element ?= a_class
 		ensure
 			start_class_set: starting_element = a_class
 		end
@@ -162,12 +166,55 @@ feature -- Setting
 			end
 		end
 
-	set_has_grid_been_binded (a_binded: BOOLEAN) is
-			-- Set `has_grid_been_binded' with `a_binded'.
+	set_has_grid_been_resized_manually (b: BOOLEAN) is
+			-- Set `has_grid_been_resized_manually' with `b'.
 		do
-			has_grid_been_binded := a_binded
+			has_grid_been_resized_manually := b
 		ensure
-			has_grid_been_binded_set: has_grid_been_binded = a_binded
+			has_grid_been_resized_manually_set: has_grid_been_resized_manually = b
+		end
+
+	set_sorting_order_getter (a_getter: like sorting_order_getter) is
+			-- Set `sorting_order_getter' with `a_getter'.
+		do
+			sorting_order_getter := a_getter
+		ensure
+			sorting_order_getter_set: sorting_order_getter = a_getter
+		end
+
+	set_sorting_order_setter (a_setter: like sorting_order_setter) is
+			-- Set `sorting_order_setter' with `a_setter'.
+		do
+			sorting_order_setter := a_setter
+		ensure
+			sorting_order_setter_set: sorting_order_setter = a_setter
+		end
+
+	try_auto_resize_grid (a_columns: ARRAY [TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]]) is
+			-- Auto resize `grid' using size given by `a_columns' if `grid' has not been resized manually by user.
+			-- For more information about `min_width' and `max_width', see `auto_resize_columns'.
+		require
+			a_columns_attached: a_columns /= Void
+		local
+			i: INTEGER
+			l_item: TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]
+			l_size_tbl: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER]
+		do
+			if not has_grid_been_resized_manually then
+				create l_size_tbl.make (a_columns.upper - a_columns.lower + 1)
+				from
+					i := a_columns.lower
+				until
+					i > a_columns.upper
+				loop
+					l_item := a_columns.item (i)
+					l_size_tbl.put ([l_item.min_width, l_item.max_width], l_item.column_index)
+					i := i + 1
+				end
+				grid.header.item_resize_end_actions.block
+				auto_resize_columns (grid, l_size_tbl)
+				grid.header.item_resize_end_actions.resume
+			end
 		end
 
 feature -- Navigation
@@ -430,6 +477,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
+			-- Agent to retrieve last recored sorting order
+
+	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
+			-- Agent to retrieve last recored sorting order
+
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
@@ -451,7 +504,7 @@ feature -- Status report
 		deferred
 		end
 
-	has_grid_been_binded: BOOLEAN
+	has_grid_been_resized_manually: BOOLEAN
 			-- Has `grid' been binded before?
 
 feature{NONE} -- Implementation
@@ -539,7 +592,19 @@ feature{NONE} -- Actions
 
 	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Action to be performed after a sorting
-		deferred
+		local
+			l_current_sorting_order: STRING
+			l_previous_sorting_order: STRING
+		do
+			if sorting_order_setter /= Void then
+				if sorting_order_getter /= Void then
+					l_previous_sorting_order := sorting_order_getter.item (Void)
+					l_current_sorting_order := string_representation_of_sorted_columns
+					if l_previous_sorting_order = Void or else not l_previous_sorting_order.is_equal (l_current_sorting_order) then
+						sorting_order_setter.call ([l_current_sorting_order])
+					end
+				end
+			end
 		end
 
 	on_key_pressed_in_text (a_key: EV_KEY) is
@@ -568,6 +633,20 @@ feature{NONE} -- Actions
 		do
 			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_button.is_selected then
 				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_button.is_selected)
+			end
+		end
+
+	on_column_resize_by_user_start (a_header: EV_HEADER_ITEM) is
+			-- Action to be performed when resize of columns of `grid' starts
+		do
+			set_is_resize_by_user (True)
+		end
+
+	on_column_resize_by_user_end (a_header: EV_HEADER_ITEM; a_force: BOOLEAN) is
+			-- Action to be performed when columns of `grid' is resized.
+		do
+			if (a_force or else is_resize_by_user) and then not has_grid_been_resized_manually then
+				set_has_grid_been_resized_manually (True)
 			end
 		end
 
@@ -631,9 +710,39 @@ feature {NONE} -- Implementation
 
 	update_view is
 			-- Update current view according to change in `model'.
-		deferred
+		do
+			if not is_up_to_date then
+				if data /= Void then
+					text.hide
+					component_widget.show
+					provide_result
+				else
+					component_widget.hide
+					text.show
+					provide_error_message
+				end
+				is_up_to_date := True
+			end
 		ensure
 			view_up_to_date: is_up_to_date
+		end
+
+	provide_result is
+			-- Provide result displayed in Current view.
+		deferred
+		end
+
+	provide_error_message is
+			-- Provide error message displayed in Current view.
+		local
+			l_msg: STRING_32
+		do
+			l_msg := Warning_messages.w_Formatter_failed.twin
+			if trace /= Void then
+				l_msg.append ("%N")
+				l_msg.append (trace)
+			end
+			text.set_text (l_msg)
 		end
 
 	fill_rows is
@@ -702,9 +811,21 @@ feature {NONE} -- Implementation
 		end
 
 	show_tooltip_button_internal: like show_tooltip_button
-			-- Implementation of `show_tooltip_button'		
+			-- Implementation of `show_tooltip_button'	
 
-feature{NONE} -- Implementation
+	is_resize_by_user: BOOLEAN
+			-- Is column resized manually by user
+			-- After user manually resized, we don't auto resize `grid' according to required column width anymore.				
+
+	set_is_resize_by_user (b: BOOLEAN) is
+			-- Set `is_resize_by_user' with `b'.
+		do
+			is_resize_by_user := b
+		ensure
+			is_resize_by_user_set: is_resize_by_user = b
+		end
+
+feature{NONE} -- Implementation/Exception
 
 	trace: STRING
 			-- Trace message
@@ -856,6 +977,24 @@ feature{NONE} -- Implementation/Stone
 			    if l_item.is_parented and then ((not l_item.row.is_expandable) or else l_item.row.is_expanded) then
 			    	Result := l_item
 			    end
+			end
+		end
+
+	item_to_put_in_editor_for_tree_row: EV_GRID_ITEM is
+			-- Grid item which may contain a stone to put into editor
+			-- Void if no satisfied item is found.
+		local
+			l_rows: LIST [EV_GRID_ROW]
+			l_grid_row: EV_GRID_ROW
+		do
+			l_rows := grid.selected_rows
+			if l_rows.count = 1 then
+				if l_rows.first.parent = grid then
+					l_grid_row := l_rows.first
+					if (not l_grid_row.is_expandable) or else (l_grid_row.is_expanded) then
+						Result := l_grid_row.item (1)
+					end
+				end
 			end
 		end
 

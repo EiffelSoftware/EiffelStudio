@@ -39,7 +39,7 @@ feature -- Access
 			if editor = Void or else class_cmd = Void then
 				Result := empty_widget
 			else
-				Result := internal_widget
+				Result := editor.widget
 			end
 		end
 

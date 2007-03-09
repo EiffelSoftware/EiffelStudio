@@ -15,7 +15,8 @@ inherit
 		redefine
 			is_valid, synchronized_stone,
 			history_name, same_as, origin_text, header, stone_signature,
-			file_name, stone_cursor, x_stone_cursor
+			file_name, stone_cursor, x_stone_cursor,
+			stone_name
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -24,6 +25,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	SHARED_TEXT_ITEMS
 
 create
 	make
@@ -104,6 +107,18 @@ feature -- Access
 			Result := interface_names.l_from (Interface_names.s_feature_stone.as_string_32 + feature_name, e_class.class_signature)
 		end
 
+	stone_name: STRING_GENERAL is
+			-- Name of Current stone
+		do
+			if is_valid then
+				Result := class_i.name + ti_dot + feature_name
+			else
+				Result := Precursor
+			end
+		end
+
+feature -- Status report
+
 	same_as (other: STONE): BOOLEAN is
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
@@ -112,6 +127,12 @@ feature -- Access
 		do
 			fns ?= other
 			Result := fns /= Void and then same_feature (e_feature, fns.e_feature)
+		end
+
+	is_valid: BOOLEAN is
+			-- Is `Current' a valid stone?
+		do
+			Result := e_feature /= Void and then Precursor {CLASSC_STONE}
 		end
 
 feature -- dragging
@@ -200,12 +221,6 @@ feature -- dragging
 		do
 			update
 			Result := internal_start_line_number
-		end
-
-	is_valid: BOOLEAN is
-			-- Is `Current' a valid stone?
-		do
-			Result := e_feature /= Void and then Precursor {CLASSC_STONE}
 		end
 
 	update is

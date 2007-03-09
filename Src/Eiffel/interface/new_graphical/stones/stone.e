@@ -88,6 +88,14 @@ feature  -- Access
 			Result := equal (Current, other)
 		end
 
+	stone_name: STRING_GENERAL is
+			-- Name of Current stone
+		do
+			Result := ""
+		ensure
+			result_attached: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -26,16 +26,12 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_sorting_order_preference: like sorting_order_preference; a_for_caller: BOOLEAN) is
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_for_caller: BOOLEAN) is
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
-			a_drop_actions_attached: a_drop_actions /= Void
-			a_sorting_order_preference_attached: a_sorting_order_preference /= Void
 		do
-			sorting_order_preference := a_sorting_order_preference
 			view_make (a_dev_window, a_drop_actions)
-			set_sorting_status (sorted_columns_from_string (sorting_order_preference.value))
 			is_for_caller := a_for_caller
 		end
 
@@ -63,11 +59,19 @@ feature -- Access
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	sorting_order_preference: STRING_PREFERENCE
-			-- Preference to store sorting order
-
 	version_count: INTEGER
 			-- Number of versions for caller/callee
+
+	reference_type_name: STRING_GENERAL is
+			-- Name of reference type, such as caller, callee.
+		do
+			Result := reference_type_name_internal
+			if Result = Void then
+				Result := ""
+			else
+				Result := interface_names.first_character_as_upper (Result)
+			end
+		end
 
 feature -- Status report
 
@@ -98,35 +102,26 @@ feature -- Setting
 			version_count_set: version_count = a_version_count
 		end
 
+	set_reference_type_name (a_name: like reference_type_name) is
+			-- Set `reference_type_name' with `a_name'.
+		do
+			reference_type_name_internal := a_name
+			if grid /= Void then
+				grid.column (1).set_title (reference_type_name)
+			end
+		end
+
 feature -- Grind binding
 
-	update_view is
-			-- Update current view according to change in `model'.
-		local
-			l_msg: STRING_32
+	provide_result is
+			-- Provide result displayed in Current view.
 		do
-			if not is_up_to_date then
-				if data /= Void then
-					text.hide
-					component_widget.show
-					fill_rows
-					disable_auto_sort_order_change
-					enable_force_multi_column_sorting
-					sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
-					disable_force_multi_column_sorting
-					enable_auto_sort_order_change
-				else
-					component_widget.hide
-					text.show
-					l_msg := Warning_messages.w_Formatter_failed.twin
-					if trace /= Void then
-						l_msg.append ("%N")
-						l_msg.append (trace)
-					end
-					text.set_text (l_msg)
-				end
-				is_up_to_date := True
-			end
+			fill_rows
+			disable_auto_sort_order_change
+			enable_force_multi_column_sorting
+			sort (0, 0, 1, 0, 0, 0, 0, 0, last_sorted_column)
+			disable_force_multi_column_sorting
+			enable_auto_sort_order_change
 		end
 
 	fill_rows is
@@ -240,11 +235,7 @@ feature -- Grind binding
 			elseif version_count = 1 then
 				grid.row (1).expand
 			end
-			if not has_grid_been_binded then
-				auto_resize_grid
-				set_has_grid_been_binded (True)
-			end
-
+			try_auto_resize_grid (<<[150, 800, 1]>>)
 		end
 
 	bind_level (a_level_index: INTEGER; a_node: EB_TREE_NODE [like row_type]; a_grid_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
@@ -290,10 +281,19 @@ feature -- Grind binding
 
 feature{NONE} -- Actions
 
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
-			-- Action to be performed after a sorting
+	on_row_selected (a_row: EV_GRID_ROW) is
+			-- Action to be performed when `a_row' is selected.
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
 		do
-			sorting_order_preference.set_value (string_representation_of_sorted_columns)
+			if grid.selected_rows.count = 1 then
+				l_row ?= a_row.data
+				if l_row /= Void  then
+					l_row.force_position_calculation
+				end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -302,6 +302,7 @@ feature{NONE} -- Implementation
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		do
+			Result := item_to_put_in_editor_for_tree_row
 		end
 
 	data: QL_FEATURE_DOMAIN
@@ -318,17 +319,8 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	auto_resize_grid is
-			-- Auto resize `grid'.
-		local
-			l_table: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
-		do
-			if grid.row_count > 0 then
-				create l_table.make (1)
-				l_table.put ([150, 800], 1)
-				auto_resize_columns (grid, l_table)
-			end
-		end
+	reference_type_name_internal: like reference_type_name
+			-- Implementation of `reference_type_name'
 
 feature{NONE} -- Implementation/Sorting
 
@@ -380,6 +372,8 @@ feature{NONE} -- Initialization
 		do
 			create grid
 			grid.set_column_count_to (2)
+			grid.column (1).set_title (reference_type_name)
+			grid.column (2).set_title (interface_names.t_reference_position)
 			grid.enable_selection_on_single_button_click
 			grid.enable_single_row_selection
 			grid.enable_tree
@@ -391,6 +385,7 @@ feature{NONE} -- Initialization
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
 			grid.row_select_actions.extend (agent highlight_row)
+			grid.row_select_actions.extend (agent on_row_selected)
 			grid.row_deselect_actions.extend (agent dehighlight_row)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.hide_tree_node_connectors
@@ -429,10 +424,6 @@ feature{NONE} -- Initialization
 				agent on_collapse_one_level_partly
 			)
 		end
-
-
-invariant
-	sorting_order_preference_attached: sorting_order_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

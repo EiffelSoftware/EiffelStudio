@@ -16,7 +16,8 @@ inherit
 		redefine
 			is_valid,
 			synchronized_stone,
-			same_as
+			same_as,
+			stone_name
 		end
 
 create
@@ -102,14 +103,6 @@ feature -- Access
 			Result := Cursors.cur_X_cluster
 		end
 
- 	is_valid: BOOLEAN is
- 			-- Does `Current' represent a valid cluster?
- 		do
- 			if Eiffel_project.initialized and then group /= Void then
- 				Result := group.is_valid
- 			end
- 		end
-
  	synchronized_stone: STONE is
  			-- Return a valid stone representing the same object after a recompilation.
  		do
@@ -119,6 +112,24 @@ feature -- Access
  				Result := Void
  			end
  		end
+
+	stone_name: STRING_GENERAL is
+			-- Name of Current stone
+		do
+			if is_valid then
+				if not path.is_empty then
+						-- For a folder
+					Result := folder_name.twin
+				else
+						-- For a group
+					Result := group.name.twin
+				end
+			else
+				Result := Precursor
+			end
+		end
+
+feature -- Status report
 
  	same_as (other: STONE): BOOLEAN is
  			-- Does `other' and `Current' represent the same cluster?
@@ -137,6 +148,14 @@ feature -- Access
 			l_clus ?= group
 			Result := l_clus /= Void
 		end
+
+ 	is_valid: BOOLEAN is
+ 			-- Does `Current' represent a valid cluster?
+ 		do
+ 			if Eiffel_project.initialized and then group /= Void then
+ 				Result := group.is_valid
+ 			end
+ 		end
 
 feature {NONE} -- Implementation
 

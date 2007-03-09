@@ -10,8 +10,6 @@ class
 	EB_METRIC_ERROR
 
 inherit
-	EB_METRIC_SHARED
-
 	SHARED_BENCH_NAMES
 
 create

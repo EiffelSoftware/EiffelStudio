@@ -31,7 +31,8 @@ inherit
 			header,
 			stone_signature,
 			origin_text,
-			history_name
+			history_name,
+			stone_name
 		redefine
 			stone_cursor,
 			X_stone_cursor,

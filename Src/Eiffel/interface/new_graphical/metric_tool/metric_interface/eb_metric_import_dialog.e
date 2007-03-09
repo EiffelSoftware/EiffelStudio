@@ -386,7 +386,7 @@ feature {NONE} -- Actions
 				l_cursor.forth
 			end
 			metric_tool.store_metrics
-			metric_tool.load_metrics (True, metric_names.t_importing_metrics)
+			metric_tool.load_metrics_and_display_error (True, metric_names.t_importing_metrics)
 			grid.disable_sensitive
 			import_btn.disable_sensitive
 			create l_dlg.make_with_text (metric_names.t_metrics_imported)
@@ -564,7 +564,7 @@ feature{NONE} -- Implementation
 		end
 
 	bind_grid (a_keep_selection: BOOLEAN) is
-			-- Bind `load_metrics' in `grid'.
+			-- Bind `load_metrics_and_display_error' in `grid'.
 			-- If `a_keep_selection' is True, try to keep focus on current selected row.
 		require
 			metrics_loaded: is_metrics_loaded
@@ -629,7 +629,7 @@ feature{NONE} -- Implementation
 		end
 
 	change_name (a_old_name: STRING; a_new_name: STRING) is
-			-- Change metric named `a_old_name' in `load_metrics' to a new name `a_new_name'.
+			-- Change metric named `a_old_name' in `load_metrics_and_display_error' to a new name `a_new_name'.
 		require
 			metrics_loaded: is_metrics_loaded
 			a_old_name_valid: a_old_name /= Void and then not a_old_name.is_empty

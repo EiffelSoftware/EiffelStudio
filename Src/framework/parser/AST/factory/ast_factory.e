@@ -1465,7 +1465,9 @@ feature -- Access
 	new_none_type_as (c: ID_AS): NONE_TYPE_AS is
 			-- New type AST node for "NONE"
 		do
-			create Result.initialize (c)
+			if c /= Void then
+				create Result.initialize (c)
+			end
 		end
 
 	new_once_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ONCE_AS is

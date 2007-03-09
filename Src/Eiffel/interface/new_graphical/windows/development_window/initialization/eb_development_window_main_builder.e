@@ -296,77 +296,15 @@ feature -- Command
 
 			create l_lock_docking_command.make (develop_window)
 			develop_window.commands.set_lock_docking_command (l_lock_docking_command)
-		end
-
-	set_up_accelerators is
-			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
-		local
-			l_cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			i: INTEGER
-			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
-			l_cmd: EB_SHOW_TOOL_COMMAND
-			l_accelerators: EV_ACCELERATOR_LIST
-			l_acc: EV_ACCELERATOR
-		do
-			l_accelerators := develop_window.window.accelerators
-				--| Accelerators related to toolbarable_commands
-			from
-				l_cmds := develop_window.commands.toolbarable_commands
-				l_cmds.start
-			until
-				l_cmds.after
-			loop
-				l_acc := l_cmds.item.accelerator
-				if l_acc /= Void and then not l_accelerators.has (l_acc) then
-					l_accelerators.extend (l_acc)
-				end
-				l_cmds.forth
-			end
-
-				--| Accelerators related to debugging toolbarable_commands
-			from
-				l_cmds := develop_window.Eb_debugger_manager.toolbarable_commands
-				l_cmds.start
-			until
-				l_cmds.after
-			loop
-				l_acc := l_cmds.item.accelerator
-				if l_acc /= Void and then not l_accelerators.has (l_acc) then
-					l_accelerators.extend (l_acc)
-				end
-				l_cmds.forth
-			end
-
-				-- Show tool commands
-			from
-				l_show_tool_commands := develop_window.commands.show_tool_commands
-				l_show_tool_commands.start
-			until
-				l_show_tool_commands.after
-			loop
-				l_cmd := l_show_tool_commands.item_for_iteration
-				l_acc := l_cmd.accelerator
-				if l_acc /= Void and then not l_accelerators.has (l_acc) then
-					l_accelerators.extend (l_acc)
-				end
-				l_show_tool_commands.forth
-			end
-
-				--| Accelerators related to external commands
-			from
-				i := 0
-			until
-				i > 9
-			loop
-				l_accelerators.extend (develop_window.commands.edit_external_commands_cmd.accelerators.item (i))
-				i := i + 1
-			end
 
 			setup_focus_editor_accelerators
 			build_close_content_accelerator
 			setup_class_address_accelerators
+		end
 
-				-- Doing this removes accelerator from the window if related managed shortcuts are wiped.
+	set_up_accelerators is
+			-- All proper configurable shortcut is related to the window.
+		do
 			develop_window.refresh_all_commands
 		end
 
@@ -497,9 +435,6 @@ feature -- Command
 					l_managed_main_formatters.item.set_editor (develop_window.editors_manager.current_editor)
 				end
 				l_managed_main_formatters.item.on_shown
-				if l_managed_main_formatters.item.accelerator /= Void then
-					develop_window.window.accelerators.extend (l_managed_main_formatters.item.accelerator)
-				end
 				l_managed_main_formatters.forth
 			end
 
@@ -1047,7 +982,6 @@ feature{NONE} -- Implementation
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("close_focusing_docking_tool_or_editor")
 			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			l_acc.actions.extend (agent develop_window.close_focusing_content)
-			develop_window.window.accelerators.extend (l_acc)
 
 			create l_cmd.make (l_acc)
 			l_cmd.set_referred_shortcut (l_shortcut)
@@ -1070,6 +1004,10 @@ feature{NONE} -- Implementation
 			l_shortcut := develop_window.preferences.misc_shortcut_data.focus_editor_shortcut
 			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			l_acc.actions.extend (agent develop_window.set_focus_to_main_editor)
+				-- We need to add it out of managed configurable shortcuts.
+			check
+				accelerator_not_exist: not develop_window.window.accelerators.has (l_acc)
+			end
 			develop_window.window.accelerators.extend (l_acc)
 		end
 
@@ -1083,7 +1021,6 @@ feature{NONE} -- Implementation
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("focus_on_class_address")
 			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			l_acc.actions.extend (agent ((develop_window.address_manager).class_address).set_focus)
-			develop_window.window.accelerators.extend (l_acc)
 
 			create l_cmd.make (l_acc)
 			l_cmd.set_referred_shortcut (l_shortcut)

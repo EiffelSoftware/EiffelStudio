@@ -493,8 +493,7 @@ feature -- Stone process
 		end
 
 	refresh_all_commands is
-			-- Refresh all commands.
-			-- Calling on initializing window wipes in the window accelerators to which shortcuts related are wiped.
+			-- Refresh all commands with their accelerators into the window and related interfaces.
 		local
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]

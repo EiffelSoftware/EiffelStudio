@@ -12,7 +12,8 @@ inherit
 	EV_WINDOW
 		redefine
 			create_implementation,
-			initialize
+			initialize,
+			show_relative_to_window
 		end
 
 feature {NONE} -- Implementation
@@ -25,10 +26,27 @@ feature {NONE} -- Implementation
 
 	initialize is
 			-- Redefine
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			Precursor {EV_WINDOW}
+
+			-- We do it later to make sure contract `is_in_default_state' not borken.
+			create l_env
+			l_env.application.do_once_on_idle (agent disable_border)
+			l_env.application.do_once_on_idle (agent disable_user_resize)
+		end
+
+feature -- Command
+
+	show_relative_to_window (a_parent: EV_WINDOW) is
+			--
+		local
+			l_box: EV_VERTICAL_BOX
+		do
+			-- On GTK, border state can't be remembered after hide, so we set it everytime when showing.
 			disable_border
-			disable_user_resize
+			Precursor {EV_WINDOW} (a_parent)
 		end
 
 indexing

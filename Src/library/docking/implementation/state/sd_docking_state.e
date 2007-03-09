@@ -325,6 +325,8 @@ stick (a_direction: INTEGER) is
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_state_void: SD_STATE_VOID
+			l_platform: PLATFORM
+			l_floating_zone: SD_FLOATING_ZONE
 		do
 			zone.show
 			show_all_split_parent (zone)
@@ -332,7 +334,14 @@ stick (a_direction: INTEGER) is
 
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
-				l_multi_dock_area.parent_floating_zone.show
+				l_floating_zone := l_multi_dock_area.parent_floating_zone
+				create l_platform
+				if not l_platform.is_windows then
+					-- On GTK, windows size will not be remembered after hide.
+					l_floating_zone.set_width (last_floating_width)
+					l_floating_zone.set_height (last_floating_height)
+				end
+				l_floating_zone.show
 				l_multi_dock_area.update_title_bar
 			end
 

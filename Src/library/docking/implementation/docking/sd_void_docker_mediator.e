@@ -36,22 +36,30 @@ feature -- Hanlde pointer events
 
 	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER_32) is
 			-- Redefine
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			is_tracing := True
 			offset_x := a_offset_x
 			offset_y := a_offset_y
+
+			focus_out_agent := agent on_focus_out
+			create l_env
+			l_env.application.focus_out_actions.extend_kamikaze (focus_out_agent)
 		end
 
 	cancel_tracing_pointer is
 			-- Redefine
 		do
 			is_tracing := False
+			clear_up
 		end
 
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER_32) is
 			-- Redefine
 		do
 			is_tracing := False
+			clear_up
 		end
 
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32) is

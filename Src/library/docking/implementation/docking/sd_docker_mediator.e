@@ -79,11 +79,17 @@ feature -- Hanlde pointer events
 
 	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER) is
 			-- Begin to trace mouss positions.
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			is_tracing := True
 			generate_hot_zones
 			offset_x := a_offset_x
 			offset_y := a_offset_y
+
+			focus_out_agent := agent on_focus_out
+			create l_env
+			l_env.application.focus_out_actions.extend_kamikaze (focus_out_agent)
 		ensure
 			set: offset_x = a_offset_x and offset_y = a_offset_y
 		end
@@ -222,6 +228,8 @@ feature {NONE} -- Implementation functions
 
 	clear_up is
 			-- Clear up all resources.
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			is_tracing := False
 			clear_all_indicator
@@ -231,6 +239,10 @@ feature {NONE} -- Implementation functions
 			ev_application.key_release_actions.prune_all (internal_key_release_function)
 
 			setter.after_disable_capture
+
+			create l_env
+			l_env.application.focus_out_actions.start
+			l_env.application.focus_out_actions.prune (focus_out_agent)
 		end
 
 	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
@@ -266,6 +278,12 @@ feature {NONE} -- Implementation functions
 			else
 
 			end
+		end
+		
+	on_focus_out (a_widget: EV_WIDGET) is
+			-- Handle focus out actions.
+		do
+			cancel_tracing_pointer
 		end
 
 	clear_all_indicator is
@@ -438,6 +456,9 @@ feature {NONE} -- Implementation attributes
 
 	internal_key_release_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
 			-- Golbal key release action.
+
+	focus_out_agent: PROCEDURE [SD_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
+			-- Focus out agent.
 
 invariant
 

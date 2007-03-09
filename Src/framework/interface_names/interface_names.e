@@ -594,6 +594,27 @@ feature -- Accelerator, focus label and menu name
 	f_remove_formatter: STRING_GENERAL is do Result := locale.translate ("Remove selected customized formatter") end
 	l_formatter: STRING_GENERAL is do Result := locale.translate ("Formatter") end
 	l_displayed_in: STRING_GENERAL is do Result := locale.translate ("Displayed in") end
+	t_tool_name: STRING_GENERAL is do Result := locale.translate ("Tool") end
+	t_formatter_displayer_name: STRING_GENERAL is do Result := locale.translate ("Formatter displayer") end
+	l_display: STRING_GENERAL is do Result := locale.translate ("Display?") end
+	l_select_formatter: STRING_GENERAL is do Result := locale.translate ("Please select a formatter.") end
+	t_setup_formatter_tools (a_formatter_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_formatter_name_attached: a_formatter_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("Setup tools for formatter %"$1%""), [a_formatter_name])
+		end
+
+feature -- Formatter displayer names
+
+	l_class_tree_displayer: STRING_GENERAL do Result := locale.translate ("Class tree view") end
+	l_class_flat_displayer: STRING_GENERAL do Result := locale.translate ("Class list view") end
+	l_class_feature_displayer: STRING_GENERAL do Result := locale.translate ("Feature list view") end
+	l_feature_displayer: STRING_GENERAL do Result := locale.translate ("Feature version view") end
+	l_feature_caller_displayer: STRING_GENERAL do Result := locale.translate ("Feature caller view") end
+	l_feature_callee_displayer: STRING_GENERAL do Result := locale.translate ("Feature callee view") end
+	l_dependency_displayer: STRING_GENERAL do Result := locale.translate ("Dependency view") end
+	l_domain_displayer: STRING_GENERAL do Result := locale.translate ("Domain view") end
 
 feature -- Toggles
 

@@ -113,6 +113,9 @@ feature {NONE} -- Implementation
 						l_accelerator.disable_shift_required
 					end
 						-- Add new accelerator to `a_window'
+					check
+						l_accelerator_not_exist: not l_accelerators.has (l_accelerator)
+					end
 					l_accelerators.extend (l_accelerator)
 				end
 			end

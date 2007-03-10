@@ -29,7 +29,7 @@ feature {NONE} -- Initialize
 			no_eal_in_text: not a_text.has ('%N')
 			a_start_pos_positive: a_start_pos > 0
 			a_end_pos_positive: a_end_pos > 0
-			a_end_pos_greater_than_a_start_pos: a_start_pos < a_end_pos
+			a_end_pos_greater_than_a_start_pos: a_start_pos <= a_end_pos
 		do
 			make (a_text)
 			start_position := a_start_pos

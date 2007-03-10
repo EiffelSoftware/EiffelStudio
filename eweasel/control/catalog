@@ -1657,3 +1657,4 @@ if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet prope
 if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet property
 if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet property
 if DOTNET test effecting-from-inherited-external	dotnet049	tcf pass dotnet
+test replicated-from-generic-type		dotnet050	tcf pass dotnet termination expanded replication

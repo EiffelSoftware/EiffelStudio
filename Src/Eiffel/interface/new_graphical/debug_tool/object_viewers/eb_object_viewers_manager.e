@@ -139,8 +139,6 @@ feature -- Viewers
 	blank_viewer_widget: EV_WIDGET
 
 	set_current_viewer (v: like current_viewer) is
-		local
-			p: EV_CONTAINER
 		do
 			if v = Void or else current_viewer /= v then
 				if v = Void then

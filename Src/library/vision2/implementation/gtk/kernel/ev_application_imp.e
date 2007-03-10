@@ -177,7 +177,7 @@ feature {EV_ANY_I} -- Implementation
 
 	fd_select (a_fd, a_timeout: INTEGER): INTEGER
 		external
-			"C inline use <stdio.h>, <sys/time.h>, <sys/types.h>, <unistd.h>"
+			"C inline use <gdk/gdkx.h>"
 		alias
 			"[
 				fd_set rfds;

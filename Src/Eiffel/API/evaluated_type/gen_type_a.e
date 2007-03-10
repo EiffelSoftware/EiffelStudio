@@ -19,7 +19,7 @@ inherit
 			same_as, format, is_equivalent,
 			deep_actual_type, instantiation_in,
 			actual_argument_type, update_dependance, hash_code,
-			is_full_named_type, process
+			is_full_named_type, process, evaluated_type_in_descendant
 		end
 
 create
@@ -424,6 +424,35 @@ feature {COMPILER_EXPORTER} -- Primitives
 				new_generics.put
 					(generics.item (i).instantiated_in (class_type), i)
 				i := i + 1
+			end
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+		local
+			i, nb: INTEGER
+			new_generics: like generics
+		do
+			if a_ancestor /= a_descendant then
+				if is_loose then
+					from
+						nb := generics.count
+						create new_generics.make (1, nb)
+						i := 1
+					until
+						i > nb
+					loop
+						new_generics.put (
+							generics.item (i).evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature),
+							i)
+						i := i + 1
+					end
+					Result := twin
+					Result.set_generics (new_generics)
+				else
+					Result := Current
+				end
+			else
+				Result := Current
 			end
 		end
 

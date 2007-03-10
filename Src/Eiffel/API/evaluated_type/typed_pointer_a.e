@@ -19,7 +19,7 @@ inherit
 			expanded_deferred, valid_expanded_creation, update_dependance,
 			has_expanded, format, dump, duplicate, reference_type,
 			is_equivalent, instantiation_of, same_as, instantiation_in,
-			is_full_named_type
+			is_full_named_type, evaluated_type_in_descendant
 		redefine
 			is_typed_pointer, type_i, associated_class, process
 		end

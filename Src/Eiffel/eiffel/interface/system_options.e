@@ -83,9 +83,6 @@ feature -- Access
 			uses_ise_gc_runtime: Result implies (external_runtime = Void or else external_runtime.is_empty)
 		end
 
-	full_type_checking: BOOLEAN
-			-- Does compiler checks inherited feature as well as local feature.
-
 	platform: INTEGER
 			-- User specified platform.
 
@@ -318,13 +315,6 @@ feature -- Update
 		ensure
 			dotnet_naming_convention_set:
 				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else dotnet_naming_convention = v
-		end
-
-	set_full_type_checking (b: BOOLEAN) is
-		do
-			full_type_checking := b
-		ensure
-			full_type_checking_set: full_type_checking = b
 		end
 
 	set_do_not_check_vape (b: BOOLEAN) is

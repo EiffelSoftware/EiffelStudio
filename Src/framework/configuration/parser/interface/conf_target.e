@@ -494,12 +494,6 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_force_32bits)
 		end
 
-	setting_full_type_checking: BOOLEAN is
-			-- Value for the full_type_checking setting.
-		do
-			Result := setting_boolean (s_full_type_checking)
-		end
-
 	setting_il_verifiable: BOOLEAN is
 			-- Value for the console_application setting.
 		do

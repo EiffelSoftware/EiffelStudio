@@ -15,6 +15,7 @@ inherit
 			has_formal_generic,
 			is_loose,
 			instantiated_in,
+			evaluated_type_in_descendant,
 			same_as,
 			format,
 			is_full_named_type,
@@ -248,6 +249,18 @@ feature {COMPILER_EXPORTER}
 			-- of `class_type'.
 		do
 			Result := class_type.generics.item (position)
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A is
+		local
+			l_feat: TYPE_FEATURE_I
+		do
+				-- Get associated feature in parent.
+			l_feat := a_ancestor.formal_at_position (position)
+				-- Get associated feature in descendant.
+			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
+			check l_feat_not_void: l_feat /= Void end
+			Result := l_feat.type.actual_type
 		end
 
 	type_i: FORMAL_I is

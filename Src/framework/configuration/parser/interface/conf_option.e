@@ -33,12 +33,15 @@ feature -- Status
 	is_msil_application_optimize_configured: BOOLEAN
 			-- Is `is_msil_application_optimize' configured?
 
+	is_full_class_checking_configured: BOOLEAN
+			-- Is `is_full_class_checking' configued?
+
 	is_empty: BOOLEAN is
 			-- Is `Current' empty? No settings are set?
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
-				is_warning_configured or is_msil_application_optimize_configured or assertions /= Void or namespace /= Void or
-				warnings /= Void or debugs /= Void )
+				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
+				assertions /= Void or namespace /= Void or warnings /= Void or debugs /= Void )
 		end
 
 feature -- Status update
@@ -85,6 +88,14 @@ feature -- Status update
 			is_msil_application_optimize := False
 		end
 
+	unset_full_class_checking is
+			-- Unset full class checking.
+		do
+			is_full_class_checking_configured := False
+			is_full_class_checking := False
+		end
+
+
 feature -- Access, stored in configuration file
 
 	assertions: CONF_ASSERTIONS
@@ -113,6 +124,9 @@ feature -- Access, stored in configuration file
 
 	is_msil_application_optimize: BOOLEAN
 			-- Do .NET specific application optimizations?
+
+	is_full_class_checking: BOOLEAN
+			-- Do we perform a full class checking?
 
 	description: STRING
 			-- A description about the options.
@@ -258,6 +272,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_msil_application_optimize_configured: is_msil_application_optimize_configured
 		end
 
+	set_full_class_checking (a_enabled: BOOLEAN) is
+			-- Set `is_full_class_checking' to `a_enabled'.
+		do
+			is_full_class_checking_configured := True
+			is_full_class_checking := a_enabled
+		ensure
+			is_full_class_checking_set: is_full_class_checking = a_enabled
+			is_full_class_checking_configured: is_full_class_checking_configured
+		end
+
 	set_description (a_description: like description) is
 			-- Set `description' to `a_description'.
 		do
@@ -271,10 +295,11 @@ feature -- Comparison
 	is_equal_options (other: like Current): BOOLEAN is
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
 		do
-			Result := equal (assertions, other.assertions) and is_debug = other.is_debug
-				and is_optimize = other.is_optimize and is_profile = other.is_profile
-				and is_trace = other.is_trace and equal(namespace, other.namespace)
-				and equal (debugs, other.debugs)
+			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
+				is_optimize = other.is_optimize and is_profile = other.is_profile and
+				is_full_class_checking = other.is_full_class_checking and
+				is_trace = other.is_trace and equal(namespace, other.namespace) and
+				equal (debugs, other.debugs)
 		end
 
 feature -- Merging
@@ -330,6 +355,10 @@ feature -- Merging
 				if not is_msil_application_optimize_configured then
 					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
 					is_msil_application_optimize := other.is_msil_application_optimize
+				end
+				if not is_full_class_checking_configured then
+					is_full_class_checking_configured := other.is_full_class_checking_configured
+					is_full_class_checking := other.is_full_class_checking
 				end
 			end
 		end

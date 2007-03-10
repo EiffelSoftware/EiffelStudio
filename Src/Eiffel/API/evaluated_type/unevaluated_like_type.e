@@ -12,7 +12,8 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			is_like_current, has_associated_class,
-			type_i, associated_class, conform_to, is_valid
+			type_i, associated_class, conform_to, is_valid,
+			evaluated_type_in_descendant, instantiated_in
 		end
 
 	SHARED_NAMES_HEAP
@@ -132,6 +133,14 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	instantiated_in (class_type: TYPE_A): like Current is
+		do
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+		do
+		end
+
 	type_i: TYPE_I is
 			-- C type
 		do
@@ -141,10 +150,8 @@ feature {NONE} -- Implementation
 			-- String constant for `Current'.
 
 invariant
-
 	non_void_anchor: anchor /= Void
-	is_like_current_implies_current_anchor: is_like_current
-				implies anchor.is_equal (Like_current)
+	is_like_current_implies_current_anchor: is_like_current implies anchor.is_equal (Like_current)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

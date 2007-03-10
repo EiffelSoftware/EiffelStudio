@@ -87,7 +87,8 @@ feature {NONE} -- Initialization
 			if t.is_basic then
 				basic_type ?= t
 			end
-			type := t.generic_derivation
+			type ?= t.generic_derivation
+			check type_not_void: type /= Void end
 				-- Set creation info as if the type is used as "like Current".
 			if type = t then
 					-- Duplicate type object to avoid modification of `t'.

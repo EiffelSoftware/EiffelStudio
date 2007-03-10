@@ -219,7 +219,6 @@ feature {NONE} -- Implementation
 			Result.force (s_enforce_unique_class_names)
 			Result.force (s_exception_trace)
 			Result.force (s_executable_name)
-			Result.force (s_full_type_checking)
 			Result.force (s_il_verifiable)
 			Result.force (s_inlining)
 			Result.force (s_inlining_size)
@@ -270,7 +269,6 @@ feature {NONE} -- Implementation
 			Result.force (s_force_32bits)
 			Result.force (s_multithreaded)
 			Result.force (s_il_verifiable)
-			Result.force (s_full_type_checking)
 			Result.force (s_use_cluster_name_as_namespace)
 			Result.force (s_use_all_cluster_name_as_namespace)
 		ensure

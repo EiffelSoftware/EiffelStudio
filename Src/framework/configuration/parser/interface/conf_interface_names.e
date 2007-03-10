@@ -289,6 +289,8 @@ feature -- Option names and descriptions
 	option_profile_description: STRING_GENERAL is do Result := locale.translate ("Generate profiling information?")	end
 	option_trace_name: STRING_GENERAL is do Result := locale.translate ("Trace")	end
 	option_trace_description: STRING_GENERAL is do Result := locale.translate ("Display name of all called features during execution?")	end
+	option_full_class_checking_name: STRING_GENERAL is do Result := locale.translate ("Full Class Checking")	end
+	option_full_class_checking_description: STRING_GENERAL is do Result := locale.translate ("Are features of parent classes rechecked in current class?")	end
 
 	option_msil_application_optimize_name: STRING_GENERAL is do Result := locale.translate ("Apply Application Optimizations")	end
 	option_msil_application_optimize_description: STRING_GENERAL is do Result := locale.translate ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end

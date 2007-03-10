@@ -265,7 +265,6 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			current_feature_table := Void
-			written_class := Void
 			clear_feature_context
 		end
 
@@ -277,6 +276,7 @@ feature -- Managing the type stack
 			locals.clear_all
 			last_conversion_info := Void
 			supplier_ids.wipe_out
+			written_class := Void
 		end;
 
 feature	-- Saving contexts

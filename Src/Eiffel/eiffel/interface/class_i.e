@@ -197,6 +197,12 @@ feature -- Access
 			end
 		end
 
+	is_full_class_checking: BOOLEAN is
+			-- Is full class being checked, i.e. including inherited features?
+		do
+			Result := options.is_full_class_checking
+		end
+
 	is_compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do

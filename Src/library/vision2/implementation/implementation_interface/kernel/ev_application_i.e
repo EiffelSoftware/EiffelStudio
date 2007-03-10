@@ -70,13 +70,13 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	cpu_relinquishment_time: INTEGER is 10
+	cpu_relinquishment_time: INTEGER is 20
 		-- Number of milliseconds to relinquish CPU when idling.
 
 	idle_iteration_count: NATURAL_32
 		-- Number of iterations that the application has been idle.
 
-	idle_iteration_boundary: NATURAL_32 is 3000
+	idle_iteration_boundary: NATURAL_32 is 1500
 		-- Number of iterations before forcing Garbage Collector to kick in.
 		-- 30 Seconds = 30 * 1000 / sleep time
 

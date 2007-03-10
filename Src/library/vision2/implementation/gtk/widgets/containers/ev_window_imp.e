@@ -80,6 +80,9 @@ feature {NONE} -- Initialization
 		do
 			set_is_initialized (False)
 			l_c_object := c_object
+
+			create accel_list.make (10)
+
 			create upper_bar
 			create lower_bar
 
@@ -306,6 +309,11 @@ feature -- Element change
 			menu_bar := Void
 		end
 
+feature {EV_GTK_WINDOW_IMP} -- Access
+
+	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
+		-- Lookup table for accelerator access.
+
 feature {NONE} -- Accelerators
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -316,6 +324,7 @@ feature {NONE} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
+				accel_list.put (an_accel, acc_imp.accel_id)
 				if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 						-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
 					a_property := once "gtk-menu-bar-accel"
@@ -329,8 +338,13 @@ feature {NONE} -- Accelerators
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Disconnect key combination `an_accel' from this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
 		do
-			-- No implementation needed
+			if an_accel /= Void then
+				acc_imp ?= an_accel.implementation
+				accel_list.remove (acc_imp.accel_id)
+			end
 		end
 
 feature {EV_ANY_IMP} -- Implementation

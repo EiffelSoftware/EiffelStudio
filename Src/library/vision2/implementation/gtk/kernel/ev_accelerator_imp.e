@@ -38,17 +38,26 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_WINDOW_IMP} -- Implementation
 
-	modifier_mask: INTEGER is
-			-- The mask consisting of alt, shift and control keys.
+	accel_id: INTEGER
+			-- Id of `Current' used for hash table lookup.
 		do
-			if control_required then
-				Result := {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
+			Result := generate_accel_id (key, control_required, alt_required, shift_required)
+		end
+
+	generate_accel_id (a_key: EV_KEY; a_control_required, a_alt_required, a_shift_required: BOOLEAN): INTEGER is
+		do
+			Result := a_key.code
+			Result := Result |<< 8
+			if a_control_required then
+				Result :=  Result + {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
 			end
-			if alt_required then
-				Result := Result.bit_or ( {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
+			Result := Result |<< 8
+			if a_alt_required then
+				Result := Result + {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM
 			end
-			if shift_required then
-				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
+			Result := Result |<< 8
+			if a_shift_required then
+				Result := Result + {EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM
 			end
 		end
 

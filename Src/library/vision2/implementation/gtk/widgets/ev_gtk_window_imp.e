@@ -302,27 +302,15 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					-- Call accelerators if present.
 				if a_key /= Void and then l_window_imp /= Void then
 					l_accel_list := l_window_imp.accelerators_internal
-					if l_accel_list /= Void then
-						from
-							i := 1
-							l_exit := False
-						until
-							i > l_accel_list.count or else l_exit
-						loop
-							l_accel := l_accel_list @ i
+					if l_accel_list /= Void and then not l_accel_list.is_empty then
+						l_accel := l_accel_list [1]
+						if l_accel /= Void then
+							l_accel_imp ?= l_accel.implementation
+								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
+							l_accel := l_window_imp.accel_list.item (l_accel_imp.generate_accel_id (a_key, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
-								l_accel_imp ?= l_accel.implementation
-								if
-									l_accel_imp.key.code = a_key.code and then
-									l_accel_imp.control_required = l_app_imp.ctrl_pressed and then
-									l_accel_imp.alt_required = l_app_imp.alt_pressed and then
-									l_accel_imp.shift_required = l_app_imp.shift_pressed
-								then
-									l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
-									l_exit := True
-								end
+								l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
 							end
-							i := i + 1
 						end
 					end
 				end

@@ -100,6 +100,9 @@ feature -- Initialization
 			if type_a_checker = Void then
 				create type_a_checker
 			end
+			if inherited_type_a_checker = Void then
+				create inherited_type_a_checker
+			end
 			if type_a_generator = Void then
 				create type_a_generator
 			end
@@ -125,6 +128,7 @@ feature -- Type checking
 			break_point_slot_count := 0
 			process_inherited_assertions (a_feature, True)
 			if a_code_inherited then
+				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if not a_feature.is_deferred then
 					is_inherited := True
 					a_feature.body.process (Current)
@@ -302,7 +306,7 @@ feature -- Type checking
 							l_id_list.after
 						loop
 							l_local_name_id := l_id_list.item
-							if l_feat_tbl.has_id (l_local_name_id) then
+							if not is_inherited and then l_feat_tbl.has_id (l_local_name_id) then
 									-- The local name is a feature name of the
 									-- current analyzed class.
 								create l_vrle1
@@ -405,7 +409,7 @@ feature {NONE} -- Implementation: Access
 	type_a_generator: AST_TYPE_A_GENERATOR
 			-- To convert TYPE_AS into TYPE_A
 
-	type_a_checker: TYPE_A_CHECKER
+	inherited_type_a_checker, type_a_checker: TYPE_A_CHECKER
 			-- To check a type
 
 	byte_anchor: AST_BYTE_NODE_ANCHOR
@@ -740,6 +744,8 @@ feature -- Roundtrip
 			l_cur_class ?= context.current_class
 
 			if is_inherited then
+					-- We have to retrieve the FEATURE_I object from the class where the inline agent is
+					-- written, since those are not inherited.
 				l_feature :=
 					system.class_of_id (l_as.class_id).eiffel_class_c.inline_agent_of_rout_id (l_as.inl_rout_id).duplicate
 				l_feature.instantiation_in (context.current_class_type.conformance_type)
@@ -964,6 +970,7 @@ feature -- Implementation
 			l_type: TYPE_A
 			l_needs_byte_node: BOOLEAN
 			l_vsta1: VSTA1
+			l_feature: FEATURE_I
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_as.class_type.process (Current)
@@ -980,7 +987,11 @@ feature -- Implementation
 
 			instantiator.dispatch (l_type, context.current_class)
 
-			process_call (l_type, Void, l_as.feature_name, Void, l_as.parameters, True, False, True, False)
+			if is_inherited then
+				l_feature := last_type.associated_class.feature_of_rout_id (l_as.routine_ids.first)
+			end
+
+			process_call (l_type, Void, l_as.feature_name, l_feature, l_as.parameters, True, False, True, False)
 			error_handler.checksum
 
 			if not is_inherited then
@@ -1898,12 +1909,15 @@ feature -- Implementation
 				l_class_id := -1
 			else
 				l_class_id := l_type_a.associated_class.class_id
-				if is_inherited then
-					l_feature := system.class_of_id (l_class_id).feature_of_rout_id (l_as.routine_ids.first)
+				if is_inherited and not l_as.is_tuple_access then
+						-- Reuse the feature when it is really one, otherwise when it is a tuple
+						-- access the call to `process_call' will do the right thing for inherited code.
+						l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
 				end
 			end
 
-			process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, True, False)
+			process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
+				False, False, True, False)
 			error_handler.checksum
 
 			if not is_inherited then
@@ -1935,7 +1949,7 @@ feature -- Implementation
 			else
 				l_class_id := l_type_a.associated_class.class_id
 				if is_inherited then
-					l_feature := system.class_of_id (l_class_id).feature_of_rout_id (l_as.routine_ids.first)
+					l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
 				end
 			end
 
@@ -2756,7 +2770,7 @@ feature -- Implementation
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
-					if not is_inherited or else l_as.is_local then
+				if not is_inherited or else l_as.is_local then
 					l_local_info := context.locals.item (l_as.feature_name.internal_name.name_id)
 				end
 				if l_local_info /= Void then
@@ -2915,17 +2929,32 @@ feature -- Implementation
 				error_handler.raise_error
 			end
 
-				-- Type check the call
-			process_call (l_target_type, Void, l_feature_name, a_feature, l_as.operands, False, True, l_as.has_target, False)
+			if l_target_type.has_associated_class then
+				l_class := l_target_type.associated_class
+				l_table := l_class.feature_table
 
-			check has_class: l_target_type.has_associated_class end
-			l_class := l_target_type.associated_class
-			l_table := l_class.feature_table
-			if a_feature = Void then
-				l_feature := l_table.item_id (l_feature_name.name_id)
+				if is_inherited then
+					if a_feature = Void then
+						l_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
+					else
+						l_feature := a_feature
+					end
+				else
+					if a_feature = Void then
+							-- Note that the following can yield `Void' in case it is not a valid feature name or
+							-- if it is a named tuple access. That's ok, since it is going to be properly
+							-- handled by `process_call'.
+						l_feature := l_table.item_id (l_feature_name.name_id)
+					else
+						l_feature := a_feature
+					end
+				end
 			else
 				l_feature := a_feature
 			end
+
+				-- Type check the call
+			process_call (l_target_type, Void, l_feature_name, l_feature, l_as.operands, False, True, l_as.has_target, False)
 
 			if l_feature = Void then
 				l_named_tuple ?= l_target_type
@@ -4146,7 +4175,7 @@ feature -- Implementation
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
-			l_dcr_feat: FEATURE_I
+			l_feature: FEATURE_I
 			l_orig_call, l_call: ACCESS_INV_AS
 			l_vgcc1: VGCC1
 			l_vgcc11: VGCC11
@@ -4156,6 +4185,7 @@ feature -- Implementation
 			l_creators: HASH_TABLE [EXPORT_I, STRING]
 			l_needs_byte_node: BOOLEAN
 			l_actual_creation_type: TYPE_A
+			l_class_id: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_orig_call := a_call
@@ -4204,20 +4234,21 @@ feature -- Implementation
 				(l_creation_class.allows_default_creation or
 				(l_is_formal_creation and then l_formal_dec.has_default_create))
 			then
-				l_dcr_feat := l_creation_class.default_create_feature
+				l_feature := l_creation_class.default_create_feature
 
 					-- Use default_create
 				create {ACCESS_INV_AS} l_call.make (
-					create {ID_AS}.initialize_from_id (l_dcr_feat.feature_name_id), Void, Void)
+					create {ID_AS}.initialize_from_id (l_feature.feature_name_id), Void, Void)
 					-- For better error reporting as we insert a dummy call for type checking.
 				l_call.feature_name.set_position (a_location.line, a_location.column,
 					a_location.position, a_location.location_count)
-				if l_is_formal_creation or else not l_dcr_feat.is_empty then
+				if l_is_formal_creation or else not l_feature.is_empty then
 						-- We want to generate a call only when needed:
 						-- 1 - In a formal generic creation call
 						-- 2 - When body of `default_create' is not empty
 					l_orig_call := l_call
 				end
+				l_call.set_routine_ids (l_feature.rout_id_set)
 				l_is_default_creation := True
 			else
 				l_call := l_orig_call
@@ -4227,14 +4258,17 @@ feature -- Implementation
 
 			if l_call /= Void then
 
-				if not is_inherited then
+				l_class_id := constrained_type (last_type.actual_type).associated_class.class_id
+				if is_inherited then
+					l_feature := system.class_of_id (l_class_id).feature_of_rout_id (l_call.routine_ids.first)
+				else
 						-- Set some type informations
-					l_call.set_class_id (constrained_type (last_type.actual_type).associated_class.class_id)
+					l_call.set_class_id (l_class_id)
 				end
 
 					-- Type check the call: as if it was an unqualified call (as export checking
 					-- is done later below)
-				process_call (last_type, Void, l_call.feature_name, Void, l_call.parameters, False, False, False, False)
+				process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
 
 				if not is_inherited then
 						-- Set some type informations
@@ -4859,7 +4893,12 @@ feature -- Implementation
 					l_list ?= last_byte_node
 				end
 			end
-			if context.current_class.is_generic and then context.current_class.is_warning_enabled (w_once_in_generic) then
+			if
+				not is_inherited and then
+				context.current_class.is_generic and then context.current_class.is_warning_enabled (w_once_in_generic)
+			then
+					-- Generate a warning only in class declaring the once, not in classes in which the once is being
+					-- rechecked.
 				error_handler.insert_warning (
 					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
 			end
@@ -5302,6 +5341,7 @@ feature {NONE} -- Implementation
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
 				is_inherited := True
+				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				from
 					i := assert_id_set.count
 				until
@@ -6954,13 +6994,20 @@ feature {NONE} -- Implementation: type validation
 		local
 			l_type: TYPE_A
 		do
-				-- Convert TYPE_AS into TYPE_A.
-			l_type := type_a_generator.evaluate_type (a_type, context.current_class)
-				-- Perform simple check that TYPE_A is valid.
-			l_type := type_a_checker.check_and_solved (l_type, a_type)
 			if is_inherited then
-					-- We need to update `l_type' to the context of `context.current_class'.
-				l_type := l_type.instantiation_in (context.current_class.actual_type, context.written_class.class_id)
+					-- Convert TYPE_AS into TYPE_A.
+				l_type := type_a_generator.evaluate_type (a_type, context.written_class)
+					-- Perform simple check that TYPE_A is valid, `l_type' should not be
+					-- Void after this call since it was not Void when checking the parent
+					-- class
+				l_type := inherited_type_a_checker.solved (l_type, a_type)
+				check l_type_not_void: l_type /= Void end
+				l_type := l_type.evaluated_type_in_descendant (context.written_class,
+					context.current_class, current_feature)
+			else
+				l_type := type_a_generator.evaluate_type (a_type, context.current_class)
+					-- Perform simple check that TYPE_A is valid.
+				l_type := type_a_checker.check_and_solved (l_type, a_type)
 			end
 				-- Check validity of type declaration
 			type_a_checker.check_type_validity (l_type, a_type)
@@ -7085,23 +7132,26 @@ feature {NONE} -- Implementation: checking locals
 					loop
 						l_local_name_id := l_id_list.item
 						l_local_name := Names_heap.item (l_local_name_id)
-						if l_curr_feat.has_argument_name (l_local_name_id) then
-								-- The local name is an argument name of the
-								-- current analyzed feature
-							create l_vrle2
-							context.init_error (l_vrle2)
-							l_vrle2.set_local_name (l_local_name_id)
-							l_vrle2.set_location (l_as.locals.item.start_location)
-							error_handler.insert_error (l_vrle2)
-						elseif context.current_feature_table.has_id (l_local_name_id) then
-								-- The local name is a feature name of the
-								-- current analyzed class.
-							create l_vrle1
-							context.init_error (l_vrle1)
-							l_vrle1.set_local_name (l_local_name_id)
-							l_vrle1.set_location (l_as.locals.item.start_location)
-							error_handler.insert_error (l_vrle1)
+						if not is_inherited then
+							if l_curr_feat.has_argument_name (l_local_name_id) then
+									-- The local name is an argument name of the
+									-- current analyzed feature
+								create l_vrle2
+								context.init_error (l_vrle2)
+								l_vrle2.set_local_name (l_local_name_id)
+								l_vrle2.set_location (l_as.locals.item.start_location)
+								error_handler.insert_error (l_vrle2)
+							elseif context.current_feature_table.has_id (l_local_name_id) then
+									-- The local name is a feature name of the
+									-- current analyzed class.
+								create l_vrle1
+								context.init_error (l_vrle1)
+								l_vrle1.set_local_name (l_local_name_id)
+								l_vrle1.set_location (l_as.locals.item.start_location)
+								error_handler.insert_error (l_vrle1)
+							end
 						end
+
 							-- Build the local table in the context
 						i := i + 1
 						create l_local_info

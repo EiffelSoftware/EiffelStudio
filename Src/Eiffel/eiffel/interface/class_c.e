@@ -1770,6 +1770,13 @@ feature -- Convenience features
 			Result := lace_class.visible_level
 		end
 
+	is_full_class_checking: BOOLEAN is
+			-- Do we perform a flat checking on the calss, i.e. checking
+			-- inherited routines in the context of the descendant class?
+		do
+			Result := lace_class.is_full_class_checking
+		end
+
 feature -- Actual class type
 
 	constraint_actual_type: CL_TYPE_A is

@@ -11,7 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			update_dependance
+			update_dependance, evaluated_type_in_descendant
 		end
 
 	SHARED_NAMES_HEAP
@@ -143,12 +143,26 @@ feature -- Output
 feature -- Primitives
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_FEATURE is
-			-- Instantiation of Current in the context of `class_type',
+			-- Instantiation of Current in the context of `type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
 			Result := twin
 			Result.set_actual_type
 							(actual_type.instantiation_in (type, written_id))
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_FEATURE is
+		local
+			l_anchor: FEATURE_I
+		do
+			if a_ancestor /= a_descendant then
+				l_anchor := a_descendant.feature_of_rout_id (routine_id)
+				check l_anchor_not_void: l_anchor /= Void end
+				create Result.make (l_anchor, a_descendant.class_id)
+				Result.set_actual_type (l_anchor.type.actual_type)
+			else
+				Result := Current
+			end
 		end
 
 	create_info: CREATE_FEAT is

@@ -69,7 +69,6 @@ feature -- Settings
 	s_enforce_unique_class_names: STRING is "enforce_unique_class_names"
 	s_exception_trace: STRING is "exception_trace"
 	s_executable_name: STRING is "executable_name"
-	s_full_type_checking: STRING is "full_type_checking"
 	s_il_verifiable: STRING is "il_verifiable"
 	s_inlining: STRING is "inlining"
 	s_inlining_size: STRING is "inlining_size"

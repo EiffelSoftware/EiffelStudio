@@ -25,7 +25,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ORIGIN_TABLE 
+	ORIGIN_TABLE
 
 inherit
 	HASH_TABLE [SELECTION_LIST, INTEGER]
@@ -51,8 +51,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	insert (info: INHERIT_INFO) is
 			-- Insert information `info' in the table.
@@ -115,7 +115,7 @@ feature
 				i := i + 1
 			end
 		end
-				
+
 	compute_feature_table (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
 			-- Origin table for instance of FEATURE_TABLE resulting
 			-- of an analysis of possible repeated inheritance

@@ -278,9 +278,15 @@ feature -- Comparison
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still
 			--| the same (problem detected for LIKE_FEATURE). Xavier
+		local
+			l_other: like Current
 		do
 			Result := other /= Void and then other.same_type (Current)
-				and then is_equivalent (other)
+			if Result then
+				l_other ?= other
+				check l_other_not_void: l_other /= Void end
+				Result := is_equivalent (l_other)
+			end
 		end;
 
 	frozen equivalent (o1, o2: TYPE_A): BOOLEAN is
@@ -497,7 +503,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
-			-- Instantiation of Current in the context of `class_type'
+			-- Instantiation of Current in the context of `type'
 			-- assuming that Current is written in the class of id `written_id'.
 		require
 			good_argument: type /= Void
@@ -514,6 +520,32 @@ feature {COMPILER_EXPORTER} -- Access
 			good_argument: class_type /= Void
 		do
 			Result := Current
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A is
+			-- Evaluate `Current' written in `a_ancestor' in the context of `a_descendant' class.
+			-- If `a_feature' is not Void, then it is the feature seen from `a_descendant' from where
+			-- `Current' appears (i.e. not in an inheritance clause).
+			-- FIXME: it would be nice to have an assertion that checks the validity of a type
+			-- in  a class (for example that FORMAL_A #3 would not make sense in a class with only
+			-- one formal generic parameter).
+		require
+			type_is_valid: is_valid
+			a_ancestor_not_void: a_ancestor /= Void
+			a_ancestor_valid: a_ancestor.is_valid
+			a_ancestor_compiled: a_ancestor.has_feature_table
+			a_descendant_not_void: a_descendant /= Void
+			a_descendant_valid: a_descendant.is_valid
+			a_descendant_compiled: a_descendant.has_feature_table
+			real_descendant: a_descendant.conform_to (a_ancestor)
+			a_feature_valid: a_feature /= Void implies
+				(a_feature.written_class.conform_to (a_ancestor) and
+				a_descendant.conform_to (a_feature.written_class))
+			is_feature_needed: has_like implies a_feature /= Void
+		do
+			Result := Current
+		ensure
+			same_object: (a_ancestor = a_descendant) implies Result = Current
 		end
 
 	duplicate: like Current is

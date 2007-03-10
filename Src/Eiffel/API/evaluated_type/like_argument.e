@@ -12,7 +12,7 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_argument_type, is_like_argument, has_like_argument
+			actual_argument_type, is_like_argument, has_like_argument, evaluated_type_in_descendant
 		end
 
 feature -- Visitor
@@ -104,6 +104,17 @@ feature {COMPILER_EXPORTER} -- Primitives
 		do
 			Result := twin
 			Result.set_actual_type (actual_type.instantiation_in (type, written_id))
+		end
+
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+		do
+			if a_ancestor /= a_descendant then
+				Result := twin
+				Result.set_actual_type (
+					a_feature.arguments.i_th (position).evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature))
+			else
+				Result := Current
+			end
 		end
 
 	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A is

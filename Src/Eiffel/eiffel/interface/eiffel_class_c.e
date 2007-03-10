@@ -550,6 +550,8 @@ feature -- Third pass: byte code production and type check
 				feat_table.after
 			loop
 				feature_i := feat_table.item_for_iteration
+				ast_context.set_written_class (feature_i.written_class)
+				ast_context.set_current_feature (feature_i)
 				type_checked := False
 
 				if feature_i.to_melt_in (Current) then
@@ -604,7 +606,6 @@ feature -- Third pass: byte code production and type check
 							-- always melted
 						feature_changed := True
 					end
-					ast_context.set_current_feature (feature_i)
 
 						-- No type check for constants and attributes.
 						-- [It is done in second pass.]
@@ -689,8 +690,6 @@ feature -- Third pass: byte code production and type check
 						record_suppliers (feature_i, dependances)
 					end
 
-					ast_context.clear_feature_context
-
 					if
 						(feature_changed or else byte_code_generated)
 						and then not (type_check_error or else feature_i.is_deferred)
@@ -708,19 +707,13 @@ feature -- Third pass: byte code production and type check
 
 					if not type_checked and then changed3 and then feature_i.is_routine then
 							-- Forced type check on the feature
-						ast_context.set_current_feature (feature_i)
 						feature_checker.type_check_only (feature_i, False)
 						check_local_names_needed := False
-						ast_context.clear_feature_context
 					elseif check_local_names_needed then
-						ast_context.set_current_feature (feature_i)
 						feature_i.check_local_names (feature_i.real_body)
-						ast_context.clear_feature_context
 					end
-
 				elseif not feature_i.is_routine then
 					if feature_i.body_index /= 0 then
-						ast_context.set_current_feature (feature_i)
 						if
 							feature_changed
 							or else
@@ -757,17 +750,14 @@ feature -- Third pass: byte code production and type check
 						else
 							feature_checker.type_check_only (feature_i, False)
 						end
-						ast_context.clear_feature_context
 					end
 					record_suppliers (feature_i, dependances)
-				elseif feature_i.is_deferred and then class_id = feature_i.written_in then
-						-- Just type check it. See if VRRR or
-						-- VMRX error has occurred.
-					ast_context.set_current_feature (feature_i)
-					feature_checker.type_check_only (feature_i, False)
-					ast_context.clear_feature_context
+				elseif is_full_class_checking then
+						-- We check inherited routines in the context of current class.
+					feature_checker.type_check_only (feature_i, class_id /= feature_i.written_in)
 					record_suppliers (feature_i, dependances)
 				end
+				ast_context.clear_feature_context
 				feat_table.forth
 			end -- Main loop
 

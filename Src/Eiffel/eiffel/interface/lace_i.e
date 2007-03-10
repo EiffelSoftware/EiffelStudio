@@ -900,20 +900,6 @@ feature {NONE} -- Implementation
 				system.set_freeze
 			end
 
-			l_s := l_settings.item (s_full_type_checking)
-			if l_s /= Void then
-				if l_s.is_boolean then
-					system.set_full_type_checking (l_s.to_boolean)
-				else
-					create vd15
-					vd15.set_option_name (s_full_type_checking)
-					vd15.set_option_value (l_s)
-					Error_handler.insert_error (vd15)
-				end
-			else
-				system.set_full_type_checking (False)
-			end
-
 			l_s := l_settings.item (s_il_verifiable)
 			if l_s /= Void then
 				if l_s.is_boolean then

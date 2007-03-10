@@ -77,7 +77,6 @@ feature {NONE} -- Initialization
 	build_mini_toolbar is
 			-- Build the associated tool bar
 		local
-			cb: EV_COMBO_BOX
 			cl: EV_CELL
 		do
 			create mini_toolbar
@@ -191,9 +190,7 @@ feature -- Events
 
 	update_viewers_selector	(viewer: EB_OBJECT_VIEWER) is
 		local
-			done: BOOLEAN
 			v: EB_OBJECT_VIEWER
-			p: EV_CONTAINER
 		do
 			v := viewer
 			if v = Void and viewers_manager /= Void then

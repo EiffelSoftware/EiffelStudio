@@ -25,8 +25,6 @@ feature -- Access
 			-- Does Current have `feature_name_id'?
 		require
 			valid_feature_name_id: feature_name_id > 0
-		local
-			char: CHAR_I
 		do
 			if compilation_type then
 				Result := c_type_table.has_key (feature_name_id)

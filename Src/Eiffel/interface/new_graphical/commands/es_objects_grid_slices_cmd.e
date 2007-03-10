@@ -137,8 +137,6 @@ feature -- Basic operations
 			obj_grid_item: ES_OBJECTS_GRID_LINE
 			conv_obj: OBJECT_STONE
 			conv_fost: FEATURE_ON_OBJECT_STONE
-			l_item: EV_ANY
-			l_addr: STRING
 		do
 			conv_obj ?= st
 			if conv_obj = Void then
@@ -154,7 +152,6 @@ feature -- Basic operations
 	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_LINE is
 			-- Object grid line related to `ost if any.
 		local
-			obj_grid_item: ES_OBJECTS_GRID_LINE
 			l_item: EV_ANY
 			l_addr: STRING
 		do
@@ -448,8 +445,6 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 		require
 			st_not_void: st /= Void
 		local
-			l_item: EV_ANY
-			l_st_addr: STRING
 			obj_grid_item: ES_OBJECTS_GRID_LINE
 			spec_cap: INTEGER
 		do

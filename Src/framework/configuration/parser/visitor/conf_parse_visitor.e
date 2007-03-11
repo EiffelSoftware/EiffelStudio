@@ -102,7 +102,7 @@ feature -- Visit nodes
 					elseif l_load.last_warnings /= Void then
 						last_warnings.append (l_load.last_warnings)
 					end
-					add_warning (l_ferr)
+					add_warning (l_load.last_error)
 
 						-- Now continue as if the library was not included by creating this
 						-- compiler specific condition which is always false (as if library was excluded
@@ -112,7 +112,7 @@ feature -- Visit nodes
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
-					add_and_raise_error (l_ferr)
+					add_and_raise_error (l_load.last_error)
 				end
 			else
 					-- add warnings

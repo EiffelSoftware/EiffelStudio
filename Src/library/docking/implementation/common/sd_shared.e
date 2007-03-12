@@ -464,11 +464,14 @@ feature -- Constants
 	Hide_tab_indicator_size: INTEGER is 20
 			-- Hide tab indicator size. Hide tabs are tabs in SD_NOTEBOOK_TAB_AREA.
 
-	Drawing_area_icons_start_x: INTEGER is 0
-			-- When drawing area draw a icon, start x position.
+	title_bar_text_start_x: INTEGER is 0
+			-- When title bar drawing text, start x position.
 
-	Drawing_area_icons_start_y: INTEGER is 2
-			-- When drawing area draw a icon, start y position.
+	title_bar_text_start_y: INTEGER is
+			-- When title bar drawing text, start y position.
+		once
+			Result := (title_bar_height / 2 - tool_bar_font.height / 2).rounded
+		end
 
 	Padding_width: INTEGER is 6
 			-- Padding width used by whold system.

@@ -56,16 +56,6 @@ feature {NONE} -- Initlization
 			set_background_color (internal_shared.default_background_color)
 		end
 
-feature -- Properties
-
-	row_height: INTEGER is
-			-- Height of row.
-		do
-			Result := internal_row_height
-		ensure
-			valid: is_row_height_valid (Result)
-		end
-
 feature -- Command
 
 	extend (a_item: SD_TOOL_BAR_ITEM) is
@@ -187,6 +177,18 @@ feature -- Command
 			internal_items.wipe_out
 		end
 
+feature {SD_TOOL_BAR_TITLE_BAR} -- Special setting
+
+	set_row_height (a_height: INTEGER) is
+			-- Set `internal_row_height' to `a_height'
+		require
+			valid: a_height >= 0
+		do
+			internal_row_height := a_height
+		ensure
+			set: internal_row_height = a_height
+		end
+
 feature -- Query
 
 	items: like internal_items is
@@ -223,6 +225,14 @@ feature -- Query
 			-- Standard tool bar height.
 		do
 			Result := internal_shared.tool_bar_font.height + 2 * border_width
+		end
+
+	row_height: INTEGER is
+			-- Height of row.
+		do
+			Result := internal_row_height
+		ensure
+			valid: is_row_height_valid (Result)
 		end
 
 feature -- Contract support

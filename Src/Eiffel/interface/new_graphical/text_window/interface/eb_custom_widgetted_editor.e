@@ -88,20 +88,22 @@ feature -- Quick search bar basic operation
 		local
 			l_string : STRING
 		do
-			if search_tool.is_visible then
-				search_tool.close
+			if search_tool /= Void then
+				if search_tool.is_visible then
+					search_tool.close
+				end
+				show_search_bar
+				if has_selection then
+					l_string := string_selection
+					search_bar.keyword_field.change_actions.block
+					search_bar.keyword_field.set_text (l_string)
+					search_bar.keyword_field.change_actions.resume
+					search_bar.trigger_sensibility
+				end
+				focusing_search_bar := true
+				search_bar.keyword_field.set_focus
+				focusing_search_bar := false
 			end
-			show_search_bar
-			if has_selection then
-				l_string := string_selection
-				search_bar.keyword_field.change_actions.block
-				search_bar.keyword_field.set_text (l_string)
-				search_bar.keyword_field.change_actions.resume
-				search_bar.trigger_sensibility
-			end
-			focusing_search_bar := true
-			search_bar.keyword_field.set_focus
-			focusing_search_bar := false
 		end
 
 	hide_search_bar is

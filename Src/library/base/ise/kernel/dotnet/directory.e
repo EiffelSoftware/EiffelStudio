@@ -512,9 +512,9 @@ feature {NONE} -- Implementation
 			-- Status mode of the directory.
 			-- Possible values are the following:
 
-	Close_directory: INTEGER is unique
+	Close_directory: INTEGER is 1
 
-	Read_directory: INTEGER is unique;
+	Read_directory: INTEGER is 2;
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

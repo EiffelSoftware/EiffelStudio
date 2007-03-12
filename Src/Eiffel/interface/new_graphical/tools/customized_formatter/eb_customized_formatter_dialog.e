@@ -98,6 +98,8 @@ feature {NONE} -- Initialization
 			setup_property_grid
 
 			show_actions.extend (agent on_shown)
+
+			set_default_cancel_button (cancel_button)
 		end
 
 feature -- Access
@@ -278,7 +280,6 @@ feature{NONE} -- Actions
 			l_grid: like formatter_grid
 		do
 			l_name := new_formatter_name.twin
-			l_name.append (" #")
 			l_name.append (next_new_formatter_index.out)
 			create l_descriptor.make (l_name)
 			descriptors.force_last (l_descriptor)
@@ -417,6 +418,31 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_metric_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_metric: STRING_32) is
+			-- Action to be performed if formatter metric changed for `a_descrptor' from `property_grid'
+		require
+			a_descriptor_attached: a_descriptor /= Void
+			a_metric_attached: a_metric /= Void
+		do
+			if is_default_formatter_name (string_32_from_string_8 (formatter_name_property.value)) and then property_grid.is_displayed and then formatter_name_property /= Void then
+				formatter_name_property.set_value (interface_names.first_character_as_upper (a_metric))
+			end
+			set_has_changed (True)
+			a_descriptor.set_metric_name (string_32_from_string_8 (a_metric))
+		end
+
+	on_key_pressed_in_formatter_grid (a_key: EV_KEY) is
+			-- Action to be performed if `a_key' is pressed in `formatter_grid'
+		require
+			a_key_attached: a_key /= Void
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_insert then
+				on_add_formatter
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_delete and then remove_formatter_button.is_sensitive then
+				on_remove_formatter
+			end
+		end
+
 feature {NONE} -- Implementation/Data
 
 	formatter_grid: ES_GRID
@@ -456,7 +482,7 @@ feature {NONE} -- Implementation/Data
 			retry
 		end
 
-	new_formatter_name: STRING is "New formatter"
+	new_formatter_name: STRING is "New formatter #"
 			-- Base name for new created formatters
 
 	next_new_formatter_index: INTEGER
@@ -537,6 +563,9 @@ feature {NONE} -- Implementation/Data
 			-- Table of grid rows for descriptors
 			-- [Grid row, Formatter descriptor displayed in that row]
 
+	formatter_name_property: STRING_PROPERTY [STRING_32]
+			-- Property containing formatter name
+
 feature{NONE} -- Sorting
 
 	formatter_name_tester (a_formatter, b_formatter: EB_CUSTOMIZED_FORMATTER_DESP; a_order: INTEGER): BOOLEAN is
@@ -601,9 +630,9 @@ feature {NONE} -- Implementation
 				l_grid_row := l_formatter_grid.row (l_formatter_grid.row_count)
 				l_row_table.put (l_grid_row, l_cursor.item)
 				bind_formatter (l_cursor.item, l_grid_row)
-
 				l_cursor.forth
 			end
+
 			resize_formatter_grid
 		end
 
@@ -635,6 +664,7 @@ feature {NONE} -- Implementation
 			create l_name.make (interface_names.l_name)
 			l_name.set_value (string_32_from_string_8 (a_descriptor.name))
 			l_name.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_name, agent refresh_grid_for_descriptor (a_descriptor)))
+			formatter_name_property := l_name
 			l_grid.add_property (l_name)
 
 			create l_tooltip.make (interface_names.l_tooltip_lbl)
@@ -665,6 +695,7 @@ feature {NONE} -- Implementation
 			create l_metric_name.make (interface_names.l_metric_name)
 			l_metric_name.set_value (string_32_from_string_8 (a_descriptor.metric_name))
 			l_metric_name.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_metric_name, Void))
+			l_metric_name.change_value_actions.extend (agent on_metric_change (a_descriptor, ?))
 			l_grid.add_property (l_metric_name)
 
 			create l_metric_filter.make_with_value (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
@@ -812,6 +843,8 @@ feature {NONE} -- Implementation
 			formatter_grid_wrapper.set_sorting_status (l_sorting_status)
 			formatter_grid_wrapper.enable_auto_sort_order_change
 			formatter_grid_wrapper.set_sort_action (agent sort_agent)
+
+			l_grid.key_press_actions.extend (agent on_key_pressed_in_formatter_grid)
 		end
 
 	setup_property_grid is
@@ -826,9 +859,38 @@ feature {NONE} -- Implementation
 
 	try_resume_last_selection is
 			-- Try to select last selected row.
+		local
+			l_formatter_grid: like formatter_grid
 		do
 			if last_selected_descriptor /= Void and then descriptor_row_table.has (last_selected_descriptor) then
 				descriptor_row_table.item (last_selected_descriptor).enable_select
+			else
+				l_formatter_grid := formatter_grid
+				if l_formatter_grid.selected_rows.is_empty and then l_formatter_grid.row_count > 0 then
+					l_formatter_grid.row (1).enable_select
+					l_formatter_grid.set_focus
+				end
+			end
+		end
+
+	is_default_formatter_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a default formatter name?
+			-- A default formatter name is like "New formatter #xxx" where "xxx" is an index integer.
+		require
+			a_name_attached: a_name /= Void
+		local
+			l_count: INTEGER
+			l_index: STRING
+		do
+			l_count := new_formatter_name.count
+			if a_name.count > l_count then
+				Result := a_name.substring (1, l_count).is_equal (new_formatter_name)
+				if Result then
+					l_index := a_name.substring (l_count + 1, a_name.count)
+					l_index.left_adjust
+					l_index.right_adjust
+					Result := l_index.is_integer
+				end
 			end
 		end
 

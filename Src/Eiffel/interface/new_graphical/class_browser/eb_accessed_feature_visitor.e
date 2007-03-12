@@ -16,7 +16,8 @@ inherit
 		redefine
 			process_access_feat_as,
 			process_access_assert_as,
-			process_routine_creation_as
+			process_routine_creation_as,
+			process_tagged_as
 		end
 
 	QL_UTILITY
@@ -198,6 +199,13 @@ feature{NONE} -- Implementation/Process
 		do
 			check_accessor_for_routine_creation (l_as)
 			Precursor (l_as)
+		end
+
+	process_tagged_as (l_as: TAGGED_AS) is
+		do
+			if l_as.expr /= Void then
+				l_as.expr.process (Current)
+			end
 		end
 
 invariant

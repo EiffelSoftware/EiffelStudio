@@ -153,7 +153,11 @@ feature -- Command
 			l_hot_index: INTEGER
 		do
 			if internal_mediator /= Void then
-				caller_position := a_relative_position
+				if a_relative_position < 0 then
+					caller_position := 0
+				else
+					caller_position := a_relative_position
+				end
 				l_hot_index := put_hot_tool_bar_at (a_relative_position)
 				try_set_position (a_relative_position, l_hot_index)
 				if is_possible_set_position (a_relative_position, l_hot_index) then

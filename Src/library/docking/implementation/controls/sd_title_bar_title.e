@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 
 				l_clipping_width := width - internal_shared.highlight_before_width - internal_shared.highlight_tail_width
 				if l_clipping_width >= 0 then
-					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, title, l_clipping_width)
+					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.title_bar_text_start_x, internal_shared.title_bar_text_start_y, title, l_clipping_width)
 				end
 			else
 				-- We set background color here, it's for theme changed actions the background color will not update except
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 				clear
 				l_clipping_width := width - internal_shared.highlight_before_width - internal_shared.highlight_tail_width
 				if l_clipping_width >= 0 then
-					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, title, l_clipping_width)
+					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.title_bar_text_start_x, internal_shared.title_bar_text_start_y, title, l_clipping_width)
 				end
 
 			end

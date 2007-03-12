@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			customize.select_actions.extend (agent on_custom_selected)
 			create close_request_actions
 			create custom_actions
-
+			tool_bar.set_row_height (l_shared.title_bar_height)
 			tool_bar.compute_minimum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 
 			drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			if content /= Void then
-				drawing_area.draw_ellipsed_text_top_left (2, 1, content.title, drawing_area.width)
+				drawing_area.draw_ellipsed_text_top_left (2, l_shared.title_bar_text_start_y, content.title, drawing_area.width)
 			end
 		end
 

@@ -134,6 +134,11 @@ feature -- Details
 			message_text.set_text (s)
 			message_text.disable_edit
 			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
+			if s.count > 0 then
+				save_button.enable_sensitive
+			else
+				save_button.disable_sensitive
+			end
 		end
 
 	set_details (d: STRING_32) is
@@ -180,28 +185,12 @@ feature {NONE} -- Implementation
 	save_exception_message is
 			-- Save exception trace into a file
 		local
-			sfd: EB_FILE_SAVE_DIALOG
-			text_file: PLAIN_TEXT_FILE
-			retried: BOOLEAN
-			l_pref: STRING_PREFERENCE
+			l_save_tool: EB_SAVE_STRING_TOOL
 		do
-			if not retried then
-				l_pref := preferences.dialog_data.last_saved_debugger_exception_directory_preference
-				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value (eiffel_layout.eiffel_projects_directory)
-				end
-				create sfd.make_with_preference (l_pref)
-				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
-				sfd.show_modal_to_window (window)
-				if not sfd.file_name.is_empty then
-					create text_file.make_open_write (sfd.file_name)
-					text_file.put_string (message_text.text)
-					text_file.close
-				end
-			end
-		rescue
-			retried := True
-			retry
+			create l_save_tool.make (window)
+			l_save_tool.set_text (message_text.text)
+			l_save_tool.set_title (Interface_names.e_Save_exception_into)
+			l_save_tool.save
 		end
 
 	close_dialog is

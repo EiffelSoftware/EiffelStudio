@@ -1204,10 +1204,10 @@ feature -- Label texts
 	l_slice_limits: STRING_GENERAL is do Result := locale.translate ("Slice limits") end
 	l_set_slice_values: STRING_GENERAL is do Result := locale.translate("Set Slice Values") end
 	l_to: STRING_GENERAL is do Result := locale.translate("to") end
-	t_viewer_object_dumper_title: STRING_GENERAL is do Result := locale.translate ("Object.dumped") end
-	t_viewer_object_browser_title: STRING_GENERAL is do Result := locale.translate ("Object.browse") end
+	t_viewer_object_dumper_title: STRING_GENERAL is do Result := locale.translate ("Object Dump") end
+	t_viewer_object_browser_title: STRING_GENERAL is do Result := locale.translate ("Object Browse") end
 	l_viewer_drop_object_here: STRING_GENERAL is do Result := locale.translate ("<< Drop object here >>") end
-	l_select_viewer: STRING_GENERAL is do Result := locale.translate ("Select viewer") end
+	l_select_viewer: STRING_GENERAL is do Result := locale.translate ("Select Viewer") end
 
 	l_When_breakpoint_is_hit: STRING_GENERAL is	do Result := locale.translate("When the breakpoint is hit:")	end
 	l_Whole_project: STRING_GENERAL is			do Result := locale.translate("Whole project")	end
@@ -1941,6 +1941,7 @@ feature -- Description texts
 	e_Running: STRING_GENERAL is				do Result := locale.translate("Application is running")	end
 	e_Running_no_stop_points: STRING_GENERAL is	do Result := locale.translate("Application is running (ignoring breakpoints)")	end
 	e_Save_call_stack: STRING_GENERAL is		do Result := locale.translate("Save call stack to a text file")	end
+	e_Save_exception_into: STRING_GENERAL is		do Result := locale.translate("Save exception message to a text file")	end
 	e_Save_dynamic_lib_definition: STRING_GENERAL is do Result := locale.translate("Save this dynamic library definition")	end
 	e_Show_class_cluster: STRING_GENERAL is		do Result := locale.translate("Locate currently edited class or cluster")	end
 	e_Send_stone_to_context: STRING_GENERAL is	do Result := locale.translate("Synchronize context")	end

@@ -1795,7 +1795,7 @@ feature {NONE} -- Implementation
 
 	last_constained_type: FORMAL_A
 
-feature {SMART_TEXT} -- Constants
+feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
 	boolean_values: ARRAY [STRING] is
 		once

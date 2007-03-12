@@ -545,64 +545,6 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	completing_context: BOOLEAN is
-			--
-		local
-			l_token: EDITOR_TOKEN
-			l_image: STRING
-			l_comment: EDITOR_TOKEN_COMMENT
-			l_number: EDITOR_TOKEN_NUMBER
-			l_string: EDITOR_TOKEN_STRING
-		do
-			check
-				cursor_not_void: cursor /= Void
-			end
-			l_token := cursor.token
-			if l_token /= Void then
-				if l_token.is_text then
-					l_image := l_token.image
-					if l_image.count > 1 and then cursor.pos_in_token > 1 then
-							-- Will prevent completion of '`.' or '..'
-						Result := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)
-					end
-				end
-
-				l_token := l_token.previous
-
-				if l_token /= Void then
-					l_comment ?= l_token
-					if l_comment /= Void then
-							-- Previous token is a comment so we cannot complete.
-							-- Happens when completing -- A Comment `.|
-						Result := True
-					elseif l_token.is_text then
-							-- Will prevent completion of '22|'
-						l_number ?= l_token
-						Result := l_number /= Void
-
-						if not Result then
-							l_string ?= l_token
-							Result := l_string /= Void
-							if not Result then
-								l_image := l_token.image
-								if l_image.count > 1 then
-										-- Will prevent completion of '|.' or '..'
-									Result := is_completable_separator (l_image.item (l_image.count).out)
-								elseif not l_image.is_empty and is_completable_separator (l_image) then
-									if l_token.previous /= Void then
-											-- Will prevent completion of '10.|'
-										l_number ?= l_token.previous
-										Result := l_number /= Void
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-			Result := not Result
-		end
-
 feature -- Syntax completion
 
 	complete_syntax (keyword: STRING; keyword_already_present, newline: BOOLEAN) is
@@ -797,6 +739,22 @@ feature {NONE} -- Possiblilities provider
 			Result := auto_complete_possible and then Precursor
 		end
 
+	cursor_token: EDITOR_TOKEN
+			-- Token at cursor position
+		do
+			if cursor /= Void then
+				Result := cursor.token
+			end
+		end
+
+	current_pos_in_token: INTEGER is
+		do
+			if cursor /= Void then
+				Result := cursor.pos_in_token
+			end
+		end
+
+
 feature {NONE}-- click information update
 
 	restore_tokens_properties (begin_line, end_line: like line) is
@@ -905,37 +863,6 @@ feature {NONE} -- Implementation
 			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
 			if current_class_is_clickable then
 				click_tool.setup_line (Result)
-			end
-		end
-
-	analyzer: EB_CLASS_INFO_ANALYZER is
-			-- Class infor analyzer
-		once
-			fixme ("Refactor so that access to `feature_call_separators' is done differently.")
-			create {EB_CLICK_AND_COMPLETE_TOOL} Result
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	is_completable_separator (a_str: STRING): BOOLEAN is
-			-- Is `a_str' a completable string separator?
-		local
-			i: INTEGER
-			l_seps: ARRAY [STRING]
-		do
-			l_seps := analyzer.feature_call_separators
-			if l_seps /= Void and then not l_seps.is_empty then
-				from
-					i := l_seps.lower
-				until
-					Result or i > l_seps.upper
-				loop
-					if (l_seps.item (i)).is_equal (a_str) then
-						Result := True
-					else
-						i := i + 1
-					end
-				end
 			end
 		end
 

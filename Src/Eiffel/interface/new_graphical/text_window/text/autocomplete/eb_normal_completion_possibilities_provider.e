@@ -15,10 +15,12 @@ class
 inherit
 	EB_COMPLETION_POSSIBILITIES_PROVIDER
 		rename
-			code_completable as text_field
+			code_completable as text_field,
+			cursor_token as cursor_token_provider
 		redefine
 			text_field,
-			prepare_completion
+			prepare_completion,
+			cursor_token_provider
 		end
 
 	EB_COMPLETE_INFO_ANALYZER
@@ -95,6 +97,10 @@ feature -- Basic operation
 				current_feature_as := [context_feature_as, context_feature_as.feature_names.first]
 			else
 				current_feature_as := Void
+			end
+			create features_ast.make (1)
+			if current_feature_as /= Void then
+				features_ast.extend (current_feature_as)
 			end
 			watching_line := text_field.current_line
 			if context_class_c /= Void then
@@ -342,6 +348,12 @@ feature {NONE} -- Build completion possibilities
 			-- Current token.
 		do
 			Result := text_field.current_token_in_line (watching_line)
+		end
+
+	cursor_token_provider: EDITOR_TOKEN is
+			-- Current token. No buffer needed.
+		do
+			Result := text_field.current_token_in_line (text_field.current_line)
 		end
 
 	current_pos_in_token: INTEGER is

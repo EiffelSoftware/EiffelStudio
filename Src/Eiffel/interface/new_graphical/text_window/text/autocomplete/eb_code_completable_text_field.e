@@ -567,6 +567,9 @@ feature {NONE} -- Implementation
 					not a_shift
 				then
 					Result := true
+					if Result then
+						Result := possibilities_provider /= Void and then possibilities_provider.completing_context
+					end
 				end
 
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
@@ -577,7 +580,10 @@ feature {NONE} -- Implementation
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
 				then
-					Result := true
+					Result := completing_feature
+					if Result then
+						Result := possibilities_provider /= Void and then possibilities_provider.completing_context
+					end
 				end
 
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("class_autocomplete")
@@ -588,8 +594,9 @@ feature {NONE} -- Implementation
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
 				then
-					Result := true
+					Result := not completing_feature
 				end
+
 					-- We remove the 'key' character on windows platform.
 					-- On linux the key has not been inserted.
 					-- Fix needed.

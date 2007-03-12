@@ -8,6 +8,9 @@ indexing
 class
 	SD_NOTEBOOK_TAB
 
+inherit
+	HASHABLE
+
 create
 	make
 
@@ -209,6 +212,12 @@ feature -- Query
 
 	parent: SD_NOTEBOOK_TAB_BOX
 			-- Parent tab box
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := text.hash_code
+		end
 
 feature -- Properties
 

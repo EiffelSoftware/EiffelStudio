@@ -309,7 +309,6 @@
       <item type="EV_FRAME">
        <Internal_properties>
         <id>14</id>
-        <name>help_area</name>
         <Expanded>1</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
@@ -331,6 +330,26 @@
        </EV_PIXMAPABLE>
        <EV_CONTAINER>
        </EV_CONTAINER>
+       <item type="EV_HORIZONTAL_BOX">
+        <Internal_properties>
+         <id>24</id>
+         <name>help_area</name>
+         <Expanded>0</Expanded>
+        </Internal_properties>
+        <EV_COLORIZABLE>
+        </EV_COLORIZABLE>
+        <EV_SENSITIVE>
+        </EV_SENSITIVE>
+        <EV_WIDGET>
+        </EV_WIDGET>
+        <EV_BOX>
+         <Border>2</Border>
+        </EV_BOX>
+        <EV_PIXMAPABLE>
+        </EV_PIXMAPABLE>
+        <EV_CONTAINER>
+        </EV_CONTAINER>
+       </item>
       </item>
      </item>
     </item>

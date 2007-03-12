@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 
 			create helper_label
 			helper_label.set_minimum_height (50)
+			helper_label.align_text_left
 			help_area.extend (helper_label)
 
 			add_formatter_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
@@ -282,6 +283,9 @@ feature{NONE} -- Actions
 			l_name := new_formatter_name.twin
 			l_name.append (next_new_formatter_index.out)
 			create l_descriptor.make (l_name)
+			l_descriptor.set_header (interface_names.l_formatter_default_header)
+			l_descriptor.set_temp_header (interface_names.l_formatter_default_temp_header)
+			l_descriptor.enable_global_scope
 			descriptors.force_last (l_descriptor)
 
 			l_grid := formatter_grid
@@ -654,6 +658,8 @@ feature {NONE} -- Implementation
 			l_tools: DIALOG_PROPERTY [HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]]
 			l_dialog: EB_DISPLAYER_DIALOG
 			l_displayer_value: like display_value
+
+			l_help: STRING_GENERAL
 		do
 			l_grid := property_grid
 			l_grid.clear_description
@@ -675,11 +681,13 @@ feature {NONE} -- Implementation
 			create l_header.make (interface_names.l_header)
 			l_header.set_value (string_32_from_string_8 (a_descriptor.header))
 			l_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_header, Void))
+			l_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
 			l_grid.add_property (l_header)
 
 			create l_temp_header.make (interface_names.l_temp_header)
 			l_temp_header.set_value (string_32_from_string_8 (a_descriptor.temp_header))
 			l_temp_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_temp_header, Void))
+			l_temp_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_temp_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
 			l_grid.add_property (l_temp_header)
 
 			create l_pixmap.make (interface_names.l_pixmap_file)
@@ -700,6 +708,7 @@ feature {NONE} -- Implementation
 
 			create l_metric_filter.make_with_value (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
 			l_metric_filter.change_value_actions.extend (agent on_filter_change (a_descriptor, ?))
+			l_metric_filter.set_description (interface_names.l_formatter_filter_help)
 			l_grid.add_property (l_metric_filter)
 
 			l_grid.current_section.expand
@@ -713,12 +722,14 @@ feature {NONE} -- Implementation
 			else
 				l_scope.set_value (interface_names.l_target)
 			end
+			l_scope.set_description (interface_names.l_formatter_scope_help)
 			l_scope.change_value_actions.extend (agent on_scope_change (a_descriptor, ?))
 			l_grid.add_property (l_scope)
 
 			create l_dialog.make (string_32_from_string_8 (a_descriptor.name), tool_table)
 			create l_tools.make_with_dialog (interface_names.l_displayed_in, l_dialog)
 			l_tools.set_display_agent (agent tools_display_function)
+			l_tools.set_description (interface_names.l_formatter_displayed_in_help)
 			l_displayer_value := display_value (a_descriptor)
 			l_dialog.set_value (l_displayer_value)
 			l_dialog.data_change_actions.extend (agent on_displayer_change (a_descriptor, ?))

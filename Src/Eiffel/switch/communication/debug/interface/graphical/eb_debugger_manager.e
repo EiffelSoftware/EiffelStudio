@@ -1021,7 +1021,7 @@ feature -- Status setting
 				st.set_max_depth (nb)
 				if st.is_stopped then
 					pos := application.current_execution_stack_number
-					st.reload_current_call_stack
+					st.force_reload_current_call_stack
 					ecs := st.current_call_stack
 					if ecs = Void or else ecs.is_empty then
 						--| Nothing to display, maybe debugger had an issue getting call stack ..

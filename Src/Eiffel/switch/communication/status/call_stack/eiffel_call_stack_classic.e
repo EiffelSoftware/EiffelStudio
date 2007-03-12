@@ -35,12 +35,12 @@ inherit
 		undefine
 			is_equal, copy
 		end
-		
+
 create {APPLICATION_STATUS_CLASSIC}
-	make, dummy_make
+	make, make_empty
 
 create {EIFFEL_CALL_STACK_CLASSIC}
-	list_make, make_sublist
+	list_make
 
 feature -- Properties
 
@@ -59,15 +59,32 @@ feature {NONE} -- Initialization
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
-		local
-			call	: CALL_STACK_ELEMENT_CLASSIC
-			level	: INTEGER
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating Eiffel Stack%N"); end
+			make_empty (tid)
+			reload (n)
+		end
+
+	make_empty (tid: INTEGER) is
+			-- Initialize only the first call stack element.
+		do
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating Empty Eiffel Stack%N"); end
+			thread_id := tid
 			error_occurred := False
 			list_make
+		end
 
+feature {APPLICATION_STATUS} -- Restricted Access
+
+	reload (n: INTEGER) is
+		local
+			tid: like thread_id
+			call: CALL_STACK_ELEMENT_CLASSIC
+			level: INTEGER
+		do
+			wipe_out
 			from
+				tid :=  thread_id
 				send_dump_stack_request (n, tid)
 				level := 1			-- we start from the top of the call stack.
 				create call.make(level, tid)
@@ -95,16 +112,14 @@ feature {NONE} -- Initialization
 				forth
 			end
 
+			is_loaded := True
+
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Finished Adopting callstack objects%N"); end
 		end
 
-	dummy_make is
-			-- Initialize only the first call stack element.
-		do
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating dummy Eiffel Stack%N"); end
-			error_occurred := False
-			list_make
-		end
+feature -- Properties
+
+	thread_id: INTEGER
 
 feature {NONE} -- Externals
 

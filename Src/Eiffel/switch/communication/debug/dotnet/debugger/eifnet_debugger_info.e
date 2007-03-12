@@ -901,6 +901,24 @@ feature -- JIT Thread
 			end
 		end
 
+	icd_thread_by_id (id: INTEGER): ICOR_DEBUG_THREAD is
+			-- ICOR_DEBUG_THREAD for thread id `id'.
+		local
+			edti: EIFNET_DEBUGGER_THREAD_INFO
+		do
+			edti := managed_thread (id)
+			if edti = Void then
+					--| If current selected thread is not existing any more ...
+				edti := default_managed_thread
+			end
+			if edti /= Void then
+				Result := edti.icd_thread
+				check
+					Result /= Void
+				end
+			end
+		end
+
 	last_icd_thread_id: INTEGER
 
 feature -- JIT Module

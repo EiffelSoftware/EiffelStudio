@@ -287,6 +287,7 @@ feature -- Breakpoints management
 								elseif v.is_case_insensitive_equal ("CALL") then
 									s.append (cse.to_string)
 								elseif v.is_case_insensitive_equal ("CALLSTACK") then
+									application_status.reload_current_call_stack
 									s.append (application_status.current_call_stack.to_string)
 								elseif v.is_case_insensitive_equal ("CLASS") and then cse.class_name /= Void then
 									s.append (cse.class_name)

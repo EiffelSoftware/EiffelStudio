@@ -111,7 +111,7 @@ feature -- Access
 			init_value (Result)
 		end
 
-	new_real_value (value: REAL; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_real_32_value (value: REAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a real item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)

@@ -149,7 +149,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_real_32_value (value: REAL; dtype: CLASS_C) is
+	set_real_32_value (value: REAL_32; dtype: CLASS_C) is
 			-- make a real item initialized to `value'
 		do
 			value_real_32 := value
@@ -159,7 +159,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_real_64_value (value: DOUBLE; dtype: CLASS_C) is
+	set_real_64_value (value: REAL_64; dtype: CLASS_C) is
 			-- make a double item initialized to `value'
 		do
 			value_real_64 := value

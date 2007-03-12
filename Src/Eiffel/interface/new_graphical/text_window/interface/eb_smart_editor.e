@@ -64,6 +64,8 @@ feature {NONE} -- Initialize
 
 	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize the editor.
+		require else
+			dev_window_not_void: a_dev_window /= Void
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (a_dev_window)
 

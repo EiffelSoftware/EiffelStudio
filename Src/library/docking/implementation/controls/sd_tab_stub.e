@@ -220,7 +220,7 @@ feature -- Properties
 			update_size_internal
 			on_expose (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
-			set: is_show_text = a_show
+			set: not internal_shared.show_all_tab_stub_text implies is_show_text = a_show
 		end
 
 	is_show_text: BOOLEAN

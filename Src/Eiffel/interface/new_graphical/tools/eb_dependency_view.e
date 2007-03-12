@@ -139,6 +139,7 @@ feature -- Status setting
 			-- Redefine
 		do
 			on_deselect
+			Precursor {EB_FORMATTER_BASED_TOOL}
 		end
 
 	set_stone (new_stone: STONE) is

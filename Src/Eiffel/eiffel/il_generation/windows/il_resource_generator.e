@@ -57,6 +57,7 @@ feature -- Generation
 			l_res: CONF_EXTERNAL_RESOURCE
 			l_res_added: SEARCH_TABLE [STRING]
 			l_loc: CONF_FILE_LOCATION
+			l_fn: STRING
 		do
 			from
 				last_resource_offset := 0
@@ -68,7 +69,15 @@ feature -- Generation
 				l_res := resources.item
 				if l_res.is_enabled (universe.conf_state) then
 					create l_loc.make (l_res.location, universe.target)
+
 					l_name := l_loc.evaluated_path
+					l_fn := l_loc.original_file
+					if l_fn.is_case_insensitive_equal (l_loc.evaluated_file) then
+							-- Ensure the resource name case is preserved
+						l_name.keep_head (l_name.count - l_fn.count)
+						l_name.append (l_fn)
+					end
+
 					if not l_res_added.has (l_name) then
 						l_res_added.force (l_name)
 						nb := l_name.count

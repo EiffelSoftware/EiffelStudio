@@ -520,7 +520,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-				create {BUILTIN_EXTENSION_AS} root_node.initialize (True)
+				create {BUILT_IN_EXTENSION_AS} root_node.initialize (True)
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -556,7 +556,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-				create {BUILTIN_EXTENSION_AS} root_node.initialize (True)
+				create {BUILT_IN_EXTENSION_AS} root_node.initialize (True)
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -592,7 +592,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-				create {BUILTIN_EXTENSION_AS} root_node.initialize (False)
+				create {BUILT_IN_EXTENSION_AS} root_node.initialize (False)
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1

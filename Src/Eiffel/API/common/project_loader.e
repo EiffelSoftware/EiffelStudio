@@ -267,13 +267,7 @@ feature -- Loading
 			l_factory: CONF_FACTORY
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
-			l_root: CONF_ROOT
-			l_file_location: CONF_FILE_LOCATION
-			l_directory_location: CONF_DIRECTORY_LOCATION
-			l_cluster: CONF_CLUSTER
-			l_library: CONF_LIBRARY
-			l_precompile: CONF_PRECOMPILE
-			l_no_gui_library: BOOLEAN
+			l_load: CONF_LOAD
 		do
 				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
 				-- This will be split into:
@@ -286,107 +280,50 @@ feature -- Loading
 			l_target_name.remove_tail (2)
 			l_config_file_name := file_system.pathname (l_directory, l_target_name + "." + config_extension)
 
+			create l_factory
 				-- Only create ecf if it does not exist yet
 			create l_file.make (l_config_file_name)
-			if not l_file.exists then
-				create l_factory
+			if l_file.exists then
+					-- ecf exists, load it
+				create l_load.make (l_factory)
+				l_load.retrieve_configuration (l_config_file_name)
+				if l_load.is_error then
+						-- ecf could not be loaded, an error will be triggered
+						-- later when the config file will be loaded again by
+						-- the `open_project_file' feature
+				else
+					l_system := l_load.last_system
+						-- Check if target exists
+					if l_system.targets.has (l_target_name) then
+							-- Default target exists,
+						l_target := l_system.targets.item (l_target_name)
+
+							-- Add libraries
+						a_libraries.do_all (agent add_library_to_target (?, l_target))
+
+							-- Check console application flag
+						if l_target.libraries.current_keys.there_exists (agent is_gui_library (?)) then
+							l_target.update_setting ("console_application", "false")
+						end
+					else
+							-- Target does not exist yet, create it
+						add_single_file_compilation_target (l_system, l_target_name, l_target_name.as_upper, "make", a_libraries)
+					end
+						-- Save config file to disk
+					l_system.store
+				end
+			else
+					-- ecf does not exist, create it
 
 					-- Configuration system
 				l_system := l_factory.new_system_generate_uuid (l_target_name)
 				l_system.set_file_name (l_config_file_name)
 
-					-- Configuration target
-				l_target := l_factory.new_target (l_target_name, l_system)
-				l_system.add_target (l_target)
+					-- Add the target for single file compilation
+				add_single_file_compilation_target (l_system, l_target_name, l_target_name.as_upper, "make", a_libraries)
 
-					-- Root class and feature
-				l_root := l_factory.new_root (l_target_name, l_target_name.as_upper, "make", False)
-				l_target.set_root (l_root)
-
-					-- Default to console application
-				l_target.update_setting ("console_application", "true")
-
-					-- Load libraries
-				if a_libraries /= Void and then a_libraries.count > 0 then
-						-- Check if there are no gui libraries
-					l_no_gui_library := a_libraries.for_all (
-						agent (a_library: STRING): BOOLEAN
-							require
-								a_library_not_void: a_library /= Void
-							do
-								Result := not (a_library.is_equal ("vision2") or a_library.is_equal ("wel"))
-							end
-					)
-					if not l_no_gui_library then
-						l_target.update_setting ("console_application", "false")
-					end
-
-						-- Todo: improve library adding. possible additions: a config file in $ISE_LIBRARY/config/xyz which
-						-- defines a mapping of library name to ecf files, e.g. as a ini file
-						-- At the moment this just takes the library name and assumes it is the directory and ecf name
-						-- in the '$ISE_LIBRARY/library' directory.
-					a_libraries.do_all (
-						agent (a_library: STRING; a_factory: CONF_FACTORY; a_target: CONF_TARGET)
-							require
-								a_library_not_void: a_library /= Void
-								a_factory_not_void: a_factory /= Void
-								a_target_not_void: a_target /= Void
-							local
-								ll_extension, ll_ecf_path: STRING
-								ll_file_location: CONF_FILE_LOCATION
-								ll_library: CONF_LIBRARY
-							do
-									-- Get extension of library argument
-								ll_extension := a_library.twin
-								ll_extension.keep_tail (4)
-								if ll_extension.is_equal ("." + config_extension) then
-										-- The library is specified as full path to ecf file, just add location
-									ll_file_location := a_factory.new_location_from_full_path (a_library, a_target)
-								else
-										-- The library is specified as name only. Guess location
-										-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
-									ll_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + "." + config_extension
-									ll_file_location := a_factory.new_location_from_full_path (ll_ecf_path, a_target)
-										-- Todo: check if location exist and raise an error if it does not
-
-										-- Todo: check if library can be used as precompile (e.g. Vision2)
-								end
-									-- Add library to ecf target
-								ll_library := a_factory.new_library (a_library, ll_file_location, a_target)
-								a_target.add_library (ll_library)
-							end
-							(?, l_factory, l_target)
-					)
-				end
-
-					-- Add 'current directory' as root cluster
-				l_directory_location := l_factory.new_location_from_path ("./", l_target)
-				l_cluster := l_factory.new_cluster (l_target_name, l_directory_location, l_target)
-				l_target.add_cluster (l_cluster)
-
-					-- Add base library
-				l_file_location := l_factory.new_location_from_full_path ("$ISE_LIBRARY/library/base/base.ecf", l_target)
-				l_library := l_factory.new_library ("base", l_file_location, l_target)
-				l_target.add_library (l_library)
-
-				if l_target.precompile = Void then
-						-- No precompile is set, add base as precompile
-					l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base.ecf", l_target)
-					l_target.set_precompile (l_precompile)
-				end
-
-					-- Safe config file to disk
+					-- Save config file to disk
 				l_system.store
-			else
-					-- ecf exists
-
-					-- Todo: load ecf and check if all specified libraries are added, otherwise add them and save
-
-					-- Load ecf
-					-- Load default target
-					-- If it does not exist, create the target (move above code which creates `l_target' into it's own feature to reuse this)
-					-- If it exists, check libraries and 'console_application' flag
-					-- If changes were necessary, save ecf
 			end
 
 				-- Now that an ecf exists, call the normal project loading with the new ecf.
@@ -1150,6 +1087,121 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [STRING]) is
+			-- Add a target to `a_system' consisting of given parameters.
+			--
+			-- `a_system': The configuration system which the target will be added to
+			-- `a_target_name': Name of target to add to the system
+			-- `a_root_class_name': Name of root class
+			-- `a_root_feature_name': Name of root feature
+			-- `a_libraries': List of libraries which will be added to the target
+		require
+			a_system_not_void: a_system /= Void
+			a_target_name_not_void: a_target_name /= Void
+			a_root_class_name_not_void: a_root_class_name /= Void
+			a_root_feature_name_not_void: a_root_feature_name /= Void
+		local
+			l_factory: CONF_FACTORY
+			l_target: CONF_TARGET
+			l_root: CONF_ROOT
+			l_file_location: CONF_FILE_LOCATION
+			l_directory_location: CONF_DIRECTORY_LOCATION
+			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
+			l_precompile: CONF_PRECOMPILE
+			l_no_gui_library: BOOLEAN
+		do
+			create l_factory
+
+				-- Configuration target
+			l_target := l_factory.new_target (a_target_name, a_system)
+			a_system.add_target (l_target)
+
+				-- Root class and feature
+			l_root := l_factory.new_root (Void, a_root_class_name, a_root_feature_name, False)
+			l_target.set_root (l_root)
+
+				-- Default to console application
+			l_target.update_setting ("console_application", "true")
+
+				-- Add libraries to target
+			if a_libraries /= Void then
+				a_libraries.do_all (agent add_library_to_target (?, l_target))
+			end
+
+				-- Check if there are any gui libraries and set flag accordingly
+			if l_target.libraries.current_keys.there_exists (agent is_gui_library (?)) then
+				l_target.update_setting ("console_application", "false")
+			end
+
+				-- Add 'current directory' as root cluster
+			l_directory_location := l_factory.new_location_from_path ("./", l_target)
+			l_cluster := l_factory.new_cluster (a_target_name, l_directory_location, l_target)
+			l_target.add_cluster (l_cluster)
+
+				-- Add base library
+			l_file_location := l_factory.new_location_from_full_path ("$ISE_LIBRARY/library/base/base.ecf", l_target)
+			l_library := l_factory.new_library ("base", l_file_location, l_target)
+			l_target.add_library (l_library)
+
+			if l_target.precompile = Void then
+					-- No precompile is set, add base as precompile
+				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base.ecf", l_target)
+				l_target.set_precompile (l_precompile)
+			end
+		ensure
+			target_exists: a_system.targets.has (a_target_name)
+		end
+
+	add_library_to_target (a_library: STRING; a_target: CONF_TARGET) is
+			-- Add library `a_library' to `a_target'.
+			--
+			-- `a_library': Either the name of a library or the location of an ecf file
+			-- `a_target': Configuration target where library is added
+		require
+			a_library_not_void: a_library /= Void
+			a_target_not_void: a_target /= Void
+		local
+			l_factory: CONF_FACTORY
+			l_library_name, l_extension, l_ecf_path: STRING
+			l_file_location: CONF_FILE_LOCATION
+			l_library: CONF_LIBRARY
+		do
+			create l_factory
+				-- Get extension of library argument
+			l_extension := a_library.twin
+			l_extension.keep_tail (4)
+				-- Check if extension denotes a configuration file
+			if l_extension.is_equal ("." + config_extension) then
+					-- The library is specified as full path to ecf file
+				l_file_location := l_factory.new_location_from_full_path (a_library, a_target)
+					-- Name of config file is taken as name of library
+				l_library_name := file_system.basename (a_library)
+				l_library_name.remove_tail (4)
+			else
+					-- The library is specified as name only
+				l_library_name := a_library.twin
+					-- Guess location
+				l_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + "." + config_extension
+				l_file_location := l_factory.new_location_from_full_path (l_ecf_path, a_target)
+					-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
+					-- Todo: check if location exist and raise an error if it does not
+					-- Todo: check if library can be used as precompile (e.g. Vision2)
+			end
+				-- Add library to ecf target
+			l_library := l_factory.new_library (l_library_name, l_file_location, a_target)
+			a_target.add_library (l_library)
+		end
+
+	is_gui_library (a_library: STRING): BOOLEAN is
+			-- Is `a_library' a GUI library?
+			-- At the moment this only checks if 'Vision2' or 'WEL' is present.
+		require
+			a_library_not_void: a_library /= Void
+		do
+			Result := a_library.is_equal ("vision2") or a_library.is_equal ("wel")
 		end
 
 indexing

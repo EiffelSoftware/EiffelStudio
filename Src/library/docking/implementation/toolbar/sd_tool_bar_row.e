@@ -66,7 +66,7 @@ feature -- Command
 				set_item_height (a_zone.tool_bar, {SD_SHARED}.tool_bar_size)
 			end
 
-			set_item_position_fixed (a_zone.tool_bar, 1, 1)
+			set_item_position_fixed (a_zone.tool_bar, 0, 0)
 			if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
 				if is_vertical then
 					internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))

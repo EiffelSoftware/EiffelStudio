@@ -127,13 +127,17 @@ feature -- Access
 	new_inline_agent_creation_as (a_b: BODY_AS; a_o: DELAYED_ACTUAL_LIST_AS; a_as: KEYWORD_AS): INLINE_AGENT_CREATION_AS is
 			-- New INLINE_AGENT_CREATION AST node.
 		do
-			create Result.make (a_b, a_o, a_as)
+			if a_b /= Void then
+				create Result.make (a_b, a_o, a_as)
+			end
 		end
 
 	new_create_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_AS is
 			-- New CREATE_CREATION AST node.
 		do
-			create Result.make (tp, tg, c, k_as)
+			if tg /= Void then
+				create Result.make (tp, tg, c, k_as)
+			end
 		end
 
 	new_bang_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_AS is

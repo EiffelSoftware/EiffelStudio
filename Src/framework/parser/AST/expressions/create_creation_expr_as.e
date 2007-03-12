@@ -19,8 +19,11 @@ create
 	make
 
 feature{NONE} -- Initialization
-	make (t: like type; c: like call; k_as: like create_keyword)is
+
+	make (t: like type; c: like call; k_as: like create_keyword) is
 			-- new CREATE_CREATION_EXPR AST node.
+		require
+			t_not_void: t /= Void
 		do
 			initialize (t, c)
 			create_keyword := k_as

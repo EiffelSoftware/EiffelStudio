@@ -20,7 +20,7 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 
 	SHARED_DEBUGGED_OBJECT_MANAGER
 
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			vb.set_padding_width (layout_constants.tiny_padding_size)
 
 				--| Viewer
-			create editor.make (Void)
+			create editor.make (Void) -- Eb_debugger_manager.debugging_window)
 			editor.disable_line_numbers
 			editor.disable_has_breakable_slots
 			editor.disable_editable

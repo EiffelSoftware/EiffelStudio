@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			create editor
 			editor.set_minimum_height (100)
 			editor.set_background_color (No_text_background_color)
-			editor.disable_word_wrapping
+			editor.enable_word_wrapping
 			editor.disable_edit
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_valid_stone)
@@ -101,6 +101,7 @@ feature {NONE} -- Implementation
 			slice_min_ref := 0
 			slice_max_ref := default_slice_max_value
 			set_slices_text (slice_min, slice_max)
+
 		end
 
 	default_slice_max_value: INTEGER is
@@ -121,21 +122,22 @@ feature {NONE} -- Implementation
 				create tbb
 				tbb.set_pixmap (pixmaps.icon_pixmaps.debugger_object_expand_icon)
 				tbb.select_actions.extend (agent auto_slice_selected)
-				tbb.set_tooltip ("Display Complete Object")
+				tbb.set_tooltip (interface_names.l_viewer_display_complete_object)
 				l_tb.extend (tbb)
 
 				l_tb.extend (create {EV_TOOL_BAR_SEPARATOR})
 
 				create tbtgb
 				tbtgb.set_pixmap (pixmaps.icon_pixmaps.general_word_wrap_icon)
+				tbtgb.enable_select
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
-				tbtgb.set_tooltip ("Enable Word Wrapping")
+				tbtgb.set_tooltip (interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
 
 				create tbb
 				tbb.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
 				tbb.select_actions.extend (agent copy_button_selected)
-				tbb.set_tooltip ("Copy Text To Clipboard")
+				tbb.set_tooltip (interface_names.l_copy_text_to_clipboard)
 				l_tb.extend (tbb)
 			end
 		end
@@ -160,6 +162,7 @@ feature {NONE} -- Implementation
 
 				create tbtgb
 				tbtgb.set_pixmap (pixmaps.mini_pixmaps.viewer_wrap_icon)
+				tbtgb.enable_select
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
 				tbtgb.set_tooltip (Interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
@@ -277,6 +280,9 @@ feature -- Change
 					retrieve_dump_value
 					if current_dump_value /= Void then
 						l_trunc_str := current_dump_value.formatted_truncated_string_representation (slice_min, slice_max)
+						lower_slice_field.set_text (slice_min.out)
+						upper_slice_field.set_text ((slice_min + l_trunc_str.count).out)
+
 						l_endpos := l_trunc_str.count + 1
 						editor.set_text (l_trunc_str)
 						editor.format_region (1, l_endpos, Text_format)
@@ -290,9 +296,9 @@ feature -- Change
 						if slice_max >= 0 and then (slice_max + 1 < l_real_str_length) then
 							editor.append_text (" ...")
 							l_endpos := l_endpos + 4
-							editor.format_region (l_endpos - 4, l_endpos + 2, Limits_format)
+							editor.format_region (l_endpos - 4, l_endpos, Limits_format)
 						else
---							editor.format_region (l_endpos, l_endpos + 1, Limits_format)
+--							editor.format_region (l_endpos, l_endpos, Limits_format)
 							fixme ("this violate assertion, but this is due to a vision2 issue of trailing %%U")
 						end
 						l_trunc_str := editor.text
@@ -432,6 +438,8 @@ feature {NONE} -- Event handling
 				editor.disable_word_wrapping
 			end
 		end
+
+--	word_wrap_buttons: LIST [EV_TOOL_BAR_TOGGLE_BUTTON]
 
 	copy_button_selected is
 			-- Called by `select_actions' of `copy_button'.

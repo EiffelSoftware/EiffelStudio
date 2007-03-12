@@ -367,21 +367,21 @@ feature -- Change
 		local
 			st: APPLICATION_STATUS
 		do
-			clear
 			if current_object /= Void then
 				st := debugger_manager.application_status
 				if st /= Void then
 					st.release_object (current_object.object_address)
 				end
 			end
-			current_dump_value := Void
-			current_object := Void
+			clear
 			set_current_viewer (Void)
 		end
 
 	clear is
 			-- Clean current data, useless if dialog closed or destroyed
 		do
+			current_object := Void
+			current_dump_value := Void
 			clear_viewers (viewers)
 		end
 

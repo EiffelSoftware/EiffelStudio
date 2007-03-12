@@ -454,7 +454,7 @@ feature {NONE}  -- Implementation
 		do
 			dragging_tab := a_tab
 			enable_capture
-
+			prepare_tabs_rects
 			debug ("docking")
 				print ("%NSD_NOTEBOOK on_tab_dragging enable capture")
 			end
@@ -468,7 +468,7 @@ feature {NONE}  -- Implementation
 		do
 			dragging_tab := Void
 			disable_capture
-
+			tabs_rects := Void
 
 			debug ("docking")
 				print ("%NSD_NOTEBOOK on_pointer_release disable capture    dragging_tab := Void? " + (dragging_tab = Void).out)
@@ -479,38 +479,39 @@ feature {NONE}  -- Implementation
 			-- Handle pointer motion.
 		local
 			l_in_tabs: BOOLEAN
-			l_tabs_snapshot: like internal_tabs
-			l_tab_item: SD_NOTEBOOK_TAB
+			l_index: INTEGER
 		do
 			-- FIXIT: This function should not be called on GTK.
 			-- 		  So actually this if clause is should not needed.
-			if dragging_tab /= Void then
+			if dragging_tab /= Void and tabs_rects /= Void then
 				from
-					l_tabs_snapshot := internal_tabs.twin
-					l_tabs_snapshot.start
+					tabs_rects.start
 				until
-					l_tabs_snapshot.after or l_in_tabs
+					tabs_rects.after or l_in_tabs
 				loop
-					l_tab_item := l_tabs_snapshot.item
-					if l_tab_item /= dragging_tab then
-						if tab_has_x_y (l_tab_item, a_screen_x, a_screen_y)  then
-							l_in_tabs := True
+					l_index := l_index + 1
+
+					if tabs_rects.item_for_iteration.has_x_y (a_screen_x, a_screen_y) then
+						l_in_tabs := True
+
+						-- Check if already swapped.
+						if l_index /= internal_tab_box.index_of (dragging_tab) then
 							internal_docking_manager.command.lock_update (Current, False)
-							swap_tabs_and_contents (dragging_tab, l_tab_item)
-							internal_tab_box.swap (dragging_tab, l_tab_item)
+							set_content_position (content_by_tab (dragging_tab), l_index)
+							internal_tab_box.set_tab_position (dragging_tab, l_index)
 
 							-- Is already done by on_resize
 							internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 							internal_docking_manager.command.unlock_update
 						end
-					elseif tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
-						l_in_tabs := True
 					end
-					l_tabs_snapshot.forth
+
+					tabs_rects.forth
 				end
 
 				if not l_in_tabs then
 					disable_capture
+					tabs_rects := Void
 					tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
 				end
 			end
@@ -557,15 +558,6 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	tab_has_x_y (a_tab: SD_NOTEBOOK_TAB; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			-- If `a_tab' has `a_screen_x', `a_screen_y'?
-		local
-			l_rect: EV_RECTANGLE
-		do
-			create l_rect.make (a_tab.screen_x, a_tab.screen_y, a_tab.width, a_tab.height)
-			Result := l_rect.has_x_y (a_screen_x, a_screen_y)
-		end
-
 	swap_tabs_and_contents (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB) is
 			-- Swap order of a_tab_1 and a_tab_2.
 		require
@@ -589,6 +581,33 @@ feature {NONE}  -- Implementation
 --			swapped: old internal_tab_box.index_of (a_tab_1) /= internal_tab_box.index_of (a_tab_1)
 --			swapped: old internal_tab_box.index_of (a_tab_2) /= internal_tab_box.index_of (a_tab_2)
 		end
+
+	prepare_tabs_rects is
+			-- Create `tabs_rects' base on current tabs position
+		local
+			l_tabs_snapshot: like internal_tabs
+			l_rect: EV_RECTANGLE
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			if dragging_tab /= Void then
+				from
+					l_tabs_snapshot := internal_tabs.twin
+					create tabs_rects.make (l_tabs_snapshot.count)
+					l_tabs_snapshot.start
+				until
+					l_tabs_snapshot.after
+				loop
+					l_tab := l_tabs_snapshot.item
+					create l_rect.make (l_tab.screen_x, l_tab.screen_y, l_tab.width, l_tab.height)
+					tabs_rects.force (l_rect, l_tab)
+					l_tabs_snapshot.forth
+				end
+			end
+		end
+
+	tabs_rects: DS_HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]
+			-- We remember orignal tab position each time before start dragging, otherwise
+			-- it will cause tab jumping if a tab is very narrow and a tab is very wide.
 
 	internal_contents: ARRAYED_LIST [SD_CONTENT]
 			-- All widgets in Current.

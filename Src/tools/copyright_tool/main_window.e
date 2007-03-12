@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 			if not copyright_list.is_empty then
 				copyright_list.i_th (1).enable_select
 			end
+
+			select_and_start.file_drop_actions.extend (agent files_dropped)
 		end
 
 feature -- Access
@@ -376,6 +378,122 @@ feature {NONE} -- Attaching copyrights
 				output_text.append_text ("Warning: " + failed_count.out + " file(s) can not be parsed after processing. Processing canceled.%N")
 			end
 			status_label.set_text (attaching_finished)
+		end
+
+	files_dropped (lst: LIST [STRING_32]) is
+			--
+		local
+			l_file: RAW_FILE
+			l_directory: DIRECTORY
+			fn32: STRING_32
+			fn8: STRING
+			files: LINKED_LIST [STRING]
+			dirs: LINKED_LIST [STRING]
+			confdlg: EV_CONFIRMATION_DIALOG
+			s: STRING
+		do
+			if lst /= Void and then not lst.is_empty then
+				from
+					create files.make
+					create dirs.make
+					lst.start
+				until
+					lst.after
+				loop
+					fn32 := lst.item
+					if fn32 /= Void then
+						fn8 := fn32.as_string_8
+						create l_directory.make (fn8)
+						if l_directory.exists then
+							if l_directory.is_readable then
+								dirs.extend (fn8)
+							end
+						else
+							create l_file.make (fn8)
+							if l_file.exists then
+								if l_file.is_readable then
+									files.extend (fn8)
+								end
+							end
+						end
+					end
+					lst.forth
+				end
+
+				create s.make_empty
+				from
+					files.start
+				until
+					files.after
+				loop
+					fn8 := files.item
+					s.append_string ("+ file: ")
+					s.append_string (fn8)
+					s.append_character ('%N')
+					files.forth
+				end
+				from
+					dirs.start
+				until
+					dirs.after
+				loop
+					fn8 := dirs.item
+					s.append_string ("+ dir: ")
+					s.append_string (fn8)
+					s.append_character ('%N')
+					dirs.forth
+				end
+				create confdlg.make_with_text ("Attach to following pathes ? %N" + s)
+				confdlg.set_buttons_and_actions (<<"Yes", "No">>, <<agent attach_files_and_directories (files, dirs), Void>>)
+				confdlg.show
+			end
+		end
+
+	attach_files_and_directories (files, dirs: LIST [STRING]) is
+			--
+		local
+			fn8: STRING
+		do
+			stop_processing := false
+			total_processed := 0
+			failed_count := 0
+			parse_failed_count := 0
+			succeed := 0
+			output_text.set_text ("")
+
+			if files /= Void and then files.count > 0 then
+				from
+					files.start
+				until
+					files.after
+				loop
+					fn8 := files.item
+					attach_file (fn8)
+					files.forth
+				end
+			end
+			if dirs /= Void and then dirs.count > 0 then
+				from
+					dirs.start
+				until
+					dirs.after
+				loop
+					fn8 := dirs.item
+					attach_directory (fn8, is_recursive)
+					dirs.forth
+				end
+			end
+
+			output_text.append_text (total_processed.out + " file(s) was(were) processed%N")
+			output_text.append_text (succeed.out + " file(s) succeed(s).%N")
+			if parse_failed_count > 0 then
+				output_text.append_text (parse_failed_count.out + " file(s) is(are) not processed due to parsing failure.%N")
+			end
+			if failed_count > 0 then
+				output_text.append_text ("Warning: " + failed_count.out + " file(s) can not be parsed after processing. Processing canceled.%N")
+			end
+			status_label.set_text (attaching_finished)
+
 		end
 
 	attach_directory (a_directory: STRING; a_is_recursive: BOOLEAN) is

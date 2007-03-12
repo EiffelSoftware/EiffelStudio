@@ -688,25 +688,6 @@ feature {NONE} -- Profile actions
 						end(p, gei)
 				)
 
-				--| Working directory						
-			a_row.insert_subrow (a_row.subrow_count + 1)
-			srow := a_row.subrow (a_row.subrow_count)
-			create gi.make_with_text (interface_names.l_working_directory)
-			srow.set_item (1, gi)
-			s := l_cwd
-			if s = Void then
-				s := ""
-			end
-			create gdi.make_with_text (s)
-			gdi.change_actions.extend (agent
-					(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
-							do
-								change_cwd_on (a_gi.text, a_prof)
-							end (p, gdi)
-				)
-			gdi.set_start_directory (default_working_directory)
-			srow.set_item (2, gdi)
-
 				--| Arguments
 			a_row.insert_subrow (a_row.subrow_count + 1)
 			srow := a_row.subrow (a_row.subrow_count)
@@ -725,6 +706,25 @@ feature {NONE} -- Profile actions
 						end (p, gti)
 				)
 			srow.set_item (2, gti)
+
+				--| Working directory						
+			a_row.insert_subrow (a_row.subrow_count + 1)
+			srow := a_row.subrow (a_row.subrow_count)
+			create gi.make_with_text (interface_names.l_working_directory)
+			srow.set_item (1, gi)
+			s := l_cwd
+			if s = Void then
+				s := ""
+			end
+			create gdi.make_with_text (s)
+			gdi.change_actions.extend (agent
+					(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
+							do
+								change_cwd_on (a_gi.text, a_prof)
+							end (p, gdi)
+				)
+			gdi.set_start_directory (default_working_directory)
+			srow.set_item (2, gdi)
 
 				--| Environment
 			a_row.insert_subrow (a_row.subrow_count + 1)

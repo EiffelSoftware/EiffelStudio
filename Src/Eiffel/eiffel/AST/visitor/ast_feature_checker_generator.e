@@ -730,7 +730,7 @@ feature -- Roundtrip
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			l_cur_class: EIFFEL_CLASS_C
 			l_body_code: BYTE_CODE
-			l_ak: LOCATION_AS
+			l_loc: LOCATION_AS
 			l_new_feature_dep: FEATURE_DEPENDANCE
 			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
 			l_used_argument_names: SEARCH_TABLE [INTEGER]
@@ -765,8 +765,8 @@ feature -- Roundtrip
 					if is_byte_node_enabled then
 
 						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
-						l_ak := l_as.agent_keyword
-						l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
+						l_loc := l_as.start_location
+						l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
 						l_as.set_feature_name (l_feature_name)
 					end
 				else

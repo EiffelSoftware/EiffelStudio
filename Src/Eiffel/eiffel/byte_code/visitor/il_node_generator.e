@@ -734,7 +734,7 @@ feature {NONE} -- Visitors
 					system.class_of_id (a_node.class_id).feature_of_feature_id (a_node.feature_id).rout_id_set.first
 				).feature_id
 			else
-				l_target_type := il_generator.implemented_type (a_node.class_id, l_target_type)
+				l_target_type := l_target_type.implemented_type (a_node.class_id)
 				l_target_feature_id := a_node.feature_id
 			end
 			il_generator.generate_routine_address (l_target_type, l_target_feature_id, is_last_argument_current)
@@ -769,7 +769,7 @@ feature {NONE} -- Visitors
 			l_base_class := l_real_ty.base_class
 			l_feat_tbl := l_base_class.feature_table
 			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.make_name_id)
-			l_decl_type := il_generator.implemented_type (l_make_feat.origin_class_id, l_real_ty)
+			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
 				-- Creation of Array
  			context.add_local (l_real_ty)
@@ -787,7 +787,7 @@ feature {NONE} -- Visitors
 
 				-- Find `put' from ARRAY
 			l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
-			l_decl_type := il_generator.implemented_type (l_put_feat.origin_class_id, l_real_ty)
+			l_decl_type := l_real_ty.implemented_type (l_put_feat.origin_class_id)
 
  			from
  				a_node.expressions.start
@@ -894,7 +894,7 @@ feature {NONE} -- Visitors
 					l_target_type := l_cl_type
 					l_target_attribute_id := l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
 				else
-					l_target_type := il_generator.implemented_type (a_node.written_in, l_cl_type)
+					l_target_type := l_cl_type.implemented_type (a_node.written_in)
 					l_target_attribute_id := a_node.attribute_id
 				end
 
@@ -1559,7 +1559,7 @@ feature {NONE} -- Visitors
 					end
 					l_target_type := l_cl_type
 				else
-					l_target_type := il_generator.implemented_type (a_node.written_in, l_cl_type)
+					l_target_type := l_cl_type.implemented_type (a_node.written_in)
 				end
 				check
 					target_type_not_void: l_target_type /= Void
@@ -2208,7 +2208,7 @@ feature {NONE} -- Visitors
 				end
 				l_cl_type ?= l_attr.context_type
 				il_generator.generate_expanded_attribute_assignment (
-					il_generator.implemented_type (l_attr.written_in, l_cl_type),
+					l_cl_type.implemented_type (l_attr.written_in),
 					context.real_type (l_attr.type),
 					l_attr.attribute_id)
 				if not l_type.is_void then
@@ -2429,15 +2429,14 @@ feature {NONE} -- Visitors
 
 			l_set_rout_disp_feat := l_real_ty.base_class.feature_table.
 				item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id)
-			l_decl_type := il_generator.implemented_type (l_set_rout_disp_feat.origin_class_id,
-				l_real_ty)
+			l_decl_type := l_real_ty.implemented_type (l_set_rout_disp_feat.origin_class_id)
 
 			l_cl_type ?= context.real_type (a_node.class_type)
 			if a_node.is_inline_agent then
-				il_generator.put_impl_method_token (il_generator.implemented_type (a_node.origin_class_id, l_cl_type),
+				il_generator.put_impl_method_token (l_cl_type.implemented_type (a_node.origin_class_id),
 					a_node.feature_id)
 			else
-				il_generator.put_method_token (il_generator.implemented_type (a_node.origin_class_id, l_cl_type),
+				il_generator.put_method_token (l_cl_type.implemented_type (a_node.origin_class_id),
 					a_node.feature_id)
 			end
 				-- Arguments
@@ -2502,7 +2501,7 @@ feature {NONE} -- Visitors
 
 					-- Find `put' from TUPLE
 				l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
-				l_decl_type := il_generator.implemented_type (l_put_feat.origin_class_id, l_real_ty)
+				l_decl_type := l_real_ty.implemented_type (l_put_feat.origin_class_id)
 					-- Call `put' from TUPLE
 				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id, l_put_feat.argument_count, l_put_feat.has_return_value, True)
 			else
@@ -2510,7 +2509,7 @@ feature {NONE} -- Visitors
 
 					-- Find `fast_item' from TUPLE
 				l_item_feat := l_feat_tbl.item_id (fast_item_name_id)
-				l_decl_type := il_generator.implemented_type (l_item_feat.origin_class_id, l_real_ty)
+				l_decl_type := l_real_ty.implemented_type (l_item_feat.origin_class_id)
 					-- Call `fast_item' from TUPLE
 				il_generator.generate_feature_access (l_decl_type, l_item_feat.origin_feature_id, l_item_feat.argument_count, l_item_feat.has_return_value, True)
 
@@ -2540,7 +2539,7 @@ feature {NONE} -- Visitors
 			l_real_ty ?= context.real_type (a_node.type)
 			l_feat_tbl := l_real_ty.base_class.feature_table
 			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.default_create_name_id)
-			l_decl_type := il_generator.implemented_type (l_make_feat.origin_class_id, l_real_ty)
+			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
 				-- Creation of Array
  			context.add_local (l_real_ty)
@@ -2556,7 +2555,7 @@ feature {NONE} -- Visitors
 
 				-- Find `put' from TUPLE
 			l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
-			l_decl_type := il_generator.implemented_type (l_put_feat.origin_class_id, l_real_ty)
+			l_decl_type := l_real_ty.implemented_type (l_put_feat.origin_class_id)
 
  			from
  				a_node.expressions.start
@@ -3404,7 +3403,7 @@ feature {NONE} -- Implementation: assignments
 				else
 						-- Generate assignment to the potentially inherited attribute.
 					il_generator.generate_attribute_assignment (attr.need_target,
-						il_generator.implemented_type (attr.written_in, cl_type), attr.attribute_id)
+						cl_type.implemented_type (attr.written_in), attr.attribute_id)
 				end
 			elseif a_node.is_local then
 				loc ?= a_node
@@ -3476,8 +3475,8 @@ feature {NONE} -- Implementation: Feature calls
 					if a_node.is_static_call then
 							-- Bug fix until we generate direct static access
 							-- to C external.
-						(create {CREATE_TYPE}.make (il_generator.implemented_type
-							(a_node.written_in, l_cl_type))).generate_il
+						(create {CREATE_TYPE}.make (l_cl_type.implemented_type
+							(a_node.written_in))).generate_il
 					else
 						il_generator.generate_current
 					end
@@ -3515,7 +3514,7 @@ feature {NONE} -- Implementation: Feature calls
 					-- not expanded and therefore we can safely generate a static
 					-- call to Precursor feature.
 				il_generator.generate_feature_access (
-					il_generator.implemented_type (a_node.written_in, l_cl_type),
+					l_cl_type.implemented_type (a_node.written_in),
 					a_node.feature_id, l_count, not l_return_type.is_void, False)
 			elseif l_cl_type.is_expanded then
 				il_generator.generate_feature_access (l_cl_type,
@@ -3523,7 +3522,7 @@ feature {NONE} -- Implementation: Feature calls
 					l_count, not l_return_type.is_void, False)
 			else
 				il_generator.generate_feature_access (
-					il_generator.implemented_type (a_node.written_in, l_cl_type),
+					l_cl_type.implemented_type (a_node.written_in),
 					a_node.feature_id, l_count, not l_return_type.is_void,
 					l_cl_type.is_reference or else l_real_metamorphose)
 			end

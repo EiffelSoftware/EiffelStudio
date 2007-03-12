@@ -464,8 +464,8 @@ feature {NONE} -- Implementation
 							-- This static feature is defined in parent which explains the search
 							-- made below to find in which parent's type.
 						generate_feature_il (feat,
-							implemented_type (feat.written_in,
-							current_class_type.type).associated_class_type.implementation_id,
+							current_class_type.type.implemented_type
+								(feat.written_in).associated_class_type.implementation_id,
 							feat.written_feature_id)
 					end
 				else
@@ -548,8 +548,8 @@ feature {NONE} -- Implementation
 					generate_feature_standard_twin (feat)
 				else
 					generate_feature_il (feat,
-						implemented_type (feat.written_in,
-							current_class_type.type).implementation_id,
+						current_class_type.type.implemented_type
+							(feat.written_in).implementation_id,
 						feat.written_feature_id)
 				end
 
@@ -563,8 +563,8 @@ feature {NONE} -- Implementation
 					valid: is_single_class and then inh_feat = Void
 				end
 				generate_feature_il (feat,
-					implemented_type (feat.written_in,
-						current_class_type.type).associated_class_type.implementation_id,
+					current_class_type.type.implemented_type
+						(feat.written_in).associated_class_type.implementation_id,
 						feat.written_feature_id)
 			end
 		end

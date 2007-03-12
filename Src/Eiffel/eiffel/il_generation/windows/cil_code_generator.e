@@ -1022,8 +1022,7 @@ feature -- Generation Structure
 				if has_root_type and is_debug_info_enabled and system.root_creation_name /= Void then
 					a_class := system.root_type.associated_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
-					l_decl_type := implemented_type (root_feat.origin_class_id,
-						system.root_type.type_i)
+					l_decl_type := system.root_type.type_i.implemented_type (root_feat.origin_class_id)
 
 					entry_point_token := current_module.implementation_feature_token (
 						l_decl_type.associated_class_type.implementation_id,
@@ -2174,8 +2173,8 @@ feature -- Features info
 					check
 						is_single_class: is_single_class
 					end
-					l_meth_token := attribute_token (implemented_type
-						(l_declaration_class.class_id, current_class_type.type).associated_class_type.static_type_id,
+					l_meth_token := attribute_token (current_class_type.type.implemented_type
+						(l_declaration_class.class_id).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (l_feat.rout_id_set.first).feature_id)
 				else
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
@@ -2509,8 +2508,8 @@ feature -- Features info
 					check
 						is_single_class: is_single_class
 					end
-					l_meth_token := attribute_token (implemented_type
-						(l_declaration_class.class_id, current_class_type.type).associated_class_type.static_type_id,
+					l_meth_token := attribute_token (current_class_type.type.implemented_type
+						(l_declaration_class.class_id).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (feat.rout_id_set.first).feature_id)
 				else
 						-- The field could be made non-public. But some third-party
@@ -3088,7 +3087,7 @@ feature -- IL Generation
 							current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, False)
 				else
 					method_body.put_call ({MD_OPCODES}.callvirt,
-						feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
+						feature_token (current_class_type.type.implemented_type (feat.origin_class_id).static_type_id, feat.origin_feature_id),
 						nb, False)
 				end
 				fixme ("Generate class invariant check (if enabled).")
@@ -3432,7 +3431,7 @@ feature -- IL Generation
 			if target_feature /= Void then
 				target_type := current_class_type.type
 				if not target_type.is_expanded then
-					target_type := implemented_type (target_feature.access_in, target_type)
+					target_type := target_type.implemented_type (target_feature.access_in)
 				end
 				target_feature := target_type.base_class.feature_of_rout_id (target_feature.rout_id_set.first)
 				generate_current
@@ -3454,9 +3453,9 @@ feature -- IL Generation
 			target_feature := f
 			if not target_type.is_expanded then
 				if f.origin_class_id = 0 then
-					target_type := implemented_type (f.access_in, target_type)
+					target_type := target_type.implemented_type (f.access_in)
 				else
-					target_type := implemented_type (f.origin_class_id, target_type)
+					target_type := target_type.implemented_type (f.origin_class_id)
 				end
 			end
 			target_feature := target_type.base_class.feature_table.feature_of_rout_id_set (f.rout_id_set)
@@ -4438,7 +4437,7 @@ feature -- Variables access
 				end
 			else
 					-- Call feature using parent type.
-				target_type := implemented_type (f.origin_class_id, target_type)
+				target_type := target_type.implemented_type (f.origin_class_id)
 				target_feature_id := f.origin_feature_id
 			end
 			generate_feature_access (target_type, target_feature_id, 0, True, True)
@@ -6782,35 +6781,6 @@ feature -- Compilation error handling
 			-- Last exception which occurred during IL generation
 
 feature -- Convenience
-
-	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
-			-- Return static_type_id of class that defined `feat'.
-		local
-			cl_type_a: CL_TYPE_A
-			written_class: CLASS_C
-			class_id: INTEGER
-		do
-			class_id := current_type.class_id
-
-				-- If a feature is defined in current class, that's easy and we
-				-- return `current_type'. Otherwise we have to find the
-				-- correct CLASS_TYPE object where the feature is written.
-			if class_id = implemented_in then
-				Result := current_type
-			else
-				written_class := System.class_of_id (implemented_in)
-					-- We go through the hierarchy only when `written_class'
-					-- is generic, otherwise for the most general case where
-					-- `written_class' is not generic it will take a long
-					-- time to go through the inheritance hierarchy.
-				if written_class.types.count > 1 then
-					cl_type_a := current_type.type_a
-					Result := cl_type_a.find_class_type (written_class).type_i
-				else
-					Result := written_class.types.first.type
-				end
-			end
-		end
 
 	generate_call_on_void_target_exception is
 			-- Generate call on void target exception.

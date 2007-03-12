@@ -1072,14 +1072,6 @@ feature -- Line info
 
 feature -- Convenience
 
-	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
-			-- Return static_type_id of class that defined `feat'.
-		require
-			valid_implemented_in: implemented_in > 0
-			current_type_not_void: current_type /= Void
-		deferred
-		end
-
 	generate_call_on_void_target_exception is
 			-- Generate call on void target exception.
 		deferred

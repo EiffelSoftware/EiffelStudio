@@ -385,6 +385,7 @@ feature -- IL Generation
 			impl_feat: FEATURE_I
 			impl_type: CL_TYPE_I
 			impl_class_type: CLASS_TYPE
+			written_class_type: CLASS_TYPE
 		do
 			is_expanded := current_class_type.is_expanded
 			if feat.body_index = standard_twin_body_index then
@@ -392,12 +393,23 @@ feature -- IL Generation
 			else
 				impl_feat := inh_feat
 				impl_class_type := class_type
+				if is_replicated then
+						-- Calculate class type where the feature is written.
+					written_class_type := current_class_type.type.implemented_type
+						(feat.written_in).associated_class_type
+				end
 				if not is_single_class then
 						-- Generate static definition of a routine `feat' if the class type is not expanded.
 					if not is_replicated or else feat.is_once then
 						if not is_expanded or else feat.is_attribute or else feat.is_external then
 							generate_feature (feat, False, True, False)
+							if is_replicated then
+								byte_context.change_class_type_context (current_class_type, written_class_type)
+							end
 							generate_feature_code (feat, True)
+							if is_replicated then
+								byte_context.restore_class_type_context
+							end
 						end
 					end
 
@@ -409,7 +421,13 @@ feature -- IL Generation
 					end
 
 					if is_expanded and then not feat.is_attribute and then not feat.is_external then
+						if is_replicated then
+							byte_context.change_class_type_context (current_class_type, written_class_type)
+						end
 						generate_feature_code (feat, False)
+						if is_replicated then
+							byte_context.restore_class_type_context
+						end
 					elseif not is_replicated or else feat.is_once then
 							-- We call locally above generated static feature
 						generate_feature_il (feat,
@@ -420,8 +438,7 @@ feature -- IL Generation
 							-- This static feature is defined in parent which explains the search
 							-- made below to find in which parent's type.
 						generate_feature_il (feat,
-							implemented_type (feat.written_in,
-							current_class_type.type).associated_class_type.implementation_id,
+							written_class_type.implementation_id,
 							feat.written_feature_id)
 					end
 				else
@@ -446,21 +463,26 @@ feature -- IL Generation
 								signatures (impl_class_type.static_type_id, impl_feat.feature_id))
 					end
 					if feat.is_c_external then
-						if not is_replicated then
+						if is_replicated then
+							generate_feature_il (feat,
+								written_class_type.implementation_id,
+								feat.written_feature_id)
+						else
 							generate_feature (feat, False, True, True)
 							generate_external_il (feat)
-						else
-							generate_feature_il (feat,
-								implemented_type (feat.written_in,
-								current_class_type.type).associated_class_type.implementation_id,
-								feat.written_feature_id)
 						end
 					elseif is_expanded and then feat.is_attribute then
 						generate_feature_il (feat,
 							current_class_type.implementation_id,
 							feat.feature_id)
 					else
+						if is_replicated then
+							byte_context.change_class_type_context (current_class_type, written_class_type)
+						end
 						generate_feature_code (feat, True)
+						if is_replicated then
+							byte_context.restore_class_type_context
+						end
 					end
 				end
 				if l_is_method_impl_generated then
@@ -507,7 +529,8 @@ feature -- IL Generation
 						implementation_feature_id := feat.written_feature_id
 					end
 					generate_feature_il (feat,
-						implemented_type (implementation_class_id, current_class_type.type).implementation_id,
+						current_class_type.type.implemented_type
+							(implementation_class_id).implementation_id,
 						implementation_feature_id)
 				end
 
@@ -524,8 +547,8 @@ feature -- IL Generation
 					generate_feature_code (feat, False)
 				else
 					generate_feature_il (feat,
-						implemented_type (feat.written_in,
-							current_class_type.type).associated_class_type.implementation_id,
+						current_class_type.type.implemented_type
+							(feat.written_in).associated_class_type.implementation_id,
 							feat.written_feature_id)
 				end
 			end

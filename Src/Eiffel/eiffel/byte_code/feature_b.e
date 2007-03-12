@@ -371,7 +371,7 @@ feature -- Inlining
 						-- feature (descendant of STD_BYTE_CODE)
 					inliner.set_current_feature_inlined
 					context_class_type := system.class_type_of_id (entry.type_id)
-					written_class_type := context_class_type.associated_class.implemented_type (f.written_in, context_class_type.type).associated_class_type
+					written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type
 					context_class_type := written_class_type
 						-- Create inlined byte node.
 					if cl_type.base_class.is_special then

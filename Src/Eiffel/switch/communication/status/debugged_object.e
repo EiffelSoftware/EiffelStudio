@@ -10,14 +10,26 @@ deferred class DEBUGGED_OBJECT
 inherit
 
 	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
+		export
+			{NONE} all
+		end
 
 	SHARED_DEBUGGER_MANAGER
 
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 
 	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Creation
 

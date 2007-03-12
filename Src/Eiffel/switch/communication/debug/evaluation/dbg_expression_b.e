@@ -28,7 +28,8 @@ feature -- Parsing
 			if not retried then
 				if has_unicode_character then
 					syntax_error := True
-					error_message := cst_syntax_error + ": the expression contains manisfest unicode string (STRING_32)"
+					error_message := Cst_syntax_error.twin
+					error_message.append_string (": the expression contains manisfest unicode string (STRING_32)")
 				else
 					create sp
 					p := sp.expression_parser
@@ -47,9 +48,9 @@ feature -- Parsing
 				end
 				syntax_error := True
 				if p.error_message = Void or else p.error_message.is_empty  then
-					error_message := Cst_syntax_error
+					error_message := Cst_syntax_error.twin
 				else
-					error_message := p.error_message
+					error_message := p.error_message.twin
 				end
 			end
 		rescue

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		do
 			create_kept_objects
-			reset_call_stack_list
+			clear_callstack_data
 		end
 
 feature -- Objects kept from session to session
@@ -123,7 +123,7 @@ feature -- Objects kept from session to session
 
 feature -- Call Stack List management
 
-	reset_call_stack_list is
+	clear_callstack_data is
 			-- Reset `call_stack_list' or create it
 		do
 			if call_stack_list = Void then
@@ -131,24 +131,56 @@ feature -- Call Stack List management
 			else
 				call_stack_list.wipe_out
 			end
+			current_thread_id := 0
+			active_thread_id := 0
+			current_call_stack := Void
+			dynamic_class := Void
+			origin_class := Void
+			e_feature := Void
+			reason := 0
+			body_index := 0
+			break_index := 0
+			exception_code := 0
+			exception_tag := Void
 		end
 
 feature -- Callstack
 
+	force_reload_current_call_stack is
+			-- reload the call stack from application (after having edited an
+			-- object for example to make sure the modification was successful).
+		do
+			get_callstack (current_thread_id, stack_max_depth, True)
+		end
+
 	reload_current_call_stack is
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
-		local
-			ecs: like current_call_stack
 		do
-				-- re-create the call stack
-			ecs := new_current_callstack_with (stack_max_depth)
-			set_call_stack (current_thread_id, ecs)
+			get_callstack (current_thread_id, stack_max_depth, False)
 		end
 
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
+	get_callstack (a_tid: INTEGER; a_stack_max_depth: INTEGER; always_reload: BOOLEAN) is
+			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+			-- for thread `a_tid'.
+		local
+			ecs: like current_call_stack
+		do
+			ecs := call_stack (a_tid)
+			if ecs /= Void then
+				check ecs.thread_id = current_thread_id end
+				if always_reload or not ecs.is_loaded  then
+					ecs.reload (a_stack_max_depth)
+				end
+			else
+				ecs := new_callstack_with (a_tid, a_stack_max_depth)
+				set_call_stack (a_tid, ecs)
+			end
+		end
+
+	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
 		deferred
 		end
 
@@ -512,7 +544,7 @@ feature -- Setting
 			if b and then not is_stopped then
 					--| When we switch from running to stopped state
 					--| we reset the call stack list
-				reset_call_stack_list
+				clear_callstack_data
 			end
 			is_stopped := b
 		end

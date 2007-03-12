@@ -81,13 +81,39 @@ feature {NONE} -- Initialization
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
+		do
+			debug ("DEBUGGER_TRACE_CALLBACK")
+				io.error.put_string ("  @-> " + generator + ".make : starting%N")
+			end
+			make_empty (tid)
+			reload (n)
+		end
+
+	make_empty (tid: INTEGER) is
+			-- Initialize only the first call stack element.
+		do
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Empty Eiffel Stack%N"); end
+			thread_id := tid
+			error_occurred := False
+			list_make
+		end
+
+feature -- Properties
+
+	thread_id: INTEGER
+			-- Thread ID related to `Current'.
+
+feature {APPLICATION_STATUS} -- Restricted access
+
+	reload (n: INTEGER) is
+			--
 		local
-			call	: CALL_STACK_ELEMENT
+			call: CALL_STACK_ELEMENT
 			eiffel_cse: CALL_STACK_ELEMENT_DOTNET
 			external_cse: EXTERNAL_CALL_STACK_ELEMENT
-			level	: INTEGER
+			level: INTEGER
 
-			l_active_thread: ICOR_DEBUG_THREAD
+			l_thread: ICOR_DEBUG_THREAD
 			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM
 			l_chain: ICOR_DEBUG_CHAIN
 			l_enum_frames: ICOR_DEBUG_FRAME_ENUM
@@ -108,7 +134,7 @@ feature {NONE} -- Initialization
 
 			l_class_type: CLASS_TYPE
 
-			l_feature_i : FEATURE_I
+			l_feature_i: FEATURE_I
 			l_line_number: INTEGER
 			l_il_offset: INTEGER
 
@@ -117,19 +143,17 @@ feature {NONE} -- Initialization
 			l_stack_drv: EIFNET_DEBUG_REFERENCE_VALUE
 			l_hexaddress: STRING
 			l_extra_info: STRING
+			tid: INTEGER
 		do
-			debug ("DEBUGGER_TRACE_CALLBACK")
-				io.error.put_string ("  @-> " + generator + ".make : starting%N")
-			end
-			error_occurred := False
-			list_make
+			clean
+			wipe_out
 
+			tid := thread_id
 			level := 1
-
-			l_active_thread := Eifnet_debugger.icor_debug_thread
-			if l_active_thread /= Void then
-				l_enum_chain := l_active_thread.enumerate_chains
-				if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
+			l_thread := Eifnet_debugger.icor_debug_thread_by_id (tid)
+			if l_thread /= Void then
+				l_enum_chain := l_thread.enumerate_chains
+				if l_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
 					l_enum_chain.reset
 					l_chains := l_enum_chain.next (l_enum_chain.get_count)
 					from
@@ -266,18 +290,12 @@ feature {NONE} -- Initialization
 					l_enum_chain.clean_on_dispose
 				end
 			end
+
+			is_loaded := True
 			debug ("DEBUGGER_TRACE_CALLBACK")
 				io.error.put_string ("  @-> " + generator + ".make : finished%N")
 			end
 		end
-
---	dummy_make is
---			-- Initialize only the first call stack element.
---		do
---			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating dummy Eiffel Stack%N"); end
---			error_occurred := False
---			list_make
---		end
 
 feature -- cleaning
 

@@ -9,10 +9,6 @@ deferred class EIFFEL_CALL_STACK
 
 feature -- Fake inherit from TWO_WAY_LIST
 
-	stack_depth: INTEGER is
-		deferred
-		end
-
 	count: INTEGER is
 		deferred
 		end
@@ -55,9 +51,32 @@ feature -- Fake inherit from TWO_WAY_LIST
 
 feature -- Properties
 
+	thread_id: INTEGER is
+			-- Thread ID related to `Current' call stack
+		deferred
+		end
+
+	stack_depth: INTEGER is
+		deferred
+		end
+
 	error_occurred: BOOLEAN is
 			-- Did an error occurred when retrieving the eiffel stack?
 		deferred
+		end
+
+	is_loaded: BOOLEAN
+			-- Is Call stacks loaded ?
+
+feature {APPLICATION_STATUS} -- Change
+
+	reload (n: INTEGER) is
+			-- Reload call stack up to level `n'
+		require
+			all_level_or_positive: n = -1 or n > 0
+		deferred
+		ensure
+			is_loaded: is_loaded
 		end
 
 feature -- Queries

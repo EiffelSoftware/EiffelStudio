@@ -94,7 +94,11 @@ feature {DBG_EVALUATOR} -- Interface
 					fixme ("it seems the runtime/debug is not designed to call precursor ...")
 					if orig_class.is_expanded and then orig_class.is_basic then
 							--| Take care of "2 > 3"
-						wclt := fi.written_type (ctype)
+						if ctype.associated_class.conform_to (fi.written_class) then
+							wclt := fi.written_type (ctype)
+						else
+							wclt := fi.written_class.types.first
+						end
 					else
 						wclt := ctype
 					end

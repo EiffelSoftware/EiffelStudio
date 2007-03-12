@@ -58,7 +58,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				break_index := offs
 
 					-- create the call stack
-				create ccs.dummy_make
+				create ccs.make_empty (current_thread_id)
 				set_call_stack (current_thread_id, ccs)
 
 --				stack_num := Application.current_execution_stack_number
@@ -96,10 +96,11 @@ feature -- Access
 
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
-			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+			-- for thread `a_tid'.
 		do
-			create Result.make (a_stack_max_depth, current_thread_id)
+			create Result.make (a_stack_max_depth, a_tid)
 		end
 
 feature -- Values

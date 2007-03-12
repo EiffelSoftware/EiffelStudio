@@ -157,8 +157,9 @@ feature -- Execution
 				if not l_status.has_thread_id (thr_id) then
 					l_status.add_thread_id (thr_id)
 				end
-				l_status.set_current_thread_id (thr_id)
 				l_status.set_active_thread_id (thr_id)
+				l_status.set_current_thread_id (thr_id)
+
 				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
 				l_status.set_exception (exception_code, exception_tag)
 

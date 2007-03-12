@@ -287,6 +287,7 @@ feature -- Basic operations
 	evaluate is
 			-- Evaluate `dbg_expression' with `expression_evaluator'
 		do
+			expression_evaluator.reset_error
 			if syntax_error_occurred then
 				expression_evaluator.notify_error_syntax (dbg_expression.error_message)
 			else

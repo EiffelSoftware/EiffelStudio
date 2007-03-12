@@ -231,11 +231,11 @@ feature -- Call stack related
 
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
-			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+			-- for thread `a_tid'.
 		do
-			clean_current_call_stack
-			create Result.make (a_stack_max_depth, current_thread_id)
+			create Result.make (a_stack_max_depth, a_tid)
 		end
 
 	current_call_stack_element: CALL_STACK_ELEMENT is

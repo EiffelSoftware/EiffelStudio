@@ -165,6 +165,9 @@ feature -- Query
 			if features_relation_tool /= Void then
 				Result.extend (features_relation_tool)
 			end
+			if dependency_tool /= Void then
+				Result.extend (dependency_tool)
+			end
 			if metric_tool /= Void then
 				Result.extend (metric_tool)
 			end

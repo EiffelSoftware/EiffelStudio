@@ -28,7 +28,6 @@ feature{NONE} -- Initialization
 	make (a_body: like body; o: like internal_operands; a_as: like agent_keyword) is
 			-- Create a new INLINE_AGENT_CREATION_AS AST node.
 		require
-			as_not_void: a_as /= Void
 			body_not_void: a_body /= Void
 		do
 			initialize (Void, Void, o, False)
@@ -94,13 +93,20 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := agent_keyword.first_token (a_list)
+			if agent_keyword /= Void then
+				Result := agent_keyword.first_token (a_list)
+			else
+				Result := body.first_token (a_list)
+			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := body.last_token (a_list)
 		end
+
+invariant
+	body_not_void: body /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

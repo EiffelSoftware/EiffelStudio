@@ -22,6 +22,8 @@ feature{NONE} -- Initialization
 
 	make (tp: like type; tg: like target; c: like call; k_as: like create_keyword) is
 			-- Create new CREATE_CREATION AST node.
+		require
+			tg_not_void: tg /= Void
 		do
 			initialize (tp, tg, c)
 			create_keyword := k_as

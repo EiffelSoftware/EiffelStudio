@@ -11,6 +11,9 @@ class
 
 inherit
 	ES_GRID
+		redefine
+			on_key_pressed
+		end
 
 	EB_SHARED_PREFERENCES
 		undefine
@@ -29,6 +32,13 @@ inherit
 		end
 
 	SHARED_WORKBENCH
+		undefine
+			default_create, copy, is_equal
+		end
+
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -250,7 +260,6 @@ feature {NONE} -- Interface
 			column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
 			column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			key_release_actions.extend (agent on_key_released)
 			set_item_pebble_function (agent grid_pebble_function)
 			set_accept_cursor (Cursors.cur_class)
 			set_deny_cursor (Cursors.cur_x_class)
@@ -520,15 +529,36 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			end
 		end
 
-	on_key_released (a_key: EV_KEY) is
-			-- On key released.
-		require
-			a_key_not_void: a_key /= Void
+	on_key_pressed (a_key: EV_KEY) is
+			-- On key pressed.
+		local
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+			Precursor {ES_GRID}(a_key)
+			inspect a_key.code
+			when key_enter then
 				if not selected_rows.is_empty then
 					go_to_line_of_editor (selected_rows.first)
 				end
+			when key_home then
+				if row_count > 0 then
+					remove_selection
+					select_row (1)
+					l_selected_rows := selected_rows
+					if not l_selected_rows.is_empty then
+						l_selected_rows.first.ensure_visible
+					end
+				end
+			when key_end then
+				if row_count > 0 then
+					remove_selection
+					select_row (row_count)
+					l_selected_rows := selected_rows
+					if not l_selected_rows.is_empty then
+						l_selected_rows.first.ensure_visible
+					end
+				end
+			else
 			end
 		end
 
@@ -624,7 +654,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		end
 
 	select_current_row is
-			-- Select current row in the grid
+			-- Select current row in the grid, and perform selecting in the editor.
 		require
 			search_launched: multi_search_performer.is_search_launched
 		local
@@ -646,6 +676,10 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			end
 			if l_row_index > 0 and l_row_index <= row_count then
 				select_row (l_row_index)
+				l_selected_rows := selected_rows
+				if not l_selected_rows.is_empty then
+					go_to_line_of_editor (l_selected_rows @ 1)
+				end
 			end
 		end
 

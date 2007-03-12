@@ -115,7 +115,7 @@
 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>	
 	<PREF NAME="tools.metric_tool.highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>	
 
-	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locates?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locate?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referencer_class" HIDDEN="false" DESCRIPTION="Should referencer classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_categorized_folder_level" HIDDEN="false" DESCRIPTION="Should categorized folder level in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>	

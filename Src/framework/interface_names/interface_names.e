@@ -616,6 +616,15 @@ feature -- Formatter displayer names
 	l_feature_callee_displayer: STRING_GENERAL do Result := locale.translate ("Feature callee view") end
 	l_dependency_displayer: STRING_GENERAL do Result := locale.translate ("Dependency view") end
 	l_domain_displayer: STRING_GENERAL do Result := locale.translate ("Domain view") end
+	l_formatter_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation has finished.") end
+	l_formatter_placeholder: STRING_GENERAL do Result := locale.translate ("%"$target%" serves as a placeholder which will be replaced by the input to current fomatter.") end
+	l_formatter_temp_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation is going on.") end
+	l_formatter_filter_help: STRING_GENERAL do Result := locale.translate ("Will invisible items be appressed from display?") end
+	l_formatter_scope_help: STRING_GENERAL do Result := locale.translate ("Is this formatter of per EiffelStudio scope or per target scope?") end
+	l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translate ("In which tool(s) will this formatter be displayed") end
+
+	l_formatter_default_header: STRING is " ... from $target"
+	l_formatter_default_temp_header: STRING is "Extracting ... from $target ..."
 
 feature -- Toggles
 

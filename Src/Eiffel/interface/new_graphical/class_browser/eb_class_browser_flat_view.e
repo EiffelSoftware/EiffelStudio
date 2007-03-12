@@ -33,6 +33,8 @@ feature{NONE} -- Initialization
 	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
 			-- Initialize.
 		do
+			create filter.make (agent is_selected)
+			create wild_matcher.make_empty
 			Precursor (a_dev_window, a_drop_actions)
 		end
 
@@ -500,10 +502,6 @@ feature{NONE} -- Initialization
 				grid.drop_actions.fill (drop_actions)
 			end
 			enable_ctrl_right_click_to_open_new_window
-			create filter_engine.make
-			filter_engine.set_empty_allowed (False)
-			filter_engine.set_multiline (False)
-			filter_engine.set_caseless (True)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			enable_grid_item_pnd_support
 		end
@@ -541,9 +539,6 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation			
 
-	filter_engine: RX_PCRE_REGULAR_EXPRESSION
-			-- Filter engine used to filter features whose name is given by `feature_name_list'
-
 	fill_rows is
 			-- Fill `rows' using information from `data'.
 		local
@@ -554,8 +549,8 @@ feature{NONE} -- Implementation
 			l_feature_from_any_displayed: BOOLEAN
 			l_filter_used: BOOLEAN
 			l_filter_name: STRING
-			l_filter: like filter_engine
-			l_ok: BOOLEAN
+			l_filter: like filter
+			l_macher: like wild_matcher
 		do
 			l_feature_list := data
 			if rows = Void then
@@ -568,10 +563,11 @@ feature{NONE} -- Implementation
 			l_filter_name := feature_name_list.text
 			l_filter_name.left_adjust
 			l_filter_name.right_adjust
-			if not l_filter_name.is_empty then
-				l_filter_used := True
-				l_filter := filter_engine
-				l_filter.compile (l_filter_name)
+			l_filter_used := not l_filter_name.is_empty
+			if l_filter_used then
+				l_macher := wild_matcher
+				l_macher.set_pattern (l_filter_name)
+				l_filter := filter
 			end
 			from
 				l_feature_list.start
@@ -580,22 +576,13 @@ feature{NONE} -- Implementation
 			loop
 				l_feature := l_feature_list.item
 				if l_feature_from_any_displayed or else (l_feature.written_class.class_id /= l_any_class_id) then
-					if l_filter_used then
-						l_filter.match (l_feature.name)
-						if l_filter.has_matched then
-							l_ok := True
-						end
-					else
-						l_ok := True
-					end
-					if l_ok then
+					if not l_filter_used or else l_filter.is_selected (l_feature, Void, Current) then
 						create l_row.make (l_feature_list.item, Current)
 						l_row.set_is_expanded (True)
 						rows.force_last (l_row)
 					end
 				end
 				l_feature_list.forth
-				l_ok := False
 			end
 		end
 
@@ -747,8 +734,29 @@ feature{NONE} -- Implementation/Stone
 			Result := item_to_put_in_editor_for_single_item_grid
 		end
 
+feature{NONE} -- Filter
+
+	filter: EB_CLASS_BROWSER_AGENT_FILTER [QL_FEATURE]
+			-- Filter used in Current view
+
+	wild_matcher: KMP_WILD
+			-- Wildcard matcher
+
+	is_selected (a_feature: QL_FEATURE; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [QL_FEATURE]; a_viewer: like Current): BOOLEAN is
+			-- Will `a_feature' be filtered out?
+		local
+			l_wild_matcher: like wild_matcher
+		do
+			if a_feature /= Void then
+				l_wild_matcher := wild_matcher
+				l_wild_matcher.set_text (a_feature.name)
+				Result := l_wild_matcher.pattern_matches
+			end
+		end
+
 invariant
-	filter_engine_attached: filter_engine /= Void
+	filter_attached: filter /= Void
+	wild_matcher_attached: wild_matcher /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -3174,7 +3174,7 @@ feature {NONE} -- Implementation
 
 			il_code_generator.create_object (l_arg_type.implementation_id)
 			il_code_generator.generate_feature_access (
-				il_code_generator.implemented_type (l_root.origin_class_id, l_arg_type.type),
+				l_arg_type.type.implemented_type (l_root.origin_class_id),
 				l_root.origin_feature_id, 0, True, True)
 		end
 

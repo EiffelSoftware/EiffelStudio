@@ -4594,8 +4594,7 @@ end
 						rout_entry.set_type_id (i)
 						rout_entry.set_type (l_void)
 						rout_entry.set_written_type_id (
-							l_class.implemented_type (l_class.creation_feature.written_in,
-								class_type.type).type_id)
+							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id)
 						rout_entry.set_body_index (l_class.creation_feature.body_index)
 						rout_table.extend (rout_entry)
 					end

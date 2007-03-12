@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			l_cl_type ?= a_node.context_type
 			il_generator.generate_current
 			il_generator.generate_attribute_address (
-				il_generator.implemented_type (a_node.written_in, l_cl_type),
+				l_cl_type.implemented_type (a_node.written_in),
 				context.real_type (a_node.type), a_node.attribute_id)
 		end
 

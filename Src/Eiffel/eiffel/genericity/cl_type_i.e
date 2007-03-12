@@ -310,6 +310,34 @@ feature -- Access
 			Result := Other_code + class_id
 		end
 
+feature -- Type evaluation
+
+	implemented_type (implemented_in: INTEGER): CL_TYPE_I is
+			-- Parent type that corresponds to the current one.
+		require
+			valid_implemented_in: implemented_in > 0
+		local
+			written_class: CLASS_C
+		do
+				-- If it is defined in current class, that's easy and we
+				-- return `current_type'. Otherwise we have to find the
+				-- correct CLASS_TYPE object where it is implemented.
+			if class_id = implemented_in then
+				Result := Current
+			else
+				written_class := System.class_of_id (implemented_in)
+					-- We go through the hierarchy only when `written_class'
+					-- is generic, otherwise for the most general case where
+					-- `written_class' is not generic it will take a long
+					-- time to go through the inheritance hierarchy.
+				if written_class.types.count > 1 then
+					Result := type_a.find_class_type (written_class).type_i
+				else
+					Result := written_class.types.first.type
+				end
+			end
+		end
+
 feature -- Status
 
 	element_type: INTEGER_8 is

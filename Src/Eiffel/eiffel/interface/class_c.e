@@ -2252,37 +2252,6 @@ feature -- Meta-type
 			meta_type_not_void: Result /= Void
 		end
 
-feature -- Type evaluation
-
-	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
-			-- Return CL_TYPE_I instance associated to `current_type' of current class.
-		require
-			valid_implemented_in: implemented_in > 0
-			current_type_not_void: current_type /= Void
-		local
-			cl_type_a: CL_TYPE_A
-			written_class: CLASS_C
-		do
-				-- If it is defined in current class, that's easy and we
-				-- return `current_type'. Otherwise we have to find the
-				-- correct CLASS_TYPE object where it is implemented.
-			if class_id = implemented_in then
-				Result := current_type
-			else
-				written_class := System.class_of_id (implemented_in)
-					-- We go through the hierarchy only when `written_class'
-					-- is generic, otherwise for the most general case where
-					-- `written_class' is not generic it will take a long
-					-- time to go through the inheritance hierarchy.
-				if written_class.generics = Void then
-					Result := written_class.types.first.type
-				else
-					cl_type_a := current_type.type_a
-					Result := cl_type_a.find_class_type (written_class).type_i
-				end
-			end
-		end
-
 feature -- Validity class
 
 	check_validity is

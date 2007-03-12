@@ -17,10 +17,12 @@ create
 
 feature -- Class stack creation
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK is
+	new_callstack_with (a_tid: INTEGER; a_stack_max_depth: INTEGER): like current_call_stack is
+			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+			-- for thread `a_tid'.
 		do
 		end
-
+	
 feature -- Values
 
 	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is

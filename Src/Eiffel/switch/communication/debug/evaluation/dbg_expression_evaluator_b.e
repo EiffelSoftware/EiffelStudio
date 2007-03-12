@@ -329,16 +329,62 @@ feature {NONE} -- EXPR_B evaluation
 			-- since the INTEGER and so on value are handled by the parser
 		local
 			l_string_b: STRING_B
+			l_tuple_const_b: TUPLE_CONST_B
 		do
 			l_string_b ?= a_expr_b
 			if l_string_b /= Void then
-				tmp_result_value := Debugger_manager.Dump_value_factory.new_manifest_string_value (l_string_b.value,
-					debugger_manager.compiler_data.string_8_class_c)
+				tmp_result_value := Debugger_manager.Dump_value_factory.new_manifest_string_value (
+						l_string_b.value,
+						debugger_manager.compiler_data.string_8_class_c
+					)
 			else
-					--| NotYetReady |--
-				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
+				l_tuple_const_b ?= a_expr_b
+				if l_tuple_const_b /= Void then
+					evaluate_tuple_const_b (l_tuple_const_b)
+				else
+						--| NotYetReady |--
+					notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
+				end
 			end
 		end
+
+	evaluate_tuple_const_b (a_tuple_const_b: TUPLE_CONST_B) is
+			-- Manifest Tuple
+		require
+			a_tuple_const_b_not_void: a_tuple_const_b /= Void
+--		local
+--			l_values: ARRAY [DUMP_VALUE]
+--			l_byte_list: LIST [BYTE_NODE]
+--			l_expr_b: EXPR_B
+--			i: INTEGER
+--			dv: DUMP_VALUE
+		do
+--			l_byte_list := a_tuple_const_b.expressions
+--			if l_byte_list.count > 0 then
+--				create l_values.make (1, l_byte_list.count)
+--				from
+--					l_byte_list.start
+--					i := 1
+--				until
+--					l_byte_list.after or error_occurred
+--				loop
+--					l_expr_b ?= l_byte_list.item
+--					if l_expr_b /= Void then
+--						dv := parameter_evaluation (l_expr_b)
+--						l_values.put (dv, i)
+--					end
+--					i := i + 1
+--					l_byte_list.forth
+--				end
+--			end
+--
+--			tmp_result_value := Debugger_manager.Dump_value_factory.new_tuple_const_value (
+--					l_tuple_const_b.value,
+--					debugger_manager.compiler_data.tuple_class_c
+--				)
+			notify_error_not_implemented (a_tuple_const_b.generator + Cst_error_not_yet_ready)
+		end
+
 
 	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C) is
 		require
@@ -421,13 +467,13 @@ feature {NONE} -- EXPR_B evaluation
 				if l_cl = Void then
 					l_cl := comp_data.real_32_class_c
 				end
-				tmp_result_value := d_fact.new_real_value (l_real.real_32_value, l_cl)
+				tmp_result_value := d_fact.new_real_32_value (l_real.real_32_value, l_cl)
 			elseif a_value_i.is_real_64 then
 				l_real ?= a_value_i
 				if l_cl = Void then
 					l_cl := comp_data.real_64_class_c
 				end
-				tmp_result_value := d_fact.new_real_64_value (l_real.real_32_value, l_cl)
+				tmp_result_value := d_fact.new_real_64_value (l_real.real_64_value, l_cl)
 			elseif a_value_i.is_bit then
 				l_bit ?= a_value_i
 				if l_cl = Void then
@@ -917,7 +963,7 @@ feature {NONE} -- EXPR_B evaluation
 	parameter_values_from_parameters_b (a_params: BYTE_LIST [EXPR_B]): ARRAYED_LIST [DUMP_VALUE] is
 		local
 			l_dmp: DUMP_VALUE
-			l_parameters_b: BYTE_LIST [EXPR_B]
+			l_parameters_b: LIST [EXPR_B]
 		do
 			l_parameters_b := a_params
 			if l_parameters_b /= Void then

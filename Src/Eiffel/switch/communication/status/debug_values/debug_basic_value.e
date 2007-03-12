@@ -125,7 +125,7 @@ feature -- Access
 				Result := d_fact.new_character_32_value (wcval.item, Dynamic_class)
 			when sk_real32  then
 				realval ?= value
-				Result := d_fact.new_real_value (realval.item, Dynamic_class)
+				Result := d_fact.new_real_32_value (realval.item, Dynamic_class)
 			when sk_real64  then
 				dblval ?= value
 				Result := d_fact.new_real_64_value (dblval.item, Dynamic_class)

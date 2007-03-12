@@ -59,6 +59,7 @@ feature{NONE} -- Initialization
 			grid.column (1).set_title (interface_names.l_display)
 			grid.column (2).set_title (interface_names.t_tool_name)
 			grid.column (3).set_title (interface_names.t_formatter_displayer_name)
+			grid.key_press_actions.extend (agent on_key_pressed_in_grid)
 			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [STRING_GENERAL]}.make (agent tool_name_tester, ascending_order))
 			grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string ("2:1"))
 			grid_wrapper.set_sort_action (agent sort_agent)
@@ -68,6 +69,7 @@ feature{NONE} -- Initialization
 			element_container.extend (l_box)
 			l_box.extend (grid)
 			ok_button.select_actions.extend (agent on_ok_pressed)
+			remove_default_push_button
 		end
 
 feature -- Access
@@ -165,6 +167,31 @@ feature{NONE} -- Actions
 			bind_grid
 			set_has_changed (False)
 			set_title (interface_names.t_setup_formatter_tools (formatter_name))
+		end
+
+	on_key_pressed_in_grid (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed in `grid'.
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_choice: EV_GRID_CHOICE_ITEM
+			l_check: EV_GRID_CHECKABLE_LABEL_ITEM
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter or a_key.code = {EV_KEY_CONSTANTS}.key_space then
+				l_selected_items := grid.selected_items
+				if l_selected_items.count = 1 then
+					l_check ?= l_selected_items.first
+					if l_check /= Void then
+						l_check.set_is_checked (not l_check.is_checked)
+					else
+						l_choice ?= l_selected_items.first
+						if l_choice /= Void then
+							l_choice.activate
+						end
+					end
+				end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -341,6 +368,10 @@ feature{NONE} -- Implementation/Binding
 			l_size_table.put ([70, 80], 1)
 			l_size_table.put ([150, 200], 2)
 			grid_wrapper.auto_resize_columns (grid, l_size_table)
+			if grid.selected_items.is_empty and then grid.row_count > 0 then
+				grid.row (1).item (1).enable_select
+				grid.set_focus
+			end
 		end
 
 	bind_row (a_grid_row: EV_GRID_ROW; a_tool: STRING; a_selected: BOOLEAN; a_view: STRING; a_sorting: STRING) is

@@ -203,13 +203,12 @@ feature -- Setting
 		do
 			if has_global_descriptors (a_descriptors) then
 				create_formatter_file_dir (global_formatter_file_path)
+				store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_global_scope)), global_formatter_file)
 			end
 			if has_target_descriptors (a_descriptors) then
 				create_formatter_file_dir (target_formatter_file_path)
+				store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_target_scope)), target_formatter_file)
 			end
-
-			store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_global_scope)), global_formatter_file)
-			store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_target_scope)), target_formatter_file)
 		end
 
 	clear_last_error is

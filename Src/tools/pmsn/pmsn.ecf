@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="pmsn" uuid="481F73D2-2E90-4182-A5E7-60D09A5AC78E">
+	<target name="pmsn">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true"/>
+		</option>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="project" location=".\" recursive="true"/>
+	</target>
+	<target name="pmsn_dotnet" extends="pmsn">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

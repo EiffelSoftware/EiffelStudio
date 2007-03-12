@@ -539,13 +539,13 @@ feature {NONE} -- Attributes
 	start_y_position_bottom: INTEGER is
 			-- Start y drawing bottom text position.
 		once
-			Result := internal_shared.tool_bar_font.height // 8
+			Result := internal_shared.tool_bar_font.height // 8 + 2
 		end
 
 	start_y_position_text: INTEGER is
 			-- Start y drawing top text positioion.
 		once
-			Result := internal_shared.tool_bar_font.height // 8 + 1
+			Result := internal_shared.tool_bar_font.height // 8 + 3
 		end
 
 	theme_drawer: EV_THEME_DRAWER_IMP

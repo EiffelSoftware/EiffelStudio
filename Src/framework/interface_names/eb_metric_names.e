@@ -79,7 +79,7 @@ feature -- Titles
 	t_input_domain: STRING_GENERAL is do Result := locale.translate ("Input domain") end
 	t_result: STRING_GENERAL is do Result := locale.translate ("Results:") end
 	t_input_domain_title: STRING_GENERAL is do Result := locale.translate ("Input domain:") end
-	t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("Criterion definition:") end
+	t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("definition:") end
 	t_select_domain_scope: STRING_GENERAL is do Result := locale.translate ("Select domain scope") end
 	t_predefined_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable because current metric is predefined.") end
 	t_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable.") end
@@ -773,7 +773,7 @@ feature -- Error/warning message
 			a_criterion_name_attached: a_criterion_name /= Void
 			a_unit_name_attached: a_unit_name /= Void
 		do
-			Result := locale.format_string (locale.translate ("Criterion %"$1%" of unit %"$2%" doesn't exists."), [a_criterion_name, a_unit_name])
+			Result := locale.format_string (locale.translate ("Criterion %"$1%" of unit %"$2%" doesn't exist."), [a_criterion_name, a_unit_name])
 		ensure
 			result_attached: Result /= Void
 		end

@@ -669,6 +669,45 @@ feature -- Element change
 			synchronize_with_docking_manager
 		end
 
+	update_content_description (a_stone: STONE; a_content: SD_CONTENT) is
+			-- Update `a_content''s detail and description text which are readed from `a_stone'.
+		local
+			l_class_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_shared: SD_SHARED
+			l_name: STRING_GENERAL
+		do
+			if a_content /= Void then
+				l_class_stone ?= a_stone
+				l_cluster_stone ?= a_stone
+				if l_class_stone /= Void then
+					a_content.set_description (interface_names.l_eiffel_class)
+					l_name := l_class_stone.file_name
+					if l_name /= Void then
+						a_content.set_detail (l_name)
+						a_content.set_tab_tooltip (l_name)
+					else
+						a_content.set_tab_tooltip (Void)
+					end
+				elseif l_cluster_stone /= Void then
+					a_content.set_description (interface_names.l_eiffel_cluster)
+					l_name := l_cluster_stone.folder_name
+					if l_name /= Void then
+						a_content.set_detail (l_name)
+						a_content.set_tab_tooltip (l_name)
+					else
+						a_content.set_tab_tooltip (Void)
+					end
+				else
+					-- We don't know this kind of stone.
+					create l_shared
+					a_content.set_description (l_shared.interface_names.zone_navigation_no_description_available)
+					a_content.set_detail (l_shared.interface_names.zone_navigation_no_detail_available)
+					a_content.set_tab_tooltip (Void)
+				end
+			end
+		end
+
 feature -- Basic operations
 
 	select_editor (a_editor: like current_editor) is
@@ -1130,38 +1169,6 @@ feature {NONE}-- Implementation
 					else
 						fake_editors.forth
 					end
-				end
-			end
-		end
-
-	update_content_description (a_stone: STONE; a_content: SD_CONTENT) is
-			-- Update `a_content''s detail and description text which are readed from `a_stone'.
-		local
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_shared: SD_SHARED
-			l_name: STRING_GENERAL
-		do
-			if a_content /= Void then
-				l_class_stone ?= a_stone
-				l_cluster_stone ?= a_stone
-				if l_class_stone /= Void then
-					a_content.set_description (interface_names.l_eiffel_class)
-					l_name := l_class_stone.file_name
-					if l_name /= Void then
-						a_content.set_detail (l_name)
-					end
-				elseif l_cluster_stone /= Void then
-					a_content.set_description (interface_names.l_eiffel_cluster)
-					l_name := l_cluster_stone.folder_name
-					if l_name /= Void then
-						a_content.set_detail (l_name)
-					end
-				else
-					-- We don't know this kind of stone.
-					create l_shared
-					a_content.set_description (l_shared.interface_names.zone_navigation_no_description_available)
-					a_content.set_detail (l_shared.interface_names.zone_navigation_no_detail_available)
 				end
 			end
 		end

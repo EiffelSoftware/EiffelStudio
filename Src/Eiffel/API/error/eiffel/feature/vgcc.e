@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Error in creation instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VGCC 
+class VGCC
 
 inherit
 

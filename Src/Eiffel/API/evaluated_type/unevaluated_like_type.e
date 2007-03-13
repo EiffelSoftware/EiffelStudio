@@ -93,7 +93,7 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 			-- Append Current type to `st'.
 		do
 			st.process_keyword_text (ti_Like_keyword, Void)

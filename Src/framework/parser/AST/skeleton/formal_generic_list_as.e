@@ -26,6 +26,42 @@ feature -- Visitor
 			v.process_formal_generic_list_as (Current)
 		end
 
+feature -- Transformation
+
+	transform_class_types_to_formals_and_record_suppliers (a_ast_factory: AST_FACTORY; a_suppliers: SUPPLIERS_AS; a_formal_parameters: ARRAYED_LIST [FORMAL_AS])
+			-- Record all suppliers and transform possibly some class types into formals.
+			--| If a formal is used before it is defined, we cannot possibly now that. That's why we need this second pass.			
+		require
+			a_ast_factory_not_void: a_ast_factory /= Void
+			a_suppliers_not_void: a_suppliers /= Void
+			a_formal_parameters_not_void: a_formal_parameters /= Void
+		local
+			l_constraints: EIFFEL_LIST[CONSTRAINING_TYPE_AS]
+			l_formal_generics_pass2: AST_FORMAL_GENERICS_PASS2
+		do
+			create l_formal_generics_pass2.make (a_ast_factory, a_suppliers, a_formal_parameters)
+			from
+				start
+			until
+				after
+			loop
+				l_constraints := item.constraints
+				from
+					l_constraints.start
+				until
+					l_constraints.after
+				loop
+					l_constraints.item.type.process (l_formal_generics_pass2)
+					if l_formal_generics_pass2.has_node_changed then
+						l_formal_generics_pass2.consume_node
+						l_constraints.item.set_type (l_formal_generics_pass2.last_consumed_node)
+					end
+					l_constraints.forth
+				end
+				forth
+			end
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is

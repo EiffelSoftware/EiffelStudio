@@ -389,6 +389,7 @@ end
 			body_index := f.body_index
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
+			multi_constraint_static := f.multi_constraint_static
 			enlarge_parameters
 		end
 

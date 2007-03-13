@@ -16,6 +16,8 @@ inherit
 	ARRAY [TYPE_I]
 		rename
 			make as array_make
+		redefine
+			put
 		end
 
 	SHARED_WORKBENCH
@@ -36,6 +38,20 @@ feature -- Initialization
 		do
 			array_make (1, n)
 		end
+
+feature -- Setters
+
+	put (v: like item; i: INTEGER_32) is
+			--
+		do
+			if not v.is_formal then
+				Precursor (v,i)
+			else
+				Precursor (v,i)
+			end
+
+		end
+
 
 feature -- Comparison
 

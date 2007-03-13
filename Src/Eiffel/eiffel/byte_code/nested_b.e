@@ -46,8 +46,11 @@ feature
 
 	type: TYPE_I is
 			-- Expression of the remote call
+		local
+			l_message: like message
 		do
-			Result := message.type;
+			l_message := message
+			Result := l_message.type
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

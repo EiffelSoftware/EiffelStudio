@@ -55,6 +55,16 @@ feature -- Status report
 	is_named_tuple: BOOLEAN is True
 			-- Current is a labelled TUPLE.
 
+	label_position_by_id (a_id: INTEGER): INTEGER is
+			-- If present, position of `a_id' in Current, otherwise `0'.
+		do
+			if a_id > 0 then
+				Result := names.index_of (a_id, 0) + 1
+			end
+		ensure
+			label_position_non_negative: Result >= 0
+		end
+
 	label_position (a_name: STRING): INTEGER is
 			-- If present, position of `a_name' in Current, otherwise `0'.
 		require

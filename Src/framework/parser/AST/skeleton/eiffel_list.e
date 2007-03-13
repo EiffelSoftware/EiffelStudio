@@ -52,6 +52,9 @@ feature -- Roundtrip
 			if separator_list = Void then
 				if capacity >= 2 then
 					create separator_list.make (capacity - 1)
+				else
+						-- One should never get here as this will yield in a call on void.
+					check one_should_never_get_here: false end
 				end
 			end
 			separator_list.reverse_extend (l_as)

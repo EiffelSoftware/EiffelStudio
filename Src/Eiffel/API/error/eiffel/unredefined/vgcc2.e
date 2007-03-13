@@ -1,24 +1,58 @@
 indexing
 
-	description: 
+	description:
 		"Error for a creation of an instance of a deferred class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VGCC2 
+class VGCC2
 
 inherit
 
 	VGCC
 		redefine
-			subcode
+			subcode, print_name
 		end
 
 feature -- Properties
 
 	subcode: INTEGER is 2;
+
+	set_deferred_classes (a_deferred_class_list: LIST[CLASS_C]) is
+			-- Set deferred_classes to `a_list_of_deferred_classes'.
+		require
+			a_deferred_class_list_not_void: a_deferred_class_list /= Void
+		do
+			deferred_classes := a_deferred_class_list
+		end
+
+
+	deferred_classes: LIST[CLASS_C]
+			-- List of deferred classes
+
+feature -- Output
+
+print_name (a_text_formatter: TEXT_FORMATTER) is
+		do
+			if target_name /= Void then
+				a_text_formatter.add ("Creation of: ");
+				a_text_formatter.add (target_name);
+				a_text_formatter.add_new_line;
+			end
+			a_text_formatter.add ("Target type set: ");
+			type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Deferred classes: ")
+			deferred_classes.do_all (agent (t: TEXT_FORMATTER; c: CLASS_C)
+								do
+								 		c.append_name (t)
+										t.add (" ")
+								end (a_text_formatter, ?))
+			a_text_formatter.add_new_line
+		end;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

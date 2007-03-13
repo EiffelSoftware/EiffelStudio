@@ -26,6 +26,27 @@ feature -- Visitor
 			v.process_rename_clause_as (Current)
 		end
 
+feature -- Output
+
+	dump: STRING
+			-- Output as STRING.
+		do
+			Result := "rename "
+			from
+				content.start
+			until
+				content.after
+			loop
+				Result.append (content.item.old_name.internal_name.name + " as " + content.item.new_name.internal_name.name)
+				content.forth
+				if not content.after then
+					Result.append (", ")
+				end
+			end
+			Result.append (" end")
+		end
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

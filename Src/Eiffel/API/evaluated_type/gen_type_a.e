@@ -161,12 +161,12 @@ feature -- Output
 			end
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		local
 			i, count: INTEGER
 		do
 				-- Append classname "TUPLE"
-			Precursor {CL_TYPE_A} (st, f)
+			Precursor {CL_TYPE_A} (st, c)
 
 			count := generics.count
 				-- TUPLE may have zero generic parameters
@@ -178,7 +178,7 @@ feature -- Output
 				until
 					i > count
 				loop
-					generics.item (i).ext_append_to (st, f)
+					generics.item (i).ext_append_to (st, c)
 					if i /= count then
 						st.process_symbol_text (ti_Comma)
 						st.add_space
@@ -373,9 +373,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): GEN_TYPE_A is
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in the associated class
-			-- of `class_type'.
+			-- TODO: new comment
 		local
 			i: INTEGER
 			old_generics: like generics
@@ -594,7 +592,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	good_generics: BOOLEAN is
 			-- Has the base class exactly the same number of generic
-			-- parameters in its formal generic declarations ?
+			-- parameters in its formal generic declarations?
 		local
 			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			i, generic_count: INTEGER
@@ -615,6 +613,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	error_generics: VTUG is
+			-- Returns the first error regarding the number of generic parameters
+			-- compared to the formal generic declarations.
+			--| Recursion is done to find all errors.
 		local
 			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			i, generic_count: INTEGER
@@ -646,189 +647,125 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_constraints (context_class: CLASS_C) is
-			-- Check the constrained genericity validity rule
-		local
-			i, count: INTEGER
-			gen_param, to_check: TYPE_A
-			constraint_type: TYPE_A
-			formal_type, other_formal_type: FORMAL_A
-			gen_type: GEN_TYPE_A
-			pos: INTEGER
-			conformance_on_formal, is_conform, l_future_convert_checking: BOOLEAN
-			formal_dec_as: FORMAL_CONSTRAINT_AS
-			l_vtug: VTUG
-		do
-				-- Some lines of explanations with some examples:
-				--  * `context_class' is the class TEST where we can find the text of A [G,...]
-				--  * `to_check' corresponds to the type of G in class TEST: it is either
-				--     G itself if G is not formal, or the constraint class corresponding
-				--     to G in TEST, i.e. if we have TEST [G -> TOTO], it is TOTO.
-				-- * `constraint_type' is the type of the constraint in the declaration
-				--    of A if there is one (i.e. A [K -> TITI,...]), otherwise it is ANY.
-				-- * `formal_type' tells you if G is formal or not.
-			from
-				i := 1
-				count := generics.count
-			until
-				i > count
-			loop
-					-- Reset data.
-				l_future_convert_checking := False
-
-					-- Take the current studied parameter of A [G,...]
-				gen_param := generics.item (i).actual_type
-				if gen_param.is_formal then
-						-- Check if the associated constraint conforms to the
-						-- i_th generic parameter of context_type
-					check
-						context_class.generics /= Void
+	check_constraints (a_type_context: CLASS_C; a_context_feature: FEATURE_I; a_check_creation_readiness: BOOLEAN) is
+				-- 	Check the constrained genericity validity rule
+				--| We check for all generic parameters whether they fullfill their constraints:
+				--| * conformance to all the constraining types
+				--| * providing creations routines to meet all creation constraints
+			local
+				i, l_count: INTEGER
+				l_class: CLASS_C
+				l_constraints: TYPE_SET_A
+				l_constraint_item: TYPE_A
+				l_formal_constraint: FORMAL_A
+				l_generic_constraint: GEN_TYPE_A
+				l_generic_parameters: ARRAY[TYPE_A]
+				l_formal_generic_parameter: FORMAL_A
+				l_generic_parameter: TYPE_A
+				l_conform: BOOLEAN
+				l_formal_dec_as: FORMAL_CONSTRAINT_AS
+					-- Errors
+				l_vtgd1: VTGD1
+				l_vtgd2: VTGD2
+			do
+					l_conform := True
+					l_class := associated_class
+					l_generic_parameters := generics
+					if l_generic_parameters.count /= l_class.generics.count then
+							l_conform := False
+								-- Count of actual generics is not equal to expected count of formal generics.
+							create l_vtgd1
+							l_vtgd1.set_class (a_type_context)
+							Error_handler.insert_error (l_vtgd1)
 					end
-					formal_type ?= gen_param
-					formal_dec_as ?= context_class.generics.i_th (formal_type.position)
-					check formal_dec_as_not_void: formal_dec_as /= Void end
-					to_check ?= formal_dec_as.constraint_type (context_class)
-				else
-					formal_type := Void
-					to_check := gen_param
-				end
 
-					-- Evaluation of the constraint in the associated class
-				formal_dec_as ?= associated_class.generics.i_th (i)
-				check formal_dec_as_not_void: formal_dec_as /= Void end
-				constraint_type := formal_dec_as.constraint_type (associated_class)
-				conformance_on_formal := False
-				is_conform := True
+						-- Check all actual generic parameters against their constraining types.
+					from
+						l_count := l_generic_parameters.count
+						i := 1
+					until
+						i > l_count or not l_conform
+					loop
+						l_generic_parameter := l_generic_parameters.item(i)
+						l_constraints := l_class.constraints(i)
+						from
+							l_constraints.start
+						until
+							l_constraints.after or not l_conform
+						loop
+							l_constraint_item := l_constraints.item.type
+							if l_constraint_item.is_formal then
+								l_formal_constraint ?= l_constraint_item
+								check l_formal_constraint /= Void end
+									-- Replace the formal with its 'instantiation' of the current generic derivation.
+									--| `l_constraint_item' can indeed still be a formal, but now has to be resolved by using `a_type_context'
+								l_constraint_item := l_generic_parameters.item(l_formal_constraint.position)
+							elseif l_constraint_item.has_generics and then not l_constraint_item.generics.is_empty then
+									-- We substitude all occurences of formals in the constraint with the instantiation of the corresponding formal in our generic derivation.
+								l_generic_constraint ?= l_constraint_item.deep_twin
+								l_generic_constraint.substitute (l_generic_parameters)
+								l_constraint_item := l_generic_constraint
+							end
+							--| Martins 14/12/06
+							--| Know that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
+							--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
+							--| Know that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
+							l_conform := l_generic_parameter.conformance_type.conform_to (l_constraint_item)
 
-				if constraint_type.is_formal then
-						-- If the constraint is a formal generic parameter, we substitute it
-						-- by its definition and we make sure that after substitution
-						-- we have a valid result for the conformance.
-						-- For example if A is declared as A [G, H -> G]:
-						-- * case 1: `to_check' is a formal parameter, we need to make sure
-						--            that we have written something like A [to_check, to_check]
-						-- * case 2: `to_check' is not formal, we need to make sure that
-						--            we have written something like A [titi, to_check] where
-						--            `to_check' conforms to `titi'.
-					conformance_on_formal := True
-					other_formal_type ?= constraint_type
-					pos := other_formal_type.position
-					if formal_type /= Void then
-							-- Case 1
-						if not formal_type.same_as (generics.item (pos)) then
-							generate_constraint_error (Current, formal_type, constraint_type, i)
-							is_conform := False
+							l_constraints.forth
 						end
-					else
-							-- Case 2
-						if not to_check.conform_to (generics.item (pos)) then
-							generate_constraint_error (Current, to_check, constraint_type, i)
-							is_conform := False
-						end
-					end
-				elseif
-					constraint_type.generics /= Void and then
-					constraint_type.generics.count /= 0
-				then
-						-- The constraint has a generic type itself which is not new in 4.3.
-						-- and the constraint is not a TUPLE type without generic parameters.
-						-- However we need to do a substitution in the case the generic
-						-- type is referencing another formal generic parameter. This
-						-- is the case when you wrote something like:
-						-- A [K -> TOTO, H -> ARRAY [K],...] we need to do the substitution
-						-- on the second generic parameter of A in order to have
-						-- ARRAY [TOTO] and not ARRAY [K].
-					gen_type ?= constraint_type.deep_twin
-					gen_type.substitute (generics)
-					constraint_type := gen_type
-				end
-
-					-- Check the conformance in the case the constraint_type was not a formal one.
-				if not conformance_on_formal then
-					if not to_check.conform_to (constraint_type) then
-							-- Check new VTCG3 rule for expanded actual generic parameter against
-							-- reference constraint_type.
-						if to_check.is_expanded and then not constraint_type.is_expanded then
-							if system.in_pass3 then
-								if
-									not (to_check.convert_to (context_class, constraint_type) and
-									to_check.is_conformant_to (constraint_type))
-								then
-									generate_constraint_error (Current, to_check, constraint_type, i)
-									is_conform := False
+						if not l_conform then
+								-- This actual parameter (`l_generic_parameter') did not conform to its constraining types.
+							create l_vtgd2
+							l_vtgd2.set_class(a_type_context)
+							l_vtgd2.set_feature (context.current_feature)
+							l_vtgd2.set_type (l_generic_parameter)
+							l_vtgd2.set_constraint (l_constraints)
+							Error_handler.insert_error (l_vtgd2)
+						else
+							-- MTNASK: this is because of the future checking... we do not need to convert anything because of the new expanded type handling, right?
+								-- Check now for the validity of the creation constraint clause if
+								-- there is one which can be checked ,i.e. when `to_check' conforms
+								-- to `constraint_type'.
+							l_formal_dec_as ?= associated_class.generics.i_th (i)
+							check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
+							if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint or a_check_creation_readiness) then
+									-- If we are not in degree 3 (i.e. 4), we cannot have a
+									-- complete check since if we are currently checking an attribute
+									-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
+									-- So we store all the needed information and we will do a check at the
+									-- end of the degree 4 (look at PASS2 for the code which does the checking).
+								l_formal_generic_parameter ?= l_generic_parameter
+								if System.in_pass3 then
+									creation_constraint_check (
+											l_formal_dec_as, l_constraints, a_type_context,
+											l_generic_parameter, i, l_formal_generic_parameter)
+								else
+--									if l_future_convert_checking then
+--										add_future_checking (l_context_class,
+--											agent delayed_convert_creation_constraint_check (l_context_class,
+--											l_generic_parameter, l_constraints, l_formal_dec_as, i, l_formal_generic_parameter, False))
+--									else
+										add_future_checking (a_type_context,
+											agent delayed_creation_constraint_check (a_type_context, Void,
+											l_generic_parameter, l_constraints, l_formal_dec_as, i, l_formal_generic_parameter))
+--									end
 								end
-							else
-									-- We do not insert future checking here for convertion as otherwise
-									-- it would break test#valid176.
-								l_future_convert_checking := True
-							end
-						else
-							generate_constraint_error (Current, to_check, constraint_type, i)
-							is_conform := False
-						end
-					end
-				end
-
-				if is_conform then
-						-- Check now for the validity of the creation constraint clause if
-						-- there is one which can be checked ,i.e. when `to_check' conforms
-						-- to `constraint_type'.
-					formal_dec_as ?= associated_class.generics.i_th (i)
-					check formal_dec_as_not_void: formal_dec_as /= Void end
-					if formal_dec_as.is_reference and then not gen_param.is_reference then
-							-- FIXME: Put a better error here, i.e. one that says it is not
-							-- valid because we expect a reference actual generic parameter.
-						generate_constraint_error (Current, gen_param, constraint_type, i)
-					elseif formal_dec_as.is_expanded and then not gen_param.is_expanded then
-							-- FIXME: Put a better error here, i.e. one that says it is not
-							-- valid because we expect an expanded actual generic parameter.
-						generate_constraint_error (Current, gen_param, constraint_type, i)
-					elseif formal_dec_as.has_creation_constraint and system.check_generic_creation_constraint then
-							-- If we are not in degree 3 (i.e. 4), we cannot have a
-							-- complete check since if we are currently checking an attribute
-							-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
-							-- So we store all the needed information and we will do a check at the
-							-- end of the degree 4 (look at PASS2 for the cod which does the checking).
-						if System.in_pass3 then
-							creation_constraint_check (
-									formal_dec_as, constraint_type, context_class,
-									to_check, i, formal_type)
-						else
-							if l_future_convert_checking then
-								add_future_checking (context_class,
-									agent delayed_convert_creation_constraint_check (context_class,
-									to_check, constraint_type, formal_dec_as, i, formal_type, False))
-							else
-								add_future_checking (context_class,
-									agent delayed_creation_constraint_check (context_class,
-									to_check, constraint_type, formal_dec_as, i, formal_type))
+--							elseif l_future_convert_checking then
+--									-- Convertion check was requested and we did not have creation constraints.
+--								add_future_checking (l_context_class,
+--									agent delayed_convert_constraint_check (
+--									l_context_class, Current, to_check, constraint_type, i, False))
 							end
 						end
-					elseif l_future_convert_checking then
-							-- Convertion check was requested and we did not have creation constraints.
-						add_future_checking (context_class,
-							agent delayed_convert_constraint_check (
-							context_class, Current, to_check, constraint_type, i, False))
+						if  l_generic_parameter.has_generics then
+								-- Recursion
+							l_generic_parameter.check_constraints (a_type_context, a_context_feature, a_check_creation_readiness)
+						end
+
+						i := i + 1
 					end
-				end
-
-					-- Recursion Part:
-
-					-- Check a generic local type
-				if not gen_param.good_generics then
-					l_vtug := gen_param.error_generics
-					l_vtug.set_type (generics.item (i))
-					l_vtug.set_class (context_class)
-					l_vtug.set_feature (context.current_feature)
-					Error_handler.insert_error (l_vtug)
-				else
-
-						-- It is a valid generic, so we can recurse
-					gen_param.check_constraints (context_class)
-				end
-				i := i + 1
 			end
-		end
 
 	substitute (new_generics: ARRAY [TYPE_A]) is
 			-- Take the arguments from `new_generics' to create an
@@ -857,64 +794,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 					gen_type ?= constraint_type
 					gen_type.substitute (new_generics)
 				end
-
 				i := i + 1
-			end
-		end
-
-	delayed_convert_creation_constraint_check (
-			context_class: CLASS_C;
-			to_check, constraint_type: TYPE_A;
-			formal_dec_as: FORMAL_CONSTRAINT_AS
-			i: INTEGER;
-			formal_type: FORMAL_A;
-			in_constraint: BOOLEAN) is
-				-- Check that declaration of generic class is conform to
-				-- defined creation constraint in delayed mode.
-		require
-			context_class_not_void: context_class /= Void
-			to_check_not_void: to_check /= Void
-			constraint_type_not_void: constraint_type /= Void
-			to_check_is_expanded: to_check.is_expanded
-			constraint_type_is_reference: not constraint_type.is_expanded
-			formal_dec_as_not_void: formal_dec_as /= Void
-			creation_constraint_exists: formal_dec_as.has_creation_constraint
-		local
-			l_vtcg7: VTCG7
-		do
-			reset_constraint_error_list
-			if context_class.is_valid and to_check.is_valid then
-				if
-					not (to_check.convert_to (context_class, constraint_type) and
-					to_check.is_conformant_to (constraint_type))
-				then
-					generate_constraint_error (Current, to_check, constraint_type, i)
-						-- The feature listed in the creation constraint have
-						-- not been declared in the constraint class.
-					create l_vtcg7
-					l_vtcg7.set_in_constraint (in_constraint)
-					l_vtcg7.set_class (context_class)
-					l_vtcg7.set_error_list (constraint_error_list)
-					l_vtcg7.set_parent_type (Current)
-					Error_handler.insert_error (l_vtcg7)
-				else
-					creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
-					if not constraint_error_list.is_empty then
-							-- The feature listed in the creation constraint have
-							-- not been declared in the constraint class.
-						create l_vtcg7
-						l_vtcg7.set_class (context_class)
-						l_vtcg7.set_error_list (constraint_error_list)
-						l_vtcg7.set_parent_type (Current)
-						Error_handler.insert_error (l_vtcg7)
-					end
-				end
 			end
 		end
 
 	delayed_creation_constraint_check (
 			context_class: CLASS_C;
-			to_check, constraint_type: TYPE_A;
+			a_context_feature: FEATURE_I;
+			to_check: TYPE_A
+			constraint_type: TYPE_SET_A
 			formal_dec_as: FORMAL_CONSTRAINT_AS
 			i: INTEGER;
 			formal_type: FORMAL_A) is
@@ -927,7 +815,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			l_vtcg7: VTCG7
 		do
 			reset_constraint_error_list
-			if context_class.is_valid and to_check.is_valid then
+			if context_class.is_valid and then to_check /= Void and then to_check.is_valid then
 				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
 				if not constraint_error_list.is_empty then
 						-- The feature listed in the creation constraint have
@@ -936,6 +824,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 					l_vtcg7.set_class (context_class)
 					l_vtcg7.set_error_list (constraint_error_list)
 					l_vtcg7.set_parent_type (Current)
+					if a_context_feature /= Void then
+						l_vtcg7.set_feature (a_context_feature)
+					end
 					Error_handler.insert_error (l_vtcg7)
 				end
 			end
@@ -943,7 +834,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	creation_constraint_check (
 			formal_dec_as: FORMAL_CONSTRAINT_AS
-			constraint_type: TYPE_A;
+			a_constraint_types: TYPE_SET_A;
 			context_class: CLASS_C;
 			to_check: TYPE_A;
 			i: INTEGER;
@@ -961,7 +852,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			feat_tbl: FEATURE_TABLE
 			class_c: CLASS_C
 			other_feature_i, feature_i: FEATURE_I
+			l_unmatched_features: LIST[FEATURE_I]
 		do
+
 				-- If there is a creation constraint we are facing two different cases:
 				-- * case 1: the declaration is using a real type `to_check', we check that
 				--           the creation procedures listed in the constraint are indeed
@@ -982,7 +875,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				if to_check.has_associated_class then
 					-- `to_check' may not have an associated class if it represents NONE type, for
 						-- example in PROCEDURE [ANY, NONE], we will check NONE against
-						-- constraint of PROCEDURE which is `TUPLE create default_create end'.
+						-- constraint of PROCEDURE which is `TUPLE create default_create end'.						
 					class_c := to_check.associated_class
 					creators_table := class_c.creators
 				end
@@ -990,13 +883,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- A creation procedure has to be specified, so if none is
 					-- specified or if there is no creation procedure in the class
 					-- corresponding to `to_check', this is not valid.
-				matched := creators_table /= Void and then not creators_table.is_empty
-				if matched then
+
+				if
+					creators_table /= Void and then not creators_table.is_empty
+				then
 					from
 						crc_list.start
 						feat_tbl := class_c.feature_table
 					until
-						not matched or else crc_list.after
+						crc_list.after
 					loop
 							-- Let's take one of the creation procedure defined in the constraint.
 						feature_i := crc_list.item
@@ -1009,9 +904,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 							-- procedures of `class_c' and that it is exported to Current, since it
 							-- it is Current that will create instances of the generic parameter.
 						creators_table.search (other_feature_i.feature_name)
-						matched := creators_table.found
-							and then creators_table.found_item.valid_for (associated_class)
-
+						if
+							not creators_table.found or else
+							not creators_table.found_item.valid_for (associated_class)
+						then
+							if l_unmatched_features = Void then
+								create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+							end
+							l_unmatched_features.extend (feature_i)
+						end
 						crc_list.forth
 					end
 				else
@@ -1020,12 +921,21 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- `default_create' as creation procedure and that `creators_table'
 						-- is Void (as empty means there is no way to create an instance of this
 						-- class).
-					matched := creators_table = Void and then
+					if
+					 	creators_table = Void and then
 						(crc_list.count = 1 and then formal_dec_as.has_default_create)
+					then
+						-- Ok, no error: We have no create clause which makes `default_create' available
+						-- and the constraint demands only `default_create'
+					else
+						create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+						l_unmatched_features.extend (class_c.feature_of_rout_id (system.default_create_id))
+						check first_not_void: l_unmatched_features.first /= Void end
+					end
 				end
-
-				if not matched then
-					generate_constraint_error (Current, to_check, constraint_type, i)
+					-- We have an error if we have unmatched features.
+				if l_unmatched_features /= Void then
+					generate_constraint_error (Current, to_check, a_constraint_types, i, l_unmatched_features)
 				end
 			else
 					-- Check if there is a creation constraint clause
@@ -1038,14 +948,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 							crc_list.start
 							matched := True
 						until
-							not matched or else crc_list.after
+							crc_list.after
 						loop
+							feature_i := crc_list.item
 								-- Check that all the creation procedures defined in the creation
 								-- constraint clause `crc_list' are indeed present under a
 								-- redefined/renamed version in the creation constraint clause
 								-- `formal_crc_list'.
 							from
-								feature_i := crc_list.item
 								matched := False
 								formal_crc_list.start
 							until
@@ -1054,6 +964,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 								matched := formal_crc_list.item.rout_id_set.has (
 											feature_i.rout_id_set.first)
 								formal_crc_list.forth
+							end
+								-- If not matched save the feature to report a proper error.
+							if not matched then
+								if l_unmatched_features = Void then
+									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+								end
+								l_unmatched_features.extend (feature_i)
 							end
 							crc_list.forth
 						end
@@ -1065,7 +982,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 
 				if not matched then
-					generate_constraint_error (Current, formal_type, constraint_type, i)
+					generate_constraint_error (Current, formal_type,a_constraint_types, i, l_unmatched_features)
 				end
 			end
 		end

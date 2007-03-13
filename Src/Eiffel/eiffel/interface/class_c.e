@@ -529,7 +529,7 @@ feature -- Expanded rues validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			constraint_type: TYPE_A
+			constraint_types: LIST[EXTENDED_TYPE_A]
 			l_formals: like generic_features
 			l_cursor: CURSOR
 			l_formal_dec: FORMAL_CONSTRAINT_AS
@@ -566,9 +566,16 @@ end
 				loop
 					l_formal_dec ?= generics.item
 					check l_formal_dec_not_void: l_formal_dec /= Void end
-					constraint_type := l_formal_dec.constraint_type (Current)
-					if constraint_type.has_generics then
-						System.expanded_checker.check_actual_type (constraint_type)
+					constraint_types := l_formal_dec.constraint_types (Current)
+					from
+						constraint_types.start
+					until
+						constraint_types.after
+					loop
+						if constraint_types.item.type.has_generics then
+							System.expanded_checker.check_actual_type (constraint_types.item.type)
+						end
+						constraint_types.forth
 					end
 					generics.forth
 				end
@@ -1045,6 +1052,12 @@ feature
 		do
 		end
 
+	check_constraint_renaming is
+			-- Check validity of renaming
+			-- Requires feature tables!!
+		do
+		end
+
 feature -- Parent checking
 
 	fill_parents (a_old_class_info, a_class_info: CLASS_INFO) is
@@ -1275,7 +1288,8 @@ feature -- Parent checking
 				if parent_actual_type.generics /= Void then
 						-- Check constrained genericity validity rule
 					parent_actual_type.reset_constraint_error_list
-					parent_actual_type.check_constraints (Current)
+						-- Check creation readyness because parents have to be creation ready.
+					parent_actual_type.check_constraints (Current, Void, True)
 					if not parent_actual_type.constraint_error_list.is_empty then
 						create vtcg4
 						vtcg4.set_class (Current)
@@ -1796,7 +1810,7 @@ feature -- Actual class type
 				until
 					i > count
 				loop
-					actual_generic.put (constraint (i), i)
+					actual_generic.put (constraints (i), i)
 					i := i + 1
 				end
 			end
@@ -1880,6 +1894,23 @@ end
 			changed_features.put (feature_name_id)
 		end
 
+		-- MTNTODO: refactor to constraint before commit
+	constraint_fixed (i: INTEGER): TYPE_A is
+			-- I-th constraint of the class
+		require
+			generics_exists: is_generic
+			valid_index: generics.valid_index (i)
+			not_is_multi_constraint: not generics.i_th (i).has_multi_constraints
+		local
+			l_formal_dec: FORMAL_CONSTRAINT_AS
+		do
+			l_formal_dec ?= generics.i_th (i)
+			check l_formal_dec_not_void: l_formal_dec /= Void end
+			Result := l_formal_dec.constraint_type (Current).type
+		ensure
+			constraint_not_void: Result /= Void
+		end
+
 	constraint (i: INTEGER): TYPE_A is
 			-- I-th constraint of the class
 		require
@@ -1890,7 +1921,39 @@ end
 		do
 			l_formal_dec ?= generics.i_th (i)
 			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.constraint_type (Current)
+			Result := l_formal_dec.constraint_type (Current).type
+		ensure
+			constraint_not_void: Result /= Void
+		end
+
+	constraints (i: INTEGER): TYPE_SET_A is
+			-- I-th constraint set of the class
+		require
+			generics_exists: is_generic
+			valid_index: generics.valid_index (i)
+		local
+			l_formal_dec: FORMAL_CONSTRAINT_AS
+		do
+			-- MTNASK: optimize with array? (store it when once accessed)
+				l_formal_dec ?= generics.i_th (i)
+				check l_formal_dec_not_void: l_formal_dec /= Void end
+				Result := l_formal_dec.constraint_types (Current)
+		ensure
+			constraint_not_void: Result /= Void
+		end
+
+	constraints_if_possible (i: INTEGER): TYPE_SET_A is
+			-- I-th constraint set of the class
+		require
+			generics_exists: is_generic
+			valid_index: generics.valid_index (i)
+		local
+			l_formal_dec: FORMAL_CONSTRAINT_AS
+		do
+			-- MTNASK: optimize with array? (store it when once accessed)
+				l_formal_dec ?= generics.i_th (i)
+				check l_formal_dec_not_void: l_formal_dec /= Void end
+				Result := l_formal_dec.constraint_types_if_possible (Current)
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -2660,6 +2723,19 @@ feature {CLASS_I} -- Settings
 
 feature -- Access
 
+	has_multi_constraints (i: INTEGER): BOOLEAN is
+			-- Does i-th generic parameter have multiple constraints?
+		require
+			has_generics: generics /= Void
+		local
+			l_formal_dec: FORMAL_CONSTRAINT_AS
+		do
+			l_formal_dec ?= generics.i_th (i)
+			check l_formal_dec_not_void: l_formal_dec /= Void end
+			Result := l_formal_dec.has_multi_constraints
+		end
+
+
 	is_fully_deferred: BOOLEAN is
 			-- Are parents of current class either ANY or a fully deferred class?
 			-- Does current class contain only deferred features?
@@ -2744,6 +2820,36 @@ feature -- Access
 			-- Is Current feature obsolete?
 		do
 			Result := obsolete_message /= Void
+		end
+
+
+	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE is
+			-- Feature whose internal name is `n'
+		require
+			valid_a_feature_name_id: a_feature_name_id > 0
+			has_feature_table: has_feature_table
+		local
+			f: FEATURE_I
+		do
+			f := feature_table.item_id (a_feature_name_id)
+			if f /= Void then
+				Result := f.api_feature (class_id)
+			end
+		end
+
+
+	feature_with_id (a_feature_id: ID_AS): E_FEATURE is
+			-- Feature whose internal name is `n'
+		require
+			valid_a_feature_id: a_feature_id /= Void
+			has_feature_table: has_feature_table
+		local
+			f: FEATURE_I
+		do
+			f := feature_table.item_id (a_feature_id.name_id)
+			if f /= Void then
+				Result := f.api_feature (class_id)
+			end
 		end
 
 	feature_with_name (n: STRING): E_FEATURE is
@@ -2903,6 +3009,17 @@ feature -- Access
 					l_gen.go_to (l_cursor)
 				end
 			end
+		end
+
+	feature_of_name_id (a_name_id: INTEGER): FEATURE_I is
+			-- Feature whose feature_id is `a_feature_id'.
+			-- Look into `feature_table', `generic_features' and
+			-- `anchored_features'.
+		require
+			a_name_id: a_name_id > 0
+			has_feature_table: has_feature_table
+		do
+			Result := feature_table.item_id (a_name_id)
 		end
 
 	api_feature_table: E_FEATURE_TABLE is

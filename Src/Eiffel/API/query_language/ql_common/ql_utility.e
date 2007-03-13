@@ -279,7 +279,11 @@ feature{NONE} -- Implementation
 		do
 			if a_type.is_formal then
 				l_formal_type ?= a_type
-				Result := a_class_c.constraint (l_formal_type.position)
+					-- TODO FIXME: Adapt code to be aware of multi-constraint generics.
+				check
+					not_has_multi_constraints: not a_class_c.has_multi_constraints (l_formal_type.position)
+				end
+				Result := a_class_c.constraint_fixed (l_formal_type.position)
 			else
 				Result := a_type
 			end

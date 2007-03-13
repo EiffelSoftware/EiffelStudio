@@ -90,11 +90,7 @@ feature {NONE} -- Properties
 				until
 					gs.after
 				loop
-					if gs.item.constraint /= Void then
-						gts.put (gs.item.constraint.dump, i)
-					else
-						gts.put ("ANY", i)
-					end
+					gts.put (gs.item.constraints.dump (False), i)
 					i := i + 1
 					gs.forth
 				end

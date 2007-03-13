@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (k_as: SYMBOL_AS; t_as: TYPE_AS; l_as: like creation_constrain) is
+	make (k_as: like constrain_symbol; t_as: like type; l_as: like creation_constrain) is
 			-- Create new CONSTRAINT_TRIPLE sturcture.
 		do
 			constrain_symbol := k_as
@@ -35,7 +35,7 @@ feature -- Access
 	constrain_symbol: SYMBOL_AS
 			-- Constrain keyword
 
-	type: TYPE_AS
+	type: CONSTRAINT_LIST_AS
 			-- Type associated with current structure
 
 	creation_constrain: CREATION_CONSTRAIN_TRIPLE;

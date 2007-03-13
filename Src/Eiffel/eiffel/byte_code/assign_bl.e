@@ -193,9 +193,13 @@ feature
 				analyze_simple_assignment
 			end
 			create saved_context.make_from_context (context)
-			target_type := context.real_type (target.type)
+			target_type := target.type
+
+			check not target_type.is_multi_constrained_formal end
+			target_type := context.real_type_fixed (target_type)
+
 			if simple_op_assignment = No_simple_op then
-				source_type := context.real_type (source.type)
+				source_type := context.real_type_fixed (source.type)
 				if target.is_predefined then
 					result_used := target.is_result
 						-- We won't attempt a propagation of the target if the

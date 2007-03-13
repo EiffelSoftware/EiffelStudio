@@ -169,6 +169,8 @@ feature -- Initialization
 
 feature -- Status report
 
+	is_parsing_class_head: BOOLEAN
+
 	il_parser: BOOLEAN
 			-- Is current Eiffel parser an IL Eiffel parser?
 
@@ -322,6 +324,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	set_is_parsing_class_head (a_flag_value: BOOLEAN)
+			-- Set is_parsing_class_head to `a_flag_value'.
+		do
+			is_parsing_class_head := a_flag_value
+		ensure
+			is_parsing_class_head_is_set: is_parsing_class_head = a_flag_value
+		end
+
 	id_level: INTEGER is
 			-- Boolean for controlling the semantic
 			-- action of rule `A_feature'
@@ -420,6 +430,9 @@ feature {NONE} -- Implementation
 
 	ast_location: LOCATION_AS
 			-- Temp location
+
+	constraining_type_list: CONSTRAINT_LIST_AS
+			-- Temp list of constraining types.
 
 	last_class_type: CLASS_TYPE_AS
 			-- Temporary local in semantic actions when

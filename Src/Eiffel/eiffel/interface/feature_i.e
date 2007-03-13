@@ -128,7 +128,7 @@ feature -- Access
 
 	feature_id: INTEGER
 			-- Feature id: first key in feature call hash table
-			-- of a class: tow features of different names have two
+			-- of a class: two features of different names have two
 			-- different feature ids.
 
 	written_in: INTEGER
@@ -248,7 +248,7 @@ feature -- Access
 		end
 
 	is_inline_agent: BOOLEAN is
-			-- is the feature an inline angent
+			-- is the feature an inline agent
 		do
 			Result := inline_agent_nr /= 0
 		end
@@ -1152,7 +1152,7 @@ feature -- Conveniences
 		end
 
 	type: TYPE_A is
-			-- Type of feature
+			-- Result type of feature
 		do
 			Result := void_type
 		end
@@ -2386,6 +2386,20 @@ feature -- Byte code access
 			access_type_not_void: access_type /= Void
 		do
 			Result := access_for_feature (access_type, Void)
+		ensure
+			Result_exists: Result /= Void
+		end
+
+	access_for_multi_constraint (access_type: TYPE_I; a_static_type: TYPE_I): ACCESS_B is
+			-- Creates a byte code access for a multi constraint target.
+			-- `a_static_type' is the type where the feature is from.
+			-- It is NOT a static call that will be generated, but a dynamic one. It is only needed for W_bench.
+		require
+			access_type_not_void: access_type /= Void
+		do
+			Result := access (access_type)
+			check Result /= Void end
+			Result.set_multi_constraint_static (a_static_type)
 		ensure
 			Result_exists: Result /= Void
 		end

@@ -571,13 +571,16 @@ feature {NONE} -- Implementation
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 		local
 			l_feat: E_FEATURE
+			l_feat_result: like feature_from_type_set
 			l_rout_id_set: ID_SET
 			l_last_class: like last_class
 			l_last_type: like last_type
+			l_last_type_set: TYPE_SET_A
 			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_type: TYPE_A
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
+			l_is_multi_constrained_formal: BOOLEAN
 		do
 			if l_as.is_argument then
 			elseif l_as.is_local then
@@ -587,7 +590,13 @@ feature {NONE} -- Implementation
 					if last_type /= Void then
 						last_type := last_type.actual_type
 						if last_type.is_formal then
-							last_type := constrained_type (last_type)
+							if last_type.is_multi_constrained_formal (current_class) then
+								l_is_multi_constrained_formal := True
+								l_last_type_set := last_type.to_type_set.constraining_types (current_class)
+								check multi_constrained_implies_existence_of_type_set: l_is_multi_constrained_formal implies l_last_type_set /= Void end
+							else
+								last_type := constrained_type (last_type)
+							end
 						end
 						if not last_type.is_none then
 							last_class := last_type.associated_class
@@ -598,14 +607,29 @@ feature {NONE} -- Implementation
 					l_rout_id_set := l_as.routine_ids
 					if l_rout_id_set /= Void then
 						if processing_creation_target then
-							l_feat := feature_in_class (current_class, l_rout_id_set)
-							if last_type /= Void then
-								last_class := last_type.associated_class
+								-- We are processing something like: create l.make
+							if l_is_multi_constrained_formal then
+								l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
+								if l_feat_result.features_found_count = 1 then
+									l_feat := l_feat_result.feature_item
+									last_class := l_feat_result.class_type_of_feature.associated_class
+								else
+									l_feat := Void
+									last_class := Void
+								end
 							else
-								last_class := current_class
+								l_feat := feature_in_class (current_class, l_rout_id_set)
+								if last_type /= Void then
+									last_class := last_type.associated_class
+								else
+									last_class := current_class
+								end
 							end
 						else
 							if last_type /= Void then
+									-- We are already in a nested call like: a.f.*
+									-- So `last_type', last_class are the ones from a and
+									-- `l_rout_id_set' is the one of f
 								if last_type.is_none then
 									last_class := system.class_of_id (l_as.class_id)
 								end
@@ -613,7 +637,17 @@ feature {NONE} -- Implementation
 									l_feat := feature_in_class (last_class, l_rout_id_set)
 								end
 							else
-								l_feat := feature_in_class (current_class, l_rout_id_set)
+									-- We are at the beginning of a nested call: a.f.*
+									-- `l_rout_id_set' is the one of a
+								if l_is_multi_constrained_formal then
+									l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
+									if l_feat_result.features_found_count = 1 then
+										l_feat := l_feat_result.feature_item
+									end
+								else
+									l_feat := feature_in_class (current_class, l_rout_id_set)
+								end
+
 								last_type := current_class.actual_type
 								last_class := current_class
 							end
@@ -1117,6 +1151,8 @@ feature {NONE} -- Implementation
 			l_left_type: TYPE_A
 			l_left_class: CLASS_C
 			l_right_type: TYPE_A
+			l_last_type_set: TYPE_SET_A
+			l_is_multi_constrained: BOOLEAN
 		do
 			reset_last_class_and_type
 			l_as.left.process (Current)
@@ -1130,7 +1166,15 @@ feature {NONE} -- Implementation
 					last_type := type_from_ancestor (source_class, l_formal)
 				end
 					-- Find correct left type and left class.
-				l_left_type := constrained_type (last_type)
+				l_left_type := last_type
+				if l_left_type.is_formal then
+					if l_left_type.is_multi_constrained_formal (current_class) then
+						l_is_multi_constrained := True
+						l_last_type_set := l_left_type.to_type_set.constraining_types (current_class)
+					else
+						l_left_type := constrained_type (last_type)
+					end
+				end
 				l_right_type := expr_type (l_as.right)
 				if not has_error_internal then
 					check
@@ -2282,6 +2326,32 @@ feature {NONE} -- Implementation: helpers
 			else
 				if not has_error_internal then
 					Result := a_class_c.feature_with_rout_id (a_id_set.first)
+				end
+			end
+			if not has_error_internal and Result = Void then
+				has_error_internal := True
+				set_error_message ("Feature with routine id " + a_id_set.first.out + " could not be found.")
+			end
+		ensure
+			feature_in_class_not_void: not has_error_internal implies Result /= Void
+		end
+
+	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): TUPLE
+		[	feature_item: E_FEATURE;
+			class_type_of_feature: CL_TYPE_A;
+			features_found_count: INTEGER;
+			constraint_position: INTEGER ]
+			-- Feature with `a_id_set' in `a_class_c'
+		require
+			a_type_set_not_void: a_type_set /= Void
+			a_id_set_not_void: a_id_set /= Void
+		do
+			if not has_error_internal and a_id_set.first = 0 then
+				has_error_internal := True
+				set_error_message ("Feature with routine id of 0!!!")
+			else
+				if not has_error_internal then
+					Result := a_type_set.e_feature_state_by_id (a_id_set.first)
 				end
 			end
 			if not has_error_internal and Result = Void then

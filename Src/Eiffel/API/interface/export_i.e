@@ -32,6 +32,8 @@ feature -- Access
 
 	is_exported_to (c: CLASS_C): BOOLEAN is
 			-- Is current exported to `c'?
+		require
+			good_argument: c /= Void;
 		do
 			Result := valid_for (c)
 		end;

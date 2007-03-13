@@ -59,12 +59,14 @@ feature -- Processing
 			i, nb, j: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
+			l_error_count_before: INTEGER
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
 
 				-- Check that the constraint class is a valid class.
 				-- I.e. we cannot have [G -> like t] or others.
+			reset_constraint_error_list
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
@@ -72,6 +74,9 @@ feature -- Processing
 						if a_class.changed and then a_class.generics /= Void then
 							System.set_current_class (a_class)
 							a_class.check_constraint_genericity
+							if constraint_error_list /= Void and then not constraint_error_list.is_empty then
+								insert_class (a_class)
+							end
 						end
 					end
 					nb := nb + 1
@@ -110,12 +115,21 @@ feature -- Processing
 				if a_class /= Void and then a_class.degree_4_needed then
 					if a_class.changed and then a_class.generics /= Void then
 						System.set_current_class (a_class)
-						a_class.check_creation_constraint_genericity
+						l_error_count_before := error_handler.nb_errors
+						a_class.check_constraint_renaming
+							-- We only check the creation constraitns if the renaming was valid.
+						if error_handler.nb_errors = l_error_count_before then
+							a_class.check_creation_constraint_genericity
+						end
+
 					end
 					nb := nb - 1
 				end
 				i := i + 1
 			end
+
+				-- We cannot go on here as the creation constraints are not guaranteed to be valid.
+			Error_handler.checksum
 
 				-- Check now that all the instances of a generic class are
 				-- valid for the creation constraint if there is one. The

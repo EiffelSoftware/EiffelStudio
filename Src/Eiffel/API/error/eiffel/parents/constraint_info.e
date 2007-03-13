@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class CONSTRAINT_INFO 
+class CONSTRAINT_INFO
 
 feature -- Properties
 
@@ -17,14 +17,20 @@ feature -- Properties
 	formal_number: INTEGER
 			-- Number of the generic parameter violating the rule
 
-	actual_type, c_type: TYPE_A
-			-- Types involved
+	actual_type_set: TYPE_SET_A
+			-- Type set involved
+
+	c_type: TYPE_SET_A
+			-- Type set involved in the constraint
+
+	unmatched_creation_constraints: LIST[FEATURE_I]
+			-- List of unmatched creation constraints
 
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		require
-			actual_type /= Void
+			actual_type_set /= Void
 			c_type /= Void
 		do
 			a_text_formatter.add_new_line
@@ -36,22 +42,43 @@ feature -- Output
 			a_text_formatter.add (":")
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Actual generic parameter: ")
-			actual_type.append_to (a_text_formatter)
+			actual_type_set.ext_append_to (a_text_formatter, type.associated_class )
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Type to which it should conform: ")
-			c_type.append_to (a_text_formatter)
+			c_type.ext_append_to (a_text_formatter, type.associated_class)
 			a_text_formatter.add_new_line
+			if unmatched_creation_constraints /= Void then
+
+				a_text_formatter.add ("Unmet creation constraint features:%N")
+				unmatched_creation_constraints.do_all (
+					agent (aa_text_formatter: TEXT_FORMATTER; a_feature: FEATURE_I)
+							-- Print all features
+						do
+							aa_text_formatter.add_feature_name (a_feature.names_heap.item (a_feature.feature_name_id), a_feature.written_class)
+							aa_text_formatter.add (" ")
+						end (a_text_formatter, ?))
+				a_text_formatter.add ("%N")
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_actual_type (t: TYPE_A) is
-			-- Assign `t' to `type1'.
+	set_unmatched_creation_constraints (a_unmatched_creation_constraints: LIST[FEATURE_I])
+			-- Set `unmatched_creation_constraints' to `a_unmatched_creation_constraints'
 		do
-			actual_type := t
+			unmatched_creation_constraints := a_unmatched_creation_constraints
+		ensure
+			set: unmatched_creation_constraints = a_unmatched_creation_constraints
 		end
 
-	set_constraint_type (t: TYPE_A) is
+
+	set_actual_type_set (t: TYPE_SET_A) is
+			-- Assign `t' to `type1'.
+		do
+			actual_type_set := t
+		end
+
+	set_constraint_types (t: TYPE_SET_A) is
 			-- Assign `t' to `type2'.
 		do
 			c_type := t

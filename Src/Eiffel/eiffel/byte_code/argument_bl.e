@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged access to an argument
 
-class ARGUMENT_BL 
+class ARGUMENT_BL
 
 inherit
 
@@ -13,11 +13,11 @@ inherit
 			used, parent, set_parent, propagate
 		end;
 
-feature 
+feature
 
 	parent: NESTED_BL;
 			-- Parent of access
-	
+
 	set_parent (p: NESTED_BL) is
 			-- Set `parent' to `p'
 		do
@@ -46,6 +46,7 @@ feature
 			-- Fill in node from local `l'
 		do
 			position := l.position;
+			multi_constraint_static := l.multi_constraint_static
 		end;
 
 	analyze is

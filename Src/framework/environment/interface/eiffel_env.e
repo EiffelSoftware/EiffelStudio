@@ -20,6 +20,7 @@ feature -- Status update
 			l_dir: DIRECTORY
 		do
 			temp := get_environment (ise_eiffel_env)
+
 			create p
 			if (temp = Void) or else temp.is_empty then
 				if platform.is_unix then

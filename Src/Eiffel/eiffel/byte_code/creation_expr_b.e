@@ -16,7 +16,7 @@ inherit
 			enlarged, size, is_simple_expr, is_single, is_type_fixed,
 			line_number, set_line_number, has_call, allocates_memory
 		end
-
+	
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is

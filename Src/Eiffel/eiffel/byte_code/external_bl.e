@@ -385,6 +385,7 @@ feature
 			expr_b: PARAMETER_B;
 			l_encapsulated: BOOLEAN
 		do
+			multi_constraint_static := e.multi_constraint_static
 			is_static_call := e.is_static_call
 			static_class_type := e.static_class_type
 			written_in := e.written_in

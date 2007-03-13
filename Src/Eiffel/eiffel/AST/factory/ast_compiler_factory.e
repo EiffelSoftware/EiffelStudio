@@ -24,6 +24,7 @@ inherit
 			new_integer_octal_as,
 			new_integer_binary_as,
 			new_external_lang_as,
+			new_vtgc1_error,
 			validate_integer_real_type
 		end
 
@@ -250,7 +251,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS is
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -288,6 +289,24 @@ feature -- Access
 			if v /= Void then
 				create Result.make_from_binary_string (t, s, v)
 			end
+		end
+
+feature -- Access for Erros
+
+	new_vtgc1_error (a_line, a_column: INTEGER_32; a_filename: STRING_8;  a_id: ID_AS; a_current: CURRENT_AS): VTGC1
+			-- Create new VTGC1 error.
+		local
+			l_location: LOCATION_AS
+		do
+			if a_id /= Void then
+				l_location := a_id
+			elseif a_current /= Void then
+				l_location := a_current
+			end
+			check l_location_not_void: l_location /= Void end
+			create Result
+			Result.set_class (system.current_class)
+			Result.set_location (l_location)
 		end
 
 feature {NONE} -- Validation

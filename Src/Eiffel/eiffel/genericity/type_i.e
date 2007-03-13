@@ -290,6 +290,12 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_multi_constrained_formal: BOOLEAN is
+			-- Is the type a formal type ?
+		do
+			-- Do nothing
+		end
+
 	is_bit: BOOLEAN is
 			-- Is the type a bit type ?
 		do

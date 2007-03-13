@@ -37,6 +37,7 @@ feature
 
 	fill_from (f: OPT_FEAT_B) is
 		do
+			multi_constraint_static := f.multi_constraint_static
 			type := f.type;
 			routine_id := f.routine_id
 			parameters := f.parameters;

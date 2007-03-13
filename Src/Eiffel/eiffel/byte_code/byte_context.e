@@ -872,7 +872,7 @@ feature -- Access
 			from
 				Result := type
 			until
-				not Result.is_formal
+				not Result.is_formal or Result.is_multi_constrained_formal
 			loop
 				context_type_i := context_type.type
 				formal ?= Result
@@ -883,12 +883,16 @@ feature -- Access
 				Result := context_type_i.meta_generic.item (formal_position)
 				reference_i ?= Result
 				if reference_i /= Void then
-					Result := context_type_i.base_class.constraint (formal_position).type_i
+					if formal.type_a.is_multi_constrained_formal (context_type.type.base_class) then
+						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position, -1)
+					else
+						Result := context_type_i.base_class.constraint_fixed (formal_position).type_i
+					end
 				end
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
 		end
 
 	real_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
@@ -903,7 +907,40 @@ feature -- Access
 			Result := constrained_type_in (type, context_type).instantiation_in (context_type)
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
+		end
+
+	real_type_in_fixed (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+			-- Type `type' as seen in `context_type'
+		require
+			type_not_void: type /= Void
+			context_type_not_void: context_type /= Void
+		local
+			l_formal: FORMAL_A
+			l_type_set: TYPE_SET_A
+		do
+			Result := real_type_in (type, context_type)
+				-- Avoid instantiating types if possible
+			if false then
+
+			debug ("to_implement")
+				to_implement ("Move this feature to TYPE_I and descendants.")
+			end
+			l_formal ?= type.type_a
+			if l_formal /= Void and then l_formal.is_multi_constrained_formal (context_type.associated_class) then
+					l_type_set := l_formal.constraints (class_type.associated_class)
+					if l_type_set.has_expanded then
+						Result := l_type_set.expanded_representative.type_i
+					else
+						create {MULTI_FORMAL_I} Result.make (type.is_reference, l_type_set.has_expanded, l_formal.position, -1)
+					end
+			else
+				Result := constrained_type_in (type, context_type).instantiation_in (context_type)
+			end
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
 		end
 
 	real_type (type: TYPE_I): TYPE_I is
@@ -915,7 +952,9 @@ feature -- Access
 		local
 			cl_type_i: CL_TYPE_I
 		do
+--			Result := real_type_fixed (type)
 				-- Avoid instantiating types if possible
+--			if false then
 			cl_type_i ?= type
 			if cl_type_i /= Void and then cl_type_i.is_standalone then
 					-- Standalone class type
@@ -932,9 +971,63 @@ feature -- Access
 				Result := constrained_type_in (type, class_type).type_a.instantiation_in
 						(context_class_type.type.type_a, class_type.type.class_id).type_i
 			end
+--			end
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal
+			--result_not_formal: not Result.is_formal
+		end
+
+	real_type_fixed (type: TYPE_I): TYPE_I is
+			-- Type `type' written in `class_type' as seen in `context_class_type'
+		require
+			type_not_void: type /= Void
+			class_type_not_void: class_type /= Void
+			context_class_type_not_void: context_class_type /= Void
+		local
+			cl_type_i: CL_TYPE_I
+			l_formal: FORMAL_I
+			l_type_set: TYPE_SET_A
+		do
+			Result := real_type (type)
+				-- Avoid instantiating types if possible
+			if false then
+			cl_type_i ?= type
+			if cl_type_i /= Void and then cl_type_i.is_standalone then
+					-- Standalone class type
+				Result := cl_type_i
+			elseif cl_type_i = Void and then type.is_anchored then
+					-- "like Current"
+				Result := context_class_type.type
+			elseif context_class_type = class_type then
+				Result := real_type_in_fixed (type, class_type)
+			else
+				debug ("to_implement")
+					to_implement ("Implement context-aware TYPE_I.instantiation_in so that there is no need to create TYPE_A.")
+				end
+				check
+					this_should_be_the_case: not type.is_multi_constrained_formal
+				end
+				l_formal ?= type
+				if l_formal /=Void and then l_formal.type_a.has_multi_constraints (class_type.associated_class) then
+						-- In case we have a multi constrained formal we generate a MULTI_FORMAL_I which is capable to answer all questions
+						-- correctly for it's given typeset.
+						-- If the multi constrained formal contains a
+					l_type_set := l_formal.type_a.constraints (class_type.associated_class)
+					if l_type_set.has_expanded then
+						Result := l_type_set.expanded_representative.type_i
+					else
+						create {MULTI_FORMAL_I} Result.make (not l_formal.is_expanded, l_type_set.has_expanded, l_formal.position, -1)
+					end
+
+				else
+					Result := constrained_type_in (type, class_type).type_a.instantiation_in
+						(context_class_type.type.type_a, class_type.type.class_id).type_i
+				end
+			end
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
 		end
 
 	creation_type (type: TYPE_I): TYPE_I is

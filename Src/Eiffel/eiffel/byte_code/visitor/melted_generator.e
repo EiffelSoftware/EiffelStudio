@@ -162,17 +162,14 @@ feature {NONE} -- Visitors
 	process_assign_b (a_node: ASSIGN_B) is
 			-- Process `a_node'.
 		local
-			l_source_type: TYPE_I
 			l_target_type: TYPE_I
 			l_target_node: ACCESS_B
 			l_hector_b: HECTOR_B
 		do
 			generate_melted_debugger_hook
-
-				-- Generate expression byte code
-			l_source_type := context.real_type (a_node.source.type)
+				-- Generate expression byte code	
 			l_target_node := a_node.target
-			l_target_type := Context.real_type (l_target_node.type)
+			l_target_type := Context.real_type_fixed (l_target_node.type)
 			if a_node.is_creation_instruction then
 					-- Avoid object cloning.
 				a_node.source.process (Current)
@@ -492,7 +489,7 @@ feature {NONE} -- Visitors
 			l_call: CALL_ACCESS_B
 			l_nested: NESTED_B
 		do
-			l_basic_type ?= context.real_type (a_node.type)
+			l_basic_type ?= context.real_type_fixed (a_node.type)
 			if l_basic_type /= Void then
 					-- Special cases for basic types where nothing needs to be created, we
 					-- simply need to push a default value as their creation procedure

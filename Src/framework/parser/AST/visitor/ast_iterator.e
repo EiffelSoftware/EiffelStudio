@@ -650,8 +650,14 @@ feature {NONE} -- Implementation
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		do
-			safe_process (l_as.constraint)
+			safe_process (l_as.constraints)
 			safe_process (l_as.creation_feature_list)
+		end
+
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
+		do
+			safe_process (l_as.type)
+			safe_process (l_as.renaming)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is

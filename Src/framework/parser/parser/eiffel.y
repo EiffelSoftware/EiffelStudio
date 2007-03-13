@@ -108,9 +108,9 @@ create
 %type <ACCESS_INV_AS>		Creation_call
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
-%type <ASSIGNER_CALL_AS>		Assigner_call
+%type <ASSIGNER_CALL_AS>	Assigner_call
 %type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
-%type <BINARY_AS>		Qualified_binary_expression
+%type <BINARY_AS>			Qualified_binary_expression
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
@@ -163,7 +163,7 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id 
+%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id Constraint_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -205,6 +205,8 @@ create
 %type <LOCAL_DEC_LIST_AS>	Local_declarations
 %type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
 %type <CONSTRAINT_TRIPLE>	Constraint
+%type <CONSTRAINT_LIST_AS> Multiple_constraint_list
+%type <CONSTRAINING_TYPE_AS> Single_constraint
 
 %expect 125
 
@@ -281,19 +283,19 @@ Eiffel_parser:
 	;
 
 Class_declaration:
-		Indexing									-- $1
+		Indexing								-- $1
 		Header_mark								-- $2
 		Class_mark								-- $3
-		Class_or_tuple_identifier					-- $4
-		Formal_generics						-- $5
+		Class_or_tuple_identifier				-- $4
+		Formal_generics							-- $5
 		External_name							-- $6
-		Obsolete									-- $7
-		Inheritance	End_inheritance_pos		-- $8 $9
-		Creators									-- $10
+		Obsolete								-- $7
+		Inheritance	End_inheritance_pos			-- $8 $9
+		Creators								-- $10
 		Convert_clause							-- $11
-		Features End_features_pos			-- $12 $13
+		Features End_features_pos				-- $12 $13
 		Class_invariant 						-- $14
-		Indexing									-- $15
+		Indexing								-- $15
 		TE_END									-- $16
 			{
 				if $6 /= Void then
@@ -443,13 +445,25 @@ Index_value: Identifier_as_lower
 			{ $$ := $1 }
 	|	Manifest_constant
 			{ $$ := $1 }
-	|	Disable_supplier_recording Creation_expression TE_END Enable_supplier_recording
+	|	Disable_supplier_recording_only_for_classic Creation_expression TE_END Enable_supplier_recording_only_for_classic
 			{ $$ := ast_factory.new_custom_attribute_as ($2, Void, $3) }
-	|	Disable_supplier_recording Creation_expression Manifest_tuple TE_END Enable_supplier_recording
+	|	Disable_supplier_recording_only_for_classic Creation_expression Manifest_tuple TE_END Enable_supplier_recording_only_for_classic
 			{ $$ := ast_factory.new_custom_attribute_as ($2, $3, $4) }
 	;
 
 Disable_supplier_recording:
+		{
+			is_supplier_recorded := False
+		}	
+	  ;
+
+Enable_supplier_recording:
+		{
+			is_supplier_recorded := True
+		}	
+	  ;
+
+Disable_supplier_recording_only_for_classic:
 		{
 			if not il_parser then
 				is_supplier_recorded := False
@@ -457,7 +471,7 @@ Disable_supplier_recording:
 		}	
 	  ;
 
-Enable_supplier_recording:
+Enable_supplier_recording_only_for_classic:
 		{
 			if not il_parser then
 				is_supplier_recorded := True
@@ -871,14 +885,7 @@ Assigner_mark_opt: -- Empty
 Constant_attribute: Manifest_constant
 			{ $$ := ast_factory.new_constant_as ($1) }
 	|	TE_UNIQUE
-			{
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-						once "The keyword `unique' might be removed in the future since not supported by the ECMA specification. Use a manifest integer constant instead."))
-				end
-				$$ := ast_factory.new_constant_as ($1)
-			}
+			{ $$ := ast_factory.new_constant_as ($1) }
 	;
 
 -- Inheritance
@@ -893,6 +900,7 @@ Inheritance: -- Empty
 						create {SYNTAX_WARNING}.make (line, column, filename,
 						once "Use `inherit ANY' or do not specify an empty inherit clause"))
 				end
+				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_parent_as (0)
 				if $$ /= Void then
 					$$.set_inherit_keyword ($1)
@@ -1663,12 +1671,13 @@ Formal_generics:
 					$$.set_squre_symbols ($1, $2)
 				end
 			}
-	|	TE_LSQURE Add_counter Formal_generic_list Remove_counter TE_RSQURE
+	|	TE_LSQURE Add_counter Disable_supplier_recording Formal_generic_list Enable_supplier_recording Remove_counter TE_RSQURE
 			{
 				formal_generics_end_position := position
-				$$ := $3
+				$$ := $4
+				$$.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
 				if $$ /= Void then
-					$$.set_squre_symbols ($1, $5)
+					$$.set_squre_symbols ($1, $7)
 				end
 			}
 	;
@@ -1760,9 +1769,65 @@ Formal_generic: Formal_parameter
 
 Constraint: -- Empty
 			-- { $$ := Void }
-	|	TE_CONSTRAIN Class_or_tuple_type Creation_constraint
+	|	TE_CONSTRAIN Single_constraint Creation_constraint
 			{
-				$$ := ast_factory.new_constraint_triple ($1, $2, $3)
+				constraining_type_list := ast_factory.new_eiffel_list_constraining_type_as (1)
+				if $1 /= Void then
+					constraining_type_list.reverse_extend ($2)
+				end
+
+				$$ := ast_factory.new_constraint_triple ($1, constraining_type_list, $3)
+			}
+	|	TE_CONSTRAIN TE_LCURLY Add_counter Multiple_constraint_list Remove_counter TE_RCURLY Creation_constraint
+			{
+				$$ := ast_factory.new_constraint_triple ($1, $4, $7)
+			}
+	;
+Single_constraint: -- Empty
+			-- { $$ := Void }
+	| Constraint_type Rename TE_END
+			{
+				$$ := ast_factory.new_constraining_type ($1, $2, $3)
+			}
+	| Constraint_type
+			{
+				$$ := ast_factory.new_constraining_type ($1, Void, Void)
+			}
+	;
+
+Constraint_type:
+		Class_or_tuple_type
+			{ $$ := $1 }
+	|	TE_LIKE Identifier_as_lower
+			{
+				error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, $2, Void))
+				error_handler.raise_error
+			}
+	|	TE_LIKE TE_CURRENT
+			{
+				error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
+				error_handler.raise_error
+			}
+	;
+
+Multiple_constraint_list:	Single_constraint
+			{
+				$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+				end
+			}
+	|	Single_constraint TE_COMMA Increment_counter Multiple_constraint_list
+			{
+				$$ := $4
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+					ast_factory.reverse_extend_separator ($$, $2)
+				end
+
+			--	error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
+			--	error_handler.raise_error
+
 			}
 	;
 

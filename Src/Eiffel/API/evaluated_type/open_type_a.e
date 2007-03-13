@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			st.add (ti_Open_arg)
 		end

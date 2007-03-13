@@ -62,7 +62,7 @@ feature -- Text
 			if is_type_enabled and then type /= Void and then feature_i /= Void then
 				l_writer.process_symbol_text (ti_colon)
 				l_writer.add_space
-				type.ext_append_to (token_writer, feature_i.e_feature)
+				type.ext_append_to (token_writer, feature_i.e_feature.associated_class)
 			end
 			Result := l_writer.last_line.content
 		end

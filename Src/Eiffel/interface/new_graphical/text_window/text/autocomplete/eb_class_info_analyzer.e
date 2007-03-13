@@ -539,7 +539,7 @@ feature {NONE}-- Clickable/Editable implementation
 			loop
 				name := current_token.image.as_lower
 				last_was_constrained := processed_type.is_formal
-				last_constained_type ?= processed_type
+				last_formal ?= processed_type
 				processed_type := constrained_type (processed_type)
 					-- We do not have named tuple problem before the second token.
 				l_named_tuple_type ?= processed_type
@@ -1143,7 +1143,7 @@ feature {NONE}-- Implementation
 							if Result /= Void then
 								Result := Result.actual_type
 								last_was_constrained := Result.is_formal
-								last_constained_type ?= Result
+								last_formal ?= Result
 								Result := constrained_type (Result)
 								found_class := Result.associated_class
 							end
@@ -1328,8 +1328,10 @@ feature {NONE}-- Implementation
 
 	constrained_type (a_type: TYPE_A): TYPE_A is
 			-- Constrained type of `a_type'.
+			--| If you want be on the save but slightly slower side use `constrained_types'.
 		require
 			a_type_not_void: a_type /= Void
+			not_multi_constrained: a_type.is_multi_constrained_formal (current_class_c)
 		local
 			l_formal_type: FORMAL_A
 		do
@@ -1338,6 +1340,21 @@ feature {NONE}-- Implementation
 				Result := current_class_c.constraint (l_formal_type.position)
 			else
 				Result := a_type
+			end
+		end
+
+	constrained_types (a_type: TYPE_A): TYPE_SET_A is
+			-- Constrained type of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_formal_type: FORMAL_A
+		do
+			if a_type.is_formal then
+				l_formal_type ?= a_type
+				Result := current_class_c.constraints (l_formal_type.position)
+			else
+				Result := a_type.to_type_set
 			end
 		end
 
@@ -1793,7 +1810,18 @@ feature {NONE} -- Implementation
 	last_was_constrained: BOOLEAN
 			-- Last type of class name was constrained?
 
-	last_constained_type: FORMAL_A
+	last_was_multi_constrained: BOOLEAN
+			-- Last type of class name was multi constrained?
+
+	last_formal: FORMAL_A
+
+	last_target_type: TYPE_A
+			-- Constraint of last_formal.
+			-- This is Void in the multi constraint case.
+
+	last_constraints: TYPE_SET_A
+			-- Constraints of last_formal for the multi constraint case.
+			-- This is Void for the single constraint case.
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 

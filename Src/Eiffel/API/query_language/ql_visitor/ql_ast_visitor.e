@@ -1289,7 +1289,7 @@ feature{NONE} -- Implementation
 				safe_process (l_as.lcurly_symbol)
 				safe_process (l_as.formal_para)
 				safe_process (l_as.constrain_symbol)
-				safe_process (l_as.constraint)
+				safe_process (l_as.constraints)
 				safe_process (l_as.create_keyword)
 				safe_process (l_as.creation_feature_list)
 				safe_process (l_as.end_keyword)
@@ -1297,6 +1297,22 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS)
+		do
+			if not is_matching_finished then
+				match_ast (constraining_type)
+				-- MTNASK what to do here?
+				-- TODO FIXME
+--				safe_process (l_as.lcurly_symbol)
+--				safe_process (l_as.formal_para)
+--				safe_process (l_as.constrain_symbol)
+--				safe_process (l_as.constraint)
+--				safe_process (l_as.create_keyword)
+--				safe_process (l_as.creation_feature_list)
+--				safe_process (l_as.end_keyword)
+--				safe_process (l_as.rcurly_symbol)
+			end
+		end
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			if not is_matching_finished then

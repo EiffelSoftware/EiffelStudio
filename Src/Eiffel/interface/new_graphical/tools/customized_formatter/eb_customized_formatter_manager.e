@@ -176,39 +176,14 @@ feature -- Setting
 			end
 		end
 
-	create_formatter_file_dir (a_path: FILE_NAME) is
-			-- Create dir `a_path' if not exists.
-		require
-			a_path_attached: a_path /= Void
-		local
-			l_dir: DIRECTORY
-			l_retried: BOOLEAN
-		do
-			if not l_retried then
-				create l_dir.make (a_path)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
-			end
-		rescue
-			l_retried := True
-			retry
-		end
-
 	store_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]) is
 			-- Store `a_descriptors' in global or target scope xml files.
 		require
 			a_descriptors_attached: a_descriptors /= Void
 			a_descriptors_valid: not a_descriptors.has (Void)
 		do
-			if has_global_descriptors (a_descriptors) then
-				create_formatter_file_dir (global_formatter_file_path)
-				store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_global_scope)), global_formatter_file)
-			end
-			if has_target_descriptors (a_descriptors) then
-				create_formatter_file_dir (target_formatter_file_path)
-				store_xml (xml_document_for_formatter (satisfied_descriptors (a_descriptors, agent is_formatter_target_scope)), target_formatter_file)
-			end
+			store_in_file (satisfied_descriptors (a_descriptors, agent is_formatter_global_scope), global_formatter_file_path)
+			store_in_file (satisfied_descriptors (a_descriptors, agent is_formatter_target_scope), target_formatter_file_path)
 		end
 
 	clear_last_error is
@@ -281,6 +256,52 @@ feature{NONE} -- Implementation
 			end
 			mark_descriptors (l_descriptors, a_global)
 			formatter_descriptors.append (l_descriptors)
+		end
+
+
+	create_formatter_file_dir (a_path: FILE_NAME) is
+			-- Create dir `a_path' if not exists.
+		require
+			a_path_attached: a_path /= Void
+		local
+			l_dir: DIRECTORY
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_dir.make (a_path)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
+	store_in_file (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]; a_path: FILE_NAME) is
+			-- Store `a_descritpors' in formatter descriptor file in `a_path'.
+			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
+		require
+			a_descriptors_attached: a_descriptors /= Void
+			a_descriptors_valid: not a_descriptors.has (Void)
+		local
+			l_file: RAW_FILE
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				if a_descriptors.is_empty then
+					create l_file.make (formatter_file (a_path))
+					if l_file.exists then
+						l_file.delete
+					end
+				else
+					create_formatter_file_dir (a_path)
+					store_xml (xml_document_for_formatter (a_descriptors), formatter_file (a_path))
+				end
+			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature{NONE} -- Implementation/Data

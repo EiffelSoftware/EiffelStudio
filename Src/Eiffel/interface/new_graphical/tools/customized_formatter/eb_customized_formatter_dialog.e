@@ -290,8 +290,9 @@ feature{NONE} -- Actions
 			l_name := new_formatter_name.twin
 			l_name.append (next_new_formatter_index.out)
 			create l_descriptor.make (l_name)
-			l_descriptor.set_header (interface_names.l_formatter_default_header)
-			l_descriptor.set_temp_header (interface_names.l_formatter_default_temp_header)
+
+			l_descriptor.set_header (string_8_from_string_32 (interface_names.l_formatter_default_header (interface_names.l_ellipsis)))
+			l_descriptor.set_temp_header (string_8_from_string_32 (interface_names.l_formatter_default_temp_header (interface_names.l_ellipsis)))
 			l_descriptor.enable_global_scope
 			descriptors.force_last (l_descriptor)
 
@@ -434,9 +435,44 @@ feature{NONE} -- Actions
 		require
 			a_descriptor_attached: a_descriptor /= Void
 			a_metric_attached: a_metric /= Void
+		local
+			l_tool_value: HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]
+			l_metric_name: STRING
+			l_metric: EB_METRIC
+			l_displayers: EB_FORMATTER_DISPLAYERS
 		do
-			if is_default_formatter_name (string_32_from_string_8 (formatter_name_property.value)) and then property_grid.is_displayed and then formatter_name_property /= Void then
-				formatter_name_property.set_value (interface_names.first_character_as_upper (a_metric))
+			if property_grid.is_displayed then
+					-- Set formatter name.
+				if is_default_formatter_name (string_32_from_string_8 (formatter_name_property.value)) and then formatter_name_property /= Void then
+					formatter_name_property.set_value (interface_names.first_character_as_upper (a_metric))
+				end
+					-- Set header.
+				if header_property /= Void and then header_property.text.is_equal (interface_names.l_formatter_default_header (interface_names.l_ellipsis).as_string_32) then
+					header_property.set_value (interface_names.l_formatter_default_header (interface_names.first_character_as_upper (a_metric)))
+				end
+					-- Set temp header.
+				if temp_header_property /= Void and then temp_header_property.text.is_equal (interface_names.l_formatter_default_temp_header (interface_names.l_ellipsis).as_string_32) then
+					temp_header_property.set_value (interface_names.l_formatter_default_temp_header (interface_names.string_general_as_lower (a_metric)))
+				end
+					-- Set default tools.
+				if displayed_in_tools_property /= Void then
+					l_tool_value := displayed_in_tools_property.value
+					if l_tool_value = Void or else l_tool_value.is_empty then
+						l_metric_name := string_8_from_string_32 (a_metric)
+						if metric_manager.has_metric (l_metric_name) and then metric_manager.is_metric_valid (l_metric_name) then
+							l_metric := metric_manager.metric_with_name (l_metric_name)
+							if l_metric.unit = class_unit or l_metric.unit = feature_unit then
+								create l_tool_value.make (1)
+								create l_displayers
+								l_tool_value.put ([l_displayers.domain_displayer, ""], window_manager.last_focused_development_window.tools.class_tool.title_for_pre)
+							end
+							if l_tool_value /= Void then
+								displayed_in_tools_property.set_value (l_tool_value)
+								refresh_grid_for_descriptor (a_descriptor)
+							end
+						end
+					end
+				end
 			end
 			set_has_changed (True)
 			a_descriptor.set_metric_name (string_32_from_string_8 (a_metric))
@@ -575,7 +611,19 @@ feature {NONE} -- Implementation/Data
 			-- [Grid row, Formatter descriptor displayed in that row]
 
 	formatter_name_property: STRING_PROPERTY [STRING_32]
-			-- Property containing formatter name
+			-- Property for formatter name
+
+	header_property: STRING_PROPERTY [STRING_32]
+			-- Property for formatter header
+
+	temp_header_property: STRING_PROPERTY [STRING_32]
+			-- Property for formatter temporary header
+
+	displayed_in_tools_property: DIALOG_PROPERTY [HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]]
+			-- Property for formatter displayed-in
+
+	displayer_dialog: EB_DISPLAYER_DIALOG
+			-- Displayer dialog
 
 feature{NONE} -- Sorting
 
@@ -655,19 +703,16 @@ feature {NONE} -- Implementation
 			l_grid: like property_grid
 			l_name: STRING_PROPERTY [STRING_32]
 			l_tooltip: STRING_PROPERTY [STRING_GENERAL]
-			l_header: STRING_PROPERTY [STRING_GENERAL]
-			l_temp_header: STRING_PROPERTY [STRING_GENERAL]
+			l_header: STRING_PROPERTY [STRING_32]
+			l_temp_header: STRING_PROPERTY [STRING_32]
 			l_pixmap: FILE_PROPERTY
-			l_metric_name: STRING_PROPERTY [STRING_GENERAL]
 			l_metric: MENU_PROPERTY [STRING_GENERAL]
 			l_metric_filter: BOOLEAN_PROPERTY
 			l_scope: STRING_CHOICE_PROPERTY [STRING_GENERAL]
 
-			l_tools: DIALOG_PROPERTY [HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]]
-			l_dialog: EB_DISPLAYER_DIALOG
+			l_tools: like displayed_in_tools_property
+			l_dialog: like displayer_dialog
 			l_displayer_value: like display_value
-
-			l_help: STRING_GENERAL
 		do
 			l_grid := property_grid
 			l_grid.clear_description
@@ -690,12 +735,14 @@ feature {NONE} -- Implementation
 			l_header.set_value (string_32_from_string_8 (a_descriptor.header))
 			l_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_header, Void))
 			l_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
+			header_property := l_header
 			l_grid.add_property (l_header)
 
 			create l_temp_header.make (interface_names.l_temp_header)
 			l_temp_header.set_value (string_32_from_string_8 (a_descriptor.temp_header))
 			l_temp_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_temp_header, Void))
 			l_temp_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_temp_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
+			temp_header_property := l_temp_header
 			l_grid.add_property (l_temp_header)
 
 			create l_pixmap.make (interface_names.l_pixmap_file)
@@ -713,6 +760,7 @@ feature {NONE} -- Implementation
 			l_metric.change_value_actions.extend (agent on_metric_change (a_descriptor, ?))
 			l_metric.set_value_retriever (agent (a_menu_item: EV_MENU_ITEM): STRING_GENERAL do Result := a_menu_item.text end)
 			l_metric.set_value_converter (agent (a_text: STRING_32): STRING_GENERAL do Result := a_text end)
+			l_metric.set_description (interface_names.l_formatter_metric_help)
 			l_metric.enable_auto_set_data
 			l_metric.enable_text_editing
 			l_grid.add_property (l_metric)
@@ -743,10 +791,15 @@ feature {NONE} -- Implementation
 			l_tools.set_description (interface_names.l_formatter_displayed_in_help)
 			l_displayer_value := display_value (a_descriptor)
 			l_dialog.set_value (l_displayer_value)
-			l_dialog.data_change_actions.extend (agent on_displayer_change (a_descriptor, ?))
 			l_tools.set_value (l_displayer_value)
+			l_dialog.data_change_actions.extend (agent l_tools.set_value)
+			displayer_dialog := l_dialog
+			l_tools.change_value_actions.extend (agent on_displayer_change (a_descriptor, ?))
+			displayed_in_tools_property := l_tools
 			l_grid.add_property (l_tools)
 			l_grid.current_section.expand
+
+			l_metric.enable_select
 		end
 
 	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP) is
@@ -766,6 +819,9 @@ feature {NONE} -- Implementation
 			end
 			formatter_grid.row_select_actions.resume
 			formatter_grid.row_deselect_actions.resume
+			if displayer_dialog /= Void then
+				displayer_dialog.set_formatter_name (a_descriptor.name)
+			end
 		end
 
 	tools_display_function (a_tool_value: like display_value): STRING_32 is

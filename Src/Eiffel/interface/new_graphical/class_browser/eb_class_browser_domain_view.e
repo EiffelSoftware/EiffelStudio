@@ -385,7 +385,7 @@ feature{NONE} -- Implementation
 				grid.column (1).set_title ("")
 				domain := Void
 			end
-			try_auto_resize_grid (<<[150, 300, 1]>>)
+			try_auto_resize_grid (<<[150, 500, 1]>>)
 		end
 
 	build_grid is

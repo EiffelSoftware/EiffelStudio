@@ -25,6 +25,7 @@ inherit
 			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} expose_actions, pointer_button_press_actions, pointer_double_press_actions,
 							redraw_rectangle
 			{SD_NOTEBOOK_HIDE_TAB_DIALOG} key_press_actions, focus_out_actions, set_focus, has_focus
+			{SD_TOOL_BAR_DRAWER_IMP} draw_ellipsed_text_top_left
 		redefine
 			update_for_pick_and_drop
 		end

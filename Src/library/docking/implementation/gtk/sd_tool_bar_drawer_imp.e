@@ -215,9 +215,14 @@ feature {NONE} -- Implementation
 			l_button: SD_TOOL_BAR_BUTTON
 			l_text_rect: EV_RECTANGLE
 			l_state: INTEGER
+			l_width_button: SD_TOOL_BAR_WIDTH_BUTTON
 		do
 			l_button ?= a_arguments.item
-			if l_button /= Void and then l_button.text /= Void then
+			l_width_button ?= a_arguments.item
+			if l_width_button /= Void and then l_width_button.text /= Void and a_arguments.tool_bar /= Void then
+				l_text_rect := l_width_button.text_rectangle
+				a_arguments.tool_bar.draw_ellipsed_text_top_left (l_text_rect.x, l_text_rect.y, l_width_button.text, l_text_rect.width)
+			elseif l_button /= Void and then l_button.text /= Void then
 				create l_env
 				l_app_imp ?= l_env.application.implementation
 				check not_void: l_app_imp /= Void end

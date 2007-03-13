@@ -1331,7 +1331,7 @@ feature {NONE}-- Implementation
 			--| If you want be on the save but slightly slower side use `constrained_types'.
 		require
 			a_type_not_void: a_type /= Void
-			not_multi_constrained: a_type.is_multi_constrained_formal (current_class_c)
+			not_multi_constrained: not a_type.is_multi_constrained_formal (current_class_c)
 		local
 			l_formal_type: FORMAL_A
 		do

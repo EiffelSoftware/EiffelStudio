@@ -151,6 +151,18 @@ feature -- Status setting
 			end
 		end
 
+	decide_tool_to_display (a_st: STONE) is
+			-- Decide which tool to display.
+		local
+			fs: FEATURE_STONE
+		do
+			fs ?= a_st
+			if fs /= Void then
+				show
+				set_focus
+			end
+		end
+
 	drop_stone (st: like stone) is
 			-- Test if there is a feature with the same name (or routine id?)
 			-- in the dropped class.
@@ -161,6 +173,7 @@ feature -- Status setting
 			cl: CLASS_C
 			found: BOOLEAN
 		do
+			decide_tool_to_display (st)
 			fst ?= st
 			if fst = Void then
 				cst ?= st

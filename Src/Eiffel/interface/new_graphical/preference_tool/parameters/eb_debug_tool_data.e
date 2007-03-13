@@ -134,7 +134,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
-	always_compile_before_debug_preference: BOOLEAN_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	default_expanded_view_size_preference: INTEGER_PREFERENCE
 	local_vs_object_proportion_preference: STRING_PREFERENCE
@@ -205,7 +204,6 @@ feature -- Toolbar Convenience
 
 feature -- Preference Strings
 
-	always_compile_before_debug_string: STRING is "debugger.always_compile_before_debug"
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
 	main_splitter_position_string: STRING is "debugger.main_splitter_position"
 	local_vs_object_proportion_string: STRING is "debugger.proportion"
@@ -238,7 +236,6 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "debug_tool")
 
-			always_compile_before_debug_preference := l_manager.new_boolean_preference_value (l_manager, always_compile_before_debug_string, True)
 			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
 			last_saved_stack_path_preference.set_hidden (True)
 			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 500)

@@ -177,6 +177,60 @@ feature -- Access
 			end
 		end
 
+feature -- Run to cursor mode
+
+	enable_run_to_cursor_mode is
+			-- backup Current's data to process Run To This Point action
+		require
+			backup_data = Void
+		do
+			backup_data := [
+							bench_status,
+							condition_type, condition, 
+							continue_on_condition_failure,
+							message, continue_execution,
+							hits_count, hits_count_condition
+							]
+
+			bench_status := 0
+			condition_type := 0
+			condition := Void
+			continue_on_condition_failure := False
+			message := Void
+			continue_execution := False
+			hits_count := 0
+			hits_count_condition := Void
+		ensure
+			backup_data /= Void
+		end
+
+	disable_run_to_cursor_mode is
+			-- Restore Current's data after Run To This Point action is proceed
+		require
+			backup_data /= Void
+		do
+			bench_status := backup_data.bench_status
+			condition_type := backup_data.condition_type
+			condition := backup_data.condition
+			continue_on_condition_failure := backup_data.continue_on_condition_failure
+			message := backup_data.message
+			continue_execution := backup_data.continue_execution
+			hits_count := backup_data.hits_count
+			hits_count_condition := backup_data.hits_count_condition
+			backup_data := Void
+		ensure
+			backup_data = Void
+		end
+
+	backup_data: TUPLE [
+						bench_status: INTEGER;
+						condition_type: INTEGER; condition: EB_EXPRESSION; 
+						continue_on_condition_failure: BOOLEAN;
+						message: STRING; continue_execution: BOOLEAN;
+						hits_count: INTEGER; hits_count_condition: like hits_count_condition
+						]
+			-- Backup data involved in "Run To This Point" action
+
 feature {NONE} -- Internal properties
 
 	condition_type: INTEGER
@@ -263,6 +317,7 @@ feature -- Change
 		do
 			reset_hits_count
 			last_condition_value := Void
+			backup_data := Void
 		end
 
 feature -- Status

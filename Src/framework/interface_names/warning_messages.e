@@ -264,7 +264,7 @@ feature -- Project settings warnings
 
 feature -- Debug warnings
 
-	w_Compile_before_debug: STRING_GENERAL is do Result := locale.translate ("Do you want to compile before debugging?") end
+	w_Compile_before_debug: STRING_GENERAL is do Result := locale.translate ("Do you want to compile before executing?") end
 
 	w_Cannot_debug: STRING_GENERAL is do Result := locale.translate ("Current version of system has not been successfully compiled.%N%
 						%Cannot use debugging facilities.") end

@@ -675,7 +675,7 @@ feature -- Element change
 			l_class_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 			l_shared: SD_SHARED
-			l_name: STRING_GENERAL
+			l_name: STRING_8
 		do
 			if a_content /= Void then
 				l_class_stone ?= a_stone
@@ -691,7 +691,10 @@ feature -- Element change
 					end
 				elseif l_cluster_stone /= Void then
 					a_content.set_description (interface_names.l_eiffel_cluster)
-					l_name := l_cluster_stone.folder_name
+
+					l_name := l_cluster_stone.path
+					l_name := l_name + l_cluster_stone.group.location.evaluated_path
+
 					if l_name /= Void then
 						a_content.set_detail (l_name)
 						a_content.set_tab_tooltip (l_name)

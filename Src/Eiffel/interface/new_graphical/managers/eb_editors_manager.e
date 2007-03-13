@@ -692,8 +692,10 @@ feature -- Element change
 				elseif l_cluster_stone /= Void then
 					a_content.set_description (interface_names.l_eiffel_cluster)
 
-					l_name := l_cluster_stone.path
-					l_name := l_name + l_cluster_stone.group.location.evaluated_path
+					l_name := l_cluster_stone.group.location.evaluated_path
+					if l_name /= Void and l_cluster_stone.path /= Void then
+						l_name := l_name + l_cluster_stone.path
+					end
 
 					if l_name /= Void then
 						a_content.set_detail (l_name)

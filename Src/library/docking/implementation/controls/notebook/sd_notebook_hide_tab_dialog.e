@@ -183,9 +183,10 @@ feature {NONE} -- Implementation agents.
 			select_content (l_content)
 			if not is_destroyed then
 				hide
+				-- It will be destroyed by focus out actions.
 			end
 		ensure
-			destroyed: is_destroyed
+			not_displayed: not is_displayed
 		end
 
 	on_search_text_change is

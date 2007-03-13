@@ -233,6 +233,7 @@ feature {NONE} -- Agents
 						elseif l_item.is_hot then
 							l_item.on_pointer_leave
 						end
+						l_item.on_pointer_motion_for_tooltip (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 					l_snapshot.forth
 				end
@@ -320,30 +321,31 @@ feature {NONE} -- Agents
 
 	on_pointer_leave is
 			-- Handle pointer leave actions
-		require
-			entered: pointer_entered = True
 		local
 			l_found: BOOLEAN
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
 		do
-			pointer_entered := False
-			if captured_tab = Void then
-				from
-					l_snapshot := internal_tabs
-					l_snapshot.start
-				until
-					l_snapshot.after or l_found
-				loop
-					l_item := l_snapshot.item
-					if l_item.is_hot  then
-						l_found := True
-						l_item.on_pointer_leave
+			-- After pick and drop call this feature, pointer_entered is False, we ignore this case.
+			if pointer_entered then
+				pointer_entered := False
+				if captured_tab = Void then
+					from
+						l_snapshot := internal_tabs
+						l_snapshot.start
+					until
+						l_snapshot.after or l_found
+					loop
+						l_item := l_snapshot.item
+						if l_item.is_hot  then
+							l_found := True
+							l_item.on_pointer_leave
+						end
+						if l_snapshot.islast and l_found = False then
+							l_item.on_pointer_leave
+						end
+						l_snapshot.forth
 					end
-					if l_snapshot.islast and l_found = False then
-						l_item.on_pointer_leave
-					end
-					l_snapshot.forth
 				end
 			end
 		ensure

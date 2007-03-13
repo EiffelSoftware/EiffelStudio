@@ -20,6 +20,7 @@ inherit
 			zone,
 			change_title,
 			change_pixmap,
+			change_tab_tooltip,
 			show,
 			hide,
 			record_state
@@ -212,8 +213,8 @@ feature -- Redefine.
 			end
 		end
 
-stick (a_direction: INTEGER) is
-			-- Redefine.
+	stick (a_direction: INTEGER) is
+				-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_width_height: INTEGER
@@ -381,6 +382,21 @@ stick (a_direction: INTEGER) is
 			-- Redefine
 		do
 			zone.update_user_widget
+		end
+
+	change_tab_tooltip (a_text: STRING_GENERAL) is
+			-- Redefine
+		local
+			l_upper: SD_DOCKING_ZONE_UPPER
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			l_upper ?= zone
+			if l_upper /= Void then
+				l_tab := l_upper.notebook.tab_by_content (content)
+				if l_tab /= Void then
+					l_tab.set_tool_tip (a_text)
+				end
+			end
 		end
 
 	zone: SD_DOCKING_ZONE

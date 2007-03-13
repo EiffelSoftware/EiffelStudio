@@ -193,11 +193,9 @@ feature -- Breakpoints management
 				expr.evaluate
 				evaluator := expr.expression_evaluator
 				if evaluator.error_occurred then
-					bp_reached := True
 					debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
-				else
-					bp_reached := bp.condition_respected --| evaluator.final_result_is_true_boolean_value
 				end
+				bp_reached := bp.condition_respected --| evaluator.final_result_is_true_boolean_value				
 			end
 
 			if bp_reached then

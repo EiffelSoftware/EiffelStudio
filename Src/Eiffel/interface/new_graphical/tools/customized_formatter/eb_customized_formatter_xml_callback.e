@@ -465,23 +465,19 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/XML node names
 
-	t_none: INTEGER is 1
-	t_formatters: INTEGER is 2
-	t_formatter: INTEGER is 3
-	t_tooltip: INTEGER is 4
-	t_header: INTEGER is 5
-	t_temp_header: INTEGER is 6
-	t_pixmap: INTEGER is 7
-	t_tools: INTEGER is 8
-	t_metric: INTEGER is 9
-	t_viewer: INTEGER is 10
-	t_tool: INTEGEr is 11
+	t_formatters: INTEGER is 2001
+	t_formatter: INTEGER is 2002
+	t_tooltip: INTEGER is 2004
+	t_header: INTEGER is 2005
+	t_temp_header: INTEGER is 2006
+	t_pixmap: INTEGER is 2007
+	t_tools: INTEGER is 2008
+	t_viewer: INTEGER is 2010
+	t_tool: INTEGEr is 2011
 
-	at_name: INTEGER is 50
-	at_filter: INTEGER is 51
-	at_location: INTEGER is 52
-	at_viewer: INTEGER is 53
-	at_sorting_order: INTEGER is 54
+	at_location: INTEGER is 2052
+	at_viewer: INTEGER is 2053
+	at_sorting_order: INTEGER is 2054
 
 invariant
 	state_transitions_tag_attached: state_transitions_tag /= Void

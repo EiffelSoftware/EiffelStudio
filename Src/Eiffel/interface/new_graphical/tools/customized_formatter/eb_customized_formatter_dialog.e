@@ -38,6 +38,13 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_INTERFACE_PROVIDER
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	make
 
@@ -652,6 +659,7 @@ feature {NONE} -- Implementation
 			l_temp_header: STRING_PROPERTY [STRING_GENERAL]
 			l_pixmap: FILE_PROPERTY
 			l_metric_name: STRING_PROPERTY [STRING_GENERAL]
+			l_metric: MENU_PROPERTY [STRING_GENERAL]
 			l_metric_filter: BOOLEAN_PROPERTY
 			l_scope: STRING_CHOICE_PROPERTY [STRING_GENERAL]
 
@@ -700,11 +708,14 @@ feature {NONE} -- Implementation
 				-- Build "Metric" section.
 			l_grid.add_section (interface_names.l_tab_metrics)
 
-			create l_metric_name.make (interface_names.l_metric_name)
-			l_metric_name.set_value (string_32_from_string_8 (a_descriptor.metric_name))
-			l_metric_name.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_metric_name, Void))
-			l_metric_name.change_value_actions.extend (agent on_metric_change (a_descriptor, ?))
-			l_grid.add_property (l_metric_name)
+			create l_metric.make_with_menu (interface_names.l_tab_metrics, metric_menu)
+			l_metric.set_value (string_32_from_string_8 (a_descriptor.metric_name))
+			l_metric.change_value_actions.extend (agent on_metric_change (a_descriptor, ?))
+			l_metric.set_value_retriever (agent (a_menu_item: EV_MENU_ITEM): STRING_GENERAL do Result := a_menu_item.text end)
+			l_metric.set_value_converter (agent (a_text: STRING_32): STRING_GENERAL do Result := a_text end)
+			l_metric.enable_auto_set_data
+			l_metric.enable_text_editing
+			l_grid.add_property (l_metric)
 
 			create l_metric_filter.make_with_value (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
 			l_metric_filter.change_value_actions.extend (agent on_filter_change (a_descriptor, ?))

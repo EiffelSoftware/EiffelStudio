@@ -467,7 +467,7 @@ feature {NONE} -- Internal data
 			conv_cust: SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			if
-				src.is_separator and then
+				(src.is_separator and src.custom_parent /= Void) and then
 				src.custom_parent.is_a_pool_list and then
 				not dst.custom_parent.is_a_pool_list
 			then

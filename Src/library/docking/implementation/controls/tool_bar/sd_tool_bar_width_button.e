@@ -51,6 +51,9 @@ feature -- Query
 			if Result.width > l_text_width then
 				Result.set_width (l_text_width)
 			end
+			if state = {SD_TOOL_BAR_ITEM_STATE}.pressed or state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
+				Result.set_width (Result.width + 1)
+			end
 		end
 
 	maximum_width: INTEGER;

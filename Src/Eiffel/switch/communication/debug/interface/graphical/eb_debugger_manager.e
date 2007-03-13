@@ -1259,6 +1259,7 @@ feature -- Status setting
 			end
 
 			debugging_window.menus.update_menu_lock_items
+			debugging_window.menus.update_show_tool_bar_items
 
 			refresh_breakpoints_tool
 		end

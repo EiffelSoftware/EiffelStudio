@@ -30,6 +30,7 @@ feature -- Building commands
 			build_address_toolbar
 			build_project_toolbar
 			build_refactoring_toolbar
+
 		end
 
 	build_general_toolbar is
@@ -51,7 +52,6 @@ feature -- Building commands
 
 				-- Create the command to show this toolbar.
 			create l_show_general_toolbar_command.make (l_content, develop_window.Interface_names.m_general_toolbar)
-			develop_window.commands.set_show_general_toolbar_command (l_show_general_toolbar_command)
 			develop_window.commands.show_toolbar_commands.force (l_show_general_toolbar_command, l_content)
 			if develop_window.development_window_data.show_general_toolbar then
 				l_show_general_toolbar_command.enable_visible
@@ -111,7 +111,6 @@ feature -- Building commands
 
 				-- Create the command to show this toolbar.
 			create l_show_address_toolbar_command.make (l_content, develop_window.Interface_names.m_address_toolbar)
-
 			develop_window.commands.show_toolbar_commands.force (l_show_address_toolbar_command, l_content)
 
 			if develop_window.development_window_data.show_address_toolbar then
@@ -155,8 +154,6 @@ feature -- Building commands
 
 				-- Create command to show this toolbar.
 			create l_show_project_toolbar_command.make (l_content, develop_window.Interface_names.m_project_toolbar)
-			develop_window.commands.set_show_project_toolbar_command (l_show_project_toolbar_command)
-
 			develop_window.commands.show_toolbar_commands.force (l_show_project_toolbar_command, l_content)
 
 			if develop_window.development_window_data.show_project_toolbar then
@@ -186,8 +183,8 @@ feature -- Building commands
 
 				-- Create the command to show this toolbar.
 			create l_show_tool_bar_command.make (l_content, develop_window.Interface_names.m_refactoring_toolbar)
-			develop_window.commands.set_show_refactoring_toolbar_command (l_show_tool_bar_command)
 			develop_window.commands.show_toolbar_commands.force (l_show_tool_bar_command, l_content)
+			
 			if develop_window.development_window_data.show_refactoring_toolbar then
 				l_show_tool_bar_command.enable_visible
 			else

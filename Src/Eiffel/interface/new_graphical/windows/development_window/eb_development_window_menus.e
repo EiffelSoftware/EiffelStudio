@@ -237,6 +237,34 @@ feature -- Command
 			develop_window.commands.lock_tool_bar_command.set_select (l_docking_manager.tool_bar_manager.is_locked)
 		end
 
+	update_show_tool_bar_items is
+			-- Update show/hide tool bar menu items state.
+		local
+			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
+			l_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
+			l_command: EB_SHOW_TOOLBAR_COMMAND
+		do
+			from
+				l_contents := develop_window.docking_manager.tool_bar_manager.contents
+				l_commands := develop_window.commands
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				l_command := l_commands.show_toolbar_commands.item (l_contents.item)
+
+				if l_command /= Void then
+					if l_contents.item.is_visible then
+						l_command.enable_visible
+					else
+						l_command.disable_visible
+					end
+				end
+
+				l_contents.forth
+			end
+		end
+
 feature -- Recycle
 
 	recycle_menus is

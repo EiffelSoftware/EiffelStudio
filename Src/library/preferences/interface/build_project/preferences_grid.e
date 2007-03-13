@@ -711,6 +711,7 @@ feature {NONE} -- Implementation
 			else
 				build_flat
 			end
+			resize_columns
 			update_status_bar
 		end
 
@@ -947,6 +948,7 @@ feature {NONE} -- Implementation
 			filter_box.enable_sensitive
 			set_show_full_preference_name (True)
 			build_flat
+			resize_columns
 			update_status_bar
 			view_toggle_button.set_text (l_tree_view)
 			view_toggle_button.set_tooltip (f_switch_to_tree_view)
@@ -961,6 +963,7 @@ feature {NONE} -- Implementation
 			grid.disable_dynamic_content
 			set_show_full_preference_name (False)
 			build_structured
+			resize_columns
 			update_status_bar
 			view_toggle_button.set_text (l_flat_view)
 			view_toggle_button.set_tooltip (f_switch_to_flat_view)
@@ -974,6 +977,19 @@ feature {NONE} -- Implementation
 			else
 				status_label.set_text (l_count_preferences (preferences.preferences.count.out))
 			end
+		end
+
+	resize_columns is
+			-- Resize all columns to it's contents.
+		local
+			col: EV_GRID_COLUMN
+		do
+			col := grid.column (1)
+			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+			col := grid.column (2)
+			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
+			col := grid.column (3)
+			col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)
 		end
 
 feature {NONE} -- Implementation

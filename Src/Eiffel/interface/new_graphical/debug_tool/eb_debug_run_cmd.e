@@ -199,11 +199,12 @@ feature -- Execution
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
-			old_bp_status: INTEGER
+--			old_bp_status: INTEGER
 			wd: EB_WARNING_DIALOG
-			cond: EB_EXPRESSION
+--			cond: EB_EXPRESSION
 			bp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
+			bp: BREAKPOINT
 		do
 			if Eiffel_project.successful then
 				f := bs.routine
@@ -212,35 +213,39 @@ feature -- Execution
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
 					dbg := Debugger_manager
-					bp_exists := dbg.is_breakpoint_set (f, index)
-					old_bp_status := dbg.breakpoint_status (f, index)
-					if old_bp_status /= 0 then
-						cond := dbg.condition (f, index)
+					bp := dbg.breakpoint (f, index)
+					bp_exists := bp /= Void
+					if bp_exists then
+						bp.enable_run_to_cursor_mode
+					else
+						dbg.enable_breakpoint (f, index)
 					end
+--					old_bp_status := dbg.breakpoint_status (f, index)
+--					if old_bp_status /= 0 then
+--						cond := dbg.condition (f, index)
+--					end
 						-- Enable the breakpoint
-					dbg.enable_breakpoint (f, index)
-					dbg.remove_condition (f, index)
+--					dbg.remove_condition (f, index)
 						-- Run the program
 					execute
 						-- Put back the status of the modified breakpoint This will prevent
 						-- the display of the temporary breakpoint (if not already present
 						-- at `index' in `f'.)
 					if bp_exists then
-						dbg.add_on_stopped_action (
-							agent dbg.set_breakpoint_status (f, index, old_bp_status),	True
-						)
-							--| FIXME: what about hit_count condition ?
-						if old_bp_status /= 0 and cond /= Void then
-								-- Restore condition after we stopped, otherwise if the evaluation
-								-- does not evaluate to True then it will not stopped.
-							dbg.add_on_stopped_action (
-									agent dbg.set_condition (f, index, cond), True
-								)
-						end
+						dbg.add_on_stopped_action (agent bp.disable_run_to_cursor_mode, True)
+--						dbg.add_on_stopped_action (
+--							agent dbg.set_breakpoint_status (f, index, old_bp_status),	True
+--						)
+--							--| FIXME: what about hit_count condition ?
+--						if old_bp_status /= 0 and cond /= Void then
+--								-- Restore condition after we stopped, otherwise if the evaluation
+--								-- does not evaluate to True then it will not stopped.
+--							dbg.add_on_stopped_action (
+--									agent dbg.set_condition (f, index, cond), True
+--								)
+--						end
 					else
-						dbg.add_on_stopped_action (
-							agent dbg.remove_breakpoint (f, index), True
-						)
+						dbg.add_on_stopped_action (agent dbg.remove_breakpoint (f, index), True)
 					end
 					dbg.add_on_stopped_action (agent dbg.notify_breakpoints_changes, True)
 				end

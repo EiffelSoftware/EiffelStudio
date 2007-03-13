@@ -147,6 +147,7 @@ feature{NONE} -- Actions
 			-- Action to be performed when view changes
 		do
 			a_view.set_data ("")
+			a_view.set_tooltip (view_table.item (view_name_table.item (a_view.text)).view_help)
 			set_has_changed (True)
 		end
 
@@ -239,7 +240,8 @@ feature{NONE} -- Implementation
 		end
 
 	view_name_table: HASH_TABLE [STRING, STRING_GENERAL] is
-			--
+			-- View name table.
+			-- [View storage name, View display name]
 		local
 			l_tbl: like view_table
 		do
@@ -250,51 +252,76 @@ feature{NONE} -- Implementation
 			until
 				l_tbl.after
 			loop
-				Result.put (l_tbl.key_for_iteration, l_tbl.item_for_iteration)
+				Result.put (l_tbl.key_for_iteration, l_tbl.item_for_iteration.view_name)
 				l_tbl.forth
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	view_name_list: LINKED_LIST [STRING_GENERAL] is
+	view_name_list: LIST [STRING_GENERAL] is
 			-- List of supported view names.
 		local
 			l_view_table: like view_table
+			l_sorted_list: SORTED_TWO_WAY_LIST [STRING_GENERAL]
 		do
-			create Result.make
 			l_view_table := view_table
+			create l_sorted_list.make
 			from
 				l_view_table.start
 			until
 				l_view_table.after
 			loop
-				Result.extend (l_view_table.item_for_iteration)
+				l_sorted_list.put_front (l_view_table.item_for_iteration.view_name)
 				l_view_table.forth
 			end
+			l_sorted_list.sort
+			Result := l_sorted_list
 		ensure
 			result_attached: Result /= Void
 		end
 
-	view_table: HASH_TABLE [STRING_GENERAL, STRING] is
+	view_table: HASH_TABLE [TUPLE [view_name: STRING_GENERAL; view_help: STRING_GENERAL], STRING] is
 			-- View table.
 			-- [View display name, View store name]
 		local
 			l_displayers: EB_FORMATTER_DISPLAYERS
+			l_names: like interface_names
 		once
 			create Result.make (7)
 			create l_displayers
-			Result.put (interface_names.l_class_tree_displayer, l_displayers.class_tree_displayer)
-			Result.put (interface_names.l_class_flat_displayer, l_displayers.class_flat_displayer)
-			Result.put (interface_names.l_class_feature_displayer, l_displayers.class_feature_displayer)
-			Result.put (interface_names.l_feature_displayer, l_displayers.feature_displayer)
-			Result.put (interface_names.l_feature_caller_displayer, l_displayers.feature_caller_displayer)
-			Result.put (interface_names.l_feature_callee_displayer, l_displayers.feature_callee_displayer)
-			Result.put (interface_names.l_dependency_displayer, l_displayers.dependency_displayer)
-			Result.put (interface_names.l_domain_displayer, l_displayers.domain_displayer)
+			l_names := interface_names
+			Result.put ([l_names.l_class_tree_displayer,     l_names.l_class_tree_displayer_help],      l_displayers.class_tree_displayer)
+			Result.put ([l_names.l_class_flat_displayer,     l_names.l_class_flat_displayer_help],      l_displayers.class_flat_displayer)
+			Result.put ([l_names.l_class_feature_displayer,  l_names.l_class_feature_displayer_help],   l_displayers.class_feature_displayer)
+			Result.put ([l_names.l_feature_displayer,        l_names.l_feature_displayer_help],         l_displayers.feature_displayer)
+			Result.put ([l_names.l_feature_caller_displayer, l_names.l_feature_caller_displayer_help],  l_displayers.feature_caller_displayer)
+			Result.put ([l_names.l_feature_callee_displayer, l_names.l_feature_callee_displayer_help],  l_displayers.feature_callee_displayer)
+			Result.put ([l_names.l_domain_displayer,         l_names.l_domain_displayer_help],          l_displayers.domain_displayer)
 		ensure
 			result_attached: Result /= Void
 		end
+
+--	view_help_table: HASH_TABLE [STRING_GENERAL, STRING_GENERAL] is
+--			-- Table of help messages for views
+--			-- [Help message, View name]
+--		local
+--			l_displayers: EB_FORMATTER_DISPLAYERS
+--		once
+--			create Result.make (7)
+--			create l_displayers
+--			Result.put (interface_names.l_class_tree_displayer_help, interface_names.l_class_tree_displayer)
+--			Result.put (interface_names.l_class_flat_displayer_help, interface_names.l_class_flat_displayer)
+--			Result.put (interface_names.l_class_feature_displayer_help, interface_names.l_class_feature_displayer)
+--			Result.put (interface_names.l_feature_displayer_help, interface_names.l_feature_displayer)
+--			Result.put (interface_names.l_feature_caller_displayer_help, interface_names.l_feature_caller_displayer)
+--			Result.put (interface_names.l_feature_callee_displayer_help, interface_names.l_feature_callee_displayer)
+--			Result.put (interface_names.l_domain_displayer_help, interface_names.l_domain_displayer)
+--		ensure
+--			result_attached: Result /= Void
+--		end
+
+
 
 feature{NONE} -- Implementation/Sorting
 
@@ -398,9 +425,10 @@ feature{NONE} -- Implementation/Binding
 
 			create l_view
 			l_view.set_item_strings (view_name_list)
-			l_view.set_text (view_table.item (a_view))
+			l_view.set_text (view_table.item (a_view).view_name)
+			l_view.set_tooltip (view_table.item (a_view).view_help)
 			l_view.pointer_button_press_actions.force_extend (agent l_view.activate)
-			l_view.select_actions.extend (agent on_view_change (l_view))
+			l_view.deactivate_actions.extend (agent on_view_change (l_view))
 			l_view.set_data (a_sorting)
 			a_grid_row.set_data (a_tool)
 			a_grid_row.set_item (3, l_view)

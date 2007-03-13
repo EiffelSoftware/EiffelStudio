@@ -1681,7 +1681,7 @@ feature -- Basic operations
 					rgb_quad.structure_size * 3
 				create bmi2.make (bmi.header, 3)
 			else
-				size := (bmi.header.structure_size +
+				size := (bmi.header.structure_size.to_double +
 					rgb_quad.structure_size *
 					(2 ^ bmi.header.bit_count)).truncated_to_integer
 				create bmi2.make (bmi.header, (2 ^ bmi.header.bit_count).truncated_to_integer)

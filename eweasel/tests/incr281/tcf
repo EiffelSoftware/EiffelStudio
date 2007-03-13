@@ -1,0 +1,31 @@
+test_name vtcg-add-remove-missing-error
+test_description Adding a creation constraint clause causes a VTCG error since a class does not met the requirements, then removing it and adding it again fail to report the same original error.
+
+define DEFAULT_CREATE ""
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_sub	test2.e $CLUSTER test2.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VTCG
+
+define DEFAULT_CREATE ", default_create"
+copy_sub	test2.e $CLUSTER test2.e
+
+resume_compile
+compile_result	ok
+
+define DEFAULT_CREATE ""
+copy_sub	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST VTCG
+
+define DEFAULT_CREATE ", default_create"
+copy_sub	test2.e $CLUSTER test2.e
+
+resume_compile
+compile_result	ok
+
+test_end

@@ -825,7 +825,7 @@ feature -- Drawing operations
 				dc.pie (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
 			else
-				dc.move_to ((left + semi_width).rounded, (top + semi_height).rounded)
+				dc.move_to ((left.to_double + semi_width).rounded, (top.to_double + semi_height).rounded)
 				dc.line_to (x_start_arc, y_start_arc)
 			end
 			release_dc

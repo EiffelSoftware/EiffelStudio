@@ -61,7 +61,7 @@ feature -- Access
 			a_tool_attached: a_tool /= Void
 			a_tool_valid: has_tool (a_tool)
 		do
-			create Result.make (a_manager, name, header, temp_header, name, metric_name, tools.item (a_tool), pixmap_location)
+			create Result.make (a_manager, name, header, temp_header, name, metric_name, tools.item (a_tool), pixmap_location, tooltip)
 			Result.set_descriptor (Current)
 			Result.set_tool (a_tool)
 		ensure

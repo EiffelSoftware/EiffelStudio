@@ -14,6 +14,7 @@ inherit
 		rename
 			make as old_make
 		redefine
+			old_make,
 			is_valid,
 			is_customized_fomatter,
 			name,
@@ -37,7 +38,17 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_manager: like manager; a_cmd_name: STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location) is
+	old_make (a_manager: like manager) is
+			-- Create a formatter associated with `a_manager'.
+		do
+			Precursor (a_manager)
+			if tooltip /= Void then
+				capital_command_name.append ("%N")
+				capital_command_name.append (tooltip)
+			end
+		end
+
+	make (a_manager: like manager; a_cmd_name: STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location; a_tooltip: like tooltip) is
 			-- Initialize Current.
 		require
 			a_manager_attached: a_manager /= Void
@@ -47,6 +58,7 @@ feature{NONE} -- Initialization
 			a_menu_name_attached: a_menu_name /= Void
 			a_metric_attached: a_metric /= Void
 			a_viewer_attached: a_viewer /= Void
+			a_tooltip_attached: a_tooltip /= Void
 		do
 			set_command_name_internal (a_cmd_name)
 			set_header_internal (a_header)
@@ -55,6 +67,7 @@ feature{NONE} -- Initialization
 			set_viewer (a_viewer)
 			set_metric (a_metric)
 			set_icon_location (a_icon_location)
+			set_tooltip (a_tooltip)
 			old_make (a_manager)
 		end
 
@@ -75,6 +88,9 @@ feature -- Access
 				Result := stone.stone_name.as_string_8
 			end
 		end
+
+	tooltip: STRING_GENERAL
+			-- Tooltip
 
 	header: STRING_GENERAL is
 			-- Text displayed in the ouput_line when current formatter is displayed.
@@ -249,6 +265,14 @@ feature -- Setting
 	setup_viewpoint is
 			-- Setup viewpoint for formatting.
 		do
+		end
+
+	set_tooltip (a_tooltip: like tooltip) is
+			-- Set `tooltip' with `a_tooltip'.
+		do
+			tooltip := a_tooltip
+		ensure
+			tooltip_set: tooltip = a_tooltip
 		end
 
 	set_metric (a_metric_name: like metric) is

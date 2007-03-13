@@ -36,7 +36,7 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of `Current'.
 		do
-			private_pixmap := pix
+			private_pixmap := pix.twin
 		end
 
 	remove_pixmap is

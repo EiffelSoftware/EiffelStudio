@@ -609,6 +609,7 @@ test	inline-agent-from-scratch-bug	incr277 tcf pass incrementality
 test	changing-formals-invariant-not-removed	incr278 tcf pass incrementality
 test	changing-formals-precursor-crash	incr279 tcf pass incrementality
 test	console-setting-change		incr280 tcf pass incrementality
+test	vtcg-add-remove-missing-error	incr281 tcf pass incrementality
 
 
 -- Melting

@@ -323,6 +323,7 @@ test	single-constraint-formal-renaming	valid202 tcf pass validity formal generic
 test	inherit-from-expanded	valid203 tcf pass validity frozen expanded
 test	recheck-assertion-feature-renamed	valid204 tcf pass validity 
 test	recursive-generic-constraint-with-creation	valid205 tcf pass validity
+test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
 
 
 -- System validity tests

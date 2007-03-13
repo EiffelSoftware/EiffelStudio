@@ -96,7 +96,7 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			create internal_shared
-			
+
 			tool_bar := a_tool_bar
 
 			extend_fixed (tool_bar)
@@ -415,12 +415,14 @@ feature {NONE} -- Implementation
 				l_items.after
 			loop
 				l_item ?= l_items.item
-				if l_item /= Void and then l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) then
-					l_item_x := item_x (l_item)
-					l_item_y := item_y (l_item)
-					if l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position then
-						set_item_position (l_item.widget, l_item_x, l_item_y)
-					end
+				if l_item /= Void and
+					-- There are maybe expose actions have been called delayed, so we should check if has `l_item'.
+					 then l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and has (l_item) then
+						l_item_x := item_x (l_item)
+						l_item_y := item_y (l_item)
+						if l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position then
+							set_item_position (l_item.widget, l_item_x, l_item_y)
+						end
 				end
 				l_items.forth
 			end

@@ -483,6 +483,10 @@ feature -- Implementation
 		do
 		end
 
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
+		do
+		end
+
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
 		end

@@ -20,13 +20,17 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword) is
+	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
 		do
 			name := f.name
-			constraint := c
+			if c = Void then
+				create constraints.make (0)
+			else
+				constraints := c
+			end
 			creation_feature_list := cf
 			position := f.position
 			is_reference := f.is_reference
@@ -37,7 +41,8 @@ feature {NONE} -- Initialization
 			end_keyword := ek_as
 		ensure
 			name_set: name = f.name
-			constraint_set: constraint = c
+			constraints_set: c /= Void implies constraints = c
+			constraints_not_void: constraints /= Void
 			creation_feature_list_set: creation_feature_list = cf
 			position_set: position = f.position
 			is_reference_set: is_reference = f.is_reference
@@ -73,8 +78,21 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	constraint: TYPE_AS
+	constraint: CONSTRAINING_TYPE_AS is
 			-- Constraint of the formal generic
+			-- Only valid to call if there's exactly one constraint.
+		require
+			not_multi_constraint: constraints.count  <= 1
+		do
+			if not constraints.is_empty then
+				Result := constraints.last
+			end
+		ensure
+			has_constraints_implies_result_not_void: not constraints.is_empty implies Result /= Void
+		end
+
+	constraints: CONSTRAINT_LIST_AS
+			-- Constraints of the formal generic
 
 	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Constraint on the creation routines of the constraint
@@ -90,8 +108,8 @@ feature -- Roundtrip/Token
 					Result := rcurly_symbol.last_token (a_list)
 				elseif end_keyword /= Void then
 					Result := end_keyword.last_token (a_list)
-				elseif constraint /= Void then
-					Result := constraint.last_token (a_list)
+				elseif constraints /= Void then
+					Result := constraints.last_token (a_list)
 				else
 					Result := Precursor (a_list)
 				end
@@ -103,7 +121,46 @@ feature -- Status
 	has_constraint: BOOLEAN is
 			-- Does the formal generic parameter have a constraint?
 		do
-			Result := constraint /= Void
+			Result := constraints /= Void and then not constraints.is_empty()
+		end
+
+	has_multi_constraints: BOOLEAN is
+			-- Does the formal generic parameter have multiple constraints in it's own constraint list?
+		do
+			Result := constraints /= Void and then constraints.count > 1
+		ensure
+			not_more_than_one_constraint: constraints /= Void implies constraints.count <= 1
+		end
+
+	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN is
+			-- Does the formal generic parameter have multiple constraints?
+			-- The difference between `has_multi_constraints' is the following:
+			-- [G -> H, H -> {A,B}] (Each is called for G.)
+			--		* `is_multi_constrained' returns True (H is multi constrained)
+			--		* `has_multi_constraints' returns False (G has just one constraint)
+			--
+			-- `a_generics' is the list of formals where `Current' is part of.
+		require
+			a_generics_not_void: a_generics /= Void
+			a_generics_valid: position <= a_generics.count
+		local
+			l_formal: FORMAL_AS
+			l_recursion_break: SEARCH_TABLE[INTEGER]
+			l_count: INTEGER
+		do
+			if constraints /= Void then
+				l_count := constraints.count
+				Result := l_count > 1
+				if l_count = 1 and then not Result then
+						-- Maybe we our constraint is a formal which itself has multi constraints?
+					l_formal ?= constraints.first
+					if l_formal /= Void and then l_formal.position /= position then
+						create l_recursion_break.make (3)
+						l_recursion_break.force (position)
+						Result := recursive_is_multi_constraint (l_formal, a_generics, l_recursion_break)
+					end
+				end
+			end
 		end
 
 	has_creation_constraint: BOOLEAN is
@@ -116,41 +173,6 @@ feature -- Status
 	has_default_create: BOOLEAN
 			-- Does the construct list `default_create' has creation procedure?
 			-- Set after a call to `constraint_creation_list'.
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
-		do
-			Result := equivalent (name, other.name)
-				and then equivalent (constraint, other.constraint)
-				and then equivalent (creation_feature_list, other.creation_feature_list)
-				and then Precursor {FORMAL_AS} (other)
-		end
-
-	equiv (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to `Current'
-			-- Incrementality of the generic parameters
-		require
-			good_argument: other /= Void
-		local
-			ct, o_ct: like constraint
-		do
-			Result := position = other.position and then
-				is_reference = other.is_reference and then
-				is_expanded = other.is_expanded
-			if Result then
-				ct := constraint
-				o_ct := other.constraint
-				if ct = Void then
-					Result := o_ct = Void
-				else
-					Result := o_ct /= Void and then o_ct.same_type (ct) and then o_ct.is_equivalent (ct)
-					Result := Result and then
-						equivalent (creation_feature_list, other.creation_feature_list)
-				end
-			end
-		end
 
 	has_creation_feature_name (feature_name: STRING): BOOLEAN is
 			-- Check in `creation_feature_list' if it contains `feature_name'.
@@ -168,6 +190,66 @@ feature -- Comparison
 			end
 		end
 
+feature {NONE} -- Status implementation
+
+	recursive_is_multi_constraint (a_formal: FORMAL_AS; a_generics: EIFFEL_LIST[FORMAL_DEC_AS]; a_recursion_break: SEARCH_TABLE[INTEGER]): BOOLEAN
+			-- Is current formal an actual multi constraint? (recursive)
+			--
+			-- `a_formal' the formal to check.
+			-- `a_generics' is the list of generics where `a_formal' is a part of.
+			-- `a_recursion_break' is used to break the recursion in case of a loop by storing poisitions of already visited formals.		
+		require
+			a_formal_not_void: a_formal /= Void
+			a_generics_not_void: a_generics /= Void
+			a_recursion_break_not_void: a_recursion_break /= Void
+		local
+			l_next_formal: FORMAL_AS
+			l_count: INTEGER
+		do
+			if not a_recursion_break.has (a_formal.position) then
+				if  constraints /= Void then
+					l_count := constraints.count
+					Result := l_count > 1
+					if l_count = 1 and then not Result then
+							-- Maybe we our constraint is a formal which itself has multi constraints?
+						l_next_formal ?= constraints.first
+						if l_next_formal /= Void and then l_next_formal.position /= a_formal.position then
+							a_recursion_break.force (a_formal.position)
+							Result := recursive_is_multi_constraint (l_next_formal, a_generics, a_recursion_break)
+						end
+					end
+				end
+			end
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (name, other.name)
+				and then equivalent (constraints, other.constraints)
+				and then equivalent (creation_feature_list, other.creation_feature_list)
+				and then Precursor {FORMAL_AS} (other)
+		end
+
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to `Current'
+			-- Incrementality of the generic parameters
+		require
+			good_argument: other /= Void
+		do
+			Result := position = other.position and then
+				is_reference = other.is_reference and then
+				is_expanded = other.is_expanded
+			if Result then
+				Result := constraints.is_equivalent (other.constraints)
+				Result := Result and then
+							equivalent (creation_feature_list, other.creation_feature_list)
+
+			end
+		end
+
 feature -- Output
 
 	constraint_string: STRING is
@@ -182,7 +264,8 @@ feature -- Output
 			Result.append (name.name.as_upper)
 			if has_constraint then
 				Result.append (" -> ")
-				Result.append (constraint.dump.as_upper)
+
+				Result.append (constraints.dump (false))
 				if has_creation_constraint then
 					from
 						creation_feature_list.start
@@ -200,6 +283,10 @@ feature -- Output
 				end
 			end
 		end
+
+invariant
+
+	constraints_not_void: constraints /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

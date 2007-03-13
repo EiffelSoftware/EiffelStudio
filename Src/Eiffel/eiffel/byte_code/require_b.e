@@ -5,14 +5,14 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class REQUIRE_B 
+class REQUIRE_B
 
 inherit
 	ASSERT_B
 		redefine
 			generate, process
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,8 +20,8 @@ feature -- Visitor
 		do
 			v.process_require_b (Current)
 		end
-	
-feature 
+
+feature
 
 	fill_from (a: ASSERT_B) is
 			-- Initialization
@@ -43,7 +43,7 @@ feature
 			buf := buffer
 
 			if Context.is_new_precondition_block then
-				first_generated := Context.is_first_precondition_block_generated 
+				first_generated := Context.is_first_precondition_block_generated
 				if first_generated then
 					buf.put_string ("RTJB;")
 					buf.put_new_line
@@ -58,7 +58,7 @@ feature
 				end
 				Context.set_new_precondition_block (False)
 			end
-				
+
 				-- generate a debugger hook
 			generate_frozen_debugger_hook
 

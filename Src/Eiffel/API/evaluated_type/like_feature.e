@@ -116,7 +116,7 @@ feature -- Output
 			Result.append (s)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		local
 			ec: CLASS_C
 			l_feat: E_FEATURE
@@ -136,7 +136,7 @@ feature -- Output
 			st.process_symbol_text (ti_r_bracket)
 			st.add_space
 			if is_valid then
-				actual_type.ext_append_to (st, f)
+				actual_type.ext_append_to (st, c)
 			end
 		end
 

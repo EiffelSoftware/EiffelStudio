@@ -411,7 +411,6 @@ feature -- Inlining
 			true_gen		: ARRAY [TYPE_I]
 			real_target_type: TYPE_A
 			actual_type		: TYPE_A
-			constraint		: TYPE_A
 			formal_a		: FORMAL_A
 			nb_generics, i	: INTEGER
 			l_formal_dec: FORMAL_CONSTRAINT_AS
@@ -447,8 +446,7 @@ feature -- Inlining
 						if actual_type.is_expanded then
 							m.put (actual_type.type_i, i)
 						else
-							constraint := written_class.constraint (i)
-							m.put (constraint.type_i, i)
+							m.put (reference_c_type, i)
 						end
 						true_gen.put (actual_type.type_i, i)
 						i := i + 1

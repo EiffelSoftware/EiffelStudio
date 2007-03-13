@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				file_browser_command_preference := l_manager.new_string_preference_value (l_manager, file_browser_command_string, "xterm -geometry 80x40")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			end
-			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"en">>)
+			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"[en];">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
 		end

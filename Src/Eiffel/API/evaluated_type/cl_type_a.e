@@ -177,7 +177,7 @@ feature -- Access
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			if has_expanded_mark then
 				st.process_keyword_text (ti_expanded_keyword, Void)

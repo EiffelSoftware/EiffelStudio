@@ -144,7 +144,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_constraint_triple (k_as: SYMBOL_AS; t_as: TYPE_AS; l_as: CREATION_CONSTRAIN_TRIPLE): CONSTRAINT_TRIPLE is
+	new_constraint_triple (k_as: SYMBOL_AS; t_as: CONSTRAINT_LIST_AS; l_as: CREATION_CONSTRAIN_TRIPLE): CONSTRAINT_TRIPLE is
 			-- New constraint triple structure.
 		do
 		end
@@ -774,7 +774,7 @@ feature -- Access
 		do
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_DEC_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_DEC_AS is
 			-- New FORMAL_DECLARATION AST node
 		do
 		end

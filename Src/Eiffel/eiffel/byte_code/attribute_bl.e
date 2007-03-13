@@ -219,6 +219,7 @@ end
 			attribute_id := a.attribute_id
 			type := a.type
 			routine_id := a.routine_id
+			multi_constraint_static := a.multi_constraint_static
 		end
 
 indexing

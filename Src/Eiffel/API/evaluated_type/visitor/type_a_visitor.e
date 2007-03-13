@@ -37,7 +37,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-feature {TYPE_A} -- Visitors
+feature {TYPE_A}
 
 	process_bits_a (a_type: BITS_A) is
 			-- Process `a_type'.
@@ -81,6 +81,11 @@ feature {TYPE_A} -- Visitors
 			is_valid: is_valid
 			a_type_not_void: a_type /= Void
 			a_type_valid: is_type_valid (a_type)
+		deferred
+		end
+
+	process_extended_type_a (a_type: EXTENDED_TYPE_A) is
+			-- Process `a_type'.
 		deferred
 		end
 

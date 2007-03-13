@@ -403,7 +403,7 @@ feature -- Status
 			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
 		end
 
-	is_reference: BOOLEAN is
+		is_reference: BOOLEAN is
 			-- Is the type a reference type?
 		do
 			Result := has_reference_mark or else

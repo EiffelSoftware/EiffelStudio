@@ -69,10 +69,41 @@ feature -- Roundtrip/Token
 
 feature -- Properties
 
+	has_renaming: BOOLEAN is
+			-- Does current type have renamed features?
+			-- This can occur in code like: "G -> A rename a as b end"
+		do
+			Result := false
+		end
+
+
+	has_associated_class: BOOLEAN is
+			-- Does Current have an associated class?
+		do
+			Result := not (is_void or else is_formal or else is_none or else is_type_set)
+		ensure
+			Yes_if_is: Result implies not (is_void or else
+								is_formal or else is_none or else is_type_set)
+		end
+
 	generics: ARRAY [TYPE_A] is
 			-- Actual generic types
 		do
 			-- Void
+		end
+
+	is_multi_constrained_formal (a_context_class: CLASS_C): BOOLEAN is
+			-- Is current type a multi constrained formal type?
+			-- | G -> {A, B}			
+		do
+			-- False
+		end
+
+	is_type_set: BOOLEAN is
+			-- Is curren type a type_set?
+			-- | example: {A, B}
+		do
+			-- False
 		end
 
 	is_valid: BOOLEAN is
@@ -145,6 +176,12 @@ feature -- Properties
 			-- Is the current actual type an external enum one?
 		do
 			-- Do nothing
+		end
+
+	is_extended: BOOLEAN is
+			-- Is current type an extended type?
+		do
+
 		end
 
 	is_reference: BOOLEAN is
@@ -249,7 +286,7 @@ feature -- Properties
 	has_formal_generic: BOOLEAN is
 			-- Has type a formal generic parameter?
 		do
-			-- Do nothing
+			-- False for non-generic type.
 		end
 
 	is_loose: BOOLEAN is
@@ -319,13 +356,10 @@ feature -- Comparison
 
 feature -- Access
 
-	has_associated_class: BOOLEAN is
-			-- Does Current have an associated class?
+	renaming: RENAMING_A is
+			-- Renaming of current type.
 		do
-			Result := not (is_void or else is_formal or else is_none)
-		ensure
-			Yes_if_is: Result implies not (is_void or else
-								is_formal or else is_none)
+			-- Result := Void
 		end
 
 	associated_class: CLASS_C is
@@ -385,7 +419,7 @@ feature -- Output
 		deferred
 		end
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C) is
 			-- Append `Current' to `text'.
 			-- `f' is used to retreive the generic type or argument name as string.
 			-- This replaces the old "G#2" or "arg#1" texts in feature signature views.
@@ -394,6 +428,26 @@ feature -- Output
 			a_text_formatter_not_void: a_text_formatter /= Void
 		deferred
 		end
+
+feature -- Conversion
+
+	to_type_set: TYPE_SET_A is
+			-- Create a type set containing one element which is `Current'.
+		local
+			l_extended_type: EXTENDED_TYPE_A
+		do
+			if is_extended then
+				l_extended_type ?= Current
+				check
+					l_extended_type_not_void:  l_extended_type /= Void
+				end
+			else
+				create l_extended_type.make (Current, Void)
+			end
+			create Result.make (3)
+			Result.extend (l_extended_type)
+		end
+
 
 feature {COMPILER_EXPORTER} -- Access
 
@@ -433,15 +487,33 @@ feature {COMPILER_EXPORTER} -- Access
 			i_non_negative: i > 0
 		local
 			l_vtcg7: VTCG7
+			l_formal_a: FORMAL_A
+			l_target_type: TYPE_A
 		do
-			if not conform_to (a_target_type) then
+			if a_target_type.is_formal then
+					-- If we find a formal, then we get the actual generic at its position
+					-- and check wheter Current conforms to it.
+					-- Example: 	class A [G -> H, H] end
+					--				B[G -> A[STRING, COMPARABLE]]
+					--			`Current' is STRING
+					-- 			`a_target_type' is H
+					-- Note: We loop over all constraints of `G' an call `check_const_gen_conformance'.
+					-- We replace `H' with `COMPARABLE' and check whether `STRING' conforms to `COMPARABLE'.					
+				l_formal_a ?= a_target_type
+				check indeed_a_formal_a: l_formal_a /= Void end
+				l_target_type := a_gen_type.generics.item (l_formal_a.position)
+			else
+				l_target_type := a_target_type
+			end
+
+			if not conform_to (l_target_type) then
 					-- FIXME: Manu 02/04/2004 We should be checking convertibility here,
 					-- but for the moment it is not yet possible because this check is done
 					-- before we do degree 4. What we need to implement is the ability
 					-- to check converitibility without having to go through a full
 					-- degree 4
 				reset_constraint_error_list
-				generate_constraint_error (a_gen_type, Current, a_target_type, i)
+				generate_constraint_error (a_gen_type, Current.to_type_set, l_target_type.to_type_set, i, Void)
 				create l_vtcg7
 				l_vtcg7.set_in_constraint (True)
 				l_vtcg7.set_class (a_class)
@@ -566,11 +638,11 @@ feature {COMPILER_EXPORTER} -- Access
 		do
 		end
 
-	check_constraints (context_class: CLASS_C) is
+	check_constraints (a_type_context: CLASS_C; a_context_feature: FEATURE_I; a_check_creation_readiness: BOOLEAN) is
 			-- Check the constained genericity validity rule and leave
 			-- error info in `constraint_error_list'
 		require
-			good_argument: context_class /= Void
+			good_argument: a_type_context /= Void
 			good_generic_count: good_generics
 		do
 		end
@@ -687,7 +759,7 @@ feature {NONE} -- Implementation
 	delayed_convert_constraint_check (
 			context_class: CLASS_C;
 			gen_type: GEN_TYPE_A
-			to_check, constraint_type: TYPE_A;
+			a_set_to_check, 	a_constraint_types: TYPE_SET_A;
 			i: INTEGER;
 			in_constraint: BOOLEAN)
 		is
@@ -699,21 +771,37 @@ feature {NONE} -- Implementation
 		require
 			context_class_not_void: context_class /= Void
 			gen_type_not_void: gen_type /= Void
-			to_check_not_void: to_check /= Void
-			constraint_type_not_void: constraint_type /= Void
-			to_check_is_expanded: to_check.is_expanded
-			constraint_type_is_reference: not constraint_type.is_expanded
+			a_set_to_check_not_void: a_set_to_check /= Void
+			a_constraint_types_not_void: a_constraint_types /= Void
+			a_set_to_check_is_expanded: a_set_to_check.has_expanded
+			not_a_constraint_type_is_reference: not a_constraint_types.has_expanded
 		local
 			l_vtcg7: VTCG7
+			l_to_check, l_constraint_type: TYPE_A
 		do
 			reset_constraint_error_list
-			if context_class.is_valid and to_check.is_valid then
-				if
-					not (to_check.convert_to (context_class, constraint_type) and
-					to_check.is_conformant_to (constraint_type))
+
+				-- Only used in case of a single constraint!!
+			l_constraint_type := a_constraint_types.first.type
+
+			if context_class.is_valid and a_set_to_check.is_valid then
+				l_to_check := a_set_to_check.first.type
+				if a_set_to_check.count /= 1 or else a_constraint_types.count /= 1 then
+					generate_constraint_error (gen_type, l_to_check, a_constraint_types, i, Void)
+						-- The feature listed in the creation constraint has
+						-- not been declared in the constraint class.
+					create l_vtcg7
+					l_vtcg7.set_in_constraint (in_constraint)
+					l_vtcg7.set_class (context_class)
+					l_vtcg7.set_error_list (constraint_error_list)
+					l_vtcg7.set_parent_type (gen_type)
+					Error_handler.insert_error (l_vtcg7)
+				elseif
+					not (l_to_check.convert_to (context_class, l_constraint_type) and
+					l_to_check.is_conformant_to (l_constraint_type))
 				then
-					generate_constraint_error (gen_type, to_check, constraint_type, i)
-						-- The feature listed in the creation constraint have
+					generate_constraint_error (gen_type, l_to_check, a_constraint_types, i, Void)
+						-- The feature listed in the creation constraint has
 						-- not been declared in the constraint class.
 					create l_vtcg7
 					l_vtcg7.set_in_constraint (in_constraint)
@@ -725,18 +813,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_constraint_error (gen_type: GEN_TYPE_A; current_type, constraint_type: TYPE_A; position: INTEGER) is
+	generate_constraint_error (gen_type: GEN_TYPE_A; current_type: TYPE_A; constraint_type: TYPE_A; position: INTEGER; a_unmatched_creation_constraints: LIST[FEATURE_I]) is
 			-- Build the error corresponding to the VTCG error
 		local
 			constraint_info: CONSTRAINT_INFO
+			l_current_type_set, l_constraint_type_set: TYPE_SET_A
 		do
+			l_current_type_set := current_type.to_type_set
+			l_constraint_type_set := constraint_type.to_type_set
 			create constraint_info
 			constraint_info.set_type (gen_type)
-			constraint_info.set_actual_type (current_type)
+			constraint_info.set_actual_type_set (l_current_type_set)
 			constraint_info.set_formal_number (position)
-			constraint_info.set_constraint_type (constraint_type)
+			constraint_info.set_constraint_types (l_constraint_type_set)
+			constraint_info.set_unmatched_creation_constraints (a_unmatched_creation_constraints)
 			constraint_error_list.extend (constraint_info)
 		end
+
+invariant
+	generics_not_equal_void_implies_generics_not_empty: generics /= Void implies not generics.empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

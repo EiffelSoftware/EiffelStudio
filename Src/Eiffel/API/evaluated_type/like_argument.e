@@ -78,21 +78,23 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			st.process_symbol_text (ti_L_bracket)
 			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
-			if f /= Void then
-				st.process_local_text (f.arguments.argument_names.i_th (position))
-			else
-				st.add (ti_Argument_index)
-				st.add_int (position)
-			end
+			--Martins 2/6/2007: this code here does not work anymore because of switch from E_FAETURE to CLASS_C
+			-- As it has to be removed anyway we do not spent any effort to enable it again.
+			-- if c /= Void then
+				--st.process_local_text (c.arguments.argument_names.i_th (position))
+			--else
+			st.add (ti_Argument_index)
+			st.add_int (position)
+
 			st.process_symbol_text (ti_R_bracket)
 			st.add_space
 			if is_valid then
-				actual_type.ext_append_to (st, f)
+				actual_type.ext_append_to (st, c)
 			end
 		end
 

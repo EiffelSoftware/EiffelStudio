@@ -1,5 +1,5 @@
 indexing
-	description: "Descripion of a actual formal generic type"
+	description: "Descripion of a formal generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,6 +10,7 @@ class FORMAL_A
 inherit
 	NAMED_TYPE_A
 		redefine
+			is_multi_constrained_formal,
 			is_formal,
 			instantiation_in,
 			has_formal_generic,
@@ -25,6 +26,7 @@ inherit
 			is_expanded
 		end
 
+	REFACTORING_HELPER
 create
 	make
 
@@ -56,6 +58,12 @@ feature -- Property
 	is_formal: BOOLEAN is True
 			-- Is the current actual type a formal generic type ?
 
+	is_multi_constrained_formal(a_context_class: CLASS_C): BOOLEAN is
+			-- Is Current a multi constraint formal relative to current context class?
+		do
+			Result := has_multi_constraints (a_context_class)
+		end
+
 	is_full_named_type: BOOLEAN is True
 			-- Current is a named type.
 
@@ -71,6 +79,18 @@ feature -- Property
 			Result := position
 		end
 
+	has_multi_constraints (a_context_class: CLASS_C): BOOLEAN is
+			-- Does current instance have multiple constraining types?
+			-- This means at least two constraining types.
+		require
+			a_context_class_sane: a_context_class.generics /= Void and then a_context_class.generics.count >= position
+		local
+			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
+		do
+				l_generics := a_context_class.generics
+				Result := l_generics.i_th (position).is_multi_constrained (l_generics)
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -82,6 +102,30 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	constraints (a_context_class: CLASS_C): TYPE_SET_A is
+			-- Constraint types of `Current'.
+			--| Return excatly what is written. For a formal like G -> {H,STRING} we return {H, STRING}.
+			--| If there are several formals in the type set we merge the results.
+		require
+			a_a_context_classt_not_void: a_context_class /= Void
+		do
+			Result := a_context_class.constraints (position)
+		ensure
+			Result_sane: Result /= Void and then not Result.is_empty
+		end
+
+	constraints_if_possible (a_context_class: CLASS_C): TYPE_SET_A is
+			-- Constraint types of `Current'.
+			--| Return excatly what is written. For a formal like G -> {H,STRING} we return {H, STRING}.
+			--| If there are several formals in the type set we merge the results.
+		require
+			a_a_context_classt_not_void: a_context_class /= Void
+		do
+			Result := a_context_class.constraints_if_possible (position)
+		ensure
+			Result_sane: Result /= Void
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is `other' the same as Current ?
@@ -113,13 +157,13 @@ feature -- Output
 			Result.append_integer (position)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		local
 			s: STRING
 			l_class: CLASS_AS
 		do
-			if f /= Void then
-				l_class := f.associated_class.ast
+			if c /= Void then
+				l_class := c.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
 					s := l_class.generics.i_th (position).name.name.as_upper
 					st.process_generic_text (s)
@@ -182,7 +226,7 @@ feature {COMPILER_EXPORTER}
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
-			l_constraint: TYPE_A
+			l_constraints: TYPE_SET_A
 		do
 			Result := same_as (other.conformance_type)
 			if not Result then
@@ -191,17 +235,14 @@ feature {COMPILER_EXPORTER}
 					-- so this is automatically taken care by `same_as' above.
 				if not is_expanded then
 						-- Check conformance of constrained generic type to `other'.
+					fixme ("As soon as conform_to takes a context class as an argument, do no longer use System.current_class but the argument.")
 					check
 						has_generics: System.current_class.generics /= Void
 						count_ok: System.current_class.generics.count >= position
 					end
-					l_constraint := System.current_class.constraint (position)
-						-- Ensure that there is no recursive call
-						-- when the formal generic is constrained to itself
-						-- like in "A [G -> G]"
-					if not same_as (l_constraint) then
-						Result := l_constraint.conform_to (other)
-					end
+						-- Get the actual type for the formal generic parameter
+					l_constraints := System.current_class.constraints (position)
+					Result := l_constraints.constraining_types (system.current_class).conform_to_type (other)
 				end
 			end
 		end

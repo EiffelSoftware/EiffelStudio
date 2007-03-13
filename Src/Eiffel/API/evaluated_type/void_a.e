@@ -52,7 +52,7 @@ feature -- Output
 	dump: STRING is "Void"
 			-- Dumped trace
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			st.process_keyword_text (ti_void, Void)
 		end

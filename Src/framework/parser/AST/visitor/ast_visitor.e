@@ -423,6 +423,13 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 			-- Process `l_as'.
 		require

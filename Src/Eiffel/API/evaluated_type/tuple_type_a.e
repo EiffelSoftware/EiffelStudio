@@ -153,7 +153,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_constraints (context_class: CLASS_C) is
+	check_constraints (context_class: CLASS_C; a_context_feature: FEATURE_I;  a_check_creation_readiness: BOOLEAN) is
 			-- Check the constrained genericity validity rule
 		local
 			i, count: INTEGER
@@ -168,7 +168,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count
 			loop
 				gen_param := generics.item (i)
-				gen_param.check_constraints (context_class)
+				gen_param.check_constraints (context_class, a_context_feature, a_check_creation_readiness)
 				i := i + 1
 			end
 		end

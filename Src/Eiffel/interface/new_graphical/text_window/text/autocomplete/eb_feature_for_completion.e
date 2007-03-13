@@ -122,7 +122,7 @@ feature -- Access
 			if internal_completion_type = Void then
 				if return_type /= Void then
 					token_writer.new_line
-					return_type.ext_append_to (token_writer, associated_feature)
+					return_type.ext_append_to (token_writer, associated_feature.associated_class)
 					Result := token_writer.last_line.image
 				else
 					create Result.make_empty

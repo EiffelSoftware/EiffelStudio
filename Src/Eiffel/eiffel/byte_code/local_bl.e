@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged access to a local
 
-class LOCAL_BL 
+class LOCAL_BL
 
 inherit
 
@@ -13,15 +13,15 @@ inherit
 			analyze, generate, propagate,
 			used, parent, set_parent
 		end;
-	
-feature 
+
+feature
 
 	parent: NESTED_BL;
 			-- Parent of access
 
 	type: TYPE_I;
 			-- Local variable type
-	
+
 	set_parent (p: NESTED_BL) is
 			-- Set `parent' to `p'
 		do
@@ -49,6 +49,7 @@ feature
 	fill_from (l: LOCAL_B) is
 			-- Fill in node from local `l'
 		do
+			multi_constraint_static := l.multi_constraint_static
 			position := l.position;
 			type := l.type;
 		end;

@@ -702,7 +702,7 @@ feature -- Output
 					end
 					a_text_formatter.process_symbol_text (Ti_colon)
 					a_text_formatter.add_space
-					orig_type.ext_append_to (a_text_formatter, Current)
+					orig_type.ext_append_to (a_text_formatter, associated_class)
 					if not args.after then
 						a_text_formatter.process_symbol_text (Ti_semi_colon)
 						a_text_formatter.add_space
@@ -720,7 +720,7 @@ feature -- Output
 			if not is_procedure then
 				a_text_formatter.process_symbol_text (Ti_colon)
 				a_text_formatter.add_space
-				type.ext_append_to (a_text_formatter, Current)
+				type.ext_append_to (a_text_formatter, associated_class)
 			end
 		end
 

@@ -128,6 +128,14 @@ feature -- Access
 			Result := alias_table.item (alias_name_id)
 		end
 
+	search_id_under_renaming (a_feature_name_id: INTEGER; a_renaming: RENAMING_A)
+			-- Search `a_name_id' in the current feature table but apply `a_renaming' first.
+		require
+			a_renaing_not_void: a_renaming /= Void
+		do
+			search_id (a_renaming.renamed (a_feature_name_id))
+		end
+
 feature {NONE} -- Implementation
 
 	alias_table: HASH_TABLE [FEATURE_I, INTEGER]

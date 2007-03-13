@@ -96,7 +96,7 @@ feature -- Comparison
 				equivalent (type, other.type)
 		end
 
-feature {TYPE_DEC_AS} -- Replication
+feature {TYPE_DEC_AS, AST_FORMAL_GENERICS_PASS2} -- Replication
 
 	set_type (t: like type) is
 		require
@@ -104,6 +104,8 @@ feature {TYPE_DEC_AS} -- Replication
 		do
 			type := t
 		end;
+
+feature {TYPE_DEC_AS} -- Replication
 
 	set_id_list (id: like id_list) is
 		require

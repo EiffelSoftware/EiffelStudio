@@ -75,7 +75,7 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER;  c: CLASS_C) is
 			-- Append Current type to `st'.
 		do
 			a_text_formatter.process_keyword_text (ti_Bit_class, Void)

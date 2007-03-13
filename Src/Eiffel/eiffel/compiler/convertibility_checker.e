@@ -36,7 +36,15 @@ inherit
 			test
 		end
 
+convert
+	to_type_as: {TYPE_AS}
+
 feature -- Initialization/Checking
+
+	to_type_as: TYPE_AS
+	do
+
+	end
 
 	init_and_check_convert_tables (
 			a_class: CLASS_C;
@@ -127,7 +135,9 @@ feature -- Initialization/Checking
 									else
 											-- Check constrained genericity validity rule
 										l_named_type.reset_constraint_error_list
-										l_named_type.check_constraints (a_class)
+										 	-- Check creation readyness because if we convert we need to create an object.
+										 	-- Pass `Void' for context feature as we don't have one.
+										l_named_type.check_constraints (a_class, Void, true)
 										if not l_named_type.constraint_error_list.is_empty then
 											create l_vncp.make ("Invalid generic type.")
 											l_vncp.set_class (a_class)
@@ -390,15 +400,25 @@ feature -- Initialization/Checking
 			valid_context_class: a_context_class.generics.count >= a_formal.position
 			a_target_type_not_void: a_target_type /= Void
 		local
-			l_success: BOOLEAN
+			l_convert_ok, l_success: BOOLEAN
 			l_other: FORMAL_A
 			l_constraint: TYPE_A
+			l_constraints: TYPE_SET_A
 			l_cl_type: CL_TYPE_A
 		do
 			l_other ?= a_target_type
 			if l_other = Void then
-				l_constraint := a_context_class.constraint (a_formal.position)
-				if l_constraint.conform_to (a_target_type) then
+				if a_formal.has_multi_constraints (a_context_class) then
+						-- Multi constraint case, use TYPE_SET_A.
+					l_constraints := a_context_class.constraints (a_formal.position)
+					l_convert_ok := l_constraints.conform_to_type (a_target_type)
+				else
+						-- Single constraint, common case.
+					l_constraint := a_context_class.constraint_fixed (a_formal.position)
+					l_convert_ok := l_constraint.conform_to (a_target_type)
+				end
+
+				if l_convert_ok then
 						-- Constraint conform to target, we allow conversion.
 						-- It is a conversion and not a plain conformance because in case where
 						-- the formal generic is expanded it becomes a conversion.

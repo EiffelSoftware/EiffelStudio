@@ -126,6 +126,20 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
+	process_extended_type_a (a_type: EXTENDED_TYPE_A) is
+			-- Process `a_type'.
+		do
+			a_type.type.append_to (text_formatter)
+			if a_type.has_renaming then
+				if a_type.has_associated_class then
+						a_type.renaming.append_to_with_pebbles (text_formatter, a_type.associated_class)
+				else
+					a_type.renaming.append_to (text_formatter)
+				end
+
+			end
+		end
+
 	process_formal_a (a_type: FORMAL_A) is
 			-- Process `a_type'.
 		do

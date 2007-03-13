@@ -112,7 +112,7 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			st.process_symbol_text (ti_L_bracket)
 			st.process_keyword_text (ti_Like_keyword, Void)
@@ -120,7 +120,7 @@ feature -- Output
 			st.process_keyword_text (ti_Current, Void)
 			st.process_symbol_text (ti_R_bracket)
 			st.add_space
-			conformance_type.ext_append_to (st, f)
+			conformance_type.ext_append_to (st, c)
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives

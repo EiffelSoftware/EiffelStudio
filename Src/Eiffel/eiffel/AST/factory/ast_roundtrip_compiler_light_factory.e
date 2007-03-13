@@ -33,6 +33,7 @@ inherit
 			new_real_value,
 			new_external_lang_as,
 			new_formal_dec_as,
+			new_vtgc1_error,
 			validate_integer_real_type,
 			new_line_pragma
 		end

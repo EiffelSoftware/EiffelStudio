@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_AST_CONTEXT
+		export
+			{NONE} all
+		end
+
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} all
@@ -770,9 +775,12 @@ feature {NONE} -- Implementation
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 		local
 			l_feat: E_FEATURE
+			l_feat_result: like feature_from_type_set
 			l_rout_id_set: ID_SET
 			l_last_class: like last_class
 			l_last_type: like last_type
+			l_last_type_set: TYPE_SET_A
+			l_is_multiconstraint_formal: BOOLEAN
 			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_type: TYPE_A
 			l_pos: INTEGER
@@ -797,33 +805,74 @@ feature {NONE} -- Implementation
 					if last_type /= Void then
 						last_type := last_type.actual_type
 						if last_type.is_formal then
-							last_type := constrained_type (last_type)
+							if last_type.is_multi_constrained_formal (current_class) then
+								l_is_multiconstraint_formal := True
+								l_last_type_set := last_type.to_type_set.constraining_types (current_class)
+								check multi_constraint_implies_existence_of_type_set: l_is_multiconstraint_formal implies l_last_type_set /= Void end
+							else
+								last_type := constrained_type (last_type)
+								if last_type.is_formal then
+										-- It's still a formal. This is unusual. We use the type set algorithm.
+									l_last_type_set := last_type.to_type_set.constraining_types (current_class)
+									l_is_multiconstraint_formal := True
+								end
+							end
 						end
-						if not last_type.is_none then
-							last_class := last_type.associated_class
-						else
+						if last_type.is_none or l_is_multiconstraint_formal then
 							last_class := Void
+						else
+							check not last_type.is_formal end
+							last_class := last_type.associated_class
 						end
 					end
 					l_rout_id_set := l_as.routine_ids
 					if l_rout_id_set /= Void then
 						if processing_creation_target then
-							l_feat := feature_in_class (current_class, l_rout_id_set)
-							if last_type /= Void then
-								last_class := last_type.associated_class
+								-- We are processing something like: create l.make
+							if l_is_multiconstraint_formal then
+								l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
+								if l_feat_result.features_found_count = 1 then
+									l_feat := l_feat_result.feature_item
+									last_class := l_feat_result.class_type_of_feature.associated_class
+								else
+									l_feat := Void
+									last_class := current_class
+								end
 							else
-								last_class := current_class
+								l_feat := feature_in_class (current_class, l_rout_id_set)
+								if last_type /= Void then
+									last_class := last_type.associated_class
+								else
+									last_class := current_class
+								end
 							end
 						else
 							if last_type /= Void then
+									-- We are already in a nested call like: a.f.*
+									-- So `last_type', last_class are the ones from a and
+									-- `l_rout_id_set' is the one of f
 								if last_type.is_none then
 									last_class := system.class_of_id (l_as.class_id)
 								end
 								if last_class /= Void then
 									l_feat := feature_in_class (last_class, l_rout_id_set)
+								else
+									-- MTNTODO: this was not hear previously: either remove the if and it always
+									-- works or then the check (+15 lines) is not really valid
+									last_class := current_class
 								end
 							else
-								l_feat := feature_in_class (current_class, l_rout_id_set)
+									-- We are at the beginning of a nested call: a.f.*
+									-- `l_rout_id_set' is the one of a
+								if l_is_multiconstraint_formal then
+									l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
+									if l_feat_result.features_found_count = 1 then
+										l_feat := l_feat_result.feature_item
+									end
+								else
+									l_feat := feature_in_class (current_class, l_rout_id_set)
+								end
+
 								last_type := current_class.actual_type
 								last_class := current_class
 							end
@@ -1641,8 +1690,11 @@ feature {NONE} -- Implementation
 			l_formal: FORMAL_A
 			l_type: TYPE_A
 			l_left_type: TYPE_A
+			l_is_multi_constrained: BOOLEAN
+			l_left_type_set: TYPE_SET_A
 			l_left_class: CLASS_C
 			l_right_type: TYPE_A
+			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1657,21 +1709,39 @@ feature {NONE} -- Implementation
 				if last_type.is_formal then
 					l_formal ?= last_type
 					last_type := type_from_ancestor (source_class, l_formal)
+				else
+					l_left_type := last_type
 				end
 					-- Find correct left type and left class.
-				l_left_type := constrained_type (last_type)
+				if last_type.is_formal then
+					if last_type.is_multi_constrained_formal (current_class) then
+							l_is_multi_constrained := True
+							l_left_type_set := constraining_types (last_type)
+					else
+							l_left_type := constrained_type (last_type)
+					end
+				end
+
 				l_right_type := expr_type (l_as.right)
 				if not has_error_internal then
 					check
 						l_right_type_not_void: l_right_type /= Void
 					end
 					l_right_type := l_right_type.actual_type
-					l_right_type := constrained_type (l_right_type)
-					if current_class = source_class then
+					if l_right_type.is_formal then
+						if l_right_type.is_multi_constrained_formal (current_class) then
+							l_right_type := constraining_types (l_right_type)
+						else
+							l_right_type := constrained_type (l_right_type)
+						end
+					end
+
+					if current_class = source_class and then not l_is_multi_constrained then
 							-- Taking into account possible conversion of the target. If it is the
 							-- same class ID as the one recorded in BINARY_AS, it means that target
 							-- was not converted, otherwise target was converted and its type is the
 							-- one from the right-hand side.
+						-- MTNASK: what to do here?
 						if l_left_type.associated_class.class_id = l_as.class_id then
 							last_type := l_left_type
 						else
@@ -1681,10 +1751,20 @@ feature {NONE} -- Implementation
 							-- We are not in the same class, so we cannot rely on `class_id' since
 							-- the type of the left target might be different in descendant class. Instead
 							-- we rely on the computed routine ID which will never change in descendants.
-						l_feat := l_left_type.associated_class.feature_with_rout_id (l_as.routine_ids.first)
-						if l_feat /= Void then
-							last_type := l_left_type
+						if l_is_multi_constrained then
+							check l_left_type_void: l_left_type = Void end
+							l_result := l_left_type_set.e_feature_state_by_name_id (names_heap.id_of (l_as.infix_function_name))
+							l_feat := l_result.feature_item
+							l_left_type := l_result.class_type_of_feature
 						else
+							check l_left_type_set_void: l_left_type_set = Void end
+							l_feat := l_left_type.associated_class.feature_with_rout_id (l_as.routine_ids.first)
+						end
+
+						if l_feat /= Void then
+							check l_left_type /= Void end
+							last_type := l_left_type
+						elseif not l_right_type.is_type_set then
 							last_type := l_right_type
 						end
 					end
@@ -1884,7 +1964,7 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				last_class := constrained_type (last_type).associated_class
+				last_class := constraining_types (last_type).associated_class
 				l_feat := feature_in_class (last_class, l_as.routine_ids)
 			end
 			if not expr_type_visiting then
@@ -1991,17 +2071,23 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_table.item_id (l_as.internal_name.name_id).e_feature
+						l_feat := last_parent.feature_with_id (l_as.internal_name)
 					else
-						l_feat := current_class.feature_table.item_id (l_as.internal_name.name_id).e_feature
+						l_feat := current_class.feature_with_id (l_as.internal_name)
 					end
 				else
 						-- Processing name of a feature.
 					l_feat := feature_in_class (current_class, current_feature.rout_id_set)
 				end
+				if l_feat = Void then
+					has_error_internal := True
+				end
 			end
 
 			if not has_error_internal and then not processing_parents then
+				-- MTNASK: can one really assume, that this here is never void?
+				-- What if someone renames a non existent feature of its constraint class? should nothing be printed?
+				-- Update: I set no error_internal as it continues to print stuff. please delte this comments.
 				check
 					l_feat_not_void: l_feat /= Void
 				end
@@ -2078,9 +2164,13 @@ feature {NONE} -- Implementation
 					else
 						l_feat := current_class.feature_with_name (l_as.feature_name.name)
 					end
+					if l_feat = Void then
+						has_error_internal := True
+					end
 				else
 						-- Processing name of a feature.
 					l_feat := feature_in_class (current_class, current_feature.rout_id_set)
+					check l_Feat_not_void: l_feat /= Void end
 				end
 
 				if not has_error_internal and then not processing_parents then
@@ -2767,7 +2857,9 @@ feature {NONE} -- Implementation
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		local
 			feature_name: FEAT_NAME_ID_AS
-			l_type: TYPE_A
+			l_constrained_type: TYPE_A
+			l_constrained_type_set: TYPE_SET_A
+			l_is_multi_constrained: BOOLEAN
 			l_feat: E_FEATURE
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
@@ -2789,10 +2881,18 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_constraint)
 				text_formatter_decorator.put_space
-				l_as.constraint.process (Current)
+				l_as.constraints.process (Current)
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				l_type := l_formal_dec.constraint_type (current_class)
+
+				if l_formal_dec.has_multi_constraints then
+						-- We're in the multi constrained case: G -> {A, B, C}
+					l_is_multi_constrained := True
+					l_constrained_type_set := l_formal_dec.constraint_types_if_possible (current_class)
+				else
+					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class).type
+				end
+
 				if l_as.has_creation_constraint then
 					from
 						l_as.creation_feature_list.start
@@ -2800,14 +2900,15 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 						text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
-						if not l_type.is_formal then
-							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
-							if l_feat /= Void then
-								text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
-							end
-						else
-							text_formatter_decorator.process_local_text (feature_name.visual_name)
-						end
+						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
+--						if not l_constrained_type.is_formal then
+--							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
+--							if l_feat /= Void then
+--								text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+--							end
+--						else
+--							text_formatter_decorator.process_local_text (feature_name.visual_name)
+--						end
 						l_as.creation_feature_list.forth
 					until
 						l_as.creation_feature_list.after
@@ -2815,11 +2916,15 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_symbol_text (ti_comma)
 						text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
-						if not l_type.is_formal then
-							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
-							text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+						if l_is_multi_constrained then
+
 						else
-							text_formatter_decorator.process_local_text (feature_name.visual_name)
+							if not l_constrained_type.is_formal then
+								l_feat := l_constrained_type.associated_class.feature_with_name (feature_name.visual_name)
+								text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+							else
+								text_formatter_decorator.process_local_text (feature_name.visual_name)
+							end
 						end
 						l_as.creation_feature_list.forth
 					end
@@ -2828,6 +2933,46 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
+		local
+			l_renaming: RENAME_CLAUSE_AS
+			l_type: TYPE_AS
+			l_cl_type_as: CLASS_TYPE_AS
+			l_tmp_current_class: like current_class
+			l_class_c: CLASS_C
+		do
+			l_type := l_as.type
+			process_type_as (l_type)
+			l_renaming := l_as.renaming
+			if l_renaming /= Void then
+				l_cl_type_as ?= l_type
+					-- If we have a class type we try to find the class and set it as the `current_class'
+					-- in order to make sure that feature lookups are done one the propper class.
+				if l_cl_type_as /= Void then
+					l_tmp_current_class := current_class
+					l_class_c := universe.class_named (l_cl_type_as.class_name.name, l_tmp_current_class.group).compiled_class
+					if l_class_c /= Void then
+						set_current_class (l_class_c)
+					else
+							-- If this class is not compiled we cannot to any feature linking for possible renaming clauses
+						has_error_internal := True
+					end
+				end
+				text_formatter_decorator.add_space
+				text_formatter_decorator.process_keyword_text (ti_rename_keyword, Void)
+				text_formatter_decorator.add_space
+				process_rename_clause_as (l_renaming)
+				text_formatter_decorator.add_space
+				text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+					-- If we changed the current_class set it back.
+				if l_class_c /= Void then
+					check l_tmp_current_class_not_void: l_tmp_current_class /= Void end
+					set_current_class (l_tmp_current_class)
+				end
+			end
+		end
+
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
@@ -2858,10 +3003,12 @@ feature {NONE} -- Implementation
 	process_rename_as (l_as: RENAME_AS) is
 		local
 			l_last_parent: like last_parent
+			l_tmp_has_error_internal: BOOLEAN
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
+			l_tmp_has_error_internal := has_error_internal
 			l_as.old_name.process (Current)
 			text_formatter_decorator.put_space
 			text_formatter_decorator.set_without_tabs
@@ -2871,6 +3018,7 @@ feature {NONE} -- Implementation
 			last_parent := Void
 			l_as.new_name.process (Current)
 			last_parent := l_last_parent
+			has_error_internal := l_tmp_has_error_internal
 		end
 
 	process_invariant_as (l_as: INVARIANT_AS) is
@@ -3285,6 +3433,36 @@ feature {NONE} -- Expression visitor
 
 feature {NONE} -- Implementation: helpers
 
+	append_feature_by_id (a_feature_name: FEAT_NAME_ID_AS; a_type: TYPE_A; a_type_set: TYPE_SET_A)
+			-- Append feature.
+			--
+			-- `a_feature_name_id' is the `NAMES_HEAP' ID of the feature name.
+			-- `l_type' is the type where we lookup the feautre
+			--| The code has 2 arguments as it suites the actual code better. (May be changed.)
+		require
+			not_both_void: a_type /= Void and a_type_set /= Void
+		local
+			l_feat: E_FEATURE
+			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+		do
+			if a_type_set /= Void then
+				l_result := a_type_set.e_feature_state_by_name_id (a_feature_name.feature_name.name_id)
+				l_feat := l_result.feature_item
+			elseif a_type /= Void then
+				check a_type_not_void: a_type /= Void end
+				if not a_type.is_formal then
+					l_feat := a_type.associated_class.feature_with_name (a_feature_name.visual_name)
+				end
+			end
+
+			if l_feat /= Void then
+				text_formatter_decorator.process_feature_text (a_feature_name.visual_name, l_feat, False)
+			else
+				text_formatter_decorator.process_local_text (a_feature_name.visual_name)
+			end
+		end
+
+
 	append_format_multilined (s: STRING; indentable: BOOLEAN) is
 		require
 			string_not_void: s /= Void
@@ -3687,6 +3865,33 @@ feature {NONE} -- Implementation: helpers
 			Result := a_current_class.feature_table.item_id (a_name_id)
 		end
 
+	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): TUPLE
+		[	feature_item: E_FEATURE;
+			class_type_of_feature: CL_TYPE_A;
+			features_found_count: INTEGER;
+			constraint_position: INTEGER ]
+			-- Feature with `a_id_set' in `a_class_c'
+		require
+			a_type_set_not_void: a_type_set /= Void
+			a_id_set_not_void: a_id_set /= Void
+		do
+			if not has_error_internal and a_id_set.first = 0 then
+				has_error_internal := True
+				set_error_message ("Feature with routine id of 0!!!")
+			else
+				if not has_error_internal then
+					Result := a_type_set.e_feature_state_by_id (a_id_set.first)
+				end
+			end
+			if not has_error_internal and Result = Void then
+				has_error_internal := True
+				set_error_message ("Feature with routine id " + a_id_set.first.out + " could not be found.")
+			end
+		ensure
+			feature_in_class_not_void: not has_error_internal implies Result /= Void
+		end
+
+
 	feature_in_class (a_class_c: CLASS_C; a_id_set: ID_SET): E_FEATURE is
 			-- Feature with `a_id_set' in `a_class_c'
 		require
@@ -3748,13 +3953,29 @@ feature {NONE} -- Implementation: helpers
 				end
 				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type (current_class).associated_class
+				Result := l_formal_dec.constraint_type (current_class).type.associated_class
 			else
 				Result := l_type.associated_class
 			end
 		end
 
-	constrained_type (a_type: TYPE_A): TYPE_A is
+	 constrained_type (a_type: TYPE_A): TYPE_A is
+			-- Constrained type of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_type_has_no_multi_constraint: not a_type.is_multi_constrained_formal (current_class)
+		local
+			l_formal_type: FORMAL_A
+		do
+			if a_type.is_formal then
+				l_formal_type ?= a_type
+				Result := current_class.constraint_fixed (l_formal_type.position)
+			else
+				Result := a_type
+			end
+		end
+
+	constraining_types (a_type: TYPE_A): TYPE_SET_A is
 			-- Constrained type of `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -3763,9 +3984,9 @@ feature {NONE} -- Implementation: helpers
 		do
 			if a_type.is_formal then
 				l_formal_type ?= a_type
-				Result := current_class.constraint (l_formal_type.position)
+				Result := current_class.constraints (l_formal_type.position)
 			else
-				Result := a_type
+				Result := a_type.to_type_set
 			end
 		end
 

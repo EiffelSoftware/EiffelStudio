@@ -64,13 +64,13 @@ feature -- Open inner container data.
 						internal_docking_manager.tool_bar_manager.unlock
 					end
 
+					open_tool_bar_datas (l_config_data.tool_bar_datas)
+					
 					check not internal_docking_manager.query.inner_container_main.full end
 					open_all_inner_containers_data (l_config_data)
 
 					-- Restore auto hide zone.
 					open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
-
-					open_tool_bar_datas (l_config_data.tool_bar_datas)
 
 					l_cmd := internal_docking_manager.command
 					l_cmd.resize (True)

@@ -84,8 +84,8 @@ feature -- Execution
 
 						-- Set changed in project
 					cst ?= l_editors.item.stone
-					if cst /= Void then
-						l_dev_win.set_classi_changed (cst.class_i)
+					if cst /= Void and then cst.is_valid then
+						l_dev_win.set_classi_changed (cst.e_class)
 					end
 					l_editors.forth
 				end

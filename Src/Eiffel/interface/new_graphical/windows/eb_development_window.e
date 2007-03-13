@@ -772,10 +772,10 @@ feature -- Resource Update
 			end
 		end
 
-	set_classi_changed (a_class: CLASS_I) is
+	set_classi_changed (a_class: CLASS_C) is
 			-- Change a_class in shared project.
 		do
-			Eiffel_project.Workbench.change_class (a_class)
+			Eiffel_project.Workbench.change_class (a_class.original_class)
 		end
 
 	on_text_saved is

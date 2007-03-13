@@ -10,7 +10,7 @@ deferred class
 	EV_SPLIT_AREA_I
 
 inherit
-	
+
 	EV_CONTAINER_I
 		redefine
 			interface,
@@ -37,11 +37,11 @@ feature -- Access
 		end
 
 feature -- Status report
-		
+
 	count: INTEGER is
 			-- Number of items in `Current'
 		do
-			if first /= Void then	
+			if first /= Void then
 				Result := 1
 			end
 			if second /= Void then
@@ -145,7 +145,7 @@ feature -- Status setting
 		do
 			max_sp := maximum_split_position
 			min_sp := minimum_split_position
-			set_split_position (((max_sp - min_sp) * a_proportion).rounded +
+			set_split_position (((max_sp - min_sp).to_real * a_proportion).rounded +
 				min_sp)
 		end
 
@@ -192,7 +192,7 @@ feature -- Element change
 			item_position_not_changed: (old item = old first implies item = first) or
 				(old item = old second implies item = second)
 		end
-		
+
 	extend (an_item: like item) is
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.

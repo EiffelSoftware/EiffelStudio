@@ -3,7 +3,7 @@ indexing
 		"Adapters for EV_DRAWABLE that allow drawing of figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figure, primitives, drawing" 
+	keywords: "figure, primitives, drawing"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,14 +59,14 @@ feature -- Access
 	drawable: EV_DRAWABLE
 			-- Drawable surface (screen, drawing area or pixmap).
 
-	world: EV_FIGURE_WORLD is 
+	world: EV_FIGURE_WORLD is
 		deferred
 		end
 
 	Default_colors: EV_STOCK_COLORS is
 		deferred
 		end
-	
+
 feature -- Element Change
 
 	set_drawable (a_drawable: EV_DRAWABLE) is
@@ -293,7 +293,7 @@ feature -- Figure drawing
 			if line.point_count >= 2 then
 				if
 					line.is_start_arrow
-				or else 
+				or else
 					line.is_end_arrow
 				then
 					d.set_line_width (0)
@@ -434,7 +434,7 @@ feature -- Figure drawing
 				cur_font.shape,
 				cur_font.height)
 			scaled_font.set_height (
-				(scaled_font.height *
+				(scaled_font.height.to_double *
 				text_figure.point.scale_y_abs).rounded)
 			scaled_font.preferred_families.append (cur_font.preferred_families)
 			d.set_font (scaled_font)

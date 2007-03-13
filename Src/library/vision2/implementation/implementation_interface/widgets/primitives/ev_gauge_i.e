@@ -128,7 +128,7 @@ feature -- Status setting
 			u := value_range.upper
 			l := value_range.lower
 			if u /= l then
-				set_value (((u - l) * a_proportion).rounded + l)
+				set_value (((u - l).to_real * a_proportion).rounded + l)
 			end
 		end
 

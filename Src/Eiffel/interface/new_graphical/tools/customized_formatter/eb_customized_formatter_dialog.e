@@ -881,6 +881,7 @@ feature {NONE} -- Implementation
 				-- Build formatter displayed tools grid item.
 			create l_tools_item
 			l_tools_item.set_component_padding (4)
+			l_tools_item.enable_component_pebble
 			l_tool_table := tool_table
 			l_tools := a_descriptor.tools
 			from
@@ -892,11 +893,32 @@ feature {NONE} -- Implementation
 				if l_tool_info /= Void then
 					create l_pixmap_component.make (l_tool_info.pixmap)
 					l_tools_item.insert_component (l_pixmap_component, l_tools_item.component_count + 1)
+					l_pixmap_component.set_general_tooltip (displayed_in_tooltip (l_tool_info.displayed_name, l_pixmap_component, l_tools_item))
 				end
 				l_tools.forth
 			end
 			a_grid_row.set_item (2, l_tools_item)
 			a_grid_row.set_data (a_descriptor)
+		end
+
+	displayed_in_tooltip (a_tool_name: STRING_GENERAL; a_component: ES_GRID_ITEM_COMPONENT; a_item: ES_GRID_LISTABLE_ITEM): EVS_GENERAL_TOOLTIP is
+			-- Tooltip for `a_tool_name'.
+		require
+			a_tool_name_attached: a_tool_name /= Void
+		local
+			l_toolname: STRING_GENERAL
+			l_tooltip: EVS_WIDGET_TOOLTIP
+		do
+			l_toolname := a_tool_name.twin
+			l_toolname.append (" ")
+			l_toolname.append (interface_names.string_general_as_lower (interface_names.t_tool_name))
+			create l_tooltip.make (a_component.pointer_enter_actions, a_component.pointer_leave_actions, agent (a_item.grid_item).is_destroyed, create {EV_LABEL}.make_with_text (l_toolname))
+			l_tooltip.unify_background_color
+			l_tooltip.enable_repeat_tooltip_display
+			l_tooltip.set_tooltip_window_related_window_agent (agent (window_manager.last_focused_development_window).window)
+			Result := l_tooltip
+		ensure
+			result_attached: Result /= Void
 		end
 
 	setup_formatter_grid is

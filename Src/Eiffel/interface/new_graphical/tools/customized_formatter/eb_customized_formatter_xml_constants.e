@@ -7,14 +7,14 @@ indexing
 class
 	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
 
+inherit
+	EB_METRIC_XML_CONSTANTS
+
 feature -- Access
 
 	n_formatters: STRING is "formatters"
 	n_formatter: STRING is "formatter"
-	n_name: STRING is "name"
 	n_location: STRING is "location"
-	n_filter: STRING is "filter"
-	n_metric: STRING is "metric"
 	n_header: STRING is "header"
 	n_temp_header: STRING is "temp_header"
 	n_pixmap: STRING is "pixmap"

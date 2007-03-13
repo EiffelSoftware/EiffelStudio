@@ -44,20 +44,6 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	remove_i_th (i: INTEGER) is
-			-- Remove item at `i'-th position.
-		local
-			imp: EV_ITEM_IMP
-			item_ptr: POINTER
-		do
-			child_array.go_i_th (i)
-			imp ?= child_array.i_th (i).implementation
-			item_ptr := imp.c_object
-			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
-			child_array.remove
-			imp.set_item_parent_imp (Void)
-		end
-
 	make (an_interface: like interface) is
 			-- Create the tool-bar.
 		do
@@ -226,11 +212,18 @@ feature -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
-			add_radio_button (v)
+
+			r ?= v_imp
+			if r /= Void then
+				{EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
+				radio_group := r.radio_group
+			end
+
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if parent_imp /= Void then
@@ -238,18 +231,34 @@ feature -- Implementation
 			end
 		end
 
-	add_radio_button (w: like item) is
-			-- Connect radio button to tool bar group.
-		require
-			w_not_void: w /= Void
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
 		local
+			imp: EV_ITEM_IMP
+			item_ptr: POINTER
 			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			l_radio_group: POINTER
 		do
-			r ?= w.implementation
+			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+
+			r ?= imp
 			if r /= Void then
-				{EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
-				radio_group := r.radio_group
+				-- We are removing a radio button from `Current' so we make sure the radio group is valid.
+				l_radio_group := {EV_GTK_EXTERNALS}.gtk_radio_tool_button_get_group (r.visual_widget)
+				check
+					radio_button_not_null: l_radio_group /= default_pointer
+				end
+				if {EV_GTK_EXTERNALS}.g_slist_length (l_radio_group) = 1 then
+					-- This is the last radio button in the group so we set `radio_group' to null.
+					radio_group := default_pointer
+				end
 			end
+
+			item_ptr := imp.c_object
+			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			child_array.remove
+			imp.set_item_parent_imp (Void)
 		end
 
 feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation

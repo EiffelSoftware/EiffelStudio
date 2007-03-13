@@ -607,24 +607,40 @@ feature -- Accelerator, focus label and menu name
 		end
 
 feature -- Formatter displayer names
+	l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
+	l_class_flat_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying class list%Nsuch as class clients/suppliers") end
+	l_class_feature_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying features in form of list from a class%Nsuch as attributes/routines") end
+	l_feature_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying different versions of a feature%Nsuch as feature implementors/ancestor versions/descendant versions") end
+	l_feature_caller_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying feature callers") end
+	l_feature_callee_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying feature callees") end
+	l_domain_displayer_help: STRING_GENERAL do Result := locale.translate ("This view can be used to display result of all formatters%Nthus it is used as a default view for formatters") end
 
 	l_class_tree_displayer: STRING_GENERAL do Result := locale.translate ("Class tree view") end
 	l_class_flat_displayer: STRING_GENERAL do Result := locale.translate ("Class list view") end
 	l_class_feature_displayer: STRING_GENERAL do Result := locale.translate ("Feature list view") end
 	l_feature_displayer: STRING_GENERAL do Result := locale.translate ("Feature version view") end
+
 	l_feature_caller_displayer: STRING_GENERAL do Result := locale.translate ("Feature caller view") end
 	l_feature_callee_displayer: STRING_GENERAL do Result := locale.translate ("Feature callee view") end
 	l_dependency_displayer: STRING_GENERAL do Result := locale.translate ("Dependency view") end
 	l_domain_displayer: STRING_GENERAL do Result := locale.translate ("Domain view") end
+
 	l_formatter_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation has finished.") end
 	l_formatter_placeholder: STRING_GENERAL do Result := locale.translate ("%"$target%" serves as a placeholder which will be replaced by the input to current fomatter.") end
 	l_formatter_temp_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation is going on.") end
 	l_formatter_filter_help: STRING_GENERAL do Result := locale.translate ("Will invisible items be appressed from display?") end
 	l_formatter_scope_help: STRING_GENERAL do Result := locale.translate ("Is this formatter of per EiffelStudio scope or per target scope?") end
 	l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translate ("In which tool(s) will this formatter be displayed") end
+	l_formatter_metric_help: STRING_GENERAL do Result := locale.translate ("From which result of this formatter is generated.") end
+	l_formatter_default_header (l_ellipse: STRING_GENERAL): STRING_GENERAL
+		do
+			Result := locale.format_string (locale.translate ("$1 from $target"), [l_ellipse])
+		end
+	l_formatter_default_temp_header (l_ellipse: STRING_GENERAL): STRING_GENERAL
+		do
+			Result := locale.format_string (locale.translate ("Extracting $1 from $target ..."), [l_ellipse])
+		end
 
-	l_formatter_default_header: STRING is " ... from $target"
-	l_formatter_default_temp_header: STRING is "Extracting ... from $target ..."
 
 feature -- Toggles
 

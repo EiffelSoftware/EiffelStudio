@@ -91,6 +91,10 @@ feature -- Command
 				develop_window := a_dev_window
 			end
 				-- Initial editors.
+			if develop_window.editors_manager.show_formatting_marks /= a_session_data.show_formatter_marks then
+				develop_window.editors_manager.toggle_formatting_marks
+				develop_window.refresh_toggle_formatting_marks_command
+			end
 			l_has_editor_restored := develop_window.editors_manager.restore_editors (a_session_data.open_classes, a_session_data.open_clusters)
 			if l_has_editor_restored then
 				develop_window.restore_editors_docking_layout

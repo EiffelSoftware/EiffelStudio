@@ -928,6 +928,7 @@ feature -- Window management
 			l_open_clusters.merge (editors_manager.open_fake_clusters)
 			a_window_data.save_open_classes (l_open_classes)
 			a_window_data.save_open_clusters (l_open_clusters)
+			a_window_data.save_formatting_marks (editors_manager.show_formatting_marks)
 		end
 
 	save_tools_docking_layout is
@@ -1843,7 +1844,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_B
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
-			EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation: Editor commands
+			EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Implementation: Editor commands
 
 	refresh_cursor_position is
 			-- Display the current cursor position in the status bar.
@@ -2048,8 +2049,14 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 	toggle_formatting_marks is
 			-- Show/Hide formatting marks in the editor and update related menu item.
 		do
-			editors_manager.current_editor.toggle_view_invisible_symbols
-			if editors_manager.current_editor.view_invisible_symbols then
+			editors_manager.toggle_formatting_marks
+			refresh_toggle_formatting_marks_command
+		end
+
+	refresh_toggle_formatting_marks_command is
+			-- Refresh toggle formatting marks menu item.
+		do
+			if editors_manager.show_formatting_marks then
 				menus.formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
 			else
 				menus.formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)

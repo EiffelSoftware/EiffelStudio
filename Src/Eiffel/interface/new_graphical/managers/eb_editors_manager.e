@@ -401,6 +401,9 @@ feature -- Status report
 			end
 		end
 
+	show_formatting_marks: BOOLEAN
+			-- Show formating marks?
+
 	not_backuped: INTEGER
 			-- Number of editors not backuped last time
 
@@ -747,6 +750,26 @@ feature -- Basic operations
 			end
 		end
 
+	toggle_formatting_marks is
+			-- Toggle formatting marks.
+		local
+			l_editors: like editors
+		do
+			from
+				l_editors := editors
+				l_editors.start
+			until
+				l_editors.after
+			loop
+				check
+					show_formatting_marks = l_editors.item.view_invisible_symbols
+				end
+				l_editors.item.toggle_view_invisible_symbols
+				l_editors.forth
+			end
+			show_formatting_marks := not show_formatting_marks
+		end
+
 feature -- Memory management
 
 	internal_recycle is
@@ -941,6 +964,9 @@ feature {NONE}-- Implementation
 		do
 			create last_created_editor.make (development_window)
 			last_created_editor.set_is_main_editor (True)
+			if show_formatting_marks /= last_created_editor.view_invisible_symbols then
+				last_created_editor.toggle_view_invisible_symbols
+			end
 			last_created_editor.widget.set_minimum_size (0, 0)
 			add_observers (last_created_editor)
 			last_created_editor.drop_actions.extend (agent on_drop (?, last_created_editor))
@@ -948,6 +974,9 @@ feature {NONE}-- Implementation
 			if editors_internal.off then
 				editors_internal.start
 			end
+		ensure
+			last_created_editor_not_void: last_created_editor /= Void
+			formatting_marks_set: show_formatting_marks = last_created_editor.view_invisible_symbols
 		end
 
 	has_editor_with_long_title (a_title: STRING_GENERAL): BOOLEAN is

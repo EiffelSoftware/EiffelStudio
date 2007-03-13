@@ -660,14 +660,22 @@ feature -- Byte code generation
 				-- Compound byte code
 			make_body_code (ba, melted_generator)
 
-			ba.append (Bc_null)
-
 			if rescue_clause /= Void then
+					-- Jump to the end of the rescue clause in case of normal execution.
+				ba.append (bc_jmp)
+				ba.mark_forward2
+					-- Mark the start of the rescue clause.
 				ba.write_forward
 				ba.append (Bc_rescue)
 				melted_generator.generate (ba, rescue_clause)
 				ba.append (Bc_end_rescue)
+					-- Mark the end of the rescue clause.
+				ba.write_forward2
 			end
+
+				-- Generate the hook corresponding to the final end.
+			generate_melted_end_debugger_hook (ba)
+			ba.append (Bc_null)
 
 			from
 				Temp_byte_code_array.append_short_integer (local_list.count)

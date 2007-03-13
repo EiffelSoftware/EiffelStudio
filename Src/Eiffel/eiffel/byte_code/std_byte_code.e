@@ -1569,9 +1569,6 @@ feature -- Byte code generation
 			if have_assert then
 				ba.write_forward
 			end
-
-				-- Generate the hook corresponding to the final end.
-			generate_melted_end_debugger_hook (ba)
 		end
 
 feature -- Array optimization

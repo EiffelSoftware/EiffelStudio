@@ -71,6 +71,11 @@ feature -- Properties
 		deferred
 		end
 
+	change_tab_tooltip (a_tooltip: STRING_GENERAL) is
+			-- Set notebook tab tooltip if possible.
+		do
+		end
+
 feature {SD_OPEN_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is

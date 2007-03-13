@@ -101,6 +101,9 @@ feature -- Access
 	detail: STRING_GENERAL
 			-- When show zone navigation dialog, we use this detail if exist.
 
+	tab_tooltip: STRING_GENERAL
+			-- Tool tip displayed on notebook tab.
+
 	pixel_buffer: like internal_pixel_buffer is
 			-- Client programmer's widget's pixel buffer
 		do
@@ -265,6 +268,15 @@ feature -- Set
 			detail := a_detail
 		ensure
 			a_detail_set: detail = a_detail
+		end
+
+	set_tab_tooltip (a_text: like tab_tooltip) is
+			-- Set `a_text' to `tab_tooltip'
+		do
+			tab_tooltip := a_text
+			state.change_tab_tooltip (a_text)
+		ensure
+			set: tab_tooltip = a_text
 		end
 
 	set_pixel_buffer (a_buffer: like internal_pixel_buffer) is

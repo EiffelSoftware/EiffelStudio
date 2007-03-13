@@ -145,6 +145,18 @@ feature -- Command
 			end
 		end
 
+	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: STRING_GENERAL) is
+			-- Change `a_content' tab's tooltip to `a_tooltip'.
+		require
+			not_void: a_content /= Void
+			has: has (a_content)
+		local
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			l_tab := internal_notebook.tab_by_content (a_content)
+			l_tab.set_tool_tip (a_tooltip)
+		end
+
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is

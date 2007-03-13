@@ -22,6 +22,7 @@ inherit
 			content,
 			change_title,
 			change_pixmap,
+			change_tab_tooltip,
 			close,
 			content_count_valid,
 			is_dock_at_top,
@@ -425,6 +426,12 @@ feature {SD_CONTENT} -- Redefine
 			tab_zone.set_pixmap (a_pixmap, a_content)
 		end
 
+	change_tab_tooltip (a_text: STRING_GENERAL) is
+			-- Redefine.
+		do
+			zone.change_tab_tooltip (content, a_text)
+		end
+
 feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 	set_last_floating_width (a_int: INTEGER) is
@@ -493,7 +500,6 @@ feature -- Properties redefine.
 	content: SD_CONTENT is
 			-- Redefine.
 		do
---			Result := tab_zone.content
 			Result := internal_content
 		ensure then
 			not_void: Result /= Void

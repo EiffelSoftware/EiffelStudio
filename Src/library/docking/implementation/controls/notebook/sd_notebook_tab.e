@@ -93,6 +93,14 @@ feature -- Command
 			internal_draw_pixmap := True
 		end
 
+	set_tool_tip (a_text: STRING_GENERAL) is
+			-- Set `tool_tip' with `a_text'
+		do
+			tool_tip := a_text
+		ensure
+			set: tool_tip = a_text
+		end
+
 	clear_pressed_flag is
 			-- Set `is_pointer_pressed' to False
 		do
@@ -175,6 +183,9 @@ feature -- Query
 		do
 			Result := parent.height
 		end
+
+	tool_tip: STRING_GENERAL
+			-- Tool tip
 
 	screen_x: INTEGER is
 			-- Screen x position
@@ -352,6 +363,18 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 							l_drawer.expose_hot (drawing_width, info)
 						end
 					end
+				end
+			end
+		end
+
+	on_pointer_motion_for_tooltip (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Handle pointer motion actions for setting tooltips.
+		do
+			if rectangle.has_x_y (a_x, a_y) then
+				if tool_tip /= Void and then not parent.tooltip.as_string_32.is_equal (tool_tip) then
+					parent.set_tooltip (tool_tip)
+				elseif tool_tip = Void then
+					parent.remove_tooltip
 				end
 			end
 		end

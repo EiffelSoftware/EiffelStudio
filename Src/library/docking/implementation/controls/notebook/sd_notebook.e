@@ -165,6 +165,7 @@ feature -- Command
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
 			l_tab.close_actions.extend (agent (a_content.close_request_actions).call (Void))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
+			l_tab.set_tool_tip (a_content.tab_tooltip)
 			internal_tab_box.extend (l_tab)
 
 			select_item (a_content, True)
@@ -328,6 +329,18 @@ feature -- Query
 			has: has_tab (a_tab)
 		do
 			Result := internal_tab_box.index_of (a_tab)
+		end
+
+	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
+			-- Tab which associate with `a_widget'.
+		require
+			has: has (a_content)
+		do
+			internal_contents.start
+			internal_contents.search (a_content)
+			Result := internal_tabs.i_th (internal_contents.index)
+		ensure
+			not_void: Result /= Void
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN is
@@ -523,18 +536,6 @@ feature {NONE}  -- Implementation
 			select_item (content_by_tab (a_tab), True)
 			notify_tab (a_tab, True)
 			selection_actions.call (Void)
-		end
-
-	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
-			-- Tab which associate with `a_widget'.
-		require
-			has: has (a_content)
-		do
-			internal_contents.start
-			internal_contents.search (a_content)
-			Result := internal_tabs.i_th (internal_contents.index)
-		ensure
-			not_void: Result /= Void
 		end
 
 	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN) is

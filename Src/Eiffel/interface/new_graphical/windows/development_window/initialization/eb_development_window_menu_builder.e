@@ -652,12 +652,8 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- show/hide formatting marks.
 			create l_cmd.make
 			l_cmd.set_menu_name (develop_window.Interface_names.m_show_formatting_marks)
-			if current_editor /= Void then
-				if current_editor.view_invisible_symbols then
-					l_cmd.set_menu_name (develop_window.Interface_names.m_hide_formatting_marks)
-				end
-			end
 			develop_window.menus.set_formatting_marks_command_menu_item (l_cmd.new_menu_item)
+			develop_window.refresh_toggle_formatting_marks_command
 			l_command_controller.add_edition_command (l_cmd)
 			l_cmd.add_agent (agent develop_window.toggle_formatting_marks)
 			develop_window.commands.editor_commands.extend (l_cmd)

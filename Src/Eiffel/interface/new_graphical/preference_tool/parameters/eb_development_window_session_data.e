@@ -67,6 +67,9 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 	editor_position: INTEGER
 			-- Position that editor was set to if any.
 
+	show_formatter_marks: BOOLEAN
+			-- Show formatter marks?
+
 	width: INTEGER
 			-- Width for the development window.
 
@@ -166,6 +169,14 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			open_clusters := a_open_clusters
 		ensure
 			open_clusters_not_void: open_clusters /= Void
+		end
+
+	save_formatting_marks (a_show_formatter_marks: like show_formatter_marks) is
+			-- Save formatter marks
+		do
+			show_formatter_marks := a_show_formatter_marks
+		ensure
+			show_formatter_marks_set: show_formatter_marks = a_show_formatter_marks
 		end
 
 	save_context_data (a_class_id, a_feature_id: STRING; a_tab_index: INTEGER) is

@@ -506,7 +506,8 @@ feature -- Visit nodes
 		do
 			process_cluster (an_override)
 			if an_override.override = Void then
-				l_groups := application_target.libraries.linear_representation
+				create l_groups.make (application_target.libraries.count + application_target.clusters.count)
+				l_groups.merge_right (application_target.libraries.linear_representation)
 				l_groups.merge_right (application_target.clusters.linear_representation)
 			else
 				l_groups := an_override.override

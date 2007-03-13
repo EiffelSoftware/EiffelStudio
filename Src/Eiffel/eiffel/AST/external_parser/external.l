@@ -187,9 +187,10 @@ N		[0-9]
 				append_text_to_string (token_buffer)
 				last_token := TE_ID
 			}
-(("-")|("/")|{X})+ {
+(("-")|("/")|("\\")|{X})+ {
 					-- Special identifier for include files that specifies
-					-- a path, e.g. <sys/timeb.h>, or path that includes an hyphenation.
+					-- a path, e.g. <sys/timeb.h>, <windows\file.h>, or path
+					-- that includes an hyphenation.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				last_token := TE_INCLUDE_ID

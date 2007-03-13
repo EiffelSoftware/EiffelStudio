@@ -1033,6 +1033,7 @@ feature -- Window management
 				restore_standard_tools_docking_layout
 			end
 			menus.update_menu_lock_items
+			menus.update_show_tool_bar_items
 		end
 
 	restore_editors_docking_layout is
@@ -1071,6 +1072,7 @@ feature -- Window management
 				internal_construct_standard_layout_by_code
 			end
 			menus.update_menu_lock_items
+			menus.update_show_tool_bar_items
 		rescue
 			retried := True
 			retry

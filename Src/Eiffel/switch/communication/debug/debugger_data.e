@@ -147,20 +147,34 @@ feature -- global
 		local
 			bp: BREAKPOINT
 			bplst: like breakpoints
+			newlst: ARRAYED_LIST [BREAKPOINT]
 		do
-				-- remove useless breakpoints
-			from
-				bplst := breakpoints
-				bplst.start
-			until
-				bplst.after
-			loop
-				bp := bplst.item_for_iteration
-				if bp.is_not_useful or not bp.is_valid then
-					bplst.remove (bp)
+			bplst := breakpoints
+			if not bplst.is_empty then
+					--| remove useless breakpoints
+				from
+					create newlst.make (bplst.count)
 					bplst.start
-				else
+				until
+					bplst.after
+				loop
+					bp := bplst.item_for_iteration
+					if bp.is_not_useful or not bp.is_valid then
+						--| Forget about this breakpoint
+					else
+						newlst.extend (bp)
+					end
 					bplst.forth
+				end
+				bplst.wipe_out
+					--| Readding the breakpoints ensures us to have fresh hash_code ...
+				from
+					newlst.start
+				until
+					newlst.after
+				loop
+					bplst.force (bp, bp)
+					newlst.forth
 				end
 			end
 		end
@@ -1071,6 +1085,10 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 
 	synchronize_breakpoint (bp: BREAKPOINT) is
 			-- Resychronize the breakpoint after a recompilation.
+			--| note: since we might update `body_index' or `breakable_line_number'
+			--|       which are used to compute the hash_code of breakpoint
+			--|       it is mandatory to call "update" afterwhile
+			--|       to reassign the bp to the bp list with fresh hash_code.
 		require
 			bp_not_void: bp /= Void
 		local
@@ -1110,6 +1128,9 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 					elseif
 						l_breakable_line_number > nb_bps
 						and then not is_breakpoint_set (l_routine, nb_bps)
+							--| FIXME.
+							--| This might be dangerous to access the breakpoints list
+							--| since its data are not stable
 					then
 						check nb_bps > 0 end
 						bp.set_breakable_line_number (nb_bps)

@@ -38,6 +38,15 @@ feature -- Command
 			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 		end
 
+	is_remote_desktop: BOOLEAN is
+			-- Redefine
+		local
+			l_routine: WEL_WINDOWS_ROUTINES
+		do
+			create l_routine
+			Result := l_routine.is_terminal_service
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -19,11 +19,11 @@ feature -- Hot zone factory
 			l_version: WEL_WINDOWS_VERSION
 			l_shared: SD_SHARED
 			l_line_drawer: SD_LINE_DRAWER
-			l_routine: WEL_WINDOWS_ROUTINES
+			l_system: SD_SYSTEM_SETTER
 		do
 			create l_version
-			create l_routine
-			if l_version.is_windows_2000_compatible and then not l_routine.is_terminal_service then
+			create {SD_SYSTEM_SETTER_IMP} l_system
+			if l_version.is_windows_2000_compatible and then not l_system.is_remote_desktop then
 				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result
 			else
 				create {SD_HOT_ZONE_OLD_FACTORY} Result

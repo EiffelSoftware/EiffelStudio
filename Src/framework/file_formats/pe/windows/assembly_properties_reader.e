@@ -27,7 +27,7 @@ feature {NONE} -- Initialize
 			l_reg: WEL_REGISTRY
 			l_val: WEL_REGISTRY_KEY_VALUE
 			l_p: POINTER
-			l_loc: STRING
+			l_dir: STRING
 			l_dll: WEL_DLL
 			l_dis: like dispenser
 		do
@@ -36,11 +36,14 @@ feature {NONE} -- Initialize
 			if l_p /= default_pointer then
 				l_val := l_reg.key_value (l_p, "InstallRoot")
 				if l_val.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz then
-					l_loc := l_val.string_value
-					l_loc.prune_all_trailing ('\')
-					l_loc.prune_all_trailing ('/')
-					if (create {DIRECTORY}.make (l_loc)).exists then
-						l_loc.append ("\" + a_runtime_version + "\mscorsn.dll")
+					l_dir := l_val.string_value
+					l_dir.prune_all_trailing ('\')
+					l_dir.prune_all_trailing ('/')
+					if (create {DIRECTORY}.make (l_dir)).exists then
+						l_dir.append ("\" + a_runtime_version + "\")
+						add_runtime_path (l_dir)
+
+							-- Check DLL exists
 						create l_dll.make ("mscorsn.dll")
 						strong_name_retriveable := l_dll.exists
 					end
@@ -134,6 +137,57 @@ feature -- Status report
 			Result := dispenser /= default_pointer
 		end
 
+feature {NONE} -- Caching
+
+	add_runtime_path (a_path: STRING) is
+			-- Add's `a_path' to PATH environment variable, if it has not already been added
+		require
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			l_access: ENVIRONMENT_ACCESS
+			l_name, l_path, l_new_path: STRING
+			l_wname, l_wpath: WEL_STRING
+			l_done: BOOLEAN
+		do
+			if not added_paths.has (a_path) then
+				create l_access
+				l_name := once "PATH"
+
+					-- Get path environment variable
+				l_path := l_access.get (l_name)
+
+					-- Create new path variable
+				create l_new_path.make (256)
+				l_new_path.append (a_path)
+				if l_path /= Void then
+					l_new_path.append_character (';')
+					l_new_path.append (l_path)
+				end
+
+					-- Set it with new value
+				l_access.put (l_new_path, l_name)
+					-- Really set the variable because on .NET ENVIRONMENT_ACCESS.put does not work.
+				create l_wname.make (l_name)
+				create l_wpath.make (l_new_path)
+				l_done := c_set_environment_variable (l_wname.item, l_wpath.item)
+
+				added_paths.extend (a_path)
+			end
+		ensure
+			has_path: added_paths.has (a_path)
+		end
+
+	added_paths: ARRAYED_LIST [STRING] is
+			-- List of paths added to PATH environment variable
+		once
+			create Result.make (1)
+			Result.compare_objects
+		ensure
+			result_attached: Result /= Void
+			result_compares_objects: Result.object_comparison
+		end
+
 feature {NONE} -- Implementation
 
 	strong_name_retriveable: BOOLEAN
@@ -147,7 +201,7 @@ feature {NONE} -- Externals
 	c_initialize (a_dispenser: TYPED_POINTER [POINTER]): INTEGER is
 			-- Initializes reader
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				IMetaDataDispenser* pUnk = NULL;
@@ -179,7 +233,7 @@ feature {NONE} -- Externals
 	c_uninitialize (a_dispenser: TYPED_POINTER [POINTER]) is
 			-- Uninitializes reader
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				if (NULL != *$a_dispenser)
@@ -195,7 +249,7 @@ feature {NONE} -- Externals
 	cpp_open_scope (a_dispenser: POINTER; a_fn: POINTER; a_flags: NATURAL; a_scope: TYPED_POINTER [POINTER]): INTEGER is
 			-- Opens an assembly scope
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				IUnknown* pUnk = (IUnknown*)$a_dispenser;
@@ -224,7 +278,7 @@ feature {NONE} -- Externals
 	cpp_close_scope (a_scope: TYPED_POINTER [POINTER]) is
 			-- Closes an opened scope.
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				if (NULL != *$a_scope) {
@@ -282,6 +336,14 @@ feature {NONE} -- Externals
 			]"
 		alias
 			"StrongNameFreeBuffer"
+		end
+
+	c_set_environment_variable (a_name, a_value: POINTER): BOOLEAN is
+			-- The SetEnvironmentVariable function sets the contents of the specified environment variable for the current process.
+		external
+			"C (LPCTSTR, LPCTSTR): BOOL | <windows.h>"
+		alias
+			"SetEnvironmentVariable"
 		end
 
 indexing

@@ -190,6 +190,7 @@ feature {NONE} -- Implementation
 			create l_save_tool.make (window)
 			l_save_tool.set_text (message_text.text)
 			l_save_tool.set_title (Interface_names.e_Save_exception_into)
+			l_save_tool.require_extension (False)
 			l_save_tool.save
 		end
 

@@ -21,6 +21,11 @@ feature -- Command
 		deferred
 		end
 
+	is_remote_desktop: BOOLEAN is
+			-- If current running in remote desktop?
+		deferred
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

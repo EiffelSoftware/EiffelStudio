@@ -117,6 +117,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 					else
 						internal_docking_manager.fixed_area.set_item_x_position (state.zone, internal_final_position)
 					end
+					state.zone.show
 				end
 
 			end

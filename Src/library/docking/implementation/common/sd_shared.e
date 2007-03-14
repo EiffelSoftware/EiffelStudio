@@ -70,8 +70,15 @@ feature -- Access
 	auto_hide_tab_slide_timer_interval: INTEGER is
 			-- Auto hide tab slide timer interval
 			-- 0 means no animation.
+		local
+			l_system: SD_SYSTEM_SETTER
 		do
-			Result := Auto_hide_tab_slide_timer_interval_cell.item
+			create {SD_SYSTEM_SETTER_IMP} l_system
+			if not l_system.is_remote_desktop then
+				Result := Auto_hide_tab_slide_timer_interval_cell.item
+			else
+				-- We disable auto hide animation in remote desktop
+			end
 		end
 
 	show_all_tab_stub_text: BOOLEAN is

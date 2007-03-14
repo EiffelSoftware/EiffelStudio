@@ -356,6 +356,9 @@ feature -- Access
 	create_and_show_watch_tool_command: EB_STANDARD_CMD
 			-- Create and show watch tool.
 
+	force_debug_mode_cmd: EB_FORCE_DEBUG_MODE_CMD
+			-- Force debug mode command.
+
 feature -- tools
 
 	call_stack_tool: EB_CALL_STACK_TOOL
@@ -976,12 +979,12 @@ feature -- Change
 
 feature -- Status setting
 
-	force_debug_mode is
+	force_debug_mode (a_save_tools_layout: BOOLEAN) is
 			-- Force debug mode
 		do
 			debug_mode_forced := True
 			if not raised then
-				raise
+				raise_saving_layout (a_save_tools_layout)
 			end
 		end
 
@@ -1072,9 +1075,16 @@ feature -- Status setting
 
 	raise is
 			-- Make the debug tools appear in `debugging_window'.
+			-- Save tools layout.
+		do
+			raise_saving_layout (True)
+		end
+
+	raise_saving_layout (a_save: BOOLEAN) is
+			-- Make the debug tools appear in `debugging_window'.
+			-- If `a_save' True, then save tools layout, otherwise not save.
 		require
 			not_already_raised: not raised
-
 		local
 			split: EV_SPLIT_AREA
 			l_watch_tool: ES_WATCH_TOOL
@@ -1097,7 +1107,10 @@ feature -- Status setting
 				l_unlock := True
 				debugging_window.window.lock_update
 			end
-			debugging_window.save_tools_docking_layout
+
+			if a_save then
+				debugging_window.save_tools_docking_layout
+			end
 
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
@@ -1797,8 +1810,6 @@ feature {NONE} -- Implementation
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 
 	options_cmd: EB_DEBUG_OPTIONS_CMD
-
-	force_debug_mode_cmd: EB_FORCE_DEBUG_MODE_CMD
 
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.

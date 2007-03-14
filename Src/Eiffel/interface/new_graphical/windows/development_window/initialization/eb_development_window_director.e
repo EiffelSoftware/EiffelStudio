@@ -28,6 +28,7 @@ feature -- Command
 			-- Create a new development window.
 		local
 			l_x, l_y: INTEGER
+			l_debugger_manager: EB_DEBUGGER_MANAGER
 		do
 			internal_construct
 			l_x := develop_window.window.x_position
@@ -35,7 +36,14 @@ feature -- Command
 			develop_window.window.set_position ({INTEGER_16}.min_value, {INTEGER_16}.min_value)
 			develop_window.window.show_actions.block
 			develop_window.window.show
-			develop_window.restore_tools_docking_layout
+
+			l_debugger_manager ?= develop_window.debugger_manager
+			if not develop_window.development_window_data.is_force_debug_mode or l_debugger_manager = Void then
+				develop_window.restore_tools_docking_layout
+			else
+				l_debugger_manager.force_debug_mode_cmd.execute_for_opening (False)
+			end
+
 			develop_window.window.unlock_update
 			develop_window.window.hide
 			develop_window.window.set_position (l_x, l_y)

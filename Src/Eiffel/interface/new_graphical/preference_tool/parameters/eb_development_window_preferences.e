@@ -69,6 +69,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
 
+	is_force_debug_mode: BOOLEAN
+			-- Is the development window force debug mode?
+		do
+			Result := is_force_debug_mode_preference.value
+		end
+
 	show_general_toolbar: BOOLEAN is
 			-- Show the general toolbar (New, Save, Cut, ...)?
 		do
@@ -245,6 +251,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	y_position_preference: INTEGER_PREFERENCE
 			-- Y position for development windows
 
+	is_force_debug_mode_preference: BOOLEAN_PREFERENCE
+			-- Is the development window force debug mode?
+
 	is_maximized_preference: BOOLEAN_PREFERENCE
 			-- Is the development window maximized?
 
@@ -346,6 +355,12 @@ feature -- Element change
 			preferences.save_preference (y_position_preference)
 		end
 
+	save_force_debug_mode (a_bool: BOOLEAN) is
+			-- Save if `is_force_debug_mode'
+		do
+			is_force_debug_mode_preference.set_value (a_bool)
+		end
+
 	save_completion_list_size (a_width, a_height: INTEGER) is
 			-- Save the size of the completion list
 		do
@@ -375,6 +390,7 @@ feature {NONE} -- Preference Strings
 	height_string: STRING is "interface.development_window.height"
 	x_position_string: STRING is "interface.development_window.x_position"
 	y_position_string: STRING is "interface.development_window.y_position"
+	is_force_debug_mode_string: STRING is "interface.developement_window.is_force_debug_mode"
 	is_maximized_string: STRING is "interface.development_window.is_maximized"
 	left_panel_use_explorer_style_string: STRING is "interface.development_window.left_panel_use_explorer_style"
 	left_panel_width_string: STRING is "interface.development_window.window_left_panel_width"
@@ -424,6 +440,7 @@ feature {NONE} -- Implementation
 			height_preference := l_manager.new_integer_preference_value (l_manager, height_string, 500)
 			x_position_preference := l_manager.new_integer_preference_value (l_manager, x_position_string, 10)
 			y_position_preference := l_manager.new_integer_preference_value (l_manager, y_position_string, 10)
+			is_force_debug_mode_preference := l_manager.new_boolean_preference_value (l_manager, is_force_debug_mode_string, False)
 			is_maximized_preference := l_manager.new_boolean_preference_value (l_manager, is_maximized_string, False)
 			general_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, general_toolbar_layout_string, <<"New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden;">>)
 			show_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_general_toolbar_string, True)
@@ -499,6 +516,7 @@ invariant
 	height_preference_not_void: height_preference /= Void
 	x_position_preference_not_void: x_position_preference /= Void
 	y_position_preference_not_void: y_position_preference /= Void
+	is_force_debug_mode_preference_not_void: is_force_debug_mode_preference /= Void
 	is_maximized_preference_not_void: is_maximized_preference /= Void
 	show_general_toolbar_preference_not_void: show_general_toolbar_preference /= Void
 	show_refactoring_toolbar_preference_not_void: show_refactoring_toolbar_preference /= Void

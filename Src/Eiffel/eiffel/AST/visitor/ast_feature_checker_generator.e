@@ -3142,7 +3142,7 @@ feature -- Implementation
 			l_formal: FORMAL_A
 			l_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
-			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_of_feature: CLASS_C; features_found_count: INTEGER]
+			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 		do
 			l_needs_byte_node := is_byte_node_enabled
@@ -3168,7 +3168,7 @@ feature -- Implementation
 				if l_result_tuple.features_found_count > 1 then
 					raise_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name), l_formal.position, l_context_current_class)
 				elseif l_result_tuple.features_found_count = 1 then
-					l_last_class := l_result_tuple.class_of_feature
+					l_last_class := l_result_tuple.class_type_of_feature.associated_class
 					l_last_constrained := l_last_class.actual_type
 					l_prefix_feature := l_result_tuple.feature_item
 				end
@@ -3797,7 +3797,7 @@ feature -- Implementation
 			l_formal: FORMAL_A
 			l_is_multi_constraint: BOOLEAN
 			l_type_set: TYPE_SET_A
-			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_of_feature: CLASS_C; features_found_count: INTEGER]
+			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 		do
 				-- Clean assigner call flag for bracket target
@@ -3823,7 +3823,7 @@ feature -- Implementation
 				if l_result_tuple.features_found_count > 1 then
 					raise_vtmc_error (create {ID_AS}.initialize (bracket_str), l_formal.position, l_context_current_class)
 				elseif l_result_tuple.features_found_count = 1 then
-					target_class := l_result_tuple.class_of_feature
+					target_class := l_result_tuple.class_type_of_feature.associated_class
 					constrained_target_type := target_class.actual_type
 					bracket_feature := l_result_tuple.feature_item
 				end

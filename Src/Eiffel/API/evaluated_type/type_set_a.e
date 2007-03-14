@@ -126,7 +126,7 @@ feature -- Access
 			l_renaming: RENAMING_A
 			l_constraint_position: INTEGER
 			l_feature_table: FEATURE_TABLE
-			l_item: TYPE_A
+			l_item: EXTENDED_TYPE_A
 		do
 			from
 				start
@@ -152,7 +152,7 @@ feature -- Access
 					then
 						l_constraint_position := cursor.index
 						l_last_feature  :=  l_feature
-						l_last_class_type ?= item.type
+						l_last_class_type ?= l_item.type
 							-- This check is guaranteed by the precondition.
 						check l_last_class_type_not_void: l_last_class_type /= Void end
 						l_features_found_count := l_features_found_count + 1
@@ -168,11 +168,94 @@ feature -- Access
 		ensure
 				-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
 			result_not_void: Result /= Void
-			result_semantik_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
-			result_semantik_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
-	feature_i_state_by_alias (an_alias: STRING): TUPLE [feature_item: FEATURE_I; class_of_feature: CLASS_C; features_found_count: INTEGER;  constraint_position: INTEGER]  is
+
+	feature_i_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+			-- Compute feature state.
+			--
+			-- `a_routine_id' is the routine id of the feature we're looking for.
+			-- Returns `feature_item' void if the feature cannot be found in the type set.
+			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
+			-- Use features from the family `info_about_feature*' to get detailed information.
+		require
+			not_loose: not is_loose
+		local
+			l_last_feature, l_feature: FEATURE_I
+			l_last_class_type: CL_TYPE_A
+			l_features_found_count: INTEGER
+			l_renaming: RENAMING_A
+			l_constraint_position: INTEGER
+			l_feature_table: FEATURE_TABLE
+			l_item: EXTENDED_TYPE_A
+		do
+			from
+				start
+			until
+				after
+			loop
+				l_item := item
+				check has_assocaited_class: l_item.has_associated_class end
+
+				l_feature :=  l_item.type.associated_class.feature_of_rout_id (a_routine_id)
+
+				if
+					l_feature /= Void
+				then
+					l_constraint_position := cursor.index
+					l_last_feature  :=  l_feature
+					l_last_class_type ?= l_item.type
+						-- This check is guaranteed by the precondition.
+					check l_last_class_type_not_void: l_last_class_type /= Void end
+					l_features_found_count := l_features_found_count + 1
+				end
+				forth
+			end
+			if l_features_found_count  >  1  then
+				l_last_feature := Void
+				l_last_class_type := Void
+			end
+			Result := [l_last_feature, l_last_class_type, l_features_found_count, l_constraint_position]
+		ensure
+					-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
+			result_not_void: Result /= Void
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+
+		end
+
+	feature_i_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: FEATURE_I; class_type: EXTENDED_TYPE_A]]
+			--
+		require
+			not_loose: not is_loose
+		local
+			l_class: CLASS_C
+			l_feat: FEATURE_I
+			l_item: EXTENDED_TYPE_A
+		do
+			create Result.make (3)
+			from
+				start
+			until
+				after
+			loop
+				l_item := item
+					-- implied by precondition: not_loose
+				check has_associated_class: l_item.has_associated_class end
+				l_class := l_item.associated_class
+				l_feat := l_class.feature_of_rout_id (a_routine_id)
+				if l_feat /= Void then
+					Result.extend ([l_feat, l_item])
+				end
+				forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	feature_i_state_by_alias (an_alias: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]  is
 			-- Compute feature state.
 			--
 			-- `an_alias' is a feature alias for which the state is computed.
@@ -181,13 +264,15 @@ feature -- Access
 			-- Use features from the family `info_about_feature*' to get detailed information.
 		require
 			an_alias_not_void: an_alias /= Void
+			not_loose: not is_loose
 		local
 			l_last_feature, l_feature: FEATURE_I
-			l_class_c, l_last_class: CLASS_C
+			l_class_c: CLASS_C
+			l_last_class_type: CL_TYPE_A
 			l_constraint_position: INTEGER
 					-- The Position at which the constraint where the feature was selected from is written.
 			l_features_found_count: INTEGER
-			l_item: TYPE_A
+			l_item: EXTENDED_TYPE_A
 		do
 			from
 				start
@@ -203,7 +288,9 @@ feature -- Access
 					then
 						l_constraint_position := cursor.index
 						l_last_feature  :=  l_feature
-						l_last_class := l_class_c
+						l_last_class_type ?= l_item.type
+							-- Precondition should ensure this.
+						check class_type_not_void: l_last_class_type /= Void end
 						l_features_found_count := l_features_found_count + 1
 					end
 				end
@@ -211,14 +298,14 @@ feature -- Access
 			end
 			if l_features_found_count  >  1  then
 				l_last_feature := Void
-				l_last_class := Void
+				l_last_class_type := Void
 			end
-			Result := [l_last_feature, l_last_class, l_features_found_count, l_constraint_position]
+			Result := [l_last_feature, l_last_class_type, l_features_found_count, l_constraint_position]
 		ensure
 			-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
 			result_not_void: Result /= Void
-			result_semantik_correct: Result.feature_item = Void implies (Result.class_of_feature = Void and Result.features_found_count /= 1)
-			result_semantik_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_of_feature = Void)
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
 	e_feature_state (a_name: ID_AS): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]  is
@@ -311,11 +398,11 @@ feature -- Access
 		ensure
 				-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
 			result_not_void: Result /= Void
-			result_semantik_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
-			result_semantik_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
-	e_feature_state_by_id (a_routine_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
+	e_feature_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
 			-- Compute feature state for `a_routine_id'			
 			--
 			-- `a_routine_id' is the first entry in the routine id set of the queried routine.
@@ -361,8 +448,37 @@ feature -- Access
 		ensure
 				-- It states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
 			result_not_void: Result /= Void
-			result_semantik_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
-			result_semantik_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
+			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
+		end
+
+	e_feature_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: E_FEATURE; class_type: EXTENDED_TYPE_A]]
+			--
+		require
+			not_loose: not is_loose
+		local
+			l_class: CLASS_C
+			l_feat: E_FEATURE
+			l_item: EXTENDED_TYPE_A
+		do
+			create Result.make (3)
+			from
+				start
+			until
+				after
+			loop
+				l_item := item
+					-- implied by precondition: not_loose
+				check has_associated_class: l_item.has_associated_class end
+				l_class := l_item.associated_class
+				l_feat := l_class.feature_with_rout_id (a_routine_id)
+				if l_feat /= Void then
+					Result.extend ([l_feat, l_item])
+				end
+				forth
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 		associated_classes: LIST[CLASS_C]
@@ -426,10 +542,12 @@ feature -- Access for Error handling
 			Result.set_data (names_heap.item (a_name_id), a_formal_position, a_context_class)
 		end
 
-	info_about_feature_by_id (a_routine_id: INTEGER; a_formal_position: INTEGER;  a_context_class: CLASS_C): like info_about_feature
+	info_about_feature_by_rout_id (a_routine_id: INTEGER; a_formal_position: INTEGER;  a_context_class: CLASS_C): like info_about_feature
 			-- Gathers information about a feature.
 			--
 			-- `a_routine_id' is the ID for the feature for which information is gatherd.
+			-- `a_formal_position' is used together with `a_context_class' to query the constraint list.
+			-- `a_context_class' is used together with `a_formal_position' to query the constraint list.
 		require
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
@@ -468,7 +586,7 @@ feature -- Access for Error handling
 
 feature {TYPE_SET_A} -- Access implementation
 
-	info_about_feature_by_agent (a_feature: FUNCTION [ANY, TUPLE [EXTENDED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]; a_formal_position: INTEGER; a_context_class: CLASS_C; a_visited_formals: SEARCH_TABLE [INTEGER]): like info_about_feature_by_id
+	info_about_feature_by_agent (a_feature: FUNCTION [ANY, TUPLE [EXTENDED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]; a_formal_position: INTEGER; a_context_class: CLASS_C; a_visited_formals: SEARCH_TABLE [INTEGER]): like info_about_feature_by_rout_id
 			-- Gather information about feature
 			-- 			
 			-- `a_feature' is an agent which returns information about a feature given a `CLASS_C' instance.			
@@ -509,7 +627,7 @@ feature {TYPE_SET_A} -- Access implementation
 				else
 					if l_item.has_associated_class then
 						l_query_result := a_feature.item ([l_item])
-							-- Check whether we found at least something yousfull and then insert an entry.
+							-- Check whether we found at least something useful and then insert an entry.
 						if l_query_result /= Void and then (l_query_result.e_feature /= Void or l_query_result.feature_i /= Void) then
 							l_constraint_position := cursor.index
 							Result.extend([l_query_result.feature_i, l_query_result.e_feature, l_item, a_formal_position, l_constraint_position])
@@ -805,19 +923,6 @@ feature -- Access
 			result_is_expaned: Result.type.is_expanded
 		end
 
-
-	associated_class: CLASS_C is
-			-- Class associated to the current type.
-		do
-				-- We are not able to return a CLASS_C object so easily.
-				-- One could maybe introduce something like that which would enable more transparency at some places (like providing a merged feature table of all types in the typeset).
-				-- For now it is a dead feature.
-			check false end
-
-		end
-
-
-
 	constraining_types (a_context_class: CLASS_C): TYPE_SET_A is
 			-- Constraining types of `a_type'.
 			--| A generic (GEN_TYPE_A) which has a formal type parameter is not counted, but all chains of formals like [G->H, H->I,I->STRING] are resolved.
@@ -980,6 +1085,18 @@ feature -- Access
 	last_type_checked: EXTENDED_TYPE_A
 		-- Last type checked.
 		-- Use this feature for error reporting.
+
+feature {NONE} -- Not anymore applicable: a type set has most likley not one, but many associated classes.
+
+	associated_class: CLASS_C is
+			-- Class associated to the current type.
+		do
+				-- We are not able to return a CLASS_C object so easily.
+				-- One could maybe introduce something like that which would enable more transparency at some places (like providing a merged feature table of all types in the typeset).
+				-- For now it is a dead feature.
+			check false end
+
+		end
 
 feature {COMPILER_EXPORTER} -- Access
 

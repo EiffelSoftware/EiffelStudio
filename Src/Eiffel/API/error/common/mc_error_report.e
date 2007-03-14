@@ -56,13 +56,6 @@ feature -- Setters
 			context_class_set: a_context_class = context_class
 		end
 
-	set_formal_position: INTEGER
-		-- The position of the formal for which we checked the feature named `feature_name'.
-
-	set_context_class: CLASS_C
-		-- Context class, is inter alla used to resolve formal positions into actual objects.
-
-
 feature -- Status
 
 	is_erroneous: BOOLEAN

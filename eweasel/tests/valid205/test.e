@@ -12,9 +12,9 @@ create
 feature
 
 	make is
-		local
-			l_c: TEST1 [PATH_NAME, FILE_NAME]
 		do
 		end
+
+	l_c: TEST1 [PATH_NAME, FILE_NAME]
 
 end

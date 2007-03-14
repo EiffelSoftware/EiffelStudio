@@ -278,7 +278,9 @@ feature -- Command
 				-- Insert current zone to exsiting row.
 			end
 			check not_void: l_row /= Void end
-
+			if zone.row /= Void then
+				zone.tool_bar.parent.prune (zone.tool_bar)
+			end
 			l_row.extend (zone)
 			l_row.set_item_position_relative (zone.tool_bar, last_state.position)
 			zone.docking_manager.command.resize (True)

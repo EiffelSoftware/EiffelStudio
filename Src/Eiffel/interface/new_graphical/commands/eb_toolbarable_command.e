@@ -126,39 +126,9 @@ feature -- Status setting
 
 	update (a_window: EV_WINDOW) is
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
-		local
-			l_items: like managed_toolbar_items
-			l_sd_items: like managed_sd_toolbar_items
-			l_tt: STRING_GENERAL
 		do
 			Precursor {EB_GRAPHICAL_COMMAND} (a_window)
-			if tooltip /= Void then
-				l_tt := tooltip.twin
-				if shortcut_available then
-					l_tt.append (opening_parenthesis)
-					l_tt.append (shortcut_string)
-					l_tt.append (closing_parenthesis)
-				end
-				from
-					l_items := managed_toolbar_items
-					l_items.start
-				until
-					l_items.after
-				loop
-					l_items.item.set_tooltip (l_tt)
-					l_items.forth
-				end
-				from
-					l_sd_items := managed_sd_toolbar_items
-					l_sd_items.start
-				until
-					l_sd_items.after
-				loop
-					l_sd_items.item.set_description (description)
-					l_sd_items.item.set_tooltip (l_tt)
-					l_sd_items.forth
-				end
-			end
+			update_tooltips
 		end
 
 feature -- Basic operations
@@ -307,6 +277,42 @@ feature {EB_SD_COMMAND_TOOL_BAR_BUTTON} -- Implementaiton
 		end
 
 feature {NONE} -- Implementation
+
+	update_tooltips is
+			-- Update tooltips when shortcut is changed.
+		local
+			l_items: like managed_toolbar_items
+			l_sd_items: like managed_sd_toolbar_items
+			l_tt: STRING_GENERAL
+		do
+			if tooltip /= Void then
+				l_tt := tooltip.twin
+				if shortcut_available then
+					l_tt.append (opening_parenthesis)
+					l_tt.append (shortcut_string)
+					l_tt.append (closing_parenthesis)
+				end
+				from
+					l_items := managed_toolbar_items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_items.item.set_tooltip (l_tt)
+					l_items.forth
+				end
+				from
+					l_sd_items := managed_sd_toolbar_items
+					l_sd_items.start
+				until
+					l_sd_items.after
+				loop
+					l_sd_items.item.set_description (description)
+					l_sd_items.item.set_tooltip (l_tt)
+					l_sd_items.forth
+				end
+			end
+		end
 
 	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 

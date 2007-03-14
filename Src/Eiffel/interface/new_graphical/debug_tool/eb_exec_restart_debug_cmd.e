@@ -34,7 +34,7 @@ feature -- Initialization
 		do
 			if eb_debugger_manager.application_is_executing then
 				if not eb_debugger_manager.debug_mode_forced then
-					eb_debugger_manager.force_debug_mode
+					eb_debugger_manager.force_debug_mode (True)
 					pre_ag := agent eb_debugger_manager.unforce_debug_mode
 					eb_debugger_manager.application_prelaunching_actions.extend_kamikaze (pre_ag)
 				end

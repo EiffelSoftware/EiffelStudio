@@ -26,6 +26,7 @@ feature {NONE} -- Creation
 			save_size (a_window_data.width, a_window_data.height)
 			save_window_state (a_window_data.is_minimized, a_window_data.is_maximized)
 			save_position (a_window_data.x_position, a_window_data.y_position)
+			save_force_debug_mode (a_window_data.is_force_debug_mode)
 			general_toolbar_layout := a_window_data.general_toolbar_layout.twin
 			refactoring_toolbar_layout := a_window_data.refactoring_toolbar_layout.twin
 			show_general_toolbar := a_window_data.show_general_toolbar
@@ -87,6 +88,9 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
+
+	is_force_debug_mode: BOOLEAN
+			-- Is the development window force debug mode?
 
 	left_panel_use_explorer_style: BOOLEAN
 			-- Should there be only one tool in the left panel?
@@ -215,6 +219,12 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 		do
 			is_maximized := a_maximized
 			is_minimized := a_minimized
+		end
+
+	save_force_debug_mode (a_bool: BOOLEAN) is
+			-- Save if `is_force_debug_mode'
+		do
+			is_force_debug_mode := a_bool
 		end
 
 	save_position (a_x, a_y: INTEGER) is

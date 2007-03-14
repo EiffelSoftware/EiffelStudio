@@ -20,7 +20,7 @@ inherit
 			{EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_ADDRESS_MANAGER}
 				Warning_messages, Interface_names,
 				init_commands, Pixmaps
-			{EB_DEVELOPMENT_WINDOW_COMMANDS, EB_TOOL, EB_STONE_CHECKER}
+			{EB_DEVELOPMENT_WINDOW_COMMANDS, EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_DIRECTOR}
 				Debugger_manager
 			{EB_STONE_FIRST_CHECKER}
 				Ev_application
@@ -1333,8 +1333,14 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 
 	 save_window_state is
 	 		-- Save window state information to preference data.
+	 	local
+	 		l_debugger_manager: EB_DEBUGGER_MANAGER
 	 	do
 			development_window_data.save_window_state (window.is_minimized, window.is_maximized)
+			l_debugger_manager ?= debugger_manager
+			if l_debugger_manager /= Void then
+				development_window_data.save_force_debug_mode (l_debugger_manager.debug_mode_forced)
+			end
 	 	end
 
 feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
@@ -2330,7 +2336,7 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Access
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	development_window_data: EB_DEVELOPMENT_WINDOW_DATA is
 			-- Meta data describing `Current'.

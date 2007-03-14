@@ -39,11 +39,18 @@ feature {NONE} -- Initialization
 feature -- Execution
 
 	execute is
+			-- Execute
+		do
+			execute_for_opening (True)
+		end
+
+	execute_for_opening (a_save_tools_layout: BOOLEAN) is
+			-- Execute for opening Eiffel Studio directly into debug mode.
 		do
 			internal_is_selected := not internal_is_selected
 			set_select (is_selected)
 			if is_selected then
-				eb_debugger_manager.force_debug_mode
+				eb_debugger_manager.force_debug_mode (a_save_tools_layout)
 				internal_managed_sd_toolbar_items.do_all (agent (a_button: like new_sd_toolbar_item) do
 					a_button.set_tooltip (interface_names.e_restore_normal_mode)
 				end)
@@ -59,8 +66,10 @@ feature -- Execution
 feature -- Status
 
 	internal_is_selected: BOOLEAN
+			-- Is selected?
 
 	is_selected: BOOLEAN is
+			-- Value of `internal_is_selected'.
 		do
 			Result := internal_is_selected --eb_debugger_manager.raised
 		end

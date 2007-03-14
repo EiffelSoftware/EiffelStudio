@@ -9,7 +9,7 @@ deferred class
 	EB_DEVELOPMENT_WINDOW_DATA
 
 
-feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_BUILDER} -- Value
+feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Value
 
 	width: INTEGER is
 			-- Width for the development window
@@ -38,6 +38,11 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDO
 
 	is_minimized: BOOLEAN is
 			-- Is the development window minimized?
+		deferred
+		end
+
+	is_force_debug_mode: BOOLEAN is
+			-- Is the development window force debug mode?
 		deferred
 		end
 
@@ -114,6 +119,13 @@ feature -- Element change
 		deferred
 		ensure
 			states_set: is_maximized = a_maximized and is_minimized = a_minimized
+		end
+
+	save_force_debug_mode (a_bool: BOOLEAN) is
+			-- Save if `is_force_debug_mode'
+		deferred
+		ensure
+			mode_set: is_force_debug_mode = a_bool
 		end
 
 	save_position (a_x, a_y: INTEGER) is

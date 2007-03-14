@@ -181,7 +181,6 @@ feature {NONE} -- Implementation
 			l_menu: EV_MENU
 		do
 			if a_menu /= Void then
-				a_proc.call ([a_menu])
 				from
 					a_menu.start
 				until
@@ -190,6 +189,8 @@ feature {NONE} -- Implementation
 					l_menu ?= a_menu.item
 					if l_menu /= Void then
 						recursive_do (l_menu, a_proc)
+					else
+						a_proc.call ([a_menu])
 					end
 					a_menu.forth
 				end

@@ -147,7 +147,6 @@ feature{NONE} -- Implementation
 			l_background_color: like actual_tooltip_background_color
 		do
 			l_background_color := actual_tooltip_background_color
---			widget_container.set_minimum_size (border_line_width * 2 + left_border + right_border + widget.width, border_line_width * 2 + top_border + bottom_border + widget.height)
 			widget_container.set_border_width (border_line_width)
 			widget_container.set_background_color (actual_border_line_color)
 			widget_container.set_foreground_color (l_background_color)

@@ -23,8 +23,11 @@ feature {NONE} -- Initialization
 
 	make  is
 			-- Initializes a default instance
+		local
+			l_item: like item
 		do
-			alloc ($item).do_nothing
+			alloc ($l_item).do_nothing
+			item := l_item
 		ensure then
 			not_item_is_null: item /= default_pointer
 		end
@@ -33,9 +36,12 @@ feature -- Clean up
 
 	dispose is
 			-- Cleans up allocated resources
+		local
+			l_item: like item
 		do
 			if item /= default_pointer then
-				dealloc ($item)
+				dealloc ($l_item)
+				item := l_item
 			end
 		ensure then
 			item_is_null: item = default_pointer
@@ -101,7 +107,7 @@ feature {NONE} -- Memory management
 	alloc (a_item: TYPED_POINTER [POINTER]): BOOLEAN is
 			--
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				*$a_item = (EIF_POINTER)calloc (1, sizeof (ASSEMBLYMETADATA));
@@ -110,8 +116,11 @@ feature {NONE} -- Memory management
 					if (NULL != psz) {
 						((ASSEMBLYMETADATA*)*$a_item)->szLocale = psz;
 						((ASSEMBLYMETADATA*)*$a_item)->cbLocale = 511;
+						return TRUE;
+					} else {
+						free(*$a_item);
+						*$a_item = NULL;
 					}
-					return TRUE;
 				}
 				return FALSE;
 			]"
@@ -120,7 +129,7 @@ feature {NONE} -- Memory management
 	dealloc (a_item: TYPED_POINTER [POINTER]) is
 			--
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				if (NULL != *$a_item){
@@ -141,7 +150,7 @@ feature {NONE} -- Extenral access
 		require
 			not_a_item_is_null: a_item /= default_pointer
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"return ((ASSEMBLYMETADATA*)$a_item)->usMajorVersion"
 		end
@@ -161,7 +170,7 @@ feature {NONE} -- Extenral access
 		require
 			not_a_item_is_null: a_item /= default_pointer
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"return ((ASSEMBLYMETADATA*)$a_item)->usBuildNumber"
 		end
@@ -171,7 +180,7 @@ feature {NONE} -- Extenral access
 		require
 			not_a_item_is_null: a_item /= default_pointer
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"return ((ASSEMBLYMETADATA*)$a_item)->usRevisionNumber"
 		end
@@ -181,7 +190,7 @@ feature {NONE} -- Extenral access
 		require
 			not_a_item_is_null: a_item /= default_pointer
 		external
-			"C++ inline use %"cor.h%""
+			"C++ inline use %"strongname.h%""
 		alias
 			"[
 				ULONG cbLocale = ((ASSEMBLYMETADATA*)$a_item)->cbLocale;

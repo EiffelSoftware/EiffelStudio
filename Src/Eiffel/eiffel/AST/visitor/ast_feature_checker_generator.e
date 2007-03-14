@@ -2032,10 +2032,6 @@ feature -- Implementation
 			l_class_id: INTEGER
 			l_type_a: TYPE_A
 			l_feature: FEATURE_I
-			l_formal: FORMAL_A
-			l_is_multi_constraint: BOOLEAN
-			l_type_set: TYPE_SET_A
-			l_result: TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 		do
 			l_type_a := last_type.actual_type
 			check
@@ -4367,7 +4363,6 @@ feature -- Implementation
 			l_is_multi_constraint_case: BOOLEAN
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_is_deferred: BOOLEAN
-			l_class_id: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_orig_call := a_call

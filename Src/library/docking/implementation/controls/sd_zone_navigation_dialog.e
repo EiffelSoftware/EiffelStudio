@@ -515,7 +515,7 @@ feature {NONE} -- Implementation command
 			else
 				-- We have to do it in idle actions, otherwise dialog minimum height will not correct.
 				create l_env
-				l_env.application.do_once_on_idle (agent set_text (l_content.detail.as_string_8))
+				l_env.application.do_once_on_idle (agent check_before_set_text (l_content.detail.as_string_8))
 			end
 		end
 
@@ -539,11 +539,15 @@ feature {NONE} -- Implementation command
 		local
 			l_content: SD_CONTENT
 		do
-			l_content ?= a_label.data
-			check not_void: l_content /= Void end
+			if a_label /= Void then
+				l_content ?= a_label.data
+				check not_void: l_content /= Void end
+			end
 			-- If we call set_focus immediately, destroy will make Current get focus.
 			destroy
-			l_content.set_focus
+			if l_content /= Void then
+				l_content.set_focus
+			end
 		end
 
 	find_label_at_right_side: SD_TOOL_BAR_RADIO_BUTTON is
@@ -862,6 +866,14 @@ feature {NONE} -- Implementation command
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+	check_before_set_text (a_tip: STRING) is
+			-- call `set_text' if possible.
+		do
+			if not is_destroyed then
+				set_text (a_tip)
+			end
 		end
 
 	is_seleted_label_in_files: BOOLEAN

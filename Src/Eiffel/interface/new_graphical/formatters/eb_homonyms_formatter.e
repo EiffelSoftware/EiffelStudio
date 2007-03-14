@@ -83,7 +83,7 @@ feature -- Formatting
 		local
 			cf: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
-			if associated_feature /= Void and then selected and then displayed then
+			if associated_feature /= Void and then selected and then displayed and then actual_veto_format_result then
 				retrieve_sorting_order
 				display_temp_header
 				setup_viewpoint

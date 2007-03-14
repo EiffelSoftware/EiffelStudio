@@ -118,11 +118,7 @@ feature -- Formatting
 		local
 			l_msg: STRING_32
 		do
-			if
-				displayed and then
-				selected and then
-				feature_cmd /= Void
-			then
+			if displayed and then selected and then feature_cmd /= Void and then actual_veto_format_result then
 				editor.disable_feature_click
 				display_temp_header
 				setup_viewpoint

@@ -52,7 +52,7 @@ feature -- Formatting
 	format is
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
-			if stone /= Void and then selected then
+			if stone /= Void and then selected and then actual_veto_format_result then
 				retrieve_sorting_order
 				display_temp_header
 				if not widget.is_displayed then

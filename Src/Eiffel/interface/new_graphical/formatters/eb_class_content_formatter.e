@@ -35,7 +35,7 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		do
-			if associated_class /= Void and then selected and then displayed then
+			if associated_class /= Void and then selected and then displayed and then actual_veto_format_result then
 				retrieve_sorting_order
 				display_temp_header
 				if not widget.is_displayed then

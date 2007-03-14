@@ -60,6 +60,8 @@ feature{NONE} -- Initialization
 			on_customized_formatter_loaded_agent := agent on_customized_formatter_loaded
 			customized_formatter_manager.formatter_change_actions.extend (on_customized_formatter_loaded_agent)
 
+			veto_format_function_agent := agent veto_format
+
 			on_metric_loaded_agent := agent on_metric_loaded
 			metric_manager.metric_loaded_actions.extend (on_metric_loaded_agent)
 
@@ -371,6 +373,38 @@ feature{NONE} -- Implementation/Cache
 
 feature{NONE} -- Implementation
 
+	attach_veto_format_function is
+			-- Attach veto format function to `formatters'.
+		do
+			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (agent veto_format) end)
+		end
+
+	detach_veto_format_function is
+			-- Detach veto format function to `formatters'.
+		do
+			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (Void) end)
+		end
+
+	veto_format_function_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+			-- Veto format function
+
+	veto_format: BOOLEAN is
+			-- True if format is allowed to go on, otherwise False.
+		do
+			Result := not is_format_vetoed
+		end
+
+	is_format_vetoed: BOOLEAN
+			-- Is format vetoed?
+
+	set_is_format_vetoed (b: BOOLEAN) is
+			-- Set `is_format_vetoed' with `b'.
+		do
+			is_format_vetoed := b
+		ensure
+			is_format_vetoed_set: is_format_vetoed = b
+		end
+
 	retrieve_formatters is
 			-- Retrieve all formatters related with Current tool and store them in `formatters'
 		require
@@ -379,11 +413,13 @@ feature{NONE} -- Implementation
 			l_layout_formatters: like layout_formatters
 			l_customized_formatters: LIST [EB_FORMATTER]
 		do
+			detach_veto_format_function
+			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
+
 			l_layout_formatters := layout_formatters
 			l_layout_formatters.wipe_out
 			l_layout_formatters.append (predefined_formatters)
 
-			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
 			l_customized_formatters := customized_formatters
 			l_customized_formatters.wipe_out
 			l_customized_formatters.append (customized_formatter_manager.formatters (title_for_pre, develop_window))
@@ -394,6 +430,7 @@ feature{NONE} -- Implementation
 			end
 
 			fill_formatters
+			attach_veto_format_function
 		end
 
 	fill_formatters is
@@ -734,7 +771,9 @@ feature{NONE} -- Implementation
 			l_formatter: EB_FORMATTER
 			l_control_bar: EV_WIDGET
 		do
+			set_is_format_vetoed (True)
 			tool_bar.wipe_out
+			set_is_format_vetoed (False)
 			formatter_tool_bar_area.wipe_out
 			viewpoint_area.hide
 			l_formatters := layout_formatters
@@ -812,7 +851,7 @@ feature{NONE} -- Recycle
 			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
 				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)
 			end
-
+			detach_veto_format_function
 			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
 			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)
 
@@ -825,5 +864,6 @@ invariant
 	formatters_attached: formatters /= Void
 	on_project_loaded_agent_attached: on_project_loaded_agent /= Void
 	customized_formatters_attached: customized_formatters /= Void
+	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 end

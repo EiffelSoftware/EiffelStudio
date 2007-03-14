@@ -129,7 +129,7 @@ feature -- Status
 		do
 			Result := constraints /= Void and then constraints.count > 1
 		ensure
-			not_more_than_one_constraint: constraints /= Void implies constraints.count <= 1
+			not_more_than_one_constraint: not Result implies (constraints /= Void implies constraints.count <= 1)
 		end
 
 	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN is

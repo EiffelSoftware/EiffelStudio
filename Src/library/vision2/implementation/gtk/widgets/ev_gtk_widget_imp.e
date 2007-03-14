@@ -256,10 +256,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Grab keyboard focus.
 		local
 			l_window, l_widget: POINTER
+			l_interface: EV_ANY
+			l_app_imp: like app_implementation
 		do
+			l_app_imp := app_implementation
 				-- If any previous widget has the capture then disable it.
-			if app_implementation.captured_widget /= Void then
-				app_implementation.captured_widget.disable_capture
+			if l_app_imp.captured_widget /= Void then
+				l_interface := interface
+				if l_interface /= l_app_imp.captured_widget then
+					l_app_imp.captured_widget.disable_capture
+				end
 			end
 			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				l_window := c_object

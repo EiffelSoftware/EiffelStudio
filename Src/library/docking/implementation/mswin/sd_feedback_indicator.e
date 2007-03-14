@@ -87,12 +87,20 @@ feature -- Command
 
 	show is
 			-- Show
+		local
+			l_routine: WEL_WINDOWS_ROUTINES
 		do
 			create timer
 			timer.set_interval (timer_interval)
 
 			timer.actions.extend (agent on_timer)
-			alpha := alpha_step
+			create l_routine
+			if l_routine.is_terminal_service then
+				-- We disable fading effect in remote desktop
+				alpha := 255
+			else
+				alpha := alpha_step
+			end
 
 			wel_show
 		end

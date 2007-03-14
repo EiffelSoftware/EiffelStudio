@@ -16,6 +16,5 @@ copy_raw 	 test3.e $CLUSTER test3.e
 copy_raw 	 test4.e $CLUSTER test4.e
 copy_raw 	 weasel.e $CLUSTER weasel.e
 compile_melted
-compile_result 	 validity_error TEST2 VTCG
-
+compile_result 	 validity_error TEST2 VTGD(2)
 test_end

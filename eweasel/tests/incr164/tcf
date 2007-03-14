@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 delete-parent-vtcg-sneak
-test_description After initial compilation, an inheritance clause is deleted, thereby introducing a VTCG error because actual generic #2 no longer conforms to actual generic #1, as required by generic class. The compiler does not detect the error.
+test_description After initial compilation, an inheritance clause is deleted, thereby introducing a VTGD(2) error because actual generic #2 no longer conforms to actual generic #1, as required by generic class. The compiler does not detect the error.
 
 define PARENT "DOUBLE undefine out, is_equal end"
 copy_sub 	Ace $TEST Ace
@@ -21,6 +21,6 @@ compile_result 	validity_error TEST2 VIFI(1)
 define PARENT ""
 copy_sub 	test2.e $CLUSTER test2.e
 resume_compile
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTGD(2)
 
 test_end

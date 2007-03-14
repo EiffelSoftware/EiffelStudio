@@ -28,6 +28,6 @@ define CLASS2 "deferred class TEST2 [G -> DOUBLE_REF, H -> G] inherit TEST3 rede
 	
 copy_sub	 test2.e $CLUSTER test2.e
 compile_melted
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTGD(2)
 
 

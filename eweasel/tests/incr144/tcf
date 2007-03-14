@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 vtcg-remove-creation-feat
-test_description After initial compilation, a creation feature named in a generic constraint is removed entirely from the class.  When the system is recompiled, the VTCG validity error is not detected.
+test_description After initial compilation, a creation feature named in a generic constraint is removed entirely from the class.  When the system is recompiled, the VTGD validity error is not detected.
 
 copy_sub 	 Ace $TEST Ace
 define		 CLASS_BODY "creation foobar feature foobar is do end"
@@ -20,6 +20,6 @@ compile_result 	 ok
 define		 CLASS_BODY ""
 copy_sub 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 validity_error TEST VTCG
+compile_result 	 validity_error TEST VTGD(2)
 
 test_end

@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 vtcg-sneak
-test_description After initial compilation, an actual generic parameter in a generic constraint is changed, thereby introducing a VTCG error.  When the system is recompiled, the compiler does not detect the error, but only if the generic class is also an expanded class.
+test_description After initial compilation, an actual generic parameter in a generic constraint is changed, thereby introducing a VTGD error.  When the system is recompiled, the compiler does not detect the error, but only if the generic class is also an expanded class.
 
 copy_sub 	 Ace $TEST Ace
 define		 GENERIC_CONSTRAINT "TEST2 [STRING]"
@@ -20,6 +20,6 @@ compile_result 	 ok
 define		 GENERIC_CONSTRAINT "TEST2 [DOUBLE]"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VTCG
+compile_result 	 validity_error TEST VTGD(2)
 
 test_end

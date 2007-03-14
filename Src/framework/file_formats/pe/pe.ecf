@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="pe_reader" uuid="6AF84AC5-5BBE-4BBD-8E19-75B035EA77EB" library_target="pe_reader">
+	<target name="pe_reader">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<external_object location="mscoree.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="pe_reader" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/unix$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/windows$</exclude>
+				<condition>
+					<platform value="unix"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

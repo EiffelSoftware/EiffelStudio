@@ -14,9 +14,13 @@ copy_raw 	test.e $CLUSTER test.e
 copy_sub 	test1.e $CLUSTER test1.e
 copy_raw 	test2.e $CLUSTER test2.e
 compile_melted
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTCG; TEST2 VTCG
 
 resume_compile
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTCG; TEST2 VTCG
+
+resume_compile
+compile_result 	validity_error TEST1 VTCG; TEST2 VTCG
+
 
 test_end

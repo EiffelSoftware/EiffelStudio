@@ -7,13 +7,13 @@
 -- This is a test control file
 
 test_name 	 fix-constrained-actual-generic
-test_description An entity of type `HASH_TABLE [STRING, DOUBLE]' is reported to violate VTCG and then the error is fixed by changing DOUBLE to STRING
+test_description An entity of type `HASH_TABLE [STRING, DOUBLE]' is reported to violate VTGD(2) and then the error is fixed by changing DOUBLE to STRING
 
 copy_sub 	 Ace $TEST Ace
 define		 HASHABLE_TYPE "TEST"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VTCG
+compile_result 	 validity_error TEST VTGD(2)
 
 define		 HASHABLE_TYPE "STRING"
 copy_sub 	 test.e  $CLUSTER test.e

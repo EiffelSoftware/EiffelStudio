@@ -14,7 +14,7 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST1 VTCG
+compile_result 	validity_error TEST1 VTGC(3)
 
 define		CREATION_PROC "make"
 copy_sub 	test1.e $CLUSTER test1.e

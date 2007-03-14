@@ -14,7 +14,7 @@ define		 ACTUAL INTEGER
 copy_sub 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VTCG
+compile_result 	 validity_error TEST VTGD(2)
 
 define		 ACTUAL STRING
 copy_sub 	 test.e  $CLUSTER test.e

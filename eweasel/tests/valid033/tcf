@@ -30,6 +30,6 @@ compile_result  ok
 define		ACTUAL "TEST1 [TEST]"
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result  validity_error TEST VTCG
+compile_result  validity_error TEST VTGD(2)
 
 test_end

@@ -4,7 +4,7 @@ feature
 
 	test (a_g: G) is
 		do
-			n := a_g
+			n ?= a_g
 			print (n)
 		end
 

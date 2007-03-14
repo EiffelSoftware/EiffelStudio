@@ -19,6 +19,6 @@ compile_result	ok
 define		FORMALS "H -> G, G"
 copy_sub	test1.e $CLUSTER test1.e
 compile_melted
-compile_result	validity_error TEST1 VTCT
+compile_result ok
 
 test_end

@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 vtcg-weasel
-test_description After initial compilation, the inheritance clause in a class used in a formal generic constraint is changed, introducing a VTCG error.  When the system is recompiled, the compiler does not detect the error.
+test_description After initial compilation, the inheritance clause in a class used in a formal generic constraint is changed, introducing a VTGD(2) error.  When the system is recompiled, the compiler does not detect the error.
 
 copy_sub 	 Ace $TEST Ace
 define		 CONSTRAINT_PARENT "IDENTIFIED_ROW"
@@ -25,7 +25,7 @@ compile_result 	 ok
 define		 CONSTRAINT_PARENT "ANONYMOUS_ROW"
 copy_sub 	 parent.e  $CLUSTER parent.e
 compile_melted
-compile_result 	 validity_error TEST1 VTCG
+compile_result 	 validity_error TEST1 VTGD(2)
 
 define		 CONSTRAINT_PARENT "IDENTIFIED_ROW"
 copy_sub 	 parent.e  $CLUSTER parent.e

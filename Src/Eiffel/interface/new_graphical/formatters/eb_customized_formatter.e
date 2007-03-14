@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 			-- Create a formatter associated with `a_manager'.
 		do
 			Precursor (a_manager)
-			if tooltip /= Void then
+			if tooltip /= Void and then not tooltip.is_empty then
 				capital_command_name.append ("%N")
 				capital_command_name.append (tooltip)
 			end

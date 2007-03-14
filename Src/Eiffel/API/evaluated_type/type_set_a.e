@@ -19,7 +19,8 @@ inherit
 			has_formal_generic,
 			instantiation_in,
 			is_loose,
-			is_valid
+			is_valid,
+			is_type_set
 		end
 
 	ARRAYED_LIST[EXTENDED_TYPE_A]
@@ -846,6 +847,12 @@ feature -- Status
 						do
 							Result := a_extended_type.type.has_formal_generic
 						end)
+		end
+
+	is_type_set: BOOLEAN
+			-- Is `Current' an instance of `TYPE_SET_A'?
+		do
+			Result := True
 		end
 
 

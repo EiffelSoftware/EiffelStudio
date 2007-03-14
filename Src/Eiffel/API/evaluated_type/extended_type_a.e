@@ -48,6 +48,8 @@ feature -- Initialization
 			-- Initialize
 		require
 			a_type_not_void: a_type /= Void
+			a_type_is_not_a_type_set: not a_type.is_type_set
+			a_type_is_not_extended: not a_type.is_extended
 		do
 			type := a_type
 			renaming := a_renaming
@@ -116,6 +118,8 @@ feature -- Setters
 			-- Set `type' to `a_type'
 		require
 			a_type_not_void: a_type /= Void
+			a_type_is_not_a_type_set: not a_type.is_type_set
+			a_type_is_not_extended: not a_type.is_extended
 		do
 			type := a_type
 		ensure
@@ -198,7 +202,9 @@ feature -- Output
 			end
 		end
 
-
+invariant
+	type_is_not_a_type_set: not type.is_type_set
+	no_nested_extended_types: not type.is_extended
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

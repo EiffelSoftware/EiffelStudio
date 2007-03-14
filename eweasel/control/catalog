@@ -320,7 +320,8 @@ test	convert-to-base-class-inherited2	valid199 tcf pass validity vycq convert
 test	convert-to-base-class-inherited3	valid200 tcf pass validity vycq convert
 test	formal-as-base-type-for-generic		valid201 tcf pass validity formal generic
 test	single-constraint-formal-renaming	valid202 tcf pass validity formal generic
-test	inherit-from-expanded	valid203 tcf pass validity frozen expanded
+test	inherit-from-expanded				valid203 tcf pass validity frozen expanded
+test	recheck-assertion-feature-renamed	valid204 tcf pass validity assertion renaming
 test	recheck-assertion-feature-renamed	valid204 tcf pass validity 
 test	recursive-generic-constraint-with-creation	valid205 tcf pass validity
 test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
@@ -1605,12 +1606,18 @@ test 	multi-constraint-formal-heavy-renaming			multicon012 tcf pass multiconstra
 test	multi-constraint-vtgc							multicon013 tcf pass multiconstraint
 test	multi-constraint-vtmc							multicon014 tcf pass multiconstraint
 test	multi-constraint-vtgd							multicon015 tcf pass multiconstraint
+test	multi-constraint-rename-conflict				multicon016 tcf pass multiconstraint
+test	multi-constraint-non-existent-renamed			multicon017 tcf pass multiconstraint
+test	multi-constraint-infix-renamed					multicon018 tcf pass multiconstraint
+test	multi-constraint-is-inherited					multicon019 tcf pass multiconstraint
 test	multi-constraint-vtgd-create					multicon020 tcf pass multiconstraint
 test	multi-constraint-add-gen-constraint				multicon021 tcf pass multiconstraint
 test	multi-constraint-renaming1						multicon022 tcf pass multiconstraint
 test	multi-constraint-renaming2						multicon023 tcf pass multiconstraint
 test	multi-constraint-check-constraints				multicon024 tcf pass multiconstraint
 test	multi-constraint-actual-type					multicon025 tcf pass multiconstraint
+test	multi-constraint-rename-formal					multicon026 tcf pass multiconstraint
+test	multi-constraint-creation-through-formal		multicon027 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

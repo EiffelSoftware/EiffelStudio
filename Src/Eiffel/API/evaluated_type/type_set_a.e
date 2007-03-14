@@ -522,7 +522,6 @@ feature -- Access for Error handling
 					local
 						l_renamed_id: INTEGER
 						l_class: CLASS_C
-						l_renaming: RENAMING_A
 					do
 						if a_ext_type.has_associated_class then
 							l_class := a_ext_type.associated_class

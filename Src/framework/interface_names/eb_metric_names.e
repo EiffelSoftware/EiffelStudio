@@ -437,7 +437,7 @@ feature -- Error/warning message
 	err_too_many_criterion_section: STRING_GENERAL is
 			-- Too many criterion section error
 		do
-			Result := locale.translate ("Too many crierion section specified. Only one criterion section is expected.")
+			Result := locale.translate ("Too many criterion sections specified. Only one criterion section is expected.")
 		ensure
 			result_attached: Result /= Void
 		end

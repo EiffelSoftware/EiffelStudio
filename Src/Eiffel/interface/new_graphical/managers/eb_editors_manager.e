@@ -1132,15 +1132,17 @@ feature {NONE}-- Implementation
 			until
 				a_editors.after or Result /= Void
 			loop
-				if a_editors.item.stone /= Void and then a_stone.is_equal (a_editors.item.stone) then
+				if a_editors.item.stone /= Void and then equal (a_stone, a_editors.item.stone) then
 					Result := a_editors.item
 				else
 					l_file_stone1 ?= a_stone
 					l_file_stone2 ?= a_editors.item.stone
-					if l_file_stone1 /= Void and l_file_stone2 /= Void then
-						if l_file_stone1.file_name.is_equal (l_file_stone2.file_name) then
-							Result := a_editors.item
-						end
+					if
+						(l_file_stone1 /= Void and l_file_stone2 /= Void) and then
+						(l_file_stone1.is_valid and l_file_stone2.is_valid) and then
+						equal (l_file_stone1.file_name, l_file_stone2.file_name)
+					then
+						Result := a_editors.item
 					end
 				end
 				a_editors.forth

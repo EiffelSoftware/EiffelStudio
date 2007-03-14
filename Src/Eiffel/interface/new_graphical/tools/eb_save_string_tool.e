@@ -25,6 +25,7 @@ feature{NONE} -- Initialization
 		do
 			owner_window := win
 			title := "Save output to file"
+			extension_required := True
 		ensure
 			owner_window_set: owner_window = win
 		end
@@ -57,6 +58,13 @@ feature -- Change
 			title := t
 		end
 
+	require_extension (b: BOOLEAN) is
+			-- Force the selected filename to have the associated extension.
+			-- for instance .txt
+		do
+			extension_required := b
+		end
+
 feature {NONE} -- Implementation
 
 	warning_dialog: EB_WARNING_DIALOG
@@ -73,6 +81,9 @@ feature {NONE} -- Implementation
 
 	save_file_dlg: EV_FILE_SAVE_DIALOG
 			-- File dialog to let user choose a file.
+
+	extension_required: BOOLEAN
+			-- Is associated extension required ?
 
 feature -- Save
 
@@ -111,8 +122,7 @@ feature -- Save
 			if not retried then
 				if save_file_dlg /= Void then
 					create str.make_from_string (save_file_dlg.file_name)
-					create f.make (str)
-					if save_file_dlg.selected_filter_index /= 0 then
+					if extension_required and save_file_dlg.selected_filter_index /= 0 then
 						filter_str ?= save_file_dlg.filters.i_th (save_file_dlg.selected_filter_index).item (1)
 						if filter_str.item (1) = '*' then
 							filter_str.remove (1)
@@ -128,6 +138,7 @@ feature -- Save
 						end
 					end
 					save_file_dlg.destroy
+					create f.make (str)
 					if f.exists then
 						create actions.make (1,1)
 						actions.put (agent on_overwrite_file (str), 1)

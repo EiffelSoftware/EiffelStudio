@@ -344,7 +344,7 @@ feature -- Setting
 	format is
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
-			if stone /= Void and then selected and then displayed then
+			if stone /= Void and then selected and then displayed and then actual_veto_format_result then
 				if is_valid then
 					retrieve_sorting_order
 					display_temp_header

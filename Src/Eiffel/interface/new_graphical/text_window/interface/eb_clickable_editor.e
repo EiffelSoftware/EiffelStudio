@@ -154,7 +154,10 @@ feature -- Status setting
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
 			margin.hide_breakpoints
-			margin_container.hide
+			-- `margin_container' also have line number widget, if we hide it line nubmer widget will not displayed.
+			if not line_numbers_enabled then
+				margin_container.hide
+			end
 			margin.refresh_now
 		end
 

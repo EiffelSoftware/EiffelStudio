@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_CHECKABLE_LIST_IMP
-	
+
 inherit
 	EV_CHECKABLE_LIST_I
 		undefine
@@ -16,7 +16,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_LIST_IMP
 		redefine
 			interface,
@@ -25,9 +25,9 @@ inherit
 			insert_i_th--,
 			--on_erase_background
 		end
-		
+
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
-	
+
 create
 	make
 
@@ -56,7 +56,7 @@ feature -- Status setting
 			item_imp ?= list_item.implementation
 			i := ev_children.index_of (item_imp, 1) - 1
 			cwin_listview_setcheckstate (wel_item, i, True)
-	
+
 		end
 
 	uncheck_item (list_item: EV_LIST_ITEM) is
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 					else
 						if check_actions_internal /= Void then
 							check_actions_internal.call ([item_interface])
-						end	
+						end
 					end
 				else
 					Precursor {EV_LIST_IMP} (info)
@@ -126,9 +126,9 @@ feature {NONE} -- Implementation
 		external
 			"C inline use <commctrl.h>"
 		alias
-			"ListView_SetItemState($hwnd, $iindex, INDEXTOSTATEIMAGEMASK(($fcheck)?2:1), LVIS_STATEIMAGEMASK)"
+			"ListView_SetItemState((HWND) $hwnd, (int) $iindex, (UINT) INDEXTOSTATEIMAGEMASK(($fcheck)?2:1), (UINT) LVIS_STATEIMAGEMASK)"
 		end
-		
+
 	cwin_listview_getcheckstate (hwnd: POINTER; iindex: INTEGER): BOOLEAN is
 			--
 		external
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

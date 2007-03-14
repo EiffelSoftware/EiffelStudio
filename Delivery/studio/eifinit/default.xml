@@ -19,7 +19,6 @@
 	<PREF NAME="debugger.dotnet.keep_stepping_info_dotnet_feature" DESCRIPTION="Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Properties;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>
-	<PREF NAME="debugger.main_splitter_position" HIDDEN="true" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>
 	<PREF NAME="debugger.max_evaluation_duration" DESCRIPTION="Maximum evaluation duration before cancelling evaluation. (this is only applicable for a .NET system)"><INTEGER>5</INTEGER></PREF>
 	<PREF NAME="debugger.max_slice" HIDDEN="true" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="debugger.min_slice" HIDDEN="true" DESCRIPTION="Smallest number of items displayed in list data."><INTEGER>0</INTEGER></PREF>
@@ -196,12 +195,9 @@
 	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.is_maximized" HIDDEN="true" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
-	<PREF NAME="interface.development_window.left_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;266;Clusters;visible;0;0;0;250;Properties;visible;0;0;0;150;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0</LIST></PREF>
-	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time." RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Search;closed;0;0;0;0;Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>
 	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -214,8 +210,6 @@
 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_tab__visible;New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Save_all_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden;Breakpoints__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>
-
-	<PREF NAME="interface.development_window.window_left_panel_width" HIDDEN="true" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>950</INTEGER></PREF>
 	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.development_window.x_position" DESCRIPTION="Screen x position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>

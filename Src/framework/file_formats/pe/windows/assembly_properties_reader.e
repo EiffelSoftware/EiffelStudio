@@ -145,7 +145,7 @@ feature {NONE} -- Caching
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_access: ENVIRONMENT_ACCESS
+			l_access: EXECUTION_ENVIRONMENT
 			l_name, l_path, l_new_path: STRING
 			l_wname, l_wpath: WEL_STRING
 			l_done: BOOLEAN

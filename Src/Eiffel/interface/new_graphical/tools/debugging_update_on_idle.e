@@ -59,6 +59,7 @@ feature {NONE} -- real_update
 
 	reset_update_on_idle is
 		do
+			cancel_process_real_update_on_idle
 			last_real_update_id := 0
 		end
 

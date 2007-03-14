@@ -113,7 +113,9 @@ feature -- Recycling
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do
-			unattach
+			if is_attached_to_row then
+				unattach
+			end
 			if onces_row /= Void then
 				onces_row.set_data (Void)
 				if onces_row.parent /= Void then

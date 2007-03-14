@@ -81,14 +81,14 @@ feature {NONE} -- Implementation
 			l_accelerator: like accelerator
 			l_compare_object: BOOLEAN
 		do
+			collect_destroyed_accelerators
+
 			if accelerator /= Void and then referred_shortcut /= Void then
 				l_accelerators := a_window.accelerators
 					-- Remove accelerator from related window.
 				l_compare_object := l_accelerators.object_comparison
 				l_accelerators.compare_references
-				if l_accelerators.has (accelerator) then
-					l_accelerators.prune_all (accelerator)
-				end
+				remove_accelerator_managed_from_list (l_accelerators)
 				if l_compare_object then
 					l_accelerators.compare_objects
 				end
@@ -96,6 +96,10 @@ feature {NONE} -- Implementation
 					-- Modify `accelerator' accordingly
 				if not referred_shortcut.is_wiped then
 					l_accelerator := accelerator
+					if l_accelerator.parented then
+							-- A paranted accelerator should be using in a existing window.
+						l_accelerator := duplicate_accelerator (l_accelerator)
+					end
 					l_accelerator.set_key (referred_shortcut.key)
 					if referred_shortcut.is_ctrl then
 						l_accelerator.enable_control_required
@@ -117,9 +121,81 @@ feature {NONE} -- Implementation
 						l_accelerator_not_exist: not l_accelerators.has (l_accelerator)
 					end
 					l_accelerators.extend (l_accelerator)
+					managed_accelerators.extend (l_accelerator)
 				end
 			end
 		end
+
+	remove_accelerator_managed_from_list (a_list: EV_ACCELERATOR_LIST) is
+			-- Remove any managed accelerator from `a_list'. Also wipe it in `managed_accelerators'.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_managed: like managed_accelerators
+		do
+			from
+				l_managed := managed_accelerators
+				l_managed.start
+			until
+				l_managed.after
+			loop
+				if a_list.has (l_managed.item) then
+					a_list.prune_all (l_managed.item)
+					l_managed.remove
+				else
+					l_managed.forth
+				end
+			end
+		end
+
+	duplicate_accelerator (a_acc: EV_ACCELERATOR): EV_ACCELERATOR is
+			-- Duplicate accelerator.
+		require
+			a_acc_not_void: a_acc /= Void
+			a_acc_not_distroyed: not a_acc.is_destroyed
+		do
+			create Result.make_with_key_combination (a_acc.key, a_acc.control_required, a_acc.alt_required, a_acc.shift_required)
+			Result.actions.append (a_acc.actions)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	collect_destroyed_accelerators is
+			-- Remove destroyed or unparented accelerators from `managed_accelerators'.
+		local
+			l_accs: like managed_accelerators
+		do
+			from
+				l_accs := managed_accelerators
+				l_accs.start
+			until
+				l_accs.after
+			loop
+				if l_accs.item.is_destroyed or else not l_accs.item.parented then
+					l_accs.remove
+				else
+					l_accs.forth
+				end
+			end
+		end
+
+	managed_accelerators: ARRAYED_LIST [EV_ACCELERATOR] is
+			-- Managed accelerators
+			-- Each accelerator should be taken by one window.
+			-- If current is any once object, destroyed/unparented accelerator might exist.
+			-- Those accelerators should be removed by `collect_destroyed_accelerators' at a suitable timing.
+		do
+			if managed_accelerators_internal = Void then
+				create Result.make (1)
+				managed_accelerators_internal := Result
+			else
+				Result := managed_accelerators_internal
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	managed_accelerators_internal: like managed_accelerators;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

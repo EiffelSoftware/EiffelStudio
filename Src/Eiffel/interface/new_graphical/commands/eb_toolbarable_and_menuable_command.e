@@ -129,8 +129,8 @@ feature -- Status setting
 	update (a_window: EV_WINDOW) is
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		do
-			Precursor {EB_TOOLBARABLE_COMMAND} (a_window)
 			Precursor {EB_MENUABLE_COMMAND} (a_window)
+			update_tooltips
 		end
 
 feature {NONE} -- Implementation

@@ -641,6 +641,8 @@ feature -- Formatter displayer names
 			Result := locale.format_string (locale.translate ("Extracting $1 from $target ..."), [l_ellipse])
 		end
 
+	l_formatter_invalid_metric: STRING_GENERAL do Result := locale.translate ("Specified metric is not defined or invalid, this will cause current formatter not usable") end
+
 
 feature -- Toggles
 

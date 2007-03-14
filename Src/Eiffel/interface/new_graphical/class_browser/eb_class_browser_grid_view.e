@@ -389,8 +389,12 @@ feature -- View update
 			-- Notification from `a_observable' indicating that `a_data' changed.
 		require else
 			a_observable_can_be_void: a_observable = Void
+		local
 		do
 			data ?= a_data
+			if data = Void then
+				value ?= a_data
+			end
 			is_up_to_date := False
 			update_view
 		end
@@ -692,6 +696,9 @@ feature {NONE} -- Implementation
 	data: ANY
 			-- Data to be displayed in current view
 
+	value: DOUBLE_REF
+			-- Value of last calculated formatter
+
 	even_line_color: EV_COLOR is
 			-- Background color for even lines
 		do
@@ -719,12 +726,29 @@ feature {NONE} -- Implementation
 				else
 					component_widget.hide
 					text.show
-					provide_error_message
+					if value /= Void then
+						provide_value_result
+					else
+						provide_error_message
+					end
 				end
 				is_up_to_date := True
 			end
 		ensure
 			view_up_to_date: is_up_to_date
+		end
+
+	provide_value_result is
+			-- Provide result for `value'.
+		require
+			value_attached: value /= Void
+		local
+			l_text: STRING_GENERAL
+		do
+			l_text := interface_names.first_character_as_upper (interface_names.l_value).twin
+			l_text.append (": ")
+			l_text.append (value.item.out)
+			text.set_text (l_text)
 		end
 
 	provide_result is

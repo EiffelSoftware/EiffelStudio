@@ -441,7 +441,8 @@ feature{NONE} -- Actions
 			l_metric: EB_METRIC
 			l_displayers: EB_FORMATTER_DISPLAYERS
 		do
-			if property_grid.is_displayed then
+			if property_grid /= Void and then property_grid.is_displayed then
+				l_metric_name := string_8_from_string_32 (a_metric)
 					-- Set formatter name.
 				if is_default_formatter_name (string_32_from_string_8 (formatter_name_property.value)) and then formatter_name_property /= Void then
 					formatter_name_property.set_value (interface_names.first_character_as_upper (a_metric))
@@ -458,7 +459,6 @@ feature{NONE} -- Actions
 				if displayed_in_tools_property /= Void then
 					l_tool_value := displayed_in_tools_property.value
 					if l_tool_value = Void or else l_tool_value.is_empty then
-						l_metric_name := string_8_from_string_32 (a_metric)
 						if metric_manager.has_metric (l_metric_name) and then metric_manager.is_metric_valid (l_metric_name) then
 							l_metric := metric_manager.metric_with_name (l_metric_name)
 							if l_metric.unit = class_unit or l_metric.unit = feature_unit then
@@ -470,6 +470,15 @@ feature{NONE} -- Actions
 								displayed_in_tools_property.set_value (l_tool_value)
 								refresh_grid_for_descriptor (a_descriptor)
 							end
+						end
+					end
+					if metric_property /= Void then
+						if metric_manager.has_metric (l_metric_name) and then metric_manager.is_metric_valid (l_metric_name) then
+							metric_property.set_tooltip ("")
+							metric_property.set_foreground_color (Void)
+						else
+							metric_property.set_foreground_color (red_color)
+							metric_property.set_tooltip (interface_names.l_formatter_invalid_metric)
 						end
 					end
 				end
@@ -625,6 +634,9 @@ feature {NONE} -- Implementation/Data
 	displayer_dialog: EB_DISPLAYER_DIALOG
 			-- Displayer dialog
 
+	metric_property: MENU_PROPERTY [STRING_GENERAL]
+			-- Property to setup metric
+
 feature{NONE} -- Sorting
 
 	formatter_name_tester (a_formatter, b_formatter: EB_CUSTOMIZED_FORMATTER_DESP; a_order: INTEGER): BOOLEAN is
@@ -706,7 +718,7 @@ feature {NONE} -- Implementation
 			l_header: STRING_PROPERTY [STRING_32]
 			l_temp_header: STRING_PROPERTY [STRING_32]
 			l_pixmap: FILE_PROPERTY
-			l_metric: MENU_PROPERTY [STRING_GENERAL]
+			l_metric: like metric_property
 			l_metric_filter: BOOLEAN_PROPERTY
 			l_scope: STRING_CHOICE_PROPERTY [STRING_GENERAL]
 
@@ -763,6 +775,7 @@ feature {NONE} -- Implementation
 			l_metric.set_description (interface_names.l_formatter_metric_help)
 			l_metric.enable_auto_set_data
 			l_metric.enable_text_editing
+			metric_property := l_metric
 			l_grid.add_property (l_metric)
 
 			create l_metric_filter.make_with_value (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
@@ -1004,3 +1017,4 @@ invariant
 	formatter_grid_wrapper_attached: formatter_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 end
+

@@ -383,7 +383,11 @@ feature -- Setting
 					l_domain.extend (l_domain_item)
 					l_value := l_metric.value_item (l_domain)
 					browser.set_starting_element (l_domain_item.query_language_item)
-					browser.update (Void, l_metric.last_result_domain)
+					if l_metric.is_basic and then l_metric.unit.scope /= Void then
+						browser.update (Void, l_metric.last_result_domain)
+					else
+						browser.update (Void, l_value)
+					end
 				else
 					browser.reset_display
 				end

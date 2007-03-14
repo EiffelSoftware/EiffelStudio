@@ -831,7 +831,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	generics_not_equal_void_implies_generics_not_empty: generics /= Void implies not generics.empty
+		-- A generic type should at least have one generic parameter.
+		-- A tuple however is an eception and can have no generic parameter.
+	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

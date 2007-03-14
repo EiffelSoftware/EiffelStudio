@@ -43,12 +43,16 @@ feature{NONE} -- Initialization
 			setting_change_actions.extend (agent on_setting_change)
 
 			horizontal_container.extend (left_border_cell)
+			horizontal_container.disable_item_expand (left_border_cell)
 			horizontal_container.extend (widget)
 			horizontal_container.extend (right_border_cell)
+			horizontal_container.disable_item_expand (right_border_cell)
 
 			vertical_container.extend (top_border_cell)
+			vertical_container.disable_item_expand (top_border_cell)
 			vertical_container.extend (horizontal_container)
 			vertical_container.extend (bottom_border_cell)
+			vertical_container.disable_item_expand (bottom_border_cell)
 
 			widget_container.extend (vertical_container)
 
@@ -143,7 +147,7 @@ feature{NONE} -- Implementation
 			l_background_color: like actual_tooltip_background_color
 		do
 			l_background_color := actual_tooltip_background_color
-			widget_container.set_minimum_size (border_line_width * 2 + left_border + right_border + widget.width, border_line_width * 2 + top_border + bottom_border + widget.height)
+--			widget_container.set_minimum_size (border_line_width * 2 + left_border + right_border + widget.width, border_line_width * 2 + top_border + bottom_border + widget.height)
 			widget_container.set_border_width (border_line_width)
 			widget_container.set_background_color (actual_border_line_color)
 			widget_container.set_foreground_color (l_background_color)

@@ -1111,7 +1111,6 @@ feature {NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_precompile: CONF_PRECOMPILE
-			l_no_gui_library: BOOLEAN
 		do
 			create l_factory
 

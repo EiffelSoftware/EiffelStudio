@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties		
 
-	error_list: LINKED_LIST [SYNTAX_ERROR]
+	error_list: LINKED_LIST [ERROR]
 			-- Error list
 
 	warning_list: LINKED_LIST [SYNTAX_WARNING]
@@ -30,7 +30,7 @@ feature -- Properties
 
 feature -- Error handling primitives
 
-	insert_error (e: SYNTAX_ERROR) is
+	insert_error (e: ERROR) is
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void

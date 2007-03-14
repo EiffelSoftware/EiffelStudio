@@ -2351,7 +2351,7 @@ feature {NONE} -- Implementation: helpers
 				set_error_message ("Feature with routine id of 0!!!")
 			else
 				if not has_error_internal then
-					Result := a_type_set.e_feature_state_by_id (a_id_set.first)
+					Result := a_type_set.e_feature_state_by_rout_id (a_id_set.first)
 				end
 			end
 			if not has_error_internal and Result = Void then

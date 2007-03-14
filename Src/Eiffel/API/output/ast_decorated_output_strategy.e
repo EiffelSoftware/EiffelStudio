@@ -831,9 +831,14 @@ feature {NONE} -- Implementation
 								-- We are processing something like: create l.make
 							if l_is_multiconstraint_formal then
 								l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
-								if l_feat_result.features_found_count = 1 then
-									l_feat := l_feat_result.feature_item
-									last_class := l_feat_result.class_type_of_feature.associated_class
+								if not l_feat_result.is_empty then
+										-- FIXME: We still can have more than feature.
+										-- See wiki topic multi constraints and flat view for more information.
+									l_feat := l_feat_result.first.feature_item
+									last_class := l_feat_result.first.class_type.associated_class
+									if l_feat_result.count > 1 then
+										set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
+									end
 								else
 									l_feat := Void
 									last_class := current_class
@@ -848,8 +853,8 @@ feature {NONE} -- Implementation
 							end
 						else
 							if last_type /= Void then
-									-- We are already in a nested call like: a.f.*
-									-- So `last_type', last_class are the ones from a and
+									-- We are already in a nested call like: xyz.a.f.*
+									-- So `last_type', last_class are the ones from "a" and
 									-- `l_rout_id_set' is the one of f
 								if last_type.is_none then
 									last_class := system.class_of_id (l_as.class_id)
@@ -857,22 +862,27 @@ feature {NONE} -- Implementation
 								if last_class /= Void then
 									l_feat := feature_in_class (last_class, l_rout_id_set)
 								else
-									-- MTNTODO: this was not hear previously: either remove the if and it always
-									-- works or then the check (+15 lines) is not really valid
-									last_class := current_class
+										-- last_class is void: it could be a multi constrained formal
+									if l_is_multiconstraint_formal then
+										l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
+										if not l_feat_result.is_empty then
+											l_feat := l_feat_result.first.feature_item
+											last_type := l_feat_result.first.class_type
+											last_class := last_type.associated_class
+											if l_feat_result.count > 1 then
+												set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
+											end
+										end
+									else
+										-- MTNTODO: this was not here previously: either remove the if and it always
+										-- works or then the check (+15 lines) is not really valid
+										last_class := current_class
+									end
 								end
 							else
 									-- We are at the beginning of a nested call: a.f.*
-									-- `l_rout_id_set' is the one of a
-								if l_is_multiconstraint_formal then
-									l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
-									if l_feat_result.features_found_count = 1 then
-										l_feat := l_feat_result.feature_item
-									end
-								else
-									l_feat := feature_in_class (current_class, l_rout_id_set)
-								end
-
+									-- `l_rout_id_set' is the one of "a"
+								l_feat := feature_in_class (current_class, l_rout_id_set)
 								last_type := current_class.actual_type
 								last_class := current_class
 							end
@@ -971,7 +981,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							l_type := l_feat.type
-									-- If it has an like argument type, we solve the type from the arguments.
+									-- If it has a like argument type, we solve the type from the arguments.
 							if l_type.has_like_argument then
 								check
 									parameters_not_void: l_as.parameters /= Void
@@ -1952,7 +1962,9 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_type: TYPE_A
 			l_last_type: TYPE_A
+			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
+			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: EXTENDED_TYPE_A]]
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1964,8 +1976,16 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				last_class := constraining_types (last_type).associated_class
-				l_feat := feature_in_class (last_class, l_as.routine_ids)
+				if last_type.is_formal and then last_type.is_multi_constrained_formal (current_class)then
+					l_last_type_set := constraining_types (last_type)
+						-- Here we get back the feature and the extended type where the feature is from (it means that it includes a possible renaming)
+					l_result := l_last_type_set.e_feature_list_by_rout_id(l_as.routine_ids.first)
+					last_class := l_result.first.type.associated_class
+					l_feat := l_result.first.feature_item
+				else
+					last_class := constrained_type (last_type).associated_class
+					l_feat := feature_in_class (last_class, l_as.routine_ids)
+				end
 			end
 			if not expr_type_visiting then
 				text_formatter_decorator.put_space
@@ -3865,11 +3885,7 @@ feature {NONE} -- Implementation: helpers
 			Result := a_current_class.feature_table.item_id (a_name_id)
 		end
 
-	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): TUPLE
-		[	feature_item: E_FEATURE;
-			class_type_of_feature: CL_TYPE_A;
-			features_found_count: INTEGER;
-			constraint_position: INTEGER ]
+	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): LIST[TUPLE[feature_item: E_FEATURE; class_type: EXTENDED_TYPE_A]]
 			-- Feature with `a_id_set' in `a_class_c'
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -3880,10 +3896,10 @@ feature {NONE} -- Implementation: helpers
 				set_error_message ("Feature with routine id of 0!!!")
 			else
 				if not has_error_internal then
-					Result := a_type_set.e_feature_state_by_id (a_id_set.first)
+					Result := a_type_set.e_feature_list_by_rout_id (a_id_set.first)
 				end
 			end
-			if not has_error_internal and Result = Void then
+			if not has_error_internal and Result.is_empty then
 				has_error_internal := True
 				set_error_message ("Feature with routine id " + a_id_set.first.out + " could not be found.")
 			end

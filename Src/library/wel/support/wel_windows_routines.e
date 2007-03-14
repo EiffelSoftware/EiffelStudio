@@ -10,7 +10,7 @@ class
 
 inherit
 	ANY
-	
+
 	WEL_IDENTIFIED
 		export
 			{NONE} all
@@ -242,6 +242,14 @@ feature -- Status report
 			end
 		end
 
+	is_terminal_service: BOOLEAN is
+			-- If window in terminal service (Remote Desktop)?
+		require
+			after_2000: (create {WEL_WINDOWS_VERSION}).is_windows_2000_compatible
+		do
+			cwin_is_terminal_service ($Result)
+		end
+
 feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
@@ -437,6 +445,19 @@ feature {NONE} -- Externals
 			]"
 		end
 
+	cwin_is_terminal_service (a_result: TYPED_POINTER [BOOLEAN]) is
+			-- If window in terminal service (Remote Desktop)?
+		external
+			"C inline use <Windows.h>"
+		alias
+			"[
+			{
+				// This is not defined in VC6
+				// define SM_REMOTESESSION  0x1000
+				*(EIF_BOOLEAN *) $a_result = GetSystemMetrics(0x1000);
+			}
+			]"
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

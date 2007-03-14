@@ -116,12 +116,13 @@ feature -- Refresh
 			a_observable_can_be_void: a_observable = Void
 		do
 			data ?= a_data
-			is_up_to_date := False
 			if data = Void then
+				value ?= a_data
+			end
+			is_up_to_date := False
+			set_should_headers_be_shown (data /= Void or else value /= Void)
+			if data = Void and then value = Void then
 				create {QL_CLASS_DOMAIN}data.make
-				set_should_headers_be_shown (False)
-			else
-				set_should_headers_be_shown (True)
 			end
 			update_view
 		end

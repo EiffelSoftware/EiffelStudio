@@ -1273,7 +1273,6 @@ feature {NONE} -- Implementation
 				loop
 					l_item := witems.item
 					l_item.request_evaluation (False)
-					check l_item.row /= Void end
 					l_expr := l_item.expression
 					if l_expr.evaluation_disabled then
 						-- Nothing special
@@ -1285,9 +1284,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if l_item.row = Void then
-						check
-							should_not_occurred: False
-						end
+							--| It seems to occur when "Restarting" debugging
 						l_item.attach_to_row (watches_grid.extended_new_row)
 					end
 					l_item.request_refresh

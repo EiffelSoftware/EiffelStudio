@@ -134,6 +134,8 @@ feature -- Command
 					else
 						if zone.assistant.last_state.is_docking_state_recorded then
 							zone.assistant.dock_last_state_for_hide
+						elseif manager /= Void then
+							manager.set_top (Current, {SD_ENUMERATION}.top)
 						end
 					end
 				end

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					grab_keyboard_and_mouse
 				end
-				app_implementation.enable_debugger
+				app_implementation.disable_debugger
 			end
 		end
 
@@ -136,8 +136,7 @@ feature {NONE} -- Implementation
 	has_capture: BOOLEAN is
 			-- Does Current have the keyboard and mouse event capture?
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_object_struct_flags (event_widget) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM or else
-			{EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object) & {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM = {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM
+			Result := App_implementation.captured_widget = interface
 		end
 
 	grab_keyboard_and_mouse is

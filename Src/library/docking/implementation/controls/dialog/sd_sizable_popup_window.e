@@ -63,8 +63,7 @@ feature {NONE} -- Implementation
 				inspect
 					internal_pointer_direction
 				when {SD_ENUMERATION}.top_left then
-					resize_left (a_screen_x)
-					resize_top (a_screen_y)
+					resize_top_left (a_screen_x, a_screen_y)
 				when {SD_ENUMERATION}.top_right then
 					resize_right (a_screen_x)
 					resize_top (a_screen_y)
@@ -93,12 +92,12 @@ feature {NONE} -- Implementation
 		local
 			l_size: INTEGER
 		do
-			l_size := (screen_x + width) - a_screen_x
+			l_size := fixed_point_x - a_screen_x
 			if l_size > 0 and l_size >= minimum_width then
 				set_x_position (a_screen_x)
 				set_width (l_size)
 			else
-				set_x_position (screen_x + (width - minimum_width))
+				set_x_position (fixed_point_x - minimum_width)
 				set_width (minimum_width)
 			end
 		end
@@ -121,14 +120,42 @@ feature {NONE} -- Implementation
 		local
 			l_size: INTEGER
 		do
-			l_size := (screen_y + height) - a_screen_y
+
+			l_size := fixed_point_y - a_screen_y
 			if l_size > 0 and l_size >= minimum_height then
 				set_y_position (a_screen_y)
 				set_height (l_size)
 			else
-				set_y_position (screen_y + (height - minimum_height))
+				set_y_position (fixed_point_y - minimum_height)
 				set_height (minimum_height)
 			end
+
+		end
+
+	resize_top_left (a_screen_x, a_screen_y: INTEGER) is
+			-- Resize at top left side.
+			-- On Linux, the efficiency of UI is not enough (compare with Windows), we can't just simply call `resize_top' and `resize_left', otherwise there will be incorrect size.
+		local
+			l_width, l_height, l_x, l_y: INTEGER
+		do
+				l_height := fixed_point_y - a_screen_y
+				if l_height > 0 and l_height >= minimum_height then
+					l_y := a_screen_y
+				else
+					l_y := fixed_point_y - minimum_height
+					l_height := minimum_height
+				end
+
+				l_width := fixed_point_x - a_screen_x
+				if l_width > 0 and l_width >= minimum_width then
+					l_x := a_screen_x
+				else
+					l_x := fixed_point_x - minimum_width
+					l_width := minimum_width
+				end
+
+				set_position (l_x, l_y)
+				set_size (l_width, l_height)
 		end
 
 	resize_bottom (a_screen_y: INTEGER) is
@@ -148,10 +175,7 @@ feature {NONE} -- Implementation
 			-- Handle pointer motion actions when not has capture.
 		require
 			not_capture: not internal_border_box.has_capture
-		local
-			l_styles: EV_STOCK_PIXMAPS
 		do
-			create l_styles
 			if is_border_left (a_x) then
 				if is_border_bottom (a_y) then
 					internal_pointer_direction := {SD_ENUMERATION}.bottom_left
@@ -186,14 +210,25 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if internal_pointer_direction = {SD_ENUMERATION}.bottom_right or internal_pointer_direction = {SD_ENUMERATION}.top_left then
-				internal_border_box.set_pointer_style (l_styles.sizenwse_cursor)
-			elseif internal_pointer_direction = {SD_ENUMERATION}.bottom_left or internal_pointer_direction = {SD_ENUMERATION}.top_right then
-				internal_border_box.set_pointer_style (l_styles.sizenesw_cursor)
-			elseif internal_pointer_direction = {SD_ENUMERATION}.left or internal_pointer_direction = {SD_ENUMERATION}.right then
-				internal_border_box.set_pointer_style (l_styles.sizewe_cursor)
+			set_pointer_style_of_widget (internal_pointer_direction, internal_border_box)
+		end
+
+	set_pointer_style_of_widget (a_direction: INTEGER; a_widget: EV_WIDGET) is
+			-- Set `a_widget' pointer sytle base on `a_direction'
+		require
+			not_void: a_widget /= Void
+		local
+			l_styles: EV_STOCK_PIXMAPS
+		do
+			create l_styles
+			if a_direction = {SD_ENUMERATION}.bottom_right or a_direction = {SD_ENUMERATION}.top_left then
+				a_widget.set_pointer_style (l_styles.sizenwse_cursor)
+			elseif a_direction = {SD_ENUMERATION}.bottom_left or a_direction = {SD_ENUMERATION}.top_right then
+				a_widget.set_pointer_style (l_styles.sizenesw_cursor)
+			elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
+				a_widget.set_pointer_style (l_styles.sizewe_cursor)
 			else
-				internal_border_box.set_pointer_style (l_styles.sizens_cursor)
+				a_widget.set_pointer_style (l_styles.sizens_cursor)
 			end
 		end
 
@@ -225,6 +260,11 @@ feature {NONE} -- Implementation
 			-- Handle pointer press actions.
 		do
 			if a_button = 1 then
+				-- We set it for Linux, if end user dragging window border fast, for the moment pointer in `internal_padding_box' we make sure pointer style is correct.
+				set_pointer_style_of_widget (internal_pointer_direction, internal_padding_box)
+				fixed_point_y := screen_y + height
+				fixed_point_x := screen_x + width
+
 				setter.before_enable_capture
 				internal_border_box.enable_capture
 			end
@@ -232,10 +272,14 @@ feature {NONE} -- Implementation
 
 	on_border_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release actions.
+		local
+			l_stock_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if internal_border_box.has_capture then
 				internal_border_box.disable_capture
 				setter.after_disable_capture
+				create l_stock_pixmaps
+				internal_padding_box.set_pointer_style (l_stock_pixmaps.standard_cursor)
 			end
 		end
 
@@ -247,6 +291,12 @@ feature {NONE} -- Implementation
 
 	border_width_factor: INTEGER is 3
 			-- The factor when calculation border width.
+
+	fixed_point_y: INTEGER
+		-- When dragging at top side, which y position the bottom side of border have to be.
+
+	fixed_point_x: INTEGER
+		-- When dragging at left side, which x position the right side of border have to be.
 
 	internal_border_box: EV_BOX
 			-- Border box surround target tool bar.

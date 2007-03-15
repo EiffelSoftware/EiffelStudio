@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 
 	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
 		do
-			safe_process (l_as.type)
+			l_as.type.process (Current)
 			safe_process (l_as.renaming)
 		end
 

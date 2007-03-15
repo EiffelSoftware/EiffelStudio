@@ -67,83 +67,149 @@
 
 		<mkdir directory="${OUTPUT_DIR}" />
 		<!-- run-time -->
-		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_runtime" reuse_variables="true" />
-		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<available resource="${OUTPUT_DIR}${path_separator}runtime_is_compiled" variable="tmp_available"/>
+		<geant target="get_bin__runtime" if="$tmp_available=false" />
 
 		<!-- library -->
-		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_library" reuse_variables="true" />
-		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
+		<available resource="${OUTPUT_DIR}${path_separator}library_is_compiled" variable="tmp_available"/>
+		<geant target="get_bin__library" if="$tmp_available=false" />
 
 		<!-- IL runtime -->
 		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
 		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${OUTPUT_DIR}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
 		
 		<!-- ec -->
-		<echo message="Finalize ec ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_ec" />
-		<echo message="Error occurred during 'finalize_ec' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ec${exe}" if="${return_code}=0" />
+		<!--
+		<available resource="${OUTPUT_DIR}${path_separator}ec${exe}" variable="tmp_available"/>
+		<geant target="get_bin__ec" if="$tmp_available=false" />
+		-->
+		<geant target="get_bin__ec" />
 
 		<!-- estudio -->
-		<echo message="Finalize estudio ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_estudio" />
-		<echo message="Error occurred during 'finalize_estudio' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${OUTPUT_DIR}${path_separator}estudio${exe}" if="${return_code}=0"/>
-		<!-- specific to windows -->
-		<geant target="compile_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
-
-		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
+		<available resource="${OUTPUT_DIR}${path_separator}estudio${exe}" variable="tmp_available"/>
+		<geant target="get_bin__estudio" if="$tmp_available=false" />
 
 		<!-- quick_finalize -->
-		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_quick_finalize" />
-		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}F_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
+		<available resource="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" variable="tmp_available"/>
+		<geant target="get_bin__quick_finalize" if="$tmp_available=false" />
 
 		<!-- compile_all -->
-		<echo message="Finalize compile_all ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_compile_all" />
-		<echo message="Error occurred during 'finalize_compile_all' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}compile_all${path_separator}F_code${path_separator}compile_all${exe}" to_file="${OUTPUT_DIR}${path_separator}compile_all${exe}" if="${return_code}=0" />
+		<available resource="${OUTPUT_DIR}${path_separator}compile_all${exe}" variable="tmp_available"/>
+		<geant target="get_bin__compile_all" if="$tmp_available=false" />
 
 		<!-- es_cleaner -->
-		<echo message="Finalize es_cleaner ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_es_cleaner" />
-		<echo message="Error occurred during 'finalize_es_cleaner' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}escln_graphical${path_separator}F_code${path_separator}escln${exe}" to_file="${OUTPUT_DIR}${path_separator}escln${exe}" if="${return_code}=0" />
+		<available resource="${OUTPUT_DIR}${path_separator}escln${exe}" variable="tmp_available"/>
+		<geant target="get_bin__escln" if="$tmp_available=false" />
+
+		<!-- esbuilder -->
+		<available resource="${OUTPUT_DIR}${path_separator}esbuilder${exe}" variable="tmp_available"/>
+		<geant target="get_bin__esbuilder" if="$tmp_available=false" />
+
+		<!-- specific to windows -->
+		<geant target="compile_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
+		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
 
 	</target>
 
 	<target name="compile_es_windows" depend="init_deliv" if="${is_windows}" >
 		<!-- finish_freezing -->
+		<available resource="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" variable="tmp_available"/>
+		<geant target="get_bin__finish_freezing" if="$tmp_available=false" />
+
+		<!-- h2e -->
+		<available resource="${OUTPUT_DIR}${path_separator}h2e${exe}" variable="tmp_available"/>
+		<geant target="get_bin__h2e" if="$tmp_available=false" />
+
+		<!-- emake -->
+		<available resource="${OUTPUT_DIR}${path_separator}emake${exe}" variable="tmp_available"/>
+		<geant target="get_bin__emake" if="$tmp_available=false" />
+
+		<!-- dotnet consumer -->
+		<available resource="${OUTPUT_DIR}${path_separator}mdconsumer_is_compiled" variable="tmp_available"/>
+		<geant target="get_bin__mdconsumer" if="$tmp_available=false" />
+	</target>
+
+
+	<target name="get_bin__runtime" >
+		<!-- run-time -->
+		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
+		<geant target="compile_runtime" reuse_variables="true" />
+		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<echo message="compiled" to_file="${OUTPUT_DIR}${path_separator}runtime_is_compiled" if="${return_code}=0" />
+	</target>
+
+	<target name="get_bin__library" >
+		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
+		<geant target="compile_library" reuse_variables="true" fork="false" />
+		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
+		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
+		<echo message="compiled" to_file="${OUTPUT_DIR}${path_separator}library_is_compiled" if="${return_code}=0" />
+	</target>
+
+	<target name="get_bin__finish_freezing" if="${is_windows}" >
 		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_finish_freezing" />
 		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}finish_freezing${path_separator}F_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
-
-		<!-- h2e -->
+	</target>
+	<target name="get_bin__h2e" if="${is_windows}" >
 		<echo message="Finalize h2e ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_h2e" />
 		<echo message="Error occurred during 'finalize_h2e' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}h2e${path_separator}F_code${path_separator}h2e${exe}" to_file="${OUTPUT_DIR}${path_separator}h2e${exe}" if="${return_code}=0" />
-
-		<!-- emake -->
+	</target>
+	<target name="get_bin__emake" if="${is_windows}" >
 		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_emake"  />
 		<echo message="Error occurred during 'finalize_emake' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${OUTPUT_DIR}${path_separator}emake${exe}" if="${return_code}=0"/>
-
-		<!-- dotnet consumer -->
+	</target>
+	<target name="get_bin__mdconsumer" if="${is_windows}" >
 		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_mdconsumer" fork="false" />
 		<echo message="Error occurred during 'finalize_mdconsumer' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<echo message="compiled" to_file="${OUTPUT_DIR}${path_separator}mdconsumer_is_compiled" if="${return_code}=0" />
 		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}\EIFGENs\consumer_20\F_code" if="${return_code}=0" >
 			<fileset include="@(*.dll)" />
 		</copy>
+	</target>
+
+	<target name="get_bin__ec" >
+		<echo message="Finalize ec ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_ec" />
+		<echo message="Error occurred during 'finalize_ec' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ec${exe}" if="${return_code}=0" />
+	</target>
+	<target name="get_bin__estudio" >
+		<echo message="Finalize estudio ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_estudio" />
+		<echo message="Error occurred during 'finalize_estudio' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${OUTPUT_DIR}${path_separator}estudio${exe}" if="${return_code}=0"/>
+	</target>
+	<target name="get_bin__quick_finalize" >
+		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_quick_finalize" />
+		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}F_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
+	</target>
+	<target name="get_bin__compile_all" >
+		<echo message="Finalize compile_all ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_compile_all" />
+		<echo message="Error occurred during 'finalize_compile_all' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}compile_all${path_separator}F_code${path_separator}compile_all${exe}" to_file="${OUTPUT_DIR}${path_separator}compile_all${exe}" if="${return_code}=0" />
+	</target>
+	<target name="get_bin__esbuilder" >
+		<echo message="Finalize esbuilder ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_esbuilder" />
+		<echo message="Error occurred during 'finalize_esbuilder' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}esbuilder${path_separator}F_code${path_separator}esbuilder${exe}" to_file="${OUTPUT_DIR}${path_separator}esbuilder${exe}" if="${return_code}=0" />
+	</target>
+	<target name="get_bin__escln" >
+		<echo message="Finalize es_cleaner ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_es_cleaner" />
+		<echo message="Error occurred during 'finalize_es_cleaner' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}escln_graphical${path_separator}F_code${path_separator}escln${exe}" to_file="${OUTPUT_DIR}${path_separator}escln${exe}" if="${return_code}=0" />
 	</target>
 
 	<target name="install_es" depend="init_deliv" >
@@ -175,6 +241,10 @@
 
 		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
 		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
+
+		<available dir="${OUTPUT_DIR}" resource="esbuilder${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="esbuilder${exe}" to_directory="${INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" 
+			if="${tmp_available}=true"/>
 
 		<unset name="tmp_install_dir" />
 		<!-- end of install -->

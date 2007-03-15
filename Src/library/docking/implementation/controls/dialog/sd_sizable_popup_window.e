@@ -200,25 +200,25 @@ feature {NONE} -- Implementation
 	is_border_left (a_x: INTEGER): BOOLEAN is
 			-- If `a_x' at border left side?
 		do
-			Result := (0 <= a_x and a_x <= internal_border_width * 2)
+			Result := (0 <= a_x and a_x <= internal_border_width * border_width_factor)
 		end
 
 	is_border_right (a_x: INTEGER): BOOLEAN is
 			-- If `a_x' at border right side?	
 		do
-			Result := ((internal_border_box.width - internal_border_width * 2) <= a_x and a_x <= internal_border_box.width)
+			Result := ((internal_border_box.width - internal_border_width * border_width_factor) <= a_x and a_x <= internal_border_box.width)
 		end
 
 	is_border_top (a_y: INTEGER): BOOLEAN is
 			-- If `a_y' at border top side?
 		do
-			Result := (0 <= a_y and a_y <= internal_border_width * 2)
+			Result := (0 <= a_y and a_y <= internal_border_width * border_width_factor)
 		end
 
 	is_border_bottom (a_y: INTEGER): BOOLEAN is
 			-- If `a_y' at border bottom side?
 		do
-			Result := ((internal_border_box.height - internal_border_width * 2) <= a_y and a_y <= internal_border_box.height)
+			Result := ((internal_border_box.height - internal_border_width * border_width_factor) <= a_y and a_y <= internal_border_box.height)
 		end
 
 	on_border_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -245,14 +245,27 @@ feature {NONE} -- Implementation
 			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
+	border_width_factor: INTEGER is 3
+			-- The factor when calculation border width.
+
 	internal_border_box: EV_BOX
 			-- Border box surround target tool bar.
 
 	internal_padding_box: EV_CONTAINER
 			-- Contianer within `internal_border_box'
 
-	internal_border_width: INTEGER is 2
+	internal_border_width: INTEGER is
 			-- Border width.		
+		local
+			l_platform: PLATFORM
+		once
+			create l_platform
+			if l_platform.is_windows then
+				Result := 2
+			else
+				Result := 3
+			end
+		end
 
 	internal_pointer_direction: INTEGER;
 			-- Pointer direction, one value of SD_DOCKING_MANAGER dock_top, dock_bottom, dock_left, dock_right.

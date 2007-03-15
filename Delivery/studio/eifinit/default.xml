@@ -697,6 +697,8 @@
 	<PREF NAME="shortcuts.view.tools.show_windows_tool" DESCRIPTION="Shortcut to display Windows tool."><SHORTCUT Ctrl="True" Alt="True">N</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_object_viewer_tool" DESCRIPTION="Shortcut to display Object Viewer tool."><SHORTCUT Ctrl="True" Alt="True">L</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.go_back" DESCRIPTION="Shortcut to go back in the history."><SHORTCUT Alt="True">Left</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.go_forth" DESCRIPTION="Shortcut to go forth in the history."><SHORTCUT Alt="True">Right</SHORTCUT></PREF>
 	
 	<PREF NAME="shortcuts.view.send_to_context" DESCRIPTION="Shortcut to send Class/Feature to tools."><SHORTCUT Alt="True">Down</SHORTCUT></PREF>
 	

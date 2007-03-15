@@ -402,6 +402,9 @@ feature {NONE} -- Agents
 							end
 							fixed.extend (internal_custom_widget)
 						end
+						if internal_title.minimum_height < a_height /= Void then
+							internal_title.set_minimum_height (a_height)
+						end
 						fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.minimum_width)
 						fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.minimum_width, a_height)
 					else
@@ -415,11 +418,17 @@ feature {NONE} -- Agents
 							fixed.prune (internal_custom_widget)
 						end
 						if a_width - tool_bar_width >= 0 then
+							if internal_title.minimum_height < a_height /= Void then
+								internal_title.set_minimum_height (a_height)
+							end
 							fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 						end
 					end
 				else
 					if a_width - tool_bar_width >= 0 then
+						if internal_title.minimum_height < a_height /= Void then
+							internal_title.set_minimum_height (a_height)
+						end
 						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 						if internal_tool_bar.has (mini_tool_bar_indicator) then
 							internal_tool_bar.prune (mini_tool_bar_indicator)

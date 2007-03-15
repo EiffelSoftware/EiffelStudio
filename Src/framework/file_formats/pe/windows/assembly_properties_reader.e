@@ -152,7 +152,7 @@ feature {NONE} -- Caching
 		do
 			if not added_paths.has (a_path) then
 				create l_access
-				l_name := once "PATH"
+				l_name := "PATH"
 
 					-- Get path environment variable
 				l_path := l_access.get (l_name)

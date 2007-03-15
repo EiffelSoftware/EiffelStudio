@@ -279,11 +279,18 @@ feature {NONE} -- Implementation functions
 
 			end
 		end
-		
+
 	on_focus_out (a_widget: EV_WIDGET) is
 			-- Handle focus out actions.
+		local
+			l_platform: PLATFORM
 		do
-			cancel_tracing_pointer
+			create l_platform
+			-- On Vision2 GTK implementation, there is additional focus out actions (compare with Windows Vision2) to be called after just started dragging. If we don't ignore it, it will cause UI hanging.
+			-- We ignore focus out actions on Linux is ok since on Linux when enable capture it's full capture, atl + tab, alt + f1 etc. not work (not like Windows).
+			if l_platform.is_windows then
+				cancel_tracing_pointer
+			end
 		end
 
 	clear_all_indicator is

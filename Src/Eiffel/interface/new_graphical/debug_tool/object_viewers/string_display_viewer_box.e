@@ -281,7 +281,7 @@ feature -- Change
 					if current_dump_value /= Void then
 						l_trunc_str := current_dump_value.formatted_truncated_string_representation (slice_min, slice_max)
 						lower_slice_field.set_text (slice_min.out)
-						upper_slice_field.set_text ((slice_min + l_trunc_str.count).out)
+						upper_slice_field.set_text ((slice_min + l_trunc_str.count - 1).out)
 
 						l_endpos := l_trunc_str.count + 1
 						editor.set_text (l_trunc_str)

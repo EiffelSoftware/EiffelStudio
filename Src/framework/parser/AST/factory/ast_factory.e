@@ -189,7 +189,9 @@ feature -- Access
 	new_constraining_type (a_type_as: TYPE_AS; a_renameing_clause_as: RENAME_CLAUSE_AS; a_comma_as: KEYWORD_AS): CONSTRAINING_TYPE_AS is
 			-- New constraining type structure.
 		do
-			create Result.make (a_type_as, a_renameing_clause_as, a_comma_as)
+			if a_type_as /= Void then
+				create Result.make (a_type_as, a_renameing_clause_as, a_comma_as)
+			end
 		end
 
 	new_eiffel_list_constraining_type_as (n: INTEGER): CONSTRAINT_LIST_AS is

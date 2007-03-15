@@ -185,38 +185,39 @@ feature -- Query
 
 	editor_parent: EV_CONTAINER is
 			-- All editor zones top level parent.
+			-- If Result Void means widget structure corrupted.
 		require
 			has_editor: editor_zone_count > 0 or has_place_holder_zone
 		local
 			l_zone: SD_ZONE
 			l_parent, l_last_parent: EV_CONTAINER
-			l_list: ARRAYED_LIST [SD_ZONE]
+			l_list, l_all_editors: ARRAYED_LIST [SD_ZONE]
 		do
 			Result := editor_place_holder_parent
 			if Result = Void then
-				from
-					l_zone := all_editors.first
-					l_parent := l_zone.parent
-					l_last_parent := l_zone
-				until
-					l_parent = Void or Result /= Void
-				loop
-					if l_parent = Current then
-						Result := Current
-					else
-						l_list := internal_docking_manager.query.all_zones_in_widget (l_parent)
-						if not is_all_editors (l_list) then
-							-- Now we find the top container of all editors
-							Result := l_last_parent
+				l_all_editors := all_editors
+				if l_all_editors.count > 0 then
+					from
+						l_zone := l_all_editors.first
+						l_parent := l_zone.parent
+						l_last_parent := l_zone
+					until
+						l_parent = Void or Result /= Void
+					loop
+						if l_parent = Current then
+							Result := Current
+						else
+							l_list := internal_docking_manager.query.all_zones_in_widget (l_parent)
+							if not is_all_editors (l_list) then
+								-- Now we find the top container of all editors
+								Result := l_last_parent
+							end
+							l_last_parent := l_parent
+							l_parent := l_parent.parent
 						end
-						l_last_parent := l_parent
-						l_parent := l_parent.parent
 					end
-
 				end
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
 	has_place_holder_zone: BOOLEAN is

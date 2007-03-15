@@ -65,7 +65,7 @@ feature -- Open inner container data.
 					end
 
 					open_tool_bar_datas (l_config_data.tool_bar_datas)
-					
+
 					check not internal_docking_manager.query.inner_container_main.full end
 					open_all_inner_containers_data (l_config_data)
 
@@ -244,48 +244,49 @@ feature {NONE} -- Implementation
 		do
 			-- There are 3 cases we need to handle
 			Result := internal_docking_manager.query.inner_container_main.editor_parent
-			-- Sometime `editor_parent' feature give us a zone as top parent.
-			l_zone ?= Result
-			if l_zone /= Void then
-				Result := l_zone.parent
-			end
+			if Result /= Void then
+				-- Sometime `editor_parent' feature give us a zone as top parent.
+				l_zone ?= Result
+				if l_zone /= Void then
+					Result := l_zone.parent
+				end
 
-			l_top_split_area ?= Result
+				l_top_split_area ?= Result
 
-			if Result = internal_docking_manager.query.inner_container_main then
-			-- If the l_top_parent is top SD_MULTI_DOCK_AREA
-				Result.wipe_out
-				create l_temp_split_area
-				Result.extend (l_temp_split_area)
-				Result := l_temp_split_area
-			elseif l_top_split_area /= Void then
-
-				l_left_zones := internal_docking_manager.query.all_zones_in_widget (l_top_split_area.first)
-				l_right_zones := internal_docking_manager.query.all_zones_in_widget (l_top_split_area.second)
-				if is_all_tools (l_left_zones) or  is_all_tools (l_right_zones) then
-					create l_temp_split_area
-					if is_all_tools (l_left_zones) then
-						-- If the top parent only right side have editors zones
-						l_temp_item := l_top_split_area.second
-					else
-						-- If the top parent only left side have editors zones	
-						l_temp_item := l_top_split_area.first
-					end
-					l_old_split_position := l_top_split_area.split_position
-					l_top_split_area.prune (l_temp_item)
-					l_top_split_area.extend (l_temp_split_area)
-					l_top_split_area.set_split_position (l_old_split_position)
-					Result := l_temp_split_area
-				else
-				-- If top parent both side only have editors zones
-					check only_editors_zone: not is_all_tools (internal_docking_manager.query.all_zones_in_widget (l_top_split_area)) end
+				if Result = internal_docking_manager.query.inner_container_main then
+				-- If the l_top_parent is top SD_MULTI_DOCK_AREA
 					Result.wipe_out
+					create l_temp_split_area
+					Result.extend (l_temp_split_area)
+					Result := l_temp_split_area
+				elseif l_top_split_area /= Void then
+
+					l_left_zones := internal_docking_manager.query.all_zones_in_widget (l_top_split_area.first)
+					l_right_zones := internal_docking_manager.query.all_zones_in_widget (l_top_split_area.second)
+					if is_all_tools (l_left_zones) or  is_all_tools (l_right_zones) then
+						create l_temp_split_area
+						if is_all_tools (l_left_zones) then
+							-- If the top parent only right side have editors zones
+							l_temp_item := l_top_split_area.second
+						else
+							-- If the top parent only left side have editors zones	
+							l_temp_item := l_top_split_area.first
+						end
+						l_old_split_position := l_top_split_area.split_position
+						l_top_split_area.prune (l_temp_item)
+						l_top_split_area.extend (l_temp_split_area)
+						l_top_split_area.set_split_position (l_old_split_position)
+						Result := l_temp_split_area
+					else
+					-- If top parent both side only have editors zones
+						check only_editors_zone: not is_all_tools (internal_docking_manager.query.all_zones_in_widget (l_top_split_area)) end
+						Result.wipe_out
+					end
 				end
 			end
 		ensure
-			not_void: Result /= Void
-			empty: Result.is_empty
-			parented: Result.parent /= Void
+			empty: Result /= Void implies Result.is_empty
+			parented: Result /= Void implies Result.parent /= Void
 		end
 
 	is_all_tools (a_zones: ARRAYED_LIST [SD_ZONE]): BOOLEAN is

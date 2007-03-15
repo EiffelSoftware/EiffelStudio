@@ -92,25 +92,27 @@ feature -- Save inner container data.
 			if not internal_docking_manager.contents.has (internal_docking_manager.zones.place_holder_content) then
 				l_dock_area := internal_docking_manager.query.inner_container_main
 				l_container := l_dock_area.editor_parent
-
-				create l_config_data
-
-				if l_container = internal_docking_manager.query.inner_container_main then
-					save_inner_container_data (l_container.item, l_config_data)
-				else
-					save_inner_container_data (l_container, l_config_data)
+				-- Maybe the widget structure is corrupt at the moment.
+				if l_container /= Void then
+					create l_config_data
+					if l_container = internal_docking_manager.query.inner_container_main then
+						save_inner_container_data (l_container.item, l_config_data)
+					else
+						save_inner_container_data (l_container, l_config_data)
+					end
 				end
 			else
 				-- There is no editor in main window.	
 				create l_config_data
 				save_place_holder_data (l_config_data)
 			end
-
-			create l_file.make_create_read_write (a_file.as_string_8)
-			create l_writer.make (l_file)
-			create l_facility
-			l_facility.independent_store (l_config_data, l_writer, True)
-			l_file.close
+			if l_config_data /= Void then
+				create l_file.make_create_read_write (a_file.as_string_8)
+				create l_writer.make (l_file)
+				create l_facility
+				l_facility.independent_store (l_config_data, l_writer, True)
+				l_file.close
+			end
 			top_container := Void
 		ensure
 			cleared: top_container = Void
@@ -132,12 +134,15 @@ feature -- Save inner container data.
 			a_name_not_void: a_name /= Void
 		local
 			l_container: EV_CONTAINER
+			l_widget_structure_corrupted: BOOLEAN
 		do
 			internal_docking_manager.command.recover_normal_state
 
 			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 				top_container := internal_docking_manager.query.inner_container_main.editor_parent
-				if top_container = internal_docking_manager.query.inner_container_main then
+				if top_container = Void then
+					l_widget_structure_corrupted := True
+				elseif top_container = internal_docking_manager.query.inner_container_main then
 					l_container ?= top_container
 					check not_void: l_container /= Void end
 					top_container := l_container.item
@@ -147,8 +152,10 @@ feature -- Save inner container data.
 				check place_holder_visible: internal_docking_manager.zones.place_holder_content.is_visible end
 			end
 
-			save_config_with_name (a_file, a_name)
-
+			if not l_widget_structure_corrupted then
+				save_config_with_name (a_file, a_name)
+			end
+		
 			top_container := Void
 		ensure
 			cleared: top_container = Void

@@ -6,7 +6,7 @@
 
 -- This is a test control file
 
-test_name multi-constraint-basics
+test_name multi-constraint-vtgd
 test_description Using COMPARABLE and NUMMERIC from base to implement a generic nummeric algorithm.
 
 copy_sub 	Ace $TEST Ace

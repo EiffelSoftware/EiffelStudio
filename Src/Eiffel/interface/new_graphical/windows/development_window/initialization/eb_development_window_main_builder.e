@@ -297,9 +297,37 @@ feature -- Command
 			create l_lock_docking_command.make (develop_window)
 			develop_window.commands.set_lock_docking_command (l_lock_docking_command)
 
+				-- Add history commands to toolbarable_commands.
+				-- Setup its accelerators.
+			l_toolbarable_commands.extend (develop_window.history_manager.back_command)
+			l_toolbarable_commands.extend (develop_window.history_manager.forth_command)
+			setup_history_back_and_forth_commands
+
 			setup_focus_editor_accelerators
 			build_close_content_accelerator
 			setup_class_address_accelerators
+		end
+
+	setup_history_back_and_forth_commands is
+			-- Setup accelerators for back and forth commands.
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+			l_cmd: EB_HISTORY_COMMAND
+			l_accel: EV_ACCELERATOR
+		do
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("go_forth")
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			l_accel.actions.extend (agent (develop_window.agents).on_forth)
+			l_cmd := develop_window.history_manager.forth_command
+			l_cmd.set_referred_shortcut (l_shortcut)
+			l_cmd.set_accelerator (l_accel)
+
+			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("go_back")
+			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			l_accel.actions.extend (agent (develop_window.agents).on_back)
+			l_cmd := develop_window.history_manager.back_command
+			l_cmd.set_referred_shortcut (l_shortcut)
+			l_cmd.set_accelerator (l_accel)
 		end
 
 	set_up_accelerators is

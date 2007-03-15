@@ -73,6 +73,14 @@ feature -- Basic operations
 				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			end
 
+	set_accelerator (a_acc: like accelerator) is
+			-- Set `accelerator' with `a_acc'.
+		do
+			accelerator := a_acc
+		ensure
+			accelerator_set: accelerator = a_acc
+		end
+
 feature {NONE} -- Recycle
 
 	internal_recycle is

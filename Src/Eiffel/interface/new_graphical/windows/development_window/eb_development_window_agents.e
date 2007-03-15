@@ -131,34 +131,76 @@ feature -- Agents
 	on_back is
 			-- User pressed Alt+left.
 			-- Go back in the history (or the context history).
+		local
+			l_history_manager: EB_HISTORY_MANAGER
+			l_tool: EB_TOOL
 		do
 			if develop_window.tools.class_tool.has_focus then
 				if develop_window.tools.class_tool.history_manager.is_back_possible then
-					develop_window.tools.class_tool.history_manager.back_command.execute
+					l_history_manager := develop_window.tools.class_tool.history_manager
+					l_tool := develop_window.tools.class_tool
 				end
 			elseif develop_window.tools.features_relation_tool.has_focus then
 				if develop_window.tools.features_relation_tool.history_manager.is_back_possible then
-					develop_window.tools.features_relation_tool.history_manager.back_command.execute
+					l_history_manager := develop_window.tools.features_relation_tool.history_manager
+					l_tool := develop_window.tools.features_relation_tool
+				end
+			elseif develop_window.tools.dependency_tool.has_focus then
+				if develop_window.tools.dependency_tool.history_manager.is_back_possible then
+					l_history_manager := develop_window.tools.dependency_tool.history_manager
+					l_tool := develop_window.tools.dependency_tool
+				end
+			elseif develop_window.tools.diagram_tool.has_focus then
+				if develop_window.tools.diagram_tool.history_manager.is_back_possible then
+					l_history_manager := develop_window.tools.diagram_tool.history_manager
+					l_tool := develop_window.tools.diagram_tool
 				end
 			elseif develop_window.history_manager.is_back_possible then
 				develop_window.history_manager.back_command.execute
+			end
+			if l_history_manager /= Void then
+				l_history_manager.back_command.execute
+				if l_tool /= Void then
+					l_tool.show
+				end
 			end
 		end
 
 	on_forth is
 			-- User pressed Alt+right.
 			-- Go forth in the history (or the context history).
+		local
+			l_history_manager: EB_HISTORY_MANAGER
+			l_tool: EB_TOOL
 		do
 			if develop_window.tools.class_tool.has_focus then
 				if develop_window.tools.class_tool.history_manager.is_forth_possible then
-					develop_window.tools.class_tool.history_manager.forth_command.execute
+					l_history_manager := develop_window.tools.class_tool.history_manager
+					l_tool := develop_window.tools.class_tool
 				end
 			elseif develop_window.tools.features_relation_tool.has_focus then
 				if develop_window.tools.features_relation_tool.history_manager.is_forth_possible then
-					develop_window.tools.features_relation_tool.history_manager.forth_command.execute
+					l_history_manager := develop_window.tools.features_relation_tool.history_manager
+					l_tool := develop_window.tools.features_relation_tool
+				end
+			elseif develop_window.tools.dependency_tool.has_focus then
+				if develop_window.tools.dependency_tool.history_manager.is_forth_possible then
+					l_history_manager := develop_window.tools.dependency_tool.history_manager
+					l_tool := develop_window.tools.dependency_tool
+				end
+			elseif develop_window.tools.diagram_tool.has_focus then
+				if develop_window.tools.diagram_tool.history_manager.is_forth_possible then
+					l_history_manager := develop_window.tools.diagram_tool.history_manager
+					l_tool := develop_window.tools.diagram_tool
 				end
 			elseif develop_window.history_manager.is_forth_possible then
 				develop_window.history_manager.forth_command.execute
+			end
+			if l_history_manager /= Void then
+				l_history_manager.forth_command.execute
+				if l_tool /= Void then
+					l_tool.show
+				end
 			end
 		end
 

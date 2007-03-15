@@ -198,13 +198,15 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (6)
+			create l_hash.make (8)
 			l_hash.put ([True, False, False, key_strings.item (key_down).twin.as_string_8], "send_to_context")
 			l_hash.put ([False, True, True, key_strings.item (Key_t).twin.as_string_8], "basic_text_view")
 			l_hash.put ([False, True, True, key_strings.item (Key_c).twin.as_string_8], "clickable_text_view")
 			l_hash.put ([False, True, True, key_strings.item (Key_f).twin.as_string_8], "flat_view")
 			l_hash.put ([False, True, True, key_strings.item (Key_o).twin.as_string_8], "contract_view")
 			l_hash.put ([False, True, True, key_strings.item (Key_i).twin.as_string_8], "interface_view")
+			l_hash.put ([True, False, False, key_strings.item (key_left).twin.as_string_8], "go_back")
+			l_hash.put ([True, False, False, key_strings.item (key_right).twin.as_string_8], "go_forth")
 			Result.extend ([l_hash, main_window_group])
 		end
 

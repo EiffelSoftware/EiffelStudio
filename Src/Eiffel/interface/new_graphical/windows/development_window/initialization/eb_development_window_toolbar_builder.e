@@ -82,19 +82,6 @@ feature -- Building commands
 			l_tool_bar_item := develop_window.history_manager.forth_command.new_sd_toolbar_item (False)
 			l_sd_items.extend (l_tool_bar_item)
 
-				-- Set up the accelerators.
-			create l_accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_right), False, True, False
-			)
-			l_accel.actions.extend (agent (develop_window.agents).on_forth)
-			develop_window.window.accelerators.extend (l_accel)
-
-			create l_accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_left), False, True, False
-			)
-			l_accel.actions.extend (agent (develop_window.agents).on_back)
-			develop_window.window.accelerators.extend (l_accel)
-
 			------------------------------------------
 			-- Address bar (Class name & feature name)
 			------------------------------------------
@@ -184,7 +171,7 @@ feature -- Building commands
 				-- Create the command to show this toolbar.
 			create l_show_tool_bar_command.make (l_content, develop_window.Interface_names.m_refactoring_toolbar)
 			develop_window.commands.show_toolbar_commands.force (l_show_tool_bar_command, l_content)
-			
+
 			if develop_window.development_window_data.show_refactoring_toolbar then
 				l_show_tool_bar_command.enable_visible
 			else

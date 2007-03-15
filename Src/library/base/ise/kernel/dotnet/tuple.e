@@ -40,31 +40,34 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", infix "@" (index: INTEGER): ANY is
+	item alias "[]", infix "@" (index: INTEGER): SYSTEM_OBJECT assign put is
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)
+		local
+			l_result: ANY
 		do
 				-- If it is a basic type, then we need to do a promotion.
 				-- If not, then we simply get the element.
 			inspect item_code (index)
-			when boolean_code then Result := boolean_item (index)
-			when character_8_code then Result := character_8_item (index)
-			when character_32_code then Result := character_32_item (index)
-			when real_64_code then Result := double_item (index)
-			when real_32_code then Result := real_item (index)
-			when pointer_code then Result := pointer_item (index)
-			when natural_32_code then Result := natural_32_item (index)
-			when natural_8_code then Result := natural_8_item (index)
-			when natural_16_code then Result := natural_16_item (index)
-			when natural_64_code then Result := natural_64_item (index)
-			when integer_32_code then Result := integer_32_item (index)
-			when integer_8_code then Result := integer_8_item (index)
-			when integer_16_code then Result := integer_16_item (index)
-			when integer_64_code then Result := integer_64_item (index)
+			when boolean_code then l_result := boolean_item (index)
+			when character_8_code then l_result := character_8_item (index)
+			when character_32_code then l_result := character_32_item (index)
+			when real_64_code then l_result := double_item (index)
+			when real_32_code then l_result := real_item (index)
+			when pointer_code then l_result := pointer_item (index)
+			when natural_32_code then l_result := natural_32_item (index)
+			when natural_8_code then l_result := natural_8_item (index)
+			when natural_16_code then l_result := natural_16_item (index)
+			when natural_64_code then l_result := natural_64_item (index)
+			when integer_32_code then l_result := integer_32_item (index)
+			when integer_8_code then l_result := integer_8_item (index)
+			when integer_16_code then l_result := integer_16_item (index)
+			when integer_64_code then l_result := integer_64_item (index)
 			when reference_code then
-				Result := native_array.item (index)
+				l_result := native_array.item (index)
 			end
+			Result := l_result
 		end
 
 	reference_item (index: INTEGER): ANY is

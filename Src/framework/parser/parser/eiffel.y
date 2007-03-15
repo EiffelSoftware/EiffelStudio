@@ -1783,6 +1783,7 @@ Constraint: -- Empty
 				$$ := ast_factory.new_constraint_triple ($1, $4, $7)
 			}
 	;
+
 Single_constraint: -- Empty
 			-- { $$ := Void }
 	| Constraint_type Rename TE_END

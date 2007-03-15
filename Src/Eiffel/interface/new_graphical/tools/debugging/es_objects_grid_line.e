@@ -127,7 +127,7 @@ feature -- Recycling
 			row_attributes_filled := False
 			row_onces_filled := False
 
-			internal_items_stone_data := Void
+			clear_items_stone_properties
 			last_dump_value := Void
 		ensure
 			item_stone_properties_not_computed : not items_stone_properties_computed
@@ -338,6 +338,12 @@ feature {NONE} -- Pick and Drop implementation
 			Result := internal_items_stone_data /= Void
 		end
 
+	clear_items_stone_properties is
+			-- Clear items stone properties
+		do
+			internal_items_stone_data := Void
+		end
+
 	get_items_stone_properties is
 		require
 			not items_stone_properties_computed
@@ -496,6 +502,7 @@ feature -- Graphical computation
 
 	compute_grid_row is
 		do
+			clear_items_stone_properties
 			compute_grid_display
 			compute_grid_row_completed_action.call (Void) -- call ([Current])
 		end

@@ -114,6 +114,8 @@ feature -- Refresh management
 			last_dump_value := Void
 			object_address := Void
 			object_dynamic_class := Void
+			internal_associated_dump_value := Void
+			clear_items_stone_properties
 
 			if
 				not evaluation_requested --| i.e: evaluate only on `grid_display_compute'

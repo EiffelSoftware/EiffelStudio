@@ -187,9 +187,7 @@ feature -- Access
 			l_last_feature, l_feature: FEATURE_I
 			l_last_class_type: CL_TYPE_A
 			l_features_found_count: INTEGER
-			l_renaming: RENAMING_A
 			l_constraint_position: INTEGER
-			l_feature_table: FEATURE_TABLE
 			l_item: EXTENDED_TYPE_A
 		do
 			from

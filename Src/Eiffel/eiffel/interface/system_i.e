@@ -1771,6 +1771,9 @@ end
 					-- Compute the root type
 				compute_root_type
 
+					-- We need to clean `instantiator' of all the types that do not make sense
+					-- anymore (see eweasel test#incr282).
+				instantiator.clean
 
 					-- Inheritance analysis: `Degree_4' is sorted by class
 					-- topological ids so the parent come first the heirs after.
@@ -2222,7 +2225,7 @@ end
 			Degree_2.initialize_non_generic_types
 
 				-- Compute the types.
-			Instantiator.process
+			instantiator.process
 		end
 
 	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is

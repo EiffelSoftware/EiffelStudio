@@ -1003,10 +1003,10 @@ feature
 
 	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
 			do
+				l_as.type.process (Current)
 				safe_process (l_as.renaming)
 				safe_process (l_as.end_of_renaming)
 			end
-
 
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do

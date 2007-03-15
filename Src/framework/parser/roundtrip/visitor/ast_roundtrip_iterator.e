@@ -975,7 +975,7 @@ feature
 			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.formal_para)
 			safe_process (l_as.constrain_symbol)
-			safe_process (l_as.constraint)
+			safe_process (l_as.constraints)
 			safe_process (l_as.create_keyword)
 			safe_process (l_as.creation_feature_list)
 			safe_process (l_as.end_keyword)

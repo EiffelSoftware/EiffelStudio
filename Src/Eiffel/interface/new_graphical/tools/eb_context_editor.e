@@ -1473,46 +1473,48 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 	force_last_stone is
 			-- Force last stone.
 		do
-			if last_stone /= Void then
-				history_manager.extend (last_stone)
-				stone := last_stone
-				class_stone ?= last_stone
-				cluster_stone ?= last_stone
-				if widget.is_displayed then
-					if class_stone /= Void then
-						-- create a new class view
-						if
-							is_rebuild_world_needed or else
-							class_graph = Void or else
-							class_graph.center_class = Void or else
-							class_graph.center_class.class_i /= class_stone.class_i
-						then
-							is_rebuild_world_needed := False
-							store
-							create_class_view (class_stone.class_i, True)
-							is_synchronization_needed := False
-						end
-					else
-						if cluster_stone /= Void then
-							-- create a cluster view
+			if not is_last_stone_processed then
+				if last_stone /= Void then
+					history_manager.extend (last_stone)
+					stone := last_stone
+					class_stone ?= last_stone
+					cluster_stone ?= last_stone
+					if widget.is_displayed then
+						if class_stone /= Void then
+							-- create a new class view
 							if
 								is_rebuild_world_needed or else
-								cluster_graph = Void or else
-								cluster_graph.center_cluster = Void or else
-								cluster_graph.center_cluster.group /= cluster_stone.group
+								class_graph = Void or else
+								class_graph.center_class = Void or else
+								class_graph.center_class.class_i /= class_stone.class_i
 							then
 								is_rebuild_world_needed := False
 								store
-								create_cluster_view (cluster_stone.group, True)
+								create_class_view (class_stone.class_i, True)
 								is_synchronization_needed := False
+							end
+						else
+							if cluster_stone /= Void then
+								-- create a cluster view
+								if
+									is_rebuild_world_needed or else
+									cluster_graph = Void or else
+									cluster_graph.center_cluster = Void or else
+									cluster_graph.center_cluster.group /= cluster_stone.group
+								then
+									is_rebuild_world_needed := False
+									store
+									create_cluster_view (cluster_stone.group, True)
+									is_synchronization_needed := False
+								end
 							end
 						end
 					end
+				else
+					clear_area
 				end
-			else
-				clear_area
+				Precursor {EB_TOOL}
 			end
-			Precursor {EB_TOOL}
 		end
 
 	decide_tool_to_display (a_st: STONE) is

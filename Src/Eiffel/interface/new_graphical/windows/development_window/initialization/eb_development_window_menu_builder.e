@@ -411,7 +411,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.add_recyclable (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_ln_cmd)
-			develop_window.window.accelerators.extend (l_ln_cmd.accelerator)
 
 				-- Separator --------------------------------------
 			develop_window.menus.edit_menu.extend (create {EV_MENU_SEPARATOR})

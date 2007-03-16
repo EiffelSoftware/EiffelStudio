@@ -377,7 +377,6 @@ feature {NONE} -- Implementation
 			gone_back_two: BOOLEAN
 			token: like a_token
 			l_swapped: BOOLEAN
-			l_type_set: TYPE_SET_A
 		do
 			token := a_token
 			if token /= Void then
@@ -903,8 +902,13 @@ feature {NONE} -- Implementation
 	            	current_feature_as := feature_containing (token, a_line)
 	            	type := type_from (token, a_line)
 	            	if type /= Void then
-	            		last_type := type
-		            	found_class := type.associated_class
+	            		if type.is_type_set then
+
+	            		else
+	            			last_type := type
+		            		found_class := type.associated_class
+	            		end
+
 		            else
 		            	found_class := Void
 		            end
@@ -1148,7 +1152,6 @@ feature {NONE} -- Implementation
 			l_current_class_c: CLASS_C
 			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_pos: INTEGER
-			l_current_type: TYPE_A
 			l_feature_state: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 		do
 			from
@@ -1275,19 +1278,15 @@ feature {NONE} -- Implementation
 						go_to_next_token
 					end
 				end
+					-- Here I go away from the `Result' to other variables, they are:
+					-- `last_constraints' and `last_target_type'
+					-- (I think it's better to use variable names with a comment as we somehow split up the paths.
+					-- Using Result for the one case and `last_constraints' for mc is one possiblity. But it is asymetric.
+					-- In each iteration we may meet multi constrained formals, in such a case
+					-- `last_constraints' is used. `last_constraitns' does _not_ contain any formals nor other typesets.
+					-- Otherwise `last_target_type' is used.
 				if Result /= Void then
-					last_was_constrained := Result.is_formal
-					last_formal ?= Result
-					if last_was_constrained then
-						last_was_multi_constrained := last_formal.is_multi_constrained_formal (current_class_c)
-						if last_was_multi_constrained then
-								-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.
-							last_constraints := constrained_types (Result).constraining_types_if_possible (current_class_c)
-							last_target_type := Void
-						else
-							last_target_type := constrained_type (Result)
-						end
-					end
+					move_to_next_target (Result, current_class_c.actual_type)
 				end
 			until
 				error or else after_searched_token
@@ -1295,15 +1294,28 @@ feature {NONE} -- Implementation
 				name := current_token.image.as_lower
 
 				if last_was_multi_constrained then
-					check last_target_type_not_known: last_target_type /= Void end
+						-- We're in the multi constraint case.
+						-- We have the constraining type set `last_constraints' and a feature name `name'.
+						-- The objective is to compute `last_target_type' and to get a `E_FEATURE' instance
+						-- of the feature named `name' and store it in `feat'.
+					check last_target_type_not_known: last_target_type = Void end
 					l_feature_state := last_constraints.e_feature_state_by_name (name)
 					if l_feature_state.features_found_count = 0 then
+							-- There's no feature with the name `name' in the type set.
 						feat := Void
 					elseif	l_feature_state.features_found_count = 1 then
+							-- We found exactly one feautre, this is good.
+							-- Let's store the class type to which the feature belongs into `last_target_type'.
 						feat := l_feature_state.feature_item
 						last_target_type := l_feature_state.class_type_of_feature
 					else
-						-- error: multiple features found (user should rename them)
+							-- Error: multiple features found (user should rename them)
+							-- We simply cannot tell which one we should take.
+							-- We should maybe report something in the status bar?
+							-- The best thing would be to underline the feature and
+							-- give a tool tip if the user hovers over it. Not easy... :-/
+							-- You can get all information by calling
+							-- `last_constraints.info_about_feature_by_name_id' it's a bit less efficient but you get all information.
 						feat := Void
 					end
 					if feat /= Void and then feat.type /= Void then
@@ -1338,11 +1350,15 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				check sane_state: type /= Void implies (feat /= Void and last_target_type /= Void) end
+				--
+				-- check sane_state: type /= Void implies (feat /= Void and last_target_type /= Void) end
 
 					-- Prepare for the next round
 				if type /= Void then
-						-- In case we have an anchored type or a generic with formals
+						-- In case we have a formal type we will:
+						-- * compute the flat version (without formals) of the constraints and store it in `last_constraints'
+						-- In case we have an any other type (including an anchored) we will:
+						-- * instantiate it and make it available in `last_target_type' right away.
 					move_to_next_target (type, last_target_type)
 				end
 
@@ -1363,7 +1379,7 @@ feature {NONE} -- Implementation
 			if error then
 				Result := Void
 			else
-				if last_target_type = Void then
+				if last_target_type /= Void then
 						-- ordinary: one type, one class
 					Result := last_target_type
 				else
@@ -1520,7 +1536,9 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	move_to_next_target (a_type, a_parent_type: TYPE_A)
-			-- Binds a loose type
+			-- Makes the transition from `a_parent_type' to `a_type'.
+			-- It binds a loose type and computes the proper constraints for formals.
+			-- if you have `l_a.f.g', `l_a's type would be `a_parent type' and `f's type would be `a_type'.
 			--
 			-- `a_type' is a possible loose type (`is_lose')
 			--| Non-loose types are not affected.
@@ -1551,6 +1569,7 @@ feature {NONE} -- Implementation
 			else
 					-- Nothing special todo: a_type is directly the target type of a possible next call.
 				last_target_type := a_type
+				error := False
 			end
 		end
 

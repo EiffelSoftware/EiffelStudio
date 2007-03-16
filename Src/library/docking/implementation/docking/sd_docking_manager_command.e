@@ -62,8 +62,10 @@ feature -- Commands
 		local
 			l_widget: EV_WIDGET
 		do
-			l_widget := internal_docking_manager.internal_viewport
-			internal_docking_manager.agents.on_resize (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height, a_force)
+			if not internal_docking_manager.property.is_opening_config then
+				l_widget := internal_docking_manager.internal_viewport
+				internal_docking_manager.agents.on_resize (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height, a_force)
+			end
 		end
 
 	lock_update (a_zone: EV_WIDGET; a_main_window: BOOLEAN) is

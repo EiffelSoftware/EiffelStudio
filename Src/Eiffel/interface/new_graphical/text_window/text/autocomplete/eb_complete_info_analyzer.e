@@ -493,6 +493,7 @@ feature {NONE} -- Implementation
 				Result := create_class_list_and_insert (a_type.associated_class)
 			end
 		ensure
+			create_class_list_and_insert_associated_classes_from_type_not_void: Result /= Void
 			at_least_one_element_in_result: Result.count > 0
 		end
 

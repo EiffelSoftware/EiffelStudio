@@ -29,6 +29,7 @@
 	
 	<target name="init" >
 		<set name="force_clean" value="false" unless="$force_clean=true" />
+		<set name="force_batch" value="false" unless="$force_batch=true" />
 		<set name="use_settings" value="false" unless="$use_settings=true" />
 		<set name="c_compile" value="true" unless="$c_compile=false" />
 		<geant target="init_system" />
@@ -71,6 +72,7 @@
 			<argument name="ecccompile" value="${c_compile}" />
 			<argument name="ecdir" value="${system_dir}" />
 			<argument name="ecclean" value="${force_clean}" />
+			<argument name="ecbatch" value="${force_batch}" />
 			<argument name="ecusesettings" value="${use_settings}" />
 		</geant>
 	</target>
@@ -82,6 +84,7 @@
 		<argument name="ecccompile" />
 		<argument name="ecprojectpath" />
 		<argument name="ecclean" />
+		<argument name="ecbatch" />
 		<argument name="ecusesettings" />
 		<argument name="ecdir" />
 		<!--
@@ -105,6 +108,7 @@
 		<set name="ecfinalize" value="$ecfinalize" />
 		<set name="ecccompile" value="$ecccompile" />
 		<set name="ecclean" value="$ecclean" />
+		<set name="ecbatch" value="$ecbatch" />
 		<set name="ecusesettings" value="$ecusesettings" />
 		<!-- fixed: end -->
 
@@ -112,12 +116,14 @@
 		<set name="eccmd" value="${eccmd} -freeze" 			unless="$ecfinalize=true"/>
 		<set name="eccmd" value="${eccmd} -c_compile" 		if="$ecccompile=true" />
 		<set name="eccmd" value="${eccmd} -clean" 			if="$ecclean=true" />
+		<set name="eccmd" value="${eccmd} -batch" 			if="$ecbatch=true" />
 		<set name="eccmd" value="${eccmd} -use_settings" 	if="$ecusesettings=true" />
 
 		<!-- fixed geant 3.4 bugs with arguments in if="" -->
 		<unset name="ecfinalize" />
 		<unset name="ecccompile" />
 		<unset name="ecclean" />
+		<unset name="ecbatch" />
 		<unset name="ecusesettings" />
 		<!-- fixed: end -->
 

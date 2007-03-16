@@ -1816,12 +1816,14 @@ feature {NONE} -- Implementation
 	last_formal: FORMAL_A
 
 	last_target_type: TYPE_A
-			-- Constraint of last_formal.
-			-- This is Void in the multi constraint case.
+			-- Type of last target.
+			-- It is `Void' for multi constraints until it gets selected by a single found feature.
 
 	last_constraints: TYPE_SET_A
 			-- Constraints of last_formal for the multi constraint case.
 			-- This is Void for the single constraint case.
+			-- If not Void `last_target_type' will be computed by using the supplied feature name and `last_constraints'
+			-- So `last_target_type' is actually a member of the `last_constraints' type set.
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 

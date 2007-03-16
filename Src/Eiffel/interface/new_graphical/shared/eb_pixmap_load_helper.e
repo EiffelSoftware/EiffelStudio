@@ -21,7 +21,7 @@ feature -- Loading
 			l_buffer: EV_PIXEL_BUFFER
 			l_pixmap: EV_PIXMAP
 		do
-			if not l_retried then
+			if not l_retried and not a_file.is_empty then
 				create l_buffer
 				create l_file.make (a_file)
 				if l_file.exists and then l_file.is_readable then

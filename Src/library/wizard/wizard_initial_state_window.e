@@ -36,7 +36,7 @@ feature -- Basic Operations
 			title.set_background_color (white_color)
 			title.align_text_left
 			title.set_font (welcome_title_font)
-			title.set_minimum_height (dialog_unit_to_pixels(40))
+--			title.set_minimum_height (dialog_unit_to_pixels(40))
 
 			create message
 			message.set_background_color (white_color)

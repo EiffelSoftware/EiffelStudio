@@ -261,7 +261,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			l_app_imp := app_implementation
 				-- If any previous widget has the capture then disable it.
-			if l_app_imp.captured_widget /= Void then
+				-- If a Pick and Drop is occurring we leave the capture as is.
+			if l_app_imp.captured_widget /= Void and then not l_app_imp.is_in_transport then
 				l_interface := interface
 				if l_interface /= l_app_imp.captured_widget then
 					l_app_imp.captured_widget.disable_capture

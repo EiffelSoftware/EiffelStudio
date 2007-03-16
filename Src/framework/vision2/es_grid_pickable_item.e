@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Grid item which supports customized defined pick behavior"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

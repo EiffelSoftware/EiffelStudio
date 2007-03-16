@@ -327,15 +327,22 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		local
 			l_has_capture: BOOLEAN
 			l_drawer: like internal_tab_drawer
+			l_in_close_button: BOOLEAN
 		do
 			if is_pointer_pressed then
-				is_pointer_pressed := False
-				l_has_capture := parent.has_capture
-				parent.disable_capture (Current)
+				-- Don't start drag in close button area.
+				if is_draw_top_tab and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
+					l_in_close_button := True
+				end
+				if not l_in_close_button then
+					is_pointer_pressed := False
+					l_has_capture := parent.has_capture
+					parent.disable_capture (Current)
 
-				-- We must check if really have vision2 capture, because capture maybe interrupted by some operations like creating a EV_DIALOG.
-				if l_has_capture then
-					drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+					-- We must check if really have vision2 capture, because capture maybe interrupted by some operations like creating a EV_DIALOG.
+					if l_has_capture then
+						drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+					end
 				end
 			else
 				-- If user close other tab, Current tab will moved without pointer enter actiosn called.

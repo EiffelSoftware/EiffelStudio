@@ -2039,9 +2039,8 @@ feature {NONE} -- Implementation
 			l_tools := debugging_window.tools
 			if
 				l_tools.features_relation_tool.content.is_visible
-				and l_tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide
+				and l_tools.features_relation_tool.content.state_value /= {SD_ENUMERATION}.auto_hide
 			then
-				-- But it is possible that is auto hide state.
 				objects_tool.content.set_relative (debugging_window.tools.features_relation_tool.content, {SD_ENUMERATION}.bottom)
 			else
 				objects_tool.content.set_top ({SD_ENUMERATION}.bottom)

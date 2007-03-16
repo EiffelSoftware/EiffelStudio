@@ -106,54 +106,53 @@ feature -- Checking
 			l_feat_tbl: FEATURE_TABLE
 			l_pos: INTEGER
 		do
-				-- If `a_node' is of type NAMED_TUPLE_TYPE_AS then we should
-				-- check the validity of labels, if not, it means that we were
-				-- checking a type whose actual type is NAMED_TUPLE_TYPE_A but
-				-- is not declared as NAMED_TUPLE_TYPE_AS declaration, and in this
-				-- case we assume that wherever the NAMED_TUPLE_TYPE_AS was, it
-				-- was checked.
+				-- The following line may result in a Void `l_named_tuple_node' when for example
+				-- the type is being rechecked or checked since part of a routine signature (see eweasel
+				-- test#tuple008 for why we always need to perform the check).
 			l_named_tuple_node ?= a_node
-			if l_named_tuple_node /= Void then
-				l_is_tuple_class_available := system.tuple_class.is_compiled and then
-					(not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed)
+			l_is_tuple_class_available := system.tuple_class.is_compiled and then
+				(not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed)
+			if l_is_tuple_class_available then
+				l_feat_tbl := system.tuple_class.compiled_class.feature_table
+			end
+			from
+				i := 0
+				l_names := names
+				nb := l_names.count
+			until
+				i = nb
+			loop
+				l_name_id := l_names.item (i)
+					-- Check if we have unique names.
+				if i < nb then
+					l_pos := l_names.index_of (l_name_id, i + 1)
+					if l_pos >= 0 then
+						create l_vreg
+						context.init_error (l_vreg)
+						if l_named_tuple_node /= Void then
+							l_vreg.set_location (l_named_tuple_node.i_th_type_declaration (l_pos + 1).start_location)
+						end
+						l_vreg.set_entity_name (names_heap.item (l_name_id))
+						error_handler.insert_error (l_vreg)
+					end
+				end
+					-- Check that we do not conflict with a feature of the TUPLE class.
 				if l_is_tuple_class_available then
-					l_feat_tbl := system.tuple_class.compiled_class.feature_table
-				end
-				from
-					i := 0
-					l_names := names
-					nb := l_names.count
-				until
-					i = nb
-				loop
-					l_name_id := l_names.item (i)
-						-- Check if we have unique names.
-					if i < nb then
-						l_pos := l_names.index_of (l_name_id, i + 1)
-						if l_pos >= 0 then
-							create l_vreg
-							context.init_error (l_vreg)
-							l_vreg.set_location (l_named_tuple_node.generics.i_th (l_pos + 1).start_location)
-							l_vreg.set_entity_name (names_heap.item (l_name_id))
-							error_handler.insert_error (l_vreg)
+					if l_feat_tbl.has_key_id (l_name_id) then
+						create l_vrft
+						context.init_error (l_vrft)
+						if l_named_tuple_node /= Void then
+							l_vrft.set_location (l_named_tuple_node.i_th_type_declaration (i + 1).start_location)
 						end
+						l_vrft.set_other_feature (l_feat_tbl.found_item)
+						error_handler.insert_error (l_vrft)
 					end
-						-- Check that we do not conflict with a feature of the TUPLE class.
-					if l_is_tuple_class_available then
-						if l_feat_tbl.has_key_id (l_name_id) then
-							create l_vrft
-							context.init_error (l_vrft)
-							l_vrft.set_location (l_named_tuple_node.generics.i_th (i + 1).start_location)
-							l_vrft.set_other_feature (l_feat_tbl.found_item)
-							error_handler.insert_error (l_vrft)
-						end
-					else
-						remaining_validity_checking_list.extend (create {FUTURE_CHECKING_INFO}.make (
-							a_context_class,
-							agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, l_named_tuple_node, i + 1)))
-					end
-					i := i + 1
+				else
+					remaining_validity_checking_list.extend (create {FUTURE_CHECKING_INFO}.make (
+						a_context_class,
+						agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, l_named_tuple_node, i + 1)))
 				end
+				i := i + 1
 			end
 		end
 
@@ -169,7 +168,6 @@ feature {NONE} -- Checking
 		require
 			a_context_class_not_void: a_context_class /= Void
 			a_name_id_positive: a_name_id > 0
-			a_tuple_node_not_void: a_tuple_node /= Void
 			a_pos_positive: a_pos > 0
 			a_pos_valid: a_pos <= generics.count
 			has_tuple_class: system.tuple_class /= Void
@@ -186,7 +184,9 @@ feature {NONE} -- Checking
 				if a_context_feature /= Void then
 					l_vrft.set_feature (a_context_feature)
 				end
-				l_vrft.set_location (a_tuple_node.generics.i_th (a_pos).start_location)
+				if a_tuple_node /= Void then
+					l_vrft.set_location (a_tuple_node.i_th_type_declaration (a_pos).start_location)
+				end
 				l_vrft.set_other_feature (l_feat_tbl.found_item)
 				error_handler.insert_error (l_vrft)
 			end

@@ -98,6 +98,35 @@ feature -- Status report
 			generic_count_positive: generic_count > 0
 		end
 
+	i_th_type_declaration (i: INTEGER): TYPE_DEC_AS is
+			-- Extract the type declaration for the `i-th' identifier of Current.
+		require
+			valid_index: i >= 1 and i <= generic_count
+		local
+			l_generics: like generics
+			l_index: INTEGER
+			j, k: INTEGER
+		do
+			from
+				l_generics := generics
+				l_index := l_generics.index
+				l_generics.start
+				j := 1
+			until
+				l_generics.after
+			loop
+				k := l_generics.item.id_list.count
+				if j <= i and i < j + k then
+					Result := l_generics.item
+				else
+					j := j + k
+				end
+				l_generics.forth
+			end
+			l_generics.go_i_th (l_index)
+		ensure
+			i_th_type_declaration_not_void: Result /= Void
+		end
 
 feature -- Roundtrip/Token
 

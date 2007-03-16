@@ -30,6 +30,151 @@ feature -- Open inner container data.
 			-- Open all docking library datas from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
+		do
+			Result := open_all_config (a_file)
+			internal_docking_manager.command.resize (True)
+		end
+
+	open_editors_config (a_file: STRING_GENERAL) is
+			-- Open main window eidtor config datas.
+		require
+			not_void: a_file /= Void
+		local
+			l_top_parent: EV_CONTAINER
+			l_file: RAW_FILE
+			l_facility: SED_STORABLE_FACILITIES
+			l_reader: SED_MEDIUM_READER_WRITER
+			l_data: SD_INNER_CONTAINER_DATA
+			l_split_area: EV_SPLIT_AREA
+		do
+			internal_docking_manager.command.resize (True)
+			internal_docking_manager.property.set_is_opening_config (True)
+
+			create l_file.make_open_read (a_file.as_string_8)
+			create l_reader.make (l_file)
+			l_reader.set_for_reading
+			create l_facility
+			l_data ?= l_facility.retrieved (l_reader, True)
+			check not_void: l_data /= Void end
+			l_top_parent := editor_top_parent_for_restore
+			internal_docking_manager.command.lock_update (Void, True)
+			clean_up_all_editors
+
+			open_inner_container_data (l_data, l_top_parent)
+			l_split_area ?= l_top_parent
+			if l_split_area /= Void then
+				if l_split_area.first /= Void then
+					l_split_area ?= l_split_area.first
+					if l_split_area /= Void then
+						open_inner_container_data_split_position (l_data, l_split_area)
+					end
+				end
+			end
+
+			-- If this time we only restore a editor place holder zone? No real editors restored.
+			if not internal_docking_manager.main_container.has_recursive (internal_docking_manager.zones.place_holder_content.state.zone) then
+				-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
+				internal_docking_manager.zones.place_holder_content.close
+			end
+
+			-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
+			internal_docking_manager.query.inner_container_main.remove_empty_split_area
+
+			internal_docking_manager.query.inner_container_main.update_middle_container
+			internal_docking_manager.property.set_is_opening_config (False)
+			internal_docking_manager.command.resize (True)
+			internal_docking_manager.command.unlock_update
+
+		end
+
+	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
+			-- Open tools config, excpet all editors
+		require
+			not_called: top_container = Void
+		local
+			l_has_place_holder: BOOLEAN
+			l_place_holder_zone: SD_ZONE
+			l_parent: EV_CONTAINER
+			l_split: EV_SPLIT_AREA
+			l_split_position: INTEGER
+			l_only_one_item: EV_WIDGET
+			l_temp_split: SD_VERTICAL_SPLIT_AREA
+			l_container: EV_CONTAINER
+			l_config_data: SD_CONFIG_DATA
+		do
+			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
+				top_container := internal_docking_manager.query.inner_container_main.editor_parent
+				if top_container = internal_docking_manager.query.inner_container_main then
+					l_container ?= top_container
+					check not_void: l_container /= Void end
+					-- It must be only one zone in top container
+					l_only_one_item := l_container.item
+					l_container.wipe_out
+					create l_temp_split
+					l_container.extend (l_temp_split)
+					l_temp_split.extend (l_only_one_item)
+					top_container := l_temp_split
+				end
+				internal_docking_manager.query.inner_container_main.save_spliter_position (top_container)
+				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
+			else
+				l_has_place_holder := True
+			end
+
+			l_config_data := config_data_from_file (a_file)
+			open_editor_minimized_data_unminimized (l_config_data)
+
+			-- Different from normal `open_config', we don't clear editors related things.
+			Result := open_all_config (a_file)
+
+			if not l_has_place_holder then
+				check has_place_holder: internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
+				l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
+				if l_place_holder_zone /= Void then
+				-- l_place_holder_zone maybe void because open_config fail.
+					l_parent := l_place_holder_zone.parent
+
+					l_split ?= l_parent
+					if l_split /= Void then
+						l_split_position := l_split.split_position
+					end
+					l_parent.prune (l_place_holder_zone)
+
+					if top_container.parent /= Void then
+						top_container.parent.prune (top_container)
+					end
+					l_parent.extend (top_container)
+					if l_split /= Void then
+						l_split.set_split_position (l_split_position)
+					end
+				end
+				internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
+				internal_docking_manager.zones.place_holder_content.close
+				if l_place_holder_zone /= Void then
+					internal_docking_manager.query.inner_container_main.update_middle_container
+					internal_docking_manager.command.resize (False)
+				end
+			end
+			top_container := Void
+
+			if Result then
+				open_editor_minimized_data_minimize (l_config_data)
+			end
+
+			internal_docking_manager.command.resize (False)
+		ensure
+			cleared: top_container = Void
+		end
+
+	top_container: EV_WIDGET
+		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.
+
+feature {NONE} -- Implementation
+
+	open_all_config (a_file: STRING_GENERAL): BOOLEAN is
+			-- Open all docking library datas from `a_file'.
+		require
+			a_file_not_void: a_file /= Void
 		local
 			l_config_data: SD_CONFIG_DATA
 			l_called: BOOLEAN
@@ -100,137 +245,6 @@ feature -- Open inner container data.
 				retry
 			end
 		end
-
-	open_editors_config (a_file: STRING_GENERAL) is
-			-- Open main window eidtor config datas.
-		require
-			not_void: a_file /= Void
-		local
-			l_top_parent: EV_CONTAINER
-			l_file: RAW_FILE
-			l_facility: SED_STORABLE_FACILITIES
-			l_reader: SED_MEDIUM_READER_WRITER
-			l_data: SD_INNER_CONTAINER_DATA
-			l_split_area: EV_SPLIT_AREA
-		do
-			internal_docking_manager.property.set_is_opening_config (True)
-
-			create l_file.make_open_read (a_file.as_string_8)
-			create l_reader.make (l_file)
-			l_reader.set_for_reading
-			create l_facility
-			l_data ?= l_facility.retrieved (l_reader, True)
-			check not_void: l_data /= Void end
-			l_top_parent := editor_top_parent_for_restore
-			internal_docking_manager.command.lock_update (Void, True)
-			clean_up_all_editors
-
-			open_inner_container_data (l_data, l_top_parent)
-			l_split_area ?= l_top_parent
-			if l_split_area /= Void then
-				if l_split_area.first /= Void then
-					l_split_area ?= l_split_area.first
-					if l_split_area /= Void then
-						open_inner_container_data_split_position (l_data, l_split_area)
-					end
-				end
-			end
-
-			-- If this time we only restore a editor place holder zone? No real editors restored.
-			if not internal_docking_manager.main_container.has_recursive (internal_docking_manager.zones.place_holder_content.state.zone) then
-				-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
-				internal_docking_manager.zones.place_holder_content.close
-			end
-
-			-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
-			internal_docking_manager.query.inner_container_main.remove_empty_split_area
-
-			internal_docking_manager.query.inner_container_main.update_middle_container
-			internal_docking_manager.command.unlock_update
-			internal_docking_manager.property.set_is_opening_config (False)
-		end
-
-	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
-			-- Open tools config, excpet all editors
-		require
-			not_called: top_container = Void
-		local
-			l_has_place_holder: BOOLEAN
-			l_place_holder_zone: SD_ZONE
-			l_parent: EV_CONTAINER
-			l_split: EV_SPLIT_AREA
-			l_split_position: INTEGER
-			l_only_one_item: EV_WIDGET
-			l_temp_split: SD_VERTICAL_SPLIT_AREA
-			l_container: EV_CONTAINER
-			l_config_data: SD_CONFIG_DATA
-		do
-			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-				top_container := internal_docking_manager.query.inner_container_main.editor_parent
-				if top_container = internal_docking_manager.query.inner_container_main then
-					l_container ?= top_container
-					check not_void: l_container /= Void end
-					-- It must be only one zone in top container
-					l_only_one_item := l_container.item
-					l_container.wipe_out
-					create l_temp_split
-					l_container.extend (l_temp_split)
-					l_temp_split.extend (l_only_one_item)
-					top_container := l_temp_split
-				end
-				internal_docking_manager.query.inner_container_main.save_spliter_position (top_container)
-				internal_docking_manager.contents.extend (internal_docking_manager.zones.place_holder_content)
-			else
-				l_has_place_holder := True
-			end
-
-			l_config_data := config_data_from_file (a_file)
-			open_editor_minimized_data_unminimized (l_config_data)
-
-			-- Different from normal `open_config', we don't clear editors related things.
-			Result := open_config (a_file)
-
-			if not l_has_place_holder then
-				check has_place_holder: internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) end
-				l_place_holder_zone ?= internal_docking_manager.zones.place_holder_content.state.zone
-				if l_place_holder_zone /= Void then
-				-- l_place_holder_zone maybe void because open_config fail.
-					l_parent := l_place_holder_zone.parent
-
-					l_split ?= l_parent
-					if l_split /= Void then
-						l_split_position := l_split.split_position
-					end
-					l_parent.prune (l_place_holder_zone)
-
-					if top_container.parent /= Void then
-						top_container.parent.prune (top_container)
-					end
-					l_parent.extend (top_container)
-					if l_split /= Void then
-						l_split.set_split_position (l_split_position)
-					end
-				end
-				internal_docking_manager.query.inner_container_main.restore_spliter_position (top_container)
-				internal_docking_manager.zones.place_holder_content.close
-				if l_place_holder_zone /= Void then
-					internal_docking_manager.query.inner_container_main.update_middle_container
-					internal_docking_manager.command.resize (False)
-				end
-			end
-			top_container := Void
-
-			if Result then
-				open_editor_minimized_data_minimize (l_config_data)
-			end
-		ensure
-			cleared: top_container = Void
-		end
-
-	top_container: EV_WIDGET
-		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.
-
-feature {NONE} -- Implementation
 
 	editor_top_parent_for_restore: EV_CONTAINER is
 			-- Editor top parent for restore

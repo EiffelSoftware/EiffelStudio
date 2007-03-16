@@ -224,7 +224,7 @@ feature -- Query
 
 	standard_height: INTEGER is
 			-- Standard tool bar height.
-		do
+		once
 			Result := internal_shared.tool_bar_font.height + 2 * border_width
 		end
 

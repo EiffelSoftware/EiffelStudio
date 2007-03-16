@@ -1334,6 +1334,8 @@ test	tuple-hashcode			tuple004	tcf	pass tuple
 test	tuple-comparison		tuple005	tcf	pass tuple
 test	tuple-twining			tuple006	tcf	pass tuple
 test	named-tuple-assignment	tuple007	tcf	pass tuple
+test	named-tuple-same-labels	tuple008	tcf	pass tuple
+test	 named-tuple-same-labels-crash	tuple009	tcf	pass tuple
 
 -- Systematic validity tests
 

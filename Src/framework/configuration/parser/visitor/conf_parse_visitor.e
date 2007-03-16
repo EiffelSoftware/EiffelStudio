@@ -166,7 +166,7 @@ feature -- Visit nodes
 				end
 			end
 		ensure then
-			target_set: not is_error implies a_library.library_target /= Void
+			target_set: (not is_error and not is_ignore_bad_libraries) implies a_library.library_target /= Void
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE) is

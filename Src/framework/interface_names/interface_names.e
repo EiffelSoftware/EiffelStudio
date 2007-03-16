@@ -605,6 +605,12 @@ feature -- Accelerator, focus label and menu name
 		do
 			Result := locale.format_string (locale.translate ("Setup tools for formatter %"$1%""), [a_formatter_name])
 		end
+	t_customized_tool_setup: STRING_GENERAL is do Result := locale.translate ("Setup Customized Tools") end
+	t_setup_customized_tool: STRING_GENERAL is do Result := locale.translate ("Setup customized tools") end
+	l_select_tool: STRING_GENERAL is do Result := locale.translate ("Please select a tool.") end
+	f_add_tool: STRING_GENERAL is do Result := locale.translate ("Add customized tool") end
+	f_remove_tool: STRING_GENERAL is do Result := locale.translate ("Remove selected customized tool") end
+
 
 feature -- Formatter displayer names
 	l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
@@ -1827,7 +1833,7 @@ feature -- Title part
 	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translate ("Overwrite Layout") end
 	t_open_c_file: STRING_GENERAL is					do Result := locale.translate ("Open C file") end
 	t_reference_position: STRING_GENERAL is				do Result := locale.translate ("Position") end
-	t_customized_formatter_setup: STRING is 			do Result := locale.translate ("Customized Formatter Setup") end
+	t_customized_formatter_setup: STRING is 			do Result := locale.translate ("Setup customized formatters") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

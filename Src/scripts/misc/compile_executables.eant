@@ -110,7 +110,8 @@
 		<setenv name="EIFFEL_DELIVERY" value="${delivery_dir}" />
 
 		<!-- Default var value -->
-		<set name="force_clean" value="false" />
+		<set name="force_clean" value="false" unless="$force_clean=true" />
+		<set name="force_batch" value="false" unless="$force_batch=true" />
 	</target>
 
 	<!--

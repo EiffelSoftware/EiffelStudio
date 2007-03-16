@@ -70,6 +70,45 @@
 		<geant target="help" reuse_variables="true" />
 	</target>
 
+	<target name="menu" depend="init" >
+		<echo message="*** Menu ***"/>
+		<echo message="Nb:force_batch=true  " if="${force_batch}=true" />
+
+		<set name="_force_batch" value="true" if="$answer=1" />
+
+		<echo message="0) set force_clean=false " if="${force_clean}=true" />
+		<set name="_force_clean" value="false" if="${force_clean}=true" />
+		<echo message="0) set force_clean=true  " unless="${force_clean}=true" />
+		<set name="_force_clean" value="true" unless="${force_clean}=true" />
+
+		<echo message="1) set force_batch=false " if="${force_batch}=true" />
+		<set name="_force_batch" value="false" if="${force_batch}=true" />
+		<echo message="1) set force_batch=true  " unless="${force_batch}=true" />
+		<set name="_force_batch" value="true" unless="${force_batch}=true" />
+
+		<echo message="2) geant compile_runtime "/>
+		<echo message="3) geant compile_library "/>
+		<echo message="4) geant compile_ec"/>
+		<echo message="5) geant finalize_ec "/>
+		<echo message="6) geant finalize_ec_batch "/>
+		<echo message=" --- " />
+		<echo message="7) geant build_es "/>
+		<input message=" -> " variable="answer" />
+		<set name="force_clean" value="$_force_clean" if="$answer=0" />
+		<set name="force_batch" value="$_force_batch" if="$answer=1" />
+		<unset name="_force_clean" />
+		<unset name="_force_batch" />
+
+		<geant target="compile_runtime" if="$answer=2" reuse_variables="true" />
+		<geant target="compile_library" if="$answer=3" reuse_variables="true" />
+		<geant target="compile_ec" if="$answer=4" reuse_variables="true" />
+		<geant target="finalize_ec" if="$answer=5" reuse_variables="true" />
+		<geant target="finalize_ec_batch" if="$answer=6" reuse_variables="true" />
+		<geant target="build_es" if="$answer=7" reuse_variables="true" />
+		<geant target="menu" if="$answer=0" reuse_variables="true" />
+		<geant target="menu" if="$answer=1" reuse_variables="true" />
+	</target>	
+
 	<!--
 	**************************************************************************************
 	***  COMPILE : ec, batch, unix ...   ********************************************

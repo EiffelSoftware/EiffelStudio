@@ -297,6 +297,9 @@ feature -- Command
 			create l_lock_docking_command.make (develop_window)
 			develop_window.commands.set_lock_docking_command (l_lock_docking_command)
 
+			develop_window.commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
+			develop_window.commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})
+
 				-- Add history commands to toolbarable_commands.
 				-- Setup its accelerators.
 			l_toolbarable_commands.extend (develop_window.history_manager.back_command)
@@ -545,6 +548,7 @@ feature -- Command
 			build_properties_tool
 			build_windows_tool
 			build_search_and_report_tool
+			build_customized_tools
 
 			create l_editors_manager.make (develop_window)
 			develop_window.set_editors_manager (l_editors_manager)
@@ -735,6 +739,69 @@ feature -- Command
 			setup_editor_close_action
 		end
 
+	register_customized_tools (a_tools: LIST [EB_CUSTOMIZED_TOOL]) is
+			-- Register `a_tools' into `develop_window'.
+		require
+			a_tools_attached: a_tools /= Void
+			a_tools_valid: not a_tools.has (Void)
+		local
+			l_cursor: CURSOR
+			l_menu_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
+		do
+				-- Register `a_tools' into `develop_window'.
+			l_cursor := a_tools.cursor
+			from
+				a_tools.start
+			until
+				a_tools.after
+			loop
+				setup_tool (a_tools.item, a_tools.item.title_for_pre)
+				a_tools.item.force_reload
+				develop_window.tools.customized_tools.extend (a_tools.item)
+				a_tools.forth
+			end
+			a_tools.go_to (l_cursor)
+
+				-- Setup menus.
+			create l_menu_builder.make (develop_window)
+			l_menu_builder.attach_customized_tools (a_tools)
+		end
+
+	deregister_customized_tool (a_tool: EB_CUSTOMIZED_TOOL) is
+			-- Delete `a_tool' from `develop_window'.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_show_cmd: EB_SHOW_TOOL_COMMAND
+			l_cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
+		do
+			if a_tool.content /= Void then
+				a_tool.content.close
+			end
+
+				--Remove `a_tool' from `develop_window'.`customized_tools'.
+			develop_window.tools.customized_tools.start
+			develop_window.tools.customized_tools.search (a_tool)
+			if not develop_window.tools.customized_tools.exhausted then
+				develop_window.tools.customized_tools.remove
+			end
+
+			develop_window.menus.remove_item_from_tools_list_menu (a_tool)
+
+				-- Remove and recycle related command.
+			l_show_cmd := develop_window.commands.show_tool_commands.item (a_tool)
+			if l_show_cmd /= Void then
+				l_cmds := develop_window.commands.toolbarable_commands
+				develop_window.commands.show_tool_commands.remove (a_tool)
+				l_cmds.start
+				l_cmds.search (l_show_cmd)
+				if not l_cmds.exhausted then
+					l_cmds.remove
+				end
+				develop_window.recycle_item (a_tool)
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	build_features_tool is
@@ -753,7 +820,7 @@ feature{NONE} -- Implementation
 		local
 			l_cluster_tool: EB_CLUSTER_TOOL
 		do
-			create l_cluster_tool.make (develop_window, develop_window)
+			create l_cluster_tool.make (develop_window)
 			develop_window.tools.set_cluster_tool (l_cluster_tool)
 
 			setup_tool (l_cluster_tool, "show_clusters_tool")
@@ -936,6 +1003,35 @@ feature{NONE} -- Implementation
 			setup_tool (l_windows_tool, "show_windows_tool")
 		end
 
+	build_customized_tools is
+			-- Build customized tools.
+		local
+			l_customized_tool: EB_CUSTOMIZED_TOOL
+			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
+			l_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP]
+			l_tools: LIST [EB_CUSTOMIZED_TOOL]
+		do
+			l_manager := develop_window.customized_tool_manager
+			l_tools := develop_window.tools.customized_tools
+			l_tools.wipe_out
+			if not l_manager.is_loaded then
+				l_manager.load (Void)
+			end
+			if l_manager.has_tools then
+				from
+					l_descriptors := l_manager.tool_descriptors
+					l_descriptors.start
+				until
+					l_descriptors.after
+				loop
+					l_customized_tool := l_descriptors.item.new_tool (develop_window)
+					setup_tool (l_customized_tool, l_customized_tool.id)
+					l_tools.extend (l_customized_tool)
+					l_descriptors.forth
+				end
+			end
+		end
+
 	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING) is
 			-- Setup tool.
 		require
@@ -954,10 +1050,12 @@ feature{NONE} -- Implementation
 			develop_window.add_recyclable (a_tool)
 
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
-			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
-			l_accel.actions.extend (agent l_show_cmd.execute)
-			l_show_cmd.set_accelerator (l_accel)
-			l_show_cmd.set_referred_shortcut (l_shortcut)
+			if l_shortcut /= Void then
+				create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+				l_accel.actions.extend (agent l_show_cmd.execute)
+				l_show_cmd.set_accelerator (l_accel)
+				l_show_cmd.set_referred_shortcut (l_shortcut)
+			end
 		end
 
 	setup_main_formatter (a_form: EB_CLASS_TEXT_FORMATTER; a_shortcut_string: STRING) is

@@ -10,6 +10,11 @@ class
 	EB_CUSTOMIZED_FORMATTER_MANAGER
 
 inherit
+	EB_CUSTOMIZED_FORMATTER_RELATED_MANAGER
+		redefine
+			item_anchor
+		end
+
 	EB_SHARED_METRIC_MANAGER
 
 	SHARED_WORKBENCH
@@ -18,34 +23,17 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	EC_EIFFEL_LAYOUT
-
-	EB_CUSTOMIZED_FORMATTER_UTILITY
-
-create
-	make
-
-feature{NONE} -- Initialization
-
-	make is
-			-- Initialize Current.
-		do
-			on_project_loaded_agent := agent on_project_loaded
-			eiffel_project.manager.load_agents.extend (on_project_loaded_agent)
-
-		end
-
 feature -- Access
 
-	formatter_change_actions: ACTION_SEQUENCE [TUPLE] is
-			-- Actions to be performed when customized formatters are (possibly) changed
+	change_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed when change occurs
 			-- This maybe because modification through customized formatter setup procedure or
 			-- through metric definition change.
 		do
-			if formatter_change_actions_internal = Void then
-				create formatter_change_actions_internal
+			if change_actions_internal = Void then
+				create change_actions_internal
 			end
-			Result := formatter_change_actions_internal
+			Result := change_actions_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -55,7 +43,7 @@ feature -- Access
 			-- Always create new formatter instances from `formatter_descriptors'.
 		local
 			l_formatters: LINKED_LIST [EB_CUSTOMIZED_FORMATTER]
-			l_fmt_desp: EB_CUSTOMIZED_FORMATTER_DESP
+			l_fmt_desp: like item_anchor
 			l_desp: like formatter_descriptors
 			l_cursor: CURSOR
 		do
@@ -79,11 +67,8 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	last_error: EB_METRIC_ERROR
-			-- Last recorded error
-
 	formatter_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP] is
-			-- List of formatter descriptors loaded by `descriptors_from_file'
+			-- List of formatter descriptors loaded by `items_from_file'
 		do
 			if formatter_descriptors_internal = Void then
 				create {LINKED_LIST [EB_CUSTOMIZED_FORMATTER_DESP]} formatter_descriptors_internal.make
@@ -91,39 +76,84 @@ feature -- Access
 			Result := formatter_descriptors_internal
 		end
 
-	global_formatter_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP] is
+	global_formatter_descriptors: LIST [like item_anchor] is
 			-- Global formatter descriptors
 		do
-			Result := satisfied_descriptors (formatter_descriptors, agent is_formatter_global_scope)
+			Result := satisfied_items (formatter_descriptors, agent is_formatter_global_scope)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	target_formatter_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP] is
+	target_formatter_descriptors: LIST [like item_anchor] is
 			-- Target formatter descriptors
 		do
-			Result := satisfied_descriptors (formatter_descriptors, agent is_formatter_target_scope)
+			Result := satisfied_items (formatter_descriptors, agent is_formatter_target_scope)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	item_anchor: EB_CUSTOMIZED_FORMATTER_DESP
+			-- Anchor of items
+
+	xml_for_descriptor (a_descriptor: like item_anchor; a_parent: XM_COMPOSITE): XM_ELEMENT is
+			-- Xml element for `a_descriptor'
+		require
+			a_descriptor_attached: a_descriptor /= Void
+			a_parent_attached: a_parent /= Void
+		local
+			l_namespace: XM_NAMESPACE
+			l_tooltip: XM_ELEMENT
+			l_header: XM_ELEMENT
+			l_temp_header: XM_ELEMENT
+			l_metric: XM_ELEMENT
+			l_tools: XM_ELEMENT
+			l_tool: XM_ELEMENT
+			l_pixmap: XM_ELEMENT
+			l_content: XM_CHARACTER_DATA
+			l_tool_tbl: HASH_TABLE [STRING, STRING]
+			l_order_tbl: HASH_TABLE [STRING, STRING]
+			l_tool_name: STRING
+		do
+			create l_namespace.make_default
+			create Result.make (a_parent, n_formatter, l_namespace)
+			Result.add_unqualified_attribute (n_name, a_descriptor.name)
+
+			create l_tooltip.make_last (Result, n_tooltip, l_namespace)
+			create l_content.make_last (l_tooltip, a_descriptor.tooltip)
+
+			create l_header.make_last (Result, n_header, l_namespace)
+			create l_content.make_last (l_header, a_descriptor.header)
+
+			create l_temp_header.make_last (Result, n_temp_header, l_namespace)
+			create l_content.make_last (l_temp_header, a_descriptor.temp_header)
+
+			create l_metric.make_last (Result, n_metric, l_namespace)
+			l_metric.add_unqualified_attribute (n_name, a_descriptor.metric_name)
+			l_metric.add_unqualified_attribute (n_filter, a_descriptor.is_filter_enabled.out)
+
+			create l_pixmap.make_last (Result, n_pixmap, l_namespace)
+			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location)
+
+			create l_tools.make_last (Result, n_tools, l_namespace)
+			from
+				l_tool_tbl := a_descriptor.tools
+				l_order_tbl := a_descriptor.sorting_orders
+				l_tool_tbl.start
+			until
+				l_tool_tbl.after
+			loop
+				l_tool_name := l_tool_tbl.key_for_iteration
+				create l_tool.make_last (l_tools, n_tool, l_namespace)
+				l_tool.add_unqualified_attribute (n_name, l_tool_name)
+				l_tool.add_unqualified_attribute (n_viewer, l_tool_tbl.item_for_iteration)
+				l_tool.add_unqualified_attribute (n_sorting_order, l_order_tbl.item (l_tool_name))
+				l_tool_tbl.forth
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
 feature -- Status report
-
-	is_loaded: BOOLEAN
-			-- has customized formatter information been loaded?
-
-	is_file_readable: BOOLEAN
-			-- Is file readable when the last time `parse_file' is called?
-
-	is_changed: BOOLEAN
-			-- Is definition of any customized formatters changed?
-			-- If True, we should store formatter definitions back to files.
-
-	has_error: BOOLEAN is
-			-- Did any error occur?
-		do
-			Result := last_error /= Void
-		end
 
 	has_formatters: BOOLEAN is
 			-- Is there any customized formatter loaded?
@@ -131,7 +161,7 @@ feature -- Status report
 			Result := not formatter_descriptors.is_empty
 		end
 
-	has_target_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]): BOOLEAN is
+	has_target_descriptors (a_descriptors: LIST [like item_anchor]): BOOLEAN is
 			-- Does `a_descriptors' contain target descriptors?
 		require
 			a_descriptors_attached: a_descriptors /= Void
@@ -140,13 +170,29 @@ feature -- Status report
 			Result := a_descriptors.there_exists (agent is_formatter_target_scope)
 		end
 
-	has_global_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]): BOOLEAN is
+	has_global_descriptors (a_descriptors: LIST [like item_anchor]): BOOLEAN is
 			-- Does `a_descriptors' contain global descriptors?
 		require
 			a_descriptors_attached: a_descriptors /= Void
 			a_descriptors_valid: not a_descriptors.has (Void)
 		do
 			Result := a_descriptors.there_exists (agent is_formatter_global_scope)
+		end
+
+	is_formatter_global_scope (a_descriptor: like item_anchor): BOOLEAN is
+			-- Is formatter defined by `a_descriptor' of global scope?
+		require
+			a_descriptor_attached: a_descriptor /= Void
+		do
+			Result := a_descriptor.is_global_scope
+		end
+
+	is_formatter_target_scope (a_descriptor: like item_anchor): BOOLEAN is
+			-- Is formatter defined by `a_descriptor' of target scope?
+		require
+			a_descriptor_attached: a_descriptor /= Void
+		do
+			Result := a_descriptor.is_target_scope
 		end
 
 feature -- Setting
@@ -161,11 +207,7 @@ feature -- Setting
 			load_formatters (target_formatter_file, False, a_error_agent)
 
 			set_is_loaded (True)
-			set_is_changed (False)
-			formatter_change_actions.call (Void)
-		ensure
-			loaded: is_loaded
-			not_changed: not is_changed
+			change_actions.call (Void)
 		end
 
 	store is
@@ -176,61 +218,14 @@ feature -- Setting
 			end
 		end
 
-	store_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]) is
+	store_descriptors (a_descriptors: LIST [like item_anchor]) is
 			-- Store `a_descriptors' in global or target scope xml files.
 		require
 			a_descriptors_attached: a_descriptors /= Void
 			a_descriptors_valid: not a_descriptors.has (Void)
 		do
-			store_in_file (satisfied_descriptors (a_descriptors, agent is_formatter_global_scope), global_formatter_file_path)
-			store_in_file (satisfied_descriptors (a_descriptors, agent is_formatter_target_scope), target_formatter_file_path)
-		end
-
-	clear_last_error is
-			-- Clear `last_error'.
-		do
-			last_error := Void
-		ensure
-			not_has_error: not has_error
-		end
-
-	set_is_changed (b: BOOLEAN) is
-			-- Set `is_changed' with `b'.
-		do
-			is_changed := b
-		ensure
-			is_changed_set: is_changed = b
-		end
-
-	set_is_loaded (b: BOOLEAN) is
-			-- Set `is_loaded' with `b'.
-		do
-			is_loaded := b
-		ensure
-			is_loaded_set: is_loaded = b
-		end
-
-	set_is_file_readable (b: BOOLEAN) is
-			-- Set `is_file_readable' with `b'.
-		do
-			is_file_readable := b
-		ensure
-			is_file_readable_set: is_file_readable = b
-		end
-
-	set_last_error (a_error: like last_error) is
-			-- Set `last_error' with `a_error'.
-		do
-			last_error := a_error
-		ensure
-			last_error_set: last_error = a_error
-		end
-
-feature{NONE} -- Actions
-
-	on_project_loaded is
-			-- Action to be performed when project is loaded.
-		do
+			store_in_file (satisfied_items (a_descriptors, agent is_formatter_global_scope), n_formatters, agent xml_for_descriptor, global_file_path, formatter_file_name)
+			store_in_file (satisfied_items (a_descriptors, agent is_formatter_target_scope), n_formatters, agent xml_for_descriptor, target_formatter_file_path, formatter_file_name)
 		end
 
 feature{NONE} -- Implementation
@@ -243,12 +238,13 @@ feature{NONE} -- Implementation
 			a_file_attached: a_file /= Void
 		local
 			l_descriptors: like formatter_descriptors
-			l_desp_tuple: like descriptors_from_file
+			l_desp_tuple: like items_from_file
+			l_callback: EB_CUSTOMIZED_FORMATTER_XML_CALLBACK
 		do
-				-- Load global formatters.
+			create l_callback.make
 			set_is_file_readable (True)
-			l_desp_tuple := descriptors_from_file (a_file, agent set_is_file_readable (False))
-			l_descriptors := l_desp_tuple.descriptors
+			l_desp_tuple := items_from_file (a_file, l_callback, agent l_callback.formatters, agent l_callback.last_error, agent set_is_file_readable (False))
+			l_descriptors := l_desp_tuple.items
 			set_last_error (l_desp_tuple.error)
 			if a_error_agent /= Void and then has_error then
 				a_error_agent.call (Void)
@@ -258,99 +254,27 @@ feature{NONE} -- Implementation
 			formatter_descriptors.append (l_descriptors)
 		end
 
-
-	create_formatter_file_dir (a_path: FILE_NAME) is
-			-- Create dir `a_path' if not exists.
-		require
-			a_path_attached: a_path /= Void
-		local
-			l_dir: DIRECTORY
-			l_retried: BOOLEAN
-		do
-			if not l_retried then
-				create l_dir.make (a_path)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
-			end
-		rescue
-			l_retried := True
-			retry
-		end
-
-	store_in_file (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]; a_path: FILE_NAME) is
-			-- Store `a_descritpors' in formatter descriptor file in `a_path'.
-			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
+	mark_descriptors (a_descriptors: LIST [like item_anchor]; a_global: BOOLEAN) is
+			-- Mark descriptors given by `a_descriptors' as of global scope if `a_global' is True,
+			-- otherwise as of target scope.
 		require
 			a_descriptors_attached: a_descriptors /= Void
 			a_descriptors_valid: not a_descriptors.has (Void)
-		local
-			l_file: RAW_FILE
-			l_retried: BOOLEAN
 		do
-			if not l_retried then
-				if a_descriptors.is_empty then
-					create l_file.make (formatter_file (a_path))
-					if l_file.exists then
-						l_file.delete
-					end
-				else
-					create_formatter_file_dir (a_path)
-					store_xml (xml_document_for_formatter (a_descriptors), formatter_file (a_path))
-				end
+			if a_global then
+				a_descriptors.do_all (agent (a_descriptor: like item_anchor) do a_descriptor.enable_global_scope end)
+			else
+				a_descriptors.do_all (agent (a_descriptor: like item_anchor) do a_descriptor.enable_target_scope end)
 			end
-		rescue
-			l_retried := True
-			retry
 		end
 
 feature{NONE} -- Implementation/Data
 
-	formatter_change_actions_internal: like formatter_change_actions
-			-- Implementation of `formatter_change_actions'
-
 	formatter_descriptors_internal: like formatter_descriptors
 			-- Implementation of `formatter_descriptors'
 
-
 	formatter_file_name: STRING is "formatters.xml"
 			-- File name of formatter definition
-
-	formatter_file_path (a_base_path: STRING): FILE_NAME is
-			-- Path for formatter file based on `a_base_path'
-		require
-			a_base_path_attached: a_base_path /= Void
-		do
-			create Result.make_from_string (a_base_path)
-			Result.extend ("formatters")
-		ensure
-			result_attached: Result /= Void
-		end
-
-	formatter_file (a_path: STRING): STRING is
-			-- Formatter file name (with absolute path) whose relative path is `a_path' (`a_path' has the "formatters" sub-path part)
-		require
-			a_path_attached: a_path /= Void
-		local
-			l_file_name: FILE_NAME
-		do
-			create l_file_name.make_from_string (a_path)
-			l_file_name.set_file_name (formatter_file_name)
-			Result := l_file_name.out
-		ensure
-			result_attached: Result /= Void
-		end
-
-	on_project_loaded_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_project_loaded'
-
-	global_formatter_file_path: FILE_NAME is
-			-- Path to store global formatter file
-		do
-			Result := formatter_file_path (eiffel_home)
-		ensure
-			result_attached: Result /= Void
-		end
 
 	target_formatter_file_path: FILE_NAME is
 			-- Path to store target formatter file
@@ -365,7 +289,7 @@ feature{NONE} -- Implementation/Data
 	global_formatter_file: STRING is
 			-- File to store global customized formatters information
 		do
-			Result := formatter_file (global_formatter_file_path)
+			Result := absolute_file_name (global_file_path, formatter_file_name)
 		end
 
 	target_formatter_file: STRING is
@@ -373,11 +297,11 @@ feature{NONE} -- Implementation/Data
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		do
-			Result := formatter_file (target_formatter_file_path)
+			Result := absolute_file_name (target_formatter_file_path, formatter_file_name)
 		end
 
-invariant
-	on_project_loaded_agent_attached: on_project_loaded_agent /= Void
+	change_actions_internal: like change_actions;
+			-- Implementation of `change_actions'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

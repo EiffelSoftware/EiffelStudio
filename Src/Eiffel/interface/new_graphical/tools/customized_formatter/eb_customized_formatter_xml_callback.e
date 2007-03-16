@@ -10,21 +10,7 @@ class
 	EB_CUSTOMIZED_FORMATTER_XML_CALLBACK
 
 inherit
-	XM_CALLBACKS_FILTER
-		redefine
-			on_error,
-			on_start_tag,
-			on_attribute,
-			on_start_tag_finish,
-			on_end_tag,
-			on_content
-		end
-
-	EXCEPTIONS
-
-	SHARED_BENCH_NAMES
-
-	EB_XML_PARSE_HELPER
+	EB_XML_CALLBACKS
 
 	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
 
@@ -36,130 +22,18 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize Current.
 		do
-			initialize_state_transitions_tag
-			initialize_tag_attributes
-			initialize_processors
-			initialize_attribute_name
+			initialize
 
 			create formatters.make
 			create formatter_receiver.make
 			create content_receiver.make
 			create tool_receiver.make
-			create current_tag.make
-			create current_attributes.make (3)
-			create current_content.make (256)
 		end
 
 feature -- Access
 
 	formatters: LINKED_LIST [EB_CUSTOMIZED_FORMATTER_DESP]
 			-- List of parsed formatter discriptors
-
-	last_error: EB_METRIC_ERROR
-			-- Last reported error
-
-feature -- Status report
-
-	has_error: BOOLEAN is
-			-- Did error occur during xml parsing?
-		do
-			Result := last_error /= Void
-		end
-
-feature -- Event handlers
-
-	on_error (a_message: STRING) is
-			-- Event producer detected an error.
-		do
-			create_last_error (a_message)
-		end
-
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
-			-- Start of start tag.
-		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
-			l_tag: INTEGER
-		do
-			if current_tag.is_empty then
-				current_tag.extend (t_none)
-			end
-			l_trans := state_transitions_tag.item (current_tag.item)
-			if l_trans /= Void then
-				l_tag := l_trans.item (a_local_part)
-			end
-			if l_tag = 0 then
-				create_last_error (xml_names.err_invalid_tag_position (a_local_part))
-			else
-				current_tag.extend (l_tag)
-			end
-		end
-
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
-			-- Start of attribute.
-		local
-			l_attr: HASH_TABLE [INTEGER, STRING]
-			l_attribute: INTEGER
-		do
-			if
-				not a_local_part.is_case_insensitive_equal ("xmlns") and
-				not	a_local_part.is_case_insensitive_equal ("xsi") and
-				not a_local_part.is_case_insensitive_equal ("schemaLocation")
-			then
-				a_local_part.to_lower
-
-					-- check if the attribute is valid for the current state
-				l_attr := tag_attributes.item (current_tag.item)
-				if l_attr /= Void then
-					l_attribute := l_attr.item (a_local_part)
-				end
-				if current_attributes = Void then
-					create current_attributes.make (1)
-				end
-				if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-					current_attributes.force (a_value, l_attribute)
-				else
-					create_last_error (xml_names.err_invalid_attribute (a_local_part))
-				end
-			end
-		end
-
-	on_start_tag_finish is
-			-- End of start tag.
-		local
-			l_tag: INTEGER
-			l_start_prc: like tag_start_processors
-		do
-			l_tag := current_tag.item
-			l_start_prc := tag_start_processors
-			if l_start_prc.has (l_tag) then
-				l_start_prc.item (l_tag).call (Void)
-			end
-			current_attributes.clear_all
-		end
-
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
-			-- End tag.
-		local
-			l_tag: INTEGER
-			l_finish_prc: like tag_finish_processors
-		do
-			l_tag := current_tag.item
-			l_finish_prc := tag_finish_processors
-			if l_finish_prc.has (l_tag) then
-				l_finish_prc.item (l_tag).call (Void)
-			end
-			current_content.wipe_out
-			current_tag.remove
-		end
-
-	current_content: STRING
-			-- Current content
-
-	on_content (a_content: STRING) is
-			-- Text content.
-		do
-			current_content.append (a_content)
-		end
 
 feature{NONE} -- Node processors
 
@@ -282,24 +156,6 @@ feature{NONE} -- Node processors
 
 feature{NONE} -- Implementation
 
-	create_last_error (a_message: STRING_GENERAL) is
-			-- Create `last_error' with `a_message'.
-			-- Raise an exception
-		do
-			create last_error.make (a_message)
-			raise ("XML parser error")
-		ensure then
-			has_error: has_error
-		end
-
-	retrieve_attribute_value (a_attr_id: INTEGER) is
-			-- Retrieve value of attribute whose id is `a_attr_id' from `current_attributes'.
-			-- If succeeded, store last retrieved attribute value in `last_tested_attribute',
-			-- otherwise raise an error.
-		do
-			test_attribute (a_attr_id, current_attributes, agent create_last_error (xml_names.err_attribute_missing (n_name)))
-		end
-
 	record_content is
 			-- Record content in `current_content' in last content receiver.
 		local
@@ -322,29 +178,6 @@ feature{NONE} -- Implementation
 
 	tool_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [STRING, STRING, STRING]]]
 			-- Tool receiver
-
-	current_tag: LINKED_STACK [INTEGER]
-			-- The stack of tags we are currently processing
-
-	current_attributes: HASH_TABLE [STRING, INTEGER]
-			-- The values of the current attributes	
-
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
-			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
-
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
-			-- Mapping of possible attributes of tags.
-
-	tag_start_processors: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
-			-- Table of processors to be called when start tag finish is met.
-			-- [processor, tag id]
-
-	tag_finish_processors: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
-			-- Table of processors to be called when tag finish is met.
-			-- [processor, tag id]
-
-	attribute_name: HASH_TABLE [STRING, INTEGER]
-			-- Table of names of attributes indexed by attribute id.
 
 feature{NONE} -- Implementation
 
@@ -451,42 +284,9 @@ feature{NONE} -- Implementation
 			tag_finish_processors := l_finish_prc
 		end
 
-	initialize_attribute_name is
-			-- Initialize `attribute_name'.
-		local
-			l_names: like attribute_name
-		do
-			create l_names.make (3)
-			l_names.put (n_name, at_name)
-			l_names.put (n_location, at_location)
-			l_names.put (n_filter, at_filter)
-			attribute_name := l_names
-		end
-
-feature{NONE} -- Implementation/XML node names
-
-	t_formatters: INTEGER is 2001
-	t_formatter: INTEGER is 2002
-	t_tooltip: INTEGER is 2004
-	t_header: INTEGER is 2005
-	t_temp_header: INTEGER is 2006
-	t_pixmap: INTEGER is 2007
-	t_tools: INTEGER is 2008
-	t_viewer: INTEGER is 2010
-	t_tool: INTEGEr is 2011
-
-	at_location: INTEGER is 2052
-	at_viewer: INTEGER is 2053
-	at_sorting_order: INTEGER is 2054
-
 invariant
-	state_transitions_tag_attached: state_transitions_tag /= Void
-	tag_attributes_attached: tag_attributes /= Void
 	formatters_attached: formatters /= Void
 	formatter_receiver_attached: formatter_receiver /= Void
-	tag_start_processors_attached: tag_start_processors /= Void
-	tag_finish_processors_attached: tag_finish_processors /= Void
-	attribute_name_attached: attribute_name /= Void
 	content_receiver_attached: content_receiver /= Void
 	tool_receiver_attached: tool_receiver /= Void
 

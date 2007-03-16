@@ -37,13 +37,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
 			-- Make a new cluster tool.
 		require
 			a_manager_exists: a_manager /= Void
-			a_window_exists: a_window /= Void
 		do
-			window := a_window
+			window := a_manager
 			tool_make (a_manager)
 		end
 

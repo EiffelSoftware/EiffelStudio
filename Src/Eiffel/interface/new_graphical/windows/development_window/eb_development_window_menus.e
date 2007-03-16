@@ -81,6 +81,37 @@ feature -- Query
 	view_menu: EV_MENU
 			-- Menu representing the different selectable views.
 
+	tools_list_menu: EV_MENU
+			-- Menu containing list of supported tools
+
+	remove_item_from_tools_list_menu (a_tool: EB_TOOL) is
+			-- Remove item corresponding to `a_too' from `tools_list_mnu' and recycle their components.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_menu: like tools_list_menu
+			l_menu_item: EV_MENU_ITEM
+			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
+			l_develop_window: like develop_window
+		do
+			l_menu := tools_list_menu
+			l_develop_window := develop_window
+			from
+				l_menu.start
+			until
+				l_menu.after
+			loop
+				l_menu_item := l_menu.item
+				l_data ?= l_menu_item.data
+				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
+					l_menu.remove
+					l_develop_window.recycle_item (l_data.menu_item)
+				else
+					l_menu.forth
+				end
+			end
+		end
+
 feature -- Item querys
 
 	melt_menu_item: EV_MENU_ITEM
@@ -223,6 +254,14 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			number_of_displayed_external_commands := a_number
 		ensure
 			set: number_of_displayed_external_commands = a_number
+		end
+
+	set_tools_list_menu (a_menu: like tools_list_menu) is
+			-- Set `tools_list_menu' with `a_menu'.
+		do
+			tools_list_menu := a_menu
+		ensure
+			tools_list_menu_set: tools_list_menu = a_menu
 		end
 
 feature -- Command

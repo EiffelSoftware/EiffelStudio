@@ -302,27 +302,6 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
---	view_help_table: HASH_TABLE [STRING_GENERAL, STRING_GENERAL] is
---			-- Table of help messages for views
---			-- [Help message, View name]
---		local
---			l_displayers: EB_FORMATTER_DISPLAYERS
---		once
---			create Result.make (7)
---			create l_displayers
---			Result.put (interface_names.l_class_tree_displayer_help, interface_names.l_class_tree_displayer)
---			Result.put (interface_names.l_class_flat_displayer_help, interface_names.l_class_flat_displayer)
---			Result.put (interface_names.l_class_feature_displayer_help, interface_names.l_class_feature_displayer)
---			Result.put (interface_names.l_feature_displayer_help, interface_names.l_feature_displayer)
---			Result.put (interface_names.l_feature_caller_displayer_help, interface_names.l_feature_caller_displayer)
---			Result.put (interface_names.l_feature_callee_displayer_help, interface_names.l_feature_callee_displayer)
---			Result.put (interface_names.l_domain_displayer_help, interface_names.l_domain_displayer)
---		ensure
---			result_attached: Result /= Void
---		end
-
-
-
 feature{NONE} -- Implementation/Sorting
 
 	tool_name_tester (a_tool, b_tool: STRING_GENERAL; a_order: INTEGER): BOOLEAN is

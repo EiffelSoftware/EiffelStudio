@@ -47,8 +47,6 @@ feature -- Initialization
 			create widget
 			create metric_notebook
 
-			feedback_dialog.set_buttons (<<>>)
-
 			notify_project_loaded_agent := agent notify_project_loaded
 			notify_project_unloaded_agent := agent notify_project_unloaded
 
@@ -571,8 +569,6 @@ feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 		end
 
 invariant
-	feedback_dialog_attached: feedback_dialog /= Void
-	not_feedback_dialog_is_destroyed: not feedback_dialog.is_destroyed
 	notify_project_loaded_agent_attached: notify_project_loaded_agent /= Void
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 

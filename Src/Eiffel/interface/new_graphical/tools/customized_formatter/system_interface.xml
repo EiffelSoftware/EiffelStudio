@@ -64,7 +64,7 @@
      <Internal_properties>
       <id>9</id>
       <name>formatter_area</name>
-      <Expanded>0</Expanded>
+      <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
      </EV_COLORIZABLE>
@@ -154,7 +154,7 @@
        <item type="EV_TOOL_BAR_BUTTON">
         <Internal_properties>
          <id>19</id>
-         <name>add_formatter_button</name>
+         <name>add_button</name>
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_SENSITIVE>
@@ -169,7 +169,7 @@
        <item type="EV_TOOL_BAR_BUTTON">
         <Internal_properties>
          <id>20</id>
-         <name>remove_formatter_button</name>
+         <name>remove_button</name>
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_SENSITIVE>
@@ -286,7 +286,7 @@
         <item type="EV_LABEL">
          <Internal_properties>
           <id>22</id>
-          <name>select_formatter_label</name>
+          <name>empty_selection_label</name>
           <Expanded>0</Expanded>
          </Internal_properties>
          <EV_COLORIZABLE>
@@ -332,7 +332,7 @@
        </EV_CONTAINER>
        <item type="EV_HORIZONTAL_BOX">
         <Internal_properties>
-         <id>24</id>
+         <id>23</id>
          <name>help_area</name>
          <Expanded>0</Expanded>
         </Internal_properties>

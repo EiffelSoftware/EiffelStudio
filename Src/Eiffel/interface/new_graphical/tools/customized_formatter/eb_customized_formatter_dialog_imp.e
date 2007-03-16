@@ -33,14 +33,14 @@ feature {NONE}-- Initialization
 			create formatter_grid_tool_bar_area
 			create l_ev_cell_1
 			create formatter_tool_bar
-			create add_formatter_button
-			create remove_formatter_button
+			create add_button
+			create remove_button
 			create property_main_area
 			create l_ev_cell_2
 			create property_area
 			create l_ev_frame_1
 			create property_grid_area
-			create select_formatter_label
+			create empty_selection_label
 			create l_ev_frame_2
 			create help_area
 			create button_area
@@ -57,14 +57,14 @@ feature {NONE}-- Initialization
 			formatter_area.extend (formatter_grid_tool_bar_area)
 			formatter_grid_tool_bar_area.extend (l_ev_cell_1)
 			formatter_grid_tool_bar_area.extend (formatter_tool_bar)
-			formatter_tool_bar.extend (add_formatter_button)
-			formatter_tool_bar.extend (remove_formatter_button)
+			formatter_tool_bar.extend (add_button)
+			formatter_tool_bar.extend (remove_button)
 			main_area.extend (property_main_area)
 			property_main_area.extend (l_ev_cell_2)
 			property_main_area.extend (property_area)
 			property_area.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (property_grid_area)
-			property_grid_area.extend (select_formatter_label)
+			property_grid_area.extend (empty_selection_label)
 			property_area.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (help_area)
 			l_ev_vertical_box_1.extend (button_area)
@@ -122,13 +122,13 @@ feature -- Access
 
 	ok_button, cancel_button: EV_BUTTON
 	formatter_tool_bar: EV_TOOL_BAR
-	add_formatter_button, remove_formatter_button: EV_TOOL_BAR_BUTTON
+	add_button, remove_button: EV_TOOL_BAR_BUTTON
 	main_area: EV_HORIZONTAL_SPLIT_AREA
 	formatter_grid_tool_bar_area,
 	property_main_area, property_grid_area, help_area, button_area: EV_HORIZONTAL_BOX
 	formatter_area, formatter_grid_area,
 	property_area: EV_VERTICAL_BOX
-	select_formatter_label: EV_LABEL
+	empty_selection_label: EV_LABEL
 
 feature {NONE} -- Implementation
 

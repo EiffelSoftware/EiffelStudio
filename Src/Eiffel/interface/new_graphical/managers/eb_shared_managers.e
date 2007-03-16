@@ -90,7 +90,13 @@ feature -- Status report
 	customized_formatter_manager: EB_CUSTOMIZED_FORMATTER_MANAGER is
 			-- Customized formatter manager
 		once
-			create Result.make
+			create Result
+		end
+
+	customized_tool_manager: EB_CUSTOMIZED_TOOL_MANAGER is
+			-- Customized tool manager
+		once
+			create Result
 		end
 
 feature {NONE} -- Implementation

@@ -360,6 +360,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			manager_has_content: manager_has_content (a_relative)
 			a_direction_valid: four_direction (a_direction)
+			not_auto_hide: a_relative.state_value /= {SD_ENUMERATION}.auto_hide
 		do
 			set_visible (True)
    			state.change_zone_split_area (a_relative.state.zone, a_direction)

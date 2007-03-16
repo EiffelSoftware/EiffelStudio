@@ -336,16 +336,20 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_SCROLL%N")
 						end
-						if focused_popup_window /= Void then
-							focused_popup_window.handle_mouse_button_event (
-								{EV_GTK_EXTERNALS}.gdk_button_press_enum,
-								2,
-								{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_x_root (gdk_event).truncated_to_integer,
-								{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer
-								)
+						if not is_in_transport then
+							if focused_popup_window /= Void then
+								focused_popup_window.handle_mouse_button_event (
+									{EV_GTK_EXTERNALS}.gdk_button_press_enum,
+									2,
+									{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_x_root (gdk_event).truncated_to_integer,
+									{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer
+									)
+							end
+							l_propagate_event := True
+						else
+							l_call_event := False
 						end
 						user_events_processed_from_underlying_toolkit := True
-						l_propagate_event := True
 					when GDK_PROXIMITY_IN, GDK_PROXIMITY_OUT then
 						debug ("GDK_EVENT")
 							print ("GDK_PROXIMITY_IN%N")
@@ -451,18 +455,22 @@ feature {EV_ANY_I} -- Implementation
 						then
 							{EV_GTK_EXTERNALS}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget_ptr)
 							if l_gtk_widget_ptr /= default_pointer then
-								l_widget_imp ?= {EV_ANY_IMP}.eif_object_from_c (l_gtk_widget_ptr)
-								if l_widget_imp /= Void then
-									l_top_level_window_imp := l_widget_imp.top_level_window_imp
-									if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
-										l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
-									else
-										l_call_event := False
+								if not is_in_transport then
+									l_widget_imp ?= {EV_ANY_IMP}.eif_object_from_c (l_gtk_widget_ptr)
+									if l_widget_imp /= Void then
+										l_top_level_window_imp := l_widget_imp.top_level_window_imp
+										if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
+											l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
+										else
+											l_call_event := False
+										end
+										l_gtk_widget_imp := Void
+										l_top_level_window_imp := Void
+										l_gtk_widget_ptr := default_pointer
+										l_widget_imp := Void
 									end
-									l_gtk_widget_imp := Void
-									l_top_level_window_imp := Void
-									l_gtk_widget_ptr := default_pointer
-									l_widget_imp := Void
+								else
+									l_call_event := False
 								end
 							end
 						end

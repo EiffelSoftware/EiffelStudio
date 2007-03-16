@@ -108,7 +108,7 @@ feature {NONE} -- Initialize
 					-- Options and replace all
 			create option_and_replace_all_box
 			create option_frame.make_with_text (interface_names.l_Options)
-			option_frame.set_minimum_width (size)
+
 			option_and_replace_all_box.extend (option_frame)
 			option_and_replace_all_box.disable_item_expand (option_frame)
 			create hbox
@@ -155,6 +155,11 @@ feature {NONE} -- Initialize
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
 
+			if option_frame.width < size then
+				-- If system font size very large, we don't set minimum widh to make sure text is displayed.
+				option_frame.set_minimum_width (size)
+			end
+			
 			create replace_all_click_button.make_with_text (interface_names.b_replace_all)
 
 			create vbox

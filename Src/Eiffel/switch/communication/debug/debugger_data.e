@@ -159,10 +159,8 @@ feature -- global
 					bplst.after
 				loop
 					bp := bplst.item_for_iteration
-					if bp.is_not_useful or not bp.is_valid then
-						--| Forget about this breakpoint
-					else
-						newlst.extend (bp)
+					if not bp.is_not_useful and then bp.is_valid then
+						newlst.force (bp)
 					end
 					bplst.forth
 				end
@@ -173,6 +171,7 @@ feature -- global
 				until
 					newlst.after
 				loop
+					bp := newlst.item
 					bplst.force (bp, bp)
 					newlst.forth
 				end

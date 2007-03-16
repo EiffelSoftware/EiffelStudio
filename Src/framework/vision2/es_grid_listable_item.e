@@ -81,7 +81,6 @@ feature -- Access
 		local
 			l_coordinate: EV_COORDINATE
 			l_pos: like component_position
-			l_item: like component_type
 			l_rec: EV_RECTANGLE
 		do
 			l_coordinate := relative_pointer_position (grid_item)
@@ -111,7 +110,6 @@ feature -- Access
 			l_coordinate: EV_COORDINATE
 			l_item: like component_type
 			l_rec: EV_RECTANGLE
-			l_last_picked_item: INTEGER
 		do
 			if i <= component_position.count then
 				l_coordinate := relative_pointer_position (grid_item)

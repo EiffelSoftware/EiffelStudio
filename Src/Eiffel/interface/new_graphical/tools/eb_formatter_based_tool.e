@@ -17,8 +17,6 @@ inherit
 			show
 		end
 
-	EB_SHARED_MANAGERS
-
 	SHARED_EIFFEL_PROJECT
 
 	EB_HISTORY_OWNER
@@ -38,9 +36,9 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	EB_METRIC_TOOL_HELPER
-
 	EVS_UTILITY
+
+	EB_SHARED_FORMATTER_DIALOGS
 
 feature{NONE} -- Initialization
 
@@ -58,7 +56,7 @@ feature{NONE} -- Initialization
 			create {LINKED_LIST [EB_FORMATTER]} customized_formatters.make
 			create {LINKED_LIST [EB_FORMATTER]} layout_formatters.make
 			on_customized_formatter_loaded_agent := agent on_customized_formatter_loaded
-			customized_formatter_manager.formatter_change_actions.extend (on_customized_formatter_loaded_agent)
+			customized_formatter_manager.change_actions.extend (on_customized_formatter_loaded_agent)
 
 			veto_format_function_agent := agent veto_format
 
@@ -68,9 +66,6 @@ feature{NONE} -- Initialization
 			on_project_loaded_agent := agent on_project_loaded
 
 			eiffel_project.manager.load_agents.extend (on_project_loaded_agent)
-
-			on_customized_formatters_setup_finished_agent := agent on_customized_formatters_setup_finished
-			formatter_dialog.ok_actions.extend (on_customized_formatters_setup_finished_agent)
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
@@ -295,6 +290,12 @@ feature -- Setting
 			end
 		end
 
+	force_reload is
+			-- Force to reload `formatters'
+		do
+			on_customized_formatter_loaded
+		end
+
 feature{NONE} -- Implementation/Cache
 
 	displayer_cache: HASH_TABLE [EB_FORMATTER_DISPLAYER, STRING] is
@@ -425,12 +426,15 @@ feature{NONE} -- Implementation
 			l_customized_formatters.append (customized_formatter_manager.formatters (title_for_pre, develop_window))
 
 			if not l_customized_formatters.is_empty then
-				l_layout_formatters.extend (Void)
+				if not predefined_formatters.is_empty then
+					l_layout_formatters.extend (Void)
+				end
 				l_layout_formatters.append (l_customized_formatters)
 			end
 
 			fill_formatters
 			attach_veto_format_function
+			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_manager (develop_window.tools) end)
 		end
 
 	fill_formatters is
@@ -496,25 +500,6 @@ feature{NONE} -- Implementation
 				l_formatters.forth
 			end
 			l_formatters.go_to (l_cursor)
-		end
-
-	load_customized_formatters (a_force: BOOLEAN) is
-			-- Load customized formatters.
-			-- If `a_force' is True, load customized formatters even if they are already loaded.
-		local
-			l_manager: like customized_formatter_manager
-		do
-			if workbench.system_defined then
-				l_manager := customized_formatter_manager
-				if a_force or else not l_manager.is_loaded then
-					l_manager.load (
-						agent
-							do
-								show_error_message (agent customized_formatter_manager.last_error, agent customized_formatter_manager.clear_last_error, develop_window.window)
-							end
-					)
-				end
-			end
 		end
 
 	new_displayer (a_name: STRING; a_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]): EB_FORMATTER_DISPLAYER is
@@ -615,7 +600,7 @@ feature{NONE} -- Actions
 			invalidate
 			on_select
 			set_stone (l_stone)
-			formatter_dialog.on_formatter_reloaded
+			formatter_dialog.on_items_reloaded
 		end
 
 	on_metric_loaded is
@@ -666,28 +651,13 @@ feature{NONE} -- Actions
 	on_setup_customized_formatters is
 			-- Action to be performed to reload customized formatters
 		do
-			if not formatter_dialog.is_displayed then
-				setup_finish_notified_flag.put (False)
-				formatter_dialog.show_relative_to_window (develop_window.window)
-			end
+			popup_formatter_dialog (develop_window)
 		end
 
 	on_project_loaded is
 			-- Action to be performed when project is loaded into EiffelStudio
 		do
-			load_customized_formatters (False)
-		end
-
-	on_customized_formatters_setup_finished is
-			-- Action to be performed when customized formatter setup has finished
-		do
-			if not setup_finish_notified_flag.item then
-				setup_finish_notified_flag.put (True)
-				if formatter_dialog.has_changed then
-					customized_formatter_manager.store_descriptors (formatter_dialog.formatter_descriptors)
-					load_customized_formatters (True)
-				end
-			end
+			reload_customized_formatter (False)
 		end
 
 feature{NONE} -- Implementation
@@ -820,25 +790,6 @@ feature{NONE} -- Implementation
 	customized_formatter_button_internal: like customized_formatter_button
 			-- Implementation of `customized_formatter_button'
 
-	formatter_dialog: EB_CUSTOMIZED_FORMATTER_DIALOG is
-			-- Dialog to setup customized formatters
-		once
-			create Result.make (agent customized_formatter_manager.formatter_descriptors)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	setup_finish_notified_flag: CELL [BOOLEAN] is
-			-- Flag to indicate if formatters setup finish messege has been notified
-		once
-			create Result.put (False)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	on_customized_formatters_setup_finished_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_customized_formatters_setup_finished'
-
 feature{NONE} -- Recycle
 
 	internal_recycle is
@@ -846,8 +797,7 @@ feature{NONE} -- Recycle
 		do
 			Precursor
 
-			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.formatter_change_actions)
-			safe_remove_agent (on_customized_formatters_setup_finished_agent, formatter_dialog.ok_actions)
+			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
 			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
 				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)
 			end

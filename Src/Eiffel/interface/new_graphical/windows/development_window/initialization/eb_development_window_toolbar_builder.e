@@ -65,7 +65,6 @@ feature -- Building commands
 	build_address_toolbar is
 			-- Set up the address toolbar (Back, Forward, Current, Class name, feature name, ...)
 		local
-			l_accel: EV_ACCELERATOR
 			l_show_address_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
 			l_sd_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_tool_bar_item: SD_TOOL_BAR_ITEM

@@ -37,6 +37,7 @@ feature{NONE} -- Element constants
 	t_tester_item: INTEGER is 24
 	t_constant_value: INTEGER is 25
 	t_metric_value: INTEGER is 26
+	t_pixmap: INTEGER is 27
 
 feature{NONE} -- Attribute constants
 
@@ -67,6 +68,7 @@ feature{NONE} -- Attribute constants
 	at_metric_name: INTEGER is 1024
 	at_relation: INTEGER is 1025
 	at_use_external_delayed: INTEGER is 1026
+	at_location: INTEGER is 1027
 
 feature{NONE} -- Text
 
@@ -131,7 +133,8 @@ feature{NONE} -- Text
 	n_constant_value: STRING is "constant_value"
 	n_relation: STRING is "relation"
 	n_metric_name: STRING is "metric_name"
-	n_use_external_delayed: STRING is "use_external_delayed";
+	n_use_external_delayed: STRING is "use_external_delayed"
+	n_location: STRING is "location";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -224,6 +224,11 @@ feature -- Status report
 			end
 		end
 
+	is_customized_tool: BOOLEAN is
+			-- Is Current tool a customized tool?
+		do
+		end
+
 feature -- Status setting
 
 	close is

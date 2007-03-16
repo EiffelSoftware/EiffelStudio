@@ -107,8 +107,6 @@ feature -- Setting
 			-- Set `start_class' with `a_class'.
 		do
 			starting_element ?= a_class
-		ensure
-			start_class_set: starting_element = a_class
 		end
 
 	lock_update_grid is

@@ -138,13 +138,13 @@ feature -- Access
 	symbol: ARRAY [EV_PIXMAP] is
 			-- Graphical representation of the command.
 		do
-			if symbol_internal = Void then
+			if (not is_pixmap_loaded) or else symbol_internal = Void then
 				if not is_pixmap_loaded then
 					load_pixmap
 				end
 				create symbol_internal.make (1, 2)
-				symbol_internal.put (actual_pixmap, 1)
-				symbol_internal.put (actual_pixmap, 2)
+				symbol_internal.put (pixmap, 1)
+				symbol_internal.put (pixmap, 2)
 			end
 			Result := symbol_internal
 		end
@@ -475,19 +475,6 @@ feature{NONE} -- Implementation/Data
 	pixmap: EV_PIXMAP
 			-- Customized pixmap for Current formatter
 
-	actual_pixmap: like pixmap is
-			-- Actual pixmap for Current formatter
-			-- If `pixmap' is Void, use a default pixmap, otherwise use `pixmap'.
-		do
-			if pixmap /= Void then
-				Result := pixmap
-			else
-				Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
 	placeholder: STRING_GENERAL is
 			-- Placeholder for header/temp_header replacement.
 		do
@@ -571,25 +558,18 @@ feature{NONE} -- Implementation/Setting
 	load_pixmap is
 			-- Load pixmap.
 		local
-			l_retried: BOOLEAN
-			l_file: RAW_FILE
+			l_pixmap_loader: EB_PIXMAP_LOAD_HELPER
+			l_result: TUPLE [a_pixmap: EV_PIXMAP; a_buffer: EV_PIXEL_BUFFER]
 		do
-			if not l_retried and then not icon_location.is_empty then
-				create pixel_buffer_internal
-				create l_file.make (icon_location)
-				if l_file.exists and then l_file.is_readable then
-					pixel_buffer_internal.set_with_named_file (icon_location)
-					set_is_pixmap_loaded (True)
-					pixmap := pixel_buffer_internal.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, pixel_buffer_internal.width, pixel_buffer_internal.height))
-					pixmap.stretch (16, 16)
-				end
-			end
-		rescue
+			create l_pixmap_loader
+			l_result := l_pixmap_loader.loaded_pixmap_from_file (icon_location, pixmaps.icon_pixmaps.diagram_export_to_png_icon, pixmaps.icon_pixmaps.diagram_export_to_png_icon_buffer)
+			l_result.a_pixmap.stretch (16, 16)
+			set_pixmap (l_result.a_pixmap)
+			pixel_buffer_internal := l_result.a_buffer
 			set_is_pixmap_loaded (True)
-			l_retried := True
-			pixel_buffer_internal := Void
-			pixmap := Void
-			retry
+		ensure
+			pixmap_attached: pixmap /= Void
+			pixel_buffer_attached: pixel_buffer_internal /= Void
 		end
 
 	set_is_pixmap_loaded (b: BOOLEAN) is

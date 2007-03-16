@@ -1758,8 +1758,8 @@ feature {NONE} -- Recycle
 				editors_manager.recycle
 				editors_manager := Void
 			end
-
 			agents.manager.remove_observer (agents)
+			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
 			docking_manager.destroy
 		end
 

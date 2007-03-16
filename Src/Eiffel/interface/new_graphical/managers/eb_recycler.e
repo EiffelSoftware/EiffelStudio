@@ -36,6 +36,32 @@ feature -- Basic operations
 			managed_recyclable_items.extend (a_recyclable_item)
 		end
 
+	recycle_item (a_recyclable: EB_RECYCLABLE) is
+			-- Recycle `a_recyclable' if it is in `managed_recyclable_items' and then remove it from `managed_recyclable_items'.
+		require
+			a_recyclable_attached: a_recyclable /= Void
+		local
+			l_cursor: CURSOR
+			l_items: like managed_recyclable_items
+			l_done: BOOLEAN
+		do
+			l_items := managed_recyclable_items
+			l_cursor := l_items.cursor
+			from
+				l_items.start
+			until
+				l_items.after or l_done
+			loop
+				if l_items.item = a_recyclable then
+					a_recyclable.recycle
+					l_items.remove
+					l_done := True
+				else
+					l_items.forth
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	managed_recyclable_items: ARRAYED_LIST [EB_RECYCLABLE];

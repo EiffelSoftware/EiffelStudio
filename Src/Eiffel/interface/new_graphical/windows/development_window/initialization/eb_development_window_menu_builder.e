@@ -164,6 +164,15 @@ feature -- Command
 			end
 		end
 
+	attach_customized_tools (a_tools: LIST [EB_TOOL]) is
+			-- Attach `a_tools' into tools list menu.
+		require
+			a_tools_attached: a_tools /= Void
+			a_tools_valid: not a_tools.has (Void)
+		do
+			a_tools.do_all (agent fill_show_menu_for_tool (develop_window.menus.tools_list_menu, ?))
+		end
+
 feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 	build_file_menu is
@@ -672,14 +681,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
 			l_new_basic_item: EV_MENU_ITEM
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
-
 		do
 			create l_view_menu.make_with_text (develop_window.Interface_names.m_View)
 			develop_window.menus.set_view_menu (l_view_menu)
 
 				-- Explorer Bar
-			l_view_menu.extend (build_explorer_bar_menu)
-
+			develop_window.menus.set_tools_list_menu (tool_list_menu)
+			l_view_menu.extend (develop_window.menus.tools_list_menu)
+			develop_window.menus.set_tools_list_menu (develop_window.menus.tools_list_menu)
 				-- Separator
 			create l_menu_sep
 			l_view_menu.extend (l_menu_sep)
@@ -935,6 +944,17 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Separator -------------------------------------------------
 			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
 
+			l_command_menu_item := develop_window.commands.customized_formatter_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_tools_menu.extend (l_command_menu_item)
+
+			l_command_menu_item := develop_window.commands.customized_tool_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_tools_menu.extend (l_command_menu_item)
+
+				-- Separator -------------------------------------------------
+			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
+
 					-- Preferences
 			l_command_menu_item := develop_window.Show_preferences_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)
@@ -987,10 +1007,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	build_explorer_bar_menu: EV_MENU is
+	tool_list_menu: EV_MENU is
 			-- Build toolbar corresponding to available left panels.
+		local
+			l_customized_tools: LIST [EB_TOOL]
 		do
 			create Result.make_with_text (develop_window.Interface_names.m_Explorer_bar)
+			Result.wipe_out
 			fill_show_menu_for_tool (Result, develop_window.tools.features_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.cluster_tool)
 			Result.extend (create {EV_MENU_SEPARATOR})
@@ -1016,6 +1039,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			fill_show_menu_for_tool (Result, develop_window.tools.favorites_tool)
 			Result.extend (create {EV_MENU_SEPARATOR})
 			fill_show_menu_for_tool (Result, develop_window.tools.breakpoints_tool)
+
+			l_customized_tools := develop_window.tools.customized_tools
+			if not l_customized_tools.is_empty then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				l_customized_tools.do_all (agent fill_show_menu_for_tool (Result, ?))
+			end
 		end
 
 	build_window_menu is
@@ -1082,6 +1111,9 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				l_menu_item := l_com.new_menu_item
 				develop_window.add_recyclable (l_menu_item)
 				a_menu.extend (l_menu_item)
+				if a_tool.is_customized_tool then
+					l_menu_item.set_data ([l_menu_item, a_tool.title_for_pre])
+				end
 			end
 		end
 

@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 --			disable_user_resize
-	--		set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1
 			v1.extend (wizard_page)
 			build_navigation_bar (v1)
 			extend (v1)
 			Precursor {EV_TITLED_WINDOW}
+			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 		end
 
 	build_navigation_bar (a_box: EV_BOX) is

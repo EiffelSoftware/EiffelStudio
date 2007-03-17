@@ -213,7 +213,7 @@ feature -- Status setting
 		do
 			auto_hide_tab_slide_timer_interval_cell.put (a_int)
 		ensure
-			set: auto_hide_tab_slide_timer_interval = a_int
+			set: auto_hide_tab_slide_timer_interval_cell.item = a_int
 		end
 
 	set_show_tab_stub_text (a_bool: BOOLEAN) is

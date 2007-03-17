@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
-			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 4, 0)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 2, 0)
 		end
 
 feature -- Access

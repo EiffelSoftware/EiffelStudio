@@ -4,16 +4,18 @@ indexing
 	revision: "$Revision$"
 
 class
-	STRING_CHOICE_PROPERTY [G -> STRING_GENERAL]
+	STRING_CHOICE_PROPERTY
 
 inherit
-	CHOICE_PROPERTY [G]
+	CHOICE_PROPERTY [STRING_32]
+		rename
+			set_value as set_string_32_value
 		undefine
 			is_valid_value,
-			set_value
+			set_string_32_value
 		end
 
-	STRING_PROPERTY [G]
+	STRING_PROPERTY
 		undefine
 			initialize_actions,
 			initialize,

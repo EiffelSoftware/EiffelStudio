@@ -4,13 +4,15 @@ indexing
 	revision: "$Revision$"
 
 class
-	STRING_PROPERTY [G -> STRING_GENERAL]
+	STRING_PROPERTY
 
 inherit
-	TEXT_PROPERTY [G]
+	TEXT_PROPERTY [STRING_32]
+		rename
+			set_value as set_string_32_value
 		redefine
 			is_valid_value,
-			set_value
+			set_string_32_value
 		end
 
 create
@@ -20,27 +22,31 @@ feature -- Update
 
 	is_valid_value (a_value: like value): BOOLEAN is
 			-- Is `a_value' a correct value for `data'?
-		local
-			l_a_value: like value
 		do
-			l_a_value := adapted_value (a_value)
-			if not equal (value, l_a_value) then
-				Result := validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([l_a_value]))
+			Result := equal (value, a_value) or else
+				validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
+		end
+
+	set_value (a_value: STRING_GENERAL) is
+			-- Set `value' to `a_value' and propagate the change if the new value is different from the old one.
+		do
+			if a_value /= Void then
+				set_string_32_value (a_value.as_string_32)
 			else
-				Result := True
+				set_string_32_value (Void)
 			end
 		end
 
-	set_value (a_value: like value) is
-			-- Set `data' to `a_value' and propagate the change if it the new value is different from the old.
+feature -- Specialized update
+
+	set_string_32_value (a_value: like value) is
+			-- Set `value' to `a_value' and propagate the change if it the new value is different from the old one.
 		local
-			l_a_value: like value
 			l_val: like displayed_value
 		do
-			l_a_value := adapted_value (a_value)
-			if not equal (value, l_a_value) then
-				value := l_a_value
-				change_value_actions.call ([l_a_value])
+			if not equal (value, a_value) then
+				value := a_value
+				change_value_actions.call ([a_value])
 			end
 			l_val := displayed_value
 			set_text (l_val)
@@ -61,40 +67,9 @@ feature {NONE} -- Implementation
 		local
 			l_string: like displayed_value
 		do
-				-- default implementation is to just do an assignement attempt
 			l_string := a_string.twin
 			l_string.replace_substring_all ("%%N", "%N")
-			Result := adapted_value (l_string)
-		end
-
-	adapted_value (s: STRING_GENERAL): G is
-			-- Adapt `s' to the type of formal generic parameter G.
-		require
-			valid_type: s /= Void implies (s.conforms_to ("") or s.conforms_to (("").as_string_32))
-		do
-			if s = Void then
-				Result := Void
-			elseif value = Void then
-				Result ?= s
-				if Result = Void then
-						-- Try if `G' is instantiated as a STRING_32
-					Result ?= s.as_string_32
-					if Result = Void then
-							-- It was not valid as a STRING_32, so it must be STRING_8
-						Result ?= s.as_string_8
-					end
-				end
-			elseif not value.same_type (s) then
-				if value.is_string_8 and s.is_string_32 then
-					Result ?= s.as_string_8
-				else
-					Result ?= s.as_string_32
-				end
-			else
-				Result ?= s
-			end
-		ensure
-			adapted: s /= Void implies Result /= Void
+			Result := l_string
 		end
 
 end

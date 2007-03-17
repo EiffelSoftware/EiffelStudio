@@ -26,9 +26,9 @@ feature {NONE} -- Implementation
 			current_target_not_void: current_target /= Void
 			conf_system_not_void: conf_system /= Void
 		local
-			l_string_prop: STRING_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
+			l_choice_prop: STRING_CHOICE_PROPERTY
 			l_root_prop: DIALOG_PROPERTY [CONF_ROOT]
 			l_version_prop: DIALOG_PROPERTY [CONF_VERSION]
 			l_file_rule_prop: FILE_RULE_PROPERTY
@@ -159,8 +159,8 @@ feature {NONE} -- Implementation
 			current_target_not_void: current_target /= Void
 			conf_system_not_void: conf_system /= Void
 		local
-			l_string_prop: STRING_PROPERTY [STRING_32]
-			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY
+			l_choice_prop: STRING_CHOICE_PROPERTY
 			l_extends, l_il_generation: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_pf_choices: ARRAYED_LIST [STRING_32]

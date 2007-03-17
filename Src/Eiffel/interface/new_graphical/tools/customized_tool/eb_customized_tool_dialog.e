@@ -103,7 +103,7 @@ feature{NONE} -- Implementation/Data
 			Result := "New tool #"
 		end
 
-	name_property: STRING_PROPERTY [STRING_GENERAL]
+	name_property: STRING_PROPERTY
 			-- Name property
 
 feature{NONE} -- Implementation

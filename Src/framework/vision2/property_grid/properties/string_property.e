@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 		do
 			if s = Void then
 				Result := Void
-			else
+			elseif value = Void then
 				Result ?= s
 				if Result = Void then
 						-- Try if `G' is instantiated as a STRING_32
@@ -82,9 +82,16 @@ feature {NONE} -- Implementation
 					if Result = Void then
 							-- It was not valid as a STRING_32, so it must be STRING_8
 						Result ?= s.as_string_8
-						check Result_not_void: Result /= Void end
 					end
 				end
+			elseif not value.same_type (s) then
+				if value.is_string_8 and s.is_string_32 then
+					Result ?= s.as_string_8
+				else
+					Result ?= s.as_string_32
+				end
+			else
+				Result ?= s
 			end
 		ensure
 			adapted: s /= Void implies Result /= Void

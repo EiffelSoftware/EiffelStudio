@@ -844,6 +844,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				choose_dialog.set_folder_add_action (agent add_folder_item)
 				choose_dialog.show_relative_to_window (develop_window.window)
 				choose_dialog.default_push_button.select_actions.extend (agent force_new_search)
+			else
+				choose_dialog.show
 			end
 			choose_dialog.set_focus
 		end

@@ -4778,7 +4778,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				end
 			end
 
-			if l_item /= Void then
+			if l_item /= Void and then l_item.is_parented then
 				if l_item.column_i.is_locked then
 					tooltip_drawable := l_item.column_i.locked_column.drawing_area
 				elseif l_item.row_i.is_locked then

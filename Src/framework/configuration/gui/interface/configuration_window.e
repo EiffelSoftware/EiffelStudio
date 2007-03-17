@@ -732,14 +732,15 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			properties_ok: properties /= Void and then not properties.is_destroyed
 		end
 
-	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING_GENERAL) is
+	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING_32) is
 			-- Show task properties for `a_task'.
 		require
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 			a_target_not_void: a_target /= Void
 			a_task_not_void: a_task /= Void
-			a_type_ok: a_type = conf_interface_names.task_pre or a_type = conf_interface_names.task_post
+			a_type_not_void: a_type /= Void
+			a_type_ok: a_type.is_equal (conf_interface_names.task_pre) or a_type.is_equal (conf_interface_names.task_post)
 		do
 			is_refreshing := True
 			refresh_current := agent show_properties_target_tasks (a_target, a_task, a_type)
@@ -790,7 +791,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 		local
 			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
-			l_item: STRING_PROPERTY [STRING]
+			l_item: STRING_PROPERTY
 		do
 			current_target := a_target
 			is_refreshing := True
@@ -818,13 +819,25 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_item.set_value (l_vars.key_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_variable_key (l_vars.key_for_iteration, ?))
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_vars: EQUALITY_HASH_TABLE [STRING, STRING])
+					require
+						s_not_void: s /= Void
+						a_vars_not_void: a_vars /= Void
+					do
+						update_variable_key (a_vars.key_for_iteration, s.as_string_8)
+					end (?, l_vars))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_variable_value (l_vars.key_for_iteration, ?))
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_vars: EQUALITY_HASH_TABLE [STRING, STRING])
+					require
+						s_not_void: s /= Void
+						a_vars_not_void: a_vars /= Void
+					do
+						update_variable_value (a_vars.key_for_iteration, s.as_string_8)
+					end (?, l_vars))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_vars.key_for_iteration)
 				if l_inh_vars.found then
@@ -857,7 +870,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 		local
 			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			i: INTEGER
-			l_item: STRING_PROPERTY [STRING]
+			l_item: STRING_PROPERTY
 		do
 			current_target := a_target
 			is_refreshing := True
@@ -884,13 +897,25 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_item.set_value (l_vars.key_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_mapping_key (l_vars.key_for_iteration, ?))
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_vars: EQUALITY_HASH_TABLE [STRING, STRING])
+					require
+						s_not_void: s /= Void
+						a_vars_not_void: a_vars /= Void
+					do
+						update_mapping_key (a_vars.key_for_iteration, s.as_string_8)
+					end (?, l_vars))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_mapping_value (l_vars.key_for_iteration, ?))
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_vars: EQUALITY_HASH_TABLE [STRING, STRING])
+					require
+						s_not_void: s /= Void
+						a_vars_not_void: a_vars /= Void
+					do
+						update_mapping_value (a_vars.key_for_iteration, s.as_string_8)
+					end (?, l_vars))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_vars.key_for_iteration)
 				if l_inh_vars.found then
@@ -1012,10 +1037,10 @@ feature {NONE} -- Implementation
 		require
 			properties_ok: properties /= Void and then not properties.is_destroyed
 		local
-			l_string_prop: STRING_PROPERTY [STRING]
+			l_string_prop: STRING_PROPERTY
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_mls_prop: MULTILINE_STRING_PROPERTY
-			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
+			l_choice_prop: STRING_CHOICE_PROPERTY
 			l_targ_ord: ARRAYED_LIST [CONF_TARGET]
 			l_targets, l_targets_none: ARRAYED_LIST [STRING_32]
 		do
@@ -1039,14 +1064,25 @@ feature {NONE} -- Implementation
 			create l_string_prop.make (conf_interface_names.system_name_name)
 			l_string_prop.set_description (conf_interface_names.system_name_description)
 			l_string_prop.set_value (conf_system.name)
-			l_string_prop.validate_value_actions.extend (agent (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name)
-			l_string_prop.change_value_actions.extend (agent conf_system.set_name)
-			l_string_prop.change_value_actions.extend (agent (a_name: STRING)
-					do
-						set_title (conf_interface_names.configuration_title (a_name))
-					end
-				)
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (False)))
+			l_string_prop.validate_value_actions.extend (agent (s: STRING_32): BOOLEAN
+				require
+					s_not_void: s /= Void
+				do
+					Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name (s.as_string_8)
+				end)
+			l_string_prop.change_value_actions.extend (agent (s: STRING_32)
+				require
+					s_not_void: s /= Void
+				do
+					conf_system.set_name (s.as_string_8)
+				end)
+			l_string_prop.change_value_actions.extend (agent (s: STRING_32)
+				require
+					s_not_void: s /= Void
+				do
+					set_title (conf_interface_names.configuration_title (s))
+				end)
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 
 				-- description
@@ -1105,7 +1141,7 @@ feature {NONE} -- Implementation
 			l_dir_prop: DIRECTORY_PROPERTY
 			l_file_prop: FILE_PROPERTY
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
-			l_prop: STRING_PROPERTY [STRING_32]
+			l_prop: STRING_PROPERTY
 		do
 			properties.add_section (conf_interface_names.section_general)
 
@@ -1184,7 +1220,7 @@ feature {NONE} -- Implementation
 			l_mls_prop: MULTILINE_STRING_PROPERTY
 			l_dir_prop: DIRECTORY_LOCATION_PROPERTY
 			l_dial: DIALOG_PROPERTY [CONF_CONDITION_LIST]
-			l_prop: STRING_PROPERTY [STRING_32]
+			l_prop: STRING_PROPERTY
 			l_bool_prop: BOOLEAN_PROPERTY
 		do
 			properties.add_section (conf_interface_names.section_general)

@@ -253,13 +253,13 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	formatter_name_property: STRING_PROPERTY [STRING_32]
+	formatter_name_property: STRING_PROPERTY
 			-- Property for formatter name
 
-	header_property: STRING_PROPERTY [STRING_32]
+	header_property: STRING_PROPERTY
 			-- Property for formatter header
 
-	temp_header_property: STRING_PROPERTY [STRING_32]
+	temp_header_property: STRING_PROPERTY
 			-- Property for formatter temporary header
 
 	displayed_in_tools_property: DIALOG_PROPERTY [HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]]
@@ -284,14 +284,14 @@ feature{NONE} -- Implementation
 			-- Load information of `a_descriptor' in `property_grid'.
 		local
 			l_grid: like property_grid
-			l_name: STRING_PROPERTY [STRING_32]
-			l_tooltip: STRING_PROPERTY [STRING_GENERAL]
-			l_header: STRING_PROPERTY [STRING_32]
-			l_temp_header: STRING_PROPERTY [STRING_32]
+			l_name: STRING_PROPERTY
+			l_tooltip: STRING_PROPERTY
+			l_header: STRING_PROPERTY
+			l_temp_header: STRING_PROPERTY
 			l_pixmap: FILE_PROPERTY
 			l_metric: like metric_property
 			l_metric_filter: BOOLEAN_PROPERTY
-			l_scope: STRING_CHOICE_PROPERTY [STRING_GENERAL]
+			l_scope: STRING_CHOICE_PROPERTY
 
 			l_tools: like displayed_in_tools_property
 			l_dialog: like displayer_dialog

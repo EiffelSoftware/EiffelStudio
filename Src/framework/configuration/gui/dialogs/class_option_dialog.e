@@ -9,7 +9,7 @@ class
 	CLASS_OPTION_DIALOG
 
 inherit
-	PROPERTY_DIALOG [HASH_TABLE [CONF_OPTION, STRING]]
+	PROPERTY_DIALOG [HASH_TABLE [CONF_OPTION, STRING_32]]
 		redefine
 			initialize,
 			on_ok

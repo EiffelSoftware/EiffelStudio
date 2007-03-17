@@ -55,10 +55,10 @@ feature -- Access
 	task: CONF_ACTION
 			-- Task for which information are displayed.
 
-	type: STRING_GENERAL
+	type: STRING_32
 			-- Type of the task.
 
-	name: STRING_GENERAL is
+	name: STRING_32 is
 			-- Name of the section.
 		do
 			Result := task.command

@@ -167,6 +167,22 @@ feature -- Access queries
 			result_not_void: Result /= Void
 		end
 
+	mapping_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32] is
+			-- Same as `mapping' but with STRING_32.
+		do
+			create Result.make (mapping.count)
+			from
+				mapping.start
+			until
+				mapping.after
+			loop
+				Result.extend (mapping.item_for_iteration, mapping.key_for_iteration)
+				mapping.forth
+			end
+		ensure
+			mapping_32_not_void: Result /= Void
+		end
+
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
 		deferred
@@ -178,8 +194,30 @@ feature -- Access queries
 			-- Options for classes.
 		deferred
 		ensure
-			Result_not_void: Result /= Void implies not Result.is_empty
+			Result_not_empty: Result /= Void implies not Result.is_empty
 		end
+
+	class_options_32: HASH_TABLE [CONF_OPTION, STRING_32] is
+			-- Classes with specific options of this group itself.
+		local
+			l_options: like class_options
+		do
+			l_options := class_options
+			if l_options /= Void then
+				create Result.make (l_options.count)
+				from
+					l_options.start
+				until
+					l_options.after
+				loop
+					Result.extend (l_options.item_for_iteration, l_options.key_for_iteration)
+					l_options.forth
+				end
+			end
+		ensure
+			class_options_32_not_empty: Result /= Void implies not Result.is_empty
+		end
+
 
 	get_class_options (a_class: STRING): CONF_OPTION is
 			-- Get the options for `a_class'.
@@ -392,6 +430,24 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_class_options := a_options
 		ensure
 			class_options_set: internal_class_options = a_options
+		end
+
+	set_class_options_32 (a_options_32: like class_options_32) is
+			-- Set `a_options'.
+		do
+			if a_options_32 = Void then
+				internal_class_options := Void
+			else
+				create internal_class_options.make (a_options_32.count)
+				from
+					a_options_32.start
+				until
+					a_options_32.after
+				loop
+					internal_class_options.extend (a_options_32.item_for_iteration, a_options_32.key_for_iteration)
+					a_options_32.forth
+				end
+			end
 		end
 
 	add_class_options (a_option: CONF_OPTION; a_class: STRING) is

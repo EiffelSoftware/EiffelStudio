@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			properties_not_void: properties /= Void
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
-			l_string_prop: STRING_PROPERTY [STRING_32]
+			l_string_prop: STRING_PROPERTY
 		do
 			properties.add_section (conf_interface_names.section_dotnet)
 

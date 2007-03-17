@@ -179,7 +179,7 @@ feature {EB_STONE_CHECKER} -- Actions
 			l_writable: BOOLEAN
 			l_app_sys: CONF_SYSTEM
 			l_class_options, l_inh_options: CONF_OPTION
-			l_name_prop: STRING_PROPERTY [STRING_GENERAL]
+			l_name_prop: STRING_PROPERTY
 			l_extends: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
 		do

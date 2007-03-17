@@ -19,6 +19,25 @@ feature -- Access, stored in configuration file
 	renaming: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
+	renaming_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32] is
+			-- Same as `renaming' but with STRING_32.
+		local
+			l_renaming: like renaming
+		do
+			l_renaming := renaming
+			if l_renaming /= Void then
+				create Result.make (l_renaming.count)
+				from
+					l_renaming.start
+				until
+					l_renaming.after
+				loop
+					Result.extend (l_renaming.item_for_iteration, l_renaming.key_for_iteration)
+					l_renaming.forth
+				end
+			end
+		end
+
 	name_prefix: STRING
 			-- An optional name prefix for this group.
 
@@ -41,6 +60,24 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			renaming := a_renaming
 		ensure
 			renaming_set: renaming = a_renaming
+		end
+
+	set_renaming_32 (a_renaming_32: like renaming_32) is
+			-- Set `renaming_32' to `a_renaming_32'.
+		do
+			if a_renaming_32 = Void then
+				renaming := Void
+			else
+				create renaming.make (a_renaming_32.count)
+				from
+					a_renaming_32.start
+				until
+					a_renaming_32.after
+				loop
+					renaming.extend (a_renaming_32.item_for_iteration, a_renaming_32.key_for_iteration)
+					a_renaming_32.forth
+				end
+			end
 		end
 
 	add_renaming (an_old_name, a_new_name: STRING) is

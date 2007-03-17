@@ -653,8 +653,8 @@ feature {NONE} -- Implementation
 			-- Fill custom conditions.
 		local
 			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
-			l_text: STRING_PROPERTY [STRING_GENERAL]
-			l_choice: STRING_CHOICE_PROPERTY [STRING_GENERAL]
+			l_text: STRING_PROPERTY
+			l_choice: STRING_CHOICE_PROPERTY
 			i: INTEGER
 			l_key: STRING_GENERAL
 		do
@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 					l_text.pointer_button_press_actions.wipe_out
 					l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
 					l_text.set_value (l_key)
-					l_text.change_value_actions.extend (agent update_variable (?, l_key))
+					l_text.change_value_actions.extend (agent update_variable ({STRING_32} ?, l_key))
 					custom.set_item (1, i, l_text)
 					create l_choice.make_with_choices ("", <<"=", "/=">>)
 					if l_cust.item_for_iteration.item.invert then
@@ -686,13 +686,13 @@ feature {NONE} -- Implementation
 					else
 						l_choice.set_value ("=")
 					end
-					l_choice.change_value_actions.extend (agent update_invert (?, l_key))
+					l_choice.change_value_actions.extend (agent update_invert ({STRING_32} ?, l_key))
 					custom.set_item (2, i, l_choice)
 					create l_text.make ("")
 					l_text.pointer_button_press_actions.wipe_out
 					l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
 					l_text.set_value (l_cust.item_for_iteration.item.value)
-					l_text.change_value_actions.extend (agent update_value (?, l_key))
+					l_text.change_value_actions.extend (agent update_value ({STRING_32} ?, l_key))
 					custom.set_item (3, i, l_text)
 
 					i := i + 1

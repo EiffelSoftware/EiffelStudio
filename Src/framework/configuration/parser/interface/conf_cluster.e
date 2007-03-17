@@ -501,6 +501,25 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_mapping_set: internal_mapping = a_mapping
 		end
 
+	set_mapping_32 (a_mapping_32: like mapping_32) is
+			-- Set `mapping' to `a_mapping_32'.
+		do
+			if a_mapping_32 = Void then
+				internal_mapping := Void
+			else
+				create internal_mapping.make (a_mapping_32.count)
+				from
+					a_mapping_32.start
+				until
+					a_mapping_32.after
+				loop
+					internal_mapping.extend (a_mapping_32.item_for_iteration, a_mapping_32.key_for_iteration)
+					a_mapping_32.forth
+				end
+			end
+			cached_mapping := Void
+		end
+
 feature {CONF_ACCESS} -- Update, not stored in configuration file
 
 	wipe_class_cache is
@@ -540,10 +559,6 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this cluster itself.
-
-feature {NONE} -- Implementation
-
-
 
 feature {NONE} -- Cached informations
 

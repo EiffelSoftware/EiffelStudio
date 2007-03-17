@@ -9,7 +9,7 @@ class
 	RENAMING_DIALOG
 
 inherit
-	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING_GENERAL, STRING_GENERAL]]
+	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING_32, STRING_32]]
 		redefine
 			initialize,
 			on_ok
@@ -104,7 +104,7 @@ feature {NONE} -- Agents
 		require
 			initialized: is_initialized
 		local
-			l_item: TEXT_PROPERTY [STRING]
+			l_item: TEXT_PROPERTY [STRING_32]
 		do
 			if grid.single_selected_row /= Void then
 				l_item ?= grid.single_selected_row.item (1)
@@ -130,12 +130,12 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	update_key (an_old_key, a_new_key: STRING_GENERAL) is
+	update_key (an_old_key, a_new_key: STRING_32) is
 			-- Update `an_old_key' with `a_new_key'.
 		require
 			an_old_key_ok: value /= Void and then value.has (an_old_key)
 		local
-			l_string: STRING_GENERAL
+			l_string: STRING_32
 		do
 			l_string := conf_interface_names.string_general_as_upper (a_new_key)
 			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
@@ -144,12 +144,12 @@ feature {NONE} -- Implementation
 			refresh
 		end
 
-	update_value (a_key, a_new_value: STRING_GENERAL) is
+	update_value (a_key, a_new_value: STRING_32) is
 			-- Update value of `a_key' to `a_new_value'
 		require
 			a_key_ok: value /= Void and then value.has (a_key)
 		local
-			l_string: STRING_GENERAL
+			l_string: STRING_32
 		do
 			l_string := conf_interface_names.string_general_as_upper (a_new_value)
 			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (l_string) then
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 		require
 			initialized: is_initialized
 		local
-			l_tp: STRING_PROPERTY [STRING_GENERAL]
+			l_tp: STRING_PROPERTY
 			i: INTEGER
 		do
 			grid.clear

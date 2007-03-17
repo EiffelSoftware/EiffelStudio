@@ -47,7 +47,7 @@ feature -- Properties
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser
 
-	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_feature_displayer, displayer_generators.feature_displayer]

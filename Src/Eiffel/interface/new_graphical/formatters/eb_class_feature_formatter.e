@@ -25,7 +25,7 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_FLAT_VIEW
 			-- Browser
 
-	displayer_generator: TUPLE [generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_class_feature_displayer, displayer_generators.class_feature_displayer]

@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
 			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 4, 0)
 			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, text_label)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 		ensure

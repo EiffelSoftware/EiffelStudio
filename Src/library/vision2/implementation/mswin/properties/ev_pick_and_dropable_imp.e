@@ -333,10 +333,12 @@ feature {EV_ANY_I} -- Implementation
 			abstract_pick_and_dropable: EV_ABSTRACT_PICK_AND_DROPABLE
 			text_component: EV_TEXT_COMPONENT_IMP
 			l_pebble: like pebble
+			l_original: like original_top_level_window_imp
 		do
 			check
 				original_top_level_window_imp_not_void: original_top_level_window_imp /= Void
 			end
+			l_original := original_top_level_window_imp
 			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
 				-- debug when the capture is enabled)
@@ -416,7 +418,7 @@ feature {EV_ANY_I} -- Implementation
 			interface.pointer_motion_actions.resume
 				-- Resume `pointer_motion_actions'.
 
-			original_top_level_window_imp.allow_movement
+			l_original.allow_movement
 			original_top_level_window_imp := Void
 
 				-- Reset internal attributes.

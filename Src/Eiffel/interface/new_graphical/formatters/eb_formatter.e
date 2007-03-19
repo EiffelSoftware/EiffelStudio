@@ -93,7 +93,7 @@ feature -- Properties
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_valid: Result.generator /= Void and then (Result.name /= Void and then not Result.name.is_empty)
+			result_valid: Result.any_generator /= Void and then (Result.name /= Void and then not Result.name.is_empty)
 		end
 
 	control_bar: EV_WIDGET is

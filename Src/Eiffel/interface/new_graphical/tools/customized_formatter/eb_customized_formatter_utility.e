@@ -124,8 +124,8 @@ feature -- Access
 				Result.error.set_file_location (a_file_name)
 				Result.error.set_xml_location ([l_parser.position.column, l_parser.position.row])
 			end
---		ensure
---			result_attached: Result /= Void
+		ensure
+			result_attached: Result /= Void
 		end
 
 	satisfied_items (a_descriptors: LIST [like item_anchor]; a_criterion: FUNCTION [ANY, TUPLE [like item_anchor], BOOLEAN]): LIST [like item_anchor] is

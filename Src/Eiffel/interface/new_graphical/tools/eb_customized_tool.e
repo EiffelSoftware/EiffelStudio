@@ -22,17 +22,19 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_develop_window: like develop_window; a_title: like title; a_id: like id; a_pixmap_location: like pixmap_location) is
+	make (a_develop_window: like develop_window; a_title: like title; a_id: like id; a_pixmap_location: like pixmap_location; a_handlers: like stone_handlers) is
 			-- Initialize.
 		require
 			a_develop_window_attached: a_develop_window /= Void
 			a_title_valid: a_title /= Void and then not a_title.is_empty
 			a_id_attached: a_id /= Void
 			a_pixmap_location_attached: a_pixmap_location /= Void
+			a_handlers_attached: a_handlers /= Void
 		do
 			set_id (a_id)
 			set_title (a_title)
 			set_pixmap_location (a_pixmap_location)
+			set_stone_handlers (a_handlers)
 			develop_window := a_develop_window
 			build_interface
 		end
@@ -79,7 +81,7 @@ feature -- Access
 	no_target_message: STRING_GENERAL is
 			-- Message to be displayed in `output_line' when no stone is set
 		do
-			Result := ""
+			Result := interface_names.l_no_info_of_element
 		end
 
 	stone: STONE is
@@ -109,6 +111,17 @@ feature -- Access
 			Result := pixel_buffer_internal
 		end
 
+	stone_handlers: HASH_TABLE [STRING, STRING]
+			-- Stone handlers [tool_id, stone_name]
+
+	set_stone_handlers (a_handlers: like stone_handlers) is
+			-- Set `stone_handlers' with `a_handlers'.
+		require
+			a_handlers_attached: a_handlers /= Void
+		do
+			stone_handlers := a_handlers.twin
+		end
+
 feature -- Status report
 
 	is_customized_tool: BOOLEAN is
@@ -125,12 +138,51 @@ feature -- Setting
 	pop_default_formatter is
 			-- Popup default formatter specified by `default_formatter'.
 		do
+
+		end
+
+	suitable_tool_for_stone (a_stone: like stone): STRING is
+			-- ID of tool which is suitable for `a_stone' defined by handlers of Current tool
+			-- Void if no suitable stone is found.
+		local
+			l_testers: like stone_testers
+			l_cursor: CURSOR
+			l_stone_name: STRING
+		do
+				-- Decide what kind of stone is `a_stone'.
+			l_testers := stone_testers
+			l_cursor := l_testers.cursor
+			from
+				l_testers.start
+			until
+				l_testers.after or l_stone_name /= Void
+			loop
+				if l_testers.item.a_tester.item ([a_stone]) then
+					l_stone_name := l_testers.item.a_stone_name
+				end
+				l_testers.forth
+			end
+			l_testers.go_to (l_cursor)
+
+			if l_stone_name /= Void then
+				Result := stone_handlers.item (l_stone_name)
+			end
 		end
 
 	drop_stone (st: like stone) is
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
+		local
+			l_tool_id: STRING
 		do
-			develop_window.tools.set_stone (st)
+			l_tool_id := suitable_tool_for_stone (st)
+			if l_tool_id /= Void then
+				develop_window.tools.show_tool_by_id (l_tool_id)
+				develop_window.tools.set_stone (st)
+			else
+				develop_window.tools.set_stone (st)
+				show
+				set_focus
+			end
 		end
 
 	set_stone (new_stone: STONE) is
@@ -218,7 +270,95 @@ feature{NONE} -- Implementation
 			pixel_buffer_attached: pixel_buffer_internal /= Void
 		end
 
+feature{NONE} -- Stone handler matching
+
+	stone_names: EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS is
+			-- Name for stone
+		do
+			if stone_names_internal = Void then
+				create stone_names_internal
+			end
+			Result := stone_names_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	stone_testers: LINKED_LIST [TUPLE [a_stone_name: STRING; a_tester: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]]] is
+			-- List of stone testers.
+			-- `a_stone_name' is the name of the stone,
+			-- `a_tester' is a predicate with a stone as argument and evaluates to True if the stone is of certain type.
+			-- Note: More specific stone testers should appear before more general stone testers in current list,
+			-- for example, tester for feature stones should be before tester for class stones.
+		do
+			if stone_testers_internal = Void then
+				create stone_testers_internal.make
+
+				stone_testers_internal.extend ([stone_names.n_feature_stone, agent is_feature_stone])
+				stone_testers_internal.extend ([stone_names.n_compiled_class_stone, agent is_compiled_class_stone])
+				stone_testers_internal.extend ([stone_names.n_uncompiled_class_stone, agent is_uncompiled_class_stone])
+				stone_testers_internal.extend ([stone_names.n_group_stone, agent is_group_stone])
+				stone_testers_internal.extend ([stone_names.n_target_stone, agent is_target_stone])
+			end
+			Result := stone_testers_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	stone_testers_internal: like stone_testers
+			-- Implementation of `stone_testers'
+
+	stone_names_internal: like stone_names
+			-- Implementation of `stone_names'
+
+feature{NONE} -- Stone testers
+
+	is_feature_stone (a_stone: STONE): BOOLEAN is
+			-- Is `a_stone' a feature stone?
+		local
+			l_stone: FEATURE_STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void
+		end
+
+	is_uncompiled_class_stone (a_stone: STONE): BOOLEAN is
+			-- Is `a_stone' a uncompiled class stone?
+		local
+			l_stone: CLASSI_STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void
+		end
+
+	is_compiled_class_stone (a_stone: STONE): BOOLEAN is
+			-- Is `a_stone' a compiled class stone?
+		local
+			l_stone: CLASSC_STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void
+		end
+
+	is_group_stone (a_stone: STONE): BOOLEAN is
+			-- Is `a_stone' a group stone?
+		local
+			l_stone: CLUSTER_STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void
+		end
+
+	is_target_stone (a_stone: STONE): BOOLEAN is
+			-- Is `a_stone' a target stone?
+		local
+			l_stone: TARGET_STONE
+		do
+			l_stone ?= a_stone
+			Result := l_stone /= Void
+		end
+
 invariant
 	id_attached: id /= Void
 
 end
+

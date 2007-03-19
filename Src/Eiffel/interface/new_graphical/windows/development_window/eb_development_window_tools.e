@@ -80,9 +80,7 @@ feature -- Commands
 					if stone /= Void then
 						stone := stone.synchronized_stone
 					end
-					class_tool.invalidate
-					features_relation_tool.invalidate
-					dependency_tool.invalidate
+					invalidate_tools
 					set_stone (stone)
 					if develop_window.has_case then
 						diagram_tool.synchronize
@@ -109,16 +107,12 @@ feature -- Commands
 
 	show_default_tool_of_feature
 		do
-			features_relation_tool.show
-			features_relation_tool.pop_default_formatter
-			features_relation_tool.set_focus
+			features_relation_tool.show_with_setting
 		end
 
 	show_default_tool_of_class
 		do
-			class_tool.show
-			class_tool.pop_default_formatter
-			class_tool.set_focus
+			class_tool.show_with_setting
 		end
 
 	set_stone_to_customized_tools (a_stone: STONE) is
@@ -138,6 +132,19 @@ feature -- Commands
 				l_cus_tools.forth
 			end
 			l_cus_tools.go_to (l_cursor)
+		end
+
+	show_tool_by_id (a_id: STRING) is
+			-- Show the tool from `all_tools' whose id is `a_id' if possible.
+		require
+			a_id_attached: a_id /= Void
+		local
+			l_tool: EB_TOOL
+		do
+			l_tool := tool_by_id (a_id)
+			if l_tool /= Void then
+				l_tool.show_with_setting
+			end
 		end
 
 feature -- Query
@@ -360,6 +367,30 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
+	tool_by_id (a_id: STRING): EB_TOOL is
+			-- Tool from `all_tools' whose id is `a_id'
+			-- Void if no such tool is found.
+		require
+			a_id_attached: a_id /= Void
+		local
+			l_tools: like all_tools
+			l_cursor: CURSOR
+		do
+			l_tools := all_tools
+			l_cursor := l_tools.cursor
+			from
+				l_tools.start
+			until
+				l_tools.after or Result /= Void
+			loop
+				if l_tools.item.title_for_pre.is_equal (a_id) then
+					Result := l_tools.item
+				end
+				l_tools.forth
+			end
+			l_tools.go_to (l_cursor)
+		end
+
 feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW} -- Setting
 
 	set_features_tool (a_tool: like features_tool) is
@@ -508,8 +539,19 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW} -- Setting
 
 feature{NONE} -- Implementation
 
-	customized_tools_internal: like customized_tools;
+	customized_tools_internal: like customized_tools
 			-- Implementation of `customized_tools'
+
+	invalidate_tools is
+			-- Invalidate tools which will force a refresh of all currently selected formatters.
+		do
+			class_tool.invalidate
+			features_relation_tool.invalidate
+			dependency_tool.invalidate
+			if not customized_tools.is_empty then
+				customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL) do a_tool.invalidate end)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

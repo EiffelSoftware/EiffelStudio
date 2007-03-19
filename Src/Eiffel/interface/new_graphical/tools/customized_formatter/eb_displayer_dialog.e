@@ -162,6 +162,7 @@ feature{NONE} -- Actions
 	on_show is
 			-- Action to be performed when Current dialog is shown
 		do
+			last_value_from_grid := Void
 			grid_wrapper.disable_auto_sort_order_change
 			grid_wrapper.sort (0, 0, 1, 0, 0, 0, 0, 0, 2)
 			grid_wrapper.enable_auto_sort_order_change
@@ -325,10 +326,21 @@ feature{NONE} -- Implementation/Sorting
 		local
 			l_sorter: DS_QUICK_SORTER [STRING_GENERAL]
 		do
+			if last_value_from_grid = Void then
+				if value = Void then
+					create last_value_from_grid.make (1)
+				else
+					last_value_from_grid := value
+				end
+			else
+				last_value_from_grid := value_from_grid
+			end
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (display_tool_names)
 			bind_grid
 		end
+
+	last_value_from_grid: like value_from_grid
 
 feature{NONE} -- Implementation/Binding
 
@@ -345,7 +357,7 @@ feature{NONE} -- Implementation/Binding
 			l_size_table: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 		do
 			create l_displayers
-			l_value := value
+			l_value := last_value_from_grid
 			if l_value = Void then
 				create l_value.make (1)
 			end

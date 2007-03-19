@@ -43,4 +43,12 @@ feature -- Access
 	at_stone: INTEGER is 2055
 	at_default_tool: INTEGER is 2056
 
+feature -- Stone names
+
+	n_feature_stone: STRING is "feature"
+	n_uncompiled_class_stone: STRING is "uncompiled class"
+	n_compiled_class_stone: STRING is "compiled class"
+	n_group_stone: STRING is "group"
+	n_target_stone: STRING is "target"
+
 end

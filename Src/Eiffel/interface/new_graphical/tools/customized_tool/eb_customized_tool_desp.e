@@ -49,7 +49,7 @@ feature -- Access
 		require
 			a_develop_window_attached: a_develop_window /= Void
 		do
-			create Result.make (a_develop_window, name.as_string_32, id, pixmap_location)
+			create Result.make (a_develop_window, name.as_string_32, id, pixmap_location, handlers)
 		ensure
 			result_attached: Result /= Void
 		end

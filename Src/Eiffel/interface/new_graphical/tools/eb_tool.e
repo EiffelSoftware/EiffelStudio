@@ -248,6 +248,12 @@ feature -- Status setting
 			force_last_stone
 		end
 
+	show_with_setting is
+			-- Show current tool (if possible), and do some settings
+		do
+			show
+		end
+
 	has_focus: BOOLEAN is
 			-- Any widget of the tool has focus?
 		do

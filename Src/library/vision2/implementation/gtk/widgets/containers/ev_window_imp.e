@@ -362,6 +362,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 	on_widget_mapped is
 			-- `Current' has been mapped to the screen.
 		do
+			Precursor
 			if show_actions_internal /= Void and call_show_actions then
 				show_actions_internal.call (Void)
 			end

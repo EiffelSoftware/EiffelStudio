@@ -507,7 +507,7 @@ feature -- Generation, Header
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
 			make_file.put_string ("%
-				%echo %"Preparing C compilation...%"%N%
+				%echo %"Preparing C compilation%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 
@@ -530,7 +530,7 @@ feature -- Generation, Header
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
 				%esac%N")
 			make_file.put_string ("%
-				%echo %"Compiling C code in " + a_directory + "...%"%N%
+				%echo %"Compiling C code in " + a_directory + "%"%N%
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 

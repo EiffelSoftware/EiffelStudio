@@ -87,10 +87,15 @@ feature -- Interface
 	menu: EV_MENU is
 		local
 			lst: LIST [EV_MENU_ITEM]
+			mi: EV_MENU_ITEM
 		do
 			Result := internal_menu
 			if Result = Void then
 				create Result
+				create mi.make_with_text (interface_names.b_reset)
+				mi.select_actions.extend (agent reset)
+				Result.extend (mi)
+				Result.extend (create {EV_MENU_SEPARATOR})
 				lst := menu_items (0, viewers)
 				if lst /= Void and then lst.count > 0 then
 					Result.append (lst)
@@ -315,9 +320,9 @@ feature -- Change
 						end
 					end
 
-					if v = Void then
-						lmi.disable_sensitive
-					else
+					if v /= Void then
+--						lmi.disable_sensitive
+--					else
 						if current_object = Void or else not v.is_valid_stone (current_object) then
 							lmi.disable_sensitive
 						else

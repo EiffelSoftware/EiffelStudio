@@ -13,7 +13,7 @@ inherit
 
 feature -- Debugger manager
 
-	new_debugger_manager: DEBUGGER_MANAGER is
+	new_default_debugger_manager: DEBUGGER_MANAGER is
 		do
 			if is_gui then
 				create {EB_DEBUGGER_MANAGER} Result.make

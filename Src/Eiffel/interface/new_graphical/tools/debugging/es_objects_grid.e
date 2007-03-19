@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 			row_expand_actions.extend (agent on_row_expand)
 			row_collapse_actions.extend (agent on_row_collapse)
 
---			set_item_pebble_function (agent on_pebble_function)
 			enable_grid_item_pnd_support
 
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)

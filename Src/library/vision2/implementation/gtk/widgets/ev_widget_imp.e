@@ -392,12 +392,12 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
 	on_widget_mapped is
 			-- `Current' has been mapped on to the screen.
 		do
-			if pointer_style /= Void then
+			if pointer_style /= Void and then previous_gdk_cursor = default_pointer then
 				internal_set_pointer_style (pointer_style)
 			end
 		end

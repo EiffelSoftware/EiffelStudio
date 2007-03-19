@@ -15,7 +15,7 @@ feature -- Access
 		do
 			Result := Debugger_manager_cell.item
 			if Result = Void then
-				Result := (create {DEBUGGER_MANAGER_FACTORY}).new_debugger_manager
+				Result := (create {DEBUGGER_MANAGER_FACTORY}).new_default_debugger_manager
 				set_debugger_manager (Result)
 			end
 		ensure

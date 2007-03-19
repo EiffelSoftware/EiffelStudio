@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 
 				--| Viewer
 			create viewerborder
-			viewerborder.set_padding_width (layout_constants.dialog_unit_to_pixels (1))
+			viewerborder.set_border_width (layout_constants.dialog_unit_to_pixels (1))
 			viewerborder.set_background_color ((create {EV_STOCK_COLORS}).black)
 
 			create viewer.make_with_name ("ObjectBrowseViewer", "obv")

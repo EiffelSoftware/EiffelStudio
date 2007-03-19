@@ -30,10 +30,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
---			create accelerator.make_with_key_combination (
---				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
---				True, False, True)
---			accelerator.actions.extend (agent execute)
 		end
 
 feature -- Formatting
@@ -169,7 +165,8 @@ feature -- Handler dialog by code
 			grid.enable_last_column_use_all_width
 			grid.column (1).resize_to_content
 			grid.set_minimum_height (grid.row_height * grid.row_count.min (10))
-			grid.pointer_double_press_item_actions.extend (agent double_clicked_on_grid_cell)
+			grid.pointer_double_press_item_actions.extend (agent on_grid_cell_clicked)
+--			grid.pointer_button_press_item_actions.extend (agent on_grid_cell_clicked)
 			vb.extend (grid)
 
 			create bt.make_with_text_and_action ("Close", agent handler_dialog.hide)
@@ -251,7 +248,7 @@ feature -- Handler dialog by code
 			grid.set_default_colors
 		end
 
-	double_clicked_on_grid_cell (ax, ay, abut: INTEGER; gi: EV_GRID_ITEM) is
+	on_grid_cell_clicked (ax, ay, abut: INTEGER; gi: EV_GRID_ITEM) is
 		local
 			glab: EV_GRID_CHECKABLE_LABEL_ITEM
 		do

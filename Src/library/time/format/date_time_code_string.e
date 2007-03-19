@@ -33,7 +33,7 @@ feature -- Creation
 			from
 				i := 1
 			until
-				pos1 >= s.count 
+				pos1 >= s.count
 			loop
 				pos2 := find_separator (s, pos1)
 				extract_substrings (s, pos1, pos2)
@@ -68,7 +68,7 @@ feature -- Attributes
 			-- Name of the code string.
 		local
 			i: INTEGER
-		do	
+		do
 			create Result.make (1)
 			from
 				i := 1
@@ -84,7 +84,7 @@ feature -- Attributes
 	base_century: INTEGER
 			-- Base century, used when interpreting 2-digit year
 			-- specifications.
-			
+
 feature -- Status report
 
 	is_date (s: STRING): BOOLEAN is
@@ -103,7 +103,7 @@ feature -- Status report
 		do
 			build_parser (s)
 			Result := parser.is_time
-		end	
+		end
 
 	is_date_time (s: STRING): BOOLEAN is
 			-- Does `s' contain a DATE_TIME?
@@ -125,7 +125,7 @@ feature -- Status report
 
 	separators_used: BOOLEAN
 			-- Does the code string contain any separators?
-			
+
 feature -- Status setting
 
 	set_base_century (c: INTEGER) is
@@ -176,20 +176,20 @@ feature -- Interface
 					Result := false
 				else
 					if substrg.count > 0 then
-						Result := substrg.count <= code.count_max and 
+						Result := substrg.count <= code.count_max and
 						substrg.count >= code.count_min
 						if code.is_numeric then
 							Result := Result and substrg.is_integer
-							if code.value_max /= -1 and 
+							if code.value_max /= -1 and
 								code.value_min /= -1 then
-								Result := Result and 
+								Result := Result and
 									substrg.to_integer <= code.value_max and
 									substrg.to_integer >= code.value_min
 							end
 						elseif code.is_meridiem (code.value) then
 							Result := Result and (substrg.as_upper.is_equal ("AM") or
 								substrg.as_upper.is_equal ("PM"))
-						elseif code.is_day_text (code.value) then 
+						elseif code.is_day_text (code.value) then
 							Result := Result and days.has (substrg)
 						elseif code.is_month_text (code.value) then
 							Result := Result and months.has (substrg)
@@ -200,14 +200,14 @@ feature -- Interface
 						code := value.item (i)
 						i := i + 1
 						if code /= Void then
-							Result := Result and (pos2 /= s.count) and 
+							Result := Result and (pos2 /= s.count) and
 								substrg2.is_equal (code.value)
 						end
 					end
 					pos1 := pos2 + 1
 				end
 			end
-		end	
+		end
 
 	create_string (date_time: DATE_TIME): STRING is
 			-- Create the output of `date_time' according to the code string.
@@ -223,7 +223,7 @@ feature -- Interface
 			create Result.make (1)
 			date := date_time.date
 			time := date_time.time
-			from 
+			from
 				i := 1
 			until
 				value.item (i) = Void
@@ -259,7 +259,7 @@ feature -- Interface
 							Result.append (l_tmp)
 						end
 					end
-				when 5 then 
+				when 5 then
 						-- Two digit year, we only keep the last two digits
 					l_tmp := date.year.out
 					if l_tmp.count > 2 then
@@ -294,7 +294,7 @@ feature -- Interface
 							int := 12
 						end
 					else
-						if int /= 12 then 
+						if int /= 12 then
 							int := int - 12
 						end
 					end
@@ -303,7 +303,7 @@ feature -- Interface
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 12 then 
+				when 12 then
 					Result.append (time.minute.out)
 				when 13 then
 					int := time.minute
@@ -320,10 +320,14 @@ feature -- Interface
 					end
 					Result.append (int.out)
 				when 16 then
-					double := time.fractional_second * 
+					double := time.fractional_second *
 						10 ^ (value.item (i).count_max)
 					int := double.truncated_to_integer
-					Result.append (int.out)
+					l_tmp := int.out
+					if l_tmp.count < value.item (i).count_max then
+						Result.append (create {STRING}.make_filled ('0', value.item (i).count_max - l_tmp.count))
+					end
+					Result.append (l_tmp)
 				when 23 then
 					int := time.hour
 					if int < 12 then
@@ -339,8 +343,8 @@ feature -- Interface
 		ensure
 			string_exists: Result /= Void
 			string_correspond: correspond (Result)
-		end	
-	
+		end
+
 	create_date_string (date: DATE): STRING is
 				-- Create the output of `date' according to the code string.
 		require
@@ -362,7 +366,7 @@ feature -- Interface
 		local
 			date_time: DATE_TIME
 		do
-			create date_time.make_fine (1, 1, 1, time.hour, time.minute, 
+			create date_time.make_fine (1, 1, 1, time.hour, time.minute,
 				time.fine_second)
 			Result := create_string (date_time)
 		ensure
@@ -382,7 +386,7 @@ feature -- Interface
 		do
 			right_day_text := True
 			build_parser (s)
-			create Result.make_fine (parser.year, parser.month, parser.day, 
+			create Result.make_fine (parser.year, parser.month, parser.day,
 					parser.hour, parser.minute, parser.fine_second)
 			if parser.day_text /= Void then
 				i := Result.date.day_of_the_week
@@ -505,9 +509,9 @@ feature -- Interface
 			i, type: INTEGER
 			has_day, has_month, has_year: BOOLEAN
 		do
-			from 
+			from
 				i := 1
-			until 
+			until
 				value.item (i) = Void
 			loop
 				code := value.item (i).twin
@@ -552,9 +556,9 @@ feature -- Interface
 			i, type: INTEGER
 			has_hour, has_minute, has_second: BOOLEAN
 		do
-			from 
+			from
 				i := 1
-			until 
+			until
 				value.item (i) = Void
 			loop
 				code := value.item (i).twin
@@ -590,13 +594,13 @@ feature -- Interface
 		end
 
 feature {NONE} -- Implementation
-		
+
 	parser: DATE_TIME_PARSER
 			-- Instance of date-time string parser
 
 	days: ARRAY [STRING]
 
-	months: ARRAY [STRING]	
+	months: ARRAY [STRING]
 
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?

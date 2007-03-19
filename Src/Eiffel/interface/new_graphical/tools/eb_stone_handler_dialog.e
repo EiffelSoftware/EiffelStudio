@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool_name: like tool_name; a_tools: LIST [EB_TOOL]; a_stone_table: like stone_table) is
+	make (a_tool_name: like tool_name; a_tools: like tools; a_stone_table: like stone_table) is
 			-- Initialize `tool_name' with `a_tool_name'.
 		require
 			a_tool_name_attached: a_tool_name /= Void
@@ -125,7 +125,7 @@ feature -- Access
 	tool_name: STRING_32
 			-- Name of the tool for which stone handers are being setup in Current dialog
 
-	tools: LIST [EB_TOOL]
+	tools: LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]]
 			-- Available tools
 
 feature -- Status report
@@ -446,8 +446,8 @@ feature{NONE} -- Implementation/Data
 			until
 				l_tools.after
 			loop
-				l_tool_table.put (l_tools.item.title, l_tools.item.title_for_pre)
-				l_tool_name_table.put (l_tools.item.title_for_pre, l_tools.item.title)
+				l_tool_table.put (l_tools.item.a_tool_name, l_tools.item.a_tool_id)
+				l_tool_name_table.put (l_tools.item.a_tool_id, l_tools.item.a_tool_name)
 				l_tools.forth
 			end
 		end
@@ -518,12 +518,16 @@ feature{NONE} -- Implementation/Sorting
 			l_sorter: DS_QUICK_SORTER [TUPLE [STRING, STRING]]
 			l_value: like value
 			l_items: like items
+			l_stone_table: like stone_table
+			l_tool_table: like tool_table
 		do
 			if not has_binded then
 				l_value := value
 				if l_value = Void then
 					create l_value.make (1)
 				end
+				l_stone_table := stone_table
+				l_tool_table := tool_table
 				l_items := items
 				l_items.wipe_out
 				from
@@ -531,7 +535,12 @@ feature{NONE} -- Implementation/Sorting
 				until
 					l_value.after
 				loop
-					l_items.force_last ([l_value.item_for_iteration, l_value.key_for_iteration])
+					if
+						l_stone_table.has (l_value.item_for_iteration) and then
+						l_tool_table.has (l_value.key_for_iteration)
+					then
+						l_items.force_last ([l_value.item_for_iteration, l_value.key_for_iteration])
+					end
 					l_value.forth
 				end
 				set_has_binded (True)

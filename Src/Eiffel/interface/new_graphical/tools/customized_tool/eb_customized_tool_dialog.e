@@ -203,7 +203,7 @@ feature{NONE} -- Implementation
 			l_pixmap.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_pixmap_location, Void))
 			l_grid.add_property (l_pixmap)
 
-			create l_dialog.make (a_descriptor.name.as_string_32, window_manager.last_focused_development_window.tools.all_tools, stone_table)
+			create l_dialog.make (a_descriptor.name.as_string_32, available_tools, stone_table)
 			create l_handler.make_with_dialog (interface_names.l_stone_handler, l_dialog)
 			l_handler.set_description (interface_names.l_stone_handler_help)
 			l_handler.set_display_agent (agent handler_display_function)
@@ -243,24 +243,34 @@ feature{NONE} -- Implementation
 			a_handler_table_attached: a_handler_table /= Void
 		local
 			l_stone_name: STRING_GENERAL
-			l_tool_name: STRING_GENERAL
-			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
-			l_tool: EB_TOOL
+			l_tools: like available_tools
+			l_tool_table: HASH_TABLE [STRING_GENERAL, STRING]
+			l_tool: STRING_GENERAL
 		do
+			l_tools := available_tools
+			create l_tool_table.make (20)
+			from
+				l_tools.start
+			until
+				l_tools.after
+			loop
+				l_tool_table.put (l_tools.item.a_tool_name, l_tools.item.a_tool_id)
+				l_tools.forth
+			end
+
 			create Result.make (64)
 			from
-				l_tools := window_manager.last_focused_development_window.tools
 				a_handler_table.start
 			until
 				a_handler_table.after
 			loop
 				l_stone_name := stone_table.item (a_handler_table.item_for_iteration)
-				l_tool := l_tools.tool_by_id (a_handler_table.key_for_iteration)
+				l_tool := l_tool_table.item (a_handler_table.key_for_iteration)
 				if l_stone_name /= Void and then l_tool /= Void then
 					if not Result.is_empty then
 						Result.append (", ")
 					end
-					Result.append (l_tool.title)
+					Result.append (l_tool)
 					Result.append ("(")
 					Result.append (l_stone_name)
 					Result.append (")")
@@ -289,5 +299,55 @@ feature{NONE} -- Implementation
 
 	stone_table_internal: like stone_table
 			-- Implementation of `stone_table'
+
+	available_tools: LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]] is
+			-- List of available tools
+			-- Those that have been removed in Current dialog are not taken into consideration.
+		local
+			l_item_table: HASH_TABLE [like item_anchor, STRING]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [like item_anchor]
+			l_tool: EB_TOOL
+			l_tools: LIST [EB_TOOL]
+		do
+			create {LINKED_LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]]} Result.make
+			create l_item_table.make (items.count)
+			l_cursor := items.new_cursor
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_item_table.put (l_cursor.item, l_cursor.item.id)
+				l_cursor.forth
+			end
+
+			l_tools := window_manager.last_focused_development_window.tools.all_tools.twin
+			from
+				l_tools.start
+			until
+				l_tools.after
+			loop
+				l_tool := l_tools.item
+				if l_tool.is_customized_tool  then
+					if l_item_table.has (l_tool.title_for_pre) then
+						Result.extend ([l_tool.title, l_tool.title_for_pre])
+						l_item_table.remove (l_tool.title_for_pre)
+					end
+				else
+					Result.extend ([l_tool.title, l_tool.title_for_pre])
+				end
+				l_tools.forth
+			end
+			from
+				l_item_table.start
+			until
+				l_item_table.after
+			loop
+				Result.extend ([l_item_table.item_for_iteration.name, l_item_table.key_for_iteration])
+				l_item_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
 end

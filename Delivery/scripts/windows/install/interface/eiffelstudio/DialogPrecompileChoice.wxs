@@ -5,9 +5,9 @@
 		  <UI Id="UI.dialog_choose_precompile">
         <RadioButtonGroup Property="PRECOMPILE">
           <RadioButton Value="none" X="5" Y="5" Width="154" Height="14" Text="D&amp;o not precompile any libraries" />
-          <RadioButton Value="base" X="5" Y="19" Width="154" Height="14" Text="&amp;Base" />
-          <RadioButton Value="wel" X="5" Y="33" Width="154" Height="14" Text="Base and &amp;WEL" />
-          <RadioButton Value="vision2" X="5" Y="47" Width="154" Height="14" Text="Base, WEL and Eiffel&amp;Vision2" />
+          <RadioButton Value="base" X="5" Y="19" Width="154" Height="14" Text="&amp;EiffelBase" />
+          <RadioButton Value="wel" X="5" Y="33" Width="154" Height="14" Text="EiffelBase and &amp;WEL" />
+          <RadioButton Value="vision2" X="5" Y="47" Width="154" Height="14" Text="EiffelBase, WEL and Eiffel&amp;Vision2" />
         </RadioButtonGroup>
   			
 			  <Dialog Id="DialogPrecompileChoice" Width="375" Height="220" Title="[ProductName]">

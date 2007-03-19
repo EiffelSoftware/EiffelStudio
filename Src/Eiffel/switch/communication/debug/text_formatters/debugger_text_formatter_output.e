@@ -84,23 +84,37 @@ feature -- Application status
 			-- Append debugger information
 		local
 			ctlr: DEBUGGER_CONTROLLER
+			app: APPLICATION_EXECUTION
+			s: STRING
 		do
 			ctlr := dbg.controller
+			app := dbg.application
+
 				--| Display information
 			tf.add_string ("Launching system :")
 			tf.add_new_line
 			tf.add_comment ("  - directory = ")
-			if ctlr.param_working_directory /= Void then
-				tf.add_quoted_text (ctlr.param_working_directory)
+			if app /= Void then
+				s := app.param_execution_directory
+			else
+				s := ctlr.param_working_directory
+			end
+			if s /= Void then
+				tf.add_quoted_text (s)
 			else
 				tf.add_string ("<Empty>")
 			end
 			tf.add_new_line
 			tf.add_comment_text ("  - arguments = ")
-			if ctlr.param_arguments = Void or else ctlr.param_arguments.is_empty then
+			if app /= Void then
+				s := app.param_arguments
+			else
+				s := ctlr.param_arguments
+			end
+			if s = Void or else s.is_empty then
 				tf.add_string ("<Empty>")
 			else
-				tf.add_quoted_text (ctlr.param_arguments)
+				tf.add_quoted_text (s)
 			end
 --| For now useless since the output panel display those info just a few nanoseconds ...
 --			if ctlr.environment_vars /= Void and then not ctlr.environment_vars.is_empty then

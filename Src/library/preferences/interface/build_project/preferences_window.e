@@ -19,10 +19,11 @@ inherit
 		end
 
 	PREFERENCE_VIEW
+		rename
+			make as view_make,
+			make_with_hidden as view_make_with_hidden
 		undefine
 			copy, default_create
-		redefine
-			make
 		end
 
 	PREFERENCE_CONSTANTS
@@ -35,11 +36,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: like preferences; a_parent_window: like parent_window) is
-			-- New view.
+	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW) is
+			-- New window.  Redefined to register EiffelStudio specific preference widgets for
+			-- special preference types.
+		do
+			make_with_hidden (a_preferences, a_obs_parent_window, False)
+		end
+
+	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN) is
+			-- New window.  Redefined to register EiffelStudio specific preference widgets for
+			-- special preference types.
 		do
 			default_create
-			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
+			parent_window := Current
+			view_make_with_hidden (a_preferences, a_show_hidden_flag)
+
 			check
 				preferenese_root_is_valid_as_string_8: preferenese_root.is_valid_as_string_8
 			end
@@ -793,6 +804,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Private attributes
+
+	parent_window: EV_WINDOW
+			-- Parent window.
 
 	show_full_preference_name: BOOLEAN
 			-- Show the full name of the preference in the list?

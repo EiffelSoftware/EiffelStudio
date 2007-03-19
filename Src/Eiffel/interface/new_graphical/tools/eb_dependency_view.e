@@ -82,7 +82,7 @@ feature -- Access
 	no_target_message: STRING_GENERAL is
 			-- Message to be displayed in `output_line' when no stone is set
 		do
-			Result := Interface_names.l_Not_in_system_no_info
+			Result := interface_names.l_no_info_of_element
 		end
 
 feature -- Status report

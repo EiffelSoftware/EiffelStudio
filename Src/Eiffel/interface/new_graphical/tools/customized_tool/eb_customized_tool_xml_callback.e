@@ -100,7 +100,7 @@ feature{NONE} -- Actions
 			l_stone_name := last_tested_attribute.twin
 			retrieve_attribute_value (at_default_tool)
 			l_tool_id := last_tested_attribute.twin
-			handler_receiver.item.call ([l_stone_name, l_tool_id])
+			handler_receiver.item.call ([l_tool_id, l_stone_name])
 		end
 
 feature{NONE}  -- Implementation

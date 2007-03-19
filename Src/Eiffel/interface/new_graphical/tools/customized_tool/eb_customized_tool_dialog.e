@@ -72,6 +72,9 @@ feature{NONE} -- Actions
 			set_has_changed (True)
 			a_descriptor.set_name (a_new_data)
 			refresh_grid_for_descriptor (a_descriptor)
+			if handler_dialog /= Void then
+				handler_dialog.set_tool_name (a_new_data)
+			end
 		end
 
 	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE]) is
@@ -87,6 +90,24 @@ feature{NONE} -- Actions
 			if a_refresher /= Void then
 				a_refresher.call (Void)
 			end
+		end
+
+	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: like item_anchor) is
+			-- Action to be performed when handlers of `a_descriptor' changes.
+		require
+			a_handlers_attached: a_handlers /= Void
+			a_descriptor_attached: a_descriptor /= Void
+		do
+			a_descriptor.handlers.wipe_out
+			from
+				a_handlers.start
+			until
+				a_handlers.after
+			loop
+				a_descriptor.extend_handler (a_handlers.item_for_iteration, a_handlers.key_for_iteration)
+				a_handlers.forth
+			end
+			set_has_changed (True)
 		end
 
 feature{NONE} -- Implementation/Data
@@ -105,6 +126,9 @@ feature{NONE} -- Implementation/Data
 
 	name_property: STRING_PROPERTY
 			-- Name property
+
+	handler_dialog: EB_STONE_HANDLER_DIALOG
+			-- Dialog to setup stone handler
 
 feature{NONE} -- Implementation
 
@@ -159,6 +183,8 @@ feature{NONE} -- Implementation
 			l_grid: like property_grid
 			l_name: like name_property
 			l_pixmap: FILE_PROPERTY
+			l_handler: DIALOG_PROPERTY [HASH_TABLE [STRING, STRING]]
+			l_dialog: EB_STONE_HANDLER_DIALOG
 		do
 			l_grid := property_grid
 			l_grid.clear_description
@@ -176,6 +202,17 @@ feature{NONE} -- Implementation
 			l_pixmap.set_value (string_32_from_string_8 (a_descriptor.pixmap_location))
 			l_pixmap.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_pixmap_location, Void))
 			l_grid.add_property (l_pixmap)
+
+			create l_dialog.make (a_descriptor.name.as_string_32, window_manager.last_focused_development_window.tools.all_tools, stone_table)
+			create l_handler.make_with_dialog (interface_names.l_stone_handler, l_dialog)
+			l_handler.set_description (interface_names.l_stone_handler_help)
+			l_handler.set_display_agent (agent handler_display_function)
+			l_handler.set_value (a_descriptor.handlers)
+			l_dialog.data_change_actions.extend (agent l_handler.set_value (?))
+			l_handler.change_value_actions.extend (agent on_handlers_change (?, a_descriptor))
+			l_handler.disable_text_editing
+			handler_dialog := l_dialog
+			l_grid.add_property (l_handler)
 
 			l_grid.current_section.expand
 			l_name.enable_select
@@ -199,5 +236,58 @@ feature{NONE} -- Implementation
 			item_grid.row_select_actions.resume
 			item_grid.row_deselect_actions.resume
 		end
+
+	handler_display_function (a_handler_table: HASH_TABLE [STRING, STRING]): STRING_32 is
+			-- String representation of handlers given by `a_handler_table'
+		require
+			a_handler_table_attached: a_handler_table /= Void
+		local
+			l_stone_name: STRING_GENERAL
+			l_tool_name: STRING_GENERAL
+			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
+			l_tool: EB_TOOL
+		do
+			create Result.make (64)
+			from
+				l_tools := window_manager.last_focused_development_window.tools
+				a_handler_table.start
+			until
+				a_handler_table.after
+			loop
+				l_stone_name := stone_table.item (a_handler_table.item_for_iteration)
+				l_tool := l_tools.tool_by_id (a_handler_table.key_for_iteration)
+				if l_stone_name /= Void and then l_tool /= Void then
+					if not Result.is_empty then
+						Result.append (", ")
+					end
+					Result.append (l_tool.title)
+					Result.append ("(")
+					Result.append (l_stone_name)
+					Result.append (")")
+				end
+				a_handler_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	stone_table: HASH_TABLE [STRING_32, STRING] is
+			-- Stone table [Stone display name, stone name]
+		do
+			if stone_table_internal = Void then
+				create stone_table_internal.make (5)
+				stone_table_internal.put (interface_names.l_feature_stone_name, n_feature_stone)
+				stone_table_internal.put (interface_names.l_compiled_class_stone_name, n_compiled_class_stone)
+				stone_table_internal.put (interface_names.l_uncompiled_class_stone_name, n_uncompiled_class_stone)
+				stone_table_internal.put (interface_names.l_group_stone_name, n_group_stone)
+				stone_table_internal.put (interface_names.l_target_stone_name, n_target_stone)
+			end
+			Result := stone_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	stone_table_internal: like stone_table
+			-- Implementation of `stone_table'
 
 end

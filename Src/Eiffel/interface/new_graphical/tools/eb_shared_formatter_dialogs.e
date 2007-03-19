@@ -14,14 +14,28 @@ inherit
 
 feature -- Access
 
+	formatter_dialog_internal: like formatter_dialog
+
 	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG is
 			-- Dialog to setup customized formatters
-		once
-			create Result.make (agent customized_formatter_manager.formatter_descriptors)
-			Result.ok_actions.extend (agent on_ok_from_formatter_dialog)
+		do
+			if formatter_dialog_internal = Void then
+				create formatter_dialog_internal.make (agent customized_formatter_manager.formatter_descriptors)
+				formatter_dialog_internal.ok_actions.extend (agent on_ok_from_formatter_dialog)
+			end
+			Result := formatter_dialog_internal
 		ensure
 			result_attached: Result /= Void
 		end
+
+--	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG is
+--			-- Dialog to setup customized formatters
+--		once
+--			create Result.make (agent customized_formatter_manager.formatter_descriptors)
+--			Result.ok_actions.extend (agent on_ok_from_formatter_dialog)
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
 	tools_dialog: EB_CUSTOMIZED_TOOL_DIALOG is
 			-- Dialog to setup customized tools

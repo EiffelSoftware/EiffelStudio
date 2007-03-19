@@ -14,7 +14,8 @@ inherit
 			build_docking_content,
 			mini_toolbar,
 			force_last_stone,
-			show
+			show,
+			show_with_setting
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -277,6 +278,14 @@ feature -- Setting
 						end
 					end
 			)
+		end
+
+	show_with_setting is
+			-- Show current tool (if possible), and do some settings
+		do
+			Precursor
+			pop_default_formatter
+			set_focus
 		end
 
 	force_display is

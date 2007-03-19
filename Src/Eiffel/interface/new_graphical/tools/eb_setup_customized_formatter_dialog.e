@@ -414,16 +414,13 @@ feature{NONE} -- Implementation
 			a_tool_value_attached: a_tool_value /= Void
 		local
 			l_tool_table: like tool_table
-			i: INTEGER
-			l_cnt: INTEGER
 			l_tool_name: STRING_GENERAL
 			l_tool_info: TUPLE [display_name: STRING_GENERAL; pixmap: EV_PIXMAP]
+			l_has_text: BOOLEAN
 		do
 			create Result.make (64)
 			l_tool_table := tool_table
 			from
-				i := 1
-				l_cnt := a_tool_value.count
 				a_tool_value.start
 			until
 				a_tool_value.after
@@ -432,13 +429,15 @@ feature{NONE} -- Implementation
 				if l_tool_info /= Void then
 					l_tool_name := l_tool_info.display_name
 					if l_tool_name /= Void then
-						Result.append (l_tool_name)
-						if i < l_cnt then
+						if l_has_text then
 							Result.append (", ")
+						end
+						Result.append (l_tool_name)
+						if not l_has_text then
+							l_has_text := True
 						end
 					end
 				end
-				i := i + 1
 				a_tool_value.forth
 			end
 		ensure

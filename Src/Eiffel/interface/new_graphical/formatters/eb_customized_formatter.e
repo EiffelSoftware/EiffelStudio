@@ -373,7 +373,9 @@ feature -- Setting
 
 				if l_domain_item /= Void then
 					l_metric := metric_manager.metric_with_name (metric)
-					l_metric.enable_fill_domain
+					if l_metric.is_result_domain_available then
+						l_metric.enable_fill_domain
+					end
 					if is_filter_enabled then
 						l_metric.enable_filter_result
 					else

@@ -275,6 +275,10 @@ feature {EV_ANY_I} -- Implementation
 							captured_widget /= Void
 						then
 							l_pnd_imp ?= captured_widget.implementation
+						elseif
+							pick_and_drop_source /= Void
+						then
+							l_pnd_imp := pick_and_drop_source
 						else
 							l_pnd_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
 						end
@@ -612,6 +616,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Pick and Drop
+
+	rubber_band_is_drawn: BOOLEAN
+		-- Is the PnD rubber band drawn on screen?
+
+	draw_rubber_band is
+			-- Draw a segment between initial pick point and `destination'.
+		do
+			if rubber_band_is_drawn then
+					-- Undraw previous rubber band if any
+				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+			end
+			set_old_pointer_x_y_origin (pick_and_drop_source.pointer_x, pick_and_drop_source.pointer_y)
+			pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+			rubber_band_is_drawn := True
+		end
+
+	erase_rubber_band is
+			-- Erase previously drawn rubber band.
+		do
+			if rubber_band_is_drawn then
+				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+				rubber_band_is_drawn := False
+			end
+		end
+
+	pnd_screen: EV_SCREEN is
+			-- Screen object used for drawing PND transport line
+		once
+			create Result
+			Result.enable_dashed_line_style
+			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.set_invert_mode
+		end
+
 feature -- Access
 
 	ctrl_pressed: BOOLEAN is
@@ -722,6 +761,10 @@ feature -- Basic operation
 
 			if captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
+			elseif
+				pick_and_drop_source /= Void
+			then
+				l_pnd_item := pick_and_drop_source
 			else
 				l_gdk_window := l_stored_display_data.window
 				if l_gdk_window /= default_pointer then

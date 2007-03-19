@@ -610,7 +610,17 @@ feature -- Accelerator, focus label and menu name
 	l_select_tool: STRING_GENERAL is do Result := locale.translate ("Please select a tool.") end
 	f_add_tool: STRING_GENERAL is do Result := locale.translate ("Add customized tool") end
 	f_remove_tool: STRING_GENERAL is do Result := locale.translate ("Remove selected customized tool") end
-
+	l_no_info_of_element: STRING_GENERAL is do Result := locale.translate ("Please select a programming element (target/group/class/feature...).") end
+	l_setup_stone_handler (l_tool_name: STRING_GENERAL): STRING_GENERAL
+		do
+			Result := locale.format_string (locale.translate ("Setup stone handlers for tool %"$1%""), [l_tool_name])
+		end
+	l_stone_name: STRING_GENERAL is do Result := locale.translate ("Stone name") end
+	l_feature_stone_name: STRING_GENERAL is do Result := locale.translate ("Feature stone") end
+	l_uncompiled_class_stone_name: STRING_GENERAL is do Result := locale.translate ("Uncompiled class stone") end
+	l_compiled_class_stone_name: STRING_GENERAL is do Result := locale.translate ("Compiled class stone") end
+	l_group_stone_name: STRING_GENERAL is do Result := locale.translate ("Group stone") end
+	l_target_stone_name: STRING_GENERAL is do Result := locale.translate ("Target stone") end
 
 feature -- Formatter displayer names
 	l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
@@ -648,7 +658,10 @@ feature -- Formatter displayer names
 		end
 
 	l_formatter_invalid_metric: STRING_GENERAL do Result := locale.translate ("Specified metric is not defined or invalid, this will cause current formatter not usable") end
-
+	l_add_stone_handler: STRING_GENERAL is do Result := locale.translate ("Add new stone handler") end
+	l_remove_stone_handler: STRING_GENERAL is do Result := locale.translate ("Remove selected stone handler") end
+	l_stone_handler: STRING_GENERAL is do Result := locale.translate ("Stone handler") end
+	l_stone_handler_help: STRING_GENERAL is do Result := locale.translate ("Specify default tools for specific stones") end
 
 feature -- Toggles
 

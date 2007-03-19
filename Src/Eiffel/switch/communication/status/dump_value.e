@@ -936,7 +936,7 @@ feature -- Access
 			--| True
 			--| 97 'a'
 			--| 123
-			--| "value _string"
+			--| "value_string"
 			--| <0x12345678>
 			--| Void
 		local

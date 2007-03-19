@@ -90,10 +90,10 @@ feature -- Access
 			inspect sk_type
 			when sk_uint8   then
 				uint8val ?= value
-				Result := d_fact.new_natural_32_value (uint8val.item.to_natural_32, Dynamic_class)
+				Result := d_fact.new_natural_8_value (uint8val.item, Dynamic_class)
 			when sk_uint16  then
 				uint16val ?= value
-				Result := d_fact.new_natural_32_value (uint16val.item.to_natural_32, Dynamic_class)
+				Result := d_fact.new_natural_16_value (uint16val.item, Dynamic_class)
 			when sk_uint32  then
 				uint32val ?= value
 				Result := d_fact.new_natural_32_value (uint32val.item, Dynamic_class)
@@ -103,10 +103,10 @@ feature -- Access
 
 			when sk_int8    then
 				int8val ?= value
-				Result := d_fact.new_integer_32_value (int8val.item.to_integer, Dynamic_class)
+				Result := d_fact.new_integer_8_value (int8val.item, Dynamic_class)
 			when sk_int16   then
 				int16val ?= value
-				Result := d_fact.new_integer_32_value (int16val.item.to_integer, Dynamic_class)
+				Result := d_fact.new_integer_16_value (int16val.item, Dynamic_class)
 			when sk_int32   then
 				int32val ?= value
 				Result := d_fact.new_integer_32_value (int32val.item, Dynamic_class)

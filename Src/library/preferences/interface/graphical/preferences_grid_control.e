@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			A EV_TITLED_WINDOW containing a tree view of application preferences.  Provides a
+			A widget containing a tree/grid view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
 			to restore preferences to their defaults.
 		]"
@@ -10,26 +10,20 @@ indexing
 	revision: "$Revision$"
 
 class
-	PREFERENCES_GRID
+	PREFERENCES_GRID_CONTROL
 
 inherit
-	PREFERENCES_GRID_IMP
-		redefine
-			destroy
-		end
 
 	PREFERENCE_VIEW
-		undefine
-			copy, default_create
 		redefine
 			make
 		end
 
+	PREFERENCES_GRID_CONSTANTS
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
-		undefine
-			copy, default_create
 		end
 
 create
@@ -37,16 +31,102 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: like preferences; a_parent_window: like parent_window) is
+	make (a_preferences: like preferences) is
 			-- New view.
 		do
-			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
+			Precursor {PREFERENCE_VIEW} (a_preferences)
+			build_interface
+		end
 
-			default_create
+	build_interface is
+			-- Called by `initialize'.
+			-- Any custom user initialization that
+			-- could not be performed in `initialize',
+			-- (due to regeneration of implementation class)
+			-- can be added here.
+		local
+			box: EV_VERTICAL_BOX
+			borderbox: EV_VERTICAL_BOX
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			ffilter, fgrid, fdesc: EV_FRAME
+			lab: EV_LABEL
+			tb: EV_TOOL_BAR
+		do
+			create box
+			widget := box
+			box.set_border_width (small_border_size)
+			box.set_padding_width (small_padding_size)
+
+			create ffilter
+			create hb
+			hb.set_border_width (small_border_size)
+			hb.set_padding_width (small_padding_size)
+			create filter_box
+			create lab.make_with_text (l_filter)
+			create filter_text_box
+			create tb
+			create view_toggle_button.make_with_text (l_flat_view)
+			filter_box.extend (lab)
+			filter_box.disable_item_expand (lab)
+			filter_box.extend (filter_text_box)
+			hb.extend (filter_box)
+			tb.extend (view_toggle_button)
+			hb.extend (tb)
+			hb.disable_item_expand (tb)
+			ffilter.extend (hb)
+			box.extend (ffilter)
+			box.disable_item_expand (ffilter)
+
+			create split_area
+
+			create fgrid
+			create vb
+			vb.set_border_width (small_border_size)
+			create grid_container
+			grid_container.set_border_width (1)
+			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			vb.extend (grid_container)
+			create status_box
+			create status_label
+			status_box.extend (status_label)
+			status_label.align_text_right
+			vb.extend (status_box)
+			vb.disable_item_expand (status_box)
+			fgrid.extend (vb)
+
+			create fdesc.make_with_text (l_description)
+			create vb
+			vb.set_padding_width (small_padding_size)
+			vb.set_border_width (small_border_size)
+			create description_text
+			description_text.set_minimum_height (40)
+			vb.extend (description_text)
+			fdesc.extend (vb)
+
+			split_area.extend (fgrid)
+			split_area.extend (fdesc)
+			split_area.enable_item_expand (fgrid)
+			split_area.disable_item_expand (fdesc)
+			box.extend (split_area)
+
+			create hb
+			vb.set_padding_width (small_padding_size)
+			vb.set_border_width (small_border_size)
+			create restore_button.make_with_text (l_restore_defaults)
+			create apply_or_close_button.make_with_text (l_apply)
+			apply_or_close_button.set_minimum_width (default_button_width)
+			hb.extend (restore_button)
+			hb.extend (create {EV_CELL})
+			hb.extend (apply_or_close_button)
+			hb.disable_item_expand (restore_button)
+			hb.disable_item_expand (apply_or_close_button)
+			box.extend (hb)
+			box.disable_item_expand (hb)
+
+				--| Dynamic behavior
+
 			flat_sorting_info := Name_sorting_mode
-
-			set_size (640, 460)
-			set_title (preferences_title)
 			create grid
 			default_row_height := grid.row_height
 			grid.enable_single_row_selection
@@ -67,61 +147,70 @@ feature {NONE} -- Initialization
 			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
 			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			close_button.select_actions.extend (agent on_close)
-			close_request_actions.extend (agent on_close)
 			restore_button.select_actions.extend (agent on_restore)
+			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
-			resize_actions.force_extend (agent on_window_resize)
+			box.resize_actions.force_extend (agent on_resize)
 			display_update_agent := agent on_preference_changed_externally
 			view_toggle_button.select_actions.extend (agent toggle_view)
-		end
 
-
-	user_initialization is
-			-- Called by `initialize'.
-			-- Any custom user initialization that
-			-- could not be performed in `initialize',
-			-- (due to regeneration of implementation class)
-			-- can be added here.
-		local
-			acc: EV_ACCELERATOR
-		do
-				--| Toggle hidden preferences display on/off
-			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_h), True, False, True)
-			acc.actions.extend (agent toggle_hiddens)
-			accelerators.extend (acc)
-
-				--| Ctrl+Tab -> toggle flat/structured
-			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab), True, False, False)
-			acc.actions.extend (agent toggle_view)
-			accelerators.extend (acc)
-
-				--| Make sure to have the grid focused when dialog is shown
-				--| this way, we can use only keyboard.
-			show_actions.extend (agent on_show)
-
-				--| Icons
+				--| Filter
 			build_filter_icons
-
-				--|
 			filter_text_box.change_actions.extend (agent request_update_matches)
 
-				--| When escape is press, close the dialog
-			set_default_cancel_button (close_button)
+			init_shortcuts
 		end
 
+	init_shortcuts is
+		do
+			filter_text_box.key_press_actions.extend (agent accelerator_on_key_pressed)
+			description_text.key_press_actions.extend (agent accelerator_on_key_pressed)
+		end
+
+feature -- Access
+
+	widget: EV_WIDGET
+			-- Main widget
+
+	close_button_action: PROCEDURE [ANY, TUPLE]
+			-- Action called when "Close" button is pressed.
+
+	parent_window: EV_WINDOW
+			-- Parent window.  Used to display this view relative to.	
+
+	restore_button, apply_or_close_button: EV_BUTTON
+	description_text: EV_TEXT
+	view_toggle_button: EV_TOOL_BAR_BUTTON
+	split_area: EV_VERTICAL_SPLIT_AREA
+	filter_box,
+	status_box: EV_HORIZONTAL_BOX
+	grid_container: EV_VERTICAL_BOX
+	status_label: EV_LABEL
+	filter_text_box: EV_TEXT_FIELD
+
 feature -- Status Setting
+
+	set_parent_window (p: like parent_window) is
+			-- Set `parent_window'
+		do
+			parent_window := p
+		end
+
+	set_close_button_action (p: like close_button_action) is
+			-- Set close button action to `p'.
+		do
+			close_button_action := p
+			if close_button_action /= Void then
+				apply_or_close_button.set_text (l_close)
+			else
+				apply_or_close_button.set_text (l_apply)
+			end
+		end
 
 	set_show_full_preference_name (a_flag: BOOLEAN) is
 			-- Set 'show_full_preference_name'
 		do
 			show_full_preference_name := a_flag
-		end
-
-	set_show_full_resource_name	(a_flag: BOOLEAN) is
-		obsolete "use set_show_full_preference_name instead of set_show_full_resource_name ."
-		do
-			set_show_full_preference_name (a_flag)
 		end
 
 	set_root_icon (a_icon: EV_PIXMAP) is
@@ -156,23 +245,27 @@ feature -- Status Setting
 			icon_down := a_icon
 		end
 
-feature {NONE} -- Events
+feature -- Events
 
 	on_show is
 		do
 			if grid.is_displayed then
-				on_window_resize
+				on_resize
 				grid.set_focus
 			end
 		end
 
-	on_close is
+	on_apply_or_close is
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
 			preferences.save_preferences
-			hide
+			if close_button_action /= Void then
+				close_button_action.call (Void)
+			end
 		end
+
+feature {NONE} -- Events		
 
 	on_preference_changed (a_pref: PREFERENCE) is
 			-- Set the preference value to the newly entered value in the edit item.
@@ -274,7 +367,7 @@ feature {NONE} -- Events
 		do
 			create l_confirmation_dialog
 			l_confirmation_dialog.set_text (restore_preference_string)
-			l_confirmation_dialog.show_modal_to_window (parent_window)
+			show_dialog_modal (l_confirmation_dialog)
 			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				preferences.restore_defaults
 			end
@@ -334,6 +427,30 @@ feature {NONE} -- Events
 			end
 		end
 
+	accelerator_on_key_pressed (k: EV_KEY) is
+		do
+			inspect
+				k.code
+			when {EV_KEY_CONSTANTS}.key_h then
+				if
+					ev_application.ctrl_pressed
+					and not ev_application.alt_pressed
+					and ev_application.shift_pressed
+				then
+					toggle_hiddens
+				end
+			when {EV_KEY_CONSTANTS}.key_tab then
+				if
+					ev_application.ctrl_pressed
+					and not ev_application.alt_pressed
+					and not ev_application.shift_pressed
+				then
+					toggle_view
+				end
+			else
+			end
+		end
+
 	on_grid_key_pressed (k: EV_KEY) is
 			-- An key was pressed
 		local
@@ -376,6 +493,7 @@ feature {NONE} -- Events
 						end
 					end
 				else
+					accelerator_on_key_pressed (k)
 				end
 			end
 		end
@@ -392,7 +510,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_window_resize is
+	on_resize is
 			-- Dialog was resized
 		local
 			l_width: INTEGER
@@ -903,7 +1021,7 @@ feature {NONE} -- Implementation
 					c := c + 1
 				end
 
-				on_window_resize
+				on_resize
 				l_preference ?= grid.row (col_name_index).data
 				if l_preference /= Void then
 					show_preference_description (l_preference)
@@ -993,12 +1111,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	destroy is
-			-- Destroy.
-		do
-			Precursor
-		end
 
 	pixmap_file_contents (pn: STRING): EV_PIXMAP is
 			-- Load a pixmap in file named `pn'.
@@ -1121,7 +1233,7 @@ feature {NONE} -- Implementation
 		do
 			create l_error_dialog
 			l_error_dialog.set_text (shortcut_modification_denied)
-			l_error_dialog.show_modal_to_window (parent_window)
+			show_dialog_modal (l_error_dialog)
 		end
 
 	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
@@ -1209,6 +1321,7 @@ feature {NONE} -- Filtering
 
 			l_preference: PREFERENCE
 			l_prefs: LIST [PREFERENCE]
+			l_filter_engine: LX_DFA_WILDCARD
 		do
 			status_label.set_text (l_updating_the_view)
 			status_label.refresh_now
@@ -1222,14 +1335,29 @@ feature {NONE} -- Filtering
 				else
 					create {ARRAYED_LIST [PREFERENCE]} matches.make (l_prefs.count)
 					from
-						l_match_text.to_lower
+						l_match_text := l_match_text.as_string_8
+						if l_match_text.item (l_match_text.count) /= '*' then
+							l_match_text.append_character ('*')
+						end
+						create l_filter_engine.compile_case_insensitive (l_match_text)
+						if not l_filter_engine.is_compiled then
+							l_filter_engine := Void
+						end
 						l_prefs.start
 					until
 						l_prefs.after
 					loop
 						l_preference := l_prefs.item
 						s32 := build_preference_name_to_display (l_preference)
-						if s32 = Void or else s32.as_lower.has_substring (l_match_text) then
+						if
+							s32 /= Void
+							and then not s32.is_empty
+							and l_filter_engine /= Void
+						then
+							if l_filter_engine.recognizes (s32.as_string_8) then
+								matches.extend (l_preference)
+							end
+						else
 							matches.extend (l_preference)
 						end
 						l_prefs.forth
@@ -1421,8 +1549,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class PREFERENCES_GRID
+end -- class PREFERENCES_GRID_CONTROL
 

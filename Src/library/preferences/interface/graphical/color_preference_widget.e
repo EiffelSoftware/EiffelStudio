@@ -58,7 +58,7 @@ feature {PREFERENCE_VIEW} -- Commands
 			create color_tool
 			color_tool.set_color (preference.value)
 			color_tool.ok_actions.extend (agent update_changes)
-			color_tool.show_modal_to_window (caller.parent_window)
+			caller.show_dialog_modal (color_tool)
 		end
 
 feature {NONE} -- Commands

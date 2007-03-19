@@ -13,27 +13,24 @@ deferred class
 
 feature -- Initialization
 
-	make (a_preferences: like preferences; a_parent_window: like parent_window) is
+	make (a_preferences: like preferences) is
 			-- Create with `a_preferences'.
 		require
 			preferences_not_void: a_preferences /= Void
-			parent_window_not_void: a_parent_window /= Void
 		do
 			preferences := a_preferences
-			parent_window := a_parent_window
 		ensure
 			preferences_set: preferences = a_preferences
 		end
 
-	make_with_hidden (a_preferences: like preferences; a_parent_window: like parent_window; a_show_hidden_flag: BOOLEAN) is
-			-- Create with `a_preferences' 
+	make_with_hidden (a_preferences: like preferences; a_show_hidden_flag: BOOLEAN) is
+			-- Create with `a_preferences'
 			-- and show hidden preferences if `a_show_hidden_flag' is True.
 		require
 			preferences_not_void: a_preferences /= Void
-			parent_window_not_void: a_parent_window /= Void
 		do
 			show_hidden_preferences := a_show_hidden_flag
-			make (a_preferences, a_parent_window)
+			make (a_preferences)
 		ensure
 			preferences_set: preferences = a_preferences
 			hidden_set: show_hidden_preferences = a_show_hidden_flag
@@ -41,8 +38,35 @@ feature -- Initialization
 
 feature -- Access
 
-	parent_window: EV_WINDOW
+	show_dialog_modal (w: EV_ANY) is
+			-- Show `dlg' modal to `parent_window' if not Void
+		require
+			w_is_a_dialog: {EV_STANDARD_DIALOG} #? w /= Void or {EV_DIALOG} #? w /= Void
+		local
+			p: like parent_window
+			sdlg: EV_STANDARD_DIALOG
+			dlg: EV_DIALOG
+		do
+			p := parent_window
+			dlg ?= w
+			if dlg /= Void then
+				if p /= Void then
+					dlg.show_modal_to_window (p)
+				else
+					dlg.show
+				end
+			elseif p /= Void then
+				sdlg ?= w
+				if sdlg /= Void then
+					sdlg.show_modal_to_window (p)
+				end
+			end
+		end
+
+	parent_window: EV_WINDOW is
 			-- Parent window.  Used to display this view relative to.
+		deferred
+		end
 
 	preference_widget (a_preference: PREFERENCE): PREFERENCE_WIDGET is
 			-- Return the widget required to display `a_preference'.
@@ -117,7 +141,7 @@ feature {NONE} -- Implementation
 			-- Preferences
 invariant
 	has_preferences: preferences /= Void
-	has_parent_window: parent_window /= Void
+--	has_parent_window: parent_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

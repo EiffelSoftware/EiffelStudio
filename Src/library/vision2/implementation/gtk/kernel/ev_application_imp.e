@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
-			l_display: POINTER
-			l_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
 
@@ -401,12 +399,11 @@ feature {EV_ANY_I} -- Implementation
 						debug ("GDK_EVENT")
 							print ("GDK_MAP%N")
 						end
-						if {EV_GTK_EXTERNALS}.gtk_widget_toplevel (event_widget) then
-							l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
-							if l_top_level_window_imp /= Void then
-								l_top_level_window_imp.on_widget_mapped
-							end
+						l_widget_imp ?= eif_object_from_gtk_object (event_widget)
+						if l_widget_imp /= Void then
+							l_widget_imp.on_widget_mapped
 						end
+						l_widget_imp := Void
 					when GDK_UNMAP then
 						debug ("GDK_EVENT")
 							print ("GDK_UNMAP%N")

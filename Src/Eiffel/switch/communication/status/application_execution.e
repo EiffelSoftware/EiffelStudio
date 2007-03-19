@@ -235,6 +235,9 @@ feature -- Execution
 		local
 			l_envstr: STRING_32
 		do
+			param_arguments := args
+			param_execution_directory := cwd
+			param_environment := env
 			l_envstr := environment_variables_to_string (environment_variables_updated_with (env))
 			run_with_env_string (args, cwd, l_envstr)
 		ensure
@@ -345,6 +348,17 @@ feature -- Query
 			a_addr /= Void
 		deferred
 		end
+
+feature -- Parameters
+
+	param_arguments: STRING
+			-- Arguments used to run Application.
+
+	param_execution_directory: STRING
+			-- Execution directory used to run Application.
+
+	param_environment: HASH_TABLE [STRING_32, STRING_32]
+			-- Modified Environment used to run Application.
 
 feature -- Setting
 

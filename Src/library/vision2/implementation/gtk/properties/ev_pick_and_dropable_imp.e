@@ -174,6 +174,19 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
+	draw_rubber_band  is
+			-- Erase previously drawn rubber band.
+			-- Draw a rubber band between initial pick point and cursor.
+		do
+			app_implementation.draw_rubber_band
+		end
+
+	erase_rubber_band  is
+			-- Erase previously drawn rubber band.
+		do
+			app_implementation.erase_rubber_band
+		end
+
 	enable_transport is
 			-- Activate pick/drag and drop mechanism.
  		do
@@ -385,42 +398,6 @@ feature -- Implementation
 				pebble_function.clear_last_result
 				pebble := Void
 			end
-		end
-
-	draw_rubber_band is
-			-- Draw a segment between initial pick point and `destination'.
-		local
-			app_imp: EV_APPLICATION_IMP
-		do
-			app_imp := app_implementation
-			if rubber_band_is_drawn then
-					-- Undraw previous rubber band if any
-				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
-			end
-			App_imp.set_old_pointer_x_y_origin (pointer_x, pointer_y)
-			pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
-			rubber_band_is_drawn := True
-		end
-
-	erase_rubber_band is
-			-- Erase previously drawn rubber band.
-		local
-			app_imp: EV_APPLICATION_IMP
-		do
-			app_imp := app_implementation
-			if rubber_band_is_drawn then
-				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
-				rubber_band_is_drawn := False
-			end
-		end
-
-	pnd_screen: EV_SCREEN is
-			-- Screen object used for drawing PND transport line
-		once
-			create Result
-			Result.enable_dashed_line_style
-			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-			Result.set_invert_mode
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is

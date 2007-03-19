@@ -397,6 +397,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_string: STRING_VALUE_I
 			l_type: TYPE_I
 			l_cl: CLASS_C
+			l_cli: CLASS_I
 			-- ...
 			d_fact: DUMP_VALUE_FACTORY
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
@@ -416,20 +417,32 @@ feature {NONE} -- EXPR_B evaluation
 				end
 				if l_cl /= Void then
 					if l_type.is_natural then
-						if l_integer.has_natural (8) then
-							tmp_result_value := d_fact.new_natural_8_value (l_integer.natural_8_value, l_cl)
-						elseif l_integer.has_natural (16) then
-							tmp_result_value := d_fact.new_natural_16_value (l_integer.natural_16_value, l_cl)
-						elseif l_integer.has_natural (32) then
+						l_cli := l_cl.original_class
+						if l_cli = system.natural_32_class then
 							tmp_result_value := d_fact.new_natural_32_value (l_integer.natural_32_value, l_cl)
-						else
+						elseif l_cli = system.natural_64_class then
 							tmp_result_value := d_fact.new_natural_64_value (l_integer.natural_64_value, l_cl)
+						elseif l_cli = system.natural_16_class then
+							tmp_result_value := d_fact.new_natural_16_value (l_integer.natural_16_value, l_cl)
+						elseif l_cli = system.natural_8_class then
+							tmp_result_value := d_fact.new_natural_8_value (l_integer.natural_8_value, l_cl)
+						else
+							check should_not_occur: False end
+							tmp_result_value := d_fact.new_natural_32_value (l_integer.natural_32_value, l_cl)
 						end
 					else
-						if l_integer.has_integer (32) then
+						l_cli := l_cl.original_class
+						if l_cli = system.integer_32_class then
 							tmp_result_value := d_fact.new_integer_32_value (l_integer.integer_32_value, l_cl)
-						else
+						elseif l_cli = system.integer_64_class then
 							tmp_result_value := d_fact.new_integer_64_value (l_integer.integer_64_value, l_cl)
+						elseif l_cli = system.integer_16_class then
+							tmp_result_value := d_fact.new_integer_16_value (l_integer.integer_16_value, l_cl)
+						elseif l_cli = system.integer_8_class then
+							tmp_result_value := d_fact.new_integer_8_value (l_integer.integer_8_value, l_cl)
+						else
+							check should_not_occur: False end
+							tmp_result_value := d_fact.new_integer_32_value (l_integer.integer_32_value, l_cl)
 						end
 					end
 				else

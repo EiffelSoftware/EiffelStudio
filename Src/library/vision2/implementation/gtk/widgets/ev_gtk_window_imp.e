@@ -288,8 +288,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_any: ANY
 			l_accel: EV_ACCELERATOR
 			l_accel_imp: EV_ACCELERATOR_IMP
-			i: INTEGER
-			l_exit: BOOLEAN
 		do
 			l_app_imp := app_implementation
 				-- Perform translation on key values from gdk.

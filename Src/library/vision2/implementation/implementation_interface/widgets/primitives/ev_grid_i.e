@@ -4771,7 +4771,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			if pointed_item /= Void then
 				l_item := pointed_item
 			else
-				if last_pointed_item /= Void and then last_pointed_item.parent_i /= Current then
+				if last_pointed_item /= Void and then last_pointed_item.parent_i = Current then
 					l_item := last_pointed_item
 				else
 					last_pointed_item := Void

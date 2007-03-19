@@ -8,11 +8,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
-obsolete "You should use PREFERENCES_GRID_DIALOG"
 class
 	PREFERENCES_GRID
 
+obsolete "You should use PREFERENCES_GRID_DIALOG"
 inherit
 	PREFERENCES_GRID_DIALOG
 		rename

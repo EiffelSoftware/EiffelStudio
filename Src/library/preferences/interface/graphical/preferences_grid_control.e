@@ -147,6 +147,7 @@ feature {NONE} -- Initialization
 			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
 			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			description_text.disable_edit
 			restore_button.select_actions.extend (agent on_restore)
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)

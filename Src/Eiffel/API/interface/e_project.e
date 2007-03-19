@@ -618,7 +618,6 @@ feature -- Update
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)
 			end
-			l_cmd.append (" -nologo")
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 

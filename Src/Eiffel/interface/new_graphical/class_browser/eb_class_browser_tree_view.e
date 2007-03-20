@@ -557,7 +557,7 @@ feature{NONE} -- Implementation
 				l_row.bind_row (Void, grid, l_bg_color, 0, l_is_path_displayed)
 				l_rows.forth
 			end
-			try_auto_resize_grid (<<[500, 800, 1]>>)
+			try_auto_resize_grid (<<[500, 800, 1]>>, False)
 		end
 
 	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is

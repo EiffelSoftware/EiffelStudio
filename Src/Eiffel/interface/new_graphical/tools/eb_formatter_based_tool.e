@@ -79,10 +79,6 @@ feature{NONE} -- Initialization
 			build_formatters
 			fill_in
 			on_select
-
---			make_with_tool (develop_window)			
---			create history_manager.make (Current)
---			create address_manager.make (Current, True)
 		end
 
 feature -- Access

@@ -589,6 +589,7 @@ feature -- Access
 			l_meth: METHOD_INFO
 			l_type_attr: RT_INTERFACE_TYPE_ATTRIBUTE
 			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
+			l_object: SYSTEM_OBJECT
 		do
 			l_dtypes := id_to_fields_static_type.item (type_id)
 			if l_dtypes = Void then
@@ -614,6 +615,7 @@ feature -- Access
 						l_name := l_type_feature_name.feature_name
 						if l_current_type = Void then
 							l_current_rt_type := pure_implementation_type (type_id)
+							l_object := {ISE_RUNTIME}.create_type (l_current_rt_type)
 							l_current_type := {SYSTEM_TYPE}.get_type_from_handle (l_current_rt_type.type)
 								-- Get RT_GENERIC_TYPE from `l_current_rt_type' if it
 								-- is an instance of `RT_GENERIC_TYPE', otherwise we get
@@ -628,7 +630,7 @@ feature -- Access
 						end
 							-- Invoke method that is going to give us a RT_TYPE instance representing the
 							-- static type of the field for the base class of `type_id'.
-						l_rt_type ?= l_meth.invoke_object_object_array ({ACTIVATOR}.create_instance (l_current_type), Void)
+						l_rt_type ?= l_meth.invoke_object_object_array (l_object, Void)
 						check
 							l_rt_type_not_void: l_rt_type /= Void
 						end

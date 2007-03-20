@@ -484,23 +484,11 @@ feature -- Object creation
 	public static object create_type (RT_CLASS_TYPE a_type)
 		// Create new instance of `a_type'.
 	{
-		RT_GENERIC_TYPE computed_type;
-		object Result;
-
 			// Create new object of type `a_type'.
-			// Note: We use the `Activator' class because it is much faster than
-			// creating an instance by getting the associated `ConstructorInfo'.
-		Result = Activator.CreateInstance (Type.GetTypeFromHandle (a_type.type));
-
 			// Properly initializes `Result'.
-		computed_type = a_type as RT_GENERIC_TYPE;
-		if (computed_type != null) {
-			#if ASSERTIONS
-				ASSERTIONS.CHECK ("Is Eiffel type", Result is EIFFEL_TYPE_INFO);
-			#endif
-			((EIFFEL_TYPE_INFO) Result).____set_type (computed_type);
-		}
-		return Result;
+		return GENERIC_CONFORMANCE.create_instance
+			(Type.GetTypeFromHandle (a_type.type),
+			a_type as RT_GENERIC_TYPE);
 	}
 
 /*

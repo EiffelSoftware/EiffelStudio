@@ -30,6 +30,7 @@ feature {NONE} -- Initialize
 			l_dir: STRING
 			l_dll: WEL_DLL
 			l_dis: like dispenser
+			l_cache: like assembly_cache
 		do
 			create l_reg
 			l_p := l_reg.open_key ({WEL_REGISTRY}.hkey_local_machine, "SOFTWARE\Microsoft\.NETFramework", {WEL_REGISTRY_ACCESS_MODE}.key_read)
@@ -51,8 +52,10 @@ feature {NONE} -- Initialize
 				l_reg.close_key (l_p)
 			end
 
-			c_initialize ($l_dis).do_nothing
+			c_initialize_dispenser ($l_dis).do_nothing
+			c_create_cache ($l_cache, 0).do_nothing
 			dispenser := l_dis
+			assembly_cache := l_cache
 		end
 
 feature -- Clean up
@@ -61,11 +64,14 @@ feature -- Clean up
 			-- Cleans up any allocated resources
 		local
 			l_dis: like dispenser
+			l_cache: like assembly_cache
 		do
 			if exists then
 				l_dis := dispenser
-				c_uninitialize ($l_dis)
+				l_cache := assembly_cache
+				c_uninitialize ($l_dis, $l_cache)
 				dispenser := default_pointer
+				assembly_cache := default_pointer
 			end
 		ensure then
 			not_exists: not exists
@@ -83,12 +89,14 @@ feature -- Basic operations
 			exists: exists
 		local
 			l_scope: POINTER
+			l_cache: like assembly_cache
+			l_fusion_name: STRING
 			l_amd: ASSEMBLY_METADATA
 			l_fn: WEL_STRING
 			l_hash: NATURAL_64
 			l_name: WEL_STRING
-			l_name_len: NATURAL_64
-			l_flags: NATURAL_64
+			l_name_len: NATURAL_32
+			l_flags: NATURAL_32
 			l_key: ARRAY [NATURAL_8]
 			l_bytes: MANAGED_POINTER
 			l_p: POINTER
@@ -123,7 +131,28 @@ feature -- Basic operations
 					end
 
 					l_name.set_count (l_name_len.to_integer_32)
+
+					l_cache := assembly_cache
 					create Result.make (a_file_name, l_name.string, l_hash, l_key, l_flags, l_amd)
+					if l_cache /= default_pointer and Result.is_signed then
+						create l_fusion_name.make (100)
+						l_fusion_name.append (Result.name)
+						l_fusion_name.append ("Version=")
+						l_fusion_name.append (Result.version_string)
+						l_fusion_name.append ("Culture=")
+						if Result.is_neutral_locale then
+							l_fusion_name.append ("neutral")
+						else
+							l_fusion_name.append (Result.locales.first)
+						end
+						l_fusion_name.append ("PublicKeyToken=")
+						l_fusion_name.append (Result.public_key_token_string)
+						create l_name.make (l_fusion_name)
+						if c_is_in_cache (l_cache, l_name.item) then
+							Result.set_is_locatable_in_gac
+						end
+					end
+
 				end
 				cpp_close_scope ($l_scope)
 			end
@@ -135,6 +164,12 @@ feature -- Status report
 			-- Indicates if reader was successfully initialized and is read for use.
 		do
 			Result := dispenser /= default_pointer
+		end
+
+	fusion_exists: BOOLEAN is
+			-- Indicates if fusion was successfully initialized and is read for use.
+		do
+			Result := assembly_cache /= default_pointer
 		end
 
 feature {NONE} -- Caching
@@ -196,15 +231,18 @@ feature {NONE} -- Implementation
 	dispenser: POINTER
 			-- Pointer to a IMetadataDespenser interface, when /= default_pointer
 
+	assembly_cache: POINTER
+			-- Pointer to a IAssemblyCache interface, when /= default_pointer
+
 feature {NONE} -- Externals
 
-	c_initialize (a_dispenser: TYPED_POINTER [POINTER]): INTEGER is
-			-- Initializes reader
+	c_initialize_dispenser (a_dispenser: TYPED_POINTER [POINTER]): INTEGER is
+			-- Initializes metadata dispenser
 		external
 			"C++ inline use %"strongname.h%""
 		alias
 			"[
-				IMetaDataDispenser* pUnk = NULL;
+				IMetaDataDispenser* pDispenser = NULL;
 				BOOL fWasInit = FALSE;
 				HRESULT hr = S_OK;
 				
@@ -212,11 +250,11 @@ feature {NONE} -- Externals
 				if (SUCCEEDED (hr))
 				{
 					fWasInit = (S_OK == hr); // COM was initialized here, make sure to uinit.
-					hr = CoCreateInstance (CLSID_CorMetaDataDispenserRuntime, NULL, CLSCTX_INPROC_SERVER, IID_IMetaDataDispenser, (LPVOID*)&pUnk);
-					if (SUCCEEDED (hr) && (pUnk != NULL))
+					hr = CoCreateInstance (CLSID_CorMetaDataDispenserRuntime, NULL, CLSCTX_INPROC_SERVER, IID_IMetaDataDispenser, (LPVOID*)&pDispenser);
+					if (SUCCEEDED (hr) && (pDispenser != NULL))
 					{
-						pUnk->AddRef();
-						*$a_dispenser = (EIF_POINTER)pUnk;
+						pDispenser->AddRef();
+						*$a_dispenser = (EIF_POINTER)pDispenser;				
 					}
 					else if (fWasInit)
 					{
@@ -230,8 +268,8 @@ feature {NONE} -- Externals
 			succeeded: Result = 0
 		end
 
-	c_uninitialize (a_dispenser: TYPED_POINTER [POINTER]) is
-			-- Uninitializes reader
+	c_uninitialize (a_dispenser: TYPED_POINTER [POINTER]; a_cache: TYPED_POINTER [POINTER]) is
+			-- Uninitializes unmanaged COM resources
 		external
 			"C++ inline use %"strongname.h%""
 		alias
@@ -241,6 +279,11 @@ feature {NONE} -- Externals
 					((IUnknown*)*$a_dispenser)->Release();
 					*$a_dispenser = (EIF_POINTER)NULL;
 				}
+				if (NULL != $a_cache)
+				{
+					((IUnknown*)*$a_cache)->Release();
+					*$a_cache = (EIF_POINTER)NULL;
+				}
 				// We cannot CoUninitialize here as we have to take into consideration that
 				// another library is still using COM.
 			]"
@@ -248,6 +291,9 @@ feature {NONE} -- Externals
 
 	cpp_open_scope (a_dispenser: POINTER; a_fn: POINTER; a_flags: NATURAL; a_scope: TYPED_POINTER [POINTER]): INTEGER is
 			-- Opens an assembly scope
+		require
+			not_a_dispenser_is_null: a_dispenser /= default_pointer
+			not_a_fn_is_null: a_fn /= default_pointer
 		external
 			"C++ inline use %"strongname.h%""
 		alias
@@ -277,6 +323,8 @@ feature {NONE} -- Externals
 
 	cpp_close_scope (a_scope: TYPED_POINTER [POINTER]) is
 			-- Closes an opened scope.
+		require
+			not_a_scope_is_null: a_scope /= default_pointer
 		external
 			"C++ inline use %"strongname.h%""
 		alias
@@ -289,8 +337,10 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_assembly_props (a_scope: POINTER; a_hash: TYPED_POINTER [NATURAL_64]; a_name: POINTER; a_name_len: TYPED_POINTER [NATURAL_64]; a_flags: TYPED_POINTER [NATURAL_64]; a_md: POINTER): INTEGER is
+	cpp_assembly_props (a_scope: POINTER; a_hash: TYPED_POINTER [NATURAL_64]; a_name: POINTER; a_name_len: TYPED_POINTER [NATURAL_32]; a_flags: TYPED_POINTER [NATURAL_32]; a_md: POINTER): INTEGER is
 			-- Retrieves a number of assembly properties
+		require
+			not_a_scope_is_null: a_scope /= default_pointer
 		external
 			"C++ inline use %"strongname.h%""
 		alias
@@ -345,6 +395,46 @@ feature {NONE} -- Externals
 		alias
 			"SetEnvironmentVariable"
 		end
+
+	c_create_cache (a_cache: TYPED_POINTER [POINTER]; a_reserved: INTEGER): INTEGER is
+			-- Retrieve the public portion of a key pair.
+		external
+			"[
+				dllwin fusion.dll signature (IAssemblyCache**, DWORD): HRESULT
+				use <fusion.h>
+			]"
+		alias
+			"CreateAssemblyCache"
+		end
+
+	c_is_in_cache (a_cache: POINTER; a_name: POINTER): BOOLEAN is
+			-- Determines if assembly is in the instatiate cache
+		require
+			not_a_cache_is_null: a_cache /= default_pointer
+			not_a_name_is_null: a_name /= default_pointer
+		external
+			"C++ inline use %"fusion.h%""
+		alias
+			"[
+				IAssemblyCache* pCache = (IAssemblyCache*)$a_cache;
+				ASSEMBLY_INFO asmInfo;
+				HRESULT hr = S_OK;
+				
+				ZeroMemory ((LPVOID)&asmInfo, sizeof (ASSEMBLY_INFO));			
+				
+				hr = pCache->QueryAssemblyInfo (0, (LPCWSTR)$a_name, &asmInfo);
+				if (SUCCEEDED(hr))
+				{
+					if (NULL != asmInfo.pszCurrentAssemblyPathBuf)
+					{
+						free (asmInfo.pszCurrentAssemblyPathBuf);
+					}
+					return (EIF_BOOLEAN) (ASSEMBLYINFO_FLAG_INSTALLED == asmInfo.dwAssemblyFlags);
+				}
+				return (EIF_BOOLEAN)FALSE;
+			]"
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

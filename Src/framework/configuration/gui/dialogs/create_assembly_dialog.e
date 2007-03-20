@@ -42,18 +42,10 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
-			vb, vb2: EV_VERTICAL_BOX
+			vb, vb2, vb3: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_lbl: EV_LABEL
-			l_il_env: IL_ENVIRONMENT
-			l_alb: SYSTEM_ASSEMBLY_LIST_BUILDER
-			l_locales: LIST [STRING]
-			l_properties: LIST [ASSEMBLY_PROPERTIES]
-			l_property: ASSEMBLY_PROPERTIES
-			l_item: EV_LIST_ITEM
-			l_name: STRING
-			l_culture: STRING
-			l_key: STRING
+			l_assemblies: like assemblies
 		do
 			Precursor
 
@@ -76,60 +68,30 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
-			create assemblies
-			vb2.extend (assemblies)
-			assemblies.set_minimum_height (200)
+			create vb3
+			vb2.extend (vb3)
+			vb3.set_border_width (1)
+			vb3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 
-				-- get clr version
-			if target.setting_msil_clr_version.is_empty then
-				create l_il_env
-			else
-				create l_il_env.make (target.setting_msil_clr_version)
-			end
-			if l_il_env.is_dotnet_installed then
-				create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
-				from
-					l_properties := l_alb.assemblies_properties
-					l_properties.start
-				until
-					l_properties.after
-				loop
-					l_property := l_properties.item
-					create l_name.make (300)
-					l_name.append (l_property.name)
-					l_name.append (once ", ")
-					l_name.append (l_property.version_string)
-					if l_property.is_neutral_locale then
-						l_culture := once "Neutral"
-					else
-						l_locales := l_property.locales
-						create l_culture.make (5 * l_locales.count)
-						from l_locales.start until l_locales.after loop
-							l_culture.append (l_locales.item)
-							if not l_locales.islast then
-								l_culture.append (once " | ")
-							end
-							l_locales.forth
-						end
-					end
-					l_name.append (once ", ")
-					l_name.append (l_culture)
-					if l_property.is_signed then
-						l_key := l_property.public_key_token_string
-					else
-						l_key := once "Null"
-					end
-					l_name.append (once ", ")
-					l_name.append (l_key)
-					create l_item.make_with_text (l_name)
-					l_item.select_actions.extend (agent fill_assembly (l_name, l_property.location))
-					l_item.set_pixmap (conf_pixmaps.folder_assembly_icon)
-					assemblies.extend (l_item)
-					l_properties.forth
-				end
-
-				sort_assemblies
-			end
+			create l_assemblies
+			assemblies := l_assemblies
+			vb3.extend (l_assemblies)
+			l_assemblies.set_minimum_height (200)
+			l_assemblies.set_minimum_width (600)
+			l_assemblies.set_column_count_to (6)
+			l_assemblies.column (1).set_title ("Name")
+			l_assemblies.column (1).set_width (162)
+			l_assemblies.column (2).set_title ("Version")
+			l_assemblies.column (2).set_width (71)
+			l_assemblies.column (3).set_title ("Culture")
+			l_assemblies.column (3).set_width (62)
+			l_assemblies.column (4).set_title ("PublicKeyToken")
+			l_assemblies.column (4).set_width (105)
+			l_assemblies.column (5).set_title ("Platform")
+			l_assemblies.column (5).set_width (60)
+			l_assemblies.column (6).set_title ("Path")
+			l_assemblies.column (6).set_width (122)
+			l_assemblies.enable_single_row_selection
 
 				-- name
 			create vb2
@@ -193,18 +155,24 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			layout_constants.set_default_width_for_button (l_btn)
 
-			set_minimum_width (440)
+			show_actions.extend (agent
+				do
+					populate_assemblies
 
-			if not assemblies.is_empty then
-				show_actions.extend (agent assemblies.set_focus)
-			else
-				show_actions.extend (agent name.set_focus)
-			end
+						-- Set focus based on content display
+					if assemblies.row_count > 0 then
+						assemblies.set_focus
+					else
+						name.set_focus
+					end
+				end)
+
+			set_minimum_width (634)
 		end
 
 feature {NONE} -- GUI elements
 
-	assemblies: EV_LIST
+	assemblies: EV_GRID
 			-- Assemblies found in default locations.
 
 	name: EV_TEXT_FIELD
@@ -219,6 +187,73 @@ feature -- Access
 			-- Last created assembly.
 
 feature {NONE} -- Actions
+
+	populate_assemblies is
+			-- Populates assembly list
+		local
+			l_il_env: IL_ENVIRONMENT
+			l_alb: SYSTEM_ASSEMBLY_LIST_BUILDER
+			l_properties: LIST [ASSEMBLY_PROPERTIES]
+			l_property: ASSEMBLY_PROPERTIES
+			l_row: EV_GRID_ROW
+			l_item: EV_GRID_LABEL_ITEM
+			l_value: STRING
+			l_assemblies: like assemblies
+		do
+			l_assemblies := assemblies
+
+				-- get clr version
+			if target.setting_msil_clr_version.is_empty then
+				create l_il_env
+			else
+				create l_il_env.make (target.setting_msil_clr_version)
+			end
+			if l_il_env.is_dotnet_installed then
+				create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
+				l_properties := l_alb.assemblies_properties
+				l_assemblies.set_row_count_to (l_properties.count)
+				from
+					l_properties.start
+				until
+					l_properties.after
+				loop
+					l_property := l_properties.item
+					l_row := l_assemblies.row (l_properties.index)
+
+						-- Create row items
+					create l_item.make_with_text (l_property.name)
+					l_item.set_pixmap (conf_pixmaps.folder_assembly_icon)
+					l_row.set_item (1, l_item)
+					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (l_property.version_string))
+
+					if l_property.is_neutral_locale then
+						l_value := once "Netural"
+					else
+						l_value := l_property.locales.first
+					end
+					l_row.set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text (l_value))
+
+					if l_property.is_signed then
+						l_row.set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text (l_property.public_key_token_string))
+					end
+
+					if l_property.is_msil then
+						l_value := once "MSIL"
+					elseif l_property.is_x86 then
+						l_value := once "x86"
+					elseif l_property.is_x64 then
+						l_value := once "x64"
+					else
+						l_value := once "Unknown"
+					end
+					l_row.set_item (5, create {EV_GRID_LABEL_ITEM}.make_with_text (l_value))
+					l_row.set_item (6, create {EV_GRID_LABEL_ITEM}.make_with_text (l_property.location))
+					l_row.select_actions.extend (agent fill_assembly (l_property.name, l_property.location))
+
+					l_properties.forth
+				end
+			end
+		end
 
 	fill_assembly (a_name, a_path: STRING) is
 			-- Fill location and name from `a_path' and `a_name'.
@@ -281,10 +316,35 @@ feature {NONE} -- Actions
 
 	fill_fields is
 			-- Set location from `browse_dialog'.
+		local
+			l_il_env: IL_ENVIRONMENT
+			l_reader: ASSEMBLY_PROPERTIES_READER
+			l_properties: ASSEMBLY_PROPERTIES
+			l_file_name: STRING
+			l_error: EV_ERROR_DIALOG
+			l_added: BOOLEAN
 		do
-			location.set_text (browse_dialog.file_name)
-			if name.text.is_empty then
-				name.set_text (name_from_location (browse_dialog.file_name))
+				-- get clr version
+			if target.setting_msil_clr_version.is_empty then
+				create l_il_env
+			else
+				create l_il_env.make (target.setting_msil_clr_version)
+			end
+			create l_reader.make (l_il_env.version)
+			l_file_name := browse_dialog.file_name
+			if (create {PE_FILE_INFO}).is_com2_pe_file (l_file_name) then
+				l_properties := l_reader.retrieve_assembly_properties (l_file_name)
+				l_added := l_properties /= Void
+				if l_added then
+					name.set_text (l_properties.name)
+					location.set_text (l_properties.location)
+				end
+			end
+
+			if not l_added then
+				create l_error.make_with_text (once "The selected file '" + l_file_name + "' is not a valid .NET assembly.")
+				l_error.set_buttons (<<once "Ok">>)
+				l_error.show_modal_to_window (Current)
 			end
 		end
 
@@ -324,53 +384,6 @@ feature {NONE} -- Actions
 			end
 		ensure
 			is_ok_last_assembly: is_ok implies last_group /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	name_from_location (a_location: STRING): STRING is
-			-- Get a name out of `a_directory'.
-		require
-			a_location_not_void: a_location /= Void
-		local
-			l_cnt, i, j: INTEGER
-		do
-			l_cnt := a_location.count
-			i := a_location.last_index_of (operating_environment.directory_separator, l_cnt)
-			j := a_location.last_index_of ('.', l_cnt)
-			if i > 0 and j > 0 then
-				Result := a_location.substring (i+1, j-1)
-			else
-				Result := a_location
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	sort_assemblies is
-			-- Sort `assemblies'.
-		require
-			assemblies_set: assemblies /= Void
-		local
-			l_sorted_assemblies: DS_ARRAYED_LIST [EV_LIST_ITEM]
-		do
-			create l_sorted_assemblies.make (assemblies.count)
-			assemblies.do_all (agent l_sorted_assemblies.force_last (?))
-			assemblies.wipe_out
-			l_sorted_assemblies.sort (create {DS_QUICK_SORTER [EV_LIST_ITEM]}.make (create {AGENT_BASED_EQUALITY_TESTER [EV_LIST_ITEM]}.make (agent (a, b: EV_LIST_ITEM): BOOLEAN
-				do
-					Result := a.text < b.text
-				end)))
-			from
-				l_sorted_assemblies.start
-			until
-				l_sorted_assemblies.after
-			loop
-				assemblies.force (l_sorted_assemblies.item_for_iteration)
-				l_sorted_assemblies.forth
-			end
-		ensure
-			assemblies_same: assemblies.count = old assemblies.count
 		end
 
 indexing

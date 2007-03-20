@@ -135,17 +135,15 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 	on_pointer_enter_leave (a_pointer_enter: BOOLEAN) is
 			-- Called from pointer enter leave intermediary agents when the mouse pointer either enters or leaves `Current'.
 		do
-			if not app_implementation.is_in_transport then
-				if a_pointer_enter then
-						-- The mouse pointer has entered `Current'.
-					if pointer_enter_actions_internal /= Void then
-						pointer_enter_actions_internal.call (Void)
-					end
-				else
-						-- The mouse pointer has left `Current'.
-					if pointer_leave_actions_internal /= Void then
-						pointer_leave_actions_internal.call (Void)
-					end
+			if a_pointer_enter then
+					-- The mouse pointer has entered `Current'.
+				if pointer_enter_actions_internal /= Void then
+					pointer_enter_actions_internal.call (Void)
+				end
+			else
+					-- The mouse pointer has left `Current'.
+				if pointer_leave_actions_internal /= Void then
+					pointer_leave_actions_internal.call (Void)
 				end
 			end
 		end

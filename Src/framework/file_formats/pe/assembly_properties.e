@@ -10,6 +10,12 @@ indexing
 class
 	ASSEMBLY_PROPERTIES
 
+inherit
+	COMPARABLE
+		redefine
+			out
+		end
+
 create
 	make
 
@@ -58,7 +64,7 @@ feature -- Access
 	public_key_token: ARRAY [NATURAL_8]
 			-- Public key token, Void for unsigned assemblies
 
-	flags: NATURAL_64
+	flags: NATURAL_32
 			-- Assembly flags
 
 	major_version: NATURAL_16
@@ -90,6 +96,31 @@ feature -- Status report
 			Result := locales = Void or else locales.is_empty
 		end
 
+	is_msil: BOOLEAN is
+			-- Indicate if assembly is processor architecture independent
+		do
+			Result := has_flag_set (af_pa_msil) or ((flags & af_pa_mask) = af_none)
+		end
+
+	is_x64: BOOLEAN is
+			-- Indicate if assembly is for x64 processors, or is processor independent
+		do
+			Result := has_flag_set (af_pa_amd64) or has_flag_set (af_pa_ia64) or else is_msil
+		ensure
+			is_x64_implies_is_msil: is_x64 implies is_msil
+		end
+
+	is_x86: BOOLEAN is
+			-- Indicate if assembly is for x86 processors
+		do
+			Result := has_flag_set (af_pa_x86) or else is_msil
+		ensure
+			is_x86_implies_is_msil: is_x86 implies is_msil
+		end
+
+	is_locatable_in_gac: BOOLEAN
+			-- Indicates if assembly can be located in the GAC
+
 feature -- Query
 
 	public_key_token_string: STRING is
@@ -111,6 +142,86 @@ feature -- Query
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+		end
+
+	locale_string: STRING is
+			-- Locale as a string
+		do
+			if is_neutral_locale then
+				Result := once "Neutral"
+			else
+				Result := locales.first
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	arcitechure_string: STRING is
+			-- Processor architecture, as a string
+		do
+			if is_msil then
+				Result := once "MSIL"
+			elseif is_x64 then
+				Result := once "x64"
+			elseif is_x86 then
+				Result := once "x86"
+			else
+				check False end
+				Result := once "Unknown"
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Query
+
+	has_flag_set (a_flag: like flags): BOOLEAN is
+			-- Determines if `a_flag' is set for current assembly reference
+		do
+			Result := (a_flag & flags) = a_flag
+		end
+
+feature {ASSEMBLY_PROPERTIES_READER} -- Status setting
+
+	set_is_locatable_in_gac is
+			-- Manipulates state to indicate that the current assembly can
+			-- be located in the GAC.
+		do
+			is_locatable_in_gac := True
+		ensure
+			is_locatable_in_gac: is_locatable_in_gac
+		end
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := out < other.out
+		end
+
+feature -- Output
+
+	out: STRING_8
+			-- New string containing terse printable representation
+			-- of current object
+		do
+			Result := internal_out
+			if Result = Void then
+				create Result.make (256)
+				Result.append (name)
+				Result.append (once ", Version=")
+				Result.append (version_string)
+				Result.append (once ", Culture=")
+				Result.append (locale_string)
+				Result.append (once ", PublicKeyToken=")
+				Result.append (public_key_token_string)
+				Result.append (once ", Processor=")
+				Result.append (arcitechure_string)
+				internal_out := Result
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -136,6 +247,34 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
+feature {NONE} -- Internal implementation cache
+
+	internal_out: like out
+			-- Cached version of `out'
+
+feature {NONE} -- Flag values
+
+	af_none: NATURAL_32 = 0x0000
+			-- Indicates that the processor architecture is unspecified
+
+	af_public_key: NATURAL_32 = 0x0001
+			-- Indicates that the assembly reference holds the full, unhashed public key
+
+	af_pa_msil: NATURAL_32 = 0x0010
+			-- Indicates that the processor architecture is neutral (PE32)
+
+	af_pa_x86: NATURAL_32 = 0x0020
+			-- Indicates that the processor architecture is x86 (PE32)
+
+	af_pa_ia64: NATURAL_32 = 0x0030
+			-- Indicates that the processor architecture is Itanium (PE32+)
+
+	af_pa_amd64: NATURAL_32 = 0x0040
+			-- Indicates that the processor architecture is AMD X64 (PE32+)
+
+	af_pa_mask: NATURAL_64 = 0x0070
+			-- A mask that describes the processor architecture.
+
 invariant
 	location_attached: location /= Void
 	not_location_is_empty: not location.is_empty
@@ -144,7 +283,7 @@ invariant
 	hash_algorithim_positive: hash_algorithim > 0
 	not_public_key_token_is_empty: public_key_token /= Void implies not public_key_token.is_empty
 	not_locales_is_empty: locales /= Void implies not locales.is_empty
-
+	x86_x64_exclusive: (is_x64 and not is_x86) or (not is_x64 and is_x86)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

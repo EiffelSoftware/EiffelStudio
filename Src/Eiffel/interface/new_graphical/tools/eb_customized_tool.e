@@ -31,21 +31,12 @@ feature{NONE} -- Initialization
 			a_pixmap_location_attached: a_pixmap_location /= Void
 			a_handlers_attached: a_handlers /= Void
 		do
+			develop_window := a_develop_window
 			set_id (a_id)
 			set_title (a_title)
 			set_pixmap_location (a_pixmap_location)
 			set_stone_handlers (a_handlers)
-			develop_window := a_develop_window
 			build_interface
-		end
-
-
-	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW) is
-			-- Initialize `development_window' with `a_too'.
-		do
-			initialize
-			fill_in
-			on_select
 		end
 
 feature -- Access

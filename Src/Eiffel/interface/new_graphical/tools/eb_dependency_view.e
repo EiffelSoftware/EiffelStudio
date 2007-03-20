@@ -24,16 +24,6 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_development_window: like develop_window) is
-			-- Set default values.
-		do
-			develop_window := a_development_window
-			initialize
-			build_formatters
-			fill_in
-			on_select
-		end
-
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Build docking content.
 		do

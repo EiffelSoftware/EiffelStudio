@@ -43,13 +43,6 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW) is
-			-- Initialize `development_window' with `a_too'.
-		require
-			a_tool_attached: a_tool /= Void
-		deferred
-		end
-
 	initialize is
 			-- Initialize.
 		do
@@ -79,9 +72,17 @@ feature{NONE} -- Initialization
 	build_interface is
 			-- Build interface
 		do
-			make_with_tool (develop_window)
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
+
+			initialize
+			build_formatters
+			fill_in
+			on_select
+
+--			make_with_tool (develop_window)			
+--			create history_manager.make (Current)
+--			create address_manager.make (Current, True)
 		end
 
 feature -- Access

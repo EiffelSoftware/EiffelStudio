@@ -801,7 +801,10 @@ feature -- Basic operation
 			end
 
 			if not l_ignore_event then
-				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+				if pick_and_drop_source = Void then
+						-- We don't want signals firing during transport.
+					{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+				end
 				if l_pnd_item /= Void then
 					l_pnd_item.on_mouse_button_event (
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),

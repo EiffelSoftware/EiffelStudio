@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 	has_capture: BOOLEAN is
 			-- Does Current have the keyboard and mouse event capture?
 		do
-			Result := App_implementation.captured_widget = interface
+			Result := App_implementation.captured_widget = interface or else app_implementation.pick_and_drop_source = Current
 		end
 
 	grab_keyboard_and_mouse is
@@ -279,6 +279,7 @@ feature -- Implementation
 							local
 								l_cursor: EV_POINTER_STYLE
 							do
+								enable_capture
 								pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
 								if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
 										-- Set correct accept cursor if `Current' accepts its own pebble.
@@ -296,7 +297,6 @@ feature -- Implementation
 									end
 								end
 								internal_set_pointer_style (l_cursor)
-								enable_capture
 							end (a_x, a_y, a_screen_x, a_screen_y)
 
 							if ready_for_pnd_menu (a_button, a_type) then

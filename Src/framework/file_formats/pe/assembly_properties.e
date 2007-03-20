@@ -204,9 +204,8 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING_8
-			-- New string containing terse printable representation
-			-- of current object
+	out_v1x: STRING_8
+			-- Full assembly fusion name for 1.x version of CLR
 		do
 			Result := internal_out
 			if Result = Void then
@@ -218,7 +217,24 @@ feature -- Output
 				Result.append (locale_string)
 				Result.append (once ", PublicKeyToken=")
 				Result.append (public_key_token_string)
-				Result.append (once ", Processor=")
+				internal_out := Result
+			end
+		end
+
+	out: STRING_8
+			-- Full assembly fusion name
+		do
+			Result := internal_out
+			if Result = Void then
+				create Result.make (256)
+				Result.append (name)
+				Result.append (once ", Version=")
+				Result.append (version_string)
+				Result.append (once ", Culture=")
+				Result.append (locale_string)
+				Result.append (once ", PublicKeyToken=")
+				Result.append (public_key_token_string)
+				Result.append (once ", ProcessorArchitecture=")
 				Result.append (arcitechure_string)
 				internal_out := Result
 			end

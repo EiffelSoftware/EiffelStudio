@@ -235,7 +235,7 @@ feature -- Grind binding
 			elseif version_count = 1 then
 				grid.row (1).expand
 			end
-			try_auto_resize_grid (<<[150, 800, 1]>>)
+			try_auto_resize_grid (<<[150, 800, 1]>>, False)
 		end
 
 	bind_level (a_level_index: INTEGER; a_node: EB_TREE_NODE [like row_type]; a_grid_row: EV_GRID_ROW; a_recursive: BOOLEAN) is

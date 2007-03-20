@@ -403,7 +403,7 @@ feature{NONE} -- Update
 			disable_force_multi_column_sorting
 			bind_grid
 			enable_auto_sort_order_change
-			try_auto_resize_grid (<<[150, 300, 1]>>)
+			try_auto_resize_grid (<<[150, 300, 1]>>, False)
 		end
 
 	bind_grid is

@@ -337,7 +337,10 @@ feature -- Notification
 			end
 			disable_force_multi_column_sorting
 			enable_auto_sort_order_change
-			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2]>>)
+			try_auto_resize_grid (<<[150, 300, 1]>>, False)
+			if not is_written_class_used then
+				try_auto_resize_grid (<<[-1, 0, 2]>>, True)
+			end
 		end
 
 	fill_rows is
@@ -352,6 +355,7 @@ feature -- Notification
 			l_is_first: BOOLEAN
 			l_last_bid: INTEGER
 			l_is_single_branch_id: BOOLEAN
+			l_written_class_used: BOOLEAN
 		do
 			l_rows := rows
 			l_rows.wipe_out
@@ -360,6 +364,7 @@ feature -- Notification
 				l_data.start
 				l_is_first := True
 				l_is_single_branch_id := True
+				l_written_class_used := is_written_class_used
 			until
 				l_data.after
 			loop
@@ -378,7 +383,7 @@ feature -- Notification
 					end
 				end
 				l_last_bid := l_branch_id
-				create l_row.make (l_data.item, l_branch_id, Current, is_written_class_used, is_signature_displayed)
+				create l_row.make (l_data.item, l_branch_id, Current, l_written_class_used, is_signature_displayed)
 				l_rows.force_last (l_row)
 				l_data.forth
 			end

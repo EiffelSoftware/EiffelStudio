@@ -188,17 +188,19 @@ feature -- Setting
 			sorting_order_setter_set: sorting_order_setter = a_setter
 		end
 
-	try_auto_resize_grid (a_columns: ARRAY [TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]]) is
-			-- Auto resize `grid' using size given by `a_columns' if `grid' has not been resized manually by user.
+	try_auto_resize_grid (a_columns: ARRAY [TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]]; a_force: BOOLEAN) is
+			-- Auto resize `grid' using size given by `a_columns' if `a_force' is True or else if `grid' has not been resized manually by user.
+			-- If `min_width' or `max_width' for some column is negative, then that column will be resized according to its required width.
 			-- For more information about `min_width' and `max_width', see `auto_resize_columns'.
 		require
 			a_columns_attached: a_columns /= Void
+			a_columns_valid: not a_columns.has (Void)
 		local
 			i: INTEGER
 			l_item: TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]
 			l_size_tbl: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER]
 		do
-			if not has_grid_been_resized_manually then
+			if a_force or else not has_grid_been_resized_manually then
 				create l_size_tbl.make (a_columns.upper - a_columns.lower + 1)
 				from
 					i := a_columns.lower
@@ -206,7 +208,11 @@ feature -- Setting
 					i > a_columns.upper
 				loop
 					l_item := a_columns.item (i)
-					l_size_tbl.put ([l_item.min_width, l_item.max_width], l_item.column_index)
+					if l_item.min_width < 0 or else l_item.max_width < 0 then
+						l_size_tbl.put (Void, l_item.column_index)
+					else
+						l_size_tbl.put ([l_item.min_width, l_item.max_width], l_item.column_index)
+					end
 					i := i + 1
 				end
 				grid.header.item_resize_end_actions.block

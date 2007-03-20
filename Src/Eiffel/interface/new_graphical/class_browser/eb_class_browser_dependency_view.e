@@ -317,7 +317,7 @@ feature -- Notification
 			disable_force_multi_column_sorting
 			enable_auto_sort_order_change
 			set_has_grid_been_binded_for_current_data (True)
-			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2], [150, 200, 3], [100, 200, 4]>>)
+			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2], [150, 200, 3], [100, 200, 4]>>, False)
 		end
 
 feature -- Sorting

@@ -121,12 +121,12 @@ feature -- Access
 		local
 			l_files: like assemblies
 			l_cursor: CURSOR
-			l_result: ARRAYED_LIST [ASSEMBLY_PROPERTIES]
+			l_result: SORTED_TWO_WAY_LIST [ASSEMBLY_PROPERTIES]
 			l_props: ASSEMBLY_PROPERTIES
 			l_reader: ASSEMBLY_PROPERTIES_READER
 		do
 			l_files := assemblies
-			create l_result.make (l_files.count)
+			create l_result.make
 			if not l_files.is_empty then
 				create l_reader.make (clr_version)
 				l_cursor := l_files.cursor
@@ -139,6 +139,7 @@ feature -- Access
 				end
 				l_files.go_to (l_cursor)
 			end
+			l_result.sort
 			Result := l_result
 		ensure
 			result_attached: Result /= Void

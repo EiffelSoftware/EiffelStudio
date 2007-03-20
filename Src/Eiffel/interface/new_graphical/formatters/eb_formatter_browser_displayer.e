@@ -11,6 +11,9 @@ class
 
 inherit
 	EB_FORMATTER_DISPLAYER
+		redefine
+			set_refresher
+		end
 
 create
 	make
@@ -48,11 +51,20 @@ feature -- Setting
 			browser_set: browser = a_browser
 		end
 
+feature -- Setting
+
+	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE]) is
+			-- Set `a_refresher' into Current, it serves as a refresher to be invoked to update Current displayer
+		do
+			browser.retrieve_data_actions.extend (a_refresher)
+		end
+
 feature {NONE} -- Recycle
 
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
+			browser.retrieve_data_actions.wipe_out
 			browser.recycle
 			browser := Void
 		end

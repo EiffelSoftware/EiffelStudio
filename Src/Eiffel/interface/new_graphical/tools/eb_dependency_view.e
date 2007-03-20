@@ -32,18 +32,6 @@ feature {NONE} -- Initialization
 			build_formatters
 			fill_in
 			on_select
-			do_all_in_list (
-				predefined_formatters,
-				agent (a_formatter: EB_FORMATTER)
-					local
-						l_browser_formatter: EB_BROWSER_FORMATTER
-					do
-						l_browser_formatter ?= a_formatter
-						if l_browser_formatter /= Void then
-							l_browser_formatter.browser.retrieve_data_actions.extend (agent refresh)
-						end
-					end
-			)
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is

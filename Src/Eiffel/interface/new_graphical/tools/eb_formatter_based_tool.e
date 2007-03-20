@@ -529,6 +529,7 @@ feature{NONE} -- Implementation
 				create l_drop_actions
 				l_drop_actions.extend (agent drop_stone)
 				Result := a_generator.item ([develop_window, l_drop_actions])
+				Result.set_refresher (agent refresh)
 				l_cache.put (Result, a_name)
 			end
 		ensure

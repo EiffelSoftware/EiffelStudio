@@ -742,10 +742,12 @@ feature {NONE} -- Implementation
 			internal_il_base_type_name_not_empty: not Result.is_empty
 		end
 
-feature {CL_TYPE_A, TUPLE_CLASS_B} -- Implementation: class type declaration marks
+feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} -- Implementation: class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)
+
+feature {CL_TYPE_A, TUPLE_CLASS_B} -- Implementation: class type declaration marks
 
 	set_mark (mark: like declaration_mark) is
 			-- Set `declaration_mark' to the given value `mark'.

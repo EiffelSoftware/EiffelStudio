@@ -147,9 +147,10 @@ feature -- Local variable info generation
 feature -- Object creation
 
 	create_object (a_type_id: INTEGER) is
-			-- Create object of `a_type_id'.
+			-- Create non-generic object of `a_type_id'.
 		require
 			valid_type_id: a_type_id > 0
+			type_not_generic: -- not class_types.item (a_type_id).is_generic
 		deferred
 		end
 
@@ -1109,12 +1110,6 @@ feature -- Generic conformance
 
 	generate_none_type_instance is
 			-- Generate a NONE_TYPE instance.
-		deferred
-		end
-
-	assign_computed_type is
-			-- Given elements on stack, compute associated type and set it to
-			-- newly created object.
 		deferred
 		end
 

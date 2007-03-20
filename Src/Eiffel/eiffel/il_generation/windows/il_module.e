@@ -252,9 +252,9 @@ feature -- Access: tokens
 			-- Token for `ISE.Runtime.assertion_tag' static field that holds
 			-- message for exception being thrown.
 
-	ise_set_type_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO.____set_type' feature that
-			-- assign type information of a class.
+	ise_get_type_token: INTEGER
+			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO.____type' feature that
+			-- returns generic type information of a class.
 
 	ise_check_invariant_token: INTEGER
 			-- Token for `ISE.Runtime.ise_check_invariant' feature that
@@ -280,8 +280,10 @@ feature -- Access: tokens
 	ise_assertion_level_attr_ctor_token,
 	ise_interface_type_attr_ctor_token,
 	ise_eiffel_consumable_attr_ctor_token,
+	ise_eiffel_class_type_mark_attr_ctor_token,
 	type_handle_class_token,
-	ise_assertion_level_enum_token: INTEGER
+	ise_assertion_level_enum_token,
+	ise_class_type_mark_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
 
 feature {NONE} -- Custom attributes: access
@@ -642,6 +644,9 @@ feature -- Access: signatures
 			-- Precomputed signature of a feature with no arguments and no return type.
 			-- Used to define default constructors and other features with same signature.
 
+	generic_ctor_sig: MD_METHOD_SIGNATURE
+			-- Precomputed signature of a constructor of generic type.
+
 	method_sig: MD_METHOD_SIGNATURE
 			-- Permanent signature for features.
 
@@ -833,6 +838,13 @@ feature -- Code generation
 			initialize_mapping (a_count)
 			initialize_tokens
 			initialize_runtime_type_class_mappings
+
+				-- Create signature of constructor of generic type.
+			create generic_ctor_sig.make
+			generic_ctor_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			generic_ctor_sig.set_parameter_count (1)
+			generic_ctor_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			generic_ctor_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
 
 			uni_string.set_string (module_name)
 
@@ -1443,6 +1455,9 @@ feature -- Metadata description
 			l_arg_count: INTEGER
 			l_method_body: MD_METHOD_BODY
 			l_tokens: HASH_TABLE [INTEGER, INTEGER]
+			l_field_sig: like field_sig
+			l_parent_type_id: INTEGER
+			l_class_type: CLASS_TYPE
 		do
 				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
 			create l_uni_string.make (".ctor")
@@ -1476,8 +1491,13 @@ feature -- Metadata description
 						-- Call constructor from super-class for reference type
 					l_arg_count := signature.parameter_count
 					if external_token = 0 then
-						l_method_body.put_call ({MD_OPCODES}.Call,
-							constructor_token (single_parent_mapping.item (class_type.implementation_id)), 0, False)
+						l_parent_type_id := single_parent_mapping.item (class_type.implementation_id)
+						if il_code_generator.class_types.item (l_parent_type_id).is_generic then
+							il_code_generator.generate_argument (1)
+							l_method_body.put_call ({MD_OPCODES}.Call, constructor_token (l_parent_type_id), 1, False)
+						else
+							l_method_body.put_call ({MD_OPCODES}.Call, constructor_token (l_parent_type_id), 0, False)
+						end
 					else
 						put_args_on_stack (l_arg_count, l_method_body)
 						l_method_body.put_call ({MD_OPCODES}.Call, external_token, l_arg_count, False)
@@ -1487,6 +1507,31 @@ feature -- Metadata description
 						put_args_on_stack (l_arg_count, l_method_body)
 						l_method_body.put_call ({MD_OPCODES}.Callvirt, eiffel_token, l_arg_count, False)
 					end
+				end
+
+					-- Record type information if required.
+				if class_type.is_generic then
+					il_code_generator.generate_current
+					il_code_generator.generate_argument (1)
+						-- Set signature of `$$____type' field.
+					l_field_sig := field_sig
+					l_field_sig.reset
+					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						ise_generic_type_token)
+						-- Find class type that declares `$$____type' field.
+					l_class_type := class_type
+					if not l_class_type.is_expanded and then l_class_type.associated_class.is_single then
+						from
+						until
+							l_class_type.associated_class.has_external_main_parent
+						loop
+							l_class_type := il_code_generator.class_types.item (single_parent_mapping.item (l_class_type.implementation_id))
+						end
+					end
+						-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
+					l_method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld,
+						md_emit.define_member_ref (create {UNI_STRING}.make ("$$____type"),
+						actual_class_type_token (l_class_type.implementation_id), l_field_sig))
 				end
 
 				if il_code_generator.is_initialization_required (class_type) then
@@ -1500,7 +1545,7 @@ feature -- Metadata description
 				method_writer.write_current_body
 
 			end
-			if signature = default_sig then
+			if signature = default_sig or else signature = generic_ctor_sig then
 				internal_constructor_token.put (l_meth_token, class_type.implementation_id)
 			end
 			if feature_id /= 0 then
@@ -1555,7 +1600,11 @@ feature -- Metadata description
 			class_type_not_void: class_type /= Void
 			class_type_can_be_created: not class_type.associated_class.is_interface
 		do
-			define_constructor (class_type, default_sig, is_reference, 0, 0, 0)
+			if class_type.is_generic then
+				define_constructor (class_type, generic_ctor_sig, is_reference, 0, 0, 0)
+			else
+				define_constructor (class_type, default_sig, is_reference, 0, 0, 0)
+			end
 		end
 
 	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
@@ -3041,16 +3090,15 @@ feature {NONE} -- Once per modules being generated.
 			ise_generic_conformance_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
-				-- Define `ise_set_type_token'.
+				-- Define `ise_get_type_token'.
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_meth_sig.set_parameter_count (1)
-			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				ise_generic_type_token)
 
-			ise_set_type_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("____set_type"),
+			ise_get_type_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("____type"),
 				ise_eiffel_type_info_type_token, l_meth_sig)
 
 				-- Define `ise_check_invariant_token'.
@@ -3106,6 +3154,18 @@ feature {NONE} -- Once per modules being generated.
 			ise_eiffel_name_attr_generic_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_eiffel_name_attr_token, l_meth_sig)
 
+				-- Definition of `.ctor' for CLASS_TYPE_MARK_ATTRIBUTE
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+				md_emit.define_type_ref
+					(create {UNI_STRING}.make (Class_type_mark_enum_class_name), ise_runtime_token))
+
+			ise_eiffel_class_type_mark_attr_ctor_token := md_emit.define_member_ref
+				(uni_string, md_emit.define_type_ref
+					(create {UNI_STRING}.make (class_type_mark_attribute_name), ise_runtime_token), l_meth_sig)
 
 				-- Definition of `.ctor' for ASSERTION_LEVEL_ATTRIBUTE
 			ise_assertion_level_enum_token := md_emit.define_type_ref (
@@ -3223,6 +3283,7 @@ feature {NONE} -- Cleaning
 			class_mapping := Void
 			dbg_writer := Void
 			default_sig := Void
+			generic_ctor_sig := Void
 			defined_assemblies.wipe_out
 			defined_assemblies := Void
 			field_sig := Void

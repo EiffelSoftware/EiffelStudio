@@ -1,9 +1,10 @@
 /*
 indexing
-	description: "Ancestor to all Eiffel generated classes."
+	description: "Enum for a mark associated with a class type."
+	warning: "Values given here are the ones from CL_TYPE_A."
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -35,53 +36,19 @@ indexing
 		]"
 
 */
-	
+
 using System;
-using System.Reflection;
-using EiffelSoftware.Runtime.Types;
-using EiffelSoftware.Runtime.CA;
 
-namespace EiffelSoftware.Runtime {
+namespace EiffelSoftware.Runtime.Enums
+{
 
-[EIFFEL_CONSUMABLE_ATTRIBUTE (false)]
-[CLSCompliant (false)]
-[System.Runtime.InteropServices.ComVisibleAttribute (false)]
-public interface EIFFEL_TYPE_INFO {
-/*
-feature -- Assertion checking
-*/
-	void _invariant ();
-		// Checks invariant of current class, throw an exception
-		// when invariant is not satisfied.
-		//
-/*
-feature -- Access
-*/
-	RT_GENERIC_TYPE ____type();
-		/* Get generic type if any. */
-
-	String ____class_name();
-		// Name of current object's generating class
-		// (base class of the type of which it is a direct instance)
-
-/*
-feature -- Comparison
-*/
-	bool ____is_equal (Object other);
-		// Is `other' attached to an object considered
-		// equal to current object?
-
-/*
-feature -- Duplication
-*/
-	void ____copy (Object other);
-		// Update current object using fields of object attached
-		// to `other', so as to yield equal objects.
-
-	object ____standard_twin ();
-		// New object field-by-field identical to `other'.
-		// Always uses default copying semantics.
-
+[Serializable]
+public enum CLASS_TYPE_MARK_ENUM
+{
+	no_mark = 0x0,
+	expanded_mark = 0x1,
+	reference_mark = 0x2,
+	separate_mark = 0x3
 }
 
-}
+} // enum CLASS_TYPE_MARK_ENUM

@@ -889,14 +889,8 @@ feature -- Generic conformance
 		do
 		end
 
-	assign_computed_type is
-			-- Given elements on stack, compute associated type and set it to
-			-- newly created object.
-		do
-		end
-
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

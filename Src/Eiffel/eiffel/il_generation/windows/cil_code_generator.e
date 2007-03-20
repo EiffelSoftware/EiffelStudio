@@ -1263,7 +1263,7 @@ feature -- Class info
 
 	define_runtime_features (class_type: CLASS_TYPE) is
 			-- Define all features needed by ISE .NET runtime. It generates
-			-- `____class_name', `$$____type', `____set_type', `____type',
+			-- `____class_name', `$$____type', `____type',
 			-- `____copy', `____is_equal' and `____standard_twin'.
 		require
 			class_type_not_void: class_type /= Void
@@ -1274,7 +1274,7 @@ feature -- Class info
 			l_field_sig: like field_sig
 			l_type_field_token: INTEGER
 			l_class_token: INTEGER
-			l_name_ca: MD_CUSTOM_ATTRIBUTE
+			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING
 			l_meth_attr: INTEGER
 			l_gen_type: GEN_TYPE_I
@@ -1289,12 +1289,13 @@ feature -- Class info
 			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
 
+			create l_ca.make
+			l_ca.put_string (l_class_name)
+
 			if class_type.is_generic then
 				l_gen_type ?= class_type.type
-				create l_name_ca.make
-				l_name_ca.put_string (l_class_name)
 				from
-					l_name_ca.put_integer_32 (l_gen_type.meta_generic.count)
+					l_ca.put_integer_32 (l_gen_type.meta_generic.count)
 					i := l_gen_type.meta_generic.lower
 					nb := l_gen_type.meta_generic.upper
 				until
@@ -1342,18 +1343,24 @@ feature -- Class info
 							l_class_name.append (l_ext_class.assembly.full_name)
 						end
 					end
-					l_name_ca.put_string (l_class_name)
+					l_ca.put_string (l_class_name)
 					i := i + 1
 				end
-				l_name_ca.put_integer_16 (0)
+				l_ca.put_integer_16 (0)
 				define_custom_attribute (l_class_token,
-					current_module.ise_eiffel_name_attr_generic_ctor_token, l_name_ca)
+					current_module.ise_eiffel_name_attr_generic_ctor_token, l_ca)
 			else
-				create l_name_ca.make
-				l_name_ca.put_string (l_class_name)
-				l_name_ca.put_integer_16 (0)
+				l_ca.put_integer_16 (0)
 				define_custom_attribute (l_class_token,
-					current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
+					current_module.ise_eiffel_name_attr_ctor_token, l_ca)
+			end
+
+			if not class_type.type.has_no_mark then
+				create l_ca.make
+				l_ca.put_integer_32 (class_type.type.declaration_mark)
+				l_ca.put_integer_16 (0)
+				define_custom_attribute (l_class_token,
+					current_module.ise_eiffel_class_type_mark_attr_ctor_token, l_ca)
 			end
 
 			if is_single_inheritance_implementation or else is_single_class then
@@ -1409,30 +1416,6 @@ feature -- Class info
 						current_module.cls_compliant_ctor_token, not_cls_compliant_ca)
 				end
 
-					-- Define `____set_type'.
-				l_sig.reset
-				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-				l_sig.set_parameter_count (1)
-				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					current_module.ise_generic_type_token)
-
-				uni_string.set_string ("____set_type")
-				l_meth_token := md_emit.define_method (uni_string,
-					l_class_token, l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-				if is_cls_compliant then
-					define_custom_attribute (l_meth_token, current_module.cls_compliant_ctor_token,
-						not_cls_compliant_ca)
-				end
-
-				start_new_body (l_meth_token)
-				generate_current
-				generate_argument (1)
-				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_type_field_token)
-				generate_return (False)
-				method_writer.write_current_body
-
 					-- Define `____type'.
 				l_sig.reset
 				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -1454,7 +1437,6 @@ feature -- Class info
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_type_field_token)
 				generate_return (True)
 				method_writer.write_current_body
-
 
 					-- Define `____standard_twin'
 				l_sig.reset
@@ -2920,7 +2902,7 @@ feature -- IL Generation
 				-- 2 - class has exported creation procedure
 				-- 3 - class has automatic `default_create' procedure
 			if not class_c.is_deferred and (l_creators = Void or else not l_creators.is_empty) then
-				l_is_generic := class_c.is_generic
+				l_is_generic := class_c.is_generic or else class_c.is_tuple
 				create_name := class_type.full_il_create_type_name
 				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
 					{MD_TYPE_ATTRIBUTES}.Auto_layout |
@@ -2982,10 +2964,6 @@ feature -- IL Generation
 			l_count: INTEGER
 			i, nb: INTEGER
 		do
-			if class_type.associated_class.name_in_upper.is_equal (once "SPECIAL") or class_c.name_in_upper.is_equal (once "SPECIAL") then
-				nb := feat.argument_count
-			end
-
 			nb := feat.argument_count
 			l_meth_sig := method_sig
 			l_meth_sig.reset
@@ -3053,19 +3031,15 @@ feature -- IL Generation
 			if l_is_il_external then
 				create_object_with_args (current_class_type.implementation_id, feat.feature_id, feat.argument_count)
 			else
-				create_object (current_class_type.implementation_id)
-			end
-
-			if not l_is_il_external then
+				if is_generic then
+					generate_argument (nb)
+					create_generic_object (current_class_type.implementation_id)
+				else
+					create_object (current_class_type.implementation_id)
+				end
 				if current_class_type.is_expanded then
 						-- Box expanded object.
 					generate_metamorphose (current_class_type.type)
-				end
-				if is_generic then
-					duplicate_top
-					generate_argument (nb)
-					method_body.put_call ({MD_OPCODES}.callvirt,
-						current_module.ise_set_type_token, 1, False)
 				end
 				if current_class_type.is_expanded then
 						-- Take address of expanded object.
@@ -4161,9 +4135,17 @@ feature -- Local saving
 feature -- Object creation
 
 	create_object (a_type_id: INTEGER) is
-			-- Create object of `a_type_id'.
+			-- Create non-generic object of `a_type_id'.
 		do
 			method_body.put_newobj (constructor_token (a_type_id), 0)
+		end
+
+	create_generic_object (a_type_id: INTEGER) is
+			-- Create generic object of `a_type_id'.
+		require
+			type_generic: class_types.item (a_type_id).is_generic
+		do
+			method_body.put_newobj (constructor_token (a_type_id), 1)
 		end
 
 	create_object_with_args (a_type_id: INTEGER; a_feature_id: INTEGER; a_arg_count: INTEGER) is
@@ -4598,6 +4580,7 @@ feature -- Variables access
 		local
 			gen_type_i: GEN_TYPE_I
 			local_index: INTEGER
+			generic_type_token: INTEGER
 		do
 			if cl_type_i.is_expanded and then cl_type_i.is_external then
 					-- Load a default value of a local variable.
@@ -4607,17 +4590,28 @@ feature -- Variables access
 				generate_local (local_index)
 			else
 					-- Create object using default constructor.
-				create_object (cl_type_i.implementation_id)
+				gen_type_i ?= cl_type_i
+				if gen_type_i = Void then
+					create_object (cl_type_i.implementation_id)
+				else
+					gen_type_i.generate_gen_type_il (Current, True)
+					generate_current_as_reference
+					method_body.put_call ({MD_OPCODES}.callvirt,
+						current_module.ise_get_type_token, 0, True)
+					generic_type_token := actual_class_type_token (generic_type_id)
+					internal_generate_external_call (current_module.ise_runtime_token,
+						generic_type_token, Void,
+						"evaluated_type", normal_type, <<generic_type_class_name>>,
+						type_class_name, True)
+					if is_verifiable then
+						method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, generic_type_token)
+					end
+					create_generic_object (cl_type_i.implementation_id)
+				end
 			end
-			gen_type_i ?= cl_type_i
 			if cl_type_i.is_expanded then
 					-- Box expanded object.
 				generate_metamorphose (cl_type_i)
-			end
-			if gen_type_i /= Void then
-				duplicate_top
-				gen_type_i.generate_gen_type_il (Current, True)
-				assign_computed_type
 			end
 		end
 
@@ -6850,21 +6844,6 @@ feature -- Generic conformance
 			-- Generate a NONE_TYPE instance.
 		do
 			create_object (none_type_id)
-		end
-
-	assign_computed_type is
-			-- Given elements on stack, compute associated type and set it to
-			-- newly created object.
-		do
-				-- First object on stack is newly created object on which we
-				-- want to assign the computed type.
-				-- Second object is the array containing the type array.
-				-- Last, we push current object to the stack.
-			generate_current_as_reference
-			internal_generate_external_call (current_module.ise_runtime_token, 0,
-				generic_conformance_class_name,
-				"compute_type", Static_type, <<type_info_class_name, type_class_name,
-				type_info_class_name>>, Void, False)
 		end
 
 feature {NONE} -- Implementation: generation

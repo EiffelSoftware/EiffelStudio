@@ -44,6 +44,10 @@
 
 #pragma module EIFRTVMS	    // force uppercase module name
 
+/*
+doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific code">
+*/
+
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "rt_assert.h"

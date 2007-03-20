@@ -90,7 +90,6 @@ feature -- Basic operations
 		local
 			l_scope: POINTER
 			l_cache: like assembly_cache
-			l_fusion_name: STRING
 			l_amd: ASSEMBLY_METADATA
 			l_fn: WEL_STRING
 			l_hash: NATURAL_64
@@ -135,21 +134,16 @@ feature -- Basic operations
 					l_cache := assembly_cache
 					create Result.make (a_file_name, l_name.string, l_hash, l_key, l_flags, l_amd)
 					if l_cache /= default_pointer and Result.is_signed then
-						create l_fusion_name.make (100)
-						l_fusion_name.append (Result.name)
-						l_fusion_name.append ("Version=")
-						l_fusion_name.append (Result.version_string)
-						l_fusion_name.append ("Culture=")
-						if Result.is_neutral_locale then
-							l_fusion_name.append ("neutral")
-						else
-							l_fusion_name.append (Result.locales.first)
-						end
-						l_fusion_name.append ("PublicKeyToken=")
-						l_fusion_name.append (Result.public_key_token_string)
-						create l_name.make (l_fusion_name)
+
+						create l_name.make (Result.out)
 						if c_is_in_cache (l_cache, l_name.item) then
 							Result.set_is_locatable_in_gac
+						else
+								-- Check 1.x
+							create l_name.make (Result.out_v1x)
+							if c_is_in_cache (l_cache, l_name.item) then
+								Result.set_is_locatable_in_gac
+							end
 						end
 					end
 
@@ -418,23 +412,22 @@ feature {NONE} -- Externals
 			"[
 				IAssemblyCache* pCache = (IAssemblyCache*)$a_cache;
 				ASSEMBLY_INFO asmInfo;
+				WCHAR   path[MAX_PATH];
 				HRESULT hr = S_OK;
 				
-				ZeroMemory ((LPVOID)&asmInfo, sizeof (ASSEMBLY_INFO));			
+				ZeroMemory ((LPVOID)&asmInfo, sizeof (ASSEMBLY_INFO));
+				asmInfo.cbAssemblyInfo = sizeof (ASSEMBLY_INFO);
+				asmInfo.pszCurrentAssemblyPathBuf = path;
+				asmInfo.cchBuf = MAX_PATH;
 				
 				hr = pCache->QueryAssemblyInfo (0, (LPCWSTR)$a_name, &asmInfo);
 				if (SUCCEEDED(hr))
 				{
-					if (NULL != asmInfo.pszCurrentAssemblyPathBuf)
-					{
-						free (asmInfo.pszCurrentAssemblyPathBuf);
-					}
 					return (EIF_BOOLEAN) (ASSEMBLYINFO_FLAG_INSTALLED == asmInfo.dwAssemblyFlags);
 				}
 				return (EIF_BOOLEAN)FALSE;
 			]"
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -23,19 +23,6 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW) is
-			-- Set default values.
-		do
-			develop_window := a_tool
-			initialize
-			build_formatters
-			fill_in
-			on_select
-		end
-
-
 feature{EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Docking issue
 
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is

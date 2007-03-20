@@ -1,0 +1,10 @@
+test_name implicit-type-cause-crash-on-cast
+test_description If the result type of {ARRAY.to_cil} is never explicitely specified then it causes a crash during code generation in verifiable mode.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

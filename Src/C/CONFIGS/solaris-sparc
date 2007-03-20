@@ -35,11 +35,11 @@ lngpad_2='LNGPAD(2)'
 #Formatting
 #Check value for next 4
 inttypes_include='#include <sys/inttypes.h>'
-eif_integer_64_display='PRId64'
-eif_natural_64_display='PRIu64'
+eif_integer_64_display='"lld"'
+eif_natural_64_display='"llu"'
 eif_pointer_display='"X"'
-eif_integer_64_constant='INT64_C(x)'
-eif_natural_64_constant='UINT64_C(x)'
+eif_integer_64_constant='CAT2(x,ll)'
+eif_natural_64_constant='CAT2(x,ull)'
 d_uint64_to_real='define'
 
 #File system
@@ -159,18 +159,18 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='gcc'
+	cc='cc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -D__BUILTIN_VA_ARG_INCR'
+	ccflags='-D__BUILTIN_VA_ARG_INCR'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='g++'
+	cpp='CC'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -189,13 +189,13 @@ eif_arch='EIF_SPARC'
 Mcc='Mcc'
 d_tls='undef'
 #Check value for next 2
-mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-optimize="-O3"
+mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
+mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DEIF_POSIX_THREADS"
+optimize="-xO2"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall'
-wkoptimize="-O0"
+warning_level=''
+wkoptimize=""
 
 #Makefiles
 ar='ar'
@@ -218,7 +218,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -lrt -lthread"
+mtlibs="$libs -lrt -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'

@@ -120,9 +120,9 @@ feature -- Redefine
 	show_indicator is
 			-- Show indicators if possible.
 		do
-				if not internal_indicator.exists then
-					build_indicator
-				end
+			if not internal_indicator.exists then
+				build_indicator
+			end
 		end
 
 	clear_indicator is

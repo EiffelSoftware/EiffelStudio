@@ -13,29 +13,17 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	EXTENDED_TYPE_A
 
 inherit
-
 	COMPILER_EXPORTER
 
 	TYPE_A
-	redefine
-		renaming, is_extended, has_renaming, instantiated_in, instantiation_in, actual_type, has_associated_class
---			is_formal,
---			has_formal_generic,
---			is_loose,
---			same_as,
---			format,
---			is_full_named_type,
---			convert_to,
---			check_const_gen_conformance,
---			is_reference,
---			is_expanded,
---			conformance_type,
---			actual_type
-	end
+		redefine
+			renaming, is_extended, has_renaming, instantiated_in,
+			instantiation_in, has_associated_class,
+			to_type_set
+		end
 
 create
 	make
@@ -60,7 +48,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type, actual_type: TYPE_A
+	type: TYPE_A
 			-- Type to which the renaming `renaming' is applied.
 
 	renaming: RENAMING_A
@@ -110,6 +98,15 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Byte code information for entity type creation
 		do
 			Result := type.create_info
+		end
+
+feature -- Conversion
+
+	to_type_set: TYPE_SET_A
+			-- Create a type set containing one element which is `Current'.
+		do
+			create Result.make (1)
+			Result.extend (Current)
 		end
 
 feature -- Setters

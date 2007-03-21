@@ -20,7 +20,8 @@ inherit
 			instantiation_in,
 			is_loose,
 			is_valid,
-			is_type_set
+			is_type_set,
+			to_type_set
 		end
 
 	ARRAYED_LIST[EXTENDED_TYPE_A]
@@ -49,21 +50,12 @@ inherit
 			is_equal, copy
 		end
 
---	SHARED_AST_CONTEXT
---		export
---			{NONE} all
---		undefine
---			is_equal, copy
---		end
-
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		undefine
 			is_equal, copy
 		end
-
-
 
 create
 	make, make_filled, make_from_array
@@ -172,7 +164,6 @@ feature -- Access
 			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
 			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
-
 
 	feature_i_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state.
@@ -636,6 +627,14 @@ feature {TYPE_SET_A} -- Access implementation
 			end
 		end
 
+feature -- Conversion
+
+	to_type_set: TYPE_SET_A
+			-- Create a type set containing one element which is `Current'.
+		do
+			Result := Current
+		end
+
 feature -- Comparison
 
 	conform_to (a_other: like Current): BOOLEAN is
@@ -852,7 +851,6 @@ feature -- Status
 		do
 			Result := True
 		end
-
 
 	is_valid: BOOLEAN is
 			-- Is the type set valid, meaning that all items are valid items?
@@ -1128,7 +1126,6 @@ feature -- Visitor
 		end
 
 feature {NONE} -- Implementation
-
 
 	formal_resolution_stack: STACK[INTEGER] is
 			-- A stack which is used to prohibit inifinite recursion while resolving a formal type to its constraining type set.

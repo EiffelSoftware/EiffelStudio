@@ -928,9 +928,23 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- Ok, no error: We have no create clause which makes `default_create' available
 						-- and the constraint demands only `default_create'
 					else
-						create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
-						l_unmatched_features.extend (class_c.feature_of_rout_id (system.default_create_id))
-						check first_not_void: l_unmatched_features.first /= Void end
+							-- Generate list of features not matching constraint.
+						from
+							create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+							crc_list.start
+						until
+							crc_list.after
+						loop
+								-- If `creators_table' is not Void, it simply means we have an empty creation routine
+								-- and therefore all the creation constraints are not met.
+								-- If it is Void, then `{ANY}.default_create' is a valid creation routine, in that
+								-- case we should not list `default_create' has not beeing met if listed in the creation
+								-- constraint.
+							if creators_table /= Void or else not crc_list.item.rout_id_set.has (system.default_create_id) then
+								l_unmatched_features.extend (crc_list.item)
+							end
+							crc_list.forth
+						end
 					end
 				end
 					-- We have an error if we have unmatched features.

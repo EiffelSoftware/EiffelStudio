@@ -206,7 +206,9 @@ feature -- Basic operation
 			end
 			window_manager.for_all_development_windows (agent (a_window: EB_DEVELOPMENT_WINDOW)
 				do
-					a_window.editors_manager.current_editor.reload
+					if a_window.editors_manager.current_editor /= Void then
+						a_window.editors_manager.current_editor.reload
+					end
 				end)
 			window_manager.on_refactoring_end
 			enable_sensitive

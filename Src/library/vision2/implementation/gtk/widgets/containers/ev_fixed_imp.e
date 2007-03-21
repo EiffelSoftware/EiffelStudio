@@ -89,10 +89,20 @@ feature -- Status setting
 			-- Set `a_widget.y_position' to `a_y'.
 		local
 			w_imp: EV_WIDGET_IMP
-			l_parent_box: POINTER
+			l_parent_box, l_parent_window, l_fixed_child: POINTER
 		do
 			w_imp ?= a_widget.implementation
 			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
+
+			if app_implementation.rubber_band_is_drawn then
+					-- This is a hack to prevent drawing corruption during pick and drop.
+				app_implementation.erase_rubber_band
+				l_fixed_child := i_th_fixed_child (index_of (a_widget, 1))
+				{EV_GTK_EXTERNALS}.set_gtk_fixed_child_struct_x (l_fixed_child, a_x)
+				{EV_GTK_EXTERNALS}.set_gtk_fixed_child_struct_y (l_fixed_child, a_y)
+				l_parent_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (w_imp.c_object)
+				{EV_GTK_EXTERNALS}.gdk_window_move (l_parent_window, a_x, a_y)
+			end
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
 		end
 

@@ -29,8 +29,6 @@ inherit
 
 	EB_VIEWPOINT_AREA
 
-	WIDGET_OWNER
-
 	SHARED_WORKBENCH
 
 	EB_CONSTANTS
@@ -236,37 +234,27 @@ feature -- Setting
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_focus end)
 		end
 
-	set_widget (new_widget: EV_WIDGET) is
-			-- Display `new_widget' under the tool bar.
+	ensure_formatter_display (a_formatter: EB_FORMATTER) is
+			-- Ensure that `a_formatter' is displayed in Current tool.
+		require
+			a_formatter_attached: a_formatter /= Void
+			a_formatter_exists: formatters.has (a_formatter)
+			a_formatter_selected: a_formatter.selected
 		local
-			l_formatters: like formatters
-			l_cursor: CURSOR
 			l_control_bar: EV_WIDGET
-			done: BOOLEAN
+			l_formatter_widget: EV_WIDGET
 		do
-			if not formatter_container.has (new_widget) then
-				l_formatters := formatters
-				l_cursor := l_formatters.cursor
-				from
-					formatter_tool_bar_area.wipe_out
-					l_formatters.start
-				until
-					l_formatters.after or done
-				loop
-					if l_formatters.item.selected then
-						l_control_bar := l_formatters.item.control_bar
-						if l_control_bar /= Void then
-							formatter_tool_bar_area.extend (l_control_bar)
-							formatter_tool_bar_area.disable_item_expand (l_control_bar)
-						end
-						outer_container.wipe_out
-						outer_container.extend (formatter_container)
-						done := True
-					end
-					l_formatters.forth
+			l_formatter_widget := a_formatter.widget
+			if not formatter_container.has (l_formatter_widget) then
+				formatter_tool_bar_area.wipe_out
+				l_control_bar := a_formatter.control_bar
+				if l_control_bar /= Void then
+					formatter_tool_bar_area.extend (l_control_bar)
+					formatter_tool_bar_area.disable_item_expand (l_control_bar)
 				end
-				l_formatters.go_to (l_cursor)
-				formatter_container.replace (new_widget)
+				outer_container.wipe_out
+				outer_container.extend (formatter_container)
+				formatter_container.replace (l_formatter_widget)
 			end
 		end
 
@@ -775,7 +763,8 @@ feature{NONE} -- Implementation
 			viewpoint_area.hide
 			l_formatters := layout_formatters
 			if l_formatters.is_empty then
-				set_widget (empty_widget)
+				formatter_tool_bar_area.wipe_out
+				formatter_container.replace (empty_widget)
 				output_line.set_text ("")
 			else
 				l_cursor := l_formatters.cursor

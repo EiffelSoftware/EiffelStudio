@@ -63,15 +63,7 @@ feature -- Status setting
 			else
 				associated_feature := Void
 				feature_cmd := Void
-				if
-					selected and then
-					not widget.is_displayed
-				then
-					if widget_owner /= Void then
-						widget_owner.set_widget (widget)
-					end
-					display_header
-				end
+				ensure_display_in_widget_owner
 			end
 		end
 
@@ -87,15 +79,7 @@ feature -- Status setting
 			end
 			must_format := True
 			format
-			if
-				selected and then
-				not widget.is_displayed
-			then
-				if widget_owner /= Void then
-					widget_owner.set_widget (widget)
-				end
-				display_header
-			end
+			ensure_display_in_widget_owner
 		ensure
 			feature_set: a_feature = associated_feature
 			cmd_created_if_possible: (a_feature = Void) = (feature_cmd = Void)

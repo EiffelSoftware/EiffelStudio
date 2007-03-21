@@ -77,14 +77,20 @@ feature -- Basic operations
 			l_current_class_c	: CLASS_C
 			l_class_as          : CLASS_AS
 			l_named_tuple_type	: NAMED_TUPLE_TYPE_A
+			l_has_renaming		: BOOLEAN
+			l_constraints		: TYPE_SET_A
 		do
 			if is_ok_for_completion then
 				create insertion
 				insertion.put ("")
 				is_create := False
 				is_static := False
-				last_was_constrained := False
 				last_type := Void
+				last_constraints := Void
+				last_target_type := Void
+				last_formal := Void
+				last_was_constrained := False
+				last_was_multi_constrained := False
 				create completion_possibilities.make (1, 30)
 				create inserted_feature_table.make (30)
 				cp_index := 1
@@ -109,7 +115,13 @@ feature -- Basic operations
 						end
 					end
 					if l_class_list /= Void then
-
+						if last_was_multi_constrained then
+							check
+								last_constraints_not_void: last_constraints /= Void
+							end
+							l_constraints := last_constraints
+							l_has_renaming := extend_types_has_renaming (l_constraints)
+						end
 						from
 							l_class_list.start
 						until
@@ -117,7 +129,7 @@ feature -- Basic operations
 						loop
 
 							cls_c := l_class_list.item
-							-- Build the completion list based on data mined from
+								-- Build the completion list based on data mined from
 							if cls_c /= Void and then cls_c.has_feature_table then
 
 									-- Add named tuple generics.
@@ -151,7 +163,12 @@ feature -- Basic operations
 													feat_table.has (crtrs.key_for_iteration) and then
 													crtrs.item_for_iteration.is_exported_to (l_current_class_c)
 												then
-													add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
+													feat := feat_table.item (crtrs.key_for_iteration)
+													if l_has_renaming then
+														add_renaming_to_completion_possibilities (feat, l_constraints, cls_c)
+													else
+														add_feature_to_completion_possibilities	(feat)
+													end
 												end
 												crtrs.forth
 											end
@@ -174,13 +191,16 @@ feature -- Basic operations
 											(exploring_current_class or else feat.is_exported_to (l_current_class_c)) and then
 											(show_any_features or else not feat.written_class.name_in_upper.is_equal (Any_name))
 										then
-											add_feature_to_completion_possibilities (feat)
+											if l_has_renaming then
+												add_renaming_to_completion_possibilities (feat, l_constraints, cls_c)
+											else
+												add_feature_to_completion_possibilities	(feat)
+											end
 										end
 											externals.forth
 										end
 									end
 								else
-									-- MTNTODO
 									show_any_features := preferences.editor_data.show_any_features or else cls_c.name_in_upper.is_equal (Any_name)
 									from
 										feat_table.start
@@ -193,7 +213,11 @@ feature -- Basic operations
 											(show_any_features or else not feat.written_class.name_in_upper.is_equal (Any_name)) and then
 											(not feat.is_infix and not feat.is_prefix)
 										then
-											add_feature_to_completion_possibilities (feat)
+											if l_has_renaming then
+												add_renaming_to_completion_possibilities (feat, l_constraints, cls_c)
+											else
+												add_feature_to_completion_possibilities	(feat)
+											end
 										end
 										feat_table.forth
 									end
@@ -213,15 +237,11 @@ feature -- Basic operations
 						completion_possibilities.sort
 					end
 					reset_after_search
-
 				end
 			end
 		end
 
 feature -- Internal access
-
-	last_type : TYPE_A
-		-- Last type stores when `class_c_to_complete_from'
 
 	inserted_feature_table: HASH_TABLE [E_FEATURE, INTEGER]
 
@@ -246,9 +266,6 @@ feature -- Internal access
 
 feature {NONE} -- Private Status
 
-	is_create: BOOLEAN
-			-- was auto-complete called after "create" ?
-
 	is_static: BOOLEAN
 			-- was auto-complete called after "feature {class}" ?
 
@@ -259,6 +276,69 @@ feature {NONE} -- Private Status
 			-- was auto-complete called after "agent {CLASS}"?
 
 	build_overload_list: BOOLEAN
+
+	extend_types_has_renaming (a_type_set: TYPE_SET_A): BOOLEAN is
+			-- Do renamings exist in `a_type_set'?
+		local
+			l_extended_type: EXTENDED_TYPE_A
+		do
+			if a_type_set /= Void then
+				from
+					a_type_set.start
+				until
+					a_type_set.after or Result
+				loop
+					l_extended_type := a_type_set.item
+					if l_extended_type.renaming /= Void then
+						Result := True
+					end
+					a_type_set.forth
+				end
+			end
+		end
+
+	search_renamed_features_from_generics (a_type_set: TYPE_SET_A): HASH_TABLE [INTEGER, INTEGER] is
+			-- Search renamed features from generics.
+		require
+			current_class_c_not_void: current_class_c /= Void
+			a_type_set_not_void: a_type_set /= Void
+		local
+			l_feat_table: E_FEATURE_TABLE
+			l_feature: E_FEATURE
+			l_found_feat_id, l_feat_id, l_name_id: INTEGER
+			l_renaming: RENAMING_A
+			l_stop : BOOLEAN
+		do
+			l_feat_table := current_class_c.api_feature_table
+			create Result.make (4)
+			from
+				l_feat_table.start
+			until
+				l_feat_table.after
+			loop
+				from
+					l_feature := l_feat_table.item_for_iteration
+					l_feat_id := l_feature.feature_id
+					l_name_id := l_feature.name_id
+					l_stop := False
+					l_found_feat_id := -1
+					a_type_set.start
+				until
+					a_type_set.after or l_stop
+				loop
+					l_renaming := a_type_set.item.renaming
+					if l_renaming /= Void and then l_renaming.is_feature_renamed_by_name_id (l_name_id) then
+						l_found_feat_id := l_renaming.renamed (l_feat_id)
+						l_stop := l_found_feat_id /= l_feat_id
+					end
+					a_type_set.forth
+				end
+				if l_stop then
+					Result.force (l_found_feat_id, l_found_feat_id)
+				end
+				l_feat_table.forth
+			end
+		end
 
 feature -- Class names completion
 
@@ -457,7 +537,14 @@ feature {NONE} -- Implementation
 					end
 					last_type := type
 				elseif is_static or is_parenthesized or found_agent_keyword then
-					Result := create_class_list_and_insert (found_class)
+					if found_class /= Void then
+						Result := create_class_list_and_insert (found_class)
+					else
+							-- Multi constaint case
+						if last_type /= Void then
+							Result := create_class_list_and_insert_associated_classes_from_type (last_type)
+						end
+					end
 				end
 			end
 
@@ -767,46 +854,6 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void implies (Result.feat_as /= Void and Result.name /= Void)
 		end
 
-	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
-			-- is "create" preceeding current position ?
-		local
-			line: EDITOR_LINE
-			token: EDITOR_TOKEN
-			par_cnt: INTEGER
-		do
-			line := current_line
-			current_line := a_line
-			token := current_token
-			current_token := a_token
-			if not token_image_is_same_as_word (current_token, closing_brace) then
-				go_to_previous_token
-			end
-			Result := token_image_is_same_as_word (current_token, Create_word)
-			if not Result and then token_image_is_same_as_word (current_token, closing_brace) then
-				from
-					par_cnt := 1
-				until
-					par_cnt = 0 or else current_token = Void
-				loop
-					go_to_previous_token
-					if token_image_is_same_as_word (current_token, Opening_brace) then
-						par_cnt:= par_cnt - 1
-					elseif token_image_is_same_as_word (current_token, Closing_brace) then
-						par_cnt:= par_cnt + 1
-					end
-				end
-				go_to_next_token
-				error := error or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
-				if not error then
-					go_to_previous_token
-					go_to_previous_token
-					Result := token_image_is_same_as_word (current_token, Create_word)
-				end
-			end
-			current_token := token
-			current_line := line
-		end
-
 	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
 			-- Is "feature" preceeding current position ?
 		local
@@ -821,6 +868,7 @@ feature {NONE} -- Implementation
 			token := current_token
 			current_token := a_token
 			found_agent_keyword := False
+			found_precursor := False
 			if token_image_is_same_as_word (current_token, Closing_brace) then
 				from
 					par_cnt := 1
@@ -838,14 +886,17 @@ feature {NONE} -- Implementation
 				l_temp_token := current_token
 				l_temp_line := current_line
 				go_to_previous_token
-				if current_token /= Void and then current_token.image.as_lower.is_equal ("agent") then
+				if current_token /= Void and then token_image_is_same_as_word (current_token, "agent") then
 					found_agent_keyword := True
+				end
+				if current_token /= Void and then token_image_is_same_as_word (current_token, "precursor") then
+					found_precursor := True
 				end
 				current_token := l_temp_token
 				current_line := l_temp_line
 
 				go_to_next_token
-				error := error or else found_agent_keyword or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
+				error := error or else found_agent_keyword or else found_precursor or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
 				if not error then
 					Result := True
 				end
@@ -904,12 +955,12 @@ feature {NONE} -- Implementation
 	            	type := type_from (token, a_line)
 	            	if type /= Void then
 	            		if type.is_type_set then
-
+							last_type := type
+							found_class := Void
 	            		else
 	            			last_type := type
 		            		found_class := type.associated_class
 	            		end
-
 		            else
 		            	found_class := Void
 		            end
@@ -1072,10 +1123,7 @@ feature {NONE} -- Implementation
 			loop
 				l_type := a_type.generics.item (i).actual_type
 				if l_type.is_loose then
-					l_type := l_type.instantiation_in (a_type, a_type.associated_class.class_id)
-						-- Do we need to solve the type?	
-					--l_type := l_type.actual_type
-					--l_type := constrained_type (l_type)
+					l_type := l_type.instantiation_in (l_type, a_type.associated_class.class_id)
 				end
 				create l_feat_name.make (a_type.label_name (i).twin, l_type, current_feature_i)
 				insert_in_completion_possibilities (l_feat_name)
@@ -1101,7 +1149,7 @@ feature {NONE} -- Implementation
 				last_constained_type_not_void: last_formal /= Void
 			end
 			l_formal_as := l_generics.i_th (last_formal.position)
-			if l_formal_as /= Void then
+			if l_formal_as /= Void and then l_formal_as.creation_feature_list /= Void then
 				from
 					l_list := l_formal_as.creation_feature_list
 					l_list.start
@@ -1115,277 +1163,6 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_list.forth
-				end
-			end
-		end
-
-	type_from (token: EDITOR_TOKEN; line: EDITOR_LINE): TYPE_A is
-			-- try to analyze class text to find type associated with word represented by `token'
-		require
-			token_not_void: token /= Void
-			line_not_void: line /= Void
-			token_in_line: line.has_token (token)
-			current_class_c_not_void: current_class_c /= Void
-		do
-			current_token := token
-			searched_token := token
-			current_line := line
-			searched_line := line
-			error := False
-			find_expression_start
-			if not error then
-				Result := searched_type
-			end
-		end
-
-	searched_type: TYPE_A is
-			-- analyze class text from `current_token' to find type associated with `searched_token'
-		require
-			current_class_i_not_void: current_class_i /= Void
-			current_class_c_not_void: current_class_c /= Void
-		local
-			exp: LINKED_LIST [EDITOR_TOKEN]
-			name: STRING
-			par_cnt: INTEGER
-			processed_class: CLASS_C
-			type: TYPE_A
-			feat: E_FEATURE
-			l_current_class_c: CLASS_C
-			l_named_tuple_type: NAMED_TUPLE_TYPE_A
-			l_pos: INTEGER
-			l_feature_state: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
-		do
-			from
-				l_current_class_c := current_class_c
-				Result := l_current_class_c.actual_type
-				if token_image_is_same_as_word (current_token, "create") then
-					go_to_next_token
-					is_create := True
-					error := not token_image_is_same_as_word (current_token, opening_brace)
-					if not error then
-						go_to_next_token
-						error := current_token = Void
-						if not error then
-							Result := type_of_class_corresponding_to_current_token
-							skip_parenthesis (opening_brace, closing_brace)
-						end
-					end
-				elseif token_image_is_same_as_word (current_token, opening_parenthesis) then
-						-- if we find a closing parenthesis, we go directly to the corresponding
-						-- opening parenthesis
-					par_cnt:= 1
-					from
-						create exp.make
-					until
-						par_cnt = 0 or else current_token = Void
-					loop
-						go_to_next_token
-						exp.extend (current_token)
-						if token_image_is_same_as_word (current_token, closing_parenthesis) then
-							par_cnt:= par_cnt - 1
-						elseif token_image_is_same_as_word (current_token, opening_parenthesis) then
-							par_cnt:= par_cnt + 1
-						end
-					end
-					if current_token = Void then
-						error := True
-					else
-						if exp.count > 0 then
-							exp.finish
-							exp.remove
-						end
-						Result := complete_expression_type (exp)
-					end
-				else
-					name := current_token.image.as_lower
-					if name.is_equal ("precursor") then
-						go_to_next_token
-						if token_image_is_same_as_word (current_token, opening_brace) then
-							go_to_next_token
-							error := error or else current_token = Void
-							if not error then
-								Result := type_of_class_corresponding_to_current_token
-								skip_parenthesis (opening_brace, closing_brace)
-								if Result /= Void and then Result.associated_class /= Void then
-									if Result.associated_class.has_feature_table then
-										feat := Result.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
-									end
-								end
-							end
-						else
-							go_to_previous_token
-							if current_feature_as /= Void and then l_current_class_c.parents /= Void then
-								from
-									l_current_class_c.parents.start
-								until
-									feat /= Void or else l_current_class_c.parents.after
-								loop
-									type := l_current_class_c.parents.item
-									if type.associated_class /= Void and then type.associated_class.has_feature_table then
-										feat := type.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
-									end
-									l_current_class_c.parents.forth
-								end
-							end
-						end
-					else
-						if l_current_class_c.has_feature_table then
-							feat := l_current_class_c.feature_with_name (name)
-						end
-						is_create := create_before_position (current_line, current_token)
-					end
-					if feat = Void then
-							-- Could not find feature, may be a local or argument
-						type := type_of_local_entity_named (name)
-						if type = Void then
-							type := type_of_constants_or_reserved_word (current_token)
-						end
-					else
-							-- Found feature
-						error := False
-						type := feat.type
-					end
-
-					if type /= Void then
-						if type.is_loose then
-							Result := type.instantiation_in (Result, Result.associated_class.class_id)
-							if Result /= Void then
-								Result := Result.actual_type
-								error := False
-							end
-						else
-							Result := type
-							error := False
-						end
-					else
-						error := True
-					end
-				end
-				go_to_next_token
-				if not error and then token_image_is_same_as_word (current_token, opening_parenthesis) then
-					skip_parenthesis (opening_parenthesis, closing_parenthesis)
-					go_to_next_token
-				end
-				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
-					skip_parenthesis (opening_bracket, closing_bracket)
-					go_to_next_token
-					Result := process_bracket_type (Result)
-				end
-				if not error then
-					if after_searched_token then
-						error := Result = Void
-					else
-						error := Result = Void or else not token_image_is_in_array (current_token, feature_call_separators)
-						go_to_next_token
-					end
-				end
-					-- Here I go away from the `Result' to other variables, they are:
-					-- `last_constraints' and `last_target_type'
-					-- (I think it's better to use variable names with a comment as we somehow split up the paths.
-					-- Using Result for the one case and `last_constraints' for mc is one possiblity. But it is asymetric.
-					-- In each iteration we may meet multi constrained formals, in such a case
-					-- `last_constraints' is used. `last_constraitns' does _not_ contain any formals nor other typesets.
-					-- Otherwise `last_target_type' is used.
-				if Result /= Void then
-					move_to_next_target (Result, current_class_c.actual_type)
-				end
-			until
-				error or else after_searched_token
-			loop
-				name := current_token.image.as_lower
-
-				if last_was_multi_constrained then
-						-- We're in the multi constraint case.
-						-- We have the constraining type set `last_constraints' and a feature name `name'.
-						-- The objective is to compute `last_target_type' and to get a `E_FEATURE' instance
-						-- of the feature named `name' and store it in `feat'.
-					check last_target_type_not_known: last_target_type = Void end
-					l_feature_state := last_constraints.e_feature_state_by_name (name)
-					if l_feature_state.features_found_count = 0 then
-							-- There's no feature with the name `name' in the type set.
-						feat := Void
-					elseif	l_feature_state.features_found_count = 1 then
-							-- We found exactly one feautre, this is good.
-							-- Let's store the class type to which the feature belongs into `last_target_type'.
-						feat := l_feature_state.feature_item
-						last_target_type := l_feature_state.class_type_of_feature
-					else
-							-- Error: multiple features found (user should rename them)
-							-- We simply cannot tell which one we should take.
-							-- We should maybe report something in the status bar?
-							-- The best thing would be to underline the feature and
-							-- give a tool tip if the user hovers over it. Not easy... :-/
-							-- You can get all information by calling
-							-- `last_constraints.info_about_feature_by_name_id' it's a bit less efficient but you get all information.
-						feat := Void
-					end
-					if feat /= Void and then feat.type /= Void then
-							type := feat.type
-					end
-				else
-					check
-						Result_has_associated_class: Result.has_associated_class
-					end
-					l_named_tuple_type ?= Result
-					processed_class := Result.associated_class
-					error := True
-					if processed_class /= Void and then processed_class.has_feature_table or l_named_tuple_type /= Void then
-						type := Void
-						if l_named_tuple_type /= Void then
-							l_pos := l_named_tuple_type.label_position (name)
-							if l_pos > 0 then
-								type := l_named_tuple_type.generics.item (l_pos)
-							end
-							if type = Void then
-								feat := processed_class.feature_with_name (name)
-								if feat /= Void then
-									type := feat.type
-								end
-							end
-						else
-							feat := processed_class.feature_with_name (name)
-							if feat /= Void then
-								type := feat.type
-							end
-						end
-					end
-				end
-
-				--
-				-- check sane_state: type /= Void implies (feat /= Void and last_target_type /= Void) end
-
-					-- Prepare for the next round
-				if type /= Void then
-						-- In case we have a formal type we will:
-						-- * compute the flat version (without formals) of the constraints and store it in `last_constraints'
-						-- In case we have an any other type (including an anchored) we will:
-						-- * instantiate it and make it available in `last_target_type' right away.
-					move_to_next_target (type, last_target_type)
-				end
-
-				go_to_next_token
-				if token_image_is_same_as_word (current_token, opening_parenthesis) then
-					skip_parenthesis (opening_parenthesis, closing_parenthesis)
-					go_to_next_token
-				end
-				if not error and then token_image_is_same_as_word (current_token, opening_bracket) then
-					skip_parenthesis (opening_bracket, closing_bracket)
-					go_to_next_token
-					Result := process_bracket_type (Result)
-				end
-				error := error or else not (after_searched_token or else token_image_is_same_as_word (current_token, "."))
-				is_create := is_create and then after_searched_token
-				go_to_next_token
-			end
-			if error then
-				Result := Void
-			else
-				if last_target_type /= Void then
-						-- ordinary: one type, one class
-					Result := last_target_type
-				else
-						-- multi constraint: several classes provide features
-					Result := last_constraints
 				end
 			end
 		end
@@ -1534,43 +1311,67 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	move_to_next_target (a_type, a_parent_type: TYPE_A)
-			-- Makes the transition from `a_parent_type' to `a_type'.
-			-- It binds a loose type and computes the proper constraints for formals.
-			-- if you have `l_a.f.g', `l_a's type would be `a_parent type' and `f's type would be `a_type'.
-			--
-			-- `a_type' is a possible loose type (`is_lose')
-			--| Non-loose types are not affected.
+	add_renaming_to_completion_possibilities (a_feat: E_FEATURE; a_type_set: TYPE_SET_A; a_extended_class: CLASS_C) is
+			-- Renamed feature from feature.
+			-- a_type_set is flattened.
 		require
-			a_type_not_void: a_type /= Void
-			a_parent_type_has_associated_class: a_parent_type.has_associated_class
+			a_type_set_not_void: a_type_set /= Void
+			a_feat_not_void: a_feat /= Void
+			a_extended_class_not_void: a_extended_class /= Void
+		local
+			l_renaming: RENAMING_A
+			l_name_id, l_new_name_id: INTEGER
+			l_stop: BOOLEAN
+			l_stat: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER_32; constraint_position: INTEGER_32]
+			l_type_set: TYPE_SET_A
+			l_name_for_completion: EB_FEATURE_FOR_COMPLETION
 		do
-			if a_type.is_loose then
-				check not_multi_constraint: a_type.is_multi_constrained_formal (current_class_c) end
-				last_target_type := a_type.instantiation_in (a_parent_type, a_parent_type.associated_class.class_id)
-				if last_target_type /= Void then
-					last_target_type := last_target_type.actual_type
-					last_was_constrained := last_target_type.is_formal
-					last_formal ?= last_target_type
-					if last_was_constrained then
-						last_was_multi_constrained := last_formal.is_multi_constrained_formal (current_class_c)
-						if last_was_multi_constrained then
-								-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.							
-							last_constraints := constrained_types (last_formal).constraining_types_if_possible (current_class_c)
-								-- We don't know yet the real target type (it'll be one out of last_constraints)
-							last_target_type := Void
+			l_name_id := a_feat.name_id
+			from
+				l_type_set := a_type_set
+				l_stat := l_type_set.e_feature_state_by_name_id (l_name_id)
+				l_type_set.start
+			until
+				l_type_set.after or l_stop
+			loop
+				if a_extended_class.class_id = l_type_set.item.associated_class.class_id then
+					l_renaming := l_type_set.item.renaming
+					if l_renaming /= Void and then l_stat.features_found_count = 1 then
+						l_stop := True
+						l_new_name_id := new_name_from_renaming_a (l_renaming, l_name_id)
+						if l_new_name_id /= -1 then
+							create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id))
+							insert_in_completion_possibilities (l_name_for_completion)
 						else
-							last_target_type := constrained_type (last_formal)
+							add_feature_to_completion_possibilities (a_feat)
 						end
 					end
-					error := False
+				else
+					if l_stat.features_found_count = 1 then
+						add_feature_to_completion_possibilities (a_feat)
+					end
 				end
-			else
-					-- Nothing special todo: a_type is directly the target type of a possible next call.
-				last_target_type := a_type
-				error := False
+				l_type_set.forth
+			end
+		end
+
+	new_name_from_renaming_a (a_renaming: RENAMING_A; a_old_name: INTEGER): INTEGER is
+			-- New name from renaming.
+			-- -1 if not found.
+		require
+			a_old_name_exists: names_heap.has (a_old_name)
+			a_renaming_not_void: a_renaming /= Void
+		do
+			Result := -1
+			from
+				a_renaming.start
+			until
+				a_renaming.after or Result /= -1
+			loop
+				if a_renaming.item_for_iteration = a_old_name then
+					Result := a_renaming.key_for_iteration
+				end
+				a_renaming.forth
 			end
 		end
 

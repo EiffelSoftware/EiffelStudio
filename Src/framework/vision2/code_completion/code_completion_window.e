@@ -765,7 +765,7 @@ feature {NONE} -- Implementation
 		local
 			i, l_upper: INTEGER
 			l_name: NAME_FOR_COMPLETION
-			l_parents_inserted: HASH_TABLE [NAME_FOR_COMPLETION, NAME_FOR_COMPLETION]
+			l_parents_inserted: ARRAYED_LIST [NAME_FOR_COMPLETION]
 		do
 			create l_parents_inserted.make (a_names.count)
 			from
@@ -780,7 +780,7 @@ feature {NONE} -- Implementation
 				end
 				if not l_parents_inserted.has (l_name) then
 					Result := Result + 1
-					l_parents_inserted.force (l_name, l_name)
+					l_parents_inserted.extend (l_name)
 				end
 				i := i + 1
 			end

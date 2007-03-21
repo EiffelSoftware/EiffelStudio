@@ -138,15 +138,7 @@ feature -- Status setting
 				stone := Void
 				reset_display
 			end
-			if
-				selected and then
-				not widget.is_displayed
-			then
-				if widget_owner /= Void then
-					widget_owner.set_widget (widget)
-				end
-				display_header
-			end
+			ensure_display_in_widget_owner
 		end
 
 	set_focus is

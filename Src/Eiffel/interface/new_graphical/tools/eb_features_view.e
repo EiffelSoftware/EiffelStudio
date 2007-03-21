@@ -142,11 +142,15 @@ feature -- Status setting
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
+			cs: CLASSI_STONE
 		do
 			fs ?= a_st
+			cs ?= a_st
 			if fs /= Void then
 				show
 				set_focus
+			elseif cs /= Void then
+				develop_window.tools.show_default_tool_of_class
 			end
 		end
 

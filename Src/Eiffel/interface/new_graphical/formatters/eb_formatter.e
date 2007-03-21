@@ -243,6 +243,15 @@ feature -- Setting
 			end
 		end
 
+	ensure_display_in_widget_owner is
+			-- If Current is selected, ensure Current is displayed in `widget_owner' if `widget_owner' is attached.
+		do
+			if selected and then widget_owner /= Void then
+				widget_owner.ensure_formatter_display (Current)
+				display_header
+			end
+		end
+
 feature -- Formatting
 
 	format is
@@ -323,9 +332,10 @@ feature -- Pop up
 			-- Make `widget' visible.
 		do
 			if widget_owner /= Void then
-				if widget_owner.last_widget /= widget then
-					widget_owner.set_widget (widget)
-				end
+				widget_owner.ensure_formatter_display (Current)
+--				if widget_owner.last_widget /= widget then
+--					widget_owner.set_widget (widget)
+--				end
 				widget_owner.force_display
 			end
 			display_header
@@ -334,10 +344,10 @@ feature -- Pop up
 			end
 		end
 
-	widget_owner: WIDGET_OWNER
+	widget_owner: EB_FORMATTER_BASED_TOOL
 			-- Container of `widget'.
 
-	set_widget_owner (new_owner: WIDGET_OWNER) is
+	set_widget_owner (new_owner: like widget_owner) is
 			-- Set `widget_owner' to `new_owner'.
 		do
 			widget_owner := new_owner
@@ -349,13 +359,7 @@ feature -- Actions
 			-- `Widget's parent is displayed.
 		do
 			internal_displayed := True
-			if
-				widget_owner /= Void and then
-				selected
-			then
-				widget_owner.set_widget (widget)
-				display_header
-			end
+			ensure_display_in_widget_owner
 			synchronize
 			if is_valid then
 				format

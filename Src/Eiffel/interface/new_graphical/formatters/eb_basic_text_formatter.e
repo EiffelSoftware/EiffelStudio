@@ -125,12 +125,9 @@ feature -- Status setting
 			else
 				classi := Void
 				if selected then
-					if widget_owner /= Void then
-						widget_owner.set_widget (widget)
-					end
 					editor.clear_window
-					display_header
 				end
+				ensure_display_in_widget_owner
 			end
 		end
 
@@ -145,12 +142,7 @@ feature -- Status setting
 			end
 			must_format := True
 			format
-			if selected then
-				if widget_owner /= Void then
-					widget_owner.set_widget (widget)
-				end
-				display_header
-			end
+			ensure_display_in_widget_owner
 		end
 
 feature {NONE} -- Properties

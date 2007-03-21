@@ -15,7 +15,7 @@ feature
 		end
 
 
-	p (a: NATIVE_ARRAY [SYSTEM_OBJECT]) is
+	p (a: NATIVE_ARRAY [ANY]) is
 		do
 		end
 

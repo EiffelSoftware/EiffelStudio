@@ -121,6 +121,24 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	empty_widget: EV_WIDGET is
+			-- Empty widget of Current tool if there is no formatter attached
+		local
+			l_frame: EV_FRAME
+		do
+			if empty_widget_internal = Void then
+				create l_frame
+				l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+				l_frame.set_background_color ((create {EV_STOCK_COLORS}).white)
+				Result := l_frame
+				l_frame.drop_actions.extend (agent drop_stone)
+				empty_widget_internal := l_frame
+			end
+			Result := empty_widget_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	visible: BOOLEAN
@@ -590,6 +608,9 @@ feature{NONE} -- Implementation
 	customized_formatters: like formatters
 			-- Customized formatters
 
+	empty_widget_internal: like empty_widget
+			-- Implementation of `empty_widget'
+
 feature{NONE} -- Actions
 
 	on_customized_formatter_loaded is
@@ -746,7 +767,6 @@ feature{NONE} -- Implementation
 			l_formatters: like formatters
 			l_cursor: CURSOR
 			l_formatter: EB_FORMATTER
-			l_control_bar: EV_WIDGET
 		do
 			set_is_format_vetoed (True)
 			tool_bar.wipe_out
@@ -754,30 +774,46 @@ feature{NONE} -- Implementation
 			formatter_tool_bar_area.wipe_out
 			viewpoint_area.hide
 			l_formatters := layout_formatters
-			l_cursor := l_formatters.cursor
-			from
-				l_formatters.start
-			until
-				l_formatters.after
-			loop
-				l_formatter := l_formatters.item
-				if l_formatter /= Void then
-					l_formatter.set_widget_owner (Current)
-					tool_bar.extend (l_formatter.new_button)
-					l_formatter.set_output_line (output_line)
-					if l_formatter.selected then
-						l_control_bar := l_formatters.item.control_bar
-						if l_control_bar /= Void then
-							formatter_tool_bar_area.extend (l_control_bar)
-							formatter_tool_bar_area.disable_item_expand (l_control_bar)
-						end
+			if l_formatters.is_empty then
+				set_widget (empty_widget)
+				output_line.set_text ("")
+			else
+				l_cursor := l_formatters.cursor
+				from
+					l_formatters.start
+				until
+					l_formatters.after
+				loop
+					l_formatter := l_formatters.item
+					if l_formatter /= Void then
+						attach_formatter (l_formatter)
+					else
+						tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 					end
-				else
-					tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
+					l_formatters.forth
 				end
-				l_formatters.forth
+				l_formatters.go_to (l_cursor)
 			end
 			pop_default_formatter
+		end
+
+	attach_formatter (a_formatter: EB_FORMATTER) is
+			-- Attach `a_formatter' to Current tool.
+		require
+			a_formatter_attached: a_formatter /= Void
+		local
+			l_control_bar: EV_WIDGET
+		do
+			a_formatter.set_widget_owner (Current)
+			tool_bar.extend (a_formatter.new_button)
+			a_formatter.set_output_line (output_line)
+			if a_formatter.selected then
+				l_control_bar := a_formatter.control_bar
+				if l_control_bar /= Void then
+					formatter_tool_bar_area.extend (l_control_bar)
+					formatter_tool_bar_area.disable_item_expand (l_control_bar)
+				end
+			end
 		end
 
 	customized_formatter_button: EV_TOOL_BAR_BUTTON is

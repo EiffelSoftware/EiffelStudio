@@ -45,7 +45,7 @@ feature -- Hanlde pointer events
 
 			focus_out_agent := agent on_focus_out
 			create l_env
-			l_env.application.focus_out_actions.extend_kamikaze (focus_out_agent)
+			l_env.application.focus_out_actions.extend (focus_out_agent)
 		end
 
 	cancel_tracing_pointer is
@@ -88,8 +88,13 @@ feature {NONE} -- Implementation
 
 	clear_up is
 			-- Redefine
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			cancel_actions.wipe_out
+			create l_env
+			l_env.application.focus_out_actions.start
+			l_env.application.focus_out_actions.prune (focus_out_agent)
 		end
 
 indexing

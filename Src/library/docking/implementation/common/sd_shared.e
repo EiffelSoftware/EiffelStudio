@@ -204,6 +204,7 @@ feature -- Status setting
 			-- Set `show_all_feedback_indicator'.
 		do
 			show_all_feedback_indicator_cell.put (a_bool)
+			is_set_show_all_feedback_indicator_called.put (True)
 		ensure
 			set: show_all_feedback_indicator = a_bool
 		end
@@ -220,6 +221,7 @@ feature -- Status setting
 			-- Set `show_tab_stub_text_cell' with `a_bool'
 		do
 			show_tab_stub_text_cell.put (a_bool)
+			is_set_show_all_feedback_indicator_called.put (True)
 		ensure
 			set: show_all_tab_stub_text =  a_bool
 		end
@@ -519,6 +521,22 @@ feature {SD_DOCKING_MANAGER} -- Implementation
 			-- All docking managers.
 		once
 			create Result.make (1)
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_set_show_all_feedback_indicator_called: CELL [BOOLEAN] is
+			-- If `set_show_all_feedback_indicator' has been called?
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_set_show_tab_stub_text_called: CELL [BOOLEAN] is
+			-- If `set_show_tab_stub_text' has been called?
+		once
+			create Result
 		ensure
 			not_void: Result /= Void
 		end

@@ -477,9 +477,6 @@ feature {NONE} -- Implementation
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
 			show_all_applicable_docking_indicators_preference.change_actions.extend (agent on_show_all_applicable_docking_indicators_changed)
-
-			-- We update Smart Docking libary value.
-			on_show_all_applicable_docking_indicators_changed
 		end
 
 	preferences: PREFERENCES

@@ -11,6 +11,7 @@ feature
 			t2: TEST2
 			a: ANY
 		do
+			print ("fddss")
 			create t2
 			t := t2
 			t.display_agent_type

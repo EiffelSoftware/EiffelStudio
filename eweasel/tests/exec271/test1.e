@@ -17,14 +17,14 @@ feature
 			print ("%N")
 		end
 
-	f: LIST [like item] is
+	f (v: LIST [like item]): LIST [like item] is
 		do
 
 		end
 
-	g: like item is
+	g (v: like item): like item is
 		do
 
 		end
-		
+
 end

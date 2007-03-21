@@ -105,14 +105,6 @@ feature -- Access
 	stone_handlers: HASH_TABLE [STRING, STRING]
 			-- Stone handlers [tool_id, stone_name]
 
-	set_stone_handlers (a_handlers: like stone_handlers) is
-			-- Set `stone_handlers' with `a_handlers'.
-		require
-			a_handlers_attached: a_handlers /= Void
-		do
-			stone_handlers := a_handlers.twin
-		end
-
 feature -- Status report
 
 	is_customized_tool: BOOLEAN is
@@ -229,6 +221,14 @@ feature -- Setting
 			is_pixmap_loaded := b
 		ensure
 			is_pixmap_loaded_set: is_pixmap_loaded = b
+		end
+
+	set_stone_handlers (a_handlers: like stone_handlers) is
+			-- Set `stone_handlers' with `a_handlers'.
+		require
+			a_handlers_attached: a_handlers /= Void
+		do
+			stone_handlers := a_handlers.twin
 		end
 
 feature{NONE} -- Implementation/Data

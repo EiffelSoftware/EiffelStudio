@@ -727,6 +727,7 @@ feature {NONE} -- Implementation
 					text.hide
 					component_widget.show
 					provide_result
+					grid.refresh_now
 				else
 					component_widget.hide
 					text.show

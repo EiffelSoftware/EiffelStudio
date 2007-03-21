@@ -6,6 +6,6 @@ copy_raw	test.e	$CLUSTER test.e
 copy_raw	test1.e	$CLUSTER test1.e
 
 compile_melted
-compile_result validity_error TEST2 VTCG
+compile_result validity_error TEST VTCG
 
 test_end

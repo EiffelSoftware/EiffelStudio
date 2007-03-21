@@ -7,7 +7,8 @@ feature
 
 	make is
 		local
-			t, t2: TEST2
+			t: TEST1
+			t2: TEST2
 			a: ANY
 		do
 			create t2

@@ -390,7 +390,7 @@ feature {NONE} -- Preference Strings
 	height_string: STRING is "interface.development_window.height"
 	x_position_string: STRING is "interface.development_window.x_position"
 	y_position_string: STRING is "interface.development_window.y_position"
-	is_force_debug_mode_string: STRING is "interface.developement_window.is_force_debug_mode"
+	is_force_debug_mode_string: STRING is "interface.development_window.is_force_debug_mode"
 	is_maximized_string: STRING is "interface.development_window.is_maximized"
 	left_panel_use_explorer_style_string: STRING is "interface.development_window.left_panel_use_explorer_style"
 	left_panel_width_string: STRING is "interface.development_window.window_left_panel_width"
@@ -477,6 +477,9 @@ feature {NONE} -- Implementation
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
 			show_all_applicable_docking_indicators_preference.change_actions.extend (agent on_show_all_applicable_docking_indicators_changed)
+
+			-- We update Smart Docking libary value.
+			on_show_all_applicable_docking_indicators_changed
 		end
 
 	preferences: PREFERENCES

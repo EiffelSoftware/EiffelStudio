@@ -161,7 +161,7 @@ feature -- Open inner container data.
 				open_editor_minimized_data_minimize (l_config_data)
 			end
 
-			internal_docking_manager.command.resize (False)
+			internal_docking_manager.command.resize (True)
 		ensure
 			cleared: top_container = Void
 		end

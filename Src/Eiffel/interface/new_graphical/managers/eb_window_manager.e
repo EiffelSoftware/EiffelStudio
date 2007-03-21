@@ -174,7 +174,11 @@ feature -- Basic operations
 					-- Set the title if a stone hasn't already been set by session manager.
 				a_window.set_title (new_title)
 			end
-			notify_observers (a_window, Notify_added_window)
+			if a_new_window then
+				notify_observers (a_window, Notify_added_window)
+			else
+				notify_observers (a_window, Notify_changed_window)
+			end
 			last_created_window := a_window
 
 				-- Show the window if not already shown

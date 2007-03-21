@@ -9,6 +9,9 @@ feature
 		local
 			a: ANY
 		do
+			a := agent g
+			print (a.generating_type)
+			print ("%N")
 			a := agent f
 			print (a.generating_type)
 			print ("%N")
@@ -19,4 +22,9 @@ feature
 
 		end
 
+	g: like item is
+		do
+
+		end
+		
 end

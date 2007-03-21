@@ -149,8 +149,6 @@ feature -- Status setting
 			if fs /= Void then
 				show
 				set_focus
-			elseif cs /= Void then
-				develop_window.tools.show_default_tool_of_class
 			end
 		end
 

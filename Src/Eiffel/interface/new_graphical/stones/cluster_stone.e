@@ -20,6 +20,11 @@ inherit
 			stone_name
 		end
 
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_subfolder
@@ -105,11 +110,26 @@ feature -- Access
 
  	synchronized_stone: STONE is
  			-- Return a valid stone representing the same object after a recompilation.
+ 		local
+ 			l_group: like group
  		do
  			if is_valid then
  				Result := Current
  			else
- 				Result := Void
+ 				if group /= Void then
+ 						-- Try to find a equivalent valid group.
+ 					l_group := group_of_id (id_of_group (group))
+ 					if l_group /= Void then
+ 						check
+ 							l_group_valid: l_group.is_valid
+ 						end
+		 				if path /= Void then
+		 					create {CLUSTER_STONE}Result.make_subfolder (l_group, path, folder_name)
+		 				else
+		 					create {CLUSTER_STONE}Result.make (l_group)
+		 				end
+ 					end
+ 				end
  			end
  		end
 

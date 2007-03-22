@@ -2060,7 +2060,7 @@ feature {NONE} -- Implementation
 		do
 			if a_stone.is_valid then
 				is_rebuild_world_needed := True
-				launch_stone (stone)
+				launch_stone (a_stone)
 			end
 		end
 

@@ -103,6 +103,7 @@ feature -- Status setting
 		local
 			wel_win: EV_WIDGET_IMP
 		do
+			application_implementation.erase_rubber_band
 			wel_win ?= a_widget.implementation
 			check
 				wel_win_not_void: wel_win /= Void

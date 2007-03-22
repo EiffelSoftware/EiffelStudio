@@ -103,25 +103,6 @@ feature {EV_ANY_I} -- WEL Implementation
 			index_not_changed: old ev_children.index = ev_children.index
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so notify all children.
-		local
-			loc_cursor: CURSOR
-		do
-			from
-				loc_cursor := ev_children.cursor
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.update_for_pick_and_drop (starting)
-				ev_children.forth
-			end
-			ev_children.go_to (loc_cursor)
-		ensure then
-			index_not_changed: old ev_children.index = ev_children.index
-		end
-
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		do

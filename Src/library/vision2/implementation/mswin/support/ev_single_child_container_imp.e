@@ -176,14 +176,6 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so notify `item_imp'.
-		do
-			if item_imp /= Void then
-				item_imp.update_for_pick_and_drop (starting)
-			end
-		end
-
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?

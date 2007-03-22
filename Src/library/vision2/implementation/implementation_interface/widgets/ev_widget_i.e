@@ -275,6 +275,12 @@ feature {EV_ANY_I} -- Implementation
 			parent_void: parent = Void
 		end
 
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	on_help_context_changed is

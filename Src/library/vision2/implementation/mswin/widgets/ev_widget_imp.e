@@ -702,15 +702,6 @@ feature {NONE} -- Implementation, mouse_button_events
 			on_button_double_click (x_pos, y_pos, 3)
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so update appearance of
-			-- `Current' to reflect available targets.
-		deferred
-		end
-
-
 feature {NONE} -- Implementation
 
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is

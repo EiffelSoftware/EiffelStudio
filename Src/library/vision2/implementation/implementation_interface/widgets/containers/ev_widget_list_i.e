@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"EiffelVision widget list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "widget list, container"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_WIDGET_LIST_I
 
 inherit
@@ -22,6 +22,23 @@ inherit
 		end
 
 feature {EV_ANY_I} -- implementation
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify all children.
+		local
+			loc_cursor: CURSOR
+		do
+			from
+				loc_cursor := cursor
+				start
+			until
+				off
+			loop
+				item.implementation.update_for_pick_and_drop (starting)
+				forth
+			end
+			go_to (loc_cursor)
+		end
 
 	interface: EV_WIDGET_LIST;
 

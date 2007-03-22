@@ -375,6 +375,15 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Nothing to do here.
+		end
+
 feature {NONE} -- External
 
 	get_rvalue (color: NATURAL_32): NATURAL_8 is

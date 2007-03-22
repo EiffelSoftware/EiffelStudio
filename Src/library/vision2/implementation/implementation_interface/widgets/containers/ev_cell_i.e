@@ -1,12 +1,12 @@
 indexing
-	description: 
+	description:
 		"EiffelVision cell. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_CELL_I
 
 inherit
@@ -14,7 +14,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_DOCKABLE_TARGET_I
 		redefine
 			interface
@@ -24,10 +24,20 @@ feature -- Element change
 
 	extend (an_item: like item) is
 			-- Ensure that structure includes `an_item'.
-		do	
+		do
 			replace (an_item)
 		end
-		
+
+feature {EV_ANY_I} -- Implementation
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify `item_imp'.
+		do
+			if item /= Void then
+				item.implementation.update_for_pick_and_drop (starting)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CELL;

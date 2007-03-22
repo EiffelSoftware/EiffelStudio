@@ -169,12 +169,6 @@ feature {NONE} -- Implementation
 			-- Actually start the pick/drag and drop mechanism.
 		do
 			if not is_dock_executing then
-					-- We now create the screen at the start of every pick.
-					-- See `pnd_screen' comment for explanation.
-				if pnd_screen = Void then
-					create pnd_screen
-				end
-
 				--interface.pointer_motion_actions.block
 						-- Block `pointer_motion_actions'.
 				initialize_transport (a_screen_x, a_screen_y, actual_source)

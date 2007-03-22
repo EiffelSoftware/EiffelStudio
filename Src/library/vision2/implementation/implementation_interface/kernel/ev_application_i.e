@@ -467,6 +467,44 @@ feature -- Implementation
 
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
+	x_origin, y_origin: INTEGER
+		-- Temp coordinate values for origin of Pick and Drop.
+
+	set_x_y_origin (a_x_origin, a_y_origin: INTEGER) is
+			-- Set `x_origin' and `y_origin' to `a_x_origin' and `a_y_origin' respectively.
+		do
+			x_origin := a_x_origin
+			y_origin := a_y_origin
+		end
+
+	rubber_band_is_drawn: BOOLEAN
+		-- Is the PnD rubber band drawn on screen?
+
+	draw_rubber_band is
+			-- Draw a segment between initial pick point and `destination'.
+		do
+			pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+			rubber_band_is_drawn := True
+		end
+
+	erase_rubber_band is
+			-- Erase previously drawn rubber band.
+		do
+			if rubber_band_is_drawn then
+				pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+				rubber_band_is_drawn := False
+			end
+		end
+
+	pnd_screen: EV_SCREEN is
+			-- Screen object used for drawing PND transport line
+		once
+			create Result
+			Result.enable_dashed_line_style
+			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.set_invert_mode
+		end
+
 	pnd_pointer_x,
 	pnd_pointer_y: INTEGER
 		-- Position of pointer on previous PND draw.

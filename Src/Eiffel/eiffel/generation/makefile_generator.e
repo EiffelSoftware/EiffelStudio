@@ -1103,7 +1103,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("/emain.c")
 			make_file.put_string ("%N%Tcd ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
+			make_file.put_string (" ; $(MAKE) emain.o%N%N")
 
 			if System.in_final_mode then
 					-- Generate dependence rule for E1/estructure.h in final mode

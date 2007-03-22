@@ -369,10 +369,12 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Process single click on mouse buttons.
 		do
-			if pick_n_drop_status = pnd_pick then
-				refresh_now
+			if not is_recycled then
+				if pick_n_drop_status = pnd_pick then
+					refresh_now
+				end
+				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 			end
-			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is

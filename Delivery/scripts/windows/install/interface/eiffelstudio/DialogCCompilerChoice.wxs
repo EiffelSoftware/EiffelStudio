@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <?ifdef EiffelStudio?>
-		  <UI Id="UI.dialog_choose_c_compiler">
-			  <RadioButtonGroup Property="SELECTEDCCOMPILER">
-				  <RadioButton Value="bcb" X="5" Y="5" Width="289" Height="14" Text="Install and use free &amp;Borland C++ 5.5 compiler" />
-				  <RadioButton Value="msc" X="5" Y="19" Width="289" Height="14" Text="Use a &amp;Microsoft C/C++ compiler (Recommended)" />
-			  </RadioButtonGroup>
-  			
-			  <Dialog Id="DialogCCompilerChoice" Width="375" Height="220" Title="[ProductName]">
-				  <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_c.bmp" />
+      <UI Id="UI.dialog_choose_c_compiler">
+        <RadioButtonGroup Property="SELECTEDCCOMPILER">
+          <RadioButton Value="bcb" X="5" Y="5" Width="289" Height="14" Text="Install and use free &amp;Borland C++ 5.5 compiler" />
+          <RadioButton Value="msc" X="5" Y="19" Width="289" Height="14" Text="Use a &amp;Microsoft C/C++ compiler (Recommended)" />
+        </RadioButtonGroup>
+        
+        <Dialog Id="DialogCCompilerChoice" Width="375" Height="220" Title="[ProductName]">
+          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_c.bmp" />
           <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
             <Text>[BigFont]C/C++ Compiler Selection</Text>
           </Control>
@@ -36,8 +36,8 @@
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
           </Control>
-			  </Dialog>
-		  </UI>
+        </Dialog>
+      </UI>
     <?endif?>
-	</Fragment>
+  </Fragment>
 </Wix>

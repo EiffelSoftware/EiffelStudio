@@ -3,7 +3,7 @@
   <Fragment>
     <UI Id="UI.dialog_browse_install_folder">
       <Dialog Id="DialogSelectFolder" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
-        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop.bmp" />
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]Please Select an Installation Location</Text>
         </Control>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI.dialog_files_in_use">
       <Dialog Id="FilesInUse" Width="375" Height="220" Title="[ProductName]" KeepModeless="yes">
-        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_warn.bmp" />
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_warn.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont]Files in Use</Text>
         </Control>
@@ -27,5 +27,5 @@
         </Control>
       </Dialog>
     </UI>
-	</Fragment>
+  </Fragment>
 </Wix>

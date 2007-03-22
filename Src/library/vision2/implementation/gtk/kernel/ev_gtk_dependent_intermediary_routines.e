@@ -128,21 +128,6 @@ feature -- Implementation
 			end
 		end
 
-	scroll_wheel_translate (n: INTEGER; args: POINTER): TUPLE is
-			-- Transform scroll wheel event
-		local
-			scroll_event: POINTER
-			button_number: INTEGER
-		do
-			scroll_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-			if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_event_scroll_struct_scroll_direction (scroll_event) = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_scroll_up_enum then
-				button_number := 4
-			else
-				button_number := 5
-			end
-			Result := [{EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM, 0, 0, button_number, 0.5, 0.5, 0.5, 0, 0]
-		end
-
 	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
 		local

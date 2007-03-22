@@ -109,12 +109,8 @@ feature -- Event handling
 
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a mouse_wheel action sequence.
-		local
-			l_app_imp: like app_implementation
 		do
 			create Result
-			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
 		end
 
 	create_file_drop_actions: like file_drop_actions_internal

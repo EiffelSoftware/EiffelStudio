@@ -229,7 +229,7 @@ feature {EV_ANY_I} -- Implementation
 			l_motion_tuple: like motion_tuple
 			l_app_motion_tuple: like app_motion_tuple
 			l_no_more_events: BOOLEAN
-			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y: INTEGER
+			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y, l_button_number: INTEGER
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -346,6 +346,15 @@ feature {EV_ANY_I} -- Implementation
 									{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_x_root (gdk_event).truncated_to_integer,
 									{EV_GTK_EXTERNALS}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer
 									)
+							end
+							l_widget_imp ?= eif_object_from_gtk_object (event_widget)
+							if l_widget_imp /= Void then
+								if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_event_scroll_struct_scroll_direction (gdk_event) = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_scroll_up_enum then
+									l_button_number := 4
+								else
+									l_button_number := 5
+								end
+								l_widget_imp.call_button_event_actions ({EV_GTK_EXTERNALS}.gdk_button_press_enum, 0, 0, l_button_number, 0.5, 0.5, 0.5, 0, 0)
 							end
 							l_propagate_event := True
 						else

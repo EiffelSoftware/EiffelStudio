@@ -130,23 +130,6 @@ feature -- Button intermediary agent routines
 			end
 		end
 
-	button_press_switch_intermediary (a_c_object: POINTER; a_type: INTEGER;	a_x, a_y, a_button: INTEGER;
-			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER) is
-			--  Call to switch between type of button press event
-		local
-			a_widget: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void and then not a_widget.is_destroyed then
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
-					-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
-				else
-					a_widget.call_button_event_actions (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-				end
-			end
-		end
-
 feature {EV_ANY_IMP} -- Window intermediary agent routines
 
 	on_widget_show (a_c_object: POINTER) is

@@ -1011,7 +1011,9 @@ feature {NONE} -- Scroll bars Management
 				l_offset := (maximum_top_line_index).min (
 					first_line_displayed - scrolling_quantum * delta)
 			end
-			set_first_line_displayed (l_offset, True)
+			if vertical_scrollbar.value_range.has (l_offset) then
+				set_first_line_displayed (l_offset, True)
+			end
 		end
 
 	scrolling_quantum: INTEGER is

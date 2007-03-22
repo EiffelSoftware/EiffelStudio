@@ -1,5 +1,5 @@
 indexing
-	description: "Grid to display metric result item"
+	description: "Grid item to display a query language item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -58,7 +58,7 @@ feature -- Initialization
 			row_index := a_row_index
 			set_overriden_fonts (label_font_table)
 			if not a_path then
-					-- Initialize current as a query language tem.
+					-- Initialize current as a query language item.
 				if a_item.is_feature then
 					l_feature ?= a_item
 					feature_with_class_style.set_ql_feature (l_feature)

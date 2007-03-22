@@ -10,7 +10,7 @@ class
 	EB_CLASS_BROWSER_DOMAIN_VIEW
 
 inherit
-	EB_CLASS_BROWSER_GRID_VIEW [EB_METRIC_RESULT_ROW]
+	EB_CLASS_BROWSER_GRID_VIEW [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 		redefine
 			data,
 			update,
@@ -146,7 +146,7 @@ feature{NONE} -- Implementation/Data
 			Result := item_to_put_in_editor_for_single_item_grid
 		end
 
-	domain: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+	domain: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 			-- Domain to be displayed in Current
 
 	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
@@ -240,7 +240,7 @@ feature{NONE} -- Implementation/Data
 			y_valid: y > 0 and y <= domain.count
 		local
 			i, j: INTEGER
-			l_content: DS_LIST [EB_METRIC_RESULT_ROW]
+			l_content: DS_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 			l_tbl: HASH_TABLE [EV_GRID_ITEM, INTEGER]
 		do
 			from
@@ -318,10 +318,10 @@ feature{NONE} -- Implementation/Data
 			end
 		end
 
-	invisible_items: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+	invisible_items: DS_LINKED_LIST [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 			-- List of invisible result rows
 
-	last_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]
+	last_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 			-- Last comparator
 
 feature{NONE} -- Implementation
@@ -379,7 +379,7 @@ feature{NONE} -- Implementation
 				until
 					l_content.after
 				loop
-					l_domain.force_last (create {EB_METRIC_RESULT_ROW}.make(l_content.item))
+					l_domain.force_last ([l_content.item, l_content.item.partial_path])
 					l_content.forth
 				end
 			else
@@ -429,8 +429,8 @@ feature{NONE} -- Implementation
 	build_sortable_and_searchable is
 			-- Build sortable and searchable facilities
 		local
-			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
-			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
+			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
+			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 		do
 			old_make (grid)
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
@@ -451,7 +451,7 @@ feature{NONE} -- Implementation
 			enable_direct_start_search
 		end
 
-	generate_grid_item (a_y: INTEGER; a_item: EB_METRIC_RESULT_ROW) is
+	generate_grid_item (a_y: INTEGER; a_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]) is
 			-- Generate grid items for row `a_y' from `a_item'.
 		require
 			domain_attached: domain /= Void
@@ -460,10 +460,10 @@ feature{NONE} -- Implementation
 		local
 			l_item: EB_METRIC_GRID_RESULT_ITEM
 			l_path_item: EB_METRIC_GRID_RESULT_ITEM
-			l_ql_item: QL_ITEM
 			l_row_background_color: EV_COLOR
+			l_ql_item: QL_ITEM
 		do
-			l_ql_item := a_item.item
+			l_ql_item := a_item.ql_item
 			create l_item.make (l_ql_item, 1, a_y, False)
 			create l_path_item.make (l_ql_item, 2, a_y, True)
 
@@ -531,7 +531,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -542,12 +542,12 @@ feature{NONE} -- Implementation/Sorting
 			fill_rows
 		end
 
-	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
+	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]) is
 			-- Sort `domain' using `a_comparator'.
 		require
 			a_comparator_attached: a_comparator /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_RESULT_ROW]
+			l_sorter: DS_QUICK_SORTER [TUPLE [ql_item: QL_ITEM; item_path: STRING]]
 			l_domain: like domain
 		do
 			l_domain := domain
@@ -557,29 +557,29 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	item_order_tester (a_item, b_item: EB_METRIC_RESULT_ROW; a_order: INTEGER): BOOLEAN
+	item_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]; a_order: INTEGER): BOOLEAN
 			-- Order tester for `a_item' and `b_item' using item name
 		require
 			a_item_attached: a_item /= Void
 			b_item_attached: b_item /= Void
 		do
 			if a_order = ascending_order then
-				Result := a_item.item.name < b_item.item.name
+				Result := a_item.ql_item.name < b_item.ql_item.name
 			else
-				Result := a_item.item.name > b_item.item.name
+				Result := a_item.ql_item.name > b_item.ql_item.name
 			end
 		end
 
-	path_order_tester (a_item, b_item: EB_METRIC_RESULT_ROW; a_order: INTEGER): BOOLEAN
+	path_order_tester (a_item, b_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]; a_order: INTEGER): BOOLEAN
 			-- Order tester for `a_item' and `b_item' using item path
 		require
 			a_item_attached: a_item /= Void
 			b_item_attached: b_item /= Void
 		do
 			if a_order = ascending_order then
-				Result := a_item.path < b_item.path
+				Result := a_item.item_path < b_item.item_path
 			else
-				Result := a_item.path > b_item.path
+				Result := a_item.item_path > b_item.item_path
 			end
 		end
 

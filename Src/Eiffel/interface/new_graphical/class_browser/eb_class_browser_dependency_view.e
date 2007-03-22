@@ -413,6 +413,7 @@ feature -- Constants
 	referencer_class_column: INTEGER is 3
 	feature_column: INTEGER is 4
 	feature_list_column: INTEGER is 5
+	position_column: INTEGER is 6
 			-- Column names
 
 feature{NONE} -- Grid binding
@@ -685,7 +686,7 @@ feature{NONE} -- Grid binding
 			end
 
 				-- Auto resize grid columns.
-			try_auto_resize_grid (<<[100, 200, feature_list_column]>>, False)
+			try_auto_resize_grid (<<[100, 200, feature_list_column], [100, 500, position_column]>>, False)
 		end
 
 	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)is

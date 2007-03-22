@@ -216,59 +216,6 @@ feature -- Grid binding
 			set_grid_row (a_row)
 		end
 
-	feature_list_item: EB_GRID_EDITOR_TOKEN_ITEM is
-			-- Grid item to display `feature_list'
-		require
-			feature_list_attached: feature_list /= Void
-		local
-			l_list: like feature_list
-			l_space: LIST [EDITOR_TOKEN]
-			l_text: LINKED_LIST [EDITOR_TOKEN]
-			i: INTEGER
-			l_count: INTEGER
-			l_feature_name_style: like feature_name_style
-			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
-		do
-			if feature_list_item_internal = Void then
-				create feature_list_item_internal
-				l_list := feature_list
-				check not l_list.is_empty end
-				feature_list_item_internal.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
-				l_count := l_list.count
-				l_feature_name_style := feature_name_style
-				if l_count > 1 then
-					plain_text_style.set_source_text (", ")
-					l_space := plain_text_style.text
-					create l_text.make
-					from
-						i := 1
-						l_list.start
-					until
-						l_list.after
-					loop
-						l_feature_name_style.set_ql_feature (l_list.item_for_iteration)
-						l_text.append (l_feature_name_style.text)
-						if i < l_count then
-							l_text.append (l_space)
-						end
-						i := i + 1
-						l_list.forth
-					end
-					feature_list_item_internal.set_text_with_tokens (l_text)
-				else
-					l_feature_name_style.set_ql_feature (l_list.first)
-					feature_list_item_internal.set_text_with_tokens (l_feature_name_style.text)
-				end
-				feature_list_item_internal.set_image (feature_list_item_internal.text)
-				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
-				l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent tooltip_text_function, l_tooltip))
-				feature_list_item_internal.set_general_tooltip (l_tooltip)
-			end
-			Result := feature_list_item_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	bind_feature_list_rows (a_parent_row: EV_GRID_ROW; a_column: INTEGER) is
 			-- Bind callers/callees rows as subrows of `a_parent_row'.
 			-- Binded rows will start their first item at `a_column'-th column.
@@ -277,7 +224,6 @@ feature -- Grid binding
 			a_column_positive: a_column > 0
 			feature_list_valid: feature_list /= Void and then not feature_list.is_empty
 		local
-			l_feature_list: like feature_list
 			l_cursor: DS_LIST_CURSOR  [QL_FEATURE]
 			l_style: like feature_name_style
 			l_grid_row: EV_GRID_ROW
@@ -366,9 +312,6 @@ feature{NONE} -- Implementation
 
 	grid_item_internal: like grid_item
 			-- Implementation of `grid_item'.
-
-	feature_list_item_internal: like feature_list_item
-			-- Implementation of `feature_list_item'
 
 	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
 			-- Path style

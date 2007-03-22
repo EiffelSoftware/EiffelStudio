@@ -63,6 +63,8 @@ feature{NONE} -- Initialization
 			grid.resizing_behavior.header_resize_end_actions.extend (agent on_column_resize_by_user_end (?, True))
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 			set_item_text_function (agent text_of_grid_item)
+			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 			enable_copy
 		ensure
 			drop_actions_set: drop_actions = a_drop_actions
@@ -491,6 +493,24 @@ feature -- Access
 	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
 			-- Agent to retrieve last recored sorting order
 
+	selected_row_background_color (a_grid_row: EV_GRID_ROW): EV_COLOR is
+			-- Background color for selected row `a_grid_row'
+		require
+			a_grid_row_attached: a_grid_row /= Void
+			a_grid_valid: a_grid_row.is_selected and then a_grid_row.is_selected
+		local
+			l_grid: EV_GRID
+		do
+			l_grid := a_grid_row.parent
+			if l_grid.has_focus then
+				Result := l_grid.focused_selection_color
+			else
+				Result := l_grid.non_focused_selection_color
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
@@ -905,11 +925,7 @@ feature -- Tree hierarchy highlight
 		do
 			if is_tree_node_highlight_enabled then
 				if a_row.is_selected then
-					if grid.has_focus then
-						a_row.set_background_color (preferences.editor_data.selection_background_color)
-					else
-						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
-					end
+					a_row.set_background_color (selected_row_background_color (a_row))
 				else
 					a_row.set_background_color (odd_line_color)
 				end
@@ -948,11 +964,7 @@ feature -- Tree hierarchy highlight
 					l_parent_row := l_parent_row.parent_row
 				end
 				if a_row.is_selected then
-					if grid.has_focus then
-						a_row.set_background_color (preferences.editor_data.selection_background_color)
-					else
-						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
-					end
+					a_row.set_background_color (selected_row_background_color (a_row))
 				else
 					if l_is_parent_selected then
 						a_row.set_background_color (odd_line_color)

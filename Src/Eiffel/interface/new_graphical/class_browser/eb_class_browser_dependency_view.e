@@ -231,7 +231,7 @@ feature -- Setting
 			has_grid_been_binded_for_current_data_set: has_grid_been_binded_for_current_data = a_binded
 		end
 
-feature -- Actions
+feature{NONE} -- Actions
 
 	on_categorized_folder_changed is
 			-- Action to be performed when selection status of `categorized_folder_button' changes
@@ -293,6 +293,21 @@ feature -- Actions
 			end
 		end
 
+	on_row_selected (a_row: EV_GRID_ROW) is
+			-- Action to be performed when `a_row' is selected.
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
+		do
+			if grid.selected_rows.count = 1 then
+				l_row ?= a_row.data
+				if l_row /= Void  then
+					l_row.force_position_calculation
+				end
+			end
+		end
+
 feature -- Notification
 
 	provide_result is
@@ -317,7 +332,7 @@ feature -- Notification
 			disable_force_multi_column_sorting
 			enable_auto_sort_order_change
 			set_has_grid_been_binded_for_current_data (True)
-			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2], [150, 200, 3], [100, 200, 4]>>, False)
+			try_auto_resize_grid (<<[150, 300, 1], [150, 300, 2], [150, 200, 3], [100, 200, 4], [100, 200, 5]>>, False)
 		end
 
 feature -- Sorting
@@ -599,7 +614,6 @@ feature{NONE} -- Grid binding
 			l_feature_table: like called_features
 			l_features: DS_HASH_SET [QL_FEATURE]
 			l_grid_row: EV_GRID_ROW
-			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
 			l_level_index: INTEGER
 		do
@@ -670,9 +684,7 @@ feature{NONE} -- Grid binding
 			end
 
 				-- Auto resize grid columns.
-			create l_column_tbl.make (1)
-			l_column_tbl.put (Void, feature_list_column)
-			auto_resize_columns (grid, l_column_tbl)
+			try_auto_resize_grid (<<[100, 200, feature_list_column]>>, False)
 		end
 
 	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)is
@@ -1449,7 +1461,8 @@ feature{NONE} -- Initialization
 			-- Build `grid'.
 		do
 			create grid
-			grid.set_column_count_to (5)
+			grid.set_column_count_to (6)
+			grid.column (6).set_title (interface_names.t_reference_position)
 			grid.enable_selection_on_single_button_click
 			grid.enable_single_row_selection
 			grid.enable_tree
@@ -1467,6 +1480,7 @@ feature{NONE} -- Initialization
 			grid.set_tree_node_connector_color ((create {EV_STOCK_COLORS}).gray)
 			grid.row_expand_actions.extend (agent on_row_expanded_or_collapsed (?, True))
 			grid.row_collapse_actions.extend (agent on_row_expanded_or_collapsed (?, False))
+			grid.row_select_actions.extend (agent on_row_selected)
 			enable_grid_item_pnd_support
 			set_select_all_action (agent do  end)
 			enable_tree_node_highlight

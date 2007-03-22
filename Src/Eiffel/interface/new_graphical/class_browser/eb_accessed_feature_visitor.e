@@ -40,24 +40,9 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	accessors: LIST [TUPLE [AST_EIFFEL, CLASS_C, BOOLEAN]]
+	accessors: LIST [TUPLE [AST_EIFFEL, CLASS_C]]
 			-- Accessors found by last `find_accessors'
-			-- The TUPLE is in form of [accessor AST, accessor written class, is_in_assertion]
-
-feature -- Status report
-
-	should_assertion_be_checked: BOOLEAN
-			-- When searching for callees, should assertions be checked?
-
-feature -- Setting
-
-	set_should_assertion_be_checked (b: BOOLEAN) is
-			-- Set `should_assertion_be_checked' with `b'.
-		do
-			should_assertion_be_checked := b
-		ensure
-			should_assertion_be_checked_set: should_assertion_be_checked = b
-		end
+			-- The TUPLE is in form of [accessor AST, accessor written class]
 
 feature -- Process
 
@@ -79,14 +64,12 @@ feature -- Process
 
 					-- Check feature body without assertions
 				if a_caller.is_real_feature then
-					set_should_assertion_be_checked (False)
 					a_caller.ast.process (Current)
 				end
 
-					-- Retrieve all assertions and check those assertions.
+					-- Retrieve all inherited assertions and check those assertions.
 				setup_ancestor_class_id_table (e_feature.associated_class)
-				set_should_assertion_be_checked (True)
-				create l_assertion_generator.make (Void, True)
+				create l_assertion_generator.make (not assertion_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_immediate, []), True)
 				l_assertion_domain ?= a_caller.wrapped_domain.new_domain (l_assertion_generator)
 				if l_assertion_domain /= Void and then not l_assertion_domain.is_empty then
 					l_assertion_domain.do_all (agent process_assertion)
@@ -157,7 +140,7 @@ feature{NONE} -- Implementation
 		do
 			if is_accessor (l_as.class_id, l_as.access_name) then
 				check last_class_c /= Void end
-				accessors.extend ([l_as.feature_name, last_class_c, should_assertion_be_checked])
+				accessors.extend ([l_as.feature_name, last_class_c])
 			end
 		end
 
@@ -167,7 +150,7 @@ feature{NONE} -- Implementation
 		do
 			if is_accessor (l_as.class_id, l_as.feature_name.name) then
 				check last_class_c /= Void end
-				accessors.extend ([l_as.feature_name, last_class_c, should_assertion_be_checked])
+				accessors.extend ([l_as.feature_name, last_class_c])
 			end
 		end
 
@@ -181,9 +164,7 @@ feature{NONE} -- Implementation/Process
 
 	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
 		do
-			if should_assertion_be_checked then
-				process_access_feat_as (l_as)
-			end
+			process_access_feat_as (l_as)
 		end
 
 	process_assertion (a_assertion: QL_ASSERTION) is

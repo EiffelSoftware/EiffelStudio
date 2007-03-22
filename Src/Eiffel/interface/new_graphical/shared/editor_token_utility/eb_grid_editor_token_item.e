@@ -431,9 +431,9 @@ feature{NONE} -- Redraw
 			if is_selected then
 				l_editor_data := preferences.editor_data
 				if l_parent.has_focus then
-					a_drawable.set_foreground_color (l_editor_data.selection_background_color)
+					a_drawable.set_foreground_color (parent.focused_selection_color)
 				else
-					a_drawable.set_foreground_color (l_editor_data.focus_out_selection_background_color)
+					a_drawable.set_foreground_color (parent.non_focused_selection_color)
 				end
 			else
 				if background_color /= Void then

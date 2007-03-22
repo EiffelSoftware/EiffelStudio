@@ -11,6 +11,9 @@ class
 
 inherit
 	EB_CLASS_BROWSER_GRID_ROW
+		redefine
+			browser
+		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
@@ -72,59 +75,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	feature_list_item: EB_GRID_EDITOR_TOKEN_ITEM is
-			-- Grid item to display `feature_list'
-		require
-			feature_list_attached: feature_list /= Void
-		local
-			l_list: like feature_list
-			l_space: LIST [EDITOR_TOKEN]
-			l_text: LINKED_LIST [EDITOR_TOKEN]
-			i: INTEGER
-			l_count: INTEGER
-			l_feature_name_style: like feature_name_style
-			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
-		do
-			if feature_list_item_internal = Void then
-				create feature_list_item_internal
-				l_list := feature_list
-				check not l_list.is_empty end
-				feature_list_item_internal.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
-				l_count := l_list.count
-				l_feature_name_style := feature_name_style
-				if l_count > 1 then
-					plain_text_style.set_source_text (", ")
-					l_space := plain_text_style.text
-					create l_text.make
-					from
-						i := 1
-						l_list.start
-					until
-						l_list.after
-					loop
-						l_feature_name_style.set_ql_feature (l_list.item_for_iteration)
-						l_text.append (l_feature_name_style.text)
-						if i < l_count then
-							l_text.append (l_space)
-						end
-						i := i + 1
-						l_list.forth
-					end
-					feature_list_item_internal.set_text_with_tokens (l_text)
-				else
-					l_feature_name_style.set_ql_feature (l_list.first)
-					feature_list_item_internal.set_text_with_tokens (l_feature_name_style.text)
-				end
-				feature_list_item_internal.set_image (feature_list_item_internal.text)
-				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
-				l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent tooltip_text_function, l_tooltip))
-				feature_list_item_internal.set_general_tooltip (l_tooltip)
-			end
-			Result := feature_list_item_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	feature_list: DS_LIST [QL_FEATURE]
 			-- Feature list to be displayed in another column
 
@@ -134,6 +84,9 @@ feature -- Access
 
 	row_count: INTEGER
 			-- Row count which should be displayed after row text
+
+	browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
+			-- Browser in which Current row is displayed
 
 feature -- Status report
 
@@ -256,12 +209,111 @@ feature -- Grid binding
 			a_row.clear
 			a_row.set_data (Current)
 			a_row.set_item (a_column, grid_item)
+				-- Bind rows related to callers/callees.
 			if feature_list /= Void then
-				a_row.set_item (a_column + 1, feature_list_item)
+				bind_feature_list_rows (a_row, a_column + 1)
 			end
 			set_grid_row (a_row)
 		end
 
+	feature_list_item: EB_GRID_EDITOR_TOKEN_ITEM is
+			-- Grid item to display `feature_list'
+		require
+			feature_list_attached: feature_list /= Void
+		local
+			l_list: like feature_list
+			l_space: LIST [EDITOR_TOKEN]
+			l_text: LINKED_LIST [EDITOR_TOKEN]
+			i: INTEGER
+			l_count: INTEGER
+			l_feature_name_style: like feature_name_style
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+		do
+			if feature_list_item_internal = Void then
+				create feature_list_item_internal
+				l_list := feature_list
+				check not l_list.is_empty end
+				feature_list_item_internal.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
+				l_count := l_list.count
+				l_feature_name_style := feature_name_style
+				if l_count > 1 then
+					plain_text_style.set_source_text (", ")
+					l_space := plain_text_style.text
+					create l_text.make
+					from
+						i := 1
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_feature_name_style.set_ql_feature (l_list.item_for_iteration)
+						l_text.append (l_feature_name_style.text)
+						if i < l_count then
+							l_text.append (l_space)
+						end
+						i := i + 1
+						l_list.forth
+					end
+					feature_list_item_internal.set_text_with_tokens (l_text)
+				else
+					l_feature_name_style.set_ql_feature (l_list.first)
+					feature_list_item_internal.set_text_with_tokens (l_feature_name_style.text)
+				end
+				feature_list_item_internal.set_image (feature_list_item_internal.text)
+				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
+				l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent tooltip_text_function, l_tooltip))
+				feature_list_item_internal.set_general_tooltip (l_tooltip)
+			end
+			Result := feature_list_item_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	bind_feature_list_rows (a_parent_row: EV_GRID_ROW; a_column: INTEGER) is
+			-- Bind callers/callees rows as subrows of `a_parent_row'.
+			-- Binded rows will start their first item at `a_column'-th column.
+		require
+			a_parent_row_attached: a_parent_row /= Void
+			a_column_positive: a_column > 0
+			feature_list_valid: feature_list /= Void and then not feature_list.is_empty
+		local
+			l_feature_list: like feature_list
+			l_cursor: DS_LIST_CURSOR  [QL_FEATURE]
+			l_style: like feature_name_style
+			l_grid_row: EV_GRID_ROW
+			l_row_index: INTEGER
+			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
+			l_for_caller: BOOLEAN
+			l_feature: QL_FEATURE
+		do
+			l_for_caller := browser.is_displaying_clients
+			l_style := feature_name_style
+			l_cursor := feature_list.new_cursor
+			a_parent_row.insert_subrows (feature_list.count, 1)
+			check item.is_feature end
+			l_feature ?= item
+
+			from
+				l_cursor.start
+				l_row_index := 1
+			until
+				l_cursor.after
+			loop
+				l_grid_row := a_parent_row.subrow (l_row_index)
+				create l_row.make (browser, l_cursor.item, l_feature, {EB_CLASS_BROWSER_CALLER_CALLEE_ROW}.feature_name_row, l_for_caller)
+				l_row.bind_row (l_grid_row, a_column)
+				l_cursor.forth
+				l_row_index := l_row_index + 1
+			end
+		end
+
+	referenced_feature_item (a_feature: QL_FEATURE): EV_GRID_ITEM is
+			-- Grid item to show `a_feature' as a referenced feature
+		require
+			a_feature_attached: a_feature /= Void
+		do
+			create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_feature.name)
+		end
 
 	refresh_row is
 			-- Refresh current row.

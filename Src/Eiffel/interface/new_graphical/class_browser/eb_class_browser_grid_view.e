@@ -1032,10 +1032,38 @@ feature{NONE} -- Implementation/Stone
 			if l_rows.count = 1 then
 				if l_rows.first.parent = grid then
 					l_grid_row := l_rows.first
-					if (not l_grid_row.is_expandable) or else (l_grid_row.is_expanded) then
+					if is_subrow_recursively_expanded (l_grid_row, agent (a_grid_row: EV_GRID_ROW): BOOLEAN do Result := a_grid_row.is_expanded end) then
 						Result := l_grid_row.item (1)
 					end
 				end
+			end
+		end
+
+	is_subrow_recursively_expanded (a_row: EV_GRID_ROW; a_expanded_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]): BOOLEAN is
+			-- Is `a_row' and all its recursive subrows expanded?
+			-- `a_expanded_agent' is a function to decide if the grid row given as the only argument is expanded.
+		require
+			a_row_attached: a_row /= Void
+			a_expanded_agent_attached: a_expanded_agent /= Void
+		local
+			l_row_count: INTEGER
+			l_row_index: INTEGER
+		do
+			if a_row.is_expandable then
+				Result := a_expanded_agent.item ([a_row])
+				l_row_count := a_row.subrow_count
+				if Result and then l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count or not Result
+					loop
+						Result := is_subrow_recursively_expanded (a_row.subrow (l_row_index), a_expanded_agent)
+						l_row_index := l_row_index + 1
+					end
+				end
+			else
+				Result := True
 			end
 		end
 

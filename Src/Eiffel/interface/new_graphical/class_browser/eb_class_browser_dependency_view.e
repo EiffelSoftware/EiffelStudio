@@ -443,6 +443,7 @@ feature{NONE} -- Grid binding
 			l_grid_item.set_text_with_tokens (token_name_from_domain_item (l_domain_item))
 			l_grid_item.set_pixmap (pixmap_from_domain_item (l_domain_item))
 			l_grid_item.set_image (l_grid_item.text)
+			l_grid_item.set_stone (starting_element)
 			grid.insert_new_row (1)
 			grid.row (1).set_item (1, l_grid_item)
 		ensure
@@ -1542,7 +1543,15 @@ feature{NONE} -- Implementation/Stone
 			l_rows := grid.selected_rows
 			if l_rows.count = 1 then
 				l_grid_row := l_rows.first
-				if (not l_grid_row.is_expandable) or else l_grid_row.is_expanded then
+				if
+					is_subrow_recursively_expanded (
+						l_grid_row,
+						agent (a_grid_row: EV_GRID_ROW): BOOLEAN
+							do
+								Result := a_grid_row.is_expanded or else (a_grid_row.subrow_count = 1 and then a_grid_row.subrow (1).index_of_first_item = 0)
+							end
+					)
+				then
 					l_row ?= l_grid_row.data
 					if l_row /= Void then
 						if not l_row.is_stone_set then
@@ -1551,6 +1560,10 @@ feature{NONE} -- Implementation/Stone
 						l_index := l_grid_row.index_of_first_item
 						if l_index /= 0 then
 							Result := l_grid_row.item (l_index)
+						end
+					else
+						if l_grid_row.index = 1 then
+							Result ?= l_grid_row.item (1)
 						end
 					end
 				end

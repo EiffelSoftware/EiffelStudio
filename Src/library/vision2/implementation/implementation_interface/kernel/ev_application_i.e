@@ -465,7 +465,18 @@ feature -- Implementation
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
+feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
+
+	pnd_pointer_x,
+	pnd_pointer_y: INTEGER
+		-- Position of pointer on previous PND draw.
+
+	set_pnd_pointer_coords (a_pnd_pointer_x, a_pnd_pointer_y: INTEGER) is
+			-- Set PND pointer origins to `a_pnd_pointer_x' and `a_pnd_pointer_y'.
+		do
+			pnd_pointer_x := a_pnd_pointer_x
+			pnd_pointer_y := a_pnd_pointer_y
+		end
 
 	target_menu (a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]): EV_MENU is
 			-- Menu of targets that accept `a_pebble'.

@@ -633,12 +633,7 @@ feature -- Pick and Drop
 	draw_rubber_band is
 			-- Draw a segment between initial pick point and `destination'.
 		do
-			if rubber_band_is_drawn then
-					-- Undraw previous rubber band if any
-				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
-			end
-			set_old_pointer_x_y_origin (pick_and_drop_source.pointer_x, pick_and_drop_source.pointer_y)
-			pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+			pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 			rubber_band_is_drawn := True
 		end
 
@@ -646,7 +641,7 @@ feature -- Pick and Drop
 			-- Erase previously drawn rubber band.
 		do
 			if rubber_band_is_drawn then
-				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+				pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
@@ -1259,17 +1254,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 		do
 			x_origin := a_x_origin
 			y_origin := a_y_origin
-		end
-
-	old_pointer_x,
-	old_pointer_y: INTEGER
-		-- Position of pointer on previous PND draw.
-
-	set_old_pointer_x_y_origin (a_old_pointer_x, a_old_pointer_y: INTEGER) is
-			-- Set PND pointer origins to `a_old_pointer_x' and `a_old_pointer_y'.
-		do
-			old_pointer_x := a_old_pointer_x
-			old_pointer_y := a_old_pointer_y
 		end
 
 feature -- Thread Handling.

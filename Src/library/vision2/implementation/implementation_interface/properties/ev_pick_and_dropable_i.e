@@ -259,9 +259,11 @@ feature {EV_ANY_I} -- Implementation
 			real_target: EV_PICK_AND_DROPABLE
 			application: EV_APPLICATION_IMP
 		do
-			draw_rubber_band
+			erase_rubber_band
 			pointer_x := a_screen_x.to_integer_16
 			pointer_y := a_screen_y.to_integer_16
+			application_implementation.set_pnd_pointer_coords (a_screen_x, a_screen_y)
+			draw_rubber_band
 
 			target := pointed_target
 			real_target ?= target
@@ -368,6 +370,12 @@ feature {EV_WIDGET, EV_WIDGET_I}
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	application_implementation: EV_APPLICATION_I is
+			-- Application implementation object.
+		do
+			Result := environment.application.implementation
+		end
 
 	environment: EV_ENVIRONMENT is
 			-- Environment object.

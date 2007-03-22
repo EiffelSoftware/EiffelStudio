@@ -30,37 +30,6 @@ feature {NONE} -- Initialization
 
 feature -- global
 
-	prepare_breakpoints_for_save
-		local
-			bplst: like breakpoints
-		do
-			restore
-			from
-				bplst := breakpoints
-				bplst.start
-			until
-				bplst.after
-			loop
-				bplst.item_for_iteration.prepare_for_save
-				bplst.forth
-			end
-		end
-
-	reload_all_breakpoints is
-		local
-			bplst: like breakpoints
-		do
-			from
-				bplst := breakpoints
-				bplst.start
-			until
-				bplst.after
-			loop
-				bplst.item_for_iteration.reload
-				bplst.forth
-			end
-		end
-
 	save (raw_filename: FILE_NAME) is
 			-- Save debug information (so far, only the breakpoints)
 			-- into the file `raw_filename'.
@@ -69,21 +38,31 @@ feature -- global
 		local
 			raw_file: RAW_FILE
 			retried: BOOLEAN
+			bplst: like breakpoints
+			old_bplist: like breakpoints
 		do
 			if not retried then
+					-- backup current list
+				old_bplist := breakpoints
+				create bplst.make_copy_for_saving (old_bplist)
+				breakpoints := bplst
+
 					-- Reset information about the application
 					-- contained in the breakpoints.
-				prepare_breakpoints_for_save
+				restore
 
 					-- save all breakpoints
 				create raw_file.make (raw_filename)
 				raw_file.open_write
-				raw_file.independent_store ([breakpoints, exceptions_handler])
+				raw_file.independent_store ([bplst, exceptions_handler])
 				raw_file.close
 
-				reload_all_breakpoints
+				breakpoints := old_bplist
 			end
 		rescue
+			if old_bplist /= Void then
+				breakpoints := old_bplist
+			end
 			retried := True
 			retry
 		end
@@ -99,7 +78,7 @@ feature -- global
 			retried: BOOLEAN
 		do
 			if not retried then
-				create raw_file.make(raw_filename)
+				create raw_file.make (raw_filename)
 				if raw_file.exists and then raw_file.is_readable then
 					raw_file.open_read
 					obj ?= raw_file.retrieved
@@ -114,7 +93,7 @@ feature -- global
 						-- Reset information about the application
 						-- contained in the breakpoints (if any).
 					restore
-					reload_all_breakpoints
+					breakpoints.reload
 				end
 			end
 			if breakpoints = Void then

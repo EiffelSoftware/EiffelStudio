@@ -37,7 +37,10 @@ inherit
 create
 	make
 
-feature {BREAK_LIST} -- Creation
+create {BREAK_LIST}
+	make_copy_for_saving
+
+feature {NONE} -- Creation
 
 	make (a_feature: E_FEATURE; a_breakable_index: INTEGER) is
 			-- Create a breakpoint in the feature `a_feature'
@@ -49,6 +52,28 @@ feature {BREAK_LIST} -- Creation
 				bench_status := Bench_breakpoint_set
 			end
 		end
+
+	make_copy_for_saving (bp: like Current) is
+		do
+				--| Key part
+			routine := bp.routine
+			breakable_line_number := bp.breakable_line_number
+			body_index := bp.body_index
+			is_corrupted := bp.is_corrupted
+
+				--| Current part
+			if bp.condition /= Void then
+				expression := bp.condition.expression
+			end
+			condition_type := bp.condition_type
+			continue_on_condition_failure := bp.continue_on_condition_failure
+			message := bp.message
+			bench_status := bp.bench_status
+			continue_execution := bp.continue_execution
+			hits_count_condition := bp.hits_count_condition
+		end
+
+
 
 feature -- debug output
 
@@ -207,7 +232,7 @@ feature -- Run to cursor mode
 	disable_run_to_cursor_mode is
 			-- Restore Current's data after Run To This Point action is proceed
 		require
-			backup_data /= Void
+			backup_data_not_void: backup_data /= Void
 		do
 			if backup_data /= Void then
 				bench_status := backup_data.bench_status
@@ -233,7 +258,7 @@ feature -- Run to cursor mode
 						]
 			-- Backup data involved in "Run To This Point" action
 
-feature {NONE} -- Internal properties
+feature {BREAKPOINT} -- Internal properties
 
 	condition_type: INTEGER
 			-- Type of condition
@@ -319,7 +344,6 @@ feature -- Change
 		do
 			reset_hits_count
 			last_condition_value := Void
-			backup_data := Void
 		end
 
 feature -- Status
@@ -545,20 +569,7 @@ feature -- Condition change
 			condition := Void
 		end
 
-feature {DEBUGGER_DATA} -- Saving protocol.
-
-	prepare_for_save is
-			-- To be used before storing breakpoints: we store the condition as the string only.
-		do
-			reset_session_data
-			if condition /= Void then
-				expression := condition.expression
-				condition := Void
-			else
-				expression := Void
-			end
-			last_condition_value := Void
-		end
+feature {BREAK_LIST} -- Saving protocol.
 
 	reload is
 			-- To be used after save and load operations, to restore the condition.

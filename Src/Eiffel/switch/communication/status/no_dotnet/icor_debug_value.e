@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ICOR_DEBUG_VALUE2
+	ICOR_DEBUG_VALUE
 
 feature -- Cleaning and dipose
 

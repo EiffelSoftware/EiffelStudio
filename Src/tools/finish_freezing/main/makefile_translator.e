@@ -635,7 +635,7 @@ feature {NONE} -- Translation
 			dir_sep_pos: INTEGER -- the position of the directory separator
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
-			l_need_test, is_emain, is_E1_makefile, is_E1_structure: BOOLEAN
+			is_E1_makefile, is_E1_structure: BOOLEAN
 			min: INTEGER
 			dependency: STRING
 			l_target_file: STRING
@@ -661,7 +661,6 @@ feature {NONE} -- Translation
 
 				is_E1_makefile := False
 				is_E1_structure := False
-				l_need_test := True
 
 				-- get directory name and filename
 				dir_sep_pos := lastline.index_of (directory_separator.item (1), 1)
@@ -676,10 +675,9 @@ feature {NONE} -- Translation
 				subst_dir_sep (dependency)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
+					filename.append (options.get_string ("obj_text", ".obj"))
 					makefile.put_string (dir)
 					makefile.put_string (directory_separator)
-					is_emain := True
-					l_need_test := False
 					subst_dir_sep (dependency)
 					makefile.put_string (options.get_string ("emain_obj_text", Void))
 					makefile.put_string (": ")
@@ -701,7 +699,6 @@ feature {NONE} -- Translation
 						-- on a per object file.
 					if dir.item (1) = 'E' and dir.item (2) = '1' and filename.item (1) /= 'E' then
 						filename.append (options.get_string ("obj_text", ".obj"))
-						l_need_test := True
 					else
 						filename.append_character ('.')
 						filename.append (options.get_string ("intermediate_file_ext", Void))
@@ -738,35 +735,15 @@ feature {NONE} -- Translation
 					makefile.put_string (" ")
 					makefile.put_string (dir)
 					makefile.put_string (options.get_string ("subcommand_separator", " && "))
-					if l_need_test then
-						makefile.put_string ("$(START_TEST) ")
-					end
-					makefile.put_string ("$(MAKE)")
-					makefile.put_string (" ")
-
-					if is_emain then
-						makefile.put_string (options.get_string ("emain_obj_text", Void))
-					else
-						makefile.put_string (filename)
-					end
-
-					if l_need_test then
-						makefile.put_string (" $(END_TEST)")
-					end
+					makefile.put_string ("$(START_TEST) $(MAKE) ")
+					makefile.put_string (filename)
+					makefile.put_string (" $(END_TEST)")
 					makefile.put_string (options.get_string ("subcommand_separator", " && "))
 					makefile.put_string (options.get_string ("cd", Void))
 					makefile.put_string (" ")
 					makefile.put_string (options.get_string ("updir", Void))
 
 					read_next
-
-					if is_emain then
-						makefile.put_string ("%N%T$(RM) ")
-						makefile.put_string (dir)
-						makefile.put_string (directory_separator)
-						makefile.put_string ("emain.c%N")
-						is_emain := False
-					end
 
 					makefile.put_string ("%N%N")
 				end

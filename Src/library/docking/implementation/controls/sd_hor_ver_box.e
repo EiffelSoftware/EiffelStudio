@@ -37,7 +37,8 @@ inherit
 			padding_width as padding_width_vertical_box,
 			index as index_vertical_box,
 			swap as swap_vertical_box,
-			is_empty as is_empty_vertical_box
+			is_empty as is_empty_vertical_box,
+			put_right as put_right_vertical_box
 		export
 			{NONE} all
 			{ANY} height, set_minimum_height, set_minimum_width, has_recursive
@@ -366,6 +367,16 @@ feature -- Redefine
 				Result := is_empty_vertical_box
 			else
 				Result := horizontal_box.is_empty
+			end
+		end
+
+	put_right (a_widget: EV_WIDGET) is
+			-- Redefine
+		do
+			if is_vertical then
+				put_right_vertical_box (a_widget)
+			else
+				horizontal_box.put_right (a_widget)
 			end
 		end
 

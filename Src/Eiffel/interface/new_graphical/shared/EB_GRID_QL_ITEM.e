@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_METRIC_GRID_RESULT_ITEM
+	EB_GRID_QL_ITEM
 
 inherit
 	EB_GRID_EDITOR_TOKEN_ITEM

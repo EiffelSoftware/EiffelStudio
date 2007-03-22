@@ -147,6 +147,28 @@ feature -- Commands
 			end
 		end
 
+	refresh_customized_tool_appearance (a_tool: EB_CUSTOMIZED_TOOL) is
+			-- Refresh appearance such as title, pixmap, stone handlers for `a_tool'.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_manager: EB_CUSTOMIZED_TOOL_MANAGER
+			l_tool_desp: EB_CUSTOMIZED_TOOL_DESP
+		do
+			l_manager := develop_window.customized_tool_manager
+			l_tool_desp := l_manager.descriptor_by_id (a_tool.title_for_pre)
+			check l_tool_desp /= Void end
+			a_tool.set_title (l_tool_desp.name)
+			a_tool.set_stone_handlers (l_tool_desp.handlers)
+			a_tool.set_pixmap_location (l_tool_desp.pixmap_location)
+
+			a_tool.content.set_long_title (a_tool.title)
+			a_tool.content.set_short_title (a_tool.title)
+			a_tool.content.set_pixel_buffer (a_tool.pixel_buffer)
+			a_tool.content.set_pixmap (a_tool.pixmap)
+			develop_window.menus.update_item_from_tools_list_menu (a_tool)
+		end
+
 feature -- Query
 
 	stone: STONE
@@ -321,8 +343,10 @@ feature -- Query
 			a_ids_attached: a_ids /= Void
 		local
 			l_set: DS_HASH_SET [STRING]
+			l_keep: BOOLEAN
 		do
 			create l_set.make (a_ids.count)
+			l_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [STRING]}.make (agent (a_str, b_str: STRING): BOOLEAN do Result := equal (a_str, b_str) end))
 			a_ids.do_all (agent l_set.force_last)
 			Result := a_tools.twin
 			from
@@ -330,7 +354,12 @@ feature -- Query
 			until
 				Result.after
 			loop
-				if not (a_include xor l_set.has (Result.item.title_for_pre)) then
+				if a_include then
+					l_keep := l_set.has (Result.item.title_for_pre)
+				else
+					l_keep := not l_set.has (Result.item.title_for_pre)
+				end
+				if l_keep then
 					Result.forth
 				else
 					Result.remove

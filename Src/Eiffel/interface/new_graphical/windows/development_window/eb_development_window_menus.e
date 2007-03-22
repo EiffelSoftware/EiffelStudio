@@ -85,7 +85,7 @@ feature -- Query
 			-- Menu containing list of supported tools
 
 	remove_item_from_tools_list_menu (a_tool: EB_TOOL) is
-			-- Remove item corresponding to `a_too' from `tools_list_mnu' and recycle their components.
+			-- Remove item corresponding to `a_tool' from `tools_list_menu' and recycle their components.
 		require
 			a_tool_attached: a_tool /= Void
 		local
@@ -106,6 +106,37 @@ feature -- Query
 				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
 					l_menu.remove
 					l_develop_window.recycle_item (l_data.menu_item)
+				else
+					l_menu.forth
+				end
+			end
+		end
+
+	update_item_from_tools_list_menu (a_tool: EB_TOOL) is
+			-- Update appearance such as title/pixmap for menu item of `a_tool' in `tools_list_menu'.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_menu: like tools_list_menu
+			l_menu_item: EV_MENU_ITEM
+			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
+			l_done: BOOLEAN
+		do
+			check
+				a_tool_exists: develop_window.tools.all_tools.has (a_tool)
+			end
+			from
+				l_menu := tools_list_menu
+				l_menu.start
+			until
+				l_menu.after or l_done
+			loop
+				l_menu_item := l_menu.item
+				l_data ?= l_menu_item.data
+				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
+					l_data.menu_item.set_pixmap (a_tool.pixmap)
+					l_data.menu_item.set_text (a_tool.title)
+					l_done := True
 				else
 					l_menu.forth
 				end

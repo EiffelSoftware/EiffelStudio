@@ -297,28 +297,33 @@ feature -- Agents
 			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
-	on_customized_tools_changed (a_unchanged_tools: LIST [STRING]) is
-			-- Action to be performed when customized tools changes
+	on_customized_tools_changed (a_changed_tools: LIST [STRING]) is
+			-- Action to be performed when customized tools changes			
 		require
-			a_unchanged_tools_attached: a_unchanged_tools /= Void
-			a_unchanged_tools_valid: not a_unchanged_tools.has (Void)
+			a_changed_tools_attached: a_changed_tools /= Void
+			a_changed_tools_valid: not a_changed_tools.has (Void)
 		local
 			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
 			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
 			l_main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
+			l_unchanged_tools: LIST [EB_CUSTOMIZED_TOOL]
 		do
-				-- Retrieve changed customized tools.
 			l_tools := develop_window.tools
-			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.tools_by_id (l_tools.all_tools,a_unchanged_tools, False))
-
 			create l_main_builder.make (develop_window)
 
 				-- Remove changed tools.
+			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.tools_by_id (l_tools.all_tools, a_changed_tools, True))
 			l_customized_tools.do_all (agent l_main_builder.deregister_customized_tool)
 
-				-- Add changed/newly add tools.
-			l_customized_tools := develop_window.customized_tool_manager.tools_by_ids (a_unchanged_tools, False, develop_window)
+				-- Add changed/newly added tools.
+			l_customized_tools := develop_window.customized_tool_manager.tools_by_ids (a_changed_tools, True, develop_window)
 			l_main_builder.register_customized_tools (l_customized_tools)
+
+				-- Refresh titile/pixmap/stone handlers for unchanged tools.
+			l_unchanged_tools := l_tools.customized_tools_from_tools (l_tools.tools_by_id (l_tools.all_tools, a_changed_tools, False))
+			if not l_unchanged_tools.is_empty then
+				l_unchanged_tools.do_all (agent l_tools.refresh_customized_tool_appearance)
+			end
 		end
 
 	on_customized_tools_changed_agent: PROCEDURE [ANY, TUPLE [LIST [STRING]]] is

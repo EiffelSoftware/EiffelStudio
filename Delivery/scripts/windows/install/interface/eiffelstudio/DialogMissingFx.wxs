@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <?ifdef EiffelStudio?>
-		  <UI Id="UI.dialog_missing_fx">
-			  <Dialog Id="DialogMissingFx" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
-				  <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_warn.bmp" />
-				  <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
-					  <Text>[BigFont]Missing Microsoft .NET</Text>
-				  </Control>
+      <UI Id="UI.dialog_missing_fx">
+        <Dialog Id="DialogMissingFx" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
+          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_warn.bmp" />
+          <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
+            <Text>[BigFont]Missing Microsoft .NET</Text>
+          </Control>
           <Control Id="SubTitle" Type="Text" Height="13" Width="302" X="56" Y="35" Transparent="yes" NoPrefix="yes">
             <Text>[SubTitleFont]The installer has detected missing software</Text>
           </Control>
@@ -26,7 +26,7 @@
             <Publish Event="NewDialog" Value="DialogWelcome">1</Publish>
           </Control>
         </Dialog>
-		  </UI>
+      </UI>
     <?endif?>
-	</Fragment>
+  </Fragment>
 </Wix>

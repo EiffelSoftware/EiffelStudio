@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI.dialog_exit_success">
       <Dialog Id="DialogExitSuccess" Width="375" Height="220" Title="[ProductName]">
-        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_info.bmp" />
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_info.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="57" Transparent="yes" NoPrefix="yes">
           <Text>[BigFont][ProductName] Installation Complete</Text>
         </Control>
@@ -18,5 +18,5 @@
         </Control>
       </Dialog>
     </UI>
-	</Fragment>
+  </Fragment>
 </Wix>

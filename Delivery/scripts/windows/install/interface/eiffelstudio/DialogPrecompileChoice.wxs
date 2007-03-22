@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <?ifdef EiffelStudio?>
-		  <UI Id="UI.dialog_choose_precompile">
+      <UI Id="UI.dialog_choose_precompile">
         <RadioButtonGroup Property="PRECOMPILE">
           <RadioButton Value="none" X="5" Y="5" Width="154" Height="14" Text="D&amp;o not precompile any libraries" />
           <RadioButton Value="base" X="5" Y="19" Width="154" Height="14" Text="&amp;EiffelBase" />
           <RadioButton Value="wel" X="5" Y="33" Width="154" Height="14" Text="EiffelBase and &amp;WEL" />
           <RadioButton Value="vision2" X="5" Y="47" Width="154" Height="14" Text="EiffelBase, WEL and Eiffel&amp;Vision2" />
         </RadioButtonGroup>
-  			
-			  <Dialog Id="DialogPrecompileChoice" Width="375" Height="220" Title="[ProductName]">
-          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_pre.bmp">
+        
+        <Dialog Id="DialogPrecompileChoice" Width="375" Height="220" Title="[ProductName]">
+          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_pre.bmp">
             <Condition Action="hide"><![CDATA[CANCCOMPILE = "0"]]></Condition>
             <Condition Action="show"><![CDATA[CANCCOMPILE = "1"]]></Condition>
           </Control>
-          <Control Id="BitmapAlt" Type="Bitmap" X="0" Y="0" Width="375" Height="220" FixedSize="yes" TabSkip="no" Text="backdrop_prew.bmp">
+          <Control Id="BitmapAlt" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_prew.bmp">
             <Condition Action="hide"><![CDATA[CANCCOMPILE = "1"]]></Condition>
             <Condition Action="show"><![CDATA[CANCCOMPILE = "0"]]></Condition>
           </Control>
@@ -56,8 +56,8 @@
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
           </Control>
-			  </Dialog>
-		  </UI>
+        </Dialog>
+      </UI>
     <?endif?>
-	</Fragment>
+  </Fragment>
 </Wix>

@@ -360,8 +360,6 @@ feature {NONE} -- Implementation
 			internal_icon_name := other_imp.internal_icon_name
 			internal_non_sensitive := other_imp.internal_non_sensitive
 			internal_pebble_positioning_enabled := other_imp.internal_pebble_positioning_enabled
-			internal_pick_x := other_imp.internal_pick_x
-			internal_pick_y := other_imp.internal_pick_y
 			internal_title := other_imp.internal_title
 			internal_width := other_imp.internal_width
 			is_closeable := other_imp.is_closeable

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI.prompt_browse">
       <Dialog Id="PromptBrowse" Width="333" Height="249" Title="[ProductName]" NoMinimize="yes">
         <Control Id="Icon" Type="Icon" X="9" Y="13" Width="38" Height="38" FixedSize="yes" IconSize="48" Text="folder.ico" />

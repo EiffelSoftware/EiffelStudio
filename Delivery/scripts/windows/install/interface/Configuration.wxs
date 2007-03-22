@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include ..\includes\Preprocessors.wxi?>
-	<Fragment>
+  <Fragment>
     <!--BUTTON TEXT-->
     <Property Id="Button_Back">&lt; &amp;Back</Property>
     <Property Id="Button_Next">&amp;Next &gt;</Property>
@@ -78,10 +78,10 @@
       <Binary Id="error.ico" SourceFile="images\error.ico"/>
       <Binary Id="up.bmp" SourceFile="images\up.bmp"/>
       <Binary Id="new.bmp" SourceFile="images\new.bmp"/>
-			<Binary Id="backdrop.bmp" SourceFile="images\$(var.Product)\backdrop.bmp"/>
-			<Binary Id="backdrop_error.bmp" SourceFile="images\$(var.Product)\backdrop_error.bmp"/>
-			<Binary Id="backdrop_info.bmp" SourceFile="images\$(var.Product)\backdrop_info.bmp"/>
-			<Binary Id="backdrop_warn.bmp" SourceFile="images\$(var.Product)\backdrop_warning.bmp"/>
+      <Binary Id="backdrop.bmp" SourceFile="images\$(var.Product)\backdrop.bmp"/>
+      <Binary Id="backdrop_error.bmp" SourceFile="images\$(var.Product)\backdrop_error.bmp"/>
+      <Binary Id="backdrop_info.bmp" SourceFile="images\$(var.Product)\backdrop_info.bmp"/>
+      <Binary Id="backdrop_warn.bmp" SourceFile="images\$(var.Product)\backdrop_warning.bmp"/>
       <!-- END BINARIES -->
 
       <!-- PRODUCT SPECIFIC -->
@@ -150,7 +150,7 @@
       <ProgressText Action="CostInitialize">Computing space requirements</ProgressText>
       <ProgressText Action="FileCost">Computing space requirements</ProgressText>
       <ProgressText Action="InstallValidate">Validating install</ProgressText>
-      <ProgressText Action="InstallFiles" Template="File: [1],	Directory: [9],	Size: [6]">Copying new files</ProgressText>
+      <ProgressText Action="InstallFiles" Template="File: [1],  Directory: [9],  Size: [6]">Copying new files</ProgressText>
       <ProgressText Action="InstallAdminPackage" Template="File: [1], Directory: [9], Size: [6]">Copying network install files</ProgressText>
       <ProgressText Action="CreateShortcuts" Template="Shortcut: [1]">Creating shortcuts</ProgressText>
       <ProgressText Action="PublishComponents" Template="Component ID: [1], Qualifier: [2]">Publishing Qualified Components</ProgressText>
@@ -166,14 +166,14 @@
       <ProgressText Action="CCPSearch">Searching for qualifying products</ProgressText>
       <ProgressText Action="CreateFolders" Template="Folder: [1]">Creating folders</ProgressText>
       <ProgressText Action="DeleteServices" Template="Service: [1]">Deleting services</ProgressText>
-      <ProgressText Action="DuplicateFiles" Template="File: [1],	Directory: [9],	Size: [6]">Creating duplicate files</ProgressText>
+      <ProgressText Action="DuplicateFiles" Template="File: [1],  Directory: [9],  Size: [6]">Creating duplicate files</ProgressText>
       <ProgressText Action="FindRelatedProducts" Template="Found application: [1]">Searching for related applications</ProgressText>
       <ProgressText Action="InstallODBC">Installing ODBC components</ProgressText>
       <ProgressText Action="InstallServices" Template="Service: [2]">Installing new services</ProgressText>
       <ProgressText Action="LaunchConditions">Evaluating launch conditions</ProgressText>
       <ProgressText Action="MigrateFeatureStates" Template="Application: [1]">Migrating feature states from related applications</ProgressText>
-      <ProgressText Action="MoveFiles" Template="File: [1],	Directory: [9],	Size: [6]">Moving files</ProgressText>
-      <ProgressText Action="PatchFiles" Template="File: [1],	Directory: [2],	Size: [3]">Patching files</ProgressText>
+      <ProgressText Action="MoveFiles" Template="File: [1],  Directory: [9],  Size: [6]">Moving files</ProgressText>
+      <ProgressText Action="PatchFiles" Template="File: [1],  Directory: [2],  Size: [3]">Patching files</ProgressText>
       <ProgressText Action="ProcessComponents">Updating component registration</ProgressText>
       <ProgressText Action="RegisterComPlus" Template="AppId: [1]{{, AppType: [2], Users: [3], RSN: [4]}}">Registering COM+ Applications and Components</ProgressText>
       <ProgressText Action="RegisterFonts" Template="Font: [1]">Registering fonts</ProgressText>
@@ -185,7 +185,7 @@
       <ProgressText Action="RemoveExistingProducts" Template="Application: [1], Command line: [2]">Removing applications</ProgressText>
       <ProgressText Action="RemoveFiles" Template="File: [1], Directory: [9]">Removing files</ProgressText>
       <ProgressText Action="RemoveFolders" Template="Folder: [1]">Removing folders</ProgressText>
-      <ProgressText Action="RemoveIniValues" Template="File: [1],	Section: [2],	Key: [3], Value: [4]">Removing INI files entries</ProgressText>
+      <ProgressText Action="RemoveIniValues" Template="File: [1],  Section: [2],  Key: [3], Value: [4]">Removing INI files entries</ProgressText>
       <ProgressText Action="RemoveODBC">Removing ODBC components</ProgressText>
       <ProgressText Action="RemoveRegistryValues" Template="Key: [1], Name: [2]">Removing system registry values</ProgressText>
       <ProgressText Action="RemoveShortcuts" Template="Shortcut: [1]">Removing shortcuts</ProgressText>
@@ -205,11 +205,11 @@
       <ProgressText Action="UnregisterProgIdInfo" Template="ProgId: [1]">Unregistering program identifiers</ProgressText>
       <ProgressText Action="UnregisterTypeLibraries" Template="LibID: [1]">Unregistering type libraries</ProgressText>
       <ProgressText Action="WriteEnvironmentStrings" Template="Name: [1], Value: [2], Action [3]">Updating environment strings</ProgressText>
-      <ProgressText Action="WriteIniValues" Template="File: [1],	Section: [2],	Key: [3], Value: [4]">Writing INI files values</ProgressText>
+      <ProgressText Action="WriteIniValues" Template="File: [1],  Section: [2],  Key: [3], Value: [4]">Writing INI files values</ProgressText>
       <ProgressText Action="WriteRegistryValues" Template="Key: [1], Name: [2], Value: [3]">Writing system registry values</ProgressText>
       <ProgressText Action="Advertise">Advertising application</ProgressText>
       <ProgressText Action="GenerateScript" Template="[1]">Generating script operations for action:</ProgressText>
-      <ProgressText Action="InstallSFPCatalogFile" Template="File: [1],	Dependencies: [2]">Installing system catalog</ProgressText>
+      <ProgressText Action="InstallSFPCatalogFile" Template="File: [1],  Dependencies: [2]">Installing system catalog</ProgressText>
       <ProgressText Action="MsiPublishAssemblies" Template="Application Context:[1], Assembly Name:[2]">Publishing assembly information</ProgressText>
       <ProgressText Action="MsiUnpublishAssemblies" Template="Application Context:[1], Assembly Name:[2]">Unpublishing assembly information</ProgressText>
       <ProgressText Action="Rollback" Template="[1]">Rolling back action:</ProgressText>
@@ -229,8 +229,8 @@
       <Error Id="9">[ProductName]</Error>
       <Error Id="10">{[2]}{, [3]}{, [4]}</Error>
       <Error Id="11">Message type: [1], Argument: [2]</Error>
-      <Error Id="12">=== Logging started: [Date]	[Time] ===</Error>
-      <Error Id="13">=== Logging stopped: [Date]	[Time] ===</Error>
+      <Error Id="12">=== Logging started: [Date]  [Time] ===</Error>
+      <Error Id="13">=== Logging stopped: [Date]  [Time] ===</Error>
       <Error Id="14">Action start [Time]: [1].</Error>
       <Error Id="15">Action ended [Time]: [1]. Return value [2].</Error>
       <Error Id="16">Time remaining: {[1] minutes }{[2] seconds}</Error>
@@ -243,7 +243,7 @@
       <Error Id="23">Preparing to remove older versions of this application...</Error>
       <Error Id="32">{[ProductName]}Setup completed successfully.</Error>
       <Error Id="33">{[ProductName]}Setup failed.</Error>
-      <Error Id="1101">Error reading from file: [2]. {{ System error [3].}}	Verify that the file exists and that you can access it.</Error>
+      <Error Id="1101">Error reading from file: [2]. {{ System error [3].}}  Verify that the file exists and that you can access it.</Error>
       <Error Id="1301">Cannot create the file '[2]'. A directory with this name already exists. Cancel the install and try installing to a different location.</Error>
       <Error Id="1302">Please insert the disk: [2]</Error>
       <Error Id="1303">The installer has insufficient privileges to access this directory: [2]. The installation cannot continue. Log on as administrator or contact your system administrator.</Error>
@@ -252,8 +252,8 @@
       <Error Id="1306">Another application has exclusive access to the file '[2]'. Please shut down all other applications, then click Retry.</Error>
       <Error Id="1307">There is not enough disk space to install this file: [2]. Free some disk space and click Retry, or click Cancel to exit.</Error>
       <Error Id="1308">Source file not found: [2]. Verify that the file exists and that you can access it.</Error>
-      <Error Id="1309">Error reading from file: [3]. {{ System error [2].}}	Verify that the file exists and that you can access it.</Error>
-      <Error Id="1310">Error writing to file: [3]. {{ System error [2].}}	Verify that you have access to that directory.</Error>
+      <Error Id="1309">Error reading from file: [3]. {{ System error [2].}}  Verify that the file exists and that you can access it.</Error>
+      <Error Id="1310">Error writing to file: [3]. {{ System error [2].}}  Verify that you have access to that directory.</Error>
       <Error Id="1311">Source file not found{{(cabinet)}}: [2]. Verify that the file exists and that you can access it.</Error>
       <Error Id="1312">Cannot create the directory '[2]'. A file with this name already exists. Please rename or remove the file and click retry, or click Cancel to exit.</Error>
       <Error Id="1313">The volume [2] is currently unavailable. Please select another.</Error>
@@ -273,22 +273,22 @@
       <Error Id="1327">Invalid Drive: [2]</Error>
       <Error Id="1328">Error applying patch to file [2]. It has probably been updated by other means, and can no longer be modified by this patch. For more information contact your patch vendor. {{System Error: [3]}}</Error>
       <Error Id="1329">A file that is required cannot be installed because the cabinet file [2] is not digitally signed. This may indicate that the cabinet file is corrupt.</Error>
-      <Error Id="1330">A file that is required cannot be installed because the cabinet file [2] has an invalid digital signature. This may indicate that the cabinet file is corrupt.{{	Error [3] was returned by WinVerifyTrust.}}</Error>
+      <Error Id="1330">A file that is required cannot be installed because the cabinet file [2] has an invalid digital signature. This may indicate that the cabinet file is corrupt.{{  Error [3] was returned by WinVerifyTrust.}}</Error>
       <Error Id="1331">Failed to correctly copy [2] file: CRC error.</Error>
       <Error Id="1332">Failed to correctly move [2] file: CRC error.</Error>
       <Error Id="1333">Failed to correctly patch [2] file: CRC error.</Error>
       <Error Id="1334">The file '[2]' cannot be installed because the file cannot be found in cabinet file '[3]'. This could indicate a network error, an error reading from the CD-ROM, or a problem with this package.</Error>
       <Error Id="1335">The cabinet file '[2]' required for this installation is corrupt and cannot be used. This could indicate a network error, an error reading from the CD-ROM, or a problem with this package.</Error>
-      <Error Id="1336">There was an error creating a temporary file that is needed to complete this installation.{{	Folder: [3]. System error code: [2]}}</Error>
-      <Error Id="1401">Could not create key: [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel. </Error>
-      <Error Id="1402">Could not open key: [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel. </Error>
-      <Error Id="1403">Could not delete value [2] from key [3]. {{ System error [4].}}	Verify that you have sufficient access to that key, or contact your support personnel. </Error>
-      <Error Id="1404">Could not delete key [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel. </Error>
-      <Error Id="1405">Could not read value [2] from key [3]. {{ System error [4].}}	Verify that you have sufficient access to that key, or contact your support personnel. </Error>
-      <Error Id="1406">Could not write value [2] to key [3]. {{ System error [4].}}	Verify that you have sufficient access to that key, or contact your support personnel.</Error>
-      <Error Id="1407">Could not get value names for key [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel.</Error>
-      <Error Id="1408">Could not get sub key names for key [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel.</Error>
-      <Error Id="1409">Could not read security information for key [2]. {{ System error [3].}}	Verify that you have sufficient access to that key, or contact your support personnel.</Error>
+      <Error Id="1336">There was an error creating a temporary file that is needed to complete this installation.{{  Folder: [3]. System error code: [2]}}</Error>
+      <Error Id="1401">Could not create key: [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel. </Error>
+      <Error Id="1402">Could not open key: [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel. </Error>
+      <Error Id="1403">Could not delete value [2] from key [3]. {{ System error [4].}}  Verify that you have sufficient access to that key, or contact your support personnel. </Error>
+      <Error Id="1404">Could not delete key [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel. </Error>
+      <Error Id="1405">Could not read value [2] from key [3]. {{ System error [4].}}  Verify that you have sufficient access to that key, or contact your support personnel. </Error>
+      <Error Id="1406">Could not write value [2] to key [3]. {{ System error [4].}}  Verify that you have sufficient access to that key, or contact your support personnel.</Error>
+      <Error Id="1407">Could not get value names for key [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel.</Error>
+      <Error Id="1408">Could not get sub key names for key [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel.</Error>
+      <Error Id="1409">Could not read security information for key [2]. {{ System error [3].}}  Verify that you have sufficient access to that key, or contact your support personnel.</Error>
       <Error Id="1410">Could not increase the available registry space. [2] KB of free registry space is required for the installation of this application.</Error>
       <Error Id="1500">Another installation is in progress. You must complete that installation before continuing this one.</Error>
       <Error Id="1501">Error accessing secured data. Please make sure the Windows Installer is configured properly and try the install again.</Error>
@@ -376,6 +376,6 @@
       <Error Id="1934">User installations are disabled via policy on the machine.</Error>
       <Error Id="1935">An error occured during the installation of assembly component [2]. HRESULT: [3]. {{assembly interface: [4], function: [5], assembly name: [6]}}</Error>
       <!-- END OTHER TEXT-->
-		</UI>
-	</Fragment>
+    </UI>
+  </Fragment>
 </Wix>

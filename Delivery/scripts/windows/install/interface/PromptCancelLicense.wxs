@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI.prompt_cancel_license">
-			<Dialog Id="PromptCancelLicense" Width="260" Height="85" Title="License Disagree" NoMinimize="yes">
+      <Dialog Id="PromptCancelLicense" Width="260" Height="85" Title="License Disagree" NoMinimize="yes">
         <Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" FixedSize="yes" IconSize="32" Text="question.ico" />
         <Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30">
           <Text>You cannot install [ProductName] if you do not agree with the End-User License Agreement (EULA).</Text>
@@ -14,6 +14,6 @@
           <Publish Event="EndDialog" Value="Exit">1</Publish>
         </Control>
       </Dialog>
-		</UI>
-	</Fragment>
+    </UI>
+  </Fragment>
 </Wix>

@@ -264,8 +264,8 @@ feature{NONE} -- Implementation
 			until
 				a_handler_table.after
 			loop
-				l_stone_name := stone_table.item (a_handler_table.item_for_iteration)
-				l_tool := l_tool_table.item (a_handler_table.key_for_iteration)
+				l_stone_name := stone_table.item (a_handler_table.key_for_iteration)
+				l_tool := l_tool_table.item (a_handler_table.item_for_iteration)
 				if l_stone_name /= Void and then l_tool /= Void then
 					if not Result.is_empty then
 						Result.append (", ")

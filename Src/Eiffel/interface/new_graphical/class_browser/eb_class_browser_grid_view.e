@@ -111,18 +111,6 @@ feature -- Setting
 			starting_element ?= a_class
 		end
 
-	lock_update_grid is
-			-- Lock update on `grid'.
-		do
-			grid.lock_update
-		end
-
-	unlock_update_grid is
-			-- Unlock update on `grid'.
-		do
-			grid.unlock_update
-		end
-
 	enable_tree_node_highlight is
 			-- Enable tree node highlight.
 			-- Go to `is_tree_node_highlight_enabled' for more information.
@@ -838,25 +826,6 @@ feature {NONE} -- Implementation
 					a_item_list.forth
 				end
 			end
-		end
-
-	tooltip_with_accelerator (a_text: STRING_GENERAL; a_accelerator: EV_ACCELERATOR): STRING_GENERAL is
-			-- Tooltip text `a_text' with information of accelerator key `a_accelerator'
-		require
-			a_text_attached: a_text /= Void
-			a_accelerator_attached: a_accelerator /= Void
-		local
-			l_text: STRING_32
-		do
-			create l_text.make (a_text.count + 10)
-			l_text.append (a_text)
-			l_text.append (" (")
-			l_text.append (a_accelerator.out)
-			l_text.append_character (')')
-			Result := l_text
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	show_tooltip_button_internal: like show_tooltip_button

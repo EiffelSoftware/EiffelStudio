@@ -22,12 +22,46 @@ inherit
 create
 	make
 
-feature -- Initialization
+create {DEBUGGER_DATA}
+	make_copy_for_saving
+
+feature {NONE} -- Initialization
 
 	make is
 			-- Create an empty list of break points.
 		do
 			ht_make (50)
+		end
+
+	make_copy_for_saving (lst: like Current) is
+		local
+			bp: BREAKPOINT
+		do
+			ht_make (lst.count)
+			from
+				lst.start
+			until
+				lst.after
+			loop
+				create bp.make_copy_for_saving (lst.item_for_iteration)
+				put (bp, bp)
+				lst.forth
+			end
+		end
+
+feature {DEBUGGER_DATA} -- Update after loading
+
+	reload is
+			-- Reload after loading breakpoints
+		do
+			from
+				start
+			until
+				after
+			loop
+				item_for_iteration.reload
+				forth
+			end
 		end
 
 feature -- Element factory

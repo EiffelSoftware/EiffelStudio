@@ -794,6 +794,7 @@ feature{NONE} -- Implementation
 			l_control_bar: EV_WIDGET
 		do
 			a_formatter.set_widget_owner (Current)
+			a_formatter.set_viewpoints (viewpoints)
 			tool_bar.extend (a_formatter.new_button)
 			a_formatter.set_output_line (output_line)
 			if a_formatter.selected then

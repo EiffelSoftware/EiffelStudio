@@ -76,6 +76,8 @@ feature{NONE} -- Initialization
 			grid.row_select_actions.extend (agent on_row_selected)
 			grid.row_deselect_actions.extend (agent on_row_deselected)
 			grid.key_press_actions.extend (agent on_key_pressed)
+			grid.item_select_actions.extend (agent on_item_selected)
+			grid.item_select_actions.extend (agent on_item_deselected)
 
 			grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_tool_name: STRING; a_stone_name: STRING]]}.make (agent stone_name_tester, ascending_order))
 			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_tool_name: STRING; a_stone_name: STRING]]}.make (agent tool_name_tester, ascending_order))
@@ -228,12 +230,20 @@ feature{NONE} -- Actions
 			-- Action to be performed to remove selected stone handler
 		local
 			l_selected_rows: LIST [EV_GRID_ROW]
+			l_selected_items: LIST [EV_GRID_ITEM]
 			l_row: EV_GRID_ROW
 			l_row_index: INTEGER
 		do
 			l_selected_rows := grid.selected_rows
 			if l_selected_rows.count = 1 then
 				l_row := l_selected_rows.first
+			else
+				l_selected_items := grid.selected_items
+				if l_selected_items.count = 1 then
+					l_row := l_selected_items.first.row
+				end
+			end
+			if l_row /= Void then
 				l_row_index := l_row.index
 				grid.column (1).header_item.remove_pixmap
 				items.remove (l_row_index)
@@ -282,7 +292,21 @@ feature{NONE} -- Actions
 			-- Action to be performed when `a_row' is deselected.			
 		do
 			if grid.selected_rows.is_empty then
-				remove_button.enable_sensitive
+				remove_button.disable_sensitive
+			end
+		end
+
+	on_item_selected (a_item: EV_GRID_ITEM) is
+			-- Action to be performed when `a_item' is selected.
+		do
+			remove_button.enable_sensitive
+		end
+
+	on_item_deselected (a_item: EV_GRID_ITEM) is
+			-- Action to be performed when `a_item' is deselected.
+		do
+			if grid.selected_items.is_empty then
+				remove_button.disable_sensitive
 			end
 		end
 

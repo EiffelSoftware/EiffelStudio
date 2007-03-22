@@ -284,6 +284,19 @@ feature {EV_SPLIT_AREA_I} -- Status Report
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
+feature {EV_ANY_I} -- Implementation
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify `first_imp' and `second_imp'.
+		do
+			if first /= Void then
+				first.implementation.update_for_pick_and_drop (starting)
+			end
+			if second /= Void then
+				second.implementation.update_for_pick_and_drop (starting)
+			end
+		end
+
 	interface: EV_SPLIT_AREA;
 
 indexing

@@ -49,6 +49,12 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		deferred
+		end
+
 	interface: EV_ITEM;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'

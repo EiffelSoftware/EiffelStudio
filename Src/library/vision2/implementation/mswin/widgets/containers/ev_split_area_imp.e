@@ -92,19 +92,6 @@ feature {EV_ANY_I} -- Status Setting
 			Precursor {EV_CONTAINER_IMP}
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so notify `first_imp' and `second_imp'.
-		do
-			if first_imp /= Void then
-				first_imp.update_for_pick_and_drop (starting)
-			end
-			if second_imp /= Void then
-				second_imp.update_for_pick_and_drop (starting)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	split_position: INTEGER is

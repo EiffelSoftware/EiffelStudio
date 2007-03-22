@@ -19,7 +19,7 @@ inherit
 			on_right_button_down, on_left_button_down, on_middle_button_down,
  			on_left_button_up, on_left_button_double_click,
  			on_middle_button_double_click, on_right_button_double_click,
- 			minimum_width, minimum_height, pnd_press, escape_pnd
+ 			minimum_width, minimum_height, pnd_press, escape_pnd, update_for_pick_and_drop
 		redefine
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
@@ -730,23 +730,6 @@ feature -- Basic operation
 				pt.x, pt.y])
 			end
 		end
-
-feature {EV_ANY_I}
-
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so update appearence of
-			-- all children.
-		do
-			from
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.update_for_pick_and_drop (starting)
-				ev_children.forth
-			end
-		end
-
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 

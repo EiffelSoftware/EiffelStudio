@@ -206,31 +206,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	modify_widget_appearance (starting: BOOLEAN) is
-			-- Modify the appearence of widgets to reflect current
-			-- state of pick and drop and dropable targets.
-			-- If `starting' then the pick and drop is starting,
-			-- else it is ending.
-		local
-			window_imp: EV_WINDOW_IMP
-			windows: LINEAR [EV_WINDOW]
-		do
-			windows := application_imp.windows
-			from
-				windows.start
-			until
-				windows.off
-			loop
-				window_imp ?= windows.item.implementation
-				check
-					window_implementation_not_void: window_imp /= Void
-				end
-				window_imp.update_for_pick_and_drop (starting)
-				windows.forth
-			end
-		end
-
-
 	real_start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.

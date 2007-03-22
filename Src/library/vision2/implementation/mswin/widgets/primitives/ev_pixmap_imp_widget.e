@@ -26,7 +26,7 @@ inherit
 			set_actual_drop_target_agent, has_parent, parent_is_sensitive,
 			internal_set_pointer_style, widget_imp_at_pointer_position,
 			pnd_screen, internal_enable_dockable, internal_disable_dockable,
-			update_buttons, refresh_now, create_file_drop_actions
+			update_buttons, refresh_now, create_file_drop_actions, update_for_pick_and_drop
 		redefine
 			interface, initialize,
 			read_from_named_file,

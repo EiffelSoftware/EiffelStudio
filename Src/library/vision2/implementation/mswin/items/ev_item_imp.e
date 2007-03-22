@@ -1,4 +1,4 @@
-indexing	
+indexing
 	description: "Eiffel Vision item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,6 +69,13 @@ feature {EV_ITEM_LIST_I} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Redefined by descendents.
+		end
 
 	interface: EV_ITEM;
 

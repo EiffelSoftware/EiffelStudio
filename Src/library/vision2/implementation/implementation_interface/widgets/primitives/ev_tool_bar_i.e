@@ -83,6 +83,26 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		deferred
 		end
 
+feature {EV_ANY_I}
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearence of
+			-- all children.
+		local
+			l_cursor: like cursor
+		do
+			from
+				l_cursor := cursor
+				start
+			until
+				off
+			loop
+				item.implementation.update_for_pick_and_drop (starting)
+				forth
+			end
+			go_to (l_cursor)
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_TOOL_BAR;

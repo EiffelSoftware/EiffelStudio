@@ -172,8 +172,8 @@ feature -- Access
 				l_handler_table.after
 			loop
 				create l_handler.make_last (l_handlers, n_handler, l_namespace)
-				l_handler.add_unqualified_attribute (n_stone, l_handler_table.item_for_iteration)
-				l_handler.add_unqualified_attribute (n_default_tool, l_handler_table.key_for_iteration)
+				l_handler.add_unqualified_attribute (n_stone, l_handler_table.key_for_iteration)
+				l_handler.add_unqualified_attribute (n_default_tool, l_handler_table.item_for_iteration)
 				l_handler_table.forth
 			end
 		ensure

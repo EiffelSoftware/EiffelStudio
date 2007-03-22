@@ -77,8 +77,8 @@ feature{NONE} -- Initialization
 			grid.row_deselect_actions.extend (agent on_row_deselected)
 			grid.key_press_actions.extend (agent on_key_pressed)
 
-			grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_stone_name: STRING; a_tool_name: STRING]]}.make (agent stone_name_tester, ascending_order))
-			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_stone_name: STRING; a_tool_name: STRING]]}.make (agent tool_name_tester, ascending_order))
+			grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_tool_name: STRING; a_stone_name: STRING]]}.make (agent stone_name_tester, ascending_order))
+			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [a_tool_name: STRING; a_stone_name: STRING]]}.make (agent tool_name_tester, ascending_order))
 			grid_wrapper.set_sort_action (agent sort_agent)
 			grid_wrapper.enable_auto_sort_order_change
 
@@ -189,6 +189,7 @@ feature{NONE} -- Actions
 	on_show is
 			-- Action to be performed when Current dialog is shown
 		do
+			set_has_binded (False)
 			grid_wrapper.disable_auto_sort_order_change
 			grid_wrapper.sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
 			grid_wrapper.enable_auto_sort_order_change
@@ -217,7 +218,7 @@ feature{NONE} -- Actions
 			stone_name_table.start
 			tool_name_table.start
 			bind_row (stone_name_table.item_for_iteration, tool_name_table.item_for_iteration, l_grid_row)
-			items.force_last ([stone_name_table.item_for_iteration, tool_name_table.item_for_iteration])
+			items.force_last ([tool_name_table.item_for_iteration, stone_name_table.item_for_iteration])
 			grid.remove_selection
 			l_grid_row.enable_select
 			set_has_changed (True)
@@ -329,7 +330,7 @@ feature{NONE} -- Implementation/Data
 				l_stone_item ?= l_grid_row.item (1)
 				l_tool_item ?= l_grid_row.item (2)
 				check l_stone_item /= Void and then l_tool_item /= Void end
-				l_value.put (stone_name_table.item (l_stone_item.text), tool_name_table.item (l_tool_item.text))
+				l_value.put (tool_name_table.item (l_tool_item.text), stone_name_table.item (l_stone_item.text))
 				l_row_index := l_row_index + 1
 			end
 			Result := l_value
@@ -464,7 +465,7 @@ feature{NONE} -- Implementation/Data
 	tool_name_table: HASH_TABLE [STRING, STRING_GENERAL]
 			-- Table of tool names [tool_id, tool_display_name]
 
-	items: DS_ARRAYED_LIST [TUPLE [a_stone_name: STRING; a_tool_id: STRING]]
+	items: DS_ARRAYED_LIST [TUPLE [a_tool_id: STRING; a_stone_name: STRING]]
 			-- Items to be displayed in `grid'
 
 feature{NONE} -- Implementation
@@ -472,7 +473,7 @@ feature{NONE} -- Implementation
 	grid: ES_GRID
 			-- Grid to display handlers
 
-	grid_wrapper: EVS_GRID_WRAPPER [TUPLE [a_stone_name: STRING; a_tool_name: STRING]]
+	grid_wrapper: EVS_GRID_WRAPPER [TUPLE [a_tool_id: STRING; a_stone_name: STRING]]
 			-- Grid wrapper to support sorting
 
 	add_button: EV_TOOL_BAR_BUTTON
@@ -483,7 +484,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	stone_name_tester (a_item, b_item: TUPLE [a_stone_name: STRING; a_tool_name: STRING]; a_order: INTEGER): BOOLEAN is
+	stone_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_item' and `b_item'.
 		require
 			a_item_valid: a_item /= Void and then a_item.a_stone_name /= Void
@@ -496,7 +497,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	tool_name_tester (a_item, b_item: TUPLE [a_stone_name: STRING; a_tool_name: STRING]; a_order: INTEGER): BOOLEAN is
+	tool_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_item' and `b_item'.
 		require
 			a_item_valid: a_item /= Void and then a_item.a_tool_name /= Void
@@ -536,8 +537,8 @@ feature{NONE} -- Implementation/Sorting
 					l_value.after
 				loop
 					if
-						l_stone_table.has (l_value.item_for_iteration) and then
-						l_tool_table.has (l_value.key_for_iteration)
+						l_stone_table.has (l_value.key_for_iteration) and then
+						l_tool_table.has (l_value.item_for_iteration)
 					then
 						l_items.force_last ([l_value.item_for_iteration, l_value.key_for_iteration])
 					end
@@ -558,7 +559,7 @@ feature{NONE} -- Implementaion
 		local
 			l_grid: like grid
 			l_grid_row: EV_GRID_ROW
-			l_cursor: DS_ARRAYED_LIST_CURSOR [TUPLE [a_stone_name: STRING; a_tool_id: STRING]]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [TUPLE [ a_tool_id: STRING; a_stone_name: STRING]]
 		do
 			l_grid := grid
 			if l_grid.row_count > 0 then

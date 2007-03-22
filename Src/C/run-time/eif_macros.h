@@ -1099,7 +1099,7 @@ RT_LNK int fcount;
 			p = &(EIF_oms[(b)]); \
 			if (!(*p)) { \
 				EIF_REFERENCE * pm; \
-				pm = eif_calloc (m, sizeof (EIF_REFERENCE *)); \
+				pm = (EIF_REFERENCE *) eif_calloc (m, sizeof (EIF_REFERENCE *)); \
 				if (!pm) { \
 					enomem(); \
 				} \

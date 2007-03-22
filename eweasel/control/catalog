@@ -1677,3 +1677,4 @@ if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet0
 if DOTNET test effecting-from-inherited-external	dotnet049	tcf pass dotnet
 test replicated-from-generic-type		dotnet050	tcf pass dotnet termination expanded replication
 test implicit-type-cause-crash-on-cast	dotnet051	tcf pass dotnet termination
+if DOTNET test incremental-custom-attribute-constant-change	dotnet052	tcf pass dotnet

@@ -808,6 +808,7 @@ feature -- Change
 	enable_debug is
 			-- Allow debugging.
 		do
+			can_debug := True
 		ensure
 			can_debug
 		end
@@ -815,6 +816,7 @@ feature -- Change
 	disable_debug is
 			-- Disallow debugging.
 		do
+			can_debug := False
 		ensure
 			not can_debug
 		end

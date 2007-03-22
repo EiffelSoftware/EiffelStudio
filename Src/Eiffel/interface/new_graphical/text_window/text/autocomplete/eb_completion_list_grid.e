@@ -15,6 +15,13 @@ inherit
 			initialize
 		end
 
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -23,6 +30,8 @@ feature {NONE} -- Initialization
 			Precursor
 			pick_ended_actions.force_extend (agent on_pick_ended)
 			set_item_pebble_function (agent on_pick)
+			set_focused_selection_color (preferences.editor_data.selection_background_color)
+			set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 		end
 
 feature {NONE} -- Implementation

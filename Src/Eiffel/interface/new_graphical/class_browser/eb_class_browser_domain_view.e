@@ -172,8 +172,8 @@ feature{NONE} -- Implementation/Data
 	row_background_color (y: INTEGER): EV_COLOR is
 			-- Background color for items in row indexed by `y'
 		local
-			l_last_item: EB_METRIC_GRID_RESULT_ITEM
-			l_current_item: EB_METRIC_GRID_RESULT_ITEM
+			l_last_item: EB_GRID_QL_ITEM
+			l_current_item: EB_GRID_QL_ITEM
 			l_last_sorted_column: INTEGER
 		do
 			l_last_sorted_column := last_sorted_column
@@ -458,8 +458,8 @@ feature{NONE} -- Implementation
 			a_y_valid: a_y > 0 and a_y <= domain.count
 			a_item_attached: a_item /= Void
 		local
-			l_item: EB_METRIC_GRID_RESULT_ITEM
-			l_path_item: EB_METRIC_GRID_RESULT_ITEM
+			l_item: EB_GRID_QL_ITEM
+			l_path_item: EB_GRID_QL_ITEM
 			l_row_background_color: EV_COLOR
 			l_ql_item: QL_ITEM
 		do
@@ -482,7 +482,7 @@ feature{NONE} -- Implementation
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
-			l_grid_item: EB_METRIC_GRID_RESULT_ITEM
+			l_grid_item: EB_GRID_QL_ITEM
 			l_grid: like grid
 		do
 			l_grid_item ?= a_item.grid_item

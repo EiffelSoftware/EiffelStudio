@@ -447,7 +447,7 @@ feature{NONE} -- Implementation/Data
 				l_tools.after
 			loop
 				l_tool_table.put (l_tools.item.a_tool_name, l_tools.item.a_tool_id)
-				l_tool_name_table.put (l_tools.item.a_tool_id, l_tools.item.a_tool_name)
+				l_tool_name_table.put (l_tools.item.a_tool_id, l_tools.item.a_tool_name.as_string_32)
 				l_tools.forth
 			end
 		end

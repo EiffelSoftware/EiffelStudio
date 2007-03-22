@@ -333,9 +333,6 @@ feature -- Pop up
 		do
 			if widget_owner /= Void then
 				widget_owner.ensure_formatter_display (Current)
---				if widget_owner.last_widget /= widget then
---					widget_owner.set_widget (widget)
---				end
 				widget_owner.force_display
 			end
 			display_header

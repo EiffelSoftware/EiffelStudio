@@ -195,9 +195,6 @@ feature -- Result loading
 			a_metric_attached: a_metric /= Void
 			a_input_attached: a_input /= Void
 		do
-			if domain /= Void then
-				domain.wipe_out
-			end
 			if a_metric.is_ratio then
 				ratio_btn_toolbar.show
 			else
@@ -268,12 +265,6 @@ feature{NONE} -- Implementation/Access
 
 	result_grid: EB_CLASS_BROWSER_DOMAIN_VIEW
 			-- Result grid
-
-	grid_wrapper: EVS_SEARCHABLE_COMPONENT [EB_METRIC_RESULT_ROW]
-			-- `grid' wrapper
-
-	domain: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
-			-- Domain to be displayed in Current
 
 	metric_panel: EB_METRIC_RESULT_AREA
 			-- Metric panel to which current is attached

@@ -1845,7 +1845,7 @@ feature -- Title part
 	t_Open_layout: STRING_GENERAL is					do Result := locale.translate ("Open Layout") end
 	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translate ("Overwrite Layout") end
 	t_open_c_file: STRING_GENERAL is					do Result := locale.translate ("Open C file") end
-	t_reference_position: STRING_GENERAL is				do Result := locale.translate ("Position") end
+	t_reference_position: STRING_GENERAL is				do Result := locale.translate ("Positions") end
 	t_customized_formatter_setup: STRING is 			do Result := locale.translate ("Setup customized formatters") end
 
 feature -- Titles translation needless (Title Original) for preference strings.

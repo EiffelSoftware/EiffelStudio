@@ -20,10 +20,14 @@ feature {NONE} -- Initialization
 		local
 			d: DATE
 			t: TIME
+			s: STRING
 		do
 			create d.make_from_string ("20010101", "yyyy[0]mm[0]dd")
 			create t.make_from_string ("180500", "[0]hh[0]mi[0]ss")
 			create d.make_from_string ("01.01.2001", "dd.mm.yyyy")
+
+			create d.make_now
+			s := d.formatted_out ("yyyy[0]mm")
 		end
 
 end -- class TEST

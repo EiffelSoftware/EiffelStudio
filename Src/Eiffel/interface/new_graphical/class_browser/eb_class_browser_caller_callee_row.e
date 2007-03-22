@@ -345,7 +345,7 @@ feature{NONE} -- Actions
 			l_accessor_visitor: EB_ACCESSED_FEATURE_VISITOR
 			l_caller: like feature_item
 			l_callee: like feature_item
-			l_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C; a_in_assertion: BOOLEAN]]
+			l_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
 				grid_item.remove_component (1)
@@ -374,7 +374,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	create_accessor_grid_item (a_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C; a_in_assertion: BOOLEAN]]) is
+	create_accessor_grid_item (a_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]) is
 			-- Create grid item to display `a_ccessors'.
 		require
 			a_accessors_attached: a_accessors /= Void
@@ -389,7 +389,7 @@ feature{NONE} -- Actions
 			until
 				a_accessors.after
 			loop
-				l_item.insert_component (accessor_grid_item_component (a_accessors.index, a_accessors.item.a_ast, a_accessors.item.a_class, a_accessors.item.a_in_assertion), a_accessors.index)
+				l_item.insert_component (accessor_grid_item_component (a_accessors.index, a_accessors.item.a_ast, a_accessors.item.a_class), a_accessors.index)
 				a_accessors.forth
 			end
 			l_item.enable_component_pebble
@@ -401,7 +401,7 @@ feature{NONE} -- Actions
 	accessor_grid_item: EV_GRID_ITEM
 			-- Grid item to display accessors for `related_feature'
 
-	accessor_grid_item_component (a_index: INTEGER; a_accessor: AST_EIFFEL; a_written_class: CLASS_C; a_in_assertion: BOOLEAN): ES_GRID_ITEM_COMPONENT is
+	accessor_grid_item_component (a_index: INTEGER; a_accessor: AST_EIFFEL; a_written_class: CLASS_C): ES_GRID_ITEM_COMPONENT is
 			-- Grid item component for `a_accessor'
 		require
 			a_index_positive: a_index > 0

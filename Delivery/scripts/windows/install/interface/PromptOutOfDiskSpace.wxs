@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI  Id="UI.prompt_out_of_disk_space">
       <Dialog Id="PromptOutOfDiskSpace" Width="333" Height="249" Title="[ProductName]" NoMinimize="yes">
         <Control Id="Icon" Type="Icon" X="9" Y="13" Width="38" Height="38" FixedSize="yes" IconSize="48" Text="error.ico" />
@@ -20,6 +20,6 @@
           <Publish Event="EndDialog" Value="Return">1</Publish>
         </Control>
       </Dialog>
-		</UI>
-	</Fragment>
+    </UI>
+  </Fragment>
 </Wix>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
     <UI Id="UI.prompt_error">
       <Dialog Id="PromptError" Width="270" Height="105" Title="Installer Information" ErrorDialog="yes" NoMinimize="yes">
         <Control Id="ErrorText" Type="Text" X="48" Y="15" Width="205" Height="60" TabSkip="no" Text="Information text" />
@@ -27,6 +27,6 @@
           <Publish Event="EndDialog" Value="ErrorRetry">1</Publish>
         </Control>
       </Dialog>
-		</UI>
-	</Fragment>
+    </UI>
+  </Fragment>
 </Wix>

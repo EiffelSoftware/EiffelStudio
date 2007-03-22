@@ -343,8 +343,9 @@ feature {NONE} -- xml callbacks
 				s.prepend_character ('-')
 				s.prepend_string (a_prefix)
 			end
-			r := next_row
 			log ("XML Attribute: " + s)
+			s.append_character ('=')
+			r := next_row
 			create lab.make_with_text (s)
 			lab.set_foreground_color (attribute_color)
 			if attribute_pixmap /= Void then
@@ -698,7 +699,7 @@ feature -- Colors
 	info_color: EV_COLOR
 
 	content_color: EV_COLOR
-	
+
 	error_color: EV_COLOR
 
 feature -- Change color

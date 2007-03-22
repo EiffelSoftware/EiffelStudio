@@ -120,6 +120,9 @@ feature -- Status setting
 					set_last_stone (fst)
 					history_manager.extend (fst)
 				end
+				if widget.is_displayed or else is_auto_hide then
+					force_last_stone
+				end
 				if flat_formatter /= Void then
 					flat_formatter.show_debugged_line
 				end
@@ -132,9 +135,9 @@ feature -- Status setting
 					formatters.item.reset_display
 					formatters.forth
 				end
-			end
-			if widget.is_displayed or else is_auto_hide then
-				force_last_stone
+				if widget.is_displayed or else is_auto_hide then
+					force_last_stone
+				end
 			end
 		end
 

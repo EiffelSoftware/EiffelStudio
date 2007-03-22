@@ -318,17 +318,19 @@ feature -- Status report
 		local
 			l_cursor: CURSOR
 		do
-			l_cursor := a_status.cursor
-			Result := True
-			from
-				a_status.start
-			until
-				a_status.after or a_status.item = Void or (not Result)
-			loop
-				Result := is_column_sortable (a_status.item.a_sorted_column)
-				a_status.forth
+			if not a_status.is_empty then
+				l_cursor := a_status.cursor
+				Result := True
+				from
+					a_status.start
+				until
+					a_status.after or a_status.item = Void or (not Result)
+				loop
+					Result := is_column_sortable (a_status.item.a_sorted_column)
+					a_status.forth
+				end
+				a_status.go_to (l_cursor)
 			end
-			a_status.go_to (l_cursor)
 		end
 
 feature -- Access

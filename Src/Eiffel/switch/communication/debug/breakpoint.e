@@ -186,7 +186,7 @@ feature -- Run to cursor mode
 		do
 			backup_data := [
 							bench_status,
-							condition_type, condition, 
+							condition_type, condition,
 							continue_on_condition_failure,
 							message, continue_execution,
 							hits_count, hits_count_condition
@@ -209,22 +209,24 @@ feature -- Run to cursor mode
 		require
 			backup_data /= Void
 		do
-			bench_status := backup_data.bench_status
-			condition_type := backup_data.condition_type
-			condition := backup_data.condition
-			continue_on_condition_failure := backup_data.continue_on_condition_failure
-			message := backup_data.message
-			continue_execution := backup_data.continue_execution
-			hits_count := backup_data.hits_count
-			hits_count_condition := backup_data.hits_count_condition
-			backup_data := Void
+			if backup_data /= Void then
+				bench_status := backup_data.bench_status
+				condition_type := backup_data.condition_type
+				condition := backup_data.condition
+				continue_on_condition_failure := backup_data.continue_on_condition_failure
+				message := backup_data.message
+				continue_execution := backup_data.continue_execution
+				hits_count := backup_data.hits_count
+				hits_count_condition := backup_data.hits_count_condition
+				backup_data := Void
+			end
 		ensure
 			backup_data = Void
 		end
 
 	backup_data: TUPLE [
 						bench_status: INTEGER;
-						condition_type: INTEGER; condition: EB_EXPRESSION; 
+						condition_type: INTEGER; condition: EB_EXPRESSION;
 						continue_on_condition_failure: BOOLEAN;
 						message: STRING; continue_execution: BOOLEAN;
 						hits_count: INTEGER; hits_count_condition: like hits_count_condition

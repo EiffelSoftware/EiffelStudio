@@ -22,7 +22,7 @@ feature -- Class stack creation
 			-- for thread `a_tid'.
 		do
 		end
-	
+
 feature -- Values
 
 	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
@@ -35,7 +35,6 @@ feature -- Values
 
 	exception_debug_value: ABSTRACT_DEBUG_VALUE	 is do end
 
-	exception_to_string,
 	exception_module_name,
 	exception_class_name: STRING is do end
 

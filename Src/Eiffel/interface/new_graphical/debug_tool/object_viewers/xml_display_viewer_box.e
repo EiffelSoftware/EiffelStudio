@@ -1,5 +1,5 @@
 indexing
-	description: "Object browser expanded viewer  ..."
+	description: "XML display expanded viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -7,21 +7,17 @@ indexing
 	revision: "$Revision$"
 
 class
-	OBJECT_BROWSER_VIEWER_BOX
+	XML_DISPLAY_VIEWER_BOX
 
 inherit
 
 	EB_OBJECT_VIEWER
-
-	ES_OBJECTS_GRID_MANAGER
 
 	EV_SHARED_APPLICATION
 
 	EB_CONSTANTS
 
 	EB_SHARED_DEBUGGER_MANAGER
-
-	SHARED_DEBUGGED_OBJECT_MANAGER
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -48,25 +44,12 @@ feature {NONE} -- Implementation
 			viewerborder.set_border_width (layout_constants.dialog_unit_to_pixels (1))
 			viewerborder.set_background_color ((create {EV_STOCK_COLORS}).black)
 
-			create viewer.make_with_name ("ObjectBrowseViewer", "obv")
-			viewer.set_column_count_to (5)
-			viewer.set_minimum_height (100)
-			viewer.set_default_columns_layout (<<
-						[1, True, False, 150, interface_names.l_name, interface_names.to_name],
-						[2, True, False, 150, interface_names.l_value, interface_names.to_value],
-						[3, True, False, 100, interface_names.l_type, interface_names.to_type],
-						[4, True, False, 80, interface_names.l_address, interface_names.to_address],
-						[5, True, False, 200, interface_names.l_Context, interface_names.to_context]
-					>>
-				)
-			viewer.set_columns_layout (1, viewer.default_columns_layout)
+			create viewer.make
+			viewer.widget.set_minimum_height (100)
 			viewer.drop_actions.extend (agent on_stone_dropped)
 			viewer.drop_actions.set_veto_pebble_function (agent is_valid_stone)
-			viewer.initialize_layout_management (Void)
-			viewer.enable_layout_management
-			viewer.set_pre_activation_action (agent pre_activate_cell)
 
-			viewerborder.extend (viewer)
+			viewer.attach_to_container (viewerborder)
 			vb.extend (viewerborder)
 
  			set_title (name)
@@ -76,26 +59,30 @@ feature -- Access
 
 	name: STRING_GENERAL is
 		do
-			Result := Interface_names.t_viewer_object_browser_title
+			Result := "XML display" --Interface_names.t_viewer_object_browser_title
 		end
 
 	widget: EV_WIDGET
 
-	viewer: ES_OBJECTS_GRID
+	viewer: ES_GRID_XML_VIEWER
 
 feature -- Access
 
 	is_valid_stone (st: OBJECT_STONE; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
+		local
+			dv: DUMP_VALUE
+			s: STRING
 		do
-			Result := st /= Void
-		end
-
-	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
-		do
-			if has_object and viewer.row_count > 0 then
-				if current_object.object_address.is_equal (add) then
-					Result ?= viewer.row (1).data
+			if st /= Void then
+				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class)
+				if dv.has_formatted_output then
+					if is_strict then
+						s := dv.formatted_truncated_string_representation (0, 10)
+						Result := begin_with (s, "<?xml", True)
+					else
+						Result := True
+					end
 				end
 			end
 		end
@@ -104,8 +91,9 @@ feature -- Change
 
 	refresh is
 			-- Recompute the displayed text.
+		local
+			l_trunc_str: STRING_32
 		do
-			viewer.record_layout
 			clear
 			if
 				Debugger_manager.application_is_executing
@@ -113,15 +101,12 @@ feature -- Change
 			then
 				if has_object then
 					retrieve_dump_value
-					viewer.insert_new_row (1)
 					if current_dump_value /= Void then
-						viewer.attach_dump_value_to_grid_row (viewer.row (1), viewers_manager.current_dump_value, "Object")
-					else
-						viewer.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text (Interface_names.l_dbg_unable_to_get_value_message))
+						l_trunc_str := current_dump_value.formatted_truncated_string_representation (0, -1)
+						viewer.load_xml_string (l_trunc_str)
 					end
 				end
 			end
-			viewer.restore_layout
 		end
 
 	destroy is
@@ -135,11 +120,6 @@ feature -- Change
 		end
 
 feature {NONE} -- Implementation
-
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
-		do
-			Result := Eb_debugger_manager.object_viewer_cmd
-		end
 
 	is_in_default_state: BOOLEAN is
 		do
@@ -162,7 +142,7 @@ feature {NONE} -- Implementation
 	clear is
 			-- Clean current data, useless if dialog closed or destroyed
 		do
-			viewer.set_row_count_to (0)
+			viewer.clear
 		end
 
 feature {NONE} -- Event handling

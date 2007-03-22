@@ -173,11 +173,18 @@ feature -- Access
 			init_value (Result)
 		end
 
-	new_object_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE is
+	new_object_value (addr: STRING; dtype: CLASS_C): DUMP_VALUE is
 			-- make a object item initialized to `value'
+		local
+			dvnet: DUMP_VALUE_DOTNET
 		do
-			create Result.make_empty (debugger_manager)
-			Result.set_object_value (value, dtype)
+			if debugger_manager.is_dotnet_project then
+				create dvnet.make_empty (debugger_manager)
+				Result := dvnet
+			else
+				create Result.make_empty (debugger_manager)
+			end
+			Result.set_object_value (addr, dtype)
 			init_value (Result)
 		end
 
@@ -215,7 +222,7 @@ feature -- Access
 
 feature -- Dotnet creation
 
-	new_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE): DUMP_VALUE is
+	new_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE): DUMP_VALUE_DOTNET is
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_dsv /= Void
@@ -225,7 +232,7 @@ feature -- Dotnet creation
 			init_value (Result)
 		end
 
-	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE is
+	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE_DOTNET is
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_drv /= Void
@@ -235,7 +242,7 @@ feature -- Dotnet creation
 			init_value (Result)
 		end
 
-	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE is
+	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE_DOTNET is
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_dnav /= Void
@@ -280,7 +287,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 end

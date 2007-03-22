@@ -19,18 +19,7 @@ inherit
 			address
 		end
 
-create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
-	make --, make_attribute
-
-feature {NONE} -- Initialization
-
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value; f: like icd_frame) is
-		do
-		end
-
 feature -- Access
-
-	length: INTEGER is 0
 
 	dynamic_class: CLASS_C is
 		once

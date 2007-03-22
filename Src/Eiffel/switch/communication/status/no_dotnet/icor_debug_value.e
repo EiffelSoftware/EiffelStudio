@@ -7,13 +7,9 @@ indexing
 	revision: "$Revision$"
 
 class
-	ICOR_DEBUG_VALUE
+	ICOR_DEBUG_VALUE2
 
 feature -- Cleaning and dipose
-
-	clean_on_dispose is
-		do
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

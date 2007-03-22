@@ -8,7 +8,7 @@ indexing
 class CALL_STACK_ELEMENT_DOTNET
 
 inherit
-	
+
 	CALL_STACK_ELEMENT
 		redefine
 			make
@@ -32,17 +32,13 @@ feature -- Properties
 	object_address: STRING
 
 	display_object_address: like object_address
-			
+
 feature -- Dotnet Properties
 
 	dotnet_module_name: STRING is
 		do
 		end
 
-	dotnet_module_filename: STRING is
-		do
-		end
-		
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

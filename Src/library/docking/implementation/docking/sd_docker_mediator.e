@@ -44,6 +44,7 @@ feature -- Initlization
 			create l_screen
 
 			create cancel_actions
+			-- FIXIT: When there is no feedback rectangle (the transparency blue area) on Windows, key press actions will not be called.
 			internal_key_press_function := agent on_key_press
 			internal_key_release_function := agent on_key_release
 			ev_application.key_press_actions.extend (internal_key_press_function)
@@ -147,6 +148,7 @@ feature -- Hanlde pointer events
 			is_tracing: is_tracing
 		local
 			l_drawed: BOOLEAN
+			l_hot_zones: like hot_zones
 		do
 			debug ("docking")
 				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
@@ -157,12 +159,13 @@ feature -- Hanlde pointer events
 				screen_y := a_screen_y
 
 				from
-					hot_zones.start
+					l_hot_zones := hot_zones.twin
+					l_hot_zones.start
 				until
-					hot_zones.after or l_drawed
+					l_hot_zones.after or l_drawed
 				loop
-					l_drawed := hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
-					hot_zones.forth
+					l_drawed := l_hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
+					l_hot_zones.forth
 					debug ("docking")
 						print ("%N SD_DOCKER_MEDIATOR on_pointer_motion")
 					end

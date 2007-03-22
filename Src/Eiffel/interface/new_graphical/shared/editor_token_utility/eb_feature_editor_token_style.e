@@ -497,7 +497,9 @@ feature{NONE} -- Implementation
 					loop
 						token_writer.new_line
 						l_comment := l_comments.item.content
-						l_comment.left_adjust
+						if l_comment.count > 1 and then l_comment.item (1).is_space then
+							l_comment.remove (1)
+						end
 						token_writer.add_comment_text (l_comment.out)
 						l_tokens.fill (token_writer.last_line.content)
 						l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)

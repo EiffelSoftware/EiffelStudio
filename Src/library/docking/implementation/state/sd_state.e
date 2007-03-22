@@ -217,6 +217,20 @@ feature -- Commands
 		do
 		end
 
+	auto_hide_tab_with (a_target_content: SD_CONTENT) is
+			-- When `a_tartget_content' is auto hide state, `content''s auto hide tab dock at side of `a_target_content' auto hide tab.
+		require
+			a_target_content_not_void: a_target_content /= Void
+		local
+			l_auto_hide_state: SD_AUTO_HIDE_STATE
+		do
+			content.set_visible (True)
+			internal_docking_manager.command.lock_update (Void, True)
+			create l_auto_hide_state.make_with_friend (content, a_target_content)
+			content.change_state (l_auto_hide_state)
+			internal_docking_manager.command.unlock_update
+		end
+
 	on_normal_max_window is
 			-- Handle normal\max zone.
 		do

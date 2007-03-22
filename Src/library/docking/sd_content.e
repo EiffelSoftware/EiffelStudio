@@ -406,23 +406,25 @@ feature -- Set Position
 		require
 			manager_has_current_content: manager_has_content (Current)
 			manager_has_a_content: manager_has_content (a_content)
-			target_content_shown: target_content_shown (a_content)
+			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
 		do
 			set_visible (True)
 			l_tab_zone ?= a_content.state.zone
+			l_docking_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
 				if not a_left then
 				 	state.move_to_tab_zone (l_tab_zone, l_tab_zone.count + 1)
 				 else
 				 	state.move_to_tab_zone (l_tab_zone, 1)
 				end
-			else
-				l_docking_zone ?= a_content.state.zone
-				check l_docking_zone /= Void end
+			elseif l_docking_zone /= Void then
 				state.move_to_docking_zone (l_docking_zone, a_left)
+			else
+				-- `a_content' is auto hide state, zone is void.
+				state.auto_hide_tab_with (a_content)
 			end
 			set_focus
 		end
@@ -554,6 +556,19 @@ feature -- States report
 		do
 			l_zone := a_target_content.state.zone
 			Result := l_zone /= Void and then l_zone.parent /= Void
+		end
+
+	target_content_zone_parent_exist (a_target_content: SD_CONTENT): BOOLEAN is
+			-- If `a_target_content''s zone parent not void if exists.
+		local
+			l_zone: SD_ZONE
+		do
+			l_zone := a_target_content.state.zone
+			if l_zone /= Void then
+				Result := l_zone.parent /= Void
+			else
+				Result := True
+			end
 		end
 
 feature {SD_STATE, SD_HOT_ZONE, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_ZONE,

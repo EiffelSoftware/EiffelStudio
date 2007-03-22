@@ -42,11 +42,6 @@ feature -- Output
 		do
 		end
 
-	fill_items (a_slice_min, a_slice_max: INTEGER) is
-			-- Get Items for attributes
-		do
-		end
-
 	string_value: STRING is
 		do
 		end

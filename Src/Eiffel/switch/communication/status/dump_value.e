@@ -133,91 +133,12 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			dynamic_class := Void
 		end
 
-feature -- Dotnet creation
+feature -- change
 
-	set_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
-			-- make a object ICorDebugStringValue item initialized to `value'
-		require
-			is_dotnet_system
-			arg_not_void: a_eifnet_dsv /= Void
+	set_icd_value_dotnet (v: like value_dotnet) is
+			-- Set `value_dotnet' as `v'
 		do
-			is_dotnet_value := True
-			eifnet_debug_value := a_eifnet_dsv
-			value_dotnet := eifnet_debug_value.icd_referenced_value
-
-			value_string_dotnet := a_eifnet_dsv.icd_value_info.interface_debug_string_value
-			value_string := a_eifnet_dsv.string_value
-			if a_eifnet_dsv.is_null then
-				value_address := Void
-			else
-				value_address := a_eifnet_dsv.address
-			end
-			type := Type_string_dotnet
-			dynamic_class := a_eifnet_dsv.dynamic_class
-			is_external_type := True
-		ensure
-			type /= Type_unknown
-		end
-
-	set_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE) is
-			-- make a object ICorDebugObjectValue item initialized to `value'
-		require
-			is_dotnet_system
-			arg_not_void: a_eifnet_drv /= Void
-		do
-			is_dotnet_value := True
-			eifnet_debug_value := a_eifnet_drv
-			value_dotnet := eifnet_debug_value.icd_referenced_value
-			icd_value_info := a_eifnet_drv.icd_value_info
-			value_class_token := a_eifnet_drv.value_class_token
-			if a_eifnet_drv.is_null then
-				value_address := Void
-			else
-				value_address := a_eifnet_drv.address
-			end
-			type := Type_object
-
-			dynamic_class_type := a_eifnet_drv.dynamic_class_type
-			if dynamic_class_type /= Void then
-				dynamic_class := dynamic_class_type.associated_class
-				debug ("debugger_eifnet_data")
-					print ("[>] dyn_class_type = " + dynamic_class_type.full_il_type_name + "%N")
-				end
-			end
-			if dynamic_class = Void then
-				dynamic_class := a_eifnet_drv.static_class
-			end
-			is_external_type := a_eifnet_drv.is_external_type
-		ensure
-			type /= Type_unknown
-		end
-
-	set_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE) is
-			-- make a object ICorDebugObjectValue item initialized to `value'
-		require
-			is_dotnet_system
-			arg_not_void: a_eifnet_dnav /= Void
-		do
-			is_dotnet_value := True
-			eifnet_debug_value := a_eifnet_dnav
-			value_dotnet := eifnet_debug_value.icd_referenced_value
-			icd_value_info := a_eifnet_dnav.icd_value_info
-
-			if a_eifnet_dnav.is_null then
-				value_address := Void
-			else
-				value_address := a_eifnet_dnav.address
-			end
-			type := Type_object
-
-			dynamic_class_type := Void
-			dynamic_class := debugger_manager.compiler_data.native_array_class_c
-			if dynamic_class = Void then
-				dynamic_class := a_eifnet_dnav.static_class
-			end
-			is_external_type := a_eifnet_dnav.is_external_type
-		ensure
-			type /= Type_unknown
+			value_dotnet := v
 		end
 
 feature -- Dotnet access
@@ -234,70 +155,40 @@ feature -- Dotnet access
 			-- Is Current represent a typical dotnet value ?
 			-- (String are processing in a special way)
 
-	is_external_type: BOOLEAN
-			-- Is the value corresponding to an external type ?
-			-- (ex: like SystemObject for dotnet)
-
-	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
-			-- Debug value related to `value_dotnet'
+feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR_IMP} -- Internal basic data
 
 	value_dotnet: ICOR_DEBUG_VALUE
 			-- Dotnet value as an ICorDebugValue interface
 
-	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
-			-- ICorDebugStringValue for the dotnet String
+feature {NONE} -- Dotnet specific
 
-	value_frame_dotnet: ICOR_DEBUG_FRAME is
-			-- ICorDebugFrame in this DUMP_VALUE context
-		do
-			Result := Eifnet_debugger.current_stack_icor_debug_frame
-		end
-
-feature -- change
-
-	set_icd_value_dotnet (v: like value_dotnet) is
-			-- Set `value_dotnet' as `v'
-		do
-			value_dotnet := v
-		end
-
-feature {NONE} -- Implementation dotnet
-
-	new_value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE is
-			-- Dotnet value as an ICorDebugObjectValue interface
-		do
-			if icd_value_info /= Void then
-				Result := icd_value_info.new_interface_debug_object_value
-			end
-		end
-
-	icd_value_info: EIFNET_DEBUG_VALUE_INFO
-
-	value_class_token: INTEGER
-			-- Class token for the dotnet value
-
-	value_class_name: STRING is
+	dotnet_value_class_name: STRING is
 			-- Class name for the dotnet value
-		local
-			l_edvi: EIFNET_DEBUG_VALUE_INFO
+		require
+			is_dotnet_system
 		do
-			if not is_external_type and then dynamic_class /= Void then
-				Result := dynamic_class.name_in_upper
-			elseif is_dotnet_value and is_external_type then
-				l_edvi := eifnet_debug_value.icd_value_info
-				if l_edvi /= Void and then l_edvi.has_object_interface then
-					Result := l_edvi.value_class_name
-				elseif dynamic_class /= Void then
-					Result := dynamic_class.name_in_upper
-				else
-					Result := "{Token=0x" + value_class_token.to_hex_string + "}"
-				end
-			end
-			if Result = Void then
-				Result := "Unknown Type"
-			end
+			check only_dotnet: is_dotnet_value end
+			Result := "Dotnet Type"
 		ensure
 			Result /= Void
+		end
+
+	dotnet_string_representation (min, max: INTEGER): STRING_32 is
+			-- String representation for dotnet value
+			-- with bounds from `min' and `max'.
+		require
+			is_dotnet_system
+		do
+			check only_dotnet: is_dotnet_value end
+		end
+
+	dotnet_generating_type_evaluated_string: STRING is
+		require
+			is_stopped: debugger_manager.safe_application_is_stopped
+			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
+			is_dotnet_value: is_dotnet_value
+		do
+			check only_dotnet: is_dotnet_value end
 		end
 
 feature -- Status report
@@ -307,7 +198,7 @@ feature -- Status report
 		require
 			valid_other: other /= Void
 		do
-			Result := type = other.type and then output_value.is_equal (other.output_value)
+			Result := type = other.type and then output_value (False).is_equal (other.output_value (False))
 		end
 
 	to_basic: DUMP_VALUE is
@@ -394,7 +285,7 @@ feature -- Status report
 	formatted_output: STRING_32 is
 			-- Output of the call to `debug_output' on `Current', if any.
 		require
-			has_formatted_output
+			has_formatted_output: has_formatted_output
 		local
 			l_str: STRING_32
 			l_max: INTEGER
@@ -406,9 +297,9 @@ feature -- Status report
 				debug ("debugger_interface")
 					io.put_string ("Finding output value of constant string")
 				end
-				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
-			elseif type = Type_string_dotnet and value_string_dotnet = Void then
-				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
+				Result := Character_routines.eiffel_string_32 (value_string)
+--			elseif type = Type_string_dotnet and then value_string_dotnet = Void then
+					--| Handled by DUMP_VALUE_DOTNET
 			else
 				l_max := debugger_manager.displayed_string_size
 					--| if l_max = -1, then do no truncate upper string
@@ -418,11 +309,12 @@ feature -- Status report
 					if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
 						l_str.append ("...")
 					end
-					create Result.make (l_str.count + 2)
-					Result.append_character ('%"')
+					create Result.make (l_str.count)
 					Result.append (Character_routines.eiffel_string_32 (l_str))
-					Result.append_character ('%"')
 				else
+						--| Should not occurs since precondition
+						--| is `has_formatted_output'
+					check should_not_occurs: False end
 					Result := "`debug_output` disabled !"
 				end
 			end
@@ -434,12 +326,14 @@ feature -- Status report
 			-- Complete output, including string representation.
 			--| `output_value' = "This is a string"
 		do
-			Result := output_value.twin
+			Result := output_value (True).twin
 			if type /= type_string and has_formatted_output then
 				Result.append_character (' ')
 				Result.append_character ('=')
 				Result.append_character (' ')
+				Result.append_character ('%"')
 				Result.append (formatted_output)
+				Result.append_character ('%"')
 			end
 			debug ("debug_recv")
 				print ("Output is ")
@@ -455,7 +349,7 @@ feature -- Status report
 			if has_formatted_output then
 				Result := formatted_output.twin
 			else
-				Result := output_value.twin
+				Result := output_value (False).twin
 			end
 			debug ("debug_recv")
 				print ("Output is ")
@@ -634,86 +528,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	dotnet_string_representation (min, max: INTEGER): STRING_32 is
-			-- String representation for dotnet value
-			-- with bounds from `min' and `max'.
-		require
-			is_dotnet_system
-		local
-			sc, sc8, sc32: CLASS_C
-			l_eifnet_debugger: EIFNET_DEBUGGER
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE
-			l_size: INTEGER
-			comp_data: DEBUGGER_DATA_FROM_COMPILER
-		do
-			l_eifnet_debugger := Eifnet_debugger
-
-			if dynamic_class /= Void then
-				comp_data := debugger_manager.compiler_data
-				sc8 := comp_data.string_8_class_c
-				sc32 := comp_data.string_32_class_c
-				if dynamic_class = sc8 or dynamic_class = sc32 then
-					sc := dynamic_class
-				elseif dynamic_class.simple_conform_to (sc8) then
-					sc := sc8
-				elseif dynamic_class.simple_conform_to (sc32) then
-					sc := sc32
-				else
-					sc := Void
-				end
-				if sc /= Void then
-					l_icdov := new_value_object_dotnet
-					if l_icdov = Void then
-						Result := "Void"
-					else
-						Result := l_eifnet_debugger.string_value_from_string_class_value (sc, value_dotnet, l_icdov, min, max)
-						last_string_representation_length := l_eifnet_debugger.last_string_value_length
-						l_icdov.clean_on_dispose
-					end
-				else
-					sc := comp_data.system_string_class_c
-					if sc /= Void then
-						if dynamic_class = sc or dynamic_class.simple_conform_to (sc) then
-							if value_string_dotnet /= Void then
-								Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
-								last_string_representation_length := l_eifnet_debugger.last_string_value_length
-							elseif value_string /= Void then
-								Result := value_string
-								last_string_representation_length := value_string.count
-								if max < 0 then
-									l_size := last_string_representation_length
-								else
-									l_size := (max + 1).min (last_string_representation_length)
-								end
-								Result := Result.substring ((min + 1).max (1), l_size)
-							end
-						else
-							Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
-						end
-					else
-						Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
-					end
-				end
-			else
-				Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
-			end
-		end
-
-	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING_32 is
-			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
-		require
-			is_dotnet_system
-		local
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE
-		do
-			l_icdov := new_value_object_dotnet
-			if l_icdov /= Void then
-				Result := a_dbg.debug_output_value_from_object_value (value_frame_dotnet, value_dotnet, l_icdov, dynamic_class_type, min, max)
-				last_string_representation_length := a_dbg.last_string_value_length
-				l_icdov.clean_on_dispose
-			end
-		end
-
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING_32 is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
 		require
@@ -740,37 +554,35 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			-- WARNING: This has to be an Eiffel type (descendant of ANY to implement generating_type)
 		require
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
-		local
-			l_feat: FEATURE_I
-			l_final_result_value: DUMP_VALUE
-			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			if debugger_manager.safe_application_is_stopped then
-				l_feat := generating_type_feature_i (dynamic_class)
 				if is_dotnet_value then
-					if dynamic_class_type /= Void then
-						l_icdov := new_value_object_dotnet
-						if l_icdov /= Void then
-							Result := Eifnet_debugger.generating_type_value_from_object_value (
-										value_frame_dotnet,
-										value_dotnet,
-										l_icdov,
-										dynamic_class_type,
-										l_feat
-									)
-							l_icdov.clean_on_dispose
-						end
-					end
+					Result := dotnet_generating_type_evaluated_string
 				else
-					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-
-					if l_final_result_value /= Void and then not l_final_result_value.is_void then
-						Result := l_final_result_value.classic_string_representation (0, -1)
-					end
+					Result := classic_generating_type_evaluated_string
 				end
 				if Result /= Void then
 					Result.prune_all ('%U')
 				end
+			end
+		end
+
+feature {NONE} -- Classic specific
+
+	classic_generating_type_evaluated_string: STRING is
+		require
+			is_stopped: debugger_manager.safe_application_is_stopped
+			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
+			is_classic_system: is_classic_system
+		local
+			l_feat: FEATURE_I
+			l_final_result_value: DUMP_VALUE
+		do
+			l_feat := generating_type_feature_i (dynamic_class)
+			l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+
+			if l_final_result_value /= Void and then not l_final_result_value.is_void then
+				Result := l_final_result_value.classic_string_representation (0, -1)
 			end
 		end
 
@@ -839,52 +651,23 @@ feature -- Action
 			value_string_c: ANY
 		do
 			inspect (type)
-				when Type_boolean then
-					send_bool_value (value_boolean)
-				when Type_character_8 then
-					send_char_8_value (value_character_8)
-				when Type_character_32 then
-					send_char_32_value (value_character_32)
-
-				when Type_integer_8 then
-					send_integer_8_value (value_integer_8)
-				when Type_integer_16 then
-					send_integer_16_value (value_integer_16)
-				when Type_integer_32 then
-					send_integer_32_value (value_integer_32)
-				when Type_integer_64 then
-					send_integer_64_value (value_integer_64)
-
-				when Type_natural_8 then
-					send_natural_8_value (value_natural_8)
-				when Type_natural_16 then
-					send_natural_16_value (value_natural_16)
-				when Type_natural_32 then
-					send_natural_32_value (value_natural_32)
-				when Type_natural_64 then
-					send_natural_64_value (value_natural_64)
-
-				when type_real_32 then
-					send_real_32_value (value_real_32)
-				when type_real_64 then
-					send_real_64_value (value_real_64)
-				when Type_pointer then
-					send_ptr_value (value_pointer)
-				when Type_string then
-					fixme("We should handle STRING_32 on the runtime side of the debuger")
-					value_string_c := value_string.as_string_8.to_c
-					send_string_value ($value_string_c)
-				when Type_object, Type_expanded_object then
-					if value_address /= Void then
-						send_ref_value (hex_to_pointer (value_address))
-					else
-						send_ref_value (Default_pointer)
-					end
+			when Type_string then
+				fixme("We should handle STRING_32 on the runtime side of the debuger")
+				value_string_c := value_string.as_string_8.to_c
+				send_string_value ($value_string_c)
+			when Type_object, Type_expanded_object then
+				if value_address /= Void then
+					send_ref_value (hex_to_pointer (value_address))
 				else
-					-- unexpected value, do nothing
-					debug("DEBUGGER")
-						io.put_string ("Error: unexpected value in [DUMP_VALUE]send_value%N")
-					end
+					send_ref_value (Default_pointer)
+				end
+			else
+					--| Basic type are handled by DUMP_VALUE_BASIC
+				check not is_basic end
+				-- unexpected value, do nothing
+				debug("DEBUGGER")
+					io.put_string ("Error: unexpected value in [DUMP_VALUE]send_value%N")
+				end
 			end
 		end
 
@@ -909,7 +692,7 @@ feature -- Access
 				end
 			elseif dynamic_class /= Void then
 				if is_dotnet_value and then dynamic_class.is_true_external then
-					l_generating_type_string := value_class_name
+					l_generating_type_string := dotnet_value_class_name
 				elseif dynamic_class.is_true_external then
 					l_generating_type_string := dynamic_class.external_class_name
 				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
@@ -917,7 +700,7 @@ feature -- Access
 						l_generating_type_string := generating_type_evaluated_string
 					end
 				elseif type = type_bits then
-					l_generating_type_string := type_of_bits
+					l_generating_type_string := as_dump_value_basic.type_of_bits
 				end
 				if l_generating_type_string	/= Void then
 					Result := l_generating_type_string
@@ -931,70 +714,39 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	output_value: STRING_32 is
+	output_value (format_result: BOOLEAN): STRING_32 is
 			-- String representation of the value of `Current'.
-			--| True
-			--| 97 'a'
-			--| 123
-			--| "value_string"
-			--| <0x12345678>
-			--| Void
+			-- If `format_result' is True, add the " and other if needed
+			--   otherwise return the raw value's output
+			--|
+			--|   True
+			--|   97 'a'
+			--|   123
+			--|   value_string  or "value_string"
+			--|   <0x12345678>
+			--|   Void
 		local
 			s: STRING_32
 		do
 			inspect type
-			when Type_boolean then
-				Result := value_boolean.out
-			when Type_character_8 then
-				create Result.make (10)
-				Result.append_integer (value_character_8.code)
-				Result.append (" '")
-				Result.append (Character_routines.char_text (value_character_8))
-				Result.append_character ('%'')
-			when Type_character_32 then
-				create Result.make (10)
-				Result.append_string (value_character_32.natural_32_code.out)
-				Result.append (" '")
-				Result.append (Character_routines.wchar_text (value_character_32))
-				Result.append_character ('%'')
-			when Type_natural_8 then
-				Result := value_natural_8.out
-			when Type_natural_16 then
-				Result := value_natural_16.out
-			when Type_natural_32 then
-				Result := value_natural_32.out
-			when Type_natural_64 then
-				Result := value_natural_64.out
-			when Type_integer_8 then
-				Result := value_integer_8.out
-			when Type_integer_16 then
-				Result := value_integer_16.out
-			when Type_integer_32 then
-				Result := value_integer_32.out
-			when Type_integer_64 then
-				Result := value_integer_64.out
-			when type_real_32 then
-				Result := value_real_32.out
-			when type_real_64 then
-				Result := value_real_64.out
-			when Type_bits then
-				Result := value_bits
 			when Type_string then
-				create Result.make (value_string.count + 2)
-				Result.append_character ('%"')
-				Result.append (value_string.as_string_8)
-				Result.append_character ('%"')
+				if format_result then
+					create Result.make (value_string.count + 2)
+					Result.append_character ('%"')
+					Result.append (value_string.as_string_8)
+					Result.append_character ('%"')
+				else
+					Result := value_string.as_string_8.twin
+				end
 			when Type_string_dotnet , Type_object, type_expanded_object then
 				if value_address /= Void then
 					create Result.make (value_address.count + 2)
 					Result.append_character ('<')
 					Result.append (value_address)
 					Result.append_character ('>')
-					if eifnet_debug_value /= Void then
-						s := eifnet_debug_value.extra_output_details
-						if s /= Void then
-							Result.append (s)
-						end
+					s := extra_output_details
+					if s /= Void then
+						Result.append (s)
 					end
 				else
 					if type = type_expanded_object then
@@ -1003,15 +755,36 @@ feature -- Access
 						Result := "Void"
 					end
 				end
-			when Type_pointer then
-				Result := value_pointer.out
 			when Type_procedure_return then
 				Result := "Procedure returned"
+--			when
+--				Type_boolean,
+--				Type_character_8,
+--				Type_character_32,
+--				Type_natural_8,
+--				Type_natural_16,
+--				Type_natural_32,
+--				Type_natural_64,
+--				Type_integer_8,
+--				Type_integer_16,
+--				Type_integer_32,
+--				Type_integer_64,
+--				Type_real_32,
+--				Type_real_64,
+--				Type_bits,
+--				Type_pointer
+--			then
+--				--| Is handled by DUMP_VALUE_BASIC class
 			else
+				check not is_basic end
 				Result := ""
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+	extra_output_details: STRING_32 is
+		do
 		end
 
 	to_minimal_hexa_representation (s: STRING): STRING is
@@ -1049,40 +822,8 @@ feature -- Access
 			--| <0x12345678>
 			--| Void
 		do
-			inspect type
-			when Type_character_8 then
-				create Result.make (10)
-				Result.append_string (to_minimal_hexa_representation (value_character_8.code.to_hex_string))
-				Result.append (" '")
-				Result.append (Character_routines.char_text (value_character_8))
-				Result.append_character ('%'')
-			when Type_character_32 then
-				create Result.make (10)
-				Result.append_string (to_minimal_hexa_representation (value_character_32.code.to_hex_string))
-				Result.append (" '")
-				Result.append (Character_routines.wchar_text (value_character_32))
-				Result.append_character ('%'')
-
-			when Type_natural_8 then
-				Result := to_minimal_hexa_representation (value_natural_8.to_hex_string)
-			when Type_natural_16 then
-				Result := to_minimal_hexa_representation (value_natural_16.to_hex_string)
-			when Type_natural_32 then
-				Result := to_minimal_hexa_representation (value_natural_32.to_hex_string)
-			when Type_natural_64 then
-				Result := to_minimal_hexa_representation (value_natural_64.to_hex_string)
-
-			when Type_integer_8 then
-				Result := to_minimal_hexa_representation (value_integer_8.to_hex_string)
-			when Type_integer_16 then
-				Result := to_minimal_hexa_representation (value_integer_16.to_hex_string)
-			when Type_integer_32 then
-				Result := to_minimal_hexa_representation (value_integer_32.to_hex_string)
-			when Type_integer_64 then
-				Result := to_minimal_hexa_representation (value_integer_64.to_hex_string)
-			else
-				Result := output_value
-			end
+				--| Basic type should be handled by DUMP_VALUE_BASIC
+			Result := output_value (True)
 		ensure
 			not_void: Result /= Void
 		end
@@ -1115,29 +856,27 @@ feature -- Access
 			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR_IMP} -- Internal basic data
+feature -- Conversion
 
-	value_boolean	: BOOLEAN is require is_basic do end
+	as_dump_value_basic: DUMP_VALUE_BASIC is
+			--
+		require
+			is_basic: is_basic
+		do
+			Result ?= Current
+		ensure
+			Result_not_void: Result /= Void
+		end
 
-	value_character_8 : CHARACTER is require is_basic do end
-	value_character_32: CHARACTER_32 is require is_basic do end
-
-	value_integer_8: INTEGER_8 is require is_basic do end
-	value_integer_16: INTEGER_16 is require is_basic do end
-	value_integer_32: INTEGER_32 is require is_basic do end
-	value_integer_64: INTEGER_64 is require is_basic do end
-
-	value_natural_8: NATURAL_8 is require is_basic do end
-	value_natural_16: NATURAL_16 is require is_basic do end
-	value_natural_32: NATURAL_32 is require is_basic do end
-	value_natural_64: NATURAL_64 is require is_basic do end
-
-	value_real_32	: REAL_32 is require is_basic do end
-	value_real_64	: REAL_64 is require is_basic do end
-
-	value_bits		: STRING is require is_basic do end
-	type_of_bits	: STRING is require is_basic do end
-	value_pointer	: POINTER is require is_basic do end
+	as_dump_value_dotnet: DUMP_VALUE_DOTNET is
+			--
+		require
+			is_dotnet_value: is_dotnet_value
+		do
+			Result ?= Current
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR_IMP} -- Internal data
 

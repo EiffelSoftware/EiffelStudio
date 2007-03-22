@@ -1,16 +1,33 @@
 indexing
-	description: "[
-		]"
+	description: "Objects join all debug values: STRING, INTEGER, BOOLEAN, REFERENCES, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ICOR_DEBUG_OBJECT_VALUE
+	DUMP_VALUE_DOTNET
 
 inherit
-	ICOR_DEBUG_VALUE
+	DUMP_VALUE
+
+create {DUMP_VALUE_FACTORY}
+	make_empty
+
+feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
+
+	set_string_for_dotnet_value  (a: ANY) is
+		do
+		end
+
+	set_object_for_dotnet_value  (a: ANY) is
+		do
+		end
+
+	set_native_array_object_for_dotnet_value  (a: ANY) is
+		do
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -44,6 +61,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_OBJECT_VALUE
-
-
+end -- class DUMP_VALUE_DOTNET

@@ -33,8 +33,6 @@ feature {NONE} -- Ancestor facade
 feature -- Client facade
 
 	callback_notification_processing: BOOLEAN is do end
-	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is do end
-	know_about_kept_object (a_address: STRING): BOOLEAN is do end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

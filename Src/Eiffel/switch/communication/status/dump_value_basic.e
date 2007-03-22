@@ -11,18 +11,14 @@ class
 inherit
 	DUMP_VALUE
 		redefine
-			value_boolean,
-            value_character_8, value_character_32,
-            value_integer_8, value_integer_16, value_integer_32, value_integer_64,
-            value_natural_8, value_natural_16, value_natural_32, value_natural_64,
-            value_real_32, value_real_64,
-			value_bits, type_of_bits,
-			value_pointer,
+			classic_send_value,
+			output_value,
+			hexa_output_value,
 			is_basic,
 			is_type_boolean, is_type_integer_32
 		end
 
-create
+create {DUMP_VALUE_FACTORY}
 	make_empty
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
@@ -60,7 +56,6 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 	set_integer_8_value  (value: INTEGER_8; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
---			value_integer_8 := value
 			value_integer_32 := value
 			type := Type_integer_8
 			dynamic_class := dtype
@@ -72,7 +67,6 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 	set_integer_16_value  (value: INTEGER_16; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
---			value_integer_16 := value
 			value_integer_32 := value
 			type := Type_integer_16
 			dynamic_class := dtype
@@ -106,7 +100,6 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 	set_natural_8_value  (value: NATURAL_8; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
---			value_natural_8 := value
 			value_natural_32 := value
 			type := Type_natural_8
 			dynamic_class := dtype
@@ -118,7 +111,6 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 	set_natural_16_value  (value: NATURAL_16; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
---			value_natural_16 := value
 			value_natural_32 := value
 			type := Type_natural_16
 			dynamic_class := dtype
@@ -226,9 +218,55 @@ feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUAT
 
 	value_real_32	: REAL_32
 	value_real_64	: REAL_64
+	value_pointer	: POINTER
 	value_bits		: STRING
 	type_of_bits	: STRING
-	value_pointer	: POINTER
+
+feature -- Action
+
+	classic_send_value is
+			-- send the value the application
+		do
+			inspect (type)
+			when Type_boolean then
+				send_bool_value (value_boolean)
+			when Type_character_8 then
+				send_char_8_value (value_character_8)
+			when Type_character_32 then
+				send_char_32_value (value_character_32)
+
+			when Type_integer_8 then
+				send_integer_8_value (value_integer_8)
+			when Type_integer_16 then
+				send_integer_16_value (value_integer_16)
+			when Type_integer_32 then
+				send_integer_32_value (value_integer_32)
+			when Type_integer_64 then
+				send_integer_64_value (value_integer_64)
+
+			when Type_natural_8 then
+				send_natural_8_value (value_natural_8)
+			when Type_natural_16 then
+				send_natural_16_value (value_natural_16)
+			when Type_natural_32 then
+				send_natural_32_value (value_natural_32)
+			when Type_natural_64 then
+				send_natural_64_value (value_natural_64)
+
+			when type_real_32 then
+				send_real_32_value (value_real_32)
+			when type_real_64 then
+				send_real_64_value (value_real_64)
+			when Type_pointer then
+				send_ptr_value (value_pointer)
+			when Type_bits then
+				debug("DEBUGGER")
+					io.put_string ("Error: can not send Bits%N")
+				end
+			else
+				Precursor
+			end
+		end
 
 feature -- Access
 
@@ -246,6 +284,107 @@ feature -- Access
 	is_type_integer_32: BOOLEAN is
 		do
 			Result := type = Type_integer_32
+		end
+
+	output_value (format_result: BOOLEAN): STRING_32 is
+			-- String representation of the value of `Current'.
+			-- If `format_result' is True, add the " and other if needed
+			--   otherwise return the raw value's output
+			--|
+			--|   True
+			--|   97 'a'
+			--|   123
+			--|   value_string  or "value_string"
+			--|   <0x12345678>
+			--|   Void
+		do
+			inspect type
+			when Type_boolean then
+				Result := value_boolean.out
+			when Type_character_8 then
+				create Result.make (10)
+				Result.append_integer (value_character_8.code)
+				Result.append (" '")
+				Result.append (Character_routines.char_text (value_character_8))
+				Result.append_character ('%'')
+			when Type_character_32 then
+				create Result.make (10)
+				Result.append_string (value_character_32.natural_32_code.out)
+				Result.append (" '")
+				Result.append (Character_routines.wchar_text (value_character_32))
+				Result.append_character ('%'')
+			when Type_natural_8 then
+				Result := value_natural_8.out
+			when Type_natural_16 then
+				Result := value_natural_16.out
+			when Type_natural_32 then
+				Result := value_natural_32.out
+			when Type_natural_64 then
+				Result := value_natural_64.out
+			when Type_integer_8 then
+				Result := value_integer_8.out
+			when Type_integer_16 then
+				Result := value_integer_16.out
+			when Type_integer_32 then
+				Result := value_integer_32.out
+			when Type_integer_64 then
+				Result := value_integer_64.out
+			when type_real_32 then
+				Result := value_real_32.out
+			when type_real_64 then
+				Result := value_real_64.out
+			when Type_bits then
+				Result := value_bits
+			when Type_pointer then
+				Result := value_pointer.out
+			else
+				Result := Precursor {DUMP_VALUE} (format_result)
+			end
+		end
+
+	hexa_output_value: STRING_32 is
+			-- String representation of the value of `Current'.
+			--| True
+			--| 0x61 'a'
+			--| 123
+			--| "value _string"
+			--| <0x12345678>
+			--| Void
+		do
+			inspect type
+			when Type_character_8 then
+				create Result.make (10)
+				Result.append_string (to_minimal_hexa_representation (value_character_8.code.to_hex_string))
+				Result.append (" '")
+				Result.append (Character_routines.char_text (value_character_8))
+				Result.append_character ('%'')
+			when Type_character_32 then
+				create Result.make (10)
+				Result.append_string (to_minimal_hexa_representation (value_character_32.code.to_hex_string))
+				Result.append (" '")
+				Result.append (Character_routines.wchar_text (value_character_32))
+				Result.append_character ('%'')
+
+			when Type_natural_8 then
+				Result := to_minimal_hexa_representation (value_natural_8.to_hex_string)
+			when Type_natural_16 then
+				Result := to_minimal_hexa_representation (value_natural_16.to_hex_string)
+			when Type_natural_32 then
+				Result := to_minimal_hexa_representation (value_natural_32.to_hex_string)
+			when Type_natural_64 then
+				Result := to_minimal_hexa_representation (value_natural_64.to_hex_string)
+
+			when Type_integer_8 then
+				Result := to_minimal_hexa_representation (value_integer_8.to_hex_string)
+			when Type_integer_16 then
+				Result := to_minimal_hexa_representation (value_integer_16.to_hex_string)
+			when Type_integer_32 then
+				Result := to_minimal_hexa_representation (value_integer_32.to_hex_string)
+			when Type_integer_64 then
+				Result := to_minimal_hexa_representation (value_integer_64.to_hex_string)
+			else
+				Result := Precursor
+			end
 		end
 
 indexing

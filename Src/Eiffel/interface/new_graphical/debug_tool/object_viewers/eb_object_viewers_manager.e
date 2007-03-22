@@ -40,8 +40,12 @@ feature {NONE} -- Initialization
 			vr := v
 			create {STRING_DISPLAY_VIEWER_BOX} v.make (Current)
 			add_viewer (v, vr)
+			vr := v
+			create {XML_DISPLAY_VIEWER_BOX} v.make (Current)
+			add_viewer (v, vr)
 			create {OBJECT_BROWSER_VIEWER_BOX} v.make (Current)
 			add_viewer (v, Void)
+
 
 			build_interface
 		end
@@ -154,7 +158,7 @@ feature -- Viewers
 				else
 					replace_cell_content (viewer_cell, v.widget)
 					set_title (v.title)
-					check current_object = Void or else v.is_valid_stone (current_object) end
+					check current_object = Void or else v.is_valid_stone (current_object, False) end
 					v.refresh
 				end
 				if v /= current_viewer then
@@ -280,7 +284,7 @@ feature -- Change
 			if current_object /= Void then
 				update_menu
 				v := current_viewer
-				if v /= Void and then v.is_valid_stone (current_object) then
+				if v /= Void and then v.is_valid_stone (current_object, False) then
 					v.refresh
 				else
 					v := valid_viewer (current_object)
@@ -323,7 +327,7 @@ feature -- Change
 					if v /= Void then
 --						lmi.disable_sensitive
 --					else
-						if current_object = Void or else not v.is_valid_stone (current_object) then
+						if current_object = Void or else not v.is_valid_stone (current_object, False) then
 							lmi.disable_sensitive
 						else
 							lmi.enable_sensitive
@@ -351,7 +355,7 @@ feature -- Change
 					Result := valid_viewer_from (st, lst.item.subviewers)
 					if Result = Void then
 						Result := lst.item
-						if not Result.is_valid_stone (st) then
+						if not Result.is_valid_stone (st, True) then
 							Result := Void
 						end
 					end

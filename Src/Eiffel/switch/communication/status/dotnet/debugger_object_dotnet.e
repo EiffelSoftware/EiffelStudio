@@ -18,13 +18,13 @@ inherit
 create {DEBUGGED_OBJECT_MANAGER}
 	make
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
 	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
 			-- Make debugged object with hector address `addr'
 			-- with upper and lower bounds `sp_lower' and `sp_upper'.
 			-- (At this stage we do not know if addr is a special object
-			-- and we don't want to retrieve all of the special object 
+			-- and we don't want to retrieve all of the special object
 			-- especially if it has thousands of entries).
 			-- (-1 for `sp_upper' stands for the upper bound
 			-- of the inspected special object)	
@@ -37,10 +37,11 @@ feature {NONE} -- Access
 			debug ("debug_recv")
 				print ("DEBUGGED_OBJECT_DOTNET.make%N")
 			end
-			l_val := kept_object_item (addr)
+			debug_value := kept_object_item (addr)
+			l_val := debug_value
 			if l_val /= Void then
 				is_tuple := False --| We considers Tuple object as Ref with Array container
-				
+
 				l_spec_val ?= l_val
 				if l_spec_val /= Void then
 					is_special := True
@@ -49,8 +50,8 @@ feature {NONE} -- Access
 					l_str_val ?= l_val
 					if l_str_val /= Void then
 						is_string_value := True
-						capacity := l_str_val.length				
-					end			
+						capacity := l_str_val.length
+					end
 				end
 
 				dtype := l_val.dynamic_class
@@ -72,23 +73,28 @@ feature {NONE} -- Access
 			max_capacity := -1
 		end
 
+feature -- Access
+
+	debug_value: ABSTRACT_DEBUG_VALUE
+			-- Kept debug value related to `object_address'.
+
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
 	refresh (sp_lower, sp_upper: INTEGER) is
 		do
 			internal_attributes := Void
-		end		
+		end
 
 feature -- Properties
 
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Attributes of object being inspected (sorted by name)
 		local
-			l_val: ABSTRACT_DEBUG_VALUE			
+			l_val: ABSTRACT_DEBUG_VALUE
 		do
 			Result := internal_attributes
 			if Result = Void then
-				l_val := kept_object_item (object_address)
+				l_val := debug_value
 				if l_val /= Void then
 					Result := l_val.children
 					internal_attributes := Result
@@ -97,7 +103,7 @@ feature -- Properties
 		end
 
 	is_string_value: BOOLEAN
-	
+
 feature {NONE} -- Implementation
 
 	internal_attributes: like attributes

@@ -252,7 +252,7 @@ feature -- Slice limits
 
 feature -- Access
 
-	is_valid_stone (st: OBJECT_STONE): BOOLEAN is
+	is_valid_stone (st: OBJECT_STONE; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		do
 			Result := st /= Void and then

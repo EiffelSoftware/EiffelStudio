@@ -199,9 +199,7 @@ feature -- Execution
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
---			old_bp_status: INTEGER
 			wd: EB_WARNING_DIALOG
---			cond: EB_EXPRESSION
 			bp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
 			bp: BREAKPOINT
@@ -213,19 +211,16 @@ feature -- Execution
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
 					dbg := Debugger_manager
-					bp := dbg.breakpoint (f, index)
-					bp_exists := bp /= Void
+					if dbg.is_breakpoint_set (f, index) then
+						bp := dbg.breakpoint (f, index)
+						bp_exists := bp /= Void
+					end
+
 					if bp_exists then
 						bp.enable_run_to_cursor_mode
 					else
 						dbg.enable_breakpoint (f, index)
 					end
---					old_bp_status := dbg.breakpoint_status (f, index)
---					if old_bp_status /= 0 then
---						cond := dbg.condition (f, index)
---					end
-						-- Enable the breakpoint
---					dbg.remove_condition (f, index)
 						-- Run the program
 					execute
 						-- Put back the status of the modified breakpoint This will prevent
@@ -233,17 +228,6 @@ feature -- Execution
 						-- at `index' in `f'.)
 					if bp_exists then
 						dbg.add_on_stopped_action (agent bp.disable_run_to_cursor_mode, True)
---						dbg.add_on_stopped_action (
---							agent dbg.set_breakpoint_status (f, index, old_bp_status),	True
---						)
---							--| FIXME: what about hit_count condition ?
---						if old_bp_status /= 0 and cond /= Void then
---								-- Restore condition after we stopped, otherwise if the evaluation
---								-- does not evaluate to True then it will not stopped.
---							dbg.add_on_stopped_action (
---									agent dbg.set_condition (f, index, cond), True
---								)
---						end
 					else
 						dbg.add_on_stopped_action (agent dbg.remove_breakpoint (f, index), True)
 					end

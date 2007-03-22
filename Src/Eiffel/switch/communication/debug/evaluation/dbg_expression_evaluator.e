@@ -334,10 +334,13 @@ feature -- Access
 			-- if final_result is a boolean
 			-- return its value
 			-- otherwise return False .
+		local
+			dmvb: DUMP_VALUE_BASIC
 		do
-			Result := final_result_type.is_basic
-				and then final_result_value.is_type_boolean
-				and then final_result_value.value_boolean
+			if final_result_type.is_basic then
+				dmvb ?= final_result_value
+				Result := dmvb.is_type_boolean and then dmvb.value_boolean
+			end
 		end
 
 	final_result_static_type: CLASS_C

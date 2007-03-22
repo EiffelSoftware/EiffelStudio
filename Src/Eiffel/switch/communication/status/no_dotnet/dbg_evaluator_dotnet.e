@@ -18,8 +18,6 @@ create
 
 feature -- Access
 
-	last_once_available: BOOLEAN is False
-	last_once_failed: BOOLEAN is False
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I; ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
 		do

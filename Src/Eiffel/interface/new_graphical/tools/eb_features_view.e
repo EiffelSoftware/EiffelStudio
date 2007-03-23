@@ -149,16 +149,16 @@ feature -- Status setting
 		local
 			fst, ofst, new_fs: FEATURE_STONE
 			new_f: E_FEATURE
-			cst: CLASSC_STONE
+			classi_stone: CLASSI_STONE
 			cl: CLASS_C
 			found: BOOLEAN
 		do
 			decide_tool_to_display (st)
 			fst ?= st
 			if fst = Void then
-				cst ?= st
-				if cst /= Void then
-					cl := cst.e_class
+				classi_stone ?= st
+				if classi_stone /= Void then
+					cl := classi_stone.class_i.compiled_representation
 					ofst ?= stone
 					if ofst /= Void and then cl /= Void then
 						new_f := ofst.e_feature.ancestor_version (cl)

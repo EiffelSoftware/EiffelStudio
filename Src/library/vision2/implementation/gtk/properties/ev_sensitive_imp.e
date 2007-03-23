@@ -66,7 +66,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	parent_is_sensitive: BOOLEAN is
-			-- (export status {NONE})
+			-- Is `parent' sensitive?
 		local
 			sensitive_parent: EV_SENSITIVE
 		do

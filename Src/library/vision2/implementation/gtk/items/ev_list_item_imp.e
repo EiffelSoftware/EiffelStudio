@@ -332,6 +332,13 @@ feature {NONE} -- Implementation
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Do nothing
+		end
+
 	internal_tooltip: STRING_32
 		-- Tooltip used for `Current'.
 

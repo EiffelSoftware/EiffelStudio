@@ -94,6 +94,8 @@ feature {NONE} -- Implementation
 
 	calculate_viewpoints is
 			-- Calculate all viewpoints for `conf_group'
+		require
+			conf_group_not_void: conf_group /= Void
 		local
 			l_list: ARRAYED_LIST [CONF_VIRTUAL_GROUP]
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
@@ -155,9 +157,6 @@ feature {NONE} -- Implementation
 			l_sorted_list.sort
 			create Result.make_from_array (l_sorted_list)
 		end
-
-invariant
-	conf_group_not_void: conf_group /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

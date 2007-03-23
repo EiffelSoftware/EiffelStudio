@@ -153,6 +153,7 @@ feature -- Status report
 						)
 					end
 				end
+				modify_widget_appearance (True)
 			end
 
 	row_height: INTEGER is

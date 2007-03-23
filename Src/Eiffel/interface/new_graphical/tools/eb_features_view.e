@@ -17,7 +17,8 @@ inherit
 			attach_to_docking_manager,
 			pixmap,
 			stone,
-			retrieve_formatters
+			retrieve_formatters,
+			force_last_stone
 		end
 
 create
@@ -120,24 +121,11 @@ feature -- Status setting
 					set_last_stone (fst)
 					history_manager.extend (fst)
 				end
-				if widget.is_displayed or else is_auto_hide then
-					force_last_stone
-				end
-				if flat_formatter /= Void then
-					flat_formatter.show_debugged_line
-				end
 			else
-				from
-					formatters.start
-				until
-					formatters.after
-				loop
-					formatters.item.reset_display
-					formatters.forth
-				end
-				if widget.is_displayed or else is_auto_hide then
-					force_last_stone
-				end
+				do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.reset_display end)
+			end
+			if widget.is_displayed or else is_auto_hide then
+				force_last_stone
 			end
 		end
 
@@ -269,6 +257,17 @@ feature {NONE} -- Implementation
 						end
 						formatters.forth
 					end
+				end
+			end
+		end
+
+	force_last_stone is
+			-- Force that `last_stone' is displayed in formatters in Current view
+		do
+			if not is_last_stone_processed then
+				Precursor
+				if flat_formatter /= Void then
+					flat_formatter.show_debugged_line
 				end
 			end
 		end

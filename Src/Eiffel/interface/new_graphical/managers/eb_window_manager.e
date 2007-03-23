@@ -441,6 +441,12 @@ feature -- Actions on all windows
 			for_all (agent refresh_commands_action)
 		end
 
+	refresh_external_commands is
+			-- Only refresh external commands
+		do
+			for_all (agent refresh_external_commands_action)
+		end
+
 	save_all is
 			-- Ask each window to save its content.
 		do
@@ -1139,9 +1145,15 @@ feature {NONE} -- Implementation
 		end
 
 	refresh_commands_action (a_window: EB_WINDOW)  is
-			-- Action to be performed on `item' in `refresh'.
+			-- Action to be performed on `item' in `refresh_all_commands'.
 		do
 			a_window.refresh_all_commands
+		end
+
+	refresh_external_commands_action (a_window: EB_WINDOW)  is
+			-- Action to be performed on `item' in `refresh_external_commands'.
+		do
+			a_window.refresh_external_commands
 		end
 
 	synchronize_breakpoints_action (a_window: EB_WINDOW) is

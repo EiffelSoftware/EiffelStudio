@@ -265,6 +265,14 @@ feature -- Window management / Status Setting
 			-- | By default do nothing.
 		end
 
+	refresh_external_commands is
+			-- Refresh external commands.
+		require
+			exists: not destroyed
+		do
+			-- | By default do nothing.
+		end
+
 feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 
 	show_imp is

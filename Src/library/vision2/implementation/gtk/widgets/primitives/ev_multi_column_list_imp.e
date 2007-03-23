@@ -932,6 +932,7 @@ feature -- Implementation
 					)
 				end
 			end
+			modify_widget_appearance (True)
 		end
 
 	post_drop_steps (a_button: INTEGER)  is

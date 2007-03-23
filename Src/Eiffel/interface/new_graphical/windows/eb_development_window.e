@@ -1043,10 +1043,7 @@ feature -- Window management
 		do
 			create l_raw_file.make (docking_config_editors_file)
 			if l_raw_file.exists then
-				-- We call it here to prevent Windows Desktop flickers.
-				window.lock_update
 				docking_manager.open_editors_config (docking_config_editors_file)
-				window.unlock_update
 			end
 		end
 

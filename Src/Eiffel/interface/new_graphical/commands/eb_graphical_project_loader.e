@@ -14,7 +14,8 @@ inherit
 			warning_messages
 		redefine
 			is_project_location_requested,
-			post_create_project
+			post_create_project,
+			retrieve_or_create_project
 		end
 
 	EB_CONSTANTS
@@ -226,6 +227,22 @@ feature {NONE} -- Actions
 			if deleting_dialog /= Void and then not deleting_dialog.is_destroyed then
 				deleting_dialog.destroy
 				deleting_dialog := Void
+			end
+		end
+
+	retrieve_or_create_project (a_project_path: STRING_8) is
+			-- Retrieve or create project.
+		local
+			l_win: EB_DEVELOPMENT_WINDOW
+		do
+			l_win := window_manager.last_created_window
+			if l_win /= Void then
+				-- We call it here to prevent Windows Desktop flickers.	
+				l_win.lock_update
+			end
+			Precursor {PROJECT_LOADER} (a_project_path)
+			if l_win /= Void then
+				l_win.unlock_update
 			end
 		end
 

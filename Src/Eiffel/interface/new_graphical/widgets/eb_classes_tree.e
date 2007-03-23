@@ -97,11 +97,15 @@ feature {NONE} -- Initialization
 			-- Remove and replace contents of `Current'.
 		local
 			l_target: CONF_TARGET
+			l_env: EV_ENVIRONMENT
+			l_locked: BOOLEAN
 		do
-			if window /= Void then
+			create l_env
+			if window /= Void and l_env.application.locked_window = Void then
 					-- Lock update of window, so rebuilding of `Current'
-					-- is hidden.
+					-- is hidden.			
 				window.lock_update
+				l_locked := True
 			end
 
 				-- Remove all items, ready for rebuilding.
@@ -139,7 +143,7 @@ feature {NONE} -- Initialization
 					-- `store_expanded_state'				
 			end
 
-			if window /= Void then
+			if window /= Void and l_locked then
 					-- Unlock update of window as `Current' has
 					-- been rebuilt.
 				window.unlock_update

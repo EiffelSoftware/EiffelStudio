@@ -14,6 +14,7 @@ inherit
 	DEBUGGER_MANAGER
 		redefine
 			make,
+			initialize,
 			controller,
 			classic_debugger_timeout,
 			classic_debugger_location,
@@ -61,8 +62,6 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initialize `Current'.
-		local
-			pbool: BOOLEAN_PREFERENCE
 		do
 			Precursor
 
@@ -81,16 +80,22 @@ feature {NONE} -- Initialization
 							end
 					)
 
-				pbool := preferences.debugger_data.debug_output_evaluation_enabled_preference
-				dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
-				pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
-
 					--| End of settings
 				init_commands
 				create watch_tool_list.make
 			end
 
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
+		end
+
+	initialize is
+		local
+			pbool: BOOLEAN_PREFERENCE
+		do
+			Precursor
+			pbool := preferences.debugger_data.debug_output_evaluation_enabled_preference
+			dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
+			pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 		end
 
 	set_default_parameters

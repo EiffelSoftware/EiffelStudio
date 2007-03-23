@@ -257,7 +257,6 @@ feature -- C code generation
 					type_c.generate_cast (buffer)
 					value.generate (buffer)
 				end
-				buffer.put_new_line
 				buffer.exdent
 				buffer.put_string (";%N}%N")
 			elseif not System.is_used (Current) then

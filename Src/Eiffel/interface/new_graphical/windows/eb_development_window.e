@@ -27,6 +27,7 @@ inherit
 		redefine
 			refresh,
 			refresh_all_commands,
+			refresh_external_commands,
 			internal_recycle,
 			destroy_imp,
 			destroy,
@@ -496,11 +497,9 @@ feature -- Stone process
 			-- Refresh all commands with their accelerators into the window and related interfaces.
 		local
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]
 			l_simple_cmds: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
 			l_main_formatter: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
-			i, l_upper: INTEGER
 		do
 				-- Editor commands
 			l_editor_commands := commands.editor_commands
@@ -526,21 +525,7 @@ feature -- Stone process
 			end
 
 				-- Update external commands
-			l_external_command := commands.Edit_external_commands_cmd.commands
-			from
-				i := l_external_command.lower
-				l_upper := l_external_command.upper
-			until
-				i > l_upper
-			loop
-				if l_external_command.item (i) /= Void then
-					l_external_command.item (i).update (window)
-				end
-				i := i + 1
-			end
-			if commands.Edit_external_commands_cmd.list_exists then
-				commands.Edit_external_commands_cmd.refresh_list
-			end
+			refresh_external_commands
 
 				-- Update simple shortcut commands
 			l_simple_cmds := commands.simple_shortcut_commands
@@ -580,6 +565,29 @@ feature -- Stone process
 			eb_debugger_manager.refresh_commands (Current)
 
 			docking_manager.propagate_accelerators
+		end
+
+	refresh_external_commands is
+			-- Refresh external commands.
+		local
+			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]
+			i, l_upper: INTEGER
+		do
+			l_external_command := commands.Edit_external_commands_cmd.commands
+			from
+				i := l_external_command.lower
+				l_upper := l_external_command.upper
+			until
+				i > l_upper
+			loop
+				if l_external_command.item (i) /= Void then
+					l_external_command.item (i).update (window)
+				end
+				i := i + 1
+			end
+			if commands.Edit_external_commands_cmd.list_exists then
+				commands.Edit_external_commands_cmd.refresh_list
+			end
 		end
 
 	quick_refresh_editors is

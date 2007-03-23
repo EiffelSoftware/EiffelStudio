@@ -148,7 +148,9 @@ feature{NONE} -- Implementation
 			-- Check if `l_as' accesses `e_feature'.
 			-- If it is, store `l_as' into `accessors'.
 		do
-			if is_accessor (l_as.class_id, l_as.feature_name.name) then
+				-- Watch out since `feature_name' from ROUTINE_CREATION_AS can be Void in
+				-- the case of an inline agent.
+			if l_as.feature_name /= Void and then is_accessor (l_as.class_id, l_as.feature_name.name) then
 				check last_class_c /= Void end
 				accessors.extend ([l_as.feature_name, last_class_c])
 			end

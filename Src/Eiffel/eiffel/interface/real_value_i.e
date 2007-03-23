@@ -121,10 +121,8 @@ feature -- Code generation
 		local
 			l_buf: like buffer
 			l_val: STRING
-			l_nb: INTEGER
+			l_nb, l_pos: INTEGER
 		do
-				-- Fixme: See bug#5659 where the code below would not work
-				-- because of our usage of `out' is locale specific.
 			l_buf := buffer
 			if is_real_64 then
 				l_val := real_64_value.out
@@ -133,10 +131,18 @@ feature -- Code generation
 			end
 			l_buf.put_string (l_val)
 			l_nb := l_val.count
-			if
+				-- Special trick when current locale decimal separator
+				-- is the coma (See bug#5659)
+			l_pos := l_val.last_index_of (',', l_nb)
+			if l_pos > 0 then
+					-- Replace the `,' with a `.'.
+				l_val.put ('.', l_pos)
+			elseif
 				l_val.last_index_of ('.', l_nb) = 0 and
 				l_val.last_index_of ('e', l_nb) = 0
 			then
+					-- It is an integer value, we need to add the '.'
+					-- as otherwise it is not a valid C identifier.
 				l_buf.put_character ('.')
 			end
 			if is_real_32 then

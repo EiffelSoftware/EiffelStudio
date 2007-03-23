@@ -95,16 +95,10 @@ feature {NONE} -- Implementation
 			fs_not_void: fs /= Void
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 		do
 				-- feature text area
-			cmd_string := command_shell_name
-			if not cmd_string.is_empty then
-				replace_target (cmd_string, fs.file_name)
-				cmd_string.replace_substring_all ("$line", fs.line_number.out)
-				create req
-				req.execute (cmd_string)
-			end
+			create req
+			req.execute (preferences.misc_data.external_editor_cli (fs.file_name, fs.line_number))
 		end
 
 	process_class (cs: CLASSI_STONE) is
@@ -113,18 +107,12 @@ feature {NONE} -- Implementation
 			cs_not_void: cs /= Void
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 			conv_f: FEATURE_STONE
 		do
 			conv_f ?= cs
 			if conv_f = Void then
-				cmd_string := command_shell_name
-				if not cmd_string.is_empty then
-					replace_target(cmd_string, cs.file_name)
-					cmd_string.replace_substring_all ("$line", "1")
-					create req
-					req.execute (cmd_string)
-				end
+				create req
+				req.execute (preferences.misc_data.external_editor_cli (cs.file_name, 1))
 			end
 		end
 
@@ -134,80 +122,39 @@ feature {NONE} -- Implementation
 			syn_not_void: syn /= Void
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 		do
-			cmd_string := command_shell_name
-			if not cmd_string.is_empty then
-				replace_target(cmd_string, syn.file_name)
-				cmd_string.replace_substring_all ("$line", syn.syntax_message.line.out)
-				create req
-				req.execute (cmd_string)
-			end
-		end
-
-	replace_target (cmd: STRING; fn:STRING) is
-			-- Find out if `fn' is a relativ path or not and if it is
-			-- one, complete it to make it absolute, so that the shell
-			-- editor will be able to load the file
-		require
-			cmd_not_void: cmd /= Void
-		local
-			target_string: STRING
-		do
-			if fn = Void then
-				target_string := ""
-			else
-				target_string := fn.twin
-				target_string.prepend_character ('%"')
-				target_string.append_character ('%"')
-			end
-			cmd.replace_substring_all ("$target", target_string)
+			create req
+			req.execute (preferences.misc_data.external_editor_cli (syn.file_name, syn.syntax_message.line))
 		end
 
 	execute is
 			-- Redefine
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 			line_nb, first_line, cursor_line: INTEGER
-
 			development_window: EB_DEVELOPMENT_WINDOW
 			editor: EB_SMART_EDITOR
-			empty: BOOLEAN
 		do
 			development_window := target
 			editor := development_window.editors_manager.current_editor
-			if editor /= Void then
-				empty := editor.is_empty
-
-				cmd_string := command_shell_name
-				if not empty then
-						-- We ensure that we target the editor line to the cursor position, however if the cursor
-						-- is not visible we take the `first_line_displayed'.
-					cursor_line := editor.cursor_y_position
-					first_line := editor.first_line_displayed
-					if first_line > cursor_line then
-						line_nb := first_line
-					elseif
-						first_line < cursor_line and
-						cursor_line < first_line + editor.number_of_lines_displayed
-					then
-						line_nb := cursor_line
-					else
-						line_nb := first_line
-					end
-				end
-				if not cmd_string.is_empty then
-					replace_target (cmd_string, window_file_name)
-					if not empty then
-						cmd_string.replace_substring_all ("$line", line_nb.out)
-					else
-						cmd_string.replace_substring_all ("$line", "1")
-					end
-					create req
-					req.execute (cmd_string)
+			if editor /= Void and then not editor.is_empty then
+					-- We ensure that we target the editor line to the cursor position, however if the cursor
+					-- is not visible we take the `first_line_displayed'.
+				cursor_line := editor.cursor_y_position
+				first_line := editor.first_line_displayed
+				if first_line > cursor_line then
+					line_nb := first_line
+				elseif
+					first_line < cursor_line and
+					cursor_line < first_line + editor.number_of_lines_displayed
+				then
+					line_nb := cursor_line
+				else
+					line_nb := first_line
 				end
 			end
+			create req
+			req.execute (preferences.misc_data.external_editor_cli (window_file_name, line_nb.max (1)))
 		end
 
 	window_file_name: STRING is
@@ -222,12 +169,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation properties
-
-	command_shell_name: STRING is
-			-- Name of the command to execute in the shell dialog.
-		do
-			Result := preferences.misc_data.external_editor_command.twin
-		end
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

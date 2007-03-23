@@ -377,24 +377,10 @@ feature -- Actions
 			-- Action to be performed to open user defined metric file in specified external editor
 		local
 			l_cmd_exec: COMMAND_EXECUTOR
-			l_cmd_string: STRING
-			l_file: STRING
-			l_platform: PLATFORM_CONSTANTS
 		do
 			if metric_manager.is_userdefined_metric_file_exist then
-				l_cmd_string := preferences.misc_data.external_editor_command.twin
-				if not l_cmd_string.is_empty then
-					l_file := metric_manager.userdefined_metrics_file.twin
-					create l_platform
-					if l_platform.is_windows and then l_file.has (' ') then
-						l_file.prepend_character ('"')
-						l_file.append_character ('"')
-					end
-					l_cmd_string.replace_substring_all ("$target", l_file)
-					l_cmd_string.replace_substring_all ("$line", "0")
-					create l_cmd_exec
-					l_cmd_exec.execute (l_cmd_string)
-				end
+				create l_cmd_exec
+				l_cmd_exec.execute (preferences.misc_data.external_editor_cli (metric_manager.userdefined_metrics_file, 1))
 			end
 		end
 

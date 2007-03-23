@@ -24,7 +24,6 @@ feature{NONE} -- Initialization
 			a_leading_padding_non_negative: a_leading_padding >= 0
 		do
 			create editor_token_text
-			editor_token_text.set_overriden_font (label_font_table)
 			editor_token_text.set_tokens (a_tokens)
 			editor_token_text.disable_text_wrap
 			leading_padding := a_leading_padding
@@ -49,6 +48,13 @@ feature -- Access
 	leading_padding: INTEGER
 			-- Padding in pixels before the first editor token
 
+	overriden_fonts: SPECIAL [EV_FONT] is
+			-- Overriden fonts
+			-- Void if overriden fonts are not set.
+		do
+			Result := editor_token_text.overriden_fonts
+		end
+
 feature{ES_GRID_LIST_ITEM} -- Drawing
 
 	display (a_drawable: EV_DRAWABLE; a_x, a_y: INTEGER; a_max_width, a_max_height: INTEGER) is
@@ -70,6 +76,14 @@ feature{ES_GRID_LIST_ITEM} -- Drawing
 			else
 				l_token_text.display (a_x + leading_padding, a_y, a_drawable, last_picked_token_index, l_focused)
 			end
+		end
+
+feature -- Setting
+
+	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]) is
+			-- Set overriden fonts used to display Current instead default fonts for editor tokens.
+		do
+			editor_token_text.set_overriden_font (a_fonts)
 		end
 
 feature{NONE} -- Impelementation

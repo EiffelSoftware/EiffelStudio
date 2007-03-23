@@ -214,6 +214,7 @@ feature -- Grind binding
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
 			end
+			grid.set_row_height (default_row_height)
 			l_cursor := rows.children.new_cursor
 			if version_count > 1 then
 				grid.insert_new_row (1)

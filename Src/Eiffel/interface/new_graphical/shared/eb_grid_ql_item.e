@@ -56,7 +56,6 @@ feature -- Initialization
 			default_create
 			column_index := a_column_index
 			row_index := a_row_index
-			set_overriden_fonts (label_font_table)
 			if not a_path then
 					-- Initialize current as a query language item.
 				if a_item.is_feature then

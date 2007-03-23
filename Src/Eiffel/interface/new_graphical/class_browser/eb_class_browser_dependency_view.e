@@ -1379,6 +1379,7 @@ feature{NONE} -- Implementation
 			inheritance_button.recycle
 			normal_referenced_button.recycle
 			syntactical_button.recycle
+			recursive_button.recycle
 			Precursor
 		end
 

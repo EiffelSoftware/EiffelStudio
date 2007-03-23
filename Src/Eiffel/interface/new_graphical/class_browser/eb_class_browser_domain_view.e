@@ -362,6 +362,7 @@ feature{NONE} -- Implementation
 			l_domain: like domain
 			a_domain: like data
 		do
+			grid.set_row_height (default_row_height)
 			a_domain := data
 			if a_domain /= Void then
 				if should_headers_be_shown then
@@ -424,6 +425,7 @@ feature{NONE} -- Implementation
 			set_item_text_function (agent text_of_grid_item)
 			set_select_all_action (agent select_all)
 			enable_copy
+			disable_use_fixed_fonts
 		end
 
 	build_sortable_and_searchable is
@@ -462,10 +464,16 @@ feature{NONE} -- Implementation
 			l_path_item: EB_GRID_QL_ITEM
 			l_row_background_color: EV_COLOR
 			l_ql_item: QL_ITEM
+			l_fixed_fonts: like label_font_table
 		do
 			l_ql_item := a_item.ql_item
 			create l_item.make (l_ql_item, 1, a_y, False)
 			create l_path_item.make (l_ql_item, 2, a_y, True)
+			if is_fixed_fonts_used then
+				l_fixed_fonts := label_font_table
+				l_item.set_overriden_fonts (l_fixed_fonts)
+				l_path_item.set_overriden_fonts (l_fixed_fonts)
+			end
 
 			l_item.set_stone (stone_from_ql_item (l_ql_item))
 			l_path_item.set_stone (stone_from_ql_item (l_ql_item.parent))

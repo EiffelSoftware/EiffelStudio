@@ -211,6 +211,24 @@ feature -- Setting
 			end
 		end
 
+	enable_use_fixed_fonts is
+			-- Enable to use fixed fonts.
+			-- Fixed fonts don't change with preferences.
+		do
+			is_fixed_fonts_used := True
+		ensure
+			is_fixed_fonts_used_set: is_fixed_fonts_used
+		end
+
+	disable_use_fixed_fonts is
+			-- Enable to use fixed fonts.
+			-- Fixed fonts don't change with preferences.		
+		do
+			is_fixed_fonts_used := False
+		ensure
+			is_fixed_fonts_used_set: not is_fixed_fonts_used
+		end
+
 feature -- Navigation
 
 	go_to_parent (a_row: EV_GRID_ROW) is
@@ -523,6 +541,11 @@ feature -- Status report
 	has_grid_been_resized_manually: BOOLEAN
 			-- Has `grid' been binded before?
 
+	is_fixed_fonts_used: BOOLEAN
+			-- Should content of Current view use fixed fonts?
+			-- Fixed fonts don't change with preferences.
+			-- Default: False
+
 feature{NONE} -- Implementation
 
 	text: EV_TEXT is
@@ -692,8 +715,12 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER is
 			-- Default height to set grid rows.
 		do
-			Result := line_height.max (pixmap_height)
-				-- We make sure we give enough space to display the pixmap.
+			if is_fixed_fonts_used then
+				Result := (create {EV_FONT}).height.max (pixmap_height)
+			else
+				Result := line_height.max (pixmap_height)
+					-- We make sure we give enough space to display the pixmap.
+			end
 		end
 
 	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL

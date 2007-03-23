@@ -244,7 +244,7 @@ feature -- Editor token appearance
 
 	feature_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
 			-- Feature appearance
-		once
+		do
 			Result := [editor_font_id, feature_text_color_id, feature_background_color_id]
 		ensure
 			result_attached: Result /= Void
@@ -252,7 +252,7 @@ feature -- Editor token appearance
 
 	assertion_tag_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
 			-- Assertion tag appearance
-		once
+		do
 			Result := [editor_font_id, assertion_tag_text_color_id, assertion_tag_background_color_id]
 		ensure
 			result_attached: Result /= Void

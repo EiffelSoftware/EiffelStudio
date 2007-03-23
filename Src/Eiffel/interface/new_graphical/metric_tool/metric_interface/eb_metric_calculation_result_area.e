@@ -103,6 +103,7 @@ feature {NONE} -- Initialization
 			create show_percentage_btn.make (preferences.metric_tool_data.display_percentage_for_ratio_preference)
 			create maximize_result_btn
 			create result_grid.make (a_tool.develop_window, tool_drop_actions (a_tool))
+			result_grid.enable_use_fixed_fonts
 			maximize_result_preference_change_agent := agent on_maximize_result_preference_change
 			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.extend (maximize_result_preference_change_agent)
 			set_metric_tool (a_tool)
@@ -382,6 +383,7 @@ feature {NONE} -- Recycle
 		do
 			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.prune_all (maximize_result_preference_change_agent)
 			show_percentage_btn.recycle
+			result_grid.recycle
 		end
 
 invariant

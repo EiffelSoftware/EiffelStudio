@@ -94,6 +94,7 @@ feature{NONE} -- Implementation
 			l_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_value: like value
 			l_writer: like token_writer
+			l_component: EB_GRID_EDITOR_TOKEN_COMPONENT
 		do
 			create l_tokens.make
 			l_writer := token_writer
@@ -113,7 +114,9 @@ feature{NONE} -- Implementation
 			expression_generator.generate_output (l_tester)
 			l_tokens.append (editor_token_output.generated_output)
 			if is_for_archive then
-				append_component (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
+				create l_component.make (l_tokens, 2)
+				l_component.set_overriden_fonts (label_font_table)
+				append_component (l_component)
 			else
 					-- Prepare metric part
 				l_writer.new_line
@@ -130,7 +133,9 @@ feature{NONE} -- Implementation
 					l_writer.add (ti_comma)
 				end
 				l_tokens.append (l_writer.last_line.content)
-				append_component (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
+				create l_component.make (l_tokens, 2)
+				l_component.set_overriden_fonts (label_font_table)
+				append_component (l_component)
 
 					-- Prepare input domain part.
 				if not domain.is_empty then

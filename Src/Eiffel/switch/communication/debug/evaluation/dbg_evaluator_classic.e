@@ -177,10 +177,12 @@ feature {DBG_EVALUATOR} -- Interface
 	dump_value_at_address (addr: STRING): DUMP_VALUE is
 		local
 			l_cl: CLASS_C
+			dbg: DEBUGGER_MANAGER
 		do
-			l_cl := debugged_object_manager.class_c_at_address (addr)
+			dbg := debugger_manager
+			l_cl := dbg.object_manager.class_c_at_address (addr)
 			if l_cl /= Void then
-				Result := Debugger_manager.Dump_value_factory.new_object_value (addr, l_cl)
+				Result := dbg.dump_value_factory.new_object_value (addr, l_cl)
 			end
 		end
 

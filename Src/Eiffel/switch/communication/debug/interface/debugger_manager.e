@@ -35,14 +35,24 @@ feature {NONE} -- Initialization
 		do
 			can_debug := True
 			set_default_parameters
-
+			create observers.make (3)
+			create controller.make (Current)
 			create application_quit_actions
 			create application_prelaunching_actions
 			create debugger_data.make
-			create controller.make (Current)
-			create dump_value_factory.make (Current)
-			create observers.make (3)
 			create implementation.make (Current)
+		end
+
+	is_initialized: BOOLEAN
+			-- Is fully initialized ?
+
+	initialize is
+		do
+			if not is_initialized then
+				is_initialized := True
+				create dump_value_factory.make (Current)
+				create object_manager.make (Current)
+			end
 		end
 
 	set_default_parameters is
@@ -63,6 +73,9 @@ feature -- Application execution
 		local
 			app: APPLICATION_EXECUTION
 		do
+			if not is_initialized then
+				initialize
+			end
 			debug
 				print (generator + ".create_application (was initialized=" + application_initialized.out + ")%N")
 			end
@@ -371,6 +384,9 @@ feature -- Properties
 
 	debugger_data: DEBUGGER_DATA
 			-- Debugger information (mainly breakpoints).
+
+	object_manager: DEBUGGED_OBJECT_MANAGER
+			-- Debugged object manager
 
 	controller: DEBUGGER_CONTROLLER
 			-- Debugger controller for run, resume ...

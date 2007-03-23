@@ -15,8 +15,6 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -334,12 +332,12 @@ feature -- Concrete evaluation
 
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
-			Result := Debugged_object_manager.attributes_at_address (a_addr, 0, 0)
+			Result := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
 		end
 
 	class_type_from_object (a_addr: STRING): CLASS_TYPE is
 		do
-			Result := Debugged_object_manager.class_type_at_address (a_addr)
+			Result := debugger_manager.object_manager.class_type_at_address (a_addr)
 		end
 
 	class_type_from_object_relative_to (a_addr: STRING; cl: CLASS_C): CLASS_TYPE is

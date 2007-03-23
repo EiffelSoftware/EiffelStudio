@@ -59,11 +59,6 @@ inherit
 			estudio_callback_event
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUGGER_MANAGER
 
 	DEBUG_OUTPUT_SYSTEM_I

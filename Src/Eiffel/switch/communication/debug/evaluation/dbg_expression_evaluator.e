@@ -16,8 +16,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-
 	SHARED_DEBUGGER_MANAGER
 
 feature {NONE} -- Initialization

@@ -27,11 +27,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 create
 	make_new_expression,
 	make_with_expression_text,
@@ -569,7 +564,7 @@ feature {NONE} -- Event handling
 						Debugger_manager.safe_application_is_stopped
 						and then Debugger_manager.application.is_valid_object_address (t)
 					then
-						o := debugged_object_manager.debugged_object (t, 0, 0)
+						o := debugger_manager.object_manager.debugged_object (t, 0, 0)
 						if as_object_radio.is_selected then
 							create new_expression.make_as_object (o.dtype , o.object_address)
 							new_expression.set_name (object_name_field.text)

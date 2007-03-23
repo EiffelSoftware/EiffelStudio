@@ -22,8 +22,6 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-
 	EB_SHARED_WINDOW_MANAGER
 
 	EB_SHARED_PREFERENCES
@@ -119,7 +117,7 @@ feature -- Change
 				debugger_manager.safe_application_is_stopped
 			then
 				if has_object then
-					dobj := debugged_object_manager.debugged_object (current_object.object_address, debugger_manager.min_slice, debugger_manager.max_slice)
+					dobj := debugger_manager.object_manager.debugged_object (current_object.object_address, debugger_manager.min_slice, debugger_manager.max_slice)
 					if dobj /= Void then
 						editor.handle_before_processing (False)
 						(create {DEBUGGER_TEXT_FORMATTER_OUTPUT}.make).append_object (dobj, "Object", editor.text_displayed)

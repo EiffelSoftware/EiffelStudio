@@ -20,11 +20,6 @@ inherit
 			{ANY} Eiffel_project, Eiffel_system
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 	REFACTORING_HELPER
 
 --create {DEBUGGER_MANAGER}
@@ -49,13 +44,13 @@ feature -- Recylcing
 	on_resumed is
 			-- Clean cached data valid only during the current stepping
 		do
-			debugged_object_manager.reset
+			debugger_manager.object_manager.reset
 		end
 
 	recycle is
 			-- Clean debugging session data
 		do
-			Debugged_object_manager.reset
+			debugger_manager.object_manager.reset
 			if is_running then
 				destroy_status
 			end

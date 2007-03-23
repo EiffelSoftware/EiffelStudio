@@ -389,8 +389,6 @@ feature -- Start Operation
 			end
 		end
 
-
-
 feature {NONE} -- Callbacks
 
 	before_starting is

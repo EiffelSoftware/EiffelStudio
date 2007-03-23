@@ -33,13 +33,6 @@ inherit
 			is_equal, copy, default_create
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		undefine
 			default_create, copy, is_equal

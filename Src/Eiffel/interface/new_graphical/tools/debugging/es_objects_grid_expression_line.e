@@ -200,7 +200,7 @@ feature -- Properties
 
 	object_spec_capacity: INTEGER is
 		do
-			Result := debugged_object_manager.special_object_capacity_at_address (object_address)
+			Result := debugger_manager.object_manager.special_object_capacity_at_address (object_address)
 		end
 
 feature -- Query
@@ -214,7 +214,7 @@ fixme ("find a smarter way to get a valid value")
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 			if object_address /= Void then
-				Result := debugged_object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
+				Result := debugger_manager.object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
 			end
 		end
 

@@ -93,7 +93,7 @@ feature -- Evaluation
 						--| .. Init current context using current call_stack
 					init_context_with_current_callstack
 				elseif on_object then
-					dobj := Debugged_object_manager.debugged_object (context_address, 0, 0)
+					dobj := debugger_manager.object_manager.debugged_object (context_address, 0, 0)
 					if dobj.is_erroneous then
 						notify_error_expression (Cst_error_during_context_preparation + "%NUnable to get valid target object for " + context_address)
 					else

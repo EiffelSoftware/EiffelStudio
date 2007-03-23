@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			-- Get SPECIAL capacity value
 		do
 			if capacity < 0 then
-				capacity := debugged_object_manager.special_object_capacity_at_address (address)
+				capacity := debugger_manager.object_manager.special_object_capacity_at_address (address)
 			end
 		end
 

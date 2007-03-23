@@ -63,12 +63,19 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			-- the eiffel project.
 		do
 			if server_mode then
-				eif_gr_link_driver (request, c_code_dir.to_c,
-					system_name.to_c, prelink_cmd_name.to_c,
-					driver_name.to_c)
+				eif_gr_link_driver (request,
+						c_code_dir.to_c,
+						system_name.to_c,
+						prelink_cmd_name.to_c,
+						driver_name.to_c
+					)
 			else
-				eif_link_driver (c_code_dir.to_c, system_name.to_c,
-					prelink_cmd_name.to_c, driver_name.to_c)
+				eif_link_driver (
+						c_code_dir.to_c,
+						system_name.to_c,
+						prelink_cmd_name.to_c,
+						driver_name.to_c
+					)
 			end
 		end
 

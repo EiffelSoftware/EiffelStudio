@@ -265,11 +265,6 @@ feature {NONE} -- ecdbgd status
 
 feature {NONE} -- Implementation
 
-	Process_factory: PROCESS_FACTORY is
-		once
-			create Result
-		end
-
 	create_handler is
 		do
 			-- Keep this for compatibility with old EiffelStudio

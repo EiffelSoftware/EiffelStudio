@@ -42,11 +42,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFNET_DEBUGGER
 		export
 			{NONE} all
@@ -214,7 +209,7 @@ feature -- Status report
 			debug ("debug_recv")
 				print (generator + ".to_basic%N")
 			end
-			attribs := Debugged_object_manager.attributes_at_address (address, 0, 0)
+			attribs := debugger_manager.object_manager.attributes_at_address (address, 0, 0)
 			if attribs /= Void then
 				from
 					l_attribs_cursor := attribs.new_cursor
@@ -466,7 +461,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| since here only the printable characters matter
 
 				if value_address /= Void then
-					l_attributes := Debugged_object_manager.attributes_at_address (value_address, 0, 0)
+					l_attributes := debugger_manager.object_manager.attributes_at_address (value_address, 0, 0)
 				end
 				if l_attributes /= Void then
 					from
@@ -601,7 +596,7 @@ feature {NONE} -- Classic specific
 			end
 			if a_feat /= Void and debugger_manager.application.is_valid_object_address (value_address) then
 					-- Initialize the communication.
-				l_dbg_obj := Debugged_object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
+				l_dbg_obj := debugger_manager.object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
 				l_dtype := l_dbg_obj.dtype
 				if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
 					l_dyntype := l_dbg_obj.class_type

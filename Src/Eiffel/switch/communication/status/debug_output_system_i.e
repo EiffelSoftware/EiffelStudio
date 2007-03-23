@@ -30,9 +30,9 @@ feature -- Access
 			l_rout_id: INTEGER
 		do
 			l_rout_id := debug_output_feature.rout_id_set.first
-			Result := c.feature_of_rout_id (l_rout_id)			
+			Result := c.feature_of_rout_id (l_rout_id)
 		end
-		
+
 	debuggable_class: CLASS_C is
 			-- Class that provides the `debug_output' interface, if any.
 		local
@@ -80,8 +80,12 @@ feature -- Access
 	internal_debug_output_feature: CELL [E_FEATURE] is
 			-- Last computed `debug_output_feature'.
 		once
+				--| Fixme: we might want to "update" the feature
+				--| after compilation in case it changed
+				--| the case might be very rare ...
+				--| but could occurs for Eiffel "kernel" developper
 			create Result.put (Void)
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

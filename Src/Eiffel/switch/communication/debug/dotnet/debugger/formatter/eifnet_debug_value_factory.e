@@ -13,15 +13,13 @@ inherit
 	ICOR_EXPORTER
 
 	DEBUG_VALUE_EXPORTER
-		
-	SHARED_EIFNET_DEBUG_VALUE_FORMATTER		
+
+	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 		export
 			{NONE} all
 		end
-		
+
 	SK_CONST
-	
-	REFACTORING_HELPER
 
 feature -- Access
 
@@ -45,7 +43,7 @@ feature -- Access
 				l_type := l_icd_prepared.get_type
 				inspect l_type
 				when {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
-					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool, 
+					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool,
 								Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_char then
 					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, sk_char,
@@ -54,45 +52,45 @@ feature -- Access
 					{MD_SIGNATURE_CONSTANTS}.element_type_i,
 					{MD_SIGNATURE_CONSTANTS}.element_type_u
 				then
-					create {EIFNET_DEBUG_BASIC_VALUE [POINTER]} Result.make (a_icd, sk_pointer, 
+					create {EIFNET_DEBUG_BASIC_VALUE [POINTER]} Result.make (a_icd, sk_pointer,
 								Edv_formatter.prepared_icor_debug_value_as_pointer (l_icd_prepared))
-								
+
 				when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
-					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_8]} Result.make (a_icd, sk_uint8, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_8]} Result.make (a_icd, sk_uint8,
 								Edv_formatter.prepared_icor_debug_value_as_natural_8 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
-					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_16]} Result.make (a_icd, sk_uint16, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_16]} Result.make (a_icd, sk_uint16,
 								Edv_formatter.prepared_icor_debug_value_as_natural_16 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
-					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_32]} Result.make (a_icd, sk_uint32, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_32]} Result.make (a_icd, sk_uint32,
 								Edv_formatter.prepared_icor_debug_value_as_natural_32 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
-					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_64]} Result.make (a_icd, sk_uint64, 
+					create {EIFNET_DEBUG_BASIC_VALUE [NATURAL_64]} Result.make (a_icd, sk_uint64,
 								Edv_formatter.prepared_icor_debug_value_as_natural_64 (l_icd_prepared))
 
 				when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, sk_int8, 
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, sk_int8,
 								Edv_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, sk_int16, 
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, sk_int16,
 								Edv_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, sk_int32, 
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, sk_int32,
 								Edv_formatter.prepared_icor_debug_value_as_integer_32 (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, sk_int64, 
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, sk_int64,
 								Edv_formatter.prepared_icor_debug_value_as_integer_64 (l_icd_prepared))
-								
+
 				when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
-					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (a_icd, sk_real32, 
+					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (a_icd, sk_real32,
 								Edv_formatter.prepared_icor_debug_value_as_real (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
-					create {EIFNET_DEBUG_BASIC_VALUE [DOUBLE]} Result.make (a_icd, sk_real64, 
+					create {EIFNET_DEBUG_BASIC_VALUE [DOUBLE]} Result.make (a_icd, sk_real64,
 								Edv_formatter.prepared_icor_debug_value_as_double (l_icd_prepared))
 
 				when {MD_SIGNATURE_CONSTANTS}.element_type_byref then
 					create {EIFNET_DEBUG_REFERENCE_VALUE} Result.make (a_icd, l_icd_prepared)
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_class,
 					{MD_SIGNATURE_CONSTANTS}.element_type_object,
 					{MD_SIGNATURE_CONSTANTS}.element_type_valuetype

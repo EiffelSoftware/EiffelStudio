@@ -19,6 +19,8 @@ inherit
 		end
 
 	EV_ITEM_IMP
+		undefine
+			update_for_pick_and_drop
 		redefine
 			interface,
 			initialize,
@@ -32,11 +34,14 @@ inherit
 			interface
 		end
 
-	EV_SENSITIVE_IMP
-		redefine
-			interface,
-			enable_sensitive
-		end
+--	EV_SENSITIVE_IMP
+--		rename
+--			enable_sensitive as enable_sensitive_internal,
+--			disable_sensitive as disable_sensitive_internal
+--		redefine
+--			interface,
+--			enable_sensitive_internal
+--		end
 
 	EV_TOOLTIPABLE_IMP
 		redefine
@@ -181,12 +186,30 @@ feature -- Element change
 		end
 
 	enable_sensitive is
+			 -- Enable `Current'.
+		do
+			enabled_before := is_sensitive
+			enable_sensitive_internal
+		end
+
+	disable_sensitive is
+			 -- Disable `Current'.
+		do
+			enabled_before := is_sensitive
+			disable_sensitive_internal
+		end
+
+	enable_sensitive_internal is
 			-- Allow the object to be sensitive to user input.
 		local
 			l_gdkwin: POINTER
 			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
 		do
-			Precursor {EV_SENSITIVE_IMP}
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
+			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+					-- Restore visible window for event box.
+				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+			end
 				--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
 				l_gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
@@ -197,6 +220,44 @@ feature -- Element change
 						app_implementation.pnd_screen.set_pointer_position (l_screen_x + l_x, l_screen_y + l_y)
 					end
 				end
+			end
+		end
+
+	disable_sensitive_internal is
+			-- Set the object to ignore all user input.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+			if {EV_GTK_EXTERNALS}.gtk_is_event_box (c_object) then
+					-- We hide the event box Window so that it cannot be seen disabled.
+				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+			end
+		end
+
+feature -- Status report
+
+	is_sensitive: BOOLEAN is
+			-- Is the object sensitive to user input.
+		do
+			-- Shift to put bit in least significant place then take mod 2
+			if not is_destroyed then
+				Result := {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (c_object)
+			end
+		end
+
+	has_parent: BOOLEAN is
+			-- Is `Current' parented?
+		do
+			Result := parent /= Void
+		end
+
+	parent_is_sensitive: BOOLEAN is
+			-- Is `parent' sensitive?
+		local
+			sensitive_parent: EV_SENSITIVE
+		do
+			sensitive_parent ?= parent
+			if sensitive_parent /= Void then
+				Result := sensitive_parent.is_sensitive
 			end
 		end
 

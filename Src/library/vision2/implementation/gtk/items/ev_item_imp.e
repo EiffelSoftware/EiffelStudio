@@ -86,6 +86,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Redefined by descendents.
+		end
+
 	interface: EV_ITEM;
 
 indexing

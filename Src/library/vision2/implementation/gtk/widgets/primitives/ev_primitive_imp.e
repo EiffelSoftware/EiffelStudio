@@ -1,21 +1,21 @@
 indexing
-	description: 
+	description:
 		"EiffelVision primitive, GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "primitive, base, widget"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_PRIMITIVE_IMP
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
 			interface
 		end
-	
+
 	EV_WIDGET_IMP
 		redefine
 			interface
@@ -29,6 +29,13 @@ inherit
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRIMITIVE;
+
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Redefined by descendents.
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

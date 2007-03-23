@@ -308,6 +308,13 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Do nothing
+		end
+
 	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
 			-- Set `list_iter' to `a_iter'
 		do

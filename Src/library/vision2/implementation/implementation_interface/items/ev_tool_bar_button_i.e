@@ -69,6 +69,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		do
+
 			if starting then
 				if not interface.drop_actions.accepts_pebble (application_implementation.pick_and_drop_source.pebble) then
 					enabled_before := is_sensitive
@@ -94,16 +95,12 @@ feature {NONE} -- Implementation
 
 	enable_sensitive is
 			 -- Enable `Current'.
-		do
-			enabled_before := is_sensitive
-			enable_sensitive_internal
+		deferred
 		end
 
 	disable_sensitive is
 			 -- Disable `Current'.
-		do
-			enabled_before := is_sensitive
-			disable_sensitive_internal
+		deferred
 		end
 
 	enable_sensitive_internal is

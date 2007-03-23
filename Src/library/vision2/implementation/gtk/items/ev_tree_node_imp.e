@@ -419,6 +419,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+			-- Do nothing
+		end
+
 	ensure_expandable is
 			-- Ensure `Current' is displayed as expandable.
 		do

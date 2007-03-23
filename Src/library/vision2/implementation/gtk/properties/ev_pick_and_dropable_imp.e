@@ -224,6 +224,7 @@ feature -- Implementation
 				end
 				App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 			end
+			modify_widget_appearance (True)
 		end
 
 	is_dockable: BOOLEAN is
@@ -355,6 +356,7 @@ feature -- Implementation
 			disable_capture
 			app_imp := app_implementation
 			erase_rubber_band
+			modify_widget_appearance (False)
 			if not is_destroyed then
 				if pointer_style /= Void then
 					internal_set_pointer_style (pointer_style)

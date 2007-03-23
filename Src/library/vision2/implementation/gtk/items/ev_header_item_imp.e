@@ -188,6 +188,12 @@ feature -- Status setting
 
 feature -- PND
 
+	update_for_pick_and_drop (starting: BOOLEAN)
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		do
+		end
+
 	enable_transport is
 			-- Enable PND transport
 		do

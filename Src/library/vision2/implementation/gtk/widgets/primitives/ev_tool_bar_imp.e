@@ -15,6 +15,8 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
+		undefine
+			update_for_pick_and_drop
 		redefine
 			interface,
 			initialize,

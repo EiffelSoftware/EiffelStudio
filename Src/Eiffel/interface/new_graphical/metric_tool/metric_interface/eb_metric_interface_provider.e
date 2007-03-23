@@ -12,8 +12,6 @@ class
 inherit
 	EB_METRIC_SHARED
 
-	QL_SHARED_UNIT
-
 	EB_SHARED_WRITER
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -28,45 +26,9 @@ inherit
 
 	EB_METRIC_XML_CONSTANTS
 
-feature -- Metric menu
+	EB_METRIC_TOOL_HELPER
 
-	metric_menu: EV_MENU is
-			-- Menu cantaining all metrics
-		local
-			l_metric_table: HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
-			l_metric_list: LIST [EB_METRIC]
-			l_submenu: EV_MENU
-			l_menu_item: EV_MENU_ITEM
-			l_unit_list: like unit_list
-		do
-			create Result
-			l_metric_table := metric_manager.ordered_metrics (metric_manager.ascending_order, False)
-			l_unit_list := unit_list (True)
-			from
-				l_unit_list.start
-			until
-				l_unit_list.after
-			loop
-				l_metric_list := l_metric_table.item (l_unit_list.item.unit)
-				if not l_metric_list.is_empty then
-					create l_submenu.make_with_text (unit_name_table.item (l_unit_list.item.unit))
-					l_submenu.set_pixmap (l_unit_list.item.pixmap)
-					Result.extend (l_submenu)
-					from
-						l_metric_list.start
-					until
-						l_metric_list.after
-					loop
-						create l_menu_item.make_with_text (l_metric_list.item.name)
-						l_menu_item.set_data (l_metric_list.item)
-						l_menu_item.set_pixmap (pixmap_from_metric (l_metric_list.item))
-						l_submenu.extend (l_menu_item)
-						l_metric_list.forth
-					end
-				end
-				l_unit_list.forth
-			end
-		end
+feature -- Metric menu
 
 	approximate_width_of_menu (a_menu: EV_MENU): INTEGER is
 			-- Approximate width in pixel of `a_menu'
@@ -96,53 +58,6 @@ feature -- Metric menu
 
 feature -- Names
 
-	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]] is
-			-- List of units
-			-- The first argument in tuple is unit's name, the second is its pixmap.
-			-- If `a_all' is True, include compilation and ratio unit.
-		local
-			l_unit_list: LIST [QL_METRIC_UNIT]
-			l_unit: QL_METRIC_UNIT
-		do
-			create {ARRAYED_LIST [TUPLE [QL_METRIC_UNIT, EV_PIXMAP]]} Result.make (11)
-
-			from
-				l_unit_list := preferences.metric_tool_data.unit_order
-				l_unit_list.start
-			until
-				l_unit_list.after
-			loop
-				l_unit := l_unit_list.item
-				if not a_all and then (l_unit = compilation_unit or l_unit = ratio_unit) then
-				else
-					Result.extend ([l_unit, pixmap_from_unit (l_unit)])
-				end
-				l_unit_list.forth
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	unit_pixmap_table: HASH_TABLE [EV_PIXMAP, QL_METRIC_UNIT] is
-			-- Table of pixmap for metric unit
-			-- Key is unit, value is pixmap for that unit.
-		once
-			create Result.make (11)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_target_icon, target_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_group_icon, group_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_class_icon, class_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_generic_icon, generic_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_feature_icon, feature_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon, argument_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon, local_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_assertion_icon, assertion_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_line_icon, line_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_compilation_icon, compilation_unit)
-			Result.put (pixmaps.icon_pixmaps.metric_unit_ratio_icon, ratio_unit)
-		ensure
-			result_attached: Result /= Void
-		end
-
 	displayed_name (a_name: STRING_GENERAL): STRING_GENERAL is
 			-- Displayed name for `a_name'
 		require
@@ -151,32 +66,6 @@ feature -- Names
 			Result := string_general_as_lower (a_name)
 			if not a_name.is_empty then
 				Result := first_character_as_upper (Result)
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	pixmap_from_metric (a_metric: EB_METRIC): EV_PIXMAP is
-			-- Pixmap of `a_metric'
-		require
-			a_metric_attached: a_metric /= Void
-		do
-			if a_metric.is_predefined then
-				if a_metric.is_basic then
-					Result := pixmaps.icon_pixmaps.metric_basic_readonly_icon
-				elseif a_metric.is_linear then
-					Result := pixmaps.icon_pixmaps.metric_linear_readonly_icon
-				elseif a_metric.is_ratio then
-					Result := pixmaps.icon_pixmaps.metric_ratio_readonly_icon
-				end
-			else
-				if a_metric.is_basic then
-					Result := pixmaps.icon_pixmaps.metric_basic_icon
-				elseif a_metric.is_linear then
-					Result := pixmaps.icon_pixmaps.metric_linear_icon
-				elseif a_metric.is_ratio then
-					Result := pixmaps.icon_pixmaps.metric_ratio_icon
-				end
 			end
 		ensure
 			result_attached: Result /= Void
@@ -210,17 +99,6 @@ feature -- Names
 			elseif a_type = ratio_metric_type then
 				Result := metric_names.t_ratio
 			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	pixmap_from_unit (a_unit: QL_METRIC_UNIT): EV_PIXMAP is
-			-- Pixmap for metric unit `a_unit'
-		require
-			a_unit_attached: a_unit /= Void
-			a_unit_supported: unit_pixmap_table.has (a_unit)
-		do
-			Result := unit_pixmap_table.item (a_unit)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -303,26 +181,6 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	unit_name_table: HASH_TABLE [STRING_GENERAL, QL_METRIC_UNIT] is
-			-- Interface names for metric unit
-		once
-			create Result.make (12)
-			Result.put (metric_names.l_target_unit, target_unit)
-			Result.put (metric_names.l_group_unit, group_unit)
-			Result.put (metric_names.l_class_unit, class_unit)
-			Result.put (metric_names.l_feature_unit, feature_unit)
-			Result.put (metric_names.l_generic_unit, generic_unit)
-			Result.put (metric_names.l_assertion_unit, assertion_unit)
-			Result.put (metric_names.l_local_unit, local_unit)
-			Result.put (metric_names.l_line_unit, line_unit)
-			Result.put (metric_names.l_compilation_unit, compilation_unit)
-			Result.put (metric_names.l_ratio_unit, ratio_unit)
-			Result.put (metric_names.l_argument_unit, argument_unit)
-			Result.put ("", no_unit)
-	ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Dialog
 
 	show_warning_dialog (a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
@@ -348,34 +206,6 @@ feature -- Actions binding
 			a_window_attached: a_window /= Void
 		do
 			a_text.key_press_actions.extend (agent on_key_pressed_on_non_editable_text_field (?, a_text, a_msg, a_window))
-		end
-
-feature -- Domain item
-
-	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
-			-- Metric domain item from `a_stone'
-		require
-			a_stone_attached: a_stone /= Void
-		local
-			l_domain_item: EB_DOMAIN_ITEM
-		do
-			l_domain_item := domain_item_from_stone (a_stone)
-			if l_domain_item /= Void then
-				if l_domain_item.is_feature_item then
-					create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
-				elseif l_domain_item.is_class_item then
-					create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (l_domain_item.id)
-				elseif l_domain_item.is_folder_item then
-					create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (l_domain_item.id)
-				elseif l_domain_item.is_group_item then
-					create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
-				elseif l_domain_item.is_target_item then
-					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
-				end
-				if l_domain_item.library_target_uuid /= Void then
-					Result.set_library_target_uuid (l_domain_item.library_target_uuid)
-				end
-			end
 		end
 
 feature -- Metric editor mode
@@ -685,17 +515,6 @@ feature{NONE} -- Implementation
 				show_warning_dialog (a_msg, a_window)
 			end
 		end
-
---	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG) is
---			-- Call `a_agent' and then hide `a_dialog'.
---		require
---			a_agent_attached: a_agent /= Void
---			a_dialog_attached: a_dialog /= Void
---			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
---		do
---			a_agent.call (Void)
---			a_dialog.hide
---		end
 
 	activate_grid_item (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_grid_item: EV_GRID_ITEM) is
 			-- Action to be performed to activate `a_grid_item'

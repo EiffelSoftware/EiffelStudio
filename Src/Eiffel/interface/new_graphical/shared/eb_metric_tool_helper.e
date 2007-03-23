@@ -18,6 +18,12 @@ inherit
 
 	EB_METRIC_SHARED
 
+	EB_DOMAIN_ITEM_UTILITY
+
+	EVS_GRID_TWO_WAY_SORTING_ORDER
+
+	QL_SHARED_UNIT
+
 feature -- Access
 
 	show_error_message (a_error_agent: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
@@ -51,6 +57,205 @@ feature -- Access
 			a_window.status_bar.display_message (a_msg)
 			a_agent.call (Void)
 			a_window.status_bar.display_message ("")
+		end
+
+	metric_order_tester (a_metric, b_metric: EB_METRIC; a_sorting_order: INTEGER): BOOLEAN is
+			-- Tester to decide the order of `a_metric' and `b_metric' according to `a_sorting_order'
+		require
+			a_metric_attached: a_metric /= Void
+			b_metric_attached: b_metric /= Void
+		local
+			l_metric_a_valid: BOOLEAN
+			l_metric_b_valid: BOOLEAN
+			l_manager: EB_METRIC_MANAGER
+		do
+			if a_sorting_order = topology_order then
+				l_manager := metric_manager
+				l_metric_a_valid := l_manager.is_metric_calculatable (a_metric.name)
+				l_metric_b_valid := l_manager.is_metric_calculatable (b_metric.name)
+				if l_metric_a_valid and then not l_metric_b_valid then
+					Result := True
+				elseif not l_metric_a_valid and then l_metric_b_valid then
+				else
+					Result := a_metric.name.as_lower < b_metric.name.as_lower
+				end
+			else
+				if a_sorting_order = ascending_order then
+					Result := a_metric.name.as_lower < b_metric.name.as_lower
+				elseif a_sorting_order = descending_order then
+					Result := a_metric.name.as_lower > b_metric.name.as_lower
+				end
+			end
+		end
+
+	pixmap_from_metric (a_metric: EB_METRIC): EV_PIXMAP is
+			-- Pixmap of `a_metric'
+		require
+			a_metric_attached: a_metric /= Void
+		do
+			if a_metric.is_predefined then
+				if a_metric.is_basic then
+					Result := pixmaps.icon_pixmaps.metric_basic_readonly_icon
+				elseif a_metric.is_linear then
+					Result := pixmaps.icon_pixmaps.metric_linear_readonly_icon
+				elseif a_metric.is_ratio then
+					Result := pixmaps.icon_pixmaps.metric_ratio_readonly_icon
+				end
+			else
+				if a_metric.is_basic then
+					Result := pixmaps.icon_pixmaps.metric_basic_icon
+				elseif a_metric.is_linear then
+					Result := pixmaps.icon_pixmaps.metric_linear_icon
+				elseif a_metric.is_ratio then
+					Result := pixmaps.icon_pixmaps.metric_ratio_icon
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	pixmap_from_unit (a_unit: QL_METRIC_UNIT): EV_PIXMAP is
+			-- Pixmap for metric unit `a_unit'
+		require
+			a_unit_attached: a_unit /= Void
+			a_unit_supported: unit_pixmap_table.has (a_unit)
+		do
+			Result := unit_pixmap_table.item (a_unit)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	metric_menu: EV_MENU is
+			-- Menu cantaining all metrics
+		local
+			l_metric_table: HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
+			l_metric_list: LIST [EB_METRIC]
+			l_submenu: EV_MENU
+			l_menu_item: EV_MENU_ITEM
+			l_unit_list: like unit_list
+		do
+			create Result
+			l_metric_table := metric_manager.ordered_metrics (agent metric_order_tester (?, ?, ascending_order) , False)
+			l_unit_list := unit_list (True)
+			from
+				l_unit_list.start
+			until
+				l_unit_list.after
+			loop
+				l_metric_list := l_metric_table.item (l_unit_list.item.unit)
+				if not l_metric_list.is_empty then
+					create l_submenu.make_with_text (unit_name_table.item (l_unit_list.item.unit))
+					l_submenu.set_pixmap (l_unit_list.item.pixmap)
+					Result.extend (l_submenu)
+					from
+						l_metric_list.start
+					until
+						l_metric_list.after
+					loop
+						create l_menu_item.make_with_text (l_metric_list.item.name)
+						l_menu_item.set_data (l_metric_list.item)
+						l_menu_item.set_pixmap (pixmap_from_metric (l_metric_list.item))
+						l_submenu.extend (l_menu_item)
+						l_metric_list.forth
+					end
+				end
+				l_unit_list.forth
+			end
+		end
+
+	unit_pixmap_table: HASH_TABLE [EV_PIXMAP, QL_METRIC_UNIT] is
+			-- Table of pixmap for metric unit
+			-- Key is unit, value is pixmap for that unit.
+		once
+			create Result.make (11)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_target_icon, target_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_group_icon, group_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_class_icon, class_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_generic_icon, generic_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_feature_icon, feature_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon, argument_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon, local_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_assertion_icon, assertion_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_line_icon, line_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_compilation_icon, compilation_unit)
+			Result.put (pixmaps.icon_pixmaps.metric_unit_ratio_icon, ratio_unit)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]] is
+			-- List of units
+			-- The first argument in tuple is unit's name, the second is its pixmap.
+			-- If `a_all' is True, include compilation and ratio unit.
+		local
+			l_unit_list: LIST [QL_METRIC_UNIT]
+			l_unit: QL_METRIC_UNIT
+		do
+			create {ARRAYED_LIST [TUPLE [QL_METRIC_UNIT, EV_PIXMAP]]} Result.make (11)
+
+			from
+				l_unit_list := preferences.metric_tool_data.unit_order
+				l_unit_list.start
+			until
+				l_unit_list.after
+			loop
+				l_unit := l_unit_list.item
+				if not a_all and then (l_unit = compilation_unit or l_unit = ratio_unit) then
+				else
+					Result.extend ([l_unit, pixmap_from_unit (l_unit)])
+				end
+				l_unit_list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Domain item
+
+	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
+			-- Metric domain item from `a_stone'
+		require
+			a_stone_attached: a_stone /= Void
+		local
+			l_domain_item: EB_DOMAIN_ITEM
+		do
+			l_domain_item := domain_item_from_stone (a_stone)
+			if l_domain_item /= Void then
+				if l_domain_item.is_feature_item then
+					create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_class_item then
+					create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_folder_item then
+					create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_group_item then
+					create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_target_item then
+					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				end
+				if l_domain_item.library_target_uuid /= Void then
+					Result.set_library_target_uuid (l_domain_item.library_target_uuid)
+				end
+			end
+		end
+
+	unit_name_table: HASH_TABLE [STRING_GENERAL, QL_METRIC_UNIT] is
+			-- Interface names for metric unit
+		once
+			create Result.make (12)
+			Result.put (metric_names.l_target_unit, target_unit)
+			Result.put (metric_names.l_group_unit, group_unit)
+			Result.put (metric_names.l_class_unit, class_unit)
+			Result.put (metric_names.l_feature_unit, feature_unit)
+			Result.put (metric_names.l_generic_unit, generic_unit)
+			Result.put (metric_names.l_assertion_unit, assertion_unit)
+			Result.put (metric_names.l_local_unit, local_unit)
+			Result.put (metric_names.l_line_unit, line_unit)
+			Result.put (metric_names.l_compilation_unit, compilation_unit)
+			Result.put (metric_names.l_ratio_unit, ratio_unit)
+			Result.put (metric_names.l_argument_unit, argument_unit)
+			Result.put ("", no_unit)
+	ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report

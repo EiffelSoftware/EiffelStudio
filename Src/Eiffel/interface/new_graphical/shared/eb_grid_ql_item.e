@@ -16,7 +16,7 @@ inherit
 			row_index
 		end
 
-	EB_METRIC_INTERFACE_PROVIDER
+	EB_SHARED_EDITOR_TOKEN_UTILITY
 		undefine
 			default_create,
 			copy,
@@ -30,7 +30,7 @@ inherit
 			is_equal
 		end
 
-	EB_SHARED_EDITOR_TOKEN_UTILITY
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create,
 			copy,

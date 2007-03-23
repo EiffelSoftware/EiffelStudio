@@ -75,6 +75,13 @@ inherit
 			copy
 		end
 
+	EB_METRIC_TOOL_HELPER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 feature {NONE} -- Initialization
 
 	user_initialization is

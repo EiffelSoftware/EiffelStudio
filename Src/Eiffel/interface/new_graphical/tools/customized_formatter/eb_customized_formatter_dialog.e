@@ -40,7 +40,14 @@ inherit
 			default_create
 		end
 
-	EB_METRIC_INTERFACE_PROVIDER
+	EB_SHARED_MANAGERS
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
+	EB_METRIC_TOOL_HELPER
 		undefine
 			copy,
 			is_equal,

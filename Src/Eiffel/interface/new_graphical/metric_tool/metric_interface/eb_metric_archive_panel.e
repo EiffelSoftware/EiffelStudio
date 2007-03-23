@@ -491,9 +491,6 @@ feature {NONE} -- Implementation
 	open_file_dialog: EB_FILE_OPEN_DIALOG
 			-- Dialog to select a file
 
-	last_domain_generator_tick_interval: NATURAL_64
-			-- Last stored tick domain generator interval
-
 	internal_timer: EV_TIMEOUT
 			-- Internal timer
 

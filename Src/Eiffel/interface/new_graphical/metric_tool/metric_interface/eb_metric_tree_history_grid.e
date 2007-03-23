@@ -312,15 +312,6 @@ feature{NONE} -- Color
 			Result := preferences.class_browser_data.odd_row_background_color
 		end
 
-	background_color_of_parent_row (a_row: EV_GRID_ROW): EV_COLOR is
-			-- Background color of parent row of `a_row'.
-		require
-			a_row_attached: a_row /= Void
-			a_row_has_parent_row: a_row.parent_row /= Void
-		do
-			Result := a_row.parent_row.background_color
-		end
-
 	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Set background color for `a_grid_row' which contains `a_archive_node'.
 		local

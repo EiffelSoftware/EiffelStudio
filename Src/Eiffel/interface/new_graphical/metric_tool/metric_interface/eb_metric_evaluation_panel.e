@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 				-- Setup basic metric definition area.
 			create metric_definer.make (metric_tool, Current, new_mode, class_unit)
 			metric_definer.change_actions_internal.extend (agent on_definition_change)
-			metric_definer.hide_name_area
+			metric_definer.name_area.hide
 			criterion_area.extend (metric_definer.widget)
 
 				-- Initialize unit list.
@@ -846,12 +846,6 @@ feature{NONE} -- Actions
 			set_is_up_to_date (False)
 			set_is_send_to_history_status_up_to_date (False)
 			update_ui
-		end
-
-	on_filter_result_changed is
-			-- Action to be performed when selection status of `detailed_result_btn' changes
-		do
-			preferences.metric_tool_data.keep_metric_detailed_result_preference.set_value (detailed_result_btn.is_selected)
 		end
 
 feature-- UI Update

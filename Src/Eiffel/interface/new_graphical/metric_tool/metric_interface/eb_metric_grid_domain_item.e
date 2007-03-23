@@ -28,6 +28,12 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_TOOL_HELPER
+		undefine
+			copy,
+			default_create
+		end
+		
 create
 	make
 

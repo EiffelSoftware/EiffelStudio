@@ -45,7 +45,6 @@ feature{NONE} -- Attribute constants
 	at_unit: INTEGER is 1001
 	at_numerator: INTEGER is 1002
 	at_denominator: INTEGER is 1003
-	at_denominator_scope: INTEGER is 1004
 	at_negation: INTEGER is 1005
 	at_case_sensitive: INTEGER is 1006
 	at_regular_expression: INTEGER is 1007
@@ -94,7 +93,6 @@ feature{NONE} -- Text
 	n_unit: STRING is "unit"
 	n_numerator: STRING is "numerator"
 	n_denominator: STRING is "denominator"
-	n_denominator_scope: STRING is "denominator_scope"
 	n_negation: STRING is "negation"
 	n_case_sensitive: STRING is "case_sensitive"
 	n_regular_expression: STRING is "regular_expression"

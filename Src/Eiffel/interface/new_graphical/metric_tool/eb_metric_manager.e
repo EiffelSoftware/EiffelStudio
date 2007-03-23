@@ -163,13 +163,6 @@ feature -- Status report
 			Result := has_metric (a_name) and then is_metric_valid (a_name)
 		end
 
-	is_valid_order (a_order: INTEGER): BOOLEAN is
-			-- Is `a_order' is valid sorting order?
-			-- For information of sorting order, see `ascending_order', `descending_order' and `topological_order'.
-		do
-			Result := a_order = ascending_order or a_order = descending_order or a_order = topological_order
-		end
-
 	is_metric_loaded: BOOLEAN
 			-- Have metrics in files been loaded?
 
@@ -325,11 +318,11 @@ feature -- Access
 			Result := metric_with_name_internal (a_name).new_instance (l_callback)
 		end
 
-	ordered_metrics (a_order: INTEGER; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is
-			-- All metrics in `a_order'
+	ordered_metrics (a_metric_order_tester: FUNCTION [ANY, TUPLE [EB_METRIC, EB_METRIC], BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is
+			-- All metrics in order retrieved by `a_metric_order_tester'.
 			-- If `a_flat' is True, DO NOT sort metrics according to unit, and all sorted metrics will be in a list with the key `no_unit'.
 		require
-			a_order_valid: is_valid_order (a_order)
+			a_metric_order_tester_attached: a_metric_order_tester /= Void
 		local
 			l_ordered_metrics: HASH_TABLE [DS_ARRAYED_LIST [EB_METRIC], QL_METRIC_UNIT]
 			l_metric_list: DS_ARRAYED_LIST [EB_METRIC]
@@ -373,9 +366,8 @@ feature -- Access
 
 				-- Sort metrics in the same unit and store result.
 			create {HASH_TABLE [ARRAYED_LIST [EB_METRIC], QL_METRIC_UNIT]} Result.make (l_ordered_metrics.count)
-			create l_agent_sorter.make (agent metric_order_tester)
+			create l_agent_sorter.make (a_metric_order_tester)
 			create l_sorter.make (l_agent_sorter)
-			current_sort_order := a_order
 			if a_flat then
 				l_sorter.sort (l_metric_list)
 				create l_list.make_from_array (l_metric_list.to_array)
@@ -480,17 +472,6 @@ feature -- Access
 			end
 			Result := on_compile_start_agent_internal
 		end
-
-feature -- Access/Sorting order
-
-	ascending_order: INTEGER is 1
-			-- Ascending order
-
-	descending_order: INTEGER is 2
-			-- Descending order
-
-	topological_order: INTEGER is 3
-			-- Topological order, i.e., valid metrics come first in ascending order , and then invalid metrics in ascending order.
 
 feature -- Metric management
 
@@ -968,36 +949,6 @@ feature{NONE} -- Implementation
 			-- Table of metric validity.
 			-- Key is name of metric, value is the error message.
 			-- Value is Void indicates that the metric is valid.
-
-	metric_order_tester (a_metric, b_metric: EB_METRIC): BOOLEAN is
-			-- Tester to decide the order of `a_metric' and `b_metric'.
-		require
-			a_metric_attached: a_metric /= Void
-			b_metric_attached: b_metric /= Void
-		local
-			l_metric_a_valid: BOOLEAN
-			l_metric_b_valid: BOOLEAN
-		do
-			if current_sort_order = topological_order then
-				l_metric_a_valid := is_metric_valid (a_metric.name)
-				l_metric_b_valid := is_metric_valid (b_metric.name)
-				if l_metric_a_valid and then not l_metric_b_valid then
-					Result := True
-				elseif not l_metric_a_valid and then l_metric_b_valid then
-				else
-					Result := a_metric.name.as_lower < b_metric.name.as_lower
-				end
-			else
-				if current_sort_order = ascending_order then
-					Result := a_metric.name.as_lower < b_metric.name.as_lower
-				else
-					Result := a_metric.name.as_lower > b_metric.name.as_lower
-				end
-			end
-		end
-
-	current_sort_order: INTEGER
-			-- Current sort order for metrics
 
 	check_name_crash (a_metric_list: like metrics) is
 			-- Check if there is a metric in `a_metric_list' which will cause name crash with metrics in `metrics'.

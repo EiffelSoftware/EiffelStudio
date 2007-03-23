@@ -120,9 +120,8 @@ feature -- Status report
 	is_metric_valid: BOOLEAN is
 			-- Is metric associated with `archive_node' valid?
 		do
-			Result := metric_manager.has_metric (metric_name) and then
-					  metric_type_id (metric_manager.metric_with_name (metric_name)) = metric_type and then
-					  metric_manager.is_metric_valid (metric_name)
+			Result := metric_manager.is_metric_calculatable (metric_name) and then
+					  metric_type_id (metric_manager.metric_with_name (metric_name)) = metric_type
 		end
 
 	is_mergable (other: like Current): BOOLEAN is

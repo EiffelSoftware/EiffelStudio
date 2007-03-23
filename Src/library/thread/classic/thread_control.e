@@ -103,6 +103,9 @@ feature {NONE} -- Externals
 			"eif_thr_last_thread"
 		end
 
+invariant
+	thread_capable: {PLATFORM}.is_thread_capable
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

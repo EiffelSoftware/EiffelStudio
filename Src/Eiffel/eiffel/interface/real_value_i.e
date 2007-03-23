@@ -9,7 +9,7 @@ indexing
 	revision: "$date: $"
 
 class
-	REAL_VALUE_I 
+	REAL_VALUE_I
 
 inherit
 	VALUE_I
@@ -47,7 +47,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := (is_real_64 = other.is_real_64) and 
+			Result := (is_real_64 = other.is_real_64) and
 				(real_64_value = other.real_64_value) and
 				(real_32_value = other.real_32_value)
 		end
@@ -67,13 +67,13 @@ feature -- Status report
 
 	is_real_64: BOOLEAN
 			-- Is the current constant a double one?
-			
+
 	is_real_32: BOOLEAN is
 			-- Is current constant a real one?
 		do
 			Result := not is_real_64
 		end
-		
+
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?
 		do
@@ -101,7 +101,7 @@ feature -- Settings
 				is_real_64 := not l_is_real_64
 			end
 		end
-		
+
 feature -- Unary operators
 
 	unary_minus: VALUE_I is
@@ -123,6 +123,8 @@ feature -- Code generation
 			l_val: STRING
 			l_nb: INTEGER
 		do
+				-- Fixme: See bug#5659 where the code below would not work
+				-- because of our usage of `out' is locale specific.
 			l_buf := buffer
 			if is_real_64 then
 				l_val := real_64_value.out

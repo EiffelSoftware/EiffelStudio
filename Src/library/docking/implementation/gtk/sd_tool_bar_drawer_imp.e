@@ -35,9 +35,27 @@ feature -- Redefine
 
 	start_draw (a_rectangle: EV_RECTANGLE) is
 			-- Redefine
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item_rect, l_rect: EV_RECTANGLE
 		do
 			is_start_draw_called := True
-			tool_bar.clear_rectangle (a_rectangle.left, a_rectangle.top, a_rectangle.width, a_rectangle.height)
+
+			from
+				l_items := tool_bar.items
+				l_rect := a_rectangle.twin
+				l_items.start
+			until
+				l_items.after
+			loop
+				l_item_rect := l_items.item.rectangle
+				if l_item_rect.intersects (a_rectangle) then
+					-- We find the maximum area we should clear.
+					l_rect.merge (l_item_rect)
+				end
+				l_items.forth
+			end
+			tool_bar.clear_rectangle (l_rect.left, l_rect.top, l_rect.width, l_rect.height)
 		end
 
 	end_draw is

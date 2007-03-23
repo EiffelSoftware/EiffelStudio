@@ -84,6 +84,7 @@ feature -- Access
 			l_writer: like token_writer
 			l_constant_as: CONSTANT_AS
 			l_output_strategy: like output_strategy
+			l_class_c: CLASS_C
 		do
 			if is_comment_enabled and then e_feature /= Void then
 				Result := feature_comment (e_feature)
@@ -108,7 +109,10 @@ feature -- Access
 						l_output_strategy := output_strategy (class_c)
 						l_output_strategy.set_current_class (class_c)
 						l_output_strategy.set_source_class (written_class)
+						l_class_c := system.current_class
+						system.set_current_class (class_c)
 						l_constant_as.process (l_output_strategy)
+						system.set_current_class (l_class_c)
 					end
 				end
 				Result := l_writer.last_line.content

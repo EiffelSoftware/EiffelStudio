@@ -673,16 +673,6 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-feature{NONE} -- Implementation/Status report
-
-	is_archive_recalculatable (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN is
-			-- Is `a_archive_node' recalculatable?
-		require
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			Result := a_archive_node.is_recalculatable
-		end
-
 feature{NONE} -- Implementation/Data
 
 	last_selected_nodes: LINKED_LIST [UUID] is

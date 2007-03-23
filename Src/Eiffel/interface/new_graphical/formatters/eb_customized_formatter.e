@@ -31,7 +31,9 @@ inherit
 
 	EXCEPTIONS
 
-	EB_METRIC_INTERFACE_PROVIDER
+--	EB_METRIC_INTERFACE_PROVIDER
+
+	EB_METRIC_TOOL_HELPER
 
 create
 	make
@@ -248,13 +250,9 @@ feature -- Status report
 			-- Is Current formatter valid?
 		local
 			l_metric_manager: like metric_manager
-			l_metric: like metric
 		do
 			l_metric_manager := metric_manager
-			l_metric := metric
-			Result := l_metric_manager.is_metric_loaded and then
-					  l_metric_manager.has_metric (l_metric) and then
-					  l_metric_manager.is_metric_valid (l_metric)
+			Result := l_metric_manager.is_metric_loaded and then l_metric_manager.is_metric_calculatable (metric)
 		end
 
 	is_customized_fomatter: BOOLEAN is True

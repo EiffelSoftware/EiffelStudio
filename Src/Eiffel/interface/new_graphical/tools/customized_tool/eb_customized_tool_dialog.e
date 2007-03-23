@@ -53,8 +53,10 @@ feature -- Access
 			-- New item used when adding new item
 		local
 			l_descriptor: like item_anchor
+			l_uuid_generator: UUID_GENERATOR
 		do
-			create l_descriptor.make (next_item_name, uuid_gen.generate_uuid.out)
+			create l_uuid_generator
+			create l_descriptor.make (next_item_name, l_uuid_generator.generate_uuid.out)
 			l_descriptor.set_pixmap_location ("")
 			Result := l_descriptor
 		end

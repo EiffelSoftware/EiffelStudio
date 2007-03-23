@@ -27,8 +27,6 @@ create
 
 feature{NONE} -- Initialization
 
-	a_selector: EB_METRIC_VALUE_CRITERION_SELECTOR
-
 	make (a_criterion: like criterion; a_row: EV_GRID_ROW; a_grid: like grid; a_readonly: BOOLEAN; a_scope: like scope) is
 			-- Initialize.
 		require
@@ -195,22 +193,6 @@ feature -- Status report
 		do
 			Result := a_name.is_case_insensitive_equal (query_language_names.ql_cri_and) or
 					  a_name.is_case_insensitive_equal (query_language_names.ql_cri_or)
-		end
-
-	is_domain_criterion (a_name: STRING; a_scope: QL_SCOPE): BOOLEAN is
-			-- Does `a_name' of scope `a_scope' represent a domain criteiron?
-		require
-			a_name_attached: a_name /= Void
-			a_scope_attached: a_scope /= Void
-		local
-			l_cri_factory: like criterion_factory
-			l_criterion: EB_METRIC_CRITERION
-		do
-			l_cri_factory := criterion_factory
-			if l_cri_factory.has_criterion (a_name, a_scope) then
-				l_criterion := l_cri_factory.metric_criterion (a_scope, a_name)
-				Result := l_criterion.is_domain_criterion
-			end
 		end
 
 	is_in_default_state: BOOLEAN

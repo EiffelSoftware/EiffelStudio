@@ -18,8 +18,7 @@ inherit
 			copy,
 			default_create
 		redefine
-			metric,
-			is_linear_metric_editor
+			metric
 		end
 
 	EB_CONSTANTS
@@ -135,11 +134,6 @@ feature {NONE} -- Initialization
 			ctrl_down_shortcut_attached: move_down_shortcut /= Void
 			metric_grid_attached: metric_grid /= Void
 		end
-
-feature -- Status report
-
-	is_linear_metric_editor: BOOLEAN is True
-			-- Is current a linear metric editor?
 
 feature -- Setting
 
@@ -597,7 +591,7 @@ feature{NONE} -- Implementation
 			l_metric_name_array: ARRAY [STRING]
 			l_index: INTEGER
 		do
-			l_metric_table := metric_manager.ordered_metrics (metric_manager.ascending_order, False)
+			l_metric_table := metric_manager.ordered_metrics (agent metric_order_tester (?, ?, ascending_order), False)
 			l_metric_list := l_metric_table.item (unit)
 			if l_metric_list /= Void and then not l_metric_list.is_empty then
 				create l_metric_name_array.make (1, l_metric_list.count)

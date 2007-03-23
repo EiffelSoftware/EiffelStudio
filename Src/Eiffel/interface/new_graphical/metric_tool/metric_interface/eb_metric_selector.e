@@ -34,6 +34,8 @@ inherit
 		end
 
 	EB_METRIC_INTERFACE_PROVIDER
+		rename
+			load_metrics as load_metrics_for_system
 		undefine
 			default_create,
 			is_equal,
@@ -210,18 +212,6 @@ feature -- Access
 				end
 			else
 				create {LINKED_LIST[STRING]} Result.make
-			end
-		end
-
-	selected_item_name: STRING is
-			-- Name of selected metric in `metric_grid'.
-			-- Void if no metric is selected
-		local
-			l_metric: EB_METRIC
-		do
-			l_metric := selected_metric
-			if l_metric /= Void then
-				Result := l_metric.name.twin
 			end
 		end
 
@@ -798,16 +788,12 @@ feature{NONE} -- Implementation/Sorting
 		do
 			metric_selected_actions.block
 			group_selected_actions.block
-			metric_table := metric_manager.ordered_metrics (mapped_sorting_order, not tree_view_checkbox.is_selected)
+			metric_table := metric_manager.ordered_metrics (agent metric_order_tester (?, ?, current_sort_order), not tree_view_checkbox.is_selected)
 			setup_selection_status
 			load_metric_in_grid
 			try_to_selected_last_metric
 			metric_selected_actions.resume
 			group_selected_actions.resume
-		end
-
-	metric_order_tester (a_metric, b_metric: EB_METRIC; a_order: INTEGER): BOOLEAN is
-		do
 		end
 
 	current_sort_order: INTEGER is
@@ -829,7 +815,7 @@ feature{NONE} -- Implementation/Sorting
 			l_new_tbl: like selection_status
 			l_name: STRING
 		do
-			l_metric_tbl := metric_manager.ordered_metrics (mapped_sorting_order, True)
+			l_metric_tbl := metric_manager.ordered_metrics (agent metric_order_tester (?, ?, current_sort_order), True)
 			l_metrics := l_metric_tbl.item (no_unit)
 			l_old_tbl := selection_status.twin
 			l_new_tbl := selection_status
@@ -882,17 +868,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	mapped_sorting_order: INTEGER is
-			-- Mapped sorting order for `metric_grid'
-		do
-			if current_sort_order = ascending_order then
-				Result := metric_manager.ascending_order
-			elseif current_sort_order = descending_order then
-				Result := metric_manager.descending_order
-			elseif current_sort_order = topology_order then
-				Result := metric_manager.topological_order
-			end
-		end
+--	mapped_sorting_order: INTEGER is
+--			-- Mapped sorting order for `metric_grid'
+--		do
+--			if current_sort_order = ascending_order then
+--				Result := metric_manager.ascending_order
+--			elseif current_sort_order = descending_order then
+--				Result := metric_manager.descending_order
+--			elseif current_sort_order = topology_order then
+--				Result := metric_manager.topological_order
+--			end
+--		end
 
 	select_metrics (a_predefined: BOOLEAN; a_select: BOOLEAN) is
 			-- Selected metrics:
@@ -1134,9 +1120,6 @@ feature {NONE} -- Implementation
 			-- Expansion status for every unit lised in Current selector.
 			-- Indexed by metric unit. If value is True, means that the grid row for that unit is expaned
 			-- when last time expansion status is checked.
-
-	cached_key_field_window: EV_POPUP_WINDOW
-			-- Popup window to display `cached_key_field'			
 
 feature{NONE} -- Key shortcuts
 

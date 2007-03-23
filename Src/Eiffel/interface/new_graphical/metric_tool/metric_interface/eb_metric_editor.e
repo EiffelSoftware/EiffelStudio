@@ -103,18 +103,6 @@ feature -- Setting
 		deferred
 		end
 
-	show_name_area is
-			-- Show `name_area'.
-		do
-			name_area.show
-		end
-
-	hide_name_area is
-			-- Hide `name_area'.
-		do
-			name_area.hide
-		end
-
 	set_uuid (a_uuid: like uuid) is
 			-- Set `uuid' with `a_uuid'.
 		require
@@ -178,11 +166,6 @@ feature -- Access
 				l_ver.extend (name_area)
 				l_ver.disable_item_expand (name_area)
 				l_ver.extend (definition_area_widget)
-				if is_ratio_metric_editor then
-					l_ver.disable_item_expand (definition_area_widget)
-				else
-					l_ver.enable_item_expand (definition_area_widget)
-				end
 				l_ver.extend (status_area)
 				l_ver.disable_item_expand (status_area)
 				widget_internal := l_ver
@@ -303,21 +286,6 @@ feature -- Status report
 			-- Is criterion of Current definable?
 		do
 			Result := unit.scope /= Void
-		end
-
-	is_basic_metric_editor: BOOLEAN is
-			-- Is current a basic metric editor?
-		do
-		end
-
-	is_linear_metric_editor: BOOLEAN is
-			-- Is current a linear metric editor?
-		do
-		end
-
-	is_ratio_metric_editor: BOOLEAN is
-			-- Is current a ratio metric editor?
-		do
 		end
 
 	is_loading_metric: BOOLEAN

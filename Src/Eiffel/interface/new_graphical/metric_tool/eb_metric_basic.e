@@ -12,8 +12,7 @@ class
 inherit
 	EB_METRIC
 		redefine
-			is_basic,
-			is_just_line_counting
+			is_basic
 		end
 
 	QL_SHARED
@@ -32,12 +31,6 @@ feature -- Status report
 
 	is_basic: BOOLEAN is True
 			-- Is current a basic metric?
-
-	is_just_line_counting: BOOLEAN is
-			-- Is current metric a line counting metric?
-		do
-			Result := criteria = Void
-		end
 
 feature -- Metric calculation
 

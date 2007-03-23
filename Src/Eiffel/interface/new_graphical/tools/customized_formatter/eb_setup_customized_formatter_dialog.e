@@ -149,7 +149,7 @@ feature{NONE} -- Actions
 				if displayed_in_tools_property /= Void then
 					l_tool_value := displayed_in_tools_property.value
 					if l_tool_value = Void or else l_tool_value.is_empty then
-						if metric_manager.has_metric (l_metric_name) and then metric_manager.is_metric_valid (l_metric_name) then
+						if metric_manager.is_metric_calculatable (l_metric_name) then
 							l_metric := metric_manager.metric_with_name (l_metric_name)
 							if l_metric.unit = class_unit or l_metric.unit = feature_unit then
 								create l_tool_value.make (1)
@@ -163,11 +163,11 @@ feature{NONE} -- Actions
 						end
 					end
 					if metric_property /= Void then
-						if metric_manager.has_metric (l_metric_name) and then metric_manager.is_metric_valid (l_metric_name) then
+						if metric_manager.is_metric_calculatable (l_metric_name) then
 							metric_property.set_tooltip ("")
 							metric_property.set_foreground_color (Void)
 						else
-							metric_property.set_foreground_color (red_color)
+							metric_property.set_foreground_color ((create {EV_STOCK_COLORS}).red)
 							metric_property.set_tooltip (interface_names.l_formatter_invalid_metric)
 						end
 					end

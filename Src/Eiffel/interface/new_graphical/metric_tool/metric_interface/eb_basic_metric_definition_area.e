@@ -18,8 +18,7 @@ inherit
 			copy,
 			default_create
 		redefine
-			metric,
-			is_basic_metric_editor
+			metric
 		end
 
 	EB_CONSTANTS
@@ -177,11 +176,6 @@ feature {NONE} -- Initialization
 			ctrl_right_shortcut_attached: and_indent_shortcut /= Void
 			alt_right_shortcut_attached: or_indent_shortcut /= Void
 		end
-
-feature -- Status report
-
-	is_basic_metric_editor: BOOLEAN is True
-			-- Is current a basic metric editor?
 
 feature -- Setting
 

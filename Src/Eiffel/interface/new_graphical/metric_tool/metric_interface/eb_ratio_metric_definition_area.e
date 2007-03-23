@@ -18,8 +18,7 @@ inherit
 			copy,
 			default_create
 		redefine
-			metric,
-			is_ratio_metric_editor
+			metric
 		end
 
 	EB_CONSTANTS
@@ -103,11 +102,6 @@ feature {NONE} -- Initialization
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 		end
 
-feature -- Status report
-
-	is_ratio_metric_editor: BOOLEAN is True
-			-- Is current a ratio metric editor?
-
 feature -- Setting
 
 	set_mode (a_mode: INTEGER) is
@@ -186,9 +180,6 @@ feature -- Access
 		do
 			Result := Current
 		end
-
-	button_metric_menu: EV_MENU
-			-- Menu to display all registered metrics				
 
 feature {NONE} -- Actions
 

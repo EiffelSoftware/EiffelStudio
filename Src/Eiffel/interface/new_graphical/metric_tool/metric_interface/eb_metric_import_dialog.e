@@ -1040,15 +1040,6 @@ feature{NONE} -- Order testers
 			end
 		end
 
-	metric_name_equality_tester (a_name, b_name: STRING): BOOLEAN is
-			-- Tester to decide if `a_name' is equal to `b_name'
-		require
-			a_name_attached: a_name /= Void
-			b_name_attached: b_name /= Void
-		do
-			Result := a_name.is_case_insensitive_equal (b_name)
-		end
-
 	has_existing_metric (a_name: STRING): BOOLEAN is
 			-- Dose metric named `a_name' exist in `existing_metrics'?
 		require

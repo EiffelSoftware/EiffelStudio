@@ -26,8 +26,7 @@ inherit
 			out
 		end
 
-create
-
+create {MISMATCH_CORRECTOR}
 	default_create
 
 feature -- Initialization
@@ -94,6 +93,10 @@ feature {NONE} -- Implementation
 			create key.make_from_c (ckey)
 			put (value, key)
 		end
+
+invariant
+	singleton: (create {MISMATCH_CORRECTOR}).mismatch_information /= Void implies
+		Current = (create {MISMATCH_CORRECTOR}).mismatch_information
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

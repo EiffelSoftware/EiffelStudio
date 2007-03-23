@@ -18,7 +18,8 @@ inherit
 			set_focus_color,
 			set_non_focus_selection_color,
 			set_pixmap,
-			update_user_widget
+			update_user_widget,
+			on_normal_max_window
 		select
 			implementation
 		end
@@ -184,6 +185,15 @@ feature {NONE} -- Implementation
 			on_drag_started (a_x, a_y, 0, 0, 0, a_screen_x, a_screen_y)
 		end
 
+	on_normal_max_window is
+		do
+				-- We need to remove the minimized state when either
+				-- selecting `restore' or `maximize'.
+			if is_minimized then
+				recover_normal_size_from_minimize
+			end
+			Precursor
+		end
 
 invariant
 	internal_notebook_not_void: notebook /= Void

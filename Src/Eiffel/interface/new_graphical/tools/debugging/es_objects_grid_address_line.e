@@ -79,7 +79,7 @@ feature -- Properties
 
 	object_spec_capacity: INTEGER is
 		do
-			Result := debugged_object_manager.special_object_capacity_at_address (object_address)
+			Result := debugger_manager.object_manager.special_object_capacity_at_address (object_address)
 		end
 
 feature -- Query
@@ -87,14 +87,14 @@ feature -- Query
 	has_attributes_values: BOOLEAN is
 		do
 			if is_valid_object_address (object_address) then
-				Result := debugged_object_manager.object_at_address_has_attributes (object_address)
+				Result := debugger_manager.object_manager.object_at_address_has_attributes (object_address)
 			end
 		end
 
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 			if is_valid_object_address (object_address) then
-				Result := debugged_object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
+				Result := debugger_manager.object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
 			end
 		end
 

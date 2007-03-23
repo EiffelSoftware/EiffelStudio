@@ -35,7 +35,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			l_eifnet_nat: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			Precursor {DUMP_VALUE} (value, dtype)
-			dobj ?= debugged_object_manager.debugged_object (value, 0, 0)
+			dobj ?= debugger_manager.object_manager.debugged_object (value, 0, 0)
 			if dobj /= Void then
 				l_val ?= dobj.debug_value
 				if l_val /= Void then
@@ -173,9 +173,6 @@ feature -- Access
 
 	formatted_output: STRING_32 is
 			-- Output of the call to `debug_output' on `Current', if any.
-		local
-			l_str: STRING_32
-			l_max: INTEGER
 		do
 			if type = Type_string_dotnet and then value_string_dotnet = Void then
 				Result := Character_routines.eiffel_string_32 (value_string)

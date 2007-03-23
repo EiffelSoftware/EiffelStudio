@@ -9,17 +9,17 @@ indexing
 class
 	DEBUGGED_OBJECT_MANAGER
 
-inherit
-	SHARED_DEBUGGER_MANAGER
-
-create {SHARED_DEBUGGED_OBJECT_MANAGER}
+create {DEBUGGER_MANAGER}
 	make
 
 feature {NONE}-- Creation
 
-	make is
+	make (dbg_manager: DEBUGGER_MANAGER) is
 		do
-			is_dotnet := Debugger_manager.is_dotnet_project
+			debugger_manager := dbg_manager
+			if dbg_manager.is_dotnet_project then
+				set_dotnet_system
+			end
 			caching_enabled := False
 		end
 
@@ -28,6 +28,13 @@ feature -- Reset
 	reset is
 		do
 			last_debugged_object := Void
+		end
+
+feature -- Settings
+
+	set_dotnet_system is
+		do
+			is_dotnet := True
 		end
 
 feature -- Query
@@ -110,13 +117,15 @@ feature -- Last debugged object
 
 	last_sp_lower, last_sp_upper: INTEGER
 
+	debugger_manager: DEBUGGER_MANAGER
+
 feature -- status
 
 	is_valid_object_address (addr: STRING): BOOLEAN is
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
-			Result := Debugger_manager.application.is_valid_object_address (addr)
+			Result := debugger_manager.application.is_valid_object_address (addr)
 		end
 
 	is_dotnet: BOOLEAN

@@ -27,14 +27,7 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end;
-
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end;
+		end
 
 create {DEBUG_VALUE_EXPORTER}
 
@@ -159,7 +152,7 @@ feature -- Output
 			debug ("debug_recv")
 				print ("REFERENCE_VALUE.children%N")
 			end
-			obj := debugged_object_manager.debugged_object (address, min_slice, max_slice)
+			obj := debugger_manager.object_manager.debugged_object (address, min_slice, max_slice)
 			is_already_sorted := obj.is_tuple or obj.is_special
 			Result := obj.attributes
 		end

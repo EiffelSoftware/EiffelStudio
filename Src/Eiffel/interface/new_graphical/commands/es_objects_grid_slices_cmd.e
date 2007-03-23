@@ -28,11 +28,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_DEBUGGER_MANAGER
 
 create

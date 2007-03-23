@@ -19,25 +19,22 @@ inherit
 
 create {EIFNET_DEBUGGER_INFO_ACCESSOR}
 	make
-	
+
 feature {NONE}-- initialisation
 
 	make is
 		do
-			init
+			create managed_callback_status_info.make (50)
+			initialize_managed_callback_status
 		end
 
-	init is
-		do
-		end
-		
 feature {EIFNET_EXPORTER} -- Reset data
-	
+
 	reset is
 			-- Reset attribute
-		do		
+		do
 		end
-		
+
 feature {NONE} -- callbacks initialisation
 
 	initialize_managed_callback_status is
@@ -76,7 +73,7 @@ feature -- Callback ids
 	last_managed_callback: INTEGER
 
 	last_unmanaged_callback: INTEGER
-	
+
 	last_managed_callback_name: STRING is
 			-- 	
 		do
@@ -125,7 +122,7 @@ feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 		do
 			inspect
 				cb_id
-			when 
+			when
 				cst_managed_cb_eval_complete,
 				cst_managed_cb_eval_exception,
 				cst_managed_cb_exit_process,
@@ -138,7 +135,7 @@ feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 				Result := False
 			end
 		end
-		
+
 feature {EIFNET_EXPORTER} -- Change Callbacks
 
 	set_last_managed_callback (cst: INTEGER) is
@@ -152,7 +149,7 @@ feature {EIFNET_EXPORTER} -- Change Callbacks
 		do
 			last_unmanaged_callback := cst
 		end
-	
+
 feature {EIFNET_EXPORTER} -- Callback status
 
 	callback_enabled (cb_id: INTEGER): BOOLEAN is
@@ -188,12 +185,8 @@ feature {NONE} -- Callback status change
 
 feature {EIFNET_EXPORTER} -- Callback status
 
-	managed_callback_status_info: HASH_TABLE [BOOLEAN, INTEGER] is
+	managed_callback_status_info: HASH_TABLE [BOOLEAN, INTEGER];
 			-- Callback information table
-		once
-			create Result.make (50)
-			initialize_managed_callback_status
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

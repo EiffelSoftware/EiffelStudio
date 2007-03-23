@@ -17,13 +17,6 @@ inherit
 			debug_value_type_id
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 feature -- Items
 
 	items_computed: BOOLEAN

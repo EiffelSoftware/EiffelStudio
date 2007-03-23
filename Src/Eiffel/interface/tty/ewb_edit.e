@@ -21,23 +21,10 @@ feature -- Element change
 		require
 			file_not_void: a_file /= Void
 		local
-			editor: STRING;
-			cmd: STRING;
 			cmd_exec: COMMAND_EXECUTOR
 		do
-			editor := preferences.misc_data.external_editor_command
-			if editor /= Void then
-					-- Replace $target and $line
-				editor.replace_substring_all ("$target", a_file)
-				editor.replace_substring_all ("$line", "")
-
-				create cmd.make (0);
-				cmd.append (editor);
-				create cmd_exec;
-				cmd_exec.execute (cmd)
-			else
-				localized_print_error (ewb_names.the_resource_editor_is_not_set)
-			end;
+			create cmd_exec
+			cmd_exec.execute (preferences.misc_data.external_editor_cli (a_file, 1))
 		end;
 
 indexing

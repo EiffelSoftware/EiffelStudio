@@ -46,8 +46,6 @@ feature -- Basic operations
 
 	edit_configuration is
 			-- Open a new dialog to edit the `group'.
-		require
-			group_not_readonly: not group.is_readonly
 		local
 			l_config: STRING
 			l_load: CONF_LOAD
@@ -85,22 +83,8 @@ feature -- Basic operations
 					l_lib_conf.set_position (configuration_window.x_position, configuration_window.y_position)
 					l_lib_conf.set_split_position (configuration_window.split_position)
 
---					l_lib_conf.show_modal_to_window (configuration_window)
 					l_lib_conf.show
 				end
-			end
-		end
-
-	update_edit_action is
-			-- Disable/enable sensitivity of the edit action depending on whether the library is read only or not.
-		local
-			l_button: EV_TOOL_BAR_BUTTON
-		do
-			l_button := toolbar.edit_library
-			if group.is_readonly and l_button.is_sensitive then
-				l_button.disable_sensitive
-			elseif not group.is_readonly and not l_button.is_sensitive then
-				l_button.enable_sensitive
 			end
 		end
 
@@ -139,8 +123,6 @@ feature {NONE} -- Implementation
 			toolbar.edit_library.select_actions.wipe_out
 			toolbar.edit_library.select_actions.extend (agent edit_configuration)
 			toolbar.edit_library.enable_sensitive
-
-			update_edit_action
 		end
 
 indexing

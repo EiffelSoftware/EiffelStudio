@@ -231,8 +231,8 @@ feature -- Access
 	selected_target: STRING
 			-- Target to select on startup.
 
-	external_editor_command: STRING
-			-- External editor with 4target as filename replacement and $line as line replacement (optional).
+	external_editor_command: FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
+			-- Command that builds an external editor command line by taking a target and a line number.
 
 	split_position: INTEGER is
 			-- Split position.
@@ -1008,12 +1008,6 @@ feature {NONE} -- Implementation
 				if l_lib_grp /= Void then
 					l_lib_grp.update_pixmap
 				end
-
-					-- check for readonly change and update edit configuration action of libraries
-				l_lib_sec ?= l_section
-				if l_lib_sec /= Void then
-					l_lib_sec.update_edit_action
-				end
 			end
 		end
 
@@ -1023,10 +1017,8 @@ feature {NONE} -- Implementation
 			l_cmd_string: STRING
 			l_env: EXECUTION_ENVIRONMENT
 		do
-			l_cmd_string := external_editor_command.twin
-			if not l_cmd_string.is_empty then
-				l_cmd_string.replace_substring_all ("$target", conf_system.file_name)
-				l_cmd_string.replace_substring_all ("$line", "0")
+			l_cmd_string := external_editor_command.item ([conf_system.file_name, 1])
+			if l_cmd_string /= Void and then not l_cmd_string.is_empty then
 				create l_env
 				l_env.launch (l_cmd_string)
 			end

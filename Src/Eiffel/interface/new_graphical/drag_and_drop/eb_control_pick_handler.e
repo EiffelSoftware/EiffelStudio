@@ -81,18 +81,12 @@ feature {NONE} -- Implementation
 			-- Process class stone.
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 			conv_f: FEATURE_STONE
 		do
 			conv_f ?= cs
 			if conv_f = Void then
-				cmd_string := preferences.misc_data.external_editor_command.twin
-				if not cmd_string.is_empty then
-					cmd_string.replace_substring_all ("$target", cs.file_name)
-					cmd_string.replace_substring_all ("$line", "1")
-					create req
-					req.execute (cmd_string)
-				end
+				create req
+				req.execute (preferences.misc_data.external_editor_cli (cs.file_name, 1))
 			else
 				process_feature (conv_f)
 			end
@@ -102,16 +96,11 @@ feature {NONE} -- Implementation
 			-- Process feature stone.
 		local
 			req: COMMAND_EXECUTOR
-			cmd_string: STRING
 		do
 				-- feature text area
-			cmd_string := preferences.misc_data.external_editor_command.twin
-			if not cmd_string.is_empty then
-				cmd_string.replace_substring_all ("$target", fs.class_i.file_name)
-				cmd_string.replace_substring_all ("$line", fs.line_number.out)
-				create req
-				req.execute (cmd_string)
-			end
+			create req
+			req.execute (preferences.misc_data.external_editor_cli (
+				fs.class_i.file_name, fs.line_number))
 		end
 
 indexing

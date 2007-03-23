@@ -144,7 +144,7 @@ feature -- Open inner container data.
 						top_container.parent.prune (top_container)
 					end
 					l_parent.extend (top_container)
-					if l_split /= Void then
+					if l_split /= Void and then l_split.minimum_split_position <= l_split_position and l_split_position <= l_split.maximum_split_position then
 						l_split.set_split_position (l_split_position)
 					end
 				end

@@ -170,18 +170,18 @@ feature -- Execution
 			-- Create a blank project in directory `directory_name'.
 		local
 			blank_project_builder: BLANK_PROJECT_BUILDER
-			rescued: BOOLEAN
+			retried: BOOLEAN
 			cla, clu, f: STRING
 			sc: EIFFEL_SYNTAX_CHECKER
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_project_initialized: BOOLEAN
 		do
 			success := False
-			if not rescued then
+			if not retried then
 				create sc
 					-- Retrieve System parameters
 				if directory_field.text = Void or else directory_field.text.is_empty then
-					add_error_message (Warning_messages.w_Fill_in_location_field)
+					add_error_message (Warning_messages.w_fill_in_location_field)
 					raise_exception (Invalid_directory_exception)
 				end
 				create directory_name.make_from_string (directory_field.text)
@@ -189,7 +189,7 @@ feature -- Execution
 
 				system_name := system_name_field.text
 				if not sc.is_valid_system_name (system_name) then
-					add_error_message (Warning_messages.w_Fill_in_project_name_field)
+					add_error_message (Warning_messages.w_fill_in_project_name_field)
 					raise_exception (Invalid_project_name_exception)
 				end
 				cla := root_class_field.text
@@ -242,8 +242,7 @@ feature -- Execution
 					(not Eiffel_ace.file_name.is_empty)
 
 				destroy
-			end
-			if rescued or else not success then
+			else
 				if not is_destroyed and then is_displayed then
 					display_error_message (Current)
 				else
@@ -251,7 +250,7 @@ feature -- Execution
 				end
 			end
 		rescue
-			rescued := True
+			retried := True
 			retry
 		end
 

@@ -1011,18 +1011,23 @@ feature {NONE} -- Implementation
 	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel received.
 		local
-			l_fired: BOOLEAN
+			l_ignore_default_processing: BOOLEAN
 		do
 			if is_displayed then
-				if application_imp.mouse_wheel_actions_internal /= Void then
-					application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
-					l_fired := True
+				if application_imp.pick_and_drop_source = Void then
+					if application_imp.mouse_wheel_actions_internal /= Void then
+						application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
+						l_ignore_default_processing := True
+					end
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([delta // 120])
+						l_ignore_default_processing := True
+					end
+				else
+					l_ignore_default_processing := True
 				end
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([delta // 120])
-					l_fired := True
-				end
-				if l_fired then
+
+				if l_ignore_default_processing then
 						-- Only return 0 if the mouse wheel actions are not empty,
 						-- as this overrides intellipoint software if installed.
 					set_message_return_value (to_lresult (0))

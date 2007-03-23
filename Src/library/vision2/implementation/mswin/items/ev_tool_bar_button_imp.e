@@ -177,6 +177,20 @@ feature -- Status report
 
 feature -- Status setting
 
+	enable_sensitive is
+			 -- Enable `Current'.
+		do
+			enabled_before := is_sensitive
+			enable_sensitive_internal
+		end
+
+	disable_sensitive is
+			 -- Disable `Current'.
+		do
+			enabled_before := is_sensitive
+			disable_sensitive_internal
+		end
+
 	enable_sensitive_internal is
 			 -- Enable `Current'.
 			 -- This is a special version used internally by the code that updates

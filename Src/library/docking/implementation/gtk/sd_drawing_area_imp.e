@@ -1,9 +1,10 @@
 indexing
-	description: "[
-					GTK implementation for SD_DRAWING_AREA.
-					Currently it do nothing. Because GTK doesn't update_for_pick_and_drop.
-					Windows implementation will do update_for_pick_and_drop.
-																							]"
+	description:"[
+ 					Object that to export update_for_pick_and_drop feature
+					which is in implementation.
+																				]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,11 +13,51 @@ class
 
 inherit
 	EV_DRAWING_AREA_IMP
+		redefine
+			update_for_pick_and_drop,
+			interface
+		end
+
+	EV_SHARED_APPLICATION
 		export
-			{SD_NOTEBOOK_TAB_DRAWER_IMP} c_object
+			{NONE} all
 		end
 
 create
 	make
 
+feature {NONE} -- Implementation
+
+	update_for_pick_and_drop (a_starting: BOOLEAN) is
+			-- Redefine
+		local
+			l_app_imp: EV_APPLICATION_IMP
+			l_src: EV_PICK_AND_DROPABLE_IMP
+		do
+			l_app_imp ?= ev_application.implementation
+			check not_void: l_app_imp /= Void end
+			l_src := l_app_imp.pick_and_drop_source
+			-- Sometime l_src maybe void ?
+			if l_src /= Void then
+				interface.update_for_pick_and_drop (a_starting, l_src.pebble)
+			end
+		end
+
+	interface: SD_DRAWING_AREA;
+			-- Redefine
+
+indexing
+	library:	"SmartDocking: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
 end
+

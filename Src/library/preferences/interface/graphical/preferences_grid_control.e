@@ -1221,8 +1221,10 @@ feature {NONE} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 		do
-			l_row := a_shortcut_widget.change_item_widget.row
-			preference_changed_on_row (a_shortcut_widget.preference, l_row, True)
+			if a_shortcut_widget.change_item_widget.is_parented then
+				l_row := a_shortcut_widget.change_item_widget.row
+				preference_changed_on_row (a_shortcut_widget.preference, l_row, True)
+			end
 		end
 
 	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
@@ -1337,6 +1339,9 @@ feature {NONE} -- Filtering
 					create {ARRAYED_LIST [PREFERENCE]} matches.make (l_prefs.count)
 					from
 						l_match_text := l_match_text.as_string_8
+						if l_match_text.item (1) /= '*' then
+							l_match_text.prepend_character ('*')
+						end
 						if l_match_text.item (l_match_text.count) /= '*' then
 							l_match_text.append_character ('*')
 						end

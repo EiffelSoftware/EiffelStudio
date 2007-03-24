@@ -34,26 +34,18 @@ feature -- Basic operations
 			wd: EB_WARNING_DIALOG
 			l_factory: CONF_COMP_FACTORY
 		do
-			if Workbench.is_already_compiled then
-				if
-					not Workbench.is_compiling or else
-					Workbench.last_reached_degree <= 5
-				then
-					create l_factory
-					create dial.make (universe.target, l_factory)
-					dial.show_modal_to_window (target.window)
-					if dial.is_ok then
-						universe.target.system.store
-						lace.reset_date_stamp
-						system.force_rebuild
-						manager.refresh
-					end
-				else
-					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
-					wd.show_modal_to_window (target.window)
+			if Workbench.is_in_stable_state then
+				create l_factory
+				create dial.make (universe.target, l_factory)
+				dial.show_modal_to_window (target.window)
+				if dial.is_ok then
+					universe.target.system.store
+					lace.reset_date_stamp
+					system.force_rebuild
+					manager.refresh
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Project_not_compiled)
+				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
 				wd.show_modal_to_window (target.window)
 			end
 		end

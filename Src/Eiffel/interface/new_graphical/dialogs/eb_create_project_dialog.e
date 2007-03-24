@@ -527,6 +527,10 @@ feature {NONE} -- Callbacks
 			else
 				select_project_path
 			end
+			if success and (ace_file_name /= Void and then not ace_file_name.is_empty) then
+				recent_projects_manager.add_recent_project (ace_file_name)
+				recent_projects_manager.save_recent_projects
+			end
 		end
 
 	on_change_project_name is

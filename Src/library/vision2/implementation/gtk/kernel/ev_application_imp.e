@@ -245,9 +245,17 @@ feature {EV_ANY_I} -- Implementation
 						-- event_widget may be null.
 					l_call_event := True
 					l_propagate_event := False
+
 					l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
 					if l_grab_widget = default_pointer then
 						l_grab_widget := event_widget
+					else
+							-- Cancel any invalid event capture.
+						if pick_and_drop_source /= Void and then not pick_and_drop_source.is_displayed then
+							pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+						elseif captured_widget /= Void and then not captured_widget.is_displayed then
+							captured_widget.disable_capture
+						end
 					end
 					inspect
 						{EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
@@ -270,7 +278,6 @@ feature {EV_ANY_I} -- Implementation
 						stored_display_data.originating_y := l_widget_y
 
 						l_call_event := False
-
 						if
 							captured_widget /= Void
 						then
@@ -283,7 +290,7 @@ feature {EV_ANY_I} -- Implementation
 							l_pnd_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
 						end
 
-						if l_pnd_imp /= Void then
+						if l_pnd_imp /= Void and then l_pnd_imp.is_displayed then
 							l_top_level_window_imp := l_pnd_imp.top_level_window_imp
 							if l_top_level_window_imp /= Void then
 								if not l_top_level_window_imp.has_modal_window then

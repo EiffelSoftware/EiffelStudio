@@ -181,7 +181,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_file_menu: EV_MENU
 			l_new_project_cmd: EB_NEW_PROJECT_COMMAND
 			l_open_project_cmd: EB_OPEN_PROJECT_COMMAND
-			l_send_to_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 			l_command_menu_item: EB_COMMAND_MENU_ITEM
 			l_shortcut: MANAGED_SHORTCUT
@@ -223,14 +222,10 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.add_recyclable (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
-				-- Sent to
-			create l_send_to_menu.make_with_text (develop_window.Interface_names.m_send_to)
-
 				-- External editor
 			l_command_menu_item := develop_window.commands.shell_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)
-			l_send_to_menu.extend (l_command_menu_item)
-			develop_window.menus.file_menu.extend (l_send_to_menu)
+			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------
 			develop_window.menus.file_menu.extend (create {EV_MENU_SEPARATOR})

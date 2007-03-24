@@ -30,19 +30,11 @@ feature -- Basic operations
 			dial: EB_CREATE_CLUSTER_DIALOG
 			wd: EB_WARNING_DIALOG
 		do
-			if Workbench.is_already_compiled then
-				if
-					not Workbench.is_compiling or else
-					Workbench.last_reached_degree <= 5
-				then
-					create dial.make_default (target)
-					dial.call_default
-				else
-					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
-					wd.show_modal_to_window (target.window)
-				end
+			if Workbench.is_in_stable_state then
+				create dial.make_default (target)
+				dial.call_default
 			else
-				create wd.make_with_text (Warning_messages.w_Project_not_compiled)
+				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
 				wd.show_modal_to_window (target.window)
 			end
 		end

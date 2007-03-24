@@ -347,6 +347,10 @@ feature {NONE} -- Implementation
 			then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive
 			end
+			develop_window.commands.new_class_cmd.enable_sensitive
+			develop_window.commands.new_library_cmd.enable_sensitive
+			develop_window.commands.new_assembly_cmd.enable_sensitive
+			develop_window.commands.new_cluster_cmd.enable_sensitive
 		end
 
 	enable_commands_on_project_loaded is
@@ -358,18 +362,12 @@ feature {NONE} -- Implementation
 			if develop_window.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.enable_sensitive
 			end
-			develop_window.commands.new_class_cmd.enable_sensitive
-			develop_window.commands.new_library_cmd.enable_sensitive
-			develop_window.commands.new_assembly_cmd.enable_sensitive
-			develop_window.commands.new_cluster_cmd.enable_sensitive
 			develop_window.commands.system_info_cmd.enable_sensitive
 			if develop_window.unified_stone then
 				develop_window.commands.send_stone_to_context_cmd.disable_sensitive
 			elseif develop_window.stone /= Void then
 				develop_window.commands.send_stone_to_context_cmd.enable_sensitive
 			end
-			develop_window.commands.new_class_cmd.enable_sensitive
-			develop_window.commands.new_cluster_cmd.enable_sensitive
 			develop_window.commands.delete_class_cluster_cmd.enable_sensitive
 			develop_window.commands.c_workbench_compilation_cmd.enable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive

@@ -151,6 +151,13 @@ feature -- Additional properties
 	is_compiling: BOOLEAN
 			-- Is the project being compiled?
 
+	is_in_stable_state: BOOLEAN is
+			-- Is project in such a state that one can manipulate the project settings,
+			-- add new classes, search for classes,...
+		do
+			Result := system_defined and then not is_compiling and then last_reached_degree <= 5
+		end
+
 	last_reached_degree: INTEGER is
 			-- What is the lowest degree that was reached during last compilation?
 			-- Or what is the current degree if `is_compiling'?

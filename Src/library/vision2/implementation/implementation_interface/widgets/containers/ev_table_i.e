@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision table. Implementation interface"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature -- Access
 
 	rows: INTEGER
 			-- Number of rows in `Current'.
-			
+
 	columns: INTEGER
 			-- Number of columns in `Current'.
 
@@ -29,7 +29,7 @@ feature -- Access
 		do
 			Result := internal_array.item ((a_row - 1) * columns + a_column)
 		end
-		
+
 	item_list: ARRAYED_LIST [EV_WIDGET] is
 			-- List of items in `Current'.
 		local
@@ -54,7 +54,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 			Result_not_has_void: not Result.has (Void)
 		end
-		
+
 	to_array: ARRAY [EV_WIDGET] is
 			-- A representation of `Current' as ARRAY. Included to
 			-- ease transition from inheritance of ARRAY to
@@ -73,13 +73,13 @@ feature -- Access
 		do
 			Result := internal_item_list.has (v)
 		end
-		
+
 	item: EV_WIDGET is
 			-- Item at current position.
 		do
 			Result := internal_item_list @ index
 		end
-		
+
 	full: BOOLEAN is
 			-- Is structure filled to capacity?
 		local
@@ -103,13 +103,13 @@ feature -- Access
 				-- then the table is full.
 			Result := used_cell_count = rows * columns
 		end
-		
+
 	before: BOOLEAN is
 			-- Is there no valid position to the left of current one?
 		do
 			Result := index = 0
 		end
-		
+
 	after: BOOLEAN is
 			-- Is there no valid position to the right of current one?
 		do
@@ -122,7 +122,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			-- Spacing between two consecutive rows.
 		deferred
 		end
-	
+
 	column_spacing: INTEGER is
 			-- Spacing between two consecutive columns.
 		deferred
@@ -132,28 +132,28 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			-- Spacing between edge of `Current' and items.
 		deferred
 		end
-		
+
 	item_column_position (widget: EV_WIDGET): INTEGER is
 			-- `Result' is column coordinate of `widget'.
 		deferred
 		end
-		
+
 	item_row_position (widget: EV_WIDGET): INTEGER is
 			-- `Result' is row coordinate of `widget'.
 		deferred
 		end
-		
-		
+
+
 	item_row_span (widget: EV_WIDGET): INTEGER is
 			-- `Result' is number of rows taken by `widget'.
 		deferred
 		end
-		
+
 	item_column_span (widget: EV_WIDGET): INTEGER is
 			-- `Result' is number of columns taken by `widget'.
 		deferred
 		end
-		
+
 	columns_resizable_to (a_column: INTEGER): BOOLEAN is
 			-- May the column count be resized to `a_column'?
 		require
@@ -195,7 +195,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 				end
 			end
 		end
-		
+
 	column_clear (a_column: INTEGER): BOOLEAN is
 			-- Is column `a_column' free of widgets?
 		require
@@ -233,7 +233,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 				a_column_index := a_column_index + 1
 			end
 		end
-		
+
 	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
 			-- Are the cells represented by parameters free of widgets? Excludes cells
 			-- filled by `v'.
@@ -255,13 +255,13 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 					not Result or else (a_col_ctr = a_column + column_span)
 				loop
 					if item_at_position (a_col_ctr, a_row_ctr) /= v then
-						Result := item_at_position (a_col_ctr, a_row_ctr) = Void	
+						Result := item_at_position (a_col_ctr, a_row_ctr) = Void
 					end
 					a_col_ctr := a_col_ctr + 1
 				end
 				a_row_ctr := a_row_ctr + 1
 			end
-		end	
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Status settings
 
@@ -274,12 +274,12 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			-- Allow items to be of varying sizes.
 		deferred
 		end
-		
+
 	is_homogeneous: BOOLEAN is
 			-- Are all children restriced to be the same size.
 		deferred
 		end
-	
+
 	set_row_spacing (a_value: INTEGER) is
 			-- Spacing between two consecutive rows of `Current'.
 		require
@@ -315,7 +315,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			create new.make (1, a_column * a_row)
 			column_max := columns.min (a_column)
 			row_max := rows.min (a_row)
-			
+
 			from
 				row_index := 1
 			until
@@ -334,7 +334,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			end
 
 			internal_array := new
-			
+
 			columns := a_column
 			rows := a_row
 			internal_array.grow (columns * rows)
@@ -344,7 +344,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			upper_updated: internal_array.upper = rows * columns
 			items_untouched: item_list.is_equal (old item_list)
 		end
-		
+
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
 			-- Move `v' to position `a_column', `a_row'.
 		local
@@ -361,7 +361,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 				if internal_array.item (a_cell_index) = v then
 					internal_array.put (Void, a_cell_index)
 				end
-				a_cell_index := a_cell_index + 1						
+				a_cell_index := a_cell_index + 1
 			end
 			from
 				a_row_ctr := a_row
@@ -382,7 +382,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 				-- Now update out internal representation of `Current'.
 			rebuild_internal_item_list
 		end
-		
+
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		require
@@ -407,7 +407,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 					if internal_array.item (a_cell_index) = v then
 						internal_array.put (Void, a_cell_index)
 					end
-					a_cell_index := a_cell_index + 1						
+					a_cell_index := a_cell_index + 1
 				end
 				from
 					a_row_ctr := original_item_row_position
@@ -428,7 +428,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 					-- Now update out internal representation of `Current'.
 				rebuild_internal_item_list
 			end
-			
+
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 		require
@@ -453,7 +453,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 					if internal_array.item (a_cell_index) = v then
 						internal_array.put (Void, a_cell_index)
 					end
-					a_cell_index := a_cell_index + 1						
+					a_cell_index := a_cell_index + 1
 				end
 				from
 					a_row_ctr := a_row
@@ -485,7 +485,7 @@ feature -- Element change
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
 			column_span_positive: column_span >= 1
-			row_span_positive: row_span >= 1		
+			row_span_positive: row_span >= 1
 		local
 			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
 		do
@@ -525,7 +525,7 @@ feature -- Element change
 				if internal_array.item (a_cell_index) = v then
 					internal_array.put (Void, a_cell_index)
 				end
-				a_cell_index := a_cell_index + 1						
+				a_cell_index := a_cell_index + 1
 			end
 				-- Now update out internal representation of `Current'.
 			rebuild_internal_item_list
@@ -553,14 +553,14 @@ feature -- Element change
 				end
 				counter := counter + 1
 			end
-			
+
 				-- Convert `counter' into x and y coordinates.
 			y := ((extend_pos - 1) // columns) + 1
 			x := extend_pos - ((y - 1) * (columns))
 				-- Insert `v' to `Current'.
 			put (v, x, y , 1, 1)
 		end
-		
+
 	wipe_out is
 			-- Remove all items.
 		do
@@ -572,7 +572,7 @@ feature -- Element change
 				interface.prune (item)
 			end
 		end
-		
+
 	cursor: CURSOR  is
 			-- Current cursor position.
 		local
@@ -583,7 +583,7 @@ feature -- Element change
 			end
 			create {EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
 		end
-		
+
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_TABLE_CURSOR and
@@ -595,7 +595,7 @@ feature -- Element change
 			Result := dlc /= Void and then
 				(dlc.item = Void or else has (dlc.item))
 		end
-		
+
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
@@ -613,29 +613,29 @@ feature -- Element change
 				index := interface.index_of (dlc.item, 1)
 			end
 		end
-		
+
 	index: INTEGER
 		-- Current cursor index.
-	
+
 	count: INTEGER is
 			-- Number of widgets contained in `Current'.
 		do
 			Result := internal_item_list.count
 		end
-		
+
 	forth is
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		do
 			index := index + 1
 		end
-		
+
 	back is
 			-- Move to previous position.
 		do
 			index := index - 1
 		end
-		
+
 	move (i: INTEGER) is
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the absolute value of `i'
@@ -661,17 +661,34 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_item_list: ARRAYED_LIST [EV_WIDGET]
 		-- An internal version of `item_list' which will only be
 		-- rebuilt when an item is added, removed or moved within the table.
-	
+
 	rebuild_internal_item_list is
 			-- Rebuild `internal_item_list'.
 		do
 			internal_item_list := item_list.twin
+		end
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify all children.
+		local
+			loc_cursor: CURSOR
+		do
+			from
+				loc_cursor := internal_item_list.cursor
+				internal_item_list.start
+			until
+				internal_item_list.after
+			loop
+				internal_item_list.item.implementation.update_for_pick_and_drop (starting)
+				forth
+			end
+			internal_item_list.go_to (loc_cursor)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -686,7 +703,7 @@ feature {EV_ANY_I} -- Implementation
 
 	Default_column_spacing: INTEGER is 0
 		-- Default column spacing of `Current'.
-		
+
 	internal_array: ARRAY [EV_WIDGET]
 		-- Array representing `Current'.
 		-- All widgets are contained in here, and we manipulate

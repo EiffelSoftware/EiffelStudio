@@ -780,13 +780,6 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
-			-- Pick and drop status has changed so notify children.
-		do
-			--| FIXME Propagate to  children.
-		end
-
-
 	compute_values
 		(minimums: ARRAYED_LIST [INTEGER]; new_size, total_sum, spacing: INTEGER
 		): ARRAYED_LIST [INTEGER] is

@@ -169,6 +169,7 @@ feature -- Titles
 	t_wildcard: STRING_GENERAL is do Result := locale.translate ("Wildcard") end
 	t_regexp: STRING_GENERAL is do Result := locale.translate ("Regular expression") end
 	t_matching_strategy: STRING_GENERAL is do Result := locale.translate ("Matching Strategy") end
+	t_clear_result: STRING_GENERAL is do Result := locale.translate ("Clear detailed result") end
 
 feature -- Titles for editor token
 

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
-			internal_docking_manager := a_docking_manager
+			docking_manager := a_docking_manager
 			create internal_shared
 			create contents
 			contents.add_actions.extend (agent on_add_tool_bar_content)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			init_right_click_menu
 		ensure
 			action_added: contents.add_actions.count = 1 and contents.remove_actions.count = 1
-			set: internal_docking_manager = a_docking_manager
+			set: docking_manager = a_docking_manager
 		end
 
 	init_right_click_menu is
@@ -71,6 +71,9 @@ feature -- Query
 	is_locked: BOOLEAN
 			-- If docking disabled?
 
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager Current belong to.
+			
 feature -- Command
 
 	lock is
@@ -90,7 +93,7 @@ feature -- Command
 				end
 				contents.forth
 			end
-			internal_docking_manager.command.resize (True)
+			docking_manager.command.resize (True)
 			is_locked := True
 		ensure
 			locked: is_locked
@@ -113,7 +116,7 @@ feature -- Command
 				end
 				contents.forth
 			end
-			internal_docking_manager.command.resize (True)
+			docking_manager.command.resize (True)
 			is_locked := False
 		ensure
 			unlocked: not is_locked
@@ -203,7 +206,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			l_container: EV_CONTAINER
 		do
 			a_content.set_manager (Current)
-			create l_tool_bar_zone.make (False, internal_docking_manager, a_content.is_menu_bar)
+			create l_tool_bar_zone.make (False, docking_manager, a_content.is_menu_bar)
 			l_tool_bar_zone.extend (a_content)
 
 			create l_tool_bar_row.make (False)
@@ -214,7 +217,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 
 			l_container := tool_bar_container (a_direction)
 			l_container.extend (l_tool_bar_row)
-			internal_docking_manager.command.resize (True)
+			docking_manager.command.resize (True)
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
@@ -229,13 +232,13 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			inspect
 				a_direction
 			when {SD_ENUMERATION}.top then
-				Result := internal_docking_manager.tool_bar_container.top
+				Result := docking_manager.tool_bar_container.top
 			when {SD_ENUMERATION}.bottom then
-				Result := internal_docking_manager.tool_bar_container.bottom
+				Result := docking_manager.tool_bar_container.bottom
 			when {SD_ENUMERATION}.left then
-				Result := internal_docking_manager.tool_bar_container.left
+				Result := docking_manager.tool_bar_container.left
 			when {SD_ENUMERATION}.right then
-				Result := internal_docking_manager.tool_bar_container.right
+				Result := docking_manager.tool_bar_container.right
 			end
 		ensure
 			not_void: Result /= Void
@@ -248,13 +251,13 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			not_floating: not a_tool_bar.is_floating
 			has: contents.has (a_tool_bar.content)
 		do
-			if internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar.tool_bar) then
+			if docking_manager.tool_bar_container.top.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_ENUMERATION}.top
-			elseif internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar.tool_bar) then
+			elseif docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_ENUMERATION}.bottom
-			elseif internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar.tool_bar) then
+			elseif docking_manager.tool_bar_container.left.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_ENUMERATION}.left
-			elseif internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar.tool_bar) then
+			elseif docking_manager.tool_bar_container.right.has_recursive (a_tool_bar.tool_bar) then
 				Result := {SD_ENUMERATION}.right
 			end
 		ensure
@@ -327,7 +330,7 @@ feature {NONE} -- Implementation
 				l_container := tool_bar_container ({SD_ENUMERATION}.bottom)
 				notify_each_row (l_container, a_width)
 			else
-				l_tool_bar_container := internal_docking_manager.tool_bar_container
+				l_tool_bar_container := docking_manager.tool_bar_container
 				l_vertical_height := a_height - l_tool_bar_container.top.height - l_tool_bar_container.bottom.height
 				if l_vertical_height >= 0  then
 					l_container := tool_bar_container ({SD_ENUMERATION}.left)
@@ -365,10 +368,10 @@ feature {NONE} -- Implementation
 	is_at_menu_area (a_widget: EV_WIDGET): BOOLEAN is
 			-- If `a_widget' in menus area?
 		do
-			Result := internal_docking_manager.tool_bar_container.top.has_recursive (a_widget)
-				or internal_docking_manager.tool_bar_container.bottom.has_recursive (a_widget)
-				or internal_docking_manager.tool_bar_container.left.has_recursive (a_widget)
-				or internal_docking_manager.tool_bar_container.right.has_recursive (a_widget)
+			Result := docking_manager.tool_bar_container.top.has_recursive (a_widget)
+				or docking_manager.tool_bar_container.bottom.has_recursive (a_widget)
+				or docking_manager.tool_bar_container.left.has_recursive (a_widget)
+				or docking_manager.tool_bar_container.right.has_recursive (a_widget)
 
 			if not Result then
 				from
@@ -457,9 +460,6 @@ feature {NONE} -- Implementation
 
 	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
 			-- Pointer button right click hander instance.
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager Current belong to.
 
 	internal_shared: SD_SHARED
 			-- All singletons.

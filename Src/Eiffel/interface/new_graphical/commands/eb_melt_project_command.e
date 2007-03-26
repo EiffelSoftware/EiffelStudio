@@ -152,7 +152,19 @@ feature {NONE} -- Compilation implementation
 	tool_resynchronization is
 			-- Resynchronize class, feature and system tools.
 			-- Clear the format_context buffers.
+		local
+			l_win: EB_DEVELOPMENT_WINDOW
+			l_mediator: SD_DOCKER_MEDIATOR
 		do
+			l_win := window_manager.last_created_window
+			if l_win /= Void then
+				l_mediator := l_win.docking_manager.docker_mediator
+				if l_mediator /= Void then
+					-- If end user is dragging a zone for docking, we cancel it.
+					l_mediator.cancel_tracing_pointer
+				end
+			end
+
 				-- Clear the format_context buffers.
 			clear_format_tables
 			window_manager.display_message_and_percentage (Interface_names.d_Resynchronizing_tools, 0)

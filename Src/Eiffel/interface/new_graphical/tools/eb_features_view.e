@@ -126,6 +126,7 @@ feature -- Status setting
 			end
 			if widget.is_displayed or else is_auto_hide then
 				force_last_stone
+					--| Note: this will also call `flat_formatter.show_debugged_line' if any
 			end
 		end
 
@@ -263,12 +264,11 @@ feature {NONE} -- Implementation
 
 	force_last_stone is
 			-- Force that `last_stone' is displayed in formatters in Current view
+			-- And show debugged line if any.
 		do
-			if not is_last_stone_processed then
-				Precursor
-				if flat_formatter /= Void then
-					flat_formatter.show_debugged_line
-				end
+			Precursor
+			if flat_formatter /= Void then
+				flat_formatter.show_debugged_line
 			end
 		end
 

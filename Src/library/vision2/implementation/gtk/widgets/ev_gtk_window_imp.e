@@ -195,6 +195,8 @@ feature {NONE} -- Implementation
 				is_modal := False
 				set_blocking_window (Void)
 				{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+					-- Force an immediate hide so that the event loop is not relied upon to unmap `Current'.
+				{EV_GTK_EXTERNALS}.gdk_window_hide ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 			end
 		end
 

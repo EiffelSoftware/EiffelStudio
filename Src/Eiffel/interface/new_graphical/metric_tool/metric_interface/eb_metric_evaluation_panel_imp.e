@@ -153,8 +153,8 @@ feature {NONE}-- Initialization
 			percentage_tool_bar.disable_vertical_button_style
 			synchronize_tool_bar.disable_vertical_button_style
 			separator_bar2.disable_vertical_button_style
-			slip_area.disable_item_expand (metric_source_domain_area)
 			slip_area.enable_item_expand (main_area)
+			slip_area.disable_item_expand (metric_source_domain_area)
 			metric_source_domain_area.set_minimum_width (200)
 			metric_source_domain_area.set_minimum_height (0)
 			metric_source_domain_area.set_padding (3)
@@ -171,8 +171,8 @@ feature {NONE}-- Initialization
 			metric_selection_area.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (choose_metric_lbl)
 			choose_metric_lbl.set_text ("Choose metric:")
-			l_ev_horizontal_split_area_1.disable_item_expand (grid_wrapper)
 			l_ev_horizontal_split_area_1.enable_item_expand (grid_wrapper_empty_area)
+			l_ev_horizontal_split_area_1.disable_item_expand (grid_wrapper)
 			grid_wrapper.set_minimum_width (0)
 			grid_wrapper_empty_area.set_minimum_width (20)
 			metric_definition_area.set_padding (3)
@@ -195,10 +195,6 @@ feature {NONE}-- Initialization
 			set_border_width (5)
 			
 			set_all_attributes_using_constants
-			
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

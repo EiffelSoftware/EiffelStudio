@@ -89,6 +89,13 @@ inherit
 			default_create
 		end
 
+	EB_DOCKING_NAMES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -183,6 +190,10 @@ feature {NONE} -- Initialization
 			l_maximized := preferences.metric_tool_data.metric_information_in_result_panel_preference.value
 			is_maximize_set := not l_maximized
 			set_maximize_status (l_maximized)
+
+			clear_result_btn.set_tooltip (metric_names.t_clear_result)
+			clear_result_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
+			clear_result_btn.select_actions.extend (agent on_clear_detailed_result)
 		ensure then
 			input_grid_attached: input_grid /= Void
 		end
@@ -350,6 +361,18 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	on_clear_detailed_result is
+			-- Action to be performed to clear detailed result
+		local
+			l_domain: QL_DOMAIN
+		do
+			l_domain ?= result_grid.data
+			if l_domain /= Void then
+				l_domain.wipe_out
+				result_grid.update (Void, l_domain)
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	set_maximize_status (b: BOOLEAN) is
@@ -359,11 +382,13 @@ feature{NONE} -- Implementation
 				is_maximize_set := b
 				if is_maximize_set then
 					maximize_result_btn.set_pixmap (pixmaps.mini_pixmaps.toolbar_restore_icon)
+					maximize_result_btn.set_tooltip (tooltip_mini_toolbar_restore)
 					metric_area.hide
 					input_area.hide
 					result_lbl.show
 				else
 					maximize_result_btn.set_pixmap (pixmaps.mini_pixmaps.toolbar_maximize_icon)
+					maximize_result_btn.set_tooltip (tooltip_mini_toolbar_maximize)
 					metric_area.show
 					input_area.show
 					result_lbl.hide

@@ -52,6 +52,8 @@ feature -- Initlization
 
 			is_dockable := True
 			setter.before_enable_capture
+
+			docking_manager.property.set_docker_mediator (Current)
 		ensure
 			set: caller = a_caller
 			set: docking_manager = a_docking_manager
@@ -246,6 +248,8 @@ feature {NONE} -- Implementation functions
 			create l_env
 			l_env.application.focus_out_actions.start
 			l_env.application.focus_out_actions.prune (focus_out_agent)
+
+			docking_manager.property.set_docker_mediator (Void)
 		end
 
 	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is

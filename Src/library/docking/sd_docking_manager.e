@@ -153,6 +153,13 @@ feature -- Query
 	is_locked: BOOLEAN
 			-- If zone can be docked?
 
+	docker_mediator: SD_DOCKER_MEDIATOR is
+			-- Manager for user dragging events.
+			-- Maybe Void if user is not dragging.
+		do
+			Result := property.docker_mediator
+		end
+
 feature -- Command
 
 	save_config (a_file: STRING_GENERAL) is

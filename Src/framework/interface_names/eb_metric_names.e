@@ -164,6 +164,11 @@ feature -- Titles
 	t_warning: STRING_GENERAL is do Result := locale.translate ("Warning") end
 	t_row: STRING_GENERAL is do Result := locale.translate ("row") end
 	t_column: STRING_GENERAL is do Result := locale.translate ("column") end
+	t_identical: STRING_GENERAL is do Result := locale.translate ("Identity") end
+	t_containing: STRING_GENERAL is do Result := locale.translate ("Containing") end
+	t_wildcard: STRING_GENERAL is do Result := locale.translate ("Wildcard") end
+	t_regexp: STRING_GENERAL is do Result := locale.translate ("Regular expression") end
+	t_matching_strategy: STRING_GENERAL is do Result := locale.translate ("Matching Strategy") end
 
 feature -- Titles for editor token
 
@@ -1020,6 +1025,13 @@ feature -- Error/warning message
 
 	err_delayed_domain_item_appear: STRING_GENERAL is do Result := locale.translate ("Delayed domain item appears.") end
 	err_input_domain_item_appear: STRING_GENERAL is do Result := locale.translate ("Input domain item appears.") end
+
+	err_invalid_matching_strategy (a_invalid_strategy: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_invalid_strategy_attached: a_invalid_strategy /= Void
+		do
+			Result := locale.format_string (locale.translate ("Matching strategy %"$1%" is invalid."), [a_invalid_strategy])
+		end
 
 feature -- To do messages
 

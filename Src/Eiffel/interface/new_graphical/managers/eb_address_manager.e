@@ -81,7 +81,10 @@ feature {NONE} -- Initialization
 			label: EV_LABEL
 			l_item: SD_TOOL_BAR_ITEM
 			l_hbox: EV_HORIZONTAL_BOX
+			l_font: EV_FONT
 		do
+			l_font := Default_font
+
 			create tool_bar_items.make (10)
 
 			create hbox
@@ -90,18 +93,20 @@ feature {NONE} -- Initialization
 			if mode then
 					-- Cluster label.
 				create label.make_with_text (interface_names.l_cluster)
+				label.set_font (l_font)
 				hbox.extend (label)
 				hbox.disable_item_expand (label)
 
 					-- Cluster selector.
 				create cluster_address
-				cluster_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(130))
+				cluster_address.set_font (l_font)
+				cluster_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (130))
 				hbox.extend (cluster_address)
 			end
 
 				-- Class label.
 			create label.make_with_text (interface_names.l_class)
-
+			label.set_font (l_font)
 
 			if mode then
 				hbox.extend (label)
@@ -121,7 +126,8 @@ feature {NONE} -- Initialization
 
 				-- Class selector.
 			create class_address
-			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(200))
+			class_address.set_font (l_font)
+			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (200))
 
 			if mode then
 				hbox.extend (class_address)
@@ -135,6 +141,7 @@ feature {NONE} -- Initialization
 			end
 				-- Feature label.
 			create label.make_with_text (interface_names.l_feature)
+			label.set_font (l_font)
 
 			if mode then
 				hbox.extend (label)
@@ -153,7 +160,8 @@ feature {NONE} -- Initialization
 			end
 				-- Feature selector
 			create feature_address
-			feature_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(200))
+			feature_address.set_font (l_font)
+			feature_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (200))
 
 			if mode then
 				hbox.extend (feature_address)
@@ -166,6 +174,7 @@ feature {NONE} -- Initialization
 			if not mode then
 					-- View label
 				create label.make_with_text (interface_names.l_view)
+				label.set_font (l_font)
 
 				create l_hbox
 				l_hbox.set_border_width (Layout_constants.Small_border_size)
@@ -2348,8 +2357,12 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	Default_font: EV_FONT is
 			-- Font used to display labels.
+			-- FIXIT: We should use once routine instead of creating a EV_FONT every time? Because this is GDI object limitations on Windows.
+		local
+			l_shared: SD_SHARED -- FIXIT: After class EV_STOCK_FONTS added, we should use that instead of SD_SHARED.
 		do
-			Result := create {EV_FONT}
+			create l_shared
+			Result := l_shared.tool_bar_font.twin
 		end
 
 	highlight_label (lab: EV_LABEL) is

@@ -102,7 +102,7 @@ feature -- Properties
 
 feature -- Execution
 
-	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -114,18 +114,21 @@ feature -- Execution
 			cwd_not_void: cwd /= Void
 			env_not_void: env /= Void
 		local
-			app: STRING
+			cmd: STRING
 			l_status: APPLICATION_STATUS
 			l_env_s8: STRING_8
 		do
 			ipc_engine.launch_ec_dbg
 			if ipc_engine.ec_dbg_launched then
-				app := Eiffel_system.application_name (True)
+				cmd := app.twin
 				if args /= Void then
-					app.extend (' ')
-					app.append (args)
+					cmd.extend (' ')
+					cmd.append (args)
 				end
-				run_request.set_application_name (app)
+					--| Do not double quote the path
+					--| since it will be done by ecdbgd
+					--| FIXME: we may want to change that ...
+				run_request.set_application_name (cmd)
 				run_request.set_working_directory (cwd)
 				if env /= Void then
 					fixme ("[

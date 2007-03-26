@@ -78,10 +78,10 @@ feature {NONE} -- Initialization
 
 			hb.extend (but)
 			hb.disable_item_expand (but)
-			but.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (but)
 			hb.extend (create {EV_CELL})
 			create close_button.make_with_text_and_action (interface_names.b_close, agent destroy)
-			close_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (close_button)
 
 			hb.extend (close_button)
 			hb.disable_item_expand (close_button)

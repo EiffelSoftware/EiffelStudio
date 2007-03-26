@@ -52,6 +52,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Run_workbench_cmd: EB_EXEC_WORKBENCH_CMD is
+			-- Command to run the workbench project.
+		once
+			create Result.make
+			Result.disable_sensitive
+		end
+
 	Run_finalized_cmd: EB_EXEC_FINALIZED_CMD is
 			-- Command to run the finalized project.
 		once

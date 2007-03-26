@@ -302,8 +302,7 @@ feature -- Command
 			l_parent ?= zone.tool_bar.parent
 			check not_void: l_parent /= Void end
 			last_state.set_container_row_number (l_box.index_of (l_parent, 1))
-
-			last_state.set_is_only_zone (l_box.count = 1)
+			last_state.set_is_only_zone (l_parent.count = 1)
 		end
 
 	floating_last_state is

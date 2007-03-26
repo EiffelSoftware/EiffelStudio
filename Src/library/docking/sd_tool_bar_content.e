@@ -165,6 +165,7 @@ feature -- Command
 					zone.hide
 				end
 				is_visible := False
+				manager.docking_manager.command.resize (True)
 			end
 		end
 

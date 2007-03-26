@@ -11,53 +11,31 @@ class
 
 inherit
 
-	EV_VERTICAL_BOX
-		redefine
-			set_focus
-		end
-
 	EB_CONSTANTS
-		undefine
-			default_create, copy, is_equal
-		end
 
 	EB_SHARED_INTERFACE_TOOLS
 		rename
 			mode as text_mode
-		undefine
-			default_create, copy, is_equal
 		end
 
 	SHARED_WORKBENCH
 		export
 			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
 
 	EB_SHARED_ARGUMENTS
 		export
 			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
 
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
 
 	SHARED_DEBUGGER_MANAGER
-		undefine
-			default_create, is_equal, copy
-		end
 
 	KL_SHARED_FILE_SYSTEM
-		undefine
-			default_create, is_equal, copy
-		end
 
 create
 	make
@@ -69,11 +47,22 @@ feature {NONE} -- Initialization
 		require
 			parent_not_void: a_parent /= Void
 		do
-			default_create
 			parent_window := a_parent
-			set_padding (Layout_constants.Default_padding_size)
 			build_interface
 			update
+		end
+
+feature -- Interface access
+
+	widget: EV_VERTICAL_BOX
+			-- Widget representing Current.	
+
+	set_focus_on_widget is
+			-- Set focus on widget
+		do
+			if widget.is_displayed then
+				widget.set_focus
+			end
 		end
 
 feature {NONE} -- Retrieval
@@ -179,8 +168,11 @@ feature {NONE} -- GUI
 		local
 			vbox: EV_VERTICAL_BOX
 		do
+			create widget
+			widget.set_padding (Layout_constants.Default_padding_size)
+
 			create execution_panel
-			extend (execution_panel)
+			widget.extend (execution_panel)
 
 				-- Create all widgets.
 			build_display_profiles_box
@@ -190,7 +182,20 @@ feature {NONE} -- GUI
 			execution_panel.extend (vbox)
 
 				-- Global actions.
-			pointer_leave_actions.extend (agent synch_with_others)
+			widget.focus_in_actions.extend (agent on_focused)
+			widget.pointer_leave_actions.extend (agent synch_with_others)
+		end
+
+	on_focused is
+			-- Widget focused in
+		do
+				--| Set focus to a new argument field or to a check box
+				--| to allow arguments if they are not allowed yet.
+			if profiles_grid.is_sensitive then
+				profiles_grid.set_focus
+			else
+				enable_profiles_button.set_focus
+			end
 		end
 
 feature {NONE} -- Display profiles impl
@@ -219,20 +224,19 @@ feature {NONE} -- Display profiles impl
 			vb.disable_item_expand (hb)
 			hb.set_padding_width (layout_constants.small_padding_size)
 			create add_button.make_with_text_and_action (interface_names.b_add, agent add_new_profile)
-			add_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (add_button)
 			add_button.disable_sensitive
 
 			create remove_button.make_with_text_and_action (interface_names.b_remove, agent remove_selected_profile)
-			remove_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (remove_button)
 			remove_button.disable_sensitive
 
 			create dup_button.make_with_text_and_action (interface_names.b_duplicate, agent duplicate_selected_profile)
-			dup_button.set_minimum_width (layout_constants.default_button_width)
+			layout_constants.set_default_width_for_button (dup_button)
 			dup_button.disable_sensitive
 
 			create enable_profiles_button.make_with_text (interface_names.b_enable_profiles)
 			enable_profiles_button.select_actions.extend (agent on_enable_profiles_clicked)
---			enable_profiles_button.set_minimum_width (layout_constants.default_button_width)
 
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
@@ -418,18 +422,6 @@ feature -- Status Setting
 			-- Update all elements after changes.
 		do
 			load_dbg_options
-		end
-
-	set_focus is
-			-- Grab keyboard focus.
-		do
-				-- Set focus to a new argument field or to a check box
-				-- to allow arguments if they are not allowed yet.
-			if profiles_grid.is_sensitive then
-				profiles_grid.set_focus
-			else
-				enable_profiles_button.set_focus
-			end
 		end
 
 	on_show is

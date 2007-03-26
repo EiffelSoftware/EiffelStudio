@@ -269,6 +269,8 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (Finalize_project_cmd)
 			run_finalized_cmd.enable_sensitive
 			toolbarable_commands.extend (run_finalized_cmd)
+			run_workbench_cmd.enable_sensitive
+			toolbarable_commands.extend (run_workbench_cmd)
 			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
 

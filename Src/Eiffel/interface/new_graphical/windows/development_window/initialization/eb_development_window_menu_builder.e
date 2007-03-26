@@ -842,6 +842,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_project_menu.extend (l_command_menu_item)
 			-- Jason Wei
 
+
+				-- Execute Workbench code
+			l_command_menu_item := develop_window.run_workbench_cmd.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
 				-- Execute Finalized code
 			l_command_menu_item := develop_window.run_finalized_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)

@@ -76,6 +76,8 @@ feature {NONE} -- Initialization
 		end
 
 	build_interface is
+		require
+			debugging_options_control_not_void: debugging_options_control /= Void
 		local
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
@@ -85,7 +87,7 @@ feature {NONE} -- Initialization
 			create execution_frame
 
 			create hbox
-			hbox.extend (debugging_options_control)
+			hbox.extend (debugging_options_control.widget)
 			hbox.set_border_width (Layout_constants.Small_border_size)
 			hbox.set_padding (Layout_constants.Small_padding_size)
 
@@ -175,9 +177,7 @@ feature {NONE} -- Implementation
 	on_window_focused is
 			-- Acion to be taken when window gains focused.
 		do
-			if debugging_options_control.is_displayed then
-				debugging_options_control.set_focus
-			end
+			debugging_options_control.set_focus_on_widget
 		end
 
 	on_run_button_key_press (key: EV_KEY) is

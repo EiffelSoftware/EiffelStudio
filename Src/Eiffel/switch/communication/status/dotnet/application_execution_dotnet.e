@@ -245,25 +245,21 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
-			-- Run application with arguments `args' in directory `cwd'.
+	run_with_env_string (app: STRING; args, cwd: STRING; env: STRING_GENERAL) is
+			-- Run application `app' with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
 			-- the application was unable to be launched
 			-- due to the time_out (see `eiffel_timeout_message').
 			-- Before running the application you must check
 			-- to see if the debugged information is up to date.
-		local
-			app: STRING
 		do
 			reload_dotnet_debug_info_if_needed
 			Eifnet_debugger.initialize_debugger_session (debugger_manager.windows_handle)
 			if Eifnet_debugger.is_debugging then
-				app := Eiffel_system.application_name (True)
-
 				process_before_running
 
-				Eifnet_debugger.do_run (app, cwd, args, env)
+				Eifnet_debugger.do_run (safe_path (app), cwd, args, env)
 
 				if not Eifnet_debugger.last_dbg_call_succeed then
 						-- This means we had issue creating process

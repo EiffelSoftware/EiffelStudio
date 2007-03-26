@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	SAFE_PATH_BUILDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -74,9 +79,7 @@ feature -- Launching
 			if not ec_dbg_launched then
 				get_environment
 				if valid_ise_ecdbgd_executable then
-					create cmd.make_from_string (ise_ecdbgd_path)
-					cmd.prepend_character ('"')
-					cmd.append_character ('"')
+					cmd := safe_path (ise_ecdbgd_path)
 					create cs_cmd.make (cmd)
 					create cs_pname.make ("ecdbgd")
 

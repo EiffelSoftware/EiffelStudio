@@ -20,6 +20,11 @@ inherit
 			{ANY} Eiffel_project, Eiffel_system
 		end
 
+	SAFE_PATH_BUILDER
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 
 --create {DEBUGGER_MANAGER}
@@ -229,12 +234,14 @@ feature -- Execution
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
 		local
 			l_envstr: STRING_32
+			app: STRING
 		do
 			param_arguments := args
 			param_execution_directory := cwd
 			param_environment := env
 			l_envstr := environment_variables_to_string (environment_variables_updated_with (env))
-			run_with_env_string (args, cwd, l_envstr)
+			app := Eiffel_system.application_name (True)
+			run_with_env_string (app, args, cwd, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -483,7 +490,7 @@ feature {NONE} -- fake
 		deferred
 		end
 
-	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -492,7 +499,8 @@ feature {NONE} -- fake
 			-- Before running the application you must check
 			-- to see if the debugged information is up to date.
 		require
-			app_not_running: not is_running
+			app_not_void: app /= Void
+			application_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
 		deferred

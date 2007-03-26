@@ -451,7 +451,6 @@ feature{NONE} -- Process
 			l_strategy: INTEGER
 			l_strategy_table: like matching_strategy_table
 			l_case_sensitive_value: BOOLEAN
-			l_regular_expression_value: BOOLEAN
 			l_boolean_set: BOOLEAN
 		do
 			if not has_error then

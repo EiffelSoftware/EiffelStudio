@@ -140,8 +140,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_horizontal_split_area_1.disable_item_expand (archive_definition_frame)
 			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_horizontal_box_5)
+			l_ev_horizontal_split_area_1.disable_item_expand (archive_definition_frame)
 			archive_definition_frame.set_text ("Archive Management")
 			archive_definition_frame.set_minimum_width (450)
 			l_ev_vertical_box_1.set_padding (6)
@@ -157,8 +157,8 @@ feature {NONE}-- Initialization
 			new_archive_file_lbl.align_text_left
 			new_archive_browse_btn.set_text ("...")
 			clean_btn.set_text ("Clean")
-			l_ev_horizontal_split_area_2.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_horizontal_split_area_2.enable_item_expand (l_ev_horizontal_box_3)
+			l_ev_horizontal_split_area_2.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.set_minimum_width (200)
 			l_ev_vertical_box_2.set_padding (3)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
@@ -201,10 +201,6 @@ feature {NONE}-- Initialization
 			browse_current_archive_btn.set_text ("...")
 			
 			set_all_attributes_using_constants
-			
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

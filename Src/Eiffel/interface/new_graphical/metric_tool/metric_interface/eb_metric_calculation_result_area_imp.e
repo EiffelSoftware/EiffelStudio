@@ -48,6 +48,7 @@ feature {NONE}-- Initialization
 			create ratio_btn_toolbar
 			create l_ev_tool_bar_3
 			create send_to_history_btn
+			create clear_result_btn
 			create information_bar_empty_area
 			create update_warning_area
 			create update_warning_pixmap
@@ -90,6 +91,7 @@ feature {NONE}-- Initialization
 			metric_area.extend (ratio_btn_toolbar)
 			metric_area.extend (l_ev_tool_bar_3)
 			l_ev_tool_bar_3.extend (send_to_history_btn)
+			l_ev_tool_bar_3.extend (clear_result_btn)
 			metric_area.extend (information_bar_empty_area)
 			metric_area.extend (update_warning_area)
 			update_warning_area.extend (update_warning_pixmap)
@@ -203,10 +205,6 @@ feature {NONE}-- Initialization
 			disable_item_expand (l_ev_cell_7)
 			
 			set_all_attributes_using_constants
-			
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -218,7 +216,7 @@ feature -- Access
 	information_bar_empty_area, empty_cell, input_cell, result_cell: EV_CELL
 	ratio_btn_toolbar,
 	tool_bar: EV_TOOL_BAR
-	send_to_history_btn: EV_TOOL_BAR_BUTTON
+	send_to_history_btn, clear_result_btn: EV_TOOL_BAR_BUTTON
 	type_pixmap, unit_pixmap, update_warning_pixmap: EV_PIXMAP
 	metric_area,
 	update_warning_area: EV_HORIZONTAL_BOX

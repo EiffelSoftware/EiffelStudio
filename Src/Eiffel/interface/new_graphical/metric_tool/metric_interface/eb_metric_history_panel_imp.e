@@ -118,10 +118,6 @@ feature {NONE}-- Initialization
 			disable_item_expand (toolbar_area)
 			
 			set_all_attributes_using_constants
-			
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

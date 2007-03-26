@@ -94,8 +94,8 @@ feature {NONE}-- Initialization
 			toolbar_area.disable_item_expand (new_metric_toolbar)
 			toolbar_area.disable_item_expand (metric_definition_toolbar)
 			metric_definition_toolbar.disable_vertical_button_style
-			main_area.disable_item_expand (metric_selector_panel)
 			main_area.enable_item_expand (definer_area)
+			main_area.disable_item_expand (metric_selector_panel)
 			metric_selector_panel.set_padding (3)
 			metric_selector_panel.disable_item_expand (select_metric_lbl)
 			select_metric_lbl.align_text_left
@@ -116,10 +116,6 @@ feature {NONE}-- Initialization
 			disable_item_expand (toolbar_area)
 			
 			set_all_attributes_using_constants
-			
-				-- Connect events.
-				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
 
 				-- Call `user_initialization'.
 			user_initialization

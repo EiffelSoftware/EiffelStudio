@@ -77,6 +77,17 @@ feature -- Properties
 	is_opening_config: BOOLEAN
 			-- If current is opening layout config?
 
+	docker_mediator: SD_DOCKER_MEDIATOR
+			-- Manager for user dragging events.
+			-- Maybe Void if user is not dragging.
+
+	set_docker_mediator (a_mediator: SD_DOCKER_MEDIATOR) is
+			-- Set `docker_mediator' with `a_mediator'.
+		do
+			docker_mediator := a_mediator
+		ensure
+			set: docker_mediator = a_mediator
+		end
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 

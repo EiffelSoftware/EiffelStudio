@@ -17,6 +17,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_SHORTCUT_MANAGER
+
 feature -- Access
 
 	accelerator: EV_ACCELERATOR;
@@ -117,13 +119,24 @@ feature {NONE} -- Implementation
 						l_accelerator.disable_shift_required
 					end
 						-- Add new accelerator to `a_window'
-					check
-						l_accelerator_not_exist: not l_accelerators.has (l_accelerator)
+					if l_accelerators.has (l_accelerator) then
+						shortcut_manager.post_updating_actions.extend_kamikaze (agent extend_accelerator (l_accelerators, l_accelerator))
+					else
+						extend_accelerator (l_accelerators, l_accelerator)
 					end
-					l_accelerators.extend (l_accelerator)
 					managed_accelerators.extend (l_accelerator)
 				end
 			end
+		end
+
+	extend_accelerator (a_list: EV_ACCELERATOR_LIST; a_acc: EV_ACCELERATOR) is
+			-- Extend an accelerator into the list.
+		require
+			a_list_not_void: a_list /= Void
+			a_acc_not_void: a_acc /= Void
+			a_list_not_have_a_acc: not a_list.has (a_acc)
+		do
+			a_list.extend (a_acc)
 		end
 
 	remove_accelerator_managed_from_list (a_list: EV_ACCELERATOR_LIST) is

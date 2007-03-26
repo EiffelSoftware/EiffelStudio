@@ -533,7 +533,7 @@ feature{NONE} -- Actions
 					-- exists, pop up an edit dialog and let user edit this command.
 				ec.edit_properties (develop_window.window)
 				ec.setup_managed_shortcut (develop_window.commands.edit_external_commands_cmd.accelerators)
-				window_manager.refresh_external_commands
+				shortcut_manager.update_external_commands
 			else
 					-- If user has just input a new external command,
 					-- first check whether we have room for this command.
@@ -548,7 +548,7 @@ feature{NONE} -- Actions
 					str.right_adjust
 					create ec.make_from_new_command_line (develop_window.window, str)
 					ec.setup_managed_shortcut (develop_window.commands.edit_external_commands_cmd.accelerators)
-					window_manager.refresh_external_commands
+					shortcut_manager.update_external_commands
 				end
 			end
 			on_cmd_lst_text_change

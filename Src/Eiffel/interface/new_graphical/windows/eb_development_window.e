@@ -564,7 +564,7 @@ feature -- Stone process
 				-- Update debug commands
 			eb_debugger_manager.refresh_commands (Current)
 
-			docking_manager.propagate_accelerators
+			shortcut_manager.propagate_accelerators (Current)
 		end
 
 	refresh_external_commands is

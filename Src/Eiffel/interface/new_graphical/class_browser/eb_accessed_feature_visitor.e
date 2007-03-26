@@ -17,7 +17,9 @@ inherit
 			process_access_feat_as,
 			process_access_assert_as,
 			process_routine_creation_as,
-			process_tagged_as
+			process_tagged_as,
+			process_binary_as,
+			process_unary_as
 		end
 
 	QL_UTILITY
@@ -134,6 +136,8 @@ feature{NONE} -- Implementation
 	last_class_c: CLASS_C
 			-- Last processed class
 
+feature -- Accessor checking
+
 	check_accessor (l_as: ACCESS_FEAT_AS) is
 			-- Check if `l_as' is an accessor of `e_feature'.
 			-- If it is, store `l_as' into `accessors'.
@@ -153,6 +157,20 @@ feature{NONE} -- Implementation
 			if l_as.feature_name /= Void and then is_accessor (l_as.class_id, l_as.feature_name.name) then
 				check last_class_c /= Void end
 				accessors.extend ([l_as.feature_name, last_class_c])
+			end
+		end
+
+	check_accessor_for_operators (a_class_id: INTEGER; a_feature_name: STRING; a_ast: AST_EIFFEL) is
+			-- Process binary or unary operators associated with class id `a_class_id', name `a_feature_name'.
+			-- `a_ast' is the AST node for that operator.
+		require
+			a_class_id_positive: a_class_id > 0
+			a_feature_name_attached: a_feature_name /= Void
+			a_ast_attached: a_ast /= Void
+		do
+			if is_accessor (a_class_id, a_feature_name) then
+				check last_class_c /= Void end
+				accessors.extend ([a_ast, last_class_c])
 			end
 		end
 
@@ -189,6 +207,18 @@ feature{NONE} -- Implementation/Process
 			if l_as.expr /= Void then
 				l_as.expr.process (Current)
 			end
+		end
+
+	process_binary_as (l_as: BINARY_AS) is
+		do
+			check_accessor_for_operators (l_as.class_id, l_as.infix_function_name, l_as.operator)
+			Precursor (l_as)
+		end
+
+	process_unary_as (l_as: UNARY_AS) is
+		do
+			check_accessor_for_operators (l_as.class_id, l_as.prefix_feature_name, l_as.operator)
+			Precursor (l_as)
 		end
 
 invariant

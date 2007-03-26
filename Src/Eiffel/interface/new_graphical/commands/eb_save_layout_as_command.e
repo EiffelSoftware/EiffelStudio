@@ -38,22 +38,21 @@ feature -- Command
 	execute is
 			-- Save current docking layout as a named layout.
 		local
-			l_dialog: EB_SAVE_LAYOUT_DIALOG
 			l_win: EV_WINDOW
 			l_x, l_y: INTEGER
 			l_screen: EV_SCREEN
 		do
-			create l_dialog.make (develop_window)
+			create dialog.make (develop_window)
 			l_win := develop_window.window
-			l_x := l_win.screen_x + l_win.width // 2 - l_dialog.width // 2
-			l_y := l_win.screen_y + l_win.height // 2 - l_dialog.height // 2
+			l_x := l_win.screen_x + l_win.width // 2 - dialog.width // 2
+			l_y := l_win.screen_y + l_win.height // 2 - dialog.height // 2
 			create l_screen
-			if l_x + l_dialog.width > l_screen.width or l_y + l_dialog.height > l_screen.height then
+			if l_x + dialog.width > l_screen.width or l_y + dialog.height > l_screen.height then
 				l_x := l_win.x_position
 				l_y := l_win.y_position
 			end
-			l_dialog.set_position (l_x, l_y)
-			l_dialog.show_relative_to_window (l_win)
+			dialog.set_position (l_x, l_y)
+			dialog.show_relative_to_window (l_win)
 		end
 
 feature -- Query
@@ -68,6 +67,8 @@ feature {NONE} -- Implementation
 
 	dialog: EB_SAVE_LAYOUT_DIALOG
 			-- Save layout dialog.
+			-- We can't declare it as a routine local, otherwise it will be
+			-- automatically recycled by gc (at least on Linux) before user finished operations on the dialog.
 
 	develop_window: EB_DEVELOPMENT_WINDOW;
 			-- Developement window.

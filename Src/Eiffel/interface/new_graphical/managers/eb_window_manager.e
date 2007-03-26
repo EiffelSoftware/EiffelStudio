@@ -435,18 +435,6 @@ feature -- Actions on all windows
 			for_all (agent refresh_action)
 		end
 
-	refresh_commands is
-			-- Refresh all windows commands.
-		do
-			for_all (agent refresh_commands_action)
-		end
-
-	refresh_external_commands is
-			-- Only refresh external commands
-		do
-			for_all (agent refresh_external_commands_action)
-		end
-
 	save_all is
 			-- Ask each window to save its content.
 		do
@@ -703,6 +691,20 @@ feature -- Actions on all windows
 			if managed_windows.valid_index (l_index) then
 				managed_windows.go_i_th (l_index)
 			end
+		end
+
+feature {EB_SHORTCUT_MANAGER} -- Actions on all windows
+
+	refresh_commands is
+			-- Refresh all windows commands.
+		do
+			for_all (agent refresh_commands_action)
+		end
+
+	refresh_external_commands is
+			-- Only refresh external commands
+		do
+			for_all (agent refresh_external_commands_action)
 		end
 
 feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events

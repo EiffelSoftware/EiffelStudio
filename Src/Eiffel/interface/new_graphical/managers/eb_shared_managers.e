@@ -18,6 +18,8 @@ inherit
 
 	EB_SHARED_METRIC_MANAGER
 
+	EB_SHARED_SHORTCUT_MANAGER
+
 feature -- Status report
 
 	process_manager: EB_PROCESS_MANAGER is

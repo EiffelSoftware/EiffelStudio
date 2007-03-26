@@ -9,7 +9,7 @@ deferred class
 	EB_SHORTCUTS_DATA
 
 inherit
-	EB_SHARED_WINDOW_MANAGER
+	EB_SHARED_SHORTCUT_MANAGER
 
 feature {NONE} -- Implementation
 
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	update is
 			-- Action called when updating preferences.
 		do
-			window_manager.refresh_commands
+			shortcut_manager.update_commands
 		end
 
 feature -- Shortcut group

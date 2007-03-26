@@ -18,7 +18,7 @@ feature {NONE} -- Ancestor facade
 	build_status is do end
 	restore_assertion_check is do end
 	disable_assertion_check is do end
-	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is do end
+	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is do end
 	continue_ignoring_kept_objects is do end
 	interrupt is do end
 	notify_newbreakpoint is do  end

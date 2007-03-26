@@ -27,6 +27,7 @@ feature{NONE} -- Initialization
 		do
 			Precursor (a_scope, a_name)
 			text := ""
+			set_matching_strategy ({QL_NAME_CRITERION}.identity_matching_strategy)
 		ensure then
 			name_text_attached: text /= Void
 		end
@@ -37,7 +38,7 @@ feature -- Access
 			-- QL_CRITERION representing current criterion
 		do
 			check text /= Void end
-			Result := criterion_factory_table.item (scope).criterion_with_name (name, [text, is_case_sensitive, is_identical_comparison_used])
+			Result := criterion_factory_table.item (scope).criterion_with_name (name, [text, is_case_sensitive, matching_strategy])
 			if Result /= Void and then is_negation_used then
 				Result := not Result
 			end
@@ -49,14 +50,24 @@ feature -- Access
 	is_case_sensitive: BOOLEAN
 			-- Is `text' case-sensitive?
 
-	is_identical_comparison_used: BOOLEAN
-			-- Is identical comparison used?
-			-- Override `is_case_sensitive'.
-
 	is_parameter_valid: BOOLEAN is
 			-- Is parameters of current criterion valid?
 		do
 			Result := not text.is_empty
+		end
+
+	matching_strategy: INTEGER
+			-- matching strategy
+
+feature -- Status report
+
+	is_valid_matching_strategy (a_strategy: INTEGER): BOOLEAN is
+			-- Is `a_strategy' a valid matching strategy?
+		do
+			Result := a_strategy = {QL_NAME_CRITERION}.identity_matching_strategy or else
+					  a_strategy = {QL_NAME_CRITERION}.containing_matching_strategy or else
+					  a_strategy = {QL_NAME_CRITERION}.wildcard_matching_strategy or else
+					  a_strategy = {QL_NAME_CRITERION}.regular_expression_matching_strategy
 		end
 
 feature -- Setting
@@ -92,20 +103,14 @@ feature -- Setting
 			case_sensitive_disabled: not is_case_sensitive
 		end
 
-	enable_identical_comparison is
-			-- Enable identical comparison.
+	set_matching_strategy (a_strategy: INTEGER) is
+			-- Set `matching_strategy' with `a_strategy'.
+		require
+			a_strategy_valid: is_valid_matching_strategy (a_strategy)
 		do
-			is_identical_comparison_used := True
+			matching_strategy := a_strategy
 		ensure
-			identical_comparison_enabled: is_identical_comparison_used
-		end
-
-	disable_identical_comparison is
-			-- disable identical comparison.
-		do
-			is_identical_comparison_used := False
-		ensure
-			identical_comparison_disabled: not is_identical_comparison_used
+			matching_strategy_set: matching_strategy = a_strategy
 		end
 
 feature -- Process

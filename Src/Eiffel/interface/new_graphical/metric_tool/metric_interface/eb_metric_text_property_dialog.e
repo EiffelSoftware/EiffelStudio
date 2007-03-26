@@ -10,7 +10,7 @@ class
 	EB_METRIC_TEXT_PROPERTY_DIALOG
 
 inherit
-	PROPERTY_DIALOG [TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]]
+	PROPERTY_DIALOG [TUPLE [a_text: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matcher: INTEGER]]
 		redefine
 			initialize,
 			on_ok,
@@ -35,9 +35,13 @@ feature{NONE} -- Initialization
 			l_opt_ver_box: EV_VERTICAL_BOX
 			l_cell1: EV_CELL
 			l_cell2: EV_CELL
+			l_ver: EV_VERTICAL_BOX
 		do
+			create identical_radio.make_with_text (metric_names.t_identical)
+			create substring_radio.make_with_text (metric_names.t_containing)
+			create wildcard_radio.make_with_text (metric_names.t_wildcard)
+			create regexp_radio.make_with_text (metric_names.t_regexp)
 			create case_sensitive_checkbox.make_with_text (metric_names.l_use_case_sensitive)
-			create regular_expression_checkbox.make_with_text (metric_names.l_use_regular_expression)
 			create name_text
 			Precursor {PROPERTY_DIALOG}
 			show_actions.extend (agent on_show)
@@ -45,6 +49,9 @@ feature{NONE} -- Initialization
 			set_size (300, 200)
 			create ok_actions
 			create cancel_actions
+
+			create l_ver
+			l_ver.set_padding (8)
 
 			create l_ver_box
 			l_ver_box.set_padding (5)
@@ -54,6 +61,7 @@ feature{NONE} -- Initialization
 
 			create l_frame
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_etched_in)
+			l_frame.set_text (metric_names.t_matching_strategy)
 
 			create l_cell1
 			l_cell1.set_minimum_height (5)
@@ -66,10 +74,18 @@ feature{NONE} -- Initialization
 			l_opt_ver_box.set_border_width (5)
 			l_frame.extend (l_opt_ver_box)
 
-			l_opt_ver_box.extend (case_sensitive_checkbox)
-			l_opt_ver_box.extend (regular_expression_checkbox)
-			l_opt_ver_box.disable_item_expand (case_sensitive_checkbox)
-			l_opt_ver_box.disable_item_expand (regular_expression_checkbox)
+			l_opt_ver_box.extend (identical_radio)
+			l_opt_ver_box.extend (substring_radio)
+			l_opt_ver_box.extend (wildcard_radio)
+			l_opt_ver_box.extend (regexp_radio)
+
+			l_opt_ver_box.disable_item_expand (identical_radio)
+			l_opt_ver_box.disable_item_expand (substring_radio)
+			l_opt_ver_box.disable_item_expand (wildcard_radio)
+			l_opt_ver_box.disable_item_expand (regexp_radio)
+
+			l_ver.extend (l_frame)
+			l_ver.extend (case_sensitive_checkbox)
 
 			l_ver_box.extend (l_name_lbl)
 			l_ver_box.disable_item_expand (l_name_lbl)
@@ -77,8 +93,8 @@ feature{NONE} -- Initialization
 			l_ver_box.disable_item_expand (l_name_lbl)
 			l_ver_box.extend (l_cell1)
 			l_ver_box.disable_item_expand (l_cell1)
-			l_ver_box.extend (l_frame)
-			l_ver_box.disable_item_expand (l_frame)
+			l_ver_box.extend (l_ver)
+			l_ver_box.disable_item_expand (l_ver)
 			l_ver_box.extend (l_cell2)
 			l_ver_box.disable_item_expand (l_cell2)
 			element_container.extend (l_ver_box)
@@ -105,7 +121,7 @@ feature{NONE} -- Actions
 			if value = Void then
 				name_text.set_text ("")
 				case_sensitive_checkbox.disable_select
-				regular_expression_checkbox.enable_select
+				identical_radio.enable_select
 			else
 				l_text ?= value.item (1)
 				l_case_sensitive ?= value.item (2)
@@ -116,10 +132,16 @@ feature{NONE} -- Actions
 				else
 					case_sensitive_checkbox.disable_select
 				end
-				if l_regular.item then
-					regular_expression_checkbox.enable_select
-				else
-					regular_expression_checkbox.disable_select
+				inspect
+					value.a_matcher
+				when {QL_NAME_CRITERION}.identity_matching_strategy then
+					identical_radio.enable_select
+				when {QL_NAME_CRITERION}.containing_matching_strategy then
+					substring_radio.enable_select
+				when {QL_NAME_CRITERION}.wildcard_matching_strategy then
+					wildcard_radio.enable_select
+				when {QL_NAME_CRITERION}.regular_expression_matching_strategy then
+					regexp_radio.enable_select
 				end
 			end
 		end
@@ -127,9 +149,25 @@ feature{NONE} -- Actions
 	on_ok is
 			-- Action to be performed when "OK" button is pressed
 		do
-			set_value ([name_text.text, case_sensitive_checkbox.is_selected, regular_expression_checkbox.is_selected])
+			set_value ([name_text.text.as_string_8, case_sensitive_checkbox.is_selected, matcher_index])
 			Precursor {PROPERTY_DIALOG}
 			ok_actions.call (Void)
+		end
+
+	matcher_index: INTEGER is
+			-- Matcher strategy index
+		do
+			if identical_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.identity_matching_strategy
+			elseif substring_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.containing_matching_strategy
+			elseif wildcard_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.wildcard_matching_strategy
+			elseif regexp_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.regular_expression_matching_strategy
+			end
+		ensure
+			good_result: Result > 0
 		end
 
 	on_cancel
@@ -144,17 +182,18 @@ feature{NONE} -- Implementation
 	case_sensitive_checkbox: EV_CHECK_BUTTON
 			-- Check box to indicate if case sensitive string comparison is used
 
-	regular_expression_checkbox: EV_CHECK_BUTTON
-			-- Check box to indicate if regular_expression_checkbox is used
-
 	name_text: EV_TEXT_FIELD
 			-- Text field for string input
+
+	identical_radio: EV_RADIO_BUTTON
+	substring_radio: EV_RADIO_BUTTON
+	wildcard_radio: EV_RADIO_BUTTON
+	regexp_radio: EV_RADIO_BUTTON
 
 invariant
 	ok_actions_attached: ok_actions /= Void
 	cancel_actions_attached: cancel_actions /= Void
 	case_sensitive_checkbox_attached: case_sensitive_checkbox /= Void
-	regular_expression_checkbox_attached: regular_expression_checkbox /= Void
 	name_text_attached: name_text /= Void
 
 indexing

@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 			-- Initialize `name' with `a_name'.
 			-- Set `is_recursive' to True by default.
 		do
-			make_with_setting (a_name, True, True)
+			make_with_setting (a_name, True, {QL_NAME_CRITERION}.containing_matching_strategy)
 			is_recursive := True
 		ensure
 			is_recursive_set: is_recursive

@@ -223,7 +223,7 @@ feature{NONE} -- Process
 		do
 			l_attr_tbl := criterion_identifier_table (a_criterion)
 			l_attr_tbl.put (a_criterion.is_case_sensitive.out, n_case_sensitive)
-			l_attr_tbl.put ((not a_criterion.is_identical_comparison_used).out, n_regular_expression)
+			l_attr_tbl.put (matching_strategy_name (a_criterion.matching_strategy), n_matching_strategy)
 			append_indent
 			append_start_tag (n_text_criterion, l_attr_tbl)
 			append_new_line
@@ -693,6 +693,26 @@ feature{NONE} -- Implementation
 			append_start_tag (n_variable_metric, l_attr_table)
 			append_end_tag (n_variable_metric)
 			append_new_line
+		end
+
+	matching_strategy_name (a_strategy_id: INTEGER): STRING is
+			-- Matching strategy name of strategy id `a_strategy_id'
+		local
+			l_table: like matching_strategy_table
+		do
+			l_table := matching_strategy_table
+			from
+				l_table.start
+			until
+				l_table.after or Result /= Void
+			loop
+				if l_table.item_for_iteration = a_strategy_id then
+					Result := l_table.key_for_iteration
+				end
+				l_table.forth
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 invariant

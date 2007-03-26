@@ -111,11 +111,7 @@ feature{NONE} -- Process
 			l_text_cri ?= original_criterion
 			if l_text_cri /= Void then
 				a_criterion.set_text (a_criterion.text)
-				if l_text_cri.is_identical_comparison_used then
-					a_criterion.enable_identical_comparison
-				else
-					a_criterion.disable_identical_comparison
-				end
+				a_criterion.set_matching_strategy (l_text_cri.matching_strategy)
 				if l_text_cri.is_case_sensitive then
 					a_criterion.enable_case_sensitive
 				else

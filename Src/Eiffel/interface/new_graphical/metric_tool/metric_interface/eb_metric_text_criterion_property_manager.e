@@ -31,12 +31,9 @@ feature -- Access
 				create property_item_internal.make_with_dialog ("text properties", l_dialog)
 				property_item_internal.set_display_agent (agent display_value_agent)
 				property_item_internal.enable_text_editing
-				property_item_internal.set_value (["", False, False])
+				property_item_internal.set_value (["", False, {QL_NAME_CRITERION}.identity_matching_strategy])
 				property_item_internal.set_text ("...")
-				property_item_internal.deactivate_actions.extend (agent on_deactivated)
-				property_item_internal.deactivate_actions.extend (agent change_actions.call (Void))
-				property_item_internal.activate_actions.extend (agent on_activated)
-				l_dialog.ok_actions.extend (agent change_actions.call (Void))
+				property_item_internal.change_value_actions.extend (agent on_value_change)
 				property_item_internal.set_tooltip (metric_names.f_insert_text_here)
 			end
 			Result := property_item_internal
@@ -49,80 +46,52 @@ feature -- Properties management
 	load_properties (a_criterion: like criterion_type) is
 			-- Load porperties from `a_criterion' into current manager
 		do
-			property_item.set_value ([a_criterion.text, a_criterion.is_case_sensitive, not a_criterion.is_identical_comparison_used])
+			property_item.change_value_actions.block
+			property_item.set_value ([a_criterion.text, a_criterion.is_case_sensitive, a_criterion.matching_strategy])
+			property_item.change_value_actions.resume
 		end
 
 	store_properties (a_criterion: like criterion_type) is
 			-- Store properties in current manager into `a_criterion'.
 		local
-			l_value: TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]
+			l_value: TUPLE [a_text: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matcher: INTEGER]
 			l_dialog_property: EB_METRIC_TEXT_PROPERTY
-			l_text: STRING_GENERAL
-			l_case: BOOLEAN_REF
-			l_regu: BOOLEAN_REF
 		do
 			l_dialog_property ?= property_item
 			check l_dialog_property /= Void end
 			l_value := property_item.value
-			l_text ?= l_value.item (1)
-			l_case ?= l_value.item (2)
-			l_regu ?= l_value.item (3)
-			check
-				l_text /= Void
-				l_case /= Void
-				l_regu /= Void
-			end
-			a_criterion.set_text (l_text.as_string_8)
-			if l_case.item then
+			a_criterion.set_text (l_value.a_text.as_string_8)
+			if l_value.a_case_sensitive then
 				a_criterion.enable_case_sensitive
 			else
 				a_criterion.disable_case_sensitive
 			end
-			if l_regu.item then
-				a_criterion.disable_identical_comparison
-			else
-				a_criterion.enable_identical_comparison
-			end
+			a_criterion.set_matching_strategy (l_value.a_matcher)
 		end
 
 feature{NONE} -- Actions
 
-	display_value_agent (a_value: TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]): STRING_32 is
+	display_value_agent (a_value: TUPLE [a_text: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matcher: INTEGER]): STRING_32 is
 			-- Action to return displayable string
 		local
 			l_str: STRING_GENERAL
 		do
-			l_str ?= a_value.item (1)
-			check l_str /= Void end
-			Result := l_str.to_string_32
+			if a_value /= Void then
+				l_str := a_value.a_text
+			end
+			if l_str /= Void then
+				Result := l_str.to_string_32
+			else
+				Result := ""
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_deactivated is
-			-- Action to be performed when dialog property is deactivated
-		local
-			l_value: TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]
-			l_case: BOOLEAN_REF
-			l_regx: BOOLEAN_REF
+	on_value_change (a_value: TUPLE [a_text: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matcher: INTEGER]) is
+			-- Action to be performed when `value' from `property_item' changes
 		do
-			check property_item.value /= Void end
-			l_value := property_item.value
-			l_case ?= l_value.item (2)
-			l_regx ?= l_value.item (3)
-			check
-				l_case /= Void
-				l_regx /= Void
-			end
-			property_item.set_value ([property_item.text, l_case.item, l_regx.item])
-		end
-
-	on_activated (a_window: EV_POPUP_WINDOW) is
-			-- Action to be performed when `property_item' is activated
-		require
-			a_window_attached: a_window /= Void
-		do
-
+			change_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

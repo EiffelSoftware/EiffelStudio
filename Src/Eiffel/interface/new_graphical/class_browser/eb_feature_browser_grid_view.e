@@ -340,6 +340,8 @@ feature -- Notification
 			try_auto_resize_grid (<<[150, 300, 1]>>, False)
 			if not is_written_class_used then
 				try_auto_resize_grid (<<[-1, 0, 2]>>, True)
+			else
+				try_auto_resize_grid (<<[300, 500, 2]>>, True)
 			end
 		end
 

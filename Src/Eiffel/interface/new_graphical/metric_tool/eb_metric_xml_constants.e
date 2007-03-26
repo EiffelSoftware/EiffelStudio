@@ -68,6 +68,7 @@ feature{NONE} -- Attribute constants
 	at_relation: INTEGER is 1025
 	at_use_external_delayed: INTEGER is 1026
 	at_location: INTEGER is 1027
+	at_matching_strategy: INTEGER is 1028
 
 feature{NONE} -- Text
 
@@ -132,7 +133,29 @@ feature{NONE} -- Text
 	n_relation: STRING is "relation"
 	n_metric_name: STRING is "metric_name"
 	n_use_external_delayed: STRING is "use_external_delayed"
-	n_location: STRING is "location";
+	n_location: STRING is "location"
+	n_matching_strategy: STRING is "matching_strategy"
+
+feature -- Names of matching strategies
+
+	identity_matching_strategy_name: STRING is "identity"
+	containing_matching_strategy_name: STRING is "containing"
+	wildcard_matching_strategy_name: STRING is "wildcard"
+	regexp_matching_strategy_name: STRING is "regular expression";
+
+	matching_strategy_table: HASH_TABLE [INTEGER, STRING] is
+			-- Table of matching strategies.
+			-- [strategy id, strategy name]
+			-- strategy name is in lower case.
+		once
+			create Result.make (4)
+			Result.put ({QL_NAME_CRITERION}.identity_matching_strategy, identity_matching_strategy_name)
+			Result.put ({QL_NAME_CRITERION}.containing_matching_strategy, containing_matching_strategy_name)
+			Result.put ({QL_NAME_CRITERION}.wildcard_matching_strategy, wildcard_matching_strategy_name)
+			Result.put ({QL_NAME_CRITERION}.regular_expression_matching_strategy, regexp_matching_strategy_name)
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

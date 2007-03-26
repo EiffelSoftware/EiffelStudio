@@ -208,6 +208,7 @@ feature {NONE} -- Initialization
 			percentage_tool_bar.extend (show_percent_btn)
 			percentage_tool_bar.wipe_out
 			send_to_history_btn.disable_sensitive
+			set_is_reload_metric_definer_safe (True)
 		end
 
 feature -- Status report
@@ -516,7 +517,9 @@ feature -- Actions
 	on_definition_change (a_criterion: EB_METRIC_CRITERION) is
 			-- Action to be performed when definition in `metric_definer' change.
 		do
+			set_is_reload_metric_definer_safe (False)
 			on_metric_selected (quick_metric (a_criterion, True))
+			set_is_reload_metric_definer_safe (True)
 			metric_definer.resize_criterion_grid_column (1, 0)
 			metric_definer.resize_criterion_grid_column (2, 0)
 		end
@@ -890,6 +893,17 @@ feature-- UI Update
 			Result := is_selected_metric_valid and then is_selected_input_domain_valid
 		end
 
+	is_reload_metric_definer_safe: BOOLEAN
+			-- Is it safe to reload `metric_definer'?
+
+	set_is_reload_metric_definer_safe (b: BOOLEAN) is
+			-- Set `is_reload_metric_definer_safe' with `b'.
+		do
+			is_reload_metric_definer_safe := b
+		ensure
+			is_reload_metric_definer_safe_set: is_reload_metric_definer_safe = b
+		end
+
 	update_ui is
 			-- Update interface
 		local
@@ -939,11 +953,13 @@ feature-- UI Update
 						metric_definition_area.enable_sensitive
 						stop_metric_btn.disable_sensitive
 						if metric_definer.is_editor_initialized then
-							metric_definer.change_actions.block
-							metric_definer.change_actions_internal.block
-							metric_definer.load_metric (metric_definer.metric, False)
-							metric_definer.change_actions_internal.resume
-							metric_definer.change_actions.resume
+							if is_reload_metric_definer_safe then
+								metric_definer.change_actions.block
+								metric_definer.change_actions_internal.block
+								metric_definer.load_metric (metric_definer.metric, False)
+								metric_definer.change_actions_internal.resume
+								metric_definer.change_actions.resume
+							end
 						end
 						l_metric := current_selected_metric
 						if l_metric /= Void and then l_metric.is_ratio then

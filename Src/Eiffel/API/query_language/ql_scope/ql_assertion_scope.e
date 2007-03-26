@@ -53,7 +53,7 @@ feature -- Access
 		do
 			if line_path_marker.is_equipped_with_marker (a_path) then
 				create {QL_LINE_DOMAIN_GENERATOR}Result
-				Result.set_criterion (create {QL_LINE_NAME_IS_CRI}.make_with_setting (line_path_marker.base_name (a_path), False, True))
+				Result.set_criterion (create {QL_LINE_NAME_IS_CRI}.make_with_setting (line_path_marker.base_name (a_path), False, {QL_NAME_CRITERION}.identity_matching_strategy))
 			end
 		ensure then
 			good_result: line_path_marker.is_equipped_with_marker (a_path) implies Result /= Void

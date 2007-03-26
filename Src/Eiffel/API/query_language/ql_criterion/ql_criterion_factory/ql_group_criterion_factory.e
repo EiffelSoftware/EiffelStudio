@@ -146,12 +146,12 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_GROUP_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GROUP_NAME_IS_CRI is
 			-- New {QL_GROUP_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
 		do
-			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+			create Result.make_with_setting (a_name, a_case_sensitive, a_matching_strategy)
 		ensure
 			result_attached: Result /= Void
 		end

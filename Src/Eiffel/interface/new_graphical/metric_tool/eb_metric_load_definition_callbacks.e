@@ -447,7 +447,9 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 			l_case_sensitive: STRING
-			l_regular_expression: STRING
+			l_matching_strategy: STRING
+			l_strategy: INTEGER
+			l_strategy_table: like matching_strategy_table
 			l_case_sensitive_value: BOOLEAN
 			l_regular_expression_value: BOOLEAN
 			l_boolean_set: BOOLEAN
@@ -469,16 +471,18 @@ feature{NONE} -- Process
 					l_case_sensitive_value := last_tested_boolean
 				end
 
-					-- Validate "regular_expression" attribute.				
+					-- Validate "matching_strategy" attribute.
 				if not has_error then
-					l_regular_expression_value := True
-					l_regular_expression := current_attributes.item (at_regular_expression)
-					l_boolean_set := test_ommitable_boolean_attribute (
-						l_regular_expression,
-						agent metric_names.err_regular_expression_attr_invalid
-					)
-					if not has_error and then l_boolean_set then
-						l_regular_expression_value := last_tested_boolean
+					l_matching_strategy := current_attributes.item (at_matching_strategy)
+					if l_matching_strategy = Void then
+						l_matching_strategy := identity_matching_strategy_name
+					end
+					l_matching_strategy.to_lower
+					l_strategy_table := matching_strategy_table
+					if not l_strategy_table.has (l_matching_strategy) then
+						create_last_error (metric_names.err_invalid_matching_strategy (l_matching_strategy))
+					else
+						l_strategy := l_strategy_table.item (l_matching_strategy)
 					end
 				end
 				if not has_error then
@@ -489,11 +493,7 @@ feature{NONE} -- Process
 					else
 						current_text_criterion.disable_case_sensitive
 					end
-					if l_regular_expression_value then
-						current_text_criterion.disable_identical_comparison
-					else
-						current_text_criterion.enable_identical_comparison
-					end
+					current_text_criterion.set_matching_strategy (l_strategy)
 					register_criterion (current_text_criterion)
 					last_criterion := current_text_criterion
 				end
@@ -1009,13 +1009,13 @@ feature{NONE} -- Implementation/XML structure
 				-- * unit
 				-- * negation
 				-- * case_sensitive
-				-- * regular_expression
+				-- * matching_strategy
 			create l_attr.make (6)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
 			l_attr.force (at_negation, n_negation)
 			l_attr.force (at_case_sensitive, n_case_sensitive)
-			l_attr.force (at_regular_expression, n_regular_expression)
+			l_attr.force (at_matching_strategy, n_matching_strategy)
 			Result.force (l_attr, t_text_criterion)
 
 				-- path_criterion

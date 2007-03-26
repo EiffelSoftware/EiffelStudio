@@ -100,22 +100,22 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_ARGUMENT_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_ARGUMENT_NAME_IS_CRI is
 			-- New {QL_ARGUMENT_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
 		do
-			create Result.make_with_setting (a_name, a_case_sensitive, a_identical)
+			create Result.make_with_setting (a_name, a_case_sensitive, a_matching_strategy)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_identical: BOOLEAN): QL_ARGUMENT_TEXT_CONTAIN_CRI is
+	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_ARGUMENT_TEXT_CONTAIN_CRI is
 			-- New {QL_ARGUMENT_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void
 		do
-			create Result.make_with_setting (a_text, a_case_sensitive, a_identical)
+			create Result.make_with_setting (a_text, a_case_sensitive, a_matching_strategy)
 		ensure
 			result_attached: Result /= Void
 		end

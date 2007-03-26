@@ -27,13 +27,17 @@ feature{NONE} -- Initialization
 
 	make (a_scope: like scope; a_name: STRING) is
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
+		local
+			l_platform: PLATFORM
 		do
+			create l_platform
 			Precursor (a_scope, a_name)
-			enable_case_sensitive
-			enable_identical_comparison
-		ensure then
-			case_sensitive_enabled: is_case_sensitive
-			identical_comparison_enabled: is_identical_comparison_used
+			if l_platform.is_windows then
+				disable_case_sensitive
+			else
+				enable_case_sensitive
+			end
+			set_matching_strategy ({QL_NAME_CRITERION}.identity_matching_strategy)
 		end
 
 feature -- Process

@@ -412,7 +412,7 @@ feature{NONE} -- Implementation/Data
 			until
 				l_table.after
 			loop
-				l_sorted.put_front (l_table.item_for_iteration)
+				l_sorted.put_front (l_table.item_for_iteration.as_string_32)
 				l_table.forth
 			end
 			l_sorted.sort

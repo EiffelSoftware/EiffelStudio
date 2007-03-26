@@ -38,7 +38,7 @@ feature{NONE} -- Implemetation
 	criterion: QL_CRITERION is
 			-- Criterion used in current command
 		do
-			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (current_feature.name, False, True)
+			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (current_feature.name, False, {QL_NAME_CRITERION}.identity_matching_strategy)
 		ensure then
 			result_attached: Result /= Void
 		end

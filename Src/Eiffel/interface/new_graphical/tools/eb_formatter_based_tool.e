@@ -97,14 +97,6 @@ feature -- Access
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.
 
-	last_widget: EV_WIDGET is
-			-- Last set widget
-		do
-			if formatter_container.readable then
-				Result := formatter_container.item
-			end
-		end
-
 	predefined_formatters: like formatters is
 			-- Predefined formatters
 		deferred
@@ -252,8 +244,6 @@ feature -- Setting
 					formatter_tool_bar_area.extend (l_control_bar)
 					formatter_tool_bar_area.disable_item_expand (l_control_bar)
 				end
-				outer_container.wipe_out
-				outer_container.extend (formatter_container)
 				formatter_container.replace (l_formatter_widget)
 			end
 		end
@@ -569,9 +559,6 @@ feature{NONE} -- Implementation
 	history_toolbar: EV_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	outer_container: EV_CELL
-			-- Container to hold `formatter_container' and `editor_frame' (if current formatter is an editor formatter)
-
 	used: BOOLEAN
 			-- Has the class view been used yet to perform any formatting?
 
@@ -708,7 +695,6 @@ feature{NONE} -- Implementation
 			create widget
 			create formatter_container
 			create output_line
-			create outer_container
 			create tool_bar_area
 			create formatter_tool_bar_area
 			create sep
@@ -720,9 +706,7 @@ feature{NONE} -- Implementation
 			widget.disable_item_expand (sep)
 			widget.extend (output_line)
 			widget.disable_item_expand (output_line)
-			outer_container.wipe_out
-			outer_container.extend (formatter_container)
-			widget.extend (outer_container)
+			widget.extend (formatter_container)
 			output_line.set_text (no_target_message)
 		end
 
@@ -850,3 +834,4 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 end
+

@@ -10,12 +10,14 @@ class
 	EB_METRIC_TEXT_PROPERTY
 
 inherit
-	DIALOG_PROPERTY [TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]]
+	DIALOG_PROPERTY [TUPLE [a_text: STRING_GENERAL; a_case_sensitive: BOOLEAN; a_matcher: INTEGER]]
 		redefine
-			update_text_on_deactivation,
-			deactivate,
+--			update_text_on_deactivation,
+--			deactivate,
 			make_with_dialog,
-			dialog
+			dialog,
+			convert_to_data,
+			set_value
 		end
 
 create
@@ -30,45 +32,60 @@ feature{NONE} -- Initialization
 			a_dialog.ok_actions.extend (agent on_dialog_close)
 		end
 
+feature -- Setting
+
+	set_value (a_value: like value) is
+			-- Set `value' to `a_value'.
+		do
+			if value /= Void then
+				value.compare_objects
+			end
+			if a_value /= Void then
+				a_value.compare_objects
+			end
+			Precursor (a_value)
+		end
+
 feature{NONE} -- Implementation
 
-	update_text_on_deactivation is
-			-- Update text on deactivation.
-		do
-			update_value
-		end
+--	update_text_on_deactivation is
+--			-- Update text on deactivation.
+--		do
+--			update_value
+--		end
 
-	deactivate is
-			-- Cleanup from previous call to `activate'.
-		do
-			Precursor
-			update_value
-		end
+--	deactivate is
+--			-- Cleanup from previous call to `activate'.
+--		do
+--			Precursor
+--			update_value
+--		end
 
-	update_value is
-			-- Update `value'.
-		local
-			l_value: like value
-			l_case: BOOLEAN_REF
-			l_regx: BOOLEAN_REF
-			l_text: like text
-		do
-			check value /= Void end
-			l_value := value
-			l_case ?= l_value.item (2)
-			l_regx ?= l_value.item (3)
-			check
-				l_case /= Void
-				l_regx /= Void
-			end
-			if text_field /= Void then
-				l_text := text_field.text
-			else
-				l_text := text
-			end
-			dialog.set_value ([l_text, l_case.item, l_regx.item])
-			set_value ([l_text, l_case.item, l_regx.item])
-		end
+--	update_value is
+--			-- Update `value'.
+--		local
+--			l_value: like value
+--			l_case: BOOLEAN_REF
+--			l_regx: BOOLEAN_REF
+--			l_text: like text
+--		do
+--			check value /= Void end
+--			l_value := value
+--			l_case ?= l_value.item (2)
+--			l_regx ?= l_value.item (3)
+--			check
+--				l_case /= Void
+--				l_regx /= Void
+--			end
+--			if text_field /= Void then
+--				l_text := text_field.text
+--			else
+--				l_text := text
+--			end
+--			dialog.set_value (l_value)
+----			dialog.set_value ([l_text, l_case.item, l_regx.item])
+--			set_value ([l_text, l_case.item, l_regx.item])
+--		end
 
 	on_dialog_close is
 			-- Action to be performed when `dialog' closes.
@@ -78,8 +95,22 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dialog: EB_METRIC_TEXT_PROPERTY_DIALOG;
+	dialog: EB_METRIC_TEXT_PROPERTY_DIALOG
 			-- Dialog to show to change the value.
+
+	convert_to_data (a_string: like displayed_value): like value is
+			-- Convert displayed data into data.
+		local
+			l_value: like value
+		do
+			l_value := value
+			if l_value = Void then
+				Result := [a_string.as_string_8.twin, False, {QL_NAME_CRITERION}.identity_matching_strategy]
+			else
+				Result := [a_string.as_string_8.twin, l_value.a_case_sensitive, l_value.a_matcher]
+			end
+			Result.compare_objects
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

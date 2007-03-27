@@ -27,17 +27,15 @@ feature{NONE} -- Initialization
 
 feature -- Basic operation
 
-	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT; a_uuid: like uuid) is
+	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT) is
 			-- Initialize current editor using `a_metric', `mode' with `a_mode' and `unit'with `a_unit'.
 		require
 			a_unit_attached: a_unit /= Void
 			a_mode_valid: is_mode_valid (a_mode)
-			a_uuid_attached: a_uuid /= Void
 		do
 			is_editor_initialized := True
 			set_unit (a_unit)
 			set_mode (a_mode)
-			set_uuid (a_uuid)
 			load_metric (a_metric, a_mode = readonly_mode)
 		ensure
 			initialized: is_editor_initialized
@@ -101,16 +99,6 @@ feature -- Setting
 	disable_edit is
 			-- Disable edit in current editor.
 		deferred
-		end
-
-	set_uuid (a_uuid: like uuid) is
-			-- Set `uuid' with `a_uuid'.
-		require
-			a_uuid_attached: a_uuid /= Void
-		do
-			uuid := a_uuid
-		ensure
-			uuid_set: uuid = a_uuid
 		end
 
 	check_validity_for_metric is
@@ -228,9 +216,6 @@ feature -- Access
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `is_definition_changes' or `is_description_changes'
-
-	uuid: UUID
-			-- UUID of current edited metric
 
 feature -- Actions
 

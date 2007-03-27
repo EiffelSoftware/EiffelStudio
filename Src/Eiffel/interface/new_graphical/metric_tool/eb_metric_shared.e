@@ -94,14 +94,6 @@ feature -- Status report
 			Result := a_type = basic_metric_type or a_type = linear_metric_type or a_type = ratio_metric_type
 		end
 
-	is_uuid_valid (a_uuid: STRING): BOOLEAN is
-			-- Is `a_uuid' a valid UUID?
-		require
-			a_uuid_attached: a_uuid /= Void
-		do
-			Result := shared_uuid.is_valid_uuid (a_uuid)
-		end
-
 feature -- UUID
 
 	shared_uuid: UUID is

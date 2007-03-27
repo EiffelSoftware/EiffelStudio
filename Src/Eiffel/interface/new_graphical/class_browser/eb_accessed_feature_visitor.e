@@ -19,7 +19,8 @@ inherit
 			process_routine_creation_as,
 			process_tagged_as,
 			process_binary_as,
-			process_unary_as
+			process_unary_as,
+			process_static_access_as
 		end
 
 	QL_UTILITY
@@ -240,6 +241,12 @@ feature{NONE} -- Implementation/Process
 			if l_feature_name /= Void then
 				check_accessor_for_operators (l_as.class_id, l_feature_name, l_as.operator)
 			end
+			Precursor (l_as)
+		end
+
+	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+		do
+			check_accessor (l_as)
 			Precursor (l_as)
 		end
 

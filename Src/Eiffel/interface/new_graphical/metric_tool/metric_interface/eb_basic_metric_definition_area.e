@@ -150,25 +150,6 @@ feature {NONE} -- Initialization
 
 			criterion_lbl.set_text (metric_names.t_metric_criterion_definition)
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
-
-			add_current_target_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
-			add_current_target_item_btn.set_tooltip (metric_names.f_application_scope)
-			add_current_target_item_btn.select_actions.extend (agent on_add_domain_item (agent new_current_application_target_domain_item))
-
-			add_input_domain_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
-			add_input_domain_item_btn.set_tooltip (metric_names.f_delayed_scope)
-			add_input_domain_item_btn.select_actions.extend (agent on_add_domain_item (agent new_input_domain_item))
-
-			add_delayed_domain_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
-			add_delayed_domain_item_btn.set_tooltip (metric_names.f_use_delayed_scope)
-			add_delayed_domain_item_btn.select_actions.extend (agent on_add_domain_item (agent new_delayed_domain_item))
-
-			clear_domain_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-			clear_domain_btn.set_tooltip (metric_names.f_clear_defined_domain)
-			clear_domain_btn.select_actions.extend (agent on_clear_defined_domain)
-
-			combination_grid.item_select_actions.extend (agent on_grid_item_selected)
-			quick_domain_item_tool_bar.disable_sensitive
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
@@ -356,17 +337,6 @@ feature{NONE} -- Actions
 			rich_text_output.load_expression (expression_text)
 			change_actions_internal.call ([l_criterion])
 			on_definition_change
-		end
-
-	on_grid_item_selected (a_item: EV_GRID_ITEM) is
-			-- Agent to be performed when `a_item' in `combination_grid' is selected
-		do
-			current_selected_grid_domain_item ?= a_item
-			if current_selected_grid_domain_item /= Void then
-				quick_domain_item_tool_bar.enable_sensitive
-			else
-				quick_domain_item_tool_bar.disable_sensitive
-			end
 		end
 
 	on_add_domain_item (a_domain_item_retrieval_agent: FUNCTION [ANY, TUPLE, EB_METRIC_DOMAIN_ITEM]) is

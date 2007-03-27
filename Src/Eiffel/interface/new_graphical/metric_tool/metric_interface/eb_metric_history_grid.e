@@ -372,13 +372,13 @@ feature{NONE} -- Grid item generation
 			result_attached: Result /= Void
 		end
 
-	value_tester_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EB_METRIC_GRID_VALUE_CRITERION_ITEM is
+	value_tester_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EB_METRIC_VALUE_CRITERION_GRID_ITEM is
 			-- Value tester item.
 		require
 			a_archive_node_attached: a_archive_node /= Void
 
 		do
-			create Result.make (create{EB_METRIC_DOMAIN}.make, True)
+			create Result.make_with_setting (create{EB_METRIC_DOMAIN}.make, True)
 			Result.set_value (["", False, a_archive_node.value_tester])
 			Result.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
 			Result.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
@@ -524,7 +524,7 @@ feature{NONE} -- Item updator
 			a_item.checked_changed_actions.resume
 		end
 
-	update_value_tester_item (a_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	update_value_tester_item (a_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Update status of `a_item' using information from `a_archive_node'.
 		require
 			a_item_attached: a_item /= Void
@@ -885,7 +885,7 @@ feature{NONE} -- Implementation
 			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
 		end
 
-	set_value_criterion (a_grid_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	set_value_criterion (a_grid_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Set `value_tester' from `a_grid_item' into `a_archive_node'.
 		require
 			a_grid_item_attached: a_grid_item /= Void

@@ -117,23 +117,22 @@ feature{NONE} -- Actions
 			l_text: STRING_GENERAL
 			l_case_sensitive: BOOLEAN_REF
 			l_regular: BOOLEAN_REF
+			l_value: like value
 		do
-			if value = Void then
+			l_value := value
+			if l_value = Void then
 				name_text.set_text ("")
 				case_sensitive_checkbox.disable_select
 				identical_radio.enable_select
 			else
-				l_text ?= value.item (1)
-				l_case_sensitive ?= value.item (2)
-				l_regular ?= value.item (3)
-				name_text.set_text (l_text)
-				if l_case_sensitive.item then
+				name_text.set_text (l_value.a_text)
+				if l_value.a_case_sensitive then
 					case_sensitive_checkbox.enable_select
 				else
 					case_sensitive_checkbox.disable_select
 				end
 				inspect
-					value.a_matcher
+					l_value.a_matcher
 				when {QL_NAME_CRITERION}.identity_matching_strategy then
 					identical_radio.enable_select
 				when {QL_NAME_CRITERION}.containing_matching_strategy then
@@ -148,26 +147,14 @@ feature{NONE} -- Actions
 
 	on_ok is
 			-- Action to be performed when "OK" button is pressed
+		local
+			l_value: like value
 		do
-			set_value ([name_text.text.as_string_8, case_sensitive_checkbox.is_selected, matcher_index])
+			l_value := [name_text.text.as_string_8, case_sensitive_checkbox.is_selected, matcher_index]
+			l_value.compare_objects
+			set_value (l_value)
 			Precursor {PROPERTY_DIALOG}
 			ok_actions.call (Void)
-		end
-
-	matcher_index: INTEGER is
-			-- Matcher strategy index
-		do
-			if identical_radio.is_selected then
-				Result := {QL_NAME_CRITERION}.identity_matching_strategy
-			elseif substring_radio.is_selected then
-				Result := {QL_NAME_CRITERION}.containing_matching_strategy
-			elseif wildcard_radio.is_selected then
-				Result := {QL_NAME_CRITERION}.wildcard_matching_strategy
-			elseif regexp_radio.is_selected then
-				Result := {QL_NAME_CRITERION}.regular_expression_matching_strategy
-			end
-		ensure
-			good_result: Result > 0
 		end
 
 	on_cancel
@@ -184,6 +171,22 @@ feature{NONE} -- Implementation
 
 	name_text: EV_TEXT_FIELD
 			-- Text field for string input
+
+	matcher_index: INTEGER is
+			-- Matcher strategy index
+		do
+			if identical_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.identity_matching_strategy
+			elseif substring_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.containing_matching_strategy
+			elseif wildcard_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.wildcard_matching_strategy
+			elseif regexp_radio.is_selected then
+				Result := {QL_NAME_CRITERION}.regular_expression_matching_strategy
+			end
+		ensure
+			good_result: Result > 0
+		end
 
 	identical_radio: EV_RADIO_BUTTON
 	substring_radio: EV_RADIO_BUTTON

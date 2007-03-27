@@ -370,7 +370,7 @@ feature -- Actions
 			l_insert_index: INTEGER
 			l_stone: STONE
 			l_domain_grid_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
-			l_value_criterion_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_value_criterion_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 			l_metric: EB_METRIC
 		do
 			if a_item /= Void then

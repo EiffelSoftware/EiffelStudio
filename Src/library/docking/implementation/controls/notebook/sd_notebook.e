@@ -567,20 +567,21 @@ feature {NONE}  -- Implementation
 			has: internal_tabs.has (a_tab_2) and internal_tab_box.has (a_tab_2)
 		local
 			l_index_1, l_index_2: INTEGER
+			l_index_1_valid, l_index_2_valid: BOOLEAN
 		do
 			l_index_1 := internal_tab_box.index_of (a_tab_1)
 			l_index_2 := internal_tab_box.index_of (a_tab_2)
-			check index_valid: l_index_1 <= internal_tabs.count and l_index_1 /= 0 end
-			check index_valid: l_index_2 <= internal_tabs.count and l_index_2 /= 0 end
-			internal_tabs.go_i_th (l_index_1)
-			internal_tabs.swap (l_index_2)
+			l_index_1_valid := l_index_1 <= internal_tabs.count and l_index_1 /= 0
+			l_index_1_valid := l_index_2 <= internal_tabs.count and l_index_2 /= 0
+			if l_index_1_valid and l_index_2_valid then
+				internal_tabs.go_i_th (l_index_1)
+				internal_tabs.swap (l_index_2)
 
-			internal_contents.go_i_th (l_index_1)
-			internal_contents.swap (l_index_2)
+				internal_contents.go_i_th (l_index_1)
+				internal_contents.swap (l_index_2)
+			end
 		ensure
 			not_changed: old internal_contents.count = internal_contents.count
---			swapped: old internal_tab_box.index_of (a_tab_1) /= internal_tab_box.index_of (a_tab_1)
---			swapped: old internal_tab_box.index_of (a_tab_2) /= internal_tab_box.index_of (a_tab_2)
 		end
 
 	prepare_tabs_rects is

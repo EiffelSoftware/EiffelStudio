@@ -107,6 +107,19 @@ feature -- Data for only one editor zone
 			set: is_editor_minimized = a_bool
 		end
 
+feature -- Data for maximized.
+
+	maximized_tool: STRING_GENERAL
+			-- Maximized tool, void if no maximized tool.
+
+	set_maximized_tool (a_unique_name: like maximized_tool) is
+			-- Set `maximized_tool' with `a_unique_name'
+		do
+			maximized_tool := a_unique_name
+		ensure
+			set: maximized_tool = a_unique_name
+		end
+
 feature {NONE}  -- Implementation
 
 	internal_inner_container_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]

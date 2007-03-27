@@ -41,6 +41,24 @@ feature -- Zones managements
 	zones: ACTIVE_LIST [SD_ZONE]
 			-- All SD_ZONE in current system.
 
+	maximized_zone: SD_ZONE is
+			-- Maximized zone, maybe void if not exists.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+		do
+			from
+				l_zones := internal_docking_manager.zones.zones
+				l_zones.start
+			until
+				l_zones.after or Result /= Void
+			loop
+				if l_zones.item.is_maximized then
+					Result := l_zones.item
+				end
+				l_zones.forth
+			end
+		end
+
 	zone_by_content (a_content: SD_CONTENT): SD_ZONE is
 			-- If main container has zone with a_content?
 		do

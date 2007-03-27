@@ -236,6 +236,15 @@ feature -- Command
 			Result := l_config.open_tools_config (a_file)
 		end
 
+	open_maximized_tool_config (a_file: STRING_GENERAL) is
+			-- Open maximized tool config data.
+		local
+			l_config: SD_OPEN_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			l_config.open_maximized_tool_data (a_file)
+		end
+
 	set_main_area_background_color (a_color: EV_COLOR) is
 			-- Set main area (editors' area) background color.
 		require

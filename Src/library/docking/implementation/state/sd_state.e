@@ -234,6 +234,7 @@ feature -- Commands
 	on_normal_max_window is
 			-- Handle normal\max zone.
 		do
+			zone.on_normal_max_window
 		end
 
 feature -- Properties

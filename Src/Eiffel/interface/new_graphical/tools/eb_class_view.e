@@ -200,9 +200,27 @@ feature {NONE} -- Implementation
 		do
 			fst ?= st
 			decide_tool_to_display (st)
-			develop_window.tools.set_stone (st)
+			if develop_window.unified_stone then
+				develop_window.set_stone (st)
+			elseif develop_window.link_tools then
+				develop_window.tools.set_stone (st)
+			else
+				set_stone (st)
+			end
 			if fst /= Void and then address_manager /= Void then
 				address_manager.hide_address_bar
+			end
+		end
+
+	veto_pebble_function (a_stone: ANY): BOOLEAN is
+		local
+			l_cis: CLASSI_STONE
+		do
+			if develop_window.link_tools then
+				Result := True
+			else
+				l_cis ?= a_stone
+				Result := l_cis /= Void
 			end
 		end
 
@@ -212,7 +230,7 @@ feature {NONE} -- Implementation
 			fs: FEATURE_STONE
 		do
 			fs ?= a_st
-			if fs /= Void then
+			if fs /= Void and develop_window.link_tools then
 				develop_window.tools.show_default_tool_of_feature
 			else
 				show

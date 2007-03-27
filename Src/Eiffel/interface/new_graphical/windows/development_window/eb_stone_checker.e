@@ -173,10 +173,7 @@ feature {NONE} -- Implementation functions
 			develop_window.tools.cluster_tool.set_stone (a_stone)
 				-- Update the context tool.
 			if develop_window.unified_stone then
-				develop_window.tools.class_tool.set_stone (a_stone)
-				develop_window.tools.features_relation_tool.set_stone (a_stone)
-				develop_window.tools.diagram_tool.set_stone (a_stone)
-				develop_window.tools.dependency_tool.set_stone (a_stone)
+				develop_window.tools.set_stone (a_stone)
 			end
 		end
 

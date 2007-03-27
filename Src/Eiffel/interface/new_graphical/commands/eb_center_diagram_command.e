@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			tbi: EB_COMMAND_TOOL_BAR_BUTTON
 		do
 			if not was_dropped then
-				Result := tool.develop_window.tools.stone
+				Result := tool.last_stone
 				check
 					internal_managed_toolbar_items /= Void
 					not internal_managed_toolbar_items.is_empty

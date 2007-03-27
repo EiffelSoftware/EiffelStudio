@@ -32,20 +32,16 @@ feature -- Commands
 			-- Dispatch stone to tools.
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
-			if develop_window.unified_stone then
-				develop_window.set_stone (a_stone)
-			else
-				develop_window.eb_debugger_manager.set_stone (a_stone)
-				features_relation_tool.set_stone (a_stone)
-				class_tool.set_stone (a_stone)
-				dependency_tool.set_stone (a_stone)
-				if develop_window.has_case then
-					 diagram_tool.set_stone (a_stone)
-				end
-				develop_window.tools.set_stone_to_customized_tools (a_stone)
-
-				stone := a_stone
+			develop_window.eb_debugger_manager.set_stone (a_stone)
+			features_relation_tool.set_stone (a_stone)
+			class_tool.set_stone (a_stone)
+			dependency_tool.set_stone (a_stone)
+			if develop_window.has_case then
+				 diagram_tool.set_stone (a_stone)
 			end
+			set_stone_to_customized_tools (a_stone)
+
+			stone := a_stone
 		end
 
 	set_stone_and_pop_tool (a_stone: STONE) is

@@ -33,6 +33,7 @@ feature {NONE} -- Initialize
 			Precursor {EB_OUTPUT_TOOL}(a_docking_manager)
 			content.drop_actions.extend (agent drop_class)
 			content.drop_actions.extend (agent drop_feature)
+			content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
 feature -- Docking management

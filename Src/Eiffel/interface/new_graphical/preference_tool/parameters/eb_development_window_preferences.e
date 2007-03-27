@@ -200,6 +200,11 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := context_unified_stone_preference.value
 		end
 
+	link_tools: BOOLEAN is
+		do
+			Result := link_tools_preference.value
+		end
+
 	graphical_output_disabled: BOOLEAN is
 		do
 			Result := graphical_output_disabled_preference.value
@@ -306,6 +311,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	last_browsed_cluster_directory_preference: STRING_PREFERENCE
 
 	context_unified_stone_preference: BOOLEAN_PREFERENCE
+
+	link_tools_preference: BOOLEAN_PREFERENCE
 
 	graphical_output_disabled_preference: BOOLEAN_PREFERENCE
 
@@ -416,6 +423,7 @@ feature {NONE} -- Preference Strings
 	dock_tracking_string: STRING is "interface.development_window.dock_tracking"
 	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
+	link_tools_string: STRING is "interface.development_window.link_tools"
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
 	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
@@ -463,6 +471,7 @@ feature {NONE} -- Implementation
 			dock_tracking_preference := l_manager.new_boolean_preference_value (l_manager, dock_tracking_string, True)
 			last_browsed_cluster_directory_preference := l_manager.new_string_preference_value (l_manager, last_browsed_cluster_directory_string, "")
 			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
+			link_tools_preference := l_manager.new_boolean_preference_value (l_manager, link_tools_string, True)
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)

@@ -1,22 +1,21 @@
 indexing
-	description: "[
-					Grid item used to manage a value criterion
-					Two generics are used to define the associated value criterion:
-					the first generic is metric name,
-					the second generic is value tester.
-					]"
-
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Grid item for metric value criterion"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_METRIC_GRID_VALUE_CRITERION_ITEM
+	EB_METRIC_VALUE_CRITERION_GRID_ITEM
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]]
+	EB_METRIC_CRITERION_GRID_ITEM [EB_METRIC_VALUE_CRITERION]
+		undefine
+			copy,
+			default_create,
+			is_equal
+		end
+
+	EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [a_metric_name: STRING; a_parent_used: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]]
 		rename
 			make as old_make
 		redefine
@@ -32,17 +31,40 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_setting
 
 feature{NONE} -- Initialization
 
-	make (a_domain: EB_METRIC_DOMAIN; a_for_archive: BOOLEAN) is
+	make is
 			-- Initialize.
 			-- `a_for_archive' indicates whether current item is for archive node.
 		do
-			is_for_archive := a_for_archive
 			value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
-			old_make (a_domain)
+			old_make (create {EB_METRIC_DOMAIN}.make)
+			pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Current))
+			dialog_ok_actions.extend (agent change_actions.call (Void))
+			set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
+			set_dialog_function (agent value_criterion_dialog)
+		end
+
+	make_with_setting (a_domain: like domain; a_for_archive: BOOLEAN) is
+			-- Initialize `domain' with `a_domain' and `is_for_archive' with `a_for_archive'.
+		require
+			a_domain_attached: a_domain /= Void
+		do
+			make
+			set_domain (a_domain)
+			set_is_for_archive (a_for_archive)
+		end
+
+
+feature -- Access
+
+	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
+		do
+			Result := change_actions
 		end
 
 feature -- Status report
@@ -61,6 +83,59 @@ feature -- Status report
 
 	is_for_archive: BOOLEAN
 			-- Is Current item for archive node?
+
+feature -- Setting
+
+	load_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Load `a_criterion' into Current.
+		local
+			l_domain: EB_METRIC_DOMAIN
+		do
+			check a_criterion.domain /= Void end
+			l_domain := a_criterion.domain.twin
+			set_domain (l_domain)
+			set_value ([a_criterion.metric_name, a_criterion.should_delayed_domain_from_parent_be_used, a_criterion.value_tester])
+		end
+
+	store_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Store Current in `a_criterion'.
+		local
+			l_value: TUPLE [a_metric_name: STRING; a_parent_used: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]
+			l_tester: EB_METRIC_VALUE_TESTER
+			l_metric_name: STRING
+			l_use_external: BOOLEAN_REF
+		do
+			check domain /= Void end
+			a_criterion.set_domain (domain.twin)
+
+			l_value := value
+			if l_value = Void then
+				l_value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
+			end
+			l_metric_name := l_value.a_metric_name
+			if l_metric_name = Void then
+				l_metric_name := ""
+			end
+			l_use_external := l_value.a_parent_used
+			if l_use_external = Void then
+				l_use_external := False
+			end
+			l_tester := l_value.a_tester
+			if l_tester = Void then
+				create l_tester.make
+			end
+			a_criterion.set_metric_name (l_metric_name)
+			a_criterion.set_value_tester (l_tester)
+			a_criterion.set_should_delayed_domain_from_parent_be_used (l_use_external.item)
+		end
+
+	set_is_for_archive (b: BOOLEAN) is
+			-- Set `is_for_archive' with `b'.
+		do
+			is_for_archive := b
+		ensure
+			is_for_archive_set: is_for_archive = b
+		end
 
 feature -- Drop
 
@@ -159,37 +234,5 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
-
-indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
 
 end

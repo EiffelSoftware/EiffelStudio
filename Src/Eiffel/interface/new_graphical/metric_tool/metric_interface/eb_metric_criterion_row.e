@@ -96,23 +96,25 @@ feature -- Loading
 			end
 
 			if a_criterion.is_normal_criterion then
-				create {EB_METRIC_NORMAL_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_NORMAL_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_caller_callee_criterion then
-				create {EB_METRIC_CALLER_CRITERION_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_CALLER_CALLEE_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_supplier_client_criterion then
-				create {EB_METRIC_SUPPLIER_CLIENT_CRITERION_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_CLIENT_SUPPLIER_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_value_criterion then
-				create {EB_METRIC_VALUE_CRITERION_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_VALUE_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_domain_criterion then
-				create {EB_METRIC_DOMAIN_PROPERTY_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_DOMAIN_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_path_criterion then
-				create {EB_METRIC_PATH_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_PATH_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_text_criterion then
-				create {EB_METRIC_TEXT_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
+				create {EB_METRIC_TEXT_CRITERION_GRID_ITEM} property_manager.make
 			end
-			property_manager.change_actions.extend (agent (grid.change_actions).call (Void))
-			property_manager.load_properties (a_criterion)
-			property_item := property_manager.property_item
+			property_manager.change_value_actions.extend (agent (grid.change_actions).call (Void))
+			property_manager.change_value_actions.extend (agent resize_grid)
+
+			property_manager.load_criterion (a_criterion)
+			property_item := property_manager.grid_item
 			bind (a_row)
 				-- Load subrows.
 			l_nary_cri ?= a_criterion
@@ -288,7 +290,7 @@ feature -- Access
 				Result := criterion_factory.metric_criterion (scope, criterion_name)
 				Result.set_is_negation_used (is_negation_used)
 				check property_manager /= Void end
-				property_manager.store_properties (Result)
+				property_manager.store_criterion (Result)
 
 					-- Store subrows.
 				l_nary_metric ?= Result
@@ -324,7 +326,7 @@ feature -- Access
 	subrows: LIST [EB_METRIC_CRITERION_ROW]
 			-- Subrows of current row
 
-	property_manager: EB_METRIC_CRITERION_PROPERTY_MANAGER
+	property_manager: EB_METRIC_CRITERION_GRID_ITEM [EB_METRIC_CRITERION]
 			-- Property manager
 
 feature -- Setting

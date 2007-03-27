@@ -95,7 +95,7 @@ feature -- Access
 			l_count: INTEGER
 			l_choice_item: EV_GRID_CHOICE_ITEM
 			l_constant_value_item: EV_GRID_EDITABLE_ITEM
-			l_metric_value_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_metric_value_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 			l_criteria: LINKED_LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
 			l_metric_value_retriever: EB_METRIC_METRIC_VALUE_RETRIEVER
 			l_value: TUPLE [metric_name: STRING; external_delayed: BOOLEAN; tester: EB_METRIC_VALUE_TESTER]
@@ -249,7 +249,7 @@ feature{NONE} -- Actions
 	on_pebble_drop (a_item: EV_GRID_ITEM; a_pebble: ANY) is
 			-- Action to be performed when `a_pebble' is dropped into `a_item'.
 		local
-			l_metric_value_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_metric_value_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 		do
 			l_metric_value_item ?= a_item
 			if l_metric_value_item /= Void then
@@ -335,9 +335,9 @@ feature {NONE} -- Implementation
 		require
 			a_metric_value_retriever_attached: a_metric_value_retriever /= Void
 		local
-			l_value_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_value_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 		do
-			create l_value_item.make (a_metric_value_retriever.input_domain, False)
+			create l_value_item.make_with_setting (a_metric_value_retriever.input_domain, False)
 			l_value_item.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, l_value_item))
 			l_value_item.dialog_ok_actions.extend (agent resize_grid (l_value_item))
 			l_value_item.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 		local
-			l_metric_value_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_metric_value_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 		do
 			l_metric_value_item ?= a_item
 			if l_metric_value_item /= Void then

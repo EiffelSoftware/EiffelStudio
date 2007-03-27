@@ -129,12 +129,6 @@ feature -- Status report
 			Result := is_name_valid and then is_parameter_valid
 		end
 
---	has_delayed_input_domain: BOOLEAN is
---			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
---			-- An delayed input domain should be replaced by actual input domain before metric calculation.
---		do
---		end
-
 feature -- Setting
 
 	set_name (a_name: STRING) is

@@ -121,11 +121,37 @@ feature -- Setting
 			is_for_caller_set: is_for_caller = b
 		end
 
-	force_position_calculation is
-			-- Force caller/callee position calculation.
+	calculate_reference_position is
+			-- Calculate reference (callers/callees) positions for `feature_item' and display them in another grid item.
+		local
+			l_accessor_visitor: EB_ACCESSED_FEATURE_VISITOR
+			l_caller: like feature_item
+			l_callee: like feature_item
+			l_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]
 		do
 			if row_type = feature_name_row and then not has_position_calculated then
-				on_pointer_click_on_trailer (0, 0, {EV_POINTER_CONSTANTS}.left, 0, 0, 0, 0, 0)
+				if is_for_caller then
+					l_caller := feature_item
+					l_callee := related_feature
+				else
+					l_caller := related_feature
+					l_callee := feature_item
+				end
+
+				if l_callee /= Void and then l_callee.is_real_feature then
+					create l_accessor_visitor.make
+					l_accessor_visitor.find_accessors (l_callee, l_caller)
+					l_accessors := l_accessor_visitor.accessors
+					if l_accessors.is_empty then
+						-- Fixme: add code
+					else
+						create_accessor_grid_item (l_accessors)
+						if is_binded_to_grid then
+							grid_row.set_item (staring_column_index + 1, accessor_grid_item)
+						end
+					end
+				end
+				set_has_position_calculated (True)
 			end
 		end
 
@@ -204,20 +230,13 @@ feature{NONE} -- Implementation/Data
 			-- Grid item to be displayed
 		local
 			l_grid_item: like grid_item_internal
-			l_trailer: ES_GRID_PIXMAP_COMPONENT
 			l_feature_item: like feature_item
 		do
 			if grid_item_internal = Void then
 				create l_grid_item
 				l_grid_item.set_pixmap (grid_item_pixmap)
 				l_grid_item.set_text_with_tokens (grid_item_text)
-				if row_type = feature_name_row then
-					create l_trailer.make (pixmaps.mini_pixmaps.new_watch_tool_icon)
-					l_grid_item.enable_adhesive_component
-					l_grid_item.insert_component (l_trailer, 1)
-					l_grid_item.set_component_spacing (8)
-					l_trailer.pointer_button_press_actions.extend (agent on_pointer_click_on_trailer)
-				end
+
 					-- Setup stone for grid item.
 				l_feature_item := feature_item
 				if row_type = class_row then
@@ -336,43 +355,6 @@ feature{NONE} -- Implementation
 		end
 
 feature{NONE} -- Actions
-
-	on_pointer_click_on_trailer (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Action to be performed when pointer click on trailer
-		require
-			related_feature_attached: related_feature /= Void
-		local
-			l_accessor_visitor: EB_ACCESSED_FEATURE_VISITOR
-			l_caller: like feature_item
-			l_callee: like feature_item
-			l_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]
-		do
-			if a_button = {EV_POINTER_CONSTANTS}.left then
-				grid_item.remove_component (1)
-				if is_for_caller then
-					l_caller := feature_item
-					l_callee := related_feature
-				else
-					l_caller := related_feature
-					l_callee := feature_item
-				end
-
-				if l_callee /= Void and then l_callee.is_real_feature then
-					create l_accessor_visitor.make
-					l_accessor_visitor.find_accessors (l_callee, l_caller)
-					l_accessors := l_accessor_visitor.accessors
-					if l_accessors.is_empty then
-						-- Fixme: add code
-					else
-						create_accessor_grid_item (l_accessors)
-						if is_binded_to_grid then
-							grid_row.set_item (staring_column_index + 1, accessor_grid_item)
-						end
-					end
-				end
-				set_has_position_calculated (True)
-			end
-		end
 
 	create_accessor_grid_item (a_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]) is
 			-- Create grid item to display `a_ccessors'.

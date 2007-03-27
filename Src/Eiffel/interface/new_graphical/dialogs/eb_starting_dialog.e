@@ -474,6 +474,7 @@ feature {NONE} -- Implementation
 			-- Currently selected wizard.
 		local
 			selected_item: EV_GRID_LABEL_ITEM
+			l_translated_name: STRING_32
 		do
 			if not wizards_list.selected_rows.is_empty then
 				selected_item ?= wizards_list.selected_rows.first.item (1)
@@ -484,7 +485,10 @@ feature {NONE} -- Implementation
 				until
 					available_wizards.after or else Result /= Void
 				loop
-					if (available_wizards.item.name.is_equal (selected_item.text)) then
+						-- Items in wizard list are translated, thus the check has
+						-- to be done on the translated name
+					l_translated_name := interface_names.find_translation (available_wizards.item.name)
+					if (l_translated_name.is_equal (selected_item.text)) then
 						Result := available_wizards.item
 					end
 					available_wizards.forth

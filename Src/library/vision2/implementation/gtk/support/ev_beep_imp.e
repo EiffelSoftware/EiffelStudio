@@ -42,30 +42,33 @@ feature -- Commands
 	asterisk is
 			-- Asterisk beep.
 		do
+			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
 	exclamation is
 			-- Exclamation beep.
 		do
+			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
 	hand is
 			-- Hand beep.
 		do
+			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
 	question is
 			-- Question beep.
 		do
+			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
 	ok is
 			-- Ok beep.
 			-- System default beep.
 		do
+			{EV_GTK_EXTERNALS}.gdk_beep
 		end
-
-feature {NONE} -- Implementation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

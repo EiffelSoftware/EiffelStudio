@@ -53,9 +53,6 @@ feature -- Process
 		require
 			a_callee_attached: a_callee /= Void
 			a_caller_attached: a_caller /= Void
-		local
-			l_assertion_domain: QL_ASSERTION_DOMAIN
-			l_assertion_generator: QL_ASSERTION_DOMAIN_GENERATOR
 		do
 			accessors.wipe_out
 			ancestor_class_id_set.wipe_out
@@ -66,16 +63,16 @@ feature -- Process
 
 					-- Check feature body without assertions
 				if a_caller.is_real_feature then
+						-- For real features
 					a_caller.ast.process (Current)
+				else
+						-- For immediate class invariants
+					check_accessor_for_assertions (a_caller.wrapped_domain, True)
 				end
 
 					-- Retrieve all inherited assertions and check those assertions.
 				setup_ancestor_class_id_table (e_feature.associated_class)
-				create l_assertion_generator.make (not assertion_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_immediate, []), True)
-				l_assertion_domain ?= a_caller.wrapped_domain.new_domain (l_assertion_generator)
-				if l_assertion_domain /= Void and then not l_assertion_domain.is_empty then
-					l_assertion_domain.do_all (agent process_assertion)
-				end
+				check_accessor_for_assertions (a_caller.wrapped_domain, False)
 			end
 		end
 
@@ -171,6 +168,26 @@ feature -- Accessor checking
 			if is_accessor (a_class_id, a_feature_name) then
 				check last_class_c /= Void end
 				accessors.extend ([a_ast, last_class_c])
+			end
+		end
+
+
+	check_accessor_for_assertions (a_source_domain: QL_DOMAIN; a_immediate: BOOLEAN) is
+			-- Check accessors in assertions from `a_source_domain'.
+			-- `a_immediate' indicates if assertions should be immediate or not.
+		require
+			a_source_domain_attached: a_source_domain /= Void
+		local
+			l_assertion_cri: QL_ASSERTION_CRITERION
+			l_assertion_domain: QL_ASSERTION_DOMAIN
+		do
+			l_assertion_cri := assertion_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_immediate, [])
+			if not a_immediate then
+				l_assertion_cri := not l_assertion_cri
+			end
+			l_assertion_domain ?= a_source_domain.new_domain (create {QL_ASSERTION_DOMAIN_GENERATOR}.make (l_assertion_cri, True))
+			if l_assertion_domain /= Void and then not l_assertion_domain.is_empty then
+				l_assertion_domain.do_all (agent process_assertion)
 			end
 		end
 

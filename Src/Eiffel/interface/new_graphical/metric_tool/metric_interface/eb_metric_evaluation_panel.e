@@ -452,7 +452,6 @@ feature -- Actions
 			if is_using_quick_metric then
 				if l_current_metric /= Void then
 					metric_tool.go_to_definition (l_current_metric, True)
-					uuid_internal := Void
 				end
 			else
 				if
@@ -482,7 +481,7 @@ feature -- Actions
 			metric_definer.set_mode (metric_definer.new_mode)
 			l_unit ?= unit_combo.selected_item.data
 			check l_unit /= Void end
-			metric_definer.initialize_editor (Void, metric_definer.edit_mode, l_unit, uuid)
+			metric_definer.initialize_editor (Void, metric_definer.edit_mode, l_unit)
 		end
 
 	on_quick_metric_button_pressed (a_metric: EB_METRIC_BASIC) is
@@ -499,7 +498,6 @@ feature -- Actions
 					unit_combo.select_actions.block
 					unit_combo.retrieve_item_by_data (a_metric.unit, False).enable_select
 					unit_combo.select_actions.resume
-					metric_definer.set_uuid (uuid)
 					metric_definer.set_unit (a_metric.unit)
 					metric_definer.set_mode (metric_definer.new_mode)
 					metric_definer.load_criterion (a_metric.identical_new_instance.criteria)
@@ -570,20 +568,6 @@ feature {NONE} -- Implementation/Data
 	domain_generator_internal: QL_DOMAIN_GENERATOR
 			-- Domain generator used to setup metric evaluation
 
-	uuid: UUID is
-			-- Current UUID used for quick metric
-		local
-			l_uuid_generator: UUID_GENERATOR
-		do
-			if uuid_internal = Void then
-				create l_uuid_generator
-				uuid_internal := l_uuid_generator.generate_uuid
-			end
-			Result := uuid_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	detailed_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 	filter_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 	auto_go_to_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
@@ -595,9 +579,6 @@ feature {NONE} -- Implementation/Data
 
 	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
 			-- Agent of `process_gui'
-
-	uuid_internal: like uuid
-			-- Implementation of `uuid'	
 
 	domain_selector: EB_METRIC_DOMAIN_SELECTOR
 			-- Domain selector
@@ -618,7 +599,7 @@ feature {NONE} -- Implementation/Data
 		do
 			l_unit ?= unit_combo.selected_item.data
 			check l_unit /= Void end
-			create l_metric.make (metric_manager.next_metric_name_with_unit (l_unit), l_unit, uuid)
+			create l_metric.make (metric_manager.next_metric_name_with_unit (l_unit), l_unit)
 			if a_appliable then
 				l_metric.set_criteria (a_criterion)
 			else

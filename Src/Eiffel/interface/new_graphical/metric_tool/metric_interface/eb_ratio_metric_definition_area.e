@@ -117,13 +117,13 @@ feature -- Setting
 			numerator_coefficient_txt.change_actions.block
 			denominator_coefficient_txt.change_actions.block
 			if a_metric /= Void then
-				numerator_metric_setter.load_metric_data (a_metric.numerator_metric_name, a_metric.numerator_metric_uuid)
-				denominator_metric_setter.load_metric_data (a_metric.denominator_metric_name, a_metric.denominator_metric_uuid)
+				numerator_metric_setter.load_metric_data (a_metric.numerator_metric_name)
+				denominator_metric_setter.load_metric_data (a_metric.denominator_metric_name)
 				numerator_coefficient_txt.set_text (a_metric.numerator_coefficient.out)
 				denominator_coefficient_txt.set_text (a_metric.denominator_coefficient.out)
 			else
-				numerator_metric_setter.load_metric_data ("", metric_manager.uuid_generator.generate_uuid)
-				denominator_metric_setter.load_metric_data ("", metric_manager.uuid_generator.generate_uuid)
+				numerator_metric_setter.load_metric_data ("")
+				denominator_metric_setter.load_metric_data ("")
 
 				numerator_coefficient_txt.set_text ("1")
 				denominator_coefficient_txt.set_text ("1")
@@ -158,13 +158,10 @@ feature -- Access
 	metric: EB_METRIC_RATIO is
 			-- Metric in current editor
 		do
-			create Result.make (name_area.name, unit, uuid)
+			create Result.make (name_area.name, unit)
 			Result.set_description (name_area.description)
 			Result.set_numerator_metric_name (numerator_metric_setter.metric_name)
-			Result.set_numerator_metric_uuid (numerator_metric_setter.metric_uuid)
-
 			Result.set_denominator_metric_name (denominator_metric_setter.metric_name)
-			Result.set_denominator_metric_uuid (denominator_metric_setter.metric_uuid)
 			Result.set_numerator_coefficient (numerator_coefficient_txt.text.to_double)
 			Result.set_denominator_coefficient (denominator_coefficient_txt.text.to_double)
 		end

@@ -119,54 +119,42 @@ feature -- Setting
 			is_read_only_set: is_read_only = b
 		end
 
-	load_metric_data (a_name: STRING; a_uuid: UUID) is
-			-- Load metric name `a_name' and its UUID `a_uuid' in Current.
+	load_metric_data (a_name: STRING) is
+			-- Load metric name `a_name' in Current.
 		require
 			a_name_attached: a_name /= Void
-			a_uuid_attached: a_uuid /= Void
 		do
 			metric_text_field.change_actions.block
 			metric_text_field.set_text (a_name)
-			metric_text_field.set_data (a_uuid)
-			on_text_change_in_text_field (a_name, a_uuid)
+			on_text_change_in_text_field (a_name)
 			metric_text_field.change_actions.resume
 		end
 
 feature{NONE}	-- Acitons
 
-	on_text_change_in_text_field (a_text: STRING; a_uuid: UUID) is
-			-- Action to be performed when text in `metric_text_field' changes to `a_text'
-			-- If `a_uuid' is attached, set `data' of `metric_text_field' with `a_uuid', else find a possible UUID and set it into `data' of `metric_text_field'.
+	on_text_change_in_text_field (a_text: STRING) is
+			-- Action to be performed when text in `metric_text_field' changes to `a_text'.			
 		require
 			a_text_attached: a_text /= Void
 		local
 			l_metric_manager: like metric_manager
 		do
 			l_metric_manager := metric_manager
-			if a_uuid /= Void then
-				metric_text_field.set_data (a_uuid)
-			end
 			if l_metric_manager.has_metric (a_text) then
 				if l_metric_manager.is_metric_valid (a_text) then
 					metric_text_field.set_foreground_color (black_color)
 				else
 					metric_text_field.set_foreground_color (red_color)
 				end
-				if a_uuid = Void then
-					metric_text_field.set_data (l_metric_manager.metric_with_name (a_text).uuid)
-				end
 			else
 				metric_text_field.set_foreground_color (red_color)
-				if a_uuid = Void then
-					metric_text_field.set_data (metric_manager.uuid_generator.generate_uuid)
-				end
 			end
 		end
 
 	on_metric_name_text_change_confirmed is
 			-- Action to be performed when text change in `metric_text_field' is confirmed
 		do
-			on_text_change_in_text_field (metric_text_field.text , Void)
+			on_text_change_in_text_field (metric_text_field.text)
 			call_change_actions
 		end
 
@@ -189,7 +177,6 @@ feature{NONE}	-- Acitons
 					else
 						metric_text_field.set_foreground_color (red_color)
 					end
-					metric_text_field.set_data (l_metric.uuid)
 					metric_text_field.set_text (l_metric.name)
 				end
 				call_change_actions

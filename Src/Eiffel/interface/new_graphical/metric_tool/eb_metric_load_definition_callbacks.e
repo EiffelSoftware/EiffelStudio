@@ -254,12 +254,12 @@ feature{NONE} -- Process
 	process_basic_metric is
 			-- Process "basic_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
+			l_id: TUPLE [name: STRING; unit: STRING]
 		do
 			if not has_error then
 				l_id := current_metric_identifier (basic_metric_type)
 				if not has_error then
-					current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
+					current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit))
 					current_metric := current_basic_metric
 					create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
 				end
@@ -269,12 +269,12 @@ feature{NONE} -- Process
 	process_linear_metric is
 			-- Process "linear_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
+			l_id: TUPLE [name: STRING; unit: STRING]
 		do
 			if not has_error then
 				l_id := current_metric_identifier (linear_metric_type)
 				if not has_error then
-					current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
+					current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit))
 					current_metric := current_linear_metric
 				end
 			end
@@ -283,13 +283,9 @@ feature{NONE} -- Process
 	process_ratio_metric is
 			-- Process "ratio_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
+			l_id: TUPLE [name: STRING; unit: STRING]
 			l_num: STRING
 			l_den: STRING
-			l_num_uuid_str: STRING
-			l_den_uuid_str: STRING
-			l_num_uuid: UUID
-			l_den_uuid: UUID
 			l_num_coefficient_str: STRING
 			l_den_coefficient_str: STRING
 			l_num_coefficient: DOUBLE
@@ -301,27 +297,13 @@ feature{NONE} -- Process
 			if not has_error then
 				l_num := current_attributes.item (at_numerator)
 				l_den := current_attributes.item (at_denominator)
-				l_num_uuid_str := current_attributes.item (at_numerator_uuid)
 				l_num_coefficient_str := current_attributes.item (at_numerator_coefficient)
 				l_den_coefficient_str := current_attributes.item (at_denominator_coefficient)
-				l_den_uuid_str := current_attributes.item (at_denominator_uuid)
 				if l_num = Void then
 					create_last_error (metric_names.err_numerator_metric_missing)
 				end
 				if not has_error and then l_den = Void then
 					create_last_error (metric_names.err_denominator_metric_missing)
-				end
-				if not has_error then
-					check_uuid_validity (l_num_uuid_str)
-					if not has_error then
-						l_num_uuid := last_valid_uuid
-					end
-				end
-				if not has_error then
-					check_uuid_validity (l_den_uuid_str)
-					if not has_error then
-						l_den_uuid := last_valid_uuid
-					end
 				end
 				if not has_error then
 					l_num_coefficient := coefficient_for_ratio_metric (
@@ -339,8 +321,8 @@ feature{NONE} -- Process
 					current_ratio_metric := factory.new_ratio_metric (
 						l_id.name,
 						unit_table.item (l_id.unit),
-						l_id.uuid, l_num, l_num_uuid,
-						l_den, l_den_uuid,
+						l_num,
+						l_den,
 						l_num_coefficient,
 						l_den_coefficient
 					)
@@ -356,13 +338,11 @@ feature{NONE} -- Process
 		local
 			l_coefficient: STRING
 			l_metric: STRING
-			l_uuid_str: STRING
 			l_coefficient_value: DOUBLE
 		do
 			if not has_error then
 				l_coefficient := current_attributes.item (at_coefficient)
 				l_metric := current_attributes.item (at_name)
-				l_uuid_str := current_attributes.item (at_uuid)
 				if l_metric = Void then
 					create_last_error (metric_names.err_variable_metric_name_missing)
 					extend_location_section (Void)
@@ -388,12 +368,6 @@ feature{NONE} -- Process
 					end
 					current_linear_metric.coefficient.extend (l_coefficient_value)
 					current_linear_metric.variable_metric.extend (l_metric)
-				end
-				if not has_error then
-					check_uuid_validity (l_uuid_str)
-					if not has_error then
-						current_linear_metric.variable_metric_uuid.extend (last_valid_uuid)
-					end
 				end
 			end
 		end
@@ -1174,18 +1148,16 @@ feature{NONE} -- Implementation/XML structure
 
 feature{NONE} -- Implementation
 
-	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING; uuid: UUID] is
+	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING] is
 			-- Metric identifier of `current_metric'
 		require
 			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
 		local
 			l_name: STRING
 			l_unit: STRING
-			l_uuid_str: STRING
 		do
 			l_name := current_attributes.item (at_name)
 			l_unit := current_attributes.item (at_unit)
-			l_uuid_str := current_attributes.item (at_uuid)
 			if not has_error then
 				if l_name = Void then
 					extend_location_section (Void)
@@ -1203,10 +1175,7 @@ feature{NONE} -- Implementation
 				end
 			end
 			if not has_error then
-				check_uuid_validity (l_uuid_str)
-				if not has_error then
-					Result := [l_name, l_unit, last_valid_uuid]
-				end
+				Result := [l_name, l_unit]
 			end
 		end
 

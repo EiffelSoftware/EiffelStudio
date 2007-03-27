@@ -230,7 +230,7 @@ feature -- Access
 	metric: EB_METRIC_BASIC is
 			-- Metric in current editor
 		do
-			create Result.make (name_area.name, unit, uuid)
+			create Result.make (name_area.name, unit)
 			Result.set_description (name_area.description)
 			Result.set_criteria (combination_grid.criterion)
 		end

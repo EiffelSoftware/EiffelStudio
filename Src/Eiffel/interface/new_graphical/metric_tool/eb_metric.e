@@ -16,16 +16,14 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_unit: like unit; a_uuid: like uuid) is
-			-- Initialize `name' with `a_name', `unit' with `a_unit and `uuid' with `a_uuid'.
+	make (a_name: STRING; a_unit: like unit) is
+			-- Initialize `name' with `a_name' and `unit' with `a_unit.
 		require
 			a_name_attached: a_name /= Void
 			a_unit_attached: a_unit /= Void
-			a_uuid_attached: a_uuid /= Void
 		do
 			set_name (a_name)
 			set_unit (a_unit)
-			set_uuid (a_uuid)
 		end
 
 feature -- Status report
@@ -90,9 +88,6 @@ feature -- Access
 
 	manager: EB_METRIC_MANAGER
 			-- Metric manager
-
-	uuid: UUID
-			-- UUID of current metric
 
 	direct_referenced_metrics: LIST [STRING] is
 			-- Name of metrics which are directly referenced by Current
@@ -226,22 +221,9 @@ feature -- Setting
 			manager_set: manager = a_manager
 		end
 
-	set_uuid (a_uuid: like uuid) is
-			-- Set `uuid' with `a_uuid'.
-		require
-			a_uuid_attached: a_uuid /= Void
-		do
-			uuid := a_uuid
-		ensure
-			uuid_set: uuid = a_uuid
-		end
-
-feature{NONE} -- Referenced metric
-
 invariant
 	name_attached: name /= Void
 	unit_attached: unit /= Void
-	uuid_attached: uuid /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

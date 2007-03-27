@@ -189,7 +189,7 @@ feature{NONE} -- Actions
 			if l_tester = Void then
 				create l_tester.make
 			end
-			metric_setter.load_metric_data (l_metric_name, uuid_gen.generate_uuid)
+			metric_setter.load_metric_data (l_metric_name)
 			value_tester.set_criterion (l_tester)
 		end
 

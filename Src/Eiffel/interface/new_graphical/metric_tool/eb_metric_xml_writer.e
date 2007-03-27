@@ -99,7 +99,6 @@ feature{NONE} -- Process
 		local
 			l_variable_metric: LIST [STRING]
 			l_coefficient: LIST [DOUBLE]
-			l_uuid: LIST [UUID]
 		do
 			append_tab (indent_level)
 			append_start_tag (n_linear_metric, metric_identifier_table (a_linear_metric))
@@ -119,17 +118,14 @@ feature{NONE} -- Process
 				from
 					l_variable_metric := a_linear_metric.variable_metric
 					l_coefficient := a_linear_metric.coefficient
-					l_uuid := a_linear_metric.variable_metric_uuid
 					l_variable_metric.start
 					l_coefficient.start
-					l_uuid.start
 				until
 					l_variable_metric.after
 				loop
-					append_variable_metric (l_variable_metric.item, l_coefficient.item.out, l_uuid.item.out)
+					append_variable_metric (l_variable_metric.item, l_coefficient.item.out)
 					l_variable_metric.forth
 					l_coefficient.forth
-					l_uuid.forth
 				end
 			end
 			exdent
@@ -146,10 +142,8 @@ feature{NONE} -- Process
 			append_tab (indent_level)
 			l_attr_tbl := metric_identifier_table (a_ratio_metric)
 			l_attr_tbl.put (a_ratio_metric.numerator_metric_name, n_numerator)
-			l_attr_tbl.put (a_ratio_metric.numerator_metric_uuid.out, n_numerator_uuid)
 			l_attr_tbl.put (a_ratio_metric.numerator_coefficient.out, n_numerator_coefficient)
 			l_attr_tbl.put (a_ratio_metric.denominator_metric_name, n_denominator)
-			l_attr_tbl.put (a_ratio_metric.denominator_metric_uuid.out, n_denominator_uuid)
 			l_attr_tbl.put (a_ratio_metric.denominator_coefficient.out, n_denominator_coefficient)
 			append_start_tag (n_ratio_metric, l_attr_tbl)
 			append_end_tag (n_ratio_metric)
@@ -629,7 +623,6 @@ feature{NONE} -- Implementation
 			create Result.make (3)
 			Result.put (a_metric.name, n_name)
 			Result.put (a_metric.unit.name, n_unit)
-			Result.put (a_metric.uuid.out, n_uuid)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -672,7 +665,7 @@ feature{NONE} -- Implementation
 		end
 
 
-	append_variable_metric (a_name: STRING; a_coefficient: STRING; a_uuid: STRING) is
+	append_variable_metric (a_name: STRING; a_coefficient: STRING) is
 			-- Append variable metric (in a linear metric) with name `a_name' and coefficient `a_coefficient' into `text'.
 		require
 			a_name_attached: a_name /= Void
@@ -680,15 +673,12 @@ feature{NONE} -- Implementation
 			a_coefficient_attached: a_coefficient /= Void
 			not_a_coefficient_is_empty: not a_coefficient.is_empty
 			a_coefficient_is_number: a_coefficient.is_real
-			a_uuid_attached: a_uuid /= Void
-			a_uuid_valid: is_uuid_valid (a_uuid)
 		local
 			l_attr_table: HASH_TABLE [STRING, STRING]
 		do
 			create l_attr_table.make (3)
 			l_attr_table.put (a_name, n_name)
 			l_attr_table.put (a_coefficient, n_coefficient)
-			l_attr_table.put (a_uuid, n_uuid)
 			append_indent
 			append_start_tag (n_variable_metric, l_attr_table)
 			append_end_tag (n_variable_metric)

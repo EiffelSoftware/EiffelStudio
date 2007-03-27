@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 				else
 					l_clause ?= l_data
 					if l_clause /= Void then
-						features_tool.go_to_clause (l_clause)
+						features_tool.go_to_clause (l_clause, True)
 					end
 				end
 			end
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			fclause_not_void: fclause /= Void
 		do
 			if a_button = 1 then
-				features_tool.go_to_clause (fclause)
+				features_tool.go_to_clause (fclause, False)
 			end
 		end
 

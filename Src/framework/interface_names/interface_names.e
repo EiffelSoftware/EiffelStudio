@@ -1553,7 +1553,6 @@ feature -- Label texts
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING is " (version from)"
-	le_Not_yet_called: STRING is			"Not yet called"
 	le_branch (a_bra: INTEGER): STRING is do Result := "Branch #" + a_bra.out end
 	le_Location_colon: STRING is 				"Location: "
 	le_Stop_point_reached: STRING is		"Breakpoint reached"

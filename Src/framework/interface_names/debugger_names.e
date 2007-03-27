@@ -38,8 +38,49 @@ feature -- Names
 	t_debugger_main_menu: STRING_GENERAL is
 			once Result := locale.translate ("--< Debugger main menu >--") end
 
+feature -- warnings
+
+	w_System_has_no_entry_and_is_not_executable: STRING_GENERAL is
+		once Result := locale.translate ("The system has no entry feature, it is not executable from EiffelStudio.") end
+
+	w_Error_occurred_during_icordebug_initialization: STRING_GENERAL is
+		once Result := locale.translate (
+							"An error occurred during initialization of the ICorDebug Debugger%N%
+							% or during the Process creation (.NET).")
+		end
+
+	w_Cannot_launch_system: STRING_GENERAL is
+		once Result := locale.translate ("Could not launch system.") end
+
+	w_Cannot_find_valid_ecdbgd (a_ecdbgd_path, a_env_var_str, a_env_var_name: STRING_GENERAL): STRING_GENERAL is
+		once
+			Result := locale.format_string (locale.translate (
+					"The Eiffel debugger is not found or not executable%N%
+					%  current path = $1 %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the $2 $3 %N"),
+					[a_ecdbgd_path, a_env_var_str, a_env_var_name]
+				)
+		end
+
+	w_Cannot_launch_in_allotted_time (a_timeout: INTEGER_32; a_env_var_str, a_env_var_name: STRING_GENERAL): STRING_GENERAL is
+		once
+			Result := locale.format_string (locale.translate (
+					"The system could not be launched in allotted time:%N%
+					%%NYour current timeout is $1 second(s) %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the $2 $3 %N"),
+					[a_timeout, a_env_var_str, a_env_var_name]
+				)
+		end
 
 feature -- Messages
+
+	m_Not_yet_called: STRING_GENERAL is
+			once Result := locale.translate ("Not yet called") end
+
+	m_Could_not_retrieve_once_information: STRING_GENERAL is
+			once Result := locale.translate ("Could not retrieve information (once is being called or once failed)") end
 
 	m_n_breakpoints (a_n: STRING_GENERAL): STRING_GENERAL is
 			once Result := locale.format_string (locale.translate ("*** $1 Breakpoints *** %N"), [a_n]) end

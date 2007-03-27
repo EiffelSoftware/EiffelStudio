@@ -41,7 +41,7 @@ feature -- change
 
 feature -- Access
 
-	message: STRING
+	message: STRING_GENERAL
 			-- Information message to display in object tool
 
 	display_message: STRING_32 is

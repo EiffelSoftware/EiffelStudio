@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BENCH_NAMES
+
 	REFACTORING_HELPER
 
 --create {DEBUGGER_MANAGER}
@@ -169,7 +171,7 @@ feature -- Access
 	can_not_launch_system_message: STRING is
 			-- Message displayed when estudio is unable to launch the system
 		do
-			Result := "Cannot launch system"
+			Result := debugger_names.w_Cannot_launch_system.as_string_8
 		end
 
 	number_of_stack_elements: INTEGER is

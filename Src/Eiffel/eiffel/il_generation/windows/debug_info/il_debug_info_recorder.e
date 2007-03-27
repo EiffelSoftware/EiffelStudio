@@ -273,10 +273,14 @@ feature -- Queries : eStudio data from debugger data
 			-- System entry point feature
 		local
 			l_class: CLASS_C
+			s: STRING
 		do
-			--| Update the root class info
-			l_class := System.root_type.associated_class
-			Result := l_class.feature_table.item (System.root_creation_name)
+				--| Update the root class info
+			s := System.root_creation_name
+			if s /= Void then
+				l_class := System.root_type.associated_class
+				Result := l_class.feature_table.item (System.root_creation_name)
+			end
 		end
 
 feature -- Access to module name computing

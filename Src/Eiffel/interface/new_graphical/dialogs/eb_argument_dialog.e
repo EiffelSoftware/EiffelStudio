@@ -27,7 +27,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		undefine
@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
 			cell: EV_CELL
+			cmd: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		do
 			create execution_frame
 
@@ -120,6 +121,26 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (run_and_close_button)
 				run_and_close_button.select_actions.extend (agent execute_and_close)
 				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)
+
+				vbox.extend (create {EV_CELL})
+
+				cmd := eb_debugger_manager.run_workbench_cmd
+				create start_wb_button.make_with_text (cmd.tooltext)
+				vbox.extend (start_wb_button)
+				vbox.disable_item_expand (start_wb_button)
+				start_wb_button.set_pixmap (cmd.pixmap)
+				start_wb_button.set_tooltip (cmd.tooltip)
+				start_wb_button.select_actions.extend (agent cmd.execute)
+				Layout_constants.set_default_width_for_button (start_wb_button)
+
+				cmd := eb_debugger_manager.run_finalized_cmd
+				create start_final_button.make_with_text (cmd.tooltext)
+				vbox.extend (start_final_button)
+				vbox.disable_item_expand (start_final_button)
+				start_final_button.set_pixmap (cmd.pixmap)
+				start_final_button.set_tooltip (cmd.tooltip)
+				start_final_button.select_actions.extend (agent cmd.execute)
+				Layout_constants.set_default_width_for_button (start_final_button)
 			end
 
 			create cell
@@ -141,6 +162,9 @@ feature -- GUI
 	run_button,
 	run_and_close_button: EV_BUTTON
 			-- Button to run system.
+
+	start_wb_button, start_final_button: EV_BUTTON
+			-- Button to start system.
 
 feature -- Status Setting
 
@@ -218,12 +242,10 @@ feature {NONE} -- Observing event handling.
 	on_application_quit is
 			-- Action to take when the application is killed.
 		do
-			if not run_button.is_sensitive then
-				run_button.enable_sensitive
-			end
-			if not run_and_close_button.is_sensitive then
-				run_and_close_button.enable_sensitive
-			end
+			run_button.enable_sensitive
+			run_and_close_button.enable_sensitive
+			start_wb_button.enable_sensitive
+			start_final_button.enable_sensitive
 		end
 
 	on_application_launched is
@@ -235,23 +257,19 @@ feature {NONE} -- Observing event handling.
 	on_application_resumed is
 			-- Action to take when the application is resumed.
 		do
-			if run_button.is_sensitive then
-				run_button.disable_sensitive
-			end
-			if run_and_close_button.is_sensitive then
-				run_and_close_button.disable_sensitive
-			end
+			run_button.disable_sensitive
+			run_and_close_button.disable_sensitive
+			start_wb_button.disable_sensitive
+			start_final_button.disable_sensitive
 		end
 
 	on_application_stopped is
 			-- Action to take when the application is stopped.
 		do
-			if not run_button.is_sensitive then
-				run_button.enable_sensitive
-			end
-			if not run_and_close_button.is_sensitive then
-				run_and_close_button.enable_sensitive
-			end
+			run_button.enable_sensitive
+			run_and_close_button.enable_sensitive
+			start_wb_button.enable_sensitive
+			start_final_button.enable_sensitive
 		end
 
 invariant

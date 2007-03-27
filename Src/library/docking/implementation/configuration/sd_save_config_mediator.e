@@ -31,37 +31,43 @@ feature -- Save inner container data.
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
 		local
-			l_file: RAW_FILE
 			l_config_data: SD_CONFIG_DATA
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
+		do
+			create l_config_data.make
+			save_config_with_name_maximized_data (l_config_data, a_name, True)
+			save_config_data_to_file (l_config_data, a_file)
+		end
+
+	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN) is
+			-- Save all docking library datas to `a_file' with `a_name'
+		require
+			a_config_data_not_void: a_config_data /= Void
+			a_file_not_void: a_name /= Void
 		do
 			debug ("docking")
 				io.put_string ("%N ================= SD_CONFIG_MEDIATOR save config ===============")
 			end
 
-			create l_config_data.make
-			create l_file.make_create_read_write (a_file.as_string_8)
+			if a_save_maximized_data then
+				save_maximized_tool_data (a_config_data)
+			end
 
 			internal_docking_manager.command.recover_normal_state
 
-			save_editor_minimized_data (l_config_data)
+			save_editor_minimized_data (a_config_data)
 
-			save_all_inner_containers_data (l_config_data)
+			save_all_inner_containers_data (a_config_data)
 
 			-- Second save auto hide zones data.
-			save_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
+			save_auto_hide_panel_data (a_config_data.auto_hide_panels_datas)
 
-			save_tool_bar_datas (l_config_data.tool_bar_datas)
+			save_tool_bar_datas (a_config_data.tool_bar_datas)
 
-			l_config_data.set_name (a_name)
-			l_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
-			l_config_data.set_is_tool_bar_locked (internal_docking_manager.tool_bar_manager.is_locked)
-
-			create l_writer.make (l_file)
-			create l_facility
-			l_facility.independent_store (l_config_data, l_writer, True)
-			l_file.close
+			a_config_data.set_name (a_name)
+			a_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
+			a_config_data.set_is_tool_bar_locked (internal_docking_manager.tool_bar_manager.is_locked)
 
 			top_container := Void
 		ensure
@@ -88,9 +94,16 @@ feature -- Save inner container data.
 			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
+			l_maximized_zone: SD_ZONE
 		do
 			if not internal_docking_manager.contents.has (internal_docking_manager.zones.place_holder_content) then
 				l_dock_area := internal_docking_manager.query.inner_container_main
+
+				l_maximized_zone := internal_docking_manager.zones.maximized_zone
+				if l_maximized_zone /= Void then
+					l_maximized_zone.on_normal_max_window
+				end
+
 				l_container := l_dock_area.editor_parent
 				-- Maybe the widget structure is corrupt at the moment.
 				if l_container /= Void then
@@ -100,6 +113,11 @@ feature -- Save inner container data.
 					else
 						save_inner_container_data (l_container, l_config_data)
 					end
+				end
+
+				if l_maximized_zone /= Void then
+					-- We restore tool maximzied state.
+					l_maximized_zone.on_normal_max_window
 				end
 			else
 				-- There is no editor in main window.	
@@ -135,7 +153,11 @@ feature -- Save inner container data.
 		local
 			l_container: EV_CONTAINER
 			l_widget_structure_corrupted: BOOLEAN
+			l_config_data: SD_CONFIG_DATA
 		do
+			create l_config_data.make
+			save_maximized_tool_data (l_config_data)
+
 			internal_docking_manager.command.recover_normal_state
 
 			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
@@ -153,10 +175,12 @@ feature -- Save inner container data.
 			end
 
 			if not l_widget_structure_corrupted then
-				save_config_with_name (a_file, a_name)
+				save_config_with_name_maximized_data (l_config_data, a_name, False)
 			end
-		
+
 			top_container := Void
+
+			save_config_data_to_file (l_config_data, a_file)
 		ensure
 			cleared: top_container = Void
 		end
@@ -474,6 +498,36 @@ feature {NONE} -- Implementation
 			else
 				a_config_data.set_is_one_editor_zone (False)
 			end
+		end
+
+	save_maximized_tool_data (a_config_data: SD_CONFIG_DATA) is
+			-- Save maximized data.
+		require
+			not_void: a_config_data /= Void
+		local
+			l_maximized_zone: SD_ZONE
+		do
+			l_maximized_zone := internal_docking_manager.zones.maximized_zone
+			if l_maximized_zone /= Void then
+				a_config_data.set_maximized_tool (l_maximized_zone.content.unique_title)
+			end
+		end
+
+	save_config_data_to_file (a_config_data: SD_CONFIG_DATA; a_file: STRING_GENERAL) is
+			-- Save `a_config_data' to `a_file'
+		require
+			a_config_data_not_void: a_config_data /= Void
+			a_file_not_void: a_file /= Void
+		local
+			l_file: RAW_FILE
+			l_facility: SED_STORABLE_FACILITIES
+			l_writer: SED_MEDIUM_READER_WRITER
+		do
+			create l_file.make_create_read_write (a_file.as_string_8)
+			create l_writer.make (l_file)
+			create l_facility
+			l_facility.independent_store (a_config_data, l_writer, True)
+			l_file.close
 		end
 
 feature {NONE} -- Implementation attributes

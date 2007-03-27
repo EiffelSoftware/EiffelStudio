@@ -52,6 +52,8 @@ feature {NONE} -- Initialize
 				l_reg.close_key (l_p)
 			end
 
+			(create {CLI_COM}).initialize_com
+
 			c_initialize_dispenser ($l_dis).do_nothing
 			c_create_cache ($l_cache, 0).do_nothing
 			dispenser := l_dis
@@ -237,24 +239,13 @@ feature {NONE} -- Externals
 		alias
 			"[
 				IMetaDataDispenser* pDispenser = NULL;
-				BOOL fWasInit = FALSE;
 				HRESULT hr = S_OK;
 				
-				hr = CoInitializeEE (NULL);
-				if (SUCCEEDED (hr))
+				hr = CoCreateInstance (CLSID_CorMetaDataDispenserRuntime, NULL, CLSCTX_INPROC_SERVER, IID_IMetaDataDispenser, (LPVOID*)&pDispenser);
+				if (SUCCEEDED (hr) && (pDispenser != NULL))
 				{
-					fWasInit = (S_OK == hr); // COM was initialized here, make sure to uinit.
-					hr = CoCreateInstance (CLSID_CorMetaDataDispenserRuntime, NULL, CLSCTX_INPROC_SERVER, IID_IMetaDataDispenser, (LPVOID*)&pDispenser);
-					if (SUCCEEDED (hr) && (pDispenser != NULL))
-					{
-						pDispenser->AddRef();
-						*$a_dispenser = (EIF_POINTER)pDispenser;				
-					}
-					else if (fWasInit)
-					{
-						// Clean up
-						CoUninitializeEE(FALSE);
-					}
+					pDispenser->AddRef();
+					*$a_dispenser = (EIF_POINTER)pDispenser;				
 				}
 				return hr;
 			]"

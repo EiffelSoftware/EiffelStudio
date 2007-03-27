@@ -216,8 +216,13 @@ feature{NONE} -- Implementation/Process
 		end
 
 	process_unary_as (l_as: UNARY_AS) is
+		local
+			l_feature_name: STRING
 		do
-			check_accessor_for_operators (l_as.class_id, l_as.prefix_feature_name, l_as.operator)
+			l_feature_name := l_as.prefix_feature_name
+			if l_feature_name /= Void then
+				check_accessor_for_operators (l_as.class_id, l_feature_name, l_as.operator)
+			end
 			Precursor (l_as)
 		end
 

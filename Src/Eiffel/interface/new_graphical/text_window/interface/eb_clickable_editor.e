@@ -188,13 +188,13 @@ feature -- Possibly delayed operations
 		local
 			ln: INTEGER
 		do
-				if text_is_fully_loaded then
-					ln := l_num.min (maximum_top_line_index)
-					set_first_line_displayed (ln, True)
-					refresh_now
-				else
-					after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
-				end
+			if text_is_fully_loaded then
+				ln := l_num.min (maximum_top_line_index)
+				set_first_line_displayed (ln, True)
+				refresh_now
+			else
+				after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
+			end
 		end
 
 	highlight_when_ready (a, b: INTEGER) is
@@ -253,9 +253,10 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_selected: BOOLEAN) is
+	scroll_to_start_of_line_when_ready_if_top (a_line_number: INTEGER; a_selected: BOOLEAN; a_top: BOOLEAN) is
 			-- Scroll to `a_line_number'-th line.
 			-- If `a_selected' is True, select that line.
+			-- If `a_top' then display `a_line_number' at top.
 		local
 			l_text: like text_displayed
 		do
@@ -266,10 +267,21 @@ feature -- Possibly delayed operations
 				end
 				l_text.cursor.set_y_in_lines (a_line_number)
 				l_text.cursor.go_start_line
-				display_line_when_ready (a_line_number, a_selected)
+				if a_top then
+					display_line_at_top_when_ready  (a_line_number)
+				else
+					display_line_when_ready (a_line_number, a_selected)
+				end
 			else
 				after_reading_text_actions.extend (agent scroll_to_start_of_line_when_ready (a_line_number, a_selected))
 			end
+		end
+
+	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_selected: BOOLEAN) is
+			-- Scroll to `a_line_number'-th line.
+			-- If `a_selected' is True, select that line.
+		do
+			scroll_to_start_of_line_when_ready_if_top (a_line_number, a_selected, False)
 		end
 
 	scroll_to_end_when_ready is

@@ -355,26 +355,37 @@ feature {EB_FEATURES_TREE} -- Status setting
 			develop_window.set_feature_locating (false)
 		end
 
-	go_to_clause (a_clause: FEATURE_CLAUSE_AS) is
+	go_to_clause (a_clause: FEATURE_CLAUSE_AS; a_focus: BOOLEAN) is
 			-- `a_clause' has been selected, the associated class
 			-- window should display the corresponding feature clause.
 			-- the premise is that basic view is being used.
+			-- `a_focus' means if set focus to current editor.
 		local
 			s: STRING
 			l_formatter: EB_BASIC_TEXT_FORMATTER
+			l_current_editor:  EB_SMART_EDITOR
+			l_line, l_pos: INTEGER
 		do
 			if a_clause.start_position > 0 and then develop_window.editors_manager.current_editor /= Void then
 				s := current_compiled_class.text
+				l_current_editor := develop_window.editors_manager.current_editor
 				if s = Void then
-					s := develop_window.editors_manager.current_editor.text
+					s := l_current_editor.text
 				end
 				check
 					s_not_void: s /= Void
 				end
 				l_formatter ?= develop_window.pos_container
 				if l_formatter /= Void then
-					develop_window.editors_manager.current_editor.display_line_at_top_when_ready (
-						character_line (a_clause.start_position, s))
+					l_pos := a_clause.start_position
+					l_line := character_line (l_pos, s)
+					if not a_focus then
+						l_current_editor.display_line_at_top_when_ready  (l_line)
+					else
+						l_current_editor.docking_content.set_focus
+						l_current_editor.set_focus
+						l_current_editor.scroll_to_start_of_line_when_ready_if_top (l_line, False, True)
+					end
 				end
 			end
 		end

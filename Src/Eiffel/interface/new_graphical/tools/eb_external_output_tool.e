@@ -64,6 +64,7 @@ feature{NONE} -- Initialization
 			Precursor {EB_OUTPUT_TOOL} (a_docking_manager)
 			content.drop_actions.extend (agent drop_class)
 			content.drop_actions.extend (agent drop_feature)
+			content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			create l_constants
 			content.set_long_title (title)
 			content.set_short_title (title)
@@ -228,6 +229,7 @@ feature{NONE} -- Initialization
 			output_text.drop_actions.extend (agent drop_feature)
 			output_text.drop_actions.extend (agent drop_cluster)
 			output_text.drop_actions.extend (agent drop_breakable)
+			output_text.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			terminate_btn.set_tooltip (f_terminate_command_button)
 			terminate_btn.select_actions.extend (agent on_terminate_process)
@@ -242,6 +244,7 @@ feature{NONE} -- Initialization
 			state_label.drop_actions.extend (agent drop_feature)
 			state_label.drop_actions.extend (agent drop_cluster)
 			state_label.drop_actions.extend (agent drop_breakable)
+			state_label.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			run_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
 			run_btn.set_tooltip (f_start_command_button)
@@ -255,6 +258,7 @@ feature{NONE} -- Initialization
 			cmd_lst.drop_actions.extend (agent drop_feature)
 			cmd_lst.drop_actions.extend (agent drop_cluster)
 			cmd_lst.drop_actions.extend (agent drop_breakable)
+			cmd_lst.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
@@ -265,6 +269,7 @@ feature{NONE} -- Initialization
 			input_field.drop_actions.extend (agent drop_feature)
 			input_field.drop_actions.extend (agent drop_cluster)
 			input_field.drop_actions.extend (agent drop_breakable)
+			input_field.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			send_input_btn.set_pixmap (icon_pixmaps.general_send_enter_icon)
 			send_input_btn.set_tooltip (f_send_input_button)
@@ -282,14 +287,17 @@ feature{NONE} -- Initialization
 			l_ev_cmd_lbl.drop_actions.extend (agent drop_feature)
 			l_ev_cmd_lbl.drop_actions.extend (agent drop_cluster)
 			l_ev_cmd_lbl.drop_actions.extend (agent drop_breakable)
+			l_ev_cmd_lbl.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			l_ev_output_lbl.drop_actions.extend (agent drop_class)
 			l_ev_output_lbl.drop_actions.extend (agent drop_feature)
 			l_ev_output_lbl.drop_actions.extend (agent drop_cluster)
 			l_ev_output_lbl.drop_actions.extend (agent drop_breakable)
+			l_ev_output_lbl.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			l_ev_input_lbl.drop_actions.extend (agent drop_class)
 			l_ev_input_lbl.drop_actions.extend (agent drop_feature)
 			l_ev_input_lbl.drop_actions.extend (agent drop_cluster)
 			l_ev_input_lbl.drop_actions.extend (agent drop_breakable)
+			l_ev_input_lbl.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			synchronize_command_list (Void)
 			if external_launcher.is_launch_session_over then

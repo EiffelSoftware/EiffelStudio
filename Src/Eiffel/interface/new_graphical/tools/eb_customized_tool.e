@@ -158,13 +158,35 @@ feature -- Setting
 			l_tool_id: STRING
 		do
 			l_tool_id := suitable_tool_for_stone (st)
-			if l_tool_id /= Void then
-				develop_window.tools.show_tool_by_id (l_tool_id)
+			if develop_window.unified_stone then
+				develop_window.set_stone (st)
+			elseif develop_window.link_tools then
+				if l_tool_id /= Void then
+					develop_window.tools.show_tool_by_id (l_tool_id)
+				else
+					show
+					set_focus
+				end
 				develop_window.tools.set_stone (st)
 			else
-				develop_window.tools.set_stone (st)
+				set_stone (st)
 				show
 				set_focus
+			end
+		end
+
+	veto_pebble_function (a_stone: STONE): BOOLEAN is
+		local
+			l_cis: CLASSI_STONE
+			l_id: STRING
+		do
+			if develop_window.link_tools then
+				Result := True
+			else
+				l_id := suitable_tool_for_stone (a_stone)
+				if l_id /= Void and then l_id.is_equal (id) then
+					Result := True
+				end
 			end
 		end
 

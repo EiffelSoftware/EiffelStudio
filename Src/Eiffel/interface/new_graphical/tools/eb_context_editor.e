@@ -1378,8 +1378,10 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 			decide_tool_to_display (a_stone)
 			if develop_window.unified_stone then
 				develop_window.set_stone (a_stone)
-			else
+			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (a_stone)
+			else
+				set_stone (a_stone)
 			end
 		end
 
@@ -1523,7 +1525,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			fs: FEATURE_STONE
 		do
 			fs ?= a_st
-			if fs /= Void then
+			if fs /= Void and then develop_window.link_tools then
 				develop_window.tools.show_default_tool_of_feature
 			else
 				show

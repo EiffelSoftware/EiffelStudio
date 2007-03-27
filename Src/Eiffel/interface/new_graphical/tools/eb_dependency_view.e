@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_docking_manager)
 			content.drop_actions.extend (agent on_item_dropped)
+			content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
 feature -- Access
@@ -96,7 +97,7 @@ feature -- Status setting
 			fs: FEATURE_STONE
 		do
 			fs ?= a_st
-			if fs /= Void then
+			if fs /= Void and then develop_window.link_tools then
 				develop_window.tools.show_default_tool_of_feature
 			else
 				show
@@ -207,12 +208,26 @@ feature {NONE} -- Implementation
 			decide_tool_to_display (st)
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
-			else
+			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (st)
+			else
+				set_stone (st)
 			end
 			fst ?= st
 			if fst /= Void and then address_manager /= Void then
 				address_manager.hide_address_bar
+			end
+		end
+
+	veto_pebble_function (a_stone: ANY): BOOLEAN is
+		local
+			l_cis: CLASSI_STONE
+		do
+			if develop_window.link_tools then
+				Result := True
+			else
+				l_cis ?= a_stone
+				Result := l_cis /= Void
 			end
 		end
 

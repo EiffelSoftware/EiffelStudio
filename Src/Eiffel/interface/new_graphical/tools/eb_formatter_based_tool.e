@@ -65,6 +65,7 @@ feature{NONE} -- Initialization
 		do
 			Precursor (a_docking_manager)
 			content.drop_actions.extend (agent on_item_dropped)
+			content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
 	build_interface is
@@ -122,6 +123,7 @@ feature -- Access
 				l_frame.set_background_color ((create {EV_STOCK_COLORS}).white)
 				Result := l_frame
 				l_frame.drop_actions.extend (agent drop_stone)
+				l_frame.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 				empty_widget_internal := l_frame
 			end
 			Result := empty_widget_internal
@@ -146,6 +148,11 @@ feature -- Setting
 
 	drop_stone (st: like last_stone) is
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
+		deferred
+		end
+
+	veto_pebble_function (a_stone: ANY): BOOLEAN is
+			-- Veto pebble function, where `drop_stone', `on_item_drop' is used.
 		deferred
 		end
 
@@ -521,6 +528,7 @@ feature{NONE} -- Implementation
 			if Result = Void then
 				create l_drop_actions
 				l_drop_actions.extend (agent drop_stone)
+				l_drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 				Result := a_generator.item ([develop_window, l_drop_actions])
 				Result.set_refresher (agent refresh)
 				l_cache.put (Result, a_name)

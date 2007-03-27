@@ -1154,6 +1154,12 @@ feature -- Tools & Controls
 	unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
 
+	link_tools: BOOLEAN is
+			-- Are tools linked?
+		do
+			Result := preferences.development_window_data.link_tools
+		end
+
 	view_points_combo: EB_VIEWPOINT_COMBO_BOX
 			-- Combo box used to a select viewpoints
 

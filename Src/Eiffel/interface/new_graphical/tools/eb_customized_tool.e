@@ -177,7 +177,6 @@ feature -- Setting
 
 	veto_pebble_function (a_stone: STONE): BOOLEAN is
 		local
-			l_cis: CLASSI_STONE
 			l_id: STRING
 		do
 			if develop_window.link_tools then

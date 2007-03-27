@@ -303,7 +303,7 @@ feature{NONE} -- Actions
 			if grid.selected_rows.count = 1 then
 				l_row ?= a_row.data
 				if l_row /= Void  then
-					l_row.force_position_calculation
+					l_row.calculate_reference_position
 				end
 			end
 		end

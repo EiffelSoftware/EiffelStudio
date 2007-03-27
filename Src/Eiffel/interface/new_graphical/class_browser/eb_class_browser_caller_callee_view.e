@@ -292,7 +292,20 @@ feature{NONE} -- Actions
 			if grid.selected_rows.count = 1 then
 				l_row ?= a_row.data
 				if l_row /= Void  then
-					l_row.force_position_calculation
+					l_row.calculate_reference_position
+				end
+			end
+		end
+
+	on_item_pressed (a_y: INTEGER; a_x: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
+			-- Action to be performed when `a_item' is selected
+		local
+			l_caller_callee_item: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
+		do
+			if a_item /= Void and then a_item.parent = grid and then a_button = {EV_POINTER_CONSTANTS}.right then
+				l_caller_callee_item ?= a_item.row.data
+				if l_caller_callee_item /= Void and then not l_caller_callee_item.has_position_calculated then
+					l_caller_callee_item.calculate_reference_position
 				end
 			end
 		end
@@ -378,6 +391,7 @@ feature{NONE} -- Initialization
 			grid.enable_selection_on_single_button_click
 			grid.enable_single_row_selection
 			grid.enable_tree
+			grid.pointer_button_press_item_actions.extend (agent on_item_pressed)
 			grid.set_row_height (default_row_height)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)

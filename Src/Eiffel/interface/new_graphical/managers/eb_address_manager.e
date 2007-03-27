@@ -1712,9 +1712,15 @@ feature {NONE} -- open new class
 			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				last_caret_position := class_address.caret_position
 				class_address.change_actions.block
+					-- Remove white space from classname
 				str.left_adjust
 				str.right_adjust
+					-- Convert classname input to uppercase for classes
 				str.to_upper
+					-- Replace spaces with underscores for classes
+				str.replace_substring_all (" ", "_")
+					-- Replace dashes with underscores for classes
+				str.replace_substring_all ("-", "_")
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or

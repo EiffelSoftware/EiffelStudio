@@ -94,6 +94,7 @@ feature -- Command
 			l_has_editor_restored: BOOLEAN
 			l_feature: E_FEATURE
 			l_feature_stone: FEATURE_STONE
+			l_debugger_manager: EB_DEBUGGER_MANAGER
 		do
 			if a_dev_window = Void then
 				internal_construct
@@ -109,6 +110,13 @@ feature -- Command
 			if l_has_editor_restored then
 				develop_window.restore_editors_docking_layout
 				develop_window.editors_manager.show_editors_possible
+				l_debugger_manager ?= develop_window.debugger_manager
+				if not l_debugger_manager.raised then
+					develop_window.docking_manager.open_maximized_tool_config (develop_window.docking_config_tools_file)
+				else
+					develop_window.docking_manager.open_maximized_tool_config (develop_window.docking_debug_config_file)
+				end
+
 			end
 				-- Attempt to reload last edited class of `Current'.
 			if a_session_data.current_target /= Void and then develop_window.editors_manager.editor_count > 0 then

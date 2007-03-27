@@ -351,7 +351,6 @@ feature -- Start Operation
 			f_name: FILE_NAME
 			make_f: INDENT_FILE
 			system_name: STRING
-			cmd, wd: STRING
 		do
 			if Eiffel_project.initialized and then Eiffel_project.system_defined then
 				system_name := Eiffel_system.name.twin

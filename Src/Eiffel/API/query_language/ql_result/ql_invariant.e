@@ -86,8 +86,6 @@ feature -- Access
 		do
 			check written_class.has_invariant end
 			Result := written_class.invariant_ast
-		ensure then
-			good_result: Result = written_class.invariant_ast
 		end
 
 	written_class: like class_c

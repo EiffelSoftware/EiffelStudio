@@ -32,8 +32,6 @@ feature -- Save inner container data.
 			a_file_not_void: a_name /= Void
 		local
 			l_config_data: SD_CONFIG_DATA
-			l_facility: SED_STORABLE_FACILITIES
-			l_writer: SED_MEDIUM_READER_WRITER
 		do
 			create l_config_data.make
 			save_config_with_name_maximized_data (l_config_data, a_name, True)

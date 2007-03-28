@@ -247,7 +247,7 @@ feature -- Grid binding
 			loop
 				l_grid_row := a_parent_row.subrow (l_row_index)
 				create l_row.make (browser, l_cursor.item, l_feature, {EB_CLASS_BROWSER_CALLER_CALLEE_ROW}.feature_name_row, l_for_caller)
-				l_row.bind_row (l_grid_row, a_column)
+				l_row.bind_row (l_grid_row, a_column, True)
 				l_cursor.forth
 				l_row_index := l_row_index + 1
 			end

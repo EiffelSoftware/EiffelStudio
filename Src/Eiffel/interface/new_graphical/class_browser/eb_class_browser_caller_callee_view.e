@@ -31,6 +31,7 @@ feature{NONE} -- Initialization
 		require
 			a_dev_window_attached: a_dev_window /= Void
 		do
+			create row_table.make (100)
 			view_make (a_dev_window, a_drop_actions)
 			is_for_caller := a_for_caller
 		end
@@ -73,6 +74,9 @@ feature -- Access
 			end
 		end
 
+	row_count: INTEGER
+			-- Number of rows in Current view
+
 feature -- Status report
 
 	should_tooltip_be_displayed: BOOLEAN
@@ -111,6 +115,14 @@ feature -- Setting
 			end
 		end
 
+	set_row_count (a_row_count: INTEGER) is
+			-- Set `row_count' with `a_row_count'.
+		do
+			row_count := a_row_count
+		ensure
+			row_count_set: row_count = a_row_count
+		end
+
 feature -- Grind binding
 
 	provide_result is
@@ -139,6 +151,7 @@ feature -- Grind binding
 			l_feature_rows: EB_TREE_NODE [like row_type]
 			l_class_rows: EB_TREE_NODE [like row_type]
 			l_version_count: INTEGER
+			l_row_count: INTEGER
 		do
 			l_data := data
 			check l_data /= Void end
@@ -172,7 +185,6 @@ feature -- Grind binding
 
 			l_rows := rows
 			l_rows.children.wipe_out
-
 			from
 				l_table.start
 			until
@@ -180,7 +192,7 @@ feature -- Grind binding
 			loop
 				l_related_feature_rows := new_node (l_table.key_for_iteration, Void, {like row_type}.compact_feature_row)
 				l_rows.children.force_last (l_related_feature_rows)
-
+				l_row_count := l_row_count + 1
 				l_inner_tbl := l_table.item_for_iteration
 				from
 					l_inner_tbl.start
@@ -189,6 +201,7 @@ feature -- Grind binding
 				loop
 					l_class_rows := new_node (l_inner_tbl.item_for_iteration.first, Void, {like row_type}.class_row)
 					l_related_feature_rows.children.force_last (l_class_rows)
+					l_row_count := l_row_count + 1
 					l_feature_list := l_inner_tbl.item_for_iteration
 					from
 						l_feature_list.start
@@ -197,11 +210,33 @@ feature -- Grind binding
 					loop
 						l_feature_rows := new_node (l_feature_list.item, l_table.key_for_iteration, {like row_type}.feature_name_row)
 						l_class_rows.children.force_last (l_feature_rows)
+						l_row_count := l_row_count + 1
 						l_feature_list.forth
 					end
 					l_inner_tbl.forth
 				end
 				l_table.forth
+			end
+			set_row_count (l_row_count)
+		end
+
+
+	build_row_table (a_node: EB_TREE_NODE [like row_type]) is
+			-- Build `row_table'.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
+		do
+			if a_node.data /= Void then
+				row_table.put (a_node.data, row_table.count + 1)
+			end
+			l_cursor := a_node.children.new_cursor
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				build_row_table (l_cursor.item)
+				l_cursor.forth
 			end
 		end
 
@@ -210,7 +245,11 @@ feature -- Grind binding
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
 			l_grid_row: EV_GRID_ROW
+			l_width: INTEGER
 		do
+			required_width_of_first_column := 0
+			row_table.wipe_out
+			build_row_table (rows)
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
 			end
@@ -236,8 +275,39 @@ feature -- Grind binding
 			elseif version_count = 1 then
 				grid.row (1).expand
 			end
-			try_auto_resize_grid (<<[150, 800, 1]>>, False)
+			if grid.row_count > 0 then
+				calculate_required_width_of_first_column
+				l_width := required_width_of_first_column.max (100)
+				l_width := l_width.min (800)
+				grid.column (level_starting_column_index.i_th (1)).set_width (l_width)
+			end
 		end
+
+	calculate_required_width_of_first_column is
+			-- Calculate required width in pixel of first column and store it in `required_width_of_first_column'.
+		local
+			l_row_count: INTEGER
+			l_row: INTEGER
+			l_grid_item: EV_GRID_ITEM
+			l_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			l_width: INTEGER
+		do
+			from
+				l_row_count := grid.row_count
+				l_item_function := agent dynamic_grid_item_function
+				l_row := 1
+			until
+				l_row > l_row_count
+			loop
+				l_grid_item := l_item_function.item ([1, l_row])
+				l_width := l_width.max (l_grid_item.required_width)
+				l_row := l_row + 1
+			end
+			required_width_of_first_column := l_width
+		end
+
+	required_width_of_first_column: INTEGER
+			-- Required width in pixel of first column
 
 	bind_level (a_level_index: INTEGER; a_node: EB_TREE_NODE [like row_type]; a_grid_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
 			-- Bind data in `a_node' whose level index is `a_level_index' in `a_grid_row'.
@@ -259,13 +329,11 @@ feature -- Grind binding
 				a_grid_row.insert_subrow (a_grid_row.subrow_count + 1)
 				l_grid_row := a_grid_row.subrow (a_grid_row.subrow_count)
 			end
-
-			a_node.data.bind_row (l_grid_row, level_starting_column_index.i_th (a_level_index))
+			a_node.data.set_starting_column_index (level_starting_column_index.i_th (a_level_index))
 				-- Bind subrows.
 			l_children_count := a_node.children.count
 			if a_recursive and then l_children_count > 0 then
 				l_cursor := a_node.children.new_cursor
---				l_grid_row.insert_subrows (l_children_count, 1)
 				from
 					l_cursor.start
 				until
@@ -282,21 +350,6 @@ feature -- Grind binding
 
 feature{NONE} -- Actions
 
-	on_row_selected (a_row: EV_GRID_ROW) is
-			-- Action to be performed when `a_row' is selected.
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
-		do
-			if grid.selected_rows.count = 1 then
-				l_row ?= a_row.data
-				if l_row /= Void  then
-					l_row.calculate_reference_position
-				end
-			end
-		end
-
 	on_item_pressed (a_y: INTEGER; a_x: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Action to be performed when `a_item' is selected
 		local
@@ -305,7 +358,7 @@ feature{NONE} -- Actions
 			if a_item /= Void and then a_item.parent = grid and then a_button = {EV_POINTER_CONSTANTS}.right then
 				l_caller_callee_item ?= a_item.row.data
 				if l_caller_callee_item /= Void and then not l_caller_callee_item.has_position_calculated then
-					l_caller_callee_item.calculate_reference_position
+					l_caller_callee_item.bind_reference_position_item
 				end
 			end
 		end
@@ -335,6 +388,46 @@ feature{NONE} -- Implementation
 
 	reference_type_name_internal: like reference_type_name
 			-- Implementation of `reference_type_name'
+
+	row_table: HASH_TABLE [EB_CLASS_BROWSER_CALLER_CALLEE_ROW, INTEGER]
+			-- Table of rows
+			-- [data row, row index]
+
+	dynamic_grid_item_function (a_x, a_y: INTEGER): EV_GRID_ITEM is
+			-- Grid item at position (`a_x', `a_y')
+		local
+			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
+			l_y: INTEGER
+			l_done: BOOLEAN
+		do
+			if version_count > 1 then
+				if a_y = 1 then
+					if a_x = 1 then
+						Result := first_row_item
+					end
+					l_done := True
+				end
+				l_y := a_y - 1
+			else
+				l_y := a_y
+			end
+			if not l_done then
+				l_row := row_table.item (l_y)
+				if l_row /= Void then
+					Result := l_row.item (a_x)
+				end
+			end
+		end
+
+	select_all is
+			-- Select all items in `grid'.
+		local
+			l_columns: ARRAYED_LIST [INTEGER]
+		do
+			create l_columns.make (1)
+			l_columns.extend (level_starting_column_index.i_th (1))
+			select_all_in_dynamic_grid (grid, agent dynamic_grid_item_function, l_columns)
+		end
 
 feature{NONE} -- Implementation/Sorting
 
@@ -391,23 +484,24 @@ feature{NONE} -- Initialization
 			grid.enable_selection_on_single_button_click
 			grid.enable_single_row_selection
 			grid.enable_tree
+			grid.enable_partial_dynamic_content
+			grid.set_dynamic_content_function (agent dynamic_grid_item_function)
 			grid.pointer_button_press_item_actions.extend (agent on_item_pressed)
 			grid.set_row_height (default_row_height)
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
+			set_select_all_action (agent select_all)
 			enable_ctrl_right_click_to_open_new_window
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
 			grid.row_select_actions.extend (agent highlight_row)
-			grid.row_select_actions.extend (agent on_row_selected)
 			grid.row_deselect_actions.extend (agent dehighlight_row)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.hide_tree_node_connectors
 			grid.enable_multiple_row_selection
 			enable_tree_node_highlight
 			enable_grid_item_pnd_support
-			set_select_all_action (agent do  end)
 
 			level_starting_column_index.wipe_out
 			level_starting_column_index.extend (1)
@@ -439,6 +533,9 @@ feature{NONE} -- Initialization
 				agent on_collapse_one_level_partly
 			)
 		end
+
+invariant
+	row_table_attached: row_table /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

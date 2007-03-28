@@ -230,6 +230,7 @@ feature {EV_ANY_I} -- Implementation
 			l_app_motion_tuple: like app_motion_tuple
 			l_no_more_events: BOOLEAN
 			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y, l_button_number: INTEGER
+			l_has_grab_widget: BOOLEAN
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -248,8 +249,10 @@ feature {EV_ANY_I} -- Implementation
 
 					l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
 					if l_grab_widget = default_pointer then
+						l_has_grab_widget := False
 						l_grab_widget := event_widget
 					else
+						l_has_grab_widget := True
 							-- Cancel any invalid event capture.
 						if pick_and_drop_source /= Void and then not pick_and_drop_source.is_displayed then
 							pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
@@ -465,29 +468,32 @@ feature {EV_ANY_I} -- Implementation
 							print ("GDK_ENTER_LEAVE_NOTIFY%N")
 						end
 						l_gdk_window := {EV_GTK_EXTERNALS}.gdk_event_any_struct_window (gdk_event)
+						l_call_event := False
 						if
 							l_gdk_window /= default_pointer
 							and then {EV_GTK_EXTERNALS}.gdk_event_any_struct_send_event (gdk_event) = 0
 							and then {EV_GTK_EXTERNALS}.gdk_event_crossing_struct_mode (gdk_event) = 0
 						then
 							{EV_GTK_EXTERNALS}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget_ptr)
+
 							if l_gtk_widget_ptr /= default_pointer then
 								if not is_in_transport then
-									l_widget_imp ?= {EV_ANY_IMP}.eif_object_from_c (l_gtk_widget_ptr)
-									if l_widget_imp /= Void then
-										l_top_level_window_imp := l_widget_imp.top_level_window_imp
+									l_pnd_imp ?= eif_object_from_gtk_object (l_gtk_widget_ptr)
+									if l_pnd_imp /= Void then
+										l_top_level_window_imp := l_pnd_imp.top_level_window_imp
 										if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
-											l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
-										else
-											l_call_event := False
+											l_widget_imp ?= l_pnd_imp
+											if l_widget_imp /= Void then
+												l_widget_imp.on_pointer_enter_leave ({EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
+											end
+											l_call_event := True
+											l_widget_imp := Void
 										end
+										l_pnd_imp := Void
 										l_gtk_widget_imp := Void
 										l_top_level_window_imp := Void
 										l_gtk_widget_ptr := default_pointer
-										l_widget_imp := Void
 									end
-								else
-									l_call_event := False
 								end
 							end
 						end

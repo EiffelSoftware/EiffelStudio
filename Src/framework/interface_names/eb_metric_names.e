@@ -79,7 +79,7 @@ feature -- Titles
 	t_input_domain: STRING_GENERAL is do Result := locale.translate ("Input domain") end
 	t_result: STRING_GENERAL is do Result := locale.translate ("Results:") end
 	t_input_domain_title: STRING_GENERAL is do Result := locale.translate ("Input domain:") end
-	t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("definition:") end
+	t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("Definition:") end
 	t_select_domain_scope: STRING_GENERAL is do Result := locale.translate ("Select domain scope") end
 	t_predefined_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable because current metric is predefined.") end
 	t_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable.") end
@@ -211,6 +211,7 @@ feature -- Labels
 	l_syntactical_referenced: STRING_GENERAL is do Result := locale.translate ("syntactical") end
 	l_empty_domain: STRING_GENERAL is do Result := locale.translate ("empty domain") end
 	l_use_parent_delayed_domain: STRING_GENERAL is do Result := locale.translate ("use parent delayed domain") end
+	l_no_value_tester: STRING_GENERAL is do Result := locale.translate ("No value tester") end
 
 feature -- Tooltip
 

@@ -34,7 +34,7 @@ feature -- Enumeration
 	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
 		do
-			Result := "Auto Hide"
+			Result := "Disable Auto Hide"
 		end
 
 	Tooltip_mini_toolbar_maximize: STRING_GENERAL is

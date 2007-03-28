@@ -46,15 +46,19 @@ feature -- Access
 		do
 			l_criterion_factory := criterion_factory_table.item (a_scope)
 			l_domain := domain.actual_domain
-			from
-				l_domain.start
-				Result := l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
-				l_domain.forth
-			until
-				l_domain.after
-			loop
-				Result := Result or l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
-				l_domain.forth
+			if l_domain.is_empty then
+				Result := l_criterion_factory.criterion_with_name (name, [dummy_domain])
+			else
+				from
+					l_domain.start
+					Result := l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
+					l_domain.forth
+				until
+					l_domain.after
+				loop
+					Result := Result or l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
+					l_domain.forth
+				end
 			end
 			if is_negation_used then
 				Result := not Result

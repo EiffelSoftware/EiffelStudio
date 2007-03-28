@@ -236,6 +236,12 @@ feature -- Metric element output
 			writer.add_comment (a_modifier)
 		end
 
+	put_warning (a_warning_msg: STRING_GENERAL) is
+			-- Display warning message `a_warning_msg'.
+		do
+			writer.process_warning (a_warning_msg.as_string_8, warning_appearance)
+		end
+
 invariant
 	generated_output_attached: generated_output /= Void
 	writer_attached: writer /= Void

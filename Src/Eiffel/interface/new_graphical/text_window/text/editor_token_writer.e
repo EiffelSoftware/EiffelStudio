@@ -431,8 +431,6 @@ feature -- Text processing
 			-- If `a_for_feature_invocation' is True, mark stone contained in `a_name' as for feature invocation.
 		require
 			a_name_attached: a_name /= Void
-			a_ast_attached: a_ast /= Void
-			a_written_class_attached: a_written_class /= Void
 		local
 			l_ast_token: EDITOR_TOKEN_AST
 			l_stone: AST_STONE
@@ -442,10 +440,20 @@ feature -- Text processing
 			else
 				create l_ast_token.make (a_name)
 			end
-			create l_stone.make (a_written_class, a_ast)
-			l_stone.set_is_for_feature_invocation (a_for_feature_invocation)
-			l_ast_token.set_pebble (l_stone)
+			if a_ast /= Void and then a_written_class /= Void then
+				create l_stone.make (a_written_class, a_ast)
+				l_stone.set_is_for_feature_invocation (a_for_feature_invocation)
+				l_ast_token.set_pebble (l_stone)
+			end
 			last_line.append_token (l_ast_token)
+		end
+
+	process_warning (a_warning_message: STRING; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
+			-- Process warning message `a_warning_message' with appearance `a_appearance'.
+		require
+			a_warning_message_attached: a_warning_message /= Void
+		do
+			process_ast (a_warning_message, Void, Void, a_appearance, False)
 		end
 
 	process_line (a_name: STRING; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is

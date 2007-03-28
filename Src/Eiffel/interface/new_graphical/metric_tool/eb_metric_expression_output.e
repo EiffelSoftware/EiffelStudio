@@ -128,6 +128,13 @@ feature -- Metric element output
 		deferred
 		end
 
+	put_warning (a_warning_msg: STRING_GENERAL) is
+			-- Display warning message `a_warning_msg'.
+		require
+			a_warning_msg_attached: a_warning_msg /= Void
+		deferred
+		end
+
 	put_normal_text (a_text: STRING_GENERAL) is
 			-- Display normal text `a_text'.
 		require

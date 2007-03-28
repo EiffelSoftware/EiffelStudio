@@ -216,7 +216,11 @@ feature{NONE} -- Process
 			l_output.put_criterion_name (a_criterion)
 			l_output.put_normal_text (once " ")
 			l_output.put_normal_text (ti_l_parenthesis.as_string_32)
-			l_output.put_string (a_criterion.text)
+			if a_criterion.text.is_empty then
+				l_output.put_warning ("%"%"")
+			else
+				l_output.put_string (a_criterion.text)
+			end
 			l_output.put_normal_text (", ")
 			l_output.put_modifier (names.string_general_as_lower (matching_strategy_names_table.item (a_criterion.matching_strategy)))
 			l_output.put_operator (" + ")
@@ -399,26 +403,30 @@ feature{NONE} -- Process
 			l_output: like output
 		do
 			l_output := output
-			if a_item.is_anded then
-				l_connector := query_language_names.ql_cri_and
+			if a_item.criteria.is_empty then
+				l_output.put_warning (metric_names.l_no_value_tester)
 			else
-				l_connector := query_language_names.ql_cri_or
-			end
-			from
-				l_cri_list := a_item.criteria
-				l_count := l_cri_list.count
-				l_cri_list.start
-			until
-				l_cri_list.after
-			loop
-				l_output.put_operator (operator_table.item (l_cri_list.item.l_criterion_type))
-				l_cri_list.item.l_retriever.process (Current)
-				if l_cri_list.index < l_count then
-					l_output.put_normal_text (ti_space.as_string_32)
-					l_output.put_keyword (l_connector)
-					l_output.put_normal_text (ti_space.as_string_32)
+				if a_item.is_anded then
+					l_connector := query_language_names.ql_cri_and
+				else
+					l_connector := query_language_names.ql_cri_or
 				end
-				l_cri_list.forth
+				from
+					l_cri_list := a_item.criteria
+					l_count := l_cri_list.count
+					l_cri_list.start
+				until
+					l_cri_list.after
+				loop
+					l_output.put_operator (operator_table.item (l_cri_list.item.l_criterion_type))
+					l_cri_list.item.l_retriever.process (Current)
+					if l_cri_list.index < l_count then
+						l_output.put_normal_text (ti_space.as_string_32)
+						l_output.put_keyword (l_connector)
+						l_output.put_normal_text (ti_space.as_string_32)
+					end
+					l_cri_list.forth
+				end
 			end
 		end
 
@@ -447,7 +455,7 @@ feature{NONE} -- Process
 			a_domain_attached: a_domain /= Void
 		do
 			if a_domain.is_empty then
-				output.put_error (metric_names.l_empty_domain)
+				output.put_warning (metric_names.l_empty_domain)
 			else
 				a_domain.process (Current)
 			end

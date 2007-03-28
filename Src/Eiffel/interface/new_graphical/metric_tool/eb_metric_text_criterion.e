@@ -53,7 +53,7 @@ feature -- Access
 	is_parameter_valid: BOOLEAN is
 			-- Is parameters of current criterion valid?
 		do
-			Result := not text.is_empty
+			Result := True
 		end
 
 	matching_strategy: INTEGER

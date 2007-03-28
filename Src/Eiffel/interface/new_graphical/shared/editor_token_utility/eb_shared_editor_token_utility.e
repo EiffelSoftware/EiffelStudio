@@ -258,6 +258,15 @@ feature -- Editor token appearance
 			result_attached: Result /= Void
 		end
 
+	warning_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+			-- Warning message appearance
+		do
+			Result := [editor_font_id, warning_text_color_id, warning_background_color_id]
+		ensure
+			result_attached: Result /= Void
+		end
+
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

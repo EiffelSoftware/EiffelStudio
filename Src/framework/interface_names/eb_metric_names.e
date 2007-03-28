@@ -170,6 +170,8 @@ feature -- Titles
 	t_regexp: STRING_GENERAL is do Result := locale.translate ("Regular expression") end
 	t_matching_strategy: STRING_GENERAL is do Result := locale.translate ("Matching Strategy") end
 	t_clear_result: STRING_GENERAL is do Result := locale.translate ("Clear detailed result") end
+	t_case_sensitive: STRING_GENERAL is do Result := locale.translate ("Case-sensitive") end
+	t_case_insensitive: STRING_GENERAL is do Result := locale.translate ("Case-insensitive") end
 
 feature -- Titles for editor token
 
@@ -200,6 +202,15 @@ feature -- Labels
 	l_constant_value: STRING_GENERAL is do Result := locale.translate ("constant value") end
 	l_metric_value: STRING_GENERAL is do Result := locale.translate ("metric value") end
 	l_value_tester: STRING_GENERAL is do Result := locale.translate ("value tester") end
+	l_current: STRING_GENERAL is do Result := locale.translate ("current") end
+	l_current_version: STRING_GENERAL is do Result := locale.translate ("current version") end
+	l_desendent_versions: STRING_GENERAL is do Result := locale.translate ("descendent versions") end
+	l_direct: STRING_GENERAL is do Result := locale.translate ("direct") end
+	l_indirect: STRING_GENERAL is do Result := locale.translate ("indirect") end
+	l_normal_referenced: STRING_GENERAL is do Result := locale.translate ("normal") end
+	l_syntactical_referenced: STRING_GENERAL is do Result := locale.translate ("syntactical") end
+	l_empty_domain: STRING_GENERAL is do Result := locale.translate ("empty domain") end
+	l_use_parent_delayed_domain: STRING_GENERAL is do Result := locale.translate ("use parent delayed domain") end
 
 feature -- Tooltip
 
@@ -1352,3 +1363,4 @@ indexing
 
 
 end
+

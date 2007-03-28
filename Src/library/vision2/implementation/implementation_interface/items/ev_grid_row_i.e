@@ -810,6 +810,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
 			i_positive: i > 0
+			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			is_parented: parent /= Void
 			valid_tree_structure: a_item /= Void and parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
 			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then interface.is_part_of_tree_structure implies interface.is_index_valid_for_item_setting_if_tree_node (i)

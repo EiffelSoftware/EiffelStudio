@@ -522,9 +522,12 @@ feature {NONE} -- column resizing impl
 			c: INTEGER
 			last_col: EV_GRID_COLUMN
 			last_col_minimal_width, col_left_x: INTEGER
+			l_new_width: INTEGER
 		do
 			if last_column_use_all_width_enabled then
-				if not implementation.is_header_item_resizing then
+				if
+					not implementation.is_header_item_resizing
+				then
 					debug
 						print (generator + ".ensure_last_column_use_all_width %N")
 					end
@@ -538,23 +541,26 @@ feature {NONE} -- column resizing impl
 						end
 						if c > 0 then
 							last_col := column (c)
-							last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
 							col_left_x := (last_col.virtual_x_position - virtual_x_position)
+							l_new_width := viewable_width - col_left_x
 							if
-								viewable_width > col_left_x
-								and then (
-									col_left_x + last_col_minimal_width < viewable_width
-									or else	(last_col.width < last_col_minimal_width and col_left_x + last_col.width < viewable_width)
-								)
+								l_new_width > 0
+								and then last_col.width /= l_new_width --| Don't change the width, and it is already ok
 							then
-								resize_actions.block
-								virtual_size_changed_actions.block
-								last_col.set_width (viewable_width - col_left_x)
-									--| IEK This line does not seem to be needed and causes potential
-									--| infinite loops during resizing on gtk.
-								--implementation.recompute_horizontal_scroll_bar
-								virtual_size_changed_actions.resume
-								resize_actions.resume
+								last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
+								if
+									last_col_minimal_width < l_new_width
+									or else	(last_col.width < last_col_minimal_width and last_col.width < l_new_width)
+								then
+									resize_actions.block
+									virtual_size_changed_actions.block
+									last_col.set_width (l_new_width)
+										--| IEK This line does not seem to be needed and causes potential
+										--| infinite loops during resizing on gtk.
+									--implementation.recompute_horizontal_scroll_bar
+									virtual_size_changed_actions.resume
+									resize_actions.resume
+								end
 							end
 						end
 					end

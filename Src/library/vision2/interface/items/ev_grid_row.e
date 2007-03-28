@@ -486,6 +486,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
+			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			is_parented: parent /= Void
 			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then is_part_of_tree_structure implies is_index_valid_for_item_setting_if_tree_node (i)
 			is_index_valid_for_item_removal_if_subrow: a_item = Void and then is_part_of_tree_structure implies is_index_valid_for_item_removal_if_tree_node (i)

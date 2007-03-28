@@ -114,9 +114,6 @@ feature{NONE} -- Actions
 	on_show is
 			-- Action to be performed when dialog is displayed
 		local
-			l_text: STRING_GENERAL
-			l_case_sensitive: BOOLEAN_REF
-			l_regular: BOOLEAN_REF
 			l_value: like value
 		do
 			l_value := value

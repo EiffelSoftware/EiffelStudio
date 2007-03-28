@@ -152,6 +152,21 @@ feature -- Access/Criterion type
 			result_attached: Result /= Void
 		end
 
+feature -- Matching strategies
+
+	matching_strategy_names_table: HASH_TABLE [STRING_32, INTEGER] is
+			-- Display name table for matching strategies
+			-- [Displayed matching strategy name, matching strategy index]
+		once
+			create Result.make (4)
+			Result.put (metric_names.t_identical, {QL_NAME_CRITERION}.identity_matching_strategy)
+			Result.put (metric_names.t_containing, {QL_NAME_CRITERION}.containing_matching_strategy)
+			Result.put (metric_names.t_wildcard, {QL_NAME_CRITERION}.wildcard_matching_strategy)
+			Result.put (metric_names.t_regexp, {QL_NAME_CRITERION}.regular_expression_matching_strategy)
+		ensure
+			result_attached: Result /= Void
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

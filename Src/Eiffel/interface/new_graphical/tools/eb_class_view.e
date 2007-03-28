@@ -197,45 +197,38 @@ feature {NONE} -- Implementation
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
 			fst: FEATURE_STONE
+			l_tool: EB_STONABLE_TOOL
 		do
 			fst ?= st
-			decide_tool_to_display (st)
+			l_tool := decide_tool_to_display (st)
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
 			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (st)
 			else
-				set_stone (st)
+				l_tool.set_stone (st)
 			end
 			if fst /= Void and then address_manager /= Void then
 				address_manager.hide_address_bar
 			end
 		end
 
-	veto_pebble_function (a_stone: ANY): BOOLEAN is
-		local
-			l_cis: CLASSI_STONE
-		do
-			if develop_window.link_tools then
-				Result := True
-			else
-				l_cis ?= a_stone
-				Result := l_cis /= Void
-			end
-		end
-
-	decide_tool_to_display (a_st: STONE) is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
 		do
 			fs ?= a_st
-			if fs /= Void and develop_window.link_tools then
+			if fs /= Void then
 				develop_window.tools.show_default_tool_of_feature
+				Result := develop_window.tools.default_feature_tool
 			else
 				show
 				set_focus
+				Result := Current
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

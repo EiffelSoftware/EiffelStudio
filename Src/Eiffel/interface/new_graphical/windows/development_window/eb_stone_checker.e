@@ -125,7 +125,7 @@ feature {NONE} -- Implementation functions
 					current_editor.load_text (f.last_string)
 				end
 			elseif target_stone /= Void and then target_stone.is_valid then
-				develop_window.tools.properties_tool.add_stone (target_stone)
+				develop_window.tools.properties_tool.set_stone (target_stone)
 			else
 				handle_all_class_stones (a_stone)
 			end
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation functions
 				end
 
 				if new_class_stone.is_valid then
-					develop_window.tools.properties_tool.add_stone (new_class_stone)
+					develop_window.tools.properties_tool.set_stone (new_class_stone)
 				end
 
 					-- class stone was dropped
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation functions
 
 			if cluster_st /= Void then
 				if cluster_st.is_valid then
-					develop_window.tools.properties_tool.add_stone (cluster_st)
+					develop_window.tools.properties_tool.set_stone (cluster_st)
 				end
 				if not text_loaded then
 					if not develop_window.during_synchronization then

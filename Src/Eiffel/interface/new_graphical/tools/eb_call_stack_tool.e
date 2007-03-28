@@ -10,7 +10,7 @@ class
 	EB_CALL_STACK_TOOL
 
 inherit
-	EB_TOOL
+	EB_STONABLE_TOOL
 		redefine
 			menu_name,
 			pixmap,
@@ -304,6 +304,9 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_call_stack_icon
 		end
 
+	stone: STONE
+			-- Not used.
+
 feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
@@ -344,11 +347,6 @@ feature -- Status setting
 			end
 		end
 
-	refresh is
-			-- Class has changed in `development_window'.
-		do
-		end
-
 	update is
 			-- Refresh `Current's display.
 		local
@@ -372,7 +370,7 @@ feature -- Status setting
 	show is
 			-- Show tool
 		do
-			Precursor {EB_TOOL}
+			Precursor {EB_STONABLE_TOOL}
 			if stack_grid.is_sensitive then
 				stack_grid.set_focus
 			end

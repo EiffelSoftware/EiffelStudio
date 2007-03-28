@@ -14,7 +14,7 @@ inherit
 
 	ES_OBJECTS_GRID_MANAGER
 
-	EB_TOOL
+	EB_STONABLE_TOOL
 		redefine
 			menu_name,
 			pixmap,
@@ -210,7 +210,7 @@ feature {NONE} -- Initialization
 			-- Build content for docking.
 
 		do
-			Precursor {EB_TOOL} (a_docking_manager)
+			Precursor {EB_STONABLE_TOOL} (a_docking_manager)
 			content.drop_actions.extend (agent on_element_drop)
 		end
 
@@ -273,6 +273,9 @@ feature -- Access
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
+	stone: STONE
+			-- Not used.
+
 feature -- Change
 
 	set_debugger_manager (a_manager: like debugger_manager) is
@@ -306,7 +309,7 @@ feature -- Change
 	show is
 			-- Show tool
 		do
-			Precursor {EB_TOOL}
+			Precursor {EB_STONABLE_TOOL}
 			if watches_grid.is_displayed then
 				watches_grid.set_focus
 			end

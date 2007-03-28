@@ -9,7 +9,7 @@ class
 	EB_PROPERTIES_TOOL
 
 inherit
-	EB_TOOL
+	EB_STONABLE_TOOL
 		rename
 			make as tool_make
 		undefine
@@ -19,7 +19,8 @@ inherit
 			pixmap,
 			pixel_buffer,
 			build_docking_content,
-			show
+			show,
+			is_stone_valid
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -75,8 +76,8 @@ feature {NONE} -- Initialization
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Build docking content
 		do
-			Precursor {EB_TOOL}(a_docking_manager)
-			content.drop_actions.extend (agent add_stone)
+			Precursor {EB_STONABLE_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent set_stone)
 			content.drop_actions.set_veto_pebble_function (agent dropable)
 		end
 
@@ -88,7 +89,7 @@ feature {NONE} -- Initialization
 			create properties
 			widget.extend (properties)
 
-			properties.drop_actions.extend (agent add_stone)
+			properties.drop_actions.extend (agent set_stone)
 			properties.drop_actions.set_veto_pebble_function (agent dropable)
 		end
 
@@ -130,12 +131,20 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.project_settings_system_icon_buffer
 		end
 
+feature -- Status report
+
+	is_stone_valid (a_stone: like stone): BOOLEAN is
+			-- Is stone valid to set?
+		do
+			Result := a_stone /= Void and then a_stone.is_valid
+		end
+
 feature -- Command
 
 	show is
 			-- Show tool.
 		do
-			Precursor {EB_TOOL}
+			Precursor {EB_STONABLE_TOOL}
 			properties.set_focus
 		end
 
@@ -166,10 +175,8 @@ feature {NONE} -- External changes to classes/clusters
 
 feature {EB_STONE_CHECKER} -- Actions
 
-	add_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE) is
 			-- Add `a_stone'.
-		require
-			a_stone_ok: a_stone /= Void and then a_stone.is_valid
 		local
 			l_gs: CLUSTER_STONE
 			l_cs: CLASSI_STONE
@@ -292,7 +299,7 @@ feature {EB_STONE_CHECKER} -- Actions
 			end
 
 			properties.unlock_update
-		ensure
+		ensure then
 			stone_set: stone = a_stone
 		end
 
@@ -378,7 +385,7 @@ feature {NONE} -- Implementation
 					properties.set_focus
 				end
 				if stone /= Void and then stone.is_valid then
-					add_stone (stone)
+					set_stone (stone)
 				else
 					properties.reset
 				end

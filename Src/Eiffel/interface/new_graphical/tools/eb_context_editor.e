@@ -11,7 +11,7 @@ class
 	EB_DIAGRAM_TOOL
 
 inherit
-	EB_TOOL
+	EB_STONABLE_TOOL
 		export
 			{EB_CONTEXT_DIAGRAM_COMMAND, ES_GRAPH, EIFFEL_WORLD, EIFFEL_FACTORY, CLASS_TEXT_MODIFIER, EIFFEL_CLASS_FIGURE}
 				develop_window
@@ -113,7 +113,6 @@ feature {NONE} -- Initialization
 			create {EIFFEL_INHERITANCE_LAYOUT} layout.make_with_world (empty_world)
 			is_rebuild_world_needed := False
 			update_excluded_class_figures
-			empty_world.drop_actions.extend (agent decide_tool_to_display)
 			empty_world.drop_actions.extend (agent on_cluster_drop)
 			empty_world.drop_actions.extend (agent on_class_drop)
 			create force_directed_layout.make_with_world (empty_world)
@@ -527,8 +526,7 @@ feature {NONE} -- Initialization
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Build dockable content.
 		do
-			Precursor {EB_TOOL}(a_docking_manager)
-			content.drop_actions.extend (agent decide_tool_to_display)
+			Precursor {EB_STONABLE_TOOL}(a_docking_manager)
 			content.drop_actions.extend (agent center_diagram_cmd.execute_with_class_stone)
 			content.drop_actions.extend (agent center_diagram_cmd.execute_with_cluster_stone)
 		end
@@ -1374,14 +1372,21 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 
 	launch_stone (a_stone: STONE) is
 			-- Launch stone.
+		local
+			l_tool: EB_STONABLE_TOOL
+			fst: FEATURE_STONE
 		do
-			decide_tool_to_display (a_stone)
+			fst ?= a_stone
+			l_tool := decide_tool_to_display (a_stone)
 			if develop_window.unified_stone then
 				develop_window.set_stone (a_stone)
 			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (a_stone)
 			else
-				set_stone (a_stone)
+				l_tool.set_stone (a_stone)
+			end
+			if fst /= Void and then address_manager /= Void then
+				address_manager.hide_address_bar
 			end
 		end
 
@@ -1515,22 +1520,26 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 				else
 					clear_area
 				end
-				Precursor {EB_TOOL}
+				Precursor {EB_STONABLE_TOOL}
 			end
 		end
 
-	decide_tool_to_display (a_st: STONE) is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
 		do
 			fs ?= a_st
-			if fs /= Void and then develop_window.link_tools then
+			if fs /= Void then
 				develop_window.tools.show_default_tool_of_feature
+				Result := develop_window.tools.default_feature_tool
 			else
 				show
 				set_focus
+				Result := Current
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {EB_CENTER_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Center diagram command
@@ -2359,13 +2368,13 @@ feature {NONE} -- Implementation for mini tool bar
 			end
 		end
 
-	stone: STONE
-			-- Current stone
-
 	refresh is
-			-- Redefine
+			-- Refresh
 		do
 		end
+
+	stone: STONE
+			-- Current stone
 
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.

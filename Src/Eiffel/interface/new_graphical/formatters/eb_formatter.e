@@ -604,7 +604,6 @@ feature {NONE} -- Implementation
 			internal_empty_widget := l_frame
 			if widget_owner /= Void then
 				internal_empty_widget.drop_actions.extend (agent widget_owner.drop_stone)
-				internal_empty_widget.drop_actions.set_veto_pebble_function (agent widget_owner.veto_pebble_function)
 			else
 				internal_empty_widget.drop_actions.extend (agent on_stone_drop)
 			end

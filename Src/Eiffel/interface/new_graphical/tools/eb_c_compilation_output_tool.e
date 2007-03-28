@@ -75,7 +75,6 @@ feature{NONE} -- Initialization
 			Precursor {EB_OUTPUT_TOOL}(a_docking_manager)
 			content.drop_actions.extend (agent drop_class)
 			content.drop_actions.extend (agent drop_feature)
-			content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
@@ -156,8 +155,7 @@ feature{NONE} -- Initialization
 			output_text.drop_actions.extend (agent drop_feature)
 			output_text.drop_actions.extend (agent drop_cluster)
 			output_text.drop_actions.extend (agent drop_breakable)
-			output_text.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
-			
+
 			output_text.change_actions.extend (agent on_text_change)
 
 			on_text_change

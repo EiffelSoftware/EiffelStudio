@@ -33,7 +33,7 @@ feature -- Access
 	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
 		do
-			Result := locale.translate ("Auto Hide")
+			Result := locale.translate ("Disable Auto Hide")
 		end
 
 	Tooltip_mini_toolbar_maximize: STRING_GENERAL is

@@ -9,7 +9,9 @@ class
 	EB_FEATURES_TOOL
 
 inherit
-	EB_TOOL
+	EB_STONABLE_TOOL
+		rename
+			stone as current_stone
 		redefine
 			menu_name,
 			pixmap,
@@ -127,7 +129,7 @@ feature -- Command
 	show is
 			-- Show tool.
 		do
-			Precursor {EB_TOOL}
+			Precursor {EB_STONABLE_TOOL}
 			if tree.is_displayed then
 				tree.set_focus
 			end

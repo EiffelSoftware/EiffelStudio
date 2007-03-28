@@ -103,12 +103,12 @@ feature -- Commands
 
 	show_default_tool_of_feature
 		do
-			features_relation_tool.show_with_setting
+			default_feature_tool.show_with_setting
 		end
 
 	show_default_tool_of_class
 		do
-			class_tool.show_with_setting
+			default_class_tool.show_with_setting
 		end
 
 	set_stone_to_customized_tools (a_stone: STONE) is
@@ -163,6 +163,18 @@ feature -- Commands
 			a_tool.content.set_pixel_buffer (a_tool.pixel_buffer)
 			a_tool.content.set_pixmap (a_tool.pixmap)
 			develop_window.menus.update_item_from_tools_list_menu (a_tool)
+		end
+
+feature -- Default tools
+
+	default_class_tool: EB_STONABLE_TOOL is
+		do
+			Result := class_tool
+		end
+
+	default_feature_tool: EB_STONABLE_TOOL is
+		do
+			Result := features_relation_tool
 		end
 
 feature -- Query

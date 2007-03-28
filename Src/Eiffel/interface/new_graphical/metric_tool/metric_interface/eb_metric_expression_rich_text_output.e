@@ -104,12 +104,12 @@ feature -- Metric element output
 			-- Display metric name of `a_metric_name'.
 		do
 			if metric_manager.is_metric_calculatable (a_metric_name) then
-				safe_put (a_metric_name.as_string_32, normal_format)
+				safe_put (a_metric_name.as_string_32, metric_name_format)
 			else
 				if a_metric_name.is_empty then
-					safe_put (metric_names.te_no_metric.as_string_32, error_format)
+					safe_put (metric_names.te_no_metric.as_string_32, err_metric_name_format)
 				else
-					safe_put (a_metric_name.as_string_32, error_format)
+					safe_put (a_metric_name.as_string_32, err_metric_name_format)
 				end
 
 			end
@@ -237,6 +237,12 @@ feature -- Metric element output
 			put_domain_item (a_delayed_item, delayed_format)
 		end
 
+	put_modifier (a_modifier: STRING_GENERAL) is
+			-- Display modifier `a_modifier'.
+		do
+			safe_put (a_modifier, modifier_format)
+		end
+
 feature{NONE} -- Implementation
 
 	safe_put (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT) is
@@ -297,31 +303,45 @@ feature{NONE} -- Formats
 	error_format: EV_CHARACTER_FORMAT
 			-- Format for error text
 
+	modifier_format: EV_CHARACTER_FORMAT
+			-- Format for modifiers
+
+	metric_name_format: EV_CHARACTER_FORMAT
+			-- Format for metric name
+
+	err_metric_name_format: EV_CHARACTER_FORMAT
+			-- Format for error metric name
+
 	regenerate_formats is
 			-- Regenerate formats for different kinds of display elements.
 		local
 			l_background_color: EV_COLOR
 			l_normal_font: EV_FONT
 			l_keyword_font: EV_FONT
+			l_preferences: EB_EDITOR_DATA
 		do
 			l_background_color := (create {EV_STOCK_COLORS}).white
 
 			create l_normal_font
 			create l_keyword_font
 			l_keyword_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			l_preferences := preferences.editor_data
 
-			create normal_format.make_with_font_and_color (l_normal_font, preferences.editor_data.normal_text_color, l_background_color)
-			create string_format.make_with_font_and_color (l_normal_font, preferences.editor_data.string_text_color, l_background_color)
-			create keyword_format.make_with_font_and_color (l_keyword_font, preferences.editor_data.keyword_text_color, l_background_color)
-			create number_format.make_with_font_and_color (l_normal_font, preferences.editor_data.number_text_color, l_background_color)
-			create operator_format.make_with_font_and_color (l_normal_font, preferences.editor_data.operator_text_color, l_background_color)
-			create target_format.make_with_font_and_color (l_normal_font, preferences.editor_data.target_text_color, l_background_color)
-			create group_format.make_with_font_and_color (l_normal_font, preferences.editor_data.cluster_text_color, l_background_color)
-			create folder_format.make_with_font_and_color (l_normal_font, preferences.editor_data.cluster_text_color, l_background_color)
-			create class_format.make_with_font_and_color (l_normal_font, preferences.editor_data.class_text_color, l_background_color)
-			create feature_format.make_with_font_and_color (l_normal_font, preferences.editor_data.feature_text_color, l_background_color)
-			create delayed_format.make_with_font_and_color (l_normal_font, preferences.editor_data.normal_text_color, l_background_color)
-			create error_format.make_with_font_and_color (l_normal_font, preferences.editor_data.error_text_color, l_background_color)
+			create normal_format.make_with_font_and_color   (l_normal_font,  l_preferences.normal_text_color,   l_background_color)
+			create string_format.make_with_font_and_color   (l_normal_font,  l_preferences.string_text_color,   l_background_color)
+			create keyword_format.make_with_font_and_color  (l_keyword_font, l_preferences.keyword_text_color,  l_background_color)
+			create number_format.make_with_font_and_color   (l_normal_font,  l_preferences.number_text_color,   l_background_color)
+			create operator_format.make_with_font_and_color (l_normal_font,  l_preferences.operator_text_color, l_background_color)
+			create target_format.make_with_font_and_color   (l_normal_font,  l_preferences.target_text_color,   l_background_color)
+			create group_format.make_with_font_and_color    (l_normal_font,  l_preferences.cluster_text_color,  l_background_color)
+			create folder_format.make_with_font_and_color   (l_normal_font,  l_preferences.cluster_text_color,  l_background_color)
+			create class_format.make_with_font_and_color    (l_normal_font,  l_preferences.class_text_color,    l_background_color)
+			create feature_format.make_with_font_and_color  (l_normal_font,  l_preferences.feature_text_color,  l_background_color)
+			create delayed_format.make_with_font_and_color  (l_normal_font,  l_preferences.normal_text_color,   l_background_color)
+			create error_format.make_with_font_and_color    (l_normal_font,  l_preferences.error_text_color,    l_background_color)
+			create modifier_format.make_with_font_and_color (l_normal_font,  l_preferences.comments_text_color, l_background_color)
+			create metric_name_format.make_with_font_and_color    	(l_keyword_font, l_preferences.normal_text_color,  l_background_color)
+			create err_metric_name_format.make_with_font_and_color  (l_keyword_font, l_preferences.error_text_color,   l_background_color)
 		end
 
 invariant

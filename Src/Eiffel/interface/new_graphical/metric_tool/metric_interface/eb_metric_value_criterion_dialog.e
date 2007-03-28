@@ -39,6 +39,7 @@ feature{NONE} -- Initialization
 		do
 			is_value_tester_area_shown := a_value_tester_area_shown
 			is_metric_area_shown := a_metric_selector_area_shown
+			is_use_external_shown := a_use_external_shown
 			default_create
 		end
 

@@ -230,6 +230,12 @@ feature -- Metric element output
 			put_domain_item (a_delayed_item)
 		end
 
+	put_modifier (a_modifier: STRING_GENERAL) is
+			-- Display modifier `a_modifier'.
+		do
+			writer.add_comment (a_modifier)
+		end
+
 invariant
 	generated_output_attached: generated_output /= Void
 	writer_attached: writer /= Void

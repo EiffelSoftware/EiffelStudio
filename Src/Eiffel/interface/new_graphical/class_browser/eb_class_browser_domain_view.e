@@ -512,29 +512,8 @@ feature{NONE} -- Implementation
 
 	select_all is
 			-- Action to be performed to select all items in `grid'					
-		local
-			l_row_index: INTEGER
-			l_row_count: INTEGER
-			l_grid: like grid
-			l_row: EV_GRID_ROW
 		do
-			l_grid := grid
-			from
-				l_row_index := 1
-				l_row_count := l_grid.row_count
-			until
-				l_row_index > l_row_count
-			loop
-				l_row := l_grid.row (l_row_index)
-				if l_row.item (1) = Void then
-					l_row.set_item (1, item_function (1, l_row_index))
-				end
-				if l_row.item (2) = Void then
-					l_row.set_item (2, item_function (2, l_row_index))
-				end
-				l_grid.select_row (l_row_index)
-				l_row_index := l_row_index + 1
-			end
+			select_all_in_dynamic_grid (grid, agent item_function, Void)
 		end
 
 feature{NONE} -- Implementation/Sorting

@@ -869,6 +869,62 @@ feature {NONE} -- Implementation
 			is_resize_by_user_set: is_resize_by_user = b
 		end
 
+	select_all_in_dynamic_grid (a_grid: EV_GRID; a_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]; a_columns: LIST [INTEGER]) is
+			-- Select all rows/items in dynamic grid `a_grid'.			
+			-- `a_item_function' is the function to get grid items on the fly.			
+			-- `a_columns' contains indexes of columns whose items are to be retrieved.
+			-- `a_columns' is Void means all columns of `a_grid' are to be retrieved.
+		require
+			a_grid_attached: a_grid /= Void
+			a_grid_valid: a_grid.is_content_partially_dynamic
+			a_item_function_attached: a_item_function /= Void
+		local
+			l_row_count: INTEGER
+			l_column_count: INTEGER
+			l_row, l_column: INTEGER
+			l_columns: LIST [INTEGER]
+			l_cur_column: INTEGER
+		do
+			a_grid.remove_selection
+			l_row_count := a_grid.row_count
+			l_column_count := a_grid.column_count
+
+			if a_columns = Void then
+				create {ARRAYED_LIST [INTEGER]}l_columns.make (l_row_count)
+				from
+					l_column := 1
+				until
+					l_column > l_column_count
+				loop
+					l_columns.extend (l_column)
+					l_column := l_column + 1
+				end
+			else
+				l_columns := a_columns
+			end
+			l_column_count := l_columns.count
+
+			from
+				l_row := 1
+			until
+				l_row > l_row_count
+			loop
+				from
+					l_columns.start
+				until
+					l_columns.after
+				loop
+					l_cur_column := l_columns.item
+					if a_grid.item (l_cur_column, l_row) = Void then
+						a_grid.set_item (l_cur_column, l_row, a_item_function.item ([l_cur_column, l_row]))
+					end
+					l_columns.forth
+				end
+				a_grid.row (l_row).enable_select
+				l_row := l_row + 1
+			end
+		end
+
 feature{NONE} -- Implementation/Exception
 
 	trace: STRING

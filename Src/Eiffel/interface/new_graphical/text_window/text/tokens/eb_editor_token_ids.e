@@ -64,9 +64,13 @@ feature -- Color ids
 
 	target_background_color_id: INTEGER is 52
 
+	warning_text_color_id: INTEGER is 53
+
+	warning_background_color_id: INTEGER is 54
+
 	max_color_id: INTEGER is
 		do
-			Result := target_background_color_id
+			Result := warning_background_color_id
 		end
 
 feature {NONE} -- Implementation

@@ -279,6 +279,22 @@ feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 
 	maximized: BOOLEAN
 
+	warning_text_color: EV_COLOR is
+			-- Warning text color
+		do
+			Result := warning_text_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
+	warning_background_color: EV_COLOR is
+			-- Warning background color
+		do
+			Result := warning_background_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	breakpoint_background_color_preference: COLOR_PREFERENCE
@@ -357,6 +373,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	new_tab_at_left_preference: BOOLEAN_PREFERENCE
 			-- When create new tab, should it created at the begin of the target notebook?
 
+	warning_text_color_preference: COLOR_PREFERENCE
+	warning_background_color_preference: COLOR_PREFERENCE
+
 feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
@@ -382,6 +401,8 @@ feature {NONE} -- Preference Strings
 	breakpoint_background_color_string: STRING is "editor.eiffel.colors.breakpoint_background_color"
 	target_text_color_string: STRING is "editor.eiffel.colors.target_text_color"
 	target_background_color_string: STRING is "editor.eiffel.colors.target_text_background_color"
+	warning_text_color_string: STRING is "editor.eiffel.colors.warning_text_color"
+	warning_background_color_string: STRING is "editor.eiffel.colors.warning_background_color"
 
 	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper"
 			-- Is first letter of once or constant in upper case?
@@ -461,6 +482,8 @@ feature {NONE} -- Init colors and fonts.
 			colors.put (object_background_color_preference.value, object_background_color_id)
 			colors.put (target_text_color_preference.value, target_text_color_id)
 			colors.put (target_background_color_preference.value, target_background_color_id)
+			colors.put (warning_text_color_preference.value, warning_text_color_id)
+			colors.put (warning_background_color_preference.value, warning_background_color_id)
 		end
 
 	init_fonts is
@@ -516,6 +539,8 @@ feature {NONE} -- Initialization
 			object_background_color_preference := l_manager.new_color_preference_value (l_manager, object_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			target_text_color_preference := l_manager.new_color_preference_value (l_manager, target_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			target_background_color_preference := l_manager.new_color_preference_value (l_manager, target_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			warning_text_color_preference := l_manager.new_color_preference_value (l_manager, warning_text_color_string, create{EV_COLOR}.make_with_8_bit_rgb (200, 64, 0))
+			warning_background_color_preference := l_manager.new_color_preference_value (l_manager, warning_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 
 				-- Booleans			
 			underscore_is_separator_preference := l_manager.new_boolean_preference_value (l_manager, underscore_is_separator_string, False)
@@ -603,6 +628,8 @@ feature {NONE} -- Initialization
 			customized_string_3_preference.change_actions.extend (agent update)
 			new_tab_at_left_preference.change_actions.extend (agent update)
 			normal_text_color_preference.change_actions.extend (agent update)
+			warning_text_color_preference.change_actions.extend (agent update)
+			warning_background_color_preference.change_actions.extend (agent update)
 
 			initialize_autocomplete_prefs
 
@@ -1062,6 +1089,8 @@ invariant
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void
 	customized_string_3_preference_not_void: customized_string_3_preference /= Void
+	warning_text_color_preference_attached: warning_text_color_preference /= Void
+	warning_background_color_preference_attached: warning_background_color_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -1096,3 +1125,4 @@ indexing
 		]"
 
 end -- class EB_EDITOR_DATA
+

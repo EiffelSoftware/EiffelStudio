@@ -68,6 +68,8 @@ feature -- Status report
 			if not is_empty then
 				metric_validity_checker.check_validity (Current)
 				Result := not metric_validity_checker.has_error
+			else
+				Result := True
 			end
 		end
 

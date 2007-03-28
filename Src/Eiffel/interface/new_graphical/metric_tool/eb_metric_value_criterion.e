@@ -57,7 +57,6 @@ feature -- status report
 			-- Parameter for current is `domain'.
 		do
 			Result := domain.is_valid and then
-					  not value_tester.criteria.is_empty and then
 					  (metric_manager.is_metric_calculatable (metric_name))
 		end
 

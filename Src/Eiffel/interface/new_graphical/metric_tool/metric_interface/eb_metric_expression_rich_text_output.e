@@ -243,6 +243,12 @@ feature -- Metric element output
 			safe_put (a_modifier, modifier_format)
 		end
 
+	put_warning (a_warning_msg: STRING_GENERAL) is
+			-- Display warning message `a_warning_msg'.
+		do
+			safe_put (a_warning_msg, warning_format)
+		end
+
 feature{NONE} -- Implementation
 
 	safe_put (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT) is
@@ -312,6 +318,9 @@ feature{NONE} -- Formats
 	err_metric_name_format: EV_CHARACTER_FORMAT
 			-- Format for error metric name
 
+	warning_format: EV_CHARACTER_FORMAT
+			-- Format for warning message
+
 	regenerate_formats is
 			-- Regenerate formats for different kinds of display elements.
 		local
@@ -342,6 +351,7 @@ feature{NONE} -- Formats
 			create modifier_format.make_with_font_and_color (l_normal_font,  l_preferences.comments_text_color, l_background_color)
 			create metric_name_format.make_with_font_and_color    	(l_keyword_font, l_preferences.normal_text_color,  l_background_color)
 			create err_metric_name_format.make_with_font_and_color  (l_keyword_font, l_preferences.error_text_color,   l_background_color)
+			create warning_format.make_with_font_and_color    (l_normal_font, l_preferences.warning_text_color,    l_background_color)
 		end
 
 invariant

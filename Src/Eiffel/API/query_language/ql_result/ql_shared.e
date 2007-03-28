@@ -75,6 +75,14 @@ feature -- Domain
 	empty_assertion_name: STRING is "#";
 			-- Name for an empty assertion
 
+	dummy_domain: QL_DOMAIN is
+			-- Dummy domain
+		do
+			create {QL_QUANTITY_DOMAIN} Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Criterion factory
 
 	criterion_factory_table: HASH_TABLE [QL_CRITERION_FACTORY, QL_SCOPE] is

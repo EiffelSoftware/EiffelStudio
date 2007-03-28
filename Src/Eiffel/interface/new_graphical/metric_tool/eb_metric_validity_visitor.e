@@ -324,7 +324,6 @@ feature{NONE} -- Process
 			-- Process `a_criterion'.
 			-- A domain criterion is valid if and only if:
 			--		* it is a registered criterion
-			--		* it contains at least one domain item
 			--		* every domain item is valid
 		do
 			if not has_error then
@@ -332,13 +331,9 @@ feature{NONE} -- Process
 			end
 			if not has_error then
 				location_stack.extend (a_criterion.visitable_name)
-				if a_criterion.domain.is_empty then
-					create_last_error_with_to_do (
-						metric_names.err_domain_item_not_exist,
-						metric_names.domain_item_not_exists_to_do
-					)
+				if not a_criterion.domain.is_empty then
+					a_criterion.domain.process (Current)
 				end
-				a_criterion.domain.process (Current)
 				location_stack.remove
 			end
 		end
@@ -367,19 +362,12 @@ feature{NONE} -- Process
 			-- Process `a_criterion'.
 			-- A text criterion is valid if and only if
 			--		* it's a registered criterion
-			--		* its text is not emtpy
 		do
 			if not has_error then
 				process_criterion (a_criterion)
 			end
 			if not has_error then
 				location_stack.extend (a_criterion.visitable_name)
-				if a_criterion.text.is_empty then
-					create_last_error_with_to_do (
-						metric_names.err_text_in_text_criterion_empty,
-						metric_names.text_in_text_criterion_empty_to_do
-					)
-				end
 				location_stack.remove
 			end
 		end
@@ -417,6 +405,10 @@ feature{NONE} -- Process
 
 	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
 			-- Process `a_criterion'.
+			-- A value criterion is valid if and only if:
+			--		* metric name is specified and that metric is valid.
+			--		* specified domain is valid.
+			--		* specified value tester is valid.
 		local
 			l_metric: EB_METRIC
 			l_metric_name: STRING
@@ -437,13 +429,13 @@ feature{NONE} -- Process
 					if not has_error then
 						l_metric.process (Current)
 					end
-					if not has_error then
-						if a_criterion.value_tester.criteria.is_empty then
-							create_last_error_with_to_do (
-								metric_names.err_no_value_tester_specified,
-								metric_names.no_value_tester_specified_to_do)
-						end
-					end
+--					if not has_error then
+--						if a_criterion.value_tester.criteria.is_empty then
+--							create_last_error_with_to_do (
+--								metric_names.err_no_value_tester_specified,
+--								metric_names.no_value_tester_specified_to_do)
+--						end
+--					end
 						-- Check validity of referenced metric by current value criterion.
 					if not has_error then
 						l_metric.process (Current)

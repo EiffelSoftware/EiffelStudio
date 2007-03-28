@@ -92,12 +92,12 @@ feature {NONE} -- Internal properties
 			if objects_grids_positions = Void then
 				create objects_grids_positions.make (Position_current, Position_objects)
 			end
-			objects_grids_positions[Position_current] 	:= second_grid_id
+			objects_grids_positions[Position_current] 	:= first_grid_id
 			objects_grids_positions[Position_stack] 	:= first_grid_id
 			objects_grids_positions[Position_arguments] := first_grid_id
 			objects_grids_positions[Position_locals] 	:= first_grid_id
 			objects_grids_positions[Position_result] 	:= first_grid_id
-			objects_grids_positions[Position_objects] 	:= second_grid_id
+			objects_grids_positions[Position_objects] 	:= first_grid_id
 		end
 
 	Position_current: INTEGER is 1

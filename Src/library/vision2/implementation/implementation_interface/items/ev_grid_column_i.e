@@ -522,14 +522,19 @@ feature -- Element change
 		require
 			width_non_negative: a_width >= 0
 			is_parented: parent /= Void
+		local
+			l_width: INTEGER
 		do
-			header_item.set_width (a_width)
-			parent_i.header.item_resize_end_actions.call ([header_item])
-				-- We need to recompute content of grid next time
-			parent_i.set_horizontal_computation_required (index)
-			parent_i.redraw
-			if is_locked then
-				parent_i.reposition_locked_column (Current)
+			l_width := width
+			if a_width /= l_width then
+				header_item.set_width (a_width)
+				parent_i.header.item_resize_end_actions.call ([header_item])
+					-- We need to recompute content of grid next time
+				parent_i.set_horizontal_computation_required (index)
+				parent_i.redraw
+				if is_locked then
+					parent_i.reposition_locked_column (Current)
+				end
 			end
 		ensure
 			width_set: width = a_width

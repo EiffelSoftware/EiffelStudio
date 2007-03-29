@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 				-- Initialize the drawable part.
 			initialize -- from EV_DRAWABLE_IMP
 
+			copy_tab_status (other)
+
 				-- Select the palette if needed.
 			if dc.palette_selected then
 				dc.unselect_palette
@@ -119,6 +121,17 @@ feature {NONE} -- Initialization
 			width := internal_bitmap.width
 			height := internal_bitmap.height
 
+				-- Destroy `other' implementation
+			other.safe_destroy
+		end
+
+	copy_tab_status (other: EV_PIXMAP_IMP) is
+			-- Retrieve all common attributes between `other'
+			-- and `Current' & make `Current' have the same
+			-- attributes than `other'.
+		require
+			other_not_void: other /= Void
+		do
 				-- Update navigation attribute
 			if other.is_tabable_from then
 				enable_tabable_from
@@ -130,15 +143,13 @@ feature {NONE} -- Initialization
 			else
 				disable_tabable_to
 			end
-
-				-- Destroy `other' implementation
-			other.safe_destroy
 		end
 
 	adapt_from_simple (other: EV_PIXMAP_IMP) is
 			-- Adapt the current implementation to `other'.
 		do
 			promote_from_simple (other)
+			copy_tab_status (other)
 
 				-- Reset the drawable part.
 			internal_initialized_pen := False

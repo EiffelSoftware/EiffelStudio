@@ -118,6 +118,8 @@ feature {NONE} -- Initialization
 			metric_grid_wrapper.set_sort_action (agent sort_agent)
 			metric_grid.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, True))
 			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed_for_metric_navigation (?, True))
+			metric_grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			metric_grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 
 			create move_unit_up_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_8), True, False, False)
 			create move_unit_down_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_2), True, False, False)

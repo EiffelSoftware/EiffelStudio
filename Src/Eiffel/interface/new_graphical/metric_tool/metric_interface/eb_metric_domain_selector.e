@@ -81,7 +81,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -131,6 +131,8 @@ feature {NONE} -- Initialization
 			grid.set_minimum_width (100)
 			grid.enable_multiple_row_selection
 			grid.set_tooltip (metric_names.t_drop_program_elements)
+			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			grid.set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 
 			grid_support := new_grid_support (grid)
 			grid_support.enable_ctrl_right_click_to_open_new_window
@@ -320,6 +322,40 @@ feature -- Actions
 	on_drop (a_any: ANY) is
 			-- Invoke when dropping a pebble to add an item to the scope.
 		local
+			l_bunch_stone: DATA_STONE
+			l_stone: STONE
+			l_groups: LIST [CONF_GROUP]
+			l_cursor: CURSOR
+		do
+			l_stone ?= a_any
+			l_bunch_stone ?= a_any
+			if l_stone /= Void then
+				if l_bunch_stone = Void then
+					drop_stone (a_any)
+				else
+					l_groups ?= l_bunch_stone.data
+					if l_groups /= Void then
+						l_cursor := l_groups.cursor
+						from
+							l_groups.start
+						until
+							l_groups.after
+						loop
+							if l_groups.item /= Void then
+								drop_stone (create {CLUSTER_STONE}.make (l_groups.item))
+							end
+							l_groups.forth
+						end
+						l_groups.go_to (l_cursor)
+					end
+				end
+				on_domain_change
+			end
+		end
+
+	drop_stone (a_any: ANY) is
+			-- Drop `a_any' in Current.
+		local
 			l_classi_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 			l_feature_stone: FEATURE_STONE
@@ -328,20 +364,17 @@ feature -- Actions
 			l_domain: like domain
 		do
 			l_stone ?= a_any
+			l_classi_stone ?= a_any
+			l_cluster_stone ?= a_any
+			l_feature_stone ?= a_any
+			l_target_stone ?= a_any
 			l_domain := domain
 			if
-				l_stone /= Void and then
+				(l_classi_stone /= Void or else l_cluster_stone /= Void or else l_feature_stone /= Void or else l_target_stone /= Void) and then
 				not l_domain.has_delayed_domain_item and then
 				not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
 			then
-				l_classi_stone ?= a_any
-				l_cluster_stone ?= a_any
-				l_feature_stone ?= a_any
-				l_target_stone ?= a_any
-				if l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void then
-					insert_domain_item (metric_domain_item_from_stone (l_stone))
-					on_domain_change
-				end
+				insert_domain_item (metric_domain_item_from_stone (l_stone))
 			end
 		end
 
@@ -570,19 +603,25 @@ feature{NONE} -- Implementation/Data
 			l_target_stone: TARGET_STONE
 			l_stone: STONE
 			l_domain: like domain
+			l_bunch_stone: DATA_STONE
 		do
 			l_stone ?= a_pebble
-			l_domain := domain
-			if
-				l_stone /= Void and then
-				not l_domain.has_delayed_domain_item and then
-				not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
-			then
-				l_classi_stone ?= a_pebble
-				l_cluster_stone ?= a_pebble
-				l_feature_stone ?= a_pebble
-				l_target_stone ?= a_pebble
-				Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+			l_bunch_stone ?= a_pebble
+			if l_bunch_stone /= Void then
+				Result := True
+			else
+				l_domain := domain
+				if
+					l_stone /= Void and then
+					not l_domain.has_delayed_domain_item and then
+					not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
+				then
+					l_classi_stone ?= a_pebble
+					l_cluster_stone ?= a_pebble
+					l_feature_stone ?= a_pebble
+					l_target_stone ?= a_pebble
+					Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+				end
 			end
 		end
 

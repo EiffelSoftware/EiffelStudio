@@ -4684,6 +4684,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 			if
 				pointed_item /= Void and then not pointed_item.is_destroyed and then
+				pointed_item.parent_i = Current and then
 				pointed_item.pointer_button_press_actions_internal /= Void and then
 				not pointed_item.pointer_button_press_actions_internal.is_empty
 			then

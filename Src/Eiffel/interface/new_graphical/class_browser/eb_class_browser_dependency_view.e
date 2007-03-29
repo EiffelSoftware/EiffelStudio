@@ -293,21 +293,6 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_row_selected (a_row: EV_GRID_ROW) is
-			-- Action to be performed when `a_row' is selected.
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
-		do
-			if grid.selected_rows.count = 1 then
-				l_row ?= a_row.data
-				if l_row /= Void  then
-					l_row.bind_reference_position_item
-				end
-			end
-		end
-
 feature -- Notification
 
 	provide_result is
@@ -1483,7 +1468,6 @@ feature{NONE} -- Initialization
 			grid.set_tree_node_connector_color ((create {EV_STOCK_COLORS}).gray)
 			grid.row_expand_actions.extend (agent on_row_expanded_or_collapsed (?, True))
 			grid.row_collapse_actions.extend (agent on_row_expanded_or_collapsed (?, False))
-			grid.row_select_actions.extend (agent on_row_selected)
 			enable_grid_item_pnd_support
 			set_select_all_action (agent do  end)
 			enable_tree_node_highlight

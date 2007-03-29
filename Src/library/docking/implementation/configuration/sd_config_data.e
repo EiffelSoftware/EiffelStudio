@@ -18,6 +18,7 @@ feature {NONE} -- Initlization
 			create internal_inner_container_datas.make (1)
 			create internal_auto_hide_zones_data.make
 			create tool_bar_datas.make (1)
+			create maximized_tools.make (1)
 			name := ""
 		end
 
@@ -109,16 +110,8 @@ feature -- Data for only one editor zone
 
 feature -- Data for maximized.
 
-	maximized_tool: STRING_GENERAL
-			-- Maximized tool, void if no maximized tool.
-
-	set_maximized_tool (a_unique_name: like maximized_tool) is
-			-- Set `maximized_tool' with `a_unique_name'
-		do
-			maximized_tool := a_unique_name
-		ensure
-			set: maximized_tool = a_unique_name
-		end
+	maximized_tools: ARRAYED_LIST [STRING_GENERAL]
+			-- Maximized tool, count is 0 if no maximized tool.
 
 feature {NONE}  -- Implementation
 
@@ -127,6 +120,9 @@ feature {NONE}  -- Implementation
 
 	internal_auto_hide_zones_data: SD_AUTO_HIDE_PANEL_DATA;
 			-- Auto hide zones datas.
+
+invariant
+	not_void: maximized_tools /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

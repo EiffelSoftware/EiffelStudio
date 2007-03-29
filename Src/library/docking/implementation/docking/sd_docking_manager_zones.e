@@ -41,19 +41,44 @@ feature -- Zones managements
 	zones: ACTIVE_LIST [SD_ZONE]
 			-- All SD_ZONE in current system.
 
-	maximized_zone: SD_ZONE is
+	maximized_zones: ARRAYED_LIST [SD_ZONE] is
 			-- Maximized zone, maybe void if not exists.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			from
+				create Result.make (1)
+				l_zones := internal_docking_manager.zones.zones
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				if l_zones.item.is_maximized then
+					Result.extend (l_zones.item)
+				end
+				l_zones.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	maximized_zone_in_main_window: SD_ZONE is
+			-- Maximized zone in main window.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_main_area: SD_MULTI_DOCK_AREA
+		do
+			from
+				l_main_area := internal_docking_manager.query.inner_container_main
 				l_zones := internal_docking_manager.zones.zones
 				l_zones.start
 			until
 				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.is_maximized then
-					Result := l_zones.item
+					if l_main_area.has_recursive (l_zones.item) then
+						Result := l_zones.item
+					end
 				end
 				l_zones.forth
 			end

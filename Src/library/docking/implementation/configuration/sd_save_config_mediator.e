@@ -97,7 +97,7 @@ feature -- Save inner container data.
 			if not internal_docking_manager.contents.has (internal_docking_manager.zones.place_holder_content) then
 				l_dock_area := internal_docking_manager.query.inner_container_main
 
-				l_maximized_zone := internal_docking_manager.zones.maximized_zone
+				l_maximized_zone := internal_docking_manager.zones.maximized_zone_in_main_window
 				if l_maximized_zone /= Void then
 					l_maximized_zone.on_normal_max_window
 				end
@@ -503,12 +503,19 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_config_data /= Void
 		local
-			l_maximized_zone: SD_ZONE
+			l_maximized_zones: ARRAYED_LIST [SD_ZONE]
 		do
-			l_maximized_zone := internal_docking_manager.zones.maximized_zone
-			if l_maximized_zone /= Void then
-				a_config_data.set_maximized_tool (l_maximized_zone.content.unique_title)
+			l_maximized_zones := internal_docking_manager.zones.maximized_zones
+			from
+				l_maximized_zones.start
+			until
+				l_maximized_zones.after
+			loop
+				a_config_data.maximized_tools.extend (l_maximized_zones.item.content.unique_title)
+				l_maximized_zones.forth
 			end
+		ensure
+			valid: a_config_data.maximized_tools.count = internal_docking_manager.zones.maximized_zones.count
 		end
 
 	save_config_data_to_file (a_config_data: SD_CONFIG_DATA; a_file: STRING_GENERAL) is

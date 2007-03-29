@@ -107,26 +107,59 @@ feature -- Querys
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
-			from
-				l_containers := internal_docking_manager.inner_containers
-				l_containers.start
-			until
-				l_containers.after or Result /= Void
-			loop
-				Result := l_containers.item
-				if not Result.has_recursive (a_zone) then
-					Result := Void
-				end
-				l_containers.forth
-			end
+			Result := internal_inner_container (a_zone)
+
 			if Result = Void then
 				Result := inner_container_main
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+	inner_container_include_hidden (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
+			-- SD_MULTI_DOCK_AREA which `a_zone' in, also finding in widgets which are hidden by a maximized zone.
+			-- Maybe void if not found.
+		require
+			not_void: a_zone /= Void
+		do
+			Result := internal_inner_container (a_zone)
+			if Result = Void then
+				-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
+				Result := maximized_inner_container (a_zone)
+			end
+		end
+
+	maximized_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
+			-- Find `a_zone' only in main areas which have maxized zone.
+			-- Maybe void if not found.
+		require
+			not_void: a_zone /= Void
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_dock_area: SD_MULTI_DOCK_AREA
+			l_container: EV_CONTAINER
+			l_hidden_widget: EV_WIDGET
+		do
+			from
+				l_zones := internal_docking_manager.zones.maximized_zones
+				l_zones.start
+			until
+				l_zones.after or Result /= Void
+			loop
+				l_dock_area := internal_docking_manager.query.inner_container (l_zones.item)
+
+				l_hidden_widget := l_zones.item.main_area_widget
+				if l_hidden_widget = a_zone then
+					Result := l_dock_area
+				else
+					l_container ?= l_hidden_widget
+					if l_container /= Void and then l_container.has_recursive (a_zone) then
+						Result := l_dock_area
+					end
+				end
+				l_zones.forth
+			end
 		end
 
 	is_main_inner_container (a_area: SD_MULTI_DOCK_AREA): BOOLEAN is
@@ -370,6 +403,28 @@ feature -- Querys
 		end
 
 feature {NONE} -- Implemnetation
+
+	internal_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
+			-- SD_MULTI_DOCK_AREA which `a_zone' in.
+			-- Maybe void if not found.
+		require
+			not_void: a_zone /= Void
+		local
+			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
+		do
+			from
+				l_containers := internal_docking_manager.inner_containers
+				l_containers.start
+			until
+				l_containers.after or Result /= Void
+			loop
+				Result := l_containers.item
+				if not Result.has_recursive (a_zone) then
+					Result := Void
+				end
+				l_containers.forth
+			end
+		end
 
 	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE]) is
 			-- Add all zones in `a_widget' to `a_list'.

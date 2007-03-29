@@ -328,13 +328,18 @@ feature -- Redefine.
 			l_state_void: SD_STATE_VOID
 			l_platform: PLATFORM
 			l_floating_zone: SD_FLOATING_ZONE
+			l_is_main_container: BOOLEAN
 		do
+			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
+			l_is_main_container :=  l_multi_dock_area /= Void and then internal_docking_manager.query.is_main_inner_container (l_multi_dock_area)
+
+			docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+
 			zone.show
 			show_all_split_parent (zone)
 			docking_manager.command.resize (False)
 
-			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
-			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
+			if not l_is_main_container then
 				l_floating_zone := l_multi_dock_area.parent_floating_zone
 				create l_platform
 				if not l_platform.is_windows then
@@ -362,7 +367,10 @@ feature -- Redefine.
 			l_spliter: EV_SPLIT_AREA
 		do
 			Precursor {SD_STATE}
-			internal_docking_manager.command.recover_normal_state
+			if not zone.is_displayed or zone.is_maximized then
+				internal_docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+			end
+
 			zone.hide
 			l_spliter ?= zone.parent
 			if l_spliter /= Void and then l_spliter.is_displayed then

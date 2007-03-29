@@ -167,8 +167,25 @@ feature -- Redefine.
 			l_docking_zone: SD_DOCKING_ZONE
 			l_auto_hide_state, l_new_state: SD_AUTO_HIDE_STATE
 			l_restired: BOOLEAN
+			l_dock_area: SD_MULTI_DOCK_AREA
+			l_zone: SD_ZONE
 		do
 			if relative /= Void and not l_restired and relative.is_visible then
+				l_zone := relative.state.zone
+				if l_zone /= Void then
+					l_dock_area := docking_manager.query.inner_container_include_hidden (l_zone)
+				end
+
+				if l_dock_area /= Void then
+					-- We should care about if maximized zone is in the same SD_MULTI_DOCK_AREA with current zone.
+					-- If yes, then call recover from normal state of that zone.
+					-- If no, then don't call recover from normal state.
+					docking_manager.command.recover_normal_state_in (l_dock_area)
+				else
+					-- We can't find `l_zone', so we restore every zone. This code should not be called.
+					docking_manager.command.recover_normal_state
+				end
+
 				l_tab_zone ?= relative.state.zone
 				l_docking_zone ?= relative.state.zone
 				if l_tab_zone /= Void then

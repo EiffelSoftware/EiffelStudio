@@ -72,6 +72,7 @@ feature -- Button texts
 	b_Feature_name: STRING_GENERAL is					do Result := locale.translate("Feature Name")	end
 	b_Finish: STRING_GENERAL is							do Result := locale.translate("Finish")	end
 	b_Function_time: STRING_GENERAL is					do Result := locale.translate("Function Time")	end
+	b_go_to: STRING_GENERAL is							do Result := locale.translate ("Go to") end
 	b_Keep_assertions: STRING_GENERAL is				do Result := locale.translate("Keep Assertions")	end
 	b_Load_ace: STRING_GENERAL is						do Result := locale.translate("Load From...")	end
 	b_Move_to_folder: STRING_GENERAL is					do Result := locale.translate("Move to Folder...")	end
@@ -1010,6 +1011,8 @@ feature -- Label texts
 	l_Language_type: STRING_GENERAL is			do Result := locale.translate("Language type")	end
 	l_Library: STRING_GENERAL is				do Result := locale.translate("library")	end
 	l_line: STRING_GENERAL is 					do Result := locale.translate ("Line") end
+	l_line_number: STRING_GENERAL is			do Result := locale.translate ("Line number") end
+	l_line_number_range (a_number: STRING_GENERAL): STRING_GENERAL is		do Result := locale.format_string (locale.translate ("Line number (1 - $1)"), [a_number]) end
 	l_Literal_value: STRING_GENERAL is			do Result := locale.translate("Literal Value")	end
 	l_Loaded_project: STRING_GENERAL is			do Result := locale.translate("Loaded project: ")	end
 	l_Loading_diagram: STRING is				"Loading diagram:"
@@ -1802,6 +1805,7 @@ feature -- Title part
 	t_first_match_reached: STRING_GENERAL is	do Result := locale.translate("Initial match reached.")	end
 	t_finish_freezing_launch_error: STRING_GENERAL is 	do Result := locale.translate("finish_freezing Launch Error")	end
 	t_bottom_reached: STRING_GENERAL is 	do Result := locale.translate("Bottom reached.")	end
+	t_go_to_line: STRING_GENERAL is				do Result := locale.translate ("Go to line") end
 	t_refactoring_feature_rename: STRING_GENERAL is	do Result := locale.translate("Refactoring: Feature Rename (Compiled Classes)")	end
 	t_refactoring_class_select: STRING_GENERAL is do Result := locale.translate("Select Class")	end
 	t_refactoring_class_rename: STRING_GENERAL is do Result := locale.translate("Refactoring: Class Rename")	end

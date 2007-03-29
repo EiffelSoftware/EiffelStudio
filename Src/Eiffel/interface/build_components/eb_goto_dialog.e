@@ -19,6 +19,13 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make
 
@@ -47,6 +54,10 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			set_title (names.t_go_to_line)
+			line_number_label.set_text (names.l_line_number)
+			go_button.set_text (names.b_go_to)
+			cancel_button.set_text (names.b_cancel)
 			close_request_actions.extend (agent destroy)
 			cancel_button.select_actions.extend (agent destroy)
 			set_default_cancel_button (cancel_button)
@@ -63,7 +74,7 @@ feature {NONE} -- Initialization
 		do
 			l_line_count := editor.number_of_lines
 			if l_line_count > 0 then
-				line_number_label.set_text ("Line number (1 - " + editor.number_of_lines.out + ")")
+				line_number_label.set_text (names.l_line_number_range (editor.number_of_lines.out))
 				line_number_text.value_range.resize_exactly (1, l_line_count)
 			end
 		end

@@ -14,6 +14,8 @@ feature {NONE} -- Creation
 			ci: C [INTEGER]
 			cx: C [X]
 			x: X
+			ca: C [ANY]
+			da: D [ANY]
 		do
 			create aa
 			aa.put ("abc")
@@ -101,6 +103,22 @@ feature {NONE} -- Creation
 			io.put_string (cx.h.out)
 			io.put_new_line
 			io.put_string (cx.i.out)
+			io.put_new_line
+			create {C [INTEGER]} ca.make (123)
+			ca.p (11, 123)
+			io.put_string (ca.h.out)
+			io.put_new_line
+			create {D [STRING]} da
+			da.p ("abc", "def")
+			io.put_string (da.j.out)
+			io.put_new_line
+			create {E} ca
+			ca.p ("xyz", 123)
+			io.put_string (ca.h.out)
+			io.put_new_line
+			create {E} da
+			da.p ("abc", 12)
+			io.put_string (da.j.out)
 			io.put_new_line
 		end
 

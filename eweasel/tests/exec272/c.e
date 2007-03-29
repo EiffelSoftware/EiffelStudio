@@ -38,4 +38,11 @@ feature
 
 	h: G
 
+	p (a: G; b: INTEGER) is
+		do
+			io.put_string ("C.p")
+			io.put_new_line
+			h := a
+		end
+
 end

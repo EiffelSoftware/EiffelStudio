@@ -354,35 +354,13 @@ feature {NONE} -- Widget initialization
 	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET is
 		local
 			l_array: ARRAY [STRING]
-			l_value: STRING
 			l_displayed_names: HASH_TABLE [STRING_GENERAL, STRING]
-			l_displayed_name: STRING_GENERAL
-			l_langs, l_locales: HASH_TABLE [STRING_GENERAL, STRING]
-			i: INTEGER
 		do
 			Result := Precursor (a_pref)
 				-- Set display names for preferences of type LIST.
 			if a_pref = preferences.misc_data.locale_id_preference then
-				l_langs := locale_names.languages
-				l_locales := locale_names.locales
 				l_array := a_pref.value
-				create l_displayed_names.make (a_pref.value.upper - a_pref.value.lower + 1)
-				from
-					i := l_array.lower
-				until
-					i > l_array.upper
-				loop
-					l_value := l_array.item (i).as_lower
-					if l_locales.has_key (l_value) then
-						l_displayed_name := l_locales.found_item
-					elseif l_langs.has_key (l_value) then
-						l_displayed_name := l_langs.found_item
-					else
-						l_displayed_name := l_array.item (i)
-					end
-					l_displayed_names.force (l_displayed_name, l_array.item (i))
-					i := i + 1
-				end
+				l_displayed_names := locale_names.locales_from_array (l_array)
 				l_displayed_names.force (names.l_unselected, "Unselected")
 				Result.set_displayed_value (l_displayed_names)
 			elseif a_pref = preferences.development_window_data.ctrl_right_click_receiver_preference then

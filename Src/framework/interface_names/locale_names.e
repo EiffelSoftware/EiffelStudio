@@ -352,6 +352,42 @@ feature -- Access
 			Result.force (locale.translate ("Zulu/isiZulu (South Africa)"), "zu_za")
 		end
 
+	locales_from_array (a_array_of_id: ARRAY [STRING]): like locales is
+			-- Locale pairs of names and locale ids.
+			-- Names have been translated according to current selected locale.
+		require
+			a_array_of_id_not_void: a_array_of_id /= Void
+		local
+			l_array: like a_array_of_id
+			i: INTEGER
+			l_displayed_name: STRING_GENERAL
+			l_langs, l_locales: HASH_TABLE [STRING_GENERAL, STRING]
+			l_value: STRING
+		do
+			create Result.make (a_array_of_id.count)
+			l_langs := languages
+			l_locales := locales
+			l_array := a_array_of_id
+			from
+				i := l_array.lower
+			until
+				i > l_array.upper
+			loop
+				l_value := l_array.item (i).as_lower
+				if l_locales.has_key (l_value) then
+					l_displayed_name := l_locales.found_item
+				elseif l_langs.has_key (l_value) then
+					l_displayed_name := l_langs.found_item
+				else
+					l_displayed_name := l_array.item (i)
+				end
+				Result.force (l_displayed_name, l_array.item (i))
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

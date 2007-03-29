@@ -11,32 +11,32 @@ class
 inherit
 	EV_PRIMITIVE
 		undefine
-			is_in_default_state,
 			is_equal
 		redefine
+			is_in_default_state,
+			is_in_default_state_for_tabs,
 			implementation
 		end
 
 	EV_ITEM_LIST [EV_HEADER_ITEM]
-		undefine
-			is_in_default_state
 		redefine
+			is_in_default_state,
 			implementation
 		end
 
 	EV_FONTABLE
 		undefine
-			is_in_default_state,
 			is_equal
 		redefine
+			is_in_default_state,
 			implementation
 		end
 
 	EV_ITEM_PIXMAP_SCALER
 		undefine
-			is_equal,
-			is_in_default_state
+			is_equal
 		redefine
+			is_in_default_state,
 			implementation
 		end
 
@@ -86,6 +86,11 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and
 				Precursor {EV_FONTABLE} and Precursor {EV_ITEM_PIXMAP_SCALER}
+		end
+
+	is_in_default_state_for_tabs: BOOLEAN is
+		do
+			Result := not is_tabable_from and not is_tabable_to
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

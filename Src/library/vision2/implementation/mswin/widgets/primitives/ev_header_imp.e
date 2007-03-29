@@ -141,6 +141,8 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			set_default_font
+			disable_tabable_from
+			disable_tabable_to
 		end
 
 feature -- Status report

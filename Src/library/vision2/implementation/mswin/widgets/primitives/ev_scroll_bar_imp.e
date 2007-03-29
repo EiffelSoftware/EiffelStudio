@@ -21,6 +21,7 @@ inherit
 			on_scroll
 		redefine
 			interface,
+			initialize,
 			wel_background_color,
 			set_leap,
 			set_range
@@ -90,6 +91,13 @@ inherit
 		end
 
 feature {NONE} -- Implementation
+
+	initialize is
+		do
+			Precursor {EV_GAUGE_IMP}
+			disable_tabable_from
+			disable_tabable_to
+		end
 
 	default_style: INTEGER is
 			-- Default style used to create the control

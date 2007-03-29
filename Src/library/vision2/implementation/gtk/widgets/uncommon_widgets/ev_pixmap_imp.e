@@ -70,8 +70,6 @@ feature {NONE} -- Initialization
 			l_app_imp: like app_implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			disable_tabable_from
-			disable_tabable_to
 			l_app_imp := app_implementation
 			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (l_app_imp.default_gdk_window, 1, 1, Default_color_depth)
 

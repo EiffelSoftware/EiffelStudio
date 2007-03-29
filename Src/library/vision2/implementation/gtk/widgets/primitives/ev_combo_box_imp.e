@@ -167,6 +167,8 @@ feature {NONE} -- Initialization
 			set_minimum_width_in_characters (4)
 
 			real_signal_connect (container_widget, once "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			enable_tabable_from
+			enable_tabable_to
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is

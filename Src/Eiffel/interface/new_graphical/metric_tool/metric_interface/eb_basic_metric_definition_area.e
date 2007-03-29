@@ -141,6 +141,13 @@ feature {NONE} -- Initialization
 			combination_grid.register_shortcut (del_key_shortcut, agent on_remove_criterion)
 			combination_grid.register_shortcut (and_indent_shortcut, agent on_indent (True))
 			combination_grid.register_shortcut (or_indent_shortcut, agent on_indent (False))
+			combination_grid.item_select_actions.extend (agent on_item_selected)
+			combination_grid.item_deselect_actions.extend (agent on_item_deselected)
+			indent_and_btn.disable_sensitive
+			indent_or_btn.disable_sensitive
+			remove_criterion_btn.disable_sensitive
+			up_btn.disable_sensitive
+			down_btn.disable_sensitive
 
 			up_btn.set_tooltip (metric_names.f_move_row_up.as_string_32 + " (" + move_row_up_shortcut.out + ")")
 			down_btn.set_tooltip (metric_names.f_move_row_down.as_string_32 + " (" + move_row_down_shortcut.out + ")")
@@ -164,13 +171,7 @@ feature -- Setting
 			-- Set `mode' with `a_mode'.
 		do
 			mode := a_mode
-			if mode = readonly_mode then
-				remove_criterion_btn.disable_sensitive
-				remove_all_criterion_btn.disable_sensitive
-			else
-				remove_criterion_btn.enable_sensitive
-				remove_all_criterion_btn.enable_sensitive
-			end
+			synchronize_button_status
 		end
 
 	load_metric_definition (a_metric: like metric) is
@@ -367,13 +368,56 @@ feature{NONE} -- Actions
 			end
 		end
 
-feature{NONE} -- Implementation/Access
+	on_item_selected (a_item: EV_GRID_ITEM) is
+			-- Action to be performed when `a_item' is selected.
+		do
+			synchronize_button_status
+		end
+
+	on_item_deselected (a_item: EV_GRID_ITEM) is
+			-- Action to be performed when `a_item' is deselected.
+		do
+			synchronize_button_status
+		end
+
+feature{NONE} -- Implementation
 
 	combination_grid: EB_METRIC_CRITERION_GRID
 			-- Criterion combination grid
 
 	current_selected_grid_domain_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
 			-- Current selected grid domain item
+
+	synchronize_button_status is
+			-- Synchronize button status
+		local
+			l_criterion_row: EB_METRIC_CRITERION_ROW
+			l_items: LIST [EV_GRID_ITEM]
+			l_item: EV_GRID_ITEM
+			l_item_selected: BOOLEAN
+		do
+			if mode /= readonly_mode then
+				l_items := combination_grid.selected_items
+				if l_items.count = 1 then
+					l_item := l_items.first
+					l_criterion_row ?= l_item.row.data
+					l_item_selected := l_criterion_row /= Void and then not l_criterion_row.is_empty_row
+				end
+			end
+			if l_item_selected then
+				indent_and_btn.enable_sensitive
+				indent_or_btn.enable_sensitive
+				remove_criterion_btn.enable_sensitive
+				up_btn.enable_sensitive
+				down_btn.enable_sensitive
+			else
+				indent_and_btn.disable_sensitive
+				indent_or_btn.disable_sensitive
+				remove_criterion_btn.disable_sensitive
+				up_btn.disable_sensitive
+				down_btn.disable_sensitive
+			end
+		end
 
 feature -- Key shortcuts
 

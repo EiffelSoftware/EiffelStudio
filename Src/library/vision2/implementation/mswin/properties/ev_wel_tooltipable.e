@@ -32,6 +32,7 @@ feature -- Element change
 			-- Assign `a_tooltip' to `tooltip'.
 		local
 			l_app: EV_APPLICATION_IMP
+			l_window: like tooltip_window
 		do
 			l_app ?= (create {EV_ENVIRONMENT}).application.implementation
 			check l_app_not_void: l_app /= Void end
@@ -46,11 +47,14 @@ feature -- Element change
 						l_app.internal_tooltip.update_text (tool_info)
 					end
 				else
-					create tool_info.make
-					tool_info.set_text (a_tooltip)
-					tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
-					tool_info.set_id_with_window (tooltip_window)
-					l_app.internal_tooltip.add_tool (tool_info)
+					l_window := tooltip_window
+					if l_window /= Void then
+						create tool_info.make
+						tool_info.set_text (a_tooltip)
+						tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
+						tool_info.set_id_with_window (l_window)
+						l_app.internal_tooltip.add_tool (tool_info)
+					end
 				end
 			else
 				if internal_tooltip_string /= Void and then not internal_tooltip_string.is_empty then

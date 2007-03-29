@@ -2340,10 +2340,12 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 		require
 			a_formatter_not_void: a_formatter /= Void
 		do
-			if changed then
-				save_and (agent a_formatter.execute)
-			else
-				a_formatter.execute
+			if a_formatter.is_button_sensitive then
+				if changed then
+					save_and (agent a_formatter.execute)
+				else
+					a_formatter.execute
+				end
 			end
 		end
 

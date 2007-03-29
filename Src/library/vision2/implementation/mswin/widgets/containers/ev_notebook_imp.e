@@ -27,7 +27,6 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			on_key_down,
 			on_size,
 			interface,
 			child_added,
@@ -377,30 +376,6 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
-	tab_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus through to the tab
-			-- key. If `direction' it goes to the next widget otherwise, it
-			-- goes to the previous one.
-		local
-			hwnd: POINTER
-			window: WEL_WINDOW
-		do
-			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
-				wel_item, direction)
-			window := window_of_item (hwnd)
-			window.set_focus
-		end
-
-	process_tab_key (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next
-			-- widget. Need to be called in the feature on_key_down when the
-			-- control need to process this kind of keys.
-		do
-			if virtual_key = Vk_tab then
-				tab_action (not key_down (Vk_shift))
-			end
-		end
-
 	compute_minimum_width is
 			-- Recompute the minimum_width of `Current'.
 		local
@@ -622,13 +597,6 @@ feature {NONE} -- WEL Implementation
 			if selection_actions_internal /= Void then
 				selection_actions_internal.call (Void)
 			end
-		end
-
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed.
-		do
-			process_tab_key (virtual_key)
-			Precursor {EV_WIDGET_LIST_IMP} (virtual_key, key_data)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

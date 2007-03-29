@@ -1269,7 +1269,7 @@ feature {NONE} -- WEL Implementation
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed.
 		do
-			process_tab_key (virtual_key)
+			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 

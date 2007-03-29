@@ -1467,14 +1467,6 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 
 feature {NONE} -- Features that should be directly implemented by externals
 
-	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- SDK GetNextDlgGroupItem
-		external
-			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
-		alias
-			"GetNextDlgGroupItem"
-		end
-
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		external

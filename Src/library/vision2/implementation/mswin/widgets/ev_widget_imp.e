@@ -897,6 +897,8 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 				end
 				if default_key_processing_handler /= Void and then not default_key_processing_handler.item ([key]) then
 					disable_default_processing
+				elseif is_tabable_from then
+					process_navigation_key (virtual_key)
 				end
 			end
 		end
@@ -941,6 +943,46 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Call `select_actions' to respond to `Enter' key press if
 			-- Current supports it.
 		do
+		end
+
+	tab_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus through to the tab
+			-- key. If `direction' it goes to the next widget otherwise,
+			-- it goes to the previous one.
+		local
+			l_null, hwnd: POINTER
+			window: WEL_WINDOW
+			l_top: like top_level_window_imp
+		do
+			l_top := top_level_window_imp
+			if l_top /= Void then
+				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
+			end
+			if hwnd /= l_null then
+				window := window_of_item (hwnd)
+				if window /= Void then
+					window.set_focus
+				end
+			end
+		end
+
+	process_navigation_key (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control needs to process this kind of keys.
+		do
+			if
+				virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then
+				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
+			then
+				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.Vk_shift))
+			end
+		end
+
+	is_tabable_from: BOOLEAN is
+			-- Can current widget be used as a starting point for key navigation
+		do
+			Result := True
 		end
 
 feature {NONE} -- Implementation
@@ -1427,21 +1469,6 @@ feature -- Deferred features
 		deferred
 		end
 
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
-		end
-
-	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		deferred
-		end
-
 feature {NONE} -- Implementation
 
 	create_file_drop_actions: like file_drop_actions
@@ -1525,8 +1552,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_WIDGET_IMP
-

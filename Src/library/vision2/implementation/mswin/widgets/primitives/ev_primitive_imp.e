@@ -21,7 +21,8 @@ inherit
 		redefine
 			update_for_pick_and_drop,
 			interface,
-			destroy
+			destroy,
+			is_tabable_from
 		end
 
 	EV_SIZEABLE_PRIMITIVE_IMP
@@ -73,78 +74,6 @@ feature -- Element change
 
 feature -- Basic operations
 
-	tab_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus through to the tab
-			-- key. If `direction' it goes to the next widget otherwise,
-			-- it goes to the previous one.
-		local
-			l_null, hwnd: POINTER
-			window: WEL_WINDOW
-			l_top: like top_level_window_imp
-		do
-			l_top := top_level_window_imp
-			if l_top /= Void then
-				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
-			end
-			if hwnd /= l_null then
-				window := window_of_item (hwnd)
-				if window /= Void then
-					window.set_focus
-				end
-			end
-		end
-
-	arrow_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus throughthe arrow
-			-- keys. If `direction' it goes to the next widget otherwise,
-			-- it goes to the previous one.
-		local
-			hwnd, l_null: POINTER
-			window: WEL_WINDOW
-			l_top: like top_level_window_imp
-		do
-			l_top := top_level_window_imp
-			if l_top /= Void then
-				hwnd := next_dlggroupitem (l_top.wel_item, wel_item, direction)
-			end
-			if hwnd /= l_null then
-				window := window_of_item (hwnd)
-				if window /= Void then
-					window.set_focus
-				end
-			end
-		end
-
-	process_tab_key (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next
-			-- widget. Need to be called in the feature on_key_down when the
-			-- control needs to process this kind of keys.
-		do
-			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then
-				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
-			then
-				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.Vk_shift))
-			end
-		end
-
-	process_tab_and_arrows_keys (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next
-			-- widget. Need to be called in the feature on_key_down when the
-			-- control need to process this kind of keys.
-		do
-			inspect
-				virtual_key
-			when {WEL_INPUT_CONSTANTS}.vk_tab then
-				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.vk_shift))
-			when {WEL_INPUT_CONSTANTS}.vk_down, {WEL_INPUT_CONSTANTS}.vk_right then
-				arrow_action (True)
-			when {WEL_INPUT_CONSTANTS}.vk_up, {WEL_INPUT_CONSTANTS}.vk_left then
-				arrow_action (False)
-			else
-				-- Do nothing
-			end
-		end
-
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
@@ -160,7 +89,55 @@ feature -- Basic operations
 			Result := window_of_item (wel_item)
 		end
 
+feature -- Navigation
+
+	is_tabable_to: BOOLEAN is
+			-- May `Current' be tabbed to?
+		do
+			Result := flag_set (style, {WEL_WS_CONSTANTS}.ws_tabstop)
+		end
+
+	is_tabable_from: BOOLEAN is
+			-- May `Current' be tabbed from?
+		do
+			Result := not not_is_tabable_from
+		end
+
+ 	enable_tabable_to is
+ 			-- Ensure `is_tabable_to' is `True'.
+ 		do
+		 	set_style (style | {WEL_WS_CONSTANTS}.ws_tabstop | {WEL_WS_CONSTANTS}.ws_group)
+		end
+
+	disable_tabable_to is
+			-- Ensure `is_tabable_to' is `False'.
+		local
+			l_style: INTEGER
+		do
+			l_style := style
+			l_style := clear_flag (l_style, {WEL_WS_CONSTANTS}.ws_tabstop)
+			l_style := clear_flag (l_style, {WEL_WS_CONSTANTS}.ws_group)
+			set_style (l_style)
+		end
+
+	enable_tabable_from is
+ 			-- Ensure `is_tabable_from' is `True'.
+ 		do
+ 			not_is_tabable_from := False
+		end
+
+	disable_tabable_from is
+			-- Ensure `is_tabable_from' is `False'.
+		do
+			not_is_tabable_from := True
+		end
+
 feature {EV_ANY_I} -- Implementation
+
+	not_is_tabable_from: BOOLEAN
+			-- Storage for `is_tabable_from' in negative value because the
+			-- default for `is_tabable_from' is True and we do not want to
+			-- set this to all descendants of EV_PRIMITIVE_IMP.
 
 	destroy is
 			-- Destroy `Current'.

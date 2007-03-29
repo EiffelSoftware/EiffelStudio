@@ -29,13 +29,8 @@ inherit
 			foreground_color
 		redefine
 			implementation,
-			is_in_default_state
-		end
-
-	EV_TAB_CONTROLABLE
-		redefine
-			implementation,
-			is_in_default_state
+			is_in_default_state,
+			is_in_default_state_for_tabs
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES
@@ -100,11 +95,15 @@ feature -- Basic operations
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default state.
+			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE}
-				and then Precursor {EV_DRAWABLE} and not is_tabable_to and
-				not is_tabable_from
+			Result := Precursor {EV_PRIMITIVE} and then Precursor {EV_DRAWABLE}
+		end
+
+	is_in_default_state_for_tabs: BOOLEAN is
+			-- Is `Current' in its default state with regards to tabs?
+		do
+			Result := not is_tabable_to and not is_tabable_from
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation

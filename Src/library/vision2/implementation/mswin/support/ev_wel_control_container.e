@@ -182,14 +182,6 @@ feature {NONE} -- Features that should be directly implemented by externals.
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- SDK GetNextDlgGroupItem
-		external
-			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
-		alias
-			"GetNextDlgGroupItem"
-		end
-
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		external

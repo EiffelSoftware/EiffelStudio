@@ -80,7 +80,7 @@ else
 fi
 
 if $make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
-	if [ ! $ncpus -ge 0 ]; then
+	if [ ! $ncpus -gt 0 ]; then
 		case `uname` in
 			Darwin) ncpus=`sysctl -n hw.activecpu` ;;
 			Linux)

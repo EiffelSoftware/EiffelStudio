@@ -53,6 +53,8 @@ feature {NONE} -- Initialization
 			private_width := 1
 			private_height := 1
 			private_bitmap_id := -1
+			disable_tabable_from
+			disable_tabable_to
 			set_is_initialized (True)
 		end
 
@@ -343,12 +345,38 @@ feature  -- Measurement
 
 feature -- Navigation
 
-	is_tabable_from: BOOLEAN is False
-	is_tabable_to: BOOLEAN is False
-	enable_tabable_from do end
-	enable_tabable_to do end
-	disable_tabable_from do end
-	disable_tabable_to do end
+	internal_tabable_info: NATURAL_8
+			-- Storage for `is_tabable_from' and `is_tabable_to'.
+
+	is_tabable_to: BOOLEAN is
+		do
+			Result := internal_tabable_info.bit_test (1)
+		end
+
+	is_tabable_from: BOOLEAN is
+		do
+			Result := internal_tabable_info.bit_test (2)
+		end
+
+	enable_tabable_from is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (True, 2)
+		end
+
+	disable_tabable_from is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (False, 2)
+		end
+
+	enable_tabable_to is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (True, 1)
+		end
+
+	disable_tabable_to is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (False, 1)
+		end
 
 feature {EV_ANY_I} -- Delegated features
 
@@ -1241,6 +1269,17 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 				private_height := private_bitmap.height
 				copy_events_from_other (other_imp)
 				update_needed := False
+			end
+				-- Update navigation attribute
+			if other_interface.is_tabable_from then
+				enable_tabable_from
+			else
+				disable_tabable_from
+			end
+			if other_interface.is_tabable_to then
+				enable_tabable_to
+			else
+				disable_tabable_to
 			end
 		end
 

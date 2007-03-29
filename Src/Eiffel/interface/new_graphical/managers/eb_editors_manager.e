@@ -718,14 +718,19 @@ feature -- Element change
 
 feature -- Basic operations
 
-	select_editor (a_editor: like current_editor) is
+	select_editor (a_editor: like current_editor; a_force_focus: BOOLEAN) is
 			-- Give `a_editor' focus.
+			-- `a_force_focus' means if force unmaximized other tool to show `a_editor'.
 		require
 			a_editor_attached: a_editor /= Void
 		do
 			if editors_internal.has (a_editor) then
 				if docking_manager.has_content (a_editor.docking_content) then
-					a_editor.docking_content.set_focus
+					if a_force_focus then
+						a_editor.docking_content.set_focus
+					else
+						a_editor.docking_content.set_focus_no_maximzied (a_editor.docking_content.user_widget)
+					end
 					if a_editor.editor_drawing_area.is_sensitive and a_editor.editor_drawing_area.is_displayed then
 						a_editor.editor_drawing_area.set_focus
 					end
@@ -937,7 +942,7 @@ feature {NONE}-- Implementation
 				last_created_editor := Void
 			end
 			if last_focused_editor /= Void then
-				select_editor (last_focused_editor)
+				select_editor (last_focused_editor, True)
 			end
 		end
 

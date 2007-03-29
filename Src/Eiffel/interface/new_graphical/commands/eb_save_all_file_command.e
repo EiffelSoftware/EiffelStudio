@@ -78,7 +78,7 @@ feature -- Execution
 				until
 					l_editors.after
 				loop
-					l_editors_manager.select_editor (l_editors.item)
+					l_editors_manager.select_editor (l_editors.item, True)
 						-- Save file
 					l_dev_win.save_cmd.execute
 
@@ -90,7 +90,7 @@ feature -- Execution
 					l_editors.forth
 				end
 				if l_editor /= Void then
-					l_editors_manager.select_editor (l_editor)
+					l_editors_manager.select_editor (l_editor, True)
 				end
 			end
 			l_dev_win.unlock_update

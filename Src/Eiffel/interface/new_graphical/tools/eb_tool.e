@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 		do
 			l_editor := develop_window.editors_manager.current_editor
 			if l_editor /= Void then
-				develop_window.editors_manager.select_editor (l_editor)
+				develop_window.editors_manager.select_editor (l_editor, False)
 				if l_editor.editor_drawing_area.is_displayed then
 					l_editor.editor_drawing_area.set_focus
 				end

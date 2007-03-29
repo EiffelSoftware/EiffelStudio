@@ -109,7 +109,7 @@ feature {EV_ANY} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE} and then Precursor {EV_DRAWABLE}
+			Result := Precursor {EV_DRAWABLE} and then is_in_default_state_for_tabs
 		end
 
 	is_in_default_state_for_tabs: BOOLEAN is

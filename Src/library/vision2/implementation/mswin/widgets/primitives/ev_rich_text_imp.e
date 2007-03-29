@@ -1172,7 +1172,7 @@ feature -- Status setting
 				-- It appears that streaming rtf adds an extra new line character which we must now remove.
 			select_region (text_length, text_length)
 			check
-				selected_text_is_newline: selected_text.is_equal ("%N")
+				selected_text_is_newline: selected_text.is_empty or selected_text.is_equal ("%N")
 			end
 			delete_selection
 

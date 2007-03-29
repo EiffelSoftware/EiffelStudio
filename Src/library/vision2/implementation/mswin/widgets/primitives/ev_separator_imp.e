@@ -18,7 +18,8 @@ inherit
 		undefine
 			set_default_minimum_size
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -42,6 +43,13 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, "EV_SEPARATOR")
  		end
+
+	initialize is
+		do
+			Precursor {EV_PRIMITIVE_IMP}
+			disable_tabable_from
+			disable_tabable_to
+		end
 
 feature {NONE} -- WEL Implementation
 

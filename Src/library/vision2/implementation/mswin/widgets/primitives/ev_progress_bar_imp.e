@@ -19,7 +19,8 @@ inherit
 		undefine
 			valid_maximum
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_PROGRESS_BAR
@@ -97,6 +98,13 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, -1)
+		end
+
+	initialize is
+		do
+			Precursor {EV_GAUGE_IMP}
+			disable_tabable_from
+			disable_tabable_to
 		end
 
 feature -- Access

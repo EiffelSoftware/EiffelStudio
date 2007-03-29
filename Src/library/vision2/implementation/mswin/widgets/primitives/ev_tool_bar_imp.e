@@ -146,7 +146,8 @@ feature {NONE} -- Initialization
 
 			-- On Windows, we only can set ex style of toolbar this way.
 			l_prev_ex_style := {WEL_API}.send_message_result_integer (wel_item, tb_setextendedstyle, to_wparam (0), to_lparam (tbstyle_ex_mixedbuttons | tbstyle_ex_drawddarrows ))
-
+			disable_tabable_from
+			disable_tabable_to
 		end
 
 feature -- Access

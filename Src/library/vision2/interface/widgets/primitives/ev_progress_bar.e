@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"[
 			Base class for bar graph gauges that display progress of a process.
@@ -17,7 +17,8 @@ inherit
 	EV_GAUGE
 		redefine
 			implementation,
-			is_in_default_state
+			is_in_default_state,
+			is_in_default_state_for_tabs
 		end
 
 feature -- Status report
@@ -60,6 +61,11 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GAUGE} and is_segmented
+		end
+
+	is_in_default_state_for_tabs: BOOLEAN is
+		do
+			Result := not is_tabable_from and not is_tabable_to
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

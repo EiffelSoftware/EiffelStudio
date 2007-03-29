@@ -136,6 +136,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			set_default_font
+			disable_tabable_from
+			disable_tabable_to
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 

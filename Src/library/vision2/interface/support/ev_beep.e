@@ -49,6 +49,11 @@ feature -- Commands
 			implementation.ok
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_BEEP_I
+			-- Responsible for interaction with native APIs.			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -56,9 +61,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_BEEP_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_BEEP_I;
-			-- Responsible for interaction with native APIs.			
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -148,6 +148,18 @@ feature {NONE} -- Initialization
  				-- update events from `other'.
 			copy_events_from_other (other)
 
+				-- Update navigation attribute
+			if other.is_tabable_from then
+				enable_tabable_from
+			else
+				disable_tabable_from
+			end
+			if other.is_tabable_to then
+				enable_tabable_to
+			else
+				disable_tabable_to
+			end
+
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.
 			set_is_initialized (False)

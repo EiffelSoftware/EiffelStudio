@@ -31,6 +31,7 @@ inherit
 			{EV_PIXMAP_IMP_WIDGET} wel_drawing_mode
 		redefine
 			interface,
+			initialize,
 			destroy,
 			sub_pixmap
 		end
@@ -118,6 +119,18 @@ feature {NONE} -- Initialization
 			width := internal_bitmap.width
 			height := internal_bitmap.height
 
+				-- Update navigation attribute
+			if other.is_tabable_from then
+				enable_tabable_from
+			else
+				disable_tabable_from
+			end
+			if other.is_tabable_to then
+				enable_tabable_to
+			else
+				disable_tabable_to
+			end
+
 				-- Destroy `other' implementation
 			other.safe_destroy
 		end
@@ -198,6 +211,13 @@ feature {NONE} -- Initialization
 			-- Initialize from `a_pointer_style'
 		do
 			check should_not_be_called: False end
+		end
+
+	initialize is
+		do
+			Precursor {EV_DRAWABLE_IMP}
+			disable_tabable_from
+			disable_tabable_to
 		end
 
 feature {NONE} -- Saving
@@ -457,12 +477,38 @@ feature -- Element change
 
 feature -- Navigation
 
-	is_tabable_from: BOOLEAN is do end
-	is_tabable_to: BOOLEAN is do end
-	enable_tabable_from do end
-	enable_tabable_to do end
-	disable_tabable_from do end
-	disable_tabable_to do end
+	internal_tabable_info: NATURAL_8
+			-- Storage for `is_tabable_from' and `is_tabable_to'.
+
+	is_tabable_to: BOOLEAN is
+		do
+			Result := internal_tabable_info.bit_test (1)
+		end
+
+	is_tabable_from: BOOLEAN is
+		do
+			Result := internal_tabable_info.bit_test (2)
+		end
+
+	enable_tabable_from is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (True, 2)
+		end
+
+	disable_tabable_from is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (False, 2)
+		end
+
+	enable_tabable_to is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (True, 1)
+		end
+
+	disable_tabable_to is
+		do
+			internal_tabable_info := internal_tabable_info.set_bit (False, 1)
+		end
 
 feature {
 		EV_PIXMAP_IMP,

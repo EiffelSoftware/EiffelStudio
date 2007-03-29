@@ -71,12 +71,12 @@ feature -- Execution
 				l_editor := editors_manager.editor_with_stone (a_stone)
 				if l_editor = Void and a_content = Void then
 					editors_manager.create_editor
-					editors_manager.select_editor (editors_manager.last_created_editor)
+					editors_manager.select_editor (editors_manager.last_created_editor, True)
 				elseif l_editor = Void and a_content /= Void then
 					editors_manager.create_editor_beside_content (a_stone, a_content)
-					editors_manager.select_editor (editors_manager.last_created_editor)
+					editors_manager.select_editor (editors_manager.last_created_editor, True)
 				else
-					editors_manager.select_editor (l_editor)
+					editors_manager.select_editor (l_editor, True)
 				end
 
 				development_window.set_stone (a_stone)

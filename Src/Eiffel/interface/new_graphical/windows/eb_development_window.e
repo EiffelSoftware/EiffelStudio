@@ -223,7 +223,7 @@ feature -- Status setting
 			-- Set focus to main current editor.
 		do
 			if editors_manager.current_editor /= Void then
-				editors_manager.select_editor (editors_manager.current_editor)
+				editors_manager.select_editor (editors_manager.current_editor, True)
 			end
 		end
 

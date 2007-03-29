@@ -106,6 +106,7 @@ feature -- Open inner container data.
 			l_temp_split: SD_VERTICAL_SPLIT_AREA
 			l_container: EV_CONTAINER
 			l_config_data: SD_CONFIG_DATA
+			l_env: EV_ENVIRONMENT
 		do
 			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 				top_container := internal_docking_manager.query.inner_container_main.editor_parent
@@ -164,10 +165,14 @@ feature -- Open inner container data.
 
 			if Result then
 				open_editor_minimized_data_minimize (l_config_data)
-				internal_open_maximized_tool_data (l_config_data)
+
 			end
 
 			internal_docking_manager.command.resize (True)
+
+			-- We have to do it on idle, otherwise, maximized mini tool bar buttons positions in floating zone not correct.
+			create l_env
+			l_env.application.do_once_on_idle (agent internal_open_maximized_tool_data (l_config_data))
 		ensure
 			cleared: top_container = Void
 		end
@@ -962,11 +967,24 @@ feature {NONE} -- Implementation
 			-- Open maximized tool data.
 		local
 			l_content: SD_CONTENT
+			l_maximzied_tools: ARRAYED_LIST [STRING_GENERAL]
+			l_zone: SD_ZONE
 		do
-			if a_config_data /= Void and then a_config_data.maximized_tool /= Void then
-				l_content := internal_docking_manager.query.content_by_title (a_config_data.maximized_tool)
-				if l_content /= Void then
-					l_content.state.on_normal_max_window
+			if a_config_data /= Void then
+				from
+					l_maximzied_tools := a_config_data.maximized_tools
+					l_maximzied_tools.start
+				until
+					l_maximzied_tools.after
+				loop
+					l_content := internal_docking_manager.query.content_by_title (l_maximzied_tools.item)
+					if l_content /= Void then
+						l_zone := l_content.state.zone
+						if l_zone /= Void and then not l_zone.is_maximized then
+							l_content.state.on_normal_max_window
+						end
+					end
+					l_maximzied_tools.forth
 				end
 			end
 		end

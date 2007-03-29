@@ -123,6 +123,10 @@ feature -- Commands
 				zone.on_focus_in (a_content)
 				docking_manager.property.set_last_focus_content (content)
 			end
+			if not zone.is_displayed then
+				-- Maybe current is hidden, we restore zones normal state in that dock area.
+				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+			end
 		end
 
 	show is
@@ -146,7 +150,7 @@ feature -- Commands
 				internal_docking_manager.command.lock_update (Void, True)
 			end
 
-			internal_docking_manager.command.recover_normal_state
+			internal_docking_manager.command.recover_normal_state_in_dock_area_of (zone)
 
 			if content /= internal_docking_manager.zones.place_holder_content then
 				add_place_holder

@@ -187,8 +187,8 @@ feature {NONE} -- Implementation
 
 	on_normal_max_window is
 		do
-				-- We need to remove the minimized state when either
-				-- selecting `restore' or `maximize'.
+			-- We need to remove the minimized state when either
+			-- selecting `restore' or `maximize'.
 			if is_minimized then
 				recover_normal_size_from_minimize
 			end

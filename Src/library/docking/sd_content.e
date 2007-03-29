@@ -322,6 +322,16 @@ feature -- Set
 			end
 		end
 
+	set_focus_no_maximzied (a_zone: EV_WIDGET) is
+			-- Same as `set_focus', but only do things when no maximized zone in dock area which has `a_zone'
+		do
+			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
+				if docking_manager.query.maximized_inner_container (a_zone) = Void then
+					set_focus
+				end
+			end
+		end
+
 	set_user_widget (a_widget: EV_WIDGET) is
 			-- Set `user_widget' with `a_widget'.
 		require
@@ -505,7 +515,6 @@ feature -- Command
 	show is
 			-- Show zone which has `Current'.
 		do
-			docking_manager.command.recover_normal_state
 			state.show
 			is_visible := True
 		end

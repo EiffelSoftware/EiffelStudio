@@ -184,6 +184,39 @@ feature -- Commands
 			end
 		end
 
+	recover_normal_state_in (a_dock_area: SD_MULTI_DOCK_AREA) is
+			-- Recover zone which is in `a_dock_area' normal state.
+		require
+			not_void: a_dock_area /= Void
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+		do
+			from
+				l_zones := internal_docking_manager.zones.zones.twin
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				if l_zones.item /= Void and then a_dock_area.has_recursive (l_zones.item) then
+					l_zones.item.recover_to_normal_state
+				end
+				l_zones.forth
+			end
+		end
+
+	recover_normal_state_in_dock_area_of (a_zone: SD_ZONE) is
+			-- Recover zone normal state in the SD_MULTI_DOCK_AREA which has `a_zone'.
+		local
+			l_area: SD_MULTI_DOCK_AREA
+		do
+			if a_zone /= Void then
+				l_area := internal_docking_manager.query.inner_container_include_hidden (a_zone)
+				if l_area /= Void then
+					recover_normal_state_in (l_area)
+				end
+			end
+		end
+
 	update_title_bar is
 			-- Update all title bar.
 			-- Also prune and destroy floating zones which are not used anymore.

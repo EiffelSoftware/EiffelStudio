@@ -92,7 +92,10 @@ feature -- Redefine.
 			-- Redefine
 		do
 			show
-			Precursor {SD_STATE} (a_content)
+			if zone /= Void then
+				zone.on_focus_in (a_content)
+				docking_manager.property.set_last_focus_content (content)
+			end
 		end
 
 	close is

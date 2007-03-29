@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- For user docking
+feature {SD_AUTO_HIDE_STATE} -- For user docking
 
 	on_focus_in (a_content: SD_CONTENT)is
 			-- Redefine.

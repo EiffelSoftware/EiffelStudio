@@ -40,7 +40,12 @@ feature -- Text observer Agents
 				str.keep_tail (str.count - 2)
 				develop_window.set_title (str)
 			end
-			develop_window.address_manager.disable_formatters
+
+			-- We close a UN-FOCUSED editor by pointer, we should not disable formatters if there is/are still editor(s) opened.
+			if develop_window.editors_manager.editor_count <= 0 then
+				develop_window.address_manager.disable_formatters
+			end
+
 			develop_window.status_bar.reset
 			develop_window.status_bar.remove_cursor_position
 			develop_window.set_text_edited (False)

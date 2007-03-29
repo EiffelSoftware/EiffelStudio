@@ -887,7 +887,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			found: BOOLEAN
 			s1, s2: STRING_32
 		do
-			process_tab_key (virtual_key)
+			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return then
 				-- If return pressed, select item with matching text.

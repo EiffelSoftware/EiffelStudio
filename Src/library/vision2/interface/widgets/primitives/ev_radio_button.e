@@ -55,12 +55,11 @@ feature {NONE} -- Contract support
 				and then Precursor {EV_BUTTON} and is_left_aligned
 		end
 
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -68,7 +67,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

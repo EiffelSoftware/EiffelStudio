@@ -585,7 +585,7 @@ feature {NONE} -- WEL Implementation
 				disable_default_processing
 			else
 				if read_only then
-					process_tab_key (virtual_key)
+					process_navigation_key (virtual_key)
 				end
 				Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			end

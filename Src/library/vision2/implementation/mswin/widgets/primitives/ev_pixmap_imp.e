@@ -341,6 +341,15 @@ feature  -- Measurement
 			Result := private_height
 		end
 
+feature -- Navigation
+
+	is_tabable_from: BOOLEAN is False
+	is_tabable_to: BOOLEAN is False
+	enable_tabable_from do end
+	enable_tabable_to do end
+	disable_tabable_from do end
+	disable_tabable_to do end
+
 feature {EV_ANY_I} -- Delegated features
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is

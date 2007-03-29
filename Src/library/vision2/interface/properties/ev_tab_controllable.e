@@ -34,6 +34,12 @@ feature -- Status report
 			Result := implementation.is_tabable_from
 		end
 
+	is_in_default_state_for_tabs: BOOLEAN is
+			-- Default state for widgets.
+		do
+			Result := is_tabable_to and is_tabable_from
+		end
+
 feature -- Status setting
 
 	enable_tabable_to is

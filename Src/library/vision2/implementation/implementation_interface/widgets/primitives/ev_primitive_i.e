@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_PRIMITIVE_I 
+	EV_PRIMITIVE_I
 
 inherit
 	EV_WIDGET_I
@@ -17,6 +17,11 @@ inherit
 		end
 
 	EV_TOOLTIPABLE_I
+		redefine
+			interface
+		end
+
+	EV_TAB_CONTROLABLE_I
 		redefine
 			interface
 		end

@@ -781,15 +781,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := internal_text_field.next_dlgtabitem (hdlg, hctl, previous)
 		end
 
-	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := internal_text_field.cwin_get_next_dlggroupitem (hdlg, hctl,
-				previous)
-		end
-
 	class_name: STRING_32 is
 			-- Window class name to create
 		do

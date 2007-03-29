@@ -29,10 +29,9 @@ inherit
 			update_current_push_button,
 			internal_default_height,
 			set_default_minimum_size,
-			next_dlggroupitem,
-			on_key_down,
 			set_background_color,
-			fire_select_actions_on_enter
+			fire_select_actions_on_enter,
+			process_navigation_key
 		select
 			wel_make
 		end
@@ -104,9 +103,9 @@ inherit
 			on_sys_key_up,
 			default_process_message,
 			on_getdlgcode,
-			on_wm_dropfiles
+			on_wm_dropfiles,
+			on_key_down
 		redefine
-			on_key_down,
 			default_style,
 			on_erase_background
 		end
@@ -169,13 +168,6 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed.
-		do
-			process_tab_and_arrows_keys (virtual_key)
-			Precursor {EV_BUTTON_IMP} (virtual_key, key_data)
-		end
-
 	on_bn_clicked is
 			-- Called when `Current' is pressed.
 		do
@@ -225,6 +217,46 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		end
 
 feature {NONE} -- Implementation, focus event
+
+	process_navigation_key (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control need to process this kind of keys.
+		do
+			inspect
+				virtual_key
+			when {WEL_INPUT_CONSTANTS}.vk_tab then
+				check tabstop_set: flag_set (style, ws_tabstop) end
+				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.vk_shift))
+			when {WEL_INPUT_CONSTANTS}.vk_down, {WEL_INPUT_CONSTANTS}.vk_right then
+				arrow_action (True)
+			when {WEL_INPUT_CONSTANTS}.vk_up, {WEL_INPUT_CONSTANTS}.vk_left then
+				arrow_action (False)
+			else
+				-- Do nothing
+			end
+		end
+
+	arrow_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus throughthe arrow
+			-- keys. If `direction' it goes to the next widget otherwise,
+			-- it goes to the previous one.
+		local
+			hwnd, l_null: POINTER
+			window: WEL_WINDOW
+			l_top: like top_level_window_imp
+		do
+			l_top := top_level_window_imp
+			if l_top /= Void then
+				hwnd := next_dlggroupitem (l_top.wel_item, wel_item, direction)
+			end
+			if hwnd /= l_null then
+				window := window_of_item (hwnd)
+				if window /= Void then
+					window.set_focus
+				end
+			end
+		end
 
 	internal_default_height: INTEGER is
 			-- The default minimum height of `Current' with no text.

@@ -203,7 +203,7 @@ feature {NONE} -- WEL Implementation
 		local
 			spin_button: EV_SPIN_BUTTON_IMP
 		do
-			process_tab_key (virtual_key)
+			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return and is_editable then
 				set_caret_position (1)

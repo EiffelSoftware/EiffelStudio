@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WIDGET_IMP}
-			enable_tabable_to
-			enable_tabable_from
+			initialize_tab_behavior
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -52,6 +51,9 @@ feature -- Status report
 
 	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_flags (visual_widget) & {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM = {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
+		end
 
 	is_tabable_from: BOOLEAN
 			-- Is Current able to be tabbed from?
@@ -60,14 +62,12 @@ feature -- Status report
 			-- Make `is_tabable_to' `True'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
-			is_tabable_to := True
 		end
 
 	disable_tabable_to is
 			-- Make `is_tabable_to' `False'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
-			is_tabable_to := False
 		end
 
 	enable_tabable_from is
@@ -80,6 +80,17 @@ feature -- Status report
 			-- Make `is_tabable_from' `False'.
 		do
 			is_tabable_from := False
+		end
+
+feature {NONE} -- Initialization
+
+	initialize_tab_behavior is
+			-- Initialize tab behavior for `Current'.
+			-- Called by `initialize'.
+		do
+			if is_tabable_to then
+				enable_tabable_from
+			end
 		end
 
 indexing

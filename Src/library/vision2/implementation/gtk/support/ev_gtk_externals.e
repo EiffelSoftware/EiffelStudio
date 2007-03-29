@@ -358,6 +358,13 @@ feature
 			"GTK_WIDGET_SET_FLAGS"
 		end
 
+	frozen gtk_widget_flags (a_widget: POINTER): INTEGER is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_WIDGET_FLAGS"
+		end
+		
 	frozen gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
 		external
 			"C [macro <gtk/gtk.h>]"

@@ -692,12 +692,14 @@ feature {NONE} -- Implementation
 			-- Wait for at most `msec' milliseconds for an input.
 		local
 			l_result: INTEGER
-			l_process: POINTER
+			l_process, l_null: POINTER
 		do
 			l_process := process_handle
-			l_result := {WEL_API}.msg_wait_for_multiple_objects (1, $l_process, False, msec,
-				{WEL_QS_CONSTANTS}.qs_allinput | {WEL_QS_CONSTANTS}.qs_allpostmessage)
-			check l_result_ok: l_result /= -1 end
+			if l_process /= l_null then
+				l_result := {WEL_API}.msg_wait_for_multiple_objects (1, $l_process, False, msec,
+					{WEL_QS_CONSTANTS}.qs_allinput | {WEL_QS_CONSTANTS}.qs_allpostmessage)
+				check l_result_ok: l_result /= -1 end
+			end
 		end
 
 feature -- Public constants

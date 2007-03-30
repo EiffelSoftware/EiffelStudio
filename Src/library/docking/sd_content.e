@@ -649,7 +649,7 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 				internal_user_widget.show
 			end
 			l_zone := state.zone
-			if l_zone /= Void and then not l_zone.is_displayed then
+			if l_zone /= Void and then not l_zone.is_destroyed and then not l_zone.is_displayed then
 				l_zone.show
 			end
 		ensure

@@ -434,11 +434,12 @@ feature {NONE} -- Agents
 							internal_tool_bar.prune (mini_tool_bar_indicator)
 						end
 					end
-
 				end
 
 				fixed.set_item_x_position (internal_title, 0)
-				fixed.set_item_x_position (internal_tool_bar, a_width - tool_bar_width)
+				if fixed.has (internal_tool_bar) then
+					fixed.set_item_x_position (internal_tool_bar, a_width - tool_bar_width)
+				end
 			end
 		end
 

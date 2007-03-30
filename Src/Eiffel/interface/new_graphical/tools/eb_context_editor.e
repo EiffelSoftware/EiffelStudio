@@ -1472,6 +1472,8 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 				set_last_stone (new_stone)
 			end
 
+			develop_window.tools.set_last_stone (last_stone)
+
 			if widget.is_displayed or else is_auto_hide then
 				force_last_stone
 			end

@@ -119,6 +119,7 @@ feature -- Status setting
 					(stone /= Void and then not l_feature_comparer.same_feature (stone.e_feature, fst.e_feature))
 				then
 					set_last_stone (fst)
+					develop_window.tools.set_last_stone (stone)
 					history_manager.extend (fst)
 				end
 			else

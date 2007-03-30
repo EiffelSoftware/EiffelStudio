@@ -123,6 +123,7 @@ feature -- Status setting
 			if cst = Void or else stone = Void or else not stone.same_as (cst) then
 					-- Set the stones.
 				set_last_stone (cst)
+				develop_window.tools.set_last_stone (stone)
 			end
 			if widget.is_displayed or else is_auto_hide then
 				force_last_stone

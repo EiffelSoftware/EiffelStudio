@@ -118,7 +118,7 @@ feature {NONE} -- Properties
 	internal_symbol: like symbol
 			-- Once per object storage for `symbol.
 
-	command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			inspect flag
@@ -129,7 +129,6 @@ feature {NONE} -- Properties
 			else
 				Result := Interface_names.l_callers
 			end
-			Result := interface_names.string_general_as_lower (Result)
 		end
 
 	post_fix: STRING is

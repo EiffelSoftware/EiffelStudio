@@ -65,6 +65,8 @@ feature -- Interface
 
 	capital_command_name: STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case, but the first letter).
+		deferred
+		end
 
 	menu_name: STRING_GENERAL is
 			-- String representation in the associated menu.

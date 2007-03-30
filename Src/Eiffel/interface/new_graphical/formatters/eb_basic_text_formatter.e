@@ -153,10 +153,10 @@ feature {NONE} -- Properties
 	classi: CLASS_I
 			-- Class currently associated with `Current'.
 
-	command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
-			Result := Interface_names.string_general_as_lower (interface_names.l_Basic_text)
+			Result := Interface_names.l_Basic_text
 		end
 
 	post_fix: STRING is "txt"

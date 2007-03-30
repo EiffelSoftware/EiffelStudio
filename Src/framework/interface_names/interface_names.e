@@ -758,20 +758,20 @@ feature -- Label texts
 	l_All: STRING_GENERAL is					do Result := locale.translate("recursive")	end
 	l_all_classes_in_same_cluster: STRING_GENERAL is	do Result := locale.translate("All classes in same cluster")	end
 	l_Alias_name: STRING_GENERAL is				do Result := locale.translate("Alias:")	end
-	l_Ancestors: STRING_GENERAL is				do Result := locale.translate("ancestors")	end
+	l_Ancestors: STRING_GENERAL is				do Result := locale.translate("Ancestors")	end
 	l_apply_changes_to_view_named: STRING_GENERAL is	do Result := locale.translate("Apply changes to view named: ")	end
 	l_Arguments: STRING_GENERAL is				do Result := locale.translate("Arguments")	end
-	l_assigners: STRING_GENERAL is				do Result := locale.translate("assigners")	end
+	l_assigners: STRING_GENERAL is				do Result := locale.translate("Assigners")	end
 	l_Attribute: STRING_GENERAL is				do Result := locale.translate("Attribute")	end
-	l_Attributes: STRING_GENERAL is				do Result := locale.translate("attributes")	end
+	l_Attributes: STRING_GENERAL is				do Result := locale.translate("Attributes")	end
 	l_auto: STRING_GENERAL is					do Result := locale.translate ("auto") end
 	l_Available_buttons_text: STRING_GENERAL is do Result := locale.translate("Available buttons")	end
 	l_Basic_application: STRING_GENERAL is		do Result := locale.translate("Basic application (no graphics library included)")	end
-	l_Basic_text: STRING_GENERAL is				do Result := locale.translate("basic text view")	end
+	l_Basic_text: STRING_GENERAL is				do Result := locale.translate("Basic text view")	end
 	l_building_flat_view: STRING_GENERAL is		do Result := locale.translate ("Building flat view ...") end
 	l_building_tree_view: STRING_GENERAL is		do Result := locale.translate ("Building tree view ...") end
 	l_capture: STRING_GENERAL is 				do Result := locale.translate ("Capture") end
-	l_Callers: STRING_GENERAL is				do Result := locale.translate("callers")	end
+	l_Callers: STRING_GENERAL is				do Result := locale.translate("Callers")	end
 	l_Calling_convention: STRING_GENERAL is		do Result := locale.translate("Calling convention:")	end
 	l_center_attraction: STRING_GENERAL is		do Result := locale.translate("Center attraction:")	end
 	l_center_attraction_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.format_string (locale.translate("Center attraction ($1%%)"), [a_value])	end
@@ -804,10 +804,10 @@ feature -- Label texts
 	l_class_name_not_valid: STRING_GENERAL is					do Result := locale.translate("The class name is not valid.")	end
 	l_clean: STRING_GENERAL is					do Result := locale.translate("Clean")	end
 	l_clean_user_file: STRING_GENERAL is		do Result := locale.translate("Reset user settings")	end
-	l_Clients: STRING_GENERAL is				do Result := locale.translate("clients")	end
+	l_Clients: STRING_GENERAL is				do Result := locale.translate("Clients")	end
 	l_Clients_stiffness: STRING_GENERAL is				do Result := locale.translate("Client stiffness:")	end
 	l_Clients_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.format_string ("Client stiffness ($1%%)", [a_value])	end
-	l_Clickable: STRING_GENERAL is				do Result := locale.translate("clickable view")	end
+	l_Clickable: STRING_GENERAL is				do Result := locale.translate("Clickable view")	end
 	l_cluster: STRING_GENERAL is				do Result := locale.translate ("Cluster") end
 	l_cluster_colon: STRING_GENERAL is			do Result := locale.translate("Cluster:")	end
 	l_cluster_is_not_in_the_system_anymore (a_cluster: STRING): STRING is
@@ -831,7 +831,7 @@ feature -- Label texts
 	l_Context: STRING_GENERAL is				do Result := locale.translate("Context")	end
 	l_context_dot: STRING_GENERAL is			do Result := locale.translate("Context ...") end
 	l_Creation: STRING_GENERAL is				do Result := locale.translate("Creation procedure:")	end
-	l_creators: STRING_GENERAL is				do Result := locale.translate("creators")	end
+	l_creators: STRING_GENERAL is				do Result := locale.translate("Creators")	end
 	l_Current_context: STRING_GENERAL is		do Result := locale.translate("Current feature")	end
 	l_Current_editor: STRING_GENERAL is			do Result := locale.translate("Current editor")	end
 	l_Current_hit_count: STRING_GENERAL is		do Result := locale.translate("Current hit count:")	end
@@ -880,9 +880,9 @@ feature -- Label texts
 	l_debugger_exception_message: STRING_GENERAL is do Result := locale.translate("Debugger :: Exception message")	end
 	l_default: STRING_GENERAL is				do Result := locale.translate ("default") end
 	l_Deferred: STRING_GENERAL is				do Result := locale.translate("deferred")	end
-	l_Deferreds: STRING_GENERAL is				do Result := locale.translate("deferred features")	end
+	l_Deferreds: STRING_GENERAL is				do Result := locale.translate("Deferred features")	end
 	l_Deleting_dialog_default: STRING_GENERAL is do Result := locale.translate("Creating new project, please wait...")	end
-	l_Descendants: STRING_GENERAL is			do Result := locale.translate("descendants")	end
+	l_Descendants: STRING_GENERAL is			do Result := locale.translate("Descendants")	end
 	l_descending_class_already_has_feature (a_class: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_class_not_void: a_class /= Void
@@ -964,10 +964,10 @@ feature -- Label texts
 	l_exploring_descendants_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.format_string (locale.translate("Exploring descendants of $1"), [a_class])	end
 	l_exploring_clinets_of (a_class: STRING_GENERAL): STRING_GENERAL is					do Result := locale.format_string (locale.translate("Exploring clients of $1"), [a_class])	end
 	l_exploring_suppliers_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.format_string (locale.translate("Exploring suppliers of $1"), [a_class])	end
-	l_Exported: STRING_GENERAL is				do Result := locale.translate("exported features")	end
+	l_Exported: STRING_GENERAL is				do Result := locale.translate("Exported features")	end
 	l_Expression: STRING_GENERAL is				do Result := locale.translate("Expression")	end
 	l_false: STRING_GENERAL is					do Result := locale.translate ("False") end
-	l_External: STRING_GENERAL is				do Result := locale.translate("external features")	end
+	l_External: STRING_GENERAL is				do Result := locale.translate("External features")	end
 	l_Feature: STRING_GENERAL is				do Result := locale.translate("Feature")	end
 	l_Feature_colon: STRING_GENERAL is				do Result := locale.translate("Feature:")	end
 	l_feature_list: STRING_GENERAL is				do Result := locale.translate("Feature list")	end
@@ -981,9 +981,8 @@ feature -- Label texts
 	l_Finalized_mode: STRING_GENERAL is 		do Result := locale.translate("Finalized mode")	end
 	l_finish_to_generate: STRING_GENERAL is 	do Result := locale.translate("Click `Finish' to generate the documentation.")	end
 	l_first_chance: STRING_GENERAL is 			do Result := locale.translate ("First chance") end
-	l_Flat: STRING_GENERAL is					do Result := locale.translate("flat view")	end
-	l_Flat_view: STRING_GENERAL is				do Result := locale.translate ("Flat View") end
-	l_Flatshort: STRING_GENERAL is				do Result := locale.translate("interface view")	end
+	l_Flat_view: STRING_GENERAL is				do Result := locale.translate ("Flat view") end
+	l_Flatshort: STRING_GENERAL is				do Result := locale.translate("Interface view")	end
 	l_found: STRING_GENERAL is 					do Result := locale.translate ("Found") end
 	l_freeze: STRING_GENERAL is					do Result := locale.translate("Freeze")	end
 	l_fresh_compilation: STRING_GENERAL is		do Result := locale.translate("Recompile project")	end
@@ -993,7 +992,7 @@ feature -- Label texts
 	l_grid_column_layout: STRING_GENERAL is		do Result := locale.translate ("Grid column layout") end
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
 	l_Has_changed: STRING_GENERAL is			do Result := locale.translate("Has Changed")	end
-	l_Homonyms: STRING_GENERAL is				do Result := locale.translate("homonyms")	end
+	l_Homonyms: STRING_GENERAL is				do Result := locale.translate("Homonyms")	end
 	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translate("Extracting the homonyms%Nmay take a long time.")	end
 	l_Identification: STRING_GENERAL is			do Result := locale.translate("Identification")	end
 	l_Ignore_external_exceptions: STRING_GENERAL is do Result := locale.translate ("Ignore external exceptions") end
@@ -1002,13 +1001,13 @@ feature -- Label texts
 	l_inheritance_stiffness_100: STRING_GENERAL is			do Result := locale.translate("Inheritance stiffness (100%%)")	end
 	l_inheritance_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.format_string ("Inheritance stiffness ($1%%)", [a_value])	end
 	l_Implicit_exception_pending: STRING_GENERAL is do Result := locale.translate("Implicit exception pending")	end
-	l_Implementers: STRING_GENERAL is			do Result := locale.translate("implementers")	end
+	l_Implementers: STRING_GENERAL is			do Result := locale.translate("Implementers")	end
 	l_Inactive_subqueries: STRING_GENERAL is	do Result := locale.translate("Inactive subqueries")	end
 	l_include_colon: STRING_GENERAL is	do Result := locale.translate("Include:")	end
 	l_include: STRING_GENERAL is 				do Result := locale.translate("Include")	end
 	l_Index: STRING_GENERAL is					do Result := locale.translate("Index:")	end
 	l_indexing_clause_error: STRING_GENERAL is			do Result := locale.translate("Indexing clause has syntax error")	end
-	l_invariants: STRING_GENERAL is				do Result := locale.translate("invariants")	end
+	l_invariants: STRING_GENERAL is				do Result := locale.translate("Invariants")	end
 	l_Is_true: STRING_GENERAL is				do Result := locale.translate("Is True")	end
 	l_Language_type: STRING_GENERAL is			do Result := locale.translate("Language type")	end
 	l_Library: STRING_GENERAL is				do Result := locale.translate("library")	end
@@ -1070,7 +1069,7 @@ feature -- Label texts
 	l_object_tool_right: STRING_GENERAL is		do Result := locale.translate("Objects tool: right")	end
 	l_On_object: STRING_GENERAL is				do Result := locale.translate("On object")	end
 	l_As_object: STRING_GENERAL is				do Result := locale.translate("As object")	end
-	l_Onces: STRING_GENERAL is					do Result := locale.translate("once routines and constants")	end
+	l_Onces: STRING_GENERAL is					do Result := locale.translate("Once routines and constants")	end
 	l_Once_routines: STRING_GENERAL is			do Result := locale.translate("Once routines")	end
 	l_only_classes_in_same_cluster: STRING_GENERAL is			do Result := locale.translate("Only classes in same cluster")	end
 	l_open: STRING_GENERAL is					do Result := locale.translate("Open")	end
@@ -1133,10 +1132,10 @@ feature -- Label texts
 	l_Root_class_name: STRING_GENERAL is		do Result := locale.translate("Root class: ")	end
 	l_Root_cluster_name: STRING_GENERAL is		do Result := locale.translate("Root cluster: ")	end
 	l_Root_feature_name: STRING_GENERAL is		do Result := locale.translate("Root feature: ")	end
-	l_Routine_ancestors: STRING_GENERAL is		do Result := locale.translate("ancestor versions")	end
-	l_Routine_descendants: STRING_GENERAL is	do Result := locale.translate("descendant versions")	end
+	l_Routine_ancestors: STRING_GENERAL is		do Result := locale.translate("Ancestor versions")	end
+	l_Routine_descendants: STRING_GENERAL is	do Result := locale.translate("Descendant versions")	end
 	l_Routine_flat: STRING_GENERAL is			do Result := locale.translate("flat view")	end
-	l_Routines: STRING_GENERAL is				do Result := locale.translate("routines")	end
+	l_Routines: STRING_GENERAL is				do Result := locale.translate("Routines")	end
 	l_Runtime_information_record: STRING_GENERAL is do Result := locale.translate("Run-time information record")	end
 	l_Same_class_name: STRING_GENERAL is		do Result := locale.translate("---")	end
 	l_Scope: STRING_GENERAL is 					do Result := locale.translate("Scope")	end
@@ -1149,7 +1148,7 @@ feature -- Label texts
 	l_Set_as_default: STRING_GENERAL is			do Result := locale.translate("Set as default")	end
 	l_Set_slice_limits: STRING is				"Slice limits"
 	l_Set_slice_limits_desc: STRING_GENERAL is	do Result := locale.translate("Set which values are shown in special objects")	end
-	l_Short: STRING_GENERAL is					do Result := locale.translate("contract view")	end
+	l_Short: STRING_GENERAL is					do Result := locale.translate("Contract view")	end
 	l_Short_name: STRING_GENERAL is				do Result := locale.translate("Short Name")	end
 	l_Show_all_call_stack: STRING_GENERAL is	do Result := locale.translate("Show all stack elements")	end
 	l_Show_only_n_elements: STRING_GENERAL is	do Result := locale.translate("Show only:")	end
@@ -1172,7 +1171,7 @@ feature -- Label texts
 	l_super_cluster: STRING_GENERAL is			do Result := locale.translate("Super-clusters")	end
 	l_subclusters: STRING_GENERAL is			do Result := locale.translate("Sub-clusters")	end
 	l_Subquery: STRING_GENERAL is				do Result := locale.translate("Define new subquery")	end
-	l_Suppliers: STRING_GENERAL is				do Result := locale.translate("suppliers")	end
+	l_Suppliers: STRING_GENERAL is				do Result := locale.translate("Suppliers")	end
 	l_Switch_num_format: STRING_GENERAL is 		do Result := locale.translate("Switch numerical formating")	end
 	l_Switch_num_format_desc: STRING_GENERAL is do Result := locale.translate("Display numerical value as Hexadecimal or Decimal formating")	end
 	l_synchronizing_classes: STRING_GENERAL is do Result := locale.translate ("Synchronizing classes") end
@@ -1470,9 +1469,9 @@ feature -- Label texts
 	l_wrap: STRING_GENERAL is do Result := locale.translate("wrap")	end
 	l_manage_external_commands: STRING_GENERAL is do Result := locale.translate("Add, remove or edit external commands")	end
 	l_module: STRING_GENERAL is do Result := locale.translate ("Module") end
-	l_callees: STRING_GENERAL is do Result := locale.translate("callees")	end
-	l_assignees: STRING_GENERAL is do Result := locale.translate("assignees")	end
-	l_created: STRING_GENERAL is do Result := locale.translate("creations")	end
+	l_callees: STRING_GENERAL is do Result := locale.translate("Callees")	end
+	l_assignees: STRING_GENERAL is do Result := locale.translate("Assignees")	end
+	l_created: STRING_GENERAL is do Result := locale.translate("Creations")	end
 	l_filter: STRING_GENERAL is do Result := locale.translate("Filter: ")	end
 	l_function: STRING_GENERAL is do Result := locale.translate("Function")	end
 	l_view: STRING_GENERAL is do Result := locale.translate ("View ") end

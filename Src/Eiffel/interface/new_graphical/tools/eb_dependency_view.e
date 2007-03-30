@@ -157,6 +157,7 @@ feature -- Status setting
 			if l_stone = Void or else stone = Void or else not is_stone_equal (l_stone, stone) then
 					-- Set the stones.
 				set_last_stone (l_stone)
+				develop_window.tools.set_last_stone (stone)
 			end
 			if widget.is_displayed or else is_auto_hide then
 				force_last_stone

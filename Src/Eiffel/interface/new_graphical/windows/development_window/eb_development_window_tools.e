@@ -44,6 +44,15 @@ feature -- Commands
 			stone := a_stone
 		end
 
+	set_last_stone (a_stone: STONE) is
+			-- Set `stone' without setting to tools.
+			-- For synchronizing use.
+		do
+			stone := a_stone
+		ensure
+			stone_set: stone = a_stone
+		end
+
 	set_stone_and_pop_tool (a_stone: STONE) is
 			-- Set stone and show proper tool as context.
 		local
@@ -67,19 +76,29 @@ feature -- Commands
 			-- or similar action that needs resynchonization.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
+			l_stone: STONE
 		do
 			develop_window.history_manager.synchronize
 
 			conv_dev := develop_window
 			if conv_dev /= Void then
 				if not conv_dev.unified_stone then
-					if stone /= Void then
-						stone := stone.synchronized_stone
-					end
 					invalidate_tools
-					set_stone (stone)
-					if develop_window.has_case then
-						diagram_tool.synchronize
+					if conv_dev.link_tools then
+						if stone /= Void then
+							stone := stone.synchronized_stone
+						end
+						set_stone (stone)
+						if develop_window.has_case then
+							diagram_tool.synchronize
+						end
+					else
+						l_stone := diagram_tool.last_stone
+						if l_stone /= Void and develop_window.has_case then
+							l_stone := l_stone.synchronized_stone
+							diagram_tool.set_stone (l_stone)
+						end
+						refresh
 					end
 				end
 			else
@@ -99,6 +118,11 @@ feature -- Commands
 			end
 			class_tool.refresh
 			features_relation_tool.refresh
+			dependency_tool.refresh
+			customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL)
+				do
+					a_tool.refresh
+				end)
 		end
 
 	show_default_tool_of_feature

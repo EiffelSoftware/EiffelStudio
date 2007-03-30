@@ -976,6 +976,7 @@ feature -- Label texts
 	l_file_location: STRING_GENERAL is 			do Result := locale.translate ("File location") end
 	l_File_name: STRING_GENERAL is				do Result := locale.translate("File name:")	end
 	l_file_changed_by_other_tool: STRING_GENERAL is do Result := locale.translate ("File has been changed by another tool/editor%NDo you want to load the changes?") end
+	l_Filter_exceptions: STRING_GENERAL is		do Result := locale.translate ("Filter exceptions") end
 	l_finalize: STRING_GENERAL is				do Result := locale.translate("Finalize")	end
 	l_Finalized_mode: STRING_GENERAL is 		do Result := locale.translate("Finalized mode")	end
 	l_finish_to_generate: STRING_GENERAL is 	do Result := locale.translate("Click `Finish' to generate the documentation.")	end
@@ -995,6 +996,7 @@ feature -- Label texts
 	l_Homonyms: STRING_GENERAL is				do Result := locale.translate("homonyms")	end
 	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translate("Extracting the homonyms%Nmay take a long time.")	end
 	l_Identification: STRING_GENERAL is			do Result := locale.translate("Identification")	end
+	l_Ignore_external_exceptions: STRING_GENERAL is do Result := locale.translate ("Ignore external exceptions") end
 	l_inheritance_cycle_was_created: STRING_GENERAL is			do Result := locale.translate("An inheritance cycle was created.%NDo you still want to add this link?")	end
 	l_inheritance_stiffness: STRING_GENERAL is			do Result := locale.translate("Inheritance stiffness:")	end
 	l_inheritance_stiffness_100: STRING_GENERAL is			do Result := locale.translate("Inheritance stiffness (100%%)")	end

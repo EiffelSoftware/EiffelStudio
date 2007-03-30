@@ -130,10 +130,10 @@ feature -- Handler dialog by code
 			create fr
 			create vb
 			fr.extend (vb)
-			create cb_ignore_external.make_with_text ("Ignore external exceptions")
+			create cb_ignore_external.make_with_text (Interface_names.l_Ignore_external_exceptions)
 			cb_ignore_external.select_actions.extend (agent handle_ignore_external_changed)
 			vb.extend (cb_ignore_external)
-			create cb_handle_exception.make_with_text ("Filter exceptions")
+			create cb_handle_exception.make_with_text (Interface_names.l_Filter_exceptions)
 			cb_handle_exception.select_actions.extend (agent handle_exception_changed)
 			vb.extend (cb_handle_exception)
 
@@ -169,7 +169,7 @@ feature -- Handler dialog by code
 --			grid.pointer_button_press_item_actions.extend (agent on_grid_cell_clicked)
 			vb.extend (grid)
 
-			create bt.make_with_text_and_action ("Close", agent handler_dialog.hide)
+			create bt.make_with_text_and_action (Interface_names.b_Close, agent handler_dialog.hide)
 			vb.extend (bt)
 			vb.disable_item_expand (bt)
 			handler_dialog.extend (vb)

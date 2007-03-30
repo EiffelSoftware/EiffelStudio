@@ -196,7 +196,9 @@ feature -- File saving
 feature -- String
 
 	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is
-			-- First character to upper case if possible
+			-- First character to upper case if possible.
+			-- Be careful to apply this to a translated word.
+			-- Since translation might result in more than one word from one in English.
 		require
 			a_s_not_void: a_s /= Void
 		local

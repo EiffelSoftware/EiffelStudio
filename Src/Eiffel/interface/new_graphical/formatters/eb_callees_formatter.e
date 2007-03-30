@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			inspect flag
@@ -88,7 +88,6 @@ feature -- Access
 			else
 				Result := Interface_names.l_callees
 			end
-			Result := interface_names.string_general_as_lower (Result)
 		end
 
 	post_fix: STRING is

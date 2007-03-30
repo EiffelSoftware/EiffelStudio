@@ -38,10 +38,10 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
-			Result := Interface_names.string_general_as_lower (interface_names.l_creators)
+			Result := Interface_names.l_creators
 		end
 
 	post_fix: STRING is "cre"

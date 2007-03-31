@@ -428,6 +428,13 @@ feature -- Constants
 			end
 		end
 
+	Notebook_tab_maximum_size: INTEGER is
+			-- Maximum size of a notebook tab.
+			-- If the title on the tab would exceed this size, it is cropped.
+		do
+			Result := tool_bar_font.width * 35
+		end
+
 	Zone_minmum_width: INTEGER is
 			-- Minmum width of a zone.
 		once
@@ -482,7 +489,7 @@ feature -- Constants
 			Result := (title_bar_height / 2 - tool_bar_font.height / 2).rounded
 		end
 
-	Padding_width: INTEGER is 6
+	Padding_width: INTEGER is 4
 			-- Padding width used by whold system.
 
 	Feedback_tab_width: INTEGER is 60

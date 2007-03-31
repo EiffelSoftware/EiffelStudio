@@ -479,7 +479,7 @@ feature{NONE} -- Implementation
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text, text_clipping_width (a_width))
+				a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text, close_clipping_width (a_width))
 			else
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
@@ -502,9 +502,9 @@ feature{NONE} -- Implementation
 					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 					a_pixmap.set_font (l_font)
 					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, close_clipping_width (a_width))
 					else
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, 1 + start_y_position_bottom, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, 1 + start_y_position_bottom, text, text_clipping_width (a_width))
 					end
 					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 				end
@@ -530,7 +530,7 @@ feature {NONE} -- Attributes
 	 		-- Redefine
 	 	do
 			if pixmap /= Void then
-				Result := (height / 2 - pixmap.height / 2).floor - 2
+				Result := (height / 2 - pixmap.height / 2).floor
 			else
 				Result := start_y_position_text
 			end

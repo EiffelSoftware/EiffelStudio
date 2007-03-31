@@ -501,7 +501,8 @@ feature {NONE}  -- Implementation functions.
 				l_drawer := internal_tab_drawer
 				-- We want to calculate a maximum space
 				l_drawer.set_selected (True, True)
-				l_size := l_drawer.start_x_tail_internal
+					-- Crop size if it exceeds the maximum tab size
+				l_size := l_drawer.start_x_tail_internal.min (internal_shared.Notebook_tab_maximum_size)
 
 				if l_size /= internal_width then
 					internal_width := l_size

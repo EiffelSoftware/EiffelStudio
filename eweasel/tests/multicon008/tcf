@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name multi-constraint-root
-test_description Using COMPARABLE and NUMMERIC from base as constraints for a formal generic parameter of the root type.
+test_description Using COMPARABLE and NUMMERIC from base as constraints for a formal generic parameter of the root type. So the root type it self is multi constraint. It prints the generating type of each instantiateion and checks all classic compilation modes.
 ---------------------------------------------
 define TYPE "INTEGER_32_REF"
 

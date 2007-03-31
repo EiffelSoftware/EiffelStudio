@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name multi-constraint-renaming
-test_description Using COMPARABLE and NUMMERIC from base to implement a generic nummeric algorithm.
+test_description This test executes a more complex prgoram using multi constraint formal generics. Thre is a semi complex inheritance hierarchy, constraints and their according renaming which test multi constraints in a broad manner.  
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

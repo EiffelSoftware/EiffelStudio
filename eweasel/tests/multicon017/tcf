@@ -1,5 +1,5 @@
 test_name multi-constraint-non-existent-renamed	
-test_description Checks that errors are reported if some renames a non-existend feature in a rename clause for constraints.
+test_description Checks that errors are reported if someone renames a non-existend feature in a rename clause for constraints.
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e

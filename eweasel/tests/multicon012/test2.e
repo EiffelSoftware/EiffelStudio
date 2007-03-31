@@ -1,4 +1,4 @@
-class TEST2[G -> B create make_b end]
+class TEST2[G -> {B, ANY} create make_b end]
 feature
 	test
 		local

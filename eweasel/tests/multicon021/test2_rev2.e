@@ -4,5 +4,5 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
-class TEST2 [G -> COMPARABLE rename is_equal as test end]
+class TEST2 [G -> {COMPARABLE rename is_equal as test end, ANY}]
 end

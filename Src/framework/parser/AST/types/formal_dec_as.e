@@ -171,7 +171,7 @@ feature -- Status
 		end
 
 	has_default_create: BOOLEAN
-			-- Does the construct list `default_create' has creation procedure?
+			-- Has the construct list a version of `default_create' as a creation procedure?
 			-- Set after a call to `constraint_creation_list'.
 
 	has_creation_feature_name (feature_name: STRING): BOOLEAN is
@@ -211,7 +211,7 @@ feature {NONE} -- Status implementation
 					l_count := constraints.count
 					Result := l_count > 1
 					if l_count = 1 and then not Result then
-							-- Maybe we our constraint is a formal which itself has multi constraints?
+							-- Maybe our constraint is a formal which itself has multi constraints?
 						l_next_formal ?= constraints.first
 						if l_next_formal /= Void and then l_next_formal.position /= a_formal.position then
 							a_recursion_break.force (a_formal.position)

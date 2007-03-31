@@ -227,9 +227,11 @@ feature -- Status
 			end
 		end
 
-	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [FEATURE_I] is
+	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]] is
 			-- Actual creation routines from a constraint clause.
-			--| It goes through all constraints and gathers the proper features by applieng
+			--
+			-- `a_context_class' is used to compute a flat version of the formal constraints.
+			--| It goes through all constraints and gathers the proper features by applying
 			--| the renaming first.
 			--| This feature requires a sane creation list without ambiguities.
 		require
@@ -243,8 +245,12 @@ feature -- Status
 			feat_table: FEATURE_TABLE
 			l_renaming: RENAMING_A
 			l_constraint_types_item: EXTENDED_TYPE_A
+			l_has_more_than_one_version_default_create, l_is_version_of_default_create: BOOLEAN
 		do
-			l_constraint_types := constraint_types (a_context_class)
+				-- Reset `has_default_create' as the algorithm depends on its initial state as False
+			has_default_create := False
+
+			l_constraint_types := constraint_types (a_context_class).constraining_types (a_context_class)
 			from
 				create Result.make
 				l_constraint_types.start
@@ -274,10 +280,27 @@ feature -- Status
 							feat_table.search_id (feature_name.name_id)
 						end
 						if feat_table.found_item /= Void then
-							Result.extend (feat_table.found_item)
-
-							if not has_default_create then
-								has_default_create := feat_table.found_item.rout_id_set.first = System.default_create_id
+							Result.extend ([l_constraint_types_item,feat_table.found_item])
+								-- We will not set has_default_create in the multi constraint case if
+							l_is_version_of_default_create := (feat_table.found_item.rout_id_set.first = System.default_create_id)
+							if
+								l_is_version_of_default_create and then
+								not l_has_more_than_one_version_default_create
+							then
+								 if not has_default_create then
+								 		-- Simple case
+								 	has_default_create := True
+								 else
+								 		-- This should only occur in the multi constraint case
+								 	check  has_multi_constraints: has_multi_constraints end
+								 		-- As we do not know which version should be selected for an
+								 		-- an abstract creation we prevent this from happening by setting `has_default_create' to False.
+								 		--| Example which shows ambiguity:
+								 		--| class MULTI [G -> {X rename default_create as x end, Y rename default_create as y} create x, y end]
+								 		--| g: G; feature f do create g; end: We do not know which version of `default_create' we should take.
+								 	l_has_more_than_one_version_default_create := True
+								 	has_default_create := False
+								 end
 							end
 						end
 						creation_feature_list.forth

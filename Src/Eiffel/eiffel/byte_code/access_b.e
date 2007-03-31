@@ -43,7 +43,7 @@ feature -- Access
 			elseif is_message then
 				Result := context.real_type (parent.target.type)
 				if Result.is_multi_constrained_formal then
-					check has_multi_constraint_static end
+					check has_multi_constraint_static: has_multi_constraint_static end
 					Result := context.real_type (multi_constraint_static)
 				end
 			else
@@ -52,6 +52,10 @@ feature -- Access
 					Result := context.context_class_type.type
 				else
 					Result := context.real_type (a_parent.target.type)
+					if Result.is_multi_constrained_formal then
+						check has_multi_constraint_static: has_multi_constraint_static end
+						Result := context.real_type (multi_constraint_static)
+					end
 				end
 			end
 		ensure

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-		MULTI[G->{COMPARABLE, NUMERIC}]
+		MULTI [G->{COMPARABLE, NUMERIC}]
 
 create
 	default_create

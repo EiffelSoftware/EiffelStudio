@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name multi-constraint-inheritance
-test_description Using COMPARABLE and NUMMERIC from base to implement a generic nummeric algorithm.
+test_description This is testing multi constraint formals by simulating a typical program using multi constraints: It checks that the right features are called and uses creation constraints.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

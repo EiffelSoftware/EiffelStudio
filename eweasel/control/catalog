@@ -1625,6 +1625,9 @@ test	multi-constraint-check-constraints				multicon024 tcf pass multiconstraint
 test	multi-constraint-actual-type					multicon025 tcf pass multiconstraint
 test	multi-constraint-rename-formal					multicon026 tcf pass multiconstraint
 test	multi-constraint-creation-through-formal		multicon027 tcf pass multiconstraint
+test	multi-constraint-abstract-creation				multicon028 tcf pass multiconstraint
+test	multi-constraint-creation-crash01				multicon029 tcf pass multiconstraint
+test	multi-constraint-code-gen-crash01				multicon030 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

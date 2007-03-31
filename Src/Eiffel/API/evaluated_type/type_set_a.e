@@ -216,8 +216,39 @@ feature -- Access
 
 		end
 
-	feature_i_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: FEATURE_I; class_type: EXTENDED_TYPE_A]]
+	any_feature_i_by_routine_id (a_routine_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type: EXTENDED_TYPE_A]
+			-- Returns the first matching feature and its class type (you need to to an assignment attempt)
 			--
+			-- `a_routine_id' is a routine id for which we query all types in the type set.
+		require
+			not_loose: not is_loose
+		local
+			l_class: CLASS_C
+			l_feat: FEATURE_I
+			l_item: EXTENDED_TYPE_A
+		do
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				l_item := item
+					-- implied by precondition: not_loose
+				check has_associated_class: l_item.has_associated_class end
+				l_class := l_item.associated_class
+				l_feat := l_class.feature_of_rout_id (a_routine_id)
+				if l_feat /= Void then
+					Result := [l_feat, l_item]
+				end
+				forth
+			end
+		end
+
+	feature_i_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: FEATURE_I; class_type: EXTENDED_TYPE_A]]
+			-- Builds a list of pairs of FEATURE_I and EXTENDED_TYPE_A which all have a feature with routine id `a_routine_id'.
+			--
+			-- `a_routine_id' is the routine ID of the routine for which the list is built.
+			--| If you are just interested in any feature for a given routine id use `first_feature_i'
 		require
 			not_loose: not is_loose
 		local
@@ -260,7 +291,7 @@ feature -- Access
 			l_class_c: CLASS_C
 			l_last_class_type: CL_TYPE_A
 			l_constraint_position: INTEGER
-					-- The Position at which the constraint where the feature was selected from is written.
+				-- The Position at which the constraint where the feature was selected from is written.
 			l_features_found_count: INTEGER
 			l_item: EXTENDED_TYPE_A
 		do
@@ -494,6 +525,8 @@ feature -- Access for Error handling
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		do
 			Result := info_about_feature_by_name_id (a_id.name_id, a_formal_position, a_context_class)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	info_about_feature_by_name_id (a_name_id: INTEGER; a_formal_position: INTEGER; a_context_class: CLASS_C): like info_about_feature
@@ -503,6 +536,7 @@ feature -- Access for Error handling
 			-- `a_formal_position' position of the formal to which this typeset belongs.
 			-- `a_context_class' is the class where the formal (denoted by `a_formal_position') has been defined.
 		require
+			a_name_id_valid: a_name_id > 0
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
 			l_feature_agent: FUNCTION [ANY, TUPLE [EXTENDED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
@@ -522,13 +556,17 @@ feature -- Access for Error handling
 								else
 									l_renamed_id := g_name_id
 								end
-								Result := [	l_class.feature_with_name_id (l_renamed_id),
-											l_class.feature_of_name_id (l_renamed_id)]
+								if l_renamed_id > 0 then
+									Result := [	l_class.feature_with_name_id (l_renamed_id),
+												l_class.feature_of_name_id (l_renamed_id)]
+								end
 							end
 						end
 					end (a_name_id, ?)
 			Result := info_about_feature_by_agent (l_feature_agent, a_formal_position, a_context_class, create {SEARCH_TABLE [INTEGER]}.make (3))
 			Result.set_data (names_heap.item (a_name_id), a_formal_position, a_context_class)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	info_about_feature_by_rout_id (a_routine_id: INTEGER; a_formal_position: INTEGER;  a_context_class: CLASS_C): like info_about_feature
@@ -554,11 +592,15 @@ feature -- Access for Error handling
 							if l_class.has_feature_table then
 								Result := [	l_class.feature_with_rout_id (g_routine_id),
 											l_class.feature_of_rout_id (g_routine_id)]
+							else
+								-- Result := Void
 							end
 						end
 					end (a_routine_id, ?)
 			Result := info_about_feature_by_agent (l_feature_agent, a_formal_position, a_context_class, create {SEARCH_TABLE [INTEGER]}.make (3))
 			Result.set_data (Void, a_formal_position, a_context_class)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	check_renaming
@@ -625,6 +667,8 @@ feature {TYPE_SET_A} -- Access implementation
 				end
 				forth
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Conversion
@@ -888,8 +932,6 @@ feature -- Status
 						 	Result := a_item.associated_class.is_deferred
 						 end)
 		end
-
-feature -- Setters
 
 feature -- Access
 

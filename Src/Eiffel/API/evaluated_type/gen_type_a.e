@@ -846,7 +846,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
 		local
 			formal_type_dec_as: FORMAL_CONSTRAINT_AS
-			formal_crc_list, crc_list: LINKED_LIST [FEATURE_I];
+			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE
@@ -870,7 +870,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				--            * m >= n
 				--            * for each `make_i' where 1 <= i <= n, there is a `j' (1 <= j <= m)
 				--              where `my_make_k' is a redefined/renamed version of `make_i'.
-			crc_list := formal_dec_as.constraint_creation_list (context_class)
+			crc_list := formal_dec_as.constraint_creation_list (associated_class)
 			if formal_type = Void then
 				if to_check.has_associated_class then
 					-- `to_check' may not have an associated class if it represents NONE type, for
@@ -894,7 +894,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						crc_list.after
 					loop
 							-- Let's take one of the creation procedure defined in the constraint.
-						feature_i := crc_list.item
+						feature_i := crc_list.item.feature_item
 
 							-- Take the redefined/renamed version of the previous version in the
 							-- descendant class `to_check'/`class_c'.
@@ -940,8 +940,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 								-- If it is Void, then `{ANY}.default_create' is a valid creation routine, in that
 								-- case we should not list `default_create' has not beeing met if listed in the creation
 								-- constraint.
-							if creators_table /= Void or else not crc_list.item.rout_id_set.has (system.default_create_id) then
-								l_unmatched_features.extend (crc_list.item)
+							feature_i := crc_list.item.feature_item
+							if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_id) then
+								l_unmatched_features.extend (feature_i)
 							end
 							crc_list.forth
 						end
@@ -964,18 +965,17 @@ feature {COMPILER_EXPORTER} -- Primitives
 						until
 							crc_list.after
 						loop
-							feature_i := crc_list.item
+							feature_i := crc_list.item.feature_item
 								-- Check that all the creation procedures defined in the creation
 								-- constraint clause `crc_list' are indeed present under a
 								-- redefined/renamed version in the creation constraint clause
-								-- `formal_crc_list'.
 							from
 								matched := False
 								formal_crc_list.start
 							until
 								matched or else formal_crc_list.after
 							loop
-								matched := formal_crc_list.item.rout_id_set.has (
+								matched := formal_crc_list.item.feature_item.rout_id_set.has (
 											feature_i.rout_id_set.first)
 								formal_crc_list.forth
 							end

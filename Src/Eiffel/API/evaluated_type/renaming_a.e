@@ -68,19 +68,6 @@ feature -- Element change
 
 feature -- Access
 
-		--| Martins 23/1/07: One might also change to ID_AS instead of INTEGER as an argument.	
-	is_feature_renamed_by_name_id	 (a_feature_name_id: INTEGER): BOOLEAN is
-			-- Is `a_feature' renamed under renaming of `Current'?
-		do
-			Result := has_item (a_feature_name_id)
-		end
-
-	is_feature_renamed (a_feature: ID_AS): BOOLEAN is
-			-- Is `a_feature' renamed under renaming of `Current'?
-		do
-			Result := is_feature_renamed_by_name_id (a_feature.name_id)
-		end
-
 	error_report: TUPLE [	renamed_multiple_times: SEARCH_TABLE[STRING];
 							renamed_to_same_name: SEARCH_TABLE[STRING];
 							non_existent: SEARCH_TABLE[STRING]]
@@ -109,9 +96,23 @@ feature -- Access
 					Result := -1
 				end
 			end
+		ensure
+			if_not_available_result_is_negative: (Result = -1) implies (has_item (a_feature_id) and not has (a_feature_id))
 		end
 
 feature -- Status
+
+	is_feature_renamed_by_name_id	 (a_feature_name_id: INTEGER): BOOLEAN is
+			-- Is `a_feature' renamed under renaming of `Current'?
+		do
+			Result := has_item (a_feature_name_id)
+		end
+
+	is_feature_renamed (a_feature: ID_AS): BOOLEAN is
+			-- Is `a_feature' renamed under renaming of `Current'?
+		do
+			Result := is_feature_renamed_by_name_id (a_feature.name_id)
+		end
 
 	has_error_report: BOOLEAN
 			-- Is renaming clause renaming clause valid?

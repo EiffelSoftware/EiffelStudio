@@ -135,18 +135,17 @@ feature -- Access queries
 			end
 			if parent /= Void then
 				l_local.merge (parent.options)
+			else
+				l_local.merge (target.options)
 			end
-			l_local.merge (target.options)
 
 				-- if used as library, get options from application level if the library is defined there
 			if is_used_in_library then
 				l_lib := target.system.application_target_library
 				if l_lib /= Void then
 					Result := l_lib.options
-						-- if there is a namespace specified use this one and don't merge it with the local
-					if Result.namespace /= Void then
-						l_local.set_namespace (Void)
-					end
+						-- Remove namespace, we use the one defined in the library if any.
+					Result.set_local_namespace (Void)
 				end
 			end
 

@@ -41,7 +41,7 @@ feature -- Status
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
 				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
-				assertions /= Void or namespace /= Void or warnings /= Void or debugs /= Void )
+				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void )
 		end
 
 feature -- Status update
@@ -102,7 +102,7 @@ feature -- Access, stored in configuration file
 			-- The assertion settings.
 
 	namespace: STRING
-			-- .NET namespace.
+			-- .NET namespace that is computed on demand.
 
 	local_namespace: STRING
 			-- .NET namespace set in configuration file
@@ -194,19 +194,21 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: warnings.has (a_name) and then warnings.item (a_name) = an_enabled
 		end
 
-	set_namespace (a_namespace: like namespace) is
-			-- Set `namespace' to `a_namespace'.
+	set_local_namespace (a_namespace: like local_namespace) is
+			-- Set `local_namespace' from `a_namepace' and reset `namespace'.
 		do
 			if a_namespace /= Void and then a_namespace.is_empty then
-				namespace := Void
+				local_namespace := Void
 			else
-				namespace := a_namespace
+				local_namespace := a_namespace
 			end
-			local_namespace := namespace
+			namespace := Void
 		ensure
-			namespace_set: a_namespace = Void or else not a_namespace.is_empty implies namespace = a_namespace
-			namespace_set: a_namespace /= Void and then a_namespace.is_empty implies namespace = Void
-			local_namespace: local_namespace = namespace
+			local_namespace_set:
+				a_namespace = Void or else not a_namespace.is_empty implies local_namespace = a_namespace
+			local_namespace_reset:
+				a_namespace /= Void and then a_namespace.is_empty implies local_namespace = Void
+			namespace_reset: namespace = Void
 		end
 
 	set_profile (a_enabled: BOOLEAN) is
@@ -298,7 +300,7 @@ feature -- Comparison
 			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
 				is_optimize = other.is_optimize and is_profile = other.is_profile and
 				is_full_class_checking = other.is_full_class_checking and
-				is_trace = other.is_trace and equal(namespace, other.namespace) and
+				is_trace = other.is_trace and equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
 
@@ -308,6 +310,7 @@ feature -- Merging
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
 		local
 			l_tmp: like debugs
+			l_namespace: like local_namespace
 		do
 			if other /= Void then
 				if assertions = Void then
@@ -327,10 +330,26 @@ feature -- Merging
 					l_tmp.merge (warnings)
 					warnings := l_tmp
 				end
-				if namespace = Void and other.namespace /= Void then
-					namespace := other.namespace.twin
-				elseif other.namespace /= Void then
-					namespace := other.namespace.twin + "." + namespace
+					-- Computation of `namespace' by using values in `other'.
+				if other.namespace /= Void then
+					l_namespace := other.namespace
+				else
+					l_namespace := other.local_namespace
+				end
+				if l_namespace /= Void then
+					if local_namespace /= Void then
+						namespace := l_namespace + "." + local_namespace
+					else
+						namespace := l_namespace.twin
+					end
+				elseif local_namespace /= Void then
+					namespace := local_namespace.twin
+				else
+					namespace := Void
+				end
+					-- Update `local_namespace' to use `other' in case it is not set.
+				if local_namespace = Void then
+					local_namespace := other.local_namespace
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured
@@ -364,7 +383,7 @@ feature -- Merging
 		end
 
 invariant
-	namespace_not_empty: namespace = Void or else not namespace.is_empty
+	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

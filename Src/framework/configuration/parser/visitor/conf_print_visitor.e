@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 				if an_options.is_full_class_checking_configured then
 					append_text (" full_class_checking=%""+an_options.is_full_class_checking.out.as_lower+"%"")
 				end
-				l_str := an_options.namespace
+				l_str := an_options.local_namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+escape_xml (l_str)+"%"")
 				end

@@ -1162,7 +1162,7 @@ feature {NONE} -- Implementation attribute processing
 				current_option.set_msil_application_optimize (l_msil_application_optimize.to_boolean)
 			end
 			if l_namespace /= Void then
-				current_option.set_namespace (l_namespace)
+				current_option.set_local_namespace (l_namespace)
 			end
 			if l_full_class_checking /= Void then
 				if l_full_class_checking.is_boolean then

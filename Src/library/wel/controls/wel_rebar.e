@@ -183,18 +183,20 @@ feature -- Status setting
 
 feature -- Element change
 
-   	set_parent (a_parent: WEL_WINDOW) is
-   			-- Change the parent of the current window.
+	set_parent (a_parent: WEL_WINDOW) is
+			-- Change the parent of the current window.
 			-- We need to use both windows methods to reparent
 			-- the rebar otherwise it doesn't work.
-   		do
+		local
+			l_parent: POINTER
+		do
 			if a_parent /= Void then
 				parent := a_parent
-				cwin_set_parent (item, a_parent.item)
+				l_parent := {WEL_API}.set_parent (item, a_parent.item)
 				{WEL_API}.send_message (item, Rb_setparent, a_parent.item, to_lparam (0))
 			else
 				parent := Void
-				cwin_set_parent (item, default_pointer)
+				l_parent := {WEL_API}.set_parent (item, default_pointer)
 				{WEL_API}.send_message (item, Rb_setparent, to_wparam (0), to_lparam (0))
 			end
 		end
@@ -293,10 +295,10 @@ feature {NONE} -- Implementation
 				+ Rbs_bandborders + Rbs_tooltips
 		end
 
-  	on_wm_paint (wparam: POINTER) is
-   			-- Wm_paint message.
-   		do
-   			-- Need to do nothing
+	on_wm_paint (wparam: POINTER) is
+			-- Wm_paint message.
+		do
+			-- Need to do nothing
  		end
 
 feature {NONE} -- Externals

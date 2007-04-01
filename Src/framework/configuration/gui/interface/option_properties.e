@@ -355,10 +355,10 @@ feature {NONE} -- Implementation
 
 			create l_string_prop.make (conf_interface_names.option_namespace_name)
 			l_string_prop.set_description (conf_interface_names.option_namespace_description)
-			if an_options.namespace /= Void then
-				l_string_prop.set_value (an_options.namespace)
+			if an_options.local_namespace /= Void then
+				l_string_prop.set_value (an_options.local_namespace)
 			end
-			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
+			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_local_namespace))
 			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			if not a_il_generation then
 				l_string_prop.enable_readonly

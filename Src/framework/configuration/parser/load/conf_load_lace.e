@@ -680,7 +680,7 @@ feature {NONE} -- Implementation of data retrieval
 							if current_options = Void then
 								create current_options
 							end
-							current_options.set_namespace (l_value.value)
+							current_options.set_local_namespace (l_value.value)
 						elseif l_name.is_equal ("override_cluster") then
 							current_overrides.force (l_value.value)
 						elseif l_name.is_equal ("product") then

@@ -53,17 +53,23 @@ feature -- Access
 	group: CONF_PHYSICAL_GROUP is
 			-- Group this class belongs to.
 		deferred
+		ensure
+			group_not_void: Result /= Void
 		end
 
 	options: CONF_OPTION is
 			-- Options of this class.
 		deferred
+		ensure
+			options_not_void: Result /= Void
 		end
 
 	target: CONF_TARGET is
 			-- Target in which current class is being defined.
 		do
 			Result := group.target
+		ensure
+			target_not_void: Result /= Void
 		end
 
 	config_class: CONF_CLASS is
@@ -541,7 +547,6 @@ feature {NONE} -- Implementation
 invariant
 	file_name_not_void: file_name /= Void
 	name_not_void: name /= Void
-	options_not_void: options /= Void
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 indexing

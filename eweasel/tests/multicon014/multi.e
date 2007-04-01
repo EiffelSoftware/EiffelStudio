@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-		MULTI[G->{COMPARABLE rename default_create as default_create2, NUMERIC} create default_create, default_create2]
+		MULTI[G->{COMPARABLE rename default_create as default_create2 end, NUMERIC} create default_create, default_create2 end]
 
 create
 	default_create
@@ -19,4 +19,4 @@ feature -- do compuations
 				-- of default_create should be taken.
 			create Result
 		end
-nd
+end

@@ -246,8 +246,6 @@ feature {NONE} -- Implementation
 			-- we integrate the changes immediatly, otherwise, we postpone
 			-- them.
 			-- Use the constants defined in EV_SIZEABLE_IMP
-		local
-			widget_imp: EV_WIDGET_IMP
 		do
 			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
 				Precursor {EV_WIDGET_LIST_IMP} (type, child)

@@ -288,8 +288,6 @@ feature -- Size issues
 
 	start_y_close: INTEGER is
 			-- Start y position of drawing a close button
-		local
-			l_platform: PLATFORM
 		do
 			Result :=(height / 2  - (internal_shared.icons.close.height - close_background_expand * 2) / 2).floor - 1
 		end

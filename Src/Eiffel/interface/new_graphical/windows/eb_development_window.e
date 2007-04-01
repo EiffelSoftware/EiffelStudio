@@ -891,7 +891,12 @@ feature -- Window management
 			end
 			if a_class_stone /= Void or else a_cluster_stone /= Void then
 				if editors_manager.current_editor /= Void then
-					a_window_data.save_editor_position (editors_manager.current_editor.text_displayed.current_line_number)
+					if not editors_manager.current_editor.text_displayed.is_empty then
+						a_window_data.save_editor_position (
+							editors_manager.current_editor.text_displayed.current_line_number)
+					else
+						a_window_data.save_editor_position (1)
+					end
 				else
 					a_window_data.save_editor_position (1)
 				end

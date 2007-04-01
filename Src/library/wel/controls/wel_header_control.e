@@ -228,6 +228,7 @@ feature -- Element change
 		local
 			window_handle_insert_after: POINTER
 			a_window_style: INTEGER
+			l_success: BOOLEAN
 		do
 			send_layout_message (parent_client_rect)
 
@@ -249,7 +250,7 @@ feature -- Element change
 			end
 
 				-- Set the initial window position				
-			cwin_set_window_pos (item, window_handle_insert_after,
+			l_success := {WEL_API}.set_window_pos (item, window_handle_insert_after,
 										last_retrieved_window_pos.x, last_retrieved_window_pos.y,
 										last_retrieved_window_pos.width, last_retrieved_window_pos.height,
 										a_window_style)

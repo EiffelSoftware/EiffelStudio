@@ -77,14 +77,15 @@ feature -- Element change
 			-- Change parent of current window if possible.
 		local
 			l_parent: like parent
+			l_prev_parent: POINTER
 		do
 			l_parent ?= a_parent
 			if l_parent /= Void then
 				parent := l_parent
-				cwin_set_parent (item, l_parent.item)
+				l_prev_parent := {WEL_API}.set_parent (item, l_parent.item)
 			else
 				parent := Void
-				cwin_set_parent (item, default_pointer)
+				l_prev_parent := {WEL_API}.set_parent (item, default_pointer)
 			end
 		end
 

@@ -1174,7 +1174,7 @@ feature -- Implementation
 					check no_type_set_available: l_last_type_set = Void end
 					check last_constrained_available: l_last_constrained /= Void end
 					check last_class_available: l_last_class /= Void end
-					check last_class_id_available: l_last_id /= Void end
+					check last_class_id_available: l_last_id >= 0 end
 						-- Look for a feature in the class associated to the
 						-- last actual type onto the context type stack. If it
 						-- is a generic take the associated constraint.
@@ -2021,7 +2021,7 @@ feature -- Implementation
 					fixme ("Related to fix me in `process_abstract_creation'")
 
 					-- MTNASK: removed tuple access protection as it is not possible to occur here.
-					
+
 						-- We need to iterate through the type set to find the routine of ID													
 					l_formal ?= l_type_a
 					check

@@ -233,6 +233,7 @@ feature {NONE} -- Implementation
 							-- update information
 						Result.set_consumed_assembly (a_consumed)
 						rebuild_classes (Result)
+						Result.set_date
 					end
 				else
 						-- create a new physical assembly

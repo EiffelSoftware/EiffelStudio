@@ -118,6 +118,51 @@ feature -- Visit
 			process_line_from_code_item (a_item)
 		end
 
+	process_line_from_code_item (a_item: QL_CODE_STRUCTURE_ITEM) is
+			-- Find out all possible QL_LINE items from `a_item'.
+		local
+			l_lines: LIST [STRING]
+			l_class_text: STRING
+			l_index: INTEGER
+			l_count: INTEGER
+			l_line: QL_LINE
+			l_cur_line: STRING
+			l_new_line_char: CHARACTER
+		do
+			if a_item.is_compiled or else a_item.is_class then
+				l_new_line_char := '%N'
+				l_class_text := a_item.text
+				l_lines := l_class_text.split (l_new_line_char)
+				if not l_lines.is_empty then
+					if l_lines.last.is_empty then
+						l_lines.finish
+						l_lines.remove
+					end
+				end
+				from
+					l_lines.start
+					l_index := 1
+					l_count := l_lines.count - 1
+				until
+					l_index > l_count
+				loop
+					l_cur_line := l_lines.item
+					l_cur_line.append_character (l_new_line_char)
+					create l_line.make_with_text (l_index, l_cur_line, a_item)
+					evaluate_item (l_line)
+					l_lines.forth
+					l_index := l_index + 1
+				end
+					-- Special case for last line: check if last line is not ended with a new-line character,
+				l_cur_line := l_lines.last
+				if l_class_text.item (l_class_text.count) = l_new_line_char then
+					l_cur_line.append_character (l_new_line_char)
+				end
+				create l_line.make_with_text (l_index, l_cur_line, a_item)
+				evaluate_item (l_line)
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	tautology_criterion: like criterion is

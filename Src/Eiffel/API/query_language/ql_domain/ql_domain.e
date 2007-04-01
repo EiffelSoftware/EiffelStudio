@@ -346,7 +346,7 @@ feature -- Set operation
 			other_attached: other /= Void
 			current_and_other_are_of_same_type: current.scope = other.scope
 		local
-			l_other_set: DS_HASH_SET [QL_ITEM]
+			l_other_set: DS_HASH_SET [like item_type]
 			l_cur_content: like content
 			l_cursor: CURSOR
 		do
@@ -477,12 +477,12 @@ feature{NONE} -- Implementation
 	is_domain_valid: BOOLEAN is
 			-- Is current domain valid?
 		do
-			Result := content.for_all (agent is_item_valid ({QL_ITEM}?))
+			Result := content.for_all (agent is_item_valid)
 		ensure
-			good_result: Result implies content.for_all (agent is_item_valid ({QL_ITEM}?))
+			good_result: Result implies content.for_all (agent is_item_valid)
 		end
 
-	is_item_valid (a_item: QL_ITEM): BOOLEAN is
+	is_item_valid (a_item: like item_type): BOOLEAN is
 			-- Is `a_item' valid?
 			-- True if all items in current are valid domain item.
 			-- See {QL_ITEM}.`is_valid_domain_item' for more information.

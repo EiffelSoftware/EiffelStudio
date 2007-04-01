@@ -189,11 +189,17 @@ feature -- Element change
 
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
+		local
+			l_text: like text
 		do
-			if not internal_font.is_equal (ft) then
+				-- Optimization, instead of computing the `private_font' in `internal_font'
+				-- we go directly and let the precursor version do it for us. This saves
+				-- a comparison and a useless creation of `private_font'.
+			if private_font = Void or else not internal_font.is_equal (ft) then
 				Precursor {EV_FONTABLE_IMP} (ft)
-				if not text.is_empty then
-					accomodate_text (text)
+				l_text := text
+				if not l_text.is_empty then
+					accomodate_text (l_text)
 				end
 				invalidate
 			end

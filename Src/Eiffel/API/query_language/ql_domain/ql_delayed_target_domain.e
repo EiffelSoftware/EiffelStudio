@@ -29,6 +29,9 @@ inherit
 			item_type
 		end
 
+create
+	make
+
 feature{NONE} -- Type anchor
 
 	item_type: QL_TARGET;

@@ -131,7 +131,8 @@ feature{NONE} -- Implementation
 					end
 					l_old_used_in_domain_generator := l_filter_cri.used_in_domain_generator
 					l_filter_cri.set_used_in_domain_generator (Void)
-					Result := l_source_domain.new_domain (l_filter_cri.domain_generator (True, True))
+					Result ?= l_source_domain.new_domain (l_filter_cri.domain_generator (True, True))
+					check Result /= Void end
 					l_filter_cri.set_used_in_domain_generator (l_old_used_in_domain_generator)
 				end
 			elseif has_exclusive_intrinsic_domain then

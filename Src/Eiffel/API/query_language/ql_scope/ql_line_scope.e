@@ -63,7 +63,7 @@ feature -- Access
 	delayed_domain: QL_DELAYED_LINE_DOMAIN is
 			-- An empty delayed domain whose scope is same as current scope
 		do
-			create Result
+			create Result.make
 		end
 
 feature -- Metric support

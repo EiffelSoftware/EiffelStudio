@@ -235,7 +235,7 @@ feature {EB_STONE_CHECKER} -- Actions
 						l_group := l_group.target.system.lowest_used_in_library
 					end
 					current_system := l_group.target.system
-					l_class_options := l_group.changeable_class_options (l_cs.class_name)
+					l_class_options := l_group.changeable_class_options (l_cs.class_i.config_class)
 					create l_inh_options
 					l_inh_options.merge (l_class_options)
 					l_inh_options.merge (l_group.options)

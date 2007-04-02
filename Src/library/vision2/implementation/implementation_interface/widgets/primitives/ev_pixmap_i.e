@@ -90,6 +90,13 @@ feature -- Initialization
 		deferred
 		end
 
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Initialize from `a_pixel_buffer'
+		require
+			not_void: a_pixel_buffer /= Void
+		deferred
+		end
+
 feature -- Access
 
 	raw_image_data: EV_RAW_IMAGE_DATA is

@@ -167,7 +167,7 @@ feature -- Query
 			end
 		end
 
-feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
+feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation
 
 	reusable_managed_pointer: MANAGED_POINTER
 		-- Managed pointer used for inspecting current.

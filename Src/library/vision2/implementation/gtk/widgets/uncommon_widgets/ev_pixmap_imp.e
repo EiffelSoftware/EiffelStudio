@@ -135,6 +135,15 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Initialize from `a_pixel_buffer'
+		local
+			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+		do
+			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
+		end
+
 feature -- Drawing operations
 
 	redraw is

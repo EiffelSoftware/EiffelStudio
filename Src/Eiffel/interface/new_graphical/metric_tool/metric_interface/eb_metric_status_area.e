@@ -11,9 +11,6 @@ class
 
 inherit
 	EB_METRIC_STATUS_AREA_IMP
-		export
-			{NONE}all
-		end
 
 	EB_METRIC_INTERFACE_PROVIDER
 		undefine

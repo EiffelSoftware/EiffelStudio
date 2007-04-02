@@ -277,6 +277,11 @@ feature -- Misc.
 			Result_not_void: Result /= Void
 		end
 
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Initialize from `a_pixel_buffer'
+		do
+		end
+
 feature -- Measurement
 
 	width: INTEGER is

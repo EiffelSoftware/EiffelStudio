@@ -66,11 +66,6 @@ feature -- Status report
 	should_result_be_filtered: BOOLEAN
 			-- Should result be filtered and only result items that are visible in the input domain are remained?
 
---	is_just_line_counting: BOOLEAN is
---			-- Is current metric a line counting metric?
---		do
---		end
-
 feature -- Access
 
 	name: STRING

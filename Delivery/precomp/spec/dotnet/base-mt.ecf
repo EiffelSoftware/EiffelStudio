@@ -5,6 +5,8 @@
 		<setting name="multithreaded" value="true"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="EiffelSoftware.Library.BaseMt"/>
 		<option>
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>

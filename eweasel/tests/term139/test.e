@@ -12,7 +12,7 @@ feature {NONE} -- Creation
 		do
 			create l_ispec.make (10)
 			l_aspec ?= l_ispec
-			if l_aspec /= Void then
+			if l_aspec = Void then
 				io.put_string ("NOT OK%N")
 			end
 		end

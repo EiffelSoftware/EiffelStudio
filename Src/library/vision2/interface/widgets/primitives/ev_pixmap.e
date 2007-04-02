@@ -46,10 +46,12 @@ inherit
 create
 	default_create,
 	make_with_size,
-	make_with_pointer_style
+	make_with_pointer_style,
+	make_with_pixel_buffer
 
 convert
-	make_with_pointer_style ({EV_POINTER_STYLE})
+	make_with_pointer_style ({EV_POINTER_STYLE}),
+	make_with_pixel_buffer ({EV_PIXEL_BUFFER})
 
 feature {NONE} -- Initialization
 
@@ -67,7 +69,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
-			-- Create from `a_pointer_style'
+			-- Create from `a_pointer_style'.
 		local
 			l_temp: EV_POINTER_STYLE
 		do
@@ -77,6 +79,15 @@ feature {NONE} -- Initialization
 				create l_temp
 			end
 			implementation.init_from_pointer_style (l_temp)
+		end
+
+	make_with_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Create from `a_pixel_buffer'.
+		require
+			a_pixel_buffer_not_void: a_pixel_buffer /= Void
+		do
+			default_create
+			implementation.init_from_pixel_buffer (a_pixel_buffer)
 		end
 
 feature -- Basic Operations

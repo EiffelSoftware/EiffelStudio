@@ -279,7 +279,11 @@ feature -- Misc.
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Initialize from `a_pixel_buffer'
+		local
+			l_pixel_buffer: EV_PIXEL_BUFFER_IMP
 		do
+			l_pixel_buffer ?= a_pixel_buffer.implementation
+			l_pixel_buffer.draw_to_drawable (interface)
 		end
 
 feature -- Measurement

@@ -1,81 +1,82 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="gobo" uuid="CCB152F0-2D87-42AF-AD4A-0D5514133C1A" library_target="gobo">
-	<target name="gobo">
-		<description>gobo library</description>
-		<file_rule>
-			<exclude>/\.svn</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/ve$</exclude>
-			<exclude>/ge$</exclude>
-			<exclude>/base$</exclude>
-			<exclude>/cvs$</exclude>
-			<exclude>/other$</exclude>
-			<exclude>/free_elks$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/Documentation$</exclude>
-		</file_rule>
-		<root all_classes="true"/>
-		<option namespace="Gobo.Library"/>
-		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="EiffelBase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="EiffelTime" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="argument" location="svn\library\argument\" recursive="true">
-			<option namespace="Argument"/>
-		</cluster>
-		<cluster name="kernel" location="svn\library\kernel\" recursive="true" >
-			<option namespace="Kernel"/>
-			<cluster name="kernel_spec" location="library\kernel\spec" recursive="true">
-				<option namespace="Spec"/>
-			</cluster>
-		</cluster>
-		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
-			<option namespace="Lexical"/>
-			<cluster name="lexical_generated" location="library\lexical" recursive="true">
-				<option namespace="Generated"/>
-			</cluster>
-		</cluster>
-		<cluster name="math" location="svn\library\math\" recursive="true">
-			<option namespace="Math"/>
-		</cluster>
-		<cluster name="parse" location="svn\library\parse\" recursive="true">
-			<option namespace="Parse"/>
-			<cluster name="parse_generated" location="library\parse\" recursive="true">
-				<option namespace="Generated"/>
-			</cluster>
-		</cluster>
-		<cluster name="pattern" location="svn\library\pattern\" recursive="true">
-			<option namespace="Pattern"/>
-		</cluster>
-		<cluster name="regexp" location="svn\library\regexp\" recursive="true">
-			<option namespace="RegExp"/>
-		</cluster>
-		<cluster name="string" location="svn\library\string\" recursive="true">
-			<option namespace="String"/>
-		</cluster>
-		<cluster name="structure" location="svn\library\structure\" recursive="true">
-			<option namespace="Structure"/>
-		</cluster>
-		<cluster name="time" location="svn\library\time\" recursive="true">
-			<option namespace="Time"/>
-		</cluster>
-		<cluster name="tools" location="svn\library\tools\" recursive="true">
-			<option namespace="Tools"/>
-			<cluster name="tools_generated" location="library\tools\" recursive="true">
-				<option namespace="Generated"/>
-			</cluster>
-		</cluster>
-		<cluster name="utility" location="svn\library\utility\" recursive="true">
-			<option namespace="Utility"/>
-		</cluster>
-		<cluster name="xml" location="svn\library\xml\" recursive="true">
-			<file_rule>
-				<exclude>/expat$</exclude>
-			</file_rule>
-			<option namespace="Xml"/>
-			<cluster name="xml_generated" location="library\xml\" recursive="true">
-				<option namespace="Generated"/>
-			</cluster>
-		</cluster>
-	</target>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="gobo" uuid="CCB152F0-2D87-42AF-AD4A-0D5514133C1A" library_target="gobo">
+  <target name="gobo">
+    <description>gobo library</description>
+    <file_rule>
+      <exclude>/\.svn</exclude>
+      <exclude>/hact$</exclude>
+      <exclude>/se$</exclude>
+      <exclude>/ve$</exclude>
+      <exclude>/ge$</exclude>
+      <exclude>/base$</exclude>
+      <exclude>/cvs$</exclude>
+      <exclude>/other$</exclude>
+      <exclude>/free_elks$</exclude>
+      <exclude>/EIFGENs$</exclude>
+      <exclude>/Documentation$</exclude>
+    </file_rule>
+    <root all_classes="true"/>
+    <option namespace="Gobo.Library"/>
+    <setting name="dotnet_naming_convention" value="true"/>
+    <library name="EiffelBase" location="$ISE_LIBRARY\library\base\base.ecf"/>
+    <library name="EiffelTime" location="$ISE_LIBRARY\library\time\time.ecf"/>
+    <assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+    <cluster name="argument" location="svn\library\argument\" recursive="true">
+      <option namespace="Argument"/>
+    </cluster>
+    <cluster name="kernel" location="svn\library\kernel\" recursive="true" >
+      <option namespace="Kernel"/>
+      <cluster name="kernel_spec" location="library\kernel\spec" recursive="true">
+        <option namespace="Spec"/>
+      </cluster>
+    </cluster>
+    <cluster name="lexical" location="svn\library\lexical\" recursive="true">
+      <option namespace="Lexical"/>
+      <cluster name="lexical_generated" location="library\lexical" recursive="true">
+        <option namespace="Generated"/>
+      </cluster>
+    </cluster>
+    <cluster name="math" location="svn\library\math\" recursive="true">
+      <option namespace="Math"/>
+    </cluster>
+    <cluster name="parse" location="svn\library\parse\" recursive="true">
+      <option namespace="Parse"/>
+      <cluster name="parse_generated" location="library\parse\" recursive="true">
+        <option namespace="Generated"/>
+      </cluster>
+    </cluster>
+    <cluster name="pattern" location="svn\library\pattern\" recursive="true">
+      <option namespace="Pattern"/>
+    </cluster>
+    <cluster name="regexp" location="svn\library\regexp\" recursive="true">
+      <option namespace="RegExp"/>
+    </cluster>
+    <cluster name="string" location="svn\library\string\" recursive="true">
+      <option namespace="String"/>
+    </cluster>
+    <cluster name="structure" location="svn\library\structure\" recursive="true">
+      <option namespace="Structure"/>
+    </cluster>
+    <cluster name="time" location="svn\library\time\" recursive="true">
+      <option namespace="Time"/>
+    </cluster>
+    <cluster name="tools" location="svn\library\tools\" recursive="true">
+      <option namespace="Tools"/>
+      <cluster name="tools_generated" location="library\tools\" recursive="true">
+        <option namespace="Generated"/>
+      </cluster>
+    </cluster>
+    <cluster name="utility" location="svn\library\utility\" recursive="true">
+      <option namespace="Utility"/>
+    </cluster>
+    <cluster name="xml" location="svn\library\xml\" recursive="true">
+      <option namespace="Xml"/>
+      <file_rule>
+        <exclude>/expat$</exclude>
+      </file_rule>
+      <cluster name="xml_generated" location="library\xml\" recursive="true">
+        <option namespace="Generated"/>
+      </cluster>
+    </cluster>
+  </target>
 </system>

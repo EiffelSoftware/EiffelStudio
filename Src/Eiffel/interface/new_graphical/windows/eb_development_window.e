@@ -356,11 +356,18 @@ feature -- Update
 			history_manager.synchronize
 			tools.features_tool.synchronize
 			tools.breakpoints_tool.synchronize
+
 				-- Update main views
-			managed_main_formatters.i_th (2).invalidate
-			managed_main_formatters.i_th (3).invalidate
-			managed_main_formatters.i_th (4).invalidate
-			managed_main_formatters.i_th (5).invalidate
+			from
+				managed_main_formatters.go_i_th (2)
+			until
+				managed_main_formatters.after
+			loop
+				managed_main_formatters.item.invalidate
+				managed_main_formatters.item.format
+				managed_main_formatters.forth
+			end
+
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
@@ -1574,14 +1581,23 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			-- Scroll to `a_ast' in `displayed_class'.
 			-- If `a_selected' is True, select region of `a_ast'.
 		local
-			begin_index: INTEGER
+			begin_index, end_index: INTEGER
 			offset: TUPLE [start_offset: INTEGER; end_offset: INTEGER]
+			match_list: LEAF_AS_LIST
 		do
-			begin_index := a_ast.start_position
-			offset := relative_location_offset ([begin_index, a_ast.end_position], displayed_class)
-
+			if displayed_class.is_compiled then
+				match_list := system.match_list_server.item (displayed_class.compiled_class.class_id)
+			end
+			if match_list /= Void then
+				begin_index := a_ast.complete_start_position (match_list)
+				end_index := a_ast.complete_end_position (match_list)
+			else
+				begin_index := a_ast.start_position
+				end_index := a_ast.end_position
+			end
+			offset := relative_location_offset ([begin_index, end_index], displayed_class)
 			if a_selected then
-				editors_manager.current_editor.select_region_when_ready (begin_index - offset.start_offset, a_ast.end_position - offset.end_offset + 1)
+				editors_manager.current_editor.select_region_when_ready (begin_index - offset.start_offset, end_index - offset.end_offset + 1)
 			else
 				editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
 			end

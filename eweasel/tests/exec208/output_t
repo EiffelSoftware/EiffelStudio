@@ -1,0 +1,23 @@
+p.x                   = 5
+conforms_to           = True
+deep_equal            = True
+same_type             = True
+standard_equal        = True
+standard_is_equal     = True
+default               = expanded POINT
+default_pointer       = 0x0
+io                    = OK
+operating_environment = OPERATING_ENVIRONMENT
+generating_type       = expanded POINT
+generator             = POINT
+out                   = expanded POINT
+tagged_out            = expanded POINT
+clone                 = expanded POINT
+deep_clone            = expanded POINT
+standard_clone        = expanded POINT
+deep_twin             = expanded POINT
+standard_twin         = expanded POINT
+twin                  = expanded POINT
+equal                 = True
+is_equal              = True
+Execution completed

@@ -179,6 +179,9 @@ feature {NONE} -- Implementation functions
 
 	check_new_class_stone (a_stone: STONE) is
 			-- Handle `a_stone' which is new class stone.
+		local
+			l_classi_stone: CLASSI_STONE
+			l_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN]
 		do
 			if new_class_stone /= Void then
 				if not develop_window.during_synchronization then
@@ -225,13 +228,21 @@ feature {NONE} -- Implementation functions
 				possible_formater
 
 				if text_loaded then
+					l_classi_stone ?= a_stone
 					from
 						managed_main_formatters.start
 					until
 						managed_main_formatters.after
 					loop
 							--| Ted: Text might be changed
-						managed_main_formatters.item.force_stone (a_stone)
+						if l_classi_stone /= Void then
+							l_veto_function := managed_main_formatters.item.veto_format_function
+							managed_main_formatters.item.set_veto_format_function (agent: BOOLEAN do Result := False end)
+							managed_main_formatters.item.set_stone (l_classi_stone)
+							managed_main_formatters.item.set_veto_format_function (l_veto_function)
+						else
+							managed_main_formatters.item.force_stone (a_stone)
+						end
 						managed_main_formatters.item.refresh
 						managed_main_formatters.forth
 					end

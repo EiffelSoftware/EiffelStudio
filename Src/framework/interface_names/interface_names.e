@@ -645,7 +645,7 @@ feature -- Formatter displayer names
 	l_formatter_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation has finished.") end
 	l_formatter_placeholder: STRING_GENERAL do Result := locale.translate ("%"$target%" serves as a placeholder which will be replaced by the input to current fomatter.") end
 	l_formatter_temp_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation is going on.") end
-	l_formatter_filter_help: STRING_GENERAL do Result := locale.translate ("Will invisible items be appressed from display?") end
+	l_formatter_filter_help: STRING_GENERAL do Result := locale.translate ("Will invisible items be displayed?") end
 	l_formatter_scope_help: STRING_GENERAL do Result := locale.translate ("Is this formatter of per EiffelStudio scope or per target scope?") end
 	l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translate ("In which tool(s) will this formatter be displayed") end
 	l_formatter_metric_help: STRING_GENERAL do Result := locale.translate ("From which result of this formatter is generated.") end
@@ -1553,6 +1553,7 @@ feature -- Label texts
 	l_metric_name: STRING_GENERAL is do Result := locale.translate ("Metric Name") end
 	l_metric_filter: STRING_GENERAL is do Result := locale.translate ("Metric Filter") end
 	l_eiffelstudio: STRING_GENERAL is do Result := locale.translate ("EiffelStudio") end
+	l_locale: STRING_GENERAL is do Result := locale.translate ("Locale:") end
 
 feature -- Label text, no translation (for the editor)
 

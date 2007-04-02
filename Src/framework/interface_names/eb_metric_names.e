@@ -950,7 +950,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			Result := locale.format_string (locale.translate ("Only syntactically referenced supplier/client class attribute %"$1%" is invalid. A boolean value is expected."), [a_value])
+			Result := locale.format_string (locale.translate ("Attribute %"$1%" is invalid. A boolean value is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end

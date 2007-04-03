@@ -6121,7 +6121,7 @@ invariant
 	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count
 	computed_visible_row_count_equals_row_when_not_users_row_offsets: is_initialized and then not uses_row_offsets implies visible_row_count = row_count
 	computed_visible_row_count_no_greater_than_rows: is_initialized implies visible_row_count <= row_count
-	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count - non_displayed_row_count = visible_row_count
+	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled and not vertical_computation_required implies row_count - non_displayed_row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 

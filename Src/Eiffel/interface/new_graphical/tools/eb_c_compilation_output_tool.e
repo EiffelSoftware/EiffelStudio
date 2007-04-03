@@ -84,6 +84,7 @@ feature{NONE} -- Initialization
 			l_ev_tool_bar_1: EV_TOOL_BAR
 			l_ev_save_toolbar: EV_TOOL_BAR
 			l_ev_h_area_1: EV_HORIZONTAL_BOX
+			l_cell: EV_CELL
 		do
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1
@@ -97,11 +98,18 @@ feature{NONE} -- Initialization
 			create open_editor_btn
 			create message_label
 			create project_dir_btn
+			create l_cell
 
 			message_label.align_text_left
 			l_ev_h_area_1.extend (message_label)
+			locale_combo.set_minimum_width (200)
+			l_ev_h_area_1.extend (locale_combo)
+			l_cell.set_minimum_height (10)
+			l_ev_h_area_1.extend (l_cell)
 			l_ev_h_area_1.extend (l_ev_save_toolbar)
 			l_ev_h_area_1.extend (l_ev_tool_bar_1)
+			l_ev_h_area_1.disable_item_expand (l_cell)
+			l_ev_h_area_1.disable_item_expand (locale_combo)
 			l_ev_h_area_1.disable_item_expand (l_ev_save_toolbar)
 			l_ev_h_area_1.disable_item_expand (l_ev_tool_bar_1)
 
@@ -262,7 +270,7 @@ feature -- Basic operation
 		do
 			str ?= text_block.data
 			if str /= Void then
-				output_text.append_text (str)
+				output_text.append_text (source_encoding.convert_to (destination_encoding, str))
 			end
 		end
 

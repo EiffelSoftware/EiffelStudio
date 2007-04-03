@@ -17,6 +17,13 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+	SHARED_BENCH_NAMES
+
 feature -- Accelerator
 
 	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN is
@@ -48,6 +55,51 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	source_encoding: ENCODING
+			-- Source encoding of process output
+
+	destination_encoding: ENCODING is
+			-- Destination encoding to display process output
+		do
+			if destination_encoding_internal = Void then
+				create destination_encoding_internal.make ((create{CODE_PAGE_CONSTANTS}).utf16)
+			end
+			Result := destination_encoding_internal
+		end
+
+	destination_encoding_internal: like destination_encoding
+			-- Implementation of `destination_encoding'
+
+	locale_combo: EV_COMBO_BOX is
+			-- Combo box to display locale list
+		local
+			l_locale_table: like locale_table
+			l_locales: LINKED_LIST [STRING_GENERAL]
+		do
+			if locale_combo_internal = Void then
+				create locale_combo_internal
+				locale_combo_internal.disable_edit
+				l_locale_table := locale_table
+				create l_locales.make
+				from
+					l_locale_table.start
+				until
+					l_locale_table.after
+				loop
+					l_locales.extend (l_locale_table.item_for_iteration)
+					l_locale_table.forth
+				end
+				locale_combo_internal.set_strings (l_locales)
+				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id))
+				locale_combo_internal.change_actions.extend (agent on_encoding_change)
+				on_encoding_change
+			end
+			Result := locale_combo_internal
+		end
+
+	locale_combo_internal: like locale_combo
+			-- Implementation of `locale_combo'
+
 feature -- Actions
 
 	on_key_presses_in_output (a_key: EV_KEY) is
@@ -63,6 +115,14 @@ feature -- Actions
 					output_text.copy_selection
 				end
 			end
+		end
+
+feature{NONE} -- Actions
+
+	on_encoding_change is
+			-- Action to be peroformed when selected encoding changes
+		do
+			create source_encoding.make (locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text))).info.code_page)
 		end
 
 feature{NONE} -- Implementation
@@ -83,8 +143,49 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	internal_output_text: like output_text;
+	internal_output_text: like output_text
 			-- Implementation of `output_text'
+
+	locale_table: HASH_TABLE [STRING_GENERAL, STRING] is
+			-- Table of locales: [locale_displayed_name, locale_id]
+		do
+			if locale_table_internal = Void then
+				locale_table_internal := locale_names.locales_from_array (preferences.misc_data.locale_id_preference.value)
+			end
+			Result := locale_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	locale_id_table: HASH_TABLE [STRING, STRING_GENERAL] is
+			-- Table of locale ids: [locale_id, locale_displayed_name]
+		local
+			l_locale_table: like locale_table
+			l_locale_id_table: like locale_id_table
+		do
+			if locale_id_table_internal = Void then
+				create locale_id_table_internal.make (100)
+				l_locale_id_table := locale_id_table_internal
+				l_locale_table := locale_table
+				from
+					l_locale_table.start
+				until
+					l_locale_table.after
+				loop
+					l_locale_id_table.put (l_locale_table.key_for_iteration, l_locale_table.item_for_iteration)
+					l_locale_table.forth
+				end
+			end
+			Result := locale_id_table_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	locale_table_internal: like locale_table
+			-- Implementation of `locale_table'
+
+	locale_id_table_internal: like locale_id_table;
+			-- Implementation of `locale_id_table'			
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -78,7 +78,6 @@ feature -- Access
 		do
 			if locale_combo_internal = Void then
 				create locale_combo_internal
-				locale_combo_internal.disable_edit
 				l_locale_table := locale_table
 				create l_locales.make
 				from
@@ -100,7 +99,7 @@ feature -- Access
 	locale_combo_internal: like locale_combo
 			-- Implementation of `locale_combo'
 
-feature -- Actions
+feature{NONE} -- Actions
 
 	on_key_presses_in_output (a_key: EV_KEY) is
 			-- Action to be performed when key pressed on text field
@@ -117,12 +116,12 @@ feature -- Actions
 			end
 		end
 
-feature{NONE} -- Actions
-
 	on_encoding_change is
 			-- Action to be peroformed when selected encoding changes
 		do
-			create source_encoding.make (locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text))).info.code_page)
+			if locale_id_table.item (locale_combo.text) /= Void then
+				create source_encoding.make (locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text))).info.code_page)
+			end
 		end
 
 feature{NONE} -- Implementation

@@ -12,6 +12,8 @@ inherit
 
 	EC_EIFFEL_LAYOUT
 
+	SHARED_WORKBENCH
+
 feature -- Access
 
 	last_error: EB_METRIC_ERROR

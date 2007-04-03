@@ -686,12 +686,12 @@ feature {NONE} -- Implementation
 			if not directory.exists then
 				directory.create_dir
 			end
-			create file_name.make_from_string (metric_manager.userdefined_metrics_path + operating_environment.directory_separator.out + a_target_file_name)
+			create file_name.make_from_string (metric_manager.userdefined_metrics_path)
+			file_name.set_file_name (a_target_file_name)
 			create file.make (file_name)
 
 			if file.exists then
-				create confirm_dialog.make_with_text_and_actions ("Remote file will be loaded in:%N" + file_name +
-								"%NThis file already exists. Overwrite?", actions_array)
+				create confirm_dialog.make_with_text_and_actions (metric_names.err_archive_file_name_exists (file_name), actions_array)
 				confirm_dialog.show_modal_to_window (metric_tool_window)
 			end
 			if not file.exists or overwrite then
@@ -700,11 +700,10 @@ feature {NONE} -- Implementation
 				transfer_manager_builder.wipe_out
 				transfer_manager_builder.add_transaction (a_url_address, target_file)
 				if not transfer_manager_builder.last_added_source_correct then
-					create error_dialog.make_with_text ("Unable to read remote file.%NPlease check URL:%N" + a_url_address)
+					create error_dialog.make_with_text (metric_names.err_unable_to_read_from_url (a_url_address))
 					error_dialog.show_modal_to_window (metric_tool_window)
 				elseif not transfer_manager_builder.last_added_target_correct then
-					create error_dialog.make_with_text ("Unable to load remote file in:%N" + file_name +
-											"Please make sure file does not exist or is writable.")
+					create error_dialog.make_with_text (metric_names.err_unable_to_load_archive_file (file_name))
 					error_dialog.show_modal_to_window (metric_tool_window)
 				else
 					transfer_manager_builder.build_manager
@@ -714,8 +713,7 @@ feature {NONE} -- Implementation
 					if transfer_manager_builder.transfer_succeeded then
 						Result := file_name
 					else
-						create error_dialog.make_with_text ("Unable to transfer remote file.%NReason: "
-																+ transfer_manager_builder.error_reason)
+						create error_dialog.make_with_text (metric_names.err_transfer_file (transfer_manager_builder.error_reason))
 						error_dialog.show_modal_to_window (metric_tool_window)
 					end
 				end

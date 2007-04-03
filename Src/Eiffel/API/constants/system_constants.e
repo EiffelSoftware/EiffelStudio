@@ -158,6 +158,9 @@ feature {NONE}
 
 	info_flag_end: STRING is "-- end of info"
 
+	data_directory: STRING is "Data"
+			-- Directory name `Data'
+
 feature {AUXILIARY_FILES} -- Versioning
 
 	Compiler_version_number: CONF_VERSION is

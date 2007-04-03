@@ -1046,6 +1046,34 @@ feature -- Error/warning message
 			Result := locale.format_string (locale.translate ("Matching strategy %"$1%" is invalid."), [a_invalid_strategy])
 		end
 
+	err_archive_file_name_exists (a_file_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_file_name_attached: a_file_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("Remote file will be loaded in: $1.%NThis file already exists. Overwrite?"), [a_file_name])
+		end
+
+	err_unable_to_read_from_url (a_url: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_url_attached: a_url /= Void
+		do
+			Result := locale.format_string (locale.translate ("Unable to read remote file.%NPlease check URL: $1"), [a_url])
+		end
+
+	err_unable_to_load_archive_file (a_file_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_file_name_attached: a_file_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("Unable to load remote file in: $1%NPlease make sure file does not exits or is writable."), [a_file_name])
+		end
+
+	err_transfer_file (a_reason: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_reason_attached: a_reason /= Void
+		do
+			Result := locale.format_string (locale.translate ("Unable to transfer remote file.%NReason: $1"), [a_reason])
+		end
+
 feature -- To do messages
 
 	variable_metric_missing_to_do: STRING_GENERAL is

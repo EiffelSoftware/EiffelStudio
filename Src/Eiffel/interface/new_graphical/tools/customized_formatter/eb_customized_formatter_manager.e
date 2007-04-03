@@ -17,8 +17,6 @@ inherit
 
 	EB_SHARED_METRIC_MANAGER
 
-	SHARED_WORKBENCH
-
 	PROJECT_CONTEXT
 
 	SHARED_EIFFEL_PROJECT
@@ -224,6 +222,7 @@ feature -- Setting
 			a_descriptors_attached: a_descriptors /= Void
 			a_descriptors_valid: not a_descriptors.has (Void)
 		do
+			workbench.create_data_directory
 			store_in_file (satisfied_items (a_descriptors, agent is_formatter_global_scope), n_formatters, agent xml_for_descriptor, global_file_path, formatter_file_name)
 			store_in_file (satisfied_items (a_descriptors, agent is_formatter_target_scope), n_formatters, agent xml_for_descriptor, target_formatter_file_path, formatter_file_name)
 		end
@@ -281,7 +280,7 @@ feature{NONE} -- Implementation/Data
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		do
-			Result := formatter_file_path (project_location.target_path)
+			Result := formatter_file_path (project_location.data_path)
 		ensure
 			result_attached: Result /= Void
 		end

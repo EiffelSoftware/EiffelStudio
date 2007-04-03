@@ -35,6 +35,7 @@ feature -- Command
 	set_with_named_file (a_file_name: STRING) is
 			-- Load pixel data from file `a_file_name'
 		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
 			implementation.set_with_named_file (a_file_name)
@@ -43,6 +44,7 @@ feature -- Command
 	save_to_named_file (a_file_name: STRING) is
 			-- Save pixel data to file `a_file_name'.
 		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
 			implementation.save_to_named_file (a_file_name)

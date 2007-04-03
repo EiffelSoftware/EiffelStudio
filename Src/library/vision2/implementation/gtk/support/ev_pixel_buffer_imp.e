@@ -49,13 +49,13 @@ feature -- Command
 	set_with_named_file (a_file_name: STRING) is
 			-- Load pixel data file `a_file_name'.
 		local
-			a_cs: EV_GTK_C_STRING
+			l_cs: EV_GTK_C_STRING
 			g_error: POINTER
 			filepixbuf: POINTER
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
-				a_cs := a_file_name
-				filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
+				l_cs := a_file_name
+				filepixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_file (l_cs.item, $g_error)
 				if g_error /= default_pointer then
 						-- GdkPixbuf could not load the image so we raise an exception.
 					(create {EXCEPTIONS}).raise ("Could not load image file.")
@@ -68,10 +68,56 @@ feature -- Command
 		end
 
 	save_to_named_file (a_file_name: STRING) is
-			-- Save pixel datas to `a_file_name'
+			-- Save pixel data to file `a_file_name'.
+		local
+			l_cs, l_file_type: EV_GTK_C_STRING
+			g_error: POINTER
+			l_writeable_formats: ARRAYED_LIST [STRING_32]
+			l_format, l_extension: STRING_32
+			l_app_imp: EV_APPLICATION_IMP
+			i: INTEGER
 		do
-			check not_implemented: False end
+			l_app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
+			l_extension := a_file_name.split ('.').last.as_upper
+			if l_extension.is_equal ("JPEG") then
+				l_extension := "JPG"
+			end
+			from
+				i := 1
+			until
+				i > l_writeable_formats.count
+			loop
+				if l_writeable_formats [i].as_upper.is_equal (l_extension) then
+					l_format := l_extension
+				end
+				i := i + 1
+			end
+			if l_format /= Void then
+				if l_format.is_equal ("JPG") then
+					l_format := "jpeg"
+				end
+				if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
+					l_cs := a_file_name
+					l_file_type := l_format
+					{EV_GTK_EXTERNALS}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
+					if g_error /= default_pointer then
+							-- GdkPixbuf could not load the image so we raise an exception.
+						(create {EXCEPTIONS}).raise ("Could not save image file.")
+					end
+				else
+					if l_format.is_equal ("PNG") then
+						internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, create {FILE_NAME}.make_from_string (a_file_name))
+					else
+						(create {EXCEPTIONS}).raise ("Could not save image file.")
+					end
+
+				end
+			else
+				(create {EXCEPTIONS}).raise ("Could not save image file.")
+			end
 		end
+
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Draw Current to `a_drawable'

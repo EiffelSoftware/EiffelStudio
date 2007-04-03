@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EB_CUSTOMIZED_FORMATTER_RELATED_MANAGER
+	EB_CUSTOMIZED_FORMATTER_RELATED_MANAGER [G -> HASHABLE]
 
 inherit
-	EB_CUSTOMIZED_FORMATTER_UTILITY
+	EB_CUSTOMIZED_FORMATTER_UTILITY [G]
 
 	EC_EIFFEL_LAYOUT
 
@@ -103,7 +103,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	store_in_file (a_descriptors: LIST [like item_anchor]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: like item_anchor; a_parent: XM_COMPOSITE], XM_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING) is
+	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XM_COMPOSITE], XM_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING) is
 			-- Store `a_descritpors' in formatter descriptor `a_file_name' in `a_path'.
 			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
 		require

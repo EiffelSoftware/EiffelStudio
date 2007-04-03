@@ -554,9 +554,6 @@ feature{NONE} -- Implementation
 	history_toolbar: EV_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	used: BOOLEAN
-			-- Has the class view been used yet to perform any formatting?
-
 	tool_bar: EV_TOOL_BAR
 			-- Toolbar containing all buttons.
 
@@ -743,7 +740,8 @@ feature{NONE} -- Implementation
 			l_formatters := layout_formatters
 			if l_formatters.is_empty then
 				formatter_tool_bar_area.wipe_out
-				formatter_container.replace (empty_widget)
+				formatter_container.wipe_out
+				formatter_container.extend (empty_widget)
 				output_line.set_text ("")
 			else
 				l_cursor := l_formatters.cursor

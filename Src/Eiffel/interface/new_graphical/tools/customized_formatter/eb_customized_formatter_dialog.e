@@ -5,18 +5,16 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EB_CUSTOMIZED_FORMATTER_DIALOG
+	EB_CUSTOMIZED_FORMATTER_DIALOG [G -> HASHABLE]
 
 inherit
 	EB_CUSTOMIZED_FORMATTER_DIALOG_IMP
 
-	EB_CUSTOMIZED_FORMATTER_UTILITY
+	EB_CUSTOMIZED_FORMATTER_UTILITY [G]
 		undefine
 			copy,
 			is_equal,
 			default_create
-		redefine
-			item_anchor
 		end
 
 	EB_CONSTANTS
@@ -109,7 +107,7 @@ feature {NONE} -- Initialization
 			item_grid.key_press_actions.extend (agent on_key_pressed_in_item_grid)
 
 				-- Setup sorting information.			
-			item_grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [like item_anchor]}.make (agent item_name_tester, ascending_order))
+			item_grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [G]}.make (agent item_name_tester, ascending_order))
 			create l_sorting_status.make (1)
 			l_sorting_status.extend ([1, ascending_order])
 			item_grid_wrapper.set_sorting_status (l_sorting_status)
@@ -132,13 +130,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	descriptors: LIST [like item_anchor] is
+	descriptors: LIST [G] is
 			-- List of descriptors of `items' defined in Current dialog
 		local
 			l_descriptors: like items
-			l_cursor: DS_ARRAYED_LIST_CURSOR [like item_anchor]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [G]
 		do
-			create {LINKED_LIST [like item_anchor]} Result.make
+			create {LINKED_LIST [G]} Result.make
 			l_descriptors := items
 			l_cursor := items.new_cursor
 			from
@@ -153,7 +151,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	items: DS_ARRAYED_LIST [like item_anchor]
+	items: DS_ARRAYED_LIST [G]
 			-- List of items
 
 	ok_actions: ACTION_SEQUENCE [TUPLE]
@@ -162,7 +160,7 @@ feature -- Access
 	cancel_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when "Cancel" button is pressed
 
-	items_getter: FUNCTION [ANY, TUPLE, LIST [like item_anchor]]
+	items_getter: FUNCTION [ANY, TUPLE, LIST [G]]
 			-- Agent to get information of `items'
 
 	tool_table: HASH_TABLE [TUPLE [display_name: STRING_GENERAL; pixmap: EV_PIXMAP], STRING] is
@@ -202,10 +200,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	item_anchor: HASHABLE
-			-- Anchor of item
-
-	name_of_item (a_item: like item_anchor): STRING_GENERAL is
+	name_of_item (a_item: G): STRING_GENERAL is
 			-- Name of `a_item'
 		deferred
 		ensure
@@ -228,7 +223,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_item: like item_anchor is
+	new_item: G is
 			-- New item used when adding new item
 		deferred
 		end
@@ -339,7 +334,7 @@ feature{NONE} -- Actions
 			-- Action to be performed to remove selected customized formatter
 		local
 			l_row: EV_GRID_ROW
-			l_descriptor: like item_anchor
+			l_descriptor: G
 			l_grid: like item_grid
 			l_row_index: INTEGER
 			l_row_count: INTEGER
@@ -377,7 +372,7 @@ feature{NONE} -- Actions
 		require
 			a_row_attached: a_row /= Void
 		local
-			l_descriptor: like item_anchor
+			l_descriptor: G
 		do
 			l_descriptor ?= a_row.data
 			check l_descriptor /= Void end
@@ -470,7 +465,7 @@ feature {NONE} -- Implementation/Data
 			Result := a_string_8.as_string_32
 		end
 
-	last_selected_descriptor: like item_anchor
+	last_selected_descriptor: G
 			-- Last selected descriptor
 
 	set_last_selected_descriptor (a_descriptor: like last_selected_descriptor) is
@@ -481,10 +476,10 @@ feature {NONE} -- Implementation/Data
 			last_selected_descriptor_set: last_selected_descriptor = a_descriptor
 		end
 
-	item_grid_wrapper: EVS_GRID_WRAPPER [like item_anchor]
+	item_grid_wrapper: EVS_GRID_WRAPPER [G]
 			-- Wrapper for `item_grid' to support sorting
 
-	descriptor_row_table: HASH_TABLE [EV_GRID_ROW, like item_anchor]
+	descriptor_row_table: HASH_TABLE [EV_GRID_ROW, G]
 			-- Table of grid rows for descriptors
 			-- [Grid row, Descriptor displayed in that row]
 
@@ -543,7 +538,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	bind_item_row (a_descriptor: like item_anchor; a_grid_row: EV_GRID_ROW) is
+	bind_item_row (a_descriptor: G; a_grid_row: EV_GRID_ROW) is
 			-- Bind `a_descriptor' in `a_grid_row'.
 		deferred
 		end
@@ -556,7 +551,7 @@ feature {NONE} -- Implementation
 	bind_item_grid is
 			-- Bind formatters in `items' in `item_grid'.
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [like item_anchor]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [G]
 			l_item_grid: like item_grid
 			l_row_table: like descriptor_row_table
 			l_grid_row: EV_GRID_ROW
@@ -582,7 +577,7 @@ feature {NONE} -- Implementation
 			resize_item_grid
 		end
 
-	bind_property_grid (a_descriptor: like item_anchor) is
+	bind_property_grid (a_descriptor: G) is
 			-- Load information of `a_descriptor' in `property_grid'.
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -591,7 +586,7 @@ feature {NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	item_name_tester (a_item, b_item: like item_anchor; a_order: INTEGER): BOOLEAN is
+	item_name_tester (a_item, b_item: G; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_item' and `a_item' according sorting order specified by `a_order'
 		do
 			if a_order = ascending_order then
@@ -602,13 +597,13 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [like item_anchor]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [like item_anchor]
+			l_sorter: DS_QUICK_SORTER [G]
 		do
 			create l_sorter.make (a_comparator)
 			l_sorter.sort (items)

@@ -8,10 +8,7 @@ class
 	EB_CUSTOMIZED_TOOL_MANAGER
 
 inherit
-	EB_CUSTOMIZED_FORMATTER_RELATED_MANAGER
-		redefine
-			item_anchor
-		end
+	EB_CUSTOMIZED_FORMATTER_RELATED_MANAGER [EB_CUSTOMIZED_TOOL_DESP]
 
 feature -- Access
 
@@ -27,9 +24,6 @@ feature -- Access
 			end
 			Result := change_actions_internal
 		end
-
-	item_anchor: EB_CUSTOMIZED_TOOL_DESP
-			-- Anchor type of items
 
 	tool_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP] is
 			-- List of loaded descriptors for customized tool
@@ -144,7 +138,7 @@ feature -- Access
 			Result := a_id.is_equal (b_id)
 		end
 
-	xml_for_descriptor (a_descriptor: like item_anchor; a_parent: XM_COMPOSITE): XM_ELEMENT is
+	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT is
 			-- Xml element for `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void

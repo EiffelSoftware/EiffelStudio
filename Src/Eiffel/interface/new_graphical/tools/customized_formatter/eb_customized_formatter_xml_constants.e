@@ -33,7 +33,6 @@ feature -- Access
 	t_header: INTEGER is 2005
 	t_temp_header: INTEGER is 2006
 	t_tools: INTEGER is 2008
-	t_viewer: INTEGER is 2010
 	t_tool: INTEGER is 2011
 	t_handlers: INTEGER is 2012
 	t_handler: INTEGER is 2013

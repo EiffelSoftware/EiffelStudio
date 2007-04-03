@@ -8,10 +8,7 @@ class
 	EB_CUSTOMIZED_TOOL_DIALOG
 
 inherit
-	EB_CUSTOMIZED_FORMATTER_DIALOG
-		redefine
-			item_anchor
-		end
+	EB_CUSTOMIZED_FORMATTER_DIALOG [EB_CUSTOMIZED_TOOL_DESP]
 
 create
 	make
@@ -34,10 +31,7 @@ feature{NONE} -- Initializatioin
 
 feature -- Access
 
-	item_anchor: EB_CUSTOMIZED_TOOL_DESP
-			-- Item ancho type	
-
-	name_of_item (a_item: like item_anchor): STRING_GENERAL is
+	name_of_item (a_item: EB_CUSTOMIZED_TOOL_DESP): STRING_GENERAL is
 			-- Name of `a_item'
 		do
 			Result := a_item.name
@@ -49,10 +43,10 @@ feature -- Access
 			Result := 1
 		end
 
-	new_item: like item_anchor is
+	new_item: EB_CUSTOMIZED_TOOL_DESP is
 			-- New item used when adding new item
 		local
-			l_descriptor: like item_anchor
+			l_descriptor: EB_CUSTOMIZED_TOOL_DESP
 			l_uuid_generator: UUID_GENERATOR
 		do
 			create l_uuid_generator
@@ -63,7 +57,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_name_change (a_new_data: STRING_32; a_descriptor: like item_anchor) is
+	on_name_change (a_new_data: STRING_32; a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -94,7 +88,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: like item_anchor) is
+	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
 			-- Action to be performed when handlers of `a_descriptor' changes.
 		require
 			a_handlers_attached: a_handlers /= Void
@@ -160,7 +154,7 @@ feature{NONE} -- Implementation
 			item_grid.column (1).set_title (interface_names.t_tool_name)
 		end
 
-	bind_item_row (a_descriptor: like item_anchor; a_grid_row: EV_GRID_ROW) is
+	bind_item_row (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_grid_row: EV_GRID_ROW) is
 			-- Bind `a_descriptor' in `a_grid_row'.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -179,7 +173,7 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	bind_property_grid (a_descriptor: like item_anchor) is
+	bind_property_grid (a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
 			-- Load information of `a_descriptor' in `property_grid'.
 		local
 			l_grid: like property_grid
@@ -220,7 +214,7 @@ feature{NONE} -- Implementation
 			l_name.enable_select
 		end
 
-	refresh_grid_for_descriptor (a_descriptor: like item_anchor) is
+	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
 			-- Refresh grid item for `a_descriptor'.
 		local
 			l_grid_row: EV_GRID_ROW
@@ -306,8 +300,8 @@ feature{NONE} -- Implementation
 			-- List of available tools
 			-- Those that have been removed in Current dialog are not taken into consideration.
 		local
-			l_item_table: HASH_TABLE [like item_anchor, STRING]
-			l_cursor: DS_ARRAYED_LIST_CURSOR [like item_anchor]
+			l_item_table: HASH_TABLE [EB_CUSTOMIZED_TOOL_DESP, STRING]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_CUSTOMIZED_TOOL_DESP]
 			l_tool: EB_TOOL
 			l_tools: LIST [EB_TOOL]
 		do

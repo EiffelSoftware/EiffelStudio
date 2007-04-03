@@ -28,10 +28,15 @@ feature -- Initialization
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
-			-- Load pixel datas from a_file_name'.
+			-- Load pixel datas from `a_file_name'.
 		deferred
 		end
 
+	save_to_named_file (a_file_name: STRING) is
+			-- Save pixel datas to `a_file_name'
+		deferred
+		end
+		
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Create a new sub pixmap from Current.
 		deferred

@@ -22,7 +22,9 @@ inherit
 			process_unary_as,
 			process_static_access_as,
 			process_bracket_as,
-			process_like_id_as
+			process_like_id_as,
+			process_assign_as,
+			process_creation_as
 		end
 
 	QL_UTILITY
@@ -40,6 +42,7 @@ feature{NONE} -- Initialization
 			-- Initialize Current.
 		do
 			create {LINKED_LIST [TUPLE [AST_EIFFEL, CLASS_C, BOOLEAN]]} accessors.make
+			create flag_stack.make
 			create ancestor_class_id_set.make (20)
 		end
 
@@ -49,6 +52,19 @@ feature -- Access
 			-- Accessors found by last `find_accessors'
 			-- The TUPLE is in form of [accessor AST, accessor written class]
 
+	flag: INTEGER_8
+			-- Required flag to match certain kinds of accessors such as assigner, creator..
+
+feature -- Setting
+
+	set_flag (a_flag: like flag) is
+			-- Set `flag' with `a_flag'.
+		do
+			flag := a_flag
+		ensure
+			flag_set: flag = a_flag
+		end
+
 feature -- Process
 
 	find_accessors (a_callee: QL_FEATURE; a_caller: QL_FEATURE) is
@@ -57,6 +73,7 @@ feature -- Process
 			a_callee_attached: a_callee /= Void
 			a_caller_attached: a_caller /= Void
 		do
+			flag_stack.wipe_out
 			accessors.wipe_out
 			ancestor_class_id_set.wipe_out
 			if a_callee.is_real_feature then
@@ -128,6 +145,9 @@ feature{NONE} -- Implementation
 					   	  a_feature_name.is_case_insensitive_equal (ti_Precursor_keyword)
 				if (not Result) and then a_feature.has_alias_name then
 					Result := a_feature_name.is_case_insensitive_equal (a_feature.alias_name)
+				end
+				if Result then
+					Result := flag /= 0 implies flag_stack.has (flag)
 				end
 			end
 		end
@@ -282,6 +302,34 @@ feature{NONE} -- Implementation/Process
 		do
 			check_accessor_for_operators (e_feature.associated_class.class_id, l_as.anchor.name, l_as.anchor)
 		end
+
+	process_assign_as (l_as: ASSIGN_AS) is
+		local
+			l_flag_stack: like flag_stack
+		do
+			l_flag_stack := flag_stack
+			l_flag_stack.extend ({DEPEND_UNIT}.is_in_assignment_flag)
+			l_as.target.process (Current)
+			l_flag_stack.remove
+			l_as.source.process (Current)
+		end
+
+	process_creation_as (l_as: CREATION_AS) is
+		local
+			l_flag_stack: like flag_stack
+		do
+			l_flag_stack := flag_stack
+			l_flag_stack.extend ({DEPEND_UNIT}.is_in_creation_flag)
+			l_as.target.process (Current)
+			l_flag_stack.remove
+			safe_process (l_as.type)
+			safe_process (l_as.call)
+		end
+
+feature{NONE} -- Implementation
+
+	flag_stack: LINKED_STACK [INTEGER_8]
+			-- Stack of flags
 
 invariant
 	accessors_attached: accessors /= Void

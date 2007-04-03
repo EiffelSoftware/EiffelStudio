@@ -514,17 +514,19 @@ feature {EV_ANY_I} -- Implementation
 						end
 						if l_gtk_widget_imp /= Void then
 							l_gtk_window_imp := l_gtk_widget_imp.top_level_gtk_window_imp
-							l_top_level_window_imp ?= l_gtk_window_imp
-							if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
-								use_stored_display_data_for_keys := True
-								stored_display_data.mask := {EV_GTK_EXTERNALS}.gdk_event_key_struct_state (gdk_event)
-								l_call_event := False
-								l_gtk_window_imp.process_key_event (gdk_event)
-								use_stored_display_data_for_keys := False
+							if l_gtk_window_imp /= Void then
+								l_top_level_window_imp ?= l_gtk_window_imp
+								if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
+									use_stored_display_data_for_keys := True
+									stored_display_data.mask := {EV_GTK_EXTERNALS}.gdk_event_key_struct_state (gdk_event)
+									l_call_event := False
+									l_gtk_window_imp.process_key_event (gdk_event)
+									use_stored_display_data_for_keys := False
+								end
+								l_gtk_widget_imp := Void
+								l_gtk_window_imp := Void
+								l_top_level_window_imp := Void
 							end
-							l_gtk_widget_imp := Void
-							l_gtk_window_imp := Void
-							l_top_level_window_imp := Void
 						end
 						if l_gdk_window /= default_pointer then
 								-- Restore remapped event.

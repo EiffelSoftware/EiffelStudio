@@ -188,6 +188,25 @@ feature -- Open inner container data.
 			internal_open_maximized_tool_data (l_data)
 		end
 
+feature -- Query
+
+	config_data_from_file (a_file: STRING_GENERAL): SD_CONFIG_DATA is
+			-- Config data readed from `a_file'
+		require
+			not_void: a_file /= Void
+		local
+			l_file: RAW_FILE
+			l_facility: SED_STORABLE_FACILITIES
+			l_reader: SED_MEDIUM_READER_WRITER
+		do
+			create l_file.make_open_read (a_file.as_string_8)
+			create l_reader.make (l_file)
+			l_reader.set_for_reading
+			create l_facility
+			Result ?=  l_facility.retrieved (l_reader, True)
+			l_file.close
+		end
+
 	top_container: EV_WIDGET
 		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.
 
@@ -987,23 +1006,6 @@ feature {NONE} -- Implementation
 					l_maximzied_tools.forth
 				end
 			end
-		end
-
-	config_data_from_file (a_file: STRING_GENERAL): SD_CONFIG_DATA is
-			-- Config data readed from `a_file'
-		require
-			not_void: a_file /= Void
-		local
-			l_file: RAW_FILE
-			l_facility: SED_STORABLE_FACILITIES
-			l_reader: SED_MEDIUM_READER_WRITER
-		do
-			create l_file.make_open_read (a_file.as_string_8)
-			create l_reader.make (l_file)
-			l_reader.set_for_reading
-			create l_facility
-			Result ?=  l_facility.retrieved (l_reader, True)
-			l_file.close
 		end
 
 feature {NONE} -- Internals.

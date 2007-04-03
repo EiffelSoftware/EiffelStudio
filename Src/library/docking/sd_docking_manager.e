@@ -160,6 +160,23 @@ feature -- Query
 			Result := property.docker_mediator
 		end
 
+	is_config_data_valid (a_file_name: STRING): BOOLEAN is
+			 -- Is config data located at `a_file_name' valid?
+		local
+			l_data: SD_CONFIG_DATA
+			l_file: RAW_FILE
+			l_config_mediator: SD_OPEN_CONFIG_MEDIATOR
+		do
+			create l_file.make (a_file_name)
+			if l_file.exists then
+				create l_config_mediator.make (Current)
+				l_data := l_config_mediator.config_data_from_file (a_file_name)
+				if l_data /= Void then
+					Result := True
+				end
+			end
+		end
+
 feature -- Command
 
 	save_config (a_file: STRING_GENERAL) is

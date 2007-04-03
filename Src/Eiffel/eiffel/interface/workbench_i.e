@@ -524,6 +524,19 @@ feature -- Commands
 			Degree_2.insert_new_class (class_to_recompile)
 		end
 
+feature -- Directory creation
+
+	create_data_directory is
+			-- Create the subdirectory for data storage.
+		local
+			d: DIRECTORY
+		do
+			create d.make (project_location.data_path)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
 feature -- Automatic backup
 
 	create_backup_directory is

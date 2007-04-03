@@ -51,67 +51,27 @@ feature -- Directory creation
 	create_project_directories is
 			-- Create basic structure for project.
 		local
-			d: DIRECTORY
+			l_dirs: ARRAY [DIRECTORY_NAME]
 		do
-			create d.make (eifgens_path)
-			if not d.exists then
-				d.create_dir
-			end
-
-			create d.make (target_path)
-			if not d.exists then
-				d.create_dir
-			end
-
-			create d.make (compilation_path)
-			if not d.exists then
-				d.create_dir
-			end
-
-			create d.make (final_path)
-			if not d.exists then
-				d.create_dir
-			end
-
-			create d.make (workbench_path)
-			if not d.exists then
-				d.create_dir
-			end
-
-			create d.make (partial_generation_path)
-			if not d.exists then
-				d.create_dir
-			end
+			l_dirs := <<eifgens_path, target_path, compilation_path, final_path, workbench_path, partial_generation_path, data_path>>
+			l_dirs.do_all (agent safe_create_directory)
 		end
 
 	create_profiler_directory is
 			-- Directory where the profiler files are generated
-		local
-			d: DIRECTORY
 		do
 			create_project_directories
-			create d.make (profiler_path)
-			if not d.exists then
-				d.create_dir
-			end
+			safe_create_directory (profiler_path)
 		end
 
 	create_local_assemblies_directory (is_final: BOOLEAN) is
 			-- Directory where local assemblies will be generated.
-		local
-			d: DIRECTORY
 		do
 			create_project_directories
 			if is_final then
-				create d.make (final_assemblies_path)
-				if not d.exists then
-					d.create_dir
-				end
+				safe_create_directory (final_assemblies_path)
 			else
-				create d.make (workbench_assemblies_path)
-				if not d.exists then
-					d.create_dir
-				end
+				safe_create_directory (workbench_assemblies_path)
 			end
 		end
 
@@ -270,6 +230,19 @@ feature -- Directories
 			end
 		ensure
 			workbench_path_not_void: Result /= Void
+		end
+
+	data_path: DIRECTORY_NAME is
+			-- Path to `Data" directory which is used to store customized formatter, metrics, docking layout files.
+		do
+			Result := internal_data_path
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.extend (data_directory)
+				internal_data_path := Result
+			end
+		ensure
+			data_path_not_void: Result /= Void
 		end
 
 feature -- Files
@@ -526,6 +499,21 @@ feature -- Settings
 			target_set: target = a_target
 		end
 
+feature -- Directory creation
+
+	safe_create_directory (a_dir: DIRECTORY_NAME) is
+			-- Create `a_dir' if it doesn't exist.
+		require
+			a_dir_attached: a_dir /= Void
+		local
+			d: DIRECTORY
+		do
+			create d.make (a_dir)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	reset_content is
@@ -562,6 +550,7 @@ feature {NONE} -- Implementation: Access
 	internal_target_path: like target_path
 	internal_workbench_assemblies_path: like workbench_assemblies_path
 	internal_workbench_path: like workbench_path
+	internal_data_path: like data_path
 			-- Placeholders for storing path.
 
 	internal_precompilation_file_name: like precompilation_file_name

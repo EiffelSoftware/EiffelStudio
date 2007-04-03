@@ -265,7 +265,7 @@ feature -- Access
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (project_location.target_path)
+			create l_file_name.make_from_string (project_location.data_path)
 			l_file_name.extend ("metrics")
 			Result :=  l_file_name.out
 		ensure

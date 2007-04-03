@@ -38,6 +38,9 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
+	flag: INTEGER_8
+			-- Flag to distinguish different accessors such as assigner, creator
+
 	feature_item: QL_FEATURE
 			-- feature_item
 
@@ -142,6 +145,14 @@ feature -- Setting
 			starting_column_index_set: starting_column_index = a_index
 		end
 
+	set_flag (a_flag: like flag) is
+			-- Set `flag' with `a_flag'.
+		do
+			flag := a_flag
+		ensure
+			flag_set: flag = a_flag
+		end
+
 	bind_reference_position_item is
 			-- Bind reference position item into grid.
 		do
@@ -156,7 +167,7 @@ feature -- Setting
 	calculate_reference_position is
 			-- Calculate reference (callers/callees) positions for `feature_item' and display them in another grid item.
 		local
-			l_accessor_visitor: EB_ACCESSED_FEATURE_VISITOR
+			l_accessor_visitor: like accessor_visitor
 			l_caller: like feature_item
 			l_callee: like feature_item
 			l_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]
@@ -171,7 +182,8 @@ feature -- Setting
 				end
 
 				if l_callee /= Void and then l_callee.is_real_feature then
-					create l_accessor_visitor.make
+					l_accessor_visitor := accessor_visitor
+					l_accessor_visitor.set_flag (flag)
 					l_accessor_visitor.find_accessors (l_callee, l_caller)
 					l_accessors := l_accessor_visitor.accessors
 					if l_accessors.is_empty then
@@ -183,6 +195,15 @@ feature -- Setting
 				set_has_position_calculated (True)
 			end
 		end
+
+	accessor_visitor: EB_ACCESSED_FEATURE_VISITOR is
+			-- Visitor to calculate reference positions
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 feature -- Grid binding
 

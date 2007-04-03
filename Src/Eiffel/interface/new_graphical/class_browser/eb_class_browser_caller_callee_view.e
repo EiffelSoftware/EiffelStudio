@@ -77,6 +77,9 @@ feature -- Access
 	row_count: INTEGER
 			-- Number of rows in Current view
 
+	flag: INTEGER_8
+			-- Flag to distinguish different accessors such as assigners, creators
+
 feature -- Status report
 
 	should_tooltip_be_displayed: BOOLEAN
@@ -121,6 +124,14 @@ feature -- Setting
 			row_count := a_row_count
 		ensure
 			row_count_set: row_count = a_row_count
+		end
+
+	set_flag (a_flag: like flag) is
+			-- Set `flag' with `a_flag'.
+		do
+			flag := a_flag
+		ensure
+			flag_set: flag = a_flag
 		end
 
 feature -- Grind binding
@@ -404,6 +415,7 @@ feature{NONE} -- Implementation
 		do
 			create Result
 			Result.set_data (create {like row_type}.make (Current, a_feature, a_related_feature, a_row_type, is_for_caller))
+			Result.data.set_flag (flag)
 		ensure
 			result_attached: Result /= Void
 		end

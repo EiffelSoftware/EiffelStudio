@@ -175,6 +175,7 @@ feature {NONE} -- Implementation
 	rebuild_browser is
 			-- Rebuild `browser'.
 		do
+			browser.set_flag (flag)
 		end
 
 	generate_result is

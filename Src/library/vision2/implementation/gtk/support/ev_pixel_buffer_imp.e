@@ -70,7 +70,7 @@ feature -- Command
 	save_to_named_file (a_file_name: STRING) is
 			-- Save pixel datas to `a_file_name'
 		do
-			check not_implemented: False
+			check not_implemented: False end
 		end
 
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is

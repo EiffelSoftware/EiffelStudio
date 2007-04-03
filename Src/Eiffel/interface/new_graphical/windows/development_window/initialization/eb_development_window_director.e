@@ -29,7 +29,6 @@ feature -- Command
 		local
 			l_x, l_y: INTEGER
 			l_debugger_manager: EB_DEBUGGER_MANAGER
-			l_raw_file: RAW_FILE
 		do
 			internal_construct
 			l_x := develop_window.window.x_position
@@ -39,8 +38,7 @@ feature -- Command
 			develop_window.window.show
 
 			l_debugger_manager ?= develop_window.debugger_manager
-			create l_raw_file.make (develop_window.docking_config_tools_file)
-			if not develop_window.development_window_data.is_force_debug_mode or l_debugger_manager = Void or not l_raw_file.exists then
+			if not develop_window.development_window_data.is_force_debug_mode or l_debugger_manager = Void or not develop_window.docking_manager.is_config_data_valid (develop_window.docking_config_tools_file) then
 				develop_window.restore_tools_docking_layout
 			else
 				l_debugger_manager.force_debug_mode_cmd.execute_for_opening (False)

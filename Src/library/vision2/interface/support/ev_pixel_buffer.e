@@ -40,6 +40,14 @@ feature -- Command
 			implementation.set_with_named_file (a_file_name)
 		end
 
+	save_to_named_file (a_file_name: STRING) is
+			-- Save pixel data to file `a_file_name'.
+		require
+			not_locked: not is_locked
+		do
+			implementation.save_to_named_file (a_file_name)
+		end
+
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Return a pixmap region of `Current' represented by area `a_rect'.
 		require
@@ -108,6 +116,15 @@ feature -- Command
 			not_void: a_point /= Void
 		do
 			implementation.draw_text (a_text, a_font, a_point)
+		end
+
+	to_pixmap: EV_PIXMAP is
+			-- Convert to EV_PIXMAP.
+		local
+			l_rect: EV_RECTANGLE
+		do
+			create l_rect.make (0, 0, width, height)
+			Result := sub_pixmap (l_rect)
 		end
 
 feature -- Query

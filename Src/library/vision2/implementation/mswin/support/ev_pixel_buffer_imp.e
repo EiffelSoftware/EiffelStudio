@@ -84,6 +84,20 @@ feature -- Command
 			end
 		end
 
+	save_to_named_file (a_file_name: STRING) is
+			-- Save pixel datas to `a_file_name'
+		local
+			l_file_name: FILE_NAME
+		do
+			if is_gdi_plus_installed then
+				gdip_bitmap.save_image_to_file (a_file_name)
+			else
+				create l_file_name.make_from_string (a_file_name)
+				-- FIXIT: How to know the orignal format of `pixmap'? It's BMP or PNG.
+				pixmap.save_to_named_file (create {EV_PNG_FORMAT}, l_file_name)
+			end
+		end
+
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Create asub pixmap from Current.
 		local

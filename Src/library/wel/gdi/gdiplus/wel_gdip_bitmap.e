@@ -11,7 +11,8 @@ class
 inherit
 	WEL_GDIP_IMAGE
 		redefine
-			load_image_from_file
+			load_image_from_file,
+			raw_format
 		end
 
 create
@@ -44,6 +45,8 @@ feature -- Command
 		do
 			create l_temp.make_with_size (1, 1)
 			l_temp.load_image_from_file_original (a_file_name)
+
+			raw_format_recorded := l_temp.raw_format_orignal
 
 			-- We copy the bitmaps data to a new instance, then the file will not be locked by Gdi+.
 			create l_bitmap_data.make
@@ -144,6 +147,19 @@ feature -- Command
 			l_helper.mirror_image (Result)
 		end
 
+feature -- Query
+
+	raw_format: WEL_GUID is
+			-- Redefine
+		do
+			Result := raw_format_recorded
+		end
+
+feature {NONE} -- Implementation
+
+	raw_format_recorded: WEL_GUID
+			-- When `load_image_from_file' we copied orignal datas to a memoryBMP image, we record orignal image type here.
+
 feature -- C externals
 
 	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
@@ -232,7 +248,6 @@ feature -- C externals
 			]"
 		end
 
-
 	c_gdip_bitmap_lock_bits (a_gdiplus_handle, a_bitmap: POINTER; a_gp_rect: POINTER; a_image_lock_flag: NATURAL_32; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]; a_bitmap_data: POINTER) is
 			-- Lock data bits of `a_bitmap', Result is pointer to BitmapData.
 		require
@@ -255,11 +270,7 @@ feature -- C externals
 								((GpBitmap *) $a_bitmap,
 								(GDIPCONST GpRect *) $a_gp_rect,
 								(UINT) $a_image_lock_flag,
-								
-								
 								(PixelFormat) $a_pixel_format,
-								
-								
 								(BitmapData *) $a_bitmap_data);
 				}
 			}

@@ -31,7 +31,8 @@ typedef void GpFontCollection;
 typedef void GpStringFormat;
 typedef void GpBrush;
 typedef void GpSolidFill;
-
+typedef GUID CLSID;
+typedef void  EncoderParameters;
 
 typedef INT PixelFormat;
 typedef unsigned short UINT16;
@@ -184,3 +185,41 @@ typedef ImageAbort DrawImageAbort;
 
 #endif // !_GDIPLUSTYPES_H
 
+#ifndef GUID_DEFINED
+#define GUID_DEFINED
+#if defined(__midl)
+typedef struct {
+    unsigned long  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    byte           Data4[ 8 ];
+} GUID;
+#else
+typedef struct _GUID {
+    unsigned long  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[ 8 ];
+} GUID;
+#endif
+#endif
+
+#ifndef ImageCodecInfoDefined
+#define ImageCodecInfoDefined
+typedef struct _ImageCodecInfo
+{
+    CLSID Clsid;
+    GUID  FormatID;
+    const WCHAR* CodecName;
+    const WCHAR* DllName;
+    const WCHAR* FormatDescription;
+    const WCHAR* FilenameExtension;
+    const WCHAR* MimeType;
+    DWORD Flags;
+    DWORD Version;
+    DWORD SigCount;
+    DWORD SigSize;
+    const BYTE* SigPattern;
+    const BYTE* SigMask;
+} ImageCodecInfo;
+#endif

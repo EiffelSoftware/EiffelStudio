@@ -48,6 +48,7 @@ feature -- Query
 feature {WEL_GDIP_ANY} -- Implementation
 
 	item: INTEGER_64;
+			-- Color data.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

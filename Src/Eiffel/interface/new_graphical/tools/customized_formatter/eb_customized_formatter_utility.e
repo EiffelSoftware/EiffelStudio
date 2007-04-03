@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_CUSTOMIZED_FORMATTER_UTILITY [G -> HASHABLE]
+	EB_CUSTOMIZED_FORMATTER_UTILITY [G]
 
 inherit
 	SHARED_BENCH_NAMES

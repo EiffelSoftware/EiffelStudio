@@ -28,15 +28,19 @@ feature -- Initialization
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is
-			-- Load pixel datas from `a_file_name'.
+			-- Load pixel data from `a_file_name'.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 		deferred
 		end
 
 	save_to_named_file (a_file_name: STRING) is
-			-- Save pixel datas to `a_file_name'
+			-- Save pixel data to file `a_file_name'.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 		deferred
 		end
-		
+
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Create a new sub pixmap from Current.
 		deferred

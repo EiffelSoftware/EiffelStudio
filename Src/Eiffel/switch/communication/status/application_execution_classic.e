@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
 			check debugger_manager_not_void: debugger_manager /= Void end
+			create last_assertion_check_stack.make
 			l_ipc := ipc_engine
 			if l_ipc = Void then
 				create l_ipc.make (debugger_manager)
@@ -114,21 +115,13 @@ feature -- Execution
 			cwd_not_void: cwd /= Void
 			env_not_void: env /= Void
 		local
-			cmd: STRING
 			l_status: APPLICATION_STATUS
 			l_env_s8: STRING_8
 		do
 			ipc_engine.launch_ec_dbg
 			if ipc_engine.ec_dbg_launched then
-				cmd := app.twin
-				if args /= Void then
-					cmd.extend (' ')
-					cmd.append (args)
-				end
-					--| Do not double quote the path
-					--| since it will be done by ecdbgd
-					--| FIXME: we may want to change that ...
-				run_request.set_application_name (cmd)
+				run_request.set_application_name (app)
+				run_request.set_arguments (args)
 				run_request.set_working_directory (cwd)
 				if env /= Void then
 					fixme ("[
@@ -172,21 +165,26 @@ feature -- Execution
 			quit_request.send_integer (0)
 			s := c_tread
 			if s /= Void and then s.is_boolean then
-				last_assertion_check := s.to_boolean
+				last_assertion_check_stack.extend (s.to_boolean)
 			end
 		end
 
 	restore_assertion_check is
 			-- Send a message to the application to restore the previous assertion check status
+		require else
+			last_assertion_check_stack_not_empty: not last_assertion_check_stack.is_empty
 		local
 			s: STRING
+			b: BOOLEAN
 		do
+			b := last_assertion_check_stack.item
+			last_assertion_check_stack.remove
 			quit_request.make (Rqst_set_assertion_check)
-			quit_request.send_integer (last_assertion_check.to_integer)
+			quit_request.send_integer (b.to_integer)
 			s := c_tread
 		end
 
-	last_assertion_check: BOOLEAN
+	last_assertion_check_stack: LINKED_STACK [BOOLEAN]
 			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
 
 	notify_newbreakpoint is
@@ -230,6 +228,7 @@ feature -- Execution
 			-- application. Also execute the `termination_command'.
 		do
 			release_all_objects
+			last_assertion_check_stack.wipe_out
 		end
 
 	request_ipc_end_of_debugging is

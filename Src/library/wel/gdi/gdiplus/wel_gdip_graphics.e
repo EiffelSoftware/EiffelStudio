@@ -141,6 +141,30 @@ feature -- Command
 			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, a_length, a_font.item, a_rect_f.item, a_format.item, a_brush.item, $l_result)
 		end
 
+feature -- Query
+
+	dc: WEL_MEMORY_DC  is
+			-- Get a gdi DC.
+		local
+			l_pointer: POINTER
+			l_result: INTEGER
+		do
+			l_pointer := c_gdip_get_dc (gdi_plus_handle, item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			create {WEL_MEMORY_DC} Result.make_by_pointer (l_pointer)
+		ensure
+			not_void: Result /= Void
+		end
+
+	release_dc (a_dc: WEL_DC) is
+			-- Release `a_dc' which was created by previous calling of `dc'.
+		local
+			l_result: INTEGER
+		do
+			c_gdip_release_dc (gdi_plus_handle, item, a_dc.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 feature -- Destroy
 
 	destroy_item is
@@ -208,6 +232,56 @@ feature {NONE} -- C externals
 			}
 			]"
 		end
+
+	c_gdip_get_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+			-- Get gdi HDC related with Current.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipGetDC = NULL;
+				HDC *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipGetDC) {
+					GdipGetDC = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipGetDC");
+				}
+				if (GdipGetDC) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics* , HDC *)) GdipGetDC)
+								((GpImage *) $a_graphics,
+								(HDC *) &l_result);
+				}				
+				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
+	c_gdip_release_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+				-- Release gdi HDC which was created by `c_gdip_get_dc'.
+			require
+				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			external
+				"C inline use %"wel_gdi_plus.h%""
+			alias
+				"[
+				{
+					static FARPROC GdipReleaseDC = NULL;
+					*(EIF_INTEGER *) $a_result_status = 1;
+					
+					if (!GdipReleaseDC) {
+						GdipReleaseDC = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipReleaseDC");
+					}
+					if (GdipReleaseDC) {
+						*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics* , HDC)) GdipReleaseDC)
+									((GpImage *) $a_graphics,
+									(HDC) $a_dc);
+					}				
+				}
+				]"
+			end
 
 	c_gdip_delete_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
 			-- Delete `a_graphics' gdi+ object.

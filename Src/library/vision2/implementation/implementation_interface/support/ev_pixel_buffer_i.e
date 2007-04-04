@@ -25,6 +25,13 @@ feature -- Initialization
 		deferred
 		end
 
+	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Create with `a_pixmap''s image data.
+		require
+			not_void: a_pixmap /= Void
+		deferred
+		end
+
 feature -- Command
 
 	set_with_named_file (a_file_name: STRING) is

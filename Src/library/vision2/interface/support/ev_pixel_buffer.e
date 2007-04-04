@@ -16,7 +16,8 @@ inherit
 		end
 create
 	default_create,
-	make_with_size
+	make_with_size,
+	make_with_pixmap
 
 feature {NONE} -- Initialization
 
@@ -28,6 +29,15 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			implementation.make_with_size (a_width, a_height)
+		end
+
+	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Create with `a_pixmap''s image data.
+		require
+			not_void: a_pixmap /= Void
+		do
+			default_create
+			implementation.make_with_pixmap (a_pixmap)
 		end
 
 feature -- Command

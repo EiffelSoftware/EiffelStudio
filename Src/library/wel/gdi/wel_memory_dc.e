@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	WEL_MEMORY_DC
 
 inherit
@@ -17,7 +17,8 @@ inherit
 
 create
 	make,
-	make_by_dc
+	make_by_dc,
+	make_by_pointer
 
 feature {NONE} -- Initialization
 
@@ -58,7 +59,7 @@ feature {NONE} -- Removal
 		local
 			p: POINTER	-- Default_pointer
 		do
-				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- Protect the call to DeleteDC, because `destroy_item' can
 				-- be called by the GC so without assertions.
 			if item /= p then
 				unselect_all

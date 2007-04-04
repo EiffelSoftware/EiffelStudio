@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
+		redefine
+			internal_recycle
+		end
 
 create
 	make
@@ -337,7 +340,7 @@ feature -- Command
 
 feature -- Recycle
 
-	recycle_menus is
+	internal_recycle is
 			-- Recycyle all menus.
 		do
 			if tools_menu /= Void then
@@ -371,6 +374,7 @@ feature -- Recycle
 			debugging_tools_menu := Void
 			favorites_menu := Void
 			view_menu := Void
+			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 indexing

@@ -20,6 +20,7 @@ inherit
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
+			internal_recycle,
 			show
 		end
 
@@ -344,7 +345,7 @@ feature -- Memory management
 			toggle_layout_cmd := Void
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			set_row_highlight_bg_color_agent := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 feature {NONE} -- Grid layout Implementation

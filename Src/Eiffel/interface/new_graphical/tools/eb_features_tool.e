@@ -22,6 +22,7 @@ inherit
 			attach_to_docking_manager,
 			mini_toolbar,
 			build_mini_toolbar,
+			internal_recycle,
 			show
 		end
 
@@ -190,7 +191,7 @@ feature {NONE} -- Memory management
 			widget.destroy
 			widget := Void
 			tree := Void
-			develop_window := Void
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 feature -- Element change

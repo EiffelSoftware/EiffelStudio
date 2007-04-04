@@ -779,7 +779,36 @@ feature -- Memory management
 
 	internal_recycle is
 			-- Memory management
+		local
+			l_editors: like editors
 		do
+			from
+				l_editors := editors
+				l_editors.start
+			until
+				l_editors.after
+			loop
+				if not l_editors.item.is_recycled then
+					l_editors.item.recycle
+				end
+				l_editors.forth
+			end
+			l_editors := Void
+			if fake_editors /= Void then
+				from
+					l_editors := fake_editors
+					l_editors.start
+				until
+					l_editors.after
+				loop
+					if not l_editors.item.is_recycled then
+						l_editors.item.recycle
+					end
+					l_editors.forth
+				end
+				fake_editors := Void
+			end
+			development_window := Void
 		end
 
 feature {NONE} -- Access

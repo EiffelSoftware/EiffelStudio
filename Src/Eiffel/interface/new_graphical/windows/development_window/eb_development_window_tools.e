@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
+		redefine
+			internal_recycle
+		end
 
 	EB_STONABLE
 
@@ -612,6 +615,18 @@ feature{NONE} -- Implementation
 			if not customized_tools.is_empty then
 				customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL) do a_tool.invalidate end)
 			end
+		end
+
+feature {NONE} -- Recycle
+
+	internal_recycle is
+		do
+			set_windows_tool (Void)
+			set_favorites_tool (Void)
+			set_features_tool (Void)
+			set_breakpoints_tool (Void)
+			set_search_tool (Void)
+			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 indexing

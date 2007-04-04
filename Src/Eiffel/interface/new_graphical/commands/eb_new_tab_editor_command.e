@@ -17,6 +17,12 @@ inherit
 			new_mini_toolbar_item
 		end
 
+	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			target as development_window,
+			make as make_old
+		end
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -159,9 +165,6 @@ feature {NONE} -- Implementation
 		do
 			Result := development_window.editors_manager
 		end
-
-	development_window: EB_DEVELOPMENT_WINDOW;
-			-- Development window.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

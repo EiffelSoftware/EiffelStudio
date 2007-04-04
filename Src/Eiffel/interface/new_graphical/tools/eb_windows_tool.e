@@ -16,6 +16,7 @@ inherit
 			pixel_buffer,
 			widget,
 			attach_to_docking_manager,
+			internal_recycle,
 			show
 		end
 
@@ -94,7 +95,7 @@ feature -- Memory management
 		do
 			widget.recycle
 			widget := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 indexing

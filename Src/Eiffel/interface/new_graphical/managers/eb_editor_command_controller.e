@@ -212,15 +212,19 @@ feature {NONE} -- Event handling
 	on_text_reset is
 			-- Text in editor was reset.
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			text_state := 0
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				text_state := 0
+			end
 		end
 
 	on_text_loaded is
 			-- Update editor commands.
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			text_state := 1
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				text_state := 1
+			end
 		end
 
 	on_text_fully_loaded is
@@ -229,79 +233,89 @@ feature {NONE} -- Event handling
 			ecmds: like editor_commands
 			scmds: like selection_commands
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			text_state := 2
-			ecmds := editor_commands
-			scmds := selection_commands
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				text_state := 2
+				ecmds := editor_commands
+				scmds := selection_commands
 
-			if current_editor.is_editable then
-				from
-					ecmds.start
-				until
-					ecmds.after
-				loop
-					ecmds.item.on_editable
-					ecmds.forth
-				end
-				from
-					scmds.start
-				until
-					scmds.after
-				loop
-					scmds.item.on_editable
-					scmds.forth
-				end
-			else
-				from
-					ecmds.start
-				until
-					ecmds.after
-				loop
-					ecmds.item.on_not_editable
-					ecmds.forth
-				end
-				from
-					scmds.start
-				until
-					scmds.after
-				loop
-					scmds.item.on_not_editable
-					scmds.forth
+				if current_editor.is_editable then
+					from
+						ecmds.start
+					until
+						ecmds.after
+					loop
+						ecmds.item.on_editable
+						ecmds.forth
+					end
+					from
+						scmds.start
+					until
+						scmds.after
+					loop
+						scmds.item.on_editable
+						scmds.forth
+					end
+				else
+					from
+						ecmds.start
+					until
+						ecmds.after
+					loop
+						ecmds.item.on_not_editable
+						ecmds.forth
+					end
+					from
+						scmds.start
+					until
+						scmds.after
+					loop
+						scmds.item.on_not_editable
+						scmds.forth
+					end
 				end
 			end
 		end
 
 	on_text_back_to_its_last_saved_state is
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			edition_state := 0
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				edition_state := 0
+			end
 		end
 
 	on_text_edited (unused: BOOLEAN) is
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
 		do
-			Precursor {TEXT_OBSERVER_MANAGER} (unused)
-			edition_state := 1
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER} (unused)
+				edition_state := 1
+			end
 		end
 
 	on_selection_begun is
 			-- Update `editor_copy_cmd' and `editor_cut_command'
 			-- (to be performed when selection starts in one of the editors)
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			selection_state := 1
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				selection_state := 1
+			end
 		end
 
 	on_selection_finished is
 			-- Update `editor_copy_cmd' and `editor_cut_command'
 			-- (to be performed when selection stops in one fo the editors)
 		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			if current_editor.has_selection then
-				selection_state := 2
-			else
-				selection_state := 0
+			if not is_recycled then
+				Precursor {TEXT_OBSERVER_MANAGER}
+				if current_editor.has_selection then
+					selection_state := 2
+				else
+					selection_state := 0
+				end
 			end
 		end
 
@@ -330,9 +344,11 @@ feature {NONE} -- Implementation
 	add_observers is
 			-- Add observers
 		do
-			current_editor.add_edition_observer (Current)
-			current_editor.add_selection_observer (Current)
-			post_notify_actions.wipe_out
+			if not is_recycled then
+				current_editor.add_edition_observer (Current)
+				current_editor.add_selection_observer (Current)
+				post_notify_actions.wipe_out
+			end
 		end
 
 	current_editor: EB_EDITOR

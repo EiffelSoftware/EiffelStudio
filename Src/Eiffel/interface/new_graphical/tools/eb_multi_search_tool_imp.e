@@ -20,6 +20,7 @@ inherit
 			pixel_buffer,
 			mini_toolbar,
 			build_mini_toolbar,
+			internal_recycle,
 			show
 		end
 
@@ -635,7 +636,7 @@ feature {NONE} -- Destroy behavior.
 			recycle_widgets
 			widget := Void
 			content := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 	recycle_widgets is

@@ -74,6 +74,14 @@ feature -- Status
 			Result := internal_is_selected --eb_debugger_manager.raised
 		end
 
+feature -- Status change
+
+	synchronize_items is
+			-- Synchronize items.
+		do
+			set_select (is_selected)
+		end
+
 feature {NONE} -- Properties
 
 	description: STRING_GENERAL is

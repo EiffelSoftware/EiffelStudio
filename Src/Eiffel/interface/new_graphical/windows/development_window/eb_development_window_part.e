@@ -9,6 +9,16 @@ indexing
 deferred class
 	EB_DEVELOPMENT_WINDOW_PART
 
+inherit
+	EB_RECYCLABLE
+
+feature {NONE} -- Recycle
+
+	internal_recycle is
+		do
+			develop_window := Void
+		end
+
 feature{NONE} -- Initlization
 
 	make (a_window: like develop_window) is

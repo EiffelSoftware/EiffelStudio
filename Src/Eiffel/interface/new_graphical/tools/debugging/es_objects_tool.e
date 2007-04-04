@@ -28,12 +28,8 @@ inherit
 			mini_toolbar_box,
 			build_mini_toolbar_box,
 			build_docking_content,
+			internal_recycle,
 			show
-		end
-
-	EB_RECYCLABLE
-		export
-			{NONE} all
 		end
 
 	VALUE_TYPES

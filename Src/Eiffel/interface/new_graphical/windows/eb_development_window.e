@@ -1313,7 +1313,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				address_manager.recycle
 				favorites_manager.recycle
 				cluster_manager.recycle
-				menus.recycle_menus
+				menus.recycle
 				history_manager.recycle
 
 				Precursor {EB_TOOL_MANAGER}
@@ -1764,12 +1764,15 @@ feature {NONE} -- Recycle
 			recycle_command
 			recycle_formatters
 			recycle_menu
+			recycle_agents
+			recycle_ui
+
 			Precursor {EB_TOOL_MANAGER}
-			if commands.save_as_cmd /= Void then
-				commands.save_as_cmd.recycle
-			end
 			if save_cmd /= Void then
 				save_cmd.recycle
+			end
+			if save_all_cmd /= Void then
+				save_all_cmd.recycle
 			end
 			commands.set_save_as_cmd (Void)
 			save_cmd := Void
@@ -1777,14 +1780,12 @@ feature {NONE} -- Recycle
 			if refactoring_manager /= Void then
 				refactoring_manager.destroy
 			end
-			tools.set_windows_tool (Void)
-			tools.set_favorites_tool (Void)
+
+			recycle_tools
 			history_manager := Void
-			tools.set_features_tool (Void)
-			tools.set_breakpoints_tool (Void)
 			favorites_manager := Void
 			cluster_manager := Void
-			tools.set_search_tool (Void)
+
 
 			if editors_manager /= Void then
 				editors_manager.recycle
@@ -1792,7 +1793,11 @@ feature {NONE} -- Recycle
 			end
 			agents.manager.remove_observer (agents)
 			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
-			docking_manager.destroy
+
+			if docking_manager /= Void then
+				docking_manager.destroy
+				docking_manager := Void
+			end
 		end
 
 	recycle_command is
@@ -1841,7 +1846,25 @@ feature {NONE} -- Recycle
 	recycle_menu is
 			-- Recycle menus.
 		do
-			menus.recycle_menus
+			menus.recycle
+		end
+
+	recycle_agents is
+			-- Recycle agents.
+		do
+			agents.recycle
+		end
+
+	recycle_tools is
+			-- Recycle tools.
+		do
+			tools.recycle
+		end
+
+	recycle_ui is
+			--
+		do
+			ui.recycle
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_BUILDER

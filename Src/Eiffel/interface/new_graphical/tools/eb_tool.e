@@ -281,6 +281,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Memory management
+
+	internal_recycle is
+			-- Recycle tool.
+		do
+			content := Void
+			develop_window := Void
+		end
+
 feature -- Obsolete
 
 	icon_name: STRING is

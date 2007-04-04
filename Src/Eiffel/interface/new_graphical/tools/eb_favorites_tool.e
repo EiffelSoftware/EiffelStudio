@@ -17,6 +17,7 @@ inherit
 			pixmap,
 			attach_to_docking_manager,
 			build_docking_content,
+			internal_recycle,
 			show
 		end
 
@@ -122,7 +123,7 @@ feature -- Memory management
 		do
 			favorites_manager.recycle
 			favorites_manager := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 feature {NONE} -- Implementation

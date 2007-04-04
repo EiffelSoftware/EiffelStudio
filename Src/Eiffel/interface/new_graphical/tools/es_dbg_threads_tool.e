@@ -16,10 +16,9 @@ inherit
 			pixmap,
 			pixel_buffer,
 			mini_toolbar,
+			internal_recycle,
 			show
 		end
-
-	EB_RECYCLABLE
 
 	EB_SHARED_DEBUGGER_MANAGER
 		export

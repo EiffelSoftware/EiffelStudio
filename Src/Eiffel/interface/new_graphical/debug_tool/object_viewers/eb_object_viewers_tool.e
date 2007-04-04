@@ -22,6 +22,7 @@ inherit
 			pixmap,
 			pixel_buffer,
 --			on_shown,
+			internal_recycle,
 			attach_to_docking_manager,
 			mini_toolbar,
 			build_mini_toolbar,

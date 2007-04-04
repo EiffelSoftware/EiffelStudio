@@ -14,6 +14,8 @@ inherit
 
 	SHARED_WORKBENCH
 
+	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
+
 feature -- Access
 
 	last_error: EB_METRIC_ERROR

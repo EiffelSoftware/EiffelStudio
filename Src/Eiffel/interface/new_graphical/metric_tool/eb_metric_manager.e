@@ -29,6 +29,8 @@ inherit
 
 	EB_XML_DOCUMENT_HELPER [EB_METRIC]
 
+	EB_METRIC_XML_CONSTANTS
+
 create
 	make
 

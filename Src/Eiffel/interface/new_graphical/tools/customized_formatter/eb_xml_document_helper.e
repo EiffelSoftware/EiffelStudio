@@ -10,8 +10,6 @@ class
 inherit
 	SHARED_BENCH_NAMES
 
-	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
-
 feature -- Access
 
 	items_from_parsing (a_parse_agent: PROCEDURE [ANY, TUPLE [XM_CALLBACKS]]; a_callback: XM_CALLBACKS_FILTER; a_result_retriever: FUNCTION [ANY, TUPLE, LIST [G]]; a_error_retriever: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]): TUPLE [items: LIST [G]; error: EB_METRIC_ERROR] is

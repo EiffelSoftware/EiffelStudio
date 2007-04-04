@@ -10,7 +10,7 @@ deferred class
 inherit
 	EB_CUSTOMIZED_FORMATTER_DIALOG_IMP
 
-	EB_CUSTOMIZED_FORMATTER_UTILITY [G]
+	EB_XML_DOCUMENT_HELPER [G]
 		undefine
 			copy,
 			is_equal,

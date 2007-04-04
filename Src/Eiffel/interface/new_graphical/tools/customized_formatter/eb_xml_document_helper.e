@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_CUSTOMIZED_FORMATTER_UTILITY [G]
+	EB_XML_DOCUMENT_HELPER [G]
 
 inherit
 	SHARED_BENCH_NAMES

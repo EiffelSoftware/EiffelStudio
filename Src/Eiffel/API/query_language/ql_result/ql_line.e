@@ -137,7 +137,11 @@ feature -- Access
 	line_in_file: INTEGER is
 			-- Line number of current item in file
 		do
-			Result := code_structure.first_line + line_number - 1
+			if code_structure.is_compiled then
+				Result := code_structure.first_line + line_number - 1
+			else
+				Result := line_number
+			end
 		end
 
 	code_structure: QL_CODE_STRUCTURE_ITEM is

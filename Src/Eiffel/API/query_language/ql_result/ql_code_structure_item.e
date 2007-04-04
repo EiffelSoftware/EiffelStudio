@@ -28,8 +28,15 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	class_i: CLASS_I is
+			-- CLASS_I object associated with current item
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	class_c: CLASS_C is
-			-- CLASS_C object associated with current_item
+			-- CLASS_C object associated with current item
 		require
 			class_compiled: is_compiled
 		deferred

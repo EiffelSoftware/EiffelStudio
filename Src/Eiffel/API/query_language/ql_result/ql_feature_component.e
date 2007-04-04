@@ -37,6 +37,12 @@ feature -- Access
 			Result := internal_hash_code
 		end
 
+	class_i: CLASS_I is
+			-- CLASS_I object associated with current item
+		do
+			Result := class_c.lace_class
+		end
+
 	class_c: CLASS_C is
 			-- CLASS_C object associated with current item
 		do

@@ -27,23 +27,44 @@ feature -- Evaluate
 			l_cnt := l_text.count
 
 			if l_cnt > 2 then
-				from
-					Result := False
-					l_pos := 1
-				until
-					l_pos > l_cnt or Result or done
-				loop
-					l_char := l_text.item (l_pos)
-					if l_char.is_space then
-						l_pos := l_pos + 1
-					elseif l_char = '-' and then l_pos < l_cnt and then l_text.item (l_pos + 1) = '-' then
-						Result := True
-						done := True
-					else
-						done := True
+				if is_for_implementation_comment then
+					Result := l_text.item (1) = '-' and then l_text.item (2) = '-'
+				else
+					from
+						Result := False
+						l_pos := 1
+					until
+						l_pos > l_cnt or Result or done
+					loop
+						l_char := l_text.item (l_pos)
+						if l_char.is_space then
+							l_pos := l_pos + 1
+						elseif l_char = '-' and then l_pos < l_cnt and then l_text.item (l_pos + 1) = '-' then
+							Result := True
+							done := True
+						else
+							done := True
+						end
 					end
 				end
 			end
+		end
+
+feature -- Status report
+
+	is_for_implementation_comment: BOOLEAN;
+			-- Should current criterion to search for implmentation comment only?
+			-- Implementation comment is also called "commented out" code, in Eiffel,
+			-- the convention is that a line starting with "--" at the first column is implementation comment.
+
+feature -- Setting
+
+	set_is_for_implementation_comment (b: BOOLEAN) is
+			-- Set `is_for_implementation_comment' with `b'.
+		do
+			is_for_implementation_comment := b
+		ensure
+			is_for_implementation_comment_set: is_for_implementation_comment = b
 		end
 
 indexing

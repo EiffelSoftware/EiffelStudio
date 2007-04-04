@@ -123,7 +123,7 @@ feature -- Commands
 				zone.on_focus_in (a_content)
 				docking_manager.property.set_last_focus_content (content)
 			end
-			if not zone.is_displayed then
+			if zone /= Void and then not zone.is_displayed then
 				-- Maybe current is hidden, we restore zones normal state in that dock area.
 				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
 			end

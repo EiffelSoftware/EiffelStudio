@@ -321,12 +321,18 @@ feature -- Actions
 							l_archive := merge_archive_from_archive_table (l_archive_tbl, l_archive)
 						end
 					end
+					metric_manager.clear_last_error
 					metric_manager.store_metric_archive (l_file_name, l_archive)
 					display_status_message ("")
 					on_new_archive_checked (True, True, l_archive)
 					on_reference_metric_archive_text_change
 					on_current_metric_archive_text_change
-					display_message (metric_names.t_metric_archive_calculation_finished)
+					if metric_manager.has_error then
+						display_message (metric_manager.last_error.message)
+						metric_manager.clear_last_error
+					else
+						display_message (metric_names.t_metric_archive_calculation_finished)
+					end
 				end
 			end
 		end

@@ -25,9 +25,9 @@ inherit
 
 	EB_METRIC_ACTION_SEQUENCES
 
-	EB_METRIC_FILE_LOADER
-
 	SHARED_FLAGS
+
+	EB_CUSTOMIZED_FORMATTER_UTILITY [EB_METRIC]
 
 create
 	make
@@ -303,21 +303,6 @@ feature -- Access
 			l_metrics.go_to (l_cursor)
 		end
 
-	new_metric_with_name (a_name: STRING): EB_METRIC is
-			-- New instance of the metric whose name is `a_name'
-		require
-			a_name_attached: a_name /= Void
-			metric_exists: has_metric (a_name)
-		local
-			l_factory: EB_LOAD_METRIC_DEFINITION_FACTORY
-			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
-		do
-			create l_factory
-			create l_callback.make_with_factory (l_factory)
-			l_callback.set_is_for_whole_file (False)
-			Result := metric_with_name_internal (a_name).new_instance (l_callback)
-		end
-
 	ordered_metrics (a_metric_order_tester: FUNCTION [ANY, TUPLE [EB_METRIC, EB_METRIC], BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is
 			-- All metrics in order retrieved by `a_metric_order_tester'.
 			-- If `a_flat' is True, DO NOT sort metrics according to unit, and all sorted metrics will be in a list with the key `no_unit'.
@@ -450,15 +435,30 @@ feature -- Access
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
+			l_tuple: TUPLE [l_metrics: LIST [EB_METRIC]; l_error: EB_METRIC_ERROR]
 		do
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
-			last_error := parse_file (a_file_name, l_callback)
+			l_tuple := items_from_file (a_file_name, l_callback, agent (l_callback.metrics).linear_representation, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name)))
 			if not has_error then
-				Result := l_callback.metrics.linear_representation
-			else
-				backup_file (a_file_name)
+				last_error := l_tuple.l_error
+				if not has_error then
+					Result := l_tuple.l_metrics
+				else
+					Result := Void
+					backup_file (a_file_name)
+				end
 			end
+		end
+
+	create_last_error (a_error_message: STRING_GENERAL) is
+			-- Create `last_error' to contain message `a_error_message'.
+		require
+			a_error_message_attached: a_error_message /= Void
+		do
+			create last_error.make (a_error_message)
+		ensure
+			has_error: has_error
 		end
 
 	archive_history: EB_METRIC_ARCHIVE
@@ -555,35 +555,13 @@ feature -- Metric management
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
-			l_file: PLAIN_TEXT_FILE
-			l_xml_generator: EB_METRIC_XML_WRITER
-			l_retried: BOOLEAN
+			l_userdefined_metrics: LINKED_LIST [EB_METRIC]
+			l_xml_generator: EB_METRIC_XML_WRITER [EB_METRIC]
 		do
-			if not l_retried then
-				clear_last_error
-				create l_file.make_create_read_write (a_file_name)
-				create l_xml_generator.make
-				l_file.put_string ("<metric>%N")
-				from
-					metrics.start
-				until
-					metrics.after
-				loop
-					if not metrics.item.is_predefined then
-						l_xml_generator.set_indent (1)
-						l_xml_generator.clear_text
-						l_xml_generator.append_text (metrics.item)
-						l_file.put_string (l_xml_generator.text)
-					end
-					metrics.forth
-				end
-				l_file.put_string ("</metric>%N")
-				l_file.close
-			end
-		rescue
-			create last_error.make (metric_names.err_file_not_writable (a_file_name))
-			l_retried := True
-			retry
+			create l_xml_generator.make
+			create l_userdefined_metrics.make
+			metrics.do_if (agent l_userdefined_metrics.extend, agent (a_metric: EB_METRIC): BOOLEAN do Result := not a_metric.is_predefined end)
+			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name)))
 		end
 
 	store_userdefined_metrics is
@@ -593,6 +571,7 @@ feature -- Metric management
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
+				workbench.create_data_directory
 				create l_folder.make (userdefined_metrics_path)
 				if not l_folder.exists then
 					l_folder.create_dir
@@ -731,13 +710,14 @@ feature -- Metric management
 		do
 			if not l_retried then
 				if archive_history.count > 0 then
+					workbench.create_data_directory
 					create l_folder.make (userdefined_metrics_path)
 					if not l_folder.exists then
 						l_folder.create_dir
 					end
 					clear_last_error
 					archive_history.clear_last_error
-					archive_history.store_archive (archive_history_file)
+					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file)))
 					if archive_history.has_error then
 						last_error := archive_history.last_error
 					end
@@ -795,7 +775,7 @@ feature -- Metric archive
 			clear_last_error
 			create l_archive.make
 			a_archive.do_all (agent l_archive.insert_archive_node)
-			l_archive.store_archive (a_file_name)
+			l_archive.store_archive (a_file_name, agent l_archive.create_last_error (metric_names.err_file_not_writable (a_file_name)))
 			last_error := l_archive.last_error
 		end
 

@@ -265,6 +265,12 @@ feature{NONE} -- Implementation/Data
 	metric_property: MENU_PROPERTY [STRING_GENERAL]
 			-- Property to setup metric
 
+	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_FORMATTER_DESP is
+			-- Data from `a_row'.
+		do
+			Result ?= a_row.data
+		end
+
 feature{NONE} -- Implementation
 
 	setup_item_grid is

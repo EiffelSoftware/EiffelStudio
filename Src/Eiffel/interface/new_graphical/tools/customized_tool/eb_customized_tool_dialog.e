@@ -126,6 +126,12 @@ feature{NONE} -- Implementation/Data
 	handler_dialog: EB_STONE_HANDLER_DIALOG
 			-- Dialog to setup stone handler
 
+	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_TOOL_DESP is
+			-- Data from `a_row'.
+		do
+			Result ?= a_row.data
+		end
+
 feature{NONE} -- Implementation
 
 	load_descriptors is

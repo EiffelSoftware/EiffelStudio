@@ -58,7 +58,6 @@ feature{NONE} -- Initialization
 			set_is_for_archive (a_for_archive)
 		end
 
-
 feature -- Access
 
 	change_value_actions: ACTION_SEQUENCE [TUPLE] is
@@ -103,7 +102,6 @@ feature -- Setting
 			l_value: TUPLE [a_metric_name: STRING; a_parent_used: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]
 			l_tester: EB_METRIC_VALUE_TESTER
 			l_metric_name: STRING
-			l_use_external: BOOLEAN_REF
 		do
 			check domain /= Void end
 			a_criterion.set_domain (domain.twin)
@@ -116,17 +114,13 @@ feature -- Setting
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_use_external := l_value.a_parent_used
-			if l_use_external = Void then
-				l_use_external := False
-			end
 			l_tester := l_value.a_tester
 			if l_tester = Void then
 				create l_tester.make
 			end
 			a_criterion.set_metric_name (l_metric_name)
 			a_criterion.set_value_tester (l_tester)
-			a_criterion.set_should_delayed_domain_from_parent_be_used (l_use_external.item)
+			a_criterion.set_should_delayed_domain_from_parent_be_used (l_value.a_parent_used)
 		end
 
 	set_is_for_archive (b: BOOLEAN) is

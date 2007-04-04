@@ -9,9 +9,6 @@ indexing
 deferred class
 	EB_METRIC_VISITABLE
 
-inherit
-	EB_METRIC_FILE_LOADER
-
 feature -- Access
 
 	visitable_name: STRING_GENERAL is
@@ -21,44 +18,27 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_instance (a_callback: EB_LOAD_METRIC_CALLBACKS): like Current is
-			-- New instance of Current using `a_callback'.
-			-- Void if error occurs.
-		require
-			a_callback_attached: a_callback /= Void
-		local
-			l_xml_writer: EB_METRIC_XML_WRITER
-			l_error: EB_METRIC_ERROR
-		do
-			a_callback.set_first_parsed_node (Void)
-			create l_xml_writer.make
-			l_xml_writer.append_text (Current)
-			l_error := parse_from_string (l_xml_writer.text, a_callback)
-			if l_error = Void then
-				Result ?= a_callback.first_parsed_node
-			end
-		end
-
 	identical_new_instance: like Current is
 			-- Identical new instance of Current.
 			-- Void if error occurs.
 		local
 			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
+			l_xml_generator: EB_METRIC_XML_WRITER [like Current]
+			l_document: XM_DOCUMENT
 		do
+			create l_xml_generator.make
+			l_document := l_xml_generator.xml_document (Current)
+
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
 			l_callback.set_is_for_whole_file (False)
-			Result := new_instance (l_callback)
+
+			l_document.process_to_events (l_callback)
+			if not l_callback.has_error then
+				Result ?= l_callback.first_parsed_node
+			end
 		end
 
 feature -- Process
-
-	append_xml (a_xml_writer: EB_METRIC_XML_WRITER) is
-			-- Append XML representation of Current into `a_xml_writer'.
-		require
-			a_xml_writer_attached: a_xml_writer /= Void
-		do
-			a_xml_writer.append_text (Current)
-		end
 
 	process (a_visitor: EB_METRIC_VISITOR) is
 			-- Process current using `a_visitor'.

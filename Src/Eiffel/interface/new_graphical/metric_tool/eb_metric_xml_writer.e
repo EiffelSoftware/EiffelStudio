@@ -1,689 +1,74 @@
 indexing
-	description: "Visitor to generate xml representation for metric"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Generator to generate xml for metric related items"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_METRIC_XML_WRITER
+	EB_METRIC_XML_WRITER [G -> EB_METRIC_VISITABLE]
 
 inherit
-	EB_METRIC_VISITOR
-
 	EB_METRIC_XML_CONSTANTS
 
-	EB_METRIC_SHARED
+	EB_METRIC_VISITOR
 
 	QL_SHARED_NAMES
+
+	EB_METRIC_SHARED
 
 create
 	make
 
-feature{NONE} -- Initialization
+feature{NONE} -- Implementation
 
 	make is
 			-- Initialize.
 		do
-			create text.make (4096)
-		ensure
-			text_attached: text /= Void
+			create element_stack.make
+			create namespace.make_default
 		end
 
-feature -- Xml generation
+feature -- Generate
 
-	append_text (a_item: EB_METRIC_VISITABLE) is
-			-- Append XML representation of `a_item' to `text'.
+	xml_element (a_item: G; a_parent: XM_COMPOSITE): XM_ELEMENT is
+			-- Xml element for `a_item'
+			-- Generated xml element will be the last child of `a_parent'.
 		require
 			a_item_attached: a_item /= Void
+			a_parent_attached: a_parent /= Void
 		do
+			element_stack.wipe_out
+			element_stack.extend (a_parent)
 			a_item.process (Current)
-		end
-
-	clear_text is
-			-- Clear `text'.
-		do
-			text.wipe_out
+			Result := target_element
 		ensure
-			text_cleared: text.is_empty
+			result_attached: Result /= Void
 		end
 
-	set_indent (a_indent: INTEGER) is
-			-- Set `indent_level' with `a_indent'
-		require
-			a_indent_non_negative: a_indent >= 0
+	xml_document (a_item: G): XM_DOCUMENT is
+			-- Xml document for `a_item'
+		local
+			l_element: XM_ELEMENT
 		do
-			indent_level := a_indent
+			create Result.make
+			element_stack.extend (Result)
+			l_element := xml_element (a_item, Result)
+			Result.wipe_out
+			Result.set_root_element (l_element)
 		ensure
-			indent_level_set: indent_level = a_indent
+			result_attached: Result /= Void
 		end
-
-feature{NONE} -- Process
-
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
-			-- Process `a_basic_metric'.
-		do
-			append_tab (indent_level)
-			append_start_tag (n_basic_metric, metric_identifier_table (a_basic_metric))
-			append_new_line
-			indent
-			if a_basic_metric.description /= Void then
-				append_indent
-				append_start_tag (n_description, Void)
-				append_content (a_basic_metric.description)
-				append_end_tag (n_description)
-				append_new_line
-			end
-			if
-				a_basic_metric.criteria /= Void
-			then
-				append_indent
-				append_start_tag (n_criterion, Void)
-				append_new_line
-				indent
-				a_basic_metric.criteria.process (Current)
-				exdent
-				append_indent
-				append_end_tag (n_criterion)
-				append_new_line
-			end
-			exdent
-			append_tab (indent_level)
-			append_end_tag (n_basic_metric)
-			append_new_line
-		end
-
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
-			-- Process `a_linear_metric'.
-		local
-			l_variable_metric: LIST [STRING]
-			l_coefficient: LIST [DOUBLE]
-		do
-			append_tab (indent_level)
-			append_start_tag (n_linear_metric, metric_identifier_table (a_linear_metric))
-			append_new_line
-			indent
-			if a_linear_metric.description /= Void then
-				append_tab (indent_level)
-				append_start_tag (n_description, Void)
-				append_content (a_linear_metric.description)
-				append_end_tag (n_description)
-				append_new_line
-			end
-			if
-				a_linear_metric.variable_metric /= Void and then
-				not a_linear_metric.variable_metric.is_empty
-			then
-				from
-					l_variable_metric := a_linear_metric.variable_metric
-					l_coefficient := a_linear_metric.coefficient
-					l_variable_metric.start
-					l_coefficient.start
-				until
-					l_variable_metric.after
-				loop
-					append_variable_metric (l_variable_metric.item, l_coefficient.item.out)
-					l_variable_metric.forth
-					l_coefficient.forth
-				end
-			end
-			exdent
-			append_tab (indent_level)
-			append_end_tag (n_linear_metric)
-			append_new_line
-		end
-
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
-			-- Process `a_ratio_metric'.
-		local
-			l_attr_tbl: like metric_identifier_table
-		do
-			append_tab (indent_level)
-			l_attr_tbl := metric_identifier_table (a_ratio_metric)
-			l_attr_tbl.put (a_ratio_metric.numerator_metric_name, n_numerator)
-			l_attr_tbl.put (a_ratio_metric.numerator_coefficient.out, n_numerator_coefficient)
-			l_attr_tbl.put (a_ratio_metric.denominator_metric_name, n_denominator)
-			l_attr_tbl.put (a_ratio_metric.denominator_coefficient.out, n_denominator_coefficient)
-			append_start_tag (n_ratio_metric, l_attr_tbl)
-			append_end_tag (n_ratio_metric)
-			append_new_line
-		end
-
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			check
-				should_not_arrive_here: False
-			end
-		end
-
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			append_indent
-			append_start_tag (n_domain_criterion, criterion_identifier_table (a_criterion))
-			append_new_line
-			indent
-			a_criterion.domain.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_domain_criterion)
-			append_new_line
-		end
-
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			l_attr_tbl.put (a_criterion.only_current_version.out, n_only_current_version)
-			append_indent
-			append_start_tag (n_caller_criterion, l_attr_tbl)
-			append_new_line
-			indent
-			a_criterion.domain.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_caller_criterion)
-			append_new_line
-		end
-
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			l_attr_tbl.put (a_criterion.indirect_referenced_class_retrieved.out, n_indirect)
-			l_attr_tbl.put (a_criterion.normal_referenced_class_retrieved.out, n_normal)
-			l_attr_tbl.put (a_criterion.only_syntactically_referencedd_class_retrieved.out, n_only_syntactical)
-			append_indent
-			append_start_tag (n_client_criterion, l_attr_tbl)
-			append_new_line
-			indent
-			a_criterion.domain.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_client_criterion)
-			append_new_line
-		end
-
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			l_attr_tbl.put (a_criterion.is_case_sensitive.out, n_case_sensitive)
-			l_attr_tbl.put (matching_strategy_name (a_criterion.matching_strategy), n_matching_strategy)
-			append_indent
-			append_start_tag (n_text_criterion, l_attr_tbl)
-			append_new_line
-			indent
-			append_indent
-			append_start_tag (n_text, Void)
-			append_content (a_criterion.text)
-			append_end_tag (n_text)
-			append_new_line
-			exdent
-			append_indent
-			append_end_tag (n_text_criterion)
-			append_new_line
-		end
-
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			append_indent
-			append_start_tag (n_path_criterion, criterion_identifier_table (a_criterion))
-			append_new_line
-			indent
-			append_indent
-			append_start_tag (n_path, Void)
-			append_content (a_criterion.path)
-			append_end_tag (n_path)
-			append_new_line
-			exdent
-			append_indent
-			append_end_tag (n_path_criterion)
-			append_new_line
-		end
-
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			append_indent
-			append_start_tag (n_normal_criterion, criterion_identifier_table (a_criterion))
-			append_end_tag (n_normal_criterion)
-			append_new_line
-		end
-
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			l_attr_tbl.put (a_criterion.metric_name, n_metric_name)
-			if a_criterion.should_delayed_domain_from_parent_be_used then
-				l_attr_tbl.put (a_criterion.should_delayed_domain_from_parent_be_used.out, n_use_external_delayed)
-			end
-			append_indent
-			append_start_tag (n_value_criterion, l_attr_tbl)
-			append_new_line
-			indent
-			a_criterion.domain.process (Current)
-			a_criterion.value_tester.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_value_criterion)
-			append_new_line
-		end
-
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			append_indent
-			append_new_line
-			process_list (a_criterion.operands)
-		end
-
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			append_indent
-			append_start_tag (n_and_criterion, l_attr_tbl)
-			indent
-			process_nary_criterion (a_criterion)
-			exdent
-			append_indent
-			append_end_tag (n_and_criterion)
-			append_new_line
-		end
-
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
-			-- Process `a_criterion'.
-		local
-			l_attr_tbl: like criterion_identifier_table
-		do
-			l_attr_tbl := criterion_identifier_table (a_criterion)
-			append_indent
-			append_start_tag (n_or_criterion, l_attr_tbl)
-			indent
-			process_nary_criterion (a_criterion)
-			exdent
-			append_indent
-			append_end_tag (n_or_criterion)
-			append_new_line
-		end
-
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
-			-- Process `a_domain'.
-		do
-			append_indent
-			append_start_tag (n_domain, Void)
-			append_new_line
-			indent
-			a_domain.do_all (agent safe_process_item ({EB_METRIC_DOMAIN_ITEM}?))
-			exdent
-			append_indent
-			append_end_tag (n_domain)
-			append_new_line
-		end
-
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			check
-				should_not_arrive_here: False
-			end
-		end
-
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_target, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_group, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_folder, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_class, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_feature, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-			append_domain_item (n_delayed, a_item.text_of_id, a_item.library_target_uuid)
-		end
-
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
-			-- Process `a_item'.
-		local
-			l_attr: HASH_TABLE [STRING, STRING]
-			l_type_name: STRING
-		do
-			create l_attr.make (4)
-			l_attr.put (a_item.metric_name, n_name)
-			inspect
-				a_item.metric_type
-			when {EB_METRIC_SHARED}.basic_metric_type then
-				l_type_name := n_basic
-			when {EB_METRIC_SHARED}.linear_metric_type then
-				l_type_name := n_linear
-			when {EB_METRIC_SHARED}.ratio_metric_type then
-				l_type_name := n_ratio
-			end
-			l_attr.put (l_type_name, n_type)
-			l_attr.put (a_item.calculated_time.out, n_time)
-			l_attr.put (a_item.value.out, n_value)
-			l_attr.put (a_item.uuid.out, n_uuid)
-			l_attr.put (a_item.is_result_filtered.out, n_filter)
-			append_indent
-			append_start_tag (n_metric, l_attr)
-			append_new_line
-			indent
-			a_item.input_domain.process (Current)
-			a_item.value_tester.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_metric)
-			append_new_line
-		end
-
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
-			-- Process `a_item'.
-		local
-			l_attr: HASH_TABLE [STRING, STRING]
-			l_item_attr: HASH_TABLE [STRING, STRING]
-			l_testers: LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
-			l_tester: TUPLE [l_retriever: EB_METRIC_VALUE_RETRIEVER; l_operator: INTEGER]
-		do
-			create l_attr.make (1)
-			create l_item_attr.make (2)
-			if a_item.is_anded then
-				l_attr.put (query_language_names.ql_cri_and, n_relation)
-			else
-				l_attr.put (query_language_names.ql_cri_or, n_relation)
-			end
-			append_indent
-			append_start_tag (n_tester, l_attr)
-			append_new_line
-			indent
-			from
-				l_testers := a_item.criteria
-				l_testers.start
-			until
-				l_testers.after
-			loop
-				l_item_attr.wipe_out
-				append_indent
-				l_tester := l_testers.item
-				l_item_attr.put (operator_table.item (l_tester.l_operator), n_name)
-				append_start_tag (n_tester_item, l_item_attr)
-				append_new_line
-				indent
-				l_tester.l_retriever.process (Current)
-				exdent
-				append_indent
-				append_end_tag (n_tester_item)
-				append_new_line
-				l_testers.forth
-			end
-			exdent
-			append_indent
-			append_end_tag (n_tester)
-			append_new_line
-		end
-
-	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		local
-			l_attr: HASH_TABLE [STRING, STRING]
-		do
-			create l_attr.make (1)
-			l_attr.put (a_item.value_internal.out, n_value)
-			append_indent
-			append_start_tag (n_constant_value, l_attr)
-			append_end_tag (n_constant_value)
-			append_new_line
-		end
-
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		local
-			l_attr: HASH_TABLE [STRING, STRING]
-		do
-			create l_attr.make (1)
-			l_attr.put (a_item.metric_name, n_metric_name)
-			if a_item.is_external_delayed_domain_used then
-				l_attr.put (a_item.is_external_delayed_domain_used.out, n_use_external_delayed)
-			end
-			append_indent
-			append_start_tag (n_metric_value, l_attr)
-			append_new_line
-			indent
-			a_item.input_domain.process (Current)
-			exdent
-			append_indent
-			append_end_tag (n_metric_value)
-			append_new_line
-		end
-
-feature -- Access
-
-	text: STRING
-			-- Text which contains xml representation of the metric been visited
-
-	indent_level: INTEGER
-			-- Number of tab indent
 
 feature{NONE} -- Implementation
 
-	append_tab (n: INTEGER) is
-			-- Append `n' tabs in `text'.
-		require
-			n_non_negative: n >= 0
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > n
-			loop
-				text.append_character ('%T')
-				i := i + 1
-			end
-		end
+	element_stack: LINKED_STACK [XM_COMPOSITE]
+			-- Stack of generated xml element
 
-	append_domain_item (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING) is
-			-- Append domain item with `a_attr_tbl' in `text'.
-		require
-			a_type_attached: a_type /= Void
-			not_a_type_is_empty: not a_type.is_empty
-			a_id_attached: a_id /= Void
-		local
-			l_attr_tbl: HASH_TABLE [STRING, STRING]
-		do
-			create l_attr_tbl.make (3)
-			l_attr_tbl.put (a_type, n_type)
-			l_attr_tbl.put (a_id, n_id)
-			if a_library_target_uuid /= Void then
-				l_attr_tbl.put (a_library_target_uuid, n_library_target_uuid)
-			end
-			append_indent
-			append_start_tag (n_domain_item, l_attr_tbl)
-			append_end_tag (n_domain_item)
-			append_new_line
-		end
+	namespace: XM_NAMESPACE
+			-- Default name space
 
-	append_new_line is
-			-- Append a new line character in `text'.
-		do
-			text.append_character ('%N')
-		end
-
-	append_content (a_content: STRING) is
-			-- Append `a_content' into `text'.
-		require
-			a_content_attached: a_content /= Void
-		do
-			text.append (a_content)
-		end
-
-	append_start_tag (a_tag_name: STRING; a_attr: HASH_TABLE [STRING, STRING]) is
-			-- Append an element whose name is `a_tag_name' and attributes is `a_attri' in `text'.
-			-- Key of `a_attr' is attribute name, and value of `a_attr' is attribute value.
-		require
-			a_tag_name_attached: a_tag_name /= Void
-			not_a_tag_name_is_empty: not a_tag_name.is_empty
-		local
-			l_text: STRING
-		do
-			l_text := text
-			l_text.append_character ('<')
-			l_text.append (a_tag_name)
-			if a_attr /= Void and then not a_attr.is_empty then
-				l_text.append_character (' ')
-				from
-					a_attr.start
-					append_attribute (a_attr.key_for_iteration, a_attr.item_for_iteration)
-					a_attr.forth
-				until
-					a_attr.after
-				loop
-					l_text.append_character (' ')
-					append_attribute (a_attr.key_for_iteration, a_attr.item_for_iteration)
-					a_attr.forth
-				end
-			end
-			l_text.append_character ('>')
-		end
-
-	append_end_tag (a_tag_name: STRING) is
-			-- Append an element end tag `a_tag_name' into `text'.
-		require
-			a_tag_name_attached: a_tag_name /= Void
-			not_a_tag_name_is_empty: not a_tag_name.is_empty
-		do
-			text.append_character ('<')
-			text.append_character ('/')
-			text.append (a_tag_name)
-			text.append_character ('>')
-		end
-
-	append_attribute (a_name: STRING; a_value: STRING) is
-			-- Append attribute with name `a_name' and value `a_value' into `text'.
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			a_value_attached: a_value /= Void
-		do
-			text.append (a_name)
-			text.append_character ('=')
-			text.append_character ('%"')
-			text.append (a_value)
-			text.append_character ('%"')
-		end
-
-	metric_identifier_table (a_metric: EB_METRIC): HASH_TABLE [STRING, STRING] is
-			-- Hash table to contain name and unit attribute for `a_metric'.
-		require
-			a_metric_attached: a_metric /= Void
-		do
-			create Result.make (3)
-			Result.put (a_metric.name, n_name)
-			Result.put (a_metric.unit.name, n_unit)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	criterion_identifier_table (a_criterion: EB_METRIC_CRITERION): HASH_TABLE [STRING, STRING] is
-			-- Hash table to contain name, scope, negation, and connector for `a_criterion'.
-		require
-			a_criterion_attached: a_criterion /= Void
-		do
-			create Result.make (3)
-			Result.put (a_criterion.name, n_name)
-			Result.put (a_criterion.scope.name, n_unit)
-			Result.put (a_criterion.is_negation_used.out, n_negation)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	indent is
-			-- Increase `indent_level' by 1.
-		do
-			indent_level := indent_level + 1
-		ensure
-			indent_level_increased: indent_level = old indent_level + 1
-		end
-
-	exdent is
-			-- Decrease `indent_level' by 1.
-		require
-			indent_level_positive: indent_level > 0
-		do
-			indent_level := indent_level - 1
-		ensure
-			indent_level_decreased: indent_level = old indent_level - 1
-		end
-
-	append_indent is
-			-- Append current `indent' tabs into `text'.
-		do
-			append_tab (indent_level)
-		end
-
-
-	append_variable_metric (a_name: STRING; a_coefficient: STRING) is
-			-- Append variable metric (in a linear metric) with name `a_name' and coefficient `a_coefficient' into `text'.
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			a_coefficient_attached: a_coefficient /= Void
-			not_a_coefficient_is_empty: not a_coefficient.is_empty
-			a_coefficient_is_number: a_coefficient.is_real
-		local
-			l_attr_table: HASH_TABLE [STRING, STRING]
-		do
-			create l_attr_table.make (3)
-			l_attr_table.put (a_name, n_name)
-			l_attr_table.put (a_coefficient, n_coefficient)
-			append_indent
-			append_start_tag (n_variable_metric, l_attr_table)
-			append_end_tag (n_variable_metric)
-			append_new_line
-		end
+	target_element: XM_ELEMENT
+			-- Last recored element
 
 	matching_strategy_name (a_strategy_id: INTEGER): STRING is
 			-- Matching strategy name of strategy id `a_strategy_id'
@@ -705,40 +90,519 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+feature{NONE} -- Process
+
+	process_metric (a_metric: EB_METRIC; a_metric_element: XM_ELEMENT) is
+			-- Process `a_metric' to generate attribute name, unit and description.
+			-- `a_metric_element' is the XML element for `a_metric'.
+		require
+			a_metric_attached: a_metric /= Void
+			a_metric_element_attached: a_metric_element /= Void
+		local
+			l_stack: like element_stack
+			l_description: XM_ELEMENT
+			l_content: XM_CHARACTER_DATA
+		do
+			l_stack := element_stack
+
+				-- Generate attribute "name", "unit".
+			a_metric_element.add_unqualified_attribute (n_name, a_metric.name)
+			a_metric_element.add_unqualified_attribute (n_unit, a_metric.unit.name)
+
+				-- Generate "description" element if any.
+			if a_metric.description /= Void then
+				create l_description.make_last (a_metric_element, n_description, namespace)
+				create l_content.make_last (l_description, a_metric.description)
+			end
+		end
+
+	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
+			-- Process `a_basic_metric'.
+		local
+			l_criterion: XM_ELEMENT
+			l_metric: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate basic metric element.
+			l_parent := element_stack.item
+			create l_metric.make (l_parent, n_basic_metric, namespace)
+			l_parent.force_last (l_metric)
+			element_stack.extend (l_metric)
+
+			process_metric (a_basic_metric, l_metric)
+				-- Generate "criterion" element if any.
+			if a_basic_metric.criteria /= Void then
+				l_parent := element_stack.item
+				create l_criterion.make (l_parent, n_criterion, namespace)
+				l_parent.force_last (l_criterion)
+				element_stack.extend (l_criterion)
+				a_basic_metric.criteria.process (Current)
+				element_stack.remove
+			end
+			target_element := l_metric
+			element_stack.remove
+		end
+
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+			-- Process `a_linear_metric'.
+		local
+			l_variable_metric: LIST [STRING]
+			l_coefficient: LIST [DOUBLE]
+			l_metric: XM_ELEMENT
+			l_linear: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate basic linear element.
+			l_parent := element_stack.item
+			create l_linear.make (l_parent, n_linear_metric, namespace)
+			l_parent.force_last (l_linear)
+			element_stack.extend (l_linear)
+
+			process_metric (a_linear_metric, l_linear)
+			if a_linear_metric.variable_metric /= Void and then not a_linear_metric.variable_metric.is_empty then
+				from
+					l_variable_metric := a_linear_metric.variable_metric
+					l_coefficient := a_linear_metric.coefficient
+					l_variable_metric.start
+					l_coefficient.start
+				until
+					l_variable_metric.after
+				loop
+					create l_metric.make_last (l_linear, n_variable_metric, namespace)
+					l_metric.add_unqualified_attribute (n_name, l_variable_metric.item)
+					l_metric.add_unqualified_attribute (n_coefficient, l_coefficient.item.out)
+					l_variable_metric.forth
+					l_coefficient.forth
+				end
+			end
+
+			target_element := l_linear
+			element_stack.remove
+		end
+
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+			-- Process `a_ratio_metric'.
+		local
+			l_ratio: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate ratio metric element.
+			l_parent := element_stack.item
+			create l_ratio.make (l_parent, n_ratio_metric, namespace)
+			l_parent.force_last (l_ratio)
+			process_metric (a_ratio_metric, l_ratio)
+			element_stack.extend (l_ratio)
+
+				-- Add attributes to element.
+			l_ratio.add_unqualified_attribute (n_numerator, a_ratio_metric.numerator_metric_name)
+			l_ratio.add_unqualified_attribute (n_numerator_coefficient, a_ratio_metric.numerator_coefficient.out)
+			l_ratio.add_unqualified_attribute (n_denominator, a_ratio_metric.denominator_metric_name)
+			l_ratio.add_unqualified_attribute (n_denominator_coefficient, a_ratio_metric.denominator_coefficient.out)
+
+			target_element := l_ratio
+			element_stack.remove
+		end
+
+	process_criterion_common (a_criterion: EB_METRIC_CRITERION; a_element: XM_ELEMENT) is
+			-- Add attribute "name", "unit" and "negation" for `a_criterion' into `a_element'.
+		require
+			a_criterion_attached: a_criterion /= Void
+			a_element_attached: a_element /= Void
+		do
+			a_element.add_unqualified_attribute (n_name, a_criterion.name)
+			a_element.add_unqualified_attribute (n_unit, a_criterion.scope.name)
+			a_element.add_unqualified_attribute (n_negation, a_criterion.is_negation_used.out)
+		end
+
+	process_criterion (a_criterion: EB_METRIC_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			check
+				should_not_arrive_here: False
+			end
+		end
+
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_domain_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			element_stack.extend (l_criterion)
+
+			a_criterion.domain.process (Current)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_caller_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			l_criterion.add_unqualified_attribute (n_only_current_version, a_criterion.only_current_version.out)
+			element_stack.extend (l_criterion)
+
+			a_criterion.domain.process (Current)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_client_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			l_criterion.add_unqualified_attribute (n_indirect, a_criterion.indirect_referenced_class_retrieved.out)
+			l_criterion.add_unqualified_attribute (n_normal, a_criterion.normal_referenced_class_retrieved.out)
+			l_criterion.add_unqualified_attribute (n_only_syntactical, a_criterion.only_syntactically_referencedd_class_retrieved.out)
+			element_stack.extend (l_criterion)
+
+			a_criterion.domain.process (Current)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_content: XM_CHARACTER_DATA
+			l_parent: XM_COMPOSITE
+			l_text: XM_ELEMENT
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_text_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			l_criterion.add_unqualified_attribute (n_case_sensitive, a_criterion.is_case_sensitive.out)
+			l_criterion.add_unqualified_attribute (n_matching_strategy, matching_strategy_name (a_criterion.matching_strategy))
+			element_stack.extend (l_criterion)
+			create l_text.make_last (l_criterion, n_text, namespace)
+			create l_content.make_last (l_text, a_criterion.text)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_content: XM_CHARACTER_DATA
+			l_parent: XM_COMPOSITE
+			l_path: XM_ELEMENT
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_path_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			element_stack.extend (l_criterion)
+
+			create l_path.make_last (l_criterion, n_path, namespace)
+			create l_content.make_last (l_path, a_criterion.path)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_normal_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			element_stack.extend (l_criterion)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_value_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			l_criterion.add_unqualified_attribute (n_metric_name, a_criterion.metric_name)
+			if a_criterion.should_delayed_domain_from_parent_be_used then
+				l_criterion.add_unqualified_attribute (n_use_external_delayed, a_criterion.should_delayed_domain_from_parent_be_used.out)
+			end
+			element_stack.extend (l_criterion)
+
+			a_criterion.domain.process (Current)
+			a_criterion.value_tester.process (Current)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			check
+				should_not_arrive_here: False
+			end
+		end
+
+	process_nary_criterion_common (a_criterion: EB_METRIC_NARY_CRITERION; a_criterion_name: STRING) is
+			-- Process `a_criterion' whose name is `a_criterion_name'.
+		require
+			a_criterion_attached: a_criterion /= Void
+			a_criterion_name_attached: a_criterion_name /= Void
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (element_stack.item, a_criterion_name, namespace)
+			l_parent.force_last (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			element_stack.extend (l_criterion)
+
+			process_list (a_criterion.operands)
+
+			target_element := l_criterion
+			element_stack.remove
+		end
+
+
+	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_nary_criterion_common (a_criterion, n_and_criterion)
+		end
+
+	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_nary_criterion_common (a_criterion, n_or_criterion)
+		end
+
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		local
+			l_domain: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_domain.make (l_parent, n_domain, namespace)
+			l_parent.force_last (l_domain)
+			element_stack.extend (l_domain)
+
+			a_domain.do_all (agent safe_process_item ({EB_METRIC_DOMAIN_ITEM}?))
+
+			target_element := l_domain
+			element_stack.remove
+		end
+
+	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			check
+				should_not_arrive_here: False
+			end
+		end
+
+	process_domain_item_common (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING) is
+			-- Add a domain element.
+		local
+			l_domain_item: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_domain_item.make (l_parent, n_domain_item, namespace)
+			l_parent.force_last (l_domain_item)
+			l_domain_item.add_unqualified_attribute (n_type, a_type)
+			l_domain_item.add_unqualified_attribute (n_id, a_id)
+			if a_library_target_uuid /= Void then
+				l_domain_item.add_unqualified_attribute (n_library_target_uuid, a_library_target_uuid)
+			end
+		end
+
+	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_target, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_group, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_folder, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_class, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_feature, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+			-- Process `a_item'.
+		do
+			process_domain_item_common (n_delayed, a_item.text_of_id, a_item.library_target_uuid)
+		end
+
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+			-- Process `a_item'.
+		local
+			l_archive: XM_ELEMENT
+			l_type_name: STRING
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_archive.make (l_parent, n_metric, namespace)
+			l_parent.force_last (l_archive)
+			inspect
+				a_item.metric_type
+			when {EB_METRIC_SHARED}.basic_metric_type then
+				l_type_name := n_basic
+			when {EB_METRIC_SHARED}.linear_metric_type then
+				l_type_name := n_linear
+			when {EB_METRIC_SHARED}.ratio_metric_type then
+				l_type_name := n_ratio
+			end
+			l_archive.add_unqualified_attribute (n_name, a_item.metric_name)
+			l_archive.add_unqualified_attribute (n_type, l_type_name)
+			l_archive.add_unqualified_attribute (n_time, a_item.calculated_time.out)
+			l_archive.add_unqualified_attribute (n_value,a_item.value.out)
+			l_archive.add_unqualified_attribute (n_uuid, a_item.uuid.out)
+			l_archive.add_unqualified_attribute (n_filter, a_item.is_result_filtered.out)
+
+			element_stack.extend (l_archive)
+
+			a_item.input_domain.process (Current)
+			a_item.value_tester.process (Current)
+
+			target_element := l_archive
+			element_stack.remove
+		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		local
+			l_testers_element: XM_ELEMENT
+			l_testers: LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
+			l_tester: TUPLE [l_retriever: EB_METRIC_VALUE_RETRIEVER; l_operator: INTEGER]
+			l_tester_item: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			if not a_item.criteria.is_empty then
+				l_parent := element_stack.item
+				create l_testers_element.make (l_parent, n_tester, namespace)
+				l_parent.force_last (l_testers_element)
+				element_stack.extend (l_testers_element)
+				if a_item.is_anded then
+					l_testers_element.add_unqualified_attribute (n_relation, query_language_names.ql_cri_and)
+				else
+					l_testers_element.add_unqualified_attribute (n_relation, query_language_names.ql_cri_or)
+				end
+
+				from
+					l_testers := a_item.criteria
+					l_testers.start
+				until
+					l_testers.after
+				loop
+					l_tester := l_testers.item
+					create l_tester_item.make_last (l_testers_element, n_tester_item, namespace)
+					l_tester_item.add_unqualified_attribute (n_name, operator_table.item (l_tester.l_operator))
+					element_stack.extend (l_tester_item)
+					l_tester.l_retriever.process (Current)
+					element_stack.remove
+					l_testers.forth
+				end
+
+				target_element := l_testers_element
+				element_stack.remove
+			end
+		end
+
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		local
+			l_retriever: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_retriever.make (l_parent, n_constant_value, namespace)
+			l_parent.force_last (l_retriever)
+			l_retriever.add_unqualified_attribute (n_value, a_item.value_internal.out)
+			target_element := l_retriever
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		local
+			l_retriever: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+			l_parent := element_stack.item
+			create l_retriever.make (l_parent, n_metric_value, namespace)
+			l_parent.force_last (l_retriever)
+			l_retriever.add_unqualified_attribute (n_metric_name, a_item.metric_name)
+			if a_item.is_external_delayed_domain_used then
+				l_retriever.add_unqualified_attribute (n_use_external_delayed, a_item.is_external_delayed_domain_used.out)
+			end
+			element_stack.extend (l_retriever)
+
+			a_item.input_domain.process (Current)
+
+			target_element := l_retriever
+			element_stack.remove
+		end
+
 invariant
-	text_attached: text /= Void
-
-indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
-
+	element_stack_attached: element_stack /= Void
 
 end

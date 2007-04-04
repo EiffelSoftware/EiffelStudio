@@ -202,9 +202,12 @@ feature{NONE} -- Implementation
 		do
 			create l_callback.make
 			set_is_file_readable (True)
-			l_desp_tuple := items_from_file (a_file, l_callback, agent l_callback.formatters, agent l_callback.last_error, agent set_is_file_readable (False))
+			clear_last_error
+			l_desp_tuple := items_from_file (a_file, l_callback, agent l_callback.formatters, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (a_file))))
 			l_descriptors := l_desp_tuple.items
-			set_last_error (l_desp_tuple.error)
+			if not has_error then
+				set_last_error (l_desp_tuple.error)
+			end
 			if a_error_agent /= Void and then has_error then
 				a_error_agent.call (Void)
 				clear_last_error

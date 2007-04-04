@@ -65,64 +65,54 @@ feature{NONE} -- Callbacks
 	on_start_tag_finish is
 			-- End of start tag.
 		do
-			if not has_error then
-				inspect
-					current_tag.item
-				when t_metric then
-					process_metric_archive_node
-				when t_domain then
-					process_domain
-				when t_domain_item then
-					process_domain_item
-				when t_tester then
-					process_tester
-				when t_tester_item then
-					process_tester_item
-				when t_constant_value then
-					process_constant_value
-				when t_metric_value then
-					process_metric_value
-				else
-					extend_location_section (Void)
-				end
-				current_attributes.clear_all
+			inspect
+				current_tag.item
+			when t_metric then
+				process_metric_archive_node
+			when t_domain then
+				process_domain
+			when t_domain_item then
+				process_domain_item
+			when t_tester then
+				process_tester
+			when t_tester_item then
+				process_tester_item
+			when t_constant_value then
+				process_constant_value
+			when t_metric_value then
+				process_metric_value
+			else
 			end
-		ensure then
-			location_stored: (not has_error) implies (location_stack.count = old location_stack.count + 1)
+			current_attributes.clear_all
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
-			if not has_error then
-				inspect
-					current_tag.item
-				when t_metric then
-					archive.extend (current_archive_node)
-					remove_domain_receiver_from_stack
-				when t_domain then
-					process_domain_finish
-				when t_tester then
-					process_tester_finish
-				when t_tester_item then
-					current_tester.insert_criterion (current_tester_item)
-					current_tester_item := Void
-					remove_receiver_from_stack (
-						value_retriever_stack,
-						metric_names.err_value_retriever_missing
-					)
-				when t_metric_value then
-					process_value_retriever_finish
-					remove_domain_receiver_from_stack
-				when t_constant_value then
-					process_value_retriever_finish
-				else
-				end
-				current_tag.remove
-				remove_location_section
+			inspect
+				current_tag.item
+			when t_metric then
+				archive.extend (current_archive_node)
+				remove_domain_receiver_from_stack
+			when t_domain then
+				process_domain_finish
+			when t_tester then
+				process_tester_finish
+			when t_tester_item then
+				current_tester.insert_criterion (current_tester_item)
+				current_tester_item := Void
+				remove_receiver_from_stack (
+					value_retriever_stack,
+					metric_names.err_value_retriever_missing
+				)
+			when t_metric_value then
+				process_value_retriever_finish
+				remove_domain_receiver_from_stack
+			when t_constant_value then
+				process_value_retriever_finish
+			else
 			end
-		ensure then
-			location_removed: (not has_error) implies (location_stack.count = old location_stack.count - 1)
+			current_tag.remove
 		end
 
 	on_content (a_content: STRING) is
@@ -146,75 +136,61 @@ feature{NONE} -- Process
 			l_filter: STRING
 			l_filter_value: BOOLEAN
 		do
-			if not has_error then
-				l_name := current_attributes.item (at_name)
-				if l_name = Void then
-					create_last_error (metric_names.err_metric_name_missing_in_archive_node)
-					extend_location_section (Void)
+			l_name := current_attributes.item (at_name)
+			if l_name = Void then
+				create_last_error (metric_names.err_metric_name_missing_in_archive_node)
+			end
+			l_type_str := current_attributes.item (at_type)
+			if l_type_str = Void then
+				create_last_error (metric_names.err_metric_type_missing)
+			else
+				l_type := metric_type_id_from_name (l_type_str)
+				if l_type = 0 then
+					create_last_error (metric_names.err_metric_type_invalid (l_type_str))
+				end
+			end
+
+			l_time := current_attributes.item (at_time)
+			if l_time = Void then
+				create_last_error (metric_names.err_archive_time_missing)
+			else
+				create l_date.make_now
+				if not l_date.date_time_valid (l_time, l_date.default_format_string) then
+					create_last_error (metric_names.err_archive_time_invalid (l_time))
+				end
+			end
+
+			l_value := current_attributes.item (at_value)
+			if l_value = Void then
+				create_last_error (metric_names.err_archive_value_missing)
+			elseif not l_value.is_real then
+				create_last_error (metric_names.err_archive_value_invalid (l_value))
+			end
+
+			l_filter := current_attributes.item (at_filter)
+			if l_filter /= Void then
+				if l_filter.is_boolean then
+					l_filter_value := l_filter.to_boolean
 				else
-					extend_location_section (l_name)
+					create_last_error (metric_names.err_filter_invalid (l_filter))
 				end
 			end
-			if not has_error then
-				l_type_str := current_attributes.item (at_type)
-				if l_type_str = Void then
-					create_last_error (metric_names.err_metric_type_missing)
-				else
-					l_type := metric_type_id_from_name (l_type_str)
-					if l_type = 0 then
-						create_last_error (metric_names.err_metric_type_invalid (l_type_str))
-					end
-				end
-			end
-			if not has_error then
-				l_time := current_attributes.item (at_time)
-				if l_time = Void then
-					create_last_error (metric_names.err_archive_time_missing)
-				else
-					create l_date.make_now
-					if not l_date.date_time_valid (l_time, l_date.default_format_string) then
-						create_last_error (metric_names.err_archive_time_invalid (l_time))
-					end
-				end
-			end
-			if not has_error then
-				l_value := current_attributes.item (at_value)
-				if l_value = Void then
-					create_last_error (metric_names.err_archive_value_missing)
-				elseif not l_value.is_real then
-					create_last_error (metric_names.err_archive_value_invalid (l_value))
-				end
-			end
-			if not has_error then
-				l_filter := current_attributes.item (at_filter)
-				if l_filter /= Void then
-					if l_filter.is_boolean then
-						l_filter_value := l_filter.to_boolean
-					else
-						create_last_error (metric_names.err_filter_invalid (l_filter))
-					end
-				end
-			end
-			if not has_error then
-				l_uuid_str := current_attributes.item (at_uuid)
-				check_uuid_validity (l_uuid_str)
-				if not has_error then
-					l_uuid := last_valid_uuid
-				end
-			end
-			if not has_error then
-				current_archive_node := factory.new_metric_arichive_node (
-					current_attributes.item (at_name),
-					l_type,
-					create {DATE_TIME}.make_from_string_default (l_time),
-					l_value.to_double,
-					create {EB_METRIC_DOMAIN}.make,
-					l_uuid_str,
-					l_filter_value
-				)
-				domain_receiver_stack.extend ([agent current_archive_node.set_input_domain, False])
-				tester_receiver_stack.extend ([agent current_archive_node.set_value_tester, False])
-			end
+
+			l_uuid_str := current_attributes.item (at_uuid)
+			check_uuid_validity (l_uuid_str)
+			l_uuid := last_valid_uuid
+
+			current_archive_node := factory.new_metric_arichive_node (
+				current_attributes.item (at_name),
+				l_type,
+				create {DATE_TIME}.make_from_string_default (l_time),
+				l_value.to_double,
+				create {EB_METRIC_DOMAIN}.make,
+				l_uuid_str,
+				l_filter_value
+			)
+			domain_receiver_stack.extend ([agent current_archive_node.set_input_domain, False])
+			tester_receiver_stack.extend ([agent current_archive_node.set_value_tester, False])
 		end
 
 feature{NONE} -- Implementation

@@ -342,7 +342,7 @@ feature{NONE} -- Actions
 			if not item_grid.selected_rows.is_empty then
 				l_row := item_grid.selected_rows.first
 				l_row_index := l_row.index
-				l_descriptor ?= l_row.data
+				l_descriptor := data_from_row (l_row)
 				check l_descriptor /= Void end
 				descriptor_row_table.remove (l_descriptor)
 				items.start
@@ -374,7 +374,7 @@ feature{NONE} -- Actions
 		local
 			l_descriptor: G
 		do
-			l_descriptor ?= a_row.data
+			l_descriptor := data_from_row (a_row)
 			check l_descriptor /= Void end
 			bind_property_grid (l_descriptor)
 			set_last_selected_descriptor (l_descriptor)
@@ -482,6 +482,11 @@ feature {NONE} -- Implementation/Data
 	descriptor_row_table: HASH_TABLE [EV_GRID_ROW, G]
 			-- Table of grid rows for descriptors
 			-- [Grid row, Descriptor displayed in that row]
+
+	data_from_row (a_row: EV_GRID_ROW): G is
+			-- Data from `a_row'.
+		deferred
+		end
 
 feature {NONE} -- Implementation
 

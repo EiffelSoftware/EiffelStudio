@@ -9,6 +9,12 @@ class
 
 feature -- Access
 
+	target: ANY
+		-- Target of PND menu item.
+
+	target_action: PROCEDURE [ANY, TUPLE]
+		-- Target agent for current transport.
+
 	name: STRING_GENERAL
 		-- Name for PND menu item.
 
@@ -35,6 +41,25 @@ feature -- Element Change
 			pixmap := a_pixmap
 		ensure
 			pixmap_assigned: pixmap = a_pixmap
+		end
+
+feature {EV_APPLICATION_I} -- Implementation
+
+	set_target (a_target: ANY)
+			-- Set `target' to `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+		ensure
+			target_assigned: target = a_target
+		end
+
+	set_target_action (a_action: PROCEDURE [ANY, TUPLE])
+		require
+			a_action_not_void: a_action /= Void
+		do
+			target_action := a_action
 		end
 
 indexing

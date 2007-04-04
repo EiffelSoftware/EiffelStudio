@@ -52,6 +52,13 @@ inherit
 			default_create
 		end
 
+	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_formatter_getter: like items_getter) is

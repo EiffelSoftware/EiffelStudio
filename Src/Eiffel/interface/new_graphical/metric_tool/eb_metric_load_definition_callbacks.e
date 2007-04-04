@@ -71,148 +71,135 @@ feature{NONE} -- Callbacks
 	on_start_tag_finish is
 			-- End of start tag.
 		do
-			if not has_error then
-				inspect
-					current_tag.item
-				when t_basic_metric then
-					process_basic_metric
-					set_first_parsed_node (current_basic_metric)
-				when t_linear_metric then
-					process_linear_metric
-					set_first_parsed_node (current_linear_metric)
-				when t_ratio_metric then
-					process_ratio_metric
-					set_first_parsed_node (current_ratio_metric)
-				when t_criterion then
-					process_criterion
-				when t_normal_criterion then
-					process_normal_criterion
-					set_first_parsed_node (current_normal_criterion)
-				when t_domain_criterion then
-					process_domain_criterion
-					set_first_parsed_node (current_domain)
-				when t_caller_criterion then
-					process_caller_callee_criterion
-					set_first_parsed_node (current_caller_criterion)
-				when t_client_criterion then
-					process_supplier_client_criterion
-					set_first_parsed_node (current_supplier_client_criterion)
-				when t_value_criterion then
-					process_value_criterion
-					set_first_parsed_node (current_value_criterion)
-				when t_text_criterion then
-					process_text_criterion
-					set_first_parsed_node (current_text_criterion)
-				when t_path_criterion then
-					process_path_criterion
-					set_first_parsed_node (current_path_criterion)
-				when t_and_criterion then
-					process_and_criterion
-					set_first_parsed_node (last_criterion)
-				when t_or_criterion then
-					process_or_criterion
-					set_first_parsed_node (last_criterion)
-				when t_variable_metric then
-					process_variable_metric
-				when t_domain then
-					process_domain
-					set_first_parsed_node (current_domain)
-				when t_domain_item then
-					process_domain_item
-					set_first_parsed_node (current_domain_item)
-				when t_tester then
-					process_tester
-					set_first_parsed_node (current_tester)
-				when t_tester_item then
-					process_tester_item
-				when t_constant_value then
-					process_constant_value
-					set_first_parsed_node (current_constant_value_retriever)
-				when t_metric_value then
-					process_metric_value
-					set_first_parsed_node (current_metric_value_retriever)
-				when t_description then
-					extend_location_section (Void)
-				when t_text then
-					extend_location_section (Void)
-				when t_path then
-					extend_location_section (Void)
-				else
-					set_first_parsed_node (Void)
-					extend_location_section (Void)
-				end
-				current_attributes.clear_all
+			inspect
+				current_tag.item
+			when t_basic_metric then
+				process_basic_metric
+				set_first_parsed_node (current_basic_metric)
+			when t_linear_metric then
+				process_linear_metric
+				set_first_parsed_node (current_linear_metric)
+			when t_ratio_metric then
+				process_ratio_metric
+				set_first_parsed_node (current_ratio_metric)
+			when t_criterion then
+				process_criterion
+			when t_normal_criterion then
+				process_normal_criterion
+				set_first_parsed_node (current_normal_criterion)
+			when t_domain_criterion then
+				process_domain_criterion
+				set_first_parsed_node (current_domain_criterion)
+			when t_caller_criterion then
+				process_caller_callee_criterion
+				set_first_parsed_node (current_caller_criterion)
+			when t_client_criterion then
+				process_supplier_client_criterion
+				set_first_parsed_node (current_supplier_client_criterion)
+			when t_value_criterion then
+				process_value_criterion
+				set_first_parsed_node (current_value_criterion)
+			when t_text_criterion then
+				process_text_criterion
+				set_first_parsed_node (current_text_criterion)
+			when t_path_criterion then
+				process_path_criterion
+				set_first_parsed_node (current_path_criterion)
+			when t_and_criterion then
+				process_and_criterion
+				set_first_parsed_node (last_criterion)
+			when t_or_criterion then
+				process_or_criterion
+				set_first_parsed_node (last_criterion)
+			when t_variable_metric then
+				process_variable_metric
+			when t_domain then
+				process_domain
+				set_first_parsed_node (current_domain)
+			when t_domain_item then
+				process_domain_item
+				set_first_parsed_node (current_domain_item)
+			when t_tester then
+				process_tester
+				set_first_parsed_node (current_tester)
+			when t_tester_item then
+				process_tester_item
+			when t_constant_value then
+				process_constant_value
+				set_first_parsed_node (current_constant_value_retriever)
+			when t_metric_value then
+				process_metric_value
+				set_first_parsed_node (current_metric_value_retriever)
+			when t_description then
+			when t_text then
+			when t_path then
+			else
+				set_first_parsed_node (Void)
 			end
-		ensure then
-			location_stored: (not has_error) implies (location_stack.count = old location_stack.count + 1)
+			current_attributes.clear_all
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		do
-			if not has_error then
-				inspect
-					current_tag.item
-				when t_description then
-					process_description_finish
-				when t_domain_criterion then
-					remove_domain_receiver_from_stack
-				when t_caller_criterion then
-					remove_domain_receiver_from_stack
-				when t_client_criterion then
-					remove_domain_receiver_from_stack
-				when t_value_criterion then
-					remove_receiver_from_stack (
-						tester_receiver_stack,
-						metric_names.err_value_tester_missing
-					)
-					remove_domain_receiver_from_stack
-				when t_text then
-					process_text_finish
-				when t_path then
-					process_path_finish
-				when t_criterion then
-					check current_criterion.count = 1 end
-					current_basic_metric.set_criteria (current_criterion.first)
-				when t_basic_metric then
-					process_metric_finish
-				when t_linear_metric then
-					process_metric_finish
-				when t_ratio_metric then
-					process_metric_finish
-				when t_and_criterion then
-					if not current_criterion_stack.is_empty then
-						current_criterion_stack.remove
-					end
-				when t_or_criterion then
-					if not current_criterion_stack.is_empty then
-						current_criterion_stack.remove
-					end
-				when t_tester then
-					process_tester_finish
-				when t_tester_item then
-					current_tester.insert_criterion (current_tester_item)
-					current_tester_item := Void
-					remove_receiver_from_stack (
-						value_retriever_stack,
-						metric_names.err_value_retriever_missing
-					)
-				when t_metric_value then
-					process_value_retriever_finish
-					remove_domain_receiver_from_stack
-				when t_domain then
-					process_domain_finish
-				when t_constant_value then
-					process_value_retriever_finish
-				else
+			inspect
+				current_tag.item
+			when t_description then
+				process_description_finish
+			when t_domain_criterion then
+				remove_domain_receiver_from_stack
+			when t_caller_criterion then
+				remove_domain_receiver_from_stack
+			when t_client_criterion then
+				remove_domain_receiver_from_stack
+			when t_value_criterion then
+				remove_receiver_from_stack (
+					tester_receiver_stack,
+					metric_names.err_value_tester_missing
+				)
+				remove_domain_receiver_from_stack
+			when t_text then
+				process_text_finish
+			when t_path then
+				process_path_finish
+			when t_criterion then
+				check current_criterion.count = 1 end
+				current_basic_metric.set_criteria (current_criterion.first)
+			when t_basic_metric then
+				process_metric_finish
+			when t_linear_metric then
+				process_metric_finish
+			when t_ratio_metric then
+				process_metric_finish
+			when t_and_criterion then
+				if not current_criterion_stack.is_empty then
+					current_criterion_stack.remove
 				end
-				create current_content.make_empty
-				current_tag.remove
-				element_stack.remove
-				remove_location_section
+			when t_or_criterion then
+				if not current_criterion_stack.is_empty then
+					current_criterion_stack.remove
+				end
+			when t_tester then
+				process_tester_finish
+			when t_tester_item then
+				current_tester.insert_criterion (current_tester_item)
+				current_tester_item := Void
+				remove_receiver_from_stack (
+					value_retriever_stack,
+					metric_names.err_value_retriever_missing
+				)
+			when t_metric_value then
+				process_value_retriever_finish
+				remove_domain_receiver_from_stack
+			when t_domain then
+				process_domain_finish
+			when t_constant_value then
+				process_value_retriever_finish
+			else
 			end
-		ensure then
-			location_removed: (not has_error) implies location_stack.count = (old location_stack.count - 1)
+			create current_content.make_empty
+			current_tag.remove
+			element_stack.remove
 		end
 
 	on_content (a_content: STRING) is
@@ -220,15 +207,13 @@ feature{NONE} -- Callbacks
 		local
 			l_current_state: INTEGER
 		do
-			if not has_error then
-				l_current_state := current_tag.item
-				if
-					l_current_state = t_description or
-					l_current_state = t_path or
-					l_current_state = t_text
-				then
-					current_content.append (a_content)
-				end
+			l_current_state := current_tag.item
+			if
+				l_current_state = t_description or
+				l_current_state = t_path or
+				l_current_state = t_text
+			then
+				current_content.append (a_content)
 			end
 		end
 
@@ -240,14 +225,12 @@ feature{NONE} -- Process
 			l_metrics: like metrics
 			l_cur_metric: like current_metric
 		do
-			if not has_error then
-				l_metrics := metrics
-				l_cur_metric := current_metric
-				if l_metrics.has (l_cur_metric.name) then
-					create_last_error (metric_names.err_duplicated_metric_name (l_cur_metric.name))
-				else
-					l_metrics.put (l_cur_metric, l_cur_metric.name)
-				end
+			l_metrics := metrics
+			l_cur_metric := current_metric
+			if l_metrics.has (l_cur_metric.name) then
+				create_last_error (metric_names.err_duplicated_metric_name (l_cur_metric.name))
+			else
+				l_metrics.put (l_cur_metric, l_cur_metric.name)
 			end
 		end
 
@@ -256,14 +239,10 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; unit: STRING]
 		do
-			if not has_error then
-				l_id := current_metric_identifier (basic_metric_type)
-				if not has_error then
-					current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit))
-					current_metric := current_basic_metric
-					create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
-				end
-			end
+			l_id := current_metric_identifier (basic_metric_type)
+			current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit))
+			current_metric := current_basic_metric
+			create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
 		end
 
 	process_linear_metric is
@@ -271,13 +250,9 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; unit: STRING]
 		do
-			if not has_error then
-				l_id := current_metric_identifier (linear_metric_type)
-				if not has_error then
-					current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit))
-					current_metric := current_linear_metric
-				end
-			end
+			l_id := current_metric_identifier (linear_metric_type)
+			current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit))
+			current_metric := current_linear_metric
 		end
 
 	process_ratio_metric is
@@ -291,44 +266,29 @@ feature{NONE} -- Process
 			l_num_coefficient: DOUBLE
 			l_den_coefficient: DOUBLE
 		do
-			if not has_error then
-				l_id := current_metric_identifier (ratio_metric_type)
+			l_id := current_metric_identifier (ratio_metric_type)
+			l_num := current_attributes.item (at_numerator)
+			l_den := current_attributes.item (at_denominator)
+			l_num_coefficient_str := current_attributes.item (at_numerator_coefficient)
+			l_den_coefficient_str := current_attributes.item (at_denominator_coefficient)
+			if l_num = Void then
+				create_last_error (metric_names.err_numerator_metric_missing)
 			end
-			if not has_error then
-				l_num := current_attributes.item (at_numerator)
-				l_den := current_attributes.item (at_denominator)
-				l_num_coefficient_str := current_attributes.item (at_numerator_coefficient)
-				l_den_coefficient_str := current_attributes.item (at_denominator_coefficient)
-				if l_num = Void then
-					create_last_error (metric_names.err_numerator_metric_missing)
-				end
-				if not has_error and then l_den = Void then
-					create_last_error (metric_names.err_denominator_metric_missing)
-				end
-				if not has_error then
-					l_num_coefficient := coefficient_for_ratio_metric (
-						l_num_coefficient_str,
-						agent metric_names.err_numerator_coefficient_invalid
-					)
-				end
-				if not has_error then
-					l_den_coefficient := coefficient_for_ratio_metric (
-						l_den_coefficient_str,
-						agent metric_names.err_denominator_coefficient_invalid
-					)
-				end
-				if not has_error then
-					current_ratio_metric := factory.new_ratio_metric (
-						l_id.name,
-						unit_table.item (l_id.unit),
-						l_num,
-						l_den,
-						l_num_coefficient,
-						l_den_coefficient
-					)
-					current_metric := current_ratio_metric
-				end
+			if l_den = Void then
+				create_last_error (metric_names.err_denominator_metric_missing)
 			end
+
+			l_num_coefficient := coefficient_for_ratio_metric (l_num_coefficient_str, agent metric_names.err_numerator_coefficient_invalid)
+			l_den_coefficient := coefficient_for_ratio_metric (l_den_coefficient_str, agent metric_names.err_denominator_coefficient_invalid)
+
+			current_ratio_metric := factory.new_ratio_metric (
+				l_id.name,
+				unit_table.item (l_id.unit),
+				l_num,
+				l_den,
+				l_num_coefficient,
+				l_den_coefficient)
+			current_metric := current_ratio_metric
 		end
 
 	process_variable_metric is
@@ -340,46 +300,34 @@ feature{NONE} -- Process
 			l_metric: STRING
 			l_coefficient_value: DOUBLE
 		do
-			if not has_error then
-				l_coefficient := current_attributes.item (at_coefficient)
-				l_metric := current_attributes.item (at_name)
-				if l_metric = Void then
-					create_last_error (metric_names.err_variable_metric_name_missing)
-					extend_location_section (Void)
-				else
-					extend_location_section (l_metric)
-				end
-				if not has_error then
-					if l_coefficient = Void then
-						create_last_error (metric_names.err_coefficient_missing)
-					else
-						test_non_void_double_attribute (
-							l_coefficient,
-							agent metric_names.err_coefficient_invalid
-						)
-						if not has_error then
-							l_coefficient_value := last_tested_double
-						end
-					end
-				end
-				if not has_error then
-					check
-						current_linear_metric_attached: current_linear_metric /= Void
-					end
-					current_linear_metric.coefficient.extend (l_coefficient_value)
-					current_linear_metric.variable_metric.extend (l_metric)
-				end
+			l_coefficient := current_attributes.item (at_coefficient)
+			l_metric := current_attributes.item (at_name)
+			if l_metric = Void then
+				create_last_error (metric_names.err_variable_metric_name_missing)
 			end
+
+			if l_coefficient = Void then
+				create_last_error (metric_names.err_coefficient_missing)
+			else
+				test_non_void_double_attribute (
+					l_coefficient,
+					agent metric_names.err_coefficient_invalid
+				)
+				l_coefficient_value := last_tested_double
+			end
+
+			check
+				current_linear_metric_attached: current_linear_metric /= Void
+			end
+			current_linear_metric.coefficient.extend (l_coefficient_value)
+			current_linear_metric.variable_metric.extend (l_metric)
 		end
 
 	process_criterion is
 			-- Process "criterion" definition list node.		
 		do
-			if not has_error then
-				extend_location_section (Void)
-				if not current_criterion.is_empty then
-					create_last_error (metric_names.err_too_many_criterion_section)
-				end
+			if not current_criterion.is_empty then
+				create_last_error (metric_names.err_too_many_criterion_section)
 			end
 		end
 
@@ -388,15 +336,12 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				current_normal_criterion := factory.new_normal_criterion (l_id.name, l_id.scope)
-				last_criterion := current_normal_criterion
-				setup_criterion (current_normal_criterion, l_id.negation)
-				register_criterion (current_normal_criterion)
-			end
+			l_id := current_criterion_identifier
+
+			current_normal_criterion := factory.new_normal_criterion (l_id.name, l_id.scope)
+			last_criterion := current_normal_criterion
+			setup_criterion (current_normal_criterion, l_id.negation)
+			register_criterion (current_normal_criterion)
 		end
 
 	process_domain_criterion is
@@ -404,16 +349,12 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				current_domain_criterion := factory.new_domain_criterion (l_id.name, l_id.scope)
-				last_criterion := current_domain_criterion
-				setup_criterion (current_domain_criterion, l_id.negation)
-				register_criterion (current_domain_criterion)
-				domain_receiver_stack.extend ([agent current_domain_criterion.set_domain, False])
-			end
+			l_id := current_criterion_identifier
+			current_domain_criterion := factory.new_domain_criterion (l_id.name, l_id.scope)
+			last_criterion := current_domain_criterion
+			setup_criterion (current_domain_criterion, l_id.negation)
+			register_criterion (current_domain_criterion)
+			domain_receiver_stack.extend ([agent current_domain_criterion.set_domain, False])
 		end
 
 	process_text_criterion is
@@ -427,50 +368,43 @@ feature{NONE} -- Process
 			l_case_sensitive_value: BOOLEAN
 			l_boolean_set: BOOLEAN
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				check current_basic_metric /= Void end
+			l_id := current_criterion_identifier
+			check current_basic_metric /= Void end
 
-					-- Validate "case_sensitive" attribute.
-				l_case_sensitive_value := False
-				l_case_sensitive := current_attributes.item (at_case_sensitive)
-				l_boolean_set := test_ommitable_boolean_attribute (
-					l_case_sensitive,
-					agent metric_names.err_case_sensitive_attr_invalid
-				)
-				if not has_error and then l_boolean_set then
-					l_case_sensitive_value := last_tested_boolean
-				end
-
-					-- Validate "matching_strategy" attribute.
-				if not has_error then
-					l_matching_strategy := current_attributes.item (at_matching_strategy)
-					if l_matching_strategy = Void then
-						l_matching_strategy := identity_matching_strategy_name
-					end
-					l_matching_strategy.to_lower
-					l_strategy_table := matching_strategy_table
-					if not l_strategy_table.has (l_matching_strategy) then
-						create_last_error (metric_names.err_invalid_matching_strategy (l_matching_strategy))
-					else
-						l_strategy := l_strategy_table.item (l_matching_strategy)
-					end
-				end
-				if not has_error then
-					current_text_criterion := factory.new_text_criterion (l_id.name, l_id.scope)
-					setup_criterion (current_text_criterion, l_id.negation)
-					if l_case_sensitive_value then
-						current_text_criterion.enable_case_sensitive
-					else
-						current_text_criterion.disable_case_sensitive
-					end
-					current_text_criterion.set_matching_strategy (l_strategy)
-					register_criterion (current_text_criterion)
-					last_criterion := current_text_criterion
-				end
+				-- Validate "case_sensitive" attribute.
+			l_case_sensitive_value := False
+			l_case_sensitive := current_attributes.item (at_case_sensitive)
+			l_boolean_set := test_ommitable_boolean_attribute (
+				l_case_sensitive,
+				agent metric_names.err_case_sensitive_attr_invalid
+			)
+			if l_boolean_set then
+				l_case_sensitive_value := last_tested_boolean
 			end
+
+				-- Validate "matching_strategy" attribute.
+			l_matching_strategy := current_attributes.item (at_matching_strategy)
+			if l_matching_strategy = Void then
+				l_matching_strategy := identity_matching_strategy_name
+			end
+			l_matching_strategy.to_lower
+			l_strategy_table := matching_strategy_table
+			if not l_strategy_table.has (l_matching_strategy) then
+				create_last_error (metric_names.err_invalid_matching_strategy (l_matching_strategy))
+			else
+				l_strategy := l_strategy_table.item (l_matching_strategy)
+			end
+
+			current_text_criterion := factory.new_text_criterion (l_id.name, l_id.scope)
+			setup_criterion (current_text_criterion, l_id.negation)
+			if l_case_sensitive_value then
+				current_text_criterion.enable_case_sensitive
+			else
+				current_text_criterion.disable_case_sensitive
+			end
+			current_text_criterion.set_matching_strategy (l_strategy)
+			register_criterion (current_text_criterion)
+			last_criterion := current_text_criterion
 		end
 
 	process_path_criterion is
@@ -478,15 +412,12 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				current_path_criterion := factory.new_path_criterion (l_id.name, l_id.scope)
-				last_criterion := current_path_criterion
-				setup_criterion (current_path_criterion, l_id.negation)
-				register_criterion (current_path_criterion)
-			end
+			l_id := current_criterion_identifier
+
+			current_path_criterion := factory.new_path_criterion (l_id.name, l_id.scope)
+			last_criterion := current_path_criterion
+			setup_criterion (current_path_criterion, l_id.negation)
+			register_criterion (current_path_criterion)
 		end
 
 	process_caller_callee_criterion is
@@ -497,31 +428,23 @@ feature{NONE} -- Process
 			l_only_current_vertion_value: BOOLEAN
 			l_boolean_set: BOOLEAN
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
+			l_id := current_criterion_identifier
+
+			l_only_current_vertion := current_attributes.item (at_only_current_version)
+			l_boolean_set := test_ommitable_boolean_attribute (l_only_current_vertion, agent metric_names.err_only_current_version_attr_invalid)
+			if l_boolean_set then
+				l_only_current_vertion_value := last_tested_boolean
 			end
-			if not has_error then
-				l_only_current_vertion := current_attributes.item (at_only_current_version)
-				l_boolean_set := test_ommitable_boolean_attribute (
-					l_only_current_vertion,
-					agent metric_names.err_only_current_version_attr_invalid
-				)
-				if not has_error then
-					if l_boolean_set then
-						l_only_current_vertion_value := last_tested_boolean
-					end
-					current_caller_criterion := factory.new_caller_callee_criterion (l_id.name, l_id.scope)
-					last_criterion := current_caller_criterion
-					setup_criterion (current_caller_criterion, l_id.negation)
-					if l_only_current_vertion_value then
-						current_caller_criterion.enable_only_current_version
-					else
-						current_caller_criterion.disable_only_current_version
-					end
-					register_criterion (current_caller_criterion)
-					domain_receiver_stack.extend ([agent current_caller_criterion.set_domain, False])
-				end
+			current_caller_criterion := factory.new_caller_callee_criterion (l_id.name, l_id.scope)
+			last_criterion := current_caller_criterion
+			setup_criterion (current_caller_criterion, l_id.negation)
+			if l_only_current_vertion_value then
+				current_caller_criterion.enable_only_current_version
+			else
+				current_caller_criterion.disable_only_current_version
 			end
+			register_criterion (current_caller_criterion)
+			domain_receiver_stack.extend ([agent current_caller_criterion.set_domain, False])
 		end
 
 	process_supplier_client_criterion is
@@ -537,53 +460,48 @@ feature{NONE} -- Process
 			l_syntactical_value: BOOLEAN
 			l_boolean_set: BOOLEAN
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
+			l_id := current_criterion_identifier
+
+			l_only_current_vertion := current_attributes.item (at_only_current_version)
+			l_indirect := current_attributes.item (at_indirect)
+			l_normal := current_attributes.item (at_normal)
+			l_syntactical := current_attributes.item (at_only_syntactical)
+			l_normal_value := True
+			l_boolean_set := test_ommitable_boolean_attribute (
+				l_normal,
+				agent metric_names.err_normal_referenced_class_attr_invalid
+			)
+			if l_boolean_set then
+				l_normal_value := last_tested_boolean
 			end
-			if not has_error then
-				l_only_current_vertion := current_attributes.item (at_only_current_version)
-				l_indirect := current_attributes.item (at_indirect)
-				l_normal := current_attributes.item (at_normal)
-				l_syntactical := current_attributes.item (at_only_syntactical)
-				l_normal_value := True
-				l_boolean_set := test_ommitable_boolean_attribute (
-					l_normal,
-					agent metric_names.err_normal_referenced_class_attr_invalid
-				)
-				if not has_error and then l_boolean_set then
-					l_normal_value := last_tested_boolean
-				end
-				if not has_error then
-					l_syntactical_value := False
-					l_boolean_set := test_ommitable_boolean_attribute (
-						l_syntactical,
-						agent metric_names.err_only_syntactically_referenced_class_attr_invalid
-					)
-					if not has_error and then l_boolean_set then
-						l_syntactical_value := last_tested_boolean
-					end
-				end
-				if not has_error then
-					l_indirect_value := False
-					l_boolean_set := test_ommitable_boolean_attribute (
-						l_indirect,
-						agent metric_names.err_indirect_referenced_class_attr_invalid
-					)
-					if not has_error and then l_boolean_set then
-						l_indirect_value := last_tested_boolean
-					end
-				end
-				if not has_error then
-					current_supplier_client_criterion := factory.new_supplier_client_criterion (l_id.name, l_id.scope)
-					current_supplier_client_criterion.set_indirect_referenced_class_retrieved (l_indirect_value)
-					current_supplier_client_criterion.set_only_syntactically_referencedd_class_retrieved (l_syntactical_value)
-					current_supplier_client_criterion.set_normal_referenced_class_retrieved (l_normal_value)
-					last_criterion := current_supplier_client_criterion
-					setup_criterion (current_supplier_client_criterion, l_id.negation)
-					register_criterion (current_supplier_client_criterion)
-					domain_receiver_stack.extend ([agent current_supplier_client_criterion.set_domain, False])
-				end
+
+			l_syntactical_value := False
+			l_boolean_set := test_ommitable_boolean_attribute (
+				l_syntactical,
+				agent metric_names.err_only_syntactically_referenced_class_attr_invalid
+			)
+			if l_boolean_set then
+				l_syntactical_value := last_tested_boolean
 			end
+
+			l_indirect_value := False
+			l_boolean_set := test_ommitable_boolean_attribute (
+				l_indirect,
+				agent metric_names.err_indirect_referenced_class_attr_invalid
+			)
+			if l_boolean_set then
+				l_indirect_value := last_tested_boolean
+			end
+
+			current_supplier_client_criterion := factory.new_supplier_client_criterion (l_id.name, l_id.scope)
+			current_supplier_client_criterion.set_indirect_referenced_class_retrieved (l_indirect_value)
+			current_supplier_client_criterion.set_only_syntactically_referencedd_class_retrieved (l_syntactical_value)
+			current_supplier_client_criterion.set_normal_referenced_class_retrieved (l_normal_value)
+			last_criterion := current_supplier_client_criterion
+			setup_criterion (current_supplier_client_criterion, l_id.negation)
+			register_criterion (current_supplier_client_criterion)
+			domain_receiver_stack.extend ([agent current_supplier_client_criterion.set_domain, False])
+
 		end
 
 
@@ -595,103 +513,83 @@ feature{NONE} -- Process
 			l_use_external_delayed: STRING
 			l_boolean_set: BOOLEAN
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
+			l_id := current_criterion_identifier
+
+			l_metric_name := current_attributes.item (at_metric_name)
+			if l_metric_name = Void then
+				create_last_error (metric_names.err_metric_name_missing)
 			end
-			if not has_error then
-				l_metric_name := current_attributes.item (at_metric_name)
-				if l_metric_name = Void then
-					create_last_error (metric_names.err_metric_name_missing)
-				end
-				if not has_error then
-					l_use_external_delayed := current_attributes.item (at_use_external_delayed)
-					l_boolean_set := test_ommitable_boolean_attribute (
-						l_use_external_delayed,
-						agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed)
-					)
-				end
-				if not has_error then
-					current_value_criterion := factory.new_value_criterion (l_id.name, l_id.scope)
-					if l_boolean_set then
-						current_value_criterion.set_should_delayed_domain_from_parent_be_used (last_tested_boolean)
-					end
-					last_criterion := current_value_criterion
-					setup_criterion (current_value_criterion, l_id.negation)
-					current_value_criterion.set_metric_name (l_metric_name)
-					register_criterion (current_value_criterion)
-					domain_receiver_stack.extend ([agent current_value_criterion.set_domain, False])
-					tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
-				end
+
+			l_use_external_delayed := current_attributes.item (at_use_external_delayed)
+			l_boolean_set := test_ommitable_boolean_attribute (
+				l_use_external_delayed,
+				agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed)
+			)
+
+			current_value_criterion := factory.new_value_criterion (l_id.name, l_id.scope)
+			if l_boolean_set then
+				current_value_criterion.set_should_delayed_domain_from_parent_be_used (last_tested_boolean)
 			end
+			last_criterion := current_value_criterion
+			setup_criterion (current_value_criterion, l_id.negation)
+			current_value_criterion.set_metric_name (l_metric_name)
+			register_criterion (current_value_criterion)
+			domain_receiver_stack.extend ([agent current_value_criterion.set_domain, False])
+			tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
+		end
+
+	process_nary_criterion is
+			-- Process nary criterion.
+		local
+			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_criterion: EB_METRIC_CRITERION
+		do
+			l_id := current_criterion_identifier
+			l_criterion := factory.new_or_criterion (l_id.name, l_id.scope)
+			last_criterion := l_criterion
+			setup_criterion (l_criterion, l_id.negation)
+			register_criterion (l_criterion)
 		end
 
 	process_and_criterion is
 			-- Process "and_criterion".
-		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_criterion: EB_METRIC_CRITERION
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				l_criterion := factory.new_and_criterion (l_id.name, l_id.scope)
-				last_criterion := l_criterion
-				setup_criterion (l_criterion, l_id.negation)
-				register_criterion (l_criterion)
-			end
+			process_nary_criterion
 		end
 
 	process_or_criterion is
 			-- Process "or_criterion".
-		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_criterion: EB_METRIC_CRITERION
 		do
-			if not has_error then
-				l_id := current_criterion_identifier
-			end
-			if not has_error then
-				l_criterion := factory.new_or_criterion (l_id.name, l_id.scope)
-				last_criterion := l_criterion
-				setup_criterion (l_criterion, l_id.negation)
-				register_criterion (l_criterion)
-			end
+			process_nary_criterion
 		end
 
 	process_text_finish is
 			-- Process "text" definition list node.
 		do
-			if not has_error then
-				if current_tag.item /= t_text then
-					create_last_error (metric_names.err_invalid_tag)
-				else
-					current_text_criterion.set_text (current_content)
-				end
+			if current_tag.item /= t_text then
+				create_last_error (metric_names.err_invalid_tag)
+			else
+				current_text_criterion.set_text (current_content)
 			end
 		end
 
 	process_path_finish is
 			-- Process "path" definition list node.		
 		do
-			if not has_error then
-				if current_tag.item /= t_path then
-					create_last_error (metric_names.err_invalid_tag)
-				else
-					current_path_criterion.set_path (current_content)
-				end
+			if current_tag.item /= t_path then
+				create_last_error (metric_names.err_invalid_tag)
+			else
+				current_path_criterion.set_path (current_content)
 			end
 		end
 
 	process_description_finish is
 			-- Process "description" definition list node.		
 		do
-			if not has_error then
-				if current_metric /= Void then
-					current_metric.set_description (current_content.twin)
-				else
-					create_last_error (metric_names.err_invalid_description_tag)
-				end
+			if current_metric /= Void then
+				current_metric.set_description (current_content.twin)
+			else
+				create_last_error (metric_names.err_invalid_description_tag)
 			end
 		end
 
@@ -1158,25 +1056,20 @@ feature{NONE} -- Implementation
 		do
 			l_name := current_attributes.item (at_name)
 			l_unit := current_attributes.item (at_unit)
-			if not has_error then
-				if l_name = Void then
-					extend_location_section (Void)
-					create_last_error (metric_names.err_metric_name_missing_in_metric_definition)
-				else
-					extend_location_section (l_name)
-					check_metric_name (l_name)
-				end
+
+			if l_name = Void then
+				create_last_error (metric_names.err_metric_name_missing_in_metric_definition)
+			else
+				check_metric_name (l_name)
 			end
-			if not has_error then
-				if l_unit = Void then
-					create_last_error (metric_names.err_unit_name_missing)
-				elseif not is_unit_valid (l_unit.as_lower) then
-					create_last_error (metric_names.err_unit_name_invalid (l_unit))
-				end
+
+			if l_unit = Void then
+				create_last_error (metric_names.err_unit_name_missing)
+			elseif not is_unit_valid (l_unit.as_lower) then
+				create_last_error (metric_names.err_unit_name_invalid (l_unit))
 			end
-			if not has_error then
-				Result := [l_name, l_unit]
-			end
+
+			Result := [l_name, l_unit]
 		end
 
 	current_criterion_identifier: TUPLE [name: STRING; scope: QL_SCOPE; is_negation_used: BOOLEAN] is
@@ -1195,39 +1088,31 @@ feature{NONE} -- Implementation
 			l_scope := current_attributes.item (at_unit)
 			l_negation := current_attributes.item (at_negation)
 			if l_name = Void then
-				extend_location_section (Void)
 				create_last_error (metric_names.err_criterion_name_missing)
 			end
-			if not has_error then
-				extend_location_section (l_name)
-				if l_scope = Void then
-					create_last_error (metric_names.err_unit_name_missing)
-				else
-					l_ql_scope := scope_table.item (l_scope)
-					if l_ql_scope = Void then
-						create_last_error (metric_names.err_unit_name_invalid (l_scope))
-					end
-				end
-				if not has_error then
-					if current_metric.unit.scope /= l_ql_scope then
-						create_last_error (metric_names.err_basic_metric_unit_not_correct (l_ql_scope.name, current_metric.unit.name))
-					end
+
+			if l_scope = Void then
+				create_last_error (metric_names.err_unit_name_missing)
+			else
+				l_ql_scope := scope_table.item (l_scope)
+				if l_ql_scope = Void then
+					create_last_error (metric_names.err_unit_name_invalid (l_scope))
 				end
 			end
-			if not has_error then
-				if l_negation /= Void then
-					test_non_void_boolean_attribute (
-						l_negation,
-						metric_names.err_negation_attr_invalid (l_negation)
-					)
-					if not has_error then
-						l_negation_used := last_tested_boolean
-					end
-				end
+
+			if current_metric.unit.scope /= l_ql_scope then
+				create_last_error (metric_names.err_basic_metric_unit_not_correct (l_ql_scope.name, current_metric.unit.name))
 			end
-			if not has_error then
-				Result := [l_name, l_ql_scope, l_negation_used]
+
+			if l_negation /= Void then
+				test_non_void_boolean_attribute (
+					l_negation,
+					metric_names.err_negation_attr_invalid (l_negation)
+				)
+
+				l_negation_used := last_tested_boolean
 			end
+			Result := [l_name, l_ql_scope, l_negation_used]
 		end
 
 	setup_criterion (a_criterion: EB_METRIC_CRITERION; a_negation: BOOLEAN) is
@@ -1282,9 +1167,7 @@ feature{NONE} -- Implementation
 		do
 			if a_value /= Void then
 				test_non_void_double_attribute (a_value, a_error_message_agent)
-				if not has_error then
-					Result := last_tested_double
-				end
+				Result := last_tested_double
 			else
 				Result := 1
 			end

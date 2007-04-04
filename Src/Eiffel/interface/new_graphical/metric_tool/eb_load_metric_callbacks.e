@@ -10,7 +10,7 @@ deferred class
 	EB_LOAD_METRIC_CALLBACKS
 
 inherit
-	XM_CALLBACKS_NULL
+	XM_CALLBACKS_FILTER
 		redefine
 			on_error,
 			on_start_tag,
@@ -25,12 +25,13 @@ inherit
 
 	EB_XML_PARSE_HELPER
 
+	EXCEPTIONS
+
 feature{NONE} -- Initialization
 
 	initialize is
 			-- Initialize.
 		do
-			create location_stack.make
 			create element_stack.make
 			create tester_receiver_stack.make
 			create value_retriever_stack.make
@@ -52,34 +53,6 @@ feature -- Access
 
 	first_parsed_node: EB_METRIC_VISITABLE
 			-- Last parsed node
-
-	location: STRING_GENERAL is
-			-- Location from `location_stack'
-		local
-			l_location: STRING_32
-			l_location_stack: like location_stack
-		do
-			create l_location.make (100)
-			if not location_stack.is_empty then
-				from
-					l_location_stack := location_stack.duplicate (location_stack.count)
-				until
-					l_location_stack.is_empty
-				loop
-					if not l_location.is_empty then
-						l_location.prepend (metric_names.location_connector)
-					end
-					l_location.prepend (l_location_stack.item)
-					l_location_stack.remove
-				end
-			end
-			Result := l_location
-		ensure
-			result_attached: Result /= Void
-		end
-
-	xml_parser: XM_PARSER
-			-- XML parser which is using current callback
 
 feature -- Status report
 
@@ -124,14 +97,6 @@ feature -- Setting
 			is_for_whole_file := b
 		ensure
 			is_for_whole_file_set: is_for_whole_file = b
-		end
-
-	set_xml_parser (a_parser: like xml_parser) is
-			-- Set `xml_parser' with `a_parser'.
-		do
-			xml_parser := a_parser
-		ensure
-			xml_parser_set: xml_parser = a_parser
 		end
 
 feature -- Callbacks
@@ -196,7 +161,6 @@ feature -- Callbacks
 					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
 						current_attributes.force (a_value, l_attribute)
 					else
-						location_stack.extend (metric_names.xml_location (element_stack.item, Void))
 						create_last_error (xml_names.err_invalid_attribute (a_local_part))
 					end
 				end
@@ -294,9 +258,9 @@ feature{NONE} -- Implementation
 			-- `setter' is the setter procedure to set last parsed domain,
 			-- `is_called' is a flag to indicate if a domain exists. It's used to detect if a needed domain is missing.
 
-	location_stack: LINKED_STACK [STRING_GENERAL]
-			-- Location stack used to provide location information in error message
-			-- Every item in this stack represents a location section information
+--	location_stack: LINKED_STACK [STRING_GENERAL]
+--			-- Location stack used to provide location information in error message
+--			-- Every item in this stack represents a location section information
 
 	element_stack: LINKED_STACK [STRING_GENERAL]
 			-- Stack of met element name			
@@ -369,29 +333,11 @@ feature{NONE} -- Implementation
 
 	create_last_error (a_message: STRING_GENERAL) is
 			-- Create `last_error' with `a_message'.
-		local
-			l_position: XM_POSITION
 		do
 			create last_error.make (a_message)
-			last_error.set_location (location)
-			if xml_parser /= Void then
-				l_position := xml_parser.position
-				last_error.set_xml_location ([l_position.column, l_position.row])
-			end
+			raise ("xml parsing error")
 		ensure then
 			has_error: has_error
-		end
-
-	extend_location_section (a_element_name: STRING_GENERAL) is
-			-- Extend element `a_element_type' with possible element name `a_element_name' in `location_stack'.
-		do
-			location_stack.extend (metric_names.xml_location (element_stack.item, a_element_name))
-		end
-
-	remove_location_section is
-			-- Remove top location section from `location_stack'.
-		do
-			location_stack.remove
 		end
 
 	set_current_tester_item (a_item: EB_METRIC_VALUE_RETRIEVER) is
@@ -410,7 +356,6 @@ feature{NONE} -- Process
 			l_domain_receiver: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
 		do
 			if not has_error then
-				extend_location_section (Void)
 				check not domain_receiver_stack.is_empty end
 				l_domain_receiver := domain_receiver_stack.item
 				if l_domain_receiver.is_called then
@@ -441,7 +386,6 @@ feature{NONE} -- Process
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			if not has_error then
-				extend_location_section (Void)
 				l_id := current_attributes.item (at_id)
 				l_type := current_attributes.item (at_type)
 				l_library_target_uuid := current_attributes.item (at_library_target_uuid)
@@ -482,7 +426,6 @@ feature{NONE} -- Process
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
 		do
 			if not has_error then
-				extend_location_section (Void)
 				check not tester_receiver_stack.is_empty end
 				l_item := tester_receiver_stack.item
 				if l_item.is_called then
@@ -519,9 +462,7 @@ feature{NONE} -- Process
 				l_operator_name := current_attributes.item (at_name)
 				if l_operator_name = Void then
 					create_last_error (metric_names.err_operator_missing)
-					extend_location_section (Void)
 				else
-					extend_location_section (l_operator_name)
 					l_operator_name_set := operator_name_set
 					if not l_operator_name_set.has (l_operator_name) then
 						create_last_error (metric_names.err_operator_invalid (l_operator_name))
@@ -546,7 +487,6 @@ feature{NONE} -- Process
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
 		do
 			if not has_error then
-				extend_location_section (Void)
 				check not value_retriever_stack.is_empty end
 				l_item := value_retriever_stack.item
 				if l_item.is_called then
@@ -581,7 +521,6 @@ feature{NONE} -- Process
 			l_boolean_set: BOOLEAN
 		do
 			if not has_error then
-				extend_location_section (Void)
 				check not value_retriever_stack.is_empty end
 				l_item := value_retriever_stack.item
 				if l_item.is_called then
@@ -640,7 +579,6 @@ feature{NONE} -- Process
 
 invariant
 	factory_attached: factory /= Void
-	location_stack_attached: location_stack /= Void
 	element_stack_attached: element_stack /= Void
 	tester_receiver_stack_attached: tester_receiver_stack /= Void
 	value_retriever_stack_attached: value_retriever_stack /= Void

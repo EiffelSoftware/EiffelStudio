@@ -172,8 +172,9 @@ feature -- Access
 
 feature -- Setting
 
-	store_xml (a_doc: XM_DOCUMENT; a_file: STRING) is
+	store_xml (a_doc: XM_DOCUMENT; a_file: STRING; a_error_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Store xml defined in `a_doc' in file named `a_file'.
+			-- When error occurs, `a_error_agent' will be invoked.
 		require
 			a_doc_attached: a_doc /= Void
 			a_file_attached: a_file /= Void
@@ -197,6 +198,9 @@ feature -- Setting
 				if l_file /= Void and then not l_file.is_closed then
 					l_file.close
 				end
+				if a_error_agent /= Void then
+					a_error_agent.call (Void)
+				end
 			end
 		rescue
 			l_retried := True
@@ -208,12 +212,11 @@ feature -- Parsing
 	parse_file (a_file: STRING; a_callback: XM_CALLBACKS; a_parser: XM_PARSER; a_set_file_error_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Parse `a_file' using `a_parser' with `a_callback'.			
 			-- Raise exception if error occurs.
-			-- If failed because of file issue, call `a_set_file_error_agent'.
+			-- If failed because of file issue, invoke `a_set_file_error_agent'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 			a_callback_attached: a_callback /= Void
 			a_parser_attached: a_parser /= Void
-			a_set_file_error_agent_attached: a_set_file_error_agent /= Void
 		local
 			l_file: KL_TEXT_INPUT_FILE
 		do
@@ -227,8 +230,55 @@ feature -- Parsing
 				if not l_file.is_closed then
 					l_file.close
 				end
-				a_set_file_error_agent.call (Void)
+				if a_set_file_error_agent /= Void then
+					a_set_file_error_agent.call (Void)
+				end
 			end
+		end
+
+feature -- Backup
+
+	backup_file (a_file: STRING) is
+			-- Backup file `a_file'.
+			-- `a_file' is not guaranteed to be backuped maybe because `a_file' doesn't exists or is not readable, or
+			-- the chosen backup file name is not writable.
+		require
+			a_file_attached: a_file /= Void
+		local
+			l_file: RAW_FILE
+			l_backup_file: RAW_FILE
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_file.make (a_file)
+				if l_file.exists and then l_file.is_readable then
+					l_file.open_read
+					create l_backup_file.make_open_write (backup_file_name (a_file))
+					l_file.copy_to (l_backup_file)
+					l_backup_file.close
+					l_file.close
+				end
+			end
+		rescue
+			l_retried := True
+			if l_file /= Void and then l_file.is_open_read then
+				l_file.close
+			end
+			if l_backup_file /= Void and then l_backup_file.is_open_write then
+				l_file.close
+			end
+			retry
+		end
+
+	backup_file_name (a_file: STRING): STRING is
+			-- Backup file name for `a_file'.
+		require
+			a_file_attached: a_file /= Void
+		do
+			create Result.make_from_string (a_file)
+			Result.append (".bak")
+		ensure
+			result_attached: Result /= Void
 		end
 
 end

@@ -12,7 +12,7 @@ class
 inherit
 	EB_METRIC_SHARED
 
-	EB_METRIC_FILE_LOADER
+	EB_CUSTOMIZED_FORMATTER_UTILITY [EB_METRIC_ARCHIVE_NODE]
 
 create
 	make
@@ -136,6 +136,14 @@ feature -- Error handling
 			not_has_error: not has_error
 		end
 
+	create_last_error (a_error_message: STRING_GENERAL) is
+			-- Create `last_error' to contain `a_error_message'.
+		do
+			create last_error.make (a_error_message)
+		ensure
+			has_error: has_error
+		end
+
 feature -- Status report
 
 	has_archive_by_metric_name (a_metric_name: STRING): BOOLEAN is
@@ -176,45 +184,36 @@ feature -- Archive manipulation
 		local
 			l_callback: EB_METRIC_LOAD_ARCHIVE_CALLBACKS
 			l_loaded_archive: LIST [EB_METRIC_ARCHIVE_NODE]
+			l_tuple: TUPLE [l_archive: LIST [EB_METRIC_ARCHIVE_NODE]; l_error: EB_METRIC_ERROR]
 		do
 			wipe_out_archive
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
-			last_error := parse_file (a_file_name, l_callback)
+
+			l_tuple := items_from_file (a_file_name, l_callback, agent l_callback.archive, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name)))
 			if not has_error then
-				l_loaded_archive := l_callback.archive
-				l_loaded_archive.do_all (agent insert_archive_node)
-			else
-				backup_file (a_file_name)
+				last_error := l_tuple.l_error
+				if not has_error then
+					l_loaded_archive := l_tuple.l_archive
+					l_loaded_archive.do_all (agent insert_archive_node)
+				else
+					backup_file (a_file_name)
+				end
 			end
 		end
 
-	store_archive (a_file_name: STRING) is
+	store_archive (a_file_name: STRING; a_error_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Write `archive' into file `a_file_name'.
 			-- Clear content of `a_file_name' if file already exists.
+			-- `a_error_agent' will be invoked when error occurs.
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
-			l_file: PLAIN_TEXT_FILE
-			l_retried: BOOLEAN
-			l_xml_generator: EB_METRIC_XML_WRITER
+			l_xml_generator: EB_METRIC_XML_WRITER [EB_METRIC_ARCHIVE_NODE]
 		do
-			if not l_retried then
-				clear_last_error
-				create l_file.make_create_read_write (a_file_name)
-				create l_xml_generator.make
-				l_file.put_string ("<metric_archive>%N")
-				l_xml_generator.set_indent (1)
-				l_xml_generator.clear_text
-				l_xml_generator.process_list (archive)
-				l_file.put_string (l_xml_generator.text)
-				l_file.put_string ("</metric_archive>%N")
-				l_file.close
-			end
-		rescue
-			l_retried := True
-			create last_error.make (metric_names.err_file_not_writable (a_file_name))
+			create l_xml_generator.make
+			store_xml (xml_document_for_items (n_metric_archive, archive, agent l_xml_generator.xml_element ({EB_METRIC_ARCHIVE_NODE}?, ?)), a_file_name, a_error_agent)
 		end
 
 	remove_archive_node (a_uuid: UUID) is

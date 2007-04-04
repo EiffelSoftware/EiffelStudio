@@ -201,8 +201,11 @@ feature -- Storage
 			l_id_set := tool_id_set
 			tool_descriptors.wipe_out
 			create l_callback.make
-			l_desp_tuple := items_from_file (tool_file, l_callback, agent l_callback.tools, agent l_callback.last_error, agent set_is_file_readable (False))
-			set_last_error (l_desp_tuple.error)
+			clear_last_error
+			l_desp_tuple := items_from_file (tool_file, l_callback, agent l_callback.tools, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (tool_file))))
+			if last_error = Void then
+				set_last_error (l_desp_tuple.error)
+			end
 			if a_error_agent /= Void then
 				a_error_agent.call (Void)
 				clear_last_error

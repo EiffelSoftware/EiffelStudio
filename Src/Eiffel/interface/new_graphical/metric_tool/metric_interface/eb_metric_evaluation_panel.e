@@ -451,7 +451,7 @@ feature -- Actions
 			l_current_metric := current_selected_metric
 			if is_using_quick_metric then
 				if l_current_metric /= Void then
-					metric_tool.go_to_definition (l_current_metric, True)
+					metric_tool.go_to_definition (l_current_metric.identical_new_instance, True)
 				end
 			else
 				if

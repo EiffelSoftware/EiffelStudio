@@ -38,8 +38,16 @@ feature -- Command
 			develop_window.window.show
 
 			l_debugger_manager ?= develop_window.debugger_manager
-			if not develop_window.development_window_data.is_force_debug_mode or l_debugger_manager = Void or not develop_window.docking_manager.is_config_data_valid (develop_window.docking_config_tools_file) then
+			if
+				not develop_window.development_window_data.is_force_debug_mode or
+				l_debugger_manager = Void or
+				not develop_window.docking_manager.is_config_data_valid (develop_window.docking_config_tools_file) or else
+				l_debugger_manager.debug_mode_forced -- There is already a window forced debug mode. We open an normal window.
+			then
 				develop_window.restore_tools_docking_layout
+				if l_debugger_manager /= Void then
+					l_debugger_manager.force_debug_mode_cmd.synchronize_items
+				end
 			else
 				l_debugger_manager.force_debug_mode_cmd.execute_for_opening (False)
 			end

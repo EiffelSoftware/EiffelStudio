@@ -16,6 +16,7 @@ inherit
 			pixmap,
 			mini_toolbar,
 			build_mini_toolbar,
+			internal_recycle,
 			show
 		end
 

@@ -11,6 +11,13 @@ class
 inherit
 	EB_MENUABLE_COMMAND
 
+	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			target as develop_window
+		redefine
+			make
+		end
+
 	EB_CONSTANTS
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -24,13 +31,9 @@ feature {NONE} -- Initlization
 
 	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
 			-- Creation method
-		require
-			not_void: a_develop_window /= Void
 		do
-			develop_window := a_develop_window
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
 			enable_sensitive
-		ensure
-			set: develop_window = a_develop_window
 		end
 
 feature -- Command
@@ -60,11 +63,6 @@ feature -- Query
 		do
 			Result := interface_names.m_set_default_layout
 		end
-
-feature {NONE} -- Implementation
-
-	develop_window: EB_DEVELOPMENT_WINDOW;
-			-- Developement window.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -14,6 +14,7 @@ inherit
 		redefine
 			menu_name,
 			attach_to_docking_manager,
+			internal_recycle,
 			pixmap
 		end
 
@@ -123,7 +124,7 @@ feature -- Clean up
 			graphical_output_manager.prune (Current)
 			text_area.recycle
 			text_area := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 feature -- Status setting

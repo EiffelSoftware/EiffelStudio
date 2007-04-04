@@ -71,20 +71,24 @@ feature -- Status setting
 	on_text_reset is
 			-- Disable `Current'.
 		do
-			if target.is_empty then
-				disable_sensitive
-			else
-				enable_sensitive
+			if not is_recycled then
+				if target.is_empty then
+					disable_sensitive
+				else
+					enable_sensitive
+				end
 			end
 		end
 
 	on_text_back_to_its_last_saved_state is
 			-- Disable `Current'.
 		do
-			if target.is_empty then
-				disable_sensitive
-			else
-				enable_sensitive
+			if not is_recycled then
+				if target.is_empty then
+					disable_sensitive
+				else
+					enable_sensitive
+				end
 			end
 		end
 

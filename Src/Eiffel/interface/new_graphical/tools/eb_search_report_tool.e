@@ -24,6 +24,7 @@ inherit
 			mini_toolbar,
 			pixmap,
 			pixel_buffer,
+			internal_recycle,
 			show
 		end
 
@@ -235,6 +236,7 @@ feature {NONE} -- Recyclable
 		do
 			search_tool := Void
 			search_report_grid.wipe_out
+			Precursor {EB_TOOL}
 		end
 
 feature {NONE} -- Implementation

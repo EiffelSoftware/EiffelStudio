@@ -20,6 +20,7 @@ inherit
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
+			internal_recycle,
 			show
 		end
 
@@ -204,7 +205,7 @@ feature {NONE} -- Memory management
 			widget.recycle
 			widget := Void
 			window := Void
-			develop_window := Void
+			Precursor {EB_TOOL}
 		end
 
 feature {NONE} -- Implementation

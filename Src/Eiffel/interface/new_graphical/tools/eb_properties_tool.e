@@ -20,6 +20,7 @@ inherit
 			pixel_buffer,
 			build_docking_content,
 			show,
+			internal_recycle,
 			is_stone_valid
 		end
 
@@ -155,8 +156,7 @@ feature -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			cluster_manager.remove_observer (Current)
-			develop_window := Void
-			content := Void
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 feature {NONE} -- External changes to classes/clusters

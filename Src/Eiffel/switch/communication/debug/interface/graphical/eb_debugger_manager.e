@@ -55,6 +55,13 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	EB_WINDOW_MANAGER_OBSERVER
+		rename
+			on_item_removed as on_window_removed
+		redefine
+			on_window_removed
+		end
+
 create
 	make
 
@@ -86,6 +93,8 @@ feature {NONE} -- Initialization
 			end
 
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
+
+			window_manager.add_observer (Current)
 		end
 
 	initialize is
@@ -781,6 +790,27 @@ feature -- tools management
 		do
 			wt.close
 			watch_tool_list.prune_all (wt)
+		end
+
+feature -- Windows observer
+
+	on_window_removed (a_item: EB_WINDOW) is
+			-- `a_item' has been removed.
+		do
+				-- We don't care the last window,
+				-- nor non-`debugging_window'.
+			if window_manager.development_windows_count > 0 and then a_item = debugging_window then
+				check
+					-- We should make sure that it is unraised.
+					-- Then change an instance of `debugging_window'.
+					unraised: not raised
+				end
+				recycle_items_from_window
+				set_debugging_window (window_manager.last_focused_development_window)
+				if debugging_window /= Void and then debug_mode_forced and not raised then
+					force_debug_mode (True)
+				end
+			end
 		end
 
 feature -- Events helpers
@@ -2108,6 +2138,18 @@ feature {NONE} -- Implementation
 			-- Show watch tool preference
 		do
 			Result := preferences.misc_shortcut_data.shortcuts.item ("show_watch_tool")
+		end
+
+feature {NONE} -- Memory management
+
+	recycle_items_from_window is
+			-- Disconnect possible items and `debugging_window'.
+		do
+			call_stack_tool := Void
+			threads_tool := Void
+			objects_tool := Void
+			object_viewer_tool := Void
+			watch_tool_list.wipe_out
 		end
 
 feature {NONE} -- MSIL system implementation

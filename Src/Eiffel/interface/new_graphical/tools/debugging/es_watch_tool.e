@@ -20,6 +20,7 @@ inherit
 			pixmap,
 			show,
 			close,
+			internal_recycle,
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content

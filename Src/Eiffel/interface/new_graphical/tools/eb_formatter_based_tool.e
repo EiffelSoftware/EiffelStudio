@@ -15,6 +15,7 @@ inherit
 			mini_toolbar,
 			force_last_stone,
 			show,
+			internal_recycle,
 			show_with_setting
 		end
 
@@ -805,7 +806,7 @@ feature{NONE} -- Recycle
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			Precursor
+			Precursor {EB_HISTORY_OWNER}
 
 			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
 			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
@@ -815,7 +816,7 @@ feature{NONE} -- Recycle
 			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
 			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)
 
-			develop_window := Void
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 invariant

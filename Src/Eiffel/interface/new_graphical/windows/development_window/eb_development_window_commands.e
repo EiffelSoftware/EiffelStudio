@@ -10,8 +10,9 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
-
-	EB_RECYCLABLE
+		redefine
+			internal_recycle
+		end
 
 create
 	make
@@ -433,7 +434,17 @@ feature -- Recycle
 			-- Recycle all commands.
 		local
 			os_cmd: EB_ON_SELECTION_COMMAND
+			l_recyclable: EB_RECYCLABLE
 		do
+			new_tab_cmd.recycle
+			reset_layout_command.recycle
+			set_default_layout_command.recycle
+			save_layout_as_command.recycle
+			open_layout_command.recycle
+			lock_docking_command.recycle
+			lock_tool_bar_command.recycle
+			save_as_cmd.recycle
+
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle
 			editor_paste_cmd.recycle
@@ -484,6 +495,19 @@ feature -- Recycle
 			end
 			show_toolbar_commands := Void
 
+			from
+				editor_commands.start
+			until
+				editor_commands.after
+			loop
+				l_recyclable ?= editor_commands.item
+				if l_recyclable /= Void then
+					l_recyclable.recycle
+				end
+				editor_commands.forth
+			end
+			editor_commands := Void
+
 			c_finalized_compilation_cmd := Void
 			c_finalized_compilation_cmd := Void
 			new_class_cmd := Void
@@ -498,6 +522,7 @@ feature -- Recycle
 			toggle_stone_cmd := Void
 			delete_class_cluster_cmd := Void
 			print_cmd := Void
+			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 indexing

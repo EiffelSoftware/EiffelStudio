@@ -29,14 +29,39 @@ feature -- Command
 		require
 			not_void: a_file_name /= Void
 		local
+			l_format: WEL_GDIP_IMAGE_FORMAT
+			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
+		do
+			if raw_format /= Void then
+				l_format := find_format
+			else
+				-- Is memoryBMP, we use PNG for saving as defualt.
+				create l_constants
+				l_format := l_constants.png
+			end
+
+			save_image_to_file_with_format (a_file_name, l_format)
+		end
+
+	save_image_to_file_with_format (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_FORMAT) is
+			-- Save datas to a file.
+		require
+			not_void: a_file_name /= Void
+			not_void: a_format /= Void
+		local
 			l_result: INTEGER
 			l_format: WEL_GDIP_IMAGE_CODEC_INFO
 			l_wel_string: WEL_STRING
+			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
 		do
-			l_format := find_encoder
+			if raw_format /= Void then
+				l_format := a_format.find_encoder
+			end
 
 			if l_format = Void then
-				check default_format_not_implemented: False end
+				-- Can't find related encoder, we used png encoder as default.
+				create l_constants
+				l_format := l_constants.png.find_encoder
 			end
 
 			create l_wel_string.make (a_file_name)
@@ -140,24 +165,28 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	find_encoder: WEL_GDIP_IMAGE_CODEC_INFO is
+	find_format: WEL_GDIP_IMAGE_FORMAT is
 			-- Find image encoder.
+		require
+			format_recorded: raw_format /= Void
 		local
-			l_all_encoders: like all_image_encoders
-			l_current_format: WEL_GUID
+			l_all_format: ARRAYED_LIST [WEL_GDIP_IMAGE_FORMAT]
+			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
 		do
 			from
-				l_current_format := raw_format
-				l_all_encoders := all_image_encoders
-				l_all_encoders.start
+				create l_constants
+				l_all_format := l_constants.all_formats
+				l_all_format.start
 			until
-				l_all_encoders.after or Result /= Void
+				l_all_format.after or Result /= Void
 			loop
-				if l_all_encoders.item.format_id.is_equal (l_current_format) then
-					Result := l_all_encoders.item
+				if l_all_format.item.guid.is_equal (raw_format) then
+					Result := l_all_format.item
 				end
-				l_all_encoders.forth
+				l_all_format.forth
 			end
+		ensure
+			not_void: Result /= Void
 		end
 
 feature -- C externals

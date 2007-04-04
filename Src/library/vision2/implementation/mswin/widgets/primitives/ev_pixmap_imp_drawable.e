@@ -37,7 +37,8 @@ inherit
 		end
 
 create
-	make_with_simple
+	make_with_simple,
+	make_with_pixel_buffer
 
 feature {NONE} -- Initialization
 
@@ -67,6 +68,12 @@ feature {NONE} -- Initialization
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.
 			set_state_flag (is_initialized_flag, False)
+		end
+
+	make_with_pixel_buffer (a_dc: WEL_MEMORY_DC) is
+			-- Creation method for EV_PIXEL_BUFFER specially
+		do
+			dc := a_dc
 		end
 
 	promote_from_simple (other: EV_PIXMAP_IMP) is

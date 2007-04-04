@@ -39,6 +39,32 @@ feature {NONE} -- Initlization
 			check not_implemented: False end
 		end
 
+feature -- Command
+
+	set_data_1 (a_value: NATURAL_64) is
+			-- Set `data_1' with `a_value'.
+		do
+			c_set_data_1 (item, a_value)
+		end
+
+	set_data_2 (a_value: NATURAL_16) is
+			-- Set `data_2' with `a_value'.
+		do
+			c_set_data_2 (item, a_value)
+		end
+
+	set_data_3 (a_value: NATURAL_16) is
+			-- Set `data_3' with `a_value'.
+		do
+			c_set_data_3 (item, a_value)
+		end
+
+	set_data_4 (a_value: NATURAL_8; a_index: INTEGER) is
+			-- Set `data_4' array item at `a_index''s value with `a_value'.
+		do
+			c_set_data_4 (item, a_index, a_value)
+		end
+
 feature -- Query
 
 	structure_size: INTEGER is
@@ -119,6 +145,52 @@ feature {NONE} -- C externals
 			"C [macro %"wel_gdi_plus.h%"]"
 		alias
 			"sizeof (GUID)"
+		end
+
+	c_set_data_1 (a_item: POINTER; a_value: NATURAL_64) is
+			-- Set `a_item''s Data1 with `a_x'
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				((GUID *)$a_item)->Data1 = (EIF_NATURAL_64)$a_value;
+			}
+			]"
+		end
+		
+	c_set_data_2 (a_item: POINTER; a_value: NATURAL_16) is
+			-- Set `a_item''s Data2 with `a_value'
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				((GUID *)$a_item)->Data2 = (EIF_NATURAL_16)$a_value;
+			}
+			]"
+		end
+
+	c_set_data_3 (a_item: POINTER; a_value: NATURAL_16) is
+			-- Set `a_item''s Data3 with `a_value'
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				((GUID *)$a_item)->Data3 = (EIF_NATURAL_16)$a_value;
+			}
+			]"
+		end
+
+	c_set_data_4 (a_item: POINTER; a_index: INTEGER; a_value: NATURAL_8) is
+			-- Set `a_item''s data4 value at `a_index' with `a_value'.
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+				((GUID *)$a_item)->Data4[$a_index] = (EIF_NATURAL_8)$a_value;
+			]"
 		end
 
 	c_data_1 (a_item: POINTER): NATURAL_64 is

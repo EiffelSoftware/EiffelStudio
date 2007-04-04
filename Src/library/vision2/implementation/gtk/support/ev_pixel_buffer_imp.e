@@ -36,6 +36,12 @@ feature {NONE} -- Initialization
 			make_with_size (1, 1)
 		end
 
+	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Create with `a_pixmap''s image data.
+		do
+			check not_implemented: False end
+		end
+
 	initialize is
 			-- Initialize `Current'.
 		do

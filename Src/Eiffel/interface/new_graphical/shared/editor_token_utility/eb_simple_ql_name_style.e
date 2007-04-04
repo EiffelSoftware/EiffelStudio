@@ -89,7 +89,7 @@ feature{NONE} -- Implementation
 				a_writer.process_target_name_text (l_target.name, l_target.target)
 			elseif a_item.is_line then
 				l_line ?= a_item
-				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_c.lace_class, False)
+				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_i, False)
 			elseif a_item.is_code_structure then
 				l_ql_code_item ?= a_item
 				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, Void, False)

@@ -162,6 +162,7 @@ feature -- Criterion names
 	ql_cri_contain_ast: STRING is "contain_ast"
 
 	ql_cri_value_of_metric_is: STRING is "value_of_metric_is"
+	ql_cri_is_implementation_comment: STRING is "is_implementation_comment"
 
 feature -- Metric names
 

@@ -145,6 +145,16 @@ feature -- Access
 			good_result: Result = internal_ast
 		end
 
+	class_i: CLASS_I is
+			-- CLASS_I object associated with current item
+		local
+			l_class: QL_CLASS
+		do
+			l_class ?= parent
+			check l_class /= Void end
+			Result := l_class.class_i
+		end
+
 	class_c: CLASS_C is
 			-- CLASS_C object associated with current_item
 		local

@@ -96,6 +96,12 @@ feature -- Access
 	e_feature: E_FEATURE
 			-- Feature associated with Current
 
+	class_i: CLASS_I is
+			-- CLASS_I object associated with current item
+		do
+			Result := class_c.lace_class
+		end
+
 	class_c: CLASS_C is
 			-- Associated class with current feature
 		do

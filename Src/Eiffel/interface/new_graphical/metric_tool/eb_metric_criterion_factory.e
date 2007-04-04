@@ -523,6 +523,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_false), query_language_names.ql_cri_false)
 			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_is_blank), query_language_names.ql_cri_is_blank)
 			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_is_comment), query_language_names.ql_cri_is_comment)
+			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_is_implementation_comment), query_language_names.ql_cri_is_implementation_comment)
 			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_is_compiled), query_language_names.ql_cri_is_compiled)
 			l_hash_table.put (agent new_normal_criterion (line_scope, query_language_names.ql_cri_true), query_language_names.ql_cri_true)
 

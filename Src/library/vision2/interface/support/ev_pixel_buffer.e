@@ -19,6 +19,9 @@ create
 	make_with_size,
 	make_with_pixmap
 
+convert
+	make_with_pixmap ({EV_PIXMAP})
+
 feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is

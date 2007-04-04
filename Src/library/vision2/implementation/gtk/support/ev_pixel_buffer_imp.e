@@ -38,8 +38,13 @@ feature {NONE} -- Initialization
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Create with `a_pixmap''s image data.
+		local
+			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixbuf: POINTER
 		do
-			check not_implemented: False end
+			l_pixmap_imp ?= a_pixmap.implementation
+			l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+			set_gdkpixbuf (l_pixbuf)
 		end
 
 	initialize is

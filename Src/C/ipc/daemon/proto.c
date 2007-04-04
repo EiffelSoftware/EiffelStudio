@@ -815,7 +815,6 @@ rt_private void get_application_env (EIF_PSTREAM sp)
 	}
 }
 
-
 rt_private void set_ipc_ewb_pid(int pid)
 {
 #ifdef EIF_WINDOWS
@@ -839,7 +838,8 @@ rt_private void start_app(EIF_PSTREAM sp)
 	 * A positive acknowledgment is sent back if the process starts correctly.
 	 */
 
-	char *cmd;			/* Application to be run */
+	char *exe_path;			/* Application to be run */
+	char *exe_args;			/* Arguments to use for application execution */
 	STREAM *cp;			/* Child stream */
 #ifdef EIF_WINDOWS
 	HANDLE process_handle;	/* Child process handle */
@@ -848,7 +848,12 @@ rt_private void start_app(EIF_PSTREAM sp)
 	Pid_t pid;			/* Child pid */
 #endif
 
-	cmd = recv_str(sp, NULL);		/* Get command */
+	/* Get Application executable path */
+	exe_path = recv_str(sp, NULL);		
+
+	/* Get Application arguments */
+	exe_args = recv_str(sp, NULL);
+
 #ifdef USE_ADD_LOG
 	add_log(12, "starting app \n");
 #endif
@@ -856,13 +861,15 @@ rt_private void start_app(EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
-	cp = spawn_child("app", 0, cmd, current_directory, (char**)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
+	cp = spawn_child("app", 0, exe_path, exe_args, current_directory, (char**)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
 #else
-	cp = spawn_child("app", cmd, current_directory, (char**)current_app_env, 1, &pid);	/* Start up children */
+	cp = spawn_child("app", exe_path, exe_args, current_directory, (char**)current_app_env, 1, &pid);	/* Start up children */
 #endif
 
-	free(cmd);
-	cmd = NULL;
+	free(exe_path);
+	exe_path = NULL;
+	free(exe_args);
+	exe_args = NULL;
 	if (current_directory) {
 		free(current_directory);
 		current_directory = NULL;

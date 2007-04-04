@@ -54,7 +54,6 @@
 #include "eif_logfile.h"
 #include "stream.h"
 #include "ewbio.h"
-#include "child.h"
 #include "identify.h"
 #include "com.h"
 #include "dbg_proto.h"
@@ -315,7 +314,7 @@ char szAppName [] = "ecdbgd";		/* Window class name for temporary estudio window
 HANDLE hInst;				/* Application main instance			 */
 HWND hwnd;				/* Handle of temporary estudio window 	*/
 
-rt_private void shword(char *cmd, int *argc, char ***argvp)
+rt_private void ecdbgd_shword(char *cmd, int *argc, char ***argvp)
 {
 	/* Break the shell command held in 'cmd', putting each shell word
 	 * in a separate array entry, hence building an argument
@@ -416,7 +415,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 	hInst = hInstance;
 
 
-	shword (tmp, &argc, &argv);	/* Create from the string returned by GetCommandLine,
+	ecdbgd_shword (tmp, &argc, &argv);	/* Create from the string returned by GetCommandLine,
 								an array of string */
 
 		/* Count the number of elements in argv */

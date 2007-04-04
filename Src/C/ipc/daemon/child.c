@@ -97,16 +97,136 @@ rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exe
 rt_private void create_dummy_window (void);
 #endif
 
-#ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, char **envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_private char* safe_unquoted_path (char* a_path) 
+{
+	char* res = NULL;
+	int n = (int) strlen(a_path);
+	if (a_path[0] == '"' && a_path[n - 1] == '"') {
+		res = (char*) malloc (n - 1);
+		strncpy (res, a_path + 1, n - 2);
+		res[n - 2] = '\0';
+	} else if (a_path[0] == '"') {
+		res = (char*)malloc (n - 0);
+		strncpy (res, a_path + 1, n - 2);
+		res[n - 1] = '\0';
+	} else if (a_path[n - 1] == '"') {
+		res = (char*)malloc (n - 0);
+		strncpy (res, a_path, n - 2);
+		res[n - 1] = '\0';
+	} else {
+		res = (char*)malloc (n + 1);
+		strcpy (res, a_path);
+		res[n] = '\0';
+	}
+	return res;
+}
+
+rt_private char* safe_quoted_path (char* a_path) 
+{
+	char* res = NULL;
+	int n = (int) strlen(a_path);
+	if (a_path[0] == '"' && a_path[n - 1] == '"') {
+		res = (char*) malloc (n + 1);
+		strcpy (res, a_path);
+		res[n] = '\0';
+	} else if (a_path[0] == '"') {
+		res = (char*) malloc (n + 3);
+		strcpy (res, a_path);
+		strcat (res, "\"");
+		res[n + 2] = '\0';
+	} else if (a_path[n - 1] == '"') {
+		res = (char*) malloc (n + 3);
+		strcpy (res, "\"");
+		strcat (res, a_path);
+		res[n + 2] = '\0';
+	} else {
+		res = (char*) malloc (n + 4);
+		strcpy (res, "\"");
+		strcat (res, a_path);
+		strcat (res, "\"");
+		res[n + 3] = '\0';
+	}
+	return res;
+}
+
+rt_private void set_meltpath_environment (char* exe_path) 
+{
+		char *meltpath, *appname;
+		static char *envstring = NULL;	/* set MELT_PATH */
+#ifdef EIF_VMS
+		size_t dirname_size;
+#endif
+
+		meltpath = safe_unquoted_path (exe_path);
+
+		if (meltpath == (char *)0){
+			SPAWN_CHILD_FAILED(1);
+		}
+
+#if defined(EIF_VMS_V6_ONLY)
+		appname = strrchr (meltpath, ']');
+		if (appname) {
+			*(++appname) = 0;
+		} else {
+			strcpy (meltpath, "[]");
+		}
+#elif defined(EIF_VMS)
+		dirname_size = eifrt_vms_dirname_len (meltpath);
+		if (dirname_size)  {
+			meltpath[--dirname_size] = '\0';
+		} else {
+			strcpy (meltpath, "[]");
+		}
+#elif defined(EIF_WINDOWS)
+		appname = strrchr (meltpath, '\\');
+		if (appname) {
+			*appname = 0;
+		} else {
+			strcpy (meltpath, ".");
+		}
 #else
-rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int handle_meltpath, Pid_t *child_pid)
+		appname = strrchr (meltpath, '/');
+		if (appname) {
+			*appname = 0;
+		} else {
+			strcpy (meltpath, ".");
+		}
+#endif /* platform */
+
+		if (!envstring) {
+			envstring = (char *) malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+		} else {
+			envstring = (char *) realloc (envstring, strlen (meltpath) + strlen("MELT_PATH=") + 1);
+		}
+		if (!envstring){
+			SPAWN_CHILD_FAILED(1);
+		}
+		sprintf (envstring, "MELT_PATH=%s", meltpath);
+		putenv (envstring);
+	
+//			/* Set working directory to where project is located. We look
+//			 * 17 characters before the end of `meltpath' to ensure there
+//			 * is only one occurrence of EIFGENs in `meltpath'. */
+//		/* FIXME JOCELYN new EIFGENs/target/W_code... 17 ??? */
+//		CHECK("Valid melted path", strlen (meltpath) >= 17);
+//					
+//		appname = strstr (meltpath + strlen (meltpath) - 17, "EIFGENs");
+//		if (appname) {
+//			*(appname - 1) = (char) 0;
+//		}
+		free (meltpath);
+}
+
+#ifdef EIF_WINDOWS
+rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *a_exe_path, char* exe_args, char *cwd, char **envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+#else
+rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *cwd, char **envir, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
 					/* Where ProcessId is written (can be NULL if you don't need it) */
 {
-	/* Launch the child process 'cmd' and return the stream structure which can
+	/* Launch the child process 'exe_path' and return the stream structure which can
 	 * be used to communicate with the child. Note that this function only
 	 * returns in the parent process.
 	 */
@@ -129,7 +249,7 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 	char *t_uu;				/* Result of UUEncode */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *startpath = NULL, *dotplace, *cmdline, *exe_path;	/* Paths for directory to start in */
+	char *startpath = NULL, *cmdline;	/* Paths for directory to start in */
 	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
 #else
 	int pp2c[2];				/* The opened downwards file descriptors : parent to child */
@@ -139,121 +259,52 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 	char **argv;				/* Argument vector */
 #endif
 	STREAM *sp;							/* Stream used for communications with ewb */
+	char* quoted_exe_path;
+	char* exe_path;
+
+	exe_path = safe_unquoted_path (a_exe_path);
+	quoted_exe_path = safe_quoted_path (exe_path);
 
 #ifdef EIF_WINDOWS
 		/* We encode 2 pointers, plus '\"?' and '?\"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6;
-
-	exe_path = strdup(cmd);
-	/* Find the name of the command and place it in exe_path */
-	/* Find the args and place them in cmdline */
-	/* Set the starting  path to be the path of the executable io start_path */
-
-	/* FIXME jfiat [2006/06/15] : 
-	 * we should make sure the .exe is at the end of following by a space
-	 * indeed if the executable is  e:/test.exe/eiffel57/...../bin/estudio.exe ... 
-	 * this will fail															*/
-	for (dotplace = strchr (exe_path, '.');
-		dotplace && (strnicmp (dotplace, ".exe", 4) != 0) ;
-		dotplace = strchr (dotplace+1 , '.') )
-		;
-	if (!dotplace) {
-		printf ("Error no .exe in executable");
-		SPAWN_CHILD_FAILED(1);
-	}
-	*(dotplace + 4) = '\0';
-	if ( (strchr (exe_path, ' ') != NULL) && (strchr (exe_path,'"') == NULL) ) {
-		cmdline = malloc (strlen (cmd) + 3 + uu_buffer_size);
-		memset  (cmdline, 0, strlen(cmd) + 3);
-		strcpy (cmdline , "\"");
-		strcat (cmdline, exe_path);
-		strcat (cmdline, "\" ");
-		if (strlen (exe_path) != strlen (cmd))
-			strcat (cmdline, dotplace + 5);
+	if ((exe_args != NULL) && strlen(exe_args) > 0) {
+		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + uu_buffer_size);
+		strcpy (cmdline, quoted_exe_path);
+		strcat (cmdline, " ");
+		strcat (cmdline, exe_args);
 	} else {
-		cmdline = malloc (strlen (cmd) + uu_buffer_size);
-		strcpy (cmdline, cmd);
+		cmdline = malloc (strlen (quoted_exe_path) + uu_buffer_size);
+		strcpy (cmdline, quoted_exe_path);
 	}
+
 #else
-	argv = shword(cmd);					/* Split command into words */
+	if ((exe_args != NULL) && strlen(exe_args) > 0) {
+		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args));
+		strcpy (cmdline, quoted_exe_path);
+		strcat (cmdline, " ");
+		strcat (cmdline, exe_args);
+	} else {
+		cmdline = malloc (strlen (quoted_exe_path));
+		strcpy (cmdline, quoted_exe_path);
+	}
+	argv = shword(cmdline);					/* Split command into words */
+
+	CHECK("Valid argv[0] = exe_path", strnicmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
 #endif
 
 		/* Set MELT_PATH */
 	if (handle_meltpath) {
-		char *meltpath, *appname;
-		static char *envstring = NULL;	/* set MELT_PATH */
-#ifdef EIF_VMS
-		size_t dirname_size;
-#endif
-
-#ifdef EIF_WINDOWS
-		meltpath = (char *) (strdup (exe_path));
-#else
-		meltpath = (char *) (strdup (argv [0]));
-#endif
-		if (meltpath == (char *)0){
-			SPAWN_CHILD_FAILED(1);
-		}
-
-#if defined(EIF_VMS_V6_ONLY)
-		appname = strrchr (meltpath, ']');
-		if (appname) 
-			*(++appname) = 0;
-		else
-			strcpy (meltpath, "[]");
-#elif defined(EIF_VMS)
-		dirname_size = eifrt_vms_dirname_len (meltpath);
-		if (dirname_size) 
-			meltpath[--dirname_size] = '\0';
-		else
-			strcpy (meltpath, "[]");
-#elif defined(EIF_WINDOWS)
-		appname = strrchr (meltpath, '\\');
-		if (appname)
-			*appname = 0;
-		else
-			strcpy (meltpath, ".");
-#else
-		appname = strrchr (meltpath, '/');
-		if (appname)
-			*appname = 0;
-		else
-			strcpy (meltpath, ".");
-#endif /* platform */
-
-		if (!envstring) {
-			envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
-		} else {
-			envstring = (char *) realloc (envstring, strlen(meltpath) + strlen("MELT_PATH=") + 1);
-		}
-		if (!envstring){
-			SPAWN_CHILD_FAILED(1);
-		}
-		sprintf (envstring, "MELT_PATH=%s", meltpath);
-		putenv (envstring);
-	
-			/* Set working directory to where project is located. We look
-			 * 14 characters before the end of `meltpath' to ensure there
-			 * is only one occurrence of EIFGEN in `meltpath'. */
-		CHECK("Valid melted path", strlen (meltpath) >= 14);
-					
-		appname= strstr (meltpath + strlen (meltpath) - 14, "EIFGEN");
-		if (appname) {
-			*(appname - 1) = (char) 0;
-			chdir (meltpath);
-#ifdef EIF_WINDOWS
-			startpath = strdup (meltpath);
-#endif
-		}
-		free (meltpath);
+		set_meltpath_environment (exe_path);
 	}
+
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
 	 * opened, one for downwards communications (ised -> ewb) and one for
 	 * upwards (ewb -> ised).
 	 */
 
 #ifdef EIF_WINDOWS
-	/* Standard pipe oeratons for Windows
+	/* Standard pipe operatons for Windows
 		DuplicateHandle is called to set correct permisions.
 	*/
 
@@ -328,7 +379,8 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
-		startpath = strdup (exe_path);
+		startpath = malloc (strlen (exe_path));
+		strcpy (startpath, exe_path);
 		*(strrchr (startpath, '\\')) = '\0';
 	}
 
@@ -370,25 +422,27 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 		l_startup_flags = CREATE_NEW_CONSOLE;
 	}
 	/* if ever we pass Unicode envir: l_startup_flags = l_startup_flags | CREATE_UNICODE_ENVIRONMENT; */
-	fSuccess = CreateProcess (exe_path,	/* Command 	*/
-		cmdline,			/* Command line */
-		NULL,				/* Process security attribute */
-		NULL,				/* Primary thread security attributes */
-		TRUE,				/* Handles are inherited */
-		l_startup_flags,	/* Creation flags */
-		envir,				/* Use parent's environment */
-		startpath,			/* Use cmd's current directory */
-		&siStartInfo,		/* STARTUPINFO pointer */
-		&piProcInfo);		/* for PROCESS_INFORMATION */
+	fSuccess = CreateProcess (
+			exe_path,			/* Command 	*/
+			cmdline,			/* Command line */
+			NULL,				/* Process security attribute */
+			NULL,				/* Primary thread security attributes */
+			TRUE,				/* Handles are inherited */
+			l_startup_flags,	/* Creation flags */
+			envir,				/* Use parent's environment */
+			startpath,			/* Use cmd's current directory */
+			&siStartInfo,		/* STARTUPINFO pointer */
+			&piProcInfo			/* for PROCESS_INFORMATION */
+		);
 
 	if (!fSuccess) {
 #ifdef USE_ADD_LOG
 		add_log(20, "ERROR cannot create process %d", GetLastError());
 		add_log(20, "Error code %d", GetLastError());
 #endif
-		strcat (error_msg, "Cannot Launch the program \"");
+		strcat (error_msg, "Cannot Launch the program [");
 		strcat (error_msg, exe_path);
-		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
+		strcat (error_msg, "]\nMake sure you have correctly set up your installation.");
 		MessageBox (NULL, error_msg, "Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
@@ -533,22 +587,22 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 /*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
 
 		if (envir == NULL) {
-			execv(argv[0], argv);
+			execv(exe_path, argv);
 		} else {
-			execve(argv[0], argv, envir);
+			execve(exe_path, argv, envir);
 		}
 #else
 		if (envir == NULL) {
-			execvp(argv[0], argv);
+			execvp(exe_path, argv);
 		} else {
-			execve(argv[0], argv, envir);
+			execve(exe_path, argv, envir);
 		}
 #endif
-			print_err_msg(stderr,"ERROR could not launch '%s'", argv[0]);
+			print_err_msg(stderr,"ERROR could not launch '%s'", exe_path);
 #ifdef USE_ADD_LOG
 			reopen_log();
 			add_log(1, "SYSERR: exec: %m (%e)");
-			add_log(2, "ERROR could not launch '%s'", argv[0]);
+			add_log(2, "ERROR could not launch '%s'", exe_path);
 #endif
 		}
 #ifdef USE_ADD_LOG
@@ -654,6 +708,7 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int 
 
 	free (cmdline);
 	free (exe_path);
+	free (quoted_exe_path);
 	free (startpath);
 #else
 	if (child_pid != (Pid_t *) 0)

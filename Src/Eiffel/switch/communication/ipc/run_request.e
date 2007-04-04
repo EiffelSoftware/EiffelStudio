@@ -25,6 +25,9 @@ feature -- Status report
 	application_name: STRING
 			-- Path to executable of application
 
+	arguments: STRING
+			-- Arguments for application execution
+
 	working_directory: STRING
 			-- Directory in which `application_name' will be launched.
 
@@ -44,6 +47,14 @@ feature -- Status setting
 			application_name := s
 		ensure
 			application_name_set: application_name = s
+		end
+
+	set_arguments (s: STRING) is
+			-- Assign `s' to `arguments'.
+		do
+			arguments := s
+		ensure
+			arguments_set: arguments = s
 		end
 
 	set_working_directory (s: STRING) is
@@ -130,8 +141,16 @@ feature {NONE} -- Implementation
 			create c_string.make (application_name)
 			c_send_str (c_string.item)
 
-			Result := recv_ack
+				-- Send the arguments.
 
+			if arguments = Void then
+				create c_string.make ("")
+			else
+				create c_string.make (arguments)
+			end
+			c_send_str (c_string.item)
+
+			Result := recv_ack
 			debug("DEBUGGER")
 				if Result then
 					io.put_string("acknowledge received%N");

@@ -243,8 +243,9 @@ rt_public int send_sized_str(EIF_PSTREAM sp, char *buffer, int size)
 
 	send_packet(sp, &pack);	/* Send the length */
 
-	if (size == 0)					/* Null-length string */
+	if (size == 0) {					/* Null-length string */
 		return 0;
+	}
 
 	/* Wait for the acknowledgment */
 #ifdef EIF_WINDOWS
@@ -325,12 +326,10 @@ rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)
 	}
 
 	size = pack.rq_opaque.op_size;			/* Fetch string's length */
-	if (sizeptr)				/* Fill in size pointer */
-		*sizeptr = size;
+	if (sizeptr) {*sizeptr = size; }		/* Fill in size pointer */
 
 	if (size == 0) {						/* Nothing to be received */
-		if (sizeptr)			/* Fill in size with 0 */
-			*sizeptr = 0;
+		if (sizeptr) { *sizeptr = 0; }		/* Fill in size with 0 */
 		return (char *) 0;
 	}
 

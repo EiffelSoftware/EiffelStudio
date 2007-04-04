@@ -219,12 +219,24 @@ rt_public char **shword(char *cmd)
 			}
 		}
 		switch (c) {
-			case '\\':
+		case '\\':
 			was_backslash = 1;			/* Remember that previous was a \ */
 			word[pos++] = c;			/* Record character */
 			break;
 		case '\'':
-			in_simple = 1;				/* Entering simple quote */
+			if (!in_quote)
+				in_simple = 1;			/* Entering simple quote */
+			else
+#ifdef EIF_WINDOWS
+				if (!in_simple)
+					word[pos++] = c;		/* Must have been escaped */
+				else {
+					in_simple = 0;
+					continue;
+				}
+#else
+				word[pos++] = c;		/* Must have been escaped */
+#endif
 			break;
 		case '"':
 			if (!in_simple)

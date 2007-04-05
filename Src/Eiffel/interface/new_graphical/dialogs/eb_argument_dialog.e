@@ -82,7 +82,6 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
-			cell: EV_CELL
 			lab: EV_LABEL
 			cmd: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		do

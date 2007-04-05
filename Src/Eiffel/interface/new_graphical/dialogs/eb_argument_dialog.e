@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
 			cell: EV_CELL
+			lab: EV_LABEL
 			cmd: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		do
 			create execution_frame
@@ -123,6 +124,9 @@ feature {NONE} -- Initialization
 				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)
 
 				vbox.extend (create {EV_CELL})
+				create lab.make_with_text (interface_names.l_outside_ide)
+				vbox.extend (lab)
+				vbox.disable_item_expand (lab)
 
 				cmd := eb_debugger_manager.run_workbench_cmd
 				create start_wb_button.make_with_text (cmd.tooltext)
@@ -142,10 +146,6 @@ feature {NONE} -- Initialization
 				start_final_button.select_actions.extend (agent cmd.execute)
 				Layout_constants.set_default_width_for_button (start_final_button)
 			end
-
-			create cell
-			cell.set_minimum_width (Layout_constants.Small_padding_size)
-			vbox.extend (cell)
 
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)

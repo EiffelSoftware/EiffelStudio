@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 		require
 			exp /= Void
 		do
-			is_readonly := True
+			set_read_only (True)
 			make_with_expression (exp, g)
 		end
 
@@ -173,6 +173,13 @@ feature -- change properties
 					a_item.set_foreground_color (parent_grid.parent.foreground_color)
 				end
 			end
+		end
+
+feature -- Settings
+
+	set_read_only (b: like is_readonly) is
+		do
+			is_readonly := b
 		end
 
 feature -- Properties
@@ -387,7 +394,8 @@ feature -- Graphical changes
 			r: EV_GRID_ROW
 		do
 			if
-				abutton = 1
+				not is_readonly
+				and then abutton = 1
 				and not ev_application.ctrl_pressed
 				and not ev_application.shift_pressed
 				and not ev_application.alt_pressed

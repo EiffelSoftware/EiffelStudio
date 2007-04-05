@@ -345,9 +345,9 @@ feature -- Access
 			-- Static type of `Current'.
 			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
 
-feature -- Evaluation
+feature {EB_EXPRESSION} -- Evaluation
 
-	evaluate is
+	evaluate (keep_assertion_checking: BOOLEAN) is
 			-- Compute the value of the last message of `Current'.
 		require
 			dbg_expression_valid_syntax: as_object or else not dbg_expression.syntax_error

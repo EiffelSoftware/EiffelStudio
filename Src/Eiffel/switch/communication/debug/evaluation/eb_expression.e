@@ -203,6 +203,10 @@ feature -- Status report
 			else
 				Result := interface_names.l_Current_context
 			end
+			if keep_assertion_checking then
+				Result.append (" - ")
+				Result.append (interface_names.b_eval_keep_assertions_checking)
+			end
 		end
 
 feature -- Bridge to dbg_expression_evaluator
@@ -273,10 +277,16 @@ feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_EVALUATOR_TOOL, EB_E
 	context_address: STRING
 			-- Address of the object the expression refers to (only valid if `on_object').
 
-feature -- Basic operations
+feature -- Evaluation settings
 
 	is_evaluated: BOOLEAN
 			-- Is current expression had been evaluated ?
+
+	keep_assertion_checking: BOOLEAN
+			-- Do we keep assertion checking enabled during evaluation ?
+			--| Default: False.
+
+feature -- Basic operations
 
 	set_unevaluated is
 			-- Reset is_evaluated
@@ -284,14 +294,27 @@ feature -- Basic operations
 			is_evaluated := False
 		end
 
+	set_keep_assertion_checking	(b: like keep_assertion_checking) is
+			-- Set `keep_assertion_checking' with `b'
+		do
+			keep_assertion_checking := b
+		end
+
 	evaluate is
 			-- Evaluate `dbg_expression' with `expression_evaluator'
+		do
+			evaluate_with_settings (keep_assertion_checking)
+		end
+
+	evaluate_with_settings (a_keep_assertion_checking: BOOLEAN) is
+			-- Evaluate `dbg_expression' with `expression_evaluator'
+			-- using `a_keep_assertion_checking' as settings
 		do
 			expression_evaluator.reset_error
 			if syntax_error_occurred then
 				expression_evaluator.notify_error_syntax (dbg_expression.error_message)
 			else
-				expression_evaluator.evaluate
+				expression_evaluator.evaluate (a_keep_assertion_checking)
 			end
 			is_evaluated := True
 		end

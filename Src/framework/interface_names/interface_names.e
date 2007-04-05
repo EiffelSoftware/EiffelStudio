@@ -74,6 +74,7 @@ feature -- Button texts
 	b_Function_time: STRING_GENERAL is					do Result := locale.translate("Function Time")	end
 	b_go_to: STRING_GENERAL is							do Result := locale.translate ("Go to") end
 	b_Keep_assertions: STRING_GENERAL is				do Result := locale.translate("Keep Assertions")	end
+	b_Eval_keep_assertions_checking: STRING_GENERAL is	do Result := locale.translate("Keep Assertions Checking")	end
 	b_Load_ace: STRING_GENERAL is						do Result := locale.translate("Load From...")	end
 	b_Move_to_folder: STRING_GENERAL is					do Result := locale.translate("Move to Folder...")	end
 	b_New_ace: STRING_GENERAL is						do Result := locale.translate("Reset")	end
@@ -1078,6 +1079,7 @@ feature -- Label texts
 	l_Options: STRING_GENERAL is 				do Result := locale.translate("Options")	end
 	l_Options_colon: STRING_GENERAL is 				do Result := locale.translate("Options: ")	end
 	l_Output_switches: STRING_GENERAL is		do Result := locale.translate("Output switches")	end
+	l_Outside_ide: STRING_GENERAL is 			do Result := locale.translate ("Outside EiffelStudio") end
 	l_Parent_cluster: STRING_GENERAL is			do Result := locale.translate("Parent cluster")	end
 	l_parents: STRING_GENERAL is				do Result := locale.translate("Parents:")	end
 	l_Path: STRING_GENERAL is					do Result := locale.translate("Path")	end

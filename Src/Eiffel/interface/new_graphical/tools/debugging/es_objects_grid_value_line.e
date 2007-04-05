@@ -205,7 +205,11 @@ feature -- Graphical changes
 					set_address (Void)
 					set_pixmap (Icons @ (Void_value))
 				else --| dv /= Void |--
-					set_name (dv.name)
+					if title /= Void then
+						set_name (title)
+					else
+						set_name (dv.name)
+					end
 					set_address (dv.address)
 
 					last_dump_value := Void

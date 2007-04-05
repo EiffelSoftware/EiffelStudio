@@ -165,6 +165,11 @@ feature {NONE} -- Initialization
 				object_name_field.set_text (expr.name)
 			end
 			modified_expression := expr
+			if expr.keep_assertion_checking then
+				keep_assertion_checking_cb.enable_select
+			else
+				keep_assertion_checking_cb.disable_select
+			end
 		end
 
 feature {NONE} -- Graphical initialization and changes
@@ -204,8 +209,6 @@ feature {NONE} -- Graphical initialization and changes
 			create expression_field.make
 			create address_field
 			create object_name_field
-
-
 
 			setup_completion_possibilities_providers
 
@@ -266,7 +269,6 @@ feature {NONE} -- Graphical initialization and changes
 			object_box.extend (hb)
 			vb.extend (object_box)
 
-
 				--| class context
 			create class_box
 			class_box.extend (class_radio)
@@ -299,13 +301,23 @@ feature {NONE} -- Graphical initialization and changes
 			expression_frame.extend (vb)
 
 				--| 2,2) Object name frame.
-			create object_name_frame.make_with_text ("Name") --Interface_names.l_Expression)
+			create object_name_frame.make_with_text (Interface_names.l_name)
 			create vb
 			vb.set_border_width (Layout_constants.small_border_size)
 			vb.extend (object_name_field)
 			object_name_frame.extend (vb)
 
-				--| 3) Buttons.
+				--| 3) assertion settings
+			create keep_assertion_checking_cb.make_with_text (interface_names.b_eval_keep_assertions_checking)
+			keep_assertion_checking_cb.disable_select
+			create hb
+			hb.extend (create {EV_CELL})
+			hb.extend (keep_assertion_checking_cb)
+			hb.disable_item_expand (keep_assertion_checking_cb)
+			cnt.extend (hb)
+			cnt.disable_item_expand (hb)
+
+				--| 4) Buttons.
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			hb.extend (create {EV_CELL})
@@ -616,6 +628,9 @@ feature {NONE} -- Event handling
 				end
 				new_expression := modified_expression
 			end
+			if new_expression /= Void then
+				new_expression.set_keep_assertion_checking (keep_assertion_checking_cb.is_selected)
+			end
 			if
 				not do_not_close_dialog
 				and then new_expression /= Void
@@ -684,6 +699,9 @@ feature {NONE} -- Widgets
 
 	expression_frame, object_name_frame: EV_FRAME
 			-- Container for expression or object name zones.
+
+	keep_assertion_checking_cb: EV_CHECK_BUTTON
+			-- Do we eval with assertion checking on ?
 
 	context_box, object_box, class_box: EV_VERTICAL_BOX
 			-- Container for current feature/object address/class zones.

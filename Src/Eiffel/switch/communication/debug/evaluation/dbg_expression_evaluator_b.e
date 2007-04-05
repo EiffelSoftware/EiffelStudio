@@ -69,9 +69,9 @@ feature -- helpers
 			Result := debugger_manager.application_status
 		end
 
-feature -- Evaluation
+feature {EB_EXPRESSION} -- Evaluation
 
-	evaluate is
+	evaluate (keep_assertion_checking: BOOLEAN) is
 			-- Compute the value of the last message of `Current'.
 		local
 			l_error_occurred: BOOLEAN
@@ -130,11 +130,7 @@ feature -- Evaluation
 					clean_temp_data
 
 						--| concrete evaluation
-					if expression_byte_node /= Void then
-						process_expression_evaluation (expression_byte_node)
-					else
-						process_instruction_evaluation (instruction_byte_node)
-					end
+					process_byte_node_evaluation (keep_assertion_checking)
 
 						--| Process result
 					if tmp_result_value /= Void then
@@ -173,13 +169,40 @@ feature -- Evaluation
 			tmp_target := Void
 		end
 
+feature {NONE} -- Evaluation
+
+	process_byte_node_evaluation (keep_assertion_checking: BOOLEAN) is
+		require
+			byte_node_not_void: byte_node /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				if not keep_assertion_checking then
+					debugger_manager.application.disable_assertion_check
+				end
+				if expression_byte_node /= Void then
+					process_expression_evaluation (expression_byte_node)
+				else
+					process_instruction_evaluation (instruction_byte_node)
+				end
+			else
+				notify_error_exception (cst_error_evaluation_failed_with_internal_exception)
+			end
+			if not keep_assertion_checking then
+				debugger_manager.application.restore_assertion_check
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature {NONE} -- INSTR_B evaluation
 
 	process_instruction_evaluation (a_instr_b: INSTR_B) is
 		local
 			l_instr_call_b: INSTR_CALL_B
 		do
-
 			l_instr_call_b ?= a_instr_b
 			if l_instr_call_b /= Void then
 				evaluate_call_b (l_instr_call_b.call)
@@ -209,17 +232,8 @@ feature {NONE} -- INSTR_B evaluation
 feature {NONE} -- EXPR_B evaluation
 
 	process_expression_evaluation (a_expr_b: EXPR_B) is
-		local
-			retried: BOOLEAN
 		do
-			if not retried then
-				evaluate_expr_b (a_expr_b)
-			else
-				notify_error_exception (Cst_error_evaluation_failed_with_internal_exception)
-			end
-		rescue
-			retried := True
-			retry
+			evaluate_expr_b (a_expr_b)
 		end
 
 	evaluate_expr_b (a_expr_b: EXPR_B) is

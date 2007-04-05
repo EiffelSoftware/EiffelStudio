@@ -380,7 +380,6 @@ feature{NONE} -- Grid item generation
 		do
 			create Result.make_with_setting (create{EB_METRIC_DOMAIN}.make, True)
 			Result.set_value (["", False, a_archive_node.value_tester])
-			Result.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
 			Result.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
 			Result.dialog_ok_actions.extend (agent Result.redraw)
 			Result.dialog_ok_actions.extend (agent resize_grid (Result))

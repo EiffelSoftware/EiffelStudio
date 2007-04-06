@@ -9,11 +9,8 @@ class
 
 feature -- Access
 
-	target: ANY
+	target: EV_ABSTRACT_PICK_AND_DROPABLE
 		-- Target of PND menu item.
-
-	target_action: PROCEDURE [ANY, TUPLE]
-		-- Target agent for current transport.
 
 	name: STRING_GENERAL
 		-- Name for PND menu item.
@@ -45,7 +42,7 @@ feature -- Element Change
 
 feature {EV_APPLICATION_I} -- Implementation
 
-	set_target (a_target: ANY)
+	set_target (a_target: like target)
 			-- Set `target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -53,13 +50,6 @@ feature {EV_APPLICATION_I} -- Implementation
 			target := a_target
 		ensure
 			target_assigned: target = a_target
-		end
-
-	set_target_action (a_action: PROCEDURE [ANY, TUPLE])
-		require
-			a_action_not_void: a_action /= Void
-		do
-			target_action := a_action
 		end
 
 indexing

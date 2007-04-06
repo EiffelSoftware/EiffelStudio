@@ -567,7 +567,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 							l_item_name := l_item_data.name
 							l_item_pixmap := l_item_data.pixmap
 							l_item_data.set_target (trg)
-							l_item_data.set_target_action (agent (trg.drop_actions).call ([a_pebble]))
 							if not l_configurable_item_added and then a_configure_agent /= Void then
 								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Revert to Pick", a_configure_agent))
 								l_menu.extend (create {EV_MENU_SEPARATOR})
@@ -607,7 +606,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					until
 						l_arrayed_list.after
 					loop
-						l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, l_arrayed_list.item.target_action))
+						l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
 						l_arrayed_list.forth
 					end
 				end

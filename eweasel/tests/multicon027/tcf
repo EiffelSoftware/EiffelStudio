@@ -4,11 +4,21 @@ test_description This test checks whether it's possible to reference a creation 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
-copy_raw 	multi2.e $CLUSTER multi2.e
 
 
+define WRONG_CREATION "create l_g.dn"
+copy_sub 	multi2.e $CLUSTER multi2.e
 compile_melted
+compile_result validity_error MULTI2 VGCC(8)
+
+define WRONG_CREATION ""
+copy_sub 	multi2.e $CLUSTER multi2.e
+resume_compile
 compile_result ok
+
+c_compile_work
+execute_work NONE exec_output1
+compare exec_output1 output
 
 test_end
 

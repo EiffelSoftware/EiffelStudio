@@ -1,5 +1,5 @@
 indexing
-description	: "This test checks that we get an error if someone renames a feature which does not exist in the base class."
+description	: "This test creates objects by a creation feature which is provided through a constraint which is of formal type:"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,9 +15,11 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		local
-			l: MULTI [like a, like a]
-			arrayed_list: ARRAYED_LIST[like a]
+			l: MULTI [like a, DOUBLE_REF]
+			l2: MULTI2 [like a, DOUBLE_REF, COMPARABLE]
 		do
+			create l.make
+			create l2.make
 		end
 
 end

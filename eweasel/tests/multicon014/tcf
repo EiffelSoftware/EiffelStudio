@@ -7,28 +7,35 @@
 -- This is a test control file
 
 test_name multi-constraint-vtmc
-test_description Using COMPARABLE and NUMMERIC from base to implement a generic nummeric algorithm.
+test_description Causes the compiler to throw all VTMC* errors and fixes them. In the end the program is correct and should compile just fine.
+
+define COMMENT_LINE_1 ""
+define COMMENT_LINE_2 ""
+define COMMENT_LINE_3 ""
+
+
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
-copy_raw 	multi.e $CLUSTER multi.e
+copy_sub 	multi.e $CLUSTER multi.e
+
 compile_melted
+compile_result 	validity_error MULTI VTMC(1)
+
+define COMMENT_LINE_1 "--"
+copy_sub 	multi.e $CLUSTER multi.e
+resume_compile
+compile_result 	validity_error MULTI VUEX(2)
+
+define COMMENT_LINE_2 "--"
+copy_sub 	multi.e $CLUSTER multi.e
+resume_compile
+compile_result 	validity_error MULTI VTMC(2)
+
+
+define COMMENT_LINE_3 "--"
+copy_sub 	multi.e $CLUSTER multi.e
+resume_compile
 compile_result 	ok
-
-execute_work NONE exec_output1
-compare exec_output1 output1
-
-compile_frozen
-compile_result 	ok
-c_compile_work
-execute_work NONE exec_output1
-compare exec_output1 output1
-
-compile_final
-compile_result 	ok
-c_compile_final
-execute_final NONE exec_output1
-compare exec_output1 output1
-
 
 test_end

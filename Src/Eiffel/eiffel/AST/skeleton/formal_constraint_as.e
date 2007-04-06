@@ -461,14 +461,6 @@ feature -- Validity checking
 			l_constraints := constraints
 			if l_constraints.count = 1 then
 				l_constraining_type := l_constraints.first
-				if l_constraining_type.renaming /= Void then
-						-- Only one constraint and a renaming does not make any sense!
-					create l_vtmc3
-					l_vtmc3.set_class (a_context_class)
-					l_vtmc3.set_type (l_constraining_type.type)
-					l_vtmc3.set_message ("It is not allowed to apply a renaming to only a single constraint.")
-					Error_handler.insert_error (l_vtmc3)
-				end
 
 					-- Get class if possible
 				l_type := l_constraining_type.type

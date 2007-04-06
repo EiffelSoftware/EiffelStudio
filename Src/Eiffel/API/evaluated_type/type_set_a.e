@@ -679,6 +679,36 @@ feature -- Conversion
 			Result := Current
 		end
 
+	substitude_formals (a_generic_context_type: GEN_TYPE_A)
+			-- Replaces (!) formal types with their generic derivation.
+			--
+			-- `a_generic_context_type' is the supplier of the actual generics
+		require
+			a_generic_context_type_not_void: a_generic_context_type /= Void
+		local
+			l_formal: FORMAL_A
+			l_gen_type: GEN_TYPE_A
+			l_item_type: TYPE_A
+		do
+			from
+				start
+			until
+				after
+			loop
+				l_item_type := item.type
+				l_formal ?= l_item_type
+				if l_formal /= Void then
+					item.set_type (a_generic_context_type.generics [l_formal.position])
+				else
+					l_gen_type ?= l_item_type
+					if l_gen_type /= Void then
+						l_gen_type.substitute (a_generic_context_type.generics)
+					end
+				end
+				forth
+			end
+		end
+
 feature -- Comparison
 
 	conform_to (a_other: like Current): BOOLEAN is
@@ -701,8 +731,7 @@ feature -- Comparison
 				loop
 					if item.type.conform_to (a_other.item.type) then
 						a_other.remove
-					end
-					if not a_other.after then
+					elseif not a_other.after then
 						a_other.forth
 					end
 				end
@@ -718,24 +747,31 @@ feature -- Comparison
 
 	conform_to_type (a_type: TYPE_A): BOOLEAN is
 			-- Is `Current' conform to `a_type'?
+		local
+			l_type_set: TYPE_SET_A
 		do
-			-- If at least one element of `Current' conforms to `a_type' then the type set conforms to the type.
-			Result := False
-			from
-				start
-			until
-				after or Result
-			loop
-				Result := item.type.conform_to (a_type)
-				last_type_checked := item
-				forth
+			l_type_set ?= a_type
+			if l_type_set /= Void then
+				Result := conform_to (l_type_set.twin)
+			else
+					-- If at least one element of `Current' conforms to `a_type' then the type set conforms to the type.
+				Result := False
+				from
+					start
+				until
+					after or Result
+				loop
+					Result := item.type.conform_to (a_type.conformance_type)
+					last_type_checked := item
+					forth
+				end
 			end
 		end
 
 	is_conforming_type (a_type: TYPE_A): BOOLEAN is
 			-- Conforms `a_type' to the type set?
 		do
-			-- If `a_type' is not conform to at least one element of the type set then `a_type' is not conform to the type set.
+				-- If `a_type' is not conform to at least one element of the type set then `a_type' is not conform to the type set.
 			Result := True
 			from
 				start
@@ -929,7 +965,9 @@ feature -- Status
 		do
 			Result := there_exists (agent (a_item: EXTENDED_TYPE_A): BOOLEAN
 						 do
-						 	Result := a_item.associated_class.is_deferred
+						 	if a_item.has_associated_class then
+						 		Result := a_item.associated_class.is_deferred
+						 	end
 						 end)
 		end
 

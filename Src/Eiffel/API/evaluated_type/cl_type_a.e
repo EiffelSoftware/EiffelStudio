@@ -306,8 +306,10 @@ feature {COMPILER_EXPORTER} -- Conformance
 			-- Does Current conform to `other'?
 		local
 			other_class_type: CL_TYPE_A
+			l_other_type_set: TYPE_SET_A
 		do
 			other_class_type ?= other.conformance_type
+			l_other_type_set ?= other
 			if other_class_type /= Void then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
@@ -331,6 +333,8 @@ feature {COMPILER_EXPORTER} -- Conformance
 						Result := other_class_type.class_id = system.system_object_id
 					end
 				end
+			elseif l_other_type_set /= Void then
+				Result := to_type_set.conform_to (l_other_type_set.twin)
 			end
 		end
 

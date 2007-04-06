@@ -12,7 +12,7 @@ feature -- Access
 	target: EV_ABSTRACT_PICK_AND_DROPABLE
 		-- Target of PND menu item.
 
-	name: STRING_GENERAL
+	name: STRING_32
 		-- Name for PND menu item.
 
 	pixmap: EV_PIXMAP

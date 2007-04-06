@@ -524,8 +524,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			targets: like pnd_targets
 			identified: IDENTIFIED
 			sensitive: EV_SENSITIVE
-			l_item_name: STRING_GENERAL
-			l_item_pixmap: EV_PIXMAP
 			l_item_data: EV_PND_TARGET_DATA
 			l_search_tree: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
@@ -534,6 +532,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_alphabetical_sort_agent: PROCEDURE [ANY, TUPLE [PROCEDURE [ANY, TUPLE], BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]]
 			l_configurable_item_added: BOOLEAN
 			l_menu: EV_MENU
+			l_menu_count: INTEGER
 		do
 			targets := pnd_targets
 			create l_menu
@@ -564,8 +563,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 								create l_item_data
 								l_item_data.set_name (trg.generating_type)
 							end
-							l_item_name := l_item_data.name
-							l_item_pixmap := l_item_data.pixmap
 							l_item_data.set_target (trg)
 							if not l_configurable_item_added and then a_configure_agent /= Void then
 								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Revert to Pick", a_configure_agent))
@@ -578,6 +575,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 							else
 								l_search_tree.put (l_object_comparable)
 							end
+							l_item_data := Void
 						end
 					end
 				end
@@ -598,6 +596,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					-- Call the recursive agent by passing itself in as the first parameter.
 				l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
 
+				l_menu_count := l_menu.count
 				if a_pnd_source.configurable_target_menu_handler /= Void then
 					a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
 				else
@@ -610,8 +609,10 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						l_arrayed_list.forth
 					end
 				end
-				if not l_menu.is_destroyed then
+				if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
 					l_menu.show
+				else
+					a_configure_agent.call (Void)
 				end
 			end
 			targets.go_to (cur)

@@ -25,6 +25,11 @@ inherit
 			Inherit_table as analyzer
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -94,7 +99,6 @@ feature -- Processing
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
 						j := j + 1
-
 						Degree_output.put_degree_4 (a_class, count - nb)
 						System.set_current_class (a_class)
 						process_class (a_class)
@@ -129,6 +133,7 @@ feature -- Processing
 			end
 
 				-- We cannot go on here as the creation constraints are not guaranteed to be valid.
+			fixme ("MTNASK: I think this line is wrong as `check_creation_constraint_instances' seems to be important for the incremental compilation?")
 			Error_handler.checksum
 
 				-- Check now that all the instances of a generic class are

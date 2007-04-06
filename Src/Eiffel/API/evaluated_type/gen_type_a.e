@@ -735,7 +735,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
 									-- So we store all the needed information and we will do a check at the
 									-- end of the degree 4 (look at PASS2 for the code which does the checking).
-								l_formal_generic_parameter ?= l_generic_parameter
+								l_formal_generic_parameter ?= l_generic_parameter.conformance_type
 								if System.in_pass3 then
 									creation_constraint_check (
 											l_formal_dec_as, l_constraints, a_type_context,
@@ -747,7 +747,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 --											l_generic_parameter, l_constraints, l_formal_dec_as, i, l_formal_generic_parameter, False))
 --									else
 										add_future_checking (a_type_context,
-											agent delayed_creation_constraint_check (a_type_context, Void,
+											agent delayed_creation_constraint_check (a_type_context, a_context_feature,
 											l_generic_parameter, l_constraints, l_formal_dec_as, i, l_formal_generic_parameter))
 --									end
 								end
@@ -811,16 +811,18 @@ feature {COMPILER_EXPORTER} -- Primitives
 		require
 			formal_dec_as_not_void: formal_dec_as /= Void
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
+			to_check_is_formal_implies_formal_type_not_void: to_check.conformance_type.is_formal implies formal_type /= Void
 		local
 			l_vtcg7: VTCG7
 		do
 			reset_constraint_error_list
 			if context_class.is_valid and then to_check /= Void and then to_check.is_valid then
-				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type) -- MTNTODO: Replace void with formal_type
 				if not constraint_error_list.is_empty then
 						-- The feature listed in the creation constraint have
 						-- not been declared in the constraint class.
 					create l_vtcg7
+				--	l_vtcg7.set_location (Current.first_token (context.))
 					l_vtcg7.set_class (context_class)
 					l_vtcg7.set_error_list (constraint_error_list)
 					l_vtcg7.set_parent_type (Current)
@@ -852,7 +854,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			feat_tbl: FEATURE_TABLE
 			class_c: CLASS_C
 			other_feature_i, feature_i: FEATURE_I
-			l_unmatched_features: LIST[FEATURE_I]
+			l_unmatched_features: LIST [FEATURE_I]
 		do
 
 				-- If there is a creation constraint we are facing two different cases:
@@ -872,6 +874,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				--              where `my_make_k' is a redefined/renamed version of `make_i'.
 			crc_list := formal_dec_as.constraint_creation_list (associated_class)
 			if formal_type = Void then
+					-- We're in the case of a class type.
 				if to_check.has_associated_class then
 					-- `to_check' may not have an associated class if it represents NONE type, for
 						-- example in PROCEDURE [ANY, NONE], we will check NONE against
@@ -916,17 +919,26 @@ feature {COMPILER_EXPORTER} -- Primitives
 						crc_list.forth
 					end
 				else
+						-- The class type does not have a creation clause:
 						-- May be we are handling a case where the constraint only specfies
 						-- `default_create', so let's check that the constraint defines
 						-- `default_create' as creation procedure and that `creators_table'
 						-- is Void (as empty means there is no way to create an instance of this
 						-- class).
+						-- At last we check that this class is not deferred.
 					if
 					 	creators_table = Void and then
 						(crc_list.count = 1 and then formal_dec_as.has_default_create)
 					then
-						-- Ok, no error: We have no create clause which makes `default_create' available
-						-- and the constraint demands only `default_create'
+							-- Ok, no error: We have no create clause which makes `default_create' available
+							-- and the constraint demands only `default_create'
+							-- But maybe it is a deferred class?
+							if class_c /= Void and then class_c.is_deferred then
+								if l_unmatched_features = Void then
+									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+								end
+								l_unmatched_features.extend (crc_list.first.feature_item)
+							end
 					else
 							-- Generate list of features not matching constraint.
 						from

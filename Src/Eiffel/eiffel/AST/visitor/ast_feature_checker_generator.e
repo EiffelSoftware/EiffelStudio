@@ -562,9 +562,19 @@ feature {NONE} -- Implementation: Access
 	last_access_writable: BOOLEAN
 			-- Is last ACCESS_AS node creatable?
 
+	last_original_feature_name: STRING
+			-- Original name of last ACCESS_AS (`last_feature_name' might be different and depending
+			-- on what usage is intended this or the other might be the one to use)
+
+	last_original_feature_name_id: INTEGER
+			-- Names_heap Id of `last_original_feature_name'
+
 	last_feature_name: STRING
 			-- Actual name of last ACCESS_AS (might be different from original name
-			-- in case an overloading resolution took place)
+			-- in case an overloading resolution or a renaming of a formal constraint took place)
+
+	last_feature_name_id: INTEGER
+			-- Names_heap Id of `last_feature_name'
 
 	is_last_access_tuple_access: BOOLEAN
 			-- Is last ACCESS_AS node an access to a TUPLE element?
@@ -584,7 +594,11 @@ feature -- Settings
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
+			last_original_feature_name := Void
+			last_original_feature_name_id := 0
 			last_feature_name := Void
+			last_feature_name_id := 0
+			last_calls_target_type := Void
 			is_type_compatible := False
 			last_assigner_command := Void
 			is_inherited := False
@@ -1080,6 +1094,7 @@ feature -- Implementation
 			l_is_multiple_constraint_case: BOOLEAN
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			l_tuple_access_b: TUPLE_ACCESS_B
+			l_vtmc1: VTMC1
 		do
 				-- Reset
 			last_calls_target_type := Void
@@ -1100,7 +1115,15 @@ feature -- Implementation
 			l_is_assigner_call := is_assigner_call
 			is_assigner_call := False
 
-			l_feature_name := a_name
+				-- `a_name' can be void for inline agents
+			if a_name /= Void then
+				l_feature_name := a_name
+					-- We need to store the original name as it may change due to
+					-- renamings applied of multi constraint formal generics.
+				last_original_feature_name := a_name.name
+				last_original_feature_name_id := a_name.name_id
+			end
+
 			l_context_current_class := context.current_class
 
 			l_last_type := a_type.actual_type
@@ -1223,6 +1246,7 @@ feature -- Implementation
 						last_type := l_named_tuple.generics.item (l_label_pos)
 						l_is_last_access_tuple_access := True
 						last_feature_name := l_feature_name.name
+						last_feature_name_id := l_feature_name.name_id
 						if l_needs_byte_node then
 							create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple.type_i, l_label_pos)
 							last_byte_node := l_tuple_access_b
@@ -1562,19 +1586,32 @@ feature -- Implementation
 					last_calls_target_type := l_last_constrained
 					last_access_writable := l_feature.is_attribute
 					last_feature_name := l_feature.feature_name
+					last_feature_name_id := l_feature.feature_name_id
 					last_routine_id_set := l_feature.rout_id_set
 				else
 						-- `l_feature' was not valid for current, report
 						-- corresponding error.
 					if l_feature = Void then
 							-- Not a valid feature name.
-						create l_veen
-						context.init_error (l_veen)
-						l_veen.set_identifier (l_feature_name.name)
-						l_veen.set_parameter_count (l_actual_count)
-						l_veen.set_location (l_feature_name)
-						error_handler.insert_error (l_veen)
-						error_handler.raise_error
+							-- In case of a multi constraint we throw a VTMC1 error instead of a VEEN.
+						if l_is_multiple_constraint_case then
+							create l_vtmc1
+							context.init_error (l_vtmc1)
+							l_vtmc1.set_feature_call_name (l_feature_name.name)
+							l_vtmc1.set_location (l_feature_name)
+							l_vtmc1.set_type_set (l_last_type_set)
+							l_vtmc1.set_location (l_feature_name)
+							error_handler.insert_error (l_vtmc1)
+							error_handler.raise_error
+						else
+							create l_veen
+							context.init_error (l_veen)
+							l_veen.set_identifier (l_feature_name.name)
+							l_veen.set_parameter_count (l_actual_count)
+							l_veen.set_location (l_feature_name)
+							error_handler.insert_error (l_veen)
+							error_handler.raise_error
+						end
 					elseif is_static then
 							-- Not a valid feature for static access.	
 						create l_vsta2
@@ -4656,7 +4693,7 @@ feature -- Implementation
 							l_vgcc5.set_target_name (a_name)
 							l_vgcc5.set_type (a_creation_type)
 							l_vgcc5.set_creation_feature (
-								l_creation_class.feature_table.item (last_feature_name))
+								l_creation_class.feature_table.item_id (last_feature_name_id))
 							l_vgcc5.set_location (l_call.feature_name)
 							error_handler.insert_error (l_vgcc5)
 						end
@@ -4665,12 +4702,13 @@ feature -- Implementation
 						-- Check that the creation feature used for creating the generic
 						-- parameter has been listed in the constraint for the generic
 						-- parameter.
-					if not l_formal_dec.has_creation_feature_name (last_feature_name) then
+					fixme ("MTNTODO: Check whether this is good or bad in context of overloaded features for .NET. Maybe it was even a bug there.")
+					if not l_formal_dec.has_creation_feature_name_id (last_original_feature_name_id) then
 						create l_vgcc11
 						context.init_error (l_vgcc11)
 						l_vgcc11.set_target_name (a_name)
 						if l_is_multi_constraint_case then
-							l_mc_feature_info := l_type_set.info_about_feature_by_name_id (names_heap.id_of (last_feature_name), l_formal_type.position, context.current_class)
+							l_mc_feature_info := l_type_set.info_about_feature_by_name_id (last_original_feature_name_id, l_formal_type.position, context.current_class)
 							if not l_mc_feature_info.is_empty then
 								l_vgcc11.set_creation_feature (l_mc_feature_info.first.feature_i)
 							end

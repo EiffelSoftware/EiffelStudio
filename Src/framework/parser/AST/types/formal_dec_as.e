@@ -174,8 +174,10 @@ feature -- Status
 			-- Has the construct list a version of `default_create' as a creation procedure?
 			-- Set after a call to `constraint_creation_list'.
 
-	has_creation_feature_name (feature_name: STRING): BOOLEAN is
-			-- Check in `creation_feature_list' if it contains `feature_name'.
+	has_creation_feature_id (a_feature_id: ID_AS): BOOLEAN is
+			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_id'.
+			--
+			-- `a_feature_name_id' is the names heap id of the feature.
 		local
 			creation_list: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -185,7 +187,26 @@ feature -- Status
 			until
 				Result or else creation_list.after
 			loop
-				Result := creation_list.item.internal_name.name.is_equal (feature_name)
+				Result := creation_list.item.internal_name.name_id = a_feature_id.name_id
+				creation_list.forth
+			end
+		end
+
+	has_creation_feature_name_id (a_feature_name_id: INTEGER): BOOLEAN is
+			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_name_id'.
+			--
+			-- `a_feature_name_id' is the names heap id of the feature.
+		local
+			creation_list: EIFFEL_LIST [FEATURE_NAME]
+		do
+			from
+				creation_list := creation_feature_list
+				creation_list.start
+			until
+				Result or else creation_list.after
+			loop
+				Result := creation_list.item.internal_name.name_id = a_feature_name_id
+
 				creation_list.forth
 			end
 		end

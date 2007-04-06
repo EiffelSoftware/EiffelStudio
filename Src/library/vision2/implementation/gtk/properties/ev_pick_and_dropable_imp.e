@@ -301,7 +301,7 @@ feature -- Implementation
 							end (a_x, a_y, a_screen_x, a_screen_y)
 
 							if ready_for_pnd_menu (a_button, a_type) then
-								app_imp.target_menu (pebble, l_configure_agent).show
+								app_imp.create_target_menu (interface, pebble, l_configure_agent)
 							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) then
 								l_configure_agent.call (Void)
 							end

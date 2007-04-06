@@ -38,6 +38,8 @@ feature -- Access
 			Result := internal_pebble_positioning_enabled
 		end
 
+	configurable_target_menu_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
+
 	accept_cursor: EV_POINTER_STYLE
 			-- Accept cursor set by user.
 			-- To be displayed when the screen pointer is over a target that accepts
@@ -156,6 +158,12 @@ feature -- Status setting
 			user_interface_mode := configurable_target_menu_mode
 		ensure
 			mode_is_target_menu: mode_is_configurable_target_menu
+		end
+
+	set_configurable_target_menu_handler (a_handler: like configurable_target_menu_handler)
+			-- Set Configurable Target Menu Handler to `a_handler'.
+		do
+			configurable_target_menu_handler := a_handler
 		end
 
 	set_accept_cursor (a_cursor: like accept_cursor) is

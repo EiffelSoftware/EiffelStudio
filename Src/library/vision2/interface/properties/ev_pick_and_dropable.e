@@ -132,6 +132,11 @@ feature -- Access
 			bridge_ok: Result = implementation.deny_cursor
 		end
 
+	configurable_target_menu_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
+			-- Agent used for customizing the Pick and Drop Target Menu of `Current'.
+		do
+			Result := implementation.configurable_target_menu_handler
+		end
 
 feature -- Status setting
 
@@ -212,6 +217,14 @@ feature -- Status setting
 			implementation.set_configurable_target_menu_mode
 		ensure
 			target_menu_mode_set: mode_is_configurable_target_menu
+		end
+
+	set_configurable_target_menu_handler (a_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]])
+			-- Set Configurable Target Menu Handler to `a_handler'.
+		do
+			implementation.set_configurable_target_menu_handler (a_handler)
+		ensure
+			configurable_target_menu_hander_assigned: configurable_target_menu_handler = a_handler
 		end
 
 	set_pebble_position (a_x, a_y: INTEGER) is

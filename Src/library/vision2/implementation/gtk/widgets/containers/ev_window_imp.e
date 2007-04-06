@@ -185,9 +185,13 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_decor)
 		end
 
+	disable_user_resize_called: BOOLEAN
+		-- Has `disable_user_resize' been called?
+
 	disable_user_resize is
 			-- Forbid the resize of the window.
 		do
+			disable_user_resize_called := True
 			user_can_resize := False
 			if is_displayed then
 				forbid_resize
@@ -223,11 +227,13 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
-				if user_can_resize then
-					allow_resize
-				else
-						-- Forbid the window manager from resizing window.
-					forbid_resize
+				if disable_user_resize_called then
+					if not user_can_resize then
+						forbid_resize
+					else
+							-- Forbid the window manager from resizing window.
+						allow_resize
+					end
 				end
 				Precursor {EV_GTK_WINDOW_IMP}
 			end

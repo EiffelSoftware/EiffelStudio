@@ -1072,22 +1072,22 @@ feature {NONE} -- Implementation
 			if not retried then
 				if debugger_manager.safe_application_is_stopped then
 						--| We generate the call stack.
-					create l_output.make;
-					Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
 					create s.make_empty
 					if debugger_manager.application_status.exception_occurred then
 						t := exception_tag_text
 						if t /= Void and then not t.is_empty then
-							s.append_string ("EXCEPTION TAG:%N" + t + "%N")
+							s.append_string ("Exception tag:%N" + t + "%N")
 						end
 						t := exception_message_text
 						if t /= Void and then not t.is_empty then
-							s.append_string ("EXCEPTION MESSAGE:%N" + t + "%N")
+							s.append_string ("Exception message:%N" + t + "%N")
 						end
 					end
+					create l_output.make;
+					Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
 					t := l_output.stored_output
 					if t /= Void and then not t.is_empty then
-						s.append_string ("CALLSTACK:%N" + t)
+						s.append_string (t)
 					end
 					ev_application.clipboard.set_text (s)
 					l_output.reset_output

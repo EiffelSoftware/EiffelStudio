@@ -41,10 +41,6 @@ feature -- Command Execution
 			appl_name_not_void: appl_name /= Void
 			args_not_void: args /= Void
 			working_directory_not_void: working_directory /= Void
-		local
-			command: STRING
-			l_prc_factory: PROCESS_FACTORY
-			l_prc_launcher: PROCESS
 		do
 			execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory, Void)
 		end

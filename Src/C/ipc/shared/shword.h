@@ -38,6 +38,6 @@
 #define _shword_h
 
 extern void shfree(void);				/* Free structure used by argv[] */
-extern char **shword(char *cmd);			/* Parse command string and split into words */
+extern char **ipc_shword(char *cmd);			/* Parse command string and split into words */
 
 #endif /* _shword_h */

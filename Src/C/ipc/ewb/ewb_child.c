@@ -92,7 +92,7 @@ rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 /* Function declaration */
 rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
 #ifndef EIF_WINDOWS
-extern char **shword(char *cmd);			/* Shell word parsing of command string */
+extern char **ipc_shword(char *cmd);			/* Shell word parsing of command string */
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 /*
 #else
@@ -150,7 +150,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 	cmdline = malloc (strlen (ecdbgd_path) + uu_buffer_size);
 	strcpy (cmdline, ecdbgd_path);
 #else
-	argv = shword(ecdbgd_path);					/* Split command into words */
+	argv = ipc_shword(ecdbgd_path);					/* Split command into words */
 #endif
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are

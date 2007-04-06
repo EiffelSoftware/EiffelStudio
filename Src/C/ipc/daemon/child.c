@@ -91,7 +91,7 @@ rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 /* Function declaration */
 rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
 #ifndef EIF_WINDOWS
-extern char **shword(char *cmd);			/* Shell word parsing of command string */
+extern char **ipc_shword(char *cmd);			/* Shell word parsing of command string */
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 #else
 rt_private void create_dummy_window (void);
@@ -288,7 +288,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		cmdline = malloc (strlen (quoted_exe_path));
 		strcpy (cmdline, quoted_exe_path);
 	}
-	argv = shword(cmdline);					/* Split command into words */
+	argv = ipc_shword(cmdline);					/* Split command into words */
 
 	CHECK("Valid argv[0] = exe_path", strnicmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
 #endif

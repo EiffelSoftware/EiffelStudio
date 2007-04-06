@@ -58,7 +58,7 @@
  */
 rt_private char *ifs = " ";		/* Input field separator */
 
-/* Array of strings built by shword, each word being stored in one slot of the
+/* Array of strings built by ipc_shword, each word being stored in one slot of the
  * argument array. This pointer can be passed as-is to the execvp() system call.
  */
 rt_private char **argv = 0;		/* Argument pointer */
@@ -70,7 +70,7 @@ rt_private void free_argv(void);		/* Free inside of argv[] array */
 rt_private int init_argv(void);		/* Initialize argv[] for new command */
 rt_private char *add_argv(char *word);		/* Append one word to the argv[] array */
 rt_public void shfree(void);			/* Free structure used by argv[] */
-rt_public char **shword(char *cmd);			/* Parse command string and split into words */
+rt_public char **ipc_shword(char *cmd);			/* Parse command string and split into words */
 
 #ifdef EIF_WINDOWS
 rt_private char *str_save(char *s);		/* Save string somewhere in memory */
@@ -171,7 +171,7 @@ rt_public void shfree(void)
 	argc = 0;
 }
 
-rt_public char **shword(char *cmd)
+rt_public char **ipc_shword(char *cmd)
           		/* The command string */
 {
 	/* Break the shell command held in 'cmd' according to the IFS, putting
@@ -319,7 +319,7 @@ print_argv(void)
 test(char *cmd)
 {
 	printf("%s\n", cmd);
-	shword(cmd);
+	ipc_shword(cmd);
 	print_argv();
 }
 

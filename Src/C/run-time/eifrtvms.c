@@ -360,10 +360,10 @@ int eifrt_vms_spawn (const char *a_cmd, int a_flags)
 	char **cmd_words;
 	char *cmd;
 	int cmd_count;
-	extern char** shword (const char *cmd);	// in C/ipc.shared/shword.c
+	extern char** ipc_shword (const char *cmd);	// in C/ipc/shared/shword.c
 	extern void shfree(void);			// ditto
 
-	cmd_words = shword (a_cmd);
+	cmd_words = ipc_shword (a_cmd);
 	if (!cmd_words[0]) {
 	    cmd = eifrt_vms_filespec (a_cmd, vms_cmd);
 	    vms_file_len = strlen (cmd);

@@ -116,9 +116,11 @@ feature {NONE} -- Output
 
 				create l_name.make (l_file_name.count + 7)
 				l_name.append (l_file_name)
-				l_name.append_character ('(')
-				l_name.append (l_ln.out)
-				l_name.append_character (')')
+				if l_ln > 0 then
+					l_name.append_character ('(')
+					l_name.append (l_ln.out)
+					l_name.append_character (')')
+				end
 			end
 
 			check

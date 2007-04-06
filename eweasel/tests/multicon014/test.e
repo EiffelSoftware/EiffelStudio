@@ -13,6 +13,5 @@ feature
 			l_test: MULTI[INTEGER]
 		do
 			create l_test
-			print (l_text.test)
 		end	
 end

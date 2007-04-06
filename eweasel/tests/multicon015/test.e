@@ -7,14 +7,14 @@ class
 creation	
 	make
 feature
-	make  is
-			-- foo
-		local
-			l_test: MULTI[INTEGER]
+	make
 		do
-			create l_test
-			io.put_integer(l_test.abs_diff (2,-2))
-			io.put_integer(l_test.abs_diff (-1,1))
-			io.put_new_line
+			$VTGD3_1 create l_test_4.default_create
 		end	
+
+	$VTGD1_1 l_test_1: MULTI [INTEGER]
+	$VTGD1_2 l_test_2: MULTI [INTEGER, INTEGER, INTEGER, ANY, ANY, ANY, ANY]
+	$VTGD2_1 l_test_3: MULTI [NUMERIC, COMPARABLE_NUMERIC, COMPARABLE]
+	l_test_4: MULTI [COMPARABLE_NUMERIC, COMPARABLE, NUMERIC]
+
 end

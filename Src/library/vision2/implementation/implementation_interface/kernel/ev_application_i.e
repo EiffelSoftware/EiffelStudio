@@ -565,8 +565,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 							end
 							l_item_data.set_target (trg)
 							if not l_configurable_item_added and then a_configure_agent /= Void then
-								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Revert to Pick", a_configure_agent))
-								l_menu.extend (create {EV_MENU_SEPARATOR})
+								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
 								l_configurable_item_added := True
 							end
 							create l_object_comparable.make (l_item_data, l_comparator_agent)

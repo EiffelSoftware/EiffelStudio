@@ -1,0 +1,126 @@
+indexing
+	description: "[
+		reg2wix command line argument parser.
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$date$";
+	revision: "$revision$"
+
+class
+	ARGUMENT_PARSER
+
+inherit
+	ARGUMENT_MULTI_PARSER
+		rename
+			make as make_parser
+		export
+			{NONE} all
+			{APPLICATION} successful, execute
+		end
+
+	IREG2WIX_OPTIONS
+		rename
+			can_query_options as successful
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize command line argument parser
+		do
+			make_parser (False, False, False)
+			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
+			set_show_switch_arguments_inline (True)
+			set_use_separated_switch_values (True)
+		end
+
+feature -- Access
+
+	reg_files: LINEAR [STRING]
+			-- List of registry files to process
+		do
+			Result := values
+		end
+
+	output_file_name: STRING
+			-- Optional output file name
+		do
+			Result := options_values_of_name (out_switch).first
+		end
+
+feature -- Status report
+
+	use_output_file_name: BOOLEAN
+			-- Indicate if `output_file_name' should be used
+		do
+			Result := has_option (out_switch)
+		end
+
+
+feature {NONE} -- Usage
+
+	name: STRING = "Reg2WiX"
+			-- Full name of application
+
+	version: STRING = "3.0"
+			-- Version number of application	
+
+	loose_argument_name: STRING = "RegFile"
+			-- Name of lose argument, used in usage information
+
+	loose_argument_description: STRING = "A Windows registry file."
+			-- Description of lose argument, used in usage information
+
+	loose_argument_type: STRING = "Registry file"
+			-- Type of lose argument, used in usage information.
+
+feature {NONE} -- Switches
+
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+			-- Retrieve a list of switch used for a specific application
+			-- (export status {NONE})
+		do
+			create Result.make (1)
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (out_switch, "An output file name for the generated WiX document.", True, False, "File", "Output file name.", False))
+		end
+
+	out_switch: STRING = "out"
+			-- Command line switches
+
+;indexing
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+end

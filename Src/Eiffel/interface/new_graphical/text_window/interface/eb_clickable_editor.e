@@ -67,6 +67,15 @@ feature {NONE}-- Initialization
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
+
+
+			--editor_drawing_area.set_configurable_target_menu_mode
+			--editor_drawing_area.set_configurable_target_menu_handler (agent handle_context_menu)
+		end
+
+	handle_context_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text ("There are " + a_target_list.count.out + " targets for " + a_pebble.generating_type))
 		end
 
 feature -- Access

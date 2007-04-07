@@ -533,6 +533,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_configurable_item_added: BOOLEAN
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
+			l_has_targets: BOOLEAN
 		do
 			targets := pnd_targets
 			create l_menu
@@ -556,32 +557,31 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					then
 						sensitive ?= trg
 						if not (sensitive /= Void and not sensitive.is_sensitive) then
+							l_has_targets := True
 							if trg.target_data_function /= Void then
 								l_item_data := trg.target_data_function.item ([a_pebble])
 							end
-							if l_item_data = Void then
-								create l_item_data
-								l_item_data.set_name (trg.generating_type)
+							if l_item_data /= Void then
+								l_item_data.set_target (trg)
+								if not l_configurable_item_added and then a_configure_agent /= Void then
+									l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
+									l_configurable_item_added := True
+								end
+								create l_object_comparable.make (l_item_data, l_comparator_agent)
+								if l_search_tree = Void then
+									create l_search_tree.make (l_object_comparable)
+								else
+									l_search_tree.put (l_object_comparable)
+								end
+								l_item_data := Void
 							end
-							l_item_data.set_target (trg)
-							if not l_configurable_item_added and then a_configure_agent /= Void then
-								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
-								l_configurable_item_added := True
-							end
-							create l_object_comparable.make (l_item_data, l_comparator_agent)
-							if l_search_tree = Void then
-								create l_search_tree.make (l_object_comparable)
-							else
-								l_search_tree.put (l_object_comparable)
-							end
-							l_item_data := Void
 						end
 					end
 				end
 				targets.forth
 			end
 
-			if l_search_tree /= Void then
+			if l_has_targets and then l_search_tree /= Void then
 					-- Sort items alphabetically using recursive inline agent
 				create l_arrayed_list.make (0)
 				l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
@@ -612,6 +612,14 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					l_menu.show
 				else
 					a_configure_agent.call (Void)
+				end
+			else
+				if a_pnd_source.configurable_target_menu_handler /= Void then
+					create l_menu
+					a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
+					if not l_menu.is_destroyed and then l_menu.count > 0 then
+						l_menu.show
+					end
 				end
 			end
 			targets.go_to (cur)

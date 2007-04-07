@@ -613,6 +613,7 @@ test	changing-formals-precursor-crash	incr279 tcf pass incrementality
 test	console-setting-change		incr280 tcf pass incrementality
 test	vtcg-add-remove-missing-error	incr281 tcf pass incrementality
 test	funky-removal-of-type			incr282 tcf pass incrementality
+test	multi-constraint-incremental-crash		incr283 tcf pass incrementality
 
 
 -- Melting
@@ -1629,6 +1630,8 @@ test	multi-constraint-creation-through-formal		multicon027 tcf pass multiconstra
 test	multi-constraint-abstract-creation				multicon028 tcf pass multiconstraint
 test	multi-constraint-creation-crash01				multicon029 tcf pass multiconstraint
 test	multi-constraint-code-generation-crash01		multicon030 tcf pass multiconstraint
+test	multi-constraint-renamed-creation-feature		multicon031 tcf pass multiconstraint
+test	multi-constraint-single-constraint-renaming		multicon032 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

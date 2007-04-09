@@ -62,8 +62,8 @@
       </Directory>
     </Directory>
 
-    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
-    </Feature>
+    <FeatureRef Id="Feat.root">
+    </FeatureRef>
     <!-- END INSTALL DESCRIPTION -->
 
     <!-- INSTALL SEQUENCING -->

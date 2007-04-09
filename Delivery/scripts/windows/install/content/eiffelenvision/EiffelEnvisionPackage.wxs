@@ -26,7 +26,7 @@
     <!-- END PROPERTIES -->
 
     <!-- LAUNCH CONDITIONS -->
-    <Condition Message="$(var.VsName) ($(var.VsVersion)) must be installed prior to installing [ProductName]."><![CDATA[INSTALLER or VSINSTALL <> "0"]]></Condition>
+    <Condition Message="$(var.VsName) ($(var.VsVersion)) must be installed prior to installing [ProductName]."><![CDATA[INSTALLED or VSINSTALL <> "0"]]></Condition>
     <!-- END LAUNCH CONDITIONS -->
     
     <!-- PACKAGE CONTENT -->

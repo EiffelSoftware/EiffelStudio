@@ -185,7 +185,7 @@
 		<!-- END PACKAGE CONTENT -->
 
 		<!-- FEATURES -->
-		<FeatureRef Id="Feat.root">
+    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentRef Id="Comp.app_icon" />
 				<ComponentRef Id="Comp.studio_registries" />
@@ -223,7 +223,7 @@
 				<ComponentGroupRef Id="Borland"/>
 			</Feature>
 			<?endif?>
-		</FeatureRef>
+		</Feature>
 		<!-- END FEATURES -->
 	 
 		<!-- CUSTOM ACTIONS -->

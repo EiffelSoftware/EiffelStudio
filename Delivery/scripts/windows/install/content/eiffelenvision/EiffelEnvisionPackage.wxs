@@ -211,7 +211,7 @@
     <!-- END COMPONENT GROUPS -->
     
     <!-- FEATURES -->
-    <FeatureRef Id="Feat.root">
+    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
       <ComponentRef Id="Comp.app_icon" />
       <ComponentGroupRef Id="CompGrp.dir.user"/>   
       <Feature Id="Feat.bin" Title="Additional Tools" Description="Additional tools and utilities to use in conjuntion with EiffelEnvision and the Eiffel for .NET compiler." Level="1" Absent="allow">
@@ -246,7 +246,7 @@
         <ComponentGroupRef Id="CompGrp.dir.examples"/>
         <ComponentGroupRef Id="CompGrp.examples"/>
       </Feature>
-      </FeatureRef>
+    </Feature>
     <!-- END FEATURES -->
 
     <!-- CUSTOM ACTIONS -->

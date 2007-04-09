@@ -1,0 +1,81 @@
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?ifndef IsWin64?>
+    <?ifdef x64?>
+    <?define IsWin64 = "yes"?>
+    <?else ?>
+    <?define IsWin64 = "no"?>
+    <?endif ?>
+    <?endif ?>
+    <?ifdef EiffelEnvision?>
+    <DirectoryRef Id="TARGETDIR" FileSource="$(var.Source)\Redist">
+      <Component Id="Comp.Base.dll" Guid="5EE49CB2-AFAC-4D34-BC5E-5C8477CD6331" Win64="no">
+        <File Id="Base.dll" Name="EiffelSoftware.Library.Base.dll" KeyPath="yes" Assembly=".net"/>
+      </Component>
+      <Component Id="Comp.Vision2.dll" Guid="F6651053-8775-4BE9-985D-CCF3933B08B9" Win64="no">
+        <File Id="Vision2.dll" Name="EiffelSoftware.Library.Vision2.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+      </Component>
+      <Component Id="Comp.Wel.dll" Guid="261E6A5C-1948-4506-A07C-D9C3E1D64064" Win64="no">
+        <File Id="Wel.dll" Name="EiffelSoftware.Library.Wel.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+      </Component>
+      <Component Id="Comp.Runtime.dll" Guid="C5E80BB2-FD54-4294-8B18-CB1385F2D7D9" Win64="no">
+        <File Id="Runtime.dll" Name="EiffelSoftware.Runtime.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+      </Component>
+      <Directory Id="SystemFolder" FileSource="$(var.Source)\Redist">
+        <Component Id="Comp.libBase.dll" Guid="0F9297B9-1FAB-46E4-872A-F059C970BAB6" Win64="no">
+          <File Id="libBase.dll" Name="libEiffelSoftware.Library.Base.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="Comp.libVision2.dll" Guid="B15CF830-F999-47DD-987A-16334A53C016" Win64="no">
+          <File Id="libVision2.dll" Name="libEiffelSoftware.Library.Vision2.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="Comp.libWel.dll" Guid="C9C06264-9206-4C4B-B2E6-053D9AAB2EAC" Win64="no">
+          <File Id="libWel.dll" Name="libEiffelSoftware.Library.Wel.dll" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <?ifdef x64?>
+    <DirectoryRef Id="TARGETDIR" FileSource="$(var.Source)\Redist\x64">
+      <Component Id="Comp.Base64.dll" Guid="2901F900-FBEB-4BF3-A849-F54BBC369829" Win64="yes">
+        <File Id="Base64.dll" Name="EiffelSoftware.Library.Base64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+      </Component>
+      <Component Id="Comp.Vision264.dll" Guid="C4F50B3E-6FE3-4502-8274-7A5DE74D1E5B" Win64="yes">
+        <File Id="Vision264.dll" Name="EiffelSoftware.Library.Vision264.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+      </Component>
+      <Component Id="Comp.Wel64.dll" Guid="2E92A85C-E618-4E27-B2E5-437A72E592C7" Win64="yes">
+        <File Id="Wel64.dll" Name="EiffelSoftware.Library.Wel64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+      </Component>
+      <Directory Id="System64Folder" FileSource="$(var.Source)\Redist\x64">
+        <Component Id="Comp.libBase64.dll" Guid="28A9B518-709E-40A6-8012-00546667CE04" Win64="yes">
+          <File Id="libBase64.dll" Name="libEiffelSoftware.Library.Base64.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="Comp.libVision264.dll" Guid="1ACEB760-C94E-4A9F-B47A-10D4344567F9" Win64="yes">
+          <File Id="libVision264.dll" Name="libEiffelSoftware.Library.Vision264.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="Comp.libWel64.dll" Guid="D9255D80-3887-408C-8137-D9D1B3F713CE" Win64="yes">
+          <File Id="libWel64.dll" Name="libEiffelSoftware.Library.Wel64.dll" KeyPath="yes"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+    <?endif ?>
+    <?endif ?>
+
+    <ComponentGroup Id="CompGrp.redist">
+      <ComponentRef Id="Comp.Base.dll"/>
+      <ComponentRef Id="Comp.Wel.dll"/>
+      <ComponentRef Id="Comp.Vision2.dll"/>
+      <ComponentRef Id="Comp.libBase.dll"/>
+      <ComponentRef Id="Comp.libWel.dll"/>
+      <ComponentRef Id="Comp.libVision2.dll"/>
+      <?ifdef x64?>
+      <ComponentRef Id="Comp.Base64.dll"/>
+      <ComponentRef Id="Comp.Wel64.dll"/>
+      <ComponentRef Id="Comp.Vision264.dll"/>
+      <ComponentRef Id="Comp.libBase64.dll"/>
+      <ComponentRef Id="Comp.libWel64.dll"/>
+      <ComponentRef Id="Comp.libVision264.dll"/>
+      <?endif?>
+      <ComponentRef Id="Comp.Runtime.dll"/>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

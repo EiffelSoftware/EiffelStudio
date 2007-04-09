@@ -535,94 +535,99 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_menu_count: INTEGER
 			l_has_targets: BOOLEAN
 		do
-			targets := pnd_targets
-			create l_menu
-			create identified
-			cur := targets.cursor
-			from
-				targets.start
-					-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
-				l_comparator_agent :=
-					agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
-						do
-							Result := first_item.name < second_item.name
-						end
-			until
-				targets.after
-			loop
-				trg ?= identified.id_object (targets.item_for_iteration)
-				if trg /= Void then
-					if
-						trg.drop_actions.accepts_pebble (a_pebble)
-					then
-						sensitive ?= trg
-						if not (sensitive /= Void and not sensitive.is_sensitive) then
-							l_has_targets := True
-							if trg.target_data_function /= Void then
-								l_item_data := trg.target_data_function.item ([a_pebble])
+			if not shift_pressed then
+				targets := pnd_targets
+				create l_menu
+				create identified
+				cur := targets.cursor
+				from
+					targets.start
+						-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
+					l_comparator_agent :=
+						agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
+							do
+								Result := first_item.name < second_item.name
 							end
-							if l_item_data /= Void then
-								l_item_data.set_target (trg)
-								if not l_configurable_item_added and then a_configure_agent /= Void then
+				until
+					targets.after
+				loop
+					trg ?= identified.id_object (targets.item_for_iteration)
+					if trg /= Void then
+						if
+							trg.drop_actions.accepts_pebble (a_pebble)
+						then
+							sensitive ?= trg
+							if not (sensitive /= Void and not sensitive.is_sensitive) then
+								l_has_targets := True
+								if not l_configurable_item_added then
 									l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
 									l_configurable_item_added := True
 								end
-								create l_object_comparable.make (l_item_data, l_comparator_agent)
-								if l_search_tree = Void then
-									create l_search_tree.make (l_object_comparable)
-								else
-									l_search_tree.put (l_object_comparable)
+								if trg.target_data_function /= Void then
+									l_item_data := trg.target_data_function.item ([a_pebble])
 								end
-								l_item_data := Void
+								if l_item_data /= Void then
+									l_item_data.set_target (trg)
+									create l_object_comparable.make (l_item_data, l_comparator_agent)
+									if l_search_tree = Void then
+										create l_search_tree.make (l_object_comparable)
+									else
+										l_search_tree.put (l_object_comparable)
+									end
+									l_item_data := Void
+								end
 							end
 						end
 					end
+					targets.forth
 				end
-				targets.forth
-			end
 
-			if l_has_targets and then l_search_tree /= Void then
-					-- Sort items alphabetically using recursive inline agent
-				create l_arrayed_list.make (0)
-				l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
-					do
-						if a_node /= Void then
-							l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
-							a_list.extend (a_node.item.item)
-							l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+				if l_has_targets and then l_search_tree /= Void then
+						-- Sort items alphabetically using recursive inline agent
+					create l_arrayed_list.make (0)
+					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
+						do
+							if a_node /= Void then
+								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
+								a_list.extend (a_node.item.item)
+								l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+							end
+						end
+						-- Call the recursive agent by passing itself in as the first parameter.
+					l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
+
+					l_menu_count := l_menu.count
+					if a_pnd_source.configurable_target_menu_handler /= Void then
+						a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
+					else
+						from
+							l_arrayed_list.start
+						until
+							l_arrayed_list.after
+						loop
+							l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
+							l_arrayed_list.forth
 						end
 					end
-					-- Call the recursive agent by passing itself in as the first parameter.
-				l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
-
-				l_menu_count := l_menu.count
-				if a_pnd_source.configurable_target_menu_handler /= Void then
-					a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
-				else
-					from
-						l_arrayed_list.start
-					until
-						l_arrayed_list.after
-					loop
-						l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
-						l_arrayed_list.forth
-					end
-				end
-				if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
-					l_menu.show
-				else
-					a_configure_agent.call (Void)
-				end
-			else
-				if a_pnd_source.configurable_target_menu_handler /= Void then
-					create l_menu
-					a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
-					if not l_menu.is_destroyed and then l_menu.count > 0 then
+					if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
 						l_menu.show
+					else
+						a_configure_agent.call (Void)
+					end
+				else
+					if a_pnd_source.configurable_target_menu_handler /= Void then
+						create l_menu
+						a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
+						if not l_menu.is_destroyed and then l_menu.count > 0 then
+							l_menu.show
+						end
 					end
 				end
+				targets.go_to (cur)
+			else
+					-- If shift is pressed the we perform normal PND.
+				a_configure_agent.call (Void)
 			end
-			targets.go_to (cur)
 		end
 
 feature {NONE} -- Debug

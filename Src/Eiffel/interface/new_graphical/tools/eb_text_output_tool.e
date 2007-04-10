@@ -90,7 +90,8 @@ feature -- Access
 				end
 				locale_combo_internal.set_strings (l_locales)
 				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id))
-				locale_combo_internal.change_actions.extend (agent on_encoding_change)
+				locale_combo_internal.select_actions.extend (agent on_encoding_change)
+				locale_combo_internal.disable_edit
 				on_encoding_change
 			end
 			Result := locale_combo_internal

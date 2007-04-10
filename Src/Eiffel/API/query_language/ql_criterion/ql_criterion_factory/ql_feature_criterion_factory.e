@@ -47,6 +47,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_constant_criterion, c_is_constant)
 			agent_table.put (agent new_is_creator_criterion, c_is_creator)
 			agent_table.put (agent new_is_deferred_criterion, c_is_deferred)
+			agent_table.put (agent new_is_effective_criterion, c_is_effective)
 			agent_table.put (agent new_is_exported_criterion, c_is_exported)
 			agent_table.put (agent new_is_external_criterion, c_is_external)
 			agent_table.put (agent new_is_feature_criterion, c_is_feature)
@@ -135,6 +136,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_return_type_is, query_language_names.ql_cri_return_type_is)
 			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
 			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
+			name_table.put (c_is_effective, query_language_names.ql_cri_is_effective)
 		end
 
 feature{NONE} -- Implementation
@@ -266,6 +268,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a feature is deferred
 		do
 			create Result.make (agent is_deferred_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_effective_criterion: QL_SIMPLE_FEATURE_CRITERION is
+			-- New criterion to test if a feature is effective
+		do
+			create Result.make (agent is_effective_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -634,6 +644,7 @@ feature -- Criterion index
 	c_return_type_is: INTEGER is 48
 	c_contain_ast: INTEGER is 49
 	c_value_of_metric_is: INTEGER is 50
+	c_is_effective: INTEGER is 51
 
 feature{NONE} -- Implementation
 
@@ -859,7 +870,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-
 	is_deferred_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is deferred
 			-- Require compiled: True
@@ -868,6 +878,16 @@ feature{NONE} -- Implementation
 			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_deferred
+		end
+
+	is_effective_agent (a_item: QL_FEATURE): BOOLEAN is
+			-- Agent to test if `a_item' is effective
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_real_feature and then not a_item.e_feature.is_deferred
 		end
 
 	is_external_agent (a_item: QL_FEATURE): BOOLEAN is

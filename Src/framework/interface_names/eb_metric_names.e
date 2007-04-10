@@ -210,7 +210,7 @@ feature -- Labels
 	l_normal_referenced: STRING_GENERAL is do Result := locale.translate ("normal") end
 	l_syntactical_referenced: STRING_GENERAL is do Result := locale.translate ("syntactical") end
 	l_empty_domain: STRING_GENERAL is do Result := locale.translate ("empty domain") end
-	l_use_parent_delayed_domain: STRING_GENERAL is do Result := locale.translate ("use parent delayed domain") end
+	l_use_external_delayed_domain: STRING_GENERAL is do Result := locale.translate ("use external delayed domain") end
 	l_no_value_tester: STRING_GENERAL is do Result := locale.translate ("No value tester") end
 
 feature -- Tooltip

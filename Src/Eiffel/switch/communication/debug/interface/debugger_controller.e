@@ -341,7 +341,10 @@ feature -- Start Operation
 					end
 					if launch_it then
 						create cmd_exec
-						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables))
+						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables, False))
+						check
+							env8_not_void: env8 /= Void
+						end
 						env8.force (project_location.workbench_path, "MELT_PATH")
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name),
@@ -401,7 +404,7 @@ feature -- Start Operation
 					end
 					if launch_it then
 						create cmd_exec
-						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables))
+						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables, True))
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name),
 									param_arguments,
@@ -480,7 +483,7 @@ feature {NONE} -- debugging
 				app_exec := manager.application
 				app_exec.set_execution_mode (a_execution_mode)
 				app_exec.on_application_before_launching
-				app_exec.run (l_cmd_line_arg, working_dir, environment_variables_updated_with (environment_vars))
+				app_exec.run (l_cmd_line_arg, working_dir, environment_variables_updated_with (environment_vars, True))
 				if manager.application_is_executing then
 					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
 						manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)
@@ -523,18 +526,20 @@ feature {NONE} -- Implementation
 
 feature -- Environment related
 
-	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING_32, STRING_32] is
+	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]; return_void_if_unchanged: BOOLEAN): HASH_TABLE [STRING_32, STRING_32] is
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
 		do
-			if env /= Void and then not env.is_empty then
+			if (env = Void or else env.is_empty) and return_void_if_unchanged then
+				--| Result := Void
+			else
 				Result := manager.environment_variables_table
-				if Result = Void then
-					--| Environment_variables table should not be Void, but just in case ...
-					create Result.make (env.count)
-				end
-
+			end
+			if
+				Result /= Void
+				and (env /= Void and then not env.is_empty)
+			then
 				from
 					env.start
 				until
@@ -549,7 +554,7 @@ feature -- Environment related
 				end
 			end
 		ensure
-			Result = Void implies (env = Void or else env.is_empty)
+			Result_not_void_unless_unchanged: Result = Void implies (return_void_if_unchanged and (env = Void or else env.is_empty))
 		end
 
 	environment_variables_to_string_8 (env32: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING, STRING] is

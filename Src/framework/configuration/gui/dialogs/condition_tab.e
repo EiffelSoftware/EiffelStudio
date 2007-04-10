@@ -545,9 +545,9 @@ feature {NONE} -- Actions
 			-- Update inversion status of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
-			a_value_ok: a_value /= Void and then (a_value.is_equal ("=") or a_value.is_equal ("/="))
+			a_value_ok: a_value /= Void and then (a_value.as_string_8.is_equal ("=") or a_value.as_string_8.is_equal ("/="))
 		do
-			if a_value.is_equal ("=") then
+			if a_value.as_string_8.is_equal ("=") then
 				data.custom.item (a_key).item.invert := False
 			else
 				data.custom.item (a_key).item.invert := True

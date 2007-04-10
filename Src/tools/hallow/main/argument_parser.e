@@ -238,7 +238,7 @@ feature -- Status report
 	frozen use_directory_alias: BOOLEAN
 			-- Indicates if user specified a directory alias
 		once
-			Result := True
+			Result := has_option (directory_alias_switch)
 		end
 
 	frozen use_disk_id: BOOLEAN

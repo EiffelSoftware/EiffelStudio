@@ -444,6 +444,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 			editor_place_holder_in: manager_has_place_holder
+			is_editor: type = {SD_ENUMERATION}.editor
 		do
 			set_visible (True)
 			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)

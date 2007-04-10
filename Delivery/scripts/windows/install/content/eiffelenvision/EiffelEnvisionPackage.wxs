@@ -26,7 +26,7 @@
     <!-- END PROPERTIES -->
 
     <!-- LAUNCH CONDITIONS -->
-    <Condition Message="$(var.VsName) ($(var.VsVersion)) must be installed prior to installing [ProductName]."><![CDATA[INSTALLED or VSINSTALL <> "0"]]></Condition>
+    <Condition Message="$(var.VsName) ($(var.VsVersion)) must be installed prior to installing [ProductName]."><![CDATA[Installed or VSINSTALL <> "0"]]></Condition>
     <!-- END LAUNCH CONDITIONS -->
     
     <!-- PACKAGE CONTENT -->
@@ -50,6 +50,11 @@
         <Component Id="Comp.compiler" Guid="DB24E211-374C-4E3D-AA63-5B3F3CD630CF" Win64="$(var.IsWin64)" KeyPath="yes">
           <CreateFolder/>
           <RemoveFolder Id="Dir.compiler" On="uninstall" Directory="Dir.compiler"/>
+          <?ifdef x64?>
+          <?include RegCompiler64.wxi?>
+          <?else?>
+          <?include RegCompiler86.wxi?>
+          <?endif?>
         </Component>
       </Directory>
       <Directory Id="Dir.documentation" Name="Documentation">
@@ -62,6 +67,11 @@
         <Component Id="Comp.eiffelpackages" Guid="12E717BB-DFB6-4F50-8C11-CD2FDE6F61EA" Win64="$(var.IsWin64)" KeyPath="yes">
           <CreateFolder/>
           <RemoveFolder Id="Dir.eiffelpackages" On="uninstall" Directory="Dir.eiffelpackages"/>
+          <?ifdef x64?>
+          <?include RegEiffelPackages64.wxi?>
+          <?else?>
+          <?include RegEiffelPackages86.wxi?>
+          <?endif?>
         </Component>
       </Directory>
       <Directory Id="Dir.eiffelprojectitems" Name="EiffelProjectItems">
@@ -109,6 +119,11 @@
     </DirectoryRef>
 
     <DirectoryRef Id="TARGETDIR">
+      <Directory Id="SystemFolder" Name="."/>
+      <?ifdef x64?>
+      <Directory Id="System64Folder" Name="."/>
+      <?endif?>
+      
       <Directory Id="PersonalFolder" Name=".">
         <Directory Id="Dir.user" Name="$(var.VsName)" >
           
@@ -213,7 +228,8 @@
     <!-- FEATURES -->
     <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
       <ComponentRef Id="Comp.app_icon" />
-      <ComponentGroupRef Id="CompGrp.dir.user"/>   
+      <ComponentGroupRef Id="CompGrp.dir.user"/>
+      <ComponentGroupRef Id="CompGrp.redist"/>
       <Feature Id="Feat.bin" Title="Additional Tools" Description="Additional tools and utilities to use in conjuntion with EiffelEnvision and the Eiffel for .NET compiler." Level="1" Absent="allow">
         <ComponentGroupRef Id="CompGrp.dir.bin"/>
         <ComponentGroupRef Id="CompGrp.bin"/>

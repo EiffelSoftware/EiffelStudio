@@ -8,7 +8,7 @@
     <?endif ?>
     <?endif ?>
     <?ifdef EiffelEnvision?>
-    <DirectoryRef Id="TARGETDIR" FileSource="$(var.Source)\Redist">
+    <DirectoryRef Id="TARGETDIR" FileSource="$(env.InstallSource)\Redist">
       <Component Id="Comp.Base.dll" Guid="5EE49CB2-AFAC-4D34-BC5E-5C8477CD6331" Win64="no">
         <File Id="Base.dll" Name="EiffelSoftware.Library.Base.dll" KeyPath="yes" Assembly=".net"/>
       </Component>
@@ -21,21 +21,21 @@
       <Component Id="Comp.Runtime.dll" Guid="C5E80BB2-FD54-4294-8B18-CB1385F2D7D9" Win64="no">
         <File Id="Runtime.dll" Name="EiffelSoftware.Runtime.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
       </Component>
-      <Directory Id="SystemFolder" FileSource="$(var.Source)\Redist">
-        <Component Id="Comp.libBase.dll" Guid="0F9297B9-1FAB-46E4-872A-F059C970BAB6" Win64="no">
-          <File Id="libBase.dll" Name="libEiffelSoftware.Library.Base.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="Comp.libVision2.dll" Guid="B15CF830-F999-47DD-987A-16334A53C016" Win64="no">
-          <File Id="libVision2.dll" Name="libEiffelSoftware.Library.Vision2.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="Comp.libWel.dll" Guid="C9C06264-9206-4C4B-B2E6-053D9AAB2EAC" Win64="no">
-          <File Id="libWel.dll" Name="libEiffelSoftware.Library.Wel.dll" KeyPath="yes" />
-        </Component>
-      </Directory>
     </DirectoryRef>
-
+    <DirectoryRef Id="SystemFolder" FileSource="$(env.InstallSource)\Redist">
+      <Component Id="Comp.libBase.dll" Guid="0F9297B9-1FAB-46E4-872A-F059C970BAB6" Win64="no">
+        <File Id="libBase.dll" Name="libEiffelSoftware.Library.Base.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Comp.libVision2.dll" Guid="B15CF830-F999-47DD-987A-16334A53C016" Win64="no">
+        <File Id="libVision2.dll" Name="libEiffelSoftware.Library.Vision2.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Comp.libWel.dll" Guid="C9C06264-9206-4C4B-B2E6-053D9AAB2EAC" Win64="no">
+        <File Id="libWel.dll" Name="libEiffelSoftware.Library.Wel.dll" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+    
     <?ifdef x64?>
-    <DirectoryRef Id="TARGETDIR" FileSource="$(var.Source)\Redist\x64">
+    <DirectoryRef Id="TARGETDIR" FileSource="$(env.InstallSource)\Redist\x64">
       <Component Id="Comp.Base64.dll" Guid="2901F900-FBEB-4BF3-A849-F54BBC369829" Win64="yes">
         <File Id="Base64.dll" Name="EiffelSoftware.Library.Base64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
       </Component>
@@ -45,17 +45,17 @@
       <Component Id="Comp.Wel64.dll" Guid="2E92A85C-E618-4E27-B2E5-437A72E592C7" Win64="yes">
         <File Id="Wel64.dll" Name="EiffelSoftware.Library.Wel64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
       </Component>
-      <Directory Id="System64Folder" FileSource="$(var.Source)\Redist\x64">
-        <Component Id="Comp.libBase64.dll" Guid="28A9B518-709E-40A6-8012-00546667CE04" Win64="yes">
-          <File Id="libBase64.dll" Name="libEiffelSoftware.Library.Base64.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="Comp.libVision264.dll" Guid="1ACEB760-C94E-4A9F-B47A-10D4344567F9" Win64="yes">
-          <File Id="libVision264.dll" Name="libEiffelSoftware.Library.Vision264.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="Comp.libWel64.dll" Guid="D9255D80-3887-408C-8137-D9D1B3F713CE" Win64="yes">
-          <File Id="libWel64.dll" Name="libEiffelSoftware.Library.Wel64.dll" KeyPath="yes"/>
-        </Component>
-      </Directory>
+    </DirectoryRef>
+    <DirectoryRef Id="System64Folder" FileSource="$(env.InstallSource)\Redist\x64">
+      <Component Id="Comp.libBase64.dll" Guid="28A9B518-709E-40A6-8012-00546667CE04" Win64="yes">
+        <File Id="libBase64.dll" Name="libEiffelSoftware.Library.Base64.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Comp.libVision264.dll" Guid="1ACEB760-C94E-4A9F-B47A-10D4344567F9" Win64="yes">
+        <File Id="libVision264.dll" Name="libEiffelSoftware.Library.Vision264.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="Comp.libWel64.dll" Guid="D9255D80-3887-408C-8137-D9D1B3F713CE" Win64="yes">
+        <File Id="libWel64.dll" Name="libEiffelSoftware.Library.Wel64.dll" KeyPath="yes"/>
+      </Component>
     </DirectoryRef>
     <?endif ?>
     <?endif ?>

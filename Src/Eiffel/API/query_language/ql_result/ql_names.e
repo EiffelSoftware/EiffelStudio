@@ -89,7 +89,7 @@ feature -- Criterion names
 	ql_cri_is_effective: STRING is "is_effective"
 	ql_cri_path_in: STRING is "path_in"
 	ql_cri_path_is: STRING is "path_is"
-	ql_cri_text_contain: STRING is "text_contain"
+	ql_cri_text_contain: STRING is "text_is"
 	ql_cri_top_indexing_has_tag: STRING is "top_indexing_has_tag"
 	ql_cri_bottom_indexing_has_tag: STRING is "bottom_indexing_has_tag"
 	ql_cri_indexing_has_tag: STRING is "indexing_has_tag"

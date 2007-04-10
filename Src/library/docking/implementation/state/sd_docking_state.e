@@ -227,7 +227,7 @@ feature -- Redefine.
 			internal_docking_manager.zones.prune_zone (zone)
 
 			-- Change state.
-			create l_auto_hide_state.make_with_size (internal_content, direction, l_width_height)
+			create l_auto_hide_state.make_with_size (internal_content, a_direction, l_width_height)
 			l_auto_hide_state.set_width_height (l_width_height)
 			change_state (l_auto_hide_state)
 			internal_docking_manager.query.inner_container_main.remove_empty_split_area

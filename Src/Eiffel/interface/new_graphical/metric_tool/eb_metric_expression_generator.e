@@ -206,8 +206,11 @@ feature{NONE} -- Process
 			process_domain_criterion_internal (a_criterion, l_modifiers, "+")
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion_internal (a_criterion: EB_METRIC_TEXT_CRITERION; a_show_matching_strategy: BOOLEAN) is
 			-- Process `a_criterion'.
+			-- If `a_show_matching_strategy' is True, display matching strategy modifier.
+		require
+			a_criterion_attached: a_criterion /= Void
 		local
 			l_output: like output
 		do
@@ -222,8 +225,10 @@ feature{NONE} -- Process
 				l_output.put_string (a_criterion.text)
 			end
 			l_output.put_normal_text (", ")
-			l_output.put_modifier (names.string_general_as_lower (matching_strategy_names_table.item (a_criterion.matching_strategy)))
-			l_output.put_operator (" + ")
+			if a_show_matching_strategy then
+				l_output.put_modifier (names.string_general_as_lower (matching_strategy_names_table.item (a_criterion.matching_strategy)))
+				l_output.put_operator (" + ")
+			end
 			if a_criterion.is_case_sensitive then
 				l_output.put_modifier (names.string_general_as_lower (metric_names.t_case_sensitive))
 			else
@@ -233,10 +238,16 @@ feature{NONE} -- Process
 			append_negation_end (a_criterion)
 		end
 
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_text_criterion_internal (a_criterion, True)
+		end
+
 	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
 			-- Process `a_criterion'.
 		do
-			process_text_criterion (a_criterion)
+			process_text_criterion_internal (a_criterion, False)
 		end
 
 	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
@@ -257,7 +268,7 @@ feature{NONE} -- Process
 			l_output.put_metric_name (a_criterion.metric_name)
 			if a_criterion.should_delayed_domain_from_parent_be_used then
 				l_output.put_normal_text (", ")
-				l_output.put_modifier (metric_names.l_use_parent_delayed_domain)
+				l_output.put_modifier (metric_names.l_use_external_delayed_domain)
 			end
 			l_output.put_normal_text (") over (")
 			process_domain_internal (a_criterion.domain)

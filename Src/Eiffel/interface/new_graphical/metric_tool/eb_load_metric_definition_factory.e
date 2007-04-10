@@ -10,82 +10,144 @@ class
 	EB_LOAD_METRIC_DEFINITION_FACTORY
 
 inherit
-	EB_LOAD_METRIC_FACTORY
+	EB_METRIC_SHARED
 
 feature -- Node creation
 
 	new_basic_metric (a_name: STRING; a_unit: QL_METRIC_UNIT): EB_METRIC_BASIC is
 			-- New basic metric
+		require
+			a_name_attached: a_name /= Void
+			a_unit_attached: a_unit /= Void
 		do
 			create Result.make (a_name, a_unit)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_linear_metric (a_name: STRING; a_unit: QL_METRIC_UNIT): EB_METRIC_LINEAR is
 			-- New linear metric
+		require
+			a_name_attached: a_name /= Void
+			a_unit_attached: a_unit /= Void
 		do
 			create Result.make (a_name, a_unit)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_ratio_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_num_name: STRING; a_den_name: STRING; a_num_coefficient: DOUBLE; a_den_coefficient: DOUBLE): EB_METRIC_RATIO is
 			-- New ratio metric
+		require
+			a_name_attached: a_name /= Void
+			a_unit_attached: a_unit /= Void
+			a_num_name_attached: a_num_name /= Void
+			a_den_name_attached: a_den_name /= Void
 		do
 			create Result.make_with_numerator_and_denominator (a_name, a_unit, a_num_name, a_den_name, a_num_coefficient, a_den_coefficient)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Criterion creation
 
 	new_normal_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_NORMAL_CRITERION is
 			-- New normal criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_text_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_TEXT_CRITERION is
 			-- NEw text criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_path_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_PATH_CRITERION is
 			-- New normal criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_domain_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_DOMAIN_CRITERION is
 			-- New domain criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_caller_callee_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_CALLER_CALLEE_CRITERION is
 			-- New caller/callee criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_supplier_client_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_SUPPLIER_CLIENT_CRITERION is
 			-- New supplier/client criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_and_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_AND_CRITERION is
 			-- New and criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_or_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_OR_CRITERION is
 			-- New or criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_value_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_VALUE_CRITERION is
 			-- New value criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
 		do
 			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Domain item creation
@@ -94,36 +156,60 @@ feature -- Domain item creation
 			-- New application domain item
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_group_item (a_id: STRING): EB_METRIC_GROUP_DOMAIN_ITEM is
 			-- New group domain item with id `a_id'
+		require
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_folder_item (a_id: STRING): EB_METRIC_FOLDER_DOMAIN_ITEM is
 			-- New folder domain item with id `a_id'
+		require
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_class_item (a_id: STRING): EB_METRIC_CLASS_DOMAIN_ITEM is
 			-- New class domain item with id `a_id'
+		require
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_feature_item (a_id: STRING): EB_METRIC_FEATURE_DOMAIN_ITEM is
 			-- New group domain item with id `a_id'
+		require
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	new_delayed_item (a_id: STRING): EB_METRIC_DELAYED_DOMAIN_ITEM is
 			-- New group domain item with id `a_id'
 		do
 			create Result.make (a_id)
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Archive node creation
@@ -131,8 +217,17 @@ feature -- Archive node creation
 	new_metric_arichive_node (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: EB_METRIC_DOMAIN; a_uuid: STRING; a_filtered: BOOLEAN): EB_METRIC_ARCHIVE_NODE is
 			-- New metric archive node and initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
 			-- `value' with `a_value' and `input_domain' with `a_input'.
+		require
+			a_metric_name_attached: a_metric_name /= Void
+			a_metric_type_valid: is_metric_type_valid (a_metric_type)
+			a_time_attached: a_time /= Void
+			a_input_attached: a_input /= Void
+			a_uuid_attached: a_uuid /= Void
+			a_uuid_valid: shared_uuid.is_valid_uuid (a_uuid)
 		do
 			create Result.make (a_metric_name, a_metric_type, a_time, a_value, a_input, a_uuid, a_filtered)
+		ensure
+			result_attached: Result /= Void
 		end
 
 indexing

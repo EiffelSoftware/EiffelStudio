@@ -39,7 +39,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	factory: EB_LOAD_METRIC_FACTORY
+	factory: EB_LOAD_METRIC_DEFINITION_FACTORY
 			-- Factory used to create new nodes when parsing xml definition file
 
 	last_error: EB_METRIC_ERROR

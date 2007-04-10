@@ -433,6 +433,7 @@ feature{NONE} -- Implementation
 			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
 			l_y: INTEGER
 			l_done: BOOLEAN
+			l_width: INTEGER
 		do
 			if version_count > 1 then
 				if a_y = 1 then
@@ -449,6 +450,12 @@ feature{NONE} -- Implementation
 				l_row := row_table.item (l_y)
 				if l_row /= Void then
 					Result := l_row.item (a_x)
+				end
+			end
+			if a_x > 1 and then Result /= Void then
+				l_width := Result.required_width
+				if grid.is_displayed and then grid.column (2).width < l_width then
+					grid.column (2).set_width (l_width + 10)
 				end
 			end
 		end

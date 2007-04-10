@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">studio_ent_x86</Configuration>
     <ProductVersion>3.0</ProductVersion>
@@ -12,7 +12,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'envision_x64' ">
     <OutputPath>bin\envision_x64\</OutputPath>
     <IntermediateOutputPath>obj\envision_x64\</IntermediateOutputPath>
-    <DefineConstants>x64;EiffelEnvision;IsePlatform=win64;Source=C:\test\install</DefineConstants>
+    <DefineConstants>x64;EiffelEnvision;IsePlatform=win64</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
     <Pedantic>True</Pedantic>
@@ -57,7 +57,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'envision_x86' ">
     <OutputPath>bin\envision_x86\</OutputPath>
     <IntermediateOutputPath>obj\envision_x86\</IntermediateOutputPath>
-    <DefineConstants>x86;EiffelEnvision;IsePlatform=windows;Source=C:\test\install</DefineConstants>
+    <DefineConstants>x86;EiffelEnvision;IsePlatform=windows</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
     <Pedantic>True</Pedantic>

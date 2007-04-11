@@ -33,7 +33,6 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
-			agent_table.put (agent new_contain_ast_criterion, c_contain_ast)
 			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 
 			create name_table.make (10)
@@ -45,7 +44,6 @@ feature{NONE} -- Initialization
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
-			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
 			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
 		end
 

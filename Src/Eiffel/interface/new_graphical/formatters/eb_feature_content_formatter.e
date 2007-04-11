@@ -17,7 +17,8 @@ inherit
 
 	EB_FEATURE_INFO_FORMATTER
 		undefine
-			retrieve_sorting_order
+			retrieve_sorting_order,
+			is_browser_formatter
 		redefine
 			internal_recycle
 		select

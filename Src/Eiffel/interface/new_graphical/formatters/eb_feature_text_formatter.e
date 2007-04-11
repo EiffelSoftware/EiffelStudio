@@ -12,7 +12,8 @@ deferred class
 inherit
 	EB_FEATURE_INFO_FORMATTER
 		undefine
-			internal_recycle
+			internal_recycle,
+			is_editor_formatter
 		end
 
 	EB_EDITOR_FORMATTER

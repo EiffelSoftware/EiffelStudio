@@ -12,7 +12,7 @@ class
 inherit
 	EB_FEATURE_TEXT_FORMATTER
 		redefine
-			set_displayer,
+			set_editor_displayer,
 			feature_cmd,
 			generate_text,
 			set_stone,
@@ -30,7 +30,7 @@ create
 
 feature -- Status setting
 
-	set_displayer (a_displayer: like displayer) is
+	set_editor_displayer (a_displayer: like displayer) is
 			-- Set `displayer' with `a_displayer'.
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_displayer)

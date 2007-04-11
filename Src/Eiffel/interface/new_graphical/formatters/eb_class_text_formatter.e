@@ -12,7 +12,8 @@ deferred class
 inherit
 	EB_CLASS_INFO_FORMATTER
 		undefine
-			internal_recycle
+			internal_recycle,
+			is_editor_formatter
 		redefine
 			new_sd_button,
 			force_stone

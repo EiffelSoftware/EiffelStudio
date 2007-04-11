@@ -142,6 +142,16 @@ feature -- Status report
 		do
 		end
 
+	is_editor_formatter: BOOLEAN is
+			-- Is Current formatter based on an editor?
+		do
+		end
+
+	is_browser_formatter: BOOLEAN is
+			-- Is Current formatter based on a browser?
+		do
+		end
+		
 feature -- Setting
 
 	invalidate is
@@ -207,11 +217,6 @@ feature -- Setting
 				disable_sensitive
 				widget.disable_sensitive
 			end
-		end
-
-	set_displayer (a_displayer: like displayer) is
-			-- Set `a_displayer' into Current.
-		deferred
 		end
 
 	update (a_window: EV_WINDOW) is

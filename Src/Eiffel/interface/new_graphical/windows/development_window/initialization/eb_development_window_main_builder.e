@@ -465,7 +465,7 @@ feature -- Command
 				l_managed_main_formatters.after
 			loop
 				if develop_window.editors_manager.current_editor /= Void then
-					l_managed_main_formatters.item.set_displayer (l_editor_displayer)
+					l_managed_main_formatters.item.set_editor_displayer (l_editor_displayer)
 				end
 				l_managed_main_formatters.item.on_shown
 				l_managed_main_formatters.forth

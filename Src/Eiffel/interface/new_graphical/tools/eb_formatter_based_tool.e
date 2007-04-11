@@ -480,6 +480,11 @@ feature{NONE} -- Implementation
 			l_cursor: CURSOR
 			l_formatter: EB_FORMATTER
 			l_generator: TUPLE [displayer_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]; displayer_name: STRING]
+			l_browser_formatter: EB_BROWSER_FORMATTER
+			l_editor_formatter: EB_EDITOR_FORMATTER
+			l_displayer: EB_FORMATTER_DISPLAYER
+			l_browser_displayer: EB_FORMATTER_BROWSER_DISPLAYER
+			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 		do
 				-- Setup displaysers.
 			l_formatters := a_formatters
@@ -493,7 +498,16 @@ feature{NONE} -- Implementation
 				if l_formatter /= Void and then l_formatter.displayer = Void then
 					l_formatter.set_viewpoints (viewpoints)
 					l_generator := l_formatter.displayer_generator
-					l_formatter.set_displayer (new_displayer (l_generator.displayer_name, l_generator.displayer_generator))
+					l_displayer := new_displayer (l_generator.displayer_name, l_generator.displayer_generator)
+					if l_formatter.is_browser_formatter then
+						l_browser_displayer ?= l_displayer
+						l_browser_formatter ?= l_formatter
+						l_browser_formatter.set_browser_displayer (l_browser_displayer)
+					else
+						l_editor_displayer ?= l_displayer
+						l_editor_formatter ?= l_formatter
+						l_editor_formatter.set_editor_displayer (l_editor_displayer)
+					end
 				end
 				l_formatters.forth
 			end

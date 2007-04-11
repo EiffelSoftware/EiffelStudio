@@ -16,14 +16,12 @@ create {DEBUGGER_MANAGER}
 feature {NONE} -- Ancestor facade
 
 	build_status is do end
-	restore_assertion_check is do end
-	disable_assertion_check is do end
+	impl_check_assert (b: BOOLEAN): BOOLEAN is do end
 	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is do end
 	continue_ignoring_kept_objects is do end
 	interrupt is do end
 	notify_newbreakpoint is do  end
 	kill is do  end
-	clean_on_process_termination is do  end
 	keep_only_objects (kept_objects: LIST [STRING]) is do end
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is do end

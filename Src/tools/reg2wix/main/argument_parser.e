@@ -63,7 +63,7 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: STRING = "Reg2WiX"
+	name: STRING = "Registry File to WiX Conversion Tool"
 			-- Full name of application
 
 	version: STRING = "3.0"

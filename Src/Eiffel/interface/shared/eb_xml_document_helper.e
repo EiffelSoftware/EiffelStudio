@@ -228,7 +228,7 @@ feature -- Parsing
 				if not l_file.is_closed then
 					l_file.close
 				end
-				if a_set_file_error_agent /= Void then
+				if l_file.exists and then a_set_file_error_agent /= Void then
 					a_set_file_error_agent.call (Void)
 				end
 			end

@@ -129,48 +129,92 @@ feature {NONE} -- get member data
 			end
 		end
 
+feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
+
+	get_ise_runtime_tokens is
+			--
+		local
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_type_token: INTEGER
+		do
+			l_icd_module := debugger_info.icor_debug_module_for_ise_runtime
+			if l_icd_module /= Void then
+				l_type_token := l_icd_module.md_class_token_by_type_name ((create {IL_PREDEFINED_STRINGS}).runtime_class_name) --"EiffelSoftware.Runtime.ISE_RUNTIME")
+				private_token_IseRuntime__check_assert := l_icd_module.md_member_token (l_type_token, "check_assert")
+				private_token_IseRuntime__create_type := l_icd_module.md_member_token (l_type_token, "create_type")
+			end
+		end
+
+	token_IseRuntime__check_assert: INTEGER is
+			-- Attribute token of ISE_RUNTIME::check_assert
+		do
+			Result := private_token_IseRuntime__check_assert
+			if Result = 0 then
+				get_ise_runtime_tokens
+				Result := private_token_IseRuntime__check_assert
+			end
+		end
+
+	token_IseRuntime__create_type: INTEGER is
+			-- Attribute token of ISE_RUNTIME::create_type
+		do
+			Result := private_token_IseRuntime__create_type
+			if Result = 0 then
+				get_ise_runtime_tokens
+				Result := private_token_IseRuntime__create_type
+			end
+		end
+
+feature {NONE} -- ISE_RUNTIME: Once per instance implementation
+
+	private_token_IseRuntime__check_assert: INTEGER
+			-- Attribute token of ISE_RUNTIME::check_assert .		
+
+	private_token_IseRuntime__create_type: INTEGER
+			-- Attribute token of ISE_RUNTIME::create_type .					
+
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 
 	get_system_text_stringbuilder_tokens is
 		local
-			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: INTEGER
 		do
-			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
-			if l_mscorlib_icd_module /= Void then
+			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_icd_module /= Void then
 					--| System.Text.StringBuilder |--
-				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Text.StringBuilder")
-				private_token_StringBuilder_m_StringValue := l_mscorlib_icd_module.md_member_token (l_type_token, "m_StringValue")
+				l_type_token := l_icd_module.md_class_token_by_type_name ("System.Text.StringBuilder")
+				private_token_StringBuilder_m_StringValue := l_icd_module.md_member_token (l_type_token, "m_StringValue")
 			end
 		end
 
 	get_system_exception_tokens is
 		local
-			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: INTEGER
 		do
-			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
-			if l_mscorlib_icd_module /= Void then
+			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_icd_module /= Void then
 					--| System.Exceptione |--
-				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Exception")
-				private_token_Exception__message    := l_mscorlib_icd_module.md_member_token (l_type_token, "_message")
-				private_token_Exception__className  := l_mscorlib_icd_module.md_member_token (l_type_token, "_className")
-				private_token_Exception_ToString    := l_mscorlib_icd_module.md_member_token (l_type_token, "ToString")
-				private_token_Exception_get_Message := l_mscorlib_icd_module.md_member_token (l_type_token, "get_Message")
+				l_type_token := l_icd_module.md_class_token_by_type_name ("System.Exception")
+				private_token_Exception__message    := l_icd_module.md_member_token (l_type_token, "_message")
+				private_token_Exception__className  := l_icd_module.md_member_token (l_type_token, "_className")
+				private_token_Exception_ToString    := l_icd_module.md_member_token (l_type_token, "ToString")
+				private_token_Exception_get_Message := l_icd_module.md_member_token (l_type_token, "get_Message")
 			end
 		end
 
 	get_system_threading_thread_tokens is
 		local
-			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: INTEGER
 		do
-			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
-			if l_mscorlib_icd_module /= Void then
+			l_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_icd_module /= Void then
 					--| System.Threading.Thread |--
-				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Threading.Thread")
-				private_token_System_Threading_Thread_m_Name := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Name")
-				private_token_System_Threading_Thread_m_Priority := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Priority")
+				l_type_token := l_icd_module.md_class_token_by_type_name ("System.Threading.Thread")
+				private_token_System_Threading_Thread_m_Name := l_icd_module.md_member_token (l_type_token, "m_Name")
+				private_token_System_Threading_Thread_m_Priority := l_icd_module.md_member_token (l_type_token, "m_Priority")
 			end
 		end
 

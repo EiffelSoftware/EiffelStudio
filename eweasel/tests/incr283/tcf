@@ -42,7 +42,7 @@ define VTGD2_1 "--"
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
 -- Crash
-compile_result 	validity_error TEST VTCG VTCG
+compile_result 	validity_error TEST VTCG
 
 test_end
 

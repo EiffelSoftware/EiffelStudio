@@ -16,6 +16,6 @@ feature
 	$VTGD1_2 l_test_2: MULTI [INTEGER, INTEGER, INTEGER, ANY, ANY, ANY, ANY]
 	$VTGD2_1 l_test_3: MULTI [NUMERIC, COMPARABLE_NUMERIC, COMPARABLE]
 	$VTGD3_1 l_test_4: MULTI [COMPARABLE_NUMERIC, COMPARABLE, NUMERIC]
-	-- numeric: NUMERIC -- if you comment in this line it will work
+	--numeric: NUMERIC -- if you comment in this line it will work
 
 end

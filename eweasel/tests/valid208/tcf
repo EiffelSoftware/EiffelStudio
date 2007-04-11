@@ -1,0 +1,24 @@
+test_name creation-constraint-like-current-deferred
+test_description Creation constraint should not be checked if actual generic derivation is `like Current'. Full class checking should find the error in ancestors (if they occur).
+
+
+define DEFAULT_CREATE ""
+copy_sub	Ace	$TEST Ace
+copy_raw	root_class.e $CLUSTER root_class.e
+copy_raw	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_raw	generic.e $CLUSTER generic.e
+
+compile_melted
+compile_result validity_error B VTCG
+
+
+define DEFAULT_CREATE "default_create,"
+copy_sub	b.e $CLUSTER b.e
+
+resume_compile
+compile_result ok
+
+
+
+test_end

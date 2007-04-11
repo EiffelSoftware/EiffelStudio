@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 				io.put_string (l_output_file_name)
 				io.put_string ("'.")
 			end
+			io.new_line
 		end
 
 feature -- Access

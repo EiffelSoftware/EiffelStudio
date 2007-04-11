@@ -92,7 +92,7 @@ feature -- Command
 				until
 					l_managed_main_formatters.after
 				loop
-					l_managed_main_formatters.item.set_displayer (l_editor_displayer)
+					l_managed_main_formatters.item.set_editor_displayer (l_editor_displayer)
 					l_managed_main_formatters.forth
 				end
 			end

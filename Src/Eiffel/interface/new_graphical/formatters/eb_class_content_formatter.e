@@ -17,7 +17,8 @@ inherit
 
 	EB_CLASS_INFO_FORMATTER
 		undefine
-			retrieve_sorting_order
+			retrieve_sorting_order,
+			is_browser_formatter
 		redefine
 			line_numbers_allowed,
 			widget,

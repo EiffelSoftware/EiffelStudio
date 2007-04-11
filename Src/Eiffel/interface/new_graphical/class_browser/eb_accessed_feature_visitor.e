@@ -78,10 +78,11 @@ feature -- Process
 			ancestor_class_id_set.wipe_out
 			if a_callee.is_real_feature then
 				e_feature := a_callee.e_feature
-				last_class_c := a_caller.class_c
+				set_last_class_c (a_caller.class_c)
+
 				ancestor_class_id_set.put (e_feature.associated_class.class_id)
 
-					-- Check feature body without assertions
+					-- Check feature body.
 				if a_caller.is_real_feature then
 						-- For real features
 					a_caller.ast.process (Current)
@@ -184,15 +185,16 @@ feature -- Accessor checking
 			end
 		end
 
-	check_accessor_for_operators (a_class_id: INTEGER; a_feature_name: STRING; a_ast: AST_EIFFEL) is
+	check_accessor_for_operators (a_feature: like e_feature; a_class_id: INTEGER; a_feature_name: STRING; a_ast: AST_EIFFEL) is
 			-- Process binary or unary operators associated with class id `a_class_id', name `a_feature_name'.
 			-- `a_ast' is the AST node for that operator.
 		require
+			a_feature_attached: a_feature /= Void
 			a_class_id_positive: a_class_id > 0
 			a_feature_name_attached: a_feature_name /= Void
 			a_ast_attached: a_ast /= Void
 		do
-			if is_accessor (e_feature, a_class_id, a_feature_name) then
+			if is_accessor (a_feature, a_class_id, a_feature_name) then
 				check last_class_c /= Void end
 				accessors.extend ([a_ast, last_class_c])
 			end
@@ -234,14 +236,9 @@ feature{NONE} -- Implementation/Process
 			l_feature := e_feature
 				-- For renamed features in inherited assertions
 			if l_as.class_id /= l_feature.associated_class.class_id then
-				l_ancestor_feature := l_feature.ancestor_version (system.class_of_id (l_as.class_id))
+				l_ancestor_feature := ancestor_version_with_different_name (l_feature, l_as.class_id)
 				if l_ancestor_feature /= Void then
-					if
-						(not l_ancestor_feature.name.is_case_insensitive_equal (l_feature.name)) or else
-						(l_ancestor_feature.has_alias_name or else l_feature.has_alias_name)
-					then
-						check_accessor (l_ancestor_feature, l_as)
-					end
+					check_accessor (l_ancestor_feature, l_as)
 				end
 			end
 			Precursor (l_as)
@@ -252,7 +249,7 @@ feature{NONE} -- Implementation/Process
 		require
 			a_assertion_attached: a_assertion /= Void
 		do
-			last_class_c := a_assertion.written_class
+			set_last_class_c (a_assertion.written_class)
 			a_assertion.ast.process (Current)
 		end
 
@@ -271,7 +268,7 @@ feature{NONE} -- Implementation/Process
 
 	process_binary_as (l_as: BINARY_AS) is
 		do
-			check_accessor_for_operators (l_as.class_id, l_as.infix_function_name, l_as.operator)
+			check_accessor_for_operators (e_feature, l_as.class_id, l_as.infix_function_name, l_as.operator)
 			Precursor (l_as)
 		end
 
@@ -281,7 +278,7 @@ feature{NONE} -- Implementation/Process
 		do
 			l_feature_name := l_as.prefix_feature_name
 			if l_feature_name /= Void then
-				check_accessor_for_operators (l_as.class_id, l_feature_name, l_as.operator)
+				check_accessor_for_operators (e_feature, l_as.class_id, l_feature_name, l_as.operator)
 			end
 			Precursor (l_as)
 		end
@@ -294,13 +291,34 @@ feature{NONE} -- Implementation/Process
 
 	process_bracket_as (l_as: BRACKET_AS) is
 		do
-			check_accessor_for_operators (l_as.class_id, "[]", l_as)
+			check_accessor_for_operators (e_feature, l_as.class_id, "[]", l_as)
 			Precursor (l_as)
 		end
 
+
 	process_like_id_as (l_as: LIKE_ID_AS) is
+		local
+			l_ancestor_feature: E_FEATURE
+			l_old_last_class_c: CLASS_C
+			l_e_feature_associated_class_id: INTEGER
+			l_e_feature_written_class_id: INTEGER
+			l_e_feature: like e_feature
 		do
-			check_accessor_for_operators (e_feature.associated_class.class_id, l_as.anchor.name, l_as.anchor)
+			l_e_feature := e_feature
+			l_e_feature_associated_class_id := l_e_feature.associated_class.class_id
+			l_e_feature_written_class_id := l_e_feature.written_class.class_id
+				-- For renamed feature
+			if l_e_feature_associated_class_id /= l_e_feature_written_class_id then
+				l_ancestor_feature := ancestor_version_with_different_name (l_e_feature, l_e_feature_written_class_id)
+				if l_ancestor_feature /= Void then
+					l_old_last_class_c := last_class_c
+					set_last_class_c (l_ancestor_feature.associated_class)
+					check_accessor_for_operators (l_ancestor_feature, l_e_feature_associated_class_id, l_as.anchor.name, l_as.anchor)
+					set_last_class_c (l_old_last_class_c)
+				end
+			end
+			
+			check_accessor_for_operators (l_e_feature, l_e_feature_associated_class_id, l_as.anchor.name, l_as.anchor)
 		end
 
 	process_assign_as (l_as: ASSIGN_AS) is
@@ -330,6 +348,30 @@ feature{NONE} -- Implementation
 
 	flag_stack: LINKED_STACK [INTEGER_8]
 			-- Stack of flags
+
+	set_last_class_c (a_class: like last_class_c) is
+			-- Set `last_class_c' with `a_class'.
+		do
+			last_class_c := a_class
+		ensure
+			last_class_c_set: last_class_c = a_class
+		end
+
+	ancestor_version_with_different_name (a_feature: E_FEATURE; a_class_id: INTEGER): E_FEATURE is
+			-- Ancestor feature (version from class whose id is `a_class_id') of `a_feature' with a different name
+		require
+			a_feature_attached: a_feature /= Void
+		do
+			Result := a_feature.ancestor_version (system.class_of_id (a_class_id))
+			if Result /= Void then
+				if
+					Result.name.is_case_insensitive_equal (a_feature.name) and then
+					((not Result.has_alias_name) and then (not a_feature.has_alias_name))
+				then
+					Result := Void
+				end
+			end
+		end
 
 invariant
 	accessors_attached: accessors /= Void

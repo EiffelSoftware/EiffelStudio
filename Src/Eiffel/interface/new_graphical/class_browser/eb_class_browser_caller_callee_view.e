@@ -336,7 +336,7 @@ feature -- Grind binding
 				l_width := l_width.max (l_grid_item.required_width + l_expand_pixmap_width + (l_subrow_depth) * l_subrow_indent)
 				l_row := l_row + 1
 			end
-			required_width_of_first_column := l_width + 20
+			required_width_of_first_column := l_width + 40
 		end
 
 	required_width_of_first_column: INTEGER

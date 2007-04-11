@@ -306,7 +306,7 @@ feature {DBG_EVALUATOR} -- Interface
 			l_ctype := adapted_class_type (ctype, f)
 			l_icdv_args := prepared_parameters (l_params, False)
 
-			l_icdm := Eifnet_debugger.runtime_module
+			l_icdm := Eifnet_debugger.ise_runtime_module
 				--| FIXME jfiat: here we are only dealing with EiffelSoftware runtime ... classes
 
 			l_cl_tok := l_icdm.md_class_token_by_type_name (l_ctype.full_il_type_name)
@@ -630,9 +630,11 @@ feature {NONE} -- Implementation
 					display_info_on_object (target_icdv)
 				end
 
---				if not is_external then
-				l_icdv_args.put (target_icdv, 1) -- First arg is the obj on which the evaluation is done.
---				end
+--| FIXME: bug#11255: Debugger gets it all wrong in .NET
+--| Might be related to first argument, or arguments count ...
+
+				l_icdv_args.put (target_icdv, l_icdv_args.lower) -- First arg is the obj on which the evaluation is done.
+
 				l_icd_frame := current_icor_debug_frame
 				if l_icd_frame = Void then
 						-- In case `associated_frame' is not set

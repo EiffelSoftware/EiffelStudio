@@ -15,6 +15,7 @@ inherit
 			is_valid_object_address,
 			can_not_launch_system_message,
 			recycle,
+			clean_on_process_termination,
 			make_with_debugger
 		end
 
@@ -329,18 +330,6 @@ feature -- Execution
 			end
 		end
 
-	disable_assertion_check is
-			-- Send a message to the application to disable assertion checking
-		do
-			to_implement ("to implemente: change_assertion_check")
-		end
-
-	restore_assertion_check is
-			-- Send a message to the application to restore the previous assertion check status
-		do
-			to_implement ("to implemente: restore_assertion_check")
-		end
-
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
@@ -364,6 +353,7 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
+			Precursor {APPLICATION_EXECUTION}
 			Eifnet_debugger.reset_debugging_data
 			Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 
@@ -379,6 +369,14 @@ feature -- Execution
 --				load_dotnet_debug_info
 --			end
 --		end
+
+feature {NONE} -- Assertion change Implementation
+
+	impl_check_assert (b: BOOLEAN): BOOLEAN is
+			-- `check_assert (b)' on debuggee
+		do
+			Result := eifnet_debugger.check_assert_on_debuggee (b)
+		end
 
 feature {APPLICATION_EXECUTION} -- Launching status
 

@@ -744,7 +744,7 @@ feature -- JIT info
 				--| Mscorlib_module is already cleaned
 				--| since it is also contained by `loaded_modules'
 			mscorlid_module := Void
-			runtime_module := Void
+			ise_runtime_module := Void
 		end
 
 feature -- JIT Thread
@@ -986,7 +986,7 @@ feature -- JIT Module
 					-- We have to deal with the MSCORLIB.DLL module
 					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module
 				mscorlid_module := a_module
-			elseif runtime_module = Void and then l_module_key_name.has_substring (runtime_namespace.as_lower) then
+			elseif ise_runtime_module = Void and then l_module_key_name.has_substring (runtime_namespace.as_lower) then
 				register_runtime_module (a_module)
 			end
 		end
@@ -1011,13 +1011,12 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 	mscorlid_module: ICOR_DEBUG_MODULE
 			-- MSCORLIB ICorDebugModule
 
-	runtime_module: ICOR_DEBUG_MODULE
+	ise_runtime_module: ICOR_DEBUG_MODULE
 			-- EiffelSoftware.runtime ICorDebugModule
 
 	register_runtime_module (a_module: ICOR_DEBUG_MODULE) is
-			--
 		do
-			runtime_module := a_module
+			ise_runtime_module := a_module
 			if on_runtime_module_registration_action /= Void then
 				on_runtime_module_registration_action.call ([a_module])
 			end
@@ -1044,6 +1043,12 @@ feature -- JIT Info access
 			-- ICorDebugModule for MSCORLIB
 		do
 			Result := mscorlid_module
+		end
+
+	icor_debug_module_for_ise_runtime: ICOR_DEBUG_MODULE is
+			-- ICorDebugModule for ISE_RUNTIME
+		do
+			Result := ise_runtime_module
 		end
 
 feature -- Stepping

@@ -16,6 +16,7 @@ inherit
 			update_critical_stack_depth,
 			can_not_launch_system_message,
 			recycle,
+			clean_on_process_termination,
 			make_with_debugger
 		end
 
@@ -50,7 +51,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
 			check debugger_manager_not_void: debugger_manager /= Void end
-			create last_assertion_check_stack.make
 			l_ipc := ipc_engine
 			if l_ipc = Void then
 				create l_ipc.make (debugger_manager)
@@ -156,37 +156,6 @@ feature -- Execution
 			ewb_request.send
 		end
 
-	disable_assertion_check is
-			-- Send a message to the application to disable assertion checking
-		local
-			s: STRING
-		do
-			ewb_request.make (Rqst_set_assertion_check)
-			ewb_request.send_integer (0)
-			s := c_tread
-			if s /= Void and then s.is_boolean then
-				last_assertion_check_stack.extend (s.to_boolean)
-			end
-		end
-
-	restore_assertion_check is
-			-- Send a message to the application to restore the previous assertion check status
-		require else
-			last_assertion_check_stack_not_empty: not last_assertion_check_stack.is_empty
-		local
-			s: STRING
-			b: BOOLEAN
-		do
-			b := last_assertion_check_stack.item
-			last_assertion_check_stack.remove
-			ewb_request.make (Rqst_set_assertion_check)
-			ewb_request.send_integer (b.to_integer)
-			s := c_tread
-		end
-
-	last_assertion_check_stack: LINKED_STACK [BOOLEAN]
-			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
-
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
@@ -227,14 +196,29 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
+			Precursor {APPLICATION_EXECUTION}
 			release_all_objects
-			last_assertion_check_stack.wipe_out
 		end
 
 	request_ipc_end_of_debugging is
 			-- Request ipc engine end of debugging
 		do
 			Ipc_engine.end_of_debugging
+		end
+
+feature {NONE} -- Assertion change Implementation
+
+	impl_check_assert (b: BOOLEAN): BOOLEAN is
+			-- `check_assert (b)' on debuggee
+		local
+			s: STRING
+		do
+			ewb_request.make (Rqst_set_assertion_check)
+			ewb_request.send_integer (b.to_integer)
+			s := c_tread
+			if s /= Void and then s.is_boolean then
+				Result := s.to_boolean
+			end
 		end
 
 feature -- Change

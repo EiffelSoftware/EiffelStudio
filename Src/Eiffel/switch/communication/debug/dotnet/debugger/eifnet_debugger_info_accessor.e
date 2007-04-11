@@ -161,10 +161,10 @@ feature -- Access
 			Result := eifnet_debugger_info.icd_thread_by_id (a_tid)
 		end
 
-	runtime_module: ICOR_DEBUG_MODULE is
+	ise_runtime_module: ICOR_DEBUG_MODULE is
 			-- EiffelSoftware.runtime ICorDebugModule
 		do
-			Result := eifnet_debugger_info.runtime_module
+			Result := eifnet_debugger_info.ise_runtime_module
 		end
 
 	evaluation_icor_debug_exception: ICOR_DEBUG_VALUE is

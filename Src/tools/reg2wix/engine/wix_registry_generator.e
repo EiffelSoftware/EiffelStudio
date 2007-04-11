@@ -61,7 +61,7 @@ feature -- Generation
 			create Result.make_with_root_named (include_tag_name, create {XM_NAMESPACE}.make ("", wix_namespace))
 
 			if not a_reg.is_empty then
-				a_reg.keys.do_if (agent generate_registry_key (?, Result.root_element, a_options), agent (a_item: REG_FILE_KEY): BOOLEAN do Result := not a_item.is_empty end)
+				a_reg.keys.do_all (agent generate_registry_key (?, Result.root_element, a_options))
 			end
 
 			working_file := Void
@@ -74,7 +74,6 @@ feature -- Generation
 			-- Generates a WiX document from the collection fo registry files `a_reg_files'
 		require
 			a_reg_files_attached: a_reg_files /= Void
-			not_a_reg_files_is_empty: not a_reg_files.is_empty
 			a_reg_files_items_attached: not a_reg_files.has (Void)
 			a_options_attached: a_options /= Void
 		local
@@ -82,7 +81,7 @@ feature -- Generation
 			l_reg: REG_FILE
 		do
 			is_generating := True
-
+			working_file := Void
 
 			create Result.make_with_root_named (include_tag_name, create {XM_NAMESPACE}.make ("", wix_namespace))
 

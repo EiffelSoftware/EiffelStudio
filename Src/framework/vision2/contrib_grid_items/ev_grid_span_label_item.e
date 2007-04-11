@@ -90,6 +90,9 @@ feature -- change
 		do
 			if is_master then
 				pixmap := v
+				if parent /= Void then
+					parent.implementation.redraw_item (implementation)
+				end
 			end
 		end
 
@@ -99,6 +102,9 @@ feature -- change
 		do
 			if is_master then
 				pixmap := Void
+				if parent /= Void then
+					parent.implementation.redraw_item (implementation)
+				end
 			end
 		end
 

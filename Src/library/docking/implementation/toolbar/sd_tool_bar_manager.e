@@ -73,7 +73,7 @@ feature -- Query
 
 	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager Current belong to.
-			
+
 feature -- Command
 
 	lock is
@@ -125,7 +125,7 @@ feature -- Command
 	destroy is
 			-- Release hooks.
 		do
-			ev_application.pointer_button_press_actions.prune (application_right_click_agent)
+			ev_application.pointer_button_press_actions.prune_all (application_right_click_agent)
 			contents.wipe_out
 		end
 

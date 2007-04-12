@@ -826,6 +826,9 @@ feature{NONE} -- Recycle
 			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
 				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)
 			end
+			if metric_manager.metric_loaded_actions.has (on_metric_loaded_agent) then
+				metric_manager.metric_loaded_actions.prune_all (on_metric_loaded_agent)
+			end
 			detach_veto_format_function
 			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
 			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)

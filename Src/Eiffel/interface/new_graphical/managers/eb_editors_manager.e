@@ -538,6 +538,7 @@ feature -- Element change
 				l_editors.after
 			loop
 				l_editors.item.docking_content.close
+				l_editors.item.recycle
 				l_editors.forth
 			end
 			create editors_internal.make (5)

@@ -1359,12 +1359,24 @@ feature{NONE} -- Implementation
 	recycle_agents is
 			-- Recycle agents
 		do
-			categorize_folder_button.recycle
-			show_self_dependency_button.recycle
-			inheritance_button.recycle
-			normal_referenced_button.recycle
-			syntactical_button.recycle
-			recursive_button.recycle
+			if categorize_folder_button_internal /= Void then
+				categorize_folder_button.recycle
+			end
+			if show_self_dependency_button_internal /= Void then
+				show_self_dependency_button.recycle
+			end
+			if inheritance_button_internal /= Void then
+				inheritance_button.recycle
+			end
+			if normal_referenced_button_internal /= Void then
+				normal_referenced_button.recycle
+			end
+			if syntactical_button_internal /= Void then
+				syntactical_button.recycle
+			end
+			if recursive_button_internal /= Void then
+				recursive_button.recycle
+			end
 			Precursor
 		end
 

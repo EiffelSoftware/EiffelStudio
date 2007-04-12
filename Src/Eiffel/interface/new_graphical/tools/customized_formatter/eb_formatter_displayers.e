@@ -59,7 +59,7 @@ feature -- Generators
 	new_editor_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_EDITOR_DISPLAYER is
 			-- New editor displayer.
 		local
-			l_editor: EB_SMART_EDITOR
+			l_editor: EB_CLICKABLE_EDITOR
 		do
 			create l_editor.make (a_dev_window)
 			l_editor.widget.set_border_width (1)

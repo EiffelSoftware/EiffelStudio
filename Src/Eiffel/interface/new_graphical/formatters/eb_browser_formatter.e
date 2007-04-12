@@ -117,9 +117,11 @@ feature{NONE} -- Recycle
 	internal_recycle is
 			-- Recycle
 		do
-			if not is_recycled then
-				displayer := Void
+			Precursor {EB_FORMATTER}
+			if displayer /= Void then
+				displayer.recycle
 			end
+			displayer := Void
 		end
 
 end

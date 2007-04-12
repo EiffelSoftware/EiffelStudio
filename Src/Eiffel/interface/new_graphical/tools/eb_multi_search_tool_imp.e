@@ -393,10 +393,14 @@ feature -- EB_TOOL
 		do
 			show
 			if currently_searched /= Void and then currently_searched.is_empty then
-				keyword_field.set_text (currently_searched)
+				if not keyword_field.is_destroyed and currently_searched /= Void and not currently_searched.has_code (('%R').natural_32_code) and keyword_field.is_editable then
+					keyword_field.set_text (currently_searched)
+				end
 			end
 			if currently_replacing /= Void and then not currently_replacing.is_empty then
-				replace_field.set_text (currently_replacing)
+				if not replace_field.is_destroyed and currently_replacing /= Void and not currently_replacing.has_code (('%R').natural_32_code) then
+					replace_field.set_text (currently_replacing)
+				end
 			end
 			keyword_field.set_focus
 		end

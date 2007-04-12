@@ -200,8 +200,8 @@ feature -- Basic operations
 			l_tool: like metric_tool
 		do
 			l_tool := metric_tool
-			if not l_tool.send_metric_value_in_history_actions.has (on_metric_sent_to_history_agent) then
-				l_tool.send_metric_value_in_history_actions.extend (on_metric_sent_to_history_agent)
+			if l_tool.send_metric_value_in_history_actions.has (on_metric_sent_to_history_agent) then
+				l_tool.send_metric_value_in_history_actions.prune_all (on_metric_sent_to_history_agent)
 			end
 		end
 

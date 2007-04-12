@@ -80,6 +80,9 @@ feature{NONE} -- Agent mantainning
 			if a_action_sequences.metric_loaded_actions.has (on_metric_loaded_agent) then
 				a_action_sequences.metric_loaded_actions.prune_all (on_metric_loaded_agent)
 			end
+			if a_action_sequences.project_load_actions.has (on_project_loaded_agent) then
+				a_action_sequences.project_load_actions.prune_all (on_project_loaded_agent)
+			end
 			if a_action_sequences.project_unload_actions.has (on_project_unloaded_agent) then
 				a_action_sequences.project_unload_actions.prune_all (on_project_unloaded_agent)
 			end

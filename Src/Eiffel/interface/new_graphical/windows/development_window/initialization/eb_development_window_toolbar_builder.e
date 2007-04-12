@@ -40,9 +40,24 @@ feature -- Building commands
 			l_show_general_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
 			l_sd_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_tool_bar_name: STRING_GENERAL
+			l_recyclable: EB_RECYCLABLE
 		do
 			-- Retrieve items.
 			l_sd_toolbar := develop_window.development_window_data.retrieve_general_toolbar (develop_window.commands.toolbarable_commands)
+
+				-- In general toolbar, there are items from once command objects.
+				-- We need to recycle those items.
+			from
+				l_sd_toolbar.start
+			until
+				l_sd_toolbar.after
+			loop
+				l_recyclable ?= l_sd_toolbar.item
+				if l_recyclable /= Void then
+					develop_window.add_recyclable (l_recyclable)
+				end
+				l_sd_toolbar.forth
+			end
 
 			l_tool_bar_name := develop_window.Interface_names.to_standard_toolbar
 
@@ -158,8 +173,23 @@ feature -- Building commands
 			l_show_tool_bar_command: EB_SHOW_TOOLBAR_COMMAND
 			l_tool_bar: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_tool_bar_name: STRING_GENERAL
+			l_recyclable: EB_RECYCLABLE
 		do
 			l_tool_bar := develop_window.development_window_data.retrieve_refactoring_toolbar (develop_window.commands.toolbarable_commands)
+
+				-- In refactoring toolbar, there are items from once command objects.
+				-- We need to recycle those items.
+			from
+				l_tool_bar.start
+			until
+				l_tool_bar.after
+			loop
+				l_recyclable ?= l_tool_bar.item
+				if l_recyclable /= Void then
+					develop_window.add_recyclable (l_recyclable)
+				end
+				l_tool_bar.forth
+			end
 
 			l_tool_bar_name := develop_window.Interface_names.to_refactory_toolbar
 

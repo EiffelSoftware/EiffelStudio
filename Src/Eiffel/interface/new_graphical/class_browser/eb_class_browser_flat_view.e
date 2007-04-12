@@ -659,7 +659,9 @@ feature{NONE} -- Implementation
 	recycle_agents is
 			-- Recycle agents
 		do
-			show_feature_from_any_button.recycle
+			if show_feature_from_any_button_internal /= Void then
+				show_feature_from_any_button.recycle
+			end
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 		end
 

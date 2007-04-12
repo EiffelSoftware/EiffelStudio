@@ -662,9 +662,15 @@ feature{NONE} -- Implementation
 	recycle_agents is
 			-- Recycle agents
 		do
-			display_path_button.recycle
-			syntactical_button.recycle
-			normal_referenced_button.recycle
+			if display_path_button_internal /= Void then
+				display_path_button.recycle
+			end
+			if syntactical_button_internal /= Void then
+				syntactical_button.recycle
+			end
+			if normal_referenced_button_internal /= Void then
+				normal_referenced_button.recycle
+			end
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 		end
 

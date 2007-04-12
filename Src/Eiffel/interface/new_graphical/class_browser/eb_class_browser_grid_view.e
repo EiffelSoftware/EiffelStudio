@@ -707,7 +707,9 @@ feature {NONE} -- Recycle
 		do
 			desynchronize_color_or_font_change_with_editor
 			desynchronize_scroll_behavior_with_editor
-			show_tooltip_button.recycle
+			if show_tooltip_button_internal /= Void then
+				show_tooltip_button.recycle
+			end
 		end
 
 feature {NONE} -- Implementation

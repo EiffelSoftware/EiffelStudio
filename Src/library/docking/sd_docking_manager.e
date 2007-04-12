@@ -320,6 +320,7 @@ feature -- Command
 	destroy is
 			-- Destroy all underline objects.
 		do
+			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
 			agents.destroy
 			tool_bar_manager.destroy

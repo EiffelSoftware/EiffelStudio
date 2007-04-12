@@ -131,7 +131,6 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT_FIELD
 			l_font: EV_FONT
-			l_grid_support: like new_grid_support
 			l_maximized: BOOLEAN
 		do
 				-- Setup `input_grid'.			
@@ -143,8 +142,8 @@ feature {NONE} -- Initialization
 			input_grid.set_focused_selection_color (editor_preferences.selection_background_color)
 			input_grid_area.extend (input_grid)
 			input_grid.enable_selection_on_single_button_click
-			l_grid_support := new_grid_support (input_grid)
-			l_grid_support.enable_grid_item_pnd_support
+			grid_support := new_grid_support (input_grid)
+			grid_support.enable_grid_item_pnd_support
 
 			result_grid_area.extend (result_grid.widget)
 
@@ -271,6 +270,9 @@ feature -- Result loading
 		end
 
 feature{NONE} -- Implementation/Access
+
+	grid_support: like new_grid_support
+			-- Grid support.
 
 	input_grid: ES_GRID
 			-- Grid to display input
@@ -409,6 +411,8 @@ feature {NONE} -- Recycle
 			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.prune_all (maximize_result_preference_change_agent)
 			show_percentage_btn.recycle
 			result_grid.recycle
+			grid_support.desynchronize_color_or_font_change_with_editor
+			grid_support.desynchronize_scroll_behavior_with_editor
 		end
 
 invariant

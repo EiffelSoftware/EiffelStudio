@@ -100,8 +100,11 @@ feature{NONE} -- Recycle
 	internal_recycle is
 			-- Recycle.
 		do
-			Precursor
+			if displayer /= Void then
+				displayer.recycle
+			end
 			displayer := Void
+			Precursor {EB_FORMATTER}
 		end
 
 indexing

@@ -575,11 +575,9 @@ feature{NONE} -- Recycle
 	internal_recycle is
 			-- Recycle.
 		do
-			if not is_recycled then
-				Precursor
-				editor_token_grid_support.desynchronize_color_or_font_change_with_editor
-				editor_token_grid_support.desynchronize_scroll_behavior_with_editor
-			end
+			Precursor
+			editor_token_grid_support.desynchronize_color_or_font_change_with_editor
+			editor_token_grid_support.desynchronize_scroll_behavior_with_editor
 		end
 
 indexing

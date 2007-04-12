@@ -326,7 +326,7 @@ test	recursive-generic-constraint-with-creation	valid205 tcf pass validity
 test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
 test	valid-generic-derivation	valid207 tcf pass validity
 test	creation-constraint-like-current-deferred	valid208 tcf pass validity
-
+test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
 
 
 

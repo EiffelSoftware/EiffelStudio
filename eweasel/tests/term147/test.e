@@ -11,6 +11,6 @@ feature
 
 		end
 
-	f: TEST1 [NONE]
+	f: expanded TEST1 [NONE]
 
 end

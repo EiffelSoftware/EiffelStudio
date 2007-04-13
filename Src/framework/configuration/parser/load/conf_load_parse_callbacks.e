@@ -1110,7 +1110,8 @@ feature {NONE} -- Implementation attribute processing
 			target: current_target /= Void
 		local
 			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class,
-			l_warning, l_msil_application_optimize, l_full_class_checking: STRING
+			l_warning, l_msil_application_optimize, l_full_class_checking,
+			l_cat_call_detection: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
@@ -1121,6 +1122,7 @@ feature {NONE} -- Implementation attribute processing
 			l_namespace := current_attributes.item (at_namespace)
 			l_class := current_attributes.item (at_class)
 			l_full_class_checking := current_attributes.item (at_full_class_checking)
+			l_cat_call_detection := current_attributes.item (at_cat_call_detection)
 
 			current_option := factory.new_option
 			if l_trace /= Void then
@@ -1169,6 +1171,13 @@ feature {NONE} -- Implementation attribute processing
 					current_option.set_full_class_checking (l_full_class_checking.to_boolean)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("full_class_checking"))
+				end
+			end
+			if l_cat_call_detection /= Void then
+				if l_cat_call_detection.is_boolean then
+					current_option.set_cat_call_detection (l_cat_call_detection.to_boolean)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
 				end
 			end
 
@@ -1868,7 +1877,7 @@ feature {NONE} -- Implementation state transitions
 				-- * debug
 				-- * warning
 				-- * namespace
-			create l_attr.make (7)
+			create l_attr.make (9)
 			l_attr.force (at_trace, "trace")
 			l_attr.force (at_profile, "profile")
 			l_attr.force (at_optimize, "optimize")
@@ -1877,6 +1886,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_msil_application_optimize, "msil_application_optimize")
 			l_attr.force (at_namespace, "namespace")
 			l_attr.force (at_full_class_checking, "full_class_checking")
+			l_attr.force (at_cat_call_detection, "cat_call_detection")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -2173,6 +2183,7 @@ feature {NONE} -- Implementation constants
 	at_msil_application_optimize: INTEGER is 1056
 	at_use_application_options: INTEGER is 1057
 	at_full_class_checking: INTEGER is 1058
+	at_cat_call_detection: INTEGER is 1059
 
 feature -- Assertions
 

@@ -131,6 +131,26 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
+				-- Cat call detection
+			create l_bool_prop.make_with_value (conf_interface_names.option_cat_call_detection_name, an_inherited_options.is_cat_call_detection)
+			l_bool_prop.set_description (conf_interface_names.option_cat_call_detection_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_cat_call_detection)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_cat_call_detection)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_cat_call_detection)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_cat_call_detection_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			properties.add_property (l_bool_prop)
+
 			properties.current_section.expand
 		end
 

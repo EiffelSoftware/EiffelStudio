@@ -215,6 +215,12 @@ feature -- Access
 			Result := options.is_full_class_checking
 		end
 
+	is_cat_call_detection: BOOLEAN is
+			-- Is cat-call detection enabled, i.e. all feature calls are checked for potential cat-calls?
+		do
+			Result := options.is_cat_call_detection
+		end
+
 	is_compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do

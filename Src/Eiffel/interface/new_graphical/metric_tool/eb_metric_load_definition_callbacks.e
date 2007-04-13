@@ -538,14 +538,20 @@ feature{NONE} -- Process
 			tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
 		end
 
-	process_nary_criterion is
+	process_nary_criterion (a_for_and: BOOLEAN) is
 			-- Process nary criterion.
+			-- If `a_for_and' is True, treat that nary criterion as an "AND" criterion,
+			-- otherwise an "OR" criterion.
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 			l_criterion: EB_METRIC_CRITERION
 		do
 			l_id := current_criterion_identifier
-			l_criterion := factory.new_or_criterion (l_id.name, l_id.scope)
+			if a_for_and then
+				l_criterion := factory.new_and_criterion (l_id.name, l_id.scope)
+			else
+				l_criterion := factory.new_or_criterion (l_id.name, l_id.scope)
+			end
 			last_criterion := l_criterion
 			setup_criterion (l_criterion, l_id.negation)
 			register_criterion (l_criterion)
@@ -554,13 +560,13 @@ feature{NONE} -- Process
 	process_and_criterion is
 			-- Process "and_criterion".
 		do
-			process_nary_criterion
+			process_nary_criterion (True)
 		end
 
 	process_or_criterion is
 			-- Process "or_criterion".
 		do
-			process_nary_criterion
+			process_nary_criterion (False)
 		end
 
 	process_text_finish is

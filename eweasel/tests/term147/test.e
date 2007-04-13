@@ -6,11 +6,11 @@ create
 feature
 
 	make is
-			--
+			-- Creation
 		do
-
+			create f
 		end
 
-	f: expanded TEST1 [NONE]
+	f: TEST1 [NONE]
 
 end

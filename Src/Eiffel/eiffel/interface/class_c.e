@@ -1789,6 +1789,12 @@ feature -- Convenience features
 			Result := lace_class.is_full_class_checking
 		end
 
+	is_cat_call_detection: BOOLEAN is
+			-- Do we perform cat-call detection on all feature calls?
+		do
+			Result := lace_class.is_cat_call_detection
+		end
+
 feature -- Actual class type
 
 	constraint_actual_type: CL_TYPE_A is

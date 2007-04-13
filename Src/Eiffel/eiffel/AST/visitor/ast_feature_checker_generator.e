@@ -536,6 +536,8 @@ feature {NONE} -- Implementation: State
 				l_formal_type ?= Result
 				Result := context.current_class.constraint_fixed (l_formal_type.position)
 			end
+		ensure
+			constrained_type_not_void: Result /= Void
 		end
 
 	current_target_type: TYPE_A
@@ -1582,6 +1584,17 @@ feature -- Implementation
 						l_access.set_parameters (l_parameter_list)
 						last_byte_node := l_access
 					end
+
+						-- Check if cat-call detection is enabled for current context class
+					if context.current_class.is_cat_call_detection then
+							-- Inline agents have no descendants, so they don't need to be checked anyway
+						if not l_feature.is_inline_agent then
+								-- Cat call detection is enabled: Test if this feature call is valid
+								-- in all subtypes of the current class.
+							check_cat_call (l_last_type, l_feature, is_qualified, l_arg_types, l_feature_name)
+						end
+					end
+
 					last_type := l_result_type
 					last_calls_target_type := l_last_constrained
 					last_access_writable := l_feature.is_attribute
@@ -7725,6 +7738,126 @@ feature {NONE} -- Implementation: Error handling
 		do
 			fixme ("MTNTODO: after the transition remove this helper function and adapt the contract of constraied_type.")
 			Result := constrained_type (a_type)
+		ensure
+			constrained_type_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation: catcall check
+
+	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_qualified: BOOLEAN; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS) is
+			-- Check if a call can potentially be a cat call.
+			--
+			-- `a_callee_type': Type on which the call happens
+			-- `a_feature': Feature which is called on callee
+			-- `a_qualified': Flag to indicate if feature call is qualified or not
+			-- `a_params': Parameters of call, already evaluated to their types
+			-- `a_location': Location where warning will be linked to
+		require
+			a_callee_type_not_void: a_callee_type /= Void
+			a_feature_not_void: a_feature /= Void
+			a_params_not_void: a_feature.argument_count > 0 implies a_params /= Void
+			same_number_of_params: a_feature.argument_count > 0 implies a_feature.argument_count = a_params.count
+		local
+			l_descendants: ARRAYED_LIST [CLASS_C]
+			l_descendant_class: CLASS_C
+			l_descendant_feature: FEATURE_I
+			l_cat_call_warning: CAT_CALL_WARNING
+			l_descendant_index, l_argument_index: INTEGER
+		do
+			l_descendants := possible_descendants (a_callee_type)
+				-- Loop through all descendants
+			from
+				l_descendant_index := 1
+			until
+				l_descendant_index > l_descendants.count
+			loop
+					-- Get descendant class and the feature in the context of the descendant
+				l_descendant_class := l_descendants.i_th (l_descendant_index)
+				l_descendant_feature := l_descendant_class.feature_of_rout_id (a_feature.rout_id_set.first)
+
+					-- Check argument validity
+				from
+					l_argument_index := 1
+				until
+					l_argument_index > a_feature.argument_count
+				loop
+						-- Check if actual parameter conforms to the possible type of the descendant feature
+						-- Todo: look at the convert check again and simplify it
+					if
+						not a_params.item (l_argument_index).conform_to (l_descendant_feature.arguments.i_th (l_argument_index)) and
+						not (
+							a_params.item (l_argument_index).convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index)) and then
+							a_feature.arguments.i_th (l_argument_index).conform_to (l_descendant_feature.arguments.i_th (l_argument_index))
+						)
+					then
+							-- Conformance is violated. Add notice to warning.
+						if l_cat_call_warning = Void then
+							create l_cat_call_warning.make (context.current_class, context.current_feature, a_location)
+							l_cat_call_warning.set_called_feature (a_feature)
+							error_handler.insert_warning (l_cat_call_warning)
+						end
+						l_cat_call_warning.add_covariant_argument_violation (l_descendant_class, l_descendant_feature, a_params.item (l_argument_index), l_argument_index)
+					end
+					l_argument_index := l_argument_index + 1
+				end
+
+					-- Check export status validity for descendant feature
+				if
+					not context.is_ignoring_export and a_qualified and
+					not l_descendant_feature.is_exported_for (context.current_class)
+				then
+						-- Export status violated. Add notice to warning.
+					if l_cat_call_warning = Void then
+						create l_cat_call_warning.make (context.current_class, context.current_feature, a_location)
+						l_cat_call_warning.set_called_feature (a_feature)
+						error_handler.insert_warning (l_cat_call_warning)
+					end
+					l_cat_call_warning.add_export_status_violation (l_descendant_class, l_descendant_feature)
+				end
+
+				l_descendant_index := l_descendant_index + 1
+			end
+		end
+
+	possible_descendants (a_type: TYPE_A): ARRAYED_LIST [CLASS_C] is
+			-- List of all descendants of the type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if a_type.has_generics then
+					-- Get all descendants for this generic which are introduced in the system
+					-- Todo: collect list of introduced types in {AST_TYPE_A_GENERATOR} and take
+					--       these types into account here. At the moment, generics are not checked
+					--       for cat-calls
+				create Result.make (1)
+			else
+				if a_type.is_formal then
+					if a_type.is_multi_constrained_formal (context.current_class) then
+							-- Type is a multi constrained formal. Loop through all associated classes of
+							-- constraints and collect their descendants
+						create Result.make (10)
+						a_type.to_type_set.constraining_types (context.current_class).associated_classes.do_all (
+							agent (a_class: CLASS_C; a_list: LIST [CLASS_C])
+									-- Append descendants of `a_class' to `a_list'.
+								require
+									a_class_not_void: a_class /= Void
+									a_list_not_void: a_list /= Void
+								do
+									a_list.append (a_class.descendants)
+								end
+							(?, Result)
+						)
+					else
+							-- Type is formal. Take descendants from associated class of constraint
+						Result := constrained_type_fixed (a_type).associated_class.descendants
+					end
+				else
+						-- Normal type. Take descenants from associated class
+					Result := a_type.associated_class.descendants
+				end
+			end
+		ensure
+			possible_descendants_not_void: Result /= Void
 		end
 
 indexing

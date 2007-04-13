@@ -36,12 +36,16 @@ feature -- Status
 	is_full_class_checking_configured: BOOLEAN
 			-- Is `is_full_class_checking' configued?
 
+	is_cat_call_detection_configured: BOOLEAN
+			-- Is `is_cat_call_detection' configured?
+
 	is_empty: BOOLEAN is
 			-- Is `Current' empty? No settings are set?
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
 				is_warning_configured or is_msil_application_optimize_configured or is_full_class_checking_configured or
-				assertions /= Void or local_namespace /= Void or warnings /= Void or debugs /= Void )
+				is_cat_call_detection_configured or assertions /= Void or local_namespace /= Void or warnings /= Void or
+				debugs /= Void)
 		end
 
 feature -- Status update
@@ -95,6 +99,12 @@ feature -- Status update
 			is_full_class_checking := False
 		end
 
+	unset_cat_call_detection is
+			-- Unset cat call detection.
+		do
+			is_cat_call_detection_configured := False
+			is_cat_call_detection := False
+		end
 
 feature -- Access, stored in configuration file
 
@@ -127,6 +137,9 @@ feature -- Access, stored in configuration file
 
 	is_full_class_checking: BOOLEAN
 			-- Do we perform a full class checking?
+
+	is_cat_call_detection: BOOLEAN
+			-- Do we perform cat-call detection on all feature calls?
 
 	description: STRING
 			-- A description about the options.
@@ -284,6 +297,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_full_class_checking_configured: is_full_class_checking_configured
 		end
 
+	set_cat_call_detection (a_enabled: BOOLEAN) is
+			-- Set `is_cat_call_detection' to `a_enabled'.
+		do
+			is_cat_call_detection_configured := True
+			is_cat_call_detection := a_enabled
+		ensure
+			is_cat_call_detection_set: is_cat_call_detection = a_enabled
+			is_cat_call_detection_configured: is_cat_call_detection_configured
+		end
+
 	set_description (a_description: like description) is
 			-- Set `description' to `a_description'.
 		do
@@ -300,6 +323,7 @@ feature -- Comparison
 			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
 				is_optimize = other.is_optimize and is_profile = other.is_profile and
 				is_full_class_checking = other.is_full_class_checking and
+				is_cat_call_detection = other.is_cat_call_detection and
 				is_trace = other.is_trace and equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
@@ -378,6 +402,10 @@ feature -- Merging
 				if not is_full_class_checking_configured then
 					is_full_class_checking_configured := other.is_full_class_checking_configured
 					is_full_class_checking := other.is_full_class_checking
+				end
+				if not is_cat_call_detection_configured then
+					is_cat_call_detection_configured := other.is_cat_call_detection_configured
+					is_cat_call_detection := other.is_cat_call_detection
 				end
 			end
 		end

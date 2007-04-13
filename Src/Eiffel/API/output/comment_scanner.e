@@ -14,7 +14,6 @@ inherit
 create
 	make_with_text_formatter
 
-
 feature -- Status report
 
 	valid_start_condition (sc: INTEGER): BOOLEAN is
@@ -200,7 +199,6 @@ when 18 then
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 143")
 end
-
 			
 when 19 then
 --|#line 146 "comment_scanner.l"
@@ -634,8 +632,6 @@ feature {NONE} -- Constants
 			-- Start condition codes
 
 feature -- User-defined features
-
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

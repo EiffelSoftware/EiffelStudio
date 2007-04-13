@@ -868,7 +868,6 @@ feature -- Status
 						end)
 		end
 
-
 	has_void: BOOLEAN is
 			-- Does the current type set contain the NONE type?
 		do
@@ -1123,7 +1122,6 @@ feature -- Access
 			only_changed_if_necessary: not old has_formal implies Result = Current
 			not_has_formal: not Result.has_formal
 		end
-
 
 	overloaded_items (an_id: INTEGER): LIST [FEATURE_I] is
 			-- List of features matching overloaded name `an_id'.

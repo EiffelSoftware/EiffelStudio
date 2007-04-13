@@ -135,14 +135,15 @@ feature -- Status
 			result_not_void: Result /= Void
 		end
 
-
 	constraint_type (a_context_class: CLASS_C): EXTENDED_TYPE_A is
 			-- Actual type of the constraint.
+			--
+			-- `a_context_class' is used to evaluate the type.
+			--| A call to this function is only valid if a_context_class
 		require
 			a_context_class_not_void: a_context_class /= Void
 			not_has_multi_constraints: not has_multi_constraints
 			-- MTNASK: can I ask for a certain degree? So that one can be sure that it works.
-			-- system.??
 		local
 			l_constraint: like constraint
 			l_type: TYPE_A
@@ -399,7 +400,6 @@ feature -- Output
 							-- Multi constraints									
 						append_multi_constraints (a_text_formatter, a_short, a_context_class)
 						l_type_set := constraint_types_if_possible (a_context_class).constraining_types_if_possible (a_context_class)
-
 
 						if has_creation_constraint then
 							from
@@ -676,7 +676,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	check_rename_clause (a_constraint: CLASS_C; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_position: INTEGER)
 			-- Checks a rename clause and inserts a `RENAMING_A' instance into the cache.
 			-- If the check was already performed it won't be done again.
@@ -713,7 +712,6 @@ feature {NONE} -- Implementation
 		   		end
 		   	end
 		end
-
 
 	constraint_classes: ARRAY[CLASS_C]
 			-- Computed constraint classes.
@@ -782,7 +780,6 @@ feature {NONE} -- Implementation
 				l_renaminings.forth
 			end
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

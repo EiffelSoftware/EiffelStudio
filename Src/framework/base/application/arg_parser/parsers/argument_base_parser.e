@@ -132,7 +132,6 @@ feature -- Element change
 			add_application_switches_set: add_application_switches = a_add
 		end
 
-
 feature -- Query
 
 	options_of_name (a_name: STRING): LIST [ARGUMENT_OPTION] is

@@ -3269,7 +3269,6 @@ feature -- Implementation
 				l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
 			end
 
-
 			if l_prefix_feature = Void then
 					-- Error: not prefixed function found
 				create l_vwoe
@@ -6798,7 +6797,6 @@ feature {NONE} -- Agents
 				-- Compute `operands_tuple' and type of TUPLE needed to determine current
 				-- ROUTINE type.
 
-
 				-- Create `l_oargtypes'. But first we need to find the `l_count', number
 				-- of open operands.
 
@@ -7720,14 +7718,14 @@ feature {NONE} -- Implementation: Error handling
 			end
 		end
 
--- MTNTODO  remove me
+
 	constrained_type_fixed (a_type: TYPE_A): TYPE_A is
 		require
 			not_multi_constraint: not a_type.is_multi_constrained_formal (context.current_class)
 		do
+			fixme ("MTNTODO: after the transition remove this helper function and adapt the contract of constraied_type.")
 			Result := constrained_type (a_type)
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

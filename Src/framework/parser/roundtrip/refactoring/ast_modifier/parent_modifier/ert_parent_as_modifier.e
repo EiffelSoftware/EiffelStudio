@@ -334,7 +334,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-
 	is_end_keyword_needed: BOOLEAN is
 			-- Is "end" keyword needed?
 			-- If no inherit presents, "end" keyword is not needed, otherwise, needed.

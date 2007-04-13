@@ -1251,7 +1251,6 @@ end
 						Error_handler.raise_error
 			end
 
-
 			if 	root_type = Void or else
 				root_type.is_loose
 			then
@@ -1786,7 +1785,6 @@ end
 					print_memory_statistics
 					create d1.make_now
 				end
-
 
 				if
 					not Compilation_modes.is_precompiling and
@@ -2397,7 +2395,6 @@ end
 				make_update_descriptors (melted_file)
 					-- End mark
 				write_int (file_pointer, -1)
-
 
 					-- Update the root class info
 			    a_class := root_type.associated_class
@@ -3181,7 +3178,6 @@ feature {NONE} -- Implementation
 					unref_classes.prune_all (eif_class.original_class)
 				end
 
-
 				eif_class.remove_c_generated_files
 
 					-- Update control flags of the topological sort
@@ -3618,7 +3614,6 @@ feature -- Dead code removal
 				-- Protection of feature `set_item' of `reference INTEGER_64'
 			l_class := integer_64_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
-
 
 debug ("DEAD_CODE")
 			remover.dump_alive
@@ -4086,7 +4081,6 @@ feature -- Generation
 			buffer.put_string ("#include %"eif_eiffel.h%"%N%N");
 
 			buffer.start_c_specific_code
-
 
 			from
 				i := 1;
@@ -4819,7 +4813,6 @@ feature -- Pattern table generation
 					i := i + 1
 				end
 
-
 				buffer.put_string ("%Nvoid egc_tabinit_init(void)%N{%N")
 				from
 					i := 1
@@ -4856,8 +4849,6 @@ feature -- Pattern table generation
 			-- Module initialization routine 'egc_system_mod_init_init'
 
 			-- Declarations
-
-
 
 			from
 				i  := 1

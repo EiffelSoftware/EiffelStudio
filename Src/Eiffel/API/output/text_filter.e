@@ -891,7 +891,6 @@ feature -- Text processing
 			process_basic_text (str)
 		end;
 
-
 	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
 			-- Process breakpoint.
 		do

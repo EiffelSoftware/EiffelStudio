@@ -91,7 +91,6 @@ feature -- Status report
 			label_name_not_void: Result /= Void
 		end
 
-
 feature -- Checking
 
 	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is

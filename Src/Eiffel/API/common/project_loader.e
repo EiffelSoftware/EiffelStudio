@@ -400,7 +400,6 @@ feature -- Settings
 			has_library_conversion_set: has_library_conversion = v
 		end
 
-
 feature {NONE} -- Settings
 
 	set_should_override_project (v: like should_override_project) is

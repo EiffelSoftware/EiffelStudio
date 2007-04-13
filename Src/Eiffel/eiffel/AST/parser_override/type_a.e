@@ -76,7 +76,6 @@ feature -- Properties
 			Result := false
 		end
 
-
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
 		do

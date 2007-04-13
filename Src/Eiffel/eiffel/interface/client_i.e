@@ -200,7 +200,6 @@ feature -- formatter
 			end
 		end
 
-
 	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		local
 			temp: STRING

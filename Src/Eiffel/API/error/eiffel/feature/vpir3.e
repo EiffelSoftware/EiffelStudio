@@ -30,9 +30,7 @@ feature -- Properties
 
 feature -- Output
 
-
 feature {COMPILER_EXPORTER}
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

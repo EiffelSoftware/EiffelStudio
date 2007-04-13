@@ -173,7 +173,6 @@ feature -- Processing
 				-- The remaining_validity_check_list will be kept. All checks will be done once we have no mroe errors.
 			error_handler.checksum
 
-
 				-- Check now that all the instances of a generic class are
 				-- valid for the creation constraint if there is one. The
 				-- checks have been stored in `remaining_validity_checking_list'.

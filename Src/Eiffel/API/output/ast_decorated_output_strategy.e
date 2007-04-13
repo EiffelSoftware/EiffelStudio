@@ -2993,7 +2993,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
 			process_type_as (l_as)
@@ -3482,7 +3481,6 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-
 	append_format_multilined (s: STRING; indentable: BOOLEAN) is
 		require
 			string_not_void: s /= Void
@@ -3907,7 +3905,6 @@ feature {NONE} -- Implementation: helpers
 			feature_in_class_not_void: not has_error_internal implies Result /= Void
 		end
 
-
 	feature_in_class (a_class_c: CLASS_C; a_id_set: ID_SET): E_FEATURE is
 			-- Feature with `a_id_set' in `a_class_c'
 		require
@@ -4128,7 +4125,6 @@ feature {NONE} -- Implementation: helpers
 					l_count := 1
 				end
 				create l_argtypes.make (1, l_count)
-
 
 					-- Create `l_oargtypes'. But first we need to find the `l_count', number
 					-- of open operands.

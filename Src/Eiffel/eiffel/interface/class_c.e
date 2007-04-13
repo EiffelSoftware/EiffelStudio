@@ -361,7 +361,6 @@ feature -- Action
 		do
 		end
 
-
 feature -- Conformance dependencies
 
 	conf_dep_table: PACKED_BOOLEANS
@@ -666,7 +665,6 @@ feature -- Setting
 		ensure
 			assembly_info_set: assembly_info = a
 		end
-
 
 feature -- Melting
 
@@ -2735,7 +2733,6 @@ feature -- Access
 			Result := l_formal_dec.has_multi_constraints
 		end
 
-
 	is_fully_deferred: BOOLEAN is
 			-- Are parents of current class either ANY or a fully deferred class?
 			-- Does current class contain only deferred features?
@@ -2822,7 +2819,6 @@ feature -- Access
 			Result := obsolete_message /= Void
 		end
 
-
 	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE is
 			-- Feature whose internal name is `n'
 		require
@@ -2836,7 +2832,6 @@ feature -- Access
 				Result := f.api_feature (class_id)
 			end
 		end
-
 
 	feature_with_id (a_feature_id: ID_AS): E_FEATURE is
 			-- Feature whose internal name is `n'

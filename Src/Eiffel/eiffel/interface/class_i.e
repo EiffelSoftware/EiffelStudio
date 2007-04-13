@@ -280,7 +280,6 @@ feature -- Access
 			end
 		end
 
-
 feature {NONE} -- Access
 
 	internal_namespace: STRING

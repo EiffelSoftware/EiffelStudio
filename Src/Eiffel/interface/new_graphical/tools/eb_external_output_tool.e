@@ -464,16 +464,16 @@ feature -- Basic operation
 			end
 		end
 
-	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
-			-- Print `text_block' on `output_text'.
-		local
-			str: STRING
-		do
-			str ?= text_block.data
-			if str /= Void then
-				output_text.append_text (source_encoding.convert_to (destination_encoding, str))
-			end
-		end
+--	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
+--			-- Print `text_block' on `output_text'.
+--		local
+--			str: STRING
+--		do
+--			str ?= text_block.data
+--			if str /= Void then
+--				output_text.append_text (source_encoding.convert_to (destination_encoding, str))
+--			end
+--		end
 
 	show is
 			-- Show tool.

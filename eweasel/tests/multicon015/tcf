@@ -14,10 +14,11 @@ define VTGD1_1 ""
 define VTGD1_2 ""
 define VTGD2_1 ""
 define VTGD3_1 ""
+define EXPANDED "expanded"
 
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
-copy_raw 	multi.e $CLUSTER multi.e
+copy_sub 	multi.e $CLUSTER multi.e
 copy_raw 	comparable_numeric.e $CLUSTER comparable_numeric.e
 compile_melted
 compile_result 	validity_error TEST VTUG(2)
@@ -39,15 +40,24 @@ resume_compile
 compile_result 	validity_error TEST VTGD(2)
 
 define VTGD2_1 "--"
+define EXPANDED ""
 copy_sub 	test.e $CLUSTER test.e
+copy_sub 	multi.e $CLUSTER multi.e
+
 resume_compile
 compile_result 	validity_error TEST VTCG
 -- VTGD(3)
 
 define VTGD3_1 "--"
+define EXPANDED "expanded"
 copy_sub 	test.e $CLUSTER test.e
+copy_sub 	multi.e $CLUSTER multi.e
 resume_compile
-compile_result 	ok
+compile_result 	validity_error TEST VTCG VTCG
 
+define EXPANDED ""
+copy_sub 	multi.e $CLUSTER multi.e
+resume_compile
+compile_result ok
 
 test_end

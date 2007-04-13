@@ -327,7 +327,7 @@ test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
 test	valid-generic-derivation	valid207 tcf pass validity
 test	creation-constraint-like-current-deferred	valid208 tcf pass validity
 test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
-
+test	vtgc-expanded	valid210 tcf pass validity
 
 
 -- System validity tests

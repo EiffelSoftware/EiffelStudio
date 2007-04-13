@@ -19,7 +19,8 @@ inherit
 			update_click_list,
 			has_focus,
 			set_focus,
-			is_offset_valid
+			is_offset_valid,
+			internal_recycle
 		end
 
 create
@@ -78,6 +79,13 @@ feature -- Fake implemetation
 
 	set_focus is
 			-- Redefine
+		do
+		end
+
+feature {NONE} -- Implementation
+
+	internal_recycle is
+			-- Do nothing, since we nothing was initialized.
 		do
 		end
 

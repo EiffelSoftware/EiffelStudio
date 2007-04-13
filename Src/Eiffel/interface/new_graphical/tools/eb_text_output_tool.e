@@ -74,7 +74,7 @@ feature -- Access
 			-- Combo box to display locale list
 		local
 			l_locale_table: like locale_table
-			l_locales: LINKED_LIST [STRING_GENERAL]
+			l_locales: LINKED_LIST [STRING_32]
 		do
 			if locale_combo_internal = Void then
 				create locale_combo_internal
@@ -85,11 +85,11 @@ feature -- Access
 				until
 					l_locale_table.after
 				loop
-					l_locales.extend (l_locale_table.item_for_iteration)
+					l_locales.extend (l_locale_table.item_for_iteration.as_string_32)
 					l_locale_table.forth
 				end
 				locale_combo_internal.set_strings (l_locales)
-				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id))
+				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id).as_string_32)
 				locale_combo_internal.select_actions.extend (agent on_encoding_change)
 				locale_combo_internal.disable_edit
 				on_encoding_change
@@ -119,9 +119,16 @@ feature{NONE} -- Actions
 
 	on_encoding_change is
 			-- Action to be peroformed when selected encoding changes
+		local
+			l_locale: I18N_LOCALE
 		do
 			if locale_id_table.item (locale_combo.text) /= Void then
-				create source_encoding.make (locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text))).info.code_page)
+				l_locale := locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text)))
+				if l_locale = Void or else l_locale.info.code_page = Void then
+					source_encoding := Void
+				else
+					create source_encoding.make (l_locale.info.code_page)
+				end
 			end
 		end
 
@@ -157,7 +164,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	locale_id_table: HASH_TABLE [STRING, STRING_GENERAL] is
+	locale_id_table: HASH_TABLE [STRING, STRING_32] is
 			-- Table of locale ids: [locale_id, locale_displayed_name]
 		local
 			l_locale_table: like locale_table
@@ -172,7 +179,7 @@ feature{NONE} -- Implementation
 				until
 					l_locale_table.after
 				loop
-					l_locale_id_table.put (l_locale_table.key_for_iteration, l_locale_table.item_for_iteration)
+					l_locale_id_table.put (l_locale_table.key_for_iteration, l_locale_table.item_for_iteration.as_string_32)
 					l_locale_table.forth
 				end
 			end
@@ -184,8 +191,25 @@ feature{NONE} -- Implementation
 	locale_table_internal: like locale_table
 			-- Implementation of `locale_table'
 
-	locale_id_table_internal: like locale_id_table;
-			-- Implementation of `locale_id_table'			
+	locale_id_table_internal: like locale_id_table
+			-- Implementation of `locale_id_table'
+
+feature -- Process
+
+	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
+			-- Print `text_block' on `console'.
+		local
+			str: STRING
+		do
+			str ?= text_block.data
+			if str /= Void then
+				if source_encoding /= Void and then destination_encoding /= Void then
+					output_text.append_text (source_encoding.convert_to (destination_encoding, str))
+				else
+					output_text.append_text (str)
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -263,16 +263,20 @@ feature -- Basic operation
 		do
 		end
 
-	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
-			-- Print `text_block' on `console'.
-		local
-			str: STRING
-		do
-			str ?= text_block.data
-			if str /= Void then
-				output_text.append_text (source_encoding.convert_to (destination_encoding, str))
-			end
-		end
+--	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
+--			-- Print `text_block' on `console'.
+--		local
+--			str: STRING
+--		do
+--			str ?= text_block.data
+--			if str /= Void then
+--				if source_encoding /= Void and then destination_encoding /= Void then
+--					output_text.append_text (source_encoding.convert_to (destination_encoding, str))
+--				else
+--					output_text.append_text (str)
+--				end
+--			end
+--		end
 
 	show is
 			-- Show tool.

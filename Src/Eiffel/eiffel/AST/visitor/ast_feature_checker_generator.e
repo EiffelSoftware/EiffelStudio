@@ -4429,6 +4429,7 @@ feature -- Implementation
 		local
 			l_call_access: CALL_ACCESS_B
 			l_formal_type: FORMAL_A
+			l_generic_type: GEN_TYPE_A
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_creation_type: TYPE_A
@@ -4458,6 +4459,8 @@ feature -- Implementation
 			l_orig_call := a_call
 			l_actual_creation_type := a_creation_type.actual_type
 
+			l_generic_type ?= l_actual_creation_type
+
 			if l_actual_creation_type.is_formal then
 					-- Cannot be Void
 				l_formal_type ?= l_actual_creation_type
@@ -4481,6 +4484,9 @@ feature -- Implementation
 					l_vgcc1.set_location (a_location)
 					error_handler.insert_error (l_vgcc1);
 				end
+			elseif l_generic_type /= Void  then
+				l_generic_type.check_constraints (context.current_class , context.current_feature, True)
+				l_generic_type.generate_error_from_creation_constraint_list (context.current_class , context.current_feature)
 			end
 
 			error_handler.checksum

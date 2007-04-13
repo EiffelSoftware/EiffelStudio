@@ -148,9 +148,7 @@ feature -- Checking
 						error_handler.insert_error (l_vrft)
 					end
 				else
-					remaining_validity_checking_list.extend (create {FUTURE_CHECKING_INFO}.make (
-						a_context_class,
-						agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, l_named_tuple_node, i + 1)))
+					add_future_checking (a_context_class, agent check_tuple_feature_clash (a_context_class, context.current_feature, l_name_id, l_named_tuple_node, i + 1))
 				end
 				i := i + 1
 			end

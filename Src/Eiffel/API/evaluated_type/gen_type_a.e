@@ -191,6 +191,30 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Primitives
 
+	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I)
+			-- Generated a VTCG7 error if there are any constraint errors.
+			-- Otherwise it does nothing.
+		require
+			not_constraint_error_list_is_void: constraint_error_list /= Void
+		local
+			l_vtcg7: VTCG7
+		do
+				if not constraint_error_list.is_empty then
+						-- The feature listed in the creation constraint have
+						-- not been declared in the constraint class.			
+					create l_vtcg7
+					-- MTNTODO set some kind of location for this error!
+				--	l_vtcg7.set_location (Current.first_token (context.))
+					l_vtcg7.set_class (a_context_class)
+					l_vtcg7.set_error_list (constraint_error_list)
+					l_vtcg7.set_parent_type (Current)
+					if a_context_feature /= Void then
+						l_vtcg7.set_feature (a_context_feature)
+					end
+					Error_handler.insert_error (l_vtcg7)
+				end
+		end
+
 	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
 			-- Update dependency for Dead Code Removal
 		local
@@ -729,7 +753,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 								-- to `constraint_type'.
 							l_formal_dec_as ?= associated_class.generics.i_th (i)
 							check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
-							if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint or a_check_creation_readiness) then
+							if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint and a_check_creation_readiness) then
 									-- If we are not in degree 3 (i.e. 4), we cannot have a
 									-- complete check since if we are currently checking an attribute
 									-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
@@ -816,21 +840,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 			l_vtcg7: VTCG7
 		do
 			reset_constraint_error_list
-			if context_class.is_valid and then to_check /= Void and then to_check.is_valid then
-				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type) -- MTNTODO: Replace void with formal_type
-				if not constraint_error_list.is_empty then
-						-- The feature listed in the creation constraint have
-						-- not been declared in the constraint class.
-					create l_vtcg7
-				--	l_vtcg7.set_location (Current.first_token (context.))
-					l_vtcg7.set_class (context_class)
-					l_vtcg7.set_error_list (constraint_error_list)
-					l_vtcg7.set_parent_type (Current)
-					if a_context_feature /= Void then
-						l_vtcg7.set_feature (a_context_feature)
-					end
-					Error_handler.insert_error (l_vtcg7)
-				end
+				-- We assume that we only get checks if the class is valid.
+				-- However, if contracts are disabled we catch the error also with the following if-statement.
+			check is_valid: is_valid end
+			if is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid then
+				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+				generate_error_from_creation_constraint_list (context_class, a_context_feature)
 			end
 		end
 
@@ -846,6 +861,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		require
 			formal_dec_as_not_void: formal_dec_as /= Void
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
+			is_valid: is_valid
 		local
 			formal_type_dec_as: FORMAL_CONSTRAINT_AS
 			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]];
@@ -875,94 +891,105 @@ feature {COMPILER_EXPORTER} -- Primitives
 			crc_list := formal_dec_as.constraint_creation_list (associated_class)
 			if formal_type = Void then
 					-- We're in the case of a class type.
-				if to_check.has_associated_class then
-					-- `to_check' may not have an associated class if it represents NONE type, for
-						-- example in PROCEDURE [ANY, NONE], we will check NONE against
-						-- constraint of PROCEDURE which is `TUPLE create default_create end'.						
-					class_c := to_check.associated_class
-					creators_table := class_c.creators
-				end
 
-					-- A creation procedure has to be specified, so if none is
-					-- specified or if there is no creation procedure in the class
-					-- corresponding to `to_check', this is not valid.
-
-				if
-					creators_table /= Void and then not creators_table.is_empty
-				then
-					from
-						crc_list.start
-						feat_tbl := class_c.feature_table
-					until
-						crc_list.after
-					loop
-							-- Let's take one of the creation procedure defined in the constraint.
-						feature_i := crc_list.item.feature_item
-
-							-- Take the redefined/renamed version of the previous version in the
-							-- descendant class `to_check'/`class_c'.
-						other_feature_i := feat_tbl.feature_of_rout_id (feature_i.rout_id_set.first)
-
-							-- Test if we found the specified feature name among the creation
-							-- procedures of `class_c' and that it is exported to Current, since it
-							-- it is Current that will create instances of the generic parameter.
-						creators_table.search (other_feature_i.feature_name)
-						if
-							not creators_table.found or else
-							not creators_table.found_item.valid_for (associated_class)
-						then
-							if l_unmatched_features = Void then
-								create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
-							end
-							l_unmatched_features.extend (feature_i)
-						end
-						crc_list.forth
-					end
+					-- If it is a deferred class and the actual derivation uses like current
+					-- we move the duty to check the creation constraint to the full class check to check
+					-- the descendants of this deferred class, which can never be instantiated direclty.
+					-- See bug#12464 and test#valid208/test#valid209 for more information.
+				if to_check.is_like_current and context_class.is_deferred then
+					-- We simply accept it.
 				else
-						-- The class type does not have a creation clause:
-						-- May be we are handling a case where the constraint only specfies
-						-- `default_create', so let's check that the constraint defines
-						-- `default_create' as creation procedure and that `creators_table'
-						-- is Void (as empty means there is no way to create an instance of this
-						-- class).
-						-- At last we check that this class is not deferred.
+
+					if to_check.has_associated_class then
+						-- `to_check' may not have an associated class if it represents NONE type, for
+							-- example in PROCEDURE [ANY, NONE], we will check NONE against
+							-- constraint of PROCEDURE which is `TUPLE create default_create end'.						
+						class_c := to_check.associated_class
+						creators_table := class_c.creators
+					end
+
+						-- A creation procedure has to be specified, so if none is
+						-- specified or if there is no creation procedure in the class
+						-- corresponding to `to_check', this is not valid.
+
 					if
-					 	creators_table = Void and then
-						(crc_list.count = 1 and then formal_dec_as.has_default_create)
+						creators_table /= Void and then not creators_table.is_empty
 					then
-							-- Ok, no error: We have no create clause which makes `default_create' available
-							-- and the constraint demands only `default_create'
-							-- But maybe it is a deferred class?
-							if class_c /= Void and then class_c.is_deferred then
-								if l_unmatched_features = Void then
-									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
-								end
-								l_unmatched_features.extend (crc_list.first.feature_item)
-							end
-					else
-							-- Generate list of features not matching constraint.
 						from
-							create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
 							crc_list.start
+							feat_tbl := class_c.feature_table
 						until
 							crc_list.after
 						loop
-								-- If `creators_table' is not Void, it simply means we have an empty creation routine
-								-- and therefore all the creation constraints are not met.
-								-- If it is Void, then `{ANY}.default_create' is a valid creation routine, in that
-								-- case we should not list `default_create' has not beeing met if listed in the creation
-								-- constraint.
+								-- Let's take one of the creation procedure defined in the constraint.
 							feature_i := crc_list.item.feature_item
-							if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_id) then
+
+								-- Take the redefined/renamed version of the previous version in the
+								-- descendant class `to_check'/`class_c'.
+							other_feature_i := feat_tbl.feature_of_rout_id (feature_i.rout_id_set.first)
+
+								-- Test if we found the specified feature name among the creation
+								-- procedures of `class_c' and that it is exported to Current, since it
+								-- it is Current that will create instances of the generic parameter.
+							creators_table.search (other_feature_i.feature_name)
+							if
+								not creators_table.found or else
+								not creators_table.found_item.valid_for (associated_class)
+							then
+								if l_unmatched_features = Void then
+									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+								end
 								l_unmatched_features.extend (feature_i)
 							end
 							crc_list.forth
 						end
+					else
+							-- The class type does not have a creation clause:
+							-- May be we are handling a case where the constraint only specfies
+							-- `default_create', so let's check that the constraint defines
+							-- `default_create' as creation procedure and that `creators_table'
+							-- is Void (as empty means there is no way to create an instance of this
+							-- class).
+							-- At last we check that this class is not deferred.
+						if
+						 	creators_table = Void and then
+							(crc_list.count = 1 and then formal_dec_as.has_default_create)
+						then
+								-- Ok, no error: We have no create clause which makes `default_create' available
+								-- and the constraint demands only `default_create'
+
+									-- But maybe it is a deferred class?					
+								if class_c /= Void and then class_c.is_deferred then
+									if l_unmatched_features = Void then
+										create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+									end
+									l_unmatched_features.extend (crc_list.first.feature_item)
+								end
+						else
+								-- Generate list of features not matching constraint.
+							from
+								create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+								crc_list.start
+							until
+								crc_list.after
+							loop
+									-- If `creators_table' is not Void, it simply means we have an empty creation routine
+									-- and therefore all the creation constraints are not met.
+									-- If it is Void, then `{ANY}.default_create' is a valid creation routine, in that
+									-- case we should not list `default_create' has not beeing met if listed in the creation
+									-- constraint.
+								feature_i := crc_list.item.feature_item
+								if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_id) then
+									l_unmatched_features.extend (feature_i)
+								end
+								crc_list.forth
+							end
+						end
 					end
-				end
-					-- We have an error if we have unmatched features.
-				if l_unmatched_features /= Void then
-					generate_constraint_error (Current, to_check, a_constraint_types, i, l_unmatched_features)
+						-- We have an error if we have unmatched features.
+					if l_unmatched_features /= Void then
+						generate_constraint_error (Current, to_check, a_constraint_types, i, l_unmatched_features)
+					end
 				end
 			else
 					-- Check if there is a creation constraint clause

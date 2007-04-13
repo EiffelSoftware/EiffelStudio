@@ -10,6 +10,7 @@ create
 feature
 	make is
 		do
+			create x
 		end
 	
 	x: TEST1 [TEST2]

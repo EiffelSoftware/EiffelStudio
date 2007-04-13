@@ -535,7 +535,7 @@ test	create-sub-cluster-bogus-vd30	incr197  tcf fail incrementality
 test	vgcc-weasel			incr198  tcf fail incrementality
 test	add-vuar-remove-finalize	incr199  tcf pass incrementality
 test	vtec-weasel			incr200  tcf fail incrementality
-test	vtcg-then-syntax-error		incr201  tcf pass incrementality
+test	vtcg-then-syntax-error-then-ok		incr201  tcf pass incrementality
 test	implicit-def-create-finalize	incr202  tcf pass incrementality
 test	remove-syntax-warning-yes	incr203  tcf pass incrementality
 test	bogus-vtec			incr204  tcf pass incrementality

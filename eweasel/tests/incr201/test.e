@@ -10,6 +10,7 @@ creation
 feature
 	make is
 		do
+			$CREATION_INSTRUCTION
   		end
 			
 	x: TEST1 [STRING]

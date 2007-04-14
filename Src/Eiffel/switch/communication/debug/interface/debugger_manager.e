@@ -399,6 +399,11 @@ feature -- Status
 	can_debug: BOOLEAN
 			-- Is debugging allowed?
 
+	system_defined: BOOLEAN is
+		do
+			Result := Eiffel_project.system_defined
+		end
+
 	is_classic_project: BOOLEAN is
 			-- Is this project a classic system ?
 		require

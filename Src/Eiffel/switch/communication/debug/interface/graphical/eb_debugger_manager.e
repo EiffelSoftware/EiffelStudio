@@ -234,12 +234,13 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (display_error_help_cmd)
 
 			create exception_handler_cmd.make
-			exception_handler_cmd.enable_sensitive
+			exception_handler_cmd.disable_sensitive
 			toolbarable_commands.extend (exception_handler_cmd)
 
 			create assertion_checking_handler_cmd.make
 			assertion_checking_handler_cmd.enable_sensitive
 			toolbarable_commands.extend (assertion_checking_handler_cmd)
+
 			create force_debug_mode_cmd.make (Current)
 			force_debug_mode_cmd.enable_sensitive
 			toolbarable_commands.extend (force_debug_mode_cmd)
@@ -1901,6 +1902,7 @@ feature {NONE} -- Implementation
 				assertion_checking_handler_cmd.disable_sensitive
 
 				options_cmd.enable_sensitive
+				exception_handler_cmd.enable_sensitive
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
@@ -1924,6 +1926,7 @@ feature {NONE} -- Implementation
 			assertion_checking_handler_cmd.disable_sensitive
 
 			options_cmd.disable_sensitive
+			exception_handler_cmd.disable_sensitive
 		end
 
 	disable_debugging_commands (full: BOOLEAN) is

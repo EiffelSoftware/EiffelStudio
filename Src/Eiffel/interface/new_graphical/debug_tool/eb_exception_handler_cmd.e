@@ -37,12 +37,14 @@ feature -- Formatting
 	execute is
 			-- Pause the execution.
 		do
-			if handler_dialog = Void or else handler_dialog.is_destroyed then
-				build_handler_dialog
-			end
+			if is_sensitive and debugger_manager.system_defined then
+				if handler_dialog = Void or else handler_dialog.is_destroyed then
+					build_handler_dialog
+				end
 
-			handler_dialog.show_relative_to_window (window_manager.last_focused_window.window)
-			handler_dialog.raise
+				handler_dialog.show_relative_to_window (window_manager.last_focused_window.window)
+				handler_dialog.raise
+			end
 		end
 
 feature -- Dialog

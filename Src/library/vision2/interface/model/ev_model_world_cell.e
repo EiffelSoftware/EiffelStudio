@@ -253,7 +253,7 @@ feature -- Element change
 				horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.upper)
 				on_horizontal_scroll (horizontal_scrollbar.value_range.upper)
 			else
-				new_value := horizontal_scrollbar.value_range.lower + ((horizontal_scrollbar.value_range.count - 1) * position).rounded
+				new_value := horizontal_scrollbar.value_range.lower + (position * (horizontal_scrollbar.value_range.count - 1)).rounded
 				check
 					valid_value: horizontal_scrollbar.value_range.has (new_value)
 				end
@@ -272,7 +272,7 @@ feature -- Element change
 				vertical_scrollbar.set_value (vertical_scrollbar.value_range.upper)
 				on_vertical_scroll (vertical_scrollbar.value_range.upper)
 			else
-				new_value := vertical_scrollbar.value_range.lower + ((vertical_scrollbar.value_range.count - 1) * position).rounded
+				new_value := vertical_scrollbar.value_range.lower + (position * (vertical_scrollbar.value_range.count - 1)).rounded
 				check
 					valid_value: vertical_scrollbar.value_range.has (new_value)
 				end
@@ -486,23 +486,23 @@ feature {NONE} -- Implementation
 				da_width := drawing_area.width
 				da_height := drawing_area.height
 				if cursor_x > da_width - autoscroll_border then
-					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + ((cursor_x - (da_width - autoscroll_border))*scroll_speed).truncated_to_integer)
+					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + (scroll_speed * (cursor_x - (da_width - autoscroll_border))).truncated_to_integer)
 					horizontal_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				if cursor_x < autoscroll_border then
-					new_value := (horizontal_scrollbar.value - ((autoscroll_border - cursor_x) * scroll_speed).truncated_to_integer).max (horizontal_scrollbar.value_range.lower)
+					new_value := (horizontal_scrollbar.value - (scroll_speed * (autoscroll_border - cursor_x)).truncated_to_integer).max (horizontal_scrollbar.value_range.lower)
 					horizontal_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				cursor_y := pointer_position.y
 				if cursor_y > da_height - autoscroll_border then
-					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + ((cursor_y - (da_height - autoscroll_border)) * scroll_speed).truncated_to_integer)
+					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + (scroll_speed * (cursor_y - (da_height - autoscroll_border))).truncated_to_integer)
 					vertical_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				if cursor_y < autoscroll_border then
-					new_value := (vertical_scrollbar.value - ((autoscroll_border - cursor_y) * scroll_speed).truncated_to_integer).max (vertical_scrollbar.value_range.lower)
+					new_value := (vertical_scrollbar.value - (scroll_speed * (autoscroll_border - cursor_y)).truncated_to_integer).max (vertical_scrollbar.value_range.lower)
 					vertical_scrollbar.set_value (new_value)
 					scrolled := True
 				end
@@ -530,14 +530,14 @@ feature {NONE} -- Implementation
 				end
 			else
 				if ev_application.shift_pressed then
-					step := (horizontal_scrollbar.value_range.count * 0.1).truncated_to_integer
+					step := (0.1 * horizontal_scrollbar.value_range.count).truncated_to_integer
 					if i >= 1 then
 						horizontal_scrollbar.set_value ((horizontal_scrollbar.value - step).max (horizontal_scrollbar.value_range.lower))
 					else
 						horizontal_scrollbar.set_value ((horizontal_scrollbar.value + step).min (horizontal_scrollbar.value_range.upper))
 					end
 				else
-					step := (vertical_scrollbar.value_range.count * 0.1).truncated_to_integer
+					step := (0.1 * vertical_scrollbar.value_range.count).truncated_to_integer
 					if i >= 1 then
 						vertical_scrollbar.set_value ((vertical_scrollbar.value - step).max (vertical_scrollbar.value_range.lower))
 					else

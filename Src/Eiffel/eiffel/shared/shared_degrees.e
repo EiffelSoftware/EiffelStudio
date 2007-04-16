@@ -74,4 +74,3 @@ indexing
 
 end -- class SHARED_DEGREES
 
-

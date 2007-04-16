@@ -414,7 +414,6 @@ feature -- operation on message
 			vb.set_padding (Layout_constants.Default_padding_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
 
-
 			create mesg_cb.make_with_text (Interface_names.l_Print_message)
 			create tf
 			create hb
@@ -562,7 +561,6 @@ feature -- operation on message
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)
 
-
 				-- Layout all widgets
 			create hb
 			hb.extend (resetb)
@@ -582,7 +580,6 @@ feature -- operation on message
 				hcc := [{BREAKPOINT}.Hits_count_condition_always, 0]
 			end
 			tf.set_text (hcc.value.out)
-
 
 			create li.make_with_text (Interface_names.m_Break_always)
 			combo.extend (li)

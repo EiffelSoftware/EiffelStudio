@@ -143,7 +143,6 @@ feature -- Element update
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
 	internal_pre_tasks: TARGET_PRE_TASKS_SECTION

@@ -23,7 +23,7 @@ inherit
 			is_equal, out, copy
 		end
 
-	SQL_SCAN
+	SQL_SCAN [G]
 
 create -- Creation procedure
 

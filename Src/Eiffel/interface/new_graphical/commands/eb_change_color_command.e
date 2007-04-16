@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 				agent change_color_all (class_list, old_color_table))
 		end
 
-
 	execute_with_stone (a_stone: CLASSI_FIGURE_STONE) is
 			-- Create a development window and process `a_stone'.
 		require

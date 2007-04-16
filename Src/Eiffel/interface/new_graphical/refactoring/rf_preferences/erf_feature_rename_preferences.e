@@ -56,7 +56,6 @@ feature -- Change value
 			update_strings_preference.set_value (a_value)
 		end
 
-
 feature {NONE} -- Preference
 
 	new_feature_name_preference: STRING_PREFERENCE

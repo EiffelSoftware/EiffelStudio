@@ -666,7 +666,6 @@ feature {NONE} -- Code completion.
 											agent eb_debugger_manager.current_debugging_class_c,
 											agent eb_debugger_manager.current_debugging_feature_as)
 
-
 			expression_field_provider.set_code_completable (expression_field)
 			expression_field.set_completion_possibilities_provider (expression_field_provider)
 
@@ -736,7 +735,6 @@ feature {NONE} -- Implementation
 				w.set_focus
 			end
 		end
-
 
 	modified_expression: EB_EXPRESSION
 			-- Expression that is being edited, if any.

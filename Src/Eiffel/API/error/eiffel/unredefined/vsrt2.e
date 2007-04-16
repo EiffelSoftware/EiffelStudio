@@ -30,7 +30,6 @@ feature -- Properties
 	group_name: STRING;
 			-- Root type involved in the error
 
-
 feature	-- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
@@ -39,7 +38,6 @@ feature	-- Output
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Group name: " + group_name)
 			a_text_formatter.add_new_line
-
 
 			a_text_formatter.add_new_line
 		end

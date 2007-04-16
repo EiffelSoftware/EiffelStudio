@@ -74,7 +74,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	name: STRING
 			-- The name to check.
 

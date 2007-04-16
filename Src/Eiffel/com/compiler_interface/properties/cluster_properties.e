@@ -434,7 +434,6 @@ feature -- Access
 				end
 			end
 		end
-		
 
 	subclusters: CLUSTER_PROP_ENUMERATOR is
 			-- List of subclusters (list of IEiffelClusterProperties*).
@@ -475,7 +474,6 @@ feature -- Access
 				end
 			end
 		end
-		
 
 feature -- Status
 
@@ -569,7 +567,6 @@ feature -- Element change
 				defaults.extend (create {D_OPTION_SD}.initialize (free_opt, v))
 			end
 		end
-		
 
 	set_cluster_path (a_path: STRING) is
 			-- set 'cluster_path' to 'a_path'

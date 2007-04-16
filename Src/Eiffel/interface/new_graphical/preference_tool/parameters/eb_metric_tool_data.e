@@ -291,7 +291,6 @@ feature {NONE} -- Implementation
 			Result.append (group_unit.hash_code.out)
 			Result.append_character (';')
 
-
 			Result.append (generic_unit.hash_code.out)
 			Result.append_character (';')
 

@@ -270,7 +270,5 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
 end -- class EB_RATIO_METRIC_DEFINITION_AREA
-
 

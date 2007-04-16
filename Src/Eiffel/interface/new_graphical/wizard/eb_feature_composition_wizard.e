@@ -262,7 +262,6 @@ feature {NONE} -- Implementation
 			proc_button.selected_peer.set_focus
 		end
 
-
 	feature_select: EV_FRAME
 			-- Containing of the radio buttons.
 

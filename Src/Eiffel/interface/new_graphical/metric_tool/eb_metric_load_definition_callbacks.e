@@ -504,7 +504,6 @@ feature{NONE} -- Process
 
 		end
 
-
 	process_value_criterion is
 			-- Process value criterion.
 		local
@@ -1226,7 +1225,6 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end
 

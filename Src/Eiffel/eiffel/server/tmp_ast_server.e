@@ -434,7 +434,6 @@ feature {NONE} -- Implementation
 			-- Set of body_indexes ids which have to disappear after a successful
 			-- recompilation
 
-
 feature {NONE} -- Implementation of dynamic type checking
 
 	is_invariant_as (obj: ANY): BOOLEAN is
@@ -460,7 +459,6 @@ feature {NONE} -- Implementation of dynamic type checking
 		once
 			Result := dynamic_type_from_string ("FEATURE_AS")
 		end
-
 
 feature {NONE} -- Implementation Constants
 

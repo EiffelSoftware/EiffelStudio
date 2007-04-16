@@ -543,8 +543,7 @@ feature {NONE} -- Output
 				put_string (Void)
 			end
 		end
-		
-		
+
 feature {NONE} -- Persistance
 
 	cache_current_properties is

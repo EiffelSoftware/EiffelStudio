@@ -135,7 +135,6 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_parent (a_parent: like parent) is
@@ -289,7 +288,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
 
 	directory (a_path: STRING): STRING is
 			-- Get the directory of `a_path' that is in the internal format.

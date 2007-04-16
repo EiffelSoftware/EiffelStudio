@@ -26,12 +26,10 @@ feature {NONE} -- Initialization
 			text := "Directory open error: "+a_dir+"%N"+a_orig_dir+"%NConfiguration: "+a_config
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

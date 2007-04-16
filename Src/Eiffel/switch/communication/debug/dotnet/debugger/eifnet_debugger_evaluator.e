@@ -428,7 +428,6 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			method_evaluation (a_frame, reference_integer_64_set_item_method, <<Result, a_icdv>>)
 		end
 
-
 	icdv_reference_natural_8_from_icdv_natural_8 (a_frame: ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue for NATURAL_8_REF object created from SystemInteger `a_icdv'
 		do
@@ -515,7 +514,6 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			Result := complete_function_evaluation
 			method_evaluation (a_frame, reference_pointer_set_item_method, <<Result, a_icdv>>)
 		end
-
 
 feature {NONE} -- Backup state
 
@@ -1129,7 +1127,6 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 			once_eiffel_string_icd_class                 := Void
 			once_reference_pointer_icd_class 			 := Void
 
-
 				--| Clean kept ICorDebugFunction
 			once_reference_integer_8_set_item_method     := Void
 			once_reference_integer_16_set_item_method    := Void
@@ -1163,7 +1160,6 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 	once_reference_character_8_icd_class         : ICOR_DEBUG_CLASS
 	once_reference_character_32_icd_class        : ICOR_DEBUG_CLASS
 	once_reference_pointer_icd_class 			 : ICOR_DEBUG_CLASS
-
 
 	once_eiffel_string_icd_class                 : ICOR_DEBUG_CLASS
 

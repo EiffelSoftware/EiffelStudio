@@ -422,7 +422,6 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugArrayValue, (void **) $a_p)"
 		end
-		
 
 --| NOTA JFIAT: uncomment this to equipped those classes with nice expression to evaluate
 --| for debugging purpose only

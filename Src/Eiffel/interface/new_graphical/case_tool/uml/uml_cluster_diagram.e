@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			is_right_angles := True
 		end
 
-
 	make (a_graph: like model; a_tool: like context_editor) is
 			-- Initialize as context in `a_tool' showing `a_graph'.
 		require

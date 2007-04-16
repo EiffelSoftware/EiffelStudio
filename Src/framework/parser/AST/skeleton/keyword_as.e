@@ -445,7 +445,6 @@ feature -- Access
 			code_set: code = a_code
 		end
 
-
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

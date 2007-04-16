@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
-
 		end
 
 feature -- Properties

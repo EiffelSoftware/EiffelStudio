@@ -20,7 +20,6 @@ create
 
 feature -- Visitor
 
-
 	process (v: AST_VISITOR) is
 			-- Process current element.
 		do

@@ -112,7 +112,6 @@ feature -- Properties
 			Result := preferences.class_browser_data.caller_sorting_order_preference
 		end
 
-
 feature {NONE} -- Properties
 
 	internal_symbol: like symbol

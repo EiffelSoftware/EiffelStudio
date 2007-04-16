@@ -92,7 +92,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	browse_btn, backup_btn, close_btn: EV_BUTTON

@@ -239,7 +239,6 @@ feature{NONE} -- Implementation
 	y_internal: INTEGER
 			-- Internal row index
 
-
 	internal_after: BOOLEAN is
 			-- Is there no valid position to the right of current one?
 		deferred
@@ -309,6 +308,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

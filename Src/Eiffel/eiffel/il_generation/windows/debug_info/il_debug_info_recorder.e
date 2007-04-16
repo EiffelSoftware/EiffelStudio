@@ -1182,7 +1182,6 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 			Result.append_string ("%N")
 		end
 
-
 feature {NONE}-- Implementation for save and load task
 
 	save (a_filename_to_save: STRING) is

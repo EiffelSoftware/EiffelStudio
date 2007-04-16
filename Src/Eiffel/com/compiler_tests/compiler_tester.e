@@ -172,8 +172,7 @@ feature {NONE} -- Output
 			put_string ("%N    output_pipe_name=")
 			put_string (compiler_interface.output_pipe_name)
 		end
-		
-	
+
 feature {NONE} -- Implementation
 
 	compile is

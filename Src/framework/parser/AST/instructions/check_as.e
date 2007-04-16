@@ -56,7 +56,6 @@ feature -- Attributes
 	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
 
-
 feature -- Roundtrip
 
 	full_assertion_list: like check_list

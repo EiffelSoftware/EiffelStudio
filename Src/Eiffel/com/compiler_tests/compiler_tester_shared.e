@@ -458,8 +458,6 @@ feature {NONE} -- Implementation
 		
 	last_boolean_internal: BOOLEAN_REF;
 			-- last bool entered by user
-		
-		
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

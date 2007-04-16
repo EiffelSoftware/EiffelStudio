@@ -26,7 +26,6 @@ feature -- Status
 			Result := True
 		end
 
-
 feature -- Access, stored in configuration file
 
 	override: ARRAYED_LIST [CONF_GROUP]
@@ -53,7 +52,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 			override.extend (a_group)
 		end
-
 
 feature -- Equality
 

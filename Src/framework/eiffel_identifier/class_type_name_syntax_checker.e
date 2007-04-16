@@ -82,7 +82,6 @@ feature {NONE} -- Implementation of is_valid_class_type
 			end
 		end
 
-
 -- Tokens: 'Id'  '['  ']'  ','  'empty' and error
 
 	tkn_start: INTEGER is 1
@@ -122,7 +121,6 @@ feature {NONE} -- Implementation of is_valid_class_type
 			Result := current_character = eof
 		end
 
-
 	consume_current_character is
 			-- Consume current character.
 		require
@@ -135,7 +133,6 @@ feature {NONE} -- Implementation of is_valid_class_type
 				current_position_in_input := current_position_in_input + 1
 			end
 		end
-
 
 	consume_current_token is
 			-- Consume the current token.

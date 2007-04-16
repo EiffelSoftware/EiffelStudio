@@ -101,7 +101,6 @@ feature -- Properties
 --		ensure
 --			module_name_is_lower_case: module_name /= Void and then module_name.as_lower.is_equal (module_name)
 
-
 	system_name: STRING
 			-- In case this module is a precompiled lib
 

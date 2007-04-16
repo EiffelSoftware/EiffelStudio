@@ -97,5 +97,3 @@ indexing
 
 end -- class CLAS_VISI_SD
 
-
-

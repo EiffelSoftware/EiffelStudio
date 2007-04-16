@@ -53,7 +53,6 @@ feature -- Status report
 	only_find_current_version: BOOLEAN
 			-- Only caller of current versions (not descendant versions) of features in `criterion_domain'?
 
-
 feature{QL_DOMAIN} -- Intrinsic domain
 
 	intrinsic_domain: QL_FEATURE_DOMAIN is
@@ -360,8 +359,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

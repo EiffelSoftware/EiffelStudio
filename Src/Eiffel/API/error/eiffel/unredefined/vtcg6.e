@@ -39,7 +39,6 @@ feature -- Status report
 
 feature -- Output
 
-
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.

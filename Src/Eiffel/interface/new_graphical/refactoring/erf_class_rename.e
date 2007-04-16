@@ -142,7 +142,6 @@ feature {NONE} -- Implementation
 			checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (class_i.cluster, preferences.new_class_name))
         end
 
-
     apply_to_project is
             -- Make project global changes (eg. *.ace, create/remove/rename cluster/files, ...).
 		require else
@@ -178,7 +177,6 @@ feature {NONE} -- Implementation
         	end
 		end
 
-
     apply_to_class (a_class: CLASS_I) is
             -- Make the changes in `a_class'.
 		require else
@@ -200,7 +198,6 @@ feature {NONE} -- Implementation
         	class_modifier.commit
         	current_actions.extend (class_modifier)
         end
-
 
 	class_i: EIFFEL_CLASS_I;
 			-- The class to rename.

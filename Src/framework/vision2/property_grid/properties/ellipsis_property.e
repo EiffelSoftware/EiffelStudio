@@ -187,7 +187,6 @@ feature {NONE} -- Agents
 			not_activated: not is_activated
 		end
 
-
 feature {NONE} -- Implementation
 
 	ellipsis: EV_PIXMAP is

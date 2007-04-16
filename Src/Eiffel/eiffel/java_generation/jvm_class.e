@@ -198,7 +198,6 @@ feature {ANY} -- Status report
 			
 	is_interface: BOOLEAN
 			-- does this type represent an interface ?
-			
 
 feature {ANY} -- Status settings
 			
@@ -313,8 +312,7 @@ feature {ANY} -- Composite access
 			-- all features available in this classes namespace (either
 			-- declared here, or inherited)
 			-- a features index must always be it's `feature_id'
-			
-			
+
 	has_feature_with_routine_id (rout_id: INTEGER): BOOLEAN is
 			-- returns wether the `Current' class has a feature with
 			-- routine id `rout_id'.
@@ -744,9 +742,7 @@ feature {NONE} -- Code Generation Implementation
 				i := i + 1
 			end
 		end
-			
-			
-			
+
 feature {NONE}
 	
 	append_access_flag is
@@ -926,8 +922,4 @@ indexing
 		]"
 
 end -- class JVM_CLASS
-
-
-
-
 

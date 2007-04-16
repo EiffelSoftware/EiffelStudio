@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			text := "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
 		end
 
-
 feature -- Access
 
 	text: STRING;

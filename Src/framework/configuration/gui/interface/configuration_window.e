@@ -551,7 +551,6 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			a_target.child_targets.do_all (agent add_target_sections (?, l_target))
 		end
 
-
 feature {CONFIGURATION_SECTION} -- Section tree selection agents
 
 	show_empty_section (a_message: STRING_GENERAL)

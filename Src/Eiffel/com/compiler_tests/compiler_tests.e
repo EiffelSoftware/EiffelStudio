@@ -60,7 +60,6 @@ feature -- Basic operations
 				io.readline
 			end
 		end
-		
 
 feature {NONE} -- Agents Routines
 
@@ -106,7 +105,6 @@ feature {NONE} -- Agents Routines
 		do
 			create l_tests.make (project_manager.completion_information)
 		end
-		
 
 	on_system_browser_selected (args: ARRAYED_LIST [STRING]) is
 			-- go to system brower menu
@@ -125,7 +123,6 @@ feature {NONE} -- Agents Routines
 		do
 			create l_tests.make (project_manager.system_browser)
 		end
-		
 
 feature {NONE} -- Implementation
 

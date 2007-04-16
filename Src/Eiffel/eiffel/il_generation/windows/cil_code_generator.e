@@ -592,7 +592,6 @@ feature -- Generation Structure
 
 			create md_dispenser.make
 
-
 				-- Create signature for `done' and `sync' in once computation.
 			create done_sig.make
 			done_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
@@ -3350,7 +3349,6 @@ feature -- IL Generation
 					l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
 						dbg_start_columns, dbg_end_lines, dbg_end_columns, feat.written_in])
 
-
 						--| feature is not attribute |--
 						-- we assume the feature concerned by `generate_feature_code'
 						-- here are static and not in_interface
@@ -4456,7 +4454,6 @@ feature -- Variables access
 				implementation_feature_token (type_i.implementation_id, a_feature_id))
 		end
 
-
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.
 		do
@@ -5044,7 +5041,6 @@ feature -- Conversion
 		do
 			method_body.put_opcode ({MD_OPCODES}.Conv_u8)
 		end
-
 
 	convert_to_real_64 is
 			-- Convert top of stack into appropriate type.

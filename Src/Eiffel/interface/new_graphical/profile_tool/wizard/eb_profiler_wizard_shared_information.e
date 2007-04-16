@@ -21,8 +21,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-		
+
 	wizard_information: EB_WIZARD_INFORMATION is
 			-- Information entered so far (base class)
 		deferred

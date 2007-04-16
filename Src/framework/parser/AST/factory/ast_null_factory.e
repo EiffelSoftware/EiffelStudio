@@ -1146,4 +1146,3 @@ indexing
 
 end -- class AST_FACTORY
 
-

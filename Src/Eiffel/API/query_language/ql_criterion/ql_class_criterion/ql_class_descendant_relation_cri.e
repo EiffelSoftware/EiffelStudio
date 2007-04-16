@@ -86,7 +86,6 @@ feature -- Access
 			--  3. B, C are heirs of A
 			--  4. D are indirect heir of A
 
-
 feature -- Status report
 
 	is_descendant_relation_valid (a_relation: INTEGER): BOOLEAN is
@@ -209,7 +208,6 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-
 	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]] is
 			-- Finder used to find result for current criterion
 		do
@@ -291,8 +289,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

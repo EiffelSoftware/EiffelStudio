@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			supercluster_depth := 1
 		end
 
-
 	make (a_tool: like context_editor) is
 			-- Create a ES_CLUSTER_GRAPH in `a_tool'.
 		require

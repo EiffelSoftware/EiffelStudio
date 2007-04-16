@@ -160,7 +160,6 @@ feature {ANY} --
 			is_field_setter_set: is_field_setter = b
 		end
 
-			
 	set_external_name (n: STRING) is
 			-- set `external_name' of this feature
 		require
@@ -392,8 +391,7 @@ feature
 	parameter_names: ARRAY [STRING]
 			-- names of parameters. usefull for debugger meta data.
 			-- may be void, some parameter names might be unkown.
-	
-	
+
 feature {NONE}	
 	
 	signature_cache: STRING
@@ -439,6 +437,4 @@ indexing
 		]"
 
 end
-
-
 

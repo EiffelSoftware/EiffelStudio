@@ -69,7 +69,6 @@ feature -- Setting
 			base_name_set: base_name = s
 		end
 
-
 feature {NONE} -- Type anchor
 
 	class_type: EIFFEL_CLASS_I

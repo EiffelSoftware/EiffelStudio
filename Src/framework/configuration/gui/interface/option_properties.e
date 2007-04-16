@@ -50,7 +50,6 @@ feature -- Update
 			debug_clauses_set: debug_clauses = a_debugs
 		end
 
-
 feature {NONE} -- Implementation
 
 	handle_value_changes (a_has_group_changed: BOOLEAN) is

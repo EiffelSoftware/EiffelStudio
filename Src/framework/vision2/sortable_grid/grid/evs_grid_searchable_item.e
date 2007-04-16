@@ -10,7 +10,6 @@ indexing
 					    `replace_succeeded_actions' and `replace_failed_actions' are called accordingly.
 					    Remember to set `last_replace_successful' in `internal_replace'.
 
-
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -203,6 +202,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

@@ -226,7 +226,6 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 
 feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 
-
 	block_focus_in_actions is
 			-- Block focus in actions
 		do

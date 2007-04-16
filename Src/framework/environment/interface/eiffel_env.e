@@ -989,7 +989,6 @@ feature -- Environment update
 			value_updated: get_environment (a_var) /= Void implies get_environment (a_var).is_equal (a_value)
 		end
 
-
 feature -- IL environment
 
 	default_il_environment: IL_ENVIRONMENT is

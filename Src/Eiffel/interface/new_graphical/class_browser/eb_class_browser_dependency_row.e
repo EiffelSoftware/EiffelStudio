@@ -158,7 +158,6 @@ feature -- Setting
 			row_node_set: row_node = a_row_node
 		end
 
-
 	set_is_expanded (a_expanded: BOOLEAN) is
 			-- Set `is_expanded' with `a_expanded'.
 		do

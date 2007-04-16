@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 				string_32_class_c := cl_i.compiled_class
 			end
 
-
 			cl_i := sys.natural_8_class
 			if cl_i /= Void then
 				natural_8_class_c := cl_i.compiled_class
@@ -124,7 +123,6 @@ feature {NONE} -- Initialization
 			if cl_i /= Void then
 				bit_class_c := cl_i.compiled_class
 			end
-
 
 			cl_i := sys.system_object_class
 			if cl_i /= Void then

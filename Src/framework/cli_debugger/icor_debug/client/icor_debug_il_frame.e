@@ -53,7 +53,6 @@ feature {ICOR_EXPORTER} -- Properties
 			Result := enum_cor_debug_mapping_result_to_string (last_cordebugmapping_result)
 		end
 
-
 feature {ICOR_EXPORTER} -- Access
 
 	get_ip: INTEGER is
@@ -187,7 +186,6 @@ feature {NONE} -- Implementation
 		alias
 			"GetStackDepth"
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

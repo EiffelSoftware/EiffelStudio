@@ -130,7 +130,6 @@ feature -- Execution
 				read_string;
 				exception_tag := last_string
 
-
 					--|----------------------------|--
 					--| Data retrieved             |--
 					--| Now process stopped state  |--

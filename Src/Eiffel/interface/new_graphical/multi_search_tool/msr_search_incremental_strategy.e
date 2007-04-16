@@ -40,8 +40,6 @@ feature -- Initialization
 			start_position_internal := a_start
 		end
 
-
-
 feature -- Access
 
 	start_position : INTEGER is

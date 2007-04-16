@@ -123,7 +123,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	toolbar_cell: EV_CELL

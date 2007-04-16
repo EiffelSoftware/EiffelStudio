@@ -72,8 +72,7 @@ feature -- Initalization
 				end
 			end
 		end
-		
-		
+
 	test_find_definition is
 			-- tests on {COMPLETION_INFORMATION}.find_definition
 		require
@@ -87,8 +86,7 @@ feature -- Initalization
 			--pm.completion_information.find_definition ("my_feture (i: INTEGER): STRING is%N%T%Tdo%N%T%T%Tcreate {STRING}.make_empty", 
 			--		"E:\overloading_eiffel_test\application.e", 3, 20, source_file_name, source_row)
 		end
-		
-		
+
 	test_target_feature is
 			-- tests on {COMPLETION_INFOMRATION}.target_feature
 		require
@@ -110,7 +108,6 @@ feature -- Initalization
 		--	feat ?= pm.completion_information.target_feature (str_out.item, "default_create", "E:\overloading_eiffel_test\application.e", false)
 			print (str_out.item)
 		end
-		
 
 feature -- Implmentation		
 
@@ -119,7 +116,6 @@ feature -- Implmentation
 		once
 			create Result.make
 		end
-		
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

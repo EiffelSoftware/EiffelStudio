@@ -20,6 +20,4 @@ feature {NONE} -- Creation
 
 		end
 
-
-
 end

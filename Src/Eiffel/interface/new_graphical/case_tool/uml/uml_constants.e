@@ -82,7 +82,6 @@ feature {NONE} -- UML class
 		do
 			Result := preferences.diagram_tool_data.uml_class_feature_section_color
 		end
-		
 
 feature {NONE} -- Cluster
 
@@ -94,7 +93,6 @@ feature {NONE} -- Cluster
 	uml_cluster_line_width: INTEGER is 1
 
 	uml_cluster_fill_color: EV_COLOR
-		
 
 	uml_cluster_iconified_fill_color: EV_COLOR is
 		do

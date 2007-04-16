@@ -475,9 +475,7 @@ feature -- Class option dialog
 
 	dialog_class_option_class_name: STRING_GENERAL is do Result := locale.translate ("Class name")	end
 
-
 	remove_group_text: STRING_GENERAL is do Result := locale.translate ("Remove group")	end
-
 
 feature -- Validation warnings
 

@@ -48,7 +48,6 @@ feature -- Line number setting
 			line_number_set: line_number = lnr
 		end
 
-
 	set_tag (s: STRING) is
 			-- Assign `s' to `tag'.
 		do

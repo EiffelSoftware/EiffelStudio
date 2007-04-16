@@ -16,7 +16,6 @@ feature
 		do
 		end
 
-
 	kind: INTEGER is
 		do
 		end
@@ -44,8 +43,5 @@ feature
 	dynamic_class: CLASS_C is
 		do
 		end
-
-
-
 
 end

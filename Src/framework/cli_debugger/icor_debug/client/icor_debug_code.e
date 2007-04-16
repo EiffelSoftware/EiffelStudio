@@ -68,7 +68,6 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-
 	get_code (a_size: INTEGER): STRING is
 			-- Returns the code of the method suitable for disassembly.
 			-- Note that instruction boundaries aren't checked

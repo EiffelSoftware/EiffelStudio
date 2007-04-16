@@ -122,8 +122,6 @@ end
 			just_born := not is_alive (body_index);
 				-- Mark feature alive
 
-
-
 DEBUG("DEAD_CODE")
 	------------------------------------------
 	--		DEBUG			--

@@ -336,4 +336,3 @@ indexing
 
 end -- class EB_FEATURES_VIEW
 
-

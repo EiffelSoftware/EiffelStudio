@@ -120,7 +120,6 @@ feature {ANY} -- Post label processing
 			end
 		end
 
-
 feature {ANY} -- Invokeing methods
 	
 	append_invoke_default_constructor (type_id: INTEGER) is
@@ -137,8 +136,7 @@ feature {ANY} -- Invokeing methods
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
-	
+
 	append_invoke_from_written_feature (f: JVM_WRITTEN_FEATURE) is
 			-- appends a invoke with index at the end of
 			-- the byte code.
@@ -329,8 +327,7 @@ feature {ANY} -- Invokeing methods
 			stack_dec1: f.has_non_void_return_type implies stack.count + f.parameter_jvm_type_ids.count = old stack.count
 			stack_consistent: f.has_non_void_return_type implies stack.count >= 1 and then stack.item = jvm_type_to_stack (f.return_jvm_type_id)
 		end
-						
-			
+
 	append_invoke (f: JVM_FEATURE) is
 			-- appends a invoke opcode with index at the end of
 			-- the byte code.
@@ -369,7 +366,6 @@ feature {ANY} -- Invokeing methods
 		do
 			append_invoke (repository.item (type_id).features.item (feature_id))
 		end
-			
 
 feature {ANY} -- Pushing manfest constants on the stack
 	append_push_default_value (jvm_type_id: INTEGER) is
@@ -763,8 +759,7 @@ feature {ANY} -- Arithmetics
 			stack_size: stack.count = old stack.count
 			stack_consistent: stack.item = old stack.item
 		end
-				
-				
+
 	append_ge is
 			-- append code for
 			-- the >= operator.
@@ -1019,8 +1014,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
-	
+
 	append_div is
 			-- appends code for:
 			-- divides the two top items on the stack
@@ -1199,7 +1193,6 @@ feature {ANY} -- Arithmetics
 			stack_dec: stack.count + 1 = old stack.count
 		end
 
-
 feature {ANY} -- Conditionals
 	append_branch_on_false_by_label_id (label: INTEGER) is
 			-- appends a branch on false
@@ -1246,8 +1239,7 @@ feature {ANY} -- Conditionals
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
-			
+
 feature {ANY} -- Unconditionals
 	
 	append_branch_by_label_id (label: INTEGER) is
@@ -1377,8 +1369,7 @@ feature {ANY} -- Arrays
 		ensure
 			stack_size: stack.count + 1 = old stack.count
 		end
-			
-			
+
 	append_pop_into_array (kind: INTEGER) is
 			-- append code for:
 			-- pop value from top of the stack and writen it into an array
@@ -1494,10 +1485,7 @@ feature {ANY} -- Object creation
 		end
 			
 feature {ANY} -- Misc. Stack operations
-				
-			
-			
-			
+
 	append_pop is
 			-- pops the top most item from the stack into the nirvana
 		require
@@ -1541,9 +1529,7 @@ feature {ANY} -- Exceptions
 		end
 
 feature {ANY} -- Introspection
-			
-			
-			
+
 	append_is_instance_of_by_type_id (type_id: INTEGER) is
 			-- append code for
 			-- look (and remove) at the top item of the stack
@@ -1580,7 +1566,6 @@ feature {ANY} -- Introspection
 			stack_size: stack.count = old stack.count
 			stack_consistent: stack.item = object_type
 		end
-
 
 feature {NONE} -- Implementation
 			
@@ -1624,7 +1609,6 @@ feature {NONE} -- Implementation
 		do
 			append_opcode (oc_wide)
 		end
-			
 
 	append_opcode (opcode: INTEGER) is
 			-- appends the opcode `opcode'
@@ -1810,8 +1794,7 @@ feature {NONE}
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
-			
+
 	append_convert_to (jvm_type: INTEGER) is
 			-- convert the top stack value (which is of type `stack.item')
 			-- to `jvm_type'.
@@ -1999,7 +1982,6 @@ feature
 				Result := a_jvm_type
 			end
 		end
-			
 
 invariant
 	
@@ -2039,7 +2021,4 @@ indexing
 		]"
 
 end
-							
-							
-
 

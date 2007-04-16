@@ -5,7 +5,6 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-
 class SPECIAL_CLASS_TYPE
 
 inherit

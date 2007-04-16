@@ -245,6 +245,5 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
 end -- class EB_METRIC_NAME_AREA
 

@@ -22,12 +22,10 @@ feature {NONE} -- Initialization
 			text := "A configuration in the precompile changed, please rebuild the precompile and project."
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

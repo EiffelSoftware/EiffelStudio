@@ -140,8 +140,6 @@ feature -- Element change
 			class_text_attached: class_text /= Void
 		end
 
-
-
 feature {NONE} -- Implementation
 
 	text_strategy: MSR_SEARCH_TEXT_STRATEGY

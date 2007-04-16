@@ -15,7 +15,6 @@ inherit
 			value_validator
 		end
 
-
 create
 	make,
 	make_hidden

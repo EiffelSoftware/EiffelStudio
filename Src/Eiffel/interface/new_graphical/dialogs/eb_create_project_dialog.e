@@ -509,7 +509,6 @@ feature {NONE} -- Implementation
 			Result := l_project_location
 		end
 
-
 feature {NONE} -- Callbacks
 
 	on_cancel is

@@ -141,7 +141,6 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := overrides /= Void
 		end
 
-
 	is_modified: BOOLEAN
 			-- Has the class been changed since last recompilation?
 
@@ -337,7 +336,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		do
 			is_valid := True
 		end
-
 
 	rebuild(a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Update the informations during a rebuild.

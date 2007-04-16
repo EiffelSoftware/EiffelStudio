@@ -24,7 +24,6 @@ feature {NONE} -- Initialisation
 			ok_action := agent close_request_actions.call
 		end
 
-
 feature {NONE} -- Deferred Constants
 
 	check_button_label: STRING_GENERAL is

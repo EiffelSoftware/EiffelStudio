@@ -107,7 +107,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	domain_grid_area, address_manager_area: EV_CELL

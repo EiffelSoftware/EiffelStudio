@@ -204,7 +204,6 @@ feature -- Setting
 			result_attached: Result /= Void
 		end
 
-
 feature -- Grid binding
 
 	bind_row (a_grid_row: EV_GRID_ROW; a_column_index: INTEGER; a_force_reference_calculation: BOOLEAN) is

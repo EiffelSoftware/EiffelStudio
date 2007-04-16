@@ -134,7 +134,6 @@ feature -- Access
 			good_result: Result = assertion_path_marker
 		end
 
-
 feature -- Status report
 
 	is_immediate: BOOLEAN is
@@ -273,8 +272,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

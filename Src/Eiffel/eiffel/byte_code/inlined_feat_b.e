@@ -506,7 +506,6 @@ feature {NONE} -- Registers
 			end
 		end;
 
-
 	get_inline_register (type_i: TYPE_I): REGISTER is
 		do
 			create Result.make (type_i.c_type);

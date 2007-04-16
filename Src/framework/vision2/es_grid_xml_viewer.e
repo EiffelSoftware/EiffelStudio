@@ -86,8 +86,6 @@ feature -- Change
 			end
 		end
 
-
-
 feature -- Loading
 
 	load_xml_string (s: STRING) is
@@ -452,7 +450,6 @@ feature -- Properties
 			Result.draw_text_top_left ((tw - sw) // 2, 0, a_text)
 		end
 
-
 	tag_pixmap: EV_PIXMAP
 			-- Pixmap for tag
 
@@ -761,7 +758,6 @@ feature {NONE} -- Style management
 
 			create value_font
 		end
-
 
 	selected_row_colors: SPECIAL [EV_COLOR]
 

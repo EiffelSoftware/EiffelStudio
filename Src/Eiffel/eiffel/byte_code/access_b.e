@@ -543,7 +543,6 @@ feature -- Multi constraint suport
 			Result := multi_constraint_static /= Void
 		end
 
-
 feature -- Inlining
 
 	inlined_byte_code: ACCESS_B is

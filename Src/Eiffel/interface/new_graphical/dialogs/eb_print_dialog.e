@@ -113,7 +113,6 @@ feature {NONE} -- Initialization
 
 			ok_button.select_actions.extend (agent execute)
 
-
 			cancel_button.select_actions.extend (agent cancel)
 
 			shell_cmd_field.return_actions.extend (agent execute)

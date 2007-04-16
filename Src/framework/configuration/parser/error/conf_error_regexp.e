@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			regexp := a_regexp
 		end
 
-
 feature -- Access
 
 	text: STRING is
@@ -43,7 +42,6 @@ feature {NONE} -- Implementation
 
 	regexp: STRING;
 		-- Incorrect regular expression.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

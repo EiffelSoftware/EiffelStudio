@@ -43,7 +43,6 @@ feature -- Roundtrip
 	assignment_symbol: SYMBOL_AS
 			-- Symbol ":=" or "?=" associated with this structure
 
-
 feature -- Attributes
 
 	target: ACCESS_AS

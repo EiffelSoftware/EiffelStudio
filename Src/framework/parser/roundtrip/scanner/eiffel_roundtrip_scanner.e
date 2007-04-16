@@ -101,7 +101,6 @@ feature -- Scann
 			end
 		end
 
-
 feature -- Status reporting
 
 	has_syntax_error: BOOLEAN is

@@ -408,7 +408,6 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-
 	update_click_list (a_stone: STONE; after_save: BOOLEAN) is
 			-- update the click tool
 			-- `after_save' must be True if current class text has just been saved
@@ -753,7 +752,6 @@ feature {NONE} -- Possiblilities provider
 				Result := cursor.pos_in_token
 			end
 		end
-
 
 feature {NONE}-- click information update
 

@@ -105,7 +105,6 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	suppliers_name_compiled (a_type: TYPE_A): STRING is

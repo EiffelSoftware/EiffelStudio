@@ -340,7 +340,6 @@ feature -- Action
 			end
 		end
 
-
 	end_of_pass1 (ast_b: CLASS_AS) is
 				-- End of the first pass after syntax analysis
 		require

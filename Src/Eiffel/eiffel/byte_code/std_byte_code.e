@@ -794,7 +794,6 @@ end
 			end
 		end
 
-
 	generate_save_locals is
 			-- Push the addresses of the local variables on the local variable stack.
 		local

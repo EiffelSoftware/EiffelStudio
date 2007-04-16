@@ -117,7 +117,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	ok_button, cancel_button: EV_BUTTON

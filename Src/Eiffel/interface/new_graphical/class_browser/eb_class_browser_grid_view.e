@@ -129,7 +129,6 @@ feature -- Setting
 			tree_node_highlight_disabled: not is_tree_node_highlight_enabled
 		end
 
-
 	set_trace (a_msg: STRING) is
 			-- Set `trace' with `a_msg'.
 		do
@@ -1177,6 +1176,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

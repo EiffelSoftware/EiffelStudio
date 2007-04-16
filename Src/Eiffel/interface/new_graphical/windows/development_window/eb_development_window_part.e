@@ -5,7 +5,6 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-
 deferred class
 	EB_DEVELOPMENT_WINDOW_PART
 

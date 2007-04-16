@@ -121,7 +121,6 @@ feature {NONE} -- Attributes
 	finalize_precompile: BOOLEAN
 			-- should precompile be finalized also?
 
-
 feature {NONE} -- Implementation
 
 	is_dotnet_project: BOOLEAN is

@@ -478,6 +478,5 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
 end -- class EB_BASIC_METRIC_DEFINITION_AREA
 

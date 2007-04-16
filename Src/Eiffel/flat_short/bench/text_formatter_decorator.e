@@ -190,7 +190,6 @@ feature -- Status report
 	rescued: BOOLEAN
 			-- Was Current format rescued?
 
-
 feature -- Properties
 
 	dot_needed: BOOLEAN is

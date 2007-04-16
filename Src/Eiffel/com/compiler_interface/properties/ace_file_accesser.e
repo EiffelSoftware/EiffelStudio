@@ -317,7 +317,6 @@ feature -- Access
 		ensure
 			non_void_result: Result /= Void
 		end
-		
 
 	working_directory: STRING is
 			-- Application working directory.
@@ -362,8 +361,6 @@ feature -- Access
 			Result := string_default(feature {FREE_OPTION_SD}.Override_cluster)
 		end
 
-		
-		
 	is_console_application: BOOLEAN is
 			-- Does application use console mode?
 		do
@@ -435,8 +432,7 @@ feature -- Access
 		do
 			Result := boolean_default(feature {FREE_OPTION_SD}.Msil_generation)
 		end
-		
-		
+
 feature{NONE} -- Element change
 
 	set_string_default (def_opt:INTEGER; new_value: STRING) is
@@ -649,7 +645,6 @@ feature -- Element change
 				l_defaults.extend (d_option)				
 			end
 		end
-		
 
 	set_il_generation (b: BOOLEAN) is
 			-- Generate IL code if `b'.
@@ -685,8 +680,7 @@ feature -- Element change
 		do
 			set_boolean_default (feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace, a_new_value)
 		end
-		
-		
+
 	set_working_directory (directory: STRING) is
 			-- Set the system's working directory
 		do
@@ -855,7 +849,6 @@ feature -- Environment
 			Result.extend("v1.0.3705")
 			Result.extend("v1.1.4322") 
 		end
-
 
 feature -- Constants
 

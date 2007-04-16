@@ -80,7 +80,6 @@ feature -- Status report
 			good_result: Result implies searchable_component /= Void
 		end
 
-
 feature{NONE} -- Registration implementation
 
 	internal_attach is
@@ -130,6 +129,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

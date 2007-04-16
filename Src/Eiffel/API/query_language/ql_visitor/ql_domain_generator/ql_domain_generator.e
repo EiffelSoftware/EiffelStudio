@@ -49,7 +49,6 @@ indexing
 					And there is a criterion named "is_visible" to filter these items.
 					For example of the invisible items, see comment of `is_visible' in {QL_CLASS}.
 
-
 					-----------------------------------------------------------------------------------------------------------------
 
 					Generation feedback and optimization
@@ -637,8 +636,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

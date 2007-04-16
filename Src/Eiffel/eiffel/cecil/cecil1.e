@@ -63,7 +63,6 @@ debug ("CECIL")
     io.put_new_line;
 end;
 
-
 					buffer.put_string ("(char *(*)()) ");
 					buffer.put_string (routine_name);
 

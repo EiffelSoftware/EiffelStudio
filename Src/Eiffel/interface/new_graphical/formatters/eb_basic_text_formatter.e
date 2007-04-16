@@ -95,7 +95,6 @@ feature -- Formatting
 			end
 		end
 
-
 feature -- Status setting
 
 	set_accelerator (accel: EV_ACCELERATOR) is

@@ -42,7 +42,6 @@ inherit
 			default_create, copy
 		end
 
-
 create
 	make, default_create --, make_with_window
 

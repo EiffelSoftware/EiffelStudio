@@ -216,7 +216,6 @@ feature{NONE} -- Implementation
 			l_trans.force (t_metric, n_metric)
 			Result.force (l_trans, t_metric_archive)
 
-
 				-- metric archive node
 				-- => domain
 			create l_trans.make (1)
@@ -379,7 +378,6 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end
 

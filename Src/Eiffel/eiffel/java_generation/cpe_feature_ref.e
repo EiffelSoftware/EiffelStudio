@@ -30,8 +30,7 @@ feature {NONE} -- Initialisation
 			class_index := a_class_index
 			name_and_type_index := a_name_and_type_index
 		end
-			
-			
+
 feature -- Access
 
 	class_index: INTEGER
@@ -104,7 +103,4 @@ indexing
 		]"
 
 end
-
-			
-
 

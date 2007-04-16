@@ -121,7 +121,6 @@ feature -- Assembler
 			result_not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	deferred_content: ROUT_BODY_AS is

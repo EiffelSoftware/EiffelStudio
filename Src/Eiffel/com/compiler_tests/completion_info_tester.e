@@ -188,8 +188,7 @@ feature {NONE} -- Agent Handlers
 				put_string (Void)
 			end
 		end
-		
-		
+
 feature {NONE} -- Implementation
 
 	perform_completion_info_tests (interface: IEIFFEL_COMPLETION_INFO_INTERFACE) is

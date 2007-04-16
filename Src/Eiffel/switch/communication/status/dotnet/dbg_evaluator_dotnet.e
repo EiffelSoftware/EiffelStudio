@@ -358,7 +358,6 @@ feature {DBG_EVALUATOR} -- Interface
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
 
-
 			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_c, f)
 
 			if l_icd_value /= Void then
@@ -517,7 +516,6 @@ feature {NONE} -- Parameters operation
 	dotnet_parameters: ARRAY [DUMP_VALUE]
 
 	dotnet_parameters_index: INTEGER
-
 
 feature {NONE} -- Properties
 

@@ -6,7 +6,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	STRING_DISPLAY_VIEWER_BOX
 

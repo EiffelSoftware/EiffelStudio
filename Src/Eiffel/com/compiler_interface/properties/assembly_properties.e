@@ -25,8 +25,7 @@ inherit
 			public_key_token,
 			set_prefix
 		end
-            
-    
+
 create
 	make,
 	make_local,
@@ -181,7 +180,6 @@ feature -- Access
 		-- lace assembly object
             
 feature {NONE} -- Implementation
-
 
 	format_hash_assembly_name (a_name, a_public_key: STRING): STRING is
 		-- format an assembly name and public key toekn into a hashable representation

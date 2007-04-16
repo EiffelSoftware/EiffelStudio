@@ -194,7 +194,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 invariant
 	elements: is_initialized implies grid /= Void
 

@@ -45,7 +45,6 @@ feature
 			create Result.make (2000)
 		end
 
-
 	header_generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation for the header
 			-- file will happen. Default size is 50Ko, it will

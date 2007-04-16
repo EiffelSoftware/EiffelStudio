@@ -81,7 +81,6 @@ feature {NONE} -- Access
 	projector: EIFFEL_PROJECTOR
 			-- Projector of generated diagram on `pixmap'.
 
-
 	world_cell: EIFFEL_FIGURE_WORLD_CELL
 
 	border: INTEGER is 5

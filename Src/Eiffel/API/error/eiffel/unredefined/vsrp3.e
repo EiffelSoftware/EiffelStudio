@@ -46,7 +46,6 @@ feature {COMPILER_EXPORTER}
 			root_type := a_root_type;
 		end;
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

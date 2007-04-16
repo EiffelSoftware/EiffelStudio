@@ -41,7 +41,6 @@ feature -- Access
 	il_generator: IL_CODE_GENERATOR
 			-- Actual IL code generator.
 
-
 feature {NONE} -- Implementation
 
 	process_argument_b (a_node: ARGUMENT_B) is

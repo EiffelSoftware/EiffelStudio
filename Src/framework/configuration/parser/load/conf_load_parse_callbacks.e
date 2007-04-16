@@ -1492,7 +1492,6 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
-
 	process_custom_attributes is
 			-- Process attributes of a custom tag.
 		require

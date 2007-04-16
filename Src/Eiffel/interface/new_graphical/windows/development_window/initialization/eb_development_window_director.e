@@ -5,7 +5,6 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-
 class
 	EB_DEVELOPMENT_WINDOW_DIRECTOR
 

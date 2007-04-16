@@ -97,7 +97,6 @@ feature{NONE} -- Initialization
 			l_tool_bar.extend (add_button)
 			l_tool_bar.extend (remove_button)
 
-
 			create l_border
 			l_border.set_border_width (1)
 			l_border.set_background_color ((create {EV_STOCK_COLORS}).black)
@@ -615,7 +614,6 @@ feature{NONE} -- Implementaion
 			a_grid_row.set_item (1, stone_grid_item (a_stone_name))
 			a_grid_row.set_item (2, tool_grid_item (a_tool_id))
 		end
-
 
 invariant
 	tool_name_attached: tool_name /= Void

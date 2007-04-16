@@ -217,8 +217,6 @@ feature -- Entries
 	e_start_without_stopping_at_breakpoints: STRING_GENERAL is
 			once Result := locale.translate ("Start without stopping at breakpoints") end
 
-
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

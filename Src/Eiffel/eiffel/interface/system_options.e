@@ -516,7 +516,6 @@ feature -- Update
 			platform_set: platform = a_platform
 		end
 
-
 feature {SYSTEM_I} -- Implementation
 
 	internal_msil_classes_per_module: INTEGER

@@ -88,7 +88,6 @@ feature -- Initialization
 			execute
 		end
 
-
 	execute is
 			-- Analyze the command line options and
 			-- execute the appropriate command.

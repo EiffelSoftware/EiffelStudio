@@ -69,7 +69,6 @@ feature -- Status setting
 			is_not_case_sensitive := True
 		end
 
-
 feature -- Search
 
 	search_for_pattern: BOOLEAN is
@@ -117,7 +116,6 @@ feature -- Search
 				pattern := old_pattern
 			end
 		end
-
 
 	find_matching_indices is
 			-- All indices in `text' which matches the
@@ -242,7 +240,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end -- class KMP_MATCHER
 

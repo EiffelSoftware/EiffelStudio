@@ -1558,7 +1558,6 @@ feature -- Metadata description
 			end
 		end
 
-
 	put_args_on_stack (a_count: INTEGER; a_body: MD_METHOD_BODY) is
 			-- Put arguments on stack
 		require
@@ -1706,9 +1705,6 @@ feature -- Metadata description
 		ensure
 			valid_result: Result /= Void
 		end
-
-
-
 
 feature -- Local saving
 

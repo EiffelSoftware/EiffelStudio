@@ -189,7 +189,6 @@ feature {NONE} -- List operation
 			unregister_bp_for_addition (a_bp)
 		end
 
-
 feature {NONE} -- Notification
 
 	notify_new_module (a_mod_key: STRING) is
@@ -400,7 +399,6 @@ feature -- debug purpose only
 				end
 				breakpoints_for_addition_by_module.forth
 			end
-
 
 			l_output.append_string ("  *** BP -- OK  *** %N")
 			from

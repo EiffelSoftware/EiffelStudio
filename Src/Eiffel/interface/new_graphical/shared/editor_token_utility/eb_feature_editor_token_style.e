@@ -316,8 +316,6 @@ feature -- Setting
 			written_class_disalbed: not is_written_class_enabled
 		end
 
-
-
 	enable_comment is
 			-- Enable display of comments.
 			-- See `is_comment_enabled' for more information.

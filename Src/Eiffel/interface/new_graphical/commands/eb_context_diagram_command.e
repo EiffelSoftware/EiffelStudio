@@ -96,4 +96,3 @@ indexing
 
 end -- class EB_CONTEXT_DIAGRAM_COMMAND
 
-

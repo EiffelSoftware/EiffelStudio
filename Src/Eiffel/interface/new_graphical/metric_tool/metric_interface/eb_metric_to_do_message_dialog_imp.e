@@ -88,7 +88,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	close_btn: EV_BUTTON

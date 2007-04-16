@@ -95,7 +95,6 @@ feature {NONE} -- Initialization
 			end
 			model.is_aggregated_changed.extend (agent on_is_aggregated_change)
 
-
 			line.disable_end_arrow
 			line.disable_start_arrow
 

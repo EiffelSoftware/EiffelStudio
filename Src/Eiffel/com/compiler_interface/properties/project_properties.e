@@ -75,7 +75,6 @@ inherit
     		all
     	end
 
-
 create
     make,
     make_from_project,

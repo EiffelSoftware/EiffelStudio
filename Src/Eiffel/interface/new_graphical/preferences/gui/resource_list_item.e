@@ -58,7 +58,6 @@ feature -- Element change
 		do
 			row_number := a_number
 		end
-		
 
 feature -- Basic operations
 

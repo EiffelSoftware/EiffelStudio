@@ -204,7 +204,6 @@ feature {NONE} -- Update
 			execute
 		end;
 
-
 feature {NONE} -- Output
 
 	process_finish_freezing (finalized_dir: BOOLEAN) is

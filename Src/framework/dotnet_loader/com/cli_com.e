@@ -93,8 +93,6 @@ feature {NONE} -- Initialization
 			"RPC_E_CHANGED_MODE"
 		end
 
-
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

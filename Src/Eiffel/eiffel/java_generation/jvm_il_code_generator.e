@@ -477,8 +477,7 @@ feature -- Features info
 			end
 			current_feature.set_feature_id (feature_id)
 			current_feature.set_routine_id (rout_id)
-							
-							
+
 			debug ("JVM_GEN2")
 				print (current_class.qualified_name_wo_l + "::")
 				print ("feature[1] " + il_name + "%T%T%TFID:"+ feature_id.out + "%T%TRID:" + rout_id.out + "%T%T")
@@ -721,9 +720,7 @@ feature -- Features info
 		end
 
 feature -- IL Generation
-	
-	
-	
+
 	start_il_generation (type_id: INTEGER) is
 		do
 			current_type_id := type_id
@@ -2302,11 +2299,4 @@ indexing
 		]"
 
 end -- class JVM_IL_CODE_GENERATOR
-							
-							
-
-
-
-
-
 

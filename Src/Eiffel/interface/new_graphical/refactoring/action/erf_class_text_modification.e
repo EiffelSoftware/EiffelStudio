@@ -389,7 +389,6 @@ feature -- Load/Save file
 			match_list := Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	compute_ast is

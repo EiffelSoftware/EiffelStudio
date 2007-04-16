@@ -302,7 +302,6 @@ feature{NONE} -- Status report
 
 feature{NONE} -- Implementation
 
-
 	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: STRING_GENERAL) is
 			-- Test if last registered receiver from `a_stack' has receivered data
 			-- If so, remove that receiver from `a_stack'. If not, fire an error `a_error_message'.
@@ -614,6 +613,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

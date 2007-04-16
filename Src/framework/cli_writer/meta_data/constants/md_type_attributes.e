@@ -100,7 +100,6 @@ feature -- Class Initialization Attributes
 	before_field_init: INTEGER is 0x00100000
 			-- Initialize the class before first static field access.
 
-
 feature -- Additional Flags
 
 	rt_special_name: INTEGER is 0x00000800

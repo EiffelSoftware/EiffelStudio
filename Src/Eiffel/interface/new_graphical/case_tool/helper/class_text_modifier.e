@@ -132,7 +132,6 @@ feature -- Access
 	last_removed_code: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
 			-- List of code and positions that has been removed.
 
-
 	last_added_code: ARRAYED_LIST [TUPLE[STRING, INTEGER]]
 			-- List of added code and position.
 
@@ -654,7 +653,6 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-
 --	extend_ancestor (a_name: STRING; ihf: BON_INHERITANCE_FIGURE) is
 --			-- Add `a_name' to parent list of the class
 --			-- with respect to `ihf' if is is not Void.
@@ -896,7 +894,6 @@ feature -- Modification (Change class name)
 				is_modified := True
 			end
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -1227,7 +1224,6 @@ feature {NONE} -- Implementation
 		do
 			text := Void
 		end
-
 
 	execute_wizard_from_diagram (fcw: EB_FEATURE_COMPOSITION_WIZARD) is
 			-- Show `fcw' and generate code if requested.

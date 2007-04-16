@@ -80,7 +80,6 @@ feature {NONE} -- Initialization
 			f_top.extend (vb_top)
 			vb.extend (f_top)
 
-
 			create f_middle
 			create fvb
 			fvb.set_padding (Layout_constants.small_padding_size)
@@ -234,7 +233,6 @@ feature -- Element change
 			f_middle.disable_sensitive
 		end
 
-
 feature {NONE} -- Implementation
 
 	on_show is
@@ -242,7 +240,6 @@ feature {NONE} -- Implementation
 		do
 			name_field.set_focus
 		end
-
 
 	comments_button, strings_button: EV_CHECK_BUTTON
 	rename_file_button: EV_CHECK_BUTTON

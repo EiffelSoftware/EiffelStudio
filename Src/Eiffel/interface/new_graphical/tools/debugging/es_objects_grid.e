@@ -558,7 +558,6 @@ feature -- Query
 			end
 		end
 
-
 feature {NONE} -- Actions implementation
 
 	on_pebble_function (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
@@ -950,7 +949,6 @@ feature -- Graphical look
 		once
 			create Result.make_with_8_bit_rgb (255,210,210)
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

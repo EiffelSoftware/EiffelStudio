@@ -440,7 +440,6 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-
 feature {NONE} -- Implemention
 
 	is_target_object: BOOLEAN is
@@ -574,7 +573,6 @@ feature {NONE} -- Implemention
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
 				ca_blob.put_natural_64 (a_int.natural_64_value)
 
-
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 				inspect a_int.il_element_type
 				when
@@ -593,7 +591,6 @@ feature {NONE} -- Implemention
 				then
 					ca_blob.put_real_32 (a_int.natural_64_value.to_real_32)
 				end
-
 
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
 				inspect a_int.il_element_type

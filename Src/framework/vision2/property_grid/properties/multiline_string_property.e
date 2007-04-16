@@ -27,5 +27,4 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("%%N", "%N")
 		end
 
-
 end

@@ -7,7 +7,6 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-
 deferred class ABSTRACT_DEBUG_VALUE
 
 inherit

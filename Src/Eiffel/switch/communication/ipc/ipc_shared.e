@@ -139,7 +139,6 @@ feature {NONE} -- Resume
 	Break_set_stepinto: INTEGER is 3		-- ( <=> DT_SET_STEPINTO in run-time )
 			-- Activate stepinto mode
 
-
 feature {NONE} -- Inspection constants
 
 	In_address: INTEGER is 0

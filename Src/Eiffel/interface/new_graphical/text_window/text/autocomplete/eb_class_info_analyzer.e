@@ -79,7 +79,6 @@ feature -- Status report
 	is_ready: BOOLEAN
 		-- is the analysis completed ?
 
-
 feature -- Basic operations
 
 	stone_at_position (cursor: TEXT_CURSOR): STONE is
@@ -2101,7 +2100,6 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 		once
 			Result := <<"local">>
 		end
-
 
 	special_keywords: ARRAY [STRING] is
 		once

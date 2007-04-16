@@ -198,8 +198,7 @@ feature -- Access
 			create assem_enum.make (assems_array_list)
 			Result := assem_enum
 		end
-		
-		
+
 	last_exception: COMPILER_EXCEPTION
 			-- last exception to be raised
 		
@@ -209,8 +208,7 @@ feature -- User Preconditions
 		once
 			Result := False
 		end
-		
-		
+
 feature -- Validation
 
 	is_valid_eiffel_identifier (a_identifier: STRING): BOOLEAN is

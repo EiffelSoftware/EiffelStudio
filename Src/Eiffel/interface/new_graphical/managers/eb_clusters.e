@@ -160,7 +160,6 @@ feature -- Observer Pattern
 			end
 		end
 
-
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' has been added.
 		require
@@ -616,7 +615,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
 
 	name: STRING is "Clusters"
 			-- Name of the item.

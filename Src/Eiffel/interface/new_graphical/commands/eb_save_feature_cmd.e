@@ -20,7 +20,6 @@ create
 	
 feature -- Properties
 
-
 	tool: EB_FEATURE_TOOL
 			-- The tool
 

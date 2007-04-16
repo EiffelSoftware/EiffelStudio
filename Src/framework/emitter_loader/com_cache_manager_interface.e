@@ -212,7 +212,6 @@ feature {NONE} -- Implementation
 			"unload"
 		end
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

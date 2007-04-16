@@ -161,7 +161,6 @@ feature -- Visit
 			evaluate_item (a_item)
 		end
 
-
 feature{NONE} -- Implementation
 
 	tautology_criterion: like criterion is
@@ -299,8 +298,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

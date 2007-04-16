@@ -52,7 +52,6 @@ feature{LEAF_AS_LIST} -- Modify
 			applied := True
 		end
 
-
 feature -- Vadility
 
 	can_prepend (other_region: like region): BOOLEAN is

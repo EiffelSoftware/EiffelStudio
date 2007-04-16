@@ -23,7 +23,6 @@ feature -- Access
 			file_modified_date_valid: Result >= -1
 		end
 
-
 feature {NONE} -- Externals
 
 	eif_date (a_path: POINTER; r: TYPED_POINTER [INTEGER]) is
@@ -84,7 +83,6 @@ feature {NONE} -- Externals
 			}
          }"
 	end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -92,7 +92,6 @@ feature -- Update
 			is_discover: is_discover
 		end
 
-
 feature -- Setting
 
 	reset_modes is

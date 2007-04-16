@@ -5,7 +5,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	XMI_ASSOCIATION
 	

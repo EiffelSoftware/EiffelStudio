@@ -40,8 +40,7 @@ feature {NONE} -- Initialization
 		ensure
 			resource_file_set: resource_file = a_file
 		end
-		
-	
+
 	make_failed (a_file: like resource_file) is
 			-- Create warning when resource compiler failed.
 		do

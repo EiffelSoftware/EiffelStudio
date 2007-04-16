@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			text := "Renaming for a non existing class "+a_class+"%NConfiguration: "+a_config
 		end
 
-
 feature -- Access
 
 	text: STRING;

@@ -25,7 +25,6 @@ feature -- Initialisation
 			create bindex_cid_table.make (200)
 		end
 
-	
 feature -- Access
 
 	id (t: CLASS_DEPENDANCE): INTEGER is

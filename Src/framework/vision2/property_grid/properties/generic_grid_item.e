@@ -29,5 +29,4 @@ feature -- Update
 			value_set: value = a_value
 		end
 
-
 end

@@ -167,7 +167,6 @@ feature -- Properties
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
 
-
 feature {EIFFEL_CALL_STACK} -- Implementation
 
 	set_hector_addr_for_locals_and_arguments is

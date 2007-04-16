@@ -266,7 +266,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	show_new_window (pq: PROFILER_QUERY;
 				po: PROFILER_OPTIONS; profinfo: PROFILE_INFORMATION) is
 			-- Create and show a new EB_PROFILE_QUERY_WINDOW.

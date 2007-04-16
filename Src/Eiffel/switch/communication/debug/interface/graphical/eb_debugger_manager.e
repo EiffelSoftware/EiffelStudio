@@ -619,7 +619,6 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
-
 					-- Do not display shortcut if any watch tool exists.
 				if not watch_tool_list.is_empty then
 					create_and_show_watch_tool_command.set_referred_shortcut (Void)
@@ -1242,7 +1241,6 @@ feature -- Status setting
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
 			restore_debug_docking_layout
-
 
 				--| Watch tool can not be simply hidden
 				--| they are shown or closed.
@@ -1872,7 +1870,6 @@ feature {NONE} -- Implementation
 
 	no_stop_cmd: EB_EXEC_NO_STOP_CMD
 			-- Run without stop points command.
-
 
 	enable_commands_on_project_created is
 			-- Enable commands when a new project has been created (not yet compiled)

@@ -16,7 +16,6 @@ inherit
 create
 	make
 
-
 feature -- Status report
 
 	valid_start_condition (sc: INTEGER): BOOLEAN is
@@ -3569,8 +3568,6 @@ feature {NONE} -- Constants
 			-- Start condition codes
 
 feature -- User-defined features
-
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

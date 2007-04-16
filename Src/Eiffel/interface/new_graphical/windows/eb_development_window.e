@@ -1786,7 +1786,6 @@ feature {NONE} -- Recycle
 			favorites_manager := Void
 			cluster_manager := Void
 
-
 			if editors_manager /= Void then
 				editors_manager.recycle
 				editors_manager := Void

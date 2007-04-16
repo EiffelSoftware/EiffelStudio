@@ -67,7 +67,6 @@ feature{NONE} -- Implementation
 	internal_text: STRING
 			-- Literal text in code
 
-
 invariant
 	literal_text_not_void: literal_text (Void) /= Void
 

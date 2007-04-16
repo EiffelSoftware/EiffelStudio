@@ -80,5 +80,3 @@ indexing
 
 end -- class EB_RESET_DIAGRAM_COMMAND
 
-
-

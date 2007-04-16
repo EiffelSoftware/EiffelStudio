@@ -24,7 +24,6 @@ inherit
 create
 	make
 
-
 feature -- Execution
 
 	execute is
@@ -32,7 +31,6 @@ feature -- Execution
 		do
 			editor.uncomment_selection
 		end
-
 
 feature -- Basic operations
 
@@ -82,8 +80,6 @@ feature -- Basic operations
 				end
 			end
 
-
-
 feature {NONE} -- Implementation
 
 	menu_name: STRING is
@@ -115,7 +111,6 @@ feature {NONE} -- Implementation
 		do
 			Result := Interface_names.e_Uncomment
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

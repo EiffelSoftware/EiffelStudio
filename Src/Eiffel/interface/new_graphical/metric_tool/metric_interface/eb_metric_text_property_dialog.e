@@ -23,7 +23,6 @@ inherit
 			copy
 		end
 
-
 feature{NONE} -- Initialization
 
 	initialize is
@@ -227,6 +226,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

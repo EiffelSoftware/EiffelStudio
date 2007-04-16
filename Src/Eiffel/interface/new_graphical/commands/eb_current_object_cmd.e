@@ -5,7 +5,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class EB_CURRENT_OBJECT_CMD
 
 inherit

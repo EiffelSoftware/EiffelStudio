@@ -111,7 +111,6 @@ feature -- Update
 			end
 		end
 
-
 	add_section (a_name: STRING_GENERAL) is
 			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
 			-- Else use the existing section.

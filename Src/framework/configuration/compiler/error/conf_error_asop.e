@@ -24,12 +24,10 @@ feature {NONE} -- Initialization
 			text := "Could not open assembly: "+an_assembly
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

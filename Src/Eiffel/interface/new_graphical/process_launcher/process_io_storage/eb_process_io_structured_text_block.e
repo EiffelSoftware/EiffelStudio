@@ -54,8 +54,6 @@ feature -- Status reporting
 			Result := structured_image.image.count
 		end
 
-
-
 feature{NONE} -- Initialization
 
 	format_structured_image (str: STRING; from_error: BOOLEAN) is

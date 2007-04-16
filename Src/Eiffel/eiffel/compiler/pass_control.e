@@ -5,11 +5,9 @@ indexing
 
 class PASS_CONTROL
 
-
 create
 
 	make
-
 
 feature
 

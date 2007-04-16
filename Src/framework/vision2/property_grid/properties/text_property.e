@@ -142,7 +142,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-
 feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_LABEL_ITEM_I

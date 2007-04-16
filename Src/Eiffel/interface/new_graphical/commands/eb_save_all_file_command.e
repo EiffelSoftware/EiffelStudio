@@ -32,7 +32,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all

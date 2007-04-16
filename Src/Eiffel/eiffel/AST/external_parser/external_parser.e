@@ -19,7 +19,6 @@ inherit
 create
 	make
 
-
 feature {NONE} -- Implementation
 
 	yy_build_parser_tables is
@@ -1850,7 +1849,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp3 := yyvsp3 + 1
@@ -1939,7 +1937,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp9 := yyvsp9 + 1
@@ -2007,7 +2004,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -2116,7 +2112,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -2490,7 +2485,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp4 := yyvsp4 + 1
@@ -2663,7 +2657,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -3426,8 +3419,6 @@ feature {NONE} -- Constants
 			-- (terminal and nonterminal)
 
 feature -- User-defined features
-
-
 
 feature {NONE} -- Constants
 

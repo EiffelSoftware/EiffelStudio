@@ -22,7 +22,6 @@ create
 
 	make
 
-	
 feature 
 
 	make (b: BOOLEAN) is
@@ -53,8 +52,7 @@ feature
 	
 	registers: ARRAY [REGISTER_MANAGER];
 			-- The available registers (one entry per C type)
-	
-	
+
 	set_registers (r: like registers) is
 			-- Assign `r' to `registers'
 		do

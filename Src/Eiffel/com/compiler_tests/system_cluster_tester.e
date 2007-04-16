@@ -413,8 +413,7 @@ feature {NONE} -- Output
 			end
 			put_string ("%N")
 		end
-			
-		
+
 feature {NONE} -- Implementation
 
 	is_valid_name (a_cluster_name: STRING) is

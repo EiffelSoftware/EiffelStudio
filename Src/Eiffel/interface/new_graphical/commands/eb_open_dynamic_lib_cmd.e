@@ -55,8 +55,6 @@ feature -- Callbacks
 			dynamic_lib_tool.hide
 		end
 
-
-	
 feature {NONE} -- Implementation
 
 	new_dynamic_lib_file: BOOLEAN

@@ -109,7 +109,6 @@ feature {NONE} -- Initialization
 
 			append_small_margin (hb_main)
 
-
 			create l_frame.make_with_text (conf_interface_names.dialog_file_rule_includes)
 			hb_main.extend (l_frame)
 			hb_main.disable_item_expand (l_frame)

@@ -12,7 +12,6 @@ class
 inherit
 	KEYBOARD_I
 
-
 feature -- Pressing
 
 	press_key (a_key: EV_KEY) is

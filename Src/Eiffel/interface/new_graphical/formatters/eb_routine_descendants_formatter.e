@@ -129,4 +129,3 @@ indexing
 
 end -- class EB_ROUTINE_DESCENDANTS_FORMATTER
 
-

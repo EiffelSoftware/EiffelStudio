@@ -850,7 +850,6 @@ feature {NONE} -- Callback actions
 					--| current il offset if corresponding to a bp slot, or approximate offset.
 			end
 
-
 			create l_copy.make_copy (l_previous_stack_info)
 			l_copy.set_current_il_offset (l_potential_il_offset)
 			if l_copy.is_equal (l_current_stack_info) then
@@ -2301,7 +2300,6 @@ feature -- Specific function evaluation
 --			l_icdf := l_icdm.get_function_from_token (l_meth_token)
 --			eifnet_dbg_evaluator.method_evaluation (active_frame, l_icdf, <<icdv>>)
 --		end
-
 
 feature -- Bridge to debug_value_keeper
 

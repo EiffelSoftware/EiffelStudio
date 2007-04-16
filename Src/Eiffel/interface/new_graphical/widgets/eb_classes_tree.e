@@ -869,12 +869,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.
-
 
 invariant
 	classes_double_click_agents_not_void: classes_double_click_agents /= Void

@@ -190,8 +190,6 @@ feature -- Element change
 			destroy_redo
 		end
 
-
-
 feature -- Basic operation
 
 	execute_refactoring (a_refactoring: ERF_REFACTORING) is
@@ -215,7 +213,6 @@ feature -- Basic operation
 			logger.refactoring_end
 		end
 
-
 feature {NONE} -- Implementation
 
 	preferences: PREFERENCES
@@ -226,7 +223,6 @@ feature {NONE} -- Implementation
 
 	redo_stack: LINKED_STACK [ LIST [ERF_ACTION]]
 			--  The stack of list of commands where all undone actions have to be registered for them to be redoable.
-
 
 	destroy_undo is
 			-- Destroy the undo informations

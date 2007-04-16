@@ -142,4 +142,3 @@ indexing
 
 end -- class EB_TOGGLE_INHERIT_COMMAND
 
-

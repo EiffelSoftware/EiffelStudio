@@ -199,8 +199,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
 	feature_i: FEATURE_I
 			-- The feature that gets renamed.
 
@@ -240,7 +238,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation constants
 
 	Chunk: INTEGER is 100
-
 
 invariant
 	feature_i_not_void: feature_i /= Void

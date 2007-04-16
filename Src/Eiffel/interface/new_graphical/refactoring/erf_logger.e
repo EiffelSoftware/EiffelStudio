@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 			create class_actions.make (1)
 		end
 
-
 feature
 
 	start_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]

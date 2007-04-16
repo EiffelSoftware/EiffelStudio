@@ -240,7 +240,6 @@ feature {NONE} -- Agent Handlers
 			put_string ("%N")
 		end
 
-
 	on_contains_assembly_selected (args: ARRAYED_LIST [STRING]) is
 			-- test safely 'contains_assembly'
 		do
@@ -604,8 +603,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
-	
+
 	contains_assembly (a_cluster_name: STRING) is
 			-- contains_assembly test
 		local

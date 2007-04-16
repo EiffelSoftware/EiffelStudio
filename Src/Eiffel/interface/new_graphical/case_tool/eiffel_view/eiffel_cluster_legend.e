@@ -129,7 +129,6 @@ feature -- Element change
 			extend (pin_button)
 		end
 
-
 feature {NONE} -- Implementation
 
 	build_table is

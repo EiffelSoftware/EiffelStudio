@@ -63,7 +63,6 @@ feature -- Access
 			init_value (Result)
 		end
 
-
 	new_integer_8_value  (value: INTEGER_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'
 		do
@@ -71,7 +70,6 @@ feature -- Access
 			Result.set_integer_8_value (value, dtype)
 			init_value (Result)
 		end
-
 
 	new_integer_16_value  (value: INTEGER_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'

@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			compare_objects
 		end
 
-
 feature -- Output
 
 	out: STRING is

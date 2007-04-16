@@ -653,7 +653,6 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local_assignment (l_result)
 			il_generator.branch_to (l_end)
 
-
 				-- Generate case where boolean value is False:
 				-- `item & ~(a_type) 1 << n'
 			il_generator.mark_label (l_else)
@@ -708,7 +707,6 @@ feature {NONE} -- IL code generation
 			il_generator.generate_binary_operator (il_or, a_type.is_natural)
 			il_generator.generate_local_assignment (l_result)
 			il_generator.branch_to (l_end)
-
 
 				-- Generate case where boolean value is False:
 				-- `item & ~(a_type) 1 << n'

@@ -26,7 +26,6 @@ feature -- Access
 	debugger_data: EB_DEBUGGER_DATA
 			-- Preference data for debugger.		
 
-
 invariant
 	debugger_data_not_void: debugger_data /= Void
 

@@ -323,7 +323,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	target_text_color_preference: COLOR_PREFERENCE
 	target_background_color_preference: COLOR_PREFERENCE
 
-
 	once_and_constant_in_upper_preference: BOOLEAN_PREFERENCE
 			-- Is first letter of once or constant in upper case?
 
@@ -491,7 +490,6 @@ feature {NONE} -- Init colors and fonts.
 		do
 			Precursor
 		end
-
 
 feature -- Update
 
@@ -770,8 +768,6 @@ feature {NONE} -- Build preferences for autocomplete
 						-- alias
 					<<" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$">>,
 
-
-
 						-- if
 					<<" $cursor$ then%N$indent$%%T%N$indent$end", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
 						-- then
@@ -893,7 +889,6 @@ feature -- Syntax Completion Customization
 			create Result.make_from_array (<<"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check">>)
 			Result.compare_objects
 		end
-
 
 	other_completed_keywords: ARRAYED_LIST [STRING] is
 			-- list of completed keywords

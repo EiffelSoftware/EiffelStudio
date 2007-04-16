@@ -193,7 +193,6 @@ feature {NONE} -- Names
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 
-
 	l_tree_view: STRING_GENERAL is						do Result := names.l_Tree_view						end
 	f_switch_to_tree_view: STRING_GENERAL is 			do Result := names.f_switch_to_tree_view				end
 	l_flat_view: STRING_GENERAL is						do Result := names.l_Flat_view 						end

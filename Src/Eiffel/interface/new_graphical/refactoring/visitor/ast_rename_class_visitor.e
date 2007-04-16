@@ -110,7 +110,6 @@ feature
 			Precursor (l_as)
 		end
 
-
 feature {NONE} -- Implementation
 
 	old_class_name: STRING

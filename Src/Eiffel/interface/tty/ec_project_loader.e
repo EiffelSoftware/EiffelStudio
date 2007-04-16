@@ -214,7 +214,6 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is

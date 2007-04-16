@@ -255,7 +255,6 @@ feature -- Setting
 			current_inline_agent_body := body
 		end
 
-
 feature -- Managing the type stack
 
 	clear_all is

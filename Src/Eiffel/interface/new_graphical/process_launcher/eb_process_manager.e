@@ -195,7 +195,6 @@ feature -- Execution
 			end
 		end
 
-
 feature{NONE} -- Implementation
 
 	freezor: EB_C_COMPILER_LAUNCHER

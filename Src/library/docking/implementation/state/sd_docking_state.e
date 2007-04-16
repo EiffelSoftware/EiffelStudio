@@ -144,6 +144,7 @@ feature -- Redefine.
 			l_new_container: EV_SPLIT_AREA
 			l_retried: BOOLEAN
 			l_called: BOOLEAN
+			l_main_container: SD_MULTI_DOCK_AREA
 		do
 			if not l_retried then
 				internal_docking_manager.command.lock_update (zone, False)
@@ -154,6 +155,7 @@ feature -- Redefine.
 				record_state
 				if zone.parent /= Void then
 					zone.parent.prune (zone)
+					l_main_container := internal_docking_manager.query.inner_container (zone)
 				end
 
 				internal_docking_manager.command.lock_update (Void, True)
@@ -196,6 +198,9 @@ feature -- Redefine.
 				internal_docking_manager.command.remove_empty_split_area
 				internal_docking_manager.command.update_title_bar
 				internal_docking_manager.query.inner_container_main.update_middle_container
+				if l_main_container /= Void then
+					l_main_container.update_visible
+				end
 				internal_docking_manager.command.resize (True)
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update

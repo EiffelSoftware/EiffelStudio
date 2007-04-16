@@ -124,6 +124,20 @@ feature -- Command
 			end
 		end
 
+	update_visible is
+			-- Update container visible.
+		local
+			l_item: SD_MIDDLE_CONTAINER
+			l_is_all_invisible: BOOLEAN
+		do
+			if readable then
+				l_item ?= item
+				if l_item /= Void then
+					l_is_all_invisible := update_visible_imp (l_item)
+				end
+			end
+		end
+
 	recover_normal_for_only_one is
 			-- If there is only one minimized zone, we restore it.
 		local
@@ -370,6 +384,56 @@ feature {NONE} -- Implementation
 			end
 
 	 	end
+
+	update_visible_imp (a_middle_container: SD_MIDDLE_CONTAINER): BOOLEAN is
+			-- Postorder traversal
+			-- If all contained widgets are invisible container, then Result is True.
+			-- Otherwise Result is False.
+		require
+			not_void: a_middle_container /= Void
+			parent_not_void: a_middle_container.parent /= Void
+		local
+			l_widget: EV_WIDGET
+			l_middle_container: SD_MIDDLE_CONTAINER
+			l_zone: SD_ZONE
+			l_left_all_invisible, l_right_all_invisible: BOOLEAN
+			l_parent: SD_MIDDLE_CONTAINER
+			l_is_in_first: BOOLEAN
+			l_new_parent: SD_MIDDLE_CONTAINER
+		do
+			-- Update all middle container in first widget.
+			l_widget := a_middle_container.first
+			l_middle_container ?= l_widget
+			l_zone ?= l_widget
+			if l_middle_container /= Void and then l_zone = Void then
+				l_left_all_invisible := update_visible_imp (l_middle_container)
+			else
+				check not_void: l_zone /= Void end
+				l_left_all_invisible := not l_zone.is_displayed
+			end
+
+			-- Update all middle container in second widget.
+			l_widget := a_middle_container.second
+			l_middle_container ?= l_widget
+			l_zone ?= l_widget
+			if l_middle_container /= Void and then l_zone = Void then
+				l_right_all_invisible := update_visible_imp (l_middle_container)
+			else
+				check not_void: l_zone /= Void end
+				l_right_all_invisible := not l_zone.is_displayed
+			end
+
+			Result := l_left_all_invisible and l_right_all_invisible
+
+			l_parent ?= a_middle_container
+			if Result then
+				-- Current should be a invisible container
+				a_middle_container.hide
+			else
+				-- Current should be a visible container
+				a_middle_container.show
+			end
+		end
 
 	update_middle_container_imp (a_middle_container: SD_MIDDLE_CONTAINER): BOOLEAN is
 			-- Postorder traversal

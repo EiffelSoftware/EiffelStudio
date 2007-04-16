@@ -25,7 +25,6 @@ inherit
 			default_create, copy
 		end
 
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -182,7 +181,6 @@ feature {NONE} -- Agents
 				wd.show_modal_to_window (Current)
 			end
 		end
-
 
 invariant
 	elements: is_initialized implies cluster_name /= Void and class_name /= Void and feature_name /= Void and all_classes /= Void

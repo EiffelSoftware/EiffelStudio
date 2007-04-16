@@ -72,7 +72,6 @@ feature -- Visit nodes
 			end
 		end
 
-
 	process_cluster (a_cluster: CONF_CLUSTER) is
 			-- Visit `a_cluster'.
 		do

@@ -15,7 +15,6 @@ inherit
 			debug_value_type_id
 		end
 
-
 feature -- Properties
 
 indexing

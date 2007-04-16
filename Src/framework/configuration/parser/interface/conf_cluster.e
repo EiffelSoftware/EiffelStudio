@@ -48,7 +48,6 @@ feature -- Status
 			Result := True
 		end
 
-
 feature -- Access, stored in configuration file
 
 	location: CONF_DIRECTORY_LOCATION

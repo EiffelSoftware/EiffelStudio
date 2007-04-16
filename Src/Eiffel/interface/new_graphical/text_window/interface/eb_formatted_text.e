@@ -48,7 +48,6 @@ feature -- Access
 		deferred
 		end
 
-
 	position: INTEGER is
 			-- Cursor position of text
 		deferred
@@ -110,7 +109,6 @@ feature -- Status setting
 		deferred
 		end
 
-
 	reset is
 			-- Reset the contents of the text window.
 		do
@@ -136,7 +134,6 @@ feature -- Update
 --			valid_stone: a_stone /= Void
 --		do
 --		end
-
 
 feature {NONE} -- Command arguments
 

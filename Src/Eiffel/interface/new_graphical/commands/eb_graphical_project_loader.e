@@ -336,7 +336,6 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-
 	report_cannot_convert_project (a_file_name: STRING) is
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		local
@@ -806,7 +805,6 @@ feature {NONE} -- Actions
 				a_dlg.destroy
 			end
 		end
-
 
 feature {NONE} -- Implementation / Private constants.
 

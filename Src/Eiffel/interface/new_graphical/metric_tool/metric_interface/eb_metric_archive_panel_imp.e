@@ -206,7 +206,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	empty_cell2, empty_cell, comparison_toolbar_cell, reference_empty_area, comparison_empty_cell,

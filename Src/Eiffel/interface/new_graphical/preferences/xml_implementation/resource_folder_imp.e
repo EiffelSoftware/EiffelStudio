@@ -179,7 +179,6 @@ feature -- Saving
 			retry
 		end
 
-
 feature -- Output
 
 	xml_trace (identation: STRING): STRING is

@@ -16,7 +16,6 @@ inherit
 	
 	COMPILER_TESTER_SHARED
 
-		
 create
 	make
 	
@@ -31,8 +30,7 @@ feature -- Access
 			l_compiler.set_output_to_console
 			Result := l_compiler
 		end
-		
-	
+
 feature -- Basic Operations
 
 	reload_ace_project: BOOLEAN is
@@ -45,9 +43,6 @@ feature -- Basic Operations
 			Valid_project_ref.set_item (False)
 			Result := load_Ace_project (ace_filename)
 		end
-		
-
-	
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

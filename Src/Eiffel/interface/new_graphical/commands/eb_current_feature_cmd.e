@@ -7,7 +7,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class EB_CURRENT_FEATURE_CMD
 
 inherit

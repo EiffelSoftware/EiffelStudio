@@ -75,7 +75,6 @@ feature -- Roundtrip
 	end_keyword: KEYWORD_AS
 			-- Keyword "end" associated with this structure
 
-
 feature -- Attributes
 
 	constraint: CONSTRAINING_TYPE_AS is

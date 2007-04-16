@@ -125,7 +125,6 @@ feature{NONE} -- Initialization
 			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
 		end
 
-
 feature{NONE} -- Implementation
 
 	criterion_type: QL_CLASS_CRITERION
@@ -822,8 +821,6 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_visible
 		end
 
-
-
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -855,8 +852,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

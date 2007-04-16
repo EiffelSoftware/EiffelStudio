@@ -398,7 +398,6 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_true), query_language_names.ql_cri_true)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_from_any), query_language_names.ql_cri_is_from_any)
 
-
 			l_hash_table.put (agent new_name_criterion (feature_scope, query_language_names.ql_cri_name_is), query_language_names.ql_cri_name_is)
 			l_hash_table.put (agent new_name_criterion (feature_scope, query_language_names.ql_cri_text_contain), query_language_names.ql_cri_text_contain)
 
@@ -559,6 +558,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

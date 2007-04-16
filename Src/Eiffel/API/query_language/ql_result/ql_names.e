@@ -393,7 +393,6 @@ feature -- AST node index
 	formal_generic_list: INTEGER is 144
 	constraining_type:  INTEGER is 145
 
-
 feature -- AST node match
 
 	ast_index_table: HASH_TABLE [ARRAY [INTEGER], STRING] is
@@ -590,8 +589,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

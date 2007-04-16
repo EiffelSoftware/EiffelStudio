@@ -197,7 +197,6 @@ feature -- Status reporting
 
 feature -- Basic Operations / Information message
 
-
 	clear_formatter is
 		do
 		end
@@ -260,7 +259,6 @@ feature {NONE} -- Implementation
 	display_additional_info (st: TEXT_FORMATTER) is
 		do
 		end
-
 
 feature {NONE} -- Implementation
 

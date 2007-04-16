@@ -131,7 +131,6 @@ feature -- Output
 			Result := Immediate_value
 		end
 
-
 feature {NONE} -- Constants
 
 	Equal_sign: STRING is " = "

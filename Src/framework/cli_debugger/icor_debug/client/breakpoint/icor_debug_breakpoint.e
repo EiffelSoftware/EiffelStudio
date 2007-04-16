@@ -14,8 +14,7 @@ inherit
 
 create 
 	make_by_pointer
-	
-	
+
 feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_function_breakpoint: ICOR_DEBUG_FUNCTION_BREAKPOINT is

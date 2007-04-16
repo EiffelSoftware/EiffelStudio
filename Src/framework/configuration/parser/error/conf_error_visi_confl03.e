@@ -25,12 +25,10 @@ feature {NONE} -- Initialization
 			text := "Visibility conflict, external class name different: "+a_class+" and "+an_other_class
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -48,7 +48,6 @@ feature -- Status
 	success: BOOLEAN
 			-- Was the last refactoring successful?
 
-
 feature -- Access
 
 	preferences: ERF_PREFERENCES
@@ -268,7 +267,6 @@ feature {NONE} -- undo handling
 		do
 			undo_stack.put (current_actions)
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -78,7 +78,6 @@ feature -- Update
 			end
 		end
 
-
 feature -- Event handling
 
 	validate_value_actions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [like value], BOOLEAN]]
@@ -107,7 +106,6 @@ feature {NONE} -- Agents
 		do
 			force_inherit_actions.call ([value])
 		end
-
 
 feature -- Update
 

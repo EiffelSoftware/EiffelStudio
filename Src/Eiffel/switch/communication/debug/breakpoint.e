@@ -73,8 +73,6 @@ feature {NONE} -- Creation
 			hits_count_condition := bp.hits_count_condition
 		end
 
-
-
 feature -- debug output
 
 	debug_output: STRING is

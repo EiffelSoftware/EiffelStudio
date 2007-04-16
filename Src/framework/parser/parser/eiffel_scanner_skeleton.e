@@ -525,4 +525,3 @@ indexing
 
 end -- class EIFFEL_SCANNER_SKELETON
 
-

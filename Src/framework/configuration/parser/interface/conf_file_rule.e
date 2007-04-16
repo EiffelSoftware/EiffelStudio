@@ -102,7 +102,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-
 feature {CONF_ACCESS} -- Merging
 
 	merge (other: like Current) is

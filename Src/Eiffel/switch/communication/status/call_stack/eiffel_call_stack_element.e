@@ -204,7 +204,6 @@ invariant
 --				not private_locals.is_empty
 --	valid_level: level_in_stack >= 1
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -103,7 +103,6 @@ feature -- Events
 	data_change_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [like value]]]
 			-- Called if `value' changes.
 
-
 feature {NONE} -- GUI elements
 
 	element_container: EV_VERTICAL_BOX

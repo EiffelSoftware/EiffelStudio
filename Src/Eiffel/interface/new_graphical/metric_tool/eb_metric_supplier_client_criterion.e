@@ -37,7 +37,6 @@ feature{NONE} -- Initialization
 			domain_attached: domain /= Void
 		end
 
-
 feature -- Access
 
 	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
@@ -169,6 +168,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

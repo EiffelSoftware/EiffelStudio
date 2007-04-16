@@ -208,4 +208,3 @@ indexing
 
 end -- class DEGREE_3
 
-

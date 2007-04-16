@@ -25,12 +25,10 @@ feature {NONE} -- Initialization
 			text := "Two different configuration files have the same uuid:%N"+a_first_location+"%N"+a_second_location
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

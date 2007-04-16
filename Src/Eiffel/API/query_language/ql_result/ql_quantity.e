@@ -160,7 +160,4 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
-
-
 end

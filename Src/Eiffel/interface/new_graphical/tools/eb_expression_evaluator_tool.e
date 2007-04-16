@@ -50,7 +50,6 @@ inherit
 create
 	make
 
-
 feature {NONE} -- Initialization
 
 	build_interface is

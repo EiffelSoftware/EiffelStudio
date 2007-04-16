@@ -1484,7 +1484,6 @@ end;
 					old_invar_clause := Inv_ast_server.server_item (class_id);
 					invar_clause := Tmp_ast_server.invariant_item (class_id);
 
-
 						-- Incrementality test on invariant clause
 					if invar_clause = Void then
 						invariant_changed := old_invar_clause /= Void

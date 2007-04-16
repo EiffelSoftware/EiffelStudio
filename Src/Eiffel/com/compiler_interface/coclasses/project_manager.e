@@ -270,7 +270,6 @@ feature -- Basic Operations
 			-- attempt to load ace `a_ace_file_name' and create new project in `a_project_directory_path'
 			create_eiffel_project (a_ace_file_name, a_project_directory_path)
 		end
-		
 
 	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
 			-- Create new Eiffel project.

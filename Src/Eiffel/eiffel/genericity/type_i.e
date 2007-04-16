@@ -20,7 +20,6 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
-
 	DEBUG_OUTPUT
 		export
 			{NONE} all

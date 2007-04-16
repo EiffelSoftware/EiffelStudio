@@ -177,4 +177,3 @@ invariant
 	widget_container_attached: widget_container /= Void
 end
 
-

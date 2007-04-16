@@ -154,8 +154,7 @@ feature {NONE} -- Output
 			put_string ("%N    valid_project=")
 			put_bool (project_manager_interface.valid_project)
 		end
-		
-	
+
 feature {NONE} -- Implementation
 
 	retrieve_project (a_filename: STRING) is
@@ -195,8 +194,6 @@ feature {NONE} -- Implementation
 			retried := True
 			retry	
 		end
-		
-		
 
 	add_menu_items is
 			-- add menu items to menu

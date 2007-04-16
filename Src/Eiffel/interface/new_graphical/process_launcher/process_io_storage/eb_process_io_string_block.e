@@ -54,7 +54,6 @@ feature  -- Status reporting
 			Result := string_buffer.count
 		end
 
-
 feature{NONE} -- Implementation
 
 	string_buffer: STRING

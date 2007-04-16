@@ -289,7 +289,6 @@ feature {NONE} -- Implementation dotnet
 	dotnet_value_class_token: INTEGER;
 			-- Class token for the dotnet value
 
-
 	dotnet_value_class_name: STRING is
 			-- Class name for the dotnet value
 		local

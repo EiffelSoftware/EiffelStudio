@@ -537,7 +537,6 @@ feature -- DYNAMIC_LIB Exports processing.
 			f.put_string (out_text)
 		end
 
-
 feature {NONE} -- Implementation
 
 	has_alias_keyword (current_line: STRING; pos: INTEGER): BOOLEAN is

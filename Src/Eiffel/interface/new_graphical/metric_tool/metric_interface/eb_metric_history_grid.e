@@ -288,7 +288,6 @@ feature{NONE} -- Grid item generation
 			result_attached: Result /= Void
 		end
 
-
 	previous_value_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EV_GRID_LABEL_ITEM is
 			-- Previous value item for `a_archive_node'		
 		require
@@ -482,7 +481,6 @@ feature{NONE} -- Item updator
 				a_item.align_text_center
 			end
 		end
-
 
 	update_time_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Update `a_item' with `a_archive_node'.
@@ -953,6 +951,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

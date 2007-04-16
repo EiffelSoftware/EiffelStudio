@@ -231,7 +231,6 @@ feature -- Grind binding
 			set_row_count (l_row_count)
 		end
 
-
 	build_row_table (a_node: EB_TREE_NODE [like row_type]) is
 			-- Build `row_table'.
 		local

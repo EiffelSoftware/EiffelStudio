@@ -12,7 +12,6 @@ class
 inherit
 	ICOR_DEBUG_ENUM_WITH_NEXT [ICOR_DEBUG_FRAME]
 
-
 create 
 	make_by_pointer
 

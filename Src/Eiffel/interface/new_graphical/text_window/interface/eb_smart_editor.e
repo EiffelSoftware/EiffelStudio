@@ -1345,7 +1345,6 @@ feature {NONE} -- Code completable implementation
 			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder)
 		end
 
-
 	select_from_cursor_to_saved is
 			-- Select from cursor position to saved cursor position
 		do

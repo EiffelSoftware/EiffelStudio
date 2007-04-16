@@ -115,7 +115,6 @@ feature -- Properties
 			Result := Interface_names.b_Open
 		end
 
-
 feature {NONE} -- Implementation
 
 	process is

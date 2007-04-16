@@ -81,7 +81,6 @@ feature -- Formatting
 			end
 		end
 
-
 feature -- Status setting
 
 	set_associated_feature (a_feature: E_FEATURE) is

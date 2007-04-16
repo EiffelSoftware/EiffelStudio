@@ -68,7 +68,6 @@ feature {NONE}-- Initialization
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
 
-
 			--editor_drawing_area.set_configurable_target_menu_mode
 			--editor_drawing_area.set_configurable_target_menu_handler (agent handle_context_menu)
 		end

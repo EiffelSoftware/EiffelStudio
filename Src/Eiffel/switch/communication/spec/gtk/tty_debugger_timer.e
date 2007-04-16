@@ -89,7 +89,6 @@ feature {NONE} -- Implementation
 			"c_ev_gtk_callback_marshal_set_is_enabled"
 		end
 
-
 	frozen marshal_timeout_connect (a_delay: INTEGER_32; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER_32
 			-- Call `an_agent' after `a_delay'.
 		external

@@ -1000,7 +1000,6 @@ feature -- Events
 			for_all (agent c_compilation_stop_action)
 		end
 
-
 	on_c_compilation_start is
 			-- Freezing or finalizing has been launched.
 			-- Update the display accordingly, ie gray out all forbidden commands.
@@ -1323,7 +1322,6 @@ feature {NONE} -- Implementation
 				a_dev_window.agents.on_c_compilation_stops
 			end
 		end
-
 
 	for_all (action: PROCEDURE [ANY, TUPLE]) is
 			-- Iterate `action' on every managed window.

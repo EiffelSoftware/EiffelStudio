@@ -7,7 +7,6 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-
 class E_SHOW_ROUTINE_ANCESTORS
 
 inherit

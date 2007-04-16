@@ -229,7 +229,6 @@ feature -- Generation
 			rtud.append (Encoder.generate_type_id_name (class_type_id))
 			rtud.append ("));%N")
 
-
 			buffer.generate_extern_declaration ("void", init_name, <<>>);
 
 			buffer.put_string ("void ");

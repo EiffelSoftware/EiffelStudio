@@ -52,7 +52,6 @@ feature -- Initialisation
 
 feature -- Access
 
-
 	has_node_changed: BOOLEAN
 			-- Has the current call to the visitor created a new node object?
 			--| So far we replace CL_TYPE_AS with FORMAL_AS wherever needed.
@@ -92,9 +91,7 @@ feature {NONE} -- Implementation: Access
 	formal_parameters: ARRAYED_LIST [FORMAL_AS]
 			-- A list of all formal generic type parameters of the class.
 
-
 feature {NONE} -- Visitor implementation
-
 
 	process_formal_as (l_as: FORMAL_AS)
 		do
@@ -159,7 +156,6 @@ feature {NONE} -- Visitor implementation
 						l_generics.forth
 					end
 				end
-
 
 		end
 

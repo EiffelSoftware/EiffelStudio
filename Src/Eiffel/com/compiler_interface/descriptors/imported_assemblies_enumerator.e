@@ -15,7 +15,6 @@ inherit
 
 	IENUM_STUB [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]
 
-
 create 
 	make
 

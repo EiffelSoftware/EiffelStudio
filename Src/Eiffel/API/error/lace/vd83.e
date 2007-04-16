@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			new_value := a_new_value
 		end
 
-
 feature -- Properties
 
 	setting: STRING

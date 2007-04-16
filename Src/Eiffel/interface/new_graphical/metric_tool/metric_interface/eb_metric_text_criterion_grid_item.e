@@ -93,7 +93,6 @@ feature -- Setting
 			result_attached: Result /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	convert_to_data (a_string: like displayed_value): like value is

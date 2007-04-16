@@ -27,7 +27,6 @@ feature{NONE} -- Initialization
 			text_set: text.is_equal (a_msg.twin)
 		end
 
-
 feature -- Access
 
 	code: STRING is
@@ -73,6 +72,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

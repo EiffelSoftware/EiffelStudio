@@ -2062,7 +2062,6 @@ feature {NONE} -- Visitors
 			l_test_label := il_generator.create_label
 			l_end_label := il_generator.create_label
 
-
 			generate_il_line_info (a_node, True)
 			process_pragma (a_node)
 

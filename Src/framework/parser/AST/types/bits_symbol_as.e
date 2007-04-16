@@ -43,7 +43,6 @@ feature -- Roundtrip
 	bit_keyword: KEYWORD_AS
 		-- Keyword "bit" associated with this structure
 
-
 feature -- Attributes
 
 	bits_symbol: ID_AS

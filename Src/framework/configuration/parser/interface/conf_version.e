@@ -222,7 +222,6 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			copyright_set: copyright = a_copyright
 		end
 
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

@@ -28,5 +28,4 @@ feature -- Execution
 			popup_formatter_dialog (window_manager.last_focused_development_window)
 		end
 
-
 end

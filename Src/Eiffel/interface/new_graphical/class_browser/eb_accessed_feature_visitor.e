@@ -200,7 +200,6 @@ feature -- Accessor checking
 			end
 		end
 
-
 	check_accessor_for_assertions (a_source_domain: QL_DOMAIN; a_immediate: BOOLEAN) is
 			-- Check accessors in assertions from `a_source_domain'.
 			-- `a_immediate' indicates if assertions should be immediate or not.
@@ -294,7 +293,6 @@ feature{NONE} -- Implementation/Process
 			check_accessor_for_operators (e_feature, l_as.class_id, "[]", l_as)
 			Precursor (l_as)
 		end
-
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		local

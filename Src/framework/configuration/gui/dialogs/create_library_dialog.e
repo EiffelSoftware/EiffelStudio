@@ -247,7 +247,6 @@ feature {NONE} -- Actions
 			is_ok_last_library: is_ok implies last_group /= Void
 		end
 
-
 feature {NONE} -- Implementation
 
 	name_from_location (a_location: STRING_8): STRING_8 is

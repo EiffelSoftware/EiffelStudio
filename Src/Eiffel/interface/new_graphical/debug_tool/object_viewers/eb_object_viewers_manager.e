@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			create {OBJECT_BROWSER_VIEWER_BOX} v.make (Current)
 			add_viewer (v, Void)
 
-
 			build_interface
 		end
 

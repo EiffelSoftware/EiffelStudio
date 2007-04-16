@@ -113,7 +113,6 @@ feature {EB_SHARED_PREFERENCES} -- Dotnet specific
 			Result := dotnet_debugger_preference.value
 		end
 
-
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE

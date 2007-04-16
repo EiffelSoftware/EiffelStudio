@@ -179,7 +179,6 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `ok_button'.
 		deferred
 		end
-	
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

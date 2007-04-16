@@ -1000,7 +1000,6 @@ feature {NONE} -- Implementation
 					-- Should sorting be performed within the last sort?
 				sort_within_last := ev_application.ctrl_pressed
 
-
 				sorted_tuple ?= output_grid.column (displayed_column_indexes.item (column_index)).data
 				check
 					sorted_tuple_not_void: sorted_tuple /= Void
@@ -1015,7 +1014,6 @@ feature {NONE} -- Implementation
 					ascending := sorted_tuple.boolean_item (2)
 					sorted_tuple.put_boolean (not ascending, 2)
 				end
-
 
 					-- Now perform actual sort on data.
 				if tree_structure_enabled then
@@ -1617,10 +1615,8 @@ feature {NONE} -- Implementation
 			query_grid_row.set_is_expanded (False)
 		end
 
-
 	last_x, last_y: INTEGER
 		-- Last x and y position relative to an item within `output_grid'.
-
 
 feature -- Update
 

@@ -551,7 +551,5 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
 end -- class EB_METRIC_ARCHIVE_RESULT_AREA
-
 

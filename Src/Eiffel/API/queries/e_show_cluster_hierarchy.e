@@ -107,7 +107,6 @@ feature {NONE} -- Implementation
 			text_formatter.add_new_line
 		end
 
-
 	display_group (a_group: QL_GROUP; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN) is
 			-- Display `a_group' in `text_formatter' starting with `a_tab_count' tabs.
 			-- If `a_is_class_displayed' is True, display classes in `a_group'.

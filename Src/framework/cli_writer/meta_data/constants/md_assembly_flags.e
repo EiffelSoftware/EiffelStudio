@@ -29,7 +29,6 @@ feature -- Access
 			-- setting on read; some implementations might use this bit to indicate
 			-- that a CIL-to-native-code compiler should not generate optimized code.
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -131,7 +131,6 @@ feature {NONE} -- Output
 			end
 			put_string ("%N  End%N")
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -167,7 +166,6 @@ feature {NONE} -- Implementation
 			assembly_public_key_token := assembly_properties_interface.assembly_public_key_token
 			cached_called := True
 		end
-		
 
 	add_menu_items is
 			-- add menu items to menu

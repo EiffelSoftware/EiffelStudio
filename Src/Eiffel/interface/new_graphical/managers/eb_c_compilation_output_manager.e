@@ -176,7 +176,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-
 feature {NONE} -- Implementation
 
 	welcome_info: TEXT_FORMATTER is

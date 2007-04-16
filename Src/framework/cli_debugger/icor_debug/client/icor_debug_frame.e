@@ -14,7 +14,6 @@ inherit
 
 create 
 	make_by_pointer
-	
 
 feature {ICOR_EXPORTER} -- QueryInterface
 

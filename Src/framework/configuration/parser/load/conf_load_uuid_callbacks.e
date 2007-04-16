@@ -37,7 +37,6 @@ feature -- Callbacks
 			end
 		end
 
-
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Start of attribute.
 		do

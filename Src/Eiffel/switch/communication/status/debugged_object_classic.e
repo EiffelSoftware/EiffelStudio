@@ -100,7 +100,6 @@ feature -- Properties
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

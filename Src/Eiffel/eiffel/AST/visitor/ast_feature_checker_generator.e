@@ -7731,7 +7731,6 @@ feature {NONE} -- Implementation: Error handling
 			end
 		end
 
-
 	constrained_type_fixed (a_type: TYPE_A): TYPE_A is
 		require
 			not_multi_constraint: not a_type.is_multi_constrained_formal (context.current_class)

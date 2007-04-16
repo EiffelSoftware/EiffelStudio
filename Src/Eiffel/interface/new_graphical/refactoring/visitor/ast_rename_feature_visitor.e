@@ -362,7 +362,6 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-
 	process_break_as (l_as: BREAK_AS) is
 			-- Process breaks which could be comments.
 		do
@@ -372,7 +371,6 @@ feature {NONE} -- Visitor implementation
 			end
 			Precursor (l_as)
 		end
-
 
 	process_string_as (l_as: STRING_AS) is
 		do
@@ -391,7 +389,6 @@ feature {NONE} -- Visitor implementation
 			end
 			Precursor (l_as)
 		end
-
 
 feature {NONE} -- Implementation
 

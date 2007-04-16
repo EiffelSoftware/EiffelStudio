@@ -392,7 +392,6 @@ feature -- Notification
 			set_is_branch_id_used (not l_is_single_branch_id)
 		end
 
-
 feature -- Visiability
 
 	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
@@ -626,6 +625,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

@@ -239,7 +239,6 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (cmd.new_mini_sd_toolbar_item)
 			copy_call_stack_cmd := cmd
 
-
 			create set_stack_depth_cmd.make
 			set_stack_depth_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.debugger_callstack_depth_icon)
 			set_stack_depth_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.debugger_callstack_depth_icon_buffer)

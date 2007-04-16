@@ -134,7 +134,6 @@ feature -- Element change
 			not_undo_managed: not undo_managed
 		end
 
-
 	set_changed_text (a_text: STRING) is
 			-- Set the changed text.
 		require
@@ -210,7 +209,6 @@ feature -- Removal
 				discard_undo
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -28,7 +28,6 @@ feature -- Properties
 			deferred_classes := a_deferred_class_list
 		end
 
-
 	deferred_classes: LIST[CLASS_C]
 			-- List of deferred classes
 
@@ -52,7 +51,6 @@ print_name (a_text_formatter: TEXT_FORMATTER) is
 								end (a_text_formatter, ?))
 			a_text_formatter.add_new_line
 		end;
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

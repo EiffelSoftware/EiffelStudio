@@ -73,7 +73,6 @@ feature -- Access
 			end
 		end
 
-
 feature	{NONE}-- Implementation
 
 	enclosing_feature: FEATURE_I

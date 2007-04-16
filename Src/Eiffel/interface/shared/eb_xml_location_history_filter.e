@@ -78,7 +78,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-
 feature -- Setting
 
 	set_history_connector (a_connector: like history_connector) is

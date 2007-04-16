@@ -494,7 +494,6 @@ feature -- Data change
 			end
 		end
 
-
 feature {NONE} -- Button Actions
 
 	on_enable_profiles_clicked is
@@ -758,7 +757,6 @@ feature {NONE} -- Profile actions
 			end
 		end
 
-
 	add_title_to_row (p: like profile_from_row; a_row: EV_GRID_ROW) is
 			-- Add title items to `a_row' for profile `p'
 		require
@@ -830,7 +828,6 @@ feature {NONE} -- Profile actions
 				r := r + 1
 			end
 		end
-
 
 feature {NONE} -- Environment queries
 

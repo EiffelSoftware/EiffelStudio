@@ -43,7 +43,6 @@ feature -- Initialization
 			my_assembly := md_emit.define_assembly (create {UNI_STRING}.make ("manu_assembly"),
 				0, md_assembly_info, Void)
 
-
 			md_assembly_info.set_major_version (1)
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
@@ -133,7 +132,6 @@ feature -- Initialization
 				sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			method_writer.write_duplicate_body (my_meth, my_meth2)
-
 
 			my_meth2 := md_emit.define_method (create {UNI_STRING}.make ("test_rescue"),
 				my_type,

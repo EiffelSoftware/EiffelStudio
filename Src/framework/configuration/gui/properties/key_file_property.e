@@ -34,7 +34,6 @@ feature -- Update
 			il_version_set: il_version = a_version
 		end
 
-
 feature {NONE} -- Actions
 
 	dialog_ok (a_dial: EV_FILE_OPEN_DIALOG) is

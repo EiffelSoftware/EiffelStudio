@@ -1000,7 +1000,6 @@ feature {NONE} -- Actions
 				l_filename.substring_index (config_extension, 1) = l_filename.count - 2 and then
 				l_filename.item (l_filename.count - 3) = '.'
 
-
 				-- Try to see if we can load the project.
 				-- If not, it is either an incorrect configuration file
 			create l_factory

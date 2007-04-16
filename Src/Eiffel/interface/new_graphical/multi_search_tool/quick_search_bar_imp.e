@@ -143,7 +143,6 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_4.compute_minimum_size
 		end
 
-
 feature -- Access
 
 	keyword_field: EV_COMBO_BOX

@@ -113,7 +113,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.
 		do

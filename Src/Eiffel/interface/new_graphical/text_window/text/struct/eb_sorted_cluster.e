@@ -39,7 +39,6 @@ feature -- Statusupdate
 			initialized: is_initialized
 		end
 
-
 	initialize is
 			-- Initialize current
 		require
@@ -200,7 +199,6 @@ feature -- Statusupdate
 		ensure
 			initialized: is_initialized
 		end
-
 
 feature -- Access
 
@@ -373,7 +371,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
 
 	generate_subfolder_mapping is
 			-- Generate subfolder mapping out of `a_classes'.

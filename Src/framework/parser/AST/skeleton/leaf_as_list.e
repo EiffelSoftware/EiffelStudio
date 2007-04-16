@@ -165,7 +165,6 @@ feature -- Status update
 			generated := a_timestamp
 		end
 
-
 feature -- Item searching
 
 	item_by_start_position (start_pos: INTEGER): LEAF_AS is
@@ -586,7 +585,6 @@ feature -- Modifier operation
 		ensure
 			Result_set: Result = modifier_list.i_th (i)
 		end
-
 
 	remove_last_modifier is
 			-- Remove last registered modifier.

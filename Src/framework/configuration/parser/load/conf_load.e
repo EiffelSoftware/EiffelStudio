@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			factory_set: factory = a_factory
 		end
 
-
 feature -- Status
 
 	is_error: BOOLEAN
@@ -60,7 +59,6 @@ feature -- Status
 		ensure
 			Result_not_void: Result /= Void
 		end
-
 
 feature -- Access
 
@@ -117,7 +115,6 @@ feature -- Basic operation
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
 		end
-
 
 feature {NONE} -- Implementation
 

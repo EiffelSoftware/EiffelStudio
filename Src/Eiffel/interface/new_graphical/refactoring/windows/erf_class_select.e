@@ -131,7 +131,6 @@ feature -- Access
 			first_item_equal_selected: Result.first.is_equal (selected_class)
 		end
 
-
 feature -- Element change
 
 	set_classes (a_classes: LIST [CLASS_C]) is
@@ -177,7 +176,6 @@ feature -- Element change
 			class_list.do_all (agent {EV_LIST_ITEM}.enable_select)
 		end
 
-
 feature {NONE} -- Implementation
 
 	class_list: EV_LIST
@@ -209,7 +207,6 @@ feature {NONE} -- Implementation
 		do
 			class_list.set_focus
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

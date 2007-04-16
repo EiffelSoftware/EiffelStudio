@@ -130,7 +130,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			set: constraint_class = a_constraint_class
 		end
 
-
 	set_feature_name (a_feature_name: STRING_8)
 			-- Set feature_name to `a_feature_name'.
 		do

@@ -61,7 +61,6 @@ feature
 			end
 		end;
 
-
 	server_item (an_id: INTEGER): CLASS_INFO is
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.

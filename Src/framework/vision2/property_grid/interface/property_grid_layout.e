@@ -97,5 +97,4 @@ feature {NONE} -- Onces for global setting of layout values.
 			create Result
 		end
 
-
 end

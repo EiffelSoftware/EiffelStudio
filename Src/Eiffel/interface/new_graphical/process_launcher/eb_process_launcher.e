@@ -76,7 +76,6 @@ feature -- Launching parameters setting
 			is_hidden_set: is_hidden = h
 		end
 
-
 	set_buffer_size (size: INTEGER) is
 			-- Set buffer_size to `size'
 		require

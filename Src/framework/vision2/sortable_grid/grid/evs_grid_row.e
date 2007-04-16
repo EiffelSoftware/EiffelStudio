@@ -34,7 +34,6 @@ feature -- Grid row
 			data_set: grid_row.data = Current
 		end
 
-
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -66,6 +65,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

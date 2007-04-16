@@ -122,8 +122,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		-- Three texts comprising the cluster, class and feature text to
 		-- be displayed in the first column of a grid.
 		-- Only used if `type' is 4.
-	
-	
+
 	internal_cluster_text_width, internal_class_text_width, internal_feature_text_width, internal_text_width: INTEGER
 		-- Internal values of string widths to enable buffered access.
 	

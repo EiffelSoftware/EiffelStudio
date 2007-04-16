@@ -141,8 +141,7 @@ feature -- Value
 		do
 			Result := bon_generics_color_preference.value
 		end
-		
-			
+
 		-- BON Client supplier link
 	bon_client_label_font: EV_IDENTIFIED_FONT is
 			-- 
@@ -167,7 +166,6 @@ feature -- Value
 		do
 			Result := bon_client_line_width_preference.value
 		end
-		
 
 		-- BON Cluster
 	bon_cluster_line_color: EV_COLOR is
@@ -199,8 +197,7 @@ feature -- Value
 		do
 			Result := bon_cluster_name_font_preference.value
 		end
-		
-	
+
 		-- BON Inheritance link
 	bon_inheritance_color: EV_COLOR is
 			-- 
@@ -213,8 +210,7 @@ feature -- Value
 		do
 			Result := bon_inheritance_line_width_preference.value
 		end
-		
-	
+
 		-- UML Class
 	uml_class_name_font: EV_IDENTIFIED_FONT is
 			-- 
@@ -287,8 +283,7 @@ feature -- Value
 		do
 			Result := uml_class_feature_section_color_preference.value
 		end
-		
-	
+
 		-- UML Client supplier link
 	uml_client_line_width: INTEGER is
 			-- 
@@ -313,8 +308,7 @@ feature -- Value
 		do
 			Result := uml_client_label_font_preference.value
 		end
-		
-	
+
 		-- UML Cluster
 	uml_cluster_line_color: EV_COLOR is
 			-- 
@@ -345,8 +339,7 @@ feature -- Value
 		do
 			Result := uml_cluster_name_font_preference.value
 		end
-		
-	
+
 		-- UML Inheritance link
 	uml_inheritance_line_width: INTEGER is
 			-- 

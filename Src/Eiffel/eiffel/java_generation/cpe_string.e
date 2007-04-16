@@ -65,8 +65,7 @@ feature -- Access
 feature {NONE} -- Implementation
 			
 	bc: JVM_BYTE_CODE
-			
-			
+
 invariant
 			
 	closed_implies_bc_exists: is_closed implies bc /= Void
@@ -104,6 +103,4 @@ indexing
 		]"
 
 end
-
-
 

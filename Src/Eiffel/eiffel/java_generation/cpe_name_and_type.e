@@ -104,10 +104,3 @@ indexing
 
 end
 
-
-
-
-
-
-
-

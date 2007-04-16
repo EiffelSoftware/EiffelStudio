@@ -353,7 +353,6 @@ feature -- Obtaining Properties of a Specified Object
 	last_get_field_dwattr: INTEGER
 			-- Last `get_field_props' property
 
-
 feature -- Status
 
 	is_valid_token (a_tok: INTEGER): BOOLEAN is

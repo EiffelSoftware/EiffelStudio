@@ -6,7 +6,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	DBG_EXPRESSION_B
 

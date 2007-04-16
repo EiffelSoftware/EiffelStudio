@@ -1874,7 +1874,6 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Editor: STRING is						"Editor"
 	to_Debugging_tool: STRING is				"Debugging"
 
-
 	to_Output_tool: STRING is					"Output"
 	to_Diagram_tool: STRING is					"Diagram"
 	to_Class_tool: STRING is					"Class"
@@ -2183,5 +2182,4 @@ indexing
 		]"
 
 end -- class INTERFACE_NAMES
-
 

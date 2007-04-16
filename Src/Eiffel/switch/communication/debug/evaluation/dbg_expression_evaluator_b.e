@@ -399,7 +399,6 @@ feature {NONE} -- EXPR_B evaluation
 			notify_error_not_implemented (a_tuple_const_b.generator + Cst_error_not_yet_ready)
 		end
 
-
 	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C) is
 		require
 			a_value_i_not_void: a_value_i /= Void

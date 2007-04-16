@@ -1166,7 +1166,6 @@ feature -- Call stack related
 					l_module := l_func.get_module
 					l_module_name := l_module.get_name
 
-
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)
 					l_module_display.prepend_string (" ..")

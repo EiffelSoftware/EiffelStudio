@@ -177,7 +177,6 @@ feature -- Dynamic Library file
 
 									buffer.put_string ("%N ***************************/")
 
-
 									-- GENERATION OF THE C-CODE
 
 									if args /=Void then
@@ -295,7 +294,6 @@ feature -- Dynamic Library file
 											argument_names.forth
 										end
 									end
-
 
 										-- CALCULATE THE MAIN OBJECT.
 									buffer.put_string ("%N%T")
@@ -543,7 +541,6 @@ feature -- Plug and Makefile file
 				buffer.put_string ("%Nlong *eif_area_table = (long *)0;%N%
 									%long *eif_lower_table = (long *)0;%N")
 			end
-
 
 			if final_mode then
 				init_name :=

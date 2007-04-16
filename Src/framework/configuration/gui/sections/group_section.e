@@ -153,7 +153,6 @@ feature {NONE} -- Implementation
 			toolbar.remove_button.enable_sensitive
 		end
 
-
 invariant
 	group_not_void: group /= Void
 

@@ -79,7 +79,6 @@ feature -- Interactivity
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
 	associated_window: EB_DEVELOPMENT_WINDOW;

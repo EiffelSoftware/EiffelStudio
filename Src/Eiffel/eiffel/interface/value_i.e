@@ -106,7 +106,6 @@ feature -- Status report
 			is_numeric_definition: is_integer or is_real_32 or is_real_64
 		end
 
-
 	is_propagation_equivalent (other: like Current): BOOLEAN is
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do

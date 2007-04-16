@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			precompiled_path_set: a_path.is_equal (precompiled_path)
 		end
 
-
 feature -- Properties
 
 	code: STRING is "VIOP"

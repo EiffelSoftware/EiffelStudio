@@ -1309,7 +1309,6 @@ feature -- Utilities
 			result_attached: Result /= Void
 		end
 
-
 	coloned_string (a_string: STRING_GENERAL; a_first_letter_upper: BOOLEAN): STRING_GENERAL is
 			-- String which is `a_string' suffixed with a colon
 			-- If `a_first_letter_upper' is True, make sure the first letter of returned string is in upper case (if current locale permits).
@@ -1389,7 +1388,6 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end
 

@@ -1173,7 +1173,6 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-
 invariant
 	parent_grid_not_void: parent_grid /= Void
 	parent_grid_related_to_attached_row: (row /= Void and then row.parent /= Void) implies parent_grid = row.parent

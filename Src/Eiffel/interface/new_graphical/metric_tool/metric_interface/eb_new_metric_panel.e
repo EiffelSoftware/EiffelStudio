@@ -710,6 +710,5 @@ indexing
                          Customer support http://support.eiffel.com
                 ]"
 
-
 end -- class EB_NEW_METRIC_PANEL
 

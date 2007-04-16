@@ -148,7 +148,6 @@ feature {NONE} -- Initialization
 			toggle_auto_behavior_cmd.enable_sensitive
 			mini_toolbar.extend (toggle_auto_behavior_cmd.new_mini_sd_toolbar_item)
 
-
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.new_expression_icon)
 			create_expression_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.new_expression_icon_buffer)

@@ -114,7 +114,6 @@ feature -- Status report
 			end
 		end
 
-
 	is_focus_back_needed: BOOLEAN is
 			-- Should focus be set back after code completion?
 		do
@@ -419,6 +418,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

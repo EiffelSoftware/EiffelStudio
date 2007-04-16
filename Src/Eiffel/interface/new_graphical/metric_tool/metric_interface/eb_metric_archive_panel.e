@@ -898,8 +898,6 @@ feature{NONE} -- Actions
 			update_ui
 		end
 
-
-
 feature{NONE} -- UI Update
 
 	update_ui is

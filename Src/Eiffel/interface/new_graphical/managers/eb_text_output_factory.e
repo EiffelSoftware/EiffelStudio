@@ -97,8 +97,6 @@ feature -- Access
 			st.add_new_line
 		end
 
-
-
 	welcome_info (a_formatter: TEXT_FORMATTER) is
 			-- Information text on how to launch $EiffelGraphicalCompiler$.
 		do

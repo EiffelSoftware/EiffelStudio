@@ -129,5 +129,3 @@ indexing
 
 end -- class EB_IMPLEMENTERS_FORMATTER
 
-
-

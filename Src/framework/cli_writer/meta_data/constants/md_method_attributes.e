@@ -46,7 +46,6 @@ feature -- Method attributes
 	hide_by_signature: INTEGER_16 is 0x0080
 			-- Method hides by name+sig, else just by name.
 
-
 	vtable_layout_mask: INTEGER_16 is 0x0100
 			-- Use this mask to retrieve vtable attributes.
 

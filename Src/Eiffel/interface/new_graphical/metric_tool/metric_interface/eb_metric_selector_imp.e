@@ -87,7 +87,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	metric_selection_toolbar, move_unit_toolbar: EV_TOOL_BAR

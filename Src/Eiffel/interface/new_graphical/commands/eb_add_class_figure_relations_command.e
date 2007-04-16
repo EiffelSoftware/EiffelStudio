@@ -230,7 +230,6 @@ feature -- Basic operations
 			tool.projector.full_project
 		end
 
-
 	add_and_position_classes (a_class_list: ARRAYED_LIST [ES_CLASS]; a_class_list_list: ARRAYED_LIST [ARRAYED_LIST [ES_CLASS]]) is
 			--
 		require

@@ -202,7 +202,6 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-
 feature{NONE} -- Evaluate
 
 	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN is
@@ -250,8 +249,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

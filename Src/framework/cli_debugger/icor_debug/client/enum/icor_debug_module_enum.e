@@ -48,7 +48,6 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 --		end
 
-
 feature {NONE} -- Implementation
 
 	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is

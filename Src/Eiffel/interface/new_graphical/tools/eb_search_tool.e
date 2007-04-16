@@ -456,7 +456,6 @@ feature {NONE} -- Implementation
 			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
 			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
 
-
 			create vbox
 			vbox.set_border_width (5)
 			vbox.extend (case_sensitive_button)
@@ -506,7 +505,6 @@ feature {NONE} -- Implementation
 --		--	fr.set_style (4)
 --			widget.extend (hb)
 --			widget.disable_item_expand (hb)
-
 
 	--		create frm
 	--		frm.set_text (Interface_names.l_Options)

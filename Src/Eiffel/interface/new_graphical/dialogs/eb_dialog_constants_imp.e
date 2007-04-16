@@ -61,7 +61,6 @@ feature -- Access
 			Result := 2
 		end
 
-
 feature -- Access
 
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to

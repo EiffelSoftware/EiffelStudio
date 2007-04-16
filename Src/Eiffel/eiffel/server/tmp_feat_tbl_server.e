@@ -30,7 +30,6 @@ feature
 			create Result.make
 		end			
 
-
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once

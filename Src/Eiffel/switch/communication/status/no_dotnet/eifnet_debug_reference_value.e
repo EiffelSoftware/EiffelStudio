@@ -12,7 +12,6 @@ class
 inherit
 	ABSTRACT_REFERENCE_VALUE
 
-
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address

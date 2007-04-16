@@ -651,4 +651,3 @@ indexing
 
 end -- class DEGREE_4
 
-

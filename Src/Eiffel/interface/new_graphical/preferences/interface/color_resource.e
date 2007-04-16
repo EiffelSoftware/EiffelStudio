@@ -137,8 +137,7 @@ feature -- Status setting
 			do
 				is_voidable := True
 			end
-		
-			
+
 feature {NONE} -- Implementation
 
 	r, g, b: INTEGER

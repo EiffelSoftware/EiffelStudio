@@ -46,7 +46,6 @@ feature -- Access
 	post_fix: STRING is "cli"
 			-- String symbol of the command, used as an extension when saving.
 
-
 feature -- Formatting
 
 	format is

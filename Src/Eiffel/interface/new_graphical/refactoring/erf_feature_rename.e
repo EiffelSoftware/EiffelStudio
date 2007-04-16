@@ -66,8 +66,6 @@ feature {ERF_CHK_FEATURE_RENAME} -- Element Change from check
 			recursive_descendants_set: recursive_descendants = a_recursive_descendants
 		end
 
-
-
 feature {NONE} -- Implementation
 
 	preferences: ERF_FEATURE_RENAME_PREFERENCES

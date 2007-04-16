@@ -218,7 +218,6 @@ feature -- Access queries
 			class_options_32_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-
 	get_class_options (a_class: STRING): CONF_OPTION is
 			-- Get the options for `a_class'.
 		local
@@ -342,7 +341,6 @@ feature -- Access queries
 		deferred
 		end
 
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -464,7 +462,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		ensure
 			added: internal_class_options.has (a_class) and then internal_class_options.item (a_class) = a_option
 		end
-
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 

@@ -343,7 +343,6 @@ feature {NONE} -- Implementation
 	user_selected: BOOLEAN
 			-- Was last selection made by the user?
 
-
 feature {NONE} -- Events
 
 	on_select is
@@ -400,7 +399,6 @@ feature {NONE} -- Events
 		once
 			Result := interface_names.l_history_discarded_string
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

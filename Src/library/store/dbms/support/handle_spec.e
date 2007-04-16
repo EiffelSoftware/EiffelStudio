@@ -15,7 +15,7 @@ feature -- Access
 		do
 			Result := db_spec_impl.item
 		ensure
-			not_void: Result /= Void 
+			not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

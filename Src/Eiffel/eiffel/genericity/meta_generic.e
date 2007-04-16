@@ -52,7 +52,6 @@ feature -- Setters
 
 		end
 
-
 feature -- Comparison
 
 	same_as (other: like Current): BOOLEAN is

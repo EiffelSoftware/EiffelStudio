@@ -106,8 +106,3 @@ indexing
 
 end
 
-
-
-
-
-

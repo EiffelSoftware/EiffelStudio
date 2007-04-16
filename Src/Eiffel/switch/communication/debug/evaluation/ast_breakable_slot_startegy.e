@@ -2117,7 +2117,6 @@ feature {NONE} -- Expression visitor
 
 feature {NONE} -- Implementation: helpers
 
-
 	format_compound (lc: EIFFEL_LIST [INSTRUCTION_AS]) is
 		require
 			lc_not_void: lc /= Void
@@ -2544,7 +2543,6 @@ feature {NONE} -- Implementation: helpers
 					l_count := 1
 				end
 				create l_argtypes.make (1, l_count)
-
 
 					-- Create `l_oargtypes'. But first we need to find the `l_count', number
 					-- of open operands.

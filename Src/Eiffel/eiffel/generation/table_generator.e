@@ -55,7 +55,6 @@ feature -- Access
 	Size_limit: INTEGER is 20000;
 			-- Limit of size for each generated file
 
-
 	new_file: INDENT_FILE is
 			-- New file for generation
 		local

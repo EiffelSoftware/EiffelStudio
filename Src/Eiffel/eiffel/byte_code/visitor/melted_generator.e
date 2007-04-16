@@ -1383,7 +1383,6 @@ feature {NONE} -- Visitors
 			ba.append_raw_string (a_node.value)
 		end
 
-
 	process_strip_b (a_node: STRIP_B) is
 			-- Process `a_node'.
 		local
@@ -1914,7 +1913,6 @@ feature {NONE} -- Implementation
 				ba.append_short_integer (-1)
 			end
 		end
-
 
 	generate_melted_debugger_hook is
 			-- Record breakable point (standard)

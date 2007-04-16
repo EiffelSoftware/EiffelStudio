@@ -278,7 +278,6 @@ feature {NONE} -- Initialize
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
 
-
 			create vbox
 			vbox.extend (scope_list)
 			scope_list.set_minimum_width (min_width_of_keyword_field)

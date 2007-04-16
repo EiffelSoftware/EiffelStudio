@@ -99,7 +99,6 @@ feature {NONE} -- Initialization
 			Eiffel_project.manager.close_agents.extend (project_close_agent)
 			develop_window.window_manager.add_observer (Current)
 
-
 			create a_class_graph.make (Current)
 			create empty_world.make (a_class_graph, Current)
 			create world_cell.make_with_world_and_tool (empty_world, Current)
@@ -448,8 +447,6 @@ feature {NONE} -- Initialization
 			widget.extend (v_box)
 			widget.disable_item_expand (v_box)
 
-
-
 			create view_menu
 
 			create view_label.make_with_text (interface_names.l_view)
@@ -475,7 +472,6 @@ feature {NONE} -- Initialization
 			view_bar.disable_item_expand (view_menu)
 
 		end
-
 
 	show_view_menu is
 			-- Display "View" menu.
@@ -658,7 +654,6 @@ feature -- Access
 
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
-
 
 	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `area'.
@@ -1098,7 +1093,6 @@ feature -- Element change
 				force_directed_layout.set_world (l_cluster_view)
 				graph := l_cluster_graph
 
-
 				if is_force_directed_used then
 					disable_force_directed
 				end
@@ -1198,7 +1192,6 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 			bon_cluster: BON_CLUSTER_DIAGRAM
 			f: RAW_FILE
 		do
-
 
 			if is_force_directed_used then
 				disable_force_directed

@@ -169,4 +169,3 @@ indexing
 
 end -- class EB_HOMONYMS_FORMATTER
 
-

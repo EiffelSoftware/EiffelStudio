@@ -567,4 +567,3 @@ indexing
 
 end -- class EB_DEVELOPMENT_WINDOW_PREFERENCES
 
-

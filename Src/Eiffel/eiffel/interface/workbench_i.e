@@ -116,7 +116,6 @@ feature -- Update
 			not_is_changed: not is_changed
 		end
 
-
 feature -- Update from retrieved object.
 
 	update_from_retrieved_project (other: like Current) is

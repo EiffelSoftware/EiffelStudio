@@ -424,7 +424,6 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-
 	number_of_suppliers (a_class: CLASS_I; depth: INTEGER): INTEGER is
 			-- Add suppliers of `a_class' until `depth' is reached.
 		require

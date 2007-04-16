@@ -50,7 +50,6 @@ feature -- Basic Operations
 			display_menu
 			get_menu_selection
 		end
-		
 
 	display_menu is
 			-- display menu

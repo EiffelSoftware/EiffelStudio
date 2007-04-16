@@ -153,7 +153,6 @@ feature {NONE} -- Implementation
 	key_pressed_action: PROCEDURE [ANY, TUPLE [EV_KEY]];
 			-- Action to be perform on key pressed.
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -934,7 +934,6 @@ feature {NONE} -- Statistic
 			bring_to_front (statistic_box)
 		end
 
-
 feature {NONE} -- Implementation
 
 	remove_view_from_file (ptf: RAW_FILE; a_name: STRING) is

@@ -129,7 +129,6 @@ feature	-- Basic operations
 			mutex.unlock
 		end
 
-
 	wipe_out is
 			-- Wipe out current storage.
 		do
@@ -207,7 +206,6 @@ feature{NONE} -- Implementation
 
 	initial_capacity: INTEGER is 1048576
 			-- Initial capacity
-
 
 invariant
 	data_list_not_null: data_list /= Void

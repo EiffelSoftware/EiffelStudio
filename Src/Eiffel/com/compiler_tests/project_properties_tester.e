@@ -213,8 +213,7 @@ feature {NONE} -- Implementation
 		end
 		
 	menu: CONSOLE_MENU
-		
-		
+
 invariant
 	non_void_menu: menu /= Void
 

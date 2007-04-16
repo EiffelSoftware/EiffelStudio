@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 			create {QL_CLASS_CLIENT_RELATION_CRI}Result.make (l_class.wrapped_domain, browser.normal_referenced_button.is_selected, browser.syntactical_button.is_selected, False)
 		end
 
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

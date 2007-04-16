@@ -101,7 +101,6 @@ feature -- Basic Operation
 			information.set_runtime_information_type (profiler_list.text)
 		end
 
-
 feature {NONE} -- Implementation
 
 	display_state_text is

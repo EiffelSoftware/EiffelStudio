@@ -177,7 +177,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	draw_bon_client_supplier (group: BON_CLIENT_SUPPLIER_FIGURE) is
 			-- Draw `group'.
 		require -- from EV_MODEL_PROJECTION_ROUTINES
@@ -315,7 +314,6 @@ feature {NONE} -- Implementation
 		do
 			d := drawable
 			d.set_foreground_color (line.foreground_color)
-
 
 			if line.point_count > 2 then
 				point_array := create {EV_COORDINATE_ARRAY}.make_from_area (line.point_array)

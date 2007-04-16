@@ -146,7 +146,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
 	build_partial is
@@ -207,7 +206,6 @@ feature {NONE} -- Shared instances
 		once
 			create Result
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

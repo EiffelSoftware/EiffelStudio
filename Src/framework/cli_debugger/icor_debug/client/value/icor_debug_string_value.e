@@ -19,7 +19,6 @@ inherit
 create
 	make_by_pointer
 
-
 feature {NONE} -- Initialization
 
 	init_icor is

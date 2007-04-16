@@ -91,7 +91,6 @@ feature -- Element change
 			end
 		end
 
-
 	apply_right_angles is
 			-- Apply right angles to all links in `links' and all elements in `Current'.
 		local

@@ -3,7 +3,6 @@ indexing
 	status: "See notice at end of class."
 class SHARED_WORKBENCH
 
-
 inherit
 	SHARED_COMPILATION_MODES
 

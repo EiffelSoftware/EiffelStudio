@@ -23,9 +23,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-
 feature {NONE} -- Implementation
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -53,7 +53,6 @@ feature -- enum CorDebugStepReason
 			"STEP_RETURN"
 		end
 
-
 	frozen enum_cor_debug_step_reason__STEP_CALL: INTEGER is
 			-- that stepping continued normally, at the start of a newly called function.
 		external
@@ -61,7 +60,6 @@ feature -- enum CorDebugStepReason
 		alias
 			"STEP_CALL"
 		end
-
 
 	frozen enum_cor_debug_step_reason__STEP_EXCEPTION_FILTER: INTEGER is
 			-- that control passed to an exception filter after an exception was thrown.
@@ -71,7 +69,6 @@ feature -- enum CorDebugStepReason
 			"STEP_EXCEPTION_FILTER"
 		end
 
-
 	frozen enum_cor_debug_step_reason__STEP_EXCEPTION_HANDLER: INTEGER is
 			-- that control passed to an exception handler after an exception was thrown.
 		external
@@ -79,7 +76,6 @@ feature -- enum CorDebugStepReason
 		alias
 			"STEP_EXCEPTION_HANDLER"
 		end
-
 
 	frozen enum_cor_debug_step_reason__STEP_INTERCEPT: INTEGER is
 			-- that control passed to an interceptor.
@@ -89,7 +85,6 @@ feature -- enum CorDebugStepReason
 			"STEP_INTERCEPT"
 		end
 
-
 	frozen enum_cor_debug_step_reason__STEP_EXIT: INTEGER is
 			-- that the thread exited before the step completed.
 			-- No more stepping can be performed with the stepper
@@ -98,7 +93,6 @@ feature -- enum CorDebugStepReason
 		alias
 			"STEP_EXIT"
 		end
-
 
 feature -- To String
 

@@ -52,10 +52,8 @@ feature -- Access
 	found_pattern_length: INTEGER
 			-- length of the found pattern in text
 
-
 	lengths: ARRAYED_LIST [INTEGER]
 			-- lengths of found patterns in text
-
 
 feature -- Status setting
 

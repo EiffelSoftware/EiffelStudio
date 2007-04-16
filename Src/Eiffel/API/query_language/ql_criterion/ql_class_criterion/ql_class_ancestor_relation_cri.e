@@ -87,7 +87,6 @@ feature -- Access
 			--  3. B, C are parents of D
 			--  4. A are indirect parent of D
 
-
 feature -- Status report
 
 	is_ancestor_relation_valid (a_relation: INTEGER): BOOLEAN is
@@ -301,8 +300,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

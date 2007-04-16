@@ -156,7 +156,6 @@ feature -- Roundtrip
 			class_keyword_set: class_keyword = k_as
 		end
 
-
 	set_alias_keyword (k_as: KEYWORD_AS) is
 			-- Set `alias_keyword' with `k_as'.
 		do

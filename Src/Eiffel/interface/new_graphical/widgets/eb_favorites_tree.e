@@ -419,7 +419,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
 	favorites_manager: EB_FAVORITES_MANAGER;

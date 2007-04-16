@@ -25,7 +25,6 @@ inherit
 			default_create, copy
 		end
 
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -159,7 +158,6 @@ feature {NONE} -- Agents
 
 			Precursor {PROPERTY_DIALOG}
 		end
-
 
 invariant
 	elements: is_initialized implies minor /= Void and major /= Void and release /= Void and build /= Void and

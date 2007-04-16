@@ -121,7 +121,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	definer_cell, definer_area_cell: EV_CELL

@@ -108,7 +108,6 @@ feature{NONE} -- Initialization
 			l_tester_area.extend (value_tester)
 			l_tester_selector_area.extend (l_tester_area)
 
-
 			l_ver.set_padding (15)
 			l_hor.set_padding (5)
 			if is_metric_area_shown then

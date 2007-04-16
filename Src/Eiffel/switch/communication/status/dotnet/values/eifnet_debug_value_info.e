@@ -531,7 +531,6 @@ feature {NONE} -- Implementation
 	once_value_icd_module: ICOR_DEBUG_MODULE
 			-- Once per instance for `value_icd_module'			
 
-
 	error_occurred: BOOLEAN
 			-- Did an error occurred ?
 

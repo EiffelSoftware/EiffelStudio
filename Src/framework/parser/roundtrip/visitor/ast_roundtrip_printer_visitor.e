@@ -9,7 +9,6 @@ indexing
 class
 	AST_ROUNDTRIP_PRINTER_VISITOR
 
-
 inherit
 	AST_ROUNDTRIP_ITERATOR
 		redefine

@@ -9,7 +9,6 @@ indexing
 class
 	SHARED_DEBUG_VALUE_KEEPER
 
-
 feature {NONE} -- Initialization
 
 	Debug_value_keeper: DEBUG_VALUE_KEEPER is

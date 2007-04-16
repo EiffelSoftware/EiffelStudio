@@ -277,7 +277,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
 				end
 
-
 				if l_interface.font /= Void then
 					drawable.set_font (l_interface.font)
 				else
@@ -293,7 +292,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				drawable.set_copy_mode
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -45,7 +45,6 @@ feature -- Status setting
 			internal_execute
 		end
 
-
 feature -- Status report
 
 	description: STRING_GENERAL is

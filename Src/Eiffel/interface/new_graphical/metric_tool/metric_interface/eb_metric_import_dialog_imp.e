@@ -140,7 +140,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	file_name_combo: EV_COMBO_BOX

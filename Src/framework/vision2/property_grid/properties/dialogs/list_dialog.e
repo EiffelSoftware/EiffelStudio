@@ -215,7 +215,6 @@ feature {NONE} -- Agents
 			end
 		end
 
-
 invariant
 	value_set: is_ok implies value /= Void
 	elements: is_initialized implies list /= Void and up_button /= Void and

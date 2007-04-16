@@ -202,8 +202,7 @@ feature -- Access
 				create Result.make_with_cluster_i (compiler_cluster.parent_cluster)
 			end
 		end
-		
-		
+
 	is_external_cluster: BOOLEAN is
 			-- Is this cluster used for external classes?
 		local

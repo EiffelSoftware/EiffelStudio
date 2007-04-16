@@ -3258,7 +3258,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp103 := yyvsp103 + 1
@@ -3354,7 +3353,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -4291,7 +4289,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp19 := yyvsp19 + 1
@@ -4361,7 +4358,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -4581,8 +4577,7 @@ end
 						-- Originally, it was 8, I changed it to 7 (Jason)
 					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
 				end
-				
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp38 := yyvsp38 + 1
@@ -4615,7 +4610,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -4878,7 +4872,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp4 := yyvsp4 + 1
@@ -5093,8 +5086,7 @@ end
 				else
 					yyval84 := ast_factory.new_feature_name_alias_as (yyvs2.item (yyvsp2), Void, has_convert_mark, Void, Void)
 				end
-				
-			
+
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp84 := yyvsp84 + 1
@@ -6007,7 +5999,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp107 := yyvsp107 + 1
@@ -6634,7 +6625,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp91 := yyvsp91 + 1
@@ -6858,7 +6848,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp53 := yyvsp53 + 1
@@ -6961,7 +6950,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -7245,7 +7233,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp98 := yyvsp98 + 1
@@ -7369,7 +7356,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp99 := yyvsp99 + 1
@@ -7492,7 +7478,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -8187,7 +8172,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp19 := yyvsp19 + 1
@@ -8330,7 +8314,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp114 := yyvsp114 + 1
@@ -8435,7 +8418,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
@@ -8573,7 +8555,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -8606,7 +8587,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -9018,7 +8998,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp71 := yyvsp71 + 1
@@ -9162,7 +9141,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp46 := yyvsp46 + 1
@@ -9305,7 +9283,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -9946,7 +9923,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -10888,7 +10864,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp116 := yyvsp116 + 1
@@ -11003,7 +10978,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -11253,7 +11227,6 @@ end
 			--	error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
 			--	error_handler.raise_error
 
-			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp118 := yyvsp118 -1
@@ -11272,7 +11245,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -11740,7 +11712,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -12655,7 +12626,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp23 := yyvsp23 + 1
@@ -12724,7 +12694,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -12814,7 +12783,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -12959,7 +12927,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -13129,7 +13096,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -13510,7 +13476,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -14093,7 +14058,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp115 := yyvsp115 + 1
@@ -14144,7 +14108,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -14731,7 +14694,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -15327,7 +15289,6 @@ end
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
-
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
@@ -17810,7 +17771,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 0
 	yyvsp93 := yyvsp93 + 1
@@ -18745,7 +18705,6 @@ end
 				
 				yyval3 := ast_factory.new_character_value (Current, Void, token_buffer, token_buffer2)
 
-			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs3.put (yyval3, yyvsp3)
@@ -24193,8 +24152,6 @@ feature {NONE} -- Constants
 			-- (terminal and nonterminal)
 
 feature -- User-defined features
-
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

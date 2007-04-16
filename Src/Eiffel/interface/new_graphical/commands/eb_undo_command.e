@@ -16,7 +16,6 @@ inherit
 			pixel_buffer
 		end
 
-
 create
 	make
 

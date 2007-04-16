@@ -507,7 +507,6 @@ feature {NONE} -- Implementation of data retrieval
 
 		end
 
-
 	process_defaults (a_defaults: LACE_LIST [D_OPTION_SD]) is
 			-- Process `a_defaults'.
 		require
@@ -550,7 +549,6 @@ feature {NONE} -- Implementation of data retrieval
 						if not current_options.is_debug_configured then
 							current_options.set_debug (True)
 						end
-
 
 						if l_value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Empty debug value."))

@@ -48,7 +48,6 @@ feature{NONE} -- Initialization
 			e_feature_set: e_feature = a_feature
 		end
 
-
 	make_with_parent (a_feature: like e_feature; a_parent: like parent) is
 			-- Initialize `class_item' with `a_class' and `parent' with `a_parent'
 		require
@@ -202,8 +201,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

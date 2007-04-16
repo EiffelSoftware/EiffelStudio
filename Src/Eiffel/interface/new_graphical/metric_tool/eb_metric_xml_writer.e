@@ -398,7 +398,6 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-
 	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
 			-- Process `a_criterion'.
 		do

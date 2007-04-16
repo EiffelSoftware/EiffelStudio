@@ -45,7 +45,6 @@ feature {NONE} -- Implementation
 			"GetValue"
 		end
 
-
 	cpp_set_value (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[

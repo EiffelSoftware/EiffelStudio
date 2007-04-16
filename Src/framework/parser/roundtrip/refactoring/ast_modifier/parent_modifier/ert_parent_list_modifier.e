@@ -144,7 +144,6 @@ feature{NONE} -- Implementation
 			modification_computed: last_computed_modifier /= Void
 		end
 
-
 feature -- Access
 
 	source: CLASS_AS
@@ -164,7 +163,6 @@ invariant
 	destination_not_void: destination /= Void
 	source_match_list_not_void: source_match_list /= Void
 	destination_match_list_not_void: destination_match_list /= Void
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

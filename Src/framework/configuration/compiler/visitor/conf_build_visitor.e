@@ -925,7 +925,6 @@ feature {NONE} -- Implementation
 			classes_added: not is_error implies current_classes.count = old current_classes.count + partial_classes.count
 		end
 
-
 feature {NONE} -- contracts
 
 	libraries_intersection (a, b: like libraries): BOOLEAN is

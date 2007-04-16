@@ -274,7 +274,6 @@ feature
 				Eiffel_table.is_polymorphic (routine_id, typ.type_id, True) < 0)
 		end
 
-
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
 			-- Generate final portion of C code.
 		local

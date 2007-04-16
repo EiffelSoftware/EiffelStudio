@@ -404,7 +404,6 @@ feature {NONE} -- Implementation
 			basic_application_item.pointer_double_press_actions.extend (agent on_double_click)
 			wizards_list.set_item (1, 1, basic_application_item)
 
-
 				-- Add a line per wizard.
 			from
 				available_wizards.start

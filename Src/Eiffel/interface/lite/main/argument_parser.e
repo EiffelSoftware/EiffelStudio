@@ -299,7 +299,6 @@ feature {NONE} -- Usage
 				switch_of_name (verbose_switch)>>, True))
 		end
 
-
 feature {NONE} -- Option names
 
 	force_switch: STRING = "force"

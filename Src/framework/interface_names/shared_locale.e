@@ -7,7 +7,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	SHARED_LOCALE
 

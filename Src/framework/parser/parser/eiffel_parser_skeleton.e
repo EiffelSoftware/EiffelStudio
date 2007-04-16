@@ -349,7 +349,6 @@ feature {NONE} -- Implementation
 			feature_stack.item.id_level := a_id_level
 		end
 
-
 	fbody_pos: INTEGER is
 			-- To memorize the beginning of a feature body
 		require
@@ -364,7 +363,6 @@ feature {NONE} -- Implementation
 		do
 			feature_stack.item.fbody_pos := a_fbody_pos
 		end
-
 
 	feature_stack: DS_ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER]]
 			-- id_level and fbody_pos are needed per feature body. Since there are inline agents
@@ -766,7 +764,6 @@ feature {AST_FACTORY} -- Error handling
 			Error_handler.raise_error
 		end
 
-
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 			-- Print error message.
@@ -844,5 +841,4 @@ indexing
 		]"
 
 end -- class EIFFEL_PARSER_SKELETON
-
 

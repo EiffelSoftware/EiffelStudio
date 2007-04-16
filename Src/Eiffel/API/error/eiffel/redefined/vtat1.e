@@ -12,7 +12,6 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-
 class VTAT1 obsolete "NOT THE SAME MEANING AS THE BOOK"
 
 inherit

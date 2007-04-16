@@ -210,7 +210,6 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-
 feature -- Access
 
 	information_bar_empty_area, empty_cell, input_cell, result_cell: EV_CELL

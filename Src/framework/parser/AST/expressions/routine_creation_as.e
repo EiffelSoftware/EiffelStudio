@@ -161,4 +161,3 @@ indexing
 
 end -- class ROUTINE_CREATION_AS
 
-

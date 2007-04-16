@@ -130,4 +130,3 @@ indexing
 
 end -- class EB_NEW_CLUSTER_COMMAND
 
-

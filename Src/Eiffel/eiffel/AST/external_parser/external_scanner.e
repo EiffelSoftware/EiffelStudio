@@ -1127,8 +1127,6 @@ feature {NONE} -- Constants
 
 feature -- User-defined features
 
-
-
 feature {NONE} -- Initialization
 
 	make is

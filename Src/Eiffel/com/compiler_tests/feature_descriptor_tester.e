@@ -166,8 +166,7 @@ feature {NONE} -- Output
 				put_string (Void)
 			end
 		end
-		
-		
+
 feature {NONE} -- Implementation
 
 	feature_descriptor_interface: IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE

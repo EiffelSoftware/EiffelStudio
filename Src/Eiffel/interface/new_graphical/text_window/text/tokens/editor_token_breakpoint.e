@@ -234,7 +234,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-
 invariant
 		breakpoint_is_first: previous = Void
 

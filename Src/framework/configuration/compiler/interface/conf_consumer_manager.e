@@ -866,7 +866,6 @@ feature {NONE} -- Contract
 			end
 		end
 
-
 invariant
 	factory_set: factory /= Void
 	il_version_set: il_version /= Void and then not il_version.is_empty

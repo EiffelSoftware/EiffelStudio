@@ -20,7 +20,6 @@ feature -- Basic operation
 			ok_or_error_message: not success implies error_message /= Void and not error_message.is_empty
 		end
 
-
 feature -- Status report
 
     success: BOOLEAN

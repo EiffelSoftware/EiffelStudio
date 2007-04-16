@@ -168,7 +168,6 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-
 feature {NONE} -- Internal implementation cache
 
 	internal_flags: LIST [CHARACTER]

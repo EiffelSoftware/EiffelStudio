@@ -27,12 +27,10 @@ feature {NONE} -- Access
 			Precursor
 			is_value_class_prop := is_value_class
 		end
-		
-	
+
 feature {ICOR_EXPORTER} -- Properties
 
 	is_value_class_prop: BOOLEAN
-
 
 feature {ICOR_EXPORTER} -- Access
 

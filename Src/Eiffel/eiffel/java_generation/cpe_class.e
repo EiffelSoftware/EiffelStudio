@@ -18,7 +18,6 @@ inherit
 			is_equal,
 			out
 		end
-								
 
 create
 
@@ -55,7 +54,6 @@ feature -- Access
 		do
 			bc.emit (file)
 		end
-
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
@@ -110,8 +108,4 @@ indexing
 		]"
 
 end
-
-								
-
-
 

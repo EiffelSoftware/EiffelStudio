@@ -175,4 +175,3 @@ indexing
 
 end -- class DEGREE_1
 
-

@@ -85,7 +85,6 @@ feature -- Initialization
 			text_combo_box.extend (text_combo)
 			text_combo.disable_edit
 
-
 			widget_minimum_width := text_combo_label.minimum_width
 
 			text_combo_label.set_minimum_width (widget_minimum_width)

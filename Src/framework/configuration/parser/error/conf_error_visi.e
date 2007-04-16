@@ -24,12 +24,10 @@ feature {NONE} -- Initialization
 			text := "Visibility for a non existing class "+a_class+"."
 		end
 
-
 feature -- Access
 
 	text: STRING;
 		-- Error text.
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

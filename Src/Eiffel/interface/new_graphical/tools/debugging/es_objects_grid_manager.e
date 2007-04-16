@@ -11,7 +11,6 @@ inherit
 
 	EV_GRID_HELPER
 
-
 feature -- cmd specific
 
 	hex_format_cmd: EB_HEX_FORMAT_CMD

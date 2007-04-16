@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			selected_type := Inheritance
 		end
 
-
 feature -- Basic operations
 
 	execute is

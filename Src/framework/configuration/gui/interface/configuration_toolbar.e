@@ -292,7 +292,6 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is True;

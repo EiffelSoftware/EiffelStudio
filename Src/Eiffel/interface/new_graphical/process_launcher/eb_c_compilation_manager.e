@@ -9,7 +9,6 @@ indexing
 deferred class
 	EB_C_COMPILER_LAUNCHER
 
-
 inherit
 	EB_PROCESS_LAUNCHER
 
@@ -30,7 +29,6 @@ inherit
 	SHARED_FLAGS
 
 	EB_SHARED_PREFERENCES
-
 
 feature{NONE}	-- Initialization
 

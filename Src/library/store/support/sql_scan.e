@@ -5,7 +5,7 @@ indexing
 	Revision: "$Revision$"
 	Product: "EiffelStore"
 
-class SQL_SCAN
+class SQL_SCAN [G -> DATABASE create default_create end]
 
 inherit
 
@@ -37,7 +37,7 @@ inherit
 			is_equal, copy, out
 		end
 
-	HANDLE_SPEC [DATABASE]
+	HANDLE_SPEC [G]
 		undefine
 			is_equal, copy, out
 		end

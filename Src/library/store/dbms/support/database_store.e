@@ -20,7 +20,7 @@ inherit
 			is_equal, out, copy
 		end
 
-	SQL_SCAN
+	SQL_SCAN [G]
 		rename
 			make as scan_make,
 			put as string_put

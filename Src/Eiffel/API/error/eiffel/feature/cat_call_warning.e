@@ -48,7 +48,7 @@ feature -- Access
 	code: STRING is
 			-- Error code
 		do
-			Result := "Potential cat-call";
+			Result := "catcall";
 		end
 
 feature -- Element change
@@ -97,7 +97,7 @@ feature -- Element change
 			a_descendant_class_not_void: a_descendant_class /= Void
 			a_descendant_feature_not_void: a_descendant_feature /= Void
 			a_type_not_void: a_type /= Void
-			a_index_not_void: a_index /= Void
+			a_index_positive: a_index > 0
 		do
 			covariant_argument_violations.extend ([a_descendant_class, a_descendant_feature.api_feature (a_descendant_feature.written_in), a_type, a_index])
 		end

@@ -150,6 +150,9 @@ feature -- Properties
 			-- Set `pixmap'
 		do
 			pixmap := a_pixmap
+			if tool_bar /= Void then
+				tool_bar.need_calculate_size
+			end
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -162,6 +165,9 @@ feature -- Properties
 			not_void: a_pixel_buffer /= Void
 		do
 			pixel_buffer := a_pixel_buffer
+			if tool_bar /= Void then
+				tool_bar.need_calculate_size
+			end
 		ensure
 			set: pixel_buffer = a_pixel_buffer
 		end

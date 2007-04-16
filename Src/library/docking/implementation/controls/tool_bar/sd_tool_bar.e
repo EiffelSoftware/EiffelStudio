@@ -27,7 +27,8 @@ inherit
 			{SD_NOTEBOOK_HIDE_TAB_DIALOG} key_press_actions, focus_out_actions, set_focus, has_focus
 			{SD_TOOL_BAR_DRAWER_IMP} draw_ellipsed_text_top_left
 		redefine
-			update_for_pick_and_drop
+			update_for_pick_and_drop,
+			initialize
 		end
 
 create
@@ -39,6 +40,13 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
+		end
+
+	initialize is
+			-- Initlialize
+		do
+			Precursor {SD_DRAWING_AREA}
+
 			create internal_shared
 			internal_row_height := standard_height
 			create internal_items.make (1)
@@ -67,6 +75,8 @@ feature -- Command
 		do
 			internal_items.extend (a_item)
 			a_item.set_tool_bar (Current)
+
+			is_need_calculate_size := True
 		ensure
 			has: has (a_item)
 			is_parent_set: is_parent_set (a_item)
@@ -178,16 +188,39 @@ feature -- Command
 			internal_items.wipe_out
 		end
 
-feature {SD_TOOL_BAR_TITLE_BAR} -- Special setting
+feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 
-	set_row_height (a_height: INTEGER) is
-			-- Set `internal_row_height' to `a_height'
-		require
-			valid: a_height >= 0
+	prefered_height: INTEGER is
+			-- Prefered tool bar height.
+		local
+			l_item: SD_TOOL_BAR_ITEM
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_height: INTEGER
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			internal_row_height := a_height
-		ensure
-			set: internal_row_height = a_height
+			from
+				l_items := items
+				l_items.start
+			until
+				l_items.after
+			loop
+				l_item := l_items.item
+				l_separator ?= l_item
+				-- We ignore separator
+				if l_separator = Void then
+					if l_item.pixmap /= Void then
+						l_height := l_item.pixmap.height + 2 * padding_width
+					elseif l_item.pixel_buffer /= Void then
+						l_height := l_item.pixel_buffer.height + 2 * padding_width
+					end
+
+					if Result < l_height then
+						Result := l_height
+					end
+				end
+
+				l_items.forth
+			end
 		end
 
 feature -- Query
@@ -230,10 +263,50 @@ feature -- Query
 
 	row_height: INTEGER is
 			-- Height of row.
+		local
+			l_font_height, l_pixmap_height: INTEGER
 		do
+			if is_need_calculate_size then
+				is_need_calculate_size := False
+				l_pixmap_height := prefered_height
+				if not items_have_texts then
+					internal_row_height := l_pixmap_height
+				else
+					l_font_height := standard_height
+					if l_font_height >= l_pixmap_height then
+						internal_row_height := l_font_height
+					else
+						internal_row_height := l_pixmap_height
+					end
+				end
+			end
+
 			Result := internal_row_height
 		ensure
 			valid: is_row_height_valid (Result)
+		end
+
+	items_have_texts: BOOLEAN is
+			-- If any item has text?
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_button: SD_TOOL_BAR_BUTTON
+		do
+			from
+				l_items := internal_items
+				l_items.start
+			until
+				l_items.after or Result
+			loop
+				l_button ?= l_items.item
+				if l_button /= Void then
+					if l_button.text /= Void then
+						Result := True
+					end
+				end
+
+				l_items.forth
+			end
 		end
 
 feature -- Contract support
@@ -288,6 +361,12 @@ feature -- Contract support
 		end
 
 feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
+
+	need_calculate_size is
+			-- Set if need recalculate `row_height'.
+		do
+			is_need_calculate_size := True
+		end
 
 	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
 			-- Relative x position of `a_item'.
@@ -424,15 +503,17 @@ feature {NONE} -- Agents
 			-- Handle expose actions.
 		local
 			l_items: like internal_items
+			l_rect: EV_RECTANGLE
 		do
-			drawer.start_draw (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height))
+			create l_rect.make (a_x, a_y, a_width, a_height)
+			drawer.start_draw (l_rect)
 			from
 				l_items := items
 				l_items.start
 			until
 				l_items.after
 			loop
-				if l_items.item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) then
+				if l_items.item.has_rectangle (l_rect) then
 					redraw_item (l_items.item)
 				end
 				l_items.forth
@@ -517,7 +598,6 @@ feature {NONE} -- Agents
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
 		do
-
 			if a_button = 1 then
 				disable_capture
 				internal_pointer_pressed := False
@@ -705,6 +785,9 @@ feature {SD_TOOL_BAR} -- Implementation
 
 	internal_start_y: INTEGER
 			-- Y postion start to draw buttons.
+
+	is_need_calculate_size: BOOLEAN
+			-- Need recalcualte current `row_height'? Because some thing changed?
 
 invariant
 	not_void: items /= Void

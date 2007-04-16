@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			customize.select_actions.extend (agent on_custom_selected)
 			create close_request_actions
 			create custom_actions
-			tool_bar.set_row_height (l_shared.title_bar_height)
 			tool_bar.compute_minimum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)
@@ -53,6 +52,7 @@ feature {NONE} -- Initialization
 			close.set_pixmap (l_shared.icons.tool_bar_floating_close)
 			close.set_tooltip (l_shared.interface_names.tooltip_toolbar_floating_close)
 			tool_bar.compute_minimum_size
+			set_minimum_height (l_shared.title_bar_height)
 		end
 
 	init_pointer_double_press_actions is

@@ -28,11 +28,21 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
+	unstick_buffer: EV_PIXEL_BUFFER is
+			-- Unstick icon pixel buffer
+		do
+		end
+
 	stick: 	EV_PIXMAP is
 			-- Stick icon pixmap.
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	stick_buffer: EV_PIXEL_BUFFER is
+			-- Stick icon pixel buffer
+		do
 		end
 
 	minimize: EV_PIXMAP is
@@ -42,6 +52,11 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
+	minimize_buffer: EV_PIXEL_BUFFER is
+			-- Minimize icon pixel buffer
+		do
+		end
+
 	maximize: EV_PIXMAP is
 			-- Maximize icon pixmap.
 		deferred
@@ -49,11 +64,21 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
+	maximize_buffer: EV_PIXEL_BUFFER is
+			-- Maximize icon pixel buffer
+		do
+		end
+
 	normal: EV_PIXMAP is
-			-- Minimize icon pixmap.
+			-- Normal icon pixmap.
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	normal_buffer: EV_PIXEL_BUFFER is
+			-- Normal icon pixel buffer
+		do
 		end
 
 	close: EV_PIXMAP is
@@ -61,6 +86,11 @@ feature -- Icons
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	close_buffer: EV_PIXEL_BUFFER is
+			-- Close icon pixel buffer
+		do
 		end
 
 	tool_bar_separator_icon: EV_PIXMAP is
@@ -105,6 +135,11 @@ feature -- Icons
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	tool_bar_indicator_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer indicator for SD_TITLE_BAR, when there is nor enough space to show custom widget.
+		do
 		end
 
 feature -- Side indicators

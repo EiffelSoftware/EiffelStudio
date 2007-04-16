@@ -90,6 +90,9 @@ feature -- Creation
 			else
 				splits := temp.split('-')
 				inspect splits.count
+				when 1 then
+					language := splits.i_th (1)
+					region := ""
 				when 2  then
 					language := splits.i_th(1)
 					region := splits.i_th(2)
@@ -113,7 +116,10 @@ feature {NONE} -- Helper function
 	set_name is
 			-- ensure platform-independant name
 		do
-			name := language+"_"+region
+			name := language
+			if not region.is_empty then
+				name.append ("_"+region)
+			end
 			if script /= Void then
 				name.append("@"+script)
 			end

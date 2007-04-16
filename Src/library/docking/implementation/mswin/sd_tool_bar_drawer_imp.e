@@ -79,13 +79,8 @@ feature -- Redefine
 	internal_client_dc: WEL_DC
 			-- Dc for tool bar windows implementation.
 
-	is_start_draw_called: BOOLEAN is
+	is_start_draw_called: BOOLEAN
 			-- Redefine
-		do
-			if internal_buffered_dc /= Void and internal_client_dc /= Void then
-				Result := internal_buffered_dc.exists and internal_client_dc.exists
-			end
-		end
 
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
 			-- Redefine
@@ -105,32 +100,35 @@ feature -- Redefine
 			l_imp ?= tool_bar.implementation
 			check not_void: l_imp /= Void end
 
-			create {WEL_CLIENT_DC} internal_client_dc.make (l_imp)
-			internal_client_dc.get
+			if l_imp.exists then
+				create {WEL_CLIENT_DC} internal_client_dc.make (l_imp)
+				internal_client_dc.get
 
-			create {WEL_MEMORY_DC} internal_buffered_dc.make_by_dc (internal_client_dc)
+				create {WEL_MEMORY_DC} internal_buffered_dc.make_by_dc (internal_client_dc)
 
-			create l_wel_bitmap.make_compatible (internal_client_dc, tool_bar.width, tool_bar.height)
-			internal_buffered_dc.select_bitmap (l_wel_bitmap)
-			l_wel_bitmap.dispose
+				create l_wel_bitmap.make_compatible (internal_client_dc, tool_bar.width, tool_bar.height)
+				internal_buffered_dc.select_bitmap (l_wel_bitmap)
+				l_wel_bitmap.dispose
 
-			l_color_imp ?= tool_bar.background_color.implementation
-			check not_void: l_color_imp /= Void end
-			internal_buffered_dc.set_background_color (l_color_imp)
+				l_color_imp ?= tool_bar.background_color.implementation
+				check not_void: l_color_imp /= Void end
+				internal_buffered_dc.set_background_color (l_color_imp)
 
-			-- If we draw background like this, when non-32bits color depth, color will broken.
---			create l_background_pixmap.make_with_size (tool_bar.width, tool_bar.height)
---			l_background_pixmap.set_background_color (tool_bar.background_color)
---			l_background_pixmap.clear
---			l_background_pixmap_state ?= l_background_pixmap.implementation
---			check not_void: l_background_pixmap_state /= Void end
---			internal_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
+				-- If we draw background like this, when non-32bits color depth, color will broken.
+	--			create l_background_pixmap.make_with_size (tool_bar.width, tool_bar.height)
+	--			l_background_pixmap.set_background_color (tool_bar.background_color)
+	--			l_background_pixmap.clear
+	--			l_background_pixmap_state ?= l_background_pixmap.implementation
+	--			check not_void: l_background_pixmap_state /= Void end
+	--			internal_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
 
-			-- So we draw background color like this.
-			create l_brush.make_solid (l_color_imp)
-			internal_buffered_dc.fill_rect (create {WEL_RECT}.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.right, internal_rectangle.bottom), l_brush)
-			l_brush.delete
+				-- So we draw background color like this.
+				create l_brush.make_solid (l_color_imp)
+				internal_buffered_dc.fill_rect (create {WEL_RECT}.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.right, internal_rectangle.bottom), l_brush)
+				l_brush.delete
+			end
 
+			is_start_draw_called := True
 		ensure then
 			set: internal_rectangle = a_rectangle
 		end
@@ -139,19 +137,26 @@ feature -- Redefine
 			-- Redefine
 		local
 		do
-			internal_client_dc.bit_blt (internal_rectangle.left,
-										internal_rectangle.top,
-										internal_rectangle.width,
-										internal_rectangle.height,
-										internal_buffered_dc,
-										internal_rectangle.left,
-										internal_rectangle.top,
-										{WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+			if internal_buffered_dc /= Void then
+				internal_client_dc.bit_blt (internal_rectangle.left,
+											internal_rectangle.top,
+											internal_rectangle.width,
+											internal_rectangle.height,
+											internal_buffered_dc,
+											internal_rectangle.left,
+											internal_rectangle.top,
+											{WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
 
-			internal_buffered_dc.unselect_all
-			internal_buffered_dc.delete
-			internal_client_dc.unselect_all
-			internal_client_dc.delete
+				internal_buffered_dc.unselect_all
+				internal_buffered_dc.delete
+				internal_client_dc.unselect_all
+				internal_client_dc.delete
+
+				internal_buffered_dc := Void
+				internal_client_dc := Void
+			end
+
+			is_start_draw_called := False
 		end
 
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
@@ -160,13 +165,15 @@ feature -- Redefine
 			l_rect: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
 		do
-			l_vision_rect := a_arguments.item.rectangle
+		 	if internal_buffered_dc /= Void then
+				l_vision_rect := a_arguments.item.rectangle
 
-			create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
+				create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-			draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
-			draw_pixmap (internal_buffered_dc, a_arguments)
-			draw_text (internal_buffered_dc, a_arguments)
+				draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
+				draw_pixmap (internal_buffered_dc, a_arguments)
+				draw_text (internal_buffered_dc, a_arguments)
+		 	end
 		end
 
 	draw_button_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_state: INTEGER; a_part_constant: INTEGER) is

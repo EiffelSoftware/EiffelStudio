@@ -47,17 +47,26 @@ feature {NONE} -- Initlization
 			internal_title.set_minimum_height (internal_shared.title_bar_height)
 			fixed.extend (internal_title)
 
-			create stick
+			create stick.make
 			stick.set_pixmap (internal_shared.icons.unstick)
+			if internal_shared.icons.unstick_buffer /= Void then
+				stick.set_pixel_buffer (internal_shared.icons.unstick_buffer)
+			end
 			stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 
 			set_stick (False)
 
-			create normal_max
+			create normal_max.make
 			normal_max.set_pixmap (internal_shared.icons.maximize)
+			if internal_shared.icons.maximize_buffer /= Void then
+				normal_max.set_pixel_buffer (internal_shared.icons.maximize_buffer)
+			end
 			normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
-			create close
+			create close.make
 			close.set_pixmap (internal_shared.icons.close)
+			if internal_shared.icons.close_buffer /= Void then
+				close.set_pixel_buffer (internal_shared.icons.close_buffer)
+			end
 			close.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_close)
 
 			stick.select_actions.extend (agent on_stick_select)
@@ -66,10 +75,11 @@ feature {NONE} -- Initlization
 
 			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
 
-			create internal_tool_bar
+			create internal_tool_bar.make
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
 			internal_tool_bar.extend (close)
+			internal_tool_bar.compute_minimum_size
 
 			fixed.extend (internal_tool_bar)
 
@@ -96,9 +106,15 @@ feature -- Command
 		do
 			if a_stick then
 				stick.set_pixmap (internal_shared.icons.stick)
+				if internal_shared.icons.stick_buffer /= Void then
+					stick.set_pixel_buffer (internal_shared.icons.stick_buffer)
+				end
 				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick)
 			else
 				stick.set_pixmap (internal_shared.icons.unstick)
+				if internal_shared.icons.unstick_buffer /= Void then
+					stick.set_pixel_buffer (internal_shared.icons.unstick_buffer)
+				end
 				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 			end
 			is_stick := a_stick
@@ -111,9 +127,15 @@ feature -- Command
 		do
 			if a_max then
 				normal_max.set_pixmap (internal_shared.icons.normal)
+				if internal_shared.icons.normal_buffer /= Void then
+					normal_max.set_pixel_buffer (internal_shared.icons.normal_buffer)
+				end
 				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			else
 				normal_max.set_pixmap (internal_shared.icons.maximize)
+				if internal_shared.icons.maximize_buffer /= Void then
+					normal_max.set_pixel_buffer (internal_shared.icons.maximize_buffer)
+				end
 				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 			end
 			is_max := a_max
@@ -126,17 +148,17 @@ feature -- Command
 		do
 			if a_show then
 				if not internal_tool_bar.has (normal_max) then
-					internal_tool_bar.start
 					if internal_tool_bar.has (stick) then
-						internal_tool_bar.put_right (normal_max)
+						internal_tool_bar.force (normal_max, 2)
 					else
-						internal_tool_bar.put_left (normal_max)
+						internal_tool_bar.force (normal_max, 1)
 					end
+					internal_tool_bar.compute_minimum_size
 				end
 			else
 				if internal_tool_bar.has (normal_max) then
-					internal_tool_bar.start
 					internal_tool_bar.prune (normal_max)
+					internal_tool_bar.compute_minimum_size
 				end
 			end
 			-- We restoring docking layout, `fixed' maybe destroyed.
@@ -152,13 +174,13 @@ feature -- Command
 		do
 			if a_show then
 				if not internal_tool_bar.has (stick) then
-					internal_tool_bar.start
-					internal_tool_bar.put_left (stick)
+					internal_tool_bar.force (stick, 1)
+					internal_tool_bar.compute_minimum_size
 				end
 			else
 				if internal_tool_bar.has (stick) then
-					internal_tool_bar.start
 					internal_tool_bar.prune (stick)
+					internal_tool_bar.compute_minimum_size
 				end
 			end
 			-- We restoring docking layout, `fixed' maybe destroyed.
@@ -200,7 +222,6 @@ feature -- Command
 
 	disable_focus_color is
 			-- Disable focus color.
-
 		do
 			internal_title.set_focus_color_enable (False)
 			internal_title.set_disable_focus_background_color
@@ -394,6 +415,7 @@ feature {NONE} -- Agents
 						-- There is enough space for mini tool bar.
 						if internal_tool_bar.has (mini_tool_bar_indicator) then
 							internal_tool_bar.prune (mini_tool_bar_indicator)
+							internal_tool_bar.compute_minimum_size
 						end
 
 						if not fixed.has (internal_custom_widget) then
@@ -410,8 +432,8 @@ feature {NONE} -- Agents
 					else
 						-- There is not enough space for mini tool bar.
 						if not internal_tool_bar.has (mini_tool_bar_indicator) then
-							internal_tool_bar.start
-							internal_tool_bar.put_left (mini_tool_bar_indicator)
+							internal_tool_bar.force (mini_tool_bar_indicator, 1)
+							internal_tool_bar.compute_minimum_size
 						end
 
 						if fixed.has (internal_custom_widget) then
@@ -432,6 +454,7 @@ feature {NONE} -- Agents
 						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 						if internal_tool_bar.has (mini_tool_bar_indicator) then
 							internal_tool_bar.prune (mini_tool_bar_indicator)
+							internal_tool_bar.compute_minimum_size
 						end
 					end
 				end
@@ -448,9 +471,15 @@ feature {NONE} -- Agents
 		do
 			if  is_stick then
 				stick.set_pixmap (internal_shared.icons.unstick)
+				if internal_shared.icons.unstick_buffer /= Void then
+					stick.set_pixel_buffer (internal_shared.icons.unstick_buffer)
+				end
 				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick_unpin)
 			else
 				stick.set_pixmap (internal_shared.icons.stick)
+				if internal_shared.icons.stick_buffer /= Void then
+					stick.set_pixel_buffer (internal_shared.icons.stick_buffer)
+				end
 				stick.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_stick)
 			end
 			stick_select_actions.call (Void)
@@ -461,9 +490,15 @@ feature {NONE} -- Agents
 		do
 			if is_max then
 				normal_max.set_pixmap (internal_shared.icons.maximize)
+				if internal_shared.icons.maximize_buffer /= Void then
+					normal_max.set_pixel_buffer (internal_shared.icons.maximize_buffer)
+				end
 				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 			else
 				normal_max.set_pixmap (internal_shared.icons.normal)
+				if internal_shared.icons.normal_buffer /= Void then
+					normal_max.set_pixel_buffer (internal_shared.icons.normal_buffer)
+				end
 				normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
 			end
 
@@ -493,38 +528,34 @@ feature {NONE} -- Implementation
 	internal_title: SD_TITLE_BAR_TITLE
 			-- Internal_title
 
-	internal_tool_bar: EV_TOOL_BAR
+	internal_tool_bar: SD_TOOL_BAR
 			-- Tool bar which hold `stick', `normal_max', `close' buttons.
 
 	tool_bar_width: INTEGER is
 			-- Actual width of `internal_tool_bar'
 			-- If we query internal_tool_bar.width directly, we will always get maximum width on Windows.
 		do
-			from
-				internal_tool_bar.start
-			until
-				internal_tool_bar.after
-			loop
-				Result := Result + internal_tool_bar.item.width
-				internal_tool_bar.forth
-			end
+			Result := internal_tool_bar.minimum_width
 		end
 
-	stick: EV_TOOL_BAR_BUTTON
+	stick: SD_TOOL_BAR_BUTTON
 			-- Sitck button
 
-	normal_max: EV_TOOL_BAR_BUTTON
+	normal_max: SD_TOOL_BAR_BUTTON
 			-- Minimize and maxmize button
 
-	close: EV_TOOL_BAR_BUTTON
+	close: SD_TOOL_BAR_BUTTON
 			-- Close button
 
-	mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON is
+	mini_tool_bar_indicator: SD_TOOL_BAR_BUTTON is
 			-- Factory method for `internal_mini_tool_bar_indicator'.
 		do
 			if internal_mini_tool_bar_indicator = Void then
-				create internal_mini_tool_bar_indicator
+				create internal_mini_tool_bar_indicator.make
 				internal_mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+				if internal_shared.icons.tool_bar_indicator_buffer /= Void then
+					internal_mini_tool_bar_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_indicator_buffer)
+				end
 				internal_mini_tool_bar_indicator.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
 				internal_mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
 			end
@@ -544,7 +575,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON
+	internal_mini_tool_bar_indicator: SD_TOOL_BAR_BUTTON
 			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'.
 
 	internal_shared: SD_SHARED

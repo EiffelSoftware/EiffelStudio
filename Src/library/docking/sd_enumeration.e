@@ -53,7 +53,7 @@ feature -- State
 
 	state_void: INTEGER is 1
 		-- FIXIT: not a good name?
-		-- Initialial state.
+		-- Initial state.
 
 	docking: INTEGER is 2
 		-- Docking state.

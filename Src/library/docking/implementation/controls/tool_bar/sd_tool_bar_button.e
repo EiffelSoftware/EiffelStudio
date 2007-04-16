@@ -166,8 +166,14 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 	pixmap_y_position: INTEGER is
 			-- Pixmap positon relative to Current.
 			-- This feature not be used on Windows temporary.
-		once
-			if pixel_buffer /= Void or pixmap /= Void then
+		local
+			l_has_text: BOOLEAN
+		do
+			if tool_bar /= Void then
+				l_has_text := tool_bar.items_have_texts
+			end
+
+			if (pixel_buffer /= Void or pixmap /= Void) and l_has_text then
 				Result := (tool_bar.standard_height / 2).ceiling
 				if pixel_buffer /= Void then
 					Result := Result - (pixel_buffer.height / 2).floor
@@ -176,7 +182,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 					Result := Result - (pixmap.height / 2).floor
 				end
 			else
-				Result := tool_bar.border_width
+				Result := tool_bar.padding_width
 			end
 		end
 

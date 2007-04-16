@@ -125,7 +125,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_reference_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_target_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_target_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -137,13 +149,31 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_cluster_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_override_cluster_icon: EV_PIXMAP
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
+	new_override_cluster_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_library_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_library_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -173,7 +203,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	general_edit_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	general_delete_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	general_delete_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -185,7 +227,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_precompiled_library_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_include_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_include_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -197,7 +251,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_object_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_makefile_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_makefile_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -209,7 +275,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_resource_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_pre_compilation_task_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_pre_compilation_task_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -221,7 +299,19 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_post_compilation_task_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	project_settings_edit_library_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	project_settings_edit_library_icon_buffer: EV_PIXEL_BUFFER
 		deferred
 		ensure
 			Result_not_void: Result /= Void

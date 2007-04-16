@@ -70,9 +70,9 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			-- Currently there is no pixel buffer for this command.
+			Result := pixmaps.icon_pixmaps.diagram_fit_to_screen_icon_buffer
 		end
-		
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

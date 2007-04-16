@@ -94,7 +94,9 @@ feature -- Access
 	selected: BOOLEAN is
 			-- Is current command selected?
 		do
-			if button /= Void then
+			if sd_button /= Void then
+				Result := sd_button.is_selected
+			elseif button /= Void then
 				Result := button.is_selected
 			elseif menu_item /= Void then
 				Result := menu_item.is_selected

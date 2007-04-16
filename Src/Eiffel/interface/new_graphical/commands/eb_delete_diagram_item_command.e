@@ -37,10 +37,12 @@ inherit
 			new_mini_toolbar_item,
 			new_sd_toolbar_item,
 			mini_pixmap,
+			mini_pixel_buffer,
 			description,
 			tooltip,
 			tooltext,
-			pixmap
+			pixmap,
+			pixel_buffer
 		redefine
 			drop_class,
 			delete_class,
@@ -94,6 +96,12 @@ feature -- Access
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

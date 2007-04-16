@@ -9,11 +9,17 @@ class
 	EB_SD_ICONS
 
 inherit
-
 	SD_ICONS_SINGLETON
 		redefine
 			tool_bar_separator_icon,
-			hide_tab_indicator
+			hide_tab_indicator,
+			unstick_buffer,
+			stick_buffer,
+			minimize_buffer,
+			maximize_buffer,
+			normal_buffer,
+			close_buffer,
+			tool_bar_indicator_buffer
 		end
 
 	EB_SHARED_PIXMAPS
@@ -40,10 +46,22 @@ feature -- Implementation
 			Result := mini_pixmaps.toolbar_unpinned_icon
 		end
 
+	unstick_buffer: EV_PIXEL_BUFFER is
+			-- Unstick icon pixmap.
+		once
+			Result := mini_pixmaps.toolbar_unpinned_icon_buffer
+		end
+
 	stick: 	EV_PIXMAP is
 			-- Stick icon pixmap.
 		once
 			Result := mini_pixmaps.toolbar_pinned_icon
+		end
+
+	stick_buffer: EV_PIXEL_BUFFER is
+			-- Stick icon pixel buffer.
+		once
+			Result := mini_pixmaps.toolbar_pinned_icon_buffer
 		end
 
 	minimize: EV_PIXMAP is
@@ -52,10 +70,22 @@ feature -- Implementation
 			Result := mini_pixmaps.toolbar_minimize_icon
 		end
 
+	minimize_buffer: EV_PIXEL_BUFFER is
+			-- Minimize icon pixel buffer.
+		once
+			Result := mini_pixmaps.toolbar_minimize_icon_buffer
+		end
+
 	maximize: EV_PIXMAP is
 				-- Maximize icon pixmap.
 		once
 			Result := mini_pixmaps.toolbar_maximize_icon
+		end
+
+	maximize_buffer: EV_PIXEL_BUFFER is
+				-- Maximize icon pixel buffer.
+		once
+			Result := mini_pixmaps.toolbar_maximize_icon_buffer
 		end
 
 	normal: EV_PIXMAP is
@@ -64,10 +94,22 @@ feature -- Implementation
 			Result := mini_pixmaps.toolbar_restore_icon
 		end
 
+	normal_buffer: EV_PIXEL_BUFFER is
+			-- Minimize icon pixel buffer.
+		once
+			Result := mini_pixmaps.toolbar_restore_icon_buffer
+		end
+
 	close: EV_PIXMAP is
 			-- close icon pixmap.
 		once
 			Result := mini_pixmaps.toolbar_close_icon
+		end
+
+	close_buffer: EV_PIXEL_BUFFER is
+			-- close icon pixel buffer.
+		once
+			Result := mini_pixmaps.toolbar_close_icon_buffer
 		end
 
 	default_icon: EV_PIXMAP is
@@ -160,6 +202,12 @@ feature -- Implementation
 			-- Redefine.
 		do
 			Result := mini_pixmaps.toolbar_expand_icon
+		end
+
+	tool_bar_indicator_buffer: EV_PIXEL_BUFFER is
+			-- Redefine
+		do
+			Result := mini_pixmaps.toolbar_expand_icon_buffer
 		end
 
 	tool_bar_customize_indicator: EV_PIXMAP is

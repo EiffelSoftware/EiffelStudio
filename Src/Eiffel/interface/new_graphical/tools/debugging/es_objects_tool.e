@@ -248,23 +248,25 @@ feature {NONE} -- Interface
 	build_mini_toolbar is
 			-- Build associated tool bar
 		local
-			tbb: EV_TOOL_BAR_BUTTON
+			tbb: SD_TOOL_BAR_BUTTON
 			scmd: EB_STANDARD_CMD
 		do
-			create mini_toolbar
+			create mini_toolbar.make
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
+			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
 			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
 			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
-			mini_toolbar.extend (scmd.new_mini_toolbar_item)
+			mini_toolbar.extend (scmd.new_mini_sd_toolbar_item)
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
 			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+			remove_debugged_object_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_delete_icon_buffer)
 			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
 			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
-			tbb := remove_debugged_object_cmd.new_mini_toolbar_item
+			tbb := remove_debugged_object_cmd.new_mini_sd_toolbar_item
 			tbb.drop_actions.extend (agent remove_dropped_debugged_object)
 			tbb.drop_actions.set_veto_pebble_function (agent is_removable_debugged_object)
 			remove_debugged_object_cmd.enable_sensitive
@@ -273,13 +275,13 @@ feature {NONE} -- Interface
 
 			create slices_cmd.make (Current)
 			slices_cmd.enable_sensitive
-			mini_toolbar.extend (slices_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (slices_cmd.new_mini_sd_toolbar_item)
 
-			mini_toolbar.extend (object_viewer_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
 
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
-			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
 
 				--| Attach the slices_cmd to the objects grid
 			from
@@ -291,6 +293,7 @@ feature {NONE} -- Interface
 				objects_grids.forth
 			end
 
+			mini_toolbar.compute_minimum_size
 		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -459,7 +462,7 @@ feature -- Access
 
 	mini_toolbar_box: EV_HORIZONTAL_BOX
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Associated mini tool bar.
 
 	header_box: EV_HORIZONTAL_BOX

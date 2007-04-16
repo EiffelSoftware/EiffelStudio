@@ -11,7 +11,8 @@ class
 inherit
 	EB_TOOLBARABLE_TOGGLE_COMMAND
 		redefine
-			mini_pixmap
+			mini_pixmap,
+			mini_pixel_buffer
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -37,6 +38,12 @@ feature -- Access
 			Result := pixmaps.mini_pixmaps.completion_show_signature_icon
 		end
 
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixmap representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.completion_show_signature_icon_buffer
+		end
+
 feature {NONE} -- Implementation
 
 	pixmap: EV_PIXMAP is
@@ -49,7 +56,7 @@ feature {NONE} -- Implementation
 		do
 			-- Currently there is no pixel buffer for this command.
 		end
-		
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

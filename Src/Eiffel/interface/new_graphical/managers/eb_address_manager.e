@@ -375,7 +375,7 @@ feature -- Element change
 			l_but: SD_TOOL_BAR_BUTTON
 			l_cnt: INTEGER
 		do
-			create formatters_combo
+			create formatters_combo.make
 			known_formatters := new_formatters
 			from
 				l_cnt := 1
@@ -404,7 +404,7 @@ feature -- Element change
 	viewpoints: EV_HORIZONTAL_BOX
 			-- Viewpoints combo box
 
-	formatters_combo: EV_TOOL_BAR
+	formatters_combo: SD_TOOL_BAR
 			-- Tool bar containing class format option buttons.
 
 	disable_formatters is

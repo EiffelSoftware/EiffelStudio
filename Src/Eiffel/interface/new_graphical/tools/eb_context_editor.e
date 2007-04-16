@@ -343,15 +343,15 @@ feature {NONE} -- Initialization
 			draw_commands.extend (zoom_in_cmd)
 
 			from
-				create drawing_toolbar
+				create drawing_toolbar.make
 				draw_commands.start
 			until
 				draw_commands.after
 			loop
 				if draw_commands.item /= Void then
-					drawing_toolbar.extend (draw_commands.item)
+					drawing_toolbar.extend (draw_commands.item.new_sd_toolbar_item (False))
 				else
-					drawing_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
+					drawing_toolbar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 				end
 				draw_commands.forth
 			end
@@ -383,23 +383,22 @@ feature {NONE} -- Initialization
 			view_commands.extend (redo_cmd)
 
 			from
-				create view_toolbar
+				create view_toolbar.make
 				view_commands.start
 			until
 				view_commands.after
 			loop
 				if view_commands.item /= Void then
-					view_toolbar.extend (view_commands.item)
+					view_toolbar.extend (view_commands.item.new_sd_toolbar_item (False))
 				else
-					view_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
+					view_toolbar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 				end
 				view_commands.forth
 			end
 
-			view_toolbar.update_toolbar
-			view_bar.extend (view_toolbar.widget)
+			view_toolbar.compute_minimum_size
+			view_bar.extend (view_toolbar)
 			view_bar.disable_item_expand (view_bar.last)
-
 
 			initialize_accelerators (draw_commands)
 			initialize_accelerators (view_commands)
@@ -411,9 +410,9 @@ feature {NONE} -- Initialization
 				extend_shortcut_table (delete_view_cmd.accelerator)
 			end
 
-			drawing_toolbar.update_toolbar
-			drawing_bar.extend (drawing_toolbar.widget)
-			drawing_bar.disable_item_expand (drawing_toolbar.widget)
+			drawing_toolbar.compute_minimum_size
+			drawing_bar.extend (drawing_toolbar)
+			drawing_bar.disable_item_expand (drawing_bar.last)
 
 			create zoom_cell
 
@@ -572,9 +571,10 @@ feature -- EB_TOOL features
 	build_mini_toolbar is
 			-- Redefine
 		do
-			create history_toolbar
-			history_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
-			history_toolbar.extend (history_manager.forth_command.new_mini_toolbar_item)
+			create history_toolbar.make
+			history_toolbar.extend (history_manager.back_command.new_mini_sd_toolbar_item)
+			history_toolbar.extend (history_manager.forth_command.new_mini_sd_toolbar_item)
+			history_toolbar.compute_minimum_size
 
 			create mini_toolbar
 			mini_toolbar.extend (address_manager.header_info)
@@ -1320,9 +1320,9 @@ feature {NONE} -- Memory management
 					l_editors.forth
 				end
 			end
-			drawing_toolbar.recycle
+			drawing_toolbar.destroy
 			drawing_toolbar := Void
-			view_toolbar.recycle
+			view_toolbar.destroy
 			view_toolbar := Void
 			recycle_commands
 			world_cell.recycle
@@ -2041,8 +2041,8 @@ feature {NONE} -- Implementation
 			-- Was a class edited through the Diagram.
 			-- (Add remove feature, add remove inheritance link)
 
-	view_toolbar: EB_TOOLBAR
-	drawing_toolbar: EB_TOOLBAR
+	view_toolbar: SD_TOOL_BAR
+	drawing_toolbar: SD_TOOL_BAR
 			-- Part of toolbar that can be customized.
 
 	area: EV_DRAWING_AREA is
@@ -2353,7 +2353,7 @@ feature {NONE} -- Implementation for mini tool bar
 	mini_toolbar: EV_HORIZONTAL_BOX
 			-- Mini tool bar.
 
-	history_toolbar: EV_TOOL_BAR;
+	history_toolbar: SD_TOOL_BAR;
 			-- Toolbar containing the history commands.
 
 	window: EV_WINDOW is

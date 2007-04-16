@@ -67,8 +67,8 @@ feature {NONE} -- Initialization
 			box: EV_VERTICAL_BOX
 			box2: EV_VERTICAL_BOX
 			box_exception: EV_HORIZONTAL_BOX
-			tb_exception: EV_TOOL_BAR
-			tb_but_exception: EV_TOOL_BAR_BUTTON
+			tb_exception: SD_TOOL_BAR
+			tb_but_exception: SD_TOOL_BAR_BUTTON
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
 		do
@@ -137,12 +137,14 @@ feature {NONE} -- Initialization
 			create box_exception
 			create exception
 			box_exception.extend (exception)
-			create tb_exception
-			create tb_but_exception
+			create tb_exception.make
+			create tb_but_exception.make
 			tb_but_exception.set_pixmap (pixmaps.icon_pixmaps.debug_exception_dialog_icon)
+			tb_but_exception.set_pixel_buffer (pixmaps.icon_pixmaps.debug_exception_dialog_icon_buffer)
 			tb_but_exception.set_tooltip ("Open exception dialog for more details")
 			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
 			tb_exception.extend (tb_but_exception)
+			tb_exception.compute_minimum_size
 			box_exception.extend (tb_exception)
 			box_exception.disable_item_expand (tb_exception)
 
@@ -221,27 +223,32 @@ feature {NONE} -- Initialization
 		local
 			cmd: EB_STANDARD_CMD
 		do
-			create mini_toolbar
+			create mini_toolbar.make
 			create save_call_stack_cmd.make
 			save_call_stack_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_save_icon)
+			save_call_stack_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_save_icon_buffer)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
-			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (save_call_stack_cmd.new_mini_sd_toolbar_item)
 
 			create cmd.make
 			cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
+			cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_copy_icon_buffer)
 			cmd.set_tooltip (Interface_names.e_Copy_call_stack_to_clipboard)
 			cmd.add_agent (agent copy_call_stack_to_clipboard)
-			mini_toolbar.extend (cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (cmd.new_mini_sd_toolbar_item)
 			copy_call_stack_cmd := cmd
 
 
 			create set_stack_depth_cmd.make
 			set_stack_depth_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.debugger_callstack_depth_icon)
+			set_stack_depth_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.debugger_callstack_depth_icon_buffer)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
-			mini_toolbar.extend (set_stack_depth_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (set_stack_depth_cmd.new_mini_sd_toolbar_item)
+
+			mini_toolbar.compute_minimum_size
 		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -263,7 +270,7 @@ feature -- Box management
 
 feature -- Access
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Associated mini toolbar.
 
 	widget: EV_WIDGET

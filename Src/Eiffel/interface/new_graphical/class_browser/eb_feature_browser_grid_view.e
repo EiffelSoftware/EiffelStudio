@@ -197,12 +197,12 @@ feature -- Access
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
-			l_tool_bar: EV_TOOL_BAR
+			l_tool_bar: SD_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
-				create l_tool_bar
-				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				create l_tool_bar.make
+				l_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 				l_tool_bar.extend (show_tooltip_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)

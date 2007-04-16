@@ -799,9 +799,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_reference_icon
 		end
 
+	new_reference_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_reference_icon_buffer
+		end
+
 	new_target_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_target_icon
+		end
+
+	new_target_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_target_icon_buffer
 		end
 
 	new_cluster_icon: EV_PIXMAP
@@ -809,14 +819,29 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_cluster_icon
 		end
 
+	new_cluster_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_cluster_icon_buffer
+		end
+
 	new_override_cluster_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_override_cluster_icon
 		end
 
+	new_override_cluster_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_override_cluster_icon_buffer
+		end
+
 	new_library_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_library_icon
+		end
+
+	new_library_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_library_icon_buffer
 		end
 
 	general_open_icon: EV_PIXMAP
@@ -839,9 +864,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.general_edit_icon
 		end
 
+	general_edit_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.general_edit_icon_buffer
+		end
+
 	general_delete_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.general_delete_icon
+		end
+
+	general_delete_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.general_delete_icon_buffer
 		end
 
 	new_precompiled_library_icon: EV_PIXMAP
@@ -849,9 +884,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_precompiled_library_icon
 		end
 
+	new_precompiled_library_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_precompiled_library_icon_buffer
+		end
+
 	new_include_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_include_icon
+		end
+
+	new_include_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_include_icon_buffer
 		end
 
 	new_object_icon: EV_PIXMAP
@@ -859,9 +904,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_object_icon
 		end
 
+	new_object_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_object_icon_buffer
+		end
+
 	new_makefile_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_makefile_icon
+		end
+
+	new_makefile_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_makefile_icon_buffer
 		end
 
 	new_resource_icon: EV_PIXMAP
@@ -869,9 +924,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_resource_icon
 		end
 
+	new_resource_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_resource_icon_buffer
+		end
+
 	new_pre_compilation_task_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.new_pre_compilation_task_icon
+		end
+
+	new_pre_compilation_task_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_pre_compilation_task_icon_buffer
 		end
 
 	new_post_compilation_task_icon: EV_PIXMAP
@@ -879,9 +944,19 @@ feature {NONE} -- Configuration pixmaps
 			Result := icon_pixmaps.new_post_compilation_task_icon
 		end
 
+	new_post_compilation_task_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.new_post_compilation_task_icon_buffer
+		end
+
 	project_settings_edit_library_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.project_settings_edit_library_icon
+		end
+
+	project_settings_edit_library_icon_buffer: EV_PIXEL_BUFFER
+		once
+			Result := icon_pixmaps.project_settings_edit_library_icon_buffer
 		end
 
 	project_settings_system_icon: EV_PIXMAP

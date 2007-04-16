@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_TOOLBARABLE_TOGGLE_COMMAND) is
+	make (a_command: EB_TOOLBARABLE_COMMAND) is
 			-- Creation method
 		do
 			sd_make
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	command: EB_TOOLBARABLE_TOGGLE_COMMAND;
+	command: EB_TOOLBARABLE_COMMAND;
 			-- command associated with Current.
 
 indexing

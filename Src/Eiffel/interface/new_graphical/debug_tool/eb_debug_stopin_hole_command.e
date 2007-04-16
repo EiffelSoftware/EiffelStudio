@@ -11,7 +11,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item, new_sd_toolbar_item, new_mini_toolbar_item, mini_pixmap,
+			new_toolbar_item, new_sd_toolbar_item, new_mini_toolbar_item, mini_pixmap, mini_pixel_buffer,
 			tooltext
 		end
 
@@ -97,6 +97,12 @@ feature -- Access
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.breakpoints_enable_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Icon for `Current'.
+		do
+			Result := pixmaps.mini_pixmaps.breakpoints_enable_icon_buffer
 		end
 
 	name: STRING is "Enable_bkpt"

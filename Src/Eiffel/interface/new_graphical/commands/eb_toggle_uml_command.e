@@ -12,7 +12,7 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			description,
 			initialize
 		end
@@ -48,7 +48,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -57,9 +57,9 @@ feature -- Basic operations
 			create Result.make (Current)
 			current_button := Result
 			if tool.is_uml then
-				Result.toggle
+				Result.enable_select
 			end
-			initialize_toolbar_item (Result, display_text)
+			initialize_sd_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			-- Currently there is no pixel buffer for this command.
+			Result := pixmaps.icon_pixmaps.diagram_view_uml_icon_buffer
 		end
 
 	description: STRING_GENERAL is
@@ -101,8 +101,8 @@ feature {NONE} -- Implementation
 
 feature {EB_DIAGRAM_TOOL} -- Implementation
 
-	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
-			-- Current toggle button.
+	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
+			-- Current sd toggle button.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

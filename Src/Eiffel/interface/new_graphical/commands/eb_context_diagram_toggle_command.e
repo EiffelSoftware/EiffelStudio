@@ -19,7 +19,7 @@ feature -- Status setting
 			if current_button /= Void then
 				if not current_button.is_selected then
 					current_button.select_actions.block
-					current_button.toggle
+					current_button.enable_select
 					current_button.select_actions.resume
 				end
 				l_string := tooltip.twin
@@ -40,7 +40,7 @@ feature -- Status setting
 			if current_button /= Void then
 				if current_button.is_selected then
 					current_button.select_actions.block
-					current_button.toggle
+					current_button.disable_select
 					current_button.select_actions.resume
 				end
 				l_string := tooltip.twin
@@ -55,7 +55,7 @@ feature -- Status setting
 
 feature -- Access
 
-	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
 		deferred
 		end
 

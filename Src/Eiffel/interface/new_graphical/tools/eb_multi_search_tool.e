@@ -574,30 +574,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 			content.focus_in_actions.extend (agent show)
 		end
 
-	report : EV_FRAME
-			-- Report container
-
-	report_button : EV_TOOL_BAR_BUTTON
-			-- Button to hide or show report.
-
-	summary_label : EV_LABEL
-			-- Label to show search summary.
-
-	shortcut_tool_bar: EV_TOOL_BAR
-			-- Tool bar contains expand all button etc.
-
-	new_search_tool_bar: EV_TOOL_BAR
-			-- Tool bar contains new search button.
-
-	new_search_button: EV_TOOL_BAR_BUTTON
-			-- Button to force a new search.
-
-	expand_all_button: EV_TOOL_BAR_BUTTON
-			-- Button to expand all.
-
-	collapse_all_button: EV_TOOL_BAR_BUTTON
-			-- Button to collapse all.
-
 	prepare_interface is
 			-- Initialize options' status.
 		local

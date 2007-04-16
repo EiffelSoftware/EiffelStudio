@@ -121,7 +121,13 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			-- Currently there is no pixel buffer for this command.
+			if selected_type = inheritance then
+				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon_buffer
+			elseif selected_type = Supplier then
+				Result := pixmaps.icon_pixmaps.new_supplier_link_icon_buffer
+			else
+				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon_buffer
+			end
 		end
 
 	tooltip: STRING_GENERAL is

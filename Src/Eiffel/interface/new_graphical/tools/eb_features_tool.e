@@ -60,11 +60,13 @@ feature {NONE} -- Initialization
 	build_mini_toolbar is
 			-- Build the associated toolbar
 		do
-			create mini_toolbar
-			mini_toolbar.extend (develop_window.commands.new_feature_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_alias_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_signature_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_assigner_cmd.new_mini_toolbar_item)
+			create mini_toolbar.make
+			mini_toolbar.extend (develop_window.commands.new_feature_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_alias_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_signature_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_assigner_cmd.new_mini_sd_toolbar_item)
+
+			mini_toolbar.compute_minimum_size
 
 			develop_window.commands.toggle_feature_signature_cmd.set_select (is_signature_enabled)
 			develop_window.commands.toggle_feature_alias_cmd.set_select (is_alias_enabled)
@@ -86,7 +88,7 @@ feature
 
 feature -- Access
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Bar containing a button for a new feature.
 
 	widget: EV_CELL

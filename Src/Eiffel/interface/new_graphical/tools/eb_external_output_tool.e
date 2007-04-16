@@ -110,18 +110,18 @@ feature{NONE} -- Initialization
 			l_ev_output_lbl: EV_LABEL
 			l_ev_input_lbl: EV_LABEL
 			l_ev_empty_lbl: EV_LABEL
-			cmd_toolbar: EV_TOOL_BAR
-			output_toolbar: EV_TOOL_BAR
-			clear_output_toolbar: EV_TOOL_BAR
-			input_toolbar: EV_TOOL_BAR
-			tbs: EV_TOOL_BAR_SEPARATOR
-			l_del_tool_bar: EV_TOOL_BAR
+			cmd_toolbar: SD_TOOL_BAR
+			output_toolbar: SD_TOOL_BAR
+			clear_output_toolbar: SD_TOOL_BAR
+			input_toolbar: SD_TOOL_BAR
+			tbs: SD_TOOL_BAR_SEPARATOR
+			l_del_tool_bar: SD_TOOL_BAR
 		do
-			create del_cmd_btn
-			create tbs.default_create
-			create cmd_toolbar
-			create output_toolbar
-			create input_toolbar
+			create del_cmd_btn.make
+			create tbs.make
+			create cmd_toolbar.make
+			create output_toolbar.make
+			create input_toolbar.make
 			create main_frame
 			create l_ev_empty_lbl
 			create l_ev_vertical_box_2
@@ -136,19 +136,19 @@ feature{NONE} -- Initialization
 			create l_ev_horizontal_box_5
 			create l_ev_horizontal_box_6
 			create l_ev_horizontal_box_7
-			create terminate_btn
-			create run_btn
+			create terminate_btn.make
+			create run_btn.make
 			create cmd_lst
-			create edit_cmd_detail_btn
-			create hidden_btn
+			create edit_cmd_detail_btn.make
+			create hidden_btn.make
 			create state_label.make_with_text (l_no_command_is_running)
-			create send_input_btn
+			create send_input_btn.make
 			create input_field
-			create save_output_btn
-			create clear_output_btn
-			create clear_output_toolbar
-			create toolbar
-			create l_del_tool_bar
+			create save_output_btn.make
+			create clear_output_btn.make
+			create clear_output_toolbar.make
+			create toolbar.make
+			create l_del_tool_bar.make
 
 			create l_locale_text.make_with_text (interface_names.l_locale)
 
@@ -157,6 +157,12 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_7.extend (l_ev_empty_lbl)
 			l_ev_horizontal_box_7.disable_item_expand (l_ev_empty_lbl)
 			output_toolbar.extend (save_output_btn)
+
+			save_output_btn.set_tooltip (f_save_output_button)
+			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
+			save_output_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_save_icon_buffer)
+			save_output_btn.select_actions.extend (agent on_save_output_to_file)
+
 			clear_output_toolbar.extend (clear_output_btn)
 			l_ev_horizontal_box_7.extend (output_toolbar)
 			l_ev_horizontal_box_7.disable_item_expand (output_toolbar)
@@ -187,8 +193,8 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (locale_combo)
 			l_ev_horizontal_box_2.set_padding_width (5)
 			l_ev_horizontal_box_5.extend (cmd_toolbar)
-			l_ev_horizontal_box_5.extend (toolbar.widget)
-			l_ev_horizontal_box_5.disable_item_expand (toolbar.widget)
+			l_ev_horizontal_box_5.extend (toolbar)
+			l_ev_horizontal_box_5.disable_item_expand (toolbar)
 			l_ev_horizontal_box_5.extend (l_del_tool_bar)
 			l_ev_horizontal_box_5.disable_item_expand (cmd_toolbar)
 			cmd_toolbar.extend (run_btn)
@@ -196,8 +202,7 @@ feature{NONE} -- Initialization
 			cmd_toolbar.extend (tbs)
 			cmd_toolbar.extend (edit_cmd_detail_btn)
 
-			toolbar.extend (a_tool.commands.edit_external_commands_cmd)
-			toolbar.update_toolbar
+			toolbar.extend (a_tool.commands.edit_external_commands_cmd.new_sd_toolbar_item (False))
 
 			l_del_tool_bar.extend (del_cmd_btn)
 			l_ev_horizontal_box_2.extend (l_ev_horizontal_box_5)
@@ -219,10 +224,12 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_border_width (4)
 
 			del_cmd_btn.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			del_cmd_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
 			clear_output_btn.set_pixmap (icon_pixmaps.general_reset_icon)
+			clear_output_btn.set_pixel_buffer (icon_pixmaps.general_reset_icon_buffer)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
@@ -232,6 +239,7 @@ feature{NONE} -- Initialization
 			output_text.disable_edit
 
 			terminate_btn.set_pixmap (pixmaps.icon_pixmaps.debug_stop_icon)
+			terminate_btn.set_pixel_buffer (pixmaps.icon_pixmaps.debug_stop_icon_buffer)
 			output_text.drop_actions.extend (agent drop_class)
 			output_text.drop_actions.extend (agent drop_feature)
 			output_text.drop_actions.extend (agent drop_cluster)
@@ -243,6 +251,7 @@ feature{NONE} -- Initialization
 			edit_cmd_detail_btn.set_text ("")
 			edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
 			edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
+			edit_cmd_detail_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_save_icon_buffer)
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
@@ -252,6 +261,7 @@ feature{NONE} -- Initialization
 			state_label.drop_actions.extend (agent drop_breakable)
 
 			run_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
+			run_btn.set_pixel_buffer (pixmaps.icon_pixmaps.debug_run_icon_buffer)
 			run_btn.set_tooltip (f_start_command_button)
 			run_btn.select_actions.extend (agent on_run_process)
 
@@ -265,6 +275,7 @@ feature{NONE} -- Initialization
 			cmd_lst.drop_actions.extend (agent drop_breakable)
 
 			edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			edit_cmd_detail_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_add_icon_buffer)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
 
 			input_field.key_press_actions.extend (agent on_key_pressed_in_input_field (?))
@@ -275,13 +286,9 @@ feature{NONE} -- Initialization
 			input_field.drop_actions.extend (agent drop_breakable)
 
 			send_input_btn.set_pixmap (icon_pixmaps.general_send_enter_icon)
+			send_input_btn.set_pixel_buffer (icon_pixmaps.general_send_enter_icon_buffer)
 			send_input_btn.set_tooltip (f_send_input_button)
 			send_input_btn.select_actions.extend (agent on_send_input_btn_pressed)
-
-			output_toolbar.disable_vertical_button_style
-			save_output_btn.set_tooltip (f_save_output_button)
-			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
-			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 
 			l_ev_cmd_lbl.set_text (l_command)
 			l_ev_output_lbl.set_text (l_output)
@@ -305,6 +312,13 @@ feature{NONE} -- Initialization
 			else
 				synchronize_on_process_starts ("")
 			end
+
+			output_toolbar.compute_minimum_size
+			clear_output_toolbar.compute_minimum_size
+			input_toolbar.compute_minimum_size
+			cmd_toolbar.compute_minimum_size
+			toolbar.compute_minimum_size
+			l_del_tool_bar.compute_minimum_size
 		end
 
 feature -- Docking
@@ -515,15 +529,18 @@ feature{NONE} -- Actions
 				if eb /= Void then
 					edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
 					edit_cmd_detail_btn.set_pixmap (pixmaps.icon_pixmaps.view_editor_icon)
+					edit_cmd_detail_btn.set_pixel_buffer (pixmaps.icon_pixmaps.view_editor_icon_buffer)
 				else
 					edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
 					edit_cmd_detail_btn.set_pixmap (icon_pixmaps.general_add_icon)
+					edit_cmd_detail_btn.set_pixel_buffer (icon_pixmaps.general_add_icon_buffer)
 				end
 			else
 				run_btn.disable_sensitive
 				del_cmd_btn.disable_sensitive
 				edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
 				edit_cmd_detail_btn.set_pixmap (icon_pixmaps.general_add_icon)
+				edit_cmd_detail_btn.set_pixel_buffer (icon_pixmaps.general_add_icon_buffer)
 			end
 		end
 
@@ -758,7 +775,7 @@ feature {NONE} -- Recycle
 		do
 			recycle_widgets
 			external_output_manager.prune (Current)
-			toolbar.recycle
+			toolbar.destroy
 			toolbar := Void
 			widget.destroy
 			widget := Void
@@ -770,17 +787,9 @@ feature {NONE} -- Recycle
 			-- Recycle widgets.
 		do
 			cmd_lst.destroy
-			terminate_btn.destroy
-			run_btn.destroy
 			state_label.destroy
 			main_frame.destroy
-			edit_cmd_detail_btn.destroy
-			hidden_btn.destroy
 			input_field.destroy
-			send_input_btn.destroy
-			save_output_btn.destroy
-			clear_output_btn.destroy
-			del_cmd_btn.destroy
 
 			terminate_btn := Void
 			run_btn := Void
@@ -798,12 +807,13 @@ feature {NONE} -- Recycle
 
 feature {NONE} -- Implementation
 
-	toolbar: EB_TOOLBAR
+	toolbar: SD_TOOL_BAR
+			-- Tool bar.
 
-	terminate_btn: EV_TOOL_BAR_BUTTON
+	terminate_btn: SD_TOOL_BAR_BUTTON
 			-- Button to terminate running process
 
-	run_btn: EV_TOOL_BAR_BUTTON
+	run_btn: SD_TOOL_BAR_BUTTON
 			-- Button to launch process
 
 	state_label: EV_LABEL
@@ -814,25 +824,25 @@ feature {NONE} -- Implementation
 	cmd_lst: EV_COMBO_BOX
 			-- List of external commands.
 
-	edit_cmd_detail_btn: EV_TOOL_BAR_BUTTON
+	edit_cmd_detail_btn: SD_TOOL_BAR_BUTTON
 			-- Button to open new/edit external command dialog.
 
-	hidden_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	hidden_btn: SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to set whether or not external command should be run hidden.
 
 	input_field: EV_COMBO_BOX
 			-- Text field where user can type data.
 
-	send_input_btn: EV_TOOL_BAR_BUTTON
+	send_input_btn: SD_TOOL_BAR_BUTTON
 			-- Button to send data into launched process.
 
-	save_output_btn: EV_TOOL_BAR_BUTTON
+	save_output_btn: SD_TOOL_BAR_BUTTON
 			-- Button to save output from process to file.
 
-	clear_output_btn: EV_TOOL_BAR_BUTTON
+	clear_output_btn: SD_TOOL_BAR_BUTTON
 			-- Button to clear output window.
 
-	del_cmd_btn: EV_TOOL_BAR_BUTTON;
+	del_cmd_btn: SD_TOOL_BAR_BUTTON;
 			-- Button to delete an already stored external command
 
 indexing

@@ -14,6 +14,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
+			mini_pixel_buffer,
 			tooltext
 		end
 
@@ -43,6 +44,9 @@ feature -- Access
 			-- Icon for tool bar button representing `Current'.
 
 	mini_pixmap: EV_PIXMAP
+			-- Icon for mini tool bar button representing `Current'.
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Icon for mini tool bar button representing `Current'.
 
 	tooltip: STRING_GENERAL
@@ -133,6 +137,12 @@ feature -- Status setting
 			-- Define the pixmap displayed on mini buttons associated to `Current'.
 		do
 			mini_pixmap := p
+		end
+
+	set_mini_pixel_buffer (p: EV_PIXEL_BUFFER)
+			-- Define the pixel buffer displayed on mini buttons associated to `Current'.
+		do
+			mini_pixel_buffer := p
 		end
 
 feature -- Basic operations

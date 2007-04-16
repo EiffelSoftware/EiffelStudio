@@ -12,7 +12,8 @@ inherit
 	EB_HISTORY_COMMAND
 		redefine
 			executable,
-			mini_pixmap
+			mini_pixmap,
+			mini_pixel_buffer
 		end
 
 create
@@ -30,6 +31,12 @@ feature -- Access
 			-- Mini pixmap representing the command.
 		do
 			Result := pixmaps.mini_pixmaps.general_previous_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Mini pixmap representing the command.
+		do
+			Result := pixmaps.mini_pixmaps.general_previous_icon_buffer
 		end
 
 feature {NONE} -- Implementation

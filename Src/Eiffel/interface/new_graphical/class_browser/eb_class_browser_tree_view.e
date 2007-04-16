@@ -64,7 +64,7 @@ feature -- Access
 		do
 			if control_tool_internal = Void then
 				create control_tool_internal
-				control_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				control_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 				control_tool_bar.extend (display_path_button)
 				if is_flat_view_enabled then
 					control_tool_bar.extend (normal_referenced_button)
@@ -79,11 +79,11 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	control_tool_bar: EV_TOOL_BAR is
+	control_tool_bar: SD_TOOL_BAR is
 			-- Tool bar contained in `control_bar'
 		do
 			if control_tool_bar_internal = Void then
-				create control_tool_bar_internal
+				create control_tool_bar_internal.make
 			end
 			Result := control_tool_bar_internal
 		ensure
@@ -95,7 +95,7 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	syntactical_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
@@ -109,7 +109,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normal_referenced_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
+	normal_referenced_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
@@ -636,7 +636,7 @@ feature{NONE} -- Implementation
 	control_tool_internal: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	display_path_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
+	display_path_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to turn on/off item path display
 		do
 			if display_path_button_internal = Void then

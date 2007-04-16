@@ -15,6 +15,7 @@ inherit
 	EB_TOOLBARABLE_COMMAND
 		redefine
 			mini_pixmap,
+			mini_pixel_buffer,
 			new_mini_toolbar_item
 		end
 
@@ -47,6 +48,12 @@ feature -- Access
 			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

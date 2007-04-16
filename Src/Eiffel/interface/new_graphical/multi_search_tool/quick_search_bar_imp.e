@@ -34,24 +34,24 @@ feature {NONE}-- Initialization
 			create l_ev_label_1
 			create keyword_field
 			create l_ev_cell_2
-			create l_ev_tool_bar_1
-			create next_button
-			create l_ev_tool_bar_2
-			create previous_button
+			create l_ev_tool_bar_1.make
+			create next_button.make
+			create l_ev_tool_bar_2.make
+			create previous_button.make
 			create l_ev_cell_3
 			create match_case_button
 			create regular_expression_button
 			create l_ev_cell_4
-			create l_ev_tool_bar_3
-			create advanced_button
+			create l_ev_tool_bar_3.make
+			create advanced_button.make
 			create l_ev_cell_5
 			create l_ev_vertical_box_1
 			create l_ev_cell_6
 			create message_box
 			create l_ev_cell_7
 			create l_ev_vertical_box_2
-			create l_ev_tool_bar_4
-			create close_button
+			create l_ev_tool_bar_4.make
+			create close_button.make
 
 				-- Build widget structure.
 			extend (l_ev_horizontal_separator_1)
@@ -136,13 +136,18 @@ feature {NONE}-- Initialization
 
 				-- Call `user_initialization'.
 			user_initialization
+			
+			l_ev_tool_bar_1.compute_minimum_size
+			l_ev_tool_bar_2.compute_minimum_size
+			l_ev_tool_bar_3.compute_minimum_size
+			l_ev_tool_bar_4.compute_minimum_size
 		end
 
 
 feature -- Access
 
 	keyword_field: EV_COMBO_BOX
-	next_button, previous_button, advanced_button, close_button: EV_TOOL_BAR_BUTTON
+	next_button, previous_button, advanced_button, close_button: SD_TOOL_BAR_BUTTON
 	message_box: EV_HORIZONTAL_BOX
 	match_case_button,
 	regular_expression_button: EV_CHECK_BUTTON
@@ -153,7 +158,7 @@ feature {NONE} -- Implementation
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4,
 	l_ev_cell_5, l_ev_cell_6, l_ev_cell_7: EV_CELL
 	l_ev_tool_bar_1, l_ev_tool_bar_2, l_ev_tool_bar_3,
-	l_ev_tool_bar_4: EV_TOOL_BAR
+	l_ev_tool_bar_4: SD_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 	l_ev_label_1: EV_LABEL

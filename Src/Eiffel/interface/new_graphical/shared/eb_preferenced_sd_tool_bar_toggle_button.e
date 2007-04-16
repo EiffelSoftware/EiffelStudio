@@ -9,10 +9,13 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 
 inherit
-	EV_TOOL_BAR_TOGGLE_BUTTON
+	SD_TOOL_BAR_TOGGLE_BUTTON
+		rename
+			make as make_base
+		end
 
 	EB_RECYCLABLE
 		undefine
@@ -31,7 +34,7 @@ feature{NONE} -- Initialization
 		require
 			a_preference_attached: a_preference /= Void
 		do
-			default_create
+			make_base
 			preference := a_preference
 			create synchronizer
 			button_status_change_agent := agent notify_synchronizer (Current)
@@ -147,4 +150,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+end -- class EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON

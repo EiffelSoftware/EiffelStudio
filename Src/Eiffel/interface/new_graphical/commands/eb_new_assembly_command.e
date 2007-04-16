@@ -10,6 +10,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
+			mini_pixel_buffer,
 			tooltext
 		end
 
@@ -56,6 +57,12 @@ feature -- Access
 			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.new_assembly_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.new_assembly_icon_buffer
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is

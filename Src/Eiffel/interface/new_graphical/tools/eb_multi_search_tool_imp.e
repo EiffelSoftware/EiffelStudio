@@ -340,11 +340,13 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
 		local
 			l_cmd: EB_SHOW_TOOL_COMMAND
 		do
-			create mini_toolbar
+			create mini_toolbar.make
 			l_cmd := develop_window.commands.show_tool_commands.item (report_tool)
 				-- Pixmap should be changed.
 			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon)
-			mini_toolbar.extend (l_cmd.new_mini_toolbar_item)
+			l_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
+			mini_toolbar.extend (l_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.compute_minimum_size
 
 			content.set_mini_toolbar (mini_toolbar)
 		ensure then
@@ -519,7 +521,7 @@ feature -- Widgets
 	options: EV_FRAME
 			-- Options widget
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Mini tool bar.
 
 feature -- Status report

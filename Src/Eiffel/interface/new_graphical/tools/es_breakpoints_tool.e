@@ -111,31 +111,34 @@ feature {NONE} -- Initialization
 			-- Build the associated tool bar
 		local
 			scmd: EB_STANDARD_CMD
-			tb: EV_TOOL_BAR_BUTTON
+			tb: SD_TOOL_BAR_BUTTON
 		do
-			create mini_toolbar
+			create mini_toolbar.make
 
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_toogle_icon)
+			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_toogle_icon_buffer)
 			scmd.set_tooltip (interface_names.f_display_breakpoints)
 			scmd.enable_sensitive
-			tb := scmd.new_mini_toolbar_item
+			tb := scmd.new_mini_sd_toolbar_item
 			scmd.add_agent (agent toggle_breakpoint_layout_mode (tb))
 			mini_toolbar.extend (tb)
 			toggle_layout_cmd := scmd
 
 			if Eb_debugger_manager.enable_bkpt /= Void then
-				enable_bkpt_button := Eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
+				enable_bkpt_button := Eb_debugger_manager.enable_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (enable_bkpt_button)
 			end
 			if Eb_debugger_manager.disable_bkpt /= Void then
-				disable_bkpt_button := Eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
+				disable_bkpt_button := Eb_debugger_manager.disable_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (disable_bkpt_button)
 			end
 			if Eb_debugger_manager.clear_bkpt /= Void then
-				clear_bkpt_button := Eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
+				clear_bkpt_button := Eb_debugger_manager.clear_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (clear_bkpt_button)
 			end
+
+			mini_toolbar.compute_minimum_size
 		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -167,7 +170,7 @@ feature -- Properties
 
 feature -- Access
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Associated mini toolbar.
 
 	widget: EV_WIDGET
@@ -325,13 +328,13 @@ feature -- Events
 
 feature -- Memory management
 
-	enable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+	enable_bkpt_button: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Enable breakpoint button
 
-	disable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+	disable_bkpt_button: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Disable breakpoint button
 
-	clear_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+	clear_bkpt_button: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Clear breakpoint button
 
 	internal_recycle is
@@ -372,7 +375,7 @@ feature {NONE} -- Grid layout Implementation
 
 feature {NONE} -- Implementation
 
-	toggle_breakpoint_layout_mode (tt: EV_TOOLTIPABLE) is
+	toggle_breakpoint_layout_mode (tt: SD_TOOL_BAR_BUTTON) is
 			-- Toggle `breakpoints_separated_by_status' mode
 		do
 			breakpoints_separated_by_status := not breakpoints_separated_by_status

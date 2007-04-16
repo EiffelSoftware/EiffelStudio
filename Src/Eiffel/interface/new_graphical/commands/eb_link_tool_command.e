@@ -11,7 +11,7 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			menu_name,
 			initialize
 		end
@@ -103,12 +103,12 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+			-- Create a new sd toolbar button for this command.
 		do
 			create Result.make (Current)
 			current_button := Result
-			initialize_toolbar_item (Result, display_text)
+			initialize_sd_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_link_stone)
 		end
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.context_link_icon_buffer
+			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon_buffer
 		end
 
 	menu_name: STRING_GENERAL is
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 
 feature {EB_DIAGRAM_TOOL} -- Implementation
 
-	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
+	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 			-- Current toggle button.
 
 indexing

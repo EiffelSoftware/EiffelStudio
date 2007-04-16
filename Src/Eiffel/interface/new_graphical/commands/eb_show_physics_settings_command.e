@@ -74,9 +74,9 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			-- Currently there is no pixel buffer for this command.
+			Result := pixmaps.icon_pixmaps.diagram_physics_settings_icon_buffer
 		end
-		
+
 	description: STRING_GENERAL is
 			-- Description for this command.
 		do

@@ -89,8 +89,11 @@ feature {NONE} -- Initialization
 			l_ev_label_1.set_text (interface_names.t_find)
 
 			next_button.set_pixmap (icon_pixmaps.general_arrow_down_icon)
+			next_button.set_pixel_buffer (icon_pixmaps.general_arrow_down_icon_buffer)
 			previous_button.set_pixmap (icon_pixmaps.general_arrow_up_icon)
+			previous_button.set_pixel_buffer (icon_pixmaps.general_arrow_up_icon_buffer)
 			advanced_button.set_pixmap (icon_pixmaps.tool_advanced_search_icon)
+			advanced_button.set_pixel_buffer (icon_pixmaps.tool_advanced_search_icon_buffer)
 			create first_reached_pixmap
 			create bottom_reached_pixmap
 			first_reached_pixmap.set_minimum_size (icon_pixmaps.search_first_reached_icon.width,
@@ -106,6 +109,7 @@ feature {NONE} -- Initialization
 			first_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, first_reached_pixmap, icon_pixmaps.search_first_reached_icon))
 			bottom_reached_pixmap.expose_actions.extend (agent on_pixmap_expose (?, ?, ?, ?, bottom_reached_pixmap, icon_pixmaps.search_bottom_reached_icon))
 			close_button.set_pixmap (icon_pixmaps.general_close_icon)
+			close_button.set_pixel_buffer (icon_pixmaps.general_close_icon_buffer)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
 			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))
 			regular_expression_button.select_actions.extend (agent check_button_changed (regular_expression_button))

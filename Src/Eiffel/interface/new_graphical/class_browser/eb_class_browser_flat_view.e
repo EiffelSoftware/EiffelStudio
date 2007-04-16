@@ -269,7 +269,7 @@ feature -- Status report
 
 feature -- Access
 
-	show_feature_from_any_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
+	show_feature_from_any_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
 			if show_feature_from_any_button_internal = Void then
@@ -314,23 +314,23 @@ feature -- Access
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
-			l_tool_bar: EV_TOOL_BAR
-			l_tool_bar2: EV_TOOL_BAR
+			l_tool_bar: SD_TOOL_BAR
+			l_tool_bar2: SD_TOOL_BAR
 			l_label: EV_LABEL
-			l_tool_bar3: EV_TOOL_BAR
+			l_tool_bar3: SD_TOOL_BAR
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar
-				create l_tool_bar
-				create l_tool_bar3
-				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				create l_tool_bar.make
+				create l_tool_bar3.make
+				l_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 				l_tool_bar.extend (show_feature_from_any_button)
 				l_tool_bar.extend (show_tooltip_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
-				create l_tool_bar2
-				l_tool_bar2.extend (create{EV_TOOL_BAR_SEPARATOR})
+				create l_tool_bar2.make
+				l_tool_bar2.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 				control_tool_bar.extend (l_tool_bar2)
 				control_tool_bar.disable_item_expand (l_tool_bar2)
 				create l_label.make_with_text (interface_names.l_filter)

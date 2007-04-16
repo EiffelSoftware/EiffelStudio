@@ -15,6 +15,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
+			mini_pixel_buffer,
 			new_toolbar_item,
 			new_mini_toolbar_item,
 			new_sd_toolbar_item,
@@ -107,6 +108,12 @@ feature -- Properties
 			-- Pixmap representing `Current' in toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.general_delete_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing `Current' in toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.general_delete_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

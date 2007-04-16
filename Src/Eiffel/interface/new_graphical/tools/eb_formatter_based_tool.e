@@ -566,10 +566,10 @@ feature{NONE} -- Implementation
 	mini_toolbar: EV_HORIZONTAL_BOX
 			-- Mini tool bar.
 
-	history_toolbar: EV_TOOL_BAR
+	history_toolbar: SD_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	tool_bar: EV_TOOL_BAR
+	tool_bar: SD_TOOL_BAR
 			-- Toolbar containing all buttons.
 
 	tool_bar_area: EV_HORIZONTAL_BOX
@@ -675,9 +675,10 @@ feature{NONE} -- Implementation
 	build_mini_toolbar is
 			-- Redefine
 		do
-			create history_toolbar
-			history_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
-			history_toolbar.extend (history_manager.forth_command.new_mini_toolbar_item)
+			create history_toolbar.make
+			history_toolbar.extend (history_manager.back_command.new_mini_sd_toolbar_item)
+			history_toolbar.extend (history_manager.forth_command.new_mini_sd_toolbar_item)
+			history_toolbar.compute_minimum_size
 
 			create mini_toolbar
 			mini_toolbar.extend (address_manager.header_info)
@@ -721,11 +722,11 @@ feature{NONE} -- Implementation
 			-- Create diagram option bar.
 		local
 			l_cell: EV_CELL
-			l_setup_toolbar: EV_TOOL_BAR
+			l_setup_toolbar: SD_TOOL_BAR
 		do
-			create tool_bar
+			create tool_bar.make
 			create l_cell
-			create l_setup_toolbar
+			create l_setup_toolbar.make
 			tool_bar_area.extend (tool_bar)
 			tool_bar_area.disable_item_expand (tool_bar)
 			tool_bar_area.extend (formatter_tool_bar_area)
@@ -737,6 +738,7 @@ feature{NONE} -- Implementation
 			tool_bar_area.disable_item_expand (l_setup_toolbar)
 
 			l_setup_toolbar.extend (customized_formatter_button)
+			l_setup_toolbar.compute_minimum_size
 			attach_formatters
 		end
 
@@ -769,12 +771,13 @@ feature{NONE} -- Implementation
 					if l_formatter /= Void then
 						attach_formatter (l_formatter)
 					else
-						tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
+						tool_bar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 					end
 					l_formatters.forth
 				end
 				l_formatters.go_to (l_cursor)
 			end
+			tool_bar.compute_minimum_size
 			pop_default_formatter
 		end
 
@@ -787,7 +790,7 @@ feature{NONE} -- Implementation
 		do
 			a_formatter.set_widget_owner (Current)
 			a_formatter.set_viewpoints (viewpoints)
-			tool_bar.extend (a_formatter.new_button)
+			tool_bar.extend (a_formatter.new_sd_button)
 			a_formatter.set_output_line (output_line)
 			if a_formatter.selected then
 				l_control_bar := a_formatter.control_bar
@@ -798,12 +801,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	customized_formatter_button: EV_TOOL_BAR_BUTTON is
+	customized_formatter_button: SD_TOOL_BAR_BUTTON is
 			-- Button used to setup customized formatters
 		do
 			if customized_formatter_button_internal = Void then
-				create customized_formatter_button_internal
+				create customized_formatter_button_internal.make
 				customized_formatter_button_internal.set_pixmap (pixmaps.icon_pixmaps.general_edit_icon)
+				customized_formatter_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.general_edit_icon_buffer)
 				 customized_formatter_button_internal.set_tooltip (interface_names.f_customize_formatter)
 				 customized_formatter_button_internal.select_actions.extend (agent on_setup_customized_formatters)
 			end

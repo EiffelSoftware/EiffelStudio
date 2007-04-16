@@ -80,24 +80,24 @@ feature{NONE} -- Initialization
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize interface.
 		local
-			l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
-			l_ev_tool_bar_1: EV_TOOL_BAR
-			l_ev_save_toolbar: EV_TOOL_BAR
+			l_ev_tool_bar_separator_1: SD_TOOL_BAR_SEPARATOR
+			l_ev_tool_bar_1: SD_TOOL_BAR
+			l_ev_save_toolbar: SD_TOOL_BAR
 			l_ev_h_area_1: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 		do
 			create l_ev_vertical_box_1
-			create l_ev_tool_bar_1
-			create save_output_btn
-			create l_ev_tool_bar_separator_1
-			create w_code_btn
-			create f_code_btn
+			create l_ev_tool_bar_1.make
+			create save_output_btn.make
+			create l_ev_tool_bar_separator_1.make
+			create w_code_btn.make
+			create f_code_btn.make
 			create l_ev_h_area_1
-			create clear_output_btn
-			create l_ev_save_toolbar
-			create open_editor_btn
+			create clear_output_btn.make
+			create l_ev_save_toolbar.make
+			create open_editor_btn.make
 			create message_label
-			create project_dir_btn
+			create project_dir_btn.make
 			create l_cell
 
 			message_label.align_text_left
@@ -124,18 +124,20 @@ feature{NONE} -- Initialization
 			l_ev_tool_bar_1.extend (f_code_btn)
 			l_ev_vertical_box_1.extend (l_ev_h_area_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_h_area_1)
-			l_ev_tool_bar_1.disable_vertical_button_style
 
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
 			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.command_send_to_external_editor_icon)
+			open_editor_btn.set_pixel_buffer (pixmaps.icon_pixmaps.command_send_to_external_editor_icon_buffer)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
 
 			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
+			save_output_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_save_icon_buffer)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 
 			w_code_btn.set_text (interface_names.e_w_code)
 			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			w_code_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_open_icon_buffer)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
 			w_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_w_code_dir, interface_names.e_open_c_file))
 			w_code_btn.pointer_button_press_actions.extend (agent on_open_w_code_in_file_browser)
@@ -143,6 +145,7 @@ feature{NONE} -- Initialization
 
 			f_code_btn.set_text (interface_names.e_f_code)
 			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			f_code_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_open_icon_buffer)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
 			f_code_btn.pointer_button_press_actions.extend (agent on_open_f_code_in_file_browser)
 			f_code_btn.set_tooltip (concatenated_tooltip (interface_names.e_go_to_f_code_dir, interface_names.e_open_c_file))
@@ -150,12 +153,14 @@ feature{NONE} -- Initialization
 
 			project_dir_btn.set_text (interface_names.e_open_project)
 			project_dir_btn.set_pixmap (pixmaps.icon_pixmaps.document_eiffel_project_icon)
+			project_dir_btn.set_pixel_buffer (pixmaps.icon_pixmaps.document_eiffel_project_icon_buffer)
 			project_dir_btn.select_actions.extend (agent on_go_to_project_dir)
 			project_dir_btn.pointer_button_press_actions.extend (agent on_open_project_dir_in_file_browser)
 			project_dir_btn.set_tooltip (interface_names.e_go_to_project_dir)
 			project_dir_btn.drop_actions.extend (agent on_pebble_drop)
 
 			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
+			clear_output_btn.set_pixel_buffer (pixmaps.icon_pixmaps.general_reset_icon_buffer)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
@@ -173,6 +178,9 @@ feature{NONE} -- Initialization
 			output_text.set_font (preferences.editor_data.font)
 			output_text.disable_edit
 			message_label.set_foreground_color ((create{EV_STOCK_COLORS}).red)
+
+			l_ev_tool_bar_1.compute_minimum_size
+			l_ev_save_toolbar.compute_minimum_size
 		end
 
 	title_for_pre: STRING is
@@ -712,25 +720,25 @@ feature{NONE} -- Implementation
 
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
-	save_output_btn: EV_TOOL_BAR_BUTTON
+	save_output_btn: SD_TOOL_BAR_BUTTON
 			-- Button to save c compilation output to a file
 
-	w_code_btn: EV_TOOL_BAR_BUTTON
+	w_code_btn: SD_TOOL_BAR_BUTTON
 			-- Button to go to W_code directory
 
-	f_code_btn: EV_TOOL_BAR_BUTTON
+	f_code_btn: SD_TOOL_BAR_BUTTON
 			-- Button to go to F_code directory
 
-	project_dir_btn: EV_TOOL_BAR_BUTTON
+	project_dir_btn: SD_TOOL_BAR_BUTTON
 			-- Button to open directory of current project
 
 	save_file_dlg: EV_FILE_SAVE_DIALOG
 			-- File dialog to let user choose a file.
 
-	clear_output_btn: EV_TOOL_BAR_BUTTON;
+	clear_output_btn: SD_TOOL_BAR_BUTTON;
 			-- Button to clear output window.
 
-	open_editor_btn: EV_TOOL_BAR_BUTTON
+	open_editor_btn: SD_TOOL_BAR_BUTTON
 			-- Button to open selected text in `console' in an external editor
 
 	directory_separator: CHARACTER is

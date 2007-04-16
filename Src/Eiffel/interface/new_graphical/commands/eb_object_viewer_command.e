@@ -14,6 +14,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
+			mini_pixel_buffer,
 			new_mini_toolbar_item
 		end
 
@@ -40,6 +41,12 @@ feature -- Access
 			-- 8*8 pixmap representing `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_expand_info_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- 8*8 pixel buffer representing `Current'.
+		do
+			Result := pixmaps.mini_pixmaps.debugger_expand_info_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

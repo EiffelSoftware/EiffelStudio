@@ -125,11 +125,13 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
 		local
 			l_cmd: EB_SHOW_TOOL_COMMAND
 		do
-			create mini_toolbar
+			create mini_toolbar.make
 			l_cmd := develop_window.commands.show_tool_commands.item (search_tool)
 				-- Pixmap should be changed.
 			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_search_icon)
-			mini_toolbar.extend (l_cmd.new_mini_toolbar_item)
+			l_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
+			mini_toolbar.extend (l_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.compute_minimum_size
 
 			content.set_mini_toolbar (mini_toolbar)
 		ensure then
@@ -171,7 +173,7 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_find_results_icon_buffer
 		end
 
-	mini_toolbar: EV_TOOL_BAR
+	mini_toolbar: SD_TOOL_BAR
 			-- Mini tool bar
 
 feature -- Command

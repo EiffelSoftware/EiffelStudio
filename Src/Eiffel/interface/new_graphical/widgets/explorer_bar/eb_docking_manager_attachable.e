@@ -48,14 +48,14 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := title.hash_code
+			Result := title_for_pre.hash_code
 		end
 
-	title: STRING_GENERAL is
+	title_for_pre: STRING is
 			-- Title of the tool
 		deferred
 		ensure then
-			valid_title: title /= Void and then not title.is_empty
+			valid_title: title_for_pre /= Void and then not title_for_pre.is_empty
 		end
 
 feature {NONE} -- Build implementation

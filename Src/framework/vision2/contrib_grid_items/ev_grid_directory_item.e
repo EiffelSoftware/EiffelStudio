@@ -27,12 +27,6 @@ feature {NONE} -- Initialization
 			Precursor
 			ellipsis_actions.force_extend (agent show_dialog)
 			enable_text_editing
---			change_actions.extend (agent ()
---				do
---					if text /= Void and then not text.is_empty then
---						set_start_directory (text)
---					end
---				end)
 		end
 
 feature -- Status
@@ -47,9 +41,6 @@ feature -- Change
 	set_start_directory (v: like start_directory) is
 		do
 			start_directory := v.twin
---			print ("start_directory -> ")
---			print (start_directory)
---			print ("%N")
 		end
 
 feature {NONE} -- Agents
@@ -59,21 +50,25 @@ feature {NONE} -- Agents
 		require
 			parented: is_parented
 			parent_window: parent_window (parent) /= Void
-			popup_window: popup_window /= Void
 			activated: is_activated
 		local
 			l_parent: EV_WINDOW
 			l_dial: EV_DIRECTORY_DIALOG
 			l_dir: DIRECTORY
-			t: STRING
+			t: STRING_GENERAL
 		do
 			l_parent := parent_window (parent)
 			is_dialog_open := True
 			create l_dial
-			t := text
+			if text_field /= Void then
+				t := text_field.text
+			else
+				t := text
+			end
+
 				--| Find the start directory
 			if t /= Void and then not t.is_empty then
-				create l_dir.make (t)
+				create l_dir.make (t.as_string_8)
 				if not l_dir.exists then
 					l_dir := Void
 				end
@@ -89,14 +84,23 @@ feature {NONE} -- Agents
 			end
 
 			l_dial.ok_actions.extend (agent dialog_ok (l_dial))
+			enter_outter_edition
 			l_dial.show_modal_to_window (l_parent)
+			leave_outter_edition
+			if text_field /= Void then
+				text_field.set_focus
+			end
 			is_dialog_open := False
 		end
 
 	dialog_ok (a_dial: EV_DIRECTORY_DIALOG) is
 			-- If dialog is closed with ok.
 		do
-			set_text (a_dial.directory)
+			if text_field /= Void then
+				text_field.set_text (a_dial.directory)
+			else
+				set_text (a_dial.directory)
+			end
 		end
 
 indexing

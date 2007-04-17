@@ -138,8 +138,20 @@ feature {NONE} -- Initialization
 			a_header_info_exist: a_header_info.exists
 		local
 			l_null_pointer: POINTER
+			l_err: WEL_ERROR
+			l_log_bitmap: WEL_LOG_BITMAP
 		do
+			create l_err
+			l_err.reset_last_error_code
 			item := cwin_create_dib_section (l_null_pointer, a_header_info.item, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors, $ppv_bits, l_null_pointer, 0)
+
+			-- FIXIT: In .Net environment, cwin_create_dib_section ppv_bits return NULL, but item is a valid pointer. Get last error is 0. Strange.
+			-- We have to query `ppv_bits' from `log_bitmap' indirectly.
+			if ppv_bits = default_pointer then
+				l_log_bitmap := log_bitmap
+				ppv_bits.set_item (l_log_bitmap.bits)
+				l_log_bitmap.dispose
+			end
 		ensure
 			bitmap_created: item /= default_pointer
 			ppv_bits_assigned: ppv_bits /= default_pointer

@@ -77,6 +77,8 @@ feature -- Access
 
 				l_tool_bar.extend (show_tooltip_button)
 
+				l_tool_bar.compute_minimum_size
+
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)

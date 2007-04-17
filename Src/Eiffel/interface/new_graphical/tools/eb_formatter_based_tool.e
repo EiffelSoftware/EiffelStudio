@@ -233,15 +233,21 @@ feature -- Setting
 			l_formatter_widget: EV_WIDGET
 		do
 			l_formatter_widget := a_formatter.widget
+			l_control_bar := a_formatter.control_bar
 			if not formatter_container.has (l_formatter_widget) then
-				formatter_tool_bar_area.wipe_out
-				l_control_bar := a_formatter.control_bar
-				if l_control_bar /= Void then
-					formatter_tool_bar_area.extend (l_control_bar)
-					formatter_tool_bar_area.disable_item_expand (l_control_bar)
-				end
+
 				formatter_container.replace (l_formatter_widget)
 			end
+
+			if l_control_bar /= Void and then not formatter_tool_bar_area.has (l_control_bar) then
+				formatter_tool_bar_area.wipe_out
+
+				formatter_tool_bar_area.extend (l_control_bar)
+				formatter_tool_bar_area.disable_item_expand (l_control_bar)
+				l_control_bar.show
+			
+			end
+
 		end
 
 	force_last_stone is

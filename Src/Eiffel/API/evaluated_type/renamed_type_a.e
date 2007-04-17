@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Encapsulates a renaming of features together with a type.
 		
-		It is called extended type because it carries extensions with it.
+		It is called renamed type because it carries extensions with it.
 		The most prominent case where we use an instance of this class is the following:
 		G -> {A rename f as f_of_a end, B rename f as f_of_b end}
 		`A' together with its rename clause corresponds to one instance of this class.

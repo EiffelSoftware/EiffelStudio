@@ -434,6 +434,7 @@ feature -- Call stack
 			c, oc	: CLASS_C
 			last_pos: INTEGER
 			oaddr: STRING
+			s: STRING
 		do
 			oaddr := cse.display_object_address
 			ecse ?= cse
@@ -473,12 +474,6 @@ feature -- Call stack
 			end
 			st.add_column_number (26)
 
-			if ecse /= Void and then ecse.is_melted then
-				st.add_string ("*")
-			end
-			if ecse /= Void and then ecse.has_rescue then
-				st.add_string ("R")
-			end
 			if oc /= Void then
 				st.add_feature_name (cse.routine_name, oc)
 				if oc /= c then
@@ -493,8 +488,24 @@ feature -- Call stack
 			else
 				st.add_string (cse.routine_name)
 			end
+			if ecse /= Void then
+				create s.make_empty
+				if ecse.is_melted then
+					s.append_character ('*')
+				end
+				if ecse.has_rescue then
+					s.append_character ('R')
+				end
+				if not s.is_empty then
+					st.add_string (" <")
+					st.add_string (s)
+					st.add_string (">")
+				end
+			end
 
 				-- print line number
+			st.add_string(" (")
+
 			st.add_string(" ( @ ")
 			st.add_int(cse.break_index)
 			st.add_string(" )")

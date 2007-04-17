@@ -9,9 +9,11 @@ class
 
 inherit
 	HASH_TABLE[INTEGER,INTEGER]
-	redefine
-		put
-	end
+		export
+			{NONE} force
+		redefine
+			put
+		end
 
 	SHARED_NAMES_HEAP
 		undefine

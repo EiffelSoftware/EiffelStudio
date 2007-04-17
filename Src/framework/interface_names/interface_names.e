@@ -934,6 +934,7 @@ feature -- Label texts
 	l_Not_empty: STRING_GENERAL is				do Result := locale.translate("Generate default feature clauses")	end
 	l_no_break_point: STRING_GENERAL is				do Result := locale.translate("No breakpoints")	end
 	l_edit_project: STRING_GENERAL is			do Result := locale.translate("Edit Project")	end
+	l_edit_text: STRING_GENERAL is				do Result := locale.translate("Edit Text") end
 	l_eiffel_class: STRING_GENERAL is			do Result := locale.translate ("Eiffel Class") end
 	l_eiffel_cluster: STRING_GENERAL is			do Result := locale.translate ("Eiffel Cluster") end
 	l_Elements: STRING_GENERAL is				do Result := locale.translate("elements.")	end

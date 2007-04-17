@@ -31,12 +31,47 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_dialog_open: BOOLEAN
-			-- Is the extended dialog open?
-
 	is_multiline_string: BOOLEAN
 
+feature -- Access
+
+	title: STRING_GENERAL
+			-- Dialog's title
+
+	ok_string: STRING_GENERAL
+			-- [OK] button's text.
+
+	reset_string: STRING_GENERAL
+			-- [Reset] button's text.
+
+	cancel_string: STRING_GENERAL
+			-- [Cancel] button's text.
+
 feature -- Change
+
+	set_dialog_title (s: like title) is
+			-- Set `title' to `s'
+		do
+			title := s
+		end
+
+	set_ok_string (s: like ok_string) is
+			-- Set `ok_string' to `s'
+		do
+			ok_string := s
+		end
+
+	set_reset_string (s: like reset_string) is
+			-- Set `reset_string' to `s'
+		do
+			reset_string := s
+		end
+
+	set_cancel_string (s: like cancel_string) is
+			-- Set `cancel_string' to `s'
+		do
+			cancel_string := s
+		end
 
 	enable_multiline_string is
 		do
@@ -55,7 +90,6 @@ feature {NONE} -- Agents
 		require
 			parented: is_parented
 			parent_window: parent_window (parent) /= Void
-			popup_window: popup_window /= Void
 			activated: is_activated
 		local
 			l_parent: EV_WINDOW
@@ -66,10 +100,29 @@ feature {NONE} -- Agents
 			l_txt: EV_TEXT
 			l_but_valid, l_but_cancel, l_but_reset: EV_BUTTON
 
-			t: STRING
+			t: STRING_GENERAL
+			l_title, l_ok_string, l_reset_string, l_cancel_string: STRING_GENERAL
 		do
+				--| Texts
+			l_title := title
+			if l_title = Void then
+				l_title := "Edit Text"
+			end
+			l_ok_string := ok_string
+			if l_ok_string = Void then
+				l_ok_string := "OK"
+			end
+			l_reset_string := reset_string
+			if l_reset_string = Void then
+				l_reset_string := "Reset"
+			end
+			l_cancel_string := cancel_string
+			if l_cancel_string = Void then
+				l_cancel_string := "Cancel"
+			end
+
+				--| Parent's window	
 			l_parent := parent_window (parent)
-			is_dialog_open := False
 				-- Build dialog
 			create l_dial
 			create vb
@@ -79,50 +132,68 @@ feature {NONE} -- Agents
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create l_but_valid.make_with_text_and_action ("Valid", agent dialog_ok (l_dial, l_txt))
-			create l_but_reset.make_with_text_and_action ("Reset", agent dialog_reset (l_dial, l_txt))
-			create l_but_cancel.make_with_text_and_action ("Cancel", agent dialog_cancel (l_dial, l_txt))
+			create l_but_valid.make_with_text_and_action (l_ok_string, agent dialog_ok (l_dial, l_txt))
+			create l_but_reset.make_with_text_and_action (l_reset_string, agent dialog_reset (l_dial, l_txt))
+			create l_but_cancel.make_with_text_and_action (l_cancel_string, agent dialog_cancel (l_dial, l_txt))
 			hb.extend (l_but_valid)
 			hb.extend (l_but_reset)
 			hb.extend (l_but_cancel)
 
-			t := text
+			if text_field /= Void then
+				t := text_field.text
+			else
+				t := text
+			end
 			if t /= Void then
 				l_txt.set_text (t)
+				l_txt.set_data (t)
 			end
 
-			l_dial.set_title ("Edit text")
+			l_dial.set_title (l_title)
 			l_dial.set_default_cancel_button (l_but_cancel)
 			l_dial.set_size (300, 200)
+			enter_outter_edition
 			l_dial.show_modal_to_window (l_parent)
-			is_dialog_open := True
+			leave_outter_edition
+			if text_field /= Void then
+				text_field.set_focus
+			end
 		end
 
-	dialog_ok (a_dial: EV_DIALOG; a_txt: EV_TEXT) is
+	dialog_ok (a_win: EV_WINDOW; a_txt: EV_TEXT) is
 			-- Valid button clicked
 		local
-			t: STRING
+			t32: STRING_32
 		do
-			t := a_txt.text
+			t32 := a_txt.text
 			if not is_multiline_string then
-				t.replace_substring_all ("%N", "")
+				t32.replace_substring_all ("%N", "")
 			end
-			set_text (t)
-			a_dial.destroy
-			is_dialog_open := False
+			if text_field /= Void then
+				text_field.set_text (t32)
+			else
+				set_text (t32)
+			end
+
+			a_win.destroy
 		end
 
-	dialog_reset (a_dial: EV_DIALOG; a_txt: EV_TEXT) is
+	dialog_reset (a_win: EV_WINDOW; a_txt: EV_TEXT) is
 			-- Reset button clicked
+		local
+			t: STRING_GENERAL
 		do
-			a_txt.set_text (text)
+			t ?= a_txt.data
+			if t = Void then
+				t := text
+			end
+			a_txt.set_text (t)
 		end
 
-	dialog_cancel (a_dial: EV_DIALOG; a_txt: EV_TEXT) is
+	dialog_cancel (a_win: EV_WINDOW; a_txt: EV_TEXT) is
 			-- Cancel button clicked
 		do
-			a_dial.destroy
-			is_dialog_open := False
+			a_win.destroy
 		end
 
 indexing

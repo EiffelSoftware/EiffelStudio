@@ -25,10 +25,6 @@ inherit
 			copy
 		end
 
---create
---	default_create,
---	make_with_text
-
 feature {NONE} -- Initialization
 
 	initialize is
@@ -102,7 +98,7 @@ feature {NONE} -- Implementation
 			text_field.return_actions.extend (agent deactivate)
 			text_field.focus_out_actions.extend (agent focus_lost)
 			button.focus_out_actions.extend (agent focus_lost)
-			button.select_actions.append (ellipsis_actions)
+			button.select_actions.extend (agent call_ellipsis_actions)
 
 			text_field.set_focus
 			user_cancelled_activation := False
@@ -112,7 +108,12 @@ feature {NONE} -- Implementation
 	focus_lost is
 			-- Check if no other element in the popup has the focus.
 		do
-			if is_activated and then not has_focus and then is_parented then
+			if
+				is_activated
+				and then not inside_outter_edition
+				and then not has_focus
+				and then is_parented
+			then
 				deactivate
 			end
 		end
@@ -123,8 +124,8 @@ feature {NONE} -- Implementation
 			hb: EV_HORIZONTAL_BOX
 		do
 			popup_window := a_popup_window
---			popup_window.set_x_position (popup_window.x_position + 1)
---			popup_window.set_size (popup_window.width - 1, popup_window.height -1 )
+--			a_popup_window.set_x_position (a_popup_window.x_position + 1)
+--			a_popup_window.set_size (a_popup_window.width - 1, a_popup_window.height -1 )
 
 			if is_text_editing then
 				create text_field
@@ -140,7 +141,7 @@ feature {NONE} -- Implementation
 				text_field.set_text (text)
 
 				text_field.set_background_color (implementation.displayed_background_color)
-				popup_window.set_background_color (implementation.displayed_background_color)
+				a_popup_window.set_background_color (implementation.displayed_background_color)
 				text_field.set_foreground_color (implementation.displayed_foreground_color)
 
 				create hb
@@ -150,17 +151,16 @@ feature {NONE} -- Implementation
 				button.set_pixmap (ellipsis)
 				hb.extend (button)
 				hb.disable_item_expand (button)
-				button.set_minimum_height (popup_window.height)
+				button.set_minimum_height (a_popup_window.height)
 
-				popup_window.extend (hb)
-				update_popup_dimensions (popup_window)
+				a_popup_window.extend (hb)
+				update_popup_dimensions (a_popup_window)
 
-				popup_window.show_actions.extend (agent initialize_actions)
+				a_popup_window.show_actions.extend (agent initialize_actions)
 				is_activated := True
 			else
-
---				update_popup_dimensions (popup_window)
-				ellipsis_actions.call (Void)
+--				update_popup_dimensions (a_popup_window)
+				call_ellipsis_actions
 			end
 		ensure then
 			popup_window_set: popup_window /= Void
@@ -172,17 +172,62 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_GRID_EDITABLE_ITEM}
 			if button /= Void then
-				button.focus_out_actions.wipe_out
 				button.destroy
 				button := Void
+			end
+			if text_field /= Void then
+				text_field.destroy
+				text_field := Void
+			end
+			if popup_window /= Void then
+				popup_window.destroy
+				popup_window := Void
 			end
 			is_activated := False
 			if parent /= Void and then not parent.is_destroyed and then parent.is_displayed then
 				parent.set_focus
 			end
 		ensure then
+			popup_window_void: popup_window = Void
+			text_field_void: text_field = Void
 			button_void: button = Void
 			not_activated: not is_activated
+		end
+
+	inside_outter_edition: BOOLEAN
+
+	enter_outter_edition is
+			--
+		require
+			is_activated: is_activated
+		do
+			inside_outter_edition := True
+			if text_field /= Void then
+				text_field.disable_sensitive
+			end
+			if button /= Void then
+				button.disable_sensitive
+			end
+			if popup_window /= Void then
+				popup_window.hide
+			end
+		end
+
+	leave_outter_edition is
+			--
+--		require
+--			is_activated: is_activated
+		do
+			if popup_window /= Void then
+				popup_window.show
+			end
+			if text_field /= Void then
+				text_field.enable_sensitive
+			end
+			if button /= Void then
+				button.enable_sensitive
+			end
+			inside_outter_edition := False
 		end
 
 feature -- Events
@@ -194,6 +239,12 @@ feature -- Events
 			-- Actions called if the text changed.
 
 feature {NONE} -- Implementation
+
+	call_ellipsis_actions is
+			-- Call ellipsis_actions
+		do
+			ellipsis_actions.call (Void)
+		end
 
 	ellipsis: EV_PIXMAP is
 			-- Icon for ellipsis
@@ -215,6 +266,10 @@ feature {NONE} -- Implementation
 		ensure
 			Result_set: Result /= Void
 		end
+
+invariant
+
+	ellipsis_actions_not_void: ellipsis_actions /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

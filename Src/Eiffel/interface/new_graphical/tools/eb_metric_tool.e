@@ -149,6 +149,7 @@ feature -- Actions
 		do
 			Precursor {EB_TOOL}
 			on_select
+			metric_notebook.set_focus
 		end
 
 	close is

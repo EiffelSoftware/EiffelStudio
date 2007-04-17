@@ -13,7 +13,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXTENDED_TYPE_A
+	RENAMED_TYPE_A
 
 inherit
 	COMPILER_EXPORTER
@@ -69,7 +69,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 	--| Martins 1/23/07: instantiation*
-	--| Should we return EXTENDED_TYPE_A?
+	--| Should we return RENAMED_TYPE_A?
 	--| Currently there seems no need for it and it might most likeley introduce bugs.
 
 	instantiated_in (a_class_type: TYPE_A): TYPE_A is
@@ -234,4 +234,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTENDED_TYPE_A
+end -- class RENAMED_TYPE_A

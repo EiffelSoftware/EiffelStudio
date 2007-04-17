@@ -22,7 +22,7 @@ feature -- Properties
 
 	subcode: INTEGER_32 is 2
 
-	error_report: MC_ERROR_REPORT
+	error_report: MC_FEATURE_INFO
 			-- List of classes with same feature.
 			-- This is used to provide the user with a specific list of classes which contain the same feature.
 

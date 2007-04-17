@@ -280,7 +280,7 @@ feature {NONE} -- Private Status
 	extend_types_has_renaming (a_type_set: TYPE_SET_A): BOOLEAN is
 			-- Do renamings exist in `a_type_set'?
 		local
-			l_extended_type: EXTENDED_TYPE_A
+			l_extended_type: RENAMED_TYPE_A
 		do
 			if a_type_set /= Void then
 				from

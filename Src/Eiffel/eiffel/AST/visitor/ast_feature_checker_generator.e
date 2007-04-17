@@ -2041,8 +2041,8 @@ feature -- Implementation
 			l_type_a: TYPE_A
 			l_formal: FORMAL_A
 			l_feature: FEATURE_I
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: EXTENDED_TYPE_A]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: EXTENDED_TYPE_A]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_type_a_is_multi_constrained_formal: BOOLEAN
 			l_type_set: TYPE_SET_A
 
@@ -4461,11 +4461,11 @@ feature -- Implementation
 			l_deferred_classes: LINKED_LIST[CLASS_C]
 			l_is_multi_constraint_case: BOOLEAN
 			l_is_deferred: BOOLEAN
-			l_constraint_creation_list: LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]]
-			l_ccl_item: TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]
-			l_mc_feature_info: MC_ERROR_REPORT
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: EXTENDED_TYPE_A]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: EXTENDED_TYPE_A]
+			l_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]
+			l_ccl_item: TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]
+			l_mc_feature_info: MC_FEATURE_INFO
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_orig_call := a_call
@@ -4517,7 +4517,7 @@ feature -- Implementation
 				if l_is_multi_constraint_case then
 						-- We generate a list of all the deferred classes in the type set
 					l_type_set.do_all (
-						agent (a_deferred_classes: LIST[CLASS_C]; a_type: EXTENDED_TYPE_A)
+						agent (a_deferred_classes: LIST[CLASS_C]; a_type: RENAMED_TYPE_A)
 							 do
 							 	if a_type.associated_class.is_deferred then
 									a_deferred_classes.extend (a_type.associated_class)
@@ -4577,7 +4577,7 @@ feature -- Implementation
 
 					check
 						found_item_was_the_only_one:
-							 (agent (a_constraint_creation_list: LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]]): BOOLEAN
+							 (agent (a_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]): BOOLEAN
 							 		-- Check that there is no more version of default create.
 							 		--| Otherwise we should never get in here as `l_formal_dec.has_default_create'
 							 		--| should have returned false and prevented this from happening.
@@ -7702,7 +7702,7 @@ feature {NONE} -- Implementation: Error handling
 		require
 			is_really_a_problematic_feature: a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state (a_problematic_feature).features_found_count /= 1
 		local
-			l_error_report: MC_ERROR_REPORT
+			l_error_report: MC_FEATURE_INFO
 			l_vtmc1: VTMC1
 			l_vtmc2: VTMC2
 			l_constraints: TYPE_SET_A

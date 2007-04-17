@@ -528,7 +528,7 @@ feature -- Expanded rues validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			constraint_types: LIST[EXTENDED_TYPE_A]
+			constraint_types: LIST[RENAMED_TYPE_A]
 			l_formals: like generic_features
 			l_cursor: CURSOR
 			l_formal_dec: FORMAL_CONSTRAINT_AS

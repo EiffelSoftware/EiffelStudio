@@ -24,7 +24,7 @@ feature -- Properties
 
 	subcode: INTEGER_32 is 3
 
-	error_info: MC_ERROR_REPORT
+	error_info: MC_FEATURE_INFO
 			-- List of types with same feature.
 			-- This is used to provide the user with a specific list of classes which contain the same feature.
 

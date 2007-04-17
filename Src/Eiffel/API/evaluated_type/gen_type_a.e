@@ -747,7 +747,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 							l_vtgd2.set_constraint (l_constraints)
 							Error_handler.insert_error (l_vtgd2)
 						else
-							-- MTNASK: this is because of the future checking... we do not need to convert anything because of the new expanded type handling, right?
+								-- MTNASK: this is because of the future checking: Do we need this future convert checking or not?
 								-- Check now for the validity of the creation constraint clause if
 								-- there is one which can be checked ,i.e. when `to_check' conforms
 								-- to `constraint_type'.
@@ -864,7 +864,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			is_valid: is_valid
 		local
 			formal_type_dec_as: FORMAL_CONSTRAINT_AS
-			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: EXTENDED_TYPE_A; feature_item: FEATURE_I]];
+			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE

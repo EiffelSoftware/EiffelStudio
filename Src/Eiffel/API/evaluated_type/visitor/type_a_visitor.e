@@ -84,7 +84,7 @@ feature {TYPE_A}
 		deferred
 		end
 
-	process_extended_type_a (a_type: EXTENDED_TYPE_A) is
+	process_extended_type_a (a_type: RENAMED_TYPE_A) is
 			-- Process `a_type'.
 		deferred
 		end

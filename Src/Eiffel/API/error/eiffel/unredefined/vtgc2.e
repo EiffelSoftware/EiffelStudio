@@ -89,30 +89,32 @@ feature -- Output
 			end
 
 			if features_renamed_to_the_same_name /= Void and then not features_renamed_to_the_same_name.is_empty then
-				l_output := "The following features have been renamed to the same name, leading to conflicts:%N   "
+				l_output := "The following features have been renamed to the same name, leading to conflicts:%N"
 				a_text_formatter.add (l_output)
 				from
 					features_renamed_to_the_same_name.start
 				until
 					features_renamed_to_the_same_name.after
 				loop
-					l_output :=	"`" + features_renamed_to_the_same_name.item_for_iteration + "'%N"
+					l_output :=	"   `" + features_renamed_to_the_same_name.item_for_iteration + "'"
 					a_text_formatter.add (l_output)
+					a_text_formatter.add_new_line
 					features_renamed_to_the_same_name.forth
 				end
 				a_text_formatter.add_new_line
 			end
 
 			if non_existent_features /= Void and then not non_existent_features.is_empty then
-				l_output := "The following features do not occur in the base class and therefore cannot be renamed:%N   "
+				l_output := "The following features do not occur in the base class and therefore cannot be renamed:%N"
 				a_text_formatter.add (l_output)
 				from
 					non_existent_features.start
 				until
 					non_existent_features.after
 				loop
-					l_output :=	"`" + non_existent_features.item_for_iteration + "'%N"
+					l_output :=	"   `" + non_existent_features.item_for_iteration + "'"
 					a_text_formatter.add (l_output)
+					a_text_formatter.add_new_line
 					non_existent_features.forth
 				end
 			end

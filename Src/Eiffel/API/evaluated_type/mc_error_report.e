@@ -1,7 +1,8 @@
 indexing
 	description: "[
 						This class encapsualtes functionality and data needed to produce a proper
-						error report for multi constraint (MC) formal generic type parameters.
+						info report for feature lookup on multi constraint (MC) formal generic type
+						parameters.
 						G -> {A, B, C} would be an example for our targeted construct.
 				]"
 	legal: "See notice at end of class."
@@ -11,13 +12,13 @@ indexing
 	revision: "$Revision$"
 
 class
-	MC_ERROR_REPORT
+	MC_FEATURE_INFO
 
 inherit
 
 	LINKED_LIST [TUPLE [	feature_i: FEATURE_I;
 							e_feature: E_FEATURE;
-							cl_type: EXTENDED_TYPE_A;
+							cl_type: RENAMED_TYPE_A;
 							formal_position: INTEGER;
 							constraint_position: INTEGER]]
 

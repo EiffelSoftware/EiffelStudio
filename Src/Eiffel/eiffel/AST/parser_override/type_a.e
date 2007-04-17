@@ -434,7 +434,7 @@ feature -- Conversion
 			-- Create a type set containing one element which is `Current'.
 		do
 			create Result.make (1)
-			Result.extend (create {EXTENDED_TYPE_A}.make (Current, Void))
+			Result.extend (create {RENAMED_TYPE_A}.make (Current, Void))
 		ensure
 			to_type_set_not_void: Result /= Void
 		end

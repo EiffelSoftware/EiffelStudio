@@ -690,9 +690,9 @@ feature {NONE} -- Profile actions
 			end
 			create gti.make_with_text (s)
 			gti.set_dialog_title (interface_names.l_edit_text)
-			gti.set_ok_string (interface_names.b_ok)
-			gti.set_reset_string (interface_names.b_reset)
-			gti.set_cancel_string (interface_names.b_cancel)
+			gti.set_ok_button_string (interface_names.b_ok)
+			gti.set_reset_button_string (interface_names.b_reset)
+			gti.set_cancel_button_string (interface_names.b_cancel)
 			gti.disable_multiline_string
 			gti.change_actions.extend (agent
 					(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
@@ -913,9 +913,9 @@ feature {NONE} -- Environment actions
 				-- VarValue item
 			create gti
 			gti.set_dialog_title (interface_names.l_edit_text)
-			gti.set_ok_string (interface_names.b_ok)
-			gti.set_reset_string (interface_names.b_reset)
-			gti.set_cancel_string (interface_names.b_cancel)
+			gti.set_ok_button_string (interface_names.b_ok)
+			gti.set_reset_button_string (interface_names.b_reset)
+			gti.set_cancel_button_string (interface_names.b_cancel)
 
 			if v /= Void then
 				gti.set_text (v)

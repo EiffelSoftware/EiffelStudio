@@ -35,42 +35,42 @@ feature -- Status
 
 feature -- Access
 
-	title: STRING_GENERAL
+	dialog_title: STRING_GENERAL
 			-- Dialog's title
 
-	ok_string: STRING_GENERAL
+	ok_button_string: STRING_GENERAL
 			-- [OK] button's text.
 
-	reset_string: STRING_GENERAL
+	reset_button_string: STRING_GENERAL
 			-- [Reset] button's text.
 
-	cancel_string: STRING_GENERAL
+	cancel_button_string: STRING_GENERAL
 			-- [Cancel] button's text.
 
 feature -- Change
 
-	set_dialog_title (s: like title) is
-			-- Set `title' to `s'
+	set_dialog_title (s: like dialog_title) is
+			-- Set `dialog_title' to `s'
 		do
-			title := s
+			dialog_title := s
 		end
 
-	set_ok_string (s: like ok_string) is
-			-- Set `ok_string' to `s'
+	set_ok_button_string (s: like ok_button_string) is
+			-- Set `ok_button_string' to `s'
 		do
-			ok_string := s
+			ok_button_string := s
 		end
 
-	set_reset_string (s: like reset_string) is
-			-- Set `reset_string' to `s'
+	set_reset_button_string (s: like reset_button_string) is
+			-- Set `reset_button_string' to `s'
 		do
-			reset_string := s
+			reset_button_string := s
 		end
 
-	set_cancel_string (s: like cancel_string) is
-			-- Set `cancel_string' to `s'
+	set_cancel_button_string (s: like cancel_button_string) is
+			-- Set `cancel_button_string' to `s'
 		do
-			cancel_string := s
+			cancel_button_string := s
 		end
 
 	enable_multiline_string is
@@ -101,24 +101,24 @@ feature {NONE} -- Agents
 			l_but_valid, l_but_cancel, l_but_reset: EV_BUTTON
 
 			t: STRING_GENERAL
-			l_title, l_ok_string, l_reset_string, l_cancel_string: STRING_GENERAL
+			l_dialog_title, l_ok_button_string, l_reset_button_string, l_cancel_button_string: STRING_GENERAL
 		do
 				--| Texts
-			l_title := title
-			if l_title = Void then
-				l_title := "Edit Text"
+			l_dialog_title := dialog_title
+			if l_dialog_title = Void then
+				l_dialog_title := "Edit Text"
 			end
-			l_ok_string := ok_string
-			if l_ok_string = Void then
-				l_ok_string := "OK"
+			l_ok_button_string := ok_button_string
+			if l_ok_button_string = Void then
+				l_ok_button_string := "OK"
 			end
-			l_reset_string := reset_string
-			if l_reset_string = Void then
-				l_reset_string := "Reset"
+			l_reset_button_string := reset_button_string
+			if l_reset_button_string = Void then
+				l_reset_button_string := "Reset"
 			end
-			l_cancel_string := cancel_string
-			if l_cancel_string = Void then
-				l_cancel_string := "Cancel"
+			l_cancel_button_string := cancel_button_string
+			if l_cancel_button_string = Void then
+				l_cancel_button_string := "Cancel"
 			end
 
 				--| Parent's window	
@@ -132,9 +132,9 @@ feature {NONE} -- Agents
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create l_but_valid.make_with_text_and_action (l_ok_string, agent dialog_ok (l_dial, l_txt))
-			create l_but_reset.make_with_text_and_action (l_reset_string, agent dialog_reset (l_dial, l_txt))
-			create l_but_cancel.make_with_text_and_action (l_cancel_string, agent dialog_cancel (l_dial, l_txt))
+			create l_but_valid.make_with_text_and_action (l_ok_button_string, agent dialog_ok (l_dial, l_txt))
+			create l_but_reset.make_with_text_and_action (l_reset_button_string, agent dialog_reset (l_dial, l_txt))
+			create l_but_cancel.make_with_text_and_action (l_cancel_button_string, agent dialog_cancel (l_dial, l_txt))
 			hb.extend (l_but_valid)
 			hb.extend (l_but_reset)
 			hb.extend (l_but_cancel)
@@ -149,7 +149,7 @@ feature {NONE} -- Agents
 				l_txt.set_data (t)
 			end
 
-			l_dial.set_title (l_title)
+			l_dial.set_title (l_dialog_title)
 			l_dial.set_default_cancel_button (l_but_cancel)
 			l_dial.set_size (300, 200)
 			enter_outter_edition

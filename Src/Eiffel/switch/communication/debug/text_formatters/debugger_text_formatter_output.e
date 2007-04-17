@@ -504,8 +504,6 @@ feature -- Call stack
 			end
 
 				-- print line number
-			st.add_string(" (")
-
 			st.add_string(" ( @ ")
 			st.add_int(cse.break_index)
 			st.add_string(" )")

@@ -148,7 +148,7 @@ feature -- Command
 				end
 			end
 			if l_editors_manager.current_editor /= Void and then not l_editors_manager.current_editor.has_focus then
-				develop_window.ev_application.do_once_on_idle (agent (l_editors_manager.current_editor).set_focus)
+				develop_window.ev_application.do_once_on_idle (agent develop_window.set_focus_to_main_editor)
 			end
 		end
 

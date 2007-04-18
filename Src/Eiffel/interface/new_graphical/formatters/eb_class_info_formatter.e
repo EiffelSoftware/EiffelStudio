@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EB_FORMATTER
+		redefine
+			veto_pebble_function
+		end
 
 	SHARED_FORMAT_INFO
 
@@ -44,6 +47,17 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	veto_pebble_function (a_any: ANY): BOOLEAN is
+			-- Veto pebble function
+		local
+			l_classi_stone: CLASSI_STONE
+		do
+			l_classi_stone ?= a_any
+			if l_classi_stone /= Void then
+				Result := Precursor {EB_FORMATTER}(a_any)
+			end
+		end
 
 	temp_header: STRING_GENERAL is
 			-- Temporary header displayed during the format processing.

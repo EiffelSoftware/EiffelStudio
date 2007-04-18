@@ -39,8 +39,14 @@ feature -- Initialization
 			development_window := a_dev_win
 			docking_manager := a_dev_win.docking_manager
 			docking_manager.tab_drop_actions.extend (agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
+			if veto_pebble_function_internal = Void then
+				docking_manager.tab_drop_actions.set_veto_pebble_function (agent default_veto_func)
+			end
 			create_editor
 			docking_manager.main_area_drop_action.extend (agent create_editor_beside_content (?, Void))
+			if veto_pebble_function_internal = Void then
+				docking_manager.main_area_drop_action.set_veto_pebble_function (agent default_veto_func)
+			end
 		ensure
 			editors_internal_not_void: editors_internal /= Void
 			editors_not_empty: not editors_internal.is_empty
@@ -407,6 +413,16 @@ feature -- Status report
 	not_backuped: INTEGER
 			-- Number of editors not backuped last time
 
+	stone_acceptable (a_stone: ANY): BOOLEAN is
+			-- Is `a_stone' suitable for a new editor?
+		do
+			if veto_pebble_function_internal /= Void then
+				Result := veto_pebble_function_internal.item ([a_stone])
+			else
+				Result := default_veto_func (a_stone)
+			end
+		end
+
 feature -- Editor observer
 
 	add_edition_observer (a_text_observer: TEXT_OBSERVER) is
@@ -560,6 +576,9 @@ feature -- Element change
 				l_editors.after
 			loop
 				l_editors.item.drop_actions.set_veto_pebble_function (a_func)
+				if l_editors.item.docking_content /= Void then
+					l_editors.item.docking_content.drop_actions.set_veto_pebble_function (a_func)
+				end
 				l_editors.forth
 			end
 		end
@@ -1004,6 +1023,9 @@ feature {NONE}-- Implementation
 			end
 			last_created_editor.widget.set_minimum_size (0, 0)
 			add_observers (last_created_editor)
+			if veto_pebble_function_internal = Void then
+				last_created_editor.drop_actions.set_veto_pebble_function (agent default_veto_func)
+			end
 			last_created_editor.drop_actions.extend (agent on_drop (?, last_created_editor))
 			editors_internal.extend (last_created_editor)
 			if editors_internal.off then
@@ -1042,6 +1064,9 @@ feature {NONE}-- Implementation
 			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
 
 			Result.drop_actions.extend (agent on_drop (?, a_editor))
+			if veto_pebble_function_internal = Void then
+				Result.drop_actions.set_veto_pebble_function (agent default_veto_func)
+			end
 
 			docking_manager.contents.extend (Result)
 			Result.focus_in_actions.extend (agent on_focus (a_editor))
@@ -1080,6 +1105,9 @@ feature {NONE}-- Implementation
 		do
 			a_content.set_user_widget (a_editor.widget)
 			a_content.drop_actions.extend (agent on_drop (?, a_editor))
+			if veto_pebble_function_internal = Void then
+				a_content.drop_actions.set_veto_pebble_function (agent default_veto_func)
+			end
 
 			a_content.focus_in_actions.wipe_out
 			a_content.focus_in_actions.extend (agent on_focus (a_editor))
@@ -1240,6 +1268,23 @@ feature {NONE}-- Implementation
 					else
 						fake_editors.forth
 					end
+				end
+			end
+		end
+
+	default_veto_func (a_stone: ANY): BOOLEAN is
+			-- Default veto function
+		local
+			l_cluster_stone: CLUSTER_STONE
+			l_filed_stone: FILED_STONE
+		do
+			l_filed_stone ?= a_stone
+			if l_filed_stone /= Void then
+				Result := True
+			else
+				l_cluster_stone ?= a_stone
+				if l_cluster_stone /= Void then
+					Result := True
 				end
 			end
 		end

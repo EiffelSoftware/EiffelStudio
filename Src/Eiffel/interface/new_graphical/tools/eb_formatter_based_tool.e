@@ -66,6 +66,7 @@ feature{NONE} -- Initialization
 		do
 			Precursor (a_docking_manager)
 			content.drop_actions.extend (agent on_item_dropped)
+			content.drop_actions.set_veto_pebble_function (agent (a_stone: STONE): BOOLEAN do Result := a_stone.is_storable end)
 		end
 
 	build_interface is
@@ -245,7 +246,7 @@ feature -- Setting
 				formatter_tool_bar_area.extend (l_control_bar)
 				formatter_tool_bar_area.disable_item_expand (l_control_bar)
 				l_control_bar.show
-			
+
 			end
 
 		end

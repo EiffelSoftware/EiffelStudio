@@ -10,7 +10,8 @@ class
 inherit
 	STONE
 		redefine
-			is_valid
+			is_valid,
+			is_storable
 		end
 
 create
@@ -55,7 +56,7 @@ feature -- Properties
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
-			Result := stone_signature
+			Result := stone_signature.as_string_32
 		end
 
 	history_name: STRING_GENERAL is
@@ -83,6 +84,13 @@ feature -- Status report
 			else
 				Result := validity_function.item ([data])
 			end
+		end
+
+	is_storable: BOOLEAN is
+			-- Can `Current' be kept?
+			-- False by default.
+		do
+			Result := False
 		end
 
 feature -- Setting

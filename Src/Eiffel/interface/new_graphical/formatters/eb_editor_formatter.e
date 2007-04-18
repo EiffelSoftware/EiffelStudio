@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	EB_FORMATTER
+		undefine
+			veto_pebble_function
 		redefine
 			displayer,
 			internal_recycle,

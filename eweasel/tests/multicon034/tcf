@@ -5,14 +5,14 @@
 
 -- This is a test control file
 
-test_name multi-constraint-single-constraint-renaming2
-test_description This test checks single constraints can be renamed too and that they produce the same error messages as multi constraint renaming issues.
+test_name multi-constraint-recursion-bug
+test_description This test reveals a bug in the multiconstraint handling of recursive generics.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
-copy_raw 	a1.e $CLUSTER a1.e
+copy_raw 	multi.e $CLUSTER multi.e
 compile_melted
-compile_result validity_error A1 VTGC(2)
+compile_result ok
 
 
 test_end

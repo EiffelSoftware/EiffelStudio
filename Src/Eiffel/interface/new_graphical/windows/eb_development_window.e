@@ -222,7 +222,7 @@ feature -- Status setting
 	set_focus_to_main_editor is
 			-- Set focus to main current editor.
 		do
-			if editors_manager.current_editor /= Void then
+			if editors_manager /= Void and then editors_manager.current_editor /= Void then
 				editors_manager.select_editor (editors_manager.current_editor, True)
 			end
 		end

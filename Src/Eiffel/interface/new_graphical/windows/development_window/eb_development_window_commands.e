@@ -82,10 +82,10 @@ feature -- Query
 	redo_cmd: EB_REDO_COMMAND
 			-- Command to redo in the editor.
 
-	editor_cut_cmd: EB_ON_SELECTION_COMMAND
+	editor_cut_cmd: EB_EDITOR_CUT_COMMAND
 			-- Command to cut text in the editor.
 
-	editor_copy_cmd: EB_ON_SELECTION_COMMAND
+	editor_copy_cmd: EB_EDITOR_COPY_COMMAND
 			-- Command to copy text in the editor.
 
 	editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
@@ -178,6 +178,22 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			new_tab_cmd := a_cmd
 		ensure
 			set: new_tab_cmd = a_cmd
+		end
+
+	set_editor_cut_cmd (a_cmd: like editor_cut_cmd) is
+			-- Set `editor_cut_cmd'
+		do
+			editor_cut_cmd := a_cmd
+		ensure
+			set: editor_cut_cmd = a_cmd
+		end
+
+	set_editor_copy_cmd (a_cmd: like editor_copy_cmd) is
+			-- Set `editor_copy_cmd'
+		do
+			editor_copy_cmd := a_cmd
+		ensure
+			set: editor_copy_cmd = a_cmd
 		end
 
 	set_shell_cmd (a_cmd: like shell_cmd) is
@@ -447,6 +463,8 @@ feature -- Recycle
 
 			c_finalized_compilation_cmd.recycle
 			c_workbench_compilation_cmd.recycle
+			editor_cut_cmd.recycle
+			editor_copy_cmd.recycle
 			editor_paste_cmd.recycle
 			new_class_cmd.recycle
 			new_cluster_cmd.recycle
@@ -522,6 +540,7 @@ feature -- Recycle
 			toggle_stone_cmd := Void
 			delete_class_cluster_cmd := Void
 			print_cmd := Void
+
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

@@ -21,7 +21,7 @@ inherit
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		redefine
-			executable, make, internal_recycle
+			executable, make, internal_recycle, target
 		select
 			internal_recycle
 		end
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- initialization
 
-	make (a_target: EB_DEVELOPMENT_WINDOW) is
+	make (a_target: like target) is
 			-- creation function
 		do
 			make_standard
@@ -130,6 +130,9 @@ feature {NONE} -- Recyclable
 		end
 
 feature {NONE} -- Implementation
+
+	target: EB_DEVELOPMENT_WINDOW
+		-- Target of `Current'.
 
 	has_selection: BOOLEAN
 			-- Is a text loaded?

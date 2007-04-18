@@ -51,7 +51,7 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent drop (?))
+			Result.drop_actions.extend (agent execute_with_stone (?))
 			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
 		end
 
@@ -59,13 +59,13 @@ feature -- Basic operations
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent drop (?))
+			Result.drop_actions.extend (agent execute_with_stone (?))
 			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
 		end
 
-feature {NONE} -- Update
+feature -- Access
 
-	drop (s: STONE) is
+	execute_with_stone (s: STONE) is
 		local
 			cs: CLASSI_STONE
 			fs: FEATURE_STONE

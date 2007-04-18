@@ -101,13 +101,13 @@ feature -- Status report
 			create Result
 		end
 
-feature {NONE} -- Implementation
-
 	Refactoring_manager: ERF_MANAGER is
 			-- The refactoring manager.
 		once
 			create Result.make
 		end
+
+feature {NONE} -- Implementation
 
 	Recent_projects_manager_cell: CELL [EB_RECENT_PROJECTS_MANAGER] is
 			-- Recent projects manager for ebench

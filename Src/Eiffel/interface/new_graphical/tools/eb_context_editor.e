@@ -1577,7 +1577,7 @@ feature {NONE} -- Views
 			view_selector.set_text (world.current_view)
 		end
 
-feature {NONE} -- Commands
+feature -- Commands
 
 	view_selector: EV_TEXT_FIELD
 			-- Combo box that lets the user change views.

@@ -114,6 +114,9 @@ feature {NONE}  -- Implementation
 		require
 			has: has (a_content)
 		do
+			-- LINKED_SET put_left is from LINKED_LIST, so it can't make sure one item per object instance in the set.
+			internal_clicked_list.prune_all (a_content)
+
 			internal_clicked_list.start
 			internal_clicked_list.put_left (a_content)
 		end

@@ -9,72 +9,28 @@ class
 	EB_EDITOR_COPY_COMMAND
 
 inherit
-	EB_CLIPBOARD_COMMAND
+	EB_ON_SELECTION_COMMAND
 		redefine
-			executable
-		end
-
-	EB_DEVELOPMENT_WINDOW_COMMAND
-		redefine
-			executable
+			initialize
 		end
 
 create
 	make
 
-feature -- Status report
 
-	executable: BOOLEAN is
-			-- Is the operation possible?
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize Command.
 		do
-				--| FIXME ARNAUD: waiting for Vision2 clipboard.
-			Result := is_sensitive
-		end
-
-feature -- Execopyion
-
-	execute is
-			-- Execopye the copy/copy/paste operation
-		do
-				--| FIXME ARNAUD: waiting for Vision2 clipboard.
-			editor.copy_selection
-		end
-
-feature {NONE} -- Implementation
-
-	menu_name: STRING is
-			-- Name as it appears in the menu (with & symbol).
-		do
-			Result := Interface_names.m_Copy
-		end
-
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_copy
-		end
-
-	tooltip: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_Copy
-		end
-
-	description: STRING is
-			-- Description for current command
-		do
-			Result := Interface_names.e_Copy
-		end
-
-	name: STRING is "Editor_copy"
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
-	editor: EB_EDITOR is
-			-- Editor corresponding to Current
-		do
-			Result := target.current_editor
+			set_menu_name (Interface_names.M_copy)
+			set_pixmap (Pixmaps.icon_pixmaps.general_copy_icon)
+			set_pixel_buffer (Pixmaps.icon_pixmaps.general_copy_icon_buffer)
+			set_name ("Editor_copy")
+			set_tooltip (Interface_names.f_copy)
+			set_tooltext (Interface_names.b_copy)
+			add_agent (agent target.copy_selection)
+			set_needs_editable (False)
 		end
 
 indexing

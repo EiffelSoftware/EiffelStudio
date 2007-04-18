@@ -352,37 +352,17 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.menus.edit_menu.extend (create {EV_MENU_SEPARATOR})
 
 				-- Cut
-			create l_os_cmd.make (develop_window)
-			l_os_cmd.set_menu_name (develop_window.Interface_names.M_cut)
-			l_os_cmd.set_pixmap (develop_window.pixmaps.icon_pixmaps.general_cut_icon)
-			l_os_cmd.set_pixel_buffer (develop_window.pixmaps.icon_pixmaps.general_cut_icon_buffer)
-			l_os_cmd.set_name ("Editor_cut")
-			l_os_cmd.set_tooltip (develop_window.interface_names.f_cut)
-			l_os_cmd.add_agent (agent develop_window.cut_selection)
-			l_os_cmd.set_tooltext (develop_window.Interface_names.b_cut)
-			develop_window.commands.editor_commands.extend (l_os_cmd)
-			develop_window.commands.toolbarable_commands.extend (l_os_cmd)
-			l_os_cmd.set_needs_editable (True)
-			l_command_controller.add_selection_command (l_os_cmd)
-			l_command_menu_item := l_os_cmd.new_menu_item
+			l_command_menu_item := develop_window.commands.editor_cut_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)
+			develop_window.commands.editor_commands.extend (develop_window.commands.editor_cut_cmd)
+			l_command_controller.add_selection_command (develop_window.commands.editor_cut_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Copy
-			create l_os_cmd.make (develop_window)
-			l_os_cmd.set_menu_name (develop_window.Interface_names.M_copy)
-			l_os_cmd.set_pixmap (develop_window.pixmaps.icon_pixmaps.general_copy_icon)
-			l_os_cmd.set_pixel_buffer (develop_window.pixmaps.icon_pixmaps.general_copy_icon_buffer)
-			l_os_cmd.set_name ("Editor_copy")
-			l_os_cmd.set_tooltip (develop_window.interface_names.f_copy)
-			l_os_cmd.set_tooltext (develop_window.Interface_names.b_copy)
-			l_os_cmd.add_agent (agent develop_window.copy_selection)
-			develop_window.commands.editor_commands.extend (l_os_cmd)
-			develop_window.commands.toolbarable_commands.extend (l_os_cmd)
-			l_os_cmd.set_needs_editable (False)
-			l_command_controller.add_selection_command (l_os_cmd)
-			l_command_menu_item := l_os_cmd.new_menu_item
+			l_command_menu_item := develop_window.commands.editor_copy_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)
+			develop_window.commands.editor_commands.extend (develop_window.commands.editor_copy_cmd)
+			l_command_controller.add_selection_command (develop_window.commands.editor_copy_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Paste

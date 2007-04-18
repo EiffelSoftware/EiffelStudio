@@ -310,7 +310,7 @@ feature -- Interface
 			end
 			Result.set_tooltip (tt)
 			set_button (Result)
-			Result.drop_actions.extend (agent on_stone_drop)
+			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
@@ -332,7 +332,7 @@ feature -- Interface
 			Result.set_name (capital_command_name)
 			Result.set_description (capital_command_name)
 			set_sd_button (Result)
-			Result.drop_actions.extend (agent on_stone_drop)
+			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
@@ -381,7 +381,7 @@ feature -- Actions
 			internal_displayed := False
 		end
 
-	on_stone_drop (a_stone: STONE) is
+	execute_with_stone (a_stone: STONE) is
 			-- Notify `manager' of the dropping of `stone'.
 		do
 			if not selected then
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			if widget_owner /= Void then
 				internal_empty_widget.drop_actions.extend (agent widget_owner.drop_stone)
 			else
-				internal_empty_widget.drop_actions.extend (agent on_stone_drop)
+				internal_empty_widget.drop_actions.extend (agent execute_with_stone)
 			end
 		end
 

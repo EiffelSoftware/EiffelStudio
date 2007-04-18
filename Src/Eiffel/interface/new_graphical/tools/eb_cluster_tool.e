@@ -211,7 +211,7 @@ feature {NONE} -- Memory management
 			Precursor {EB_TOOL}
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	show_class (st: CLASSI_STONE) is
 			-- Display the class relative to `st' in the cluster tree.
@@ -230,6 +230,8 @@ feature {NONE} -- Implementation
 				content.set_focus
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	show_current_class_cluster is
 			-- Highlight currently edited object in the cluster tree.

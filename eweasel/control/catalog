@@ -1049,6 +1049,7 @@ test	signed-unsigned-in-inspect	exec269 tcf pass execution inspect
 test	mixed-basic-type-operations	exec270 tcf pass execution inspect
 test	wrong-agent-creation-type	exec271 tcf pass execution inspect
 test	expanded-derivation-reattachment	exec272 tcf pass execution expanded generic
+test	expanded-creation-semantics	exec273 tcf pass execution expanded creation attachment clone
 
 
 

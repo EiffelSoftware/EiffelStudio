@@ -858,27 +858,27 @@ feature -- Status
 	has_expanded: BOOLEAN is
 			-- Does the current type set contain the NONE type?
 		do
-			Result := there_exists (agent(a_extended_type: RENAMED_TYPE_A): BOOLEAN
+			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A): BOOLEAN
 						do
-							Result := a_extended_type.type.is_expanded
+							Result := a_renamed_type.type.is_expanded
 						end)
 		end
 
 	has_none: BOOLEAN is
 			-- Does the current type set contain the NONE type?
 		do
-			Result := there_exists (agent(a_extended_type: RENAMED_TYPE_A): BOOLEAN
+			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A): BOOLEAN
 						do
-							Result := a_extended_type.type.is_none
+							Result := a_renamed_type.type.is_none
 						end)
 		end
 
 	has_void: BOOLEAN is
 			-- Does the current type set contain the NONE type?
 		do
-			Result := there_exists (agent(a_extended_type: RENAMED_TYPE_A): BOOLEAN
+			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A): BOOLEAN
 						do
-							Result := a_extended_type.type.is_void
+							Result := a_renamed_type.type.is_void
 						end)
 		end
 
@@ -915,18 +915,18 @@ feature -- Status
 	has_renamings: BOOLEAN is
 			-- Has the `current' any renamings?
 		do
-			Result := there_exists (agent(a_extended_type: RENAMED_TYPE_A): BOOLEAN
+			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A): BOOLEAN
 						do
-							Result := a_extended_type.type.has_renaming
+							Result := a_renamed_type.type.has_renaming
 						end)
 		end
 
 	has_formal_generic: BOOLEAN is
 			-- Has current type set any formal genrics?
 		do
-			Result := there_exists (agent(a_extended_type: RENAMED_TYPE_A): BOOLEAN
+			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A): BOOLEAN
 						do
-							Result := a_extended_type.type.has_formal_generic
+							Result := a_renamed_type.type.has_formal_generic
 						end)
 		end
 
@@ -987,7 +987,7 @@ feature -- Access
 		require
 			has_expanded: has_expanded
 		local
-			l_extended_type: RENAMED_TYPE_A
+			l_renamed_type: RENAMED_TYPE_A
 		do
 			from
 				start
@@ -998,9 +998,9 @@ feature -- Access
 				check
 					not_after: not after
 				end
-				l_extended_type := item
-				if l_extended_type.type.is_expanded	then
-					Result := l_extended_type
+				l_renamed_type := item
+				if l_renamed_type.type.is_expanded	then
+					Result := l_renamed_type
 				end
 				forth
 			end

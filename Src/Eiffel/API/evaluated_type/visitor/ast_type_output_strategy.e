@@ -126,7 +126,7 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_extended_type_a (a_type: RENAMED_TYPE_A) is
+	process_renamed_type_a (a_type: RENAMED_TYPE_A) is
 			-- Process `a_type'.
 		do
 			a_type.type.append_to (text_formatter)

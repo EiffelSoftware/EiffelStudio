@@ -1,5 +1,9 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+						This class maps new feature names onto old feature names.
+						It does this not by using strings but by using the `name_id' of each
+						feature which obtained by using an instance of the NAMES_HEAP class.
+					]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,7 +83,7 @@ feature -- Access
 	renamed (a_feature_id: INTEGER): INTEGER
 			-- Renames `a_feature_id' or leaves it unchanged if it is not renamed.
 			--| This feature calls `search' and is therefore not sideeffect free.
-			--! This feature can return -1 if it finds out that this feature has benn renamed into another name.
+			--| This feature can return -1 if it finds out that this `a_feature_id' has benn renamed into another name.
 		do
 				-- We're looking for f (a_feature_id)
 			search (a_feature_id)
@@ -117,7 +121,7 @@ feature -- Status
 		end
 
 	has_error_report: BOOLEAN
-			-- Is renaming clause renaming clause valid?
+			-- Is the renaming clause in-valid?
 			--| Are there any features which are renamed multiple times?
 			--| Are there any features which are renamed to the same name?
 			--| Are there any non-existent features? (This is only the case

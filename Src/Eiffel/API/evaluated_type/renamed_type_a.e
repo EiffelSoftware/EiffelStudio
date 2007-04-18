@@ -20,7 +20,7 @@ inherit
 
 	TYPE_A
 		redefine
-			renaming, is_extended, has_renaming, instantiated_in,
+			renaming, is_renamed_type, has_renaming, instantiated_in,
 			instantiation_in, has_associated_class,
 			to_type_set
 		end
@@ -37,7 +37,7 @@ feature -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 			a_type_is_not_a_type_set: not a_type.is_type_set
-			a_type_is_not_extended: not a_type.is_extended
+			a_type_is_not_renamed: not a_type.is_renamed_type
 		do
 			type := a_type
 			renaming := a_renaming
@@ -115,7 +115,7 @@ feature -- Setters
 		require
 			a_type_not_void: a_type /= Void
 			a_type_is_not_a_type_set: not a_type.is_type_set
-			a_type_is_not_extended: not a_type.is_extended
+			a_type_is_not_renamed: not a_type.is_renamed_type
 		do
 			type := a_type
 		ensure
@@ -136,7 +136,7 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := type.is_equivalent (other)
-			if other.is_extended then
+			if other.is_renamed_type then
 
 			end
 		end
@@ -146,7 +146,7 @@ feature -- Visitor
 	process (v: TYPE_A_VISITOR) is
 			-- Process current element.
 		do
-			v.process_extended_type_a (Current)
+			v.process_renamed_type_a (Current)
 		end
 
 feature -- Status
@@ -164,9 +164,9 @@ feature -- Status
 			Result := renaming /= Void and then not renaming.is_empty
 		end
 
-	is_extended: BOOLEAN is True
-		-- Is current type extended?
-		-- An extended type has currently the possibility to carry a renaming.
+	is_renamed_type: BOOLEAN is True
+		-- Is current an instance of RENAMED_TYPE_A?
+		-- An renamed type has the ability to carry a feature renaming.
 
 feature -- Output
 
@@ -200,7 +200,7 @@ feature -- Output
 
 invariant
 	type_is_not_a_type_set: not type.is_type_set
-	no_nested_extended_types: not type.is_extended
+	no_nested_renamed_types: not type.is_renamed_type
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

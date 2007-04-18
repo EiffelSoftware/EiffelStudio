@@ -177,10 +177,10 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_extended: BOOLEAN is
-			-- Is current type an extended type?
+	is_renamed_type: BOOLEAN is
+			-- Is current type an instance of `RENAMED_TYPE_A'?
+			-- If so there is the possibility that some features of this type are renamed.
 		do
-
 		end
 
 	is_reference: BOOLEAN is

@@ -53,7 +53,7 @@ feature -- Status
 		-- MTNASK: here I would also like to require the proper degree.
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_extended_type: RENAMED_TYPE_A
+			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 		do
@@ -73,11 +73,11 @@ feature -- Status
 					l_constraining_type := l_constraints.item
 					if l_constraining_type.renaming /= Void then
 						generate_renaming (l_constraining_type.renaming)
-						create l_extended_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),last_renaming)
+						create l_renamed_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),last_renaming)
 					else
-						create l_extended_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),Void)
+						create l_renamed_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),Void)
 					end
-					Result.extend (l_extended_type)
+					Result.extend (l_renamed_type)
 					l_constraints.forth
 				end
 				l_constraints.go_i_th (l_constraints_cursor)
@@ -99,7 +99,7 @@ feature -- Status
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
 			l_type: TYPE_A
-			l_extended_type: RENAMED_TYPE_A
+			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 		do
@@ -121,11 +121,11 @@ feature -- Status
 					if l_type /= Void then
 						if l_constraining_type.renaming /= Void then
 							generate_renaming (l_constraining_type.renaming)
-							create l_extended_type.make (l_type, last_renaming)
+							create l_renamed_type.make (l_type, last_renaming)
 						else
-							create l_extended_type.make (l_type, Void)
+							create l_renamed_type.make (l_type, Void)
 						end
-						Result.extend (l_extended_type)
+						Result.extend (l_renamed_type)
 					end
 					l_constraints.forth
 				end
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 			-- `a_context_class' is used to evaluate the types.
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_extended_type: RENAMED_TYPE_A
+			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 			l_type: TYPE_A
@@ -626,8 +626,8 @@ feature {NONE} -- Implementation
 							-- Type was found: Process the type
 						if l_constraining_type.renaming /= Void then
 							generate_renaming (l_constraining_type.renaming)
-							create l_extended_type.make (l_type, last_renaming)
-							type_output_strategy.process (l_extended_type, a_text_formatter, a_context_class, Void)
+							create l_renamed_type.make (l_type, last_renaming)
+							type_output_strategy.process (l_renamed_type, a_text_formatter, a_context_class, Void)
 						else
 							type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
 						end

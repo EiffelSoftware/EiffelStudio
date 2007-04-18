@@ -1978,7 +1978,7 @@ feature {NONE} -- Implementation
 				last_type := last_type.actual_type
 				if last_type.is_formal and then last_type.is_multi_constrained_formal (current_class)then
 					l_last_type_set := constraining_types (last_type)
-						-- Here we get back the feature and the extended type where the feature is from (it means that it includes a possible renaming)
+						-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
 					l_result := l_last_type_set.e_feature_list_by_rout_id(l_as.routine_ids.first)
 					last_class := l_result.first.type.associated_class
 					l_feat := l_result.first.feature_item

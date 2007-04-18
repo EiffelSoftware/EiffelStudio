@@ -257,7 +257,7 @@ feature -- Update
 			l_items := items
 			l_items.do_all (agent (a_item: SD_TOOL_BAR_ITEM)
 				local
-					l_sens: EV_SENSITIVE
+					l_sens: SD_TOOL_BAR_BUTTON
 				do
 					l_sens ?= a_item
 					if l_sens /= Void then

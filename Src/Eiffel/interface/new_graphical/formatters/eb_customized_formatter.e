@@ -503,6 +503,12 @@ feature{NONE} -- Implementation/Data
 	pixel_buffer_internal: like pixel_buffer
 			-- Implementation of `pixel_buffer'
 
+	veto_pebble_function (a_any: ANY): BOOLEAN is
+			-- Veto pebble function
+		do
+			Result := actual_veto_format_result
+		end
+
 feature{NONE} -- Implementation/Setting
 
 	set_command_name_internal (a_name: like command_name_internal) is

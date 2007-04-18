@@ -383,7 +383,6 @@ feature -- Element change
 				l_cnt > 5
 			loop
 				l_but := known_formatters.i_th (l_cnt).new_sd_button
-				l_but.drop_actions.set_veto_pebble_function (agent is_not_feature_stone (?))
 				tool_bar_items.extend (l_but)
 				l_cnt := l_cnt + 1
 			end
@@ -2105,15 +2104,6 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	address_dialog: EV_POPUP_WINDOW
 			-- Window that pops up in the context tool to change the stone centering.
-
-	is_not_feature_stone (st: ANY): BOOLEAN is
-			-- Is `st' not a feature stone?
-		local
-			fst: FEATURE_STONE
-		do
-			fst ?= st
-			Result := fst = Void
-		end
 
 	set_mode (for_context_tool: BOOLEAN) is
 			-- Define `Current's execution mode (generated parent_windows are different).

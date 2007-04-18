@@ -9,6 +9,8 @@ deferred class
 
 inherit
 	EB_FORMATTER
+		undefine
+			veto_pebble_function
 		redefine
 			retrieve_sorting_order,
 			internal_recycle,

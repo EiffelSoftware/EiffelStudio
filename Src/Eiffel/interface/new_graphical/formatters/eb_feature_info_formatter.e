@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EB_FORMATTER
+		redefine
+			veto_pebble_function
+		end
 
 feature -- Properties
 
@@ -18,6 +21,17 @@ feature -- Properties
 			-- Feature about which information is displayed.
 
 feature {NONE} -- Implementation
+
+	veto_pebble_function (a_any: ANY): BOOLEAN is
+			-- Veto pebble function
+		local
+			l_feature_stone: FEATURE_STONE
+		do
+			l_feature_stone ?= a_any
+			if l_feature_stone /= Void then
+				Result := Precursor {EB_FORMATTER}(a_any)
+			end
+		end
 
 	element_name: STRING is
 			-- name of associated element in current formatter.

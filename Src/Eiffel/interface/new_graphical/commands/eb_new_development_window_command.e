@@ -172,9 +172,13 @@ feature {NONE} -- Implementation
 			-- Can `st' be dropped?
 		local
 			conv_st: STONE
+			tar_st: TARGET_STONE
 		do
-			conv_st ?= st
-			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
+			tar_st ?= st
+			if tar_st = Void then
+				conv_st ?= st
+				Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
+			end
 		end
 
 	description: STRING_GENERAL is

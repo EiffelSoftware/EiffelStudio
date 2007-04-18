@@ -15,7 +15,6 @@ inherit
 			internal_recycle,
 			is_editor_formatter
 		redefine
-			new_sd_button,
 			force_stone
 		end
 
@@ -29,13 +28,6 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 feature -- Access
-
-	new_sd_button: SD_TOOL_BAR_RADIO_BUTTON is
-			-- Create a new toolbar button and associate it with `Current'.
-		do
-			Result := Precursor {EB_CLASS_INFO_FORMATTER}
-			Result.drop_actions.extend (agent on_stone_drop)
-		end
 
 	widget: EV_WIDGET is
 			-- Graphical representation of the information provided.

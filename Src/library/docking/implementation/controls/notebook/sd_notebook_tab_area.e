@@ -29,6 +29,8 @@ feature {NONE}  -- Initlization
 		require
 			a_notebook_not_void: a_notebook /= Void
 			a_docking_manager_not_void: a_docking_manager /= Void
+		local
+			l_veto_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
 		do
 			default_create
 			create internal_shared
@@ -38,6 +40,11 @@ feature {NONE}  -- Initlization
 
 			if internal_docking_manager.tab_drop_actions.count > 0 then
 				drop_actions.extend (agent on_drop_actions)
+
+				l_veto_function := internal_docking_manager.tab_drop_actions.veto_pebble_function
+				if l_veto_function /= Void then
+					drop_actions.set_veto_pebble_function (l_veto_function)
+				end
 			end
 
 			create internal_tool_bar.make
@@ -293,19 +300,8 @@ feature {NONE}  -- Implementation functions
 
 	on_drop_actions (a_any: ANY) is
 			-- Handle drop actions.
-		local
-			l_veto_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
-			l_result: BOOLEAN
 		do
-			l_veto_function := internal_docking_manager.tab_drop_actions.veto_pebble_function
-			if l_veto_function /= Void then
-				l_veto_function.call ([a_any])
-				l_result := l_veto_function.last_result
-			end
-
-			if (l_veto_function = Void) or (l_veto_function /= Void and l_result) then
-				internal_docking_manager.tab_drop_actions.call ([a_any, internal_notebook.selected_item])
-			end
+			internal_docking_manager.tab_drop_actions.call ([a_any, internal_notebook.selected_item])
 		end
 
 	updates_tabs_not_shown (a_width: INTEGER) is

@@ -327,7 +327,8 @@ test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
 test	valid-generic-derivation	valid207 tcf pass validity
 test	creation-constraint-like-current-deferred	valid208 tcf pass validity
 test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
-test	vtgc-expanded	valid210 tcf pass validity
+test	vtcg-expanded	valid210 tcf pass validity
+test	vtcg-generic	valid211 tcf pass validity
 
 
 -- System validity tests
@@ -1636,7 +1637,8 @@ test	multi-constraint-creation-crash01				multicon029 tcf pass multiconstraint
 test	multi-constraint-code-generation-crash01		multicon030 tcf pass multiconstraint
 test	multi-constraint-renamed-creation-feature		multicon031 tcf pass multiconstraint
 test	multi-constraint-single-constraint-renaming		multicon032 tcf pass multiconstraint
-test	single-constraint-renaming						multicon033 tcf pass multiconstraint
+test	multi-constraint-single-constraint-renaming2	multicon033 tcf pass multiconstraint
+test	multi-constraint-recursion-bug					multicon034 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

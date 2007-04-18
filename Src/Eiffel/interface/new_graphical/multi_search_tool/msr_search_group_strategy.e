@@ -147,7 +147,7 @@ feature -- Basic operatioin
 				check
 					l_libary_not_void: l_library /= Void
 				end
-				if l_library.library_target /= Void then
+				if l_library.library_target /= Void and is_subgroup_searched then
 					l_clusters := l_library.library_target.clusters
 				end
 				if l_clusters /= Void then
@@ -166,7 +166,9 @@ feature -- Basic operatioin
 							l_group_strategy.set_case_insensitive
 						end
 						l_group_strategy.set_regular_expression_used (is_regular_expression_used)
-						l_group_strategy.set_subgroup_searched (is_subgroup_searched)
+							-- We already get flat clusters of the library target.
+							-- So subcluster searching is not needed.
+						l_group_strategy.set_subgroup_searched (False)
 						l_group_strategy.set_whole_word_matched (is_whole_word_matched)
 						l_group_strategy.launch
 						item_matched.append (l_group_strategy.item_matched)

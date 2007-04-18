@@ -540,61 +540,67 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				create l_menu
 				create identified
 				cur := targets.cursor
-				from
-					targets.start
-						-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
-					l_comparator_agent :=
-						agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
-							do
-								Result := first_item.name < second_item.name
-							end
-				until
-					targets.after
-				loop
-					trg ?= identified.id_object (targets.item_for_iteration)
-					if trg /= Void then
-						if
-							trg.drop_actions.accepts_pebble (a_pebble)
-						then
-							sensitive ?= trg
-							if not (sensitive /= Void and not sensitive.is_sensitive) then
-								l_has_targets := True
-								if not l_configurable_item_added then
-									l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
-									l_configurable_item_added := True
+				if a_pebble /= Void then
+					from
+						targets.start
+							-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
+						l_comparator_agent :=
+							agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
+								do
+									Result := first_item.name < second_item.name
 								end
-								if trg.target_data_function /= Void then
-									l_item_data := trg.target_data_function.item ([a_pebble])
-								end
-								if l_item_data /= Void then
-									l_item_data.set_target (trg)
-									create l_object_comparable.make (l_item_data, l_comparator_agent)
-									if l_search_tree = Void then
-										create l_search_tree.make (l_object_comparable)
-									else
-										l_search_tree.put (l_object_comparable)
+					until
+						targets.after
+					loop
+						trg ?= identified.id_object (targets.item_for_iteration)
+						if trg /= Void then
+							if
+								trg.drop_actions.accepts_pebble (a_pebble)
+							then
+								sensitive ?= trg
+								if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
+									l_has_targets := True
+									if not l_configurable_item_added then
+										l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
+										l_configurable_item_added := True
 									end
-									l_item_data := Void
+									if trg.target_data_function /= Void then
+										l_item_data := trg.target_data_function.item ([a_pebble])
+									end
+									if l_item_data /= Void then
+										l_item_data.set_target (trg)
+										create l_object_comparable.make (l_item_data, l_comparator_agent)
+										if l_search_tree = Void then
+											create l_search_tree.make (l_object_comparable)
+										else
+											l_search_tree.put (l_object_comparable)
+										end
+										l_item_data := Void
+									end
 								end
 							end
 						end
+						targets.forth
 					end
-					targets.forth
+
 				end
 
-				if l_has_targets and then l_search_tree /= Void then
-						-- Sort items alphabetically using recursive inline agent
+				if l_has_targets then
 					create l_arrayed_list.make (0)
-					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
-						do
-							if a_node /= Void then
-								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
-								a_list.extend (a_node.item.item)
-								l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+
+					if l_search_tree /= Void then
+							-- Sort items alphabetically using recursive inline agent
+						l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
+							do
+								if a_node /= Void then
+									l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
+									a_list.extend (a_node.item.item)
+									l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+								end
 							end
-						end
-						-- Call the recursive agent by passing itself in as the first parameter.
-					l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
+							-- Call the recursive agent by passing itself in as the first parameter.
+						l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
+					end
 
 					l_menu_count := l_menu.count
 					if a_pnd_source.configurable_target_menu_handler /= Void then
@@ -611,7 +617,8 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					end
 					if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
 						l_menu.show
-					else
+					elseif a_configure_agent /= Void then
+
 						a_configure_agent.call (Void)
 					end
 				else
@@ -624,7 +631,8 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					end
 				end
 				targets.go_to (cur)
-			else
+			elseif a_configure_agent /= Void then
+
 					-- If shift is pressed the we perform normal PND.
 				a_configure_agent.call (Void)
 			end

@@ -672,12 +672,12 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		local
-			l_feature: E_FEATURE
+			l_e_feature: E_FEATURE
 		do
 			Result := a_item.is_real_feature
 			if Result then
-				l_feature := a_item.e_feature
-				Result := l_feature.has_precondition or l_feature.has_postcondition
+				l_e_feature := a_item.e_feature
+				Result := l_e_feature.has_precondition or l_e_feature.has_postcondition
 			end
 		end
 

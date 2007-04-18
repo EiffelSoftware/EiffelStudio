@@ -212,6 +212,7 @@ feature{NONE} -- Implementation
 			rid: INTEGER
 			l_feature_domain: like features_from_domain
 			l_feature: QL_FEATURE
+			l_e_feature: E_FEATURE
 		do
 			l_feature_domain := features_from_domain (criterion_domain)
 			if not l_feature_domain.is_empty then
@@ -222,12 +223,13 @@ feature{NONE} -- Implementation
 				loop
 					l_feature := l_feature_domain.item
 					if l_feature.is_real_feature then
+						l_e_feature := l_feature.e_feature
 						create descendants.make
-						rid := l_feature.e_feature.rout_id_set.item (1)
+						rid := l_e_feature.rout_id_set.item (1)
 						if not only_find_current_version then
-							record_descendants (descendants, l_feature.e_feature.associated_class)
+							record_descendants (descendants, l_e_feature.associated_class)
 						else
-							descendants.extend (l_feature.e_feature.associated_class)
+							descendants.extend (l_e_feature.associated_class)
 						end
 						from
 							create a_list.make (descendants.count)

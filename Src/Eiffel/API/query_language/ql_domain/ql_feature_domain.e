@@ -103,7 +103,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- otherwise return Void.
 		local
 			l_cursor: CURSOR
-			l_feature: E_FEATURE
+			l_e_feature: E_FEATURE
 		do
 			l_cursor := cursor
 			from
@@ -112,9 +112,9 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 				after or Result /= Void
 			loop
 				if item.is_real_feature then
-					l_feature := item.e_feature
+					l_e_feature := item.e_feature
 					if
-						l_feature.same_as (e_feature)
+						l_e_feature.same_as (e_feature)
 				 	then
 						Result := item
 					end

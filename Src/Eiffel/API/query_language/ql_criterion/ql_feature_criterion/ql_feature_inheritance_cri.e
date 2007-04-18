@@ -19,20 +19,20 @@ feature{NONE} -- Evaluate
 		local
 			l_user_data_list: like user_data_list
 			l_feature_list: like feature_list
-			l_feature: E_FEATURE
+			l_e_feature: E_FEATURE
 			l_item: QL_FEATURE
 		do
 			if a_item.is_real_feature then
 				l_user_data_list := user_data_list
 				l_feature_list := feature_list
-				l_feature := a_item.e_feature
-				check l_feature /= Void end
+				l_e_feature := a_item.e_feature
+				check l_e_feature /= Void end
 				from
 					l_feature_list.start
 				until
 					l_feature_list.after
 				loop
-					if l_feature_list.item.same_as (l_feature) then
+					if l_feature_list.item.same_as (l_e_feature) then
 						if not Result then
 							a_item.set_data (l_user_data_list.i_th (l_feature_list.index))
 							Result := True

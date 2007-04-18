@@ -1240,14 +1240,12 @@ feature {NONE} -- Implementation
 	save_action (a_window: EB_WINDOW) is
 			-- Action to be performed on `item' in `save_all'.
 		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
+			l_dev_window: EB_DEVELOPMENT_WINDOW
 			conv_dll: EB_DYNAMIC_LIB_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void and then
-			   a_dev_window.changed
-			then
-				a_dev_window.save_text
+			l_dev_window ?= a_window
+			if l_dev_window /= Void and then l_dev_window.any_editor_changed then
+				l_dev_window.save_all
 			end
 			conv_dll ?= a_window
 			if conv_dll /= Void and then conv_dll.changed then

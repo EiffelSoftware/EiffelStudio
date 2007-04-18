@@ -504,6 +504,7 @@ feature -- Command
 			state.close
 			docking_manager.contents.start
 			docking_manager.contents.prune (Current)
+			docking_manager.property.remove_from_clicked_list (Current)
 		end
 
 	hide is

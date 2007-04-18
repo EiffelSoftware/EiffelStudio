@@ -165,8 +165,12 @@ feature {NONE} -- Quick search bar.
 			bottom_widget_created: bottom_widget /= Void
 		do
 			create search_bar.make (search_tool)
-			search_tool.first_result_reached_actions.extend (agent search_bar.trigger_first_reached_pixmap)
-			search_tool.bottom_reached_actions.extend (agent search_bar.trigger_bottom_reached_pixmap)
+
+			first_result_reached_action := agent search_bar.trigger_first_reached_pixmap
+			bottom_reached_action := agent search_bar.trigger_bottom_reached_pixmap
+
+			search_tool.first_result_reached_actions.extend (first_result_reached_action)
+			search_tool.bottom_reached_actions.extend (bottom_reached_action)
 			bottom_widget.extend (search_bar)
 			hide_search_bar
 			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
@@ -446,6 +450,8 @@ feature {NONE} -- Implementation
 			-- Recycle
 		do
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
+			search_tool.first_result_reached_actions.prune_all (first_result_reached_action)
+			search_tool.bottom_reached_actions.prune_all (bottom_reached_action)
 			search_bar.destroy
 			Precursor {EB_EDITOR}
 		end
@@ -542,6 +548,10 @@ feature {NONE} -- Implementation
 
 	check_search_bar_visible_procedure: PROCEDURE [ANY, TUPLE];
 			-- Procedure instance added into focus_in_actions of current window
+
+	first_result_reached_action: PROCEDURE [ANY, TUPLE]
+	bottom_reached_action: PROCEDURE [ANY, TUPLE];
+			-- Actions to recycle
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

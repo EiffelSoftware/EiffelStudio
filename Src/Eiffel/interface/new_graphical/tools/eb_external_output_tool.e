@@ -202,7 +202,8 @@ feature{NONE} -- Initialization
 			cmd_toolbar.extend (tbs)
 			cmd_toolbar.extend (edit_cmd_detail_btn)
 
-			toolbar.extend (a_tool.commands.edit_external_commands_cmd.new_sd_toolbar_item (False))
+			edit_external_commands_cmd_btn := a_tool.commands.edit_external_commands_cmd.new_sd_toolbar_item (False)
+			toolbar.extend (edit_external_commands_cmd_btn)
 
 			l_del_tool_bar.extend (del_cmd_btn)
 			l_ev_horizontal_box_2.extend (l_ev_horizontal_box_5)
@@ -803,6 +804,8 @@ feature {NONE} -- Recycle
 			save_output_btn := Void
 			clear_output_btn := Void
 			del_cmd_btn := Void
+			edit_external_commands_cmd_btn.recycle
+			edit_external_commands_cmd_btn := Void
 		end
 
 feature {NONE} -- Implementation
@@ -842,8 +845,11 @@ feature {NONE} -- Implementation
 	clear_output_btn: SD_TOOL_BAR_BUTTON
 			-- Button to clear output window.
 
-	del_cmd_btn: SD_TOOL_BAR_BUTTON;
+	del_cmd_btn: SD_TOOL_BAR_BUTTON
 			-- Button to delete an already stored external command
+
+	edit_external_commands_cmd_btn: EB_SD_COMMAND_TOOL_BAR_BUTTON;
+			-- Button to recycle
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

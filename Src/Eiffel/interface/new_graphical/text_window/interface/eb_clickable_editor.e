@@ -72,9 +72,239 @@ feature {NONE}-- Initialization
 			--editor_drawing_area.set_configurable_target_menu_handler (agent handle_context_menu)
 		end
 
-	handle_context_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
+			-- Handler used for creating contextual menus based on a Pick and Drop transport.
+		local
+			l_menu: EV_MENU
+			l_stone: CLASSC_STONE
+			l_feature_stone: FEATURE_STONE
+			l_pebble_generating_type: like generating_type
+			l_class_formatter: EB_CLASS_INFO_FORMATTER
+			l_feature_formatter: EB_FEATURE_INFO_FORMATTER
+			l_editor_cmd: EB_EDITOR_COMMAND
+			l_form: EB_CLASS_INFO_FORMATTER
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text ("There are " + a_target_list.count.out + " targets for " + a_pebble.generating_type))
+			if a_pebble /= Void then
+				l_pebble_generating_type := a_pebble.generating_type
+				l_stone ?= a_pebble
+			else
+				l_pebble_generating_type := ""
+			end
+
+			if l_pebble_generating_type.is_equal ("CLASSC_STONE") then
+				a_menu.extend (dev_window.commands.new_tab_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.commands.new_tab_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (dev_window.new_development_window_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.new_development_window_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (dev_window.commands.shell_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.commands.shell_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+
+				create l_menu.make_with_text (interface_names.m_show)
+				a_menu.extend (l_menu)
+
+				from
+					dev_window.managed_class_formatters.start
+				until
+					dev_window.managed_class_formatters.after
+				loop
+					l_class_formatter ?= dev_window.managed_class_formatters.item
+					if l_class_formatter /= Void then
+						l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_class_formatter.menu_name))
+						l_menu.last.select_actions.extend (agent l_class_formatter.execute_with_stone (l_stone))
+					end
+					dev_window.managed_class_formatters.forth
+				end
+				l_menu.extend (create {EV_MENU_SEPARATOR})
+
+				l_menu.extend (dev_window.tools.cluster_tool.show_current_class_cluster_cmd.new_menu_item)
+				l_menu.last.select_actions.wipe_out
+				l_menu.last.select_actions.extend (agent (dev_window.tools.cluster_tool).show_class (l_stone))
+
+				l_menu.extend (dev_window.tools.diagram_tool.center_diagram_cmd.new_menu_item)
+				l_menu.last.select_actions.wipe_out
+				l_menu.last.select_actions.extend (agent (dev_window.tools.diagram_tool.center_diagram_cmd).execute_with_class_stone (l_stone))
+
+				create l_menu.make_with_text (interface_names.m_refactoring)
+				a_menu.extend (l_menu)
+				l_menu.extend (dev_window.refactoring_manager.rename_command.new_menu_item)
+				l_menu.last.select_actions.wipe_out
+				l_menu.last.select_actions.extend (agent (dev_window.refactoring_manager.rename_command).drop_class (l_stone))
+--				l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Move"))
+				--| FIXME IEK There is no dialog for moving a class?
+
+				create l_menu.make_with_text (interface_names.m_debug)
+				a_menu.extend (l_menu)
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_add_first_breakpoints_in_class))
+				l_menu.last.select_actions.extend (
+					agent (a_class: CLASS_C) do
+						dev_window.debugger_manager.enable_first_breakpoints_in_class (a_class)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_stone.e_class)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_enable_stop_points))
+				l_menu.last.select_actions.extend (
+					agent (a_class: CLASS_C) do
+						dev_window.debugger_manager.enable_breakpoints_in_class (a_class)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_stone.e_class)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_disable_stop_points))
+				l_menu.last.select_actions.extend (
+					agent (a_class: CLASS_C) do
+						dev_window.debugger_manager.disable_breakpoints_in_class (a_class)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_stone.e_class)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_clear_breakpoints))
+				l_menu.last.select_actions.extend (
+					agent (a_class: CLASS_C) do
+						dev_window.debugger_manager.remove_breakpoints_in_class (a_class)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_stone.e_class)
+				)
+
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+			elseif l_pebble_generating_type.is_equal ("FEATURE_STONE") then
+				l_feature_stone ?= l_stone
+
+				a_menu.extend (dev_window.commands.new_tab_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.commands.new_tab_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (dev_window.new_development_window_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.new_development_window_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (dev_window.commands.shell_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.commands.shell_cmd).execute_with_stone (l_stone))
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+
+				create l_menu.make_with_text (interface_names.m_show)
+				a_menu.extend (l_menu)
+
+				from
+					dev_window.managed_feature_formatters.start
+				until
+					dev_window.managed_feature_formatters.after
+				loop
+					l_feature_formatter ?= dev_window.managed_feature_formatters.item
+					if l_feature_formatter /= Void then
+						l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_feature_formatter.menu_name))
+						l_menu.last.select_actions.extend (agent l_feature_formatter.execute_with_stone (l_stone))
+					end
+					dev_window.managed_feature_formatters.forth
+				end
+
+				create l_menu.make_with_text (interface_names.m_refactoring)
+				a_menu.extend (l_menu)
+				l_menu.extend (dev_window.refactoring_manager.rename_command.new_menu_item)
+				l_menu.last.select_actions.wipe_out
+				l_menu.last.select_actions.extend (agent (dev_window.refactoring_manager.rename_command).drop_feature (l_feature_stone))
+
+				l_menu.extend (dev_window.refactoring_manager.pull_command.new_menu_item)
+				l_menu.last.select_actions.wipe_out
+				l_menu.last.select_actions.extend (agent (dev_window.refactoring_manager.pull_command).drop_feature (l_feature_stone))
+
+				create l_menu.make_with_text (interface_names.m_debug)
+				a_menu.extend (l_menu)
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_add_first_breakpoints_in_feature))
+				l_menu.last.select_actions.extend (
+					agent (a_feature: E_FEATURE) do
+						dev_window.debugger_manager.enable_first_breakpoint_of_feature (a_feature)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_feature_stone.e_feature)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_enable_stop_points))
+				l_menu.last.select_actions.extend (
+					agent (a_feature: E_FEATURE) do
+						dev_window.debugger_manager.enable_breakpoints_in_feature (a_feature)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_feature_stone.e_feature)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_disable_stop_points))
+				l_menu.last.select_actions.extend (
+					agent (a_feature: E_FEATURE) do
+						dev_window.debugger_manager.disable_breakpoints_in_feature (a_feature)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_feature_stone.e_feature)
+				)
+
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (interface_names.m_clear_breakpoints))
+				l_menu.last.select_actions.extend (
+					agent (a_feature: E_FEATURE) do
+						dev_window.debugger_manager.remove_breakpoints_in_feature (a_feature)
+						window_manager.synchronize_all_about_breakpoints
+					end (l_feature_stone.e_feature)
+				)
+
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+
+
+			elseif l_pebble_generating_type.is_equal ("CLUSTER_STONE") then
+				a_menu.extend (dev_window.commands.new_tab_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.commands.new_tab_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (dev_window.new_development_window_cmd.new_menu_item)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent (dev_window.new_development_window_cmd).execute_with_stone (l_stone))
+
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+			end
+
+			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item)
+			a_menu.extend (dev_window.commands.editor_copy_cmd.new_menu_item)
+			a_menu.extend (dev_window.commands.editor_paste_cmd.new_menu_item)
+
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (Interface_names.m_select_all))
+			a_menu.last.select_actions.extend (agent dev_window.select_all)
+
+
+			create l_menu.make_with_text (interface_names.m_edit)
+			a_menu.extend (l_menu)
+			from
+				dev_window.commands.editor_commands.start
+				dev_window.commands.editor_commands.forth
+					-- 'Select All' is at the first position.
+			until
+				dev_window.commands.editor_commands.after
+			loop
+				l_editor_cmd ?= dev_window.commands.editor_commands.item
+				if l_editor_cmd /= Void then
+					if not l_editor_cmd.menu_name.is_equal (interface_names.m_select_all) then
+						l_menu.extend (l_editor_cmd.new_menu_item)
+					end
+				end
+				dev_window.commands.editor_commands.forth
+			end
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+			create l_menu.make_with_text (interface_names.m_view)
+			a_menu.extend (l_menu)
+			from
+				dev_window.managed_main_formatters.start
+			until
+				dev_window.managed_main_formatters.after
+			loop
+				l_form := dev_window.managed_main_formatters.item
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_form.new_menu_item.text))
+				l_menu.last.select_actions.extend (agent l_form.execute)
+				l_menu.last.select_actions.extend (agent l_form.invalidate)
+				dev_window.managed_main_formatters.forth
+			end
 		end
 
 feature -- Access

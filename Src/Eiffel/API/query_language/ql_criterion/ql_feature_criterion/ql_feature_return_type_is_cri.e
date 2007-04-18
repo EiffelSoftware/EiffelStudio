@@ -25,13 +25,15 @@ feature -- Evaluate
 			-- Evaluate `a_item'.
 		local
 			l_return_type: CLASS_C
+			l_e_feature: E_FEATURE
 		do
 			if a_item.is_real_feature then
-				if a_item.e_feature.type /= Void then
+				l_e_feature := a_item.e_feature
+				if l_e_feature.type /= Void then
 					if not is_criterion_domain_evaluated then
 						initialize_domain
 					end
-					l_return_type := return_type (a_item.e_feature)
+					l_return_type := return_type (l_e_feature)
 					Result := return_types.has (l_return_type.class_id) or else has_conformed_return_type (l_return_type)
 					if not Result then
 
@@ -105,7 +107,7 @@ feature{NONE} -- Implementation
 				l_return_types.forth
 			end
 		end
-			
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -36,6 +36,7 @@ feature{NONE} -- Implementation
 			l_branch_id_list: like user_data_list
 			l_feature_domain: like features_from_domain
 			l_feature: QL_FEATURE
+			l_e_feature: E_FEATURE
 			l_cnt: INTEGER
 		do
 			l_feature_domain := features_from_domain (criterion_domain)
@@ -48,30 +49,33 @@ feature{NONE} -- Implementation
 					l_feature_domain.after
 				loop
 					l_feature := l_feature_domain.item
-					create classes.make (20)
-					record_ancestors (classes, l_feature.e_feature.associated_class)
-					rout_id_set := l_feature.e_feature.rout_id_set
-					from
-						i := 1
-						l_cnt := rout_id_set.count
-					until
-						i > l_cnt
-					loop
-						rout_id := rout_id_set.item (i)
+					if l_feature.is_real_feature then
+						l_e_feature := l_feature.e_feature
+						create classes.make (20)
+						record_ancestors (classes, l_e_feature.associated_class)
+						rout_id_set := l_e_feature.rout_id_set
 						from
-							classes.start
+							i := 1
+							l_cnt := rout_id_set.count
 						until
-							classes.after
+							i > l_cnt
 						loop
-							c := classes.item
-							other_feature := c.feature_with_rout_id (rout_id)
-							if other_feature /= Void then
-								l_ancestor_list.extend (other_feature)
-								l_branch_id_list.extend (i)
+							rout_id := rout_id_set.item (i)
+							from
+								classes.start
+							until
+								classes.after
+							loop
+								c := classes.item
+								other_feature := c.feature_with_rout_id (rout_id)
+								if other_feature /= Void then
+									l_ancestor_list.extend (other_feature)
+									l_branch_id_list.extend (i)
+								end
+								classes.forth
 							end
-							classes.forth
+							i := i + 1
 						end
-						i := i + 1
 					end
 					l_feature_domain.forth
 				end

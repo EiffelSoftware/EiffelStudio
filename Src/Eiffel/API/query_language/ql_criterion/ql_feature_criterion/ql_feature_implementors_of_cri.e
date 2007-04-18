@@ -38,7 +38,8 @@ feature{NONE} -- Implementation
 			rc: INTEGER
 			l_branch_id_list: like user_data_list
 			l_implementor_list: like feature_list
-			l_feature: E_FEATURE
+			l_e_feature: E_FEATURE
+			l_associated_class: CLASS_C
 			l_feature_domain: like features_from_domain
 			l_ql_feature: QL_FEATURE
 		do
@@ -53,18 +54,19 @@ feature{NONE} -- Implementation
 				loop
 					l_ql_feature := l_feature_domain.item
 					if l_ql_feature.is_real_feature then
-						l_feature := l_ql_feature.e_feature
-						written_cl := l_feature.written_class
-						precursors := l_feature.precursors
+						l_e_feature := l_ql_feature.e_feature
+						written_cl := l_e_feature.written_class
+						precursors := l_e_feature.precursors
 						create classes.make
-						record_descendants (classes, l_feature.associated_class)
-						if not classes.has (l_feature.associated_class) then
-							classes.extend (l_feature.associated_class)
+						l_associated_class := l_e_feature.associated_class
+						record_descendants (classes, l_associated_class)
+						if not classes.has (l_associated_class) then
+							classes.extend (l_associated_class)
 						end
 						if precursors /= Void then
 							classes.append (precursors)
 						end
-						rout_id_set := l_feature.rout_id_set
+						rout_id_set := l_e_feature.rout_id_set
 						from
 							rc := rout_id_set.count
 							i := 1

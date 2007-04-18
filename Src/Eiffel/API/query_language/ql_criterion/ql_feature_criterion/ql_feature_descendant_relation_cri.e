@@ -35,6 +35,7 @@ feature{NONE} -- Implementation
 			l_branch_id_list: like user_data_list
 			l_feature_domain: like features_from_domain
 			l_ql_feature: QL_FEATURE
+			l_e_feature: E_FEATURE
 			l_rout_id: INTEGER
 		do
 			l_feature_domain := features_from_domain (criterion_domain)
@@ -48,9 +49,10 @@ feature{NONE} -- Implementation
 				loop
 					l_ql_feature := l_feature_domain.item
 					if l_ql_feature.is_real_feature then
+						l_e_feature := l_ql_feature.e_feature
 						create classes.make (20)
-						record_descendants (classes, l_ql_feature.e_feature.associated_class)
-						rout_id_set := l_ql_feature.e_feature.rout_id_set
+						record_descendants (classes, l_e_feature.associated_class)
+						rout_id_set := l_e_feature.rout_id_set
 						from
 							i := 1
 						until

@@ -20,23 +20,25 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
 			-- Evaluate `a_item'.
 		local
-			l_client: like clients
+			l_clients: like clients
+			l_e_feature: E_FEATURE
 		do
 			if a_item.is_real_feature then
+				l_e_feature := a_item.e_feature
 				if not is_criterion_domain_evaluated then
 					initialize_domain
 				end
 				check clients /= Void end
-				l_client := clients
+				l_clients := clients
 				Result := True
-				if not l_client.is_empty then
+				if not l_clients.is_empty then
 					from
-						l_client.start
+						l_clients.start
 					until
-						l_client.after or not Result
+						l_clients.after or not Result
 					loop
-						Result := a_item.e_feature.is_exported_to (l_client.item.class_c)
-						l_client.forth
+						Result := l_e_feature.is_exported_to (l_clients.item.class_c)
+						l_clients.forth
 					end
 				end
 			end

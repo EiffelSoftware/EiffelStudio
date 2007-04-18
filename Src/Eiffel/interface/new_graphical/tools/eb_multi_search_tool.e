@@ -823,7 +823,18 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			else
 				choose_dialog.show
 			end
-			choose_dialog.set_focus
+			if not choose_dialog.is_destroyed and then
+				choose_dialog.is_displayed and then
+				choose_dialog.is_sensitive
+			then
+				choose_dialog.set_focus
+			end
+			if not choose_dialog.classes_tree.is_destroyed and then
+				choose_dialog.classes_tree.is_displayed and then
+				choose_dialog.classes_tree.is_sensitive
+			then
+				choose_dialog.classes_tree.set_focus
+			end
 		end
 
 	on_drop_custom_button (a_any: ANY) is

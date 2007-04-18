@@ -119,6 +119,9 @@ feature -- Access
 			Result := selected_class_name
 		end
 
+	classes_tree: EB_CLASSES_TREE
+			-- Tree where the user can choose its class.
+
 feature -- Element Change
 
 	set_class_add_action (action: like on_class_add) is
@@ -233,11 +236,8 @@ feature {NONE} -- Controls
 	add_button: EV_BUTTON
 			-- "Add button"
 
-	ok_button: EV_BUTTON
+	ok_button: EV_BUTTON;
 			-- "Ok" button.
-
-	classes_tree: EB_CLASSES_TREE;
-			-- Tree where the user can choose its class.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

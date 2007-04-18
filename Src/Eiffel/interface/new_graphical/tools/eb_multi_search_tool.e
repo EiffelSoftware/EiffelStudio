@@ -1307,6 +1307,13 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				old_search_key_value := currently_searched
 				old_editor := editor
 				search_report_grid.redraw_grid
+				if
+					not is_current_editor_searched and then
+					not multi_search_performer.is_empty and then
+					not report_tool.shown
+				then
+					report_tool.show
+				end
 				trigger_keyword_field_color (keyword_field)
 				changed_classes.wipe_out
 				extend_and_run_loaded_action (agent force_not_changed)

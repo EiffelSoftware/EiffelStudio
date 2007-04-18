@@ -26,6 +26,7 @@ inherit
 							redraw_rectangle
 			{SD_NOTEBOOK_HIDE_TAB_DIALOG} key_press_actions, focus_out_actions, set_focus, has_focus
 			{SD_TOOL_BAR_DRAWER_IMP} draw_ellipsed_text_top_left
+			{SD_TOOL_BAR} is_initialized
 		redefine
 			update_for_pick_and_drop,
 			initialize
@@ -41,6 +42,8 @@ feature {NONE} -- Initlization
 		do
 			default_create
 		end
+
+feature {SD_TOOL_BAR} -- Internal initlization
 
 	initialize is
 			-- Initlialize

@@ -61,7 +61,8 @@ inherit
 			is_cloned,
 			drawer,
 			items_have_texts,
-			on_pointer_release
+			on_pointer_release,
+			initialize
 		end
 
 	EV_FIXED
@@ -110,6 +111,12 @@ feature {NONE} -- Initlization
 			tool_bar.expose_actions.extend (agent on_tool_bar_expose_actions)
 		ensure
 			set: tool_bar = a_tool_bar
+		end
+
+	initialize is
+			-- Redefine
+		do
+			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, True)
 		end
 
 feature -- Properties

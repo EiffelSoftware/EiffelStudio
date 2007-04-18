@@ -132,6 +132,12 @@ feature -- Command
 			main_area_drop_actions.wipe_out
 		end
 
+	remove_from_clicked_list (a_content: SD_CONTENT) is
+			-- Remove `a_content' from `internal_clicked_list'
+		do
+			internal_clicked_list.prune_all (a_content)
+		end
+
 invariant
 
 	internal_clicked_list_not_void: internal_clicked_list /= Void

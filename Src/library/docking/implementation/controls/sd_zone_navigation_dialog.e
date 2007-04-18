@@ -85,6 +85,12 @@ feature {NONE} -- Initialization
 			l_font := full_title.font
 			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			full_title.set_font (l_font)
+
+
+			-- We have to do it like this, otherwise when press tab key (executing next_tabstop_widget in EV_WIDGET_IMP on Windows), there will be stack overflow.
+			-- The reason of the stack overflow maybe is: the `parent' of `wel_window' is not correct.
+			internal_files_label.enable_tabable_to
+			internal_tools_label.enable_tabable_to
 		end
 
 	init_background (a_color: EV_COLOR) is

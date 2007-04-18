@@ -176,20 +176,20 @@ feature {EV_ANY_I} -- Implementation
 				if pebble_function /= Void then
 					pebble := pebble_function.last_result
 				end
-				if pebble /= Void and not application_imp.drop_actions_executing then
+				if not application_imp.drop_actions_executing then
 					-- Note that we check there is not a pick and drop source currently executing.
 					-- If you drop on to a widget that is also a source and call `process_events' from the
 					-- `drop_actions', this causes the transport to start. The above check prevents this
 					-- from occurring.
 					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
-						if mode_is_configurable_target_menu then
+						if pebble /= Void and then mode_is_configurable_target_menu then
 							l_configure_agent := agent real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
 						application_imp.create_target_menu (interface, pebble, l_configure_agent)
-					elseif mode_is_pick_and_drop and a_button = 3 then
+					elseif pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
 						real_start_transport (a_x, a_y, a_button, a_x_tilt,
 							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-					elseif mode_is_drag_and_drop and a_button = 1 then
+					elseif pebble /= Void and then mode_is_drag_and_drop and a_button = 1 then
 						if not awaiting_movement then
 								-- Store arguments so they can be passed to
 								-- real_start_transport.

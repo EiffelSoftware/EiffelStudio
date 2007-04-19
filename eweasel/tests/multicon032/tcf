@@ -12,9 +12,13 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
 copy_raw 	multi2.e $CLUSTER multi2.e
-compile_melted
+compile_frozen
 compile_result ok
-execute_final NONE exec_output1
+c_compile_work
+c_compile_result ok
+
+
+execute_work NONE exec_output1
 compare exec_output1 output1
 
 

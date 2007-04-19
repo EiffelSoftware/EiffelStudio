@@ -16,9 +16,10 @@ feature -- do compuations
 			-- for testing
 		local
 			l_g: G
+			l_any: ANY
 		do
 			create Result
-			Result.test
+			l_any := Result.test
 
 			create l_g
 			if l_g.better_name (l_g) then

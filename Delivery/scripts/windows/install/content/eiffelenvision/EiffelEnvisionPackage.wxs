@@ -67,11 +67,6 @@
         <Component Id="Comp.eiffelpackages" Guid="12E717BB-DFB6-4F50-8C11-CD2FDE6F61EA" Win64="$(var.IsWin64)" KeyPath="yes">
           <CreateFolder/>
           <RemoveFolder Id="Dir.eiffelpackages" On="uninstall" Directory="Dir.eiffelpackages"/>
-          <?ifdef x64?>
-          <?include RegEiffelPackages64.wxi?>
-          <?else?>
-          <?include RegEiffelPackages86.wxi?>
-          <?endif?>
         </Component>
       </Directory>
       <Directory Id="Dir.eiffelprojectitems" Name="EiffelProjectItems">
@@ -123,9 +118,13 @@
       <?ifdef x64?>
       <Directory Id="System64Folder" Name="."/>
       <?endif?>
+
+      <Component Id="Comp.eiffelpackages.reg" Guid="CA055265-A3B9-4788-A3DC-FDE93646A9CF" Win64="no" KeyPath="yes">
+        <?include RegEiffelPackages.wxi?>
+      </Component>
       
       <Directory Id="PersonalFolder" Name=".">
-        <Directory Id="Dir.user" Name="$(var.VsName)" >
+        <Directory Id="Dir.user" Name="$(var.VsName)">
           
           <!-- Code Snippets -->
           <Directory Id="Dir.user.code_snippets" Name="Code Snippets">
@@ -229,7 +228,7 @@
     <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
       <ComponentRef Id="Comp.app_icon" />
       <ComponentGroupRef Id="CompGrp.dir.user"/>
-      <ComponentGroupRef Id="CompGrp.redist"/>
+      <ComponentGroupRef Id="CompGrp.redist"/>      
       <Feature Id="Feat.bin" Title="Additional Tools" Description="Additional tools and utilities to use in conjuntion with EiffelEnvision and the Eiffel for .NET compiler." Level="1" Absent="allow">
         <ComponentGroupRef Id="CompGrp.dir.bin"/>
         <ComponentGroupRef Id="CompGrp.bin"/>
@@ -245,6 +244,7 @@
         <ComponentGroupRef Id="CompGrp.eiffelprojectitems"/>
         <ComponentGroupRef Id="CompGrp.eiffelprojects"/>
         <ComponentGroupRef Id="CompGrp.snippets"/>
+        <ComponentRef Id="Comp.eiffelpackages.reg"/>
         <Feature Id="Feat.package.library" Title="Libraries" Description="Library configuration files for quick reuse of source code libraries" Level="1" Absent="disallow">
           <ComponentGroupRef Id="CompGrp.dir.libraries"/>
           <ComponentGroupRef Id="CompGrp.libraries"/>

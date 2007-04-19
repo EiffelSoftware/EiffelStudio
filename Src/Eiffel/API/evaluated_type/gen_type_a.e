@@ -836,8 +836,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			formal_dec_as_not_void: formal_dec_as /= Void
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
 			to_check_is_formal_implies_formal_type_not_void: to_check.conformance_type.is_formal implies formal_type /= Void
-		local
-			l_vtcg7: VTCG7
 		do
 			reset_constraint_error_list
 				-- We assume that we only get checks if the class is valid.

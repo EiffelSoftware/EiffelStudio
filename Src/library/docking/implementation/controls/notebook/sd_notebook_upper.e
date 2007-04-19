@@ -120,6 +120,19 @@ feature -- Query
 	is_maximized: BOOLEAN
 			-- If Current is maximized?
 
+	is_in_close_area: BOOLEAN is
+			-- If pointer position in tab close button area?
+		do
+			from
+				internal_tabs.start
+			until
+				internal_tabs.after or Result
+			loop
+				Result := internal_tabs.item.is_pointer_in_close_area
+				internal_tabs.forth
+			end
+		end
+
 feature -- Command
 
 	set_mini_tool_bar (a_widget: EV_WIDGET) is

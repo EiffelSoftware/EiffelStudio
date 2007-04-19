@@ -13,13 +13,13 @@
         <File Id="Base.dll" Name="EiffelSoftware.Library.Base.dll" KeyPath="yes" Assembly=".net"/>
       </Component>
       <Component Id="Comp.Vision2.dll" Guid="F6651053-8775-4BE9-985D-CCF3933B08B9" Win64="no">
-        <File Id="Vision2.dll" Name="EiffelSoftware.Library.Vision2.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+        <File Id="Vision2.dll" Name="EiffelSoftware.Library.Vision2.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
       <Component Id="Comp.Wel.dll" Guid="261E6A5C-1948-4506-A07C-D9C3E1D64064" Win64="no">
-        <File Id="Wel.dll" Name="EiffelSoftware.Library.Wel.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+        <File Id="Wel.dll" Name="EiffelSoftware.Library.Wel.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
       <Component Id="Comp.Runtime.dll" Guid="C5E80BB2-FD54-4294-8B18-CB1385F2D7D9" Win64="no">
-        <File Id="Runtime.dll" Name="EiffelSoftware.Runtime.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x86"/>
+        <File Id="Runtime.dll" Name="EiffelSoftware.Runtime.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="SystemFolder" FileSource="$(env.InstallSource)\Redist">
@@ -37,13 +37,13 @@
     <?ifdef x64?>
     <DirectoryRef Id="TARGETDIR" FileSource="$(env.InstallSource)\Redist\x64">
       <Component Id="Comp.Base64.dll" Guid="2901F900-FBEB-4BF3-A849-F54BBC369829" Win64="yes">
-        <File Id="Base64.dll" Name="EiffelSoftware.Library.Base64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+        <File Id="Base64.dll" Name="EiffelSoftware.Library.Base64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
       <Component Id="Comp.Vision264.dll" Guid="C4F50B3E-6FE3-4502-8274-7A5DE74D1E5B" Win64="yes">
-        <File Id="Vision264.dll" Name="EiffelSoftware.Library.Vision264.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+        <File Id="Vision264.dll" Name="EiffelSoftware.Library.Vision264.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
       <Component Id="Comp.Wel64.dll" Guid="2E92A85C-E618-4E27-B2E5-437A72E592C7" Win64="yes">
-        <File Id="Wel64.dll" Name="EiffelSoftware.Library.Wel64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="x64"/>
+        <File Id="Wel64.dll" Name="EiffelSoftware.Library.Wel64.dll" KeyPath="yes" Assembly=".net" ProcessorArchitecture="msil"/>
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="System64Folder" FileSource="$(env.InstallSource)\Redist\x64">

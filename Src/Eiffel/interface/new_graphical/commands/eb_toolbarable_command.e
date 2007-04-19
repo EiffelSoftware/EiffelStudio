@@ -91,6 +91,7 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			toolbar_items: like internal_managed_toolbar_items
+			sd_toolbar_items: like internal_managed_sd_toolbar_items
 		do
 			if not is_sensitive then
 				is_sensitive := True
@@ -105,6 +106,18 @@ feature -- Status setting
 						toolbar_items.forth
 					end
 				end
+
+				sd_toolbar_items := internal_managed_sd_toolbar_items
+				if sd_toolbar_items /= Void then
+					from
+						sd_toolbar_items.start
+					until
+						sd_toolbar_items.after
+					loop
+						sd_toolbar_items.item.enable_sensitive
+						sd_toolbar_items.forth
+					end
+				end
 			end
 		end
 
@@ -112,6 +125,7 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			toolbar_items: like internal_managed_toolbar_items
+			sd_toolbar_items: like internal_managed_sd_toolbar_items
 		do
 			if is_sensitive then
 				toolbar_items := internal_managed_toolbar_items
@@ -125,6 +139,19 @@ feature -- Status setting
 						toolbar_items.forth
 					end
 				end
+
+				sd_toolbar_items := internal_managed_sd_toolbar_items
+				if sd_toolbar_items /= Void then
+					from
+						sd_toolbar_items.start
+					until
+						sd_toolbar_items.after
+					loop
+						sd_toolbar_items.item.disable_sensitive
+						sd_toolbar_items.forth
+					end
+				end
+
 				is_sensitive := False
 			end
 		end

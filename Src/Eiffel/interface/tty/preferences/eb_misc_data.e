@@ -150,6 +150,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := locale_id_preference.selected_value
 		end
 
+	is_pnd_mode: BOOLEAN is
+			-- Is current Pnd mode? If False, Contextual Menu mode.
+		do
+			Result := pnd_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
@@ -165,6 +171,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_PREFERENCE
 	locale_id_preference: ARRAY_PREFERENCE
+	pnd_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -181,6 +188,7 @@ feature {NONE} -- Preference Strings
 	console_shell_command_string: STRING is "general.console_shell_command"
 	file_browser_command_string: STRING is "general.file_browser_command"
 	locale_id_preference_string: STRING is "general.locale"
+	pnd_preference_string: STRING is "general.pnd_mode"
 
 feature {NONE} -- Implementation
 
@@ -214,6 +222,8 @@ feature {NONE} -- Implementation
 			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"[en];">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
+
+			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 		end
 
 	preferences: PREFERENCES
@@ -308,6 +318,7 @@ invariant
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
 	locale_id_preference_not_void: locale_id_preference /= Void
+	pnd_preference_not_void: pnd_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

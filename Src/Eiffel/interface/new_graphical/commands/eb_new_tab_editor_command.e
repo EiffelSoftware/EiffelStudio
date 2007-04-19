@@ -59,7 +59,9 @@ feature -- Execution
 	execute is
 			-- Create new tab.
 		do
+			creating_empty_tab := True
 			execute_with_stone_content (Void, Void)
+			creating_empty_tab := False
 		end
 
 	execute_with_stone (a_stone: STONE) is
@@ -74,7 +76,7 @@ feature -- Execution
 			l_editor : EB_SMART_EDITOR
 		do
 			if is_sensitive then
-				if editors_manager.stone_acceptable (a_stone) then
+				if editors_manager.stone_acceptable (a_stone) or creating_empty_tab then
 					l_editor := editors_manager.editor_with_stone (a_stone)
 					if l_editor = Void and a_content = Void then
 						editors_manager.create_editor
@@ -164,6 +166,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	creating_empty_tab: BOOLEAN
+			-- Creating empty tab?
 
 	editors_manager: EB_EDITORS_MANAGER is
 			-- Editors manager.

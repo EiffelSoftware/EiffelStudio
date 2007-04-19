@@ -275,6 +275,12 @@ feature -- Query
 	is_minimized: BOOLEAN
 			-- If Current is minimized?
 
+	is_in_close_area: BOOLEAN is
+			-- If pointer in tab close button area?
+		do
+			Result := internal_notebook.is_in_close_area
+		end
+
 feature {NONE} -- Implementation
 
 	show_notebook_contents (a_is_show: BOOLEAN) is

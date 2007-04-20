@@ -19,10 +19,10 @@
           <Control Id="View" Type="PushButton" X="276" Y="152" Width="90" Height="17" Text="[Button_ViewCompilerHowTo]">
             <Publish Event="DoAction" Value="ShowCCompilerHowTo">1</Publish>
           </Control>
-          <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Disabled="yes" Text="[Button_Back]" />
           <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Next]">
             <Publish Event="EndDialog" Value="Exit">1</Publish>
           </Control>
+          <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Disabled="yes" Text="[Button_Back]" />
           <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Text="[Button_Cancel]">
             <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
           </Control>

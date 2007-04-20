@@ -108,6 +108,28 @@ feature -- Creation
 			count_set: Result.count = count
 		end
 
+	type_of (object: ANY): TYPE [ANY]
+			-- Type object for `object'.
+		do
+			if object /= Void then
+				Result := type_of_type (dynamic_type (object))
+			else
+				Result ?= new_instance_of (dynamic_type_from_string ("TYPE [NONE]"))
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	type_of_type (type_id: INTEGER): TYPE [ANY]
+			-- Return type for type id `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result ?= new_instance_of (dynamic_type_from_string ("TYPE [" + type_name_of_type (type_id) + "]"))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_special_any_type (type_id: INTEGER): BOOLEAN is

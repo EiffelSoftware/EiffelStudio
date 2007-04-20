@@ -742,6 +742,7 @@ feature -- Menu mnenomics
 	m_Unify_stone: STRING_GENERAL is			do Result := locale.translate("Lin&k Context Tool")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
 	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
+	m_Pick: STRING_GENERAL is					do Result := locale.translate("Pick") end
 
 	m_When_hits: STRING_GENERAL is				do Result := locale.translate("When Hits ...")	end
 	m_Window: STRING_GENERAL is					do Result := locale.translate("&Window")	end

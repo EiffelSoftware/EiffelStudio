@@ -7,10 +7,15 @@
     <Binary Id="setup.dll" SourceFile="$(sys.SOURCEFILEDIR)binaries\$(var.Platform)\setup.dll" />
     <!-- END BINARIES -->
 		
-		<!-- CUSTOM ACTIONS -->
-		<CustomAction Id="EvaluateCCompiler" BinaryKey="setup.dll" DllEntry="evaluate_c_compiler" Return="check"  Execute="immediate"/>
-    <CustomAction Id="ShowCCompilerHowTo" BinaryKey="setup.dll" DllEntry="show_c_compiler_how_to" Return="ignore"  Execute="immediate"/>
-    <CustomAction Id="CanPerformCCompilation" BinaryKey="setup.dll" DllEntry="can_perform_c_compilation" Return="ignore"  Execute="immediate"/>
+    <!-- CUSTOM ACTIONS -->
+    <CustomAction Id="InitializeProperties" BinaryKey="setup.dll" DllEntry="initialize_properties" Return="check"  Execute="immediate"/>
+    <CustomAction Id="EvaluateCCompiler" BinaryKey="setup.dll" DllEntry="evaluate_c_compiler" Return="check" Execute="immediate"/>
+    <CustomAction Id="ShowCCompilerHowTo" BinaryKey="setup.dll" DllEntry="show_c_compiler_how_to" Return="ignore" Execute="immediate"/>
+    <CustomAction Id="CanPerformCCompilation" BinaryKey="setup.dll" DllEntry="can_perform_c_compilation" Return="ignore" Execute="immediate"/>
+    <?ifdef Enterprise?>
+      <CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" Return="check"  Execute="immediate"/>
+      <CustomAction Id="ValidateCdKey" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" Return="check"  Execute="immediate"/>
+    <?endif?>
     <!-- END CUSTOM ACTIONS -->
 
     <CustomAction Id="SET_INSTALLDIR" Property="INSTALLDIR" Value="[INSTALLDIR]" Execute="firstSequence" />

@@ -71,42 +71,42 @@
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.library" Name="library"/>
 		</DirectoryRef>
-		
-			<!-- ProgIds -->
-		<DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
-			<Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
-					<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
-                <File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
-				<ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
-					<Extension Id="bpr">
-						<MIME ContentType="text/xml" />
-						<Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
-					</Extension>
-				</ProgId>
-			</Component>
-		</DirectoryRef>
-		<DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
-			<Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
-					<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
-                <File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
-				<ProgId Id="estudio_ecf.project" Description="EiffelBuild project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
-					<Extension Id="ecf">
-						<MIME ContentType="text/xml" />
-						<Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-						<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-						<Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-						<Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-						<Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-					</Extension>
-				</ProgId>
-				<ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="2" >
-					<Extension Id="e" >
-						<MIME ContentType="text/plain" />
-					</Extension>
-				</ProgId>
-			</Component>
-		</DirectoryRef>
 
+    <!-- PROGIDS -->
+    <DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
+      <Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
+        <!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+        <File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
+        <ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
+          <Extension Id="bpr">
+            <MIME ContentType="text/xml" />
+            <Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
+          </Extension>
+        </ProgId>
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
+      <Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
+        <!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+        <File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
+        <ProgId Id="estudio_ecf.project" Description="EiffelBuild project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
+          <Extension Id="ecf">
+            <MIME ContentType="text/xml" />
+            <Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+            <Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+            <Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+            <Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+            <Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+          </Extension>
+        </ProgId>
+        <ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="2" >
+          <Extension Id="e" >
+            <MIME ContentType="text/plain" />
+          </Extension>
+        </ProgId>
+      </Component>
+    </DirectoryRef>
+    <!-- END PROGIDS -->
 
 		<DirectoryRef Id="TARGETDIR">
 			<Directory Id="DesktopFolder" Name="." />
@@ -230,10 +230,6 @@
 		<CustomAction Id="IsGdixInstalled" BinaryKey="setup.dll" DllEntry="is_gdi_plus_installed" />
 		<CustomAction Id="PrepareFinalizeSetup" BinaryKey="setup.dll" DllEntry="prepare_finalize_setup" />
 		<CustomAction Id="FinalizeSetup" BinaryKey="setup.dll" DllEntry="finalize_setup" Impersonate="no" Execute="deferred" />
-		<?ifdef Enterprise?>
-			<CustomAction Id="IsCdKeyValid" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" />
-			<CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" />
-		<?endif?>
 		<CustomAction Id="SET_EIFFELPROJECTDIR" Property="EIFFELPROJECTDIR" Value="[EIFFELPROJECTDIR]" Execute="firstSequence" />
 		<CustomAction Id="RESET_CHECKCCOMPILER" Property="CHECKCCOMPILER" Value="0" />
 		<CustomAction Id="RESET_HASMSCCOMPILER" Property="HASMSCCOMPILER" Value="0" />
@@ -247,9 +243,6 @@
 		<InstallUISequence>
 			<Custom Action="RESET_CHECKCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
 			<Custom Action="RESET_HASMSCCOMPILER" After="AppSearch"><![CDATA[SHOWCCONFIG >= "1"]]></Custom> <!-- See Admin.txt -->
-			<?ifdef Enterprise?>
-				<Custom Action="RetrieveCdKey" Before="AppSearch"/>
-			<?endif?>
 		</InstallUISequence>
 		<!-- END UI SEQUENCING -->
 
@@ -257,18 +250,12 @@
 		<AdminExecuteSequence>
 			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="CostInitialize"/>
-			<?ifdef Enterprise?>
-				<Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-			<?endif?>
 		</AdminExecuteSequence>
 		<InstallExecuteSequence>
 			<Custom Action="SET_EIFFELPROJECTDIR" Before="CostInitialize"><![CDATA[SET_EIFFELPROJECTDIR=""]]></Custom>
 			<Custom Action="IsGdixInstalled" Before="LaunchConditions"/>
 			<Custom Action="PrepareFinalizeSetup" Before="FinalizeSetup"><![CDATA[NOT Installed]]></Custom>
 			<Custom Action="FinalizeSetup" Before="InstallFinalize"><![CDATA[NOT Installed]]></Custom>
-			<?ifdef Enterprise?>
-				<Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-			<?endif?>
 		</InstallExecuteSequence>
 		<!-- END INSTALL SEQUENCING -->
 	</Fragment>

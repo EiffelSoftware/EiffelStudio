@@ -51,6 +51,9 @@ feature -- Command
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, True)
+			if internal_tab.parent.has_focus then
+				internal_tab.draw_focus_rect
+			end
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
@@ -155,7 +158,13 @@ feature -- Command
 
 	draw_focus_rect (a_rect: EV_RECTANGLE) is
 			-- Redefine
+		local
+			l_imp: SD_DRAWING_AREA_IMP
 		do
+			l_imp ?= internal_tab.parent.implementation
+			check not_void: l_imp /= Void end
+
+			c_gtk_paint_focus (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 		end
 
 	pixmap_y_position: INTEGER is
@@ -243,6 +252,33 @@ feature {NONE}  -- Implementation
 					&l_area, l_widget, "tab",
 					$a_x, $a_y, $a_width, $a_height,
 					l_gap_side);				
+			}
+			]"
+		end
+
+	c_gtk_paint_focus (a_gtk_widget: POINTER; a_style: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
+			-- Draws a focus indicator around the given rectangle.
+		external
+			"C inline use <gtk/gtk.h>		"
+		alias
+			"[
+			{
+				GtkWidget *l_widget;
+				l_widget = GTK_WIDGET ($a_gtk_widget);
+				
+				GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
+				
+				gtk_paint_focus  (	$a_style,
+									l_widget->window,
+								 	GTK_STATE_ACTIVE,
+								 	&l_area,
+								 	l_widget,
+								 	"tab",
+								 	$a_x,
+								 	$a_y,
+								 	$a_width,
+								 	$a_height);
+
 			}
 			]"
 		end

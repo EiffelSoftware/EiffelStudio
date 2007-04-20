@@ -247,6 +247,28 @@ feature {NONE}  -- Implementation
 			]"
 		end
 
+	c_gtk_paint_focus () is
+			-- Gtk
+		external
+			"C inline use <gtk/gtk.h>		"
+		alias
+			"[
+			{
+	(GtkStyle *style,
+	                                             GdkWindow *window,
+	                                             GtkStateType state_type,
+	                                             GdkRectangle *area,
+	                                             GtkWidget *widget,
+	                                             const gchar *detail,
+	                                             gint x,
+	                                             gint y,
+	                                             gint width,
+	                                             gint height);
+
+			}
+			]"
+		end
+		
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

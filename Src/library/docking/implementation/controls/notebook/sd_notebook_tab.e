@@ -405,7 +405,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				then
 					-- For select actions, we don't call select actions.
 					if is_selected then
-						l_drawer.expose_selected (internal_width, info)
+						redraw_selected
 					else
 						l_drawer.expose_hot (internal_width, info)
 					end
@@ -436,7 +436,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				and then l_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y)
 			then
 				if is_selected then
-					l_drawer.expose_selected (internal_width, info)
+					redraw_selected
 				else
 					l_drawer.expose_hot (internal_width, info)
 				end
@@ -461,6 +461,27 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			on_expose
 		ensure
 			set: is_hot = False
+		end
+
+feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
+
+	redraw_selected is
+			-- Redraw selected.
+		do
+			internal_tab_drawer.expose_selected (internal_width, info)
+		end
+
+	draw_focus_rect is
+			-- Draw focus rectangle.
+		local
+			l_rect: EV_RECTANGLE
+		do
+			l_rect := rectangle
+			l_rect.set_left (l_rect.left + focus_rect_padding)
+			l_rect.set_top (l_rect.top + focus_rect_padding)
+			l_rect.set_right (l_rect.right - focus_rect_padding)
+			l_rect.set_bottom (l_rect.bottom - focus_rect_padding)
+			internal_tab_drawer.draw_focus_rect (l_rect)
 		end
 
 feature {NONE}  -- Implementation agents
@@ -511,6 +532,9 @@ feature {NONE}  -- Implementation functions.
 		end
 
 feature {NONE}  -- Implementation attributes
+
+	focus_rect_padding: INTEGER is 2
+			-- Padding with of focus rectangle.
 
 	internal_width: INTEGER
 			-- Width

@@ -16,7 +16,8 @@ inherit
 			draw_pixmap_text_unselected,
 			expose_selected,
 			expose_unselected,
-			expose_hot
+			expose_hot,
+			draw_focus_rect
 		end
 
 	EV_BUTTON_IMP
@@ -29,7 +30,8 @@ inherit
 			pixmap as pixmap_not_use,
 			set_pixmap as set_pixmap_not_use,
 			width as width_not_use,
-			height as height_not_use
+			height as height_not_use,
+			draw_focus_rect as wel_draw_focus_rect
 		export
 			{NONE} all
 		end
@@ -115,6 +117,10 @@ feature -- Commands
 			draw_pixmap_text_selected (buffer_pixmap, 0, a_width)
 
 			end_draw
+
+			if internal_tab.parent.has_focus then
+				internal_tab.draw_focus_rect
+			end
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
@@ -122,6 +128,24 @@ feature -- Commands
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, True)
+		end
+
+	draw_focus_rect (a_rect: EV_RECTANGLE) is
+			-- Redefine
+		local
+			l_rect: WEL_RECT
+
+			l_wel_window: WEL_WINDOW
+			l_dc: WEL_WINDOW_DC
+		do
+			l_wel_window ?= internal_tab.parent.implementation
+			check not_void: l_wel_window /= Void end
+			create l_dc.make (l_wel_window)
+			l_dc.get
+
+			create l_rect.make (a_rect.left, a_rect.top, a_rect.right, a_rect.bottom)
+			wel_draw_focus_rect (l_dc, l_rect)
+			l_dc.dispose
 		end
 
 feature{NONE} -- Implementation

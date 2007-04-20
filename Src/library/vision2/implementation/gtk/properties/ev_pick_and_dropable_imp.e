@@ -299,12 +299,12 @@ feature -- Implementation
 								end
 								internal_set_pointer_style (l_cursor)
 							end (a_x, a_y, a_screen_x, a_screen_y)
+						end
 
-							if ready_for_pnd_menu (a_button, a_type) then
-								app_imp.create_target_menu (interface, pebble, l_configure_agent)
-							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) then
-								l_configure_agent.call (Void)
-							end
+						if ready_for_pnd_menu (a_button, a_type) then
+							app_imp.create_target_menu (interface, pebble, l_configure_agent)
+						elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) and then l_configure_agent /= Void then
+							l_configure_agent.call (Void)
 						end
 					end
 				else

@@ -48,6 +48,13 @@ feature {NONE} -- Initialization
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_drop_actions_veto_pebble)
+
+			enable_tabable_from
+			enable_tabable_to
+
+			key_press_actions.extend (agent on_key)
+			focus_in_actions.extend (agent update_focus_rectangle)
+			focus_out_actions.extend (agent update_focus_rectangle)
 		end
 
 feature -- Command
@@ -162,7 +169,7 @@ feature -- Query
 	i_th (a_index: INTEGER): SD_NOTEBOOK_TAB is
 			-- Tab at `a_index'.
 		require
-			valid: internal_tabs.valid_index (a_index)
+			valid: is_tab_index_valid (a_index)
 		do
 			Result := internal_tabs.i_th (a_index)
 		end
@@ -183,6 +190,15 @@ feature -- Query
 			-- All tabs in Current.
 		do
 			Result := internal_tabs.twin
+		end
+
+	captured_tab: SD_NOTEBOOK_TAB
+			-- Tab which enabled capture
+
+	is_tab_index_valid (a_index: INTEGER): BOOLEAN is
+			-- If `a_index' valid?
+		do
+			Result := internal_tabs.valid_index (a_index)
 		end
 
 feature {NONE} -- Agents
@@ -375,11 +391,65 @@ feature {NONE} -- Agents
 			end
 		end
 
-feature -- Implementation
+	on_key (a_key: EV_KEY) is
+			-- Handle left/right navigation actions.
+		local
+			l_notebook: SD_NOTEBOOK
+			l_selected_index: INTEGER
+			l_content: SD_CONTENT
+		do
+
+			if a_key /= Void then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_left or a_key.code = {EV_KEY_CONSTANTS}.key_right then
+					l_notebook := notebook
+					l_selected_index := l_notebook.selected_item_index
+					if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+						if l_selected_index > 1 then
+							l_content := l_notebook.contents.i_th (l_selected_index - 1)
+						end
+					else
+						if l_selected_index < l_notebook.contents.count then
+							l_content := l_notebook.contents.i_th (l_selected_index + 1)
+						end
+					end
+
+					if l_content /= Void then
+						l_notebook.select_item (l_content, True)
+						l_content.focus_in_actions.call ([])
+
+						-- The focus maybe was lost in `l_content.focus_in_actions', but we hope keep the focus, when end user press left/right in tabs area.
+						set_focus
+					end
+				end
+			end
+		end
+
+feature{NONE} -- Implementation
 
 	pointer_entered: BOOLEAN
 			-- If pointer enter actions called?
 			-- We have this flag for the same reason as SD_TOOL_BAR's pointer_entered.
+
+	update_focus_rectangle is
+			-- Draw or clear focus rectangle base on if Current has focus.
+		local
+			l_notebook: SD_NOTEBOOK
+		do
+			l_notebook := notebook
+			l_notebook.tab_by_content (l_notebook.selected_item).redraw_selected
+		end
+
+	notebook: SD_NOTEBOOK is
+			-- Parent notebook
+		local
+			l_tab_area: SD_NOTEBOOK_TAB_AREA
+		do
+			l_tab_area ?= parent
+			check not_void: l_tab_area /= Void end
+			Result := l_tab_area.internal_notebook
+		ensure
+			not_void: Result /= Void
+		end
 
 	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB is
 			--  Tab at `a_x' which is relative position
@@ -433,9 +503,6 @@ feature -- Implementation
 				l_tabs.forth
 			end
 		end
-
-	captured_tab: SD_NOTEBOOK_TAB
-			-- Tab which enabled capture
 
 	internal_shared: SD_SHARED
 			-- All sigletons.

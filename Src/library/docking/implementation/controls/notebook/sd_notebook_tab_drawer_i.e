@@ -51,6 +51,13 @@ feature -- Command
 			current_total_width := a_width
 		end
 
+	draw_focus_rect (a_rect: EV_RECTANGLE) is
+			-- Draw focus rectangle.
+		require
+			not_void: a_rect /= Void
+		do
+		end
+
 feature -- Key setting
 
 	set_drawing_area (a_tab: SD_NOTEBOOK_TAB) is

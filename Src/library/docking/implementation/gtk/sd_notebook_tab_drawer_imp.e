@@ -152,6 +152,11 @@ feature -- Command
 			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
+	draw_focus_rect (a_rect: EV_RECTANGLE) is
+			-- Redefine
+		do
+		end
+
 	pixmap_y_position: INTEGER is
 			-- Pixmap positon relative to Current.
 		do

@@ -451,6 +451,11 @@ feature {NONE}  -- Implementation functions
 			not_void: Result /= Void
 		end
 
+feature {SD_NOTEBOOK_TAB_BOX} -- Internal attributes
+
+	internal_notebook: SD_NOTEBOOK
+			-- Notebook which Current belong to.
+
 feature {NONE}  -- Implementation attributes
 
 	internal_one_not_enough_space: BOOLEAN
@@ -467,9 +472,6 @@ feature {NONE}  -- Implementation attributes
 
 	internal_tabs_not_shown: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- Tabs not shown which be not shown.
-
-	internal_notebook: SD_NOTEBOOK
-			-- Notebook which Current belong to.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.

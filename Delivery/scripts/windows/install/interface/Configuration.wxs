@@ -28,6 +28,7 @@
     <Property Id="Button_DisagreeBack">&amp;Back</Property>
     <Property Id="Button_View">&amp;View</Property>
     <Property Id="Button_Close">&amp;Close</Property>
+    <Property Id="Button_Download">&amp;Download</Property>
     <Property Id="Button_ViewCompilerHowTo">&amp;View How To</Property>
     <!--END BUTTON TEXT-->
 
@@ -46,7 +47,13 @@
 
       <!-- USER INTERFACE SEQUENCING -->
       <InstallUISequence>
-        <Custom Action="EvaluateCCompiler" After="AppSearch" />
+        <Custom Action="InitializeProperties" After="AppSearch" />
+        <?ifdef Enterprise?>
+          <Custom Action="RetrieveCdKey" After="InitializeProperties" />
+          <Custom Action="EvaluateCCompiler" After="RetrieveCdKey" />
+        <?else?>
+          <Custom Action="EvaluateCCompiler" After="InitializeProperties" />
+        <?endif?>
         <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"><![CDATA[NOT Installed]]></Custom>
 
         <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR=""]]></Custom>
@@ -59,10 +66,16 @@
         <Show Dialog="DialogFatalError" OnExit="error" />
       </InstallUISequence>
       <AdminUISequence>
-        <Custom Action="SET_INSTALLDIR" Before="CostInitialize"><![CDATA[INSTALLDIR=""]]></Custom>
-        
-        <Custom Action="EvaluateCCompiler" Before="CostInitialize" />
+        <Custom Action="InitializeProperties" After="CostInitialize" />
+        <?ifdef Enterprise?>
+          <Custom Action="RetrieveCdKey" After="InitializeProperties" />
+          <Custom Action="EvaluateCCompiler" After="RetrieveCdKey" />
+        <?else?>
+          <Custom Action="EvaluateCCompiler" Before="InitializeProperties" />
+        <?endif?>
         <Custom Action="CanPerformCCompilation" After="EvaluateCCompiler"><![CDATA[NOT Installed]]></Custom>
+
+        <Custom Action="SET_INSTALLDIR" After="CanPerformCCompilation"><![CDATA[INSTALLDIR=""]]></Custom>
 
         <Show Dialog="DialogWelcome" After="CanPerformCCompilation"/>
         <Show Dialog="DialogUserExit" OnExit="cancel" />

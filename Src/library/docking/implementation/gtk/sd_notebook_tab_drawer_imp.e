@@ -17,7 +17,8 @@ inherit
 			draw_pixmap_text_unselected,
 			expose_unselected,
 			expose_selected,
-			expose_hot
+			expose_hot,
+			draw_focus_rect
 		end
 
 	EV_BUTTON_IMP -- Only for export

@@ -21,6 +21,17 @@
     <!-- MEDIA -->
     <Media Id="1" EmbedCab="yes" DiskPrompt="Disc #1" Cabinet="data.cab" CompressionLevel="high"/>
     <Property Id="DiskPrompt" Value="$(var.ProductName) Installation [1]" />
+    <?ifdef Enterprise?>
+      <Property Id="USERNAME"></Property>
+      <Property Id="ORGANIZATIONNAME"></Property>
+      <Property Id="PIDTemplate" Hidden="yes"><![CDATA[12345<#####-#####-#####-#####-#####-#####>@@@@@]]></Property>
+      <?ifdef EiffelStudio?>
+        <Property Id="PIDKEY" Hidden="yes">15150-70574-84354-91751-92576-03575</Property>
+      <?else?>
+        <Property Id="PIDKEY" Hidden="yes">91169-08119-81772-37111-92871-67979</Property>
+      <?endif?>
+    <?endif?>
+    <Property Id="PidKeySet" Hidden="yes">0</Property>
     <!-- END MEDIA -->
 
     <!-- BINARIES -->

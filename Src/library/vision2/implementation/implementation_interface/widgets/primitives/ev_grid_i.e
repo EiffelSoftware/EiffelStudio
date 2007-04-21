@@ -3050,19 +3050,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					current_row_offset := row_offsets @ (index)
 					rows.go_i_th (index)
 					if index > 1 then
-						if index < last_row_count_in_recompute_row_offsets then
+						if index <= visible_indexes_to_row_indexes.i_th (visible_row_count) then
 							visible_count := row_indexes_to_visible_indexes.i_th (index)
 						else
-							--| FIXME This check no longer holds in all circumstances due to
-							--| `last_row_count_in_recompute_row_offsets' change.
---							check
---								index_is_row_count: index = row_count
---							end
-								-- In this situation, we are adding a new row that has not already
-								-- been computed. Now we set the visible count to the previous (and last)
-								-- item and add one. Without this, we are unable to determine the
-								-- visible row count.
-							visible_count := row_indexes_to_visible_indexes.i_th (index - 1) + 1
+								-- In this situation, we are adding a row that has not already been computed.
+								-- Therefore, `visible_count' is set to the number of rows that was previously
+								-- computed during the last call to this feature.
+							visible_count := visible_row_count
 						end
 					else
 							-- In this case, the feature has already been called when there are
@@ -3152,11 +3146,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 			rows.go_i_th (original_row_index)
 
-			last_row_count_in_recompute_row_offsets := l_row_count
+			--last_row_count_in_recompute_row_offsets := computed_visible_row_count--l_row_count
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
 			row_index_not_changed: old rows.index = rows.index
 		end
+
 
  	last_row_count_in_recompute_row_offsets: INTEGER
  		-- The row count of `Current' last time `recompute_row_offsets' was called.

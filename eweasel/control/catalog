@@ -1640,6 +1640,8 @@ test	multi-constraint-renamed-creation-feature		multicon031 tcf pass multiconstr
 test	multi-constraint-single-constraint-renaming		multicon032 tcf pass multiconstraint
 test	multi-constraint-single-constraint-renaming2	multicon033 tcf pass multiconstraint
 test	multi-constraint-recursion-bug					multicon034 tcf pass multiconstraint
+test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
+
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

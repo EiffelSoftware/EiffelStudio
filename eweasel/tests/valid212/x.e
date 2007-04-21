@@ -19,7 +19,7 @@ feature {NONE}
 			initialize
 		end
 
-	make
+	make (a_string: STRING)
 		do
 		end
 

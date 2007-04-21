@@ -14,7 +14,7 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
 copy_raw 	multi2_a.e $CLUSTER multi2.e
 compile_melted
-compile_result validity_error MULTI2 VTCG
+compile_result validity_error TEST VTCG
 
 copy_raw 	multi2_b.e $CLUSTER multi2.e
 resume_compile

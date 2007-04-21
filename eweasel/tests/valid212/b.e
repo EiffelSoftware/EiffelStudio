@@ -17,11 +17,20 @@ feature
 
 	item: G
 
+	s: STRING
+
+	string_function: STRING
+		do
+		end
+
 	test
 		do
 			do_nothing
 			if item = Void then
-				create item.make
+				create item.make ("3")
+				create item.make (s)
+				create item.make (s.out)
+				create item.make (string_function)
 			end
 		end
 end

@@ -191,7 +191,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I)
+	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS)
 			-- Generated a VTCG7 error if there are any constraint errors.
 			-- Otherwise it does nothing.
 		require
@@ -203,8 +203,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- The feature listed in the creation constraint have
 						-- not been declared in the constraint class.			
 					create l_vtcg7
-					-- MTNTODO set some kind of location for this error!
-				--	l_vtcg7.set_location (Current.first_token (context.))
+					-- MTNTODO set some kind of location for this error!					
+					l_vtcg7.set_location (a_location_as)
 					l_vtcg7.set_class (a_context_class)
 					l_vtcg7.set_error_list (constraint_error_list)
 					l_vtcg7.set_parent_type (Current)
@@ -843,7 +843,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			check is_valid: is_valid end
 			if is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid then
 				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
-				generate_error_from_creation_constraint_list (context_class, a_context_feature)
+				generate_error_from_creation_constraint_list (context_class, a_context_feature, formal_dec_as.start_location )
 			end
 		end
 

@@ -135,10 +135,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := type.is_equivalent (other)
-			if other.is_renamed_type then
-
-			end
+			Result := type.is_equivalent (other.type)
 		end
 
 feature -- Visitor

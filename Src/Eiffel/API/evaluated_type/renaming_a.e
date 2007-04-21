@@ -81,7 +81,7 @@ feature -- Access
 		--| Is Void if no error occured.
 
 	renamed (a_feature_id: INTEGER): INTEGER
-			-- Renames `a_feature_id' or leaves it unchanged if it is not renamed.
+			-- Renames `a_feature_id' into it's old name or leaves it unchanged if it is not renamed.
 			--| This feature calls `search' and is therefore not sideeffect free.
 			--| This feature can return -1 if it finds out that this `a_feature_id' has benn renamed into another name.
 		do
@@ -104,6 +104,26 @@ feature -- Access
 			end
 		ensure
 			if_not_available_result_is_negative: (Result = -1) implies (has_item (a_feature_id) and not has (a_feature_id))
+		end
+
+		new_name (a_feature_id: INTEGER): INTEGER
+			-- Renames `a_feature_id' into it's new name or leaves it unchanged.
+		do
+				from
+					start
+				until
+					after or Result /= 0
+				loop
+					if item_for_iteration = a_feature_id then
+						Result := key_for_iteration
+					end
+					forth
+				end
+				if Result = 0 then
+						-- No new name found for this feature
+						-- Just keep the old one
+					Result := a_feature_id
+				end
 		end
 
 feature -- Status

@@ -1008,7 +1008,7 @@ feature -- Access
 					this_should_be_the_case: not type.is_multi_constrained_formal
 				end
 				l_formal ?= type
-				if l_formal /=Void and then l_formal.type_a.has_multi_constraints (class_type.associated_class) then
+				if l_formal /=Void and then not l_formal.type_a.is_single_constraint_without_renaming (class_type.associated_class) then
 						-- In case we have a multi constrained formal we generate a MULTI_FORMAL_I which is capable to answer all questions
 						-- correctly for it's given typeset.
 						-- If the multi constrained formal contains a

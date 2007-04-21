@@ -447,6 +447,7 @@ feature -- Validity checking
 			l_type: TYPE_AS
 			l_class_type: CLASS_TYPE_AS
 			l_formal_type: FORMAL_AS
+			l_tuple_type: NAMED_TUPLE_TYPE_AS
 			l_rename_clause: RENAME_CLAUSE_AS
 			l_constraints: like constraints
 			l_constraint_position: INTEGER
@@ -470,28 +471,12 @@ feature -- Validity checking
 				l_type := l_constraining_type.type
 				l_class_type ?= l_type
 				if l_class_type = Void then
-						-- Check whether it is a formal.
-					l_formal_type ?= l_type
-					if l_formal_type = Void then
-							-- Generic constraint lists a type which is not a class type:
-							--   fictitious class NONE
-							--   tuple type
-							-- It does not make any sense not to report an error:
-							--  * one cannot inherit from a TUPLE
-							--  * if one constraints to NONE it does not make any sense to constrain to something else.							
+					if l_constraining_type.renaming /= Void then
 						create l_vtmc3
 						l_vtmc3.set_class (a_context_class)
 						l_vtmc3.set_type (l_type)
-						l_vtmc3.set_message ("You specified a type as constraint from which one cannot inherit (eg. NONE).")
+						l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic.")
 						Error_handler.insert_error (l_vtmc3)
-					else
-						if l_constraining_type.renaming /= Void then
-							create l_vtmc3
-							l_vtmc3.set_class (a_context_class)
-							l_vtmc3.set_type (l_type)
-							l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic.")
-							Error_handler.insert_error (l_vtmc3)
-						end
 					end
 				else
 					l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)

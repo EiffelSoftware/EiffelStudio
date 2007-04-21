@@ -131,6 +131,47 @@ feature -- Status
 			not_more_than_one_constraint: not Result implies (constraints /= Void implies constraints.count <= 1)
 		end
 
+	is_single_constraint_without_renaming (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN
+			-- Is the formal generic parameter only single constraint and this constraint has no feature renaming clause?
+			--
+			-- `a_generics' is the list of the classes generics where this formal is written in.
+			--|  `a_generics' is used to resolve formals occuring as constraints.
+			--| If this feature returns true, some optimizations become available: No check for renaming and the
+			--| feature lookup is simpler, as there is at most one constraint.
+		require
+			a_generics_not_void: a_generics /= Void
+			a_generics_valid: position <= a_generics.count
+		local
+			l_constraints: like constraints
+			l_count: INTEGER
+			l_constraining_type: CONSTRAINING_TYPE_AS
+			l_formal: FORMAL_AS
+			l_recursion_break: SEARCH_TABLE [INTEGER]
+		do
+			l_constraints := constraints
+			if l_constraints = Void then
+					-- No constraints means just constraint to ANY without any feature renaming.
+				Result := True
+			else
+				l_count := l_constraints.count
+				if l_count = 1 then
+					l_constraining_type := l_constraints.first
+					if l_constraining_type.renaming = Void then
+							-- If we don't have a renaming check whether it is a formal
+						l_formal ?= l_constraining_type.type
+						if l_formal = Void then
+								-- One constraint which is not a formal and has no renaming
+							Result := True
+						else
+							create l_recursion_break.make (3)
+							l_recursion_break.force (position)
+							Result := a_generics[l_formal.position].recursive_is_single_constraint_without_renaming (a_generics, l_recursion_break)
+						end
+					end
+				end
+			end
+		end
+
 	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN is
 			-- Does the formal generic parameter have multiple constraints?
 			-- The difference between `has_multi_constraints' is the following:
@@ -144,20 +185,25 @@ feature -- Status
 			a_generics_valid: position <= a_generics.count
 		local
 			l_formal: FORMAL_AS
-			l_recursion_break: SEARCH_TABLE[INTEGER]
+			l_recursion_break: SEARCH_TABLE [INTEGER]
 			l_count: INTEGER
+			l_constraints: like constraints
 		do
-			if constraints /= Void then
-				l_count := constraints.count
-				Result := l_count > 1
-				if l_count = 1 and then not Result then
-						-- Maybe we our constraint is a formal which itself has multi constraints?
-					l_formal ?= constraints.first
+			l_constraints := constraints
+			if l_constraints /= Void then
+				l_count := l_constraints.count
+
+				if l_count = 1 then
+						-- Maybe our constraint is a formal which itself has multi constraints?
+					l_formal ?= l_constraints.first.type
 					if l_formal /= Void and then l_formal.position /= position then
 						create l_recursion_break.make (3)
 						l_recursion_break.force (position)
-						Result := recursive_is_multi_constraint (l_formal, a_generics, l_recursion_break)
+						Result := a_generics[l_formal.position].recursive_is_multi_constraint (a_generics, l_recursion_break)
 					end
+				else
+						--Possibly multi constraint
+					 Result := l_count > 1
 				end
 			end
 		end
@@ -177,18 +223,10 @@ feature -- Status
 			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_id'.
 			--
 			-- `a_feature_name_id' is the names heap id of the feature.
-		local
-			creation_list: EIFFEL_LIST [FEATURE_NAME]
+		require
+			a_feature_id_not_void: a_feature_id /= Void
 		do
-			from
-				creation_list := creation_feature_list
-				creation_list.start
-			until
-				Result or else creation_list.after
-			loop
-				Result := creation_list.item.internal_name.name_id = a_feature_id.name_id
-				creation_list.forth
-			end
+			Result := has_creation_feature_name_id (a_feature_id.name_id)
 		end
 
 	has_creation_feature_name_id (a_feature_name_id: INTEGER): BOOLEAN is
@@ -205,39 +243,80 @@ feature -- Status
 				Result or else creation_list.after
 			loop
 				Result := creation_list.item.internal_name.name_id = a_feature_name_id
-
 				creation_list.forth
 			end
 		end
+feature {FORMAL_DEC_AS} -- Status implementation
 
-feature {NONE} -- Status implementation
-
-	recursive_is_multi_constraint (a_formal: FORMAL_AS; a_generics: EIFFEL_LIST[FORMAL_DEC_AS]; a_recursion_break: SEARCH_TABLE[INTEGER]): BOOLEAN
-			-- Is current formal an actual multi constraint? (recursive)
+	recursive_is_single_constraint_without_renaming (a_generics: EIFFEL_LIST[FORMAL_DEC_AS]; a_recursion_break: SEARCH_TABLE[INTEGER]): BOOLEAN
+			-- Is `a_formal' still single constraint without any renamings?
 			--
-			-- `a_formal' the formal to check.
-			-- `a_generics' is the list of generics where `a_formal' is a part of.
-			-- `a_recursion_break' is used to break the recursion in case of a loop by storing poisitions of already visited formals.		
+			-- `a_generics' is the list of generics where `a_formal' is a part of. Needed to resolve formal constraints.
+			-- `a_recursion_break' is used to break the recursion in case of a loop by storing poisitions of already visited formals.
 		require
-			a_formal_not_void: a_formal /= Void
 			a_generics_not_void: a_generics /= Void
 			a_recursion_break_not_void: a_recursion_break /= Void
 		local
+			l_constraints: like constraints
+			l_count: INTEGER
+			l_constraining_type: CONSTRAINING_TYPE_AS
+			l_formal: FORMAL_AS
+		do
+			if a_recursion_break.has (position) then
+					-- This is the case when sombebody writes a pure loop: MULTI [G -> H, H -> G]
+				Result := True
+			else
+				l_constraints := constraints
+				if l_constraints = Void then
+						-- No constraints means just constraint to ANY without any feature renaming.
+					Result := True
+				else
+					l_count := l_constraints.count
+					if l_count = 1 then
+						l_constraining_type := l_constraints.first
+						if l_constraining_type.renaming = Void then
+								-- If we don't have a renaming check whether it is a formal
+							l_formal ?= l_constraining_type.type
+							if l_formal = Void then
+									-- One constraint which is not a formal and has no renaming
+								Result := True
+							else
+									-- We insert the current position into the recursion break.
+								a_recursion_break.force (position)
+								Result := a_generics [l_formal.position].recursive_is_single_constraint_without_renaming (a_generics, a_recursion_break)
+							end
+						end
+					end
+				end
+			end
+		end
+
+	recursive_is_multi_constraint (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]; a_recursion_break: SEARCH_TABLE[INTEGER]): BOOLEAN
+			-- Is current formal an actual multi constraint? (recursive)
+			--
+			-- `a_generics' is the list of generics where `a_formal' is a part of.
+			-- `a_recursion_break' is used to break the recursion in case of a loop by storing poisitions of already visited formals.		
+		require
+			a_generics_not_void: a_generics /= Void
+			a_recursion_break_not_void: a_recursion_break /= Void
+		local
+			l_constraints: like constraints
 			l_next_formal: FORMAL_AS
 			l_count: INTEGER
 		do
-			if not a_recursion_break.has (a_formal.position) then
-				if  constraints /= Void then
-					l_count := constraints.count
-					Result := l_count > 1
-					if l_count = 1 and then not Result then
-							-- Maybe our constraint is a formal which itself has multi constraints?
-						l_next_formal ?= constraints.first
-						if l_next_formal /= Void and then l_next_formal.position /= a_formal.position then
-							a_recursion_break.force (a_formal.position)
-							Result := recursive_is_multi_constraint (l_next_formal, a_generics, a_recursion_break)
-						end
+			if not a_recursion_break.has (position) then
+				l_constraints := constraints
+				l_count := l_constraints.count
+				if l_count = 1 then
+						-- Maybe our constraint is a formal which itself has multi constraints?
+					l_next_formal ?= l_constraints.first.type
+					if l_next_formal /= Void then
+						a_recursion_break.force (position)
+						Result := a_generics[l_next_formal.position].recursive_is_multi_constraint (a_generics, a_recursion_break)
 					end
+				else
+						-- Possibly multi-constraiend
+					Result := l_count > 1
 				end
 			end
 		end

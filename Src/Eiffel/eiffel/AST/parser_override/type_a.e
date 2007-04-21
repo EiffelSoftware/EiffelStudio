@@ -98,6 +98,17 @@ feature -- Properties
 			-- False
 		end
 
+	is_single_constrained_formal_without_renaming (a_context_class: CLASS_C): BOOLEAN is
+			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?
+			--| G -> A -> True
+			--| G -> A rename a as b end -> False
+			--| G -> {A, B} -> False
+		require
+			a_context_class_not_void: a_context_class /= Void
+		do
+			-- False
+		end
+
 	is_type_set: BOOLEAN is
 			-- Is curren type a type_set?
 			-- | example: {A, B}

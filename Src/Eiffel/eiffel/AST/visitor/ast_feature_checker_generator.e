@@ -564,16 +564,60 @@ feature {NONE} -- Implementation: Access
 	last_access_writable: BOOLEAN
 			-- Is last ACCESS_AS node creatable?
 
+	last_actual_feature_name: STRING
+			-- Whenever a feature name is required, use this to select the actually correct one.
+			--| If last_original_feature_name is 0 then last_feature_name will be selected
+		require
+			at_least_one_name_available: last_original_feature_name_id /= 0 or last_feature_name_id /= 0
+		do
+			if last_original_feature_name_id = 0 then
+				Result := last_feature_name
+			else
+				Result := last_original_feature_name
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	last_actual_feature_name_id: INTEGER
+			-- Whenever a feature name is required, use this to select the actually correct one.
+			--| If last_original_feature_name is 0 then last_feature_name will be selected
+		require
+			at_least_one_name_available: last_original_feature_name_id /= 0 or last_feature_name_id /= 0
+		do
+			Result := last_original_feature_name_id
+			if Result = 0 then
+				Result := last_feature_name_id
+			end
+		ensure
+			Result_not_zero: Result /= 0
+		end
+
 	last_original_feature_name: STRING
 			-- Original name of last ACCESS_AS (`last_feature_name' might be different and depending
 			-- on what usage is intended this or the other might be the one to use)
+		require
+			last_original_feature_name_id_not_negative: last_original_feature_name_id >= 0
+		do
+			Result := names_heap.item (last_original_feature_name_id)
+		ensure
+			Result_correct: last_original_feature_name_id /= 0 implies Result /= Void
+		end
 
 	last_original_feature_name_id: INTEGER
-			-- Names_heap Id of `last_original_feature_name'
+			-- Names_heap Id of original name of last ACCESS_AS (`last_feature_name' might be different and depending
+			-- on what usage is intended this or the other might be the one to use)
 
 	last_feature_name: STRING
 			-- Actual name of last ACCESS_AS (might be different from original name
 			-- in case an overloading resolution or a renaming of a formal constraint took place)
+		require
+			last_feature_name_id_not_zero: last_feature_name_id /= 0
+		do
+			Result := names_heap.item (last_feature_name_id)
+		ensure
+			Result_correct: Result /= Void
+		end
 
 	last_feature_name_id: INTEGER
 			-- Names_heap Id of `last_feature_name'
@@ -596,9 +640,7 @@ feature -- Settings
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
-			last_original_feature_name := Void
 			last_original_feature_name_id := 0
-			last_feature_name := Void
 			last_feature_name_id := 0
 			last_calls_target_type := Void
 			is_type_compatible := False
@@ -1095,6 +1137,7 @@ feature -- Implementation
 			l_last_feature_table: FEATURE_TABLE
 			l_is_multiple_constraint_case: BOOLEAN
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+			l_last_original_feature_name_id: INTEGER
 			l_tuple_access_b: TUPLE_ACCESS_B
 			l_vtmc1: VTMC1
 		do
@@ -1121,9 +1164,14 @@ feature -- Implementation
 			if a_name /= Void then
 				l_feature_name := a_name
 					-- We need to store the original name as it may change due to
-					-- renamings applied of multi constraint formal generics.
-				last_original_feature_name := a_name.name
-				last_original_feature_name_id := a_name.name_id
+					-- renamings applied of multi constraint formal generics.				
+				l_last_original_feature_name_id := a_name.name_id
+				last_original_feature_name_id := l_last_original_feature_name_id
+				check
+					last_original_feature_name_correct: last_original_feature_name = a_name.name
+				end
+			else
+				last_original_feature_name_id := 0
 			end
 
 			l_context_current_class := context.current_class
@@ -1153,7 +1201,7 @@ feature -- Implementation
 				l_last_feature_table := l_last_class.feature_table
 			else
 				l_formal ?= l_last_type
-				if l_formal.has_multi_constraints (l_context_current_class) then
+				if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
 					l_last_type_set := l_last_type.to_type_set.constraining_types  (l_context_current_class)
 						-- from now on we know that we have multiple constraints
 						-- we cannot compute `l_last_class', `l_last_id', ... as we do not know which
@@ -1161,7 +1209,7 @@ feature -- Implementation
 					l_is_multiple_constraint_case := True
 				else
 						-- Resolve formal type
-					l_last_constrained := constrained_type_fixed (l_last_type)
+					l_last_constrained := constrained_type (l_last_type)
 					check  l_last_constrained.associated_class /= Void end
 					l_last_class := l_last_constrained.associated_class
 					l_last_id := l_last_class.class_id
@@ -1230,10 +1278,6 @@ feature -- Implementation
 				end
 			end
 
-			check
-				--environment_set_if_feature_exists: l_feature /= Void implies (l_last_id /= 0 and then l_last_class /= Void and then l_last_constrained /= Void)
-			end
-
 				-- No feature was found, so if the target of the call is a named tuple
 				-- then it might be a call on one of its label.
 				--| This we only check in the case of single cosntraint formals.
@@ -1247,8 +1291,12 @@ feature -- Implementation
 					if l_label_pos > 0 then
 						last_type := l_named_tuple.generics.item (l_label_pos)
 						l_is_last_access_tuple_access := True
-						last_feature_name := l_feature_name.name
 						last_feature_name_id := l_feature_name.name_id
+							-- No renaming possible (from RENAMED_TYPE_A), they are the same
+						last_original_feature_name_id := last_feature_name_id
+						check
+							last_feature_name_correct: last_feature_name = l_feature_name.name
+						end
 						if l_needs_byte_node then
 							create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple.type_i, l_label_pos)
 							last_byte_node := l_tuple_access_b
@@ -1448,6 +1496,12 @@ feature -- Implementation
 						end
 					end
 
+						-- Reset original name because it was polluted by the argument checking
+					last_original_feature_name_id := l_last_original_feature_name_id
+					check
+						last_original_feature_name_correct: last_original_feature_name = a_name.name
+					end
+
 						-- Get the type of Current feature.
 					l_result_type := l_feature.type
 						-- Adapted type in case it is a formal generic parameter or a like.
@@ -1598,8 +1652,10 @@ feature -- Implementation
 					last_type := l_result_type
 					last_calls_target_type := l_last_constrained
 					last_access_writable := l_feature.is_attribute
-					last_feature_name := l_feature.feature_name
 					last_feature_name_id := l_feature.feature_name_id
+					check
+						last_feature_name_correct: last_feature_name = l_feature.feature_name
+					end
 					last_routine_id_set := l_feature.rout_id_set
 				else
 						-- `l_feature' was not valid for current, report
@@ -2052,7 +2108,7 @@ feature -- Implementation
 				l_type_a_is_multi_constrained_formal := l_type_a.is_multi_constrained_formal (context.current_class)
 			end
 			if  not l_type_a_is_multi_constrained_formal then
-				l_type_a := constrained_type_fixed (l_type_a)
+				l_type_a := constrained_type (l_type_a)
 				if not l_type_a.is_none and not l_type_a.is_void then
 					if is_inherited and not l_as.is_tuple_access then
 							-- Reuse the feature when it is really one, otherwise when it is a tuple
@@ -2170,7 +2226,7 @@ feature -- Implementation
 				-- `context.current_class_type' since we start a feature call.
 			check not_is_formal: not last_type.is_formal end
 			 l_last_id := last_type.associated_class.class_id
-			check  equivalent_ids: l_last_id =  constrained_type_fixed (last_type).associated_class.class_id end
+			check  equivalent_ids: l_last_id =  constrained_type (last_type).associated_class.class_id end
 
 			l_feature := current_feature
 				-- Look for an argument
@@ -2200,7 +2256,7 @@ feature -- Implementation
 					if l_type.is_multi_constrained_formal (context.current_class) then
 							l_class_id := -1 -- MTNASK: What impact does it have? I guess it's ok.
 					else
-						l_type_a := constrained_type_fixed (l_type.actual_type)
+						l_type_a := constrained_type (l_type.actual_type)
 						if not (l_type_a.is_none or l_type_a.is_void) then
 							l_class_id := l_type_a.associated_class.class_id
 						else
@@ -2245,7 +2301,7 @@ feature -- Implementation
 						if l_type.actual_type.is_multi_constrained_formal (context.current_class) then
 							l_class_id := -1 -- MTNASK: same as above, is it ok to leave it like that?
 						else
-							l_type_a := constrained_type_fixed (l_type.actual_type)
+							l_type_a := constrained_type (l_type.actual_type)
 							if not (l_type_a.is_none or l_type_a.is_void) then
 								l_class_id := l_type_a.associated_class.class_id
 							else
@@ -2303,7 +2359,7 @@ feature -- Implementation
 			-- `context.current_class_type' since we start a feature call.
 			check not_is_formal: not last_type.is_formal end
 			 l_last_id := last_type.associated_class.class_id
-			check  equivalent_ids: l_last_id =  constrained_type_fixed (last_type).associated_class.class_id end
+			check  equivalent_ids: l_last_id =  constrained_type (last_type).associated_class.class_id end
 
 			l_feature := current_feature
 				-- Look for an argument
@@ -2336,7 +2392,7 @@ feature -- Implementation
 					if last_type.actual_type.is_multi_constrained_formal (context.current_class) then
 						l_class_id := -1
 					else
-						l_type_a := constrained_type_fixed (last_type.actual_type)
+						l_type_a := constrained_type (last_type.actual_type)
 						if not (l_type_a.is_none or l_type_a.is_void) then
 							l_class_id := l_type_a.associated_class.class_id
 						else
@@ -3253,7 +3309,7 @@ feature -- Implementation
 			end
 			l_formal ?= last_type.actual_type
 			if l_formal /= Void then
-				l_is_multi_constrained := l_formal.is_multi_constrained_formal (l_context_current_class)
+				l_is_multi_constrained := not l_formal.is_single_constraint_without_renaming (l_context_current_class)
 			end
 
 			if l_is_multi_constrained then
@@ -3264,10 +3320,11 @@ feature -- Implementation
 				elseif l_result_tuple.features_found_count = 1 then
 					l_last_class := l_result_tuple.class_type_of_feature.associated_class
 					l_last_constrained := l_last_class.actual_type
+					last_calls_target_type := l_last_constrained
 					l_prefix_feature := l_result_tuple.feature_item
 				end
 			else
-				l_last_constrained := constrained_type_fixed (last_type.actual_type)
+				l_last_constrained := constrained_type (last_type.actual_type)
 				if  l_last_constrained.is_none then
 						-- If we have a formal constrained to NONE it should already be checked earlier.
 					create l_vuex.make_for_none (l_as.prefix_feature_name)
@@ -3374,6 +3431,9 @@ feature -- Implementation
 					-- not predefined and `f' is a constant, we generate the
 					-- complete evaluation `a.f'. However during generation,
 					-- we will do an optimization by hardwiring value of constant.
+				if l_is_multi_constrained then
+					l_access.set_multi_constraint_static (last_calls_target_type.type_i)
+				end
 				if not (l_access.is_constant and l_expr.is_predefined) then
 					l_unary := byte_anchor.unary_node (l_as)
 					l_unary.set_expr (l_expr)
@@ -3455,7 +3515,7 @@ feature -- Implementation
 				if last_type.actual_type.is_multi_constrained_formal (context.current_class) then
 					l_as.set_class_id (-1) --MTNASK: same as at other places
 				else
-					l_type_a := constrained_type_fixed (last_type.actual_type)
+					l_type_a := constrained_type (last_type.actual_type)
 					if not (l_type_a.is_none or l_type_a.is_void) then
 						l_as.set_class_id (l_type_a.associated_class.class_id)
 					else
@@ -3511,7 +3571,7 @@ feature -- Implementation
 			end
 
 			if not l_is_left_multi_constrained  then
-				l_left_constrained := constrained_type_fixed (l_left_type)
+				l_left_constrained := constrained_type (l_left_type)
 					-- Check if target is not of type NONE
 				if l_left_constrained.is_none then
 					create l_vuex.make_for_none (l_as.infix_function_name)
@@ -3528,7 +3588,7 @@ feature -- Implementation
 			l_is_right_multi_constrained :=  l_right_type.is_multi_constrained_formal (context.current_class)
 
 			if not l_is_right_multi_constrained  then
-				l_right_constrained := constrained_type_fixed (l_right_type)
+				l_right_constrained := constrained_type (l_right_type)
 			end
 
 			if l_needs_byte_node then
@@ -3792,7 +3852,7 @@ feature -- Implementation
 				if l_left_type.actual_type.is_multi_constrained_formal (context.current_class) then
 					l_as.set_class_id (-1) -- MTNASK: same as at other places
 				else
-					l_type_a := constrained_type_fixed (l_left_type.actual_type)
+					l_type_a := constrained_type (l_left_type.actual_type)
 					if not (l_type_a.is_none or l_type_a.is_void) then
 						l_as.set_class_id (l_type_a.associated_class.class_id)
 					else
@@ -3906,11 +3966,10 @@ feature -- Implementation
 
 			l_formal ?= target_type.actual_type
 			if l_formal /= Void then
-				l_is_multi_constraint := l_formal.is_multi_constrained_formal (l_context_current_class)
+				l_is_multi_constraint := not l_formal.is_single_constraint_without_renaming (l_context_current_class)
 			end
 
 			if l_is_multi_constraint then
-
 				l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
 				l_result_tuple := l_type_set.feature_i_state_by_alias (bracket_str)
 				if l_result_tuple.features_found_count > 1 then
@@ -3921,7 +3980,7 @@ feature -- Implementation
 					bracket_feature := l_result_tuple.feature_item
 				end
 			else
-				constrained_target_type := constrained_type_fixed (target_type)
+				constrained_target_type := constrained_type (target_type)
 					-- Check if target is not of type NONE
 				if constrained_target_type.is_none then
 					create vuex.make_for_none (bracket_str)
@@ -4445,6 +4504,7 @@ feature -- Implementation
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_creation_type: TYPE_A
+			l_renamed_creation_type: RENAMED_TYPE_A
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_feature: FEATURE_I
 			l_orig_call, l_call: ACCESS_INV_AS
@@ -4466,6 +4526,7 @@ feature -- Implementation
 			l_mc_feature_info: MC_FEATURE_INFO
 			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
 			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
+			l_original_default_create_name_id: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_orig_call := a_call
@@ -4476,7 +4537,7 @@ feature -- Implementation
 			if l_actual_creation_type.is_formal then
 					-- Cannot be Void
 				l_formal_type ?= l_actual_creation_type
-				l_is_multi_constraint_case := l_formal_type.has_multi_constraints (context.current_class)
+				l_is_multi_constraint_case := not l_formal_type.is_single_constraint_without_renaming (context.current_class)
 					-- Get the corresponding constraint type of the current class
 				l_formal_dec ?= context.current_class.generics.i_th (l_formal_type.position)
 				check l_formal_dec_not_void: l_formal_dec /= Void end
@@ -4498,7 +4559,7 @@ feature -- Implementation
 				end
 			elseif l_generic_type /= Void  then
 				l_generic_type.check_constraints (context.current_class , context.current_feature, True)
-				l_generic_type.generate_error_from_creation_constraint_list (context.current_class , context.current_feature)
+				l_generic_type.generate_error_from_creation_constraint_list (context.current_class , context.current_feature, a_location)
 			end
 
 			error_handler.checksum
@@ -4506,7 +4567,7 @@ feature -- Implementation
 				l_type_set := l_actual_creation_type.to_type_set.constraining_types  (context.current_class)
 				l_is_deferred := l_type_set.has_deferred
 			else
-				l_constraint_type := constrained_type_fixed (l_actual_creation_type)
+				l_constraint_type := constrained_type (l_actual_creation_type)
 				l_creation_class := l_constraint_type.associated_class
 				l_is_deferred := l_creation_class.is_deferred
 			end
@@ -4547,6 +4608,7 @@ feature -- Implementation
 				if l_creation_class /= Void  then
 					check not_is_multi_constraint_case: not l_is_multi_constraint_case end
 					l_feature := l_creation_class.default_create_feature
+					l_original_default_create_name_id := l_feature.feature_name_id
 				else
 					check
 						is_multi_constrainet_case: l_is_multi_constraint_case
@@ -4568,7 +4630,13 @@ feature -- Implementation
 						l_ccl_item := l_constraint_creation_list.item
 						l_feature := l_ccl_item.feature_item
 						if l_feature.rout_id_set.first = system.default_create_id then
-							l_creation_type := l_ccl_item.type_item.type
+							l_renamed_creation_type := l_ccl_item.type_item
+							if l_renamed_creation_type.has_renaming then
+								l_original_default_create_name_id := l_renamed_creation_type.renaming.new_name (l_feature.feature_name_id)
+							else
+								l_original_default_create_name_id  := l_feature.feature_name_id
+							end
+							l_creation_type := l_renamed_creation_type.type
 							l_creation_class := l_creation_type.associated_class
 							last_type := l_creation_type
 						end
@@ -4601,7 +4669,7 @@ feature -- Implementation
 
 					-- Use default_create
 				create {ACCESS_INV_AS} l_call.make (
-					create {ID_AS}.initialize_from_id (l_feature.feature_name_id), Void, Void)
+					create {ID_AS}.initialize_from_id (l_original_default_create_name_id), Void, Void)
 					-- For better error reporting as we insert a dummy call for type checking.
 				l_call.feature_name.set_position (a_location.line, a_location.column,
 					a_location.position, a_location.location_count)
@@ -4627,7 +4695,7 @@ feature -- Implementation
 							-- We need to iterate through the type set to find the routine of ID
 						check
 								-- It should work as we are in the multi constraint case
-							l_formal_not_void: l_formal_type /= Void
+							l_formal_type_not_void: l_formal_type /= Void
 						end
 						l_result := l_type_set.feature_i_list_by_rout_id (l_call.routine_ids.first)
 						check at_least_one_feature_found: l_result.count > 0 end
@@ -4659,7 +4727,7 @@ feature -- Implementation
 						process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
 					end
 				else
-						-- Type check the call
+						-- Type check the call						
 					process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
 				end
 
@@ -4721,7 +4789,7 @@ feature -- Implementation
 						-- parameter has been listed in the constraint for the generic
 						-- parameter.
 					fixme ("MTNTODO: Check whether this is good or bad in context of overloaded features for .NET. Maybe it was even a bug there.")
-					if not l_formal_dec.has_creation_feature_name_id (last_original_feature_name_id) then
+					if not l_formal_dec.has_creation_feature_name_id (last_actual_feature_name_id) then
 						create l_vgcc11
 						context.init_error (l_vgcc11)
 						l_vgcc11.set_target_name (a_name)
@@ -5082,7 +5150,7 @@ feature -- Implementation
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			if not last_type.actual_type.is_multi_constrained_formal (context.current_class) then
-				l_constraint_type := constrained_type_fixed (last_type.actual_type)
+				l_constraint_type := constrained_type (last_type.actual_type)
 			end
 			if
 				l_constraint_type = Void or else (
@@ -6141,7 +6209,7 @@ feature {NONE} -- Implementation
 				-- `is_infix_valid'.
 			if a_left_type.is_formal  then
 				l_formal ?= a_left_type
-				if l_formal.has_multi_constraints (l_context_current_class) then
+				if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
 					l_is_multi_constraint_case := True
 						-- this is the multi constraint case
 					l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
@@ -6158,7 +6226,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not l_is_multi_constraint_case  then
-				l_last_constrained := constrained_type_fixed (a_left_type)
+				l_last_constrained := constrained_type (a_left_type)
 				check
 					l_last_constrained_not_void: l_last_constrained /= Void
 					associated_class_not_void: l_last_constrained.associated_class /= Void
@@ -7731,16 +7799,6 @@ feature {NONE} -- Implementation: Error handling
 			end
 		end
 
-	constrained_type_fixed (a_type: TYPE_A): TYPE_A is
-		require
-			not_multi_constraint: not a_type.is_multi_constrained_formal (context.current_class)
-		do
-			fixme ("MTNTODO: after the transition remove this helper function and adapt the contract of constraied_type.")
-			Result := constrained_type (a_type)
-		ensure
-			constrained_type_not_void: Result /= Void
-		end
-
 feature {NONE} -- Implementation: catcall check
 
 	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_qualified: BOOLEAN; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS) is
@@ -7848,7 +7906,7 @@ feature {NONE} -- Implementation: catcall check
 						)
 					else
 							-- Type is formal. Take descendants from associated class of constraint
-						Result := constrained_type_fixed (a_type).associated_class.descendants
+						Result := constrained_type (a_type).associated_class.descendants
 					end
 				else
 						-- Normal type. Take descenants from associated class

@@ -9,8 +9,11 @@ class FORMAL_A
 
 inherit
 	NAMED_TYPE_A
+		rename
+			is_single_constrained_formal_without_renaming as is_single_constraint_without_renaming
 		redefine
 			is_multi_constrained_formal,
+			is_single_constraint_without_renaming,
 			is_formal,
 			instantiation_in,
 			has_formal_generic,
@@ -77,6 +80,17 @@ feature -- Property
 			--
 		do
 			Result := position
+		end
+
+	is_single_constraint_without_renaming (a_context_class: CLASS_C): BOOLEAN
+			-- Is current instance single constraint and the constriant has no renaming applied?
+			--| This means there is exactly one constraint class which can be directly used without applying a feature renaming.
+		local
+			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
+		do
+				l_generics := a_context_class.generics
+				check l_generics_not_void: l_generics /= Void end
+				Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
 		end
 
 	has_multi_constraints (a_context_class: CLASS_C): BOOLEAN is

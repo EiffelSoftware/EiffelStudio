@@ -498,6 +498,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 						l_number <= number_of_lines and then
 						x_pos >= -left_margin_width + offset and then
 						x_pos < editor_viewport.width + offset
+						and then not has_selection
 					then
 						create cur.make_from_character_pos (1, 1, text_displayed)
 						position_cursor (cur, x_pos, y_pos)
@@ -774,8 +775,14 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			end
 
 			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item)
+			if not is_editable then
+				a_menu.last.disable_sensitive
+			end
 			a_menu.extend (dev_window.commands.editor_copy_cmd.new_menu_item)
 			a_menu.extend (dev_window.commands.editor_paste_cmd.new_menu_item)
+			if not is_editable then
+				a_menu.last.disable_sensitive
+			end
 
 			a_menu.extend (create {EV_MENU_SEPARATOR})
 			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (Interface_names.m_select_all))
@@ -784,6 +791,9 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 			create l_menu.make_with_text (interface_names.m_edit)
 			a_menu.extend (l_menu)
+			if not is_editable then
+				a_menu.last.disable_sensitive
+			end
 			from
 				dev_window.commands.editor_commands.start
 				dev_window.commands.editor_commands.forth

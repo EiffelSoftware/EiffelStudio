@@ -446,8 +446,6 @@ feature -- Validity checking
 			l_cluster: CONF_GROUP
 			l_type: TYPE_AS
 			l_class_type: CLASS_TYPE_AS
-			l_formal_type: FORMAL_AS
-			l_tuple_type: NAMED_TUPLE_TYPE_AS
 			l_rename_clause: RENAME_CLAUSE_AS
 			l_constraints: like constraints
 			l_constraint_position: INTEGER

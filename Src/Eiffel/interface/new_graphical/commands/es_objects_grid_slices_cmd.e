@@ -175,7 +175,7 @@ feature -- Obsolete
 
 feature -- Inapplicable
 
-feature {EB_PRETTY_PRINT_DIALOG} -- Properties
+feature {NONE} -- Properties
 
 	slice_min: INTEGER
 			-- Minimum index of displayed attributes in special objects.

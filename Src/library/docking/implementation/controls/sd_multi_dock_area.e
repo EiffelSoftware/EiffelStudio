@@ -398,8 +398,6 @@ feature {NONE} -- Implementation
 			l_zone: SD_ZONE
 			l_left_all_invisible, l_right_all_invisible: BOOLEAN
 			l_parent: SD_MIDDLE_CONTAINER
-			l_is_in_first: BOOLEAN
-			l_new_parent: SD_MIDDLE_CONTAINER
 		do
 			-- Update all middle container in first widget.
 			l_widget := a_middle_container.first

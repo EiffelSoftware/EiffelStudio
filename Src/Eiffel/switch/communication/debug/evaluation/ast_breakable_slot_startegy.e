@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation
 				if l_left_type.is_formal then
 					if l_left_type.is_multi_constrained_formal (current_class) then
 						l_is_multi_constrained := True
-						l_last_type_set := l_left_type.to_type_set.constraining_types (current_class)
+						l_last_type_set := constraining_types (l_left_type)
 					else
 						l_left_type := constrained_type (last_type)
 					end
@@ -1357,7 +1357,9 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_type: TYPE_A
 			l_last_type: TYPE_A
+			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
+			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A]]
 		do
 			l_as.target.process (Current)
 			check
@@ -1366,8 +1368,16 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				last_class := constrained_type (last_type).associated_class
-				l_feat := feature_in_class (last_class, l_as.routine_ids)
+				if last_type.is_formal and then last_type.is_multi_constrained_formal (current_class)then
+					l_last_type_set := constraining_types (last_type)
+						-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
+					l_result := l_last_type_set.e_feature_list_by_rout_id(l_as.routine_ids.first)
+					last_class := l_result.first.type.associated_class
+					l_feat := l_result.first.feature_item
+				else
+					last_class := constrained_type (last_type).associated_class
+					l_feat := feature_in_class (last_class, l_as.routine_ids)
+				end
 			end
 			if not expr_type_visiting then
 				if l_as.operands /= Void then
@@ -2403,6 +2413,21 @@ feature {NONE} -- Implementation: helpers
 				Result := l_formal_dec.constraint_type (current_class).associated_class
 			else
 				Result := l_type.associated_class
+			end
+		end
+
+	constraining_types (a_type: TYPE_A): TYPE_SET_A is
+			-- Constrained type of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_formal_type: FORMAL_A
+		do
+			if a_type.is_formal then
+				l_formal_type ?= a_type
+				Result := current_class.constraints (l_formal_type.position)
+			else
+				Result := a_type.to_type_set
 			end
 		end
 

@@ -534,7 +534,7 @@ feature {NONE} -- Implementation: State
 				not Result.is_formal
 			loop
 				l_formal_type ?= Result
-				Result := context.current_class.constraint_fixed (l_formal_type.position)
+				Result := context.current_class.constraint (l_formal_type.position)
 			end
 		ensure
 			constrained_type_not_void: Result /= Void
@@ -4788,7 +4788,6 @@ feature -- Implementation
 						-- Check that the creation feature used for creating the generic
 						-- parameter has been listed in the constraint for the generic
 						-- parameter.
-					fixme ("MTNTODO: Check whether this is good or bad in context of overloaded features for .NET. Maybe it was even a bug there.")
 					if not l_formal_dec.has_creation_feature_name_id (last_actual_feature_name_id) then
 						create l_vgcc11
 						context.init_error (l_vgcc11)

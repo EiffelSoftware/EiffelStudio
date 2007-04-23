@@ -283,7 +283,7 @@ feature{NONE} -- Implementation
 				check
 					not_has_multi_constraints: not a_class_c.has_multi_constraints (l_formal_type.position)
 				end
-				Result := a_class_c.constraint_fixed (l_formal_type.position)
+				Result := a_class_c.constraint (l_formal_type.position)
 			else
 				Result := a_type
 			end

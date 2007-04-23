@@ -84,7 +84,6 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			l_error_count_before: INTEGER
-			l_remaining_validity_checking_list_count: INTEGER
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
@@ -92,9 +91,6 @@ feature -- Processing
 				-- Check that the constraint class is a valid class.
 				-- I.e. we cannot have [G -> like t] or others.
 			reset_constraint_error_list
-
-			fixme ("MTNTODO: remove this line, it is used together with the check below to ensure that an assumption I have made is correct.")
-			l_remaining_validity_checking_list_count := remaining_validity_checking_list.count
 
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
@@ -111,10 +107,6 @@ feature -- Processing
 					nb := nb + 1
 				end
 				i := i + 1
-			end
-
-			check
-				no_new_delayed_checks: l_remaining_validity_checking_list_count = remaining_validity_checking_list.count
 			end
 
 				-- Cannot continue if there is an error in the

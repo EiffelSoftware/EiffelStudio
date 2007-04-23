@@ -1093,7 +1093,7 @@ feature -- Access
 					l_type_set_item := item.type
 
 						-- We have to get rid of all formals occuring somwhere (be it a generic type or a typeset)				
-						-- `has_generic' is more expensive forTYPE_SET_A
+						-- `has_generic' is more expensive for TYPE_SET_A
 					if l_type_set_item.is_formal then
 							l_formal_type ?= l_type_set_item
 								-- An Item which has already been asked for but has not been resolved so far is a circle

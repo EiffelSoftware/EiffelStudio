@@ -203,7 +203,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- The feature listed in the creation constraint have
 						-- not been declared in the constraint class.			
 					create l_vtcg7
-					-- MTNTODO set some kind of location for this error!					
 					l_vtcg7.set_location (a_location_as)
 					l_vtcg7.set_class (a_context_class)
 					l_vtcg7.set_error_list (constraint_error_list)

@@ -414,7 +414,7 @@ feature -- Initialization/Checking
 					l_convert_ok := l_constraints.conform_to_type (a_target_type)
 				else
 						-- Single constraint, common case.
-					l_constraint := a_context_class.constraint_fixed (a_formal.position)
+					l_constraint := a_context_class.constraint (a_formal.position)
 					l_convert_ok := l_constraint.conform_to (a_target_type)
 				end
 

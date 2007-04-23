@@ -362,7 +362,7 @@ feature -- Output
 				else
 						-- The following code handels the single and multi constraint cases separately.
 					if not has_multi_constraints then
-						-- Single constraint
+							-- Single constraint
 						l_type := constraint_type_if_possible (a_context_class)
 						if l_type /= Void then
 							type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)

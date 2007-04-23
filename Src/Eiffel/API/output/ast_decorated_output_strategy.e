@@ -872,10 +872,10 @@ feature {NONE} -- Implementation
 											if l_feat_result.count > 1 then
 												set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
 											end
+										else
+											last_class := current_class
 										end
 									else
-										-- MTNTODO: this was not here previously: either remove the if and it always
-										-- works or then the check (+15 lines) is not really valid
 										last_class := current_class
 									end
 								end
@@ -1979,7 +1979,7 @@ feature {NONE} -- Implementation
 				if last_type.is_formal and then last_type.is_multi_constrained_formal (current_class)then
 					l_last_type_set := constraining_types (last_type)
 						-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
-					l_result := l_last_type_set.e_feature_list_by_rout_id(l_as.routine_ids.first)
+					l_result := l_last_type_set.e_feature_list_by_rout_id (l_as.routine_ids.first)
 					last_class := l_result.first.type.associated_class
 					l_feat := l_result.first.feature_item
 				else
@@ -3459,7 +3459,7 @@ feature {NONE} -- Implementation: helpers
 			-- `l_type' is the type where we lookup the feautre
 			--| The code has 2 arguments as it suites the actual code better. (May be changed.)
 		require
-			not_both_void: a_type /= Void and a_type_set /= Void
+			not_both_void: a_type /= Void or a_type_set /= Void
 		local
 			l_feat: E_FEATURE
 			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
@@ -3982,7 +3982,7 @@ feature {NONE} -- Implementation: helpers
 		do
 			if a_type.is_formal then
 				l_formal_type ?= a_type
-				Result := current_class.constraint_fixed (l_formal_type.position)
+				Result := current_class.constraint (l_formal_type.position)
 			else
 				Result := a_type
 			end

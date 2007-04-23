@@ -886,7 +886,7 @@ feature -- Access
 					if formal.type_a.is_multi_constrained_formal (context_type.type.base_class) then
 						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position, -1)
 					else
-						Result := context_type_i.base_class.constraint_fixed (formal_position).type_i
+						Result := context_type_i.base_class.constraint (formal_position).type_i
 					end
 				end
 			end

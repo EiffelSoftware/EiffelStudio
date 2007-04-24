@@ -40,6 +40,14 @@ inherit
 			set_pebble_function
 		end
 
+	EV_POSITIONED
+		undefine
+			initialize
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES
 		redefine
 			implementation
@@ -284,6 +292,16 @@ feature -- Status setting
 			pebble_positioning_updated: not pebble_positioning_enabled
 		end
 
+	show_configurable_target_menu (a_x, a_y: INTEGER)
+			-- Show the configurable target menu at position `a_x', `a_y' relative to `Current'.
+		require
+			not_destroyed: not is_destroyed
+			mode_is_configurable_target_menu: mode_is_configurable_target_menu
+			configurable_menu_handler_set: configurable_target_menu_handler /= Void
+		do
+			implementation.show_configurable_target_menu (a_x, a_y)
+		end
+
 feature -- Status report
 
 	mode_is_pick_and_drop: BOOLEAN is
@@ -331,7 +349,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_ANY} and mode_is_pick_and_drop
+			Result := Precursor {EV_ANY} and Precursor {EV_POSITIONED} and mode_is_pick_and_drop
 				and pebble = Void
 		end
 

@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			loop
 
 				create l_custom_dialog.make_for_menu (contents.item.zone)
-				l_string := customize_string_start.as_string_32
+				l_string := internal_shared.interface_names.tool_bar_right_click_customize.as_string_32
 				l_string.append (contents.item.title)
 				l_string.append (customize_string_end)
 				create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
@@ -444,12 +444,6 @@ feature {NONE} -- Implementation
 				contents.forth
 			end
 
-		end
-
-	customize_string_start: STRING_GENERAL is
-			-- String for customize
-		once
-			Result := "Customize "
 		end
 
 	customize_string_end: STRING_GENERAL is

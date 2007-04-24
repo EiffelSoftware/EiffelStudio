@@ -119,6 +119,13 @@ feature -- Enumeration
 			Result_not_void: Result /= Void
 		end
 
+	tool_bar_right_click_customize: STRING_GENERAL is
+			-- String for menu area right click menu.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 feature -- Tool bar customize dialog strings
 
 	tool_bar_customize_title: STRING_GENERAL is

@@ -740,13 +740,23 @@ feature -- Menu mnenomics
 	m_Separate_stone: STRING_GENERAL is			do Result := locale.translate("Unlin&k Context Tool")	end
 	m_Tools: STRING_GENERAL is					do Result := locale.translate("&Tools")	end
 	m_Unify_stone: STRING_GENERAL is			do Result := locale.translate("Lin&k Context Tool")	end
-	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
-	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
-	m_Pick: STRING_GENERAL is					do Result := locale.translate("Pick") end
 
 	m_When_hits: STRING_GENERAL is				do Result := locale.translate("When Hits ...")	end
 	m_Window: STRING_GENERAL is					do Result := locale.translate("&Window")	end
 	m_Refactoring: STRING_GENERAL is			do Result := locale.translate("&Refactoring")	end
+
+feature -- Context menu
+
+	m_add_to: STRING_GENERAL is					do Result := locale.translate("&Add to")	end
+	m_add_subcluster: STRING_GENERAL is			do Result := locale.translate("Add &subcluster")	end
+	m_Assembly: STRING_GENERAL is				do Result := locale.translate ("Assembly") end
+	m_delete: STRING_GENERAL is					do Result := b_delete_command	end
+	m_input_domain: STRING_GENERAL is			do Result := locale.translate("&Input domain") end
+	m_library: STRING_GENERAL is				do Result := locale.translate ("Library") end
+	m_Pick: STRING_GENERAL is					do Result := locale.translate("&Pick") end
+	m_remove_from: STRING_GENERAL is			do Result := locale.translate("&Remove from")	end
+	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
+	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
 
 feature -- Label texts
 

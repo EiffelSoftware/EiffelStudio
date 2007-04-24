@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 			set_pebble_function (agent stone)
 			set_accept_cursor (cursors.cur_target)
 			set_deny_cursor (cursors.cur_x_target)
+			set_configurable_target_menu_mode
+			set_configurable_target_menu_handler (agent context_menu_handler)
 		end
 
 feature -- Access

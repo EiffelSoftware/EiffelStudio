@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 				-- Build the widgets
 			create cluster_entry
 			create folder_entry
-			create cluster_list.make_without_targets
+			create cluster_list.make_without_targets (a_target.menus.context_menu_factory)
 			create recursive_box.make_with_text (Interface_names.l_All)
 			create name_label.make_with_text (Interface_names.L_cluster_name)
 			create path_label.make_with_text (Interface_names.l_Path)
@@ -188,6 +188,19 @@ feature -- Basic operations
 			is_default_cluster_name_set := True
 			new_cluster_counter.put (new_cluster_counter.item + 1)
 			internal_call (default_cluster_name)
+		end
+
+	call_stone (a_stone: CLUSTER_STONE) is
+			-- Display dialog give `a_stone' as default place.
+		require
+			a_stone_not_void: a_stone /= Void
+		do
+			default_cluster_name := "new_cluster_" + new_cluster_counter.item.out
+			is_default_cluster_name_set := True
+			new_cluster_counter.put (new_cluster_counter.item + 1)
+			cluster_list.show_stone (a_stone)
+			cluster_entry.set_text (default_cluster_name)
+			show_modal_to_window (target.window)
 		end
 
 	call (cluster_n: STRING) is

@@ -65,10 +65,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Initialize the tree of clusters.
 		do
 			default_create
+			context_menu_factory := a_context_menu_factory
 			prepare
 			manager.extend (Current)
 --| FIXME XR: When clusters can be moved for real, uncomment this line.
@@ -80,10 +81,10 @@ feature {NONE} -- Initialization
 			has_targets := True
 		end
 
-	make_without_targets is
+	make_without_targets (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Create a tree where targets of system are not shown.
 		do
-			make
+			make (a_context_menu_factory)
 			has_targets := False
 		end
 
@@ -121,21 +122,37 @@ feature {NONE} -- Initialization
 				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
 				build_group_tree (manager.clusters, cluster_header)
 				cluster_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.clusters, True), agent is_group_valid))
+				if context_menu_factory /= Void then
+					cluster_header.set_configurable_target_menu_mode
+					cluster_header.set_configurable_target_menu_handler (agent context_menu_factory.clusters_data_menu)
+				end
 
 					-- sort overrides
 				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
 				build_group_tree (manager.overrides, override_header)
 				override_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.overrides, False), agent is_group_valid))
+				if context_menu_factory /= Void then
+					override_header.set_configurable_target_menu_mode
+					override_header.set_configurable_target_menu_handler (agent context_menu_factory.clusters_data_menu)
+				end
 
 					-- sort libraries
 				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_pixmaps.top_level_folder_library_icon)
 				build_group_tree (manager.libraries, library_header)
 				library_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.libraries, False), agent is_group_valid))
+				if context_menu_factory /= Void then
+					library_header.set_configurable_target_menu_mode
+					library_header.set_configurable_target_menu_handler (agent context_menu_factory.libraries_data_menu)
+				end
 
 					-- sort assemblies
 				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 				build_group_tree (manager.assemblies, assembly_header)
 				assembly_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.assemblies, False), agent is_group_valid))
+				if context_menu_factory /= Void then
+					assembly_header.set_configurable_target_menu_mode
+					assembly_header.set_configurable_target_menu_handler (agent context_menu_factory.assemblies_data_menu)
+				end
 
 					-- targets
 				if has_targets then
@@ -354,6 +371,7 @@ feature {NONE} -- Memory management
 				end
 				forth
 			end
+			set_configurable_target_menu_handler (Void)
 			window := Void
 		end
 
@@ -870,6 +888,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY
+			-- Context menu factory
 
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.

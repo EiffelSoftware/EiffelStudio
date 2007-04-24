@@ -130,8 +130,14 @@ feature {NONE} -- Implementation
 		local
 			choose_class_dialog: EB_CHOOSE_CLASS_DIALOG
 			class_name: STRING
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_factory: EB_CONTEXT_MENU_FACTORY
 		do
-			create choose_class_dialog.make
+			l_window := window_manager.last_focused_development_window
+			if l_window /= Void then
+				l_factory := l_window.menus.context_menu_factory
+			end
+			create choose_class_dialog.make (l_factory)
 			choose_class_dialog.show_modal_to_window (Current)
 			if choose_class_dialog.selected then
 				class_name := choose_class_dialog.class_name

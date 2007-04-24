@@ -38,6 +38,19 @@ feature -- Access
 			Result ?= Precursor
 		end
 
+feature {NONE} -- Context menu
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu
+		local
+			l_factory: EB_CONTEXT_MENU_FACTORY
+		do
+			if parent_tree /= Void then
+				l_factory := parent_tree.context_menu_factory
+				l_factory.class_tree_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
+		end
+
 feature {NONE} -- Recyclable
 
 	internal_recycle is

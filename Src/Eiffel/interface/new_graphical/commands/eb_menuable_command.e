@@ -98,14 +98,23 @@ feature -- Status setting
 feature -- Basic operations
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
-			--
+			-- New menu item, managed, recycling needed.
 		do
 			create Result.make (Current)
 			initialize_menu_item (Result)
 			Result.select_actions.extend (agent execute)
 		end
 
-	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
+	new_menu_item_unmanaged: EV_MENU_ITEM is
+			-- New menu item, unmanaged.
+			-- Command name, pixmap and shortcut text are never updated.
+		do
+			create Result
+			initialize_menu_item (Result)
+			Result.select_actions.extend (agent execute)
+		end
+
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
 			-- Initialize `a_menu_item'
 		local
 			mname: STRING_GENERAL

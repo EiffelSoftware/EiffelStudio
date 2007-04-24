@@ -40,6 +40,23 @@ feature -- Basic operations
 			end
 		end
 
+	execute_stone (a_stone: CLUSTER_STONE) is
+			-- Pop cluster wizard initialized with location of `a_stone'.
+		require
+			a_stone_not_void: a_stone /= Void
+		local
+			dial: EB_CREATE_CLUSTER_DIALOG
+			wd: EB_WARNING_DIALOG
+		do
+			if Workbench.is_in_stable_state then
+				create dial.make_default (target)
+				dial.call_stone (a_stone)
+			else
+				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
+				wd.show_modal_to_window (target.window)
+			end
+		end
+
 feature -- Access
 
 	mini_pixmap: EV_PIXMAP is

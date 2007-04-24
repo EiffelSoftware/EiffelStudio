@@ -98,6 +98,8 @@ feature {NONE} -- Initialization
 			bbox: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			sz: INTEGER
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_factory: EB_CONTEXT_MENU_FACTORY
 		do
 			target := a_target
 
@@ -111,7 +113,11 @@ feature {NONE} -- Initialization
 			class_entry.change_actions.extend (agent update_file_entry)
 			create file_entry
 			create creation_entry
-			create cluster_list.make_without_targets
+			l_window := window_manager.last_focused_development_window
+			if l_window /= Void then
+				l_factory := l_window.menus.context_menu_factory
+			end
+			create cluster_list.make_without_targets (l_factory)
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
 			cluster_list.refresh
 			create deferred_check.make_with_text (Interface_names.L_deferred)
@@ -263,6 +269,21 @@ feature -- Basic operations
 		do
 			call ("NEW_CLASS_" + new_class_counter.item.out)
 			new_class_counter.put (new_class_counter.item + 1)
+		end
+
+	call_stone (a_stone: CLUSTER_STONE) is
+			-- Create a new dialog with `a_stone' as parent cluster.
+		require
+			a_stone_not_void: a_stone /= Void
+		local
+			class_n, str: STRING
+		do
+			class_n := "NEW_CLASS_" + new_class_counter.item.out
+			new_class_counter.put (new_class_counter.item + 1)
+			cluster_list.show_subfolder (a_stone.group, a_stone.path)
+			str := class_n.as_upper
+			class_entry.set_text (str)
+			show_modal_to_window (target.window)
 		end
 
 	call (class_n: STRING) is

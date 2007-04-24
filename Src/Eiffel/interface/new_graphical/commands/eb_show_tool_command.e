@@ -20,7 +20,6 @@ inherit
 		redefine
 			new_toolbar_item,
 			new_sd_toolbar_item,
-			new_menu_item,
 			tooltext,
 			is_tooltext_important,
 			pixel_buffer,
@@ -149,15 +148,6 @@ feature -- Basic operations
 			initialize_sd_toolbar_item (Result, a_display_text)
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent update_sd_tooltip (Result))
-		end
-
-	new_menu_item: EB_COMMAND_MENU_ITEM is
-			-- Create a new menu entry for this command.
-		do
-				-- Create the menu item
-			create Result.make (Current)
-			initialize_menu_item (Result)
-			Result.select_actions.extend (agent execute)
 		end
 
 feature -- Element change

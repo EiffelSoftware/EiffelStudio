@@ -32,11 +32,6 @@ inherit
 			interface
 		end
 
-	EV_POSITIONED_I
-		redefine
-			interface
-		end
-
 	EV_WIDGET_ACTION_SEQUENCES_I
 
 	EV_HELP_CONTEXTABLE_I

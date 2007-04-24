@@ -21,11 +21,6 @@ inherit
 			interface
 		end
 
-	EV_POSITIONED_I
-		redefine
-			interface
-		end
-
 	EV_ITEM_ACTION_SEQUENCES_I
 
 feature -- Access

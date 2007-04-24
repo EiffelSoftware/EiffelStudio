@@ -101,6 +101,7 @@ feature -- Formatting
 				else
 					browser.update (Void, Void)
 				end
+				display_header
 			end
 		end
 

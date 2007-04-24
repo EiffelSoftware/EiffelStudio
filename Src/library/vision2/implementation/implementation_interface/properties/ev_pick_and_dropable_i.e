@@ -17,6 +17,11 @@ inherit
 			interface
 		end
 
+	EV_POSITIONED_I
+		redefine
+			interface
+		end
+
 	EV_SHARED_TRANSPORT_I
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_I
@@ -62,6 +67,14 @@ feature -- Access
 		end
 
 feature -- Status setting
+
+	show_configurable_target_menu (a_x, a_y: INTEGER)
+			-- Show the configurable target menu at position `a_x', `a_y' relative to `Current'.
+		do
+			if application_implementation.pick_and_drop_source = Void then
+				start_transport (a_x, a_y, 3, 0, 0, 0, screen_x + a_x, screen_y + a_y)
+			end
+		end
 
 	set_pebble_position (a_x, a_y: INTEGER) is
 			-- Set the initial position for pick and drop relative to `Current'.

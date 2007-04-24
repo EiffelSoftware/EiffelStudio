@@ -69,15 +69,20 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	initialize_menu_item (a_menu_item: like new_menu_item) is
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
 			-- Create a new menu entry for this command.
+		local
+			l_item: like new_menu_item
 		do
 			Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (a_menu_item)
 				-- Create the menu item
-			if is_selected then
-				a_menu_item.enable_select
-			else
-				a_menu_item.disable_select
+			l_item ?= a_menu_item
+			if l_item /= Void then
+				if is_selected then
+					l_item.enable_select
+				else
+					l_item.disable_select
+				end
 			end
 			if pixmap /= Void then
 				a_menu_item.set_pixmap (pixmap)

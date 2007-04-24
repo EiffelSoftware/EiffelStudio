@@ -87,6 +87,16 @@ feature -- Query
 	tools_list_menu: EV_MENU
 			-- Menu containing list of supported tools
 
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+			-- Context menu factory
+		do
+			Result := context_menu_factory_internal
+			if Result = Void then
+				build_context_menu_factory
+				Result := context_menu_factory_internal
+			end
+		end
+
 	remove_item_from_tools_list_menu (a_tool: EB_TOOL) is
 			-- Remove item corresponding to `a_tool' from `tools_list_menu' and recycle their components.
 		require
@@ -333,10 +343,22 @@ feature -- Command
 						l_command.disable_visible
 					end
 				end
-
 				l_contents.forth
 			end
 		end
+
+feature {NONE} -- Context menu factory
+
+	build_context_menu_factory is
+			-- Build context menu factory.
+		do
+			create context_menu_factory_internal.make (develop_window)
+			develop_window.add_recyclable (context_menu_factory_internal)
+		ensure
+			context_menu_factory_internal_not_void: context_menu_factory_internal /= Void
+		end
+
+	context_menu_factory_internal: EB_CONTEXT_MENU_FACTORY
 
 feature -- Recycle
 

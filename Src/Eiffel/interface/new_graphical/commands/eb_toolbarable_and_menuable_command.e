@@ -135,7 +135,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	initialize_menu_item (a_menu_item: like new_menu_item) is
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
 			-- Create a new menu entry for this command.
 		do
 			Precursor {EB_MENUABLE_COMMAND} (a_menu_item)

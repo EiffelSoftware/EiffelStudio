@@ -19,7 +19,8 @@ inherit
 			new_toolbar_item,
 			new_mini_toolbar_item,
 			new_mini_sd_toolbar_item,
-			new_menu_item
+			new_menu_item,
+			new_menu_item_unmanaged
 		end
 
 	EB_HISTORY_MANAGER_OBSERVER
@@ -76,14 +77,25 @@ feature -- Basic operations
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
 			-- Create a new menu entry for this command.
-			do
-				start_observer
-				if not executable then
-					disable_sensitive
-				end
-
-				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		do
+			start_observer
+			if not executable then
+				disable_sensitive
 			end
+
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		end
+
+	new_menu_item_unmanaged: EV_MENU_ITEM is
+			-- Create an unmanaged menu item for this command.
+		do
+			start_observer
+			if not executable then
+				disable_sensitive
+			end
+
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		end
 
 	set_accelerator (a_acc: like accelerator) is
 			-- Set `accelerator' with `a_acc'.

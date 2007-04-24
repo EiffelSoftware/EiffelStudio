@@ -814,7 +814,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			-- Add a new scope from a choose dialog to the list.
 		do
 			if choose_dialog = Void or else choose_dialog.is_destroyed then
-				create choose_dialog.make
+				create choose_dialog.make (develop_window.menus.context_menu_factory)
 				choose_dialog.set_class_add_action (agent add_class_item)
 				choose_dialog.set_cluster_add_action (agent add_cluster_item)
 				choose_dialog.set_folder_add_action (agent add_folder_item)

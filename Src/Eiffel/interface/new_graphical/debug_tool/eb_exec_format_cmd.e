@@ -14,7 +14,8 @@ inherit
 		redefine
 			new_toolbar_item,
 			new_sd_toolbar_item,
-			new_menu_item
+			new_menu_item,
+			new_menu_item_unmanaged
 		end
 
 	EB_SHARED_INTERFACE_TOOLS
@@ -92,6 +93,14 @@ feature -- Access
 			-- Create a new menu item
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result.select_actions.put_front (agent execute_from (Result))
+		end
+
+	new_menu_item_unmanaged: EV_MENU_ITEM is
+			-- Create a new menu item unmanaged.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+				-- Fixme: If this item is used in contextual menu. Window will not be found.
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 

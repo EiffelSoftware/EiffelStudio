@@ -12,6 +12,8 @@ class
 inherit
 	EB_METRIC_INTERFACE_PROVIDER
 
+
+
 create
 	make
 
@@ -21,9 +23,16 @@ feature{NONE} -- Implementation
 			-- Initialize `add_scope_action' with `a_add_scope_action'.
 		require
 			a_add_scope_action_attached: a_add_scope_action /= Void
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_factory: EB_CONTEXT_MENU_FACTORY
 		do
 			set_add_scope_action (a_add_scope_action)
-			create class_dialog.make_with_targets
+			l_window := window_manager.last_focused_development_window
+			if l_window /= Void then
+				l_factory := l_window.menus.context_menu_factory
+			end
+			create class_dialog.make_with_targets (l_factory)
 			class_dialog.set_title (metric_names.t_select_domain_scope)
 			class_dialog.set_cluster_add_action (agent on_add_cluster)
 			class_dialog.set_class_add_action (agent on_add_class)

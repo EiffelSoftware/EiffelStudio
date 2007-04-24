@@ -39,22 +39,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Initialize the dialog.			
 		do
 			default_create
 			set_title (Interface_names.t_Add_search_scope)
-			prepare
+			prepare (a_factory)
 		end
 
-	make_with_targets is
+	make_with_targets (a_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Initialize the dialog and make sure targets are displayed in current dialog.
 		do
 			show_targets := True
-			make
+			make (a_factory)
 		end
 
-	prepare is
+	prepare (a_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Create the controls and setup the layout
 		local
 			buttons_box: EV_HORIZONTAL_BOX
@@ -78,9 +78,9 @@ feature {NONE} -- Initialization
 
 				-- Create the controls.
 			if show_targets then
-				create classes_tree.make
+				create classes_tree.make (a_factory)
 			else
-				create classes_tree.make_without_targets
+				create classes_tree.make_without_targets (a_factory)
 			end
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))

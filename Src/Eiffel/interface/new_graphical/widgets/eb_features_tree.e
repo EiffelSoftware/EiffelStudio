@@ -215,6 +215,8 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						tree_item.set_data (fcl.item)
 						tree_item.pointer_button_press_actions.extend (
 							agent button_go_to_clause (fcl.item, ?, ?, ?, ?, ?, ?, ?, ?))
+						tree_item.set_configurable_target_menu_mode
+						tree_item.set_configurable_target_menu_handler (agent feature_clause_item_handler (?, ?, ?, ?, fcl.item))
 					end
 					extend (tree_item)
 					if
@@ -301,6 +303,32 @@ feature {EB_FEATURES_TOOL} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Context menu handler
+
+	feature_item_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_compiled: BOOLEAN; a_name: STRING) is
+			-- Context menu handler for a feature
+		require
+			not_compiled_implies_name_not_void: not a_compiled implies a_name /= Void
+		local
+			l_factory: EB_CONTEXT_MENU_FACTORY
+		do
+			l_factory := features_tool.develop_window.menus.context_menu_factory
+			if a_compiled then
+				l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			else
+				l_factory.uncompiled_feature_item_menu (a_menu, a_target_list, a_source, a_pebble, a_name)
+			end
+		end
+
+	feature_clause_item_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; fclause: FEATURE_CLAUSE_AS) is
+			-- Context menu handler for a feature
+		local
+			l_factory: EB_CONTEXT_MENU_FACTORY
+		do
+			l_factory := features_tool.develop_window.menus.context_menu_factory
+			l_factory.feature_clause_item_menu (a_menu, a_target_list, a_source, a_pebble, fclause)
 		end
 
 feature {NONE} -- Implementation
@@ -419,12 +447,16 @@ feature {NONE} -- Implementation
 								tree_item.pointer_button_press_actions.force_extend (
 									agent features_tool.go_to_feature_with_name (l_first_item_name))
 								tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
+								tree_item.set_configurable_target_menu_mode
+								tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, False, l_first_item_name))
 							end
 						else
 							tree_item.set_data (ef)
 							if is_clickable then
 								tree_item.pointer_button_press_actions.extend (
 									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
+									tree_item.set_configurable_target_menu_mode
+									tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, True, Void))
 							end
 							tree_item.set_text (feature_name (ef))
 							tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
@@ -490,6 +522,8 @@ feature {NONE} -- Implementation
 						tree_item.set_data (ef)
 						tree_item.pointer_button_press_actions.extend (
 						agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
+						tree_item.set_configurable_target_menu_mode
+						tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, True, Void))
 						tree_item.set_text (feature_name (ef))
 						tree_item.set_pixmap (pixmap_from_e_feature (ef))
 

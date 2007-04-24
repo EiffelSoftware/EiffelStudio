@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	build_interface is
 			-- Build all the tool's widgets.
 		do
-			create widget.make
+			create widget.make (window.menus.context_menu_factory)
 			widget.associate_with_window (window)
 		end
 

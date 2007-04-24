@@ -19,7 +19,8 @@ inherit
 
 	EB_MENUABLE_COMMAND
 		redefine
-			new_menu_item
+			new_menu_item,
+			initialize_menu_item
 		end
 
 create
@@ -122,15 +123,26 @@ feature -- Basic operations
 				-- Create the menu item
 			create Result.make (Current)
 			initialize_menu_item (Result)
-			Result.enable_sensitive
-			if is_visible then
-				Result.enable_select
-			else
-				Result.disable_select
-			end
 			Result.select_actions.extend (agent execute)
+		end
+
+	initialize_menu_item (a_item: EV_MENU_ITEM) is
+			-- Init `a_item'.
+		local
+			l_item: like new_menu_item
+		do
+			Precursor {EB_MENUABLE_COMMAND}(a_item)
+			a_item.enable_sensitive
+			l_item ?= a_item
+			if l_item /= Void then
+				if is_visible then
+					l_item.enable_select
+				else
+					l_item.disable_select
+				end
+			end
 			if pixmap /= Void then
-				Result.set_pixmap (pixmap)
+				a_item.set_pixmap (pixmap)
 			end
 		end
 

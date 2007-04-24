@@ -17,7 +17,8 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
-			new_menu_item
+			new_menu_item,
+			new_menu_item_unmanaged
 		end
 
 	UNDO_REDO_OBSERVER
@@ -48,6 +49,13 @@ feature -- Basic operations
 			end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
+			-- Create a new menu entry for this command.
+		do
+			start_observer
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		end
+
+	new_menu_item_unmanaged: EV_MENU_ITEM is
 			-- Create a new menu entry for this command.
 		do
 			start_observer

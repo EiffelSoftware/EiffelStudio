@@ -344,7 +344,7 @@ feature -- Element change
 			end
 		end
 
-feature {EB_FEATURES_TREE} -- Status setting
+feature {EB_FEATURES_TREE, EB_CONTEXT_MENU_FACTORY} -- Status setting
 
 	go_to (a_feature: E_FEATURE) is
 			-- `a_feature' has been selected, the associated class

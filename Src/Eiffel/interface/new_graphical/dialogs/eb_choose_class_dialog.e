@@ -37,15 +37,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Initialize the dialog.
 		do
 			default_create
 			set_title (Interface_names.t_Choose_class)
-			prepare
+			prepare (a_context_menu_factory)
 		end
 
-	prepare is
+	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
 			-- Create the controls and setup the layout
 		local
 			buttons_box: EV_VERTICAL_BOX
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 				-- Create the controls.
 			create class_name_entry.make
-			create classes_tree.make_without_targets
+			create classes_tree.make_without_targets (a_context_menu_factory)
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
 

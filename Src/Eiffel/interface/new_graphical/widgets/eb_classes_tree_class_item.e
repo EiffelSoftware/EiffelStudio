@@ -76,6 +76,8 @@ feature -- Status setting
 			set_deny_cursor (Cursors.cur_X_Class)
 			set_tooltip (name)
 			set_pixmap (pixmap_from_class_i (a_class))
+			set_configurable_target_menu_mode
+			set_configurable_target_menu_handler (agent context_menu_handler)
 		end
 
 	load_overriden_children is

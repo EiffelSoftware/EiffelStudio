@@ -116,8 +116,17 @@ feature -- Command
 
 	stick is
 			-- Stick window.
+		local
+			l_enum: SD_ENUMERATION
+			l_direction: INTEGER
 		do
-			internal_content.state.stick ({SD_ENUMERATION}.left)
+			create l_enum
+			if l_enum.is_direction_valid (internal_content.state.direction) then
+				l_direction := internal_content.state.direction
+			else
+				l_direction := {SD_ENUMERATION}.left
+			end
+			internal_content.state.stick (l_direction)
 		end
 
 feature -- Query

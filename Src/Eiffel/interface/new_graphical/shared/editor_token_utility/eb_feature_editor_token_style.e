@@ -106,13 +106,15 @@ feature -- Access
 					end
 					if is_value_for_constant and then e_feature.is_constant then
 						l_constant_as ?= e_feature.ast.body.content
-						l_output_strategy := output_strategy (class_c)
-						l_output_strategy.set_current_class (class_c)
-						l_output_strategy.set_source_class (written_class)
-						l_class_c := system.current_class
-						system.set_current_class (class_c)
-						l_constant_as.process (l_output_strategy)
-						system.set_current_class (l_class_c)
+						if l_constant_as /= Void then
+							l_output_strategy := output_strategy (class_c)
+							l_output_strategy.set_current_class (class_c)
+							l_output_strategy.set_source_class (written_class)
+							l_class_c := system.current_class
+							system.set_current_class (class_c)
+							l_constant_as.process (l_output_strategy)
+							system.set_current_class (l_class_c)
+						end
 					end
 				end
 				Result := l_writer.last_line.content
@@ -432,6 +434,7 @@ feature{NONE} -- Implementation
 			l_ext_class: EXTERNAL_CLASS_I
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_line: LIST [EDITOR_TOKEN]
+			l_leaf: LEAF_AS_LIST
 		do
 			create Result.make (128)
 			if a_feature.is_il_external then
@@ -487,34 +490,37 @@ feature{NONE} -- Implementation
 				token_writer.disable_multiline
 			else
 					-- For normal features
-				token_writer.new_line
-				l_comments := a_feature.ast.comment (match_list_server.item (a_feature.written_class.class_id))
-				create l_tokens.make
-				if l_comments.count > 0 then
-					token_writer.set_comment_context_class (a_feature.associated_class)
-					from
-						l_comments.start
-					until
-						l_comments.after
-					loop
-						token_writer.new_line
-						l_comment := l_comments.item.content
-						if l_comment.count > 1 and then l_comment.item (1).is_space then
-							l_comment.remove (1)
+				l_leaf := match_list_server.item (a_feature.written_class.class_id)
+				if l_leaf /= Void then
+					token_writer.new_line
+					l_comments := a_feature.ast.comment (l_leaf)
+					create l_tokens.make
+					if l_comments /= Void and then l_comments.count > 0 then
+						token_writer.set_comment_context_class (a_feature.associated_class)
+						from
+							l_comments.start
+						until
+							l_comments.after
+						loop
+							token_writer.new_line
+							l_comment := l_comments.item.content
+							if l_comment.count > 1 and then l_comment.item (1).is_space then
+								l_comment.remove (1)
+							end
+							token_writer.add_comment_text (l_comment.out)
+							l_tokens.fill (token_writer.last_line.content)
+							l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
+							l_comments.forth
 						end
-						token_writer.add_comment_text (l_comment.out)
-						l_tokens.fill (token_writer.last_line.content)
-						l_tokens.extend (create{EDITOR_TOKEN_EOL}.make)
-						l_comments.forth
-					end
-					from
-						l_tokens.start
-					until
-						l_tokens.after
-					loop
-						l_tokens.item.update_width
-						Result.extend (l_tokens.item)
-						l_tokens.forth
+						from
+							l_tokens.start
+						until
+							l_tokens.after
+						loop
+							l_tokens.item.update_width
+							Result.extend (l_tokens.item)
+							l_tokens.forth
+						end
 					end
 				end
 			end

@@ -140,13 +140,13 @@ feature {NONE} -- Implementation
 				-- external includes
 			l_dir := l_dest_dir.twin
 			l_dir.extend_from_array (<<client, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (l_dir, l_target))
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
 			l_dir := l_dest_dir.twin
 			l_dir.extend_from_array (<<common, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (l_dir, l_target))
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
 			l_dir := l_dest_dir.twin
 			l_dir.extend_from_array (<<server, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (l_dir, l_target))
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
 
 				-- external libs
 			add_libs (l_target, client)
@@ -197,12 +197,12 @@ feature {NONE} -- Implementation
 			if not is_empty_clib_folder (a_folder) then
 				create l_dir.make (50)
 				l_dir := environment.destination_folder + a_folder + "\Clib\$(ISE_C_COMPILER)\"
-				l_ex_obj := conf_factory.new_external_object (l_dir + "ecom_final.lib", a_target)
+				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "ecom_final.lib"), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_finalize)
 				l_ex_obj.add_condition (l_cond)
 				a_target.add_external_object (l_ex_obj)
-				l_ex_obj := conf_factory.new_external_object (l_dir + "ecom.lib", a_target)
+				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "ecom.lib"), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_workbench)
 				l_ex_obj.add_condition (l_cond)
@@ -249,6 +249,23 @@ feature {NONE} -- Implementation
 			l_dn.extend_from_array (<<a_folder, clib>>)
 			create l_directory.make_open_read (l_dn)
 			Result := l_directory.is_empty
+		end
+
+	quote_path (a_path: STRING): STRING is
+			-- Added quotations marks around path `a_path' and returns the new result
+		require
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		do
+			create Result.make (a_path.count + 2)
+			Result.append_character ('%"')
+			Result.append (a_path)
+			Result.append_character ('%"')
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_starts_with_quote: Result.item (1) = '%"'
+			result_ends_with_quote: Result.item (Result.count) = '%"'
 		end
 
 	Def_file_extension: STRING is ".def"

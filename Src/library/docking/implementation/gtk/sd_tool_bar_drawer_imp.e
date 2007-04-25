@@ -234,10 +234,21 @@ feature {NONE} -- Implementation
 			l_text_rect: EV_RECTANGLE
 			l_state: INTEGER
 			l_width_button: SD_TOOL_BAR_WIDTH_BUTTON
+			l_font_button: SD_TOOL_BAR_FONT_BUTTON
+			l_orignal_font: EV_FONT
+			l_tool_bar: EV_DRAWING_AREA
 		do
 			l_button ?= a_arguments.item
 			l_width_button ?= a_arguments.item
-			if l_width_button /= Void and then l_width_button.text /= Void and a_arguments.tool_bar /= Void then
+			l_font_button ?= a_arguments.item
+			if l_font_button /= Void and then l_font_button.text /= Void and l_font_button.font /= Void and a_arguments.tool_bar /= Void then
+				l_tool_bar := a_arguments.tool_bar
+				l_orignal_font := l_tool_bar.font
+				l_text_rect := l_font_button.text_rectangle
+				l_tool_bar.set_font (l_font_button.font)
+				l_tool_bar.draw_text_top_left (l_text_rect.x, l_text_rect.y, l_font_button.text)
+				l_tool_bar.set_font (l_orignal_font)
+			elseif l_width_button /= Void and then l_width_button.text /= Void and a_arguments.tool_bar /= Void then
 				l_text_rect := l_width_button.text_rectangle
 				a_arguments.tool_bar.draw_ellipsed_text_top_left (l_text_rect.x, l_text_rect.y, l_width_button.text, l_text_rect.width)
 			elseif l_button /= Void and then l_button.text /= Void then

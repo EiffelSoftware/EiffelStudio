@@ -767,9 +767,7 @@ feature {NONE} -- Settings
 			l_args.extend ("-c_compile")
 			l_args.extend ("-batch")
 			if l_target.setting_msil_generation then
-				if l_target.setting_msil_use_optimized_precompile then
-					l_args.extend ("-finalize")
-				end
+				l_args.extend ("-finalize")
 				l_path := overridden_metadata_cache_path
 				if l_path = Void then
 					l_path := l_target.setting_metadata_cache_path

@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			vb.set_padding_width (layout_constants.tiny_padding_size)
 
 				--| Viewer
-			create editor.make (Void) -- Eb_debugger_manager.debugging_window)
+			create editor.make (eb_debugger_manager.debugging_window)
 			editor.disable_line_numbers
 			editor.disable_has_breakable_slots
 			editor.disable_editable

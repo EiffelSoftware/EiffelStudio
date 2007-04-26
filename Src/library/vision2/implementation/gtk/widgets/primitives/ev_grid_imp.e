@@ -39,7 +39,12 @@ inherit
 			disable_capture,
 			has_capture,
 			set_default_colors,
-			set_default_key_processing_handler
+			set_default_key_processing_handler,
+			set_pick_and_drop_mode,
+			set_drag_and_drop_mode,
+			set_target_menu_mode,
+			set_configurable_target_menu_mode,
+			set_configurable_target_menu_handler
 		redefine
 			interface,
 			initialize,

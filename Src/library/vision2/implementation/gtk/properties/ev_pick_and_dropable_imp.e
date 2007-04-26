@@ -302,7 +302,7 @@ feature -- Implementation
 						end
 
 						if ready_for_pnd_menu (a_button, a_type) then
-							app_imp.create_target_menu (interface, pebble, l_configure_agent)
+							app_imp.create_target_menu (pebble_source, pebble, l_configure_agent)
 						elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) and then l_configure_agent /= Void then
 							l_configure_agent.call (Void)
 						end
@@ -338,6 +338,13 @@ feature -- Implementation
 			check
 				do_not_call: False
 			end
+		end
+
+	pebble_source: EV_PICK_AND_DROPABLE
+			-- Source of `pebble', used for widgets with deferred PND implementation
+			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
+		do
+			Result := interface
 		end
 
 	ready_for_pnd_menu (a_button, a_type: INTEGER): BOOLEAN is

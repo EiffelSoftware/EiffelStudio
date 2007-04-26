@@ -22,8 +22,7 @@
     <Media Id="1" EmbedCab="yes" DiskPrompt="Disc #1" Cabinet="data.cab" CompressionLevel="high"/>
     <Property Id="DiskPrompt" Value="$(var.ProductName) Installation [1]" />
     <?ifdef Enterprise?>
-      <Property Id="USERNAME"></Property>
-      <Property Id="ORGANIZATIONNAME"></Property>
+      <Property Id="USERNAME">Eiffel User</Property>
       <Property Id="PIDTemplate" Hidden="yes"><![CDATA[12345<#####-#####-#####-#####-#####-#####>@@@@@]]></Property>
       <?ifdef EiffelStudio?>
         <Property Id="PIDKEY" Hidden="yes">15150-70574-84354-91751-92576-03575</Property>

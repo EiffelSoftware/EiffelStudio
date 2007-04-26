@@ -129,6 +129,9 @@ feature -- Query
 	lock_docking_command: EB_LOCK_DOCKING_COMMAND
 			-- Lock tools docking mechanism command
 
+	lock_editor_docking_command: EB_LOCK_EDITOR_DOCKING_COMMAND
+			-- Lock editors docking mechanims command
+
 	customized_formatter_command: EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND
 			-- Command to setup customzied formatter
 
@@ -428,6 +431,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: lock_docking_command = a_cmd
 		end
 
+	set_lock_editor_docking_command (a_cmd: like lock_editor_docking_command) is
+			-- Set `lock_docking_command'
+		do
+			lock_editor_docking_command := a_cmd
+		ensure
+			set: lock_editor_docking_command = a_cmd
+		end
+
 	set_customized_formatter_command (a_cmd: like customized_formatter_command) is
 			-- Set `customized_formatter_command' with `a_cmd'.
 		do
@@ -458,6 +469,7 @@ feature -- Recycle
 			save_layout_as_command.recycle
 			open_layout_command.recycle
 			lock_docking_command.recycle
+			lock_editor_docking_command.recycle
 			lock_tool_bar_command.recycle
 			save_as_cmd.recycle
 

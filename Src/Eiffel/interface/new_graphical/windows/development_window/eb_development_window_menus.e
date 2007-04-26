@@ -318,6 +318,7 @@ feature -- Command
 			l_docking_manager := develop_window.docking_manager
 			develop_window.commands.lock_docking_command.set_select (l_docking_manager.is_locked)
 			develop_window.commands.lock_tool_bar_command.set_select (l_docking_manager.tool_bar_manager.is_locked)
+			develop_window.commands.lock_editor_docking_command.set_select (l_docking_manager.is_editor_locked)
 		end
 
 	update_show_tool_bar_items is

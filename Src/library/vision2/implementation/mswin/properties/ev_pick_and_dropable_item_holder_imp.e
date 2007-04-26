@@ -32,10 +32,12 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				start_transport (a_x, a_y, a_button, 0, 0, 0.5,
 					a_screen_x, a_screen_y)
 					-- We must only set the parent source to true if
-					-- the P/DND and drop has just started.
-				if (a_button = 1 and mode_is_drag_and_drop) or
-					(a_button = 3 and mode_is_pick_and_drop and application_imp.pick_and_drop_source /= Void) then
-					set_parent_source_true
+					-- the transport has began.
+				if application_imp.pick_and_drop_source /= Void then
+					if (a_button = 1 and mode_is_drag_and_drop) or
+						(a_button = 3 and mode_is_pick_and_drop and application_imp.pick_and_drop_source /= Void) then
+						set_parent_source_true
+					end
 				end
 			when
 				Ev_pnd_end_transport

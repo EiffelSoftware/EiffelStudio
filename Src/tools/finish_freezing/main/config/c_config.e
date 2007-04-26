@@ -18,12 +18,21 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_use_32bit: like use_32bit) is
+	make (a_use_32bit: like use_32bit; a_code: like code; a_desc: like description) is
 			-- Initialize a config
+		require
+			a_code_attached: a_code /= Void
+			not_a_code_is_empty: not a_code.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
 		do
 			use_32bit := a_use_32bit
+			code := a_code
+			description := a_desc
 		ensure
 			use_32bit_set: use_32bit = a_use_32bit
+			code_set: code = a_code
+			description_set: description = a_desc
 		end
 
 	frozen initialize is
@@ -119,6 +128,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	code: STRING
+			-- Compiler id code
+
+	description: STRING
+			-- Configuration compiler description
+
 feature -- Status report
 
 	exists: BOOLEAN is
@@ -192,6 +207,10 @@ feature {NONE} -- Variable caching
 
 invariant
 	variable_table_attached: is_initialized implies variable_table /= Void
+	code_attached: code /= Void
+	not_code_is_empty: not code.is_empty
+	description_attached: description /= Void
+	not_description_is_empty: not description.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

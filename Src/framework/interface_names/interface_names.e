@@ -463,7 +463,8 @@ feature -- Accelerator, focus label and menu name
 	m_Line_numbers: STRING_GENERAL is			do Result := locale.translate("Toggle &Line Numbers")	end
 	m_lock_tool_bar: STRING_GENERAL is			do Result := locale.translate ("Lock the Toolbars") end
 	m_lock_docking: STRING_GENERAL is			do Result := locale.translate ("Lock the Tools") end
-	f_match_case_question: STRING_GENERAL is			do Result := locale.translate("Match case?")	end
+	m_lock_docking_editor: STRING_GENERAL is	do Result := locale.translate ("Lock the Editors") end
+	f_match_case_question: STRING_GENERAL is	do Result := locale.translate("Match case?")	end
 	f_Melt: STRING_GENERAL is					do Result := locale.translate("Compile current project")	end
 	m_Melt_new: STRING_GENERAL is				do Result := locale.translate("&Compile")	end
 	m_New: STRING_GENERAL is					do Result := locale.translate("&New")	end

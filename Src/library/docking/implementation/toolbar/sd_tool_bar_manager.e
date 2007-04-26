@@ -276,7 +276,8 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			from
 				l_floating_bars := floating_tool_bars.twin
 				l_floating_bars.start
-				Result := contents.twin
+				create Result.make (contents.count)
+				Result.append (contents)
 			until
 				l_floating_bars.after
 			loop

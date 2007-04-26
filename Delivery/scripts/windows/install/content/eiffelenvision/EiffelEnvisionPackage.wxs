@@ -272,28 +272,16 @@
     <!-- UI SEQUENCING -->
     <AdminUISequence>
       <Custom Action="SET_VSINSTALLDIR" After="LaunchConditions"><![CDATA[NOT Installed]]></Custom>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
-      <?endif?>
     </AdminUISequence>
     <InstallUISequence>
       <Custom Action="SET_VSINSTALLDIR" After="LaunchConditions"><![CDATA[NOT Installed]]></Custom>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="AppSearch"/>
-      <?endif?>
     </InstallUISequence>
     <!-- END UI SEQUENCING -->
 
     <!-- INSTALL SEQUENCING -->
     <AdminExecuteSequence>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-      <?endif?>
     </AdminExecuteSequence>
     <InstallExecuteSequence>
-      <?ifdef Enterprise?>
-        <Custom Action="RetrieveCdKey" Before="CostInitialize"/>
-      <?endif?>
     </InstallExecuteSequence>
     <!-- END INSTALL SEQUENCING -->
     

@@ -19,6 +19,9 @@ feature -- Access
 	lib_var_name: STRING = "LIB"
 			-- LIBS environment variable name
 
+	ise_platform_var_name: STRING = "ISE_PLATFORM"
+			-- ISE_PLATFORM environment variable name
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

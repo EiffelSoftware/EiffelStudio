@@ -52,10 +52,10 @@ feature -- Query
 
 	height: INTEGER is
 			-- Height of Current item
-		require
-			not_void: tool_bar /= Void
 		do
-			Result :=  tool_bar.row_height
+			if tool_bar /= Void then
+				Result :=  tool_bar.row_height
+			end
 		end
 
 	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN is

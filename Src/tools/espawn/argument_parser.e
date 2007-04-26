@@ -17,6 +17,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} successful, execute
+		redefine
+			switch_groups
 		end
 
 create
@@ -49,10 +51,24 @@ feature -- Access
 
 	for_32bit: BOOLEAN is
 			-- Indiciates if tool should be run in a 32bit emulated enironment
+		require
+			successful: successful
 		do
 			Result := not {C_CONFIG_MANAGER}.is_windows_x64 or else has_option (x86_switch)
 		ensure
 			true_for_64bit: not {C_CONFIG_MANAGER}.is_windows_x64 implies Result
+		end
+
+	specific_compiler_code: STRING is
+			-- The user specified compiler code to use to establish an environment
+		require
+			successful: successful
+			use_specific_compiler: use_specific_compiler
+		do
+			Result := option_of_name (use_compiler_switch).value
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	ignore_failures: BOOLEAN is
@@ -101,12 +117,30 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
+	list_available_compilers: BOOLEAN is
+			-- Indicates if espawn should list the available compiler codes
+		require
+			successful: successful
+		once
+			Result := has_option (list_compilers_switch)
+		end
+
+feature -- Status report
+
+	use_specific_compiler: BOOLEAN is
+			-- Inidicate if a specific compiler code should be used
+		require
+			successful: successful
+		once
+			Result := has_option (use_compiler_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING_8 = "Eiffel Environment Command Spawn Utility"
 			-- Full name of application
 
-	version: STRING_8 = "6.0"
+	version: STRING_8 = "6.0b"
 			-- Version number of application
 
 	loose_argument_description: STRING_8 = "Command or application to execute."
@@ -129,9 +163,18 @@ feature {NONE} -- Usage
 			else
 				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, "Ineffective.", True, False))
 			end
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (use_compiler_switch, "Forces espawn to use an specific environment", True, False, "code", "The code related to a compiler, use -l to list codes.", False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously", True, False, "count", "Number of processors to utilize", True, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ignore_switch, "Use to ignore failures", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes", False, False))
+		end
 
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
+			-- Valid switch grouping
+		do
+			create Result.make (2)
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_compilers_switch), switch_of_name (x86_switch)>>, False))
 		end
 
 feature {NONE} -- Switch names
@@ -140,6 +183,8 @@ feature {NONE} -- Switch names
 	x86_switch: STRING = "x86"
 	aync_switch: STRING = "async"
 	ignore_switch: STRING = "ignore"
+	list_compilers_switch: STRING = "l"
+	use_compiler_switch: STRING = "use"
 
 feature {NONE} -- Externals
 

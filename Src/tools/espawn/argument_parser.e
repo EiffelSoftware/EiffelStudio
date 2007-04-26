@@ -157,23 +157,24 @@ feature {NONE} -- Usage
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (1)
-			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration.", False, False))
 			if {C_CONFIG_MANAGER}.is_windows_x64 then
-				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment, ignored if -" + manual_switch + " is used.", True, False))
+				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment.", True, False))
 			else
 				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, "Ineffective.", True, False))
 			end
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (use_compiler_switch, "Forces espawn to use an specific environment", True, False, "code", "The code related to a compiler, use -l to list codes.", False))
-			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously", True, False, "count", "Number of processors to utilize", True, 1, {NATURAL_16}.max_value))
-			Result.extend (create {ARGUMENT_SWITCH}.make (ignore_switch, "Use to ignore failures", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes", False, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (use_compiler_switch, "Forces espawn to use an specific environment.", True, False, "code", "The code related to a compiler, use -l to list codes.", False))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously.", True, False, "count", "Number of processors to utilize.", True, 1, {NATURAL_16}.max_value))
+			Result.extend (create {ARGUMENT_SWITCH}.make (ignore_switch, "Use to ignore failures.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
 			-- Valid switch grouping
 		do
 			create Result.make (2)
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_compilers_switch), switch_of_name (x86_switch)>>, False))
 		end
 

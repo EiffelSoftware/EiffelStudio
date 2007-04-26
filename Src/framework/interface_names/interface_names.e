@@ -751,11 +751,15 @@ feature -- Context menu
 	m_add_to: STRING_GENERAL is					do Result := locale.translate("&Add to")	end
 	m_add_subcluster: STRING_GENERAL is			do Result := locale.translate("Add &subcluster")	end
 	m_Assembly: STRING_GENERAL is				do Result := locale.translate ("Assembly") end
+	m_center_diagram: STRING_GENERAL is			do Result := locale.translate ("Center target in diagram") end
+	m_change_color: STRING_GENERAL is			do Result := locale.translate ("Change color") end
 	m_delete: STRING_GENERAL is					do Result := b_delete_command	end
+	m_include_all_classes: STRING_GENERAL is	do Result := locale.translate ("Include all classes") end
 	m_input_domain: STRING_GENERAL is			do Result := locale.translate("&Input domain") end
 	m_library: STRING_GENERAL is				do Result := locale.translate ("Library") end
 	m_Pick: STRING_GENERAL is					do Result := locale.translate("&Pick") end
-	m_remove_from: STRING_GENERAL is			do Result := locale.translate("&Remove from")	end
+	m_remove_from_diagram: STRING_GENERAL		do Result := locale.translate ("&Remove from diagram") end
+	m_show_diagram_history: STRING_GENERAL is	do Result := locale.translate("&Show diagram history")	end
 	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
 

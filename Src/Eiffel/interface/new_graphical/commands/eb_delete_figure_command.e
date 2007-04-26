@@ -12,6 +12,8 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
+			menu_name,
 			description
 		end
 
@@ -26,53 +28,6 @@ feature -- Basic operations
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_figure)
 			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
-
-feature -- Access
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_class_stone)
-			Result.drop_actions.extend (agent execute_with_cluster_stone)
-			Result.drop_actions.extend (agent execute_with_link_midpoint)
-			Result.drop_actions.extend (agent execute_with_inheritance_stone)
-			Result.drop_actions.extend (agent execute_with_client_stone)
-			Result.drop_actions.extend (agent execute_with_class_list)
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap representing the command.
-		do
-			Result := pixmaps.icon_pixmaps.general_reset_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer representing the command.
-		do
-			Result := pixmaps.icon_pixmaps.general_reset_icon_buffer
-		end
-
-	tooltip: STRING_GENERAL is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_diagram_remove
-		end
-
-	description: STRING_GENERAL is
-			-- Description for this command.
-		do
-			Result := Interface_names.l_diagram_remove
-		end
-
-	name: STRING is "Delete_hole"
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
-	explain_dialog: EB_INFORMATION_DIALOG
-			-- Dialog explaining how to use `Current'.
-
-feature {NONE} -- Implementation
 
 	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE) is
 			-- Remove `a_stone' from diagram.
@@ -127,64 +82,6 @@ feature {NONE} -- Implementation
 				[<<agent reinclude_class_list (a_stone.classes, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 		end
 
-	remove_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]) is
-			-- Remove all classes in `a_list'.
-		local
-			l_world: EIFFEL_WORLD
-			es_class: ES_CLASS
-			class_fig: EIFFEL_CLASS_FIGURE
-			l_links: LIST [ES_ITEM]
-		do
-			l_world := tool.world
-			from
-				a_list.start
-			until
-				a_list.after
-			loop
-				class_fig := a_list.item
-				es_class := class_fig.model
-				es_class.disable_needed_on_diagram
-				from
-					l_links := es_class.needed_links
-					l_links.start
-				until
-					l_links.after
-				loop
-					l_links.item.disable_needed_on_diagram
-					l_links.forth
-				end
-				a_list.forth
-			end
-			tool.projector.full_project
-		end
-
-	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]) is
-			-- Reinclude all classes in `a_list' to position in `undo_list' TUPLE and reinclude all links in `undo_list'.
-		local
-			l_world: EIFFEL_WORLD
-			es_class: ES_CLASS
-			class_fig: EIFFEL_CLASS_FIGURE
-			remove_links: LIST [ES_ITEM]
-			l_item: TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]
-		do
-			l_world := tool.world
-			from
-				a_list.start
-				undo_list.start
-			until
-				a_list.after
-			loop
-				class_fig := a_list.item
-				es_class := class_fig.model
-				l_item := undo_list.item
-				remove_links ?= l_item.item (3)
-				l_world.reinclude_class (class_fig, remove_links, l_item.integer_item (1), l_item.integer_item (2))
-				a_list.forth
-				undo_list.forth
-			end
-			tool.projector.full_project
-		end
-
 	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE) is
 			-- Remove `a_stone' from diagram.
 			-- (And its relations.)
@@ -222,30 +119,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
-			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
-		local
-			l_linkables: LIST [EG_LINKABLE]
-			es_class: ES_CLASS
-			class_fig: EIFFEL_CLASS_FIGURE
-		do
-			from
-				create {ARRAYED_LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]} Result.make (5)
-				l_linkables := a_cluster.flat_linkables
-				l_linkables.start
-			until
-				l_linkables.after
-			loop
-				es_class ?= l_linkables.item
-				if es_class /= Void and then es_class.is_needed_on_diagram then
-					class_fig ?= tool.world.figure_from_model (es_class)
-					if class_fig /= Void then
-						Result.extend ([class_fig, class_fig.port_x, class_fig.port_y])
-					end
-				end
-				l_linkables.forth
-			end
-		end
 
 	execute_with_link_midpoint (a_stone: EG_EDGE) is
 			-- Remove `a_stone' from diagram.
@@ -305,6 +178,155 @@ feature {NONE} -- Implementation
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
 		end
+
+feature -- Access
+
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent execute_with_class_stone)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
+			Result.drop_actions.extend (agent execute_with_link_midpoint)
+			Result.drop_actions.extend (agent execute_with_inheritance_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent execute_with_class_list)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent execute_with_class_stone)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
+			Result.drop_actions.extend (agent execute_with_link_midpoint)
+			Result.drop_actions.extend (agent execute_with_inheritance_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent execute_with_class_list)
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_reset_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_reset_icon_buffer
+		end
+
+	tooltip: STRING_GENERAL is
+			-- Tooltip for the toolbar button.
+		do
+			Result := Interface_names.f_diagram_remove
+		end
+
+	description: STRING_GENERAL is
+			-- Description for this command.
+		do
+			Result := Interface_names.l_diagram_remove
+		end
+
+	name: STRING is "Delete_hole"
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := interface_names.m_remove_from_diagram
+		end
+
+	explain_dialog: EB_INFORMATION_DIALOG
+			-- Dialog explaining how to use `Current'.
+
+feature {NONE} -- Implementation
+
+	remove_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]) is
+			-- Remove all classes in `a_list'.
+		local
+			l_world: EIFFEL_WORLD
+			es_class: ES_CLASS
+			class_fig: EIFFEL_CLASS_FIGURE
+			l_links: LIST [ES_ITEM]
+		do
+			l_world := tool.world
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				class_fig := a_list.item
+				es_class := class_fig.model
+				es_class.disable_needed_on_diagram
+				from
+					l_links := es_class.needed_links
+					l_links.start
+				until
+					l_links.after
+				loop
+					l_links.item.disable_needed_on_diagram
+					l_links.forth
+				end
+				a_list.forth
+			end
+			tool.projector.full_project
+		end
+
+	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]) is
+			-- Reinclude all classes in `a_list' to position in `undo_list' TUPLE and reinclude all links in `undo_list'.
+		local
+			l_world: EIFFEL_WORLD
+			es_class: ES_CLASS
+			class_fig: EIFFEL_CLASS_FIGURE
+			remove_links: LIST [ES_ITEM]
+			l_item: TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]
+		do
+			l_world := tool.world
+			from
+				a_list.start
+				undo_list.start
+			until
+				a_list.after
+			loop
+				class_fig := a_list.item
+				es_class := class_fig.model
+				l_item := undo_list.item
+				remove_links ?= l_item.item (3)
+				l_world.reinclude_class (class_fig, remove_links, l_item.integer_item (1), l_item.integer_item (2))
+				a_list.forth
+				undo_list.forth
+			end
+			tool.projector.full_project
+		end
+
+	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
+			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
+		local
+			l_linkables: LIST [EG_LINKABLE]
+			es_class: ES_CLASS
+			class_fig: EIFFEL_CLASS_FIGURE
+		do
+			from
+				create {ARRAYED_LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]} Result.make (5)
+				l_linkables := a_cluster.flat_linkables
+				l_linkables.start
+			until
+				l_linkables.after
+			loop
+				es_class ?= l_linkables.item
+				if es_class /= Void and then es_class.is_needed_on_diagram then
+					class_fig ?= tool.world.figure_from_model (es_class)
+					if class_fig /= Void then
+						Result.extend ([class_fig, class_fig.port_x, class_fig.port_y])
+					end
+				end
+				l_linkables.forth
+			end
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

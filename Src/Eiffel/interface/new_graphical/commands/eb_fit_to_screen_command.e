@@ -12,7 +12,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			initialize
+			initialize,
+			menu_name
 		end
 
 create
@@ -75,6 +76,12 @@ feature {NONE} -- Implementation
 
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
+		do
+			Result := Interface_names.f_diagram_fit_to_screen
+		end
+
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
 		do
 			Result := Interface_names.f_diagram_fit_to_screen
 		end

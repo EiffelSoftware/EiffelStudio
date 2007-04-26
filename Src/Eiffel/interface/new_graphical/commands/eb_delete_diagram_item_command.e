@@ -48,7 +48,8 @@ inherit
 			delete_class,
 			delete_cluster,
 			execute,
-			internal_recycle
+			internal_recycle,
+			menu_name
 		end
 
 create
@@ -71,65 +72,6 @@ feature -- Access
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_item)
 			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text)
-			Result.drop_actions.extend (agent execute_with_inherit_stone)
-			Result.drop_actions.extend (agent execute_with_client_stone)
-			Result.drop_actions.extend (agent drop_class)
-			Result.drop_actions.extend (agent drop_cluster)
-		end
-
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for docking.
-		do
-			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND}(display_text)
-			Result.drop_actions.extend (agent execute_with_inherit_stone)
-			Result.drop_actions.extend (agent execute_with_client_stone)
-			Result.drop_actions.extend (agent drop_class)
-			Result.drop_actions.extend (agent drop_cluster)
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap representing the command.
-		do
-			Result := pixmaps.icon_pixmaps.general_delete_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixmap representing the command.
-		do
-			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
-		end
-
-	tooltip: STRING_GENERAL is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_diagram_delete
-		end
-
-	description: STRING_GENERAL is
-			-- Description for this command.
-		do
-			Result := Interface_names.l_diagram_delete
-		end
-
-	name: STRING is "Delete_item"
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
-feature {NONE} -- Removal
-
-	internal_recycle is
-			-- Recycle code.
-		do
-			Precursor {EB_CONTEXT_DIAGRAM_COMMAND}
-			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
-		end
-
-feature {NONE} -- Implementation
 
 	drop_class (st: CLASSI_STONE) is
 			-- Extract the class that should be removed from `st' and erase it.
@@ -176,6 +118,180 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
+			-- Remove `a_stone' from diagram.
+		local
+			ctm: CLASS_TEXT_MODIFIER
+			descendant, ancestor: ES_CLASS
+			e_item: ES_INHERITANCE_LINK
+			link: EIFFEL_INHERITANCE_FIGURE
+		do
+			link := a_stone.source
+			descendant := link.model.descendant
+			ancestor := link.model.ancestor
+			if ancestor /= Void and then descendant /= Void then
+				ctm := descendant.code_generator
+
+				e_item ?= a_stone.source.model
+				check
+					e_item_not_void: e_item /= Void
+				end
+				e_item.disable_needed_on_diagram
+
+				tool.history.do_named_undoable (
+					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name),
+					agent remove_ancestor (ctm, ancestor.name, e_item),
+					agent add_ancestor (ctm, ancestor.name, e_item))
+			end
+		end
+
+	execute_with_client_stone (a_stone: CLIENT_STONE) is
+			-- Delete feature in `a_stone'.
+		local
+			features: LIST [FEATURE_AS]
+			selected_features: ARRAYED_LIST [FEATURE_AS]
+			cancelled: BOOLEAN
+			dial: EB_DELETE_CLIENT_LINK_DIALOG
+			names: LIST [STRING]
+			l_item: FEATURE_AS
+		do
+			features := a_stone.source.model.features
+			if features.count = 1 then
+				delete_features (features.twin, a_stone.source)
+			else
+				-- Let user select a subset
+				dial := delete_client_link_dialog
+				dial.set_strings (a_stone.source.feature_names)
+				dial.show_modal_to_window (window.window)
+				if
+					not dial.cancelled and then
+					not dial.selected_item.is_empty
+				then
+					names := dial.selected_items
+					from
+						names.start
+						create selected_features.make (features.count)
+					until
+						names.after
+					loop
+						l_item := item_from_name (features, names.item)
+						if l_item /= Void then
+							selected_features.extend (l_item)
+						end
+						names.forth
+					end
+				else
+					cancelled := True
+				end
+				dial.destroy
+				if not cancelled then
+					delete_features (selected_features, a_stone.source)
+				end
+			end
+		end
+
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text)
+			Result.drop_actions.extend (agent execute_with_inherit_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
+			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for docking.
+		do
+			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND}(display_text)
+			Result.drop_actions.extend (agent execute_with_inherit_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
+			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_delete_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
+		end
+
+	tooltip: STRING_GENERAL is
+			-- Tooltip for the toolbar button.
+		do
+			Result := Interface_names.f_diagram_delete
+		end
+
+	description: STRING_GENERAL is
+			-- Description for this command.
+		do
+			Result := Interface_names.l_diagram_delete
+		end
+
+	menu_name: STRING_GENERAL is
+			-- Menu name
+		do
+			Result := interface_names.m_delete
+		end
+
+	name: STRING is "Delete_item"
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+
+feature -- Status report
+
+	veto_pebble_function (a_pebble: ANY): BOOLEAN is
+			-- Veto pebble function
+		local
+			l_client: CLIENT_STONE
+			l_inherit: INHERIT_STONE
+			l_classi: CLASSI_STONE
+			l_cluster: CLUSTER_STONE
+			l_feature_stone: FEATURE_STONE
+		do
+			l_classi ?= a_pebble
+			if l_classi /= Void then
+				l_feature_stone ?= a_pebble
+				if l_feature_stone = Void then
+					Result := True
+				end
+			else
+				l_cluster ?= a_pebble
+				if l_cluster /= Void then
+					Result := True
+				else
+					l_inherit ?= a_pebble
+					if l_inherit /= Void then
+						Result := True
+					else
+						l_client ?= a_pebble
+						if l_client /= Void then
+							Result := True
+						end
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Removal
+
+	internal_recycle is
+			-- Recycle code.
+		do
+			Precursor {EB_CONTEXT_DIAGRAM_COMMAND}
+			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
+		end
+
+feature {NONE} -- Implementation
 
 	delete_class is
 			-- Remove `class_i' from the system.
@@ -242,33 +358,6 @@ feature {NONE} -- Implementation
 			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
 		end
 
-	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
-			-- Remove `a_stone' from diagram.
-		local
-			ctm: CLASS_TEXT_MODIFIER
-			descendant, ancestor: ES_CLASS
-			e_item: ES_INHERITANCE_LINK
-			link: EIFFEL_INHERITANCE_FIGURE
-		do
-			link := a_stone.source
-			descendant := link.model.descendant
-			ancestor := link.model.ancestor
-			if ancestor /= Void and then descendant /= Void then
-				ctm := descendant.code_generator
-
-				e_item ?= a_stone.source.model
-				check
-					e_item_not_void: e_item /= Void
-				end
-				e_item.disable_needed_on_diagram
-
-				tool.history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name),
-					agent remove_ancestor (ctm, ancestor.name, e_item),
-					agent add_ancestor (ctm, ancestor.name, e_item))
-			end
-		end
-
 	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
 			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
 		do
@@ -284,51 +373,6 @@ feature {NONE} -- Implementation
 			a_ctm.add_ancestor (a_name)
 			if not a_ctm.class_modified_outside_diagram then
 				a_link.enable_needed_on_diagram
-			end
-		end
-
-	execute_with_client_stone (a_stone: CLIENT_STONE) is
-			-- Delete feature in `a_stone'.
-		local
-			features: LIST [FEATURE_AS]
-			selected_features: ARRAYED_LIST [FEATURE_AS]
-			cancelled: BOOLEAN
-			dial: EB_DELETE_CLIENT_LINK_DIALOG
-			names: LIST [STRING]
-			l_item: FEATURE_AS
-		do
-			features := a_stone.source.model.features
-			if features.count = 1 then
-				delete_features (features.twin, a_stone.source)
-			else
-				-- Let user select a subset
-				dial := delete_client_link_dialog
-				dial.set_strings (a_stone.source.feature_names)
-				dial.show_modal_to_window (window.window)
-				if
-					not dial.cancelled and then
-					not dial.selected_item.is_empty
-				then
-					names := dial.selected_items
-					from
-						names.start
-						create selected_features.make (features.count)
-					until
-						names.after
-					loop
-						l_item := item_from_name (features, names.item)
-						if l_item /= Void then
-							selected_features.extend (l_item)
-						end
-						names.forth
-					end
-				else
-					cancelled := True
-				end
-				dial.destroy
-				if not cancelled then
-					delete_features (selected_features, a_stone.source)
-				end
 			end
 		end
 

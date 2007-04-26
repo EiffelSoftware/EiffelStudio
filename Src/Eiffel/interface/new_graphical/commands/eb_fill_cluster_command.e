@@ -12,7 +12,9 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			initialize
+			new_sd_toolbar_item,
+			initialize,
+			menu_name
 		end
 
 create
@@ -84,6 +86,13 @@ feature -- Basic operations
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
+		end
+
 feature {NONE} -- Implementation
 
 	include_all_classes (a_cluster_fig: EIFFEL_CLUSTER_FIGURE) is
@@ -129,6 +138,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_fill_cluster
+		end
+
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := interface_names.m_include_all_classes
 		end
 
 	name: STRING is "Cluster_filling";

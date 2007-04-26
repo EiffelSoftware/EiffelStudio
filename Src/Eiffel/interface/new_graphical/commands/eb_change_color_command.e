@@ -11,7 +11,9 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			new_sd_toolbar_item,
+			menu_name
 		end
 
 	BON_CONSTANTS
@@ -59,6 +61,17 @@ feature -- Basic operations
 feature -- Access
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.select_actions.wipe_out
+			Result.select_actions.extend (agent execute)
+			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.extend (agent execute_with_list)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -250,14 +263,20 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := interface_names.m_change_color
+		end
+
 	change_color_dialog: EV_COLOR_DIALOG
 			-- Dialog that allows to choose a color.
 
 	default_colors: EV_STOCK_COLORS is
-		-- Eiffel Vision colors.
-	once
-		create Result
-	end
+			-- Eiffel Vision colors.
+		once
+			create Result
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

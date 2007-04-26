@@ -10,13 +10,17 @@ class
 
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		undefine
+			menu_name
 		redefine
 			new_sd_toolbar_item,
-			menu_name,
 			initialize
 		end
 
 	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
+		redefine
+			menu_name
+		end
 
 create
 	make

@@ -13,8 +13,10 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			make,
-			description
+			description,
+			menu_name
 		end
 
 create
@@ -53,6 +55,18 @@ feature -- Basic operations
 			create Result.make (Current)
 			initialize_toolbar_item (Result, display_text)
 			current_button := Result
+			Result.select_actions.extend (agent show_text_menu)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+			--
+			-- Call `recycle' on the result when you don't need it anymore otherwise
+			-- it will never be garbage collected.
+		do
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, display_text)
+			current_sd_button := Result
 			Result.select_actions.extend (agent show_text_menu)
 		end
 
@@ -103,6 +117,7 @@ feature -- Status setting
 				end
 			end
 		end
+
 feature {NONE} -- Implementation
 
 	pixmap: EV_PIXMAP is
@@ -151,6 +166,12 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := tooltip
+		end
+
 	show_text_menu is
 			-- Show menu to enable selection of link type.
 		local
@@ -179,10 +200,33 @@ feature {NONE} -- Implementation
 			end
 			menu_item.select_actions.extend (agent select_type (Aggregate))
 			menu.extend (menu_item)
-			menu.show_at (current_button.parent, current_button.parent.pointer_position.x, current_button.parent.height)
+			menu.show_at (current_widget, current_widget.pointer_position.x, button_height)
+		end
+
+	current_widget: EV_WIDGET is
+			-- Current widget
+		do
+			if current_button /= Void then
+				Result := current_button.parent
+			elseif current_sd_button /= Void then
+				Result := current_sd_button.tool_bar
+			end
+		end
+
+	button_height: INTEGER is
+			-- Height of button
+		do
+			if current_button /= Void then
+				Result := current_button.parent.height
+			elseif current_sd_button /= Void then
+				Result := current_sd_button.tool_bar.height
+			end
 		end
 
 feature {EB_DIAGRAM_TOOL} -- Implementation
+
+	current_sd_button: EB_SD_COMMAND_TOOL_BAR_BUTTON;
+			-- Current toggle button.
 
 	current_button: EB_COMMAND_TOOL_BAR_BUTTON;
 			-- Current toggle button.

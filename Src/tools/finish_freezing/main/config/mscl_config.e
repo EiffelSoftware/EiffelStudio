@@ -20,17 +20,22 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_key: like product_reg_path; a_use_32bit: like use_32bit) is
+	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description) is
 			-- Initialize a config from a relative HKLM\SOFTWARE registry key `a_key'.
 		require
 			a_key_attached: a_key /= Void
 			not_a_key_is_empty: not a_key.is_empty
+			a_code_attached: a_code /= Void
+			not_a_code_is_empty: not a_code.is_empty
+			a_desc_attached: a_desc /= Void
+			not_a_desc_is_empty: not a_desc.is_empty
 		do
-			make_c_config (a_use_32bit)
+			make_c_config (a_use_32bit, a_code, a_desc)
 			product_reg_path := a_key
 		ensure
 			product_reg_path_set: product_reg_path = a_key
 			use_32bit_set: use_32bit = a_use_32bit
+			code_set: code = a_code
 		end
 
 	on_initialize is

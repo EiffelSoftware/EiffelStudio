@@ -393,7 +393,8 @@ feature -- Querys
 			not_void: a_caller /= Void
 			not_void: a_docking_manager /= Void
 		do
-			if not internal_docking_manager.is_locked then
+			if (a_caller.content.type = {SD_ENUMERATION}.tool and not internal_docking_manager.is_locked) or
+				(a_caller.content.type = {SD_ENUMERATION}.editor and not internal_docking_manager.is_editor_locked) then
 				create Result.make (a_caller, a_docking_manager)
 			else
 				create {SD_VOID_DOCKER_MEDIATOR} Result.make (a_caller, a_docking_manager)

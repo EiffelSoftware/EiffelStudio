@@ -39,7 +39,8 @@ inherit
 			call_button_event_actions,
 			create_pointer_motion_actions,
 			visual_widget,
-			on_pointer_motion
+			on_pointer_motion,
+			pebble_source
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -760,6 +761,17 @@ feature -- Element change
 
 feature -- Implementation
 
+	pebble_source: EV_PICK_AND_DROPABLE
+			-- Source of pebble, used for widgets with deferred PND implementation
+			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.interface
+			else
+				Result := Precursor
+			end
+		end
+
 	set_to_drag_and_drop: BOOLEAN is
 			-- Set transport mode to drag and drop.
 		do
@@ -780,15 +792,13 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button, a_type: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button, a_type: INTEGER_32): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
-			if a_button = 3 and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
-				if pnd_row_imp /= Void then
-					Result := pnd_row_imp.mode_is_target_menu or else pnd_row_imp.mode_is_configurable_target_menu
-				else
-					Result := mode_is_target_menu or else mode_is_configurable_target_menu
-				end
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_type)
+			else
+				Result := Precursor (a_button, a_type)
 			end
 		end
 
@@ -841,7 +851,7 @@ feature -- Implementation
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)
-				if not pnd_row_imp.able_to_transport (a_button) then
+				if not (pnd_row_imp.able_to_transport (a_button) or pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
 			end

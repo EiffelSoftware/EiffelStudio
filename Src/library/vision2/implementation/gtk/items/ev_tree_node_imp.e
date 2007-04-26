@@ -353,11 +353,16 @@ feature {EV_TREE_IMP} -- Implementation
 		end
 
 	able_to_transport (a_button: INTEGER): BOOLEAN is
-			-- Is the row able to transport data with `a_button' click.
+			-- Is `Current' able to initiate transport with `a_button'.
 		do
-			Result := is_transport_enabled and
-			((a_button = 1 and mode_is_drag_and_drop) or
-			(a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
+			Result := (mode_is_drag_and_drop and then a_button = 1) or
+				(mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)
+		end
+
+	ready_for_pnd_menu (a_button, a_type: INTEGER): BOOLEAN is
+			-- Will `Current' display a menu with button `a_button'.
+		do
+			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum
 		end
 
 feature {EV_ANY_I} -- Implementation

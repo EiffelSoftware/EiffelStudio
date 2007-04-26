@@ -30,7 +30,12 @@ inherit
 			set_deny_cursor,
 			enable_capture,
 			disable_capture,
-			has_capture
+			has_capture,
+			set_pick_and_drop_mode,
+			set_drag_and_drop_mode,
+			set_target_menu_mode,
+			set_configurable_target_menu_mode,
+			set_configurable_target_menu_handler
 		end
 
 	EV_TOOLTIPABLE_I
@@ -1940,7 +1945,42 @@ feature -- Status setting
 
 	is_horizontal_scroll_bar_show_requested: BOOLEAN
 			-- Will a horizontal scroll bar be displayed in `Current' when
-			-- `virtual_width' exceeds `viewable_width'?	
+			-- `virtual_width' exceeds `viewable_width'?
+
+	set_pick_and_drop_mode is
+			-- Set transport mechanism to pick and drop,
+		do
+			Precursor {EV_CELL_I}
+			drawable.set_pick_and_drop_mode
+		end
+
+	set_drag_and_drop_mode is
+			-- Set transport mechanism to drag and drop,
+		do
+			Precursor {EV_CELL_I}
+			drawable.set_drag_and_drop_mode
+		end
+
+	set_target_menu_mode is
+			-- Set transport mechanism to a target_menu.
+		do
+			Precursor {EV_CELL_I}
+			drawable.set_target_menu_mode
+		end
+
+	set_configurable_target_menu_mode is
+			-- Set transport mechanism to a configurable target_menu.
+		do
+			Precursor {EV_CELL_I}
+			drawable.set_configurable_target_menu_mode
+		end
+
+	set_configurable_target_menu_handler (a_handler: like configurable_target_menu_handler) is
+			-- Set Configurable Target Menu Handler to `a_handler'.
+		do
+			Precursor {EV_CELL_I}(a_handler)
+			drawable.set_configurable_target_menu_handler (a_handler)
+		end
 
 feature -- Status report
 

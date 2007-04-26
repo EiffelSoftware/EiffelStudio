@@ -36,40 +36,88 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent start (l_parser, l_layout.eiffel_layout))
 		end
 
-	start (a_parser: ARGUMENT_PARSER; a_env: EIFFEL_ENV) is
+	start (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV) is
 			-- Starts application
 		require
-			a_parser_attached: a_parser /= Void
+			a_options_attached: a_options /= Void
+			a_options_successful: a_options.successful
+			a_env_attached: a_env /= Void
+		local
+			l_success: BOOLEAN
+		do
+			if a_options.list_available_compilers then
+				list_available_compilers (a_options)
+			else
+				initialize_environment (a_options, a_env)
+				l_success := spawn_processes (a_options)
+
+				if not a_options.ignore_failures then
+					if not l_success then
+						(create {EXCEPTIONS}).die (1)
+					end
+				end
+			end
+		end
+
+feature -- Basic operations
+
+	initialize_environment (a_options: ARGUMENT_PARSER; a_env: EIFFEL_ENV) is
+			-- Initializes an environment base on `a_options'
+		require
+			a_options_attached: a_options /= Void
+			a_options_successful: a_options.successful
 			a_env_attached: a_env /= Void
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_config: C_CONFIG
+		do
+			if not a_options.manual then
+					-- Configure environment
+				create l_manager.make (a_options.for_32bit)
+				if l_manager.has_applicable_config then
+					if a_options.use_specific_compiler then
+						l_config := l_manager.config_from_code (a_options.specific_compiler_code, True)
+					else
+						l_config := l_manager.best_configuration
+					end
+					if l_config = Void then
+						print ("Warning: No environment were set up, no C/C++ compiler found!%N")
+					else
+						print ("Using C/C++ compiler from " + l_config.description + "%N")
+						merge_variable (path_var_name, l_config.path_var, a_env)
+						merge_variable (include_var_name, l_config.include_var, a_env)
+						merge_variable (lib_var_name, l_config.lib_var, a_env)
+
+							-- Set platform name
+						if not {C_CONFIG_MANAGER}.is_windows_x64 or else a_options.for_32bit then
+							a_env.set_environment ("windows", ise_platform_var_name)
+						else
+							a_env.set_environment ("win64", ise_platform_var_name)
+						end
+					end
+				end
+			end
+		end
+
+	spawn_processes (a_options: ARGUMENT_PARSER): BOOLEAN is
+			-- Spawns all processes found in `a_options' and returns successful result
+		require
+			a_options_attached: a_options /= Void
+			a_options_successful: a_options.successful
+		local
 			l_commands: LINEAR [STRING]
 			l_factory: PROCESS_FACTORY
 			l_process: PROCESS
 			l_spawner: SPAWNER
 			l_count, l_failures: INTEGER
 		do
-			if not a_parser.manual then
-					-- Configure environment
-				create l_manager.make (a_parser.for_32bit)
-				if l_manager.has_applicable_config then
-					l_config := l_manager.best_configuration
-					if l_config /= Void then
-						merge_variable (path_var_name, l_config.path_var, a_env)
-						merge_variable (include_var_name, l_config.include_var, a_env)
-						merge_variable (lib_var_name, l_config.lib_var, a_env)
-					end
-				end
-			end
-
 				-- Launch processes
 			create l_factory
-			l_commands := a_parser.commands
-			create l_spawner.make (a_parser.max_processors)
+			l_commands := a_options.commands
+			create l_spawner.make (a_options.max_processors)
 			from l_commands.start until l_commands.after loop
-				l_process := l_factory.process_launcher_with_command_line (a_parser.commands.item, Void)
-				l_spawner.launch_process (l_process, not a_parser.ignore_failures)
+				l_process := l_factory.process_launcher_with_command_line (l_commands.item, Void)
+				l_spawner.launch_process (l_process, not a_options.ignore_failures)
 				l_commands.forth
 				l_count := l_count + 1
 			end
@@ -87,10 +135,49 @@ feature {NONE} -- Initialization
 				print (" processes failed to execute correctly!%N")
 			end
 
-			if not a_parser.ignore_failures then
-				if not l_spawner.successful then
-					(create {EXCEPTIONS}).die (1)
+			Result := l_spawner.successful
+		end
+
+	list_available_compilers (a_options: ARGUMENT_PARSER) is
+			-- Lists the available C/C++ compilers
+		require
+			a_options_attached: a_options /= Void
+			a_options_successful: a_options.successful
+		local
+			l_manager: C_CONFIG_MANAGER
+			l_codes: LIST [STRING]
+			l_cursor: CURSOR
+			l_config: C_CONFIG
+			l_code: STRING
+			l_count: INTEGER
+		do
+			print ("Available C/C++ compilers:%N%N")
+			create l_manager.make (a_options.for_32bit)
+			l_codes := l_manager.applicable_config_codes
+
+			if l_codes.is_empty then
+				print ("   No applicable compilers could be found.%N")
+			else
+					-- Determine max code name size
+				l_cursor := l_codes.cursor
+				from l_codes.start until l_codes.after loop
+					l_count := l_count.max (l_codes.item.count)
+					l_codes.forth
 				end
+
+				from l_codes.start until l_codes.after loop
+					l_config := l_manager.config_from_code (l_codes.item, False)
+					check l_config_attached: l_config /= Void end
+					if l_config /= Void then
+						check l_config_exists: l_config.exists end
+						l_code := l_config.code
+						print ("   " + l_code)
+						print (create {STRING}.make_filled (' ', l_count - l_code.count))
+						print (":  " + l_config.description + "%N")
+					end
+					l_codes.forth
+				end
+				l_codes.go_to (l_cursor)
 			end
 		end
 
@@ -120,8 +207,6 @@ feature {NONE} -- Basic operations
 				a_env.set_environment (a_values, a_name)
 			end
 		end
-
---feature -- Basic operations
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

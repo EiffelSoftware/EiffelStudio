@@ -244,6 +244,12 @@ feature {NONE} -- Implementation
 						internal_docking_manager.unlock
 					end
 
+					if l_config_data.is_editor_docking_locked then
+						internal_docking_manager.lock_editor
+					else
+						internal_docking_manager.unlock_editor
+					end
+
 					if l_config_data.is_tool_bar_locked then
 						internal_docking_manager.tool_bar_manager.lock
 					else

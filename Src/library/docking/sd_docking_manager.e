@@ -151,7 +151,10 @@ feature -- Query
 		end
 
 	is_locked: BOOLEAN
-			-- If zone can be docked?
+			-- If tool type zone can be docked?
+
+	is_editor_locked: BOOLEAN
+			-- If editor type zone can be docked?
 
 	docker_mediator: SD_DOCKER_MEDIATOR is
 			-- Manager for user dragging events.
@@ -315,6 +318,22 @@ feature -- Command
 			is_locked := False
 		ensure
 			unlocked: is_locked = False
+		end
+
+	lock_editor is
+			-- Set `is_editor_locked' to `True'.
+		do
+			is_editor_locked := True
+		ensure
+			locked: is_editor_locked = True
+		end
+
+	unlock_editor is
+			-- Set `is_editor_locked' to `False'
+		do
+			is_editor_locked := False
+		ensure
+			unlocked: is_editor_locked = False
 		end
 
 	destroy is

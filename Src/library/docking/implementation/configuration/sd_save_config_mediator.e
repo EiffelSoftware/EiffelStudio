@@ -65,8 +65,9 @@ feature -- Save inner container data.
 
 			a_config_data.set_name (a_name)
 			a_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
+			a_config_data.set_is_editor_docking_locked (internal_docking_manager.is_editor_locked)
 			a_config_data.set_is_tool_bar_locked (internal_docking_manager.tool_bar_manager.is_locked)
-
+			
 			top_container := Void
 		ensure
 			cleared: top_container = Void

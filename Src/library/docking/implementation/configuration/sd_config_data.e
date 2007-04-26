@@ -46,7 +46,7 @@ feature -- Properties
 		end
 
 	is_docking_locked: BOOLEAN
-			-- If docking manager is locked?
+			-- If tools docking mechanism locked?
 
 	set_is_tool_bar_locked (a_bool: BOOLEAN) is
 			--  Set `is_tool_bar_locked' with `a_bool'
@@ -58,6 +58,17 @@ feature -- Properties
 
 	is_tool_bar_locked: BOOLEAN
 			-- If tool bar manager is locked?
+
+	set_is_editor_docking_locked (a_bool: BOOLEAN) is
+			-- Set `is_editor_docking_locked' with `a_bool'
+		do
+			is_editor_docking_locked := a_bool
+		ensure
+			set: is_editor_docking_locked = a_bool
+		end
+
+	is_editor_docking_locked: BOOLEAN
+			-- If editors docking mechanism locked?
 
 	inner_container_datas: like internal_inner_container_datas is
 			-- Value of `internal_inner_container_datas'

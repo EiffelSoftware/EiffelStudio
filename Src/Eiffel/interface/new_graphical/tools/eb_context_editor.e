@@ -129,6 +129,15 @@ feature {NONE} -- Initialization
 
 			develop_window.editors_manager.add_edition_observer (Current)
 			area.key_press_actions.extend (agent on_key_pressed)
+
+			area.set_configurable_target_menu_mode
+			area.set_configurable_target_menu_handler (agent context_menu_handler)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler.
+		do
+			develop_window.menus.context_menu_factory.diagram_tool_menu (a_menu, a_target_list, a_source, a_pebble)
 		end
 
 	init_commands is

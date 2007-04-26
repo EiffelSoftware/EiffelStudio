@@ -94,7 +94,6 @@ feature -- Class Tree Menu
 							extend_view_in_main_formatters_menus (a_menu)
 							a_menu.extend (create {EV_MENU_SEPARATOR})
 						end
-						extend_add_to_menu (a_menu, l_stone)
 						extend_delete_class_cluster_menu (a_menu, l_stone)
 					end
 				end
@@ -161,6 +160,36 @@ feature -- Class Tree Menu
 			end
 		end
 
+feature -- Diagram tool
+
+	diagram_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Setup editor menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_feature_stone: FEATURE_STONE
+		do
+			if not is_pnd_mode then
+				if a_pebble = Void then
+					extend_basic_diagram_menu (a_menu)
+				else
+					build_name (a_pebble)
+					setup_pick_item (a_menu, a_pebble)
+					extend_standard_compiler_item_menu (a_menu, a_pebble)
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					l_feature_stone ?= a_pebble
+					if l_feature_stone = Void then
+						extend_diagram_add_menu (a_menu, a_pebble)
+						extend_diagram_include_all_classes (a_menu, a_pebble)
+						extend_force_right_angle (a_menu, a_pebble)
+						extend_remove_anchor (a_menu, a_pebble)
+						extend_remove_from_diagram (a_menu, a_pebble)
+						extend_diagram_delete_menu (a_menu, a_pebble)
+					end
+				end
+			end
+		end
+
 feature -- Feature tree
 
 	uncompiled_feature_item_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_name: STRING) is
@@ -199,40 +228,56 @@ feature -- Standard menus
 			end
 		end
 
-feature {NONE} -- Command sections, Granularity 2.
+feature {NONE} -- Menu section, Granularity 2.
 
 	extend_standard_compiler_item_menu (a_menu: EV_MENU; a_pebble: ANY) is
 			-- Extend menu items for standard cluster/class/feature.
 		local
 			l_stonec: CLASSC_STONE
+			l_stonei: CLASSI_STONE
 			l_feature_stone: FEATURE_STONE
-			l_pebble_type: TYPE [ANY]
-			l_internal: INTERNAL
+			l_cluster_stone: CLUSTER_STONE
 			l_stone: STONE
 		do
-			create l_internal
-			l_pebble_type := l_internal.type_of (a_pebble)
-			if l_pebble_type.is_equal ({CLASSC_STONE}) then
-				l_stonec ?= a_pebble
-				extend_basic_opening_menus (a_menu, l_stonec, False)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
-				extend_class_formatter_menus (a_menu, l_stonec)
-				extend_class_refactoring_menus (a_menu, l_stonec)
-				extend_debug_class_menus (a_menu, l_stonec.e_class)
-			elseif l_pebble_type.is_equal ({FEATURE_STONE}) then
-				l_feature_stone ?= a_pebble
+			l_feature_stone ?= a_pebble
+			l_stonec ?= a_pebble
+			l_stonei ?= a_pebble
+			l_cluster_stone ?= a_pebble
+			l_stone ?= a_pebble
+			if l_feature_stone /= Void then
 				extend_basic_opening_menus (a_menu, l_feature_stone, True)
 				a_menu.extend (create {EV_MENU_SEPARATOR})
 				extend_feature_formatter_menus (a_menu, l_feature_stone)
 				extend_feature_refactoring_menus (a_menu, l_feature_stone)
 				extend_debug_feature_menus (a_menu, l_feature_stone.e_feature)
-			elseif l_pebble_type.is_equal ({CLUSTER_STONE}) then
-				l_stone ?= a_pebble
+				extend_add_to_menu (a_menu, l_stone)
+			elseif l_stonec /= Void then
+				extend_basic_opening_menus (a_menu, l_stonec, False)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_class_formatter_menus (a_menu, l_stonec)
+				extend_class_refactoring_menus (a_menu, l_stonec)
+				extend_debug_class_menus (a_menu, l_stonec.e_class)
+				extend_add_to_menu (a_menu, l_stone)
+			elseif l_stonei /= Void then
+				extend_basic_opening_menus (a_menu, l_stonei, False)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_class_refactoring_menus (a_menu, l_stonei)
+				extend_add_to_menu (a_menu, l_stone)
+			elseif l_cluster_stone /= Void then
 				extend_basic_opening_menus (a_menu, l_stone, False)
+				extend_add_to_menu (a_menu, l_stone)
 			end
 		end
 
-feature {NONE} -- Command sections, Granularity 1.
+	extend_basic_diagram_menu (a_menu: EV_MENU) is
+			-- Extend menus for blank diagram area.
+		require
+			a_menu_not_void: a_menu /= Void
+		do
+
+		end
+
+feature {NONE} -- Menu section, Granularity 1.
 
 	extend_basic_opening_menus (a_menu: EV_MENU; a_stone: STONE; a_external_editor: BOOLEAN) is
 			-- Add items of basic opening operations.
@@ -627,6 +672,206 @@ feature {NONE} -- Command sections, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		do
 			a_menu.extend (dev_window.commands.new_assembly_cmd.new_menu_item_unmanaged)
+		end
+
+feature {NONE} -- Diagram menu section, Granularity 1.
+
+	extend_diagram_add_menu (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Add commands in diagram.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_menu: EV_MENU
+			l_classi_stone: CLASSI_STONE
+			l_figures: CLASS_FIGURE_LIST_STONE
+			l_diagram_tool: EB_DIAGRAM_TOOL
+		do
+			l_classi_stone ?= a_pebble
+			l_figures ?= a_pebble
+			if l_classi_stone /= Void or l_figures /= Void then
+				create l_menu.make_with_text (names.b_add)
+				a_menu.extend (l_menu)
+				l_diagram_tool := dev_window.tools.diagram_tool
+
+				l_menu.extend (l_diagram_tool.toggle_selected_classes_ancestors_cmd.new_menu_item_unmanaged)
+				l_menu.last.select_actions.wipe_out
+				if l_classi_stone /= Void then
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_ancestors_cmd).execute_with_class_stone (l_classi_stone))
+				else
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_ancestors_cmd).execute_with_class_list (l_figures))
+				end
+
+				l_menu.extend (l_diagram_tool.toggle_selected_classes_descendents_cmd.new_menu_item_unmanaged)
+				l_menu.last.select_actions.wipe_out
+				if l_classi_stone /= Void then
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_descendents_cmd).execute_with_class_stone (l_classi_stone))
+				else
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_descendents_cmd).execute_with_class_list (l_figures))
+				end
+
+				l_menu.extend (l_diagram_tool.toggle_selected_classes_clients_cmd.new_menu_item_unmanaged)
+				l_menu.last.select_actions.wipe_out
+				if l_classi_stone /= Void then
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_clients_cmd).execute_with_class_stone (l_classi_stone))
+				else
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_clients_cmd).execute_with_class_list (l_figures))
+				end
+
+				l_menu.extend (l_diagram_tool.toggle_selected_classes_suppliers_cmd.new_menu_item_unmanaged)
+				l_menu.last.select_actions.wipe_out
+				if l_classi_stone /= Void then
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_suppliers_cmd).execute_with_class_stone (l_classi_stone))
+				else
+					l_menu.last.select_actions.extend (agent (l_diagram_tool.toggle_selected_classes_suppliers_cmd).execute_with_class_list (l_figures))
+				end
+			end
+		end
+
+	extend_diagram_include_all_classes (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Include all classes command.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_cluster_stone: CLUSTER_STONE
+			l_command: EB_FILL_CLUSTER_COMMAND
+		do
+			l_cluster_stone ?= a_pebble
+			if l_cluster_stone /= Void then
+				l_command := dev_window.tools.diagram_tool.fill_cluster_cmd
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_cluster_stone (l_cluster_stone))
+			end
+		end
+
+	extend_force_right_angle (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Force right angle command.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_link_stone: LINK_STONE
+			l_command: EB_LINK_TOOL_COMMAND
+		do
+			l_link_stone ?= a_pebble
+			if l_link_stone /= Void then
+				l_command := dev_window.tools.diagram_tool.link_tool_cmd
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_link_stone (l_link_stone))
+			end
+		end
+
+	extend_remove_anchor (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Remove Anchor menu item.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_class_stone: CLASSI_FIGURE_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_class_figures: CLASS_FIGURE_LIST_STONE
+			l_command: EB_REMOVE_ANCHOR_COMMAND
+		do
+			l_command := dev_window.tools.diagram_tool.remove_anchor_cmd
+			l_class_stone ?= a_pebble
+			l_cluster_stone ?= a_pebble
+			l_class_figures ?= a_pebble
+			if l_class_stone /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_class (l_class_stone))
+			elseif l_cluster_stone /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_cluster (l_cluster_stone))
+			elseif l_class_figures /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_class_list (l_class_figures))
+			end
+		end
+
+	extend_diagram_delete_menu (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend diagram delete menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_command: EB_DELETE_DIAGRAM_ITEM_COMMAND
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_client: CLIENT_STONE
+			l_inherit: INHERIT_STONE
+		do
+			l_command := dev_window.tools.diagram_tool.delete_cmd
+			if l_command.veto_pebble_function (a_pebble) then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				l_classi_stone ?= a_pebble
+				if l_classi_stone /= Void then
+					a_menu.last.select_actions.extend (agent l_command.drop_class (l_classi_stone))
+				else
+					l_client ?= a_pebble
+					if l_client /= Void then
+						a_menu.last.select_actions.extend (agent l_command.execute_with_client_stone (l_client))
+					else
+						l_inherit ?= a_pebble
+						if l_inherit /= Void then
+							a_menu.last.select_actions.extend (agent l_command.execute_with_inherit_stone (l_inherit))
+						else
+							l_cluster_stone ?= a_pebble
+							if l_cluster_stone /= Void then
+								a_menu.last.select_actions.extend (agent l_command.drop_cluster (l_cluster_stone))
+							end
+						end
+					end
+				end
+			end
+		end
+
+	extend_remove_from_diagram (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Remove Anchor menu item.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_class_stone: CLASSI_FIGURE_STONE
+			l_cluster_stone: CLUSTER_FIGURE_STONE
+			l_class_figures: CLASS_FIGURE_LIST_STONE
+			l_edge: EG_EDGE
+			l_inherit: INHERIT_STONE
+			l_client: CLIENT_STONE
+			l_command: EB_DELETE_FIGURE_COMMAND
+		do
+			l_command := dev_window.tools.diagram_tool.trash_cmd
+			l_class_stone ?= a_pebble
+			l_cluster_stone ?= a_pebble
+			l_class_figures ?= a_pebble
+			l_edge ?= a_pebble
+			l_inherit ?= a_pebble
+			l_client ?= a_pebble
+			if l_class_stone /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_class_stone (l_class_stone))
+			elseif l_cluster_stone /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_cluster_stone (l_cluster_stone))
+			elseif l_class_figures /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_class_list (l_class_figures))
+			elseif l_inherit /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_inheritance_stone (l_inherit))
+			elseif l_client /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_client_stone (l_client))
+			elseif l_edge /= Void then
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.execute_with_link_midpoint (l_edge))
+			end
 		end
 
 feature {NONE} -- Implementation

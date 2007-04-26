@@ -11,8 +11,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
-			initialize
+			initialize,
+			menu_name
 		end
 
 create
@@ -39,13 +39,6 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.select_actions.extend (agent execute)
-		end
-
 feature {NONE} -- Implementation
 
 	pixmap: EV_PIXMAP is
@@ -64,6 +57,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_history
+		end
+
+	menu_name: STRING_GENERAL is
+			-- Menu name
+		do
+			Result := interface_names.m_show_diagram_history
 		end
 
 	name: STRING is "History_tool";

@@ -10,6 +10,8 @@ class
 
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		undefine
+			menu_name
 		redefine
 			new_sd_toolbar_item,
 			description,

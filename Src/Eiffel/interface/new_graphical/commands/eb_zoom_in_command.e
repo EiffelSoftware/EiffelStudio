@@ -11,7 +11,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			initialize
+			initialize,
+			menu_name
 		end
 
 create
@@ -76,6 +77,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_zoom_in
+		end
+
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := interface_names.f_diagram_zoom_in
 		end
 
 	name: STRING is "Zoom_in";

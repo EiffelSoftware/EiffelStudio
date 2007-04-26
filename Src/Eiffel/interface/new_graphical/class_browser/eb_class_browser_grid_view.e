@@ -99,6 +99,12 @@ feature{NONE} -- Initialization
 			color_or_font_change_actions.extend (agent on_color_or_font_changed)
 			synchronize_color_or_font_change_with_editor
 			synchronize_scroll_behavior_with_editor
+
+				-- Setup context menu handler.
+			grid.set_configurable_target_menu_mode
+			grid.set_configurable_target_menu_handler (agent context_menu_handler)
+			set_context_menu_factory_function (agent (development_window.menus).context_menu_factory)
+
 			enable_direct_start_search
 			quick_search_bar.hide_tool_actions.extend (agent do grid.set_focus end)
 		end

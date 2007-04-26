@@ -11,7 +11,9 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			new_sd_toolbar_item,
+			menu_name
 		end
 
 create
@@ -40,6 +42,18 @@ feature -- Basic operations
 			Result.set_accept_cursor (Cursors.cur_Class)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		local
+			a_stone: CREATE_CLASS_STONE
+		do
+			create a_stone
+			Result := Precursor (display_text)
+			-- |Fixme: uncomment it when pebble is ready in EB_SD_COMMAND_TOOL_BAR_BUTTON
+--			Result.set_pebble (a_stone)
+--			Result.set_accept_cursor (Cursors.cur_Class)
+		end
+
 feature {NONE} -- Implementation
 
 	pixmap: EV_PIXMAP is
@@ -63,6 +77,12 @@ feature {NONE} -- Implementation
 	name: STRING is "Create_class"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
+
+	menu_name: STRING_GENERAL is
+			-- Menu name
+		do
+			Result := interface_names.m_create_new_class
+		end
 
 	explain_dialog: EB_INFORMATION_DIALOG;
 			-- Dialog explaining how to use `Current'.

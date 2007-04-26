@@ -63,6 +63,12 @@ feature -- Access
 		deferred
 		end
 
+	menu_name: STRING_GENERAL is
+			-- Name on corresponding menu items
+		do
+			Result := tooltip
+		end
+
 	shortcut_string: STRING_GENERAL is
 		deferred
 		ensure

@@ -27,11 +27,22 @@ inherit
 
 	EVS_GRID_PND_SUPPORT
 		redefine
+			make_with_grid,
 			enable_grid_item_pnd_support
 		end
 
 create
 	make_with_grid
+
+feature {NONE} -- Initialization
+
+	make_with_grid (a_grid: like grid) is
+			-- Initialize `grid' with `a_grid'.
+		do
+			Precursor {EVS_GRID_PND_SUPPORT}(a_grid)
+			a_grid.set_configurable_target_menu_mode
+			a_grid.set_configurable_target_menu_handler (agent context_menu_handler)
+		end
 
 feature -- Access
 
@@ -218,6 +229,14 @@ feature -- Setting
 			pick_end_actions.extend (agent on_pick_ended_from_grid_pickable_item)
 		end
 
+	set_context_menu_factory_function (a_fun: like context_menu_factory_function) is
+			-- Set `context_menu_factory_function' with `a_fun'.
+		do
+			context_menu_factory_function := a_fun
+		ensure
+			context_menu_factory_function_set: context_menu_factory_function = a_fun
+		end
+
 feature{NONE} -- Actions
 
 	on_color_or_font_change is
@@ -301,6 +320,20 @@ feature{NONE} -- Implementation
 			Result := on_pointer_right_click_agent_internal
 		ensure
 			result_attached: Result /= Void
+		end
+
+	context_menu_factory_function: FUNCTION [ANY, TUPLE, EB_CONTEXT_MENU_FACTORY]
+			-- Context menu factory agent.
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler.
+		local
+			l_factory: EB_CONTEXT_MENU_FACTORY
+		do
+			if context_menu_factory_function /= Void then
+				l_factory := context_menu_factory_function.item (Void)
+				l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
 		end
 
 invariant

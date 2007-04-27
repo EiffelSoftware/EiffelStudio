@@ -792,13 +792,13 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button, a_type: INTEGER_32): BOOLEAN
+	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
 			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_type)
+				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
 			else
-				Result := Precursor (a_button, a_type)
+				Result := Precursor (a_button, a_press)
 			end
 		end
 

@@ -129,7 +129,7 @@ feature -- PND
 		end
 
 	start_transport (
-        	a_x, a_y, a_button: INTEGER;
+        	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
         	a_screen_x, a_screen_y: INTEGER) is
 		do
@@ -304,10 +304,10 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 			check do_not_call: False end
 		end
 
-	ready_for_pnd_menu (a_button, a_type: INTEGER_32): BOOLEAN
+	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
 			-- Will `Current' display a menu with button `a_button'.
 		do
-			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum
+			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then not a_press
 		end
 
 feature {EV_ANY_I} -- Implementation

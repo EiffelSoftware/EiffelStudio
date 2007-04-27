@@ -76,7 +76,7 @@ feature -- Status setting
 				Ev_pnd_start_transport
 			then
 				start_transport
-					(a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					(a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x, a_screen_y)
 			when
 				Ev_pnd_end_transport
 			then
@@ -158,7 +158,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+	start_transport (a_x, a_y, a_button: INTEGER; a_press: BOOLEAN a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick/drag and drop mechanism.
 		local

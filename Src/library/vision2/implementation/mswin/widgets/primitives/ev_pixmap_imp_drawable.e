@@ -872,6 +872,7 @@ feature -- Delegated features
 			a_x: INTEGER
 			a_y: INTEGER
 			a_button: INTEGER
+			a_press: BOOLEAN
 			a_x_tilt: DOUBLE
 			a_y_tilt: DOUBLE
 			a_pressure: DOUBLE
@@ -885,6 +886,7 @@ feature -- Delegated features
 				a_x,
 				a_y,
 				a_button,
+				a_press,
 				a_x_tilt,
 				a_y_tilt,
 				a_pressure,

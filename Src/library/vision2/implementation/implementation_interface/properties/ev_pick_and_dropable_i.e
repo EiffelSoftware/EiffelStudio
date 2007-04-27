@@ -72,7 +72,7 @@ feature -- Status setting
 			-- Show the configurable target menu at position `a_x', `a_y' relative to `Current'.
 		do
 			if application_implementation.pick_and_drop_source = Void then
-				start_transport (a_x, a_y, 3, 0, 0, 0, screen_x + a_x, screen_y + a_y)
+				start_transport (a_x, a_y, 3, False, 0, 0, 0, screen_x + a_x, screen_y + a_y)
 			end
 		end
 
@@ -251,7 +251,7 @@ feature {EV_ANY_I} -- Implementation
 	configurable_target_menu_mode: INTEGER_8 is 3
 
 	start_transport (
-		a_x, a_y, a_button: INTEGER;
+		a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER)
 	is

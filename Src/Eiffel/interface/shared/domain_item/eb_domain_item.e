@@ -169,13 +169,18 @@ feature -- Access
 	domain_without_scope: QL_DOMAIN is
 			-- New query lanaguage domain representing current item
 		do
-			if not is_delayed_item then
-				Result := domain (class_scope)
+			if is_valid then
+				if not is_delayed_item then
+					Result := domain (class_scope)
+				end
+			else
+				Result := class_scope.empty_domain
 			end
 		ensure
 			good_result:
-				(is_delayed_item implies Result = Void) and then
-				((not is_delayed_item) implies Result /= Void)
+				is_valid implies (
+					(is_delayed_item implies Result = Void) and then
+					((not is_delayed_item) implies Result /= Void))
 		end
 
 	query_language_item: QL_ITEM is

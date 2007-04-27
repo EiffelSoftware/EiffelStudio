@@ -301,9 +301,13 @@ feature -- Notification
 			-- Provide result displayed in Current view.
 		local
 			l_cluster_stone: CLUSTER_STONE
+			l_item_from_stone: like domain_item_from_stone
 		do
 			set_has_grid_been_binded_for_current_data (False)
-			starting_element_group := domain_item_from_stone (starting_element).group
+			l_item_from_stone := domain_item_from_stone (starting_element)
+			if l_item_from_stone /= Void and then l_item_from_stone.is_valid then
+				starting_element_group := domain_item_from_stone (starting_element).group
+			end
 			l_cluster_stone ?= starting_element
 			is_starting_element_folder := l_cluster_stone /= Void and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
 

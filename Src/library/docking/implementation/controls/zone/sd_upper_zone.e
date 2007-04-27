@@ -275,10 +275,13 @@ feature -- Query
 	is_minimized: BOOLEAN
 			-- If Current is minimized?
 
-	is_in_close_area: BOOLEAN is
-			-- If pointer in tab close button area?
+	is_ignore_restore_area: BOOLEAN is
+			-- If pointer in tab close button or normal/maximize button area?
 		do
 			Result := internal_notebook.is_in_close_area
+			if not Result then
+				Result := internal_notebook.in_normal_maximize_area
+			end
 		end
 
 feature {NONE} -- Implementation

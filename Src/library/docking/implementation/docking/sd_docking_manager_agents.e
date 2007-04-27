@@ -114,7 +114,7 @@ feature  -- Agents
 					if l_zones.item.has_recursive (a_widget) then
 						l_tool_bar ?= a_widget
 						-- We ignore click on tool bar.
-						if l_tool_bar = Void and then not l_upper_zone.is_in_close_area then
+						if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area then
 							l_upper_zone.recover_normal_size_from_minimize
 						end
 					end

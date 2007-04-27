@@ -73,7 +73,7 @@ feature -- Access
 					if (a_button = 1 and not mode_is_pick_and_drop) or
 						(a_button = 3 and mode_is_pick_and_drop) then
 						set_pnd_original_parent
-						start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
+						start_transport (a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x,
 							a_screen_y)
 						if application_imp.pick_and_drop_source /= Void then
 							if pebble /= Void then

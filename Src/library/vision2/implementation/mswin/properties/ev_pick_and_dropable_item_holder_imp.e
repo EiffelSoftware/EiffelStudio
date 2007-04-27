@@ -29,7 +29,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			when
 				Ev_pnd_start_transport
 			then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5,
+				start_transport (a_x, a_y, a_button, True, 0, 0, 0.5,
 					a_screen_x, a_screen_y)
 					-- We must only set the parent source to true if
 					-- the transport has began.

@@ -419,6 +419,32 @@ feature -- Query
 			end
 		end
 
+	has_pebble_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If button at `a_screen_x', `a_screen_y' has pebble function?
+		local
+			l_item: SD_TOOL_BAR_ITEM
+		do
+			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
+				l_item := tool_bar.item_at_position (a_screen_x, a_screen_y)
+				if l_item /= Void then
+					Result := l_item.pebble_function /= Void
+				end
+			end
+		end
+
+	has_drop_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If button at `a_screen_x', `a_screen_y' has drop function?
+		local
+			l_item: SD_TOOL_BAR_ITEM
+		do
+			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
+				l_item := tool_bar.item_at_position (a_screen_x, a_screen_y)
+				if l_item /= Void then
+					Result := l_item.drop_actions.count >= 1
+				end
+			end
+		end
+
 feature {NONE} -- Agents
 
 	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is

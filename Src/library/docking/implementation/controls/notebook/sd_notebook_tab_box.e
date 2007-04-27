@@ -434,9 +434,13 @@ feature{NONE} -- Implementation
 			-- Draw or clear focus rectangle base on if Current has focus.
 		local
 			l_notebook: SD_NOTEBOOK
+			l_selected: SD_CONTENT
 		do
 			l_notebook := notebook
-			l_notebook.tab_by_content (l_notebook.selected_item).redraw_selected
+			l_selected := l_notebook.selected_item
+			if l_selected /= Void then
+				l_notebook.tab_by_content (l_selected).redraw_selected
+			end
 		end
 
 	notebook: SD_NOTEBOOK is

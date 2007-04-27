@@ -62,7 +62,8 @@ inherit
 			drawer,
 			items_have_texts,
 			on_pointer_release,
-			initialize
+			initialize,
+			item_at_position
 		end
 
 	EV_FIXED
@@ -402,6 +403,12 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 			-- Set `internal_start_y' of `tool_bar'.
 		do
 			Result := tool_bar.start_y
+		end
+
+	item_at_position (a_screen_x, a_screen_y: INTEGER_32): SD_TOOL_BAR_ITEM is
+			-- Redefine
+		do
+			Result := tool_bar.item_at_position (a_screen_x, a_screen_y)
 		end
 
 feature {NONE} -- Implementation

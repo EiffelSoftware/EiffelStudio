@@ -64,6 +64,7 @@ feature {SD_TOOL_BAR} -- Internal initlization
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_veto_pebble_function)
+			set_pebble_function (agent on_pebble_function)
 
 			set_background_color (internal_shared.default_background_color)
 		end
@@ -680,6 +681,7 @@ feature {NONE} -- Agents
 			l_screen: EV_SCREEN
 			l_item: SD_TOOL_BAR_ITEM
 			l_pointer_position: EV_COORDINATE
+			l_stock_pixmap: EV_STOCK_PIXMAPS
 		do
 			create l_screen
 			l_pointer_position := l_screen.pointer_position
@@ -687,11 +689,38 @@ feature {NONE} -- Agents
 				l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
 				if l_item /= Void then
 					Result := l_item.drop_actions.accepts_pebble (a_any)
+					create l_stock_pixmap
+					if l_item.accept_cursor /= Void then
+						set_accept_cursor (l_item.accept_cursor)
+					else
+						set_accept_cursor (l_stock_pixmap.standard_cursor)
+					end
+					if l_item.deny_cursor /= Void then
+						set_deny_cursor (l_item.deny_cursor)
+					else
+						set_deny_cursor (l_stock_pixmap.no_cursor)
+					end
 				end
 			end
 		end
 
-feature {SD_TOOL_BAR} -- Implementation
+	on_pebble_function: ANY is
+			-- Handle pebble function event.
+		local
+			l_item: SD_TOOL_BAR_ITEM
+			l_screen: EV_SCREEN
+			l_position: EV_COORDINATE
+		do
+			create l_screen
+			l_position := l_screen.pointer_position
+			l_item := item_at_position (l_position.x, l_position.y)
+			if l_item /= Void and then l_item.pebble_function /= Void then
+				l_item.pebble_function.call ([])
+				Result := l_item.pebble_function.last_result
+			end
+		end
+
+feature {SD_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 	redraw_item (a_item: SD_TOOL_BAR_ITEM) is
 			-- Redraw `a_item'.

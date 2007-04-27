@@ -93,6 +93,7 @@ feature -- Access (Group)
 	id_of_group (a_group: CONF_GROUP): STRING is
 			-- Identifier of `a_group'
 			-- target_uuid + name_sep + group_name
+			-- Assembly: assembly + name_sep + ph + name_sep + assemblyID
 		require
 			a_group_not_void: a_group /= Void
 		local
@@ -104,7 +105,11 @@ feature -- Access (Group)
 				check
 					assembly: l_phys_as /= Void
 				end
-				Result.append ("assembly@")
+				Result.append (encode ("assembly"))
+				Result.extend (name_sep)
+					-- We need a place holder to keep the same section number with other types of group.
+				Result.append (encode (place_holder_string))
+				Result.extend (name_sep)
 				Result.append (l_phys_as.guid)
 			else
 				create Result.make (50)
@@ -124,18 +129,20 @@ feature -- Access (Group)
 			group_name: STRING
 			l_target: CONF_TARGET
 			l_pos: INTEGER
+			l_ass_id: STRING
 		do
-			l_pos := a_id.index_of ('@', 1)
-			if l_pos > 0 then
-				if a_id.substring (1, l_pos-1).is_equal ("assembly") then
-					Result := universe.target.system.all_assemblies.item (a_id.substring (l_pos+1, a_id.count))
+			last_group_name := Void
+			strings := a_id.split (name_sep)
+			if strings.count >= group_id_sections then
+				if decode (strings.i_th (1)).is_equal ("assembly") then
+					l_ass_id := decode (strings.i_th (group_id_sections))
+					Result := universe.target.system.all_assemblies.item (l_ass_id)
 					if Result /= Void then
 						last_group_name := Result.name
 					end
 				end
 			end
 			if Result = Void then
-				last_group_name := Void
 				l_target := target_of_id (a_id)
 				if strings.count >= group_id_sections then
 					group_name := decode (strings.i_th (group_id_sections))
@@ -212,7 +219,7 @@ feature -- Access (Class)
 			a_id_not_void: a_id /= Void
 		local
 			class_name: STRING
-			l_group: CONF_CLUSTER
+			l_group: CONF_GROUP
 		do
 			last_class_name := Void
 			l_group ?= group_of_id (a_id)
@@ -418,9 +425,17 @@ feature {NONE} -- Implementation. Encoding/Decoding
 
 	escape_char: CHARACTER is '%%'
 
-	name_sep_code: NATURAL_32 is 0x26
+	place_holder_string: STRING is "ph"
 
-	escape_char_code: NATURAL_32 is 0x25
+	name_sep_code: NATURAL_32 is
+		once
+			Result := name_sep.natural_32_code
+		end
+
+	escape_char_code: NATURAL_32 is
+		once
+			Result := escape_char.natural_32_code
+		end
 
 	hex_strings: ARRAY [STRING] is
 		once

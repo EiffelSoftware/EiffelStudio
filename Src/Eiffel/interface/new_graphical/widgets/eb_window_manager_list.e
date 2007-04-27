@@ -50,7 +50,6 @@ feature {NONE} -- Initialization
 			build_list
 
 				-- Add actions
- 			pointer_button_release_actions.extend (agent button_action)
 			key_press_actions.extend (agent key_action)
 			drop_actions.extend (agent drop_class (?))
 
@@ -97,6 +96,10 @@ feature {NONE} -- Initialization Implementation
 				create list_item
 				list_item.set_data (an_item)
 				list_item.set_text (an_item.title)
+				list_item.set_pebble (an_item)
+				list_item.set_configurable_target_menu_mode
+				list_item.set_configurable_target_menu_handler (agent context_menu_handler)
+				list_item.pointer_double_press_actions.extend (agent button_action (?, ?, ?, ?, ?, ?, ?, ?, list_item))
 				if window_pixmap /= Void then
 					list_item.set_pixmap (window_pixmap)
 				end
@@ -124,6 +127,10 @@ feature -- Observer pattern
 			end
 			list_item.set_data (an_item)
 			extend (list_item)
+			list_item.set_pebble (an_item)
+			list_item.set_configurable_target_menu_mode
+			list_item.set_configurable_target_menu_handler (agent context_menu_handler)
+			list_item.pointer_double_press_actions.extend (agent button_action (?, ?, ?, ?, ?, ?, ?, ?, list_item))
 		end
 
 	on_item_removed (an_item: EB_WINDOW) is
@@ -171,14 +178,11 @@ feature {NONE} -- Implementation
 
 	button_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
 					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
-					a_screen_x: INTEGER; a_screen_y: INTEGER) is
+					a_screen_x: INTEGER; a_screen_y: INTEGER; a_item: EV_LIST_ITEM) is
 			-- Raise Development window corresponding to selected item.
 		do
-			if a_button = 1 then
-				raise_selected
-			elseif a_button = 3 then
-				popup_selected_window_menu
-			end
+			a_item.enable_select
+			raise_selected
 		end
 
 	key_action (k: EV_KEY) is
@@ -205,16 +209,26 @@ feature {NONE} -- Implementation
 	window_manager: EB_WINDOW_MANAGER
 			-- Associated window manager
 
-	popup_selected_window_menu is
-			-- Display the context menu associated to the selected window.
+	context_menu_handler (menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY) is
+			-- Context menu handler
 		local
-			selected_window: EB_WINDOW
+			l_menu: EV_MENU
+			l_window: EB_WINDOW
+			l_item: EV_MENU_ITEM
 		do
-			if selected_item /= void then
-				selected_window ?= selected_item.data
-				if selected_window /= Void then
-					selected_window.new_menu.show
-				end
+			l_window ?= source_pebble
+			if l_window /= Void then
+				l_menu := l_window.new_menu
+			end
+			menu.wipe_out
+			from
+				l_menu.start
+			until
+				l_menu.after or l_menu.is_empty
+			loop
+				l_item := l_menu.item
+				l_menu.remove
+				menu.extend (l_item)
 			end
 		end
 

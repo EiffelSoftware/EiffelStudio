@@ -105,7 +105,7 @@ feature -- Access (Group)
 				check
 					assembly: l_phys_as /= Void
 				end
-				Result.append (encode ("assembly"))
+				Result.append (encode (assembly_prefix))
 				Result.extend (name_sep)
 					-- We need a place holder to keep the same section number with other types of group.
 				Result.append (encode (place_holder_string))
@@ -134,7 +134,7 @@ feature -- Access (Group)
 			last_group_name := Void
 			strings := a_id.split (name_sep)
 			if strings.count >= group_id_sections then
-				if decode (strings.i_th (1)).is_equal ("assembly") then
+				if decode (strings.i_th (1)).is_equal (assembly_prefix) then
 					l_ass_id := decode (strings.i_th (group_id_sections))
 					Result := universe.target.system.all_assemblies.item (l_ass_id)
 					if Result /= Void then
@@ -291,17 +291,19 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if l_strings.count >= target_id_sections then
-				create Result.make (40)
-				Result.append (encode (a_target_uuid))
-				from
-					l_strings.go_i_th (target_id_sections)
-				until
-					l_strings.after
-				loop
-					Result.extend (name_sep)
-					Result.append (l_strings.item)
-					l_strings.forth
+			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+				if l_strings.count >= target_id_sections then
+					create Result.make (40)
+					Result.append (encode (a_target_uuid))
+					from
+						l_strings.go_i_th (target_id_sections)
+					until
+						l_strings.after
+					loop
+						Result.extend (name_sep)
+						Result.append (l_strings.item)
+						l_strings.forth
+					end
 				end
 			end
 		end
@@ -322,21 +324,23 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if last_split_strings.count >= target_id_sections then
-				create Result.make (40)
-				Result.append (l_strings.first)
-				from
-					l_strings.go_i_th (target_id_sections)
-				until
-					l_strings.after
-				loop
-					Result.extend (name_sep)
-					if l_strings.index = target_id_sections then
-						Result.append (encode (a_target_name))
-					else
-						Result.append (l_strings.item)
+			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+				if last_split_strings.count >= target_id_sections then
+					create Result.make (40)
+					Result.append (l_strings.first)
+					from
+						l_strings.go_i_th (target_id_sections)
+					until
+						l_strings.after
+					loop
+						Result.extend (name_sep)
+						if l_strings.index = target_id_sections then
+							Result.append (encode (a_target_name))
+						else
+							Result.append (l_strings.item)
+						end
+						l_strings.forth
 					end
-					l_strings.forth
 				end
 			end
 		end
@@ -357,21 +361,23 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if last_split_strings.count >= group_id_sections then
-				create Result.make (40)
-				Result.append (l_strings.first)
-				from
-					l_strings.go_i_th (target_id_sections)
-				until
-					l_strings.after
-				loop
-					Result.extend (name_sep)
-					if l_strings.index = group_id_sections then
-						Result.append (encode (a_group_name))
-					else
-						Result.append (l_strings.item)
+			if not decode (l_strings.i_th (1)).is_equal (assembly_prefix) then
+				if last_split_strings.count >= group_id_sections then
+					create Result.make (40)
+					Result.append (l_strings.first)
+					from
+						l_strings.go_i_th (target_id_sections)
+					until
+						l_strings.after
+					loop
+						Result.extend (name_sep)
+						if l_strings.index = group_id_sections then
+							Result.append (encode (a_group_name))
+						else
+							Result.append (l_strings.item)
+						end
+						l_strings.forth
 					end
-					l_strings.forth
 				end
 			end
 		end
@@ -426,6 +432,8 @@ feature {NONE} -- Implementation. Encoding/Decoding
 	escape_char: CHARACTER is '%%'
 
 	place_holder_string: STRING is "ph"
+
+	assembly_prefix: STRING is "assembly"
 
 	name_sep_code: NATURAL_32 is
 		once

@@ -133,6 +133,12 @@ feature -- Query
 			end
 		end
 
+	in_normal_maximize_area: BOOLEAN is
+			-- If pointer position in normal/maximize button area?
+		do
+			Result := internal_minimize_button.state = {SD_TOOL_BAR_ITEM_STATE}.hot
+		end
+
 feature -- Command
 
 	set_mini_tool_bar (a_widget: EV_WIDGET) is

@@ -128,7 +128,6 @@ feature -- Access (Group)
 		local
 			group_name: STRING
 			l_target: CONF_TARGET
-			l_pos: INTEGER
 			l_ass_id: STRING
 		do
 			last_group_name := Void

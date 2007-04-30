@@ -114,6 +114,9 @@ feature {NONE} -- Initialization
 
 			esgrid.set_pre_activation_action (agent pre_activate_cell)
 
+			esgrid.set_configurable_target_menu_mode
+			esgrid.set_configurable_target_menu_handler (agent context_menu_handler)
+
 			watches_grid := esgrid
 			initialize_watches_grid_layout (preferences.debug_tool_data.is_watches_grids_layout_managed_preference)
 
@@ -222,6 +225,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EB_STONABLE_TOOL} (a_docking_manager)
 			content.drop_actions.extend (agent on_element_drop)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			develop_window.menus.context_menu_factory.watch_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current)
 		end
 
 feature -- Properties
@@ -522,6 +531,79 @@ feature {NONE} -- add new expression from the grid
 			Result := s /= Void and then not s.has ('%R') and not s.has ('%N')
 		end
 
+feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
+
+	on_element_drop (s: CLASSC_STONE) is
+			-- Something was dropped in `ev_list'.
+		local
+			fst: FEATURE_STONE
+			cst: CLASSC_STONE
+			ost: OBJECT_STONE
+			fost: FEATURE_ON_OBJECT_STONE
+			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+			oname: STRING
+		do
+			show
+			fost ?= s
+			if fost /= Void then
+				oname := fost.feature_name
+				if ev_application.ctrl_pressed then
+					ost := fost.object_stone
+					if ost /= Void then
+						on_element_drop (ost)
+					end
+				else
+					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
+				end
+			else
+				fst ?= s
+				if fst /= Void then
+					oname := fst.feature_name
+					create dlg.make_with_expression_text (fst.feature_name)
+					if fst.e_class /= Void then
+						dlg.set_class_text (fst.e_class)
+					end
+				else
+					ost ?= s
+					if ost /= Void then
+						oname := ost.name + ": " + ost.object_address
+						if ev_application.ctrl_pressed then
+							add_object (ost, oname)
+						else
+							create dlg.make_with_named_object (ost.object_address, oname)
+						end
+					else
+						cst ?= s
+						if cst /= Void then
+							create dlg.make_with_class (cst.e_class)
+						end
+					end
+				end
+			end
+			if dlg /= Void then
+				dlg.set_callback (agent add_expression_with_dialog (dlg))
+				dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+			end
+		end
+
+	is_removable (a: ANY): BOOLEAN is
+		do
+			Result := True
+		end
+
+	remove_object_line (a: ANY) is
+		do
+			remove_selected
+		end
+
+	has_selected_item: BOOLEAN is
+			-- Does the grid have selected item?
+		do
+			if watches_grid /= Void then
+				Result := not watches_grid.selected_items.is_empty
+			end
+		end
+
 feature {NONE} -- Event handling
 
 	open_watch_menu (w: EV_WIDGET; ax, ay: INTEGER) is
@@ -746,16 +828,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	is_removable (a: ANY): BOOLEAN is
-		do
-			Result := True
-		end
-
-	remove_object_line (a: ANY) is
-		do
-			remove_selected
-		end
-
 	remove_selected is
 			-- Remove the selected expressions from the list.
 		local
@@ -803,59 +875,6 @@ feature {NONE} -- Event handling
 --| bug#11272 : using the next line raises display issue:
 --|			watches_grid.remove_row (row.index)
 			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
-		end
-
-	on_element_drop (s: CLASSC_STONE) is
-			-- Something was dropped in `ev_list'.
-		local
-			fst: FEATURE_STONE
-			cst: CLASSC_STONE
-			ost: OBJECT_STONE
-			fost: FEATURE_ON_OBJECT_STONE
-			dlg: EB_EXPRESSION_DEFINITION_DIALOG
-			oname: STRING
-		do
-			show
-			fost ?= s
-			if fost /= Void then
-				oname := fost.feature_name
-				if ev_application.ctrl_pressed then
-					ost := fost.object_stone
-					if ost /= Void then
-						on_element_drop (ost)
-					end
-				else
-					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
-				end
-			else
-				fst ?= s
-				if fst /= Void then
-					oname := fst.feature_name
-					create dlg.make_with_expression_text (fst.feature_name)
-					if fst.e_class /= Void then
-						dlg.set_class_text (fst.e_class)
-					end
-				else
-					ost ?= s
-					if ost /= Void then
-						oname := ost.name + ": " + ost.object_address
-						if ev_application.ctrl_pressed then
-							add_object (ost, oname)
-						else
-							create dlg.make_with_named_object (ost.object_address, oname)
-						end
-					else
-						cst ?= s
-						if cst /= Void then
-							create dlg.make_with_class (cst.e_class)
-						end
-					end
-				end
-			end
-			if dlg /= Void then
-				dlg.set_callback (agent add_expression_with_dialog (dlg))
-				dlg.show_modal_to_window (debugger_manager.debugging_window.window)
-			end
 		end
 
 	disable_commands_on_expressions is

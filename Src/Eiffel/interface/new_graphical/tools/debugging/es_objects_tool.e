@@ -234,6 +234,9 @@ feature {NONE} -- Interface
 			g.row_deselect_actions.extend (agent on_objects_row_deselected)
 
 			g.set_pre_activation_action (agent pre_activate_cell)
+
+			g.set_configurable_target_menu_mode
+			g.set_configurable_target_menu_handler (agent context_menu_handler)
 		end
 
 	build_mini_toolbar_box is
@@ -386,6 +389,12 @@ feature {NONE} -- Interface
 			ap := apref.value
 			ap[ap.lower + a_pos - objects_grids_positions.lower] := a_gid
 			apref.set_value (ap) --| Should trigger "update"
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble)
 		end
 
 feature -- preference

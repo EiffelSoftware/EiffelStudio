@@ -182,7 +182,7 @@ feature {EB_DEBUGGER_MANAGER} -- Tool management
 			create Result.make_with_command (Current, w)
 		end
 
-feature {NONE} -- Implementation
+feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 
 	on_stone_dropped (st: OBJECT_STONE) is
 			-- An object was dropped on the button, display it.
@@ -190,6 +190,8 @@ feature {NONE} -- Implementation
 			open_new_dialog
 			last_opened_viewer.set_stone (st)
 		end
+
+feature {NONE} -- Implementation
 
 	opened_viewers: ARRAYED_LIST [EB_OBJECT_VIEWERS_I]
 			-- All expanded viewers linked to `Current'.		

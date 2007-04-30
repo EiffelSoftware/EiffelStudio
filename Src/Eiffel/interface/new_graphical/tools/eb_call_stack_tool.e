@@ -194,6 +194,9 @@ feature {NONE} -- Initialization
 			else
 				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			end
+			stack_grid.set_configurable_target_menu_mode
+			stack_grid.set_configurable_target_menu_handler (agent (development_window.menus.context_menu_factory).call_stack_menu)
+
 			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
 
 			box.extend (stack_grid)

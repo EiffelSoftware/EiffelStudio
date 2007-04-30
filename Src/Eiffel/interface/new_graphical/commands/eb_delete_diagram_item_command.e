@@ -35,6 +35,7 @@ inherit
 			disable_sensitive,
 			new_toolbar_item,
 			new_mini_toolbar_item,
+			new_mini_sd_toolbar_item,
 			new_sd_toolbar_item,
 			mini_pixmap,
 			mini_pixel_buffer,

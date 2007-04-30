@@ -14,7 +14,8 @@ inherit
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
-			new_mini_toolbar_item
+			new_mini_toolbar_item,
+			new_mini_sd_toolbar_item
 		end
 
 	EB_SHARED_PREFERENCES
@@ -125,6 +126,15 @@ feature -- Execution
 feature -- Basic operations
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new mini toolbar button for this command.
+		do
+			Result := Precursor
+			Result.drop_actions.extend (agent drop_feature_on_object_stone)
+			Result.drop_actions.extend (agent drop_object_stone)
+			Result.drop_actions.set_veto_pebble_function (agent is_resizable (?))
+		end
+
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor

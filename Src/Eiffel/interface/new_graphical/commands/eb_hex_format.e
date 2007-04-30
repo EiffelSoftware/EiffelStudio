@@ -16,7 +16,8 @@ inherit
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
-			new_mini_toolbar_item
+			new_mini_toolbar_item,
+			new_mini_sd_toolbar_item
 		end
 
 create
@@ -87,12 +88,12 @@ feature -- Execution
 			-- Remove an object from `tool'.
 		do
 			if command_call_back /= Void then
-				command_call_back.call ([toggle_button.is_selected])
+				command_call_back.call ([is_button_selected])
 			end
-			if toggle_button.is_selected then
-				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_dec)
+			if is_button_selected then
+				change_tooltip (interface_names.e_Switch_num_format_to_dec)
 			else
-				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_hex)
+				change_tooltip (interface_names.e_Switch_num_format_to_hex)
 			end
 		end
 
@@ -114,13 +115,50 @@ feature -- Basic operations
 			toggle_button := Result
 		end
 
-feature -- Obsolete
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+			-- Create a new sd mini toolbar button for this command.
+		do
+			create Result.make (Current)
+			Result.set_pixmap (mini_pixmap)
+			if is_sensitive then
+				Result.enable_sensitive
+			else
+				Result.disable_sensitive
+			end
+			Result.set_tooltip (tooltip)
+			Result.select_actions.extend (agent execute)
 
-feature -- Inapplicable
+			sd_toggle_button := Result
+		end
 
 feature {NONE} -- Implementation
 
+	is_button_selected: BOOLEAN is
+			-- Is button selected?
+		do
+			if toggle_button /= Void then
+				Result := toggle_button.is_selected
+			else
+				Result := sd_toggle_button.is_selected
+			end
+		end
+
+	change_tooltip (a_tooltip: STRING_GENERAL) is
+			-- Change tooltip on button.
+		require
+			a_tooltip_not_void: a_tooltip /= Void
+		do
+			if toggle_button /= Void then
+				toggle_button.set_tooltip (a_tooltip)
+			end
+			if sd_toggle_button /= Void then
+				sd_toggle_button.set_tooltip (a_tooltip)
+			end
+		end
+
 	toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON;
+
+	sd_toggle_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

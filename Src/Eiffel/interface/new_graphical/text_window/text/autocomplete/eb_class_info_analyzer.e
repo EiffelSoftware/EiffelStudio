@@ -749,14 +749,14 @@ feature {NONE} -- Implementation (`type_from')
 					last_was_constrained := last_target_type.is_formal
 					last_formal ?= last_target_type
 					if last_was_constrained then
-						last_was_multi_constrained := last_formal.is_multi_constrained_formal (l_class)
+						last_was_multi_constrained := last_formal.is_multi_constrained (l_class)
 						if last_was_multi_constrained then
 								-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.							
-							last_constraints := constrained_types (last_formal, l_class).constraining_types_if_possible (l_class)
+							last_constraints := last_formal.constraints (l_class).constraining_types_if_possible (l_class)
 								-- We don't know yet the real target type (it'll be one out of last_constraints)
 							last_target_type := Void
 						else
-							last_target_type := constrained_type (last_formal, l_class)
+							last_target_type := last_formal.constrained_type (l_class)
 						end
 					end
 					error := False
@@ -1590,38 +1590,6 @@ feature {NONE}-- Implementation
 					end
 					l_gens.forth
 				end
-			end
-		end
-
-	constrained_type (a_type: TYPE_A; a_class: CLASS_C): TYPE_A is
-			-- Constrained type of `a_type'.
-			--| If you want be on the save but slightly slower side use `constrained_types'.
-		require
-			a_type_not_void: a_type /= Void
-			not_multi_constrained: not a_type.is_multi_constrained_formal (a_class)
-		local
-			l_formal_type: FORMAL_A
-		do
-			if a_type.is_formal then
-				l_formal_type ?= a_type
-				Result := a_class.constraint (l_formal_type.position)
-			else
-				Result := a_type
-			end
-		end
-
-	constrained_types (a_type: TYPE_A; a_class: CLASS_C): TYPE_SET_A is
-			-- Constrained type of `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_formal_type: FORMAL_A
-		do
-			if a_type.is_formal then
-				l_formal_type ?= a_type
-				Result := a_class.constraints (l_formal_type.position)
-			else
-				Result := a_type.to_type_set
 			end
 		end
 

@@ -16,7 +16,7 @@ class MULTI_FORMAL_I
 inherit
 	TYPE_I
 		redefine
-			is_formal,is_multi_constrained_formal, is_valid, same_as, has_true_formal, has_formal, instantiation_in,
+			is_formal, is_multi_constrained, is_valid, same_as, has_true_formal, has_formal, instantiation_in,
 			complete_instantiation_in,
 			generated_id, is_explicit, generate_gen_type_il,
 			generate_cid, generate_cid_array, generate_cid_init,
@@ -107,7 +107,7 @@ feature -- Status report
 	is_formal: BOOLEAN is True
 			-- Is the type a formal type ?
 
-	is_multi_constrained_formal: BOOLEAN is True
+	is_multi_constrained: BOOLEAN is True
 			-- Is the type a formal type ?
 
 	is_explicit: BOOLEAN is False

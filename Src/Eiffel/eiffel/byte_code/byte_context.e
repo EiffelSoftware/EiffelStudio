@@ -872,7 +872,7 @@ feature -- Access
 			from
 				Result := type
 			until
-				not Result.is_formal or Result.is_multi_constrained_formal
+				not Result.is_formal or Result.is_multi_constrained
 			loop
 				context_type_i := context_type.type
 				formal ?= Result
@@ -883,7 +883,7 @@ feature -- Access
 				Result := context_type_i.meta_generic.item (formal_position)
 				reference_i ?= Result
 				if reference_i /= Void then
-					if formal.type_a.is_multi_constrained_formal (context_type.type.base_class) then
+					if formal.type_a.is_multi_constrained (context_type.type.base_class) then
 						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position, -1)
 					else
 						Result := context_type_i.base_class.constraint (formal_position).type_i
@@ -892,7 +892,7 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
 	real_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
@@ -907,7 +907,7 @@ feature -- Access
 			Result := constrained_type_in (type, context_type).instantiation_in (context_type)
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
 	real_type_in_fixed (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
@@ -927,7 +927,7 @@ feature -- Access
 				to_implement ("Move this feature to TYPE_I and descendants.")
 			end
 			l_formal ?= type.type_a
-			if l_formal /= Void and then l_formal.is_multi_constrained_formal (context_type.associated_class) then
+			if l_formal /= Void and then l_formal.is_multi_constrained (context_type.associated_class) then
 					l_type_set := l_formal.constraints (class_type.associated_class)
 					if l_type_set.has_expanded then
 						Result := l_type_set.expanded_representative.type_i
@@ -940,7 +940,7 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
 	real_type (type: TYPE_I): TYPE_I is
@@ -1005,7 +1005,7 @@ feature -- Access
 					to_implement ("Implement context-aware TYPE_I.instantiation_in so that there is no need to create TYPE_A.")
 				end
 				check
-					this_should_be_the_case: not type.is_multi_constrained_formal
+					this_should_be_the_case: not type.is_multi_constrained
 				end
 				l_formal ?= type
 				if l_formal /=Void and then not l_formal.type_a.is_single_constraint_without_renaming (class_type.associated_class) then
@@ -1027,7 +1027,7 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal or Result.is_multi_constrained_formal
+			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
 	creation_type (type: TYPE_I): TYPE_I is

@@ -112,14 +112,11 @@ feature {NONE} -- Implementation
 		require
 			at_least_one_item_selected: favorites_tree.selected_item /= Void
 		local
-			source: EB_FAVORITES_ITEM_LIST
 			item_to_remove: EB_FAVORITES_ITEM
 		do
 				-- Retrieve item to move
 			item_to_remove ?= favorites_tree.selected_item.data
-			source := item_to_remove.parent
-			source.start
-			source.prune (item_to_remove)
+			favorites_manager.remove (item_to_remove)
 			move_button.disable_sensitive
 			remove_button.disable_sensitive
 		end
@@ -127,47 +124,15 @@ feature {NONE} -- Implementation
 	new_favorite_class is
 			-- Create a new "favorite class" and add it to the
 			-- end of the root list.
-		local
-			choose_class_dialog: EB_CHOOSE_CLASS_DIALOG
-			class_name: STRING
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_factory: EB_CONTEXT_MENU_FACTORY
 		do
-			l_window := window_manager.last_focused_development_window
-			if l_window /= Void then
-				l_factory := l_window.menus.context_menu_factory
-			end
-			create choose_class_dialog.make (l_factory)
-			choose_class_dialog.show_modal_to_window (Current)
-			if choose_class_dialog.selected then
-				class_name := choose_class_dialog.class_name
-				favorites.add_class (class_name)
-			end
+			favorites_manager.new_favorite_class (Current)
 		end
 
 	create_folder is
 			-- create a new folder and add it to the end of the
 			-- root list.
-		local
-			folder_name_dialog: EB_TYPE_FOLDER_DIALOG
-			folder_name: STRING
-			wd: EB_WARNING_DIALOG
 		do
-			create folder_name_dialog.make
-			folder_name_dialog.show_modal_to_window (Current)
-			if folder_name_dialog.selected then
-				folder_name := folder_name_dialog.folder_name
-				if
-					folder_name.has ('(')
-					or folder_name.has (')')
-					or folder_name.has ('*')
-				then
-					create wd.make_with_text (Warning_messages.w_Invalid_folder_name.as_string_32 + warning_messages.w_Folder_name_cannot_contain)
-					wd.show_modal_to_window (Current)
-				else
-					favorites.add_folder (folder_name)
-				end
-			end
+			favorites_manager.create_folder (Current)
 		end
 
 	move_to_folder is
@@ -185,38 +150,10 @@ feature {NONE} -- Implementation
 		do
 				-- Retrieve item to move
 			item_to_move ?= favorites_tree.selected_item.data
-			if item_to_move.is_feature then
-				create wd.make_with_text (Warning_messages.w_Cannot_move_feature_alone)
-				wd.show_modal_to_window (Current)
-			else
-				source := item_to_move.parent
-
-					-- Retrieve destination
-				create choose_folder_dialog.make (favorites_manager)
-				choose_folder_dialog.show_modal_to_window (Current)
-
-					-- Move item.
-				if choose_folder_dialog.selected then
-					destination := choose_folder_dialog.chosen_folder
-					conv_folder ?= item_to_move
-					conv_item ?= destination
-					if
-						conv_folder /= Void and then
-						conv_item /= Void and then
-						conv_folder.has_recursive_child (conv_item)
-					then
-						create wd.make_with_text (Warning_messages.w_Cannot_move_favorite_to_a_child)
-						wd.show_modal_to_window (Current)
-					else
-						source.prune_all (item_to_move)
-						destination.extend (item_to_move)
-						item_to_move.set_parent (destination)
-					end
-				end
-				if favorites_tree.selected_item = Void then
-					move_button.disable_sensitive
-					remove_button.disable_sensitive
-				end
+			favorites_manager.move_to_folder (item_to_move, Current)
+			if favorites_tree.selected_item = Void then
+				move_button.disable_sensitive
+				remove_button.disable_sensitive
 			end
 		end
 

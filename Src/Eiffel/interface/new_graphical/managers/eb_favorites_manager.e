@@ -90,6 +90,124 @@ feature -- Basic Operations
 			organize_favorites_dialog.raise
 		end
 
+	remove (a_item: EB_FAVORITES_ITEM) is
+			-- Remove `a_item' from favorites.
+		require
+			a_item_not_void: a_item /= Void
+		local
+			source: EB_FAVORITES_ITEM_LIST
+		do
+			source := a_item.parent
+			source.start
+			source.prune (a_item)
+		end
+
+	new_favorite_class (a_window: EV_WINDOW) is
+			-- Create a new "favorite class" and add it to the
+			-- end of the root list.
+		local
+			choose_class_dialog: EB_CHOOSE_CLASS_DIALOG
+			class_name: STRING
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_factory: EB_CONTEXT_MENU_FACTORY
+		do
+			l_window := development_window
+			l_factory := l_window.menus.context_menu_factory
+			create choose_class_dialog.make (l_factory)
+			if a_window /= Void then
+			 	choose_class_dialog.show_modal_to_window (a_window)
+			else
+				choose_class_dialog.show_modal_to_window (l_window.window)
+			end
+			if choose_class_dialog.selected then
+				class_name := choose_class_dialog.class_name
+				favorites.add_class (class_name)
+			end
+		end
+
+	create_folder (a_window: EV_WINDOW) is
+			-- create a new folder and add it to the end of the
+			-- root list.
+		local
+			folder_name_dialog: EB_TYPE_FOLDER_DIALOG
+			folder_name: STRING
+			wd: EB_WARNING_DIALOG
+		do
+			create folder_name_dialog.make
+			if a_window /= Void then
+				folder_name_dialog.show_modal_to_window (a_window)
+			else
+				folder_name_dialog.show_modal_to_window (development_window.window)
+			end
+			if folder_name_dialog.selected then
+				folder_name := folder_name_dialog.folder_name
+				if
+					folder_name.has ('(')
+					or folder_name.has (')')
+					or folder_name.has ('*')
+				then
+					create wd.make_with_text (Warning_messages.w_Invalid_folder_name.as_string_32 + warning_messages.w_Folder_name_cannot_contain)
+					if a_window /= Void then
+						wd.show_modal_to_window (a_window)
+					else
+						wd.show_modal_to_window (development_window.window)
+					end
+				else
+					favorites.add_folder (folder_name)
+				end
+			end
+		end
+
+	move_to_folder (a_item: EB_FAVORITES_ITEM; a_window: EV_WINDOW) is
+			-- Move the selected item to a given folder.
+		require
+			a_item_not_void: a_item /= Void
+		local
+			choose_folder_dialog: EB_CHOOSE_FAVORITES_FOLDER_DIALOG
+			destination: EB_FAVORITES_ITEM_LIST
+			source: EB_FAVORITES_ITEM_LIST
+			conv_folder: EB_FAVORITES_FOLDER
+			conv_item: EB_FAVORITES_ITEM
+			wd: EB_WARNING_DIALOG
+			l_window: EV_WINDOW
+		do
+			if a_window /= Void then
+				l_window := a_window
+			else
+				l_window := development_window.window
+			end
+			if a_item.is_feature then
+				create wd.make_with_text (Warning_messages.w_Cannot_move_feature_alone)
+				wd.show_modal_to_window (l_window)
+			else
+				source := a_item.parent
+
+					-- Retrieve destination
+				create choose_folder_dialog.make (Current)
+				choose_folder_dialog.show_modal_to_window (l_window)
+
+					-- Move item.
+				if choose_folder_dialog.selected then
+					destination := choose_folder_dialog.chosen_folder
+					conv_folder ?= a_item
+					conv_item ?= destination
+					if
+						conv_folder /= Void and then
+						conv_item /= Void and then
+						conv_folder.has_recursive_child (conv_item)
+					then
+						create wd.make_with_text (Warning_messages.w_Cannot_move_favorite_to_a_child)
+						wd.show_modal_to_window (l_window)
+					else
+						source.prune_all (a_item)
+						destination.extend (a_item)
+						a_item.set_parent (destination)
+					end
+				end
+			end
+		end
+
+
 feature -- Load / Save / Reset...
 
 	reset is
@@ -124,7 +242,7 @@ feature {NONE} -- Memory management
 			development_window := Void
 		end
 
-feature {EB_FAVORITES_MENU} -- Implementation
+feature {EB_FAVORITES_MENU, EB_FAVORITES_TREE} -- Implementation
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.

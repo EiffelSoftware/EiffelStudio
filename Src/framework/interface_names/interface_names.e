@@ -759,6 +759,7 @@ feature -- Context menu
 	m_library: STRING_GENERAL is				do Result := locale.translate ("Library") end
 	m_Pick: STRING_GENERAL is					do Result := locale.translate("&Pick") end
 	m_remove_from_diagram: STRING_GENERAL		do Result := locale.translate ("&Remove from diagram") end
+	m_remove_from_favorites: STRING_GENERAL		do Result := locale.translate ("&Remove from Favorites") end
 	m_show_diagram_history: STRING_GENERAL is	do Result := locale.translate("&Show diagram history")	end
 	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end

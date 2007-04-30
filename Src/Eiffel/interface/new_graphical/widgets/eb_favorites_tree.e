@@ -131,6 +131,7 @@ feature {NONE} -- Initialization Implementation
 			an_item: EB_FAVORITES_ITEM
 		do
 			create Result.make (a_favorites_folder)
+			Result.set_context_menu_factory (context_menu_factory)
 			from
 				a_favorites_folder.start
 			until
@@ -156,6 +157,7 @@ feature {NONE} -- Initialization Implementation
 			if an_item.is_class then
 				a_class_item ?= an_item
 				create Result.make (a_class_item)
+				Result.set_context_menu_factory (context_menu_factory)
 				if is_clickable then
 					Result.pointer_button_press_actions.force_extend (
 						agent on_button_pressed (a_class_item, ?, ?, ?))
@@ -177,6 +179,7 @@ feature {NONE} -- Initialization Implementation
 			elseif an_item.is_feature then
 				a_feat_item ?= an_item
 				create Result.make (a_feat_item)
+				Result.set_context_menu_factory (context_menu_factory)
 				if is_clickable then
 					Result.pointer_button_press_actions.force_extend (
 						agent on_button_pressed (a_feat_item, ?, ?, ?))
@@ -203,7 +206,7 @@ feature -- Observer pattern
 			item_list := get_tree_item_from_path (Current, a_path)
 			if item_list /= Void then
 				create tree_item.make (a_item)
-
+				tree_item.set_context_menu_factory (context_menu_factory)
 				if a_item.is_class then
 					a_class_item ?= a_item
 					if is_clickable then
@@ -420,6 +423,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+			-- Context menu factory
+		do
+			Result := favorites_manager.development_window.menus.context_menu_factory
+		end
 
 	favorites_manager: EB_FAVORITES_MANAGER;
 			-- Associated favorites manager

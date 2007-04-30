@@ -1798,7 +1798,7 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
 	display_error_help_cmd: EB_ERROR_INFORMATION_CMD
 			-- Command to pop up a dialog giving help on compilation errors.
 
-feature {ES_OBJECTS_GRID_MANAGER} -- Command
+feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 

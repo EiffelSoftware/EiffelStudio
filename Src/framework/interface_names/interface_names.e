@@ -754,6 +754,7 @@ feature -- Context menu
 	m_center_diagram: STRING_GENERAL is			do Result := locale.translate ("Center target in diagram") end
 	m_change_color: STRING_GENERAL is			do Result := locale.translate ("Change color") end
 	m_delete: STRING_GENERAL is					do Result := b_delete_command	end
+	m_expanded_object_view: STRING_GENERAL is	do Result := locale.translate ("Expanded object view") end
 	m_include_all_classes: STRING_GENERAL is	do Result := locale.translate ("Include all classes") end
 	m_input_domain: STRING_GENERAL is			do Result := locale.translate("&Input domain") end
 	m_library: STRING_GENERAL is				do Result := locale.translate ("Library") end
@@ -762,6 +763,7 @@ feature -- Context menu
 	m_remove_from_favorites: STRING_GENERAL		do Result := locale.translate ("&Remove from Favorites") end
 	m_show_diagram_history: STRING_GENERAL is	do Result := locale.translate("&Show diagram history")	end
 	m_Show: STRING_GENERAL is					do Result := locale.translate("&Show")	end
+	m_synchronize_in_tools: STRING_GENERAL is	do Result := locale.translate("Synchronize in tools")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
 
 feature -- Label texts

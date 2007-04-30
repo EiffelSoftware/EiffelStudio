@@ -242,6 +242,70 @@ feature -- Favorites menus
 			end
 		end
 
+feature -- Call stack menu
+
+	call_stack_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_item: EB_FAVORITES_TREE_ITEM) is
+			-- Call stack menu.
+		local
+			l_call_stack_stone: CALL_STACK_STONE
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				l_call_stack_stone ?= a_pebble
+				if l_call_stack_stone /= Void then
+					extend_standard_compiler_item_menu (a_menu, a_pebble)
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_sync_in_context_tool (a_menu, a_pebble)
+					extend_expanded_object_view (a_menu, a_pebble)
+				end
+			end
+		end
+
+feature -- Object and Watch tool menus
+
+	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Object tool menu
+		local
+			l_object_stone: OBJECT_STONE
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				l_object_stone ?= a_pebble
+				if l_object_stone /= Void then
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_expanded_object_view (a_menu, a_pebble)
+				end
+			end
+		end
+
+	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL) is
+			-- Watch tool menu
+		local
+			l_object_stone: OBJECT_STONE
+			l_sep_added: BOOLEAN
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				l_object_stone ?= a_pebble
+				if l_object_stone /= Void then
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					l_sep_added := True
+					extend_expanded_object_view (a_menu, a_pebble)
+				end
+				if a_watch_tool.has_selected_item then
+					if not l_sep_added then
+						a_menu.extend (create {EV_MENU_SEPARATOR})
+					end
+					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
+				end
+			end
+		end
+
 feature -- Standard menus
 
 	standard_compiler_item_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
@@ -608,6 +672,9 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_pebble_not_void: a_pebble /= Void
 		local
 			l_menu, l_menu2: EV_MENU
+			l_class_stone: CLASSC_STONE
+			l_debugger: EB_DEBUGGER_MANAGER
+			l_list: LINKED_SET [ES_WATCH_TOOL]
 		do
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
@@ -625,6 +692,25 @@ feature {NONE} -- Menu section, Granularity 1.
 					dev_window.tools.metric_tool.metric_archive_panel.force_drop_stone (a_stone)
 				end (a_pebble)
 			)
+				-- Added to Watch tool, if possible.
+			l_class_stone ?= a_pebble
+			if l_class_stone /= Void then
+				l_debugger := dev_window.eb_debugger_manager
+				l_list := l_debugger.watch_tool_list
+				if l_debugger.raised and not l_list.is_empty then
+					create l_menu2.make_with_text (names.m_watch_tool)
+					l_menu.extend (l_menu2)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_menu2.extend (create {EV_MENU_ITEM}.make_with_text (l_list.item.title))
+						l_menu2.last.select_actions.extend (agent (l_list.item).on_element_drop (l_class_stone))
+						l_list.forth
+					end
+				end
+			end
 		end
 
 	extend_delete_class_cluster_menu (a_menu: EV_MENU; a_pebble: STONE) is
@@ -965,6 +1051,55 @@ feature {NONE} -- Favorites menu section, Granularity 1.
 			if l_item /= Void then
 				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_from_favorites))
 				a_menu.last.select_actions.extend (agent favorite_manager.remove (l_item))
+			end
+		end
+
+feature {NONE} -- Debug tool menu section, Granularity 1.
+
+	extend_sync_in_context_tool (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Synchronize in Feature relation tool menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_stone: CALL_STACK_STONE
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_synchronize_in_tools))
+				a_menu.last.select_actions.extend (agent (a_stone: STONE)
+					do
+						dev_window.tools.launch_stone (a_stone)
+					end (l_stone))
+			end
+		end
+
+	extend_expanded_object_view (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend Expanded object view menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_stone: OBJECT_STONE
+			l_command: EB_OBJECT_VIEWER_COMMAND
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				l_command := dev_window.eb_debugger_manager.object_viewer_cmd
+				a_menu.extend (l_command.new_menu_item_unmanaged)
+				a_menu.last.select_actions.wipe_out
+				a_menu.last.select_actions.extend (agent l_command.on_stone_dropped (l_stone))
+			end
+		end
+
+	extend_delete_expression (a_menu: EV_MENU; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL) is
+			-- Extend delete expression menu.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_watch_tool_not_void: a_watch_tool /= Void
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_delete))
+			a_menu.last.select_actions.extend (agent a_watch_tool.remove_object_line (a_pebble))
+			if not a_watch_tool.is_removable (a_pebble) then
+				a_menu.last.disable_sensitive
 			end
 		end
 

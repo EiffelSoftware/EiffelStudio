@@ -1,3 +1,6 @@
 Error: Creation instruction applies to target of generic type
-       which does not have a creation constraint.
-What to do: make sure that the constraint has a creation part.
+   which does not have a suitable creation constraint.
+What to do: Make sure that the constraint has a creation part
+   and that it lists the feature you need.
+   For an abstract creation (create x) a version of
+   `default_create' from any is required.

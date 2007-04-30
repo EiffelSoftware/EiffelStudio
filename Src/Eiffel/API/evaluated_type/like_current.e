@@ -33,6 +33,14 @@ feature -- Properties
 	conformance_type: TYPE_A
 			-- Type of the anchored type as specified in `set_actual_type'
 
+	has_associated_class: BOOLEAN is
+			-- Does Current have an associated class?
+		do
+			Result :=
+				conformance_type /= Void and then
+				conformance_type.has_associated_class
+		end
+
 	is_like_current: BOOLEAN is True
 			-- Is the current type an anchored type on Current ?
 
@@ -61,21 +69,13 @@ feature -- Properties
 	is_basic: BOOLEAN is False
 			-- Is the current actual type a basic one?
 
-feature -- Access
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_like_current
 		end
 
-	has_associated_class: BOOLEAN is
-			-- Does Current have an associated class?
-		do
-			Result :=
-				conformance_type /= Void and then
-				conformance_type.has_associated_class
-		end
+feature -- Access
 
 	associated_class: CLASS_C is
 			-- Associated class

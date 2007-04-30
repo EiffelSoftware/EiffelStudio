@@ -22,7 +22,7 @@ inherit
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
 			instantiation_in, has_associated_class,
-			to_type_set
+			to_type_set, conformance_type
 		end
 
 create
@@ -47,6 +47,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
+	conformance_type: TYPE_A
+			-- Type to which the renaming `renaming' is applied. Can be used for conformance checks.
+		do
+			Result := type
+		end
 
 	type: TYPE_A
 			-- Type to which the renaming `renaming' is applied.

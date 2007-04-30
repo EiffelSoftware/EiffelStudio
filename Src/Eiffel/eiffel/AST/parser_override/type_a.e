@@ -91,24 +91,6 @@ feature -- Properties
 			-- Void
 		end
 
-	is_multi_constrained_formal (a_context_class: CLASS_C): BOOLEAN is
-			-- Is current type a multi constrained formal type?
-			-- | G -> {A, B}			
-		do
-			-- False
-		end
-
-	is_single_constrained_formal_without_renaming (a_context_class: CLASS_C): BOOLEAN is
-			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?
-			--| G -> A -> True
-			--| G -> A rename a as b end -> False
-			--| G -> {A, B} -> False
-		require
-			a_context_class_not_void: a_context_class /= Void
-		do
-			-- False
-		end
-
 	is_type_set: BOOLEAN is
 			-- Is curren type a type_set?
 			-- | example: {A, B}
@@ -366,12 +348,6 @@ feature -- Comparison
 
 feature -- Access
 
-	renaming: RENAMING_A is
-			-- Renaming of current type.
-		do
-			-- Result := Void
-		end
-
 	associated_class: CLASS_C is
 			-- Class associated to the current type.
 		require
@@ -384,12 +360,16 @@ feature -- Access
 			--| *** FIXME this will become obsolete
 		do
 			Result := Current
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	conformance_type: TYPE_A is
 			-- Type which is used to check conformance
 		do
 			Result := actual_type
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	deep_actual_type: TYPE_A is
@@ -414,6 +394,12 @@ feature -- Access
 			Result := Current
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	renaming: RENAMING_A is
+			-- Renaming of current type.
+		do
+			-- Result := Void
 		end
 
 feature -- Output

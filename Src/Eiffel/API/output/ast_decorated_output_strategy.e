@@ -779,6 +779,7 @@ feature {NONE} -- Implementation
 			l_rout_id_set: ID_SET
 			l_last_class: like last_class
 			l_last_type: like last_type
+			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
 			l_is_multiconstraint_formal: BOOLEAN
 			l_named_tuple_type: NAMED_TUPLE_TYPE_A
@@ -805,17 +806,14 @@ feature {NONE} -- Implementation
 					if last_type /= Void then
 						last_type := last_type.actual_type
 						if last_type.is_formal then
-							if last_type.is_multi_constrained_formal (current_class) then
+							l_formal ?= last_type
+							if l_formal.is_multi_constrained (current_class) then
 								l_is_multiconstraint_formal := True
 								l_last_type_set := last_type.to_type_set.constraining_types (current_class)
 								check multi_constraint_implies_existence_of_type_set: l_is_multiconstraint_formal implies l_last_type_set /= Void end
 							else
-								last_type := constrained_type (last_type)
-								if last_type.is_formal then
-										-- It's still a formal. This is unusual. We use the type set algorithm.
-									l_last_type_set := last_type.to_type_set.constraining_types (current_class)
-									l_is_multiconstraint_formal := True
-								end
+								last_type := l_formal.constrained_type (current_class)
+								check not_formal: not last_type.is_formal end
 							end
 						end
 						if last_type.is_none or l_is_multiconstraint_formal then
@@ -1698,10 +1696,11 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_name: STRING
 			l_formal: FORMAL_A
+					-- Temporary usage only!
 			l_type: TYPE_A
 			l_left_type: TYPE_A
 			l_is_multi_constrained: BOOLEAN
-			l_left_type_set: TYPE_SET_A
+			l_left_type_set, l_right_type_set: TYPE_SET_A
 			l_left_class: CLASS_C
 			l_right_type: TYPE_A
 			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
@@ -1718,17 +1717,19 @@ feature {NONE} -- Implementation
 				last_type := last_type.actual_type
 				if last_type.is_formal then
 					l_formal ?= last_type
+						-- MTNASK: Why is  type_from_ancestor needed?
 					last_type := type_from_ancestor (source_class, l_formal)
 				else
 					l_left_type := last_type
 				end
 					-- Find correct left type and left class.
 				if last_type.is_formal then
-					if last_type.is_multi_constrained_formal (current_class) then
+					l_formal ?= last_type
+					if l_formal.is_multi_constrained (current_class) then
 							l_is_multi_constrained := True
-							l_left_type_set := constraining_types (last_type)
+							l_left_type_set := l_formal.constrained_types (current_class)
 					else
-							l_left_type := constrained_type (last_type)
+							l_left_type := l_formal.constrained_type (current_class)
 					end
 				end
 
@@ -1739,10 +1740,11 @@ feature {NONE} -- Implementation
 					end
 					l_right_type := l_right_type.actual_type
 					if l_right_type.is_formal then
-						if l_right_type.is_multi_constrained_formal (current_class) then
-							l_right_type := constraining_types (l_right_type)
+						l_formal ?= l_right_type
+						if l_formal.is_multi_constrained (current_class) then
+							l_right_type_set := l_formal.constrained_types (current_class)
 						else
-							l_right_type := constrained_type (l_right_type)
+							l_right_type := l_formal.constrained_type (current_class)
 						end
 					end
 
@@ -1763,6 +1765,7 @@ feature {NONE} -- Implementation
 							-- we rely on the computed routine ID which will never change in descendants.
 						if l_is_multi_constrained then
 							check l_left_type_void: l_left_type = Void end
+							 -- MTNASK: why can we go over the name? Should one not use the routine ID?
 							l_result := l_left_type_set.e_feature_state_by_name_id (names_heap.id_of (l_as.infix_function_name))
 							l_feat := l_result.feature_item
 							l_left_type := l_result.class_type_of_feature
@@ -1961,6 +1964,7 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
+			l_formal: FORMAL_A
 			l_last_type: TYPE_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
@@ -1976,15 +1980,18 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				if last_type.is_formal and then last_type.is_multi_constrained_formal (current_class)then
-					l_last_type_set := constraining_types (last_type)
-						-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
-					l_result := l_last_type_set.e_feature_list_by_rout_id (l_as.routine_ids.first)
-					last_class := l_result.first.type.associated_class
-					l_feat := l_result.first.feature_item
-				else
-					last_class := constrained_type (last_type).associated_class
-					l_feat := feature_in_class (last_class, l_as.routine_ids)
+				if last_type.is_formal then
+					l_formal ?= last_type
+					if l_formal.is_multi_constrained (current_class)then
+						l_last_type_set := l_formal.constrained_types (current_class)
+							-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
+						l_result := l_last_type_set.e_feature_list_by_rout_id (l_as.routine_ids.first)
+						last_class := l_result.first.type.associated_class
+						l_feat := l_result.first.feature_item
+					else
+						last_class :=l_formal.constrained_type (current_class).associated_class
+						l_feat := feature_in_class (last_class, l_as.routine_ids)
+					end
 				end
 			end
 			if not expr_type_visiting then
@@ -3972,36 +3979,36 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	 constrained_type (a_type: TYPE_A): TYPE_A is
-			-- Constrained type of `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-			a_type_has_no_multi_constraint: not a_type.is_multi_constrained_formal (current_class)
-		local
-			l_formal_type: FORMAL_A
-		do
-			if a_type.is_formal then
-				l_formal_type ?= a_type
-				Result := current_class.constraint (l_formal_type.position)
-			else
-				Result := a_type
-			end
-		end
+--	 constrained_type (a_type: TYPE_A): TYPE_A is
+--			-- Constrained type of `a_type'.
+--		require
+--			a_type_not_void: a_type /= Void
+--			a_type_has_no_multi_constraint: not a_type.is_multi_constrained (current_class)
+--		local
+--			l_formal_type: FORMAL_A
+--		do
+--			if a_type.is_formal then
+--				l_formal_type ?= a_type
+--				Result := current_class.constraint (l_formal_type.position)
+--			else
+--				Result := a_type
+--			end
+--		end
 
-	constraining_types (a_type: TYPE_A): TYPE_SET_A is
-			-- Constrained type of `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_formal_type: FORMAL_A
-		do
-			if a_type.is_formal then
-				l_formal_type ?= a_type
-				Result := current_class.constraints (l_formal_type.position)
-			else
-				Result := a_type.to_type_set
-			end
-		end
+--	constraining_types (a_type: TYPE_A): TYPE_SET_A is
+--			-- Constrained type of `a_type'.
+--		require
+--			a_type_not_void: a_type /= Void
+--		local
+--			l_formal_type: FORMAL_A
+--		do
+--			if a_type.is_formal then
+--				l_formal_type ?= a_type
+--				Result := current_class.constraints (l_formal_type.position)
+--			else
+--				Result := a_type.to_type_set
+--			end
+--		end
 
 	strip_type: GEN_TYPE_A is
 			-- Strip type

@@ -154,7 +154,10 @@ feature -- Status
 				Result := True
 			else
 				l_count := l_constraints.count
-				if l_count = 1 then
+				if l_count = 0 then
+					Result := True
+				elseif l_count = 1 then
+						-- Further investigations are necessary
 					l_constraining_type := l_constraints.first
 					if l_constraining_type.renaming = Void then
 							-- If we don't have a renaming check whether it is a formal

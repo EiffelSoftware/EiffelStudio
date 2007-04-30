@@ -9,11 +9,7 @@ class FORMAL_A
 
 inherit
 	NAMED_TYPE_A
-		rename
-			is_single_constrained_formal_without_renaming as is_single_constraint_without_renaming
 		redefine
-			is_multi_constrained_formal,
-			is_single_constraint_without_renaming,
 			is_formal,
 			instantiation_in,
 			has_formal_generic,
@@ -61,8 +57,12 @@ feature -- Property
 	is_formal: BOOLEAN is True
 			-- Is the current actual type a formal generic type ?
 
-	is_multi_constrained_formal(a_context_class: CLASS_C): BOOLEAN is
+	is_multi_constrained (a_context_class: CLASS_C): BOOLEAN is
 			-- Is Current a multi constraint formal relative to current context class?
+			--
+			-- `a_context_class': Used to resolve formals to their constraints.
+		require
+			a_context_class_attached: a_context_class /= Void
 		do
 			Result := has_multi_constraints (a_context_class)
 		end
@@ -83,7 +83,12 @@ feature -- Property
 		end
 
 	is_single_constraint_without_renaming (a_context_class: CLASS_C): BOOLEAN
-			-- Is current instance single constraint and the constriant has no renaming applied?
+			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?			
+			--
+			-- `a_context_class' is the context class where the type occurs in.
+			--| G -> A -> True
+			--| G -> A rename a as b end -> False
+			--| G -> {A, B} -> False
 			--| This means there is exactly one constraint class which can be directly used without applying a feature renaming.
 		local
 			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
@@ -91,6 +96,17 @@ feature -- Property
 				l_generics := a_context_class.generics
 				check l_generics_not_void: l_generics /= Void end
 				Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
+		end
+
+			is_single_constrained_formal_without_renaming (a_context_class: CLASS_C): BOOLEAN is
+			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?
+			--| G -> A -> True
+			--| G -> A rename a as b end -> False
+			--| G -> {A, B} -> False
+		require
+			a_context_class_not_void: a_context_class /= Void
+		do
+			-- False
 		end
 
 	has_multi_constraints (a_context_class: CLASS_C): BOOLEAN is
@@ -117,10 +133,79 @@ feature -- Comparison
 
 feature -- Access
 
+	constrained_type (a_context_class: CLASS_C): TYPE_A
+			-- Constraint of Current.
+		require
+			a_context_class_attached: a_context_class /= Void
+			not_multi_constraint: not is_multi_constrained (a_context_class)
+		local
+			l_formal_type: FORMAL_A
+		do
+			Result := a_context_class.constrained_type (position)
+		ensure
+			Result_not_void: Result /= Void
+			Result_is_named_but_not_formal:  Result.is_named_type and not Result.is_formal
+		end
+
+	constrained_types (a_context_class: CLASS_C): TYPE_SET_A
+			-- Constrained types of Current.
+			--
+			-- `a_context_class' is the context class where the formal occurs in.
+			--| It is a list of class types which constraint the current Formal.
+		require
+			a_context_class_attached: a_context_class /= Void
+		do
+			Result := a_context_class.constrained_types (position)
+		ensure
+			Result_not_void_and_not_empty: Result /= Void and not Result.is_empty
+		end
+
+	constrained_type_if_possible (a_context_class: CLASS_C): TYPE_A
+			-- Constraint of Current.
+		require
+			a_context_class_attached: a_context_class /= Void
+			not_multi_constraint: not is_multi_constrained (a_context_class)
+		local
+			l_formal_type: FORMAL_A
+		do
+			from
+					-- Unfold the chain of formal generics
+				Result := Current
+			until
+				Result = Void or else not Result.is_formal
+			loop
+				l_formal_type ?= Result
+				Result := a_context_class.constraint_if_possible (l_formal_type.position)
+			end
+		end
+
+	constrained_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A
+			-- Constraint of Current.
+		require
+			a_context_class_attached: a_context_class /= Void
+		do
+			Result := constraints (a_context_class).constraining_types (a_context_class)
+		end
+
+	constraint (a_context_class: CLASS_C): TYPE_A is
+			-- Constraint type of `Current'.
+			--| Return excatly what is written. For a formal like G -> H we return H.
+			--| If you want to resolve formal chains use `constrained_type'.
+			--| If there are several formals in the type set we merge the results.
+		require
+			a_a_context_classt_not_void: a_context_class /= Void
+		do
+			Result := a_context_class.constraint (position)
+		ensure
+			Result_sane: Result /= Void
+		end
+
+
 	constraints (a_context_class: CLASS_C): TYPE_SET_A is
 			-- Constraint types of `Current'.
 			--| Return excatly what is written. For a formal like G -> {H,STRING} we return {H, STRING}.
 			--| If there are several formals in the type set we merge the results.
+			--| If you want to get rid of recursive formals call `constraining_types' on the resulting TYPE_SET_A.
 		require
 			a_a_context_classt_not_void: a_context_class /= Void
 		do

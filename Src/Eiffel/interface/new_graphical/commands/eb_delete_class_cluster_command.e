@@ -19,6 +19,7 @@ inherit
 			new_toolbar_item,
 			new_mini_toolbar_item,
 			new_sd_toolbar_item,
+			new_mini_sd_toolbar_item,
 			tooltext
 		end
 
@@ -57,6 +58,17 @@ feature -- Access
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+			--
+			-- Call `recycle' on the result when you don't need it anymore otherwise
+			-- it will never be garbage collected.
+		do
+			Result := Precursor
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
+		end
+
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise

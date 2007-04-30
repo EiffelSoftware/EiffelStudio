@@ -11,7 +11,12 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item, new_sd_toolbar_item, new_mini_toolbar_item, mini_pixmap, mini_pixel_buffer,
+			new_toolbar_item,
+			new_sd_toolbar_item,
+			new_mini_toolbar_item,
+			new_mini_sd_toolbar_item,
+			mini_pixmap,
+			mini_pixel_buffer,
 			tooltext
 		end
 
@@ -68,6 +73,16 @@ feature -- Access
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for `Current'.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result.drop_actions.extend (agent drop_breakable (?))
+			Result.drop_actions.extend (agent drop_feature (?))
+			Result.drop_actions.extend (agent drop_class (?))
+			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
+		end
+
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for `Current'.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}

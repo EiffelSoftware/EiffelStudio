@@ -66,14 +66,14 @@ feature -- Basic operations
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
-			do
-				start_observer
-				if not executable then
-					disable_sensitive
-				end
-
-				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		do
+			start_observer
+			if not executable then
+				disable_sensitive
 			end
+
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
 			-- Create a new menu entry for this command.

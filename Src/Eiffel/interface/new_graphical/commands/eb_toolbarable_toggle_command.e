@@ -14,7 +14,8 @@ inherit
 			initialize_sd_toolbar_item,
 			new_toolbar_item,
 			new_mini_toolbar_item,
-			new_sd_toolbar_item
+			new_sd_toolbar_item,
+			new_mini_sd_toolbar_item
 		end
 
 feature -- Change
@@ -68,12 +69,6 @@ feature -- Change
 			end
 		end
 
-	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
-			-- Update tooltip of `toggle'.
-		do
-			toggle.set_tooltip (tooltip)
-		end
-
 feature -- Basic operations
 
 	is_selected: BOOLEAN is
@@ -114,7 +109,37 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+			-- Create a new mini toolbar button for this command.
+		do
+			create Result.make (Current)
+			Result.set_pixmap (mini_pixmap)
+			if is_sensitive then
+				Result.enable_sensitive
+			else
+				Result.disable_sensitive
+			end
+			Result.set_tooltip (tooltip)
+			if is_selected then
+				Result.enable_select
+			end
+			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent update_sd_tooltip (Result))
+		end
+
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+
+	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
+			-- Update tooltip of `toggle'.
+		do
+			toggle.set_tooltip (tooltip)
+		end
+
+	update_sd_tooltip (toggle: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON) is
+			-- Update tooltip of `toggle'.
+		do
+			toggle.set_tooltip (tooltip)
+		end
 
 	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON; display_text: BOOLEAN) is
 			-- Initialize `a_item'

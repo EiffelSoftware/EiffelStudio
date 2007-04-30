@@ -14,7 +14,8 @@ inherit
 			tooltext,
 			new_toolbar_item,
 			new_sd_toolbar_item,
-			new_mini_toolbar_item
+			new_mini_toolbar_item,
+			new_mini_sd_toolbar_item
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -113,6 +114,14 @@ feature -- Items
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+			-- New mini toolbar item.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
+		end
+
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- New mini toolbar item.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}

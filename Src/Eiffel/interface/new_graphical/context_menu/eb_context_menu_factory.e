@@ -196,24 +196,50 @@ feature -- Feature tree
 			-- Uncompiled feature item menu
 		require
 			a_name_not_void: a_name /= Void
+			a_menu_not_void: a_menu /= Void
 		local
 			l_feature_tool: EB_FEATURES_TOOL
 		do
-			l_feature_tool := dev_window.tools.features_tool
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
-			a_menu.last.select_actions.extend (agent l_feature_tool.go_to_feature_with_name (a_name))
+			if not is_pnd_mode then
+				l_feature_tool := dev_window.tools.features_tool
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
+				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_feature_with_name (a_name))
+			end
 		end
 
 	feature_clause_item_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_clause: FEATURE_CLAUSE_AS) is
 			-- Feature clause item menu
 		require
 			a_clause_not_void: a_clause /= Void
+			a_menu_not_void: a_menu /= Void
 		local
 			l_feature_tool: EB_FEATURES_TOOL
 		do
-			l_feature_tool := dev_window.tools.features_tool
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
-			a_menu.last.select_actions.extend (agent l_feature_tool.go_to_clause (a_clause, False))
+			if not is_pnd_mode then
+				l_feature_tool := dev_window.tools.features_tool
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
+				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_clause (a_clause, False))
+			end
+		end
+
+feature -- Favorites menus
+
+	favorites_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_item: EB_FAVORITES_TREE_ITEM) is
+			-- Favorites menu
+		require
+			a_menu_not_void: a_menu /= Void
+			a_item_not_void: a_item /= Void
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_new_favorite_class (a_menu)
+				extend_add_favorite_folder (a_menu)
+				extend_move_to_folder (a_menu, a_pebble)
+				extend_remove_from_favorites (a_menu, a_pebble)
+			end
 		end
 
 feature -- Standard menus
@@ -874,6 +900,74 @@ feature {NONE} -- Diagram menu section, Granularity 1.
 			end
 		end
 
+feature {NONE} -- Favorites menu section, Granularity 1.
+
+	extend_new_favorite_class (a_menu: EV_MENU) is
+			-- Extend new favorite class menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_new_favorite_class))
+			a_menu.last.select_actions.extend (agent favorite_manager.new_favorite_class (Void))
+		end
+
+	extend_move_to_folder (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend move to folder menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_class_stone: EB_FAVORITES_CLASS_STONE
+			l_folder: EB_FAVORITES_FOLDER
+			l_item: EB_FAVORITES_ITEM
+		do
+			l_class_stone ?= a_pebble
+			l_folder ?= a_pebble
+			if l_class_stone /= Void then
+				l_item := l_class_stone.origin
+			elseif l_folder /= Void then
+				l_item := l_folder
+			end
+			if l_item /= Void then
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_move_to_folder))
+				a_menu.last.select_actions.extend (agent favorite_manager.move_to_folder (l_item, Void))
+			end
+		end
+
+	extend_add_favorite_folder (a_menu: EV_MENU) is
+			-- Extend "Create Folder..." menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_create_folder))
+			a_menu.last.select_actions.extend (agent favorite_manager.create_folder (Void))
+		end
+
+	extend_remove_from_favorites (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend remove from favorites menu.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_item: EB_FAVORITES_ITEM
+			l_class_stone: EB_FAVORITES_CLASS_STONE
+			l_folder: EB_FAVORITES_FOLDER
+			l_feature: EB_FAVORITES_FEATURE_STONE
+		do
+			l_class_stone ?= a_pebble
+			l_folder ?= a_pebble
+			l_feature ?= a_pebble
+			if l_class_stone /= Void then
+				l_item := l_class_stone.origin
+			elseif l_folder /= Void then
+				l_item := l_folder
+			elseif l_feature /= Void then
+				l_item := l_feature.origin
+			end
+			if l_item /= Void then
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_from_favorites))
+				a_menu.last.select_actions.extend (agent favorite_manager.remove (l_item))
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	setup_pick_item (a_menu: EV_MENU; a_pebble: ANY) is
@@ -957,6 +1051,12 @@ feature {NONE} -- Implementation
 	last_type: STRING_32
 
 	current_editor: EB_CLICKABLE_EDITOR
+
+	favorite_manager: EB_FAVORITES_MANAGER is
+			-- Favorites manager
+		do
+			Result := dev_window.favorites_manager
+		end
 
 feature {NONE} -- Status report
 

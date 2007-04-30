@@ -75,6 +75,16 @@ feature {NONE} -- Initialization
 			end
 			set_accept_cursor (an_item.mouse_cursor)
 			set_deny_cursor (an_item.Xmouse_cursor)
+			set_configurable_target_menu_mode
+			set_configurable_target_menu_handler (agent context_menu_handler)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			if context_menu_factory /= Void then
+				context_menu_factory.favorites_menu (a_menu, a_target_list, a_source, a_pebble, Current)
+			end
 		end
 
 feature -- Status setting
@@ -193,12 +203,23 @@ feature -- Status setting
 			end
 		end
 
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+			-- Set `context_menu_factory' with `a_factory'.
+		do
+			context_menu_factory := a_factory
+		ensure
+			context_menu_factory_set: context_menu_factory = a_factory
+		end
+
 feature -- Access
 
 	data: EB_FAVORITES_ITEM
 			-- item represented by Current.
 
 feature {NONE} -- Implementation
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY
+			-- Context menu factory
 
 	droppable (a_pebble: ANY): BOOLEAN is
 			-- Can user drop `a_pebble' on `Current'?

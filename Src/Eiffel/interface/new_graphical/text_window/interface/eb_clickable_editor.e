@@ -450,8 +450,11 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
 				l_shortcuts.first.apply
 				check_cursor_position
-			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_menu and not dev_window.preferences.misc_data.is_pnd_mode then
-				editor_drawing_area.show_configurable_target_menu (0, 0)
+			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_menu and not preferences.misc_data.is_pnd_mode then
+				if not text_displayed.is_empty then
+					check_cursor_position
+					editor_drawing_area.show_configurable_target_menu (current_cursor_position + left_margin_width - 1, (text_displayed.cursor.y_in_lines) * line_height - (line_height // 2))
+				end
 			else
 				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (ev_key)
 			end
@@ -498,8 +501,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 						l_number > 0 and then
 						l_number <= number_of_lines and then
 						x_pos >= -left_margin_width + offset and then
-						x_pos < editor_viewport.width + offset and then
-						(not dev_window.preferences.misc_data.is_pnd_mode implies not has_selection)
+						x_pos < editor_viewport.width + offset
 					then
 						create cur.make_from_character_pos (1, 1, text_displayed)
 						position_cursor (cur, x_pos, y_pos)

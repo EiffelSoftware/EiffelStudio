@@ -49,7 +49,7 @@ feature -- Access
 			Result := [agent displayer_generators.new_editor_displayer, displayer_generators.editor_displayer]
 		end
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Possible area to display a tool bar
 		do
 		end

@@ -50,7 +50,7 @@ create
 
 feature -- Access
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 			-- Every view can provide a customized control bar. Normally a tool bar is placed in this area
 			-- through which behavior (such as tooltip display) of current view can be changed.

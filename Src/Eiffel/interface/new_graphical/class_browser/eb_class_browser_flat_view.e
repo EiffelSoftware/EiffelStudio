@@ -311,34 +311,33 @@ feature -- Access
 			end
 		end
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
-			l_tool_bar: SD_TOOL_BAR
-			l_tool_bar2: SD_TOOL_BAR
 			l_label: EV_LABEL
-			l_tool_bar3: SD_TOOL_BAR
+			l_box: EV_HORIZONTAL_BOX
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_contants: EV_LAYOUT_CONSTANTS
 		do
 			if control_tool_bar = Void then
-				create control_tool_bar
-				create l_tool_bar.make
-				create l_tool_bar3.make
-				l_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
-				l_tool_bar.extend (show_feature_from_any_button)
-				l_tool_bar.extend (show_tooltip_button)
-				control_tool_bar.set_padding (2)
-				control_tool_bar.extend (l_tool_bar)
-				control_tool_bar.disable_item_expand (l_tool_bar)
-				create l_tool_bar2.make
-				l_tool_bar2.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
-				control_tool_bar.extend (l_tool_bar2)
-				control_tool_bar.disable_item_expand (l_tool_bar2)
+				create control_tool_bar.make (5)
+				control_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
+				control_tool_bar.extend (show_feature_from_any_button)
+				control_tool_bar.extend (show_tooltip_button)
+
+				control_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
+
 				create l_label.make_with_text (interface_names.l_filter)
-				control_tool_bar.extend (l_label)
-				control_tool_bar.disable_item_expand (l_label)
+				create l_box
+				l_box.extend (l_label)
+				create l_contants
+				l_box.set_border_width (l_contants.small_border_size)
+				create l_widget_item.make (l_box)
+				control_tool_bar.extend (l_widget_item)
+
 				feature_name_list.set_minimum_width (100)
-				control_tool_bar.extend (feature_name_list)
-				control_tool_bar.disable_item_expand (feature_name_list)
+				create l_widget_item.make (feature_name_list)
+				control_tool_bar.extend (l_widget_item)
 			end
 			Result := control_tool_bar
 		ensure then
@@ -531,7 +530,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Implementation/Data
 
-	control_tool_bar: EV_HORIZONTAL_BOX
+	control_tool_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Tool bar of current view
 
 	show_feature_from_any_button_internal: like show_feature_from_any_button

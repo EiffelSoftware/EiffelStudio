@@ -34,7 +34,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Possible area to display a tool bar
 		do
 			if browser /= Void then

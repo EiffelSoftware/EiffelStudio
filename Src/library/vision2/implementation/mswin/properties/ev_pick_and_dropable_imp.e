@@ -163,18 +163,16 @@ feature {EV_ANY_I} -- Implementation
 			-- Initialize the pick/drag and drop mechanism.
 		local
 			l_configure_agent: PROCEDURE [ANY, TUPLE]
+			l_pebble: like pebble
 		do
 			application_imp.clear_transport_just_ended
 			if mode_is_pick_and_drop and a_button /= 3 then
 			else
-					-- We used to call `call_pebble_function' here, but this causes
-					-- the pebble function to be executed twice. The first execution
-					-- occurrs in EV_WINDOW_IMP source_at_pointer_position. This should
-					-- have always been called in order for us to be here in `start_transport'.
-					-- If it is not, then there must be a fix for that, but I do not know of any
-					-- case in which it would not be called first. Julian 09/27/2001
 				if pebble_function /= Void then
-					pebble := pebble_function.last_result
+					call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
+					l_pebble := pebble_function.last_result
+				else
+					l_pebble := pebble
 				end
 				if not application_imp.drop_actions_executing then
 					-- Note that we check there is not a pick and drop source currently executing.
@@ -182,18 +180,18 @@ feature {EV_ANY_I} -- Implementation
 					-- `drop_actions', this causes the transport to start. The above check prevents this
 					-- from occurring.
 					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
-						if pebble /= Void and then mode_is_configurable_target_menu then
+						if l_pebble /= Void and then mode_is_configurable_target_menu then
 							l_configure_agent := agent real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-						application_imp.create_target_menu (interface, pebble, l_configure_agent)
-					elseif pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
-						if application_imp.ctrl_pressed and then drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
-							drop_actions_internal.call ([pebble])
+						application_imp.create_target_menu (a_x, a_y, interface, l_pebble, l_configure_agent)
+					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
+						if application_imp.ctrl_pressed and then drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (l_pebble) then
+							drop_actions_internal.call ([l_pebble])
 						else
 							real_start_transport (a_x, a_y, a_button, a_x_tilt,
 								a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-					elseif pebble /= Void and then mode_is_drag_and_drop and a_button = 1 then
+					elseif l_pebble /= Void and then mode_is_drag_and_drop and a_button = 1 then
 						if not awaiting_movement then
 								-- Store arguments so they can be passed to
 								-- real_start_transport.

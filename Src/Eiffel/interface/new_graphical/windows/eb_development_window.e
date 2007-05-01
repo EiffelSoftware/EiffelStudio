@@ -1776,7 +1776,6 @@ feature {NONE} -- Recycle
 				refactoring_manager.destroy
 			end
 
-			recycle_tools
 			history_manager := Void
 			favorites_manager := Void
 			cluster_manager := Void
@@ -1792,6 +1791,7 @@ feature {NONE} -- Recycle
 				docking_manager.destroy
 				docking_manager := Void
 			end
+			recycle_tools
 		end
 
 	recycle_command is

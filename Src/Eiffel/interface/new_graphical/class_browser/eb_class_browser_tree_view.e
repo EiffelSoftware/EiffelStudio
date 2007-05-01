@@ -59,20 +59,17 @@ feature -- Status report
 
 feature -- Access
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		do
 			if control_tool_internal = Void then
-				create control_tool_internal
-				control_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
-				control_tool_bar.extend (display_path_button)
+				create control_tool_internal.make (4)
+				control_tool_internal.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
+				control_tool_internal.extend (display_path_button)
 				if is_flat_view_enabled then
-					control_tool_bar.extend (normal_referenced_button)
-					control_tool_bar.extend (syntactical_button)
+					control_tool_internal.extend (normal_referenced_button)
+					control_tool_internal.extend (syntactical_button)
 				end
-				control_tool_internal.set_padding (2)
-				control_tool_internal.extend (control_tool_bar)
-				control_tool_internal.disable_item_expand (control_tool_bar)
 			end
 			Result := control_tool_internal
 		ensure then
@@ -633,7 +630,7 @@ feature{NONE} -- Implementation
 	class_table_internal: like class_table
 			-- Implementation of `class_table'		
 
-	control_tool_internal: EV_HORIZONTAL_BOX
+	control_tool_internal: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Implementation of `control_bar'
 
 	display_path_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is

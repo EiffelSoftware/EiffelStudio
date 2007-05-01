@@ -38,26 +38,21 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Widget of a control bar through which, certain control can be performed upon current view
-		local
-			l_tool_bar: SD_TOOL_BAR
 		do
 			if control_tool_bar = Void then
-				create control_tool_bar
-				create l_tool_bar.make
-				l_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
-				l_tool_bar.extend (show_tooltip_button)
-				control_tool_bar.set_padding (2)
-				control_tool_bar.extend (l_tool_bar)
-				control_tool_bar.disable_item_expand (l_tool_bar)
+				create control_tool_bar.make (2)
+
+				control_tool_bar.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
+				control_tool_bar.extend (show_tooltip_button)
 			end
 			Result := control_tool_bar
 		ensure then
 			result_attached: Result /= Void
 		end
 
-	control_tool_bar: EV_HORIZONTAL_BOX
+	control_tool_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Implementation of `control_bar'
 
 	version_count: INTEGER

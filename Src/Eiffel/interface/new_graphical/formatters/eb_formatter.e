@@ -98,7 +98,7 @@ feature -- Properties
 			result_valid: Result.any_generator /= Void and then (Result.name /= Void and then not Result.name.is_empty)
 		end
 
-	control_bar: EV_WIDGET is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Possible area to display a tool bar
 		deferred
 		end

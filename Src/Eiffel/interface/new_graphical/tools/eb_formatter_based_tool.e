@@ -225,30 +225,40 @@ feature -- Setting
 
 	ensure_formatter_display (a_formatter: EB_FORMATTER) is
 			-- Ensure that `a_formatter' is displayed in Current tool.
-		require
-			a_formatter_attached: a_formatter /= Void
-			a_formatter_exists: formatters.has (a_formatter)
-			a_formatter_selected: a_formatter.selected
 		local
-			l_control_bar: EV_WIDGET
+			l_control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_formatter_widget: EV_WIDGET
+			l_target_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_index, l_predefined_count: INTEGER
 		do
 			l_formatter_widget := a_formatter.widget
 			l_control_bar := a_formatter.control_bar
 			if not formatter_container.has (l_formatter_widget) then
-
 				formatter_container.replace (l_formatter_widget)
 			end
 
-			if l_control_bar /= Void and then not formatter_tool_bar_area.has (l_control_bar) then
-				formatter_tool_bar_area.wipe_out
+			clear_control_bar_butons (tool_bar)
 
-				formatter_tool_bar_area.extend (l_control_bar)
-				formatter_tool_bar_area.disable_item_expand (l_control_bar)
-				l_control_bar.show
+			if l_control_bar /= Void and then l_control_bar.count > 0 then
+				if not tool_bar.has (l_control_bar.first) then
+					from
+						l_predefined_count := predefined_formatters.count
+						l_control_bar.start
+					until
+						l_control_bar.after
+					loop
+						-- We make sure customize formatter buttons are show after option buttons.
+						-- And option buttons show after the predefined buttons.
+						-- For example, for Dependency Tool, the predefined buttons are `Client' and `Suppliers'.
+						l_index := l_control_bar.index + l_predefined_count
+						check buttons_ahead: tool_bar.items.valid_index (l_index - 1) end
+						tool_bar.force (l_control_bar.item, l_index)
 
+						l_control_bar.forth
+					end
+					tool_bar.compute_minimum_size
+				end
 			end
-
 		end
 
 	force_last_stone is
@@ -576,7 +586,7 @@ feature{NONE} -- Implementation
 	history_toolbar: SD_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: SD_WIDGET_TOOL_BAR
 			-- Toolbar containing all buttons.
 
 	tool_bar_area: EV_HORIZONTAL_BOX
@@ -599,6 +609,42 @@ feature{NONE} -- Implementation
 
 	empty_widget_internal: like empty_widget
 			-- Implementation of `empty_widget'
+
+	clear_control_bar_butons (a_tool_bar: SD_TOOL_BAR) is
+			-- Clear previous `control_bar' buttons from a formatter.
+		require
+			not_void: a_tool_bar /= Void
+		local
+			l_predefind, l_customized: INTEGER
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_parent: EV_CONTAINER
+		do
+			l_predefind := predefined_formatters.count
+			l_customized := customized_formatters.count
+
+			from
+				l_items := a_tool_bar.items
+				l_items.go_i_th (l_predefind)
+			until
+				l_items.after or l_items.index + l_customized >= l_items.count
+			loop
+				l_items.forth
+
+				if not l_items.after then
+					a_tool_bar.prune (l_items.item)
+					l_widget_item ?= l_items.item
+					if l_widget_item /= Void then
+						l_parent := l_widget_item.widget.parent
+						if l_parent /= Void then
+							l_parent.prune (l_widget_item.widget)
+						end
+					end
+				end
+			end
+
+			a_tool_bar.compute_minimum_size
+		end
 
 feature{NONE} -- Actions
 
@@ -731,7 +777,7 @@ feature{NONE} -- Implementation
 			l_cell: EV_CELL
 			l_setup_toolbar: SD_TOOL_BAR
 		do
-			create tool_bar.make
+			create tool_bar.make (create {SD_TOOL_BAR}.make)
 			create l_cell
 			create l_setup_toolbar.make
 			tool_bar_area.extend (tool_bar)
@@ -793,7 +839,7 @@ feature{NONE} -- Implementation
 		require
 			a_formatter_attached: a_formatter /= Void
 		local
-			l_control_bar: EV_WIDGET
+			l_control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			a_formatter.set_widget_owner (Current)
 			a_formatter.set_viewpoints (viewpoints)
@@ -801,9 +847,17 @@ feature{NONE} -- Implementation
 			a_formatter.set_output_line (output_line)
 			if a_formatter.selected then
 				l_control_bar := a_formatter.control_bar
-				if l_control_bar /= Void then
-					formatter_tool_bar_area.extend (l_control_bar)
-					formatter_tool_bar_area.disable_item_expand (l_control_bar)
+				if l_control_bar /= Void and then l_control_bar.count > 0 then
+					from
+						l_control_bar.start
+					until
+						l_control_bar.after
+					loop
+						tool_bar.extend (l_control_bar.item)
+						l_control_bar.forth
+					end
+
+					tool_bar.compute_minimum_size
 				end
 			end
 		end

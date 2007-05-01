@@ -213,6 +213,12 @@ feature -- Access
 		deferred
 		end
 
+	transport_in_progress: BOOLEAN
+			-- Is a Pick and Drop transport currently in progress?
+		do
+			Result := pick_and_drop_source /= Void
+		end
+
 feature -- Element Change
 
 	set_invoke_garbage_collection_when_inactive (a_enabled: BOOLEAN)
@@ -516,7 +522,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]) is
+	create_target_menu (a_x, a_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -534,6 +540,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
 			l_has_targets: BOOLEAN
+			l_widget: EV_WIDGET
 		do
 			if not shift_pressed then
 				targets := pnd_targets
@@ -616,9 +623,13 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						end
 					end
 					if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
-						l_menu.show
+						l_widget ?= a_pnd_source
+						if l_widget /= Void then
+							l_menu.show_at (l_widget, a_x, a_y)
+						else
+							l_menu.show
+						end
 					elseif a_configure_agent /= Void then
-
 						a_configure_agent.call (Void)
 					end
 				else
@@ -626,7 +637,12 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						create l_menu
 						a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
 						if not l_menu.is_destroyed and then l_menu.count > 0 then
-							l_menu.show
+							l_widget ?= a_pnd_source
+							if l_widget /= Void then
+								l_menu.show_at (l_widget, a_x, a_y)
+							else
+								l_menu.show
+							end
 						end
 					end
 				end

@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			create drop_actions
+			create show_actions
+
 			internal_user_widget := a_widget
 			internal_user_widget.set_minimum_size (0, 0)
 			internal_unique_title := a_unique_title
@@ -496,6 +498,9 @@ feature -- Actions
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Drop actions to performed when user drop a pebble on notebook tab.
 
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perform when `user_widget' is shown.
+
 feature -- Command
 
 	close is
@@ -698,6 +703,8 @@ invariant
 
 	the_user_widget_not_void: internal_user_widget /= Void
 	internal_shared_not_void: internal_shared /= Void
+	drop_actions_not_void: show_actions /= Void
+	show_actions_not_void: show_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

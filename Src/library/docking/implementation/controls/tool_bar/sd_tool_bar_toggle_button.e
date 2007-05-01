@@ -35,7 +35,7 @@ feature -- Query
 	is_selected: BOOLEAN is
 			-- If current selected?
 		do
-			Result := state = {SD_TOOL_BAR_ITEM_STATE}.checked
+			Result := state = {SD_TOOL_BAR_ITEM_STATE}.checked or state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked
 		end
 
 feature -- Command

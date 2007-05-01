@@ -146,8 +146,12 @@ feature -- Command
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
+
+			if not internal_docking_manager.property.is_opening_config then
+				a_content.show_actions.call ([])
+			end
 		ensure
-			selectd: selected_item = a_content
+			selected: selected_item = a_content
 		end
 
 	extend (a_content: SD_CONTENT) is
@@ -201,6 +205,7 @@ feature -- Command
 				end
 
 				select_item (internal_contents.item, a_focus)
+
 				if a_focus then
 					selection_actions.call (Void)
 				end

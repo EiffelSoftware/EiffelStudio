@@ -467,8 +467,13 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
 	redraw_selected is
 			-- Redraw selected.
+		local
+			l_drawer: like internal_tab_drawer
 		do
-			internal_tab_drawer.expose_selected (internal_width, info)
+			l_drawer := internal_tab_drawer
+			if l_drawer /= Void then
+				internal_tab_drawer.expose_selected (internal_width, info)
+			end
 		end
 
 	draw_focus_rect is
@@ -577,13 +582,16 @@ feature {NONE}  -- Implementation attributes
 	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
 			-- Drawer of Current
 		do
-			Result := internal_shared.notebook_tab_drawer
-			Result.set_drawing_area (Current)
-			Result.set_is_draw_at_top (is_draw_top_tab)
-			Result.set_selected (is_selected, is_focused)
-			Result.set_text (text)
-			Result.set_pixmap (pixmap)
-			Result.set_enough_space (is_enough_space)
+			-- `interal_shared' cannot be void, but in fact, it maybe void when running. See bug#12519.
+			if internal_shared /= Void  then
+				Result := internal_shared.notebook_tab_drawer
+				Result.set_drawing_area (Current)
+				Result.set_is_draw_at_top (is_draw_top_tab)
+				Result.set_selected (is_selected, is_focused)
+				Result.set_text (text)
+				Result.set_pixmap (pixmap)
+				Result.set_enough_space (is_enough_space)
+			end
 		end
 
 invariant

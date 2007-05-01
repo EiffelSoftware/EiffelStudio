@@ -967,6 +967,7 @@ feature {EV_ANY_I} -- Implementation
 			an_item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
 			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
+			l_pebble_function: FUNCTION [ANY, TUPLE, ANY]
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -990,11 +991,18 @@ feature {EV_ANY_I} -- Implementation
 							-- perform the pebble query the first time, before the
 							-- transport has started.
 						if application_imp.pick_and_drop_source = Void then
+							l_pebble_function := widget_imp.pebble_function
 							widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
 								wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
+
 						end
 						if widget_imp.pebble /= Void then
 							Result := widget_imp
+						end
+						if l_pebble_function /= Void then
+							l_pebble_function.clear_last_result
+							widget_imp.remove_pebble
+							widget_imp.set_pebble_function (l_pebble_function)
 						end
 						item_list_imp ?= widget_imp
 						if item_list_imp /= Void then
@@ -1002,8 +1010,9 @@ feature {EV_ANY_I} -- Implementation
 								- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
 							if an_item_imp /= Void then
 										--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
-									an_item_imp.call_pebble_function (0, 0, wel_point.x, wel_point.y)
-								if an_item_imp.pebble /= Void then--or pebble_result /= Void then
+								l_pebble_function := an_item_imp.pebble_function
+								an_item_imp.call_pebble_function (0, 0, wel_point.x, wel_point.y)
+								if an_item_imp.pebble /= Void then
 										-- If the cursor is over an item and the item is a
 										-- pick and drop target then we set the target id to that of the
 										-- item, as the items are conceptually 'above' the list and so
@@ -1014,6 +1023,11 @@ feature {EV_ANY_I} -- Implementation
 									if sensitive = Void or (sensitive /= Void and then sensitive.is_sensitive) then
 										Result := an_item_imp
 									end
+								end
+								if l_pebble_function /= Void then
+									l_pebble_function.clear_last_result
+									an_item_imp.remove_pebble
+									an_item_imp.set_pebble_function (l_pebble_function)
 								end
 							end
 						end

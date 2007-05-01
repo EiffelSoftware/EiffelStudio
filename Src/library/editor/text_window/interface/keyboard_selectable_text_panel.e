@@ -913,7 +913,7 @@ feature {NONE} -- Implementation
 	ignore_keyboard_input: BOOLEAN is
 			-- Ignore keyboard events?
 		do
-			Result := text_displayed.is_empty or else editor_drawing_area.pebble /= Void
+			Result := text_displayed.is_empty or else ev_application.transport_in_progress
 		end
 
 	check_position (a_cursor: like cursor_type) is

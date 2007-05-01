@@ -267,6 +267,14 @@ feature -- Status report
 			bridge_ok: Result = implementation.focused_widget
 		end
 
+	transport_in_progress: BOOLEAN
+			-- Is a Pick and Drop transport currently in progress?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.transport_in_progress
+		end
+
 	ctrl_pressed: BOOLEAN is
 			-- Is ctrl key currently pressed?
 		require

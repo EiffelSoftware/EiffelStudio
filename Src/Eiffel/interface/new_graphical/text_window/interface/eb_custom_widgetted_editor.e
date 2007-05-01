@@ -450,8 +450,10 @@ feature {NONE} -- Implementation
 			-- Recycle
 		do
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
-			search_tool.first_result_reached_actions.prune_all (first_result_reached_action)
-			search_tool.bottom_reached_actions.prune_all (bottom_reached_action)
+			if search_tool /= Void then
+				search_tool.first_result_reached_actions.prune_all (first_result_reached_action)
+				search_tool.bottom_reached_actions.prune_all (bottom_reached_action)
+			end
 			search_bar.destroy
 			Precursor {EB_EDITOR}
 		end

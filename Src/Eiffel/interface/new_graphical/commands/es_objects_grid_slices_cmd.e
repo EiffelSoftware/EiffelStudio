@@ -146,7 +146,7 @@ feature -- Basic operations
 	is_resizable (st: ANY): BOOLEAN is
 			-- Is the object represented by `st' droppable, i.e. SPECIAL?
 		local
-			obj_grid_item: ES_OBJECTS_GRID_LINE
+			obj_grid_item: like object_grid_line_for
 			conv_obj: OBJECT_STONE
 			conv_fost: FEATURE_ON_OBJECT_STONE
 		do
@@ -161,7 +161,7 @@ feature -- Basic operations
 			Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
 		end
 
-	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_LINE is
+	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_OBJECT_LINE is
 			-- Object grid line related to `ost if any.
 		local
 			l_item: EV_ANY
@@ -172,10 +172,10 @@ feature -- Basic operations
 				if l_item /= Void then
 					Result ?= l_item.data
 				end
-				if Result = Void	then
+				if Result = Void then
 					l_addr := ost.object_address
 					if tool /= Void	and l_addr /= Void then
-						Result := tool.objects_grid_item (l_addr)
+						Result := tool.objects_grid_object_line (l_addr)
 					end
 				end
 			end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			-- Did the user really enter new min/max values in the dialog box?
 			-- Valid after each call to get_slice_limits.
 
-	get_slice_limits_on_target (obj_grid_item: ES_OBJECTS_GRID_LINE) is
+	get_slice_limits_on_target (obj_grid_item: ES_OBJECTS_GRID_OBJECT_LINE) is
 		do
 			get_slice_limits (False, obj_grid_item)
 		end
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			get_slice_limits (True, Void)
 		end
 
-	get_slice_limits (def: BOOLEAN; obj: ES_OBJECTS_GRID_LINE) is
+	get_slice_limits (def: BOOLEAN; obj: ES_OBJECTS_GRID_OBJECT_LINE) is
 			-- Display a dialog box to enter new slice limits
 			-- as default values if `def',
 			-- as object specific values otherwise,
@@ -244,6 +244,7 @@ feature {NONE} -- Implementation
 			maincont: EV_VERTICAL_BOX
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
+			w: EV_WINDOW
 		do
 				-- Build the dialog.
 			create dial
@@ -422,7 +423,11 @@ feature {NONE} -- Implementation
 			debug ("debugger_interface")
 				io.put_string ("displaying the dialog%N")
 			end
-			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+			w := tool.parent_window
+			if w = Void then
+				w := window_manager.last_focused_development_window.window
+			end
+			dial.show_modal_to_window (w)
 		end
 
 	on_cb_disp_str_limit_cb (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD) is
@@ -457,7 +462,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 		require
 			st_not_void: st /= Void
 		local
-			obj_grid_item: ES_OBJECTS_GRID_LINE
+			obj_grid_item: like object_grid_line_for
 			spec_cap: INTEGER
 		do
 			debug ("debugger_interface")

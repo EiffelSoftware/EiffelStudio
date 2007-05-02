@@ -15,6 +15,8 @@ inherit
 			init
 		end
 
+	DEBUG_EXT
+
 	RECV_VALUE
 		rename
 			error as recv_error
@@ -155,6 +157,53 @@ feature {DBG_EVALUATOR} -- Interface
 				end
 			else
 				notify_error (cst_error_occurred, "Once feature " + f.feature_name + ": not yet called")
+			end
+		end
+
+	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+			-- create an empty instance of `a_type_i' in the context of object's type `a_curr_obj_typeid'
+		local
+			l_gens: ARRAY [TYPE_I]
+			l_gens_nb: INTEGER
+--			t: TYPE_I
+--			i: INTEGER
+--			b: BOOLEAN
+--			c_string: C_STRING
+		do
+			l_gens := a_type_i.true_generics
+			if l_gens /= Void then
+				l_gens_nb := l_gens.count
+			end
+			if l_gens_nb > 0 then
+				notify_error (cst_error_occurred, "Instance creation of generic class {" + a_type_i.name + "} is not yet implemented for classic system.")
+--| FIXME: complete implementation for generic soon.
+--				send_rqst_3_integer (Rqst_new_instance, a_type_i.associated_class_type.type_id - 1, a_curr_obj_typeid - 1, l_gens_nb)				
+--				check l_gens /= Void end
+--				from
+--					i := l_gens.lower
+--				until
+--					i > l_gens.upper
+--				loop
+--					t := l_gens[i]
+----					c_twrite (integer_to_pointer (100 + i), (create {PLATFORM}).Integer_bytes)
+----					send_integer_32_value (100 + i)
+--					create c_string.make ((100 + i).out)
+--					c_send_str (c_string.item)
+----					c_send_sized_str (c_string.item, c_string.count)
+--					i := i + 1
+--				end
+--				b := recv_ack
+			else
+				send_rqst_3_integer (Rqst_new_instance, a_type_i.associated_class_type.type_id - 1, a_curr_obj_typeid - 1, l_gens_nb)
+				reset_recv_value
+				recv_value (Current)
+				if item /= Void then
+					item.set_hector_addr
+					last_result_value := item.dump_value
+					reset_recv_value
+				else
+					notify_error (cst_error_occurred, "Instance creation of class {" + a_type_i.name + "} raised an error.")
+				end
 			end
 		end
 

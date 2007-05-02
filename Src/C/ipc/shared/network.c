@@ -180,7 +180,7 @@ closed:
 	 * polite enough to send a 'bye' request and wait for us to receive it.
 	 */
 
-	errno = EPIPE;				/* conntection is broken */
+	errno = EPIPE;				/* connection is broken */
 	KillTimer (NULL, timer);	/* stop alarm clock */
 
   	return -1;

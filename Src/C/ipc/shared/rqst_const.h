@@ -88,8 +88,9 @@
 #define CLEAR_BREAKPOINTS 46	/* Clear breakpoints table */
 #define DBG_EXCEPTION_TRACE 47	/* Get exception trace by id */
 #define APPLICATION_ENV	48		/* Send current env to launch application */
+#define NEW_INSTANCE	49		/* Create new instance of class */
 
-#define MAX_REQUEST_TYPE 48		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 49		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

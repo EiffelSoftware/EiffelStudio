@@ -212,6 +212,8 @@ feature {NONE} -- INSTR_B evaluation
 		end
 
 	evaluate_call_b (a_call_b: CALL_B) is
+		require
+			a_call_b /= Void
 		local
 			l_access_b: ACCESS_B
 			l_nested_b: NESTED_B
@@ -228,6 +230,26 @@ feature {NONE} -- INSTR_B evaluation
 				end
 			end
 		end
+
+--| Keep this commented code for later use.		
+--	standalone_evaluation_expr_b (a_expr_b: EXPR_B): DUMP_VALUE
+--			-- (export status {NONE})
+--		require
+--			a_expr_b /= Void
+--		local
+--			l_tmp_result_value_backup: like tmp_result_value
+--			l_tmp_target_backup: like tmp_target
+--			l_tmp_result_static_type_backup: like tmp_result_static_type
+--		do
+--			l_tmp_result_value_backup := tmp_result_value
+--			l_tmp_target_backup := tmp_target
+--			l_tmp_result_static_type_backup := tmp_result_static_type
+--			evaluate_expr_b (a_expr_b)
+--			Result := tmp_result_value
+--			tmp_result_value := l_tmp_result_value_backup
+--			tmp_target := l_tmp_target_backup
+--			tmp_result_static_type := l_tmp_result_static_type_backup
+--		end		
 
 feature {NONE} -- EXPR_B evaluation
 
@@ -366,13 +388,48 @@ feature {NONE} -- EXPR_B evaluation
 			-- Manifest Tuple
 		require
 			a_tuple_const_b_not_void: a_tuple_const_b /= Void
---		local
+		local
 --			l_values: ARRAY [DUMP_VALUE]
 --			l_byte_list: LIST [BYTE_NODE]
 --			l_expr_b: EXPR_B
 --			i: INTEGER
 --			dv: DUMP_VALUE
+--			exp: EB_EXPRESSION
+--			l_class: CLASS_C
+--			l_feat_i: FEATURE_I
+--			l_value: like tmp_result_value
+--			bak_tmp_target: like tmp_target
 		do
+--| FIXME jfiat [2007/05/02] : Keep commented line, since this is a first try to create manifest tuple...
+--			create_empty_instance_of (a_tuple_const_b.type)
+--			if not error_occurred then
+--				l_value := tmp_result_value
+--				bak_tmp_target := tmp_target
+--				l_class := l_value.dynamic_class
+--				l_feat_i := l_class.default_create_feature
+--				tmp_target := l_value
+--				evaluate_routine (tmp_target.address, tmp_target, l_class, l_feat_i, Void)
+--				tmp_result_value := l_value
+--				tmp_result_static_type := l_class
+--				tmp_target := bak_tmp_target
+--			end
+--------| For instance  [123, "abc"] on .NET
+--------|
+--------|	    RT_TUPLE_TYPE rt_tuple_type1 = new RT_TUPLE_TYPE();
+--------|	    RT_TYPE[] rt_typeArray1 = new RT_TYPE[2];
+--------|	    new RT_BASIC_TYPE().set_type((RuntimeTypeHandle) int);
+--------|	    rt_typeArray1[0] = new RT_BASIC_TYPE();
+--------|	    new RT_CLASS_TYPE().set_type((RuntimeTypeHandle) STRING_8);
+--------|	    rt_typeArray1[1] = new RT_CLASS_TYPE();
+--------|	    rt_tuple_type1.set_generics(rt_typeArray1);
+--------|	    rt_tuple_type1.set_type((RuntimeTypeHandle) TUPLE);
+--------|	    TUPLE tuple = new TUPLE((RT_GENERIC_TYPE) rt_tuple_type1.evaluated_type(Current.____type()));
+--------|	    tuple.default_create();
+--------|	    tuple.put(0x7b, 1);
+--------|	    STRING_8 v = new STRING_8();
+--------|	    v.make_from_cil("abc");
+--------|	    tuple.put(v, 2);
+
 --			l_byte_list := a_tuple_const_b.expressions
 --			if l_byte_list.count > 0 then
 --				create l_values.make (1, l_byte_list.count)
@@ -767,7 +824,6 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			l_type_to_create := a_creation_expr_b.info.type_to_create
 			if not retried then
-				fixme ("2004/03/18 for now we just process basic type ..., to improve ...")
 				if l_type_to_create /= Void and then l_type_to_create.is_basic then
 					l_f_b ?= a_creation_expr_b.call
 					if l_f_b /= Void and then l_f_b.parameters /= Void then
@@ -786,7 +842,13 @@ feature {NONE} -- EXPR_B evaluation
 						end
 					end
 				else
-					l_has_error := True
+					if l_type_to_create /= Void then
+						evaluate_creation_expr_b_with_type (a_creation_expr_b, l_type_to_create)
+						l_has_error := error_occurred
+					else
+						fixme ("2004/03/18 for now we just process basic type ..., to improve ...")
+						l_has_error := True
+					end
 				end
 			else
 				l_has_error := True
@@ -803,6 +865,41 @@ feature {NONE} -- EXPR_B evaluation
 		rescue
 			retried := True
 			retry
+		end
+
+	evaluate_creation_expr_b_with_type (a_creation_expr_b: CREATION_EXPR_B; a_type_i: CL_TYPE_I) is
+			-- (export status {NONE})
+		require
+			a_type_i_not_void: a_type_i /= Void
+		local
+			l_tmp_target_backup: like tmp_target
+			l_call_value: DUMP_VALUE
+			l_call: CALL_B
+			l_curr_obj_typeid: INTEGER
+		do
+			l_tmp_target_backup := tmp_target
+			if tmp_target /= Void and then tmp_target.dynamic_class_type /= Void then
+				l_curr_obj_typeid := tmp_target.dynamic_class_type.type_id
+			elseif context_class_type /= Void then
+				l_curr_obj_typeid := context_class_type.type_id
+			end
+			if a_type_i.has_associated_class_type then
+				create_empty_instance_of (a_type_i, l_curr_obj_typeid)
+			else
+				notify_error_evaluation ("Can not instanciate class {" + a_type_i.name + "} (not compiled)%N")
+			end
+			if not error_occurred then
+				tmp_target := tmp_result_value
+				l_call_value := tmp_target
+				l_call := a_creation_expr_b.call
+				if l_call /= Void then
+					evaluate_call_b (l_call)
+				end
+				if not error_occurred then
+					tmp_result_value := l_call_value
+				end
+			end
+			tmp_target := l_tmp_target_backup
 		end
 
 	evaluate_tuple_access_b (a_tuple_access_b: TUPLE_ACCESS_B) is
@@ -1284,6 +1381,17 @@ feature {NONE} -- Concrete evaluation
 				Dbg_evaluator.evaluate_function_with_name (l_addr, a_target, a_feature_name, a_external_name, params)
 				retrieve_evaluation
 			end
+		end
+
+	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+			-- New empty instance of class represented by `a_type_id'.
+		require
+			a_type_i_not_void: a_type_i /= Void
+			a_type_i_compiled: a_type_i.has_associated_class_type
+		do
+			prepare_evaluation
+			Dbg_evaluator.create_empty_instance_of (a_type_i, a_curr_obj_typeid)
+			retrieve_evaluation
 		end
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data

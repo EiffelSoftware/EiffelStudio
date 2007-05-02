@@ -124,6 +124,7 @@ rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type);
+rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid, int currtypeid, int generic_nb);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
@@ -227,6 +228,9 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_prepare();
 		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 		dthread_restore();
+		break;
+	case NEW_INSTANCE:
+		dbg_new_instance_of_type (sp, (int) arg_1, (int) arg_2, (int) arg_3);
 		break;
 	case DBG_EXCEPTION_TRACE:
 		dbg_exception_trace(sp, (int) arg_1);
@@ -1602,6 +1606,88 @@ rt_private void opush_dmpitem(struct item *item)
 		}
 	opush(item);
 	}
+
+rt_private EIF_BOOLEAN app_recv_ack (EIF_PSTREAM sp)
+{
+	Request pack;
+
+	Request_Clean (pack);
+#ifdef EIF_WINDOWS
+	if (-1 == app_recv_packet(sp, &pack, TRUE))
+#else
+	if (-1 == app_recv_packet(sp, &pack))
+#endif
+		return (EIF_BOOLEAN) 0;
+
+	switch (pack.rq_type) {
+	case ACKNLGE:
+
+		switch (pack.rq_ack.ak_type) {
+		case AK_OK:
+			return (EIF_BOOLEAN) 1;
+		case AK_ERROR:
+			return (EIF_BOOLEAN) 0;
+		default:
+			return (EIF_BOOLEAN) 0;
+		}
+	default:
+		return (EIF_BOOLEAN) 0;
+	}
+}
+
+rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid, int currtypeid, int generic_nb)
+{
+	/* Must be the typeid of a Reference class */
+
+	GTCX
+	struct item *ip;
+	Request rqst;				/* What we send back */
+	struct dump dumped;			/* Item returned */
+	EIF_REFERENCE tp1 = NULL;
+	EIF_REFERENCE loc1 = (EIF_REFERENCE) 0;
+	EIF_BOOLEAN is_ok = EIF_TRUE;
+
+	/* printf("[RT] dbg_new_instance_of_type (.., %d, %d, %d)\n", typeid, currtypeid, generic_nb); */
+/*** FIXME jfiat [2007/04/27] : generic case ... for later
+	char* p;
+	int i;
+	if (generic_nb > 0) {
+		for (i = 1; i <= generic_nb; i++) {
+			printf("[RT] dbg_new_instance_of_type : get generic <%d/%d>\n", i, generic_nb);
+			p = tread (sp, NULL);
+			printf("[RT] dbg_new_instance_of_type : get generic done <%d>\n", i);
+		}
+		send_ack(sp, AK_OK);
+		is_ok = EIF_TRUE;
+		printf("[RT] dbg_new_instance_of_type : get generics done <%d>\n", generic_nb);
+	}
+***/
+	
+	RTGC;
+
+
+	ip = (struct item*) malloc (sizeof (struct item));
+	memset (ip, 0, sizeof(struct item));	
+	if (is_ok == EIF_TRUE) {
+		tp1 = RTLN(RTUD(typeid));
+		loc1 = (EIF_REFERENCE)RTCCL(tp1);
+
+		ip->it_ref = (EIF_REFERENCE) loc1;
+		ip->type = SK_REF | Dtype(ip->it_ref);
+		ip->it_addr = NULL;
+	} else {
+		ip->it_ref = (EIF_REFERENCE) 0;
+		ip->type = SK_VOID;
+		ip->it_addr = NULL;
+	}
+
+	Request_Clean (rqst);
+	rqst.rq_type = DUMPED;			/* A dumped stack item */
+	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
+	dumped.dmp_item = ip;
+	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
+	app_send_packet(sp, &rqst);		/* Send to network */
+}
 
 rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_precompiled, int is_basic_type)
 {

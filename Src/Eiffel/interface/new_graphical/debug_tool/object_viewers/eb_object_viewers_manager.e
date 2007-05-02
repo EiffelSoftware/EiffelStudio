@@ -242,7 +242,7 @@ feature -- Change
 		local
 			l_item: EV_ANY
 			l_dv: ABSTRACT_DEBUG_VALUE
-			l_line: ES_OBJECTS_GRID_LINE
+			l_line: ES_OBJECTS_GRID_OBJECT_LINE
 		do
 			clear
 			current_object := st

@@ -178,6 +178,15 @@ feature {DBG_EVALUATOR} -- Interface
 		deferred
 		end
 
+	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+		require
+			a_type_i_not_void: a_type_i /= Void
+			a_type_i_compiled: a_type_i.has_associated_class_type
+		deferred
+		end
+
+feature {DBG_EVALUATOR} -- Query		
+
 	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
 			-- Associated _REF classtype for type `cl'
 			--| for instance return INTEGER_REF for INTEGER

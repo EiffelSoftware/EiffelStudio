@@ -42,32 +42,40 @@ feature {ICOR_EXPORTER} -- Access
 			 -- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
 		require
 			func_not_void: a_func /= Void
-			args_not_void: a_args /= Void
 		local
 			l_mp_args: MANAGED_POINTER
+			l_args_count: INTEGER
+			l_args_pointer: POINTER
 			l_pointer_size: INTEGER
 			i: INTEGER
 			l_arg: ICOR_DEBUG_VALUE
 			l_arg_pointer: POINTER
 		do
-			l_pointer_size := (create {PLATFORM}).Pointer_bytes
-			create l_mp_args.make (a_args.count * l_pointer_size)
-			from
-				i := a_args.lower
-			until
-				i > a_args.upper
-			loop
-				l_arg := a_args.item (i)
-				if l_arg = Void then
-					l_arg := create_void_reference
-				end
-				l_arg_pointer := l_arg.item
+			if a_args /= Void and then a_args.count > 0 then
+				l_pointer_size := (create {PLATFORM}).Pointer_bytes
+				create l_mp_args.make (a_args.count * l_pointer_size)
+				from
+					i := a_args.lower
+				until
+					i > a_args.upper
+				loop
+					l_arg := a_args.item (i)
+					if l_arg = Void then
+						l_arg := create_void_reference
+					end
+					l_arg_pointer := l_arg.item
 
-				l_mp_args.put_pointer (l_arg_pointer, (i - a_args.lower) * l_pointer_size)
-				i := i + 1
+					l_mp_args.put_pointer (l_arg_pointer, (i - a_args.lower) * l_pointer_size)
+					i := i + 1
+				end
+				l_args_pointer := l_mp_args.item
+				l_args_count := a_args.count
+			else
+				--| l_args_pointer is Null (Default_pointer)
+				--| l_args_count is 0
 			end
 
-			last_call_success := cpp_call_function (item, a_func.item, a_args.count, l_mp_args.item)
+			last_call_success := cpp_call_function (item, a_func.item, l_args_count, l_args_pointer)
 
 --			debug ("DEBUGGER_TRACE_EVAL")
 --				print ("ICOR_DEBUG_EVAL.call_function : " +a_func.to_string + "%N%T=> return code = " + last_call_success.out + "%N")

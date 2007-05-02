@@ -1,5 +1,5 @@
 indexing
-	description: "TTY debugger's controller."
+	description: "Objects that represent constants used by ES_OBJECTS_GRID_SPECIFIC_LINE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -7,57 +7,16 @@ indexing
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_CONTROLLER
+	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
 
-inherit
-	DEBUGGER_CONTROLLER
-		redefine
-			manager,
-			if_confirmed_do,
-			discardable_if_confirmed_do,
-			activate_debugger_environment
-		end
+feature -- Constants
 
-feature
-
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
-		local
-			is_yes: BOOLEAN
-		do
-			localized_print (msg.as_string_32 + " [y/n] ?")
-			io.read_line
-			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
-			if is_yes then
-				a_action.call (Void)
-			end
-		end
-
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
-		do
-			bp ?= preferences.preferences.get_preference (a_pref_string)
-			if bp /= Void and then bp.value then
-				a_action.call (Void)
-			else
-				if_confirmed_do (msg, a_action)
-			end
-		end
-
-	activate_debugger_environment (b: BOOLEAN) is
-		do
-			Precursor {DEBUGGER_CONTROLLER} (b)
-			if b then
-				localized_print (debugger_names.m_debugger_environment_started)
-			else
-				localized_print (debugger_names.m_debugger_environment_closed)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	manager: TTY_DEBUGGER_MANAGER;
+	Stack_id: INTEGER is 1
+	Current_object_id: INTEGER is 2
+	Arguments_id: INTEGER is 3
+	Locals_id: INTEGER is 4
+	Result_id: INTEGER is 5
+	Dropped_id: INTEGER is 6 ;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

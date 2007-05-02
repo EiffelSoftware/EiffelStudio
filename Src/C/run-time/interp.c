@@ -4289,11 +4289,12 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 
 	dynamic_eval (fid, stype, is_precompiled, is_basic_type, 0);
 
-	if (otop()!=previous_otop) {/* a result has been pushed on the stack */
+	if (otop()!=previous_otop) { /* a result has been pushed on the stack */
 		result = opop(); 
 		type = result->type & SK_HEAD;
-		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL))
+		if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {
 			result->type = type | Dtype(result->it_ref);
+		}
 	}
 
 	debug_mode = saved_debug_mode;

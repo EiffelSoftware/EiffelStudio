@@ -22,6 +22,24 @@ feature -- cmd specific
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
+feature -- Access
+
+	widget: EV_WIDGET is
+			-- Widget representing Current object.
+		deferred
+		end
+
+	parent_window: EV_WINDOW is
+			-- Parent EV_WINDOW if any.
+		local
+			w: EV_WIDGET
+		do
+			w := widget
+			if w /= Void then
+				Result := impl_parent_window (w)
+			end
+		end
+
 feature -- Refresh
 
 	refresh is
@@ -31,7 +49,7 @@ feature -- Refresh
 
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
+	objects_grid_object_line (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
 		require
 			valid_address: add /= Void
 		deferred
@@ -213,6 +231,21 @@ feature -- Clipboard related
 							empty_expression_cell.activate_with_string (text_data)
 						end
 					end
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	impl_parent_window (w: EV_WIDGET): EV_WINDOW is
+		local
+			p: EV_WIDGET
+		do
+			p := w.parent
+			if p /= Void then
+				Result ?= p
+				if Result = Void then
+					Result := impl_parent_window (p)
 				end
 			end
 		end

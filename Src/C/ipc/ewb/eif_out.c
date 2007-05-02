@@ -373,6 +373,27 @@ rt_public void send_bit_value(char *value)
 	send_dmpitem_request(&item);
 }
 
+rt_public void ewb_send_ack_ok(void)
+      		/* The socket descriptor */
+         	/* The acknowledgment code */
+{
+	/* Send an acknowledgment report. In case it is a negative one, the error
+	 * parameter gives some complementary informations. It is possible to
+	 * omit the third parameters for AK_OK or AK_DENIED reports.
+	 */
+
+	Request pack;		/* The answer we'll send back */
+
+	Request_Clean (pack);
+	pack.rq_type = ACKNLGE;				/* We are sending an acknowledgment */
+	pack.rq_ack.ak_type = AK_OK;		/* Report code */
+
+#ifdef USE_ADD_LOG
+	add_log(100, "sending ack %d on pipe %d", code, writefd (sp));
+#endif
+	ewb_send_packet (ewb_sp, &pack);
+}
+
 rt_public EIF_BOOLEAN recv_ack (void)
 {
 	Request pack;

@@ -120,6 +120,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ CLEAR_BREAKPOINTS, idr_void },
 	{ DBG_EXCEPTION_TRACE, idr_Opaque },
 	{ APPLICATION_ENV, idr_void },
+	{ NEW_INSTANCE, idr_Opaque },
 };
 
 /*

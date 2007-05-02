@@ -12,10 +12,17 @@ class
 inherit
 	REFACTORING_HELPER
 
-	ES_OBJECTS_GRID_MANAGER
+	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
 		rename
-			objects_grid_item as get_object_display_item
+			stack_id as position_stack,
+			current_object_id as position_current,
+			arguments_id as position_arguments,
+			locals_id as position_locals,
+			result_id as position_result,
+			dropped_id as position_dropped
 		end
+
+	ES_OBJECTS_GRID_MANAGER
 
 	EB_STONABLE_TOOL
 		rename
@@ -59,19 +66,7 @@ feature {NONE} -- Initialization
 			a_debugger_not_void: a_debugger /= Void
 		do
 			set_debugger_manager (a_debugger)
-
-			display_first_attributes := True
-			display_first_onces := False
-			display_first_special := True
-			display_first := True
-
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
-			create objects_grids.make (2)
-			create objects_grids_layout_initialized.make (2)
-			create objects_grids_empty.make (2)
-
-			create objects_grids_positions.make (Position_current, Position_objects)
-
 			make_tool (a_manager)
 		end
 
@@ -81,40 +76,112 @@ feature {NONE} -- Internal properties
 
 	second_grid_id: STRING is "2"
 
-	objects_grids_positions: ARRAY [STRING]
-
-	reset_objects_grids_positions_to_default is
+	reset_objects_grids_contents_to_default is
+		local
+			lst: LIST [INTEGER]
 		do
-			if objects_grids_positions = Void then
-				create objects_grids_positions.make (Position_current, Position_objects)
+			dropped_objects_grid := Void
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				lst := objects_grids.item_for_iteration.ids
+				lst.wipe_out
+				if objects_grids.key_for_iteration.is_equal (first_grid_id) then
+					lst.extend (position_stack)
+					lst.extend (position_current)
+					lst.extend (position_arguments)
+					lst.extend (position_locals)
+					lst.extend (position_result)
+					if dropped_objects_grid /= Void then
+						objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+					end
+					lst.extend (position_dropped)
+					dropped_objects_grid := objects_grids.item_for_iteration.grid
+				end
+				objects_grids.forth
 			end
-			objects_grids_positions[Position_current] 	:= first_grid_id
-			objects_grids_positions[Position_stack] 	:= first_grid_id
-			objects_grids_positions[Position_arguments] := first_grid_id
-			objects_grids_positions[Position_locals] 	:= first_grid_id
-			objects_grids_positions[Position_result] 	:= first_grid_id
-			objects_grids_positions[Position_objects] 	:= first_grid_id
 		end
 
-	Position_current: INTEGER is 1
-	Position_stack: INTEGER is 2
-	Position_arguments: INTEGER is 3
-	Position_locals: INTEGER is 4
-	Position_result: INTEGER is 5
-	Position_objects: INTEGER is 6
+	objects_grids_contents_to_array: ARRAY [STRING] is
+			--
+		local
+			lst: LIST [INTEGER]
+			res: ARRAYED_LIST [STRING]
+			nb: INTEGER
+			s: STRING
+		do
+			from
+				nb := 0
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				nb := nb + 1 + objects_grids.item_for_iteration.ids.count
+				objects_grids.forth
+			end
 
-	objects_grids: HASH_TABLE [ES_OBJECTS_GRID, STRING]
+			create res.make (nb)
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				s := objects_grids.key_for_iteration.twin
+				s.prepend_character ('#')
+				res.extend (s)
+				lst := objects_grids.item_for_iteration.ids
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					res.extend (lst.item.out)
+					lst.forth
+				end
+				objects_grids.forth
+			end
+			Result := res
+		ensure
+			Result_has_no_void_item: not Result.has (Void)
+		end
+
+	Position_entries: ARRAY [INTEGER] is
+		once
+			Result := <<
+							position_stack,
+							position_current,
+							position_arguments,
+							position_locals,
+							position_result,
+							position_dropped
+					>>
+		end
+
+	objects_grids: HASH_TABLE [like objects_grid_data, STRING]
 			-- Contains the stack and debugged objects grids
 
-	objects_grids_layout_initialized: HASH_TABLE [BOOLEAN, STRING]
-			-- Contains intialized status of grids
-			-- for optimisation
-
-	objects_grids_empty: HASH_TABLE [BOOLEAN, STRING]
-			-- Contains emptyness status of grids
-			-- for optimisation
-
 	objects_grid (a_id: STRING): ES_OBJECTS_GRID is
+			-- Objects grid identified by `a_id'.
+		require
+			a_id /= Void
+		do
+			Result := objects_grids.item (a_id).grid
+		end
+
+	objects_grid_ids (a_id: STRING): LIST [INTEGER] is
+			-- Objects grid's contents identified by `a_id'.
+		require
+			a_id /= Void
+		do
+			Result := objects_grids.item (a_id).ids
+		end
+
+	objects_grid_data (a_id: STRING): TUPLE [grid:ES_OBJECTS_GRID; grid_is_empty:BOOLEAN;
+						layout_initialized:BOOLEAN;
+						ids:LIST[INTEGER]; lines:LIST[ES_OBJECTS_GRID_SPECIFIC_LINE]
+					] is
 			-- Objects grid identified by `a_id'.
 		require
 			a_id /= Void
@@ -122,13 +189,7 @@ feature {NONE} -- Internal properties
 			Result := objects_grids.item (a_id)
 		end
 
-	objects_grid_for (pos: INTEGER): ES_OBJECTS_GRID is
-			-- Objects grid for entities position `pos'.	
-		require
-			pos_valid: objects_grids_positions.lower <= pos and pos <= objects_grids_positions.upper
-		do
-			Result := objects_grid (objects_grids_positions[pos])
-		end
+	dropped_objects_grid: ES_OBJECTS_GRID
 
 feature {NONE} -- Interface
 
@@ -141,6 +202,9 @@ feature {NONE} -- Interface
 				--| Build interface
 
 			create displayed_objects.make
+
+			create objects_grids.make (2)
+			objects_grids.compare_objects
 			create_objects_grid (interface_names.l_object_tool_left, first_grid_id)
 			create_objects_grid (interface_names.l_object_tool_right, second_grid_id)
 
@@ -173,10 +237,6 @@ feature {NONE} -- Interface
 
 			widget := split
 
-				-- Specific initialization
-			expand_result := True
-			expand_args := True
-			expand_locals := True
 
 				--| objects grid layout
 			initialize_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference, stack_objects_grid)
@@ -186,6 +246,7 @@ feature {NONE} -- Interface
 			init_delayed_cleaning_mecanism
 			create_update_on_idle_agent
 			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
+
 			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
 		end
 
@@ -196,9 +257,9 @@ feature {NONE} -- Interface
 			g: like objects_grid
 		do
 			create g.make_with_name (a_name, a_id)
-			objects_grids.force (g, a_id)
+			objects_grids.force ([g, True, False, create {ARRAYED_LIST[INTEGER]}.make (6) ,create {ARRAYED_LIST[ES_OBJECTS_GRID_SPECIFIC_LINE]}.make (6)], a_id)
 
-			g.set_objects_grid_item_function (agent get_object_display_item)
+			g.set_objects_grid_item_function (agent objects_grid_object_line)
 			spref := preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
 			g.set_default_columns_layout (
 						<<
@@ -292,7 +353,7 @@ feature {NONE} -- Interface
 			until
 				objects_grids.after
 			loop
-				objects_grids.item_for_iteration.set_slices_cmd (slices_cmd)
+				objects_grids.item_for_iteration.grid.set_slices_cmd (slices_cmd)
 				objects_grids.forth
 			end
 
@@ -311,67 +372,104 @@ feature {NONE} -- Interface
 
 	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
 		local
-			m, sm: EV_MENU
-			mci: EV_CHECK_MENU_ITEM
+			m, sm,subm: EV_MENU
+			mi,msi,mall: EV_MENU_ITEM
 			l_has_all: BOOLEAN
 			og: like objects_grid
 			lid: STRING
-			i: INTEGER
 			pos_titles: ARRAY [STRING_GENERAL]
+			gdata: like objects_grid_data
+			gids: LIST [INTEGER]
+			i: INTEGER
+			missings: ARRAYED_LIST [INTEGER]
 		do
 			if not objects_grids.is_empty then
 				create m
 				from
-					create pos_titles.make (objects_grids_positions.lower, objects_grids_positions.upper)
-					pos_titles[position_current] := Interface_names.l_current_object
+					create pos_titles.make (Position_entries.lower, Position_entries.upper)
 					pos_titles[position_stack] := Interface_names.l_stack_information
+					pos_titles[position_current] := Interface_names.l_current_object
 					pos_titles[position_arguments] := Interface_names.l_arguments
 					pos_titles[position_locals] := Interface_names.l_locals
 					pos_titles[position_result] := Interface_names.l_result
-					pos_titles[position_objects] := Interface_names.l_dropped_references
+					pos_titles[position_dropped] := Interface_names.l_dropped_references
+
 					objects_grids.start
 				until
 					objects_grids.after
 				loop
-					og := objects_grids.item_for_iteration
+					create missings.make_from_array (position_entries.deep_twin)
+					og := objects_grids.item_for_iteration.grid
 					create sm.make_with_text (og.name)
 					m.extend (sm)
-					from
-						l_has_all := True
-						lid := objects_grids.key_for_iteration
-						i := objects_grids_positions.lower
-					until
-						i > objects_grids_positions.upper
-					loop
-						create mci
-						mci.set_text (pos_titles[i])
-						if lid.is_case_insensitive_equal (objects_grids_positions[i]) then
-							mci.enable_select
-							mci.disable_sensitive
-						else
-							l_has_all := False
-							mci.disable_select
-							mci.select_actions.extend (agent assign_objects_grids_position (lid, i))
+
+					l_has_all := True
+					lid := objects_grids.key_for_iteration
+					gdata := objects_grids.item_for_iteration
+					gids := gdata.ids
+					if gids /= Void and then not gids.is_empty then
+						create mall.make_with_text ("All")
+						mall.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+						mall.enable_sensitive
+						sm.extend (mall)
+
+						from
+							gids.start
+						until
+							gids.after
+						loop
+							i := gids.item
+							if i > 0 then
+								mall.select_actions.extend (agent remove_objects_grids_position (lid, i))
+								missings.prune_all (i)
+								create subm.make_with_text (pos_titles[i])
+								if not gids.isfirst then
+									create msi.make_with_text (interface_names.f_move_item_up)
+									msi.select_actions.extend (agent move_objects_grids_position (lid, i, -1))
+									msi.set_pixmap (pixmaps.mini_pixmaps.general_up_icon)
+									subm.extend (msi)
+								end
+								create msi.make_with_text (interface_names.b_remove)
+								msi.select_actions.extend (agent remove_objects_grids_position (lid, i))
+								msi.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+								subm.extend (msi)
+								if not gids.islast then
+									create msi.make_with_text (interface_names.f_move_item_down)
+									msi.select_actions.extend (agent move_objects_grids_position (lid, i, +1))
+									msi.set_pixmap (pixmaps.mini_pixmaps.general_down_icon)
+									subm.extend (msi)
+								end
+								sm.extend (subm)
+							end
+							gids.forth
 						end
-						sm.extend (mci)
-						i := i + 1
+						sm.extend (create {EV_MENU_SEPARATOR})
 					end
 
-					create mci.make_with_text ("All")
-					if l_has_all then
-						mci.enable_select
-						mci.disable_sensitive
-					else
-						mci.disable_select
-						mci.enable_sensitive
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_current))
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_stack))
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_arguments))
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_locals))
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_result))
-						mci.select_actions.extend (agent assign_objects_grids_position (lid, position_objects))
+					l_has_all := missings.is_empty
+					if not l_has_all then
+						create mall.make_with_text ("All")
+						mall.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
+						mall.enable_sensitive
+						sm.extend (mall)
+
+						from
+							missings.start
+						until
+							missings.after
+						loop
+							i := missings.item
+							if i > 0 then
+								create mi.make_with_text (pos_titles[i])
+								mi.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
+								mi.select_actions.extend (agent assign_objects_grids_position (lid, i))
+								sm.extend (mi)
+
+								mall.select_actions.extend (agent assign_objects_grids_position (lid, i))
+							end
+							missings.forth
+						end
 					end
-					sm.put_front (mci)
 					objects_grids.forth
 				end
 
@@ -383,12 +481,59 @@ feature {NONE} -- Interface
 			-- Change grid position for item at position `a_pos' to grid identified by `a_gid'
 		local
 			apref: ARRAY_PREFERENCE
-			ap: ARRAY [STRING]
+			lst: LIST [INTEGER]
 		do
-			apref := preferences.debug_tool_data.objects_tool_layout_preference
-			ap := apref.value
-			ap[ap.lower + a_pos - objects_grids_positions.lower] := a_gid
-			apref.set_value (ap) --| Should trigger "update"
+			lst := objects_grids.item (a_gid).ids
+			if not lst.has (a_pos) then
+				if a_pos = position_dropped then
+					if dropped_objects_grid /= Void then
+						objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+					end
+					dropped_objects_grid := objects_grid (a_gid)
+				end
+				lst.extend (a_pos)
+				apref := preferences.debug_tool_data.objects_tool_layout_preference
+				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
+			end
+		end
+
+	remove_objects_grids_position (a_gid: STRING; a_pos: INTEGER) is
+			-- Change grid position for item at position `a_pos' to grid identified by `a_gid'
+		local
+			apref: ARRAY_PREFERENCE
+			lst: LIST [INTEGER]
+		do
+			lst := objects_grids.item (a_gid).ids
+			if lst.has (a_pos) then
+				lst.prune_all (a_pos)
+				if a_pos = position_dropped and dropped_objects_grid /= Void then
+					objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+				end
+				apref := preferences.debug_tool_data.objects_tool_layout_preference
+				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
+			end
+		end
+
+	move_objects_grids_position	(a_gid: STRING; a_pos: INTEGER; a_step: INTEGER) is
+		require
+			valid_step: a_step /= 0
+		local
+			apref: ARRAY_PREFERENCE
+			lst: LIST [INTEGER]
+		do
+			lst := objects_grids.item (a_gid).ids
+			if lst.has (a_pos) then
+				lst.start
+				lst.search (a_pos)
+				if
+					not lst.exhausted
+					and lst.valid_index (lst.index + a_step)
+				then
+					lst.swap (lst.index + a_step)
+				end
+				apref := preferences.debug_tool_data.objects_tool_layout_preference
+				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
+			end
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
@@ -402,52 +547,68 @@ feature -- preference
 	refresh_objects_layout_from_preference (p: ARRAY_PREFERENCE) is
 			-- Refresh the layout using preference `p'
 		local
-			retried: BOOLEAN
+			error_occurred: BOOLEAN
 			vals: ARRAY [STRING]
-			i: INTEGER
-			l_changed: BOOLEAN
-			l_pref_changed: BOOLEAN
-			l_pos: STRING
+			l_id: STRING
+			s: STRING
+			i, si: INTEGER
+			lst: LIST [INTEGER]
 		do
 			vals := p.value
-			if retried or (vals = Void or else vals.is_empty) then
-				reset_objects_grids_positions_to_default
-				if not retried then
-					p.set_value (objects_grids_positions) --| should trigger the `p.change_actions' and then recall this feature
-				end
-			else
+			if not error_occurred and (vals /= Void and then not vals.is_empty) then
+--				reset_objects_grids_contents_to_default
 				from
 					i := vals.lower
 				until
 					i > vals.upper
 				loop
-					l_pos := objects_grids_positions[i]
-					l_changed := l_changed or l_pos = Void or else (not (l_pos).is_case_insensitive_equal (vals[i]))
-					if (vals[i]).is_case_insensitive_equal (second_grid_id) then
-						objects_grids_positions[i] := second_grid_id
-					elseif (vals[i]).is_case_insensitive_equal (first_grid_id) then
-						objects_grids_positions[i] := first_grid_id
-					else -- Default ?
-							--| This occurs only if bad value is provided.
-						l_pref_changed := True
-						objects_grids_positions[i] := first_grid_id --| vals[i]
+					s := vals [i]
+					if s = Void or else s.is_empty then
+						error_occurred := True
+					elseif s.item (1) = '#' then
+						l_id := s.substring (2, s.count)
+						lst := objects_grid_ids (l_id)
+						if lst /= Void then
+							lst.wipe_out
+						end
+					elseif lst /= Void and s.is_integer then
+						si := s.to_integer
+						if i = position_dropped then
+							if dropped_objects_grid /= Void then
+								objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+							end
+							dropped_objects_grid := objects_grid (l_id)
+						end
+						if not lst.has (si) then
+							lst.extend (si)
+						end
+					else
+						error_occurred := True
 					end
 					i := i + 1
 				end
-				if l_pref_changed then
-					p.set_value (objects_grids_positions) --| should trigger the `p.change_actions' and then recall this feature
-				else
-					if not objects_grids_positions.has (second_grid_id) then
+					--| Should end with an empty entry
+				error_occurred := s /= Void and then not s.is_empty
+				if not error_occurred then
+					lst := objects_grid_ids (second_grid_id)
+					if lst = Void or else lst.is_empty then
 						split.second.hide
 					elseif not split.second.is_show_requested then
 						split.second.show
 					end
 					split.show
-					if l_changed then
-						update
-					end
+					update
 				end
 			end
+			if error_occurred or (vals = Void or else vals.is_empty) then
+				reset_objects_grids_contents_to_default
+				if not error_occurred then
+					p.set_value (objects_grids_contents_to_array) --| should trigger the `p.change_actions' and then recall this feature
+				end
+			end
+		rescue
+			error_occurred := True
+			retry
 		end
 
 	save_grids_preferences is
@@ -459,7 +620,7 @@ feature -- preference
 			until
 				objects_grids.after
 			loop
-				g := objects_grids.item_for_iteration
+				g := objects_grids.item_for_iteration.grid
 				g.save_columns_layout_to_string_preference (
 					preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
 					)
@@ -623,7 +784,7 @@ feature {NONE} -- Notebook item's behavior
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	get_object_display_item (addr: STRING): ES_OBJECTS_GRID_LINE is
+	objects_grid_object_line (addr: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
 			-- Return managed object located at address `addr'.
 		local
 			found: BOOLEAN
@@ -654,7 +815,7 @@ feature -- Properties setting
 			until
 				objects_grids.after
 			loop
-				objects_grids.item_for_iteration.set_hexadecimal_mode (v)
+				objects_grids.item_for_iteration.grid.set_hexadecimal_mode (v)
 				objects_grids.forth
 			end
 		end
@@ -667,7 +828,7 @@ feature {NONE} -- Row actions
 			g: like objects_grid
 		do
 			g ?= row.parent
-			if g /= Void and then g.id = objects_grids_positions[position_objects] then
+			if g /= Void and then g = dropped_objects_grid then
 				remove_debugged_object_cmd.enable_sensitive
 			else
 				remove_debugged_object_cmd.disable_sensitive
@@ -732,7 +893,7 @@ feature -- Change
 				until
 					objects_grids.after
 				loop
-					objects_grids.item_for_iteration.reset_layout_recorded_values
+					objects_grids.item_for_iteration.grid.reset_layout_recorded_values
 					objects_grids.forth
 				end
 			end
@@ -766,22 +927,32 @@ feature -- Status Setting
 	reset_tool is
 		local
 			g: like objects_grid
+			t: like objects_grid_data
+			l: ES_OBJECTS_GRID_SPECIFIC_LINE
+			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 		do
 			reset_update_on_idle
 			displayed_objects.wipe_out
-			if current_object /= Void then
-				display_first := current_object.display
-				display_first_attributes := current_object.display_attributes
-				display_first_onces := current_object.display_onces
-				current_object.reset
-				current_object := Void
-			end
 			from
 				objects_grids.start
 			until
 				objects_grids.after
 			loop
-				g := objects_grids.item_for_iteration
+				t := objects_grids.item_for_iteration
+				lines := t.lines
+				from
+					lines.start
+				until
+					lines.after
+				loop
+					l := lines.item
+					if l /= Void then
+						l.reset
+					end
+					lines.forth
+				end
+
+				g := t.grid
 				g.call_delayed_clean
 				g.reset_layout_manager
 				objects_grids.forth
@@ -812,7 +983,7 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 			until
 				objects_grids.after
 			loop
-				g := objects_grids.item_for_iteration
+				g := objects_grids.item_for_iteration.grid
 				if g.delayed_cleaning_exists then
 					g.set_cleaning_delay (cleaning_delay)
 				end
@@ -831,7 +1002,7 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 			until
 				objects_grids.after
 			loop
-				g := objects_grids.item_for_iteration
+				g := objects_grids.item_for_iteration.grid
 				if not g.delayed_cleaning_exists then
 					g.build_delayed_cleaning
 					g.set_cleaning_delay (cleaning_delay)
@@ -868,18 +1039,9 @@ feature {NONE} -- grid Layout Implementation
 
 feature {NONE} -- Stack grid Layout Implementation
 
-	expand_result: BOOLEAN
-			-- Should the "Result" tree item be expanded?
-
-	expand_args: BOOLEAN
-			-- Should the "Arguments" tree item be expanded?
-
-	expand_locals: BOOLEAN
-			-- Should the "Locals" tree item be expanded?
-
 	initialize_objects_grid_layout (pv: BOOLEAN_PREFERENCE; g: like objects_grid) is
 		require
-			not objects_grids_layout_initialized.item (g.id)
+			not objects_grids.item (g.id).layout_initialized
 			g.layout_manager = Void
 		do
 			g.initialize_layout_management (pv)
@@ -887,31 +1049,20 @@ feature {NONE} -- Stack grid Layout Implementation
 				g.layout_manager /= Void
 			end
 			g.layout_manager.set_global_identification_agent (agent current_stack_class_feature_identification)
-			objects_grids_layout_initialized.force (True, g.id)
+			objects_grids.item (g.id).layout_initialized := True
 		end
 
 	action_clean_objects_grid (g_id: STRING) is
 		local
-			g: like objects_grid
+			t: like objects_grid_data
 		do
-			g := objects_grid (g_id)
-			if not objects_grids_empty.item (g_id) then
-				g.default_clean
-				objects_grids_empty.force (True, g_id)
-			end
-
-				-- Update rows
-			if internal_locals_row /= Void and then internal_locals_row.parent = Void then
-				internal_locals_row := Void
-			end
-			if internal_arguments_row /= Void and then internal_arguments_row.parent = Void then
-				internal_arguments_row := Void
-			end
-			if internal_result_row /= Void and then internal_result_row.parent = Void then
-				internal_result_row := Void
+			t := objects_grid_data (g_id)
+			if not t.grid_is_empty then
+				t.grid.default_clean
+				t.grid_is_empty := True
 			end
 		ensure
-			objects_grid_cleaned: objects_grids_empty.item (g_id)
+			objects_grid_cleaned: objects_grid_data (g_id).grid_is_empty
 		end
 
 feature -- grid Layout access
@@ -919,25 +1070,25 @@ feature -- grid Layout access
 	record_grids_layout is
 		local
 			g: like objects_grid
+			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 		do
-			if internal_locals_row /= Void and then internal_locals_row.parent /= Void then
-				expand_locals := internal_locals_row.is_expanded
-			end
-			if internal_arguments_row /= Void and then internal_arguments_row.parent /= Void then
-				expand_args := internal_arguments_row.is_expanded
-			end
-			if internal_result_row /= Void and then internal_result_row.parent /= Void then
-				expand_result := internal_result_row.is_expanded
-			end
-			if current_object /= Void then
-				current_object.record_layout
-			end
 			from
 				objects_grids.start
 			until
 				objects_grids.after
 			loop
-				g := objects_grids.item_for_iteration
+				lines := objects_grids.item_for_iteration.lines
+				from
+					lines.start
+				until
+					lines.after
+				loop
+					if lines.item /= Void then
+						lines.item.record_layout
+					end
+					lines.forth
+				end
+				g := objects_grids.item_for_iteration.grid
 				if g.row_count > 0 then
 					g.record_layout
 				end
@@ -978,7 +1129,8 @@ feature {NONE} -- Implementation
 			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS
 			g: like objects_grid
-			cse: EIFFEL_CALL_STACK_ELEMENT
+			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
+			t: like objects_grid_data
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			from
@@ -986,7 +1138,7 @@ feature {NONE} -- Implementation
 			until
 				objects_grids.after
 			loop
-				objects_grids.item_for_iteration.request_delayed_clean
+				objects_grids.item_for_iteration.grid.request_delayed_clean
 				objects_grids.forth
 			end
 
@@ -997,55 +1149,40 @@ feature {NONE} -- Implementation
 			if l_status /= Void then
 				if l_status.is_stopped and dbg_was_stopped then
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
+						init_specific_lines
 						from
 							objects_grids.start
 						until
 							objects_grids.after
 						loop
-							objects_grids.item_for_iteration.cancel_delayed_clean
+							objects_grids.item_for_iteration.grid.cancel_delayed_clean
 							objects_grids.forth
 						end
-						if not l_app.current_call_stack_is_empty then
-							cse ?= current_stack_element
-						end
 						from
 							objects_grids.start
 						until
 							objects_grids.after
 						loop
-							g := objects_grids.item_for_iteration
+							t := objects_grids.item_for_iteration
+							g := t.grid
 							g.call_delayed_clean
-							objects_grids_empty.force (False, g.id)
-							if objects_grids_positions[position_stack] = g.id then
-								build_stack_info (g)
-							end
-							if cse /= Void then
-								if objects_grids_positions[position_current] = g.id then
-									build_current_object_row (g, cse)
-								end
-								if objects_grids_positions[position_arguments] = g.id then
-									build_arguments_row (g, cse)
-									if internal_arguments_row /= Void and expand_args then
-										internal_arguments_row.expand
-									end
-								end
-								if objects_grids_positions[position_locals] = g.id then
-									build_locals_row (g, cse)
-									if internal_locals_row /= Void and expand_locals then
-										internal_locals_row.expand
-									end
-								end
-								if objects_grids_positions[position_result] = g.id then
-									build_result_row (g, cse)
-									if internal_result_row /= Void and expand_result then
-										internal_result_row.expand
-									end
-								end
-							end
-							if objects_grids_positions[position_objects] = g.id then
-								add_displayed_objects_to_grid (g)
-							end
+							t.grid_is_empty := False
 
+							lines := t.lines
+							from
+								lines.start
+							until
+								lines.after
+							loop
+								if lines.item /= Void then
+									lines.item.attach_to_row (g.extended_new_row)
+								else --| Void is the place for displayed objects
+									if dropped_objects_grid = g then
+										add_displayed_objects_to_grid (g)
+									end
+								end
+								lines.forth
+							end
 							if g.row_count > 0 then
 									--| be sure the grid is redrawn, and the first row is visible
 								g.row (1).redraw
@@ -1053,12 +1190,6 @@ feature {NONE} -- Implementation
 							g.restore_layout
 							objects_grids.forth
 						end
-					end
-				else
-					if current_object /= Void then
-						display_first := current_object.display
-						display_first_attributes := current_object.display_attributes
-						display_first_onces := current_object.display_onces
 					end
 				end
 			end
@@ -1070,59 +1201,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Current objects grid Implementation
 
-	displayed_objects: LINKED_LIST [ES_OBJECTS_GRID_LINE];
+	displayed_objects: LINKED_LIST [ES_OBJECTS_GRID_OBJECT_LINE];
 			-- All displayed objects, their addresses, types and display options.
-
-	build_current_object_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
-		require
-			application_is_executing: debugger_manager.application_is_executing
-			target_grid_not_void: a_target_grid /= Void
-			cse_not_void: cse /= Void
-		local
-			value: ABSTRACT_DEBUG_VALUE
-			item: ES_OBJECTS_GRID_LINE
-			l_str: STRING_GENERAL
-			dn_st: APPLICATION_STATUS_DOTNET
-			app: APPLICATION_EXECUTION
-		do
-			if current_object /= Void then
-				display_first 			 := current_object.display
-				display_first_attributes := current_object.display_attributes
-				display_first_onces		 := current_object.display_onces
-			end
-			current_object := Void
-			if debugger_manager.is_dotnet_project then
-				app := debugger_manager.application
-				if not app.current_call_stack_is_empty then
-					dn_st ?= app.status
-					check dn_st /= Void end
-					value := dn_st.current_call_stack_element_dotnet.current_object
-					if value /= Void then
-						create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, a_target_grid)
-					end
-				end
-			else
-				create {ES_OBJECTS_GRID_ADDRESS_LINE} current_object.make_with_call_stack_element (cse, a_target_grid)
-			end
-			if current_object /= Void then
-				current_object.set_display (display_first)
-				current_object.set_display_attributes (display_first_attributes)
-				current_object.set_display_onces (display_first_onces)
-				item := current_object
-				if item.title /= Void then
-					l_str := Interface_names.l_Current_object.twin
-					l_str.append (": ")
-					l_str.append (item.title)
-					item.set_title (l_str)
-				else
-					item.set_title (Interface_names.l_Current_object)
-				end
-				item.attach_to_row (a_target_grid.extended_new_row)
-				if debugger_manager.safe_application_is_stopped then
-					current_object.compute_grid_display
-				end
-			end
-		end
 
 	add_displayed_objects_to_grid (a_target_grid: ES_OBJECTS_GRID) is
 		local
@@ -1147,19 +1227,6 @@ feature {NONE} -- Current objects grid Implementation
 
 feature {NONE} -- Impl : Debugged objects grid specifics
 
---	debugged_object_key_action (k: EV_KEY) is
---			-- Actions performed when a key is pressed on a top-level object.
---			-- Handle `Del'.
---		do
---			inspect
---				k.code
---			when {EV_KEY_CONSTANTS}.key_delete then
---				remove_debugged_object_cmd.execute
---			else
-
---			end
---		end
-
 	object_stone_dropped_on_grid (a_grid: like objects_grid; st: OBJECT_STONE) is
 		local
 			cst: CALL_STACK_STONE
@@ -1168,7 +1235,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			if cst /= Void then
 				drop_stack_element (cst)
 			else
-				check a_grid.id = objects_grids_positions[position_objects] end
+				check a_grid = dropped_objects_grid end
 				add_debugged_object (st)
 			end
 		end
@@ -1178,7 +1245,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			ost: OBJECT_STONE
 			cst: CALL_STACK_STONE
 		do
-			if a_grid.id = objects_grids_positions[position_objects] then
+			if a_grid = dropped_objects_grid then
 				ost ?= a_pebble
 				Result := ost /= Void
 			else
@@ -1191,8 +1258,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			-- Add the object represented by `a_stone' to the managed objects.
 		require
 			application_is_running: debugger_manager.application_is_executing
+			dropped_objects_grid_not_void: dropped_objects_grid /= Void
 		local
-			n_obj: ES_OBJECTS_GRID_LINE
+			n_obj: ES_OBJECTS_GRID_OBJECT_LINE
 			conv_spec: SPECIAL_VALUE
 			abstract_value: ABSTRACT_DEBUG_VALUE
 			exists: BOOLEAN
@@ -1202,7 +1270,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			debug ("debug_recv")
 				print (generator + ".add_object%N")
 			end
-			g := objects_grid_for (position_objects)
+			g := dropped_objects_grid
 			from
 				displayed_objects.start
 			until
@@ -1251,14 +1319,16 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 	remove_dropped_debugged_object (ost: OBJECT_STONE) is
 		local
 			row: EV_GRID_ROW
-			gline: ES_OBJECTS_GRID_LINE
+			gline: ES_OBJECTS_GRID_OBJECT_LINE
+			sline: ES_OBJECTS_GRID_SPECIFIC_LINE
 		do
 			row ?= ost.ev_item
 			if row /= Void then
 				gline ?= row.data
+				sline ?= gline
 				if
 					gline /= Void
-					and then gline /= current_object
+					and then (sline = Void) -- or else not current_object_line.is_represented_by (gline))
 				then
 					remove_debugged_object_line (gline)
 				end
@@ -1267,8 +1337,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 
 	remove_selected_debugged_objects is
 		local
-			glines: LIST [ES_OBJECTS_GRID_LINE]
-			line: ES_OBJECTS_GRID_LINE
+			glines: LIST [ES_OBJECTS_GRID_OBJECT_LINE]
+			line: ES_OBJECTS_GRID_OBJECT_LINE
+			sline: ES_OBJECTS_GRID_SPECIFIC_LINE
 		do
 			glines := selected_debugged_object_lines
 			if glines /= Void then
@@ -1283,10 +1354,11 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 						line /= Void
 						line.row /= Void
 					end
+					sline ?= line
 					if
 						is_removable_debugged_object_row (line.row)
 						and then is_removable_debugged_object_address (line.object_address)
-						and then line /= current_object
+						and then sline = Void  --(current_object_line = Void or else not current_object_line.is_represented_by (line))
 					then
 						remove_debugged_object_line (line)
 					end
@@ -1295,7 +1367,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	remove_debugged_object_line (gline: ES_OBJECTS_GRID_LINE) is
+	remove_debugged_object_line (gline: ES_OBJECTS_GRID_OBJECT_LINE) is
 		require
 			gline_not_void: gline /= Void
 		local
@@ -1313,14 +1385,14 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_LINE] is
+	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_OBJECT_LINE] is
 		local
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
-			gline: ES_OBJECTS_GRID_LINE
+			gline: ES_OBJECTS_GRID_OBJECT_LINE
 			g: like objects_grid
 		do
-			g := objects_grid_for (position_objects)
+			g := dropped_objects_grid
 			rows := g.selected_rows
 			if not rows.is_empty then
 				from
@@ -1371,284 +1443,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 
 feature {NONE} -- Impl : Stack objects grid
 
-	internal_locals_row: EV_GRID_ROW
-
-	internal_arguments_row: EV_GRID_ROW
-
-	internal_result_row: EV_GRID_ROW
-
-	build_stack_info (a_target_grid: ES_OBJECTS_GRID) is
-			-- Create the grid rows that contains call stack info
-		do
-			build_exception_info (a_target_grid)
-		end
-
---	build_stack_objects (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
---			-- Create the tree that contains locals (Result) and parameters.
---		require
---			cse_not_void: cse /= Void
---		do
---				--| Build other stack part
---			build_arguments_row (a_target_grid, cse)
---			if internal_arguments_row /= Void and expand_args then
---				internal_arguments_row.expand
---			end
---			build_locals_row (a_target_grid, cse)
---			if internal_locals_row /= Void and expand_locals then
---				internal_locals_row.expand
---			end
---			build_result_row (a_target_grid, cse)
---			if internal_result_row /= Void and expand_result then
---				internal_result_row.expand
---			end
---		end
-
-	show_exception_dialog (a_tag, a_msg: STRING) is
-		local
-			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
-		do
-			create dlg.make (a_tag, a_msg)
-			dlg.show_modal_to_window (debugger_manager.debugging_window.window)
-		end
-
-	build_exception_info (a_target_grid: ES_OBJECTS_GRID) is
-			-- Display exception info
-			-- for now only for Dotnet systems
-		local
-			row: EV_GRID_ROW
-			exception_row: EV_GRID_ROW
-			glab: EV_GRID_LABEL_ITEM
-			es_glab: EV_GRID_LABEL_ITEM
-			l_exception_class_detail: STRING
-			l_exception_module_detail: STRING
-			l_exception_tag, l_exception_message: STRING_32
-			appstat: APPLICATION_STATUS
-			dotnet_status: APPLICATION_STATUS_DOTNET
-			exc_dv: ABSTRACT_DEBUG_VALUE
-		do
-			appstat := debugger_manager.application_status
-			if appstat.exception_occurred then
-					--| Details
-				exception_row := a_target_grid.extended_new_row
-				glab := a_target_grid.folder_label_item (Cst_exception_raised_text)
-				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.debug_exception_handling_icon)
-				exception_row.set_item (1, glab)
-				create glab
-
-				dotnet_status ?= appstat
-				if dotnet_status /= Void then
-					if dotnet_status.exception_handled then
-						a_target_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
-					else
-						a_target_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
-					end
-					exception_row.set_item (2, glab)
-				else
-					a_target_grid.grid_cell_set_text (glab, appstat.exception_description)
-					exception_row.set_item (2, glab)
-				end
-
-					--| Tag
-				l_exception_tag := appstat.exception_tag
-				if l_exception_tag /= Void then
-					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item ("Tag")
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					row.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_tag)
-					a_target_grid.grid_cell_set_text (es_glab, l_exception_tag)
-					row.set_item (2, es_glab)
-				end
-
-				if dotnet_status /= Void then
-						--| Class
-					l_exception_class_detail := dotnet_status.exception_class_name
-					if l_exception_class_detail /= Void then
-						row := a_target_grid.extended_new_subrow (exception_row)
-						glab := a_target_grid.name_label_item ("Class")
-						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-						row.set_item (1, glab)
-						create es_glab
-						es_glab.set_data (l_exception_class_detail)
-						a_target_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
-						row.set_item (2, es_glab)
-					end
-						--| Module
-					l_exception_module_detail := dotnet_status.exception_module_name
-					if l_exception_module_detail /= Void then
-						row := a_target_grid.extended_new_subrow (exception_row)
-						glab := a_target_grid.name_label_item (interface_names.l_module)
-						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-						row.set_item (1, glab)
-						create es_glab
-						es_glab.set_data (l_exception_module_detail)
-						a_target_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
-						row.set_item (2, es_glab)
-					end
-				end
-
-					--| Nota/Message
-				l_exception_message := appstat.exception_message
---				l_exception_message := dotnet_status.exception_to_string
-				if l_exception_message /= Void and then not l_exception_message.is_empty then
-					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item (interface_names.l_note)
-					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					row.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_message)
-					a_target_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
-					a_target_grid.grid_cell_set_tooltip (es_glab, l_exception_message)
-					es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
-					row.set_item (2, es_glab)
-				end
-				if dotnet_status /= Void then
-					exc_dv := dotnet_status.exception_debug_value
-					if exc_dv /= Void then
-						row := a_target_grid.extended_new_subrow (exception_row)
-						a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, interface_names.l_exception_object)
-					end
-				end
-			end
-		end
-
-	Cst_exception_double_click_text: STRING_GENERAL is
-		do
-			Result := interface_names.l_exception_double_click_text
-		end
-
-	Cst_exception_raised_text: STRING_GENERAL is
-		do
-			Result := interface_names.l_exception_raised
-		end
-
-	Cst_exception_first_chance_text: STRING_GENERAL is
-		do
-			Result := interface_names.l_first_chance
-		end
-
-	Cst_exception_unhandled_text: STRING_GENERAL is
-		do
-			Result := interface_names.l_unhandled
-		end
-
-	build_result_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
-			-- Create the row containing Result
-		require
-			call_stack_not_void: cse /= Void
-		local
-			dv: ABSTRACT_DEBUG_VALUE
-			glab: EV_GRID_LABEL_ITEM
-			r: INTEGER
-		do
-			if cse.has_result then
-				internal_result_row := a_target_grid.extended_new_row
-				glab := a_target_grid.folder_label_item (Interface_names.l_result)
-				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
-				internal_result_row.set_item (1, glab)
-				dv := cse.result_value
-				if dv /= Void then
-					internal_result_row.insert_subrows (1, 1)
-					r := internal_result_row.index + 1
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), dv, Void)
-				end
-			else
-				internal_result_row := Void
-			end
-		end
-
-	build_arguments_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
-			-- Create the row containing arguments
-		require
-			call_stack_not_void: cse /= Void
-		local
-			glab: EV_GRID_LABEL_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			r: INTEGER
-		do
-			list := cse.arguments
-			if list /= Void and then not list.is_empty then
-				internal_arguments_row := a_target_grid.extended_new_row
-				glab := a_target_grid.folder_label_item (Interface_names.l_Arguments)
-				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
-				internal_arguments_row.set_item (1, glab)
-				from
-					internal_arguments_row.insert_subrows (list.count, 1)
-					r := internal_arguments_row.index + 1
-					list.start
-				until
-					list.after
-				loop
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), list.item, Void)
-					r := r + 1
-					list.forth
-				end
-			else
-				internal_arguments_row := Void
-			end
-		end
-
-	build_locals_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
-			-- Create the row containing locals
-		require
-			call_stack_not_void: cse /= Void
-		local
-			i: INTEGER
-			glab: EV_GRID_LABEL_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
-			dbg_nb: INTEGER
-			r: INTEGER
-		do
-			list := cse.locals
-			if list /= Void and then not list.is_empty then
-				glab := a_target_grid.folder_label_item (Interface_names.l_Locals)
-				a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
-				internal_locals_row := a_target_grid.extended_new_row
-				internal_locals_row.set_item (1, glab)
-				dbg_nb := list.count
-				create tmp.make (1, dbg_nb)
-				from
-					list.start
-					i := 1
-				until
-					list.after
-				loop
-					tmp.put (list.item, i)
-					i := i + 1
-					list.forth
-				end
-				tmp.sort
-				from
-					internal_locals_row.insert_subrows (dbg_nb, 1)
-					r := internal_locals_row.index + 1
-					i := 1
-				until
-					i > dbg_nb
-				loop
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i, Void)
-					r := r + 1
-					i := i + 1
-				end
-			else
-				internal_locals_row := Void
-			end
-		end
-
-	on_stacks_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
-		local
-			st: CALL_STACK_STONE
-		do
-			st ?= a_pebble
-			Result := st /= Void
-		end
-
---	on_drop_stack_element (a_item: EV_GRID_ITEM; st: CALL_STACK_STONE) is
---		do
---			drop_stack_element (st)
---		end
-
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.
 		do
@@ -1692,26 +1486,95 @@ feature {NONE} -- Impl : Stack objects grid
 
 feature {NONE} -- Debugged objects grid Implementation
 
-	current_object: ES_OBJECTS_GRID_LINE
-			--EB_OBJECT_DISPLAY_PARAMETERS
-			-- The display parameters for the current object (for the current stack)
-			-- It is recreated at each execution step.
+	new_specific_line (a_id: INTEGER): ES_OBJECTS_GRID_SPECIFIC_LINE is
+			--
+		do
+			inspect a_id
+			when position_stack then
+				create Result.make_as_stack
+			when position_current then
+				create Result.make_as_current_object
+			when position_arguments then
+				create Result.make_as_arguments
+			when position_locals then
+				create Result.make_as_locals
+			when position_result then
+				create Result.make_as_result
+			when position_dropped then
+--				create Result.make_as_dropped
+			else
+				check should_not_occur: False end
+			end
+		end
 
-	display_first: BOOLEAN
-			-- Memorize the display parameters of the current object.
-			-- Was declared in ES_OBJECTS_TOOL as synonym of `display_first_attributes', `display_first_onces' and `display_first_special'.
+	init_specific_lines is
+		local
+			g: like objects_grid
+			gdata: like objects_grid_data
+			l: ES_OBJECTS_GRID_SPECIFIC_LINE
+			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
+			lst_pos: LIST [INTEGER]
+		do
+				--| Clean old lines
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				g := objects_grids.item_for_iteration.grid
+				lines := objects_grids.item_for_iteration.lines
+				from
+					lines.start
+				until
+					lines.after
+				loop
+					l := lines.item
+					if l /= Void then
+						if l.is_attached_to_row then
+							l.unattach
+						end
+					end
+					lines.forth
+				end
+				objects_grids.forth
+			end
 
-	display_first_attributes: BOOLEAN
-			-- Memorize the display parameters of the current object.
-			-- Was declared in ES_OBJECTS_TOOL as synonym of `display_first', `display_first_onces' and `display_first_special'.
-
-	display_first_onces: BOOLEAN
-			-- Memorize the display parameters of the current object.
-			-- Was declared in ES_OBJECTS_TOOL as synonym of `display_first', `display_first_attributes' and `display_first_special'.
-
-	display_first_special: BOOLEAN
-			-- Memorize the display parameters of the current object.
-			-- Was declared in ES_OBJECTS_TOOL as synonym of `display_first', `display_first_attributes' and `display_first_onces'.
+				-- New lines
+			dropped_objects_grid := Void
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				gdata := objects_grid_data (objects_grids.key_for_iteration)
+				lst_pos := gdata.ids
+				gdata.lines.wipe_out
+				from
+					lst_pos.start
+				until
+					lst_pos.after
+				loop
+					if lst_pos.item = position_dropped then
+						if dropped_objects_grid /= Void then
+							objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+						end
+						dropped_objects_grid := gdata.grid
+						gdata.lines.force (Void) --| FIXME: for now, Void item is the placeholder for displayed objects
+					else
+						l := new_specific_line (lst_pos.item)
+						if l /= Void then
+							gdata.lines.force (l)
+						end
+					end
+					lst_pos.forth
+				end
+				objects_grids.forth
+			end
+			if dropped_objects_grid = Void then
+				check gdata /= Void end
+				dropped_objects_grid := gdata.grid
+			end
+		end
 
 feature {NONE} -- Constants
 
@@ -1722,10 +1585,7 @@ invariant
 
 	debugger_manager_not_void: debugger_manager /= Void
 
-	objects_grids_positions_not_void: objects_grids_positions /= void
 	objects_grids_not_void: objects_grids /= Void
-	objects_grids_layout_initialized_not_void: objects_grids_layout_initialized /= Void
-	objects_grids_empty_not_void: objects_grids_empty /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

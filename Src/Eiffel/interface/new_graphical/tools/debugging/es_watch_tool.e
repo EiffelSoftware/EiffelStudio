@@ -343,11 +343,10 @@ feature -- Properties setting
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_item (addr: STRING): ES_OBJECTS_GRID_LINE is
+	objects_grid_object_line (addr: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
 		local
 			r: INTEGER
 			lrow: EV_GRID_ROW
-			litem: ES_OBJECTS_GRID_LINE
 			ladd: STRING
 		do
 			from
@@ -357,11 +356,11 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 			loop
 				lrow := watches_grid.row (r)
 				if lrow.parent_row = Void then
-					litem ?= grid_data_from_widget (lrow)
-					if litem /= Void then
-						ladd := litem.object_address
-						if ladd /= Void and then ladd.is_equal (addr) then
-							Result := litem
+					Result ?= grid_data_from_widget (lrow)
+					if Result /= Void then
+						ladd := Result.object_address
+						if ladd = Void or else not ladd.is_equal (addr) then
+							Result := Void
 						end
 					end
 				end

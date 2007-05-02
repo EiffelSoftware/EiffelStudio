@@ -116,7 +116,7 @@ feature {NONE} -- Helper function
 	set_name is
 			-- ensure platform-independant name
 		do
-			name := language
+			name := language.twin
 			if not region.is_empty then
 				name.append ("_"+region)
 			end
@@ -126,8 +126,6 @@ feature {NONE} -- Helper function
 		ensure
 			name_not_void: name /= Void
 		end
-
-
 
 feature  -- Informations
 

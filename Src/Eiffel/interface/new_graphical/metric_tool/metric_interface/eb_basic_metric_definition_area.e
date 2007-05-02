@@ -104,6 +104,8 @@ feature {NONE} -- Initialization
 			create combination_grid.make
 			combination_grid_container.extend (combination_grid)
 			combination_grid.change_actions.extend (agent on_change)
+			combination_grid.set_configurable_target_menu_mode
+			combination_grid.set_configurable_target_menu_handler (agent (metric_tool.develop_window.menus.context_menu_factory).standard_compiler_item_menu)
 
 				-- Setup combination toolbar
 			remove_criterion_btn.remove_text

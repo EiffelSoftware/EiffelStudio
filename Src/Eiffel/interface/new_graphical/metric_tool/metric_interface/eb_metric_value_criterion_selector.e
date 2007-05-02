@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
 			grid.enable_selection_on_single_button_click
 			l_grid_support.enable_grid_item_pnd_support
+			l_grid_support.set_context_menu_factory_function (agent context_menu_factory)
 
 			grid.set_item_veto_pebble_function (agent is_pebble_droppable)
 			grid.item_drop_actions.extend (agent on_pebble_drop)
@@ -188,6 +189,12 @@ feature -- Setting
 			metric_value_retriever_dialog_function := a_function
 		ensure
 			metric_value_retriever_dialog_function_set: metric_value_retriever_dialog_function = a_function
+		end
+
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+			-- Set context menu factory.
+		do
+			context_menu_factory := a_factory
 		end
 
 feature{NONE} -- Actions
@@ -425,6 +432,8 @@ feature {NONE} -- Implementation
 			end
 			Result := True
 		end
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY;
 
 invariant
 	grid_attached: grid /= Void

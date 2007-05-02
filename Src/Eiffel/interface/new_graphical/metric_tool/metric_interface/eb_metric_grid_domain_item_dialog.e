@@ -45,7 +45,7 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
-		
+
 feature -- Setting
 
 	set_domain (a_domain: EB_METRIC_DOMAIN) is
@@ -54,6 +54,12 @@ feature -- Setting
 			a_domain_attached: a_domain /= Void
 		do
 			domain_selector.set_domain (a_domain)
+		end
+
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+			-- Set context menu factory.
+		do
+			domain_selector.set_context_menu_factory (a_factory)
 		end
 
 feature{NONE} -- Actions

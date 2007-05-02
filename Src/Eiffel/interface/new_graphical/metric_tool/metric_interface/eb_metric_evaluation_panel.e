@@ -131,9 +131,11 @@ feature {NONE} -- Initialization
 			domain_selector.setup_delayed_domain_item_buttons (True, False, False)
 			metric_domain_selector_area.extend (domain_selector)
 			domain_selector.domain_change_actions.extend (agent on_domain_change)
+			domain_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 			metric_selector.metric_selected_actions.extend (agent on_metric_selected)
 			metric_selector.group_selected_actions.extend (agent on_metric_selected (Void))
 			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
+			metric_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 
 				-- Setup sensitivity and background color for text fields
 			metric_value_text.disable_edit

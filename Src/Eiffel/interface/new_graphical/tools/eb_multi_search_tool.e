@@ -676,7 +676,7 @@ feature {NONE} -- Shortcut button actions
 			end
 		end
 
-feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
+feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 
 	new_search_or_go_next is
 			-- If new search is not necessary, go to next found.
@@ -899,6 +899,12 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 					remove_cluster_item (l_cluster_stone.group)
 				end
 			end
+		end
+
+	remove_all is
+			-- Remove all from scope
+		do
+			scope_list.wipe_out
 		end
 
 	on_text_edited (directly_edited: BOOLEAN) is
@@ -1519,6 +1525,8 @@ feature -- Custom search scope
 				l_item.set_pebble_function (agent scope_pebble_function (a_class))
 				l_item.set_accept_cursor (Cursors.cur_class)
 				l_item.set_deny_cursor (Cursors.cur_x_class)
+				l_item.set_configurable_target_menu_mode
+				l_item.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).search_scope_menu)
 				force_new_search
 			end
 		end
@@ -1553,6 +1561,8 @@ feature -- Custom search scope
 					l_item.set_pebble_function (agent scope_pebble_function (a_group))
 					l_item.set_accept_cursor (Cursors.cur_cluster)
 					l_item.set_deny_cursor (Cursors.cur_x_cluster)
+					l_item.set_configurable_target_menu_mode
+					l_item.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).search_scope_menu)
 					force_new_search
 				end
 			end
@@ -1587,6 +1597,8 @@ feature -- Custom search scope
 				l_item.set_pebble_function (agent scope_pebble_function (a_folder))
 				l_item.set_accept_cursor (Cursors.cur_cluster)
 				l_item.set_deny_cursor (Cursors.cur_x_cluster)
+				l_item.set_configurable_target_menu_mode
+				l_item.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).search_scope_menu)
 				force_new_search
 			end
 		end
@@ -1860,12 +1872,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			if scope_list.selected_items.count /= 0 then
 				force_new_search
 			end
-		end
-
-	remove_all is
-			-- Remove all from scope
-		do
-			scope_list.wipe_out
 		end
 
 	switch_mode is

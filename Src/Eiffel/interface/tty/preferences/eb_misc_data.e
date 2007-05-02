@@ -153,9 +153,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 	is_pnd_mode: BOOLEAN is
 			-- Is current Pnd mode? If False, Contextual Menu mode.
 		do
-			--|Ted: temporarily keep it always pnd mode.
-			--Result := pnd_preference.value
-			Result := True
+			Result := pnd_preference.value
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference

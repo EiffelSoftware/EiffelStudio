@@ -876,6 +876,7 @@ feature{NONE} -- Implementation
 			grid.key_press_actions.extend (agent on_key_pressed)
 			l_grid_support := new_grid_support (grid)
 			l_grid_support.enable_grid_item_pnd_support
+			l_grid_support.set_context_menu_factory_function (agent context_menu_factory)
 			grid.enable_row_separators
 			grid.enable_column_separators
 			grid.enable_single_row_selection
@@ -913,6 +914,12 @@ feature{NONE} -- Implementation
 	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Set background color for `a_grid_row' which contains `a_archive_node'.
 		deferred
+		end
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+			-- Context menu factory
+		do
+			Result := metric_history_panel.metric_tool.develop_window.menus.context_menu_factory
 		end
 
 invariant

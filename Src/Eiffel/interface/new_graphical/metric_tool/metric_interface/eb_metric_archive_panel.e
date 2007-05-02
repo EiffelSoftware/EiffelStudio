@@ -124,9 +124,11 @@ feature {NONE} -- Initialization
 				-- Setup domain selector.
 			create domain_selector
 			domain_selector.setup_delayed_domain_item_buttons (True, False, False)
+			domain_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 				-- Setup metric selector.
 			create metric_selector.make (True)
 			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
+			metric_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 
 				-- Setup toolbar.
 			run_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)

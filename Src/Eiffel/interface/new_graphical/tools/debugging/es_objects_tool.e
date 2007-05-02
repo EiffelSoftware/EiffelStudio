@@ -1512,15 +1512,20 @@ feature {NONE} -- Debugged objects grid Implementation
 			l: ES_OBJECTS_GRID_SPECIFIC_LINE
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 			lst_pos: LIST [INTEGER]
+			l_reused: HASH_TABLE [ARRAY [ES_OBJECTS_GRID_SPECIFIC_LINE], STRING]
+			l_reused_lines: ARRAY [ES_OBJECTS_GRID_SPECIFIC_LINE]
 		do
 				--| Clean old lines
 			from
+				create l_reused.make (objects_grids.count)
 				objects_grids.start
 			until
 				objects_grids.after
 			loop
 				g := objects_grids.item_for_iteration.grid
 				lines := objects_grids.item_for_iteration.lines
+				create l_reused_lines.make (position_stack, position_dropped)
+				l_reused.put (l_reused_lines, g.id)
 				from
 					lines.start
 				until
@@ -1531,6 +1536,7 @@ feature {NONE} -- Debugged objects grid Implementation
 						if l.is_attached_to_row then
 							l.unattach
 						end
+						l_reused_lines[l.id] := l
 					end
 					lines.forth
 				end
@@ -1548,6 +1554,7 @@ feature {NONE} -- Debugged objects grid Implementation
 				lst_pos := gdata.ids
 				gdata.lines.wipe_out
 				from
+					l_reused_lines := l_reused.item (objects_grids.key_for_iteration)
 					lst_pos.start
 				until
 					lst_pos.after
@@ -1559,7 +1566,10 @@ feature {NONE} -- Debugged objects grid Implementation
 						dropped_objects_grid := gdata.grid
 						gdata.lines.force (Void) --| FIXME: for now, Void item is the placeholder for displayed objects
 					else
-						l := new_specific_line (lst_pos.item)
+						l := l_reused_lines [lst_pos.item]
+						if l = Void then
+							l := new_specific_line (lst_pos.item)
+						end
 						if l /= Void then
 							gdata.lines.force (l)
 						end

@@ -2073,14 +2073,14 @@ feature -- Implementation
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 		local
-			l_type_a: TYPE_A
+			l_type_a, l_last_type, l_last_constrained: TYPE_A
+			l_last_class_id: INTEGER
 			l_formal: FORMAL_A
 			l_feature: FEATURE_I
 			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
 			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_type_a_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
-
 		do
 			l_type_a := last_type.actual_type
 			if l_type_a.is_formal then
@@ -2122,6 +2122,7 @@ feature -- Implementation
 					l_type_set := l_type_set.constraining_types (context.current_class)
 					l_result := l_type_set.feature_i_list_by_rout_id (l_as.routine_ids.first)
 					check at_least_one_feature_found: l_result.count > 0 end
+							-- As we inherited this feature there's the possiblity that now,
 					from
 						l_result.start
 					until
@@ -2129,10 +2130,15 @@ feature -- Implementation
 					loop
 						l_result_item := l_result.item
 						l_feature := l_result_item.feature_i
-						last_type := l_result_item.cl_type.type
+						l_last_class_id := l_result_item.cl_type.associated_class.class_id
+						l_last_constrained := l_result_item.cl_type.type
+							-- Save last_type
+						l_last_type :=last_type
 							-- Type check the call
-						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters,
+						process_call (l_last_constrained, Void, l_as.feature_name, l_feature, l_as.parameters,
 							False, False, True, False)
+							-- We inherited this feature. Adapt it's type.
+						last_type := l_feature.type.instantiation_in (l_last_type, l_last_class_id).actual_type
 						l_result.forth
 					end
 				else
@@ -4687,6 +4693,8 @@ feature -- Implementation
 							last_type := l_creation_type
 								-- Type check the call
 							process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False)
+								-- Even though this code is very similar to the one in `process_access_feat_as' we do not
+								-- need to adapt last_type as this is a creation procedure without a result.
 						end
 							-- Martins 3/29/2007
 							-- After the loop we simply continue with whatever feature was last found.
@@ -7582,7 +7590,7 @@ feature {NONE} -- Implementation: type validation
 				-- If the declared target type is formal
 				-- and if the corresponding generic parameter is
 				-- constrained to a class which is also generic
-				-- Result id a FORMAL_A object with no more information
+				-- Result is a FORMAL_A object with no more information
 				-- than the position of the formal in the generic parameter
 				-- list of the class in which the feature "l_feature_name" is
 				-- declared.
@@ -7602,7 +7610,7 @@ feature {NONE} -- Implementation: type validation
 				-- type in the declaration of the constraint class type (in this case
 				-- class STRING).
 				-- Note: the following conditional instruction will not be executed
-				-- if the class type of the constraint id not generic since in that
+				-- if the class type of the constraint is not generic since in that
 				-- case `Result' would not be formal.
 			Result := a_type
 			if a_last_type.is_formal then

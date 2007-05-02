@@ -1269,6 +1269,8 @@ feature -- Parent checking
 			l_single_classes: LINKED_LIST [CLASS_C]
 			l_old_is_single, l_has_external_parent: BOOLEAN
 		do
+				-- Clear feature context
+			ast_context.clear_feature_context
 			from
 				l_area := parents.area
 				nb := parents.count

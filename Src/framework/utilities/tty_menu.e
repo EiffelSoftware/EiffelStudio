@@ -246,7 +246,7 @@ feature {NONE} -- Answers implementation
 			-- Display menu
 		local
 			item: like entry
-			l_title: STRING_32
+			l_title: STRING_GENERAL
 		do
 			localized_print (title)
 			io.put_new_line

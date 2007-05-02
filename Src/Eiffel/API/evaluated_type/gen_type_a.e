@@ -741,7 +741,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 								-- This actual parameter (`l_generic_parameter') did not conform to its constraining types.
 							create l_vtgd2
 							l_vtgd2.set_class(a_type_context)
-							l_vtgd2.set_feature (context.current_feature)
+							if context.current_feature /= Void then
+								l_vtgd2.set_feature (context.current_feature)
+							end
 							l_vtgd2.set_type (l_generic_parameter)
 							l_vtgd2.set_constraint (l_constraints)
 							Error_handler.insert_error (l_vtgd2)

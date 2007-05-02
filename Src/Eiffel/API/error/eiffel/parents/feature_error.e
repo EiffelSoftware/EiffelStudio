@@ -82,14 +82,14 @@ feature -- Output
 				elseif feature_name /= Void then
 					a_text_formatter.add_feature_error (e_feature, feature_name, line)
 				else
-					a_text_formatter.add ("invariant")
+					a_text_formatter.add ("inheritance or invariant clause")
 				end
 			elseif e_feature /= Void then
 				e_feature.append_name (a_text_formatter)
 			elseif feature_name /= Void then
 				a_text_formatter.add (feature_name)
 			else
-				a_text_formatter.add ("invariant")
+				a_text_formatter.add ("inheritance or invariant clause")
 			end
 			a_text_formatter.add_new_line
 			build_explain (a_text_formatter)

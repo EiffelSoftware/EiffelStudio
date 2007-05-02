@@ -11,7 +11,7 @@ class
 
 inherit
 
-	ES_OBJECTS_GRID_LINE
+	ES_OBJECTS_GRID_OBJECT_LINE
 		rename
 			data as object,
 			set_data as set_object
@@ -135,7 +135,7 @@ feature -- Related line if precised
 			related_line := v
 		end
 
-	related_line: ES_OBJECTS_GRID_LINE
+	related_line: ES_OBJECTS_GRID_OBJECT_LINE
 
 feature -- Query
 

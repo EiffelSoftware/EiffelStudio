@@ -779,18 +779,11 @@ feature{NONE} -- Implementation
 			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_feature: E_FEATURE
-			l_routine: ROUTINE_AS
 		do
 			Result := a_item.is_real_feature
 			if Result then
 				l_feature := a_item.e_feature
-				Result := l_feature.is_procedure or l_feature.is_function
-				if Result then
-					l_routine ?= l_feature.ast.body.content
-					if l_routine /= Void then
-						Result := l_routine.rescue_clause /= Void
-					end
-				end
+				Result := l_feature.has_rescue_clause
 			end
 		end
 

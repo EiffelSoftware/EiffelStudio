@@ -330,6 +330,18 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 		end
 
+	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+		require
+			a_type_i_not_void: a_type_i /= Void
+			a_type_i_compiled: a_type_i.has_associated_class_type
+		do
+			prepare_evaluation
+			implementation.create_empty_instance_of (a_type_i, a_curr_obj_typeid)
+			retrieve_evaluation
+		end
+
+feature -- Query
+
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 			Result := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
@@ -470,6 +482,9 @@ feature {NONE} -- Implementation
 		do
 			last_result_value       := implementation.last_result_value
 			last_result_static_type := implementation.last_result_static_type
+			if last_result_static_type = Void and last_result_value /= Void then
+				last_result_static_type := last_result_value.dynamic_class
+			end
 			if implementation.error_occurred then
 				notify_error_evaluation (implementation.error_message)
 			end

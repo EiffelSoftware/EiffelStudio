@@ -89,7 +89,7 @@ feature -- Access
 			Result := st /= Void
 		end
 
-	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
+	objects_grid_object_line (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
 		do
 			if has_object and viewer.row_count > 0 then
 				if current_object.object_address.is_equal (add) then
@@ -142,19 +142,6 @@ feature {NONE} -- Implementation
 	is_in_default_state: BOOLEAN is
 		do
 			Result := True
-		end
-
-	parent_window (w: EV_WIDGET): EV_WINDOW is
-		local
-			p: EV_WIDGET
-		do
-			p := w.parent
-			if p /= Void then
-				Result ?= p
-				if Result = Void then
-					Result := parent_window (p)
-				end
-			end
 		end
 
 	clear is

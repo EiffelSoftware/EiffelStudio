@@ -116,6 +116,9 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_dbg_Exception_trace: INTEGER is 47
 			-- Get dbg exception trace
 
+	Rqst_new_instance: INTEGER is 49
+			-- Create new instance of class
+
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0

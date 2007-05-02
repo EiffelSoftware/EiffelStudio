@@ -124,6 +124,13 @@ feature
 			"C signature (EIF_REFERENCE)"
 		end
 
+	send_ack_ok is
+		external
+			"C"
+		alias
+			"ewb_send_ack_ok"
+		end;
+
 	recv_ack: BOOLEAN is
 		external
 			"C"

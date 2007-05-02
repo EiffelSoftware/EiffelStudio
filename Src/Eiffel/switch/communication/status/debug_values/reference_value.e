@@ -95,9 +95,8 @@ feature -- Access
 				end
 				print ("%N")
 			end
-			if dynamic_class /= Void then
-				l_cl := dynamic_class
-			else
+			l_cl := dynamic_class
+			if l_cl = Void then
 				l_cl := static_class
 			end
 			Result := Debugger_manager.Dump_value_factory.new_object_value (address, l_cl)

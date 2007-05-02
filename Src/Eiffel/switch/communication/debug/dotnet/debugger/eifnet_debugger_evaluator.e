@@ -68,7 +68,6 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
 			-- Function evaluation result for `a_func' on `a_icd'
 		require
-			args_not_void: a_args /= Void
 			func_not_void: a_func /= Void
 		do
 			debug ("debugger_trace_eval")

@@ -401,7 +401,7 @@ rt_private uint32 go_ith_stack_level(int level)
  * (The interpreter registers are supposed to be correctly synchronized)  *
  **************************************************************************/
 rt_private struct dump *get_next_variable(uint32 start)
-	{
+{
 	static struct dump dumped;			/* Item returned */
 	struct dump *dp;					/* Partial dump pointer */
 	static int arg_done = 0;			/* True when arguments processed */
@@ -409,26 +409,27 @@ rt_private struct dump *get_next_variable(uint32 start)
 	static uint32 locn = 0;				/* Local number */
 
 	if (!arg_done)						/* There are still some arguments */
-		{
+	{
 		dp = variable_item(IV_ARG,argn++,start);	/* Get next argument */
-		if (dp != (struct dump *) 0)
+		if (dp != (struct dump *) 0) {
 			return dp;
+		}
 		arg_done = 1;					/* No more arguments */
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
 		return &dumped;					/* arguments to be sent. */
-		}
-	else
+	} else {
 		dp = variable_item(IV_LOCAL,locn++,start);	/* Get next local then */
+	}
 			
 	if (dp == (struct dump *) 0)		/* Finished: reset static vars */
-		{
+	{
 		arg_done = 0;
 		argn = 0;
 		locn = 0;
-		}
+	}
 
 	return dp;			/* Pointer to static data or null */
-	}
+}
 
 /************************************************************************** 
  * NAME: variable_item                                                    * 

@@ -151,7 +151,7 @@ feature -- Number formatting
 
 	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
 		local
-			l_eb_t: ES_OBJECTS_GRID_LINE
+			l_eb_t: ES_OBJECTS_GRID_OBJECT_LINE
 		do
 			l_eb_t ?= t.data
 			if l_eb_t /= Void then
@@ -403,7 +403,7 @@ feature -- Change
 
 feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING_GENERAL) is
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_OBJECT_LINE; a_title: STRING_GENERAL) is
 		require
 			dv /= Void
 		local
@@ -437,14 +437,14 @@ feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJE
 			litem.attach_to_row (a_row)
 		end
 
-	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_LINE is
+	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_OBJECT_LINE is
 		require
 			a_row /= Void
 		do
 			Result ?= a_row.data
 		end
 
-	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
+	objects_grid_item (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is
 		require
 			valid_address: add /= Void
 		do
@@ -458,7 +458,8 @@ feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJE
 				)
 		end
 
-	objects_grid_item_function: FUNCTION [ANY, TUPLE [STRING], ES_OBJECTS_GRID_LINE]
+	objects_grid_item_function: FUNCTION [ANY, TUPLE [STRING], like objects_grid_item]
+			-- Function used to retrieve the objects_grid objects line related to `addr'.
 
 	set_objects_grid_item_function (fct: like objects_grid_item_function) is
 		do

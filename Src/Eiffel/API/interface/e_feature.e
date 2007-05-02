@@ -221,6 +221,17 @@ feature -- Properties
 			Result := arguments /= Void
 		end
 
+	has_rescue_clause: BOOLEAN is
+			-- Has rescue clause ?
+		local
+			f: like associated_feature_i
+		do
+			f := associated_feature_i
+			if f /= Void then
+				Result := f.has_rescue_clause
+			end
+		end
+
 	arguments: E_FEATURE_ARGUMENTS is
 			-- Argument types
 		do

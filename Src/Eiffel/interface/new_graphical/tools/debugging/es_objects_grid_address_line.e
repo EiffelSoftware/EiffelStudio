@@ -11,7 +11,7 @@ class
 
 inherit
 
-	ES_OBJECTS_GRID_LINE
+	ES_OBJECTS_GRID_OBJECT_LINE
 		rename
 			data as object_address,
 			set_data as set_object_address

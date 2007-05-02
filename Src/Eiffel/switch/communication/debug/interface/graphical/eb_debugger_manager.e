@@ -1543,6 +1543,7 @@ feature -- Debugging events
 		do
 			Precursor
 			disable_debugging_commands (False)
+			notify_breakpoints_changes
 		end
 
 	on_application_launched is

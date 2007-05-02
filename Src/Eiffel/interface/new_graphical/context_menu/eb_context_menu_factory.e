@@ -18,6 +18,8 @@ inherit
 
 	SHARED_BENCH_NAMES
 
+	EB_SHARED_MANAGERS
+
 create
 	make
 
@@ -179,7 +181,7 @@ feature -- Diagram tool
 					a_menu.extend (create {EV_MENU_SEPARATOR})
 					l_feature_stone ?= a_pebble
 					if l_feature_stone = Void then
-						extend_diagram_add_menu (a_menu, a_pebble)
+						extend_diagram_add_menu (a_menu, names.b_add, a_pebble)
 						extend_diagram_include_all_classes (a_menu, a_pebble)
 						extend_force_right_angle (a_menu, a_pebble)
 						extend_remove_anchor (a_menu, a_pebble)
@@ -239,6 +241,48 @@ feature -- Favorites menus
 				extend_add_favorite_folder (a_menu)
 				extend_move_to_folder (a_menu, a_pebble)
 				extend_remove_from_favorites (a_menu, a_pebble)
+			end
+		end
+
+feature -- Metrics tool
+
+	metric_domain_selector_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_selector: EB_METRIC_DOMAIN_SELECTOR) is
+			-- Metrics domain selector context menu
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_metric_selector_remove (a_menu, a_pebble, a_selector)
+			end
+		end
+
+	metric_metric_selector_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_selector: EB_METRIC_SELECTOR) is
+			-- Metrics domain selector context menu
+		local
+			l_unit: QL_METRIC_UNIT
+			l_basic: EB_METRIC_BASIC
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				l_unit ?= a_pebble
+				l_basic ?= a_pebble
+				if l_unit /= Void then
+					extend_metric_selector_move_up_and_down (a_menu, a_selector, l_unit)
+				elseif l_basic /= Void then
+					extend_metric_clone_metric (a_menu, l_basic)
+					extend_metric_quick_metric (a_menu, l_basic)
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_new_metric (a_menu)
+					extend_reload_metrics (a_menu)
+					extend_metric_open_user_metric (a_menu)
+					extend_import_metric_from_file (a_menu)
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_metric_delete (a_menu, l_basic)
+				end
 			end
 		end
 
@@ -303,6 +347,20 @@ feature -- Object and Watch tool menus
 					end
 					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
 				end
+			end
+		end
+
+feature -- Search scope menu
+
+	search_scope_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Search scope menu
+		do
+			if not is_pnd_mode then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_search_scope_remove (a_menu, a_pebble)
 			end
 		end
 
@@ -488,8 +546,10 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 			a_class_stone_not_void: a_class_stone /= Void
 		local
-			l_menu: EV_MENU
+			l_menu, l_c_menu: EV_MENU
 			l_class_formatter: EB_CLASS_INFO_FORMATTER
+			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
 			create l_menu.make_with_text (names.m_show)
 			a_menu.extend (l_menu)
@@ -502,10 +562,32 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_class_formatter ?= dev_window.managed_class_formatters.item
 				if l_class_formatter /= Void then
 					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_class_formatter.menu_name))
+					l_menu.last.select_actions.extend (agent (dev_window.tools.class_tool).show)
 					l_menu.last.select_actions.extend (agent l_class_formatter.execute_with_stone (a_class_stone))
 				end
 				dev_window.managed_class_formatters.forth
 			end
+
+				-- Extend customized formatters.
+			create l_c_menu.make_with_text (names.f_customize_formatter)
+			l_menu.extend (l_c_menu)
+
+			extend_formatter (l_c_menu, dev_window.tools.class_tool.customized_formatters, dev_window.tools.class_tool, a_class_stone)
+			extend_formatter (l_c_menu, dev_window.tools.dependency_tool.customized_formatters, dev_window.tools.dependency_tool, a_class_stone)
+			l_customized_tools := dev_window.tools.customized_tools
+			from
+				l_customized_tools.start
+			until
+				l_customized_tools.after
+			loop
+				l_customized_tool := l_customized_tools.item
+				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_class_stone)
+				l_customized_tools.forth
+			end
+			if l_c_menu.is_empty then
+				l_c_menu.disable_sensitive
+			end
+
 			l_menu.extend (create {EV_MENU_SEPARATOR})
 
 			l_menu.extend (dev_window.tools.cluster_tool.show_current_class_cluster_cmd.new_menu_item_unmanaged)
@@ -523,8 +605,10 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 			a_feature_stone_not_void: a_feature_stone /= Void
 		local
-			l_menu: EV_MENU
+			l_menu, l_c_menu: EV_MENU
 			l_feature_formatter: EB_FEATURE_INFO_FORMATTER
+			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
+			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
 			create l_menu.make_with_text (names.m_show)
 			a_menu.extend (l_menu)
@@ -537,9 +621,49 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_feature_formatter ?= dev_window.managed_feature_formatters.item
 				if l_feature_formatter /= Void then
 					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_feature_formatter.menu_name))
+					l_menu.last.select_actions.extend (agent (dev_window.tools.features_relation_tool).show)
 					l_menu.last.select_actions.extend (agent l_feature_formatter.execute_with_stone (a_feature_stone))
 				end
 				dev_window.managed_feature_formatters.forth
+			end
+
+				-- Extend customized formatters.
+			create l_c_menu.make_with_text (names.f_customize_formatter)
+			l_menu.extend (l_c_menu)
+
+			extend_formatter (l_c_menu, dev_window.tools.features_relation_tool.customized_formatters, dev_window.tools.features_relation_tool, a_feature_stone)
+			extend_formatter (l_c_menu, dev_window.tools.dependency_tool.customized_formatters, dev_window.tools.dependency_tool, a_feature_stone)
+			l_customized_tools := dev_window.tools.customized_tools
+			from
+				l_customized_tools.start
+			until
+				l_customized_tools.after
+			loop
+				l_customized_tool := l_customized_tools.item
+				extend_formatter (l_c_menu, l_customized_tool.formatters, l_customized_tool, a_feature_stone)
+				l_customized_tools.forth
+			end
+			if l_c_menu.is_empty then
+				l_c_menu.disable_sensitive
+			end
+		end
+
+	extend_formatter (a_menu: EV_MENU; a_formatters: LIST [EB_FORMATTER]; a_tool: EB_TOOL; a_stone: STONE) is
+			-- Extend formatter excution menu entries.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_formatter_not_void: a_formatters /= Void
+			a_tool_not_void: a_tool /= Void
+		do
+			from
+				a_formatters.start
+			until
+				a_formatters.after
+			loop
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (a_formatters.item.name))
+				a_menu.last.select_actions.extend (agent a_tool.show)
+				a_menu.last.select_actions.extend (agent (a_formatters.item).execute_with_stone (a_stone))
+				a_formatters.forth
 			end
 		end
 
@@ -678,6 +802,12 @@ feature {NONE} -- Menu section, Granularity 1.
 		do
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
+
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_search_scope))
+			l_menu.last.select_actions.extend (agent (dev_window.tools.search_tool).on_drop_add (a_pebble))
+
+			extend_diagram_add_menu (l_menu, names.m_diagram_with, a_pebble)
+
 			create l_menu2.make_with_text (names.m_input_domain)
 			l_menu.extend (l_menu2)
 			l_menu2.extend (create {EV_MENU_ITEM}.make_with_text (metric_names.t_evaluation_tab))
@@ -786,12 +916,25 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu.extend (dev_window.commands.new_assembly_cmd.new_menu_item_unmanaged)
 		end
 
+	extend_search_scope_remove (a_menu: EV_MENU; a_pebble: ANY) is
+			-- Extend search remove menu.
+		local
+			l_search_tool: EB_MULTI_SEARCH_TOOL
+		do
+			l_search_tool := dev_window.tools.search_tool
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove))
+			a_menu.last.select_actions.extend (agent l_search_tool.on_drop_remove (a_pebble))
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_all))
+			a_menu.last.select_actions.extend (agent l_search_tool.remove_all)
+		end
+
 feature {NONE} -- Diagram menu section, Granularity 1.
 
-	extend_diagram_add_menu (a_menu: EV_MENU; a_pebble: ANY) is
+	extend_diagram_add_menu (a_menu: EV_MENU; a_name: STRING_GENERAL; a_pebble: ANY) is
 			-- Extend Add commands in diagram.
 		require
 			a_menu_not_void: a_menu /= Void
+			a_name_not_void: a_name /= Void
 		local
 			l_menu: EV_MENU
 			l_classi_stone: CLASSI_STONE
@@ -801,7 +944,7 @@ feature {NONE} -- Diagram menu section, Granularity 1.
 			l_classi_stone ?= a_pebble
 			l_figures ?= a_pebble
 			if l_classi_stone /= Void or l_figures /= Void then
-				create l_menu.make_with_text (names.b_add)
+				create l_menu.make_with_text (a_name)
 				a_menu.extend (l_menu)
 				l_diagram_tool := dev_window.tools.diagram_tool
 
@@ -1101,6 +1244,137 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 			if not a_watch_tool.is_removable (a_pebble) then
 				a_menu.last.disable_sensitive
 			end
+		end
+
+feature {NONE} -- Metrics tool section, Granularity 1.
+
+	extend_metric_delete (a_menu: EV_MENU; a_basic: EB_METRIC_BASIC) is
+			-- Extend metric Delete.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_basic_not_void: a_basic /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_delete))
+			a_menu.last.set_pixmap (l_metric_panel.remove_metric_btn.pixmap)
+			a_menu.last.select_actions.extend (agent l_metric_panel.remove_metric_by_context_menu (a_basic))
+			if a_basic.is_predefined then
+				a_menu.last.disable_sensitive
+			end
+		end
+
+	extend_metric_quick_metric (a_menu: EV_MENU; a_basic: EB_METRIC_BASIC) is
+			-- Extend Quick metric.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_basic_not_void: a_basic /= Void
+		local
+			l_metric_panel: EB_METRIC_EVALUATION_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.metric_evaluation_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_quick_metric))
+			a_menu.last.set_pixmap (l_metric_panel.quick_metric_btn.pixmap)
+			a_menu.last.select_actions.extend (agent (dev_window.tools.metric_tool.metric_notebook).select_item (l_metric_panel))
+			a_menu.last.select_actions.extend (agent l_metric_panel.on_create_quick_metric (a_basic))
+		end
+
+	extend_metric_clone_metric (a_menu: EV_MENU; a_basic: EB_METRIC_BASIC) is
+			-- Extend Open user defined metrics externally.
+		require
+			a_menu_not_void: a_menu /= Void
+			a_basic_not_void: a_basic /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_clone_metric))
+			a_menu.last.set_pixmap (l_metric_panel.send_current_to_new_btn.pixmap)
+			a_menu.last.select_actions.extend (agent (dev_window.tools.metric_tool.metric_notebook).select_item (l_metric_panel))
+			a_menu.last.select_actions.extend (agent l_metric_panel.clone_and_load_metric (a_basic))
+		end
+
+	extend_reload_metrics (a_menu: EV_MENU) is
+			-- Extend Reload metrics
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_reload_metrics))
+			a_menu.last.set_pixmap (l_metric_panel.reload_btn.pixmap)
+			a_menu.last.select_actions.extend (agent l_metric_panel.on_reload_metrics)
+		end
+
+	extend_import_metric_from_file (a_menu: EV_MENU) is
+			-- Extend Import metrics from file.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_import_metrics_from_file))
+			a_menu.last.set_pixmap (l_metric_panel.import_btn.pixmap)
+			a_menu.last.select_actions.extend (agent l_metric_panel.on_import_metrics)
+		end
+
+	extend_new_metric (a_menu: EV_MENU) is
+			-- Extend New metric
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+			l_menu: EV_MENU
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			l_menu := l_metric_panel.new_metric_menu (True)
+			l_menu.set_pixmap (l_metric_panel.new_metric_btn.pixmap)
+			l_menu.set_text (names.m_new_metric)
+			a_menu.extend (l_menu)
+		end
+
+	extend_metric_open_user_metric (a_menu: EV_MENU) is
+			-- Extend Open user defined metrics externally.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_metric_panel: EB_NEW_METRIC_PANEL
+		do
+			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_open_user_defined_metric))
+			a_menu.last.set_pixmap (l_metric_panel.open_metric_file_btn.pixmap)
+			a_menu.last.select_actions.extend (agent l_metric_panel.on_open_user_defined_metric_file)
+		end
+
+	extend_metric_selector_move_up_and_down (a_menu: EV_MENU; a_selector: EB_METRIC_SELECTOR; a_unit: QL_METRIC_UNIT) is
+			-- Extend Move up and Move down menus for metric selector
+		require
+			a_menu_not_void: a_menu /= Void
+			a_selector_not_void: a_selector /= Void
+			a_unit_not_void: a_unit /= Void
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_move_up))
+			a_menu.last.select_actions.extend (agent a_selector.move_unit (a_unit, True))
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_move_down))
+			a_menu.last.select_actions.extend (agent a_selector.move_unit (a_unit, False))
+		end
+
+	extend_metric_selector_remove (a_menu: EV_MENU; a_pebble: ANY; a_selector: EB_METRIC_DOMAIN_SELECTOR) is
+			-- Remove and Remove all menus in metric selector
+		require
+			a_menu_not_void: a_menu /= Void
+			a_selector_not_void: a_selector /= Void
+		do
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove))
+				-- |Ted: Questionable: Metric domain selector has two routine handling removing?
+			a_menu.last.select_actions.extend (agent a_selector.on_item_dropped_on_remove_button (a_pebble))
+			a_menu.last.select_actions.extend (agent a_selector.on_item_drop_on_remove_button (a_pebble))
+
+			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_all))
+			a_menu.last.select_actions.extend (agent a_selector.on_remove_all_scopes)
 		end
 
 feature {NONE} -- Implementation

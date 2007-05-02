@@ -26,6 +26,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+
 feature -- Initialize
 
 	initialize_code_complete is
@@ -87,6 +89,14 @@ feature {NONE} -- Access
 	current_char: CHARACTER is
 			-- Current character, to the right of the cursor.
 		deferred
+		end
+
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+			-- Dev window
+		do
+			if window_manager.last_focused_development_window /= Void then
+				Result := window_manager.last_focused_development_window.menus.context_menu_factory
+			end
 		end
 
 feature -- Status Change
@@ -530,6 +540,7 @@ feature {NONE} -- Implementation
 			if choices.show_needed then
 				position_completion_choice_window
 				is_completing := True
+				choices.set_context_menu_factory (context_menu_factory)
 				choices.show
 			end
 		end

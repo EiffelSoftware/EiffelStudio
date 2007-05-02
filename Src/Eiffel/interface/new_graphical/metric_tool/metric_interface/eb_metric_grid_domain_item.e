@@ -33,7 +33,7 @@ inherit
 			copy,
 			default_create
 		end
-		
+
 create
 	make
 
@@ -186,6 +186,7 @@ feature -- Setting
 			activated: is_activated
 		local
 			l_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]
+			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_dialog := dialog_function.item (Void)
 			if l_dialog /= Void then
@@ -195,6 +196,10 @@ feature -- Setting
 				l_dialog.cancel_actions.wipe_out
 				l_dialog.set_domain (domain)
 				l_dialog.set_value (value)
+				l_dev_window := window_manager.last_focused_development_window
+				if l_dev_window /= Void and l_dialog.domain_selector /= Void then
+					l_dialog.set_context_menu_factory (l_dev_window.menus.context_menu_factory)
+				end
 				l_dialog.show_relative_to_window (parent_window (parent))
 				l_dialog.set_focus
 			end

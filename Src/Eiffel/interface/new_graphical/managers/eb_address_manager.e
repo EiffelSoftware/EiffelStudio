@@ -50,6 +50,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+
 create
 	make
 
@@ -2164,6 +2166,14 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			highlight_label (feature_label)
 			unhighlight_label (feature_label)
 
+			cluster_label.set_configurable_target_menu_mode
+			class_label.set_configurable_target_menu_mode
+			feature_label.set_configurable_target_menu_mode
+
+			cluster_label.set_configurable_target_menu_handler (agent context_menu_handler)
+			class_label.set_configurable_target_menu_handler (agent context_menu_handler)
+			feature_label.set_configurable_target_menu_handler (agent context_menu_handler)
+
 			hb.set_padding (2)
 			hb.extend (cluster_label)
 			hb.extend (class_label)
@@ -2172,6 +2182,14 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			hb.disable_item_expand (class_label)
 			hb.disable_item_expand (feature_label)
 			header_info.extend (hb)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			if context_menu_factory /= Void then
+				context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
 		end
 
 	update_labels is

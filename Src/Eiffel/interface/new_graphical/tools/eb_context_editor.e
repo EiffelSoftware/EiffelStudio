@@ -571,6 +571,7 @@ feature -- EB_TOOL features
 
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
+			address_manager.set_context_menu_factory (develop_window.menus.context_menu_factory)
 		end
 
 	build_mini_toolbar is

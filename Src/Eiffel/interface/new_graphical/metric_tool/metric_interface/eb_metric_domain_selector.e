@@ -82,6 +82,13 @@ inherit
 			copy
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -138,6 +145,9 @@ feature {NONE} -- Initialization
 			grid_support.enable_ctrl_right_click_to_open_new_window
 			grid_support.enable_grid_item_pnd_support
 
+			grid.set_configurable_target_menu_mode
+			grid.set_configurable_target_menu_handler (agent context_menu_handler)
+
 			create scope_grid.make (grid)
 			scope_grid.disable_search
 			l_border.extend (scope_grid.component_widget)
@@ -171,6 +181,14 @@ feature {NONE} -- Initialization
 			open_address_manager_btn.set_pixmap (pixmaps.icon_pixmaps.tool_search_icon)
 			open_address_manager_btn.select_actions.extend (agent on_show_address_manager)
 			open_address_manager_btn.set_tooltip (metric_names.f_search_for_class)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu
+		do
+			if context_menu_factory /= Void then
+				context_menu_factory.metric_domain_selector_menu (a_menu, a_target_list, a_source, a_pebble, Current)
+			end
 		end
 
 feature -- Access
@@ -378,6 +396,39 @@ feature -- Actions
 			end
 		end
 
+feature {EB_CONTEXT_MENU_FACTORY} -- Actions
+
+	on_remove_all_scopes is
+			-- Actions to be performed to remove all scopes
+		do
+			if grid.row_count > 0 then
+				grid.remove_rows (1, grid.row_count)
+				on_domain_change
+			end
+		end
+
+	on_item_dropped_on_remove_button (a_pebble: ANY) is
+			-- Action to be performed when an item is dropped on remove item button
+		do
+			if last_picked_row_index > 0 and then last_picked_row_index <= grid.row_count then
+				grid.remove_row (last_picked_row_index)
+				last_picked_row_index := 0
+				on_domain_change
+			end
+		end
+
+	on_item_drop_on_remove_button (a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped on `remove_item_btn'
+		local
+			l_last_picked_item: EV_GRID_ITEM
+		do
+			l_last_picked_item := grid_support.last_picked_item
+			if l_last_picked_item /= Void then
+				grid.remove_row (l_last_picked_item.row.index)
+				on_domain_change
+			end
+		end
+
 feature{NONE} -- Actions
 
 	on_remove_selected_scopes is
@@ -410,15 +461,6 @@ feature{NONE} -- Actions
 					end
 					grid.row (l_smallest_row_index).enable_select
 				end
-				on_domain_change
-			end
-		end
-
-	on_remove_all_scopes is
-			-- Actions to be performed to remove all scopes
-		do
-			if grid.row_count > 0 then
-				grid.remove_rows (1, grid.row_count)
 				on_domain_change
 			end
 		end
@@ -479,16 +521,6 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_item_dropped_on_remove_button (a_pebble: ANY) is
-			-- Action to be performed when an item is dropped on remove item button
-		do
-			if last_picked_row_index > 0 and then last_picked_row_index <= grid.row_count then
-				grid.remove_row (last_picked_row_index)
-				last_picked_row_index := 0
-				on_domain_change
-			end
-		end
-
 	on_domain_change is
 			-- Action to be performed when domain changes
 		do
@@ -509,18 +541,6 @@ feature{NONE} -- Actions
 			-- Action to be performed to display `address_manager'
 		do
 			address_manager.pop_up_address_bar_at_position (address_manager_toolbar.screen_x, address_manager_toolbar.screen_y, 2)
-		end
-
-	on_item_drop_on_remove_button (a_pebble: ANY) is
-			-- Action to be performed when `a_pebble' is dropped on `remove_item_btn'
-		local
-			l_last_picked_item: EV_GRID_ITEM
-		do
-			l_last_picked_item := grid_support.last_picked_item
-			if l_last_picked_item /= Void then
-				grid.remove_row (l_last_picked_item.row.index)
-				on_domain_change
-			end
 		end
 
 feature{NONE} -- Implementation/Data

@@ -120,11 +120,12 @@ feature {NONE} -- Initialization
 				agent (a_metric: EB_METRIC)
 					do
 						if remove_metric_btn.is_sensitive then
-							remove_metric
+							remove_current_metric
 						end
 					end
 			)
 			metric_selector.disable_tooltip_contain_go_to_definition_message
+			metric_selector.set_context_menu_factory (metric_tool.develop_window.menus.context_menu_factory)
 			metric_selector_area.extend (metric_selector)
 
 				-- Initialize toolbar
@@ -239,6 +240,15 @@ feature -- Basic operations
 		do
 		end
 
+	clone_and_load_metric (a_metric: EB_METRIC) is
+			-- Clone and load `a_metric'
+		require
+			a_metric_not_void: a_metric /= Void
+		do
+			a_metric.set_name (metric_manager.next_metric_name_with_unit (a_metric.unit))
+			load_metric_definition (a_metric, metric_type_id (a_metric), a_metric.unit, True)
+		end
+
 feature -- Actions
 
 	on_copy_current_metric_to_a_new_metric is
@@ -250,9 +260,8 @@ feature -- Actions
 			l_editor := current_metric_editor
 			if l_editor /= Void then
 				l_metric := l_editor.metric
-				l_metric.set_name (metric_manager.next_metric_name_with_unit (l_metric.unit))
 				metric_selector.remove_selection
-				load_metric_definition (l_metric, metric_type_id (l_metric), l_metric.unit, True)
+				clone_and_load_metric (l_metric)
 			end
 		end
 
@@ -261,7 +270,7 @@ feature -- Actions
 		local
 			l_menu: EV_MENU
 		do
-			l_menu := new_metric_menu
+			l_menu := new_metric_menu (False)
 			l_menu.show_at (new_metric_toolbar, 0, new_metric_toolbar.height - 3)
 		end
 
@@ -348,7 +357,7 @@ feature -- Actions
 				metric_names.t_discard_remove_prompt,
 				preferences.preferences
 			)
-			l_dlg.set_ok_action (agent remove_metric)
+			l_dlg.set_ok_action (agent remove_current_metric)
 			l_dlg.show_modal_to_window (metric_tool_window)
 		end
 
@@ -401,15 +410,9 @@ feature -- Actions
 		do
 		end
 
-feature{NONE} -- Implementation
+feature {EB_CONTEXT_MENU_FACTORY} -- Implemetation
 
-	current_metric_editor: EB_METRIC_EDITOR
-			-- Current metric editor
-
-	original_metric: EB_METRIC
-			-- Current metric
-
-	new_metric_menu: EV_MENU is
+	new_metric_menu (a_context_menu: BOOLEAN): EV_MENU is
 			-- Menu for creating new metrics
 		local
 			l_submenu: EV_MENU
@@ -418,7 +421,7 @@ feature{NONE} -- Implementation
 			l_type: INTEGER_REF
 			l_new_menu: like new_metric_menu
 		do
-			if new_metric_menu_internal = Void then
+			if new_metric_menu_internal = Void or a_context_menu then
 				l_unit_list := unit_list (False)
 
 				create l_new_menu
@@ -445,6 +448,9 @@ feature{NONE} -- Implementation
 					loop
 						l_submenu ?= l_new_menu.item
 						create l_menu_item.make_with_text_and_action (unit_name_table.item (l_unit_list.item.l_unit), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
+						if a_context_menu then
+							l_menu_item.select_actions.extend (agent (metric_tool.metric_notebook).select_item (metric_tool.new_metric_panel))
+						end
 						l_menu_item.set_pixmap (l_unit_list.item.l_pixmap)
 						l_submenu.extend (l_menu_item)
 						l_unit_list.forth
@@ -452,6 +458,9 @@ feature{NONE} -- Implementation
 					l_new_menu.forth
 				end
 				create l_menu_item.make_with_text_and_action (displayed_name (metric_names.l_ratio_metric), agent on_create_new_metric (ratio_metric_type, ratio_unit))
+				if a_context_menu then
+					l_menu_item.select_actions.extend (agent (metric_tool.metric_notebook).select_item (metric_tool.new_metric_panel))
+				end
 				l_menu_item.set_pixmap (pixmaps.icon_pixmaps.metric_ratio_icon)
 				l_new_menu.extend (l_menu_item)
 				new_metric_menu_internal := l_new_menu
@@ -460,6 +469,35 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+	remove_metric_by_context_menu (a_metric: EB_METRIC) is
+			-- Remove metric by context menu.
+		require
+			a_metric_not_void: a_metric /= Void
+		local
+			l_dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			check
+				original_metric /= Void
+				current_metric_editor /= Void
+			end
+			create l_dlg.make_initialized (
+				2, preferences.dialog_data.confirm_remove_metric_string,
+				metric_names.t_remove_metric.as_string_32 +  "%"" + a_metric.name.twin + "%"?",
+				metric_names.t_discard_remove_prompt,
+				preferences.preferences
+			)
+			l_dlg.set_ok_action (agent remove_metric (a_metric))
+			l_dlg.show_modal_to_window (metric_tool_window)
+		end
+
+feature{NONE} -- Implementation
+
+	current_metric_editor: EB_METRIC_EDITOR
+			-- Current metric editor
+
+	original_metric: EB_METRIC
+			-- Current metric
 
 	new_metric_menu_internal: like new_metric_menu
 			-- Implementation of `new_metric_menu_internal'
@@ -473,16 +511,24 @@ feature{NONE} -- Implementation
 	ratio_metric_definition_area: EB_RATIO_METRIC_DEFINITION_AREA
 			-- Internal ratio metric definition area
 
-	remove_metric is
+	remove_current_metric is
 			-- Remove current editing metric.
+		do
+			remove_metric (original_metric)
+			current_metric_editor := Void
+			original_metric := Void
+		end
+
+	remove_metric (a_metric: EB_METRIC) is
+			-- Remove `a_metric'.
+		require
+			a_metric_not_void: a_metric /= Void
 		do
 			check
 				original_metric /= Void
 				current_metric_editor /= Void
 			end
-			metric_manager.remove_metric (original_metric.name)
-			current_metric_editor := Void
-			original_metric := Void
+			metric_manager.remove_metric (a_metric.name)
 			metric_tool.store_metrics
 --			metric_tool.load_metrics (True, metric_names.t_removing_metrics)
 			metric_selector.select_first_metric

@@ -144,6 +144,7 @@ feature {NONE} -- Initialization
 			input_grid.enable_selection_on_single_button_click
 			grid_support := new_grid_support (input_grid)
 			grid_support.enable_grid_item_pnd_support
+			grid_support.set_context_menu_factory_function (agent (metric_tool.develop_window.menus).context_menu_factory)
 
 			result_grid_area.extend (result_grid.widget)
 

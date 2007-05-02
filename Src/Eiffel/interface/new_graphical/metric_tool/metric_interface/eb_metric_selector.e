@@ -42,6 +42,13 @@ inherit
 			copy
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -132,6 +139,9 @@ feature {NONE} -- Initialization
 			metric_grid.item_drop_actions.extend (agent on_drop_unit)
 			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
 
+			metric_grid.set_configurable_target_menu_mode
+			metric_grid.set_configurable_target_menu_handler (agent context_menu_handler)
+
 			tree_view_checkbox.remove_text
 			tree_view_checkbox.set_text (metric_names.t_group)
 			tree_view_checkbox.set_pixmap (pixmaps.icon_pixmaps.metric_group_icon)
@@ -159,6 +169,14 @@ feature {NONE} -- Initialization
 			delete_key_pressed_actions_attached: delete_key_pressed_actions /= Void
 			metric_table_attached: metric_table /= Void
 			double_click_actions_attached: double_click_actions /= Void
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			if context_menu_factory /= Void then
+				context_menu_factory.metric_metric_selector_menu (a_menu, a_target_list, a_source, a_pebble, Current)
+			end
 		end
 
 feature -- Access
@@ -254,6 +272,25 @@ feature -- Status report
 	should_unit_be_expanded: BOOLEAN
 			-- Should unit be expanded?
 			-- Default: False
+
+feature {EB_CONTEXT_MENU_FACTORY} -- Context menu handler
+
+	move_unit (a_unit: QL_METRIC_UNIT; a_up: BOOLEAN) is
+			-- Move a unit up/down.
+		require
+			a_unit_not_void: a_unit /= Void
+		local
+			l_target_unit: like sideward_unit
+			l_row: like row_by_data
+		do
+			l_row := row_by_data (a_unit)
+			if l_row /= Void then
+				l_target_unit := sideward_unit (l_row, a_up)
+				if l_target_unit /= Void then
+					change_unit_order (a_unit, l_target_unit, not a_up)
+				end
+			end
+		end
 
 feature{NONE} -- Actions
 
@@ -430,10 +467,7 @@ feature{NONE} -- Actions
 			l_row: EV_GRID_ROW
 			l_source_unit: QL_METRIC_UNIT
 			l_dest_unit: QL_METRIC_UNIT
-			l_start_index: INTEGER
-			l_end_index: INTEGER
 			l_grid: like metric_grid
-			done: BOOLEAN
 		do
 			l_grid := metric_grid
 			l_selected_rows := l_grid.selected_rows
@@ -441,29 +475,7 @@ feature{NONE} -- Actions
 				l_row := l_selected_rows.first
 				l_source_unit ?= l_row.data
 				if l_source_unit /= Void then
-					if a_up then
-						from
-							l_start_index := l_row.index - 1
-							l_end_index := 1
-						until
-							l_start_index < l_end_index or done
-						loop
-							l_dest_unit ?= l_grid.row (l_start_index).data
-							done := l_dest_unit /= Void
-							l_start_index := l_start_index - 1
-						end
-					else
-						from
-							l_start_index := l_row.index + 1
-							l_end_index := l_grid.row_count
-						until
-							l_start_index > l_end_index or done
-						loop
-							l_dest_unit ?= l_grid.row (l_start_index).data
-							done := l_dest_unit /= Void
-							l_start_index := l_start_index + 1
-						end
-					end
+					l_dest_unit := sideward_unit (l_row, a_up)
 					if l_dest_unit /= Void then
 						change_unit_order (l_source_unit, l_dest_unit, a_after)
 					end
@@ -471,19 +483,19 @@ feature{NONE} -- Actions
 			end
 		end
 
-		on_drop_unit (a_item: EV_GRID_ITEM; a_unit: QL_METRIC_UNIT) is
-				-- Action to be performed when `a_unit' is dropped on `a_item'
-			require
-				a_item_attached: a_item /= Void
-				a_unit_attached: a_unit /= Void
-			local
-				l_dest_unit: QL_METRIC_UNIT
-			do
-				l_dest_unit ?= a_item.row.data
-				if l_dest_unit /= Void and then a_unit /= l_dest_unit then
-					change_unit_order (a_unit, l_dest_unit, True)
-				end
+	on_drop_unit (a_item: EV_GRID_ITEM; a_unit: QL_METRIC_UNIT) is
+			-- Action to be performed when `a_unit' is dropped on `a_item'
+		require
+			a_item_attached: a_item /= Void
+			a_unit_attached: a_unit /= Void
+		local
+			l_dest_unit: QL_METRIC_UNIT
+		do
+			l_dest_unit ?= a_item.row.data
+			if l_dest_unit /= Void and then a_unit /= l_dest_unit then
+				change_unit_order (a_unit, l_dest_unit, True)
 			end
+		end
 
 feature -- setting
 
@@ -1086,6 +1098,64 @@ feature {NONE} -- Implementation
 
 					preferences.metric_tool_data.set_unit_order (l_unit_list)
 				end
+			end
+		end
+
+	sideward_unit (a_row: EV_GRID_ROW; a_upper: BOOLEAN): QL_METRIC_UNIT is
+			-- Upper unit of `a_source_unit' if `a_upper', vice verser.
+		require
+			a_row_not_void: a_row /= Void
+		local
+			l_start_index: INTEGER
+			l_end_index: INTEGER
+			l_grid: like metric_grid
+			done: BOOLEAN
+		do
+			l_grid := metric_grid
+			if a_upper then
+				from
+					l_start_index := a_row.index - 1
+					l_end_index := 1
+				until
+					l_start_index < l_end_index or done
+				loop
+					Result ?= l_grid.row (l_start_index).data
+					done := Result /= Void
+					l_start_index := l_start_index - 1
+				end
+			else
+				from
+					l_start_index := a_row.index + 1
+					l_end_index := l_grid.row_count
+				until
+					l_start_index > l_end_index or done
+				loop
+					Result ?= l_grid.row (l_start_index).data
+					done := Result /= Void
+					l_start_index := l_start_index + 1
+				end
+			end
+		end
+
+	row_by_data (a_data: ANY): EV_GRID_ROW is
+			-- Get first row by `a_data' in `metric_grid'.
+		require
+			a_data_not_void: a_data /= Void
+		local
+			l_grid: like metric_grid
+			i, l_count: INTEGER
+		do
+			from
+				l_grid := metric_grid
+				l_count := l_grid.row_count
+				i := 1
+			until
+				i > l_count or Result /= Void
+			loop
+				if l_grid.row (i).data = a_data then
+					Result := l_grid.row (i)
+				end
+				i := i + 1
 			end
 		end
 

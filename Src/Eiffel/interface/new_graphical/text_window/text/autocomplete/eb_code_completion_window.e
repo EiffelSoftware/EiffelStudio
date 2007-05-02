@@ -57,6 +57,11 @@ inherit
 			default_create, copy
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -67,6 +72,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
 			choice_list.enable_tree
+			choice_list.set_configurable_target_menu_mode
+			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
 			set_title (Interface_names.t_Autocomplete_window)
 			setup_option_buttons
 			setup_accelerators
@@ -241,6 +248,14 @@ feature {NONE} -- Initialization
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (remember_size_button))
 			accelerators.extend (l_acc)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			if context_menu_factory /= Void then
+				context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
 		end
 
 feature -- Initialization

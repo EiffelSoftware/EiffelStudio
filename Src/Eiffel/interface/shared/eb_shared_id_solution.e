@@ -249,7 +249,7 @@ feature -- Access (Feature)
 				last_feature_name := l_feature_name
 				if l_class /= Void then
 					l_class_c := l_class.compiled_representation
-					if l_class_c /= Void then
+					if l_class_c /= Void and then l_class_c.has_feature_table then
 						Result := l_class_c.feature_with_name (l_feature_name)
 					end
 				end

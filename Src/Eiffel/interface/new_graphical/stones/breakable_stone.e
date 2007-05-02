@@ -639,6 +639,7 @@ feature -- operation on message
 						a_bp.reset_hits_count
 						a_lab.set_text (a_bp.hits_count.out)
 						a_lab.refresh_now
+						debugger_manager.notify_breakpoints_changes
 					end(bp, lab)
 				)
 			d.set_default_push_button (okb)

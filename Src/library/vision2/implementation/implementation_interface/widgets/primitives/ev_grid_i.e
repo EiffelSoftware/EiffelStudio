@@ -5200,7 +5200,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		local
 			l_parent_row_i: EV_GRID_ROW_I
 		do
-			if a_item.row.height > 0 or a_item.row.is_show_requested then
+			if a_item.row.height > 0 and then a_item.row.is_show_requested then
 					-- Only visible rows may be navigated to.
 				Result := True
 				if is_tree_enabled then

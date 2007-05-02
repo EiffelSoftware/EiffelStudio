@@ -587,8 +587,6 @@ feature -- preference
 					end
 					i := i + 1
 				end
-					--| Should end with an empty entry
-				error_occurred := s /= Void and then not s.is_empty
 				if not error_occurred then
 					lst := objects_grid_ids (second_grid_id)
 					if lst = Void or else lst.is_empty then

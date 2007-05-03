@@ -114,6 +114,7 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 			Result.set_pixmap (mini_pixmap)
+			Result.set_pixel_buffer (mini_pixel_buffer)
 			if is_sensitive then
 				Result.enable_sensitive
 			else

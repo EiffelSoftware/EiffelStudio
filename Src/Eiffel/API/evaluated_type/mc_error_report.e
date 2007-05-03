@@ -18,7 +18,7 @@ inherit
 
 	LINKED_LIST [TUPLE [	feature_i: FEATURE_I;
 							e_feature: E_FEATURE;
-							cl_type: RENAMED_TYPE_A;
+							cl_type: RENAMED_TYPE_A [TYPE_A];
 							formal_position: INTEGER;
 							constraint_position: INTEGER]]
 

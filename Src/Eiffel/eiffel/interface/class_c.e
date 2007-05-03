@@ -540,7 +540,7 @@ feature -- Expanded rues validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			constraint_types: LIST[RENAMED_TYPE_A]
+			constraint_types: LIST[RENAMED_TYPE_A [TYPE_A]]
 			l_formals: like generic_features
 			l_cursor: CURSOR
 			l_formal_dec: FORMAL_CONSTRAINT_AS
@@ -1936,7 +1936,7 @@ end
 			not_is_multi_constraint: not generics.i_th (i).has_multi_constraints
 		local
 			l_formal_dec: FORMAL_CONSTRAINT_AS
-			l_result: RENAMED_TYPE_A
+			l_result: RENAMED_TYPE_A [TYPE_A]
 		do
 			l_formal_dec ?= generics.i_th (i)
 			check l_formal_dec_not_void: l_formal_dec /= Void end

@@ -1968,7 +1968,7 @@ feature {NONE} -- Implementation
 			l_last_type: TYPE_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
-			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A]]
+			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A [TYPE_A]]]
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -3890,7 +3890,7 @@ feature {NONE} -- Implementation: helpers
 			Result := a_current_class.feature_table.item_id (a_name_id)
 		end
 
-	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A]]
+	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A [TYPE_A]]]
 			-- Feature with `a_id_set' in `a_class_c'
 		require
 			a_type_set_not_void: a_type_set /= Void

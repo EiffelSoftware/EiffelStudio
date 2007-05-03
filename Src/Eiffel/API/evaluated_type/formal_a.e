@@ -138,8 +138,6 @@ feature -- Access
 		require
 			a_context_class_attached: a_context_class /= Void
 			not_multi_constraint: not is_multi_constrained (a_context_class)
-		local
-			l_formal_type: FORMAL_A
 		do
 			Result := a_context_class.constrained_type (position)
 		ensure

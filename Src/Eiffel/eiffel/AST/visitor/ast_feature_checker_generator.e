@@ -1271,7 +1271,7 @@ feature -- Implementation
 						last_type := l_named_tuple.generics.item (l_label_pos)
 						l_is_last_access_tuple_access := True
 						last_feature_name_id := l_feature_name.name_id
-							-- No renaming possible (from RENAMED_TYPE_A), they are the same
+							-- No renaming possible (from RENAMED_TYPE_A [TYPE_A]), they are the same
 						last_original_feature_name_id := last_feature_name_id
 						check
 							last_feature_name_correct: last_feature_name = l_feature_name.name
@@ -2077,8 +2077,8 @@ feature -- Implementation
 			l_last_class_id: INTEGER
 			l_formal: FORMAL_A
 			l_feature: FEATURE_I
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
 			l_type_a_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
 		do
@@ -2208,9 +2208,6 @@ feature -- Implementation
 			l_veen2b: VEEN2B
 			l_needs_byte_node: BOOLEAN
 			l_type: TYPE_A
-			l_formal: FORMAL_A
-			l_class_id: INTEGER
-			l_type_a: TYPE_A
 			l_context_current_class: CLASS_C
 		do
 			l_context_current_class := context.current_class
@@ -4478,7 +4475,7 @@ feature -- Implementation
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_creation_type: TYPE_A
-			l_renamed_creation_type: RENAMED_TYPE_A
+			l_renamed_creation_type: RENAMED_TYPE_A [TYPE_A]
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_feature: FEATURE_I
 			l_orig_call, l_call: ACCESS_INV_AS
@@ -4495,11 +4492,11 @@ feature -- Implementation
 			l_deferred_classes: LINKED_LIST[CLASS_C]
 			l_is_multi_constraint_case: BOOLEAN
 			l_is_deferred: BOOLEAN
-			l_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]
-			l_ccl_item: TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]
+			l_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]
+			l_ccl_item: TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]
 			l_mc_feature_info: MC_FEATURE_INFO
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
 			l_original_default_create_name_id: INTEGER
 			l_context_current_class: CLASS_C
 		do
@@ -4560,7 +4557,7 @@ feature -- Implementation
 				if l_is_multi_constraint_case then
 						-- We generate a list of all the deferred classes in the type set
 					l_type_set.do_all (
-						agent (a_deferred_classes: LIST[CLASS_C]; a_type: RENAMED_TYPE_A)
+						agent (a_deferred_classes: LIST[CLASS_C]; a_type: RENAMED_TYPE_A [TYPE_A])
 							 do
 							 	if a_type.associated_class.is_deferred then
 									a_deferred_classes.extend (a_type.associated_class)
@@ -4627,7 +4624,7 @@ feature -- Implementation
 
 					check
 						found_item_was_the_only_one:
-							 (agent (a_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]): BOOLEAN
+							 (agent (a_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]): BOOLEAN
 							 		-- Check that there is no more version of default create.
 							 		--| Otherwise we should never get in here as `l_formal_dec.has_default_create'
 							 		--| should have returned false and prevented this from happening.

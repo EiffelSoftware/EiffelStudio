@@ -13,7 +13,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	RENAMED_TYPE_A
+	RENAMED_TYPE_A [G -> TYPE_A]
 
 inherit
 	COMPILER_EXPORTER
@@ -32,7 +32,7 @@ feature -- remove me
 
 feature -- Initialization
 
-	make (a_type: TYPE_A; a_renaming: RENAMING_A) is
+	make (a_type: like type; a_renaming: like renaming) is
 			-- Initialize
 		require
 			a_type_not_void: a_type /= Void
@@ -48,13 +48,13 @@ feature -- Initialization
 
 feature -- Access
 
-	conformance_type: TYPE_A
+	conformance_type: G
 			-- Type to which the renaming `renaming' is applied. Can be used for conformance checks.
 		do
 			Result := type
 		end
 
-	type: TYPE_A
+	type: G
 			-- Type to which the renaming `renaming' is applied.
 
 	renaming: RENAMING_A
@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 	--| Martins 1/23/07: instantiation*
-	--| Should we return RENAMED_TYPE_A?
+	--| Should we return RENAMED_TYPE_A [TYPE_A]?
 	--| Currently there seems no need for it and it might most likeley introduce bugs.
 
 	instantiated_in (a_class_type: TYPE_A): TYPE_A is
@@ -116,7 +116,7 @@ feature -- Conversion
 
 feature -- Setters
 
-	set_type (a_type: TYPE_A)
+	set_type (a_type: G)
 			-- Set `type' to `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -168,7 +168,7 @@ feature -- Status
 		end
 
 	is_renamed_type: BOOLEAN is True
-		-- Is current an instance of RENAMED_TYPE_A?
+		-- Is current an instance of RENAMED_TYPE_A [TYPE_A]?
 		-- An renamed type has the ability to carry a feature renaming.
 
 feature -- Output
@@ -237,4 +237,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class RENAMED_TYPE_A
+end -- class RENAMED_TYPE_A [TYPE_A]

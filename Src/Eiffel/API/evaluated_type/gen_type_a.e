@@ -863,7 +863,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			is_valid: is_valid
 		local
 			formal_type_dec_as: FORMAL_CONSTRAINT_AS
-			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]];
+			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE

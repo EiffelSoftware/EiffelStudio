@@ -1376,7 +1376,7 @@ feature {NONE} -- Implementation
 			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
-			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A]]
+			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A [TYPE_A]]]
 		do
 			l_as.target.process (Current)
 			check

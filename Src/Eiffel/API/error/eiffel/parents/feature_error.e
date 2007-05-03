@@ -70,7 +70,8 @@ feature -- Output
 			a_text_formatter.add ("Class: ")
 			class_c.append_signature (a_text_formatter, False)
 			a_text_formatter.add_new_line
-			if written_class /= Void then
+				-- Display source class only if different.
+			if written_class /= Void and then class_c /= written_class then
 				a_text_formatter.add ("Source class: ")
 				written_class.append_signature (a_text_formatter, False)
 				a_text_formatter.add_new_line

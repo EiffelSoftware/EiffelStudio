@@ -247,18 +247,18 @@ feature -- Setting
 				if not tool_bar.has (l_control_bar.first) then
 					from
 						l_predefined_count := predefined_formatters.count
-						l_control_bar.start
+						l_control_bar.finish
 					until
-						l_control_bar.after
+						l_control_bar.before
 					loop
 						-- We make sure customize formatter buttons are show after option buttons.
 						-- And option buttons show after the predefined buttons.
 						-- For example, for Dependency Tool, the predefined buttons are `Client' and `Suppliers'.
-						l_index := l_control_bar.index + l_predefined_count
+						l_index := 1 + l_predefined_count
 						check buttons_ahead: tool_bar.items.valid_index (l_index - 1) end
 						tool_bar.force (l_control_bar.item, l_index)
 
-						l_control_bar.forth
+						l_control_bar.back
 					end
 					tool_bar.compute_minimum_size
 				end

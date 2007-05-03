@@ -140,13 +140,7 @@ feature {NONE} -- Implementation
 		require
 			at_least_one_item_selected: favorites_tree.selected_item /= Void
 		local
-			choose_folder_dialog: EB_CHOOSE_FAVORITES_FOLDER_DIALOG
-			destination: EB_FAVORITES_ITEM_LIST
-			source: EB_FAVORITES_ITEM_LIST
 			item_to_move: EB_FAVORITES_ITEM
-			conv_folder: EB_FAVORITES_FOLDER
-			conv_item: EB_FAVORITES_ITEM
-			wd: EB_WARNING_DIALOG
 		do
 				-- Retrieve item to move
 			item_to_move ?= favorites_tree.selected_item.data

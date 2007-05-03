@@ -87,6 +87,9 @@ feature -- Visit nodes
 			l_target: CONF_TARGET
 		do
 			create text.make_from_string (header)
+			if not text.is_empty then
+				append_text ("%N")
+			end
 			append_text_indent ("<system")
 			append_text (" xmlns=%""+Namespace+"%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")

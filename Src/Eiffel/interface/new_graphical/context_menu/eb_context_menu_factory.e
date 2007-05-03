@@ -564,8 +564,11 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_class_formatter ?= dev_window.managed_class_formatters.item
 				if l_class_formatter /= Void then
 					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_class_formatter.menu_name))
+					l_menu.last.set_pixmap (l_class_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.class_tool).show)
 					l_menu.last.select_actions.extend (agent l_class_formatter.execute_with_stone (a_class_stone))
+				else
+					l_menu.extend (create {EV_MENU_SEPARATOR})
 				end
 				dev_window.managed_class_formatters.forth
 			end

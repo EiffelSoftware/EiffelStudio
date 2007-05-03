@@ -626,8 +626,11 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_feature_formatter ?= dev_window.managed_feature_formatters.item
 				if l_feature_formatter /= Void then
 					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_feature_formatter.menu_name))
+					l_menu.last.set_pixmap (l_feature_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.features_relation_tool).show)
 					l_menu.last.select_actions.extend (agent l_feature_formatter.execute_with_stone (a_feature_stone))
+				else
+					l_menu.extend (create {EV_MENU_SEPARATOR})
 				end
 				dev_window.managed_feature_formatters.forth
 			end

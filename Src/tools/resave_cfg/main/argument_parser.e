@@ -19,6 +19,11 @@ inherit
 			{ANY} successful, execute
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -27,34 +32,79 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_parser (False, False, False)
+			make_parser (False, False, True)
 			set_use_separated_switch_values (True)
 			set_show_switch_arguments_inline (True)
-			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
+			set_loose_argument_validator (create {ARGUMENT_FILE_OR_DIRECTORY_VALIDATOR})
 		end
 
 feature -- Access
 
-	files: LINEAR [STRING] is
+	files: DS_BILINEAR [STRING] is
 			-- List of files to resave
 		require
 			successful: successful
+		local
+			l_options: like values
+			l_result: DS_ARRAYED_LIST [STRING]
 		once
-			Result := values
+			l_options := values.twin
+			from l_options.start until l_options.after loop
+				if not file_system.is_file_readable (l_options.item) then
+					l_options.remove
+				else
+					l_options.forth
+				end
+			end
+			create l_result.make (l_options.count)
+			l_options.do_all (agent l_result.force_last (?))
+			Result := l_result
 		ensure
 			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
+			reuslt_contains_attached_items: not Result.has (Void)
+		end
+
+	directories: DS_BILINEAR [STRING] is
+			-- List of directories to locate ecfs in
+		require
+			successful: successful
+		local
+			l_options: like values
+			l_result: DS_ARRAYED_LIST [STRING]
+		once
+			l_options := values.twin
+			from l_options.start until l_options.after loop
+				if not file_system.is_directory_readable (l_options.item) then
+					l_options.remove
+				else
+					l_options.forth
+				end
+			end
+			create l_result.make (l_options.count)
+			l_options.do_all (agent l_result.force_last (?))
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+			reuslt_contains_attached_items: not Result.has (Void)
+		end
+
+	use_directory_recusion: BOOLEAN is
+			-- Indicates if directories should be recursively scanned
+		require
+			successful: successful
+		once
+			Result := has_option (recursive_switch)
 		end
 
 feature {NONE} -- Usage
 
-	loose_argument_name: STRING = "ecf"
+	loose_argument_name: STRING = "path"
 			-- Name of lose argument, used in usage information
 
-	loose_argument_description: STRING = "An Eiffel configuration file"
+	loose_argument_description: STRING = "An Eiffel configuration file or a directory"
 			-- Description of lose argument, used in usage information
 
-	loose_argument_type: STRING = "Eiffel configuration file"
+	loose_argument_type: STRING = "Eiffel configuration file/directory"
 			-- Type of lose argument, used in usage information.
 			-- A type is a short description of the argument. I.E. "Configuration File"
 
@@ -64,11 +114,16 @@ feature {NONE} -- Usage
 	version: STRING = "6.0"
 			-- Version number of application
 
+feature {NONE} -- Switches
+
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of switch used for a specific application
 		once
-			--| No switches
+			create Result.make (1)
+			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursive scan any directories for *.ecf", True, False))
 		end
+
+	recursive_switch: STRING = "r"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -987,9 +987,6 @@ feature {EV_ANY_I} -- Implementation
 						--| button matches the type of transport of `widget_imp'.
 					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
 						(button_pressed = 3 and (widget_imp.mode_is_pick_and_drop or widget_imp.mode_is_target_menu)) then
-							-- This feature may get called more then once, so we only
-							-- perform the pebble query the first time, before the
-							-- transport has started.
 						if application_imp.pick_and_drop_source = Void then
 							l_pebble_function := widget_imp.pebble_function
 							widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
@@ -1000,6 +997,7 @@ feature {EV_ANY_I} -- Implementation
 							Result := widget_imp
 						end
 						if l_pebble_function /= Void then
+								-- We clear the result of the pebble function call to avoid side effects.
 							l_pebble_function.clear_last_result
 							widget_imp.remove_pebble
 							widget_imp.set_pebble_function (l_pebble_function)
@@ -1025,6 +1023,7 @@ feature {EV_ANY_I} -- Implementation
 									end
 								end
 								if l_pebble_function /= Void then
+										-- Clear pebble function result to avoid side effects.
 									l_pebble_function.clear_last_result
 									an_item_imp.remove_pebble
 									an_item_imp.set_pebble_function (l_pebble_function)

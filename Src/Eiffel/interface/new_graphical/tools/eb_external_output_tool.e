@@ -631,8 +631,13 @@ feature{NONE} -- Actions
 			l_text: STRING_32
 		do
 			l_text := input_field.text.twin
+			l_text.append ("%N")
+			if destination_encoding /= Void and then source_encoding /= Void and then destination_encoding.is_valid and then source_encoding.is_valid then
+				on_input_to_process (destination_encoding.convert_to (source_encoding, l_text).as_string_8)
+			else
+				on_input_to_process (l_text.as_string_8)
+			end
 
-			on_input_to_process (destination_encoding.convert_to (source_encoding, l_text + "%N").as_string_8)
 			if not l_text.is_empty then
 				from
 					input_field.start

@@ -625,7 +625,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
 						l_widget ?= a_pnd_source
 						if l_widget /= Void then
-							l_menu.show_at (l_widget, a_x, a_y)
+							l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
 						else
 							l_menu.show
 						end
@@ -639,7 +639,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						if not l_menu.is_destroyed and then l_menu.count > 0 then
 							l_widget ?= a_pnd_source
 							if l_widget /= Void then
-								l_menu.show_at (l_widget, a_x, a_y)
+								l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
 							else
 								l_menu.show
 							end
@@ -653,6 +653,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				a_configure_agent.call (Void)
 			end
 		end
+
+	menu_placement_offset: INTEGER = 10
+		-- Offset for both X and Y dimensions to which to move the menu so its placement is directly underneath the mouse pointer.
 
 feature {NONE} -- Debug
 

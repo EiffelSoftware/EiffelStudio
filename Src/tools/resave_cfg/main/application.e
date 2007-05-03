@@ -25,9 +25,15 @@ feature {NONE} -- Initialization
 			-- Application entry point
 		local
 			l_parser: ARGUMENT_PARSER
+			retried: BOOLEAN
 		do
-			create l_parser.make
-			l_parser.execute (agent start (l_parser))
+			if not retried then
+				create l_parser.make
+				l_parser.execute (agent start (l_parser))
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Execution

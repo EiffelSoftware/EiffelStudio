@@ -11,6 +11,7 @@ class
 inherit
 	ARGUMENT_VALUE_SWITCH
 		redefine
+			create_value_option,
 			value_validator
 		end
 
@@ -24,6 +25,14 @@ feature -- Access
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result
+		end
+
+feature {ARGUMENT_BASE_PARSER} -- Factory Functions
+
+	create_value_option (a_value: STRING): ARGUMENT_FILE_OR_DIRECTORY_OPTION is
+			-- Creates a new argument option given a value `a_value'
+		do
+			create Result.make (a_value, Current)
 		end
 
 indexing

@@ -1,5 +1,9 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+					 Set of types. This class encapsulates features to handle conformance and feature lookup on a set of types .
+					 TODO: This class could be made generic constrained to TYPE_A. 
+					 The issue is that the agent conformance does not allow it because some features become invalid.
+				]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,10 +28,10 @@ inherit
 			to_type_set
 		end
 
-	ARRAYED_LIST[RENAMED_TYPE_A [TYPE_A]]
-	rename
-		duplicate as list_duplicate
-	end
+	ARRAYED_LIST [RENAMED_TYPE_A [TYPE_A]]
+		rename
+			duplicate as list_duplicate
+		end
 
 	COMPILER_EXPORTER
 		export

@@ -473,6 +473,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu: EV_MENU
 			l_editor_cmd: EB_EDITOR_COMMAND
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+			l_select_all_string: STRING_GENERAL
 		do
 			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item_unmanaged)
 			if not is_editable then
@@ -499,12 +500,13 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_commands.start
 				l_commands.forth
 					-- 'Select All' is at the first position.
+				l_select_all_string := names.m_select_all
 			until
 				l_commands.after
 			loop
 				l_editor_cmd ?= l_commands.item
 				if l_editor_cmd /= Void then
-					if not l_editor_cmd.menu_name.is_equal (names.m_select_all) then
+					if not l_editor_cmd.menu_name.is_equal (l_select_all_string) then
 						l_menu.extend (l_editor_cmd.new_menu_item_unmanaged)
 					end
 				end

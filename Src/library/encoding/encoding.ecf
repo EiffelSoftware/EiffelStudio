@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="encoding" uuid="1557cb9b-9c9f-11db-b606-0800200c9a66" library_target="encoding">
-  <target name="encoding">
-    <description>Encoding library</description>
-    <root all_classes="true"/>
-    <file_rule>
-      <exclude>/\.svn$</exclude>
-      <exclude>/documents$</exclude>
-      <exclude>/EIFGENs$</exclude>
-      <exclude>/include$</exclude>
-    </file_rule>
-    <option namespace="EiffelSoftware.Library">
-      <assertions precondition="true"/>
-      <warning name="export_class_missing" enabled="false"/>
-      <warning name="old_verbatim_strings" enabled="false"/>
-      <warning name="syntax" enabled="false"/>
-      <warning name="vjrv" enabled="false"/>
-      <warning name="vweq" enabled="false"/>
-    </option>
-    <setting name="dotnet_naming_convention" value="true"/>
-    <library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-    <cluster name="encoding" location=".\">
-      <option namespace="Encoding"/>
-      <cluster name="implementation" location=".\implementation\">
-        <option namespace="Implementation"/>
-        <cluster name="windows" location=".\implementation\windows\">
-          <option namespace="Windows"/>
-          <condition>
-            <platform value="windows"/>
-            <dotnet value="false"/>
-          </condition>
-        </cluster>
-        <cluster name="unix" location=".\implementation\unix">
-          <condition>
-            <platform value="unix"/>
-          </condition>
-        </cluster>
-      </cluster>
-    </cluster>
-  </target>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="encoding" uuid="1557CB9B-9C9F-11DB-B606-0800200C9A66" library_target="encoding">
+	<target name="encoding">
+		<description>Encoding library</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/documents$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/include$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Library">
+			<assertions precondition="true"/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+			<warning name="vweq" enabled="false"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<cluster name="encoding" location=".\">
+			<option namespace="Encoding">
+			</option>
+			<cluster name="implementation" location=".\implementation\">
+				<option namespace="Implementation">
+				</option>
+				<cluster name="windows" location=".\implementation\windows\">
+					<condition>
+						<platform value="windows"/>
+						<dotnet value="false"/>
+					</condition>
+					<option namespace="Windows">
+					</option>
+				</cluster>
+				<cluster name="unix" location=".\implementation\unix\">
+					<condition>
+						<platform value="unix"/>
+					</condition>
+				</cluster>
+			</cluster>
+		</cluster>
+	</target>
 </system>

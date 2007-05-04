@@ -917,7 +917,6 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 			start_pos: INTEGER
 			output: STRING
 			maximum_string_width: INTEGER
-			lines_changed: BOOLEAN
 			all_space_indexes: ARRAYED_LIST [INTEGER]
 		do
 			create all_space_indexes.make (20)

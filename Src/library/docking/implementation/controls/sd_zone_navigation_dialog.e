@@ -926,7 +926,7 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 			modified_tip := tip.twin
 			modified_tip.replace_substring_all ("%N", " ")
 			modified_tip.append_character (' ')
-			maximum_string_width := width - 10
+			maximum_string_width := width - 25
 
 				-- Set up all space indexes which stores the index of each space in the
 				-- text, as these are the wrapping criterion.
@@ -937,7 +937,7 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 			until
 				counter > modified_tip.count
 			loop
-				if modified_tip.item (counter).is_equal(' ') then
+				if modified_tip.item (counter).is_equal(Operating_environment.directory_separator) then
 					all_space_indexes.extend (counter)
 				end
 				counter := counter + 1
@@ -948,13 +948,13 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 				start_pos := 1
 				counter := 1
 			until
-				counter > all_space_indexes.count
+				counter > all_space_indexes.count or counter < 1
 			loop
 				from
 					current_width := 0
 				until
 					current_width > maximum_string_width or
-					counter > all_space_indexes.count
+					counter > all_space_indexes.count or counter < 1
 				loop
 
 					temp_string := modified_tip.substring (start_pos, all_space_indexes.i_th (counter) - 1)
@@ -969,54 +969,30 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 				if all_space_indexes.valid_index (counter) then
 					start_pos := all_space_indexes.i_th (counter) + 1
 				end
-				lines.extend (last_string)
+				if lines.count = 0 and last_string = Void and counter = 0 then
+					-- Only one line which can't be wrapped
+					lines.extend (temp_string)
+				else
+					lines.extend (last_string)
+				end
 			end
 
-				-- Now determine if the contents of the line have actually changed.
-				-- If they have not, then there is no need to set the text again, as it
-				-- causes flicker.
+			-- Now create and set the text on the label
+			output := ""
 			from
 				lines.start
-				Previous_lines.start
 			until
-				lines.off or lines_changed or previous_lines.off
+				lines.off
 			loop
-				if lines.item.count /= previous_lines.item.count then
-					lines_changed := True
+				output.append (lines.item)
+				if lines.index < lines.count then
+					output.append_character (Operating_environment.directory_separator)
+					output.append_character ('%N')
 				end
 				lines.forth
-				Previous_lines.forth
-			end
-			if previous_lines.is_empty then
-				lines_changed := True
 			end
 
-				-- Now create and set the text on the label if
-				-- it needs to be changed.
-			if lines_changed then
-				output := ""
-				from
-					lines.start
-				until
-					lines.off
-				loop
-					output.append (lines.item)
-					if lines.index < lines.count then
-						output.append_character ('%N')
-					end
-					lines.forth
-				end
-				previous_lines.make_from_array (lines)
-				detail.set_text (output)
-			end
-		end
-
-	previous_lines: ARRAYED_LIST [STRING] is
-			-- Previous contents of lines displayed.
-			-- Used to prevent continuous redrawing of label when
-			-- nothign has changed.
-		once
-			create Result.make (20)
+			detail.set_text (output)
 		end
 
 invariant

@@ -342,6 +342,8 @@ feature -- Comparison
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
+		require
+			other_attached: other /= Void
 		do
 			-- Do nothing
 		end

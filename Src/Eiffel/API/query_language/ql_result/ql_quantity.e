@@ -89,6 +89,12 @@ feature -- Access
 			good_result: Result = quantity_path_marker
 		end
 
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		do
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is False

@@ -96,12 +96,6 @@ feature -- Status report
 			Result := item.is_group
 		end
 
-	should_parent_be_displayed: BOOLEAN is
-			-- Should parent of `item' be displayed?
-		do
-			Result := item.is_group or item.is_invariant_feature
-		end
-
 	is_expanded: BOOLEAN
 			-- Is current row expanded?
 
@@ -252,14 +246,6 @@ feature -- Grid binding
 			end
 		end
 
-	referenced_feature_item (a_feature: QL_FEATURE): EV_GRID_ITEM is
-			-- Grid item to show `a_feature' as a referenced feature
-		require
-			a_feature_attached: a_feature /= Void
-		do
-			create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_feature.name)
-		end
-
 	refresh_row is
 			-- Refresh current row.
 		require
@@ -326,46 +312,6 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	tooltip_text_function: LIST [EDITOR_TOKEN] is
-			-- Text to return text for tooltip
-		require
-			feature_list_valid: feature_list /= Void and then not feature_list.is_empty
-		do
-			complete_generic_class_style.set_class_c (feature_list.first.class_c)
-			plain_text_style.set_source_text (interface_names.l_from_x)
-			Result := (plain_text_style + complete_generic_class_style).text
-		ensure
-			result_attached: Result /= Void
-		end
-
-	path_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN; a_keep_leading_separator: BOOLEAN): LIST [EDITOR_TOKEN] is
-			-- Editor token representation of folder path of `a_class'
-			-- If `a_allow_empty' is True, folder part of the part can be empty, otherwise at least "." is displayed as folder part.
-			-- If `a_keep_leading_separator' is True, keep the first "/" in path and turn it into "."
-		require
-			a_class_attached: a_class /= Void
-		local
-			l_path: STRING
-			l_plain_text_style: like plain_text_style
-		do
-			l_path := a_class.class_i.path.twin
-			if l_path.is_empty then
-				if not a_allow_empty then
-					l_path.append (".")
-				end
-			else
-				if not a_keep_leading_separator then
-					l_path.keep_tail (l_path.count - 1)
-				end
-				l_path.replace_substring_all ("/", path_separator.out)
-			end
-			l_plain_text_style := plain_text_style
-			l_plain_text_style.set_source_text (l_path)
-			Result := l_plain_text_style.text
-		ensure
-			result_attached: Result /= Void
-		end
-
 	path_grid_item_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN; a_stop_on_target: BOOLEAN; a_force_complete: BOOLEAN): LIST [EDITOR_TOKEN] is
 			-- Editor token representations of path of `a_class' used in grid item.
 			-- If `a_class' is used in cluster, display "folder.folder.folder"
@@ -377,14 +323,31 @@ feature{NONE} -- Implementation
 			a_class_attached: a_class /= Void
 		local
 			l_path_style: like class_path_style
+			l_dot: EDITOR_TOKEN_TEXT
+			l_path: LIST [EDITOR_TOKEN]
 		do
-			if a_class.class_c.group.is_used_in_library or else a_force_complete then
-				l_path_style := class_path_style
-				l_path_style.set_item (conf_group_as_parent (a_class.class_i.config_class.group, a_stop_on_target))
-				Result := l_path_style.text
-				Result.append (path_text (a_class, (not Result.is_empty) or else a_allow_empty, True))
+			create {LINKED_LIST [EDITOR_TOKEN]} Result.make
+			l_path_style := class_path_style
+			l_path_style.set_item (a_class)
+			l_path := l_path_style.text
+
+			if a_class.conf_class.group.is_used_in_library then
+				if l_path.count > 2 then
+					l_path.start
+					l_path.remove
+					l_path.remove
+				end
 			else
-				Result := path_text (a_class, a_allow_empty, False)
+				if l_path.count = 1 then
+					l_path.wipe_out
+				end
+			end
+			Result.append (l_path)
+
+			if Result.is_empty then
+				create l_dot.make (".")
+				l_dot.set_pebble (create {CLUSTER_STONE}.make (a_class.conf_class.group))
+				Result.extend (l_dot)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -395,12 +358,25 @@ feature{NONE} -- Implementation
 		require
 			a_class_attached: a_class /= Void
 		local
-			l_plain_text_style: like plain_text_style
+			l_style: like full_class_path_style
 		do
-			l_plain_text_style := plain_text_style
-			l_plain_text_style.set_source_text (interface_names.le_location_colon)
-			Result := l_plain_text_style.text
-			Result.append (path_grid_item_text (a_class, True, False, True))
+			l_style := full_class_path_style
+			l_style.set_item (a_class)
+			create {LINKED_LIST [EDITOR_TOKEN]} Result.make
+			Result.append (l_style.text)
+		end
+
+	full_class_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+			-- Full class path style including (group, folder, class)
+		once
+			create Result
+			Result.disable_self
+			Result.enable_parent
+			Result.enable_indirect_parent
+			Result.disable_target
+			Result.set_is_folder_displayed (True)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	class_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
@@ -411,6 +387,8 @@ feature{NONE} -- Implementation
 			Result.enable_parent
 			Result.enable_indirect_parent
 			Result.disable_target
+			Result.set_is_folder_displayed (True)
+			Result.set_is_class_displayed (False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -474,6 +452,7 @@ feature{NONE} -- Implementation
 					l_path_style.path_printer.set_feature_style (feature_name_style)
 				end
 				l_path_style.set_item (item)
+				l_path_style.set_is_folder_displayed (False)
 				base_text.append (l_path_style.text)
 				grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
 

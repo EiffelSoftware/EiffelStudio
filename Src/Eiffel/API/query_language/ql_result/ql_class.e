@@ -19,7 +19,8 @@ inherit
 			ast,
 			is_compiled,
 			text,
-			is_visible
+			is_visible,
+			parent_with_real_path
 		end
 
 	QL_UTILITY
@@ -228,6 +229,13 @@ feature -- Access
 				end
 				Result := text_internal
 			end
+		end
+
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		do
+			Result := query_group_item_from_conf_group (class_i.group)
 		end
 
 feature -- Status report

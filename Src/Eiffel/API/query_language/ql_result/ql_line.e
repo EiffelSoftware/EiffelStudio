@@ -155,6 +155,19 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		local
+			l_parent: QL_ITEM
+		do
+			Result := parent.twin
+			l_parent := Result.parent_with_real_path
+			if l_parent /= Void then
+				Result.set_parent (l_parent)
+			end
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is

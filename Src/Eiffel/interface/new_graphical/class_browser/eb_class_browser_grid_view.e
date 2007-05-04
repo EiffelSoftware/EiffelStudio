@@ -721,9 +721,27 @@ feature {NONE} -- Implementation
 
 	default_row_height: INTEGER is
 			-- Default height to set grid rows.
+		local
+			l_height: INTEGER
+			l_font_table: like label_font_table
+			l_index, l_count: INTEGER
 		do
 			if is_fixed_fonts_used then
-				Result := (create {EV_FONT}).height.max (pixmap_height)
+				from
+					l_font_table := label_font_table
+					l_count := l_font_table.count
+				until
+					l_index = l_count
+				loop
+					if l_font_table.item (l_index) /= Void then
+						l_height := l_font_table.item (l_index).height
+						if l_height > Result then
+							Result := l_height
+						end
+					end
+					l_index := l_index + 1
+				end
+				Result := Result.max (pixmap_height) + 1
 			else
 				Result := line_height.max (pixmap_height)
 					-- We make sure we give enough space to display the pixmap.

@@ -50,6 +50,11 @@ inherit
 			is_equal
 		end
 
+	QL_UTILITY
+		undefine
+			is_equal
+		end
+		
 feature -- Setting
 
 	set_data (some_data: like data) is
@@ -228,6 +233,12 @@ feature -- Access
 			a_domain_generator_attached: a_domain_generator /= Void
 		do
 			Result := wrapped_domain.new_domain (a_domain_generator)
+		end
+
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		deferred
 		end
 
 feature -- Item type

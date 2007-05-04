@@ -136,29 +136,13 @@ feature -- Access
 	path_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
 			-- Path item
 		local
-			l_path_style: like path_item_style
-			l_plain_text_style: like plain_text_style
-			l_path: STRING
-			l_style: EB_EDITOR_TOKEN_STYLE
+			l_path_style: like location_style
 		do
 			if path_grid_item_internal = Void then
 				create path_grid_item_internal
-
-					-- Setup group information.
-				l_path_style := path_item_style
-				l_path_style.set_item (conf_group_as_parent (class_item.class_c.group, False))
-				l_style := l_path_style
-
-					-- Setup folder information.
-				l_path := class_item.class_i.path.twin
-				if not l_path.is_empty then
-					l_path.replace_substring_all ("/", path_separator.out)
-					l_plain_text_style := plain_text_style
-					l_plain_text_style.set_source_text (l_path)
-					l_style := l_style + l_plain_text_style
-				end
-
-				path_grid_item_internal.set_text_with_tokens (l_style.text)
+				l_path_style := location_style
+				l_path_style.set_item (class_item)
+				path_grid_item_internal.set_text_with_tokens (l_path_style.text)
 				path_grid_item_internal.set_image (path_grid_item_internal.text)
 				if class_item.parent /= Void then
 					path_grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (class_item.parent))
@@ -221,6 +205,20 @@ feature -- Setting
 			Result.enable_parent
 			Result.disable_target
 			Result.enable_indirect_parent
+			Result.set_is_folder_displayed (True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	location_style: EB_PATH_EDITOR_TOKEN_STYLE is
+			-- Editor token style to generate path information for a query language item.		
+		once
+			create Result
+			Result.enable_parent
+			Result.disable_target
+			Result.enable_indirect_parent
+			Result.disable_self
+			Result.set_is_folder_displayed (True)
 		ensure
 			result_attached: Result /= Void
 		end

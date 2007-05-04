@@ -33,6 +33,13 @@ inherit
 			is_equal
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -189,12 +196,6 @@ feature -- Setting
 			metric_value_retriever_dialog_function := a_function
 		ensure
 			metric_value_retriever_dialog_function_set: metric_value_retriever_dialog_function = a_function
-		end
-
-	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
-			-- Set context menu factory.
-		do
-			context_menu_factory := a_factory
 		end
 
 feature{NONE} -- Actions
@@ -433,7 +434,11 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	context_menu_factory: EB_CONTEXT_MENU_FACTORY;
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
+			-- Context menu handler
+		do
+			-- Do nothing.
+		end
 
 invariant
 	grid_attached: grid /= Void

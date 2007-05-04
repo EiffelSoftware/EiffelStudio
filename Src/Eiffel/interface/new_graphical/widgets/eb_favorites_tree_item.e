@@ -20,6 +20,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -203,23 +208,12 @@ feature -- Status setting
 			end
 		end
 
-	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
-			-- Set `context_menu_factory' with `a_factory'.
-		do
-			context_menu_factory := a_factory
-		ensure
-			context_menu_factory_set: context_menu_factory = a_factory
-		end
-
 feature -- Access
 
 	data: EB_FAVORITES_ITEM
 			-- item represented by Current.
 
 feature {NONE} -- Implementation
-
-	context_menu_factory: EB_CONTEXT_MENU_FACTORY
-			-- Context menu factory
 
 	droppable (a_pebble: ANY): BOOLEAN is
 			-- Can user drop `a_pebble' on `Current'?

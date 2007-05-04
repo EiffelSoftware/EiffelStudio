@@ -588,67 +588,63 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					end
 					targets.forth
 				end
+			end
 
-				if l_has_targets then
-					create l_arrayed_list.make (0)
+			if l_has_targets then
+				create l_arrayed_list.make (0)
 
-					if l_search_tree /= Void then
-							-- Sort items alphabetically using recursive inline agent
-						l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
-							do
-								if a_node /= Void then
-									l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
-									a_list.extend (a_node.item.item)
-									l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
-								end
+				if l_search_tree /= Void then
+						-- Sort items alphabetically using recursive inline agent
+					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
+						do
+							if a_node /= Void then
+								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
+								a_list.extend (a_node.item.item)
+								l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
 							end
-							-- Call the recursive agent by passing itself in as the first parameter.
-						l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
-					end
-
-					l_menu_count := l_menu.count
-					if a_pnd_source.configurable_target_menu_handler /= Void then
-						a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
-					else
-						from
-							l_arrayed_list.start
-						until
-							l_arrayed_list.after
-						loop
-							l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
-							l_arrayed_list.forth
 						end
+						-- Call the recursive agent by passing itself in as the first parameter.
+					l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
+				end
+
+				l_menu_count := l_menu.count
+				if a_pnd_source.configurable_target_menu_handler /= Void then
+					a_pnd_source.configurable_target_menu_handler.call ([l_menu, l_arrayed_list, a_pnd_source, a_pebble])
+				else
+					from
+						l_arrayed_list.start
+					until
+						l_arrayed_list.after
+					loop
+						l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (l_arrayed_list.item.name, agent (l_arrayed_list.item.target.drop_actions).call ([a_pebble])))
+						l_arrayed_list.forth
 					end
-					if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
+				end
+				if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
+					l_widget ?= a_pnd_source
+					if l_widget /= Void then
+						l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
+					else
+						l_menu.show
+					end
+				elseif a_configure_agent /= Void then
+					a_configure_agent.call (Void)
+				end
+			else
+				if a_pnd_source.configurable_target_menu_handler /= Void then
+					create l_menu
+					a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
+					if not l_menu.is_destroyed and then l_menu.count > 0 then
 						l_widget ?= a_pnd_source
 						if l_widget /= Void then
 							l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
 						else
 							l_menu.show
 						end
-					elseif a_configure_agent /= Void then
-						a_configure_agent.call (Void)
-					end
-				else
-					if a_pnd_source.configurable_target_menu_handler /= Void then
-						create l_menu
-						a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
-						if not l_menu.is_destroyed and then l_menu.count > 0 then
-							l_widget ?= a_pnd_source
-							if l_widget /= Void then
-								l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
-							else
-								l_menu.show
-							end
-						end
 					end
 				end
-				targets.go_to (cur)
-			elseif a_configure_agent /= Void then
-
-					-- If shift is pressed the we perform normal PND.
-				a_configure_agent.call (Void)
 			end
+			targets.go_to (cur)
 		end
 
 	menu_placement_offset: INTEGER = 3

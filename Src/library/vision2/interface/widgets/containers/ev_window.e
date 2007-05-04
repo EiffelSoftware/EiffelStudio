@@ -376,7 +376,7 @@ feature -- Status setting
 			implementation.show_relative_to_window (a_parent)
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_WINDOW_I
 			-- Responsible for interaction with native graphics toolkit.

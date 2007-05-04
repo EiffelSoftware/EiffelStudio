@@ -115,7 +115,7 @@ feature {EV_ANY_I} -- Basic operations
 			if count > 0 then
 				create wel_point.make (0, 0)
 				wel_point.set_cursor_position
-				create l_popup.make_with_menu (Current)
+				create l_popup.make_with_menu (Current, wel_point.window_at)
 				show_track (wel_point.x, wel_point.y, l_popup)
 					-- If we do not process events now, the fact we remove the
 					-- menu from `l_popup' will prevent the action to be executed.
@@ -176,7 +176,7 @@ feature {EV_ANY_I} -- Basic operations
 				else
 					create wel_point.make (0, 0)
 				end
-				create l_popup.make_with_menu (Current)
+				create l_popup.make_with_menu (Current, wel_win)
 				show_track (wel_point.x, wel_point.y, l_popup)
 					-- If we do not process events now, the fact we remove the
 					-- menu from `l_popup' will prevent the action to be executed.

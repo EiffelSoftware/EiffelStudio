@@ -13,7 +13,6 @@ inherit
 			veto_pebble_function
 		redefine
 			retrieve_sorting_order,
-			internal_recycle,
 			is_browser_formatter
 		end
 
@@ -80,6 +79,7 @@ feature -- Setting
 			-- Set `a_displayer' with `a_displayer'.
 		do
 			displayer := a_displayer
+			check displayer.browser /= Void end
 			browser := displayer.browser
 		end
 
@@ -112,18 +112,6 @@ feature{NONE} -- Implementation
 				end
 				l_browser.set_sorting_status (l_sorting_status)
 			end
-		end
-
-feature{NONE} -- Recycle
-
-	internal_recycle is
-			-- Recycle
-		do
-			Precursor {EB_FORMATTER}
-			if displayer /= Void then
-				displayer.recycle
-			end
-			displayer := Void
 		end
 
 end

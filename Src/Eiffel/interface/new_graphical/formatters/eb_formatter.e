@@ -152,6 +152,9 @@ feature -- Status report
 		do
 		end
 
+	should_displayer_be_recycled: BOOLEAN
+			-- Should `displayer' be recycled in `internal_recycle'?
+
 feature -- Setting
 
 	invalidate is
@@ -257,6 +260,14 @@ feature -- Setting
 				widget_owner.ensure_formatter_display (Current)
 				display_header
 			end
+		end
+
+	set_should_displayer_be_recycled (b: BOOLEAN) is
+			-- Set `should_displayer_be_recycled' with `b'.
+		do
+			should_displayer_be_recycled := b
+		ensure
+			should_displayer_be_recycled_set: should_displayer_be_recycled = b
 		end
 
 feature -- Formatting
@@ -518,6 +529,11 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			manager := Void
+			if should_displayer_be_recycled then
+				if displayer /= Void then
+					displayer.recycle
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

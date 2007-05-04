@@ -96,8 +96,11 @@ feature -- Command
 				loop
 					a_text_formatter.add_new_line
 					a_text_formatter.add_indent
-					print_feature_name(a_text_formatter, item.e_feature, item.feature_i)
+					a_text_formatter.add ("{")
 					item.cl_type.type.append_to (a_text_formatter)
+					a_text_formatter.add ("}.")
+					print_feature_name(a_text_formatter, item.e_feature, item.feature_i)
+
 					a_text_formatter.add_space
 					a_text_formatter.add ("from formal:")
 					a_text_formatter.add_space

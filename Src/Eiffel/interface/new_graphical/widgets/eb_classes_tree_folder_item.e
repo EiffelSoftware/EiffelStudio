@@ -598,9 +598,6 @@ feature {NONE} -- Implementation
 				l_as := data.actual_assembly
 				if l_as.classes_set then
 					l_phys_as ?= l_as.physical_assembly
-					check
-						physical_assembly: l_phys_as /= Void
-					end
 					Result.append (physical_assembly_tooltip_text (l_phys_as))
 				end
 				Result.append (data.actual_group.location.evaluated_path)

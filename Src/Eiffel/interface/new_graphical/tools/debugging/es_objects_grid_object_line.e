@@ -555,8 +555,12 @@ feature -- Updating
 				inspect l_dmp.type
 						--| We only change the "Hexa"isable value
 					when
+						{DUMP_VALUE_CONSTANTS}.Type_integer_8,
+						{DUMP_VALUE_CONSTANTS}.Type_integer_16,
 						{DUMP_VALUE_CONSTANTS}.Type_integer_32,
 						{DUMP_VALUE_CONSTANTS}.Type_integer_64,
+						{DUMP_VALUE_CONSTANTS}.Type_natural_8,
+						{DUMP_VALUE_CONSTANTS}.Type_natural_16,
 						{DUMP_VALUE_CONSTANTS}.Type_natural_32,
 						{DUMP_VALUE_CONSTANTS}.Type_natural_64,
 						{DUMP_VALUE_CONSTANTS}.Type_character_8,

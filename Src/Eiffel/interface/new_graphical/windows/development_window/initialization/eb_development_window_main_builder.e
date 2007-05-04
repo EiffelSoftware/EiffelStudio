@@ -480,6 +480,7 @@ feature -- Command
 			loop
 				if develop_window.editors_manager.current_editor /= Void then
 					l_managed_main_formatters.item.set_editor_displayer (l_editor_displayer)
+					l_managed_main_formatters.item.set_should_displayer_be_recycled (True)
 				end
 				l_managed_main_formatters.item.on_shown
 				l_managed_main_formatters.forth

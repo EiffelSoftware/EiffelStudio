@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	language_guid: COM_GUID is
+	language_guid: WEL_GUID is
 			-- Language guid used to identify our language when debugging.
 		once
 			create Result.make (0xE1FFE11E, 0x8195, 0x490C,
@@ -19,7 +19,7 @@ feature -- Access
 			language_guid_not_void: language_guid /= Void
 		end
 
-	vendor_guid: COM_GUID is
+	vendor_guid: WEL_GUID is
 			-- Vendor guid used to identify us when debugging.
 		once
 			create Result.make (0xE1FFE10E, 0x9424, 0x485F,
@@ -28,7 +28,7 @@ feature -- Access
 			vendor_guid_not_void: vendor_guid /= Void
 		end
 
-	document_type_guid: COM_GUID is
+	document_type_guid: WEL_GUID is
 			-- Document type guid.
 		once
 			create Result.make_empty

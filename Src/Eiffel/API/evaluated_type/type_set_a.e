@@ -116,7 +116,7 @@ feature -- Access
 	feature_i_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
 			-- Compute feature state.
 			--
-			-- `a_name_id' is the `names_heap'-id of the feature name string.
+			-- `a_name_id': This is the `names_heap'-id of the feature name string.
 			-- Returns `feature_item' void if the feature cannot be found in the type set.
 			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
 			-- Use features from the family `info_about_feature*' to get detailed information.
@@ -124,6 +124,7 @@ feature -- Access
 			not_has_formal: not has_formal
 		local
 			l_last_feature, l_feature: FEATURE_I
+			l_class_type: CL_TYPE_A
 			l_last_class_type: CL_TYPE_A
 			l_features_found_count: INTEGER
 			l_renaming: RENAMING_A
@@ -149,17 +150,29 @@ feature -- Access
 					end
 
 					l_feature :=  l_feature_table.found_item
-
+						-- Duplicated code. Occurs also in `feature_i_state_by_rout_id'.
 					if
 						l_feature /= Void
 					then
 						l_constraint_position := cursor.index
 						l_last_feature  :=  l_feature
-						l_last_class_type ?= l_item.type
+						l_class_type ?= l_item.type
 							-- This check is guaranteed by the precondition.
-						check l_last_class_type_not_void: l_last_class_type /= Void end
-						l_features_found_count := l_features_found_count + 1
+						check l_class_type_not_void: l_class_type /= Void end
+
+						if l_last_class_type = Void or else (not l_class_type.same_as (l_last_class_type)) then
+								-- Only if we found a true new static type we count up.
+							l_features_found_count := l_features_found_count + 1
+						else
+							-- If it was the same static type that is ok because it does not change anything
+							-- regarding the dynamic binding.
+							-- G -> {COMPARABLE, COMPARABLE} is an example for such code.
+							-- There are more complex examples which lead to the same effect where it makes
+							-- more sense than this given example.
+						end
+						l_last_class_type := l_class_type
 					end
+
 				end
 				forth
 			end
@@ -178,7 +191,7 @@ feature -- Access
 	feature_i_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state.
 			--
-			-- `a_routine_id' is the routine id of the feature we're looking for.
+			-- `a_routine_id': This is the routine id of the feature we're looking for.
 			-- Returns `feature_item' void if the feature cannot be found in the type set.
 			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
 			-- Use features from the family `info_about_feature*' to get detailed information.
@@ -186,6 +199,7 @@ feature -- Access
 			not_loose: not is_loose
 		local
 			l_last_feature, l_feature: FEATURE_I
+			l_class_type: CL_TYPE_A
 			l_last_class_type: CL_TYPE_A
 			l_features_found_count: INTEGER
 			l_constraint_position: INTEGER
@@ -201,15 +215,21 @@ feature -- Access
 
 				l_feature :=  l_item.type.associated_class.feature_of_rout_id (a_routine_id)
 
+					-- Duplicated code. Occurs also in `feature_i_state_by_name_id'.
 				if
 					l_feature /= Void
 				then
 					l_constraint_position := cursor.index
 					l_last_feature  :=  l_feature
-					l_last_class_type ?= l_item.type
+					l_class_type ?= l_item.type
 						-- This check is guaranteed by the precondition.
-					check l_last_class_type_not_void: l_last_class_type /= Void end
-					l_features_found_count := l_features_found_count + 1
+					check l_class_type_not_void: l_class_type /= Void end
+
+						-- See comments in `feature_i_state_by_name_id'
+					if l_last_class_type = Void or else (not l_class_type.same_as (l_last_class_type)) then
+						l_features_found_count := l_features_found_count + 1
+					end
+					l_last_class_type := l_class_type
 				end
 				forth
 			end
@@ -227,9 +247,10 @@ feature -- Access
 		end
 
 	any_feature_i_by_routine_id (a_routine_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type: RENAMED_TYPE_A [TYPE_A]]
-			-- Returns the first matching feature and its class type (you need to to an assignment attempt)
+			-- Returns the first matching feature and its class type
 			--
 			-- `a_routine_id' is a routine id for which we query all types in the type set.
+			--| An assignment attempt is needed.
 		require
 			not_loose: not is_loose
 		local
@@ -815,9 +836,7 @@ feature -- Output
 
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C) is
 			-- Append `Current' to `text'.
-			-- `f' is used to retreive the generic type or argument name as string.	
-			-- MTNASK: f? why not a class... why a feature?	(only LIKE_ARGUMENT uses f really... what to do?)
-			-- MTN Other solution: Use append_to if not possible ext can handle void...
+			-- `c' is used to retreive the generic type or argument name as string.	
 		do
 				check first /= Void  end
 				if count > 1 then

@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: UNI_STRING; language, vendor, doc_type: COM_GUID): DBG_DOCUMENT_WRITER is
+	define_document (url: UNI_STRING; language, vendor, doc_type: WEL_GUID): DBG_DOCUMENT_WRITER is
 			-- Create a new document writer needed to generated debug info.
 		require
 			not_is_closed: not is_closed

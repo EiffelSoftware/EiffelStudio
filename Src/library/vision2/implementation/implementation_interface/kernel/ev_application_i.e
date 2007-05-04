@@ -542,54 +542,51 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_has_targets: BOOLEAN
 			l_widget: EV_WIDGET
 		do
-			if not shift_pressed then
-				targets := pnd_targets
-				create l_menu
-				create identified
-				cur := targets.cursor
-				if a_pebble /= Void then
-					from
-						targets.start
-							-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
-						l_comparator_agent :=
-							agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
-								do
-									Result := first_item.name < second_item.name
+			targets := pnd_targets
+			create l_menu
+			create identified
+			cur := targets.cursor
+			if a_pebble /= Void then
+				from
+					targets.start
+						-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
+					l_comparator_agent :=
+						agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
+							do
+								Result := first_item.name < second_item.name
+							end
+				until
+					targets.after
+				loop
+					trg ?= identified.id_object (targets.item_for_iteration)
+					if trg /= Void then
+						if
+							trg.drop_actions.accepts_pebble (a_pebble)
+						then
+							sensitive ?= trg
+							if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
+								l_has_targets := True
+								if not l_configurable_item_added then
+									l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
+									l_configurable_item_added := True
 								end
-					until
-						targets.after
-					loop
-						trg ?= identified.id_object (targets.item_for_iteration)
-						if trg /= Void then
-							if
-								trg.drop_actions.accepts_pebble (a_pebble)
-							then
-								sensitive ?= trg
-								if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
-									l_has_targets := True
-									if not l_configurable_item_added then
-										l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
-										l_configurable_item_added := True
+								if trg.target_data_function /= Void then
+									l_item_data := trg.target_data_function.item ([a_pebble])
+								end
+								if l_item_data /= Void then
+									l_item_data.set_target (trg)
+									create l_object_comparable.make (l_item_data, l_comparator_agent)
+									if l_search_tree = Void then
+										create l_search_tree.make (l_object_comparable)
+									else
+										l_search_tree.put (l_object_comparable)
 									end
-									if trg.target_data_function /= Void then
-										l_item_data := trg.target_data_function.item ([a_pebble])
-									end
-									if l_item_data /= Void then
-										l_item_data.set_target (trg)
-										create l_object_comparable.make (l_item_data, l_comparator_agent)
-										if l_search_tree = Void then
-											create l_search_tree.make (l_object_comparable)
-										else
-											l_search_tree.put (l_object_comparable)
-										end
-										l_item_data := Void
-									end
+									l_item_data := Void
 								end
 							end
 						end
-						targets.forth
 					end
-
+					targets.forth
 				end
 
 				if l_has_targets then
@@ -654,7 +651,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			end
 		end
 
-	menu_placement_offset: INTEGER = 10
+	menu_placement_offset: INTEGER = 3
 		-- Offset for both X and Y dimensions to which to move the menu so its placement is directly underneath the mouse pointer.
 
 feature {NONE} -- Debug

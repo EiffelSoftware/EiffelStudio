@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Request to run the application.
+	description: "Request to run the application."
 
 class RUN_REQUEST
 
@@ -115,40 +115,34 @@ feature {NONE} -- Implementation
 			-- application to check that it is alive.
 			-- Return False if something went wrong
 			-- in the communication.
-		local
-			c_string: C_STRING
 		do
 				-- Initialize sending of working directory
 			if working_directory /= Void then
 				send_rqst_0 (Rqst_application_cwd)
 					-- Send working directory of application
-				create c_string.make (working_directory)
-				c_send_str (c_string.item)
+				send_string_content (working_directory)
 			end
 
 				-- Initialize sending of environment
 			if environment_variables /= Void and then environment_variables.count > 0 then
 				send_rqst_0 (Rqst_application_env)
 				-- Send environment of application
-				create c_string.make (environment_variables)
-				c_send_sized_str (c_string.item, environment_variables.count)
+				send_string_content_with_size (environment_variables, environment_variables.count)
 			end
 
 				-- Start the application (in debug mode).
 			send_rqst_0 (Rqst_application)
 
 				-- Send the name of the application.
-			create c_string.make (application_name)
-			c_send_str (c_string.item)
+			send_string_content	(application_name)
 
 				-- Send the arguments.
 
 			if arguments = Void then
-				create c_string.make ("")
+				send_string_content	("")
 			else
-				create c_string.make (arguments)
+				send_string_content	(arguments)
 			end
-			c_send_str (c_string.item)
 
 			Result := recv_ack
 			debug("DEBUGGER")

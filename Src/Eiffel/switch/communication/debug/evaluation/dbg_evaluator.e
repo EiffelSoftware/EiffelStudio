@@ -330,13 +330,13 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+	create_empty_instance_of (a_type_i: CL_TYPE_I) is
 		require
 			a_type_i_not_void: a_type_i /= Void
 			a_type_i_compiled: a_type_i.has_associated_class_type
 		do
 			prepare_evaluation
-			implementation.create_empty_instance_of (a_type_i, a_curr_obj_typeid)
+			implementation.create_empty_instance_of (a_type_i)
 			retrieve_evaluation
 		end
 

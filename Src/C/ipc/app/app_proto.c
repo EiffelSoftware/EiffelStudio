@@ -124,7 +124,7 @@ rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type);
-rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid, int currtypeid, int generic_nb);
+rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
@@ -230,7 +230,7 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
 	case NEW_INSTANCE:
-		dbg_new_instance_of_type (sp, (int) arg_1, (int) arg_2, (int) arg_3);
+		dbg_new_instance_of_type (sp, (int) arg_1);
 		break;
 	case DBG_EXCEPTION_TRACE:
 		dbg_exception_trace(sp, (int) arg_1);
@@ -275,22 +275,12 @@ static int curr_modify = NO_CURRMODIF;
 		critical_stack_depth = (uint32) arg_3;
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
 
-#ifdef EIF_WINDOWS
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");
 		if ((void (*)()) 0 == rem_input(sp))
 			add_log(12, "rem_input: %s (%s)", s_strerror(), s_strname());
 #else
 		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
-#endif
-#else
-#ifdef USE_ADD_LOG
-		add_log(9, "RESUME");
-		if ((void (*)()) 0 == rem_input(sp))
-			add_log(12, "rem_input: %s (%s)", s_strerror(), s_strname());
-#else
-		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
-#endif
 #endif
 		break;
 	case QUIT:						/* Die, immediately */
@@ -818,8 +808,13 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "in load_bc loop");
 #endif
+
+		/* Read BYTECODE request */
 #ifdef EIF_WINDOWS
-		app_recv_packet(sp, &rqst, TRUE);			/* Read BYTECODE request */
+		app_recv_packet(sp, &rqst, TRUE);			
+#else
+		app_recv_packet(sp, &rqst);
+#endif
 		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
 			send_ack(sp, AK_PROTO);		/* Protocol error */
 			return;
@@ -843,24 +838,6 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "sent ack");
 #endif
-
-#else /* NOT EIF_WINDOWS */
-		app_recv_packet(sp, &rqst);			/* Read BYTECODE request */
-		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
-			send_ack(sp, AK_PROTO);		/* Protocol error */
-			return;
-		}
-#ifdef USE_ADD_LOG
-		add_log(9, "received packet BYTECODE");
-#endif
-		bc = (unsigned char *) app_tread((int *) 0);			/* Get byte code in memory */
-		if (bc == NULL) {			/* Not enough memory */
-			send_ack(sp, AK_ERROR);		/* Notify failure */
-			return;						/* And abort downloading */
-		}
-		drecord_bc((BODY_INDEX) arg_1, (BODY_INDEX) arg_2, bc);	/* Place byte code in run-time tables*/
-		send_ack(sp, AK_OK);				/* Byte code loaded successfully */
-#endif /* NOT EIF_WINDOWS */
 	}
 
 #undef arg_1
@@ -1635,43 +1612,58 @@ rt_private EIF_BOOLEAN app_recv_ack (EIF_PSTREAM sp)
 	}
 }
 
-rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid, int currtypeid, int generic_nb)
+rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 {
 	/* Must be the typeid of a Reference class */
 
 	GTCX
-	struct item *ip;
-	Request rqst;				/* What we send back */
+	struct item *ip = NULL;
+	Request rqst;				/* What we receive and send back */
 	struct dump dumped;			/* Item returned */
-	EIF_REFERENCE tp1 = NULL;
+	EIF_REFERENCE tmp = NULL;
 	EIF_REFERENCE loc1 = (EIF_REFERENCE) 0;
-	EIF_BOOLEAN is_ok = EIF_TRUE;
+	EIF_TYPE_ID tid;
+	char* s;
 
-	/* printf("[RT] dbg_new_instance_of_type (.., %d, %d, %d)\n", typeid, currtypeid, generic_nb); */
-/*** FIXME jfiat [2007/04/27] : generic case ... for later
-	char* p;
-	int i;
-	if (generic_nb > 0) {
-		for (i = 1; i <= generic_nb; i++) {
-			printf("[RT] dbg_new_instance_of_type : get generic <%d/%d>\n", i, generic_nb);
-			p = tread (sp, NULL);
-			printf("[RT] dbg_new_instance_of_type : get generic done <%d>\n", i);
-		}
-		send_ack(sp, AK_OK);
-		is_ok = EIF_TRUE;
-		printf("[RT] dbg_new_instance_of_type : get generics done <%d>\n", generic_nb);
+	/* Get type name */
+	Request_Clean (rqst);
+	/* Get request */
+#ifdef EIF_WINDOWS
+	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
+#else
+	if (-1 == app_recv_packet(sp, &rqst))
+#endif
+	{
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
 	}
-***/
+	if (rqst.rq_type == DUMPED && rqst.rq_dump.dmp_type == DMP_ITEM) {
+		ip = rqst.rq_dump.dmp_item;
+		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
+			s = (char*) ip->it_ref;
+		} else {
+			ip = NULL;
+		}
+	}
+	if (s == NULL) {
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
+	} else {
+		send_ack(sp, AK_OK);
+	}
 	
-	RTGC;
-
-
 	ip = (struct item*) malloc (sizeof (struct item));
 	memset (ip, 0, sizeof(struct item));	
-	if (is_ok == EIF_TRUE) {
-		tp1 = RTLN(RTUD(typeid));
-		loc1 = (EIF_REFERENCE)RTCCL(tp1);
-
+	if (s != NULL) {
+		tid = eif_type_id(s);
+		if (tid != -1) {
+			tmp = RTLNSMART(tid);
+		}
+	} else {
+		tmp = RTLN(RTUD(typeid));
+	}
+	if (tmp != NULL) {
+		loc1 = (EIF_REFERENCE)RTCCL(tmp);
 		ip->it_ref = (EIF_REFERENCE) loc1;
 		ip->type = SK_REF | Dtype(ip->it_ref);
 		ip->it_addr = NULL;

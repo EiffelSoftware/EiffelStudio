@@ -222,6 +222,17 @@ feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUAT
 	value_bits		: STRING
 	type_of_bits	: STRING
 
+feature {DBG_EXPRESSION_EVALUATOR} -- Specific access
+
+	replace_integer_32_value (i: like value_integer_32) is
+			-- Replace `value_integer_32' by `i'
+			--| This is mainly used by debugger's evaluator for optimisation.
+		require
+			is_type_integer_32: is_type_integer_32
+		do
+			value_integer_32 := i
+		end
+
 feature -- Action
 
 	classic_send_value is

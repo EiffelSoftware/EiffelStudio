@@ -342,11 +342,12 @@ rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)
 	}
 
 #ifdef EIF_WINDOWS
-	if (-1 == net_recv(sp, buffer, size, TRUE)) 	/* Cannot receive string */
+	if (-1 == net_recv(sp, buffer, size, TRUE))
 #else
-	if (-1 == net_recv(sp, buffer, size)) 	/* Cannot receive string */
+	if (-1 == net_recv(sp, buffer, size)) 	
 #endif
 	{
+		/* Cannot receive string */
 		free(buffer);
 		return (char *) 0;
 	}

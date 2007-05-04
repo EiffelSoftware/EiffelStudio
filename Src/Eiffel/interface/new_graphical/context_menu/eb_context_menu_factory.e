@@ -47,7 +47,7 @@ feature -- Editor menu
 				setup_pick_item (a_menu, a_pebble)
 				if a_pebble /= Void then
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 				end
 				extend_basic_editor_menus (a_menu, a_editor.is_editable)
 				extend_view_in_main_formatters_menus (a_menu)
@@ -78,7 +78,7 @@ feature -- Class Tree Menu
 					else
 						l_cluster_stone ?= l_stone
 						if l_cluster_stone /= Void then
-							a_menu.extend (create {EV_MENU_SEPARATOR})
+							extend_separator (a_menu)
 							l_group := l_cluster_stone.group
 							if l_group.is_cluster then
 								extend_add_new_class_item (a_menu, l_cluster_stone, l_group.is_readonly)
@@ -88,13 +88,13 @@ feature -- Class Tree Menu
 							elseif l_group.is_assembly then
 								extend_add_assembly (a_menu)
 							end
-							a_menu.extend (create {EV_MENU_SEPARATOR})
+							extend_separator (a_menu)
 						end
 						extend_standard_compiler_item_menu (a_menu, l_stone)
-						a_menu.extend (create {EV_MENU_SEPARATOR})
+						extend_separator (a_menu)
 						if l_cluster_stone = Void then
 							extend_view_in_main_formatters_menus (a_menu)
-							a_menu.extend (create {EV_MENU_SEPARATOR})
+							extend_separator (a_menu)
 						end
 						extend_delete_class_cluster_menu (a_menu, l_stone)
 					end
@@ -114,9 +114,9 @@ feature -- Class Tree Menu
 				if l_data_stone /= Void then
 					build_name (a_pebble)
 					setup_pick_item (a_menu, l_data_stone)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_subcluster_item (a_menu, Void, False)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
 				end
 			end
@@ -134,9 +134,9 @@ feature -- Class Tree Menu
 				if l_data_stone /= Void then
 					build_name (a_pebble)
 					setup_pick_item (a_menu, l_data_stone)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_library (a_menu)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
 				end
 			end
@@ -154,9 +154,9 @@ feature -- Class Tree Menu
 				if l_data_stone /= Void then
 					build_name (a_pebble)
 					setup_pick_item (a_menu, l_data_stone)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_assembly (a_menu)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
 				end
 			end
@@ -178,7 +178,7 @@ feature -- Diagram tool
 					build_name (a_pebble)
 					setup_pick_item (a_menu, a_pebble)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					l_feature_stone ?= a_pebble
 					if l_feature_stone = Void then
 						extend_diagram_add_menu (a_menu, names.b_add, a_pebble)
@@ -204,7 +204,7 @@ feature -- Feature tree
 		do
 			if not is_pnd_mode then
 				l_feature_tool := dev_window.tools.features_tool
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
+				a_menu.extend (new_menu_item (names.m_go_to))
 				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_feature_with_name (a_name))
 			end
 		end
@@ -219,7 +219,7 @@ feature -- Feature tree
 		do
 			if not is_pnd_mode then
 				l_feature_tool := dev_window.tools.features_tool
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_go_to))
+				a_menu.extend (new_menu_item (names.m_go_to))
 				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_clause (a_clause, False))
 			end
 		end
@@ -236,7 +236,7 @@ feature -- Favorites menus
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_new_favorite_class (a_menu)
 				extend_add_favorite_folder (a_menu)
 				extend_move_to_folder (a_menu, a_pebble)
@@ -253,7 +253,7 @@ feature -- Metrics tool
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_metric_selector_remove (a_menu, a_pebble, a_selector)
 			end
 		end
@@ -267,7 +267,7 @@ feature -- Metrics tool
 			if not is_pnd_mode then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				l_unit ?= a_pebble
 				l_basic ?= a_pebble
 				if l_unit /= Void then
@@ -275,12 +275,12 @@ feature -- Metrics tool
 				elseif l_basic /= Void then
 					extend_metric_clone_metric (a_menu, l_basic)
 					extend_metric_quick_metric (a_menu, l_basic)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_new_metric (a_menu)
 					extend_reload_metrics (a_menu)
 					extend_metric_open_user_metric (a_menu)
 					extend_import_metric_from_file (a_menu)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_metric_delete (a_menu, l_basic)
 				end
 			end
@@ -299,7 +299,7 @@ feature -- Call stack menu
 				l_call_stack_stone ?= a_pebble
 				if l_call_stack_stone /= Void then
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_sync_in_context_tool (a_menu, a_pebble)
 					extend_expanded_object_view (a_menu, a_pebble)
 				end
@@ -319,7 +319,7 @@ feature -- Object and Watch tool menus
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				l_object_stone ?= a_pebble
 				if l_object_stone /= Void then
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					extend_expanded_object_view (a_menu, a_pebble)
 				end
 			end
@@ -337,13 +337,13 @@ feature -- Object and Watch tool menus
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				l_object_stone ?= a_pebble
 				if l_object_stone /= Void then
-					a_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (a_menu)
 					l_sep_added := True
 					extend_expanded_object_view (a_menu, a_pebble)
 				end
 				if a_watch_tool.has_selected_item then
 					if not l_sep_added then
-						a_menu.extend (create {EV_MENU_SEPARATOR})
+						extend_separator (a_menu)
 					end
 					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
 				end
@@ -359,7 +359,7 @@ feature -- Search scope menu
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_search_scope_remove (a_menu, a_pebble)
 			end
 		end
@@ -394,21 +394,21 @@ feature {NONE} -- Menu section, Granularity 2.
 			l_stone ?= a_pebble
 			if l_feature_stone /= Void then
 				extend_basic_opening_menus (a_menu, l_feature_stone, True)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_feature_formatter_menus (a_menu, l_feature_stone)
 				extend_feature_refactoring_menus (a_menu, l_feature_stone)
 				extend_debug_feature_menus (a_menu, l_feature_stone.e_feature)
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_stonec /= Void then
 				extend_basic_opening_menus (a_menu, l_stonec, False)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_class_formatter_menus (a_menu, l_stonec)
 				extend_class_refactoring_menus (a_menu, l_stonec)
 				extend_debug_class_menus (a_menu, l_stonec.e_class)
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_stonei /= Void then
 				extend_basic_opening_menus (a_menu, l_stonei, False)
-				a_menu.extend (create {EV_MENU_SEPARATOR})
+				extend_separator (a_menu)
 				extend_class_refactoring_menus (a_menu, l_stonei)
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_cluster_stone /= Void then
@@ -485,8 +485,8 @@ feature {NONE} -- Menu section, Granularity 1.
 				a_menu.last.disable_sensitive
 			end
 
-			a_menu.extend (create {EV_MENU_SEPARATOR})
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_select_all))
+			extend_separator (a_menu)
+			a_menu.extend (new_menu_item (names.m_select_all))
 			a_menu.last.select_actions.extend (agent dev_window.select_all)
 
 
@@ -512,7 +512,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end
 				l_commands.forth
 			end
-			a_menu.extend (create {EV_MENU_SEPARATOR})
+			extend_separator (a_menu)
 		end
 
 	extend_view_in_main_formatters_menus (a_menu: EV_MENU) is
@@ -570,12 +570,12 @@ feature {NONE} -- Menu section, Granularity 1.
 			loop
 				l_class_formatter ?= dev_window.managed_class_formatters.item
 				if l_class_formatter /= Void then
-					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_class_formatter.menu_name))
+					l_menu.extend (new_menu_item (l_class_formatter.menu_name))
 					l_menu.last.set_pixmap (l_class_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.class_tool).show)
 					l_menu.last.select_actions.extend (agent l_class_formatter.execute_with_stone (a_class_stone))
 				else
-					l_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (l_menu)
 				end
 				dev_window.managed_class_formatters.forth
 			end
@@ -600,7 +600,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_c_menu.disable_sensitive
 			end
 
-			l_menu.extend (create {EV_MENU_SEPARATOR})
+			extend_separator (l_menu)
 
 			l_menu.extend (dev_window.tools.cluster_tool.show_current_class_cluster_cmd.new_menu_item_unmanaged)
 			l_menu.last.select_actions.wipe_out
@@ -632,12 +632,12 @@ feature {NONE} -- Menu section, Granularity 1.
 			loop
 				l_feature_formatter ?= dev_window.managed_feature_formatters.item
 				if l_feature_formatter /= Void then
-					l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_feature_formatter.menu_name))
+					l_menu.extend (new_menu_item (l_feature_formatter.menu_name))
 					l_menu.last.set_pixmap (l_feature_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.features_relation_tool).show)
 					l_menu.last.select_actions.extend (agent l_feature_formatter.execute_with_stone (a_feature_stone))
 				else
-					l_menu.extend (create {EV_MENU_SEPARATOR})
+					extend_separator (l_menu)
 				end
 				dev_window.managed_feature_formatters.forth
 			end
@@ -675,7 +675,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			until
 				a_formatters.after
 			loop
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (a_formatters.item.name))
+				a_menu.extend (new_menu_item (a_formatters.item.name))
 				a_menu.last.select_actions.extend (agent a_tool.show)
 				a_menu.last.select_actions.extend (agent (a_formatters.item).execute_with_stone (a_stone))
 				a_formatters.forth
@@ -695,7 +695,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (dev_window.refactoring_manager.rename_command.new_menu_item_unmanaged)
 			l_menu.last.select_actions.wipe_out
 			l_menu.last.select_actions.extend (agent (dev_window.refactoring_manager.rename_command).drop_class (a_stone))
---			l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Move"))
+--			l_menu.extend (new_menu_item ("Move"))
 			--| FIXME IEK There is no dialog for moving a class?
 		end
 
@@ -728,7 +728,7 @@ feature {NONE} -- Menu section, Granularity 1.
 		do
 			create l_menu.make_with_text (names.m_debug)
 			a_menu.extend (l_menu)
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_add_first_breakpoints_in_class))
+			l_menu.extend (new_menu_item (names.m_add_first_breakpoints_in_class))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
 					dev_window.debugger_manager.enable_first_breakpoints_in_class (a_class)
@@ -736,7 +736,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_class_c)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_enable_stop_points))
+			l_menu.extend (new_menu_item (names.m_enable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
 					dev_window.debugger_manager.enable_breakpoints_in_class (a_class)
@@ -744,7 +744,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_class_c)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_disable_stop_points))
+			l_menu.extend (new_menu_item (names.m_disable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
 					dev_window.debugger_manager.disable_breakpoints_in_class (a_class)
@@ -752,7 +752,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_class_c)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_clear_breakpoints))
+			l_menu.extend (new_menu_item (names.m_clear_breakpoints))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
 					dev_window.debugger_manager.remove_breakpoints_in_class (a_class)
@@ -771,7 +771,7 @@ feature {NONE} -- Menu section, Granularity 1.
 		do
 			create l_menu.make_with_text (names.m_debug)
 			a_menu.extend (l_menu)
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_add_first_breakpoints_in_feature))
+			l_menu.extend (new_menu_item (names.m_add_first_breakpoints_in_feature))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
 					dev_window.debugger_manager.enable_first_breakpoint_of_feature (a_feature)
@@ -779,7 +779,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_efeature)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_enable_stop_points))
+			l_menu.extend (new_menu_item (names.m_enable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
 					dev_window.debugger_manager.enable_breakpoints_in_feature (a_feature)
@@ -787,7 +787,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_efeature)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_disable_stop_points))
+			l_menu.extend (new_menu_item (names.m_disable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
 					dev_window.debugger_manager.disable_breakpoints_in_feature (a_feature)
@@ -795,7 +795,7 @@ feature {NONE} -- Menu section, Granularity 1.
 				end (a_efeature)
 			)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_clear_breakpoints))
+			l_menu.extend (new_menu_item (names.m_clear_breakpoints))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
 					dev_window.debugger_manager.remove_breakpoints_in_feature (a_feature)
@@ -818,20 +818,20 @@ feature {NONE} -- Menu section, Granularity 1.
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_search_scope))
+			l_menu.extend (new_menu_item (names.m_search_scope))
 			l_menu.last.select_actions.extend (agent (dev_window.tools.search_tool).on_drop_add (a_pebble))
 
 			extend_diagram_add_menu (l_menu, names.m_diagram_with, a_pebble)
 
 			create l_menu2.make_with_text (names.m_input_domain)
 			l_menu.extend (l_menu2)
-			l_menu2.extend (create {EV_MENU_ITEM}.make_with_text (metric_names.t_evaluation_tab))
+			l_menu2.extend (new_menu_item (metric_names.t_evaluation_tab))
 			l_menu2.last.select_actions.extend (
 				agent (a_stone: STONE) do
 					dev_window.tools.metric_tool.metric_evaluation_panel.force_drop_stone (a_stone)
 				end (a_pebble)
 			)
-			l_menu2.extend (create {EV_MENU_ITEM}.make_with_text (metric_names.t_archive_tab))
+			l_menu2.extend (new_menu_item (metric_names.t_archive_tab))
 			l_menu2.last.select_actions.extend (
 				agent (a_stone: STONE) do
 					dev_window.tools.metric_tool.metric_archive_panel.force_drop_stone (a_stone)
@@ -850,7 +850,7 @@ feature {NONE} -- Menu section, Granularity 1.
 					until
 						l_list.after
 					loop
-						l_menu2.extend (create {EV_MENU_ITEM}.make_with_text (l_list.item.title))
+						l_menu2.extend (new_menu_item (l_list.item.title))
 						l_menu2.last.select_actions.extend (agent (l_list.item).on_element_drop (l_class_stone))
 						l_list.forth
 					end
@@ -937,9 +937,9 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_search_tool: EB_MULTI_SEARCH_TOOL
 		do
 			l_search_tool := dev_window.tools.search_tool
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove))
+			a_menu.extend (new_menu_item (names.m_remove))
 			a_menu.last.select_actions.extend (agent l_search_tool.on_drop_remove (a_pebble))
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_all))
+			a_menu.extend (new_menu_item (names.m_remove_all))
 			a_menu.last.select_actions.extend (agent l_search_tool.remove_all)
 		end
 
@@ -1151,7 +1151,7 @@ feature {NONE} -- Favorites menu section, Granularity 1.
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_new_favorite_class))
+			a_menu.extend (new_menu_item (names.b_new_favorite_class))
 			a_menu.last.select_actions.extend (agent favorite_manager.new_favorite_class (Void))
 		end
 
@@ -1172,7 +1172,7 @@ feature {NONE} -- Favorites menu section, Granularity 1.
 				l_item := l_folder
 			end
 			if l_item /= Void then
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_move_to_folder))
+				a_menu.extend (new_menu_item (names.b_move_to_folder))
 				a_menu.last.select_actions.extend (agent favorite_manager.move_to_folder (l_item, Void))
 			end
 		end
@@ -1182,7 +1182,7 @@ feature {NONE} -- Favorites menu section, Granularity 1.
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.b_create_folder))
+			a_menu.extend (new_menu_item (names.b_create_folder))
 			a_menu.last.select_actions.extend (agent favorite_manager.create_folder (Void))
 		end
 
@@ -1207,7 +1207,7 @@ feature {NONE} -- Favorites menu section, Granularity 1.
 				l_item := l_feature.origin
 			end
 			if l_item /= Void then
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_from_favorites))
+				a_menu.extend (new_menu_item (names.m_remove_from_favorites))
 				a_menu.last.select_actions.extend (agent favorite_manager.remove (l_item))
 			end
 		end
@@ -1223,7 +1223,7 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 		do
 			l_stone ?= a_pebble
 			if l_stone /= Void then
-				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_synchronize_in_tools))
+				a_menu.extend (new_menu_item (names.m_synchronize_in_tools))
 				a_menu.last.select_actions.extend (agent (a_stone: STONE)
 					do
 						dev_window.tools.launch_stone (a_stone)
@@ -1254,7 +1254,7 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 			a_watch_tool_not_void: a_watch_tool /= Void
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_delete))
+			a_menu.extend (new_menu_item (names.m_delete))
 			a_menu.last.select_actions.extend (agent a_watch_tool.remove_object_line (a_pebble))
 			if not a_watch_tool.is_removable (a_pebble) then
 				a_menu.last.disable_sensitive
@@ -1272,7 +1272,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_NEW_METRIC_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_delete))
+			a_menu.extend (new_menu_item (names.m_delete))
 			a_menu.last.set_pixmap (l_metric_panel.remove_metric_btn.pixmap)
 			a_menu.last.select_actions.extend (agent l_metric_panel.remove_metric_by_context_menu (a_basic))
 			if a_basic.is_predefined then
@@ -1289,7 +1289,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_METRIC_EVALUATION_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.metric_evaluation_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_quick_metric))
+			a_menu.extend (new_menu_item (names.m_quick_metric))
 			a_menu.last.set_pixmap (l_metric_panel.quick_metric_btn.pixmap)
 			a_menu.last.select_actions.extend (agent (dev_window.tools.metric_tool.metric_notebook).select_item (l_metric_panel))
 			a_menu.last.select_actions.extend (agent l_metric_panel.on_create_quick_metric (a_basic))
@@ -1304,7 +1304,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_NEW_METRIC_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_clone_metric))
+			a_menu.extend (new_menu_item (names.m_clone_metric))
 			a_menu.last.set_pixmap (l_metric_panel.send_current_to_new_btn.pixmap)
 			a_menu.last.select_actions.extend (agent (dev_window.tools.metric_tool.metric_notebook).select_item (l_metric_panel))
 			a_menu.last.select_actions.extend (agent l_metric_panel.clone_and_load_metric (a_basic))
@@ -1318,7 +1318,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_NEW_METRIC_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_reload_metrics))
+			a_menu.extend (new_menu_item (names.m_reload_metrics))
 			a_menu.last.set_pixmap (l_metric_panel.reload_btn.pixmap)
 			a_menu.last.select_actions.extend (agent l_metric_panel.on_reload_metrics)
 		end
@@ -1331,7 +1331,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_NEW_METRIC_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_import_metrics_from_file))
+			a_menu.extend (new_menu_item (names.m_import_metrics_from_file))
 			a_menu.last.set_pixmap (l_metric_panel.import_btn.pixmap)
 			a_menu.last.select_actions.extend (agent l_metric_panel.on_import_metrics)
 		end
@@ -1359,7 +1359,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			l_metric_panel: EB_NEW_METRIC_PANEL
 		do
 			l_metric_panel := dev_window.tools.metric_tool.new_metric_panel
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_open_user_defined_metric))
+			a_menu.extend (new_menu_item (names.m_open_user_defined_metric))
 			a_menu.last.set_pixmap (l_metric_panel.open_metric_file_btn.pixmap)
 			a_menu.last.select_actions.extend (agent l_metric_panel.on_open_user_defined_metric_file)
 		end
@@ -1371,9 +1371,9 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			a_selector_not_void: a_selector /= Void
 			a_unit_not_void: a_unit /= Void
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_move_up))
+			a_menu.extend (new_menu_item (names.m_move_up))
 			a_menu.last.select_actions.extend (agent a_selector.move_unit (a_unit, True))
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_move_down))
+			a_menu.extend (new_menu_item (names.m_move_down))
 			a_menu.last.select_actions.extend (agent a_selector.move_unit (a_unit, False))
 		end
 
@@ -1383,12 +1383,12 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 			a_selector_not_void: a_selector /= Void
 		do
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove))
+			a_menu.extend (new_menu_item (names.m_remove))
 				-- |Ted: Questionable: Metric domain selector has two routine handling removing?
 			a_menu.last.select_actions.extend (agent a_selector.on_item_dropped_on_remove_button (a_pebble))
 			a_menu.last.select_actions.extend (agent a_selector.on_item_drop_on_remove_button (a_pebble))
 
-			a_menu.extend (create {EV_MENU_ITEM}.make_with_text (names.m_remove_all))
+			a_menu.extend (new_menu_item (names.m_remove_all))
 			a_menu.last.select_actions.extend (agent a_selector.on_remove_all_scopes)
 		end
 
@@ -1480,6 +1480,26 @@ feature {NONE} -- Implementation
 			-- Favorites manager
 		do
 			Result := dev_window.favorites_manager
+		end
+
+	extend_separator (a_menu: EV_MENU) is
+			-- Extend a separator into `a_menu'.
+		require
+			a_menu_not_void: a_menu /= Void
+		do
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+		end
+
+	new_menu_item (a_name: STRING_GENERAL): EV_MENU_ITEM is
+			-- New menu item with `a_name'.
+		do
+			if a_name /= Void then
+				create Result.make_with_text (a_name)
+			else
+				create Result
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Status report

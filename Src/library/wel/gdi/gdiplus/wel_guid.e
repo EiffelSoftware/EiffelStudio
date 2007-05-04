@@ -1,5 +1,5 @@
 indexing
-	description: "GUID struct used by GDI+."
+	description: "Abstraction of a GUID data structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,120 +11,109 @@ class
 inherit
 	ANY
 		redefine
-			is_equal
+			is_equal, copy
 		end
 
 create
 	make,
+	make_empty,
 	share_from_pointer
 
-feature {NONE} -- Initlization
+feature {NONE} -- Initialization
 
-	make is
-			-- Creation method.
+	make (data1: NATURAL_32; data2, data3: NATURAL_16; data4: ARRAY [NATURAL_8]) is
+			-- Create Current using provided above information.
+		require
+			data4_not_void: data4 /= Void
+			data4_valid_count: data4.count = data_4_count
 		do
-			create internal_item.make (structure_size)
+			create internal_item.make (size)
+			internal_item.put_natural_32 (data1, data_1_pos)
+			internal_item.put_natural_16 (data2, data_2_pos)
+			internal_item.put_natural_16 (data3, data_3_pos)
+			internal_item.put_array (data4, data_4_pos)
+		end
+
+	make_empty is
+			-- Create a GUID with null data.
+		do
+			make (0, 0, 0, << 0,0,0,0,0,0,0,0 >>)
 		end
 
 	share_from_pointer (a_pointer: POINTER) is
 			-- Creation method
 		do
-			create internal_item.share_from_pointer (a_pointer, structure_size)
+			create internal_item.share_from_pointer (a_pointer, size)
 		end
 
-	make_from_string (a_string: STRING) is
-			-- Creation method
-		do
-			-- We need a simple parser for this creation method.
-			check not_implemented: False end
-		end
+feature -- Element change
 
-feature -- Command
-
-	set_data_1 (a_value: NATURAL_64) is
+	set_data_1 (a_value: NATURAL_32) is
 			-- Set `data_1' with `a_value'.
 		do
-			c_set_data_1 (item, a_value)
+			internal_item.put_natural_32 (a_value, data_1_pos)
+		ensure
+			data_1_set: data_1 = a_value
 		end
 
 	set_data_2 (a_value: NATURAL_16) is
 			-- Set `data_2' with `a_value'.
 		do
-			c_set_data_2 (item, a_value)
+			internal_item.put_natural_16 (a_value, data_2_pos)
+		ensure
+			data_2_set: data_2 = a_value
 		end
 
 	set_data_3 (a_value: NATURAL_16) is
 			-- Set `data_3' with `a_value'.
 		do
-			c_set_data_3 (item, a_value)
+			internal_item.put_natural_16 (a_value, data_3_pos)
+		ensure
+			data_3_set: data_3 = a_value
 		end
 
-	set_data_4 (a_value: NATURAL_8; a_index: INTEGER) is
+	set_data_4 (a_values: ARRAY [NATURAL_8]; a_index: INTEGER) is
 			-- Set `data_4' array item at `a_index''s value with `a_value'.
+		require
+			a_value_not_void: a_values /= Void
+			a_values_valid_count: a_values.count = data_4_count
 		do
-			c_set_data_4 (item, a_index, a_value)
+			internal_item.put_array (a_values, data_4_pos)
+		ensure
+			data_4_set: data_4.is_equal (a_values)
 		end
 
-feature -- Query
+feature -- Access
 
-	structure_size: INTEGER is
-			-- Size of Current structure.
-		do
-			Result := c_size_of_guid
-		end
-
-	data_1: NATURAL_64 is
+	data_1: NATURAL_32 is
 			-- Data 1
 		do
-			Result := c_data_1 (internal_item.item)
+			Result := internal_item.read_natural_32 (data_1_pos)
 		end
 
 	data_2: NATURAL_16 is
 			-- Data 2
 		do
-			Result := c_data_2 (internal_item.item)
+			Result := internal_item.read_natural_16 (data_2_pos)
 		end
 
 	data_3: NATURAL_16 is
 			-- Data 3
 		do
-			Result := c_data_3 (internal_item.item)
+			Result := internal_item.read_natural_16 (data_3_pos)
 		end
 
 	data_4: ARRAY [NATURAL_8] is
 			-- Data 4
-		local
-			l_count: INTEGER
 		do
-			from
-				create Result.make (0, 7)
-			until
-				l_count >= 8
-			loop
-				Result.put (c_data_4 (internal_item.item, l_count), l_count)
-				l_count := l_count + 1
-			end
+			Result := internal_item.read_array (data_4_pos, data_4_count)
 		ensure
 			not_void: Result /= Void
-			count_right: Result.count = 8
+			count_right: Result.count = data_4_count
 		end
 
-	is_equal (other: like Current): BOOLEAN is
-			-- Redefine
-		local
-			l_data_4, l_other_data_4: like data_4
-		do
-			l_data_4 := data_4
-			l_data_4.compare_objects
-
-			l_other_data_4 := other.data_4
-			l_other_data_4.compare_objects
-
-			Result := other.data_1 = data_1 and
-					other.data_2 = data_2 and
-					other.data_3 = data_3 and
-					l_other_data_4.is_equal (l_data_4)
-		end
+	data_4_count: INTEGER is 8
+			-- Number of elements in `data_4'.
 
 	item: POINTER is
 			-- Pointer
@@ -132,106 +121,39 @@ feature -- Query
 			Result := internal_item.item
 		end
 
-feature {NONE} -- Implementation
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Redefine
+		do
+			Result := internal_item.is_equal (other.internal_item)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		do
+			internal_item := other.internal_item.twin
+		end
+
+feature {WEL_GUID} -- Access
 
 	internal_item: MANAGED_POINTER
-			-- Managed pointer to the struct.
+			-- To hold data of Current.
 
-feature {NONE} -- C externals
+	size: INTEGER is 16
+			-- Size of structure.
 
-	c_size_of_guid: INTEGER is
-			-- GUID struct size.
-		external
-			"C [macro %"wel_gdi_plus.h%"]"
-		alias
-			"sizeof (GUID)"
-		end
+	data_1_pos: INTEGER is 0
+	data_2_pos: INTEGER is 4
+	data_3_pos: INTEGER is 6
+	data_4_pos: INTEGER is 8
+			-- Starting position of `data_1', `data_2', `data_3' and `data_4' in `internal_item'.
 
-	c_set_data_1 (a_item: POINTER; a_value: NATURAL_64) is
-			-- Set `a_item''s Data1 with `a_x'
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				((GUID *)$a_item)->Data1 = (EIF_NATURAL_64)$a_value;
-			}
-			]"
-		end
-		
-	c_set_data_2 (a_item: POINTER; a_value: NATURAL_16) is
-			-- Set `a_item''s Data2 with `a_value'
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				((GUID *)$a_item)->Data2 = (EIF_NATURAL_16)$a_value;
-			}
-			]"
-		end
-
-	c_set_data_3 (a_item: POINTER; a_value: NATURAL_16) is
-			-- Set `a_item''s Data3 with `a_value'
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				((GUID *)$a_item)->Data3 = (EIF_NATURAL_16)$a_value;
-			}
-			]"
-		end
-
-	c_set_data_4 (a_item: POINTER; a_index: INTEGER; a_value: NATURAL_8) is
-			-- Set `a_item''s data4 value at `a_index' with `a_value'.
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-				((GUID *)$a_item)->Data4[$a_index] = (EIF_NATURAL_8)$a_value;
-			]"
-		end
-
-	c_data_1 (a_item: POINTER): NATURAL_64 is
-			-- `a_item''s data1
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-				((GUID *)$a_item)->Data1
-			]"
-		end
-
-	c_data_2 (a_item: POINTER): NATURAL_16 is
-			-- `a_item''s data1
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-				((GUID *)$a_item)->Data2
-			]"
-		end
-
-	c_data_3 (a_item: POINTER): NATURAL_16 is
-			-- `a_item''s data1
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-				((GUID *)$a_item)->Data3
-			]"
-		end
-
-	c_data_4 (a_item: POINTER; a_index: INTEGER): NATURAL_8 is
-			-- `a_item''s data4 value at `a_index'.
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-				((GUID *)$a_item)->Data4[$a_index]
-			]"
-		end
+invariant
+	internal_item_not_void: internal_item /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -243,6 +165,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end

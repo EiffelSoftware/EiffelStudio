@@ -146,7 +146,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 		local
 			l_result: INTEGER
 		do
-			create Result.make
+			create Result.make_empty
 			c_gdip_get_image_raw_format (gdi_plus_handle, item, Result.item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end

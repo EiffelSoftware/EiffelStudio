@@ -37,23 +37,8 @@ feature -- Query
     	local
     		l_guid: WEL_GUID
     	once
-    		create l_guid.make
-
-    		-- {b96b3caa-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3caa)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+    			-- {b96b3caa-0728-11d3-9d7b-0000f81ef32e}
+    		create l_guid.make (0xb96b3caa, 0x0728, 0x11d3, <<0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e>>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -64,22 +49,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cab-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cab)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cab-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cab, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -90,22 +61,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cac-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cac)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cac-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cac, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -116,22 +73,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cad-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cad)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cad-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cad, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -142,22 +85,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cae-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cae)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cae-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cae, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -168,22 +97,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3caf-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3caf)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3caf-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3caf, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -194,22 +109,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cb0-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb0)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cb0-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb0, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -220,22 +121,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cb1-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb1)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cb1-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb1, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -246,22 +133,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cb2-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb2)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cb2-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb2, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -272,22 +145,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cb3-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb3)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cb3-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb3, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -298,22 +157,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			-- {b96b3cb4-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb4)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				-- {b96b3cb4-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb4, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void
@@ -324,22 +169,8 @@ feature -- Query
 		local
 			l_guid: WEL_GUID
 		once
-			create l_guid.make
-			--{b96b3cb5-0728-11d3-9d7b-0000f81ef32e}
-
-    		l_guid.set_data_1 (0xb96b3cb5)
-    		l_guid.set_data_2 (0x0728)
-    		l_guid.set_data_3 (0x11d3)
-
-    		l_guid.set_data_4 (0x9d, 0)
-    		l_guid.set_data_4 (0x7b, 1)
-    		l_guid.set_data_4 (0x00, 2)
-    		l_guid.set_data_4 (0x00, 3)
-    		l_guid.set_data_4 (0xf8, 4)
-    		l_guid.set_data_4 (0x1e, 5)
-    		l_guid.set_data_4 (0xf3, 6)
-    		l_guid.set_data_4 (0x2e, 7)
-
+				--{b96b3cb5-0728-11d3-9d7b-0000f81ef32e}
+			create l_guid.make (0xb96b3cb5, 0x0728, 0x11d3, << 0x9d, 0x7b, 0x00, 0x00, 0xf8, 0x1e, 0xf3, 0x2e >>)
     		create Result.make (l_guid)
     	ensure
     		not_void: Result /= Void

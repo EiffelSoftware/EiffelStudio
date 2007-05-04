@@ -155,6 +155,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		do
+			Result := query_target_item_from_conf_target (group.target)
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is True

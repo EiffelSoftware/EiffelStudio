@@ -114,6 +114,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		do
+		end
+
 feature -- Status report
 
 	hash_code: INTEGER is

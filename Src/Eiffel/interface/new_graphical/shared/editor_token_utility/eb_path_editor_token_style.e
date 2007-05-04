@@ -140,6 +140,22 @@ feature -- Setting
 			item_set: item = a_item
 		end
 
+	set_is_folder_displayed (b: BOOLEAN) is
+			-- If `b' is True, enable folder display for path, otherwise, display folder display.
+		do
+			path_printer.set_is_folder_displayed (b)
+		ensure
+			folder_display_set: path_printer.is_folder_displayed = b
+		end
+
+	set_is_class_displayed (b: BOOLEAN) is
+			-- If `b' is True, enable class name to be displayed, otherwise, don't display class name.
+		do
+			path_printer.set_is_class_name_displayed (b)
+		ensure
+			class_display_set: path_printer.is_class_name_displayed = b
+		end
+
 feature{NONE} -- Implementation
 
 	class_style: EB_CLASS_EDITOR_TOKEN_STYLE is

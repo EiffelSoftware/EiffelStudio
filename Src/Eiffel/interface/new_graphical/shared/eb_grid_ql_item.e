@@ -72,6 +72,7 @@ feature -- Initialization
 					-- Initialize current as a path item.
 				l_path_style := item_path_style
 				l_path_style.set_item (a_item)
+				l_path_style.set_is_folder_displayed (True)
 				set_text_with_tokens (l_path_style.text)
 				set_image (text)
 			end

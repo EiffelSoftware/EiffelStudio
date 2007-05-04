@@ -31,6 +31,7 @@ feature{NONE} -- Initialization
 			create_default_class_style
 			create_default_feature_style
 			create {LINKED_LIST [EDITOR_TOKEN]} text_internal.make
+			set_is_class_name_displayed (True)
 		end
 
 feature -- Access
@@ -55,6 +56,23 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
+
+feature -- Status report
+
+	is_text_empty: BOOLEAN is
+			-- Is `text' empty (i.e., no editor token in it)?
+		do
+			Result := text_internal /= Void and then text_internal.is_empty
+		end
+
+	is_folder_displayed: BOOLEAN
+			-- Should folder where a class is located be displayed?
+			-- Default: False
+
+	is_class_name_displayed: BOOLEAN
+			-- Should class name be processed?
+			-- Used when `is_folder_displayed' is True to display folder information for a class without class name
+			-- Default: True			
 
 feature -- Style
 
@@ -176,6 +194,22 @@ feature -- Setting
 			text_is_empty: text_internal.is_empty
 		end
 
+	set_is_folder_displayed (b: BOOLEAN) is
+			-- Set `is_folder_displayed' with `b'.
+		do
+			is_folder_displayed := b
+		ensure
+			is_folder_displayed_set: is_folder_displayed = b
+		end
+
+	set_is_class_name_displayed (b: BOOLEAN) is
+			-- Set `is_class_name_displayed' with `b'.
+		do
+			is_class_name_displayed := b
+		ensure
+			should_class_be_processed_set: is_class_name_displayed = b
+		end
+
 feature -- Process
 
 	process_domain (a_item: QL_DOMAIN) is
@@ -188,40 +222,113 @@ feature -- Process
 			-- Process `a_item'.
 		local
 			l_target_style: like target_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_target_style := target_style
 			l_target_style.set_item (a_item)
-			text_internal.append (l_target_style.text)
+			l_text_internal.append (l_target_style.text)
 		end
 
 	process_group (a_item: QL_GROUP) is
 			-- Process `a_item'.
 		local
 			l_group_style: like group_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_group_style := group_style
 			l_group_style.set_item (a_item)
-			text_internal.append (l_group_style.text)
+			l_text_internal.append (l_group_style.text)
 		end
 
 	process_class (a_item: QL_CLASS) is
 			-- Process `a_item'.
 		local
 			l_class_style: like class_style
+			l_folder: STRING
+			l_separator: CHARACTER
+			l_folders: LIST [STRING]
+			l_text_internal: like text_internal
+			l_text_style: EB_TEXT_EDITOR_TOKEN_STYLE
+			l_count: INTEGER
+			l_text: LIST [EDITOR_TOKEN]
+			l_group_stone: CLUSTER_STONE
+			l_group: CONF_GROUP
+			l_path: STRING
+			l_name: STRING
+			l_should_put_separator: BOOLEAN
 		do
-			l_class_style := class_style
-			l_class_style.set_ql_class (a_item)
-			text_internal.append (l_class_style.text)
+			l_text_internal := text_internal
+
+				-- Display folder for `a_item'.
+			if is_folder_displayed then
+				l_folder := a_item.conf_class.path
+				if l_folder /= Void and then not l_folder.is_empty then
+					l_folder := l_folder.twin
+					l_separator := '/'
+					l_folders := l_folder.split (l_separator)
+
+					create l_text_style
+					create l_path.make (64)
+					l_group := a_item.conf_class.group
+					l_should_put_separator := not is_text_empty
+					from
+						l_count := l_folders.count
+						l_folders.start
+					until
+						l_folders.after
+					loop
+						l_name := l_folders.item
+						if not l_name.is_empty then
+							l_path.append_character (l_separator)
+							l_path.append (l_name)
+							if l_should_put_separator then
+								l_text_internal.extend (editor_token_for_dot)
+							end
+							l_text_style.set_source_text (l_name)
+							l_text := l_text_style.text
+							create l_group_stone.make_subfolder (l_group, l_path, l_name)
+							check not l_text.is_empty end
+							l_text.first.set_pebble (l_group_stone)
+							l_text_internal.append (l_text)
+							l_should_put_separator := True
+						end
+						l_folders.forth
+					end
+				end
+			end
+
+				-- Display class name for `a_item'.
+			if is_class_name_displayed then
+				if not is_text_empty then
+					l_text_internal.extend (editor_token_for_dot)
+				end
+				l_class_style := class_style
+				l_class_style.set_ql_class (a_item)
+				text_internal.append (l_class_style.text)
+			end
 		end
 
 	process_feature (a_item: QL_FEATURE) is
 			-- Process `a_item'.
 		local
 			l_feature_style: like feature_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_feature_style := feature_style
 			l_feature_style.set_ql_feature (a_item)
-			text_internal.append (l_feature_style.text)
+			l_text_internal.append (l_feature_style.text)
 		end
 
 	process_real_feature (a_item: QL_REAL_FEATURE) is
@@ -240,60 +347,90 @@ feature -- Process
 			-- Process `a_item'.
 		local
 			l_quantity_style: like quantity_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_quantity_style := quantity_style
 			l_quantity_style.set_item (a_item)
-			text_internal.append (l_quantity_style.text)
+			l_text_internal.append (l_quantity_style.text)
 		end
 
 	process_line (a_item: QL_LINE) is
 			-- Process `a_item'.
 		local
 			l_line_style: like line_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_line_style := line_style
 			l_line_style.set_item (a_item)
-			text_internal.append (l_line_style.text)
+			l_text_internal.append (l_line_style.text)
 		end
 
 	process_generic (a_item: QL_GENERIC) is
 			-- Process `a_item'.
 		local
 			l_generic_style: like generic_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_generic_style := generic_style
 			l_generic_style.set_item (a_item)
-			text_internal.append (l_generic_style.text)
+			l_text_internal.append (l_generic_style.text)
 		end
 
 	process_local (a_item: QL_LOCAL) is
 			-- Process `a_item'.
 		local
 			l_local_style: like local_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_local_style := local_style
 			l_local_style.set_item (a_item)
-			text_internal.append (l_local_style.text)
+			l_text_internal.append (l_local_style.text)
 		end
 
 	process_argument (a_item: QL_ARGUMENT) is
 			-- Process `a_item'.
 		local
 			l_argument_style: like argument_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_argument_style := argument_style
 			l_argument_style.set_item (a_item)
-			text_internal.append (l_argument_style.text)
+			l_text_internal.append (l_argument_style.text)
 		end
 
 	process_assertion (a_item: QL_ASSERTION) is
 			-- Process `a_item'.
 		local
 			l_assertion_style: like assertion_style
+			l_text_internal: like text_internal
 		do
+			l_text_internal := text_internal
+			if not is_text_empty then
+				l_text_internal.extend (editor_token_for_dot)
+			end
 			l_assertion_style := assertion_style
 			l_assertion_style.set_item (a_item)
-			text_internal.append (l_assertion_style.text)
+			l_text_internal.append (l_assertion_style.text)
 		end
 
 	process_path (a_item: QL_ITEM; a_self_included: BOOLEAN; a_parent_included: BOOLEAN; a_indirect_parent_included: BOOLEAN; a_target_included: BOOLEAN) is
@@ -309,28 +446,37 @@ feature -- Process
 			l_writer: like token_writer
 			l_list: LINKED_LIST [QL_ITEM]
 			l_parent: QL_ITEM
-			l_count: INTEGER
 			l_curr_item: QL_ITEM
 			l_dot_token: EDITOR_TOKEN
+			l_text_internal: like text_internal
+			l_old_is_class_name_displayed: BOOLEAN
 		do
 			l_curr_item := a_item
 			l_writer := token_writer
 			l_writer.new_line
+
+			l_old_is_class_name_displayed := is_class_name_displayed
 
 			create l_list.make
 
 				-- Insert `a_item' itself.
 			if a_self_included then
 				l_list.extend (l_curr_item)
+			else
+				if l_curr_item.is_class and then is_folder_displayed then
+					set_is_class_name_displayed (False)
+					l_list.extend (l_curr_item)
+				end
 			end
 
 				-- Insert direct parent.
-			if a_parent_included and then l_curr_item.parent /= Void then
-				if not l_curr_item.parent.is_target or else a_target_included then
-					l_list.put_front (l_curr_item.parent)
+			l_parent := l_curr_item.parent_with_real_path
+			if a_parent_included and then l_parent /= Void then
+				if not l_parent.is_target or else a_target_included then
+					l_list.put_front (l_parent)
 				end
 			end
-			l_curr_item := l_curr_item.parent
+			l_curr_item := l_parent
 
 				-- Insert indirect parent.
 			if a_indirect_parent_included and then l_curr_item /= Void then
@@ -351,21 +497,19 @@ feature -- Process
 				if l_list.count = 1 then
 					l_list.first.process (Current)
 				else
+					l_text_internal := text_internal
 					l_dot_token := editor_token_for_dot
 					from
 						l_list.start
-						l_count := l_list.count
 					until
 						l_list.after
 					loop
 						l_list.item.process (Current)
-						if l_list.index < l_list.count then
-							text_internal.extend (l_dot_token)
-						end
 						l_list.forth
 					end
 				end
 			end
+			set_is_class_name_displayed (l_old_is_class_name_displayed)
 		end
 
 feature{NONE} -- Implementation
@@ -429,7 +573,7 @@ feature{NONE} -- Implementation
 			reslt_attached: Result /= Void
 		end
 
-		text_internal: LIST [EDITOR_TOKEN];
+		text_internal: LIST [EDITOR_TOKEN]
 			-- Text generated
 
 invariant

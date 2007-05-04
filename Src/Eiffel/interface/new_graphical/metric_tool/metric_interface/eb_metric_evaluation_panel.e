@@ -211,6 +211,7 @@ feature {NONE} -- Initialization
 			percentage_tool_bar.wipe_out
 			send_to_history_btn.disable_sensitive
 			set_is_reload_metric_definer_safe (True)
+			metric_definition_area.hide
 		end
 
 feature -- Status report
@@ -387,7 +388,9 @@ feature -- Actions
 					-- Setup metric evaluator.
 				if l_metric.is_basic then
 					if detailed_result_btn.is_selected then
-						l_metric.enable_fill_domain
+						if l_metric.is_result_domain_available then
+							l_metric.enable_fill_domain
+						end
 					else
 						l_metric.disable_fill_domain
 					end

@@ -81,7 +81,7 @@ feature -- Redefine
 			if l_button /= Void then
 				-- Paint background
 				if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
-					c_gtk_paint_box (style_of (l_tool_bar_imp.c_object) , l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+					c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
 				end
 
 				-- Paint pixmap
@@ -123,28 +123,23 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP} -- Command
 			not_void: a_rect /= Void
 			vaild: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
 		do
-			c_gtk_paint_box (style_of (a_gtk_widget), a_gtk_widget, to_gtk_state (a_state), gtk_shadow_type (a_state), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+			c_gtk_paint_box (button_style, a_gtk_widget, to_gtk_state (a_state), gtk_shadow_type (a_state), a_rect.x, a_rect.y, a_rect.width, a_rect.height, False)
 		end
 
 feature {NONE} -- Implementation
 
-	style_of (a_gtk_widget: POINTER): POINTER is
-			-- Style of a c gtk widget.
-		require
-			exist: a_gtk_widget /= default_pointer
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-			{
-				GtkWidget *l_gtk_widget;
-				l_gtk_widget = GTK_WIDGET ($a_gtk_widget);
-				
-				return l_gtk_widget->style;
-			}
-			]"
+	button_style: POINTER is
+			-- Default theme style from resource.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
 		ensure
-			exist: Result /= default_pointer
+			not_void: Result /= default_pointer
+		end
+
+	style_source: POINTER is
+			-- Button for query theme style.
+		once
+			Result := {EV_GTK_EXTERNALS}.gtk_button_new
 		end
 
 	gtk_shadow_type (a_state: INTEGER): INTEGER is
@@ -301,7 +296,7 @@ feature {NONE} -- Externals
 		end
 
 
-	c_gtk_paint_box (a_style: POINTER; a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER) is
+	c_gtk_paint_box (a_style: POINTER; a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER; a_inset_shadow: BOOLEAN) is
 			-- Paint background.
 		require
 			exist: a_gtk_widget /= default_pointer
@@ -311,8 +306,22 @@ feature {NONE} -- Externals
 			"[
 			{
 				GtkWidget* l_widget;
+				GtkStyle *l_style;
+				
 				l_widget = GTK_WIDGET ($a_gtk_widget);
-
+				l_style = GTK_STYLE ($a_style);
+				
+				if ($a_inset_shadow)
+				{
+					// Set thickness value not less than 3, then we can draw inset gradient border in clearlook themes.
+					l_style->xthickness = 3;
+					l_style->ythickness = 3;
+				}else
+				{
+					l_style->xthickness = 1;
+					l_style->ythickness = 1;				
+				}
+				
 				gtk_paint_box ($a_style, l_widget->window,
 					$a_gtk_state_type, $a_gtk_shadow_type,
 					NULL, l_widget, "button",				

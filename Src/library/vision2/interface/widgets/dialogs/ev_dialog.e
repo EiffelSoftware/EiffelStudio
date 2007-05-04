@@ -196,7 +196,7 @@ feature -- Basic operations
 			implementation.dialog_key_press_action (a_key)
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_DIALOG_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -39,7 +39,7 @@ feature -- Access
 		do
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+	create_empty_instance_of (a_type_i: CL_TYPE_I) is
 		do
 		end
 

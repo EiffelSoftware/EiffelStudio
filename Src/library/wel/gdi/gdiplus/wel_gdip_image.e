@@ -367,7 +367,6 @@ feature -- C externals
 			"[
 			{
 				static FARPROC GdipGetImageEncoders = NULL;
-			//	ImageCodecInfo *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
 
 				if (!GdipGetImageEncoders) {
@@ -375,12 +374,10 @@ feature -- C externals
 				}
 				if (GdipGetImageEncoders) {
 					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (UINT, UINT, ImageCodecInfo *)) GdipGetImageEncoders)
-								((UINT *) $a_num_encoders,
-								(UINT *) $a_size,
+								((UINT) $a_num_encoders,
+								(UINT) $a_size,
 								(ImageCodecInfo *) $a_result_pointer);
 				}
-				
-			//	return (EIF_POINTER) l_result;
 			}
 			]"
 		end
@@ -395,7 +392,6 @@ feature -- C externals
 			"[
 			{
 				static FARPROC GdipGetImageRawFormat = NULL;
-			//GUID *l_result = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
 
 				if (!GdipGetImageRawFormat) {
@@ -406,8 +402,6 @@ feature -- C externals
 								((GpImage *) $a_image,
 								(GUID *) $a_result_guid);
 				}
-				
-			//	return (EIF_POINTER) l_result;
 			}
 			]"
 		end

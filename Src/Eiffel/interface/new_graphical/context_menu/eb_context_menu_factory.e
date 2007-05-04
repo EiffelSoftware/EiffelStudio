@@ -525,6 +525,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_menu: EV_MENU
+			l_item, l_selected_item: EV_RADIO_MENU_ITEM
 			l_form: EB_CLASS_INFO_FORMATTER
 		do
 			create l_menu.make_with_text (names.m_view)
@@ -535,10 +536,16 @@ feature {NONE} -- Menu section, Granularity 1.
 				dev_window.managed_main_formatters.after
 			loop
 				l_form := dev_window.managed_main_formatters.item
-				l_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_form.new_menu_item.text))
+				l_item := l_form.new_standalone_menu_item
+				if l_form.selected and l_form.is_button_sensitive then
+					l_selected_item := l_item
+				end
+				l_menu.extend (l_item)
 				l_menu.last.select_actions.extend (agent l_form.execute)
-				l_menu.last.select_actions.extend (agent l_form.invalidate)
 				dev_window.managed_main_formatters.forth
+			end
+			if l_selected_item /= Void then
+				l_selected_item.enable_select
 			end
 		end
 

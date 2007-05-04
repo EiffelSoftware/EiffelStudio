@@ -281,8 +281,8 @@ feature -- Interface
 		deferred
 		end
 
-	new_menu_item: EV_RADIO_MENU_ITEM is
-			-- Create a new menu item for `Current'.
+	new_standalone_menu_item: EV_RADIO_MENU_ITEM is
+			-- Create a new menu item.
 		local
 			mname: STRING_GENERAL
 		do
@@ -293,7 +293,17 @@ feature -- Interface
 			end
 			create Result.make_with_text (mname)
 			Result.set_pixmap (symbol @ 1)
+		ensure
+			new_standalone_menu_item_not_void: Result /= Void
+		end
+
+	new_menu_item: EV_RADIO_MENU_ITEM
+			-- Create a new menu item for `Current'.
+		do
+			Result := new_standalone_menu_item
 			set_menu_item (Result)
+		ensure
+			new_menu_item_not_void: Result /= Void
 		end
 
 	new_button: EV_TOOL_BAR_RADIO_BUTTON is

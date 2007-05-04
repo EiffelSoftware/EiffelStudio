@@ -198,6 +198,25 @@ feature {NONE}  -- Implementation
 			internal_tab.parent.fill_rectangle (a_x, 0, a_width, internal_tab.parent.height)
 		end
 
+	notebook_style: POINTER is
+			-- Default theme style from resource.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
+		ensure
+			not_void: Result /= default_pointer
+		end
+
+	style_source: POINTER is
+			-- Notebook for query theme style.
+		once
+			-- We can't use notebook for the soure of style here.
+			-- Becaues it will always return white style. when using a notebook object to query the style.
+			--- Result := {EV_GTK_EXTERNALS}.gtk_notebook_new
+			-- {EV_GTK_EXTERNALS}.gtk_notebook_append_page (Result, {EV_GTK_EXTERNALS}.gtk_button_new, default_pointer)
+
+			Result := {EV_GTK_EXTERNALS}.gtk_button_new
+		end
+
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN) is
 			-- Expose implementation
 		local
@@ -209,7 +228,7 @@ feature {NONE}  -- Implementation
 			check not_void: l_imp /= Void end
 
 			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
-				c_gtk_paint_extension (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_is_selected,
+				c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
 										 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
 				if a_is_selected then
 					draw_pixmap_text_selected (internal_tab.parent, internal_tab.x, a_width)

@@ -389,71 +389,72 @@ feature {NONE} -- EXPR_B evaluation
 		require
 			a_tuple_const_b_not_void: a_tuple_const_b /= Void
 		local
---			l_values: ARRAY [DUMP_VALUE]
---			l_byte_list: LIST [BYTE_NODE]
---			l_expr_b: EXPR_B
---			i: INTEGER
---			dv: DUMP_VALUE
---			exp: EB_EXPRESSION
---			l_class: CLASS_C
---			l_feat_i: FEATURE_I
---			l_value: like tmp_result_value
---			bak_tmp_target: like tmp_target
+			l_byte_list: LIST [BYTE_NODE]
+			l_arg_as_lst: LINKED_LIST [DUMP_VALUE]
+			l_expr_b: EXPR_B
+			i: INTEGER
+			dv: DUMP_VALUE
+			index_dv: DUMP_VALUE_BASIC
+			l_class: CLASS_C
+			l_put_feat_i: FEATURE_I
+			l_tmp_target_backup: like tmp_target
+			l_call_value: DUMP_VALUE
+			l_type_i: CL_TYPE_I
 		do
---| FIXME jfiat [2007/05/02] : Keep commented line, since this is a first try to create manifest tuple...
---			create_empty_instance_of (a_tuple_const_b.type)
---			if not error_occurred then
---				l_value := tmp_result_value
---				bak_tmp_target := tmp_target
---				l_class := l_value.dynamic_class
---				l_feat_i := l_class.default_create_feature
---				tmp_target := l_value
---				evaluate_routine (tmp_target.address, tmp_target, l_class, l_feat_i, Void)
---				tmp_result_value := l_value
---				tmp_result_static_type := l_class
---				tmp_target := bak_tmp_target
---			end
---------| For instance  [123, "abc"] on .NET
---------|
---------|	    RT_TUPLE_TYPE rt_tuple_type1 = new RT_TUPLE_TYPE();
---------|	    RT_TYPE[] rt_typeArray1 = new RT_TYPE[2];
---------|	    new RT_BASIC_TYPE().set_type((RuntimeTypeHandle) int);
---------|	    rt_typeArray1[0] = new RT_BASIC_TYPE();
---------|	    new RT_CLASS_TYPE().set_type((RuntimeTypeHandle) STRING_8);
---------|	    rt_typeArray1[1] = new RT_CLASS_TYPE();
---------|	    rt_tuple_type1.set_generics(rt_typeArray1);
---------|	    rt_tuple_type1.set_type((RuntimeTypeHandle) TUPLE);
---------|	    TUPLE tuple = new TUPLE((RT_GENERIC_TYPE) rt_tuple_type1.evaluated_type(Current.____type()));
---------|	    tuple.default_create();
---------|	    tuple.put(0x7b, 1);
---------|	    STRING_8 v = new STRING_8();
---------|	    v.make_from_cil("abc");
---------|	    tuple.put(v, 2);
+			l_tmp_target_backup := tmp_target
+			l_type_i := a_tuple_const_b.type
+			if l_type_i.has_associated_class_type then
+				create_empty_instance_of (l_type_i)
+			else
+				notify_error_evaluation ("Can not instanciate class {" + l_type_i.name + "} (not compiled)%N")
+			end
+			if not error_occurred then
+				l_call_value := tmp_result_value
+				tmp_target := l_call_value
 
---			l_byte_list := a_tuple_const_b.expressions
---			if l_byte_list.count > 0 then
---				create l_values.make (1, l_byte_list.count)
---				from
---					l_byte_list.start
---					i := 1
---				until
---					l_byte_list.after or error_occurred
---				loop
---					l_expr_b ?= l_byte_list.item
---					if l_expr_b /= Void then
---						dv := parameter_evaluation (l_expr_b)
---						l_values.put (dv, i)
---					end
---					i := i + 1
---					l_byte_list.forth
---				end
---			end
---
---			tmp_result_value := Debugger_manager.Dump_value_factory.new_tuple_const_value (
---					l_tuple_const_b.value,
---					debugger_manager.compiler_data.tuple_class_c
---				)
-			notify_error_not_implemented (a_tuple_const_b.generator + Cst_error_not_yet_ready)
+				l_byte_list := a_tuple_const_b.expressions
+				if l_byte_list.count > 0 then
+					from
+						l_class := l_type_i.associated_class_type.associated_class
+						l_put_feat_i := l_class.feature_named ("put")
+						check l_put_feat_i /= Void end
+						create l_arg_as_lst.make
+						l_arg_as_lst.extend (Void)
+						l_arg_as_lst.extend (Void)
+						l_byte_list.start
+						i := 1
+					until
+						l_byte_list.after or error_occurred
+					loop
+						l_expr_b ?= l_byte_list.item
+						if l_expr_b /= Void then
+							dv := parameter_evaluation (l_expr_b)
+							check l_arg_as_lst.count = 2 end
+							if not error_occurred then
+								l_arg_as_lst.start
+								l_arg_as_lst.replace (dv)
+								l_arg_as_lst.forth
+								if index_dv = Void then
+									index_dv := new_integer_dump_value (i)
+								else
+									index_dv.replace_integer_32_value (i)
+								end
+								l_arg_as_lst.replace (index_dv)
+
+								tmp_target := l_call_value
+								evaluate_routine (tmp_target.address, tmp_target, l_class, l_put_feat_i, l_arg_as_lst)
+							end
+						end
+						i := i + 1
+						l_byte_list.forth
+					end
+					if error_occurred then
+						notify_error_evaluation ("Creation of class {" + l_type_i.name + "} raised an error.%N")
+					end
+				end
+				tmp_result_value := l_call_value
+			end
+			tmp_target := l_tmp_target_backup
 		end
 
 	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C) is
@@ -875,16 +876,10 @@ feature {NONE} -- EXPR_B evaluation
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DUMP_VALUE
 			l_call: CALL_B
-			l_curr_obj_typeid: INTEGER
 		do
 			l_tmp_target_backup := tmp_target
-			if tmp_target /= Void and then tmp_target.dynamic_class_type /= Void then
-				l_curr_obj_typeid := tmp_target.dynamic_class_type.type_id
-			elseif context_class_type /= Void then
-				l_curr_obj_typeid := context_class_type.type_id
-			end
 			if a_type_i.has_associated_class_type then
-				create_empty_instance_of (a_type_i, l_curr_obj_typeid)
+				create_empty_instance_of (a_type_i)
 			else
 				notify_error_evaluation ("Can not instanciate class {" + a_type_i.name + "} (not compiled)%N")
 			end
@@ -1383,14 +1378,26 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
+	create_empty_instance_of (a_type_i: CL_TYPE_I) is
 			-- New empty instance of class represented by `a_type_id'.
 		require
 			a_type_i_not_void: a_type_i /= Void
 			a_type_i_compiled: a_type_i.has_associated_class_type
+		local
+			l_type_i: TYPE_I
+			l_cl_type_i: CL_TYPE_I
 		do
+			if context_class_type /= Void then
+				l_type_i := byte_context.real_type_in (a_type_i, context_class_type)
+				if l_type_i /= Void then
+					l_cl_type_i ?= l_type_i
+				end
+			end
+			if l_cl_type_i = Void then
+				l_cl_type_i := a_type_i
+			end
 			prepare_evaluation
-			Dbg_evaluator.create_empty_instance_of (a_type_i, a_curr_obj_typeid)
+			Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
 			retrieve_evaluation
 		end
 
@@ -1588,6 +1595,14 @@ feature {NONE} -- Implementation
 			addr /= Void
 		do
 			Result := dbg_evaluator.dump_value_at_address (addr)
+		end
+
+	new_integer_dump_value (i: INTEGER): DUMP_VALUE_BASIC is
+		local
+			dbgm: like debugger_manager
+		do
+			dbgm := debugger_manager
+			Result := dbgm.dump_value_factory.new_integer_32_value (i, dbgm.compiler_data.integer_32_class_c)
 		end
 
 	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE) is

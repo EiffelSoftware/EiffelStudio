@@ -392,8 +392,8 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I; a_curr_obj_typeid: INTEGER) is
-			-- create an empty instance of `a_type_i' in the context of object's type `a_curr_obj_typeid'
+	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+			-- create an empty instance of `a_type_i'
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_class: ICOR_DEBUG_CLASS

@@ -104,6 +104,7 @@ feature -- Debug Operation
 			l_il_env: IL_ENVIRONMENT
 			l_app_string: STRING
 			is_dotnet_system: BOOLEAN
+			prefstr: STRING
 			dotnet_debugger: STRING
 		do
 			launch_program := False
@@ -182,9 +183,14 @@ feature -- Debug Operation
 							else
 								launch_program := True
 								if manager.has_breakpoints and then a_execution_mode = {EXEC_MODES}.no_stop_points then
+									if preferences.dialog_data /= Void then
+										prefstr := preferences.dialog_data.confirm_ignore_all_breakpoints_string
+									else
+										prefstr := Void
+									end
 									discardable_if_confirmed_do (Warning_messages.w_Ignoring_all_stop_points,
 														agent debug_workbench_application (a_execution_mode),
-														2, preferences.dialog_data.confirm_ignore_all_breakpoints_string
+														2, prefstr
 													)
 								else
 									debug_workbench_application (a_execution_mode)

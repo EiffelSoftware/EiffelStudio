@@ -292,6 +292,7 @@ feature -- Interface
 				mname.append (shortcut_string)
 			end
 			create Result.make_with_text (mname)
+			Result.set_pixmap (symbol @ 1)
 			set_menu_item (Result)
 		end
 

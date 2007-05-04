@@ -1616,14 +1616,13 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 {
 	/* Must be the typeid of a Reference class */
 
-	GTCX
 	struct item *ip = NULL;
 	Request rqst;				/* What we receive and send back */
 	struct dump dumped;			/* Item returned */
 	EIF_REFERENCE tmp = NULL;
 	EIF_REFERENCE loc1 = (EIF_REFERENCE) 0;
 	EIF_TYPE_ID tid;
-	char* s;
+	char* s = NULL;
 
 	/* Get type name */
 	Request_Clean (rqst);

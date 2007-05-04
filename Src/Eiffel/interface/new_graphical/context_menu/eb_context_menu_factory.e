@@ -33,6 +33,21 @@ feature -- Initialization
 			dev_window := a_window
 		end
 
+feature {NONE} -- Implementation
+
+	menu_displayable: BOOLEAN
+			-- Should the menu be displayed?
+		local
+			l_shift_pressed: BOOLEAN
+		do
+			l_shift_pressed := (create {EV_ENVIRONMENT}).application.shift_pressed
+			if is_pnd_mode then
+				Result := l_shift_pressed
+			else
+				Result := not l_shift_pressed
+			end
+		end
+
 feature -- Editor menu
 
 	editor_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_editor: EB_CLICKABLE_EDITOR) is
@@ -41,7 +56,7 @@ feature -- Editor menu
 			a_menu_not_void: a_menu /= Void
 			a_editor_not_void: a_editor /= Void
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				current_editor := a_editor
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
@@ -67,7 +82,7 @@ feature -- Class Tree Menu
 			l_cluster_stone: CLUSTER_STONE
 			l_group: CONF_GROUP
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				l_stone ?= a_pebble
@@ -109,7 +124,7 @@ feature -- Class Tree Menu
 		local
 			l_data_stone: DATA_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				l_data_stone ?= a_pebble
 				if l_data_stone /= Void then
 					build_name (a_pebble)
@@ -129,7 +144,7 @@ feature -- Class Tree Menu
 		local
 			l_data_stone: DATA_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				l_data_stone ?= a_pebble
 				if l_data_stone /= Void then
 					build_name (a_pebble)
@@ -149,7 +164,7 @@ feature -- Class Tree Menu
 		local
 			l_data_stone: DATA_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				l_data_stone ?= a_pebble
 				if l_data_stone /= Void then
 					build_name (a_pebble)
@@ -171,7 +186,7 @@ feature -- Diagram tool
 		local
 			l_feature_stone: FEATURE_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				if a_pebble = Void then
 					extend_basic_diagram_menu (a_menu)
 				else
@@ -202,7 +217,7 @@ feature -- Feature tree
 		local
 			l_feature_tool: EB_FEATURES_TOOL
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				l_feature_tool := dev_window.tools.features_tool
 				a_menu.extend (new_menu_item (names.m_go_to))
 				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_feature_with_name (a_name))
@@ -217,7 +232,7 @@ feature -- Feature tree
 		local
 			l_feature_tool: EB_FEATURES_TOOL
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				l_feature_tool := dev_window.tools.features_tool
 				a_menu.extend (new_menu_item (names.m_go_to))
 				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_clause (a_clause, False))
@@ -232,7 +247,7 @@ feature -- Favorites menus
 			a_menu_not_void: a_menu /= Void
 			a_item_not_void: a_item /= Void
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -249,7 +264,7 @@ feature -- Metrics tool
 	metric_domain_selector_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_selector: EB_METRIC_DOMAIN_SELECTOR) is
 			-- Metrics domain selector context menu
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -264,7 +279,7 @@ feature -- Metrics tool
 			l_unit: QL_METRIC_UNIT
 			l_basic: EB_METRIC_BASIC
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
@@ -293,7 +308,7 @@ feature -- Call stack menu
 		local
 			l_call_stack_stone: CALL_STACK_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				l_call_stack_stone ?= a_pebble
@@ -313,7 +328,7 @@ feature -- Object and Watch tool menus
 		local
 			l_object_stone: OBJECT_STONE
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -331,7 +346,7 @@ feature -- Object and Watch tool menus
 			l_object_stone: OBJECT_STONE
 			l_sep_added: BOOLEAN
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -355,7 +370,7 @@ feature -- Search scope menu
 	search_scope_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
 			-- Search scope menu
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -369,7 +384,7 @@ feature -- Standard menus
 	standard_compiler_item_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
 			-- Standard compiler item menu. (class/feature/cluster)
 		do
-			if not is_pnd_mode then
+			if menu_displayable then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)

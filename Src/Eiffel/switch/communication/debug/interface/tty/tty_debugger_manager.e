@@ -13,21 +13,17 @@ inherit
 	DEBUGGER_MANAGER
 		redefine
 			on_application_launched,
+			on_debugging_terminated,
 			on_application_just_stopped,
 			make,
 			debugger_output_message,
 			display_system_info,
 			display_application_status,
 			display_debugger_info,
-			add_idle_action, remove_idle_action, new_timer,
-			windows_handle,
-			controller,
-			implementation
+			controller
 		end
 
 	OUTPUT_ROUTINES
-
-	THREAD_CONTROL
 
 create
 	make
@@ -40,7 +36,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 			create {TERM_WINDOW} tty_output
-			create idle_actions
 		end
 
 feature -- Output helpers
@@ -161,7 +156,7 @@ feature -- Access
 	on_application_launched is
 		do
 			Precursor
-			wait_until_application_is_dead
+			enter_events_handling
 		end
 
 	on_application_just_stopped is
@@ -173,6 +168,13 @@ feature -- Access
 			raise_dbg_running_menu (False)
 		end
 
+	on_debugging_terminated (was_executing: BOOLEAN) is
+			--
+		do
+			leave_events_handling
+			Precursor (was_executing)
+		end
+
 feature -- Interaction
 
 	inside_debugger_menu: BOOLEAN
@@ -181,46 +183,50 @@ feature -- Interaction
 		local
 			ag_is_stopped: FUNCTION [ANY, TUPLE, BOOLEAN]
 			ag_is_executing: FUNCTION [ANY, TUPLE, BOOLEAN]
-		once
-			ag_is_stopped := agent safe_application_is_stopped
-			ag_is_executing := agent application_is_executing
+		do
+			Result := internal_dbg_running_menu
+			if Result = Void then
+				ag_is_stopped := agent safe_application_is_stopped
+				ag_is_executing := agent application_is_executing
 
-			create Result.make (debugger_names.t_debugger_excetion_menu)
-			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
-			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
+				create Result.make (debugger_names.t_debugger_excetion_menu)
+				Result.enter_actions.extend (agent do inside_debugger_menu := True end)
+				Result.quit_actions.extend (agent do inside_debugger_menu := False end)
 
-			Result.add_conditional_entry ("N", debugger_names.c_step_next,
-						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_by_step, Result),
-						ag_is_stopped)
+				Result.add_conditional_entry ("N", debugger_names.c_step_next,
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.step_by_step, Result),
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("I", debugger_names.c_step_into,
-						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_into, Result),
-						ag_is_stopped)
+				Result.add_conditional_entry ("I", debugger_names.c_step_into,
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.step_into, Result),
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("O", debugger_names.c_step_out,
-						agent tty_controller_do_if_stopped ({EXEC_MODES}.out_of_routine, Result),
-						ag_is_stopped)
+				Result.add_conditional_entry ("O", debugger_names.c_step_out,
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.out_of_routine, Result),
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("C", debugger_names.c_run_to_next_stop_point,
-						agent tty_controller_do_if_stopped ({EXEC_MODES}.user_stop_points, Result),
-						ag_is_stopped)
+				Result.add_conditional_entry ("C", debugger_names.c_run_to_next_stop_point,
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.user_stop_points, Result),
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("G", debugger_names.c_run_without_stop_point,
-						agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
-						ag_is_stopped)
+				Result.add_conditional_entry ("G", debugger_names.c_run_without_stop_point,
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("K", debugger_names.c_kill_application, agent controller.debug_kill,
-						ag_is_executing)
-			Result.add_conditional_entry ("P", debugger_names.c_pause_application, agent controller.debug_interrupt,
-						ag_is_executing)
-			Result.add_separator (" --- ")
-			Result.add_conditional_entry ("B", debugger_names.c_breakpoints_controls, agent raise_debugger_menu_breakpoints,
-						ag_is_stopped)
-			Result.add_conditional_entry ("D", debugger_names.c_display_information, agent raise_debugger_menu_display,
-						ag_is_stopped)
+				Result.add_conditional_entry ("K", debugger_names.c_kill_application, agent controller.debug_kill,
+							ag_is_executing)
+				Result.add_conditional_entry ("P", debugger_names.c_pause_application, agent controller.debug_interrupt,
+							ag_is_executing)
+				Result.add_separator (" --- ")
+				Result.add_conditional_entry ("B", debugger_names.c_breakpoints_controls, agent raise_debugger_menu_breakpoints,
+							ag_is_stopped)
+				Result.add_conditional_entry ("D", debugger_names.c_display_information, agent raise_debugger_menu_display,
+							ag_is_stopped)
 
-			Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not application_is_executing end)
-			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
+				Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not application_is_executing end)
+				Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
+				internal_dbg_running_menu := Result
+			end
 		end
 
 	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU) is
@@ -271,8 +277,10 @@ feature -- Interaction
 							else
 								localized_print (debugger_names.m_error_occurred)
 							end
-						else
+						elseif x.expression_evaluator.final_result_value /= Void then
 							tty_output.add_string (x.expression + " => " + x.expression_evaluator.final_result_value.output_for_debugger + "%N")
+						else
+							tty_output.add_string (x.expression + " => Returned ...%N")
 						end
 						x := Void
 					end
@@ -293,6 +301,11 @@ feature -- Interaction
 			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
 			Result.add_quit_entry ("..", debugger_names.e_back_to_parent_menu)
 		end
+
+feature {NONE} -- Menu caching
+
+	internal_dbg_running_menu: like dbg_running_menu
+			-- Cached `dbg_running_menu'.
 
 feature -- Breakpoints management
 
@@ -406,6 +419,22 @@ feature -- Breakpoints management
 			s: STRING_32
 		do
 			create m.make (debugger_names.m_modify_breakpoint (bp.string_representation (False)))
+			if bp.hits_count > 0 then
+				s := "Hits count = "
+				s.append_integer (bp.hits_count)
+				m.add_separator (s)
+			end
+			if bp.has_condition then
+				s := "Condition = "
+				s.append_string_general (bp.condition.expression)
+				m.add_separator (s)
+			end
+			if bp.has_message then
+				s := "Message = "
+				s.append_string_general (bp.message)
+				m.add_separator (s)
+			end
+			m.add_separator ("----")
 			if not bp.is_enabled then
 				m.add_entry ("E", debugger_names.e_enable_breakpoint, agent bp.enable)
 			end
@@ -457,65 +486,18 @@ feature -- Breakpoints management
 			end
 		end
 
-feature -- Access
-
-	windows_handle: POINTER is
-		do
-			Result := implementation.timer_win32_handle
-		end
-
 feature -- Events
 
-	new_timer: TTY_DEBUGGER_TIMER is
+	enter_events_handling is
+		require
+			events_handler /= Void
 		do
-			create Result.make (implementation)
+			events_handler.start_events_handling
 		end
 
-	wait_until_application_is_dead is
-			-- Wait until application is dead
-		local
-			stop_process_loop_on_events: BOOLEAN
+	leave_events_handling is
 		do
-			from
-				stop_process_loop_on_events := False
-			until
-				stop_process_loop_on_events
-			loop
-				if not inside_debugger_menu then
-					implementation.process_underlying_toolkit_event_queue
-					idle_actions.call (Void)
-				end
-				if application_initialized then
-					sleep (10 * 1000)
-				else
-					stop_process_loop_on_events := True
-				end
-			end
-		end
-
-	idle_actions: ACTION_SEQUENCE [TUPLE]
-			-- Internal idle actions.
-
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
-			-- Extend `idle_actions' with `v'.
-		do
-			if not idle_actions.has (v) then
-				idle_actions.extend (v)
-			end
-		end
-
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
-			-- Remove `v' from `idle_actions'
-		local
-			l_cursor: CURSOR
-			l_idle_actions: like idle_actions
-		do
-			l_idle_actions := idle_actions
-			l_cursor := l_idle_actions.cursor
-			l_idle_actions.prune_all (v)
-			if l_idle_actions.valid_cursor (l_cursor) then
-				l_idle_actions.go_to (l_cursor)
-			end
+			events_handler.stop_events_handling
 		end
 
 feature -- Properties
@@ -526,11 +508,7 @@ feature -- Properties
 
 feature -- Output visitor
 
-	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR
-
-feature {NONE} -- Implementation
-
-	implementation: TTY_DEBUGGER_MANAGER_IMP;
+	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

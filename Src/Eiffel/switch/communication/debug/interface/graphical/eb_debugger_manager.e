@@ -27,17 +27,14 @@ inherit
 			on_application_resumed,
 			on_application_before_stopped,
 			on_application_just_stopped,
-			on_application_quit,
+			on_debugging_terminated,
 			process_breakpoint,
-			implementation,
 			set_default_parameters,
 			set_maximum_stack_depth,
 			notify_breakpoints_changes,
-			add_idle_action, remove_idle_action, new_timer,
 			debugger_output_message, debugger_warning_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
-			set_error_message,
-			windows_handle
+			set_error_message
 		end
 
 	EB_CONSTANTS
@@ -71,6 +68,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor
+			create_events_handler
 
 			if not eiffel_project.batch_mode then
 					--| When compiling in batch mode with the graphical "ec"
@@ -815,26 +813,10 @@ feature -- Windows observer
 
 feature -- Events helpers
 
-	new_timer: EV_DEBUGGER_TIMER is
+	create_events_handler is
+			-- Create `events_handler'
 		do
-			create Result
-		end
-
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
-		do
-			ev_application.add_idle_action (v)
-		end
-
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
-		do
-			ev_application.remove_idle_action (v)
-		end
-
-feature -- GUI Access
-
-	windows_handle: POINTER is
-		do
-			Result := implementation.ev_window_win32_handle (debugging_window.window)
+			set_events_handler (create {EB_DEBUGGER_EVENTS_HANDLER}.make (agent debugging_window))
 		end
 
 feature {NONE} -- watch tool numbering
@@ -1707,18 +1689,10 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_quit is
+	on_debugging_terminated (was_executing: BOOLEAN) is
 			-- Application just quit.
 			-- This application means the debuggee.
-		local
-			was_executing: BOOLEAN
 		do
-			debug("debugger_trace_synchro")
-				io.put_string (generator + ".on_application_quit %N")
-			end
-			was_executing := application_is_executing
-			Precursor
-
 			if was_executing then
 					-- Modify the debugging window display.
 				window_manager.quick_refresh_all_margins
@@ -1759,10 +1733,7 @@ feature -- Debugging events
 				set_critical_stack_depth_cmd.enable_sensitive
 				assertion_checking_handler_cmd.reset
 			end
-
-			debug("debugger_trace_synchro")
-				io.put_string (generator + ".on_application_quit : done%N")
-			end
+			Precursor (was_executing)
 		end
 
 	first_valid_call_stack_stone: CALL_STACK_STONE is
@@ -2164,12 +2135,8 @@ feature {NONE} -- MSIL system implementation
 					and then equal (Eiffel_system.System.msil_generation_type, dll_type)
 		end
 
-	dll_type: STRING is "dll"
+	dll_type: STRING is "dll";
 			-- DLL type constant for MSIL system
-
-feature {NONE} -- specific implementation
-
-	implementation: EB_DEBUGGER_MANAGER_IMP;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

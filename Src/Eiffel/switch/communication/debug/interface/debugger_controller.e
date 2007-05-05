@@ -96,6 +96,7 @@ feature -- Debug Operation
 
 	debug_application (a_execution_mode: INTEGER) is
 			-- Launch the program from the project target.
+			-- see EXEC_MODES for `a_execution_mode' values.
 		local
 			launch_program: BOOLEAN
 			makefile_sh_name: FILE_NAME

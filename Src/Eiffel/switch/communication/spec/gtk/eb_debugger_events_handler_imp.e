@@ -1,58 +1,17 @@
 indexing
-	description: "implementation for DEBUGGER_MANAGER"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Platform specific implementation for DEBUGGER_EVENTS_HANDLER_IMP"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_MANAGER_IMP
+	EB_DEBUGGER_EVENTS_HANDLER_IMP
 
-inherit
-	DEBUGGER_MANAGER_IMP
-		redefine
-			interface
-		end
+feature -- Access
 
-create {DEBUGGER_MANAGER}
-	make
-
-feature {DEBUGGER_MANAGER} -- Access
-
-	process_underlying_toolkit_event_queue is
-		local
-			l_no_more_events: BOOLEAN
-		do
-			from
-			until
-				l_no_more_events
-			loop
-				dispatch_events
-				l_no_more_events := not events_pending
-			end
-		end
-
-	timer_win32_handle: POINTER is
+	windows_handle_from (dw: EB_DEVELOPMENT_WINDOW): POINTER is
 		do
 		end
-
-	frozen dispatch_events is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"g_main_context_dispatch(g_main_context_default())"
-		end
-
-	frozen events_pending: BOOLEAN is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"g_main_context_pending (g_main_context_default())"
-		end
-
-feature {NONE} -- Interface
-
-	interface: TTY_DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

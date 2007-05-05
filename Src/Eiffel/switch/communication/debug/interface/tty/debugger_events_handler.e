@@ -1,65 +1,52 @@
 indexing
-	description: "TTY debugger's controller."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: "$Author$"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
+deferred
 class
-	TTY_DEBUGGER_CONTROLLER
+	DEBUGGER_EVENTS_HANDLER
 
-inherit
-	DEBUGGER_CONTROLLER
-		redefine
-			manager,
-			if_confirmed_do,
-			discardable_if_confirmed_do,
-			activate_debugger_environment
+feature -- Status
+
+	start_events_handling is
+		deferred
 		end
 
-feature
-
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
-		local
-			is_yes: BOOLEAN
-		do
-			localized_print (msg.as_string_32 + " [y/n] ?")
-			io.read_line
-			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
-			if is_yes then
-				a_action.call (Void)
-			end
+	stop_events_handling is
+		deferred
 		end
 
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
-		do
-			if a_pref_string /= Void then
-				bp ?= preferences.preferences.get_preference (a_pref_string)
-			end
-			if bp /= Void and then bp.value then
-				a_action.call (Void)
-			else
-				if_confirmed_do (msg, a_action)
-			end
+feature -- Access
+
+	new_timer: DEBUGGER_TIMER is
+			--
+		deferred
 		end
 
-	activate_debugger_environment (b: BOOLEAN) is
-		do
-			Precursor {DEBUGGER_CONTROLLER} (b)
-			if b then
-				localized_print (debugger_names.m_debugger_environment_started)
-			else
-				localized_print (debugger_names.m_debugger_environment_closed)
-			end
+	timer_win32_handle: POINTER is
+		deferred
 		end
 
-feature {NONE} -- Implementation
+feature -- Change
 
-	manager: TTY_DEBUGGER_MANAGER;
+	recycle is
+			--
+		deferred
+		end
+
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		require
+			v_not_void: v /= Void
+		deferred
+		end
+
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		require
+			v_not_void: v /= Void
+		deferred
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -94,3 +81,4 @@ indexing
 		]"
 
 end
+

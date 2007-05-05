@@ -525,25 +525,49 @@ feature -- Exception handling
 			Result_not_void: Result /= Void
 		end
 
-feature -- Events helpers
+feature -- Events/Timers helpers
+
+	events_handler: DEBUGGER_EVENTS_HANDLER
+			-- Events handler to process debugger's timers.
+
+	set_events_handler (e: like events_handler) is
+			-- Set `events_handler'
+		do
+			if events_handler /= Void and then events_handler /= e then
+				events_handler.recycle
+			end
+			events_handler := e
+		ensure
+			events_handler = e
+		end
+
+	windows_handle: POINTER is
+		require
+			is_windows_platform: (create {PLATFORM}).is_windows
+			events_handler_not_void: events_handler /= Void
+		do
+			Result := events_handler.timer_win32_handle
+		end
 
 	new_timer: DEBUGGER_TIMER is
+		require
+			events_handler_not_void: events_handler /= Void
 		do
-			check to_be_implemented: False end
+			Result := events_handler.new_timer
 		end
 
 	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
 		require
-			v_not_void: v /= Void
+			events_handler_not_void: events_handler /= Void
 		do
-			check to_be_implemented: False end
+			events_handler.add_idle_action (v)
 		end
 
 	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
 		require
-			v_not_void: v /= Void
+			events_handler_not_void: events_handler /= Void
 		do
-			check to_be_implemented: False end
+			events_handler.remove_idle_action (v)
 		end
 
 feature {DEBUGGER_OBSERVER} -- Observer implementation
@@ -617,12 +641,6 @@ feature -- Access
 			application_is_executing
 		do
 			Result := application.is_stopped
-		end
-
-	windows_handle: POINTER is
-		require
-			is_windows_platform: (create {PLATFORM}).is_windows
-		do
 		end
 
 	application_active_thread_id: INTEGER is
@@ -950,16 +968,18 @@ feature -- Debugging events
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_resumed)
 		end
 
-	on_application_quit is
+	frozen on_application_quit is
+		local
+			was_executing: BOOLEAN
 		do
-			application_launching_in_progress := False
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit %N")
 			end
-
+			application_launching_in_progress := False
 			incremente_debugging_operation_id
 
-			if application_is_executing then
+			was_executing := application_is_executing
+			if was_executing then
 				debugger_output_message (debugger_names.t_Application_exited)
 				debugger_status_message (debugger_names.t_Application_exited)
 
@@ -976,14 +996,21 @@ feature -- Debugging events
 				stopped_actions.call (Void)
 			end
 
-			application_quit_actions.call (Void)
-
 			destroy_application
 			reset_class_c_data
 
+			on_debugging_terminated (was_executing)
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit : done%N")
 			end
+		end
+
+	on_debugging_terminated (was_executing: BOOLEAN) is
+			-- Called at the very end of debuggging session
+			-- after `on_application_quit'
+		do
+			-- do_nothing
+			application_quit_actions.call (Void)
 		end
 
 feature -- Actions

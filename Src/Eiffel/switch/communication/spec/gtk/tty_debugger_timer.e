@@ -17,9 +17,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dmi: TTY_DEBUGGER_MANAGER_IMP) is
+	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP) is
 		do
-			tty_dbg_manager_imp := dmi
+			tty_dbg_events_handler_imp := dmi
 			create actions
 
 			if gtk_init_check then
@@ -51,7 +51,7 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	tty_dbg_manager_imp: TTY_DEBUGGER_MANAGER_IMP;
+	tty_dbg_events_handler_imp: TTY_DEBUGGER_EVENTS_HANDLER_IMP;
 
 	timeout_connection_id: INTEGER
 

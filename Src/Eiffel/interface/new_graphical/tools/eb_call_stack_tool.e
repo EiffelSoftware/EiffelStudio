@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 			create tb_but_exception.make
 			tb_but_exception.set_pixmap (pixmaps.icon_pixmaps.debug_exception_dialog_icon)
 			tb_but_exception.set_pixel_buffer (pixmaps.icon_pixmaps.debug_exception_dialog_icon_buffer)
-			tb_but_exception.set_tooltip ("Open exception dialog for more details")
+			tb_but_exception.set_tooltip (interface_names.l_open_exception_dialog_tooltip)
 			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
 			tb_exception.extend (tb_but_exception)
 			tb_exception.compute_minimum_size

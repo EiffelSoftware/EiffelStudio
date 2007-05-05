@@ -1300,6 +1300,7 @@ feature -- Class info
 				until
 					i > nb
 				loop
+					l_ext_class := Void
 					l_type := l_gen_type.meta_generic.item (i)
 					l_ref ?= l_type
 					if l_ref /= Void then

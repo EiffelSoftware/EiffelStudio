@@ -65,6 +65,7 @@ feature {NONE} -- Implementation
 			dbg ?= debugger_manager
 			if dbg = Void then
 				create dbg.make
+				dbg.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
 				set_debugger_manager (dbg)
 			end
 			if param_working_directory = Void or else param_working_directory.is_empty then

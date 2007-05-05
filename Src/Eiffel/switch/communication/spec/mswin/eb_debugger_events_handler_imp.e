@@ -1,65 +1,32 @@
 indexing
-	description: "TTY debugger's controller."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Platform specific implementation for DEBUGGER_EVENTS_HANDLER_IMP"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_CONTROLLER
+	EB_DEBUGGER_EVENTS_HANDLER_IMP
 
 inherit
-	DEBUGGER_CONTROLLER
-		redefine
-			manager,
-			if_confirmed_do,
-			discardable_if_confirmed_do,
-			activate_debugger_environment
-		end
+	EV_ANY_HANDLER
 
-feature
+feature -- Access
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+	windows_handle_from (dw: EB_DEVELOPMENT_WINDOW): POINTER is
+		require
+			dw /= Void
 		local
-			is_yes: BOOLEAN
+			w: EB_VISION_WINDOW
+			w_impl: EV_WINDOW_IMP
 		do
-			localized_print (msg.as_string_32 + " [y/n] ?")
-			io.read_line
-			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
-			if is_yes then
-				a_action.call (Void)
+			w := dw.window
+			if w /= Void then
+				w_impl ?= w.implementation
+				if w_impl /= Void then
+					Result := w_impl.wel_item
+				end
 			end
 		end
-
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
-		do
-			if a_pref_string /= Void then
-				bp ?= preferences.preferences.get_preference (a_pref_string)
-			end
-			if bp /= Void and then bp.value then
-				a_action.call (Void)
-			else
-				if_confirmed_do (msg, a_action)
-			end
-		end
-
-	activate_debugger_environment (b: BOOLEAN) is
-		do
-			Precursor {DEBUGGER_CONTROLLER} (b)
-			if b then
-				localized_print (debugger_names.m_debugger_environment_started)
-			else
-				localized_print (debugger_names.m_debugger_environment_closed)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	manager: TTY_DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

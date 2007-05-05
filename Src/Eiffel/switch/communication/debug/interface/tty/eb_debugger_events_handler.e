@@ -1,65 +1,91 @@
 indexing
-	description: "TTY debugger's controller."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Objects that manage timer events based on EB_DEVELOPMENT_WINDOW."
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_CONTROLLER
+	EB_DEBUGGER_EVENTS_HANDLER
 
 inherit
-	DEBUGGER_CONTROLLER
-		redefine
-			manager,
-			if_confirmed_do,
-			discardable_if_confirmed_do,
-			activate_debugger_environment
+	DEBUGGER_EVENTS_HANDLER
+
+	EV_SHARED_APPLICATION
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a: like development_window_agent) is
+		do
+			development_window_agent := a
+			create implementation
 		end
 
-feature
+feature -- Access
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+	development_window_agent: FUNCTION [ANY, TUPLE, EB_DEVELOPMENT_WINDOW]
+
+feature -- Status
+
+	start_events_handling is
+		do
+			--| Do nothing
+		end
+
+	stop_events_handling is
+		do
+			--| Do nothing			
+		end
+
+feature -- Access
+
+	new_timer: EV_DEBUGGER_TIMER is
+			--
+		do
+			create Result
+		end
+
+	timer_win32_handle: POINTER is
+			--
 		local
-			is_yes: BOOLEAN
+			dw: EB_DEVELOPMENT_WINDOW
 		do
-			localized_print (msg.as_string_32 + " [y/n] ?")
-			io.read_line
-			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
-			if is_yes then
-				a_action.call (Void)
+			if development_window_agent /= Void then
+				dw := development_window_agent.item (Void)
+				if dw /= Void then
+					Result := implementation.windows_handle_from (dw)
+				end
 			end
+		ensure then
+			result_not_null: Result /= Default_pointer
 		end
 
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
+feature -- Change
+
+	recycle is
+			--
 		do
-			if a_pref_string /= Void then
-				bp ?= preferences.preferences.get_preference (a_pref_string)
-			end
-			if bp /= Void and then bp.value then
-				a_action.call (Void)
-			else
-				if_confirmed_do (msg, a_action)
-			end
+			development_window_agent := Void
+			implementation := Void
 		end
 
-	activate_debugger_environment (b: BOOLEAN) is
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+			-- Extend `idle_actions' with `v'.
 		do
-			Precursor {DEBUGGER_CONTROLLER} (b)
-			if b then
-				localized_print (debugger_names.m_debugger_environment_started)
-			else
-				localized_print (debugger_names.m_debugger_environment_closed)
-			end
+			ev_application.add_idle_action (v)
+		end
+
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+			-- Remove `v' from `idle_actions'
+		do
+			ev_application.remove_idle_action (v)
 		end
 
 feature {NONE} -- Implementation
 
-	manager: TTY_DEBUGGER_MANAGER;
+	implementation: EB_DEBUGGER_EVENTS_HANDLER_IMP ;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -94,3 +120,4 @@ indexing
 		]"
 
 end
+

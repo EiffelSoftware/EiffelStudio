@@ -1,65 +1,61 @@
 indexing
-	description: "TTY debugger's controller."
+	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_CONTROLLER
+	TTY_DEBUGGER_EVENTS_HANDLER_IMP
 
-inherit
-	DEBUGGER_CONTROLLER
-		redefine
-			manager,
-			if_confirmed_do,
-			discardable_if_confirmed_do,
-			activate_debugger_environment
+create {TTY_DEBUGGER_EVENTS_HANDLER}
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_interface: like interface) is
+			-- Initialize current
+		do
+			interface := a_interface
 		end
 
-feature
+feature {DEBUGGER_EVENTS_HANDLER} -- Access
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+	process_underlying_toolkit_event_queue is
 		local
-			is_yes: BOOLEAN
+			l_no_more_events: BOOLEAN
 		do
-			localized_print (msg.as_string_32 + " [y/n] ?")
-			io.read_line
-			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
-			if is_yes then
-				a_action.call (Void)
+			from
+			until
+				l_no_more_events
+			loop
+				dispatch_events
+				l_no_more_events := not events_pending
 			end
 		end
 
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		local
-			bp: BOOLEAN_PREFERENCE
+	timer_win32_handle: POINTER is
 		do
-			if a_pref_string /= Void then
-				bp ?= preferences.preferences.get_preference (a_pref_string)
-			end
-			if bp /= Void and then bp.value then
-				a_action.call (Void)
-			else
-				if_confirmed_do (msg, a_action)
-			end
 		end
 
-	activate_debugger_environment (b: BOOLEAN) is
-		do
-			Precursor {DEBUGGER_CONTROLLER} (b)
-			if b then
-				localized_print (debugger_names.m_debugger_environment_started)
-			else
-				localized_print (debugger_names.m_debugger_environment_closed)
-			end
+	frozen dispatch_events is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_dispatch(g_main_context_default())"
 		end
 
-feature {NONE} -- Implementation
+	frozen events_pending: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_pending (g_main_context_default())"
+		end
 
-	manager: TTY_DEBUGGER_MANAGER;
+feature {NONE} -- Interface
+
+	interface: TTY_DEBUGGER_EVENTS_HANDLER;
+			-- Interface instance.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

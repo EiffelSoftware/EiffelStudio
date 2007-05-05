@@ -14,11 +14,15 @@ inherit
 feature -- Debugger manager
 
 	new_default_debugger_manager: DEBUGGER_MANAGER is
+		local
+			ttydbgm: TTY_DEBUGGER_MANAGER
 		do
 			if is_gui then
 				create {EB_DEBUGGER_MANAGER} Result.make
 			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
+				create ttydbgm.make
+				ttydbgm.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
+				Result := ttydbgm
 			end
 		end
 

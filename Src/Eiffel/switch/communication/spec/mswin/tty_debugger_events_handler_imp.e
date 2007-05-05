@@ -6,31 +6,24 @@ indexing
 	revision: "$Revision$"
 
 class
-	TTY_DEBUGGER_MANAGER_IMP
+	TTY_DEBUGGER_EVENTS_HANDLER_IMP
 
-inherit
-	DEBUGGER_MANAGER_IMP
-		redefine
-			make,
-			interface
-		end
-
-create {DEBUGGER_MANAGER}
+create {TTY_DEBUGGER_EVENTS_HANDLER}
 	make
 
 feature {NONE} -- Initialization
 
-	make (dm: DEBUGGER_MANAGER) is
+	make (a_interface: like interface) is
 			-- Initialize current
 		do
-			Precursor (dm)
+			interface := a_interface
 			reusable_pointer := reusable_pointer.memory_calloc (1, c_size_of_msg)
 
 				--| Maybe useless ...
 			timer_win32_handle := cwin_new_window_handle
 		end
 
-feature {DEBUGGER_MANAGER} -- Access
+feature {DEBUGGER_EVENTS_HANDLER} -- Access
 
 	process_underlying_toolkit_event_queue is
 		local
@@ -65,7 +58,7 @@ feature {DEBUGGER_MANAGER} -- Access
 
 feature {NONE} -- Interface
 
-	interface: TTY_DEBUGGER_MANAGER
+	interface: TTY_DEBUGGER_EVENTS_HANDLER
 			-- Interface instance.
 
 feature {TTY_DEBUGGER_TIMER} -- Timer Access

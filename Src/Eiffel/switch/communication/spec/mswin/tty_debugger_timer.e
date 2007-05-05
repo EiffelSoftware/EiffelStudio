@@ -22,9 +22,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dmi: TTY_DEBUGGER_MANAGER_IMP) is
+	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP) is
 		do
-			tty_dbg_manager_imp := dmi
+			tty_dbg_events_handler_imp := dmi
 			create actions
 		end
 
@@ -48,12 +48,12 @@ feature -- Change
 
 	set_timer is
 		do
-			tty_dbg_manager_imp.set_timer (object_id, interval)
+			tty_dbg_events_handler_imp.set_timer (object_id, interval)
 		end
 
 	kill_timer is
 		do
-			tty_dbg_manager_imp.kill_timer (object_id)
+			tty_dbg_events_handler_imp.kill_timer (object_id)
 		end
 
 feature -- Execution
@@ -65,7 +65,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	tty_dbg_manager_imp: TTY_DEBUGGER_MANAGER_IMP;
+	tty_dbg_events_handler_imp: TTY_DEBUGGER_EVENTS_HANDLER_IMP;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

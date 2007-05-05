@@ -1579,6 +1579,8 @@ feature -- Label texts
 	l_existing_layout_names: STRING_GENERAL is do Result := locale.translate ("Existing Layouts:") end
 	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
+	l_open_exception_dialog_tooltip: STRING_GENERAL is do Result := locale.translate ("Open exception dialog for more details") end
+	 
 	h_click_to_open: STRING_GENERAL is do Result := locale.translate ("Click to open") end
 	l_layout: STRING_GENERAL is do Result := locale.translate ("Layout") end
 	l_tooltip_lbl: STRING_GENERAL is do Result := locale.translate ("Tooltip") end

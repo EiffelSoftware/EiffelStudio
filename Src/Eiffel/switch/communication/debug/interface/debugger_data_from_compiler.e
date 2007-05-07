@@ -34,6 +34,11 @@ feature {NONE} -- Initialization
 				routine_class_c := cl_i.compiled_class
 			end
 
+			cl_i := sys.array_class
+			if cl_i /= Void then
+				array_class_c := cl_i.compiled_class
+			end
+
 			cl_i := sys.tuple_class
 			if cl_i /= Void then
 				tuple_class_c := cl_i.compiled_class
@@ -138,13 +143,13 @@ feature {NONE} -- Initialization
 			if cl_i /= Void then
 				native_array_class_c := cl_i.compiled_class
 			end
-
 		end
 
 feature -- Access
 
 	any_class_c: CLASS_C
 	routine_class_c: CLASS_C
+	array_class_c: CLASS_C
 	tuple_class_c: CLASS_C
 	string_8_class_c: CLASS_C
 	string_32_class_c: CLASS_C
@@ -164,11 +169,40 @@ feature -- Access
 	pointer_class_c: CLASS_C
 	bit_class_c: CLASS_C
 
+feature -- Specific access
+
+	internal_class_c: CLASS_C is
+			--
+		local
+			lst: LIST [CLASS_I]
+			l_cli: CLASS_I
+		do
+			Result := opo_internal_class_c
+			if Result = Void then
+				lst := eiffel_universe.classes_with_name ("INTERNAL")
+				if lst.count = 1 then
+					l_cli := lst.first
+				else
+					l_cli := eiffel_universe.class_named ("INTERNAL", eiffel_universe.group_of_name ("base"))
+				end
+				if l_cli /= Void then
+					Result := l_cli.compiled_class
+				end
+				opo_internal_class_c := Result
+			end
+		ensure
+			Result_not_Void: Result /= Void
+		end
+
 feature -- IL Access
 
 	system_object_class_c: CLASS_C
 	system_string_class_c: CLASS_C;
 	native_array_class_c: CLASS_C;
+
+feature {NONE} -- Once per object
+
+	opo_internal_class_c: like internal_class_c;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

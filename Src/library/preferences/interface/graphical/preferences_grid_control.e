@@ -275,7 +275,7 @@ feature {NONE} -- Events
 		do
 			if not grid.selected_rows.is_empty then
 				l_row := grid.selected_rows.first
-				preference_changed_on_row (a_pref, l_row, False)
+				preference_changed_on_row (a_pref, l_row, True)
 			end
 		end
 

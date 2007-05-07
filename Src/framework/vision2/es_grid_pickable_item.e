@@ -29,6 +29,12 @@ feature -- Access
 			last_picked_item_set: last_picked_item = a_index
 		end
 
+	pebble_at_position: ANY is
+			-- Pebble at pointer position
+			-- Void if no pebble found at that position
+		deferred
+		end
+
 feature -- Actions
 
 	on_pick: ANY is

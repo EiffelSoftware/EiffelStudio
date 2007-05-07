@@ -46,6 +46,12 @@ feature -- Access
 			good_result: Result = pixmap.height
 		end
 
+	pebble_at_position (a_x, a_y: INTEGER): ANY is
+			-- Pebble at position (`a_x', `a_y') which is related to Current component
+			-- Void if no pebble is found.
+		do
+		end
+
 feature -- Drawing
 
 	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER) is

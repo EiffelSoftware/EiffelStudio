@@ -624,6 +624,7 @@ feature{NONE} -- Implementation/Data
 			l_stone: STONE
 			l_domain: like domain
 			l_bunch_stone: DATA_STONE
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			l_stone ?= a_pebble
 			l_bunch_stone ?= a_pebble
@@ -633,14 +634,17 @@ feature{NONE} -- Implementation/Data
 				l_domain := domain
 				if
 					l_stone /= Void and then
-					not l_domain.has_delayed_domain_item and then
-					not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
+					not l_domain.has_delayed_domain_item
 				then
-					l_classi_stone ?= a_pebble
-					l_cluster_stone ?= a_pebble
-					l_feature_stone ?= a_pebble
-					l_target_stone ?= a_pebble
-					Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+					l_domain_item := metric_domain_item_from_stone (l_stone)
+					if l_domain_item /= Void and then not domain_has (l_domain,
+					l_domain_item) then
+						l_classi_stone ?= a_pebble
+						l_cluster_stone ?= a_pebble
+						l_feature_stone ?= a_pebble
+						l_target_stone ?= a_pebble
+						Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+					end
 				end
 			end
 		end

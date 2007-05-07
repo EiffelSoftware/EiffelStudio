@@ -31,6 +31,12 @@ feature -- Access
 	last_pebble: ANY
 			-- Last pebble returned from `on_pick'
 
+	pebble_at_position (a_x, a_y: INTEGER): ANY is
+			-- Pebble at position (`a_x', `a_y') which is related to Current component
+			-- Void if no pebble is found.
+		deferred
+		end
+
 feature -- General tooltip
 
 	general_tooltip: EVS_GENERAL_TOOLTIP

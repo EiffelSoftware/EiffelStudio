@@ -14,17 +14,31 @@ inherit
 
 	EB_SHARED_WRITER
 
+feature -- Access
+
+	pebble_at_position (a_x, a_y: INTEGER): ANY is
+			-- Pebble at position (`a_x', `a_y') which is related to Current component
+			-- Void if no pebble is found.
+		local
+			l_data: like pebble_and_index_at_position
+		do
+			l_data := pebble_and_index_at_position (a_x, a_y)
+			if l_data /= Void then
+				Result := l_data.pebble
+			end
+		end
+
 feature -- Actions
 
 	on_pick (a_x, a_y: INTEGER) is
 			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
 		local
-			l_index: INTEGER
+			l_data: like pebble_and_index_at_position
 		do
-			l_index := token_index_at_position (a_x, a_y)
-			if l_index > 0 then
-				set_last_picked_token_index (l_index)
-				set_last_pebble (editor_token_text.pebble (l_index))
+			l_data := pebble_and_index_at_position (a_x, a_y)
+			if l_data /= Void then
+				set_last_picked_token_index (l_data.index)
+				set_last_pebble (l_data.pebble)
 			end
 		end
 
@@ -55,6 +69,18 @@ feature{NONE} -- Implementation
 			-- Token item index in `editor_token_text' at position (`a_x', `a_y')
 			-- Zero means that no editor token is at position (`a_x', `a_y').
 		deferred
+		end
+
+	pebble_and_index_at_position (a_x, a_y: INTEGER): TUPLE [pebble: ANY; index: INTEGER] is
+			-- Pebble and its token index at position (`a_x', `a_y') which is related to Current component
+			-- Void if no pebble is found.
+		local
+			l_index: INTEGER
+		do
+			l_index := token_index_at_position (a_x, a_y)
+			if l_index > 0 then
+				Result := [editor_token_text.pebble (l_index), l_index]
+			end
 		end
 
 invariant

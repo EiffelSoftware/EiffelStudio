@@ -57,35 +57,16 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	stone_and_index_at_position (a_x, a_y: INTEGER): like stone_and_index_from_editor_token_item is
-			-- Stone of editor token and its index at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+	stone_at_position (a_x, a_y: INTEGER): ANY  is
+			-- Stone at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
 			-- Void if no item is found or that item contains no stone.			
 		local
-			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_pickable_item: ES_GRID_PICKABLE_ITEM
 		do
-			l_editor_token_item ?= grid_item_at_position (grid, a_x, a_y)
-			if l_editor_token_item /= Void then
-				Result := stone_and_index_from_editor_token_item (l_editor_token_item)
+			l_pickable_item ?= grid_item_at_position (grid, a_x, a_y)
+			if l_pickable_item /= Void then
+				Result := l_pickable_item.pebble_at_position
 			end
-		ensure
-			good_result: Result /= Void implies (Result.stone /= Void and then Result.index > 0)
-		end
-
-	stone_and_index_from_editor_token_item (a_item: EB_GRID_EDITOR_TOKEN_ITEM): TUPLE [stone: STONE; index: INTEGER] is
-			-- Stone and its editor token index from `a_item'
-		local
-			l_index: INTEGER
-			l_stone: STONE
-		do
-			l_index := a_item.token_index_at_current_position
-			if l_index > 0 then
-				l_stone ?= a_item.editor_token_pebble (l_index)
-				if l_stone /= Void then
-					Result := [l_stone, l_index]
-				end
-			end
-		ensure
-			good_result: Result /= Void implies (Result.stone /= Void and then Result.index > 0)
 		end
 
 feature -- Pick and drop support for grid items
@@ -259,18 +240,12 @@ feature{NONE} -- Actions
 			-- Action to be performed when pointer right click on `grid'
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
 		local
-			l_data: like stone_and_index_at_position
 			l_stone: STONE
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
-				l_data := stone_and_index_at_position (a_x, a_y)
-				if l_data /= Void then
-					l_stone := l_data.stone
-					if l_stone.is_valid then
-						if l_stone /= Void and then l_stone.is_valid then
-							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
-						end
-					end
+				l_stone ?= stone_at_position (a_x, a_y)
+				if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
 		end

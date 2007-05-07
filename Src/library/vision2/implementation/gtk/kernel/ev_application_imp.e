@@ -493,6 +493,11 @@ feature {EV_ANY_I} -- Implementation
 										l_gtk_widget_imp := Void
 										l_top_level_window_imp := Void
 										l_gtk_widget_ptr := default_pointer
+									else
+											-- This code is needed for standard dialogs where we do not have a handle to all
+											-- gtk widgets.
+										{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+										l_call_event := False
 									end
 								end
 							end

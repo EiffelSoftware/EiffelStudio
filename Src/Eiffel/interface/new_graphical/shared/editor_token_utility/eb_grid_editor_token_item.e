@@ -113,6 +113,29 @@ feature -- Access
 	component_spacing: INTEGER
 			-- Space in pixel between text and the first trailer
 
+	pebble_at_position: ANY is
+			-- Pebble at pointer position
+			-- Void if no pebble found at that position		
+		local
+			l_index: INTEGER
+			l_component: like component
+			l_pos: EV_RECTANGLE
+			l_left_corner: EV_COORDINATE
+		do
+			l_index := token_index_at_current_position
+			if l_index > 0 then
+				Result ?= editor_token_pebble (l_index)
+			else
+				l_index := component_index_at_pointer_position
+				if l_index > 0 and then l_index <= component_position.count and then l_index <= component_count then
+					l_component := component (l_index)
+					l_pos := component_position.i_th (l_index)
+					l_left_corner := relative_pointer_position (Current)
+					Result := l_component.pebble_at_position (l_pos.x - l_left_corner.x, l_pos.y - l_left_corner.y)
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_component_adhesive_enabled: BOOLEAN

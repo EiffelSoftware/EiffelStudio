@@ -41,6 +41,26 @@ feature -- Access
 			Result := Current
 		end
 
+	pebble_at_position: ANY is
+			-- Pebble at pointer position
+			-- Void if no pebble found at that position
+		local
+			l_component_index: INTEGER
+			l_component: like component
+			l_pointer_position: EV_COORDINATE
+			l_component_position: EV_RECTANGLE
+		do
+			if is_component_pebble_enabled then
+				l_component_index := component_index_at_pointer_position
+				if l_component_index > 0 and then l_component_index <= component_count and then l_component_index <= component_position.count then
+					l_component := component (l_component_index)
+					l_pointer_position := relative_pointer_position (grid_item)
+					l_component_position := component_position.i_th (l_component_index)
+					Result := l_component.pebble_at_position (l_pointer_position.x - l_component_position.x, l_pointer_position.y - l_component_position.y)
+				end
+			end
+		end
+
 feature -- Actions
 
 	on_pick: ANY is

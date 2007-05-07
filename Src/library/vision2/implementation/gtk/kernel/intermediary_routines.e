@@ -130,19 +130,6 @@ feature -- Button intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Window intermediary agent routines
-
-	on_widget_show (a_c_object: POINTER) is
-			-- Widget has been shown
-		local
-			a_widget_imp: EV_WIDGET_IMP
-		do
-			a_widget_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget_imp /= Void and then not a_widget_imp.is_destroyed then
-				a_widget_imp.on_widget_mapped
-			end
-		end
-
 feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
 	menu_item_activate_intermediary (a_c_object: POINTER) is

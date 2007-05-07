@@ -169,22 +169,23 @@ feature -- Grind binding
 			loop
 				l_feature := l_data.item
 				l_related_feature ?= l_feature.data
-				check l_related_feature /= Void end
-				if l_table.has (l_related_feature) then
-					l_inner_tbl := l_table.item (l_related_feature)
-				else
-					l_version_count := l_version_count + 1
-					create l_inner_tbl.make (20)
-					l_table.put (l_inner_tbl, l_related_feature)
+				if l_related_feature /= Void then
+					if l_table.has (l_related_feature) then
+						l_inner_tbl := l_table.item (l_related_feature)
+					else
+						l_version_count := l_version_count + 1
+						create l_inner_tbl.make (20)
+						l_table.put (l_inner_tbl, l_related_feature)
+					end
+					l_class_c := l_feature.class_c
+					if l_inner_tbl.has (l_class_c) then
+						l_feature_list := l_inner_tbl.item (l_class_c)
+					else
+						create l_feature_list.make
+						l_inner_tbl.put (l_feature_list, l_class_c)
+					end
+					l_feature_list.extend (l_feature)
 				end
-				l_class_c := l_feature.class_c
-				if l_inner_tbl.has (l_class_c) then
-					l_feature_list := l_inner_tbl.item (l_class_c)
-				else
-					create l_feature_list.make
-					l_inner_tbl.put (l_feature_list, l_class_c)
-				end
-				l_feature_list.extend (l_feature)
 				l_data.forth
 			end
 			set_version_count (l_version_count)

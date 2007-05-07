@@ -233,7 +233,6 @@ feature -- Setting
 		local
 			l_control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_formatter_widget: EV_WIDGET
-			l_index, l_predefined_count: INTEGER
 		do
 			l_formatter_widget := a_formatter.widget
 			l_control_bar := a_formatter.control_bar

@@ -726,6 +726,10 @@ feature {NONE} -- Memory management
 	internal_recycle is
 			-- Destroy `Current'
 		do
+			if dev_window /= Void and then dev_window.ui.current_editor = Current then
+					-- To avoid reference on recycled editor.
+				dev_window.ui.set_current_editor (Void)
+			end
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if customizable_commands /= Void then
 				customizable_commands.wipe_out

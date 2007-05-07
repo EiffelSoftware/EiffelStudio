@@ -241,27 +241,22 @@ feature -- Setting
 				formatter_container.replace (l_formatter_widget)
 			end
 
-			clear_control_bar_butons (tool_bar)
-
 			if l_control_bar /= Void and then l_control_bar.count > 0 then
 				if not tool_bar.has (l_control_bar.first) then
+					clear_control_bar_butons (tool_bar)
 					from
-						l_predefined_count := predefined_formatters.count
-						l_control_bar.finish
+						l_control_bar.start
 					until
-						l_control_bar.before
+						l_control_bar.after
 					loop
-						-- We make sure customize formatter buttons are show after option buttons.
-						-- And option buttons show after the predefined buttons.
-						-- For example, for Dependency Tool, the predefined buttons are `Client' and `Suppliers'.
-						l_index := 1 + l_predefined_count
-						check buttons_ahead: tool_bar.items.valid_index (l_index - 1) end
-						tool_bar.force (l_control_bar.item, l_index)
+						tool_bar.extend (l_control_bar.item)
 
-						l_control_bar.back
+						l_control_bar.forth
 					end
 					tool_bar.compute_minimum_size
 				end
+			else
+				clear_control_bar_butons (tool_bar)
 			end
 		end
 
@@ -623,12 +618,15 @@ feature{NONE} -- Implementation
 		do
 			l_predefind := predefined_formatters.count
 			l_customized := customized_formatters.count
-
+			if l_customized >= 1 then
+				-- There is an additional tool bar separator if customized formatter exists.
+				l_customized := l_customized + 1
+			end
 			from
 				l_items := a_tool_bar.items
-				l_items.go_i_th (l_predefind)
+				l_items.go_i_th (l_predefind + l_customized)
 			until
-				l_items.after or l_items.index + l_customized >= l_items.count
+				l_items.after
 			loop
 				l_items.forth
 

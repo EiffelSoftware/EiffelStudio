@@ -64,9 +64,7 @@ feature -- Access
 	on_close is
 			-- Window was closed
 		do
-			preferences.misc_data.preference_window_height_preference.set_value (height)
-			preferences.misc_data.preference_window_width_preference.set_value (width)
-			Precursor
+			hide
 		end
 
 	hide is

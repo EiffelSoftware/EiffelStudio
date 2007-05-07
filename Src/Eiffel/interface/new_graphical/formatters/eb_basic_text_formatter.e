@@ -19,7 +19,8 @@ inherit
 			set_class,
 			format,
 			make,
-			set_accelerator
+			set_accelerator,
+			force_stone
 		end
 
 create
@@ -142,6 +143,18 @@ feature -- Status setting
 			must_format := True
 			format
 			ensure_display_in_widget_owner
+		end
+
+	force_stone (a_stone: STONE) is
+			-- Directly set `stone' with `a_stone'
+		local
+			l_stone: CLASSI_STONE
+		do
+			Precursor (a_stone)
+			l_stone ?= a_stone
+			if l_stone /= Void then
+				set_classi (l_stone.class_i)
+			end
 		end
 
 feature {NONE} -- Properties

@@ -1641,6 +1641,8 @@ test	multi-constraint-single-constraint-renaming		multicon032 tcf pass multicons
 test	multi-constraint-single-constraint-renaming2	multicon033 tcf pass multiconstraint
 test	multi-constraint-recursion-bug					multicon034 tcf pass multiconstraint
 test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
+test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
+ 
 
 
 -- .NET specific test

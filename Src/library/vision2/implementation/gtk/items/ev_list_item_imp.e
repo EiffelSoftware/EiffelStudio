@@ -61,11 +61,16 @@ feature -- PND
 			end
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
-			-- Is the row able to transport data with `a_button' click.
-			-- (export status {EV_MULTI_COLUMN_LIST_IMP})
+	able_to_transport (a_button: INTEGER_32): BOOLEAN
+			-- Is `Current' able to initiate transport with `a_button'.
 		do
-			Result := is_transport_enabled and ((a_button = 1 and mode_is_drag_and_drop) or (a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
+			Result := (mode_is_drag_and_drop and then a_button = 1) or (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)
+		end
+
+	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
+			-- Will `Current' display a menu with button `a_button'.
+		do
+			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then not a_press
 		end
 
 	draw_rubber_band is

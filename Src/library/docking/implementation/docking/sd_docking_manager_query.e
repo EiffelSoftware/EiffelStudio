@@ -392,15 +392,42 @@ feature -- Querys
 		require
 			not_void: a_caller /= Void
 			not_void: a_docking_manager /= Void
+		local
+			l_floating_zone: SD_FLOATING_ZONE
+			l_tool, l_editor: BOOLEAN
 		do
-			if (a_caller.content.type = {SD_ENUMERATION}.tool and not internal_docking_manager.is_locked) or
-				(a_caller.content.type = {SD_ENUMERATION}.editor and not internal_docking_manager.is_editor_locked) then
+			if a_caller.content /= Void then
+				if (a_caller.content.type = {SD_ENUMERATION}.tool and not internal_docking_manager.is_locked) then
+					l_tool := True
+				end
+				if (a_caller.content.type = {SD_ENUMERATION}.editor and not internal_docking_manager.is_editor_locked) then
+					l_editor := True
+				end
+			end
+			l_floating_zone ?= a_caller
+
+			if l_floating_zone /= Void or l_tool or l_editor then
 				create Result.make (a_caller, a_docking_manager)
 			else
 				create {SD_VOID_DOCKER_MEDIATOR} Result.make (a_caller, a_docking_manager)
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+	is_in_main_window (a_tool_bar: SD_TOOL_BAR): BOOLEAN is
+			-- If `a_widget' in main window?
+		do
+			Result := internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar)
+			if not Result then
+				Result := internal_docking_manager.tool_bar_container.bottom.has_recursive (a_tool_bar)
+			end
+			if not Result then
+				Result := internal_docking_manager.tool_bar_container.left.has_recursive (a_tool_bar)
+			end
+			if not Result then
+				Result := internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar)
+			end
 		end
 
 feature {NONE} -- Implemnetation

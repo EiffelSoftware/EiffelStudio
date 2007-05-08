@@ -32,8 +32,6 @@ inherit
 			item_x,
 			item_y,
 			update,
-			is_row_height_set,
-			is_row_height_valid,
 			is_parent_set,
 			is_start_x_set,
 			is_start_y_set,
@@ -127,7 +125,21 @@ feature -- Properties
 	row_height: INTEGER is
 			--  Height of row.
 		do
-			Result := tool_bar.row_height
+			if is_need_calculate_size then
+				is_need_calculate_size := False
+				Result := tool_bar.row_height
+				from
+					start
+				until
+					after
+				loop
+					Result := Result.max (item.minimum_height)
+					forth
+				end
+				internal_row_height  := Result
+			else
+				Result := internal_row_height
+			end
 		end
 
 feature -- Command
@@ -144,6 +156,7 @@ feature -- Command
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
 			end
+			is_need_calculate_size := True
 		end
 
 	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER) is
@@ -157,6 +170,7 @@ feature -- Command
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
 			end
+			is_need_calculate_size := True
 		end
 
 	prune (a_item: SD_TOOL_BAR_ITEM) is
@@ -175,6 +189,7 @@ feature -- Command
 			if l_resizable_item /= Void then
 				l_resizable_item.clear
 			end
+			is_need_calculate_size := True
 		end
 
 	compute_minimum_size is
@@ -430,18 +445,6 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 		end
 
 feature -- Contract support
-
-	is_row_height_set (a_new_height: INTEGER): BOOLEAN is
-			-- If `a_new_height' equal `row_height'?
-		do
-			Result := tool_bar.row_height = a_new_height
-		end
-
-	is_row_height_valid (a_height: INTEGER): BOOLEAN is
-			-- If `a_height' equal `row_height'?
-		do
-			Result := tool_bar.row_height = a_height
-		end
 
 	is_parent_set (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
 			-- If `a_item' parent equal `tool_bar'?

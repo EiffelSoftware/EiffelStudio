@@ -19,6 +19,7 @@ feature {NONE} -- Initlization
 			create internal_auto_hide_zones_data.make
 			create tool_bar_datas.make (1)
 			create maximized_tools.make (1)
+			create resizable_items_data.make (1)
 			name := ""
 		end
 
@@ -95,6 +96,19 @@ feature -- Properties
 	tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]
 			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right.
 
+	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
+			-- Tool bar resizable items datas.
+
+	set_resizable_items_data (a_data: like resizable_items_data) is
+			-- Set `tool_bar_datas' with `a_data'.
+		require
+			not_void: a_data /= Void
+		do
+			resizable_items_data := a_data
+		ensure
+			set: resizable_items_data = a_data
+		end
+
 feature -- Data for only one editor zone
 
 	is_one_editor_zone: BOOLEAN
@@ -134,6 +148,7 @@ feature {NONE}  -- Implementation
 
 invariant
 	not_void: maximized_tools /= Void
+	not_void: resizable_items_data /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -189,7 +189,7 @@ feature {NONE} -- Implementation functions.
 		local
 			l_new_row: SD_TOOL_BAR_ROW
 		do
-			create l_new_row.make (internal_vertical)
+			create l_new_row.make (internal_docking_manager, internal_vertical)
 			if a_start then
 				internal_box.start
 				internal_box.put_left (l_new_row)

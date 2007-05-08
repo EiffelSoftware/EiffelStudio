@@ -54,6 +54,7 @@ feature -- Save inner container data.
 
 			internal_docking_manager.command.recover_normal_state
 
+			save_tool_bar_item_data (a_config_data)
 			save_editor_minimized_data (a_config_data)
 
 			save_all_inner_containers_data (a_config_data)
@@ -67,7 +68,7 @@ feature -- Save inner container data.
 			a_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
 			a_config_data.set_is_editor_docking_locked (internal_docking_manager.is_editor_locked)
 			a_config_data.set_is_tool_bar_locked (internal_docking_manager.tool_bar_manager.is_locked)
-			
+
 			top_container := Void
 		ensure
 			cleared: top_container = Void
@@ -155,6 +156,7 @@ feature -- Save inner container data.
 			l_config_data: SD_CONFIG_DATA
 		do
 			create l_config_data.make
+			save_tool_bar_item_data (l_config_data)
 			save_maximized_tool_data (l_config_data)
 
 			internal_docking_manager.command.recover_normal_state
@@ -517,6 +519,12 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid: a_config_data.maximized_tools.count = internal_docking_manager.zones.maximized_zones.count
+		end
+
+	save_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
+			-- Save tool bar resizable item datas.
+		do
+			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end
 
 	save_config_data_to_file (a_config_data: SD_CONFIG_DATA; a_file: STRING_GENERAL) is

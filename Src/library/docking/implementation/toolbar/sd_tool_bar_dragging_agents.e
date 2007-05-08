@@ -80,8 +80,10 @@ feature -- Agents
 			if internal_docker_mediator = Void then
 				if zone.drag_area_rectangle.has_x_y (a_x, a_y) then
 					zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
-				else
+					setted := True
+				elseif setted then
 					zone.tool_bar.set_pointer_style (l_pixmaps.standard_cursor)
+					setted := False
 				end
 			end
 			if internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating) then
@@ -181,10 +183,13 @@ feature {NONE} -- Implementation functions
 feature {NONE} -- Implementation attributes
 
 	setter: SD_SYSTEM_SETTER is
-			--
+			-- System setter singleton.
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
 		end
+
+	setted: BOOLEAN
+		-- If pointer style setted?
 
 	internal_shared: SD_SHARED
 			-- All singletons.

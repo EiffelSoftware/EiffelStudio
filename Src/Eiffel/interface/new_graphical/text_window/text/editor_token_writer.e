@@ -426,11 +426,13 @@ feature -- Text processing
 		do
 		end
 
-	process_ast (a_name: STRING; a_ast: AST_EIFFEL; a_written_class: CLASS_C; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]; a_for_feature_invocation: BOOLEAN) is
+	process_ast (a_name: STRING; a_ast: AST_EIFFEL; a_written_class: CLASS_C; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]; a_for_feature_invocation: BOOLEAN; a_cursor, a_x_cursor: EV_POINTER_STYLE) is
 			-- Process `a_ast' from `a_written_class'.
 			-- `a_name' is displayed name for `a_ast'.
 			-- `a_appearance' is new appearance (font, text color and background color) associated with `a_name', if Void, default values will be used.
 			-- If `a_for_feature_invocation' is True, mark stone contained in `a_name' as for feature invocation.
+			-- If `a_cursor' is not Void , it will be used as cursor for generated text.
+			-- If `a_x_cursor' is not Void , it will be used as X cursor for generated text.
 		require
 			a_name_attached: a_name /= Void
 		local
@@ -445,6 +447,12 @@ feature -- Text processing
 			if a_ast /= Void and then a_written_class /= Void then
 				create l_stone.make (a_written_class, a_ast)
 				l_stone.set_is_for_feature_invocation (a_for_feature_invocation)
+				if a_cursor /= Void then
+					l_stone.set_stone_cursor (a_cursor)
+				end
+				if a_x_cursor /= Void then
+					l_stone.set_x_stone_cursor (a_x_cursor)
+				end
 				l_ast_token.set_pebble (l_stone)
 			end
 			last_line.append_token (l_ast_token)
@@ -455,7 +463,7 @@ feature -- Text processing
 		require
 			a_warning_message_attached: a_warning_message /= Void
 		do
-			process_ast (a_warning_message, Void, Void, a_appearance, False)
+			process_ast (a_warning_message, Void, Void, a_appearance, False, Void, Void)
 		end
 
 	process_line (a_name: STRING; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is

@@ -410,7 +410,7 @@ feature{NONE} -- Implementation
 				if is_for_invariant then
 					l_inv := written_class.invariant_ast
 					if l_inv /= Void then
-						a_writer.process_ast (invariant_name, l_inv, written_class, feature_appearance, False)
+						a_writer.process_ast (invariant_name, l_inv, written_class, feature_appearance, False, cursors.cur_feature, cursors.cur_x_feature)
 					else
 						a_writer.add_string (invariant_name)
 					end

@@ -191,6 +191,7 @@ feature {NONE} -- Initialization
 			end
 			if not mode then
 				build_viewpoints
+				view_points_combo.set_font (l_font)
 				parent_widget.set_view_points (view_points_combo)
 			end
 

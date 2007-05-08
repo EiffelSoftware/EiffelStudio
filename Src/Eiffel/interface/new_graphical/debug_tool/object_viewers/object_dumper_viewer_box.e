@@ -48,6 +48,7 @@ feature {NONE} -- Implementation
 			editor.disable_line_numbers
 			editor.disable_has_breakable_slots
 			editor.disable_editable
+			editor.set_read_only (True)
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_valid_stone)
 

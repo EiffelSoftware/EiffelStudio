@@ -1517,7 +1517,7 @@ feature -- Label texts
 	l_callees_from_supplier_class: STRING_GENERAL is do Result := locale.translate("Callees from supplier class") end
 	l_from_x: STRING is "From "
 	h_categorize_folder: STRING_GENERAL is do Result := locale.translate("Categorize classes in folder?") end
-	h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translate("Show only synctactically referenced classes?") end
+	h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translate("Show only syntactically referenced classes?") end
 	h_show_normal_referenced_classes: STRING_GENERAL is do Result := locale.translate("Show normal referenced classes?") end
 	h_show_ancestor_classes: STRING_GENERAL is do Result := locale.translate("Show ancestor classes?") end
 	h_show_descendant_classes: STRING_GENERAL is do Result := locale.translate("Show descendant classes?") end
@@ -1580,7 +1580,7 @@ feature -- Label texts
 	l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
 	l_open_exception_dialog_tooltip: STRING_GENERAL is do Result := locale.translate ("Open exception dialog for more details") end
-	 
+
 	h_click_to_open: STRING_GENERAL is do Result := locale.translate ("Click to open") end
 	l_layout: STRING_GENERAL is do Result := locale.translate ("Layout") end
 	l_tooltip_lbl: STRING_GENERAL is do Result := locale.translate ("Tooltip") end

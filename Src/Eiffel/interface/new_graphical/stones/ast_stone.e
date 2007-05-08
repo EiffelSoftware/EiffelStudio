@@ -13,6 +13,9 @@ inherit
 	CLASSC_STONE
 		rename
 			make as make_class_c
+		redefine
+			stone_cursor,
+			x_stone_cursor
 		end
 
 create
@@ -28,12 +31,32 @@ feature{NONE} -- Initialization
 		do
 			make_class_c (a_class_c)
 			set_ast (a_ast)
+			set_stone_cursor (cursors.cur_object)
+			set_x_stone_cursor (cursors.cur_x_object)
 		end
 
 feature -- Access
 
 	ast: AST_EIFFEL
 			-- AST node associated with Current stone
+
+	stone_cursor: EV_POINTER_STYLE is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
+		do
+			Result := stone_cursor_internal
+		ensure then
+			good_result: Result = stone_cursor_internal
+		end
+
+	x_stone_cursor: EV_POINTER_STYLE is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := x_stone_cursor_internal
+		ensure then
+			good_result: Result = x_stone_cursor_internal
+		end
 
 feature -- Status report
 
@@ -59,6 +82,38 @@ feature -- Setting
 		ensure
 			is_for_feature_invocation_set: is_for_feature_invocation = b
 		end
+
+	set_stone_cursor (a_cursor: like stone_cursor) is
+			-- Set `stone_cursor' with `a_cursor'.
+		require
+			a_cursor_attached: a_cursor /= Void
+		do
+			stone_cursor_internal := a_cursor
+		ensure
+			stone_cursor_set: stone_cursor = a_cursor
+		end
+
+	set_x_stone_cursor (a_cursor: like x_stone_cursor) is
+			-- Set `x_stone_cursor' with `a_cursor'.
+		require
+			a_cursor_attached: a_cursor /= Void
+		do
+			x_stone_cursor_internal := a_cursor
+		ensure
+			x_stone_cursor_set: x_stone_cursor = a_cursor
+		end
+
+feature{NONE} -- Implementation
+
+	stone_cursor_internal: like stone_cursor
+			-- Implementation of `stone_cursor'
+
+	x_stone_cursor_internal: like x_stone_cursor
+			-- Implementation of `x_stone_cursor'
+
+invariant
+	stone_cursor_attached: stone_cursor /= Void
+	x_stone_cursor_attached: x_stone_cursor /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -92,9 +92,26 @@ feature{NONE} -- Implementation
 				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_i, False)
 			elseif a_item.is_code_structure then
 				l_ql_code_item ?= a_item
-				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, Void, False)
+				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, appearance_for_item (a_item), False)
 			else
 				a_writer.add_string (a_item.name)
+			end
+		end
+
+	appearance_for_item (a_item: QL_ITEM): TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER] is
+			-- Appearance for `a_item'
+			-- Void if no appearance available.
+		require
+			a_item_attached: a_item /= Void
+		do
+			if a_item.is_argument then
+				Result := [editor_font_id, argument_text_color_id, argument_background_color_id]
+			elseif a_item.is_local then
+				Result := [editor_font_id, local_text_color_id, local_background_color_id]
+			elseif a_item.is_generic then
+				Result := [editor_font_id, generic_text_color_id, generic_background_color_id]
+			elseif a_item.is_assertion then
+				Result := [editor_font_id, assertion_tag_text_color_id, assertion_tag_background_color_id]
 			end
 		end
 

@@ -476,7 +476,9 @@ feature{NONE} -- Implementation
 			end
 
 			l_item.set_stone (stone_from_ql_item (l_ql_item))
-			l_path_item.set_stone (stone_from_ql_item (l_ql_item.parent))
+			if l_ql_item.parent /= Void then
+				l_path_item.set_stone (stone_from_ql_item (l_ql_item.parent))
+			end
 
 			content.i_th (1).force (l_item, a_y)
 			content.i_th (2).force (l_path_item, a_y)

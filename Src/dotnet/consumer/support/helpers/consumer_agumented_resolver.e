@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 						l_paths.forth
 					end
 				end
+				look_up_file_names := l_paths
 			else
 				look_up_file_names := a_paths
 			end

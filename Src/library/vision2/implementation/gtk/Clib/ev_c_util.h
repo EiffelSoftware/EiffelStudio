@@ -26,9 +26,9 @@ extern gboolean c_io_watcher_marshal (GIOChannel* source, GIOCondition condition
 typedef struct {
 	gint x_position;
 	gint y_position;
-} c_position;
+} menu_position;
 
-extern void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
+extern void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gboolean * push_in,  gpointer user_data);
 extern void c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data);
 extern void enable_ev_gtk_log (int a_mode);
 

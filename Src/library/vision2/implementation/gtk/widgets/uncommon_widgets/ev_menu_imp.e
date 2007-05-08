@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 				c_object, list_widget
 			)
 			Precursor {EV_MENU_ITEM_LIST_IMP}
---			Precursor {EV_MENU_ITEM_IMP}
+			Precursor {EV_MENU_ITEM_IMP}
 		end
 
 feature -- Basic operations

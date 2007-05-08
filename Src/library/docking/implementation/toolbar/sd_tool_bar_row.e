@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} has, parent, count, prunable
-			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size
+			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		end
 
@@ -29,15 +29,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_vertical: BOOLEAN) is
+	make (a_manager: SD_DOCKING_MANAGER; a_vertical: BOOLEAN) is
 			-- Creation method
+		require
+			not_void: a_manager /= Void
 		do
 			default_create
 			create internal_shared
 			create internal_zones.make_default
 			create internal_positioner.make (Current)
 			is_vertical := a_vertical
+			docking_manager := a_manager
 		ensure
+			set: docking_manager = a_manager
 			set: is_vertical = a_vertical
 		end
 
@@ -229,6 +233,39 @@ feature -- Query
 		do
 			Result := internal_positioner.internal_sizer.is_enough_max_space (True)
 		end
+
+	hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- All hideen items in row.
+		local
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_temp_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+		do
+			create Result.make (1)
+			-- Prepare all hiden items in Current row.
+			l_tool_bars := zones
+			from
+				l_tool_bars.start
+			until
+				l_tool_bars.after
+			loop
+				-- We can't just call `append' to insert items, because we want to reverse items order.
+				from
+					l_temp_items := l_tool_bars.item_for_iteration.assistant.hide_tool_bar_items
+					l_temp_items.finish
+				until
+					l_temp_items.before
+				loop
+					Result.extend (l_temp_items.item)
+					l_temp_items.back
+				end
+				l_tool_bars.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manger.
 
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 

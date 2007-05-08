@@ -188,6 +188,17 @@ feature -- Open inner container data.
 			internal_open_maximized_tool_data (l_data)
 		end
 
+	open_tool_bar_item_data (a_file: STRING_GENERAL) is
+			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
+		require
+			a_file_not_void: a_file /= Void
+		local
+			l_data: SD_CONFIG_DATA
+		do
+			l_data := config_data_from_file (a_file)
+			internal_open_tool_bar_item_data (l_data)
+		end
+
 feature -- Query
 
 	config_data_from_file (a_file: STRING_GENERAL): SD_CONFIG_DATA is
@@ -917,9 +928,9 @@ feature {NONE} -- Implementation
 			loop
 				l_row := l_rows.item
 				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
-					create l_tool_bar_row.make (False)
+					create l_tool_bar_row.make (internal_docking_manager, False)
 				else
-					create l_tool_bar_row.make (True)
+					create l_tool_bar_row.make (internal_docking_manager, True)
 				end
 				l_tool_bar_container.extend (l_tool_bar_row)
 				l_tool_bar_row.set_ignore_resize (True)
@@ -1010,6 +1021,51 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_maximzied_tools.forth
+				end
+			end
+		end
+
+	internal_open_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
+			-- Open tool bar resizable item datas.
+		local
+			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item: SD_TOOL_BAR_RESIZABLE_ITEM
+			l_tool_bar_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER_32]]
+			l_found: BOOLEAN
+		do
+			if a_config_data /= Void then
+				from
+					l_tool_bar_data := a_config_data.resizable_items_data
+					l_contents := internal_docking_manager.tool_bar_manager.contents
+					l_contents.start
+				until
+					l_contents.after
+				loop
+					from
+						l_items := l_contents.item.items
+						l_items.start
+					until
+						l_items.after
+					loop
+						l_item ?= l_items.item
+						if l_item /= Void then
+							from
+								l_tool_bar_data.start
+								l_found := False
+							until
+								l_tool_bar_data.after or l_found
+							loop
+								if l_item.name.as_string_32.is_equal (l_tool_bar_data.item.name.as_string_32) then
+									l_item.widget.set_minimum_width (l_tool_bar_data.item.width)
+									l_found := True
+								end
+								l_tool_bar_data.forth
+							end
+						end
+						l_items.forth
+					end
+					l_contents.forth
 				end
 			end
 		end

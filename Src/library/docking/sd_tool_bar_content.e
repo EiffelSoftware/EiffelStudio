@@ -397,7 +397,7 @@ feature -- Query
 
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
 		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER, SD_OPEN_CONFIG_MEDIATOR,
-		SD_SAVE_CONFIG_MEDIATOR}  -- Internal issues.
+		SD_SAVE_CONFIG_MEDIATOR, SD_DOCKING_MANAGER_QUERY, SD_TOOL_BAR}  -- Internal issues.
 
 	wipe_out is
 			-- Remove all items.
@@ -556,8 +556,8 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			not_void: a_zone /= Void
 		do
 			zone := a_zone
--- For on_customize issue, we disable it here
--- But does it work for open_configs?			
+			-- For on_customize issue, we disable it here
+			-- But does it work for open_configs?			
 			is_visible := True
 		ensure
 			set: zone = a_zone

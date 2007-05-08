@@ -20,6 +20,7 @@ feature {NONE}  -- Initlization
 		do
 			internal_docking_manager := a_docking_manager
 			create internal_clicked_list.make
+			create resizable_items_data.make (1)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -89,6 +90,9 @@ feature -- Properties
 			set: docker_mediator = a_mediator
 		end
 
+	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
+			-- SD_TOOL_BAR_RESIABLE_ITEM datas.
+
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 
 	set_is_opening_config (a_bool: BOOLEAN) is
@@ -144,6 +148,7 @@ feature -- Command
 invariant
 
 	internal_clicked_list_not_void: internal_clicked_list /= Void
+	resizable_items_data_not_void: resizable_items_data /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

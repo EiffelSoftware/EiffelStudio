@@ -202,6 +202,7 @@ feature {NONE} -- Implementation
 				-- FIXIT: can't destroy directly?
 --				destroy
 				ev_application.do_once_on_idle (agent destroy)
+				parent_tool_bar.docking_manager.command.resize (True)
 			end
 		end
 

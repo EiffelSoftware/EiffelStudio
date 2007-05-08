@@ -209,7 +209,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			create l_tool_bar_zone.make (False, docking_manager, a_content.is_menu_bar)
 			l_tool_bar_zone.extend (a_content)
 
-			create l_tool_bar_row.make (False)
+			create l_tool_bar_row.make (docking_manager, False)
 			l_tool_bar_row.set_ignore_resize (True)
 			l_tool_bar_row.extend (l_tool_bar_zone)
 			l_tool_bar_row.record_state
@@ -221,7 +221,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
-			SD_TOOL_BAR_ZONE_ASSISTANT,	SD_TOOL_BAR_ZONE, SD_DEBUG_ACCESS} -- Internal querys
+			SD_TOOL_BAR_ZONE_ASSISTANT,	SD_TOOL_BAR_ZONE, SD_DEBUG_ACCESS, SD_TOOL_BAR} -- Internal querys
 
 	tool_bar_container (a_direction: INTEGER): EV_BOX is
 			-- Tool bar container base on `a_direction'.
@@ -285,6 +285,24 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 				Result.start
 				Result.prune (l_floating_bars.item.content)
 				l_floating_bars.forth
+			end
+		end
+
+	content_of (a_tool_bar: SD_TOOL_BAR): SD_TOOL_BAR_CONTENT is
+			-- Content of `a_tool_bar'
+		local
+			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
+		do
+			from
+				l_contents := contents
+				l_contents.start
+			until
+				l_contents.after or Result /= Void
+			loop
+				if l_contents.item.zone /= Void and then l_contents.item.zone.tool_bar = a_tool_bar then
+					Result := l_contents.item
+				end
+				l_contents.forth
 			end
 		end
 

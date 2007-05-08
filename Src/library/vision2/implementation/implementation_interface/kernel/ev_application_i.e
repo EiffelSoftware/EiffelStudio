@@ -522,7 +522,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]) is
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -541,7 +541,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
 			l_has_targets: BOOLEAN
-			l_widget: EV_WIDGET
 		do
 			targets := pnd_targets
 			create l_menu
@@ -623,12 +622,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					end
 				end
 				if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
-					l_widget ?= a_pnd_source
-					if l_widget /= Void then
-						l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
-					else
-						l_menu.show
-					end
+					l_menu.show_at (Void, a_screen_x - menu_placement_offset, a_screen_y - menu_placement_offset)
 				elseif a_configure_agent /= Void then
 					a_configure_agent.call (Void)
 				end
@@ -636,13 +630,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				if a_pnd_source.configurable_target_menu_handler /= Void then
 					create l_menu
 					a_pnd_source.configurable_target_menu_handler.call ([l_menu, create {ARRAYED_LIST [EV_PND_TARGET_DATA]}.make (0), a_pnd_source, a_pebble])
-					if not l_menu.is_destroyed and then l_menu.count > 0 then
-						l_widget ?= a_pnd_source
-						if l_widget /= Void then
-							l_menu.show_at (l_widget, a_x - menu_placement_offset, a_y - menu_placement_offset)
-						else
-							l_menu.show
-						end
+					if not l_menu.is_destroyed and then l_menu.count > 0 and then not ctrl_pressed then
+							-- If the pebble is Void then no menu should be displayed if Ctrl is pressed.
+						l_menu.show_at (Void, a_screen_x - menu_placement_offset, a_screen_y - menu_placement_offset)
 					end
 				end
 			end

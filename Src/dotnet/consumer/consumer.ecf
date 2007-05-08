@@ -84,6 +84,13 @@
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
 		<cluster name="main" location="$EIFFEL_SRC\dotnet\consumer\main\"/>
 	</target>
+	<target name="emdc_10" extends="emdc">
+		<setting name="msil_clr_version" value="v1.0.3705"/>
+		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
+		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
+		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
+		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
+	</target>
 	<target name="consumer_20" extends="consumer_library">
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>

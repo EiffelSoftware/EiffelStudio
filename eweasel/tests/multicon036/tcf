@@ -1,0 +1,19 @@
+-- This is a test control file
+
+test_name multi-constraint-vtmc4
+test_description This test should trigger a VTMC4 error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	bc.e $CLUSTER bc.e
+copy_raw 	non_multi.e $CLUSTER non_multi.e
+copy_raw 	multi.e $CLUSTER multi.e
+
+
+compile_melted
+compile_result validity_error MULTI VTMC(4)
+
+test_end

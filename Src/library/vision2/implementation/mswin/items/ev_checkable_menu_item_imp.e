@@ -192,11 +192,11 @@ feature {NONE} -- WEL Implementation
 				-- Draw an edge around the pixmap when it is selected
 			create edge_rect.make (rect.left, rect.top, rect.left + plain_text_position - 2, rect.bottom)
 			if checked then
-				create hlc.make_rgb ((system_color_menu.red + 20).min(255), (system_color_menu.green + 20).min(255), (system_color_menu.blue + 20).min(255))
+				create hlc.make_by_color (contrast_color (system_color_menu).item)
 				erase_background (draw_dc, edge_rect, hlc)
 				draw_dc.draw_edge (edge_rect, Wel_drawing_constants.Bdr_sunkenouter, Wel_drawing_constants.Bf_rect)
 			elseif selected and not disabled then
-				create hlc.make_rgb ((system_color_menu.red + 20).min(255), (system_color_menu.green + 20).min(255), (system_color_menu.blue + 20).min(255))
+				create hlc.make_by_color (contrast_color (system_color_menu).item)
 				erase_background (draw_dc, edge_rect, hlc)
 				draw_dc.draw_edge (edge_rect, Wel_drawing_constants.Bdr_raisedinner, Wel_drawing_constants.Bf_rect)
 			end
@@ -222,6 +222,32 @@ feature {NONE} -- WEL Implementation
 					rect.top = old rect.top and
 					rect.right = old rect.right and
 					rect.bottom = old rect.bottom
+		end
+
+	contrast_color (a_color: WEL_COLOR_REF): WEL_COLOR_REF is
+			-- New color which is either slightly lighter or darker than
+			-- `a_color'.
+		require
+			a_color_not_void: a_color /= Void
+		do
+			create Result.make
+			if a_color.red < 220 then
+				Result.set_red (a_color.red + 20)
+			else
+				Result.set_red ((a_color.red - 20).max (0))
+			end
+			if a_color.green < 220 then
+				Result.set_green (a_color.green + 20)
+			else
+				Result.set_green ((a_color.green - 20).max (0))
+			end
+			if a_color.blue < 220 then
+				Result.set_blue (a_color.blue + 20)
+			else
+				Result.set_blue ((a_color.blue - 20).max (0))
+			end
+		ensure
+			contrast_color_not_void: Result /= Void
 		end
 
 	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_background_color: WEL_COLOR_REF) is

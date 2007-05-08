@@ -31,9 +31,9 @@ feature -- Access
 	scope: QL_SCOPE is
 			-- Scope of current
 		do
-			Result := local_scope
+			Result := argument_scope
 		ensure then
-			good_result: Result = local_scope
+			good_result: Result = argument_scope
 		end
 
 	path_name_marker: QL_PATH_MARKER is

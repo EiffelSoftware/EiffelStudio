@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	QL_CODE_STRUCTURE_ITEM
+		redefine
+			parent_with_real_path
+		end
 
 feature -- Access
 
@@ -65,6 +68,18 @@ feature -- Access
 			Result := internal_e_feature
 		ensure then
 			good_result: Result = internal_e_feature
+		end
+
+	parent_with_real_path: QL_ITEM is
+			-- Parent item of Current with real path.
+			-- Real path means that every parent is physically determined.
+		do
+			if parent /= Void and then parent.is_feature then
+				Result := parent.twin
+				Result.set_parent (Result.parent_with_real_path)
+			else
+				Result := Precursor
+			end
 		end
 
 feature -- Status report

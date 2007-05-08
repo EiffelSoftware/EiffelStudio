@@ -20,7 +20,10 @@ inherit
 			call_pebble_function,
 			initialize,
 			interface,
-			pre_pick_steps
+			pre_pick_steps,
+			ready_for_pnd_menu,
+			pebble_source,
+			able_to_transport
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
@@ -161,6 +164,37 @@ feature -- Status report
 		do
 			--| FIXME Implement correctly.
 			Result := 10
+		end
+
+	pebble_source: EV_PICK_AND_DROPABLE
+			-- Source of pebble, used for widgets with deferred PND implementation
+			-- such as EV_TREE and EV_MULTI_COLUMN_LIST.
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.interface
+			else
+				Result := Precursor
+			end
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is list or row able to transport PND data using `a_button'.
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.able_to_transport (a_button)
+			else
+				Result := Precursor (a_button)
+			end
+		end
+
+	ready_for_pnd_menu (a_button: INTEGER_32; a_press: BOOLEAN): BOOLEAN
+			-- Is list or row able to display PND menu using `a_button'
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.ready_for_pnd_menu (a_button, a_press)
+			else
+				Result := Precursor (a_button, a_press)
+			end
 		end
 
 	pnd_row_imp: EV_LIST_ITEM_IMP

@@ -59,13 +59,12 @@ feature -- Standard operations
 
 	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
-			-- of `a_widget'.
+			-- of `a_widget' or relative to the screen if `a_widget' is Void.
 		require
 			not_destroyed: not is_destroyed
 			not_parented: parent = Void
-			widget_not_void: a_widget /= Void
-			widget_not_destroyed: not a_widget.is_destroyed
-			widget_displayed: a_widget.is_displayed
+			widget_not_destroyed: a_widget /= Void implies not a_widget.is_destroyed
+			widget_displayed: a_widget /= Void implies a_widget.is_displayed
 		do
 			implementation.show_at (a_widget, a_x, a_y)
 		end

@@ -333,7 +333,7 @@ feature -- Implementation
 			end
 
 			if ready_for_pnd_menu (a_button, a_press) then
-				app_implementation.create_target_menu (a_x, a_y, pebble_source, pebble, l_configure_agent)
+				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, pebble, l_configure_agent)
 			elseif l_configure_agent /= Void then
 				l_configure_agent.call (Void)
 			end

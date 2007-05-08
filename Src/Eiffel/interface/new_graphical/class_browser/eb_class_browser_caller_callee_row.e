@@ -448,7 +448,6 @@ feature{NONE} -- Actions
 			l_writer: like token_writer
 			l_appearance: like feature_appearance
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
-			l_tokens: LIST [EDITOR_TOKEN]
 		do
 			l_writer := token_writer
 			l_writer.new_line

@@ -319,15 +319,15 @@ feature {NONE} -- Implementation functions
 					end
 				elseif ast_stone /= Void then
 					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
-						if develop_window.managed_main_formatters.first.selected then
-							develop_window.managed_main_formatters.first.enable_select
+						if not develop_window.managed_main_formatters.first.selected then
+							select_basic_main_formatter
 						end
 						develop_window.scroll_to_ast (ast_stone.ast, ast_stone.class_i, ast_stone.is_for_feature_invocation)
 					end
 				elseif line_stone /= Void then
 					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
-						if develop_window.managed_main_formatters.first.selected then
-							develop_window.managed_main_formatters.first.enable_select
+						if not develop_window.managed_main_formatters.first.selected then
+							select_basic_main_formatter
 						end
 						develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.should_line_be_selected)
 					end
@@ -861,6 +861,18 @@ feature {NONE} -- Implementation functions
 			l_format_context.exdent
 			l_format_context.put_new_line
 			current_editor.handle_after_processing
+		end
+
+	select_basic_main_formatter is
+			-- Ensure that basic text formatter is selected.
+		local
+			l_basic_formatter: EB_FORMATTER
+		do
+			l_basic_formatter := develop_window.managed_main_formatters.first
+			l_basic_formatter.enable_select
+			l_basic_formatter.set_must_format (True)
+			l_basic_formatter.format
+			l_basic_formatter.ensure_display_in_widget_owner
 		end
 
 feature {NONE} -- Implementation attributes

@@ -280,6 +280,14 @@ feature -- Formatting
 	last_was_error: BOOLEAN
 			-- Did an error occur during the last attempt to format?
 
+	set_must_format (b: BOOLEAN) is
+			-- Set `must_format' with `b'.
+		do
+			must_format := b
+		ensure
+			must_format_set: must_format = b
+		end
+
 feature -- Interface
 
 	symbol: ARRAY [EV_PIXMAP] is

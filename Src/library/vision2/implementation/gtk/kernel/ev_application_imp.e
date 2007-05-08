@@ -1072,8 +1072,8 @@ feature -- Implementation
 	enable_debugger is
 			-- Enable the Eiffel debugger.
 		do
-			if not debugger_is_disabled then
-				debugger_is_disabled := True
+			if debugger_is_disabled then
+				debugger_is_disabled := False
 				internal_set_debug_mode (saved_debug_mode)
 			end
 		end
@@ -1081,15 +1081,15 @@ feature -- Implementation
 	disable_debugger is
 			-- Disable the Eiffel debugger.
 		do
-			if debugger_is_disabled then
-				debugger_is_disabled := False
+			if not debugger_is_disabled then
+				debugger_is_disabled := True
 				saved_debug_mode := debug_mode
 				internal_set_debug_mode (0)
 			end
 		end
 
 	debugger_is_disabled: BOOLEAN
-		-- Is the debugger disabled?
+			-- Is the debugger disabled?
 
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 

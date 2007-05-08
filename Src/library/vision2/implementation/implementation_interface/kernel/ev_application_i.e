@@ -527,6 +527,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 		local
 			cur: CURSOR
 			trg: EV_ABSTRACT_PICK_AND_DROPABLE
+			pnd_trg: EV_PICK_AND_DROPABLE
 			targets: like pnd_targets
 			identified: IDENTIFIED
 			sensitive: EV_SENSITIVE
@@ -559,7 +560,8 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					targets.after
 				loop
 					trg ?= identified.id_object (targets.item_for_iteration)
-					if trg /= Void then
+					pnd_trg ?= trg
+					if trg /= Void and then (pnd_trg = Void or else not pnd_trg.is_destroyed) then
 						if
 							trg.drop_actions.accepts_pebble (a_pebble)
 						then

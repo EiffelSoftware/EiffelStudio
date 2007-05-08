@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 				c_object, list_widget
 			)
 			Precursor {EV_MENU_ITEM_LIST_IMP}
-			Precursor {EV_MENU_ITEM_IMP}
+--			Precursor {EV_MENU_ITEM_IMP}
 		end
 
 feature -- Basic operations
@@ -67,11 +67,20 @@ feature -- Basic operations
 	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
+		local
+			l_x, l_y: INTEGER
 		do
+			if a_widget /= Void then
+				l_x := a_widget.screen_x + a_x
+				l_y := a_widget.screen_y + a_y
+			else
+				l_x := a_x
+				l_y := a_y
+			end
 			if not interface.is_empty then
-				app_implementation.do_once_on_idle (agent c_gtk_menu_popup (list_widget,
-					a_widget.screen_x + a_x,
-					a_widget.screen_y + a_y, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
+				app_implementation.do_once_on_idle (agent
+					c_gtk_menu_popup (list_widget,
+							l_x, l_y, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
 				)
 			end
 		end
@@ -83,12 +92,12 @@ feature {NONE} -- Externals
 			"C inline use %"ev_c_util.h%""
 		alias
 			"[
-				{
-				c_position pos;
-				pos.x_position = $a_x;
-				pos.y_position = $a_y;
-				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, (guint) $a_button, (guint32) $a_event_time);
-				}
+			{
+				menu_position *pos = malloc (sizeof (menu_position));
+				pos->x_position = (gint) $a_x;
+				pos->y_position = (gint) $a_y;
+				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, (gpointer) pos, (guint) $a_button, (guint32) $a_event_time);
+			}
 			]"
 		end
 

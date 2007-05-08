@@ -317,14 +317,14 @@ feature{NONE} -- Implementation
 			create l_header.make (interface_names.l_header)
 			l_header.set_value (string_32_from_string_8 (a_descriptor.header))
 			l_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_header, Void))
-			l_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
+			l_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_header_help, interface_names.l_formatter_placeholder>>).linear_representation, "%N"))
 			header_property := l_header
 			l_grid.add_property (l_header)
 
 			create l_temp_header.make (interface_names.l_temp_header)
 			l_temp_header.set_value (string_32_from_string_8 (a_descriptor.temp_header))
 			l_temp_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_temp_header, Void))
-			l_temp_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_temp_header_help, interface_names.l_formatter_placeholder>>).linear_representation, " "))
+			l_temp_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_temp_header_help, interface_names.l_formatter_placeholder>>).linear_representation, "%N"))
 			temp_header_property := l_temp_header
 			l_grid.add_property (l_temp_header)
 

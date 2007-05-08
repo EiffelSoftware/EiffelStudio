@@ -38,6 +38,20 @@ feature -- Setting
 			set_editor_token_function (agent number_text_agent (a_number))
 		end
 
+	set_folder_text (a_folder_name: STRING; a_path: STRING; a_group: CONF_GROUP) is
+			-- Set `source_text' to be genericed in `text' as folder text.
+			-- `a_folder_name' is the name of the folder,
+			-- `a_path' is the path in which `a_folder_name' exist, so for example,
+			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.
+			-- `a_group' is the group where this folder is located.
+		require
+			a_folder_name_attached: a_folder_name /= Void
+			a_path_attached: a_path /= Void
+			a_group_attached: a_group /= Void
+		do
+			set_editor_token_function (agent folder_text_agent (a_folder_name, a_path, a_group))
+		end
+
 feature{NONE} -- Agents
 
 	generated_editor_token (a_text_processor_function: FUNCTION [ANY, TUPLE [like token_writer], PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]; a_text: STRING_GENERAL): LIST [EDITOR_TOKEN] is
@@ -93,6 +107,38 @@ feature{NONE} -- Agents
 			)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	folder_text_agent (a_folder_name: STRING; a_path: STRING; a_group: CONF_GROUP): LIST [EDITOR_TOKEN] is
+			-- Editor token representation of `a_text' in folder style
+			-- `a_folder_name' is the name of the folder,
+			-- `a_path' is the path in which `a_folder_name' exist, so for example,
+			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.
+			-- `a_group' is the group where this folder is located.
+		require
+			a_folder_name_attached: a_folder_name /= Void
+			a_path_attached: a_path /= Void
+			a_group_attached: a_group /= Void
+		do
+			Result := generated_editor_token (
+				agent process_folder_text (?, a_folder_name, a_path, a_group), a_folder_name
+			)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	process_folder_text (a_writer: like token_writer; a_folder_name: STRING; a_path: STRING; a_group: CONF_GROUP): PROCEDURE [ANY, TUPLE [STRING_GENERAL]] is
+			-- `a_folder_name' is the name of the folder,
+			-- `a_path' is the path in which `a_folder_name' exist, so for example,
+			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.
+			-- `a_group' is the group where this folder is located.
+		require
+			a_writer_attached: a_writer /= Void
+			a_folder_name_attached: a_folder_name /= Void
+			a_path_attached: a_path /= Void
+			a_group_attached: a_group /= Void
+		do
+			Result := agent a_writer.process_folder_text (?, a_path, a_group)
 		end
 
 indexing

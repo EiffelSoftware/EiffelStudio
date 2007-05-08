@@ -22,6 +22,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	EB_EDITOR_TOKEN_IDS
+
 create {NONE}
 
 feature {NONE} -- Initialization
@@ -463,9 +465,9 @@ feature -- Text processing
 			a_line_number_positive: a_line_number > 0
 			a_class_i_attached: a_class_i /= Void
 		local
-			l_token: EDITOR_TOKEN_TEXT
+			l_token: EDITOR_TOKEN_AST
 		do
-			create l_token.make (a_name)
+			create l_token.make_with_appearance (a_name, [editor_font_id, line_number_text_color_id, string_background_color_id])
 			l_token.set_pebble (create {LINE_STONE}.make_with_line (a_class_i, a_line_number, a_selected))
 			last_line.append_token (l_token)
 		end
@@ -486,6 +488,24 @@ feature -- Text processing
 			-- Add string.
 		do
 			process_string_text (s, Void)
+		end
+
+	process_folder_text (a_folder_name: STRING; a_path: STRING; a_group: CONF_GROUP) is
+			-- Process folder text.
+			-- `a_folder_name' is the name of the folder,
+			-- `a_path' is the path in which `a_folder_name' exist, so for example,
+			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.
+			-- `a_group' is the group where this folder is located.
+		require
+			a_folder_name_attached: a_folder_name /= Void
+			a_path_attached: a_path /= Void
+			a_group_attached: a_group /= Void
+		local
+			l_token: EDITOR_TOKEN_AST
+		do
+			create l_token.make_with_appearance (a_folder_name, [editor_font_id, folder_text_color_id, folder_background_color_id])
+			l_token.set_pebble (create {CLUSTER_STONE}.make_subfolder (a_group, a_path, a_folder_name))
+			last_line.append_token (l_token)
 		end
 
 feature {NONE} -- Initialisations and File status

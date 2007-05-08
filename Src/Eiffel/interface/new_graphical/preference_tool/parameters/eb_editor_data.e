@@ -295,6 +295,38 @@ feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			result_attached: Result /= Void
 		end
 
+	argument_text_color: EV_COLOR is
+			-- Argument text color
+		do
+			Result := argument_text_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
+	argument_background_color: EV_COLOR is
+			-- Argument background color
+		do
+			Result := argument_background_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
+	folder_text_color: EV_COLOR is
+			-- Folder text color
+		do
+			Result := folder_text_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
+	folder_background_color: EV_COLOR is
+			-- Folder background color
+		do
+			Result := folder_background_color_preference.value
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	breakpoint_background_color_preference: COLOR_PREFERENCE
@@ -375,6 +407,14 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	warning_text_color_preference: COLOR_PREFERENCE
 	warning_background_color_preference: COLOR_PREFERENCE
 
+	argument_text_color_preference: COLOR_PREFERENCE
+	argument_background_color_preference: COLOR_PREFERENCE
+			-- Color of name of arguments displayed in metric tool
+
+	folder_text_color_preference: COLOR_PREFERENCE
+	folder_background_color_preference: COLOR_PREFERENCE
+			-- Color of name of folders displayed in metric tool
+
 feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
@@ -402,6 +442,12 @@ feature {NONE} -- Preference Strings
 	target_background_color_string: STRING is "editor.eiffel.colors.target_text_background_color"
 	warning_text_color_string: STRING is "editor.eiffel.colors.warning_text_color"
 	warning_background_color_string: STRING is "editor.eiffel.colors.warning_background_color"
+	line_text_color_string: STRING is "editor.eiffel.colors.line_text_color"
+	line_background_color_string: STRING is "editor.eiffel.colors.line_background_color"
+	argument_text_color_string: STRING is "editor.general.colors.argument_text_color"
+	argument_background_color_string: STRING is "editor.general.colors.argument_background_color"
+	folder_text_color_string: STRING is "editor.general.colors.folder_text_color"
+	folder_background_color_string: STRING is "editor.general.colors.folder_background_color"
 
 	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper"
 			-- Is first letter of once or constant in upper case?
@@ -483,6 +529,10 @@ feature {NONE} -- Init colors and fonts.
 			colors.put (target_background_color_preference.value, target_background_color_id)
 			colors.put (warning_text_color_preference.value, warning_text_color_id)
 			colors.put (warning_background_color_preference.value, warning_background_color_id)
+			colors.put (argument_text_color_preference.value, argument_text_color_id)
+			colors.put (argument_background_color_preference.value, argument_background_color_id)
+			colors.put (folder_text_color_preference.value, folder_text_color_id)
+			colors.put (folder_background_color_preference.value, folder_background_color_id)
 		end
 
 	init_fonts is
@@ -539,6 +589,10 @@ feature {NONE} -- Initialization
 			target_background_color_preference := l_manager.new_color_preference_value (l_manager, target_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			warning_text_color_preference := l_manager.new_color_preference_value (l_manager, warning_text_color_string, create{EV_COLOR}.make_with_8_bit_rgb (200, 64, 0))
 			warning_background_color_preference := l_manager.new_color_preference_value (l_manager, warning_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			argument_text_color_preference := l_manager.new_color_preference_value (l_manager, argument_text_color_string, create{EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			argument_background_color_preference := l_manager.new_color_preference_value (l_manager, argument_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			folder_text_color_preference := l_manager.new_color_preference_value (l_manager, folder_text_color_string, create{EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			folder_background_color_preference := l_manager.new_color_preference_value (l_manager, folder_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 
 				-- Booleans			
 			underscore_is_separator_preference := l_manager.new_boolean_preference_value (l_manager, underscore_is_separator_string, False)
@@ -628,6 +682,10 @@ feature {NONE} -- Initialization
 			normal_text_color_preference.change_actions.extend (agent update)
 			warning_text_color_preference.change_actions.extend (agent update)
 			warning_background_color_preference.change_actions.extend (agent update)
+			argument_text_color_preference.change_actions.extend (agent update)
+			argument_background_color_preference.change_actions.extend (agent update)
+			folder_text_color_preference.change_actions.extend (agent update)
+			folder_background_color_preference.change_actions.extend (agent update)
 
 			initialize_autocomplete_prefs
 
@@ -1086,6 +1144,9 @@ invariant
 	customized_string_3_preference_not_void: customized_string_3_preference /= Void
 	warning_text_color_preference_attached: warning_text_color_preference /= Void
 	warning_background_color_preference_attached: warning_background_color_preference /= Void
+	argument_text_color_preference_attached: argument_text_color_preference /= Void
+	argument_background_color_preference_attached: argument_background_color_preference /= Void
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

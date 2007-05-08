@@ -259,7 +259,6 @@ feature -- Process
 			l_text_style: EB_TEXT_EDITOR_TOKEN_STYLE
 			l_count: INTEGER
 			l_text: LIST [EDITOR_TOKEN]
-			l_group_stone: CLUSTER_STONE
 			l_group: CONF_GROUP
 			l_path: STRING
 			l_name: STRING
@@ -292,11 +291,8 @@ feature -- Process
 							if l_should_put_separator then
 								l_text_internal.extend (editor_token_for_dot)
 							end
-							l_text_style.set_source_text (l_name)
+							l_text_style.set_folder_text (l_name, l_path, l_group)
 							l_text := l_text_style.text
-							create l_group_stone.make_subfolder (l_group, l_path, l_name)
-							check not l_text.is_empty end
-							l_text.first.set_pebble (l_group_stone)
 							l_text_internal.append (l_text)
 							l_should_put_separator := True
 						end

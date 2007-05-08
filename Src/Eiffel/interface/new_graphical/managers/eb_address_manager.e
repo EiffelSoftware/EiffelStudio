@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 				hbox.extend (class_address)
 			else
 				-- Then we build a `class_addre
-				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (class_address)
+				create {SD_TOOL_BAR_RESIZABLE_ITEM} l_item.make (class_address)
 				l_item.set_description ("Class address")
 				l_item.set_name (l_item.description)
 
@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 			if mode then
 				hbox.extend (feature_address)
 			else
-				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (feature_address)
+				create {SD_TOOL_BAR_RESIZABLE_ITEM} l_item.make (feature_address)
 				l_item.set_description ("Feature address")
 				l_item.set_name (l_item.description)
 				tool_bar_items.extend (l_item)
@@ -271,8 +271,14 @@ feature -- Access
 
 	new_view_points_tool_bar_item: SD_TOOL_BAR_ITEM is
 			-- New view points docking widget
+		local
+			l_combo: EV_COMBO_BOX
 		do
-			create {SD_TOOL_BAR_WIDGET_ITEM} Result.make (view_points_widget)
+			l_combo := view_points_combo
+			if l_combo.parent /= Void then
+				l_combo.parent.prune (l_combo)
+			end
+			create {SD_TOOL_BAR_RESIZABLE_ITEM} Result.make (l_combo)
 			Result.set_name ("Viewpoints")
 			Result.set_description (Result.name)
 		ensure

@@ -268,7 +268,7 @@ feature -- PND
 			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
 				pnd_row_imp ?= i_th (a_row_index).implementation
-				if not pnd_row_imp.able_to_transport (a_button) then
+				if pnd_row_imp /= Void and then not (pnd_row_imp.able_to_transport (a_button) or pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
 			end

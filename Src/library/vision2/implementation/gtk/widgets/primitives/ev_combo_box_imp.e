@@ -27,7 +27,10 @@ inherit
 			pre_pick_steps,
 			call_pebble_function,
 			enable_transport,
-			hide_border
+			hide_border,
+			pebble_source,
+			ready_for_pnd_menu,
+			able_to_transport
 		redefine
 			initialize,
 			make,

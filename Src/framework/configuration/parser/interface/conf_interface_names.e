@@ -498,6 +498,7 @@ feature -- Validation warnings
 	group_name_empty: STRING is "Cannot rename group because the name is empty."
 	root_no_class: STRING is "Cannot specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
 	root_none: STRING is "Root class has to be specified if the target is not extended by another target."
+	root_invalid_cluster: STRING is "Root cluster name is invalid."
 	root_invalid_class: STRING is "Root class name is invalid."
 	root_invalid_feature: STRING is "Root feature name is invalid."
 	cluster_dependency_group_not_exist: STRING is "Cannot add dependency. There is no group with this name."

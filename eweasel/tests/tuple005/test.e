@@ -61,6 +61,24 @@ feature
 			create l_mem
 			l_mem.collect
 			l_mem.full_collect
+
+			test_single_element_comparison
+		end
+
+	test_single_element_comparison is
+		local
+			l_tuple1, l_tuple2: TUPLE [STRING]
+			l_str1, l_str2: STRING
+		do
+			l_str1 := "abc"
+			l_str2 := "123"
+			l_tuple1 := [l_str1]
+			l_tuple2 := [l_str2]
+			l_tuple1.compare_objects
+			l_tuple2.compare_objects
+			io.put_string ("Single element comparison: ")
+			io.put_string (l_tuple1.is_equal (l_tuple2).out)
+			io.new_line
 		end
 
 end -- class TEST

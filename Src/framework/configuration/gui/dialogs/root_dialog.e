@@ -143,34 +143,38 @@ feature {NONE} -- Agents
 			l_root: CONF_ROOT
 			l_cluster, l_class, l_feature: STRING
 			wd: EB_WARNING_DIALOG
-
+			l_checker: EIFFEL_SYNTAX_CHECKER
 		do
 			if all_classes.is_selected then
 				create l_root.make (Void, Void, Void, True)
 			else
 				l_cluster := cluster_name.text.to_string_8
-				if l_cluster.is_empty then
-					l_cluster := Void
-				end
 				l_class := class_name.text.to_string_8
 				l_feature := feature_name.text.to_string_8
-				if l_feature.is_empty then
-					l_feature := Void
-				end
-				if not l_class.is_empty then
-					if l_feature /= Void and then not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (l_feature) then
-						create wd.make_with_text (conf_interface_names.root_invalid_feature)
-					elseif not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_type_name (l_class) then
-																-- use vclass type name because something like ROOT[INTEGER] is allowed!
-						create wd.make_with_text (conf_interface_names.root_invalid_class)
-					else
-						create l_root.make (l_cluster, l_class, l_feature, False)
+
+					-- Check validity of l_cluster, l_class and l_feature.
+				create l_checker
+				if not l_cluster.is_empty and not l_checker.is_valid_group_name (l_cluster) then
+					create wd.make_with_text (conf_interface_names.root_invalid_cluster)
+				elseif not l_class.is_empty and not l_checker.is_valid_class_type_name (l_class) then
+					create wd.make_with_text (conf_interface_names.root_invalid_class)
+				elseif not l_feature.is_empty and not l_checker.is_valid_feature_name (l_feature) then
+					create wd.make_with_text (conf_interface_names.root_invalid_feature)
+				else
+					if l_cluster.is_empty then
+						l_cluster := Void
 					end
-				elseif l_cluster /= Void or l_feature /= Void then
-					create wd.make_with_text (conf_interface_names.root_no_class)
-				elseif target.child_targets.is_empty then
-						-- we don't have any child targets, so we need a root class.
-					create wd.make_with_text (conf_interface_names.root_none)
+					if l_feature.is_empty then
+						l_feature := Void
+					end
+					if not l_class.is_empty then
+						create l_root.make (l_cluster, l_class, l_feature, False)
+					elseif l_cluster /= Void or l_feature /= Void then
+						create wd.make_with_text (conf_interface_names.root_no_class)
+					elseif target.child_targets.is_empty then
+							-- we don't have any child targets, so we need a root class.
+						create wd.make_with_text (conf_interface_names.root_none)
+					end
 				end
 			end
 

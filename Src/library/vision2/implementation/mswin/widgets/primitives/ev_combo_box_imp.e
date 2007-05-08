@@ -711,6 +711,9 @@ feature {NONE} -- Implementation
 
 					-- Remove the text field and create a combo.
 				create combo.make_with_combo (Current)
+				if private_font /= Void then
+					set_font (private_font)
+				end
 				if not sensitive then
 					disable_sensitive
 				end
@@ -751,6 +754,9 @@ feature {NONE} -- Implementation
 					-- Remove the combo and create a text field.
 				create combo.make_with_combo (Current)
 				create text_field.make_with_combo (Current)
+				if private_font /= Void then
+					set_font (private_font)
+				end
 				if not sensitive then
 					disable_sensitive
 				end

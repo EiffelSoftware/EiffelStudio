@@ -64,6 +64,7 @@ feature{NONE} -- Implementation
 			l_target: QL_TARGET
 			l_ql_code_item: QL_CODE_STRUCTURE_ITEM
 			l_line: QL_LINE
+			l_cursors: like cursors_for_item
 		do
 			if a_item.is_class then
 				l_class ?= a_item
@@ -92,7 +93,8 @@ feature{NONE} -- Implementation
 				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_i, False)
 			elseif a_item.is_code_structure then
 				l_ql_code_item ?= a_item
-				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, appearance_for_item (a_item), False)
+				l_cursors := cursors_for_item (a_item)
+				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, appearance_for_item (a_item), False, l_cursors.cursor, l_cursors.x_cursor)
 			else
 				a_writer.add_string (a_item.name)
 			end
@@ -113,6 +115,14 @@ feature{NONE} -- Implementation
 			elseif a_item.is_assertion then
 				Result := [editor_font_id, assertion_tag_text_color_id, assertion_tag_background_color_id]
 			end
+		end
+
+	cursors_for_item (a_item: QL_ITEM): TUPLE [cursor: EV_POINTER_STYLE; x_cursor: EV_POINTER_STYLE] is
+			-- Cursor and X cursor for `a_item'
+		require
+			a_item_attached: a_item /= Void
+		do
+			Result := [cursors.cur_object, cursors.cur_x_object]
 		end
 
 indexing

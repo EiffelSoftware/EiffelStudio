@@ -448,6 +448,7 @@ feature{NONE} -- Actions
 			l_writer: like token_writer
 			l_appearance: like feature_appearance
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+			l_tokens: LIST [EDITOR_TOKEN]
 		do
 			l_writer := token_writer
 			l_writer.new_line
@@ -457,7 +458,7 @@ feature{NONE} -- Actions
 			else
 				l_appearance := feature_appearance
 			end
-			l_writer.process_ast ("#" + a_index.out, a_accessor, a_written_class, l_appearance, True)
+			l_writer.process_ast ("#" + a_index.out, a_accessor, a_written_class, l_appearance, True, cursors.cur_feature, cursors.cur_x_feature)
 			create l_component.make (l_writer.last_line.content, 2)
 
 				-- Setup general tooltip.

@@ -86,6 +86,31 @@ feature -- Accepting cursor shapes
 			create Result.make_with_pixel_buffer (icon_cursors.context_assembly_cursor_cursor_buffer, 16, 16)
 		end
 
+	frozen cur_metric_generic: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_generic_cursor, 16, 16)
+		end
+
+	frozen cur_metric_line: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_line_cursor, 16, 16)
+		end
+
+	frozen cur_metric_feature: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_feature_cursor, 16, 16)
+		end
+
+	frozen cur_metric_local: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_local_cursor, 16, 16)
+		end
+
+	frozen cur_metric_assertion: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_assertion_cursor, 16, 16)
+		end
+
 feature -- Non-Accepting cursor shapes
 
 	frozen cur_x_class: EV_POINTER_STYLE is
@@ -161,6 +186,31 @@ feature -- Non-Accepting cursor shapes
 	frozen cur_x_assembly: EV_POINTER_STYLE is
 		once
 			create Result.make_with_pixel_buffer (icon_cursors.context_disabled_assembly_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_metric_generic: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_disabled_generic_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_metric_feature: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_disabled_feature_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_metric_line: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_disabled_line_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_metric_local: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_disabled_local_cursor_cursor_buffer, 16, 16)
+		end
+
+	frozen cur_x_metric_assertion: EV_POINTER_STYLE is
+		once
+			create Result.make_with_pixel_buffer (icon_cursors.metrics_disabled_assertion_cursor_cursor_buffer, 16, 16)
 		end
 
 feature -- Other cursor

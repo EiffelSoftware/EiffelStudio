@@ -99,13 +99,31 @@ feature -- Access
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Cluster
+			if group.is_cluster then
+				Result := cursors.cur_cluster
+			elseif group.is_library then
+				Result := cursors.cur_library
+			elseif group.is_assembly then
+				Result := cursors.cur_assembly
+			end
+		ensure then
+			result_attached: Result /= Void
 		end
 
 	x_stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := Cursors.cur_X_cluster
+			Result := Cursors.cur_Cluster
+			if group.is_cluster then
+				Result := cursors.cur_x_cluster
+			elseif group.is_library then
+				Result := cursors.cur_x_library
+			elseif group.is_assembly then
+				Result := cursors.cur_x_assembly
+			end
+		ensure then
+			result_attached: Result /= Void
 		end
 
  	synchronized_stone: STONE is

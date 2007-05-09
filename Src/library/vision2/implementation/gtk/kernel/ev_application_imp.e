@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_mode := debug_mode
-				enable_ev_gtk_log (0)
+				enable_ev_gtk_log (1)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 
@@ -109,6 +109,16 @@ feature {NONE} -- Event loop
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	set_currently_shown_control (a_control: EV_PICK_AND_DROPABLE)
+			-- Set `currently_shown_control' to `a_control'.
+		do
+			currently_shown_control := a_control
+		end
+
+	currently_shown_control: EV_PICK_AND_DROPABLE
+		-- Graphical objects that is presently shown
+		-- Used for holding a reference do not get garbage collected.
 
 	focused_widget: EV_WIDGET is
 			-- Widget with keyboard focus
@@ -430,6 +440,12 @@ feature {EV_ANY_I} -- Implementation
 					when GDK_UNMAP then
 						debug ("GDK_EVENT")
 							print ("GDK_UNMAP%N")
+						end
+						l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
+						if l_gtk_widget_imp /= Void then
+							if currently_shown_control = l_gtk_widget_imp.interface then
+								set_currently_shown_control (Void)
+							end
 						end
 					when GDK_SELECTION_CLEAR then
 						debug ("GDK_EVENT")

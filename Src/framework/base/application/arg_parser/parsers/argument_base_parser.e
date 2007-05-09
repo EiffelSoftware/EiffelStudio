@@ -806,7 +806,6 @@ feature {NONE} -- Validation
 				end
 			end
 		ensure
---			a_groups_unmoved: old a_groups /= Void implies a_groups.cursor.is_equal (old a_groups.cursor)
 			values_unmoved: values.cursor.is_equal (old values.cursor)
 		end
 
@@ -898,6 +897,7 @@ feature {NONE} -- Validation
 			Result := l_extend_groups
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
 		end
 
 	frozen expanded_switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
@@ -1272,8 +1272,6 @@ feature {NONE} -- Output
 					l_value_switches.forth
 				end
 			end
-		ensure
-			available_options_unmoved: old available_switches /= Void implies available_switches.cursor.is_equal (old available_switches.cursor)
 		end
 
 feature {NONE} -- Usage
@@ -1509,6 +1507,7 @@ feature {NONE} -- Switches
 			Result.extend (l_switch)
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
 		end
 
 	frozen available_visible_switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
@@ -1536,6 +1535,7 @@ feature {NONE} -- Switches
 			end
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
@@ -1543,10 +1543,7 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_valid_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
-				do
-					Result := a_item /= Void
-				end)
+			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
@@ -1554,10 +1551,7 @@ feature {NONE} -- Switches
 		once
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARGUMENT_GROUP): BOOLEAN
-				do
-					Result := a_item /= Void
-				end)
+			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
 	switch_appurtenances: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH] is
@@ -1566,25 +1560,11 @@ feature {NONE} -- Switches
 		once
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_attached_items: Result /= Void implies Result.linear_representation.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
-				do
-					Result := a_item /= Void
-				end)
+			result_contains_attached_items: Result /= Void implies not Result.linear_representation.has (Void)
 			result_contains_attached_valid_items: Result /= Void implies Result.linear_representation.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
 				do
-					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN do Result := a_item2 /= Void end)
+					Result := not a_item.has (Void)
 				end)
-			not_result_contains_key_as_item: Result /= Void implies (agent (a_table: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]): BOOLEAN
-				local
-					l_cursor: CURSOR
-				do
-					Result := True
-					l_cursor := a_table.cursor
-					from a_table.start until a_table.after or not Result loop
-						Result := not a_table.item_for_iteration.has (a_table.key_for_iteration)
-					end
-					a_table.go_to (l_cursor)
-				end).item ([Result])
 		end
 
 feature {NONE} -- Formatting
@@ -1653,7 +1633,11 @@ feature {NONE} -- Constants
 	switch_prefixes: ARRAY [CHARACTER] is
 			-- Prefixes used to indicate a command line switch
 		once
-			Result := <<'-', '/'>>
+			if {PLATFORM}.is_windows then
+				Result := <<'-', '/'>>
+			else
+				Result := <<'-'>>
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

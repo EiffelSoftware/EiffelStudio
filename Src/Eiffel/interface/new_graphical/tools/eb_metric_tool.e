@@ -60,16 +60,16 @@ feature -- Initialization
 			eiffel_project.manager.close_agents.extend (notify_project_unloaded_agent)
 
 			metric_notebook.extend (metric_evaluation_panel)
+			metric_notebook.extend (detail_result_panel)
 			metric_notebook.extend (new_metric_panel)
 			metric_notebook.extend (metric_archive_panel)
-			metric_notebook.extend (detail_result_panel)
 			metric_notebook.extend (metric_history_panel)
 
 				-- Setup tab names			
 			metric_notebook.set_item_text (metric_notebook.i_th (1), metric_names.t_evaluation_tab)
-			metric_notebook.set_item_text (metric_notebook.i_th (2), metric_names.t_definition_tab)
-			metric_notebook.set_item_text (metric_notebook.i_th (3), metric_names.t_archive_tab)
-			metric_notebook.set_item_text (metric_notebook.i_th (4), metric_names.t_detail_result_tab)
+			metric_notebook.set_item_text (metric_notebook.i_th (2), metric_names.t_detail_result_tab)
+			metric_notebook.set_item_text (metric_notebook.i_th (3), metric_names.t_definition_tab)
+			metric_notebook.set_item_text (metric_notebook.i_th (4), metric_names.t_archive_tab)
 			metric_notebook.set_item_text (metric_notebook.i_th (5), metric_names.t_history_tab)
 
 			metric_notebook.selection_actions.extend (agent on_tab_change)

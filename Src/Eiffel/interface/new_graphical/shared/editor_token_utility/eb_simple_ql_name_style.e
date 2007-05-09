@@ -121,8 +121,17 @@ feature{NONE} -- Implementation
 			-- Cursor and X cursor for `a_item'
 		require
 			a_item_attached: a_item /= Void
+		local
+			l_cursors: like cursors
 		do
-			Result := [cursors.cur_object, cursors.cur_x_object]
+			l_cursors := cursors
+			if a_item.is_argument or else a_item.is_local then
+				Result := [l_cursors.cur_metric_local, l_cursors.cur_x_metric_local]
+			elseif a_item.is_assertion then
+				Result := [l_cursors.cur_metric_assertion, l_cursors.cur_x_metric_assertion]
+			elseif a_item.is_generic then
+				Result := [l_cursors.cur_metric_generic, l_cursors.cur_x_metric_generic]
+			end
 		end
 
 indexing

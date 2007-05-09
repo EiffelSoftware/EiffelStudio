@@ -11,6 +11,10 @@ class
 
 inherit
 	CLASSI_STONE
+		redefine
+			stone_cursor,
+			x_stone_cursor
+		end
 
 create
 	make_with_line
@@ -31,6 +35,20 @@ feature -- Access
 
 	line_number: INTEGER
 			-- Line number
+
+	stone_cursor: EV_POINTER_STYLE is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
+		once
+			Result := Cursors.cur_metric_line
+		end
+
+	x_stone_cursor: EV_POINTER_STYLE is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		once
+			Result := Cursors.cur_x_metric_line
+		end
 
 feature -- Status report
 

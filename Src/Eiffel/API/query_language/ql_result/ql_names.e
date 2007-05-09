@@ -199,8 +199,8 @@ feature -- Path marker
 	ql_class_path_opener: STRING is "{"
 	ql_class_path_closer: STRING is "}"
 
-	ql_feature_path_opener: STRING is "`"
-	ql_feature_path_closer: STRING is "'"
+	ql_feature_path_opener: STRING is ""
+	ql_feature_path_closer: STRING is ""
 
 	ql_generic_path_opener: STRING is "["
 	ql_generic_path_closer: STRING is "]"

@@ -104,6 +104,10 @@ feature {NONE} -- Initialization
 
 			grid.build_delayed_cleaning
 			grid.set_delayed_cleaning_action (agent clean_breakpoints_info)
+
+			grid.set_configurable_target_menu_mode
+			grid.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
+
 			widget := box
 		end
 

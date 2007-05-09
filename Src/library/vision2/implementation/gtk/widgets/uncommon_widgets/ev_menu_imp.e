@@ -59,9 +59,7 @@ feature -- Basic operations
 		do
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
-			if not interface.is_empty then
-				app_implementation.do_once_on_idle (agent c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time))
-			end
+			show_at (Void, pc.x + bw, pc.y + bw)
 		end
 
 	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is

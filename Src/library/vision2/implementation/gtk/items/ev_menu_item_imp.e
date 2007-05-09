@@ -40,13 +40,10 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN = False
 			-- Does `a_widget' need an event box?
-		do
-			Result := False
-		end
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
 	make (an_interface: like interface) is
 			-- Create a menu.
@@ -54,7 +51,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
 			pixmapable_imp_initialize
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (c_object, pixmap_box)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
 		end
 
 	initialize is
@@ -63,11 +60,11 @@ feature {NONE} -- Initialization
 			box: POINTER
 		do
 			Precursor {EV_ITEM_IMP}
-			real_signal_connect_after (visual_widget, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
+			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (menu_item, box)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 
 			if pixmap_box = default_pointer then
@@ -93,6 +90,14 @@ feature -- Element change
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 		end
 
+feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
+
+	menu_item: POINTER
+			-- Pointer to the GtkMenuItem widget.
+		do
+			Result := c_object
+		end
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	accelerators_enabled: BOOLEAN is True
@@ -108,7 +113,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 				{EV_GTK_EXTERNALS}.gtk_menu_shell_deactivate (p_imp.list_widget)
 			end
-			{EV_GTK_EXTERNALS}.gtk_menu_item_deselect (c_object)
+			{EV_GTK_EXTERNALS}.gtk_menu_item_deselect (menu_item)
 			if select_actions_internal /= Void then
 				select_actions_internal.call (Void)
 			end

@@ -680,7 +680,6 @@ feature -- Basic operations
 			replace_strategy_internal.replace
 			replace_report := replace_strategy.replace_report
 		ensure
-			last_replaced_text_not_void: last_replaced_text_internal /= Void
 			is_replace_launched: is_replace_launched
 			replace_report_not_void: replace_report /= Void
 		end
@@ -881,9 +880,6 @@ feature {NONE} -- Implementation
 
 	replace_strategy_internal: MSR_REPLACE_STRATEGY
 			-- Replace strategy
-
-	last_replaced_text_internal: STRING
-			-- The last result replacement has conducted.
 
 invariant
 

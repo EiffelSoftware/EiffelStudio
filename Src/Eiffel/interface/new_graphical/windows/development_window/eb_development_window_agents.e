@@ -237,8 +237,13 @@ feature -- Agents
 		local
 			l_editor: EB_SMART_EDITOR
 			l_class_i_stone: CLASSI_STONE
+			l_editor_manager: EB_EDITORS_MANAGER
 		do
-			l_editor := develop_window.editors_manager.current_editor
+			l_editor_manager := develop_window.editors_manager
+			if l_editor_manager /= Void then
+				l_editor := l_editor_manager.current_editor
+			end
+
 			if l_editor /= Void then
 					-- If the class currently being edited had its read-only status changed
 					-- we made sure that the editor is updated accordingly.

@@ -1319,6 +1319,10 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
+					if Result /= Void then
+						output_grid.set_accept_cursor (Result.stone_cursor)
+						output_grid.set_deny_cursor (Result.x_stone_cursor)
+					end
 				end
 			end
 		end

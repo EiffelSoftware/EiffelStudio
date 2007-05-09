@@ -1617,7 +1617,7 @@ feature -- Custom search scope
 			-- Scope pebble function
 		local
 			l_class_i: CLASS_I
-			l_cluster_i: CLUSTER_I
+			l_cluster_i: CONF_GROUP
 			l_folder: EB_FOLDER
 		do
 			l_class_i ?= a_data
@@ -1625,10 +1625,10 @@ feature -- Custom search scope
 			l_folder ?= a_data
 			if l_class_i /= Void then
 				Result := stone_from_class_i (l_class_i)
-			elseif l_cluster_i /= Void then
-				create {CLUSTER_STONE}Result.make (l_cluster_i)
 			elseif l_folder /= Void then
 				create {CLUSTER_STONE}Result.make_subfolder (l_folder.cluster, l_folder.path, l_folder.name)
+			elseif l_cluster_i /= Void then
+				create {CLUSTER_STONE}Result.make (l_cluster_i)
 			end
 		end
 

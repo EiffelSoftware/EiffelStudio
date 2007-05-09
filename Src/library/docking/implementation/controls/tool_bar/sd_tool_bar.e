@@ -17,7 +17,7 @@ inherit
 				  screen_y, hide, show, is_displayed,parent,
 					pointer_motion_actions, pointer_button_release_actions,
 					enable_capture, disable_capture, has_capture,
-					x_position, y_position, destroy,
+					x_position, y_position, destroy, out,
 					set_minimum_width, set_minimum_height
 			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
 			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip, font
@@ -533,8 +533,18 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
+			l_platform: PLATFORM
+			l_capture_enabled: BOOLEAN
 		do
-			if pointer_entered then
+			-- Special handing for GTK.
+			-- Because on GTK, pointer leave actions doesn't have same behavior as Windows implementation.
+			-- This will cause `pointer_entered' flag not same between Windows and Gtk after pressed at SD_TOOL_BAR_RESIZABLE_ITEM end area.
+			create l_platform
+			if not l_platform.is_windows then
+				l_capture_enabled := has_capture
+			end
+
+			if pointer_entered or l_capture_enabled then
 				from
 					l_items := items
 					l_items.start
@@ -563,7 +573,7 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_TOOL_BAR on_pointer_press")
 			end
-			if a_button = 1 then
+			if a_button = {EV_POINTER_CONSTANTS}.left then
 				enable_capture
 				from
 					l_items := items
@@ -605,7 +615,7 @@ feature {NONE} -- Agents
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
 		do
-			if a_button = 1 then
+			if a_button = {EV_POINTER_CONSTANTS}.left then
 				disable_capture
 				internal_pointer_pressed := False
 				from

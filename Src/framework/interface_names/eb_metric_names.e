@@ -132,7 +132,7 @@ feature -- Titles
 	f_send_to_history: STRING_GENERAL is do Result := locale.translate ("Send last calculated metric value to history") end
 	t_hide_old_archive: STRING_GENERAL is do Result := locale.translate ("Hide archives more than ") end
 	t_days: STRING_GENERAL is do Result := locale.translate (" days old.") end
-	f_keep_archive_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when recalculating archive?") end
+	f_keep_archive_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when recalculating archive?%NIf yes, detailed result will be available by double clicking the icon in %"Result%" column in history result area after recalculation.") end
 	f_keep_metric_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when evaluating metric?") end
 	f_remove_detailed_result: STRING_GENERAL is do Result := locale.translate ("Remove detailed result?") end
 	t_detailed_result: STRING_GENERAL is do Result := locale.translate ("Result") end

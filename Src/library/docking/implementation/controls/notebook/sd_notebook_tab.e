@@ -394,16 +394,16 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		do
 			inspect
 				a_button
-			when 1 then
+			when {EV_POINTER_CONSTANTS}.left then
 				is_pointer_pressed := True
-				parent.enable_capture (Current)
+
 				l_drawer := internal_tab_drawer
 				if
 					l_drawer.is_top_side_tab
 					and internal_width > 0
 					and then l_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y)
 				then
-					-- For select actions, we don't call select actions.
+					-- For close actions, we don't call select actions.
 					if is_selected then
 						redraw_selected
 					else
@@ -412,8 +412,10 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				else
 					select_actions.call (Void)
 				end
-
-			when 3 then
+				
+				-- We enable capture after calling `select_actions', this will make debugger working in client programmers `select_actions'.
+				parent.enable_capture (Current)
+			when {EV_POINTER_CONSTANTS}.right then
 				select_actions.call (Void)
 				create l_menu.make (internal_notebook)
 				l_menu.show_at (parent, a_x, a_y)

@@ -15,7 +15,8 @@ inherit
 	EV_DRAWING_AREA_IMP
 		redefine
 			update_for_pick_and_drop,
-			interface
+			interface,
+			initialize
 		end
 
 	EV_SHARED_APPLICATION
@@ -25,6 +26,16 @@ inherit
 
 create
 	make
+
+feature -- Initialize
+
+	initialize
+			-- Initialize `Current'.
+		do
+			Precursor
+			enable_double_buffering
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+		end
 
 feature {NONE} -- Implementation
 

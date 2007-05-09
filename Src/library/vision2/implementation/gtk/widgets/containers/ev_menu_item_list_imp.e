@@ -26,7 +26,7 @@ inherit
 feature {EV_MENU_ITEM_IMP} -- implementation
 
 	list_widget: POINTER is
-			--
+			-- GtkMenuItem container for `Current'.
 		do
 			Result := c_object
 		end
@@ -103,8 +103,7 @@ feature {NONE} -- Implementation
 	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
 		do
---			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.menu_item, pos - 1)
-{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
+			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.menu_item, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)
 			an_item_imp.set_item_parent_imp (Current)

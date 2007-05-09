@@ -415,14 +415,14 @@ feature {NONE} -- Menu section, Granularity 2.
 				extend_debug_feature_menus (a_menu, l_feature_stone.e_feature)
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_stonec /= Void then
-				extend_basic_opening_menus (a_menu, l_stonec, False)
+				extend_basic_opening_menus (a_menu, l_stonec, True)
 				extend_separator (a_menu)
 				extend_class_formatter_menus (a_menu, l_stonec)
 				extend_class_refactoring_menus (a_menu, l_stonec)
 				extend_debug_class_menus (a_menu, l_stonec.e_class)
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_stonei /= Void then
-				extend_basic_opening_menus (a_menu, l_stonei, False)
+				extend_basic_opening_menus (a_menu, l_stonei, True)
 				extend_separator (a_menu)
 				extend_class_refactoring_menus (a_menu, l_stonei)
 				extend_add_to_menu (a_menu, l_stone)

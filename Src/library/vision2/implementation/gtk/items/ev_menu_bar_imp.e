@@ -24,20 +24,13 @@ inherit
 
 	EV_ANY_IMP
 		redefine
-			interface,
-			needs_event_box
+			interface
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
-
-	needs_event_box: BOOLEAN is
-			-- Does `a_widget' need an event box?
-		do
-			Result := False
-		end
 
 	make (an_interface: like interface) is
 		do

@@ -21,6 +21,7 @@ feature -- Building commands
 		local
 			l_toolbars_area: EV_VERTICAL_BOX
 			l_debugger: EB_DEBUGGER_MANAGER
+			l_file: RAW_FILE
 		do
 			create l_toolbars_area
 			develop_window.set_toolbars_area (l_toolbars_area)
@@ -35,9 +36,15 @@ feature -- Building commands
 			l_debugger ?= develop_window.debugger_manager
 			if l_debugger /= Void then
 				if not l_debugger.raised then
-					develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_config_tools_file)
+					create l_file.make (develop_window.docking_config_tools_file)
+					if l_file.exists then
+						develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_config_tools_file)
+					end
 				else
-					develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_debug_config_file)
+					create l_file.make (develop_window.docking_debug_config_file)
+					if l_file.exists then
+						develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_debug_config_file)
+					end
 				end
 			end
 		end

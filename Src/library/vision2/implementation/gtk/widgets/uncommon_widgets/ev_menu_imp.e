@@ -50,7 +50,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
-			couple_object_id_with_gtk_object (list_widget, object_id)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (menu_item)
 			{EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
@@ -91,6 +90,10 @@ feature -- Basic operations
 				l_y := a_y
 			end
 			if not interface.is_empty then
+					-- This is needed so that we can retrieve `Current' from the
+					-- GdkEvent when it is unmapped to remove the reference
+					-- of {EV_APPLICATION_IMP}.currently_shown_control
+				couple_object_id_with_gtk_object (list_widget, object_id)
 				app_implementation.set_currently_shown_control (interface)
 				app_implementation.do_once_on_idle (agent
 					c_gtk_menu_popup (list_widget,

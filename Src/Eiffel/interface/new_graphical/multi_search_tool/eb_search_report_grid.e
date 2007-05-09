@@ -43,6 +43,13 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EB_CONTEXT_MENU_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make
 
@@ -58,9 +65,18 @@ feature {NONE} -- Initialization
 			default_create
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			build_interface
+			set_configurable_target_menu_mode
+			set_configurable_target_menu_handler (agent context_menu_handler)
+			set_context_menu_factory (a_search_tool.develop_window.menus.context_menu_factory)
 		ensure
 			report_summary_string_not_void: report_summary_string /= Void
 			search_tool_set: search_tool = a_search_tool
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		do
+			context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
 		end
 
 feature -- Access

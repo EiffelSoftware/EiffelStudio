@@ -177,6 +177,8 @@ feature {NONE} -- Initialization
 			output_grid.pointer_button_press_item_actions.extend (agent item_pressed)
 			output_grid.key_press_actions.extend (agent key_pressed)
 			output_grid.mouse_wheel_actions.extend (agent mouse_wheel_received)
+			output_grid.set_configurable_target_menu_mode
+			output_grid.set_configurable_target_menu_handler (agent context_menu_handler)
 
 			create grid_border
 			grid_border.set_border_width (1)
@@ -228,6 +230,17 @@ feature {NONE} -- Initialization
 			preferences.editor_data.cluster_text_color_preference.change_actions.extend (colors_changed_agent)
 			preferences.editor_data.class_text_color_preference.change_actions.extend (colors_changed_agent)
 
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler.
+		local
+			l_win: EB_DEVELOPMENT_WINDOW
+		do
+			l_win := window_manager.last_focused_development_window
+			if l_win /= Void then
+				l_win.menus.context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
 		end
 
 feature {EB_SAVE_RESULT_CMD} -- Save commands

@@ -11,8 +11,6 @@ class
 inherit
 
 	EB_MULTI_SEARCH_TOOL_IMP
-		export
-			{MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_SEARCH_REPORT_TOOL} develop_window
 		redefine
 			make,
 			reverse,

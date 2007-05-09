@@ -64,6 +64,20 @@ feature {EV_ANY_I} -- Access
 			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
 
+	frozen couple_object_id_with_gtk_object (a_gtk_object: POINTER; a_object_id: INTEGER)
+			-- Associate GtkObject `a_gtk_object' with object id `a_object_id'
+		external
+			"C inline use %"ev_any_imp.h%""
+		alias
+			"[
+	            g_object_set_data (
+	                G_OBJECT ($a_gtk_object),
+	                "eif_oid",
+	                (gpointer) (rt_int_ptr) $a_object_id
+	            );
+			]"
+		end
+
 	frozen eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		external

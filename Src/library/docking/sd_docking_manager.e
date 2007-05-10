@@ -347,12 +347,25 @@ feature -- Command
 
 	destroy is
 			-- Destroy all underline objects.
+		local
+			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 		do
 			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
 			agents.destroy
 			tool_bar_manager.destroy
 			contents.wipe_out
+
+			-- We have to destroy floating zones for Linux implementation, on Windows not needed.
+			from
+				l_floating_zones := query.floating_zones
+				l_floating_zones.start
+			until
+				l_floating_zones.after
+			loop
+				l_floating_zones.item.destroy
+				l_floating_zones.forth
+			end
 		end
 
 feature -- Contract support

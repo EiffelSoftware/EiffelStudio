@@ -1081,6 +1081,7 @@ feature {NONE} -- Implementation
 					process_cluster_callback (1)
 				else
 					create choice.make_default (address_dialog, agent process_cluster_callback (?))
+					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names, cluster_pixmaps)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
@@ -1149,6 +1150,7 @@ feature {NONE} -- Implementation
 					process_class_callback (1)
 				else
 					create choice.make_default (address_dialog, agent process_class_callback (?))
+					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names, class_pixmaps)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
@@ -1189,6 +1191,7 @@ feature {NONE} -- Implementation
 					process_feature_callback (1)
 				else
 					create choice.make_default (address_dialog, agent process_feature_callback (?))
+					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names, feature_pixmaps)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)

@@ -174,6 +174,11 @@ feature {EV_ANY_I} -- Basic operations
 				end
 				if wel_win /= Void then
 					wel_point.client_to_screen (wel_win)
+				else
+						-- If no Window found, we still try to locate the window below the current
+						-- coordinate. That way the window won't loose its focus due to EV_POPUP_MENU_HANDLER
+						-- creating a top window.
+					wel_win ?= wel_point.window_at
 				end
 				create l_popup.make_with_menu (Current, wel_win)
 				show_track (wel_point.x, wel_point.y, l_popup)

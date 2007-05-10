@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} has_focus, width, height, is_destroyed, is_displayed
-			{SD_OPEN_CONFIG_MEDIATOR} destroy
+			{SD_OPEN_CONFIG_MEDIATOR, SD_DOCKING_MANAGER} destroy
 		undefine
 			initialize,
 			Identifier_path_separator,

@@ -1,0 +1,16 @@
+test_name field-attribute-test
+test_description Tests an expanded's fields are correctly marked up with an defined custom attributes
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw lib_wrap.e $CLUSTER lib_wrap.e
+copy_raw find_data.e $CLUSTER find_data.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

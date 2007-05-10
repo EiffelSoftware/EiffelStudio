@@ -274,10 +274,18 @@ feature -- Command
 		local
 			l_box: EV_BOX
 			l_parent: SD_TOOL_BAR_ROW
+			l_direction: INTEGER
 		do
 			last_state.set_position (zone.position)
 			last_state.set_size (zone.size)
-			last_state.set_container_direction (zone.docking_manager.tool_bar_manager.container_direction (zone))
+			l_direction := zone.docking_manager.tool_bar_manager.container_direction (zone)
+
+			if not (create {SD_ENUMERATION}).is_direction_valid (l_direction) then
+				-- Maybe `zone' can't be found at the moment, don't know exactly why now, see bug#12611.
+				-- We set top as default. Larry 5/10/2007
+				l_direction := {SD_ENUMERATION}.top
+			end
+			last_state.set_container_direction (l_direction)
 
 			l_box := zone.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
 			l_parent ?= zone.tool_bar.parent

@@ -35,10 +35,9 @@ feature {NONE} -- Initialize
 			-- Build all the tool's widgets.
 		local
 			vbox: EV_VERTICAL_BOX
-			search_box: EV_VERTICAL_BOX
-			replace_box: EV_VERTICAL_BOX
+			search_box: EV_HORIZONTAL_BOX
+			replace_box: EV_HORIZONTAL_BOX
 			label, label_search: EV_LABEL
-			size: INTEGER
 			scope_tab: EV_BOX
 			report_box: EV_BOX
 			frame: EV_FRAME
@@ -48,65 +47,47 @@ feature {NONE} -- Initialize
 			option_frame: EV_FRAME
 		do
 					-- Search box
-			create label_search.make_with_text (Interface_names.l_Search_for)
+			create label_search.make_with_text (Interface_names.l_search_for)
 			label_search.align_text_left
-			size := label_search.minimum_width
 
 			create keyword_field
-			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
+			keyword_field.set_minimum_width (
+				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
 
 			create search_box
-			search_box.set_padding (1)
-			create hbox
-			search_box.extend (hbox)
-			hbox.extend (label_search)
-			hbox.disable_item_expand (label_search)
-
-			hbox.extend (keyword_field)
-			create cell
-			cell.set_minimum_width (3)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
+			search_box.set_padding (2)
+			search_box.extend (label_search)
+			search_box.disable_item_expand (label_search)
+			search_box.extend (keyword_field)
 			create search_button.make_with_text (interface_names.b_search)
 			search_button.disable_sensitive
-			hbox.extend (search_button)
-			hbox.disable_item_expand (search_button)
+			search_box.extend (search_button)
+			search_box.disable_item_expand (search_button)
 
 					-- Replace box
 			create replace_combo_box
-			replace_combo_box.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
-
-			create replace_check_button.make_with_text (Interface_names.l_Replace_with)
+			replace_combo_box.set_minimum_width (
+				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
 
 			create replace_button.make_with_text (interface_names.b_replace)
 
 			create replace_box
-			create hbox
-			replace_box.extend (hbox)
-			replace_box.disable_item_expand (hbox)
+			replace_box.set_padding (2)
 			create label.make_with_text (interface_names.l_replace_with)
+			replace_box.extend (label)
+			replace_box.disable_item_expand (label)
+			replace_box.extend (replace_combo_box)
+			replace_box.extend (replace_button)
+			replace_box.disable_item_expand (replace_button)
 
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
-			label_search.set_minimum_width (label.width)
-
-			hbox.extend (replace_check_button)
-			replace_check_button.hide
-			hbox.disable_item_expand (replace_check_button)
-			hbox.extend (replace_combo_box)
-			size := label.width.max (size) + replace_combo_box.width
-
-			create cell
-			cell.set_minimum_width (3)
-			hbox.extend (cell)
-			hbox.disable_item_expand (cell)
-
-			hbox.extend (replace_button)
-			hbox.disable_item_expand (replace_button)
+				-- Ensures alignments of combo boxes by making sure that their preceeding 
+				-- labels have the same width.
+			label_search.set_minimum_width (label.width.max (label_search.minimum_width))
+			label.set_minimum_width (label_search.minimum_width)
 
 					-- Options and replace all
 			create option_and_replace_all_box
-			create option_frame.make_with_text (interface_names.l_Options)
+			create option_frame.make_with_text (interface_names.l_options)
 
 			option_and_replace_all_box.extend (option_frame)
 			create hbox
@@ -120,16 +101,16 @@ feature {NONE} -- Initialize
 			create incremental_search_button.make_with_text ("Have not added to search panel")
 
 				-- Option "Match case"
-			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
+			create case_sensitive_button.make_with_text (Interface_names.l_match_case)
 
 				-- Option "Whole word"
-			create whole_word_button.make_with_text (Interface_names.l_Whole_word)
+			create whole_word_button.make_with_text (Interface_names.l_whole_word)
 
 				-- Option "Use regular expression"
-			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
+			create use_regular_expression_button.make_with_text (Interface_names.l_use_regular_expression)
 
 				-- Option "Search backward"
-			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
+			create search_backward_button.make_with_text (Interface_names.l_search_backward)
 
 			create vbox
 			vbox.extend (case_sensitive_button)
@@ -155,11 +136,6 @@ feature {NONE} -- Initialize
 			create cell
 			cell.set_minimum_width (10)
 			hbox.extend (cell)
-
-			if option_frame.width < size then
-				-- If system font size very large, we don't set minimum widh to make sure text is displayed.
-				option_frame.set_minimum_width (size)
-			end
 
 			create replace_all_click_button.make_with_text (interface_names.b_replace_all)
 
@@ -223,19 +199,19 @@ feature {NONE} -- Initialize
 			l_hbox: EV_HORIZONTAL_BOX
 		do
 				-- Option "Current Editor"		
-			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
+			create current_editor_button.make_with_text (Interface_names.l_current_editor)
 
 				-- Option "Whole Project"
-			create whole_project_button.make_with_text (Interface_names.l_Whole_project)
+			create whole_project_button.make_with_text (Interface_names.l_whole_project)
 
 				-- Option "Scope"
-			create custom_button.make_with_text (Interface_names.l_Custom)
+			create custom_button.make_with_text (Interface_names.l_custom)
 
 				-- Option "Subcluster"
-			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
+			create search_subcluster_button.make_with_text (Interface_names.l_sub_clusters)
 
 				-- Option "Compiled class"
-			create search_compiled_class_button.make_with_text (Interface_names.l_Compiled_class)
+			create search_compiled_class_button.make_with_text (Interface_names.l_compiled_class)
 
 				-- Option list scope
 			create scope_list.default_create
@@ -243,15 +219,15 @@ feature {NONE} -- Initialize
 			scope_list.set_pick_and_drop_mode
 
 				-- Add button
-			create add_button.make_with_text (interface_names.b_Add)
+			create add_button.make_with_text (interface_names.b_add)
 			layout_constants.set_default_width_for_button (add_button)
 
 				-- Remove button
-			create remove_button.make_with_text (interface_names.b_Remove)
+			create remove_button.make_with_text (interface_names.b_remove)
 			layout_constants.set_default_width_for_button (remove_button)
 
 				-- Remove all button
-			create remove_all_button.make_with_text (interface_names.b_Remove_all)
+			create remove_all_button.make_with_text (interface_names.b_remove_all)
 			layout_constants.set_default_width_for_button (remove_all_button)
 
 			create Result
@@ -360,19 +336,19 @@ feature -- EB_TOOL
 	title: STRING_GENERAL is
 			-- Title of the tool
 		do
-			Result := Interface_names.t_Search_tool
+			Result := Interface_names.t_search_tool
 		end
 
 	title_for_pre: STRING is
 			-- Title for prefence, STRING_8
 		do
-			Result := Interface_names.to_Search_tool
+			Result := Interface_names.to_search_tool
 		end
 
 	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
-			Result := Interface_names.m_Search_tool
+			Result := Interface_names.m_search_tool
 		end
 
 	pixmap: EV_PIXMAP is
@@ -404,25 +380,6 @@ feature -- EB_TOOL
 				end
 			end
 			keyword_field.set_focus
-		end
-
-	mode_is_search: BOOLEAN is
-			-- Are replace fields/buttons inactive ?
-		do
-			Result := not replace_check_button.is_selected
-		end
-
-	set_mode_is_search (value: BOOLEAN) is
-			-- Show/hide replace field according to `value'
-		do
-			if value then
-				if replace_check_button.is_selected then
-					replace_check_button.disable_select
-					--switch_mode
-				end
-			elseif not replace_check_button.is_selected then
-				replace_check_button.enable_select
-			end
 		end
 
 	show is
@@ -507,9 +464,6 @@ feature -- Widgets
 
 	search_button: EV_BUTTON
 			-- Search button
-
-	replace_check_button : EV_CHECK_BUTTON
-			-- Replace check button
 
 	replace_button: EV_BUTTON
 			-- Replace button
@@ -669,7 +623,6 @@ feature {NONE} -- Destroy behavior.
 			notebook := Void
 			whole_word_button := Void
 			search_button := Void
-			replace_check_button := Void
 			replace_button := Void
 			search_backward_button := Void
 			options := Void

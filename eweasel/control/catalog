@@ -330,7 +330,7 @@ test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
 test	vtcg-expanded	valid210 tcf pass validity
 test	vtcg-generic	valid211 tcf pass validity
 test	wrong-vgcc		valid212 tcf pass validity
-
+test	named-tuple-convert-conformance		valid213 tcf fail validity
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system validity

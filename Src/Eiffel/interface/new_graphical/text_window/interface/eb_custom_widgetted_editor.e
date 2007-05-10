@@ -416,9 +416,6 @@ feature -- Search commands
 			-- Display search tool if necessary.
 		do
 			if search_tool /= Void then
-				if not search_tool.mode_is_search then
-					search_tool.set_mode_is_search (True)
-				end
 				prepare_search_tool (False)
 			end
 		end
@@ -427,9 +424,6 @@ feature -- Search commands
 			-- Display search tool (with Replace field) if necessary.
 		do
 			if search_tool /= Void then
-				if search_tool.mode_is_search then
-					search_tool.set_mode_is_search (False)
-				end
 				prepare_search_tool (True)
 			end
 		end
@@ -491,7 +485,7 @@ feature {NONE} -- Implementation
 			l_search_tool := search_tool
 			l_search_tool.set_check_class_succeed (True)
 			if not text_displayed.has_selection then
-				select_current_token
+				select_current_token (True)
 			end
 			if text_displayed.has_selection then
 				l_search_tool.force_new_search

@@ -104,9 +104,6 @@ feature {NONE} -- Initialization
 			replace_combo_box.key_press_actions.extend (agent key_pressed (?, False))
 			replace_combo_box.drop_actions.extend (agent display_stone_signature (replace_combo_box, ?))
 
-			replace_check_button.select_actions.extend (agent switch_mode)
-			replace_check_button.key_press_actions.extend (agent key_pressed (?, True ))
-
 			replace_button.select_actions.extend (agent replace_current)
 			replace_button.key_press_actions.extend (agent handle_enter_on_button (?, agent replace_current))
 
@@ -2055,7 +2052,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		do
 			keyword_field.change_actions.block
 			replace_combo_box.key_press_actions.block
-			replace_check_button.key_press_actions.block
 			case_sensitive_button.key_press_actions.block
 			whole_word_button.key_press_actions.block
 			use_regular_expression_button.key_press_actions.block
@@ -2079,7 +2075,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		do
 			keyword_field.change_actions.resume
 			replace_combo_box.key_press_actions.resume
-			replace_check_button.key_press_actions.resume
 			case_sensitive_button.key_press_actions.resume
 			whole_word_button.key_press_actions.resume
 			use_regular_expression_button.key_press_actions.resume

@@ -3056,6 +3056,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_is_row_height_fixed: BOOLEAN
 			l_row_height: INTEGER
 			l_original_computed_visible_row_count: INTEGER
+			l_visible_row_count: INTEGER
 		do
 			l_original_computed_visible_row_count := computed_visible_row_count
 			original_row_index := rows.index
@@ -3089,14 +3090,15 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				else
 					current_row_offset := row_offsets @ (index)
 					rows.go_i_th (index)
+					l_visible_row_count := visible_row_count
 					if index > 1 then
-						if index <= visible_indexes_to_row_indexes.i_th (visible_row_count) then
+						if l_visible_row_count > 0 and then index <= visible_indexes_to_row_indexes.i_th (l_visible_row_count) then
 							visible_count := row_indexes_to_visible_indexes.i_th (index)
 						else
 								-- In this situation, we are adding a row that has not already been computed.
 								-- Therefore, `visible_count' is set to the number of rows that was previously
 								-- computed during the last call to this feature.
-							visible_count := visible_row_count
+							visible_count := l_visible_row_count
 						end
 					else
 							-- In this case, the feature has already been called when there are

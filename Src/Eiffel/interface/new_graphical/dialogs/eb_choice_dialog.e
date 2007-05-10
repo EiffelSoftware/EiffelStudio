@@ -50,6 +50,8 @@ feature -- Initialization
 			enable_user_resize
 			show_actions.extend (agent on_shown)
 			list.hide_header
+
+			create destroy_actions
 		end
 
 feature
@@ -130,6 +132,9 @@ feature
 			end
 		end
 
+	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed after destroyed.
+
 feature {NONE} -- Properties
 
 	list: ES_GRID
@@ -182,6 +187,7 @@ feature {NONE} -- Implementation
 				not has_focus
 			then
 				destroy_dialog
+				destroy_actions.call ([])
 			end
 		end
 
@@ -203,6 +209,10 @@ feature {NONE} -- Implementation
 
 	parent_window: EV_WINDOW;
 		-- Window that `Current' is shown from.
+
+invariant
+
+	destroy_actions_not_void: destroy_actions /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

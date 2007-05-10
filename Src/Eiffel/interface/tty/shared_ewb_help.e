@@ -56,7 +56,7 @@ feature {NONE}
 
 	Convert_profile_help: STRING_GENERAL is do Result := locale.translate ("convert profiler output files") end
 
-	Debug_help: STRING_GENERAL is do Result := locale.translate ("debug the system") end
+	Debug_help: STRING_GENERAL is do Result := locale.translate ("debug the system as a command loop") end
 
 	defaults_help: STRING_GENERAL is do Result := locale.translate ("reset all values to their defaults") end
 

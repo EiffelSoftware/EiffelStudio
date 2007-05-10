@@ -13,12 +13,14 @@ indexing
 
 class
 	I18N_AST_ITERATOR
+
 inherit
 	AST_ROUNDTRIP_ITERATOR
-	redefine
-		process_access_feat_as,
-		process_access_id_as
-	end
+		redefine
+			process_access_feat_as,
+			process_access_id_as
+		end
+
 	CHARACTER_ROUTINES
 
 feature -- Access
@@ -31,6 +33,12 @@ feature -- Access
 
 	translate_plural_feature: STRING
 		-- Name of plural_translate feature in i18n
+
+	source_file_name: STRING
+		-- Source file name.
+
+	source_text: STRING
+		-- Source file text.
 
 	set_translate_feature (a: like translate_feature) is
 			-- Set translator function name
@@ -60,6 +68,22 @@ feature -- Access
 			po_file := po
 		end
 
+	set_source_file_name (a_str: STRING) is
+			-- Set `source_file_name' with `a_str'.
+		do
+			source_file_name := a_str
+		ensure
+			source_file_name_set: source_file_name = a_str
+		end
+
+	set_source_text (a_file: STRING) is
+			-- Set `source_text' with `a_file'.
+		do
+			source_text := a_file
+		ensure
+			source_text_set: source_text = a_file
+		end
+
 feature {NONE} -- Implementation
 
 	analyse_call(node: ACCESS_FEAT_AS) is
@@ -68,6 +92,7 @@ feature {NONE} -- Implementation
 			param1: STRING_AS
 			param2: STRING_AS
 			plural_entry: PO_FILE_ENTRY_PLURAL
+			singular_entry: PO_FILE_ENTRY_SINGULAR
 			temp:  STRING_32
 		do
 			l_feature_name := node.access_name
@@ -78,7 +103,9 @@ feature {NONE} -- Implementation
 						temp := param1.value.as_string_32
 						handle_special_chars (temp)
 						if (not po_file.has_entry (temp)) then
-							po_file.add_entry (create {PO_FILE_ENTRY_SINGULAR}.make (utf8_string (temp)))
+							create singular_entry.make (utf8_string (temp))
+							append_comments (param1, singular_entry)
+							po_file.add_entry (singular_entry)
 						end
 					end
 				end
@@ -94,6 +121,7 @@ feature {NONE} -- Implementation
 							temp := param2.value.as_string_32
 							handle_special_chars (temp)
 							plural_entry.set_msgid_plural (utf8_string (temp))
+							append_comments (param1, plural_entry)
 							po_file.add_entry (plural_entry)
 						end
 					end
@@ -147,6 +175,48 @@ feature {NONE} -- Implementation
 			loop
 				utf8.append_code_to_utf8 (Result, a_string.item_code (i))
 				i := i + 1
+			end
+		end
+
+	current_line (a_pos: INTEGER; a_text: STRING): STRING is
+			-- Line text at `a_pos'
+		require
+			a_text_not_void: a_text /= Void
+			a_pos_valid: a_pos <= a_text.count
+		local
+			l_start, l_end: INTEGER
+		do
+			l_start := a_text.last_index_of ('%N', a_pos)
+			l_end := a_text.index_of ('%N', a_pos)
+			if l_start = 0 then
+				Result := a_text.substring (1, l_end - 1)
+			elseif l_end = 0 then
+				Result := a_text.substring (l_start + 1, a_text.count)
+			else
+				Result := a_text.substring (l_start + 1, l_end - 1)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	append_comments (a_as: LOCATION_AS; a_node: PO_FILE_ENTRY) is
+			-- Append comments to `a_node'.
+		require
+			a_as_not_void: a_as /= Void
+			a_node_not_void: a_node /= Void
+		local
+			l_line: STRING
+		do
+				-- Extract source code.
+			if source_text /= Void and then a_as.position <= source_text.count then
+				l_line := current_line (a_as.position, source_text)
+				l_line.left_adjust
+				l_line.right_adjust
+				a_node.add_automatic_comment (utf8_string ("Source code: " + l_line))
+			end
+				-- Append location.
+			if source_file_name /= Void then
+				a_node.add_reference_comment (utf8_string (source_file_name + ":" + a_as.line.out))
 			end
 		end
 

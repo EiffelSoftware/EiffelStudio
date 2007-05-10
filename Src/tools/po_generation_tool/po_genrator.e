@@ -30,11 +30,23 @@ feature -- Status report
 
 	has_error: BOOLEAN
 
+feature -- Status setting
+
+	set_source_file_name (a_str: STRING) is
+			-- Set `source_file_name' with `a_str'.
+		do
+			source_file_name := a_str
+		ensure
+			source_file_name_set: source_file_name = a_str
+		end
+
 feature {NONE} -- Access
 
 	file: PO_FILE
 
 	text: STRING_GENERAL
+
+	source_file_name: STRING
 
 feature -- Generation
 
@@ -57,6 +69,8 @@ feature -- Generation
 					l_iterator.set_parsed_class (eiffel_parser.root_node)
 					l_iterator.set_match_list (eiffel_parser.match_list)
 					l_iterator.set_po_file (file)
+					l_iterator.set_source_file_name (source_file_name)
+					l_iterator.set_source_text (l_string)
 					l_iterator.set_translate_feature (name_of_translate)
 					l_iterator.set_translate_plural_feature (name_of_translate_plural)
 					l_iterator.process_class_as (eiffel_parser.root_node)

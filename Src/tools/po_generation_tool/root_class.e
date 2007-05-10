@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_dir: KL_DIRECTORY
 			l_file: KL_TEXT_INPUT_FILE
-			l_name: STRING
+			l_name, l_short_name: STRING
 		do
 			l_dirs := a_dir.directory_names
 			if l_dirs /= Void then
@@ -132,13 +132,13 @@ feature {NONE} -- Implementation
 				until
 					i > l_files.upper
 				loop
-					l_name := l_files.item (i)
-					if l_name.substring (l_name.count - 1, l_name.count).is_equal (file_suffix) then
-						l_name := a_dir.name + operating_environment.directory_separator.out + l_name
+					l_short_name := l_files.item (i)
+					if l_short_name.substring (l_short_name.count - 1, l_short_name.count).is_equal (file_suffix) then
+						l_name := a_dir.name + operating_environment.directory_separator.out + l_short_name
 						create l_file.make (l_name)
 						l_file.open_read
 						if l_file.is_readable then
-							generate_file (l_name, l_file)
+							generate_file (l_name, l_short_name, l_file)
 							debug
 								print (l_name + "%N")
 							end
@@ -153,17 +153,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_file (a_name: STRING; a_file: KL_TEXT_INPUT_FILE) is
+	generate_file (a_name, a_short_name: STRING; a_file: KL_TEXT_INPUT_FILE) is
 			-- Generate from `a_file'.
 		require
 			po_file_not_void: po_file /= Void
 			a_name_not_void: a_name /= Void
+			a_short_name_not_void: a_short_name /= Void
 			a_file_not_void: a_file /= Void
 		local
 			l_generator: PO_GENERATOR
 		do
 			a_file.read_string (a_file.count)
 			create l_generator.make (po_file, a_file.last_string)
+			l_generator.set_source_file_name (a_short_name)
 			l_generator.generate
 			if l_generator.has_error then
 				print ("Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")

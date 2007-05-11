@@ -18,6 +18,7 @@ feature
 		local
 			s: ARRAY [STRING]
 		do
+			create s.make (1, 0)
 			p.call (Void)
 			print ((s~make (?, 2)).generating_type); io.new_line
   		end

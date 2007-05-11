@@ -133,7 +133,7 @@ feature -- Visit nodes
 					end
 
 					create l_comparer
-					if a_library.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
+					if application_target.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
 						add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
 					end
 				else

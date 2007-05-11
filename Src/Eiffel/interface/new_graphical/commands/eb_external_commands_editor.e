@@ -460,9 +460,10 @@ feature {NONE} -- Implementation
 				l_managed_windows.after
 			loop
 				l_develop_window ?= l_managed_windows.item
-				check not_void: l_develop_window /= Void end
-				create l_builder.make (l_develop_window)
-				l_builder.rebuild_tools_menu
+				if l_develop_window /= Void then
+					create l_builder.make (l_develop_window)
+					l_builder.rebuild_tools_menu
+				end
 				l_managed_windows.forth
 			end
 		end

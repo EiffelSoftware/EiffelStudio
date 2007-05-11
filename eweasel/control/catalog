@@ -330,7 +330,10 @@ test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
 test	vtcg-expanded	valid210 tcf pass validity
 test	vtcg-generic	valid211 tcf pass validity
 test	wrong-vgcc		valid212 tcf pass validity
-test	named-tuple-convert-conformance		valid213 tcf fail validity
+test	named-tuple-convert-conformance					valid213 tcf fail validity
+test	nested-generics-creation-readiness				valid214 tcf valid
+
+
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system validity
@@ -1642,7 +1645,9 @@ test	multi-constraint-single-constraint-renaming2	multicon033 tcf pass multicons
 test	multi-constraint-recursion-bug					multicon034 tcf pass multiconstraint
 test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
 test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
- 
+test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
+test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
+
 
 
 -- .NET specific test

@@ -1,0 +1,16 @@
+test_name incr-remove-create-dotnet-constructor
+test_description Removing a create statement whilse having it persist on a dotnet_constructor declaration should not crash the compiler's code generation
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+copy_raw a2.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+test_end

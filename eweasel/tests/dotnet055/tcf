@@ -1,0 +1,15 @@
+test_name creation-without-default-ctor
+test_description When a Eiffel .NET type defines creation routines as constructors the ctors should be used in the static factory functions, to prevent the use of a non-existing ctor.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

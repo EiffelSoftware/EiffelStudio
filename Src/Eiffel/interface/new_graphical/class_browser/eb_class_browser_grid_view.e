@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 				end
 				Result := Result.max (pixmap_height) + 1
 			else
-				Result := line_height.max (pixmap_height)
+				Result := line_height.max (pixmap_height) + 1
 					-- We make sure we give enough space to display the pixmap.
 			end
 		end

@@ -489,11 +489,11 @@
 		<description>Number of dependants</description>
 		<criterion>
 			<or_criterion negation="False" name="or" unit="class">				
-				<domain_criterion negation="False" name="client_is" unit="class">
+				<client_criterion negation="False" name="client_is" unit="class" normal="True" only_syntactical="False" indirect="False">
 					<domain>
 						<domain_item type="delayed" id=""></domain_item>
 					</domain>
-				</domain_criterion>
+				</client_criterion>
 				<domain_criterion negation="False" name="descendant_is" unit="class">
 					<domain>
 						<domain_item type="delayed" id=""></domain_item>

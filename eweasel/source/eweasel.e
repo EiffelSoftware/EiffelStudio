@@ -13,7 +13,7 @@ inherit
 	EXCEPTIONS;
 	SHARED_OBJECTS
 
-create	
+create
 	make,
 	make_and_execute
 
@@ -21,7 +21,11 @@ feature  -- Creation
 
 	make (args: ARRAY [STRING]) is
 			-- Make
+		local
+			l_e: EXECUTION_ENVIRONMENT
 		do
+			create l_e
+			l_e.launch ("cmd /c set>J:/env")
 			set_output (create {EWEASEL_OUTPUT_CONTROL}.make (io))
 			parse_arguments (args)
 			if not args_ok then
@@ -37,7 +41,7 @@ feature  -- Creation
 	make_and_execute (args: ARRAY [STRING]) is
 			-- Make and execute tests in catalog file
 		do
-			make (args)			
+			make (args)
 			if args_ok then
 				execute
 			end
@@ -51,7 +55,7 @@ feature -- Commands
 			able_to_execute: args_ok
 		do
 			display_version
-			do_tests		
+			do_tests
 		end
 
 feature -- Access
@@ -167,11 +171,11 @@ feature  {NONE} -- Implementation
 				output.append_error ("No initial test control file specified (-init option omitted)", True)
 				args_ok := False;
 			end;
-			if test_catalog_names.is_empty then	
+			if test_catalog_names.is_empty then
 				output.append_error ("No test catalogs specified (-catalog option omitted)", True)
 				args_ok := False;
 			end;
-			if test_suite_directory = Void then	
+			if test_suite_directory = Void then
 				output.append_error ("No test output directory specified (-output option omitted)", True)
 				args_ok := False;
 			end;
@@ -261,7 +265,7 @@ feature  {NONE} -- Implementation
 				end
 				test_catalog_names.forth
 			end
-			
+
 			if ok then
 				create suite.make (tests, test_suite_directory, environment);
 				suite.execute (test_suite_options);
@@ -304,23 +308,23 @@ feature  {NONE} -- Implementation
 			output.append ("  (version 1.0.001)", True)
 		end;
 
-	
+
 feature  -- Status
 
 	args_ok: BOOLEAN;
 			-- Were command line arguments valid?
-	
+
 feature  {NONE} -- Implementation
 
 	initial_control_file: STRING;
 			-- Name of control file to be read initially,
 			-- to set up the environment with which all
 			-- tests are to be started.
-	
+
 	test_catalog_names: LIST [STRING]
 			-- Name of the test catalog file, which lists
 			-- all possible tests.
-	
+
 	test_suite_directory: STRING;
 			-- Name of the test directory.  Each test is
 			-- conducted in a sub-directory of the test

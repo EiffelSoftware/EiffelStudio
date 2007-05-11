@@ -52,28 +52,31 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			mg: EB_PROJECT_MANAGER
+			dbg: DEBUGGER_MANAGER
 		do
 				-- Build all widgets.
 			--copy_icons
 			build_interface
+
+			dbg := debugger_manager
 				-- Update the status.
 			mg := eiffel_project.manager
 			if mg.is_created then
-				on_project_created
+				on_project_created (dbg)
 				if mg.has_edited_classes then
 					on_project_edited
 				end
 			end
 			if mg.is_project_loaded then
-				on_project_loaded
+				on_project_loaded (dbg)
 			else
-				on_project_closed
+				on_project_closed (dbg)
 			end
 				-- Handle events.
+			load_agent := agent on_project_loaded (dbg)
+			create_agent := agent on_project_created (dbg)
+			close_agent := agent on_project_closed (dbg)
 			edition_agent := agent on_project_edited
-			load_agent := agent on_project_loaded
-			create_agent := agent on_project_created
-			close_agent := agent on_project_closed
 			compile_start_agent := agent on_project_compiles
 			compile_stop_agent := agent on_project_compiled
 			mg.edition_agents.extend (edition_agent)
@@ -367,14 +370,14 @@ feature {NONE} -- Implementation: event handling
 			debugger_cell.prune_all (debugger_icon)
 		end
 
-	on_project_created is
+	on_project_created (dbg: DEBUGGER_MANAGER) is
 			-- The project has been created.
 		do
 			on_project_updated
-			on_application_quit (debugger_manager)
+			on_application_quit (dbg)
 		end
 
-	on_project_loaded is
+	on_project_loaded (dbg: DEBUGGER_MANAGER) is
 			-- The project has been loaded.
 		do
 			set_project_name (eiffel_system.name)
@@ -385,19 +388,19 @@ feature {NONE} -- Implementation: event handling
 			end
 			if debugger_manager.application_is_executing then
 				if debugger_manager.application_is_stopped then
-					on_application_stopped (debugger_manager)
+					on_application_stopped (dbg)
 				else
-					on_application_launched (debugger_manager)
+					on_application_launched (dbg)
 				end
 			else
-				on_application_quit (debugger_manager)
+				on_application_quit (dbg)
 			end
 			if not eiffel_project.workbench.is_compiling then
 				on_project_compiled
 			end
 		end
 
-	on_project_closed is
+	on_project_closed (dbg: DEBUGGER_MANAGER) is
 			-- The project has been closed.
 		do
 			set_project_name ("No project")
@@ -408,7 +411,7 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.clear
 			edition_icon.remove_tooltip
 				--| This is probably redundant...
-			on_application_quit (Debugger_manager)
+			on_application_quit (dbg)
 		end
 
 	on_project_compiles is

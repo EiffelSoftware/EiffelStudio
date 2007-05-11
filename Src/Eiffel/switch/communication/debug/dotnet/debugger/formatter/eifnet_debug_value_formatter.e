@@ -71,16 +71,16 @@ feature -- Access
 
 feature -- Transforming
 
-	icor_debug_string_value_to_truncated_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE;
-					a_size: INTEGER): STRING is
-		do
-			Result := get_truncated_string_value (a_icd_string_value, a_size)
-		end
+--	icor_debug_string_value_to_truncated_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE;
+--					a_size: INTEGER): STRING is
+--		do
+--			Result := get_truncated_string_value (a_icd_string_value, a_size)
+--		end
 
-	icor_debug_string_value_to_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE): STRING is
-		do
-			Result := get_string_value (a_icd_string_value)
-		end
+--	icor_debug_string_value_to_string (a_icd_string_value: ICOR_DEBUG_STRING_VALUE): STRING is
+--		do
+--			Result := get_string_value (a_icd_string_value)
+--		end
 
 	icor_debug_value_as_string_to_string (a_data: ICOR_DEBUG_VALUE): STRING_32 is
 			-- STRING value from `a_data' which is supposed to be a System.String value.
@@ -101,23 +101,23 @@ feature -- Transforming
 			end
 		end
 
-	icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
-		local
-			l_data: ICOR_DEBUG_VALUE
-		do
-			l_data := prepared_debug_value (a_data)
-			if last_strip_references_call_success /= 0 then
-				debug ("debugger_icor_data")
-					io.error.put_string ("[!] Error on strip_references (dereference..) %N%T=> " + error_code_to_string (last_strip_references_call_success) + "%N")
-				end
-				Result := "ERROR while Dereferencing"
-			else
-				Result := prepared_icor_debug_value_to_string (l_data)
-			end
-			if l_data /= a_data then
-				l_data.clean_on_dispose
-			end
-		end
+--	icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
+--		local
+--			l_data: ICOR_DEBUG_VALUE
+--		do
+--			l_data := prepared_debug_value (a_data)
+--			if last_strip_references_call_success /= 0 then
+--				debug ("debugger_icor_data")
+--					io.error.put_string ("[!] Error on strip_references (dereference..) %N%T=> " + error_code_to_string (last_strip_references_call_success) + "%N")
+--				end
+--				Result := "ERROR while Dereferencing"
+--			else
+--				Result := prepared_icor_debug_value_to_string (l_data)
+--			end
+--			if l_data /= a_data then
+--				l_data.clean_on_dispose
+--			end
+--		end
 
 	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
 		local
@@ -462,17 +462,17 @@ feature -- Dereferenced to Value
 			end
 		end
 
-	prepared_icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
-		local
-			l_result: ANY
-		do
-			l_result := prepared_icor_debug_value (a_data)
-			if l_result /= Void then
-				Result := l_result.out
-			else
-				Result := "Void"
-			end
-		end
+--	prepared_icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
+--		local
+--			l_result: ANY
+--		do
+--			l_result := prepared_icor_debug_value (a_data)
+--			if l_result /= Void then
+--				Result := l_result.out
+--			else
+--				Result := "Void"
+--			end
+--		end
 
 feature -- internal Status
 

@@ -79,16 +79,6 @@ feature -- Query
 			Result := dobj.sorted_attributes
 		end
 
-	object_at_address_is_special (addr: STRING): BOOLEAN is
-		require
-			address_not_void: addr /= Void
-		local
-			dobj: DEBUGGED_OBJECT
-		do
-			dobj := debugged_object (addr, 0, 0)
-			Result := dobj.is_special
-		end
-
 	object_at_address_has_attributes (addr: STRING): BOOLEAN is
 		require
 			address_not_void: addr /= Void
@@ -137,22 +127,6 @@ feature -- debugged object creation
 			not is_dotnet
 		do
 			create Result.make_with_class (addr, a_compiled_class)
-		end
-
-	fakedebugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
-		require
-			non_void_addr: addr /= Void
-			valid_addr: is_valid_object_address (addr)
-			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
-		do
-			if is_dotnet then
-				create {DEBUGGED_OBJECT_DOTNET} Result.make (addr, sp_lower, sp_upper)
-			else
-				create {DEBUGGED_OBJECT_CLASSIC} Result.make (addr, sp_lower, sp_upper)
-			end
-			last_debugged_object := Result
-			last_sp_lower := sp_lower
-			last_sp_upper := sp_upper
 		end
 
 	caching_enabled: BOOLEAN

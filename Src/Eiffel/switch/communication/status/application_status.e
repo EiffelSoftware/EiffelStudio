@@ -208,7 +208,7 @@ feature -- Values
 			-- (first, second...)
 
 	reason: INTEGER
-			-- Reason for the applicaiton being stopped
+			-- Reason for the application being stopped
 
 	object_address: STRING
 			-- Address of object in which we are stopped
@@ -444,13 +444,6 @@ feature {NONE} -- Call stack implementation
 			-- Call Stack list, associating Call Stack and their Thread Id.
 
 feature -- Access
-
-	class_name: STRING is
-			-- Class name of object in which we are currently
-			-- stopped
-		do
-			Result := dynamic_class.name
-		end
 
 	valid_reason: BOOLEAN is
 			-- Is the reason valid for stopping of execution?

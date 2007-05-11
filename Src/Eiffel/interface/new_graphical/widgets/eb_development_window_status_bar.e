@@ -66,15 +66,6 @@ feature {NONE} -- Initialization
 			end
 			if mg.is_project_loaded then
 				on_project_loaded
-				if Debugger_manager.application_is_executing then
-					if Debugger_manager.application_is_stopped then
-						on_application_stopped
-					else
-						on_application_launched
-					end
-				else
-					on_application_quit
-				end
 			else
 				on_project_closed
 			end
@@ -330,13 +321,13 @@ feature {NONE} -- Implementation: widgets
 
 feature {NONE} -- Implementation: event handling
 
-	on_application_launched is
+	on_application_launched (dbg: DEBUGGER_MANAGER) is
 			-- The application has just been launched by the debugger.
 		do
-			on_application_resumed
+			on_application_resumed (dbg)
 		end
 
-	on_application_resumed is
+	on_application_resumed (dbg: DEBUGGER_MANAGER) is
 			-- The application has been resumed by the debugger.
 		do
 			if debugger_cell.is_empty then
@@ -353,7 +344,7 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_application_stopped is
+	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- The application has just stopped (paused).
 		local
 			p: EV_PIXMAP
@@ -369,7 +360,7 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_application_quit is
+	on_application_quit (dbg: DEBUGGER_MANAGER) is
 			-- The application has just terminated (dead).
 		do
 			running_timer.set_interval (0)
@@ -380,7 +371,7 @@ feature {NONE} -- Implementation: event handling
 			-- The project has been created.
 		do
 			on_project_updated
-			on_application_quit
+			on_application_quit (debugger_manager)
 		end
 
 	on_project_loaded is
@@ -394,12 +385,12 @@ feature {NONE} -- Implementation: event handling
 			end
 			if debugger_manager.application_is_executing then
 				if debugger_manager.application_is_stopped then
-					on_application_stopped
+					on_application_stopped (debugger_manager)
 				else
-					on_application_launched
+					on_application_launched (debugger_manager)
 				end
 			else
-				on_application_quit
+				on_application_quit (debugger_manager)
 			end
 			if not eiffel_project.workbench.is_compiling then
 				on_project_compiled
@@ -417,7 +408,7 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.clear
 			edition_icon.remove_tooltip
 				--| This is probably redundant...
-			on_application_quit
+			on_application_quit (Debugger_manager)
 		end
 
 	on_project_compiles is

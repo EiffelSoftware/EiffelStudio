@@ -227,11 +227,29 @@ feature -- Execution
 						-- the display of the temporary breakpoint (if not already present
 						-- at `index' in `f'.)
 					if bp_exists then
-						dbg.add_on_stopped_action (agent bp.disable_run_to_cursor_mode, True)
+						dbg.add_on_stopped_action (
+								agent (a_dbg: DEBUGGER_MANAGER; a_bp: BREAKPOINT)
+									do
+										a_bp.disable_run_to_cursor_mode
+									end (?, bp)
+								, True
+							)
 					else
-						dbg.add_on_stopped_action (agent dbg.remove_breakpoint (f, index), True)
+						dbg.add_on_stopped_action (
+								agent (a_dbg: DEBUGGER_MANAGER; a_f: E_FEATURE; a_index: INTEGER)
+									do
+										a_dbg.remove_breakpoint (a_f, a_index)
+									end (?, f, index)
+								, True
+							)
 					end
-					dbg.add_on_stopped_action (agent dbg.notify_breakpoints_changes, True)
+					dbg.add_on_stopped_action (
+							agent (a_dbg: DEBUGGER_MANAGER)
+								do
+									a_dbg.notify_breakpoints_changes
+								end (?)
+							, True
+						)
 				end
 			else
 				create wd.make_with_text (Warning_messages.w_Cannot_debug)

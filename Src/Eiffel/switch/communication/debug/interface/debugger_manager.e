@@ -936,14 +936,15 @@ feature -- Debugging events
 			incremente_debugging_operation_id
 			debugger_status_message (debugger_names.t_Paused)
 
-			if has_stopped_action then
-				stopped_actions.call (Void)
-			end
 				--| Reset current stack number to 1 (top level)
 			application.set_current_execution_stack_number (1)
 
+			if has_stopped_action then
+				stopped_actions.call ([Current])
+			end
+
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped)
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped (Current))
 		end
 
 	on_application_before_resuming is
@@ -993,7 +994,7 @@ feature -- Debugging events
 			end
 
 			if has_stopped_action then
-				stopped_actions.call (Void)
+				stopped_actions.call ([Current])
 			end
 
 			destroy_application
@@ -1023,7 +1024,7 @@ feature -- Actions
 
 feature {NONE} -- Implementation
 
-	stopped_actions: ACTION_SEQUENCE [TUPLE]
+	stopped_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]]
 			-- Actions called when application has stopped.
 
 feature -- One time action
@@ -1037,7 +1038,7 @@ feature -- One time action
 				Result = (stopped_actions /= Void and then not stopped_actions.is_empty)
 		end
 
-	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE]; is_kamikaze: BOOLEAN) is
+	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN) is
 			-- Add `p' to `stopped_actions' with `p'.
 		require
 			p_not_void: p /= Void

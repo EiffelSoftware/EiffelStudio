@@ -9,6 +9,8 @@ class CALL_STACK_ELEMENT_DOTNET
 
 inherit
 	EIFFEL_CALL_STACK_ELEMENT
+		rename
+			current_object_value as current_object
 		redefine
 			make
 		end

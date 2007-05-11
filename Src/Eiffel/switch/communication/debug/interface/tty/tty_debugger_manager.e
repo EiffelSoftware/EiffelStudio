@@ -232,8 +232,7 @@ feature -- Interaction
 	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU) is
 		do
 			if safe_application_is_stopped then
-				application.set_execution_mode (a_exec_mode)
-				controller.resume_workbench_application
+				controller.debug_operate (a_exec_mode)
 				a_menu.quit
 			end
 		end

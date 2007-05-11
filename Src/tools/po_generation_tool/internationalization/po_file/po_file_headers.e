@@ -21,47 +21,56 @@ class
 inherit
 	PO_FILE_ENTRY_SINGULAR
 		rename
-			make as make_old
-		export
-				-- This is not a nice or elegant thing to do, I know.
-			{NONE} make_old
+			make as make_entry
 		redefine
-			msgstr, to_string
+			msgstr,
+			to_string
 		end
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Initialization
 
 	make is
-			-- makes new headers entry
+			-- Initialize empty header entry
 		do
-			make_old ("")
-			create headers.make (10) --10 headers should be enough for anybody
+			make_entry ("")
+				-- 10 headers should be enough for anybody
+			create headers.make (10)
 		end
 
-feature --Access
+feature -- Status report
 
-	has_header(key:STRING_GENERAL):BOOLEAN is
-			-- does this header exist?
+	has_header (key: STRING_GENERAL): BOOLEAN is
+			-- Does a header with key `key' exist?
+			--
+			-- `key': Key of header line
+			-- `Result': True if `key' is present, False otherwise
 		require
-			argument_not_void: key /= Void
+			key_not_void: key /= Void
 		do
 			Result := headers.has (key.to_string_32)
 		end
 
-	get_header(key:STRING_GENERAL):STRING_32 is
-			-- get the content of this header
+feature -- Access
+
+	header (key: STRING_GENERAL): STRING_32 is
+			-- Value of header identified by `key'
+			--
+			-- `key': Key of header line
+			-- `Result': Value of header line
 		require
-			argument_not_void: key /= Void
+			key_not_void: key /= Void
 			key_valid: has_header(key)
 		do
 			Result := headers.item (key.to_string_32)
+		ensure
+			header_not_void: Result /= Void
 		end
 
 	msgstr: STRING_32 is
-			-- Return the msgstr.
+			-- Message string of header
 		do
 				-- In this case the msgstr is _not_ stored in msgstr_lines like a normal entry,
 				-- because the msgtr is a multi-line string where each line is a header. We keep them in a
@@ -80,33 +89,42 @@ feature --Access
 			end
 		end
 
-feature --Modification
+feature -- Element change
 
-	add_header(key:STRING_GENERAL; value:STRING_GENERAL) is
+	add_header (key: STRING_GENERAL; value: STRING_GENERAL) is
+			-- Add header line
+			--
+			-- `key': Key of header line
+			-- `value': Value of header line
 		require
-			arguments_not_void: key /= Void and value /= Void
+			key_not_void: key /= Void
+			value_not_void: value /= Void
 			header_is_not_already_present: not has_header (key)
 		do
 			headers.put (value.to_string_32, key.to_string_32)
 		ensure
-			header_set: has_header (key) and then get_header (key).is_equal(value.to_string_32)
+			header_set: has_header (key) and then header (key).is_equal (value.to_string_32)
 		end
 
-	modify_header(key:STRING_GENERAL; value: STRING_GENERAL) is
+	modify_header (key:STRING_GENERAL; value: STRING_GENERAL) is
+			-- Change header identified by `key'
+			--
+			-- `key': Key of header line
+			-- `value': New value of header line
 		require
-			arguments_not_void: key /= Void and value /= Void
+			key_not_void: key /= Void
+			value_not_void: value /= Void
 			header_is_already_present: has_header(key)
 		do
 			headers.replace (value.as_string_32, key.as_string_32)
 		ensure
-			header_changed: get_header (key).is_equal(value.to_string_32)
+			header_changed: header (key).is_equal(value.to_string_32)
 		end
-
 
 feature -- Output
 
-	to_string:STRING_32 is
-			-- prints header entry as string_32
+	to_string: STRING_32 is
+			-- Entry as a unicode string
 		local
 			accumulator: STRING_32
 		do
@@ -132,7 +150,8 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	headers: HASH_TABLE[STRING_32, STRING_32];
+	headers: HASH_TABLE [STRING_32, STRING_32];
+			-- Header values identified by header keys
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
@@ -165,6 +184,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -15,16 +15,19 @@ class
 inherit
 	PO_FILE_ENTRY
 		redefine
-			make, to_string
+			make,
+			to_string
 		end
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Initialization
 
-	make(a_msgid:STRING_GENERAL) is
-			-- create new singular entry
+	make (a_msgid:STRING_GENERAL) is
+			-- Initialize singular entry with `a_msgid' as message ID.
+			--
+			-- `a_msgid': Message ID for new entry
 		do
 			Precursor(a_msgid)
 			create msgstr_lines.make
@@ -32,10 +35,12 @@ feature -- Creation
 			msgstr_lines_created: msgstr_lines /= Void
 		end
 
-feature -- msgstr
+feature -- Element change
 
-	set_msgstr(a_msgstr:STRING_GENERAL) is
-			-- set the translated value of the msgid
+	set_msgstr (a_msgstr: STRING_GENERAL) is
+			-- Set translated value of entry to `a_msgstr'.
+			--
+			-- `a_msgstr': Translation corresponding to entry
 		require
 			a_mesgstr_not_void: a_msgstr /= Void
 		do
@@ -47,21 +52,23 @@ feature -- msgstr
 
 feature -- Access
 
-	msgstr:STRING_32 is
+	msgstr: STRING_32 is
+			-- Translation for the entry
 		do
 			Result := unbreak_line (msgid_lines)
+		ensure
+			msgstr_not_void: Result /= Void
 		end
 
-feature -- output
+feature -- Output
 
-	to_string:STRING_32 is
-			-- outputs the entry as a string
+	to_string: STRING_32 is
+			-- Entry as a unicode string
 		do
 			Result := Precursor
 				--add the msgstr
 			Result.append_string(prepare_string ("msgstr", msgstr_lines))
 		end
-
 
 feature {NONE} -- Implementation
 

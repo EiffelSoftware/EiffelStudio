@@ -22,7 +22,8 @@ class
 create
 	make_empty
 
-feature	-- Creation
+feature	{NONE} -- Initialization
+
 	make_empty is
 			-- Makes a new, empty representation of a .po file
 		do
@@ -44,49 +45,54 @@ feature	-- Creation
 
 feature -- Access
 
-	get_entry (msgid: STRING_GENERAL): PO_FILE_ENTRY is
-			-- get an entry by msgid
+	entry (msgid: STRING_GENERAL): PO_FILE_ENTRY is
+			-- File entry for `msgid'
+			--
+			-- `msgid': Message ID which identifies entry
+			-- `Result': File entry for `msgid'
 		require
 			key_not_void: msgid /= Void
-			entry_exists: has_entry(msgid.to_string_32)
+			entry_exists: has_entry (msgid.to_string_32)
 		do
 			Result := entries.item (msgid.to_string_32)
 		ensure
 			valid_result: Result /= Void
 		end
 
-feature -- Modification
+feature -- Element change
 
-	add_entry(new: PO_FILE_ENTRY) is
-			-- Adds an entry to the .po file
+	add_entry (new: PO_FILE_ENTRY) is
+			-- Adds entry `new' to .po file.
+			--
 			-- Note: a .po file should not contain more then one entry with a given msgid
+			--
+			-- `new': File entry to add to .po file
 		require
-			valid_new: new /= Void
-			entry_not_already_present: not has_entry(new.msgid)
+			new_not_void: new /= Void
+			entry_not_already_present: not has_entry (new.msgid)
 		do
 			entries.put (new, new.msgid)
 		ensure
-			entry_added: has_entry(new.msgid)
+			entry_added: has_entry (new.msgid)
 		end
 
-	has_entry(msgid: STRING_GENERAL):BOOLEAN is
-			-- Is an entry with this msgid already in the .po file?
-			-- (msgid is a unique key for entries)
+	has_entry (msgid: STRING_GENERAL):BOOLEAN is
+			-- Is an entry with message id `msgid' already in the .po file?
+			--
+			-- Note: msgid is a unique key for entries
+			--
+			-- `msgid': Message ID which identifies entry
+			-- `Result': True if entry with message ID `msgid' exists, False otherwise
 		require
 			msgid_not_void: msgid /= Void
 		do
 			Result := entries.has (msgid.to_string_32)
 		end
 
-feature -- Headers
-		-- Can be public because it does not allow anything dangerous to be done
-
-	headers: PO_FILE_HEADERS
-
 feature -- Output
 
 	to_string: STRING_32 is
-			-- prints the whole .po file as a string_32
+			-- Prints whole .po file as a string_32
 		do
 			create Result.make_empty
 			Result.append_string(headers.to_string)
@@ -105,7 +111,8 @@ feature -- Output
 
 feature {NONE} --Implementation
 
-	entries: HASH_TABLE[PO_FILE_ENTRY, STRING_32];
+	entries: HASH_TABLE [PO_FILE_ENTRY, STRING_32];
+			-- Map of file entries identified by their message ID
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
@@ -138,6 +145,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end

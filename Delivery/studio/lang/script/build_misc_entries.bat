@@ -2,5 +2,5 @@
 echo Appending misc entries to ../po_files/estudio.pot...
 perl misc_po_extraction.pl
 echo Removing duplicate entries...
-msguniq -o ../po_files/estudio.pot ../po_files/estudio.pot
+msguniq -s -o ../po_files/estudio.pot ../po_files/estudio.pot
 echo Done.

@@ -1700,3 +1700,5 @@ test implicit-type-cause-crash-on-cast	dotnet051	tcf pass dotnet termination
 if DOTNET test incremental-custom-attribute-constant-change	dotnet052	tcf pass dotnet
 if DOTNET test wrong-eiffel-name-attribute-generation	dotnet053	tcf pass dotnet
 if DOTNET test field-attribute-test	dotnet054	tcf fail dotnet
+if DOTNET test creation-without-default-ctor	dotnet055	tcf fail dotnet
+if DOTNET test incr-remove-create-dotnet-constructor	dotnet056	tcf fail dotnet

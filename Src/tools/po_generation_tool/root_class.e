@@ -72,9 +72,27 @@ feature {NONE} -- Implementation
 		local
 			l_dir: KL_DIRECTORY
 			l_directorys: like search_directories
+			l_file_names: like file_names
 			l_s: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			l_short_name: STRING_8
 		do
 			create po_file.make_empty
+			l_file_names := file_names
+			from
+				l_file_names.start
+			until
+				l_file_names.after
+			loop
+				l_s := l_file_names.item
+				l_s.replace_substring_all ("/", "\")
+				l_short_name := l_s.substring (l_s.last_index_of ('\', l_s.count) + 1, l_s.count)
+				debug
+					print (l_s + "%N")
+				end
+				generate_file (l_s, l_short_name)
+				l_file_names.forth
+			end
 			l_directorys := search_directories
 			from
 				l_directorys.start
@@ -106,7 +124,6 @@ feature {NONE} -- Implementation
 			l_files: ARRAY [STRING]
 			i: INTEGER
 			l_dir: KL_DIRECTORY
-			l_file: KL_TEXT_INPUT_FILE
 			l_name, l_short_name: STRING
 		do
 			l_dirs := a_dir.directory_names
@@ -135,43 +152,43 @@ feature {NONE} -- Implementation
 					l_short_name := l_files.item (i)
 					if l_short_name.substring (l_short_name.count - 1, l_short_name.count).is_equal (file_suffix) then
 						l_name := a_dir.name + operating_environment.directory_separator.out + l_short_name
-						create l_file.make (l_name)
-						l_file.open_read
-						if l_file.is_readable then
-							generate_file (l_name, l_short_name, l_file)
-							debug
-								print (l_name + "%N")
-							end
+						generate_file (l_name, l_short_name)
+						debug
+							print (l_name + "%N")
 						end
-						check
-							l_file_closable: l_file.is_closable
-						end
-						l_file.close
 					end
 					i := i + 1
 				end
 			end
 		end
 
-	generate_file (a_name, a_short_name: STRING; a_file: KL_TEXT_INPUT_FILE) is
+	generate_file (a_name, a_short_name: STRING) is
 			-- Generate from `a_file'.
 		require
 			po_file_not_void: po_file /= Void
 			a_name_not_void: a_name /= Void
 			a_short_name_not_void: a_short_name /= Void
-			a_file_not_void: a_file /= Void
 		local
 			l_generator: PO_GENERATOR
+			l_file: KL_TEXT_INPUT_FILE
 		do
-			a_file.read_string (a_file.count)
-			create l_generator.make (po_file, a_file.last_string)
-			l_generator.set_source_file_name (a_short_name)
-			l_generator.generate
-			if l_generator.has_error then
-				print ("Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
-			else
-				print_analyze_file (a_name)
+			create l_file.make (a_name)
+			l_file.open_read
+			if l_file.is_readable then
+				l_file.read_string (l_file.count)
+				create l_generator.make (po_file, l_file.last_string)
+				l_generator.set_source_file_name (a_short_name)
+				l_generator.generate
+				if l_generator.has_error then
+					print ("Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
+				else
+					print_analyze_file (a_name)
+				end
 			end
+			check
+				l_file_closable: l_file.is_closable
+			end
+			l_file.close
 		end
 
 	analyze_options is

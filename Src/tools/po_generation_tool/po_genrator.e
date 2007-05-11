@@ -15,6 +15,9 @@ feature -- Initialize
 
 	make (a_file: like file; a_text: like text) is
 			-- Initialize.
+			--
+			-- `a_file': File where parsed messages are added
+			-- `a_text': Eiffel source text which is parsed for messages
 		require
 			a_file_not_void: a_file /= Void
 			a_text_not_void: a_text /= Void
@@ -29,11 +32,14 @@ feature -- Initialize
 feature -- Status report
 
 	has_error: BOOLEAN
+			-- Did an error occur while parsing `text'?
 
-feature -- Status setting
+feature -- Element change
 
 	set_source_file_name (a_str: STRING) is
-			-- Set `source_file_name' with `a_str'.
+			-- Set `source_file_name' to `a_str'.
+		require
+			a_str_not_void: a_str /= Void
 		do
 			source_file_name := a_str
 		ensure
@@ -43,15 +49,21 @@ feature -- Status setting
 feature {NONE} -- Access
 
 	file: PO_FILE
+			-- File where messages are added
 
 	text: STRING_GENERAL
+			-- Eiffel source text which is parsed for messages
 
 	source_file_name: STRING
+			-- File name of Eiffel source file
+			-- This is used to generate references from the messages to their source file.
 
 feature -- Generation
 
 	generate is
 			-- Generate entries and write them into `file'.
+		require
+			source_file_name_set: source_file_name /= Void
 		local
 			l_iterator: I18N_AST_ITERATOR
 			l_string: STRING
@@ -81,6 +93,7 @@ feature -- Generation
 feature {NONE} -- Implementation
 
 	eiffel_parser: EIFFEL_PARSER is
+			-- Eiffel parser used to parse input text
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
 			Result.set_il_parser
@@ -89,8 +102,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Constants
 
 	name_of_translate: STRING is "translate"
+			-- Name of translate feature
+			-- Arguments from this feature are taken as translateable messages.
 
 	name_of_translate_plural: STRING is "translate_plural"
+			-- Name of translate feature for plurals
+			-- Arguments from this feature are taken as translateable plural messages.
 
 invariant
 	text_not_void: text /= Void
@@ -127,7 +144,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 end

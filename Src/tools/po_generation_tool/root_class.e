@@ -42,10 +42,10 @@ feature -- Access
 			-- Current option
 
 	file_names: ARRAYED_LIST [STRING]
-			-- Files need to generate.
+			-- Files need to generate
 
 	search_directories: ARRAYED_LIST [STRING]
-			-- Directories need to search.
+			-- Directories need to search
 
 	output_file_name: STRING
 			-- Name for output file
@@ -53,28 +53,37 @@ feature -- Access
 feature -- Status report
 
 	option_error: BOOLEAN
+			-- Did an option error occur?
 
 	is_help_needed: BOOLEAN
 
 feature {NONE} -- Implementation
 
 	file_suffix: STRING is ".e"
+			-- Suffix for files which are parsed
+			-- This is the file suffix for Eiffel source files
 
 	default_output_name: STRING is "po_file.pot"
+			-- File name of output file if no specific name is given
+			-- through commandline options
 
 	output_name_for_standard: STRING is "-"
+			-- If this file name is given as a command line option
+			-- then the output is put on the standard output
 
 	po_file: PO_FILE
-			-- Po file generated.
+			-- Po file generated
 
 	generate is
 			-- Generate po files.
+			--
+			-- The input directories and input files will be parsed for localizable messages
+			-- and they will be added to `po_file'.
 		local
 			l_dir: KL_DIRECTORY
 			l_directorys: like search_directories
 			l_file_names: like file_names
 			l_s: STRING
-			l_file: KL_TEXT_INPUT_FILE
 			l_short_name: STRING_8
 		do
 			create po_file.make_empty
@@ -93,6 +102,7 @@ feature {NONE} -- Implementation
 				generate_file (l_s, l_short_name)
 				l_file_names.forth
 			end
+				-- Go through directories specified on command line
 			l_directorys := search_directories
 			from
 				l_directorys.start
@@ -115,7 +125,12 @@ feature {NONE} -- Implementation
 		end
 
 	generate_directory (a_dir: KL_DIRECTORY) is
-			-- Generate from `a_dir'.
+			-- Generate messages from `a_dir'.
+			--
+			-- Read all files (recursively) in `a_dir' which macht `file_suffix' and parse
+			-- messages in the files which will be added to `po_file'.
+			--
+			-- `a_dir': Directory which is searched recursively for files matching `file_suffix'
 		require
 			po_file_not_void: po_file /= Void
 			a_dir_not_void: a_dir /= Void
@@ -163,7 +178,13 @@ feature {NONE} -- Implementation
 		end
 
 	generate_file (a_name, a_short_name: STRING) is
-			-- Generate from `a_file'.
+			-- Generate messages from `a_file'.
+			--
+			-- The file is parsed for messages which will be added to `po_file'.
+			--
+			-- `a_name': Full path of `a_file'
+			-- `a_short_name': Filename of `a_file'
+			-- `a_file': File which will be parsed
 		require
 			po_file_not_void: po_file /= Void
 			a_name_not_void: a_name /= Void
@@ -192,7 +213,7 @@ feature {NONE} -- Implementation
 		end
 
 	analyze_options is
-			-- Analyze options
+			-- Analyze options.
 		do
 			from
 				current_option := 1
@@ -205,7 +226,7 @@ feature {NONE} -- Implementation
 		end
 
 	analyze_one_option is
-			-- Analyze one option
+			-- Analyze one option.
 		local
 			l_name: STRING
 		do
@@ -318,7 +339,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_to_file is
-			-- Writes the `po_file' to `output_file_name'
+			-- Writes the `po_file' to `output_file_name'.
 		require
 			po_file_not_void: po_file /= Void
 		local
@@ -360,20 +381,23 @@ feature {NONE} -- Output
 		end
 
 	print_file_not_exist (a_file: STRING) is
+			-- Print error that `a_file' does not exist.
 		require
 			a_file_not_void: a_file /= Void
 		do
 			io.put_string (a_file + ": file does not exist%N")
 		end
 
-	print_directory_not_exist (a_file: STRING) is
+	print_directory_not_exist (a_directory: STRING) is
+			-- Print error that `a_directory' does not exist.
 		require
-			a_file_not_void: a_file /= Void
+			a_directory_not_void: a_directory /= Void
 		do
-			io.put_string (a_file + ": directory does not exist%N")
+			io.put_string (a_directory + ": directory does not exist%N")
 		end
 
 	print_file_name_invalid (a_file: STRING) is
+			-- Print error that `a_file' is invalid.
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -381,23 +405,27 @@ feature {NONE} -- Output
 		end
 
 	print_invalid_output_file is
+			-- Print error that `output_file_name' is invalid.
 		do
 			io.put_string ("%"" + output_file_name + "%" is invalid.%N")
 			io.put_string ("File not generated.%N")
 		end
 
 	print_file_not_writable is
+			-- Print error that `output_file_name' is not writable.
 		do
 			io.put_string ("%"" + output_file_name + "%" is not writable.%N")
 			io.put_string ("File not generated.%N")
 		end
 
 	print_file_generated is
+			-- Print status message that `output_file_name' has been generated.
 		do
 			io.put_string ("%"" + output_file_name + "%" has been generated.%N")
 		end
 
 	print_analyze_file (a_file: STRING) is
+			-- Print status message that file `a_file' is currently being analyzed.
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -421,7 +449,7 @@ feature {NONE} -- Output
 							If output file is -, output is written to standard output.
 							If output file is not specified, 'po_file.pot' will be generated as default name.
 					-h		display this help and exit
-					]"
+				]"
 			)
 		end
 
@@ -457,6 +485,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class ROOT_CLASS
+end

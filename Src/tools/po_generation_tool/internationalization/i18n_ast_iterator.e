@@ -40,8 +40,10 @@ feature -- Access
 	source_text: STRING
 		-- Source file text.
 
+feature -- Element change
+
 	set_translate_feature (a: like translate_feature) is
-			-- Set translator function name
+			-- Set translator function name to `a'.
 		require
 			a_not_void: a /= Void
 		do
@@ -51,7 +53,7 @@ feature -- Access
 		end
 
 	set_translate_plural_feature (a: like translate_plural_feature) is
-			-- Set plural translator function name
+			-- Set plural translator function name to `a'.
 		require
 			a_not_void: a /= Void
 		do
@@ -61,15 +63,19 @@ feature -- Access
 		end
 
 	set_po_file (po: PO_FILE) is
-			-- Set the `po_file'.
+			-- Set `po_file' to `po'.
 		require
 			po_not_void: po /= Void
 		do
 			po_file := po
+		ensure
+			po_file_set: po_file = po
 		end
 
 	set_source_file_name (a_str: STRING) is
-			-- Set `source_file_name' with `a_str'.
+			-- Set `source_file_name' to `a_str'.
+		require
+			a_str_not_void: a_str /= Void
 		do
 			source_file_name := a_str
 		ensure
@@ -77,7 +83,9 @@ feature -- Access
 		end
 
 	set_source_text (a_file: STRING) is
-			-- Set `source_text' with `a_file'.
+			-- Set `source_text' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
 		do
 			source_text := a_file
 		ensure
@@ -86,7 +94,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	analyse_call(node: ACCESS_FEAT_AS) is
+	analyse_call (node: ACCESS_FEAT_AS) is
+			-- Analyze if call which `node' represents is a call to a translate feature.
+			--
+			-- `node': AST node of a feature call which is analyzed
 		local
 			l_feature_name: STRING
 			param1: STRING_AS
@@ -129,8 +140,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_access_id_as(l_as: ACCESS_ID_AS) is
-			-- eh?
+	process_access_id_as (l_as: ACCESS_ID_AS) is
+			-- Process `l_as'.
+			--
+			-- `l_as': AST node representing an access on an identifier
 		do
 			analyse_call(l_as)
 			safe_process (l_as.feature_name)
@@ -138,10 +151,9 @@ feature {NONE} -- Implementation
 		end
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
-			-- process a feature
-			-- what do we want from a feature?
-			-- it must be a feature call to feature i18n of SHARED_I18N_LOCALIZATOR
-			-- (check others later)
+			-- Process `l_as'.
+			--
+			-- `l_as': AST node representing an access on a feature
 		do
 			analyse_call(l_as)
 			safe_process (l_as.feature_name)
@@ -264,6 +276,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end

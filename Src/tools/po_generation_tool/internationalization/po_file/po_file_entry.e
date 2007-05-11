@@ -8,12 +8,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PO_FILE_ENTRY
 
-feature --Creation
+feature {NONE} -- Initialization
 
-	make(a_msgid:STRING_GENERAL) is
+	make (a_msgid: STRING_GENERAL) is
+			-- Initialize entry with `a_msgid' as message ID.
+			--
+			-- `a_msgid': Message ID for new entry
 		require
 			argument_not_void: a_msgid /= Void
 		do
@@ -23,10 +26,10 @@ feature --Creation
 			msgid_set: a_msgid.as_string_32.is_equal(msgid)
 		end
 
-feature {NONE} --Set msgid
+feature {NONE} -- Element change
 
-	set_msgid(a_msgid:STRING_GENERAL) is
-			-- Create a new PO_FILE_ENTRY with given msgid
+	set_msgid (a_msgid: STRING_GENERAL) is
+			-- Set message ID of entry to `a_msgid'.
 		require
 			a_msgid_not_void: a_msgid /= Void
 		do
@@ -36,15 +39,17 @@ feature {NONE} --Set msgid
 			a_msgid_set: msgid.is_equal (a_msgid.as_string_32)
 		end
 
-feature	-- Modification
+feature	-- Element change
 
-	add_user_comment(a_comment:STRING_GENERAL) is
-			-- add a user comment line (this will be wrapped onto several comment lines if it is too long)
+	add_user_comment (a_comment: STRING_GENERAL) is
+			-- Add a user comment line (this will be wrapped onto several comment lines if it is too long)
 			-- these comments are intended to be used for communication between translators
+			--
+			-- `a_comment': Comment which is added to user comments
 		require
 			comment_not_void: a_comment /= Void
 		local
-			lines: LINKED_LIST[STRING_32]
+			lines: LINKED_LIST [STRING_32]
 			temporary: STRING_32
 		do
 			lines := break_line (a_comment.as_string_32)
@@ -61,13 +66,16 @@ feature	-- Modification
 			user_comments.append (lines)
 		end
 
-	add_reference_comment(a_comment:STRING_GENERAL) is
-			-- add a reference comment line (this will be not be wrapped)
+	add_reference_comment (a_comment: STRING_GENERAL) is
+			-- Add a reference comment line (this will be not be wrapped)
 			-- This should give the location of the string
 			--  ideally in FILENAME:linenumber form
 			-- optional and ignored by msgfmt
+			--
+			-- `a_comment': Comment which is added to references
 		require
 			comment_not_void: a_comment /= Void
+			comment_does_not_contain_newlines: not a_comment.has_code (('%N').natural_32_code)
 		local
 			temporary: STRING_32
 		do
@@ -76,13 +84,15 @@ feature	-- Modification
 			reference_comments.extend (temporary)
 		end
 
-	add_automatic_comment(a_comment:STRING_GENERAL) is
-			-- add a automatic comment line (this will be not be wrapped)
-			-- fantastic GNU documentation does not say anything about this
-			-- type of header apart from the fact that "GNU tools" create and
-			-- maintain them. Use at own risk.
+	add_automatic_comment (a_comment: STRING_GENERAL) is
+			-- Add a automatic comment line (this will be not be wrapped)
+			-- These comment lines will be preserved if this po file is used
+			-- as a template.
+			--
+			-- `a_comment': Comment which is added to automatic comments
 		require
 			comment_not_void: a_comment /= Void
+			comment_does_not_contain_newlines: not a_comment.has_code (('%N').natural_32_code)
 		local
 			temporary: STRING_32
 		do
@@ -91,35 +101,32 @@ feature	-- Modification
 			automatic_comments.extend (temporary)
 		end
 
-
-	set_fuzzy(new:BOOLEAN) is
-			-- sets the "fuzzy" flag (this indicates doubts about the translation)
+	set_fuzzy (new: BOOLEAN) is
+			-- Set `fuzzy' to `new'.
 		do
 			fuzzy := new
 		ensure
 			fuzzy_set: new = fuzzy
 		end
 
-	set_c_format(new:BOOLEAN) is
-			-- sets the "c-format" flag (this indicates a string that is used as an argument for
-			-- a 'printf'-type function and causes msgfmt to do some extra checks on the string)
-		do
-			c_format := new
-		ensure
-			c_format_set: c_format = new
-		end
-
-feature --Indexes
+feature -- Access
 
 	msgid: STRING_32 is
+			-- Message ID of entry
 		do
-			Result := unbreak_line(msgid_lines)
+			Result := unbreak_line (msgid_lines)
+		ensure
+			msgid_not_void: Result /= Void
 		end
+
+	fuzzy: BOOLEAN
+			-- Is the translation fuzzy?
+			-- If true, the translation is marked as unsure.
 
 feature	-- Output
 
-	to_string:STRING_32 is
-				-- Output the entry as a unicode string
+	to_string: STRING_32 is
+			-- Entry as a unicode string
 		do
 			create Result.make_empty
  				--start with 2 lines of whitespace
@@ -128,39 +135,25 @@ feature	-- Output
  			Result.append_string (prepare_headers (user_comments))
  			Result.append_string (prepare_headers (automatic_comments))
  			Result.append_string (prepare_headers (reference_comments))
+ 				-- fuzzy flag if present
+ 			if fuzzy then
+ 				Result.append ("#, fuzzy%N")
+ 			end
 				-- now the msgid
 			Result.append_string(prepare_string("msgid", msgid_lines))
+		ensure
+			string_exists: Result /= Void
 		end
 
-feature --Flags
+feature {NONE} -- Implementation (formatting)
 
-	fuzzy: BOOLEAN
-	c_format: BOOLEAN
-
-feature {NONE} -- Internal formatting
-
-	wrap_line(line:STRING_32):LINKED_LIST[STRING_32] is
-			-- wraps a line into more sensible chunks
-		require
-			line_not_void: line /= Void
-		local
-			words: ARRAY[TUPLE[INTEGER, INTEGER]]
-		do
-				--  simple algorithm:
-				--	1: break line into words
-				--		implementation: array holding integers representing start & length of word
-				--		We wish to keep spaces, as they are part of the string, so a "word" for our purposes
-				--		contains all whitespace until the next real word
-				--	2: place words in line on a greedy basis. It is also possible to do this with dynamic programming
-
-				--parse line and fill words array
-			 create words.make (1, 20)
-		end
-
-	break_line(line:STRING_32):LINKED_LIST[STRING_32] is
-			-- breaks a line into 78-character chunks and returns them in a list
+	break_line (line: STRING_32): LINKED_LIST [STRING_32] is
+			-- Breaks a line into 78-character chunks and returns them in a list
+			--
 			-- NOTE: this will break in the middle of words.
 			-- The ending charater of a line is not '\', so more than 78 char is possible.
+		require
+			line_not_void: line /= Void
 		local
 			linear : LINEAR[WIDE_CHARACTER]
 			counter: INTEGER
@@ -201,12 +194,15 @@ feature {NONE} -- Internal formatting
 					Result.extend(accumulator)
 				end
 			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
-	unbreak_line( list: LINEAR[STRING_GENERAL]):STRING_32 is
-			-- undo effects of break_line
+	unbreak_line (list: LINEAR [STRING_GENERAL]): STRING_32 is
+			-- Undo effects of break_line.
 		require
-			argument_not_void: list /= Void
+			list_not_void: list /= Void
 		do
 			from
 				list.start
@@ -217,12 +213,15 @@ feature {NONE} -- Internal formatting
 				Result.append (list.item.as_string_32)
 				list.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-
-	prepare_headers (headers:LINKED_LIST[STRING_32]):STRING_32 is
+	prepare_headers (headers: LINKED_LIST [STRING_32]): STRING_32 is
+			-- Concatenate `headers' into one string.
+			-- Newlines are added between header lines.
 		require
-			argument_not_void: headers /=Void
+			headers_not_void: headers /=Void
 		do
 			create Result.make_empty
 			from
@@ -234,11 +233,16 @@ feature {NONE} -- Internal formatting
 				Result.append_string("%N")
 				headers.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-	prepare_string (key: STRING_32; string: LINKED_LIST[STRING_32]):STRING_32 is
+	prepare_string (key: STRING_32; string: LINKED_LIST [STRING_32]): STRING_32 is
+			-- Create output string for `string' and `key'.
+			--
+			-- If `string' does not fit on one line, the string is split over multiple lines.
 		require
-			argument_not_void: string /= Void
+			string_not_void: string /= Void
 			key_not_void: key /= Void
 		do
 			create Result.make_empty
@@ -262,22 +266,39 @@ feature {NONE} -- Internal formatting
 					string.forth
 				end
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-feature  {NONE} -- Implementation datastructures
+feature  {NONE} -- Implementation (datastructures)
 
 	user_comments: LINKED_LIST[STRING_32]
+			-- List of user comments
+			-- User comments start with "# "
+
 	automatic_comments: LINKED_LIST[STRING_32]
+			-- List of automatic comments
+			-- Automatic comments start with "#. "
+
 	reference_comments: LINKED_LIST[STRING_32]
+			-- List of reference comments
+			-- Reference comments start with "#: "
+
 	msgid_lines: LINKED_LIST[STRING_32]
+			-- List of message ID lines
 
 	initialize_datastructures is
-			-- creates the various lists
+			-- Initialize various lists.
 		do
 			create user_comments.make
 			create automatic_comments.make
 			create reference_comments.make
 			create msgid_lines.make
+		ensure
+			user_comments_not_void: user_comments /= Void
+			automatic_comments_not_void: automatic_comments /= Void
+			reference_comments_not_void: reference_comments /= Void
+			msgid_lines_not_void: msgid_lines /= Void
 		end
 
 indexing
@@ -311,6 +332,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end

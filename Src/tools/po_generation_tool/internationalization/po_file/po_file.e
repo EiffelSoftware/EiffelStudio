@@ -45,6 +45,9 @@ feature	{NONE} -- Initialization
 
 feature -- Access
 
+	headers: PO_FILE_HEADERS
+			-- Headers of po file
+
 	entry (msgid: STRING_GENERAL): PO_FILE_ENTRY is
 			-- File entry for `msgid'
 			--

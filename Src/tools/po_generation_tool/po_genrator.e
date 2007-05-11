@@ -46,7 +46,7 @@ feature -- Element change
 			source_file_name_set: source_file_name = a_str
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
 	file: PO_FILE
 			-- File where messages are added

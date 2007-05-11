@@ -502,17 +502,24 @@ feature {NONE} -- Implmentation
 
 	set_drag_area (a_is_for_horizontal: BOOLEAN) is
 			-- Set `drag_area_rectangle' and `start_x', `start_y' for tool bar.
+		local
+			l_row_height: INTEGER
 		do
+			l_row_height := tool_bar.row_height
+			-- Maybe the row height not setted at the moment, we use `standard_height' as default.
+			if l_row_height <= 0 then
+				l_row_height := tool_bar.standard_height
+			end
 			if a_is_for_horizontal then
 				-- Change to horizontal drag area.
 				tool_bar.set_start_x (internal_drag_area_size)
 				tool_bar.set_start_y (0)
-				create drag_area_rectangle.make (0, 0, internal_drag_area_size, tool_bar.row_height)
+				create drag_area_rectangle.make (0, 0, internal_drag_area_size, l_row_height)
 			else
 				-- Change to vertical drag area.
 				tool_bar.set_start_x (0)
 				tool_bar.set_start_y (internal_drag_area_size)
-				create drag_area_rectangle.make (0, 0, tool_bar.row_height, internal_drag_area_size)
+				create drag_area_rectangle.make (0, 0, l_row_height, internal_drag_area_size)
 			end
 		end
 

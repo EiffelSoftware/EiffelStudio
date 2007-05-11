@@ -1,6 +1,5 @@
 class
-	GEN_CLASS_1 [G -> ANY create default_create end]
+	GEN_CLASS_1 [G]
 
-create
 feature
 end

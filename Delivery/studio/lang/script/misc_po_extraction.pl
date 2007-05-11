@@ -39,25 +39,32 @@ select POT_FILE;
 unless (open DATABASE, "../../eifinit/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
-&extract;
+&extract ("\$EIFFEL_SRC/Delivery/studio/eifinit/default.xml");
 unless (open DATABASE, "../../eifinit/spec/windows/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
-&extract;
+&extract ("\$EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml");
 unless (open DATABASE, "../../eifinit/spec/unix/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
-&extract;
+&extract ("\$EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml");
 
 # Extracting names from wizard discription files.
 foreach $dsc_file (@pm_files){
 	unless (open DATABASE, $dsc_file) {
 		die "Error: Couldn't open $dsc_file: $!; aborting";
 	}
+	$count = 0;
+	$dsc_file =~ /[\\\/]([^\\\/]+\.dsc)/i;
+	$file_name = $1;
 	while ($line = <DATABASE>) {
+		$o_line = $line;
+		$count = $count + 1;
 		chomp;
 		if ($line =~ /NAME\s*=\s*\"((?:[^"]|\"\")+)\"/i) {
 			$extracted = $1;
+			print "#. $o_line\n";
+			print "#: $file_name:$count\n";
 			print "msgid \"$extracted\"\n";
 			print "msgstr \"\"\n\n";
 		}
@@ -67,10 +74,16 @@ foreach $dsc_file (@pm_files){
 select STDOUT;
 
 sub extract {
+	$count = 0;
 	while ($line = <DATABASE>) {
+		$count = $count + 1;
+		$o_line = $line;
+		$file_name = $_[0];
 		chomp;
 		if ($line =~ /DESCRIPTION\s*=\s*\"((?:[^"]|\"\")+)\"/i) {
 			$extracted = &escape_xml ($1);
+			print "#. $o_line\n";
+			print "#: $file_name:$count\n";
 			print "msgid \"$extracted\"\n";
 			print "msgstr \"\"\n\n";
 		}
@@ -83,6 +96,8 @@ sub extract {
 					# Follow the algerithm of {PREFERENCES_GRID}.formatted_name
 					# to ensure that i18n can find strings extracted.
 				$words = &upper_case (&make_words ($parent));
+				print "#. $o_line\n";
+				print "#: $file_name:$count\n";
 				print "msgid \"$words\"\n";
 				print "msgstr \"\"\n\n";
 			}

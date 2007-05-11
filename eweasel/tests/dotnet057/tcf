@@ -1,0 +1,15 @@
+test_name smart-object-automatic-implementation
+test_description The compiler should be smart about implementing to_string on Eiffel types.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw e.e $CLUSTER e.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

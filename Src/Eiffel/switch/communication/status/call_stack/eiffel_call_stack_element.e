@@ -95,6 +95,11 @@ feature -- Properties
 			is_function_non_void: routine.is_function implies Result /= Void
 		end
 
+	current_object_value: ABSTRACT_DEBUG_VALUE is
+			-- Current object's value.
+		deferred
+		end
+
 	locals: LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Value of local variables
 		local

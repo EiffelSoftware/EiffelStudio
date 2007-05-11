@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Observing event handling.
 
-	on_application_quit is
+	on_application_quit (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is killed.
 		do
 			run_button.enable_sensitive
@@ -247,13 +247,13 @@ feature {NONE} -- Observing event handling.
 			start_final_button.enable_sensitive
 		end
 
-	on_application_launched is
+	on_application_launched (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is launched.
 		do
-			on_application_resumed
+			on_application_resumed (dbg)
 		end
 
-	on_application_resumed is
+	on_application_resumed (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is resumed.
 		do
 			run_button.disable_sensitive
@@ -262,7 +262,7 @@ feature {NONE} -- Observing event handling.
 			start_final_button.disable_sensitive
 		end
 
-	on_application_stopped is
+	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is stopped.
 		do
 			run_button.enable_sensitive

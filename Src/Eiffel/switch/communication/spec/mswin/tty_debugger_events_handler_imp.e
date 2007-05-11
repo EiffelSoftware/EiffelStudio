@@ -237,13 +237,13 @@ feature {NONE} -- Message related externals
 			"sizeof (MSG)"
 		end
 
-	Pm_noremove: INTEGER is 0
+--	Pm_noremove: INTEGER is 0
 
 	Pm_remove: INTEGER is 1
 
-	Pm_noyield: INTEGER is 2
+--	Pm_noyield: INTEGER is 2
 
-	Pm_qs_paint: INTEGER is 0x200000
+--	Pm_qs_paint: INTEGER is 0x200000
 
 	Pm_qs_postmessage: INTEGER is 0x980000;
 

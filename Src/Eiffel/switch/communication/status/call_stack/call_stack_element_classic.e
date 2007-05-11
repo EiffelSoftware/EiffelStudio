@@ -24,6 +24,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	DEBUG_VALUE_EXPORTER
+
 	SHARED_EIFFEL_PROJECT
 
 	SHARED_CONFIGURE_RESOURCES
@@ -45,6 +47,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_WORKBENCH
 		export
@@ -166,6 +170,24 @@ feature -- Properties
 			--| the "line" between the two processes is free.
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
+
+	current_object_value: ABSTRACT_DEBUG_VALUE is
+			-- Current object's value.
+		local
+			dobj: DEBUGGED_OBJECT
+			ct: CLASS_TYPE
+		do
+			dobj := debugger_manager.object_manager.debugged_object (object_address, 0, 0)
+			if dobj /= Void then
+				ct := dobj.class_type
+				if dobj.is_special then
+					create {SPECIAL_VALUE} Result.make_set_ref (hex_to_pointer (object_address), ct.type_id)
+				else
+					check not_expanded: not ct.is_expanded end
+					create {REFERENCE_VALUE} Result.make (hex_to_pointer (object_address), ct.type_id)
+				end
+			end
+		end
 
 feature {EIFFEL_CALL_STACK} -- Implementation
 

@@ -11,22 +11,22 @@ deferred class
 
 feature {DEBUGGER_MANAGER} -- Event handling
 
-	on_application_launched is
+	on_application_launched (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has just been launched.
 		do
 		end
 
-	on_application_resumed is
+	on_application_resumed (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has been resumed after a stop.
 		do
 		end
 
-	on_application_stopped is
+	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has just stopped (paused).
 		do
 		end
 
-	on_application_quit is
+	on_application_quit (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has just died (exited).
 		do
 		end

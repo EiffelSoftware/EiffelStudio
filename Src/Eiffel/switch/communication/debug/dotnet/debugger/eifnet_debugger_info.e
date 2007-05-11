@@ -76,9 +76,11 @@ feature -- Reset
 			reset_debugger_error
 
 				--| Various |--
-			current_stack_info := Void
-			previous_stack_info := Void
-			current_callstack_initialized := False
+			if previous_stack_info /= Void then
+				previous_stack_info.reset
+				previous_stack_info := Void
+			end
+			reset_current_callstack
 
 			last_control_mode := 0
 
@@ -125,6 +127,7 @@ feature -- Current CallStack
 	reset_current_callstack is
 			-- Reset current callstack information
 		do
+			current_stack_info.reset
 			current_stack_info := Void
 			current_callstack_initialized := False
 		end

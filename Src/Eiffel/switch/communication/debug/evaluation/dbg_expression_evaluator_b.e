@@ -5,6 +5,7 @@ indexing
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
+	fixme: "FIXME jfiat [2007/05/07] : factorize code between evaluate_array_const_b and evaluate_tuple_const_b"
 
 class
 	DBG_EXPRESSION_EVALUATOR_B

@@ -245,44 +245,47 @@ feature -- Debug Operation
 
 feature {DEBUGGER_MANAGER} -- Debugging operation
 
+	debug_operate (a_exec_mode: INTEGER) is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.set_execution_mode (a_exec_mode)
+			resume_workbench_application
+		end
+
 	debug_step_next is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			manager.application.set_execution_mode ({EXEC_MODES}.step_by_step)
-			resume_workbench_application
+			debug_operate ({EXEC_MODES}.step_by_step)
 		end
 
 	debug_step_into is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			manager.application.set_execution_mode ({EXEC_MODES}.step_into)
-			resume_workbench_application
+			debug_operate ({EXEC_MODES}.step_into)
 		end
 
 	debug_step_out is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			manager.application.set_execution_mode ({EXEC_MODES}.out_of_routine)
-			resume_workbench_application
+			debug_operate ({EXEC_MODES}.out_of_routine)
 		end
 
 	debug_run is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			manager.application.set_execution_mode ({EXEC_MODES}.user_stop_points)
-			resume_workbench_application
+			debug_operate ({EXEC_MODES}.user_stop_points)
 		end
 
 	debug_run_without_stop_points is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			manager.application.set_execution_mode ({EXEC_MODES}.no_stop_points)
-			resume_workbench_application
+			debug_operate ({EXEC_MODES}.no_stop_points)
 		end
 
 	debug_kill is

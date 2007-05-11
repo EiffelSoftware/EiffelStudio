@@ -524,17 +524,19 @@ feature {NONE} -- Implementation
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 		do
 			l_file_name := a_text_field.text
-			create l_file.make (l_file_name)
-			create l_dir.make (l_file_name)
-			if l_file.exists and then not l_file.is_directory then
-				metric_tool.show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool.develop_window)
-				l_archive := metric_manager.last_loaded_metric_archive
-				a_action.call ([True, not metric_manager.has_error, l_archive])
-				metric_manager.clear_last_error
-			elseif not l_dir.exists then
-				a_action.call ([False, False, Void])
+			if not l_file_name.is_empty then
+				create l_file.make (l_file_name)
+				create l_dir.make (l_file_name)
+				if l_file.exists and then not l_file.is_directory then
+					metric_tool.show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool.develop_window)
+					l_archive := metric_manager.last_loaded_metric_archive
+					a_action.call ([True, not metric_manager.has_error, l_archive])
+					metric_manager.clear_last_error
+				elseif not l_dir.exists then
+					a_action.call ([False, False, Void])
+				end
+				a_timer.set_interval (0)
 			end
-			a_timer.set_interval (0)
 		end
 
 	check_selected_metrics (a_list: LIST [STRING]): STRING_GENERAL is

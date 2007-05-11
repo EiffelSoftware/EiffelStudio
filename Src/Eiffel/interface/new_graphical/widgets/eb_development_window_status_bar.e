@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
 
-			Debugger_manager.add_observer (Current)
+			dbg.add_observer (Current)
 		end
 
 	build_interface is
@@ -386,8 +386,8 @@ feature {NONE} -- Implementation: event handling
 			else
 				on_project_updated
 			end
-			if debugger_manager.application_is_executing then
-				if debugger_manager.application_is_stopped then
+			if dbg.application_is_executing then
+				if dbg.application_is_stopped then
 					on_application_stopped (dbg)
 				else
 					on_application_launched (dbg)

@@ -108,7 +108,6 @@ feature -- Output
 	to_string:STRING_32 is
 			-- prints header entry as string_32
 		local
-			counter: INTEGER
 			accumulator: STRING_32
 		do
 				---put header lines into msgstr for Precursor

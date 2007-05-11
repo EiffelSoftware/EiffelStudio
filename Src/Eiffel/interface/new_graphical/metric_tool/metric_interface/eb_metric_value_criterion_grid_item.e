@@ -46,6 +46,7 @@ feature{NONE} -- Initialization
 			dialog_ok_actions.extend (agent change_actions.call (Void))
 			set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
 			set_dialog_function (agent value_criterion_dialog)
+			set_is_empty_tester_displayed (True)
 		end
 
 	make_with_setting (a_domain: like domain; a_for_archive: BOOLEAN) is
@@ -82,6 +83,10 @@ feature -- Status report
 
 	is_for_archive: BOOLEAN
 			-- Is Current item for archive node?
+
+	is_empty_tester_displayed: BOOLEAN
+			-- Should some message be displayed when no value tester is specified?
+			-- Default: True
 
 feature -- Setting
 
@@ -129,6 +134,14 @@ feature -- Setting
 			is_for_archive := b
 		ensure
 			is_for_archive_set: is_for_archive = b
+		end
+
+	set_is_empty_tester_displayed (b: BOOLEAN) is
+			-- Set `is_empty_tester_displayed' with `b'.
+		do
+			is_empty_tester_displayed := b
+		ensure
+			is_empty_tester_displayed_set: is_empty_tester_displayed = b
 		end
 
 feature -- Drop
@@ -180,7 +193,9 @@ feature{NONE} -- Implementation
 
 				-- Prepare the value tester part			
 			editor_token_output.wipe_out
-			expression_generator.generate_output (l_tester)
+			if is_empty_tester_displayed or else not l_tester.criteria.is_empty then
+				expression_generator.generate_output (l_tester)
+			end
 			l_tokens.append (editor_token_output.generated_output)
 			if is_for_archive then
 				create l_component.make (l_tokens, 2)

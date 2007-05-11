@@ -165,6 +165,8 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent file_name_combo.set_focus)
 			set_default_cancel_button (close_btn)
 			set_icon_pixmap (pixmaps.icon_pixmaps.tool_metric_icon)
+			backup_btn.set_minimum_width (190)
+			import_btn.set_minimum_width (190)
 		end
 
 feature {NONE} -- Actions

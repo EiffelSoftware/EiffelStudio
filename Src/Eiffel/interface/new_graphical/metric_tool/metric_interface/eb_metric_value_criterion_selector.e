@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			l_value_item: EB_METRIC_VALUE_CRITERION_GRID_ITEM
 		do
 			create l_value_item.make_with_setting (a_metric_value_retriever.input_domain, False)
-			l_value_item.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, l_value_item))
+			l_value_item.set_is_empty_tester_displayed (False)
 			l_value_item.dialog_ok_actions.extend (agent resize_grid (l_value_item))
 			l_value_item.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
 			l_value_item.set_dialog_function (metric_value_retriever_dialog_function)

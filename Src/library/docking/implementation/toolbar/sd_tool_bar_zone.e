@@ -355,9 +355,13 @@ feature -- Query
 			-- Current size.
 		do
 			if is_vertical then
-				Result := tool_bar.height
+				Result := tool_bar.minimum_height
 			else
-				Result := tool_bar.width
+				-- On GTK, SD_TOOL_BAR `minimum_width' is not always equal `width' here.
+				-- On Windows, SD_TOOL_BAR `minimum_width' is always equal `width' here.
+				-- See bug#12651, so we use `minimum_width' for it.
+				-- Same for `minimum_height' and `height'.
+				Result := tool_bar.minimum_width
 			end
 		ensure
 			valid: Result >= 0

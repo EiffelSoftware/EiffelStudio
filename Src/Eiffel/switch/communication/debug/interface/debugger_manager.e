@@ -909,7 +909,7 @@ feature -- Debugging events
 			debugger_output_message (s)
 
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_launched)
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_launched (Current))
 
 				--| Output information			
 			display_application_status
@@ -966,7 +966,7 @@ feature -- Debugging events
 			end
 
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_resumed)
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_resumed (Current))
 		end
 
 	frozen on_application_quit is
@@ -985,7 +985,7 @@ feature -- Debugging events
 				debugger_status_message (debugger_names.t_Application_exited)
 
 					--| Observers
-				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit)
+				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit (Current))
 					--| Kept objects
 				application_status.clear_kept_objects
 

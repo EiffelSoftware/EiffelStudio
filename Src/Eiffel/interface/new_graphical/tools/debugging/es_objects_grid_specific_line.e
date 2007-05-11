@@ -12,7 +12,7 @@ class
 inherit
 
 	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
-	
+
 	ES_OBJECTS_GRID_LINE
 		redefine
 			record_layout,
@@ -133,6 +133,7 @@ feature -- Change
 				written_line /= Void
 				and then written_line /= Current
 				and then written_line.row /= Void
+				and then written_line.row.parent /= Void
 				and then written_line.row.is_show_requested
 				and then written_line.compute_grid_display_done
 			then

@@ -54,6 +54,16 @@ feature -- Access
 			Result.put ("UCS-4-SWAPPED", "UCS-4-SWAPPED")
 		end
 
+	big_endian_codesets: HASH_TABLE [STRING, STRING] is
+		once
+			create Result.make (5)
+			Result.put ("UCS-2BE", "UCS-2BE")
+			Result.put ("UNICODEBIG", "UNICODEBIG")
+			Result.put ("UTF-16BE", "UTF-16BE")
+			Result.put ("UCS-4BE", "UCS-4BE")
+			Result.put ("UTF-32BE", "UTF-32BE")
+		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

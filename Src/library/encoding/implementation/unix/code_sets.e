@@ -54,6 +54,17 @@ feature -- Access
 			Result.put ("UCS-4-SWAPPED", "UCS-4-SWAPPED")
 		end
 
+	little_endian_codesets: HASH_TABLE [STRING, STRING] is
+		once
+			create Result.make (5)
+			Result.put ("UCS-2LE", "UCS-2LE")
+			Result.put ("UNICODELITTLE", "UNICODELITTLE") -- Alias
+			Result.put ("UTF-16LE", "UTF-16LE")
+			Result.put ("UCS-4LE", "UCS-4LE")
+			Result.put ("UTF-32LE", "UTF-32LE")
+		end
+
+
 	big_endian_codesets: HASH_TABLE [STRING, STRING] is
 		once
 			create Result.make (5)

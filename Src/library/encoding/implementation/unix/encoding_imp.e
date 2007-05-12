@@ -23,13 +23,24 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_out_count: INTEGER
 			l_string: STRING_8
+			l_string_32: STRING_32
+			l_big_endian: BOOLEAN
 		do
+			l_big_endian := big_endian_codesets.has (a_from_code_page)
 			if four_byte_codesets.has (a_from_code_page) then
-				l_pointer := string_32_to_pointer (a_from_string)
-				l_count := (a_from_string.count) * 4
+				l_string_32 := a_from_string.twin
+				if not l_big_endian then
+					l_string_32.precede (byte_order_mark)
+				end
+				l_pointer := string_32_to_pointer (l_string_32)
+				l_count := (l_string_32.count) * 4
 			elseif two_byte_codesets.has (a_from_code_page) then
-				l_pointer := wide_string_to_pointer (a_from_string.as_string_32)
-				l_count := (a_from_string.count) * 2
+				l_string_32 := a_from_string.twin
+				if not l_big_endian then
+					l_string_32.precede (byte_order_mark)
+				end
+				l_pointer := wide_string_to_pointer (l_string_32)
+				l_count := (l_string_32.count) * 2
 			else
 				l_pointer := multi_byte_to_pointer (a_from_string.as_string_8)
 				l_count := a_from_string.count
@@ -103,6 +114,12 @@ feature {NONE} -- Implementation
 			end
 			l_managed_data.put_natural_32 (0, i * 4)
 			Result := l_managed_data.item
+		end
+
+	byte_order_mark: CHARACTER_32 is
+			-- Byte order mark (BOM)
+		once
+			Result := (0xFEFF).to_character_32
 		end
 
 	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is

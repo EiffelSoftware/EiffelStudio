@@ -25,8 +25,9 @@ feature -- String encoding convertion
 			l_string: STRING_8
 			l_string_32: STRING_32
 			l_big_endian: BOOLEAN
+			l_no_endian: BOOLEAN
 		do
-			l_big_endian := big_endian_codesets.has (a_from_code_page)
+			l_big_endian := big_endian_codesets.has (a_from_code_page) or else (not is_little_endian and not little_endian_codesets.has (a_from_code_page))
 			if four_byte_codesets.has (a_from_code_page) then
 				l_string_32 := a_from_string.twin
 				if not l_big_endian then
@@ -48,15 +49,36 @@ feature -- String encoding convertion
 			l_pointer := c_iconv (multi_byte_to_pointer (a_from_code_page), multi_byte_to_pointer (a_to_code_page), l_pointer, l_count, $l_out_count, $last_conversion_successful)
 			if last_conversion_successful then
 				if l_pointer /= Void then
+					l_no_endian := not big_endian_codesets.has (a_to_code_page) and not little_endian_codesets.has (a_to_code_page)
 					if four_byte_codesets.has (a_to_code_page) then
 						Result := pointer_to_string_32 (l_pointer, l_out_count)
-						if not Result.is_empty and then (Result.code (1) = 0xFEFF or else Result.code (1) = 0xFFFE) then
-							Result := Result.substring (2, Result.count)
+						if not Result.is_empty then
+							if bom_little_endian (Result.code (1)) then
+								Result := Result.substring (2, Result.count)
+								if l_no_endian and then not is_little_endian then
+									Result := string_32_switch_endian (Result)
+								end
+							elseif bom_big_endian (Result.code (1)) then
+								Result := Result.substring (2, Result.count)
+								if l_no_endian and then is_little_endian then
+									Result := string_32_switch_endian (Result)
+								end
+							end
 						end
 					elseif two_byte_codesets.has (a_to_code_page) then
 						Result := pointer_to_wide_string (l_pointer, l_out_count)
-						if not Result.is_empty and then (Result.code (1) = 0xFEFF or else Result.code (1) = 0xFFFE) then
-							Result := Result.substring (2, Result.count)
+						if not Result.is_empty then
+							if bom_little_endian (Result.code (1)) then
+								Result := Result.substring (2, Result.count)
+								if l_no_endian and then not is_little_endian then
+									Result := string_16_switch_endian (Result)
+								end
+							elseif bom_big_endian (Result.code (1)) then
+								Result := Result.substring (2, Result.count)
+								if l_no_endian and then is_little_endian then
+									Result := string_16_switch_endian (Result)
+								end
+							end
 						end
 					else
 						Result := pointer_to_multi_byte (l_pointer, l_out_count)
@@ -83,6 +105,18 @@ feature -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	bom_little_endian (code: NATURAL_32): BOOLEAN is
+			-- Is `code' little endian BOM?
+		do
+			Result := code = 0xFEFF or code = 0xFEFF0000
+		end
+
+	bom_big_endian (code: NATURAL_32): BOOLEAN is
+			-- Is `code' big endian BOM?
+		do
+			Result := code = 0xFFFE or code = 0xFFFE0000
+		end
 
 	string_32_to_pointer (a_string: STRING_32): POINTER is
 		require

@@ -544,9 +544,9 @@ feature -- Plug and Makefile file
 
 			if final_mode then
 				init_name :=
-					Encoder.table_name (system.routine_id_counter.initialization_rout_id).twin
+					Encoder.routine_table_name (system.routine_id_counter.initialization_rout_id).twin
 				exp_init_name :=
-					Encoder.table_name (system.routine_id_counter.creation_rout_id).twin
+					Encoder.routine_table_name (system.routine_id_counter.creation_rout_id).twin
 
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (init_name)
@@ -555,7 +555,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (exp_init_name)
 				buffer.put_string ("[])();%N")
 
-				dispose_name := Encoder.table_name (system.routine_id_counter.dispose_rout_id).twin
+				dispose_name := Encoder.routine_table_name (system.routine_id_counter.dispose_rout_id).twin
 				buffer.put_string ("extern char *(*")
 				buffer.put_string (dispose_name)
 				buffer.put_string ("[])();%N%N")

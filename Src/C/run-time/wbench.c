@@ -100,7 +100,7 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type
 	BODY_INDEX body_id;
 
 	nstcall = 0;								/* No invariant check */
-	body_id = desc_tab[origin][dyn_type][offset].info;
+	body_id = desc_tab[origin][dyn_type][offset].body_index;
 
 	if (egc_frozen [body_id])
 		return egc_frozen[body_id];			 /* Frozen feature */
@@ -162,7 +162,7 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 
 	dyn_type = Dtype(object);
 
-	body_id = desc_tab[origin][dyn_type][offset].info;
+	body_id = desc_tab[origin][dyn_type][offset].body_index;
 
 	if (egc_frozen [body_id])
 		return egc_frozen[body_id];
@@ -219,7 +219,7 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE obj
 	unsigned char *OLD_IC;
 
 	nstcall = 0;								/* No invariant check */
-	body_id = desc_tab[origin][dyn_type][offset].info;
+	body_id = desc_tab[origin][dyn_type][offset].body_index;
 
 	OLD_IC = IC;								/* Save old IC */
 	if (egc_frozen [body_id])
@@ -262,7 +262,7 @@ rt_public long wpattr(int32 origin, int32 offset, int dyn_type)
 	 * Return a long integer.
 	 */
 
-	return (desc_tab[origin][dyn_type][offset].info);
+	return (desc_tab[origin][dyn_type][offset].offset);
 }
 
 rt_public long wattr_inv (int static_type, int32 feature_id, char *name, EIF_REFERENCE object)
@@ -335,7 +335,7 @@ rt_public long wpattr_inv (int32 origin, int32 offset, char *name, EIF_REFERENCE
  *	}
  */
 
-	return (desc_tab[origin][dyn_type][offset].info);
+	return (desc_tab[origin][dyn_type][offset].offset);
 }
 
 /* GENERIC CONFORMANCE */

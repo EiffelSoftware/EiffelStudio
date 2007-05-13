@@ -129,8 +129,7 @@ feature -- C code generation
 				else
 						-- Simple type objects are metamorphosed
 					basic_i ?= l_expr_type		-- Cannot fail
-					basic_i.metamorphose
-						(register, expr, buf, context.workbench_mode)
+					basic_i.metamorphose (register, expr, buf)
 				end
 				buf.put_character(';')
 				buf.put_new_line

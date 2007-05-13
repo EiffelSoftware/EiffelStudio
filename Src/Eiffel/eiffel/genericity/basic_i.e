@@ -101,7 +101,7 @@ feature -- Status report
 feature -- Byte code generation
 
 	metamorphose
-		(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
+		(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.

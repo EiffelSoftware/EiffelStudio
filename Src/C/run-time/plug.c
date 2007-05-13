@@ -104,11 +104,21 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	typres = eif_typeof_array_of ((int16)egc_str_dtype);
 	array = emalloc((uint32)typres);		/* If we return, it succeeded */
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
+	nstcall = 0;					/* Turn invariant checking off */
 #ifdef WORKBENCH
 	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
-#endif
-	nstcall = 0;					/* Turn invariant checking off */
+	{
+		EIF_UNION u_lower;
+		EIF_UNION u_upper;
+		u_lower.type = SK_INT32;
+		u_lower.value.EIF_INTEGER_32_value = 0;
+		u_upper.type = SK_INT32;
+		u_upper.value.EIF_INTEGER_32_value = argc-1;
+		(egc_arrmake)(array, u_lower, u_upper);	/* Call the `make' routine of ARRAY */
+	}
+#else
 	(egc_arrmake)(array, (EIF_INTEGER) 0, argc-1);	/* Call the `make' routine of ARRAY */
+#endif
 	sp = *(EIF_REFERENCE *) array;			/* Get the area of the ARRAY */
 	RT_GC_PROTECT (sp);		/* Protect the area */
 
@@ -188,8 +198,19 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	typres = eif_typeof_array_of(egc_any_dtype);
 	array = emalloc((uint32)typres);	/* If we return, it succeeded */
 	nstcall = 0;
-	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr);	
-								/* Call feature `make' in class ARRAY[ANY] */
+#ifdef WORKBENCH
+	{
+		EIF_UNION u_lower;
+		EIF_UNION u_upper;
+		u_lower.type = SK_INT32;
+		u_lower.value.EIF_INTEGER_32_value = 1;
+		u_upper.type = SK_INT32;
+		u_upper.value.EIF_INTEGER_32_value = stripped_nbr;
+		(egc_arrmake)(array, u_lower, u_upper); /* Call feature `make' in class ARRAY[ANY] */
+	}
+#else
+	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr); /* Call feature `make' in class ARRAY[ANY] */
+#endif
 
 	sp = *(EIF_REFERENCE *) array;		/* Get the area of the ARRAY */
 
@@ -315,7 +336,7 @@ rt_public EIF_REFERENCE makestr_with_hash (register char *s, register size_t len
 	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
 #endif
 	nstcall = 0;
-	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
+	RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	RT_STRING_SET_HASH_CODE(string, a_hash);
 	RT_STRING_SET_COUNT(string, len);
 #ifdef WORKBENCH
@@ -359,7 +380,7 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register siz
 	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
 #endif
 	nstcall = 0;
-	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
+	RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	RT_STRING_SET_HASH_CODE(string, a_hash);
 	RT_STRING_SET_COUNT(string, len);
 #ifdef WORKBENCH

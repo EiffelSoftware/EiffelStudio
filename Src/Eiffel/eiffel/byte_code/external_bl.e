@@ -173,7 +173,14 @@ feature
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := Encoder.table_name (routine_id)
+				table_name := Encoder.routine_table_name (routine_id)
+
+				if system.seed_of_routine_id (routine_id).type.type_i.is_formal and then l_type_i.is_basic then
+						-- Feature returns a reference that need to be used as a basic one.
+					buf.put_character ('*')
+					type_c.generate_access_cast (buf)
+					type_c := reference_c_type
+				end
 
 				buf.put_character ('(');
 				type_c.generate_function_cast (buf, argument_types)

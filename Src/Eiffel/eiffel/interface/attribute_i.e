@@ -60,9 +60,14 @@ feature
 			create Result
 			Result.set_body_index (body_index)
 			Result.set_type_a (type.actual_type)
-			Result.set_written_in (generate_in)
+			if generate_in = 0 then
+				Result.set_written_in (written_in)
+			else
+				Result.set_written_in (generate_in)
+			end
 			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
+			Result.set_is_attribute
 		end
 
 	undefinable: BOOLEAN is
@@ -117,7 +122,7 @@ feature -- Element Change
 			end
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
@@ -130,6 +135,9 @@ feature -- Element Change
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_extension (extension)
 				Result := external_b
+			elseif is_qualified and then type.type_i.is_formal then
+					-- Call a generic wrapper.
+				Result := Precursor (access_type, static_type, is_qualified)
 			else
 				create attribute_b
 				attribute_b.init (Current)
@@ -145,6 +153,11 @@ feature -- Element Change
 		local
 			result_type: TYPE_I
 			internal_name: STRING
+			return_type_name: STRING
+			rout_ids: like rout_id_set
+			rout_id: INTEGER
+			basic_i: BASIC_I
+			i: INTEGER
 		do
 			if used then
 					-- Generation of a routine to access the attribute
@@ -153,19 +166,95 @@ feature -- Element Change
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
 
-				buffer.generate_function_signature (result_type.c_type.c_string,
+				if byte_context.workbench_mode then
+					return_type_name := once "EIF_UNION"
+				else
+					return_type_name := result_type.c_type.c_string
+				end
+				buffer.generate_function_signature (return_type_name,
 					internal_name, True, Byte_context.header_buffer,
 					<<"Current">>, <<"EIF_REFERENCE">>)
 				buffer.indent
-				buffer.put_string ("return ")
+				if byte_context.workbench_mode then
+					buffer.put_string ("EIF_UNION r;")
+					buffer.put_new_line
+					buffer.put_string ("r.")
+					result_type.c_type.generate_typed_tag (buffer)
+					buffer.put_character (';')
+					buffer.put_new_line
+					buffer.put_string ("r.")
+					result_type.c_type.generate_typed_field (buffer)
+					buffer.put_string (" = ")
+				else
+					buffer.put_string ("return ")
+				end
 
 				generate_attribute_access (class_type, buffer, "Current")
 
-				buffer.put_character (';')
+				if byte_context.workbench_mode then
+					buffer.put_character (';')
+					buffer.put_new_line
+					buffer.put_string ("return r;")
+				else
+					buffer.put_character (';')
+				end
+
 				buffer.exdent
 				buffer.put_new_line
 				buffer.put_character ('}')
 				buffer.put_new_line
+
+				if byte_context.final_mode then
+							-- Generate generic wrappers if required.
+					from
+						rout_ids := rout_id_set
+						i := rout_ids.count
+					until
+						i <= 0
+					loop
+						rout_id := rout_ids.item (i)
+						if system.seed_of_routine_id (rout_id).has_formal then
+								-- Generate generic wrapper.
+							buffer.generate_function_signature
+								("EIF_REFERENCE", internal_name + "1", True,
+								 Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+							buffer.indent
+							basic_i ?= result_type
+							if basic_i /= Void then
+								byte_context.mark_result_used
+								buffer.put_string ("EIF_REFERENCE Result = (EIF_REFERENCE) 0;")
+								buffer.put_string ("RTLD;")
+								buffer.put_new_line
+								buffer.put_string ("RTLI(")
+								buffer.put_integer (2)
+								buffer.put_string (gc_rparan_semi_c)
+								buffer.put_new_line
+								buffer.put_local_registration (0, "Current")
+								buffer.put_new_line
+								buffer.put_local_registration (1, "Result")
+								buffer.put_new_line
+								basic_i.metamorphose (byte_context.result_register, byte_context.result_register.no_register, buffer)
+							else
+								buffer.put_string ("return ")
+							end
+							buffer.put_string (internal_name)
+							buffer.put_string (" (Current);")
+							buffer.put_new_line
+							if basic_i /= Void then
+								buffer.put_string ("RTLE;")
+								buffer.put_new_line
+								buffer.put_string ("return Result;");
+								buffer.put_new_line
+							end
+							buffer.exdent
+							buffer.put_character ('}')
+							buffer.put_new_line
+								-- Only 1 wrapper is generated.
+							i := 1
+						end
+						i := i - 1
+					end
+				end
 				buffer.put_new_line
 			end
 		end
@@ -195,7 +284,7 @@ feature -- Element Change
 			if byte_context.final_mode then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
 				if array_index >= 0 then
-					table_name := Encoder.table_name (rout_id)
+					table_name := Encoder.attribute_table_name (rout_id)
 
 						-- Generate following dispatch:
 						-- table [Actual_offset - base_offset]
@@ -302,8 +391,11 @@ feature -- Element Change
 			ba.append_short_integer (0)
 				-- Local count
 			ba.append_short_integer (0)
-				-- No argument clone
-			ba.append (Bc_no_clone_arg)
+				-- Precise result type (if required)
+			if result_type.is_true_expanded and then not result_type.is_bit then
+					-- Generate full type info.
+				result_type.make_full_type_byte_code (ba)
+			end
 				-- Feature name
 			ba.append_raw_string (feature_name)
 				-- Type where the feature is written in

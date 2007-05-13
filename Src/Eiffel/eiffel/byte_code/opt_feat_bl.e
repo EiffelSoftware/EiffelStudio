@@ -38,12 +38,12 @@ feature
 	fill_from (f: OPT_FEAT_B) is
 		do
 			multi_constraint_static := f.multi_constraint_static
-			type := f.type;
+			type := f.type
 			routine_id := f.routine_id
-			parameters := f.parameters;
-			array_desc := f.array_desc.enlarged;
+			set_parameters (f.parameters)
+			array_desc := f.array_desc.enlarged
 			is_item := f.is_item
-			access_area := f.access_area;
+			access_area := f.access_area
 			precursor_type := f.precursor_type
 			enlarge_parameters
 		end
@@ -164,7 +164,7 @@ feature -- Code generation
 			generate_end (gen_reg, class_type)
 		end
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

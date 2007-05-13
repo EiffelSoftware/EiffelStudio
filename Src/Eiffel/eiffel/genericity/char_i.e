@@ -168,6 +168,28 @@ feature -- Access
 			end
 		end
 
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			if is_character_32 then
+				buffer.put_string ("value.EIF_WIDE_CHAR_value")
+			else
+				buffer.put_string ("value.EIF_CHARACTER_value")
+			end
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			if is_character_32 then
+				buffer.put_string ("type = SK_WCHAR")
+			else
+				buffer.put_string ("type = SK_CHAR")
+			end
+		end
+
 feature -- Code generation
 
 	minimum_interval_value: CHAR_VAL_B is

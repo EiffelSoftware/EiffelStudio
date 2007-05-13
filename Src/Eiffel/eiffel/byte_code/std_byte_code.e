@@ -228,9 +228,23 @@ feature -- Analyzis
 			extern: BOOLEAN
 			buf: GENERATION_BUFFER
 			l_is_once: BOOLEAN
+			return_type_name: STRING
 			args: like argument_names
 			i: INTEGER
+			j: INTEGER
 			keep: BOOLEAN
+			seed: FEATURE_I
+			rout_id_set: ROUT_ID_SET
+			seed_type: TYPE_I
+			seed_arguments: FEAT_ARG
+			seed_types: ARRAY [STRING]
+			routine_id: INTEGER
+			t: TYPE_I
+			nb_refs: INTEGER
+			basic_i: BASIC_I
+			suffix: STRING
+			suffixes: LIST [STRING]
+			inline_agent_feature: FEATURE_I
 		do
 			buf := buffer
 			l_is_once := is_once
@@ -277,8 +291,13 @@ feature -- Analyzis
 				extern := False
 			end
 			args := argument_names
+			if not type_c.is_void and then context.workbench_mode then
+				return_type_name := once "EIF_UNION"
+			else
+				return_type_name := type_c.c_string
+			end
 			buf.generate_function_signature
-				(type_c.c_string, name, extern,
+				(return_type_name, name, extern,
 				 Context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
@@ -291,6 +310,9 @@ feature -- Analyzis
 
 				-- Declare variables required for once routines.
 			generate_once_data (internal_name)
+
+				-- Ensure the arguments are of the expected type
+			generate_argument_checks
 
 				-- Clone expanded parameters.
 			generate_expanded_initialization
@@ -406,6 +428,18 @@ feature -- Analyzis
 				buf.put_string ("#undef Result")
 				buf.put_new_line
 			end
+			if context.workbench_mode then
+				from
+					i := argument_count
+				until
+					i <= 0
+				loop
+					buf.put_string ("#undef arg")
+					buf.put_integer (i)
+					buf.put_new_line
+					i := i - 1
+				end
+			end
 
 				-- Leave a blank line after function definition
 			buf.put_string ("}%N%N")
@@ -420,7 +454,7 @@ feature -- Analyzis
 			if l_is_once and then context.is_once_call_optimized then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
-					(type_c.c_string, internal_name, True,
+					(return_type_name, internal_name, True,
 					 Context.header_buffer, args, argument_types)
 				buf.indent
 				if not type_c.is_void then
@@ -442,6 +476,190 @@ feature -- Analyzis
 				end
 				buf.exdent
 				buf.put_string ("));%N}%N%N")
+			end
+
+				-- Generate generic wrappers if required.
+			if context.final_mode then
+				from
+					if context.current_feature.is_inline_agent then
+						inline_agent_feature := context.current_feature
+					end
+					rout_id_set := context.current_feature.rout_id_set
+					j := rout_id_set.count
+				until
+					j <= 0
+				loop
+					routine_id := rout_id_set.item (j)
+					if inline_agent_feature = Void then
+						seed := system.seed_of_routine_id (	routine_id)
+					else
+						seed := inline_agent_feature
+					end
+					if seed.has_formal then
+							-- Generate generic wrapper.
+						suffix := seed.generic_fingerprint
+						if suffixes = Void then
+							create {LINKED_LIST [STRING]} suffixes.make
+							suffixes.compare_objects
+						end
+						if not suffixes.has (suffix) then
+							suffixes.force (suffix)
+							seed_arguments := seed.arguments
+							seed_type := seed.type.type_i
+							create seed_types.make (1, args.count)
+							i := 1
+							nb_refs := 0
+							if generate_current then
+								seed_types.put ("EIF_REFERENCE", 1)
+								nb_refs := 1
+								i := 2
+							end
+							if seed_arguments /= Void then
+								from
+									seed_arguments.start
+								until
+									seed_arguments.after
+								loop
+									t := seed_arguments.item.type_i
+									if t.is_formal then
+											-- Formal is passed as a reference.
+										seed_types.put ("EIF_REFERENCE", i)
+										nb_refs := nb_refs + 1
+									else
+										if t.is_anchored then
+												-- "like Current" is passed as a reference.
+											type_c := reference_c_type
+										else
+											type_c := t.c_type
+										end
+										seed_types.put (type_c.c_string, i)
+										if type_c.is_pointer then
+											nb_refs := nb_refs + 1
+										end
+									end
+									i := i + 1
+									seed_arguments.forth
+								end
+							end
+							buf.generate_function_signature
+								(seed_type.c_type.c_string, internal_name + suffix, True,
+								 Context.header_buffer, args, seed_types)
+							buf.indent
+							if not seed_type.is_void then
+								if seed_type.is_anchored then
+									type_c := reference_c_type
+								else
+									type_c := seed_type.c_type
+								end
+								type_c.generate (buf)
+								buf.put_string ("Result = ")
+								type_c.generate_cast (buf)
+								buf.put_string (" 0;")
+								buf.put_new_line
+								context.mark_result_used
+								if type_c.is_pointer then
+									nb_refs := nb_refs + 1
+								end
+							end
+							buf.put_string ("RTLD;")
+							buf.put_new_line
+							buf.put_string ("RTLI(")
+							buf.put_integer (nb_refs)
+							buf.put_string (gc_rparan_semi_c)
+							buf.put_new_line
+								-- `i' indicates the current argument number.
+							i := 1
+							if generate_current then
+								i := 2
+								nb_refs := nb_refs - 1
+								buf.put_local_registration (nb_refs, "Current")
+								buf.put_new_line
+							end
+							if seed_arguments /= Void then
+								from
+									seed_arguments.start
+								until
+									seed_arguments.after
+								loop
+									t := seed_arguments.item.type_i
+									if t.is_formal then
+											-- Formal is passed as a reference.
+										nb_refs := nb_refs - 1
+										buf.put_local_registration (nb_refs, args [i])
+										buf.put_new_line
+									else
+										if t.is_anchored then
+												-- "like Current" is passed as a reference.
+											type_c := reference_c_type
+										else
+											type_c := t.c_type
+										end
+										if type_c.is_pointer then
+											nb_refs := nb_refs - 1
+											buf.put_local_registration (nb_refs, args [i])
+											buf.put_new_line
+										end
+									end
+									i := i + 1
+									seed_arguments.forth
+								end
+							end
+							if not seed_type.is_void then
+								if seed_type.is_anchored then
+										-- "like Current" is passed as a reference.
+									type_c := reference_c_type
+								else
+									type_c := seed_type.c_type
+								end
+								if type_c.is_pointer then
+									check
+										nb_refs = 1
+									end
+									buf.put_local_registration (0, "Result")
+									buf.put_new_line
+									basic_i ?= real_type (result_type)
+								end
+								if basic_i /= Void then
+									basic_i.metamorphose (context.result_register, context.result_register.no_register, buf)
+								else
+									buf.put_string ("Result = ")
+								end
+							end
+							buf.put_string (internal_name)
+							buf.put_string (" (")
+							from
+								if seed_arguments /= Void then
+									seed_arguments.start
+								end
+								i := 1
+							until
+								i > args.count
+							loop
+								if i > 1 then
+									buf.put_character (',')
+									t := seed_arguments.item.type_i
+									if t.is_formal and then not real_type (arguments.item (i - 1)).c_type.is_pointer then
+										buf.put_character ('*')
+										real_type (arguments.item (i - 1)).c_type.generate_access_cast (buf)
+									end
+									seed_arguments.forth
+								end
+								buf.put_string (args.item (i))
+								i := i + 1
+							end
+							buf.put_string (gc_rparan_semi_c)
+							buf.put_new_line
+							buf.put_string ("RTLE;")
+							buf.put_new_line
+							if not seed_type.is_void then
+								buf.put_string ("return Result;")
+							end
+							buf.exdent
+							buf.put_string ("%N}%N%N")
+						end
+					end
+					j := j - 1
+				end
 			end
 
 			Context.inherited_assertion.wipe_out
@@ -496,26 +714,34 @@ end
 	generate_return_exp is
 			-- Generate the return expression
 		local
-			type_i: TYPE_I
+			type_c: TYPE_C
 			buf: GENERATION_BUFFER
 		do
 				-- Do not forget to remove the GC hooks before returning
 				-- if they have already been generated. For instance, when
 				-- generating return for a once function, hooks have not
 				-- been generated.
-			type_i := real_type (result_type)
 			if not result_type.is_void then
+				type_c := real_type (result_type).c_type
 				buf := buffer
-				buf.put_string ("return ")
-					-- If Result was used, generate it. Otherwise, its value
-					-- is simply the initial one (i.e. generic 0).
-					-- Note: in workbench, we always return the result. It may
-					--       have been changed by the user (see class EDIT_ITEM)
-				if context.workbench_mode or else context.result_used then
-					buf.put_string ("Result;")
+				if context.workbench_mode then
+						-- Note: in workbench, we always return the result. It may
+						--       have been changed by the user (see class EDIT_ITEM)
+					buf.put_string ("{ EIF_UNION r; r.")
+					type_c.generate_typed_tag (buf)
+					buf.put_string ("; r.")
+					type_c.generate_typed_field (buf)
+					buf.put_string (" = Result; return r; }")
 				else
-					type_i.c_type.generate_cast (buf)
-					buf.put_string ("0;")
+					buf.put_string ("return ")
+						-- If Result was used, generate it. Otherwise, its value
+						-- is simply the initial one (i.e. generic 0).
+					if context.result_used then
+						buf.put_string ("Result;")
+					else
+						type_c.generate_cast (buf)
+						buf.put_string ("0;")
+					end
 				end
 				buf.put_new_line
 			end
@@ -1052,6 +1278,54 @@ end
 
 				-- Separate declarations and body with a blank line
 			buf.put_new_line
+		end
+
+	generate_argument_checks is
+			-- Generate checks that ensure that arguments are of the expected type.
+		local
+			i: INTEGER
+			types: like arguments
+			c_type: TYPE_C
+			buf: like buffer
+		do
+			if context.workbench_mode then
+				i := argument_count
+				if i > 0 then
+					from
+						buf := buffer
+						types := arguments
+					until
+						i <= 0
+					loop
+						c_type := context.real_type (types [i]).c_type
+						if not c_type.is_pointer then
+								-- The argument type is not reference, so it might be boxed.
+							buf.put_string ("if (arg")
+							buf.put_integer (i)
+							buf.put_string ("x.type == SK_REF) arg")
+							buf.put_integer (i)
+							buf.put_string ("x.")
+							c_type.generate_typed_field (buf)
+							buf.put_string (" = * ")
+							c_type.generate_access_cast (buf)
+							buf.put_string (" arg")
+							buf.put_integer (i)
+							buf.put_string ("x.value.EIF_REFERENCE_value;")
+							buf.put_new_line
+						end
+						buf.left_margin
+						buf.put_string ("#define arg")
+						buf.put_integer (i)
+						buf.put_string (" arg")
+						buf.put_integer (i)
+						buf.put_string ("x.")
+						c_type.generate_typed_field (buf)
+						buf.put_new_line
+						buf.restore_margin
+						i := i - 1
+					end
+				end
+			end
 		end
 
 	generate_result_declaration (may_need_volatile: BOOLEAN) is
@@ -1744,7 +2018,7 @@ feature {NONE} -- Convenience
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -13,43 +13,35 @@ inherit
 
 feature -- for dead code removal
 
-	is_attribute: BOOLEAN is True
-			-- is the feature_i associated an attribute ?
+	is_attribute: BOOLEAN is
+			-- Is the entry associated with an attribute?
+		do
+			Result := True
+		end
 
 feature -- previously in ATTR_UNIT
-
-	new_poly_table (routine_id: INTEGER): ATTR_TABLE is
-			-- New associated polymorhic table
-		do
-			create Result.make (routine_id)
-		end;
 
 	entry (class_type: CLASS_TYPE): ATTR_ENTRY is
 			-- Attribute entry in an attribute offset table
 		do
-			create Result;
-			Result.set_type_id (class_type.type_id);
-			Result.set_feature_id (feature_id);
-			Result.set_type (feature_type (class_type));
-		end;
+			create Result
+			Result.set_type_id (class_type.type_id)
+			Result.set_feature_id (feature_id)
+			Result.set_type (feature_type (class_type))
+		end
 
 feature -- from ATTR_ENTRY
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Make byte code for an offset entry
+	used: BOOLEAN is
+			-- Is an attribute entry used?
 		do
-				-- Dynamic type
-			ba.append_short_integer (type_id - 1);
-				-- Offset encoding
-			System.class_type_of_id (type_id).skeleton.make_offset_byte_code
-					(ba, feature_id);
-		end;
-
-	used: BOOLEAN is True;
-			-- Is an attribute entry used ?
+			Result := True
+		end
 
 	workbench_offset: INTEGER is
 			-- Offset of attribute in object structure
+		require
+			is_attribute: is_attribute
 		local
 			skel: SKELETON
 		do
@@ -59,7 +51,7 @@ feature -- from ATTR_ENTRY
 		end;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

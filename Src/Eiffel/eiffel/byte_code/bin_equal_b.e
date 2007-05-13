@@ -169,27 +169,25 @@ feature
 	generate is
 			-- Generate expression
 		local
-			basic_i: BASIC_I;
+			basic_i: BASIC_I
 			buf: GENERATION_BUFFER
 		do
-			left.generate;
-			right.generate;
+			left.generate
+			right.generate
 			buf := buffer
 			if left_register /= Void then
-				basic_i ?= context.real_type (left.type);
-				basic_i.metamorphose
-					(left_register, left, buf, context.workbench_mode);
-				buf.put_character (';');
-				buf.put_new_line;
-			end;
+				basic_i ?= context.real_type (left.type)
+				basic_i.metamorphose (left_register, left, buf)
+				buf.put_character (';')
+				buf.put_new_line
+			end
 			if right_register /= Void then
-				basic_i ?= context.real_type (right.type);
-				basic_i.metamorphose
-					(right_register, right, buf, context.workbench_mode);
-				buf.put_character (';');
-				buf.put_new_line;
-			end;
-		end;
+				basic_i ?= context.real_type (right.type)
+				basic_i.metamorphose (right_register, right, buf)
+				buf.put_character (';')
+				buf.put_new_line
+			end
+		end
 
 	print_register is
 			-- Print expression value

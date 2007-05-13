@@ -86,13 +86,6 @@ feature -- Previously in POLY_UNIT
 
 feature -- previously in POLY_UNIT
 
-	new_poly_table (routine_id: INTEGER): POLY_TABLE [ENTRY] is
-			-- New associated polymophic unit table
-		require
-			valid_routine_id: routine_id /= 0
-		deferred
-		end;
-
 	entry (class_type: CLASS_TYPE): ENTRY is
 			-- Entry in a poly-table for final mode
 		require
@@ -207,11 +200,6 @@ feature -- from ENTRY
 			is_generic : is_generic
 		do
 			type.make_gen_type_byte_code (ba, False)
-		end;
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Make byte code for current entry.
-		deferred
 		end;
 
 indexing

@@ -927,7 +927,8 @@ rt_public void desc_updt(void)
 				rout_count = wshort();
 				SAFE_ALLOC(desc_ptr, struct desc_info, rout_count);
 				for (i=0; i<rout_count;i++) {
-					desc_ptr[i].info = wuint32();
+					desc_ptr[i].body_index = wuint32();
+					desc_ptr[i].offset = wuint32();
 					desc_ptr[i].type = wshort();
 /* GENCONF */
 					desc_ptr[i].gen_type = wtype_array((int16 *)0);
@@ -938,7 +939,7 @@ rt_public void desc_updt(void)
 	{
 		int i;
 		for (i=0;i<rout_count;i++)
-			dprintf(4) ("\t%d: body_index = %d, type = %d\n", i, desc_ptr[i].info, desc_ptr[i].type);
+			dprintf(4) ("\t%d: body_index = %d, offset = %d, type = %d\n", i, desc_ptr[i].body_index, desc_ptr[i].offset, desc_ptr[i].type);
 	}
 #endif
 				IMDSC(desc_ptr, org_id, RTUD(type_id-1));

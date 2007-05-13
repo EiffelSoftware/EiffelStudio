@@ -101,6 +101,8 @@ RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 RT_LNK EIF_REFERENCE cmalloc(size_t nbytes);				/* Allocate a C object */
 RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems);			/* Reallocate an Eiffel special object */
 
+RT_LNK EIF_REFERENCE eif_box(EIF_UNION v);                  /* Create a boxed version of a basic value */
+
 #ifdef __cplusplus
 }
 #endif

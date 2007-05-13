@@ -34,9 +34,7 @@ feature -- Final mode
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
-			new_unit: ENTRY
 			feature_i: FEATURE_I
-			rout_id: INTEGER
 		do
 			from
 				start
@@ -45,10 +43,7 @@ feature -- Final mode
 			loop
 				feature_i := item_for_iteration
 				if feature_i.has_entry then
-					rout_id := key_for_iteration
-					new_unit := feature_i.new_entry (rout_id)
-					new_unit.set_class_id (id)
-					History_control.add_new (new_unit, rout_id)
+					History_control.add_new (feature_i, id, key_for_iteration)
 				end
 				forth
 			end

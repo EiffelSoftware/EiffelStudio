@@ -181,8 +181,7 @@ feature -- Byte code generation
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					basic_type.metamorphose (basic_register, reg,
-									buf, context.workbench_mode)
+					basic_type.metamorphose (basic_register, reg, buf)
 					buf.put_character (';')
 					buf.put_new_line
 				end
@@ -195,6 +194,123 @@ feature -- Byte code generation
 			reg_not_void: reg /= Void
 			typ_not_void: typ /= Void
 		do
+		end
+
+	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I; result_register: REGISTER) is
+			-- Generate feature call in a `typ' context
+			-- in workbench mode.
+		require
+			result_register_attached: c_type.is_pointer implies result_register /= Void
+		local
+			is_nested: BOOLEAN
+			rout_info: ROUT_INFO
+			buf: GENERATION_BUFFER
+			cl_type_i: CL_TYPE_I
+			return_type: TYPE_C
+		do
+			is_nested := not is_first
+			buf := buffer
+
+			if precursor_type /= Void then
+				cl_type_i ?= context.real_type (precursor_type)
+				check
+					cl_type_i_attached: cl_type_i /= Void
+				end
+			else
+				cl_type_i := typ
+			end
+
+			return_type := c_type
+			if not return_type.is_void then
+				buf.put_character ('(')
+				buf.put_character ('(')
+				if return_type.is_pointer then
+					context.print_argument_register (result_register, buf)
+					buf.put_string (" = ")
+				end
+			end
+			buf.put_character ('(')
+			return_type.generate_function_cast (buf, argument_types)
+
+			if
+				Compilation_modes.is_precompiling or else
+				cl_type_i.base_class.is_precompiled
+			then
+				if is_nested and need_invariant then
+					buf.put_string ("RTVPF(")
+				else
+					buf.put_string ("RTWPF(")
+				end
+				rout_info := System.rout_info_table.item (routine_id)
+				buf.put_class_id (rout_info.origin)
+				buf.put_string (gc_comma)
+				buf.put_integer (rout_info.offset)
+			else
+				if is_nested and need_invariant then
+					buf.put_string ("RTVF(")
+				else
+					buf.put_string ("RTWF(")
+				end
+				buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+				buf.put_string (gc_comma)
+				buf.put_integer (real_feature_id (cl_type_i.base_class))
+			end
+			buf.put_string (gc_comma)
+			if not is_nested then
+				if precursor_type /= Void then
+						-- Use dynamic type of parent instead
+						-- of dynamic type of Current.
+					buf.put_string ("RTUD(")
+					buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buf.put_character (')')
+				else
+					context.generate_current_dtype
+				end
+			elseif need_invariant then
+				buf.put_string_literal (feature_name)
+				buf.put_string (gc_comma)
+				reg.print_register
+			else
+				buf.put_string (gc_upper_dtype_lparan)
+				reg.print_register
+				buf.put_character (')')
+			end
+			buf.put_string ("))")
+		end
+
+	generate_workbench_end (result_register: REGISTER) is
+			-- Generate final portion of C code in workbench mode.
+		require
+			result_register_attached: c_type.is_pointer implies result_register /= Void
+		local
+			buf: GENERATION_BUFFER
+			return_type: TYPE_C
+		do
+			buf := buffer
+			return_type := c_type
+			if return_type.is_pointer then
+					-- Return value might be unboxed.
+					-- It should be boxed now.
+					-- The type of the result register has to be preserved.
+				buf.put_string ("), ((")
+				context.print_argument_register (result_register, buf)
+				buf.put_string (".type == SK_REF)? (EIF_REFERENCE) 0: (")
+				context.print_argument_register (result_register, buf)
+				buf.put_string (".value.EIF_REFERENCE_value = RTBU(")
+				context.print_argument_register (result_register, buf)
+				buf.put_string ("))), (")
+				context.print_argument_register (result_register, buf)
+				buf.put_string (".type = SK_POINTER), ")
+				context.print_argument_register (result_register, buf)
+				buf.put_string (".value.EIF_REFERENCE_value)")
+			elseif not return_type.is_void then
+					-- Return value should be of an expected basic type.
+					-- It can be used as it is.
+				buf.put_character (')')
+				buf.put_character ('.')
+				return_type.generate_typed_field (buf)
+				buf.put_character (')')
+			end
 		end
 
 	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
@@ -321,7 +437,7 @@ feature {NONE} -- Implementation
 		local
 			p: like parent
 		do
-			Result := f.access (real_type (type))
+			Result := f.access (real_type (type), p/= Void)
 			p := parent
 			if p /= Void then
 				Result.set_parent (p)

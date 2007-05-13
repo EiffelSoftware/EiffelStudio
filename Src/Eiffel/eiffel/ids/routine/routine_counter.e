@@ -58,6 +58,22 @@ feature -- Access
 	creation_rout_id: INTEGER
             -- Predefined routine ids
 
+feature -- Status report
+
+	is_feature_routine_id (rout_id: like next_rout_id): BOOLEAN is
+			-- Does `rout_id' correspond to some feature
+			-- rather than to some special service entity?
+		do
+			if
+				rout_id /= invariant_rout_id and then
+				rout_id /= initialization_rout_id and then
+				rout_id /= dispose_rout_id and then
+				rout_id /= creation_rout_id
+			 then
+				Result := True
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	attribute_ids: ARRAY [BOOLEAN]

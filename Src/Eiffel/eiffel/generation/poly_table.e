@@ -100,6 +100,11 @@ feature -- Initialization
 
 feature
 
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+			-- New entry corresponding to `f' in class of class ID `c'
+		deferred
+		end
+
 	is_polymorphic (type_id: INTEGER): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
@@ -108,29 +113,8 @@ feature
 		deferred
 		end
 
-	writer: TABLE_GENERATOR is
-			-- Generator of tables which spilt the generation in several
-			-- files.
-		deferred
-		end
-
 	write is
-			-- Generation of the table through the writer
-		require
-			writer_exists: writer /= Void
-		local
-			l_poly: POLY_TABLE [ENTRY]
-		do
-			l_poly ?= Current
-			check l_poly_not_void: l_poly /= Void end
-			writer.generate (l_poly)
-			if has_type_table and then not has_one_type then
-				writer.generate_type_table (l_poly)
-			end
-		end
-
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generation of the table for final Eiffel executable.
+			-- Generate table using writer.
 		deferred
 		end
 
@@ -215,15 +199,6 @@ feature
 			end;
 		end
 
-	final_table_size: INTEGER is
-			-- Size of the C table
-		require
-			not is_empty
-			is_used: used
-		do
-			Result := max_used - min_used + 1
-		end
-
 	goto (type_id: INTEGER) is
 			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an effective class (non-deferred).
@@ -287,7 +262,7 @@ feature
 			end
 		end
 
-	generate_type_table (buffer: GENERATION_BUFFER) is
+	generate_type_table (writer: TABLE_GENERATOR) is
 			-- Generate the associated type table in final mode.
 		local
 			i, j, k, nb, index: INTEGER
@@ -296,7 +271,10 @@ feature
 			l_entry_type_id, l_type_id: INTEGER
 			l_start, l_end: INTEGER
 			l_generate: BOOLEAN
+			buffer: GENERATION_BUFFER
 		do
+			writer.update_size (max_type_id - min_type_id + 1)
+			buffer := writer.current_buffer
 			l_table_name := Encoder.type_table_name (rout_id)
 
 				-- First generate type arrays for generic types.
@@ -435,6 +413,12 @@ feature
 
 	is_routine_table: BOOLEAN is
 			-- Is the current table a routine table ?
+		do
+			-- Do nothing
+		end
+
+	is_attribute_table: BOOLEAN is
+			-- Is the current table an attribute table ?
 		do
 			-- Do nothing
 		end

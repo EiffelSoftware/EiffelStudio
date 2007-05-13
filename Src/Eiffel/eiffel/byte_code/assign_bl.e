@@ -436,8 +436,7 @@ feature
 			buf := buffer
 			if how = Metamorphose_assignment then
 				basic_source_type ?= context.real_type (source.type)
-				basic_source_type.metamorphose
-					(register, source, buf, context.workbench_mode)
+				basic_source_type.metamorphose (register, source, buf)
 				buf.put_character (';')
 				buf.put_new_line
 			elseif how = Clone_assignment then

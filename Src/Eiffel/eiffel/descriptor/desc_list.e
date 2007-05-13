@@ -2,7 +2,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- List of descriptors of a class (CLASS_C).
--- Note: with the current implementation of genericity, a class can 
+-- Note: with the current implementation of genericity, a class can
 -- have several class types, one descriptor must be built for each class type.
 
 class DESC_LIST
@@ -80,7 +80,7 @@ feature
 	class_types: TYPE_LIST
 			-- Class types associated with base class of
 			-- Current descriptor list
-	
+
 feature -- Insertion
 
 	put_invariant (f: INVARIANT_FEAT_I) is
@@ -110,12 +110,12 @@ feature -- Insertion
 		end
 
 	put (r_id: INTEGER; f: FEATURE_I) is
-			-- Insert the routine id `r_id' into the descriptors 
+			-- Insert the routine id `r_id' into the descriptors
 			-- of `base_class', and associate it with the feature `f'.
 			--|The (routine_id, FEATURE_I) pair is inserted into
 			--|the descriptor DESC_UNIT substructure corresponding
 			--|to the origin of the routine. The origin of the routine
-			--|is found in the global system table Rout_info_table 
+			--|is found in the global system table Rout_info_table
 			--|which is built during pass 2.
 		local
 			u: ENTRY
@@ -223,7 +223,7 @@ feature -- Melting
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
-			-- Append the byte code of each individual 
+			-- Append the byte code of each individual
 			-- descriptor to `ba'
 		local
 			des: DESCRIPTOR

@@ -31,7 +31,7 @@ feature -- Status report
 
 	count: INTEGER
 			-- Number of elements in Current.
-		
+
 feature {NONE} -- Access
 
 	class_id: INTEGER
@@ -40,7 +40,7 @@ feature -- Generation
 
 	generate (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
 			-- C code of Current descriptor unit
-			--|Note1: Currently the feature type is written for all the 
+			--|Note1: Currently the feature type is written for all the
 			--|features when in practice it is used rather seldom. Try
 			--|to find a better representation (without affecting the
 			--|incrementality).
@@ -72,38 +72,44 @@ feature -- Generation
 				i > l_count
 			loop
 				entry_item := l_area.item (i)
+				buffer.put_string (body_index_type)
 				if entry_item /= Void then
 					re ?= entry_item
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
-							-- into the run-time dispatch table) and the type
-							-- of the feature.
-						buffer.put_string (body_index_type)
+							-- into the run-time dispatch table).
 						buffer.put_real_body_index (re.real_body_index)
-						buffer.put_string (int16)
-						buffer.put_static_type_id (re.static_feature_type_id)
+						buffer.put_string (", (BODY_INDEX) ")
+							-- Write the offset of the attribute in the
+							-- run-time structure (object) (if any).
+						if re.is_attribute then
+							buffer.put_integer (re.workbench_offset)
+						else
+							buffer.put_integer (Invalid_index)
+						end
 					else
 						ae ?= entry_item
 						check
 							ae_not_void: ae /= Void
 						end
 							-- The entry corresponds to an attribute.
-							-- Write the offset of the attribute in the 
-							-- run-time structure (object) and the type of
-							-- the feature.
-						buffer.put_string (body_index_type)
+						buffer.put_integer (Invalid_index)
+							-- Write the offset of the attribute in the
+							-- run-time structure (object).
+						buffer.put_string (", (BODY_INDEX) ")
 						buffer.put_integer (ae.workbench_offset)
-						buffer.put_string (int16)
-						buffer.put_static_type_id (ae.static_feature_type_id)
 					end
+						-- Write the type of the feature.
+					buffer.put_string (int16)
+					buffer.put_static_type_id (entry_item.static_feature_type_id)
 
 					if entry_item.is_generic then
 						buffer.put_string (gen_type)
 						buffer.put_integer (cnt.value)
 						buffer.put_string (id_string)
 						j := cnt.next
-					else           
+					else
 						buffer.put_string (null_init)
 					end
 
@@ -112,7 +118,8 @@ feature -- Generation
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.put_string (body_index_type)
+					buffer.put_integer (Invalid_index)
+					buffer.put_string (", (BODY_INDEX)")
 					buffer.put_integer (Invalid_index)
 					buffer.put_string (invalid_entry)
 				end
@@ -122,7 +129,7 @@ feature -- Generation
 
 	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER; id_string: STRING) is
 			-- C code of Current precompiled descriptor unit
-			--|Note1: Currently the feature type is written for all the 
+			--|Note1: Currently the feature type is written for all the
 			--|features when in practice it is used rather seldom. Try
 			--|to find a better representation (without affecting the
 			--|incrementality).
@@ -138,14 +145,15 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			nb: INTEGER
 			entry_item: ENTRY
-			info, desc1, desc2, gen_type, type: STRING
+			body_index, offset, desc1, desc2, gen_type, type: STRING
 			non_generic, gen_type_string, end_of_line: STRING
 			l_area: like area
 		do
 			from
 					-- Initialize all the constant string used during this generation
-				info := "].info = (BODY_INDEX) ("
 				desc1 := "%Tdesc" + id_string + "["
+				body_index := "].body_index = (BODY_INDEX) ("
+				offset := "].offset = (BODY_INDEX) ("
 				desc2 := ");%N%Tdesc" + id_string + "["
 				type := "].type = (int16) ("
 				gen_type := "].gen_type = "
@@ -158,6 +166,9 @@ feature -- Generation
 				i > l_count
 			loop
 				nb := i + start
+				buffer.put_string (desc1)
+				buffer.put_integer (nb)
+				buffer.put_string (body_index)
 				entry_item := l_area.item (i)
 				if entry_item /= Void then
 					re ?= entry_item
@@ -166,38 +177,39 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.put_string (desc1)
-						buffer.put_integer (nb)
-						buffer.put_string (info)
 						buffer.put_real_body_index (re.real_body_index)
 						buffer.put_string (desc2)
 						buffer.put_integer (nb)
-						buffer.put_string (type)
-						re.generated_static_feature_type_id (buffer)
-						buffer.put_string (desc2)
-						buffer.put_integer (nb)
-						buffer.put_string (gen_type)
+						buffer.put_string (offset)
+							-- Write the offset of the attribute in the
+							-- run-time structure (object) (if any).
+						if re.is_attribute then
+							buffer.put_integer (re.workbench_offset)
+						else
+							buffer.put_integer (Invalid_index)
+						end
 					else
 						ae ?= entry_item
 						check
 							ae_not_void: ae /= Void
 						end
 							-- The entry corresponds to an attribute.
-							-- Write the offset of the attribute in the 
-							-- run-time structure (object) and the type of
-							-- the feature.
-						buffer.put_string (desc1)
+							-- Write the offset of the attribute in the
+							-- run-time structure (object).
+						buffer.put_integer (Invalid_index)
+						buffer.put_string (desc2)
 						buffer.put_integer (nb)
-						buffer.put_string (info)
+						buffer.put_string (offset)
 						buffer.put_integer (ae.workbench_offset)
-						buffer.put_string (desc2)
-						buffer.put_integer (nb)
-						buffer.put_string (type)
-						ae.generated_static_feature_type_id (buffer)
-						buffer.put_string (desc2)
-						buffer.put_integer (nb)
-						buffer.put_string (gen_type)
 					end
+						-- Write the type of the feature.
+					buffer.put_string (desc2)
+					buffer.put_integer (nb)
+					buffer.put_string (type)
+					entry_item.generated_static_feature_type_id (buffer)
+					buffer.put_string (desc2)
+					buffer.put_integer (nb)
+					buffer.put_string (gen_type)
 
 					if entry_item.is_generic then
 						buffer.put_string (gen_type_string)
@@ -212,9 +224,10 @@ feature -- Generation
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.put_string (desc1)
+					buffer.put_integer (Invalid_index)
+					buffer.put_string (desc2)
 					buffer.put_integer (nb)
-					buffer.put_string (info)
+					buffer.put_string (offset)
 					buffer.put_integer (Invalid_index)
 					buffer.put_string (desc2)
 					buffer.put_integer (nb)
@@ -303,22 +316,28 @@ feature -- Melting
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
-							-- into the run-time dispatch table) and the type
-							-- of the feature.
-						ba.append_uint32_integer (re.real_body_index- 1)
-						ba.append_short_integer (re.static_feature_type_id -1)
+							-- into the run-time dispatch table).
+						ba.append_uint32_integer (re.real_body_index - 1)
+						if re.is_attribute then
+								-- Write the offset of the attribute in the
+								-- run-time structure (object).
+							ba.append_uint32_integer (re.workbench_offset)
+						else
+							ba.append_uint32_integer (-1)
+						end
 					else
 						ae ?= entry_item
 						check
 							ae_not_void: ae /= Void
 						end
 							-- The entry corresponds to an attribute.
-							-- Write the offset of the attribute in the 
-							-- run-time structure (object) and the type of
-							-- the feature.
+						ba.append_uint32_integer (-1)
+							-- Write the offset of the attribute in the
+							-- run-time structure (object).
 						ba.append_uint32_integer (ae.workbench_offset)
-						ba.append_short_integer (ae.static_feature_type_id - 1)
 					end
+						-- Write the type of the feature.
+					ba.append_short_integer (entry_item.static_feature_type_id - 1)
 
 					if entry_item.is_generic then
 						ba.append_short_integer (0)
@@ -329,6 +348,7 @@ feature -- Melting
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
+					ba.append_uint32_integer (-1)
 					ba.append_uint32_integer (-1)
 					ba.append_short_integer (-1)
 					ba.append_short_integer (-1)

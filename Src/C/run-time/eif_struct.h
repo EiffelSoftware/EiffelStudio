@@ -160,7 +160,8 @@ RT_LNK int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
-	BODY_INDEX info;					/* Body index or attribute offset */
+	BODY_INDEX body_index;					/* Body index */
+	BODY_INDEX offset;					/* Attribute offset */
 	int16 type;							/* Feature type */
 	int16 *gen_type;					/* Generics, if any */
 };

@@ -222,6 +222,70 @@ feature -- Access
 			-- Not used at the moment.
 		end
 
+	has_formal: BOOLEAN is
+			-- Is formal type present in the feature signature at the top level?
+			-- (Formals used as parameters of generic class types do not count.)
+		local
+			a: like arguments
+		do
+			if type.type_i.is_formal then
+				Result := True
+			else
+				a := arguments
+				if a /= Void then
+					from
+						a.start
+					until
+						a.after
+					loop
+						if a.item.type_i.is_formal then
+							Result := True
+							a.finish
+						end
+						a.forth
+					end
+				end
+			end
+		end
+
+	generic_fingerprint: STRING is
+			-- Fingerprint of the feature signature that distinguishes
+			-- between formal generic and non-formal-generic types.
+		local
+			digit: NATURAL_8
+			a: like arguments
+			i: NATURAL_8
+		do
+			create Result.make_empty
+			if type.type_i.is_formal then
+				digit := 1
+			end
+			a := arguments
+			if a /= Void then
+				from
+					i := 2
+					a.start
+				until
+					a.after
+				loop
+					if a.item.type_i.is_formal then
+						digit := digit + i
+					end
+					i := i |<< 1
+					if i >= 16 then
+							-- Add a digit to the result.
+						Result.append_character (digit.to_hex_character)
+						digit := 0
+						i := 1
+					end
+					a.forth
+				end
+			end
+			if digit /= 0 then
+				Result.append_character (digit.to_hex_character)
+			end
+		end
+
 	extension: EXTERNAL_EXT_I is
 			-- Encapsulation of the external extension
 		do
@@ -1438,15 +1502,52 @@ feature -- Polymorphism
  			Result := True
  		end
 
+	new_poly_table (rout_id: INTEGER): POLY_TABLE [ENTRY] is
+ 			-- New polymorphic table
+ 		require
+			positive_rout_id: rout_id > 0
+			valid_rout_id: rout_id_set.has (rout_id)
+		local
+			seed: FEATURE_I
+ 		do
+ 			if not is_attribute or else not Routine_id_counter.is_attribute (rout_id) then
+ 					-- This is a routine.
+ 					-- The seed is a routine as well.
+ 				create {ROUT_TABLE} Result.make (rout_id)
+ 			elseif has_formal then
+ 					-- This is an attribute of a formal generic type.
+ 					-- The seed is also of a formal generic type.
+ 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
+ 			else
+ 				seed := system.seed_of_routine_id (rout_id)
+ 				if seed = Current or else not seed.has_formal then
+	 					-- This is an attribute that is not of a formal generic type
+	 					-- and its seed is not of a formal generic type.
+	 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
+ 				else
+	 					-- This is an attribute with a seed of a formal generic type.
+	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
+ 				end
+ 			end
+ 		end
+
  	new_entry (rout_id: INTEGER): ENTRY is
  			-- New polymorphic unit
  		require
 			rout_id_not_void: rout_id /= 0
+		local
+			r: like new_rout_entry
  		do
- 			if not is_attribute or not Routine_id_counter.is_attribute (rout_id) then
- 				Result := new_rout_entry
+ 			if is_attribute and then Routine_id_counter.is_attribute (rout_id) then
+ 				if has_formal or else byte_context.workbench_mode then
+	 				r := new_rout_entry
+	 				r.set_is_attribute
+	 				Result := r
+ 				else
+	 				Result := new_attr_entry
+ 				end
  			else
- 				Result := new_attr_entry
+ 				Result := new_rout_entry
  			end
  		end
 
@@ -2380,31 +2481,31 @@ feature -- Dead code removal
 
 feature -- Byte code access
 
-	frozen access (access_type: TYPE_I): ACCESS_B is
+	frozen access (access_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature
 		require
 			access_type_not_void: access_type /= Void
 		do
-			Result := access_for_feature (access_type, Void)
+			Result := access_for_feature (access_type, Void, is_qualified)
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	access_for_multi_constraint (access_type: TYPE_I; a_static_type: TYPE_I): ACCESS_B is
+	frozen access_for_multi_constraint (access_type: TYPE_I; a_static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
 			-- Creates a byte code access for a multi constraint target.
 			-- `a_static_type' is the type where the feature is from.
 			-- It is NOT a static call that will be generated, but a dynamic one. It is only needed for W_bench.
 		require
 			access_type_not_void: access_type /= Void
 		do
-			Result := access (access_type)
+			Result := access (access_type, is_qualified)
 			check Result /= Void end
 			Result.set_multi_constraint_static (a_static_type)
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		require

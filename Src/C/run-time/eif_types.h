@@ -225,6 +225,27 @@ struct stchunk {
 	/*	interp.h & debug.h */
 	/*---------------------*/
 
+typedef struct tag_EIF_UNION {
+	union {
+		EIF_BOOLEAN     EIF_BOOLEAN_value;    /* SK_BOOL    - boolean                  */
+		EIF_CHARACTER   EIF_CHARACTER_value;  /* SK_CHAR    - character                */
+		EIF_WIDE_CHAR   EIF_WIDE_CHAR_value;  /* SK_WCHAR   - unicode character        */
+		EIF_INTEGER_8   EIF_INTEGER_8_value;  /* SK_INT8    - 8 bits integer           */
+		EIF_INTEGER_16  EIF_INTEGER_16_value; /* SK_INT16   - 16 bits integer          */
+		EIF_INTEGER_32  EIF_INTEGER_32_value; /* SK_INT32   - 32 bits integer          */
+		EIF_INTEGER_64  EIF_INTEGER_64_value; /* SK_INT64   - 64 bits integer          */
+		EIF_NATURAL_8   EIF_NATURAL_8_value;  /* SK_UINT8   - 8 bits unsigned integer  */
+		EIF_NATURAL_16  EIF_NATURAL_16_value; /* SK_UINT16  - 16 bits unsigned integer */
+		EIF_NATURAL_32  EIF_NATURAL_32_value; /* SK_UINT32  - 32 bits unsigned integer */
+		EIF_NATURAL_64  EIF_NATURAL_64_value; /* SK_UINT64  - 64 bits unsigned integer */
+		EIF_REAL_32     EIF_REAL_32_value;    /* SK_REAL32  - 32 bits real             */
+		EIF_REAL_64     EIF_REAL_64_value;    /* SK_REAL64  - 64 bits real             */
+		EIF_REFERENCE   EIF_REFERENCE_value;  /* SK_REF     - reference                */
+		EIF_POINTER     EIF_POINTER_value;    /* SK_POINTER - pointer                  */
+	} value;
+	uint32 type;				      /* Type of value (SK_BOOL, SK_CHAR, ...) */
+} EIF_UNION;
+
 	/* Stack data structures for features */
 struct item {
 	uint32 type;				/* Type of the item (SK_INT, SK_BOOL, SK_DOUBLE, ...) */

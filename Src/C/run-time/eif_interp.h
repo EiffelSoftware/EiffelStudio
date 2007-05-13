@@ -54,6 +54,7 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #endif
 
 /* Macros for easy reference */
+#define it_bool		itu.itu_char
 #define it_char		itu.itu_char
 #define it_int8		itu.itu_int8
 #define it_int16	itu.itu_int16

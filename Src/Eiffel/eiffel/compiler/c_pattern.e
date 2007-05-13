@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class C_PATTERN 
+class C_PATTERN
 
 inherit
 
@@ -29,7 +29,7 @@ create
 
 	make
 
-feature 
+feature
 
 	result_type: TYPE_C;
 			-- Meta type of the result
@@ -179,7 +179,7 @@ feature -- Pattern generation
 			until
 				i > nb
 			loop
-				Result.put (argument_types.item (i).c_string, j)
+				Result.put ("EIF_UNION", j)
 				i := i + 1;
 				j := j + 1;
 			end;
@@ -204,8 +204,7 @@ feature -- Pattern generation
 					buffer.put_character ('%T');
 					j := j + 1;
 				end;
-				argument_types.item (i).generate (buffer);
-				buffer.put_string ("arg");
+				buffer.put_string ("EIF_UNION arg");
 				buffer.put_integer (i);
 				buffer.put_character (';');
 				buffer.put_new_line;
@@ -236,9 +235,7 @@ feature -- Pattern generation
 			buffer.put_string ("%
 				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
-				buffer.put_character ('%T');
-				result_type.generate (buffer);
-				buffer.put_string ("result;%N%Tstruct item *it;%N");
+				buffer.put_string ("%TEIF_UNION result;%N%Tstruct item *it;%N");
 			end;
 			generate_argument_declaration (1, buffer);
 			generate_toc_pop (buffer);
@@ -250,7 +247,16 @@ feature -- Pattern generation
 				result_type.generate_sk_value (buffer);
 				buffer.put_string (";%N%Tit->");
 				result_type.generate_union (buffer);
-				buffer.put_string (" = result;%N");
+				buffer.put_string (" = ");
+				if result_type.is_pointer then
+						-- Result might need to be boxed.
+					buffer.put_string ("(result.type == SK_REF)? result.value.EIF_REFERENCE_value: RTBU(result);%N")
+				else
+						-- Result of a basic type can be used as it is.
+					buffer.put_string ("result.")
+					result_type.generate_typed_field (buffer)
+					buffer.put_string (";%N")
+				end
 			end;
 			buffer.put_string ("}%N%N"); -- ss MT
 		end;
@@ -265,7 +271,11 @@ feature -- Pattern generation
 			f_name := "toi";
 			f_name.append_integer (id);
 
-			result_string := result_type.c_string;
+			if  result_type.is_void then
+				result_string := result_type.c_string
+			else
+				result_string := "EIF_UNION"
+			end
 
 			arg_types := argument_type_array
 
@@ -273,15 +283,20 @@ feature -- Pattern generation
 				(result_string, f_name, False, buffer,
 				 argument_name_array, arg_types)
 
-			buffer.put_string ("%Tstruct item *it;%N");
+			buffer.put_string ("%Tstruct item *it;%N")
+			if not result_type.is_void then
+				buffer.put_string ("%TEIF_UNION r;%N")
+			end
 			generate_toi_push (buffer);
 			buffer.put_string ("%Txinterp(IC);%N");
 			if not result_type.is_void then
-				buffer.put_string ("%
-					%%Tit = opop();%N%
-					%%Treturn it->");
+				buffer.put_string ("%Tit = opop();%N%Tr.")
+				result_type.generate_typed_tag (buffer)
+				buffer.put_string (";%N%Tr.")
+				result_type.generate_typed_field (buffer)
+				buffer.put_string (" = it->")
 				result_type.generate_union (buffer);
-				buffer.put_string (";%N");
+				buffer.put_string (";%N%Treturn r;%N");
 			end;
 			buffer.put_string ("}%N%N"); -- ss MT
 		end;
@@ -305,8 +320,22 @@ feature -- Pattern generation
 				arg.generate_sk_value (buffer);
 				buffer.put_string (";%N%Tit->");
 				arg.generate_union (buffer);
-				buffer.put_string (" = arg");
+				buffer.put_string (" = (arg");
 				buffer.put_integer (i);
+				if arg.is_pointer then
+						-- Reference value can be used as it is.
+					buffer.put_string (".value.EIF_REFERENCE_value)")
+				else
+						-- Basic value might need to be unboxed.
+					buffer.put_string (".type == SK_REF)? * ")
+					arg.generate_access_cast (buffer)
+					buffer.put_string ("arg")
+					buffer.put_integer (i)
+					buffer.put_string (".value.EIF_REFERENCE_value: arg")
+					buffer.put_integer (i)
+					buffer.put_character ('.')
+					arg.generate_typed_field (buffer)
+				end
 				buffer.put_string (";%N");
 				i := i + 1;
 			end;
@@ -320,22 +349,29 @@ feature -- Pattern generation
 			-- Generate poping instructions for pattern from interpreter
 			-- to C code
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
-			buffer.put_string ("%TCurrent = opop()->it_ref;%N");
+			buffer.put_string ("%TCurrent = opop()->it_ref;%N")
 			from
-				i := argument_count;
+				i := argument_count
 			until
 				i < 1
 			loop
-				buffer.put_string ("%Targ");
-				buffer.put_integer (i);
-				buffer.put_string (" = opop()->");
-				argument_types.item (i).generate_union (buffer);
-				buffer.put_string (";%N");
-				i := i - 1;
-			end;
-		end;
+				buffer.put_string ("%Targ")
+				buffer.put_integer (i)
+				buffer.put_string (".")
+				argument_types.item (i).generate_typed_tag (buffer)
+				buffer.put_string (";%N")
+				buffer.put_string ("%Targ")
+				buffer.put_integer (i)
+				buffer.put_character ('.')
+				argument_types.item (i).generate_typed_field (buffer)
+				buffer.put_string (" = opop()->")
+				argument_types.item (i).generate_union (buffer)
+				buffer.put_string (";%N")
+				i := i - 1
+			end
+		end
 
 	generate_routine_call (buffer: GENERATION_BUFFER) is
 			-- Generate C routine call

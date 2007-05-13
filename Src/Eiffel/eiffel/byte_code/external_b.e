@@ -119,8 +119,11 @@ feature -- Routines for externals
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do
-			parameters := p;
-		end;
+			parameters := p
+			if p /= Void then
+				p.do_all (agent {PARAMETER_B}.set_parent (Current))
+			end
+		end
 
 	set_type (t: TYPE_I) is
 			-- Assign `t' to `type'.
@@ -327,7 +330,7 @@ feature -- Inlining
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

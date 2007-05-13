@@ -1722,7 +1722,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 						l_feat_not_void: l_feat /= Void
 					end
 				end
-				l_code ?= l_feat.access (void_c_type)
+				l_code ?= l_feat.access (void_c_type, False)
 				check
 					l_code_not_void: l_code /= Void
 				end
@@ -7711,7 +7711,7 @@ feature -- Inline agents
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

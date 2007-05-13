@@ -124,7 +124,7 @@ feature
 		end
 
 	metamorphose
-	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
+	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
@@ -139,6 +139,20 @@ feature
 			-- to the current C type in `buffer'.
 		do
 			 buffer.put_string ("it_bit")
+		end
+
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("value.EIF_REFERENCE_value")
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("type = SK_REF")
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is

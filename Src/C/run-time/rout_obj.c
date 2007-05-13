@@ -109,33 +109,71 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( int16 dftype, EIF_POINTER rout_disp
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+	EIF_UNION u_rout_disp;
+	EIF_UNION u_encaps_rout_disp;
+	EIF_UNION u_calc_rout_addr;
+	EIF_UNION u_class_id;
+	EIF_UNION u_feature_id;
+	EIF_UNION u_open_map;
+	EIF_UNION u_is_precompiled;
+	EIF_UNION u_is_basic;
+	EIF_UNION u_is_target_closed;
+	EIF_UNION u_is_inline_agent;
+	EIF_UNION u_closed_operands;
+	EIF_UNION u_open_count;
 	RTLD;
 
+	u_rout_disp.type = SK_POINTER;
+	u_rout_disp.value.EIF_POINTER_value = rout_disp;
+	u_encaps_rout_disp.type = SK_POINTER;
+	u_encaps_rout_disp.value.EIF_POINTER_value = encaps_rout_disp;
+	u_calc_rout_addr.type = SK_POINTER;
+	u_calc_rout_addr.value.EIF_POINTER_value = calc_rout_addr;
+	u_class_id.type = SK_INT32;
+	u_class_id.value.EIF_INTEGER_32_value = class_id;
+	u_feature_id.type = SK_INT32;
+	u_feature_id.value.EIF_INTEGER_32_value = feature_id;
+	u_open_map.type = SK_REF;
+	u_open_map.value.EIF_REFERENCE_value = open_map;
+	u_is_precompiled.type = SK_BOOL;
+	u_is_precompiled.value.EIF_BOOLEAN_value = is_precompiled;
+	u_is_basic.type = SK_BOOL;
+	u_is_basic.value.EIF_BOOLEAN_value = is_basic;
+	u_is_target_closed.type = SK_BOOL;
+	u_is_target_closed.value.EIF_BOOLEAN_value = is_target_closed;
+	u_is_inline_agent.type = SK_BOOL;
+	u_is_inline_agent.value.EIF_BOOLEAN_value = is_inline_agent;
+	u_closed_operands.type = SK_REF;
+	u_closed_operands.value.EIF_REFERENCE_value = closed_operands;
+	u_open_count.type = SK_INT32;
+	u_open_count.value.EIF_INTEGER_32_value = open_count;
 		/* Protect address in case it moves */
- 	RTLI(3);
+ 	RTLI(5);
 	RTLR (0, result);
 	RTLR (1, closed_operands);
 	RTLR (2, open_map);
+	RTLR (3, u_open_map.value.EIF_REFERENCE_value);
+	RTLR (4, u_closed_operands.value.EIF_REFERENCE_value);
 
 		/* Create ROUTINE object */
 	result = emalloc(dftype);
 	nstcall = 0;
 		/* Call 'set_rout_disp' from ROUTINE */
-	(FUNCTION_CAST (void, ( EIF_REFERENCE,
-							EIF_POINTER, 
-							EIF_POINTER, 
-							EIF_POINTER, 
-							EIF_INTEGER,
-							EIF_INTEGER,
-							EIF_REFERENCE,
-							EIF_BOOLEAN,
-							EIF_BOOLEAN, 
-							EIF_BOOLEAN,
-							EIF_BOOLEAN,
-							EIF_REFERENCE,
-							EIF_INTEGER)) egc_routdisp_wb)( result, rout_disp, encaps_rout_disp, calc_rout_addr, 
-														    class_id, feature_id, open_map, is_precompiled, is_basic, 
-														    is_target_closed, is_inline_agent, closed_operands, open_count);
+	(*egc_routdisp_wb)(
+		result,
+		u_rout_disp,
+		u_encaps_rout_disp,
+		u_calc_rout_addr,
+		u_class_id,
+		u_feature_id,
+		u_open_map,
+		u_is_precompiled,
+		u_is_basic,
+		u_is_target_closed,
+		u_is_inline_agent,
+		u_closed_operands,
+		u_open_count
+	);
 
 	RTLE;
 	return result;

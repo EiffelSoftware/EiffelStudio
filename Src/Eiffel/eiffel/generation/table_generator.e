@@ -77,29 +77,14 @@ feature -- Access
 		deferred
 		end; -- init_file
 
-	generate (table: POLY_TABLE [ENTRY]) is
-			-- Generation of `table'.
+	update_size (value: INTEGER) is
+			-- Prepare `current_buffer' for writing a table with `value' number of entries.
 		require
-			current_buffer_exists: current_buffer /= Void;
-			good_argument: table /= Void;
+			value_not_negative: value >= 0
 		do
-			update;
-			size := size + table.final_table_size;
-			table.generate (current_buffer);
-		end;
-
-	generate_type_table (table: POLY_TABLE [ENTRY]) is
-			-- Generation of associated type table of `table'
-			-- in final mode.
-		require
-			current_buffer_exists: current_buffer /= Void;
-			good_argument: table /= Void;
-			has_type_table: table.has_type_table;
-		do
-			update;
-			size := size + table.final_table_size;
-			table.generate_type_table (current_buffer);
-		end;
+			update
+			size := size + value
+		end
 
 	update is
 			-- Update current file

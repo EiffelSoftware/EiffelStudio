@@ -6,6 +6,11 @@ deferred class TYPE_C
 inherit
 	HASHABLE
 
+	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -122,7 +127,11 @@ feature
 				buffer.put_string (call_type)
 			else
 				buffer.put_string ("FUNCTION_CAST(")
-				buffer.put_string (c_string)
+				if context.workbench_mode and then not is_void then
+					buffer.put_string ("EIF_UNION")
+				else
+					buffer.put_string (c_string)
+				end
 			end
 			buffer.put_string (", (")
 			buffer.put_array (arg_types)
@@ -156,6 +165,22 @@ feature
 			-- to the current C type in `buffer'.
 		require
 			good_argument: buffer /= Void
+		deferred
+		end
+
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		require
+			buffer_attached: buffer /= Void
+		deferred
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		require
+			buffer_attached: buffer /= Void
 		deferred
 		end
 

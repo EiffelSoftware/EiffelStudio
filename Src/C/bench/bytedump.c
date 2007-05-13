@@ -2,7 +2,7 @@
 	description: "Byte code reader."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include "rt_interp.h"
 #include "rt_bc_reader.h"
+#include "rt_gen_types.h"
 #include "eif_size.h"
 #include <string.h>
 #include <stdlib.h>
@@ -411,6 +412,8 @@ static  void    print_byte_code ()
 	uint32    rid;    /* Routine id      */
 	char    rescue; /* Has rescue?     */
 	int     i;
+	uint32 argnum;
+	uint32 n;
 	EIF_NATURAL_8   once_mark;
 	BODY_INDEX	once_key;
 
@@ -432,16 +435,11 @@ static  void    print_byte_code ()
 	body_id = get_uint32(&ip);
 	fprintf (ofp,"Body Id      : %d\n", body_id);
 
-	fprintf (ofp,"Result Type  : ");
 	rtype = get_uint32(&ip);
 
-	print_dtype (0,rtype);
+	argnum = get_uint16(&ip);
 
-	NEWL;
-
-	i = (int) get_int16(&ip);
-
-	fprintf (ofp,"Nr. args     : %d\n", i);
+	fprintf (ofp,"Nr. args     : %d\n", argnum);
 
 	switch (once_mark)
 	{
@@ -466,22 +464,72 @@ static  void    print_byte_code ()
 		NEWL;
 	}
 
-	/* Arguments which must be cloned */
+	/* Arguments which must be cloned or initialized */
 
-	if (*ip != BC_NO_CLONE_ARG)
-	{
-		/* Consume the BC_CLONE_ARG */
-		ip += sizeof (char);
-
-		/* NOTE: The printout is wrong - FIXME */
-
-		while (*ip != BC_NO_CLONE_ARG)
-		{
-			fprintf (ofp,"Clone nr : %d\n", (int) get_int16(&ip));
+	for (n = 1; n <= argnum; n++) {
+		fprintf (ofp,"arg%d: ", (int) n);
+		switch (get_uint8 (&ip)) {
+		case EIF_EXPANDED_CODE_EXTENSION:
+			print_dtype (1, SK_EXP | get_int16(&ip));
+			break;
+		case EIF_BIT_CODE_EXTENSION:
+			fprintf (ofp,"BIT %d", (int) get_int32(&ip));
+			break;
+		case EIF_REFERENCE_CODE:
+			fprintf (ofp,"REFERENCE");
+			break;
+		case EIF_BOOLEAN_CODE:
+			fprintf (ofp,"BOOLEAN");
+			break;
+		case EIF_CHARACTER_CODE:
+			fprintf (ofp,"CHARACTER_8");
+			break;
+		case EIF_REAL_64_CODE:
+			fprintf (ofp,"REAL_64");
+			break;
+		case EIF_REAL_32_CODE:
+			fprintf (ofp,"REAL_32");
+			break;
+		case EIF_POINTER_CODE:
+			fprintf (ofp,"POINTER");
+			break;
+		case EIF_INTEGER_8_CODE:
+			fprintf (ofp,"INTEGER_8");
+			break;
+		case EIF_INTEGER_16_CODE:
+			fprintf (ofp,"INTEGER_16");
+			break;
+		case EIF_INTEGER_32_CODE:
+			fprintf (ofp,"INTEGER_32");
+			break;
+		case EIF_INTEGER_64_CODE:
+			fprintf (ofp,"INTEGER_64");
+			break;
+		case EIF_NATURAL_8_CODE:
+			fprintf (ofp,"NATURAL_8");
+			break;
+		case EIF_NATURAL_16_CODE:
+			fprintf (ofp,"NATURAL_16");
+			break;
+		case EIF_NATURAL_32_CODE:
+			fprintf (ofp,"NATURAL_32");
+			break;
+		case EIF_NATURAL_64_CODE:
+			fprintf (ofp,"NATURAL_64");
+			break;
+		case EIF_WIDE_CHAR_CODE:
+			fprintf (ofp,"CHARACTER_32");
+			break;
 		}
+		NEWL;
 	}
 
-	advance (3);    /* Consume the 'BC_NO_CLONE_ARGS' */
+	fprintf (ofp,"Result Type  : ");
+	if ((rtype & SK_HEAD) == SK_EXP)
+		print_dtype (1, rtype);
+	else
+		print_dtype (0, rtype);
+
 	NEWL;
 
 	/* If the routine id is zero it's a class invariant */

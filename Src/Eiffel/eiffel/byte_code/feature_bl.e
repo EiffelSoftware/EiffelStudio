@@ -202,8 +202,8 @@ end
 			type_i: TYPE_I
 		do
 			type_i := context_type
-			if not type_i.is_basic then
-				class_type ?= type_i;	-- Cannot fail
+			if not type_i.is_basic and then precursor_type = Void then
+				class_type ?= type_i -- Cannot fail
 				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
 			end
 		end
@@ -240,6 +240,7 @@ end
 			internal_name		: STRING
 			table_name			: STRING
 			rout_table			: ROUT_TABLE
+			type_i: TYPE_I
 			type_c				: TYPE_C
 			buf					: GENERATION_BUFFER
 			array_index			: INTEGER
@@ -256,7 +257,8 @@ end
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
 			is_deferred := False
-			type_c := real_type (type).c_type
+			type_i := real_type (type)
+			type_c := type_i.c_type
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				is_deferred := True
@@ -267,7 +269,13 @@ end
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := Encoder.table_name (routine_id)
+				table_name := Encoder.routine_table_name (routine_id)
+				if system.seed_of_routine_id (routine_id).type.type_i.is_formal and then type_i.is_basic then
+						-- Feature returns a reference that need to be used as a basic one.
+					buf.put_character ('*')
+					type_c.generate_access_cast (buf)
+					type_c := reference_c_type
+				end
 				buf.put_character ('(')
 				if keep then
 					if is_nested and then need_invariant then
@@ -383,7 +391,7 @@ end
 			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			type := f.type
-			parameters := f.parameters
+			set_parameters (f.parameters)
 			precursor_type := f.precursor_type
 			routine_id := f.routine_id
 			body_index := f.body_index
@@ -431,7 +439,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

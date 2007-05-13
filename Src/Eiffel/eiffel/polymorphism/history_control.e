@@ -29,7 +29,7 @@ feature -- Initialization
 feature -- Access
 
 	new_units: HASH_TABLE [POLY_TABLE [ENTRY], INTEGER]
-			-- New units 
+			-- New units
 
 	count: INTEGER
 			-- Count of new and obsolete units already recorded
@@ -50,76 +50,46 @@ feature -- Checking
 
 feature -- Settings
 
-	add_new (entry: ENTRY; rout_id: INTEGER) is
+	add_new (f: FEATURE_I; id: INTEGER; rout_id: INTEGER) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
-			good_argument: entry /= Void
+			f_attached: f /= Void
+			valid_id: id > 0 and then system.classes.has (id)
+			valid_rout_id: rout_id /= 0
 		local
 			poly_table: POLY_TABLE [ENTRY]
+			associated_class: CLASS_C
+			types: TYPE_LIST
+			entry: ENTRY
+			modified_entry: ENTRY
 		do
 			poly_table := new_units.item (rout_id)
 			if poly_table = Void then
-				poly_table := entry.new_poly_table (rout_id)
+				poly_table := f.new_poly_table (rout_id)
 				new_units.put (poly_table, rout_id)
-				create_poly_table_with_entry (poly_table, entry)
-			else
-				extend_poly_table_with_entry (poly_table, entry)
+			end
+			associated_class := System.class_of_id (id)
+			if associated_class /= Void and then associated_class.has_types then
+					-- Classes could have been removed
+				from
+					types := associated_class.types
+					if poly_table.is_empty then
+						poly_table.create_block (types.count)
+					else
+						poly_table.extend_block (types.count)
+					end
+					entry := poly_table.new_entry (f, id)
+					types.start
+				until
+					types.after
+				loop
+					modified_entry := entry.twin
+					modified_entry.update (types.item)
+					poly_table.extend (modified_entry)
+					types.forth
+				end
 			end
 			count := count + 1
-		end
-
-	create_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
-			-- Add `entry' in newly created `poly_table' with the generic derivations.
-		require
-			poly_table_empty: poly_table.is_empty
-		local
-			associated_class: CLASS_C
-			types: TYPE_LIST
-			modified_entry: ENTRY
-		do
-			associated_class := System.class_of_id (entry.class_id)
-			if associated_class /= Void and then associated_class.has_types then
-					-- Classes could have been removed
-				from
-					types := associated_class.types
-					types.start
-					poly_table.create_block (types.count)
-				until
-					types.after
-				loop
-					modified_entry := entry.twin
-					modified_entry.update (types.item)
-					poly_table.extend (modified_entry)
-					types.forth
-				end
-			end
-		end
-
-	extend_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
-			-- Extend `poly_table' with `entry'
-		require
-			not_poly_table_empty: not poly_table.is_empty
-		local
-			associated_class: CLASS_C
-			types: TYPE_LIST
-			modified_entry: ENTRY
-		do
-			associated_class := System.class_of_id (entry.class_id)
-			if associated_class /= Void and then associated_class.has_types then
-					-- Classes could have been removed
-				from
-					types := associated_class.types
-					types.start
-					poly_table.extend_block (types.count)
-				until
-					types.after
-				loop
-					modified_entry := entry.twin
-					modified_entry.update (types.item)
-					poly_table.extend (modified_entry)
-					types.forth
-				end
-			end
 		end
 
 	transfer is

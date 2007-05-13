@@ -47,7 +47,7 @@ feature
 			routine_id := f.routine_id
 			parameters := f.parameters;
 			if parameters /= Void then
-				parameters := parameters.inlined_byte_code
+				set_parameters (parameters.inlined_byte_code)
 			end
 		end
 
@@ -583,7 +583,7 @@ feature -- Code to inline
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

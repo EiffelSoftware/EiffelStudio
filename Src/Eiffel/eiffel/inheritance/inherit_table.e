@@ -424,6 +424,9 @@ end;
 				-- Process paterns of origin features
 			process_pattern (resulting_table);
 
+				-- Ensure a wrapper is generated for attributes of a formal generic type.
+			mark_generic_attribute_seeds (resulting_table)
+
 -- Line removed by Frederic Deramat 15/04/92.
 --
 --    *** resulting_table.process_polymorphism (feature_table); ***
@@ -1564,6 +1567,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
+		mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
+				-- Mark attributes that are seeds of generic types to generate
+				-- wrappers for them.
+			require
+				resulting_table_attached: resulting_table /= Void
+			local
+				f: FEATURE_I
+				a: ATTRIBUTE_I
+			do
+				from
+					resulting_table.start
+				until
+					resulting_table.after
+				loop
+					f := resulting_table.item_for_iteration
+					if f.is_attribute and then f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
+						a ?= f
+						check
+							a_attached: a /= Void
+						end
+						a.set_generate_in (f.written_in)
+					end
+					resulting_table.forth
+				end
+			end
+
 feature {NONE} -- Temporary body index
 
 	external_body_index: INTEGER is
@@ -1576,7 +1605,7 @@ feature {NONE} -- Temporary body index
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

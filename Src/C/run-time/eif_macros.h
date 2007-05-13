@@ -174,6 +174,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTXB(x,y) copies bit `x' to `y'
  *  RTMB(x,y) creates bit of length y bits from string value x
  *  RTEB(x,y) are bits `x' and `y' equal?
+ *  RTBU(x) box a basic value stored in EIF_UNION and return EIF_REFERENCE
  */
 #define RTLN(x)				emalloc(x)
 #define RTLNS(x,y,z)		emalloc_size(x,y,z)
@@ -190,6 +191,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTXB(x,y)			b_copy(x,y)
 #define RTEB(x,y)			b_equal(x,y)
 #define RTLX(x)				cr_exp(x)
+#define RTBU(x)				eif_box(x)
 #ifdef WORKBENCH
 #define RTLXI(x)			init_exp(x)
 #else
@@ -216,8 +218,12 @@ RT_LNK int fcount;
  */
 #define RTCL(x)		rtclone(x)
 #define RTCB(x)		b_clone(x)
-#define RTRCL(x)	egc_twin(x)
 #define RTCCL(x)	((x && eif_is_boxed_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
+#ifdef WORKBENCH
+#	define RTRCL(x)	((egc_twin(x)).value.EIF_REFERENCE_value)
+#else
+#	define RTRCL(x)	egc_twin(x)
+#endif
 
 
 /* Macro used for object creation to get the proper creation type:
@@ -530,15 +536,19 @@ RT_LNK int fcount;
 
 #define RTOTW(body_id)
 
-#define RTOTC(name, body_id, value)                                          \
+#define RTOTC(name, body_id, v)                                              \
 	RTOTDV(name)                                                         \
 	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
+	EIF_UNION r;                                                         \
+	r.type = SK_REF;                                                     \
 	if (PResult) {                                                       \
-		return *PResult;                                             \
+		r.value.EIF_REFERENCE_value = *PResult;                      \
+		return r;                                                    \
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
 	MTOM(OResult);                                                       \
-	return RTOTRR = value;
+	r.##value.EIF_REFERENCE_value = RTOTRR = v;                          \
+	return r;
 
 #define RTOTOK
 
@@ -1138,7 +1148,7 @@ RT_LNK int fcount;
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		eif_xcopy(x, y)
 #define RTEQ(x,y)		eif_xequal((x),(y))
-#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf((int16) Dftype(x), (int16) Dftype(y)))? egc_equal((x),(x),(y)): (x)==(y))
+#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf((int16) Dftype(x), (int16) Dftype(y)))? eif_xequal((x),(y)): (x)==(y))
 #define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? eif_is_nested_expanded(HEADER(x)->ov_flags) : 0)
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x)			((x) - RTOF(x))

@@ -401,6 +401,9 @@ feature -- Settings
 				loop
 					temp := "arg"
 					temp.append_integer (i)
+					if context.workbench_mode and then not system.il_generation then
+						temp.append_character ('x')
+					end
 					Result.put (temp, j)
 					i := i + 1
 					j := j + 1
@@ -413,38 +416,13 @@ feature -- Settings
 			end
 		end
 
-	generate_arguments is
-			-- Generate C arguments, if any, in the definition.
-		local
-			i, count: INTEGER
-			a: like argument_names
-			buf: GENERATION_BUFFER
-		do
-			from
-				a := argument_names
-				i := 1
-				count := a.count
-				buf := buffer
-				if i <= count then
-					buf.put_string (a @ i)
-					i := i + 1
-				end
-			until
-				i > count
-			loop
-				buf.put_string (gc_comma)
-				buf.put_string (a @ i)
-				i := i + 1
-			end
-		end
-
 	generate_current: BOOLEAN is True
 			-- Is Current included in argument generation?
 
 	argument_types: ARRAY [STRING] is
 			-- Declare C parameters, if any, as part of the definition.
 		local
-			arg: TYPE_I
+			type_name: STRING
 			i, j, count: INTEGER
 		do
 			if arguments /= Void then
@@ -462,8 +440,12 @@ feature -- Settings
 				until
 					i > count
 				loop
-					arg := real_type (arguments.item (i))
-					Result.put (arg.c_type.c_string, j)
+					if context.workbench_mode then
+						type_name := once "EIF_UNION"
+					else
+						type_name := real_type (arguments.item (i)).c_type.c_string
+					end
+					Result.put (type_name, j)
 					i := i + 1
 					j := j + 1
 				end
@@ -602,6 +584,7 @@ feature -- Byte code generation
 			bit_i: BIT_I
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
+			type_code: NATURAL_8
 		do
 			local_list := context.local_list
 			local_list.wipe_out
@@ -701,21 +684,20 @@ feature -- Byte code generation
 					i > nb
 				loop
 					formal_type := context.real_type (arguments.item (i))
-					if formal_type.is_true_expanded or else formal_type.is_bit
-					then
-						Temp_byte_code_array.append (Bc_clone_arg)
-						Temp_byte_code_array.append_short_integer (i)
-						if formal_type.is_bit then
-							bit_i ?= formal_type
-							Temp_byte_code_array.append_integer(bit_i.size)
-						else
-							formal_type.make_full_type_byte_code (Temp_byte_code_array)
-						end
+					type_code := formal_type.tuple_code.as_natural_8
+					if formal_type.is_bit then
+						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.bit_tuple_code_extension)
+						bit_i ?= formal_type
+						Temp_byte_code_array.append_integer(bit_i.size)
+					elseif formal_type.is_true_expanded then
+						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.expanded_tuple_code_extension)
+						formal_type.make_full_type_byte_code (Temp_byte_code_array)
+					else
+						Temp_byte_code_array.append_natural_8 (formal_type.tuple_code.as_natural_8)
 					end
 					i := i + 1
 				end
 			end
-			Temp_byte_code_array.append (Bc_no_clone_arg)
 
 			if r_type.is_true_expanded and then not r_type.is_bit then
 					-- Generate full type info.

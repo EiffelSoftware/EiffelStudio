@@ -404,7 +404,7 @@ feature -- Contexts
 		do
 			entry := Eiffel_table.poly_table (rout_id)
 			Eiffel_table.mark_used (rout_id)
-			temp := Encoder.table_name (rout_id)
+			temp := Encoder.attribute_table_name (rout_id)
 			buffer.put_string ("extern long ")
 			buffer.put_string (temp)
 			buffer.put_string ("[];%Nlong *")

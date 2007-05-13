@@ -535,6 +535,9 @@ feature {NONE} -- Implementation: State
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
 
+	is_qualified_call: BOOLEAN
+			-- Is a qualified call being processed?
+
 	is_checking_cas: BOOLEAN
 			-- Is a custom attribute being processed?
 
@@ -1075,6 +1078,7 @@ feature -- Implementation
 			l_like_argument: LIKE_ARGUMENT
 			l_cl_type_a: CL_TYPE_A
 			l_feature: FEATURE_I
+			l_seed: FEATURE_I
 			i, l_actual_count, l_formal_count: INTEGER
 				-- Id of the class type on the stack
 			l_arg_type: TYPE_A
@@ -1283,6 +1287,12 @@ feature -- Implementation
 						end
 					end
 				end
+			elseif not system.il_generation then
+				if l_feature.is_inline_agent then
+					l_seed := l_feature
+				else
+					l_seed := system.seed_of_routine_id (l_feature.rout_id_set.first)
+				end
 			end
 			if not l_is_last_access_tuple_access then
 				if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
@@ -1455,6 +1465,9 @@ feature -- Implementation
 									l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type, a_precursor_type.associated_class.class_id).type_i)
 								else
 									l_parameter.set_attachment_type (l_formal_arg_type.type_i)
+									if not system.il_generation then
+										l_parameter.set_is_formal (l_seed.arguments.i_th (i).type_i.is_formal)
+									end
 								end
 								l_parameter_list.extend (l_parameter)
 
@@ -1586,7 +1599,7 @@ feature -- Implementation
 						if not is_static then
 							if is_precursor then
 								l_cl_type_i ?= a_precursor_type.type_i
-								l_access := l_feature.access_for_feature (l_generated_result_type.type_i, l_cl_type_i)
+								l_access := l_feature.access_for_feature (l_generated_result_type.type_i, l_cl_type_i, False)
 									-- Strange situation where Precursor is an external, then we do as if
 									-- it was a static call.
 								l_ext ?= l_access
@@ -1596,19 +1609,17 @@ feature -- Implementation
 							else
 								if l_is_multiple_constraint_case then
 									check not l_last_constrained.type_i.is_formal end
-									l_access := l_feature.access_for_multi_constraint (l_generated_result_type.type_i, l_last_constrained.type_i)
+									l_access := l_feature.access_for_multi_constraint (l_generated_result_type.type_i, l_last_constrained.type_i, is_qualified)
 								else
-									l_access := l_feature.access (l_generated_result_type.type_i)
+									l_access := l_feature.access (l_generated_result_type.type_i, is_qualified)
 								end
 							end
 						else
+							l_access := l_feature.access_for_feature (l_generated_result_type.type_i, a_type.type_i, is_qualified)
 							if l_is_multiple_constraint_case then
-									check not l_last_constrained.type_i.is_formal end
-									l_access := l_feature.access_for_feature (l_generated_result_type.type_i, a_type.type_i)
-									l_access.set_multi_constraint_static (l_last_constrained.type_i)
-								else
-									l_access := l_feature.access_for_feature (l_generated_result_type.type_i, a_type.type_i)
-								end
+								check not l_last_constrained.type_i.is_formal end
+								l_access.set_multi_constraint_static (l_last_constrained.type_i)
+							end
 							l_ext ?= l_access
 							if l_ext /= Void then
 								l_ext.enable_static_call
@@ -2503,6 +2514,7 @@ feature -- Implementation
 			l_access_expr: ACCESS_EXPR_B
 			l_call: CALL_B
 			l_nested: NESTED_B
+			l_is_qualified_call: BOOLEAN
 		do
 				-- Type check the target
 			l_as.target.process (Current)
@@ -2514,7 +2526,10 @@ feature -- Implementation
 			end
 
 				-- Type check the message
+			l_is_qualified_call := is_qualified_call
+			is_qualified_call := True
 			l_as.message.process (Current)
+			is_qualified_call := l_is_qualified_call
 			if is_byte_node_enabled then
 				l_call ?= last_byte_node
 				check
@@ -2535,6 +2550,7 @@ feature -- Implementation
 			l_call: CALL_B
 			l_nested: NESTED_B
 			l_is_assigner_call: BOOLEAN
+			l_is_qualified_call: BOOLEAN
 		do
 				-- Mask out assigner call flag for target of the call
 			l_is_assigner_call := is_assigner_call
@@ -2543,6 +2559,8 @@ feature -- Implementation
 			l_as.target.process (Current)
 				-- Restore assigner call flag for nested call
 			is_assigner_call := l_is_assigner_call
+			l_is_qualified_call := is_qualified_call
+			is_qualified_call := True
 			if not is_byte_node_enabled then
 					-- Type check the message
 				l_as.message.process (Current)
@@ -2566,6 +2584,7 @@ feature -- Implementation
 
 				last_byte_node := l_nested
 			end
+			is_qualified_call := l_is_qualified_call
 		end
 
 	process_routine_as (l_as: ROUTINE_AS) is
@@ -3056,7 +3075,7 @@ feature -- Implementation
 
 						if l_needs_byte_node then
 							if l_feature.is_attribute then
-								l_access := l_feature.access (l_type.type_i)
+								l_access := l_feature.access (l_type.type_i, False)
 								create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type.type_i)
 							else
 								create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
@@ -3389,7 +3408,7 @@ feature -- Implementation
 			end
 
 			if l_needs_byte_node then
-				l_access := l_prefix_feature.access (l_prefix_feature_type.type_i)
+				l_access := l_prefix_feature.access (l_prefix_feature_type.type_i, True)
 					-- If we have something like `a.f' where `a' is predefined
 					-- and `f' is a constant then we simply generate a byte
 					-- node that will be the constant only. Otherwise if `a' is
@@ -3664,7 +3683,7 @@ feature -- Implementation
 					l_binary.set_left (l_left_expr)
 					l_binary.set_right (l_right_expr)
 
-					l_call_access ?= last_infix_feature.access (l_infix_type.type_i)
+					l_call_access ?= last_infix_feature.access (l_infix_type.type_i, True)
 						-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
 					if l_is_left_multi_constrained then
 						l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type.type_i)
@@ -3915,6 +3934,7 @@ feature -- Implementation
 			l_type_set: TYPE_SET_A
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
+			l_is_qualified_call: BOOLEAN
 		do
 				-- Clean assigner call flag for bracket target
 			was_assigner_call := is_assigner_call
@@ -3986,7 +4006,10 @@ feature -- Implementation
 				-- Restore assigner call flag
 			is_assigner_call := was_assigner_call
 				-- Process call to bracket feature
+			l_is_qualified_call := is_qualified_call
+			is_qualified_call := True
 			process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
+			is_qualified_call := l_is_qualified_call
 			error_handler.checksum
 			if is_byte_node_enabled then
 				create nested_b
@@ -4272,6 +4295,9 @@ feature -- Implementation
 					create argument
 					argument.set_expression (binary_b.right)
 					argument.set_attachment_type (binary_b.attachment)
+					if not system.il_generation then
+						argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).type_i.is_formal)
+					end
 					arguments.extend (argument)
 				else
 					check
@@ -4303,12 +4329,15 @@ feature -- Implementation
 					create argument
 					argument.set_expression (source_byte_node)
 					argument.set_attachment_type (target_type.type_i)
+					if not system.il_generation then
+						argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).type_i.is_formal)
+					end
 					assigner_arguments.extend (argument)
 					if arguments /= Void then
 						assigner_arguments.append (arguments)
 					end
 						-- Evaluate assigner command byte node
-					access_b := target_assigner.access (void_type.type_i)
+					access_b := target_assigner.access (void_type.type_i, True)
 					access_b.set_parameters (assigner_arguments)
 					if external_b = Void then
 							-- Replace end of call chain with an assigner command
@@ -7093,7 +7122,7 @@ feature {NONE} -- Agents
 	compute_feature_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
 								   		a_target_type: TYPE_A; a_agent_type: TYPE_A)
 		do
-			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type.type_i), a_feature.type, a_target,
+			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type.type_i, True), a_feature.type, a_target,
 									   a_target_type, a_agent_type, a_feature)
 		end
 
@@ -7939,7 +7968,7 @@ feature {NONE} -- Implementation: catcall check
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

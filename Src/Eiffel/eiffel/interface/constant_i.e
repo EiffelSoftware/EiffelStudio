@@ -196,6 +196,7 @@ feature -- C code generation
 		local
 			type_c: TYPE_C
 			internal_name: STRING
+			return_type_name: STRING
 			local_byte_context: BYTE_CONTEXT
 			local_is_once: BOOLEAN
 			header_buffer: GENERATION_BUFFER
@@ -228,7 +229,12 @@ feature -- C code generation
 				end
 
 					-- Generation of function's header
-				buffer.generate_function_signature (type_c.c_string,
+				if byte_context.workbench_mode then
+					return_type_name := once "EIF_UNION"
+				else
+					return_type_name := type_c.c_string
+				end
+				buffer.generate_function_signature (return_type_name,
 						internal_name, True, local_byte_context.header_buffer,
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
@@ -253,9 +259,26 @@ feature -- C code generation
 					value.generate (buffer)
 					buffer.put_character (')')
 				else
-					buffer.put_string ("return ")
+					if byte_context.workbench_mode then
+						buffer.put_string ("EIF_UNION r;")
+						buffer.put_new_line
+						buffer.put_string ("r.")
+						type_c.generate_typed_tag (buffer)
+						buffer.put_character (';')
+						buffer.put_new_line
+						buffer.put_string ("r.")
+						type_c.generate_typed_field (buffer)
+						buffer.put_string (" = ")
+					else
+						buffer.put_string ("return ")
+					end
 					type_c.generate_cast (buffer)
 					value.generate (buffer)
+					if byte_context.workbench_mode then
+						buffer.put_character (';')
+						buffer.put_new_line
+						buffer.put_string ("return r")
+					end
 				end
 				buffer.exdent
 				buffer.put_string (";%N}%N")
@@ -264,7 +287,7 @@ feature -- C code generation
 			end
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for constant. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		local
@@ -273,7 +296,7 @@ feature -- C code generation
 		do
 			if is_once then
 					-- Cannot hardwire string constants, ever.
-				Result := Precursor {ENCAPSULATED_I} (access_type, static_type)
+				Result := Precursor (access_type, static_type, is_qualified)
 			else
 				if extension /= Void then
 					create external_b
@@ -288,7 +311,7 @@ feature -- C code generation
 				else
 						-- Constants are hardwired in final mode
 					create constant_b.make (value)
-					constant_b.set_access (Precursor {ENCAPSULATED_I} (access_type, static_type))
+					constant_b.set_access (Precursor (access_type, static_type, is_qualified))
 					Result := constant_b
 				end
 			end
@@ -356,8 +379,6 @@ feature -- Byte code generation
 
 				-- Local count
 			ba.append_short_integer (0)
-				-- No argument clone
-			ba.append (Bc_no_clone_arg)
 				-- Feature name
 			ba.append_raw_string (feature_name)
 				-- Type where the feature is written in

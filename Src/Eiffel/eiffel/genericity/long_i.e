@@ -190,6 +190,26 @@ feature -- Access
 			buffer.put_integer (size)
 		end
 
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			inspect size
+			when 8 then buffer.put_string ("value.EIF_INTEGER_8_value")
+			when 16 then buffer.put_string ("value.EIF_INTEGER_16_value")
+			when 32 then buffer.put_string ("value.EIF_INTEGER_32_value")
+			when 64 then buffer.put_string ("value.EIF_INTEGER_64_value")
+			end
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("type = SK_INT")
+			buffer.put_integer (size)
+		end
+
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do

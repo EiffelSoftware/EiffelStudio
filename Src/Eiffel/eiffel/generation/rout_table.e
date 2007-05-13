@@ -8,12 +8,11 @@ indexing
 class ROUT_TABLE
 
 inherit
+
 	POLY_TABLE [ROUT_ENTRY]
-		rename
-			writer as Rout_generator
 		redefine
-			is_routine_table, tmp_poly_table
-		end;
+			is_attribute_table, is_routine_table, tmp_poly_table
+		end
 
 	SHARED_GENERATOR
 		undefine
@@ -45,8 +44,17 @@ create
 
 feature -- Status report
 
-	is_routine_table: BOOLEAN is True;
-			-- Is the table a routine table ?
+	is_routine_table: BOOLEAN is
+			-- Is the table a routine table?
+		do
+			Result := True
+		end
+
+	is_attribute_table: BOOLEAN is
+			-- Is the current table an attribute table ?
+		do
+				-- False here.
+		end
 
 	is_implemented: BOOLEAN is
 			-- Is implemented
@@ -68,6 +76,13 @@ feature -- Status report
 			Result := array_item (position).routine_name
 		end
 
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+			-- New entry corresponding to `f' in class of class ID `c'
+		do
+			Result := f.new_rout_entry
+			Result.set_class_id (c)
+		end
+
 	is_polymorphic (type_id: INTEGER): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
@@ -75,7 +90,7 @@ feature -- Status report
 			first_real_body_index, first_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
-			first_type: CLASS_TYPE
+			first_class_type: CLASS_TYPE
 			found: BOOLEAN;
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
@@ -93,13 +108,13 @@ feature -- Status report
 
 					-- We never compute the value for this entry, so we need to do it
 				from
-					first_type := system_i.class_type_of_id (type_id)
+					first_class_type := system_i.class_type_of_id (type_id)
 				until
 					Result or else i > nb
 				loop
 					entry := array_item (i)
 					if entry.used then
-						if system_i.class_type_of_id (entry.type_id).conform_to (first_type) then
+						if system_i.class_type_of_id (entry.type_id).conform_to (first_class_type) then
 							if found then
 								Result := entry.real_body_index /= first_real_body_index or
 									entry.body_index /= first_body_index
@@ -146,14 +161,19 @@ feature -- Status report
 
 feature -- Code generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (writer: TABLE_GENERATOR) is
 			-- Generation of the routine table in buffer "erout*.c".
+		require
+			writer_attached: writer /= Void
 		local
 			l_min_used: INTEGER
+			final_table_size: INTEGER
 		do
+			final_table_size := max_used - min_used + 1
+			writer.update_size (final_table_size)
 			l_min_used := min_used
 			goto (l_min_used)
-			internal_generate (buffer, 0, final_table_size, l_min_used, max_used)
+			internal_generate (writer.current_buffer, 0, final_table_size, l_min_used, max_used)
 		end
 
 	generate_full (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
@@ -164,7 +184,7 @@ feature -- Code generation
 			l_table_name: STRING
 		do
 			if max_position = 0 then
-				l_table_name := Encoder.table_name (real_rout_id)
+				l_table_name := Encoder.routine_table_name (real_rout_id)
 				buffer.put_string ("char *(*");
 				buffer.put_string (l_table_name);
 				buffer.put_string ("[")
@@ -269,12 +289,19 @@ feature {NONE} -- Implementation
 			l_generate_entry: BOOLEAN
 			l_routine_name: STRING;
 			l_table_name: STRING
+			l_suffix: STRING
 		do
+			if system.routine_id_counter.is_feature_routine_id (rout_id) and then
+				system.seed_of_routine_id (rout_id).has_formal
+			then
+					-- Use generic wrapper of the feature.
+				l_suffix := system.seed_of_routine_id (rout_id).generic_fingerprint
+			end
 				-- We generate a compact table initialization, that is to say if two or more
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
 				buffer.put_string ("char *(*");
-				l_table_name := Encoder.table_name (rout_id)
+				l_table_name := Encoder.routine_table_name (rout_id)
 				buffer.put_string (l_table_name);
 				buffer.put_string ("[")
 				buffer.put_integer (a_table_size)
@@ -319,6 +346,9 @@ feature {NONE} -- Implementation
 					l_generate_entry := False
 					if l_rout_entry /= Void then
 						l_routine_name := l_rout_entry.routine_name
+						if l_suffix /= Void then
+							l_routine_name.append_string (l_suffix)
+						end
 						generate_loop_initialization (buffer, l_table_name, l_routine_name,
 							l_start, l_end)
 
@@ -334,6 +364,9 @@ feature {NONE} -- Implementation
 			end;
 			if l_rout_entry /= Void then
 				l_routine_name := l_rout_entry.routine_name
+				if l_suffix /= Void then
+					l_routine_name.append_string (l_suffix)
+				end
 				generate_loop_initialization (buffer, l_table_name, l_routine_name,
 					l_start, l_end)
 
@@ -391,6 +424,15 @@ feature {NONE} -- Implementation
 
 	function_ptr_cast_string: STRING is "(char *(*)()) ";
 			-- String representing cast to type of function pointer
+
+	write is
+			-- Generate table using writer.
+		do
+			generate (Rout_generator)
+			if has_type_table and then not has_one_type then
+				generate_type_table (Rout_generator)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

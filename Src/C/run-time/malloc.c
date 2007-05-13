@@ -3827,6 +3827,43 @@ rt_shared void sc_stop(void)
 #endif
 
 /*
+doc:	<routine name="eif_box" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Create a boxed version of a basic value.</summary>
+doc:		<param name="v" type="EIF_UNION">Value to be boxed.</param>
+doc:		<return>A newly allocated object if successful.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE eif_box (EIF_UNION v)
+{
+	EIF_REFERENCE Result;
+	switch (v.type)
+	{
+		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                   Result = v.value.EIF_BOOLEAN_value; break;
+		case SK_CHAR:    Result = RTLN(egc_char_dtype);   *                   Result = v.value.EIF_CHARACTER_value; break;
+		case SK_WCHAR:   Result = RTLN(egc_wchar_dtype);  *(EIF_WIDE_CHAR *)  Result = v.value.EIF_WIDE_CHAR_value; break;
+		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)  Result = v.value.EIF_NATURAL_8_value; break;
+		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) Result = v.value.EIF_NATURAL_16_value; break;
+		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) Result = v.value.EIF_NATURAL_32_value; break;
+		case SK_UINT64:  Result = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) Result = v.value.EIF_NATURAL_64_value; break;
+		case SK_INT8:    Result = RTLN(egc_int8_dtype);   *(EIF_INTEGER_8 *)  Result = v.value.EIF_INTEGER_8_value; break;
+		case SK_INT16:   Result = RTLN(egc_int16_dtype);  *(EIF_INTEGER_16 *) Result = v.value.EIF_INTEGER_16_value; break;
+		case SK_INT32:   Result = RTLN(egc_int32_dtype);  *(EIF_INTEGER_32 *) Result = v.value.EIF_INTEGER_32_value; break;
+		case SK_INT64:   Result = RTLN(egc_int64_dtype);  *(EIF_INTEGER_64 *) Result = v.value.EIF_INTEGER_64_value; break;
+		case SK_REAL32:  Result = RTLN(egc_real32_dtype); *(EIF_REAL_32 *)    Result = v.value.EIF_REAL_32_value; break;
+		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)    Result = v.value.EIF_REAL_64_value; break;
+		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.value.EIF_POINTER_value; break;
+		case SK_REF:     Result = v.value.EIF_REFERENCE_value; break;
+		default: 
+			eif_panic("illegal value type");
+	}
+	return Result;
+}
+
+/*
 doc:	<routine name="eif_set" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Set an Eiffel object for use: reset the zone with zeros, and try to record the object inside the moved set, if necessary. The function returns the address of the object (it may move if a GC cycle is raised).</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object to setup.</param>

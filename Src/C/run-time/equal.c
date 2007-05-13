@@ -92,7 +92,17 @@ rt_public EIF_BOOLEAN eif_xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 			/* We don't care anymore about conformance, egc_equal expect
 			 * type to be equal, otherwise it returns False.
 			 */
+#ifdef WORKBENCH
+		EIF_UNION r1;
+		EIF_UNION r2;
+		r1.type = SK_REF;
+		r2.type = SK_REF;
+		r1.value.EIF_REFERENCE_value = ref1;
+		r2.value.EIF_REFERENCE_value = ref2;
+		return egc_equal(ref1, r1, r2).value.EIF_BOOLEAN_value;
+#else
 		return egc_equal(ref1, ref1, ref2);
+#endif
 	}
 
 	return EIF_FALSE;

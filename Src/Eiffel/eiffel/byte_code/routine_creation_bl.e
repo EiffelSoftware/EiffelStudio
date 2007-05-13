@@ -284,7 +284,7 @@ feature
 				else
 					l_type_id := l_class_type.type_id
 					if l_entry.is_polymorphic (l_type_id) then
-						l_table_name := Encoder.table_name (rout_id)
+						l_table_name := Encoder.routine_table_name (rout_id)
 						buffer.put_string (l_table_name)
 						buffer.put_string ("[Dtype((")
 						generate_current
@@ -306,7 +306,7 @@ feature
 							buffer.put_string (l_function_name)
 							buffer.put_string ("),")
 							if l_feat.has_arguments then
-								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments)
+								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments, True)
 							else
 								l_args := <<"EIF_REFERENCE">>
 							end

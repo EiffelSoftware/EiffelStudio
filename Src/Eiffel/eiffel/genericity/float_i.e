@@ -124,6 +124,20 @@ feature -- C code generation
 			buffer.put_string ("it_real32")
 		end
 
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("value.EIF_REAL_32_value")
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("type = SK_REAL32")
+		end
+
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do

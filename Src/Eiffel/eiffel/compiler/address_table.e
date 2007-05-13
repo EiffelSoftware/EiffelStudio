@@ -463,12 +463,13 @@ feature -- Generation helpers
 			Result := s_type.type_i.c_type
 		end
 
-	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG): ARRAY [STRING] is
+	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG; is_for_agent: BOOLEAN): ARRAY [STRING] is
 			-- Generate declaration of the argument types.
 		require
 			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
+			t: STRING
 		do
 			from
 				i := 1
@@ -478,7 +479,12 @@ feature -- Generation helpers
 			until
 				i > nb
 			loop
-				Result.put (solved_type (context_type, args.i_th (i)).c_string, i + 1)
+				if is_for_agent and then system.byte_context.workbench_mode then
+					t := "EIF_UNION"
+				else
+					t := solved_type (context_type, args.i_th (i)).c_string
+				end
+				Result.put (t, i + 1)
 				i := i + 1
 			end
 		end
@@ -581,6 +587,40 @@ feature {NONE} -- Generation
 			end
 		end
 
+	generate_workbench_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; context_type: CLASS_TYPE; args: FEAT_ARG) is
+			-- Generate declaration of `n' arguments.
+		local
+			i: INTEGER
+			n: INTEGER
+			arg_type: TYPE_C
+		do
+			buffer.put_string (current_name)
+			if args /= Void then
+				from
+					i := 1
+					n := args.count
+				until
+					i > n
+				loop
+					arg_type := solved_type (context_type, args.i_th (i))
+					buffer.put_string (", ((u [")
+					buffer.put_integer (i - 1)
+					buffer.put_string ("].")
+					arg_type.generate_typed_tag (buffer)
+					buffer.put_string ("), (u [")
+					buffer.put_integer (i - 1)
+					buffer.put_string ("].")
+					arg_type.generate_typed_field (buffer)
+					buffer.put_string (" = arg")
+					buffer.put_integer (i)
+					buffer.put_string ("), u [")
+					buffer.put_integer (i - 1)
+					buffer.put_string ("])")
+					i := i + 1
+				end
+			end
+		end
+
 	generate_feature (a_class: CLASS_C; a_feature: FEATURE_I; final_mode: BOOLEAN; buffer: GENERATION_BUFFER;
 					  is_for_agent, is_target_closed: BOOLEAN; omap: ARRAYED_LIST [INTEGER];
 					  a_oargs_encapsulated: BOOLEAN) is
@@ -651,10 +691,14 @@ feature {NONE} -- Generation
 				buffer.put_string (" */%N")
 
 				c_return_type := solved_type (l_type, return_type)
-				return_type_string := c_return_type.c_string
+				if is_for_agent and then not c_return_type.is_void and then system.byte_context.workbench_mode then
+					return_type_string := "EIF_UNION"
+				else
+					return_type_string := c_return_type.c_string
+				end
 
 				if has_arguments then
-					a_types := arg_types (l_type, args)
+					a_types := arg_types (l_type, args, is_for_agent)
 				else
 					a_types := <<"EIF_REFERENCE">>
 				end
@@ -667,11 +711,18 @@ feature {NONE} -- Generation
 						(return_type_string, function_name, True, buffer,
 						arg_names (args_count), a_types)
 				end
-				if is_for_agent and (not final_mode or else system.keep_assertions) then
-						-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
-					buffer.put_string ("{%N%TGTCX%N%Tnstcall = 1;%N%T")
-				else
-					buffer.put_string ("{%N%T")
+				buffer.put_string ("{%N%T")
+				if not final_mode and then args_count > 0 then
+						-- Declare structure to be used for passing arguments.
+					buffer.put_string ("EIF_UNION u [")
+					buffer.put_integer (args_count)
+					buffer.put_string ("];%N%T")
+				end
+				if is_for_agent then
+					if not final_mode or else system.keep_assertions then
+							-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
+						buffer.put_string ("GTCX%N%Tnstcall = 1;%N%T")
+					end
 				end
 
 				if is_function then
@@ -685,7 +736,7 @@ feature {NONE} -- Generation
 					is_for_agent
 				then
 					buffer.put_string ("f_ptr (")
-					generate_arg_list_for_rout (buffer, arg_tags (l_type, args), omap, a_oargs_encapsulated)
+					generate_arg_list_for_rout (buffer, l_type, args, final_mode, omap, a_oargs_encapsulated)
 				else
 					if a_feature.is_inline_agent then
 						buffer.put_character ('(')
@@ -700,7 +751,7 @@ feature {NONE} -- Generation
 							is_for_agent
 						end
 
-						generate_arg_list_for_rout (buffer, arg_tags (l_type, args), omap, a_oargs_encapsulated)
+						generate_arg_list_for_rout (buffer, l_type, args, final_mode, omap, a_oargs_encapsulated)
 					else
 						if final_mode then
 							l_is_implemented :=
@@ -711,14 +762,21 @@ feature {NONE} -- Generation
 						end
 						if l_is_implemented then
 							if is_for_agent then
-								generate_arg_list_for_rout (buffer, arg_tags (l_type, args), omap, a_oargs_encapsulated)
-							else
+								generate_arg_list_for_rout (buffer, l_type, args, final_mode, omap, a_oargs_encapsulated)
+							elseif final_mode then
 								generate_arg_list (buffer, l_current_name, args_count)
+							else
+								generate_workbench_arg_list (buffer, l_current_name, l_type, args)
 							end
 						end
 					end
 				end
-				buffer.put_string (");%N")
+				buffer.put_character (')')
+				if not final_mode and then not is_for_agent and then not c_return_type.is_void then
+					buffer.put_character ('.')
+					c_return_type.generate_typed_field (buffer)
+				end
+				buffer.put_string (";%N")
 
 				buffer.put_string ("%N}%N%N")
 
@@ -779,7 +837,7 @@ feature {NONE} -- Generation
 			else
 				l_type_id := a_type.type_id
 				if l_entry.is_polymorphic (l_type_id) then
-					l_table_name := Encoder.table_name (l_rout_id)
+					l_table_name := Encoder.routine_table_name (l_rout_id)
 					c_return_type.generate_function_cast (buffer, a_types)
 					buffer.put_string (l_table_name)
 					buffer.put_string ("[Dtype(")
@@ -822,10 +880,22 @@ feature {NONE} -- Generation
 		local
 			l_rout_id: INTEGER
 			l_rout_info: ROUT_INFO
+			l_types: ARRAY [STRING]
+			i: INTEGER
 		do
 			buffer.put_character ('(')
 			l_rout_id := a_feature.rout_id_set.first
-			c_return_type.generate_function_cast (buffer, a_types)
+			create l_types.make (1, a_types.count)
+			l_types [1] := a_types [1]
+			from
+				i := l_types.count
+			until
+				i < 2
+			loop
+				l_types [i] := "EIF_UNION"
+				i := i - 1
+			end
+			c_return_type.generate_function_cast (buffer, l_types)
 
 			if
 				Compilation_modes.is_precompiling or else
@@ -849,13 +919,16 @@ feature {NONE} -- Generation
 			buffer.put_string ("))(")
 		end
 
-	generate_arg_list_for_rout (a_buf: GENERATION_BUFFER; a_tags : ARRAY [STRING];
+	generate_arg_list_for_rout (a_buf: GENERATION_BUFFER; a_type: CLASS_TYPE; a_args: FEAT_ARG; final_mode: BOOLEAN;
 								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN) is
 			-- Generate declaration of `n' arguments for routine objects.
 		local
 			i, j, k, o: INTEGER
 			sep: STRING
+			tags : ARRAY [STRING]
+			arg_type: TYPE_C
 		do
+			tags := arg_tags (a_type, a_args)
 			from
 				i := 1
 				j := 1
@@ -868,17 +941,29 @@ feature {NONE} -- Generation
 				end
 				sep := ", "
 			until
-				i > a_tags.count
+				i > tags.count
 			loop
 				if i > 1 then
 					a_buf.put_string (sep)
+					if not final_mode then
+						arg_type := solved_type (a_type, a_args.i_th (i - 1))
+						a_buf.put_string ("((u [")
+						a_buf.put_integer (i - 2)
+						a_buf.put_string ("].")
+						arg_type.generate_typed_tag (a_buf)
+						a_buf.put_string ("), (u [")
+						a_buf.put_integer (i - 2)
+						a_buf.put_string ("].")
+						arg_type.generate_typed_field (a_buf)
+						a_buf.put_string (" = ")
+					end
 				end
 				if i = o then
 					if a_oargs_encapsulated then
 						a_buf.put_string ("open [")
 						a_buf.put_string (k.out)
 						a_buf.put_string ("].element.")
-						a_buf.put_string (a_tags.item (i))
+						a_buf.put_string (tags.item (i))
 						k := k + 1
 					else
 						a_buf.put_string ("op_")
@@ -894,8 +979,13 @@ feature {NONE} -- Generation
 					a_buf.put_string ("closed [")
 					a_buf.put_integer (j)
 					a_buf.put_string ("].element.")
-					a_buf.put_string (a_tags.item (i))
+					a_buf.put_string (tags.item (i))
 					j := j + 1
+				end
+				if i > 1 and then not final_mode then
+					a_buf.put_string ("), u [")
+					a_buf.put_integer (i - 2)
+					a_buf.put_string ("])")
 				end
 				i := i + 1
 			end

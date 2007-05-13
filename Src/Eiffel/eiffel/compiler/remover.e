@@ -45,7 +45,8 @@ feature
 			loop
 				dep := control.item
 				if
-					not System.routine_id_counter.is_attribute (dep.rout_id) and then
+					tmp_poly_server.item (dep.rout_id).is_routine_table and then
+--					not System.routine_id_counter.is_attribute (dep.rout_id) and then
 					not is_treated (dep.body_index, dep.rout_id)
 				then
 					mark_treated (dep.body_index, dep.rout_id)

@@ -175,7 +175,7 @@ end
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
-				table_name := Encoder.table_name (routine_id)
+				table_name := Encoder.attribute_table_name (routine_id)
 
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]

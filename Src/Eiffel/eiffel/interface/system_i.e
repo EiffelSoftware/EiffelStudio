@@ -1502,6 +1502,18 @@ feature {NONE} -- Implementation: predefined routine IDs
 	internal_special_make_id: INTEGER
 			-- Once per compilation value of routine id of `make' from SPECIAL.
 
+feature -- Feature declaration
+
+	seed_of_routine_id (routine_id: INTEGER): FEATURE_I is
+			-- Seed with the given `routine_id'
+		require
+			valid_routine_id: routine_id > 0 and then routine_id_counter.is_feature_routine_id (routine_id) -- and `routine_id' is used
+		do
+			Result := class_of_id (rout_info_table.item (routine_id).origin).feature_of_rout_id (routine_id)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Recompilation
 
 	set_rebuild (b: BOOLEAN) is
@@ -3909,17 +3921,31 @@ feature -- Generation
 				used.after
 			loop
 				l_rout_id := used.item_for_iteration
-				l_table_name := Encoder.table_name (l_rout_id)
-					-- Declare initialization routine for table
-				l_header_buf.put_string ("extern void ")
-				l_header_buf.put_string (l_table_name)
-				l_header_buf.put_string ("_init(void);")
-				l_header_buf.put_new_line
-
-					-- Call the routine
-				l_buf.put_string (l_table_name)
-				l_buf.put_string ("_init();")
-				l_buf.put_new_line
+				table := Tmp_poly_server.item (l_rout_id)
+				if table.is_routine_table then
+					l_table_name := Encoder.routine_table_name (l_rout_id)
+						-- Declare initialization routine for table
+					l_header_buf.put_string ("extern void ")
+					l_header_buf.put_string (l_table_name)
+					l_header_buf.put_string ("_init(void);")
+					l_header_buf.put_new_line
+						-- Call the routine
+					l_buf.put_string (l_table_name)
+					l_buf.put_string ("_init();")
+					l_buf.put_new_line
+				end
+				if table.is_attribute_table then
+					l_table_name := Encoder.attribute_table_name (l_rout_id)
+						-- Declare initialization routine for table
+					l_header_buf.put_string ("extern void ")
+					l_header_buf.put_string (l_table_name)
+					l_header_buf.put_string ("_init(void);")
+					l_header_buf.put_new_line
+						-- Call the routine
+					l_buf.put_string (l_table_name)
+					l_buf.put_string ("_init();")
+					l_buf.put_new_line
+				end
 				used.forth
 			end
 				-- Initialize then table used for finding out
@@ -3955,7 +3981,7 @@ feature -- Generation
 				l_rout_ids.after
 			loop
 				l_rout_id := l_rout_ids.item
-				l_table_name := Encoder.table_name (l_rout_id)
+				l_table_name := Encoder.routine_table_name (l_rout_id)
 					-- Declare initialization routine for table
 				l_header_buf.put_string ("extern void ")
 				l_header_buf.put_string (l_table_name)
@@ -4785,11 +4811,20 @@ feature -- Pattern table generation
 					buffer.put_string (");%N")
 				end
 			else
-				buffer.put_string ("%Tif (egc_rcorigin != -1) {%N%
-					%%T%Tif (egc_rcarg) {%N%
-					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, argarr(argc, argv));%N%
-					%%T%T} else {%N%
-					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);%N%T%T}%N%T}%N")
+				buffer.put_string (
+					"[
+						if (egc_rcorigin != -1) {
+							if (egc_rcarg) {
+								EIF_UNION u_args;
+								u_args.type = SK_REF;
+								u_args.value.EIF_REFERENCE_value = argarr(argc, argv);
+								(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_UNION)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
+							} else {
+								(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
+							}
+						}
+					]"
+				)
 			end
 
 			buffer.put_string ("%N}%N")

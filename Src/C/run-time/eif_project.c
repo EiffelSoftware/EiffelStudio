@@ -88,7 +88,11 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>STRING</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER); 
+#ifdef WORKBENCH
+rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_UNION);
+#else
+rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);
+#endif
 
 #ifdef WORKBENCH
 /*
@@ -99,7 +103,7 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>STRING</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER); 
+rt_public void (*egc_strset)(EIF_REFERENCE, EIF_UNION);
 #else
 
 /*
@@ -131,7 +135,11 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ARRAY [ANY]</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);	
+#ifdef WORKBENCH
+rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_UNION, EIF_UNION);
+#else
+rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);
+#endif
 
 /*
 doc:	<attribute name="egc_routdisp" return_type="fnptr" export="public">
@@ -264,8 +272,13 @@ rt_public long *egc_fnbref ;
 rt_public long *egc_fsize;
 #endif
 
-rt_public EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
-rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+#ifdef WORKBENCH
+	rt_public EIF_UNION (*egc_equal)(EIF_REFERENCE, EIF_UNION, EIF_UNION); /* {ANY}.equal */
+	rt_public EIF_UNION (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+#else
+	rt_public EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
+	rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+#endif
 
 rt_public int32 egc_rcdt;				/* E1/einit.c */
 rt_public int32 egc_rcorigin;			/* E1/einit.c */

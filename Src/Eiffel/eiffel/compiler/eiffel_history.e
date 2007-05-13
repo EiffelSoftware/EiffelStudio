@@ -66,87 +66,92 @@ feature -- Status
 			entry: POLY_TABLE [ENTRY]
 			min_id: INTEGER
 		do
-				-- Get the array corresponding to the searched value
-				-- if it is a valid `rout_id', if not `bool_array' is
-				-- set to `Void' because we we have most probably a
-				-- case of a deferred feature without implementation
-				-- (This will be verified later).
-			if rout_id <= is_polymorphic_table.upper then
-				bool_array := is_polymorphic_table.item (rout_id)
-			end
-
-			if bool_array /= Void then
-					-- Compute minimum class type id for current `rout_id'.
-				min_id := min_id_table.item (rout_id)
-
-					-- We already have computed something for this polymorphic
-					-- table, we just need to search for the requested `class_type_id'
-					-- to know if we can retrieve the value or if we had to compute it.
-				if class_type_id >= min_id then
-					Result := get_value (bool_array, class_type_id - min_id)
-				else
-					Result := is_feature_not_yet_computed
-				end
-
-				if Result = is_feature_not_yet_computed then
-						-- The entry has not yet been computed
-					entry := poly_table (rout_id)
-					status := entry.is_polymorphic (class_type_id)
-					if class_type_id >= min_id then
-						put_value (bool_array, class_type_id - min_id, status)
-					end
-					if status then
-						Result := min_id
-					else
-						Result := - 1
-					end
-				elseif Result = is_feature_polymorphic then
-					Result := min_id
-				else
-					Result := -1
-				end
+			if system.class_type_of_id (class_type_id).is_expanded then
+					-- Call on an expanded type is not polymorphic.
+				Result := -1
 			else
-					-- First time, the information for <`rout_id',`class_type_id'> is requested
-				entry := poly_table (rout_id)
+					-- Get the array corresponding to the searched value
+					-- if it is a valid `rout_id', if not `bool_array' is
+					-- set to `Void' because we we have most probably a
+					-- case of a deferred feature without implementation
+					-- (This will be verified later).
+				if rout_id <= is_polymorphic_table.upper then
+					bool_array := is_polymorphic_table.item (rout_id)
+				end
 
-				if entry /= Void then
-						-- Store the polymorphic status of the searched entry.
-					status := entry.is_polymorphic (class_type_id)
+				if bool_array /= Void then
+						-- Compute minimum class type id for current `rout_id'.
+					min_id := min_id_table.item (rout_id)
 
-						-- When we are handling with a ROUT_TABLE, we need to store
-						-- the `min_used' id, otherwise its enough to store the
-						-- `min_type_id'.
-					if used_requested then
-						min_id := entry.min_used - 1
-					else
-						min_id := entry.min_type_id - 1
-					end
-					min_id_table.put (min_id, rout_id)
-
-						-- Create packed booleans array with bounds `2 * min_id'
-						-- to `2 * entry.max_type_id'. `2' is because for each entry we store
-						-- two informations: `is_computed' and then `is_polymorphic'.
-					create bool_array.make (2 * (entry.max_type_id - min_id))
-
-						-- Store the value in the C array.
+						-- We already have computed something for this polymorphic
+						-- table, we just need to search for the requested `class_type_id'
+						-- to know if we can retrieve the value or if we had to compute it.
 					if class_type_id >= min_id then
-						put_value (bool_array, class_type_id - min_id, status)
+						Result := get_value (bool_array, class_type_id - min_id)
+					else
+						Result := is_feature_not_yet_computed
 					end
 
-						-- Insert the new computed table in the array of computed tables.
-					is_polymorphic_table.put (bool_array, rout_id)
-
-						-- Return the result
-					if status then
+					if Result = is_feature_not_yet_computed then
+							-- The entry has not yet been computed
+						entry := poly_table (rout_id)
+						status := entry.is_polymorphic (class_type_id)
+						if class_type_id >= min_id then
+							put_value (bool_array, class_type_id - min_id, status)
+						end
+						if status then
+							Result := min_id
+						else
+							Result := - 1
+						end
+					elseif Result = is_feature_polymorphic then
 						Result := min_id
 					else
 						Result := -1
 					end
 				else
-						-- In case there is no polymorphic table associated to `rout_id'
-						-- we don't do anything and next time we will go to the same place.
-						-- Most probably a deferred feature without implementation
-					Result := -2
+						-- First time, the information for <`rout_id',`class_type_id'> is requested
+					entry := poly_table (rout_id)
+
+					if entry /= Void then
+							-- Store the polymorphic status of the searched entry.
+						status := entry.is_polymorphic (class_type_id)
+
+							-- When we are handling with a ROUT_TABLE, we need to store
+							-- the `min_used' id, otherwise its enough to store the
+							-- `min_type_id'.
+						if used_requested then
+							min_id := entry.min_used - 1
+						else
+							min_id := entry.min_type_id - 1
+						end
+						min_id_table.put (min_id, rout_id)
+
+							-- Create packed booleans array with bounds `2 * min_id'
+							-- to `2 * entry.max_type_id'. `2' is because for each entry we store
+							-- two informations: `is_computed' and then `is_polymorphic'.
+						create bool_array.make (2 * (entry.max_type_id - min_id))
+
+							-- Store the value in the C array.
+						if class_type_id >= min_id then
+							put_value (bool_array, class_type_id - min_id, status)
+						end
+
+							-- Insert the new computed table in the array of computed tables.
+						is_polymorphic_table.put (bool_array, rout_id)
+
+							-- Return the result
+						if status then
+							Result := min_id
+						else
+							Result := -1
+						end
+					else
+							-- In case there is no polymorphic table associated to `rout_id'
+							-- we don't do anything and next time we will go to the same place.
+							-- Most probably a deferred feature without implementation
+						Result := -2
+					end
 				end
 			end
 		end

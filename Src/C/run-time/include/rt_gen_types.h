@@ -87,6 +87,9 @@ extern "C" {
 #define EIF_NATURAL_64_CODE 0x0D
 #define EIF_WIDE_CHAR_CODE	0x0E
 
+#define EIF_EXPANDED_CODE_EXTENSION 0x10
+#define EIF_BIT_CODE_EXTENSION 0x20
+
 /*------------------------------------------------------------------*/
 
 extern char *eif_typename (int16);

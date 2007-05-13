@@ -18,7 +18,7 @@ feature -- Generic conformance access
 	Like_feature_type: INTEGER_16 is 0xFFFA
 	Tuple_type: INTEGER_16 is 0xFFF9
 	Formal_type: INTEGER_16 is 0xFFF8
-	
+
 feature -- TUPLE code
 
 	reference_tuple_code: INTEGER_8 is 0x00
@@ -37,9 +37,15 @@ feature -- TUPLE code
 	natural_64_tuple_code: INTEGER_8 is 0x0D
 	wide_character_tuple_code: INTEGER_8 is 0x0E;
 			-- Code used to identify type in TUPLE.
-	
+
+	expanded_tuple_code_extension: NATURAL_8 is 0x10
+			-- Code used to identify special type, used in metainformation only: non-basic expanded type
+
+	bit_tuple_code_extension: NATURAL_8 is 0x20;
+			-- Code used to identify special type, used in metainformation only: bit type
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

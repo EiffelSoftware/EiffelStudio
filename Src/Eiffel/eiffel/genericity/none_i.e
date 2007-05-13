@@ -6,7 +6,7 @@ class NONE_I
 inherit
 	TYPE_I
 		redefine
-			is_none, is_void, is_bit, is_basic, 
+			is_none, is_void, is_bit, is_basic,
 			is_reference, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
 			generated_id,
@@ -117,12 +117,26 @@ feature
 			buffer.put_string ("it_ref")
 		end
 
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("value.EIF_REFERENCE_value")
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("type = SK_REF")
+		end
+
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ("SK_REF")
 		end
-	
+
 	type_a: NONE_A is
 		do
 			create Result
@@ -145,7 +159,7 @@ feature -- Generic conformance
 feature -- Generic conformace for IL
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
-			-- `use_info' is true iff we generate code for a 
+			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
 			il_generator.generate_none_type_instance

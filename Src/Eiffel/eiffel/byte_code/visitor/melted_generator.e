@@ -117,20 +117,17 @@ feature {NONE} -- Visitors
 			l_target_type := l_real_ty.meta_generic.item (1)
 			l_base_class := l_real_ty.base_class
 			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-				-- Need to insert into
-				-- the stack back to front in order
-				-- to be inserted into the area correctly
 			from
-				a_node.expressions.finish
+				a_node.expressions.start
 			until
-				a_node.expressions.before
+				a_node.expressions.after
 			loop
 				l_expr ?= a_node.expressions.item
 				check
 					l_expr_not_void: l_expr /= Void
 				end
 				make_expression_byte_code_for_type (l_expr, l_target_type)
-				a_node.expressions.back
+				a_node.expressions.forth
 			end
 			if l_base_class.is_precompiled then
 				ba.append (Bc_parray)
@@ -710,6 +707,11 @@ feature {NONE} -- Visitors
 				ba.append (Bc_pop)
 				ba.append_uint32_integer (l_nb_expr_address)
 			end
+
+			if context.real_type (a_node.type).is_reference then
+					-- Box return value if required.
+				ba.append (bc_metamorphose)
+			end
 		end
 
 	process_feature_b (a_node: FEATURE_B) is
@@ -816,6 +818,11 @@ feature {NONE} -- Visitors
 			if l_nb_expr_address > 0 then
 				ba.append (Bc_pop)
 				ba.append_uint32_integer (l_nb_expr_address)
+			end
+
+			if context.real_type (a_node.type).is_reference then
+					-- Box return value if required.
+				ba.append (bc_metamorphose)
 			end
 		end
 
@@ -1058,8 +1065,6 @@ feature {NONE} -- Visitors
 				l_tmp_ba.append_integer (l_local_list.item.sk_value)
 				l_local_list.forth
 			end
-
-			l_tmp_ba.append (Bc_no_clone_arg)
 
 			context.byte_prepend (ba, l_tmp_ba)
 		end

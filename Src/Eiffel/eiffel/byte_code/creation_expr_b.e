@@ -16,7 +16,7 @@ inherit
 			enlarged, size, is_simple_expr, is_single, is_type_fixed,
 			line_number, set_line_number, has_call, allocates_memory
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -234,6 +234,7 @@ feature -- Generation
 			l_special_creation: BOOLEAN
 			l_special_type: GEN_TYPE_I
 			l_class_type: SPECIAL_CLASS_TYPE
+			parameter: PARAMETER_BL
 		do
 			buf := buffer
 			generate_line_info
@@ -264,7 +265,8 @@ feature -- Generation
 				l_call.parameters.first.generate
 				info.generate_start (buf)
 				info.generate_gen_type_conversion
-				l_class_type.generate_creation (buf, info, register, l_call.parameters.first)
+				parameter ?= l_call.parameters.first
+				l_class_type.generate_creation (buf, info, register, parameter)
 				info.generate_end (buf)
 			else
 				info.generate_start (buf)
@@ -320,7 +322,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

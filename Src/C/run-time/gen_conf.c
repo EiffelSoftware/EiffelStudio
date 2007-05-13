@@ -1144,7 +1144,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 		/* Protect address in case it moves */
 
 	nstcall = 0;
-	(egc_strmake)(ret, (EIF_INTEGER) len);
+	RT_STRING_MAKE(ret, (EIF_INTEGER) len);
 	RT_STRING_SET_COUNT(ret, len);
 
 	/* We know the `area' is the very first reference
@@ -1226,7 +1226,7 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 		/* Protect address in case it moves */
 
 	nstcall = 0;
-	(egc_strmake)(ret, (EIF_INTEGER) len);
+	RT_STRING_MAKE(ret, (EIF_INTEGER) len);
 	RT_STRING_SET_COUNT(ret, len);
 
 	/* We know the `area' is the very first reference

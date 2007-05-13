@@ -6,10 +6,19 @@ indexing
 class BYTE_CONTEXT
 
 inherit
+
 	SHARED_C_LEVEL
 		export
 			{NONE} all
+			{REGISTER}
+				c_nb_types
 		end
+
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 	ASSERT_TYPE
 	SHARED_ARRAY_BYTE
 	SHARED_SERVER
@@ -25,7 +34,7 @@ feature -- Initialization
 	make is
 			-- Initialization
 		do
-			create register_server.make (True)
+			create register_server.make (c_nb_types * 2)
 			create local_vars.make (1, 50)
 			create local_index_table.make (10)
 			create associated_register_table.make (10)
@@ -768,7 +777,7 @@ feature {NONE} -- Setting: once manifest strings
 			once_manifest_string_count_set: once_manifest_string_count = number
 		end
 
-feature -- Access
+feature -- Registers
 
 	Current_register: REGISTRABLE is
 			-- An instance of Current register for local var index computation
@@ -800,8 +809,182 @@ feature -- Access
 			create {RESULT_BL} Result.make (dummy)
 		end
 
+	get_argument_register (t: TYPE_C): REGISTER is
+			-- Get a new temporary register of type `t' to hold an argument
+			-- to passed to during a feature call
+		require
+			t_attached: t /= Void
+			valid_t: not t.is_void
+		do
+			create Result.make_with_level (t.level + (c_nb_types - 1))
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	print_argument_register (r: REGISTER; buf: like buffer) is
+			-- Print a name of a register `r' to `buf'
+		require
+			r_attached: r /= Void
+			buf_attached: buf /= Void
+		do
+			put_register_name (r.level, r.regnum, buf)
+			buf.put_character ('x')
+		end
+
+feature {BYTE_CONTEXT, REGISTER} -- Registers
+
 	register_server: REGISTER_SERVER
 			-- Register number server
+
+feature {REGISTER} -- Registers
+
+	register_name (t: INTEGER; n: INTEGER): STRING is
+			-- Name of a temporary register number `n' of type `t'.
+		require
+			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
+			positive_n: n > 0
+		do
+			Result := register_names [t].twin
+			Result.append_integer (n)
+		end
+
+	register_type (t: INTEGER): TYPE_C is
+			-- Type of register identified by `t'.
+		require
+			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
+		local
+			i: INTEGER
+		do
+			i := t
+			if i >= c_nb_types then
+				i := i - (c_nb_types - 1)
+			end
+			inspect i
+			when c_uint8 then
+				Result := uint8_c_type
+			when c_uint16 then
+				Result := uint16_c_type
+			when c_uint32 then
+				Result := uint32_c_type
+			when c_uint64 then
+				Result := uint64_c_type
+			when c_int8 then
+				Result := int8_c_type
+			when c_int16 then
+				Result := int16_c_type
+			when c_int32 then
+				Result := int32_c_type
+			when c_int64 then
+				Result := int64_c_type
+			when c_ref then
+				Result := reference_c_type
+			when c_real32 then
+				Result := real32_c_type
+			when c_real64 then
+				Result := real64_c_type
+			when c_char then
+				Result := char_c_type
+			when c_wide_char then
+				Result := wide_char_c_type
+			when c_pointer then
+				Result := pointer_c_type
+			end
+		end
+
+feature {NONE} -- Registers: implementation
+
+	put_register_name (t: INTEGER; n: INTEGER; buf: like buffer) is
+			-- Put name of a temporary register number `n' of type `t' into `buf'.
+		require
+			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
+			positive_n: n > 0
+			buf_attached: buf /= Void
+		do
+			buf.put_string (register_names [t])
+			buf.put_integer (n)
+		end
+
+	register_names: ARRAY [STRING] is
+			-- Names of registers indexed by their level
+		once
+				-- `c_void' is not used.
+			create Result.make (1, (c_nb_types - 1) * 2)
+				-- Simple registers.
+			Result.put ("ti1_", c_int8)
+			Result.put ("ti2_", c_int16)
+			Result.put ("ti4_", c_int32)
+			Result.put ("ti8_", c_int64)
+			Result.put ("tu1_", c_uint8)
+			Result.put ("tu2_", c_uint16)
+			Result.put ("tu4_", c_uint32)
+			Result.put ("tu8_", c_uint64)
+			Result.put ("tr4_", c_real32)
+			Result.put ("tr8_", c_real64)
+			Result.put ("tc", c_char)
+			Result.put ("tw", c_wide_char)
+			Result.put ("tp", c_pointer)
+			Result.put ("tr", c_ref)
+				-- Registers for passing typed arguments.
+			Result.put ("ui1_", c_nb_types - 1 + c_int8)
+			Result.put ("ui2_", c_nb_types - 1 + c_int16)
+			Result.put ("ui4_", c_nb_types - 1 + c_int32)
+			Result.put ("ui8_", c_nb_types - 1 + c_int64)
+			Result.put ("uu1_", c_nb_types - 1 + c_uint8)
+			Result.put ("uu2_", c_nb_types - 1 + c_uint16)
+			Result.put ("uu4_", c_nb_types - 1 + c_uint32)
+			Result.put ("uu8_", c_nb_types - 1 + c_uint64)
+			Result.put ("ur4_", c_nb_types - 1 + c_real32)
+			Result.put ("ur8_", c_nb_types - 1 + c_real64)
+			Result.put ("uc", c_nb_types - 1 + c_char)
+			Result.put ("uw", c_nb_types - 1 + c_wide_char)
+			Result.put ("up", c_nb_types - 1 + c_pointer)
+			Result.put ("ur", c_nb_types - 1 + c_ref)
+		end
+
+	register_sk_value (t: INTEGER): INTEGER is
+			-- SK value associated with a register type `t'
+		require
+			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
+		do
+			Result := register_sk_values [t]
+		end
+
+	register_sk_values: ARRAY [INTEGER_32] is
+			-- SK values of registers indexed by their level
+		do
+			create Result.make (1, (c_nb_types - 1) * 2)
+			Result.put ({SK_CONST}.sk_int8, c_int8)
+			Result.put ({SK_CONST}.sk_int16, c_int16)
+			Result.put ({SK_CONST}.sk_int32, c_int32)
+			Result.put ({SK_CONST}.sk_int64, c_int64)
+			Result.put ({SK_CONST}.sk_uint8, c_uint8)
+			Result.put ({SK_CONST}.sk_uint16, c_uint16)
+			Result.put ({SK_CONST}.sk_uint32, c_uint32)
+			Result.put ({SK_CONST}.sk_uint64, c_uint64)
+			Result.put ({SK_CONST}.sk_real32, c_real32)
+			Result.put ({SK_CONST}.sk_real64, c_real64)
+			Result.put ({SK_CONST}.sk_char, c_char)
+			Result.put ({SK_CONST}.sk_wchar, c_wide_char)
+			Result.put ({SK_CONST}.sk_pointer, c_pointer)
+			Result.put ({SK_CONST}.sk_ref, c_ref)
+				-- Registers for passing typed arguments.
+			Result.put ({SK_CONST}.sk_int8, c_nb_types - 1 + c_int8)
+			Result.put ({SK_CONST}.sk_int16, c_nb_types - 1 + c_int16)
+			Result.put ({SK_CONST}.sk_int32, c_nb_types - 1 + c_int32)
+			Result.put ({SK_CONST}.sk_int64, c_nb_types - 1 + c_int64)
+			Result.put ({SK_CONST}.sk_uint8, c_nb_types - 1 + c_uint8)
+			Result.put ({SK_CONST}.sk_uint16, c_nb_types - 1 + c_uint16)
+			Result.put ({SK_CONST}.sk_uint32, c_nb_types - 1 + c_uint32)
+			Result.put ({SK_CONST}.sk_uint64, c_nb_types - 1 + c_uint64)
+			Result.put ({SK_CONST}.sk_real32, c_nb_types - 1 + c_real32)
+			Result.put ({SK_CONST}.sk_real64, c_nb_types - 1 + c_real64)
+			Result.put ({SK_CONST}.sk_char, c_nb_types - 1 + c_char)
+			Result.put ({SK_CONST}.sk_wchar, c_nb_types - 1 + c_wide_char)
+			Result.put ({SK_CONST}.sk_pointer, c_nb_types - 1 + c_pointer)
+			Result.put ({SK_CONST}.sk_ref, c_nb_types - 1 + c_ref)
+		end
+
+feature -- Access
 
 	has_chained_prec: BOOLEAN is
 			-- Feature has chained preconditions?
@@ -1552,9 +1735,9 @@ feature -- Access
 			i, j, nb_vars: INTEGER
 		do
 			from
-				i := 1
+				i := (c_nb_types - 1) * 2
 			until
-				i > C_nb_types
+				i <= 0
 			loop
 				from
 					j := 1
@@ -1565,7 +1748,7 @@ feature -- Access
 					generate_tmp_var (i, j)
 					j := j + 1
 				end
-				i := i + 1
+				i := i - 1
 			end
 		end
 
@@ -1574,69 +1757,52 @@ feature -- Access
 			-- whose C type is `ctype'.
 		local
 			buf: GENERATION_BUFFER
-			l_type, l_name: STRING
+			value_type: TYPE_C
+			variable_type: STRING
+			is_generic: BOOLEAN
 		do
-			buf :=buffer
+			buf := buffer
 
 				-- First get type and name of temporary local.
-			inspect
-				ctype
-			when c_uint8 then
-				l_type := once "EIF_NATURAL_8"
-				l_name := once "tu8_"
-			when c_uint16 then
-				l_type := once "EIF_NATURAL_16"
-				l_name := once "tu16_"
-			when c_uint32 then
-				l_type := once "EIF_NATURAL_32"
-				l_name := once "tu32_"
-			when c_uint64 then
-				l_type := once "EIF_NATURAL_64"
-				l_name := once "tu64_"
-			when C_int8 then
-				l_type := once "EIF_INTEGER_8"
-				l_name := once "ti8_"
-			when C_int16 then
-				l_type := once "EIF_INTEGER_16"
-				l_name := once "ti16_"
-			when C_int32 then
-				l_type := once "EIF_INTEGER_32"
-				l_name := once "ti32_"
-			when C_int64 then
-				l_type := once "EIF_INTEGER_64"
-				l_name := once "ti64_"
-			when C_ref then
-				l_type := once "EIF_REFERENCE"
-				l_name := once "tp"
-			when C_real32 then
-				l_type := once "EIF_REAL_32"
-				l_name := once "tr32_"
-			when C_char then
-				l_type := once "EIF_CHARACTER"
-				l_name := once "tc"
-			when C_wide_char then
-				l_type := once "EIF_WIDE_CHAR"
-				l_name := once "twc"
-			when C_real64 then
-				l_type := once "EIF_REAL_64"
-				l_name := once "tr64_"
-			when C_pointer then
-				l_type := once "EIF_POINTER"
-				l_name := once "ta"
+			value_type := register_type (ctype)
+			if ctype >= c_nb_types 	then
+					-- This is a register to hold generic argument value
+				is_generic := True
+				variable_type := once "EIF_UNION"
+			else
+				variable_type := value_type.c_string
 			end
-			buf.put_string (l_type)
+			buf.put_string (variable_type)
 			buf.put_character (' ')
 			if has_rescue then
 				buf.put_string (once " EIF_VOLATILE ")
 			end
-			buf.put_string (l_name)
-			buf.put_integer (num)
-			if ctype = c_ref then
-					-- Because it is a reference we absolutely need to initialize it
-					-- to its default value, otherwise it would mess up the GC local tracking.
-				buf.put_string (once " = NULL")
+			put_register_name (ctype, num, buf)
+			if is_generic then
+					-- Record register type and zero pointer value for GC.
+				buf.put_string (once "x = {0, ")
+				buf.put_integer (register_sk_value (ctype))
+				buf.put_string ("};")
+				buf.left_margin
+				buf.put_new_line
+				buf.put_string ("#undef ")
+				put_register_name (ctype, num, buf)
+				buf.put_new_line
+				buf.put_string ("#define ")
+				put_register_name (ctype, num, buf)
+				buf.put_character (' ')
+				put_register_name (ctype, num, buf)
+				buf.put_string ("x.")
+				value_type.generate_typed_field (buf)
+				buf.restore_margin
+			else
+				if ctype = c_ref then
+						-- Because it is a reference we absolutely need to initialize it
+						-- to its default value, otherwise it would mess up the GC local tracking.
+					buf.put_string (once " = NULL")
+				end
+				buf.put_character (';')
 			end
-			buf.put_character (';')
 			buf.put_new_line
 		end
 

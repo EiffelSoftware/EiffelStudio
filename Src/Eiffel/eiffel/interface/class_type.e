@@ -172,7 +172,7 @@ feature -- Access
 			-- attributes to be re-generated ?]
 
 	is_basic: BOOLEAN is
-			-- Is current class type a basci type?
+			-- Is current class type a basic type?
 		do
 			Result := basic_type /= Void
 		end
@@ -479,6 +479,10 @@ feature -- Update
 					a_parent := l_parent_type.associated_class_type
 					a_parent.build_conformance_table_of (cl)
 					i := i + 1
+				end
+				if l_gen_type /= Void and then not l_gen_type.base_class.is_tuple then
+						-- Mark all generic derivations this one conforms to.
+					l_gen_type.enumerate_interfaces (agent {CLASS_TYPE}.build_conformance_table_of (cl))
 				end
 			end
 		end

@@ -165,16 +165,19 @@ feature -- Byte code special generation
 
 feature -- C special code generation
 
-	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_I; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_I; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
 		require
 			valid_output_buffer: buffer /= Void
 			valid_target: target /= Void
 			valid_function_type: valid_function_type (function_type)
 		local
-			parameter: REGISTRABLE
+			parameter: PARAMETER_BL
 		do
 			if parameters /= Void then
-				parameter := parameters.first
+				parameter ?= parameters.first
+				check
+					paramater_attached: parameter /= Void
+				end
 			end
 			inspect function_type
 			when lower_type, upper_type then
@@ -598,7 +601,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
-	generate_equal (buffer: GENERATION_BUFFER; target, parameter: REGISTRABLE) is
+	generate_equal (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `equal' where target and parameter
 			-- are both basic types.
 		require
@@ -611,10 +614,10 @@ feature {NONE} -- C code generation
 			buffer.put_character ('=')
 			buffer.put_character ('=')
 			buffer.put_character (' ')
-			parameter.print_register
+			parameter.print_immediate_register
 		end
 
-	generate_offset (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
+	generate_offset (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `+' where target and parameter
 			-- are both basic types. Only `POINTER' and `CHARACTER' are handled, the
 			-- other basic types have their own handling by the compiler.
@@ -629,8 +632,6 @@ feature {NONE} -- C code generation
 				buffer.put_string ("RTPOF(")
 				target.print_register
 				buffer.put_character (',')
-				parameter.print_register
-				buffer.put_character (')')
 			when character_type then
 				if is_wide then
 					buffer.put_string ("(EIF_WIDE_CHAR) (((EIF_INTEGER_32) ")
@@ -639,15 +640,13 @@ feature {NONE} -- C code generation
 				end
 				target.print_register
 				buffer.put_string (") + ")
-				parameter.print_register
-				buffer.put_character (')')
 			else
 				buffer.put_character ('(')
 				target.print_register
 				buffer.put_string (" + ")
-				parameter.print_register
-				buffer.put_character (')')
 			end
+			parameter.print_immediate_register
+			buffer.put_character (')')
 		end
 
 	generate_out (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
@@ -768,7 +767,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_max (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
+	generate_max (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `max' where target and parameter
 			-- are both basic types.
 		require
@@ -804,14 +803,14 @@ feature {NONE} -- C code generation
 
 			target.print_register
 			buffer.put_character (',')
-			parameter.print_register
+			parameter.print_immediate_register
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
+	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `min' where target and parameter
 			-- are both basic types.
 		require
@@ -847,14 +846,14 @@ feature {NONE} -- C code generation
 
 			target.print_register
 			buffer.put_character (',')
-			parameter.print_register
+			parameter.print_immediate_register
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
+	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `three_way_comparison' where target and parameter
 			-- are both basic types.
 		require
@@ -890,7 +889,7 @@ feature {NONE} -- C code generation
 
 			target.print_register
 			buffer.put_character (',')
-			parameter.print_register
+			parameter.print_immediate_register
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
@@ -931,7 +930,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
 			-- Generate fast wrapper for call on `memory_copy',
 			-- `memory_move', `memory_set' and `memory_calloc' from POINTER.
 		require
@@ -942,6 +941,8 @@ feature {NONE} -- C code generation
 				f_type = memory_move or f_type = memory_copy or
 				f_type = memory_set or f_type = memory_free or
 				f_type = memory_alloc or f_type = memory_calloc
+		local
+			parameter: PARAMETER_BL
 		do
 			shared_include_queue.put ({PREDEFINED_NAMES}.string_header_name_id)
 
@@ -980,21 +981,24 @@ feature {NONE} -- C code generation
 				check
 					valid_parameters: parameters.count = 2
 				end
-				parameters.i_th (1).print_register
+				parameter ?= parameters.i_th (1)
+				parameter.print_immediate_register
 				buffer.put_string (", (size_t) ")
-				parameters.i_th (2).print_register
+				parameter ?= parameters.i_th (2)
+				parameter.print_immediate_register
 			when memory_alloc then
 				check
 					valid_paramters: parameters.count = 1
 				end
-				parameters.i_th (1).print_register
+				parameter ?= parameters.i_th (1)
+				parameter.print_immediate_register
 			else
 			end
 
 			buffer.put_string (")")
 		end
 
-	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target, parameter: REGISTRABLE) is
+	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
 			-- Generate fast wrapper for call on `bit_xxx' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1025,7 +1029,7 @@ feature {NONE} -- C code generation
 				end
 				target.print_register
 				buffer.put_character (',')
-				parameter.print_register
+				parameter.print_immediate_register
 			end
 			buffer.put_character (')')
 
@@ -1033,7 +1037,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
 			-- Generate fast wrapper for call on `set_bit' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1041,22 +1045,26 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 			parameters_not_void: parameters /= Void
 			valid_parameters: parameters.count = 2
+		local
+			parameter: PARAMETER_BL
 		do
 			buffer.put_string ("eif_set_bit(")
 			target.c_type.generate (buffer)
 			buffer.put_character (',')
 			target.print_register
 			buffer.put_character (',')
-			parameters.i_th (1).print_register
+			parameter ?= parameters.i_th (1)
+			parameter.print_immediate_register
 			buffer.put_character (',')
-			parameters.i_th (2).print_register
+			parameter ?= parameters.i_th (2)
+			parameter.print_immediate_register
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
 			-- Generate fast wrapper for call on `set_bit_with_mask' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1064,13 +1072,17 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 			parameters_not_void: parameters /= Void
 			valid_parameters: parameters.count = 2
+		local
+			parameter: PARAMETER_BL
 		do
 			buffer.put_string ("eif_set_bit_with_mask(")
 			target.print_register
 			buffer.put_character (',')
-			parameters.i_th (1).print_register
+			parameter ?= parameters.i_th (1)
+			parameter.print_immediate_register
 			buffer.put_character (',')
-			parameters.i_th (2).print_register
+			parameter ?= parameters.i_th (2)
+			parameter.print_immediate_register
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.

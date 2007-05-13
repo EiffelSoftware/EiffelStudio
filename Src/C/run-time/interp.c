@@ -148,7 +148,7 @@ doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
-doc:	<attribute name="argnum" return_type="int" export="private">
+doc:	<attribute name="argnum" return_type="uint32" export="private">
 doc:		<summary>Number of arguments in `iregs'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
@@ -332,6 +332,8 @@ rt_public void metamorphose_top(struct stochunk * volatile scur, struct item * v
 	struct item * last;	/* Last pushed value */
 	unsigned long stagval;
 	
+	if ((otop()->type & SK_HEAD) == SK_EXP)
+		return; /* Leave an expanded object as is. */
 	last = opop();
 	stagval = tagval;
 	head_type = last->type & SK_HEAD;
@@ -569,32 +571,121 @@ rt_private void interpret(int flag, int where)
 		init_registers(MTC);		/* Initialize the registers */
 		caller_assertion_level = WASC(icur_dtype) & CK_SUP_REQUIRE;	/* Set the caller assertion level */
 
-		/* Expanded clone of arguments (if any). Reading BC_CLONE_ARG until we get BC_NO_CLONE_ARG. */
-		while (*IC++ != BC_NO_CLONE_ARG) {
-			EIF_REFERENCE ref;
+		/* Argument normalization and expanded clone of arguments (if any). */
+		{
+			uint32 n;
+			for (n = 1; n <= argnum; n++) {
+				EIF_REFERENCE ref;
 
-			code = get_int16(&IC);		/* Get the argument number to clone */
-			last =  arg(code);
-			ref = last->it_ref;
-			if (ref == NULL)
-				xraise(EN_VEXP);	/* Void assigned to expanded */
-			switch (last->type & SK_HEAD) {
-			case SK_REF:			/* Lovely comment */
-			case SK_EXP:
-				RT_GC_PROTECT(ref);
-				type = get_int16(&IC);
-				type = get_compound_id(MTC icurrent->it_ref, (short) type);
-				last->it_ref = RTLN(type);
-				RT_GC_WEAN(ref);
-				last->type = SK_EXP;
-				eif_std_ref_copy(ref, last->it_ref);
-				break;
-			case SK_BIT:
-				RT_GC_PROTECT(ref);
-				last->it_bit = RTLB(get_int32(&IC));
-				RT_GC_WEAN(ref);
-				b_copy(ref, last->it_bit);
-				break;
+				last = arg(n);
+				ref = last->it_ref;
+				switch (get_uint8(&IC)) {
+				case EIF_EXPANDED_CODE_EXTENSION:
+					if (ref == NULL)
+						xraise(EN_VEXP);	/* Void assigned to expanded */
+					RT_GC_PROTECT(ref);
+					type = get_int16(&IC);
+					type = get_compound_id(MTC icurrent->it_ref, (short) type);
+					last->it_ref = RTLN(type);
+					RT_GC_WEAN(ref);
+					last->type = SK_EXP;
+					eif_std_ref_copy(ref, last->it_ref);
+					break;
+				case EIF_BIT_CODE_EXTENSION:
+					if (ref == NULL)
+						xraise(EN_VEXP);	/* Void assigned to expanded */
+					RT_GC_PROTECT(ref);
+					last->it_bit = RTLB(get_int32(&IC));
+					RT_GC_WEAN(ref);
+					b_copy(ref, last->it_bit);
+					break;
+				case EIF_REFERENCE_CODE:
+					break;
+				case EIF_BOOLEAN_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_bool = *(EIF_BOOLEAN *) ref;
+						last -> type = SK_BOOL;
+					}
+					break;
+				case EIF_CHARACTER_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_char = *(EIF_CHARACTER *) ref;
+						last -> type = SK_CHAR;
+					}
+					break;
+				case EIF_REAL_64_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_real64 = *(EIF_REAL_64 *) ref;
+						last -> type = SK_REAL64;
+					}
+					break;
+				case EIF_REAL_32_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_real32 = *(EIF_REAL_32 *) ref;
+						last -> type = SK_REAL32;
+					}
+					break;
+				case EIF_POINTER_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_ptr = *(EIF_POINTER *) ref;
+						last -> type = SK_POINTER;
+					}
+					break;
+				case EIF_INTEGER_8_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_int8 = *(EIF_INTEGER_8 *) ref;
+						last -> type = SK_INT8;
+					}
+					break;
+				case EIF_INTEGER_16_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_int16 = *(EIF_INTEGER_16 *) ref;
+						last -> type = SK_INT16;
+					}
+					break;
+				case EIF_INTEGER_32_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_int32 = *(EIF_INTEGER_32 *) ref;
+						last -> type = SK_INT32;
+					}
+					break;
+				case EIF_INTEGER_64_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_int64 = *(EIF_INTEGER_64 *) ref;
+						last -> type = SK_INT64;
+					}
+					break;
+				case EIF_NATURAL_8_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_uint8 = *(EIF_NATURAL_8 *) ref;
+						last -> type = SK_UINT8;
+					}
+					break;
+				case EIF_NATURAL_16_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_uint16 = *(EIF_NATURAL_16 *) ref;
+						last -> type = SK_UINT16;
+					}
+					break;
+				case EIF_NATURAL_32_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_uint32 = *(EIF_NATURAL_32 *) ref;
+						last -> type = SK_UINT32;
+					}
+					break;
+				case EIF_NATURAL_64_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_uint64 = *(EIF_NATURAL_64 *) ref;
+						last -> type = SK_UINT64;
+					}
+					break;
+				case EIF_WIDE_CHAR_CODE:
+					if ((last->type & SK_HEAD) == SK_REF) {
+						last -> it_wchar = *(EIF_WIDE_CHAR *) ref;
+						last -> type = SK_WCHAR;
+					}
+					break;
+				}
 			}
 		}
 
@@ -1458,7 +1549,7 @@ rt_private void interpret(int flag, int where)
 
 				stagval = tagval;
 				OLD_IC = IC;
-				ref = egc_twin (ref);
+				ref = RTRCL (ref);
 				IC = OLD_IC;
 				if (tagval != stagval)		/* previous call can call malloc which may
 								 * call the interpreter for creation
@@ -1486,7 +1577,7 @@ rt_private void interpret(int flag, int where)
 			if (ref && eif_is_boxed_expanded(HEADER(ref)->ov_flags)) {
 				unsigned char *OLD_IC;
 				OLD_IC = IC;
-				last->it_ref = egc_twin (ref);
+				last->it_ref = RTRCL (ref);
 				IC = OLD_IC;
 				if (tagval != stagval)		/* previous call can call malloc which may
 								 * call the interpreter for creation
@@ -2692,12 +2783,14 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE sp_area;
 			short stype, dtype, feat_id;
 			unsigned long stagval;
-			int curr_pos = 0;
+			int curr_pos;
 			struct item *it;
 			long elem_size;
 			unsigned char *OLD_IC;
  
 			if (code == BC_PARRAY) {
+				EIF_UNION u_lower;
+				EIF_UNION u_upper;
 				origin = get_int32(&IC);		/* Get the origin class id */
 				ooffset = get_int32(&IC);		/* Get the offset in origin */
 				dtype = get_int16(&IC);			/* Get the static type */
@@ -2711,8 +2804,14 @@ rt_private void interpret(int flag, int where)
 	 
 				new_obj = RTLN(dtype);			/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
+				u_lower.type = SK_INT32;
+				u_lower.value.EIF_INTEGER_32_value = 1;
+				u_upper.type = SK_INT32;
+				u_upper.value.EIF_INTEGER_32_value = nbr_of_items;
+				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, u_lower, u_upper);
 			} else {
+				EIF_UNION u_lower;
+				EIF_UNION u_upper;
 				stype = get_int16(&IC);			/* Get the static type */
 				dtype = get_int16(&IC);			/* Get the static type */
 
@@ -2726,7 +2825,11 @@ rt_private void interpret(int flag, int where)
 	 
 				new_obj = RTLN(dtype);			/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
+				u_lower.type = SK_INT32;
+				u_lower.value.EIF_INTEGER_32_value = 1;
+				u_upper.type = SK_INT32;
+				u_upper.value.EIF_INTEGER_32_value = nbr_of_items;
+				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, u_lower, u_upper);
 			}
 
 			IC = OLD_IC;
@@ -2736,11 +2839,15 @@ rt_private void interpret(int flag, int where)
 			sp_area = *(EIF_REFERENCE *) new_obj;
 			RT_GC_PROTECT(sp_area);
 
-			while (curr_pos < nbr_of_items) {
+				/* Take into account that elements are pushed
+				 * in first-to-last order */
+			curr_pos = nbr_of_items;
+			while (curr_pos > 0) {
 				/* Fill the special area with the expressions
 				* for the manifest array.
 				*/
 
+				curr_pos--;
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
@@ -2769,7 +2876,6 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic(MTC RT_BOTCHED_MSG);
 				}
-				curr_pos++;
 			}
 			RT_GC_WEAN(sp_area);			/* Release protection of `sp_area' */
 			RT_GC_WEAN(new_obj);			/* and of `new_obj'. */
@@ -4352,9 +4458,9 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 		}
 	} else {
 		if (is_inline_agent) {
-			body_id = desc_tab[stype][RTUD(stype)][fid].info;
+			body_id = desc_tab[stype][RTUD(stype)][fid].body_index;
 		} else {
-			body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].info;
+			body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].body_index;
 		}
 	}
 	excatch(&exenv);
@@ -4469,9 +4575,9 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 	uint32 pid;						/* Pattern id of the frozen feature */
 
 	if (ptype == -1)
-		body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
+		body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
 	else
-		body_id = desc_tab[origin][RTUD(ptype)][offset].info;
+		body_id = desc_tab[origin][RTUD(ptype)][offset].body_index;
 
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */

@@ -7,20 +7,20 @@ indexing
 
 class
 	BYTE_CODE_FACTORY
-	
+
 inherit
 	COMPILER_EXPORTER
-	
+
 	SHARED_TYPES
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-	
+
 feature -- Convertibility
 
 	convert_byte_node (a_expr: EXPR_B; a_conversion_info: FEATURE_CONVERSION_INFO): EXPR_B is
@@ -82,12 +82,12 @@ feature {NONE} -- Implementation: status report
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
 			elseif is_from_conversion then
-				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits 
+				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits
 			elseif not is_from_conversion then
 				Result := a_source_type.is_basic and not a_source_type.is_bits and not a_target_type.is_expanded
 			end
 		end
-		
+
 feature {NONE} -- Implementation: Byte node
 
 	basic_conversion_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): EXPR_B is
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation: Byte node
 						l_basic_i_not_void: l_basic_i /= Void
 					end
 					if a_source_type.is_typed_pointer then
-							-- Special case here to ensure that the attachment type is POINTER and 
+							-- Special case here to ensure that the attachment type is POINTER and
 							-- not TYPED_POINTER otherwise the C generated code will generate an
 							-- incorrect signature of `set_item'. It fixed C compilation
 							-- warnings/errors (depending on the platform used to run the test)
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation: Byte node
 						Result := creation_byte_code (l_feat, l_basic_i, l_ref, a_expr)
 					end
 				end
-			end			
+			end
 		end
 
 	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_I; a_expr: EXPR_B): NESTED_B is
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_target (l_access_expr)
 
 				-- Create message.
-			l_access ?= a_feat.access (a_target_type)
+			l_access ?= a_feat.access (a_target_type, True)
 			l_access.set_parent (Result)
 			Result.set_message (l_access)
 		end
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_type (a_target_type)
 
 				-- Create call.
-			l_access ?= a_feat.access (Void_type.type_i)
+			l_access ?= a_feat.access (Void_type.type_i, True)
 			create l_param
 			l_param.set_expression (a_expr)
 			l_param.set_attachment_type (a_source_type)
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation: Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

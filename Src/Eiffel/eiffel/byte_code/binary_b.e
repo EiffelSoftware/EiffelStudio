@@ -157,6 +157,9 @@ feature -- Code generation
 			create p
 			p.set_expression (right)
 			p.set_attachment_type (attachment)
+			if not system.il_generation then
+				p.set_is_formal (system.seed_of_routine_id (access.routine_id).arguments.first.type_i.is_formal)
+			end
 			param.extend (p)
 			access.set_parameters (param)
 		end

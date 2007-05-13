@@ -81,7 +81,7 @@ feature -- Generation
 			buffer.put_string ("%N */%N%N")
 			buffer.put_string ("#include %"eif_macros.h%"%N");
 			if is_precompiling then
-				buffer.put_string ("#include %"eif_wbench.h%"%N%N")	
+				buffer.put_string ("#include %"eif_wbench.h%"%N%N")
 			end
 			buffer.start_c_specific_code
 			if is_precompiling then
@@ -118,15 +118,15 @@ feature -- Generation
 			buffer.put_string (id_string)
 			buffer.put_string ("[] = {%N");
 
-			if (invariant_entry = Void) then
-				buffer.put_string ("%T{(BODY_INDEX) ");
-				buffer.put_integer (Invalid_index);
-				buffer.put_string (", (int16) -1, (int16 *) 0},%N")
+			buffer.put_string ("%T{(BODY_INDEX) ")
+			if invariant_entry = Void then
+				buffer.put_integer (Invalid_index)
 			else
-				buffer.put_string ("%T{(BODY_INDEX) ");
-				buffer.put_real_body_index (invariant_entry.real_body_index);
-				buffer.put_string (", (int16) -1, (int16 *) 0},%N")
-			end;
+				buffer.put_real_body_index (invariant_entry.real_body_index)
+			end
+			buffer.put_string (", (BODY_INDEX) ")
+			buffer.put_integer (Invalid_index)
+			buffer.put_string (", (int16) -1, (int16 *) 0},%N")
 
 			from
 				create cnt
@@ -179,25 +179,22 @@ feature -- Generation
 			buffer.put_string (entry_name)
 			buffer.put_string ("(void) {%N%T")
 
-			if (invariant_entry = Void) then
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].info = (BODY_INDEX) ")
+			buffer.put_string (entry_name)
+			buffer.put_string ("[0].body_index = (BODY_INDEX) (")
+			if invariant_entry = Void then
 				buffer.put_integer (Invalid_index)
-				buffer.put_string (";%N%T")
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].type = (int16) -1;%N%T")
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
 			else
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].info = (BODY_INDEX) (")
 				buffer.put_real_body_index (invariant_entry.real_body_index)
-				buffer.put_string (");%N%T")
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].type = (int16) -1;%N%T")
-				buffer.put_string (entry_name)
-				buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
-			end;
+			end
+			buffer.put_string (");%N%T")
+			buffer.put_string (entry_name)
+			buffer.put_string ("[0].offset = (BODY_INDEX) (")
+			buffer.put_integer (Invalid_index)
+			buffer.put_string (");%N%T")
+			buffer.put_string (entry_name)
+			buffer.put_string ("[0].type = (int16) -1;%N%T")
+			buffer.put_string (entry_name)
+			buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
 
 			from
 				create cnt
@@ -305,7 +302,9 @@ feature -- Melting
 				ba.append_uint32_integer (-1)
 			else
 				ba.append_uint32_integer (invariant_entry.real_body_index - 1)
-			end;
+			end
+				-- Offset.
+			ba.append_uint32_integer (-1)
 
 			-- No type
 			ba.append_short_integer (-1);

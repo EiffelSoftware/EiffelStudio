@@ -1,12 +1,16 @@
 indexing
+	description: "[
+			Internal levels used to encode C types.
+			Those values have to match with run-time source file "update.h".
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Internal levels used to encode C types
--- Those values have to match with run-time source file "update.h"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class SHARED_C_LEVEL 
-	
-feature 
+class SHARED_C_LEVEL
+
+feature
 
 	C_void: INTEGER is 0
 			-- Internal code for void
@@ -19,7 +23,7 @@ feature
 
 	C_int8: INTEGER is 3
 			-- Internal code for 8 bits integer
-			
+
 	c_uint16: INTEGER is 4
 			-- Internal code for 16 bits natural
 
@@ -34,7 +38,7 @@ feature
 
 	C_int32: INTEGER is 8
 			-- Internal code for long, same as `C_long'
-	
+
 	C_real32: INTEGER is 9
 			-- Internal code for REAL_32
 
@@ -43,21 +47,21 @@ feature
 
 	C_int64: INTEGER is 11
 			-- Internal code for 64 bits integer
-	
+
 	C_real64: INTEGER is 12
 			-- Internal code for double
-	
+
 	C_ref: INTEGER is 13
 			-- Internal code for reference
 
 	C_pointer: INTEGER is 14
 			-- Internal code for pointer type
-	
+
 	C_nb_types: INTEGER is 15;
 			-- Number of internal C types
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

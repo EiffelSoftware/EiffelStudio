@@ -225,9 +225,7 @@ end;
 			nb				: INTEGER
 			new_rout_id		: INTEGER
 			rid				: INTEGER
-			--cond			: BOOLEAN
-			--written_type	: TYPE_A
-			--old_pos		: INTEGER
+			attribute_i: ATTRIBUTE_I
 		do
 			id := new_t.feat_tbl_id;
 			info := first;
@@ -278,11 +276,16 @@ end;
 				i := i + 1;
 			end
 
-				-- Insertion into thwe routine info table
+				-- Insertion into the routine info table
 			System.rout_info_table.put (new_rout_id, System.current_class);
 			a_feature.set_rout_id_set (rout_id_set);
 			a_feature.set_is_selected (False);
 			a_feature.set_is_origin (True);
+			attribute_i ?= a_feature
+			if attribute_i /= Void and then attribute_i.type.type_i.is_formal then
+					-- A wrapper has to be generated.
+				attribute_i.set_generate_in (system.current_class.class_id)
+			end
 			select_table.put (a_feature, new_rout_id);
 			new_t.replace (a_feature, feature_name_id);
 

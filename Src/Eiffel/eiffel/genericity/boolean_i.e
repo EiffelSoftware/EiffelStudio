@@ -95,6 +95,20 @@ feature
 			buffer.put_string ("it_char")
 		end
 
+	generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("value.EIF_BOOLEAN_value")
+		end
+
+	generate_typed_tag (buffer: GENERATION_BUFFER) is
+			-- Generate tag of C structure "EIF_UNION" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("type = SK_BOOL")
+		end
+
 feature
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

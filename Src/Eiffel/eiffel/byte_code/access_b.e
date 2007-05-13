@@ -443,7 +443,7 @@ feature -- Code generation
 			i, j, nb: INTEGER
 			expr: EXPR_B
 			param: PARAMETER_B
-			type_c: TYPE_C
+			type_name: STRING
 		do
 			p := parameters
 			if p = Void then
@@ -462,11 +462,11 @@ feature -- Code generation
 					param ?= expr
 						-- FIXME
 					if param = Void then
-						type_c := real_type (expr.type).c_type
+						type_name := real_type (expr.type).c_type.c_string
 					else
-						type_c := real_type (param.attachment_type).c_type
+						type_name := param.target_type_name
 					end
-					Result.put (type_c.c_string, j)
+					Result.put (type_name, j)
 
 					i := i +1
 					j := j +1

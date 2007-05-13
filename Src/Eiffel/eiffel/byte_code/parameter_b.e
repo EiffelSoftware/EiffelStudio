@@ -25,43 +25,81 @@ feature -- Visitor
 			v.process_parameter_b (Current)
 		end
 
-feature
+feature {PARAMETER_B} -- Implementation
+
+	internal_attachment_type: TYPE_I
+			-- Type to which the expression is attached
+
+feature -- Access
 
 	expression: EXPR_B;
 			-- Expression
 
-	attachment_type: TYPE_I;
+	attachment_type: TYPE_I is
 			-- Type to which the expression is attached
+		do
+			if not system.il_generation and then context.final_mode and then is_formal and then parent.is_polymorphic then
+				Result := reference_c_type
+			else
+				Result := internal_attachment_type
+			end
+		end
+
+ feature {PARAMETER_B} -- Status report
+
+	is_formal: BOOLEAN
+			-- Is type of the corresponding argument
+			-- of the routine seed formal?
+
+	parent: ACCESS_B
+			-- Feature which is called with this parameter
+
+feature -- Modification
 
 	set_expression (e: EXPR_B) is
 			-- Assign `e' to `expression'.
 		do
-			expression := e;
-		end;
+			expression := e
+		end
 
 	set_attachment_type (t: TYPE_I) is
 			-- Assign `t' to `attachment_type'.
 		do
-			attachment_type := t;
-		end;
+			internal_attachment_type := t
+		end
+
+	set_is_formal (v: BOOLEAN) is
+			-- Specify whether the associated formal argument
+			-- of the routine seed is formal.
+		do
+			is_formal := v
+		end
+
+	set_parent (p: ACCESS_B) is
+			-- Set parent of this parameter to `p'.
+		do
+			parent := p
+		end
+
+feature -- Status report
 
 	type: TYPE_I is
 			-- Expression type
 		do
-			Result := expression.type;
-		end;
+			Result := expression.type
+		end
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is `r' used in the expression ?
 		do
-			Result := expression.used (r);
-		end;
+			Result := expression.used (r)
+		end
 
 	is_hector: BOOLEAN is
 			-- Is the expression a non-protected one ?
 		do
-			Result := expression.is_hector;
-		end;
+			Result := expression.is_hector
+		end
 
 	is_simple_expr: BOOLEAN is
 			-- Is the current expression a simple one ?
@@ -99,6 +137,16 @@ feature
 			Result.fill_from (Current);
 		end;
 
+	target_type_name: STRING is
+			-- Name of the target C type
+		do
+			if is_compaund then
+				Result := "EIF_UNION"
+			else
+				Result := real_type (attachment_type).c_type.c_string
+			end
+		end
+
 feature -- Array optimization
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
@@ -126,20 +174,28 @@ feature -- Inlining
 
 	pre_inlined_code: like Current is
 		do
-			Result := Current;
-			attachment_type := context.real_type (attachment_type)
+			Result := Current
+			internal_attachment_type := context.real_type (internal_attachment_type)
 			expression := expression.pre_inlined_code
 		end
 
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			attachment_type := context.real_type (attachment_type)
+			internal_attachment_type := context.real_type (internal_attachment_type)
 			expression := expression.inlined_byte_code
 		end
 
+feature {NONE} -- Status report
+
+	is_compaund: BOOLEAN is
+			-- Shall a structure be used to pass the argument value?
+		do
+			Result := context.workbench_mode
+		end
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

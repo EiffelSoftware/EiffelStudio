@@ -38,6 +38,7 @@
 #define _rt_macros_h_
 
 #include "eif_macros.h"
+#include "eif_types.h"
 #include "rt_wbench.h"
 
 #ifdef __cplusplus
@@ -48,11 +49,25 @@ extern "C" {
  * is defined in workbench mode, as only setting hash code makes sense for fast finalized 
  * executable. */
 #ifdef WORKBENCH
+#define RT_STRING_MAKE(string,len) \
+	{ \
+		EIF_UNION u; \
+		u.type = SK_INT32; \
+		u.value.EIF_INTEGER_32_value = (EIF_INTEGER) (len); \
+		(egc_strmake)((EIF_REFERENCE) (string), u); \
+	}
 #define RT_STRING_SET_COUNT(string,count) \
 	nstcall = 0; \
-	(egc_strset)((EIF_REFERENCE) string, (EIF_INTEGER) count);
+	{ \
+		EIF_UNION u; \
+		u.type = SK_INT32; \
+		u.value.EIF_INTEGER_32_value = (EIF_INTEGER) count; \
+		(egc_strset)((EIF_REFERENCE) string, u); \
+	}
 #define RT_STRING_SET_HASH_CODE(string, hash)
 #else
+#define RT_STRING_MAKE(string,len) \
+	(egc_strmake)((EIF_REFERENCE) (string), (len))
 #define RT_STRING_SET_COUNT(string, count) \
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str_count_offset) = (EIF_INTEGER) count;
 #define RT_STRING_SET_HASH_CODE(string, hash) \

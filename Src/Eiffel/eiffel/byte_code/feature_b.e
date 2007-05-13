@@ -120,6 +120,9 @@ feature -- Access
 			-- Assign `p' to `parameters'.
 		do
 			parameters := p
+			if p /= Void then
+				p.do_all (agent {PARAMETER_B}.set_parent (Current))
+			end
 		end
 
 	set_type (t: TYPE_I) is
@@ -322,7 +325,7 @@ feature -- Inlining
 				precursor_type ?= real_type (precursor_type)
 			end
 			if parameters /= Void then
-				parameters := parameters.pre_inlined_code
+				set_parameters (parameters.pre_inlined_code)
 			end
 		end
 
@@ -458,7 +461,7 @@ feature -- Inlining
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

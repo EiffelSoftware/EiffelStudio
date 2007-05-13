@@ -152,7 +152,7 @@ feature -- Code generation
 			then
 				create_optimized_parameters
 				if is_manifest_optimizable then
-					parameters := optimized_parameters
+					set_parameters (optimized_parameters)
 				end
 			end
 		end
@@ -353,7 +353,7 @@ feature {NONE} --Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

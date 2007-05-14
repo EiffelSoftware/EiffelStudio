@@ -541,16 +541,16 @@ feature -- Analyzis
 									seed_arguments.forth
 								end
 							end
+							if seed_type.is_anchored then
+								type_c := reference_c_type
+							else
+								type_c := seed_type.c_type
+							end
 							buf.generate_function_signature
-								(seed_type.c_type.c_string, internal_name + suffix, True,
+								(type_c.c_string, internal_name + suffix, True,
 								 Context.header_buffer, args, seed_types)
 							buf.indent
 							if not seed_type.is_void then
-								if seed_type.is_anchored then
-									type_c := reference_c_type
-								else
-									type_c := seed_type.c_type
-								end
 								type_c.generate (buf)
 								buf.put_string ("Result = ")
 								type_c.generate_cast (buf)

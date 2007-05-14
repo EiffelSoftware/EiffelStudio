@@ -127,8 +127,10 @@ feature -- Current CallStack
 	reset_current_callstack is
 			-- Reset current callstack information
 		do
-			current_stack_info.reset
-			current_stack_info := Void
+			if current_stack_info /= Void then
+				current_stack_info.reset
+				current_stack_info := Void
+			end
 			current_callstack_initialized := False
 		end
 

@@ -36,6 +36,7 @@ feature
 			-- static type `in_class'.
 		local
 			dep: DEPEND_UNIT
+			routine_id: INTEGER
 		do
 			from
 				create dep.make (in_class.class_id, feat)
@@ -44,13 +45,15 @@ feature
 				control.is_empty
 			loop
 				dep := control.item
+				routine_id := dep.rout_id
 				if
-					tmp_poly_server.item (dep.rout_id).is_routine_table and then
---					not System.routine_id_counter.is_attribute (dep.rout_id) and then
-					not is_treated (dep.body_index, dep.rout_id)
+					(not System.routine_id_counter.is_attribute (routine_id) or else
+					(tmp_poly_server.has (routine_id) and then
+					tmp_poly_server.item (routine_id).is_routine_table)) and then
+					not is_treated (dep.body_index, routine_id)
 				then
-					mark_treated (dep.body_index, dep.rout_id)
-					mark (dep.body_index, dep.class_id, dep.written_in, dep.rout_id)
+					mark_treated (dep.body_index, routine_id)
+					mark (dep.body_index, dep.class_id, dep.written_in, routine_id)
 				end
 				control.remove
 			end

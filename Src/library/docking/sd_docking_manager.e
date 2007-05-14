@@ -287,7 +287,8 @@ feature -- Command
 
 	main_area_drop_action: EV_PND_ACTION_SEQUENCE is
 			-- Main area (editor area) drop acitons.
-			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
+			-- This actions will be called if there is no editor zone and end user drop
+			-- a stone to the void editor area.
 		do
 			Result := property.main_area_drop_actions
 		ensure
@@ -295,7 +296,8 @@ feature -- Command
 		end
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT) is
-			-- After mini tool bar widget size changes, update mini tool bar size to best fit new size of mini tool bar widget.
+			-- After mini tool bar widget size changes, update mini tool bar size to best
+			-- fit new size of mini tool bar widget.
 			-- `a_content' can be void if not known.
 		do
 			command.update_mini_tool_bar_size (a_content)
@@ -407,7 +409,8 @@ feature -- Contract support
 		end
 
 feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
-		SD_DOCKER_MEDIATOR, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_TOOL_BAR_DOCKER_MEDIATOR,
+		SD_DOCKER_MEDIATOR, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
+		SD_HOT_ZONE, SD_ZONE, SD_TOOL_BAR_DOCKER_MEDIATOR,
 	 	SD_TOOL_BAR_MANAGER, SD_AUTO_HIDE_PANEL, SD_TOOL_BAR_ZONE, SD_WIDGET_TOOL_BAR,
 	  	SD_TAB_STUB, SD_MULTI_DOCK_AREA, SD_DOCKING_MANAGER_AGENTS, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG,
 	  	SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES, SD_AUTO_HIDE_ANIMATION,
@@ -457,8 +460,7 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 	main_container: SD_MAIN_CONTAINER
 			-- Container has four tab stub areas in four side and main area in center.
 
-feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY,
-	SD_DOCKING_MANAGER_COMMAND} -- Implementation
+feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND} -- Implementation
 
 	internal_viewport: EV_VIEWPORT
 			-- The viewport which contain `fixed_area'.
@@ -466,7 +468,10 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY,
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	internal_auto_hide_panel_left, internal_auto_hide_panel_right, internal_auto_hide_panel_top, internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
+	internal_auto_hide_panel_left,
+	internal_auto_hide_panel_right,
+	internal_auto_hide_panel_top,
+	internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
 
 invariant

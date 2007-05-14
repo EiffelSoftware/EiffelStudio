@@ -124,6 +124,8 @@ feature -- Properties
 
 	row_height: INTEGER is
 			--  Height of row.
+		local
+			l_tool_bar: SD_TOOL_BAR
 		do
 			if is_need_calculate_size then
 				is_need_calculate_size := False
@@ -133,7 +135,12 @@ feature -- Properties
 				until
 					after
 				loop
-					Result := Result.max (item.minimum_height)
+					l_tool_bar ?= item
+					-- Ignore SD_TOOL_BAR's height, only take account of other widgets' height such as EV_COMBO_BOX.
+					-- Otherwise, when dragging a multi-row floating tool bar, the height is larger and larger after dock it back.
+					if l_tool_bar = Void then
+						Result := Result.max (item.minimum_height)
+					end
 					forth
 				end
 				internal_row_height  := Result

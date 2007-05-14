@@ -82,7 +82,9 @@ feature -- Process
 				end
 			elseif l_conf_group.is_library then
 				l_library ?= l_conf_group
-				process_groups_from_target (l_library.library_target, a_item, agent evaluate_item)
+				if l_library.library_target /= Void then
+					process_groups_from_target (l_library.library_target, a_item, agent evaluate_item)
+				end
 			elseif l_conf_group.is_assembly then
 				l_assembly ?= l_conf_group
 				check

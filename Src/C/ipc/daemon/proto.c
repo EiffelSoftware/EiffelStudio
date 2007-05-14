@@ -788,7 +788,6 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 
 rt_private void get_application_cwd (EIF_PSTREAM sp)
 {
-
 	current_directory = recv_str(sp, NULL);		/* Get command */
 
 	CHECK ("valid_count", strlen (current_directory) > 0);
@@ -803,10 +802,7 @@ rt_private void get_application_cwd (EIF_PSTREAM sp)
 
 rt_private void get_application_env (EIF_PSTREAM sp)
 {
-
 	current_app_env = recv_str(sp, NULL);		/* Get command */
-
-
 		/* If current app env is '' we reset the value to NULL,
 		 * meaning that we won't look at the value of `current_app_env' */
 	if (strlen (current_app_env) == 0) {
@@ -861,9 +857,9 @@ rt_private void start_app(EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
-	cp = spawn_child("app", 0, exe_path, exe_args, current_directory, (char**)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
+	cp = spawn_child("app", 0, exe_path, exe_args, current_directory, (char*)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
 #else
-	cp = spawn_child("app", exe_path, exe_args, current_directory, (char**)current_app_env, 1, &pid);	/* Start up children */
+	cp = spawn_child("app", exe_path, exe_args, current_directory, (char*)current_app_env, 1, &pid);	/* Start up children */
 #endif
 
 	free(exe_path);

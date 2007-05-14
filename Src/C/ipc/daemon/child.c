@@ -97,6 +97,33 @@ rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exe
 rt_private void create_dummy_window (void);
 #endif
 
+#ifndef EIF_WINDOWS
+
+rt_private char** envstr_to_envp (char* aenvir)
+{
+	char** res;
+	int i, n, len;
+	char* p;
+	n = 0;
+	for (p = aenvir; *p; p++) {
+		while (*p) { 
+			p++; 
+		}
+		n = n + 1;
+	}
+	res = (char**) malloc ((1+n) * sizeof(char*));
+	p = aenvir;
+	for (i = 0; i < n; i++) {
+		res[i] = (char*) p;
+		len = strlen (res[i]);
+		p = p + len + 1;
+	}
+	res[n] = (char*) 0;
+	return res;
+
+}
+#endif
+
 rt_private char* safe_unquoted_path (char* a_path) 
 {
 	char* res = NULL;
@@ -218,9 +245,9 @@ rt_private void set_meltpath_environment (char* exe_path)
 }
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *a_exe_path, char* exe_args, char *cwd, char **envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *a_exe_path, char* exe_args, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *cwd, char **envir, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
@@ -257,6 +284,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
 	char **argv;				/* Argument vector */
+	char** envp;
 #endif
 	STREAM *sp;							/* Stream used for communications with ewb */
 	char* quoted_exe_path;
@@ -582,23 +610,36 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 			if (cwd) {
 				chdir (cwd);
 			}
+			if (envir == NULL) {
+				envp = NULL;
+			} else {
+				envp = (char**) envstr_to_envp (envir);
+			}
 
 #ifdef EIF_VMS
 /*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
 
-		if (envir == NULL) {
-			execv(exe_path, argv);
-		} else {
-			execve(exe_path, argv, envir);
-		}
+			if (envp == NULL) {
+				execv(exe_path, argv);
+			} else {
+				execve(exe_path, argv, envp);
+			}
 #else
-		if (envir == NULL) {
-			execvp(exe_path, argv);
-		} else {
-			execve(exe_path, argv, envir);
-		}
+			
+			
+			if (envp == NULL) {
+				execvp(exe_path, argv);
+			} else {
+				execve(exe_path, argv, envp);
+			}
 #endif
+
 			print_err_msg(stderr,"ERROR could not launch '%s'", exe_path);
+			if (envp != NULL) {
+				free(envp);
+				envp = NULL;
+			}
+
 #ifdef USE_ADD_LOG
 			reopen_log();
 			add_log(1, "SYSERR: exec: %m (%e)");
@@ -606,8 +647,9 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 #endif
 		}
 #ifdef USE_ADD_LOG
-		else
+		else {
 			add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+		}
 #endif
 		SPAWN_CHILD_FAILED(1);
 
@@ -713,6 +755,12 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 #else
 	if (child_pid != (Pid_t *) 0)
 		*child_pid = pid;
+	if (envp != NULL) {
+		free(envp);
+	}
+	free (cmdline);
+	free (exe_path);
+	free (quoted_exe_path);
 #endif
 
 	return sp;			/* Stream used to speak to child process */

@@ -60,7 +60,7 @@ feature -- Access
 							if l_cluster_stone.group.is_library then
 								l_library ?= l_cluster_stone.group
 								l_target := target_of_id (Result.id)
-								if l_target.system.uuid.is_equal (universe.target.system.uuid) then
+								if l_target.system.uuid.is_equal (universe.target.system.uuid) and then l_library.library_target /= Void then
 									Result.set_library_target_uuid (l_library.library_target.system.uuid.out)
 								end
 							end

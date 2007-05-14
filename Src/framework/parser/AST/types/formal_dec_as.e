@@ -173,6 +173,8 @@ feature -- Status
 					end
 				end
 			end
+				-- Uncomment this line for testing tcs#26
+		 	--Result := False
 		end
 
 	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN is
@@ -209,6 +211,8 @@ feature -- Status
 					 Result := l_count > 1
 				end
 			end
+				-- Uncomment this line for testing tcs#26
+			-- Result := True
 		end
 
 	has_creation_constraint: BOOLEAN is

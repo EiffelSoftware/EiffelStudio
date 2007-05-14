@@ -1,0 +1,19 @@
+test_name dotnet-name-generation
+test_description Validates the names generated are in accordance to the .NET name generation.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw i_interface.e $CLUSTER i_interface.e
+copy_raw iinterface_2.e $CLUSTER iinterface_2.e
+copy_raw item_32.e $CLUSTER item_32.e
+copy_raw item_32_suffixed.e $CLUSTER item_32_suffixed.e
+copy_raw external_named.e $CLUSTER external_named.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

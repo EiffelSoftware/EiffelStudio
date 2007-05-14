@@ -6,29 +6,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	LINE_STONE
 
 inherit
-	CLASSI_STONE
+	STONE
 		redefine
 			stone_cursor,
 			x_stone_cursor
-		end
-
-create
-	make_with_line
-
-feature{NONE} -- Initialization
-
-	make_with_line (a_class_i: like class_i; a_line_number: INTEGER; a_select: BOOLEAN) is
-			-- Initialize `class_i' with `a_class_i' and `line_number' with `line_number'.
-		require
-			a_class_i_attached: a_class_i /= Void
-			a_line_number_positive: a_line_number > 0
-		do
-			make (a_class_i)
-			set_line_number (a_line_number)
 		end
 
 feature -- Access
@@ -50,6 +35,9 @@ feature -- Access
 			Result := Cursors.cur_x_metric_line
 		end
 
+	class_c: CLASS_C
+			-- Compiled class associated with that line, if the associated class is compiled
+
 feature -- Status report
 
 	should_line_be_selected: BOOLEAN
@@ -63,6 +51,14 @@ feature -- Status report
 			should_line_be_selected := b
 		ensure
 			should_line_be_selected_set: should_line_be_selected = b
+		end
+
+	set_class_c (a_class_c: like class_c) is
+			-- Set `class_c' with `a_class_c'.
+		do
+			class_c := a_class_c
+		ensure
+			class_c_set: class_c = a_class_c
 		end
 
 feature -- Setting

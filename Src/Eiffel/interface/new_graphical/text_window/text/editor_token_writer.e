@@ -466,7 +466,21 @@ feature -- Text processing
 			process_ast (a_warning_message, Void, Void, a_appearance, False, Void, Void)
 		end
 
-	process_line (a_name: STRING; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is
+	process_compiled_line (a_name: STRING; a_line_number: INTEGER; a_class_c: CLASS_C; a_selected: BOOLEAN) is
+			-- Process `a_name' which represents a line of a class.
+		require
+			a_name_attached: a_name /= Void
+			a_line_number_positive: a_line_number > 0
+			a_class_c_attached: a_class_c /= Void
+		local
+			l_token: EDITOR_TOKEN_AST
+		do
+			create l_token.make_with_appearance (a_name, [editor_font_id, line_number_text_color_id, string_background_color_id])
+			l_token.set_pebble (create {COMPILED_LINE_STONE}.make_with_line (a_class_c, a_line_number, a_selected))
+			last_line.append_token (l_token)
+		end
+
+	process_uncompiled_line (a_name: STRING; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is
 			-- Process `a_name' which represents a line of a class.
 		require
 			a_name_attached: a_name /= Void
@@ -476,7 +490,7 @@ feature -- Text processing
 			l_token: EDITOR_TOKEN_AST
 		do
 			create l_token.make_with_appearance (a_name, [editor_font_id, line_number_text_color_id, string_background_color_id])
-			l_token.set_pebble (create {LINE_STONE}.make_with_line (a_class_i, a_line_number, a_selected))
+			l_token.set_pebble (create {UNCOMPILED_LINE_STONE}.make_with_line (a_class_i, a_line_number, a_selected))
 			last_line.append_token (l_token)
 		end
 

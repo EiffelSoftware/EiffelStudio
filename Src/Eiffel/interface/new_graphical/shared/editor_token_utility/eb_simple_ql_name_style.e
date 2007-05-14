@@ -65,6 +65,7 @@ feature{NONE} -- Implementation
 			l_ql_code_item: QL_CODE_STRUCTURE_ITEM
 			l_line: QL_LINE
 			l_cursors: like cursors_for_item
+			l_class_c: CLASS_C
 		do
 			if a_item.is_class then
 				l_class ?= a_item
@@ -90,7 +91,15 @@ feature{NONE} -- Implementation
 				a_writer.process_target_name_text (l_target.name, l_target.target)
 			elseif a_item.is_line then
 				l_line ?= a_item
-				a_writer.process_line (l_line.name, l_line.line_in_file, l_line.code_structure.class_i, False)
+				l_ql_code_item := l_line.code_structure
+				if l_ql_code_item.is_compiled then
+					l_class_c := l_ql_code_item.class_c
+				end
+				if l_class_c /= Void then
+					a_writer.process_compiled_line (l_line.name, l_line.line_in_file, l_class_c, False)
+				else
+					a_writer.process_uncompiled_line (l_line.name, l_line.line_in_file, l_ql_code_item.class_i, False)
+				end
 			elseif a_item.is_code_structure then
 				l_ql_code_item ?= a_item
 				l_cursors := cursors_for_item (a_item)

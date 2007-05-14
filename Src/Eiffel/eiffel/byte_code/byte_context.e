@@ -1774,7 +1774,7 @@ feature -- Access
 			end
 			buf.put_string (variable_type)
 			buf.put_character (' ')
-			if has_rescue then
+			if has_rescue and then not is_generic then
 				buf.put_string (once " EIF_VOLATILE ")
 			end
 			put_register_name (ctype, num, buf)

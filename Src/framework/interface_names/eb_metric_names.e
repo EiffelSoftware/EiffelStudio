@@ -124,6 +124,7 @@ feature -- Titles
 	err_input_domain_invalid: STRING_GENERAL is do Result := locale.translate ("Input domain invalid") end
 	t_previous_value: STRING_GENERAL is do Result := locale.translate ("Previous value") end
 	t_calculated_time: STRING_GENERAL is do Result := locale.translate ("Calculated time") end
+	t_warning_check_failed: STRING_GENERAL is do Result := locale.translate ("Warning check failed") end
 
 	f_run_history_recalculation: STRING_GENERAL is do Result := locale.translate ("Recalculate selected metric(s)") end
 	f_stop_history_recalculation: STRING_GENERAL is do Result := locale.translate ("Stop metric recalculation") end

@@ -161,8 +161,8 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
-							      EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,	EIF_INTEGER); 
+rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION,
+                                  EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION);
 
 #else
 /*

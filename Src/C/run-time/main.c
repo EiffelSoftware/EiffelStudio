@@ -789,7 +789,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #endif
 #ifdef WORKBENCH
 	if (egc_routdisp_wb == 0) {
-		egc_routdisp_wb = egc_routdisp;
+		egc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION)) egc_routdisp;
 	}
 #else
 	if (egc_routdisp_fl == 0) {

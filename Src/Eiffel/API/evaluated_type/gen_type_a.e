@@ -553,7 +553,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i > count
 				loop
 					gen_type_generics.put
-					  (instantiate (gen_type_generics.item (i)), i)
+						(instantiate (gen_type_generics.item (i)), i)
 					i := i + 1
 				end
 			else
@@ -687,6 +687,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_generic_parameter: TYPE_A
 				l_conform: BOOLEAN
 				l_formal_dec_as: FORMAL_CONSTRAINT_AS
+				l_check_creation_readiness: BOOLEAN
 					-- Errors
 				l_vtgd1: VTGD1
 				l_vtgd2: VTGD2
@@ -729,10 +730,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 								l_generic_constraint.substitute (l_generic_parameters)
 								l_constraint_item := l_generic_constraint
 							end
-							--| Martins 14/12/06
-							--| Know that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
-							--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
-							--| Know that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
+								--| Martins 14/12/06
+								--| Know that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
+								--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
+								--| Know that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
 							l_conform := l_generic_parameter.conformance_type.conform_to (l_constraint_item)
 
 							l_constraints.forth
@@ -759,8 +760,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- complete check since if we are currently checking an attribute
 									-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
 									-- So we store all the needed information and we will do a check at the
-									-- end of the degree 4 (look at PASS2 for the code which does the checking).
+									-- end of the degree 4 (look at PASS2 for the code which does the checking).								
 								l_formal_generic_parameter ?= l_generic_parameter.conformance_type
+									-- We have a creation constraint so in case a check was requested we have to continue checking it.
+								l_check_creation_readiness := a_check_creation_readiness
 								if System.in_pass3 then
 									creation_constraint_check (
 											l_formal_dec_as, l_constraints, a_type_context,
@@ -781,11 +784,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 --								add_future_checking (l_context_class,
 --									agent delayed_convert_constraint_check (
 --									l_context_class, Current, to_check, constraint_type, i, False))
+							else
+									-- We do not have a creation constraint, so stop checking for it.
+								l_check_creation_readiness := False
 							end
 						end
-						if  l_generic_parameter.has_generics then
+						if l_generic_parameter.has_generics then
 								-- Recursion
-							l_generic_parameter.check_constraints (a_type_context, a_context_feature, a_check_creation_readiness)
+							l_generic_parameter.check_constraints (a_type_context, a_context_feature, l_check_creation_readiness)
 						end
 
 						i := i + 1

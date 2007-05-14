@@ -1,5 +1,5 @@
 indexing
-	description: "Error for calls to a problematicfeature of a multi constraing formal generic type. The feature was not found."
+	description: "Error for calls to a problematic feature of a multi constraing formal generic type. The feature was not found."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

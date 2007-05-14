@@ -445,6 +445,7 @@ feature -- Validity checking
 		local
 			l_cluster: CONF_GROUP
 			l_type: TYPE_AS
+			l_named_tuple_type: NAMED_TUPLE_TYPE_AS
 			l_class_type: CLASS_TYPE_AS
 			l_rename_clause: RENAME_CLAUSE_AS
 			l_constraints: like constraints
@@ -468,33 +469,39 @@ feature -- Validity checking
 				l_constraining_type := l_constraints.item
 				l_type := l_constraining_type.type
 				l_class_type ?= l_type
+
 				if l_class_type = Void then
-					if l_constraining_type.renaming /= Void then
-						create l_vtmc3
-						l_vtmc3.set_class (a_context_class)
-						l_vtmc3.set_type (l_type)
-						l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic.")
-						Error_handler.insert_error (l_vtmc3)
+					l_named_tuple_type ?= l_type
+					if l_named_tuple_type = Void  then
+						if l_constraining_type.renaming /= Void then
+							create l_vtmc3
+							l_vtmc3.set_class (a_context_class)
+							l_vtmc3.set_type (l_type)
+							l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic.")
+							Error_handler.insert_error (l_vtmc3)
+						end
+					else
+						l_class_i := universe.class_named ("TUPLE", l_cluster)
 					end
 				else
 					l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
-						-- We handle only the case where `class_i' is a valid reference
-						-- because the case has been handled in `check_constraint_type'
-						-- from CLASS_TYPE_AS which is called just before this feature.
-					if l_class_i /= Void then
-							-- Here we assume that the class is correct (call `check_constraint_type'
-							-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.)
-							l_compiled_class := l_class_i.compiled_class
-							constraint_classes.put (l_compiled_class, l_constraint_position)
+				end
+					-- We handle only the case where `class_i' is a valid reference
+					-- because the case has been handled in `check_constraint_type'
+					-- from CLASS_TYPE_AS which is called just before this feature.
+				if l_class_i /= Void then
+						-- Here we assume that the class is correct (call `check_constraint_type'
+						-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.)
+					l_compiled_class := l_class_i.compiled_class
+					constraint_classes.put (l_compiled_class, l_constraint_position)
 
-							l_rename_clause := l_constraints.item.renaming
-			   				if l_rename_clause /= Void then
-			   						-- After this call a RENAMING_A object will be stored into the cache if there were no errors.
-			   					check_rename_clause (l_class_i.compiled_class, l_rename_clause, l_constraint_position)
-							else
-								-- no renaming to check
-			   				end
-					end
+					l_rename_clause := l_constraints.item.renaming
+	   				if l_rename_clause /= Void then
+	   						-- After this call a RENAMING_A object will be stored into the cache if there were no errors.
+	   					check_rename_clause (l_class_i.compiled_class, l_rename_clause, l_constraint_position)
+					else
+						-- no renaming to check
+	   				end
 				end
 				l_constraints.forth
 				l_constraint_position := l_constraint_position + 1

@@ -99,10 +99,10 @@ rt_public void init_dbg(int argc, char **argv)
 	STREAM *s;		/* Stream used for communications with ised */
 	char *eif_timeout;	/* Timeout specified in environment variable */
 #ifdef EIF_WINDOWS
-	HANDLE pid = 0;
+	/* HANDLE pid = 0; */
 	HANDLE *p_ewbin, *p_ewbout, *p_event_r, *p_event_w;
 #else
-	int pid = 0;
+	/* int pid = 0; */
 	int fd_in, fd_out;
 #endif
 
@@ -264,6 +264,7 @@ rt_public void dexit(int code)
 #if defined(EIF_WINDOWS) && defined(_DEBUG)
 /* Uncomment the code below if you want to trap some runtime errors detected at runtime.
    If you don't, then the application usually exits without a chance of debugging.
+*/
 /*
 void __cdecl report_failure(int code, void * unused)
 {

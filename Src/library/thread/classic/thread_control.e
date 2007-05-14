@@ -12,7 +12,7 @@ feature -- Basic operations
 
 	yield is
 			-- The calling thread yields its execution in favor of another
-			-- thread.
+			-- thread for an OS specific amount of time.
 		external
 			"C | %"eif_threads.h%""
 		alias

@@ -5,6 +5,7 @@
 		<setting name="multithreaded" value="true"/>
 		<setting name="msil_generation" value="true"/>
 		<setting name="msil_generation_type" value="dll"/>
+		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="EiffelSoftware.Library.Vision2Mt"/>
 		<option>

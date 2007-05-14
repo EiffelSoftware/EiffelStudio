@@ -397,8 +397,13 @@ feature{NONE} -- Item updator
 			a_archive_node_attached: a_archive_node /= Void
 		do
 			if a_archive_node.is_up_to_date and then a_archive_node.is_value_valid then
-				a_item.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
-				a_item.set_tooltip (Void)
+				if a_archive_node.is_last_warning_check_successful then
+					a_item.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
+					a_item.set_tooltip (Void)
+				else
+					a_item.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
+					a_item.set_tooltip (metric_names.t_warning_check_failed)
+				end
 			else
 				a_item.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
 				a_item.set_tooltip (metric_names.t_archive_not_up_to_date)

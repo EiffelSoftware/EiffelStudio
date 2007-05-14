@@ -123,6 +123,7 @@ feature {NONE} -- Initialization
 
 			check_warning_btn.set_pixmap (pixmaps.icon_pixmaps.metric_unit_assertion_icon)
 			check_warning_btn.set_tooltip (metric_names.f_check_warning)
+			check_warning_btn.enable_select
 
 			keep_detailed_result_tool_bar.extend (keep_result_btn)
 			group_tool_bar.extend (group_btn)

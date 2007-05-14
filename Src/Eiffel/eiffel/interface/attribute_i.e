@@ -249,6 +249,7 @@ feature -- Element Change
 							buffer.exdent
 							buffer.put_character ('}')
 							buffer.put_new_line
+							byte_context.clear_feature_data
 								-- Only 1 wrapper is generated.
 							i := 1
 						end

@@ -14,6 +14,8 @@ class
 
 inherit
 
+	DEBUG_OUTPUT
+
 	SHARED_BENCH_NAMES
 		rename
 			names as interface_names
@@ -111,6 +113,28 @@ feature -- Properties
 
 	name: STRING_32
 			-- Optional name to qualify this expression.
+
+feature -- debug output
+
+	debug_output: STRING is
+			--
+		local
+		do
+			create Result.make_empty
+			if expression /= Void then
+				Result.append_string_general ("exp=%"")
+				Result.append_string_general (expression)
+				Result.append_string_general ("%" ")
+			end
+			if is_evaluated then
+				Result.append_string_general (" evaluated")
+			else
+				Result.append_string_general (" NOT evaluated")
+			end
+			if error_occurred then
+				Result.append_string_general (" -> ERROR")
+			end
+		end
 
 feature -- Change
 

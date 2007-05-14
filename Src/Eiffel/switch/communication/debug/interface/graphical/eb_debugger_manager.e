@@ -1693,14 +1693,14 @@ feature -- Debugging events
 			-- Application just quit.
 			-- This application means the debuggee.
 		do
+				-- Modify the debugging window display.
+			window_manager.quick_refresh_all_margins
+			disable_debugging_commands (False)
+
+				--| Clean and reset debugging tools
+			reset_tools
+
 			if was_executing then
-					-- Modify the debugging window display.
-				window_manager.quick_refresh_all_margins
-				disable_debugging_commands (False)
-
-					--| Clean and reset debugging tools
-				reset_tools
-
 					-- Make all debugging tools disappear.
 				if debugging_window.destroyed then
 					debugging_window := Void
@@ -1714,25 +1714,25 @@ feature -- Debugging events
 					unraise
 					debugging_window := Void
 				end
-
-				enable_debugging_commands
-				update_all_debugging_tools_menu
-
-					-- Make related buttons insensitive.
-				stop_cmd.disable_sensitive
-				quit_cmd.disable_sensitive
-				restart_cmd.disable_sensitive
-				debug_cmd.enable_sensitive
-				debug_cmd.set_launched (False)
-				no_stop_cmd.enable_sensitive
-
-				step_cmd.enable_sensitive
-				into_cmd.enable_sensitive
-				out_cmd.disable_sensitive
-
-				set_critical_stack_depth_cmd.enable_sensitive
-				assertion_checking_handler_cmd.reset
 			end
+			enable_debugging_commands
+			update_all_debugging_tools_menu
+
+				-- Make related buttons insensitive.
+			stop_cmd.disable_sensitive
+			quit_cmd.disable_sensitive
+			restart_cmd.disable_sensitive
+			debug_cmd.enable_sensitive
+			debug_cmd.set_launched (False)
+			no_stop_cmd.enable_sensitive
+
+			step_cmd.enable_sensitive
+			into_cmd.enable_sensitive
+			out_cmd.disable_sensitive
+
+			set_critical_stack_depth_cmd.enable_sensitive
+			assertion_checking_handler_cmd.reset
+
 			Precursor (was_executing)
 		end
 

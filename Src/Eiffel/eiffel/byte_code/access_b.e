@@ -441,9 +441,6 @@ feature -- Code generation
 		local
 			p: like parameters
 			i, j, nb: INTEGER
-			expr: EXPR_B
-			param: PARAMETER_B
-			type_name: STRING
 		do
 			p := parameters
 			if p = Void then
@@ -458,16 +455,7 @@ feature -- Code generation
 				until
 					i > nb
 				loop
-					expr := p @ i
-					param ?= expr
-						-- FIXME
-					if param = Void then
-						type_name := real_type (expr.type).c_type.c_string
-					else
-						type_name := param.target_type_name
-					end
-					Result.put (type_name, j)
-
+					Result.put (p [i].target_type_name, j)
 					i := i +1
 					j := j +1
 				end

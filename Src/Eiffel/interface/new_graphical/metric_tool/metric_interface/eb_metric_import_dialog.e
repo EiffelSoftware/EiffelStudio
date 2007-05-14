@@ -898,7 +898,9 @@ feature{NONE} -- Implementation
 					until
 						l_libraries.after
 					loop
-						library_uuid_table_internal.force (l_libraries.key_for_iteration, l_libraries.item_for_iteration.library_target.system.uuid.out)
+						if l_libraries.item_for_iteration.library_target /= Void then
+							library_uuid_table_internal.force (l_libraries.key_for_iteration, l_libraries.item_for_iteration.library_target.system.uuid.out)
+						end
 						l_libraries.forth
 					end
 				end

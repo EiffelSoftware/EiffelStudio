@@ -71,9 +71,11 @@ feature -- Code generation
 			name: STRING
 			i: INTEGER
 			put_eif_test: BOOLEAN
+			arg_types: ARRAY [STRING]
 		do
 			name := inline_byte_code.generated_c_feature_name
-			force_inline_def (inline_byte_code.result_type, name, inline_byte_code.argument_types)
+			arg_types := inline_byte_code.argument_types
+			force_inline_def (inline_byte_code.result_type, name, arg_types)
 			name := inline_name (name)
 
 			l_buffer := Context.buffer
@@ -98,7 +100,9 @@ feature -- Code generation
 				if i > 1 then
 					l_buffer.put_string (", ")
 				end
-				l_buffer.put_string ("arg" + i.out)
+				l_buffer.put_character ('(')
+				l_buffer.put_string (arg_types.item (i))
+				l_buffer.put_string (") arg" + i.out)
 				i := i + 1
 			end
 			if put_eif_test then

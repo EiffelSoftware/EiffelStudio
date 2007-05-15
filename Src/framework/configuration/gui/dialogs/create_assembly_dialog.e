@@ -156,8 +156,15 @@ feature {NONE} -- Initialization
 			layout_constants.set_default_width_for_button (l_btn)
 
 			show_actions.extend (agent
+				local
+					l_old_style: like pointer_style
 				do
+					l_old_style := pointer_style
+					set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+
 					populate_assemblies
+
+					set_pointer_style (l_old_style)
 
 						-- Set focus based on content display
 					if assemblies.row_count > 0 then
@@ -172,7 +179,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- GUI elements
 
-	assemblies: EV_GRID
+	assemblies: ES_GRID
 			-- Assemblies found in default locations.
 
 	name: EV_TEXT_FIELD

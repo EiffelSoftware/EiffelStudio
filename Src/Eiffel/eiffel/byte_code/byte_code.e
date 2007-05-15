@@ -584,7 +584,6 @@ feature -- Byte code generation
 			bit_i: BIT_I
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
-			type_code: NATURAL_8
 		do
 			local_list := context.local_list
 			local_list.wipe_out
@@ -684,7 +683,6 @@ feature -- Byte code generation
 					i > nb
 				loop
 					formal_type := context.real_type (arguments.item (i))
-					type_code := formal_type.tuple_code.as_natural_8
 					if formal_type.is_bit then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.bit_tuple_code_extension)
 						bit_i ?= formal_type

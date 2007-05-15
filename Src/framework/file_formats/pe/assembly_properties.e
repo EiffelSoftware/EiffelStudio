@@ -199,7 +199,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
-			Result := out < other.out
+			Result := out.as_lower < other.out.as_lower
 		end
 
 feature -- Output

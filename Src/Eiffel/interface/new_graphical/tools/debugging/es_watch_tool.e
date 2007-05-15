@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 		local
 			esgrid: ES_OBJECTS_GRID
 		do
+			auto_expressions_deltas := [-2, +1]
 			create watched_items.make (10)
 
 			create esgrid.make_with_name (title, "watches" + watch_id.out)
@@ -685,6 +686,9 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	auto_expressions_deltas: TUPLE [low: INTEGER; up: INTEGER]
+			-- Default might be (-)2, (+)1
+
 	add_auto_expressions is
 		local
 			l_auto: AST_DEBUGGER_AUTO_EXPRESSION_VISITOR
@@ -694,7 +698,13 @@ feature {NONE} -- Event handling
 			watched_items.wipe_out
 			clean_watched_grid
 			create l_auto
-			expressions := l_auto.auto_expressions (debugger_manager.current_debugging_breakable_index, -2, +1, debugger_manager.current_debugging_feature, debugger_manager.current_debugging_class_c)
+			expressions := l_auto.auto_expressions (
+									debugger_manager.current_debugging_breakable_index,
+									auto_expressions_deltas.low,
+									auto_expressions_deltas.up,
+									debugger_manager.current_debugging_feature,
+									debugger_manager.current_debugging_class_c
+								)
 			if expressions /= Void and then not expressions.is_empty then
 				watches_grid_empty := False
 				from
@@ -1077,16 +1087,25 @@ feature {NONE} -- Event handling
 		local
 			expr_item: like watched_item_from
 		do
-			if auto_expression_enabled and expr.error_occurred then
-				-- Do not display it
+			if auto_expression_enabled then
+				if debugger_manager.safe_application_is_stopped then
+					if not expr.is_evaluated then
+						expr.evaluate
+					end
+				end
+				if not expr.error_occurred then
+					expr_item := new_watched_item_from_expression (expr, watches_grid)
+				end
 			else
 				expr_item := new_watched_item_from_expression (expr, watches_grid)
-				if debugger_manager.safe_application_is_stopped then
+			end
+			if expr_item /= Void then
+				if not expr.is_evaluated and debugger_manager.safe_application_is_stopped then
 					expr_item.request_evaluation (True)
 				end
-				watched_items.extend (expr_item)
 
-				if expr_item /= Void and then expr_item.row /= Void then
+				watched_items.extend (expr_item)
+				if expr_item.row /= Void then
 					if
 						not expr_item.compute_grid_display_done
 						and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))

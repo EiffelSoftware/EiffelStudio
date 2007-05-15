@@ -1712,4 +1712,7 @@ if DOTNET test expected-any-type-name	dotnet058	tcf pass dotnet
 if DOTNET test expected-basic-type-names	dotnet059	tcf pass dotnet
 if DOTNET test dotnet-name-generation	dotnet060	tcf fail dotnet
 if DOTNET test external-name-conflict-validation	dotnet061	tcf pass dotnet
-
+if DOTNET test target-namespace-generation-rules	dotnet062	tcf fail dotnet
+if DOTNET test target-named-namespace-generation-rules	dotnet063	tcf pass dotnet
+if DOTNET test library-namespace-generation-rules	dotnet064	tcf fail dotnet
+if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet

@@ -20,6 +20,8 @@ inherit
 			dotnet_string_representation
 		end
 
+	ICOR_EXPORTER
+
 create {DUMP_VALUE_FACTORY}
 	make_empty
 
@@ -68,6 +70,8 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			value_dotnet := eifnet_debug_value.icd_referenced_value
 
 			value_string_dotnet := a_eifnet_dsv.icd_value_info.interface_debug_string_value
+			value_string_dotnet.get_strong_reference_value
+
 			value_string := a_eifnet_dsv.string_value
 			if a_eifnet_dsv.is_null then
 				value_address := Void
@@ -244,6 +248,10 @@ feature {NONE} -- string_representation Implementation
 						if dynamic_class = sc or dynamic_class.simple_conform_to (sc) then
 							if value_string_dotnet /= Void then
 								Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
+								if Result = Void and then value_string_dotnet.last_error_was_object_neutered then
+									value_string_dotnet := l_eifnet_debugger.unneutered_icd_string_value (value_string_dotnet)
+									Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
+								end
 								last_string_representation_length := l_eifnet_debugger.last_string_value_length
 							elseif value_string /= Void then
 								Result := value_string

@@ -17,7 +17,8 @@ inherit
 		end
 
 create
-	make_by_pointer
+	make_by_pointer,
+	make_value_by_pointer
 
 feature {NONE} -- Initialization
 

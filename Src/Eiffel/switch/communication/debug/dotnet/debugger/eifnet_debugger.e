@@ -1860,20 +1860,43 @@ feature -- Specific function evaluation
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_size: INTEGER
-			last_string_length: INTEGER
+			l_len: INTEGER
+			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
+			einfo: EIFNET_DEBUG_VALUE_INFO
 		do
 			last_string_value_length := 0
-			if icd_string_value /= Void then
-				last_string_length := icd_string_value.get_length
-				last_string_value_length := last_string_length
-					--| Be careful, in this context min,max correspond to string starting at position '0'
-				if max < 0 then
-					l_size := last_string_length
-				else
-					l_size := (max + 1).min (last_string_length)
+			l_icd_string_value := icd_string_value
+			if l_icd_string_value /= Void then
+				l_len := l_icd_string_value.get_length
+				if not l_icd_string_value.last_error_was_object_neutered then
+					last_string_value_length := l_len
+						--| Be careful, in this context min,max correspond to string starting at position '0'
+					if max < 0 then
+						l_size := l_len
+					else
+						l_size := (max + 1).min (l_len)
+					end
+					Result := l_icd_string_value.get_string (l_size)
+					Result := Result.substring ((min + 1).max (1), l_size.min (Result.count))
 				end
-				Result := icd_string_value.get_string (l_size)
-				Result := Result.substring ((min + 1).max (1), l_size.min (Result.count))
+			end
+		end
+
+	unneutered_icd_string_value	(a_icd_str: ICOR_DEBUG_STRING_VALUE): ICOR_DEBUG_STRING_VALUE is
+		require
+			a_icd_str_not_void: a_icd_str /= Void
+		local
+			einfo: EIFNET_DEBUG_VALUE_INFO
+		do
+			if a_icd_str.strong_reference_value /= Void then
+				create einfo.make (a_icd_str.strong_reference_value)
+				Result := einfo.interface_debug_string_value
+				if einfo.icd_prepared_value /= Void then
+					einfo.icd_prepared_value.clean_on_dispose
+				end
+				einfo.clean
+			else
+				Result := a_icd_str
 			end
 		end
 

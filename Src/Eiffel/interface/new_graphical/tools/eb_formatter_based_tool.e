@@ -712,6 +712,7 @@ feature{NONE} -- Actions
 	on_setup_customized_formatters is
 			-- Action to be performed to reload customized formatters
 		do
+			reload_customized_formatter (False)
 			popup_formatter_dialog (develop_window)
 		end
 

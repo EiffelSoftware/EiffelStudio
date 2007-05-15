@@ -158,12 +158,16 @@ feature -- Setting
 	load (a_error_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Load global and target scope formatters.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
+		local
+			l_file: RAW_FILE
 		do
 			formatter_descriptors.wipe_out
 
 			load_formatters (global_formatter_file, True, a_error_agent)
-			load_formatters (target_formatter_file, False, a_error_agent)
-
+			create l_file.make (target_formatter_file)
+			if l_file.exists then
+				load_formatters (target_formatter_file, False, a_error_agent)
+			end
 			set_is_loaded (True)
 			change_actions.call (Void)
 		end
@@ -184,7 +188,9 @@ feature -- Setting
 		do
 			workbench.create_data_directory
 			store_in_file (satisfied_items (a_descriptors, agent is_formatter_global_scope), n_formatters, agent xml_for_descriptor, global_file_path, formatter_file_name)
-			store_in_file (satisfied_items (a_descriptors, agent is_formatter_target_scope), n_formatters, agent xml_for_descriptor, target_formatter_file_path, formatter_file_name)
+			if workbench.universe_defined then
+				store_in_file (satisfied_items (a_descriptors, agent is_formatter_target_scope), n_formatters, agent xml_for_descriptor, target_formatter_file_path, formatter_file_name)
+			end
 		end
 
 feature{NONE} -- Implementation

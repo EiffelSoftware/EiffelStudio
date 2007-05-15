@@ -322,6 +322,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	starting_dialog_height_preference: INTEGER_PREFERENCE
 	open_project_dialog_width_preference: INTEGER_PREFERENCE
 	open_project_dialog_height_preference: INTEGER_PREFERENCE
+	discard_target_scope_customized_formatter_preference: BOOLEAN_PREFERENCE
 
 feature -- Preference strings
 
@@ -379,6 +380,7 @@ feature -- Preference strings
 	starting_dialog_height_preference_string: STRING is "interface.dialogs.starting_dialog_height"
 	open_project_dialog_width_preference_string: STRING is "interface.dialogs.open_project_dialog_width"
 	open_project_dialog_height_preference_string: STRING is "interface.dialogs.open_project_dialog_height"
+	discard_target_scope_customized_formatter_string: STRING is "interface.dialogs.discard_target_scope_customized_formatter"
 
 feature {NONE} -- Implementation
 
@@ -439,6 +441,7 @@ feature {NONE} -- Implementation
 			starting_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, starting_dialog_height_preference_string, 500)
 			open_project_dialog_width_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_width_preference_string, 500)
 			open_project_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_height_preference_string, 300)
+			discard_target_scope_customized_formatter_preference := l_manager.new_boolean_preference_value (l_manager, discard_target_scope_customized_formatter_string, True)
 		end
 
 	preferences: PREFERENCES

@@ -1591,6 +1591,8 @@ feature -- Label texts
 	l_metric_filter: STRING_GENERAL is do Result := locale.translate ("Metric Filter") end
 	l_eiffelstudio: STRING_GENERAL is do Result := locale.translate ("EiffelStudio") end
 	l_locale: STRING_GENERAL is do Result := locale.translate ("Locale:") end
+	l_target_scope_customzied_formatter_not_saved: STRING_GENERAL is do Result := locale.translate ("Customized formatters with target scope won't be saved%Nbecause no project has been loaded. Go ahead anyway?") end
+	l_discard_target_scope_customized_formatter: STRING_GENERAL is do Result := locale.translate ("Don't ask me again and discard%Nunsaved target scope customized formatters.") end
 
 feature -- Label text, no translation (for the editor)
 

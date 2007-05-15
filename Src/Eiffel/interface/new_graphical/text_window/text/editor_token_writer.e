@@ -590,7 +590,9 @@ feature {NONE} -- Initialisations and File status
 			feature_start_found: BOOLEAN
 			editor_tok: EDITOR_TOKEN
 		do
-			create stone.make (a_feature)
+			if a_feature /= Void then
+				create stone.make (a_feature)
+			end
 			from
 				last_line.start
 			until
@@ -620,9 +622,9 @@ feature {NONE} -- Initialisations and File status
 				last_line.append_token (feature_start)
 			else
 				if is_keyword (t) then
-					create {EDITOR_TOKEN_KEYWORD}tok.make (t.as_string_8)
+					create {EDITOR_TOKEN_KEYWORD} tok.make (t.as_string_8)
 				else
-					create {EDITOR_TOKEN_OPERATOR}tok.make (t.as_string_8)
+					create {EDITOR_TOKEN_OPERATOR} tok.make (t.as_string_8)
 				end
 				tok.set_pebble (stone)
 				last_line.append_token (tok)

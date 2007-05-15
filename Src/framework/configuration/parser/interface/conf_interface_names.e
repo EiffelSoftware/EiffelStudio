@@ -324,6 +324,7 @@ feature -- Option names and descriptions
 			Result.force (locale.translate ("Assignment on Formal/Expanded"), w_vjrv)
 			Result.force (locale.translate ("Renaming Unknown Class"), w_renaming_unknown_class)
 			Result.force (locale.translate ("Options Unknown Class"), w_option_unknown_class)
+			Result.force (locale.translate ("Classname/filename mismatch"), w_classname_filename_mismatch)
 		end
 
 	warning_descriptions: HASH_TABLE [STRING_GENERAL, STRING] is
@@ -342,6 +343,7 @@ feature -- Option names and descriptions
 			Result.force (locale.translate ("Warn about assignment attempts on formal or expanded targets (VJRV)?"), w_vjrv)
 			Result.force (locale.translate ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
 			Result.force (locale.translate ("Warn about class options of unknown classes?"), w_option_unknown_class)
+			Result.force (locale.translate ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
 		end
 
 feature -- Misc

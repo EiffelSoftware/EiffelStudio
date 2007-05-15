@@ -187,6 +187,7 @@ feature {NONE} -- Implementation
 			Result.force (w_vjrv)
 			Result.force (w_renaming_unknown_class)
 			Result.force (w_option_unknown_class)
+			Result.force (w_classname_filename_mismatch)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -28,15 +28,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
---	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG is
---			-- Dialog to setup customized formatters
---		once
---			create Result.make (agent customized_formatter_manager.formatter_descriptors)
---			Result.ok_actions.extend (agent on_ok_from_formatter_dialog)
---		ensure
---			result_attached: Result /= Void
---		end
-
 	tools_dialog: EB_CUSTOMIZED_TOOL_DIALOG is
 			-- Dialog to setup customized tools
 		once
@@ -97,11 +88,9 @@ feature{NONE} -- Implementation
 		local
 			l_manager: like customized_formatter_manager
 		do
-			if workbench.system_defined then
-				l_manager := customized_formatter_manager
-				if a_force or else not l_manager.is_loaded then
-					l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, window_manager.last_focused_development_window.window))
-				end
+			l_manager := customized_formatter_manager
+			if a_force or else not l_manager.is_loaded then
+				l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, window_manager.last_focused_development_window.window))
 			end
 		end
 

@@ -268,19 +268,31 @@ feature -- Events
 
 feature {NONE} -- Events		
 
-	on_preference_changed (a_pref: PREFERENCE) is
+	on_preference_changed (a_pref: PREFERENCE; a_pref_widget: PREFERENCE_WIDGET) is
 			-- Set the preference value to the newly entered value in the edit item.
 		local
 			l_row: EV_GRID_ROW
+			l_item: EV_GRID_ITEM
 		do
-			if not grid.selected_rows.is_empty then
-				l_row := grid.selected_rows.first
+			if a_pref_widget /= Void then
+				l_item := a_pref_widget.change_item_widget
+				if l_item /= Void and l_item.is_parented then
+					l_row := l_item.row
+				end
+			end
+			if l_row = Void then
+				l_row := preference_row	(a_pref)
+			end
+			if l_row /= Void then
 				preference_changed_on_row (a_pref, l_row, True)
 			end
 		end
 
 	preference_changed_on_row (a_pref: PREFERENCE; a_row: EV_GRID_ROW; a_update_value: BOOLEAN) is
 			-- Set the preference value to the newly entered value in the edit item.
+		require
+			a_pref_not_void: a_pref /= Void
+			a_row_parented: a_row /= Void and then a_row.parent /= Void
 		local
 			l_default_item: EV_GRID_LABEL_ITEM
 			l_selected_row: EV_GRID_ROW
@@ -315,9 +327,21 @@ feature {NONE} -- Events
 	on_preference_changed_externally (a_pref: PREFERENCE) is
 			-- Set the preference value to the newly entered value NOT changed in the edit item.
 		local
+			l_row: EV_GRID_ROW
+		do
+			l_row := preference_row (a_pref)
+			if l_row /= Void then
+				preference_changed_on_row (a_pref, l_row, True)
+			end
+		end
+
+	preference_row (a_pref: PREFERENCE): EV_GRID_ROW is
+			-- Row containing `a_pref'.
+		require
+			a_pref_not_void: a_pref /= Void
+		local
 			nb: INTEGER
 			r: INTEGER
-			l_row: EV_GRID_ROW
 			l_pref: PREFERENCE
 		do
 			nb := grid.row_count
@@ -326,16 +350,14 @@ feature {NONE} -- Events
 				from
 					r := 1
 				until
-					r > nb or l_row /= Void
+					r > nb or Result /= Void
 				loop
 					l_pref ?= grid.row (r).data
 					if l_pref /= Void and then l_pref.name.is_equal (a_pref.name) then
-						l_row := grid.row (r)
-						preference_changed_on_row (a_pref, l_row, True)
+						Result := grid.row (r)
 					end
 					r := r + 1
 				end
-				--rebuild
 			end
 		end
 
@@ -944,20 +966,20 @@ feature {NONE} -- Implementation
 			l_bool ?= a_pref
 			if l_bool /= Void then
 				l_bool_widget := new_boolean_widget (l_bool)
-				l_bool_widget.change_actions.extend (agent on_preference_changed)
+				l_bool_widget.change_actions.extend (agent on_preference_changed (?, l_bool_widget))
 				Result := l_bool_widget.change_item_widget
 				Result.set_data (l_bool_widget)
 			else
 				if a_pref.generating_preference_type.is_equal ("TEXT") then
 					create l_edit_widget.make_with_preference (a_pref)
-					l_edit_widget.change_actions.extend (agent on_preference_changed)
+					l_edit_widget.change_actions.extend (agent on_preference_changed (?, l_edit_widget))
 					Result := l_edit_widget.change_item_widget
 					Result.set_data (l_edit_widget)
 				elseif a_pref.generating_preference_type.is_equal ("COMBO") then
 					l_array ?= a_pref
 					if l_array /= Void then
 						l_choice_widget := new_choice_widget (l_array)
-						l_choice_widget.change_actions.extend (agent on_preference_changed)
+						l_choice_widget.change_actions.extend (agent on_preference_changed (?, l_choice_widget))
 						Result := l_choice_widget.change_item_widget
 						Result.set_data (l_choice_widget)
 					end
@@ -965,7 +987,7 @@ feature {NONE} -- Implementation
 					l_font ?= a_pref
 					if l_font /= Void then
 						create l_font_widget.make_with_preference (l_font)
-						l_font_widget.change_actions.extend (agent on_preference_changed)
+						l_font_widget.change_actions.extend (agent on_preference_changed (?, l_font_widget))
 						l_font_widget.set_caller (Current)
 						Result := l_font_widget.change_item_widget
 						Result.set_data (l_font_widget)
@@ -974,7 +996,7 @@ feature {NONE} -- Implementation
 						l_color ?= a_pref
 						if l_color /= Void then
 							create l_color_widget.make_with_preference (l_color)
-							l_color_widget.change_actions.extend (agent on_preference_changed)
+							l_color_widget.change_actions.extend (agent on_preference_changed (?, l_color_widget))
 							l_color_widget.set_caller (Current)
 							Result := l_color_widget.change_item_widget
 							Result.set_data (l_color_widget)
@@ -982,7 +1004,7 @@ feature {NONE} -- Implementation
 							l_shortcut ?= a_pref
 							if l_shortcut /= Void then
 								create l_shortcut_widget.make_with_preference (l_shortcut)
-								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
+								l_shortcut_widget.change_actions.extend (agent on_preference_changed (?, l_shortcut_widget))
 								Result := l_shortcut_widget.change_item_widget
 								Result.set_data (l_shortcut_widget)
 								l_shortcut.overridden_actions.wipe_out

@@ -166,7 +166,7 @@ feature -- Access
 			l_id_font ?= a_pref
 			if l_id_font /= Void then
 				create l_font_widget.make_with_preference (l_id_font)
-				l_font_widget.change_actions.extend (agent on_preference_changed)
+				l_font_widget.change_actions.extend (agent on_preference_changed (?, l_font_widget))
 				l_font_widget.set_caller (Current)
 				Result := l_font_widget.change_item_widget
 				Result.set_data (l_font_widget)

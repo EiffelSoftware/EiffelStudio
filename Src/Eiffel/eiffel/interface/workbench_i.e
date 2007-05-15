@@ -530,9 +530,11 @@ feature -- Directory creation
 		local
 			d: DIRECTORY
 		do
-			create d.make (project_location.data_path)
-			if not d.exists then
-				d.create_dir
+			if universe_defined then
+				create d.make (project_location.data_path)
+				if not d.exists then
+					d.create_dir
+				end
 			end
 		end
 

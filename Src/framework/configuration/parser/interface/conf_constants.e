@@ -52,6 +52,7 @@ feature -- Warnings
 	w_vjrv: STRING is "vjrv"
 	w_renaming_unknown_class: STRING is "renaming_unknown_class"
 	w_option_unknown_class: STRING is "option_unknown_class"
+	w_classname_filename_mismatch: STRING is "classname_filename_mismatch"
 
 feature -- Settings
 
@@ -126,6 +127,13 @@ feature -- XML parsing/printing
 			create Result.make (1)
 			Result.append_character (quot_char)
 		end
+
+feature -- Extension
+
+	eiffel_file_extension: STRING is "e"
+			-- File extension for an Eiffel source file without the dot
+
+invariant
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

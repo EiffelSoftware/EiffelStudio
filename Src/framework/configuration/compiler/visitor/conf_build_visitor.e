@@ -620,6 +620,7 @@ feature {NONE} -- Implementation
 			l_pc: ARRAYED_LIST [STRING]
 			l_file_name: STRING
 			l_done: BOOLEAN
+			l_suggested_filename: STRING
 		do
 			check
 				current_classes_not_void: current_classes /= Void
@@ -698,6 +699,27 @@ feature {NONE} -- Implementation
 									current_classes_by_filename.force (l_class, l_file_name)
 								end
 							end
+						end
+					end
+				end
+					-- Check if classname matches filename
+				if
+					(l_class /= Void and then l_class.options.is_warning_enabled (w_classname_filename_mismatch)) or else
+					 application_target.options.is_warning_enabled (w_classname_filename_mismatch)
+				then
+						-- l_name is set by all execution paths since the ones where it is not set raise an error.
+					check l_name /= Void end
+						-- Check file name against class name
+					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal (l_name) then
+							-- We propose the correct file name. The file name construction follows the same schema as above
+						l_suggested_filename := a_path + "/" + l_name.as_lower + "." + eiffel_file_extension
+						if l_full_file /= Void then
+							l_suggested_filename := a_cluster.location.evaluated_directory + l_suggested_filename
+							add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file, l_name, l_suggested_filename))
+						elseif a_path /= Void then
+							add_warning (create {CONF_ERROR_FILENAME}.make (l_file_name, l_name, l_suggested_filename))
+						else
+							add_warning (create {CONF_ERROR_FILENAME}.make (a_file, l_name, l_name.as_lower + "." + eiffel_file_extension))
 						end
 					end
 				end

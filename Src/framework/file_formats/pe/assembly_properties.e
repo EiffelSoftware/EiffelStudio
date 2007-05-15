@@ -157,7 +157,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	arcitechure_string: STRING is
+	architecture_string: STRING is
 			-- Processor architecture, as a string
 		do
 			if is_msil then
@@ -235,7 +235,7 @@ feature -- Output
 				Result.append (once ", PublicKeyToken=")
 				Result.append (public_key_token_string)
 				Result.append (once ", ProcessorArchitecture=")
-				Result.append (arcitechure_string)
+				Result.append (architecture_string)
 				internal_out := Result
 			end
 		end

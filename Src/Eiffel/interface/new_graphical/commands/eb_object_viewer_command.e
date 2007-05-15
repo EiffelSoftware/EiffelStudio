@@ -200,11 +200,17 @@ feature {NONE} -- Implementation
 			-- Create and display a new expanded viewer dialog
 		local
 			dlg: EB_OBJECT_VIEWERS_DIALOG
+			w: EV_WINDOW
 		do
 			create dlg.make (Current)
 			opened_viewers.extend (dlg)
 			last_opened_viewer := dlg
-			dlg.show
+			w := associated_window
+			if w /= Void then
+				dlg.show_relative_to_window (w)
+			else
+				dlg.show
+			end
 		ensure
 			added_a_dialog: opened_viewers.count = (old opened_viewers.count) + 1
 		end

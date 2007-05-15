@@ -12,7 +12,7 @@ compile_result ok
 
 execute_work 	NONE 	exec_output
 execute_result 	ok
-compare		exec_output output
+
 
 cleanup_compile
 
@@ -23,7 +23,6 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_nn
 execute_result 	ok
-compare		exec_output_nn output_nn
 
 cleanup_compile
 
@@ -34,7 +33,6 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_ucnn
 execute_result 	ok
-compare		exec_output_ucnn output_ucnn
 
 cleanup_compile
 
@@ -45,7 +43,6 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_urcnn
 execute_result 	ok
-compare		exec_output_urcnn output_urcnn
 
 cleanup_compile
 
@@ -56,7 +53,6 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_nn_ucnn
 execute_result 	ok
-compare		exec_output_nn_ucnn output_nn_ucnn
 
 cleanup_compile
 
@@ -67,7 +63,16 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_nn_urcnn
 execute_result 	ok
-compare		exec_output_nn_urcnn output_nn_urcnn
+
+cleanup_compile
+
+copy_sub Ace_ucnn_urcnn $TEST Ace
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_ucnn_urcnn
+execute_result 	ok
 
 cleanup_compile
 
@@ -78,6 +83,14 @@ compile_result ok
 
 execute_work 	NONE 	exec_output_nn_ucnn_urcnn
 execute_result 	ok
+
+compare		exec_output output
+compare		exec_output_nn output_nn
+compare		exec_output_ucnn output_ucnn
+compare		exec_output_urcnn output_urcnn
+compare		exec_output_nn_ucnn output_nn_ucnn
+compare		exec_output_nn_urcnn output_nn_urcnn
+compare		exec_output_ucnn_urcnn output_ucnn_urcnn
 compare		exec_output_nn_ucnn_urcnn output_nn_ucnn_urcnn
 
 test_end

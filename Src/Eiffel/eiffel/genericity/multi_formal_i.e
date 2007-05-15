@@ -64,8 +64,9 @@ feature -- Status report
 	tuple_code: INTEGER_8 is
 			-- Multi Formal tuple code.
 		do
-			-- MTN so far this code has never been called. why?
-			check false end
+				-- Before we said that we should not be called, but now we use `tuple_code' for the
+				-- argument passing for our new implementation of expanded conformance with generics.
+				-- For example the eweasel test#multicon005 exercises this code.
 			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 

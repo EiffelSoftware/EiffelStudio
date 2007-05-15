@@ -8,6 +8,7 @@
 		<setting name="console_application" value="${FL_CONSOLE_APPLICATION}"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="${FL_APPLICATION_TYPE}"/>
+		<setting name="dotnet_naming_convention" value="True"/>
 		${FL_CLR_VERSION}
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK/mscorlib.dll"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>

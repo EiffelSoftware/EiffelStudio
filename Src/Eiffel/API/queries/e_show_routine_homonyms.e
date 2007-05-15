@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_SHOW_ROUTINE_HOMONYMNS
+class E_SHOW_ROUTINE_HOMONYMS
 
 inherit
 

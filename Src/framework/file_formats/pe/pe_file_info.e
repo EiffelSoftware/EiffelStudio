@@ -37,11 +37,16 @@ feature -- Initialization
 					l_pe_file.read_natural_16 -- Options header size
 					l_oh_size := l_pe_file.last_natural_16
 
-					if optional_32_bit_header_size = l_oh_size then
-							-- .Net PE files always use 32bit optional headers
-
-							-- Move past Characteristics in PEH (2 bytes), directly to data dictionary (96 bytes) at element 15 (112 bytes).
-						l_pe_file.move (0x2 + 0x60 + 0x70)
+					if optional_32_bit_header_size = l_oh_size or optional_64_bit_header_size = l_oh_size then
+						if optional_64_bit_header_size = l_oh_size then
+								-- 64 bit header
+								-- Move past Characteristics in PEH (2 bytes), directly to data dictionary (256 bytes) at element 15 (112 bytes).
+							l_pe_file.move (0x2 + 0x70 + 0x70)
+						else
+								-- 32 bit header
+								-- Move past Characteristics in PEH (2 bytes), directly to data dictionary (96 bytes) at element 15 (112 bytes).
+							l_pe_file.move (0x2 + 0x60 + 0x70)
+						end
 
 							-- Data dictionary has 16 directories comprising of 128 bytes. (We are intrested in 15th entry)
 							-- Each directory is 8 bytes and split into 4 byte chunks. The first

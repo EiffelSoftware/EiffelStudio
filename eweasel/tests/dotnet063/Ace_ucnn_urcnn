@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="834ed852-1835-48dc-a08e-774999d16f89">
+	<target name="test">
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="use_cluster_name_as_namespace" value="true"/>
+		<setting name="use_all_cluster_name_as_namespace" value="true"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<cluster name="root_cluster" location="$CLUSTER\" recursive="false">
+			<option namespace="NamedRootCluster"/>
+			<cluster name="clusters" location="$CLUSTER\cluster\" recursive="true">
+				<option namespace="NamedCluster"/>
+			</cluster>
+		</cluster>
+	</target>
+</system>

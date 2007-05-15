@@ -122,8 +122,10 @@
 				<alt_text>Visible dialog</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>To make a class visible, just enter the class name and press
-			<italic>Add class</italic>. Optionally it is possible to specify a different name under which it is accessible. After a class has been added, it is possible to restrict the access to certain features only, to do this, enter the name of the feature (and optional a renamed name), select the class they belong to and click on <italic>Add feature</italic>.
+		<paragraph>To make a class visible, just enter the class name and press 
+			<italic>Add class</italic>. Optionally it is possible to specify a different name under which it is accessible. 
+			After a class has been added, it is possible to restrict the access to certain features only. To do this, enter the name 
+			of the feature (and optionally a renamed name), select the class it belongs to and click on <italic>Add feature</italic>.
 		</paragraph>
 	</paragraph>
 </document>

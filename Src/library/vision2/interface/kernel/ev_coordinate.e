@@ -123,8 +123,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_COORDINATES
 

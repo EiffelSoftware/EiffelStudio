@@ -433,12 +433,13 @@ feature {NONE} -- Implementation
 		do
 			if ask_for_system_name then
 				system_name_field.set_caret_position (1)
+				system_name_field.set_focus
 			else
 				if not directory_field.text.is_empty then
 					directory_field.set_caret_position (1)
+					directory_field.set_focus
 				end
 			end
-			directory_field.set_focus
 		end
 
 	browse_directory is
@@ -509,6 +510,9 @@ feature {NONE} -- Implementation
 			Result := l_project_location
 		end
 
+	old_project_name: STRING
+			-- Old project name, set by user
+
 feature {NONE} -- Callbacks
 
 	on_cancel is
@@ -539,8 +543,12 @@ feature {NONE} -- Callbacks
 			curr_project_name: STRING
 			sep_index: INTEGER
 		do
-			curr_project_location := directory_field.text
 			curr_project_name := system_name_field.text
+			curr_project_location := directory_field.text
+
+			if old_project_name = Void or else old_project_name.is_equal (root_cluster_field.text) then
+				root_cluster_field.set_text (curr_project_name)
+			end
 			if not curr_project_location.is_empty then
 				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
 				curr_project_location.keep_head (sep_index)
@@ -550,6 +558,11 @@ feature {NONE} -- Callbacks
 
 				directory_field.set_text (curr_project_location)
 			end
+
+			old_project_name := system_name_field.text
+		ensure
+			old_project_name_attached: old_project_name /= Void
+			old_project_name_set: old_project_name.is_equal (system_name_field.text)
 		end
 
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG) is
@@ -631,13 +644,13 @@ feature {NONE} -- Vision2 architechture
 
 feature {NONE} -- Constants
 
-	Default_project_name: STRING is "sample"
+	Default_project_name: STRING is "project"
 
-	Default_root_class_name: STRING is "ROOT_CLASS"
+	Default_root_class_name: STRING is "APPLICATION"
 
 	Default_root_feature_name: STRING is "make"
 
-	Default_root_cluster_name: STRING is "root_cluster"
+	Default_root_cluster_name: STRING is "project"
 
 	Invalid_ace_exception: STRING is "Invalid_ace"
 

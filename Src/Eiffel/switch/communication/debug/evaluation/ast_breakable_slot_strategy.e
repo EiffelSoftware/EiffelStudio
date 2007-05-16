@@ -1199,7 +1199,6 @@ feature {NONE} -- Implementation
 							-- same class ID as the one recorded in BINARY_AS, it means that target
 							-- was not converted, otherwise target was converted and its type is the
 							-- one from the right-hand side.
-							-- MTNASK: a + b, a can be converted? Converted to what?
 						if l_left_type.associated_class.class_id = l_as.class_id then
 							last_type := l_left_type
 						else

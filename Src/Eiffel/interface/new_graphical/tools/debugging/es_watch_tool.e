@@ -663,6 +663,7 @@ feature {NONE} -- Event handling
 				else
 					create dlg.make_new_expression
 				end
+				dlg.set_new_expression_mode
 				dlg.set_callback (agent add_expression_with_dialog (dlg))
 				dlg.show_modal_to_window (debwin.window)
 			end
@@ -743,6 +744,7 @@ feature {NONE} -- Event handling
 						expr := l_item.expression
 						check expr /= Void end
 						create dlg.make_with_expression (expr)
+						dlg.set_edit_expression_title
 						dlg.set_callback (agent refresh_expression (expr))
 						dlg.show_modal_to_window (debugger_manager.debugging_window.window)
 					end
@@ -922,14 +924,7 @@ feature {NONE} -- Event handling
 	on_row_deselected (row: EV_GRID_ROW) is
 			-- An item in the list of expression was selected.
 		do
-			if
-				not auto_expression_enabled and
-				row /= Void and then row.parent_row = Void
-			then
-				enable_commands_on_expressions
-			else
-				disable_commands_on_expressions
-			end
+			disable_commands_on_expressions
 		end
 
 	key_pressed (k: EV_KEY) is

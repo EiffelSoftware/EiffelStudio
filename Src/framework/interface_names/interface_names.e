@@ -74,7 +74,7 @@ feature -- Button texts
 	b_Function_time: STRING_GENERAL is					do Result := locale.translate("Function Time")	end
 	b_go_to: STRING_GENERAL is							do Result := locale.translate ("Go to") end
 	b_Keep_assertions: STRING_GENERAL is				do Result := locale.translate("Keep Assertions")	end
-	b_Eval_keep_assertions_checking: STRING_GENERAL is	do Result := locale.translate("Keep Assertions Checking")	end
+	b_eval_keep_assertion_checking: STRING_GENERAL is	do Result := locale.translate("Keep Assertion Checking")	end
 	b_Load_ace: STRING_GENERAL is						do Result := locale.translate("Load From...")	end
 	b_Move_to_folder: STRING_GENERAL is					do Result := locale.translate("Move to Folder...")	end
 	b_New_ace: STRING_GENERAL is						do Result := locale.translate("Reset")	end
@@ -1678,6 +1678,7 @@ feature -- Title part
 	t_New_class: STRING_GENERAL is						do Result := locale.translate("New Class")	end
 	t_New_cluster: STRING_GENERAL is					do Result := locale.translate("Add Cluster")	end
 	t_New_expression: STRING_GENERAL is					do Result := locale.translate("New Expression")	end
+	t_Edit_expression: STRING_GENERAL is				do Result := locale.translate("Edit Expression")	end
 	t_New_project: STRING_GENERAL is					do Result := locale.translate("New Project")	end
 	t_Open_backup: STRING_GENERAL is					do Result := locale.translate("Backup Found")	end
 	t_Organize_favorites: STRING_GENERAL is				do Result := locale.translate("Organize Favorites")	end
@@ -1981,7 +1982,7 @@ feature -- Description texts
 	e_Display_system_info: STRING_GENERAL is	do Result := locale.translate("Display information concerning current system")	end
 	e_Drop_an_error_stone: STRING is	do Result := locale.translate(ee_Drop_an_error_stone)	end
 	e_Edit_exported_feature: STRING_GENERAL is	do Result := locale.translate("Edit the properties of the selected feature")	end
-	e_Edit_expression: STRING_GENERAL is		do Result := locale.translate("Edit an expression")	end
+	e_Edit_expression: STRING_GENERAL is		do Result := locale.translate("Edit the selected expression")	end
 	e_Edited: STRING_GENERAL is					do Result := locale.translate("Some classes were edited since last compilation")	end
 	e_Exec_debug: STRING_GENERAL is				do Result := locale.translate("Start application and stop at breakpoints")	end
 	e_Exec_debug_continue: STRING_GENERAL is	do Result := locale.translate("Continue application and stop at breakpoints")	end

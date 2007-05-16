@@ -308,7 +308,7 @@ feature {NONE} -- Graphical initialization and changes
 			object_name_frame.extend (vb)
 
 				--| 3) assertion settings
-			create keep_assertion_checking_cb.make_with_text (interface_names.b_eval_keep_assertions_checking)
+			create keep_assertion_checking_cb.make_with_text (interface_names.b_eval_keep_assertion_checking)
 			keep_assertion_checking_cb.disable_select
 			create hb
 			hb.extend (create {EV_CELL})
@@ -360,6 +360,18 @@ feature {NONE} -- Graphical initialization and changes
 		end
 
 feature -- Access
+
+	set_edit_expression_title is
+			-- Set Edit expression title
+		do
+			dialog.set_title (Interface_names.t_Edit_expression)
+		end
+
+	set_new_expression_mode is
+			-- Set New expression title
+		do
+			dialog.set_title (Interface_names.t_New_expression)
+		end
 
 	callback: PROCEDURE [ANY, TUPLE]
 			-- Callback that should be called after the dialog is closed.
@@ -761,7 +773,7 @@ feature {NONE} -- Implementation
 			-- Widget that should be given the focus when the dialog is displayed.
 
 invariant
-	invariant_clause: True -- Your invariant here
+	dialog_not_void: dialog /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

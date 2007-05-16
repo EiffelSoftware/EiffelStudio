@@ -9,10 +9,12 @@ class
 	I18N_LOCALE_ID
 
 inherit
+
 	ANY
 		redefine
 			is_equal
 		end
+
 	HASHABLE
 		undefine
 			is_equal
@@ -22,28 +24,47 @@ create
 	make,
 	make_from_string
 
-feature -- Creation
+feature {NONE} -- Initialization
 
 	make (a_language, a_region, a_script: STRING_32) is
-			-- a_script is an optional parameter and normally should be void (excellent design)
+			-- Initialize locale id.
+			--
+			-- `a_language': Language of locale, e.g. 'en'
+			-- `a_region': Region of locale, e.g. 'us'
+			-- `a_script': An optional parameter for the locale, e.g. 'Latn' for latin script
 		require
 			language_not_void: a_language /= Void
 			region_not_void: a_region /= Void
 		do
-			create language.make_from_string(a_language)
-			create region.make_from_string(a_region)
+			create language.make_from_string (a_language)
+			create region.make_from_string (a_region)
 			if a_script /= Void then
-				create script.make_from_string(a_script)
+				create script.make_from_string (a_script)
 			end
 			set_name
 		ensure
-			language_set: language.is_equal(a_language)
-			region_set: region.is_equal(a_region)
-			script_set: (script /= Void) implies script.is_equal(a_script)
+			language_set: language.is_equal (a_language)
+			region_set: region.is_equal (a_region)
+			script_set: script /= Void implies script.is_equal (a_script)
 		end
 
 	make_from_string (identifier: STRING_32) is
-			-- Initialize with data in `identifier'
+			-- Initialize locale id with identifier.
+			--
+			-- There are several ways this identifier could look
+			-- Case 1: LL-RR
+			-- Case 2: LL-SS-RR
+			-- Case 3: LL_RR
+			-- Case 4: LL_RR.Enc
+			-- Case 5: LL_RR@SS  [sometimes the SS is simply variant information]
+			-- LL is a two-letter language identifier from ISO 639-1 or, if there is none, a three-letter
+			-- identifier from ISO 639-2/T
+			-- RR is a two-letter country coding from ISO 3166-1, except when it is not (en-029 ('English (Carribean)') under Windows)
+			-- SS under windows is mostly either 'Latn' or 'Cyrl'. @SS on linux is sometimes useful and sometimes meaningless
+			--  ('@euro' variants seem to have no difference)
+			-- Enc is ignored
+			--
+			-- `identifier': An identifier in one of the recognised formats
 		require
 			identifier_not_void: identifier /= Void
 		local
@@ -52,17 +73,6 @@ feature -- Creation
 			-- script, region, language: STRING_32
 			splits: LIST[STRING_32]
 		do
-				-- There are several ways this identifier could look
-				-- Case 1: LL-RR
-				-- Case 2: LL-SS-RR
-				-- Case 3: LL_RR
-				-- Case 4: LL_RR.Enc
-				-- Case 5: LL_RR@SS  [sometimes the SS is simply variant information]
-				-- LL is a two-letter language identifier from ISO 639-1 or, if there is none, a three-letter
-				-- identifier from ISO 639-2/T
-				-- RR is a two-letter country coding from ISO 3166-1, except when it is not (en-029 ('English (Carribean)') under Windows)
-				-- SS under windows is mostly either 'Latn' or 'Cyrl'. @SS on linux is sometimes useful and sometimes meaningless
-				--  ('@euro' variants seem to have no difference)
 
 				-- first throw away everything after and with a dot
 			create temp.make_from_string(identifier)
@@ -111,10 +121,49 @@ feature -- Creation
 			region_set: region /= Void
 		end
 
-feature {NONE} -- Helper function
+feature  -- Access
+
+	name: STRING_32
+			-- Full locale id of the form LL_RR@SS
+			-- where LL is language code,
+			-- RR is region code and
+			-- SS is optional script
+
+	language:STRING_32
+			-- Language of locale id
+
+	region: STRING_32
+			-- Region of locale id
+
+	script: STRING_32
+			-- Script of locale id (optional)
+
+ 	language_id: I18N_LANGUAGE_ID is
+ 			-- Language ID corresponding to current locale id
+ 		do
+ 			create Result.make (language)
+ 		end
+
+ 	hash_code: INTEGER is
+ 			-- Hash code value
+ 		do
+ 			Result := name.hash_code
+ 		end
+
+feature	 -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := language.is_equal (other.language) and region.is_equal(other.region) and
+						( (script /= Void and other.script /= Void) implies script.is_equal(other.script))
+		end
+
+feature {NONE} -- Implementation
 
 	set_name is
-			-- ensure platform-independant name
+			-- Set `name' to a platform independent name.
 		do
 			name := language.twin
 			if not region.is_empty then
@@ -126,41 +175,6 @@ feature {NONE} -- Helper function
 		ensure
 			name_not_void: name /= Void
 		end
-
-feature  -- Informations
-
-	language:STRING_32
-	region: STRING_32
-	script: STRING_32
-
-feature	 -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- is `other' equal `Current'
-		do
-			Result := language.is_equal (other.language) and region.is_equal(other.region) and
-						( (script /= Void and other.script /= Void) implies script.is_equal(other.script))
-		end
-
- feature -- Hashing
-
- 	hash_code: INTEGER is
- 		do
- 			Result := name.hash_code
- 		end
-
- feature  -- Name for hashing
-
-	name: STRING_32
-
-
- feature -- Conversion
-
- 	language_id: I18N_LANGUAGE_ID is
- 			-- Get corresponding language id
- 		do
- 			create Result.make(language)
- 		end
 
 invariant
 	language_exists: language /= Void

@@ -9,6 +9,7 @@ class
 	I18N_LOCALE_INFO
 
 inherit
+
 	I18N_CURRENCY_INFO
 		rename
 			make as initialize_currency_info
@@ -32,10 +33,10 @@ inherit
 creation
 	make
 
-feature --creation
+feature {NONE} -- Initialization
 
 	make is
-			-- creates a I18N_LOCALE_INFO with default values
+			-- Initialize object with default values.
 		do
 				-- initialise to arbitrary default values so we can ensure
 				-- that all fields will have valid/non-void contents
@@ -53,15 +54,15 @@ feature --creation
 			create id.make_from_string ("")
 		end
 
-feature	--identification
+feature	-- Access
 
 	id: I18N_LOCALE_ID
-		-- id of `Current'
+		-- Id of `Current'
 
-feature	-- modification
+feature	-- Element change
 
 	set_id (an_id: I18N_LOCALE_ID) is
-			-- set the locale id to  `an_id'
+			-- Set `id' to `an_id'.
 		require
 			an_id_exists: an_id /= Void
 		do
@@ -81,6 +82,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

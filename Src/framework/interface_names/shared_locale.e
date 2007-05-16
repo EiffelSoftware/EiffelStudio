@@ -47,7 +47,7 @@ feature -- Status change
         do
 			create l_id.make_from_string (a_id)
 			if locale_manager.has_locale (l_id) then
-				locale_internal.put (locale_manager.get_locale (l_id))
+				locale_internal.put (locale_manager.locale (l_id))
 			else
 				locale_internal.put (empty_locale)
 			end
@@ -122,14 +122,14 @@ feature {NONE} -- Implementation
 
 	system_locale: I18N_LOCALE
 		once
-			Result := locale_manager.get_system_locale
+			Result := locale_manager.system_locale
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	empty_locale: I18N_LOCALE
 		once
-			Result := locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (""))
+			Result := locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (""))
 		ensure
 			result_not_void: Result /= Void
 		end

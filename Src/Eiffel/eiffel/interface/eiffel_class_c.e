@@ -1661,8 +1661,6 @@ feature {NONE} -- Class initialization
 
 					-- Second, check if the formal generic name doesn't
 					-- appear twice in `generics'.
-
-					-- MTNASK: this is already done in the parser now. Remove the following code?
 				from
 					j := 0
 				until

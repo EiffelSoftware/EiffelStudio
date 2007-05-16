@@ -1649,6 +1649,20 @@ test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
 
 
+-- Synthethic tests to find bugs in expanded types
+test	expanded-array-attached-reference-array			expanded001 tcf pass expanded
+test	expanded-reverse-assignment						expanded002 tcf pass expanded
+test	array-of-user-defined-expanded					expanded003 tcf pass expanded
+--test						expanded004 tcf pass expanded
+--test						expanded005 tcf pass expanded
+--test						expanded006 tcf pass expanded
+--test						expanded007 tcf pass expanded
+--test						expanded008 tcf pass expanded
+--test						expanded009 tcf pass expanded
+
+
+
+
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

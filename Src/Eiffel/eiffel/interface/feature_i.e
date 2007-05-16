@@ -255,6 +255,7 @@ feature -- Access
 			digit: NATURAL_8
 			a: like arguments
 			i: NATURAL_8
+			z: INTEGER
 		do
 			create Result.make_empty
 			if type.type_i.is_formal then
@@ -275,6 +276,11 @@ feature -- Access
 					if i >= 16 then
 							-- Add a digit to the result.
 						Result.append_character (digit.to_hex_character)
+						if digit = 0 then
+							z := z + 1
+						else
+							z := 0
+						end
 						digit := 0
 						i := 1
 					end
@@ -283,6 +289,9 @@ feature -- Access
 			end
 			if digit /= 0 then
 				Result.append_character (digit.to_hex_character)
+			elseif z > 0 then
+					-- Remove trailing zeroes.
+				Result.remove_tail (z)
 			end
 		end
 

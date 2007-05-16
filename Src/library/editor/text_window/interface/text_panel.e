@@ -392,7 +392,7 @@ feature -- Query
 			-- Has the content of the editor changed since it was
 			-- loaded or saved?
 		do
-			Result := text_displayed.changed
+			Result := text_displayed.is_modified
 		end
 
 	line_numbers_enabled: BOOLEAN

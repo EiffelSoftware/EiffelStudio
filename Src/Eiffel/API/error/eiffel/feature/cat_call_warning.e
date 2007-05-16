@@ -15,6 +15,8 @@ inherit
 			build_explain
 		end
 
+	SHARED_NAMES_HEAP
+
 create
 	make
 
@@ -90,23 +92,23 @@ feature -- Element change
 			export_status_violations.extend ([a_descendant_class, a_descendant_feature.api_feature (a_descendant_feature.written_in)])
 		end
 
-	add_covariant_argument_violation (a_descendant_class: CLASS_C; a_descendant_feature: FEATURE_I; a_type: TYPE_A; a_index: INTEGER) is
+	add_covariant_argument_violation (a_descendant_type: TYPE_A; a_descendant_feature: FEATURE_I; a_type: TYPE_A; a_index: INTEGER) is
 			-- Add a covariant argument violation of `a_descendant_feature' in `a_descendant_class' where
 			-- the actual type of the call is `a_type' at the argument position `a_index'.
 		require
-			a_descendant_class_not_void: a_descendant_class /= Void
+			a_descendant_type_not_void: a_descendant_type /= Void
 			a_descendant_feature_not_void: a_descendant_feature /= Void
 			a_type_not_void: a_type /= Void
 			a_index_positive: a_index > 0
 		do
-			covariant_argument_violations.extend ([a_descendant_class, a_descendant_feature.api_feature (a_descendant_feature.written_in), a_type, a_index])
+			covariant_argument_violations.extend ([a_descendant_type, a_descendant_feature.api_feature (a_descendant_feature.written_in), a_type, a_index])
 		end
 
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
-			item: TUPLE [descendant_class: CLASS_C; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]
+			item: TUPLE [descendant_type: TYPE_A; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]
 		do
 				-- Print context
 			a_text_formatter.add ("Class: ")
@@ -145,15 +147,14 @@ feature -- Output
 					a_text_formatter.add ("Call has argument of type ")
 					covariant_argument_violations.item.actual_type.append_to (a_text_formatter)
 					a_text_formatter.add (", but if call is made on a descendant of type ")
-					item.descendant_class.append_name (a_text_formatter)
+					item.descendant_type.append_to (a_text_formatter)
 					a_text_formatter.add (" then the argument should be of type ")
 					item.descendant_feature.arguments.i_th (item.argument_index).append_to (a_text_formatter)
 					a_text_formatter.add (" (feature {")
-					item.descendant_class.append_name (a_text_formatter)
+					item.descendant_type.append_to (a_text_formatter)
 					a_text_formatter.add ("}.")
 					item.descendant_feature.append_signature (a_text_formatter)
 					a_text_formatter.add (")")
-					a_text_formatter.add_new_line
 					a_text_formatter.add_new_line
 					covariant_argument_violations.forth
 				end
@@ -194,15 +195,94 @@ feature -- Output
 					a_text_formatter.add_new_line
 				end
 			end
+
+			update_statistics
+			print_statistics (a_text_formatter)
 		end
 
 feature {NONE} -- Implementation
 
-	covariant_argument_violations: LINKED_LIST [TUPLE [descendant_class: CLASS_C; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]]
+	covariant_argument_violations: LINKED_LIST [TUPLE [descendant_type: TYPE_A; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]]
 			-- List of descendants which produce a possible cat-call because of a covariant argument redefinition
 
 	export_status_violations: LINKED_LIST [TUPLE [descendant_class: CLASS_C; descendant_feature: E_FEATURE]]
 			-- List of descendants which produce a possible cat-call because of an export status violation
+
+	statistics: TUPLE [
+		total: INTEGER;
+		export_violation: INTEGER;
+		covariant_violation: INTEGER;
+		any_features: INTEGER;
+		generic_features: INTEGER;
+		like_current_feature: INTEGER;
+		other: INTEGER] is
+			-- Statistics of catcalls in system
+		once
+			Result := [0, 0, 0, 0, 0, 0, 0]
+		end
+
+	update_statistics is
+			-- Update statistics with catcall of current warning
+		local
+			l_feature_name: INTEGER
+		do
+			statistics.total := statistics.total + 1
+			if not export_status_violations.is_empty then
+				statistics.export_violation := statistics.export_violation + 1
+			end
+			if not covariant_argument_violations.is_empty then
+				statistics.covariant_violation := statistics.covariant_violation + 1
+				l_feature_name := called_feature.name_id
+				if
+					l_feature_name = names_heap.equal_name_id or
+					l_feature_name = names_heap.standard_equal_name_id or
+					l_feature_name = names_heap.deep_equal_name_id or
+					l_feature_name = names_heap.is_equal_name_id or
+					l_feature_name = names_heap.standard_is_equal_name_id or
+					l_feature_name = names_heap.is_deep_equal_name_id or
+					l_feature_name = names_heap.copy_name_id or
+					l_feature_name = names_heap.standard_copy_name_id or
+					l_feature_name = names_heap.deep_copy_name_id
+				then
+					statistics.any_features := statistics.any_features + 1
+				elseif
+					called_feature.arguments /= Void and then
+					called_feature.arguments.there_exists (
+						agent (a_type: TYPE_A): BOOLEAN
+							do
+								Result := a_type.is_like_current
+							end)
+				then
+					statistics.like_current_feature := statistics.like_current_feature + 1
+				elseif
+					called_feature.arguments /= Void and then
+					called_feature.arguments.there_exists (
+						agent (a_type: TYPE_A): BOOLEAN
+							do
+								Result := a_type.is_formal or else a_type.actual_type.is_formal
+							end)
+				then
+					statistics.generic_features := statistics.generic_features + 1
+				else
+					statistics.other := statistics.other + 1
+				end
+			end
+		end
+
+	print_statistics (a_text_formatter: TEXT_FORMATTER) is
+			--
+		do
+			a_text_formatter.add ("STAT (")
+			a_text_formatter.add ("total: " + statistics.total.out + "%T")
+			a_text_formatter.add ("export-violation: " + statistics.export_violation.out + "%T")
+			a_text_formatter.add ("covariant-violation: " + statistics.covariant_violation.out + "%T")
+			a_text_formatter.add ("any-features: " + statistics.any_features.out + "%T")
+			a_text_formatter.add ("like-current-features: " + statistics.like_current_feature.out + "%T")
+			a_text_formatter.add ("generics: " + statistics.generic_features.out + "%T")
+			a_text_formatter.add ("other: " + statistics.other.out + "%T")
+			a_text_formatter.add (")")
+			a_text_formatter.add_new_line
+		end
 
 invariant
 

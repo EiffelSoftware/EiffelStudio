@@ -1653,7 +1653,8 @@ feature -- Implementation
 						-- Check if cat-call detection is enabled for current context class
 					if context.current_class.is_cat_call_detection then
 							-- Inline agents have no descendants, so they don't need to be checked anyway
-						if not l_feature.is_inline_agent then
+							-- Static calls don't need to be checked since they can't have a descendant either
+						if not l_feature.is_inline_agent and not is_static then
 								-- Cat call detection is enabled: Test if this feature call is valid
 								-- in all subtypes of the current class.
 							check_cat_call (l_last_type, l_feature, is_qualified, l_arg_types, l_feature_name)
@@ -5881,6 +5882,12 @@ feature -- Implementation
 			process_eiffel_list (l_as)
 		end
 
+	process_restrict_clause_as (l_as: RESTRICT_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			l_as.type_list.process (Current)
+		end
+
 feature {NONE} -- Predefined types
 
 	string_type: CL_TYPE_A is
@@ -7932,21 +7939,26 @@ feature {NONE} -- Implementation: catcall check
 			a_params_not_void: a_feature.argument_count > 0 implies a_params /= Void
 			same_number_of_params: a_feature.argument_count > 0 implies a_feature.argument_count = a_params.count
 		local
-			l_descendants: ARRAYED_LIST [CLASS_C]
+			l_descendants: ARRAYED_LIST [TYPE_A]
+			l_descendant_type: TYPE_A
 			l_descendant_class: CLASS_C
 			l_descendant_feature: FEATURE_I
 			l_cat_call_warning: CAT_CALL_WARNING
 			l_descendant_index, l_argument_index: INTEGER
+			l_descendant_argument: TYPE_A
+			l_descendant_formal: FORMAL_A
+			l_actual_argument: TYPE_A
 		do
-			l_descendants := possible_descendants (a_callee_type)
+			l_descendants := conforming_descendants (a_callee_type)
 				-- Loop through all descendants
 			from
 				l_descendant_index := 1
 			until
 				l_descendant_index > l_descendants.count
 			loop
-					-- Get descendant class and the feature in the context of the descendant
-				l_descendant_class := l_descendants.i_th (l_descendant_index)
+					-- Get descendant class and the feature in the context of the descendant\
+				l_descendant_type := l_descendants.i_th (l_descendant_index)
+				l_descendant_class := l_descendant_type.associated_class
 				l_descendant_feature := l_descendant_class.feature_of_rout_id (a_feature.rout_id_set.first)
 
 					-- Check argument validity
@@ -7955,13 +7967,20 @@ feature {NONE} -- Implementation: catcall check
 				until
 					l_argument_index > a_feature.argument_count
 				loop
+					l_actual_argument := a_params.item (l_argument_index)
+					l_descendant_argument := l_descendant_feature.arguments.i_th (l_argument_index).actual_type
+						-- If argument is a formal, replace with instantiation of callee type
+					if l_descendant_argument.is_formal then
+						l_descendant_formal ?= l_descendant_argument
+						l_descendant_argument := l_descendant_type.generics.item (l_descendant_formal.position)
+					end
 						-- Check if actual parameter conforms to the possible type of the descendant feature
 						-- Todo: look at the convert check again and simplify it
 					if
-						not a_params.item (l_argument_index).conform_to (l_descendant_feature.arguments.i_th (l_argument_index)) and
+						not l_actual_argument.conform_to (l_descendant_argument) and
 						not (
-							a_params.item (l_argument_index).convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index)) and then
-							a_feature.arguments.i_th (l_argument_index).conform_to (l_descendant_feature.arguments.i_th (l_argument_index))
+							l_actual_argument.convert_to (context.current_class, a_feature.arguments.i_th (l_argument_index)) and then
+							a_feature.arguments.i_th (l_argument_index).conform_to (l_descendant_argument)
 						)
 					then
 							-- Conformance is violated. Add notice to warning.
@@ -7970,7 +7989,7 @@ feature {NONE} -- Implementation: catcall check
 							l_cat_call_warning.set_called_feature (a_feature)
 							error_handler.insert_warning (l_cat_call_warning)
 						end
-						l_cat_call_warning.add_covariant_argument_violation (l_descendant_class, l_descendant_feature, a_params.item (l_argument_index), l_argument_index)
+						l_cat_call_warning.add_covariant_argument_violation (l_descendant_type, l_descendant_feature, a_params.item (l_argument_index), l_argument_index)
 					end
 					l_argument_index := l_argument_index + 1
 				end
@@ -7993,46 +8012,79 @@ feature {NONE} -- Implementation: catcall check
 			end
 		end
 
-	possible_descendants (a_type: TYPE_A): ARRAYED_LIST [CLASS_C] is
+	conforming_descendants (a_type: TYPE_A): ARRAYED_LIST [TYPE_A] is
 			-- List of all descendants of the type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
 		local
+			l_descendants: ARRAYED_LIST [CLASS_C]
+			l_type: TYPE_A
 			l_formal: FORMAL_A
+			l_generics: ARRAY [TYPE_A]
 		do
-			if a_type.has_generics then
-					-- Get all descendants for this generic which are introduced in the system
-					-- Todo: collect list of introduced types in {AST_TYPE_A_GENERATOR} and take
-					--       these types into account here. At the moment, generics are not checked
-					--       for cat-calls
-				create Result.make (1)
-			else
-				if a_type.is_formal then
-					l_formal ?= a_type
-					if l_formal.is_multi_constrained (context.current_class) then
-							-- Type is a multi constrained formal. Loop through all associated classes of
-							-- constraints and collect their descendants
-						create Result.make (10)
-						l_formal.constrained_types (context.current_class).associated_classes.do_all (
-							agent (a_class: CLASS_C; a_list: LIST [CLASS_C])
-									-- Append descendants of `a_class' to `a_list'.
-								require
-									a_class_not_void: a_class /= Void
-									a_list_not_void: a_list /= Void
-								do
-									a_list.append (a_class.descendants)
-								end
-							(?, Result)
-						)
-					else
-							-- Type is formal. Take descendants from associated class of constraint
-						Result := l_formal.constrained_type (context.current_class).associated_class.descendants
-					end
+			if a_type.is_formal then
+				l_formal ?= a_type
+				if l_formal.is_multi_constrained (context.current_class) then
+						-- Type is a multi constrained formal. Loop through all associated classes of
+						-- constraints and collect their descendants
+					create l_descendants.make (10)
+					l_formal.to_type_set.constraining_types (context.current_class).associated_classes.do_all (
+						agent (a_class: CLASS_C; a_list: LIST [CLASS_C])
+								-- Append descendants of `a_class' to `a_list'.
+							require
+								a_class_not_void: a_class /= Void
+								a_list_not_void: a_list /= Void
+							do
+								a_list.append (a_class.descendants)
+							end
+						(?, l_descendants)
+					)
 				else
-						-- Normal type. Take descenants from associated class
-					Result := a_type.associated_class.descendants
+						-- Type is formal. Take descendants from associated class of constraint
+					l_descendants := l_formal.constrained_type (context.current_class).associated_class.descendants
 				end
+			else
+					-- Normal type. Take descenants from associated class
+				l_descendants := a_type.associated_class.descendants
 			end
+				-- Go through descendants and remove the ones which don't conform
+				-- This can happen with non-conforming inheritance or restrict types
+			from
+				l_descendants.start
+				create Result.make (l_descendants.count)
+			until
+				l_descendants.after
+			loop
+					-- If type is generic, instantiate subtype with same generics
+				if a_type.has_generics then
+					l_type := l_descendants.item.partial_actual_type (a_type.generics, a_type.is_expanded, a_type.is_separate)
+				else
+					l_type := l_descendants.item.actual_type
+				end
+				if l_type.conform_to (a_type) then
+					Result.extend (l_type)
+				end
+				l_descendants.forth
+			end
+-- generic check is not working correctly at the moment
+-- juliant, 15.05.07
+--			if a_type.has_generics and then not a_type.generics.is_empty then
+--					-- Try to construct a new subtype by substituting the generic arguments
+--				if not a_type.generics.item (1).has_generics then
+--						-- Only use subclasses of normal class types, generics can have infinite subclasses otherwise
+--					l_type := a_type.generics.item (1).actual_type
+--					if not l_type.is_formal then
+--						l_descendants := l_type.associated_class.descendants
+--						if l_descendants.count > 0 then
+--								-- Copy generics
+--							l_generics := a_type.generics.twin
+--							l_generics.item (1) := l_descendants.first.actual_type
+--								-- Replace generic with a subclass
+--							Result.extend (a_type.associated_class.partial_actual_type (l_generics, a_type.is_expanded, a_type.is_separate))
+--						end
+--					end
+--				end
+--			end
 		ensure
 			possible_descendants_not_void: Result /= Void
 		end

@@ -1730,3 +1730,9 @@ if DOTNET test target-namespace-generation-rules	dotnet062	tcf fail dotnet
 if DOTNET test target-named-namespace-generation-rules	dotnet063	tcf pass dotnet
 if DOTNET test library-namespace-generation-rules	dotnet064	tcf fail dotnet
 if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet
+if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet
+if DOTNET test uncompiled-managed-resource-embeddeding	dotnet066	tcf pass dotnet
+if DOTNET test compiled-managed-resource-embeddeding	dotnet067	tcf pass dotnet
+if DOTNET test peripheral-resource-embeddeding	dotnet068	tcf pass dotnet
+if DOTNET test non-existent-resource-embeddeding	dotnet069	tcf fail dotnet
+if DOTNET test uncompiled-managed-resource-modified	dotnet070	tcf fail dotnet

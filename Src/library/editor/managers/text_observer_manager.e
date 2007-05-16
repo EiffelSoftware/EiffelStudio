@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	changed: BOOLEAN
+	is_modified: BOOLEAN
 			-- Has the text been modified since it was opened?
 
 	is_notifying: BOOLEAN
@@ -40,10 +40,10 @@ feature -- Status setting
 	set_changed (value: BOOLEAN; directly_edited: BOOLEAN) is
 			-- Assign `value' to `changed'
 		do
-			if value and not changed then
+			if value and not is_modified then
 				on_text_edited (directly_edited)
 			end
-			changed := value
+			is_modified := value
 		end
 
 feature -- Operations
@@ -168,7 +168,7 @@ feature {NONE} -- Updates
 		do
 			tmp_is_notifying := is_notifying
 			is_notifying := True
-			changed := True
+			is_modified := True
 			if not edition_observer_list.is_empty then
 				l_cur := edition_observer_list.cursor
 				from
@@ -195,7 +195,7 @@ feature {NONE} -- Updates
 			l_cur: CURSOR
 		do
 			is_notifying := True
-			changed := False
+			is_modified := False
 			l_cur := edition_observer_list.cursor
 			from
 				edition_observer_list.start
@@ -240,7 +240,7 @@ feature {NONE} -- Updates
 			l_cur: CURSOR
 		do
 			is_notifying := True
-			changed := False
+			is_modified := False
 			l_cur := edition_observer_list.cursor
 			from
 				edition_observer_list.start

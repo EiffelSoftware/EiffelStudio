@@ -5883,12 +5883,6 @@ feature -- Implementation
 			process_eiffel_list (l_as)
 		end
 
-	process_restrict_clause_as (l_as: RESTRICT_CLAUSE_AS) is
-			-- Process `l_as'.
-		do
-			l_as.type_list.process (Current)
-		end
-
 feature {NONE} -- Predefined types
 
 	string_type: CL_TYPE_A is

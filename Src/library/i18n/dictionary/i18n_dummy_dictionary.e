@@ -39,20 +39,20 @@ feature -- Entries
 
 feature -- Retrieval
 
-	get_singular (original_singular: STRING_32): STRING_32 is
+	singular (original_singular: STRING_32): STRING_32 is
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""
 		end
 
-	get_plural(original_singular, original_plural: STRING_32; plural_number: INTEGER): STRING_32 is
+	plural(original_singular, original_plural: STRING_32; plural_number: INTEGER): STRING_32 is
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -62,6 +62,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

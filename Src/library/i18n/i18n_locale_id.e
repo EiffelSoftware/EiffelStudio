@@ -70,15 +70,14 @@ feature {NONE} -- Initialization
 		local
 			temp: STRING_32
 			index: INTEGER
-			-- script, region, language: STRING_32
-			splits: LIST[STRING_32]
+			splits: LIST [STRING_32]
 		do
 
 				-- first throw away everything after and with a dot
 			create temp.make_from_string(identifier)
 			index :=  temp.index_of ('.', 1)
 			if index > 0 then
-				temp.keep_head(index-1)
+				temp.keep_head (index-1)
 			end
 				-- remove @ and keep SS if there
 			index := temp.index_of ('@',1)
@@ -88,15 +87,15 @@ feature {NONE} -- Initialization
 --				if script.is_equal("euro") then		-- @euro -> not currency_symbol.is_equal ("EUR")
 --					script := Void
 --				end
-				temp.keep_head(index-1)
+				temp.keep_head (index-1)
 			end
 				-- So - do we have case 1,2 or 3 now?
 				-- check if we have dashes or underscores
-			index := temp.index_of('_',1)
+			index := temp.index_of ('_',1)
 			if index > 0 then
 					-- Case 3
-				language := temp.substring(1, index-1)
-				region := temp.substring(index+1, temp.count)
+				language := temp.substring (1, index-1)
+				region := temp.substring (index+1, temp.count)
 			else
 				splits := temp.split('-')
 				inspect splits.count
@@ -104,12 +103,12 @@ feature {NONE} -- Initialization
 					language := splits.i_th (1)
 					region := ""
 				when 2  then
-					language := splits.i_th(1)
-					region := splits.i_th(2)
+					language := splits.i_th (1)
+					region := splits.i_th (2)
 				when 3 then
-					language := splits.i_th(1)
-					script := splits.i_th(2)
-					region := splits.i_th(3)
+					language := splits.i_th (1)
+					script := splits.i_th (2)
+					region := splits.i_th (3)
 				else
 					language := ""
 					region := ""
@@ -129,7 +128,7 @@ feature  -- Access
 			-- RR is region code and
 			-- SS is optional script
 
-	language:STRING_32
+	language: STRING_32
 			-- Language of locale id
 
 	region: STRING_32
@@ -142,6 +141,8 @@ feature  -- Access
  			-- Language ID corresponding to current locale id
  		do
  			create Result.make (language)
+ 		ensure
+ 			language_id_not_void: Result /= Void
  		end
 
  	hash_code: INTEGER is
@@ -156,14 +157,17 @@ feature	 -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := language.is_equal (other.language) and region.is_equal(other.region) and
-						( (script /= Void and other.script /= Void) implies script.is_equal(other.script))
+			Result := language.is_equal (other.language) and region.is_equal (other.region) and
+						( (script /= Void and other.script /= Void) implies script.is_equal (other.script))
 		end
 
 feature {NONE} -- Implementation
 
 	set_name is
 			-- Set `name' to a platform independent name.
+		require
+			language_not_void: language /= Void
+			region_not_void: region /= Void
 		do
 			name := language.twin
 			if not region.is_empty then
@@ -177,11 +181,13 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	language_exists: language /= Void
-	region_exists: region /= Void
+
+	name_not_void: name /= Void
+	language_not_void: language /= Void
+	region_not_void: region /= Void
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -191,6 +197,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

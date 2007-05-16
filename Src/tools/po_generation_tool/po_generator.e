@@ -101,11 +101,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	name_of_translate: STRING is "translate"
+	name_of_translate: STRING is "translation"
 			-- Name of translate feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_translate_plural: STRING is "translate_plural"
+	name_of_translate_plural: STRING is "plural_translation"
 			-- Name of translate feature for plurals
 			-- Arguments from this feature are taken as translateable plural messages.
 

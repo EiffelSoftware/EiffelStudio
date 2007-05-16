@@ -15,97 +15,97 @@ feature -- Access
 	Zone_navigation_left_column_name: STRING_GENERAL is
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
 		do
-			Result := locale.translate ("Tools")
+			Result := locale.translation ("Tools")
 		end
 
 	Zone_navigation_right_column_name: STRING_GENERAL is
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
 		do
-			Result := locale.translate ("Targets")
+			Result := locale.translation ("Targets")
 		end
 
 	Tooltip_mini_toolbar_stick: STRING_GENERAL is
 			-- Tooltip for mini toolbar pin buttons.
 		do
-			Result := locale.translate ("Auto Hide")
+			Result := locale.translation ("Auto Hide")
 		end
 
 	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
 		do
-			Result := locale.translate ("Disable Auto Hide")
+			Result := locale.translation ("Disable Auto Hide")
 		end
 
 	Tooltip_mini_toolbar_maximize: STRING_GENERAL is
 			-- Tooltip for mini toolbar maximize buttons.
 		do
-			Result :=  locale.translate ("Maximize")
+			Result :=  locale.translation ("Maximize")
 		end
 
 	Tooltip_mini_toolbar_restore: STRING_GENERAL is
 			-- Tooltip for mini toolbar restore buttons.
 		do
-			Result := locale.translate ("Restore")
+			Result := locale.translation ("Restore")
 		end
 
 	Tooltip_mini_toolbar_minimize: STRING_GENERAL is
 			-- Tooltip for mini toolbar minimize buttons.
 		do
-			Result :=  locale.translate ("Minimize")
+			Result :=  locale.translation ("Minimize")
 		end
 
 	Tooltip_mini_toolbar_close: STRING_GENERAL is
 			-- Tooltip for mini toolbar close buttons.
 		do
-			Result := locale.translate ("Close")
+			Result := locale.translation ("Close")
 		end
 
 	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tool bar indicators.
 		do
-			Result := locale.translate ("Show Mini Toolbar")
+			Result := locale.translation ("Show Mini Toolbar")
 		end
 
 	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tab indicators.
 		do
-			Result := locale.translate ("Show List")
+			Result := locale.translation ("Show List")
 		end
 
 	Tooltip_toolbar_tail_indicator: STRING_GENERAL is
 			-- Tooltip for tool bar tail indicators.
 		do
-			Result := locale.translate ("Toolbar Options")
+			Result := locale.translation ("Toolbar Options")
 		end
 
 	Tooltip_toolbar_floating_close: STRING_GENERAL is
 			-- Tooltip for tool bar close button.
 		do
-			Result := locale.translate ("Close")
+			Result := locale.translation ("Close")
 		end
 
 	Tooltip_notebook_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for notebook hidden tab indicator.
 		do
-			Result := locale.translate ("Show List")
+			Result := locale.translation ("Show List")
 		end
 
 	Zone_navigation_no_description_available: STRING_GENERAL is
 			-- Label text for zone navigation dialog.
 		do
-			Result := locale.translate ("No description available.")
+			Result := locale.translation ("No description available.")
 		end
 
 	Zone_navigation_no_detail_available: STRING_GENERAL is
 			-- Label text for zone navigation dialog.
 		do
-			Result := locale.translate ("No detail available.")
+			Result := locale.translation ("No detail available.")
 		end
 
 	tool_bar_right_click_customize: STRING_GENERAL is
 			-- String for menu area right click menu.
 		do
-			Result := locale.translate ("Customize ")
+			Result := locale.translation ("Customize ")
 		end
 
 feature -- Tool bar customize dialog strings
@@ -113,61 +113,61 @@ feature -- Tool bar customize dialog strings
 	tool_bar_customize_title: STRING_GENERAL is
 			-- Tool bar customize dialog title.
 		do
-			Result := locale.translate ("Customize Toolbar")
+			Result := locale.translation ("Customize Toolbar")
 		end
 
 	available_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
 		do
-			Result := locale.translate ("Available buttons")
+			Result := locale.translation ("Available buttons")
 		end
 
 	displayed_buttons: STRING_GENERAL is
 			-- Tool bar customize dialog label.
 		do
-			Result := locale.translate ("Displayed buttons")
+			Result := locale.translation ("Displayed buttons")
 		end
 
 	add_button: STRING_GENERAL is
 			-- Tool bar customize dialog add button text.
 		do
-			Result := locale.translate ("Add ->")
+			Result := locale.translation ("Add ->")
 		end
 
 	remove_button: STRING_GENERAL is
 			-- Tool bar customize dialog remove button text.
 		do
-			Result := locale.translate ("<- Remove")
+			Result := locale.translation ("<- Remove")
 		end
 
 	move_button_up: STRING_GENERAL is
 			-- Tool bar customize dialog move button up button text.
 		do
-			Result := locale.translate ("Up")
+			Result := locale.translation ("Up")
 		end
 
 	move_button_down: STRING_GENERAL is
 			-- Tool bar customize dialog move button down button text.
 		do
-			Result := locale.translate ("Down")
+			Result := locale.translation ("Down")
 		end
 
 	separator: STRING_GENERAL is
 			-- Tool bar separator name which appeared in tool bar customize dialog.
 		do
-			Result := locale.translate ("Separator")
+			Result := locale.translation ("Separator")
 		end
 
 	ok: STRING_GENERAL is
 			-- Ok button text.
 		do
-			Result := locale.translate ("OK")
+			Result := locale.translation ("OK")
 		end
 
 	cancel: STRING_GENERAL is
 			-- Cancel button text.
 		do
-			Result := locale.translate ("Cancel")
+			Result := locale.translation ("Cancel")
 		end
 
 indexing

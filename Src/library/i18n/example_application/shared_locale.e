@@ -19,7 +19,7 @@ feature -- Initialization
 			else
 				create locale_manager.make (Operating_environment.Current_directory_name_representation+
 											Operating_environment.Directory_separator.out+"mo_files")
-				current_locale := locale_manager.get_system_locale
+				current_locale := locale_manager.system_locale
 				available_locales := locale_manager.available_locales
 				Result := current_locale
 			end
@@ -41,7 +41,7 @@ feature -- Initialization
 				available_locales.forth
 			end
 			if not available_locales.after then
-				current_locale := locale_manager.get_locale (available_locales.item)
+				current_locale := locale_manager.locale (available_locales.item)
 			end
 		end
 
@@ -55,7 +55,7 @@ feature {NONE} -- Locale
 	available_locales: LIST[I18N_LOCALE_ID];
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -65,6 +65,8 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
+
 
 
 end

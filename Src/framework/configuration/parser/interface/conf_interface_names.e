@@ -17,467 +17,467 @@ feature -- Configuration
 
 	configuration_title (a_system_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Project Settings ($1)"), [a_system_name])
+			Result := locale.formatted_string (locale.translation ("Project Settings ($1)"), [a_system_name])
 		end
 
-	browse: STRING_GENERAL is do Result := locale.translate ("Browse...")	end
+	browse: STRING_GENERAL is do Result := locale.translation ("Browse...")	end
 
 feature -- Section names
 
-	section_system: STRING_GENERAL is do Result := locale.translate ("System")	end
+	section_system: STRING_GENERAL is do Result := locale.translation ("System")	end
 	section_target (a_target: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Target: $1"), [a_target])
+			Result := locale.formatted_string (locale.translation ("Target: $1"), [a_target])
 		end
-	section_assertions: STRING_GENERAL is do Result := locale.translate ("Assertions")	end
-	section_groups: STRING_GENERAL is do Result := locale.translate ("Groups")	end
-	section_warning: STRING_GENERAL is do Result := locale.translate ("Warnings")	end
-	section_debug: STRING_GENERAL is do Result := locale.translate ("Debug")	end
-	section_external: STRING_GENERAL is do Result := locale.translate ("Externals")	end
-	section_tasks: STRING_GENERAL is do Result := locale.translate ("Tasks")	end
-	section_variables: STRING_GENERAL is do Result := locale.translate ("Variables")	end
-	section_mapping: STRING_GENERAL is do Result := locale.translate ("Type Mapping")	end
-	section_general: STRING_GENERAL is do Result := locale.translate ("General")	end
-	section_dotnet: STRING_GENERAL is do Result := locale.translate (".NET")	end
-	section_advanced: STRING_GENERAL is do Result := locale.translate ("Advanced")	end
+	section_assertions: STRING_GENERAL is do Result := locale.translation ("Assertions")	end
+	section_groups: STRING_GENERAL is do Result := locale.translation ("Groups")	end
+	section_warning: STRING_GENERAL is do Result := locale.translation ("Warnings")	end
+	section_debug: STRING_GENERAL is do Result := locale.translation ("Debug")	end
+	section_external: STRING_GENERAL is do Result := locale.translation ("Externals")	end
+	section_tasks: STRING_GENERAL is do Result := locale.translation ("Tasks")	end
+	section_variables: STRING_GENERAL is do Result := locale.translation ("Variables")	end
+	section_mapping: STRING_GENERAL is do Result := locale.translation ("Type Mapping")	end
+	section_general: STRING_GENERAL is do Result := locale.translation ("General")	end
+	section_dotnet: STRING_GENERAL is do Result := locale.translation (".NET")	end
+	section_advanced: STRING_GENERAL is do Result := locale.translation ("Advanced")	end
 
-	selection_tree_select_node: STRING_GENERAL is do Result := locale.translate ("Please select a sub node.")	end
+	selection_tree_select_node: STRING_GENERAL is do Result := locale.translation ("Please select a sub node.")	end
 
 feature -- Section actions
 
-	menu_properties: STRING_GENERAL is do Result := locale.translate ("Properties")	end
-	menu_edit_config: STRING_GENERAL is do Result := locale.translate ("Edit Configuration")	end
-	add_target: STRING_GENERAL is do Result := locale.translate ("Add Target")	end
+	menu_properties: STRING_GENERAL is do Result := locale.translation ("Properties")	end
+	menu_edit_config: STRING_GENERAL is do Result := locale.translation ("Edit Configuration")	end
+	add_target: STRING_GENERAL is do Result := locale.translation ("Add Target")	end
 
 feature -- General names and descriptions
 
-	file_rule_name: STRING_GENERAL is do Result := locale.translate ("Exclude Rules")	end
-	file_rule_description: STRING_GENERAL is do Result := locale.translate ("Regular expressions which exclude/include sub folders and/or files.")	end
+	file_rule_name: STRING_GENERAL is do Result := locale.translation ("Exclude Rules")	end
+	file_rule_description: STRING_GENERAL is do Result := locale.translation ("Regular expressions which exclude/include sub folders and/or files.")	end
 
 feature -- System names and descriptions
 
-	system_name_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	system_name_description: STRING_GENERAL is do Result := locale.translate ("Name of the system.")	end
-	system_description_name: STRING_GENERAL is do Result := locale.translate ("Description")	end
-	system_description_description: STRING_GENERAL is do Result := locale.translate ("Description of the system.")	end
-	system_library_target_name: STRING_GENERAL is do Result := locale.translate ("Library Target")	end
-	system_library_target_description: STRING_GENERAL is do Result := locale.translate ("Target used if system is used as a library.")	end
-	system_readonly_name: STRING_GENERAL is do Result := locale.translate ("Library Readonly")	end
-	system_readonly_description: STRING_GENERAL is do Result := locale.translate ("Is this system read only per default if it is used as a library?")	end
-	system_file_name: STRING_GENERAL is do Result := locale.translate ("File Name")	end
-	system_file_description: STRING_GENERAL is do Result := locale.translate ("Location of the configuration file.")	end
-	system_uuid_name: STRING_GENERAL is do Result := locale.translate ("UUID")	end
-	system_uuid_description: STRING_GENERAL is do Result := locale.translate ("Universal unique identifier for the system.")	end
+	system_name_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	system_name_description: STRING_GENERAL is do Result := locale.translation ("Name of the system.")	end
+	system_description_name: STRING_GENERAL is do Result := locale.translation ("Description")	end
+	system_description_description: STRING_GENERAL is do Result := locale.translation ("Description of the system.")	end
+	system_library_target_name: STRING_GENERAL is do Result := locale.translation ("Library Target")	end
+	system_library_target_description: STRING_GENERAL is do Result := locale.translation ("Target used if system is used as a library.")	end
+	system_readonly_name: STRING_GENERAL is do Result := locale.translation ("Library Readonly")	end
+	system_readonly_description: STRING_GENERAL is do Result := locale.translation ("Is this system read only per default if it is used as a library?")	end
+	system_file_name: STRING_GENERAL is do Result := locale.translation ("File Name")	end
+	system_file_description: STRING_GENERAL is do Result := locale.translation ("Location of the configuration file.")	end
+	system_uuid_name: STRING_GENERAL is do Result := locale.translation ("UUID")	end
+	system_uuid_description: STRING_GENERAL is do Result := locale.translation ("Universal unique identifier for the system.")	end
 
 feature -- Target names and descriptions
 
-	target_name_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	target_name_description: STRING_GENERAL is do Result := locale.translate ("Name of the target.")	end
-	target_description_name: STRING_GENERAL is do Result := locale.translate ("Description")	end
-	target_description_description: STRING_GENERAL is do Result := locale.translate ("Description of the target.")	end
-	target_abstract_name: STRING_GENERAL is do Result := locale.translate ("Abstract")	end
-	target_abstract_description: STRING_GENERAL is do Result := locale.translate ("Is this an abstract target that cannot be used to compile?")	end
-	target_compilation_type_name: STRING_GENERAL is do Result := locale.translate ("Compilation Type")	end
-	target_compilation_type_description: STRING_GENERAL is do Result := locale.translate ("Type of compilation.")	end
-	target_compilation_type_standard: STRING_GENERAL is do Result := locale.translate ("Standard (C/byte code)")	end
-	target_compilation_type_dotnet: STRING_GENERAL is do Result := locale.translate (".NET (msil)")	end
-	target_executable_name: STRING_GENERAL is do Result := locale.translate ("Output Name")	end
-	target_executable_description: STRING_GENERAL is do Result := locale.translate ("Name of the generated binary.")	end
-	target_root_name: STRING_GENERAL is do Result := locale.translate ("Root")	end
-	target_root_description: STRING_GENERAL is do Result := locale.translate ("Root cluster, class, feature of the system.")	end
-	target_version_name: STRING_GENERAL is do Result := locale.translate ("Version")	end
-	target_version_description: STRING_GENERAL is do Result := locale.translate ("Version information.")	end
-	target_product_name: STRING_GENERAL is do Result := locale.translate ("Product")	end
-	target_company_name: STRING_GENERAL is do Result := locale.translate ("Company")	end
-	target_copyright_name: STRING_GENERAL is do Result := locale.translate ("Copyright")	end
-	target_trademark_name: STRING_GENERAL is do Result := locale.translate ("Trademark")	end
-	target_dialog_root_cluster: STRING_GENERAL is do Result := locale.translate ("Root Cluster")	end
-	target_dialog_root_class: STRING_GENERAL is do Result := locale.translate ("Root Class")	end
-	target_dialog_root_feature: STRING_GENERAL is do Result := locale.translate ("Root Feature")	end
-	target_dialog_root_all: STRING_GENERAL is do Result := locale.translate ("Compile All Classes?")	end
+	target_name_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	target_name_description: STRING_GENERAL is do Result := locale.translation ("Name of the target.")	end
+	target_description_name: STRING_GENERAL is do Result := locale.translation ("Description")	end
+	target_description_description: STRING_GENERAL is do Result := locale.translation ("Description of the target.")	end
+	target_abstract_name: STRING_GENERAL is do Result := locale.translation ("Abstract")	end
+	target_abstract_description: STRING_GENERAL is do Result := locale.translation ("Is this an abstract target that cannot be used to compile?")	end
+	target_compilation_type_name: STRING_GENERAL is do Result := locale.translation ("Compilation Type")	end
+	target_compilation_type_description: STRING_GENERAL is do Result := locale.translation ("Type of compilation.")	end
+	target_compilation_type_standard: STRING_GENERAL is do Result := locale.translation ("Standard (C/byte code)")	end
+	target_compilation_type_dotnet: STRING_GENERAL is do Result := locale.translation (".NET (msil)")	end
+	target_executable_name: STRING_GENERAL is do Result := locale.translation ("Output Name")	end
+	target_executable_description: STRING_GENERAL is do Result := locale.translation ("Name of the generated binary.")	end
+	target_root_name: STRING_GENERAL is do Result := locale.translation ("Root")	end
+	target_root_description: STRING_GENERAL is do Result := locale.translation ("Root cluster, class, feature of the system.")	end
+	target_version_name: STRING_GENERAL is do Result := locale.translation ("Version")	end
+	target_version_description: STRING_GENERAL is do Result := locale.translation ("Version information.")	end
+	target_product_name: STRING_GENERAL is do Result := locale.translation ("Product")	end
+	target_company_name: STRING_GENERAL is do Result := locale.translation ("Company")	end
+	target_copyright_name: STRING_GENERAL is do Result := locale.translation ("Copyright")	end
+	target_trademark_name: STRING_GENERAL is do Result := locale.translation ("Trademark")	end
+	target_dialog_root_cluster: STRING_GENERAL is do Result := locale.translation ("Root Cluster")	end
+	target_dialog_root_class: STRING_GENERAL is do Result := locale.translation ("Root Class")	end
+	target_dialog_root_feature: STRING_GENERAL is do Result := locale.translation ("Root Feature")	end
+	target_dialog_root_all: STRING_GENERAL is do Result := locale.translation ("Compile All Classes?")	end
 
-	target_address_expression_name: STRING_GENERAL is do Result := locale.translate ("Address Expression")	end
-	target_address_expression_description: STRING_GENERAL is do Result := locale.translate ("Are simplified address expressions enabled?")	end
-	target_automatic_backup_name: STRING_GENERAL is do Result := locale.translate ("Automatic Backup")	end
-	target_automatic_backup_description: STRING_GENERAL is do Result := locale.translate ("Automatically generate a backup during recompilation?")	end
-	target_check_vape_name: STRING_GENERAL is do Result := locale.translate ("Check VAPE")	end
-	target_check_vape_description: STRING_GENERAL is do Result := locale.translate ("Enforce VAPE validity constraint?")	end
-	target_console_application_name: STRING_GENERAL is do Result := locale.translate ("Console Application")	end
-	target_console_application_description: STRING_GENERAL is do Result := locale.translate ("Is the project a console application?")	end
-	target_cls_compliant_name: STRING_GENERAL is do Result := locale.translate ("CLS Compliant")	end
-	target_cls_compliant_description: STRING_GENERAL is do Result := locale.translate ("Should generated assemblies be marked as CLS compliant?")	end
-	target_dead_code_removal_name: STRING_GENERAL is do Result := locale.translate ("Dead Code Removal")	end
-	target_dead_code_removal_description: STRING_GENERAL is do Result := locale.translate ("Should unused code be removed?")	end
-	target_dotnet_naming_convention_name: STRING_GENERAL is do Result := locale.translate (".NET Naming Convention")	end
-	target_dotnet_naming_convention_description: STRING_GENERAL is do Result := locale.translate ("Should names follow the .NET naming convention?")	end
-	target_dynamic_runtime_name: STRING_GENERAL is do Result := locale.translate ("Dynamic Runtime")	end
-	target_dynamic_runtime_description: STRING_GENERAL is do Result := locale.translate ("Should the generated executable use a shared library of the runtime?")	end
-	target_enforce_unique_class_names_name: STRING_GENERAL is do Result := locale.translate ("Enforce unique class names")	end
-	target_enforce_unique_class_names_description: STRING_GENERAL is do Result := locale.translate ("Enforce all class names to be system wide unique?")	end
-	target_exception_trace_name: STRING_GENERAL is do Result := locale.translate ("Exception Trace")	end
-	target_exception_trace_description: STRING_GENERAL is do Result := locale.translate ("Should a complete exception trace be generated in the finalized version?")	end
-	target_il_verifiable_name: STRING_GENERAL is do Result := locale.translate ("IL Verifiable")	end
-	target_il_verifiable_description: STRING_GENERAL is do Result := locale.translate ("Should the generated binary be IL verifiable?")	end
-	target_inlining_name: STRING_GENERAL is do Result := locale.translate ("Inlining")	end
-	target_inlining_description: STRING_GENERAL is do Result := locale.translate ("Should inlining be enabled?")	end
-	target_inlining_size_name: STRING_GENERAL is do Result := locale.translate ("Inlining Size")	end
-	target_inlining_size_description: STRING_GENERAL is do Result := locale.translate ("Maximal number of instructions in a feature for the feature to be inlined.")	end
-	target_line_generation_name: STRING_GENERAL is do Result := locale.translate ("Line Generation")	end
-	target_line_generation_description: STRING_GENERAL is do Result := locale.translate ("Generate extra information for external debuggers?")	end
-	target_metadata_cache_path_name: STRING_GENERAL is do Result := locale.translate ("Metadata Cache Path")	end
-	target_metadata_cache_path_description: STRING_GENERAL is do Result := locale.translate ("Location where information about external assemblies is stored.")	end
-	target_msil_classes_per_module_name: STRING_GENERAL is do Result := locale.translate ("Classes per Module")	end
-	target_msil_classes_per_module_description: STRING_GENERAL is do Result := locale.translate ("Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.")	end
-	target_msil_clr_version_name: STRING_GENERAL is do Result := locale.translate (".NET Runtime Version")	end
-	target_msil_clr_version_description: STRING_GENERAL is do Result := locale.translate ("Version of the .NET runtime to use.")	end
-	target_msil_generation_type_name: STRING_GENERAL is do Result := locale.translate ("Generation Type")	end
-	target_msil_generation_type_description: STRING_GENERAL is do Result := locale.translate ("Type of binary to generate.")	end
-	target_msil_key_file_name_name: STRING_GENERAL is do Result := locale.translate ("Signing Key")	end
-	target_msil_key_file_name_description: STRING_GENERAL is do Result := locale.translate ("Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file.")	end
-	target_msil_use_optimized_precompile_name: STRING_GENERAL is do Result := locale.translate ("Use Optimized Precompile")	end
-	target_msil_use_optimized_precompile_description: STRING_GENERAL is do Result := locale.translate ("Use an optimized version of a precompile?")	end
-	target_multithreaded_name: STRING_GENERAL is do Result := locale.translate ("Multithreaded")	end
-	target_multithreaded_description: STRING_GENERAL is do Result := locale.translate ("Generate a multithreaded application?")	end
-	target_old_verbatim_strings_name: STRING_GENERAL is do Result := locale.translate ("Old Verbatim Strings")	end
-	target_old_verbatim_strings_description: STRING_GENERAL is do Result := locale.translate ("Use the old format for verbatim strings?")	end
-	target_platform_name: STRING_GENERAL is do Result := locale.translate ("Platform")	end
-	target_platform_description: STRING_GENERAL is do Result := locale.translate ("Override the detected platform to use in conditions.")	end
-	target_shared_library_definition_name: STRING_GENERAL is do Result := locale.translate ("Shared Library Definition")	end
-	target_shared_library_definition_description: STRING_GENERAL is do Result := locale.translate ("Specify the file the compiler uses to generate the exported functions.")	end
-	target_library_root_name: STRING_GENERAL is do Result := locale.translate ("Library Root")	end
-	target_library_root_description: STRING_GENERAL is do Result := locale.translate ("Absolute path to use as base for relative paths.")	end
-	target_use_cluster_name_as_namespace_name: STRING_GENERAL is do Result := locale.translate ("Use Cluster Name as Namespace")	end
-	target_use_cluster_name_as_namespace_description: STRING_GENERAL is do Result := locale.translate ("Should cluster names be used as namespaces?")	end
-	target_use_all_cluster_name_as_namespace_name: STRING_GENERAL is do Result := locale.translate ("Use Recursive Cluster Name as Namespace")	end
-	target_use_all_cluster_name_as_namespace_description: STRING_GENERAL is do Result := locale.translate ("Should names of folders in recursive clusters be used as namespaces?")	end
-	target_force_32bits_name: STRING_GENERAL is do Result := locale.translate ("Force 32bits")	end
-	target_force_32bits_description: STRING_GENERAL is do Result := locale.translate ("Force compilation for 32bits?")	end
+	target_address_expression_name: STRING_GENERAL is do Result := locale.translation ("Address Expression")	end
+	target_address_expression_description: STRING_GENERAL is do Result := locale.translation ("Are simplified address expressions enabled?")	end
+	target_automatic_backup_name: STRING_GENERAL is do Result := locale.translation ("Automatic Backup")	end
+	target_automatic_backup_description: STRING_GENERAL is do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
+	target_check_vape_name: STRING_GENERAL is do Result := locale.translation ("Check VAPE")	end
+	target_check_vape_description: STRING_GENERAL is do Result := locale.translation ("Enforce VAPE validity constraint?")	end
+	target_console_application_name: STRING_GENERAL is do Result := locale.translation ("Console Application")	end
+	target_console_application_description: STRING_GENERAL is do Result := locale.translation ("Is the project a console application?")	end
+	target_cls_compliant_name: STRING_GENERAL is do Result := locale.translation ("CLS Compliant")	end
+	target_cls_compliant_description: STRING_GENERAL is do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
+	target_dead_code_removal_name: STRING_GENERAL is do Result := locale.translation ("Dead Code Removal")	end
+	target_dead_code_removal_description: STRING_GENERAL is do Result := locale.translation ("Should unused code be removed?")	end
+	target_dotnet_naming_convention_name: STRING_GENERAL is do Result := locale.translation (".NET Naming Convention")	end
+	target_dotnet_naming_convention_description: STRING_GENERAL is do Result := locale.translation ("Should names follow the .NET naming convention?")	end
+	target_dynamic_runtime_name: STRING_GENERAL is do Result := locale.translation ("Dynamic Runtime")	end
+	target_dynamic_runtime_description: STRING_GENERAL is do Result := locale.translation ("Should the generated executable use a shared library of the runtime?")	end
+	target_enforce_unique_class_names_name: STRING_GENERAL is do Result := locale.translation ("Enforce unique class names")	end
+	target_enforce_unique_class_names_description: STRING_GENERAL is do Result := locale.translation ("Enforce all class names to be system wide unique?")	end
+	target_exception_trace_name: STRING_GENERAL is do Result := locale.translation ("Exception Trace")	end
+	target_exception_trace_description: STRING_GENERAL is do Result := locale.translation ("Should a complete exception trace be generated in the finalized version?")	end
+	target_il_verifiable_name: STRING_GENERAL is do Result := locale.translation ("IL Verifiable")	end
+	target_il_verifiable_description: STRING_GENERAL is do Result := locale.translation ("Should the generated binary be IL verifiable?")	end
+	target_inlining_name: STRING_GENERAL is do Result := locale.translation ("Inlining")	end
+	target_inlining_description: STRING_GENERAL is do Result := locale.translation ("Should inlining be enabled?")	end
+	target_inlining_size_name: STRING_GENERAL is do Result := locale.translation ("Inlining Size")	end
+	target_inlining_size_description: STRING_GENERAL is do Result := locale.translation ("Maximal number of instructions in a feature for the feature to be inlined.")	end
+	target_line_generation_name: STRING_GENERAL is do Result := locale.translation ("Line Generation")	end
+	target_line_generation_description: STRING_GENERAL is do Result := locale.translation ("Generate extra information for external debuggers?")	end
+	target_metadata_cache_path_name: STRING_GENERAL is do Result := locale.translation ("Metadata Cache Path")	end
+	target_metadata_cache_path_description: STRING_GENERAL is do Result := locale.translation ("Location where information about external assemblies is stored.")	end
+	target_msil_classes_per_module_name: STRING_GENERAL is do Result := locale.translation ("Classes per Module")	end
+	target_msil_classes_per_module_description: STRING_GENERAL is do Result := locale.translation ("Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.")	end
+	target_msil_clr_version_name: STRING_GENERAL is do Result := locale.translation (".NET Runtime Version")	end
+	target_msil_clr_version_description: STRING_GENERAL is do Result := locale.translation ("Version of the .NET runtime to use.")	end
+	target_msil_generation_type_name: STRING_GENERAL is do Result := locale.translation ("Generation Type")	end
+	target_msil_generation_type_description: STRING_GENERAL is do Result := locale.translation ("Type of binary to generate.")	end
+	target_msil_key_file_name_name: STRING_GENERAL is do Result := locale.translation ("Signing Key")	end
+	target_msil_key_file_name_description: STRING_GENERAL is do Result := locale.translation ("Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file.")	end
+	target_msil_use_optimized_precompile_name: STRING_GENERAL is do Result := locale.translation ("Use Optimized Precompile")	end
+	target_msil_use_optimized_precompile_description: STRING_GENERAL is do Result := locale.translation ("Use an optimized version of a precompile?")	end
+	target_multithreaded_name: STRING_GENERAL is do Result := locale.translation ("Multithreaded")	end
+	target_multithreaded_description: STRING_GENERAL is do Result := locale.translation ("Generate a multithreaded application?")	end
+	target_old_verbatim_strings_name: STRING_GENERAL is do Result := locale.translation ("Old Verbatim Strings")	end
+	target_old_verbatim_strings_description: STRING_GENERAL is do Result := locale.translation ("Use the old format for verbatim strings?")	end
+	target_platform_name: STRING_GENERAL is do Result := locale.translation ("Platform")	end
+	target_platform_description: STRING_GENERAL is do Result := locale.translation ("Override the detected platform to use in conditions.")	end
+	target_shared_library_definition_name: STRING_GENERAL is do Result := locale.translation ("Shared Library Definition")	end
+	target_shared_library_definition_description: STRING_GENERAL is do Result := locale.translation ("Specify the file the compiler uses to generate the exported functions.")	end
+	target_library_root_name: STRING_GENERAL is do Result := locale.translation ("Library Root")	end
+	target_library_root_description: STRING_GENERAL is do Result := locale.translation ("Absolute path to use as base for relative paths.")	end
+	target_use_cluster_name_as_namespace_name: STRING_GENERAL is do Result := locale.translation ("Use Cluster Name as Namespace")	end
+	target_use_cluster_name_as_namespace_description: STRING_GENERAL is do Result := locale.translation ("Should cluster names be used as namespaces?")	end
+	target_use_all_cluster_name_as_namespace_name: STRING_GENERAL is do Result := locale.translation ("Use Recursive Cluster Name as Namespace")	end
+	target_use_all_cluster_name_as_namespace_description: STRING_GENERAL is do Result := locale.translation ("Should names of folders in recursive clusters be used as namespaces?")	end
+	target_force_32bits_name: STRING_GENERAL is do Result := locale.translation ("Force 32bits")	end
+	target_force_32bits_description: STRING_GENERAL is do Result := locale.translation ("Force compilation for 32bits?")	end
 
-	target_edit_manually: STRING_GENERAL is do Result := locale.translate ("Manually Edit Configuration")	end
+	target_edit_manually: STRING_GENERAL is do Result := locale.translation ("Manually Edit Configuration")	end
 
-	external_location_name: STRING_GENERAL is do Result := locale.translate ("Location")	end
-	external_location_description: STRING_GENERAL is do Result := locale.translate ("Location of the external.")	end
-	external_description_name: STRING_GENERAL is do Result := locale.translate ("Description")	end
-	external_description_description: STRING_GENERAL is do Result := locale.translate ("Description of the external.")	end
-	external_condition_name: STRING_GENERAL is do Result := locale.translate ("Condition")	end
-	external_condition_description: STRING_GENERAL is do Result := locale.translate ("Conditions for this external.")	end
+	external_location_name: STRING_GENERAL is do Result := locale.translation ("Location")	end
+	external_location_description: STRING_GENERAL is do Result := locale.translation ("Location of the external.")	end
+	external_description_name: STRING_GENERAL is do Result := locale.translation ("Description")	end
+	external_description_description: STRING_GENERAL is do Result := locale.translation ("Description of the external.")	end
+	external_condition_name: STRING_GENERAL is do Result := locale.translation ("Condition")	end
+	external_condition_description: STRING_GENERAL is do Result := locale.translation ("Conditions for this external.")	end
 
-	external_include: STRING_GENERAL is do Result := locale.translate ("Include")	end
-	external_object: STRING_GENERAL is do Result := locale.translate ("Object")	end
-	external_library: STRING_GENERAL is do Result := locale.translate ("Library")	end
-	external_make: STRING_GENERAL is do Result := locale.translate ("Makefile")	end
-	external_resource: STRING_GENERAL is do Result := locale.translate ("Resource")	end
+	external_include: STRING_GENERAL is do Result := locale.translation ("Include")	end
+	external_object: STRING_GENERAL is do Result := locale.translation ("Object")	end
+	external_library: STRING_GENERAL is do Result := locale.translation ("Library")	end
+	external_make: STRING_GENERAL is do Result := locale.translation ("Makefile")	end
+	external_resource: STRING_GENERAL is do Result := locale.translation ("Resource")	end
 
-	external_include_tree: STRING_GENERAL is do Result := locale.translate ("Includes")	end
-	external_object_tree: STRING_GENERAL is do Result := locale.translate ("Objects")	end
-	external_library_tree: STRING_GENERAL is do Result := locale.translate ("Libraries")	end
-	external_make_tree: STRING_GENERAL is do Result := locale.translate ("Makefiles")	end
-	external_resource_tree: STRING_GENERAL is do Result := locale.translate ("Resources")	end
+	external_include_tree: STRING_GENERAL is do Result := locale.translation ("Includes")	end
+	external_object_tree: STRING_GENERAL is do Result := locale.translation ("Objects")	end
+	external_library_tree: STRING_GENERAL is do Result := locale.translation ("Libraries")	end
+	external_make_tree: STRING_GENERAL is do Result := locale.translation ("Makefiles")	end
+	external_resource_tree: STRING_GENERAL is do Result := locale.translation ("Resources")	end
 
-	external_add_include: STRING_GENERAL is do Result := locale.translate ("Add Include")	end
-	external_add_object: STRING_GENERAL is do Result := locale.translate ("Add Object")	end
-	external_add_library: STRING_GENERAL is do Result := locale.translate ("Add Library")	end
-	external_add_make: STRING_GENERAL is do Result := locale.translate ("Add Make")	end
-	external_add_resource: STRING_GENERAL is do Result := locale.translate ("Add Resource")	end
+	external_add_include: STRING_GENERAL is do Result := locale.translation ("Add Include")	end
+	external_add_object: STRING_GENERAL is do Result := locale.translation ("Add Object")	end
+	external_add_library: STRING_GENERAL is do Result := locale.translation ("Add Library")	end
+	external_add_make: STRING_GENERAL is do Result := locale.translation ("Add Make")	end
+	external_add_resource: STRING_GENERAL is do Result := locale.translation ("Add Resource")	end
 
-	task_pre_tree: STRING_GENERAL is do Result := locale.translate ("Pre Compilation Tasks")	end
-	task_post_tree: STRING_GENERAL is do Result := locale.translate ("Post Compilation Tasks")	end
+	task_pre_tree: STRING_GENERAL is do Result := locale.translation ("Pre Compilation Tasks")	end
+	task_post_tree: STRING_GENERAL is do Result := locale.translation ("Post Compilation Tasks")	end
 
-	task_pre: STRING_GENERAL is do Result := locale.translate ("Pre Compilation")	end
-	task_post: STRING_GENERAL is do Result := locale.translate ("Post Compilation")	end
-	task_type_name: STRING_GENERAL is do Result := locale.translate ("Type")	end
-	task_type_description: STRING_GENERAL is do Result := locale.translate ("Type of the task.")	end
-	task_command_name: STRING_GENERAL is do Result := locale.translate ("Command")	end
-	task_command_description: STRING_GENERAL is do Result := locale.translate ("Command to execute.")	end
-	task_description_name: STRING_GENERAL is do Result := locale.translate ("Description")	end
-	task_description_description: STRING_GENERAL is do Result := locale.translate ("Description of the task.")	end
-	task_working_directory_name: STRING_GENERAL is do Result := locale.translate ("Working Directory")	end
-	task_working_directory_description: STRING_GENERAL is do Result := locale.translate ("Directory where the command will be executed.")	end
-	task_succeed_name: STRING_GENERAL is do Result := locale.translate ("Must succeed")	end
-	task_succeed_description: STRING_GENERAL is do Result := locale.translate ("Does this task have to finish successful for the compilation to continue?")	end
-	task_condition_name: STRING_GENERAL is do Result := locale.translate ("Condition")	end
-	task_condition_description: STRING_GENERAL is do Result := locale.translate ("Conditions for this task to be executed.")	end
-	task_add_pre: STRING_GENERAL is do Result := locale.translate ("Add Pre Compilation Task")	end
-	task_add_post: STRING_GENERAL is do Result := locale.translate ("Add Post Compilation Task")	end
+	task_pre: STRING_GENERAL is do Result := locale.translation ("Pre Compilation")	end
+	task_post: STRING_GENERAL is do Result := locale.translation ("Post Compilation")	end
+	task_type_name: STRING_GENERAL is do Result := locale.translation ("Type")	end
+	task_type_description: STRING_GENERAL is do Result := locale.translation ("Type of the task.")	end
+	task_command_name: STRING_GENERAL is do Result := locale.translation ("Command")	end
+	task_command_description: STRING_GENERAL is do Result := locale.translation ("Command to execute.")	end
+	task_description_name: STRING_GENERAL is do Result := locale.translation ("Description")	end
+	task_description_description: STRING_GENERAL is do Result := locale.translation ("Description of the task.")	end
+	task_working_directory_name: STRING_GENERAL is do Result := locale.translation ("Working Directory")	end
+	task_working_directory_description: STRING_GENERAL is do Result := locale.translation ("Directory where the command will be executed.")	end
+	task_succeed_name: STRING_GENERAL is do Result := locale.translation ("Must succeed")	end
+	task_succeed_description: STRING_GENERAL is do Result := locale.translation ("Does this task have to finish successful for the compilation to continue?")	end
+	task_condition_name: STRING_GENERAL is do Result := locale.translation ("Condition")	end
+	task_condition_description: STRING_GENERAL is do Result := locale.translation ("Conditions for this task to be executed.")	end
+	task_add_pre: STRING_GENERAL is do Result := locale.translation ("Add Pre Compilation Task")	end
+	task_add_post: STRING_GENERAL is do Result := locale.translation ("Add Post Compilation Task")	end
 
-	group_cluster_tree: STRING_GENERAL is do Result := locale.translate ("Clusters")	end
-	group_assembly_tree: STRING_GENERAL is do Result := locale.translate ("Assemblies")	end
-	group_library_tree: STRING_GENERAL is do Result := locale.translate ("Libraries")	end
-	group_precompile_tree: STRING_GENERAL is do Result := locale.translate ("Precompile")	end
-	group_override_tree: STRING_GENERAL is do Result := locale.translate ("Overrides")	end
+	group_cluster_tree: STRING_GENERAL is do Result := locale.translation ("Clusters")	end
+	group_assembly_tree: STRING_GENERAL is do Result := locale.translation ("Assemblies")	end
+	group_library_tree: STRING_GENERAL is do Result := locale.translation ("Libraries")	end
+	group_precompile_tree: STRING_GENERAL is do Result := locale.translation ("Precompile")	end
+	group_override_tree: STRING_GENERAL is do Result := locale.translation ("Overrides")	end
 
-	group_cluster: STRING_GENERAL is do Result := locale.translate ("Cluster")	end
-	group_assembly: STRING_GENERAL is do Result := locale.translate ("Assembly")	end
-	group_library: STRING_GENERAL is do Result := locale.translate ("Library")	end
-	group_precompile: STRING_GENERAL is do Result := locale.translate ("Precompile")	end
-	group_override: STRING_GENERAL is do Result := locale.translate ("Override")	end
+	group_cluster: STRING_GENERAL is do Result := locale.translation ("Cluster")	end
+	group_assembly: STRING_GENERAL is do Result := locale.translation ("Assembly")	end
+	group_library: STRING_GENERAL is do Result := locale.translation ("Library")	end
+	group_precompile: STRING_GENERAL is do Result := locale.translation ("Precompile")	end
+	group_override: STRING_GENERAL is do Result := locale.translation ("Override")	end
 
-	group_type_name: STRING_GENERAL is do Result := locale.translate ("Type")	end
-	group_type_description: STRING_GENERAL is do Result := locale.translate ("Type of the group.")	end
-	group_name_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	group_name_description: STRING_GENERAL is do Result := locale.translate ("Name of the group.")	end
-	group_description_name: STRING_GENERAL is do Result := locale.translate ("Description")	end
-	group_description_description: STRING_GENERAL is do Result := locale.translate ("Description of the group.")	end
-	group_condition_name: STRING_GENERAL is do Result := locale.translate ("Condition")	end
-	group_condition_description: STRING_GENERAL is do Result := locale.translate ("Conditions for this group to be used.")	end
-	group_readonly_name: STRING_GENERAL is do Result := locale.translate ("Read Only")	end
-	group_readonly_description: STRING_GENERAL is do Result := locale.translate ("Is this group read only?")	end
-	group_location_name: STRING_GENERAL is do Result := locale.translate ("Location")	end
-	group_location_description: STRING_GENERAL is do Result := locale.translate ("Location of this group.")	end
-	group_prefix_name: STRING_GENERAL is do Result := locale.translate ("Prefix")	end
-	group_prefix_description: STRING_GENERAL is do Result := locale.translate ("Prefix which all classes in this group get.")	end
-	group_renaming_name: STRING_GENERAL is do Result := locale.translate ("Renaming")	end
-	group_renaming_description: STRING_GENERAL is do Result := locale.translate ("Renaming of classes in this group.")	end
-	group_class_option_name: STRING_GENERAL is do Result := locale.translate ("Class Options")	end
-	group_class_option_description: STRING_GENERAL is do Result := locale.translate ("Class specific options.")	end
-	group_eifgens_location_name: STRING_GENERAL is do Result := locale.translate ("EIFGENs location")	end
-	group_eifgens_location_description: STRING_GENERAL is do Result := locale.translate ("Directory where the EIFGENs folder is.")	end
-	group_add_cluster: STRING_GENERAL is do Result := locale.translate ("Add Cluster")	end
-	group_add_subcluster: STRING_GENERAL is do Result := locale.translate ("Add Sub cluster")	end
-	group_add_override: STRING_GENERAL is do Result := locale.translate ("Add Override")	end
-	group_add_assembly: STRING_GENERAL is do Result := locale.translate ("Add Assembly")	end
-	group_add_library: STRING_GENERAL is do Result := locale.translate ("Add Library")	end
-	group_add_precompile: STRING_GENERAL is do Result := locale.translate ("Add Precompile")	end
+	group_type_name: STRING_GENERAL is do Result := locale.translation ("Type")	end
+	group_type_description: STRING_GENERAL is do Result := locale.translation ("Type of the group.")	end
+	group_name_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	group_name_description: STRING_GENERAL is do Result := locale.translation ("Name of the group.")	end
+	group_description_name: STRING_GENERAL is do Result := locale.translation ("Description")	end
+	group_description_description: STRING_GENERAL is do Result := locale.translation ("Description of the group.")	end
+	group_condition_name: STRING_GENERAL is do Result := locale.translation ("Condition")	end
+	group_condition_description: STRING_GENERAL is do Result := locale.translation ("Conditions for this group to be used.")	end
+	group_readonly_name: STRING_GENERAL is do Result := locale.translation ("Read Only")	end
+	group_readonly_description: STRING_GENERAL is do Result := locale.translation ("Is this group read only?")	end
+	group_location_name: STRING_GENERAL is do Result := locale.translation ("Location")	end
+	group_location_description: STRING_GENERAL is do Result := locale.translation ("Location of this group.")	end
+	group_prefix_name: STRING_GENERAL is do Result := locale.translation ("Prefix")	end
+	group_prefix_description: STRING_GENERAL is do Result := locale.translation ("Prefix which all classes in this group get.")	end
+	group_renaming_name: STRING_GENERAL is do Result := locale.translation ("Renaming")	end
+	group_renaming_description: STRING_GENERAL is do Result := locale.translation ("Renaming of classes in this group.")	end
+	group_class_option_name: STRING_GENERAL is do Result := locale.translation ("Class Options")	end
+	group_class_option_description: STRING_GENERAL is do Result := locale.translation ("Class specific options.")	end
+	group_eifgens_location_name: STRING_GENERAL is do Result := locale.translation ("EIFGENs location")	end
+	group_eifgens_location_description: STRING_GENERAL is do Result := locale.translation ("Directory where the EIFGENs folder is.")	end
+	group_add_cluster: STRING_GENERAL is do Result := locale.translation ("Add Cluster")	end
+	group_add_subcluster: STRING_GENERAL is do Result := locale.translation ("Add Sub cluster")	end
+	group_add_override: STRING_GENERAL is do Result := locale.translation ("Add Override")	end
+	group_add_assembly: STRING_GENERAL is do Result := locale.translation ("Add Assembly")	end
+	group_add_library: STRING_GENERAL is do Result := locale.translation ("Add Library")	end
+	group_add_precompile: STRING_GENERAL is do Result := locale.translation ("Add Precompile")	end
 
-	library_edit_configuration: STRING_GENERAL is do Result := locale.translate ("Edit Library Configuration")	end
-	library_use_application_options_name: STRING_GENERAL is do Result := locale.translate ("Use Application Options")	end
-	library_use_application_options_description: STRING_GENERAL is do Result := locale.translate ("Should this library use options from the application instead of from the library?")	end
+	library_edit_configuration: STRING_GENERAL is do Result := locale.translation ("Edit Library Configuration")	end
+	library_use_application_options_name: STRING_GENERAL is do Result := locale.translation ("Use Application Options")	end
+	library_use_application_options_description: STRING_GENERAL is do Result := locale.translation ("Should this library use options from the application instead of from the library?")	end
 
-	cluster_recursive_name: STRING_GENERAL is do Result := locale.translate ("Recursive")	end
-	cluster_recursive_description: STRING_GENERAL is do Result := locale.translate ("Are sub folders recursively included?")	end
-	cluster_hidden_name: STRING_GENERAL is do Result := locale.translate ("Hidden")	end
-	cluster_hidden_description: STRING_GENERAL is do Result := locale.translate ("Is this a hidden cluster that can not be used if the system is used as a library?")	end
-	cluster_dependencies_name: STRING_GENERAL is do Result := locale.translate ("Dependencies")	end
-	cluster_dependencies_description: STRING_GENERAL is do Result := locale.translate ("Groups this cluster depends on.")	end
-	cluster_visible_name: STRING_GENERAL is do Result := locale.translate ("Visible Classes")	end
-	cluster_visible_description: STRING_GENERAL is do Result := locale.translate ("Classes visible for external code.")	end
-	cluster_mapping_name: STRING_GENERAL is do Result := locale.translate ("Type Mapping")	end
-	cluster_mapping_description: STRING_GENERAL is do Result := locale.translate ("Special type mappings.")	end
+	cluster_recursive_name: STRING_GENERAL is do Result := locale.translation ("Recursive")	end
+	cluster_recursive_description: STRING_GENERAL is do Result := locale.translation ("Are sub folders recursively included?")	end
+	cluster_hidden_name: STRING_GENERAL is do Result := locale.translation ("Hidden")	end
+	cluster_hidden_description: STRING_GENERAL is do Result := locale.translation ("Is this a hidden cluster that can not be used if the system is used as a library?")	end
+	cluster_dependencies_name: STRING_GENERAL is do Result := locale.translation ("Dependencies")	end
+	cluster_dependencies_description: STRING_GENERAL is do Result := locale.translation ("Groups this cluster depends on.")	end
+	cluster_visible_name: STRING_GENERAL is do Result := locale.translation ("Visible Classes")	end
+	cluster_visible_description: STRING_GENERAL is do Result := locale.translation ("Classes visible for external code.")	end
+	cluster_mapping_name: STRING_GENERAL is do Result := locale.translation ("Type Mapping")	end
+	cluster_mapping_description: STRING_GENERAL is do Result := locale.translation ("Special type mappings.")	end
 
-	assembly_name_name: STRING_GENERAL is do Result := locale.translate ("Assembly Name")	end
-	assembly_name_description: STRING_GENERAL is do Result := locale.translate ("Full name of the assembly as found in the GAC.")	end
-	assembly_culture_name: STRING_GENERAL is do Result := locale.translate ("Assembly Culture")	end
-	assembly_culture_description: STRING_GENERAL is do Result := locale.translate ("Culture of the assembly.")	end
-	assembly_version_name: STRING_GENERAL is do Result := locale.translate ("Assembly Version")	end
-	assembly_version_description: STRING_GENERAL is do Result := locale.translate ("Version of the assembly.")	end
-	assembly_public_key_token_name: STRING_GENERAL is do Result := locale.translate ("Assembly Public Key Token")	end
-	assembly_public_key_token_description: STRING_GENERAL is do Result := locale.translate ("Public key token that identifies the asssembly.")	end
+	assembly_name_name: STRING_GENERAL is do Result := locale.translation ("Assembly Name")	end
+	assembly_name_description: STRING_GENERAL is do Result := locale.translation ("Full name of the assembly as found in the GAC.")	end
+	assembly_culture_name: STRING_GENERAL is do Result := locale.translation ("Assembly Culture")	end
+	assembly_culture_description: STRING_GENERAL is do Result := locale.translation ("Culture of the assembly.")	end
+	assembly_version_name: STRING_GENERAL is do Result := locale.translation ("Assembly Version")	end
+	assembly_version_description: STRING_GENERAL is do Result := locale.translation ("Version of the assembly.")	end
+	assembly_public_key_token_name: STRING_GENERAL is do Result := locale.translation ("Assembly Public Key Token")	end
+	assembly_public_key_token_description: STRING_GENERAL is do Result := locale.translation ("Public key token that identifies the asssembly.")	end
 
-	override_override_name: STRING_GENERAL is do Result := locale.translate ("Overriding")	end
-	override_override_description: STRING_GENERAL is do Result := locale.translate ("Groups this override is overriding.")	end
-	class_option_class_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	class_option_file_name: STRING_GENERAL is do Result := locale.translate ("Location")	end
-	properties_class_name: STRING_GENERAL is do Result := locale.translate ("Class")	end
-	properties_target_name: STRING_GENERAL is do Result := locale.translate ("Target")	end
+	override_override_name: STRING_GENERAL is do Result := locale.translation ("Overriding")	end
+	override_override_description: STRING_GENERAL is do Result := locale.translation ("Groups this override is overriding.")	end
+	class_option_class_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	class_option_file_name: STRING_GENERAL is do Result := locale.translation ("Location")	end
+	properties_class_name: STRING_GENERAL is do Result := locale.translation ("Class")	end
+	properties_target_name: STRING_GENERAL is do Result := locale.translation ("Target")	end
 
 feature -- Option names and descriptions
 
-	option_require_name: STRING_GENERAL is do Result := locale.translate ("Require")	end
-	option_require_description: STRING_GENERAL is do Result := locale.translate ("Evaluate precondition assertions?")	end
-	option_ensure_name: STRING_GENERAL is do Result := locale.translate ("Ensure")	end
-	option_ensure_description: STRING_GENERAL is do Result := locale.translate ("Evaluate postcondition assertions?")	end
-	option_check_name: STRING_GENERAL is do Result := locale.translate ("Check")	end
-	option_check_description: STRING_GENERAL is do Result := locale.translate ("Evaluate check assertions?")	end
-	option_invariant_name: STRING_GENERAL is do Result := locale.translate ("Invariant")	end
-	option_invariant_description: STRING_GENERAL is do Result := locale.translate ("Evaluate invariant assertions?")	end
-	option_loop_name: STRING_GENERAL is do Result := locale.translate ("Loop")	end
-	option_loop_description: STRING_GENERAL is do Result := locale.translate ("Evaluate loop assertions?")	end
-	option_sup_require_name: STRING_GENERAL is do Result := locale.translate ("Supplier Precondition")	end
-	option_sup_require_description: STRING_GENERAL is do Result := locale.translate ("Evaluate precondition assertions of suppliers?")	end
+	option_require_name: STRING_GENERAL is do Result := locale.translation ("Require")	end
+	option_require_description: STRING_GENERAL is do Result := locale.translation ("Evaluate precondition assertions?")	end
+	option_ensure_name: STRING_GENERAL is do Result := locale.translation ("Ensure")	end
+	option_ensure_description: STRING_GENERAL is do Result := locale.translation ("Evaluate postcondition assertions?")	end
+	option_check_name: STRING_GENERAL is do Result := locale.translation ("Check")	end
+	option_check_description: STRING_GENERAL is do Result := locale.translation ("Evaluate check assertions?")	end
+	option_invariant_name: STRING_GENERAL is do Result := locale.translation ("Invariant")	end
+	option_invariant_description: STRING_GENERAL is do Result := locale.translation ("Evaluate invariant assertions?")	end
+	option_loop_name: STRING_GENERAL is do Result := locale.translation ("Loop")	end
+	option_loop_description: STRING_GENERAL is do Result := locale.translation ("Evaluate loop assertions?")	end
+	option_sup_require_name: STRING_GENERAL is do Result := locale.translation ("Supplier Precondition")	end
+	option_sup_require_description: STRING_GENERAL is do Result := locale.translation ("Evaluate precondition assertions of suppliers?")	end
 
-	option_profile_name: STRING_GENERAL is do Result := locale.translate ("Profile")	end
-	option_profile_description: STRING_GENERAL is do Result := locale.translate ("Generate profiling information?")	end
-	option_trace_name: STRING_GENERAL is do Result := locale.translate ("Trace")	end
-	option_trace_description: STRING_GENERAL is do Result := locale.translate ("Display name of all called features during execution?")	end
-	option_full_class_checking_name: STRING_GENERAL is do Result := locale.translate ("Full Class Checking")	end
-	option_full_class_checking_description: STRING_GENERAL is do Result := locale.translate ("Are features of parent classes rechecked in current class?")	end
+	option_profile_name: STRING_GENERAL is do Result := locale.translation ("Profile")	end
+	option_profile_description: STRING_GENERAL is do Result := locale.translation ("Generate profiling information?")	end
+	option_trace_name: STRING_GENERAL is do Result := locale.translation ("Trace")	end
+	option_trace_description: STRING_GENERAL is do Result := locale.translation ("Display name of all called features during execution?")	end
+	option_full_class_checking_name: STRING_GENERAL is do Result := locale.translation ("Full Class Checking")	end
+	option_full_class_checking_description: STRING_GENERAL is do Result := locale.translation ("Are features of parent classes rechecked in current class?")	end
 
-	option_msil_application_optimize_name: STRING_GENERAL is do Result := locale.translate ("Apply Application Optimizations")	end
-	option_msil_application_optimize_description: STRING_GENERAL is do Result := locale.translate ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
+	option_msil_application_optimize_name: STRING_GENERAL is do Result := locale.translation ("Apply Application Optimizations")	end
+	option_msil_application_optimize_description: STRING_GENERAL is do Result := locale.translation ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
 
-	option_namespace_name: STRING_GENERAL is do Result := locale.translate (".NET Namespace")	end
-	option_namespace_description: STRING_GENERAL is do Result := locale.translate ("Namespace for .NET")	end
+	option_namespace_name: STRING_GENERAL is do Result := locale.translation (".NET Namespace")	end
+	option_namespace_description: STRING_GENERAL is do Result := locale.translation ("Namespace for .NET")	end
 
-	option_debug_name: STRING_GENERAL is do Result := locale.translate ("Enabled")	end
-	option_debug_description: STRING_GENERAL is do Result := locale.translate ("Are debug clauses globally enabled?")	end
-	option_unnamed_debug_name: STRING_GENERAL is do Result := locale.translate ("Unnamed Debugs")	end
+	option_debug_name: STRING_GENERAL is do Result := locale.translation ("Enabled")	end
+	option_debug_description: STRING_GENERAL is do Result := locale.translation ("Are debug clauses globally enabled?")	end
+	option_unnamed_debug_name: STRING_GENERAL is do Result := locale.translation ("Unnamed Debugs")	end
 
-	option_warnings_name: STRING_GENERAL is do Result := locale.translate ("Enabled")	end
-	option_warnings_description: STRING_GENERAL is do Result := locale.translate ("Are warnings enabled?")	end
+	option_warnings_name: STRING_GENERAL is do Result := locale.translation ("Enabled")	end
+	option_warnings_description: STRING_GENERAL is do Result := locale.translation ("Are warnings enabled?")	end
 
-	option_cat_call_detection_name: STRING_GENERAL is do Result := locale.translate ("Cat call detection") end
-	option_cat_call_detection_description: STRING_GENERAL is do Result := locale.translate ("Are all feature calls checked if they are a potential cat-call?") end
+	option_cat_call_detection_name: STRING_GENERAL is do Result := locale.translation ("Cat call detection (experimental)") end
+	option_cat_call_detection_description: STRING_GENERAL is do Result := locale.translation ("Are all feature calls checked if they are a potential cat-call?") end
 
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Warning names.
 		once
 			create Result.make (10)
-			Result.force (locale.translate ("Unused Locals"), w_unused_local)
-			Result.force (locale.translate ("Obsolete Classes"), w_obsolete_class)
-			Result.force (locale.translate ("Obsolete Features"), w_obsolete_feature)
-			Result.force (locale.translate ("Onces in Generics"), w_once_in_generic)
-			Result.force (locale.translate ("Old Syntax"), w_syntax)
-			Result.force (locale.translate ("Old Verbatim Strings"), w_old_verbatim_strings)
-			Result.force (locale.translate ("Same UUID"), w_same_uuid)
-			Result.force (locale.translate ("Missing Class Export"), w_export_class_missing)
-			Result.force (locale.translate ("Incompatible Types Equality"), w_vweq)
-			Result.force (locale.translate ("Assignment on Formal/Expanded"), w_vjrv)
-			Result.force (locale.translate ("Renaming Unknown Class"), w_renaming_unknown_class)
-			Result.force (locale.translate ("Options Unknown Class"), w_option_unknown_class)
-			Result.force (locale.translate ("Classname/filename mismatch"), w_classname_filename_mismatch)
+			Result.force (locale.translation ("Unused Locals"), w_unused_local)
+			Result.force (locale.translation ("Obsolete Classes"), w_obsolete_class)
+			Result.force (locale.translation ("Obsolete Features"), w_obsolete_feature)
+			Result.force (locale.translation ("Onces in Generics"), w_once_in_generic)
+			Result.force (locale.translation ("Old Syntax"), w_syntax)
+			Result.force (locale.translation ("Old Verbatim Strings"), w_old_verbatim_strings)
+			Result.force (locale.translation ("Same UUID"), w_same_uuid)
+			Result.force (locale.translation ("Missing Class Export"), w_export_class_missing)
+			Result.force (locale.translation ("Incompatible Types Equality"), w_vweq)
+			Result.force (locale.translation ("Assignment on Formal/Expanded"), w_vjrv)
+			Result.force (locale.translation ("Renaming Unknown Class"), w_renaming_unknown_class)
+			Result.force (locale.translation ("Options Unknown Class"), w_option_unknown_class)
+			Result.force (locale.translation ("Classname/filename mismatch"), w_classname_filename_mismatch)
 		end
 
 	warning_descriptions: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Warning descriptions.
 		once
 			create Result.make (10)
-			Result.force (locale.translate ("Warn about locals that are not used?"), w_unused_local)
-			Result.force (locale.translate ("Warn about usage of obsolete classes?"), w_obsolete_class)
-			Result.force (locale.translate ("Warn about usage of obsolete features?"), w_obsolete_feature)
-			Result.force (locale.translate ("Warn about usage of onces in generics?"), w_once_in_generic)
-			Result.force (locale.translate ("Warn about usage of old syntax?"), w_syntax)
-			Result.force (locale.translate ("Warn about usage of old verbatim strings?"), w_old_verbatim_strings)
-			Result.force (locale.translate ("Warn about different files with the same UUID?"), w_same_uuid)
-			Result.force (locale.translate ("Warn about missing classes in export clauses (VTCM)?"), w_export_class_missing)
-			Result.force (locale.translate ("Warn about incompatible types in equality comparisons (VWEQ)?"), w_vweq)
-			Result.force (locale.translate ("Warn about assignment attempts on formal or expanded targets (VJRV)?"), w_vjrv)
-			Result.force (locale.translate ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
-			Result.force (locale.translate ("Warn about class options of unknown classes?"), w_option_unknown_class)
-			Result.force (locale.translate ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
+			Result.force (locale.translation ("Warn about locals that are not used?"), w_unused_local)
+			Result.force (locale.translation ("Warn about usage of obsolete classes?"), w_obsolete_class)
+			Result.force (locale.translation ("Warn about usage of obsolete features?"), w_obsolete_feature)
+			Result.force (locale.translation ("Warn about usage of onces in generics?"), w_once_in_generic)
+			Result.force (locale.translation ("Warn about usage of old syntax?"), w_syntax)
+			Result.force (locale.translation ("Warn about usage of old verbatim strings?"), w_old_verbatim_strings)
+			Result.force (locale.translation ("Warn about different files with the same UUID?"), w_same_uuid)
+			Result.force (locale.translation ("Warn about missing classes in export clauses (VTCM)?"), w_export_class_missing)
+			Result.force (locale.translation ("Warn about incompatible types in equality comparisons (VWEQ)?"), w_vweq)
+			Result.force (locale.translation ("Warn about assignment attempts on formal or expanded targets (VJRV)?"), w_vjrv)
+			Result.force (locale.translation ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
+			Result.force (locale.translation ("Warn about class options of unknown classes?"), w_option_unknown_class)
+			Result.force (locale.translation ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
 		end
 
 feature -- Misc
 
-	general_add: STRING_GENERAL is do Result := locale.translate ("Add")	end
-	general_remove: STRING_GENERAL is do Result := locale.translate ("Remove")	end
-	variables_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	variables_value: STRING_GENERAL is do Result := locale.translate ("Value")	end
-	mapping_old_name: STRING_GENERAL is do Result := locale.translate ("Old Name")	end
-	mapping_new_name: STRING_GENERAL is do Result := locale.translate ("New Name")	end
+	general_add: STRING_GENERAL is do Result := locale.translation ("Add")	end
+	general_remove: STRING_GENERAL is do Result := locale.translation ("Remove")	end
+	variables_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	variables_value: STRING_GENERAL is do Result := locale.translation ("Value")	end
+	mapping_old_name: STRING_GENERAL is do Result := locale.translation ("Old Name")	end
+	mapping_new_name: STRING_GENERAL is do Result := locale.translation ("New Name")	end
 	remove_target (a_target: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Are you sure you want to remove $1?"), [a_target])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1?"), [a_target])
 		end
 
 	target_remove_group (a_group: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Are you sure you want to remove $1 and any children of it?"), [a_group])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1 and any children of it?"), [a_group])
 		end
 	target_remove_library (a_group: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Are you sure you want to remove the reference to $1?"), [a_group])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove the reference to $1?"), [a_group])
 		end
 	target_remove_external (a_external: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Are you sure you want to remove $1?"), [a_external])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1?"), [a_external])
 		end
 	target_remove_task (a_task: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Are you sure you want to remove $1?"), [a_task])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1?"), [a_task])
 		end
 
 feature -- Condition dialog
 
-	dial_cond_platforms: STRING_GENERAL is do Result := locale.translate ("Platforms")	end
-	dial_cond_platforms_exclude: STRING_GENERAL is do Result := locale.translate ("Exclude platform(s)")	end
-	dial_cond_other: STRING_GENERAL is do Result := locale.translate ("Other")	end
-	dial_cond_build: STRING_GENERAL is do Result := locale.translate ("Build")	end
-	dial_cond_dotnet: STRING_GENERAL is do Result := locale.translate (".NET")	end
-	dial_cond_multithreaded: STRING_GENERAL is do Result := locale.translate ("Multithreaded")	end
-	dial_cond_dynamic_runtime: STRING_GENERAL is do Result := locale.translate ("Dynamic runtime")	end
-	dial_cond_version: STRING_GENERAL is do Result := locale.translate ("Version")	end
-	dial_cond_version_compiler: STRING_GENERAL is do Result := locale.translate ("<= compiler version <= ")	end
-	dial_cond_version_clr: STRING_GENERAL is do Result := locale.translate ("<= MSIL CLR version <= ")	end
-	dial_cond_custom: STRING_GENERAL is do Result := locale.translate ("Custom")	end
-	dial_cond_new_custom: STRING_GENERAL is do Result := locale.translate ("new")	end
-	dial_cond_new_custom_value: STRING_GENERAL is do Result := locale.translate ("new_value")	end
-	dial_cond_custom_variable: STRING_GENERAL is do Result := locale.translate ("Variable")	end
-	dial_cond_custom_value: STRING_GENERAL is do Result := locale.translate ("Value")	end
-	dial_cond_add_and_term: STRING_GENERAL is do Result := locale.translate ("Add and-term")	end
-	dial_cond_remove_and_term: STRING_GENERAL is do Result := locale.translate ("Remove and-term")	end
-	dial_cond_and_term_1: STRING_GENERAL is do Result := locale.translate ("And-term 1")	end
+	dial_cond_platforms: STRING_GENERAL is do Result := locale.translation ("Platforms")	end
+	dial_cond_platforms_exclude: STRING_GENERAL is do Result := locale.translation ("Exclude platform(s)")	end
+	dial_cond_other: STRING_GENERAL is do Result := locale.translation ("Other")	end
+	dial_cond_build: STRING_GENERAL is do Result := locale.translation ("Build")	end
+	dial_cond_dotnet: STRING_GENERAL is do Result := locale.translation (".NET")	end
+	dial_cond_multithreaded: STRING_GENERAL is do Result := locale.translation ("Multithreaded")	end
+	dial_cond_dynamic_runtime: STRING_GENERAL is do Result := locale.translation ("Dynamic runtime")	end
+	dial_cond_version: STRING_GENERAL is do Result := locale.translation ("Version")	end
+	dial_cond_version_compiler: STRING_GENERAL is do Result := locale.translation ("<= compiler version <= ")	end
+	dial_cond_version_clr: STRING_GENERAL is do Result := locale.translation ("<= MSIL CLR version <= ")	end
+	dial_cond_custom: STRING_GENERAL is do Result := locale.translation ("Custom")	end
+	dial_cond_new_custom: STRING_GENERAL is do Result := locale.translation ("new")	end
+	dial_cond_new_custom_value: STRING_GENERAL is do Result := locale.translation ("new_value")	end
+	dial_cond_custom_variable: STRING_GENERAL is do Result := locale.translation ("Variable")	end
+	dial_cond_custom_value: STRING_GENERAL is do Result := locale.translation ("Value")	end
+	dial_cond_add_and_term: STRING_GENERAL is do Result := locale.translation ("Add and-term")	end
+	dial_cond_remove_and_term: STRING_GENERAL is do Result := locale.translation ("Remove and-term")	end
+	dial_cond_and_term_1: STRING_GENERAL is do Result := locale.translation ("And-term 1")	end
 	dial_cond_and_term_x (a_number: INTEGER): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("or And-term $1"), [a_number.out])
+			Result := locale.formatted_string (locale.translation ("or And-term $1"), [a_number.out])
 		end
 
 feature -- File rule dialog
 
-	dialog_file_rule_excludes: STRING_GENERAL is do Result := locale.translate ("Excludes:")	end
-	dialog_file_rule_includes: STRING_GENERAL is do Result := locale.translate ("Includes:")	end
-	dialog_file_rule_description: STRING_GENERAL is do Result := locale.translate ("Description:")	end
-	dialog_file_rule_condition: STRING_GENERAL is do Result := locale.translate ("Condition:")	end
-	dialog_file_rule_edit_condition: STRING_GENERAL is do Result := locale.translate ("Edit condition")	end
-	dialog_file_rule_add_rule: STRING_GENERAL is do Result := locale.translate ("Add rule")	end
-	dialog_file_rule_remove_rule: STRING_GENERAL is do Result := locale.translate ("Remove rule")	end
+	dialog_file_rule_excludes: STRING_GENERAL is do Result := locale.translation ("Excludes:")	end
+	dialog_file_rule_includes: STRING_GENERAL is do Result := locale.translation ("Includes:")	end
+	dialog_file_rule_description: STRING_GENERAL is do Result := locale.translation ("Description:")	end
+	dialog_file_rule_condition: STRING_GENERAL is do Result := locale.translation ("Condition:")	end
+	dialog_file_rule_edit_condition: STRING_GENERAL is do Result := locale.translation ("Edit condition")	end
+	dialog_file_rule_add_rule: STRING_GENERAL is do Result := locale.translation ("Add rule")	end
+	dialog_file_rule_remove_rule: STRING_GENERAL is do Result := locale.translation ("Remove rule")	end
 	dialog_file_rule_file_rule_x (a_number: INTEGER): STRING is
 		do
-			Result := locale.format_string (locale.translate ("File rule $1"), [a_number.out])
+			Result := locale.formatted_string (locale.translation ("File rule $1"), [a_number.out])
 		end
 
 feature -- Visible dialog
 
-	dialog_visible_name: STRING_GENERAL is do Result := locale.translate ("Name: ")	end
-	dialog_visible_renamed_name: STRING_GENERAL is do Result := locale.translate ("Renamed name: ")	end
-	dialog_visible_add_class: STRING_GENERAL is do Result := locale.translate ("Add class")	end
-	dialog_visible_add_feature: STRING_GENERAL is do Result := locale.translate ("Add feature")	end
-	dialog_visible_remove: STRING_GENERAL is do Result := locale.translate ("Remove")	end
+	dialog_visible_name: STRING_GENERAL is do Result := locale.translation ("Name: ")	end
+	dialog_visible_renamed_name: STRING_GENERAL is do Result := locale.translation ("Renamed name: ")	end
+	dialog_visible_add_class: STRING_GENERAL is do Result := locale.translation ("Add class")	end
+	dialog_visible_add_feature: STRING_GENERAL is do Result := locale.translation ("Add feature")	end
+	dialog_visible_remove: STRING_GENERAL is do Result := locale.translation ("Remove")	end
 
 feature -- Renaming dialog
 
-	dialog_renaming_old_name: STRING_GENERAL is do Result := locale.translate ("Old name")	end
-	dialog_renaming_new_name: STRING_GENERAL is do Result := locale.translate ("New name")	end
-	dialog_renaming_create_old: STRING_GENERAL is do Result := locale.translate ("OLD_NAME")	end
-	dialog_renaming_create_new: STRING_GENERAL is do Result := locale.translate ("NEW_NAME")	end
+	dialog_renaming_old_name: STRING_GENERAL is do Result := locale.translation ("Old name")	end
+	dialog_renaming_new_name: STRING_GENERAL is do Result := locale.translation ("New name")	end
+	dialog_renaming_create_old: STRING_GENERAL is do Result := locale.translation ("OLD_NAME")	end
+	dialog_renaming_create_new: STRING_GENERAL is do Result := locale.translation ("NEW_NAME")	end
 
 feature -- Create task dialog
 
-	dialog_task_add: STRING_GENERAL is do Result := locale.translate ("Add new task")	end
+	dialog_task_add: STRING_GENERAL is do Result := locale.translation ("Add new task")	end
 
 feature -- Create external dialog
 
-	dialog_external_add: STRING_GENERAL is do Result := locale.translate ("Add new external")	end
+	dialog_external_add: STRING_GENERAL is do Result := locale.translation ("Add new external")	end
 
 feature -- Create library dialog
 
-	dialog_create_library_title: STRING_GENERAL is do Result := locale.translate ("Add Library")	end
-	dialog_create_library_defaults: STRING_GENERAL is do Result := locale.translate ("Default libraries")	end
-	dialog_create_library_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	dialog_create_library_location: STRING_GENERAL is do Result := locale.translate ("Location")	end
+	dialog_create_library_title: STRING_GENERAL is do Result := locale.translation ("Add Library")	end
+	dialog_create_library_defaults: STRING_GENERAL is do Result := locale.translation ("Default libraries")	end
+	dialog_create_library_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	dialog_create_library_location: STRING_GENERAL is do Result := locale.translation ("Location")	end
 
 feature -- Create precompile dialog
 
-	dialog_create_precompile_title: STRING_GENERAL is do Result := locale.translate ("Add Precompile")	end
-	dialog_create_precompile_defaults: STRING_GENERAL is do Result := locale.translate ("Default precompiles")	end
-	dialog_create_precompile_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	dialog_create_precompile_location: STRING_GENERAL is do Result := locale.translate ("Location")	end
+	dialog_create_precompile_title: STRING_GENERAL is do Result := locale.translation ("Add Precompile")	end
+	dialog_create_precompile_defaults: STRING_GENERAL is do Result := locale.translation ("Default precompiles")	end
+	dialog_create_precompile_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	dialog_create_precompile_location: STRING_GENERAL is do Result := locale.translation ("Location")	end
 
 feature -- Create assembly dialog
 
-	dialog_create_assembly_found: STRING_GENERAL is do Result := locale.translate ("Assemblies")	end
-	dialog_create_assembly_title: STRING_GENERAL is do Result := locale.translate ("Add Assembly")	end
-	dialog_create_assembly_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	dialog_create_assembly_location: STRING_GENERAL is do Result := locale.translate ("Location")	end
-	dialog_create_assembly_a_name: STRING_GENERAL is do Result := locale.translate ("Assembly Name")	end
-	dialog_create_assembly_a_version: STRING_GENERAL is do Result := locale.translate ("Assembly Version")	end
-	dialog_create_assembly_a_culture: STRING_GENERAL is do Result := locale.translate ("Assembly Culture")	end
-	dialog_create_assembly_a_key: STRING_GENERAL is do Result := locale.translate ("Assembly Key")	end
+	dialog_create_assembly_found: STRING_GENERAL is do Result := locale.translation ("Assemblies")	end
+	dialog_create_assembly_title: STRING_GENERAL is do Result := locale.translation ("Add Assembly")	end
+	dialog_create_assembly_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	dialog_create_assembly_location: STRING_GENERAL is do Result := locale.translation ("Location")	end
+	dialog_create_assembly_a_name: STRING_GENERAL is do Result := locale.translation ("Assembly Name")	end
+	dialog_create_assembly_a_version: STRING_GENERAL is do Result := locale.translation ("Assembly Version")	end
+	dialog_create_assembly_a_culture: STRING_GENERAL is do Result := locale.translation ("Assembly Culture")	end
+	dialog_create_assembly_a_key: STRING_GENERAL is do Result := locale.translation ("Assembly Key")	end
 
 feature -- Create cluster dialog
 
-	dialog_create_cluster_title: STRING_GENERAL is do Result := locale.translate ("Add Cluster")	end
-	dialog_create_cluster_name: STRING_GENERAL is do Result := locale.translate ("Name")	end
-	dialog_create_cluster_location: STRING_GENERAL is do Result := locale.translate ("Location")	end
+	dialog_create_cluster_title: STRING_GENERAL is do Result := locale.translation ("Add Cluster")	end
+	dialog_create_cluster_name: STRING_GENERAL is do Result := locale.translation ("Name")	end
+	dialog_create_cluster_location: STRING_GENERAL is do Result := locale.translation ("Location")	end
 
 feature -- Create override dialog
 
-	dialog_create_override_title: STRING_GENERAL is do Result := locale.translate ("Add Override Cluster")	end
+	dialog_create_override_title: STRING_GENERAL is do Result := locale.translation ("Add Override Cluster")	end
 
 feature -- Class option dialog
 
-	dialog_class_option_class_name: STRING_GENERAL is do Result := locale.translate ("Class name")	end
+	dialog_class_option_class_name: STRING_GENERAL is do Result := locale.translation ("Class name")	end
 
-	remove_group_text: STRING_GENERAL is do Result := locale.translate ("Remove group")	end
+	remove_group_text: STRING_GENERAL is do Result := locale.translation ("Remove group")	end
 
 feature -- Validation warnings
 

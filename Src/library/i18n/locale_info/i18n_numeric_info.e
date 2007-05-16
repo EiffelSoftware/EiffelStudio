@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- initialize all fields
@@ -25,7 +25,7 @@ feature -- Initialization
 			set_value_negative_sign (default_negative_sign)
 		end
 
-feature	-- number formatting
+feature	-- Access: Number formatting
 
 	value_decimal_separator: STRING_32
 	value_numbers_after_decimal_separator: INTEGER
@@ -35,7 +35,7 @@ feature	-- number formatting
 	value_negative_sign: STRING_32
 	value_grouping: ARRAY[INTEGER]
 
-feature -- Default values
+feature -- Access: Default values
 
 	default_value_decimal_separator: STRING_32 is
 		once
@@ -66,7 +66,7 @@ feature -- Default values
 
 	default_value_grouping: ARRAY[INTEGER] is
 		once
-			Result :=<<3,3,0>>
+			Result := << 3, 3, 0 >>
 		end
 
 feature -- Element change
@@ -142,7 +142,7 @@ feature -- Element change
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -152,6 +152,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

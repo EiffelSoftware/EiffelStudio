@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			show_signature_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_signature_icon)
 			l_tooltip := preferences.editor_data.show_completion_signature_preference.description
 			if l_tooltip /= Void then
-				show_signature_button.set_tooltip (locale.translate (l_tooltip))
+				show_signature_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (show_signature_button)
 

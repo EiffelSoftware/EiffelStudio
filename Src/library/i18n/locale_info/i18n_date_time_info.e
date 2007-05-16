@@ -9,7 +9,7 @@ class I18N_DATE_TIME_INFO
 
 create make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- initialize all attributes
@@ -30,7 +30,7 @@ feature -- Initialization
 		end
 
 
-feature -- Date and time formatting
+feature -- Access: Date and time formatting
 
 	date_time_format: STRING_32
 
@@ -46,7 +46,7 @@ feature -- Date and time formatting
 	time_separator,
 	date_separator: STRING_32
 
-feature	-- day and month names
+feature	-- Access: Day and month names
 
 	day_names: ARRAY[STRING_32]
 	month_names: ARRAY[STRING_32]
@@ -186,7 +186,7 @@ feature -- Element change
 			separator_set: date_separator.is_equal(sep.as_string_32)
 		end
 
-feature -- Default Values
+feature -- Access: Default Values
 
 	Default_date_time_format: STRING_32 is
 			-- The ISO 8601 complete date plus hours, minutes and seconds format
@@ -348,7 +348,7 @@ feature -- Default Values
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -358,6 +358,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

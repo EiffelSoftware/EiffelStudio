@@ -181,7 +181,7 @@ feature	-- Access
 			end
 		end
 
-	get_singular(original:STRING_GENERAL): STRING_32 is
+	singular(original:STRING_GENERAL): STRING_32 is
 		--
 		local
 			entry: I18N_DICTIONARY_ENTRY
@@ -194,7 +194,7 @@ feature	-- Access
 			end
 		end
 
-	get_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
 				--
 		local
 			entry: I18N_DICTIONARY_ENTRY
@@ -242,7 +242,7 @@ invariant
 	count_equal_last_index: count=last_index
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -253,6 +253,4 @@ indexing
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-

@@ -9,7 +9,9 @@ class
 	APPLICATION
 
 inherit
+
 	EV_APPLICATION
+
 	SHARED_NAMES
 		undefine
 			default_create, copy
@@ -31,7 +33,6 @@ feature {NONE} -- Initialization
 			default_create
 			prepare
 			launch
-
 		end
 
 	prepare is
@@ -70,7 +71,7 @@ feature -- Create window elements
 	build_menu_bar is
 			-- build the menu bar
 		local
-			increase,decrease,about,
+			about,
 			italian, arabic, greek, unknown, russian, chinese, english, french, hungarian : EV_MENU_ITEM
 			file, language_selection: EV_MENU
 		do
@@ -334,7 +335,7 @@ feature {NONE} -- Implementation
 
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -345,5 +346,4 @@ indexing
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class APPLICATION
+end

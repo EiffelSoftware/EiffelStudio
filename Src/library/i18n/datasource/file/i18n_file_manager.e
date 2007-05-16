@@ -35,7 +35,7 @@ feature	-- Creation
 
 feature	-- Access
 
-	get_dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
+	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
 			-- return appropriate dictionary
 		do
 			if available_locales.has (a_locale) then
@@ -135,7 +135,7 @@ invariant
 	language_list_exists: language_list /= Void
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -145,6 +145,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

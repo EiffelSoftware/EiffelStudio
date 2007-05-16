@@ -10,13 +10,13 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
 		end
 
-feature -- Code pages
+feature -- Access: Code pages
 
 	code_page: STRING is
 			-- Take `oem_code_page' as default.
@@ -29,7 +29,7 @@ feature -- Code pages
 	mac_code_page: STRING
 			-- On windows platform, these values are different.
 
-feature {I18N_HOST_LOCALE} -- Code pages setting
+feature {I18N_HOST_LOCALE} -- Element change: Code pages
 
 	set_ansi_code_page (a_value: STRING) is
 		do
@@ -47,7 +47,7 @@ feature {I18N_HOST_LOCALE} -- Code pages setting
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

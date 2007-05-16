@@ -8,13 +8,14 @@ indexing
 deferred class
 	I18N_DATASOURCE_MANAGER
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_uri : STRING_GENERAL) is
-			-- Creation procedure
-			-- Implementations should redefine this
+			-- Initialize datasource manager with given URI.
+			--
+			-- Note: Implementations should redefine this and parse URI
 		require
-			a_uri_exists: a_uri /= Void
+			a_uri_not_void: a_uri /= Void
 		do
 			uri := a_uri.to_string_32
 		ensure
@@ -23,34 +24,37 @@ feature -- Initialization
 
 feature -- Access
 
-	get_dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
-			-- get dictionary datastructure for the locale `a_locale'
+	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
+			-- Dictionary for locale `a_locale'
+			--
+			-- `a_locale': Locale ID to lookup dictionary
+			-- `Result': Dictionary with translations for `a_locale'
 		require
-			a_locale_exists: a_locale /= Void
-			a_locale_present: has_locale(a_locale) or has_language(a_locale.language_id)
+			a_locale_not_void: a_locale /= Void
+			a_locale_present: has_locale (a_locale) or has_language (a_locale.language_id)
 		deferred
 		ensure
-			dictionary_exists: Result /= Void
+			dictionary_not_void: Result /= Void
 		end
 
-feature -- Informations
-
-	 available_locales: LINEAR[I18N_LOCALE_ID] is
-			-- list of the available locales
-		deferred
-		ensure
-			result_exists: Result /= Void
-		end
-
-	available_languages: LINEAR[I18N_LANGUAGE_ID] is
-			-- list of the available languages
+	 available_locales: LINEAR [I18N_LOCALE_ID] is
+			-- List of the available locales
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	has_locale ( a_locale_id: I18N_LOCALE_ID): BOOLEAN is
-			-- is `a_locale_id'  available?
+	available_languages: LINEAR [I18N_LANGUAGE_ID] is
+			-- List of the available languages
+		deferred
+		ensure
+			result_exists: Result /= Void
+		end
+
+feature -- Status report
+
+	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+			-- Is `a_locale_id' available?
 		require
 			a_locale_id_exists: a_locale_id /= Void
 		do
@@ -59,8 +63,8 @@ feature -- Informations
 			correct_result: Result = available_locales.has (a_locale_id)
 		end
 
-	has_language ( a_language_id: I18N_LANGUAGE_ID): BOOLEAN is
-			-- is `a_language_id' available?
+	has_language (a_language_id: I18N_LANGUAGE_ID): BOOLEAN is
+			-- Is `a_language_id' available?
 		require
 			a_language_id_exists: a_language_id /= Void
 		do
@@ -69,12 +73,13 @@ feature -- Informations
 			correct_result: Result = available_languages.has (a_language_id)
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	uri: STRING_32;
+			-- URI of data
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -84,6 +89,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

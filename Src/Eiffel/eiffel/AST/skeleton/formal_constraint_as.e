@@ -50,7 +50,7 @@ feature -- Status
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
-		-- MTNASK: here I would also like to require the proper degree.
+			-- Assume that we are past degree 4, so that one can be sure that it works.
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
 			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
@@ -143,7 +143,7 @@ feature -- Status
 		require
 			a_context_class_not_void: a_context_class /= Void
 			not_has_multi_constraints: not has_multi_constraints
-			-- MTNASK: can I ask for a certain degree? So that one can be sure that it works.
+			-- Assume that we are past degree 4, so that one can be sure that it works.
 		local
 			l_constraint: like constraint
 			l_type: TYPE_A

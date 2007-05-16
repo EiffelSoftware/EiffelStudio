@@ -15,7 +15,8 @@ inherit
 			extend as extend_hor_ver_box,
 			has_focus as has_focus_vertical_box
 		redefine
-			destroy
+			destroy,
+			prune_all
 		select
 			pointer_enter_actions,
 			implementation,
@@ -213,6 +214,16 @@ feature -- Command
 			end
 			pointer_enter_actions.wipe_out
 			pointer_enter_actions := Void
+		end
+
+feature -- Redefine
+
+	prune_all (a_item: EV_WIDGET) is
+			-- Redefine.
+		do
+				-- TODO: Remove this feature as soon as compiler
+				-- issue with unresolved externals is resolved.
+			Precursor (a_item)
 		end
 
 invariant

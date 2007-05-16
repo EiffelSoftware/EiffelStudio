@@ -16,7 +16,7 @@ feature -- Access
 		require
 			a_attr_attached: a_attr /= Void
 		do
-			Result := locale.format_string ("Attribute %"$1%" is missing.", [a_attr])
+			Result := locale.formatted_string ("Attribute %"$1%" is missing.", [a_attr])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -26,7 +26,7 @@ feature -- Access
 		require
 			a_attribute_attached: a_attribute /= Void
 		do
-			Result := locale.format_string (locale.translate ("Invalid attribute %"$1%"."), [a_attribute])
+			Result := locale.formatted_string (locale.translation ("Invalid attribute %"$1%"."), [a_attribute])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -36,7 +36,7 @@ feature -- Access
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			Result := locale.format_string (locale.translate ("Invalid tag/tag position %"$1%"."), [a_tag])
+			Result := locale.formatted_string (locale.translation ("Invalid tag/tag position %"$1%"."), [a_tag])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -46,7 +46,7 @@ feature -- Access
 			a_attr_name_attached: a_attr_name /= Void
 			a_value_attached: a_value /= Void
 		do
-			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"$2%" is invalid. A boolean is expected."), [a_value, a_attr_name])
+			Result := locale.formatted_string (locale.translation ("Value %"$1%" of attribute %"$2%" is invalid. A boolean is expected."), [a_value, a_attr_name])
 		ensure
 			result_attached: Result /= Void
 		end

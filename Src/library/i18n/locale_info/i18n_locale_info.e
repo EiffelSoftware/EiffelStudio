@@ -71,8 +71,12 @@ feature	-- Element change
 			id_set: id = an_id
 		end
 
+invariant
+
+	id_not_void: id /= Void
+
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

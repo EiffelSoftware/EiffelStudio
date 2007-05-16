@@ -23,15 +23,18 @@ feature	-- creation
 		deferred
 		end
 
-feature	-- information
+feature	-- Access
 
  	locale: STRING_32 is
- 			-- best guess at locale of the file
+ 			-- Locale of file
+ 			--
+ 			-- Note: This is a best guess and may not be accurate.
  		deferred
  		end
 
  	plural_form: INTEGER
- 			-- the plural form used by the file
+ 			-- Plural form used by the file
+ 			--
  			-- This may have exactly 10 values:
  			-- 0: unknown/unitialised/no plural support
  			-- 1: Only one form (Chinese, Japanese, Korean, Turkish etc..)
@@ -46,20 +49,21 @@ feature	-- information
  			-- See I18N_PLURAL_TOOLS for more information
 
 	entry_count: INTEGER
-				-- Number of entries in the file.
+			-- Number of entries in the file.
 
-feature -- entry access
-
-	entry_has_plurals (i: INTEGER): BOOLEAN is
-			-- does this entry have any plurals?
+	original_singular_string (i: INTEGER): STRING_32 is
+			-- Original singular string for ith entry
+			--
+			-- `i': Entry index
+			-- `Result': Original singular string
 		require
 			file_open: opened
 			i_valid_index: valid_index (i)
 		deferred
 		end
 
-	original_singular_string (i: INTEGER): STRING_32 is
-			-- Get the original singular string for this entry
+	translated_singular_string (i: INTEGER): STRING_32 is
+			-- Translated singular string for ith entry
 		require
 			file_open: opened
 			i_valid_index: valid_index (i)
@@ -67,7 +71,10 @@ feature -- entry access
 		end
 
 	original_plural_string (i:INTEGER): STRING_32 is
-			--  Get the original plural string for this entry. May return Void if there are none!
+			-- Original plural string for ith entry
+			--
+			-- `i': Entry index
+			-- `Result': Original plural string, otherwise Void if there is none
 		require
 			file_open: opened
 			i_valid_index: valid_index (i)
@@ -75,9 +82,13 @@ feature -- entry access
 		deferred
 		end
 
-	translated_plural_strings (i:INTEGER): ARRAY[STRING_32] is
-			--  get the translated plural strings for this entry. May return Void if there are none!
-			-- array indexes should be 0 t0 3
+	translated_plural_strings (i: INTEGER): ARRAY [STRING_32] is
+			-- Translated plural strings for ith entry
+			--
+			-- Note: Result array is indexed exactly from 0 to 3
+			--
+			-- `i': Entry index
+			-- `Result': Array containing plural translations, otherwise Void if there are no plural translations
 		require
 			file_open: opened
 			i_valid_index: valid_index (i)
@@ -89,8 +100,10 @@ feature -- entry access
 			correct_upper_index: Result.upper = 3
 		end
 
-	translated_singular_string (i:INTEGER): STRING_32 is
-			-- get the translated singular string for this entry
+feature -- Status report
+
+	entry_has_plurals (i: INTEGER): BOOLEAN is
+			-- Does this entry have any plurals?
 		require
 			file_open: opened
 			i_valid_index: valid_index (i)
@@ -98,49 +111,51 @@ feature -- entry access
 		end
 
 	valid_index(i:INTEGER):BOOLEAN is
-			-- is this a valid index for an entry?
+			-- Is this a valid index for an entry?
 		require
 			file_open: opened
 		deferred
 		end
 
-feature -- mechanics
-
 	opened: BOOLEAN
-		-- is the file opened?
+			-- Is the file opened?
 
 	valid: BOOLEAN is
-		-- could the file be parsed correctly?
+			-- Was file parsed correctly?
 		deferred
 		end
 
+feature -- Basic operations
+
 	close is
-			-- closes the file
+			-- Close file.
 		require
-			opened -- can't close file if not open
+			file_open: opened
 		deferred
 		ensure
 			closed: not opened
 		end
 
 	open is
-			-- opens the file
+			-- Open file.
 		require
-			not opened
+			file_closed: not opened
 		deferred
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	file: FILE
+			-- File handle
 
 invariant
+
 	plural_form_correct: plural_form < 10 and plural_form >= 0
 	opened_only_if_valid: opened implies valid
 	opened_means_file_exists: opened implies file.exists
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -150,6 +165,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

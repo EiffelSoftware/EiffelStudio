@@ -38,9 +38,7 @@ feature -- Access
 	info: I18N_LOCALE_INFO
 			-- Specific information about locale
 
-feature -- Basic Operations
-
-	translate (original: STRING_GENERAL): STRING_32 is
+	translation (original: STRING_GENERAL): STRING_32 is
 			-- Translation of `original' in locale
 			--
 			-- `original': String to translate
@@ -49,7 +47,7 @@ feature -- Basic Operations
 			original_not_void: original /= Void
 		do
 			if dictionary.has (original) then
-				Result := dictionary.get_singular (original)
+				Result := dictionary.singular (original)
 			else
 				Result := original
 			end
@@ -57,7 +55,7 @@ feature -- Basic Operations
 			result_not_void: Result /= Void
 		end
 
-	translate_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
 			-- Translation of `original_singular' or `original_plural' in locale depending on `plural_number'
 			--
 			-- `original_singular': String to translate if singular is used
@@ -69,7 +67,7 @@ feature -- Basic Operations
 			original_plural_not_void: original_plural /= Void
 		do
 			if dictionary.has_plural (original_singular, original_plural, plural_number) then
-				Result := dictionary.get_plural (original_singular, original_plural, plural_number)
+				Result := dictionary.plural (original_singular, original_plural, plural_number)
 			else
 				if plural_number = 1 then
 					Result := original_singular
@@ -81,7 +79,7 @@ feature -- Basic Operations
 			result_not_void: Result /= Void
 		end
 
-	format_string (original: STRING_GENERAL; token_values: TUPLE[ANY]): STRING_32 is
+	formatted_string (original: STRING_GENERAL; token_values: TUPLE): STRING_32 is
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -98,9 +96,9 @@ feature -- Basic Operations
 			original_not_void: original /= Void
 			token_values_not_void: token_values /= Void
 			token_values_valid: string_formatter.valid_arguments (token_values)
-			correct_number_of_tokens: string_formatter.required_arguments (original) = token_values.count
+			enough_number_of_tokens: string_formatter.required_arguments (original) <= token_values.count
 		do
-			Result := string_formatter.format_string (original, token_values)
+			Result := string_formatter.formatted_string (original, token_values)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -126,8 +124,15 @@ feature {NONE} -- Implementation
 
 invariant
 
+	info_not_void: info /= Void
+	date_formatter_not_void: date_formatter /= Void
+	value_formatter_not_void: value_formatter /= Void
+	currency_formatter_not_void: currency_formatter /= Void
+	string_formatter_not_void: string_formatter /= Void
+	dictionary_not_void: dictionary /= Void
+
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

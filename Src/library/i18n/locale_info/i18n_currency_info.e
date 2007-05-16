@@ -10,7 +10,7 @@ class I18N_CURRENCY_INFO
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- initialize all fields
@@ -35,7 +35,7 @@ feature -- Initialization
 
 		end
 
-feature	-- Normal currency Informations
+feature	-- Access: Normal currency informations
 
 	currency_symbol: STRING_32
 	currency_symbol_location: INTEGER
@@ -50,7 +50,7 @@ feature	-- Normal currency Informations
 	currency_negative_sign: STRING_32
 	currency_grouping: ARRAY[INTEGER]
 
-feature -- International currency Informations
+feature -- Access: International currency informations
 
 	currency_international_symbol: STRING_32
 	currency_international_symbol_location: INTEGER
@@ -63,7 +63,7 @@ feature -- International currency Informations
 	currency_international_number_list_separator: STRING_32
 	currency_international_grouping: ARRAY[INTEGER]
 
-feature -- Default values
+feature -- Access: Default values
 
 	default_currency_symbol: STRING_32 is
 		once
@@ -105,7 +105,7 @@ feature -- Default values
 			Result := <<3,3,0>>
 		end
 
-feature -- Normal Element change
+feature -- Element change: Normal values
 
 	set_currency_symbol (a_currency_symbol : STRING_GENERAL) is
 			-- set the currency symbol
@@ -197,7 +197,7 @@ feature -- Normal Element change
 			grouping_set: currency_grouping = a_array
 		end
 
-feature -- International Element change
+feature -- Element change: International values
 
 	set_international_currency_symbol (a_currency_symbol : STRING_GENERAL) is
 			-- set the international currency symbol
@@ -270,7 +270,7 @@ feature -- International Element change
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -280,6 +280,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

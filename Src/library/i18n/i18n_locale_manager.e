@@ -24,6 +24,11 @@ feature {NONE} -- Initialization
 	make (a_uri: STRING_GENERAL) is
 			-- Initialize manager from given URI.
 			--
+			-- Note: At the moment only file resources are available. Thus
+			-- the given URI will be interpreted as a directory. The directory
+			-- needs to contain 'mo' files named after the language and region
+			-- they represent.
+			--
 			-- `a_uri': The URI which is used to look up translations.
 		require
 			a_uri_exists: a_uri /= Void
@@ -46,21 +51,23 @@ feature -- Access
 			l_dictionary: I18N_DICTIONARY
 		do
 			if has_translations (a_locale_id) then
-				l_dictionary := datasource_manager.get_dictionary (a_locale_id)
+				l_dictionary := datasource_manager.dictionary (a_locale_id)
 			else
-				create {I18N_DUMMY_DICTIONARY}	l_dictionary.make(0)
+				create {I18N_DUMMY_DICTIONARY}	l_dictionary.make (0)
 			end
 			if has_formatting_info (a_locale_id) then
 				l_locale_info := host_locale.create_locale_info (a_locale_id)
 			else
-				create l_locale_info.make -- will have default values	
+					-- No formatting info available from host system.
+					-- Set default value
+				create l_locale_info.make
 			end
 			create Result.make (l_dictionary, l_locale_info)
 		ensure
 			locale_not_void: Result /= Void
 		end
 
-	system_locale : I18N_LOCALE is
+	system_locale: I18N_LOCALE is
 			-- Default locale in system
 		do
 			Result := locale (host_locale.system_locale_id)
@@ -68,12 +75,12 @@ feature -- Access
 			system_locale_not_void: Result /= Void
 		end
 
-	available_locales : LIST [I18N_LOCALE_ID] is
-			-- list of available locales
+	available_locales: LIST [I18N_LOCALE_ID] is
+			-- List of available locales
 		local
 			temp: LINEAR [I18N_LOCALE_ID]
 		do
-			create {LINKED_LIST[I18N_LOCALE_ID]} Result.make
+			create {LINKED_LIST [I18N_LOCALE_ID]} Result.make
 			Result.fill (host_locale.available_locales)
 			temp := datasource_manager.available_locales
 			from
@@ -94,6 +101,8 @@ feature -- Status report
 
 	has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- Are there translations for locale `a_locale_id'?
+			--
+			-- This checks the datasource for the locale with and without region information.
 		require
 			a_locale_id_not_void: a_locale_id /= Void
 		do
@@ -103,6 +112,8 @@ feature -- Status report
 
 	has_localised_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- Are there localized translations for locale `a_locale_id'?
+			--
+			-- This checks the datasource for the locale with region information.
 		require
 			a_locale_id_not_void: a_locale_id /= Void
 		do
@@ -118,7 +129,7 @@ feature -- Status report
 		end
 
 	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
-			--
+			-- Is locale `a_locale_id' available?
 		require
 			a_locale_id_not_void: a_locale_id /= Void
 		do
@@ -130,10 +141,18 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	datasource_manager: I18N_DATASOURCE_MANAGER
+			-- Manages internationalization files
+
 	host_locale: I18N_HOST_LOCALE;
+			-- Locale of host machine
+
+invariant
+
+	datasource_manager_not_void: datasource_manager /= Void
+	host_locale_not_void: host_locale /= Void
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

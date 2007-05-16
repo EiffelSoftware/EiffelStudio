@@ -9,6 +9,7 @@ class
 	I18N_LANGUAGE_ID
 
 inherit
+
 	ANY
 		redefine
 			is_equal
@@ -21,26 +22,28 @@ inherit
 create
 	make
 
-feature --Identification
-
-	name: STRING_32
-
-feature --Creation
+feature {NONE} -- Initialization
 
 	make (a_language: STRING_GENERAL) is
-			--
+			-- Initialize language id to `a_language'.
 		require
-			a_language_valid: a_language /= Void
+			a_language_not_void: a_language /= Void
 		do
 			name := a_language.as_string_32
 		ensure
 			name_set: name.is_equal(a_language.as_string_32)
 		end
 
+feature -- Access
+
+	name: STRING_32
+			-- Language name
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			--
+			-- Is `other' attached to an object considered
+			-- equal to current object?
 		do
 			Result := other.name.is_equal(name)
 		end
@@ -48,13 +51,13 @@ feature -- Comparison
 feature --hashable
 
 	hash_code: INTEGER is
-			--
+			-- Hash code value
 		do
 			Result := name.hash_code
 		end
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -64,6 +67,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

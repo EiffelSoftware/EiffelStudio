@@ -18,10 +18,10 @@ create
 	default_create,
 	make_with_escape_character
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	default_create is
-			-- Create with default escape character
+			-- Initialize with default escape character '$'.
 		do
 			escape_character := '$'
 		ensure then
@@ -29,25 +29,38 @@ feature -- Initialization
 		end
 
 	make_with_escape_character (a_escape_character: CHARACTER) is
-			-- Create with `a_escape_character' as escape_character
+			-- Initialize with `a_escape_character' as escape_character
+			--
+			-- `a_escape_character': Character used to escape replacement tokens
 		do
 			escape_character := a_escape_character
 		ensure
 			escape_character_set: escape_character = a_escape_character
 		end
 
-feature -- Utility
+feature -- Access
 
-	format_string (a_string: STRING_32; args_tuple: TUPLE): STRING_32 is
-			-- sobstiture in `a_string' items in `args_tuple'
+	escape_character: CHARACTER
+			-- Character used to escape replacement tokens
+
+feature -- Basic operations
+
+	formatted_string (a_string: STRING_32; args_tuple: TUPLE): STRING_32 is
+			-- String which has it's tokens replaced by given values
+			--
+			-- The string given can have token placeholders. The placeholder has
+			-- the form `a_escape_charater' followed by the tuple index.
+			--
+			-- `a_string': Original string with possible token placeholders
+			-- `args_tuple': Values which will be replaced in the placeholders
+			-- `Result': String which has token placeholders replaced with values
 		require
-			a_string_exists: a_string /= Void
-			args_tuple_exists: args_tuple /= Void
+			a_string_not_void: a_string /= Void
+			args_tuple_not_void: args_tuple /= Void
 			valid_arguments: valid_arguments (args_tuple)
-			reasonable_number_of_arguments: args_tuple.count <= {INTEGER_32}.Max_value
-			correct_number_of_arguments: required_arguments (a_string) <= args_tuple.count
+			enough_arguments: required_arguments (a_string) <= args_tuple.count
 		local
-			l_list: LIST[STRING_32]
+			l_list: LIST [STRING_32]
 			i : INTEGER
 			l_string: STRING_32
 			test: STRING_GENERAL
@@ -63,20 +76,20 @@ feature -- Utility
 				l_list.after
 			loop
 				if l_list.item.is_empty then
-						-- It wasn't a escape_character
-					Result.append(escape_character.out)
+						-- It wasn't an escape_character
+					Result.append (escape_character.out)
 				else
 						-- it's possibly an escape_character
 					from
 						i := 1
-						l_string := l_list.item.substring(i,i)
+						l_string := l_list.item.substring (i,i)
 					until
 						i > l_list.item.count or not l_string.is_integer
 					loop	--extract the number
 						i := i + 1
-						l_string := l_list.item.substring(i,i)
+						l_string := l_list.item.substring (i,i)
 					end
-					l_string := l_list.item.substring(1,i-1)
+					l_string := l_list.item.substring (1, i-1)
 					if l_string.is_integer then
 							-- It was en escape character
 
@@ -85,12 +98,12 @@ feature -- Utility
 						if test /= Void then
 							Result.append (test.as_string_32)
 						else
-							Result.append (args_tuple.item(l_string.to_integer).out)
+							Result.append (args_tuple.item (l_string.to_integer).out)
 						end
 
-						Result.append (l_list.item.substring(i,l_list.item.count).twin)
+						Result.append (l_list.item.substring (i, l_list.item.count).twin)
 					else
-							-- It should not be conseidered as escape character
+							-- It should not be considered as escape character
 						Result.append (escape_character.out)
 						Result.append (l_list.item)
 					end
@@ -99,15 +112,14 @@ feature -- Utility
 			end
 		ensure
 			result_exists: Result /= Void
---			no_more_escape_characters: required_arguments (Result) = 0
 		end
 
 feature -- Check functions
 
 	valid_arguments (a_tuple: TUPLE) : BOOLEAN is
-			-- are al argument valid (/= Void)?
+			-- Are all values in the tuple non-void?
 		require
-			a_tuple_exists: a_tuple /= Void
+			a_tuple_not_void: a_tuple /= Void
 		local
 			i : INTEGER
 		do
@@ -123,9 +135,9 @@ feature -- Check functions
 		end
 
 	required_arguments (a_string: STRING_32): INTEGER is
-			-- how many argumnents does `a_string' require?
+			-- The number of arguments which `a_string' needs to have replaced
 		require
-			a_string_exists: a_string /= Void
+			a_string_not_void: a_string /= Void
 		local
 			l_list: LIST[STRING_32]
 			i : INTEGER
@@ -155,15 +167,12 @@ feature -- Check functions
 				l_list.forth
 			end
 		ensure
-			Correct_result: a_string.has_substring (Result.out)
+			result_not_negative: Result >= 0
+			result_correct: a_string.has_substring (escape_character.out + Result.out)
 		end
 
-feature -- Values
-
-	escape_character : CHARACTER;
-
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -173,6 +182,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -61,7 +61,7 @@ invariant
 	date_time_format_exists: date_time_format /= VOid
 
 indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
+	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -72,5 +72,4 @@ indexing
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class I18N_DATE_FORMATTER
+end

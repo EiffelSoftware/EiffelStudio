@@ -522,6 +522,10 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 
+
+			l_item := restart_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.add_recyclable (l_item)
 			l_item := stop_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.add_recyclable (l_item)

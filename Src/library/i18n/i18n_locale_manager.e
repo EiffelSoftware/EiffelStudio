@@ -19,10 +19,12 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_uri: STRING_GENERAL) is
-			-- Creation procedure
+			-- Initialize manager from given URI.
+			--
+			-- `a_uri': The URI which is used to look up translations.
 		require
 			a_uri_exists: a_uri /= Void
 		do
@@ -32,8 +34,11 @@ feature -- Initialization
 
 feature -- Access
 
-	get_locale (a_locale_id: I18N_LOCALE_ID): I18N_LOCALE is
-			-- Get locale object that corresponds to `a_locale_id'
+	locale (a_locale_id: I18N_LOCALE_ID): I18N_LOCALE is
+			-- Locale object that corresponds to `a_locale_id'
+			--
+			-- `a_locale_id': Locale ID for which the locale object is returned
+			-- `Result': Locale object corresponding to `a_locale_id'
 		require
 			a_locale_id_exists: a_locale_id /= Void
 		local
@@ -52,26 +57,24 @@ feature -- Access
 			end
 			create Result.make (l_dictionary, l_locale_info)
 		ensure
-			get_locale_not_void: Result /= Void
+			locale_not_void: Result /= Void
 		end
 
-	get_system_locale : I18N_LOCALE is
-			-- Get the default locale in the system
+	system_locale : I18N_LOCALE is
+			-- Default locale in system
 		do
-			Result := get_locale(host_locale.system_locale_id)
+			Result := locale (host_locale.system_locale_id)
 		ensure
-			get_system_locale_not_void: Result /= Void
+			system_locale_not_void: Result /= Void
 		end
 
-feature -- Status report
-
-	available_locales : LIST[I18N_LOCALE_ID] is
+	available_locales : LIST [I18N_LOCALE_ID] is
 			-- list of available locales
 		local
-			temp: LINEAR[I18N_LOCALE_ID]
+			temp: LINEAR [I18N_LOCALE_ID]
 		do
 			create {LINKED_LIST[I18N_LOCALE_ID]} Result.make
-			Result.fill(host_locale.available_locales)
+			Result.fill (host_locale.available_locales)
 			temp := datasource_manager.available_locales
 			from
 				temp.start
@@ -87,8 +90,12 @@ feature -- Status report
 			available_locales_not_void: Result /= Void
 		end
 
+feature -- Status report
+
 	has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- Are there translations for locale `a_locale_id'?
+		require
+			a_locale_id_not_void: a_locale_id /= Void
 		do
 			Result := datasource_manager.has_locale (a_locale_id) or
 					 datasource_manager.has_language (a_locale_id.language_id)
@@ -96,18 +103,24 @@ feature -- Status report
 
 	has_localised_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- Are there localized translations for locale `a_locale_id'?
+		require
+			a_locale_id_not_void: a_locale_id /= Void
 		do
 			Result := datasource_manager.has_locale (a_locale_id)
 		end
 
 	has_formatting_info (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- Are there informations on formatting for locale `a_locale_id'
+		require
+			a_locale_id_not_void: a_locale_id /= Void
 		do
 			Result:= host_locale.is_available (a_locale_id)
 		end
 
 	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			--
+		require
+			a_locale_id_not_void: a_locale_id /= Void
 		do
 			Result := host_locale.is_available(a_locale_id) or
 					( datasource_manager.has_locale (a_locale_id) or
@@ -130,6 +143,5 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

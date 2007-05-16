@@ -99,7 +99,7 @@ feature {NONE} --Implementation
 				until
 					temp.after
 				loop
-					scope := chain.get_file_scope (
+					scope := chain.file_scope (
 							uri + Operating_environment.directory_separator.out + temp.item)
 
 					if scope /= Void then

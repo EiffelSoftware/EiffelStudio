@@ -10,19 +10,26 @@ indexing
 	revision: "$Revision$"
 
 class
-	I18N_MO_FILE inherit
+	I18N_MO_FILE
+
+inherit
 
   		I18N_FILE
   			redefine
   				valid
   			end
+
 		IMPORTED_UTF8_READER_WRITER
+
 create
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (a_path: STRING_GENERAL) is
+			-- Initialize file from `a_path'.
+			--
+			-- `a_path': File path of a valid mo file
 		do
 			create {RAW_FILE} file.make (a_path.to_string_8)
 			last_translated := [0, Void]
@@ -31,6 +38,8 @@ feature
 			last_translated /= Void
 			last_original /= Void
 		end
+
+feature
 
 	open is
 			-- opens file and intialises parser

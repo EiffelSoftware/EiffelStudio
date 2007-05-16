@@ -14,7 +14,9 @@ inherit
 feature	-- creation
 
 	make (path: STRING_GENERAL) is
-			-- does not open the file, just sets the path. Call open afterwards!
+			-- Initialize file from `a_path'.
+			--
+			-- `a_path': File path of a valid mo file
 		require
 			string_exists: path /= Void
 			string_not_empty: not path.is_empty

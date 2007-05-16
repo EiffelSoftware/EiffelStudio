@@ -123,7 +123,7 @@ feature{NONE} -- Actions
 			l_locale: I18N_LOCALE
 		do
 			if locale_id_table.item (locale_combo.text) /= Void then
-				l_locale := locale_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text)))
+				l_locale := locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text)))
 				if l_locale = Void or else l_locale.info.code_page = Void then
 					source_encoding := Void
 				else

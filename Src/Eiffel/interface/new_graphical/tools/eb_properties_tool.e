@@ -1,5 +1,5 @@
 indexing
-	description	: "Tool to view the favorites"
+	description	: "Tool to view the properties of a system/cluster/class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"

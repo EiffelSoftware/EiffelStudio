@@ -1954,10 +1954,10 @@ end
 		local
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			-- MTNASK: optimize with array? (store it when once accessed)
-				l_formal_dec ?= generics.i_th (i)
-				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_types (Current)
+				-- Fixme: Should we store computation of `constraint_types'?
+			l_formal_dec ?= generics.i_th (i)
+			check l_formal_dec_not_void: l_formal_dec /= Void end
+			Result := l_formal_dec.constraint_types (Current)
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -1970,10 +1970,10 @@ end
 		local
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			-- MTNASK: optimize with array? (store it when once accessed)
-				l_formal_dec ?= generics.i_th (i)
-				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_types_if_possible (Current)
+				-- Fixme: Should we store computation of `constraint_types_if_possible'?
+			l_formal_dec ?= generics.i_th (i)
+			check l_formal_dec_not_void: l_formal_dec /= Void end
+			Result := l_formal_dec.constraint_types_if_possible (Current)
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -1982,6 +1982,7 @@ end
 			-- Constraint of Current.
 			--
 			-- `a_formal_position' is the position of the formal whose constraint is returned.
+			-- Warning: Result is cached, do not modify it.
 		require
 			is_generic: is_generic
 			valid_formal_position: is_valid_formal_position (a_formal_position)
@@ -2013,7 +2014,6 @@ end
 				end
 				constrained_type_cache[a_formal_position] := Result
 			end
-				-- MTNASK: should result be twinned?
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_named_but_not_formal:  Result.is_named_type and not Result.is_formal
@@ -2024,6 +2024,7 @@ end
 			--
 			-- `a_context_class' is the context class where the formal occurs in.
 			--| It is a list of class types which constraint the current Formal.
+			-- Warning: Result is cached, do not modify it.
 		require
 			valid_formal_position: is_valid_formal_position (a_formal_position)
 		do
@@ -2032,7 +2033,6 @@ end
 				Result := constraints (a_formal_position).constraining_types (Current)
 				constrained_types_cache[a_formal_position] := Result
 			end
-				-- MTNASK: should result be twinned?
 		ensure
 			Result_not_void_and_not_empty: Result /= Void and not Result.is_empty
 		end

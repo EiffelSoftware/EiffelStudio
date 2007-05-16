@@ -1717,7 +1717,6 @@ feature {NONE} -- Implementation
 				last_type := last_type.actual_type
 				if last_type.is_formal then
 					l_formal ?= last_type
-						-- MTNASK: Why is  type_from_ancestor needed?
 					last_type := type_from_ancestor (source_class, l_formal)
 				else
 					l_left_type := last_type
@@ -1753,7 +1752,6 @@ feature {NONE} -- Implementation
 							-- same class ID as the one recorded in BINARY_AS, it means that target
 							-- was not converted, otherwise target was converted and its type is the
 							-- one from the right-hand side.
-						-- MTNASK: what to do here?
 						if l_left_type.associated_class.class_id = l_as.class_id then
 							last_type := l_left_type
 						else

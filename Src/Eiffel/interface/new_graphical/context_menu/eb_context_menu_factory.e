@@ -542,6 +542,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu: EV_MENU
 			l_item, l_selected_item: EV_RADIO_MENU_ITEM
 			l_form: EB_CLASS_INFO_FORMATTER
+			l_editor: EB_SMART_EDITOR
 		do
 			create l_menu.make_with_text (names.m_view)
 			a_menu.extend (l_menu)
@@ -561,6 +562,13 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 			if l_selected_item /= Void then
 				l_selected_item.enable_select
+			end
+			l_editor := dev_window.editors_manager.current_editor
+			if l_editor = Void or else l_editor.changed then
+					-- If there is no editor, or if the current editor is being modified
+					--  we should not enable the `View' menu because
+					-- we would loose changes by executing the associated command.
+				l_menu.disable_sensitive
 			end
 		end
 

@@ -229,7 +229,7 @@ feature -- Status report
 			end
 			if keep_assertion_checking then
 				Result.append (" - ")
-				Result.append (interface_names.b_eval_keep_assertions_checking)
+				Result.append (interface_names.b_eval_keep_assertion_checking)
 			end
 		end
 

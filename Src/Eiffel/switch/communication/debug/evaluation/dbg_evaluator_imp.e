@@ -146,7 +146,9 @@ feature {NONE} -- Error code id
 feature {DBG_EVALUATOR} -- Interface
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
-			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
+				ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
+				is_static_call: BOOLEAN
+			) is
 		require
 			realf /= Void
 		deferred
@@ -308,6 +310,8 @@ feature {NONE} -- Implementation
 					Result := ctype
 				else
 					if l_f_class_c.types.count = 1 then
+						Result := l_f_class_c.types.first
+					elseif l_f_class_c.is_basic then
 						Result := l_f_class_c.types.first
 					else
 							--| The feature is inherited

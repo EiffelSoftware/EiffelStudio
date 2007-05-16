@@ -123,10 +123,10 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
-rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type);
+rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
-extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
+extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -224,9 +224,9 @@ static int curr_modify = NO_CURRMODIF;
 		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 		dthread_restore();
 		break;
-	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
+	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type / arg6=is_static_call */
 		dthread_prepare();
-		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
+		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1, (arg_3 >> 3) & 1);
 		dthread_restore();
 		break;
 	case NEW_INSTANCE:
@@ -1680,7 +1680,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 	app_send_packet(sp, &rqst);		/* Send to network */
 }
 
-rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_precompiled, int is_basic_type)
+rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	struct item *ip;
 	Request rqst;					/* What we send back */
@@ -1691,7 +1691,7 @@ rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_pr
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
 	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
-	ip = dynamic_eval_dbg(fid,stype, is_precompiled, is_basic_type, previous_otop, &exception_occured);
+	ip = dynamic_eval_dbg(fid,stype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
 	c_opop();
 	if (ip == (struct item *) 0) {
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */

@@ -1125,24 +1125,37 @@ feature {NONE} -- EXPR_B evaluation
 
 	evaluate_external_b	(a_external_b: EXTERNAL_B) is
 		local
+			ti: TYPE_I
 			fi: FEATURE_I
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
-			if tmp_target /= Void then
-				cl := tmp_target.dynamic_class
-			elseif context_class /= Void then
-				cl := context_class
-			else
-				cl := system.class_of_id (a_external_b.written_in)
+			if a_external_b.is_static_call then
+				ti := a_external_b.static_class_type
+				if
+					ti /= Void
+					and then ti.type_a /= Void
+					and then ti.type_a.has_associated_class
+				then
+					cl := ti.type_a.associated_class
+				end
+			end
+			if cl = Void then
+				if tmp_target /= Void then
+					cl := tmp_target.dynamic_class
+				elseif context_class /= Void then
+					cl := context_class
+				else
+					cl := system.class_of_id (a_external_b.written_in)
+				end
 			end
 
 			if cl = Void then
 				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
-					)
+							Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
+						)
 			else
-					fi := feature_i_from_call_access_b_in_context (cl, a_external_b)
+				fi := feature_i_from_call_access_b_in_context (cl, a_external_b)
 				if fi = Void then
 					params := parameter_values_from_parameters_b (a_external_b.parameters)
 					if not error_occurred then
@@ -1160,12 +1173,20 @@ feature {NONE} -- EXPR_B evaluation
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
 						if not error_occurred then
-							if tmp_target /= Void then
-								evaluate_routine (tmp_target.value_address, tmp_target, Void, fi, params)
-							elseif context_address /= Void then
-								evaluate_routine (context_address, Void, Void, fi, params)
+							if a_external_b.is_static_call then
+								if tmp_target /= Void then
+									evaluate_static_routine (tmp_target.value_address, tmp_target, cl, fi, params)
+								else
+									evaluate_static_routine (context_address, Void, cl, fi, params)
+								end
 							else
-								evaluate_static_function (fi, cl, params)
+								if tmp_target /= Void then
+									evaluate_routine (tmp_target.value_address, tmp_target, cl, fi, params)
+								elseif context_address /= Void then
+									evaluate_routine (context_address, Void, cl, fi, params)
+								else
+									evaluate_static_function (fi, cl, params)
+								end
 							end
 						end
 					elseif fi.is_attribute then
@@ -1454,7 +1475,23 @@ feature {NONE} -- Concrete evaluation
 					)
 			else
 				prepare_evaluation
-				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params)
+				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params, False)
+				retrieve_evaluation
+			end
+		end
+
+	evaluate_static_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+		require
+			f /= Void
+			f_is_not_attribute: not f.is_attribute
+		do
+			if a_target /= Void and then a_target.is_void then
+				notify_error_evaluation (Cst_error_call_on_void_target +
+						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
+					)
+			else
+				prepare_evaluation
+				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params, True)
 				retrieve_evaluation
 			end
 		end
@@ -1488,6 +1525,8 @@ feature {NONE} -- Concrete evaluation
 		local
 			l_type_i: TYPE_I
 			l_cl_type_i: CL_TYPE_I
+			ct: CLASS_TYPE
+			l_is_special: BOOLEAN
 		do
 			if a_type_i.has_associated_class_type then
 				if context_class_type /= Void then
@@ -1499,9 +1538,20 @@ feature {NONE} -- Concrete evaluation
 				if l_cl_type_i = Void then
 					l_cl_type_i := a_type_i
 				end
-				prepare_evaluation
-				Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
-				retrieve_evaluation
+				if l_cl_type_i.has_associated_class_type then
+					ct := l_cl_type_i.associated_class_type
+					if ct.associated_class /= Void then
+						l_is_special := ct.associated_class.is_special
+					end
+				end
+				if l_is_special then
+					fixme ("To create SPECIAL objects, we have to use INTERNAL.new_special_any_instance ... ")
+					notify_error_evaluation ("Can not instanciate class {" + l_type_i.name + "} (SPECIAL is not yet supported)%N")
+				else
+					prepare_evaluation
+					Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
+					retrieve_evaluation
+				end
 			else
 				notify_error_evaluation ("Can not instanciate class {" + l_type_i.name + "} (not compiled)%N")
 			end

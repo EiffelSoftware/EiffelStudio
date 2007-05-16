@@ -187,7 +187,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -263,7 +263,7 @@ feature -- Concrete evaluation
 					valid_dyn_type: l_dyntype /= Void
 				end
 
-				effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params)
+				effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
 				if last_result_value = Void then
 					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
 					if a_addr /= Void then
@@ -320,12 +320,14 @@ feature -- Concrete evaluation
 		end
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
-			ctype: CLASS_TYPE; orig_class: CLASS_C;
-			params: LIST [DUMP_VALUE]) is
+				ctype: CLASS_TYPE; orig_class: CLASS_C;
+				params: LIST [DUMP_VALUE];
+				is_static_call: BOOLEAN
+			) is
 		do
 			prepare_evaluation
 			implementation.effective_evaluate_routine (
-								a_addr, a_target, f, realf, ctype, orig_class, params
+								a_addr, a_target, f, realf, ctype, orig_class, params, is_static_call
 							)
 			retrieve_evaluation
 		end

@@ -48,7 +48,8 @@ feature -- Concrete initialization
 feature {DBG_EVALUATOR} -- Interface
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
-			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]) is
+			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
+			is_static_call: BOOLEAN) is
 		local
 			fi: FEATURE_I
 			dmp: DUMP_VALUE
@@ -86,6 +87,9 @@ feature {DBG_EVALUATOR} -- Interface
 					-- Send the final request.
 				if fi.is_external then
 					par := par + 1
+				end
+				if is_static_call then
+					par := par + 8
 				end
 
 				if fi.written_class.is_precompiled then

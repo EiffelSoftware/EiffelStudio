@@ -56,6 +56,26 @@ feature -- Command
 			end
 		end
 
+	execute_if_not_setted is
+			-- Save default debug layout file if the file not exists.
+		local
+			l_graphical_debugger: EB_DEBUGGER_MANAGER
+			l_file: RAW_FILE
+			l_fn: FILE_NAME
+		do
+			l_graphical_debugger ?= debugger_manager
+			if l_graphical_debugger /= Void then
+				if l_graphical_debugger.raised then
+					l_fn := docking_standard_layout_path.twin
+					l_fn.set_file_name (standard_tools_debug_layout_name)
+					create l_file.make (l_fn)
+					if not l_file.exists then
+						execute
+					end
+				end
+			end
+		end
+
 feature -- Query
 
 	menu_name: STRING_GENERAL is

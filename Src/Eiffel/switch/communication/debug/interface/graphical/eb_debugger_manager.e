@@ -1274,6 +1274,11 @@ feature -- Status setting
 			update_all_debugging_tools_menu
 			unpopup_switching_mode
 			force_debug_mode_cmd.enable_sensitive
+
+			-- Save default debug layout file if not exists.
+			-- Because if not save, the default layout of debug mode is restored by `restore_standard_debug_docking_layout_by_code' which
+			-- put debugging tools to current layout directly. This will confuse end user.
+			debugging_window.commands.set_default_layout_command.execute_if_not_setted
 		ensure
 			raised
 		end

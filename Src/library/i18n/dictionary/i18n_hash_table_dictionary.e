@@ -22,8 +22,8 @@ feature --Creation
 	make (a_plural_form: INTEGER) is
 			-- create the datastructure
 		do
-			Precursor(a_plural_form)
-			create hash.make(default_number_of_entries)
+			Precursor (a_plural_form)
+			create hash.make (default_number_of_entries)
 		end
 
 feature --Insertion
@@ -56,13 +56,13 @@ feature --Access
 			end
 		end
 
-	get_singular(original:STRING_GENERAL): STRING_32 is
+	singular (original: STRING_GENERAL): STRING_32 is
 			-- get the singular translation of `original'
 		do
 			Result := hash.item (original.as_string_32).singular_translation
 		end
 
-	get_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
 			-- get the `plural_number'-th plural translation of entry
 			-- with `original_singular' and `original_plural'
 		do
@@ -71,7 +71,7 @@ feature --Access
 
 feature --Information
 
-	count:INTEGER is
+	count: INTEGER is
 			-- number of items in hash table
 		do
 			Result := hash.count
@@ -79,7 +79,7 @@ feature --Information
 
 feature {NONE} --Implementation
 
-	hash: HASH_TABLE[I18N_DICTIONARY_ENTRY, STRING_32]
+	hash: HASH_TABLE [I18N_DICTIONARY_ENTRY, STRING_32]
 	default_number_of_entries: INTEGER is 50;
 
 indexing

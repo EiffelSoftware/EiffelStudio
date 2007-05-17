@@ -113,34 +113,6 @@ feature -- Implementation
 
 feature -- Agent functions.
 
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for key events
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					keyval: NATURAL_32
-					gdkeventkey: POINTER
-					a_key_string: STRING_32
-					key: EV_KEY
-					a_key_press: BOOLEAN
-					a_cs: EV_GTK_C_STRING
-				do
-					gdkeventkey := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
-					if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (gdkeventkey) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
-						a_key_press := True
-						create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (gdkeventkey))
-						a_key_string := a_cs.string
-					end
-					keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdkeventkey)
-						-- Value may be zero for special extend keys (Play/Pause etc..)
-					if keyval > 0 and then valid_gtk_code (keyval) then
-						create key.make_with_code (key_code_from_gtk (keyval))
-					end
-					Result := key_tuple (key, a_key_string, a_key_press)
-				end
-		end
-
 	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for set-focus events
 		once

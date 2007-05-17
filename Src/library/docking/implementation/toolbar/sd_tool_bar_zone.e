@@ -335,7 +335,7 @@ feature -- Query
 			-- Content in `Current'.
 
 	tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- Tool bar items on `Current'.
+			-- Tool bar items on `Current' including invisible items.
 		do
 			Result := content.items
 		ensure

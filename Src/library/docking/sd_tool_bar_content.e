@@ -214,7 +214,7 @@ feature -- Query
 			-- Title for display.
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			-- All 	EV_TOOL_BAR_ITEM in `Current'.
+			-- All 	EV_TOOL_BAR_ITEM in `Current' including invisible items.
 
 	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- All displayed items.
@@ -234,14 +234,20 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	items_except_sep (a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_snap_shot: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			Result := items.twin
-			l_snap_shot := items.twin
+			if a_include_invisible then
+				Result := items.twin
+				l_snap_shot := items.twin
+			else
+				Result := items_visible
+				l_snap_shot := items_visible
+			end
+
 			from
 				l_snap_shot.start
 			until
@@ -259,55 +265,69 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	group_count: INTEGER is
-			-- Group count, group is buttons before one separatpr.
+	groups_count (a_include_invisible: BOOLEAN): INTEGER is
+			-- Group count, group is buttons before one separater.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_last_is_separator: BOOLEAN -- Maybe two separator together.
+			l_items: like items_visible
 		do
 			Result := 1
 			from
-				items.start
-			until
-				items.after
-			loop
-				l_separator ?= items.item
-				if l_separator /= Void and not l_last_is_separator then
-					Result := Result + 1
-					l_last_is_separator := True
-				elseif l_separator = Void then
-					l_last_is_separator := False
+				if a_include_invisible then
+					l_items := items
+				else
+					l_items := items_visible
 				end
-				items.forth
+				l_items.start
+			until
+				l_items.after
+			loop
+				if l_items.item.is_displayed then
+					l_separator ?= l_items.item
+					if l_separator /= Void and not l_last_is_separator then
+						Result := Result + 1
+						l_last_is_separator := True
+					elseif l_separator = Void then
+						l_last_is_separator := False
+					end
+				end
+				l_items.forth
 			end
 		end
 
-	group (a_group_index: INTEGER): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- Group items.
+	group_items (a_group_index: INTEGER; a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- Group items except hidden items.
 		require
-			valid: 0 < a_group_index and a_group_index <= group_count
+			valid: 0 < a_group_index and a_group_index <= groups_count (False)
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
 			l_stop: BOOLEAN
+			l_items: like items_visible
 		do
 			from
+				if a_include_invisible then
+					l_items := items
+				else
+					l_items := items_visible
+				end
 				create Result.make (1)
 				l_group_count := 1
-				items.start
+				l_items.start
 			until
-				items.after or l_stop
+				l_items.after or l_stop
 			loop
-				l_separator ?= items.item
+				l_separator ?= l_items.item
 				if l_separator /= Void then
 					l_group_count := l_group_count + 1
-				elseif l_group_count = a_group_index then
-					Result.extend (items.item)
+				elseif l_group_count = a_group_index and l_items.item.is_displayed then
+					Result.extend (l_items.item)
 				end
 				if l_group_count > a_group_index then
 					l_stop := True
 				end
-				items.forth
+				l_items.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -323,7 +343,7 @@ feature -- Query
 			Result := internal_close_request_actions
 		end
 
-	item_count_except_separator: INTEGER is
+	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER is
 			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -337,7 +357,13 @@ feature -- Query
 			loop
 				l_separator ?= l_items.item
 				if l_separator = Void then
-					Result := Result + 1
+					if not a_include_invisible then
+						if l_items.item.is_displayed then
+							Result := Result + 1
+						end
+					else
+						Result := Result + 1
+					end
 				end
 				l_items.forth
 			end
@@ -369,7 +395,7 @@ feature -- Query
 			-- If Current visible?
 
 	is_menu_bar: BOOLEAN is
-			-- If Current is a menu bar whihch only contain SD_TOOL_BAR_MENU_ITEM.
+			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM.
 		local
 			l_menu_item: SD_TOOL_BAR_MENU_ITEM
 		do
@@ -393,6 +419,40 @@ feature -- Query
 			-- Hash code
 		do
 			Result := unique_title.hash_code
+		end
+
+feature -- Obsolete
+
+	item_count_except_separator: INTEGER is
+			-- Item count except SD_TOOL_BAR_SEPARATOR.
+		obsolete
+			"Use item_count_except_sep instead."
+		do
+			Result := item_count_except_sep (True)
+		end
+
+	group (a_group_index: INTEGER_32): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- Group items except hidden items.
+		obsolete
+			"Use group_items instead."
+		do
+			Result := group_items (a_group_index, True)
+		end
+
+	group_count: INTEGER is
+			-- Group count, group is buttons before one separater.
+		obsolete
+			"Use groups_count instead."
+		do
+			Result := groups_count (True)
+		end
+
+	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- `items' except SD_TOOL_BAR_SEPARATOR.
+		obsolete
+			"Use items_except_sep instead."
+		do
+			Result := items_except_sep (True)
 		end
 
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
@@ -429,15 +489,19 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			end
 		end
 
-	index_of (a_item: SD_TOOL_BAR_ITEM): INTEGER
+	index_of (a_item: SD_TOOL_BAR_ITEM; a_include_invisible: BOOLEAN): INTEGER
 			-- Index of `a_item'
 		require
 			has: items.has (a_item)
 		local
-			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			from
-				l_items := items.twin
+				if a_include_invisible then
+					l_items := items
+				else
+					l_items := items_visible
+				end
 				l_items.start
 			until
 				l_items.after or Result /= 0
@@ -452,35 +516,41 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 		end
 
 	separator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
-			-- Separator after `a_item' if exist.
+			-- Separator after `a_item' if exist, except invisible items.
 		require
-			has: items.has (a_item)
+			has: items_visible.has (a_item)
+		local
+			l_items_visible: like items_visible
 		do
-			items.go_i_th (index_of (a_item))
-			if not items.after then
-				items.forth
-				if not items.after then
-					Result ?= items.item
+			l_items_visible := items_visible
+			l_items_visible.go_i_th (l_items_visible.index_of (a_item, 1))
+			if not l_items_visible.after then
+				l_items_visible.forth
+				if not l_items_visible.after then
+					Result ?= l_items_visible.item
 				end
 			end
 		end
 
 	separator_before_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
-			-- Separator before `a_item' if exist.
+			-- Separator before `a_item' if exist, except invisible items.
 		require
 			has: items.has (a_item)
 		local
 			l_index: INTEGER
+			l_items_visible: like items_visible
 		do
-			l_index := index_of (a_item)
+			l_items_visible := items_visible
+			l_index := l_items_visible.index_of (a_item, 1)
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_CONTENT: separator_before_item: index_of `a_item' is: " + l_index.out)
 			end
-			items.go_i_th (l_index)
-			if not items.before then
-				items.go_i_th (l_index - 1)
-				if not items.before then
-					Result ?= items.item
+
+			l_items_visible.go_i_th (l_index)
+			if not l_items_visible.before then
+				l_items_visible.go_i_th (l_index - 1)
+				if not l_items_visible.before then
+					Result ?= l_items_visible.item
 				end
 			end
 		end
@@ -488,46 +558,35 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 	tool_bar_items_texts: ARRAYED_LIST [STRING_GENERAL];
 			-- All strings on `items'.
 
-	button_count_except_separator: INTEGER is
-			-- Button count except SD_TOOL_BAR_SEPARATOR.
-		local
-			l_separetor: SD_TOOL_BAR_SEPARATOR
-		do
-			from
-				items.start
-			until
-				items.after
-			loop
-				l_separetor ?= items.item
-				if l_separetor = Void then
-					Result := Result + 1
-				end
-				items.forth
-			end
-		end
-
-	item_start_index (a_group_index: INTEGER): INTEGER is
+	item_start_index (a_group_index: INTEGER; a_inclue_invisible: BOOLEAN): INTEGER is
 			-- Start index in `items' of a group. Start index not include SD_TOOL_BAR_SEPARATOR.
 		require
-			valid: a_group_index > 0 and a_group_index <= group_count
+			valid: a_group_index > 0 and a_group_index <= groups_count (False)
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
+			l_items: like items_visible
 		do
 			from
+				if a_inclue_invisible then
+					l_items := items
+				else
+					l_items := items_visible
+				end
+
 				Result := 1
 				l_group_count := 1
-				items.start
+				l_items.start
 			until
-				items.after or l_group_count = a_group_index
+				l_items.after or l_group_count = a_group_index
 			loop
-				l_separator ?= items.item
+				l_separator ?= l_items.item
 				if l_separator /= Void then
 					l_group_count := l_group_count + 1
 				end
 				Result := Result + 1
 
-				items.forth
+				l_items.forth
 			end
 		ensure
 			valid: Result > 0 and Result <= items.count
@@ -536,10 +595,10 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 	item_end_index (a_group_index: INTEGER): INTEGER is
 			-- End index in `items' of a group. End index not include SD_TOOL_BAR_SEPARATOR.
 		require
-			valid: a_group_index > 0 and a_group_index <= group_count
+			valid: a_group_index > 0 and a_group_index <= groups_count (False)
 		do
-			if a_group_index /= group_count then
-				Result := item_start_index (a_group_index + 1) - 2
+			if a_group_index /= groups_count (False) then
+				Result := item_start_index (a_group_index + 1, False) - 2
 			else
 				Result := items.count
 			end

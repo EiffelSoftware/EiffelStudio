@@ -50,12 +50,12 @@ feature -- Query
 		local
 			l_maximum_index: INTEGER
 		do
-			l_maximum_index := maximum_width_group_index
+			l_maximum_index := maximum_width_group_index.max_index
 			go_group_i_th (l_maximum_index)
 			if not has_sub_info then
 			-- This function is calculate inlclude sub level
 			-- But it's not calculate "sub sub" level, so we pass True here
-				Result := group_maximum_width (l_maximum_index)
+				Result := group_maximum_width (l_maximum_index).max_width
 			else
 				Result := sub_grouping.item (l_maximum_index).maximum_width_sub
 			end
@@ -63,13 +63,37 @@ feature -- Query
 
 	maximum_width: INTEGER is
 			-- Maximum width
+			-- The calculation include sub level groups.
+		local
+			l_temp_size: INTEGER
+			l_group_count, l_max_group_count: INTEGER
+		do
+			from
+				l_group_count := 1
+				l_max_group_count := group_count
+			until
+				l_group_count > l_max_group_count
+			loop
+				l_temp_size := group_maximum_width (l_group_count).max_width
+				if l_temp_size > Result then
+					Result := l_temp_size
+				end
+				l_group_count := l_group_count + 1
+			end
+		end
+
+	maximum_width_only_top_level: TUPLE [max_width: INTEGER; item_count: INTEGER] is
+			-- Maximum width
 			-- The calculation not include sub level groups.
 		local
 			l_snapshot: like internal_group_info
 			l_new_group_snapshot: like internal_is_new_group
 			l_temp_size: INTEGER
+			l_item: DS_HASH_TABLE [INTEGER_32, INTEGER_32]
+			l_item_count: INTEGER
 		do
 			from
+				create Result
 				l_snapshot := internal_group_info.twin
 				l_new_group_snapshot := internal_is_new_group.twin
 				check same_size: l_new_group_snapshot.count = l_snapshot.count end
@@ -78,43 +102,58 @@ feature -- Query
 			until
 				l_snapshot.after or l_new_group_snapshot.after
 			loop
-				l_snapshot.item.finish
-				if l_new_group_snapshot.item then
+				if l_new_group_snapshot.item.item then
 					l_temp_size := 0
+					l_item_count := 0
 				end
-				l_temp_size := l_temp_size + l_snapshot.item.value (l_snapshot.item.key_for_iteration)
-				if l_temp_size > Result then
-					Result := l_temp_size
+				-- Only first level.
+				from
+					l_item := l_snapshot.item
+					l_item.start
+				until
+					l_item.after
+				loop
+					l_temp_size := l_temp_size + l_item.item_for_iteration
+					l_item_count := l_item_count + 1
+					l_item.forth
 				end
+
+				if l_temp_size > Result.max_width then
+					Result.max_width := l_temp_size
+					Result.item_count := l_item_count
+				end
+
 				l_snapshot.forth
 				l_new_group_snapshot.forth
 			end
 		end
 
-	maximum_width_group_index: INTEGER is
+	maximum_width_group_index: TUPLE [max_index: INTEGER; max_row_item_count: INTEGER] is
 			-- Maximum width group index.
 			-- It compute sub-level groups
 		local
 			l_group_count: INTEGER
 			l_total_group: INTEGER
 			l_maximum_width: INTEGER
-			l_group_width: INTEGER
+			l_temp_result: TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
 		do
 			from
+				create Result
 				l_group_count := 1
 				l_total_group := group_count
 			until
 				l_group_count > l_total_group
 			loop
-				l_group_width := group_maximum_width (l_group_count)
-				if l_group_width > l_maximum_width then
-					l_maximum_width := l_group_width
-					Result := l_group_count
+				l_temp_result := group_maximum_width (l_group_count)
+				if l_temp_result.max_width > l_maximum_width then
+					l_maximum_width := l_temp_result.max_width
+					Result.max_index := l_group_count
+					Result.max_row_item_count := l_temp_result.item_count
 				end
 				l_group_count := l_group_count + 1
 			end
 		ensure
-			valid: Result > 0 and Result <= group_count
+			valid: Result.max_index > 0 and Result.max_index <= group_count
 		end
 
 	maximum_width_top_group: SD_TOOL_BAR_GROUP_INFO is
@@ -148,7 +187,7 @@ feature -- Query
 			until
 				l_group_count > l_total_group
 			loop
-				l_group_width := group_maximum_width (l_group_count)
+				l_group_width := group_maximum_width (l_group_count).max_width
 				if l_group_width > l_maximum_width then
 					l_maximum_width := l_group_width
 					Result := l_group_count
@@ -159,55 +198,7 @@ feature -- Query
 			valid: Result > 0 and Result <= total_group_count
 		end
 
-	group_width (a_group_index: INTEGER): INTEGER is
-			-- Group width
-			-- Calculation include sub level items.
-		require
-			valid: a_group_index > 0 and a_group_index <= total_group_count
-		local
-			l_count_include_sub: INTEGER
-			l_sub_group_info: SD_TOOL_BAR_GROUP_INFO
-			l_stop: BOOLEAN
-			l_sub_group_count: INTEGER
-		do
-			from
-				l_count_include_sub := 1
-				start
-			until
-				after or l_count_include_sub > a_group_index or l_stop
-			loop
-				if is_new_group then
-					l_count_include_sub := l_count_include_sub + 1
-				end
-				if has_sub_info then
-					l_sub_group_info := sub_grouping.item (index)
-					from
-						l_sub_group_info.start
-						l_sub_group_count := 1
-					until
-						l_sub_group_info.after or l_stop
-					loop
-						if l_sub_group_info.is_new_group then
-							l_count_include_sub := l_count_include_sub + 1
-						end
-						if l_count_include_sub = a_group_index then
-							l_stop := True
-							Result := l_sub_group_info.row_width (l_sub_group_count)
-						end
-						l_sub_group_info.forth
-						l_sub_group_count := l_sub_group_count + 1
-					end
-				else
-					if l_count_include_sub = a_group_index then
-						l_stop := True
-						Result := row_width (index)
-					end
-				end
-				forth
-			end
-		end
-
-	group_maximum_width (a_group_index: INTEGER): INTEGER is
+	group_maximum_width (a_group_index: INTEGER): TUPLE [max_width: INTEGER; item_count: INTEGER] is
 			-- Maximum group width of a_group_index.
 			-- `a_group_index' is top level group index.
 		require
@@ -216,13 +207,14 @@ feature -- Query
 			l_group_count: INTEGER
 			l_index_count, l_index_max: INTEGER
 			l_temp_result: INTEGER
+			l_temp_max_info: TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
 		do
 			from
+				create Result.default_create
 				l_group_count := 1
 				l_index_count := 1
 				l_index_max := count
 			until
-
 				l_index_count > l_index_max or l_group_count > a_group_index
 			loop
 				go_i_th (l_index_count)
@@ -234,16 +226,27 @@ feature -- Query
 					if not has_sub_info then
 						l_temp_result := row_width (l_index_count)
 					else
-						l_temp_result := sub_grouping.item (l_index_count).maximum_width
+						l_temp_max_info := sub_grouping.item (l_index_count).maximum_width_only_top_level
+						l_temp_result := l_temp_max_info.max_width
 					end
-					if l_temp_result > Result then
-						Result := l_temp_result
+					if l_temp_result > Result.max_width then
+						Result.max_width := l_temp_result
+						if not has_sub_info then
+							-- Result.item_count := internal_group_info.i_th (l_index_count).count is not correct,
+							-- because this value is group count, not item count.
+							-- We don't know how many items in this group.
+							-- This `item_count' is used for stop calculation grouping infos.
+							-- We don't want it stop here, so we assign a value which larger than 1.
+							Result.item_count := {INTEGER}.max_value
+						else
+							Result.item_count := l_temp_max_info.item_count
+						end
 					end
 				end
 				l_index_count := l_index_count + 1
 			end
 		ensure
-			valid: Result >= 0
+			valid: Result.max_width >= 0
 		end
 
 	row_width (a_row_index: INTEGER): INTEGER is
@@ -373,7 +376,7 @@ feature -- Query
 		end
 
 	sub_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
-			-- SD_tool_bar_GROUP_INFO is grouping info of items in one tool bar items group.
+			-- SD_TOOL_BAR`_GROUP_INFO is grouping info of items in one tool bar items group.
 			-- INTEGER is tool bar items group id. It is INTEGER in `internal_group_info'.
 
 feature -- Command
@@ -557,7 +560,7 @@ feature {NONE} -- Implementation
 	internal_group_info: ARRAYED_LIST [DS_HASH_TABLE [INTEGER, INTEGER]]
 			-- Grouping formation.
 			-- The order of items in arrayed list is the same order as ..........
-			-- 1st INTEGER Store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width.			
+			-- 1st INTEGER store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width.			
 			-- 2nd INTEGER is group_index of SD_TOOL_BAR_CONTENT.
 
 	internal_is_new_group: ARRAYED_LIST [BOOLEAN]

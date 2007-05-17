@@ -69,7 +69,6 @@ feature {NONE} -- Implementation functions
 				end
 				if not a_groups_info.has_sub_info then
 					if a_groups_info.is_new_group then
-						check not_more_than_one: a_groups_info.item.count = 1 end
 						position_top_level_items (a_groups_info.item)
 					end
 					debug ("docking")
@@ -102,9 +101,9 @@ feature {NONE} -- Implementation functions
 			from
 				a_group_indexs.start
 			until
-				a_group_indexs.after
+				a_group_indexs.after or l_first_item /= Void
 			loop
-				l_group := zone.content.group (a_group_indexs.key_for_iteration)
+				l_group := zone.content.group_items (a_group_indexs.key_for_iteration, False)
 				l_first_item := l_group.first
 				a_group_indexs.forth
 			end
@@ -132,13 +131,13 @@ feature {NONE} -- Implementation functions
 			debug ("docking")
 				print ("%N                                  position_sub_level_items START: ")
 			end
-			l_items := zone.content.group (a_group_index)
+			l_items := zone.content.group_items (a_group_index, False)
 			from
 				a_sub_info.start
 			until
 				a_sub_info.after
 			loop
-				a_sub_info.item.finish
+				a_sub_info.item.start
 				debug ("docking")
 					print ("%N                                  position a_sub_info.item.key_for_iteration: " + a_sub_info.item.key_for_iteration.out)
 				end
@@ -174,7 +173,7 @@ feature {NONE} -- Implementation functions
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			l_items := zone.content.items
+			l_items := zone.content.items_visible
 			from
 				l_items.start
 			until

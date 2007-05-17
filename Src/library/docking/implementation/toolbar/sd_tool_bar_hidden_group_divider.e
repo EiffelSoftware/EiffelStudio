@@ -72,7 +72,7 @@ feature -- Query
 			set: max_width_allowed > 0
 		local
 			l_group_count: INTEGER
-			l_group_info: SD_TOOL_BAR_GROUP_INFO
+			l_group_info: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]
 			l_stop: BOOLEAN
 		do
 			from
@@ -88,8 +88,8 @@ feature -- Query
 					until
 						l_group_info.after
 					loop
-						if l_group_info.is_new_group then
-							internal_items.i_th (l_group_info.index).set_wrap (True)
+						if l_group_info.index /= 1 and internal_items.valid_index (l_group_info.item.first - 1) then
+							internal_items.i_th (l_group_info.item.first - 1).set_wrap (True)
 						else
 							internal_items.i_th (l_group_info.index).set_wrap (False)
 						end
@@ -104,7 +104,7 @@ feature -- Query
 
 feature {NONE}	-- Implementation
 
-	algorithm: 	SD_TOOL_BAR_GROUP_ALGORITHM
+	algorithm: 	SD_HUFFMAN_ALGORITHM
 			-- Grouping algorithm.
 
 	internal_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]

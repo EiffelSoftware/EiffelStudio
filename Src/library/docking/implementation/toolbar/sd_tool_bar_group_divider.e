@@ -24,9 +24,9 @@ feature {NONE} -- Initlization
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			create algorithm.make (a_content.group_count)
+			create algorithm.make (a_content.groups_count (False))
 			content := a_content
-			l_items := a_content.items
+			l_items := a_content.items_visible
 
 			algorithm.set_items_width (init_group_width (a_content.items_visible))
 			init_grouping_infos
@@ -61,7 +61,7 @@ feature {NONE} -- Initlization
 			end
 			Result.extend (group_width (l_temp_group))
 		ensure
-			group_count_right: Result.count = content.group_count
+			group_count_right: Result.count = content.groups_count (False)
 		end
 
 	init_grouping_infos is
@@ -73,7 +73,7 @@ feature {NONE} -- Initlization
 			create grouping_algorithm.make_default
 			from
 				l_count := 1
-				l_max_group_count := content.item_count_except_separator
+				l_max_group_count := content.item_count_except_sep (False)
 				create group_infos.make (1)
 			until
 				l_count > l_max_group_count
@@ -133,7 +133,7 @@ feature -- Query
 		end
 
 	tool_bar_item_width (a_tool_bar_item: SD_TOOL_BAR_ITEM): INTEGER is
-			-- Tool bar item width of a_tool_bar_item.
+			-- Tool bar item width of `a_tool_bar_item'.
 		require
 			not_void: a_tool_bar_item /= Void
 		do
@@ -218,7 +218,7 @@ feature -- Query
 	best_grouping (a_group_count: INTEGER): SD_TOOL_BAR_GROUP_INFO is
 			-- Best grouping.
 		require
-			valid: a_group_count >= 1 and a_group_count <= content.item_count_except_separator
+			valid: a_group_count >= 1 and a_group_count <= content.item_count_except_sep (False)
 		do
 			Result := group_infos.item (a_group_count)
 		ensure
@@ -228,37 +228,141 @@ feature -- Query
 	max_row_count: INTEGER is
 			-- Actual maximum row count.
 		do
-			Result := content.item_count_except_separator
+			Result := content.item_count_except_sep (False)
 		end
 
 	content: SD_TOOL_BAR_CONTENT
 			-- Tool bar content managed by Current.
 
-	algorithm: SD_TOOL_BAR_GROUP_ALGORITHM
+	algorithm: SD_HUFFMAN_ALGORITHM
 			-- Algorithm for grouping.
 
 feature {NONE} -- Implementation
+
+	insert_arrayed_list_to_group_info_sub_level (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_sub_group_index: INTEGER; a_widths: ARRAY [INTEGER]) is
+			-- Insert `a_list' to `internal_refined_grouping'.
+		require
+			not_void: internal_refined_grouping /= Void
+			not_void: a_list /= Void
+			valid: a_sub_group_index > 0 and a_sub_group_index <= content.groups_count (False)
+			valid: list_and_width_equal (a_list, a_widths)
+		local
+			l_sub_group_info: SD_TOOL_BAR_GROUP_INFO
+			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
+
+		do
+			internal_refined_grouping.go_i_th (a_sub_group_index)
+
+			-- `position_groups_imp' from SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT count base on total items in sub group
+			l_sub_group_info := convert_arrayed_list_to_group_info (a_list, False, a_widths)
+
+			internal_refined_grouping.set_sub_group_info (l_sub_group_info, a_sub_group_index)
+		end
+
+	list_and_width_equal (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_items_width: ARRAY [INTEGER]): BOOLEAN is
+			-- Is items count in `a_list' equal to `a_items_width''s count?
+		require
+			not_void: a_list /= Void
+			not_void: a_items_width /= Void
+		local
+			l_count: INTEGER
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				l_count := l_count + a_list.item.count
+				a_list.forth
+			end
+			Result := l_count = a_items_width.count
+		end
+
+	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAY [INTEGER]): SD_TOOL_BAR_GROUP_INFO is
+			-- Only covert first level. Item is one group which has several items.
+		require
+			not_void: a_list /= Void
+			not_void: a_items_width /= Void
+			valid: list_and_width_equal (a_list, a_items_width)
+		local
+			l_one_group: ARRAYED_LIST [INTEGER]
+			l_group_width: INTEGER
+			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_item_count: INTEGER
+		do
+			from
+				l_item_count := 1
+				create Result.make
+				a_list.start
+			until
+				a_list.after
+			loop
+				from
+					l_one_group := a_list.item
+					create l_item.make_default
+					l_group_width := 0
+					if a_count_clear then
+						l_item_count := 1
+					end
+					l_one_group.start
+				until
+					l_one_group.after
+				loop
+					l_item.force_new (a_items_width.item (l_one_group.item), l_item_count)
+					l_group_width := l_one_group.item + l_group_width
+
+					l_item_count := l_item_count + 1
+					l_one_group.forth
+				end
+				Result.extend (l_item, a_list.index /= 1)
+				a_list.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 	group_items (a_group_count: INTEGER) is
 			-- Group items.
 		local
 			l_row_left: INTEGER
+			l_group: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]
 		do
 			if a_group_count >= 1 then
 				if a_group_count > algorithm.max_group_count then
-					internal_refined_grouping := algorithm.best_grouping_when (algorithm.max_group_count).deep_twin
+					l_group := algorithm.best_grouping_when (algorithm.max_group_count)
+					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, algorithm.item_width)
 				else
-					internal_refined_grouping := algorithm.best_grouping_when (a_group_count)
+					l_group := algorithm.best_grouping_when (a_group_count)
+					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, algorithm.item_width)
 				end
 
-				if a_group_count > content.group_count and a_group_count <= content.item_count_except_separator then
-					l_row_left := a_group_count - content.group_count
+				if a_group_count > content.groups_count (False) and a_group_count <= content.item_count_except_sep (False) then
+					l_row_left := a_group_count - content.groups_count (False)
 					debug ("docking")
-						print ("%N SD_tool_bar_GROUP_DIVIDER on_pointer_motion l_row_left is: " + l_row_left.out)
+						print ("%N SD_TOOL_BAR_GROUP_DIVIDER on_pointer_motion l_row_left is: " + l_row_left.out)
 					end
 					compute_extra_groups (l_row_left)
 				end
 			end
+		end
+
+	grouping_algorithm_factory (a_max_width_group_index: INTEGER): SD_HUFFMAN_ALGORITHM is
+			-- Factory method of algorithm.
+		require
+			valid: a_max_width_group_index > 0 and a_max_width_group_index <= content.groups_count (False)
+		local
+			l_sub_group_item_count: INTEGER
+		do
+			if grouping_algorithm.has (a_max_width_group_index) then
+				Result := grouping_algorithm.item (a_max_width_group_index)
+			else
+				l_sub_group_item_count := content.group_items (a_max_width_group_index, False).count
+				create Result.make (l_sub_group_item_count)
+				Result.set_items_width (group_item_width (content.group_items (a_max_width_group_index, False)))
+				grouping_algorithm.put_last (Result, a_max_width_group_index)
+			end
+		ensure
+			not_void: Result /= Void
 		end
 
 	compute_extra_groups (a_extra_group_count: INTEGER) is
@@ -267,53 +371,46 @@ feature {NONE} -- Implementation
 			valid: a_extra_group_count > 0
 		local
 			l_max_group_info: SD_TOOL_BAR_GROUP_INFO
-			l_temp_algorithm: SD_TOOL_BAR_GROUP_ALGORITHM
+			l_temp_algorithm: SD_HUFFMAN_ALGORITHM
 			l_sub_grouping: SD_TOOL_BAR_GROUP_INFO
 			l_reduced: INTEGER
 			l_stop: BOOLEAN
-			l_sub_group_item_count: INTEGER
+			l_max_info: TUPLE [max_group_index: INTEGER; max_row_item_count: INTEGER]
 		do
 			from
-
 			until
 				l_reduced >= a_extra_group_count or l_stop
 			loop
 				l_max_group_info := internal_refined_grouping.maximum_width_top_group
-
 				l_max_group_info.start
-				l_sub_group_item_count := content.group (internal_refined_grouping.maximum_width_group_index).count
-				if grouping_algorithm.has (internal_refined_grouping.maximum_width_group_index) then
-					l_temp_algorithm := grouping_algorithm.item (internal_refined_grouping.maximum_width_group_index)
-				else
-					create l_temp_algorithm.make (l_sub_group_item_count)
-					l_temp_algorithm.set_items_width (group_item_width (content.group (internal_refined_grouping.maximum_width_group_index)))
-					grouping_algorithm.put_last (l_temp_algorithm, internal_refined_grouping.maximum_width_group_index)
-				end
+				l_max_info := internal_refined_grouping.maximum_width_group_index
 
-
-				if is_initialized_sub_group (l_max_group_info) and then l_temp_algorithm.max_group_count < l_max_group_info.group_count + 1 then
-					-- The maximum width row is already one item per row.
+				-- Is there only one item in max width row?
+				if l_max_info.max_row_item_count <= 1 then
 					l_stop := True
-				else
-					-- Should not pass a_extra
-					l_reduced := l_reduced + 1
-					-- Because if `l_max_group_info' is not sub group info, then group count will be 1 larger than actual
-					if not is_initialized_sub_group (l_max_group_info) then
-						-- Is not from a sub group info
-						-- Or from sub group info which item count = 1
-						l_sub_grouping := l_temp_algorithm.best_grouping_when (2)
+				end
+				if not l_stop then
+					l_temp_algorithm := grouping_algorithm_factory (l_max_info.max_group_index)
+
+					if is_initialized_sub_group (l_max_group_info) and then l_temp_algorithm.max_group_count < l_max_group_info.group_count + 1 then
+						-- The maximum width row is already one item per row.
+						l_stop := True
 					else
-						-- Is from a sub group info
-						l_max_group_info.start
-						l_sub_grouping := l_temp_algorithm.best_grouping_when (l_max_group_info.group_count + 1)
+						-- Should not pass a_extra
+						l_reduced := l_reduced + 1
+						-- Because if `l_max_group_info' is not sub group info, then group count will be 1 larger than actual
+						if not is_initialized_sub_group (l_max_group_info) then
+							-- Is not from a sub group info
+							-- Or from sub group info which item count = 1
+							insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (2), l_max_info.max_group_index, l_temp_algorithm.item_width)
+						else
+							-- Is from a sub group info
+							l_max_group_info.start
+							insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (l_max_group_info.group_count + 1), l_max_info.max_group_index, l_temp_algorithm.item_width)
+						end
 					end
 				end
-
-				if l_sub_grouping /= Void then
-					internal_refined_grouping.set_sub_group_info (l_sub_grouping, internal_refined_grouping.maximum_width_group_index)
-				end
 			end
-
 		end
 
 	is_initialized_sub_group (a_group_info: SD_TOOL_BAR_GROUP_INFO): BOOLEAN is
@@ -331,7 +428,7 @@ feature {NONE} -- Implementation
 	group_infos: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
 			-- Group informations.
 
-	grouping_algorithm: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_ALGORITHM, INTEGER]
+	grouping_algorithm: DS_HASH_TABLE [SD_HUFFMAN_ALGORITHM, INTEGER]
 			-- We store algorithm here, so it'll not need recompute.
 			-- 2nd INTEGER is sub group index count
 

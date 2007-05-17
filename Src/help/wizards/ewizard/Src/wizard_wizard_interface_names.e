@@ -14,21 +14,21 @@ inherit
 feature -- Title
 
 	t_Initial_state: STRING_GENERAL is
-		do Result := locale.translate ("Welcome to the New Wizard%NApplication Wizard") end
+		do Result := locale.translation ("Welcome to the New Wizard%NApplication Wizard") end
 
-	t_Final_state: STRING_GENERAL is do Result := locale.translate ("Completing the New Wizard %NApplication Wizard") end
+	t_Final_state: STRING_GENERAL is do Result := locale.translation ("Completing the New Wizard %NApplication Wizard") end
 
-	t_Second_state: STRING_GENERAL is do Result := locale.translate ("Number of States") end
+	t_Second_state: STRING_GENERAL is do Result := locale.translation ("Number of States") end
 
-	st_Second_state: STRING_GENERAL is do Result := locale.translate ("You can choose the number of states your wizard will have.") end
+	st_Second_state: STRING_GENERAL is do Result := locale.translation ("You can choose the number of states your wizard will have.") end
 
-	t_new_wizard_application_wizard: STRING_GENERAL is do Result := locale.translate ("New Wizard Application Wizard") end
+	t_new_wizard_application_wizard: STRING_GENERAL is do Result := locale.translation ("New Wizard Application Wizard") end
 
 feature -- Label
 
-	l_Number_of_state1: STRING_GENERAL is do Result := locale.translate ("Generate a wizard with ") end
+	l_Number_of_state1: STRING_GENERAL is do Result := locale.translation ("Generate a wizard with ") end
 
-	l_Number_of_state2: STRING_GENERAL is do Result := locale.translate (" states.") end
+	l_Number_of_state2: STRING_GENERAL is do Result := locale.translation (" states.") end
 
 feature -- Message
 
@@ -36,7 +36,7 @@ feature -- Message
 		local
 			word: STRING_32
 		do
-			word := locale.format_string (locale.translate (
+			word := locale.formatted_string (locale.translation (
 				"You have specified the following settings:%N%
 				%%N%
 				%Project name: %T$1%N%
@@ -45,14 +45,14 @@ feature -- Message
 				%%N"),
 				[project_name, project_location])
 			if compile_project then
-				Result := word + locale.translate ("Click Finish to generate and compile this project")
+				Result := word + locale.translation ("Click Finish to generate and compile this project")
 			else
-				Result := word + locale.translate ("Click Finish to generate this project")
+				Result := word + locale.translation ("Click Finish to generate this project")
 			end
 		end
 
 	m_Initial_state: STRING_GENERAL is
-		do Result := locale.translate ("Using this wizard you can create a Wizard application%N%
+		do Result := locale.translation ("Using this wizard you can create a Wizard application%N%
 		%%N%
 		%You will have to choose how many states should be in%N%
 		%your wizard.%N%
@@ -62,7 +62,7 @@ feature -- Message
 		%%N%
 		%To continue, click Next.") end
 
-	m_Second_state: STRING_GENERAL is do Result := locale.translate ("The number of states is limited to 10.") end;
+	m_Second_state: STRING_GENERAL is do Result := locale.translation ("The number of states is limited to 10.") end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

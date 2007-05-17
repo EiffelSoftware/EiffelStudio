@@ -133,7 +133,7 @@ feature -- Access
 			Result := locale_cell.item
 			if Result = Void then
 				create l_manager.make ("")
-				Result := l_manager.get_system_locale
+				Result := l_manager.system_locale
 				locale_cell.put (Result)
 			end
 		ensure
@@ -252,15 +252,15 @@ feature -- Colors
 
 feature -- Interface names
 
-	b_back: STRING_GENERAL is do Result := locale.translate ("< Back ") end
-	b_next: STRING_GENERAL is do Result := locale.translate ("Next >") end
-	b_cancel: STRING_GENERAL is do Result := locale.translate ("Cancel") end
-	b_help: STRING_GENERAL is do Result := locale.translate ("Help") end
-	b_finish: STRING_GENERAL is do Result := locale.translate ("Finish") end
-	b_abort: STRING_GENERAL is do Result := locale.translate ("Abort") end
-	b_browse: STRING_GENERAL is do Result := locale.translate ("Browse...") end
+	b_back: STRING_GENERAL is do Result := locale.translation ("< Back ") end
+	b_next: STRING_GENERAL is do Result := locale.translation ("Next >") end
+	b_cancel: STRING_GENERAL is do Result := locale.translation ("Cancel") end
+	b_help: STRING_GENERAL is do Result := locale.translation ("Help") end
+	b_finish: STRING_GENERAL is do Result := locale.translation ("Finish") end
+	b_abort: STRING_GENERAL is do Result := locale.translation ("Abort") end
+	b_browse: STRING_GENERAL is do Result := locale.translation ("Browse...") end
 
-	t_choose_directory: STRING_GENERAL is do Result := locale.translate ("Please choose a folder.") end
+	t_choose_directory: STRING_GENERAL is do Result := locale.translation ("Please choose a folder.") end
 
 feature {NONE} -- Implementation
 

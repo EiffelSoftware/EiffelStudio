@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			create l_manager.make (l_layout.language_path)
 			if argument_count >= 2 then
 				l_arg := argument (2)
-				l_locale := l_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
+				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
 			end
 			locale_cell.put (l_locale)
 		end

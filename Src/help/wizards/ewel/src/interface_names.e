@@ -13,25 +13,25 @@ inherit
 
 feature -- Labels names
 
-	l_frame_application: STRING_GENERAL is do Result := locale.translate ("Frame application") end
-	l_dialog_application: STRING_GENERAL is do Result := locale.translate ("Dialog application") end
-	l_project_icon: STRING_GENERAL is do Result := locale.translate ("Project icon") end
+	l_frame_application: STRING_GENERAL is do Result := locale.translation ("Frame application") end
+	l_dialog_application: STRING_GENERAL is do Result := locale.translation ("Dialog application") end
+	l_project_icon: STRING_GENERAL is do Result := locale.translation ("Project icon") end
 
 feature -- Title
 
-	t_new_wel_wizard: STRING_GENERAL is	do Result := locale.translate ("New WEL Application Wizard") end
-	t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translate ("Welcome to the New WEL%NApplication Wizard") end
-	t_completing_wizard: STRING_GENERAL is	do Result := locale.translate ("Completing the New WEL%NApplication Wizard") end
-	t_wel_app_type: STRING_GENERAL is do Result := locale.translate ("WEL Application Type") end
-	t_choose_type_subtitle: STRING_GENERAL is do Result := locale.translate ("You can choose the type of your application between%N a Frame-based or a Dialog based window") end
-	t_project_icon: STRING_GENERAL is do Result := locale.translate ("Project icon") end
-	t_choose_icon_subtitle: STRING_GENERAL is do Result := locale.translate ("Choose an icon for you project.") end
+	t_new_wel_wizard: STRING_GENERAL is	do Result := locale.translation ("New WEL Application Wizard") end
+	t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New WEL%NApplication Wizard") end
+	t_completing_wizard: STRING_GENERAL is	do Result := locale.translation ("Completing the New WEL%NApplication Wizard") end
+	t_wel_app_type: STRING_GENERAL is do Result := locale.translation ("WEL Application Type") end
+	t_choose_type_subtitle: STRING_GENERAL is do Result := locale.translation ("You can choose the type of your application between%N a Frame-based or a Dialog based window") end
+	t_project_icon: STRING_GENERAL is do Result := locale.translation ("Project icon") end
+	t_choose_icon_subtitle: STRING_GENERAL is do Result := locale.translation ("Choose an icon for you project.") end
 
 feature -- Message
 
 	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate (
+			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%
 			%%N%
 			%Project name: %T$1%N%
@@ -42,15 +42,15 @@ feature -- Message
 	m_click_finish_to (a_compile: BOOLEAN): STRING_GENERAL is
 		do
 			if a_compile then
-				Result := locale.translate ("Click Finish to generate and compile this project")
+				Result := locale.translation ("Click Finish to generate and compile this project")
 			else
-				Result := locale.translate ("Click Finish to generate this project")
+				Result := locale.translation ("Click Finish to generate this project")
 			end
 		end
 
 	m_wizard_introduction: STRING_GENERAL is
 		do
-			Result := locale.translate (
+			Result := locale.translation (
 				"Using this wizard you can create a Windows application%N%
 				%based on the WEL library.%N%
 				%%N%
@@ -60,7 +60,7 @@ feature -- Message
 
 	m_a_frame_based_application: STRING_GENERAL is
 		do
-			Result := locale.translate (
+			Result := locale.translation (
 				"A Frame-Based Application uses a main window, or %"frame%", which can have %
 				%%Nmenus, subwindows, etc. (EiffelStudio is an example of Frame-Based Application.)%
 				%%N%NA Dialog-Based Application uses a sequence of dialogs.%
@@ -70,7 +70,7 @@ feature -- Message
 
 	m_choose_icon: STRING_GENERAL is
 		do
-			Result := locale.translate (
+			Result := locale.translation (
 				"You have chosen to build a Frame-Based Application.%N%
 				%You can provide an icon or use the default icon")
 		end

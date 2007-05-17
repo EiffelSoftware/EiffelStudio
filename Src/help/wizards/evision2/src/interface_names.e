@@ -13,24 +13,24 @@ inherit
 
 feature -- Labels names
 
-	l_menu_bar: STRING_GENERAL is do Result := locale.translate ("Menu Bar") end
-	l_tool_bar: STRING_GENERAL is do Result := locale.translate ("Tool Bar") end
-	l_status_bar: STRING_GENERAL is do Result := locale.translate ("Status Bar") end
-	l_about_dialogbox: STRING_GENERAL is do Result := locale.translate ("About DialogBox") end
+	l_menu_bar: STRING_GENERAL is do Result := locale.translation ("Menu Bar") end
+	l_tool_bar: STRING_GENERAL is do Result := locale.translation ("Tool Bar") end
+	l_status_bar: STRING_GENERAL is do Result := locale.translation ("Status Bar") end
+	l_about_dialogbox: STRING_GENERAL is do Result := locale.translation ("About DialogBox") end
 
 feature -- Title
 
-	t_new_vision2_wizard: STRING_GENERAL is	do Result := locale.translate ("New Vision2 Application Wizard") end
-	t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translate ("Welcome to the New Vision2%NApplication Wizard") end
-	t_completing_wizard: STRING_GENERAL is	do Result := locale.translate ("Completing the New Vision2%NApplication Wizard") end
-	t_vision2_application_appearance: STRING_GENERAL is do Result := locale.translate ("Vision2 Application Appearance") end
-	t_subtitle: STRING_GENERAL is do Result := locale.translate ("You can choose the appearance of your application.") end
+	t_new_vision2_wizard: STRING_GENERAL is	do Result := locale.translation ("New Vision2 Application Wizard") end
+	t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New Vision2%NApplication Wizard") end
+	t_completing_wizard: STRING_GENERAL is	do Result := locale.translation ("Completing the New Vision2%NApplication Wizard") end
+	t_vision2_application_appearance: STRING_GENERAL is do Result := locale.translation ("Vision2 Application Appearance") end
+	t_subtitle: STRING_GENERAL is do Result := locale.translation ("You can choose the appearance of your application.") end
 
 feature -- Message
 
 	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate (
+			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%
 			%%N%
 			%Project name: %T$1%N%
@@ -41,15 +41,15 @@ feature -- Message
 	m_click_finish_to (a_compile: BOOLEAN): STRING_GENERAL is
 		do
 			if a_compile then
-				Result := locale.translate ("Click Finish to generate and compile this project")
+				Result := locale.translation ("Click Finish to generate and compile this project")
 			else
-				Result := locale.translate ("Click Finish to generate this project")
+				Result := locale.translation ("Click Finish to generate this project")
 			end
 		end
 
 	m_wizard_introduction: STRING_GENERAL is
 		do
-			Result := locale.translate (
+			Result := locale.translation (
 				"Using this wizard you can create a graphical application%N%
 				%based on the EiffelVision2 library.%N%
 				%%N%
@@ -60,7 +60,7 @@ feature -- Message
 				%To continue, click Next.")
 		end
 
-	m_click_checkboxes_to: STRING_GENERAL is do Result := locale.translate ("Click the checkboxes to change the appearance.") end
+	m_click_checkboxes_to: STRING_GENERAL is do Result := locale.translation ("Click the checkboxes to change the appearance.") end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

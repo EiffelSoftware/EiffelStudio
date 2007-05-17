@@ -16,7 +16,7 @@ indexing
 			----------------------------------
 		]"
 	status: "See notice at end of class."
-	keywrods: "notebook, tab, page"
+	keywords: "notebook, tab, page"
 	date: "$Date$"
 	revision: "$Revision$"
 

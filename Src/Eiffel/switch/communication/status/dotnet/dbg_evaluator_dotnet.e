@@ -446,10 +446,7 @@ feature {DBG_EVALUATOR} -- Interface
 			l_dyn_type_from_str_feat_i,
 			l_new_instance_of_feat_i: FEATURE_I
 			l_icd_func: ICOR_DEBUG_FUNCTION
-			l_icd_args: ARRAY [ICOR_DEBUG_VALUE]
-			l_args: ARRAY [DUMP_VALUE]
-			l_i_dv,
-			l_dv: DUMP_VALUE
+			l_i_dv, l_dv: DUMP_VALUE
 		do
 			l_dyn_type_from_str_feat_i := a_internal_class_c.feature_named ("dynamic_type_from_string")
 			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_dyn_type_from_str_feat_i)

@@ -8,6 +8,7 @@
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<warning name="classname_filename_mismatch" enabled="false"/>
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>

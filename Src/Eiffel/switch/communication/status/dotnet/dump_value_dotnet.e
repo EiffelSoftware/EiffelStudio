@@ -70,7 +70,9 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			value_dotnet := eifnet_debug_value.icd_referenced_value
 
 			value_string_dotnet := a_eifnet_dsv.icd_value_info.interface_debug_string_value
-			value_string_dotnet.get_strong_reference_value
+			if value_string_dotnet /= Void then
+				value_string_dotnet.get_strong_reference_value
+			end
 
 			value_string := a_eifnet_dsv.string_value
 			if a_eifnet_dsv.is_null then

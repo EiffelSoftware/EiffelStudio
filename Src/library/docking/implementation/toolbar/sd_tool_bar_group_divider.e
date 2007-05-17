@@ -248,8 +248,6 @@ feature {NONE} -- Implementation
 			valid: list_and_width_equal (a_list, a_widths)
 		local
 			l_sub_group_info: SD_TOOL_BAR_GROUP_INFO
-			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
-
 		do
 			internal_refined_grouping.go_i_th (a_sub_group_index)
 
@@ -372,7 +370,6 @@ feature {NONE} -- Implementation
 		local
 			l_max_group_info: SD_TOOL_BAR_GROUP_INFO
 			l_temp_algorithm: SD_HUFFMAN_ALGORITHM
-			l_sub_grouping: SD_TOOL_BAR_GROUP_INFO
 			l_reduced: INTEGER
 			l_stop: BOOLEAN
 			l_max_info: TUPLE [max_group_index: INTEGER; max_row_item_count: INTEGER]

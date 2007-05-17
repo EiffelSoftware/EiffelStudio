@@ -188,7 +188,6 @@ feature {NONE} -- Implementation functions
 			-- Next best grouping info of `a_previous_infos'.
 		local
 			l_group_index: INTEGER
-			l_group_item_index: INTEGER
 			l_group: ARRAYED_LIST [INTEGER]
 		do
 			Result := a_previous_info.deep_twin
@@ -245,7 +244,6 @@ feature {NONE} -- Implementation functions
 		local
 			l_minimum_two_width: INTEGER
 			l_temp_two_width: INTEGER
-			l_group_count: INTEGER
 		do
 			from
 				l_minimum_two_width := {INTEGER}.max_value

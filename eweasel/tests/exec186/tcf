@@ -11,7 +11,7 @@ test_description When doing `a.b' where a and b are onces and if b has been alre
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
-copy_raw 	 test1.e  $CLUSTER test2.e
+copy_raw 	 test1.e  $CLUSTER test1.e
 compile_frozen
 compile_result 	 ok
 

@@ -11,7 +11,7 @@ test_description Procedure `default_create' is not called on all elements of a S
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
-copy_raw 	a.e $CLUSTER a.e
+copy_raw 	class_a.e $CLUSTER class_a.e
 copy_raw 	composite_class.e $CLUSTER composite_class.e
 compile_frozen
 compile_result 	ok

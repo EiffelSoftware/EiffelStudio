@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 lambert_conformal_conic.e  $CLUSTER lambert_conformal_conic.e
 copy_raw 	 lambert_conformal_conic_test.e  $CLUSTER lambert_conformal_conic_test.e
 copy_raw 	 ellipsoid.e  $CLUSTER ellipsoid.e
-copy_raw 	 catrographic_projector.e  $CLUSTER catrographic_projector.e
+copy_raw 	 cartographic_projector.e  $CLUSTER cartographic_projector.e
 compile_melted
 compile_result 	 ok
 

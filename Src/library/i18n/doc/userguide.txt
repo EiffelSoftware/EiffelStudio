@@ -99,8 +99,8 @@ away, what can you do with it?
 
           2.2.1.1 Interface
 
-translated (original: STRING_GENERAL): STRING_32
-translated_plural (original_singular, original_plural: STRING_GENERAL; plural_form : INTEGER <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+INTEGER&btnI=I%27m+Feeling+Lucky>): STRING_32
+translation (original: STRING_GENERAL): STRING_32
+plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+INTEGER&btnI=I%27m+Feeling+Lucky>): STRING_32
 formatted_string (original: STRING_GENERAL; token_values: TUPLE <http://www.google.com/search?q=site%3Ahttp%3A%2F%2Fdocs.eiffel.com%2Feiffelstudio%2Flibraries+TUPLE&btnI=I%27m+Feeling+Lucky>[STRING_GENERAL]): STRING_32
 
 
@@ -114,12 +114,12 @@ We'll use this example to illustrate the use of the string translation
 features of the i18n library.
 
 If, as above, there is just one constant string to translate, the
-solution is very easy: simply use the translate function. The resulting
+solution is very easy: simply use the translation function. The resulting
 code would look like this
 
-io.put_string(my_locale.translated("My hovercraft is full of eels"))
+io.put_string(my_locale.translation("My hovercraft is full of eels"))
 
-If the translate function can't find a translation for this string it
+If the translation function can't find a translation for this string it
 will simply return the original string - better then nothing!
 
 But life is, of course, not always that simple. What if we have to deal
@@ -138,11 +138,11 @@ translate both strings?
 Depending on the language, there may be up to 4 different types of
 plural forms, used in strange and exotic ways. Clearly, it is important
 to know exactly _how_ many hovercraft there are so that we can choose
-the right plural form. This can be done by the translate_plural
+the right plural form. This can be done by the plural_translation
 function, which we can use in this way:
 
 n := number_of_hovercraft
-io.put_string(my_locale.translated_plural("My hovercraft is full of eels","My hovercraft are full of eels",n))
+io.put_string(my_locale.plural_translation("My hovercraft is full of eels","My hovercraft are full of eels",n))
 
 This function will choose and return a translation in the correct plural
 form. If it can't find one, it will behave like translate and return
@@ -159,17 +159,17 @@ else
 	io.put_string("My "+n.out+" hovercraft are full of eels")
 end
 
-How can translate_plural handle this? It needs some reinforcements: the
+How can plural_translation handle this? It needs some reinforcements: the
 solution is to also use /string templates/. This means that we can embed
 codes like "$1" in a string and replace them in the translation by the
 actual values. Let's see how this works:
 
 n := number_of_hovercraft
-plural_string := my_locale.translated_plural("My hovercraft is full of eels","My $1 hovercraft are full of eels",n)
+plural_string := my_locale.plural_translation("My hovercraft is full of eels","My $1 hovercraft are full of eels",n)
 io.put_string(my_locale.formatted_string(plural_string, [n]))
 
 To replace the /escape codes/, such as $1, $2, we use the function
-format_string. This replaces all the escape codes it finds by the values
+formatted_string. This replaces all the escape codes it finds by the values
 in a tuple that you give to it a an argument.
 
 
@@ -179,7 +179,7 @@ It is not a good idea, generally speaking, to do something like the
 following:
 
 n := number_of_eels
-io.put_string(my_locale.translated("My hovercraft has "+n.out+"eels"))
+io.put_string(my_locale.translation("My hovercraft has "+n.out+"eels"))
 
 There are two reasons for this:
 
@@ -187,7 +187,7 @@ There are two reasons for this:
       runtime-dependant. It may correspond to an actual entry in the
       datasource, if you are careful, but in the example above it
       probably won't unless you have entries for every possible value of
-      n. This is the reason for which we have the format_string feature
+      n. This is the reason for which we have the formatted_string feature
       in LOCALE - please use it! 
 
     * When you want to generate a .po file to give to translators, this
@@ -261,15 +261,15 @@ programmer, so somehow you have to be able to give this translator a
 list of strings that you want translated.
 
 We can extract these strings from your application fairly easily by
-simply looking at the arguments for each call to translate or
-translate_plural. By clicking on a handy button in EiffelStudio, these
+simply looking at the arguments for each call to translation or
+plural_translation. By clicking on a handy button in EiffelStudio, these
 strings will be extracted and placed in a .po file
 
 If you are using the es-i18n branch, this command is in the "Tools" menu
 ("Generate .po"). One click and it will prompt you for a location to
 write the .po file to. This is basically all there is to it. It is
 helpful to understand how it works (see the 'Misuse' section): it
-extracts the arguments of calls to the translate and translate_plural
+extracts the arguments of calls to the translate and plural_translation
 functions. Largely it will not behave satisfactorily if the string is
 made up of several parts glued together at run-time.
 

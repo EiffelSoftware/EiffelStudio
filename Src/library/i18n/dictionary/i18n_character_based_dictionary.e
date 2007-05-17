@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	has_plural (original_singular, original_plural : STRING_GENERAL; plural_number : INTEGER) : BOOLEAN is
+	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN is
 			--
 		local
 			entry: I18N_DICTIONARY_ENTRY
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	get_singular ( original : STRING_GENERAL) : STRING_32 is
+	singular (original: STRING_GENERAL): STRING_32 is
 			-- get the translation of `original'
 			-- in the singular form
 		local
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	get_plural (original_singular, original_plural : STRING_GENERAL; plural_number : INTEGER) : STRING_32 is
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
 			-- get the translation of `original_singular'
 			-- in the given plural form
 		do
@@ -94,10 +94,10 @@ feature --Information
 
 feature {NONE}  -- Implementation
 
-	singular_char_tree: CHARACTER_TREE[I18N_DICTIONARY_ENTRY]
+	singular_char_tree: CHARACTER_TREE [I18N_DICTIONARY_ENTRY]
 			-- tree that contains all entries without plurals
 
-	plural_char_tree: CHARACTER_TREE[I18N_DICTIONARY_ENTRY];
+	plural_char_tree: CHARACTER_TREE [I18N_DICTIONARY_ENTRY];
 			-- tree that contains all entries with plurals
 
 indexing

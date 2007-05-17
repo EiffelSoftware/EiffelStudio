@@ -490,6 +490,7 @@ feature -- Access
 			if show_tooltip_button_internal = Void then
 				create show_tooltip_button_internal.make (preferences.class_browser_data.show_tooltip_preference)
 				show_tooltip_button_internal.set_pixmap (pixmaps.icon_pixmaps.general_show_tool_tips_icon)
+				show_tooltip_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.general_show_tool_tips_icon_buffer)
 				show_tooltip_button_internal.set_tooltip (interface_names.h_show_tooltip)
 				show_tooltip_button_internal.select_actions.extend (agent on_show_tooltip_changed)
 			end

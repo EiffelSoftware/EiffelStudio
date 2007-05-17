@@ -116,6 +116,7 @@ feature {NONE} -- Initialization
 		local
 			scmd: EB_STANDARD_CMD
 			tb: SD_TOOL_BAR_BUTTON
+			dbgm: EB_DEBUGGER_MANAGER
 		do
 			create mini_toolbar.make
 
@@ -129,16 +130,18 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (tb)
 			toggle_layout_cmd := scmd
 
-			if Eb_debugger_manager.enable_bkpt /= Void then
-				enable_bkpt_button := Eb_debugger_manager.enable_bkpt.new_mini_sd_toolbar_item
+			dbgm := Eb_debugger_manager
+
+			if dbgm.enable_bkpt /= Void then
+				enable_bkpt_button := dbgm.enable_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (enable_bkpt_button)
 			end
-			if Eb_debugger_manager.disable_bkpt /= Void then
-				disable_bkpt_button := Eb_debugger_manager.disable_bkpt.new_mini_sd_toolbar_item
+			if dbgm.disable_bkpt /= Void then
+				disable_bkpt_button := dbgm.disable_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (disable_bkpt_button)
 			end
-			if Eb_debugger_manager.clear_bkpt /= Void then
-				clear_bkpt_button := Eb_debugger_manager.clear_bkpt.new_mini_sd_toolbar_item
+			if dbgm.clear_bkpt /= Void then
+				clear_bkpt_button := dbgm.clear_bkpt.new_mini_sd_toolbar_item
 				mini_toolbar.extend (clear_bkpt_button)
 			end
 
@@ -384,9 +387,9 @@ feature {NONE} -- Implementation
 		do
 			breakpoints_separated_by_status := not breakpoints_separated_by_status
 			if breakpoints_separated_by_status then
-				tt.set_tooltip (interface_names.f_display_breakpoints_sep_by_status)
+				tt.set_tooltip (interface_names.f_display_all_breakpoints_together)
 			else
-				tt.set_tooltip (interface_names.f_all_breakpoint_together)
+				tt.set_tooltip (interface_names.f_display_breakpoints_sep_by_status)
 			end
 			refresh_breakpoints_info
 		end

@@ -277,7 +277,7 @@ feature -- Accelerator, focus label and menu name
 					]")
 		end
 	f_advanced_search: STRING_GENERAL is 		do Result := locale.translation ("Advanced search") end
-	f_all_breakpoint_together: STRING_GENERAL is 		do Result := locale.translation ("All breakpoints together") end
+	f_display_all_breakpoints_together: STRING_GENERAL is 		do Result := locale.translation ("Display all breakpoints together") end
 	m_Address_toolbar: STRING_GENERAL is		do Result := locale.translation("&Address Bar")	end
 	m_Apply: STRING_GENERAL is					do Result := locale.translation("&Apply")	end
 	m_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Auto expressions")	end

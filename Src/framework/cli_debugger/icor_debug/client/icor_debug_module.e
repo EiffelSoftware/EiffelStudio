@@ -92,8 +92,13 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 
 	md_member_name (a_feat_token: INTEGER): STRING is
 			-- (Feature) name for `a_feat_token'.
+		local
+			t: TUPLE [name:STRING; f:INTEGER]
 		do
-			Result := interface_md_import.get_member_props (a_feat_token)
+			t := interface_md_import.get_member_props (a_feat_token)
+			if t /= Void then
+				Result := t.name
+			end
 		end
 
 feature {ICOR_EXPORTER} -- Access

@@ -189,6 +189,29 @@ feature -- Enumerating collections
 			end
 		end
 
+	enum_properties (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+			-- Enumerates all properties defined on a specified TypeDef.
+			-- The tokens are returned in the same order as originally emitted into metadata.
+			-- If you specify cl as nil, the method will enumerate all the global
+			-- static data members defined in the current scope.
+		local
+			l_md_size: INTEGER
+			l_mp_tokens: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_md_size := sizeof_mdProperty
+			create l_mp_tokens.make (a_max_count * l_md_size)
+
+			last_call_success := cpp_enum_properties (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+
+			if
+				(last_call_success = 0 or last_call_success = 1 )
+				and then l_count > 0
+			then
+				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+			end
+		end
+
 	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all attributed parameters for the method specified by md.
 			-- By attributed parameters, we mean those parameters of a method
@@ -274,13 +297,13 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
 		end
 
-	get_member_props (a_tok: INTEGER): STRING is
+	get_member_props (a_tok: INTEGER): TUPLE [name:STRING; flag:INTEGER] is
 			-- Get member 's name property
 		local
 			mp_name: MANAGED_POINTER
 			l_r_classtoken: INTEGER
 			l_rsize: INTEGER
-			l_flag: POINTER
+			l_flag: INTEGER
 			l_sig: POINTER
 			l_sigsize: INTEGER
 			l_code_rva: INTEGER
@@ -291,10 +314,12 @@ feature -- Obtaining Properties of a Specified Object
 		do
 			create mp_name.make (256 * 2)
 
-			last_call_success := cpp_get_member_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, l_flag, l_sig, $l_sigsize,
+			last_call_success := cpp_get_member_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
+				$l_flag,
+				l_sig, $l_sigsize,
 				$l_code_rva, l_pdwimpl_flags, l_cplustype_flag, l_cst_ppvalue, $l_pcchvalue)
 
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+			Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_flag]
 		end
 
 	get_method_props (a_tok: INTEGER): STRING is
@@ -338,6 +363,37 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
 
+	get_property_props (a_tok: INTEGER): TUPLE [name:STRING; getter:INTEGER; flag:INTEGER] is
+			-- Get field 's name property
+		local
+			mp_name: MANAGED_POINTER
+			l_r_classtoken: INTEGER
+			l_rsize: INTEGER
+			l_sig: POINTER
+			l_sigsize: INTEGER
+			l_pdwdef_type: POINTER
+			l_ppvalue: POINTER
+			l_pcbvalue: INTEGER
+			l_setter: INTEGER
+			l_getter: INTEGER
+			l_othermethod: POINTER
+			l_cmax: INTEGER
+			l_pcothermethod: INTEGER
+			l_mp_tokens: MANAGED_POINTER
+			last_get_property_flags: INTEGER
+		do
+			l_cmax := 1
+			create l_mp_tokens.make (l_cmax * sizeof_mdMethodDef)
+
+			create mp_name.make (256 * 2)
+			last_call_success := cpp_get_property_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
+				$last_get_property_flags, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue,
+				$l_setter, $l_getter, l_mp_tokens.item, l_cmax, $l_pcothermethod
+				)
+
+			Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_getter, last_get_property_flags]
+		end
+
 	last_field_is_static: BOOLEAN is
 			-- Last `get_field_props' is_static property
 		do
@@ -378,6 +434,78 @@ feature -- Status
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
+		end
+
+feature -- Queries
+
+	field_tokens (a_class_token: INTEGER): ARRAYED_LIST [INTEGER] is
+		require
+			a_class_token > 0
+		do
+			Result := enum_tokens (a_class_token, agent enum_fields)
+		end
+
+	property_tokens (a_class_token: INTEGER): ARRAYED_LIST [INTEGER] is
+		require
+			a_class_token > 0
+		do
+			Result := enum_tokens (a_class_token, agent enum_properties)
+		end
+
+	enum_tokens (   a_class_token: INTEGER;
+					enum_agent: FUNCTION [ANY, TUPLE [TYPED_POINTER [POINTER], INTEGER, INTEGER], ARRAY [INTEGER]];
+				): ARRAYED_LIST [INTEGER] is
+		require
+			a_class_token > 0
+		local
+			l_tp: TYPED_POINTER [POINTER]
+			l_tokens: ARRAYED_LIST [INTEGER]
+			l_tokens_array: ARRAY [INTEGER]
+			l_t_index: INTEGER
+			l_t_upper: INTEGER
+			l_tokens_count: INTEGER
+			l_enum_hdl: POINTER
+			l_token: INTEGER
+		do
+				--| Get inherited "direct" entry
+			create l_tokens.make (5)
+
+--			l_enum_hdl := Default_pointer
+			l_tp := $l_enum_hdl --| BUG: ... TUPLE with typed_pointer !!!
+			l_tokens_array := enum_agent.item ([l_tp, a_class_token, 10])
+			l_tokens_count := count_enum (l_enum_hdl)
+			if l_tokens_count > 0 then
+				if l_tokens_count > l_tokens.capacity - l_tokens.count then
+					l_tokens.resize (l_tokens.count + l_tokens_count)
+				end
+				from
+					l_t_upper := l_tokens_array.upper
+					l_t_index := l_tokens_array.lower
+				until
+					l_t_index > l_t_upper
+				loop
+					l_tokens.force (l_tokens_array.item (l_t_index))
+					l_t_index := l_t_index + 1
+				end
+				if l_tokens_count > l_tokens_array.count then
+						-- We need to retrieve the rest of the data
+
+					l_tokens_array := enum_agent.item ([l_tp, a_class_token, l_tokens_count - 10])
+
+					from
+						l_t_upper := l_tokens_array.upper
+						l_t_index := l_tokens_array.lower
+					until
+						l_t_index > l_t_upper
+					loop
+						l_token := l_tokens_array.item (l_t_index)
+						l_tokens.force (l_token)
+						l_t_index := l_t_index + 1
+					end
+				end
+			end
+			close_enum (l_enum_hdl)
+			Result := l_tokens
 		end
 
 feature {NONE} -- Implementation Enum...
@@ -460,6 +588,16 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumFields"
+		end
+
+	frozen cpp_enum_properties (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_properties: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+		external
+			"[
+				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdProperty*, ULONG, ULONG*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"EnumProperties"
 		end
 
 	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
@@ -613,6 +751,34 @@ feature {NONE} -- Implementation Obtaining information
 			]"
 		end
 
+	frozen cpp_get_property_props (obj: POINTER;
+				a_property_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
+				r_flags: POINTER; ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
+				a_elt_type_cst_value: POINTER; a_def_val_p: POINTER;
+				a_def_val_byte_count: TYPED_POINTER [INTEGER];
+				a_setter: TYPED_POINTER [INTEGER]; a_getter: TYPED_POINTER [INTEGER];
+				a_othermethod: POINTER;	a_cmax: INTEGER; a_pcothermethod: TYPED_POINTER [INTEGER]
+						): INTEGER is
+		external
+			"[
+				C++ inline use "cli_headers.h"
+			]"
+		alias
+			"[
+   				((IMetaDataImport*)$obj)->GetPropertyProps((mdProperty)$a_property_token, (mdTypeDef*)$r_class_token,
+						(LPWSTR)$r_name, (ULONG)$a_wcharsize, (ULONG*)$r_wchsize,
+						(DWORD*)$r_flags, (PCCOR_SIGNATURE*)$ppvsigblob, (ULONG*)$pcbsigblob,
+						(DWORD*)$a_elt_type_cst_value, (void const **)$a_def_val_p,
+						(ULONG*)$a_def_val_byte_count,
+						(mdMethodDef*)$a_setter,
+						(mdMethodDef*)$a_getter,
+						(mdMethodDef*)$a_othermethod,
+        				(ULONG)$a_cmax, 
+        				(ULONG*)$a_pcothermethod)
+			]"
+		end
+
 feature {NONE} -- Implementation Status
 
 	frozen cpp_is_valid_token (obj: POINTER; a_tok: INTEGER): INTEGER is
@@ -669,6 +835,14 @@ feature {NONE} -- Implementation
 			"C++ macro use %"cli_headers.h%" "
 		alias
 			"sizeof(mdFieldDef)"
+		end
+
+	sizeof_mdProperty: INTEGER is
+			-- Number of bytes in a value of type `mdProperty'
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"sizeof(mdProperty)"
 		end
 
 	sizeof_mdParamDef: INTEGER is

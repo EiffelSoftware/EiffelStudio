@@ -99,10 +99,19 @@ feature -- Special Dotnet status
 	is_static: BOOLEAN
 			-- Is a static value ?
 
+	is_property: BOOLEAN
+			-- Is a property value ?
+
 	set_static (v: like is_static) is
 			-- Set `is_static' as `v'
 		do
 			is_static := v
+		end
+
+	set_property (v: like is_property) is
+			-- Set `is_property' as `v'
+		do
+			is_property := v
 		end
 
 feature {NONE} -- Special childrens
@@ -117,24 +126,7 @@ feature {NONE} -- Special childrens
 			l_class_token: INTEGER
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_md_import: MD_IMPORT
-			l_tokens: DS_ARRAYED_LIST [INTEGER]
-			l_tokens_array: ARRAY [INTEGER]
---#			l_class_tokens_array: ARRAY [INTEGER]
---#			l_ct_index: INTEGER
-			l_t_index: INTEGER
-			l_t_upper: INTEGER
-
-			l_tokens_cursor: DS_LINEAR_CURSOR [INTEGER]
-			l_tokens_count: INTEGER
-			l_enum_hdl: POINTER
-
-			l_att_token: INTEGER
-			l_att_icd_debug_value: ICOR_DEBUG_VALUE
-			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
-			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
-			l_att_name: STRING
-			l_error_message: STRING
-			l_is_static: BOOLEAN
+			l_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.new_interface_debug_object_value
@@ -149,10 +141,163 @@ feature {NONE} -- Special childrens
 					end
 					l_class_token := l_icd_class.get_token
 					l_icd_module := l_icd_class.get_module
-					l_md_import := l_icd_module.interface_md_import
 
-						--| Get inherited "direct" Fields
-					create l_tokens.make (5)
+					l_values := field_values_for (l_class_token, l_icd_class, l_object_value, l_icd_frame, l_icd_module)
+					Result := l_values
+
+					l_values := property_values_for (l_class_token, l_icd_class, icd_value_info.icd_referenced_value, l_icd_frame, l_icd_module)
+					if Result = Void then
+						Result := l_values
+					elseif l_values /= Void then
+						Result.append_last (l_values)
+					end
+				end
+				l_object_value.clean_on_dispose
+			end
+		end
+
+	field_values_for (l_class_token: INTEGER; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
+				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+		local
+			l_md_import: MD_IMPORT
+			l_tokens: LIST [INTEGER]
+			l_att_token: INTEGER
+			l_att_icd_debug_value: ICOR_DEBUG_VALUE
+			l_att_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
+			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
+			l_att_name: STRING
+			l_error_message: STRING
+			l_is_static: BOOLEAN
+		do
+			l_md_import := l_icd_module.interface_md_import
+			l_tokens := l_md_import.field_tokens (l_class_token)
+			if not l_tokens.is_empty then
+				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
+				from
+					l_tokens.start
+				until
+					l_tokens.after
+				loop
+					l_att_icd_debug_value := Void
+					l_error_message := Void
+					l_att_token := l_tokens.item
+					l_att_name := l_md_import.get_field_props (l_att_token)
+--					l_att_name.prepend (".. ") --| To separate from the Properties values.
+					if l_att_name /= Void and then not l_md_import.last_field_is_literal then
+							--| If the field is not a constant at compiled time
+							--| then available only throught source code or
+							--| Meta Data
+
+						l_is_static := l_md_import.last_field_is_static
+						if l_is_static and l_icd_frame /= Void then
+							l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
+							if (l_icd_class.last_call_success & 0x0000FFFF) = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
+								l_error_message := "Static not yet initialized"
+							end
+							debug ("DBG_EXTRA_DISPLAY")
+								l_att_name.prepend ("{S} ")
+							end
+						end
+						if l_att_icd_debug_value = Void and l_error_message = Void then
+							l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
+						end
+						if l_att_icd_debug_value /= Void then
+							l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value, Void)
+							if l_att_debug_value /= Void then
+								l_att_debug_value.set_static (l_is_static)
+								l_att_debug_value.set_name (l_att_name)
+								Result.force_last (l_att_debug_value)
+							end
+						else
+							create l_error_debug_value.make_with_name (l_att_name)
+							if l_error_message /= Void then
+								l_error_debug_value.set_message (l_error_message)
+							end
+							Result.force_last (l_error_debug_value)
+						end
+					end
+					debug ("DBG_EXTRA_DISPLAY")
+						if l_att_name /= Void and then l_md_import.last_field_is_literal then
+							if l_md_import.last_field_is_static then
+								l_att_name.prepend ("{S C} ")
+							else
+								l_att_name.prepend ("{C} ")
+							end
+							create l_error_debug_value.make_with_name (l_att_name)
+							l_error_debug_value.set_message ("Const value are not displayed")
+							Result.force_last (l_error_debug_value)
+						end
+					end
+					l_tokens.forth
+				end
+			end
+		end
+
+	property_values_for (l_class_token: INTEGER; l_icd_class: ICOR_DEBUG_CLASS; a_icd_value: ICOR_DEBUG_VALUE;
+				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE;
+			): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+		local
+			l_md_import: MD_IMPORT
+			l_tokens: LIST [INTEGER]
+			l_token: INTEGER
+			l_icd_debug_value: ICOR_DEBUG_VALUE
+			l_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
+			l_error_debug_value: DUMMY_MESSAGE_DEBUG_VALUE
+			l_name: STRING
+			l_getter_token: INTEGER
+			l_icd_func: ICOR_DEBUG_FUNCTION
+			l_error_message: STRING
+			l_is_static: BOOLEAN
+			t: TUPLE [name:STRING; getter:INTEGER; flag:INTEGER]
+			l_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR
+		do
+			l_md_import := l_icd_module.interface_md_import
+			l_tokens := l_md_import.property_tokens (l_class_token)
+			if not l_tokens.is_empty then
+				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
+				from
+					l_dbg_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+					l_tokens.start
+				until
+					l_tokens.after
+				loop
+					l_icd_debug_value := Void
+					l_error_message := Void
+					l_token := l_tokens.item
+					t := l_md_import.get_property_props (l_token)
+					if t /= Void then
+						l_name := t.name
+						l_name.prepend (" ") --| To have Properties values at the beginning	
+						l_getter_token := t.getter
+						l_icd_func := l_icd_module.get_function_from_token (l_getter_token)
+						if l_icd_func /= Void then
+							l_icd_debug_value := l_dbg_evaluator.function_evaluation (l_icd_frame, l_icd_func, <<a_icd_value>>)
+							if l_dbg_evaluator.last_eval_is_exception and l_icd_debug_value /= Void then
+								l_icd_debug_value.clean_on_dispose
+								l_icd_debug_value := Void
+							end
+						end
+						if l_icd_debug_value /= Void then
+							l_debug_value := debug_value_from_icdv (l_icd_debug_value, Void)
+							if l_debug_value /= Void then
+								l_debug_value.set_property (True)
+								l_debug_value.set_name (l_name)
+								Result.force_last (l_debug_value)
+							end
+						else
+							create l_error_debug_value.make_with_name (l_name)
+							if l_error_message /= Void then
+								l_error_debug_value.set_message (l_error_message)
+							end
+							Result.force_last (l_error_debug_value)
+						end
+					end
+					l_tokens.forth
+				end
+			end
+		end
+
+feature -- Commented code
 
 --| 2006-08-01: Commented temporary previous improvement to get more attributes
 --| but this need more checking to be sure the attributes are related to `l_class_token'
@@ -172,109 +317,11 @@ feature {NONE} -- Special childrens
 --#						l_ct_index < l_class_tokens_array.lower
 --#					loop
 --#						l_class_token := l_class_tokens_array [l_ct_index]
-						l_enum_hdl := default_pointer
-						l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
-						l_tokens_count := l_md_import.count_enum (l_enum_hdl)
-						if l_tokens_count > 0 then
-							if l_tokens_count > l_tokens.capacity - l_tokens.count then
-								l_tokens.resize (l_tokens.count + l_tokens_count)
-							end
-							from
-								l_t_upper := l_tokens_array.upper
-								l_t_index := l_tokens_array.lower
-							until
-								l_t_index > l_t_upper
-							loop
-								l_tokens.force_last (l_tokens_array.item (l_t_index))
-								l_t_index := l_t_index + 1
-							end
-							if l_tokens_count > l_tokens_array.count then
-									-- We need to retrieve the rest of the data
-								l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
-
-								from
-									l_t_upper := l_tokens_array.upper
-									l_t_index := l_tokens_array.lower
-								until
-									l_t_index > l_t_upper
-								loop
-									l_tokens.force_last (l_tokens_array.item (l_t_index))
-									l_t_index := l_t_index + 1
-								end
-							end
-						end
-						l_md_import.close_enum (l_enum_hdl)
+--# 					...
 --#						l_ct_index := l_ct_index - 1
 --#					end
-
 -- FIXME JFIAT: 2004-01-14 : Check with User's preference limit.
 -- FIXME JFIAT: 2004-01-14 : do we get all inherited fields too ?
-
-					check l_tokens /= Void end
-					if not l_tokens.is_empty then
-						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
-						from
-							l_tokens_cursor := l_tokens.new_cursor
-							l_tokens_cursor.start
-						until
-							l_tokens_cursor.after
-						loop
-							l_att_icd_debug_value := Void
-							l_error_message := Void
-							l_att_token := l_tokens_cursor.item
-							l_att_name := l_md_import.get_field_props (l_att_token)
-							if l_att_name /= Void and then not l_md_import.last_field_is_literal then
-									--| If the field is not a constant at compiled time
-									--| then available only throught source code or
-									--| Meta Data
-
-								l_is_static := l_md_import.last_field_is_static
-								if l_is_static and l_icd_frame /= Void then
-									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
-									if (l_icd_class.last_call_success & 0x0000FFFF) = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
-										l_error_message := "Static not yet initialized"
-									end
-									debug ("DBG_EXTRA_DISPLAY")
-										l_att_name.prepend ("{S} ")
-									end
-								end
-								if l_att_icd_debug_value = Void and l_error_message = Void then
-									l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
-								end
-								if l_att_icd_debug_value /= Void then
-									l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value, Void)
-									if l_att_debug_value /= Void then
-										l_att_debug_value.set_static (l_is_static)
-										l_att_debug_value.set_name (l_att_name)
-										Result.force_last (l_att_debug_value)
-									end
-								else
-									create l_error_debug_value.make_with_name (l_att_name)
-									if l_error_message /= Void then
-										l_error_debug_value.set_message (l_error_message)
-									end
-									Result.force_last (l_error_debug_value)
-								end
-							end
-							debug ("DBG_EXTRA_DISPLAY")
-								if l_att_name /= Void and then l_md_import.last_field_is_literal then
-									if l_md_import.last_field_is_static then
-										l_att_name.prepend ("{S C} ")
-									else
-										l_att_name.prepend ("{C} ")
-									end
-									create l_error_debug_value.make_with_name (l_att_name)
-									l_error_debug_value.set_message ("Const value are not displayed")
-									Result.force_last (l_error_debug_value)
-								end
-							end
-							l_tokens_cursor.forth
-						end
-					end
-				end
-				l_object_value.clean_on_dispose
-			end
-		end
 
 feature -- Properties
 

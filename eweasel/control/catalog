@@ -1661,6 +1661,7 @@ test	array-of-user-defined-expanded					expanded003 tcf pass expanded
 --test						expanded009 tcf pass expanded
 
 
+test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
 
 

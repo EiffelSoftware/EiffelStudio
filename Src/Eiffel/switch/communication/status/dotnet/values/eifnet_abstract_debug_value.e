@@ -125,7 +125,6 @@ feature {NONE} -- Special childrens
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_class_token: INTEGER
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_md_import: MD_IMPORT
 			l_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			if icd_value_info.has_object_interface then
@@ -247,7 +246,6 @@ feature {NONE} -- Special childrens
 			l_getter_token: INTEGER
 			l_icd_func: ICOR_DEBUG_FUNCTION
 			l_error_message: STRING
-			l_is_static: BOOLEAN
 			t: TUPLE [name:STRING; getter:INTEGER; flag:INTEGER]
 			l_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR
 		do

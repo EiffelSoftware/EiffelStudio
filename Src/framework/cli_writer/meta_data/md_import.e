@@ -376,7 +376,6 @@ feature -- Obtaining Properties of a Specified Object
 			l_pcbvalue: INTEGER
 			l_setter: INTEGER
 			l_getter: INTEGER
-			l_othermethod: POINTER
 			l_cmax: INTEGER
 			l_pcothermethod: INTEGER
 			l_mp_tokens: MANAGED_POINTER

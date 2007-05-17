@@ -1692,9 +1692,9 @@ if DOTNET test deferred-inherited-from-external	dotnet023	tcf pass dotnet
 if DOTNET test renamed-feature-from-interface	dotnet024	tcf pass dotnet
 if DOTNET test property-name-clash	dotnet025	tcf pass dotnet property
 if DOTNET test enum-inspect-validity	dotnet026	tcf pass dotnet
-if DOTNET test property-assigner-generation	dotnet027	tcf pass dotnet
+if DOTNET test property-assigner-generation	dotnet027	tcf pass dotnet property assign
 if DOTNET test field-assigner-generation	dotnet028	tcf pass dotnet
-test property-accessor-name-clash		dotnet029	tcf pass dotnet
+test property-accessor-name-clash		dotnet029	tcf pass dotnet property
 test inline-agent-of-descendant dotnet030 tcf pass dotnet
 test deferred-class-inherit-dotnet dotnet031 tcf pass dotnet
 if DOTNET test single-inheritance-test dotnet032 tcf pass dotnet
@@ -1736,3 +1736,15 @@ if DOTNET test compiled-managed-resource-embeddeding	dotnet067	tcf pass dotnet r
 if DOTNET test peripheral-resource-embeddeding	dotnet068	tcf pass dotnet resources
 if DOTNET test non-existent-resource-embeddeding	dotnet069	tcf fail dotnet resources
 if DOTNET test uncompiled-managed-resource-modified	dotnet070	tcf fail dotnet resources
+if DOTNET test property-name-clash-named dotnet071	tcf pass dotnet property
+if DOTNET test property-name-clash-single-named dotnet072	tcf pass dotnet property
+if DOTNET test property-name-clash-named-inherited dotnet073	tcf pass dotnet property
+if DOTNET test properties-generated-on_eiffel-interface dotnet074	tcf pass dotnet property
+if DOTNET test illegal-routine-properties dotnet075	tcf pass dotnet property
+if DOTNET test property-reusing-parent-setter dotnet076	tcf fail dotnet property
+if DOTNET test deferred-property-function-on-single dotnet077	tcf fail dotnet property
+if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet property incrementality
+if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality
+
+
+

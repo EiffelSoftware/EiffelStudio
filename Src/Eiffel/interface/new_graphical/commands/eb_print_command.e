@@ -162,6 +162,7 @@ feature {NONE} -- Recyclable
 feature {NONE} -- implementation
 
 	saved: BOOLEAN
+			-- If saved?
 
 	save_to_file (a_text: STRING; a_filename: STRING) is
 			-- Save `a_text' in `a_filename'.

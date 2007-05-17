@@ -8015,7 +8015,7 @@ feature {NONE} -- Implementation: catcall check
 			l_descendants: ARRAYED_LIST [CLASS_C]
 			l_type: TYPE_A
 			l_formal: FORMAL_A
-			l_generics: ARRAY [TYPE_A]
+--			l_generics: ARRAY [TYPE_A]
 		do
 			if a_type.is_formal then
 				l_formal ?= a_type

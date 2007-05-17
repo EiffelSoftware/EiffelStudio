@@ -279,7 +279,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			a_key_string: STRING_32
 			a_key: EV_KEY
 			a_key_press: BOOLEAN
-			a_cs: EV_GTK_C_STRING
 			l_app_imp: like app_implementation
 			l_accel_list: EV_ACCELERATOR_LIST
 			l_window_imp: EV_WINDOW_IMP
@@ -290,6 +289,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_any: ANY
 			l_accel: EV_ACCELERATOR
 			l_accel_imp: EV_ACCELERATOR_IMP
+			l_unicode_value: NATURAL_32
 		do
 			l_app_imp := app_implementation
 				-- Perform translation on key values from gdk.
@@ -303,7 +303,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				if a_key /= Void and then l_window_imp /= Void then
 					l_accel_list := l_window_imp.accelerators_internal
 					if l_accel_list /= Void and then not l_accel_list.is_empty then
-						l_accel := l_accel_list [1]
+						l_accel := l_accel_list @ 1
 						if l_accel /= Void then
 							l_accel_imp ?= l_accel.implementation
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
@@ -315,8 +315,13 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 				end
 				a_key_press := True
-				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (a_key_event))
-				a_key_string := a_cs.string
+				if keyval > 0 then
+					l_unicode_value := {EV_GTK_EXTERNALS}.gdk_keyval_to_unicode (keyval)
+					if l_unicode_value > 0 then
+						create a_key_string.make (0)
+						a_key_string.append_character (l_unicode_value.to_character_32)
+					end
+				end
 				if a_key_string /= Void and then a_key_string.valid_index (1) then
 					l_char := a_key_string @ 1
 					if l_char.is_character_8 then

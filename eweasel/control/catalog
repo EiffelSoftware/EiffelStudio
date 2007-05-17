@@ -1682,9 +1682,9 @@ test dotnet-inherit-new-array-type		dotnet014	tcf pass dotnet
 test none-usage-in-internal-type-comparison	dotnet015	tcf fail dotnet
 if DOTNET test dotnet-empty-custom-attributes	dotnet016	tcf pass dotnet
 test dotnet-replicated-standard_twin		dotnet017	tcf pass dotnet
-if DOTNET test dotnet-custom-attributes	dotnet018	tcf pass dotnet
+if DOTNET test dotnet-custom-attributes	dotnet018	tcf fail dotnet
 if DOTNET test dotnet-attribute-in-enum	dotnet019	tcf pass dotnet
-if DOTNET test dotnet-enum-value		dotnet020	tcf pass dotnet
+if DOTNET test dotnet-enum-value		dotnet020	tcf fail dotnet
 if DOTNET test dotnet-value-type-initialization	dotnet021	tcf pass dotnet
 if DOTNET test custom-attribute-type-change	dotnet022	tcf pass dotnet incrementality
 if DOTNET test deferred-inherited-from-external	dotnet023	tcf pass dotnet
@@ -1697,9 +1697,9 @@ test property-accessor-name-clash		dotnet029	tcf pass dotnet
 test inline-agent-of-descendant dotnet030 tcf pass dotnet
 test deferred-class-inherit-dotnet dotnet031 tcf pass dotnet
 if DOTNET test single-inheritance-test dotnet032 tcf pass dotnet
-test assertion-evaluation-order dotnet033 tcf pass dotnet
+test assertion-evaluation-order dotnet033 tcf fail dotnet
 test pointer-to-external-expanded		dotnet034	tcf pass dotnet expanded
-if DOTNET test ambiguous-dotnet-types	dotnet035	tcf pass dotnet expanded
+if DOTNET test ambiguous-dotnet-types	dotnet035	tcf fail dotnet expanded
 test real-output-no-locale	dotnet036	tcf pass dotnet real locale
 if DOTNET test overload-with-argument-type	dotnet037	tcf pass dotnet
 if DOTNET test compatible-single-and-interface	dotnet038	tcf pass dotnet
@@ -1716,23 +1716,22 @@ if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet0
 if DOTNET test effecting-from-inherited-external	dotnet049	tcf pass dotnet
 test replicated-from-generic-type		dotnet050	tcf pass dotnet termination expanded replication
 test implicit-type-cause-crash-on-cast	dotnet051	tcf pass dotnet termination
-if DOTNET test incremental-custom-attribute-constant-change	dotnet052	tcf pass dotnet
-if DOTNET test wrong-eiffel-name-attribute-generation	dotnet053	tcf pass dotnet
-if DOTNET test field-attribute-test	dotnet054	tcf fail dotnet
-if DOTNET test creation-without-default-ctor	dotnet055	tcf fail dotnet
-if DOTNET test incr-remove-create-dotnet-constructor	dotnet056	tcf fail dotnet
+if DOTNET test incremental-custom-attribute-constant-change	dotnet052	tcf fail dotnet custom_attributes
+if DOTNET test wrong-eiffel-name-attribute-generation	dotnet053	tcf pass dotnet custom_attributes
+if DOTNET test field-attribute-test	dotnet054	tcf fail dotnet custom_attributes
+if DOTNET test creation-without-default-ctor	dotnet055	tcf fail dotnet constructor
+if DOTNET test incr-remove-create-dotnet-constructor	dotnet056	tcf fail dotnet constructor incrementality
 if DOTNET test smart-object-automatic-implementation	dotnet057	tcf fail dotnet
-if DOTNET test expected-any-type-name	dotnet058	tcf pass dotnet
-if DOTNET test expected-basic-type-names	dotnet059	tcf pass dotnet
-if DOTNET test dotnet-name-generation	dotnet060	tcf fail dotnet
-if DOTNET test external-name-conflict-validation	dotnet061	tcf pass dotnet
-if DOTNET test target-namespace-generation-rules	dotnet062	tcf fail dotnet
-if DOTNET test target-named-namespace-generation-rules	dotnet063	tcf pass dotnet
-if DOTNET test library-namespace-generation-rules	dotnet064	tcf fail dotnet
-if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet
-if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet
-if DOTNET test uncompiled-managed-resource-embeddeding	dotnet066	tcf pass dotnet
-if DOTNET test compiled-managed-resource-embeddeding	dotnet067	tcf pass dotnet
-if DOTNET test peripheral-resource-embeddeding	dotnet068	tcf pass dotnet
-if DOTNET test non-existent-resource-embeddeding	dotnet069	tcf fail dotnet
-if DOTNET test uncompiled-managed-resource-modified	dotnet070	tcf fail dotnet
+if DOTNET test expected-any-type-name	dotnet058	tcf pass dotnet namespace dotnet_names
+if DOTNET test expected-basic-type-names	dotnet059	tcf pass dotnet namespace dotnet_names
+if DOTNET test dotnet-name-generation	dotnet060	tcf fail dotnet dotnet_names
+if DOTNET test external-name-conflict-validation	dotnet061	tcf pass dotnet dotnet_names
+if DOTNET test target-namespace-generation-rules	dotnet062	tcf fail dotnet namespace
+if DOTNET test target-named-namespace-generation-rules	dotnet063	tcf pass dotnet namespace
+if DOTNET test library-namespace-generation-rules	dotnet064	tcf fail dotnet namespace
+if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet namespace
+if DOTNET test uncompiled-managed-resource-embeddeding	dotnet066	tcf pass dotnet resources
+if DOTNET test compiled-managed-resource-embeddeding	dotnet067	tcf pass dotnet resources
+if DOTNET test peripheral-resource-embeddeding	dotnet068	tcf pass dotnet resources
+if DOTNET test non-existent-resource-embeddeding	dotnet069	tcf fail dotnet resources
+if DOTNET test uncompiled-managed-resource-modified	dotnet070	tcf fail dotnet resources

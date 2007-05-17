@@ -472,8 +472,10 @@ feature {NONE} -- Process Vision2 events
 				-- Redraw the line where the cursor is (we will erase the cursor)
 			show_cursor := False
 			if not editor_drawing_area.is_destroyed then
-				invalidate_selection_rect (True)
-				suspend_cursor_blinking
+				invalidate_selection_rect (False)
+					-- No need to suspend the blinking of the cursor here since the drawing
+					-- routine `draw_cursor' takes into consideration that when you do not have
+					-- the focus we draw a fix grey cursor.
 			end
 		end
 
@@ -817,7 +819,7 @@ feature {NONE} -- Blink Cursor Management
 			if not is_empty then
 				line_start := text_displayed.selection_start.y_in_lines
 				line_end := text_displayed.selection_end.y_in_lines
-				invalidate_block (line_start, line_end, true)
+				invalidate_block (line_start, line_end, flush_screen)
 			end
 		end
 

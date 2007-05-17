@@ -10,6 +10,11 @@ class
 
 feature -- Externals
 
+	frozen gdk_keyval_to_unicode (a_keyval: NATURAL_32): NATURAL_32 is
+		external
+			"C (guint): guint | <gtk/gtk.h>"
+		end
+
 	frozen gdk_window_set_accept_focus (a_window: POINTER; a_accept: BOOLEAN)
 		external
 			"C signature (GdkWindow*, gboolean) use <gtk/gtk.h>"

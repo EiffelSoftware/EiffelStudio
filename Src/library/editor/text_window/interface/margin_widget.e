@@ -64,6 +64,9 @@ feature {NONE}-- Initialization
 			a_text_panel.text_displayed.add_lines_observer (Current)
 			a_text_panel.text_displayed.add_edition_observer (Current)
 			margin_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
+				-- Set focus to `text_panel' anytime we receives the focus since from
+				-- the user point of view the margin and the editor are one.
+			margin_area.focus_in_actions.extend (agent text_panel.set_focus)
 		end
 
 	user_initialization is

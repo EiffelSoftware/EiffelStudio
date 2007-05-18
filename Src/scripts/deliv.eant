@@ -25,11 +25,13 @@
 		<echo message="---(sub tasks)---" />
 		<echo message="3) compile_es" />
 		<echo message="4) build_es_eiffelxx" />
-		<input message=" -> " variable="answer" />
-		<geant target="menu_clean" if="$answer=1" reuse_variables="yes" />
-		<geant target="build_es" if="$answer=2" reuse_variables="yes" />
-		<geant target="compile_es" if="$answer=3" reuse_variables="yes" />
-		<geant target="build_es_eiffelxx" if="$answer=4" reuse_variables="yes" />
+		<echo message="----" />
+		<echo message="Q) quit" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,Q,q" />
+		<geant target="menu_clean" if="$answer=1" reuse_variables="true" />
+		<geant target="build_es" if="$answer=2" reuse_variables="true" />
+		<geant target="compile_es" if="$answer=3" reuse_variables="true" />
+		<geant target="build_es_eiffelxx" if="$answer=4" reuse_variables="true" />
 		<echo message="Bye..."/>
 	</target>
 
@@ -41,12 +43,14 @@
 		<echo message="3) clean output folder (bin)" />
 		<echo message="4) clean compile folder (EIFGENs)" />
 		<echo message="5) clean delivery folder (EiffelXX)" />
-		<input message=" -> " variable="answer" />
-		<geant target="clean_all" if="$answer=1" reuse_variables="yes" />
-		<geant target="clean_es" if="$answer=2" reuse_variables="yes" />
-		<geant target="clean_bin" if="$answer=3" reuse_variables="yes" />
-		<geant target="clean_compile" if="$answer=4" reuse_variables="yes" />
-		<geant target="clean_delivery" if="$answer=5" reuse_variables="yes" />
+		<echo message="----" />
+		<echo message="Q) quit" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,Q,q" />
+		<geant target="clean_all" if="$answer=1" reuse_variables="true" />
+		<geant target="clean_es" if="$answer=2" reuse_variables="true" />
+		<geant target="clean_bin" if="$answer=3" reuse_variables="true" />
+		<geant target="clean_compile" if="$answer=4" reuse_variables="true" />
+		<geant target="clean_delivery" if="$answer=5" reuse_variables="true" />
 	</target>
 
 	<target name="init_deliv" depend="init_system" >

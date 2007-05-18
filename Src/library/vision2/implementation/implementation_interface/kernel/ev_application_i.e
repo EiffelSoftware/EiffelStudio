@@ -522,7 +522,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]) is
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN) is
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -623,7 +623,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				end
 				if not l_menu.is_destroyed and then l_menu.count > l_menu_count then
 					l_menu.show_at (Void, a_screen_x - menu_placement_offset, a_screen_y - menu_placement_offset)
-				elseif a_configure_agent /= Void then
+				elseif a_configure_agent /= Void and not a_menu_only then
 					a_configure_agent.call (Void)
 				end
 			else

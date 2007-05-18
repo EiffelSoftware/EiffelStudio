@@ -337,7 +337,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			new_text: STRING_32
 		do
 			new_text := text
-			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
+			if --not in_change_action and then
+			(stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
 					-- The text has actually changed
 				in_change_action := True
 				if change_actions_internal /= Void then

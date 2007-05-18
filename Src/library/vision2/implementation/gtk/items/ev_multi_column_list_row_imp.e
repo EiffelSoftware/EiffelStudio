@@ -131,7 +131,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is
+        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
 		do
 			check
 				do_not_call: False

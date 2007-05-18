@@ -258,7 +258,6 @@ feature -- Implementation
 			l_call_events: BOOLEAN
 			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
 			l_current: ANY
-			l_configure_agent: PROCEDURE [ANY, TUPLE]
 			l_press: BOOLEAN
 		do
 			l_call_events := True
@@ -273,7 +272,7 @@ feature -- Implementation
 						l_dockable_source ?= Current
 						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
-						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 					end
 				else
 					l_current := Current
@@ -299,7 +298,7 @@ feature -- Implementation
 	start_transport (
 			a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER)
+			a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
 		is
 			-- Initialize a pick and drop transport.
 		local
@@ -333,7 +332,7 @@ feature -- Implementation
 			end
 
 			if ready_for_pnd_menu (a_button, a_press) then
-				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, pebble, l_configure_agent)
+				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, pebble, l_configure_agent, a_menu_only)
 			elseif l_configure_agent /= Void then
 				l_configure_agent.call (Void)
 			end

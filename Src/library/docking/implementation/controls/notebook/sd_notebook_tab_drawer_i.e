@@ -412,12 +412,8 @@ feature {NONE} -- Implementation
 	internal_shared: SD_SHARED
 			-- ALl singletons.
 
-	buffer_pixmap: EV_PIXMAP
+	buffer_pixmap: EV_PIXMAP;
 			-- Buffer pixmap
-
-invariant
-
-	not_void: internal_tab /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

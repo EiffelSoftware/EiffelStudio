@@ -38,15 +38,6 @@ feature {NONE}  -- Initlization
 			internal_notebook := a_notebook
 			internal_docking_manager := a_docking_manager
 
-			if internal_docking_manager.tab_drop_actions.count > 0 then
-				drop_actions.extend (agent on_drop_actions)
-
-				l_veto_function := internal_docking_manager.tab_drop_actions.veto_pebble_function
-				if l_veto_function /= Void then
-					drop_actions.set_veto_pebble_function (l_veto_function)
-				end
-			end
-
 			create internal_tool_bar.make
 
 			create internal_auto_hide_indicator.make
@@ -65,6 +56,15 @@ feature {NONE}  -- Initlization
 
 			set_minimum_width (0)
 			set_minimum_height (internal_shared.notebook_tab_height + 3)
+			
+			if internal_docking_manager.tab_drop_actions.count > 0 then
+				drop_actions.extend (agent on_drop_actions)
+
+				l_veto_function := internal_docking_manager.tab_drop_actions.veto_pebble_function
+				if l_veto_function /= Void then
+					drop_actions.set_veto_pebble_function (l_veto_function)
+				end
+			end
 		ensure
 			set: internal_docking_manager = a_docking_manager
 			set: internal_notebook = a_notebook

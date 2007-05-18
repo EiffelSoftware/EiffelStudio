@@ -101,7 +101,7 @@ feature -- Basic Operations
 			-- Show tool.
 		do
 			Precursor {EB_OUTPUT_TOOL}
-			if text_area /= Void and then not text_area.is_empty then
+			if text_area /= Void and then not text_area.is_empty and then text_area.editor_drawing_area.is_displayed then
 				text_area.editor_drawing_area.set_focus
 			end
 		end

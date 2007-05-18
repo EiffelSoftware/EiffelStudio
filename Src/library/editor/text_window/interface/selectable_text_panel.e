@@ -331,7 +331,7 @@ feature {NONE} -- Handle mouse clicks
 					if l_cursor.token /= Void then
 						l_num := l_cursor.y_in_lines
 						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
-						invalidate_line (l_cursor.y_in_lines, True)
+						invalidate_line (l_cursor.y_in_lines, False)
 						if l_click_count < 4 then
 								-- If the click count is greater than 3 don't move the cursor to the bottom of the screen
 							check_cursor_position

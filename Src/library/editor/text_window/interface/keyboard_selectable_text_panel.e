@@ -835,10 +835,8 @@ feature {NONE} -- Blink Cursor Management
 			if editor_preferences.blinking_cursor and has_focus then
 					-- Set up a timeout to be called to make the cursor blink
 				blinking_timeout.actions.extend (agent internal_draw_cursor (media, x, y, width, line_height, show_cursor))
-				blinking_timeout.actions.call (Void)
-			else
-				internal_draw_cursor (media, x, y, width, line_height, show_cursor)
 			end
+			internal_draw_cursor (media, x, y, width, line_height, show_cursor)
  		end
 
 	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN) is
@@ -849,7 +847,7 @@ feature {NONE} -- Blink Cursor Management
 		do
 			if not updating_line then
 				blink_on := not blink_on
-				invalidate_cursor_rect (True)
+				invalidate_cursor_rect (False)
 			end
 			media.set_xor_mode
 			if not do_show then

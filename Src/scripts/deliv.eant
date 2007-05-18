@@ -30,6 +30,10 @@
 
 		<geant target="set_version"			fork="false" reuse_variables="true" />
 		<geant target="compile_es" 			fork="false" reuse_variables="true" />
+		<geant target="build_es_eiffelxx"	fork="false" reuse_variables="true" />
+	</target>
+
+	<target name="build_es_eiffelxx" depend="init_deliv" >
 		<geant target="create_es_delivery" 	fork="false" reuse_variables="true" />
 		<geant target="install_es" 			fork="false" reuse_variables="true" />
 	</target>
@@ -79,11 +83,11 @@
 		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${OUTPUT_DIR}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
 		
 		<!-- ec -->
-		<!--
 		<available resource="${OUTPUT_DIR}${path_separator}ec${exe}" variable="tmp_available"/>
 		<geant target="get_bin__ec" if="$tmp_available=false" />
-		-->
+		<!--
 		<geant target="get_bin__ec" />
+		-->
 
 		<!-- estudio -->
 		<available resource="${OUTPUT_DIR}${path_separator}estudio${exe}" variable="tmp_available"/>
@@ -326,9 +330,26 @@
 	<target name="make_delivery_common" depend="init_deliv" >
 		<!-- platform independant -->
 		<set name="SVNURL" value="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk" />
+		<echo message=" - Copy Delivery to ${cwd}"/>
+		<copy to_directory="${cwd}" dir="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<mkdir directory="library"/>
+		<echo message=" - Copy library to ${cwd}${path_separator}library"/>
+		<copy to_directory="${cwd}${path_separator}library" dir="${EIFFEL_SRC}${path_separator}library" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<mkdir directory="C_library"/>
+		<echo message=" - Copy C_library to ${cwd}${path_separator}C_library"/>
+		<copy to_directory="${cwd}${path_separator}C_library" dir="${EIFFEL_SRC}${path_separator}C_library" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<!--
 		<exec executable="svn checkout $SVNURL/Delivery . " />
 		<exec executable="svn checkout $SVNURL/Src/library library" />
 		<exec executable="svn checkout $SVNURL/Src/C_library C_library" />
+		-->
+		<echo message=" - ..." />
 		<mkdir directory="studio/spec/$ISE_PLATFORM"/>
 		<mkdir directory="studio/spec/$ISE_PLATFORM/bin"/>
 		<echo message="make dir : studio/spec/$ISE_PLATFORM/include" />

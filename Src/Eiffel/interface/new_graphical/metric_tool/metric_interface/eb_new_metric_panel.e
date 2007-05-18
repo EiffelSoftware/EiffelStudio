@@ -318,10 +318,12 @@ feature -- Actions
 			end
 			if l_ok then
 				metric_manager.save_metric (l_new_metric, current_metric_editor.mode = {EB_METRIC_EDITOR}.new_mode, l_old_metric)
+				original_metric := l_new_metric
 				metric_tool.store_metrics
 				set_is_metric_changed (False)
-				original_metric := l_new_metric
-				current_metric_editor.initialize_editor (l_new_metric, {EB_METRIC_EDITOR}.edit_mode, l_new_metric.unit)
+				if current_metric_editor /= Void then
+					current_metric_editor.initialize_editor (l_new_metric, {EB_METRIC_EDITOR}.edit_mode, l_new_metric.unit)
+				end
 				set_is_up_to_date (False)
 				update_ui
 			else

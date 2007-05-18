@@ -61,6 +61,7 @@ feature -- Editor menu
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				if a_pebble /= Void then
+					extend_separator (a_menu)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 				end

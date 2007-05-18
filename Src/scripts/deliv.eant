@@ -31,7 +31,6 @@
 		<geant target="compile_es" if="$answer=3" reuse_variables="yes" />
 		<geant target="build_es_eiffelxx" if="$answer=4" reuse_variables="yes" />
 		<echo message="Bye..."/>
-</target>
 	</target>
 
 	<target name="menu_clean">

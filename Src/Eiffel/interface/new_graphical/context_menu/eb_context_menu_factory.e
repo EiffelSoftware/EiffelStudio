@@ -89,6 +89,7 @@ feature -- Class Tree Menu
 				setup_pick_item (a_menu, a_pebble)
 				l_stone ?= a_pebble
 				if l_stone /= Void then
+					extend_separator (a_menu)
 					l_target_stone ?= l_stone
 					if l_target_stone /= Void then
 						extend_add_to_menu (a_menu, l_stone)
@@ -195,6 +196,7 @@ feature -- Diagram tool
 				else
 					build_name (a_pebble)
 					setup_pick_item (a_menu, a_pebble)
+					extend_separator (a_menu)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 					l_feature_stone ?= a_pebble
@@ -254,6 +256,7 @@ feature -- Favorites menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_new_favorite_class (a_menu)
@@ -271,6 +274,7 @@ feature -- Metrics tool
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_metric_selector_remove (a_menu, a_pebble, a_selector)
@@ -315,6 +319,7 @@ feature -- Call stack menu
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				l_call_stack_stone ?= a_pebble
 				if l_call_stack_stone /= Void then
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
@@ -335,6 +340,7 @@ feature -- Object and Watch tool menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				l_object_stone ?= a_pebble
 				if l_object_stone /= Void then
@@ -353,6 +359,7 @@ feature -- Object and Watch tool menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				l_object_stone ?= a_pebble
 				if l_object_stone /= Void then
@@ -377,6 +384,7 @@ feature -- Search scope menu
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_search_scope_remove (a_menu, a_pebble)
@@ -391,6 +399,7 @@ feature -- Standard menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 			end
 		end

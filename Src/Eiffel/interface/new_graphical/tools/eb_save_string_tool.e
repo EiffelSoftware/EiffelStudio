@@ -103,6 +103,7 @@ feature -- Save
 		do
 			create save_file_dlg.make_with_title (title)
 			save_file_dlg.filters.extend (["*.txt", "Text files (*.txt)"])
+			save_file_dlg.filters.extend (["*.*", "All files (*.*)"])
 			save_file_dlg.save_actions.extend (agent on_save_file_selected)
 			save_file_dlg.show_modal_to_window (owner_window)
 			save_file_dlg.destroy
@@ -124,8 +125,12 @@ feature -- Save
 					create str.make_from_string (save_file_dlg.file_name)
 					if extension_required and save_file_dlg.selected_filter_index /= 0 then
 						filter_str ?= save_file_dlg.filters.i_th (save_file_dlg.selected_filter_index).item (1)
-						if filter_str.item (1) = '*' then
-							filter_str.remove (1)
+						if filter_str.is_equal ("*.*") then
+							filter_str := ""
+						else
+							if filter_str.item (1) = '*' then
+								filter_str.remove (1)
+							end
 						end
 						l_count := filter_str.count
 						l_count2 := str.count

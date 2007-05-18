@@ -647,11 +647,12 @@ feature{NONE} -- Item comparison
 		require
 			a_item_attached: a_item /= Void
 			b_item_attached: b_item /= Void
-			a_b_of_same_type: a_item.same_type (b_item)
 		do
-			Result := a_item.is_equal (b_item)
+			if a_item.same_type (b_item) then
+				Result := a_item.is_equal (b_item)
+			end
 		ensure
-			good_result: Result implies (a_item.is_equal (b_item))
+			good_result: Result implies (a_item.same_type (b_item) and then a_item.is_equal (b_item))
 		end
 
 	item_type: QL_ITEM

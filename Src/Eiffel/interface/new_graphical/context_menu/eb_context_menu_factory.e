@@ -66,6 +66,7 @@ feature -- Editor menu
 				end
 				extend_basic_editor_menus (a_menu, a_editor.is_editable)
 				extend_view_in_main_formatters_menus (a_menu)
+				extend_property_menu (a_menu, a_pebble)
 				current_editor := Void
 			end
 		end
@@ -113,6 +114,7 @@ feature -- Class Tree Menu
 						end
 						extend_delete_class_cluster_menu (a_menu, l_stone)
 					end
+					extend_property_menu (a_menu, l_stone)
 				end
 			end
 		end
@@ -203,6 +205,7 @@ feature -- Diagram tool
 						extend_remove_from_diagram (a_menu, a_pebble)
 						extend_diagram_delete_menu (a_menu, a_pebble)
 					end
+					extend_property_menu (a_menu, a_pebble)
 				end
 			end
 		end
@@ -964,6 +967,28 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu.last.select_actions.extend (agent l_search_tool.on_drop_remove (a_pebble))
 			a_menu.extend (new_menu_item (names.m_remove_all))
 			a_menu.last.select_actions.extend (agent l_search_tool.remove_all)
+		end
+
+	extend_property_menu (a_menu: EV_MENU; a_pebble: ANY)
+			-- Extend Properties menu item relating to `a_pebble'.
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_menu_item: EV_MENU_ITEM
+			l_properties_tool: EB_PROPERTIES_TOOL
+			l_stone: STONE
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+				l_properties_tool := dev_window.tools.properties_tool
+				if l_properties_tool.dropable (l_stone) then
+					create l_menu_item.make_with_text (l_properties_tool.menu_name)
+					l_menu_item.select_actions.extend (agent l_properties_tool.show)
+					l_menu_item.select_actions.extend (agent l_properties_tool.set_stone (l_stone))
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					a_menu.extend (l_menu_item)
+				end
+			end
 		end
 
 feature {NONE} -- Diagram menu section, Granularity 1.

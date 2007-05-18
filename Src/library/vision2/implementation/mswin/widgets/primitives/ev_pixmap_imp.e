@@ -949,6 +949,7 @@ feature {EV_ANY_I} -- Delegated features
 			a_pressure: DOUBLE
 			a_screen_x: INTEGER
 			a_screen_y: INTEGER
+			a_menu_only: BOOLEAN
 		) is
 			-- Start a pick and drop transport.
 		do
@@ -962,7 +963,8 @@ feature {EV_ANY_I} -- Delegated features
 				a_y_tilt,
 				a_pressure,
 				a_screen_x,
-				a_screen_y
+				a_screen_y,
+				a_menu_only
 				)
 		end
 

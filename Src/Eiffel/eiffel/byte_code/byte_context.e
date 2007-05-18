@@ -46,6 +46,7 @@ feature -- Initialization
 			create once_manifest_string_table.make (100)
 			create {LINKED_STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]} class_type_stack.make
 			create generated_inlines.make (5)
+			create generic_wrappers.make (0)
 		end
 
 feature -- Access
@@ -2018,11 +2019,13 @@ feature -- Clearing
 			onces.wipe_out
 			once_manifest_string_count_table.wipe_out
 			class_type_stack.wipe_out
+			generic_wrappers.wipe_out
 			expanded_descendants := Void
 		ensure
 			global_onces_is_empty: global_onces.is_empty
 			onces_is_empty: onces.is_empty
 			once_manifest_string_count_table_is_empty: once_manifest_string_count_table.is_empty
+			generic_wrappers_is_empty: generic_wrappers.is_empty
 			has_no_expanded_descendants_information: not has_expanded_descendants_information
 		end
 
@@ -2143,6 +2146,38 @@ feature -- Descendants information
 			has_expanded_descendants_information: has_expanded_descendants_information
 			expanded_descendants_is_filled: expanded_descendants.count >= system.class_types.count
 		end
+
+feature -- Generic code generation
+
+	record_wrapper (body_index: INTEGER; routine_id: INTEGER) is
+			-- Ensure the wrapper of the routine `body_index' is generated
+			--  for the polymorphic table `routine_id'
+		require
+			final_mode: final_mode
+		local
+			r: ROUT_ID_SET
+		do
+			generic_wrappers.search (body_index)
+			if generic_wrappers.found then
+				r := generic_wrappers.found_item
+			else
+				create r.make
+				generic_wrappers.put (r, body_index)
+			end
+			r.put (routine_id)
+		end
+
+	generic_wrapper_ids (body_index: INTEGER): ROUT_ID_SET is
+			-- Routine IDs of generic wrappers for a feature with `body_index' (if any)
+		do
+			Result := generic_wrappers.item (body_index)
+		end
+
+feature {NONE} -- Generic code generation
+
+	generic_wrappers: HASH_TABLE [ROUT_ID_SET, INTEGER]
+			-- Set of routine IDs identified by the body index
+			-- for which a wrapper has to be generated
 
 feature {NONE} -- Implementation
 

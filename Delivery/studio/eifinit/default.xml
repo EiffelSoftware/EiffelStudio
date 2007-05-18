@@ -641,9 +641,9 @@
 
 	<PREF NAME="shortcuts.code_completion.toggle_filter" DESCRIPTION="Toggle filter button in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.toggle_show_type" DESCRIPTION="Toggle show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Key"><SHORTCUT>F3</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Key"><SHORTCUT>F4</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Key"><SHORTCUT>F5</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Toggle signature in completion list."><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Toggle disambiguated name in completion list."><SHORTCUT>F4</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Toggle remember size in completion list."><SHORTCUT>F5</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 	

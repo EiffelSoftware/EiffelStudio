@@ -14,6 +14,11 @@ inherit
 
 	EB_METRIC_SHARED
 
+	DEBUG_OUTPUT
+		rename
+			debug_output as name
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_name: STRING; a_unit: like unit) is

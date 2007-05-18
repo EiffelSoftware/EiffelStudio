@@ -483,7 +483,13 @@ feature -- Analyzis
 					if context.current_feature.is_inline_agent then
 						inline_agent_feature := context.current_feature
 					end
-					rout_id_set := context.current_feature.rout_id_set
+					rout_id_set := context.generic_wrapper_ids (body_index)
+					if rout_id_set /= Void then
+						rout_id_set := rout_id_set.twin
+						rout_id_set.merge (context.current_feature.rout_id_set)
+					else
+						rout_id_set := context.current_feature.rout_id_set
+					end
 					j := rout_id_set.count
 				until
 					j <= 0

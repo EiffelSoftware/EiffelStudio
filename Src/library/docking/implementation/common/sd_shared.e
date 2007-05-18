@@ -636,19 +636,19 @@ feature {NONE} -- Implementation
 
 	zone_navigation_accelerator_ctrl_cell: CELL [BOOLEAN] is
 			-- Singleton cell for `zone_navigation_accelerator_ctrl'
-		do
+		once
 			create Result.put (True)
 		end
 
 	zone_navigation_accelerator_alt_cell: CELL [BOOLEAN] is
 			-- Singleton cell for `zone_navigation_accelerator_alt'
-		do
+		once
 			create Result.put (False)
 		end
 
 	zone_navigation_accelerator_shift_cell: CELL [BOOLEAN] is
 			-- Singleton cell for `zone_navigation_accelerator_shift'
-		do
+		once
 			create Result.put (False)
 		end
 

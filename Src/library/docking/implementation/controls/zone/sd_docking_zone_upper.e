@@ -46,6 +46,7 @@ feature -- Initlization
 		do
 			default_create
 			create internal_shared
+
 			internal_content := a_content
 			internal_docking_manager := a_content.docking_manager
 			create notebook.make (a_content.docking_manager)
@@ -62,6 +63,9 @@ feature -- Initlization
 			notebook.extend (a_content)
 			notebook.set_item_pixmap (a_content, a_content.pixmap)
 			notebook.set_item_text (a_content, a_content.short_title)
+
+			-- Not breaking the invariant
+			create internal_shared_not_used
 		ensure
 			set: internal_content = a_content
 			set: internal_docking_manager = a_content.docking_manager

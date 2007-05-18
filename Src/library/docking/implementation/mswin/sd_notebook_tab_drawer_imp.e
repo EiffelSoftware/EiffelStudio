@@ -34,6 +34,8 @@ inherit
 			draw_focus_rect as wel_draw_focus_rect
 		export
 			{NONE} all
+		redefine
+			base_make_called
 		end
 
 	EV_SHARED_APPLICATION
@@ -74,6 +76,9 @@ feature{NONE} -- Initlization
 			end
 			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Tab")
 		end
+
+	base_make_called: BOOLEAN is True
+			-- Not breaking the invariant.
 
 feature -- Commands
 

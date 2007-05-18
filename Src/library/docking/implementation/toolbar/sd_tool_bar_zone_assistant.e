@@ -354,7 +354,7 @@ feature -- Command
 						end
 						l_all_items.forth
 					end
-					check must_fount: l_item /= Void end
+					check must_found: l_item /= Void end
 					l_content.items.extend (l_item)
 				end
 				l_datas.forth

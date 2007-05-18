@@ -38,6 +38,10 @@ feature {NONE} -- Initlization
 			internal_content := a_content
 			internal_docking_manager := internal_content.docking_manager
 			extend (a_content)
+
+			-- Not breaking the invariant
+			create internal_shared_not_used
+			create internal_shared
 		ensure
 			set: internal_content = a_content
 		end

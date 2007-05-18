@@ -17,6 +17,8 @@ inherit
 			make as make_not_use
 		export
 			{NONE} all
+		redefine
+			base_make_called
 		end
 
 	EV_SHARED_APPLICATION
@@ -46,6 +48,9 @@ feature {NONE} -- Implementation
 			end
 			create wel_color
 		end
+
+	base_make_called: BOOLEAN is True
+			-- Not breaking the invariant in EV_ANY_I.
 
 feature -- Querys
 

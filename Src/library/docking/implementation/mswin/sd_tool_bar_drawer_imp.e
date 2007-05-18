@@ -22,7 +22,8 @@ inherit
 		export
 			{NONE} all
 		redefine
-			on_wm_theme_changed
+			on_wm_theme_changed,
+			base_make_called
 		end
 
 	EV_SHARED_APPLICATION
@@ -65,6 +66,9 @@ feature{NONE} -- Initlization
 			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Toolbar")
 		end
 
+	base_make_called: BOOLEAN is True
+			-- Not breaking the invariant.
+			
 feature -- Redefine
 
 	tool_bar: SD_TOOL_BAR

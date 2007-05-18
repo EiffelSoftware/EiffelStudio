@@ -81,12 +81,6 @@ feature -- Access
 			end
 		end
 
-	show_all_tab_stub_text: BOOLEAN is
-			-- When more than one tab stubs stay together at side of main window, show inactive tab stub text?
-		do
-			Result := show_tab_stub_text_cell.item
-		end
-
 	tool_bar_font: EV_FONT is
 			-- Tool bar font
 		local
@@ -139,6 +133,12 @@ feature -- Status report
 			-- If show all indicators same time when use transparent rectangle style feedback?
 		do
 			Result := show_all_feedback_indicator_cell.item
+		end
+
+	show_all_tab_stub_text: BOOLEAN is
+			-- When more than one tab stubs stay together at side of main window, show inactive tab stub text?
+		do
+			Result := show_tab_stub_text_cell.item
 		end
 
 	zone_navigation_accelerator_ctrl: BOOLEAN is

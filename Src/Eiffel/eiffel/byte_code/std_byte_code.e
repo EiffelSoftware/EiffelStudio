@@ -240,7 +240,6 @@ feature -- Analyzis
 			seed_types: ARRAY [STRING]
 			routine_id: INTEGER
 			t: TYPE_I
-			nb_refs: INTEGER
 			basic_i: BASIC_I
 			suffix: STRING
 			suffixes: LIST [STRING]
@@ -508,10 +507,8 @@ feature -- Analyzis
 							seed_type := seed.type.type_i
 							create seed_types.make (1, args.count)
 							i := 1
-							nb_refs := 0
 							if generate_current then
 								seed_types.put ("EIF_REFERENCE", 1)
-								nb_refs := 1
 								i := 2
 							end
 							if seed_arguments /= Void then
@@ -524,7 +521,6 @@ feature -- Analyzis
 									if t.is_formal then
 											-- Formal is passed as a reference.
 										seed_types.put ("EIF_REFERENCE", i)
-										nb_refs := nb_refs + 1
 									else
 										if t.is_anchored then
 												-- "like Current" is passed as a reference.
@@ -533,96 +529,39 @@ feature -- Analyzis
 											type_c := t.c_type
 										end
 										seed_types.put (type_c.c_string, i)
-										if type_c.is_pointer then
-											nb_refs := nb_refs + 1
-										end
 									end
 									i := i + 1
 									seed_arguments.forth
 								end
 							end
 							if seed_type.is_anchored then
+									-- "like Current" is passed as a reference.
 								type_c := reference_c_type
 							else
 								type_c := seed_type.c_type
 							end
-							buf.generate_function_signature
+							buf.generate_pure_function_signature
 								(type_c.c_string, internal_name + suffix, True,
 								 Context.header_buffer, args, seed_types)
+							buf.put_character ('{')
+							buf.put_new_line
 							buf.indent
 							if not seed_type.is_void then
-								type_c.generate (buf)
-								buf.put_string ("Result = ")
-								type_c.generate_cast (buf)
-								buf.put_string (" 0;")
-								buf.put_new_line
-								context.mark_result_used
 								if type_c.is_pointer then
-									nb_refs := nb_refs + 1
-								end
-							end
-							buf.put_string ("RTLD;")
-							buf.put_new_line
-							buf.put_string ("RTLI(")
-							buf.put_integer (nb_refs)
-							buf.put_string (gc_rparan_semi_c)
-							buf.put_new_line
-								-- `i' indicates the current argument number.
-							i := 1
-							if generate_current then
-								i := 2
-								nb_refs := nb_refs - 1
-								buf.put_local_registration (nb_refs, "Current")
-								buf.put_new_line
-							end
-							if seed_arguments /= Void then
-								from
-									seed_arguments.start
-								until
-									seed_arguments.after
-								loop
-									t := seed_arguments.item.type_i
-									if t.is_formal then
-											-- Formal is passed as a reference.
-										nb_refs := nb_refs - 1
-										buf.put_local_registration (nb_refs, args [i])
-										buf.put_new_line
-									else
-										if t.is_anchored then
-												-- "like Current" is passed as a reference.
-											type_c := reference_c_type
-										else
-											type_c := t.c_type
-										end
-										if type_c.is_pointer then
-											nb_refs := nb_refs - 1
-											buf.put_local_registration (nb_refs, args [i])
-											buf.put_new_line
-										end
-									end
-									i := i + 1
-									seed_arguments.forth
-								end
-							end
-							if not seed_type.is_void then
-								if seed_type.is_anchored then
-										-- "like Current" is passed as a reference.
-									type_c := reference_c_type
-								else
-									type_c := seed_type.c_type
-								end
-								if type_c.is_pointer then
-									check
-										nb_refs = 1
-									end
-									buf.put_local_registration (0, "Result")
-									buf.put_new_line
 									basic_i ?= real_type (result_type)
-								end
-								if basic_i /= Void then
-									basic_i.metamorphose (context.result_register, context.result_register.no_register, buf)
 								else
-									buf.put_string ("Result = ")
+									basic_i := Void
+								end
+								if basic_i = Void then
+									buf.put_string ("return ")
+								else
+									context.mark_result_used
+									type_c.generate (buf)
+									context.result_register.print_register
+									buf.put_character (';')
+									buf.put_new_line
+									basic_i.c_type.generate (buf)
+									buf.put_string ("r = ")
 								end
 							end
 							buf.put_string (internal_name)
@@ -649,13 +588,17 @@ feature -- Analyzis
 							end
 							buf.put_string (gc_rparan_semi_c)
 							buf.put_new_line
-							buf.put_string ("RTLE;")
-							buf.put_new_line
-							if not seed_type.is_void then
-								buf.put_string ("return Result;")
+							if not seed_type.is_void and then basic_i /= Void then
+								basic_i.metamorphose (context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buf)
+								buf.put_character (';')
+								buf.put_new_line
+								buf.put_string ("return ")
+								context.result_register.print_register
+								buf.put_character (';')
+								buf.put_new_line
 							end
 							buf.exdent
-							buf.put_string ("%N}%N%N")
+							buf.put_string ("}%N%N")
 						end
 					end
 					j := j - 1

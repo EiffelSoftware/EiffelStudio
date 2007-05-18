@@ -190,17 +190,15 @@ feature -- Element Change
 				end
 
 				generate_attribute_access (class_type, buffer, "Current")
+				buffer.put_character (';')
+				buffer.put_new_line
 
 				if byte_context.workbench_mode then
-					buffer.put_character (';')
-					buffer.put_new_line
 					buffer.put_string ("return r;")
-				else
-					buffer.put_character (';')
+					buffer.put_new_line
 				end
 
 				buffer.exdent
-				buffer.put_new_line
 				buffer.put_character ('}')
 				buffer.put_new_line
 
@@ -215,35 +213,34 @@ feature -- Element Change
 						rout_id := rout_ids.item (i)
 						if system.seed_of_routine_id (rout_id).has_formal then
 								-- Generate generic wrapper.
-							buffer.generate_function_signature
+							buffer.generate_pure_function_signature
 								("EIF_REFERENCE", internal_name + "1", True,
 								 Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+							buffer.put_character ('{')
+							buffer.put_new_line
 							buffer.indent
 							basic_i ?= result_type
 							if basic_i /= Void then
 								byte_context.mark_result_used
-								buffer.put_string ("EIF_REFERENCE Result = (EIF_REFERENCE) 0;")
-								buffer.put_string ("RTLD;")
+								basic_i.true_reference_type.c_type.generate (buffer)
+								byte_context.result_register.print_register
+								buffer.put_character (';')
 								buffer.put_new_line
-								buffer.put_string ("RTLI(")
-								buffer.put_integer (2)
-								buffer.put_string (gc_rparan_semi_c)
-								buffer.put_new_line
-								buffer.put_local_registration (0, "Current")
-								buffer.put_new_line
-								buffer.put_local_registration (1, "Result")
-								buffer.put_new_line
-								basic_i.metamorphose (byte_context.result_register, byte_context.result_register.no_register, buffer)
+								basic_i.c_type.generate (buffer)
+								buffer.put_string ("r = ")
 							else
 								buffer.put_string ("return ")
 							end
-							buffer.put_string (internal_name)
-							buffer.put_string (" (Current);")
+							generate_attribute_access (class_type, buffer, "Current")
+							buffer.put_character (';')
 							buffer.put_new_line
 							if basic_i /= Void then
-								buffer.put_string ("RTLE;")
+								basic_i.metamorphose (byte_context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
+								buffer.put_character (';')
 								buffer.put_new_line
-								buffer.put_string ("return Result;");
+								buffer.put_string ("return ")
+								byte_context.result_register.print_register
+								buffer.put_character (';')
 								buffer.put_new_line
 							end
 							buffer.exdent

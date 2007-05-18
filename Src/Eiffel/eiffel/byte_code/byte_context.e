@@ -942,7 +942,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("ur", c_nb_types - 1 + c_ref)
 		end
 
-	register_sk_value (t: INTEGER): INTEGER is
+	register_sk_value (t: INTEGER): STRING is
 			-- SK value associated with a register type `t'
 		require
 			valid_t: 0 < t and t <= (c_nb_types - 1) * 2
@@ -950,39 +950,39 @@ feature {NONE} -- Registers: implementation
 			Result := register_sk_values [t]
 		end
 
-	register_sk_values: ARRAY [INTEGER_32] is
+	register_sk_values: ARRAY [STRING] is
 			-- SK values of registers indexed by their level
-		do
+		once
 			create Result.make (1, (c_nb_types - 1) * 2)
-			Result.put ({SK_CONST}.sk_int8, c_int8)
-			Result.put ({SK_CONST}.sk_int16, c_int16)
-			Result.put ({SK_CONST}.sk_int32, c_int32)
-			Result.put ({SK_CONST}.sk_int64, c_int64)
-			Result.put ({SK_CONST}.sk_uint8, c_uint8)
-			Result.put ({SK_CONST}.sk_uint16, c_uint16)
-			Result.put ({SK_CONST}.sk_uint32, c_uint32)
-			Result.put ({SK_CONST}.sk_uint64, c_uint64)
-			Result.put ({SK_CONST}.sk_real32, c_real32)
-			Result.put ({SK_CONST}.sk_real64, c_real64)
-			Result.put ({SK_CONST}.sk_char, c_char)
-			Result.put ({SK_CONST}.sk_wchar, c_wide_char)
-			Result.put ({SK_CONST}.sk_pointer, c_pointer)
-			Result.put ({SK_CONST}.sk_ref, c_ref)
+			Result.put ("SK_INT8", c_int8)
+			Result.put ("SK_INT16", c_int16)
+			Result.put ("SK_INT32", c_int32)
+			Result.put ("SK_INT64", c_int64)
+			Result.put ("SK_UINT8", c_uint8)
+			Result.put ("SK_UINT16", c_uint16)
+			Result.put ("SK_UINT32", c_uint32)
+			Result.put ("SK_UINT64", c_uint64)
+			Result.put ("SK_REAL32", c_real32)
+			Result.put ("SK_REAL64", c_real64)
+			Result.put ("SK_CHAR", c_char)
+			Result.put ("SK_WCHAR", c_wide_char)
+			Result.put ("SK_POINTER", c_pointer)
+			Result.put ("SK_REF", c_ref)
 				-- Registers for passing typed arguments.
-			Result.put ({SK_CONST}.sk_int8, c_nb_types - 1 + c_int8)
-			Result.put ({SK_CONST}.sk_int16, c_nb_types - 1 + c_int16)
-			Result.put ({SK_CONST}.sk_int32, c_nb_types - 1 + c_int32)
-			Result.put ({SK_CONST}.sk_int64, c_nb_types - 1 + c_int64)
-			Result.put ({SK_CONST}.sk_uint8, c_nb_types - 1 + c_uint8)
-			Result.put ({SK_CONST}.sk_uint16, c_nb_types - 1 + c_uint16)
-			Result.put ({SK_CONST}.sk_uint32, c_nb_types - 1 + c_uint32)
-			Result.put ({SK_CONST}.sk_uint64, c_nb_types - 1 + c_uint64)
-			Result.put ({SK_CONST}.sk_real32, c_nb_types - 1 + c_real32)
-			Result.put ({SK_CONST}.sk_real64, c_nb_types - 1 + c_real64)
-			Result.put ({SK_CONST}.sk_char, c_nb_types - 1 + c_char)
-			Result.put ({SK_CONST}.sk_wchar, c_nb_types - 1 + c_wide_char)
-			Result.put ({SK_CONST}.sk_pointer, c_nb_types - 1 + c_pointer)
-			Result.put ({SK_CONST}.sk_ref, c_nb_types - 1 + c_ref)
+			Result.put ("SK_INT8", c_nb_types - 1 + c_int8)
+			Result.put ("SK_INT16", c_nb_types - 1 + c_int16)
+			Result.put ("SK_INT32", c_nb_types - 1 + c_int32)
+			Result.put ("SK_INT64", c_nb_types - 1 + c_int64)
+			Result.put ("SK_UINT8", c_nb_types - 1 + c_uint8)
+			Result.put ("SK_UINT16", c_nb_types - 1 + c_uint16)
+			Result.put ("SK_UINT32", c_nb_types - 1 + c_uint32)
+			Result.put ("SK_UINT64", c_nb_types - 1 + c_uint64)
+			Result.put ("SK_REAL32", c_nb_types - 1 + c_real32)
+			Result.put ("SK_REAL64", c_nb_types - 1 + c_real64)
+			Result.put ("SK_CHAR", c_nb_types - 1 + c_char)
+			Result.put ("SK_WCHAR", c_nb_types - 1 + c_wide_char)
+			Result.put ("SK_POINTER", c_nb_types - 1 + c_pointer)
+			Result.put ("SK_REF", c_nb_types - 1 + c_ref)
 		end
 
 feature -- Access
@@ -1782,7 +1782,7 @@ feature -- Access
 			if is_generic then
 					-- Record register type and zero pointer value for GC.
 				buf.put_string (once "x = {0, ")
-				buf.put_integer (register_sk_value (ctype))
+				buf.put_string (register_sk_value (ctype))
 				buf.put_string ("};")
 				buf.left_margin
 				buf.put_new_line

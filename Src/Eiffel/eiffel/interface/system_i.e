@@ -3032,6 +3032,7 @@ feature -- Final mode generation
 					inlining_on := inlining_on and not remover_off
 					array_optimization_on := array_optimization_on and not remover_off
 
+					byte_context.clear_system_data
 					process_degree_minus_2
 					debug ("Timing")
 						create d2.make_now
@@ -3069,7 +3070,6 @@ feature -- Final mode generation
 						-- Generation of C files associated to the classes of
 						-- the system.
 					Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
-					byte_context.clear_system_data
 					byte_context.compute_expanded_descendants
 					process_degree_minus_3
 

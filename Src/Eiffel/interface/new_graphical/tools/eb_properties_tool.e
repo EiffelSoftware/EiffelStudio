@@ -173,7 +173,7 @@ feature {NONE} -- External changes to classes/clusters
 			refresh
 		end
 
-feature {EB_STONE_CHECKER} -- Actions
+feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 
 	set_stone (a_stone: STONE) is
 			-- Add `a_stone'.

@@ -37,6 +37,8 @@ feature {NONE}  -- Initlization
 			ev_application.pick_actions.extend (pick_actions_handler)
 			ev_application.drop_actions.extend (drop_actions_handler)
 			ev_application.theme_changed_actions.extend (theme_changed_handler)
+
+			create internal_shared
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -56,8 +58,6 @@ feature -- Command
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
 			internal_docking_manager.main_window.focus_out_actions.extend (agent on_top_level_window_focus_out)
 			internal_docking_manager.main_window.focus_in_actions.extend (agent on_top_level_window_focus_in)
-
-			create internal_shared
 		end
 
 feature  -- Agents

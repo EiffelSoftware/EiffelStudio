@@ -159,8 +159,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_RGB_QUAD
-
+end

@@ -184,8 +184,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_DRAW_ITEM_STRUCT
-
+end

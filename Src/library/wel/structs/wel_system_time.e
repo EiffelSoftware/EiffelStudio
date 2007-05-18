@@ -167,8 +167,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_SYSTEM_TIME
-
+end

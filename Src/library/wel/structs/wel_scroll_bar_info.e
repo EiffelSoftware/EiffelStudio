@@ -279,8 +279,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_SCROLL_BAR_INFO
-
+end

@@ -121,8 +121,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_DELETE_ITEM_STRUCT
-
+end

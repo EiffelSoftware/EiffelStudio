@@ -394,8 +394,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_IMAGE_LIST
-
+end

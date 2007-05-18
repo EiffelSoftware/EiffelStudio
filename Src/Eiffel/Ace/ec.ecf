@@ -383,4 +383,10 @@ This is primarly for tools that need to use the Eiffel compiler rather than deve
 		<setting name="executable_name" value="ecl"/>
 		<cluster name="lite_compiler" location="$EIFFEL_SRC\Eiffel\interface\lite\" recursive="true"/>
 	</target>
+	<target name="compile_all_bench" extends="bench">
+		<root all_classes="true"/>
+	</target>
+	<target name="compile_all_batch" extends="batch">
+		<root all_classes="true"/>
+	</target>
 </system>

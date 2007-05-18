@@ -128,7 +128,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_em11 (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -143,7 +142,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_em12 (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -158,7 +156,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_em21 (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -173,7 +170,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_em22 (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -188,7 +184,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_edx (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -203,7 +198,6 @@ feature {NONE} -- Externals
 		end
 
 	cwel_paraformat_set_edy (ptr: POINTER; value: REAL) is
-			--
 		external
 			"C [struct <windows.h>] (XFORM, FLOAT)"
 		alias
@@ -228,8 +222,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_XFORM
-
+end

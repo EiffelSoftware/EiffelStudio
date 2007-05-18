@@ -18,9 +18,42 @@
 		<echo message=" geant ${opt} build_es"/>
 	</target>
 
+	<target name="menu">
+		<echo message="Menu"/>
+		<echo message="1) clean ..." />
+		<echo message="2) build_es (includes 3,4)" />
+		<echo message="---(sub tasks)---" />
+		<echo message="3) compile_es" />
+		<echo message="4) build_es_eiffelxx" />
+		<input message=" -> " variable="answer" />
+		<geant target="menu_clean" if="$answer=1" reuse_variables="yes" />
+		<geant target="build_es" if="$answer=2" reuse_variables="yes" />
+		<geant target="compile_es" if="$answer=3" reuse_variables="yes" />
+		<geant target="build_es_eiffelxx" if="$answer=4" reuse_variables="yes" />
+		<echo message="Bye..."/>
+</target>
+	</target>
+
+	<target name="menu_clean">
+		<echo message="Menu"/>
+		<echo message="1) clean all (3,4,5)" />
+		<echo message="2) clean es (4,5 : all but output)" />
+		<echo message="----" />
+		<echo message="3) clean output folder (bin)" />
+		<echo message="4) clean compile folder (EIFGENs)" />
+		<echo message="5) clean delivery folder (EiffelXX)" />
+		<input message=" -> " variable="answer" />
+		<geant target="clean_all" if="$answer=1" reuse_variables="yes" />
+		<geant target="clean_es" if="$answer=2" reuse_variables="yes" />
+		<geant target="clean_bin" if="$answer=3" reuse_variables="yes" />
+		<geant target="clean_compile" if="$answer=4" reuse_variables="yes" />
+		<geant target="clean_delivery" if="$answer=5" reuse_variables="yes" />
+	</target>
+
 	<target name="init_deliv" depend="init_system" >
 		<set name="INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" unless="${INSTALL_DIR}" />
 		<set name="OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="${OUTPUT_DIR}"/>
+		<set name="EIFGENS_DIR" value="${cwd}${path_separator}EIFGENs" unless="${EIFGENS_DIR}"/>
 		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" unless="$build_es_logfile" />
 	</target>
 
@@ -288,20 +321,38 @@
 			if="${tmp_available}=true"/>
 	</target>
 
+	<target name="clean_all" depend="init_deliv" >
+		<echo message="Cleaning All ..." />
+		<geant target="clean_bin" reuse_variables="true" fork="false" />
+		<geant target="clean_es" reuse_variables="true" fork="false" />
+		<geant target="clean_compile" reuse_variables="true" fork="false" />
+	</target>
+	<target name="clean_bin" depend="init_deliv" >
+		<echo message="Cleaning Bin folder: ${OUTPUT_DIR} ..." />
+		<exec executable="rmdir /q/s ${OUTPUT_DIR}" if="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="\rm -rf ${OUTPUT_DIR}" unless="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
+	</target>
 	<target name="clean_es" depend="init_deliv" >
-		<exec executable="rmdir /q/s ${EIFGENs}" if="${is_windows}" />
-		<exec executable="\rm -rf ${EIFGENs}" unless="${is_windows}" />
-		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
-		<geant target="clean_delivery" reuse_variables="true" fork="false" if="${installdir_available}=true" />
+		<echo message="Cleaning EIFGENs ..." />
+		<geant target="clean_compile" reuse_variables="true" fork="false" />
+		<geant target="clean_delivery" reuse_variables="true" fork="false" />
+	</target>
+
+	<target name="clean_compile" depend="init_deliv" >
+		<echo message="Cleaning Compile folder: ${EIFGENS_DIR} ..." />
+		<exec executable="rmdir /q/s ${EIFGENS_DIR}" if="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="\rm -rf ${EIFGENS_DIR}" unless="${is_windows}" accept_errors="true" iit_code_variable="return_code" />
 	</target>
 
 	<target name="clean_delivery" depend="init_deliv" >
+		<echo message="Cleaning Install folder: ${INSTALL_DIR} ..." />
 		<!--
 		<delete directory="${INSTALL_DIR}" if="${installdir_available}=true" />
 		-->
 		<exec executable="rmdir /q/s ${INSTALL_DIR}" if="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="\rm -rf ${INSTALL_DIR}" unless="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
 	</target>
+
 	<target name="make_delivery" depend="init_deliv" >
 		<echo message="Task: make_delivery"/>
 		<echo message="Task: make_delivery" to_file="$build_es_logfile" append="true" />

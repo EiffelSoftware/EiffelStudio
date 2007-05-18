@@ -76,7 +76,7 @@ feature -- Status setting
 				Ev_pnd_start_transport
 			then
 				start_transport
-					(a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x, a_screen_y)
+					(a_x, a_y, a_button, True, 0, 0, 0.5, a_screen_x, a_screen_y, False)
 			when
 				Ev_pnd_end_transport
 			then
@@ -159,7 +159,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	start_transport (a_x, a_y, a_button: INTEGER; a_press: BOOLEAN a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
 			-- Initialize the pick/drag and drop mechanism.
 		local
 			l_configure_agent: PROCEDURE [ANY, TUPLE]
@@ -183,7 +183,7 @@ feature {EV_ANY_I} -- Implementation
 						if l_pebble /= Void and then mode_is_configurable_target_menu then
 							l_configure_agent := agent real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
-						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, interface, l_pebble, l_configure_agent)
+						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, interface, l_pebble, l_configure_agent, a_menu_only)
 					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
 							real_start_transport (a_x, a_y, a_button, a_x_tilt,
 								a_y_tilt, a_pressure, a_screen_x, a_screen_y)

@@ -1,5 +1,5 @@
 indexing
-	description: "Specialized configiration for Microsoft Platform/WindowsSDK's."
+	description: "Specialized configiration for Microsoft WindowsSDKs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 		do
 			l_layout ?= eiffel_layout
 			create Result.make (256)
-			if l_layout /= Void then
+			if l_layout /= Void and then l_layout.is_valid_environment then
 				Result.append (l_layout.config_eif_path)
 				Result.append ("\windows_sdk_v6.0.bat")
 			else
@@ -75,8 +75,11 @@ feature {NONE} -- Access
 			Result.append (product_reg_path)
 		end
 
-	install_path_value_name: STRING = "InstallationFolder"
+	install_path_value_name: STRING
 			-- Key value name for install location
+		once
+			Result := "InstallationFolder"
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -84,8 +84,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_ABC_STRUCT
-
+end

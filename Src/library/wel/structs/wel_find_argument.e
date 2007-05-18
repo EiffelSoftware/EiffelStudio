@@ -126,8 +126,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_FIND_ARGUMENT
-
+end

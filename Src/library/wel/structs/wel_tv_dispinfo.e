@@ -83,8 +83,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_TV_DISPINFO
-
+end

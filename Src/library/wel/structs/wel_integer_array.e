@@ -104,8 +104,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_INTEGER_ARRAY
-
+end

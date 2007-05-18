@@ -105,8 +105,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_TV_HITTESTINFO
-
+end

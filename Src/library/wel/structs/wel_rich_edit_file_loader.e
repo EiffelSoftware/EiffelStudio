@@ -83,5 +83,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WEL_RICH_EDIT_FILE_LOADER
-
+end

@@ -682,6 +682,10 @@ feature {NONE} -- C code generation
 				buffer.put_string ("return r;")
 			end
 			buffer.exdent
+			if byte_context.workbench_mode then
+				buffer.put_new_line
+				buffer.put_string ("#undef arg1")
+			end
 			buffer.put_string ("%N}%N%N")
 
 			byte_context.clear_feature_data

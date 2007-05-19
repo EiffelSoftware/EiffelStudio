@@ -3996,7 +3996,7 @@ feature -- Generation
 			end
 
 			l_buf.exdent
-			l_buf.put_string ("};")
+			l_buf.put_string ("}")
 			l_buf.put_new_line
 
 			l_buf.end_c_specific_code

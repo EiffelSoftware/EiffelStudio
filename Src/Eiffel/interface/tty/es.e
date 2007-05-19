@@ -1118,6 +1118,10 @@ feature -- Update
 					is_single_file_compilation := True
 						-- Implies finish freezing
 					is_finish_freezing_called := True
+						-- If no libraries are set yet, initialize empty list
+					if single_file_compilation_libraries = Void then
+						create {LINKED_LIST [STRING]} single_file_compilation_libraries.make
+					end
 				else
 					option_error := True
 				end

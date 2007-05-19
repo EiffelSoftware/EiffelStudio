@@ -62,7 +62,6 @@ feature -- Settings
 			types: TYPE_LIST
 			entry: ENTRY
 			modified_entry: ENTRY
-			written_feature: FEATURE_I
 		do
 			poly_table := new_units.item (rout_id)
 			if poly_table = Void then

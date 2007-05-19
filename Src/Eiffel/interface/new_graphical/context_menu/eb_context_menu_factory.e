@@ -1574,8 +1574,17 @@ feature {NONE} -- Implementation
 			-- Extend a separator into `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
+		local
+			l_sep: EV_MENU_SEPARATOR
 		do
-			a_menu.extend (create {EV_MENU_SEPARATOR})
+				-- Add a separator, only if it is not the first entry in the menu
+				-- and if the last inserted entry was not a separator.
+			if not a_menu.is_empty then
+				l_sep ?= a_menu.last
+				if l_sep = Void then
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+				end
+			end
 		end
 
 	new_menu_item (a_name: STRING_GENERAL): EV_MENU_ITEM is

@@ -408,7 +408,7 @@ feature
 
 			buffer.exdent
 			buffer.put_new_line
-			buffer.put_string ("};%N%N")
+			buffer.put_string ("}%N%N")
 		end
 
 	is_routine_table: BOOLEAN is

@@ -224,7 +224,7 @@ feature -- Autocomplete
 			-- `after_save' must be True if current class text has just been saved
 			-- and False otherwise.
 		do
-			if dev_window.stone /= Void and then text_displayed.click_tool_enabled then
+			if dev_window.stone /= Void and then text_displayed.click_tool_enabled and then not text_displayed.text_being_processed then
 				text_displayed.update_click_list (dev_window.stone, after_save)
 				process_click_tool_error
 			end

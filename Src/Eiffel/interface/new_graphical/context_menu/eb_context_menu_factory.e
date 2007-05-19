@@ -33,7 +33,7 @@ feature -- Initialization
 			dev_window := a_window
 		end
 
-feature {NONE} -- Implementation
+feature -- Status report
 
 	menu_displayable (a_pebble: ANY): BOOLEAN
 			-- Should the menu be displayed?
@@ -55,8 +55,35 @@ feature -- Editor menu
 		require
 			a_menu_not_void: a_menu /= Void
 			a_editor_not_void: a_editor /= Void
+		local
+			l_pebble: ANY
+			l_classi_stone: CLASSI_STONE
+			l_classc_stone: CLASSC_STONE
 		do
-			if menu_displayable (a_pebble) or a_pebble = Void then
+			if a_pebble = Void then
+					-- If no pebble is selected, and if we show a menu in a real editor, we select
+					-- the stone associated with the editor for displaying the context menu.
+				if a_editor = dev_window.editors_manager.current_editor then
+						-- Try to get `stone' from editor and transformed it into a CLASSI_STONE
+						-- or CLASSC_STONE depending on the stone. We do this because the stone
+						-- could represent a feature and we want the context menu to show what is
+						-- applicable to the current class.
+					l_classc_stone ?= a_editor.stone
+					if l_classc_stone /= Void and then l_classc_stone.is_valid then
+						create {CLASSC_STONE} l_pebble.make (l_classc_stone.e_class)
+					else
+						l_classi_stone ?= a_editor.stone
+						if l_classi_stone /= Void and then l_classi_stone.is_valid then
+							create {CLASSI_STONE} l_pebble.make (l_classi_stone.class_i)
+						end
+					end
+				end
+			else
+				l_pebble := a_pebble
+			end
+				-- Note: we still use `a_pebble' to check whether or not we should display the
+				-- context menu, since `l_pebble' might not be Void anymore with the above change.
+			if menu_displayable (l_pebble) or a_pebble = Void then
 				current_editor := a_editor
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
@@ -110,10 +137,6 @@ feature -- Class Tree Menu
 						end
 						extend_standard_compiler_item_menu (a_menu, l_stone)
 						extend_separator (a_menu)
-						if l_cluster_stone = Void then
-							extend_view_in_main_formatters_menus (a_menu)
-							extend_separator (a_menu)
-						end
 						extend_delete_class_cluster_menu (a_menu, l_stone)
 					end
 					extend_property_menu (a_menu, l_stone)
@@ -478,6 +501,9 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu.last.set_text (add_type_and_name (names.m_new_window))
 			a_menu.last.select_actions.wipe_out
 			a_menu.last.select_actions.extend (agent (dev_window.new_development_window_cmd).execute_with_stone (l_stone))
+			if current_editor /= Void and then l_stone.same_as (current_editor.stone) then
+				a_menu.last.disable_sensitive
+			end
 
 			if a_external_editor then
 				a_menu.extend (dev_window.commands.shell_cmd.new_menu_item_unmanaged)
@@ -540,10 +566,10 @@ feature {NONE} -- Menu section, Granularity 1.
 				end
 				l_commands.forth
 			end
-			extend_separator (a_menu)
 		end
 
 	extend_view_in_main_formatters_menus (a_menu: EV_MENU) is
+			--|----
 			--| View -->	Basic view
 			--|				Clickable view
 			--|				Flat view
@@ -557,31 +583,35 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_form: EB_CLASS_INFO_FORMATTER
 			l_editor: EB_SMART_EDITOR
 		do
-			create l_menu.make_with_text (names.m_view)
-			a_menu.extend (l_menu)
-			from
-				dev_window.managed_main_formatters.start
-			until
-				dev_window.managed_main_formatters.after
-			loop
-				l_form := dev_window.managed_main_formatters.item
-				l_item := l_form.new_standalone_menu_item
-				if l_form.selected and l_form.is_button_sensitive then
-					l_selected_item := l_item
-				end
-				l_menu.extend (l_item)
-				l_menu.last.select_actions.extend (agent l_form.execute)
-				dev_window.managed_main_formatters.forth
-			end
-			if l_selected_item /= Void then
-				l_selected_item.enable_select
-			end
 			l_editor := dev_window.editors_manager.current_editor
-			if l_editor = Void or else l_editor.changed then
-					-- If there is no editor, or if the current editor is being modified
-					--  we should not enable the `View' menu because
-					-- we would loose changes by executing the associated command.
-				l_menu.disable_sensitive
+			if l_editor /= Void and then l_editor = current_editor then
+					-- Menu only appears when showing the context menu in a real editor (the one where
+					-- classes are edited).
+				extend_separator (a_menu)
+				create l_menu.make_with_text (names.m_view)
+				a_menu.extend (l_menu)
+				from
+					dev_window.managed_main_formatters.start
+				until
+					dev_window.managed_main_formatters.after
+				loop
+					l_form := dev_window.managed_main_formatters.item
+					l_item := l_form.new_standalone_menu_item
+					if l_form.selected and l_form.is_button_sensitive then
+						l_selected_item := l_item
+					end
+					l_menu.extend (l_item)
+					l_menu.last.select_actions.extend (agent l_form.execute)
+					dev_window.managed_main_formatters.forth
+				end
+				if l_selected_item /= Void then
+					l_selected_item.enable_select
+				end
+				if l_editor.changed then
+						-- Editor is being edited, disble the view menu since selecting one
+						-- of the entry could discard the changes being made.
+					l_menu.disable_sensitive
+				end
 			end
 		end
 

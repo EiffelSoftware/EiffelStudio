@@ -137,12 +137,15 @@ feature -- C code generation
 			buffer_not_void: buffer /= Void
 		local
 			i: INTEGER
+			l_cast: STRING
 		do
 			from
 				i := lower
+				l_cast := "(int32) "
 			until
 				i > upper
 			loop
+				buffer.put_string (l_cast)
 				item (i).generate_cecil_value (buffer)
 				buffer.put_string (",%N")
 				i := i + 1

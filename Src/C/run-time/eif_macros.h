@@ -547,7 +547,7 @@ RT_LNK int fcount;
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
 	MTOM(OResult);                                                       \
-	r.##value.EIF_REFERENCE_value = RTOTRR = v;                          \
+	r.value.EIF_REFERENCE_value = RTOTRR = v;                          \
 	return r;
 
 #define RTOTOK

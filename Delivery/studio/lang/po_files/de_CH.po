@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-18 18:45-0800\n"
+"PO-Revision-Date: 2007-05-19 11:43-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -1517,7 +1517,7 @@ msgstr ""
 #. 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:138
 msgid "Acknowledge not loaded"
-msgstr ""
+msgstr "Nicht geladen bestätigen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>
@@ -2616,7 +2616,7 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>20</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:179
 msgid "Auto hide animation speed"
-msgstr ""
+msgstr "Animationsgeschwinditkeit für automatisches Verbergen"
 
 #. 	<PREF NAME="editor.eiffel.auto_remove_trailing_blank_when_saving" DESCRIPTION="Should trailing blanks be auto-removed when saving?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:232
@@ -4528,7 +4528,7 @@ msgstr "C Ausgabe"
 #. 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:177
 msgid "C output panel prompted"
-msgstr ""
+msgstr "C Ausgabe anzeigen"
 
 #. Source code: m_Showclick: STRING_GENERAL is				do Result := locale.translate("C&lickable")	end
 #: interface_names.e:551
@@ -6508,12 +6508,12 @@ msgstr "Erstellung der optimierten Version bestätigen"
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:133
 msgid "Confirm finalize assertions"
-msgstr "Bestätige Zusicherungen beim optimieren"
+msgstr "Zusicherungen beim Optimieren bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:139
 msgid "Confirm finalize precompile"
-msgstr ""
+msgstr "Optimierte vorkompilierte Bibliothek bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:131
@@ -6528,12 +6528,12 @@ msgstr "Ignorieren aller Haltepunkte bestätigen"
 #. 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:148
 msgid "Confirm kill"
-msgstr ""
+msgstr "Abbrechen bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill_and_restart" DESCRIPTION="Display dialog before killing a debugged application and restarting a new one."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:149
 msgid "Confirm kill and restart"
-msgstr ""
+msgstr "Abbrechen und neu starten bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:128
@@ -6548,12 +6548,12 @@ msgstr "Beenden eines externen Befehls bestätigen"
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilationa of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:141
 msgid "Confirm on terminate finalizing"
-msgstr ""
+msgstr "Optimieren Abbrechen bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:140
 msgid "Confirm on terminate freezing"
-msgstr ""
+msgstr "Einfrieren Abbrechen bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:142
@@ -6562,9 +6562,8 @@ msgstr "Beenden eines laufenden Prozesses bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_remove_metric" DESCRIPTION="Display dialog before removing a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:150
-#, fuzzy
 msgid "Confirm remove metric"
-msgstr "Metrik entfernen"
+msgstr "Metrik entfernen bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:129
@@ -6574,18 +6573,17 @@ msgstr "\"Alle ersetzen\" bestätigen"
 #. 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:145
 msgid "Confirm resource change needs restart"
-msgstr ""
+msgstr "Ressource benötig neustart bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:132
 msgid "Confirm save before compile"
-msgstr "Bestätige Speichern vor dem Kompilieren"
+msgstr "Speichern vor dem Kompilieren bestätigen"
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_metric" DESCRIPTION="Display dialog before saving a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:151
-#, fuzzy
 msgid "Confirm save metric"
-msgstr "Bestätigung"
+msgstr "Metrik speichern bestätigen"
 
 #. Source code: t_confirmation: STRING_GENERAL is					do Result := locale.translate ("Confirmation") end
 #: interface_names.e:1652
@@ -7239,7 +7237,7 @@ msgstr "Diagramm abschneiden"
 #. 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_tab_editor];new_window;current_editor;context;external</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:184
 msgid "Ctrl right click receiver"
-msgstr ""
+msgstr "Control-Rechtsklick Empfänger"
 
 #. Source code: m_Cut: STRING_GENERAL is						do Result := locale.translate("Cu&t%TCtrl+X")	end
 #: interface_names.e:308
@@ -10023,12 +10021,12 @@ msgstr "Haltepunkte nach Status getrennt anzeigen"
 #. 	<PREF NAME="interface.dialogs.confirm_build_precompile" DESCRIPTION="Display confirmation dialog before building a needed precompile."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:137
 msgid "Display confirmation dialog before building a needed precompile."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor eine vorkompilierte Bibliothek erstellt wird die benötig wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:136
 msgid "Display confirmation dialog before converting an old project."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor alte Projekte konvertiert werden."
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:130
@@ -10043,37 +10041,37 @@ msgstr "Bestätigungsdialog anzeigen für C Kompilierung beim einfrieren."
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:133
 msgid "Display confirmation dialog for assertions on finalize operation."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen für Zusicherungen beim optimierten Kompilieren."
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:139
 msgid "Display confirmation dialog for finalizing a .NET precompiled library."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen für das Erstellen einer optimierten vorkompilierten Bibliothek für .NET."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:143
 msgid "Display confirmation dialog for terminating an external command."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen um externen Befehl abzubrechen."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:142
 msgid "Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen um eine laufende C Kompilierung abzubrechen wenn EiffelStudio beendet wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:140
 msgid "Display confirmation dialog for terminating the C compilation of a freeze."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen um C Kompilierung beim Einfrieren abzubrechen."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilationa of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:141
 msgid "Display confirmation dialog for terminating the C compilationa of a finalize."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen um C Kompilierung beim optimieren abzubrechen."
 
 #. 	<PREF NAME="interface.dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:134
 msgid "Display confirmation dialog on clearing breakpoints."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen wenn Haltepunkte gelöscht werden."
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:132
@@ -10093,52 +10091,52 @@ msgstr "Bestätigungsdialog anzeigen für die Aktion 'Alle ersetzen'."
 #. 	<PREF NAME="interface.dialogs.confirm_ignore_all_breakpoints" DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:135
 msgid "Display confirmation dialog when starting the application without stopping at breakpoints."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen wenn Anwendung ohne Haltepunkte ausgeführt wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill_and_restart" DESCRIPTION="Display dialog before killing a debugged application and restarting a new one."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:149
 msgid "Display dialog before killing a debugged application and restarting a new one."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor eine Anwendung im Debagger abgebrochen und neu gestartet wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:148
 msgid "Display dialog before killing a debugged application."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor ein Anwendung im Debugger abgebrochen wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_remove_metric" DESCRIPTION="Display dialog before removing a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:150
 msgid "Display dialog before removing a metric."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor eine Metrik entfernt wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_metric" DESCRIPTION="Display dialog before saving a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:151
 msgid "Display dialog before saving a metric."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen bevor Metrik gespeichert wird."
 
 #. 	<PREF NAME="interface.dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:146
 msgid "Display dialog that warns that homonym format can take a long time."
-msgstr ""
+msgstr "Dialog anzeigen der davor warnt dass das Berechnen der Homonyme lange dauern kann."
 
 #. 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:138
 msgid "Display dialog that warns that text is being loaded and is not editable or clickable."
-msgstr ""
+msgstr "Dialog anzeigen der davor warnt dass der Text der geladen wird nicht editierbar oder klickbar ist."
 
 #. 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:147
 msgid "Display dialog when an application is running and a compilation is launched."
-msgstr ""
+msgstr "Dialog anzeigen wenn Anwendung läuft und eine Kompilierung gestartet wird."
 
 #. 	<PREF NAME="interface.dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:152
 msgid "Display dialog when editing the same class in two development windows."
-msgstr ""
+msgstr "Dialog anzeigen wenn eine Klasse in mehreren Entwicklungsfenstern geöffnet ist."
 
 #. 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:153
 msgid "Display dialog while running an external command."
-msgstr ""
+msgstr "Dialog anzeigen während ein externer Befehl läuft."
 
 #. 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:185
@@ -10210,7 +10208,7 @@ msgstr "Falls aktiviert wird der Basistyp eines Objekts angezeigt, anderenfalls 
 #. 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:145
 msgid "Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective."
-msgstr ""
+msgstr "Dialog anzeigen der davor warnt wenn eine Ressource geändert wird welche den Neustart von EiffelStudio benötigt."
 
 #. Source code: l_display: STRING_GENERAL is do Result := locale.translate ("Display?") end
 #: interface_names.e:603
@@ -11762,7 +11760,7 @@ msgstr "Schrift für Überschriften im Editor."
 #. 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:185
 msgid "Editor left side"
-msgstr ""
+msgstr "Editor linke Seite"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -13134,17 +13132,17 @@ msgstr "EiffelStudio Debugmenu aktiviert"
 #. Source code: option_check_description: STRING_GENERAL is do Result := locale.translate ("Evaluate check assertions?")	end
 #: conf_interface_names.e:280
 msgid "Evaluate check assertions?"
-msgstr "'check' auswerten?"
+msgstr "Check-Bedingugen auswerten?"
 
 #. Source code: option_invariant_description: STRING_GENERAL is do Result := locale.translate ("Evaluate invariant assertions?")	end
 #: conf_interface_names.e:282
 msgid "Evaluate invariant assertions?"
-msgstr "Invariant assertions auswerten?"
+msgstr "Invarianten auswerten?"
 
 #. Source code: option_loop_description: STRING_GENERAL is do Result := locale.translate ("Evaluate loop assertions?")	end
 #: conf_interface_names.e:284
 msgid "Evaluate loop assertions?"
-msgstr "Loop-assertions auswerten?"
+msgstr "Schleifenbedingugen auswerten (Variante und Invariante)?"
 
 #. Source code: f_run_metric_again: STRING_GENERAL is do Result := locale.translate ("Evaluate metric again to get up-to-date result") end
 #: eb_metric_names.e:267
@@ -15892,7 +15890,7 @@ msgstr "Beinhaltet:"
 #. Source code: Result.force (locale.translate ("Incompatible Types Equality"), w_vweq)
 #: conf_interface_names.e:323
 msgid "Incompatible Types Equality"
-msgstr ""
+msgstr "Unkompatieble typen in Gleicheit"
 
 #. Source code: "Incompatible version for project compiled in: $1.%N$2 version is $3.%NProject was compiled with version $4."),
 #: warning_messages.e:73
@@ -16775,7 +16773,7 @@ msgstr "Ist Alias aktiviert"
 #. 	<PREF NAME="interface.development_window.features_tool.is_assigner_enabled" DESCRIPTION="Display assigner command ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:192
 msgid "Is assigner enabled"
-msgstr ""
+msgstr "Sind Zuweiser aktiviert"
 
 #. 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:242
@@ -17448,7 +17446,7 @@ msgstr "Werkzeuge verknüpfen"
 #. 	<PREF NAME="interface.development_window.link_tools" DESCRIPTION="Link tools? True means that a tool propagates stone to other tools if possible."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:211
 msgid "Link tools? True means that a tool propagates stone to other tools if possible."
-msgstr ""
+msgstr "Werkzeuge verknüpfen? Falls ja werden geöffnete Objekte (Klassen, Features) zu anderen Werkzeugen weitergegeben wenn möglich."
 
 #. 	<PREF NAME="tools.metric_tool.unit_order" DESCRIPTION="List of metric units in order"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:110
@@ -18369,7 +18367,7 @@ msgstr "Namen der Klassen die nicht im generierten Diagramm erscheinen sollen."
 #. Source code: option_namespace_description: STRING_GENERAL is do Result := locale.translate ("Namespace for .NET")	end
 #: conf_interface_names.e:299
 msgid "Namespace for .NET"
-msgstr "Namespace für .NET"
+msgstr "Namensraum für .NET"
 
 #. Source code: Result.force (locale.translate ("Nepali"), "ne")
 #: locale_names.e:91
@@ -19334,7 +19332,7 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
 msgid "Order used to sort feature clauses in formatted texts."
-msgstr ""
+msgstr "Ordnung von Featureklauseln in formatierten Texten."
 
 #. Source code: t_Organize_favorites: STRING_GENERAL is				do Result := locale.translate("Organize Favorites")	end
 #: interface_names.e:1681
@@ -19478,7 +19476,7 @@ msgstr "Ausgabe-Parameter"
 #. 	<PREF NAME="interface.development_window.output_tool_prompted" DESCRIPTION="Should the output tool be shown when a compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:181
 msgid "Output tool prompted"
-msgstr ""
+msgstr "Ausgabe anzeigen"
 
 #. Source code: l_Outside_ide: STRING_GENERAL is 			do Result := locale.translate ("Outside EiffelStudio") end
 #: interface_names.e:1115
@@ -20665,7 +20663,7 @@ msgstr "Verbleibend:"
 #. 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:199
 msgid "Remember completion list size"
-msgstr ""
+msgstr "Grösse Vervollständigungsliste beibehalten"
 
 #. Source code: Result := locale.format_string (locale.translate ("Remote file will be loaded in: $1.%NThis file already exists. Overwrite?"), [a_file_name])
 #: eb_metric_names.e:1053
@@ -22946,12 +22944,12 @@ msgstr "Soll in der abschliessenden Version ein kompletter Stacktrace generiert 
 #. 	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:200
 msgid "Should address toolbar be shown?"
-msgstr "Soll Adress-Symbolleiste angezeigt werden?"
+msgstr "Soll Adressleiste angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.show_all_applicable_docking_indicators" DESCRIPTION="Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:180
 msgid "Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"
-msgstr ""
+msgstr "Sollen alle anwendbaren Andockmarken angezeigt werden wenn ein Editor oder Werkzeug gezogen wird?"
 
 #. 	<PREF NAME="tools.refactoring.class_rename.all_classes" DESCRIPTION="Should all classes be processed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:630
@@ -22996,7 +22994,7 @@ msgstr "Soll die Datei umbenennt werden?"
 #. 	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:206
 msgid "Should general toolbar be shown?"
-msgstr "Soll allgemeine Symbolleiste angezeigt werden?"
+msgstr "Soll Standardleiste angezeigt werden?"
 
 #. Source code: target_cls_compliant_description: STRING_GENERAL is do Result := locale.translate ("Should generated assemblies be marked as CLS compliant?")	end
 #: conf_interface_names.e:108
@@ -23062,12 +23060,12 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:201
 msgid "Should project toolbar be shown?"
-msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
+msgstr "Soll Projektleiste angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:202
 msgid "Should refactoring toolbar be shown?"
-msgstr "Soll Refactoring-Symbolleiste angezeigt werden?"
+msgstr "Soll Refactoringleiste angezeigt werden?"
 
 #. 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:118
@@ -23086,12 +23084,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:203
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:207
 msgid "Should selective text of toolbar items in general toolbar?"
-msgstr ""
+msgstr "Soll Text der Elemente in der Symbolleiste angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:199
 msgid "Should size of completion list be remembered between completions in the editor?"
-msgstr ""
+msgstr "Soll die Grösse der Vervollständigungsliste beibehalten werden?"
 
 #. 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:124
@@ -23107,12 +23105,12 @@ msgstr "Soll Tabulator beim automatischen Einrücken verwendet werden?"
 #. 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:40
 msgid "Should text be shown alongside all toolbar items?"
-msgstr ""
+msgstr "Soll Text zusätzlich bie allen Elementen der Symbolleiste angezeigt werden?"
 
 #. 	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:39
 msgid "Should text be shown alongside preselected toolbar items?"
-msgstr ""
+msgstr "Soll Text zusätzlich bei den vorselektierten Elementen der Symbolleiste angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:177
@@ -23136,9 +23134,8 @@ msgstr "Soll Informationen über ein Agenten-Objekt angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.output_tool_prompted" DESCRIPTION="Should the output tool be shown when a compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:181
-#, fuzzy
 msgid "Should the output tool be shown when a compilation is launched?"
-msgstr "Soll die Ausgabe des Compilers angezeigt werden wenn eine C-Kompilierung gestartet wird?"
+msgstr "Soll die Ausgabe angezeigt werden wenn eine Kompilierung gestartet wird?"
 
 #. Source code: library_use_application_options_description: STRING_GENERAL is do Result := locale.translate ("Should this library use options from the application instead of from the library?")	end
 #: conf_interface_names.e:244
@@ -23227,14 +23224,13 @@ msgstr "UML anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:200
-#, fuzzy
 msgid "Show address toolbar"
-msgstr "Soll Adress-Symbolleiste angezeigt werden?"
+msgstr "Addressleiste anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_all_applicable_docking_indicators" DESCRIPTION="Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:180
 msgid "Show all applicable docking indicators"
-msgstr ""
+msgstr "Alle Andockmarken zeigen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: l_Showallcallers: STRING_GENERAL is			do Result := locale.translate("Show all callers")	end
@@ -23257,21 +23253,18 @@ msgstr "Alle Stackelemente anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:208
-#, fuzzy
 msgid "Show all text in general toolbar"
-msgstr "Elemente die in der allgemeinen Symbolleiste angezeigt werden."
+msgstr "Text in Standardleiste"
 
 #. 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:40
-#, fuzzy
 msgid "Show all text in project toolbar"
-msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
+msgstr "Text in Projektleiste"
 
 #. 	<PREF NAME="interface.development_window.show_all_text_in_refactoring_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:204
-#, fuzzy
 msgid "Show all text in refactoring toolbar"
-msgstr "Elemente die in der Refactoring-Symbolleiste angezeigt werden."
+msgstr "Text in Refactoringleiste"
 
 #. Source code: h_show_ancestor_classes: STRING_GENERAL is do Result := locale.translate("Show ancestor classes?") end
 #: interface_names.e:1522
@@ -23398,9 +23391,8 @@ msgstr "Features anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:206
-#, fuzzy
 msgid "Show general toolbar"
-msgstr "Elemente die in der allgemeinen Symbolleiste angezeigt werden."
+msgstr "Standardleiste anzeigen"
 
 #. 	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:605
@@ -23481,9 +23473,8 @@ msgstr "Zeige Dialog für Physikeigenschaften"
 
 #. 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:201
-#, fuzzy
 msgid "Show project toolbar"
-msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
+msgstr "Projektleiste anzeigen"
 
 #. 	<PREF NAME="shortcuts.view.tools.show_properties_tool" DESCRIPTION="Shortcut to display Properties tool."><SHORTCUT>F4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:690
@@ -23497,9 +23488,8 @@ msgstr "Schnellsuch-Leiste anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_refactoring_toolbar" DESCRIPTION="Should refactoring toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:202
-#, fuzzy
 msgid "Show refactoring toolbar"
-msgstr "Elemente die in der Refactoring-Symbolleiste angezeigt werden."
+msgstr "Refactoringleiste anzeigen"
 
 #. 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:657
@@ -23564,21 +23554,18 @@ msgstr ""
 
 #. 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:207
-#, fuzzy
 msgid "Show text in general toolbar"
-msgstr "Elemente die in der allgemeinen Symbolleiste angezeigt werden."
+msgstr "Text in Standardleiste anzeigen"
 
 #. 	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:39
-#, fuzzy
 msgid "Show text in project toolbar"
-msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
+msgstr "Text in Projektleiste anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_text_in_refactoring_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:203
-#, fuzzy
 msgid "Show text in refactoring toolbar"
-msgstr "Elemente die in der Refactoring-Symbolleiste angezeigt werden."
+msgstr "Text in Refactoringleiste anzeigen"
 
 #. Source code: l_Show_all_text: STRING_GENERAL is			do Result := locale.translate("Show text labels")	end
 #: interface_names.e:1145
@@ -23890,7 +23877,7 @@ msgstr ""
 #. Source code: option_msil_application_optimize_description: STRING_GENERAL is do Result := locale.translate ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
 #: conf_interface_names.e:296
 msgid "Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation."
-msgstr ""
+msgstr "Sollen alle anwendabern Applikationsspezifischen optimierungen angewendet werden beim Erstellen der optimierten Version?"
 
 #. Source code: l_Specify_arguments: STRING_GENERAL is		do Result := locale.translate("Specify arguments")	end
 #: interface_names.e:1198
@@ -24141,7 +24128,7 @@ msgstr ""
 #. 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:147
 msgid "Stop execution when compiling"
-msgstr ""
+msgstr "Ausführen abbrechen wenn kompiliert wird"
 
 #. Source code: f_stop_archive: STRING_GENERAL is do Result := locale.translate ("Stop metric archive evaluation") end
 #: eb_metric_names.e:232
@@ -27593,7 +27580,7 @@ msgstr "Eine Warnung ausgeben falls verschiedene Dateien dieselbe UUID haben?"
 #. Source code: Result.force (locale.translate ("Warn about incompatible types in equality comparisons (VWEQ)?"), w_vweq)
 #: conf_interface_names.e:341
 msgid "Warn about incompatible types in equality comparisons (VWEQ)?"
-msgstr ""
+msgstr "Über inkompatieble Typen in Gleichheitsausdrücken warnen (VWEQ)?"
 
 #. Source code: Result.force (locale.translate ("Warn about locals that are not used?"), w_unused_local)
 #: conf_interface_names.e:333

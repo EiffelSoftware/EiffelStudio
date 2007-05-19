@@ -495,8 +495,8 @@ feature {TYPE_A} -- Visitors
 	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A]) is
 			-- Process `a_type'.
 		do
-		--	last_type := a_type.type -- MTNASK: what should it be? EXTENED or not?
 			a_type.type.process (Current)
+			last_type := a_type
 		end
 
 	process_formal_a (a_type: FORMAL_A) is

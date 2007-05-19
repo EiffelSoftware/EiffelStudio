@@ -1114,7 +1114,7 @@ feature {NONE} -- Implementation
 			-- Update status bar
 		do
 			if not grid.is_tree_enabled and matches /= Void then
-				status_label.set_text (l_matches_of_total_preferences (matches.count.out, preferences.preferences.count.out))
+				status_label.set_text (l_matches_of_total_preferences (matches.count, preferences.preferences.count))
 			else
 				status_label.set_text (l_count_preferences (preferences.preferences.count.out))
 			end

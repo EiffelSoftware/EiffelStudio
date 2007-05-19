@@ -656,8 +656,8 @@
 	<PREF NAME="shortcuts.editor.expand_tree_node" DESCRIPTION="Trigger expansion of current tree node."><SHORTCUT Ctrl="True">Right</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.search_backward" DESCRIPTION="Trigger backward search."><SHORTCUT Shift="True">F3</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.search_forward" DESCRIPTION="Trigger forward search."><SHORTCUT>F3</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.editor.search_selection_forward" DESCRIPTION="Trigger search on current selection and goes to previous result."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.editor.search_selection_backward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True" Shift="True">F3</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.search_selection_forward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.editor.search_selection_backward" DESCRIPTION="Trigger search on current selection and goes to previous result."><SHORTCUT Ctrl="True" Shift="True">F3</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.show_quick_search_bar" DESCRIPTION="Trigger quick search bar."><SHORTCUT Ctrl="True">F</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.toggle_line_number_visibility" DESCRIPTION="Toggle visibility of line numbers."><SHORTCUT Ctrl="True">L</SHORTCUT></PREF>

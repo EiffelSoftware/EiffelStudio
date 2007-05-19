@@ -50,12 +50,9 @@ feature -- Access
 	l_flat_view: STRING_GENERAL is			do Result := "Flat View" end
 	f_switch_to_flat_view: STRING_GENERAL is do Result := "Switch to Flat View" end
 
-	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL is
-		require
-			a_count_not_void: a_count /= Void
-			a_total_count_not_void: a_total_count /= Void
+	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL is
 		do
-			Result := a_count.as_string_32 + " matches of " + a_total_count + " total preferences"
+			Result := a_count.out + " matches of " + a_total_count.out + " total preferences"
 		end
 
 	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL is

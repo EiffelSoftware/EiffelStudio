@@ -1056,12 +1056,14 @@ feature -- Label texts
 	l_Min_index: STRING_GENERAL is				do Result := locale.translation("Minimum index displayed")	end
 	l_Match_case: STRING_GENERAL is				do Result := locale.translation("Match case")	end
 
-	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL is
+	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL is
 		require
 			a_count_not_void: a_count /= Void
 			a_total_count_not_void: a_total_count /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("$1 matches of $2 total preferences"), [a_count, a_total_count])
+				-- Actually it should have two plural forms, one for the number of matches and the other for the number of preferences
+				-- But since the number of preferences is always greater than one anyway we just go for the number of matches
+			Result := locale.formatted_string (locale.plural_translation ("$1 match of $2 total preferences" ,"$1 matches of $2 total preferences", a_count), [a_count, a_total_count])
 		end
 
 	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL is

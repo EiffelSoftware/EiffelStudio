@@ -88,8 +88,6 @@ feature -- Pick and drop support for grid items
 					if l_stone /= Void then
 						l_grid := l_item.grid_item.parent
 						set_last_picked_item (l_item.grid_item)
-						set_last_pebble (l_stone)
-						a_grid_support.set_last_pebble (l_stone)
 						l_grid.remove_selection
 						l_grid.set_accept_cursor (l_stone.stone_cursor)
 						l_grid.set_deny_cursor (l_stone.x_stone_cursor)
@@ -97,6 +95,8 @@ feature -- Pick and drop support for grid items
 					end
 				end
 			end
+			set_last_pebble (l_stone)
+			a_grid_support.set_last_pebble (l_stone)
 		end
 
 	on_pick_ended_from_grid_pickable_item (a_item: EV_GRID_ITEM) is

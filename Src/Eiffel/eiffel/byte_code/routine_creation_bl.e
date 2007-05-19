@@ -270,6 +270,7 @@ feature
 			l_args: ARRAY [STRING_8]
 			l_seed: FEATURE_I
 		do
+			buffer.put_string ("(EIF_POINTER)")
 			buffer.put_character ('(')
 			if is_inline_agent or context.workbench_mode then
 				buffer.put_string ("0),")

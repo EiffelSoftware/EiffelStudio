@@ -98,7 +98,12 @@ feature {NONE} -- External features
 
 	store_append (f_desc: INTEGER; object, make_index_proc, need_index_proc, s: POINTER): INTEGER is
 		external
-			"C | %"pstore.h%""
+			"C inline use %"pstore.h%""
+		alias
+			"[
+				return (EIF_INTEGER) store_append ((EIF_INTEGER) $f_desc, (EIF_REFERENCE) $object,
+					(fnptr) $make_index_proc, (fnptr) $need_index_proc, (EIF_REFERENCE) $s);
+			]"
 		end
 
 	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is

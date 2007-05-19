@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-19 11:43-0800\n"
+"PO-Revision-Date: 2007-05-19 12:47-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -7286,9 +7286,8 @@ msgstr "Aktuelles Feature"
 
 #. Source code: l_Current_hit_count: STRING_GENERAL is		do Result := locale.translate("Current hit count:")	end
 #: interface_names.e:870
-#, fuzzy
 msgid "Current hit count:"
-msgstr "Aktueller Editor"
+msgstr "Aktuelle Trefferzahl:"
 
 #. Source code: t_save_metric: STRING_GENERAL is do Result := locale.translate ("Current metric has been modified, save it?") end
 #: eb_metric_names.e:52
@@ -21027,7 +21026,7 @@ msgstr "Abstossung:"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:317
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:318
 msgid "Require"
-msgstr ""
+msgstr "Require"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.autocomplete_require_else" DESCRIPTION="Autocomplete require else?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -21048,7 +21047,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:324
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:325
 msgid "Require else"
-msgstr ""
+msgstr "Require else"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.autocomplete_rescue" DESCRIPTION="Autocomplete rescue?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -22147,7 +22146,7 @@ msgstr "Serbisch (Bosnien und Herzegovina, Cyrillic)"
 #. Source code: Result.force (locale.translate ("Serbian (Bosnia and Herzegovina, Latin)"), "sr_latn_ba")
 #: locale_names.e:321
 msgid "Serbian (Bosnia and Herzegovina, Latin)"
-msgstr ""
+msgstr "Serbian (Bosnia and Herzegovina, Latin)"
 
 #. Source code: Result.force (locale.translate ("Serbian (Serbia and Montenegro, Cyrillic)"), "sr_cyrl_cs")
 #: locale_names.e:320
@@ -22157,7 +22156,7 @@ msgstr "Serbisch (Serbien und Montenegro, Cyrillic)"
 #. Source code: Result.force (locale.translate ("Serbian (Serbia and Montenegro, Latin)"), "sr_latn_cs")
 #: locale_names.e:322
 msgid "Serbian (Serbia and Montenegro, Latin)"
-msgstr ""
+msgstr "Serbian (Serbia and Montenegro, Latin)"
 
 #. Source code: Result.force (locale.translate ("Sesotho sa Leboa/Northern Sotho"), "ns")
 #: locale_names.e:94
@@ -22167,7 +22166,7 @@ msgstr "Sesotho sa Leboa/Northern Sotho"
 #. Source code: Result.force (locale.translate ("Sesotho sa Leboa/Northern Sotho (South Africa)"), "ns_za")
 #: locale_names.e:288
 msgid "Sesotho sa Leboa/Northern Sotho (South Africa)"
-msgstr ""
+msgstr "Sesotho sa Leboa/Northern Sotho (South Africa)"
 
 #. Source code: b_set: STRING_GENERAL is							do Result := locale.translate("Set")	end
 #: interface_names.e:106
@@ -23993,12 +23992,12 @@ msgstr "Anwendung starten und Haltepunkte ignorieren"
 #. 	<PREF NAME="interface.dialogs.starting_dialog_height" DESCRIPTION="Height of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:173
 msgid "Starting dialog height"
-msgstr ""
+msgstr "Höhe Startdialog"
 
 #. 	<PREF NAME="interface.dialogs.starting_dialog_width" DESCRIPTION="Width of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:172
 msgid "Starting dialog width"
-msgstr ""
+msgstr "Breite Startdialog"
 
 #. Source code: t_status: STRING_GENERAL is do Result := locale.translate ("Status") end
 #: eb_metric_names.e:32
@@ -24078,12 +24077,12 @@ msgstr "Aus Routine austreten"
 #. Source code: l_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.format_string (locale.translate("Stiffness ($1%%)"), [a_value])	end
 #: interface_names.e:1202
 msgid "Stiffness ($1%)"
-msgstr ""
+msgstr "Steifheit ($1%)"
 
 #. Source code: l_stiffness: STRING_GENERAL is do Result := locale.translate("Stiffness:")	end
 #: interface_names.e:1503
 msgid "Stiffness:"
-msgstr ""
+msgstr "Steifheit:"
 
 #. Source code: l_stone_handler: STRING_GENERAL is do Result := locale.translate ("Stone handler") end
 #: interface_names.e:666
@@ -24124,6 +24123,10 @@ msgid ""
 "\n"
 "Are you sure this is what you want?"
 msgstr ""
+"Debugger stoppen und Cluster $1 permanent\n"
+"vom System entfernen.\n"
+"\n"
+"Sind Sie sicher das Sie das wollen?"
 
 #. 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:147
@@ -25023,7 +25026,7 @@ msgstr ""
 #. Source code: there_is_no_item_available: STRING_GENERAL is				do Result := locale.translate ("There is no items available at this index.%N") end
 #: ewb_names.e:54
 msgid "There is no items available at this index.\n"
-msgstr ""
+msgstr "An diesem Index ist kein Element vorhanden.\n"
 
 #. Source code: thers_is_no_output_to_save: STRING_GENERAL is					do Result := locale.translate ("There is no output to save.%N") end
 #: ewb_names.e:181
@@ -25052,6 +25055,9 @@ msgid ""
 "Please make sure that it is neither deferred nor generic\n"
 "and that the system is correctly compiled."
 msgstr ""
+"Diese Klasse kann keine Features exportieren.\n"
+"Bitte sicherstellen dass die Klasse weder deferred nocht generisch ist\n"
+"und das das System korrekt kompiliert wurde."
 
 #. Source code: w_Class_already_edited: STRING_GENERAL is do Result := locale.translate ("This class is already being edited%N%
 #: warning_messages.e:1048
@@ -25077,6 +25083,8 @@ msgid ""
 "This command requires a class name.\n"
 "It cannot be executed."
 msgstr ""
+"Der Befehl benötigt einen Klassennamen.\n"
+"Er kann nicht ausgeführt werden."
 
 #. Source code: w_Command_needs_directory: STRING_GENERAL is do Result := locale.translate ("This command requires a directory.%N%
 #: warning_messages.e:1062
@@ -25084,6 +25092,8 @@ msgid ""
 "This command requires a directory.\n"
 "It cannot be executed."
 msgstr ""
+"Der Befehl benötigt ein Verzeichnis.\n"
+"Er kann nicht ausgeführt werden."
 
 #. Source code: w_Command_needs_file: STRING_GENERAL is do Result := locale.translate ("This command requires a file name.%N%
 #: warning_messages.e:1059
@@ -25091,6 +25101,8 @@ msgid ""
 "This command requires a file name.\n"
 "It cannot be executed."
 msgstr ""
+"Der Befehl benötigt einen Dateinamen.\n"
+"Er kann nicht ausgeführt werden."
 
 #. Source code: w_Stop_debugger: STRING_GENERAL is do Result := locale.translate ("This command will stop the debugger.") end
 #: warning_messages.e:982
@@ -25198,13 +25210,15 @@ msgstr ""
 
 #. Source code: l_feature_callee_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying feature callees") end
 #: interface_names.e:634
+#, fuzzy
 msgid "This view is suitable for displaying feature callees"
-msgstr ""
+msgstr "Diese Ansicht eignet sich für die Darstellung von Featurenaufgerufenen"
 
 #. Source code: l_feature_caller_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying feature callers") end
 #: interface_names.e:633
+#, fuzzy
 msgid "This view is suitable for displaying feature callers"
-msgstr ""
+msgstr "Diese Ansicht eignet sich für die Darstellung von Featureaufrufern"
 
 #. Source code: l_class_feature_displayer_help: STRING_GENERAL do Result := locale.translate ("This view is suitable for displaying features in form of list from a class%Nsuch as attributes/routines") end
 #: interface_names.e:631
@@ -27692,6 +27706,8 @@ msgid ""
 "Welcome to the\n"
 "new .NET Application Wizard"
 msgstr ""
+"Wilkommen zum Assistenten\n"
+"für neue .NET Anwendungen"
 
 #. Source code: t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translate ("Welcome to the New Vision2%NApplication Wizard") end
 #: interface_names.e:24
@@ -27728,7 +27744,7 @@ msgstr "Wilkommen zum Assistenten für die Verwendung des Profilers"
 #. Source code: Result.force (locale.translate ("Welsh"), "cy")
 #: locale_names.e:36
 msgid "Welsh"
-msgstr ""
+msgstr "Welsh"
 
 #. Source code: Result.force (locale.translate ("Welsh (United Kingdom)"), "cy_gb")
 #: locale_names.e:179
@@ -27759,7 +27775,7 @@ msgstr "When"
 #. Source code: m_When_hits: STRING_GENERAL is				do Result := locale.translate("When Hits ...")	end
 #: interface_names.e:745
 msgid "When Hits ..."
-msgstr ""
+msgstr "Whenn Treffer ..."
 
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_accelerator_allowed" DESCRIPTION="When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:187
@@ -27790,7 +27806,7 @@ msgstr ""
 #. Source code: l_When_breakpoint_is_hit: STRING_GENERAL is	do Result := locale.translate("When the breakpoint is hit:")	end
 #: interface_names.e:1288
 msgid "When the breakpoint is hit:"
-msgstr ""
+msgstr "Wenn der Haltepunkt getroffen wird:"
 
 #. 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:11
@@ -27969,6 +27985,9 @@ msgid ""
 "the backup file. Previous content will be lost\n"
 "and the backup file deleted."
 msgstr ""
+"Die Originaldatei wird mit der Sicherheitskopie\n"
+"überschrieben. Inhalt der Originaldatei wird\n"
+"verloren und die Sicherheitskopie gelöscht."
 
 #. Source code: t_subtitle: STRING_GENERAL is do Result := locale.translate ("You can choose the appearance of your application.") end
 #: interface_names.e:27
@@ -28004,11 +28023,13 @@ msgid ""
 "You can choose to create a .exe or a .dll file\n"
 "and select the names of the root class and its creation routine."
 msgstr ""
+"Sie können wählen ob eine .exe oder eine .dll Datei erstellt wird\n"
+"und den Namen der Wurzelklasse und der Erzeugerroutine."
 
 #. Source code: m_Second_state: STRING_GENERAL is do Result := locale.translate ("You can create an executable file (.exe) or  dynamic-link library (.dll)") end
 #: interface_names.e:114
 msgid "You can create an executable file (.exe) or  dynamic-link library (.dll)"
-msgstr ""
+msgstr "Sie können eine ausführbare Datei (.exe) oder dynamische Bibliothek (.dll) erstellen"
 
 #. Source code: do Result := locale.translate("You can generate the Execution Profile from a Run-time Information Record%N%
 #: interface_names.e:2117

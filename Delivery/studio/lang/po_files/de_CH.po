@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-18 16:30-0800\n"
+"PO-Revision-Date: 2007-05-18 18:45-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -471,9 +471,8 @@ msgstr "&Über $1"
 
 #. Source code: m_add_to: STRING_GENERAL is					do Result := locale.translate("&Add to")	end
 #: interface_names.e:751
-#, fuzzy
 msgid "&Add to"
-msgstr "Sen&de zu"
+msgstr "&Hinzufügen zu"
 
 #. Source code: m_Add_to_favorites: STRING_GENERAL is		do Result := locale.translate("&Add to Favorites")	end
 #: interface_names.e:267
@@ -1354,7 +1353,7 @@ msgstr "<= MSIL CLR Version <= "
 #. Source code: dial_cond_version_compiler: STRING_GENERAL is do Result := locale.translate ("<= compiler version <= ")	end
 #: conf_interface_names.e:387
 msgid "<= compiler version <= "
-msgstr "<= Kompilerversion <= "
+msgstr "<= Kompiliererversion <= "
 
 #. Source code: once Result := locale.translate ("<None>") end
 #: debugger_names.e:138
@@ -1903,7 +1902,7 @@ msgstr "Afrikaans (Südafrika)"
 #. 	<PREF NAME="tools.metric_tool.old_archive_age_in_days" DESCRIPTION="Age in days for an archive item to be considered old"><INTEGER>30</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:108
 msgid "Age in days for an archive item to be considered old"
-msgstr ""
+msgstr "Alter in Tagen um ein Archivelemt als alt zu betrachten."
 
 #. Source code: Result.force (locale.translate ("Albanian"), "sq")
 #: locale_names.e:114
@@ -2015,9 +2014,8 @@ msgstr "Alphabetische Clusterliste"
 
 #. 	<PREF NAME="interface.dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:152
-#, fuzzy
 msgid "Already editing class"
-msgstr "In Klasse deklariert"
+msgstr "Klasse bereits geöffnet"
 
 #. Source code: Result.force (locale.translate ("Alsatian"), "gsw")
 #: locale_names.e:55
@@ -2598,19 +2596,17 @@ msgstr "Attribute"
 #. Source code: Result := locale.translate ("Auto Hide")
 #: docking_names.e:30
 msgid "Auto Hide"
-msgstr ""
+msgstr "Automatisch verbergen"
 
 #. 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:230
-#, fuzzy
 msgid "Auto auto-complete"
-msgstr "Autovervollständigung"
+msgstr "Autovervollständigung automatisch anzeigen"
 
 #. 	<PREF NAME="editor.eiffel.auto_complete_words" DESCRIPTION="Should completion automatically complete words when a single best match is available?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:231
-#, fuzzy
 msgid "Auto complete words"
-msgstr "Autovervollständigung für 'is'?"
+msgstr "Wörter automatisch vervollständigen"
 
 #. Source code: m_auto_expressions: STRING_GENERAL is		do Result := locale.translate("Auto expressions")	end
 #: interface_names.e:283
@@ -2624,9 +2620,8 @@ msgstr ""
 
 #. 	<PREF NAME="editor.eiffel.auto_remove_trailing_blank_when_saving" DESCRIPTION="Should trailing blanks be auto-removed when saving?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:232
-#, fuzzy
 msgid "Auto remove trailing blank when saving"
-msgstr "Sollen Leerschläge am Ende von Zeilen automatisch entfernt werden?"
+msgstr "Leerschläge am Zeilenende entfernen"
 
 #. Source code: t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translate("Auto-Complete")	end
 #: interface_names.e:1709
@@ -2635,15 +2630,13 @@ msgstr "Autovervollständigung"
 
 #. 	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Are brackets and parentheses closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:228
-#, fuzzy
 msgid "Auto-complete brackets and parentheses"
-msgstr "Autovervollständigung für 'ensure then'?"
+msgstr "Klammern automatisch vervollständigen"
 
 #. 	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:229
-#, fuzzy
 msgid "Auto-complete quotes"
-msgstr "Autovervollständigung für 'once'?"
+msgstr "Anführungszeichen automatisch vervollständigen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -4188,7 +4181,7 @@ msgstr "Belarusian"
 #. Source code: Result.force (locale.translate ("Belarusian (Belarus)"), "be_by")
 #: locale_names.e:168
 msgid "Belarusian (Belarus)"
-msgstr ""
+msgstr "Belarusian (Belarus)"
 
 #. Source code: Result.force (locale.translate ("Bengali"), "bn")
 #: locale_names.e:29
@@ -4910,9 +4903,8 @@ msgstr ""
 
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:715
-#, fuzzy
 msgid "Check overrides and compile"
-msgstr "Bibliotheken zur Präkompilierung wählen"
+msgstr "Overrides überprüfen und kompilieren"
 
 #. Source code: e_Check_exports: STRING_GENERAL is			do Result := locale.translate("Check the validity of the library definition")	end
 #: interface_names.e:1940
@@ -5187,7 +5179,7 @@ msgstr "Klasse ist nicht editierbar.\n"
 #: interface_names.e:638
 #, fuzzy
 msgid "Class list view"
-msgstr "flache Ansicht"
+msgstr "Klassenliste"
 
 #. Source code: dialog_class_option_class_name: STRING_GENERAL is do Result := locale.translate ("Class name")	end
 #: conf_interface_names.e:476
@@ -5359,7 +5351,7 @@ msgstr "Syntaxfehler im Klassentext"
 #: interface_names.e:637
 #, fuzzy
 msgid "Class tree view"
-msgstr "flache Ansicht"
+msgstr "Klassenbaum"
 
 #. Source code: w_Class_modified_outside_diagram: STRING_GENERAL is do Result := locale.translate ("Class was modified outside the diagram.%N%
 #: warning_messages.e:1010
@@ -5459,9 +5451,8 @@ msgstr ""
 
 #. Source code: t_clear_result: STRING_GENERAL is do Result := locale.translate ("Clear detailed result") end
 #: eb_metric_names.e:172
-#, fuzzy
 msgid "Clear detailed result"
-msgstr "Detailiertes Resultat behalten"
+msgstr "Detailiertes Resultat löschen"
 
 #. Source code: f_clear_output: STRING_GENERAL is				 do Result := locale.translate ("Clear output") end
 #: eb_external_output_names.e:26
@@ -5520,9 +5511,8 @@ msgstr "Klicken um zu öffnen"
 
 #. 	<PREF NAME="shortcuts.view.clickable_text_view" DESCRIPTION="Shortcut to display clickable text view."><SHORTCUT Ctrl="True" Shift="True">C</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:708
-#, fuzzy
 msgid "Clickable text view"
-msgstr "Ansicht zum Klicken"
+msgstr "Klickbare Textansicht"
 
 #. Source code: l_Clickable: STRING_GENERAL is				do Result := locale.translate("Clickable view")	end
 #: interface_names.e:843
@@ -5562,9 +5552,8 @@ msgstr "Klienten der Klasse"
 
 #. Source code: m_clone_metric: STRING_GENERAL is			do Result := locale.translate ("Clone metric") end
 #: interface_names.e:756
-#, fuzzy
 msgid "Clone metric"
-msgstr "Lineare Metrik"
+msgstr "Metrik duplizieren"
 
 #. Source code: f_create_new_metric_using_current_data: STRING_GENERAL is do Result := locale.translate ("Clone selected metric to a new metric") end
 #: eb_metric_names.e:261
@@ -6363,7 +6352,7 @@ msgstr "Die kompilierte Konfiguration ist nicht aktuell. Bitte rekompilieren."
 #. 	<PREF NAME="compiler.maximum_processors_usage" DESCRIPTION="The maximum number of processors to use during compilation. Used '0' to use all available processors."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:2
 msgid "Compiler"
-msgstr "Compiler"
+msgstr "Kompilierer"
 
 #. Source code: m_Complete_word: STRING_GENERAL is			do Result := locale.translate("Complete &Word")	end
 #: interface_names.e:313
@@ -6705,7 +6694,7 @@ msgstr "Vertrag"
 #: interface_names.e:1186
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:710
 msgid "Contract view"
-msgstr "Zusicherungs-Ansicht"
+msgstr "Vertragsansicht"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.autocomplete_if" DESCRIPTION="Autocomplete if?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -7164,9 +7153,8 @@ msgstr "Erstelle neues Projekt. Bitte warten..."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:295
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:296
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:297
-#, fuzzy
 msgid "Creation"
-msgstr "&Erzeugte"
+msgstr "Creation"
 
 #. Source code: t_Creation_routine: STRING_GENERAL is				do Result := locale.translate("Creation Procedure")	end
 #: interface_names.e:1649
@@ -8204,9 +8192,8 @@ msgstr "Symbolleiste anpassen"
 
 #. Source code: f_customize_formatter: STRING_GENERAL is do Result := locale.translate ("Customize formatters") end
 #: interface_names.e:596
-#, fuzzy
 msgid "Customize formatters"
-msgstr "Symbolleiste anpassen"
+msgstr "Formatierer anpassen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
@@ -8691,17 +8678,17 @@ msgstr "Benutzerdefinierte Autovervollständigung (Leerschlag, andere Fälle)"
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_1" DESCRIPTION="Trigger insertion of customized string #1."><SHORTCUT>F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:647
 msgid "Customized insertion 1"
-msgstr ""
+msgstr "Benutzerdefinierte Eingabe 1"
 
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_2" DESCRIPTION="Trigger insertion of customized string #2."><SHORTCUT Ctrl="True">F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:648
 msgid "Customized insertion 2"
-msgstr ""
+msgstr "Benutzerdefinierte Eingabe 2"
 
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_3" DESCRIPTION="Trigger insertion of customized string #3."><SHORTCUT Shift="True">F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:649
 msgid "Customized insertion 3"
-msgstr ""
+msgstr "Benutzerdefinierte Eingabe 3"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8709,9 +8696,8 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:224
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:233
-#, fuzzy
 msgid "Customized string 1"
-msgstr "Re&factoringleiste anpassen..."
+msgstr "Benutzerdefinierte Zeichenkette 1"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8719,9 +8705,8 @@ msgstr "Re&factoringleiste anpassen..."
 #. 	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:234
-#, fuzzy
 msgid "Customized string 2"
-msgstr "Re&factoringleiste anpassen..."
+msgstr "Benutzerdefinierte Zeichenkette 2"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8729,9 +8714,8 @@ msgstr "Re&factoringleiste anpassen..."
 #. 	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:226
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:235
-#, fuzzy
 msgid "Customized string 3"
-msgstr "Re&factoringleiste anpassen..."
+msgstr "Benutzerdefinierte Zeichenkette 3"
 
 #. Source code: b_Cut: STRING_GENERAL is							do Result := locale.translate("Cut")	end
 #: interface_names.e:122
@@ -9053,7 +9037,7 @@ msgstr ""
 #. 	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:6
 msgid "Default displayed string size"
-msgstr "Standardwert für Länge angezeigter Zeichenketten"
+msgstr "Standardwert Länge von Zeichenketten"
 
 #. 	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:7
@@ -9073,7 +9057,7 @@ msgstr "Standardbibliotheken"
 #. 	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:8
 msgid "Default maximum stack depth"
-msgstr "Standardwert für maximale Stack-Tiefe"
+msgstr "Standardwert maximale Stack-Tiefe"
 
 #. 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:623
@@ -9124,7 +9108,7 @@ msgstr "Standardmässige vorkompilierte Bibliotheken"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:352
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:353
 msgid "Deferred"
-msgstr ""
+msgstr "Deferred"
 
 #. Source code: l_Deferreds: STRING_GENERAL is				do Result := locale.translate("Deferred features")	end
 #: interface_names.e:916
@@ -9233,9 +9217,8 @@ msgstr "Abhängigkeit"
 
 #. Source code: l_dependency_displayer: STRING_GENERAL do Result := locale.translate ("Dependency view") end
 #: interface_names.e:644
-#, fuzzy
 msgid "Dependency view"
-msgstr "Abhängigkeiten"
+msgstr "Abhängigkeiten Ansicht"
 
 #. Source code: b_Descendant_time: STRING_GENERAL is				do Result := locale.translate("Descendant Time")	end
 #: interface_names.e:60
@@ -9671,9 +9654,8 @@ msgstr ""
 
 #. Source code: m_diagram_with: STRING_GENERAL is	do Result := locale.translate ("Diagram with") end
 #: interface_names.e:758
-#, fuzzy
 msgid "Diagram with"
-msgstr "Diagrammwerkzeug"
+msgstr "Diagramm mit"
 
 #. Source code: l_dialog_application: STRING_GENERAL is do Result := locale.translate ("Dialog application") end
 #: interface_names.e:17
@@ -9850,37 +9832,37 @@ msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
 #. 	<PREF NAME="interface.dialogs.last_saved_call_stack_directory" DESCRIPTION="Directory of last call stack saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:160
 msgid "Directory of last call stack saved."
-msgstr ""
+msgstr "Verzeichnis wo der letzter Aufrufstack gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:161
 msgid "Directory of last debugger exception saved."
-msgstr ""
+msgstr "Verzeichnis wo die letzte Ausnahme des Debuggers gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_diagram_postscript_directory" DESCRIPTION="Directory of last diagram postscript file saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:162
 msgid "Directory of last diagram postscript file saved."
-msgstr ""
+msgstr "Verzeichnis wo die letzte Postscript-Datei eines Diagramms gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib library opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:156
 msgid "Directory of last dynamic lib library opened."
-msgstr ""
+msgstr "Verzeichnis wo die letzte dynamische Bibliothek geöffnet wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:159
 msgid "Directory of last dynamic lib saved."
-msgstr ""
+msgstr "Verzeichnis wo die letzte dynamische Bibliothek gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:163
 msgid "Directory of last exception saved."
-msgstr ""
+msgstr "Verzeichnis wo die letzte Ausnahme gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_file_directory" DESCRIPTION="Directory of last file opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:157
 msgid "Directory of last file opened."
-msgstr ""
+msgstr "Verzeichnis wo die letzte Datei geöffnet wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition directory." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:166
@@ -9891,7 +9873,7 @@ msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
 #. 	<PREF NAME="interface.dialogs.last_opened_metric_browse_archive_directory" DESCRIPTION="Directory of last metric browse archive opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:158
 msgid "Directory of last metric browse archive opened."
-msgstr ""
+msgstr "Verzeichnis wo das letzte Metrikarchiv geöffnet wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
@@ -9901,7 +9883,7 @@ msgstr "Speichere Verzeichnis des letzen Profilresultats."
 #. 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
 msgid "Directory of last project opened."
-msgstr ""
+msgstr "Verzeichnis wo das letzte Projekt geöffnet wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:164
@@ -9925,9 +9907,8 @@ msgstr "Überprüfung der Zusicherungen abschalten"
 
 #. Source code: Result := locale.translate ("Disable Auto Hide")
 #: docking_names.e:36
-#, fuzzy
 msgid "Disable Auto Hide"
-msgstr "Deaktiviert"
+msgstr "Automatisch verbergen deaktivieren"
 
 #. Source code: b_Bkpt_disable: STRING_GENERAL is					do Result := locale.translate("Disable Breakpoints")	end
 #: interface_names.e:149
@@ -10254,7 +10235,7 @@ msgstr "Divehi"
 #. Source code: Result.force (locale.translate ("Divehi (Maldives)"), "dv_mv")
 #: locale_names.e:187
 msgid "Divehi (Maldives)"
-msgstr ""
+msgstr "Divehi (Maldives)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -10399,7 +10380,7 @@ msgstr ""
 #. Source code: want_to_update_new_compiler: STRING_GENERAL is 				do Result := locale.translate ("Do you want to update to new version of compiler?") end
 #: ewb_names.e:32
 msgid "Do you want to update to new version of compiler?"
-msgstr "Auf neue Version des Kompilers aktualisieren?"
+msgstr "Auf neue Version des Kompilierers aktualisieren?"
 
 #. Source code: d_Documentation: STRING is					do Result := locale.translate("Documentation").out	end
 #: interface_names.e:241
@@ -10448,9 +10429,8 @@ msgstr "Muss diese Aufgabe erfolgreich beendet werden für die weitere Kompilier
 
 #. Source code: err_domain_missing: STRING_GENERAL is do Result := locale.translate ("Domain is missing.") end
 #: eb_metric_names.e:1027
-#, fuzzy
 msgid "Domain is missing."
-msgstr "UUID fehlt."
+msgstr "Domäne fehlt."
 
 #. Source code: Result := locale.translate ("Domain item id is missing.")
 #: eb_metric_names.e:643
@@ -12665,7 +12645,7 @@ msgstr "EiffelStudio"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_7" DESCRIPTION="Eighth external command shortcut."><SHORTCUT Alt="True">7</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:674
 msgid "Eighth external command shortcut."
-msgstr "Schnelltaste für 8. externen Befehl"
+msgstr "Tastenkombination für 8. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_7" DESCRIPTION="Eighth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:594
@@ -12708,9 +12688,8 @@ msgstr "Element $1 wird erwartet aber nicht gefunden."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:414
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:415
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:416
-#, fuzzy
 msgid "Else"
-msgstr "Schliessen"
+msgstr "Else"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete else if?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -12745,15 +12724,13 @@ msgstr "Aktuelle Zeile in 'if' Klausel einbetten."
 
 #. 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:664
-#, fuzzy
 msgid "Embed debug clause"
-msgstr "Gitterlayout beibehalten"
+msgstr "In 'Debug' einbetten"
 
 #. 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:663
-#, fuzzy
 msgid "Embed if clause"
-msgstr "[Unbenannte Feature-Klausel]"
+msgstr "In 'If' einbetten"
 
 #. Source code: t_Empty_creation_routine_external_name_error: STRING_GENERAL is do Result := locale.translate ("Empty Creation Routine .NET Name Error") end
 #: interface_names.e:146
@@ -13276,9 +13253,8 @@ msgstr "Ausschliessen:"
 
 #. 	<PREF NAME="tools.diagram_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:90
-#, fuzzy
 msgid "Excluded class figures"
-msgstr "Platform(en) auschschliessen"
+msgstr ""
 
 #. 	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:97
@@ -13307,9 +13283,8 @@ msgstr "Anwendung Schritt für Schritt ausführen"
 
 #. 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:153
-#, fuzzy
 msgid "Executing command"
-msgstr "Externer Befehl"
+msgstr "Befehl ausführen"
 
 #. Source code: wt_Execution_Profile: STRING_GENERAL is do Result := locale.translate("Execution Profile")	end
 #: interface_names.e:2112
@@ -13504,9 +13479,8 @@ msgstr "Ausdruck:"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:358
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:359
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:360
-#, fuzzy
 msgid "External"
-msgstr "Externe Objekte"
+msgstr "External"
 
 #. Source code: t_external_command: STRING_GENERAL is				do Result := locale.translate("External Command")	end
 #: interface_names.e:1667
@@ -13823,9 +13797,8 @@ msgstr "Feat&ure-Ansichten"
 
 #. 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
-#, fuzzy
 msgid "Feature clause order"
-msgstr "Feature Name"
+msgstr "Ordnung für Featureklauseln"
 
 #. 	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:99
@@ -14113,7 +14086,7 @@ msgstr "Featureliste"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:387
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:388
 msgid "Feature structure keywords"
-msgstr ""
+msgstr "Schlüsselwörter von Features"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:260
@@ -14162,7 +14135,7 @@ msgstr "Features-Werkzeug"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_4" DESCRIPTION="Fifth external command shortcut."><SHORTCUT Alt="True">4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:671
 msgid "Fifth external command shortcut."
-msgstr "Schnelltaste für 5. externen Befehl"
+msgstr "Tastenkombination für 5. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_4" DESCRIPTION="Fifth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:591
@@ -14343,15 +14316,13 @@ msgstr "Filter"
 
 #. 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:236
-#, fuzzy
 msgid "Filter completion list"
-msgstr "Cluster optionen"
+msgstr "Vervollständigungsliste filtern"
 
 #. Source code: l_Filter_exceptions: STRING_GENERAL is		do Result := locale.translate ("Filter exceptions") end
 #: interface_names.e:1013
-#, fuzzy
 msgid "Filter exceptions"
-msgstr "Cluster optionen"
+msgstr "Ausnahmen filtern"
 
 #. 	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
@@ -14500,7 +14471,7 @@ msgstr "Erste möglichkeit"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:667
 msgid "First external command shortcut."
-msgstr "Schnelltaste für 1. externen Befehl"
+msgstr "Tastenkombination für 1. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_0" DESCRIPTION="First external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:587
@@ -14520,7 +14491,7 @@ msgstr "Das Problem beheben und den Assistenten neustarten."
 #. Source code: l_flat_contracts:  STRING_GENERAL is		do Result := locale.translate("Flat contracts")	end
 #: interface_names.e:815
 msgid "Flat contracts"
-msgstr ""
+msgstr "Flache Verträge"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: l_Flat_view: STRING_GENERAL is				do Result := locale.translate ("Flat view") end
@@ -14534,12 +14505,12 @@ msgstr "Flache Ansicht"
 #. 	<PREF NAME="shortcuts.general.focus_on_class_address" DESCRIPTION="Focus on class address input field."><SHORTCUT>F6</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:634
 msgid "Focus on class address"
-msgstr ""
+msgstr "Adressleiste für Klassen fokussieren"
 
 #. 	<PREF NAME="shortcuts.general.focus_on_class_address" DESCRIPTION="Focus on class address input field."><SHORTCUT>F6</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:634
 msgid "Focus on class address input field."
-msgstr ""
+msgstr "Fokus auf Adressleiste für Klassen legen."
 
 #. Source code: fs_focus_on_editor: STRING_GENERAL is			do Result := locale.translate ("Focus on current editor") end
 #: interface_names.e:1621
@@ -14756,25 +14727,23 @@ msgstr "Format um Klassentext abzuspeichern. 'Wahr' speichert im Windows Textfor
 
 #. Source code: l_formatter: STRING_GENERAL is do Result := locale.translate ("Formatter") end
 #: interface_names.e:599
-#, fuzzy
 msgid "Formatter"
-msgstr "F&ormat"
+msgstr "Formatierer"
 
 #. Source code: t_formatter_displayer_name: STRING_GENERAL is do Result := locale.translate ("Formatter displayer") end
 #: interface_names.e:602
-#, fuzzy
 msgid "Formatter displayer"
-msgstr "F&ormat"
+msgstr "Anzeiger für Formatierer"
 
 #. 	<PREF NAME="tools.context_tool.formatters_history_size" DESCRIPTION="Number of cached formatted text in history."><INTEGER>60</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:100
 msgid "Formatters history size"
-msgstr ""
+msgstr "Verlaufgrösse für Formatierer"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_3" DESCRIPTION="Forth external command shortcut."><SHORTCUT Alt="True">3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:670
 msgid "Forth external command shortcut."
-msgstr "Schnelltaste für 4. externen Befehl"
+msgstr "Tastenkombination für 4. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_3" DESCRIPTION="Forth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:590
@@ -14900,7 +14869,6 @@ msgstr "Frisian (Netherlands)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:435
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:436
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:437
-#, fuzzy
 msgid "From"
 msgstr "From"
 
@@ -16014,9 +15982,8 @@ msgstr "Index:"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:274
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:275
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:276
-#, fuzzy
 msgid "Indexing"
-msgstr "Index"
+msgstr "Indexing"
 
 #. Source code: l_indexing_clause_error: STRING_GENERAL is			do Result := locale.translate("Indexing clause has syntax error")	end
 #: interface_names.e:1043
@@ -16181,7 +16148,7 @@ msgstr "Inherit"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:506
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:507
 msgid "Inherit clauses keywords"
-msgstr ""
+msgstr "Schlüsselwörter für Vererbung"
 
 #. 	<PREF NAME="tools.class_browser.inheritance_classes" HIDDEN="false" DESCRIPTION="Should inheritance classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:121
@@ -16351,9 +16318,8 @@ msgstr "Text hier einfügen"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:421
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:422
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:423
-#, fuzzy
 msgid "Inspect"
-msgstr "Eingabe"
+msgstr "Inspect"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
@@ -16753,7 +16719,7 @@ msgstr "Ungültiges Ziel. Wähle gewünschtes Ziel:"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:534
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:535
 msgid "Invariant"
-msgstr ""
+msgstr "Invariant"
 
 #. Source code: l_invariants: STRING_GENERAL is				do Result := locale.translate("Invariants")	end
 #: interface_names.e:1044
@@ -17220,21 +17186,18 @@ msgstr ""
 
 #. 	<PREF NAME="interface.dialogs.last_opened_file_directory" DESCRIPTION="Directory of last file opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:157
-#, fuzzy
 msgid "Last opened file directory"
-msgstr "Kann nicht zu Verzeichnis wechseln"
+msgstr "Zuletzt geöffnete Datei"
 
 #. 	<PREF NAME="interface.dialogs.last_opened_metric_browse_archive_directory" DESCRIPTION="Directory of last metric browse archive opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:158
-#, fuzzy
 msgid "Last opened metric browse archive directory"
-msgstr "Stop die Auswertung des Metrikarchives"
+msgstr "Zuletzt geöffnetes Metrikarchiv"
 
 #. 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
-#, fuzzy
 msgid "Last opened project directory"
-msgstr "Kann nicht zu Verzeichnis wechseln"
+msgstr "Zuletzt geöffnetes Projekt"
 
 #. 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:221
@@ -17243,9 +17206,8 @@ msgstr "Zuletzt geöffneten Projekte"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_call_stack_directory" DESCRIPTION="Directory of last call stack saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:160
-#, fuzzy
 msgid "Last saved call stack directory"
-msgstr "Maximale Aufruf-Stack-Tiefe angeben"
+msgstr "Zuletzt gespeicherter Aufrufstack"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:161
@@ -17264,9 +17226,8 @@ msgstr ""
 
 #. 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:163
-#, fuzzy
 msgid "Last saved exception directory"
-msgstr "Kann nicht zu Verzeichnis wechseln"
+msgstr "Zuletzt gespeicherten Ausnahme"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
@@ -17581,9 +17542,8 @@ msgstr "Sprache des aktuellen Systems. (Neustart benötigt um Änderungen wirksa
 
 #. Source code: l_locale: STRING_GENERAL is do Result := locale.translate ("Locale:") end
 #: interface_names.e:1593
-#, fuzzy
 msgid "Locale:"
-msgstr "Sprache"
+msgstr "Gebietsschema:"
 
 #. Source code: l_Locals: STRING_GENERAL is					do Result := locale.translate("Locals")	end
 #: interface_names.e:1055
@@ -17674,17 +17634,17 @@ msgstr "Werkzeuge arretieren"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:457
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:458
 msgid "Loop"
-msgstr ""
+msgstr "Loop"
 
 #. Source code: Result.force (locale.translate ("Lower Sorbian"), "dsb")
 #: locale_names.e:39
 msgid "Lower Sorbian"
-msgstr ""
+msgstr "Lower Sorbian"
 
 #. Source code: Result.force (locale.translate ("Lower Sorbian (Germany)"), "dsb_de")
 #: locale_names.e:186
 msgid "Lower Sorbian (Germany)"
-msgstr ""
+msgstr "Lower Sorbian (Germany)"
 
 #. Source code: Result.force (locale.translate ("Luxembourgish"), "lb")
 #: locale_names.e:78
@@ -17694,7 +17654,7 @@ msgstr "Luxembourgish"
 #. Source code: Result.force (locale.translate ("Luxembourgish (Luxembourg)"), "lb_lu")
 #: locale_names.e:268
 msgid "Luxembourgish (Luxembourg)"
-msgstr ""
+msgstr "Luxembourgish (Luxembourg)"
 
 #. Source code: m_Maximize: STRING_GENERAL is				do Result := locale.translate("Ma&ximize")	end
 #: interface_names.e:714
@@ -17768,9 +17728,8 @@ msgstr "Verschiere dass Zähler- und Nennermetrik von der Quotientenmetrik refer
 
 #. Source code: Result := locale.translate ("Make sure that referenced metric exists and is valid.")
 #: eb_metric_names.e:1159
-#, fuzzy
 msgid "Make sure that referenced metric exists and is valid."
-msgstr "Stellen Sie sicher das jede Variablenmetrik definiert ist welche von einer lineraren Metrik referenziert wird."
+msgstr "Sicherstellen dass die referenzierte Metrik existiert und gültig ist."
 
 #. Source code: criterion_not_exist_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure that the criterion of given unit exists.") end
 #: eb_metric_names.e:1108
@@ -17805,12 +17764,12 @@ msgstr "Malay"
 #. Source code: Result.force (locale.translate ("Malay (Brunei Darussalam)"), "ms_bn")
 #: locale_names.e:279
 msgid "Malay (Brunei Darussalam)"
-msgstr ""
+msgstr "Malay (Brunei Darussalam)"
 
 #. Source code: Result.force (locale.translate ("Malay (Malaysia)"), "ms_my")
 #: locale_names.e:280
 msgid "Malay (Malaysia)"
-msgstr ""
+msgstr "Malay (Malaysia)"
 
 #. Source code: Result.force (locale.translate ("Malayalam"), "ml")
 #: locale_names.e:84
@@ -17830,7 +17789,7 @@ msgstr "Maltese"
 #. Source code: Result.force (locale.translate ("Maltese (Malta)"), "mt_mt")
 #: locale_names.e:281
 msgid "Maltese (Malta)"
-msgstr ""
+msgstr "Maltese (Malta)"
 
 #. Source code: target_edit_manually: STRING_GENERAL is do Result := locale.translate ("Manually Edit Configuration")	end
 #: conf_interface_names.e:156
@@ -18248,7 +18207,7 @@ msgstr "Mongolisch"
 #. Source code: Result.force (locale.translate ("Mongolian (Mongolia)"), "mn_cyrl_mn")
 #: locale_names.e:275
 msgid "Mongolian (Mongolia)"
-msgstr ""
+msgstr "Mongolian (Mongolia)"
 
 #. Source code: Result.force (locale.translate ("Mongolian (PRC)"), "mn_mong_cn")
 #: locale_names.e:276
@@ -18292,9 +18251,8 @@ msgstr "Verschiebe [$1] nach \"$2\""
 
 #. Source code: m_move_down: STRING_GENERAL is				do Result := locale.translate ("Move down") end
 #: interface_names.e:764
-#, fuzzy
 msgid "Move down"
-msgstr "Element nach unten verschieben"
+msgstr "Nach unten"
 
 #. Source code: f_move_item_down: STRING_GENERAL is				do Result := locale.translate ("Move item down") end
 #: interface_names.e:477
@@ -18333,9 +18291,8 @@ msgstr "Zum Ordner verschieben..."
 
 #. Source code: m_move_up: STRING_GENERAL is				do Result := locale.translate ("Move up") end
 #: interface_names.e:765
-#, fuzzy
 msgid "Move up"
-msgstr "Element nach oben verschieben"
+msgstr "Nach oben"
 
 #. Source code: do Result := locale.translate ("Moving a feature favorite is not supported by the favorite manager.") end
 #: warning_messages.e:818
@@ -18417,7 +18374,7 @@ msgstr "Namespace für .NET"
 #. Source code: Result.force (locale.translate ("Nepali"), "ne")
 #: locale_names.e:91
 msgid "Nepali"
-msgstr ""
+msgstr "Nepali"
 
 #. Source code: Result.force (locale.translate ("Nepali (India)"), "ne_in")
 #: locale_names.e:283
@@ -18619,7 +18576,7 @@ msgstr "Nächste >"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_8" DESCRIPTION="Ninth external command shortcut."><SHORTCUT Alt="True">8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:675
 msgid "Ninth external command shortcut."
-msgstr "Schnelltaste für 9. externeb Befehl"
+msgstr "Tastenkombination für 9. externeb Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_8" DESCRIPTION="Ninth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:595
@@ -18664,7 +18621,7 @@ msgstr "Kein Cluster gewählt. Bitte ein Cluster wählen um eine Klasse zu erste
 #. Source code: l_no_command_is_running: STRING_GENERAL is 		 do Result := locale.translate ("No command is running") end
 #: eb_external_output_names.e:17
 msgid "No command is running"
-msgstr ""
+msgstr "Kein Befehl läuft"
 
 #. Source code: once Result := locale.translate ("No debugging for DLL system") end
 #: debugger_names.e:126
@@ -18760,7 +18717,7 @@ msgstr "Keine Resultate vorhanden."
 #. Source code: w_No_system_defined: STRING_GENERAL is do Result := locale.translate ("No system was defined.%N") end
 #: warning_messages.e:1072
 msgid "No system was defined.\n"
-msgstr ""
+msgstr "Es wurde kein System definiert.\n"
 
 #. Source code: w_No_system: STRING_GENERAL is do Result := locale.translate ("No system was defined.%NCannot launch the application.") end
 #: warning_messages.e:964
@@ -18836,9 +18793,8 @@ msgstr "Standard-Hintergrundfarbe"
 
 #. 	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:125
-#, fuzzy
 msgid "Normal referenced classes"
-msgstr "Gewählte(r) Level aufklappen"
+msgstr "Normal referenzierte Klassen"
 
 #. 	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:563
@@ -19001,9 +18957,8 @@ msgstr "Objektwerkzeuge: Rechts"
 
 #. Source code: m_Object_viewer_tool: STRING_GENERAL is		do Result := locale.translate("Object viewer")	end
 #: interface_names.e:291
-#, fuzzy
 msgid "Object viewer"
-msgstr "Objekt"
+msgstr "Objektbetrachter"
 
 #. Source code: external_object_tree: STRING_GENERAL is do Result := locale.translate ("Objects")	end
 #: conf_interface_names.e:172
@@ -19131,7 +19086,7 @@ msgstr "Ein Objekt"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:345
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:346
 msgid "Once"
-msgstr ""
+msgstr "Once"
 
 #. Source code: do Result := locale.translate("Once an execution of an instrumented system has generated the proper file,%N%
 #: interface_names.e:2130
@@ -19651,9 +19606,8 @@ msgstr "Persisch (Iran)"
 
 #. Source code: t_physics_setting: STRING_GENERAL is				do Result := locale.translate ("Physics settings") end
 #: interface_names.e:1877
-#, fuzzy
 msgid "Physics settings"
-msgstr "Zeige Dialog für Physikeigenschaften"
+msgstr "Physikeinstellungen"
 
 #. Source code: f_pick_and_drop_items: STRING_GENERAL is do Result := locale.translate ("Pick and drop items like group/class/feature here") end
 #: eb_metric_names.e:255
@@ -19863,9 +19817,8 @@ msgstr ""
 
 #. Source code: l_select_formatter: STRING_GENERAL is do Result := locale.translate ("Please select a formatter.") end
 #: interface_names.e:604
-#, fuzzy
 msgid "Please select a formatter."
-msgstr "Bitte einen Untereintrag wählen."
+msgstr "Bitte einen Formatierer wählen."
 
 #. Source code: l_no_info_of_element: STRING_GENERAL is do Result := locale.translate ("Please select a programming element (target/group/class/feature...).") end
 #: interface_names.e:616
@@ -20263,9 +20216,8 @@ msgstr "Y-Position der Projekteinstellungen"
 
 #. 	<PREF NAME="interface.dialogs.project_settings_split_position" DESCRIPTION="Position of the split area." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:171
-#, fuzzy
 msgid "Project settings split position"
-msgstr "Projekteinstellungen"
+msgstr "Projekteinstellungen Trennposition"
 
 #. 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:167
@@ -20565,9 +20517,8 @@ msgstr "Metrik \"$1\" ist rekursiv definiert."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:484
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:485
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:486
-#, fuzzy
 msgid "Redefine"
-msgstr "Undefiniert"
+msgstr "Redefine"
 
 #. Source code: b_Redo: STRING_GENERAL is							do Result := locale.translate("Redo")	end
 #: interface_names.e:133
@@ -21119,9 +21070,8 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:365
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:366
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:367
-#, fuzzy
 msgid "Rescue"
-msgstr "Zurücksetzen"
+msgstr "Rescue"
 
 #. 	<PREF NAME="editor.eiffel.colors.reserved_background_color" DESCRIPTION="Background color for reserved words."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:253
@@ -21312,7 +21262,7 @@ msgstr "Zurückrollen?"
 #. Source code: Result.force (locale.translate ("Romanian"), "ro")
 #: locale_names.e:104
 msgid "Romanian"
-msgstr ""
+msgstr "Rumänisch"
 
 #. Source code: Result.force (locale.translate ("Romanian (Romania)"), "ro_ro")
 #: locale_names.e:301
@@ -21322,7 +21272,7 @@ msgstr "Romanian (Romania)"
 #. Source code: Result.force (locale.translate ("Romansh"), "rm")
 #: locale_names.e:103
 msgid "Romansh"
-msgstr ""
+msgstr "Rätherromanisch"
 
 #. Source code: Result.force (locale.translate ("Romansh (Switzerland)"), "rm_ch")
 #: locale_names.e:300
@@ -21528,7 +21478,7 @@ msgstr "Sami (Inari, Finnland)"
 #. Source code: Result.force (locale.translate ("Sami (Lule, Norway)"), "smj_no")
 #: locale_names.e:314
 msgid "Sami (Lule, Norway)"
-msgstr ""
+msgstr "Sami (Lule, Norway)"
 
 #. Source code: Result.force (locale.translate ("Sami (Lule, Sweden)"), "smj_se")
 #: locale_names.e:315
@@ -21798,7 +21748,7 @@ msgstr "Suche augewählte Datei..."
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:668
 msgid "Second external command shortcut."
-msgstr "Schnelltaste für 2. externen Befehl"
+msgstr "Tastenkombination für 2. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_1" DESCRIPTION="Second external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:588
@@ -21824,7 +21774,7 @@ msgstr "2. externer Befehl"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:499
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:500
 msgid "Select"
-msgstr ""
+msgstr "Select"
 
 #. Source code: m_Select_all: STRING_GENERAL is				do Result := locale.translate("Select &All%TCtrl+A")	end
 #: interface_names.e:536
@@ -22173,9 +22123,8 @@ msgstr ""
 
 #. 	<PREF NAME="shortcuts.view.send_to_context" DESCRIPTION="Shortcut to send Class/Feature to tools."><SHORTCUT Alt="True">Down</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:705
-#, fuzzy
 msgid "Send to context"
-msgstr "Kontext synchronisieren"
+msgstr "Zu Kontext senden"
 
 #. Source code: e_Shell: STRING_GENERAL is					do Result := locale.translate("Send to external editor")	end
 #: interface_names.e:2029
@@ -22260,15 +22209,13 @@ msgstr "Als Standard setzen"
 
 #. 	<PREF NAME="shortcuts.editor.set_to_lowercase" DESCRIPTION="Set current selection to lowercase."><SHORTCUT Ctrl="True" Shift="True">U</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:662
-#, fuzzy
 msgid "Set current selection to lowercase."
-msgstr "Selektierte Metrik entfernen"
+msgstr "Tastenkombination um aktuelle Selektion in Kleinbuchstaben umzuwandeln."
 
 #. 	<PREF NAME="shortcuts.editor.set_to_uppercase" DESCRIPTION="Set current selection to uppercase."><SHORTCUT Ctrl="True">U</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:661
-#, fuzzy
 msgid "Set current selection to uppercase."
-msgstr "Selektierte Metrik entfernen"
+msgstr "Tastenkombination um aktuelle Selektion in Grossbuchstaben umzuwandeln."
 
 #. Source code: once Result := locale.translate ("Set environment") end
 #: debugger_names.e:210
@@ -22292,15 +22239,13 @@ msgstr "Alles &Grossbuchstaben"
 
 #. 	<PREF NAME="shortcuts.editor.set_to_lowercase" DESCRIPTION="Set current selection to lowercase."><SHORTCUT Ctrl="True" Shift="True">U</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:662
-#, fuzzy
 msgid "Set to lowercase"
-msgstr "Alles &Kleinbuchstaben\tCtrl+Shift+U"
+msgstr "Zu Kleinbuchstaben"
 
 #. 	<PREF NAME="shortcuts.editor.set_to_uppercase" DESCRIPTION="Set current selection to uppercase."><SHORTCUT Ctrl="True">U</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:661
-#, fuzzy
 msgid "Set to uppercase"
-msgstr "Alles &Grossbuchstaben\tCtrl+U"
+msgstr "Zu Grossbuchstaben"
 
 #. Source code: l_Set_slice_limits_desc: STRING_GENERAL is	do Result := locale.translate("Set which values are shown in special objects")	end
 #: interface_names.e:1185
@@ -22408,7 +22353,7 @@ msgstr "Verfügbare Kriterien"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_6" DESCRIPTION="Seventh external command shortcut."><SHORTCUT Alt="True">6</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:673
 msgid "Seventh external command shortcut."
-msgstr "Schnelltaste für 7. externen Befehl"
+msgstr "Tastenkombination für 7. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_6" DESCRIPTION="Seventh external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:593
@@ -22433,52 +22378,52 @@ msgstr "Kurzname"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:667
 msgid "Shortcut 0"
-msgstr "Tastaturkürzel 0"
+msgstr "Tastenkombination 0"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:668
 msgid "Shortcut 1"
-msgstr "Tastaturkürzel 1"
+msgstr "Tastenkombination 1"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_2" DESCRIPTION="Third external command shortcut."><SHORTCUT Alt="True">2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Shortcut 2"
-msgstr "Tastaturkürzel 2"
+msgstr "Tastenkombination 2"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_3" DESCRIPTION="Forth external command shortcut."><SHORTCUT Alt="True">3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:670
 msgid "Shortcut 3"
-msgstr "Tastaturkürzel 3"
+msgstr "Tastenkombination 3"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_4" DESCRIPTION="Fifth external command shortcut."><SHORTCUT Alt="True">4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:671
 msgid "Shortcut 4"
-msgstr "Tastaturkürzel 4"
+msgstr "Tastenkombination 4"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_5" DESCRIPTION="Sixth external command shortcut."><SHORTCUT Alt="True">5</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:672
 msgid "Shortcut 5"
-msgstr "Tastaturkürzel 5"
+msgstr "Tastenkombination 5"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_6" DESCRIPTION="Seventh external command shortcut."><SHORTCUT Alt="True">6</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:673
 msgid "Shortcut 6"
-msgstr "Tastaturkürzel 6"
+msgstr "Tastenkombination 6"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_7" DESCRIPTION="Eighth external command shortcut."><SHORTCUT Alt="True">7</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:674
 msgid "Shortcut 7"
-msgstr "Tastaturkürzel 7"
+msgstr "Tastenkombination 7"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_8" DESCRIPTION="Ninth external command shortcut."><SHORTCUT Alt="True">8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:675
 msgid "Shortcut 8"
-msgstr "Tastaturkürzel 8"
+msgstr "Tastenkombination 8"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_9" DESCRIPTION="Tenth external command shortcut."><SHORTCUT Alt="True">9</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:676
 msgid "Shortcut 9"
-msgstr "Tastaturkürzel 9"
+msgstr "Tastenkombination 9"
 
 #. Source code: l_shortcut_modification_denied: STRING_GENERAL is do Result := locale.translate ("Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system.") end
 #: interface_names.e:1577
@@ -23172,7 +23117,7 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:177
 msgid "Should the C output panel be shown when a C compilation is launched?"
-msgstr "Soll die Ausgabe des Compilers angezeigt werden wenn eine C-Kompilierung gestartet wird?"
+msgstr "Soll die Ausgabe des Kompilierers angezeigt werden wenn eine C-Kompilierung gestartet wird?"
 
 #. Source code: target_il_verifiable_description: STRING_GENERAL is do Result := locale.translate ("Should the generated binary be IL verifiable?")	end
 #: conf_interface_names.e:120
@@ -23506,7 +23451,7 @@ msgstr "Normal referenzierte Klassen anzeigen?"
 #. 	<PREF NAME="shortcuts.view.tools.show_object_viewer_tool" DESCRIPTION="Shortcut to display Object Viewer tool."><SHORTCUT Ctrl="True" Alt="True">L</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:701
 msgid "Show object viewer tool"
-msgstr "Objektanzeige anzeigen"
+msgstr "Objektbetrachtung anzeigen"
 
 #. 	<PREF NAME="shortcuts.debug.show_objects_tool" DESCRIPTION="Shortcut to display Objects tool."><SHORTCUT Ctrl="True" Alt="True">J</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:730
@@ -23642,9 +23587,8 @@ msgstr "Beschriftung anzeigen"
 
 #. 	<PREF NAME="shortcuts.debug.show_threads_tool" DESCRIPTION="Shortcut to display Threads tool."><SHORTCUT Ctrl="True" Alt="True">P</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:729
-#, fuzzy
 msgid "Show threads tool"
-msgstr "Soll Adress-Symbolleiste angezeigt werden?"
+msgstr "Threads anzeigen"
 
 #. 	<PREF NAME="tools.class_browser.show_tooltip" DESCRIPTION="Show tooltip?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:619
@@ -23709,7 +23653,7 @@ msgstr "Sinhala (Sri Lanka)"
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_5" DESCRIPTION="Sixth external command shortcut."><SHORTCUT Alt="True">5</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:672
 msgid "Sixth external command shortcut."
-msgstr "Schnelltaste für 6. externen Befehl"
+msgstr "Tastenkombination für 6. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_5" DESCRIPTION="Sixth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:592
@@ -23978,7 +23922,7 @@ msgstr ""
 #. Source code: target_shared_library_definition_description: STRING_GENERAL is do Result := locale.translate ("Specify the file the compiler uses to generate the exported functions.")	end
 #: conf_interface_names.e:146
 msgid "Specify the file the compiler uses to generate the exported functions."
-msgstr "Datei angeben welche der Kompiler verwendet um die exportierten Funktionen zu erstellen."
+msgstr "Datei angeben welche der Kompilierer verwendet um die exportierten Funktionen zu erstellen."
 
 #. 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:86
@@ -24411,9 +24355,8 @@ msgstr "Cluster synchronisieren"
 
 #. Source code: l_synchronizing_diagram_tool: STRING_GENERAL is do Result := locale.translate ("Synchronizing diagram tool: ") end
 #: interface_names.e:1216
-#, fuzzy
 msgid "Synchronizing diagram tool: "
-msgstr "Werkzeuge neu synchronisieren"
+msgstr "Synchronisiere Diagram: "
 
 #. Source code: l_synchronizing_links: STRING_GENERAL is do Result := locale.translate ("Synchronizing links") end
 #: interface_names.e:1217
@@ -24530,7 +24473,7 @@ msgstr "Tamazight"
 #. Source code: Result.force (locale.translate ("Tamazight (Algeria, Latin)"), "tmz_latn_dz")
 #: locale_names.e:332
 msgid "Tamazight (Algeria, Latin)"
-msgstr ""
+msgstr "Tamazight (Algeria, Latin)"
 
 #. Source code: Result.force (locale.translate ("Tamil"), "ta")
 #: locale_names.e:119
@@ -24656,7 +24599,7 @@ msgstr ""
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_9" DESCRIPTION="Tenth external command shortcut."><SHORTCUT Alt="True">9</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:676
 msgid "Tenth external command shortcut."
-msgstr "Schnelltaste für 10. externen Befehl"
+msgstr "Tastenkombination für 10. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_9" DESCRIPTION="Tenth external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:596
@@ -24929,7 +24872,7 @@ msgid ""
 "The project location is the place where compilation\n"
 "files will be generated by the compiler"
 msgstr ""
-"Der Projekpfad ist der Ort wo die vom Compiler\n"
+"Der Projekpfad ist der Ort wo die vom Kompilierer\n"
 "generierten Datein gelagert werden"
 
 #. Source code: do Result := locale.translate ("The project name that you have specified does not conform%N%
@@ -25043,7 +24986,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:401
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:402
 msgid "Then"
-msgstr ""
+msgstr "Then"
 
 #. Source code: do Result := locale.translate ("There are problems in this library definition.%N%
 #: warning_messages.e:614
@@ -25108,7 +25051,7 @@ msgstr "Diese Parameter sind ungültig."
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_2" DESCRIPTION="Third external command shortcut."><SHORTCUT Alt="True">2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Third external command shortcut."
-msgstr "Schnelltaste für 3. externen Befehl"
+msgstr "Tastenkombination für 3. externen Befehl"
 
 #. 	<PREF NAME="general.external_commands.external_command_2" DESCRIPTION="Third external command."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:589
@@ -25311,7 +25254,7 @@ msgstr "Tibetisch"
 #. Source code: Result.force (locale.translate ("Tibetan (Bhutan)"), "bo_bt")
 #: locale_names.e:171
 msgid "Tibetan (Bhutan)"
-msgstr ""
+msgstr "Tibetan (Bhutan)"
 
 #. Source code: Result.force (locale.translate ("Tibetan (PRC)"), "bo_cn")
 #: locale_names.e:172
@@ -25357,13 +25300,12 @@ msgstr "Filter umschalten"
 #. 	<PREF NAME="shortcuts.code_completion.toggle_filter" DESCRIPTION="Toggle filter button in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:637
 msgid "Toggle filter button in completion list."
-msgstr ""
+msgstr "Filterknopf in Autovervollständigungsliste umschalten."
 
 #. 	<PREF NAME="shortcuts.editor.toggle_line_number_visibility" DESCRIPTION="Toggle visibility of line numbers."><SHORTCUT Ctrl="True">L</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:658
-#, fuzzy
 msgid "Toggle line number visibility"
-msgstr "Zeilen&numern an/aus"
+msgstr "Sichtbarkeit von Zeilennumern umschalten"
 
 #. Source code: l_diagram_toggle_quality: STRING_GENERAL is	do Result := locale.translate("Toggle quality level")	end
 #: interface_names.e:391
@@ -25372,35 +25314,33 @@ msgstr "Qualitätslevel umschalten"
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Key"><SHORTCUT>F5</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:641
-#, fuzzy
 msgid "Toggle remember size"
-msgstr "Anzeige Zeilen&numern umschalten"
+msgstr "Grösse merken umschalten"
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Key"><SHORTCUT>F4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:640
-#, fuzzy
 msgid "Toggle show disambiguated name"
-msgstr "Soll Vervollständigung eindeutige Namen anzeigen?"
+msgstr "Eindeutigen Namen anzeigen umschalten"
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Key"><SHORTCUT>F3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:639
 msgid "Toggle show signature"
-msgstr "'Signatur anzeigen' umschalten"
+msgstr "Signatur anzeigen umschalten"
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_show_type" DESCRIPTION="Toggle show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:638
 msgid "Toggle show type"
-msgstr ""
+msgstr "Typ anzeigen umschalten"
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_show_type" DESCRIPTION="Toggle show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:638
 msgid "Toggle show type in completion list."
-msgstr ""
+msgstr "Typ anzeigen in Autovervollständigungsliste umschalten."
 
 #. Source code: l_toggle_assigner: STRING_GENERAL is	do Result := locale.translate("Toggle visibility of assigner command name")	end
 #: interface_names.e:678
 msgid "Toggle visibility of assigner command name"
-msgstr ""
+msgstr "Sichtbarkeit vom Namen des Zuweiserbefehls umschalten"
 
 #. Source code: l_diagram_labels_visibility: STRING_GENERAL is	do Result := locale.translate("Toggle visibility of client link labels")	end
 #: interface_names.e:385
@@ -25434,9 +25374,8 @@ msgstr "Sichtbarkeit der Vererbungsverbindung umschalten"
 
 #. 	<PREF NAME="shortcuts.editor.toggle_line_number_visibility" DESCRIPTION="Toggle visibility of line numbers."><SHORTCUT Ctrl="True">L</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:658
-#, fuzzy
 msgid "Toggle visibility of line numbers."
-msgstr "Sichtbarkeit der Clusters umschalten"
+msgstr "Tastenkombination um Sichtbarkeit von Zeilennummern umzuschalten."
 
 #. Source code: l_diagram_supplier_visibility: STRING_GENERAL is do Result := locale.translate("Toggle visibility of supplier links")	end
 #: interface_names.e:369
@@ -25963,7 +25902,7 @@ msgstr "Rückwärtssuche auslösen."
 #. 	<PREF NAME="shortcuts.code_completion.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:643
 msgid "Trigger class completion"
-msgstr "Klassen-Vervollständigung auslösen."
+msgstr "Autovervollständigung für Klassen auslösen."
 
 #. 	<PREF NAME="shortcuts.editor.collapse_all_levels" DESCRIPTION="Trigger collapsing of all tree nodes."><SHORTCUT Shift="True">NumPad -</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:645
@@ -25978,7 +25917,7 @@ msgstr "Zuklappen des aktuellen Knotens auslösen."
 #. 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:657
 msgid "Trigger display of search panel focused on replace."
-msgstr ""
+msgstr "Anzeige des Suchen und Ersetzen Werkzeugs auslösen."
 
 #. 	<PREF NAME="shortcuts.editor.expand_all_levels" DESCRIPTION="Trigger expansion of all tree nodes."><SHORTCUT Shift="True">NumPad *</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:650
@@ -25993,7 +25932,7 @@ msgstr "Aufklappen des aktuellen Knotens auslösen."
 #. 	<PREF NAME="shortcuts.code_completion.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:642
 msgid "Trigger feature completion."
-msgstr "Feature-Vervollständigung auslösen."
+msgstr "Autovervollständigung für Feature auslösen."
 
 #. 	<PREF NAME="shortcuts.editor.search_forward" DESCRIPTION="Trigger forward search."><SHORTCUT>F3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:653
@@ -26018,7 +25957,7 @@ msgstr "Einfügen der benutzerdefinierten Zeichenkette #3 auslösen."
 #. 	<PREF NAME="shortcuts.editor.show_quick_search_bar" DESCRIPTION="Trigger quick search bar."><SHORTCUT Ctrl="True">F</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:656
 msgid "Trigger quick search bar."
-msgstr "Schnellsuch-Leiste auslösen."
+msgstr "Anzeige der Schnellsuch-Leiste auslösen."
 
 #. 	<PREF NAME="shortcuts.editor.search_selection_backward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True" Shift="True">F3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:655
@@ -26157,7 +26096,7 @@ msgstr "Uighur"
 #. Source code: Result.force (locale.translate ("Uighur (PRC)"), "ug_cn")
 #: locale_names.e:337
 msgid "Uighur (PRC)"
-msgstr ""
+msgstr "Uighur (PRC)"
 
 #. Source code: Result.force (locale.translate ("Ukrainian"), "uk")
 #: locale_names.e:130
@@ -26479,11 +26418,12 @@ msgstr ""
 
 #. Source code: Result := locale.format_string (locale.translate ("Unable to read remote file.%NPlease check URL: $1"), [a_url])
 #: eb_metric_names.e:1060
-#, fuzzy
 msgid ""
 "Unable to read remote file.\n"
 "Please check URL: $1"
-msgstr "Kann Datei nicht schreiben: $1"
+msgstr ""
+"Kann ferne Datei nicht lesen.\n"
+"Bitte die URL überprüfuen: $1"
 
 #. Source code: w_unable_to_retrieve_wizard_list: STRING_GENERAL is do Result := locale.translate ("Unable to retrieve the list of installed wizard.") end
 #: warning_messages.e:105
@@ -26492,11 +26432,12 @@ msgstr "Kann die Liste der installierten Assistenten nicht öffnen."
 
 #. Source code: Result := locale.format_string (locale.translate ("Unable to transfer remote file.%NReason: $1"), [a_reason])
 #: eb_metric_names.e:1074
-#, fuzzy
 msgid ""
 "Unable to transfer remote file.\n"
 "Reason: $1"
-msgstr "Kann Datei nicht schreiben: $1"
+msgstr ""
+"Kann ferne Datei nicht übertragen.\n"
+"Grund: $1"
 
 #. Source code: w_unable_to_write_file (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("Unable to write file: $1"), [a_name]) end;
 #: warning_messages.e:109
@@ -26772,7 +26713,7 @@ msgstr "Urdu"
 #. Source code: Result.force (locale.translate ("Urdu (India)"), "tr_in")
 #: locale_names.e:334
 msgid "Urdu (India)"
-msgstr ""
+msgstr "Urdu (India)"
 
 #. Source code: Result.force (locale.translate ("Urdu (Pakistan)"), "ur_pk")
 #: locale_names.e:339
@@ -27351,7 +27292,7 @@ msgstr "Uzbek"
 #. Source code: Result.force (locale.translate ("Uzbek (Uzbekistan, Cyrillic)"), "uz_cyrl_uz")
 #: locale_names.e:340
 msgid "Uzbek (Uzbekistan, Cyrillic)"
-msgstr ""
+msgstr "Uzbek (Uzbekistan, Cyrillic)"
 
 #. Source code: Result.force (locale.translate ("Uzbek (Uzbekistan, Latin)"), "uz_latn_uz")
 #: locale_names.e:341
@@ -27705,15 +27646,13 @@ msgstr "Warnung"
 #. 	<PREF NAME="editor.general.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:114
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:581
-#, fuzzy
 msgid "Warning background color"
-msgstr "Hintergrundfarbe für Rand"
+msgstr "Hintergrundfarbe Warnungen"
 
 #. 	<PREF NAME="editor.general.colors.warning_text_color" DESCRIPTION="Warning text color"><COLOR>200;64;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:580
-#, fuzzy
 msgid "Warning text color"
-msgstr "Farbe für Zeichenketten"
+msgstr "Farbe Warnungen"
 
 #. Source code: l_Slice_taken_into_account1: STRING_GENERAL is do Result := locale.translate("Warning: Modifications will be taken into account")	end
 #: interface_names.e:1193
@@ -27828,7 +27767,7 @@ msgstr "Walisisch (Grossbritanien)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:429
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:430
 msgid "When"
-msgstr ""
+msgstr "When"
 
 #. Source code: m_When_hits: STRING_GENERAL is				do Result := locale.translate("When Hits ...")	end
 #: interface_names.e:745
@@ -28412,7 +28351,7 @@ msgstr "Existierendes Projekt löschen falls vorhanden und eine neue Kompilation
 #. Source code: l_denominator_metric: STRING_GENERAL is do Result := locale.translate ("denominator metric") end
 #: eb_metric_names.e:189
 msgid "denominator metric"
-msgstr ""
+msgstr "Nennermetrik"
 
 #. Source code: l_desendent_versions: STRING_GENERAL is do Result := locale.translate ("descendent versions") end
 #: eb_metric_names.e:207
@@ -28508,7 +28447,7 @@ msgstr "System optimieren (Zusicherungen standardmässig ausschalten)"
 #. Source code: t_finish_freezing_launch_error: STRING_GENERAL is 	do Result := locale.translate("finish_freezing Launch Error")	end
 #: interface_names.e:1845
 msgid "finish_freezing Launch Error"
-msgstr ""
+msgstr "Fehler beim Ausführen von finish_freezing"
 
 #. Source code: l_Flat: STRING_GENERAL is					do Result := locale.translate("flat view")	end
 #: ewb_names.e:162
@@ -28665,7 +28604,7 @@ msgstr "normal"
 #. Source code: l_numerator_metric: STRING_GENERAL is do Result := locale.translate ("numerator metric") end
 #: eb_metric_names.e:190
 msgid "numerator metric"
-msgstr ""
+msgstr "Zählermetrik"
 
 #. Source code: Result := locale.format_string (locale.translate ("offset $1"), [a_offset])
 #: interface_names.e:1547
@@ -28710,7 +28649,7 @@ msgstr "Verhältnis"
 #. Source code: l_ratio_metric: STRING_GENERAL is do Result := locale.translate ("ratio metric") end
 #: eb_metric_names.e:186
 msgid "ratio metric"
-msgstr ""
+msgstr "Verhältnissmetrik"
 
 #. Source code: reactivate_subquery_help: STRING_GENERAL is do Result := locale.translate ("reactivate subquery") end
 #: shared_ewb_help.e:157

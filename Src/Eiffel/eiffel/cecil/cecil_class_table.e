@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CECIL_CLASS_TABLE 
+class CECIL_CLASS_TABLE
 
 inherit
 	CECIL_TABLE [CLASS_C]
@@ -14,7 +14,7 @@ inherit
 
 create
 	init
-	
+
 feature -- C code generation
 
 	generate is
@@ -96,7 +96,7 @@ feature {NONE} -- Convenience
 					until
 						l_types.after or l_has_entry
 					loop
-						l_has_entry := 
+						l_has_entry :=
 							(for_expanded and l_types.item.is_expanded) or
 							(not for_expanded and not l_types.item.is_expanded)
 						l_types.forth
@@ -147,7 +147,7 @@ feature {NONE} -- C code generation
 				buffer.put_string ("static char * exp_type_key [] = {%N")
 			else
 				buffer.put_string ("static char * type_key [] = {%N")
-			end			
+			end
 			from
 				i := 0
 				nb := capacity - 1
@@ -164,7 +164,7 @@ feature {NONE} -- C code generation
 				i := i + 1
 			end
 			buffer.put_string ("};%N%N")
-			
+
 				-- Generate the subvalues needed to fill the values
 			from
 				i := 0
@@ -196,17 +196,18 @@ feature {NONE} -- C code generation
 									gen_type ?= l_types.item.type
 									check
 										gen_type_not_void: gen_type /= Void
-									end
+						 			end
 									gen_type.meta_generic.generate_cecil_values (buffer)
 								else
+									buffer.put_string ("(int32) ")
 									l_types.item.type.generate_cecil_value (buffer)
 									buffer.put_string (",%N")
 								end
 							end
 							l_types.forth
 						end
-						buffer.put_string ("SK_INVALID%N};%N%N")
-						
+						buffer.put_string ("(int32) SK_INVALID%N};%N%N")
+
 						if for_expanded then
 							buffer.put_string ("static int16 exp_dyn_types")
 						else
@@ -322,7 +323,7 @@ feature {NONE} -- Byte code generation
 		do
 			l_values := values
 			l_keys := keys
-			
+
 			ba.append_short_integer (capacity)
 			from
 				i := 0
@@ -341,7 +342,7 @@ feature {NONE} -- Byte code generation
 				end
 				i := i + 1
 			end
-			
+
 			from
 				i := 0
 				nb := capacity - 1
@@ -380,7 +381,7 @@ feature {NONE} -- Byte code generation
 					else
 						ba.append_short_integer (l_class.generics.count)
 						ba.append_short_integer (0)
-	
+
 							-- Compute number of types that needs to be generated.
 						from
 							l_types := l_class.types
@@ -397,12 +398,12 @@ feature {NONE} -- Byte code generation
 							end
 							l_types.forth
 						end
-	
+
 						check
 							has_types: nb_types > 0
 						end
 						ba.append_short_integer (nb_types)
-	
+
 							-- Meta type description array
 						from
 							l_types.start
@@ -425,7 +426,7 @@ feature {NONE} -- Byte code generation
 							end
 							l_types.forth
 						end
-	
+
 							-- Dynamic type array
 						from
 							l_types.start

@@ -9,13 +9,13 @@ deferred class
 	EDIT_ITEM
 
 inherit
-	SHARED_APPLICATION_EXECUTION
+--	SHARED_APPLICATION_EXECUTION
 	IPC_SHARED
 	DEBUG_EXT
 	BEURK_HEXER
 
 feature {EDIT_ITEM} -- Private attributes
-		
+
 	status: APPLICATION_STATUS
 		-- Current application's status.
 
@@ -24,12 +24,9 @@ feature {EDIT_ITEM} -- Private attributes
 
 	item: ABSTRACT_DEBUG_VALUE
 		-- item we will modify
-	
+
 	item_name: STRING
 		-- name of the item we will modify
-	
-	project_tool: PROJECT_W
-		-- Current project tool
 
 feature -- Status
 
@@ -38,17 +35,16 @@ feature -- Status
 
 	modified: BOOLEAN
 		-- has the last call to modify_item been successful ?
-		
+
 feature -- Commands
 
-	work(given_project_tool: PROJECT_W) is
+	work is
 		do
 				-- initialize attributes
 			status := Application.status
 			item_list := Void
 			item := Void
 			item_name := Void
-			project_tool := given_project_tool
 			waiting_for_object := False
 
 			if Application.is_running and then status /= Void and then status.is_stopped then
@@ -137,10 +133,10 @@ feature {NONE} -- Implementation
 			value_string: STRING
 			value_string_c: ANY
 
-			type_real: REAL_B
+			type_real: REAL_32_B
 			type_ptr: POINTER_B
 			type_integer: INTEGER_B
-			type_double: DOUBLE_B
+			type_double: REAL_64_B
 			type_char: CHARACTER_B
 			type_bool: BOOLEAN_B
 		do

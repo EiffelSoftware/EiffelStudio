@@ -1554,7 +1554,7 @@ feature {EB_CENTER_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Center diagram comma
 	cluster_stone: CLUSTER_STONE
 			-- Stone representing center cluster.
 
-feature {EB_CLASS_HEADER_COMMAND} -- Class head command
+feature {NONE} -- Class head command
 
 	area_as_widget: EV_WIDGET is
 			-- `area' cast to EV_WIDGET.

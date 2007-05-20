@@ -281,7 +281,7 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Re
 			end
 		end
 
-feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_EVALUATOR_TOOL, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
+feature {ES_WATCH_TOOL, ES_OBJECTS_GRID_LINE, EB_EXPRESSION_DEFINITION_DIALOG} -- Status report: Propagate the context and the results.
 
 	as_object: BOOLEAN
 			-- Is the expression represent the context object ?

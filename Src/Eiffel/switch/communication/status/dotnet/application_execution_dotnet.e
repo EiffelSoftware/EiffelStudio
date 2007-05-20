@@ -157,7 +157,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			retry
 		end
 
-feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL, EV_SHARED_APPLICATION}  -- Trigger eStudio status
+feature {EIFNET_EXPORTER, EV_SHARED_APPLICATION}  -- Trigger eStudio status
 
 	callback_notification_processing: BOOLEAN is
 			-- Is inside callback notification processing ?

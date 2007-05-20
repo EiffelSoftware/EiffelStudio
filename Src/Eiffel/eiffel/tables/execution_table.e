@@ -374,7 +374,7 @@ feature -- C code generation
 			frozen_file.close
 		end
 
-feature {EXT_INCL_EXEC_UNIT} -- Include set
+feature {NONE} -- Include set
 
 	include_set: LINKED_SET [INTEGER]
 

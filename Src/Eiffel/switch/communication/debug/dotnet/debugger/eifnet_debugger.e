@@ -1862,7 +1862,6 @@ feature -- Specific function evaluation
 			l_size: INTEGER
 			l_len: INTEGER
 			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
-			einfo: EIFNET_DEBUG_VALUE_INFO
 		do
 			last_string_value_length := 0
 			l_icd_string_value := icd_string_value

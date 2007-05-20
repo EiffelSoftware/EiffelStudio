@@ -650,7 +650,7 @@ feature -- Formatter displayer names
 	l_formatter_filter_help: STRING_GENERAL do Result := locale.translation ("Display non visible items?") end
 	l_formatter_scope_help: STRING_GENERAL do Result := locale.translation ("Is this formatter of per EiffelStudio scope or per target scope?") end
 	l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translation ("In which tool(s) will this formatter be displayed") end
-	l_formatter_metric_help: STRING_GENERAL do Result := locale.translation ("From which result of this formatter is generated.") end
+	l_formatter_metric_help: STRING_GENERAL do Result := locale.translation ("From the result of which metric is this formatter generated?") end
 	l_formatter_default_header (l_ellipse: STRING_GENERAL): STRING_GENERAL
 		do
 			Result := locale.formatted_string (locale.translation ("$1 from $target"), [l_ellipse])
@@ -839,7 +839,7 @@ feature -- Label texts
 	l_clean_user_file: STRING_GENERAL is		do Result := locale.translation("Reset user settings")	end
 	l_Clients: STRING_GENERAL is				do Result := locale.translation("Clients")	end
 	l_Clients_stiffness: STRING_GENERAL is				do Result := locale.translation("Client stiffness:")	end
-	l_Clients_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string ("Client stiffness ($1%%)", [a_value])	end
+	l_Clients_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string (locale.translation ("Client stiffness ($1%%)"), [a_value])	end
 	l_Clickable: STRING_GENERAL is				do Result := locale.translation("Clickable view")	end
 	l_cluster: STRING_GENERAL is				do Result := locale.translation ("Cluster") end
 	l_cluster_colon: STRING_GENERAL is			do Result := locale.translation("Cluster:")	end
@@ -1033,7 +1033,7 @@ feature -- Label texts
 	l_inheritance_cycle_was_created: STRING_GENERAL is			do Result := locale.translation("An inheritance cycle was created.%NDo you still want to add this link?")	end
 	l_inheritance_stiffness: STRING_GENERAL is			do Result := locale.translation("Inheritance stiffness:")	end
 	l_inheritance_stiffness_100: STRING_GENERAL is			do Result := locale.translation("Inheritance stiffness (100%%)")	end
-	l_inheritance_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string ("Inheritance stiffness ($1%%)", [a_value])	end
+	l_inheritance_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string (locale.translation ("Inheritance stiffness ($1%%)"), [a_value])	end
 	l_Implicit_exception_pending: STRING_GENERAL is do Result := locale.translation("Implicit exception pending")	end
 	l_Implementers: STRING_GENERAL is			do Result := locale.translation("Implementers")	end
 	l_Inactive_subqueries: STRING_GENERAL is	do Result := locale.translation("Inactive subqueries")	end

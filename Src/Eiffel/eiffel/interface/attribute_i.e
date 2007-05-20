@@ -20,6 +20,11 @@ inherit
 
 	SHARED_GENERATION
 
+	SHARED_TYPE_I
+		export {NONE}
+			all
+		end
+
 	BYTE_CONST
 
 create
@@ -221,10 +226,7 @@ feature -- Element Change
 							buffer.indent
 							basic_i ?= result_type
 							if basic_i /= Void then
-								byte_context.mark_result_used
-								basic_i.true_reference_type.c_type.generate (buffer)
-								byte_context.result_register.print_register
-								buffer.put_character (';')
+								buffer.put_string ("EIF_REFERENCE Result;")
 								buffer.put_new_line
 								basic_i.c_type.generate (buffer)
 								buffer.put_string ("r = ")
@@ -235,12 +237,10 @@ feature -- Element Change
 							buffer.put_character (';')
 							buffer.put_new_line
 							if basic_i /= Void then
-								basic_i.metamorphose (byte_context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
+								basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
 								buffer.put_character (';')
 								buffer.put_new_line
-								buffer.put_string ("return ")
-								byte_context.result_register.print_register
-								buffer.put_character (';')
+								buffer.put_string ("return Result;")
 								buffer.put_new_line
 							end
 							buffer.exdent

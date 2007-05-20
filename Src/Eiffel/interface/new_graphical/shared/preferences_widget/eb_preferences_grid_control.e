@@ -209,7 +209,7 @@ feature {NONE} -- Names
 	l_building_flat_view: STRING_GENERAL				do Result := names.l_building_flat_view 				end
 	l_building_tree_view: STRING_GENERAL				do Result := names.l_building_tree_view 				end
 
-	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL is
+	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL is
 		do
 			Result := names.l_matches_of_total_preferences (a_count, a_total_count)
 		end

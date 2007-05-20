@@ -2,9 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-19 12:47-0800\n"
+"PO-Revision-Date: 2007-05-19 19:48-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
+"Plural-Forms: nplurals=2; plural=n!=1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -116,7 +117,8 @@ msgstr ""
 #: interface_names.e:1435
 msgid "   $1 replaced in $2 class"
 msgid_plural "   $1 replaced in $2 classes"
-msgstr[0] ""
+msgstr[0] "   $1 ersetzt in $2 Klasse"
+msgstr[1] "   $1 ersetzt in $2 Klassen"
 
 #. Source code: l_precompiled: STRING_GENERAL is do Result := locale.translate ("  (precompiled)") end
 #: interface_names.e:1471
@@ -207,7 +209,7 @@ msgstr "Keine Haltepunkte"
 #. Source code: once Result := locale.translate (" => This is not a valid boolean condition. %N") end
 #: debugger_names.e:118
 msgid " => This is not a valid boolean condition. \n"
-msgstr ""
+msgstr " => Dies ist keine gültige boolsche Bedingung. \n"
 
 #. Source code: l_str.append (locale.translate (" Try again?"))
 #: warning_messages.e:239
@@ -219,20 +221,22 @@ msgstr " Neu versuchen?"
 msgid " [0] Cancel \n"
 msgstr "[0] Abbrechen \n"
 
+# Der ganze satz lautet: Archive verbergen die älter sind als XXX Tage.
+# Dabei ist XXX ein Eingabefeld.
 #. Source code: t_days: STRING_GENERAL is do Result := locale.translate (" days old.") end
 #: eb_metric_names.e:134
 msgid " days old."
-msgstr " Tage alt."
+msgstr " Tage."
 
 #. Source code: l_space_disabled: STRING_GENERAL is 		do Result := locale.translate(" disabled")	end
 #: interface_names.e:1195
 msgid " disabled"
-msgstr "deaktiviert"
+msgstr " deaktiviert"
 
 #. Source code: l_space_enabled: STRING_GENERAL is 			do Result := locale.translate(" enabled")	end
 #: interface_names.e:1196
 msgid " enabled"
-msgstr "aktiviert"
+msgstr " aktiviert"
 
 #. Source code: l_space_error: STRING_GENERAL is 			do Result := locale.translate(" error")	end
 #: interface_names.e:1197
@@ -252,27 +256,27 @@ msgstr " Ausgabe der Featurenamen"
 #. Source code: Number_of_calls_help: STRING_GENERAL is do Result := locale.translate (" output of number of calls to a feature") end
 #: shared_ewb_help.e:129
 msgid " output of number of calls to a feature"
-msgstr ""
+msgstr " Ausgabe von der Anzahl die ein Feature aufgerufen wurde"
 
 #. Source code: Percentage_help: STRING_GENERAL is do Result := locale.translate (" output of percentage of time spent in a feature") end
 #: shared_ewb_help.e:135
 msgid " output of percentage of time spent in a feature"
-msgstr ""
+msgstr " Ausgabe vom Prozentsatz der Zeit die in einem Feature verbracht wurde"
 
 #. Source code: Self_sec_help: STRING_GENERAL is do Result := locale.translate (" output of time spent in a function itself") end
 #: shared_ewb_help.e:171
 msgid " output of time spent in a function itself"
-msgstr ""
+msgstr " Ausgabe von der Zeit welche in einem Feature verbracht wurde"
 
 #. Source code: Total_sec_help: STRING_GENERAL is do Result := locale.translate (" output of time spent in both the function and its descendants") end
 #: shared_ewb_help.e:199
 msgid " output of time spent in both the function and its descendants"
-msgstr ""
+msgstr " Ausgabe von der Zeit welche in einem Feature und deren Nachfahren verbracht wurde"
 
 #. Source code: Descendants_time_help: STRING_GENERAL is do Result := locale.translate (" output of time spent in descendants of a function") end
 #: shared_ewb_help.e:67
 msgid " output of time spent in descendants of a function"
-msgstr ""
+msgstr " Ausgabe der Zeit welche in den Nachfahren eines Features verbracht wurde"
 
 #. Source code: l_Number_of_state2: STRING_GENERAL is do Result := locale.translate (" states.") end
 #: wizard_wizard_interface_names.e:31
@@ -296,7 +300,7 @@ msgstr "\"$1\" ist keine kompilierte Klasse."
 #. Source code: l_formatter_placeholder: STRING_GENERAL do Result := locale.translate ("%"$target%" serves as a placeholder which will be replaced by the input to current fomatter.") end
 #: interface_names.e:648
 msgid "\"$target\" serves as a placeholder which will be replaced by the input to current fomatter."
-msgstr ""
+msgstr "\"$target\" kann als Platzhalter verwendet werden und wird mit der aktuellen Eingabe des Formatierers ersetzt."
 
 #. Source code: Result := locale.format_string (locale.translate ("$1%Nis not a directory."), [dir_name])
 #: warning_messages.e:222
@@ -368,6 +372,11 @@ msgid_plural ""
 "$1 files could not be backed up.\n"
 "Other class files were saved with a .swp extension."
 msgstr[0] ""
+"Sicherheitskopie für $1 Datei konnte nicht erstellt werden.\n"
+"Andere Dateien wurden mit einer .swp Dateierweiterung gespeichert."
+msgstr[1] ""
+"Sicherheitskopie für $1 Dateien konnte nicht erstellt werden.\n"
+"Andere Dateien wurden mit einer .swp Dateierweiterung gespeichert."
 
 #. Source code: Result := locale.format_string (locale.translate ("$1 from $2"), [a_str1, a_str2])
 #: interface_names.e:1443
@@ -383,7 +392,8 @@ msgstr "$1 von $target"
 #: interface_names.e:1552
 msgid "$1 hit"
 msgid_plural "$1 hits"
-msgstr[0] ""
+msgstr[0] "$1 Treffer"
+msgstr[1] "$1 Treffer"
 
 #. Source code: "$1 is more recent than the system.%N%
 #: warning_messages.e:927
@@ -423,7 +433,8 @@ msgstr "$1 ist nicht im Universum\n"
 #: interface_names.e:1099
 msgid "$1 match"
 msgid_plural "$1 matches"
-msgstr[0] ""
+msgstr[0] "$1 Übereinstimmung"
+msgstr[1] "$1 Übereinstimmungen"
 
 #. Source code: Result := locale.format_string (locale.translate ("$1 matches of $2 total preferences"), [a_count, a_total_count])
 #: interface_names.e:1064
@@ -747,7 +758,7 @@ msgstr "&Indexklauseln"
 #. Source code: m_input_domain: STRING_GENERAL is			do Result := locale.translate("&Input domain") end
 #: interface_names.e:762
 msgid "&Input domain"
-msgstr "&Eingabedomäne"
+msgstr "&Eingabebereich"
 
 #. Source code: m_Showfs: STRING_GENERAL is					do Result := locale.translate("&Interface")	end
 #: interface_names.e:559
@@ -1745,7 +1756,7 @@ msgstr "Klassenklienten zum Diagramm hinzufügen"
 #. Source code: l_diagram_add_descendents: STRING_GENERAL is do Result := locale.translate("Add class descendants to diagram")	end
 #: interface_names.e:372
 msgid "Add class descendants to diagram"
-msgstr "Füge Subklassen dem Diagramm hinzu"
+msgstr "Subklassen dem Diagramm hinzufügen"
 
 #. Source code: l_diagram_add_suppliers: STRING_GENERAL is do Result := locale.translate("Add class suppliers to diagram")	end
 #: interface_names.e:373
@@ -1760,18 +1771,17 @@ msgstr "Bedingung hinzufügen"
 #. Source code: f_application_scope: STRING_GENERAL is do Result := locale.translate ("Add current application target scope") end
 #: eb_metric_names.e:252
 msgid "Add current application target scope"
-msgstr ""
+msgstr "Aktuelle Anwendung zum Eingabebereich hinzufügen"
 
 #. Source code: f_add_formatter: STRING_GENERAL is do Result := locale.translate ("Add customized formatter") end
 #: interface_names.e:597
 msgid "Add customized formatter"
-msgstr ""
+msgstr "Benutzerdefinierten Formatierer hinzufügen"
 
 #. Source code: f_add_tool: STRING_GENERAL is do Result := locale.translate ("Add customized tool") end
 #: interface_names.e:614
-#, fuzzy
 msgid "Add customized tool"
-msgstr "Symbolleiste anpassen"
+msgstr "Benutzerdefiniertes Werkzeug erstellen"
 
 #. Source code: dialog_visible_add_feature: STRING_GENERAL is do Result := locale.translate ("Add feature")	end
 #: conf_interface_names.e:421
@@ -2257,7 +2267,7 @@ msgstr "Anwendungsoptimierungen anwenden"
 #. Source code: l_apply_changes_to_view_named: STRING_GENERAL is	do Result := locale.translate("Apply changes to view named: ")	end
 #: interface_names.e:795
 msgid "Apply changes to view named: "
-msgstr ""
+msgstr "Änderungen auf folgende Ansicht anwenden:"
 
 #. Source code: Result.force (locale.translate ("Arabic"), "ar")
 #: locale_names.e:22
@@ -4810,7 +4820,7 @@ msgstr "Klassen in Ordnern kategorisieren?"
 #. Source code: l_center_attraction_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.format_string (locale.translate("Center attraction ($1%%)"), [a_value])	end
 #: interface_names.e:810
 msgid "Center attraction ($1%)"
-msgstr ""
+msgstr "Zentrumsanziehung ($1%)"
 
 #. Source code: l_center_attraction: STRING_GENERAL is		do Result := locale.translate("Center attraction:")	end
 #: interface_names.e:809
@@ -4889,17 +4899,17 @@ msgstr "VAPE überprüfen"
 #. 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:112
 msgid "Check defined value warning when metric archive is recalculated?"
-msgstr ""
+msgstr "Definierte Warnungen überprüfen wenn Metrikarchiv neu ausgewertet wird?"
 
 #. 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:112
 msgid "Check defined warning"
-msgstr ""
+msgstr "Definierte Warnungen überprüfen"
 
 #. Source code: f_check_warning: STRING_GENERAL is do Result := locale.translate ("Check defined warnings when archive is recalculated?") end
 #: eb_metric_names.e:276
 msgid "Check defined warnings when archive is recalculated?"
-msgstr ""
+msgstr "Definierte Warnungen überprüfen wenn Archiv neu ausgewertet wird?"
 
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:715
@@ -5536,9 +5546,8 @@ msgstr "Klientengruppe"
 
 #. Source code: l_Clients_stiffness: STRING_GENERAL is				do Result := locale.translate("Client stiffness:")	end
 #: interface_names.e:841
-#, fuzzy
 msgid "Client stiffness:"
-msgstr "Klientenklasse"
+msgstr "Klientensteifheit:"
 
 #. Source code: l_Clients: STRING_GENERAL is				do Result := locale.translate("Clients")	end
 #: interface_names.e:840
@@ -5558,7 +5567,7 @@ msgstr "Metrik duplizieren"
 #. Source code: f_create_new_metric_using_current_data: STRING_GENERAL is do Result := locale.translate ("Clone selected metric to a new metric") end
 #: eb_metric_names.e:261
 msgid "Clone selected metric to a new metric"
-msgstr "Gewählte Metrik klonen"
+msgstr "Gewählte Metrik duplizieren"
 
 #. Source code: Result := locale.translate ("Close")
 #: docking_names.e:60
@@ -7111,7 +7120,7 @@ msgstr "Neue Klienten-Zulieferer-Verknüpfungen erstellen"
 #. Source code: f_diagram_create_inheritance_links: STRING_GENERAL is do Result := locale.translate("Create new inheritance links")	end
 #: interface_names.e:404
 msgid "Create new inheritance links"
-msgstr "Neue Vererbungsverbindung erstellen"
+msgstr "Neue Vererbungsbeziehung erstellen"
 
 #. Source code: Result := locale.format_string (locale.translate ("Create new project in '$1'?"), [a_str])
 #: ewb_names.e:118
@@ -9120,7 +9129,7 @@ msgstr "Definiere neue Unterabfrage"
 #. Source code: f_quick_metric_definition: STRING_GENERAL is do Result := locale.translate ("Define quick metric (or drop a basic metric here as a template)") end
 #: eb_metric_names.e:218
 msgid "Define quick metric (or drop a basic metric here as a template)"
-msgstr "Scnelle Metrik definieren (oder Basismetrik als Vorlage fallen lassen)"
+msgstr "Schnelle Metrik definieren (oder Basismetrik als Vorlage fallen lassen)"
 
 #. Source code: t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("Definition:") end
 #: eb_metric_names.e:82
@@ -9290,7 +9299,7 @@ msgstr ""
 #. Source code: t_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Deselect Recalculatable") end
 #: eb_metric_names.e:147
 msgid "Deselect Recalculatable"
-msgstr ""
+msgstr "Wiederauswertbare abwählen"
 
 #. Source code: f_deselect_all_history: STRING_GENERAL is do Result := locale.translate ("Deselect all history items") end
 #: eb_metric_names.e:141
@@ -9300,7 +9309,7 @@ msgstr "Alle Verlaufselemente abwählen"
 #. Source code: f_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Deselect recalculatable history items") end
 #: eb_metric_names.e:143
 msgid "Deselect recalculatable history items"
-msgstr ""
+msgstr "Wiederauswertbare Historienelemente abwählen"
 
 #. Source code: t_detail_result_tab: STRING_GENERAL is do Result := locale.translate ("Detailed Result") end
 #: eb_metric_names.e:45
@@ -9940,7 +9949,7 @@ msgstr "Graphische Ausgabe deaktivieren."
 #. Source code: e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translate("Disable or restore Assertion checking handling during debugging")	end
 #: interface_names.e:2041
 msgid "Disable or restore Assertion checking handling during debugging"
-msgstr ""
+msgstr "Überprüfung von Zusicherungen während dem Debuggen an- oder ausschalten"
 
 #. Source code: l_disabled: STRING_GENERAL is do Result := locale.translate ("Disabled") end
 #: interface_names.e:1450
@@ -10169,9 +10178,8 @@ msgstr "Sollen Namen der aufgerufenen Features während der Ausführung angezeig
 
 #. Source code: l_formatter_filter_help: STRING_GENERAL do Result := locale.translate ("Display non visible items?") end
 #: interface_names.e:650
-#, fuzzy
 msgid "Display non visible items?"
-msgstr "Editor auf der linken Seite zeigen?"
+msgstr "Nicht sichtbare Elemente anzeigen?"
 
 #. Source code: l_Switch_num_format_desc: STRING_GENERAL is do Result := locale.translate("Display numerical value as Hexadecimal or Decimal formating")	end
 #: interface_names.e:1211
@@ -10427,7 +10435,7 @@ msgstr "Muss diese Aufgabe erfolgreich beendet werden für die weitere Kompilier
 #. Source code: err_domain_missing: STRING_GENERAL is do Result := locale.translate ("Domain is missing.") end
 #: eb_metric_names.e:1027
 msgid "Domain is missing."
-msgstr "Domäne fehlt."
+msgstr "Bereich fehlt."
 
 #. Source code: Result := locale.translate ("Domain item id is missing.")
 #: eb_metric_names.e:643
@@ -14329,7 +14337,7 @@ msgstr ""
 #. Source code: f_filter_result: STRING_GENERAL is do Result := locale.translate ("Filter result which is not visible from input domain") end
 #: eb_metric_names.e:254
 msgid "Filter result which is not visible from input domain"
-msgstr ""
+msgstr "Resultate filtern welche vom Eingabebereich nicht sichtbar sind"
 
 #. Source code: Result := locale.format_string (locale.translate ("Filter value %"$1%" is invalid."), [a_filter])
 #: eb_metric_names.e:913
@@ -14882,7 +14890,7 @@ msgstr "Von Klasse"
 #. Source code: l_formatter_metric_help: STRING_GENERAL do Result := locale.translate ("From which result of this formatter is generated.") end
 #: interface_names.e:653
 msgid "From which result of this formatter is generated."
-msgstr ""
+msgstr "Vom Resultat welcher Metrik wird dieser Formatierer generiert?"
 
 #. Source code: option_full_class_checking_name: STRING_GENERAL is do Result := locale.translate ("Full Class Checking")	end
 #: conf_interface_names.e:292
@@ -15410,7 +15418,7 @@ msgstr ""
 #. Source code: t_group: STRING_GENERAL is do Result := locale.translate ("Group") end
 #: eb_metric_names.e:48
 msgid "Group"
-msgstr "Gruppe"
+msgstr "Gruppieren"
 
 #. Source code: Result := locale.format_string (locale.translate ("Group %"$1%" (ID = %"$2%") is invalid."), [a_group_name, a_domain_item_id])
 #: eb_metric_names.e:861
@@ -15572,15 +15580,17 @@ msgstr ""
 msgid "Hide Signature"
 msgstr "Signatur verbergen"
 
+# Der ganze satz lautet: Archive verbergen die älter sind als XXX Tage.
+# Dabei ist XXX ein Eingabefeld.
 #. Source code: t_hide_old_archive: STRING_GENERAL is do Result := locale.translate ("Hide archives more than ") end
 #: eb_metric_names.e:133
 msgid "Hide archives more than "
-msgstr ""
+msgstr "Archive verbergen die älter sind als "
 
 #. Source code: f_diagram_hide_legend: STRING_GENERAL is		do Result := locale.translate("Hide cluster legend")	end
 #: interface_names.e:383
 msgid "Hide cluster legend"
-msgstr "Cluster-Legende verbergen"
+msgstr "Clusterlegende verbergen"
 
 #. Source code: f_diagram_hide_clusters: STRING_GENERAL is	do Result := locale.translate("Hide clusters")	end
 #: interface_names.e:380
@@ -15610,7 +15620,7 @@ msgstr "Altes Archiv verbergen"
 #. Source code: f_diagram_hide_supplier: STRING_GENERAL is	do Result := locale.translate("Hide supplier links")	end
 #: interface_names.e:366
 msgid "Hide supplier links"
-msgstr "Lieferantenverknüpfungen verbergen"
+msgstr "Lieferantenbeziehungen verbergen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="debugger.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
@@ -15646,7 +15656,7 @@ msgstr "Verlauf"
 #. Source code: f_diagram_history: STRING_GENERAL is		do Result := locale.translate("History tool")	end
 #: interface_names.e:399
 msgid "History tool"
-msgstr "Historien-Werkzeug"
+msgstr "Verlauf"
 
 #. Source code: m_Hit_count: STRING_GENERAL is				do Result := locale.translate("Hit Count")	end
 #: interface_names.e:713
@@ -15824,7 +15834,7 @@ msgstr ""
 #. Source code: l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translate ("In which tool(s) will this formatter be displayed") end
 #: interface_names.e:652
 msgid "In which tool(s) will this formatter be displayed"
-msgstr ""
+msgstr "In welchen Werkzeugen wird dieser Formatierer angezeigt?"
 
 #. Source code: m_show_invariants: STRING_GENERAL is		do Result := locale.translate("In&variants")	end
 #: interface_names.e:563
@@ -16155,15 +16165,13 @@ msgstr "&Indexklauseln"
 
 #. Source code: l_inheritance_stiffness_100: STRING_GENERAL is			do Result := locale.translate("Inheritance stiffness (100%%)")	end
 #: interface_names.e:1035
-#, fuzzy
 msgid "Inheritance stiffness (100%)"
-msgstr "&Indexklauseln"
+msgstr "Vererbungssteifheit (100%)"
 
 #. Source code: l_inheritance_stiffness: STRING_GENERAL is			do Result := locale.translate("Inheritance stiffness:")	end
 #: interface_names.e:1034
-#, fuzzy
 msgid "Inheritance stiffness:"
-msgstr "&Indexklauseln"
+msgstr "Vererbungssteifheit:"
 
 #. 	<PREF NAME="tools.search_tool.init_incremental" DESCRIPTION="Initial status of incremental search."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:608
@@ -16268,13 +16276,12 @@ msgstr "Eingabe"
 #. Source code: t_input_domain: STRING_GENERAL is do Result := locale.translate ("Input domain") end
 #: eb_metric_names.e:79
 msgid "Input domain"
-msgstr "Eingabedomäne"
+msgstr "Eingabebereich"
 
 #. Source code: err_input_domain_invalid: STRING_GENERAL is do Result := locale.translate ("Input domain invalid") end
 #: eb_metric_names.e:124
-#, fuzzy
 msgid "Input domain invalid"
-msgstr "Eingabedomäne"
+msgstr "Eingabebereich ungültig"
 
 #. Source code: err_input_domain_item_appear: STRING_GENERAL is do Result := locale.translate ("Input domain item appears.") end
 #: eb_metric_names.e:1040
@@ -16848,7 +16855,7 @@ msgstr "Ist dies ein abstraktes Ziel, welches nicht zum kompilieren verwendet we
 #. Source code: l_formatter_scope_help: STRING_GENERAL do Result := locale.translate ("Is this formatter of per EiffelStudio scope or per target scope?") end
 #: interface_names.e:651
 msgid "Is this formatter of per EiffelStudio scope or per target scope?"
-msgstr ""
+msgstr "Ist der Bereich dieses Formatierers per EiffelStudio oder per Kompilierungsziel?"
 
 #. Source code: group_readonly_description: STRING_GENERAL is do Result := locale.translate ("Is this group read only?")	end
 #: conf_interface_names.e:224
@@ -17006,6 +17013,8 @@ msgid ""
 "Keep detailed result when recalculating archive?\n"
 "If yes, detailed result will be available by double clicking the icon in \"Result\" column in history result area after recalculation."
 msgstr ""
+"Detailliertes Resultat behalten wenn Archiv neu ausgewertet wird?\n"
+"Falls ja wird das detaillierte Resultat verfügbar sein mittels Doppelclick auf das Symbol in der \"Result\" Spalte nach der Auswertung."
 
 #. Source code: m_keep_grid_layout: STRING_GENERAL is					do Result := locale.translate("Keep grid layout")	end
 #: interface_names.e:462
@@ -17938,12 +17947,12 @@ msgstr "Menuleiste"
 #. Source code: l_formatter_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation has finished.") end
 #: interface_names.e:647
 msgid "Message that will be displayed in the formatter view when calculation has finished."
-msgstr ""
+msgstr "Nachricht die in der Formatiereransicht angezeigt wird wenn die Berechnung abgeschlossen ist."
 
 #. Source code: l_formatter_temp_header_help: STRING_GENERAL do Result := locale.translate ("Message that will be displayed in the formatter view when calculation is going on.") end
 #: interface_names.e:649
 msgid "Message that will be displayed in the formatter view when calculation is going on."
-msgstr ""
+msgstr "Nachricht die in der Formatiereranischt angetzeigt wird wenn die Berechnung läuft."
 
 #. Source code: target_metadata_cache_path_name: STRING_GENERAL is do Result := locale.translate ("Metadata Cache Path")	end
 #: conf_interface_names.e:127
@@ -19326,7 +19335,7 @@ msgstr "Oder"
 #. Source code: f_rearrange_unit: STRING_GENERAL is do Result := locale.translate ("Or you can pick a metric unit and drop it on another metric to rearrange their order.") end
 #: eb_metric_names.e:272
 msgid "Or you can pick a metric unit and drop it on another metric to rearrange their order."
-msgstr ""
+msgstr "Oder eine Metrik aufnehmen und an einem anderen Ort fallenlassen um die Metriken neu zu ordnen."
 
 #. 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
@@ -19624,7 +19633,7 @@ msgstr ""
 #. Source code: l_pixmap_file: STRING_GENERAL is do Result := locale.translate ("Pixmap File") end
 #: interface_names.e:1589
 msgid "Pixmap File"
-msgstr ""
+msgstr "Bilddatei"
 
 #. 	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="Place new editor tab at left side of editor's area?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:585
@@ -19815,7 +19824,7 @@ msgstr ""
 #. Source code: l_select_formatter: STRING_GENERAL is do Result := locale.translate ("Please select a formatter.") end
 #: interface_names.e:604
 msgid "Please select a formatter."
-msgstr "Bitte einen Formatierer wählen."
+msgstr "Bitte einen Formatierer wählen oder erstellen."
 
 #. Source code: l_no_info_of_element: STRING_GENERAL is do Result := locale.translate ("Please select a programming element (target/group/class/feature...).") end
 #: interface_names.e:616
@@ -19830,7 +19839,7 @@ msgstr "Bitte einen Untereintrag wählen."
 #. Source code: l_select_tool: STRING_GENERAL is do Result := locale.translate ("Please select a tool.") end
 #: interface_names.e:613
 msgid "Please select a tool."
-msgstr "Bitte ein Werkzeug wählen."
+msgstr "Bitte ein Werkzeug wählen oder erstellen."
 
 #. Source code: w_Select_project_to_create: STRING_GENERAL is do Result := locale.translate ("Please select the kind of project you want to create.") end
 #: warning_messages.e:25
@@ -20530,7 +20539,7 @@ msgstr "Wiederherstellen (Ctrl+Y)"
 #. Source code: f_refactoring_redo: STRING_GENERAL is		do Result := locale.translate("Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
 #: interface_names.e:509
 msgid "Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
-msgstr "Letztes Refactoring wiederholen (funktioniert nur wenn alle Dateien die vom Refactoring betroffen sind nicht manuell geändert wruden)"
+msgstr "Letztes Refactoring wiederholen (funktioniert nur wenn alle Dateien die vom Refactoring betroffen sind nicht manuell geändert wurden)"
 
 #. Source code: b_refactoring_redo: STRING_GENERAL is		do Result := locale.translate("Redo Refactoring")	end
 #: interface_names.e:513
@@ -20734,7 +20743,7 @@ msgstr "Alle Zeilen entfernen"
 #. Source code: f_remove_all_scopes: STRING_GENERAL is do Result := locale.translate ("Remove all scopes") end
 #: eb_metric_names.e:245
 msgid "Remove all scopes"
-msgstr ""
+msgstr "Alle Bereiche entfernen"
 
 #. Source code: t_remove_all_value_retriever: STRING_GENERAL is do Result := locale.translate ("Remove all value retriever") end
 #: eb_metric_names.e:154
@@ -20822,15 +20831,13 @@ msgstr "Regel entfernen"
 
 #. Source code: f_remove_formatter: STRING_GENERAL is do Result := locale.translate ("Remove selected customized formatter") end
 #: interface_names.e:598
-#, fuzzy
 msgid "Remove selected customized formatter"
-msgstr "Gewählten Ausdruck entfernen"
+msgstr "Benutzerdefinierten Formatierer entfernen"
 
 #. Source code: f_remove_tool: STRING_GENERAL is do Result := locale.translate ("Remove selected customized tool") end
 #: interface_names.e:615
-#, fuzzy
 msgid "Remove selected customized tool"
-msgstr "Gewählten Ausdruck entfernen"
+msgstr "Benutzerdefiniertes Werkzeug entfernen"
 
 #. Source code: e_Remove_expressions: STRING_GENERAL is		do Result := locale.translate("Remove selected expressions")	end
 #: interface_names.e:2016
@@ -20839,9 +20846,8 @@ msgstr "Gewählten Ausdruck entfernen"
 
 #. Source code: f_remove_history_node: STRING_GENERAL is do Result := locale.translate ("Remove selected metric history") end
 #: eb_metric_names.e:130
-#, fuzzy
 msgid "Remove selected metric history"
-msgstr "Selektierte Metrik entfernen"
+msgstr "Benutzerdefiniertes Metrikarchiv entfernen"
 
 #. Source code: f_remove_scope: STRING_GENERAL is do Result := locale.translate ("Remove selected scope(s)") end
 #: eb_metric_names.e:244
@@ -21396,6 +21402,8 @@ msgid ""
 "Run selected metric\n"
 "Runnable when a metric is selected and input domain is set."
 msgstr ""
+"Gewählte Metrik auswerten\n"
+"Ausführbar wenn eine Metrik ausgewählt ist und ein Eingabebereich gesetzt ist."
 
 #. Source code: once Result := locale.translate ("Run to next stop point") end
 #: debugger_names.e:155
@@ -21815,9 +21823,8 @@ msgstr ""
 
 #. Source code: t_select_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Select Recalculatable") end
 #: eb_metric_names.e:146
-#, fuzzy
 msgid "Select Recalculatable"
-msgstr "Cluster wählen"
+msgstr "Wiederauswertbare wählen"
 
 #. Source code: l_select_viewer: STRING_GENERAL is do Result := locale.translate ("Select Viewer") end
 #: interface_names.e:1286
@@ -21891,13 +21898,12 @@ msgstr "Verzeichnis wählen"
 #. Source code: f_select_exist_archive_file: STRING_GENERAL is do Result := locale.translate ("Select an existing metric archive file") end
 #: eb_metric_names.e:233
 msgid "Select an existing metric archive file"
-msgstr "Eine existierende Metrik-Archiv-Datei wählen"
+msgstr "Eine existierende Metrikarchivdatei wählen"
 
 #. Source code: l_select_another_view: STRING_GENERAL is do Result := locale.translate("Select another view if you want to save current placement.")	end
 #: interface_names.e:1502
-#, fuzzy
 msgid "Select another view if you want to save current placement."
-msgstr "Ansicht wählen die verwendet werden soll"
+msgstr "Eine andere Ansicht wählen falls die aktuelle Anordnung beibehalten werden soll."
 
 #. Source code: w_Profiler_select_one_language: STRING_GENERAL is do Result := locale.translate ("Select at least one language.") end
 #: warning_messages.e:749
@@ -21935,7 +21941,7 @@ msgstr "Cluster wählen von dem die Dokumentation erstellt werden soll"
 #. Source code: t_select_current_archive: STRING_GENERAL is do Result := locale.translate ("Select current archive (URL acceptable):") end
 #: eb_metric_names.e:75
 msgid "Select current archive (URL acceptable):"
-msgstr "Aktuelles Archiv wählen (URL wird akteptiert):"
+msgstr "Aktuelles Archiv wählen (URL wird akzeptiert):"
 
 #. Source code: f_select_current_archive: STRING_GENERAL is do Result := locale.translate ("Select current metric archive file") end
 #: eb_metric_names.e:237
@@ -21991,12 +21997,12 @@ msgstr "Wähle Metrik:"
 #. Source code: f_select_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Select recalculatable history items") end
 #: eb_metric_names.e:142
 msgid "Select recalculatable history items"
-msgstr ""
+msgstr "Wiederauswertbare Historienelemente selektieren"
 
 #. Source code: t_select_reference_archive: STRING_GENERAL is do Result := locale.translate ("Select reference archive (URL acceptable):") end
 #: eb_metric_names.e:74
 msgid "Select reference archive (URL acceptable):"
-msgstr "Referenzarchiv wählen (URL aktzeptabel):"
+msgstr "Referenzarchiv wählen (URL wird akzeptiert):"
 
 #. Source code: f_select_reference_archive: STRING_GENERAL is do Result := locale.translate ("Select reference metric archive file") end
 #: eb_metric_names.e:238
@@ -22061,7 +22067,7 @@ msgstr "Anwählen/Abwählen von vordefinierten Metriken"
 #. Source code: f_select_userdefined_metrics: STRING_GENERAL is do Result := locale.translate ("Select/deselect user-defined metrics") end
 #: eb_metric_names.e:239
 msgid "Select/deselect user-defined metrics"
-msgstr "Wählen/Abwählen der Benutzerdefinierten Metrik"
+msgstr "Wählen/Abwählen von benutzerdefinierten Metriken"
 
 #. Source code: l_Selected_assemblies_name: STRING_GENERAL is	do Result := locale.translate ("Selected assemblies Name") end
 #: interface_names.e:25
@@ -22116,7 +22122,7 @@ msgstr "Eingabe zu Befehl senden"
 #. Source code: f_send_to_history: STRING_GENERAL is do Result := locale.translate ("Send last calculated metric value to history") end
 #: eb_metric_names.e:132
 msgid "Send last calculated metric value to history"
-msgstr ""
+msgstr "Zuletzt ausgewertete Metrik zur Historie senden."
 
 #. 	<PREF NAME="shortcuts.view.send_to_context" DESCRIPTION="Shortcut to send Class/Feature to tools."><SHORTCUT Alt="True">Down</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:705
@@ -22267,13 +22273,12 @@ msgstr "Setswana/Tswana (Südafrika)"
 #. Source code: t_setup_customized_formatter: STRING_GENERAL is do Result := locale.translate ("Setup Customized Formatters") end
 #: interface_names.e:595
 msgid "Setup Customized Formatters"
-msgstr ""
+msgstr "Benutzerdefinierte Formatierer einstellen..."
 
 #. Source code: t_customized_tool_setup: STRING_GENERAL is do Result := locale.translate ("Setup Customized Tools") end
 #: interface_names.e:611
-#, fuzzy
 msgid "Setup Customized Tools"
-msgstr "Symbolleiste anpassen"
+msgstr "Benutzerdefinierte Werkzeuge einstellen..."
 
 #. Source code: Result := locale.translate ("Setup client classes")
 #: eb_metric_names.e:331
@@ -22292,33 +22297,28 @@ msgstr ""
 
 #. Source code: t_customized_formatter_setup: STRING is 			do Result := locale.translate ("Setup customized formatters") end
 #: interface_names.e:1891
-#, fuzzy
 msgid "Setup customized formatters"
-msgstr "Symbolleiste anpassen"
+msgstr "Benutzerdefinierten Formatierer erstellen"
 
 #. Source code: t_setup_customized_tool: STRING_GENERAL is do Result := locale.translate ("Setup customized tools") end
 #: interface_names.e:612
-#, fuzzy
 msgid "Setup customized tools"
-msgstr "Symbolleiste anpassen"
+msgstr "Benutzerdefiniertes Tool erstellen"
 
 #. Source code: l_setup_domain_dialog: STRING_GENERAL is do Result := locale.translate ("Setup domain") end
 #: eb_metric_names.e:335
-#, fuzzy
 msgid "Setup domain"
-msgstr "Eingabedomäne"
+msgstr "Bereich setzten"
 
 #. Source code: t_setup_feature_domain: STRING_GENERAL is do Result := locale.translate ("Setup feature domain") end
 #: eb_metric_names.e:149
-#, fuzzy
 msgid "Setup feature domain"
-msgstr "Feature typ wählen"
+msgstr "Featurebereich setzten"
 
 #. Source code: t_select_source_domain: STRING_GENERAL is do Result := locale.translate ("Setup input domain:") end
 #: eb_metric_names.e:72
-#, fuzzy
 msgid "Setup input domain:"
-msgstr "Eingabebereich wählen"
+msgstr "Eingabebereich setzen:"
 
 #. Source code: l_setup_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Setup metric value retriever") end
 #: eb_metric_names.e:161
@@ -22339,7 +22339,7 @@ msgstr "Lieferantenklassen einrichten"
 #. Source code: Result := locale.format_string (locale.translate ("Setup tools for formatter %"$1%""), [a_formatter_name])
 #: interface_names.e:609
 msgid "Setup tools for formatter \"$1\""
-msgstr ""
+msgstr "Werkzeuge für Formatierer \"$1\" einstellen"
 
 #. Source code: t_setup_value_criterion: STRING_GENERAL is do Result := locale.translate ("Setup value criterion") end
 #: eb_metric_names.e:155
@@ -24136,7 +24136,7 @@ msgstr "Ausführen abbrechen wenn kompiliert wird"
 #. Source code: f_stop_archive: STRING_GENERAL is do Result := locale.translate ("Stop metric archive evaluation") end
 #: eb_metric_names.e:232
 msgid "Stop metric archive evaluation"
-msgstr "Stop die Auswertung des Metrikarchives"
+msgstr "Auswertung des Metrikarchives stoppen"
 
 #. Source code: f_stop: STRING_GENERAL is do Result := locale.translate ("Stop metric evaluation") end
 #: eb_metric_names.e:221
@@ -24270,7 +24270,7 @@ msgstr "Zur flachen Ansicht wechseln"
 #. Source code: f_switch_to_tree_view: STRING_GENERAL is do Result := locale.translate ("Switch to Tree View") end
 #: interface_names.e:590
 msgid "Switch to Tree View"
-msgstr "Zu Baumansicht wechseln"
+msgstr "Zur Baumansicht wechseln"
 
 #. Source code: e_Switch_num_format_to_dec: STRING_GENERAL is do Result := locale.translate("Switch to decimal format")	end
 #: interface_names.e:2031
@@ -24584,7 +24584,7 @@ msgstr "Telugu (Indien)"
 #. Source code: l_temp_header: STRING_GENERAL is do Result := locale.translate ("Temporary header") end
 #: interface_names.e:1588
 msgid "Temporary header"
-msgstr ""
+msgstr "Temporäre Überschrift"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_9" DESCRIPTION="Tenth external command shortcut."><SHORTCUT Alt="True">9</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:676
@@ -25003,7 +25003,7 @@ msgid ""
 "Change its name in \"Metric name\" column to make it importable."
 msgstr ""
 "Eine Metrik mit dem Namen $1 existiert bereits.\n"
-"Ändere Namen in \"Metric name\" Spalte um den Import zu ermöglichen."
+"Ändere Namen in der \"Metrikname\" Spalte um den Import zu ermöglichen."
 
 #. Source code: Result := locale.format_string (locale.translate ("There is already a project compiled in %"$1%"%NIt needs to be deleted before a precompilation.%N"), [a_project_name])
 #: ewb_names.e:246
@@ -26570,7 +26570,7 @@ msgstr "Name der Einheit fehlt."
 #. 	<PREF NAME="tools.metric_tool.unit_order" DESCRIPTION="List of metric units in order"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:110
 msgid "Unit order"
-msgstr ""
+msgstr "Einheitenreihenfolge"
 
 #. Source code: l_unit_colon: STRING_GENERAL is do Result := locale.translate ("Unit:") end
 #: eb_metric_names.e:196
@@ -26661,7 +26661,7 @@ msgstr "Hinauf"
 #. Source code: l_up_to_depth_of: STRING_GENERAL is 				do Result := locale.translate ("Up to depth of") end
 #: interface_names.e:1262
 msgid "Up to depth of"
-msgstr ""
+msgstr "Bis zu einer Tiefe von"
 
 #. Source code: b_Update: STRING_GENERAL is 						do Result := locale.translate("Update")	end
 #: interface_names.e:112
@@ -28253,7 +28253,7 @@ msgstr "einfach"
 #. Source code: l_basic_metric: STRING_GENERAL is do Result := locale.translate ("basic metric") end
 #: eb_metric_names.e:188
 msgid "basic metric"
-msgstr ""
+msgstr "Basismetrik"
 
 #. Source code: once Result := locale.translate ("callstack") end
 #: debugger_names.e:178
@@ -28374,7 +28374,7 @@ msgstr "direkt"
 #. Source code: disable: STRING_GENERAL is									do Result := locale.translate ("disable") end
 #: ewb_names.e:46
 msgid "disable"
-msgstr "deaktivieren"
+msgstr "deaktiviere"
 
 #. Source code: cluster_hierarchy_help: STRING_GENERAL is do Result := locale.translate ("display the cluster hierarchy of the system") end
 #: shared_ewb_help.e:51
@@ -28389,7 +28389,7 @@ msgstr "Cluster nicht in Biblioitheken konvertieren"
 #. Source code: l_domain: STRING_GENERAL is do Result := locale.translate ("domain") end
 #: eb_metric_names.e:159
 msgid "domain"
-msgstr "Domäne"
+msgstr "Bereich"
 
 #. Source code: edit_ace_help: STRING_GENERAL is do Result := locale.translate ("edit the config file") end
 #: shared_ewb_help.e:73
@@ -28408,14 +28408,13 @@ msgstr "Elemente"
 
 #. Source code: l_empty_domain: STRING_GENERAL is do Result := locale.translate ("empty domain") end
 #: eb_metric_names.e:212
-#, fuzzy
 msgid "empty domain"
-msgstr "Eingabedomäne"
+msgstr "leerer Bereich"
 
 #. Source code: enable: STRING_GENERAL is									do Result := locale.translate ("enable") end
 #: ewb_names.e:47
 msgid "enable"
-msgstr "aktivieren"
+msgstr "aktiviere"
 
 #. Source code: l_error_message: STRING_GENERAL is do Result := locale.translate ("error message") end
 #: eb_metric_names.e:160
@@ -28506,7 +28505,8 @@ msgstr "Treffer:"
 #: interface_names.e:1095
 msgid "in $1 class"
 msgid_plural "in $1 classes"
-msgstr[0] ""
+msgstr[0] "in $1 Klasse"
+msgstr[1] "in $1 Klassen"
 
 #. Source code: inactivate_subquery_help: STRING_GENERAL is do Result := locale.translate ("inactivate subquery") end
 #: shared_ewb_help.e:159
@@ -28889,7 +28889,7 @@ msgstr "Sourcedatei angeben für Kompilierung einzelner Dateien"
 #. Source code: library_help: STRING_GENERAL is do Result := locale.translate ("specify a library for single file compilation") end
 #: shared_ewb_help.e:115
 msgid "specify a library for single file compilation"
-msgstr ""
+msgstr "Bibliothek angeben für Kompilierung einzelner Dateien"
 
 #. Source code: Input_help: STRING_GENERAL is do Result := locale.translate ("specify input file (filename or last_output)") end
 #: shared_ewb_help.e:111
@@ -28953,9 +28953,8 @@ msgstr "syntaktisch"
 
 #. Source code: l_target_domain_item: STRING_GENERAL is do Result := locale.translate ("target item") end
 #: interface_names.e:1568
-#, fuzzy
 msgid "target item"
-msgstr "Ziel"
+msgstr ""
 
 #. Source code: quit_help: STRING_GENERAL is do Result := locale.translate ("terminate session") end
 #: shared_ewb_help.e:151
@@ -28990,9 +28989,8 @@ msgstr "benutzerdefiniert"
 
 #. Source code: l_value_tester: STRING_GENERAL is do Result := locale.translate ("value tester") end
 #: eb_metric_names.e:204
-#, fuzzy
 msgid "value tester"
-msgstr "Cluster"
+msgstr ""
 
 #. Source code: l_variable_metric: STRING_GENERAL is do Result := locale.translate ("variable metric") end
 #: eb_metric_names.e:191

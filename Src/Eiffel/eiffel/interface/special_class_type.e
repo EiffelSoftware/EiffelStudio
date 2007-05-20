@@ -379,17 +379,30 @@ feature {NONE} -- C code generation
 
 			if final_mode then
 					-- Generate generic wrapper.
-				buffer.generate_function_signature ("void", encoded_name + "2", True,
+				buffer.generate_pure_function_signature ("void", encoded_name + "2", True,
 					Byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
 					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER">>)
+				buffer.put_character ('{')
+				buffer.put_new_line
 				buffer.indent
-				buffer.put_string (encoded_name)
-				buffer.put_string (" (Current, ")
-				if gen_param.is_basic then
-					buffer.put_character ('*')
-					gen_param.c_type.generate_access_cast (buffer)
+				if l_param_is_expanded or else type_c.level = c_ref or else associated_class.assertion_level.is_precondition then
+					buffer.put_string (encoded_name)
+					buffer.put_string (" (Current, ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						gen_param.c_type.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1, arg2);")
+				else
+					buffer.put_string ("*(")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string (" Current + arg2) = ")
+					if gen_param.is_basic then
+						buffer.put_character ('*')
+						gen_param.c_type.generate_access_cast (buffer)
+					end
+					buffer.put_string ("arg1;")
 				end
-				buffer.put_string ("arg1, arg2);")
 				buffer.exdent
 				buffer.put_new_line
 				buffer.put_character ('}')
@@ -538,33 +551,34 @@ feature {NONE} -- C code generation
 
 			if final_mode then
 					-- Generate generic wrapper.
-				buffer.generate_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
+				buffer.generate_pure_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
 					Byte_context.header_buffer, <<"Current", "arg1">>,
 					<<"EIF_REFERENCE", "EIF_INTEGER">>)
+				buffer.put_character ('{')
+				buffer.put_new_line
 				buffer.indent
 				basic_i ?= gen_param
-				if basic_i /= Void then
-					byte_context.mark_result_used
-					buffer.put_string ("EIF_REFERENCE Result = (EIF_REFERENCE) 0;")
-					buffer.put_string ("RTLD;")
-					buffer.put_new_line
-					buffer.put_string ("RTLI(")
-					buffer.put_integer (2)
-					buffer.put_string (gc_rparan_semi_c)
-					buffer.put_new_line
-					buffer.put_local_registration (0, "Current")
-					buffer.put_new_line
-					buffer.put_local_registration (1, "Result")
-					buffer.put_new_line
-					basic_i.metamorphose (byte_context.result_register, byte_context.result_register.no_register, buffer)
-				else
+				if basic_i = Void then
 					buffer.put_string ("return ")
+				else
+					buffer.put_string ("EIF_REFERENCE Result;")
+					buffer.put_new_line
+					basic_i.c_type.generate (buffer)
+					buffer.put_string ("r = ")
 				end
-				buffer.put_string (encoded_name)
-				buffer.put_string (" (Current, arg1);")
+				if l_param_is_expanded or else associated_class.assertion_level.is_precondition then
+						-- It's possible to repeat the code above, but it's complex enough.
+					buffer.put_string (encoded_name)
+					buffer.put_string (" (Current, arg1);")
+				else
+					buffer.put_string ("*(")
+					type_c.generate_access_cast (buffer)
+					buffer.put_string (" Current + arg1);")
+				end
 				buffer.put_new_line
 				if basic_i /= Void then
-					buffer.put_string ("RTLE;")
+					basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
+					buffer.put_character (';')
 					buffer.put_new_line
 					buffer.put_string ("return Result;")
 					buffer.put_new_line

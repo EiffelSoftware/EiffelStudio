@@ -123,7 +123,11 @@ feature -- Command
 			create group_divider.make_with_content (content)
 			l_group_count := group_count_by_height (height)
 			lock_update
-			assistant.position_groups (group_divider.best_grouping (l_group_count))
+			if l_group_count > 0 then
+				assistant.position_groups (group_divider.best_grouping (l_group_count))
+			else
+				assistant.to_minmum_size
+			end
 			last_group_count := l_group_count
 			unlock_update
 		end
@@ -160,7 +164,7 @@ feature {NONE} -- Implementation of resize issues.
 		do
 			if not internal_border_box.has_capture then
 				on_border_pointer_motion_no_capture (a_x, a_y)
-			else
+			elseif content.items_visible.count > 0 then
 				inspect
 					internal_pointer_direction
 				when {SD_ENUMERATION}.left then
@@ -241,6 +245,7 @@ feature {NONE} -- Implementation of resize issues.
 			l_total_height_without_subgroup: INTEGER
 			l_temp_height: INTEGER
 			l_item_count: INTEGER
+			l_row_height: INTEGER
 		do
 			l_total_height_without_subgroup := zone.content.groups_count (False) * tool_bar.row_height + (zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
 			if a_pointer_height <= l_total_height_without_subgroup then
@@ -248,7 +253,12 @@ feature {NONE} -- Implementation of resize issues.
 			else
 				l_temp_height := a_pointer_height - (zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
 				check valid: l_temp_height > 0 end
-				Result := l_temp_height // tool_bar.row_height + 1
+				l_row_height := tool_bar.row_height
+				if l_row_height = 0 then
+					-- If tool bar don't have items.
+					l_row_height := tool_bar.standard_height
+				end
+				Result := l_temp_height // l_row_height + 1
 			end
 
 			l_item_count := content.item_count_except_sep (False)
@@ -262,7 +272,7 @@ feature {NONE} -- Implementation of resize issues.
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE group_count_by_height Result: " + Result.out)
 			end
 		ensure
-			valid: 0 < Result and Result <= content.item_count_except_sep (False)
+			valid: 0 <= Result and Result <= content.item_count_except_sep (False)
 		end
 
 	last_group_count: INTEGER

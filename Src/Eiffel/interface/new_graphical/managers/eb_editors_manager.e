@@ -933,7 +933,7 @@ feature {NONE} -- Agents
 				end
 				validate_editor (l_editor)
 				editor_switched_actions.call ([l_editor])
-				if l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
+				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
 					l_editor.editor_drawing_area.set_focus
 				end
 			end
@@ -1032,7 +1032,7 @@ feature {NONE} -- Implementation
 
 	veto_pebble_function_internal: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
 			-- Veto pebble function.
-			
+
 	close_editor_perform (a_editor: like current_editor) is
 			-- Perform closing editor.
 		do

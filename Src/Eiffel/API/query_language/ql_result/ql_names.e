@@ -558,6 +558,10 @@ feature -- AST node match
 			result_attached: Result /= Void
 		end
 
+feature -- Access
+
+	ql_no_tag: STRING is "no tag";
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

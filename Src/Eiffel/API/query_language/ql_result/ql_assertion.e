@@ -61,12 +61,12 @@ feature -- Access
 			-- `name' can be empty for an assertion that has no tag attached to it.
 		do
 			if ast.tag = Void then
-				Result := ""
+				Result := query_language_names.ql_no_tag
 			else
 				Result := ast.tag.name
 			end
 		ensure then
-			good_result: (ast.tag = Void implies Result.is_equal ("")) and
+			good_result: (ast.tag = Void implies Result.is_equal (query_language_names.ql_no_tag)) and
 						 (ast.tag /= Void implies Result.is_equal (ast.tag.name))
 		end
 

@@ -129,9 +129,15 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
+		local
+			l_target_id: STRING
 		do
-			if
-				(is_target_item and then other.is_target_item) or else
+			if (is_target_item and then other.is_target_item) then
+				l_target_id := id_of_target (workbench.universe.target)
+				Result := (id.is_empty and then other.id.is_equal (l_target_id)) or else
+						  (other.id.is_empty and then id.is_equal (l_target_id)) or else
+						  (id.is_empty and then other.id.is_empty)
+			elseif
 				(is_group_item and then other.is_group_item) or else
 				(is_folder_item and then other.is_folder_item) or else
 				(is_class_item and then other.is_class_item) or else

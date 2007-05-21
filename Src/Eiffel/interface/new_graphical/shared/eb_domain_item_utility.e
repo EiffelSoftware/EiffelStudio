@@ -134,6 +134,7 @@ feature -- Access
 			l_writer: like token_writer
 			l_feature: QL_FEATURE
 			l_folder: EB_FOLDER_DOMAIN_ITEM
+			l_pebble_function: FUNCTION [ANY, TUPLE, ANY]
 		do
 			if a_item.is_valid then
 					-- For valid item, we display its pickable name.
@@ -146,7 +147,6 @@ feature -- Access
 					l_feature ?= a_item.query_language_item
 					feature_with_class_style.set_ql_feature (l_feature)
 					Result := feature_with_class_style.text
-
 				elseif a_item.is_folder_item then
 						-- For folder item
 					l_writer := token_writer
@@ -167,8 +167,11 @@ feature -- Access
 				elseif a_item.is_target_item then
 						-- For target item
 					if a_item.id.is_empty then
+						l_pebble_function := plain_text_style.pebble_function
+						plain_text_style.set_pebble_function (agent: TARGET_STONE do create{TARGET_STONE} Result.make (workbench.universe.target) Result.set_is_delayed_application_target (True) end)
 						plain_text_style.set_source_text (a_item.string_representation)
 						Result := plain_text_style.text
+						plain_text_style.set_pebble_function (l_pebble_function)
 					else
 						ql_name_style.set_item (a_item.query_language_item)
 						Result := ql_name_style.text

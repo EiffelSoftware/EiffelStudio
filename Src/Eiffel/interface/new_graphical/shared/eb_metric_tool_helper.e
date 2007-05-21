@@ -218,6 +218,7 @@ feature -- Domain item
 			a_stone_attached: a_stone /= Void
 		local
 			l_domain_item: EB_DOMAIN_ITEM
+			l_target_stone: TARGET_STONE
 		do
 			l_domain_item := domain_item_from_stone (a_stone)
 			if l_domain_item /= Void then
@@ -230,7 +231,13 @@ feature -- Domain item
 				elseif l_domain_item.is_group_item then
 					create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
 				elseif l_domain_item.is_target_item then
-					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+					l_target_stone ?= a_stone
+					check l_target_stone /= Void end
+					if l_target_stone.is_delayed_application_target then
+						create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make ("")
+					else
+						create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+					end
 				end
 				if l_domain_item.library_target_uuid /= Void then
 					Result.set_library_target_uuid (l_domain_item.library_target_uuid)

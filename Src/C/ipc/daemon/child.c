@@ -284,7 +284,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
 	char **argv;				/* Argument vector */
-	char** envp;
+	char** envp=NULL;
 #endif
 	STREAM *sp;							/* Stream used for communications with ewb */
 	char* quoted_exe_path;

@@ -16,8 +16,8 @@ inherit
 	SERVICE_CONTAINER_IMPL
 		redefine
 			add_service,
-			add_service_with_creator,
-			remove_service,
+			add_service_with_activator,
+			revoke_service,
 			proffers_service
 		end
 
@@ -45,7 +45,7 @@ feature -- Extension
 			end
 		end
 
-	add_service_with_creator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY] a_promote: BOOLEAN) is
+	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY] a_promote: BOOLEAN) is
 			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
 			-- an instance of service when requested.
 			-- If service is being promoted it will be registered with a parent service provider.

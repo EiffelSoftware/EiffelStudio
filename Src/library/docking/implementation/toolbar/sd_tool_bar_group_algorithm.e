@@ -20,7 +20,7 @@ feature {NONE} -- Initlization
 	make (a_max_group_count: INTEGER) is
 			-- Creation method
 		require
-			valid: a_max_group_count > 0
+			valid: a_max_group_count >= 0
 		do
 			max_group_count := a_max_group_count
 			group_count := 1

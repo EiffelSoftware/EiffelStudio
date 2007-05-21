@@ -33,8 +33,10 @@ feature -- Commands
 			debug ("docking")
 				print ("%N=================== SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups ================")
 			end
-			position_groups_imp (a_groups_info)
-			zone.zone.assistant.last_state.set_floating_group_info (a_groups_info)
+			if zone.content.items_except_sep (False).count > 0 then
+				position_groups_imp (a_groups_info)
+				zone.zone.assistant.last_state.set_floating_group_info (a_groups_info)
+			end
 		end
 
 	to_minmum_size is
@@ -143,8 +145,6 @@ feature {NONE} -- Implementation functions
 				end
 				if a_sub_info.item.key_for_iteration > 1 and l_items.valid_index (a_sub_info.item.key_for_iteration - 1) then
 					l_first_item := l_items.i_th (a_sub_info.item.key_for_iteration - 1)
-					l_separator := Void
-					l_separator := zone.content.separator_before_item (l_first_item)
 					if (a_sub_info.is_new_group or a_sub_info.index = 1) and then zone.content.separator_after_item (l_first_item) = Void then
 						l_first_item.set_wrap (True)
 						debug ("docking")
@@ -155,9 +155,10 @@ feature {NONE} -- Implementation functions
 						print ("%N                                  larger than 1: a_sub_info.is_new_group" + a_sub_info.is_new_group.out)
 					end
 				elseif a_sub_info.item.key_for_iteration = 1 then
-					-- For first item, we should set group's separator wrap.
+					-- For first item, we don't set group's separator wrap.
 					l_separator := zone.content.separator_before_item (l_items.i_th (1))
-					if l_separator /= Void then
+					if l_separator /= Void and then zone.content.index_of (l_separator, False) /= 1 then
+						-- If first item is separator, we don't set it wrap.
 						l_separator.set_wrap (True)
 					end
 				end

@@ -23,8 +23,10 @@ feature {NONE} -- Initlization
 			not_void: a_content /= Void
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_group_count: INTEGER
 		do
-			create algorithm.make (a_content.groups_count (False))
+			l_group_count := a_content.groups_count (False)
+			create algorithm.make (l_group_count)
 			content := a_content
 			l_items := a_content.items_visible
 
@@ -59,7 +61,9 @@ feature {NONE} -- Initlization
 				end
 				a_items.forth
 			end
-			Result.extend (group_width (l_temp_group))
+			if l_temp_group.count > 0 then
+				Result.extend (group_width (l_temp_group))
+			end
 		ensure
 			group_count_right: Result.count = content.groups_count (False)
 		end

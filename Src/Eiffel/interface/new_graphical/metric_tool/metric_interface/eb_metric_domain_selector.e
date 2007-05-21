@@ -455,13 +455,13 @@ feature{NONE} -- Actions
 					l_select_rows.forth
 				end
 				l_row_cnt := grid.row_count
+				on_domain_change
 				if l_row_cnt > 0 then
 					if l_smallest_row_index > l_row_cnt then
 						l_smallest_row_index := l_row_cnt
 					end
 					grid.row (l_smallest_row_index).enable_select
 				end
-				on_domain_change
 			end
 		end
 

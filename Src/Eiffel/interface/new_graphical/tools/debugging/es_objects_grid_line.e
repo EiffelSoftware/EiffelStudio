@@ -200,7 +200,7 @@ feature -- Graphical computation
 				end
 			end
 		ensure
-			result_not_void_if_stopped: (debugger_manager.safe_application_is_stopped ) implies Result /= Void
+			result_not_void_if_stopped: (row /= Void and debugger_manager.safe_application_is_stopped ) implies Result /= Void
 		end
 
 	compute_grid_row is

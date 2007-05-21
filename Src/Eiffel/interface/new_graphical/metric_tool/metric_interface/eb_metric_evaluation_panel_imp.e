@@ -200,6 +200,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
+
 feature -- Access
 
 	unit_combo: EV_COMBO_BOX

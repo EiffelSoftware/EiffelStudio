@@ -146,16 +146,13 @@ feature {NONE}-- Initialization
 			metric_area.disable_item_expand (l_ev_tool_bar_3)
 			metric_area.disable_item_expand (information_bar_empty_area)
 			metric_area.disable_item_expand (update_warning_area)
-			metric_lbl.set_text ("Metric:")
 			metric_lbl.align_text_left
 			metric_name_text.set_minimum_width (150)
 			metric_name_text.disable_edit
 			l_ev_cell_2.set_minimum_width (10)
-			type_lbl.set_text ("Type:")
 			l_ev_cell_3.set_minimum_width (2)
 			type_pixmap.set_minimum_width (16)
 			type_pixmap.set_minimum_height (16)
-			type_name_text.set_text ("Compilation")
 			type_name_text.align_text_left
 			l_ev_cell_4.set_minimum_width (15)
 			unit_lbl.set_text ("Unit:")
@@ -163,10 +160,8 @@ feature {NONE}-- Initialization
 			l_ev_cell_5.set_minimum_width (2)
 			unit_pixmap.set_minimum_width (16)
 			unit_pixmap.set_minimum_height (16)
-			unit_name_text.set_text ("Ratio")
 			unit_name_text.align_text_left
 			l_ev_cell_6.set_minimum_width (15)
-			value_lbl.set_text ("Value:")
 			value_lbl.align_text_left
 			value_text.set_minimum_width (100)
 			value_text.disable_edit
@@ -180,7 +175,6 @@ feature {NONE}-- Initialization
 			input_area.disable_item_expand (l_ev_horizontal_box_1)
 			input_area.disable_item_expand (input_grid_area)
 			l_ev_horizontal_box_1.disable_item_expand (input_lbl)
-			input_lbl.set_text ("Source domain:")
 			input_lbl.align_text_left
 			input_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			input_grid_area.set_border_width (1)
@@ -190,7 +184,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (result_lable)
 			l_ev_horizontal_box_2.disable_item_expand (result_lbl)
 			l_ev_horizontal_box_2.disable_item_expand (tool_bar)
-			result_lable.set_text ("Result:")
 			result_lable.align_text_left
 			result_lbl.set_minimum_width (150)
 			result_lbl.align_text_left
@@ -209,6 +202,7 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 
 feature -- Access
 

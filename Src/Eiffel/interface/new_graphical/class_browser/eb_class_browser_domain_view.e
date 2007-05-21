@@ -45,6 +45,13 @@ inherit
 			default_create
 		end
 
+	SHARED_BENCH_NAMES
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -263,31 +270,31 @@ feature{NONE} -- Implementation/Data
 	cache_row_count: INTEGER is 50
 			-- Cache row count
 
-	domain_type_name (a_domain: QL_DOMAIN): STRING is
+	domain_type_name (a_domain: QL_DOMAIN): STRING_GENERAL is
 			-- Type name of `a_domain'
 		require
 			a_domain_attached: a_domain /= Void
 		do
 			if a_domain.is_target_domain then
-				Result := query_language_names.ql_target
+				Result := metric_names.l_target_unit
 			elseif a_domain.is_group_domain then
-				Result := query_language_names.ql_group
+				Result := metric_names.l_group_unit
 			elseif a_domain.is_class_domain then
-				Result := query_language_names.ql_class
+				Result := metric_names.l_class_unit
 			elseif a_domain.is_generic_domain then
-				Result := query_language_names.ql_generic
+				Result := metric_names.l_generic_unit
 			elseif a_domain.is_feature_domain then
-				Result := query_language_names.ql_feature
+				Result := metric_names.l_feature_unit
 			elseif a_domain.is_argument_domain then
-				Result := query_language_names.ql_argument
+				Result := metric_names.l_argument_unit
 			elseif a_domain.is_local_domain then
-				Result := query_language_names.ql_local
+				Result := metric_names.l_local_unit
 			elseif a_domain.is_assertion_domain then
-				Result := query_language_names.ql_assertion
+				Result := metric_names.l_assertion_unit
 			elseif a_domain.is_line_domain then
-				Result := query_language_names.ql_line
+				Result := metric_names.l_line_unit
 			elseif a_domain.is_quantity_domain then
-				Result := query_language_names.ql_quantity
+				Result := ""
 			end
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
@@ -366,7 +373,7 @@ feature{NONE} -- Implementation
 			a_domain := data
 			if a_domain /= Void then
 				if should_headers_be_shown then
-					grid.column (1).set_title (interface_names.first_character_as_upper (domain_type_name (a_domain).as_lower))
+					grid.column (1).set_title (interface_names.first_character_as_upper (domain_type_name (a_domain)))
 					grid.column (2).set_title (interface_names.l_location)
 				else
 					grid.column (1).set_title ("")

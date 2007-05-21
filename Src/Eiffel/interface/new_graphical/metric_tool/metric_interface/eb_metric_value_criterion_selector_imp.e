@@ -82,6 +82,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
+
 feature -- Access
 
 	control_tool_bar: EV_TOOL_BAR

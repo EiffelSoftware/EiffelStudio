@@ -138,6 +138,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
+
 feature -- Access
 
 	expression_text: EV_RICH_TEXT

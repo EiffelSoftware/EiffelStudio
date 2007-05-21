@@ -1916,6 +1916,7 @@ feature {NONE} -- Implementation
 				enable_bkpt.disable_sensitive
 				disable_bkpt.disable_sensitive
 				bkpt_info_cmd.disable_sensitive
+				force_debug_mode_cmd.disable_sensitive
 			end
 
 			debug_cmd.disable_sensitive

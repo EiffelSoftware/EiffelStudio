@@ -194,6 +194,12 @@ feature {NONE} -- Initialization
 			clear_result_btn.set_tooltip (metric_names.t_clear_result)
 			clear_result_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			clear_result_btn.select_actions.extend (agent on_clear_detailed_result)
+			input_lbl.set_text (metric_names.coloned_string  (metric_names.t_input_domain, True))
+			type_lbl.set_text (metric_names.coloned_string  (metric_names.t_type, True))
+			unit_lbl.set_text (metric_names.l_unit_colon)
+			value_lbl.set_text (metric_names.e_value)
+			result_lable.set_text (metric_names.t_result)
+			metric_lbl.set_text (metric_names.coloned_string (metric_names.t_metric_name, True))
 		ensure then
 			input_grid_attached: input_grid /= Void
 		end

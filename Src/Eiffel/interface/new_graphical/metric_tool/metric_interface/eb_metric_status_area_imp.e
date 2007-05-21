@@ -72,6 +72,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
+
 feature -- Access
 
 	show_to_do_message_toolbar: EV_TOOL_BAR

@@ -145,6 +145,7 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
+
 feature -- Access
 
 	name_empty_area: EV_CELL

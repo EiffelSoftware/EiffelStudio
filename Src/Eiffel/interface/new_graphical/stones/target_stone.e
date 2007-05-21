@@ -86,6 +86,14 @@ feature -- Access
 			end
 		end
 
+	set_is_delayed_application_target (b: BOOLEAN) is
+			-- Set `is_delayed_application_target' with `b'.
+		do
+			is_delayed_application_target := b
+		ensure
+			is_delayed_application_target_set: is_delayed_application_target = b
+		end
+
 feature -- Status report
 
 	is_valid: BOOLEAN is
@@ -96,5 +104,9 @@ feature -- Status report
 			l_target := eiffel_universe.conf_system.targets.item (target.name)
 			Result := target = l_target
 		end
+
+	is_delayed_application_target: BOOLEAN
+			-- Does current stone represents a delayed application target?		
+			-- Used by metric tool
 
 end

@@ -588,15 +588,13 @@ feature {NONE} -- Queries
 				Result.append ("%"" + a_profile.args + "%"")
 			end
 			if a_profile.cwd /= Void and then not a_profile.cwd.is_empty then
-				Result.append (" cwd=%"" + a_profile.cwd + "%"")
+				Result.append (" ")
+				Result.append (interface_names.l_cwd (a_profile.cwd).as_string_8)
 			end
 			if a_profile.env /= Void and then not a_profile.env.is_empty then
-				Result.append (" (" + a_profile.env.count.out)
-				if a_profile.env.count > 1 then
-					Result.append (" variables)")
-				else
-					Result.append (" variable)")
-				end
+				Result.append (" (")
+				Result.append (interface_names.l_variable_count (a_profile.env.count).as_string_8)
+				Result.append (")")
 			end
 		ensure
 			result_not_void: Result /= Void

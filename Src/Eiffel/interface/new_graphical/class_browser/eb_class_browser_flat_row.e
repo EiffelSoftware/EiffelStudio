@@ -150,9 +150,7 @@ feature -- Access
 	summary: STRING is
 			-- Summary of current row
 		do
-			create Result.make (24)
-			Result.append ((children_count + 1).out)
-			Result.append (" features")
+			Result := interface_names.l_feature_count (children_count + 1).as_string_8
 		ensure
 			result_attached: Result /= Void
 		end

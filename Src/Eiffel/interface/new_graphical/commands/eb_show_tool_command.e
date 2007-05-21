@@ -52,11 +52,8 @@ feature -- Access
 
 	tooltip: STRING_GENERAL is
 			-- Tooltip for Current
-		local
-			l_string: STRING_GENERAL
 		do
-			l_string := string_general_as_lower (tool.content.long_title.twin)
-			Result := interface_names.f_show_tool (l_string)
+			Result := interface_names.f_show_tool (tool.content.long_title)
 		end
 
 	tooltext: STRING_GENERAL is
@@ -74,7 +71,7 @@ feature -- Access
 	description: STRING_GENERAL is
 			-- Description for current command.
 		do
-			Result := ("Show ").as_string_32 + tool.content.short_title
+			Result := interface_names.f_show_tool (tool.content.short_title)
 		end
 
 	menu_name: STRING_GENERAL is

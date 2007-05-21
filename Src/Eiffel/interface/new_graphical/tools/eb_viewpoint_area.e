@@ -38,7 +38,7 @@ feature -- Access
 		do
 			if viewpoint_area_internal = Void then
 				create l_hor
-				create l_lbl.make_with_text (interface_names.l_viewpoints)
+				create l_lbl.make_with_text (interface_names.l_viewpoints_colon)
 				create l_cell1
 				create l_toolbar
 				l_toolbar.extend (create {EV_TOOL_BAR_SEPARATOR})

@@ -1388,16 +1388,8 @@ feature{NONE} -- Implementation
 		require
 			a_relation_name_attached: a_relation_name /= Void
 			a_name_of_starting_element_attached: a_name_of_starting_element /= Void
-		local
-			l_str: STRING
-			l_upper_relation: STRING
 		do
-			create l_str.make_from_string ("$1 (from $2)")
-			create l_upper_relation.make_from_string (a_relation_name.as_string_8)
-			l_upper_relation.put (l_upper_relation.item (1).as_upper, 1)
-			l_str.replace_substring_all ("$1", a_relation_name.as_string_8)
-			l_str.replace_substring_all ("$2", a_name_of_starting_element.as_string_8)
-			Result := l_str
+			Result := interface_names.l_one_from_two (a_relation_name, a_name_of_starting_element)
 		ensure
 			result_attached: Result /= Void
 		end

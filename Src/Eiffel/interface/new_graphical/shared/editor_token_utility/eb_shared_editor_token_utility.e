@@ -183,7 +183,7 @@ feature -- Editor token style
 		end
 
 	agent_style: EB_AGENT_EDITOR_TOKEN_STYLE is
-			-- Editor token style generator whose outptu is coming from an agent.
+			-- Editor token style generator whose output is coming from an agent.
 			-- Note: Do not change setting of this style.
 		once
 			create Result

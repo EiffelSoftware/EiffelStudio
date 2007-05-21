@@ -820,7 +820,9 @@ feature -- Label texts
 	l_Only_available_for_stopped_application: STRING_GENERAL is do Result := locale.translation("This feature is only available when debugging, and when the debugged application is stopped.")	end
 
 	l_class: STRING_GENERAL is					do Result := locale.translation ("Class") end
+	l_class_address: STRING_GENERAL is			do Result := locale.translation ("Class address") end
 	l_class_colon: STRING_GENERAL is					do Result := locale.translation("Class:")	end
+	l_class_label: STRING_GENERAL is			do Result := locale.translation ("Class label") end
 	l_class_is_not_writable (a_class: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_class_not_void: a_class /= Void
@@ -861,7 +863,7 @@ feature -- Label texts
 	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Stop the application?")	end
 	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Stop and restart the application?")	end
 
-	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing Diagram for $1"), [a_name])	end
+	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_GENERAL is				do Result := locale.translation("Context")	end
 	l_context_dot: STRING_GENERAL is			do Result := locale.translation("Context ...") end
 	l_Creation: STRING_GENERAL is				do Result := locale.translation("Creation procedure:")	end
@@ -906,6 +908,9 @@ feature -- Label texts
 		do Result := locale.translation("A C Compilation is currently running.%N%
 								%It needs to be terminated before EiffelStudio can exist.%N%N%
 								%Cancel C compilation and exit?%N")	end
+	l_cwd (a_working_directory: STRING_GENERAL): STRING_GENERAL is
+		do Result := locale.formatted_string (locale.translation ("cwd=%"$1%""), [a_working_directory]) end
+
 	l_external_command_running: STRING_GENERAL is
 		do Result := locale.translation("An external command is currently running.%N%
 								%It need to be terminated before EiffelStudio can exist.%N%N%
@@ -1006,6 +1011,12 @@ feature -- Label texts
 	l_External: STRING_GENERAL is				do Result := locale.translation("External features")	end
 	l_Feature: STRING_GENERAL is				do Result := locale.translation("Feature")	end
 	l_Feature_colon: STRING_GENERAL is				do Result := locale.translation("Feature:")	end
+	l_feature_count (a_count: INTEGER): STRING_GENERAL is
+		do
+			Result := locale.formatted_string (locale.plural_translation ("$1 feature", "$1 features", a_count), [a_count])
+		end
+	l_feature_address: STRING_GENERAL is				do Result := locale.translation("Feature address")	end
+	l_feature_label: STRING_GENERAL is				do Result := locale.translation("Feature label")	end
 	l_feature_list: STRING_GENERAL is				do Result := locale.translation("Feature list")	end
 	l_Feature_properties: STRING_GENERAL is		do Result := locale.translation("Feature properties")	end
 	l_force_inheritance: STRING_GENERAL is do Result := locale.translation ("Force inheritance on child elements.")	end
@@ -1025,6 +1036,7 @@ feature -- Label texts
 	l_general: STRING_GENERAL is				do Result := locale.translation("General")	end
 	l_Generate_profile_from_rtir: STRING_GENERAL is do Result := locale.translation("Generate profile from Run-time information record")	end
 	l_Generate_creation: STRING_GENERAL is		do Result := locale.translation("Generate creation procedure")	end
+	l_generate_set_procedure: STRING_GENERAL is	do Result := locale.translation ("Generate set procedure") end
 	l_grid_column_layout: STRING_GENERAL is		do Result := locale.translation ("Grid column layout") end
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
 	l_Has_changed: STRING_GENERAL is			do Result := locale.translation("Has Changed")	end
@@ -1185,8 +1197,9 @@ feature -- Label texts
 	l_Search_report_show: STRING_GENERAL is		do Result := locale.translation("Report >>")	end
 	l_Search_report_hide: STRING_GENERAL is 	do Result := locale.translation("Report <<")	end
 	l_Set_as_default: STRING_GENERAL is			do Result := locale.translation("Set as default")	end
-	l_Set_slice_limits: STRING is				"Slice limits"
+	l_Set_slice_limits: STRING is				do Result := locale.translation ("Slice limits") end
 	l_Set_slice_limits_desc: STRING_GENERAL is	do Result := locale.translation("Set which values are shown in special objects")	end
+	l_settings: STRING_GENERAL is				do Result := locale.translation ("Settings") end
 	l_Short: STRING_GENERAL is					do Result := locale.translation("Contract view")	end
 	l_Short_name: STRING_GENERAL is				do Result := locale.translation("Short Name")	end
 	l_Show_all_call_stack: STRING_GENERAL is	do Result := locale.translation("Show all stack elements")	end
@@ -1271,10 +1284,15 @@ feature -- Label texts
 	l_user_set: STRING_GENERAL is				do Result := locale.translation ("user set") end
 	l_use_inherited: STRING_GENERAL is do Result := locale.translation ("Use inherited value.")	end
 	l_Value: STRING_GENERAL is					do Result := locale.translation("Value")	end
+	l_variable_count (a_variable_count: INTEGER): STRING_GENERAL is
+		do
+			Result := locale.formatted_string (locale.plural_translation ("$1 variable", "$1 variables", a_variable_count), [a_variable_count])
+		end
 
 	l_viewer_display_complete_object: STRING_GENERAL is do Result := locale.translation("Display Complete Object") end
 	l_viewer_enable_word_wrapping: STRING_GENERAL is do Result := locale.translation("Enable Word Wrapping") end
 	l_copy_text_to_clipboard: STRING_GENERAL is do Result := locale.translation("Copy Text To Clipboard") end
+	l_view_label: STRING_GENERAL is do Result := locale.translation ("View label") end
 	t_viewer_string_display: STRING_GENERAL is do Result := locale.translation("String Display") end
 	l_viewer_string_display_full_string_length (n: INTEGER): STRING_GENERAL is
 		do
@@ -1363,6 +1381,14 @@ feature -- Label texts
 			a_class_not_void: a_class /= Void
 		do
 			Result := locale.formatted_string (locale.translation (" (from $1)"), [a_class])
+		end
+
+	l_one_from_two (a_one, a_two: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_one_not_void: a_one /= Void
+			a_two_not_void: a_two /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("$1 (from $2)"), [a_one, a_two])
 		end
 
 	l_module_is (a_module: STRING_GENERAL): STRING_GENERAL is
@@ -1515,7 +1541,8 @@ feature -- Label texts
 	l_function: STRING_GENERAL is do Result := locale.translation("Function")	end
 	l_view: STRING_GENERAL is do Result := locale.translation ("View ") end
 	l_zoom: STRING_GENERAL is do Result := locale.translation ("Zoom ") end
-	l_viewpoints: STRING_GENERAL is do Result := locale.translation("Viewpoints: ")	end
+	l_viewpoints: STRING_GENERAL is do Result := locale.translation("Viewpoints")	end
+	l_viewpoints_colon: STRING_GENERAL is do Result := locale.translation("Viewpoints: ")	end
 	l_Tab_metrics: STRING_GENERAL is do Result := locale.translation("Metric")	end
 	l_callers_from_client_class: STRING_GENERAL is do Result := locale.translation("Callers from client class") end
 	l_callees_from_supplier_class: STRING_GENERAL is do Result := locale.translation("Callees from supplier class") end
@@ -1525,17 +1552,14 @@ feature -- Label texts
 	h_show_normal_referenced_classes: STRING_GENERAL is do Result := locale.translation("Show normal referenced classes?") end
 	h_show_ancestor_classes: STRING_GENERAL is do Result := locale.translation("Show ancestor classes?") end
 	h_show_descendant_classes: STRING_GENERAL is do Result := locale.translation("Show descendant classes?") end
-	l_only_syntactically_related: STRING is "Only syntactically related"
-	l_ancestor_related: STRING is "Ancestor related"
-	l_descendant_related: STRING is "Descendant related"
-	l_invalid_item: STRING is "Invalid item"
-	l_application_target: STRING is "Application target"
-	l_delayed_item: STRING is "Delayed item"
+	l_invalid_item: STRING is do Result := locale.translation ("Invalid item") end
+	l_application_target: STRING is do Result := locale.translation ("Application target") end
+	l_delayed_item: STRING is do Result := locale.translation ("Delayed item") end
 	l_ellipsis: STRING is "..."
-	l_ancestor_of: STRING is "Ancestor of "
-	l_descendant_of: STRING is "Descendant of "
-	l_syntactical_supplier_of: STRING is "Syntactical supplier of "
-	l_syntactical_client_of: STRING is "Syntactical client of "
+	l_ancestor_of: STRING is do Result := locale.translation ("Ancestor of ") end
+	l_descendant_of: STRING is do Result := locale.translation ("Descendant of ") end
+	l_syntactical_supplier_of: STRING is do Result := locale.translation ("Syntactical supplier of ") end
+	l_syntactical_client_of: STRING is do Result := locale.translation ("Syntactical client of ") end
 
 	l_Tab_dependency_info: STRING_GENERAL is do Result := locale.translation("Dependency")	end
 	l_client_class: STRING_GENERAL is do Result := locale.translation("Client class")	end
@@ -2036,7 +2060,7 @@ feature -- Description texts
 	e_Shell: STRING_GENERAL is					do Result := locale.translation("Send to external editor")	end
 	e_Switch_num_format_to_hex: STRING_GENERAL is do Result := locale.translation("Switch to hexadecimal format")	end
 	e_Switch_num_format_to_dec: STRING_GENERAL is do Result := locale.translation("Switch to decimal format")	end
-	e_Switch_num_formating: STRING is "Hexadecimal/Decimal formating"
+	e_Switch_num_formating: STRING is do Result := locale.translation ("Hexadecimal/Decimal formating") end
 	e_Toggle_state_of_expressions: STRING_GENERAL is		do Result := locale.translation("Enable/Disable expressions")	end
 	e_Toggle_stone_management: STRING_GENERAL is do Result := locale.translation("Link or not the context tool to other components")	end
 	e_Undo: STRING_GENERAL is					do Result := locale.translation("Undo")	end

@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			denominator_area.extend (denominator_metric_setter)
 			denominator_area.disable_item_expand (denominator_metric_setter)
 
+			expression_lbl.set_text (metric_names.t_expression)
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
 			numerator_frame.set_text (interface_names.first_character_as_upper (metric_names.l_numerator_metric))

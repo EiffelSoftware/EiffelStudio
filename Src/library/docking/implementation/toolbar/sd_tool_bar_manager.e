@@ -490,9 +490,7 @@ feature {NONE} -- Implementation
 			loop
 
 				create l_custom_dialog.make_for_menu (contents.item.zone)
-				l_string := internal_shared.interface_names.tool_bar_right_click_customize.as_string_32
-				l_string.append (contents.item.title)
-				l_string.append (customize_string_end)
+				l_string := internal_shared.interface_names.tool_bar_right_click_customize (contents.item.title)
 				create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
 				Result.extend (l_menu_item)
 				contents.forth
@@ -500,11 +498,6 @@ feature {NONE} -- Implementation
 
 		end
 
-	customize_string_end: STRING_GENERAL is
-			-- String for customize
-		once
-			Result := "..."
-		end
 
 	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
 			-- Pointer button right click hander instance.

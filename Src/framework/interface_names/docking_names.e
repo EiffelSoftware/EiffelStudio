@@ -102,10 +102,10 @@ feature -- Access
 			Result := locale.translation ("No detail available.")
 		end
 
-	tool_bar_right_click_customize: STRING_GENERAL is
+	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_GENERAL is
 			-- String for menu area right click menu.
 		do
-			Result := locale.translation ("Customize ")
+			Result := locale.formatted_string (locale.translation ("Customize $1..."), [toolbar_name])
 		end
 
 feature -- Tool bar customize dialog strings
@@ -168,6 +168,14 @@ feature -- Tool bar customize dialog strings
 			-- Cancel button text.
 		do
 			Result := locale.translation ("Cancel")
+		end
+
+feature -- Hidden item dialog strings
+
+	customize: STRING_GENERAL is
+			-- Customize menu entry text.
+		do
+			Result := locale.translation ("Customize")
 		end
 
 indexing

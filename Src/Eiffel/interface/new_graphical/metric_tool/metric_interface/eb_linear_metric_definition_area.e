@@ -122,6 +122,7 @@ feature {NONE} -- Initialization
 			remove_metric_btn.set_tooltip (metric_names.f_del_row.as_string_32 + " (" + del_key_shortcut.out + ")")
 			remove_all_metric_btn.set_tooltip (metric_names.f_clear_rows)
 
+			expression_lbl.set_text (metric_names.t_expression)
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
 

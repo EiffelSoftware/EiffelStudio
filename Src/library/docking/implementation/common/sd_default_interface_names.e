@@ -103,10 +103,10 @@ feature -- Enumeration
 			Result := "No detail available."
 		end
 
-	tool_bar_right_click_customize: STRING_GENERAL is
+	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_GENERAL is
 			-- String for menu area right click menu.
 		do
-			Result := "Customize "
+			Result := "Customize " + toolbar_name.as_string_8 + "..."
 		end
 
 feature -- Tool bar customize dialog strings
@@ -169,6 +169,14 @@ feature -- Tool bar customize dialog strings
 			-- Cancel button text.
 		do
 			Result := "Cancel"
+		end
+
+feature -- Hidden item dialog strings
+
+	customize: STRING_GENERAL is
+			-- Customize menu entry text.
+		do
+			Result := "Customize"
 		end
 
 indexing

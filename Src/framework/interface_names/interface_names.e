@@ -100,6 +100,7 @@ feature -- Button texts
 	b_Remove_all: STRING_GENERAL is						do Result := locale.translation("Remove all")	end
 	b_Remove_handles: STRING_GENERAL is					do Result := locale.translation("Remove handles")	end
 	b_Remove_text: STRING_GENERAL is 					do Result := locale.translation("<- Remove")	end
+	b_Rename: STRING_GENERAL is							do Result := locale.translation("Rename") end
 	b_Retry: STRING_GENERAL is							do Result := locale.translation("Retry")	end
 	b_Search: STRING_GENERAL is							do Result := locale.translation("Search")	end
 	b_select_target: STRING_GENERAL is					do Result := locale.translation ("Select target") end
@@ -972,6 +973,7 @@ feature -- Label texts
 	l_Elements: STRING_GENERAL is				do Result := locale.translation("elements.")	end
 	l_enabled: STRING_GENERAL is				do Result := locale.translation("Enabled")	end
 	l_Enter_folder_name: STRING_GENERAL is		do Result := locale.translation("Enter the name of the new folder: ")	end
+	l_Entry_colon: STRING_GENERAL is			do Result := locale.translation("Entry: ") end
 	l_environment: STRING_GENERAL is					do Result := locale.translation("Environment")	end
 	l_error: STRING_GENERAL is					do Result := locale.translation("Error")	end
 	l_error_message:  STRING_GENERAL is					do Result := locale.translation("Error message :")	end

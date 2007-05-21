@@ -33,16 +33,14 @@ feature {NONE}  -- Initlization
 		require
 			not_void: a_hidden_items /= Void
 			not_void: a_tool_bar /= Void
-		local
-			l_shared: SD_SHARED
 		do
 			default_create
 			disable_user_resize
 			disable_border
 			create internal_vertical_box
-			create l_shared
-			internal_vertical_box.set_border_width (l_shared.border_width)
-			internal_vertical_box.set_background_color (l_shared.border_color)
+			create internal_shared
+			internal_vertical_box.set_border_width (internal_shared.border_width)
+			internal_vertical_box.set_background_color (internal_shared.border_color)
 
 			extend (internal_vertical_box)
 
@@ -124,7 +122,7 @@ feature {NONE}  -- Initlization
 			end
 
 			create l_button.make
-			l_button.set_text ("Customize")
+			l_button.set_text (internal_shared.interface_names.customize)
 			l_button.select_actions.extend (agent on_customize)
 			internal_tool_bar.extend (l_button)
 		end
@@ -214,6 +212,9 @@ feature {NONE} -- Implementation
 
 	internal_label: EV_LABEL
 			-- Label which show "Customize".
+
+	internal_shared: SD_SHARED
+			-- All singletons.
 
 invariant
 	not_void: parent_tool_bar /= Void

@@ -19,6 +19,13 @@ inherit
 			build_text_field
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -57,7 +64,7 @@ feature {NONE} -- GUI
 
 			extend (list)
 
-			build_text_field ("Entry: ")
+			build_text_field (interface_names.l_Entry_colon)
 
 			text_field.change_actions.extend (agent update_button_status)
 			text_field.return_actions.extend (agent add_item_in)
@@ -65,7 +72,7 @@ feature {NONE} -- GUI
 			create hbox
 			hbox.set_border_width (5)
 			hbox.extend (create {EV_CELL})
-			create add_button.make_with_text ("Add")
+			create add_button.make_with_text (interface_names.b_Add)
 			add_button.select_actions.extend (agent add_item_in)
 			add_button.set_minimum_width (80)
 			hbox.extend (add_button)
@@ -73,7 +80,7 @@ feature {NONE} -- GUI
 			add_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
-			create apply_button.make_with_text ("Rename")
+			create apply_button.make_with_text (interface_names.b_Rename)
 			apply_button.select_actions.extend (agent modify_item_in)
 			apply_button.set_minimum_width (80)
 			hbox.extend (apply_button)
@@ -81,7 +88,7 @@ feature {NONE} -- GUI
 			apply_button.disable_sensitive
 
 			hbox.extend (create {EV_CELL})
-			create remove_button.make_with_text ("Remove")
+			create remove_button.make_with_text (interface_names.b_Remove)
 			remove_button.select_actions.extend (agent remove_item_in)
 			remove_button.set_minimum_width (80)
 			hbox.extend (remove_button)
@@ -93,7 +100,7 @@ feature {NONE} -- GUI
 			disable_item_expand (hbox)
 		end
 
-	build_text_field (t: STRING) is
+	build_text_field (t: STRING_GENERAL) is
 			-- Create text field part.
 		local
 			hbox: EV_HORIZONTAL_BOX

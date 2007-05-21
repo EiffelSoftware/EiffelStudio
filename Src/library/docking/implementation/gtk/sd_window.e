@@ -36,8 +36,8 @@ feature {NONE} -- Implementation
 			l_env.application.do_once_on_idle (agent
 													do
 														if not is_destroyed then
-														disable_border
-														disable_user_resize
+															disable_border
+															disable_user_resize
 														end
 													end
 												)

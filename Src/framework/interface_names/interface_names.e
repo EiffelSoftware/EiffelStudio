@@ -1949,7 +1949,7 @@ feature -- Description texts
 	e_Compilation_succeeded: STRING_GENERAL is	do Result := locale.translation("Eiffel Compilation Succeeded")	end
 	e_freezing_failed: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
 	e_finalizing_failed: STRING_GENERAL is		do Result := locale.translation("Background Finalized C compilation Failed")	end
-	e_Force_debug_mode: STRING_GENERAL is		do Result := locale.translation("Force the environment to stay in debugger mode")	end
+	e_Force_debug_mode: STRING_GENERAL is		do Result := locale.translation("Force the environment to stay in debug mode")	end
 	e_freezing_launch_failed: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Launch Failed")	end
 	e_finalizing_launch_failed: STRING_GENERAL is		do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
 	e_freezing_launched: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Launched")	end

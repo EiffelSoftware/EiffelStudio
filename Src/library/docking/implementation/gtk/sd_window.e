@@ -33,8 +33,14 @@ feature {NONE} -- Implementation
 
 			-- We do it later to make sure contract `is_in_default_state' not borken.
 			create l_env
-			l_env.application.do_once_on_idle (agent disable_border)
-			l_env.application.do_once_on_idle (agent disable_user_resize)
+			l_env.application.do_once_on_idle (agent
+													do
+														if not is_destroyed then
+														disable_border
+														disable_user_resize
+														end
+													end
+												)
 		end
 
 feature -- Command

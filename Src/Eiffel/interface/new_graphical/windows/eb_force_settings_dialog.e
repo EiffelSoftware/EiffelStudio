@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			l_ev_vertical_box_1.set_border_width (default_border_size)
 			l_ev_vertical_box_1.set_padding_width (small_padding_size)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
-			l_ev_frame_1.set_text ("Settings")
+			l_ev_frame_1.set_text (interface_names.l_settings)
 			l_ev_frame_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.set_border_width (small_border_size)
 			l_ev_vertical_box_2.set_padding (small_padding_size)

@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			invariant_field.focus_in_actions.extend (agent on_invariant_focus_gain)
 			add_indented (invariant_field, 1, False)
 
-			create procedure_check_box.make_with_text ("Generate set procedure")
+			create procedure_check_box.make_with_text (interface_names.l_generate_set_procedure)
 			extend (procedure_check_box)
 			disable_item_expand (procedure_check_box)
 

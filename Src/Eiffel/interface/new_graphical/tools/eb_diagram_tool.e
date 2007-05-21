@@ -910,7 +910,7 @@ feature -- Element change
 
 			if not cancelled then
 				develop_window.status_bar.reset
-				develop_window.status_bar.display_message ("Constructing Diagram for " + a_class.name + " Class")
+				develop_window.status_bar.display_message (interface_names.l_constructing_diagram_for (a_class.name))
 
 				graph.wipe_out
 

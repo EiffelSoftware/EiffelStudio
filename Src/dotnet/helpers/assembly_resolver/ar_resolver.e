@@ -159,7 +159,11 @@ feature -- Resolution
 						debug ("trace")
 							{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_path + "'.")
 						end
-						l_name := get_assembly_name (l_file_path)
+						if {SYSTEM_FILE}.exists (l_file_path) then
+							l_name := get_assembly_name (l_file_path)
+						else
+							l_name := Void
+						end
 						if l_name /= Void then
 							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
 								debug ("trace")
@@ -501,7 +505,7 @@ feature {NONE} -- Implementation
 		require
 			a_path_not_void: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+			a_path_exists: {SYSTEM_FILE}.exists (a_path)
 		local
 			retried: BOOLEAN
 		do
@@ -522,7 +526,7 @@ feature {NONE} -- Implementation
 		require
 			a_path_not_void: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+			a_path_exists: {SYSTEM_FILE}.exists (a_path)
 		local
 			retried: BOOLEAN
 		do

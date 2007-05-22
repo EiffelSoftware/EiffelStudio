@@ -1000,6 +1000,7 @@ feature -- Label texts
 	l_Dummy: STRING_GENERAL is					do Result := locale.translation("Should not be read")	end
 	l_Not_empty: STRING_GENERAL is				do Result := locale.translation("Generate default feature clauses")	end
 	l_no_break_point: STRING_GENERAL is				do Result := locale.translation("No breakpoints")	end
+	l_no_project: STRING_GENERAL is				do Result := locale.translation ("No project") end
 	l_edit_project: STRING_GENERAL is			do Result := locale.translation("Edit Project")	end
 	l_edit_text: STRING_GENERAL is				do Result := locale.translation("Edit Text") end
 	l_eiffel_class: STRING_GENERAL is			do Result := locale.translation ("Eiffel Class") end

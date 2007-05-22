@@ -1471,13 +1471,15 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 			a_selector_not_void: a_selector /= Void
 		do
-			a_menu.extend (new_menu_item (names.m_remove))
-				-- |Ted: Questionable: Metric domain selector has two routine handling removing?
-			a_menu.last.select_actions.extend (agent a_selector.on_item_dropped_on_remove_button (a_pebble))
-			a_menu.last.select_actions.extend (agent a_selector.on_item_drop_on_remove_button (a_pebble))
+			if a_pebble /= Void then
+				a_menu.extend (new_menu_item (names.m_remove))
+					-- |Ted: Questionable: Metric domain selector has two routine handling removing?
+				a_menu.last.select_actions.extend (agent a_selector.on_item_dropped_on_remove_button (a_pebble))
+				a_menu.last.select_actions.extend (agent a_selector.on_item_drop_on_remove_button (a_pebble))
 
-			a_menu.extend (new_menu_item (names.m_remove_all))
-			a_menu.last.select_actions.extend (agent a_selector.on_remove_all_scopes)
+				a_menu.extend (new_menu_item (names.m_remove_all))
+				a_menu.last.select_actions.extend (agent a_selector.on_remove_all_scopes)
+			end
 		end
 
 feature {NONE} -- Implementation

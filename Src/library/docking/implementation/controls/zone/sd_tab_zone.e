@@ -146,9 +146,12 @@ feature -- Command
 				l_index := 1
 			end
 			l_selected := contents.i_th (l_index)
-
-			internal_title_bar.set_title (l_selected.long_title)
-			update_mini_tool_bar (l_selected)
+			-- `l_selected' should not be void in theroy.
+			-- But in fact, it can be void sometimes, see bug#12807.
+			if l_selected /= Void then
+				internal_title_bar.set_title (l_selected.long_title)
+				update_mini_tool_bar (l_selected)
+			end
 		end
 
 	set_show_normal_max (a_show: BOOLEAN) is

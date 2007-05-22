@@ -194,6 +194,10 @@ feature {AUXILIARY_FILES} -- Versioning
 			Result.append (compiler_version_number.version)
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
+			Result.append_character (' ')
+			Result.append_character ('-')
+			Result.append_character (' ')
+			Result.append_string (eiffel_layout.eiffel_platform)
 		end
 
 	Version_tag: INTEGER is 0x026

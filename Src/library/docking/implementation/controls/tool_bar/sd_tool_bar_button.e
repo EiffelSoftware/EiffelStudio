@@ -340,9 +340,9 @@ feature{SD_TOOL_BAR} -- Implementation
 			-- Width of icons which is `pixel_buffer' or `pixmap'.
 		do
 			if pixel_buffer /= Void then
-				Result := Result + pixel_buffer.width
+				Result := pixel_buffer.width
 			elseif pixmap /= Void then
-				Result := Result + pixmap.width
+				Result := pixmap.width
 			end
 		end
 

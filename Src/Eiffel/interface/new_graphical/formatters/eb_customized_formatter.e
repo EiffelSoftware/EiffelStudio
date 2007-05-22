@@ -289,9 +289,17 @@ feature -- Setting
 			end
 		end
 
-	set_pixmap (a_pixmap: like pixmap) is
+	set_pixmap_and_pixel_buffer (a_pixmap: like pixmap; a_pixel_buffer: like pixel_buffer) is
 			-- Set `pixmap' with `a_pixmap'.
+		require
+			not_void: a_pixel_buffer /= Void
+		local
+			l_right_size_buffer: EV_PIXEL_BUFFER
 		do
+			create l_right_size_buffer.make_with_size (16, 16)
+			l_right_size_buffer.draw_pixel_buffer (a_pixel_buffer, create {EV_RECTANGLE}.make (0, 0, a_pixel_buffer.width, a_pixel_buffer.height))
+			pixel_buffer_internal := l_right_size_buffer
+
 			pixmap := a_pixmap
 			pixmap.stretch (16, 16)
 		end
@@ -559,9 +567,9 @@ feature{NONE} -- Implementation/Setting
 		do
 			create l_pixmap_loader
 			l_result := l_pixmap_loader.loaded_pixmap_from_file (icon_location, pixmaps.icon_pixmaps.diagram_export_to_png_icon, pixmaps.icon_pixmaps.diagram_export_to_png_icon_buffer)
-			l_result.a_pixmap.stretch (16, 16)
-			set_pixmap (l_result.a_pixmap)
-			pixel_buffer_internal := l_result.a_buffer
+
+			set_pixmap_and_pixel_buffer (l_result.a_pixmap, l_result.a_buffer)
+
 			set_is_pixmap_loaded (True)
 		ensure
 			pixmap_attached: pixmap /= Void

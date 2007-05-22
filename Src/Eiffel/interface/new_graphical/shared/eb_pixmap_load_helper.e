@@ -32,7 +32,9 @@ feature -- Loading
 			if l_pixmap = Void then
 				l_pixmap := a_default_pixmap
 			end
-			if l_buffer = Void then
+			-- `l_buffer' is not void after exceptions in exectuing `set_with_named_file'.
+			-- We need to check `l_retried' here.
+			if l_buffer = Void or l_retried then
 				l_buffer := a_default_buffer
 			end
 			Result := [l_pixmap, l_buffer]

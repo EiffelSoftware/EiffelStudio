@@ -1749,6 +1749,15 @@ if DOTNET test property-reusing-parent-setter dotnet076	tcf fail dotnet property
 if DOTNET test deferred-property-function-on-single dotnet077	tcf fail dotnet property
 if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet property incrementality
 if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality
-
-
-
+if DOTNET test property-on-procedure dotnet080	tcf pass dotnet property
+if DOTNET test ctor-basic dotnet081	tcf fail dotnet constructor
+if DOTNET test ctor-basic-dynamic dotnet082	tcf pass dotnet constructor
+if DOTNET test ctor-non-existing-create dotnet083	tcf pass dotnet constructor
+if DOTNET test ctor-single-default-ctor dotnet084	tcf pass dotnet constructor
+if DOTNET test ctor-parent-ctor-reference dotnet085	tcf pass dotnet constructor
+if DOTNET test ctor-parent-argumented-ctor-reference dotnet086	tcf pass dotnet constructor
+if DOTNET test ctor-parent-argumented-ctor-redefine dotnet087	tcf fail dotnet constructor
+if DOTNET test ctor-root-creation-ctor dotnet088	tcf fail dotnet constructor
+if DOTNET test ctor-multi-source-ctors dotnet089	tcf fail dotnet constructor
+if DOTNET test ctor-reference-from-external-type dotnet090	tcf fail dotnet constructor
+if DOTNET test ctor-multi-source-unique-ctors dotnet091	tcf fail dotnet constructor

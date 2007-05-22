@@ -1183,7 +1183,10 @@ feature -- Multiple editor management
 					local
 						l_editor: EB_EDITOR
 					do
-						l_editor := editors_manager.current_editor
+							-- We might be called after the development window has been recycled.
+						if editors_manager /= Void then
+							l_editor := editors_manager.current_editor
+						end
 						if
 							l_editor /= Void and then
 							not l_editor.is_empty and then

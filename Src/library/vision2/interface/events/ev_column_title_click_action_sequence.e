@@ -11,10 +11,8 @@ class
 	EV_COLUMN_TITLE_CLICK_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [INTEGER]]
-	-- EV_ACTION_SEQUENCE [TUPLE [a_column: INTEGER]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [column_number: INTEGER]]
+
 create
 	default_create
 

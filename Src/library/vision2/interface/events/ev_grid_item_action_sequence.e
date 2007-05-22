@@ -9,8 +9,8 @@ class
 	EV_GRID_ITEM_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM]]
-	
+	EV_ACTION_SEQUENCE [TUPLE [item: EV_GRID_ITEM]]
+
 create
 	default_create
 
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_filled (n)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -8,10 +8,8 @@ indexing
 class
 	EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_DOCKABLE_SOURCE]]
-	-- EV_ACTION_SEQUENCE [TUPLE [source: EV_DOCKABLE_SOURCE]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [source: EV_DOCKABLE_SOURCE]]
+
 create
 	default_create
 

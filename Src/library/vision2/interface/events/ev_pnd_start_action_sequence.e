@@ -11,10 +11,8 @@ class
 	EV_PND_START_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
-	-- EV_ACTION_SEQUENCE [TUPLE [x, y: INTEGER]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [x: INTEGER; y: INTEGER]]
+
 create
 	default_create
 

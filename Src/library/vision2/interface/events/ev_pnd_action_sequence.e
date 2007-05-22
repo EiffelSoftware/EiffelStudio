@@ -11,7 +11,7 @@ class
 	EV_PND_ACTION_SEQUENCE
 
 inherit
-	EV_LITE_ACTION_SEQUENCE [TUPLE [ANY]]
+	EV_LITE_ACTION_SEQUENCE [TUPLE [pebble: ANY]]
 		redefine
 			call
 		end

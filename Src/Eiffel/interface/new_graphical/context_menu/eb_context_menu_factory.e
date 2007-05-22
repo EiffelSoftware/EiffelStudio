@@ -490,7 +490,7 @@ feature {NONE} -- Menu section, Granularity 1.
 		do
 			l_stone := a_stone
 			a_menu.extend (dev_window.commands.new_tab_cmd.new_menu_item_unmanaged)
-			a_menu.last.set_text (add_type_and_name (names.m_new_tab))
+			a_menu.last.set_text (names.m_context_menu_new_tab (last_type, last_name))
 			a_menu.last.select_actions.wipe_out
 			a_menu.last.select_actions.extend (agent (dev_window.commands.new_tab_cmd).execute_with_stone (l_stone))
 			if current_editor /= Void and then l_stone.same_as (current_editor.stone) then
@@ -498,7 +498,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 
 			a_menu.extend (dev_window.new_development_window_cmd.new_menu_item_unmanaged)
-			a_menu.last.set_text (add_type_and_name (names.m_new_window))
+			a_menu.last.set_text (names.m_context_menu_new_window (last_type, last_name))
 			a_menu.last.select_actions.wipe_out
 			a_menu.last.select_actions.extend (agent (dev_window.new_development_window_cmd).execute_with_stone (l_stone))
 			if current_editor /= Void and then l_stone.same_as (current_editor.stone) then
@@ -507,7 +507,7 @@ feature {NONE} -- Menu section, Granularity 1.
 
 			if a_external_editor then
 				a_menu.extend (dev_window.commands.shell_cmd.new_menu_item_unmanaged)
-				a_menu.last.set_text (add_type_and_name (names.m_external_editor))
+				a_menu.last.set_text (names.m_context_menu_external_editor (last_type, last_name))
 				a_menu.last.select_actions.wipe_out
 				a_menu.last.select_actions.extend (agent (dev_window.commands.shell_cmd).execute_with_stone (l_stone))
 			end
@@ -1493,23 +1493,8 @@ feature {NONE} -- Implementation
 			l_text: STRING_32
 		do
 			if a_menu.count > 0 then
-				l_text := add_type_and_name (names.m_pick)
+				l_text := names.m_context_menu_pick (last_type, last_name)
 				a_menu.first.set_text (l_text)
-			end
-		end
-
-	add_type_and_name (a_str: STRING_32): STRING_32 is
-			-- Make new string extended `last_type' and `last_name' to `a_str'.
-		require
-			a_str_not_void: a_str /= Void
-		do
-			Result := a_str.twin
-			if last_type /= Void and then last_name /= Void then
-				Result.append (" ")
-				Result.append (last_type)
-				Result.append (" '")
-				Result.append (last_name)
-				Result.append ("'")
 			end
 		end
 

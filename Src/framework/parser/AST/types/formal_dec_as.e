@@ -120,7 +120,7 @@ feature -- Status
 	has_constraint: BOOLEAN is
 			-- Does the formal generic parameter have a constraint?
 		do
-			Result := constraints /= Void and then not constraints.is_empty()
+			Result := constraints /= Void and then not constraints.is_empty
 		end
 
 	has_multi_constraints: BOOLEAN is

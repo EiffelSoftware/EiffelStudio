@@ -1250,7 +1250,14 @@ feature {NONE} -- Implementation
 		do
 			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab),
 							False, False, False)
-			acc.actions.extend (agent gi.activate)
+			acc.actions.extend (agent (a_gi: EV_GRID_ITEM)
+				do
+						-- We need to protect the case when `gi' has already been deactivated.
+					if not a_gi.is_destroyed and then a_gi.is_parented then
+						a_gi.activate
+					end
+				end (gi)
+			)
 			pop.accelerators.extend (acc)
 		end
 

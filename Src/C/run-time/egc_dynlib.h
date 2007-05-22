@@ -58,7 +58,24 @@ extern "C" {
 		} \
 		EIF_EXIT_EIFFEL; \
 	}
-			
+
+#ifndef EIF_WINDOWS
+	/* Define calling convention type so that it Eiffel dlls for windows can also be compiled
+	 * on other platforms where it does not matter. */
+#ifndef __stdcall
+#define __stdcall
+#endif
+
+#ifndef __cdecl
+#define __cdecl
+#endif
+
+#ifndef __fastcall
+#define __fastcall
+#endif
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

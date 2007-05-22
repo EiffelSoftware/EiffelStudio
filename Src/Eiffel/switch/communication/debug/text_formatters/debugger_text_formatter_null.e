@@ -57,6 +57,11 @@ feature -- Call stack
 		do
 		end
 
+	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER) is
+			-- Display information about debugger
+		do
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

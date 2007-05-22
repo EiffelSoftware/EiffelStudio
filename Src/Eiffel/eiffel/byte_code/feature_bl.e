@@ -250,6 +250,7 @@ end
 			index: INTEGER
 			keep, is_nested: BOOLEAN
 			l_par: NESTED_BL
+			return_type_string: STRING
 		do
 			keep := system.keep_assertions
 			is_nested := not is_first
@@ -330,7 +331,12 @@ end
 					local_argument_types := argument_types
 					if rout_table.item.written_type_id /= Context.original_class_type.type_id then
 							-- Remember extern routine declaration
-						Extern_declarations.add_routine_with_signature (type_c,
+						if context.workbench_mode then
+							return_type_string := "EIF_UNION"
+						else
+							return_type_string := type_c.c_string
+						end
+						Extern_declarations.add_routine_with_signature (return_type_string,
 								internal_name, local_argument_types)
 						if f.is_once and then context.is_once_call_optimized then
 							Extern_declarations.add_once (type_c, index, is_process_relative)

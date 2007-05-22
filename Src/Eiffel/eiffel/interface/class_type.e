@@ -1691,7 +1691,7 @@ feature -- Structure generation
 				else
 					if has_creation_routine then
 						c_name := encoder.feature_name (static_type_id, initialization_body_index)
-						Extern_declarations.add_routine_with_signature (Void_c_type,
+						Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
 							c_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
 						buffer.put_string (c_name)
 						buffer.put_character ('(')
@@ -1724,7 +1724,7 @@ feature -- Structure generation
 					buffer.put_string (c_name)
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)
-					Extern_declarations.add_routine_with_signature (Void_c_type,
+					Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
 						c_name, <<"EIF_REFERENCE">>)
 					buffer.put_string (");")
 					buffer.put_new_line

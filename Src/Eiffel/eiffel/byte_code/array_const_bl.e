@@ -300,7 +300,7 @@ feature {NONE} -- C code generation
 				-- Since `make' from ARRAY is a procedure, the return type is `Void_c_type'
 				--| Note: it used to be `real_ty.c_type' but it was the C type of
 				--| the array itself and not of the `make' routine and thus was incorrect.
-			Extern_declarations.add_routine_with_signature (Void_c_type, internal_name,
+			Extern_declarations.add_routine_with_signature (Void_c_type.c_string, internal_name,
 							<<"EIF_REFERENCE", "EIF_INTEGER", "EIF_INTEGER">>)
 		end;
 

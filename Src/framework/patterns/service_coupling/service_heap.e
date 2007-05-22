@@ -17,13 +17,13 @@ inherit
 	SERVICE_CONTAINER_IMPL
 		rename
 			add_service as provider_add_service,
-			add_service_with_activator as provider_add_service_with_creator,
-			revoke_service as provider_remove_service,
+			add_service_with_activator as provider_add_service_with_activator,
+			revoke_service as provider_revoke_service,
 			proffers_service as provider_proffers_service
 		export {NONE}
 			provider_add_service,
-			provider_add_service_with_creator,
-			provider_remove_service,
+			provider_add_service_with_activator,
+			provider_revoke_service,
 			provider_proffers_service
 		end
 
@@ -57,7 +57,7 @@ feature -- Extension
 			not_proffers_service: not proffers_service (a_type)
 			service_conforms_to_type: service_conforms_to_type (a_type, a_activator)
 		do
-			provider_add_service_with_creator (a_type, a_activator, False)
+			provider_add_service_with_activator (a_type, a_activator, False)
 		ensure
 			proffers_service: proffers_service (a_type)
 		end
@@ -70,7 +70,7 @@ feature -- Removal
 		require
 			a_type_attached: a_type /= Void
 		do
-			provider_remove_service (a_type, False)
+			provider_revoke_service (a_type, False)
 		ensure
 			not_proffers_service: not proffers_service (a_type)
 		end

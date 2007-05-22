@@ -126,20 +126,6 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A]) is
-			-- Process `a_type'.
-		do
-			a_type.type.append_to (text_formatter)
-			if a_type.has_renaming then
-				if a_type.has_associated_class then
-						a_type.renaming.append_to_with_pebbles (text_formatter, a_type.associated_class)
-				else
-					a_type.renaming.append_to (text_formatter)
-				end
-
-			end
-		end
-
 	process_formal_a (a_type: FORMAL_A) is
 			-- Process `a_type'.
 		do
@@ -304,6 +290,19 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
+		end
+
+	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A]) is
+			-- Process `a_type'.
+		do
+			a_type.type.append_to (text_formatter)
+			if a_type.has_renaming then
+				if a_type.has_associated_class then
+						a_type.renaming.append_to_with_pebbles (text_formatter, a_type.associated_class)
+				else
+					a_type.renaming.append_to (text_formatter)
+				end
+			end
 		end
 
 	process_tuple_type_a (a_type: TUPLE_TYPE_A) is

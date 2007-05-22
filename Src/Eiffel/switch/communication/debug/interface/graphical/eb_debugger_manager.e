@@ -1585,7 +1585,6 @@ feature -- Debugging events
 			-- Application was just stopped (by a breakpoint, ...).
 		local
 			st: CALL_STACK_STONE
-			cd: EB_CONFIRMATION_DIALOG
 		do
 			Precursor
 			debug ("debugger_trace_synchro")
@@ -1634,8 +1633,7 @@ feature -- Debugging events
 			debugging_window.window.raise
 
 			if application_status.reason_is_overflow then
-				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent resume_application>>)
-				cd.show_modal_to_window (debugging_window.window)
+				on_overflow_detected
 			end
 
 			debug ("debugger_interface")
@@ -1644,6 +1642,20 @@ feature -- Debugging events
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_just_stopped : done%N")
 			end
+		end
+
+	on_overflow_detected is
+			-- OVERFLOW detected
+		do
+			--| Fixme: we might try to prevent debugging tools to refresh before poping up this dialog...				
+			ev_application.do_once_on_idle (agent
+					local
+						cd: EB_CONFIRMATION_DIALOG
+					do
+						create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent resume_application>>)
+						cd.show_modal_to_window (debugging_window.window)
+					end
+				)
 		end
 
 	on_application_before_resuming is

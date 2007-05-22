@@ -888,6 +888,7 @@ feature -- Debugging events
 				bl.item_for_iteration.reset_session_data
 				bl.forth
 			end
+			save_debugger_data
 			application_launching_in_progress := True
 			application_prelaunching_actions.call (Void)
 		end
@@ -988,14 +989,13 @@ feature -- Debugging events
 				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit (Current))
 					--| Kept objects
 				application_status.clear_kept_objects
-
-					--| Save debug info
-				save_debugger_data
 			end
 
 			if has_stopped_action then
 				stopped_actions.call ([Current])
 			end
+				--| Save debug info
+			save_debugger_data
 
 			destroy_application
 			reset_class_c_data

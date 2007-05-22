@@ -82,7 +82,9 @@ feature {NONE} -- Implementation
 					l_content.set_top (l_direction)
 				elseif relative_radio_button.is_selected then
 					l_direction := selected_direction
-					l_selected_content ?= existing_contents_list.selected_item.data
+					if existing_contents_list.selected_item /= Void then
+						l_selected_content ?= existing_contents_list.selected_item.data
+					end
 					if l_direction /= 0 and then l_selected_content /= Void and then l_selected_content.state_value /= {SD_ENUMERATION}.auto_hide then
 						l_content.set_relative (l_selected_content, l_direction)
 					end
@@ -92,7 +94,9 @@ feature {NONE} -- Implementation
 					elseif right_radio_button.is_selected then
 						l_is_left := False
 					end
-					l_selected_content ?= existing_contents_list.selected_item.data
+					if existing_contents_list.selected_item /= Void then
+						l_selected_content ?= existing_contents_list.selected_item.data
+					end
 					if l_selected_content /= Void and then l_content.target_content_zone_parent_exist (l_selected_content) then
 						l_content.set_tab_with (l_selected_content, l_is_left)
 					end

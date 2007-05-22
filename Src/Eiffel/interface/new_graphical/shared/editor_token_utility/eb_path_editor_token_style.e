@@ -45,10 +45,20 @@ feature -- Access
 		do
 			if path_printer_internal = Void then
 				create path_printer_internal.make
-				path_printer_internal.set_class_style (class_style)
-				path_printer_internal.set_feature_style (feature_style)
+				path_printer_internal.set_output (token_output)
 			end
 			Result := path_printer_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	token_output: EB_QUERY_LANGUAGE_TOKEN_OUTPUT is
+			-- Token output
+		do
+			if token_output_internal = Void then
+				create token_output_internal.make
+			end
+			Result := token_output_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -61,9 +71,9 @@ feature -- Text
 			l_printer: like path_printer
 		do
 			l_printer := path_printer
-			l_printer.wipe_out_text
+			l_printer.wipe_out_output
 			l_printer.process_path (item, is_self_included, is_parent_included, is_indirect_parent_included, is_target_included)
-			Result := l_printer.text
+			Result := token_output.last_output
 		end
 
 feature -- Setting
@@ -184,6 +194,9 @@ feature{NONE} -- Implementation
 
 	path_printer_internal: like path_printer;
 			-- Implementation of `path_printer'
+
+	token_output_internal: like token_output;
+			-- Implementation of `token_output'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

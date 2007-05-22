@@ -306,8 +306,8 @@ feature{NONE} -- Implementation
 			Result.enable_indirect_parent
 			Result.enable_parent
 			Result.enable_self
-			Result.path_printer.set_class_style (class_style)
-			Result.path_printer.set_feature_style (feature_style)
+			Result.token_output.set_class_style (class_style)
+			Result.token_output.set_feature_style (feature_style)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -447,9 +447,9 @@ feature{NONE} -- Implementation
 					l_path_style.disable_parent
 				end
 				if item.is_invariant_feature then
-					l_path_style.path_printer.set_feature_style (feature_with_written_class_style)
+					l_path_style.token_output.set_feature_style (feature_with_written_class_style)
 				elseif item.is_real_feature then
-					l_path_style.path_printer.set_feature_style (feature_name_style)
+					l_path_style.token_output.set_feature_style (feature_name_style)
 				end
 				l_path_style.set_item (item)
 				l_path_style.set_is_folder_displayed (False)

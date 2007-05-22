@@ -1,0 +1,16 @@
+test_name ctor-parent-argumented-ctor-redefine
+test_description Tests if a parent .NET external type's ctor can be redefined and the redefined version makred as being an Eiffel ctor
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw b.e $CLUSTER b.e
+copy_bin a.dll $CLUSTER a.dll
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			l_frame: EV_FRAME
 			li: EV_LIST_ITEM
 			l_btn: EV_BUTTON
+			l_cell: EV_CELL
 		do
 			Precursor
 
@@ -84,13 +85,11 @@ feature {NONE} -- Initialization
 				-- top part (platforms, builds, multithreaded, .NET)
 			create hb_top
 			extend (hb_top)
-			disable_item_expand (hb_top)
 			hb_top.set_padding (layout_constants.default_padding_size)
 
 				-- platforms
 			create l_frame.make_with_text (conf_interface_names.dial_cond_platforms)
 			hb_top.extend (l_frame)
-			hb_top.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
 			vb.set_border_width (layout_constants.default_border_size)
@@ -111,7 +110,6 @@ feature {NONE} -- Initialization
 			platforms.set_minimum_size (105, 75)
 			create exclude_platforms.make_with_text (conf_interface_names.dial_cond_platforms_exclude)
 			vb.extend (exclude_platforms)
-			vb.disable_item_expand (exclude_platforms)
 			if data.platform /= Void and then data.platform.item.invert then
 				exclude_platforms.enable_select
 			end
@@ -119,8 +117,6 @@ feature {NONE} -- Initialization
 				-- other
 			create l_frame.make_with_text (conf_interface_names.dial_cond_other)
 			hb_top.extend (l_frame)
-			l_frame.set_minimum_width (220)
-			hb_top.disable_item_expand (l_frame)
 
 			create hb
 			l_frame.extend (hb)
@@ -128,12 +124,9 @@ feature {NONE} -- Initialization
 
 				-- build
 			create vb
-			vb.set_minimum_width (100)
 			hb.extend (vb)
-			hb.disable_item_expand (vb)
 			create build_enabled.make_with_text (conf_interface_names.dial_cond_build)
 			vb.extend (build_enabled)
-			vb.disable_item_expand (build_enabled)
 			create builds.make_with_strings (<<build_workbench_name, build_finalize_name>>)
 			builds.disable_edit
 			vb.extend (builds)
@@ -161,7 +154,6 @@ feature {NONE} -- Initialization
 			append_small_margin (vb)
 			create dynamic_runtime_enabled.make_with_text (conf_interface_names.dial_cond_dynamic_runtime)
 			vb.extend (dynamic_runtime_enabled)
-			vb.disable_item_expand (dynamic_runtime_enabled)
 			create dynamic_runtime.make_with_strings (<<"True", "False">>)
 			dynamic_runtime.disable_edit
 			vb.extend (dynamic_runtime)
@@ -177,16 +169,17 @@ feature {NONE} -- Initialization
 				dynamic_runtime.disable_sensitive
 			end
 
-			hb.extend (create {EV_CELL})
+				-- cell to separate left and right settings
+			create l_cell
+			l_cell.set_minimum_width (5)
+			hb.extend (l_cell)
+			hb.disable_item_expand (l_cell)
 
 				-- dotnet
 			create vb
-			vb.set_minimum_width (100)
 			hb.extend (vb)
-			hb.disable_item_expand (vb)
 			create dotnet_enabled.make_with_text (conf_interface_names.dial_cond_dotnet)
 			vb.extend (dotnet_enabled)
-			vb.disable_item_expand (dotnet_enabled)
 			create dotnet.make_with_strings (<<"True", "False">>)
 			dotnet.disable_edit
 			vb.extend (dotnet)
@@ -206,7 +199,6 @@ feature {NONE} -- Initialization
 			append_small_margin (vb)
 			create multithreaded_enabled.make_with_text (conf_interface_names.dial_cond_multithreaded)
 			vb.extend (multithreaded_enabled)
-			vb.disable_item_expand (multithreaded_enabled)
 			create multithreaded.make_with_strings (<<"True", "False">>)
 			multithreaded.disable_edit
 			vb.extend (multithreaded)

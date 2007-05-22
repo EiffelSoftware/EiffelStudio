@@ -772,28 +772,28 @@ feature -- Context menu
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation (m_pick.as_string_32 + " $1 '$2'"), [a_type, a_name])
+			Result := locale.formatted_string (locale.translation ("&Pick $1 '$2'"), [a_type, a_name])
 		end
 
 	m_context_menu_new_tab (a_type, a_name: STRING_GENERAL): STRING_GENERAL
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation (m_new_tab.as_string_32 + " $1 '$2'"), [a_type, a_name])
+			Result := locale.formatted_string (locale.translation ("New Ta&b $1 '$2'"), [a_type, a_name])
 		end
 
 	m_context_menu_new_window (a_type, a_name: STRING_GENERAL): STRING_GENERAL
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation (m_new_window.as_string_32 + " $1 '$2'"), [a_type, a_name])
+			Result := locale.formatted_string (locale.translation ("New &Window $1 '$2'"), [a_type, a_name])
 		end
 
 	m_context_menu_external_editor (a_type, a_name: STRING_GENERAL): STRING_GENERAL
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation (m_external_editor.as_string_32 + " $1 '$2'"), [a_type, a_name])
+			Result := locale.formatted_string (locale.translation ("External E&ditor $1 '$2'"), [a_type, a_name])
 		end
 
 	m_quick_metric: STRING_GENERAL is			do Result := locale.translation("Quick metric") end

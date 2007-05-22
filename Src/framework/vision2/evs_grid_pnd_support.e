@@ -7,6 +7,11 @@ indexing
 class
 	EVS_GRID_PND_SUPPORT
 
+inherit
+	EVS_GRID_UTILITY
+
+	EV_SHARED_APPLICATION
+
 create
 	make_with_grid
 
@@ -66,6 +71,18 @@ feature -- Access
 	old_item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 			-- Old `item_pebble_function' in `grid' before last `enable_grid_item_pnd_support'
 
+	stone_at_position (a_x, a_y: INTEGER): ANY  is
+			-- Stone at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found or that item contains no stone.			
+		local
+			l_pickable_item: ES_GRID_PICKABLE_ITEM
+		do
+			l_pickable_item ?= grid_item_at_position (grid, a_x, a_y)
+			if l_pickable_item /= Void then
+				Result := l_pickable_item.pebble_at_position
+			end
+		end
+
 feature -- Setting
 
 	enable_grid_item_pnd_support is
@@ -74,6 +91,9 @@ feature -- Setting
 			-- Actions in `pick_start_actions' will be invoked when pick starts and
 			-- actions in `pick_end_actions' will be invoked when pick ends.
 		do
+			if not grid.pick_actions.has (on_pick_start_action) then
+				grid.pick_actions.force_extend (on_pick_start_action)
+			end
 			if not grid.pick_ended_actions.has (on_pick_ended_action) then
 				grid.pick_ended_actions.force_extend (on_pick_ended_action)
 			end
@@ -120,9 +140,19 @@ feature{NONE} -- Implementation
 
 	pebble_from_grid_item (a_item: EV_GRID_ITEM): ANY is
 			-- Pebble from `a_item'
+		local
+			l_position: EV_COORDINATE
 		do
-			pick_start_actions.call ([a_item])
-			Result := last_pebble
+			if a_item /= Void and then a_item.parent /= Void then
+				l_position := a_item.parent.pointer_position
+				Result := stone_at_position (l_position.x, l_position.y)
+			end
+			if Result /= Void then
+				set_last_picked_item (a_item)
+			else
+				set_last_picked_item (Void)
+			end
+			set_last_pebble (Result)
 		end
 
 	on_pick_ended_action: PROCEDURE [ANY, TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]] is
@@ -152,6 +182,29 @@ feature{NONE} -- Implementation
 
 	on_pick_function_internal: like on_pick_function
 			-- Implementation of `on_pick_function'
+
+	on_pick_start_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]] is
+			-- agent of `on_pick_start'
+		do
+			if on_pick_start_action_internal = Void then
+				on_pick_start_action_internal := agent on_pick_start
+			end
+			Result := on_pick_start_action_internal
+		end
+
+	on_pick_start_action_internal: like on_pick_start_action
+			-- Implementation of `on_pick_start_action'
+
+	on_pick_start (a_x, a_y: INTEGER) is
+			-- Action to be performed when pick-and-drop starts
+		local
+			l_position: EV_COORDINATE
+		do
+			if not pick_start_actions.is_empty then
+				l_position := grid.pointer_position
+				pick_start_actions.call ([grid_item_at_position (grid, l_position.x, l_position.y)])
+			end
+		end
 
 	on_pick_end (a_area: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Action to be performed when pick-and-drop ends

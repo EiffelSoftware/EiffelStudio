@@ -57,18 +57,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	stone_at_position (a_x, a_y: INTEGER): ANY  is
-			-- Stone at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
-			-- Void if no item is found or that item contains no stone.			
-		local
-			l_pickable_item: ES_GRID_PICKABLE_ITEM
-		do
-			l_pickable_item ?= grid_item_at_position (grid, a_x, a_y)
-			if l_pickable_item /= Void then
-				Result := l_pickable_item.pebble_at_position
-			end
-		end
-
 feature -- Pick and drop support for grid items
 
 	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is

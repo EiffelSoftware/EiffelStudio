@@ -937,7 +937,7 @@ feature {NONE} -- Generation
 					function_name := Encoder.feature_name (l_type.static_type_id, a_feature.body_index)
 					buffer.put_string (function_name)
 					buffer.put_string (")(")
-					extern_declarations.add_routine_with_signature (c_return_type,
+					extern_declarations.add_routine_with_signature (return_type_string,
 						function_name, a_types)
 
 					check
@@ -1078,7 +1078,7 @@ feature {NONE} -- Generation
 						l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (l_rout_id).generic_fingerprint
 						buffer.put_string (l_function_name)
 						buffer.put_string (")(")
-						extern_declarations.add_routine_with_signature (c_return_type,
+						extern_declarations.add_routine_with_signature (c_return_type.c_string,
 							l_function_name, a_types)
 					else
 							-- Function pointer associated to a deferred feature

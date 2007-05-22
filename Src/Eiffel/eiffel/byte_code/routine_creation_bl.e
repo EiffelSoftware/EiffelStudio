@@ -269,6 +269,7 @@ feature
 			l_c_return_type: TYPE_C
 			l_args: ARRAY [STRING_8]
 			l_seed: FEATURE_I
+			l_return_type_string: STRING
 		do
 			buffer.put_string ("(EIF_POINTER)")
 			buffer.put_character ('(')
@@ -308,6 +309,11 @@ feature
 						else
 							l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						end
+						if context.workbench_mode then
+							l_return_type_string := "EIF_UNION"
+						else
+							l_return_type_string := l_c_return_type.c_string
+						end
 						if l_rout_table.is_implemented then
 							l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (rout_id).generic_fingerprint
 							buffer.put_string (l_function_name)
@@ -318,7 +324,7 @@ feature
 								l_args := <<"EIF_REFERENCE">>
 							end
 							extern_declarations.add_routine_with_signature (
-								l_c_return_type, l_function_name, l_args)
+								l_return_type_string, l_function_name, l_args)
 						else
 								-- Function pointer associated to a deferred feature
 								-- without any implementation. We mark `l_is_implemented'

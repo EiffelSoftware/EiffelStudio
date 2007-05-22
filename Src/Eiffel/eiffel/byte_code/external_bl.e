@@ -153,6 +153,7 @@ feature
 			rout_table: ROUT_TABLE
 			internal_name: STRING
 			inline_ext: INLINE_EXTENSION_I
+			return_type_string: STRING
 		do
 			check
 				final_mode: context.final_mode
@@ -250,7 +251,12 @@ feature
 							-- Remember extern routine declaration if not written in same class. But no need
 							-- doing this for an inline C/C++ since the code of the inline routine will be
 							-- generated again.
-						Extern_declarations.add_routine_with_signature (type_c,
+						if context.workbench_mode then
+							return_type_string := "EIF_UNION"
+						else
+							return_type_string := type_c.c_string
+						end
+						Extern_declarations.add_routine_with_signature (return_type_string,
 								internal_name, local_argument_types)
 					end
 

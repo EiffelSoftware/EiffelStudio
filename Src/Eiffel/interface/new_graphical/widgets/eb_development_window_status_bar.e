@@ -403,7 +403,7 @@ feature {NONE} -- Implementation: event handling
 	on_project_closed (dbg: DEBUGGER_MANAGER) is
 			-- The project has been closed.
 		do
-			set_project_name ("No project")
+			set_project_name (interface_names.l_no_project)
 			compilation_icon.set_background_color (debugger_cell.background_color)
 			compilation_icon.clear
 			compilation_icon.remove_tooltip
@@ -497,13 +497,13 @@ feature {NONE} -- Implementation: event handling
 
 feature {NONE} -- Implementation
 
-	set_project_name (n: STRING) is
+	set_project_name (n: STRING_GENERAL) is
 			-- Display `n' as the project name.
 		require
 			valid_name: n /= Void
 		local
 			f: EV_FONT
-			s: STRING
+			s: STRING_32
 			w: INTEGER
 		do
 			f := project_label.font

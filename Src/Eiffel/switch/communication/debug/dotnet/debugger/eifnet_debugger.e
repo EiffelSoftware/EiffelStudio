@@ -1697,6 +1697,55 @@ feature -- Bridge to MD_IMPORT
 
 feature -- Function Evaluation
 
+	icd_function_by_names (a_icdmod: ICOR_DEBUG_MODULE; cl_name: STRING; f_name: STRING): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for `a_icdmod' module,
+			-- with class name `cl_name'
+			-- with feature name `f_name'.
+		require
+			a_icdmod_not_void: a_icdmod /= Void
+			valid_class_name: cl_name /= Void and then not cl_name.is_empty
+			valid_feature_name: f_name /= Void and then not f_name.is_empty
+		local
+			l_cl_tok: INTEGER
+		do
+			l_cl_tok := a_icdmod.md_class_token_by_type_name (cl_name)
+			if l_cl_tok > 0 then
+				Result := icd_function_by_name (a_icdmod, l_cl_tok, f_name)
+			end
+		end
+
+	icd_function_by_name (a_icdmod: ICOR_DEBUG_MODULE; a_classtok: INTEGER; f_name: STRING): ICOR_DEBUG_FUNCTION is
+			-- ICorDebugFunction for `a_icdmod' module,
+			-- with class token `a_classtok'
+			-- with feature name `f_name'.
+		require
+			a_icdmod_not_void: a_icdmod /= Void
+			a_classtok_positive: a_classtok > 0
+			valid_feature_name: f_name /= Void and then not f_name.is_empty
+		local
+			icdm: ICOR_DEBUG_MODULE
+			classtok, feattok: INTEGER
+		do
+			icdm := a_icdmod
+			classtok := a_classtok
+			feattok := icdm.md_member_token (classtok, f_name)
+			if feattok > 0 then
+				Result := icdm.get_function_from_token (feattok)
+				if Result = Void then
+						--| Let's try the mscorlib module with System.Object
+						--| We might need to look in all ancestor of `a_classtok'
+						--| but for now, let's do simple.
+					icdm := info.icor_debug_module_for_mscorlib
+					if icdm /= Void then
+						feattok := icdm.md_member_token_by_names (info.system_object_class_name, f_name)
+						if feattok > 0 then
+							Result := icdm.get_function_from_token (feattok)
+						end
+					end
+				end
+			end
+		end
+
 	icd_function_by_feature (icdv: ICOR_DEBUG_VALUE; ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for `ct'.`a_feat'
 			-- and optionally on object `icdv'
@@ -1734,22 +1783,18 @@ feature -- Function Evaluation
 				end
 			end
 			if l_icd_module /= Void then
-					--| Now we have the ICOR_DEBUG_MODULE ...				
-				if l_feat_tok = 0 then
-					l_feat_tok := l_icd_module.md_member_token_by_names (
-								ct.full_il_implementation_type_name,
-								l_feat_name
-							)
-				end
 				if l_feat_tok > 0 then
 					Result := l_icd_module.get_function_from_token (l_feat_tok)
+				end
+				if Result = Void then
+					Result := icd_function_by_names (l_icd_module, ct.full_il_implementation_type_name, l_feat_name)
 				end
 			end
 		end
 
 feature {EIFNET_DEBUGGER_EVALUATOR} -- Implementation of ICorDebugFunction retriever
 
-	icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
+	eiffel_icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
 		local
 			l_feat_i : FEATURE_I
@@ -2010,7 +2055,7 @@ feature -- Specific function evaluation
 						l_icd := a_icd_obj.get_field_value (l_icd_class, l_feature_token)
 					else
 						if l_feature_token = 0 then
-							l_func := icd_function_by_name (l_class_type, l_feat.feature_name)
+							l_func := eiffel_icd_function_by_name (l_class_type, l_feat.feature_name)
 						else
 							l_func := l_icd_module.get_function_from_token (l_feature_token)
 						end

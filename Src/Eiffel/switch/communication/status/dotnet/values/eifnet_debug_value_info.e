@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_EIFNET_DEBUGGER
+		export
+			{NONE} all
+		end
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -411,16 +416,13 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			valid_feature_name: f_name /= Void and then not f_name.is_empty
 		local
 			icdm: like value_icd_module
-			classtok, feattok: INTEGER
+			classtok: INTEGER
 		do
 			icdm := value_icd_module
 			if icdm /= Void then
 				classtok := value_class_token
 				if classtok > 0 then
-					feattok := icdm.md_member_token (classtok, f_name)
-					if feattok > 0 then
-						Result := icdm.get_function_from_token (feattok)
-					end
+					Result := eifnet_debugger.icd_function_by_name (icdm, classtok, f_name)
 				end
 			end
 		end

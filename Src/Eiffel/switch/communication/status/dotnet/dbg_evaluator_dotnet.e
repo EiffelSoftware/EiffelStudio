@@ -282,7 +282,6 @@ feature {DBG_EVALUATOR} -- Interface
 			l_ctype: CLASS_TYPE
 			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
 			l_icdm: ICOR_DEBUG_MODULE
-			l_cl_tok, l_f_tok: INTEGER
 			l_icd_fun: ICOR_DEBUG_FUNCTION
 			l_result: ICOR_DEBUG_VALUE
 			l_adv: ABSTRACT_DEBUG_VALUE
@@ -310,9 +309,7 @@ feature {DBG_EVALUATOR} -- Interface
 			l_icdm := Eifnet_debugger.ise_runtime_module
 				--| FIXME jfiat: here we are only dealing with EiffelSoftware runtime ... classes
 
-			l_cl_tok := l_icdm.md_class_token_by_type_name (l_ctype.full_il_type_name)
-			l_f_tok := l_icdm.md_feature_token (l_cl_tok, f.external_name)
-			l_icd_fun := l_icdm.get_function_from_token (l_f_tok)
+			l_icd_fun := eifnet_debugger.icd_function_by_names (l_icdm, l_ctype.full_il_type_name, f.external_name)
 			if l_icd_fun /= Void then
 				l_icd_frame := current_icor_debug_frame
 				if l_icd_frame = Void then

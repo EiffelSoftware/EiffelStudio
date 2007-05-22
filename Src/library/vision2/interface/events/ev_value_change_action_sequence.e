@@ -11,10 +11,8 @@ class
 	EV_VALUE_CHANGE_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [INTEGER]]
-	-- EV_ACTION_SEQUENCE [TUPLE [value: INTEGER]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [value: INTEGER]]
+
 create
 	default_create
 

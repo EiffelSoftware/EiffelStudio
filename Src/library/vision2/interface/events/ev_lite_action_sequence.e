@@ -38,7 +38,7 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		do
-			if not ignore_subsequent_calls then
+			if allow_recursive_calls or not ignore_subsequent_calls then
 					-- Prevent nested calls.
 				ignore_subsequent_calls := True
 				if count > 0 then
@@ -51,6 +51,13 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	allow_recursive_calls: BOOLEAN
+			-- Are recursive calls allowed for `Current'.
+		do
+			Result := False
+				-- False by default, redefined by descendents.
+		end
 
 	ignore_subsequent_calls: BOOLEAN;
 		-- Should subsequent calls be ignored?

@@ -11,10 +11,9 @@ class
 	EV_KEY_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_KEY]]
-	-- EV_ACTION_SEQUENCE [TUPLE [key: EV_KEY]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [key: EV_KEY]]
+
+
 create
 	default_create
 

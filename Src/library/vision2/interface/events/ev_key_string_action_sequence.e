@@ -11,7 +11,7 @@ class
 	EV_KEY_STRING_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [STRING_32]]
+	EV_ACTION_SEQUENCE [TUPLE [key_string: STRING_32]]
 
 create
 	default_create

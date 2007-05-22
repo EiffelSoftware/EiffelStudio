@@ -11,10 +11,8 @@ class
 	EV_NEW_ITEM_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
-	-- EV_ACTION_SEQUENCE [TUPLE [a_widget: EV_WIDGET]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET]]
+
 create
 	default_create
 

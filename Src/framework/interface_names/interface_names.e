@@ -767,6 +767,35 @@ feature -- Context menu
 	m_new_metric: STRING_GENERAL is				do Result := locale.translation ("New metric") end
 	m_open_user_defined_metric: STRING_GENERAL is	do Result := locale.translation ("Open user defined metrics externally") end
 	m_Pick: STRING_GENERAL is					do Result := locale.translation("&Pick") end
+
+	m_context_menu_pick (a_type, a_name: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation (m_pick.as_string_32 + " $1 '$2'"), [a_type, a_name])
+		end
+
+	m_context_menu_new_tab (a_type, a_name: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation (m_new_tab.as_string_32 + " $1 '$2'"), [a_type, a_name])
+		end
+
+	m_context_menu_new_window (a_type, a_name: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation (m_new_window.as_string_32 + " $1 '$2'"), [a_type, a_name])
+		end
+
+	m_context_menu_external_editor (a_type, a_name: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation (m_external_editor.as_string_32 + " $1 '$2'"), [a_type, a_name])
+		end
+
 	m_quick_metric: STRING_GENERAL is			do Result := locale.translation("Quick metric") end
 	m_reload_metrics: STRING_GENERAL is			do Result := locale.translation("&Reload metrics") end
 	m_remove: STRING_GENERAL					do Result := locale.translation ("&Remove") end

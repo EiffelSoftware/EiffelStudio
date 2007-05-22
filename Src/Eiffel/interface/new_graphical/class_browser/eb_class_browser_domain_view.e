@@ -336,6 +336,9 @@ feature{NONE} -- Implementation
 	provide_result is
 			-- Provide result displayed in Current view.
 		do
+			set_all_path_retrieved (False)
+			content.i_th (1).wipe_out
+			content.i_th (2).wipe_out
 			bind_grid
 			if is_column_sortable (last_sorted_column) then
 				disable_auto_sort_order_change
@@ -368,7 +371,10 @@ feature{NONE} -- Implementation
 			l_content: LIST [QL_ITEM]
 			l_domain: like domain
 			a_domain: like data
+			l_item: QL_ITEM
+			l_empty_path: STRING
 		do
+			l_empty_path := ""
 			grid.set_row_height (default_row_height)
 			a_domain := data
 			if a_domain /= Void then
@@ -387,7 +393,8 @@ feature{NONE} -- Implementation
 				until
 					l_content.after
 				loop
-					l_domain.force_last ([l_content.item, l_content.item.partial_path])
+					l_item := l_content.item
+					l_domain.force_last ([l_item, l_empty_path])
 					l_content.forth
 				end
 			else
@@ -472,10 +479,15 @@ feature{NONE} -- Implementation
 			l_row_background_color: EV_COLOR
 			l_ql_item: QL_ITEM
 			l_fixed_fonts: like label_font_table
+			l_domain: like domain
 		do
 			l_ql_item := a_item.ql_item
 			create l_item.make (l_ql_item, 1, a_y, False)
 			create l_path_item.make (l_ql_item, 2, a_y, True)
+			l_domain := domain
+			if l_domain.item (a_y).item_path.is_empty then
+				l_domain.replace ([a_item.ql_item, l_path_item.image], a_y)
+			end
 			if is_fixed_fonts_used then
 				l_fixed_fonts := label_font_table
 				l_item.set_overriden_fonts (l_fixed_fonts)
@@ -527,12 +539,58 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
+	all_path_retrieved: BOOLEAN
+			-- Have all path information for `domain' been retrieved?
+
+	set_all_path_retrieved (b: BOOLEAN) is
+			-- Set `all_path_retrieved' with `b'.
+		do
+			all_path_retrieved := b
+		ensure
+			all_path_retrieved_set: all_path_retrieved = b
+		end
+
 	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING]]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
-			not_a_column_list_is_empty:
+		local
+			l_tbl: HASH_TABLE [EV_GRID_ITEM, INTEGER]
+			l_index, l_count: INTEGER
+			l_domain: like domain
+			l_printer: EB_QUERY_LANGUAGE_PRINTER_VISITOR
+			l_output: EB_QUERY_LANGUAGE_TEXT_OUTPUT
+			l_item: TUPLE [ql_item: QL_ITEM; item_path: STRING]
 		do
+			if not all_path_retrieved then
+					-- Retrieve all missing path information.
+				l_domain := domain
+				if l_domain /= Void and then not l_domain.is_empty then
+					l_tbl := content.i_th (2)
+					from
+						l_index := 1
+						l_count := l_domain.count
+						l_domain.start
+
+						create l_printer.make
+						create l_output.make
+						l_printer.set_output (l_output)
+						l_printer.set_is_folder_displayed (True)
+					until
+						l_index > l_count
+					loop
+						if not l_tbl.has (l_index) then
+							l_item := l_domain.item_for_iteration
+							l_printer.wipe_out_output
+							l_printer.process_path (l_item.ql_item, False, True, True, False)
+							l_domain.replace_at ([l_item.ql_item, l_output.last_output])
+						end
+						l_domain.forth
+						l_index := l_index + 1
+					end
+				end
+				set_all_path_retrieved (True)
+			end
 			last_comparator := a_comparator
 			sort_domain (a_comparator)
 			fill_rows
@@ -622,3 +680,4 @@ indexing
 		]"
 
 end
+

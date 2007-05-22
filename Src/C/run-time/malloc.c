@@ -3858,6 +3858,7 @@ rt_public EIF_REFERENCE eif_box (EIF_UNION v)
 		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.value.EIF_POINTER_value; break;
 		case SK_REF:     Result = v.value.EIF_REFERENCE_value; break;
 		default: 
+			Result = NULL;	/* To avoid C warnings. */
 			eif_panic("illegal value type");
 	}
 	return Result;

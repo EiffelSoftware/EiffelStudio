@@ -915,7 +915,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 
 	icor_set_item_method_from (ct: CLASS_TYPE): ICOR_DEBUG_FUNCTION is
 		do
-			Result := Eifnet_debugger.icd_function_by_name (ct, once "set_item")
+			Result := Eifnet_debugger.eiffel_icd_function_by_name (ct, once "set_item")
 		end
 
 	reference_integer_8_set_item_method: ICOR_DEBUG_FUNCTION is
@@ -1089,7 +1089,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 			if Result = Void then
 				l_class := Eiffel_system.String_class.compiled_class
 				check l_class /= Void end
-				Result := Eifnet_debugger.icd_function_by_name (l_class.types.first, "make_from_cil")
+				Result := Eifnet_debugger.eiffel_icd_function_by_name (l_class.types.first, "make_from_cil")
 				once_eiffel_string_make_from_cil_constructor := Result
 			end
 		ensure

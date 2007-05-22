@@ -261,6 +261,7 @@ feature {NONE} -- Agents
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
+			l_called: BOOLEAN
 		do
 			if captured_tab /= Void then
 				captured_tab.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
@@ -269,11 +270,15 @@ feature {NONE} -- Agents
 					l_snapshot := internal_tabs.twin
 					l_snapshot.start
 				until
-					l_snapshot.after
+					l_snapshot.after or l_called
 				loop
 					l_item := l_snapshot.item
 					if l_item.rectangle.has_x_y (a_x, a_y) and l_item.is_displayed then
 						l_item.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						-- One pointer press action only call one notebook tab action.
+						-- Otherwise, right click menu can appear more than once in one pointer press action.
+						-- See bug#12806.
+						l_called := True
 					end
 					l_snapshot.forth
 				end

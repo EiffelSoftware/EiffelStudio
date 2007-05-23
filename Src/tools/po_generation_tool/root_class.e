@@ -336,6 +336,17 @@ feature {NONE} -- Implementation
 					l_search_directories.forth
 				end
 			end
+				-- Check output location
+			create l_file.make (output_file_name)
+			if
+				not (
+					(l_file.exists and then l_file.is_writable) or else
+					(not l_file.exists and then l_file.is_creatable)
+				)
+			then
+				print_invalid_output_file
+				Result := False
+			end
 		end
 
 	write_to_file is

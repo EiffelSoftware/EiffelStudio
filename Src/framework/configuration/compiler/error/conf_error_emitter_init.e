@@ -11,9 +11,20 @@ class
 inherit
 	CONF_ERROR
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_code: INTEGER) is
+			-- Create error message with COM error `a_code'.
+		do
+			text := "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + a_code.to_hex_string + ")."
+		end
+
 feature -- Access
 
-	text: STRING is "Could not initialize Eiffel Assembly Cache in specified path.";
+	text: STRING;
 		-- Error text.
 
 indexing

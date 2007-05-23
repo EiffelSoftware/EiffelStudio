@@ -713,7 +713,7 @@ feature {CONSUMER_EXPORT} -- il emitter
 					Result := Void
 				elseif not Result.is_initialized then
 						-- Path to cache is not valid
-					add_error (create {CONF_ERROR_EMITTER_INIT})
+					add_error (create {CONF_ERROR_EMITTER_INIT}.make (Result.last_com_code))
 					Result := Void
 				else
 					internal_il_emitter.put (Result)

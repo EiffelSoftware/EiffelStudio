@@ -15,6 +15,8 @@ inherit
 	COM_OBJECT
 		rename
 			is_successful as is_com_successful
+		export
+			{ANY} last_call_success
 		end
 
 create

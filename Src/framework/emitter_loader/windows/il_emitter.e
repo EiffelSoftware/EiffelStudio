@@ -42,6 +42,14 @@ feature -- Status report
 			Result := implementation.is_initialized
 		end
 
+	last_com_code: INTEGER is
+			-- Last value of the COM error if any.
+		require
+			exists: exists
+		do
+			Result := implementation.last_call_success
+		end
+
 feature -- Clean up
 
 	unload is

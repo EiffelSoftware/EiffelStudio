@@ -1,0 +1,20 @@
+Assembly
+assembly: on assembly
+
+Interface
+root_cluster.TEST(TEST): on class and interface
+root_cluster.TEST(TEST): on interface
+root_cluster.TEST(method): on class and interface
+root_cluster.TEST(method): on interface
+root_cluster.TEST(set_property): on class and interface
+root_cluster.TEST(set_property): on interface
+root_cluster.TEST(property): on property
+
+Implementation
+root_cluster.Impl.TEST(TEST): on class
+root_cluster.Impl.TEST(TEST): on class and interface
+root_cluster.Impl.TEST(method): on class
+root_cluster.Impl.TEST(method): on class and interface
+root_cluster.Impl.TEST(set_property): on class
+root_cluster.Impl.TEST(set_property): on class and interface
+Execution completed

@@ -2357,18 +2357,19 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	one_lost_focus is
 			-- One of the widgets displayed in `address_dialog' has lost the focus.
 			-- If none now has the focus, hide `address_dialog'.
-		require
-			for_context_tool: mode
 		do
-			if
-				lost_focus_action_enabled and then
-				not class_address.has_focus and then
-				not feature_address.has_focus and then
-				not cluster_address.has_focus and then
-				not address_dialog.has_focus and then
-				(choice = Void or else (choice.is_destroyed or else not choice.is_show_requested))
-			then
-				address_dialog.hide
+			if mode then
+			-- Now it's for context tool, `address_dialog' exists.
+				if
+					lost_focus_action_enabled and then
+					(class_address = Void or else not class_address.has_focus) and then
+					(feature_address = Void or else not feature_address.has_focus) and then
+					(cluster_address = Void or else not cluster_address.has_focus) and then
+					(address_dialog = Void or else not address_dialog.has_focus) and then
+					(choice = Void or else (choice.is_destroyed or else not choice.is_show_requested))
+				then
+					address_dialog.hide
+				end
 			end
 		end
 

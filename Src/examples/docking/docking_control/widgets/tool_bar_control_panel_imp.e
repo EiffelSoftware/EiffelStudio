@@ -6,8 +6,6 @@ indexing
 		You should not modify this code by hand, as it will be re-generated every time
 		 modifications are made to the project.
 		 	]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,6 +44,7 @@ feature {NONE}-- Initialization
 			create add_button_button
 			create add_toggle_button
 			create add_radio_button
+			create add_menu_button_button
 			create l_ev_vertical_box_4
 			create add_build_in_widget_button
 			create add_resizable_button
@@ -81,6 +80,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (add_button_button)
 			l_ev_vertical_box_3.extend (add_toggle_button)
 			l_ev_vertical_box_3.extend (add_radio_button)
+			l_ev_vertical_box_3.extend (add_menu_button_button)
 			l_ev_horizontal_box_2.extend (l_ev_vertical_box_4)
 			l_ev_vertical_box_4.extend (add_build_in_widget_button)
 			l_ev_vertical_box_4.extend (add_resizable_button)
@@ -125,9 +125,16 @@ feature {NONE}-- Initialization
 			create_toolbar_button.set_text ("Create Tool Bar")
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_vertical_box_3)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_vertical_box_4)
+			l_ev_vertical_box_3.disable_item_expand (add_button_button)
+			l_ev_vertical_box_3.disable_item_expand (add_toggle_button)
+			l_ev_vertical_box_3.disable_item_expand (add_radio_button)
 			add_button_button.set_text ("Add Button")
 			add_toggle_button.set_text ("Add Toggle Button")
 			add_radio_button.set_text ("Add Radio Button")
+			add_menu_button_button.set_text ("Add Menu Button")
+			l_ev_vertical_box_4.disable_item_expand (add_build_in_widget_button)
+			l_ev_vertical_box_4.disable_item_expand (add_resizable_button)
+			l_ev_vertical_box_4.disable_item_expand (add_separator_button)
 			add_build_in_widget_button.set_text ("Add Build-in Widget")
 			add_resizable_button.set_text ("Add Build-in Resizable")
 			add_separator_button.set_text ("Add Separator")
@@ -164,6 +171,7 @@ feature {NONE}-- Initialization
 			add_button_button.select_actions.extend (agent on_add_button_button_selected)
 			add_toggle_button.select_actions.extend (agent on_add_toggle_button_selected)
 			add_radio_button.select_actions.extend (agent on_add_radio_button_selected)
+			add_menu_button_button.select_actions.extend (agent on_add_menu_button_button_selected)
 			add_build_in_widget_button.select_actions.extend (agent on_add_build_in_widget_button_selected)
 			add_resizable_button.select_actions.extend (agent on_add_resizable_button_selected)
 			add_separator_button.select_actions.extend (agent on_add_separator_button_selected)
@@ -182,10 +190,10 @@ feature -- Access
 
 	toolbar_list: EV_LIST
 	create_toolbar_button, add_button_button, add_toggle_button, add_radio_button,
-	add_build_in_widget_button, add_resizable_button, add_separator_button, show_button,
-	hide_button, close_button, set_title_button, set_top_button: EV_BUTTON
-	up_radio_button, down_radio_button,
-	left_radio_button, right_radio_button: EV_RADIO_BUTTON
+	add_menu_button_button, add_build_in_widget_button, add_resizable_button, add_separator_button,
+	show_button, hide_button, close_button, set_title_button, set_top_button: EV_BUTTON
+	up_radio_button,
+	down_radio_button, left_radio_button, right_radio_button: EV_RADIO_BUTTON
 	title_field: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
@@ -235,6 +243,11 @@ feature {NONE} -- Implementation
 	
 	on_add_radio_button_selected is
 			-- Called by `select_actions' of `add_radio_button'.
+		deferred
+		end
+	
+	on_add_menu_button_button_selected is
+			-- Called by `select_actions' of `add_menu_button_button'.
 		deferred
 		end
 	
@@ -419,17 +432,5 @@ feature {NONE} -- Constant setting
 		do
 			Result := an_integer
 		end
-
-indexing
-	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 
 end

@@ -88,6 +88,7 @@ feature -- Editor menu
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				if a_pebble /= Void then
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
 					extend_separator (a_menu)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
@@ -1039,6 +1040,23 @@ feature {NONE} -- Menu section, Granularity 1.
 				end
 			end
 		end
+
+	extend_retarget_tool_menu (a_source: EV_PICK_AND_DROPABLE; a_menu: EV_MENU; a_pebble: ANY)
+		require
+			a_source_not_void: a_source /= Void
+			a_menu_not_void: a_menu /= Void
+			a_pebble_not_void: a_pebble /= Void
+		local
+			l_text: STRING_32
+		do
+			if last_type /= Void and then last_name /= Void and then a_source.drop_actions.accepts_pebble (a_pebble) then
+				extend_separator (a_menu)
+				l_text := names.m_context_menu_retarget (last_type, last_name)
+				a_menu.extend (create {EV_MENU_ITEM}.make_with_text (l_text))
+				a_menu.last.select_actions.extend (agent (a_source.drop_actions).call ([a_pebble]))
+			end
+		end
+
 
 feature {NONE} -- Diagram menu section, Granularity 1.
 

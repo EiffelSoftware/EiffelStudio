@@ -615,6 +615,12 @@ feature {NONE} -- Implementation
 			Result := a_pref.name
 		end
 
+	build_full_name_to_display (a_pref_name: STRING): STRING_32 is
+			-- Name to show on display for a preference name
+		do
+			Result := a_pref_name.as_string_32
+		end
+
 	build_structured is
 			-- Fill with preferences structured hierarchically.
 		local
@@ -755,14 +761,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	index_tuple_less_than (a, b: TUPLE [pref_name: STRING_32; index: STRING_32]): BOOLEAN is
+			-- Compare two tuples on their string index
+		do
+			Result := a.index < b.index
+		end
+
 	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: LIST [PREFERENCE]): LIST [PREFERENCE] is
 			-- Sorted known preferences using criteria `a_sorting_info'.
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
 			l_prefs_to_sort: LIST [PREFERENCE]
 			l_known_pref_ht: HASH_TABLE [PREFERENCE, STRING]
-			l_sorted_preferences: DS_ARRAYED_LIST [STRING_32]
-			l_pref_index, l_pref_name: STRING_32
+			l_sorted_preferences: SORTED_TWO_WAY_LIST [PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]]
+			l_compare_agent: PREDICATE [ANY, TUPLE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]]
+			l_proxy_comparable: PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]
+			l_pref_index, l_pref_name, l_display_name: STRING_32
 			l_pref: PREFERENCE
 			l_sorting_up: BOOLEAN
 			l_sorting_criteria: INTEGER
@@ -771,22 +785,24 @@ feature {NONE} -- Implementation
 			if l_prefs_to_sort /= Void then
 				l_sorting_up := a_sorting_info > 0
 				l_sorting_criteria := a_sorting_info.abs
+				l_compare_agent := agent index_tuple_less_than
 
 					-- Alphabetically sort the known preferences
 				from
-					create l_sorted_preferences.make (l_prefs_to_sort.count)
+					create l_sorted_preferences.make
 					l_prefs_to_sort.start
 				until
 					l_prefs_to_sort.after
 				loop
+					l_pref := l_prefs_to_sort.item
+					l_pref_name := l_pref.name
+					l_display_name := build_full_name_to_display (l_pref_name)
 					inspect l_sorting_criteria
 					when Name_sorting_mode then --| Pref name
-						l_pref_index := l_prefs_to_sort.item.name
+						l_pref_index := l_display_name
 					when Type_sorting_mode then --| type name
-						l_pref := l_prefs_to_sort.item
-						l_pref_index := l_pref.string_type + "@" + l_pref.name
+						l_pref_index := l_pref.string_type + "@" + l_display_name
 					when Status_sorting_mode then --| type name
-						l_pref := l_prefs_to_sort.item
 						l_pref_index := ""
 						if l_pref.is_default_value then
 							l_pref_index.append_string (p_default_value)
@@ -796,14 +812,14 @@ feature {NONE} -- Implementation
 						if l_pref.is_auto then
 							l_pref_index.append_string (auto_value)
 						end
-						l_pref_index.append_string ("@" + l_pref.name)
+						l_pref_index.append_string ("@" + l_display_name)
 					else
 						check False end
 					end
-					l_sorted_preferences.force_last (l_pref_index)
+					create l_proxy_comparable.make ([l_pref_name, l_pref_index], l_compare_agent)
+					l_sorted_preferences.extend (l_proxy_comparable)
 					l_prefs_to_sort.forth
 				end
-				l_sorted_preferences.sort (create {DS_QUICK_SORTER [STRING_32]}.make (create {KL_COMPARABLE_COMPARATOR [STRING_32]}.make))
 				l_prefs_to_sort := Void
 
 				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
@@ -819,15 +835,7 @@ feature {NONE} -- Implementation
 				until
 					l_sorted_preferences.off
 				loop
-					inspect l_sorting_criteria
-					when Name_sorting_mode then --| Pref name
-						l_pref_name := l_sorted_preferences.item_for_iteration
-					when Type_sorting_mode, Status_sorting_mode then --| type name
-						l_pref_index := l_sorted_preferences.item_for_iteration
-						l_pref_name := l_pref_index.substring (l_pref_index.index_of ('@', 1) + 1, l_pref_index.count)
-					else
-						check False end
-					end
+					l_pref_name := l_sorted_preferences.item.item.pref_name
 
 					l_pref := l_known_pref_ht.item (l_pref_name)
 					if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then

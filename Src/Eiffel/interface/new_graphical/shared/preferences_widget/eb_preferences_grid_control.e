@@ -56,7 +56,8 @@ inherit
 			l_no_default_value,
 			l_building_flat_view,
 			l_building_tree_view,
-			build_preference_name_to_display
+			build_preference_name_to_display,
+			build_full_name_to_display
 		end
 
 	EB_SHARED_PREFERENCES
@@ -247,8 +248,6 @@ feature {NONE} -- Implementation
 
 	build_full_name_to_display (a_pref: STRING): STRING_32 is
 			-- Build a translated full name of a preference.
-		require
-			a_pref_not_void: a_pref /= Void
 		local
 			l_str_32: STRING_32
 			l_string: STRING

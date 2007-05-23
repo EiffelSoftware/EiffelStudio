@@ -46,12 +46,19 @@ feature {NONE} -- Implementation
 feature -- Command
 
 	show_relative_to_window (a_parent: EV_WINDOW) is
-			--
+			-- Redefine
 		local
-			l_box: EV_VERTICAL_BOX
+			l_x, l_y: INTEGER
 		do
+			-- After `disable_border', x,y position will be forgot. We restore it manually..
+			l_x := screen_x
+			l_y := screen_y
+
 			-- On GTK, border state can't be remembered after hide, so we set it everytime when showing.
 			disable_border
+
+			set_position (l_x, l_y)
+
 			Precursor {EV_WINDOW} (a_parent)
 		end
 

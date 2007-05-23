@@ -160,6 +160,7 @@ feature -- Class Tree Menu
 					extend_add_subcluster_item (a_menu, Void, False)
 					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
+					extend_property_menu (a_menu, l_data_stone)
 				end
 			end
 		end
@@ -180,6 +181,7 @@ feature -- Class Tree Menu
 					extend_add_library (a_menu)
 					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
+					extend_property_menu (a_menu, l_data_stone)
 				end
 			end
 		end
@@ -200,6 +202,7 @@ feature -- Class Tree Menu
 					extend_add_assembly (a_menu)
 					extend_separator (a_menu)
 					extend_add_to_menu (a_menu, l_data_stone)
+					extend_property_menu (a_menu, l_data_stone)
 				end
 			end
 		end
@@ -301,6 +304,7 @@ feature -- Metrics tool
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_metric_selector_remove (a_menu, a_pebble, a_selector)
+				extend_property_menu (a_menu, a_pebble)
 			end
 		end
 
@@ -349,6 +353,7 @@ feature -- Call stack menu
 					extend_separator (a_menu)
 					extend_sync_in_context_tool (a_menu, a_pebble)
 					extend_expanded_object_view (a_menu, a_pebble)
+					extend_property_menu (a_menu, a_pebble)
 				end
 			end
 		end
@@ -369,6 +374,7 @@ feature -- Object and Watch tool menus
 				if l_object_stone /= Void then
 					extend_separator (a_menu)
 					extend_expanded_object_view (a_menu, a_pebble)
+					extend_property_menu (a_menu, a_pebble)
 				end
 			end
 		end
@@ -396,6 +402,7 @@ feature -- Object and Watch tool menus
 					end
 					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
 				end
+				extend_property_menu (a_menu, a_pebble)
 			end
 		end
 
@@ -411,6 +418,7 @@ feature -- Search scope menu
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_search_scope_remove (a_menu, a_pebble)
+				extend_property_menu (a_menu, a_pebble)
 			end
 		end
 
@@ -424,6 +432,7 @@ feature -- Standard menus
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				extend_property_menu (a_menu, a_pebble)
 			end
 		end
 
@@ -1493,8 +1502,10 @@ feature {NONE} -- Implementation
 			l_text: STRING_32
 		do
 			if a_menu.count > 0 then
-				l_text := names.m_context_menu_pick (last_type, last_name)
-				a_menu.first.set_text (l_text)
+				if last_type /= Void and then last_name /= Void then
+					l_text := names.m_context_menu_pick (last_type, last_name)
+					a_menu.first.set_text (l_text)
+				end
 			end
 		end
 

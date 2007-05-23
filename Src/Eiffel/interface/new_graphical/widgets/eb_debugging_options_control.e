@@ -594,7 +594,7 @@ feature {NONE} -- Button Actions
 			r: EV_GRID_ROW
 		do
 			profiles_grid.remove_selection
-			r := added_profile_text_row ([interface_names.l_profile_no.as_string_32 + profiles_count.out, Void, Void, Void], True, True)
+			r := added_profile_text_row ([interface_names.l_profile_no.as_string_32 + profiles_count.out, Void, Void, Void], False, True)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
 			end
@@ -616,7 +616,7 @@ feature {NONE} -- Button Actions
 					end
 					p.title.prepend_string (interface_names.m_copy_of)
 
-					r := added_profile_text_row (p, True, True)
+					r := added_profile_text_row (p, False, True)
 					if r.is_expandable and then not r.is_expanded then
 						r.expand
 					end

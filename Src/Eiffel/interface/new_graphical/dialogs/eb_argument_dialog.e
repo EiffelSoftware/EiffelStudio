@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent debugging_options_control.on_show)
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)
-			close_request_actions.extend (agent on_cancel)
+			close_request_actions.extend (agent on_close)
 		end
 
 	build_interface is
@@ -109,11 +109,11 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (b)
 			b.select_actions.extend (agent on_ok)
 
-			create b.make_with_text (interface_names.b_cancel)
+			create b.make_with_text (interface_names.b_close)
 			vbox.extend (b)
 			Layout_constants.set_default_width_for_button (b)
 			vbox.disable_item_expand (b)
-			b.select_actions.extend (agent on_cancel)
+			b.select_actions.extend (agent on_close)
 
 			if run /= Void then
 				create run_button.make_with_text (interface_names.b_run)
@@ -182,9 +182,20 @@ feature -- Status Setting
 
 feature {NONE} -- Actions
 
-	on_cancel is
+	on_close is
 	 		-- Action to take when user presses 'Cancel' button.
+		local
+			dlg: EB_CONFIRMATION_DIALOG
+			msg: STRING_GENERAL
 		do
+			if debugging_options_control.has_changed then
+				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
+				dlg.set_buttons_and_actions (
+					<<interface_names.b_yes, interface_names.b_no>>,
+					<<agent debugging_options_control.store_dbg_options, Void>>
+					)
+				dlg.show_modal_to_window (Current)
+			end
 			hide
 		end
 
@@ -224,7 +235,7 @@ feature {NONE} -- Implementation
 			key_not_void: key /= Void
      	do
         	if key.code = {EV_KEY_CONSTANTS}.key_escape then
-            	on_cancel
+            	on_close
             end
       	end
 

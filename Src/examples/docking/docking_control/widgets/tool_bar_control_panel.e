@@ -217,6 +217,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_add_menu_button_button_selected is
+			-- Called by `select_actions' of `add_menu_button_button'.
+		local
+	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_button: SD_TOOL_BAR_MENU_ITEM
+	 		l_menu: EV_MENU
+		do
+			l_content := selected_content
+			if l_content /= Void then
+				create l_button.make
+				l_button.set_text ("Button #" + new_widget_number.out)
+				l_button.set_pixel_buffer (sd_shared.icons.close_all)
+				l_button.select_actions.extend (agent button_clicked (l_button))
+				setup_sensitivity (l_button)
+				create l_menu.make_with_text ("Menu")
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Menu Item"))
+				l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Menu Item"))
+				l_button.set_menu (l_menu)
+				l_content.items.extend (l_button)
+			end
+		end
+
 	on_radio_button_created (a_dialog: RADIO_BUTTON_CREATION_DIALOG) is
 		require
 			a_dialog_not_void: a_dialog /= Void

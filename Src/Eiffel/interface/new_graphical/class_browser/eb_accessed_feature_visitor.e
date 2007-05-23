@@ -379,14 +379,19 @@ feature{NONE} -- Implementation
 			-- Ancestor feature (version from class whose id is `a_class_id') of `a_feature' with a different name
 		require
 			a_feature_attached: a_feature /= Void
+		local
+			l_class: CLASS_C
 		do
-			Result := a_feature.ancestor_version (system.class_of_id (a_class_id))
-			if Result /= Void then
-				if
-					Result.name.is_case_insensitive_equal (a_feature.name) and then
-					((not Result.has_alias_name) and then (not a_feature.has_alias_name))
-				then
-					Result := Void
+			l_class := system.class_of_id (a_class_id)
+			if l_class /= Void then
+				Result := a_feature.ancestor_version (l_class)
+				if Result /= Void then
+					if
+						Result.name.is_case_insensitive_equal (a_feature.name) and then
+						((not Result.has_alias_name) and then (not a_feature.has_alias_name))
+					then
+						Result := Void
+					end
 				end
 			end
 		end

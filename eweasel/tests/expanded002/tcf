@@ -14,9 +14,9 @@ compare actual_output1 output1
 
 compile_frozen
 compile_result ok
-execute_work NONE actual_output2
 c_compile_work
 c_compile_result ok
+execute_work NONE actual_output2
 execute_result ok
 compare actual_output2 output1
 

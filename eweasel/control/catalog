@@ -1649,15 +1649,23 @@ test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
 test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
 test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
-test	multi-constraint-alias		multicon039 tcf pass multiconstraint
-test	multi-constraint-assigner	multicon040 tcf pass multiconstraint
+test	multi-constraint-alias							multicon039 tcf pass multiconstraint
+test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
+-- endless loop test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
+test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
+test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
+test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint
 
+--test					multicon047 tcf pass multiconstraint
+--test					multicon048 tcf pass multiconstraint
 
--- Synthethic tests to find bugs in expanded types
+-- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded
 test	expanded-reverse-assignment						expanded002 tcf pass expanded
 test	array-of-user-defined-expanded					expanded003 tcf pass expanded
---test						expanded004 tcf pass expanded
+test	expanded-formal-multiconstraint					expanded004 tcf pass expanded
+test	expanded-formal-multiconstraint2				expanded005 tcf pass expanded
+
 --test						expanded005 tcf pass expanded
 --test						expanded006 tcf pass expanded
 --test						expanded007 tcf pass expanded

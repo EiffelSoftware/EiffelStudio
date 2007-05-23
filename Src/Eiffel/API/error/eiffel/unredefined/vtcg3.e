@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class VTCG3 
+class VTCG3
 
 inherit
 	VTCG
@@ -15,6 +15,9 @@ inherit
 		end
 
 feature -- Properties
+
+		-- Subcode commented as there is only one error message fot VTCG.
+	-- subcode: INTEGER is 3
 
 	entity_name: STRING
 

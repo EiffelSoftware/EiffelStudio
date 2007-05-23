@@ -17,6 +17,9 @@ inherit
 
 feature -- Properties
 
+		-- Subcode commented as there is only one error message for VTCG.
+	-- subcode: INTEGER_32 is 7
+
 	parent_type: TYPE_A
 			-- Parent type involved in the error
 

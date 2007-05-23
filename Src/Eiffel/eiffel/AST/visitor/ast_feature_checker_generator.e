@@ -1512,7 +1512,7 @@ feature -- Implementation
 						-- Reset original name because it was polluted by the argument checking
 					last_original_feature_name_id := l_last_original_feature_name_id
 					check
-						last_original_feature_name_correct: last_original_feature_name = a_name.name
+						last_original_feature_name_correct: a_name /= Void implies (last_original_feature_name = a_name.name)
 					end
 
 						-- Get the type of Current feature.

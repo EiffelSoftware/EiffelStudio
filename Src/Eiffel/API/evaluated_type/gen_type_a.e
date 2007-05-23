@@ -688,20 +688,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_conform: BOOLEAN
 				l_formal_dec_as: FORMAL_CONSTRAINT_AS
 				l_check_creation_readiness: BOOLEAN
-					-- Errors
-				l_vtgd1: VTGD1
-				l_vtgd2: VTGD2
 			do
 					l_conform := True
 					l_class := associated_class
 					l_generic_parameters := generics
-					if l_generic_parameters.count /= l_class.generics.count then
-							l_conform := False
-								-- Count of actual generics is not equal to expected count of formal generics.
-							create l_vtgd1
-							l_vtgd1.set_class (a_type_context)
-							Error_handler.insert_error (l_vtgd1)
-					end
 
 						-- Check all actual generic parameters against their constraining types.
 					from
@@ -715,7 +705,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						from
 							l_constraints.start
 						until
-							l_constraints.after or not l_conform
+							l_constraints.after
 						loop
 							l_constraint_item := l_constraints.item.type
 							if l_constraint_item.is_formal then
@@ -734,23 +724,20 @@ feature {COMPILER_EXPORTER} -- Primitives
 								--| Knowing that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
 								--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
 								--| Knowing that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
-							l_conform := l_generic_parameter.conformance_type.conform_to (l_constraint_item)
+
+							if l_generic_parameter.conformance_type.conform_to (l_constraint_item) then
+								-- Everything is fine, we conform
+							else
+									-- We do not conform, insert an error for this type.
+								l_conform := False
+								generate_constraint_error (Current, l_generic_parameter, l_constraint_item, i, Void)
+							end
 
 							l_constraints.forth
 						end
-						if not l_conform then
-								-- This actual parameter (`l_generic_parameter') did not conform to its constraining types.
-							create l_vtgd2
-							l_vtgd2.set_class(a_type_context)
-							if context.current_feature /= Void then
-								l_vtgd2.set_feature (context.current_feature)
-							end
-							l_vtgd2.set_type (l_generic_parameter)
-							l_vtgd2.set_constraint (l_constraints)
-							Error_handler.insert_error (l_vtgd2)
-						else
+						if l_conform then
 								-- Check now for the validity of the creation constraint clause if
-								-- there is one which can be checked ,i.e. when `to_check' conforms
+								-- there is one which can be checked, i.e. when `to_check' conforms
 								-- to `constraint_type'.
 							l_formal_dec_as ?= associated_class.generics.i_th (i)
 							check l_formal_dec_as_not_void: l_formal_dec_as /= Void end

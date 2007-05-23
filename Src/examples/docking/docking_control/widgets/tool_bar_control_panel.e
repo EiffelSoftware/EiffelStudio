@@ -123,6 +123,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	button_clicked (a_button: SD_TOOL_BAR_BUTTON) is
+			-- On button clicked.
+		require
+			a_button_not_void: a_button /= Void
+		local
+			l_dialog: EV_INFORMATION_DIALOG
+		do
+			create l_dialog.make_with_text (a_button.text.as_string_32 + " was clicked.")
+			l_dialog.show_modal_to_window (window)
+		end
+
 	next_disable_sensitivity: BOOLEAN
 
 	sd_shared: SD_SHARED
@@ -169,6 +180,7 @@ feature {NONE} -- Implementation
 				create l_button.make
 				l_button.set_text ("Button #" + new_widget_number.out)
 				l_button.set_pixel_buffer (sd_shared.icons.close_all)
+				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
 				l_content.items.extend (l_button)
 			end
@@ -185,6 +197,7 @@ feature {NONE} -- Implementation
 				create l_button.make
 				l_button.set_text ("Button #" + new_widget_number.out)
 				l_button.set_pixel_buffer (sd_shared.icons.close_all)
+				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
 				l_content.items.extend (l_button)
 			end
@@ -221,6 +234,7 @@ feature {NONE} -- Implementation
 					create l_button.make
 					l_button.set_text ("Button #" + new_widget_number.out)
 					l_button.set_pixel_buffer (sd_shared.icons.close_all)
+					l_button.select_actions.extend (agent button_clicked (l_button))
 					setup_sensitivity (l_button)
 					l_content.items.extend (l_button)
 				elseif a_dialog.is_font then
@@ -229,6 +243,7 @@ feature {NONE} -- Implementation
 					l_f_button.set_font (l_font)
 					l_f_button.set_text ("Button #" + new_widget_number.out)
 					l_f_button.set_pixel_buffer (sd_shared.icons.close_all)
+					l_f_button.select_actions.extend (agent button_clicked (l_f_button))
 					setup_sensitivity (l_f_button)
 					l_content.items.extend (l_f_button)
 				elseif a_dialog.is_width then
@@ -237,6 +252,7 @@ feature {NONE} -- Implementation
 					l_w_button.set_maximum_width (l_width)
 					l_w_button.set_text ("Button #" + new_widget_number.out)
 					l_w_button.set_pixel_buffer (sd_shared.icons.close_all)
+					l_w_button.select_actions.extend (agent button_clicked (l_w_button))
 					setup_sensitivity (l_w_button)
 					l_content.items.extend (l_w_button)
 				end

@@ -12,7 +12,7 @@ class
 inherit
 	WIZARD_SHARED
 
-feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
+feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basic Operations
 
 	back is
 			-- Go to the previous state.

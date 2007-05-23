@@ -344,6 +344,7 @@ feature -- Preference strings
 	confirm_replace_all_string: STRING is "interface.dialogs.confirm_replace_all"
 	confirm_remove_metric_string: STRING is "interface.dialogs.confirm_remove_metric"
 	confirm_save_metric_string: STRING is "interface.dialogs.confirm_save_metric"
+	confirm_apply_debugger_profiles_string: STRING is "interface.dialogs.confirm_apply_debugger_profiles"
 	acknowledge_not_loaded_string: STRING is "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING is "interface.dialogs.confirm_finalize_precompile"
 	show_starting_dialog_string: STRING is "interface.dialogs.show_starting_dialog"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-19 19:48-0800\n"
+"PO-Revision-Date: 2007-05-21 14:43-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=n!=1\n"
@@ -598,7 +598,7 @@ msgstr "&Debugging Werkzeuge"
 #. Source code: m_Showdeferreds: STRING_GENERAL is			do Result := locale.translate("&Deferred")	end
 #: interface_names.e:554
 msgid "&Deferred"
-msgstr ""
+msgstr "&Aufgeschobene"
 
 #. Source code: m_diagram_delete_view: STRING_GENERAL is		do Result := locale.translate("&Delete Current View")	end
 #: interface_names.e:361
@@ -1153,10 +1153,11 @@ msgstr "--( Bedingung: \"$1\")--"
 msgid "---"
 msgstr "---"
 
+# Eintrag im Verlaufsfenster des Diagrammwerkzeugs. Der Eintrag symbolisiert das Ende des gespeicherten Verlaufs.
 #. Source code: l_history_discarded_string: STRING_GENERAL is do Result := locale.translate ("--- History discarded ---") end
 #: interface_names.e:1339
 msgid "--- History discarded ---"
-msgstr "--- Verlauf verworfen ---"
+msgstr "--- Ältere Änderungen verworfen ---"
 
 #. Source code: once Result := locale.translate ("--< Debugger execution menu >--") end
 #: debugger_names.e:33
@@ -1438,6 +1439,8 @@ msgid ""
 "A class figure(s) must either be selected\n"
 "or dropped on this button via right clicking."
 msgstr ""
+"Eine oder mehrere Klassen müssen entweder selektiert sein\n"
+"oder auf der Schaltfläche fallengelassen werden."
 
 #. Source code: l_overwrite_layout (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.format_string (locale.translate ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 #: interface_names.e:1580
@@ -1468,6 +1471,8 @@ msgid ""
 "A valid metric name is a non-empty string which doesn't start with space, enter or tab, and doesn't end with space, enter or tab.\n"
 "Make sure specified metric name is valid."
 msgstr ""
+"Ein gültiger Metrikname ist nicht leer, startet und endet nicht mit einem Leerschlag, Tabulator oder Zeilenumbruch.\n"
+"Bitte sicherstellen dass der angegebene Metrikname gültig ist."
 
 #. Source code: m_show_assigners: STRING_GENERAL is			do Result := locale.translate("A&ssigners")	end
 #: interface_names.e:539
@@ -1632,12 +1637,12 @@ msgstr "Objekt hinzufügen"
 #. Source code: group_add_override: STRING_GENERAL is do Result := locale.translate ("Add Override")	end
 #: conf_interface_names.e:237
 msgid "Add Override"
-msgstr "Override hinzufügen"
+msgstr "Überschreibendes Cluster hinzufügen"
 
 #. Source code: dialog_create_override_title: STRING_GENERAL is do Result := locale.translate ("Add Override Cluster")	end
 #: conf_interface_names.e:472
 msgid "Add Override Cluster"
-msgstr "Overridecluster hinzufügen"
+msgstr "Überschreibendes Cluster hinzufügen"
 
 #. Source code: task_add_post: STRING_GENERAL is do Result := locale.translate ("Add Post Compilation Task")	end
 #: conf_interface_names.e:201
@@ -1726,7 +1731,7 @@ msgstr "Alle hinzufügenl ->"
 #. Source code: f_Create_new_assembly: STRING_GENERAL is	do Result := locale.translate("Add an assembly")	end
 #: interface_names.e:323
 msgid "Add an assembly"
-msgstr "Füge ein Assembly hinzu"
+msgstr "Ein Assembly hinzufügen"
 
 #. Source code: dial_cond_add_and_term: STRING_GENERAL is do Result := locale.translate ("Add and-term")	end
 #: conf_interface_names.e:394
@@ -2170,6 +2175,14 @@ msgid ""
 "Follow the instructions at http://support.eiffel.com/submit.html in\n"
 "order to submit a bug report at http://support.eiffel.com"
 msgstr ""
+"Ein interner Fehler ist aufgetreten.\n"
+"\n"
+"1 - Überprüfen dass genügend Speicherplatz zum kompiliern vorhanden ist.\n"
+"2 - Falls dies auch nach einem Neustart des Programms passiert\n"
+"     löschen Sie das EIFGENs Verzeichnis und Kompilieren Sie neu.\n"
+"\n"
+"Um einen Bugreport zu senden, folgen Sie den Instruktionen unter\n"
+"http://support.eiffel.com/submit.html"
 
 #. Source code: "An unexpected error occurred.%N$1 will now make an attempt to create%N%
 #: warning_messages.e:577
@@ -2178,6 +2191,9 @@ msgid ""
 "$1 will now make an attempt to create\n"
 "a backup of the edited files."
 msgstr ""
+"Ein unerwarteter Fehler ist aufgetreten.\n"
+"$1 wird versuchen Sicherheitskopien aller bearbeiteten\n"
+"Dateien zu erstellen."
 
 #. Source code: t_analysing_archive: STRING_GENERAL is do Result := locale.translate ("Analyzing metric archive(s)...") end
 #: eb_metric_names.e:89
@@ -2377,7 +2393,7 @@ msgstr "Archivwert fehlt."
 #. Source code: option_cat_call_detection_description: STRING_GENERAL is do Result := locale.translate ("Are all feature calls checked if they are a potential cat-call?") end
 #: conf_interface_names.e:309
 msgid "Are all feature calls checked if they are a potential cat-call?"
-msgstr ""
+msgstr "Werden alle Featureaufrufe überprüft ob potentiell ein Catcall vorliegt?"
 
 #. 	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Are brackets and parentheses closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:228
@@ -2495,22 +2511,22 @@ msgstr "Assemblies"
 #. Source code: group_assembly: STRING_GENERAL is do Result := locale.translate ("Assembly")	end
 #: conf_interface_names.e:210
 msgid "Assembly"
-msgstr ""
+msgstr "Assembly"
 
 #. Source code: s_Assembly_stone: STRING_GENERAL is			do Result := locale.translate("Assembly ")	end
 #: interface_names.e:1614
 msgid "Assembly "
-msgstr ""
+msgstr "Assembly "
 
 #. Source code: assembly_culture_name: STRING_GENERAL is do Result := locale.translate ("Assembly Culture")	end
 #: conf_interface_names.e:259
 msgid "Assembly Culture"
-msgstr ""
+msgstr "Assembly Kultur"
 
 #. Source code: dialog_create_assembly_a_key: STRING_GENERAL is do Result := locale.translate ("Assembly Key")	end
 #: conf_interface_names.e:462
 msgid "Assembly Key"
-msgstr ""
+msgstr "Assembly Schlüssel"
 
 #. Source code: assembly_name_name: STRING_GENERAL is do Result := locale.translate ("Assembly Name")	end
 #: conf_interface_names.e:257
@@ -2520,7 +2536,7 @@ msgstr "Assembly Name"
 #. Source code: assembly_public_key_token_name: STRING_GENERAL is do Result := locale.translate ("Assembly Public Key Token")	end
 #: conf_interface_names.e:263
 msgid "Assembly Public Key Token"
-msgstr ""
+msgstr "Assembly Öffentlicher Tokenschlüssel"
 
 #. Source code: assembly_version_name: STRING_GENERAL is do Result := locale.translate ("Assembly Version")	end
 #: conf_interface_names.e:261
@@ -4206,7 +4222,7 @@ msgstr "Bengali (Indien)"
 #. 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:545
 msgid "Blinking cursor"
-msgstr ""
+msgstr "Blinkender Cursor"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
@@ -4407,7 +4423,7 @@ msgstr "Ende erreicht."
 #. Source code: l_branch (a_bra: INTEGER): STRING_GENERAL is do Result := locale.format_string (locale.translate("Branch #$1"), [a_bra.out]) end
 #: interface_names.e:1486
 msgid "Branch #$1"
-msgstr ""
+msgstr "Ast #$1"
 
 #. Source code: m_Bkpt_info: STRING_GENERAL is				do Result := locale.translate("Brea&kpoint Information")	end
 #: interface_names.e:684
@@ -4914,7 +4930,7 @@ msgstr "Definierte Warnungen überprüfen wenn Archiv neu ausgewertet wird?"
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:715
 msgid "Check overrides and compile"
-msgstr "Overrides überprüfen und kompilieren"
+msgstr "Überschreibende Cluster überprüfen und kompilieren"
 
 #. Source code: e_Check_exports: STRING_GENERAL is			do Result := locale.translate("Check the validity of the library definition")	end
 #: interface_names.e:1940
@@ -5750,9 +5766,8 @@ msgstr "Koeffizient"
 
 #. Source code: Result := locale.format_string (locale.translate ("Coefficient %"$1%" for denominator metric is invalid. A real number is expected."), [a_value])
 #: eb_metric_names.e:933
-#, fuzzy
 msgid "Coefficient \"$1\" for denominator metric is invalid. A real number is expected."
-msgstr "Wert \"$1\" von Attribut \"value\" is ungültig. Eine reele Zahl wird erwartet."
+msgstr "Koeffizient \"$1\" der Nennermetrik ist ungültig. Eine reelle Zahl wird erwartet."
 
 #. Source code: Result := locale.format_string (locale.translate ("Coefficient %"$1%" for numerator metric is invalid. A real number is expected."), [a_value])
 #: eb_metric_names.e:923
@@ -6945,7 +6960,7 @@ msgstr "Aufrufstack zur Zwischenablage kopieren"
 #. Source code: m_copy_of: STRING_GENERAL is					do Result := locale.translate("Copy of ")	end
 #: interface_names.e:318
 msgid "Copy of "
-msgstr "Kopie von"
+msgstr "Kopie von "
 
 #. Source code: target_copyright_name: STRING_GENERAL is do Result := locale.translate ("Copyright")	end
 #: conf_interface_names.e:92
@@ -7115,7 +7130,7 @@ msgstr ""
 #. Source code: f_diagram_create_supplier_links: STRING_GENERAL is	do Result := locale.translate("Create new client-supplier links")	end
 #: interface_names.e:402
 msgid "Create new client-supplier links"
-msgstr "Neue Klienten-Zulieferer-Verknüpfungen erstellen"
+msgstr "Neue Klienten-Zulieferer-Beziehung erstellen"
 
 #. Source code: f_diagram_create_inheritance_links: STRING_GENERAL is do Result := locale.translate("Create new inheritance links")	end
 #: interface_names.e:404
@@ -8179,7 +8194,7 @@ msgstr ""
 #. Source code: Result := locale.translate ("Customize ")
 #: docking_names.e:108
 msgid "Customize "
-msgstr "Anpassen"
+msgstr "Anpassen "
 
 #. Source code: m_Customize_project: STRING_GENERAL is		do Result := locale.translate("Customize P&roject Toolbar...")	end
 #: interface_names.e:306
@@ -9119,7 +9134,7 @@ msgstr "Deferred"
 #. Source code: l_Deferreds: STRING_GENERAL is				do Result := locale.translate("Deferred features")	end
 #: interface_names.e:916
 msgid "Deferred features"
-msgstr "Abstrakte Features"
+msgstr "Aufgeschobene Features (deferred)"
 
 #. Source code: l_Subquery: STRING_GENERAL is				do Result := locale.translate("Define new subquery")	end
 #: interface_names.e:1208
@@ -9204,12 +9219,12 @@ msgstr "Lösche Dateien"
 #. Source code: Result := locale.format_string (locale.translate ("Denominator metric %"$1%" is not defined."), [a_denominator])
 #: eb_metric_names.e:772
 msgid "Denominator metric \"$1\" is not defined."
-msgstr ""
+msgstr "Nennermetrik \"$1\" ist nicht definiert."
 
 #. Source code: Result := locale.translate ("Denominator metric is missing.")
 #: eb_metric_names.e:511
 msgid "Denominator metric is missing."
-msgstr ""
+msgstr "Nennermetrik fehlt."
 
 #. Source code: cluster_dependencies_name: STRING_GENERAL is do Result := locale.translate ("Dependencies")	end
 #: conf_interface_names.e:250
@@ -10184,7 +10199,7 @@ msgstr "Nicht sichtbare Elemente anzeigen?"
 #. Source code: l_Switch_num_format_desc: STRING_GENERAL is do Result := locale.translate("Display numerical value as Hexadecimal or Decimal formating")	end
 #: interface_names.e:1211
 msgid "Display numerical value as Hexadecimal or Decimal formating"
-msgstr ""
+msgstr "Numerischen Wert im Hexadezimal- oder Dezimalformat anzeigen"
 
 #. Source code: once Result := locale.translate ("Display parameters") end
 #: debugger_names.e:214
@@ -10193,14 +10208,13 @@ msgstr "Anzeigeparameter"
 
 #. 	<PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:104
-#, fuzzy
 msgid "Display percentage for ratio"
-msgstr "Resultat in Prozent angeben? (Nur für Quotientenmetriken)"
+msgstr "Protzentsatz für Verhältnis anzeigen"
 
 #. Source code: f_display_in_percentage: STRING_GENERAL is do Result := locale.translate ("Display result in percentage? (Only applicable for ratio metrics)") end
 #: eb_metric_names.e:265
 msgid "Display result in percentage? (Only applicable for ratio metrics)"
-msgstr "Resultat in Prozent angeben? (Nur für Quotientenmetriken)"
+msgstr "Das Resultat in Prozent anzeigen? (Nur für Verhältnismetriken)"
 
 #. 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:190
@@ -10510,7 +10524,7 @@ msgstr "Hinunter"
 #. Source code: e_open_c_file: STRING_GENERAL is do Result := locale.translate ("Drop a class/feature here to open its corresponding C file/function in external editor.") end
 #: interface_names.e:2047
 msgid "Drop a class/feature here to open its corresponding C file/function in external editor."
-msgstr ""
+msgstr "Eine Klasse oder Feature hier fallenlassen um die entsprechende C Datei in externem Editor zu öffnen."
 
 #. Source code: t_drop_program_elements: STRING_GENERAL is do Result := locale.translate ("Drop target/group/class/feature here") end
 #: eb_metric_names.e:339
@@ -13397,22 +13411,22 @@ msgstr ""
 #. Source code: l_exploring_ancestor_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.format_string (locale.translate("Exploring ancestors of $1"), [a_class])	end
 #: interface_names.e:997
 msgid "Exploring ancestors of $1"
-msgstr "Untersuche Vorfahren von $1"
+msgstr "Suche Vorfahren von $1"
 
 #. Source code: l_exploring_clinets_of (a_class: STRING_GENERAL): STRING_GENERAL is					do Result := locale.format_string (locale.translate("Exploring clients of $1"), [a_class])	end
 #: interface_names.e:999
 msgid "Exploring clients of $1"
-msgstr "Untersuche Klienten von $1"
+msgstr "Suche Klienten von $1"
 
 #. Source code: l_exploring_descendants_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.format_string (locale.translate("Exploring descendants of $1"), [a_class])	end
 #: interface_names.e:998
 msgid "Exploring descendants of $1"
-msgstr "Untersuche Nachfahren von $1"
+msgstr "Suche Nachfahren von $1"
 
 #. Source code: l_exploring_suppliers_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.format_string (locale.translate("Exploring suppliers of $1"), [a_class])	end
 #: interface_names.e:1000
 msgid "Exploring suppliers of $1"
-msgstr "Untersuche Lieferanten von $1"
+msgstr "Suche Lieferanten von $1"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.autocomplete_export" DESCRIPTION="Autocomplete export?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -13808,7 +13822,7 @@ msgstr "Ordnung für Featureklauseln"
 #. 	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:99
 msgid "Feature format that is selected by default."
-msgstr ""
+msgstr "Featureformat das standardmässig gewählt ist."
 
 #. Source code: l_feature_in_client_class: STRING_GENERAL is do Result := locale.translate("Feature in client class")	end
 #: interface_names.e:1556
@@ -15245,7 +15259,7 @@ msgstr "Erstellungsfehler"
 #. Source code: target_msil_generation_type_name: STRING_GENERAL is do Result := locale.translate ("Generation Type")	end
 #: conf_interface_names.e:133
 msgid "Generation Type"
-msgstr ""
+msgstr "Generierender Typ"
 
 #. Source code: l_generic_unit: STRING_GENERAL is do Result := locale.translate("Generic") end
 #: eb_metric_names.e:282
@@ -15449,7 +15463,7 @@ msgstr "Gruppe von welchem dieses Cluster abhängt"
 #. Source code: override_override_description: STRING_GENERAL is do Result := locale.translate ("Groups this override is overriding.")	end
 #: conf_interface_names.e:267
 msgid "Groups this override is overriding."
-msgstr ""
+msgstr "Gruppe welches dieses überschreibende Cluster überschreibt."
 
 #. Source code: Result.force (locale.translate ("Gujarati"), "gu")
 #: locale_names.e:56
@@ -15553,7 +15567,7 @@ msgstr "Hilfswerkzeug"
 #. Source code: w_help_topic_could_not_be_displayed: STRING_GENERAL is do Result := locale.translate ("Help Topic could not be displayed, please check Eiffel Installation") end
 #: warning_messages.e:1088
 msgid "Help Topic could not be displayed, please check Eiffel Installation"
-msgstr ""
+msgstr "Hilfethema konnte nicht angezeigt werden. Bitte überüfen Sie die EiffelStudio installation."
 
 #. Source code: cluster_hidden_name: STRING_GENERAL is do Result := locale.translate ("Hidden")	end
 #: conf_interface_names.e:248
@@ -15573,7 +15587,7 @@ msgstr "Aliasnamen verbergen"
 #. Source code: f_hide_assigner: STRING_GENERAL is		do Result := locale.translate("Hide Assigner Command Name")	end
 #: interface_names.e:672
 msgid "Hide Assigner Command Name"
-msgstr ""
+msgstr "Name des Zuweiserbefehls verbergen"
 
 #. Source code: f_hide_signature: STRING_GENERAL is		do Result := locale.translate("Hide Signature")	end
 #: interface_names.e:673
@@ -15610,7 +15624,7 @@ msgstr "Vererbungsbeziehungen verbergen"
 #. Source code: f_diagram_hide_labels: STRING_GENERAL is		do Result := locale.translate("Hide labels")	end
 #: interface_names.e:376
 msgid "Hide labels"
-msgstr "Beschriftung verbergen"
+msgstr "Beschriftungen verbergen"
 
 #. 	<PREF NAME="tools.metric_tool.hide_old_archive" DESCRIPTION="Should old archive items be hidden?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:106
@@ -15830,6 +15844,8 @@ msgid ""
 "In linear metric, make sure that every variable metric doesn't involve recursive metric.\n"
 "In ratio metric, make sure that numerator metric or denominator metric doesn't involve recursive metric."
 msgstr ""
+"Sicherstellen dass für die lineare Metrik keine Variablenmetrik rekursiv ist.\n"
+"Sicherstellen dass für die Verhältnismetrik weder die Zähler- noch die Nennermetrik rekursiv ist."
 
 #. Source code: l_formatter_displayed_in_help: STRING_GENERAL do Result := locale.translate ("In which tool(s) will this formatter be displayed") end
 #: interface_names.e:652
@@ -16819,9 +16835,8 @@ msgstr "Ist maximiert"
 
 #. 	<PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:104
-#, fuzzy
 msgid "Is percentage for ratio metric displayed?"
-msgstr "Soll der Text der Elemente in der Symbolleiste angezeigt werden?"
+msgstr "Ist das Resultat einer Verhältnismetrik in Prozent angezeigt?"
 
 #. 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:190
@@ -17685,7 +17700,7 @@ msgstr ""
 #. Source code: make_sure_denominator_coefficient_non_zero_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure coefficient for denominator metric is a non-zero real number.") end
 #: eb_metric_names.e:1120
 msgid "Make sure coefficient for denominator metric is a non-zero real number."
-msgstr ""
+msgstr "Sicherstellen dass der Koeffizient der Nennermetrik eine nicht-negative reelle Zahl ist."
 
 #. Source code: unit_in_basic_metric_not_same_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric.") end
 #: eb_metric_names.e:1107
@@ -17730,7 +17745,7 @@ msgstr ""
 #. Source code: Result := ratio_metric_info.as_string_32 + locale.translate ("Make sure that numerator and denominator metric referenced by ratio metric are defined.")
 #: eb_metric_names.e:1102
 msgid "Make sure that numerator and denominator metric referenced by ratio metric are defined."
-msgstr "Verschiere dass Zähler- und Nennermetrik von der Quotientenmetrik referenziert sind."
+msgstr "Verschiere dass Zähler- und Nennermetrik von der Verhätlnismetrik referenziert sind."
 
 #. Source code: Result := locale.translate ("Make sure that referenced metric exists and is valid.")
 #: eb_metric_names.e:1159
@@ -18183,7 +18198,7 @@ msgstr ""
 #. Source code: Result.force (locale.translate ("Missing Class Export"), w_export_class_missing)
 #: conf_interface_names.e:322
 msgid "Missing Class Export"
-msgstr "Fehlder Klassen "
+msgstr "Unbekannte Klassen in Exportklauseln"
 
 #. Source code: once Result := locale.translate ("Modify existing breakpoint") end
 #: debugger_names.e:190
@@ -18627,7 +18642,7 @@ msgstr "Kein Cluster gewählt. Bitte ein Cluster wählen um eine Klasse zu erste
 #. Source code: l_no_command_is_running: STRING_GENERAL is 		 do Result := locale.translate ("No command is running") end
 #: eb_external_output_names.e:17
 msgid "No command is running"
-msgstr "Kein Befehl läuft"
+msgstr "Kein Befehl ausgeführt"
 
 #. Source code: once Result := locale.translate ("No debugging for DLL system") end
 #: debugger_names.e:126
@@ -18718,7 +18733,7 @@ msgstr "Kein vorheriger Wert\n"
 #. Source code: l_no_result_available: STRING_GENERAL is do Result := locale.translate ("No result available.") end
 #: eb_metric_names.e:198
 msgid "No result available."
-msgstr "Keine Resultate vorhanden."
+msgstr "Keine Resultat vorhanden."
 
 #. Source code: w_No_system_defined: STRING_GENERAL is do Result := locale.translate ("No system was defined.%N") end
 #: warning_messages.e:1072
@@ -18910,7 +18925,7 @@ msgstr "Zählermetrik  \"$1\" nicht definiert."
 #. Source code: Result := locale.translate ("Numerator metric is missing.")
 #: eb_metric_names.e:503
 msgid "Numerator metric is missing."
-msgstr "Zähler-Metrik fehlt."
+msgstr "Zählermetrik fehlt."
 
 #. Source code: m_Showonces: STRING_GENERAL is				do Result := locale.translate("O&nce/Constants")	end
 #: interface_names.e:564
@@ -19504,7 +19519,7 @@ msgstr "Schutz vor Stacküberlauf"
 #. Source code: group_override: STRING_GENERAL is do Result := locale.translate ("Override")	end
 #: conf_interface_names.e:213
 msgid "Override"
-msgstr ""
+msgstr "Überschreibendes Cluster"
 
 #. Source code: target_platform_description: STRING_GENERAL is do Result := locale.translate ("Override the detected platform to use in conditions.")	end
 #: conf_interface_names.e:144
@@ -19514,7 +19529,7 @@ msgstr "Die gefundene Platform in Bedingungen überschreiben."
 #. Source code: group_override_tree: STRING_GENERAL is do Result := locale.translate ("Overrides")	end
 #: conf_interface_names.e:207
 msgid "Overrides"
-msgstr ""
+msgstr "Überschreibende Cluster"
 
 #. Source code: override_override_name: STRING_GENERAL is do Result := locale.translate ("Overriding")	end
 #: conf_interface_names.e:266
@@ -19995,7 +20010,7 @@ msgstr "Vorkompilierung von Bibliothek $1"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:513
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:514
 msgid "Precursor"
-msgstr ""
+msgstr "c"
 
 #. 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:604
@@ -20373,7 +20388,7 @@ msgstr "Schnelle Metrik"
 #. Source code: once Result := locale.translate ("Quit") end
 #: debugger_names.e:170
 msgid "Quit"
-msgstr ""
+msgstr "Beenden"
 
 #. Source code: m_Raise_all_unsaved: STRING_GENERAL is		do Result := locale.translate("Raise &Unsaved Windows")	end
 #: interface_names.e:730
@@ -20398,7 +20413,7 @@ msgstr "Alle Fenster hervorheben"
 #. Source code: l_ratio_unit: STRING_GENERAL is do Result := locale.translate("Ratio") end
 #: eb_metric_names.e:288
 msgid "Ratio"
-msgstr ""
+msgstr "Verhältnis"
 
 #. Source code: Result := locale.translate ("Ratio metric is of the form:%N%N%T (coefficient * Numerator metric) / (coefficient * Denominator metric)%N%NNumerator metric and denominator metric can be of any valid unit.%N%N")
 #: eb_metric_names.e:1143
@@ -20410,6 +20425,12 @@ msgid ""
 "Numerator metric and denominator metric can be of any valid unit.\n"
 "\n"
 msgstr ""
+"Verhältnismetrik hat die Form:\n"
+"\n"
+"\t (Koeffizient * Zählemetrik) / (Koeffizient * Nennermetrik)\n"
+"\n"
+"Zähler- und Nennermetrik können beliebige Einheiten haben.\n"
+"\n"
 
 #. Source code: m_Redo: STRING_GENERAL is					do Result := locale.translate("Re&do%TCtrl+Y")	end
 #: interface_names.e:519
@@ -20473,17 +20494,17 @@ msgstr "Kürzliche Projekte"
 #. Source code: m_Override_scan: STRING_GENERAL is			do Result := locale.translate("Recompile &Overrides")	end
 #: interface_names.e:726
 msgid "Recompile &Overrides"
-msgstr ""
+msgstr "&Überschreibende Cluster neu kompilieren"
 
 #. Source code: b_override_scan: STRING_GENERAL is					do Result := locale.translate("Recompile Overrides")	end
 #: interface_names.e:120
 msgid "Recompile Overrides"
-msgstr ""
+msgstr "Überschreibende Cluster neu kompilieren"
 
 #. Source code: e_override_scan: STRING_GENERAL is			do Result := locale.translate("Recompile override clusters")	end
 #: interface_names.e:2009
 msgid "Recompile override clusters"
-msgstr ""
+msgstr "Überschreibende Cluster neu kompilieren"
 
 #. Source code: l_fresh_compilation: STRING_GENERAL is		do Result := locale.translate("Recompile project")	end
 #: interface_names.e:1022
@@ -22435,7 +22456,7 @@ msgstr "Tastenkombination um Kompilierung abzubrechen."
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:715
 msgid "Shortcut to check overrides and compile current project."
-msgstr "Tastenkombination um Overrides zu überprüfen und aktuelles Projekt zu kompilieren."
+msgstr "Tastenkombination um überschreibende Cluster zu überprüfen und aktuelles Projekt zu kompilieren."
 
 #. 	<PREF NAME="shortcuts.project.compile" DESCRIPTION="Shortcut to compile current project."><SHORTCUT>F7</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:713
@@ -23092,9 +23113,8 @@ msgstr "Soll die Grösse der Vervollständigungsliste beibehalten werden?"
 
 #. 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:124
-#, fuzzy
 msgid "Should syntactical referenced classes be displayed?"
-msgstr "Nur syntaktisch referenzierte Klassen anzeigen?"
+msgstr "Sollen syntaktisch referenyierte Klassen angezeigt werden?"
 
 #. 	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:557
@@ -23189,7 +23209,7 @@ msgstr "Aliasnamen anzeigen"
 #. Source code: f_show_assigner: STRING_GENERAL is		do Result := locale.translate("Show Assigner Command Name")	end
 #: interface_names.e:675
 msgid "Show Assigner Command Name"
-msgstr ""
+msgstr "Name des Zuweiserbefehls anzeigen"
 
 #. Source code: f_diagram_show_bon: STRING_GENERAL is 		do Result := locale.translate("Show BON")	end
 #: interface_names.e:379
@@ -23411,7 +23431,7 @@ msgstr "Informationen über Haltepunkte anzeigen"
 #. Source code: f_diagram_show_inheritance: STRING_GENERAL is	do Result := locale.translate("Show inheritance links")	end
 #: interface_names.e:395
 msgid "Show inheritance links"
-msgstr "Vererbungsverbindung anzeigen"
+msgstr "Vererbungsbeziehung anzeigen"
 
 #. 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:122
@@ -23451,7 +23471,6 @@ msgstr "Objekte anzeigen"
 
 #. Source code: h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translate("Show only syntactically referenced classes?") end
 #: interface_names.e:1520
-#, fuzzy
 msgid "Show only syntactically referenced classes?"
 msgstr "Nur syntaktisch referenzierte Klassen anzeigen?"
 
@@ -23512,9 +23531,8 @@ msgstr ""
 
 #. 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:123
-#, fuzzy
 msgid "Show self dependency"
-msgstr "Cluster Legende anzeigen"
+msgstr "Clusterlegende anzeigen"
 
 #. 	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:144
@@ -23544,7 +23562,7 @@ msgstr ""
 #. Source code: f_diagram_show_supplier: STRING_GENERAL is	do Result := locale.translate("Show supplier links")	end
 #: interface_names.e:367
 msgid "Show supplier links"
-msgstr "Lieferantenverknüpfungen anzeigen"
+msgstr "Lieferantenbeziehungen anzeigen"
 
 #. 	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:94
@@ -24355,9 +24373,8 @@ msgstr "Verknüpfungen synchronisieren"
 
 #. 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:124
-#, fuzzy
 msgid "Syntactical classes"
-msgstr "Alphabetische Klassenliste"
+msgstr "Syntaktische Klassen"
 
 #. 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:242
@@ -25056,7 +25073,7 @@ msgid ""
 "and that the system is correctly compiled."
 msgstr ""
 "Diese Klasse kann keine Features exportieren.\n"
-"Bitte sicherstellen dass die Klasse weder deferred nocht generisch ist\n"
+"Bitte sicherstellen dass die Klasse weder aufgeschoben nocht generisch ist\n"
 "und das das System korrekt kompiliert wurde."
 
 #. Source code: w_Class_already_edited: STRING_GENERAL is do Result := locale.translate ("This class is already being edited%N%
@@ -25116,6 +25133,9 @@ msgid ""
 "Deferred features, external ones,\n"
 "and attributes cannot be exported."
 msgstr ""
+"Dieses Feature kann nicht exportiert werden.\n"
+"Aufgeschobene Features, externe Features\n"
+"und Attribute können nicht exportiert werden."
 
 #. Source code: do Result := locale.translate ("This feature export clause contains errors.%N%
 #: warning_messages.e:619
@@ -25433,9 +25453,8 @@ msgstr "S&ymbolleisten"
 
 #. Source code: Result := locale.translate ("Toolbar Options")
 #: docking_names.e:78
-#, fuzzy
 msgid "Toolbar Options"
-msgstr "Klassenoptionen"
+msgstr "Einstellungen der Symbolleiste"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: Result := locale.translate ("Tools")
@@ -25998,7 +26017,7 @@ msgstr "Turkmen (Turkmenistan)"
 #. Source code: f_diagram_force_directed_off: STRING_GENERAL is	do Result := locale.translate("Turn off physics")	end
 #: interface_names.e:410
 msgid "Turn off physics"
-msgstr "Physik deaktivieren."
+msgstr "Physik ausschalten"
 
 #. Source code: f_diagram_force_directed_on: STRING_GENERAL is	do Result := locale.translate("Turn on physics")	end
 #: interface_names.e:409
@@ -28341,10 +28360,11 @@ msgstr "System debuggen"
 msgid "default"
 msgstr ""
 
+# Dialog um Klasse zu erzeugen. Titel der Checkbox ob Klasse abstrakt ist.
 #. Source code: l_Deferred: STRING_GENERAL is				do Result := locale.translate("deferred")	end
 #: interface_names.e:915
 msgid "deferred"
-msgstr ""
+msgstr "Aufgeschoben (deferred)"
 
 #. Source code: l_delayed_domain_item: STRING_GENERAL is do Result := locale.translate ("delayed item") end
 #: interface_names.e:1573
@@ -28783,7 +28803,7 @@ msgstr "Erzeugerprozeduren einer Klasse anzeigen"
 #. Source code: deferred_help: STRING_GENERAL is do Result := locale.translate ("show the deferred features of a class") end
 #: shared_ewb_help.e:63
 msgid "show the deferred features of a class"
-msgstr "Abstrakte Features einer Klasse anzeigen"
+msgstr "Aufgeschobene Features einer Klasse anzeigen"
 
 #. Source code: dversions_help: STRING_GENERAL is do Result := locale.translate ("show the descendant versions of a feature") end
 #: shared_ewb_help.e:71

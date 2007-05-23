@@ -119,6 +119,7 @@ feature {NONE} -- Retrieval
 			else
 				enable_profiles_button.enable_select
 			end
+			set_changed (False)
 		end
 
 feature -- Storage
@@ -160,6 +161,7 @@ feature -- Storage
 			create l_user_factory
 			l_user_factory.store (lace.user_options)
 			synch_with_others
+			set_changed (False)
 		end
 
 feature {NONE} -- GUI
@@ -235,6 +237,10 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (dup_button)
 			dup_button.disable_sensitive
 
+			create apply_button.make_with_text_and_action (interface_names.b_apply, agent apply_changes)
+			layout_constants.set_default_width_for_button (apply_button)
+			apply_button.disable_sensitive
+
 			create enable_profiles_button.make_with_text (interface_names.b_enable_profiles)
 			enable_profiles_button.select_actions.extend (agent on_enable_profiles_clicked)
 
@@ -244,6 +250,8 @@ feature {NONE} -- Display profiles impl
 			hb.disable_item_expand (dup_button)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
+			hb.extend (apply_button)
+			hb.disable_item_expand (apply_button)
 			hb.extend (create {EV_CELL})
 			hb.extend (enable_profiles_button)
 			hb.disable_item_expand (enable_profiles_button)
@@ -289,6 +297,7 @@ feature {NONE} -- GUI Properties
 			-- Widget containing profile settings.
 
 	add_button, dup_button, remove_button: EV_BUTTON
+	apply_button: EV_BUTTON
 
 	enable_profiles_button: EV_CHECK_BUTTON
 
@@ -333,7 +342,7 @@ feature {NONE} -- Grid events
 			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
-			if a_row /= Void then
+			if not inside_tab_accelerator and a_row /= Void then
 				r := a_row.parent_row_root
 				check r /= Void end
 
@@ -361,20 +370,22 @@ feature {NONE} -- Grid events
 			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
-			remove_button.disable_sensitive
-			dup_button.disable_sensitive
-			if a_row /= Void then
-				r := a_row.parent_row_root
-				if r = a_row then
-					r.set_background_color (profiles_grid.separator_color)
-					r.set_foreground_color (profiles_grid.foreground_color)
-				end
---				propagate_background_color_on (r, Void)
-				if r.count > 0 then
-					gi ?= r.item (1)
-					if gi /= Void then
-						gi.remove_pixmap
-						profiles_grid.safe_resize_column_to_content (gi.column, False, False)
+			if not inside_tab_accelerator then
+				remove_button.disable_sensitive
+				dup_button.disable_sensitive
+				if a_row /= Void then
+					r := a_row.parent_row_root
+					if r = a_row then
+						r.set_background_color (profiles_grid.separator_color)
+						r.set_foreground_color (profiles_grid.foreground_color)
+					end
+	--				propagate_background_color_on (r, Void)
+					if r.count > 0 then
+						gi ?= r.item (1)
+						if gi /= Void then
+							gi.remove_pixmap
+							profiles_grid.safe_resize_column_to_content (gi.column, False, False)
+						end
 					end
 				end
 			end
@@ -393,7 +404,25 @@ feature {NONE} -- Grid events
 			end
 		end
 
+feature -- Status
+
+	has_changed: BOOLEAN
+			-- Profile data changed ?
+
 feature -- Status Setting
+
+	set_changed (b: BOOLEAN) is
+			-- Notify change
+		do
+			if has_changed /= b then
+				has_changed := b
+				if has_changed then
+					apply_button.enable_sensitive
+				else
+					apply_button.disable_sensitive
+				end
+			end
+		end
 
 	synch_with_others is
 			-- Synchronize other open controls due to changes in Current.
@@ -438,40 +467,71 @@ feature -- Status Setting
 
 feature -- Data change
 
+	same_string_value (s1, s2: STRING_GENERAL): BOOLEAN is
+			-- is `s1' and `s2' the same text ?
+		do
+			if s1 = Void and s2 = Void then
+				Result := True
+			elseif s1 = Void or s2 = Void then
+				Result := False
+			else --| s1 /= Void and s2 /= Void
+				Result := s1.is_equal (s2)
+			end
+		end
+
 	change_title_on (v: STRING_GENERAL; p: like profile_from_row) is
 		require
 			v /= Void
+		local
+			s: STRING_GENERAL
 		do
 			if v.is_empty then
-				p.title := Void
+				s := Void
 			else
-				p.title := v
+				s := v
 			end
-			update_title_row_of (p)
+			if not same_string_value (p.title, s) then
+				p.title := s
+
+				update_title_row_of (p)
+				set_changed (True)
+			end
 		end
 
 	change_cwd_on (v: STRING; p: like profile_from_row) is
 		require
 			v /= Void
+		local
+			s: STRING
 		do
 			if v.is_empty then
-				p.cwd := Void
+				s := Void
 			else
-				p.cwd := v
+				s := v
 			end
-			update_title_row_of (p)
+			if not same_string_value (p.cwd, s) then
+				p.cwd := s
+				update_title_row_of (p)
+				set_changed (True)
+			end
 		end
 
 	change_args_on (v: STRING; p: like profile_from_row) is
 		require
 			v /= Void
+		local
+			s: STRING
 		do
 			if v.is_empty then
-				p.args := Void
+				s := Void
 			else
-				p.args := v
+				s := v
 			end
-			update_title_row_of (p)
+			if not same_string_value (p.args, s) then
+				p.args := s
+				update_title_row_of (p)
+				set_changed (True)
+			end
 		end
 
 	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row) is
@@ -482,6 +542,7 @@ feature -- Data change
 				p.env := v
 			end
 			update_title_row_of (p)
+			set_changed (True)
 		end
 
 	update_title_row_of (p: like profile_from_row) is
@@ -495,6 +556,16 @@ feature -- Data change
 		end
 
 feature {NONE} -- Button Actions
+
+	apply_changes is
+			--
+		require
+			has_changed: has_changed
+		do
+			store_dbg_options
+		ensure
+			not_has_changed: not has_changed
+		end
 
 	on_enable_profiles_clicked is
 			-- `enable_profiles_button' has been clicked
@@ -559,6 +630,7 @@ feature {NONE} -- Button Actions
 				r := r.parent_row_root
 				profiles_grid.remove_row (r.index)
 			end
+			set_changed (True)
 		end
 
 	profiles_count: INTEGER is
@@ -623,6 +695,8 @@ feature {NONE} -- Profile actions
 					if store_right_after then
 							--| Maybe we should not store right away .. but only on Ok, or Run ...
 						store_dbg_options
+					else
+						set_changed (True)
 					end
 				end
 			end
@@ -778,6 +852,7 @@ feature {NONE} -- Profile actions
 
 			refresh_title_row_text (a_row)
 			a_row.ensure_expandable
+			set_changed (True)
 		end
 
 	refresh_title_row_text (a_row: EV_GRID_ROW) is
@@ -930,6 +1005,7 @@ feature {NONE} -- Environment actions
 
 			gei.deactivate_actions.extend (agent change_environment_entry_from_row (srow))
 			gti.change_actions.extend (agent change_environment_entry_from_row (srow))
+			gti.deactivate_actions.extend (agent change_environment_entry_from_row (srow))
 
 			gei.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
 			gti.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
@@ -968,6 +1044,7 @@ feature {NONE} -- Environment actions
 					gei.activate
 				end
 			end
+			set_changed (True)
 		end
 
 	refresh_environ_row (a_row: EV_GRID_ROW) is
@@ -1123,35 +1200,46 @@ feature {NONE} -- Environment actions
 			gli: EV_GRID_LABEL_ITEM
 			k,v: STRING_32
 			old_k: STRING_32
+			c: BOOLEAN
 		do
-			old_k := environment_variable_name_from_row (a_row)
-			p := profile_from_row (a_row)
-			check p /= Void end
-			env := p.env
-			if env = Void then
-				create env.make (3)
-			end
-				--| Get Key
-			gli ?= a_row.item (1)
-			check gli /= Void end
-			k := gli.text
-			k.left_adjust
-			k.right_adjust
-
-				--| Get Value
-			gli ?= a_row.item (2)
-			check gli /= Void end
-			v := gli.text
-
-			if k /= Void and then not k.is_empty then
-				if not k.is_case_insensitive_equal (old_k) then
-					env.remove (old_k)
+			if not inside_tab_accelerator then
+				old_k := environment_variable_name_from_row (a_row)
+				p := profile_from_row (a_row)
+				check p /= Void end
+				env := p.env
+				if env = Void then
+					create env.make (3)
 				end
-				env.force (v, k)
-				refresh_environ_row	(a_row)
-				change_env_on (env, p)
-			else
-				remove_env_row (a_row)
+					--| Get Key
+				gli ?= a_row.item (1)
+				check gli /= Void end
+				k := gli.text
+				k.left_adjust
+				k.right_adjust
+
+					--| Get Value
+				gli ?= a_row.item (2)
+				check gli /= Void end
+				v := gli.text
+
+				if k /= Void and then not k.is_empty then
+					if not k.is_case_insensitive_equal (old_k) then
+						env.remove (old_k)
+						c := True
+					elseif
+						not env.has (old_k)
+						or else not same_string_value (v, env.item (old_k))
+					then
+						c := True
+					end
+					if c then
+						env.force (v, k)
+						refresh_environ_row	(a_row)
+						change_env_on (env, p)
+					end
+				else
+					ev_application.do_once_on_idle (agent remove_env_row (a_row))
+				end
 			end
 		end
 
@@ -1244,6 +1332,9 @@ feature {NONE} -- Implementation
 			create Result.make_with_8_bit_rgb (245, 245, 245)
 		end
 
+	inside_tab_accelerator: BOOLEAN
+			-- Is inside tab accelerator processing.
+
 	add_edition_tab_action_to_item (gi: EV_GRID_ITEM; pop: EV_POPUP_WINDOW) is
 		local
 			acc: EV_ACCELERATOR
@@ -1252,10 +1343,12 @@ feature {NONE} -- Implementation
 							False, False, False)
 			acc.actions.extend (agent (a_gi: EV_GRID_ITEM)
 				do
+					inside_tab_accelerator := True
 						-- We need to protect the case when `gi' has already been deactivated.
 					if not a_gi.is_destroyed and then a_gi.is_parented then
 						a_gi.activate
 					end
+					inside_tab_accelerator := False
 				end (gi)
 			)
 			pop.accelerators.extend (acc)

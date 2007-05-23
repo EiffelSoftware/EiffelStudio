@@ -34,6 +34,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 	DEBUGGER_OBSERVER
 		export
 			{NONE} all
@@ -133,7 +140,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_wb_button)
 				start_wb_button.set_pixmap (cmd.pixmap)
 				start_wb_button.set_tooltip (cmd.tooltip)
-				start_wb_button.select_actions.extend (agent cmd.execute)
+				start_wb_button.select_actions.extend (agent execute_command (cmd))
 				Layout_constants.set_default_width_for_button (start_wb_button)
 
 				cmd := eb_debugger_manager.run_finalized_cmd
@@ -142,7 +149,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_final_button)
 				start_final_button.set_pixmap (cmd.pixmap)
 				start_final_button.set_tooltip (cmd.tooltip)
-				start_final_button.select_actions.extend (agent cmd.execute)
+				start_final_button.select_actions.extend (agent execute_command (cmd))
 				Layout_constants.set_default_width_for_button (start_final_button)
 			end
 
@@ -184,7 +191,7 @@ feature {NONE} -- Actions
 	on_ok is
 	 		-- Action to take when user presses 'OK' button.
 		do
-			debugging_options_control.store_dbg_options
+			save_debugging_options
 			hide
 		end
 
@@ -221,15 +228,42 @@ feature {NONE} -- Implementation
             end
       	end
 
+	save_debugging_options is
+			--
+		local
+			dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			msg: STRING_GENERAL
+		do
+			if debugging_options_control.has_changed then
+				msg := "Profiles are modified.%NDo you want to apply the change before continuing ?"
+				create dlg.make_initialized (2,
+								preferences.dialog_data.confirm_apply_debugger_profiles_string,
+								warning_messages.w_apply_debugger_profiles_before_continuing,
+								Interface_names.l_Do_not_show_again,
+								preferences.preferences
+							)
+				dlg.set_ok_action (agent debugging_options_control.store_dbg_options)
+				dlg.set_no_action (Void)
+				dlg.show_modal_to_window (Current)
+			end
+		end
+
+	execute_command (cmd: EB_COMMAND) is
+			-- Execute command
+		do
+			save_debugging_options
+			cmd.execute
+		end
+
 	execute is
 		do
-			debugging_options_control.store_dbg_options
+			save_debugging_options
 			run.call (Void)
 		end
 
 	execute_and_close is
 		do
-			debugging_options_control.store_dbg_options
+			save_debugging_options
 				-- Hide first since it may take a long time before the program is
 				-- actually launched.
 			hide

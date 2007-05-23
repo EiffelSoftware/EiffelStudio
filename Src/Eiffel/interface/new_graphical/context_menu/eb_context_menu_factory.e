@@ -338,7 +338,7 @@ feature -- Metrics tool
 
 feature -- Call stack menu
 
-	call_stack_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_item: EB_FAVORITES_TREE_ITEM) is
+	call_stack_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Call stack menu.
 		local
 			l_call_stack_stone: CALL_STACK_STONE

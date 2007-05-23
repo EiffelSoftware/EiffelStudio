@@ -784,4 +784,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class FORMAL_DEC_AS
+end
+

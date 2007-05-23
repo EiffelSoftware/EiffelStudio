@@ -2665,38 +2665,40 @@ feature {NONE} -- Implementation
 			l_il_ext: IL_EXTENSION_I
 			l_feature_b: FEATURE_B
 		do
-			l_cl_type ?= context.real_type (a_node.type)
-			Result := a_is_target_of_call and then l_cl_type.is_true_expanded and then not l_cl_type.is_enum
+			if a_is_target_of_call then
+				l_cl_type ?= context.real_type (a_node.type)
+				Result := l_cl_type /= Void and then l_cl_type.is_true_expanded and then not l_cl_type.is_enum
 
-			if Result then
-				l_call_access ?= a_node.parent.message
-
-				if l_call_access = Void then
-						-- Find out if it is a nested call.
-					l_nested ?= a_node.parent.message
-
-					if l_nested = Void then
-						l_constant ?= a_node.parent.message
-						check
-								-- It has to be a constant access, as otherwise
-								-- it means the original code was not Eiffel code.
-							l_constant_not_void: l_constant /= Void
-						end
-						l_call_access ?= l_constant.access
-					else
-						l_call_access ?= l_nested.target
-					end
-				end
-
-					-- We do not load the address if it is an optimized call of the compiler.
-				l_feature_b ?= l_call_access
-				Result := l_feature_b = Void or else not il_special_routines.has (l_feature_b, l_cl_type)
 				if Result then
-					l_ext ?= l_call_access
-					if l_ext /= Void then
-						l_il_ext ?= l_ext.extension
-						Result := l_il_ext = Void or else l_il_ext.type /=
-							{SHARED_IL_CONSTANTS}.Operator_type
+					l_call_access ?= a_node.parent.message
+
+					if l_call_access = Void then
+							-- Find out if it is a nested call.
+						l_nested ?= a_node.parent.message
+
+						if l_nested = Void then
+							l_constant ?= a_node.parent.message
+							check
+									-- It has to be a constant access, as otherwise
+									-- it means the original code was not Eiffel code.
+								l_constant_not_void: l_constant /= Void
+							end
+							l_call_access ?= l_constant.access
+						else
+							l_call_access ?= l_nested.target
+						end
+					end
+
+						-- We do not load the address if it is an optimized call of the compiler.
+					l_feature_b ?= l_call_access
+					Result := l_feature_b = Void or else not il_special_routines.has (l_feature_b, l_cl_type)
+					if Result then
+						l_ext ?= l_call_access
+						if l_ext /= Void then
+							l_il_ext ?= l_ext.extension
+							Result := l_il_ext = Void or else l_il_ext.type /=
+								{SHARED_IL_CONSTANTS}.Operator_type
+						end
 					end
 				end
 			end

@@ -42,8 +42,6 @@ feature -- Output
 			a_text_formatter.add ("Formal #")
 			a_text_formatter.add_int (formal_number)
 			a_text_formatter.add (": ")
-			--a_text_formatter.add_new_line
-			--a_text_formatter.add ("Actual generic parameter: ")
 			actual_type_set.ext_append_to (a_text_formatter, type.associated_class )
 			a_text_formatter.add_new_line
 			if c_type.has_formal then

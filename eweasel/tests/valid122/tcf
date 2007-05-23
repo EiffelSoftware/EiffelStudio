@@ -15,12 +15,14 @@ copy_sub 	 test.e $CLUSTER test.e
 copy_raw 	 test1.e $CLUSTER test1.e
 copy_raw 	 test2.e $CLUSTER test2.e
 compile_melted
-compile_result 	 validity_error TEST VTGD(2)
+compile_result 	 validity_error TEST VTCG
+-- VTGD(2)
 
 define		 EXPRESSION "agent {HASH_TABLE [TEST1, TEST1]}.make"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VTGD(2)
+compile_result 	 validity_error TEST VTCG
+-- VTGD(2)
 
 define		 EXPRESSION "create {HASH_TABLE [expanded TEST1, expanded TEST1]}.make (5)"
 copy_sub 	 test.e $CLUSTER test.e
@@ -35,11 +37,13 @@ compile_result 	 validity_error TEST VTEC(2)
 define		 EXPRESSION "create {HASH_TABLE [TEST2 [LIST [DOUBLE]], TEST2 [LIST [DOUBLE]]]}.make (5)"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VTGD(2); TEST VTGD(2); TEST VTGD(2)
+compile_result 	 validity_error TEST VTCG
+-- 	 validity_error TEST VTGD(2)
 
 define		 EXPRESSION "agent {HASH_TABLE [TEST2 [LIST [DOUBLE]], TEST2 [LIST [DOUBLE]]]}.make"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VTGD(2); TEST VTGD(2); TEST VTGD(2)
+compile_result validity_error TEST VTCG
+-- 	 validity_error TEST VTGD(2)
 
 test_end

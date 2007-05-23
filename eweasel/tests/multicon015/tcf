@@ -37,7 +37,8 @@ define VTGD2_1 ""
 define VTGD3_1 ""
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VTGD(2)
+compile_result 	validity_error TEST VTCG
+--replace with VTGD(2) once all error codes are redone
 
 define VTGD2_1 "--"
 define EXPANDED ""

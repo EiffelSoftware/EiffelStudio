@@ -395,7 +395,7 @@ feature {NONE} -- Implementation attributes.
 	is_in_orignal_row: BOOLEAN
 			-- Orignal parent row which `caller' in.
 
-	motion_count_max: INTEGER is 20
+	motion_count_max: INTEGER is 40
 			-- Max number start to change to resizing mode.
 
 	easy_drag_offset: INTEGER is 50

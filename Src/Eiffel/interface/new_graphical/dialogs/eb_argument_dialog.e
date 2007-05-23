@@ -235,7 +235,6 @@ feature {NONE} -- Implementation
 			msg: STRING_GENERAL
 		do
 			if debugging_options_control.has_changed then
-				msg := "Profiles are modified.%NDo you want to apply the change before continuing ?"
 				create dlg.make_initialized (2,
 								preferences.dialog_data.confirm_apply_debugger_profiles_string,
 								warning_messages.w_apply_debugger_profiles_before_continuing,
@@ -243,7 +242,7 @@ feature {NONE} -- Implementation
 								preferences.preferences
 							)
 				dlg.set_ok_action (agent debugging_options_control.store_dbg_options)
-				dlg.set_no_action (Void)
+				dlg.set_no_action (agent do_nothing)
 				dlg.show_modal_to_window (Current)
 			end
 		end

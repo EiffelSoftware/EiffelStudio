@@ -1057,6 +1057,7 @@ test	expanded-derivation-reattachment	exec272 tcf pass execution expanded generi
 test	expanded-creation-semantics	exec273 tcf pass execution expanded creation attachment clone
 test	agent-for-expanded-derivation	exec274 tcf pass execution expanded generic agent
 test	merging-feature-with-formal	exec275 tcf pass execution expanded generic merging
+test	entry-point-defined	exec276 tcf pass execution expanded generic merging
 
 
 
@@ -1695,11 +1696,11 @@ test dotnet-inherit-new-array-type		dotnet014	tcf pass dotnet
 test none-usage-in-internal-type-comparison	dotnet015	tcf fail dotnet
 if DOTNET test dotnet-empty-custom-attributes	dotnet016	tcf pass dotnet
 test dotnet-replicated-standard_twin		dotnet017	tcf pass dotnet
-if DOTNET test dotnet-custom-attributes	dotnet018	tcf fail dotnet
+if DOTNET test dotnet-custom-attributes	dotnet018	tcf fail dotnet custom_attributes
 if DOTNET test dotnet-attribute-in-enum	dotnet019	tcf pass dotnet
 if DOTNET test dotnet-enum-value		dotnet020	tcf fail dotnet
 if DOTNET test dotnet-value-type-initialization	dotnet021	tcf pass dotnet
-if DOTNET test custom-attribute-type-change	dotnet022	tcf pass dotnet incrementality
+if DOTNET test custom-attribute-type-change	dotnet022	tcf pass dotnet incrementality custom_attributes
 if DOTNET test deferred-inherited-from-external	dotnet023	tcf pass dotnet
 if DOTNET test renamed-feature-from-interface	dotnet024	tcf pass dotnet
 if DOTNET test property-name-clash	dotnet025	tcf pass dotnet property
@@ -1769,3 +1770,12 @@ if DOTNET test ctor-root-creation-ctor dotnet088	tcf fail dotnet constructor
 if DOTNET test ctor-multi-source-ctors dotnet089	tcf fail dotnet constructor
 if DOTNET test ctor-reference-from-external-type dotnet090	tcf fail dotnet constructor
 if DOTNET test ctor-multi-source-unique-ctors dotnet091	tcf fail dotnet constructor
+if DOTNET test ca-use-of-non-native-attribute dotnet092	tcf fail dotnet custom_attributes
+if DOTNET test ca-incorrect-context-usage dotnet093	tcf fail dotnet custom_attributes
+if DOTNET test ca-peripheral-assembly-metadata dotnet094	tcf pass dotnet custom_attributes
+if DOTNET test ca-assembly-md-with-compile-all dotnet095	tcf fail dotnet custom_attributes
+if DOTNET test ca-correct-assignment dotnet096	tcf pass dotnet custom_attributes
+if DOTNET test ca-basic-custom-attribute dotnet097	tcf pass dotnet custom_attributes
+if DOTNET test ca-custom-attribute-with-property dotnet098	tcf fail dotnet custom_attributes property
+if DOTNET test ca-custom-attribute-with-ctor dotnet099	tcf pass dotnet custom_attributes constructor
+if DOTNET test ca-custom-attribute-with-create dotnet100	tcf fail dotnet custom_attributes

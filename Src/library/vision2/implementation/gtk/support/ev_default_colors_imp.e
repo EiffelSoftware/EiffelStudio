@@ -11,33 +11,59 @@ class
 
 feature -- Access
 
-	default_background_color, Color_dialog, Color_3d_face, Color_read_only, Color_read_write: EV_COLOR is
-			-- Color usely used for the background of dialogs
+	color_read_write: EV_COLOR is
+			-- Color used for read write.
+		local
+			l_widget: POINTER
 		do
-			Result := color_from_state (bg_style, {EV_GTK_EXTERNALS}.gtk_state_normal_enum)
+			l_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
+			Result := color_from_state (l_widget, base_style, {EV_GTK_EXTERNALS}.gtk_state_normal_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
+		end
+
+	color_read_only: EV_COLOR is
+			-- Color used for read only.
+		local
+			l_widget: POINTER
+		do
+			l_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
+			Result := color_from_state (l_widget, base_style, {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
+		end
+
+	default_background_color, Color_dialog, Color_3d_face: EV_COLOR is
+			-- Color used for the background of dialogs
+		local
+			l_widget: POINTER
+		do
+			l_widget := {EV_GTK_EXTERNALS}.gtk_dialog_new
+			Result := color_from_state (l_widget, bg_style, {EV_GTK_EXTERNALS}.gtk_state_normal_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
 		end
 
 	default_foreground_color, Color_dialog_fg, Color_3d_highlight, Color_3d_shadow: EV_COLOR is
-			-- Color usely used for the foreground of dialogs
+			-- Color used for the foreground of dialogs.
+		local
+			l_widget: POINTER
 		do
-			Result := color_from_state (fg_style, {EV_GTK_EXTERNALS}.gtk_state_normal_enum)
+			l_widget := {EV_GTK_EXTERNALS}.gtk_dialog_new
+			Result := color_from_state (l_widget, fg_style, {EV_GTK_EXTERNALS}.gtk_state_normal_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
 		end
 
 feature {NONE} -- Implementation
 
-	color_from_state (style_type, a_state: INTEGER): EV_COLOR is
+	color_from_state (a_widget: POINTER; style_type, a_state: INTEGER): EV_COLOR is
 			-- Return color of either fg or bg representing `a_state'
 		require
 			a_state_valid: a_state >= {EV_GTK_EXTERNALS}.gtk_state_normal_enum and a_state <= {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
 		local
-			a_widget, a_style: POINTER
+			a_style: POINTER
 			a_gdk_color: POINTER
 			a_r, a_g, a_b: INTEGER
 		do
-			a_widget := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			a_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (a_widget)
 				-- Style is cached so it doesn't need to be unreffed.
-
 			inspect
 				style_type
 			when text_style  then
@@ -54,7 +80,6 @@ feature {NONE} -- Implementation
 			a_r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_gdk_color)
 			a_g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_gdk_color)
 			a_b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_gdk_color)
-			{EV_GTK_EXTERNALS}.gtk_widget_destroy (a_widget)
 			create Result
 			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end

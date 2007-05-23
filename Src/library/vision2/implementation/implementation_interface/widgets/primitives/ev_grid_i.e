@@ -3078,6 +3078,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						-- `Current' is empty, so simply keep the same index.
 					index := an_index
 				end
+				if row_count > 0 and index <= row_count and then not row (index).is_show_requested then
+						-- If we are removing a row that is hidden, then unless we reset the index to start
+						-- recomputation to a row that is shown, the visible count lookup will return an incorrect value
+						-- and corrupt our calculations.
+					index := 1
+				end
 			end
 			if uses_row_offsets then
 					-- Only perform recomputation if the rows do not all have the same height

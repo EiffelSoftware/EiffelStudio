@@ -28,10 +28,11 @@ feature -- Basic operations
 			-- Initialize a new thread running `execute'.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
+		local
+			l_attr: THREAD_ATTRIBUTES
 		do
-			terminated := False
-			create_thread (Current, $thr_main)
-			thread_id := last_created_thread
+			create l_attr.make
+			launch_with_attributes (l_attr)
 		end
 
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
@@ -58,6 +59,8 @@ feature {NONE} -- Externals
 
 	create_thread (current_obj: THREAD; init_func: POINTER) is
 			-- Initialize and start thread.
+		obsolete
+			"Use `launch' instead."
 		external
 			"C signature (EIF_OBJECT, EIF_POINTER) use %"eif_threads.h%""
 		alias

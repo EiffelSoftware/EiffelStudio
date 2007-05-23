@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			parent_not_void: a_parent /= Void
 		do
 			parent_window := a_parent
+			create row_unselected_actions
 			build_interface
 			update
 		end
@@ -364,6 +365,8 @@ feature {NONE} -- Grid events
 			end
 		end
 
+	row_unselected_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ROW]]
+
 	on_row_unselected (a_row: EV_GRID_ROW) is
 			-- `a_row' has been unselected
 		local
@@ -388,6 +391,7 @@ feature {NONE} -- Grid events
 						end
 					end
 				end
+				row_unselected_actions.call ([a_row])
 			end
 		end
 
@@ -1003,9 +1007,9 @@ feature {NONE} -- Environment actions
 			gei.activate_actions.extend (agent add_edition_tab_action_to_item (gti, ?))
 			gti.activate_actions.extend (agent add_edition_tab_action_to_item (gei, ?))
 
-			gei.deactivate_actions.extend (agent change_environment_entry_from_row (srow))
-			gti.change_actions.extend (agent change_environment_entry_from_row (srow))
-			gti.deactivate_actions.extend (agent change_environment_entry_from_row (srow))
+			gei.deactivate_actions.extend (agent change_environment_entry_from_row (srow, False))
+			gti.change_actions.extend (agent change_environment_entry_from_row (srow, False))
+			gti.deactivate_actions.extend (agent change_environment_entry_from_row (srow, False))
 
 			gei.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
 			gti.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
@@ -1022,7 +1026,7 @@ feature {NONE} -- Environment actions
 								inspect a_key.code
 								when {EV_KEY_CONSTANTS}.key_delete then
 									a_gei.remove_text
-									change_environment_entry_from_row (a_gei.row)
+									change_environment_entry_from_row (a_gei.row, True)
 								when {EV_KEY_CONSTANTS}.key_enter then
 									a_gei.activate
 								else
@@ -1182,14 +1186,14 @@ feature {NONE} -- Environment actions
 				m.extend (create {EV_MENU_SEPARATOR})
 				create mi.make_with_text (interface_names.m_add_new_variable)
 				mi.select_actions.extend (agent on_new_environ_event (a_row.parent_row))
-				mi.select_actions.extend (agent change_environment_entry_from_row (a_row))
+				mi.select_actions.extend (agent change_environment_entry_from_row (a_row, True))
 				m.extend (mi)
 
 				m.show
 			end
 		end
 
-	change_environment_entry_from_row (a_row: EV_GRID_ROW) is
+	change_environment_entry_from_row (a_row: EV_GRID_ROW; safe_grid_operation: BOOLEAN) is
 			-- Change environment related to `a_row'
 		require
 			a_row_parented: a_row /= Void and then a_row.parent /= Void
@@ -1202,7 +1206,7 @@ feature {NONE} -- Environment actions
 			old_k: STRING_32
 			c: BOOLEAN
 		do
-			if not inside_tab_accelerator then
+			if safe_grid_operation or else not inside_tab_accelerator then
 				old_k := environment_variable_name_from_row (a_row)
 				p := profile_from_row (a_row)
 				check p /= Void end
@@ -1238,10 +1242,23 @@ feature {NONE} -- Environment actions
 						change_env_on (env, p)
 					end
 				else
-					ev_application.do_once_on_idle (agent remove_env_row (a_row))
+					if safe_grid_operation then
+						remove_env_row (a_row)
+					else
+						row_unselected_actions.extend_kamikaze (agent safe_remove_env_row)
+					end
 				end
 			end
 		end
+
+	safe_remove_env_row (a_row: EV_GRID_ROW) is
+			--
+		do
+			if a_row /= Void and a_row.parent /= Void then
+				remove_env_row (a_row)
+			end
+		end
+
 
 	remove_env_row (a_row: EV_GRID_ROW) is
 			-- Remove environment variable related to `a_row'
@@ -1251,7 +1268,8 @@ feature {NONE} -- Environment actions
 		local
 			k: like environment_variable_name_from_row
 			p: like profile_from_row
-			r: INTEGER
+			r, i: INTEGER
+			gi: EV_GRID_ITEM
 			g: EV_GRID
 		do
 			k := environment_variable_name_from_row (a_row)
@@ -1266,6 +1284,18 @@ feature {NONE} -- Environment actions
 			elseif r > 1 then
 				g.select_row (r - 1)
 			end
+			from
+				i := 1
+			until
+				i > a_row.count
+			loop
+				gi := a_row.item (i)
+				if gi /= Void and then not gi.is_destroyed and then gi.is_parented then
+					gi.deactivate
+				end
+				i := i + 1
+			end
+			a_row.clear
 			g.remove_row (r)
 			change_env_on (p.env, p)
 		end

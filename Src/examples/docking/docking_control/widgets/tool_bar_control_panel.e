@@ -262,12 +262,14 @@ feature {NONE} -- Implementation
 				elseif a_dialog.is_font then
 					create l_f_button.make
 					l_font := a_dialog.font
-					l_f_button.set_font (l_font)
-					l_f_button.set_text ("Button #" + new_widget_number.out)
-					l_f_button.set_pixel_buffer (sd_shared.icons.close_all)
-					l_f_button.select_actions.extend (agent button_clicked (l_f_button))
-					setup_sensitivity (l_f_button)
-					l_content.items.extend (l_f_button)
+					if l_font /= Void then
+						l_f_button.set_font (l_font)
+						l_f_button.set_text ("Button #" + new_widget_number.out)
+						l_f_button.set_pixel_buffer (sd_shared.icons.close_all)
+						l_f_button.select_actions.extend (agent button_clicked (l_f_button))
+						setup_sensitivity (l_f_button)
+						l_content.items.extend (l_f_button)
+					end
 				elseif a_dialog.is_width then
 					create l_w_button.make
 					l_width := a_dialog.max_width

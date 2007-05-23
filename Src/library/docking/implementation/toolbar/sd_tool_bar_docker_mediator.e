@@ -291,6 +291,8 @@ feature {NONE} -- Implementation functions
 			not_floating: not caller.is_floating
 		local
 			l_should_float: BOOLEAN
+			l_env: EV_ENVIRONMENT
+			l_platform: PLATFORM
 		do
 			-- We should detect if user dragging at the beginning of a tool bar row/column
 			-- This is let user easily drag a tool bar to the begnning of a row/column
@@ -300,12 +302,35 @@ feature {NONE} -- Implementation functions
 				docking_manager.command.lock_update (Void, True)
 				caller.assistant.record_docking_state
 
-				-- On windows, following disable/enable capture lines is not needed,
-				-- But on Gtk, we need first disable_capture then enable capture,
-				-- because it's off-screen widget, it'll not have capture when it show again.
-				caller.tool_bar.disable_capture
+				create l_platform
+				if not l_platform.is_windows then
+					-- On windows, following disable/enable capture lines is not needed,
+					-- But on Gtk, we need first disable capture then enable capture,
+					-- because it's off-screen widget, it'll not have capture until it show again.
+					caller.tool_bar.disable_capture
+				end
+
 				caller.float (a_screen_x - offset_x, a_screen_y - offset_y, True)
-				caller.tool_bar.enable_capture
+
+				if not l_platform.is_windows then
+					-- We can't enable capture immediately, seems GTK window is not ready at this point.
+					-- enable capture not fully working at this point (only capture events when pointer in main window), see bug#12542 problem 1.
+					-- caller.tool_bar.enable_capture
+					create l_env
+					l_env.application.do_once_on_idle (agent
+															local
+																l_screen: EV_SCREEN
+																l_position: EV_COORDINATE
+															do
+																caller.tool_bar.enable_capture
+
+																-- Set floating tool bar to current pointer position.
+																create l_screen
+																l_position := l_screen.pointer_position
+																on_pointer_motion (l_position.x, l_position.y)
+															end
+														)
+				end
 
 				docking_manager.command.unlock_update
 			else

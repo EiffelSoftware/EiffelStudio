@@ -3,7 +3,7 @@
 		<root cluster="root_cluster" feature="${FL_CREATION_ROUTINE_NAME}" class="${FL_ROOT_CLASS_NAME}" ${FL_ALL_CLASSES}/>
 
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="${FL_CONSOLE_APPLICATION}"/>
 		<setting name="msil_generation" value="True"/>

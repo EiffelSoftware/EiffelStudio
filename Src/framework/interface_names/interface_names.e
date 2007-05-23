@@ -775,6 +775,13 @@ feature -- Context menu
 			Result := locale.formatted_string (locale.translation ("&Pick $1 '$2'"), [a_type, a_name])
 		end
 
+	m_context_menu_retarget (a_type, a_name: STRING_GENERAL): STRING_GENERAL
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Retarget to $1 '$2'"), [a_type, a_name])
+		end
+
 	m_context_menu_new_tab (a_type, a_name: STRING_GENERAL): STRING_GENERAL
 		require
 			exists: a_type /= Void and a_name /= Void

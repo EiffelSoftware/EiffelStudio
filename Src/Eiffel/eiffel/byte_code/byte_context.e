@@ -1166,10 +1166,6 @@ feature -- Access
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: context_class_type /= Void
-		local
-			cl_type_i: CL_TYPE_I
-			l_formal: FORMAL_I
-			l_type_set: TYPE_SET_A
 		do
 			Result := real_type (type)
 		ensure

@@ -19,7 +19,7 @@ create
 
 feature
 
-		dump (a_dump_renaming: BOOLEAN): STRING_8
+	dump (a_dump_renaming: BOOLEAN): STRING_8
 			-- Dumps a list of constraining types
 			--
 			-- `a_dump_renaming' states whether the renaming clause should be dumped as well.	

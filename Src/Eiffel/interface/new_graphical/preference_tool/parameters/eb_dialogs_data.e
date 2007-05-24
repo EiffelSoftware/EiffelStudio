@@ -284,6 +284,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	confirm_save_metric_preference: BOOLEAN_PREFERENCE
 			-- Should we save requested metric?
 
+	confirm_apply_debugger_profiles_preference: BOOLEAN_PREFERENCE
+
 	acknowledge_not_loaded_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
@@ -407,6 +409,7 @@ feature {NONE} -- Implementation
 			confirm_build_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_build_precompile_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
 			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
+			confirm_apply_debugger_profiles_preference := l_manager.new_boolean_preference_value (l_manager, confirm_apply_debugger_profiles_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
 			confirm_finalize_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_precompile_string, True)
 			show_starting_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_starting_dialog_string, True)
@@ -454,6 +457,7 @@ invariant
 	confirm_finalize_preference_not_void: confirm_finalize_preference /= Void
 	confirm_freeze_preference_not_void: confirm_freeze_preference /= Void
 	confirm_save_before_compile_preference_not_void: confirm_save_before_compile_preference /= Void
+	confirm_apply_debugger_profiles_preference_not_void: confirm_apply_debugger_profiles_preference /= Void
 	confirm_finalize_assertions_preference_not_void: confirm_finalize_assertions_preference /= Void
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void
 	confirm_ignore_all_breakpoints_preference_not_void: confirm_ignore_all_breakpoints_preference /= Void

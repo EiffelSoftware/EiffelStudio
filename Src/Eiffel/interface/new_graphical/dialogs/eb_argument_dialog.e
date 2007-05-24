@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 								preferences.preferences
 							)
 				dlg.set_ok_action (agent debugging_options_control.store_dbg_options)
-				dlg.set_no_action (agent do_nothing)
+				dlg.set_cancel_action (agent do_nothing)
 				dlg.show_modal_to_window (Current)
 			end
 		end

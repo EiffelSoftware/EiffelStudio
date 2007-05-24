@@ -715,6 +715,7 @@ feature -- Generation, External archives and object files.
 			l_added_objects: SEARCH_TABLE [STRING]
 			l_path: STRING
 			l_has_objects: BOOLEAN
+			l_state: CONF_STATE
 		do
 			create l_added_objects.make (10)
 				-- add the object files
@@ -725,11 +726,12 @@ feature -- Generation, External archives and object files.
 				from
 					i := 1
 					nb := object_file_names.count
+					l_state := universe.conf_state
 				until
 					i > nb
 				loop
 					l_ext := object_file_names.i_th (i)
-					if l_ext.is_enabled (universe.conf_state) then
+					if l_ext.is_enabled (l_state) then
 						l_path := l_ext.location
 						safe_external_path (l_path, False)
 							-- don't add the same object multiple times

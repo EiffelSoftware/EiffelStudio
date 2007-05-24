@@ -217,18 +217,20 @@ feature {NONE} -- Implementation
 			l_item: EV_MENU_ITEM
 		do
 			l_window ?= source_pebble
-			if l_window /= Void then
+			if l_window /= Void and then not l_window.destroyed then
 				l_menu := l_window.new_menu
-			end
-			menu.wipe_out
-			from
-				l_menu.start
-			until
-				l_menu.after or l_menu.is_empty
-			loop
-				l_item := l_menu.item
-				l_menu.remove
-				menu.extend (l_item)
+				menu.wipe_out
+				from
+					l_menu.start
+				until
+					l_menu.after or l_menu.is_empty
+				loop
+					l_item := l_menu.item
+					l_menu.remove
+					menu.extend (l_item)
+				end
+			else
+				menu.wipe_out
 			end
 		end
 

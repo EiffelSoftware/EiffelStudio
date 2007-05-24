@@ -1779,3 +1779,5 @@ if DOTNET test ca-basic-custom-attribute dotnet097	tcf pass dotnet custom_attrib
 if DOTNET test ca-custom-attribute-with-property dotnet098	tcf fail dotnet custom_attributes property
 if DOTNET test ca-custom-attribute-with-ctor dotnet099	tcf pass dotnet custom_attributes constructor
 if DOTNET test ca-custom-attribute-with-create dotnet100	tcf fail dotnet custom_attributes
+if DOTNET test application-optimizations-enabled dotnet101	tcf pass dotnet optimization
+if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet consumer

@@ -134,7 +134,7 @@ feature
 				end
 			end
 			buffer.put_string (", (")
-			buffer.put_array (arg_types)
+			buffer.put_string_array (arg_types)
 			buffer.put_string (")) ")
 		end
 

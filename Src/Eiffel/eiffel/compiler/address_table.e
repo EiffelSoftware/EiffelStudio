@@ -1281,7 +1281,7 @@ feature {NONE} -- Generation
 			tmp_buffer.clear_all
 			tmp_buffer.put_string (a_return_type)
 			tmp_buffer.put_string ("(*f_ptr) (")
-			tmp_buffer.put_array (a_types)
+			tmp_buffer.put_string_array (a_types)
 			tmp_buffer.put_string (")")
 			l_arg_types.put (tmp_buffer.as_string, 1)
 				-- The name of the pointer is embedded in its type

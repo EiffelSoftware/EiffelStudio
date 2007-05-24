@@ -1034,7 +1034,7 @@ feature -- Implementation
 	internal_pick_and_drop_source: like pick_and_drop_source
 	internal_docking_source: like docking_source
 
-	keyboard_modifier_mask: INTEGER is
+	keyboard_modifier_mask: NATURAL_32 is
 			-- Mask representing current keyboard modifiers state.
 		local
 			l_display_data: like retrieve_display_data
@@ -1048,7 +1048,7 @@ feature -- Implementation
 			Result := l_display_data.mask
 		end
 
-	retrieve_display_data: TUPLE [window: POINTER; x, y: INTEGER; mask: INTEGER; originating_x, originating_y: INTEGER] is
+	retrieve_display_data: TUPLE [window: POINTER; x, y: INTEGER; mask: NATURAL_32; originating_x, originating_y: INTEGER] is
 			-- Retrieve mouse and keyboard data from the display.
 		do
 			if not use_stored_display_data then
@@ -1061,7 +1061,8 @@ feature -- Implementation
 	update_display_data is
 			-- Update stored values with current values.
 		local
-			temp_mask, temp_x, temp_y: INTEGER
+			temp_mask: NATURAL_32
+			temp_x, temp_y: INTEGER
 			temp_ptr: POINTER
 			l_stored_display_data: like stored_display_data
 		do

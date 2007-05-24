@@ -51,7 +51,7 @@ feature -- Status report
 	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer.
 		local
-			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: INTEGER]
+			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
 		do
 			l_display_data := app_implementation.retrieve_display_data
 			create Result.set (l_display_data.a_x, l_display_data.a_y)

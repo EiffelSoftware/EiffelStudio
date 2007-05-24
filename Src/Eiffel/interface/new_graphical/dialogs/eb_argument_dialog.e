@@ -103,12 +103,6 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 
-			create b.make_with_text (interface_names.b_ok)
-			vbox.extend (b)
-			Layout_constants.set_default_width_for_button (b)
-			vbox.disable_item_expand (b)
-			b.select_actions.extend (agent on_ok)
-
 			create b.make_with_text (interface_names.b_close)
 			vbox.extend (b)
 			Layout_constants.set_default_width_for_button (b)
@@ -140,7 +134,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_wb_button)
 				start_wb_button.set_pixmap (cmd.pixmap)
 				start_wb_button.set_tooltip (cmd.tooltip)
-				start_wb_button.select_actions.extend (agent execute_command (cmd))
+				start_wb_button.select_actions.extend (agent execute_operation (agent cmd.execute))
 				Layout_constants.set_default_width_for_button (start_wb_button)
 
 				cmd := eb_debugger_manager.run_finalized_cmd
@@ -149,7 +143,7 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_final_button)
 				start_final_button.set_pixmap (cmd.pixmap)
 				start_final_button.set_tooltip (cmd.tooltip)
-				start_final_button.select_actions.extend (agent execute_command (cmd))
+				start_final_button.select_actions.extend (agent execute_operation (agent cmd.execute))
 				Layout_constants.set_default_width_for_button (start_final_button)
 			end
 
@@ -186,7 +180,6 @@ feature {NONE} -- Actions
 	 		-- Action to take when user presses 'Cancel' button.
 		local
 			dlg: EB_CONFIRMATION_DIALOG
-			msg: STRING_GENERAL
 		do
 			if debugging_options_control.has_changed then
 				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
@@ -196,13 +189,6 @@ feature {NONE} -- Actions
 					)
 				dlg.show_modal_to_window (Current)
 			end
-			hide
-		end
-
-	on_ok is
-	 		-- Action to take when user presses 'OK' button.
-		do
-			save_debugging_options
 			hide
 		end
 
@@ -239,11 +225,10 @@ feature {NONE} -- Implementation
             end
       	end
 
-	save_debugging_options is
-			--
+	execute_operation (op: PROCEDURE [ANY, TUPLE]) is
+			-- Execute operation `op'
 		local
 			dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
-			msg: STRING_GENERAL
 		do
 			if debugging_options_control.has_changed then
 				create dlg.make_initialized (2,
@@ -252,32 +237,26 @@ feature {NONE} -- Implementation
 								Interface_names.l_Do_not_show_again,
 								preferences.preferences
 							)
-				dlg.set_ok_action (agent debugging_options_control.store_dbg_options)
+				dlg.set_ok_action (agent (a_op: PROCEDURE [ANY, TUPLE])
+						do
+							debugging_options_control.store_dbg_options
+							a_op.call (Void)
+						end (op))
 				dlg.set_cancel_action (agent do_nothing)
 				dlg.show_modal_to_window (Current)
+			else
+				op.call (Void)
 			end
-		end
-
-	execute_command (cmd: EB_COMMAND) is
-			-- Execute command
-		do
-			save_debugging_options
-			cmd.execute
 		end
 
 	execute is
 		do
-			save_debugging_options
-			run.call (Void)
+			execute_operation (run)
 		end
 
 	execute_and_close is
 		do
-			save_debugging_options
-				-- Hide first since it may take a long time before the program is
-				-- actually launched.
-			hide
-			run.call (Void)
+			execute_operation (agent do hide; run.call (Void) end)
 		end
 
 feature {NONE} -- Observing event handling.

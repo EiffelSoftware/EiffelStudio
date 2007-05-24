@@ -487,12 +487,12 @@ feature -- Data change
 		require
 			v /= Void
 		local
-			s: STRING_GENERAL
+			s: STRING_32
 		do
 			if v.is_empty then
 				s := Void
 			else
-				s := v
+				s := v.as_string_32
 			end
 			if not same_string_value (p.title, s) then
 				p.title := s
@@ -594,7 +594,7 @@ feature {NONE} -- Button Actions
 			r: EV_GRID_ROW
 		do
 			profiles_grid.remove_selection
-			r := added_profile_text_row ([interface_names.l_profile_no.as_string_32 + profiles_count.out, Void, Void, Void], False, True)
+			r := added_profile_text_row ([interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, Void, Void, Void], False, True)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
 			end

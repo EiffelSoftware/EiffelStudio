@@ -720,13 +720,13 @@ feature -- Generation, External archives and object files.
 			create l_added_objects.make (10)
 				-- add the object files
 			object_file_names := universe.conf_system.all_external_object
+			l_state := universe.conf_state
 			if object_file_names /= Void then
 				make_file.put_string ("EXTERNALS = ")
 				l_has_objects := True
 				from
 					i := 1
 					nb := object_file_names.count
-					l_state := universe.conf_state
 				until
 					i > nb
 				loop
@@ -761,7 +761,7 @@ feature -- Generation, External archives and object files.
 					i > nb
 				loop
 					l_ext := object_file_names.i_th (i)
-					if l_ext.is_enabled (universe.conf_state) then
+					if l_ext.is_enabled (l_state) then
 						l_path := l_ext.location
 						safe_external_path (l_path, False)
 							-- don't add the same library multiple times
@@ -789,6 +789,7 @@ feature -- Generation, External archives and object files.
 			l_ext: CONF_EXTERNAL_INCLUDE
 			l_path: STRING
 			l_added_includes: SEARCH_TABLE [STRING]
+			l_state: CONF_STATE
 		do
 			create l_added_includes.make (10)
 			include_paths := universe.conf_system.all_external_include
@@ -797,11 +798,12 @@ feature -- Generation, External archives and object files.
 				from
 					i := 1
 					nb := include_paths.count
+					l_state := universe.conf_state
 				until
 					i > nb
 				loop
 					l_ext := include_paths.i_th (i)
-					if l_ext.is_enabled (universe.conf_state) then
+					if l_ext.is_enabled (l_state) then
 						l_path := l_ext.location
 						safe_external_path (l_path, False)
 							-- all remaining $ are by choice so mask them
@@ -831,6 +833,7 @@ feature -- Generation, External archives and object files.
 			l_ext: CONF_EXTERNAL_MAKE
 			l_added_make: SEARCH_TABLE [STRING]
 			l_path: STRING
+			l_state: CONF_STATE
 		do
 			create l_added_make.make (1)
 			makefile_names := universe.conf_system.all_external_make
@@ -838,11 +841,12 @@ feature -- Generation, External archives and object files.
 				make_file.put_string ("EXTERNAL_MAKEFILES = ")
 				i := 1
 				nb := makefile_names.count
+				l_state := universe.conf_state
 			until
 				i > nb
 			loop
 				l_ext := makefile_names.i_th (i)
-				if l_ext.is_enabled (universe.conf_state) then
+				if l_ext.is_enabled (l_state) then
 					l_path := l_ext.location
 					safe_external_path (l_path, False)
 					if not l_added_make.has (l_path) then

@@ -43,6 +43,17 @@ feature -- Status report
 			end
 		end
 
+
+	last_com_code: INTEGER is
+			-- Last value of the COM error if any.
+		require
+			exists: exists
+		do
+			check
+				False
+			end
+		end
+
 feature -- Retrieval
 
 	unload is

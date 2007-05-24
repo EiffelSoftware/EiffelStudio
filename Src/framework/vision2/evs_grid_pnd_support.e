@@ -103,6 +103,7 @@ feature -- Setting
 	disable_grid_item_pnd_support is
 			-- Disable pick and drop on individual editor token.
 		do
+			grid.pick_actions.prune_all (on_pick_start_action)
 			grid.pick_ended_actions.prune_all (on_pick_ended_action)
 			grid.set_item_pebble_function (old_item_pebble_function)
 		end

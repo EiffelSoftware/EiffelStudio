@@ -538,10 +538,16 @@ feature -- Query
 			a_cell_not_void: a_cell /= Void
 		local
 			t: like grid_pnd_details_from_row_and_column
+			s: STONE
 		do
 			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
 			if t /= Void then
-				Result := t.accept_cursor
+				s ?= t.pebble
+				if s /= Void then
+					Result := s.stone_cursor
+				else
+					Result := t.accept_cursor
+				end
 			end
 		end
 
@@ -551,10 +557,16 @@ feature -- Query
 			a_cell_not_void: a_cell /= Void
 		local
 			t: like grid_pnd_details_from_row_and_column
+			s: STONE
 		do
 			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
 			if t /= Void then
-				Result := t.deny_cursor
+				s ?= t.pebble
+				if s /= Void then
+					Result := s.x_stone_cursor
+				else
+					Result := t.deny_cursor
+				end
 			end
 		end
 
@@ -587,6 +599,11 @@ feature {NONE} -- Actions implementation
 				and a_item /= Void
 			then
 				Result := grid_accept_cursor_from_cell (a_item)
+				if Result = Void then
+						--| FIXME: this is to behave correctly with  EVS_GRID_PND_SUPPORT
+						--| when the pebble in providing by EVS_GRID_PND_SUPPORT mechanism.
+					Result := implementation.accept_cursor
+				end
 			end
 		end
 
@@ -597,6 +614,11 @@ feature {NONE} -- Actions implementation
 				and a_item /= Void
 			then
 				Result := grid_deny_cursor_from_cell (a_item)
+				if Result = Void then
+						--| FIXME: this is to behave correctly with  EVS_GRID_PND_SUPPORT
+						--| when the pebble in providing by EVS_GRID_PND_SUPPORT mechanism.					
+					Result := implementation.deny_cursor
+				end
 			end
 		end
 

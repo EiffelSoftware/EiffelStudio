@@ -317,7 +317,7 @@ feature -- Element change
 
 feature {EV_GTK_WINDOW_IMP} -- Access
 
-	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
+	accel_list: HASH_TABLE [EV_ACCELERATOR, NATURAL_32]
 		-- Lookup table for accelerator access.
 
 feature {NONE} -- Accelerators

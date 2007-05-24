@@ -364,7 +364,7 @@ feature
 		alias
 			"GTK_WIDGET_FLAGS"
 		end
-		
+
 	frozen gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
 		external
 			"C [macro <gtk/gtk.h>]"
@@ -688,29 +688,28 @@ feature
 			"GTK_IS_MENU"
 		end
 
-
-	frozen gdk_control_mask_enum: INTEGER is
+	frozen gdk_control_mask_enum: NATURAL_32 is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GDK_CONTROL_MASK"
 		end
 
-	frozen gdk_mod1_mask_enum: INTEGER is
+	frozen gdk_mod1_mask_enum: NATURAL_32 is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GDK_MOD1_MASK"
 		end
 
-	frozen gdk_shift_mask_enum: INTEGER is
+	frozen gdk_shift_mask_enum: NATURAL_32 is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GDK_SHIFT_MASK"
 		end
 
-	frozen gdk_lock_mask_enum: INTEGER is
+	frozen gdk_lock_mask_enum: NATURAL_32 is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -8165,9 +8164,9 @@ feature
 			"send_event"
 		end
 
-	frozen gdk_event_button_struct_state (a_c_struct: POINTER): INTEGER is
+	frozen gdk_event_button_struct_state (a_c_struct: POINTER): NATURAL_32 is
 		external
-			"C [struct <gtk/gtk.h>] (GdkEventButton): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GdkEventButton): EIF_NATURAL_32"
 		alias
 			"state"
 		end
@@ -8340,9 +8339,9 @@ feature
 			"send_event"
 		end
 
-	frozen gdk_event_key_struct_state (a_c_struct: POINTER): INTEGER is
+	frozen gdk_event_key_struct_state (a_c_struct: POINTER): NATURAL_32 is
 		external
-			"C [struct <gtk/gtk.h>] (GdkEventKey): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GdkEventKey): EIF_NATURAL_32"
 		alias
 			"state"
 		end
@@ -8389,9 +8388,9 @@ feature
 			"send_event"
 		end
 
-	frozen gdk_event_motion_struct_state (a_c_struct: POINTER): INTEGER is
+	frozen gdk_event_motion_struct_state (a_c_struct: POINTER): NATURAL_32 is
 		external
-			"C [struct <gtk/gtk.h>] (GdkEventMotion): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GdkEventMotion): EIF_NATURAL_32"
 		alias
 			"state"
 		end

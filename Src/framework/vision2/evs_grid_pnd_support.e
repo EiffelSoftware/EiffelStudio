@@ -87,7 +87,6 @@ feature -- Setting
 
 	enable_grid_item_pnd_support is
 			-- Enable pick and drop on individual editor token.
-			-- This will overwrite the currently set `item_pebble_function'.
 			-- Actions in `pick_start_actions' will be invoked when pick starts and
 			-- actions in `pick_end_actions' will be invoked when pick ends.
 		do
@@ -106,14 +105,6 @@ feature -- Setting
 		do
 			grid.pick_ended_actions.prune_all (on_pick_ended_action)
 			grid.set_item_pebble_function (old_item_pebble_function)
-		end
-
-	set_last_pebble (a_pebble: like last_pebble) is
-			-- Set `last_pebble' with `a_pebble'.
-		do
-			last_pebble := a_pebble
-		ensure
-			last_pebble_set: last_pebble = a_pebble
 		end
 
 	set_last_picked_item (a_item: like last_picked_item) is
@@ -135,24 +126,23 @@ feature{NONE} -- Implementation
 	pick_end_actions_internal: like pick_end_actions
 			-- Implementation of `pick_end_actions'
 
-	last_pebble: ANY
-			-- Last pebble
-
 	pebble_from_grid_item (a_item: EV_GRID_ITEM): ANY is
 			-- Pebble from `a_item'
 		local
 			l_position: EV_COORDINATE
 		do
-			if a_item /= Void and then a_item.parent /= Void then
+			if a_item /= Void and then a_item.parent = grid then
 				l_position := a_item.parent.pointer_position
 				Result := stone_at_position (l_position.x, l_position.y)
+				if Result = Void and then old_item_pebble_function /= Void then
+					Result := old_item_pebble_function.item ([a_item])
+				end
 			end
-			if Result /= Void then
-				set_last_picked_item (a_item)
-			else
+			if Result = Void then
 				set_last_picked_item (Void)
+			else
+				set_last_picked_item (a_item)
 			end
-			set_last_pebble (Result)
 		end
 
 	on_pick_ended_action: PROCEDURE [ANY, TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]] is
@@ -213,7 +203,6 @@ feature{NONE} -- Implementation
 				pick_end_actions.call ([last_picked_item])
 			end
 			set_last_picked_item (Void)
-			set_last_pebble (Void)
 		ensure
 			last_picked_item_cleared: last_picked_item = Void
 		end

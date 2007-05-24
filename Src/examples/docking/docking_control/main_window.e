@@ -67,9 +67,6 @@ feature {NONE} -- Initialization
 				-- Build the Docking Manager.
 			create docking_manager.make (docking_container, Current)
 			sd_shared.set_icons (create {ICONS}.make)
---			sd_shared.set_auto_hide_tab_slide_timer_interval (200)
-
-			create toolbar_manager.make (docking_manager)
 		end
 
 	is_in_default_state: BOOLEAN is

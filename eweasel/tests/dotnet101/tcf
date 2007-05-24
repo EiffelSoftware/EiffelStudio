@@ -1,0 +1,34 @@
+test_name application-optimizations-enabled
+test_description Checks .NET application optimizations are performed when requested
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw base.e $CLUSTER base.e
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+copy_raw c.e $CLUSTER c.e
+copy_raw d.e $CLUSTER d.e
+copy_raw cluster2\e.e $CLUSTER\cluster2 e.e
+copy_raw cluster2\f.e $CLUSTER\cluster2 f.e
+copy_raw cluster2\g.e $CLUSTER\cluster2 g.e
+copy_raw cluster2\h.e $CLUSTER\cluster2 h.e
+copy_raw cluster3\i.e $CLUSTER\cluster3 i.e
+
+compile_final
+compile_result	ok
+
+execute_final 	NONE 	exec_output
+execute_result 	ok
+
+copy_raw base_2.e $CLUSTER base.e
+
+compile_final
+compile_result	ok
+
+execute_final 	NONE 	exec_output_2
+execute_result 	ok
+
+compare		exec_output output
+compare		exec_output_2 output
+
+test_end

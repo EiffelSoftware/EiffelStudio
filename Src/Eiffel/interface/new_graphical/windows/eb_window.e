@@ -73,6 +73,9 @@ feature -- Access
 
 	new_menu: EV_MENU is
 			-- Menu to be used as a context menu displaying associated commands.
+		require
+			window_not_void: window /= Void
+			window_not_destroyed: not window.is_destroyed
 		local
 			item: EV_MENU_ITEM
 			sep: EV_MENU_SEPARATOR

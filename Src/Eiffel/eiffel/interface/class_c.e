@@ -2729,6 +2729,55 @@ feature -- Properties
 			Result := lace_class.text
 		end
 
+	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C] is
+			-- Computed constraint classes.
+			-- Only class types are put into this cache so every item in the cache is error free.
+			-- All other positions are void especially those of formals.
+		require
+			a_formal_dec_not_void: a_formal_dec /= Void
+		do
+			if constraint_cache /= Void then
+				Result := constraint_cache.constraint_classes
+				if Result = Void then
+					create Result.make (1, a_formal_dec.constraints.count)
+					constraint_cache.constraint_classes := Result
+				end
+			else
+				create Result.make (1, a_formal_dec.constraints.count)
+				constraint_cache := [Result, Void]
+			end
+		ensure
+			constraint_classes_not_void: Result /= Void
+			is_result_from_cache: Result = constraint_cache.constraint_classes
+		end
+
+	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [RENAMING_A] is
+			-- Caches computed renamings.
+			-- Only sane renamings are put into this cache so every item in the cache is error free.
+			-- All other positions are void especially those of formal constraints as they are not allowed to have renamings.
+		require
+			a_formal_dec_not_void: a_formal_dec /= Void
+		do
+			if constraint_cache /= Void then
+				Result := constraint_cache.constraint_renaming
+				if Result = Void then
+					create Result.make (1, a_formal_dec.constraints.count)
+					constraint_cache.constraint_renaming := Result
+				end
+			else
+				create Result.make (1, a_formal_dec.constraints.count)
+				constraint_cache := [Void, Result]
+			end
+		ensure
+			constraint_renaming_not_void: Result /= Void
+			is_result_from_cache: Result = constraint_cache.constraint_renaming
+		end
+
+feature {NONE} -- Implementation: Properties
+
+	constraint_cache: TUPLE [constraint_classes: ARRAY [CLASS_C]; constraint_renaming: ARRAY [RENAMING_A]]
+			-- To store computed information about generic constraints of Current.
+
 feature -- IL code generation
 
 	il_data_name: STRING is

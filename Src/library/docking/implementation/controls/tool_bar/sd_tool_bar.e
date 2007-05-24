@@ -726,7 +726,9 @@ feature {NONE} -- Agents
 		do
 			create l_screen
 			l_position := l_screen.pointer_position
-			l_item := item_at_position (l_position.x, l_position.y)
+			if is_item_position_valid (l_position.x, l_position.y) then
+				l_item := item_at_position (l_position.x, l_position.y)
+			end
 			if l_item /= Void and then l_item.pebble_function /= Void then
 				l_item.pebble_function.call ([])
 				Result := l_item.pebble_function.last_result

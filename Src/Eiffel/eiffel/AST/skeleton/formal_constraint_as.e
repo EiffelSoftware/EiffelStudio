@@ -72,10 +72,14 @@ feature -- Status
 				loop
 					l_constraining_type := l_constraints.item
 					if l_constraining_type.renaming /= Void then
-						generate_renaming (l_constraining_type.renaming)
-						create l_renamed_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),last_renaming)
+						create l_renamed_type.make (
+							type_a_generator.evaluate_type_if_possible (l_constraining_type.type,
+								a_context_class),
+							new_renaming_a (l_constraining_type.renaming))
 					else
-						create l_renamed_type.make (type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class),Void)
+						create l_renamed_type.make (
+							type_a_generator.evaluate_type_if_possible (l_constraining_type.type,
+							a_context_class), Void)
 					end
 					Result.extend (l_renamed_type)
 					l_constraints.forth
@@ -120,8 +124,8 @@ feature -- Status
 					l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
 					if l_type /= Void then
 						if l_constraining_type.renaming /= Void then
-							generate_renaming (l_constraining_type.renaming)
-							create l_renamed_type.make (l_type, last_renaming)
+							create l_renamed_type.make (l_type,
+								new_renaming_a (l_constraining_type.renaming))
 						else
 							create l_renamed_type.make (l_type, Void)
 						end
@@ -156,8 +160,7 @@ feature -- Status
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				check l_type_not_void: l_type /= Void end
 				if l_constraint.renaming /= Void then
-					generate_renaming (l_constraint.renaming)
-					create Result.make (l_type, last_renaming)
+					create Result.make (l_type, new_renaming_a (l_constraint.renaming))
 				else
 					create Result.make (l_type, Void)
 				end
@@ -187,8 +190,7 @@ feature -- Status
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				if l_type /= Void then
 					if l_constraint.renaming /= Void then
-						generate_renaming (l_constraint.renaming)
-						create Result.make (l_type, last_renaming)
+						create Result.make (l_type, new_renaming_a (l_constraint.renaming))
 					else
 						create Result.make (l_type, Void)
 					end
@@ -281,7 +283,7 @@ feature -- Status
 							feat_table.search_id (feature_name.name_id)
 						end
 						if feat_table.found_item /= Void then
-							Result.extend ([l_constraint_types_item,feat_table.found_item])
+							Result.extend ([l_constraint_types_item, feat_table.found_item])
 								-- We will not set has_default_create in the multi constraint case if
 							l_is_version_of_default_create := (feat_table.found_item.rout_id_set.first = System.default_create_id)
 							if
@@ -493,12 +495,12 @@ feature -- Validity checking
 						-- Here we assume that the class is correct (call `check_constraint_type'
 						-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.)
 					l_compiled_class := l_class_i.compiled_class
-					constraint_classes.put (l_compiled_class, l_constraint_position)
+					a_context_class.constraint_classes (Current).put (l_compiled_class, l_constraint_position)
 
 					l_rename_clause := l_constraints.item.renaming
 	   				if l_rename_clause /= Void then
 	   						-- After this call a RENAMING_A object will be stored into the cache if there were no errors.
-	   					check_rename_clause (l_class_i.compiled_class, l_rename_clause, l_constraint_position)
+	   					check_rename_clause (a_context_class, l_class_i.compiled_class, l_rename_clause, l_constraint_position)
 					else
 						-- no renaming to check
 	   				end
@@ -615,8 +617,8 @@ feature {NONE} -- Implementation
 					if l_type /= Void then
 							-- Type was found: Process the type
 						if l_constraining_type.renaming /= Void then
-							generate_renaming (l_constraining_type.renaming)
-							create l_renamed_type.make (l_type, last_renaming)
+							create l_renamed_type.make (l_type,
+								new_renaming_a (l_constraining_type.renaming))
 							type_output_strategy.process (l_renamed_type, a_text_formatter, a_context_class, Void)
 						else
 							type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
@@ -625,13 +627,12 @@ feature {NONE} -- Implementation
 							-- Type was not found: Simply dump it
 						a_text_formatter.add (l_constraining_type.type.dump)
 						if l_constraining_type.renaming /= Void then
-							generate_renaming (l_constraining_type.renaming)
 							if a_short then
 								a_text_formatter.process_keyword_text ("rename", Void)
 								a_text_formatter.add (" ... ")
 								a_text_formatter.process_keyword_text ("end", Void)
 							else
-								last_renaming.append_to (a_text_formatter)
+								new_renaming_a (l_constraining_type.renaming).append_to (a_text_formatter)
 							end
 						end
 					end
@@ -647,7 +648,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_rename_clause (a_constraint: CLASS_C; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_position: INTEGER)
+	check_rename_clause (a_context_class, a_constraint: CLASS_C; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_position: INTEGER)
 			-- Checks a rename clause and inserts a `RENAMING_A' instance into the cache.
 			-- If the check was already performed it won't be done again.
 			--
@@ -655,19 +656,19 @@ feature {NONE} -- Implementation
 			-- `a_rename_clause' is the renaming clause for one constraint
 			-- `a_constraint_position' is the position of the actual constraint being checked.
 		require
+			a_context_class_not_void: a_context_class /= Void
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_clause_not_void: a_constraint /= Void
 			a_constraint_position_in_range: a_constraint_position  > 0 and then a_constraint_position <= constraints.count
 		local
-			l_renaming_cache: like constraint_renaming
+			l_renaming_cache: ARRAY [RENAMING_A]
 			l_renaming: RENAMING_A
 			l_vtgc2: VTGC2
 		do
-			l_renaming_cache := constraint_renaming
+			l_renaming_cache := a_context_class.constraint_renaming (Current)
 			l_renaming := l_renaming_cache.item (a_constraint_position)
 			if l_renaming = Void then
-				generate_renaming (a_rename_clause)
-		   		l_renaming := last_renaming
+		   		l_renaming := new_renaming_a (a_rename_clause)
 		   		l_renaming.check_against_feature_table (a_constraint.feature_table)
 
 		   		if l_renaming.has_error_report then
@@ -684,54 +685,8 @@ feature {NONE} -- Implementation
 		   	end
 		end
 
-	constraint_classes: ARRAY[CLASS_C]
-			-- Computed constraint classes.
-			-- Only class types are put into this cache so every item in the cache is error free.
-			-- All other positions are void especially those of formals.
-		do
-			if cache /= Void then
-				Result := cache.constraint_classes
-				if Result = Void then
-					create Result.make (1, constraints.count)
-					cache.constraint_classes := Result
-				end
-			else
-				create Result.make (1, constraints.count)
-				cache := [ Result, Void]
-			end
-		ensure
-			is_result_from_cache: Result = cache.constraint_classes
-		end
-
-	constraint_renaming: ARRAY[RENAMING_A]
-			-- Caches computed renamings.
-			-- Only sane renamings are put into this cache so every item in the cache is error free.
-			-- All other positions are void especially those of formal constraints as they are not allowed to have renamings.
-		do
-			if cache /= Void then
-				Result := cache.constraint_renaming
-				if Result = Void then
-					create Result.make (1, constraints.count)
-					cache.constraint_renaming := Result
-				end
-			else
-				create Result.make (1, constraints.count)
-				cache := [Void, Result]
-			end
-		ensure
-			is_result_from_cache: Result = cache.constraint_renaming
-		end
-
-	cache: TUPLE [constraint_classes: ARRAY [CLASS_C]; constraint_renaming: ARRAY [RENAMING_A]]
-			-- Field to store potential caches.
-
-	last_renaming: RENAMING_A
-			-- Last generated renaming through `generate_renaming'
-
-	generate_renaming (a_rename_clause: RENAME_CLAUSE_AS) is
-			-- Generate renaming lookup datastructure from `a_renaming_clause'.
-			-- Access the result through `last_renaming'
-			--
+	new_renaming_a (a_rename_clause: RENAME_CLAUSE_AS): RENAMING_A is
+			-- Renaming lookup datastructure from `a_renaming_clause'.
 			-- `a_rename_clause' is AST for which the RENAMING_A instance is built.
 		require
 			a_rename_clause_not_void: a_rename_clause /= Void
@@ -739,17 +694,19 @@ feature {NONE} -- Implementation
 			l_renaminings: LIST[RENAME_AS]
 			l_rename: RENAME_AS
 		do
-			create last_renaming.make (5)
 			l_renaminings := a_rename_clause.content
+			create Result.make (l_renaminings.count)
 			from
 				l_renaminings.start
 			until
 				l_renaminings.after
 			loop
 				l_rename := l_renaminings.item
-				last_renaming.put (l_rename.old_name.internal_name.name_id, l_rename.new_name.internal_name.name_id)
+				Result.put (l_rename.old_name.internal_name.name_id, l_rename.new_name.internal_name.name_id)
 				l_renaminings.forth
 			end
+		ensure
+			new_rename_a_not_void: Result /= Void
 		end
 
 indexing

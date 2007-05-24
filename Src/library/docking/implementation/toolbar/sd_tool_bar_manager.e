@@ -17,7 +17,7 @@ inherit
 		end
 
 create
-	make
+	{SD_DOCKING_MANAGER} make
 
 feature {NONE} -- Initialization
 

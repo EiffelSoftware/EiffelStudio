@@ -46,23 +46,7 @@ feature -- Access
 		local
 			i, index, pos, count: INTEGER
 		do
-			index := name.occurrences ('.')
-			if index > 0 then
-				from
-					count := name.count
-					pos := name.last_index_of ('.', count)
-					Result := full_formatted_type_name (name.substring (pos + 1, count))
-					i := 2
-				until
-					i > index or else not used_names.has (Result)
-				loop
-					pos := name.last_index_of ('.', pos - 1)
-					Result := full_formatted_type_name (name.substring (pos + 1, count))
-					i := i + 1
-				end
-			else
-				Result := full_formatted_type_name (name)
-			end
+			Result := full_formatted_type_name (name, used_names)
 			if used_names.has (Result) then
 				from
 					count := 2
@@ -79,39 +63,59 @@ feature -- Access
 			non_void_name: Result /= Void
 		end
 
-	full_formatted_type_name (name: STRING): STRING is
+	full_formatted_type_name (name: STRING; used_names: HASH_TABLE [STRING, STRING]): STRING is
 			-- Format .NET type name `name' to Eiffel class name.
 		require
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
+			used_names_not_void: used_names /= Void
 		local
-			i: INTEGER
+			simple_name: STRING
+			count, pos, index, i: INTEGER
 			container, nested: STRING
 		do
-			type_mapping_table.search (name)
-			if type_mapping_table.found then
-				Result := type_mapping_table.found_item
+			full_name_type_mapping_table.search (name)
+			if full_name_type_mapping_table.found then
+				Result := full_name_type_mapping_table.found_item
 			else
-				variable_mapping_table.search (name.as_lower)
+				index := name.occurrences ('.')
+				if index > 0 then
+					from
+						count := name.count
+						pos := name.last_index_of ('.', count)
+						simple_name := name.substring (pos + 1, count)
+						i := 2
+					until
+						i > index or else not used_names.has (Result)
+					loop
+						pos := name.last_index_of ('.', pos - 1)
+						simple_name := name.substring (pos + 1, count)
+						i := i + 1
+					end
+				else
+					simple_name := name
+				end
+
+				variable_mapping_table.search (simple_name.as_lower)
 				if variable_mapping_table.found then
 					Result := variable_mapping_table.found_item.as_upper
 				else
-					create Result.make_from_string (name)
-					if Result.item (name.count) = ']' then
+					create Result.make_from_string (simple_name)
+					if Result.item (simple_name.count) = ']' then
 						Result.keep_head (Result.count - 2)
 						Result.append (native_array_string)
-						Result.append (full_formatted_type_name (Result))
+						Result.append (full_formatted_type_name (Result, used_names))
 						Result.append_character (']')
 					else
-						i := name.index_of ('+', 1)
+						i := simple_name.index_of ('+', 1)
 						if i > 0 then
-							container := name.substring (1, i - 1)
-							nested := name.substring (i + 1, name.count)
+							container := simple_name.substring (1, i - 1)
+							nested := simple_name.substring (i + 1, simple_name.count)
 								-- Estimated allocation size.
-							create Result.make (name.count + 5)
-							Result.append (full_formatted_type_name (nested))
+							create Result.make (simple_name.count + 5)
+							Result.append (full_formatted_type_name (nested, used_names))
 							Result.append (in_string)
-							Result.append (full_formatted_type_name (container))
+							Result.append (full_formatted_type_name (container, used_names))
 						else
 							if Result.item (Result.count) = '&' then
 								Result.keep_head (Result.count - 1)
@@ -460,28 +464,6 @@ feature {NONE} -- Implementation
 					Result.append_character ('_')
 				end
 				Result.append_character (c.lower)
-			end
-		end
-
-	type_mapping_table: HASH_TABLE [STRING, STRING] is
-			-- Special types
-		local
-			l_index: INTEGER
-			l_name: STRING
-		once
-			create Result.make (full_name_type_mapping_table.count)
-			from
-				full_name_type_mapping_table.start
-			until
-				full_name_type_mapping_table.after
-			loop
-				l_name := full_name_type_mapping_table.key_for_iteration
-				l_index := l_name.last_index_of ('.', l_name.count)
-				if l_index > 0 then
-					l_name := l_name.substring (l_index + 1, l_name.count)
-				end
-				Result.put (full_name_type_mapping_table.item_for_iteration, l_name)
-				full_name_type_mapping_table.forth
 			end
 		end
 

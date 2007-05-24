@@ -83,8 +83,6 @@ feature -- Pick and drop support for grid items
 					end
 				end
 			end
-			set_last_pebble (l_stone)
-			a_grid_support.set_last_pebble (l_stone)
 		end
 
 	on_pick_ended_from_grid_pickable_item (a_item: EV_GRID_ITEM) is

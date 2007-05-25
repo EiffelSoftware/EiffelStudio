@@ -11,7 +11,8 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			interface
+			interface,
+			reset_pebble_function
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -71,6 +72,19 @@ feature -- PND
 			-- Will `Current' display a menu with button `a_button'.
 		do
 			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then not a_press
+		end
+
+	reset_pebble_function is
+			--Reset pebble_function.
+		local
+			l_parent_imp: like parent_imp
+		do
+			l_parent_imp := parent_imp
+			if l_parent_imp /= Void then
+				l_parent_imp.reset_pebble_function
+			else
+				Precursor
+			end
 		end
 
 	draw_rubber_band is

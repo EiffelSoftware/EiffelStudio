@@ -15,7 +15,8 @@ inherit
 			interface,
 			initialize,
 			call_pebble_function,
-			append
+			append,
+			reset_pebble_function
 		end
 
 	EV_PRIMITIVE_IMP
@@ -35,7 +36,8 @@ inherit
 			visual_widget,
 			needs_event_box,
 			on_pointer_motion,
-			pebble_source
+			pebble_source,
+			reset_pebble_function
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -511,27 +513,25 @@ feature -- Implementation
 			modify_widget_appearance (True)
 		end
 
+	reset_pebble_function
+			-- Reset `pebble_function'.
+		do
+			if pebble_function /= Void then
+				pebble_function.clear_last_result
+			end
+			pebble := temp_pebble
+			pebble_function := temp_pebble_function
+			temp_pebble := Void
+			temp_pebble_function := Void
+		end
+
 	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			App_implementation.set_x_y_origin (0, 0)
---			last_pointed_target := Void
-
-			if pebble_function /= Void then
-				if pnd_row_imp /= Void then
-					pnd_row_imp.set_pebble_void
-				else
-					temp_pebble := Void
-				end
-			end
-
+			Precursor (a_button)
 			accept_cursor := temp_accept_cursor
 			deny_cursor := temp_deny_cursor
-			pebble := temp_pebble
-			pebble_function := temp_pebble_function
 
-			temp_pebble := Void
-			temp_pebble_function := Void
 			temp_accept_cursor := Void
 			temp_deny_cursor := Void
 

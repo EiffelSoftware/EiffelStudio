@@ -14,7 +14,8 @@ inherit
 	EV_COMBO_BOX_I
 		undefine
 			wipe_out,
-			call_pebble_function
+			call_pebble_function,
+			reset_pebble_function
 		redefine
 			interface
 		end
@@ -25,7 +26,9 @@ inherit
 			create_focus_out_actions,
 			needs_event_box,
 			pre_pick_steps,
+			post_drop_steps,
 			call_pebble_function,
+			reset_pebble_function,
 			enable_transport,
 			hide_border,
 			pebble_source,

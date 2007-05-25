@@ -120,7 +120,7 @@ feature -- Status setting
 			if awaiting_movement then
 				if (original_x - a_x).abs > drag_and_drop_starting_movement or
 					(original_y - a_y).abs > drag_and_drop_starting_movement
-					then real_start_transport (original_x, original_y, 1,
+					then real_start_transport (pebble, original_x, original_y, 1,
 						original_x_tilt, original_y_tilt, original_pressure,
 						a_screen_x + (original_x - a_x), a_screen_y +
 						(original_y - a_y))
@@ -170,10 +170,9 @@ feature {EV_ANY_I} -- Implementation
 			else
 				if pebble_function /= Void then
 					call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-					l_pebble := pebble_function.last_result
-				else
-					l_pebble := pebble
 				end
+				l_pebble := pebble
+				reset_pebble_function
 				if not application_imp.drop_actions_executing then
 					-- Note that we check there is not a pick and drop source currently executing.
 					-- If you drop on to a widget that is also a source and call `process_events' from the
@@ -181,13 +180,14 @@ feature {EV_ANY_I} -- Implementation
 					-- from occurring.
 					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
 						if l_pebble /= Void and then mode_is_configurable_target_menu then
-							l_configure_agent := agent real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+							l_configure_agent := agent real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						end
 						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, interface, l_pebble, l_configure_agent, a_menu_only)
 					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
-							real_start_transport (a_x, a_y, a_button, a_x_tilt,
+							real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt,
 								a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					elseif l_pebble /= Void and then mode_is_drag_and_drop and a_button = 1 then
+						pebble := l_pebble
 						if not awaiting_movement then
 								-- Store arguments so they can be passed to
 								-- real_start_transport.
@@ -204,7 +204,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	real_start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+	real_start_transport (a_pebble: like pebble; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.
 		require
@@ -225,6 +225,8 @@ feature {EV_ANY_I} -- Implementation
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.
 			then
+					-- Set the pebble.
+				pebble := a_pebble
 
 					-- We need to store `top_level_window_imp' for use later if `Current'
 					-- is unparented during the pick and drop execution.

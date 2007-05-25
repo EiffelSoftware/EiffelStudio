@@ -38,30 +38,12 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		do
-			if allow_recursive_calls or not ignore_subsequent_calls then
-					-- Prevent nested calls.
-				ignore_subsequent_calls := True
-				if count > 0 then
-						-- We need to update the global event counter.
-					ev_application.increase_action_sequence_call_counter
-					Precursor (event_data)
-				end
-				ignore_subsequent_calls := False
+			if count > 0 then
+					-- We need to update the global event counter.
+				ev_application.increase_action_sequence_call_counter
+				Precursor (event_data)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	allow_recursive_calls: BOOLEAN
-			-- Are recursive calls allowed for `Current'.
-		do
-			Result := False
-				-- False by default, redefined by descendents.
-		end
-
-	ignore_subsequent_calls: BOOLEAN;
-		-- Should subsequent calls be ignored?
-		-- This is used to prevent nested calls which could lead to stack overflow.
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

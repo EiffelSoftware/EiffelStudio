@@ -12,9 +12,6 @@ class
 
 inherit
 	EV_ACTION_SEQUENCE [TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
-		redefine
-			allow_recursive_calls
-		end
 
 create
 	default_create
@@ -38,9 +35,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	allow_recursive_calls: BOOLEAN = False
-			-- Should `Current' allow recursive calls?
 
 	new_filled_list (n: INTEGER): like Current is
 			-- New list with `n' elements.

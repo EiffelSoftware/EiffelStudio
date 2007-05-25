@@ -91,10 +91,8 @@ feature -- Editor menu
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				if a_pebble /= Void then
-					if l_editor_is_current_editor then
-						extend_retarget_tool_menu (a_source, a_menu, a_pebble)
-						extend_separator (a_menu)
-					end
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+					extend_separator (a_menu)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 				end

@@ -439,6 +439,10 @@ feature -- Standard menus
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
+				if a_pebble /= Void then
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+					extend_separator (a_menu)
+				end
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				extend_property_menu (a_menu, a_pebble)
 			end

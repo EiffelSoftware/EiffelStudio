@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Error for a feature call: type mismatch on one argument."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VUAR2 
+class VUAR2
 
 inherit
 
@@ -45,7 +45,20 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
+		local
+			l_actual_type: CL_TYPE_A
+			l_formal_type: CL_TYPE_A
+			l_same_class_name: BOOLEAN
 		do
+				-- Find out if we should also show the group corresponding to the type
+				-- involved when they have the same name (which would be confusion to the user).
+				--| Note: The same code is present in VJAR.
+			l_actual_type ?= actual_type
+			l_formal_type ?= formal_type
+			if l_actual_type /= Void and then l_formal_type /= Void then
+				l_same_class_name := l_actual_type.associated_class.name.is_equal (l_formal_type.associated_class.name)
+			end
+
 			print_called_feature (a_text_formatter);
 			a_text_formatter.add ("Argument name: ");
 			a_text_formatter.add (argument_name);
@@ -55,9 +68,21 @@ feature -- Output
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Actual argument type: ");
 			actual_type.append_to (a_text_formatter);
+			if l_same_class_name then
+				a_text_formatter.add (" (from ")
+				a_text_formatter.add_group (l_actual_type.associated_class.lace_class.group,
+					l_actual_type.associated_class.lace_class.target.name)
+				a_text_formatter.add (")")
+			end
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Formal argument type: ");
 			formal_type.append_to (a_text_formatter);
+			if l_same_class_name then
+				a_text_formatter.add (" (from ")
+				a_text_formatter.add_group (l_formal_type.associated_class.lace_class.group,
+					l_formal_type.associated_class.lace_class.target.name)
+				a_text_formatter.add (")")
+			end
 			a_text_formatter.add_new_line;
 		end;
 

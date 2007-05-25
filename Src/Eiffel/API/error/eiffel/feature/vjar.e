@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Error for invalid assignment attempt."
+	description: "Error for invalid assignment."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -10,7 +8,6 @@ indexing
 class VJAR
 
 inherit
-
 	FEATURE_ERROR
 		redefine
 			build_explain
@@ -21,10 +18,10 @@ feature -- Properties
 	target_name: STRING;
 
 	target_type: TYPE_A;
-			-- Target type of the reverse assignment (left part)
+			-- Target type of the assignment (left part)
 
 	source_type: TYPE_A;
-			-- Source type of the reverse assignment (right part)
+			-- Source type of the assignment (right part)
 
 	code: STRING is
 		do
@@ -36,15 +33,40 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
+		local
+			l_target_type: CL_TYPE_A
+			l_source_type: CL_TYPE_A
+			l_same_class_name: BOOLEAN
 		do
+				-- Find out if we should also show the group corresponding to the type
+				-- involved when they have the same name (which would be confusion to the user).
+				--| Note: The same code is present in VUAR2.
+			l_target_type ?= target_type
+			l_source_type ?= source_type
+			if l_target_type /= Void and then l_source_type /= Void then
+				l_same_class_name := l_target_type.associated_class.name.is_equal (l_source_type.associated_class.name)
+			end
+
 			a_text_formatter.add ("Target name: ");
 			a_text_formatter.add (target_name);
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Target type: ");
 			target_type.append_to (a_text_formatter);
+			if l_same_class_name then
+				a_text_formatter.add (" (from ")
+				a_text_formatter.add_group (l_target_type.associated_class.lace_class.group,
+					l_target_type.associated_class.lace_class.target.name)
+				a_text_formatter.add (")")
+			end
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Source type: ");
 			source_type.append_to (a_text_formatter);
+			if l_same_class_name then
+				a_text_formatter.add (" (from ")
+				a_text_formatter.add_group (l_source_type.associated_class.lace_class.group,
+					l_source_type.associated_class.lace_class.target.name)
+				a_text_formatter.add (")")
+			end
 			a_text_formatter.add_new_line
 		end
 

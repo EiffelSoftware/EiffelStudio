@@ -41,22 +41,22 @@ feature
 	analyze is
 			-- Analyze reverse assignment
 		local
-			source_type: TYPE_I;
-			target_type: TYPE_I;
-			gen_type   : GEN_TYPE_I
+			source_type: TYPE_I
+			target_type: TYPE_I
+			gen_type: GEN_TYPE_I
 		do
 				-- Mark Result used only if not the last instruction (in which
 				-- case we'll generate a direct return, hence Result won't be
 				-- needed).
 			if target.is_result then
-				context.mark_result_used;
+				context.mark_result_used
 			end;
 				-- The target is always expanded in-line for de-referencing.
 				-- Ensure propagation in any generation mode (the propagation
 				-- of No_register in workbench mode is prevented to force
 				-- expression splitting).
-			target.set_register (No_register);
-			target.analyze;
+			target.set_register (No_register)
+			target.analyze
 			info.analyze
 			source_type := context.real_type (source.type)
 			target_type := context.creation_type (target.type)
@@ -75,33 +75,34 @@ feature
 				-- target is a reference and the source is a basic type
 				-- or an expanded.
 			if not target_type.is_none and then not target_type.is_expanded and then source_type.is_expanded then
-				source.propagate (No_register);
-				register_for_metamorphosis := true;
+				source.propagate (No_register)
+				register_for_metamorphosis := true
+				get_register
 			else
-				source.propagate (register);
-				register_propagated := context.propagated;
-			end;
-			gen_type ?= target_type;
+				source.propagate (register)
+				register_propagated := context.propagated
+			end
+			gen_type ?= target_type
 
 				-- Current needed in the access if target is not predefined
 				-- or if target is generic.
 
-			if (not target.is_predefined and target.c_type.is_pointer) then
-				context.mark_current_used;
-			end;
-			if (gen_type /= Void) then
+			if not target.is_predefined and target.c_type.is_pointer then
+				context.mark_current_used
+			end
+			if gen_type /= Void then
 				context.add_dftype_current
 			end
-			source.analyze;
-			source.free_register;
+			source.analyze
+			source.free_register
 			if register.is_temporary and not register_propagated then
-				register.free_register;
-			end;
-			simple_op_assignment := No_simple_op;
+				register.free_register
+			end
+			simple_op_assignment := No_simple_op
 			if target_type.is_expanded then
 				last_in_result := False
 			end
-		end;
+		end
 
 	source_print_register is
 			-- Print register holding the source
@@ -231,7 +232,11 @@ feature
 				else
 					target.print_register
 					buf.put_string (" = ")
+					buf.put_string ("RTRV(")
+					info.generate_type_id (buf, context.final_mode)
+					buf.put_string (gc_comma)
 					print_register
+					buf.put_character (')')
 						-- Perform aging tests when necessary
 					if not target.is_predefined then
 						buf.put_character (';')

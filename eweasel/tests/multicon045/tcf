@@ -1,5 +1,5 @@
-test_name 	 multi-constraint-rename-alias
-test_description Feature can get an alias as a result of renaming in formal generic constraint.
+test_name 	 multi-constraint-alias
+test_description Feature call on a formal generic type using an operator notation should be supported.
 
 copy_raw	a.e $CLUSTER a.e
 copy_raw	b.e $CLUSTER b.e

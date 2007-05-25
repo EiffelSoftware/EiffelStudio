@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			set_slices (0, 50)
 			set_displayed_string_size (60)
-			set_critical_stack_depth (-1) --| Dft: 1000
+			set_critical_stack_depth (1000) --| Dft: 1000
 			set_interrupt_number (1)
 			set_maximum_stack_depth (100)
 			set_max_evaluation_duration (5)

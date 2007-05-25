@@ -15,7 +15,7 @@ inherit
 			on_application_launched,
 			on_debugging_terminated,
 			on_application_just_stopped,
-			make,
+			make, set_default_parameters,
 			debugger_output_message,
 			display_system_info,
 			display_application_status,
@@ -24,6 +24,8 @@ inherit
 		end
 
 	EIFFEL_SYNTAX_CHECKER
+
+	EB_SHARED_PREFERENCES
 
 	OUTPUT_ROUTINES
 
@@ -38,6 +40,25 @@ feature {NONE} -- Initialization
 			Precursor
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 			create {TERM_WINDOW} tty_output
+		end
+
+	set_default_parameters
+			-- Set hard coded default parameters values
+		do
+			Precursor {DEBUGGER_MANAGER}
+			if preferences.debugger_data /= Void then
+				set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
+				set_displayed_string_size (preferences.debugger_data.default_displayed_string_size)
+				set_maximum_stack_depth (preferences.debugger_data.default_maximum_stack_depth)
+				set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
+
+				set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
+				preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
+			end
+			check
+				displayed_string_size: displayed_string_size = preferences.debugger_data.default_displayed_string_size
+				max_evaluation_duration_set: preferences.debugger_data /= Void implies max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
+			end
 		end
 
 feature -- Output helpers

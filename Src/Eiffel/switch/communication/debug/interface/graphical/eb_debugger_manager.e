@@ -114,6 +114,7 @@ feature {NONE} -- Initialization
 				set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
 				set_displayed_string_size (preferences.debugger_data.default_displayed_string_size)
 				set_maximum_stack_depth (preferences.debugger_data.default_maximum_stack_depth)
+				set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
 
 				set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
 				preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)

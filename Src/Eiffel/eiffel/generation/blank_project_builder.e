@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 					%feature -- Initialization%N%
 					%%N%
 					%%T" + root_feature_name + " is%N%
-					%%T%T%T-- Creation procedure.%N%
+					%%T%T%T-- Run application.%N%
 					%%T%Tdo%N%
 					%%T%T%T--| Add your code here%N%
 					%%T%Tend%N%

@@ -1,0 +1,12 @@
+test_name class-name-in-multiline-string
+test_description When a class has a multiline string with { } and has `class X' in it, the compiler wrongly thinks that the class is called X, failing to see that later there is the actual class keyword.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+
+compile_melted
+compile_result ok
+
+test_end

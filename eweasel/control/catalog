@@ -1605,6 +1605,7 @@ test	synonyms-with-indexing		fixed128 tcf pass fixed
 test	elseif-with-compound		fixed129 tcf pass fixed
 test	attribute-in-inherited-assertion	fixed130 tcf pass fixed
 test	external-inline-boolean	fixed131 tcf pass fixed
+test	class-name-in-multiline-string	fixed132 tcf pass fixed
 
 test	roundtrip-test rdtp001 tcf pass fixed
 test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
@@ -1652,7 +1653,7 @@ test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
 test	multi-constraint-rename-alias							multicon039 tcf pass multiconstraint
 test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
--- endless loop test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
+test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint manual
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
 test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint
@@ -1668,7 +1669,6 @@ test	array-of-user-defined-expanded					expanded003 tcf pass expanded
 test	expanded-formal-multiconstraint					expanded004 tcf pass expanded
 test	expanded-formal-multiconstraint2				expanded005 tcf pass expanded
 
---test						expanded005 tcf pass expanded
 --test						expanded006 tcf pass expanded
 --test						expanded007 tcf pass expanded
 --test						expanded008 tcf pass expanded

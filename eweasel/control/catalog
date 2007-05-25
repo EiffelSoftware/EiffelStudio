@@ -1650,12 +1650,13 @@ test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
 test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
 test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
-test	multi-constraint-alias							multicon039 tcf pass multiconstraint
+test	multi-constraint-rename-alias							multicon039 tcf pass multiconstraint
 test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
 -- endless loop test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
 test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint
+test	multi-constraint-alias						multicon045 tcf pass multiconstraint
 
 --test					multicon047 tcf pass multiconstraint
 --test					multicon048 tcf pass multiconstraint

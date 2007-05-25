@@ -80,7 +80,6 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_OBJECT, EIF_POINTER);
 rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
@@ -621,31 +620,10 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	eif_free (rt_globals);
 }
 
-rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
-{
-	/*
-	 * Creates a new Eiffel thread. This function is only called from
-	 * Eiffel and is given three arguments: 
-	 * - the object (whose class inherits from THREAD) a clone of which
-	 *   will become the root object of the new thread
-	 * - the Eiffel routine it will execute
-	 *
-	 * These arguments are part of the routine context that will be
-	 * passed to the new thread via the low-level platform-dependant
-	 * thread-creation function.
-	 *
-	 * This context also contains a pointer to the thread-id of the new
-	 * thread, a pointer to the parent's children-counter `n_children', a
-	 * mutex and a condition variable that are used by eif_thr_join_all()
-	 * and eif_thr_exit()  --PCV
-	 */
-
-	eif_thr_create_with_args (thr_root_obj, init_func,
-							  (EIF_INTEGER) -1, /* Priority: not used */
-							  (EIF_INTEGER) -1, /* Policy: not used */
-							  (EIF_BOOLEAN) 5); /* -> Don't use args */
+/* The following routine is obsolete, it should be removed in release 6.1 or later. */
+rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func) {
+	eif_thr_create_with_args (thr_root_obj, init_func, EIF_DEFAULT_PRIORITY, 0, EIF_TRUE);
 }
-
 
 rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
 										 EIF_POINTER init_func,
@@ -654,9 +632,21 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 										 EIF_BOOLEAN detach)
 {
 	/*
-	 * This function is the same as eif_thr_create() but makes it possible
-	 * to set the thread priority, scheduling policy and detached_state
-	 * (when allowed by the current architecture) upon creation.--PCV
+	 * Creates a new Eiffel thread. This function is only called from
+	 * Eiffel and is given five arguments: 
+	 * - the object (whose class inherits from THREAD) a clone of which
+	 *   will become the root object of the new thread
+	 * - the Eiffel routine it will execute
+	 * - the priority, the policy and the detached state.
+	 *
+	 * These arguments are part of the routine context that will be
+	 * passed to the new thread via the low-level platform-dependant
+	 * thread-creation function.
+	 *
+	 * This context also contains a pointer to the thread-id of the new
+	 * thread, a pointer to the parent's children-counter `n_children', a
+	 * mutex and a condition variable that are used by eif_thr_join_all()
+	 * and eif_thr_exit().
 	 */
 
 	RT_GET_CONTEXT
@@ -665,6 +655,9 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	volatile EIF_INTEGER l_is_initialized = 0;
 	EIF_OBJECT root_object = NULL;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+#ifndef EIF_WINDOWS
+	EIF_THR_ATTR_TYPE attr;
+#endif
 
 	routine_ctxt = (start_routine_ctxt_t *)eif_malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
@@ -694,17 +687,12 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
 	SIGBLOCK;
 	LAUNCH_MUTEX_LOCK;
-	if (detach != (EIF_BOOLEAN) 5) {
-#ifndef EIF_WINDOWS
-		EIF_THR_ATTR_TYPE attr;
-#endif
-		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
-		EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr,
-								 "Cannot create thread\n");
-		EIF_THR_ATTR_DESTROY(attr);
-	} else { /* We're called from eif_thr_create */
-		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid, "Cannot create thread\n");
-	}
+
+		/* Actual creation of the thread in the next 3 lines. */
+	EIF_THR_ATTR_INIT(attr,priority,policy,detach);
+	EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr, "Cannot create thread\n");
+	EIF_THR_ATTR_DESTROY(attr);
+
 	LAUNCH_MUTEX_UNLOCK;
 	SIGRESUME;
 	last_child = tid;
@@ -796,8 +784,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 rt_public void eif_thr_exit(void)
 {
 	/*
-	 * Function called to terminate a thread launched by Eiffel with
-	 * eif_thr_create() or eif_thr_create_with_args().
+	 * Function called to terminate a thread launched by Eiffel with eif_thr_create_with_args().
 	 * All the memory allocated with eif_malloc() for the thread context is freed
 	 * This function must be called from the thread itself (not the parent).
 	 */
@@ -867,7 +854,7 @@ rt_public void eif_thr_exit(void)
 		}
 
 		/* 
-		 * Every thread that has created a child thread with eif_thr_create() or
+		 * Every thread that has created a child thread with
 		 * eif_thr_create_with_args() has created a mutex and a condition 
 		 * variable to be able to do a join_all (or a join). If no children are
 		 * still alive, we destroy eif_children_mutex and eif_children_cond.

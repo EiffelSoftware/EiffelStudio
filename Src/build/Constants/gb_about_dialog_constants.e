@@ -13,13 +13,18 @@ feature -- Access
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild 5.7.0000"
+			Result := "EiffelBuild 6.0."
+				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
+				-- will get replaced by the delivery scripts (see comments for `snv_revision').
+			Result.append ((svn_revision // (9999 + 1).as_natural_32).as_natural_16.out)
+			Result.append_character ('.')
+			Result.append ((svn_revision \\ (9999 + 1).as_natural_32).as_natural_16.out)
 		end
 
 	t_Copyright_info: STRING is
 		once
-			Result := 
-				"Copyright (C) 1985-2006 Eiffel Software Inc.%N%
+			Result :=
+				"Copyright (C) 1985-2007 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 
@@ -35,6 +40,16 @@ feature -- Access
 				%Web Customer Support: http://support.eiffel.com%N%
 				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)
+		end
+
+feature {NONE} -- Implementation
+
+	svn_revision: NATURAL_32 is
+			-- SVN revision that build EiffelBuild.
+			-- We use `0000' because it is replaced by the actual svn revision number
+			-- when doing a delivery.
+		do
+			Result := 0000
 		end
 
 invariant

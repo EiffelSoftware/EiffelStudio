@@ -865,6 +865,12 @@ feature {NONE} -- Implementation
 				l_data := a_tool_bar_datas.item
 				check is_floating_tool_bar_data: l_data.is_floating end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
+
+				-- Reset texts if original docking vertically
+				if l_content.zone /= Void then
+					l_content.zone.change_direction (True)
+				end
+
 				create l_tool_bar.make (False, internal_docking_manager, False)
 				l_tool_bar.extend (l_content)
 				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
@@ -885,6 +891,12 @@ feature {NONE} -- Implementation
 				l_data := a_tool_bar_datas.item
 				check is_hidden_docking: not l_data.is_floating and not l_data.is_visible end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
+
+				-- Reset texts if original docking vertically
+				if l_content.zone /= Void then
+					l_content.zone.change_direction (True)
+				end
+
 				l_state := l_data.last_state
 				if l_state /= Void then
 					create l_tool_bar.make (l_state.is_vertical, internal_docking_manager, False)
@@ -903,7 +915,7 @@ feature {NONE} -- Implementation
 		end
 
 	open_one_tool_bar_data (a_direction: INTEGER; a_tool_bar_data: SD_TOOL_BAR_DATA) is
-			-- Open one mene area config datas.
+			-- Open one tool bar area config datas.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right

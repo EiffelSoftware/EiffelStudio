@@ -10,7 +10,7 @@ create
 feature {NONE} -- Initialization
 
 	${FL_CREATION_ROUTINE_NAME} is
-			-- Entry point.
+			-- Run application.
 		do
 			-- Write your code here.
 		end

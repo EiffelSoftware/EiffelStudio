@@ -59,11 +59,13 @@ feature -- Editor menu
 			l_pebble: ANY
 			l_classi_stone: CLASSI_STONE
 			l_classc_stone: CLASSC_STONE
+			l_editor_is_current_editor: BOOLEAN
 		do
+			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
 			if a_pebble = Void then
 					-- If no pebble is selected, and if we show a menu in a real editor, we select
 					-- the stone associated with the editor for displaying the context menu.
-				if a_editor = dev_window.editors_manager.current_editor then
+				if l_editor_is_current_editor then
 						-- Try to get `stone' from editor and transformed it into a CLASSI_STONE
 						-- or CLASSC_STONE depending on the stone. We do this because the stone
 						-- could represent a feature and we want the context menu to show what is
@@ -87,9 +89,12 @@ feature -- Editor menu
 				current_editor := a_editor
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
 				if a_pebble /= Void then
-					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
-					extend_separator (a_menu)
+					if l_editor_is_current_editor then
+						extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+						extend_separator (a_menu)
+					end
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 				end
@@ -117,6 +122,8 @@ feature -- Class Tree Menu
 				setup_pick_item (a_menu, a_pebble)
 				l_stone ?= a_pebble
 				if l_stone /= Void then
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+					extend_separator (a_menu)
 					extend_separator (a_menu)
 					l_target_stone ?= l_stone
 					if l_target_stone /= Void then

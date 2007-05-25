@@ -23,6 +23,8 @@ inherit
 			controller
 		end
 
+	EIFFEL_SYNTAX_CHECKER
+
 	OUTPUT_ROUTINES
 
 create
@@ -111,13 +113,12 @@ feature -- output
 			until
 				bl.after
 			loop
-
 				b := bl.item_for_iteration
 				if arr /= Void then
-					io.put_string (" [" + i.out + "] ")
+					io.put_string ("  [" + i.out + "] ")
 					arr[i] := b
 				else
-					io.put_string (" - ")
+					io.put_string ("  - ")
 				end
 				localized_print (b.string_representation (True) + "%N")
 				bl.forth
@@ -127,22 +128,24 @@ feature -- output
 				from
 					localized_print (debugger_names.m_zero_cancel)
 					if a_proc_message /= Void then
-						localized_print (" -> " + a_proc_message + ": ")
+						localized_print ("  -> " + a_proc_message + ": ")
 					end
 					i := 1
 					b := Void
 				until
 					b /= Void or i = 0
 				loop
-					io.read_line
-					s := io.last_string
-					s.left_adjust
-					s.right_adjust
+					s := adjusted_answer
 					if s.is_integer then
 						i:= s.to_integer
 						if arr.lower <= i and i <= arr.upper then
 							b := arr[i]
 						end
+					end
+					if b = Void and then i /= 0 then
+						localized_print (debugger_names.m_error_invalid_value ("0-" + arr.upper.out))
+						io.put_new_line
+						io.put_string (" -> ")
 					end
 				end
 				if b /= Void then
@@ -179,7 +182,7 @@ feature -- Interaction
 
 	inside_debugger_menu: BOOLEAN
 
-	dbg_running_menu: TTY_MENU is
+	dbg_running_menu: EWB_TTY_MENU is
 		local
 			ag_is_stopped: FUNCTION [ANY, TUPLE, BOOLEAN]
 			ag_is_executing: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -239,6 +242,7 @@ feature -- Interaction
 
 	raise_dbg_running_menu (sm: BOOLEAN) is
 		do
+			io.put_new_line
 			dbg_running_menu.execute (sm)
 		end
 
@@ -252,7 +256,7 @@ feature -- Interaction
 			dbg_breakpoints_menu.execute (True)
 		end
 
-	dbg_display_menu: TTY_MENU is
+	dbg_display_menu: EWB_TTY_MENU is
 		do
 			create Result.make (debugger_names.t_debugger_menu_display)
 			Result.add_entry ("L", debugger_names.e_locales, agent display_locals)
@@ -282,6 +286,7 @@ feature -- Interaction
 							tty_output.add_string (x.expression + " => Returned ...%N")
 						end
 						x := Void
+						io.put_new_line
 					end
 				)
 			Result.add_entry (Void, Void, Void)
@@ -289,7 +294,7 @@ feature -- Interaction
 			Result.add_quit_entry ("..", debugger_names.e_back_to_parent_menu)
 		end
 
-	dbg_breakpoints_menu: TTY_MENU is
+	dbg_breakpoints_menu: EWB_TTY_MENU is
 		do
 			create Result.make (debugger_names.t_debugger_menu_breakpoints)
 
@@ -314,6 +319,7 @@ feature -- Breakpoints management
 			i: INTEGER
 			curr_bi: INTEGER
 			ci_lst: LIST [CLASS_I]
+			ci: CLASS_I
 			curr_cc, cc: CLASS_C
 			curr_fe, fe: E_FEATURE
 			l_added: BOOLEAN
@@ -323,10 +329,8 @@ feature -- Breakpoints management
 			if curr_cc /= Void then
 				localized_print ("[" + curr_cc.name_in_upper + "] ")
 			end
-			io.read_line
-			s := io.last_string
-			s.left_adjust
-			s.right_adjust
+			s := adjusted_answer
+			s.to_upper
 			if s.is_empty then
 				if curr_cc /= Void then
 					cc := curr_cc
@@ -340,11 +344,20 @@ feature -- Breakpoints management
 				end
 				s.prune_all (' ')
 				if s /= Void and then not s.is_case_insensitive_equal (curr_cc.name) then
-					ci_lst := Eiffel_universe.classes_with_name (s)
-					if ci_lst /= Void and then not ci_lst.is_empty then
-						cc := ci_lst.first.compiled_class
-					else
+					if is_valid_class_name (s) then
+						if curr_cc /= Void then
+							ci := eiffel_universe.class_named (s, curr_cc.group)
+						else
+							ci_lst := Eiffel_universe.classes_with_name (s)
+							if ci_lst /= Void and then not ci_lst.is_empty then
+								ci := ci_lst.first
+							end
+						end
+					end
+					if ci = Void then
 						localized_print (debugger_names.m_could_not_find_class (s))
+					else
+						cc := ci.compiled_class
 					end
 				else
 					cc := curr_cc
@@ -359,21 +372,21 @@ feature -- Breakpoints management
 						io.put_string ("[" + curr_fe.name + "] ")
 					end
 				end
-				io.read_line
-				s := io.last_string
-				s.left_adjust
-				s.right_adjust
+				s := adjusted_answer
+				s.to_lower
 				if s.is_empty then
 					if curr_fe /= Void then
 						fe := curr_fe
 					end
 				else
 					if s.item (1) = '*' then
-						debugger_data.enable_breakpoints_in_class (cc)
+						debugger_data.enable_first_breakpoints_in_class (cc)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
-						fe := cc.feature_with_name (s)
+						if is_valid_feature_name (s) then
+							fe := cc.feature_with_name (s)
+						end
 						if fe = Void then
 							localized_print (debugger_names.m_could_not_find_feature (cc.name_in_upper, s))
 						end
@@ -387,8 +400,7 @@ feature -- Breakpoints management
 							localized_print ("[" + curr_bi.out + "] ")
 						end
 					end
-					io.read_line
-					s := io.last_string
+					s := adjusted_answer
 					if s.is_empty then
 						if curr_bi > 0 then
 							i := curr_bi
@@ -398,9 +410,15 @@ feature -- Breakpoints management
 							i := s.to_integer
 						else
 							i := 0
+							s := Void
 						end
 					end
-					if i > 0 then
+					if s /= Void then --| i.e `i' is a number
+						if i <= 0 then
+							i := 1
+						elseif i > fe.number_of_breakpoint_slots then
+							i := fe.number_of_breakpoint_slots
+						end
 						debugger_data.enable_breakpoint (fe, i)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
@@ -414,7 +432,7 @@ feature -- Breakpoints management
 
 	modify_breakpoint (bp: BREAKPOINT) is
 		local
-			m: TTY_MENU
+			m: EWB_TTY_MENU
 			s: STRING_32
 		do
 			create m.make (debugger_names.m_modify_breakpoint (bp.string_representation (False)))
@@ -441,18 +459,18 @@ feature -- Breakpoints management
 				m.add_entry ("D", debugger_names.e_disable_breakpoint, agent bp.disable)
 			end
 			m.add_entry ("R", debugger_names.e_remove_breakpoint, agent bp.discard)
-			if bp.has_condition then
-				s := bp.condition.expression
-				if s.count > 22 then
-					s.keep_head (20)
-					s.append ("..")
-				end
-				m.add_separator (debugger_names.m_condition_sep (s))
-				m.add_entry ("I", debugger_names.e_edit_condition, agent edit_breakpoint_condition (bp))
-				m.add_entry ("R", debugger_names.e_remove_condition, agent bp.remove_condition)
-			else
-				m.add_entry ("C", debugger_names.e_add_condition, agent edit_breakpoint_condition (bp))
-			end
+
+			m.add_conditional_entry ("Z", debugger_names.e_reset_bp_hits_count (bp.hits_count), agent bp.reset_hits_count,
+						agent (a_bp: BREAKPOINT): BOOLEAN do Result := a_bp.hits_count > 0 end(bp))
+
+			m.add_conditional_entry ("I", debugger_names.e_edit_condition, agent edit_breakpoint_condition (bp),
+						agent bp.has_condition)
+			m.add_conditional_entry ("R", debugger_names.e_remove_condition, agent bp.remove_condition,
+						agent bp.has_condition)
+			m.add_conditional_entry ("C", debugger_names.e_add_condition, agent edit_breakpoint_condition (bp),
+						agent (a_bp: BREAKPOINT): BOOLEAN do Result := not a_bp.has_condition end (bp))
+			m.add_entry ("W", debugger_names.e_bp_when_hits, agent edit_breakpoint_when_hits (bp))
+
 			m.add_separator (Void)
 			m.add_quit_entry ("..", debugger_names.e_back_to_previous_menu)
 			m.execute (True)
@@ -463,26 +481,91 @@ feature -- Breakpoints management
 			s: STRING
 			exp: EB_EXPRESSION
 			fe: E_FEATURE
+			d: STRING
 		do
 			if bp.has_condition then
 				s := bp.condition.expression
 				localized_print (debugger_names.m_current_condition (s))
 			end
 			localized_print (debugger_names.m_edit_new_condition)
-			io.read_line
-			s := io.last_string.twin
-			s.left_adjust
-			s.right_adjust
+			s := adjusted_answer
 			if not s.is_empty then
 				fe := bp.routine
 				create exp.make_for_context (s)
-				if (fe /= Void and then not exp.is_boolean_expression (fe)) or else exp.error_occurred then
+				if bp.continue_on_condition_failure then
+					d := "y"
+				else
+					d := "n"
+				end
+				s := confirmation_answer (debugger_names.m_continue_on_condition_failure_question, <<"y", "n">>, d, True)
+				bp.set_continue_on_condition_failure (s.is_equal ("y"))
+
+				if bp.condition_as_is_true then
+					d := "1"
+				else
+					d := "2"
+				end
+				s := confirmation_answer (debugger_names.m_condition_is_true_or_has_changed_question ("1", "2"), <<"1", "2">>, d, True)
+				if s.is_equal ("1") then
+					bp.set_condition_as_is_true
+				else
+					bp.set_condition_as_has_changed
+				end
+
+				if exp.error_occurred then
+					localized_print (debugger_names.m_not_a_valid_condition)
+				elseif
+					bp.condition_as_is_true and then (fe /= Void and then not exp.is_boolean_expression (fe))
+				then
 					localized_print (debugger_names.m_not_a_valid_boolean_condition)
 				else
 					bp.set_condition (exp)
 					localized_print (debugger_names.m_new_condition_applied)
 				end
 			end
+		end
+
+	edit_breakpoint_when_hits (bp: BREAKPOINT) is
+		local
+			s: STRING
+			exp: EB_EXPRESSION
+			fe: E_FEATURE
+			d: STRING
+		do
+			if bp.has_message then
+				s := bp.message
+				localized_print (debugger_names.m_current_bp_message(s))
+			end
+			if bp.has_message then
+				d := "y"
+			else
+				d := "n"
+			end
+			s := confirmation_answer (debugger_names.m_print_message_when_bp_hit_question, <<"y", "n">>, d, True)
+			if s.is_equal ("y") then
+				localized_print (debugger_names.e_enter_print_message)
+				s := adjusted_answer
+				if s.is_empty and bp.has_message then
+					if confirmation_answer (debugger_names.m_remove_or_use_current_bp_message_question ("1", "2"), << "1", "2">>, "2", True).is_equal ("1") then
+						bp.set_message (Void)
+					else
+						--| Do nothing
+					end
+					-- do you want to keep existing message
+				else
+					if bp.has_message then
+						bp.set_continue_execution (True)
+					end
+					bp.set_message (s)
+				end
+			end
+			if bp.continue_execution then
+				d := "y"
+			else
+				d := "n"
+			end
+			s := confirmation_answer (debugger_names.m_continue_when_bp_hit_question, <<"y", "n">>, d, True)
+			bp.set_continue_execution (s.is_equal ("y"))
 		end
 
 feature -- Events
@@ -508,6 +591,90 @@ feature -- Properties
 feature -- Output visitor
 
 	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR;
+
+feature {NONE} -- Implementation
+
+	truncated_text (s: STRING; a_size: INTEGER): STRING is
+		require
+			a_size > 3
+		do
+			Result := s.twin
+			if Result.count > a_size and Result.count > 2 then
+				Result.keep_head (a_size - 2)
+				Result.append ("..")
+			end
+		end
+
+	adjusted_answer: STRING is
+			-- Return input answer.
+		do
+			io.read_line
+			Result := io.last_string.twin
+			Result.left_adjust
+			Result.right_adjust
+		end
+
+	confirmation_answer (m: STRING_GENERAL; lst: ARRAY [STRING]; a_default: STRING; a_caseless: BOOLEAN): STRING is
+			-- Confirmation answer
+		require
+			a_default_in_lst: (a_default /= Void and lst /= Void)
+						implies lst.there_exists (agent (s:STRING; d:STRING): BOOLEAN do Result := s.is_equal (d) end(?,a_default))
+		local
+			i: INTEGER
+			l_is_valid: BOOLEAN
+		do
+			from
+--				lst.there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			until
+				Result /= Void
+			loop
+				localized_print (m)
+				if lst /= Void and then lst.count > 1 then
+					io.put_string (" (")
+					from
+						i := lst.lower
+					until
+						i > lst.upper
+					loop
+						if (i > lst.lower) then
+							io.put_character ('/')
+						end
+						io.put_string (lst[i])
+						i := i + 1
+					end
+					io.put_string (") ")
+					if a_default /= Void then
+						io.put_character ('[')
+						localized_print (a_default)
+						io.put_string ("] ")
+					end
+				end
+				Result := adjusted_answer
+				if a_default /= Void and then Result.is_empty then
+					Result := a_default
+				elseif lst /= Void and then lst.count > 1 then
+					from
+						l_is_valid := False
+						i := lst.lower
+					until
+						i > lst.upper or l_is_valid
+					loop
+						if a_caseless then
+							l_is_valid := Result.is_case_insensitive_equal (lst[i])
+						else
+							l_is_valid := Result.is_equal (lst[i])
+						end
+						if l_is_valid then
+							Result := lst[i]
+						end
+						i := i + 1
+					end
+					if not l_is_valid then
+						Result := Void
+					end
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

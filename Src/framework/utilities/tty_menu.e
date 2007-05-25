@@ -9,9 +9,6 @@ indexing
 class
 	TTY_MENU
 
-inherit
-	SHARED_BATCH_NAMES
-
 create
 	make
 
@@ -22,6 +19,9 @@ feature {NONE} -- Initialization
 		require
 			a_title /= Void
 		do
+			console := io
+			line_prefix := " "
+			show_menu_after_n_empty_reply := 2
 			set_title (a_title)
 			create entries.make (0)
 			create enter_actions
@@ -31,8 +31,20 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	show_menu_after_n_empty_reply: INTEGER
+			-- Show menu after `show_menu_after_n_empty_reply' empty replies.
+
+	line_prefix: STRING
+			-- Line prefix
+
+	console: STD_FILES
+			-- Console for output
+
 	title: STRING_GENERAL
 			-- Title of Current menu.
+
+	entry_disabled_message: STRING_GENERAL
+			-- Message to display when an entry is disabled.
 
 	enter_actions: ACTION_SEQUENCE [TUPLE]
 			-- Action to be called when entering the menu.
@@ -42,12 +54,28 @@ feature -- Properties
 
 feature -- Change
 
+	set_line_prefix (s: STRING_GENERAL) is
+			-- Set menu's line_prefix
+		require
+			s /= Void
+		do
+			line_prefix := s.as_string_8.twin
+		end
+
 	set_title (s: STRING_GENERAL) is
 			-- Set menu's title
 		require
 			s /= Void
 		do
 			title := s.twin
+		end
+
+	set_entry_disabled_message (s: STRING_GENERAL) is
+			-- Set entry_disabled_message
+		require
+			s /= Void
+		do
+			entry_disabled_message := s.twin
 		end
 
 	add_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from) is
@@ -89,6 +117,7 @@ feature -- Access
 		local
 			menu_shown: BOOLEAN
 			retried: BOOLEAN
+			empty_reply_count: INTEGER
 			e: like entry
 		do
 			menu_asked := a_display_entry
@@ -101,12 +130,17 @@ feature -- Access
 			until
 				leave
 			loop
+				if menu_shown_requested or empty_reply_count >= show_menu_after_n_empty_reply then
+					menu_shown := False
+					menu_shown_requested := False
+				end
 				if menu_asked then
 					if menu_shown = False then
+						empty_reply_count := 0
 						display_menu
 						menu_shown := True
 					end
-					print ("  -> ")
+					console.put_string (line_prefix + "-> ")
 				end
 				e := get_entry
 				if e /= Void then
@@ -114,11 +148,11 @@ feature -- Access
 						if entry_enabled (e) then
 							e.action.call (Void)
 						else
-							localized_print (ewb_names.entry_disabled)
+							console_print_entry_disabled
 						end
 					end
-					menu_shown := False
 				else
+					empty_reply_count := empty_reply_count + 1
 					menu_asked := True
 				end
 			end
@@ -135,13 +169,30 @@ feature -- Access
 
 	request_menu_display is
 		do
+			menu_shown_requested := True
 			menu_asked := True
+		end
+
+	console_print (m: STRING_GENERAL) is
+			-- console.put_string ...
+		do
+			console.put_string (m.as_string_8)
+		end
+
+	console_print_entry_disabled is
+		do
+			if entry_disabled_message /= Void then
+				console_print (entry_disabled_message)
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	menu_asked: BOOLEAN
 			-- Display menu next time.
+
+	menu_shown_requested: BOOLEAN
+			-- Display full menu next time.
 
 	leave: BOOLEAN
 			-- Leave when possible.
@@ -183,7 +234,7 @@ feature {NONE} -- Implementation
 				until
 					lst.after or Result /= Void
 				loop
-					if string_started_by (a_abr, lst.item.abrev) then
+					if string_started_by (a_abr, lst.item.abrev, True) then
 						Result := lst.item
 					end
 					lst.forth
@@ -204,8 +255,8 @@ feature {NONE} -- Answers implementation
 			s: STRING
 			i: INTEGER
 		do
-			io.read_line
-			s := io.last_string
+			console.read_line
+			s := console.last_string
 			if s.is_integer then
 				i := s.to_integer
 				Result := entry (i, Void)
@@ -216,7 +267,7 @@ feature {NONE} -- Answers implementation
 			end
 		end
 
-	string_started_by (s: STRING; a_prefix: STRING): BOOLEAN is
+	string_started_by (s: STRING; a_prefix: STRING; a_is_entire: BOOLEAN): BOOLEAN is
 			-- Is string `s' started by `a_prefix' string ?
 			-- (first blanks are ignored)
 		require
@@ -240,6 +291,9 @@ feature {NONE} -- Answers implementation
 					i := i + 1
 				end
 			end
+			if Result and a_is_entire then
+				Result := s.count = a_prefix.count or else s.item (a_prefix.count + 1).is_space
+			end
 		end
 
 	display_menu is
@@ -248,8 +302,9 @@ feature {NONE} -- Answers implementation
 			item: like entry
 			l_title: STRING_GENERAL
 		do
-			localized_print (title)
-			io.put_new_line
+			console.put_new_line
+			console_print (title)
+			console.put_new_line
 
 			from
 				entries.start
@@ -260,24 +315,26 @@ feature {NONE} -- Answers implementation
 				if entry_enabled (item) then
 					l_title := item.text
 					if l_title /= Void and then not l_title.is_empty then
+						console.put_string (line_prefix)
 						if item.abrev = Void and item.action = Void then
-							io.put_string ("      ")
+
+							console.put_string ("    ")
 						else
-							io.put_string ("  (")
+							console.put_string ("(")
 							if item.abrev /= Void and then not item.abrev.is_empty then
-								localized_print (item.abrev)
+								console_print (item.abrev)
 							else
-								localized_print (item.index.out)
+								console_print (item.index.out)
 							end
-							io.put_string (") ")
+							console.put_string (") ")
 						end
-						localized_print (l_title)
-						io.put_new_line
+						console_print (l_title)
+						console.put_new_line
 					end
 				end
 				entries.forth
 			end
---			io.put_string ("  (0) Quit%N")
+--			console.put_string (offset + "(0) Quit%N")
 		end
 
 indexing

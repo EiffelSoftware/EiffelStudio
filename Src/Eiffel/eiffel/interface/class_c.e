@@ -1986,14 +1986,14 @@ end
 		require
 			is_generic: is_generic
 			valid_formal_position: is_valid_formal_position (a_formal_position)
-			not_multi_constraint: not generics[a_formal_position].is_multi_constrained (generics)
+			not_multi_constraint: not generics [a_formal_position].is_multi_constrained (generics)
 		local
 			l_formal_type: FORMAL_A
 			l_recursion_break: SPECIAL [BOOLEAN]
 			l_break: BOOLEAN
 			l_formal_type_position: INTEGER
 		do
-			Result := constrained_type_cache[a_formal_position]
+			Result := constrained_type_cache [a_formal_position - 1]
 			if Result = Void then
 				create l_recursion_break.make (generics.count + 1)
 				from
@@ -2005,14 +2005,14 @@ end
 					check l_formal_type_not_void: l_formal_type /= Void end
 					l_formal_type_position := l_formal_type.position
 					check valid_formal_position: is_valid_formal_position (l_formal_type_position) end
-					l_break := l_recursion_break[l_formal_type_position]
-					l_recursion_break[l_formal_type_position] := True
+					l_break := l_recursion_break [l_formal_type_position]
+					l_recursion_break [l_formal_type_position] := True
 					Result := constraint (l_formal_type_position)
 				end
 				if l_break then
 					Result := any_type
 				end
-				constrained_type_cache[a_formal_position] := Result
+				constrained_type_cache [a_formal_position - 1] := Result
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -2028,10 +2028,10 @@ end
 		require
 			valid_formal_position: is_valid_formal_position (a_formal_position)
 		do
-			Result ?= constrained_types_cache[a_formal_position]
+			Result ?= constrained_types_cache [a_formal_position - 1]
 			if Result = Void then
 				Result := constraints (a_formal_position).constraining_types (Current)
-				constrained_types_cache[a_formal_position] := Result
+				constrained_types_cache [a_formal_position - 1] := Result
 			end
 		ensure
 			Result_not_void_and_not_empty: Result /= Void and not Result.is_empty
@@ -2730,53 +2730,100 @@ feature -- Properties
 		end
 
 	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C] is
-			-- Computed constraint classes.
+			-- Computed constraint classes for every formal of the current class.
 			-- Only class types are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formals.
 		require
 			a_formal_dec_not_void: a_formal_dec /= Void
+			valid_formal: a_formal_dec.position <= generics.count
+		local
+			l_cache: like constraint_cache
+			l_formal_cache: like formal_constraint_cache
+			l_pos: INTEGER
 		do
-			if constraint_cache /= Void then
-				Result := constraint_cache.constraint_classes
+				-- Check if `constraint_cache' has been created.
+			l_cache := constraint_cache
+			if l_cache = Void then
+				create l_cache.make (generics.count)
+				constraint_cache := l_cache
+			end
+				-- Check if an entry for `a_formal_dec' was created.
+			l_pos := a_formal_dec.position - 1
+			l_formal_cache := l_cache.item (l_pos)
+			if l_formal_cache /= Void then
+				Result := l_formal_cache.constraint_classes
+					-- Check if it is Void (case where `constraint_renaming'
+					-- was already called for `a_formal_dec').
 				if Result = Void then
 					create Result.make (1, a_formal_dec.constraints.count)
-					constraint_cache.constraint_classes := Result
+					l_formal_cache.constraint_classes := Result
 				end
 			else
+					-- Insert `a_formal_dec'.
 				create Result.make (1, a_formal_dec.constraints.count)
-				constraint_cache := [Result, Void]
+				l_cache.put ([Result, Void], l_pos)
 			end
 		ensure
 			constraint_classes_not_void: Result /= Void
-			is_result_from_cache: Result = constraint_cache.constraint_classes
 		end
 
 	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [RENAMING_A] is
-			-- Caches computed renamings.
+			-- Computed renamings for every formal of the current class.
 			-- Only sane renamings are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formal constraints as they are not allowed to have renamings.
 		require
 			a_formal_dec_not_void: a_formal_dec /= Void
+		local
+			l_cache: like constraint_cache
+			l_formal_cache: like formal_constraint_cache
+			l_pos: INTEGER
 		do
-			if constraint_cache /= Void then
-				Result := constraint_cache.constraint_renaming
+				-- Check if `constraint_cache' has been created.
+			l_cache := constraint_cache
+			if l_cache = Void then
+				create l_cache.make (generics.count)
+				constraint_cache := l_cache
+			end
+				-- Check if an entry for `a_formal_dec' was created.
+			l_pos := a_formal_dec.position - 1
+			l_formal_cache := l_cache.item (l_pos)
+			if l_formal_cache /= Void then
+				Result := l_formal_cache.constraint_renaming
+					-- Check if it is Void (case where `constraint_classes'
+					-- was already called for `a_formal_dec').
 				if Result = Void then
 					create Result.make (1, a_formal_dec.constraints.count)
-					constraint_cache.constraint_renaming := Result
+					l_formal_cache.constraint_renaming := Result
 				end
 			else
+					-- Insert `a_formal_dec'.
 				create Result.make (1, a_formal_dec.constraints.count)
-				constraint_cache := [Void, Result]
+				l_cache.put ([Void, Result], l_pos)
 			end
 		ensure
 			constraint_renaming_not_void: Result /= Void
-			is_result_from_cache: Result = constraint_cache.constraint_renaming
 		end
 
 feature {NONE} -- Implementation: Properties
 
-	constraint_cache: TUPLE [constraint_classes: ARRAY [CLASS_C]; constraint_renaming: ARRAY [RENAMING_A]]
+	constraint_cache: SPECIAL [like formal_constraint_cache]
 			-- To store computed information about generic constraints of Current.
+
+	formal_constraint_cache: TUPLE [
+			constraint_classes: ARRAY [CLASS_C];
+			constraint_renaming: ARRAY [RENAMING_A]]
+		is
+			-- For easy type checking of `constraint_cache'.
+		do
+		end
+
+	constrained_type_cache: SPECIAL [TYPE_A]
+			-- Constraining type for each given formal, if there exists one
+
+	constrained_types_cache: SPECIAL [TYPE_SET_A]
+			-- Constraining types for each given formal
+			--| In case someone requests a type set for a single constraint this is just fine.
+			--| That is why we have two caches.
 
 feature -- IL code generation
 
@@ -2827,14 +2874,6 @@ feature {NONE} -- IL code generation
 
 	data_prefix: STRING is "Data"
 			-- Prefix in a name of class data
-
-	constrained_type_cache: ARRAY [TYPE_A]
-			-- Constraining type for each given formal, if there exists one
-
-	constrained_types_cache: ARRAY [TYPE_SET_A]
-			-- Constraining types for each given formal
-			--| In case someone requests a type set for a single constraint this is just fine.
-			--| That is why we have two caches.
 
 feature -- status
 
@@ -3442,8 +3481,8 @@ feature {COMPILER_EXPORTER} -- Setting
 		do
 			generics := g
 			if g /= Void then
-				create constrained_type_cache.make (1, g.count)
-				create constrained_types_cache.make (1, g.count)
+				create constrained_type_cache.make (g.count)
+				create constrained_types_cache.make (g.count)
 			end
 		ensure
 			generics_set: generics = g

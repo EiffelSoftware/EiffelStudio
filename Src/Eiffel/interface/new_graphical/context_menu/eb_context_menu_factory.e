@@ -544,10 +544,21 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_menu: EV_MENU
-			l_editor_cmd: EB_EDITOR_COMMAND
+			l_cmd: EB_STANDARD_CMD
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 			l_select_all_string: STRING_GENERAL
 		do
+			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
+			if not is_editable then
+				a_menu.last.disable_sensitive
+			end
+
+			a_menu.extend (dev_window.commands.redo_cmd.new_menu_item_unmanaged)
+			if not is_editable then
+				a_menu.last.disable_sensitive
+			end
+			extend_separator (a_menu)
+
 			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item_unmanaged)
 			if not is_editable then
 				a_menu.last.disable_sensitive
@@ -557,34 +568,130 @@ feature {NONE} -- Menu section, Granularity 1.
 			if not is_editable then
 				a_menu.last.disable_sensitive
 			end
-
 			extend_separator (a_menu)
 			a_menu.extend (new_menu_item (names.m_select_all))
 			a_menu.last.select_actions.extend (agent dev_window.select_all)
+			extend_separator (a_menu)
 
 
-			create l_menu.make_with_text (names.m_edit)
-			a_menu.extend (l_menu)
+				-- The following command are hard-coded and depend on positioning within `editor_commands' list.
+			l_commands := dev_window.commands.editor_commands
+			l_commands.go_i_th (5)
+
+				-- Toggle Line Numbers
+			l_cmd ?= l_commands.item
+			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+			extend_separator (a_menu)
+
+			l_commands.forth
+
+				-- Find
+			l_cmd ?= l_commands.item
+			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Go To
+			l_cmd ?= l_commands.item
+			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Replace
+			l_cmd ?= l_commands.item
+			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
 			if not is_editable then
 				a_menu.last.disable_sensitive
 			end
-			from
-				l_commands := dev_window.commands.editor_commands
-				l_commands.start
-				l_commands.forth
-					-- 'Select All' is at the first position.
-				l_select_all_string := names.m_select_all
-			until
-				l_commands.after
-			loop
-				l_editor_cmd ?= l_commands.item
-				if l_editor_cmd /= Void then
-					if not l_editor_cmd.menu_name.is_equal (l_select_all_string) then
-						l_menu.extend (l_editor_cmd.new_menu_item_unmanaged)
-					end
-				end
-				l_commands.forth
-			end
+
+			create l_menu.make_with_text (names.m_find)
+			a_menu.extend (l_menu)
+
+
+				-- Find Next
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Find Previous
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Find Next Selection
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Find Previous Selection
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+
+			extend_separator (a_menu)
+			create l_menu.make_with_text (names.m_advanced)
+			a_menu.extend (l_menu)
+
+				-- Indent Selection
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Unindent Selection
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Set to Lowercase
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Set to Uppercase
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Comment
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Uncomment
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+			extend_separator (l_menu)
+
+				-- Embed in "If"
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Embed in "Debug"
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+			extend_separator (l_menu)
+
+				-- Complete Word
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+				-- Complete Class Name
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
+
+			extend_separator (l_menu)
+
+				-- Show Formatting Marks
+			l_cmd ?= l_commands.item
+			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+			l_commands.forth
 		end
 
 	extend_view_in_main_formatters_menus (a_menu: EV_MENU) is
@@ -905,8 +1012,6 @@ feature {NONE} -- Menu section, Granularity 1.
 
 			l_menu.extend (new_menu_item (names.m_search_scope))
 			l_menu.last.select_actions.extend (agent (dev_window.tools.search_tool).on_drop_add (a_pebble))
-
-			extend_diagram_add_menu (l_menu, names.m_diagram_with, a_pebble)
 
 			create l_menu2.make_with_text (names.m_input_domain)
 			l_menu.extend (l_menu2)

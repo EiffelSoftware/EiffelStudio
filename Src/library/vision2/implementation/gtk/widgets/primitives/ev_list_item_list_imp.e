@@ -12,15 +12,18 @@ inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
 			call_pebble_function,
+			reset_pebble_function,
 			interface
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			call_pebble_function,
+			reset_pebble_function,
 			initialize,
 			interface,
 			pre_pick_steps,
+			post_drop_steps,
 			ready_for_pnd_menu,
 			pebble_source,
 			able_to_transport
@@ -159,6 +162,19 @@ feature -- Status report
 				modify_widget_appearance (True)
 			end
 
+	post_drop_steps (a_button: INTEGER)  is
+			-- Steps to perform once an attempted drop has happened.
+		do
+			Precursor (a_button)
+			accept_cursor := temp_accept_cursor
+			deny_cursor := temp_deny_cursor
+
+			temp_accept_cursor := Void
+			temp_deny_cursor := Void
+
+			pnd_row_imp := Void
+		end
+
 	row_height: INTEGER is
 			-- Height of rows in `Current'
 		do
@@ -221,6 +237,18 @@ feature -- Status report
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
 			end
+		end
+
+	reset_pebble_function
+			-- Reset `pebble_function'.
+		do
+			if pebble_function /= Void then
+				pebble_function.clear_last_result
+			end
+			pebble := temp_pebble
+			pebble_function := temp_pebble_function
+			temp_pebble := Void
+			temp_pebble_function := Void
 		end
 
 feature -- Status setting

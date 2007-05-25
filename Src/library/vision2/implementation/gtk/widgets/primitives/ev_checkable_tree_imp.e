@@ -11,18 +11,19 @@ indexing
 
 class
 	EV_CHECKABLE_TREE_IMP
-	
+
 inherit
 	EV_CHECKABLE_TREE_I
 		undefine
 			initialize,
 			call_pebble_function,
+			reset_pebble_function,
 			wipe_out,
 			append
 		redefine
 			interface
 		end
-		
+
 	EV_TREE_IMP
 		redefine
 			interface,
@@ -32,12 +33,12 @@ inherit
 		end
 
 	EV_GTK_TREE_VIEW
-	
+
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -54,19 +55,19 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TREE_IMP}
 			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			
+
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_toggle_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
 			a_gtk_c_str :=  "active"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
-			
+
 			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
 		end
 
 	boolean_tree_model_column: INTEGER is 2
 
 	on_tree_path_toggle (a_tree_path_str: POINTER) is
-			-- 
+			--
 		local
 			a_tree_path, a_int_ptr: POINTER
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
@@ -89,7 +90,7 @@ feature {NONE} -- Initialization
 					-- Toggle the currently selected value
 				{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, not a_selected)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
-				
+
 				if a_selected then
 						-- We are toggling so `a_selected' is status before toggle
 					if uncheck_actions_internal /= Void then
@@ -100,12 +101,12 @@ feature {NONE} -- Initialization
 						check_actions_internal.call ([a_tree_item])
 					end
 				end
-				
+
 				a_gvalue.memory_free
 			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
-		
+
 
 	initialize_model is
 			-- Create our data model for `Current'
@@ -118,7 +119,7 @@ feature {NONE} -- Initialization
 			a_type_array.put ({EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
 			a_type_array.put ({EV_GTK_DEPENDENT_EXTERNALS}.g_type_boolean, 2)
 			a_type_array_c := a_type_array.to_c
-			tree_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (3, $a_type_array_c)			
+			tree_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (3, $a_type_array_c)
 		end
 
 feature -- Access

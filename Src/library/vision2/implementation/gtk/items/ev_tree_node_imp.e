@@ -11,7 +11,8 @@ class
 inherit
 	EV_TREE_NODE_I
 		redefine
-			interface
+			interface,
+			reset_pebble_function
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -344,13 +345,20 @@ feature -- PND
 			end
 		end
 
-feature {EV_TREE_IMP} -- Implementation
-
-	set_pebble_void is
-			-- Resets pebble from Tree_Imp.
+	reset_pebble_function is
+			--Reset pebble_function.
+		local
+			l_parent_tree_imp: like parent_tree_imp
 		do
-			pebble := Void
+			l_parent_tree_imp := parent_tree_imp
+			if l_parent_tree_imp /= Void then
+				l_parent_tree_imp.reset_pebble_function
+			else
+				Precursor
+			end
 		end
+
+feature {EV_TREE_IMP} -- Implementation
 
 	able_to_transport (a_button: INTEGER): BOOLEAN is
 			-- Is `Current' able to initiate transport with `a_button'.

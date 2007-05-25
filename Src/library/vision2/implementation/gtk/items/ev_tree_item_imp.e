@@ -10,10 +10,12 @@ class
 
 inherit
 	EV_TREE_ITEM_I
+		undefine
+			reset_pebble_function
 		redefine
 			interface
 		end
-	
+
 	EV_TREE_NODE_IMP
 		redefine
 			interface
@@ -25,7 +27,7 @@ create
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

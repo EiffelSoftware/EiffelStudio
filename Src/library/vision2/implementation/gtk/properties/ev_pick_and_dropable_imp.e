@@ -269,7 +269,7 @@ feature -- Implementation
 					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then is_dockable and then a_button = 1 then
 						l_dockable_source ?= Current
 						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
+					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 						l_call_events := False
 					end
@@ -291,6 +291,7 @@ feature -- Implementation
 			end
 		end
 
+
 	start_transport (
 			a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -299,16 +300,22 @@ feature -- Implementation
 			-- Initialize a pick and drop transport.
 		local
 			l_configure_agent: PROCEDURE [ANY, TUPLE]
+			l_pebble: like pebble
 		do
 			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-			if pebble /= Void then
-				l_configure_agent := agent (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
+			l_pebble := pebble
+			reset_pebble_function
+				-- We reset the pebble function immediately to avoid any memory leak from calling the pebble function
+				-- It is the reset in the configure agent.
+			if l_pebble /= Void then
+				l_configure_agent := agent (a_pebble: like pebble; a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
 				local
 					l_cursor: EV_POINTER_STYLE
 				do
+					pebble := a_pebble
 					enable_capture
 					pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
-					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
+					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
 							-- Set correct accept cursor if `Current' accepts its own pebble.
 						if accept_cursor /= Void then
 							l_cursor := accept_cursor
@@ -324,11 +331,11 @@ feature -- Implementation
 						end
 					end
 					internal_set_pointer_style (l_cursor)
-				end (a_x, a_y, a_screen_x, a_screen_y)
+				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
 			end
 
 			if ready_for_pnd_menu (a_button, a_press) then
-				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, pebble, l_configure_agent, a_menu_only)
+				app_implementation.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, pebble_source, l_pebble, l_configure_agent, a_menu_only)
 			elseif l_configure_agent /= Void then
 				l_configure_agent.call (Void)
 			end
@@ -397,10 +404,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
-			if pebble_function /= Void then
-				pebble_function.clear_last_result
-				pebble := Void
-			end
+			reset_pebble_function
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is

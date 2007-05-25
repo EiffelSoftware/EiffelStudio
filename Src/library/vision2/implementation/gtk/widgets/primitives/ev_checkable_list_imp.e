@@ -8,18 +8,19 @@ indexing
 
 class
 	EV_CHECKABLE_LIST_IMP
-	
+
 inherit
 	EV_CHECKABLE_LIST_I
 		undefine
 			wipe_out,
 			selected_items,
 			call_pebble_function,
+			reset_pebble_function,
 			disable_default_key_processing
 		redefine
 			interface
 		end
-	
+
 	EV_LIST_IMP
 		redefine
 			interface,
@@ -28,9 +29,9 @@ inherit
 		end
 
 	EV_GTK_TREE_VIEW
-		
+
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
-	
+
 create
 	make
 
@@ -44,19 +45,19 @@ feature -- Initialization
 		do
 			Precursor {EV_LIST_IMP}
 			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
-			
+
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_toggle_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
 			a_gtk_c_str :=  "active"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
-			
+
 			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
 		end
 
 	boolean_tree_model_column: INTEGER is 2
 
 	on_tree_path_toggle (a_tree_path_str: POINTER) is
-			-- 
+			--
 		local
 			a_tree_path, a_int_ptr: POINTER
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
@@ -79,7 +80,7 @@ feature -- Initialization
 					-- Toggle the currently selected value
 				{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, not a_selected)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
-				
+
 				if a_selected then
 						-- We are toggling so `a_selected' is status before toggle
 					if uncheck_actions_internal /= Void then
@@ -90,7 +91,7 @@ feature -- Initialization
 						check_actions_internal.call ([a_list_item])
 					end
 				end
-				
+
 				a_gvalue.memory_free
 			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
@@ -99,7 +100,7 @@ feature -- Initialization
 	initialize_model is
 			-- Create our data model for `Current'
 		local
-			a_type_array: MANAGED_POINTER 
+			a_type_array: MANAGED_POINTER
 		do
 			create a_type_array.make (3 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 			{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
@@ -163,7 +164,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

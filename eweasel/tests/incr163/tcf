@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 switch-generics-tricky-vtcg
-test_description After initial compilation, formal generics in an inheritance clause are switched, causing a class to no longer conform to the generic constraint.  The class is used as an actual generic in a generic constraint.  The compiler does not detect the newly introduced VTCG error.
+test_description After initial compilation, formal generics in an inheritance clause are switched, causing a class to no longer conform to the generic constraint.  The class is used as an actual generic in a generic constraint.  The compiler does not detect the newly introduced VTCG error in the declaration of the TEST1 constraint.
 
 define PARENT "HASH_TABLE [G, H]"
 copy_sub 	Ace $TEST Ace
@@ -23,6 +23,6 @@ compile_result 	ok
 define PARENT "HASH_TABLE [H, G]"
 copy_sub 	test5.e $CLUSTER test5.e
 compile_melted
-compile_result 	validity_error TEST4 VTCG
+compile_result 	validity_error TEST1 VTCG
 
 test_end

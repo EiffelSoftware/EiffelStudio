@@ -97,7 +97,7 @@ feature -- Element change
 			if l_split_list.count = 2 then
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 				real_text := a_text
-				a_cs := l_split_list @ 2
+				a_cs :=  "            " + l_split_list @ 2
 				{EV_GTK_EXTERNALS}.gtk_widget_show (accel_label)
 			else
 				Precursor {EV_TEXTABLE_IMP} (a_text)

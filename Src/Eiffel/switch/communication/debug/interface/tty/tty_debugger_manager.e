@@ -549,8 +549,6 @@ feature -- Breakpoints management
 	edit_breakpoint_when_hits (bp: BREAKPOINT) is
 		local
 			s: STRING
-			exp: EB_EXPRESSION
-			fe: E_FEATURE
 			d: STRING
 		do
 			if bp.has_message then

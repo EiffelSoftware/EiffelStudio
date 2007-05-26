@@ -420,7 +420,7 @@ feature -- Status setting
 
 feature -- Update
 
-	melt is
+	melt (is_for_finalization: BOOLEAN) is
 			-- Incremental recompilation of Eiffel project.
 			-- Raise error messages if necessary if unsuccessful. Otherwize,
 			-- save the project and link driver to precompiled library
@@ -432,7 +432,11 @@ feature -- Update
 			degree_output.put_new_compilation
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.set_item (True)
-				Workbench.recompile
+				workbench.start_compilation
+				workbench.recompile
+				if not is_for_finalization then
+					workbench.stop_compilation
+				end
 
 				if successful then
 					if not freezing_occurred then
@@ -471,7 +475,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_discover
-				melt
+				melt (False)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -490,7 +494,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_quick_melt
-				melt
+				melt (False)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -508,7 +512,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_override_scan
-				melt
+				melt (False)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -526,7 +530,7 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			Compilation_modes.set_is_freezing
-			melt
+			melt (False)
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -541,10 +545,8 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			Compilation_modes.set_is_finalizing
-
-			melt
-				-- Add warning for non-optimal finalization.
+			Compilation_modes.set_is_quick_melt
+			melt (True)
 			if successful then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
@@ -558,7 +560,6 @@ feature -- Update
 				is_compiling_ref.set_item (False)
 				Compilation_modes.reset_modes
 			end
-			error_handler.trace_warnings
 			Workbench.stop_compilation
 		ensure
 			was_saved: successful and then not
@@ -621,7 +622,7 @@ feature -- Update
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 
-	precompile (is_finalizing: BOOLEAN) is
+	precompile (is_for_finalization: BOOLEAN) is
 			-- Precompile eiffel project.
 		require
 			able_to_compile: able_to_compile
@@ -630,10 +631,11 @@ feature -- Update
 			set_error_status (ok_status)
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
-			if is_finalizing then
-				Compilation_modes.set_is_finalizing
+			workbench.start_compilation
+			workbench.recompile
+			if not is_for_finalization then
+				workbench.stop_compilation
 			end
-			Workbench.recompile
 
 			if successful then
 				Comp_system.save_precompilation_info

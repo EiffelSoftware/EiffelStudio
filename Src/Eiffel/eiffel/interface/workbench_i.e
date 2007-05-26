@@ -315,7 +315,6 @@ feature -- Commands
 				save_starting_backup_info
 			end
 
-			start_compilation
 				-- We perform a degree 6 only when it is the first the compilation or
 				-- when there was an error during the compilation concerning a missing
 				-- class and that no degree 6 has been done before.
@@ -385,10 +384,6 @@ feature -- Commands
 				--| directory)
 			if system /= Void and then system.automatic_backup then
 				save_ending_backup_info
-			end
-
-			if not compilation_modes.is_finalizing then
-				stop_compilation
 			end
 		ensure
 			increment_compilation_counter:

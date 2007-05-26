@@ -74,11 +74,10 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, False, True, 0)
 
 			accel_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (accel_label)
 				-- We right align accelerator text.
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (accel_label, 1.0, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (accel_label, 0, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, accel_label, True, True, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, accel_label, True, True, 2)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (accel_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
 
@@ -99,9 +98,11 @@ feature -- Element change
 				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
 				real_text := a_text
 				a_cs := l_split_list @ 2
+				{EV_GTK_EXTERNALS}.gtk_widget_show (accel_label)
 			else
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				a_cs := ""
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (accel_label)
 			end
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (accel_label, a_cs.item)
 		end

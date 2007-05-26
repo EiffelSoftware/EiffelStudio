@@ -305,8 +305,8 @@ feature -- Implementation
 			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 			l_pebble := pebble
 			reset_pebble_function
-				-- We reset the pebble function immediately to avoid any memory leak from calling the pebble function
-				-- It is the reset in the configure agent.
+				-- We reset the pebble function immediately to avoid any 'memory leak' from calling the pebble function
+				-- It is then re-set in the configure agent.
 			if l_pebble /= Void then
 				l_configure_agent := agent (a_pebble: like pebble; a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
 				local

@@ -48,8 +48,13 @@ X		([a-z]|[A-Z]|[0-9]|_)
 		-- Basic manifest string:
 	\"([^"%\n]|%([^/\n\r\t ]|([ \t\r]*\n[ \t\r\n]*%)|("/"[0-9]+"/")))*\"	-- Ignore
 		-- Verbatim string:
-	\"[^\n"%]*\[/[ \t\r]*\n {
+	\"[^\n"]*[\[\{]/[ \t\r]*\n {
 				verbatim_marker.clear_all
+				if text_item (text_count) = '[' then
+					verbatim_marker.append_character (']')
+				else
+					verbatim_marker.append_character ('}')
+				end
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
 				last_start_condition := start_condition
 				set_start_condition (VERBATIM_STR3)
@@ -77,7 +82,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 <VERBATIM_STR1>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*\][^%\n"]*\" {
+	[ \t\r]*[\]\}][^\n"]*\" {
 				if is_verbatim_string_closer then
 					set_start_condition (last_start_condition)
 				else

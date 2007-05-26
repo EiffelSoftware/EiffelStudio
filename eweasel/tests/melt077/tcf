@@ -1,0 +1,24 @@
+test_name 	dollar-with-tuple
+test_description When the $ operator is used on a pointer, the tuple value is set to default pointer in melted mode.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output2
+execute_result ok
+compare		exec_output2 output
+
+test_end

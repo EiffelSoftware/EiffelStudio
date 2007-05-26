@@ -362,14 +362,14 @@ feature {NONE} -- Implementation
 	is_verbatim_string_closer: BOOLEAN is
 			-- Is `text' a valid Verbatim_string_closer?
 		require
-			-- valid_text: `text' matches regexp [ \t\r]*\][^%\n"]*\"
+			-- valid_text: `text' matches regexp [ \t\r]*\][^\n"]*\"
 		local
 			i, j, nb: INTEGER
 			found: BOOLEAN
 		do
 				-- Look for first character ].
 				-- (Note that `text' matches the following
-				-- regexp:   [ \t\r]*[\]\}][^%\n"]*\"  .)
+				-- regexp:   [ \t\r]*[\]\}][^\n"]*\"  .)
 			from j := 0 until found loop
 				j := j + 1
 				inspect text_item (j)

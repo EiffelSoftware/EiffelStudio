@@ -35,8 +35,6 @@ feature -- Initialization
 			else
 				print ("failed: wrong argument. I need an integer as first argument.%N")
 			end
-
-
 		end
 
 	test_array: ARRAY[ B ]

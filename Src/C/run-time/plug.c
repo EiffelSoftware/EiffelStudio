@@ -47,7 +47,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "eif_option.h"
 #endif
 #include "rt_macros.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_local.h"
 #include "rt_interp.h"
 #if !defined CUSTOM || defined NEED_HASHIN_H
@@ -488,13 +488,21 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
 	int p_type;
+	jmp_buf exenv;
 
 	if (dtype <= 0) return;		/* ANY does not have invariants */
 
-	if ((char) 0 != inv_mark_tablep[dtype])	/* Already checked */
+	if ((char) 0 != inv_mark_tablep[dtype]) {/* Already checked */
 		return;
-	else
+	} else {
 		inv_mark_tablep[dtype] = (char) 1;	/* Mark as checked */
+	}
+
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		RT_GC_WEAN(obj);	/* Remove protection. This fixes eweasel test#melt076 and possibly others. */
+		ereturn();			/* Propagate exception */
+	}
 
 	RT_GC_PROTECT(obj);	/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
@@ -537,8 +545,11 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	}
 #endif
 
-	/* No more propection for `obj' */
+		/* No more propection for `obj' */
 	RT_GC_WEAN(obj);
+
+		/* Restore exception stack. */
+	expop(&eif_stack);
 }
 
 /*

@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 	get_environment_variables is
 		local
 			vn: STRING
-			vv, rvv: STRING
+			vv: STRING
 		do
 			localized_print (debugger_names.m_environment_variables)
 			io.put_new_line

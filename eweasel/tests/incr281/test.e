@@ -5,7 +5,7 @@ create
 feature
 	make
 		do
-
+			create test1
 		end
 
 	test1: TEST1 [TEST2]

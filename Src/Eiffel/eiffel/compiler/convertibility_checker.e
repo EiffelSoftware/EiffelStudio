@@ -523,7 +523,7 @@ feature {NONE} -- Implementation: checking
 					end
 				else
 						-- Feature is not an Eiffel routine
-					create l_vncp.make ("Should be a routine, not a once nor an external.")
+					create l_vncp.make ("Should not be a once nor an external.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)
 					Error_handler.insert_error (l_vncp)

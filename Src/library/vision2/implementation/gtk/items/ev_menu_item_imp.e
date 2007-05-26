@@ -71,23 +71,39 @@ feature {NONE} -- Initialization
 				pixmapable_imp_initialize
 				{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			end
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, False, True, 0)
+
+			accel_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (accel_label)
+				-- We right align accelerator text.
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (accel_label, 1.0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (accel_label, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, accel_label, True, True, 0)
+			{EV_GTK_EXTERNALS}.gtk_label_set_justify (accel_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
+
+		accel_label: POINTER
 
 feature -- Element change
 
 	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
---			tab_mod: INTEGER
+			l_split_text: STRING_32
+			l_split_list: LIST [STRING_32]
+			a_cs: EV_GTK_C_STRING
 		do
---			tab_mod := temp_string.count \\ 8
---			if tab_mod < 4 then
---				temp_string.replace_substring_all ("%T", "%T%T%T")
---			else
---				temp_string.replace_substring_all ("%T", "%T%T")
---			end
-			Precursor {EV_TEXTABLE_IMP} (a_text)
+			l_split_text := a_text.to_string_32.twin
+			l_split_list := l_split_text.split ('%T')
+			if l_split_list.count = 2 then
+				Precursor {EV_TEXTABLE_IMP} (l_split_list @ 1)
+				real_text := a_text
+				a_cs := l_split_list @ 2
+			else
+				Precursor {EV_TEXTABLE_IMP} (a_text)
+				a_cs := ""
+			end
+			{EV_GTK_EXTERNALS}.gtk_label_set_text (accel_label, a_cs.item)
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation

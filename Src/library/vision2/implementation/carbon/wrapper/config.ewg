@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ewg_config name="carbon">
+
+	<rule_list>
+		<rule>
+  			<match>
+   				<header name=".*MacWindows.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CarbonEvents.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*Events.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*ControlDefinitions.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*HIView.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CarbonEventsCore.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*Processes.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*Controls.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*HIObject.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CFString.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+			<match>
+				<identifier name="CMPlugin.*" />
+			</match>
+			<wrapper type="none" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*Menus.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CFBase.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CFBundle.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CFURL.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CGDataProvider.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CGImage.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CGContext.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*HIGeometry.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+  			<match>
+   				<header name=".*CGGeometry.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+			<match>
+				<header name=".*MacHelp.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>	
+		<rule>
+			<match>
+				<header name=".*MacTextEditor.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+			<match>
+				<header name=".*CGPath.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+			<match>
+				<header name=".*CGAffineTransform.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+		<rule>
+			<match>
+				<header name=".*Navigation.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>	
+		<rule>
+			<match>
+				<header name=".*AEDataModel.h"/>
+			</match>
+			<wrapper type="default" />
+		</rule>
+    	<rule>
+			<match/>
+			<wrapper type="none" />
+		</rule>
+	</rule_list>
+
+</ewg_config>

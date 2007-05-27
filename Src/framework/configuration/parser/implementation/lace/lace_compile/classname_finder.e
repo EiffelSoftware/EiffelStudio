@@ -12,7 +12,7 @@ inherit
 
 	CLASSNAME_FINDER_SKELETON
 
-creation
+create
 
 	make
 
@@ -52,7 +52,7 @@ end
 
 				set_start_condition (IN_CLASS)
 				set_partial_class (True)
-			
+
 when 2 then
 --|#line 34 "classname_finder.l"
 debug ("GELEX")
@@ -61,7 +61,7 @@ end
 
 				set_start_condition (IN_CLASS)
 				set_partial_class (False)
-			
+
 when 3 then
 --|#line 39 "classname_finder.l"
 debug ("GELEX")
@@ -70,7 +70,7 @@ end
 
 				classname := text
 				last_token := TE_ID
-			
+
 when 4 then
 --|#line 44 "classname_finder.l"
 debug ("GELEX")
@@ -104,7 +104,7 @@ end
 				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
 				last_start_condition := start_condition
 				set_start_condition (VERBATIM_STR3)
-			
+
 when 8 then
 --|#line 63 "classname_finder.l"
 debug ("GELEX")
@@ -130,7 +130,7 @@ debug ("GELEX")
 end
 
 				set_start_condition (VERBATIM_STR1)
-			
+
 when 12 then
 --|#line 73 "classname_finder.l"
 debug ("GELEX")
@@ -139,7 +139,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 when 13 then
 --|#line 85 "classname_finder.l"
 debug ("GELEX")
@@ -151,7 +151,7 @@ end
 				else
 					set_start_condition (VERBATIM_STR2)
 				end
-			
+
 when 14 then
 --|#line 92 "classname_finder.l"
 debug ("GELEX")
@@ -159,7 +159,7 @@ debug ("GELEX")
 end
 
 				set_start_condition (VERBATIM_STR2)
-			
+
 when 15 then
 --|#line 95 "classname_finder.l"
 debug ("GELEX")
@@ -167,7 +167,7 @@ debug ("GELEX")
 end
 
 				-- Ignore.
-			
+
 when 16 then
 --|#line 98 "classname_finder.l"
 debug ("GELEX")
@@ -176,7 +176,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 when 17 then
 --|#line 110 "classname_finder.l"
 debug ("GELEX")
@@ -184,7 +184,7 @@ debug ("GELEX")
 end
 
 				set_start_condition (VERBATIM_STR1)
-			
+
 when 18 then
 --|#line 113 "classname_finder.l"
 debug ("GELEX")
@@ -193,7 +193,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 when 19 then
 --|#line 0 "classname_finder.l"
 debug ("GELEX")
@@ -219,7 +219,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 when 3 then
 --|#line 0 "classname_finder.l"
 debug ("GELEX")
@@ -228,7 +228,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 when 4 then
 --|#line 0 "classname_finder.l"
 debug ("GELEX")
@@ -237,7 +237,7 @@ end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
-			
+
 			else
 				terminate
 			end

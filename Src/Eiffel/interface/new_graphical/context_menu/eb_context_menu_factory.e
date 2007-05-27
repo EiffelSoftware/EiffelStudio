@@ -546,7 +546,6 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu: EV_MENU
 			l_cmd: EB_STANDARD_CMD
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
-			l_select_all_string: STRING_GENERAL
 		do
 			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
 			if not is_editable then

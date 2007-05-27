@@ -148,7 +148,6 @@ feature -- Process
 			l_folders: LIST [STRING]
 			l_text_style: EB_TEXT_EDITOR_TOKEN_STYLE
 			l_count: INTEGER
-			l_text: LIST [EDITOR_TOKEN]
 			l_group: CONF_GROUP
 			l_path: STRING
 			l_name: STRING
@@ -252,7 +251,7 @@ feature -- Process
 		do
 			process_item_internal (a_item)
 		end
-		
+
 	process_path (a_item: QL_ITEM; a_self_included: BOOLEAN; a_parent_included: BOOLEAN; a_indirect_parent_included: BOOLEAN; a_target_included: BOOLEAN) is
 			-- Process `a_item' and write path of `a_item' into `text_internal' in form of "grand_parent.parent.item"
 			-- If `a_self_included' is True, including `a_item' itself.

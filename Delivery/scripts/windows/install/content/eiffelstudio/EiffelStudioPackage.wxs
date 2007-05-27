@@ -89,7 +89,7 @@
       <Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
         <!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
         <File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
-        <ProgId Id="estudio_ecf.project" Description="EiffelBuild project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
+        <ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
           <Extension Id="ecf">
             <MIME ContentType="text/xml" />
             <Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />

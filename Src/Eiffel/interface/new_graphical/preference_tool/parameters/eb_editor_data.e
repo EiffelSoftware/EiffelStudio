@@ -444,10 +444,10 @@ feature {NONE} -- Preference Strings
 	warning_background_color_string: STRING is "editor.eiffel.colors.warning_background_color"
 	line_text_color_string: STRING is "editor.eiffel.colors.line_text_color"
 	line_background_color_string: STRING is "editor.eiffel.colors.line_background_color"
-	argument_text_color_string: STRING is "editor.general.colors.argument_text_color"
-	argument_background_color_string: STRING is "editor.general.colors.argument_background_color"
-	folder_text_color_string: STRING is "editor.general.colors.folder_text_color"
-	folder_background_color_string: STRING is "editor.general.colors.folder_background_color"
+	argument_text_color_string: STRING is "editor.eiffel.colors.argument_text_color"
+	argument_background_color_string: STRING is "editor.eiffel.colors.argument_background_color"
+	folder_text_color_string: STRING is "editor.eiffel.colors.folder_text_color"
+	folder_background_color_string: STRING is "editor.eiffel.colors.folder_background_color"
 
 	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper"
 			-- Is first letter of once or constant in upper case?

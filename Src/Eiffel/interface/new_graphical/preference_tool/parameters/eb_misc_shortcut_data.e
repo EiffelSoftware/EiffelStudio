@@ -232,7 +232,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (11)
+			create l_hash.make (12)
 			l_hash.put ([False, False, False, key_strings.item (key_f10).twin.as_string_8], "step_by_step")
 			l_hash.put ([False, False, False, key_strings.item (key_f11).twin.as_string_8], "step_into")
 			l_hash.put ([False, False, True, key_strings.item (key_f11).twin.as_string_8], "step_out_of_routine")

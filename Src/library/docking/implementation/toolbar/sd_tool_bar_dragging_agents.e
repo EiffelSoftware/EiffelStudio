@@ -42,7 +42,7 @@ feature -- Agents
 	on_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle drag area pressed.
 		do
-			if a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) then
+			if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
 				internal_pointer_pressed := True
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
@@ -51,14 +51,14 @@ feature -- Agents
 				zone.tool_bar.enable_capture
 			end
 		ensure
-			pointer_press_set: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = True
-			docker_mediaot_void: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void
+			pointer_press_set: a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = True
+			docker_mediaot_void: a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void
 		end
 
 	on_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle drag area release.
 		do
-			if a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) then
+			if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
@@ -66,8 +66,8 @@ feature -- Agents
 				setter.after_disable_capture
 			end
 		ensure
-			pointer_press_set: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False
-			docker_mediaot_void: a_button = 1 and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void
+			pointer_press_set: a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False
+			docker_mediaot_void: a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void
 		end
 
 	on_drag_area_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -170,14 +170,14 @@ feature {NONE} -- Implementation functions
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
-			if internal_docker_mediator /= Void then
+			if internal_docker_mediator /= Void and a_button = {EV_POINTER_CONSTANTS}.left then
 				internal_docker_mediator.apply_change (a_screen_x, a_screen_y)
 				on_cancel
 			end
 		ensure
-			disable_capture: not zone.tool_bar.has_capture
-			not_pointer_pressed: internal_docker_mediator /= Void implies not internal_pointer_pressed
-			cleared: internal_shared.tool_bar_docker_mediator_cell.item = Void
+			disable_capture: a_button = {EV_POINTER_CONSTANTS}.left implies not zone.tool_bar.has_capture
+			not_pointer_pressed: a_button = {EV_POINTER_CONSTANTS}.left and internal_docker_mediator /= Void implies not internal_pointer_pressed
+			cleared: a_button = {EV_POINTER_CONSTANTS}.left implies internal_shared.tool_bar_docker_mediator_cell.item = Void
 		end
 
 feature {NONE} -- Implementation attributes

@@ -109,6 +109,7 @@
 	<PREF NAME="tools.metric_tool.tree_view_for_metric_history" DESCRIPTION="Is tree view used to display metric history?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.unit_order" DESCRIPTION="List of metric units in order"><STRING></STRING></PREF>
 	<PREF NAME="tools.metric_tool.keep_metric_detailed_result" DESCRIPTION="Keep metric detailed result?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.metric_tool.keep_archive_detailed_result" DESCRIPTION="Keep archive detailed result?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>	
@@ -122,9 +123,14 @@
 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="tools.class_browser.folder_search_recursive" HIDDEN="false" DESCRIPTION="Search a folder for classes recursively"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.folder_search_recursive" HIDDEN="false" DESCRIPTION="Search a folder for classes recursively?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.callee_sorting_order" DESCRIPTION="Sorting order of callees." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.caller_sorting_order" DESCRIPTION="Sorting order of callers." HIDDEN="True"><STRING>1:1</STRING></PREF>
+	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
 
+	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
@@ -173,6 +179,7 @@
 	<PREF NAME="interface.dialogs.starting_dialog_height" DESCRIPTION="Height of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_width" DESCRIPTION="Width of the open project dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_height" DESCRIPTION="Height of the open project dialog." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>
 
 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 
@@ -267,6 +274,12 @@
 	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for object addresses."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.target_text_color" DESCRIPTION="Background color for target text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.target_text_background_color" DESCRIPTION="Background color for target text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.folder_background_color" DESCRIPTION="Background color of folder text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.folder_text_color" DESCRIPTION="Folder text color"><COLOR>166;137;149</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.argument_text_color" DESCRIPTION="Argument text color"><COLOR>145;86;84</COLOR></PREF> 
+	<PREF NAME="editor.eiffel.colors.warning_text_color" DESCRIPTION="Warning text color"><COLOR>200;64;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>255;255;255</COLOR></PREF>
 
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -577,12 +590,6 @@
 	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.general.colors.warning_text_color" DESCRIPTION="Warning text color"><COLOR>200;64;0</COLOR></PREF>
-  <PREF NAME="editor.general.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>255;255;255</COLOR></PREF>
-  <PREF NAME="editor.general.colors.folder_background_color" DESCRIPTION="Background color of folder text."><COLOR>auto</COLOR></PREF>
-  <PREF NAME="editor.general.colors.folder_text_color" DESCRIPTION="Folder text color"><COLOR>166;137;149</COLOR></PREF>
-  <PREF NAME="editor.general.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>auto</COLOR></PREF>
-  <PREF NAME="editor.general.colors.argument_text_color" DESCRIPTION="Argument text color"><COLOR>145;86;84</COLOR></PREF>    
 	<PREF NAME="editor.general.use_buffered_line" DESCRIPTION="Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
@@ -703,7 +710,6 @@
 	<PREF NAME="shortcuts.view.tools.show_favorites_tool" DESCRIPTION="Shortcut to display Favorites tool."><SHORTCUT Ctrl="True" Alt="True">A</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_windows_tool" DESCRIPTION="Shortcut to display Windows tool."><SHORTCUT Ctrl="True" Alt="True">N</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_object_viewer_tool" DESCRIPTION="Shortcut to display Object Viewer tool."><SHORTCUT Ctrl="True" Alt="True">L</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_back" DESCRIPTION="Shortcut to go back in the history."><SHORTCUT Alt="True">Left</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.go_forth" DESCRIPTION="Shortcut to go forth in the history."><SHORTCUT Alt="True">Right</SHORTCUT></PREF>
 	
@@ -733,5 +739,6 @@
 	
 	<PREF NAME="shortcuts.debug.show_threads_tool" DESCRIPTION="Shortcut to display Threads tool."><SHORTCUT Ctrl="True" Alt="True">P</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.show_objects_tool" DESCRIPTION="Shortcut to display Objects tool."><SHORTCUT Ctrl="True" Alt="True">J</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.debug.show_object_viewer_tool" DESCRIPTION="Shortcut to display Object Viewer tool."><SHORTCUT Ctrl="True" Alt="True">L</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.show_watch_tool" DESCRIPTION="Shortcut to display Watch tool."><SHORTCUT Ctrl="True" Alt="True">H</SHORTCUT></PREF>	
 </EIFFEL_DOCUMENT>

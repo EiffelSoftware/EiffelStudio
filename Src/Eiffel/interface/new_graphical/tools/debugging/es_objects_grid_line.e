@@ -119,6 +119,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 				row.clear
 			end
 			row.set_data (Void)
+			compute_grid_row_completed_action.wipe_out
 			reset_row_actions
 			row := Void
 			compute_grid_display_done := False
@@ -208,7 +209,7 @@ feature -- Graphical computation
 			is_attached_to_row: is_attached_to_row
 		do
 			compute_grid_display
-			compute_grid_row_completed_action.call (Void) -- call ([Current])
+			compute_grid_row_completed_action.call (Void) -- call ([Current])				
 		end
 
 	compute_grid_display is
@@ -223,6 +224,7 @@ feature -- Graphical computation
 feature -- Actions
 
 	compute_grid_row_completed_action: EV_NOTIFY_ACTION_SEQUENCE -- [TUPLE [ES_OBJECTS_GRID_LINE]]
+			-- Actions to be trigger when the row is computation is completed.
 
 feature -- Updating
 

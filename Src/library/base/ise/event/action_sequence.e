@@ -267,6 +267,16 @@ feature -- Element Change
 			kamikazes.extend (an_action)
 		end
 
+feature -- Element status
+
+	has_kamikaze_action (an_action: like item): BOOLEAN is
+			-- Return True is `an_action' is found and will be pruned when called.
+		require
+			has (an_action)
+		do
+			Result := has (an_action) and then kamikazes.has (an_action)
+		end
+
 feature -- Event handling
 
 	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]

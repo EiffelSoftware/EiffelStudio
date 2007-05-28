@@ -1413,11 +1413,13 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			row: EV_GRID_ROW
 		do
-			row ?= ost.ev_item
-			if row /= Void then
-				Result := is_removable_debugged_object_row (row)
+			if ost /= Void then
+				row ?= ost.ev_item
+				if row /= Void then
+					Result := is_removable_debugged_object_row (row)
+				end
+				Result := Result and then is_removable_debugged_object_address (ost.object_address)
 			end
-			Result := Result and then is_removable_debugged_object_address (ost.object_address)
 		end
 
 	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN is

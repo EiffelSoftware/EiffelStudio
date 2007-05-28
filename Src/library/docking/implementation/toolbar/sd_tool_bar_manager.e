@@ -329,17 +329,20 @@ feature {NONE} -- Agents
 	on_menu_area_click (a_widget: EV_WIDGET; a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle menu area right click.
 		do
-			if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right
-				and then not has_pointer_actions (a_screen_x, a_screen_y)
-				and then not has_pebble_function (a_screen_x, a_screen_y)
-				and then not has_drop_function (a_screen_x, a_screen_y) then
-				-- We query if a button `has_drop_function' before showing the menu, because if a
-				-- pick action starts from a widget which is same as the widget receive the drop
-				-- action, then there will be an additional pointer click actions called after drop
-				-- action. If the pick action not from the same widget which receive the drop action,
-				-- then there won't be a pointer click actions action called after drop action. I think
-				-- this is a bug.		 Larry Apr. 27th 2007.
-				right_click_menu.show
+			-- End user not dragging a tool bar.
+			if internal_shared.tool_bar_docker_mediator_cell.item = Void then
+				if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right
+					and then not has_pointer_actions (a_screen_x, a_screen_y)
+					and then not has_pebble_function (a_screen_x, a_screen_y)
+					and then not has_drop_function (a_screen_x, a_screen_y) then
+					-- We query if a button `has_drop_function' before showing the menu, because if a
+					-- pick action starts from a widget which is same as the widget receive the drop
+					-- action, then there will be an additional pointer click actions called after drop
+					-- action. If the pick action not from the same widget which receive the drop action,
+					-- then there won't be a pointer click actions action called after drop action. I think
+					-- this is a bug.		 Larry Apr. 27th 2007.
+					right_click_menu.show
+				end
 			end
 		end
 

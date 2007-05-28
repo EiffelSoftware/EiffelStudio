@@ -707,6 +707,10 @@ feature {NONE} -- Implementation (`type_from')
 						end
 					else
 						feat := l_processed_class.feature_with_name (a_name)
+						if feat = Void and then last_was_constrained and then not last_formal.is_single_constraint_without_renaming (current_class_c) then
+								-- Renamed in constaint clause?
+							feat := feature_of_constaint_renamed (last_formal, a_name)
+						end
 						if feat /= Void then
 							type := feat.type
 						end
@@ -732,11 +736,7 @@ feature {NONE} -- Implementation (`type_from')
 			l_is_named_tuple: BOOLEAN
 		do
 			l_is_named_tuple := a_parent_type.is_named_tuple
-			if l_is_named_tuple then
-				l_class := current_class_c
-			else
-				l_class := a_class
-			end
+			l_class := current_class_c
 			if a_type.is_loose then
 				if l_is_named_tuple then
 					last_target_type := a_type.actual_type.instantiation_in (a_type, a_class.class_id)
@@ -763,7 +763,12 @@ feature {NONE} -- Implementation (`type_from')
 				end
 			else
 					-- Non formal status.
-				last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
+				if not a_parent_type.is_tuple then
+					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, l_class.class_id)
+				else
+					last_target_type := a_type
+				end
+
 				last_type := last_target_type
 				last_was_multi_constrained := False
 				last_was_constrained := False
@@ -863,6 +868,36 @@ feature {NONE} -- Implementation (`type_from')
 			Result := type
 		ensure
 			Result_not_void_implies_processed_class_not_void: Result /= Void implies written_class /= Void
+		end
+
+	feature_of_constaint_renamed (a_formal: FORMAL_A; a_new_name: STRING): E_FEATURE is
+			-- Constaint renamed feature of current class.
+		require
+			a_formal_not_void: a_formal /= Void
+			a_new_name_not_void: a_new_name /= Void
+			current_class_c_not_void: current_class_c /= Void
+		local
+			l_renames: ARRAY [RENAMING_A]
+			l_renaming: RENAMING_A
+			i, upper, l_new_name_id, l_old_name_id: INTEGER
+		do
+			l_new_name_id := names_heap.id_of (a_new_name)
+			l_renames := current_class_c.constraint_renaming (current_class_c.generics.i_th (last_formal.position))
+			from
+				i := l_renames.lower
+				upper := l_renames.upper
+			until
+				i > upper or Result /= Void
+			loop
+				l_renaming := l_renames.item (i)
+				if l_renaming /= Void then
+					l_old_name_id := l_renaming.item (l_new_name_id)
+					if l_old_name_id > 0 then
+						Result := current_class_c.feature_with_name_id (l_old_name_id)
+					end
+				end
+				i := i + 1
+			end
 		end
 
 	written_class: CLASS_C

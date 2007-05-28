@@ -918,10 +918,15 @@ feature -- Layout manager
 		end
 
 	restore_layout is
+		local
+			retried: BOOLEAN
 		do
-			if is_layout_managed and layout_manager /= Void then
+			if not retried and is_layout_managed and layout_manager /= Void then
 				layout_manager.restore
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Graphical look

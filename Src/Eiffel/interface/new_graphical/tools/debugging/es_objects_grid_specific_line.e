@@ -282,6 +282,7 @@ feature {NONE} -- Implementation
 	compute_grid_display_for_current_object (cse: like call_stack_element) is
 		local
 			value: ABSTRACT_DEBUG_VALUE
+			proc: PROCEDURE [ANY, TUPLE]
 			item: ES_OBJECTS_GRID_OBJECT_LINE
 			dn_st: APPLICATION_STATUS_DOTNET
 			app: APPLICATION_EXECUTION
@@ -307,6 +308,27 @@ feature {NONE} -- Implementation
 				item.set_display (display_expanded)
 				item.set_title (interface_names.l_current_object)
 				r := row
+				if
+					compute_grid_row_completed_action /= Void
+					and then compute_grid_row_completed_action.is_empty
+				then
+					from
+						compute_grid_row_completed_action.start
+					until
+						compute_grid_row_completed_action.after
+					loop
+						proc := compute_grid_row_completed_action.item
+						if compute_grid_row_completed_action.has_kamikaze_action (proc) then
+							item.compute_grid_row_completed_action.extend_kamikaze (proc)
+						else
+							item.compute_grid_row_completed_action.extend (proc)
+						end
+						compute_grid_row_completed_action.remove
+					end
+					check
+						compute_grid_row_completed_action.count = 0
+					end
+				end
 				unattach
 				item.attach_to_row (r)
 			else

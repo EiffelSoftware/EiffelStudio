@@ -93,6 +93,9 @@ feature {EB_EXPRESSION} -- Evaluation
 				if on_context then
 						--| .. Init current context using current call_stack
 					init_context_with_current_callstack
+				elseif on_class then
+					init_context_address_with_current_callstack
+					set_context_data (Void, context_class, Void)
 				elseif on_object then
 					dobj := debugger_manager.object_manager.debugged_object (context_address, 0, 0)
 					if dobj.is_erroneous then
@@ -101,8 +104,6 @@ feature {EB_EXPRESSION} -- Evaluation
 						set_context_data (Void, dobj.dtype, dobj.class_type)
 					end
 					dobj := Void
-				elseif on_class then
-					set_context_data (Void, context_class, Void)
 				end
 
 				if
@@ -1109,9 +1110,9 @@ feature {NONE} -- EXPR_B evaluation
 						elseif fi.is_attribute then
 								-- How come ? maybe with redefinition .. and so on ..
 							if tmp_target /= Void then
-								evaluate_attribute (tmp_target.value_address, tmp_target, fi)
+								evaluate_attribute (tmp_target.value_address, tmp_target, cl, fi)
 							else
-								evaluate_attribute (context_address, Void, fi)
+								evaluate_attribute (context_address, Void, cl, fi)
 							end
 						else
 							notify_error_not_implemented (a_feature_b.generator +  Cst_error_other_than_func_cst_once_not_available)
@@ -1139,6 +1140,8 @@ feature {NONE} -- EXPR_B evaluation
 				then
 					cl := ti.type_a.associated_class
 				end
+			elseif on_class then
+				cl := context_class
 			end
 			if cl = Void then
 				if tmp_target /= Void then
@@ -1173,7 +1176,7 @@ feature {NONE} -- EXPR_B evaluation
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
 						if not error_occurred then
-							if a_external_b.is_static_call then
+							if on_class or a_external_b.is_static_call then
 								if tmp_target /= Void then
 									evaluate_static_routine (tmp_target.value_address, tmp_target, cl, fi, params)
 								else
@@ -1185,15 +1188,19 @@ feature {NONE} -- EXPR_B evaluation
 								elseif context_address /= Void then
 									evaluate_routine (context_address, Void, cl, fi, params)
 								else
-									evaluate_static_function (fi, cl, params)
+									if debugger_manager.is_dotnet_project  then
+										evaluate_static_function (fi, cl, params)
+									else
+										evaluate_static_routine (context_address, Void, cl, fi, params)
+									end
 								end
 							end
 						end
 					elseif fi.is_attribute then
 						if tmp_target /= Void then
-							evaluate_attribute (tmp_target.value_address, tmp_target, fi)
+							evaluate_attribute (tmp_target.value_address, tmp_target, cl, fi)
 						else
-							evaluate_attribute (context_address, tmp_target, fi)
+							evaluate_attribute (context_address, tmp_target, cl, fi)
 						end
 					else
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
@@ -1243,9 +1250,9 @@ feature {NONE} -- EXPR_B evaluation
 				fi := feature_i_from_call_access_b_in_context (cl, a_attribute_b)
 				if fi /= Void then
 					if tmp_target /= Void then
-						evaluate_attribute (tmp_target.value_address, tmp_target, fi)
+						evaluate_attribute (tmp_target.value_address, tmp_target, cl, fi)
 					else
-						evaluate_attribute (context_address, Void, fi)
+						evaluate_attribute (context_address, Void, cl, fi)
 					end
 				else
 					notify_error_evaluation ("Error: issue with attribute " + a_attribute_b.attribute_name)
@@ -1450,7 +1457,7 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: FEATURE_I) is
+	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
@@ -1459,7 +1466,7 @@ feature {NONE} -- Concrete evaluation
 					)
 			else
 				prepare_evaluation
-				Dbg_evaluator.evaluate_attribute (a_addr, a_target, f)
+				Dbg_evaluator.evaluate_attribute (a_addr, a_target, c, f)
 				retrieve_evaluation
 			end
 		end
@@ -1603,6 +1610,20 @@ feature -- Change Context
 			end
 		end
 
+	init_context_address_with_current_callstack is
+		local
+			cse: CALL_STACK_ELEMENT
+			ecse: EIFFEL_CALL_STACK_ELEMENT
+			fi: FEATURE_I
+		do
+			cse := application_status.current_call_stack_element
+				--| Cse can be Void if the application raised an exception
+				--| at the very beginning of the execution (for instance under dotnet)
+			if cse /= Void then
+				context_address := cse.object_address
+			end
+		end
+
 	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type) is
 		require
 --			f_not_void: f /= Void
@@ -1637,6 +1658,10 @@ feature -- Change Context
 				end
 				if not equal (context_class_type, c_c_t) then
 					context_class_type := c_c_t
+					l_reset_byte_node := True
+				end
+				if context_class = Void and context_class_type /= Void then
+					context_class_type := Void
 					l_reset_byte_node := True
 				end
 				if l_reset_byte_node then

@@ -287,14 +287,14 @@ feature {DBG_EVALUATOR} -- Interface
 			l_adv: ABSTRACT_DEBUG_VALUE
 			l_icd_frame: ICOR_DEBUG_FRAME
 		do
-				--| Reset error status
-			reset_error
-
 			debug ("debugger_trace_eval")
 				print (generating_type + ".dotnet_evaluate_static_function : ")
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
+
+				--| Reset error status
+			reset_error
 
 			if params /= Void and then not params.is_empty then
 				prepare_parameters (ctype, f, params)

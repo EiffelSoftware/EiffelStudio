@@ -1009,8 +1009,15 @@ feature {NONE} -- Menu section, Granularity 1.
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
 
-			l_menu.extend (new_menu_item (names.m_search_scope))
-			l_menu.last.select_actions.extend (agent (dev_window.tools.search_tool).on_drop_add (a_pebble))
+			if dev_window.tools.search_tool.veto_pebble_function (a_pebble) then
+				l_menu.extend (new_menu_item (names.m_search_scope))
+				l_menu.last.select_actions.extend (agent (dev_window.tools.search_tool).on_drop_add (a_pebble))
+			end
+
+			if favorite_manager.veto_pebble_function (a_pebble) then
+				l_menu.extend (new_menu_item (names.m_favorites))
+				l_menu.last.select_actions.extend (agent favorite_manager.add_stone (a_pebble))
+			end
 
 			create l_menu2.make_with_text (names.m_input_domain)
 			l_menu.extend (l_menu2)

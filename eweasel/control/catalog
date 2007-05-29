@@ -332,7 +332,7 @@ test	vtcg-generic	valid211 tcf pass validity
 test	wrong-vgcc		valid212 tcf pass validity
 test	named-tuple-convert-conformance					valid213 tcf fail validity
 test	nested-generics-creation-readiness				valid214 tcf valid
-
+test	static-comparison-test							valid215 tcf fail validity
 
 
 -- System validity tests

@@ -63,24 +63,27 @@ feature -- Access
 	argument_names: LIST [STRING] is
 			-- Argument names
 		do
-			Result := arguments.argument_names;
-		end;
+			Result := arguments.argument_names
+		end
 
 	locals: EIFFEL_LIST [TYPE_DEC_AS] is
 		local
 			routine_as: ROUTINE_AS
+			feature_as: FEATURE_AS
 		do
 			if is_inline_agent then
-				routine_as ?=
-					inline_agent_lookup.lookup_inline_agent_of_feature (
-						Body_server.item (enclosing_body_id), inline_agent_nr).content
+				feature_as := Body_server.item (enclosing_body_id)
+				if feature_as /= Void then
+					routine_as ?= inline_agent_lookup.lookup_inline_agent_of_feature (
+							feature_as, inline_agent_nr).content
+				end
 			elseif body_index > 0 then
-				routine_as ?= Body_server.item (body_index).body.content;
+				routine_as ?= Body_server.item (body_index).body.content
 			end
 			if routine_as /= Void then
 				Result := routine_as.locals
-			end;
-		end;
+			end
+		end
 
 	updated_version: E_FEATURE
 		local

@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 					if l_list /= Void and then not l_list.is_empty then
 						--| now the result value has been removed
 						--| let's get the real Local variables
-						local_decl_grps := rout.locals
+						local_decl_grps := local_decl_grps_from (rout)
 						if local_decl_grps /= Void then
 							l_old_group := inst_context.group
 							Inst_context.set_group (rout.associated_class.group)

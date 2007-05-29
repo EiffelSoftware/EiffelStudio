@@ -291,153 +291,165 @@ feature {NONE} -- Implementation
 			args_list		: like private_arguments
 			arg_types		: E_FEATURE_ARGUMENTS
 			arg_names		: LIST [STRING]
-			rout			: like routine
-			rout_i			: like routine_i
+			feat			: like routine
+			feat_i			: like routine_i
 			counter			: INTEGER
 			l_names_heap	: like Names_heap
 			l_stat_class	: CLASS_C
 			l_old_group   	: CONF_GROUP
 			l_old_class		: CLASS_C
 			l_wc			: CLASS_C
+			retried: BOOLEAN
 		do
-			debug ("DEBUGGER_TRACE_CALLSTACK")
-				io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
-			end
-			if not is_exhausted then
-				retrieve_locals_and_arguments
-				set_hector_addr_for_locals_and_arguments
-			end
-			debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument"+"%N"); end
+			if not retried then
 
-			rout := routine
-
-			unprocessed_l := unprocessed_values
-			unprocessed_l.start
-			if rout /= Void then
-				local_decl_grps := rout.locals
-				--l_count := rout.argument_count
-				l_count := retrieved_arguments_count
-				if l_count > 0 then
-					arg_types := rout.arguments
-					if arg_types = Void then
-						unprocessed_l.go_i_th (unprocessed_l.index + l_count)
-					else
-						create args_list.make_filled (l_count)
-						from
-							arg_types.start
-							arg_names := rout.argument_names
-							arg_names.start
-							args_list.start
-						until
-							args_list.after
-						loop
-							value := unprocessed_l.item
-							value.set_name (arg_names.item)
-							if arg_types.item.has_associated_class then
-								value.set_static_class (arg_types.item.associated_class)
-							end
-
-							args_list.replace (value)
-							args_list.forth
-							arg_types.forth
-							arg_names.forth
-							unprocessed_l.forth
-						end
-					end
+				debug ("DEBUGGER_TRACE_CALLSTACK")
+					io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
 				end
-				if local_decl_grps /= Void then
-					l_old_group := inst_context.group
-					inst_context.set_group (rout.associated_class.group)
+				if not is_exhausted then
+					retrieve_locals_and_arguments
+					set_hector_addr_for_locals_and_arguments
+				end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument"+"%N"); end
 
-					l_old_class := System.current_class
-					System.set_current_class (dynamic_class)
+				feat := routine
 
-					create locals_list.make (retrieved_locals_count)
-					from
-						rout_i := routine_i
-						l_wc := rout_i.written_class
-						l_count := 0
-						local_decl_grps.start
-						l_names_heap := Names_heap
-					until
-						local_decl_grps.after or
-						l_count >= retrieved_locals_count
-					loop
-						id_list := local_decl_grps.item.id_list
-						if not id_list.is_empty then
-							l_stat_class := static_class_for_local (local_decl_grps.item, rout_i, l_wc)
+				unprocessed_l := unprocessed_values
+				unprocessed_l.start
+				if feat /= Void then
+					--l_count := feat.argument_count
+					l_count := retrieved_arguments_count
+					if l_count > 0 then
+						arg_types := feat.arguments
+						if arg_types = Void then
+							unprocessed_l.go_i_th (unprocessed_l.index + l_count)
+						else
+							create args_list.make_filled (l_count)
 							from
-								id_list.start
+								arg_types.start
+								arg_names := feat.argument_names
+								arg_names.start
+								args_list.start
 							until
-								id_list.after or
-								l_count >= retrieved_locals_count
+								args_list.after
 							loop
 								value := unprocessed_l.item
-								value.set_name (l_names_heap.item (id_list.item))
-								if l_stat_class /= Void then
-									value.set_static_class (l_stat_class)
+								value.set_name (arg_names.item)
+								if arg_types.item.has_associated_class then
+									value.set_static_class (arg_types.item.associated_class)
 								end
-								locals_list.extend (value)
-								id_list.forth
+
+								args_list.replace (value)
+								args_list.forth
+								arg_types.forth
+								arg_names.forth
 								unprocessed_l.forth
-								l_count := l_count + 1
 							end
 						end
-						local_decl_grps.forth
-					end
-					if l_old_group /= Void then
-						inst_context.set_group (l_old_group)
-					end
-					if l_old_class /= Void then
-						System.set_current_class (l_old_class)
 					end
 
-				end
-				if rout.is_function and not unprocessed_values.is_empty then
-					private_result := unprocessed_values.last
-					private_result.set_name ("Result")
-					if rout.type.has_associated_class then
-						private_result.set_static_class (rout.type.associated_class)
+					local_decl_grps := local_decl_grps_from (feat)
+					if local_decl_grps /= Void then
+						l_old_group := inst_context.group
+						inst_context.set_group (feat.associated_class.group)
+
+						l_old_class := System.current_class
+						System.set_current_class (dynamic_class)
+
+						create locals_list.make (retrieved_locals_count)
+						from
+							feat_i := routine_i
+							l_wc := feat_i.written_class
+							l_count := 0
+							local_decl_grps.start
+							l_names_heap := Names_heap
+						until
+							local_decl_grps.after or
+							l_count >= retrieved_locals_count
+						loop
+							id_list := local_decl_grps.item.id_list
+							if not id_list.is_empty then
+								l_stat_class := static_class_for_local (local_decl_grps.item, feat_i, l_wc)
+								from
+									id_list.start
+								until
+									id_list.after or
+									l_count >= retrieved_locals_count
+								loop
+									value := unprocessed_l.item
+									value.set_name (l_names_heap.item (id_list.item))
+									if l_stat_class /= Void then
+										value.set_static_class (l_stat_class)
+									end
+									locals_list.extend (value)
+									id_list.forth
+									unprocessed_l.forth
+									l_count := l_count + 1
+								end
+							end
+							local_decl_grps.forth
+						end
+						if l_old_group /= Void then
+							inst_context.set_group (l_old_group)
+						end
+						if l_old_class /= Void then
+							System.set_current_class (l_old_class)
+						end
+
+					end
+					if feat.is_function and not unprocessed_values.is_empty then
+						private_result := unprocessed_values.last
+						private_result.set_name ("Result")
+						if feat.type.has_associated_class then
+							private_result.set_static_class (feat.type.associated_class)
+						end
 					end
 				end
-			end
 
-				-- initialize item numbers
-			if args_list /= Void then
-				from
-					args_list.start
-					counter := 1
-				until
-					args_list.after
-				loop
-					args_list.item.set_item_number (counter)
-					args_list.forth
-					counter := counter + 1
+					-- initialize item numbers
+				if args_list /= Void then
+					from
+						args_list.start
+						counter := 1
+					until
+						args_list.after
+					loop
+						args_list.item.set_item_number (counter)
+						args_list.forth
+						counter := counter + 1
+					end
 				end
-			end
-			private_arguments := args_list
+				private_arguments := args_list
 
-			if locals_list /= Void and then not locals_list.is_empty then
-				from
-					locals_list.start
-					counter := 1
-				until
-					locals_list.after
-				loop
-					locals_list.item.set_item_number (counter)
-					locals_list.forth
-					counter := counter + 1
+				if locals_list /= Void and then not locals_list.is_empty then
+					from
+						locals_list.start
+						counter := 1
+					until
+						locals_list.after
+					loop
+						locals_list.item.set_item_number (counter)
+						locals_list.forth
+						counter := counter + 1
+					end
+					private_locals := locals_list
+				else
+					private_locals := Void
 				end
-				private_locals := locals_list
+
+				unprocessed_values := Void
+				initialized := True
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end
 			else
-				private_locals := Void
+				set_error
+				initialized := True
 			end
-
-			unprocessed_values := Void
-			initialized := True
-			debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end
 		ensure then
 			void_unprocessed: unprocessed_values = Void
+		rescue
+			set_error
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation Properties

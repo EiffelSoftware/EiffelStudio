@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 		local
 			l_type: TYPE_A
 			l_formal: FORMAL_A
-			l_last_type_set: TYPE_SET_A
+--			l_last_type_set: TYPE_SET_A
 		do
 			if t.has_associated_class then
 				Result := t.associated_class

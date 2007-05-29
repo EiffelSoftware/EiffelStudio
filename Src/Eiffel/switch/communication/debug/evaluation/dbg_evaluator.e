@@ -127,9 +127,7 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 
 			if last_result_value /= Void then
-				if f.type.has_associated_class then
-					last_result_static_type := f.type.associated_class
-				end
+				last_result_static_type := class_c_from_type_a (f.type, cl)
 			else
 				notify_error_evaluation ("Unable to evaluate {" + cl.name_in_upper + "}." + f.feature_name)
 			end
@@ -146,7 +144,7 @@ feature -- Concrete evaluation
 			effective_evaluate_once_function (f)
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: FEATURE_I) is
+	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		local
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
@@ -169,7 +167,7 @@ feature -- Concrete evaluation
 				lst := attributes_list_from_object (l_address)
 				dv := find_item_in_list (f.feature_name, lst)
 
-				last_result_static_type := f.type.associated_class
+				last_result_static_type := class_c_from_type_a (f.type, c)
 				if dv = Void then
 					if f.feature_name.is_equal ("Void") then
 						last_result_value := Debugger_manager.Dump_value_factory.new_void_value (last_result_static_type)
@@ -274,10 +272,8 @@ feature -- Concrete evaluation
 
 				if not error_occurred and then last_result_value /= Void then
 					if f.is_function then
-						at := f.type
-						if at.has_associated_class then
-							last_result_static_type := at.associated_class
-						end
+						check l_target_dynclass /= Void end
+						last_result_static_type := class_c_from_type_a (f.type, l_target_dynclass)
 						if last_result_static_type = Void then
 							last_result_static_type := Workbench.Eiffel_system.Any_class.compiled_class
 						end
@@ -472,6 +468,42 @@ feature {NONE} -- compiler helpers
 		end
 
 feature {NONE} -- Implementation
+
+	class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C is
+		require
+			t_not_void: t /= Void
+			a_ctx_class_not_void: a_ctx_class /= Void
+		local
+			l_type: TYPE_A
+			l_formal: FORMAL_A
+			l_last_type_set: TYPE_SET_A
+		do
+			if t.has_associated_class then
+				Result := t.associated_class
+			else
+				l_type := t.actual_type
+				if l_type.is_formal then
+					l_formal ?= l_type
+					if l_formal.is_multi_constrained (a_ctx_class) then
+						fixme("Handle multi constrained type...")
+--						l_last_type_set := l_type.to_type_set.constraining_types (a_ctx_class)
+--						l_type := l_last_type_set.instantiated_in (a_ctx_class.actual_type)
+--						if l_type.is_formal then
+--							l_formal ?= l_type
+--							l_type := l_formal.constrained_type (a_ctx_class)
+--						end
+						l_type := Void
+					else
+						l_type := l_formal.constrained_type (a_ctx_class)
+					end
+				end
+				if l_type /= Void and then not l_type.is_none then
+					Result := l_type.associated_class
+				else
+					Result := Void
+				end
+			end
+		end
 
 	prepare_evaluation is
 			-- Initialization before effective evaluation

@@ -517,7 +517,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 			l_class_i: CLASS_I
 		do
 			l_class_i ?= a_item.data
-			if old_editor = Void or old_editor = editor then
+			if old_editor = Void or else old_editor.is_recycled or else old_editor = editor then
 				if l_class_i /= Void then
 					if is_current_editor_searched then
 						Result := is_text_changed_in_editor

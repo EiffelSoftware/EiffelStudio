@@ -614,7 +614,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			search_tool.set_new_search_set (false)
 			l_text_item ?= multi_search_performer.item
 			if l_text_item /= Void then
-				if search_tool.old_editor /= Void then
+				if search_tool.old_editor /= Void and then not search_tool.old_editor.is_recycled then
 					l_editor := search_tool.old_editor
 				else
 					l_editor := search_tool.editor

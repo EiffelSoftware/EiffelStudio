@@ -104,16 +104,17 @@ feature -- Properties
 			-- Value of local variables
 		local
 			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
-			r: E_FEATURE
+			f: E_FEATURE
+			r: E_ROUTINE
 		do
 			if not initialized then
 				initialize_stack
 			end
 			Result := private_locals
 			if Result = Void then
-				r := routine
-				if r /= Void then
-					l_locals := r.locals
+				f := routine
+				if f /= Void then
+					l_locals := local_decl_grps_from (f)
 					if
 						l_locals /= Void
 						and then not l_locals.is_empty
@@ -160,6 +161,12 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			initialized: initialized
+		end
+
+	local_decl_grps_from (feat: E_FEATURE): EIFFEL_LIST [TYPE_DEC_AS] is
+			-- Locals declaration groups for `feat'.
+		do
+			Result := feat.locals
 		end
 
 feature {NONE} -- Implementation Properties

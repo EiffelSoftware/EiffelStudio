@@ -141,6 +141,7 @@ feature {NONE} -- Initialization
 			custom_button.select_actions.extend (agent toggle_scope_detail (custom_button))
 			custom_button.select_actions.extend (agent force_new_search)
 			custom_button.drop_actions.extend (agent on_drop_custom_button (?))
+			custom_button.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
 			search_subcluster_button.select_actions.extend (agent force_new_search)
@@ -150,9 +151,11 @@ feature {NONE} -- Initialization
 
 			scope_list.key_press_actions.extend (agent key_pressed (?, True))
 			scope_list.drop_actions.extend (agent on_drop_add (?))
+			scope_list.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			add_button.select_actions.extend (agent add_scope)
 			add_button.drop_actions.extend (agent on_drop_add (?))
+			add_button.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 
 			remove_button.select_actions.extend (agent remove_scope)
 			remove_button.drop_actions.extend (agent on_drop_remove (?))
@@ -848,13 +851,16 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			l_cluster_stone: CLUSTER_STONE
 			l_folder: EB_FOLDER
 			l_cluster: CONF_CLUSTER
+			l_data: DATA_STONE
+			l_groups: LIST [CONF_GROUP]
+			l_cursor: CURSOR
 		do
 			l_classi_stone ?= a_any
 			l_cluster_stone ?= a_any
+			l_data ?= a_any
 			if l_classi_stone /= Void then
 				add_class_item (l_classi_stone.class_i)
-			end
-			if l_cluster_stone /= Void then
+			elseif l_cluster_stone /= Void then
 				if not l_cluster_stone.path.is_empty and l_cluster_stone.folder_name /= Void then
 					l_cluster ?= l_cluster_stone.group
 					check
@@ -865,6 +871,41 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 				else
 					add_cluster_item (l_cluster_stone.group)
 				end
+			elseif l_data /= Void then
+				l_groups ?= l_data.data
+				if l_groups /= Void then
+					l_cursor := l_groups.cursor
+					from
+						l_groups.start
+					until
+						l_groups.after
+					loop
+						if l_groups.item /= Void then
+							add_cluster_item (l_groups.item)
+						end
+						l_groups.forth
+					end
+					l_groups.go_to (l_cursor)
+				end
+			end
+		end
+
+	veto_pebble_function (a_any: ANY): BOOLEAN is
+			-- Veto pebble function
+		local
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_feature_stone: FEATURE_STONE
+			l_data: DATA_STONE
+		do
+				-- We reject FEATURE_STONE.
+			l_feature_stone ?= a_any
+			if l_feature_stone = Void then
+					-- Check validity of the stone.
+				l_classi_stone ?= a_any
+				l_cluster_stone ?= a_any
+				l_data ?= a_any
+				Result := l_cluster_stone /= Void or l_classi_stone /= Void or l_data /= Void
 			end
 		end
 

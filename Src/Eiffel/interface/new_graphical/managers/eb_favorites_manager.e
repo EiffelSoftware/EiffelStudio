@@ -63,6 +63,17 @@ feature -- Status setting
 			end
 		end
 
+feature -- Status report
+
+	veto_pebble_function (a_pebble: ANY): BOOLEAN is
+			-- Veto pebble function
+		local
+			l_class_stone: CLASSI_STONE
+		do
+			l_class_stone ?= a_pebble
+			Result := l_class_stone /= Void
+		end
+
 feature -- Basic Operations
 
 	cleanup is
@@ -80,6 +91,14 @@ feature -- Basic Operations
 			development_window_class_name := development_window.class_name
 			if development_window_class_name /= Void then
 				favorites.add_class (development_window_class_name.as_upper)
+			end
+		end
+
+	add_stone (a_stone: STONE) is
+			-- Add `a_stone' to favorites.
+		do
+			if widget /= Void then
+				widget.add_stone (a_stone)
 			end
 		end
 

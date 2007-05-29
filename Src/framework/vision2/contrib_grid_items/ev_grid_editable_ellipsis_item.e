@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 				a_popup_window.extend (hb)
 				update_popup_dimensions (a_popup_window)
 
-				a_popup_window.show_actions.extend (agent initialize_actions)
+				a_popup_window.show_actions.extend_kamikaze (agent initialize_actions)
 				is_activated := True
 			else
 --				update_popup_dimensions (a_popup_window)

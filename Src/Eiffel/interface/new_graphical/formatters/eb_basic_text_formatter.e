@@ -93,6 +93,9 @@ feature -- Formatting
 				end
 				display_header
 				stone.set_pos_container (Current)
+				if editor /= Void and then editor.stone /= Void then
+					editor.stone.set_pos_container (Current)
+				end
 			end
 		end
 

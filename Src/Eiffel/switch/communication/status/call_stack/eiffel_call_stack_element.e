@@ -105,7 +105,6 @@ feature -- Properties
 		local
 			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			f: E_FEATURE
-			r: E_ROUTINE
 		do
 			if not initialized then
 				initialize_stack

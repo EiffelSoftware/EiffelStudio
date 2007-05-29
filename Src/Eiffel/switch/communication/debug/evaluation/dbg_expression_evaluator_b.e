@@ -1613,8 +1613,6 @@ feature -- Change Context
 	init_context_address_with_current_callstack is
 		local
 			cse: CALL_STACK_ELEMENT
-			ecse: EIFFEL_CALL_STACK_ELEMENT
-			fi: FEATURE_I
 		do
 			cse := application_status.current_call_stack_element
 				--| Cse can be Void if the application raised an exception

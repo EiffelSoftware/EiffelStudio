@@ -308,7 +308,7 @@ static  void    panic (void);
 
 static  EIF_INTEGER_32 rlong (void);
 static  BODY_INDEX rbody_index (void);
-static  char    *rbuf (int);
+static  unsigned char *rbuf (int);
 static  EIF_CHARACTER * rstr (void);
 
 /*------------------------------------------------------------------*/
@@ -1456,17 +1456,16 @@ static EIF_INTEGER_32 rlong ()
 }
 /*------------------------------------------------------------------*/
 
-static  char    *rbuf (int size)
+static  unsigned char *rbuf (int size)
 
 {
-	char    *result;
+	unsigned char    *result;
 
 	fpos += size;
 
 	result = malloc (size);
 
-	if (result == (char *) 0)
-	{
+	if (!result) {
 		printf ("Out of memory (rbuf)\n");
 		panic ();
 	}

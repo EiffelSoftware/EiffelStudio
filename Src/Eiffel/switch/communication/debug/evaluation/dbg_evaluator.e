@@ -193,7 +193,6 @@ feature -- Concrete evaluation
 			l_target_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE
 			realf: FEATURE_I
-			at: TYPE_A
 			l_err_msg: STRING
 		do
 			debug ("debugger_trace_eval")

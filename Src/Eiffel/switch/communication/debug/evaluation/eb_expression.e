@@ -219,13 +219,13 @@ feature -- Status report
 			-- Return a string representing `Current's context.
 		do
 			if on_class then
-				Result := context_class.name_in_upper
+				Result := context_class.name_in_upper.twin
 			elseif as_object then
-				Result :=  interface_names.l_As_object
+				Result :=  interface_names.l_As_object.twin
 			elseif on_object then
-				Result := context_address
+				Result := context_address.twin
 			else
-				Result := interface_names.l_Current_context
+				Result := interface_names.l_Current_context.twin
 			end
 			if keep_assertion_checking then
 				Result.append (" - ")

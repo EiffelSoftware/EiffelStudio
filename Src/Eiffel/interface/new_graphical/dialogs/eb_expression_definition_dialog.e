@@ -533,6 +533,7 @@ feature {NONE} -- Event handling
 		local
 			o: DEBUGGED_OBJECT
 			cl_i: LIST [CLASS_I]
+			ci: CLASS_I
 			cl: CLASS_C
 			t: STRING
 			wd: EB_WARNING_DIALOG
@@ -545,16 +546,30 @@ feature {NONE} -- Event handling
 					t := class_field.text.as_string_8.as_upper
 						--| First find the class given in `class_field'.
 					cl_i := Eiffel_universe.classes_with_name (t)
-					if not cl_i.is_empty then
+					if cl_i.is_empty then
+						ci := Eiffel_universe.class_named (t, eiffel_system.root_cluster)
+						cl := ci.compiled_class
+					elseif not cl_i.is_empty then
 						from
 							cl_i.start
 						until
 							cl_i.after or cl /= Void
 						loop
-							cl := cl_i.item.compiled_class
+							ci := cl_i.item
+							cl := ci.compiled_class
 							cl_i.forth
 						end
-						if cl /= Void then
+					end
+					if ci = Void then
+						set_focus (class_field)
+						create wd.make_with_text (Warning_messages.w_Cannot_find_class (t))
+						wd.show_modal_to_window (dialog)
+					else
+						if cl = Void then
+							set_focus (class_field)
+							create wd.make_with_text (Warning_messages.w_Not_a_compiled_class (t))
+							wd.show_modal_to_window (dialog)
+						else
 								--| Now we have the class, create the expression.
 							create new_expression.make_with_class (cl, expression_field.text)
 							if new_expression.syntax_error_occurred then
@@ -562,15 +577,7 @@ feature {NONE} -- Event handling
 								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8))
 								wd.show_modal_to_window (dialog)
 							end
-						else
-							set_focus (class_field)
-							create wd.make_with_text (Warning_messages.w_Not_a_compiled_class (t))
-							wd.show_modal_to_window (dialog)
 						end
-					else
-						set_focus (class_field)
-						create wd.make_with_text (Warning_messages.w_Cannot_find_class (t))
-						wd.show_modal_to_window (dialog)
 					end
 				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.

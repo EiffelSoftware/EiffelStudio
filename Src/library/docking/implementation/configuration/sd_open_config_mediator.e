@@ -673,18 +673,21 @@ feature {NONE} -- Implementation
 				l_state ?= l_internal.new_instance_of (l_type_id)
 				l_state.set_docking_manager (internal_docking_manager)
 				l_state.restore (a_config_data, a_container)
-				l_state.set_last_floating_height (a_config_data.height)
-				l_state.set_last_floating_width (a_config_data.width)
-				if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
-					l_state.content.hide
-				end
-				if a_config_data.is_minimized then
-					-- l_state.zone will be void. We should query zone indirectly.
-					l_parent ?= l_state.content.state.zone.parent
-					if l_parent /= Void and l_parent.is_minimized then
-						-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
---						check full: l_parent.full end
-						l_parent.disable_item_expand (l_state.content.state.zone)
+				-- We should check if we really restored content.
+				if l_state.content /= Void then
+					l_state.set_last_floating_height (a_config_data.height)
+					l_state.set_last_floating_width (a_config_data.width)
+					if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
+						l_state.content.hide
+					end
+					if a_config_data.is_minimized then
+						-- l_state.zone will be void. We should query zone indirectly.
+						l_parent ?= l_state.content.state.zone.parent
+						if l_parent /= Void and l_parent.is_minimized then
+							-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
+							-- check full: l_parent.full end
+							l_parent.disable_item_expand (l_state.content.state.zone)
+						end
 					end
 				end
 			else	-- If it's a split_area

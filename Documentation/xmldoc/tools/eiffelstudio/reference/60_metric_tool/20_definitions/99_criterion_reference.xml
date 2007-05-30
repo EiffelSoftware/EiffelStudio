@@ -89,11 +89,11 @@
 		<bold>Applicable on:</bold> Class, Feature<line_break/>
 		<bold>Remark:</bold> This criterion will evaluate to True if candidate class (or feature) is descendant of any (if more than one are possible) of the class (or feature) specified in the criterion domain.<line_break/>
 		For example, in a class metric,
-		    <note>ancestor_is {STRING_8}</note><line_break/>
-		will evaluate to True when a candidate class is a descendant of class STRING_8.<line_break/>
+		    <note>ancestor_is {<class_name>STRING_8</class_name>}</note><line_break/>
+		will evaluate to True when a candidate class is a descendant of class <class_name>STRING_8</class_name>.<line_break/>
 		In a class metric, 
-		<note>ancestor_is {LINKED_LIST, DS_LINKED_LIST} </note>
-		will evaluate to True when a candidate class is a descendant of either LINKED_LIST or DS_LINKED_LIST.
+		<note>ancestor_is {<class_name>LINKED_LIST</class_name>, <class_name>DS_LINKED_LIST</class_name>} </note>
+		will evaluate to True when a candidate class is a descendant of either <class_name>LINKED_LIST</class_name> or <class_name>DS_LINKED_LIST</class_name>.
 	</paragraph>
 
 	<paragraph>
@@ -107,10 +107,10 @@
 				<alt_text>class hierarchy</alt_text>
 			</image>
 		</paragraph>		
-		Ancestors of STRING_32 are: STRING_32, STRING_GENERAL, INDEXABLE, COMPARABLE and PART_COMPARABLE.<line_break/>
-		Proper ancestors of STRING_32 are STRING_GENERAL, INDEXABLE, COMPARABLE and PART_COMPARABLE.<line_break/>
-		Parents of STRING_32 are: STRING_GENERAL and INDEXABLE<line_break/>
-		Indirect parents of STRING_32 are: COMPARABLE and PARTCOMPARABLE<line_break/>
+		Ancestors of <class_name>STRING_32</class_name> are: <class_name>STRING_32</class_name>, <class_name>STRING_GENERAL</class_name>, <class_name>INDEXABLE</class_name>, <class_name>COMPARABLE</class_name> and <class_name>PART_COMPARABLE</class_name>.<line_break/>
+		Proper ancestors of <class_name>STRING_32</class_name> are <class_name>STRING_GENERAL</class_name>, <class_name>INDEXABLE</class_name>, <class_name>COMPARABLE</class_name> and <class_name>PART_COMPARABLE</class_name>.<line_break/>
+		Parents of <class_name>STRING_32</class_name> are: <class_name>STRING_GENERAL</class_name> and <class_name>INDEXABLE</class_name><line_break/>
+		Indirect parents of <class_name>STRING_32</class_name> are: <class_name>COMPARABLE</class_name> and <class_name>PARTCOMPARABLE</class_name><line_break/>
 		The related concepts of descendants, proper descendants, heirs, indirect heirs follow the same rule but are in the reversed direction. <line_break/>
 	</paragraph>
 
@@ -170,7 +170,7 @@
 	                          <keyword>create</keyword> <local_variable>l_str</local_variable><symbol>.</symbol><feature_name>make_empty</feature_name>
 	                 <keyword>end</keyword>
 		</code_block><line_break/>
-		Then both STRING and FILE are suppliers of class A. STRING is normal supplier because a feature make_empty in STRING is invoked in class A, but FILE is a syntactically referenced supplier because no feature from FILE is called from A. Classes explicitly listed in inherit clause of a class are also considered as syntactically referenced suppliers.
+		Then both <class_name>STRING</class_name> and <class_name>FILE</class_name> are suppliers of class <class_name>A</class_name>. <class_name>STRING</class_name> is normal supplier because a feature make_empty in <class_name>STRING</class_name> is invoked in class <class_name>A</class_name>, but <class_name>FILE</class_name> is a syntactically referenced supplier because no feature from <class_name>FILE</class_name> is called from <class_name>A</class_name>. Classes explicitly listed in inherit clause of a class are also considered as syntactically referenced suppliers.
 		<paragraph>Concepts of direct/indirect, normally referenced/syntactically referenced clients follow the same rule expect in the other direction.</paragraph>			
 	</paragraph>
 	
@@ -302,17 +302,17 @@
 		<paragraph>This value_of_metric_is criterion should check this: for every candidate feature, test if the number of callers of that feature in current application target scope is zero.</paragraph>
  		<paragraph>Suppose now a feature named foo is the candidate feature.</paragraph>
 		<paragraph>If the "Use external delayed domain" is not checked, then the metric <bold>callee_is</bold> is calculated over input domain {application target}. </paragraph>
- 		<paragraph>So when calculate callee_is metric, every feature (let's call the current candidate feature APPLICATION.goo) from current application target is checked to see if it satisfies the criterion: callee_is {APPLICATION.goo} (the "Delayed item" is replaced by the current candidate feature). This is actually checking if a feature is called by itself.</paragraph>
+ 		<paragraph>So when calculate callee_is metric, every feature (let's call the current candidate feature <class_name>APPLICATION</class_name>.<feature_name>goo</feature_name>) from current application target is checked to see if it satisfies the criterion: callee_is {<class_name>APPLICATION</class_name>.<feature_name>goo</feature_name>} (the "Delayed item" is replaced by the current candidate feature). This is actually checking if a feature is called by itself.</paragraph>
  		<paragraph>As you can see, if "Use external delayed domain" option is not checked, during the period of value_of_metric_is criterion evaluation, the current feature candidate from the <bold>Unused features</bold> metrics is never involved. This of course yields wrong result.</paragraph>
- 		<paragraph>Now we select the "Use external delayed domain" option. Recall that current candidate feature of metric <bold>Unused features</bold> is APPLICATION.foo.</paragraph>
-		<paragraph>When the value_of_metric_is criterion is evaluated, the delayed item from metric <bold>callee_is</bold> is replaced by APPLICATION.foo. So the metric <bold>callee_is</bold> now is equal to:</paragraph>
+ 		<paragraph>Now we select the "Use external delayed domain" option. Recall that current candidate feature of metric <bold>Unused features</bold> is <class_name>APPLICATION</class_name>.<feature_name>foo</feature_name>.</paragraph>
+		<paragraph>When the value_of_metric_is criterion is evaluated, the delayed item from metric <bold>callee_is</bold> is replaced by <class_name>APPLICATION</class_name>.<feature_name>foo</feature_name>. So the metric <bold>callee_is</bold> now is equal to:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/fake_callee_is.jpg</url>
 				<alt_text>value criterion</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>which reads: calculate the number of callers of feature APPLICATION.foo. And the value_of_metric_is criterion is now semantically equal to: test if number of callers of APPLICATION.foo is zero. This is what we want.</paragraph>
+		<paragraph>which reads: calculate the number of callers of feature <class_name>APPLICATION</class_name>.<feature_name>foo</feature_name>. And the value_of_metric_is criterion is now semantically equal to: test if number of callers of <class_name>APPLICATION</class_name>.<feature_name>foo</feature_name> is zero. This is what we want.</paragraph>
 		<paragraph>As we can see, when the option "Use external delayed domain" is selected, the delayed item from the criterion metric will be replaced by the current candidate code element. Otherwise, it will be replaced by the candidate element from criterion metric input domain when criterion metric is calculated.</paragraph>
 	</paragraph>
 	<heading>
@@ -425,7 +425,7 @@
 		<bold>is_always_compiled</bold><line_break/>
 		<bold>Syntax:</bold> is_always_compiled<line_break/>
 		<bold>Applicable on:</bold> Class<line_break/>
-		<bold>Remark:</bold> This criterion will evaluate to True if the candidate class is an always compiled class. Some basic class such as INTEGER, REAL are always compiled no matter whether they are used in an application. These class will cause is_always_compiled criterion evaluate to True.<line_break/>
+		<bold>Remark:</bold> This criterion will evaluate to True if the candidate class is an always compiled class. Some basic class such as <class_name>INTEGER</class_name>, <class_name>REAL</class_name> are always compiled no matter whether they are used in an application. These class will cause is_always_compiled criterion evaluate to True.<line_break/>
 	</paragraph>
 	<paragraph>
 		<bold>is_assembly</bold><line_break/>
@@ -539,7 +539,7 @@
 		<bold>is_from_any</bold><line_break/>
 		<bold>Syntax:</bold> is_from_any<line_break/>
 		<bold>Applicable on:</bold> Feature<line_break/>
-		<bold>Remark:</bold> This criterion will evaluate to True if the candidate feature is from class ANY.<line_break/>
+		<bold>Remark:</bold> This criterion will evaluate to True if the candidate feature is from class <class_name>ANY</class_name>.<line_break/>
 	</paragraph>
 	<paragraph>
 		<bold>is_frozen</bold><line_break/>
@@ -563,7 +563,7 @@
 		<bold>is_hidden</bold><line_break/>
 		<bold>Syntax:</bold> is_hidden<line_break/>
 		<bold>Applicable on:</bold> Feature<line_break/>
-		<bold>Remark:</bold> This criterion will evaluate to True if the candidate feature is exported to NONE.<line_break/>
+		<bold>Remark:</bold> This criterion will evaluate to True if the candidate feature is exported to <class_name>NONE</class_name>.<line_break/>
 	</paragraph>
 	<paragraph>
 		<bold>is_immediate</bold><line_break/>
@@ -734,7 +734,7 @@
 				<alt_text>system hierarchy</alt_text>
 			</image>
 		</paragraph>
- 		<paragraph>The figure shows the group hierarchy of a Vision2 application. library base and vision2 are used by the application. And notice that library wel is used internally by vision2 library but not by the application. This means that classes defined in wel library is not visible to the application thus one cannot use those wel classes in application.</paragraph>
+ 		<paragraph>The figure shows the group hierarchy of a Vision2 application. library <cluster_name>base</cluster_name> and <cluster_name>vision2</cluster_name> are used by the application. And notice that library <cluster_name>wel</cluster_name> is used internally by <cluster_name>vision2</cluster_name> library but not by the application. This means that classes defined in <cluster_name>wel</cluster_name> library is not visible to the application thus one cannot use those <cluster_name>wel</cluster_name> classes in application.</paragraph>
  		<paragraph>And if we create the following basic metric and run it with current application target as input domain:</paragraph>
 		<paragraph>
 			<image>
@@ -742,7 +742,7 @@
 				<alt_text>visible</alt_text>
 			</image>
 		</paragraph>
- 		<paragraph>We'll get all classes in the application including those classes in wel library because every class is descendant of class ANY.</paragraph>
+ 		<paragraph>We'll get all classes in the application including those classes in <cluster_name>wel</cluster_name> library because every class is descendant of class <class_name>ANY</class_name>.</paragraph>
 		<paragraph>But if we do things a little bit differently, we create the following metric and run it with current application target as input domain:</paragraph>
 		<paragraph>
 			<image>
@@ -750,7 +750,7 @@
 				<alt_text>visible</alt_text>
 			</image>
 		</paragraph>
- 		<paragraph>Then we will get all visible classes in current application target. i.e., those classes in wel library (any maybe some other invisible classes as well) are filtered out.</paragraph>
+ 		<paragraph>Then we will get all visible classes in current application target. i.e., those classes in <cluster_name>wel</cluster_name> library (any maybe some other invisible classes as well) are filtered out.</paragraph>
 		<paragraph>Visibility of a generic, feature, assertion, argument, local is determined by its written in class. </paragraph>				
 	</paragraph>	
 		

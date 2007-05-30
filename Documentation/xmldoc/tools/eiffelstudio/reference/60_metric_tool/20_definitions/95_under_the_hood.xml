@@ -32,18 +32,18 @@
 			<alt_text>Actual semantic for input domain item</alt_text>
 		</image>
 	</paragraph>		
-	<paragraph>Here the selected metric is <bold>Compiled classes</bold>, and the input domain is {base}, and when calculating, all compiled classes in library base will be found and counted. The result is shown in the following figure:</paragraph>
+	<paragraph>Here the selected metric is <bold>Compiled classes</bold>, and the input domain is {<cluster_name>base</cluster_name>}, and when calculating, all compiled classes in library base will be found and counted. The result is shown in the following figure:</paragraph>
 	<paragraph>
 		<image>
 			<url>../../../../../images/eiffelstudio/metrics_tool/hood2.png</url>
 			<alt_text>Actual semantic for input domain item</alt_text>
 		</image>
 	</paragraph>
-	<paragraph>But how those compiled classes are found in library base? The answer is through an operation called domain transformation.</paragraph>
+	<paragraph>But how those compiled classes are found in library <cluster_name>base</cluster_name>? The answer is through an operation called domain transformation.</paragraph>
 	<paragraph>A domain transformation will transform a source domain into a destination domain with a specified product unit. This means that a product unit has to be specified to indicate what kind of code element will appear in a destination domain. A product unit can be one of the following: target, group, class, generic, feature, argument, local, assertion, line.</paragraph>
 	<paragraph>A domain transformation is done like this: For every code element in source domain, all code elements of the destination unit that can be found (with the help of the compiler) in that source code element are put into the destination domain.</paragraph>
-	<paragraph>Let's continue to use the above <bold>Compiled classes</bold> example. The input domain {base} is source domain, and the result domain of the metric is destination domain here. And the destination unit is class which is the unit of the specified metric <bold>Compiled classes</bold>.</paragraph>
-	<paragraph>So for a source code element (here is base), find all classes in that element (base), and put them in the destination domain. Now we get a destination domain which contains all candidate classes. Those classes are called candidates because we only want some of them. And the filtering is done with the specified criterion is_compiled. After that, you get the actual result domain.</paragraph>
+	<paragraph>Let's continue to use the above <bold>Compiled classes</bold> example. The input domain {<cluster_name>base</cluster_name>} is source domain, and the result domain of the metric is destination domain here. And the destination unit is class which is the unit of the specified metric <bold>Compiled classes</bold>.</paragraph>
+	<paragraph>So for a source code element (here is <cluster_name>base</cluster_name>), find all classes in that element (<cluster_name>base</cluster_name>), and put them in the destination domain. Now we get a destination domain which contains all candidate classes. Those classes are called candidates because we only want some of them. And the filtering is done with the specified criterion is_compiled. After that, you get the actual result domain.</paragraph>
 	<paragraph>It's quite easy to understand the group to class transformation. But what if I want some features now? Just do consecutive transformations: from group to class first, and then from class to feature.</paragraph>
 	<paragraph>We call a transformation from an element to another element a rout, consecutive transformations a path. All possible transformation paths are shown in the following figure:</paragraph>
 	<paragraph>

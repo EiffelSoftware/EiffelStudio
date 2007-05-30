@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize callbacks
 		once
-			c_ev_gtk_callback_marshal_init (Current, $marshal)
+			c_ev_gtk_callback_marshal_init ($Current, $marshal)
 			c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
@@ -286,13 +286,13 @@ feature {NONE} -- Tuple optimizations.
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_init (
-		object: EV_GTK_CALLBACK_MARSHAL; a_marshal: POINTER
+		object: POINTER; a_marshal: POINTER
 		) is
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C inline use %"ev_gtk_callback_marshal.h%""
 		alias
-			"c_ev_gtk_callback_marshal_init ((EIF_OBJECT) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
+			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy

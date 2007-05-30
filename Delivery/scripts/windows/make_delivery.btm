@@ -124,7 +124,7 @@ safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
 exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet dotnet
+exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %STUDIO_DIR
 remtrace wizards
 exprt %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
@@ -136,7 +136,7 @@ fullrd C_library\.libs
 remtrace Free add ons
 exprt %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 remtrace .NET assemblies
-exprt %DEFAULT_ORIGO_SVN/Delivery/dotnet dotnet
+exprt %DEFAULT_ORIGO_SVN/Delivery/dotnet %ISE_PLATFORM-dotnet
 remtrace root
 exprt -N %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG

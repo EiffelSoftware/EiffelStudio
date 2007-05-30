@@ -363,11 +363,17 @@ feature -- Access: file name
 			-- Retrieve precomp location.
 		require
 			is_valid_environment: is_valid_environment
+		local
+			l_dn_name: STRING
 		do
 			Result := lib_path.twin
 			Result.extend_from_array (<<"precomp", "spec">>)
 			if a_is_dotnet then
-				Result.extend ("dotnet")
+					-- Append '-dotnet' to platform name
+				create l_dn_name.make (eiffel_platform.count + 7)
+				l_dn_name.append (eiffel_platform)
+				l_dn_name.append ("-dotnet")
+				Result.extend (l_dn_name)
 			else
 				Result.extend (eiffel_platform)
 			end

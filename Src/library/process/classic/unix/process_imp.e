@@ -157,12 +157,10 @@ feature {PROCESS_TIMER}  -- Status checking
 					has_process_exited := not child_process.is_executing
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
-						if child_process.is_terminated_by_signal then
-							force_terminated := True
-						end
 						if is_launched_in_new_process_group and then is_terminal_control_enabled then
 							attach_terminals (process_id)
 						end
+
 						if in_thread /= Void then
 							in_thread.set_exit_signal
 						end
@@ -340,6 +338,15 @@ feature {NONE}  -- Implementation
 			start_listening_threads
 		end
 
+	new_thread_attributes: THREAD_ATTRIBUTES is
+			-- New threads attributes used to launch thread
+		do
+			create Result.make
+			Result.set_detached (True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	start_listening_threads is
 			-- Setup listeners for process output/error and for process status acquiring.
 		do
@@ -347,18 +354,18 @@ feature {NONE}  -- Implementation
 				create input_buffer.make (initial_buffer_size)
 				create input_mutex.make
 				create in_thread.make (Current)
-				in_thread.launch
+				in_thread.launch_with_attributes (new_thread_attributes)
 			end
 				-- Start  output listening thread is necessory
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create out_thread.make (Current)
-			   	out_thread.launch
+			   	out_thread.launch_with_attributes (new_thread_attributes)
 			end
 				-- Start a error listening thread is necessory	
 			if (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)  then
 				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 					create err_thread.make (Current)
-					err_thread.launch
+					err_thread.launch_with_attributes (new_thread_attributes)
 				end
 			end
 					-- Start a timer for process status acquiring.

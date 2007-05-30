@@ -88,6 +88,7 @@ feature -- Status setting
 			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
 		local
 			tbb: EB_COMMAND_TOOL_BAR_BUTTON
+			l_sd_button: like new_sd_toolbar_item
 			tt: STRING_GENERAL
 		do
 			selected_type := a_type
@@ -114,6 +115,23 @@ feature -- Status setting
 						tbb.disable_sensitive
 					end
 					internal_managed_toolbar_items.forth
+				end
+			end
+			if internal_managed_sd_toolbar_items /= Void then
+				from
+					internal_managed_sd_toolbar_items.start
+				until
+					internal_managed_sd_toolbar_items.after
+				loop
+					l_sd_button := internal_managed_sd_toolbar_items.item
+					l_sd_button.set_pixel_buffer (pixel_buffer)
+					l_sd_button.set_tooltip (tt)
+					if is_sensitive then
+						l_sd_button.enable_sensitive
+					else
+						l_sd_button.disable_sensitive
+					end
+					internal_managed_sd_toolbar_items.forth
 				end
 			end
 		end

@@ -21,7 +21,7 @@ indexing
 #include <gtk/gtk.h>
 
 void c_ev_gtk_callback_marshal_init
-	(EIF_OBJECT, void (*) (
+	(EIF_REFERENCE, void (*) (
 		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
 	);
 

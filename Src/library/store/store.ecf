@@ -19,10 +19,6 @@
 			<option namespace="Converter">
 			</option>
 		</cluster>
-		<cluster name="dataview" location="dataview\" recursive="true">
-			<option namespace="DataView">
-			</option>
-		</cluster>
 		<cluster name="dbms-support" location="dbms\support\" recursive="true">
 			<option namespace="Dbms.Support">
 			</option>

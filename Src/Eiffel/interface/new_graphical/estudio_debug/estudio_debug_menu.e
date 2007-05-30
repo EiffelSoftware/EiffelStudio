@@ -65,15 +65,21 @@ feature {NONE} -- Actions
 				l_path := l_env.get ("EIFFEL_SRC")
 				if l_path = Void then
 					create l_dlg.make_with_text ("EIFFEL_SRC not defined.")
-					l_dlg.show
+					if window /= Void then
+						l_dlg.show_modal_to_window (Void)
+					else
+						l_dlg.show
+					end
 				else
 					create l_dir.make_from_string (l_path)
 					l_dir.extend_from_array (<<"library", "memory_analyzer" >>)
 					create ma_window.make (l_dir)
-					ma_window.close_request_actions.extend (agent handle_close_window)
+					ma_window.close_request_actions.extend (agent ma_window.hide)
+					ma_window.show
 				end
+			else
+				ma_window.show
 			end
-			ma_window.show
 		end
 
 	launch_uuid_tool is
@@ -119,12 +125,6 @@ feature {NONE} -- Actions
 		end
 
 feature {NONE} -- Implementation
-
-	handle_close_window is
-			-- Handle user press window action.
-		do
-			ma_window.destroy
-		end
 
 	window: EV_WINDOW
 			-- Main development window.

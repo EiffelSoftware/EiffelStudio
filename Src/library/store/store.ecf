@@ -14,7 +14,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="converter" location="converter\" recursive="true">
 			<option namespace="Converter">
 			</option>

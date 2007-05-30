@@ -10,8 +10,10 @@ class
 
 inherit
 	SED_BINARY_READER_WRITER
+		rename
+			buffer_position as count
 		export
-			{ANY} buffer
+			{ANY} buffer, count
 		end
 
 create
@@ -49,7 +51,7 @@ feature {NONE} -- Buffer update
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
 			-- Otherwise, read/write to `medium' to free some space.
 		do
-			if n + buffer_position > buffer_size then
+			if n + count > buffer_size then
 				buffer.resize (buffer.count + buffer.count // 2)
 				buffer_size := buffer.count
 			end
@@ -66,10 +68,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

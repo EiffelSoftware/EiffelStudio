@@ -59,7 +59,7 @@ feature -- Insertion
 					-- The routine id has been recorded
 					-- earlier.
 				info := found_item
-				if not (info.origin = org.class_id) then
+				if info.origin /= org.class_id then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.

@@ -181,9 +181,8 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 
 
 #define EIF_THREAD_DISPOSE \
-	EIF_RT_BASIC_CLEANUP \
+	eif_thr_exit(); \
 }
-
 
 #define EIF_DISPOSE_ALL \
 	EIF_RT_BASIC_CLEANUP \

@@ -24,12 +24,12 @@ void (*ev_gtk_callback_marshal)
     (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER);
 
 void c_ev_gtk_callback_marshal_init (
-    EIF_OBJECT callback_marshal_object,
+    EIF_REFERENCE callback_marshal_object,
     void (*callback_marshal) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
 )
         // Store the address of the Eiffel callback marshal in a global.
 {
-        ev_gtk_callback_marshal_object = eif_adopt(callback_marshal_object);
+        ev_gtk_callback_marshal_object = eif_protect(callback_marshal_object);
         ev_gtk_callback_marshal = callback_marshal;
 }
 

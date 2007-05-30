@@ -82,6 +82,10 @@ feature {NONE} -- Retrieval
 
 				--| Load data
 			profiles_grid.set_row_count_to (0)
+
+				--| Default
+			l_row := added_profile_text_row (Void, False, False)
+
 			l_user_opts := lace.user_options.target
 			l_profs := l_user_opts.profiles
 			if l_user_opts.profiles_enabled then
@@ -119,6 +123,8 @@ feature {NONE} -- Retrieval
 					if profiles_grid.column_count > 0 then
 						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
 					end
+				else
+					default_profile_row.enable_select
 				end
 			end
 
@@ -126,6 +132,17 @@ feature {NONE} -- Retrieval
 		end
 
 feature -- Storage
+
+	validate is
+		require
+			not has_changed
+		local
+			l_user_opts: TARGET_USER_OPTIONS
+			l_user_factory: USER_OPTIONS_FACTORY
+		do
+			l_user_opts := lace.user_options.target
+			l_user_opts.set_last_profile_by_title (selected_profile)
+		end
 
 	store_dbg_options is
 			-- Store the current arguments and set current
@@ -153,13 +170,14 @@ feature -- Storage
 			end
 			l_user_opts.set_profiles (l_profs)
 
-			if profiles_grid.row_count > 0 and then not profiles_grid.selected_rows.is_empty then
-				lrow := profiles_grid.selected_rows.first
-				t := profile_from_row (lrow)
-				l_user_opts.set_last_profile (t)
-			else
-				l_user_opts.set_last_profile (Void)
+			t := selected_profile
+			if t = Void then
+				lrow := default_profile_row
+				if lrow /= Void then
+					lrow.enable_select
+				end
 			end
+			l_user_opts.set_last_profile (t)
 			l_user_opts.set_profiles_enabled (enable_profiles_button.is_selected)
 
 			create l_user_factory
@@ -167,6 +185,24 @@ feature -- Storage
 
 			synch_with_others
 			set_changed (False)
+		end
+
+	selected_profile: like profile_from_row is
+		local
+			lrow: EV_GRID_ROW
+		do
+			if profiles_grid.row_count > 0 and then not profiles_grid.selected_rows.is_empty then
+				lrow := profiles_grid.selected_rows.first
+				Result := profile_from_row (lrow)
+			end
+		end
+
+	default_profile_row: EV_GRID_ROW is
+			-- "Default" profile's row.
+		do
+			if profiles_grid.row_count > 0 then
+				Result := profiles_grid.row (1)
+			end
 		end
 
 feature {NONE} -- GUI
@@ -348,6 +384,7 @@ feature {NONE} -- Grid events
 			r: EV_GRID_ROW
 		do
 			if not inside_tab_accelerator and a_row /= Void then
+				set_row_root_as_selected (False, default_profile_row)
 				r := a_row.parent_row_root
 				check r /= Void end
 
@@ -357,15 +394,35 @@ feature {NONE} -- Grid events
 					r.set_foreground_color (profiles_grid.focused_selection_text_color)
 				end
 --				propagate_background_color_on (r, selected_background_color)
-				if r.count > 0 then
-					gi ?= r.item (1)
-					if gi /= Void then
-						gi.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
-						profiles_grid.safe_resize_column_to_content (gi.column, False, False)
-					end
+
+				set_row_root_as_selected (True, r)
+
+				if r.data /= Void then
+					remove_button.enable_sensitive
+					dup_button.enable_sensitive
+				else
+					remove_button.disable_sensitive
+					dup_button.disable_sensitive
 				end
-				remove_button.enable_sensitive
-				dup_button.enable_sensitive
+			end
+		end
+
+	set_row_root_as_selected (a_is_selected: BOOLEAN; a_row: EV_GRID_ROW) is
+		require
+			a_row /= Void implies a_row.parent_row_root = a_row
+		local
+			gi: EV_GRID_SPAN_LABEL_ITEM
+		do
+			if a_row /= Void and then a_row.count > 0 then
+				gi ?= a_row.item (1)
+				if gi /= Void then
+					if a_is_selected then
+						gi.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
+					else
+						gi.remove_pixmap
+					end
+					profiles_grid.safe_resize_column_to_content (gi.column, False, False)
+				end
 			end
 		end
 
@@ -397,6 +454,7 @@ feature {NONE} -- Grid events
 				end
 				row_unselected_actions.call ([a_row])
 			end
+			set_row_root_as_selected (True, default_profile_row)
 		end
 
 	on_item_double_clicked (ax, ay, ab: INTEGER; gi: EV_GRID_ITEM) is
@@ -602,6 +660,7 @@ feature {NONE} -- Button Actions
 				remove_button.enable_sensitive
 				dup_button.enable_sensitive
 			end
+			set_changed (True)
 		end
 
 	add_new_profile is
@@ -698,7 +757,11 @@ feature {NONE} -- Profile actions
 			-- Action to take when user chooses to add a new argument.
 			-- if `store_arguments' is true, store_arguments if any change occurred
 		do
-			if a_profile /= Void then
+			if a_profile = Void then
+				Result := profiles_grid.extended_new_row
+				Result.set_data (Void)
+				add_title_to_row (Void, Result)
+			else
 				Result := grid_row_with_profile (a_profile)
 				if Result = Void then
 					Result := profiles_grid.extended_new_row
@@ -871,7 +934,9 @@ feature {NONE} -- Profile actions
 			a_row.set_background_color (profiles_grid.separator_color)
 
 			refresh_title_row_text (a_row)
-			a_row.ensure_expandable
+			if p /= Void then
+				a_row.ensure_expandable
+			end
 			set_changed (True)
 		end
 
@@ -879,16 +944,19 @@ feature {NONE} -- Profile actions
 			-- Refresh `a_row' by recomputing the title's text related to `a_row'
 		require
 			a_row /= Void
-			profile_from_row (a_row) /= Void
 		local
 			p: like profile_from_row
 			l_item: EV_GRID_SPAN_LABEL_ITEM
 			s: STRING_32
 		do
 			p := profile_from_row (a_row)
-			s := p.title
-			if s = Void or else s.is_empty then
-				s := description_from_profile (p).as_string_32
+			if p = Void then
+				s := interface_names.l_default
+			else
+				s := p.title
+				if s = Void or else s.is_empty then
+					s := description_from_profile (p).as_string_32
+				end
 			end
 			l_item ?= a_row.item (1)
 			l_item.set_text (s)

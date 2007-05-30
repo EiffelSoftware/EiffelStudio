@@ -188,6 +188,8 @@ feature {NONE} -- Actions
 					<<agent debugging_options_control.store_dbg_options, Void>>
 					)
 				dlg.show_modal_to_window (Current)
+			else
+				debugging_options_control.validate
 			end
 			hide
 		end
@@ -245,6 +247,7 @@ feature {NONE} -- Implementation
 				dlg.set_cancel_action (agent do_nothing)
 				dlg.show_modal_to_window (Current)
 			else
+				debugging_options_control.validate
 				op.call (Void)
 			end
 		end

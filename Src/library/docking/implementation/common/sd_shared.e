@@ -226,14 +226,6 @@ feature -- Status setting
 			set: show_all_tab_stub_text =  a_bool
 		end
 
-	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
-			-- Set tool bar docker mediator singleton.
-		do
-			tool_bar_docker_mediator_cell.put (a_mediator)
-		ensure
-			set: tool_bar_docker_mediator_cell.item = a_mediator
-		end
-
 	set_default_screen_x (a_x: INTEGER) is
 			-- Set `default_screen_x'
 		require
@@ -435,6 +427,12 @@ feature -- Constants
 			Result := tool_bar_font.width * 35
 		end
 
+	tab_zone_upper_minimum_height: INTEGER is
+			-- SD_TAB_ZONE_UPPER and SD_DOCKING_ZONE_UPPER's minimum height.
+		do
+			Result := notebook_tab_height + 5
+		end
+
 	Zone_minmum_width: INTEGER is
 			-- Minmum width of a zone.
 		once
@@ -512,7 +510,15 @@ feature -- Constants
 			Result_not_void: Result /= Void
 		end
 
-feature {SD_DOCKING_MANAGER} -- Implementation
+feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR} -- Implementation
+
+	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
+			-- Set tool bar docker mediator singleton.
+		do
+			tool_bar_docker_mediator_cell.put (a_mediator)
+		ensure
+			set: tool_bar_docker_mediator_cell.item = a_mediator
+		end
 
 	add_docking_manager (a_manager: SD_DOCKING_MANAGER) is
 			-- Set `internal_docking_manager'.

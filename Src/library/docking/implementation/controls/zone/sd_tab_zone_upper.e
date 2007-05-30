@@ -46,6 +46,8 @@ feature {NONE} -- Initlization
 			internal_notebook.minimize_actions.extend (agent on_minimize)
 			internal_notebook.tab_double_click_actions.extend (agent on_normal_max_window)
 			internal_notebook.drag_tab_area_actions.extend (agent on_drag_title_bar)
+
+			set_minimum_height (internal_shared.tab_zone_upper_minimum_height)
 		end
 
 feature -- Query

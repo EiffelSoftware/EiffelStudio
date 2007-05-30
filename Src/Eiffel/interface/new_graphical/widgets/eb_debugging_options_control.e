@@ -88,11 +88,6 @@ feature {NONE} -- Retrieval
 
 			l_user_opts := lace.user_options.target
 			l_profs := l_user_opts.profiles
-			if l_user_opts.profiles_enabled then
-				enable_profiles_button.enable_select
-			else
-				enable_profiles_button.disable_select
-			end
 			if l_profs /= Void and then l_profs.count > 0 then
 					--| It is safer to work on a copy to be able to cancel
 					--| changes easily
@@ -108,7 +103,6 @@ feature {NONE} -- Retrieval
 				end
 				i := l_user_opts.last_profile_index
 				if l_profs.valid_index (i) then
-					enable_profiles_button.enable_select
 					l_prof := l_profs[i]
 					l_row := grid_row_with_profile (l_prof)
 					if l_row = Void then
@@ -126,6 +120,8 @@ feature {NONE} -- Retrieval
 				else
 					default_profile_row.enable_select
 				end
+			else
+				default_profile_row.enable_select
 			end
 
 			set_changed (False)
@@ -178,7 +174,6 @@ feature -- Storage
 				end
 			end
 			l_user_opts.set_last_profile (t)
-			l_user_opts.set_profiles_enabled (enable_profiles_button.is_selected)
 
 			create l_user_factory
 			l_user_factory.store (lace.user_options)
@@ -236,8 +231,6 @@ feature {NONE} -- GUI
 				--| to allow arguments if they are not allowed yet.
 			if profiles_grid.is_sensitive then
 				profiles_grid.set_focus
-			else
-				enable_profiles_button.set_focus
 			end
 		end
 
@@ -268,7 +261,7 @@ feature {NONE} -- Display profiles impl
 			hb.set_padding_width (layout_constants.small_padding_size)
 			create add_button.make_with_text_and_action (interface_names.b_add, agent add_new_profile)
 			layout_constants.set_default_width_for_button (add_button)
-			add_button.disable_sensitive
+			add_button.enable_sensitive
 
 			create remove_button.make_with_text_and_action (interface_names.b_remove, agent remove_selected_profile)
 			layout_constants.set_default_width_for_button (remove_button)
@@ -282,9 +275,6 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (apply_button)
 			apply_button.disable_sensitive
 
-			create enable_profiles_button.make_with_text (interface_names.b_enable_profiles)
-			enable_profiles_button.select_actions.extend (agent on_enable_profiles_clicked)
-
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
 			hb.extend (dup_button)
@@ -293,9 +283,6 @@ feature {NONE} -- Display profiles impl
 			hb.disable_item_expand (remove_button)
 			hb.extend (apply_button)
 			hb.disable_item_expand (apply_button)
-			hb.extend (create {EV_CELL})
-			hb.extend (enable_profiles_button)
-			hb.disable_item_expand (enable_profiles_button)
 
 				--| Grid
 			create g
@@ -340,8 +327,6 @@ feature {NONE} -- GUI Properties
 	add_button, dup_button, remove_button: EV_BUTTON
 	apply_button: EV_BUTTON
 
-	enable_profiles_button: EV_CHECK_BUTTON
-
 feature {NONE} -- Grid events
 
 	on_key_pressed (a_key: EV_KEY) is
@@ -383,7 +368,7 @@ feature {NONE} -- Grid events
 			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
-			if not inside_tab_accelerator and a_row /= Void then
+			if not inside_row_operation and a_row /= Void then
 				set_row_root_as_selected (False, default_profile_row)
 				r := a_row.parent_row_root
 				check r /= Void end
@@ -434,7 +419,7 @@ feature {NONE} -- Grid events
 			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
-			if not inside_tab_accelerator then
+			if not inside_row_operation then
 				remove_button.disable_sensitive
 				dup_button.disable_sensitive
 				if a_row /= Void then
@@ -453,8 +438,8 @@ feature {NONE} -- Grid events
 					end
 				end
 				row_unselected_actions.call ([a_row])
+				set_row_root_as_selected (True, default_profile_row)
 			end
-			set_row_root_as_selected (True, default_profile_row)
 		end
 
 	on_item_double_clicked (ax, ay, ab: INTEGER; gi: EV_GRID_ITEM) is
@@ -643,24 +628,6 @@ feature {NONE} -- Button Actions
 			load_dbg_options
 		ensure
 			not_has_changed: not has_changed
-		end
-
-	on_enable_profiles_clicked is
-			-- `enable_profiles_button' has been clicked
-		do
-			if not enable_profiles_button.is_selected then
-				profiles_grid.remove_selection
-				set_sensitive_state_on_grid (profiles_grid, False)
-				add_button.disable_sensitive
-				remove_button.disable_sensitive
-				dup_button.disable_sensitive
-			else
-				set_sensitive_state_on_grid (profiles_grid, True)
-				add_button.enable_sensitive
-				remove_button.enable_sensitive
-				dup_button.enable_sensitive
-			end
-			set_changed (True)
 		end
 
 	add_new_profile is
@@ -1312,7 +1279,7 @@ feature {NONE} -- Environment actions
 			old_k: STRING_32
 			c: BOOLEAN
 		do
-			if safe_grid_operation or else not inside_tab_accelerator then
+			if safe_grid_operation or else not inside_row_operation then
 				old_k := environment_variable_name_from_row (a_row)
 				p := profile_from_row (a_row)
 				check p /= Void end
@@ -1382,10 +1349,15 @@ feature {NONE} -- Environment actions
 		local
 			k: like environment_variable_name_from_row
 			p: like profile_from_row
+			par: EV_GRID_ROW
 			r, i: INTEGER
 			gi: EV_GRID_ITEM
 			g: EV_GRID
 		do
+			inside_row_operation := True
+			if a_row.parent /= Void then
+				par := a_row.parent_row
+			end
 			k := environment_variable_name_from_row (a_row)
 			p := profile_from_row (a_row)
 			if k /= Void and (p /= Void and then p.env /= Void) then
@@ -1393,11 +1365,6 @@ feature {NONE} -- Environment actions
 			end
 			r := a_row.index
 			g := a_row.parent
-			if r < g.row_count and then g.row(r + 1).parent_row = a_row.parent_row then
-				g.select_row (r)
-			elseif r > 1 then
-				g.select_row (r - 1)
-			end
 			from
 				i := 1
 			until
@@ -1412,6 +1379,13 @@ feature {NONE} -- Environment actions
 			a_row.clear
 			g.remove_row (r)
 			change_env_on (p.env, p)
+			inside_row_operation := False
+			if r > 1 then
+				g.select_row (r - 1)
+			end
+--			if par /= Void and par.parent /= Void then
+--				profiles_grid.select_row (par.index)
+--			end
 		end
 
 	validate_env_row (a_row: EV_GRID_ROW) is
@@ -1495,8 +1469,8 @@ feature {NONE} -- Implementation
 			create Result.make_with_8_bit_rgb (245, 245, 245)
 		end
 
-	inside_tab_accelerator: BOOLEAN
-			-- Is inside tab accelerator processing.
+	inside_row_operation: BOOLEAN
+			-- Is inside a grid row operation processing.
 
 	add_edition_tab_action_to_item (gi: EV_GRID_ITEM; pop: EV_POPUP_WINDOW) is
 		local
@@ -1506,27 +1480,27 @@ feature {NONE} -- Implementation
 							False, False, False)
 			acc.actions.extend (agent (a_gi: EV_GRID_ITEM)
 				do
-					inside_tab_accelerator := True
+					inside_row_operation := True
 						-- We need to protect the case when `gi' has already been deactivated.
 					if not a_gi.is_destroyed and then a_gi.is_parented then
 						a_gi.activate
 					end
-					inside_tab_accelerator := False
+					inside_row_operation := False
 				end (gi)
 			)
 			pop.accelerators.extend (acc)
 		end
 
-	set_sensitive_state_on_grid (a_grid: EV_GRID; a_is_sensitive: BOOLEAN) is
-		do
-			if a_is_sensitive then
-				a_grid.enable_sensitive
-				a_grid.set_background_color (stock_colors.color_read_write)
-			else
-				a_grid.disable_sensitive
-				a_grid.set_background_color (stock_colors.Color_read_only)
-			end
-		end
+--	set_sensitive_state_on_grid (a_grid: EV_GRID; a_is_sensitive: BOOLEAN) is
+--		do
+--			if a_is_sensitive then
+--				a_grid.enable_sensitive
+--				a_grid.set_background_color (stock_colors.color_read_write)
+--			else
+--				a_grid.disable_sensitive
+--				a_grid.set_background_color (stock_colors.Color_read_only)
+--			end
+--		end
 
 --	propagate_background_color_on (a_row: EV_GRID_ROW; a_color: EV_COLOR) is
 --		require

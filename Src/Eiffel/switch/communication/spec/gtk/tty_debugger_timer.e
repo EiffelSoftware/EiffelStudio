@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create actions
 
 			if gtk_init_check then
-				marshal_init (Current, $marshal)
+				marshal_init ($Current, $marshal)
 				marshal_set_is_enabled (True)
 			end
 		end
@@ -73,12 +73,14 @@ feature {NONE} -- Implementation
 			"C (guint) | <gtk/gtk.h>"
 		end
 
-	frozen marshal_init (object: like Current; a_marshal: POINTER)
+	frozen marshal_init (
+		object: POINTER; a_marshal: POINTER
+		)
 			-- See ev_gtk_callback_marshal.c
 		external
-			"C | %"ev_gtk_callback_marshal.h%""
+			"C inline use %"ev_gtk_callback_marshal.h%""
 		alias
-			"c_ev_gtk_callback_marshal_init"
+			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
 		end
 
 	frozen marshal_set_is_enabled (a_enabled_state: BOOLEAN) is

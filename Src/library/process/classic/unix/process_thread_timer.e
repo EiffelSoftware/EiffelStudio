@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
-			thread_capable: {PLATFORM}.is_thread_capable			
+			thread_capable: {PLATFORM}.is_thread_capable
 			interval_positive: interval > 0
 		do
 			sleep_time := interval
@@ -36,11 +36,15 @@ feature {NONE} -- Implementation
 feature -- Control
 
 	start is
+		local
+			l_thread_attribute: THREAD_ATTRIBUTES
 		do
 			mutex.lock
 			should_destroy := False
 			terminated := False
-			launch
+			create l_thread_attribute.make
+			l_thread_attribute.set_detached (True)
+			launch_with_attributes (l_thread_attribute)
 			has_started := True
 			mutex.unlock
 		end

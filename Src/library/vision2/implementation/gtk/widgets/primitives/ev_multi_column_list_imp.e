@@ -854,6 +854,8 @@ feature -- Implementation
 				if not (pnd_row_imp.able_to_transport (a_button) or pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
+			else
+				pnd_row_imp := Void
 			end
 
 			Precursor (

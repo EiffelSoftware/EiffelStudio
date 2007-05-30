@@ -96,7 +96,7 @@ feature -- Editor menu
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 				end
-				extend_basic_editor_menus (a_menu, a_editor.is_editable)
+				extend_basic_editor_menus (a_menu, a_editor)
 				extend_view_in_main_formatters_menus (a_menu)
 				extend_property_menu (a_menu, a_pebble)
 				current_editor := Void
@@ -532,7 +532,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 		end
 
-	extend_basic_editor_menus (a_menu: EV_MENU; is_editable: BOOLEAN) is
+	extend_basic_editor_menus (a_menu: EV_MENU; a_editor: EB_CLICKABLE_EDITOR) is
 			-- Add items of basic editor operations.
 			-- |Cut
 			-- |Copy
@@ -542,11 +542,16 @@ feature {NONE} -- Menu section, Granularity 1.
 			-- |Edit-->...
 		require
 			a_menu_not_void: a_menu /= Void
+			a_editor_not_void: a_editor /= Void
 		local
 			l_menu: EV_MENU
 			l_cmd: EB_STANDARD_CMD
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+			is_editable: BOOLEAN
+			l_editor_is_current_editor: BOOLEAN
 		do
+			is_editable := a_editor.is_editable
+			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
 			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
 			if not is_editable then
 				a_menu.last.disable_sensitive
@@ -578,10 +583,12 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_commands.go_i_th (5)
 
 				-- Toggle Line Numbers
-			l_cmd ?= l_commands.item
-			a_menu.extend (l_cmd.new_menu_item_unmanaged)
-			extend_separator (a_menu)
-
+			if l_editor_is_current_editor then
+					-- We don't want this item shown for non editors
+				l_cmd ?= l_commands.item
+				a_menu.extend (l_cmd.new_menu_item_unmanaged)
+				extend_separator (a_menu)
+			end
 			l_commands.forth
 
 				-- Find

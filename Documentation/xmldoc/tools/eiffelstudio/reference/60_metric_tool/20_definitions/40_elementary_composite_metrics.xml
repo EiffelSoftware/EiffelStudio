@@ -39,5 +39,15 @@
 				<url>70_scopes.xml</url>
 				<label>Scopes</label>
 			</link>
+			<line_break/>
+			<link>
+				<url>80_domains.xml</url>
+				<label>Domains</label>
+			</link>	
+			<line_break/>
+			<link>
+				<url>55_selection_criteria.xml</url>
+				<label>Selection criteria</label>
+			</link>				
 		</seealso>
 	</paragraph></document>

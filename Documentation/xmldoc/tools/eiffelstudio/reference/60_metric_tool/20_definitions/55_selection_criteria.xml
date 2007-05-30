@@ -41,7 +41,7 @@
 		<paragraph>Some examples:</paragraph>
 		<paragraph>is_deferred</paragraph>
 		<paragraph>text_is "some text", identity, case-sensitive</paragraph>
-		<paragraph>ancestor_is {ANY}</paragraph>
+		<paragraph>ancestor_is {<class_name>ANY</class_name>}</paragraph>
 		<paragraph>value_of_metric_is <bold>Class</bold>, {base}, (&gt;0 and &lt;100)</paragraph>		
 		<paragraph>There are several kinds of selection criteria, namely, text criterion, path criterion, relation criterion, metric value criterion and normal criterion.</paragraph>
 		<heading>
@@ -101,7 +101,7 @@
 			<content>Relation Criterion</content>
 		</heading>		
 		<paragraph>A relation criterion uses a criterion domain to check if a candidate code element is of some relationship between the criterion domain. Some other modifiers may also appear in a relation criterion.</paragraph>
-		<paragraph>Let's have look at a class relation criterion client_is shown in the following two figures where a basic class metric with relation criterion client_is is defined. This client_is criterion will match all direct normally referenced as well as only syntactically referenced suppliers of class LINKED_LIST.</paragraph>
+		<paragraph>Let's have look at a class relation criterion client_is shown in the following two figures where a basic class metric with relation criterion client_is is defined. This client_is criterion will match all direct normally referenced as well as only syntactically referenced suppliers of class <class_name>LINKED_LIST</class_name>.</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/selection_cri4.png</url>

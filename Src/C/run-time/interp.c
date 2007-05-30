@@ -4462,7 +4462,7 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 		if (is_inline_agent) {
 			body_id = desc_tab[stype][RTUD(stype)][fid].body_index;
 		} else if (is_static_call) {
-			body_id = desc_tab[stype][RTUD(stype)][fid].body_index;
+			body_id = desc_tab[stype][RTUD(1)][fid].body_index;
 		} else {
 			body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].body_index;
 		}

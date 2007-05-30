@@ -84,6 +84,11 @@ feature {NONE} -- Retrieval
 			profiles_grid.set_row_count_to (0)
 			l_user_opts := lace.user_options.target
 			l_profs := l_user_opts.profiles
+			if l_user_opts.profiles_enabled then
+				enable_profiles_button.enable_select
+			else
+				enable_profiles_button.disable_select
+			end
 			if l_profs /= Void and then l_profs.count > 0 then
 					--| It is safer to work on a copy to be able to cancel
 					--| changes easily
@@ -114,12 +119,9 @@ feature {NONE} -- Retrieval
 					if profiles_grid.column_count > 0 then
 						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
 					end
-				else
-					enable_profiles_button.disable_select
 				end
-			else
-				enable_profiles_button.enable_select
 			end
+
 			set_changed (False)
 		end
 
@@ -158,9 +160,11 @@ feature -- Storage
 			else
 				l_user_opts.set_last_profile (Void)
 			end
+			l_user_opts.set_profiles_enabled (enable_profiles_button.is_selected)
 
 			create l_user_factory
 			l_user_factory.store (lace.user_options)
+
 			synch_with_others
 			set_changed (False)
 		end
@@ -435,19 +439,30 @@ feature -- Status Setting
 			l_control: like Current
 			l_controls_list: SPECIAL [ANY]
 			l_counter: INTEGER
+			b: BOOLEAN
 		do
+				-- FIXME: this sounds rather dangerous to use MEMORY for such need.
 			create mem
+			b := mem.collecting
+			if b then
+				mem.collection_off
+			end
 			l_controls_list := mem.objects_instance_of (Current)
-			from
-				l_counter := 0
-			until
-				l_counter = l_controls_list.count
-			loop
-				if l_controls_list.item (l_counter) /= Current then
-					l_control ?= l_controls_list.item (l_counter)
-					l_control.update
+			if b then
+				mem.collection_on
+			end
+			if l_controls_list /= Void and then l_controls_list.count > 0 then
+				from
+					l_counter := 0
+				until
+					l_counter = l_controls_list.count
+				loop
+					if l_controls_list.item (l_counter) /= Current then
+						l_control ?= l_controls_list.item (l_counter)
+						l_control.update
+					end
+					l_counter := l_counter + 1
 				end
-				l_counter := l_counter + 1
 			end
 		end
 
@@ -567,6 +582,7 @@ feature {NONE} -- Button Actions
 			has_changed: has_changed
 		do
 			store_dbg_options
+			load_dbg_options
 		ensure
 			not_has_changed: not has_changed
 		end
@@ -1058,37 +1074,55 @@ feature {NONE} -- Environment actions
 		local
 			gei: EV_GRID_EDITABLE_ITEM
 			gti: EV_GRID_TEXT_ITEM
-			k: STRING_32
+			old_k, k: STRING_32
 			s, sv: STRING
 			ctrler: ES_GRID_ROW_CONTROLLER
 		do
 			gei ?= a_row.item (1)
 			if gei /= Void then
-				k := gei.text
-					--| Update embedded data
+					--| Embedded data				
 				ctrler ?= a_row.data
 				check ctrler /= Void end
+
+				old_k ?= ctrler.data
+
+				k := gei.text
+				k.left_adjust
+				k.right_adjust
 				ctrler.set_data (k)
 
 					--| Check if it is "inherited" variable
 					--| And update the graphical look
-				s := Execution_env.get (k)
-				if s = Void then
+				if old_k = Void then
+						--| New environ variable row
 					a_row.set_background_color (Void)
-					gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_disabled_icon)
+					gei.remove_pixmap
+					gei.set_tooltip (Void)
+					a_row.set_foreground_color (Void)
+				elseif k /= Void and then k.is_empty then
+					a_row.set_background_color (stock_colors.red)
+					gei.set_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
 					gei.set_tooltip (Void)
 					a_row.set_foreground_color (Void)
 				else
-					gti ?= a_row.item (2)
-					sv := gti.text
-					if s.is_equal (sv) then
-						a_row.set_background_color (inherit_color)
+					s := Execution_env.get (k)
+					if s = Void then
+						a_row.set_background_color (Void)
+						gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_disabled_icon)
+						gei.set_tooltip (Void)
+						a_row.set_foreground_color (Void)
 					else
-						a_row.set_background_color (override_color)
-					end
+						gti ?= a_row.item (2)
+						sv := gti.text
+						if s.is_equal (sv) then
+							a_row.set_background_color (inherit_color)
+						else
+							a_row.set_background_color (override_color)
+						end
 
-					gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
-					gei.set_tooltip (interface_names.f_original_value_is (k, s))
+						gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
+						gei.set_tooltip (interface_names.f_original_value_is (k, s))
+					end
 				end
 			end
 		end
@@ -1167,7 +1201,11 @@ feature {NONE} -- Environment actions
 				create m.make_with_text (interface_names.m_environment_variables)
 				gei ?= a_row.item (1)
 				k := gei.text
-				if not k.is_empty then
+				if k.is_empty then
+					create mi.make_with_text (interface_names.b_delete_command)
+					mi.select_actions.extend (agent safe_remove_env_row (a_row))
+					m.extend (mi)
+				else
 					create mmi.make_with_text (k)
 					s := execution_env.get (k)
 					if s /= Void then
@@ -1177,7 +1215,7 @@ feature {NONE} -- Environment actions
 						mmi.extend (mi)
 					end
 					create mi.make_with_text (interface_names.b_delete_command)
-					mi.select_actions.extend (agent remove_env_row (a_row))
+					mi.select_actions.extend (agent safe_remove_env_row (a_row))
 					mmi.extend (mi)
 
 					m.extend (mmi)
@@ -1227,7 +1265,9 @@ feature {NONE} -- Environment actions
 				v := gli.text
 
 				if k /= Void and then not k.is_empty then
-					if not k.is_case_insensitive_equal (old_k) then
+					if old_k = Void then
+						c := True
+					elseif not k.is_case_insensitive_equal (old_k) then
 						env.remove (old_k)
 						c := True
 					elseif
@@ -1242,13 +1282,20 @@ feature {NONE} -- Environment actions
 						change_env_on (env, p)
 					end
 				else
-					if safe_grid_operation then
-						remove_env_row (a_row)
-					else
-						row_unselected_actions.extend_kamikaze (agent safe_remove_env_row)
+					if old_k /= Void then
+						env.remove (old_k)
 					end
+					refresh_environ_row	(a_row)
+					change_env_on (env, p)
+--					if safe_grid_operation then
+--						safe_remove_env_row (a_row)
+--					else
+--						error_on_env_row (a_row)
+----						row_unselected_actions.extend_kamikaze (agent safe_remove_env_row)
+--					end
 				end
 			end
+			validate_env_row (a_row)
 		end
 
 	safe_remove_env_row (a_row: EV_GRID_ROW) is
@@ -1258,7 +1305,6 @@ feature {NONE} -- Environment actions
 				remove_env_row (a_row)
 			end
 		end
-
 
 	remove_env_row (a_row: EV_GRID_ROW) is
 			-- Remove environment variable related to `a_row'
@@ -1298,6 +1344,25 @@ feature {NONE} -- Environment actions
 			a_row.clear
 			g.remove_row (r)
 			change_env_on (p.env, p)
+		end
+
+	validate_env_row (a_row: EV_GRID_ROW) is
+			-- Set `a_row' has error
+		require
+			a_row /= Void
+			a_row.parent /= Void
+		local
+			k: like environment_variable_name_from_row
+			p: like profile_from_row
+		do
+			k := environment_variable_name_from_row (a_row)
+			p := profile_from_row (a_row)
+			if k = Void or else k.is_empty then
+				if k /= Void and (p /= Void and then p.env /= Void) then
+					p.env.remove (k)
+					change_env_on (p.env, p)
+				end
+			end
 		end
 
 feature {NONE} -- Environment implementation

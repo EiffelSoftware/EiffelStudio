@@ -41,6 +41,7 @@ int main (int argc, char ** argv, char ** envp)
 	reclaim();
 	exit(0);
 }
+	return 0;
 }
 
 #ifdef __cplusplus

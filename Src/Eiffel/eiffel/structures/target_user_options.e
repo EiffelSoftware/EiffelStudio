@@ -90,6 +90,9 @@ feature -- Debugging settings
 			end
 		end
 
+	profiles_enabled: BOOLEAN
+			-- Is profile enabled ?
+
 	profiles: ARRAYED_LIST [like last_profile]
 			-- Last used profile.
 
@@ -120,6 +123,12 @@ feature -- Update
 			l_list.put_front (a_location)
 		ensure
 			last_location_set: last_location /= Void and then last_location.is_equal (a_location)
+		end
+
+	set_profiles_enabled (b: BOOLEAN) is
+			-- Set `profiles_enabled'
+		do
+			profiles_enabled := b
 		end
 
 	set_profiles (a_profiles: like profiles) is

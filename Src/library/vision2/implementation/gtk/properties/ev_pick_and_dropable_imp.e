@@ -373,22 +373,15 @@ feature -- Implementation
 					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_pointer)
 				end
 			end
-
 				-- Make sure 'in_transport' returns False before firing any drop actions.
 			App_imp.on_drop (pebble)
 
 				-- Call appropriate action sequences
 			l_pebble_tuple := [pebble]
-			if
-				able_to_transport (a_button) or else (a_button = 3 and then mode_is_configurable_target_menu)
-			then
-				target := pointed_target
-				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
-					target.drop_actions.call (l_pebble_tuple)
-					App_imp.drop_actions.call (l_pebble_tuple)
-				else
-					App_imp.cancel_actions.call (l_pebble_tuple)
-				end
+			target := pointed_target
+			if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
+				target.drop_actions.call (l_pebble_tuple)
+				App_imp.drop_actions.call (l_pebble_tuple)
 			else
 				App_imp.cancel_actions.call (l_pebble_tuple)
 			end

@@ -107,7 +107,7 @@ feature
 		alias
 			"[
 				#if GTK_MAJOR_VERSION == 2
-					return gdk_x11_screen_get_window_manager_name ((GdkScreen*) $a_screen);
+					return (EIF_POINTER) gdk_x11_screen_get_window_manager_name ((GdkScreen*) $a_screen);
 				#else
 					return "unknown";
 				#endif

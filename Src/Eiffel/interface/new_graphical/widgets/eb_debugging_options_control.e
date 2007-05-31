@@ -134,7 +134,6 @@ feature -- Storage
 			not has_changed
 		local
 			l_user_opts: TARGET_USER_OPTIONS
-			l_user_factory: USER_OPTIONS_FACTORY
 		do
 			l_user_opts := lace.user_options.target
 			l_user_opts.set_last_profile_by_title (selected_profile)
@@ -365,7 +364,6 @@ feature {NONE} -- Grid events
 	on_row_selected (a_row: EV_GRID_ROW) is
 			-- `a_row' has been selected
 		local
-			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
 			if not inside_row_operation and a_row /= Void then

@@ -800,7 +800,7 @@ rt_public void eif_thr_exit(void)
 		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
 #endif
 		int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
-		int l_has_parent_thread = (eif_thr_context != NULL);
+		int l_has_parent_thread = (eif_thr_context != NULL) && (eif_thr_context->current);
 
 			/* We need to keep a reference to the children mutex, 
 			 * the children condition variable and parent's thread number
@@ -818,10 +818,6 @@ rt_public void eif_thr_exit(void)
 		thread_exiting = 1;
 
 		if (l_has_parent_thread) {
-			l_chld_cond = eif_thr_context->children_cond; 
-			l_chld_mutex = eif_thr_context->children_mutex;
-			l_addr_n_children = eif_thr_context->addr_n_children;
-
 #ifdef WORKBENCH
 			dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
 #endif
@@ -830,6 +826,9 @@ rt_public void eif_thr_exit(void)
 
 		if (l_has_parent_thread) {
 			RT_GC_PROTECT(thread_object);
+			l_chld_cond = eif_thr_context->children_cond; 
+			l_chld_mutex = eif_thr_context->children_mutex;
+			l_addr_n_children = eif_thr_context->addr_n_children;
 			thread_object = eif_wean(eif_thr_context->current);
 			offset = eifaddr_offset (thread_object, "terminated", &ret);
 			CHECK("terminated attribute exists", ret == EIF_CECIL_OK);

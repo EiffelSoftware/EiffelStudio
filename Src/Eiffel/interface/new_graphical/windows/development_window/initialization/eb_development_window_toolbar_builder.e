@@ -90,6 +90,7 @@ feature -- Building commands
 				l_show_general_toolbar_command.disable_visible
 			end
 			l_content.close_request_actions.extend (agent l_show_general_toolbar_command.execute)
+			l_content.show_request_actions.extend (agent l_show_general_toolbar_command.execute)
 			develop_window.commands.editor_commands.extend (develop_window.commands.shell_cmd)
 		end
 
@@ -137,6 +138,7 @@ feature -- Building commands
 			end
 
 			l_content.close_request_actions.extend (agent l_show_address_toolbar_command.execute)
+			l_content.show_request_actions.extend (agent l_show_address_toolbar_command.execute)
 
 --			l_formatters := develop_window.managed_main_formatters
 --			from
@@ -180,6 +182,7 @@ feature -- Building commands
 			end
 
 			l_content.close_request_actions.extend (agent l_show_project_toolbar_command.execute)
+			l_content.show_request_actions.extend (agent l_show_project_toolbar_command.execute)
 		end
 
 	build_refactoring_toolbar is
@@ -224,6 +227,7 @@ feature -- Building commands
 			end
 
 			l_content.close_request_actions.extend (agent l_show_tool_bar_command.execute)
+			l_content.show_request_actions.extend (agent l_show_tool_bar_command.execute)
 		end
 
 indexing

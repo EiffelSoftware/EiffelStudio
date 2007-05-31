@@ -66,7 +66,7 @@ feature {NONE} -- Actions
 				if l_path = Void then
 					create l_dlg.make_with_text ("EIFFEL_SRC not defined.")
 					if window /= Void then
-						l_dlg.show_modal_to_window (Void)
+						l_dlg.show_modal_to_window (window)
 					else
 						l_dlg.show
 					end

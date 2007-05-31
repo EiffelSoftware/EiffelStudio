@@ -472,10 +472,20 @@ feature {NONE} -- Implementation
 				create l_menu_item.make_with_text (contents.item.title)
 				if contents.item.is_visible then
 					l_menu_item.enable_select
-					l_menu_item.select_actions.extend (agent (contents.item).hide)
+					l_menu_item.select_actions.extend (agent (a_content: SD_TOOL_BAR_CONTENT)
+															require
+																not_void: a_content /= Void
+															do
+																a_content.close_request_actions.call ([])
+															end (contents.item))
 				else
 					l_menu_item.disable_select
-					l_menu_item.select_actions.extend (agent (contents.item).show)
+					l_menu_item.select_actions.extend (agent (a_content: SD_TOOL_BAR_CONTENT)
+															require
+																not_void: a_content /= Void
+															do
+																a_content.show_request_actions.call ([])
+															end (contents.item))
 				end
 
 				Result.extend (l_menu_item)

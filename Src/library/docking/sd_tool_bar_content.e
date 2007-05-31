@@ -358,6 +358,15 @@ feature -- Query
 			not_contain_separator:
 		end
 
+	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to perform when show requested
+		do
+			if internal_show_request_actions = Void then
+				create internal_show_request_actions
+			end
+			Result := internal_show_request_actions
+		end
+
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to perfrom when close requested.
 		do
@@ -685,6 +694,9 @@ feature {NONE} -- Implementation
 				zone.destroy
 			end
 		end
+
+	internal_show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perform when show requested.
 
 	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Actions to perfrom when close requested.

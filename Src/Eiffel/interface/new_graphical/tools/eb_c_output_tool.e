@@ -85,6 +85,7 @@ feature{NONE} -- Initialization
 			l_ev_save_toolbar: SD_TOOL_BAR
 			l_ev_h_area_1: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
+			l_locale_lbl: EV_LABEL
 		do
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1.make
@@ -99,16 +100,19 @@ feature{NONE} -- Initialization
 			create message_label
 			create project_dir_btn.make
 			create l_cell
+			create l_locale_lbl
 
 			message_label.align_text_left
 			l_ev_h_area_1.extend (message_label)
 			locale_combo.set_minimum_width (200)
+			l_ev_h_area_1.extend (l_locale_lbl)
 			l_ev_h_area_1.extend (locale_combo)
 			l_cell.set_minimum_height (10)
 			l_ev_h_area_1.extend (l_cell)
 			l_ev_h_area_1.extend (l_ev_save_toolbar)
 			l_ev_h_area_1.extend (l_ev_tool_bar_1)
 			l_ev_h_area_1.disable_item_expand (l_cell)
+			l_ev_h_area_1.disable_item_expand (l_locale_lbl)
 			l_ev_h_area_1.disable_item_expand (locale_combo)
 			l_ev_h_area_1.disable_item_expand (l_ev_save_toolbar)
 			l_ev_h_area_1.disable_item_expand (l_ev_tool_bar_1)
@@ -181,6 +185,8 @@ feature{NONE} -- Initialization
 
 			l_ev_tool_bar_1.compute_minimum_size
 			l_ev_save_toolbar.compute_minimum_size
+
+			l_locale_lbl.set_text (interface_names.l_locale)
 		end
 
 	title_for_pre: STRING is

@@ -602,21 +602,21 @@ feature {NONE} -- Implementation
 				when Pg_overflow then
 					stop_cause.set_text (Interface_names.l_Possible_overflow)
 					m.append (Interface_names.l_Possible_overflow)
-					show
+					set_focus_is_visible
 				when Pg_raise then
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
 					m.append (Interface_names.l_Explicit_exception_pending)
 					m.append (": ")
 					m.append (exception_tag_text)
 					display_exception
-					show
+					set_focus_is_visible
 				when Pg_viol then
 					stop_cause.set_text (Interface_names.l_Implicit_exception_pending)
 					m.append (Interface_names.l_Implicit_exception_pending)
 					m.append (": ")
 					m.append (exception_tag_text)
 					display_exception
-					show
+					set_focus_is_visible
 				when Pg_new_breakpoint then
 					stop_cause.set_text (Interface_names.l_New_breakpoint)
 					m.append (Interface_names.l_New_breakpoint)
@@ -625,6 +625,14 @@ feature {NONE} -- Implementation
 					m.append (Interface_names.l_Unknown_status)
 				end
 				Eb_debugger_manager.debugging_window.status_bar.display_message ( first_line_of (m) )
+			end
+		end
+
+	set_focus_is_visible is
+			-- Set focus if visible
+		do
+			if content /= Void and then content.is_visible then
+				content.set_focus
 			end
 		end
 

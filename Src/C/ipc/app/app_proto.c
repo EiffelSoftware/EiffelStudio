@@ -123,10 +123,10 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
-rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call);
+rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
-extern struct item *dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
+extern struct item *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -184,9 +184,10 @@ rt_private void process_request(EIF_PSTREAM sp, Request *rqst)
 
 static int curr_modify = NO_CURRMODIF;
 
-#define arg_1	rqst->rq_opaque.op_first
-#define arg_2	rqst->rq_opaque.op_second
-#define arg_3	(int) rqst->rq_opaque.op_third
+#define arg_1	rqst->rq_opaque.op_1
+#define arg_2	rqst->rq_opaque.op_2
+#define arg_3	(int) rqst->rq_opaque.op_3
+#define arg_4	rqst->rq_opaque.op_4
 
 #ifdef USE_ADD_LOG
 	add_log(9, "received request type %d", rqst->rq_type);
@@ -224,9 +225,9 @@ static int curr_modify = NO_CURRMODIF;
 		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 		dthread_restore();
 		break;
-	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type / arg6=is_static_call */
+	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=dynamic_type / arg4=is_external / arg5=is_precompiled / arg6=is_basic_type / arg7=is_static_call */
 		dthread_prepare();
-		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1, (arg_3 >> 3) & 1);
+		dynamic_evaluation(sp, arg_1, arg_2, arg_3, (arg_4 >> 1) & 1, (arg_4 >> 2) & 1, (arg_4 >> 3) & 1);
 		dthread_restore();
 		break;
 	case NEW_INSTANCE:
@@ -326,6 +327,7 @@ static int curr_modify = NO_CURRMODIF;
 #undef arg_1
 #undef arg_2
 #undef arg_3
+#undef arg_4
 }
 
 /*
@@ -569,9 +571,9 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 	struct item *val = NULL;		/* Value in operational stack */
 	char *addr;				/* Address of EIF_OBJ */
 
-	switch (what->op_first) {		/* First value describes request */
+	switch (what->op_1) {		/* First value describes request */
 	case IN_H_ADDR:					/* Hector address inspection */
-		addr = (char *) what->op_third;		/* long -> (char *) */
+		addr = (char *) what->op_3;		/* long -> (char *) */
 #ifdef ISE_GC
 		obj_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
 #else
@@ -579,11 +581,11 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 #endif
 		return;
 	case IN_BIT_ADDR:				/* Bit address inspection */
-		addr = (char *) what->op_third;		/* long -> (char *) */
+		addr = (char *) what->op_3;		/* long -> (char *) */
 		bit_inspect((EIF_OBJ) &addr);
 		return;
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
-		addr = (char *) what->op_third;		/* long -> (char *) */
+		addr = (char *) what->op_3;		/* long -> (char *) */
 #ifdef ISE_GC
 		string_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
 #else
@@ -591,14 +593,14 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 #endif
 		return;
 	case IN_ADDRESS:				/* Address inspection */
-		addr = (char *) what->op_third;		/* long -> (char *) */
+		addr = (char *) what->op_3;		/* long -> (char *) */
 		out = dview(addr);
 		break;
 	case IN_LOCAL:					/* Local inspection */
-		val = ivalue(IV_LOCAL, what->op_second,0);
+		val = ivalue(IV_LOCAL, what->op_2,0);
 		break;
 	case IN_ARG:					/* Argument inspection */
-		val = ivalue(IV_ARG, what->op_second,0);
+		val = ivalue(IV_ARG, what->op_2,0);
 		break;
 	case IN_CURRENT:				/* Value of Current */
 		val = ivalue(IV_CURRENT,0,0);		/* %%zs misuse, added ",0" */
@@ -610,7 +612,7 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		eif_panic("BUG inspect");
 	}
 
-	if (what->op_first != IN_ADDRESS)	/* Not an address request */
+	if (what->op_1 != IN_ADDRESS)	/* Not an address request */
 		out = simple_out(val);			/* May be a simple type */
 
 	/* Now we got a string, holding the appropriate representation of the
@@ -651,11 +653,11 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 #endif
 	
 	
-	switch (what->op_first) {		/* First value describes request */
+	switch (what->op_1) {		/* First value describes request */
 	case OUT_INDEX:					/* ONCE_INDEX for the once routine */
-	 	b_index = (BODY_INDEX) what->op_third;	/* Body_id of once routine */
+	 	b_index = (BODY_INDEX) what->op_3;	/* Body_id of once routine */
 #ifdef EIF_THREADS
-		is_process_once = (what->op_second == OUT_ONCE_PER_PROCESS);
+		is_process_once = (what->op_2 == OUT_ONCE_PER_PROCESS);
 		if (is_process_once) {
 			o_index = process_once_index (b_index);
 		} else 
@@ -665,8 +667,8 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 		app_twrite(buf, strlen(buf));
 		break;
 	case OUT_CALLED:				/* Has once routine already been called? */
-		o_index = (ONCE_INDEX) what->op_third;
-		GetOResult(o_index, (what->op_second == OUT_ONCE_PER_PROCESS));
+		o_index = (ONCE_INDEX) what->op_3;
+		GetOResult(o_index, (what->op_2 == OUT_ONCE_PER_PROCESS));
 		if (MTOD(OResult)) {
 			app_twrite("true", 4);
 		} else {
@@ -676,7 +678,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 	case OUT_DATA_PER_PROCESS:			/* Result of already called once function */
 		is_process_once = 1;
 	case OUT_DATA_PER_THREAD:
-		o_index = (ONCE_INDEX) what->op_third;
+		o_index = (ONCE_INDEX) what->op_3;
 		GetOResult(o_index, is_process_once);
 		if (MTOD(OResult)) {
 				/* Done ? */
@@ -689,8 +691,8 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 			} else {
 				app_twrite("false", 5);
 					/* Result */
-				if (((int) what->op_second) != 0) {
-					send_once_result(sp, OResult, (int) what->op_second);	/* Send result back to ewb */
+				if (((int) what->op_2) != 0) {
+					send_once_result(sp, OResult, (int) what->op_2);	/* Send result back to ewb */
 															/* the last argument is the expected type */
 				}
 			}
@@ -727,7 +729,7 @@ rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
 	char *physical_addr;	/* Address of unprotected object */
 	char hector_addr[20];	/* Buffer where indirection address is stored */
 
-	physical_addr = (char *) what->op_third;
+	physical_addr = (char *) what->op_3;
 	sprintf(hector_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
 	app_twrite(hector_addr, strlen(hector_addr));
 }
@@ -746,7 +748,7 @@ rt_private void ipc_access(EIF_PSTREAM sp, Opaque *what)
 	char physical_addr[20];	/* Address of unprotected object */
 	char *hector_addr;		/* Hector address with indirection */
 
-	hector_addr = (char *) what->op_third;
+	hector_addr = (char *) what->op_3;
 	sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
 	app_twrite(physical_addr, strlen(physical_addr));
 }
@@ -762,7 +764,7 @@ rt_private void wean(EIF_PSTREAM sp, Opaque *what)
 
 	char *hector_addr;		/* Hector address with indirection */
 
-	hector_addr = (char *) what->op_third;
+	hector_addr = (char *) what->op_3;
 	eif_wean((EIF_OBJ) hector_addr);
 }
 
@@ -796,8 +798,8 @@ rt_private void load_bc(int slots, int amount)
 		add_log(9, "made room");
 #endif
 
-#define arg_1	rqst.rq_opaque.op_first
-#define arg_2	rqst.rq_opaque.op_second
+#define arg_1	rqst.rq_opaque.op_1
+#define arg_2	rqst.rq_opaque.op_2
 
 	/* The byte codes have a BYTECODE leading request giving the body index
 	 * and body ID information, which is followed by a transfer request to
@@ -1680,7 +1682,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 	app_send_packet(sp, &rqst);		/* Send to network */
 }
 
-rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call)
+rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	struct item *ip;
 	Request rqst;					/* What we send back */
@@ -1691,7 +1693,7 @@ rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid, int stype, int is_pr
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
 	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
-	ip = dynamic_eval_dbg(fid,stype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
+	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
 	c_opop();
 	if (ip == (struct item *) 0) {
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
@@ -1748,4 +1750,5 @@ rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid)
 		app_twrite(buf, strlen(buf));
 	}
 }
+
 

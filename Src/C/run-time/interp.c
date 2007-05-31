@@ -238,10 +238,10 @@ rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Dbg evaluation */
 rt_shared int dbg_store_exception_trace (char* trace);
-rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured);
+rt_public struct item * dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured);
 
 /* Feature call and/or access  */
-rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);
+rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -4332,9 +4332,10 @@ rt_private void eif_interp_bit_operations (void)
 /*
  * Function calling routines for debugger
  */
-rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured)
+rt_public struct item * dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured)
 						/* Feature ID or offset if the feature is precompiled */
-						/* Static type (entity where feature is applied) */
+						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
+						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
@@ -4393,7 +4394,7 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 		return result;
 	}
 
-	dynamic_eval (fid, stype, is_precompiled, is_basic_type, is_static_call, 0);
+	dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0);
 
 	if (otop()!=previous_otop) { /* a result has been pushed on the stack */
 		result = opop(); 
@@ -4414,9 +4415,10 @@ rt_public struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled,
 /*
  * Function calling routines
  */
-rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent)
+rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent)
 						/* Feature ID or offset if the feature is precompiled */
-						/* Static type (entity where feature is applied) */
+						/* Static type or origin if the feature is precompiled (entity where feature is applied) */
+						/* Dynamic type if needed on which call is being done. Mostly used for static calls in precompiled. */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
@@ -4450,21 +4452,23 @@ rt_public void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic
 	}
 	
 	if (! is_precompiled) {
-		rout_id = Routids(stype)[fid];
-		if (is_inline_agent) {
-			CBodyId(body_id,rout_id,RTUD(stype));
-		} else if (is_static_call) {
+		int stype = stype_or_origin;
+		rout_id = Routids(stype)[fid_or_offset];
+		if ((is_inline_agent) || (is_static_call)) {
+				/* For an inline agent or a static call, the call is always relative to
+				 * the type declaring the inline agent or the type target of the static call. */
 			CBodyId(body_id,rout_id,RTUD(stype));
 		} else {
 			CBodyId(body_id,rout_id,Dtype(otop()->it_ref));		
 		}
 	} else {
-		if (is_inline_agent) {
-			body_id = desc_tab[stype][RTUD(stype)][fid].body_index;
-		} else if (is_static_call) {
-			body_id = desc_tab[stype][RTUD(1)][fid].body_index;
+		int origin = stype_or_origin;
+		int offset = fid_or_offset;
+		CHECK("Not an inline agent", !is_inline_agent);
+		if (is_static_call) {
+			body_id = desc_tab[origin][RTUD(dtype)][offset].body_index;
 		} else {
-			body_id = desc_tab[stype][Dtype(otop()->it_ref)][fid].body_index;
+			body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].body_index;
 		}
 	}
 	excatch(&exenv);

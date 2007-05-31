@@ -214,8 +214,8 @@ rt_public void send_byte_code (EIF_INTEGER real_body_index, BODY_INDEX real_body
 
 	Request_Clean (rqst);
 	rqst.rq_type = BCODE;
-	rqst.rq_opaque.op_first = (int) real_body_index;
-	rqst.rq_opaque.op_second = (int) real_body_id;
+	rqst.rq_opaque.op_1 = (int) real_body_index;
+	rqst.rq_opaque.op_2 = (int) real_body_id;
 
 #ifdef EIF_WINDOWS
 	if (-1 == ewb_send_packet (sp, &rqst))
@@ -243,9 +243,9 @@ rt_public void send_breakpoint (BODY_INDEX real_body_id, long int offset, EIF_BO
 
 	Request_Clean (rqst);
 	rqst.rq_type = BREAK_ON;
-	rqst.rq_opaque.op_first = (int) real_body_index;
-	rqst.rq_opaque.op_second = (int) real_body_id;
-	rqst.rq_opaque.op_third = offset;
+	rqst.rq_opaque.op_1 = (int) real_body_index;
+	rqst.rq_opaque.op_2 = (int) real_body_id;
+	rqst.rq_opaque.op_3 = offset;
 
 	if (-1 == ewb_send_packet (sp, &rqst))
 		error

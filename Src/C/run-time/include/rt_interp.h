@@ -282,8 +282,8 @@ extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);	
 extern void idump(FILE *fd, char *start);
 extern void opstack_reset(struct opstack *stk);
 
-extern void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);	/* Dynamic evaluation of a feature */
-extern struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
+extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);	/* Dynamic evaluation of a feature */
+extern struct item * dynamic_eval_dbg(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
 
 extern short get_compound_id (EIF_REFERENCE, short);
 

@@ -386,7 +386,9 @@ rt_public void rout_obj_call_procedure_dynamic (
 		/* We are calling a feature through an agent, in this case, we consider all calls
 		 * as qualified so that the invariant is checked. */
 	nstcall = 1;
-	dynamic_eval (feature_id, stype_id, is_precompiled, is_basic_type, 0, is_inline_agent);
+		/* We pass `0' for `dtype' in `dynamic_eval' because for an agent call we always have
+		 * a target object to get this from. */
+	dynamic_eval (feature_id, stype_id, 0, is_precompiled, is_basic_type, 0, is_inline_agent);
 }
 
 void fill_it (struct item* it, EIF_TYPED_ELEMENT* te) 

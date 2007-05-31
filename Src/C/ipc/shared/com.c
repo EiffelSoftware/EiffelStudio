@@ -367,10 +367,11 @@ rt_public void trace_request(char *status, Request *rqst)
 
 	switch (rqst->rq_type) {
 	case EIF_OPAQUE:
-		sprintf(buf, "EIF_OPAQUE [%d, %d, %d]",
+		sprintf(buf, "EIF_OPAQUE [%d, %d, %d, %d]",
 			rqst->rq_opaque.op_type,
 			rqst->rq_opaque.op_cmd,
-			rqst->rq_opaque.op_size);
+			rqst->rq_opaque.op_size,
+			rqst->rq_opaque.op_info);
 		break;
 	case ACKNLGE:
 		switch (rqst->rq_ack.ak_type) {

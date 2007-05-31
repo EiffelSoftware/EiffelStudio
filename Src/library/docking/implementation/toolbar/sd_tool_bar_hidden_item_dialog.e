@@ -145,22 +145,35 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 		local
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_parent_window: EV_WINDOW
 		do
-			create l_dialog.make
-			l_items := parent_tool_bar.content.items
-			l_dialog.set_size (300, 300)
-			l_dialog.customize_toolbar (parent_tool_bar.docking_manager.main_window, True, True, l_items)
+			if parent_tool_bar.customize_dialog /= Void then
+				parent_tool_bar.customize_dialog.set_focus
+			else
+				create l_dialog.make
+				parent_tool_bar.set_customize_dialog (l_dialog)
 
-			if l_dialog.valid_data then
-				save_items_layout (l_dialog.final_toolbar)
+				l_items := parent_tool_bar.content.items
+				l_dialog.set_size (300, 300)
 
-				parent_tool_bar.assistant.open_items_layout
-
-				if not parent_tool_bar.is_floating then
-					parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
+				if parent_tool_bar.is_floating then
+					l_parent_window := parent_tool_bar.floating_tool_bar
+				else
+					l_parent_window := parent_tool_bar.docking_manager.main_window
 				end
-				save_items_layout (l_dialog.final_toolbar)
-				parent_tool_bar.compute_minmum_size
+				l_dialog.customize_toolbar (l_parent_window, True, True, l_items)
+				parent_tool_bar.set_customize_dialog (Void)
+				if l_dialog.valid_data then
+					save_items_layout (l_dialog.final_toolbar)
+
+					parent_tool_bar.assistant.open_items_layout
+
+					if not parent_tool_bar.is_floating then
+						parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
+					end
+					save_items_layout (l_dialog.final_toolbar)
+					parent_tool_bar.compute_minmum_size
+				end
 			end
 		end
 

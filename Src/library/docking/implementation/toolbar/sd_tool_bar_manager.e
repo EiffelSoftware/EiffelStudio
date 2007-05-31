@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 
 			create l_separator
 			Result.extend (l_separator)
-			-- Custome menu items
+			-- Customize menu items
 
 			from
 				contents.start

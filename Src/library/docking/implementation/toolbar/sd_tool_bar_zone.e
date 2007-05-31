@@ -325,6 +325,9 @@ feature -- Query
 			Result := floating_tool_bar /= Void
 		end
 
+	customize_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
+			-- SD_TOOL_BAR_CUSTOMIZE_DIALOG if exists.
+
 	tool_bar: SD_TOOL_BAR
 			-- Tool bar which managed by Current.
 
@@ -559,7 +562,7 @@ feature {NONE} -- Implmentation
 			end
 		end
 
-feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR} -- Internal issues
+feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR, SD_TOOL_BAR_CONTENT} -- Internal issues
 
 	tail_indicator: SD_TOOL_BAR_NARROW_BUTTON
 			-- Button at tail of Current, which used for show hide buttons and customize dialog.
@@ -591,6 +594,14 @@ feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING
 			else
 				maximize_size := tool_bar.minimum_width
 			end
+		end
+
+	set_customize_dialog (a_dialog: like customize_dialog) is
+			-- Set `customize_dialog' with `a_dialog'
+		do
+			customize_dialog := a_dialog
+		ensure
+			set: customize_dialog = a_dialog
 		end
 
 feature {SD_FLOATING_TOOL_BAR_ZONE} -- Internal issues.

@@ -360,7 +360,7 @@ feature -- Command
 				l_datas.forth
 			end
 			zone.wipe_out
-			l_content.clear_widget_items_parents
+			l_content.clear
 			zone.extend (l_content)
 			update_indicator
 			if zone.row /= Void then

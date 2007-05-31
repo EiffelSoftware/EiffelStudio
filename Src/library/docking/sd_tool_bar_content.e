@@ -498,8 +498,8 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			items.wipe_out
 		end
 
-	clear_widget_items_parents is
-			-- Clear widget items' parents.
+	clear is
+			-- Clear widget items' parents and reset state flags.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
@@ -519,6 +519,11 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 					end
 				end
 				l_items.forth
+			end
+
+			if zone /= Void and then zone.customize_dialog /= Void then
+				zone.customize_dialog.destroy
+				zone.set_customize_dialog (Void)
 			end
 		end
 

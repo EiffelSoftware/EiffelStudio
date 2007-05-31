@@ -47,6 +47,7 @@ feature -- Entry
 	auto_expressions (a_bp_index: INTEGER; a_delta_lower, a_delta_upper: INTEGER; a_f: E_FEATURE; cl: CLASS_C): LIST [STRING] is
 		local
 			l_as: FEATURE_AS
+			fi, afi: FEATURE_I
 			s: STRING
 			c, i: INTEGER
 			l_line_start, l_line_end: INTEGER
@@ -60,9 +61,14 @@ feature -- Entry
 					l_as := a_f.ast
 					create strat.make
 					strat.set_current_class (cl)
-					strat.set_source_class (cl)
-					strat.set_current_feature (a_f.associated_feature_i)
-					strat.set_source_feature (a_f.associated_feature_i)
+					fi := a_f.associated_feature_i
+					strat.set_current_feature (fi)
+					afi := ancestor_version_of (fi, cl)
+					if afi = Void then
+						afi := fi
+					end
+					strat.set_source_class (afi.written_class)
+					strat.set_source_feature (afi)
 					strat.reset
 					l_as.process (strat)
 
@@ -121,6 +127,37 @@ feature -- Entry
 		rescue
 			retried := True
 			retry
+		end
+
+	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
+			-- Feature in `an_ancestor' of which `Current' is derived.
+			-- `Void' if not present in that class.
+			--| FIXME jfiat [2007/05/31] : duplication of DBG_EVALUATOR.ancestor_version_of (..)
+		require
+			fi_not_void: fi /= Void
+			an_ancestor_not_void: an_ancestor /= Void
+		local
+			n, nb: INTEGER
+			ris: ROUT_ID_SET
+			rout_id: INTEGER
+		do
+			ris := fi.rout_id_set
+			from
+				n := ris.lower
+				nb := ris.count
+			until
+				n > nb or else Result /= Void
+			loop
+				rout_id := ris.item (n)
+				if
+					rout_id /= 0
+					and then an_ancestor.is_valid
+					and then an_ancestor.has_feature_table
+				then
+					Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
+				end
+				n := n + 1
+			end
 		end
 
 feature -- Processing

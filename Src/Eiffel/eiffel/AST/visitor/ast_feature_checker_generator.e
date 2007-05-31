@@ -236,7 +236,7 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 			an_ast_not_void: an_ast /= Void
 		do
-			type_a_checker.init_for_checking (a_feature, context.current_class, Void, error_handler)
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset

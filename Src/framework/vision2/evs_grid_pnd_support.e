@@ -132,11 +132,13 @@ feature{NONE} -- Implementation
 		local
 			l_position: EV_COORDINATE
 		do
-			if a_item /= Void and then a_item.parent = grid then
-				l_position := a_item.parent.pointer_position
-				Result := stone_at_position (l_position.x, l_position.y)
-				if Result = Void and then old_item_pebble_function /= Void then
-					Result := old_item_pebble_function.item ([a_item])
+			if not ev_application.ctrl_pressed then
+				if a_item /= Void and then a_item.parent = grid then
+					l_position := a_item.parent.pointer_position
+					Result := stone_at_position (l_position.x, l_position.y)
+					if Result = Void and then old_item_pebble_function /= Void then
+						Result := old_item_pebble_function.item ([a_item])
+					end
 				end
 			end
 			if Result = Void then

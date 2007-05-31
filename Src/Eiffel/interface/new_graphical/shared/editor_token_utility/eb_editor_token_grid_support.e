@@ -69,7 +69,7 @@ feature -- Pick and drop support for grid items
 			l_grid: EV_GRID
 			l_stone: STONE
 		do
-			if a_item /= Void and then a_item.is_parented and then not ev_application.ctrl_pressed then
+			if a_item /= Void and then a_item.is_parented then
 				l_item ?= a_item
 				if l_item /= Void and then l_item.grid_item.is_parented then
 					l_stone ?= l_item.on_pick

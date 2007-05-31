@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			until
 				l_contents.after
 			loop
-				l_contents.item.clear_widget_items_parents
+				l_contents.item.clear
 				l_contents.item.set_visible (False)
 				l_contents.forth
 			end

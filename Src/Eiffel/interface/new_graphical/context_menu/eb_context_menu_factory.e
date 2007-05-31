@@ -551,17 +551,17 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_editor_is_current_editor: BOOLEAN
 		do
 			is_editable := a_editor.is_editable
-			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
-			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
-			if not is_editable then
-				a_menu.last.disable_sensitive
-			end
+--			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
+--			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)
+--			if not is_editable then
+--				a_menu.last.disable_sensitive
+--			end
 
-			a_menu.extend (dev_window.commands.redo_cmd.new_menu_item_unmanaged)
-			if not is_editable then
-				a_menu.last.disable_sensitive
-			end
-			extend_separator (a_menu)
+--			a_menu.extend (dev_window.commands.redo_cmd.new_menu_item_unmanaged)
+--			if not is_editable then
+--				a_menu.last.disable_sensitive
+--			end
+--			extend_separator (a_menu)
 
 			a_menu.extend (dev_window.commands.editor_cut_cmd.new_menu_item_unmanaged)
 			if not is_editable then
@@ -575,7 +575,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			extend_separator (a_menu)
 			a_menu.extend (new_menu_item (names.m_select_all))
 			a_menu.last.select_actions.extend (agent dev_window.select_all)
-			extend_separator (a_menu)
+--			extend_separator (a_menu)
 
 
 				-- The following command are hard-coded and depend on positioning within `editor_commands' list.
@@ -583,58 +583,58 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_commands.go_i_th (5)
 
 				-- Toggle Line Numbers
-			if l_editor_is_current_editor then
-					-- We don't want this item shown for non editors
-				l_cmd ?= l_commands.item
-				a_menu.extend (l_cmd.new_menu_item_unmanaged)
-				extend_separator (a_menu)
-			end
+--			if l_editor_is_current_editor then
+--					-- We don't want this item shown for non editors
+--				l_cmd ?= l_commands.item
+--				a_menu.extend (l_cmd.new_menu_item_unmanaged)
+--				extend_separator (a_menu)
+--			end
 			l_commands.forth
 
 				-- Find
-			l_cmd ?= l_commands.item
-			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			a_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 				-- Go To
-			l_cmd ?= l_commands.item
-			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			a_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 				-- Replace
-			l_cmd ?= l_commands.item
-			a_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			a_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
-			if not is_editable then
-				a_menu.last.disable_sensitive
-			end
+--			if not is_editable then
+--				a_menu.last.disable_sensitive
+--			end
 
-			create l_menu.make_with_text (names.m_find)
-			a_menu.extend (l_menu)
+--			create l_menu.make_with_text (names.m_find)
+--			a_menu.extend (l_menu)
 
 
 				-- Find Next
-			l_cmd ?= l_commands.item
-			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			l_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 				-- Find Previous
-			l_cmd ?= l_commands.item
-			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			l_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 				-- Find Next Selection
-			l_cmd ?= l_commands.item
-			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			l_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 				-- Find Previous Selection
-			l_cmd ?= l_commands.item
-			l_menu.extend (l_cmd.new_menu_item_unmanaged)
+--			l_cmd ?= l_commands.item
+--			l_menu.extend (l_cmd.new_menu_item_unmanaged)
 			l_commands.forth
 
 
-			extend_separator (a_menu)
+--			extend_separator (a_menu)
 			create l_menu.make_with_text (names.m_advanced)
 			a_menu.extend (l_menu)
 

@@ -64,6 +64,18 @@
 			</item>
 			<item>
 				<link>
+					<url>65_console_tool/index.xml</url>
+					<label>Console tool</label>
+				</link>
+			</item>		
+			<item>
+				<link>
+					<url>66_c_output_tool/index.xml</url>
+					<label>C Output tool</label>
+				</link>
+			</item>				
+			<item>
+				<link>
 					<url>70_wizards_and_dialogs/index.xml</url>
 					<label>Wizards and dialogs</label>
 				</link>

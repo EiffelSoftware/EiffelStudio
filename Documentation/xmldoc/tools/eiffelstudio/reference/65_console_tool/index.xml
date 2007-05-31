@@ -1,0 +1,45 @@
+<document title="Console tool" output="studio">
+	<meta_data/>
+	<paragraph>
+		Console tool lets you run external commands from within EiffelStudio. Console tool is shown in the following figure:
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/console_tool/console1.png</url>
+				<alt_text>Defining an input domain</alt_text>
+			</image>
+		</paragraph>
+	<paragraph>You can type your command in the "Command" region and then press the 
+		<image>
+			<url>../../../../images/eiffelstudio/metrics_tool/debug_run_icon.png</url>
+			<alt_text>Launch Command</alt_text>
+		</image>
+
+	Run button to launch that command. When a command is runing, you can type input data to that command in "Input" region if necessary. And you can press 
+		<image>
+			<url>../../../../images/eiffelstudio/metrics_tool/debug_stop_icon.png</url>
+			<alt_text>Stop Command</alt_text>
+		</image>
+	
+	Stop button to terminate a running command. If the command uses a different locale from your default locale, you can specify the desired locale in the "Locale" region where all supported locales are listed. The selected locale will be used for both the input and output of the command. After the command has exited, its return value will be displayed at the bottom line.
+	</paragraph> 
+	<paragraph>In the "Command" region, the following placeholders can be used:
+	</paragraph>
+		<list ordered="false">
+			<item>$class_name: this will be replaced by the name in lower case of the targeted class in editor</item>
+			<item>$file_name: this will be replaced by the path to the targeted class in editor</item>
+			<item>$directory_name: this will be replaced by the directory location of the targeted class in editor</item>
+			<item>$group_name: this will be replaced by the group name of the targeted class in editor</item>
+			<item>$line: this will be replaced by the line number of the cursor of the targeted class in editor</item>
+			<item>$w_code: this will be replaced by the W_code directory of current system, if defined</item>
+			<item>$w_code: this will be replaced by the F_code directory of current system, if defined</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/> 
+			<link>
+				<url>../70_wizards_and_dialogs/30_dialogs/30_external_commands/00_introduction.xml</url>
+				<label>External commands Editor dialog</label>
+			</link>
+		</seealso>
+	
+	</paragraph></document>

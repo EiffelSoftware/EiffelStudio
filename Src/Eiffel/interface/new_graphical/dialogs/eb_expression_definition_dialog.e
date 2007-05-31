@@ -27,6 +27,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_SYNTAX_CHECKER
+		export
+			{NONE} all
+		end
+
 create
 	make_new_expression,
 	make_with_expression_text,
@@ -506,11 +511,11 @@ feature {NONE} -- Event handling
 			l_list: LIST [CLASS_I]
 		do
 			if class_radio.is_selected then
-				l_class_name := class_field.text
+				l_class_name := class_field.text.as_string_8
 				l_class_name.left_adjust
 				l_class_name.right_adjust
 				l_class_name.to_upper
-				if not l_class_name.is_empty then
+				if is_valid_class_name (l_class_name) then
 					l_list := eiffel_universe.compiled_classes_with_name (l_class_name)
 					if l_list /= Void and then not l_list.is_empty then
 						l_class_c := l_list.first.compiled_class
@@ -543,21 +548,30 @@ feature {NONE} -- Event handling
 			if modified_expression = Void then
 				if class_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := class_field.text.as_string_8.as_upper
-						--| First find the class given in `class_field'.
-					cl_i := Eiffel_universe.classes_with_name (t)
-					if cl_i.is_empty then
-						ci := Eiffel_universe.class_named (t, eiffel_system.root_cluster)
-						cl := ci.compiled_class
-					elseif not cl_i.is_empty then
-						from
-							cl_i.start
-						until
-							cl_i.after or cl /= Void
-						loop
-							ci := cl_i.item
-							cl := ci.compiled_class
-							cl_i.forth
+					t := class_field.text.as_string_8
+					t.left_adjust
+					t.right_adjust
+					t.to_upper
+					if is_valid_class_name (t) then
+							--| First find the class given in `class_field'.
+						cl_i := Eiffel_universe.classes_with_name (t)
+						if cl_i.is_empty then
+							ci := Eiffel_universe.class_named (t, eiffel_system.root_cluster)
+							if ci /= Void then
+								cl := ci.compiled_class
+							end
+						elseif not cl_i.is_empty then
+							from
+								cl_i.start
+							until
+								cl_i.after or cl /= Void
+							loop
+								ci := cl_i.item
+								if ci /= Void then
+									cl := ci.compiled_class
+								end
+								cl_i.forth
+							end
 						end
 					end
 					if ci = Void then

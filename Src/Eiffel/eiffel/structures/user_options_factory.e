@@ -77,7 +77,7 @@ feature -- Store/Retrieve
 		end
 
 	load (a_file_path: STRING) is
-			-- Retrieve content of user data associated with `a_uuid' into `last_options'.
+			-- Retrieve content of user data associated with `a_file_path' into `last_options'.
 			-- If no such file is found, then `last_options' is set to Void.
 		require
 			a_file_path_not_void: a_file_path /= Void

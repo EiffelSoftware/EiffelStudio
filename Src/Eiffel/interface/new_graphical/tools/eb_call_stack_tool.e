@@ -602,18 +602,21 @@ feature {NONE} -- Implementation
 				when Pg_overflow then
 					stop_cause.set_text (Interface_names.l_Possible_overflow)
 					m.append (Interface_names.l_Possible_overflow)
+					show
 				when Pg_raise then
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
 					m.append (Interface_names.l_Explicit_exception_pending)
 					m.append (": ")
 					m.append (exception_tag_text)
 					display_exception
+					show
 				when Pg_viol then
 					stop_cause.set_text (Interface_names.l_Implicit_exception_pending)
 					m.append (Interface_names.l_Implicit_exception_pending)
 					m.append (": ")
 					m.append (exception_tag_text)
 					display_exception
+					show
 				when Pg_new_breakpoint then
 					stop_cause.set_text (Interface_names.l_New_breakpoint)
 					m.append (Interface_names.l_New_breakpoint)
@@ -1116,10 +1119,7 @@ feature {NONE} -- Implementation
 			th_tools: ES_DBG_THREADS_TOOL
 		do
 			th_tools := Eb_debugger_manager.threads_tool
-			if not th_tools.shown then
-				th_tools.show
-				th_tools.widget.set_focus
-			end
+			th_tools.show
 		end
 
 	select_call_stack_thread (lab: EV_LABEL; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is

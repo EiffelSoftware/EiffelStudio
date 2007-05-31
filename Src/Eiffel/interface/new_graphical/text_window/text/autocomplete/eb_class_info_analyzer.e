@@ -428,7 +428,6 @@ feature {NONE} -- Implementation (`type_from')
 			feat: E_FEATURE
 			l_current_class_c: CLASS_C
 			l_precursor_from: TYPE_A
-			l_class: CLASS_C
 		do
 			from
 				last_constraints := Void
@@ -483,13 +482,13 @@ feature {NONE} -- Implementation (`type_from')
 							exp.finish
 							exp.remove
 						end
-						l_class := written_class
 						type := complete_expression_type (exp)
 						if type /= Void then
 								-- Fixme: some problems here, type is possible multi-constaint.
 							last_target_type := type
-						else
-							written_class := l_class
+							if type.has_associated_class then
+								written_class := type.associated_class
+							end
 						end
 					end
 				else
@@ -763,8 +762,8 @@ feature {NONE} -- Implementation (`type_from')
 				end
 			else
 					-- Non formal status.
-				if not a_parent_type.is_tuple then
-					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, l_class.class_id)
+				if a_type.is_loose and then not a_parent_type.is_tuple then
+					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
 				else
 					last_target_type := a_type
 				end

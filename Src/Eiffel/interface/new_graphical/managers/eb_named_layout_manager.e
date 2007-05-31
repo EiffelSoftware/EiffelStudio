@@ -121,6 +121,9 @@ feature -- Command
 				development_window.restore_standard_tools_docking_layout
 			end
 
+			development_window.menus.update_menu_lock_items
+			development_window.menus.update_show_tool_bar_items
+
 			development_window.window.set_pointer_style (l_pointer_style)
 		end
 

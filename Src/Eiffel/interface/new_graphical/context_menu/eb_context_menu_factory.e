@@ -548,8 +548,10 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_cmd: EB_STANDARD_CMD
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 			is_editable: BOOLEAN
-			l_editor_is_current_editor: BOOLEAN
+--			l_editor_is_current_editor: BOOLEAN
 		do
+				-- The commented code below is kept so that if one wants to add one of the commented item back to the
+				-- context menu, we know in which order we should do it.
 			is_editable := a_editor.is_editable
 --			l_editor_is_current_editor := a_editor = dev_window.editors_manager.current_editor
 --			a_menu.extend (dev_window.commands.undo_cmd.new_menu_item_unmanaged)

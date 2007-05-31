@@ -236,7 +236,7 @@ feature -- Concrete evaluation
 					notify_error_evaluation ("Cannot find complete dynamic type of an expanded type")
 				end
 			else
-				l_dyntype := l_target_dynclass.types.first
+				check l_target_dynclass /= Void and then l_target_dynclass.types.count = 0 end
 			end
 			if f.is_once then
 				effective_evaluate_once_function (f)
@@ -244,31 +244,42 @@ feature -- Concrete evaluation
 					notify_error_evaluation ("Unable to evaluate once {" + f.written_class.name_in_upper + "}." + f.feature_name)
 				end
 			elseif not error_occurred then
-					-- Get real feature
-				realf := ancestor_version_of (f, f.written_class)
-				if realf = Void then
-						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
-						--| occurred for EV_RICH_TEXT_IMP.line_index (...)
-					debug ("debugger_trace_eval_data")
-						print ("f.ancestor_version (f.written_class) = Void%N")
-						print ("  f.feature_name  = " + f.feature_name + "%N")
-						print ("  f.written_class = " + f.written_class.name_in_upper + "%N")
-					end
-					realf := f
-				end
-				check
-					valid_dyn_type: l_dyntype /= Void
-				end
-
-				effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
-				if last_result_value = Void then
-					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
-					if a_addr /= Void then
-						l_err_msg.append_string (" on <" + a_addr + ">")
-					end
+				check l_target_dynclass /= Void end
+				if l_dyntype = Void then
+					l_err_msg := "Unable to evaluate {" + f.written_class.name_in_upper + "}." + f.feature_name
+					l_err_msg.append_string ("%NThe compiled system does not include class type for " + l_target_dynclass.name_in_upper + ".")
 					notify_error_evaluation (l_err_msg)
+				else
+						-- Get real feature
+					realf := ancestor_version_of (f, f.written_class)
+					if realf = Void then
+							--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
+							--| occurred for EV_RICH_TEXT_IMP.line_index (...)
+						debug ("debugger_trace_eval_data")
+							print ("f.ancestor_version (f.written_class) = Void%N")
+							print ("  f.feature_name  = " + f.feature_name + "%N")
+							print ("  f.written_class = " + f.written_class.name_in_upper + "%N")
+						end
+						realf := f
+					elseif realf.is_deferred then
+						realf := f
+					end
+					check
+						valid_dyn_type: l_dyntype /= Void
+					end
+					if realf.is_deferred and f.is_deferred then
+						notify_error_evaluation ("Unable to evaluate deferred feature {" + f.written_class.name_in_upper + "}." + f.feature_name)
+					else
+						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
+						if last_result_value = Void then
+							l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
+							if a_addr /= Void then
+								l_err_msg.append_string (" on <" + a_addr + ">")
+							end
+							notify_error_evaluation (l_err_msg)
+						end
+					end
 				end
-
 				if not error_occurred and then last_result_value /= Void then
 					if f.is_function then
 						check l_target_dynclass /= Void end

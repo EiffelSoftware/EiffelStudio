@@ -224,6 +224,8 @@ feature -- Command
 
 	add_menu (w: EB_VISION_WINDOW) is
 			-- Add menu to menu bar then change the preference.
+		require
+			w_not_void: w /= Void
 		local
 			m: like menu
 		do

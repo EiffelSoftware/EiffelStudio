@@ -33,6 +33,16 @@ feature
 	send_rqst_3 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER) is
 		external
 			"C"
+		end
+
+	send_rqst_4 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER; info4: INTEGER) is
+		external
+			"C"
+		end
+
+	send_rqst_4_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER; info4: INTEGER) is
+		do
+			send_rqst_4 (code, info1, info2, integer_to_pointer (info3), info4)
 		end;
 
 	send_rqst_3_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER) is

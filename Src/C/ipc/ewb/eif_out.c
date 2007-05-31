@@ -79,7 +79,7 @@ rt_public void send_rqst_1 (long int code, long int info1)
 #endif
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
-	rqst.rq_opaque.op_first = (int) info1;
+	rqst.rq_opaque.op_1 = (int) info1;
 
 	ewb_send_packet(ewb_sp, &rqst);
 }
@@ -94,8 +94,8 @@ rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
-	rqst.rq_opaque.op_first = (int) info1;
-	rqst.rq_opaque.op_second = (int) info2;
+	rqst.rq_opaque.op_1 = (int) info1;
+	rqst.rq_opaque.op_2 = (int) info2;
 
 	ewb_send_packet(ewb_sp, &rqst);
 }
@@ -110,9 +110,27 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, rt_ui
 
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
-	rqst.rq_opaque.op_first = (int) info1;
-	rqst.rq_opaque.op_second = (int) info2;
-	rqst.rq_opaque.op_third = info3;
+	rqst.rq_opaque.op_1 = (int) info1;
+	rqst.rq_opaque.op_2 = (int) info2;
+	rqst.rq_opaque.op_3 = info3;
+
+	ewb_send_packet(ewb_sp, &rqst);
+}
+
+rt_public void send_rqst_4 (long int code, long int info1, long int info2, rt_uint_ptr info3, long int info4)
+{
+	Request rqst;
+
+#ifdef USE_ADD_LOG
+    add_log(100, "sending request 3: %ld from ec", code);
+#endif
+
+	Request_Clean (rqst);
+	rqst.rq_type = (int) code;
+	rqst.rq_opaque.op_1 = (int) info1;
+	rqst.rq_opaque.op_2 = (int) info2;
+	rqst.rq_opaque.op_3 = info3;
+	rqst.rq_opaque.op_4 = (int) info4;
 
 	ewb_send_packet(ewb_sp, &rqst);
 }

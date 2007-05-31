@@ -92,24 +92,23 @@ feature {DBG_EVALUATOR} -- Interface
 					par := par + 8
 				end
 
+				if orig_class.is_expanded and then orig_class.is_basic then
+						--| Take care of "2 > 3"
+					if ctype.associated_class.conform_to (fi.written_class) then
+						wclt := fi.written_type (ctype)
+					else
+						wclt := fi.written_class.types.first
+					end
+				else
+					wclt := ctype
+				end
 				if fi.written_class.is_precompiled then
 					par := par + 2
 					rout_info := System.rout_info_table.item (fi.rout_id_set.first)
-					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+					send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, wclt.type_id - 1, par)
 				else
 					fixme ("it seems the runtime/debug is not designed to call precursor ...")
-					if orig_class.is_expanded and then orig_class.is_basic then
-							--| Take care of "2 > 3"
-						if ctype.associated_class.conform_to (fi.written_class) then
-							wclt := fi.written_type (ctype)
-						else
-							wclt := fi.written_class.types.first
-						end
-					else
-						wclt := ctype
-					end
-
-					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, par)
+					send_rqst_4_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, 0, par)
 				end
 					-- Receive the Result.
 				recv_value (Current)

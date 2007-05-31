@@ -146,7 +146,8 @@ rt_private bool_t idr_Opaque(IDR *idrs, void *ext)
 	Opaque *opa = (Opaque *) ext;
 	return idr_int(idrs, &opa->op_type) &&
 			idr_int(idrs, &opa->op_cmd) &&
-			idr_rt_uint_ptr(idrs, &opa->op_size);
+			idr_rt_uint_ptr(idrs, &opa->op_size) &&
+			idr_int(idrs, &opa->op_info);
 }
 
 rt_private bool_t idr_Acknlge(IDR *idrs, void *ext)

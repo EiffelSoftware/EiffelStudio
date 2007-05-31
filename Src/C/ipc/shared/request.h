@@ -48,11 +48,13 @@ typedef struct {
 	int op_type;
 	int op_cmd;
 	rt_uint_ptr op_size;
+	int op_info;
 } Opaque;
 
-#define op_first	op_type
-#define op_second	op_cmd
-#define op_third	op_size
+#define op_1	op_type
+#define op_2	op_cmd
+#define op_3	op_size
+#define op_4	op_info
 
 /* Acknowledgment codes and object inspection codes defined in rqst_const.h */
 

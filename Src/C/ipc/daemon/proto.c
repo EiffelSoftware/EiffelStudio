@@ -174,8 +174,8 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 	case KPALIVE:			/* Dummy request for connection checks */
 		break;
 	case SET_IPC_PARAM:		/* set IPC parameters */
-		set_ipc_ewb_pid ((int) rqst->rq_opaque.op_first);	
-		set_ipc_timeout ((unsigned int) rqst->rq_opaque.op_second);	
+		set_ipc_ewb_pid ((int) rqst->rq_opaque.op_1);	
+		set_ipc_timeout ((unsigned int) rqst->rq_opaque.op_2);	
 		break;
 	case TRANSFER:			/* Data transfer via daemon */
 		transfer(sp, rqst);
@@ -639,8 +639,8 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 	cmd = recv_str(sp, NULL);		/* Get command */
 
 	dans.rq_type = ASYNACK;				/* Initialize the answer type */
-	jobnum = rqst->rq_opaque.op_first;	/* Job number assigned by client */
-	dans.rq_opaque.op_first = jobnum;	/* Anwser is tagged with job number */
+	jobnum = rqst->rq_opaque.op_1;	/* Job number assigned by client */
+	dans.rq_opaque.op_1 = jobnum;	/* Anwser is tagged with job number */
 
 #ifdef EIF_WINDOWS
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
@@ -686,7 +686,7 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 		add_log(1, "SYSERR fork: %m (%e)");
 		add_log(2, "ERROR cannot run asynchronous command");
 #endif
-		dans.rq_opaque.op_second = AK_ERROR;
+		dans.rq_opaque.op_2 = AK_ERROR;
 /*
  * Asynchronous commands do not send acknowledgment back anymore
  * -- FRED
@@ -757,9 +757,9 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 	free(cmd);
 
 	if (status == 0)
-		dans.rq_opaque.op_second = AK_OK;	/* Command completed sucessfully */
+		dans.rq_opaque.op_2 = AK_OK;	/* Command completed sucessfully */
 	else
-		dans.rq_opaque.op_second = AK_ERROR;	/* Comamnd failed */
+		dans.rq_opaque.op_2 = AK_ERROR;	/* Comamnd failed */
 
 #ifdef EIF_VMS
 	if (status) {	/* command failed */

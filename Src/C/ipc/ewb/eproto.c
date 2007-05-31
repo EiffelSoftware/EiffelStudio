@@ -102,7 +102,7 @@ rt_public int background(char *cmd)
 
 	Request_Clean (rqst);
 	rqst.rq_type = ASYNCMD;				/* Daemon will run it in background */
-	rqst.rq_opaque.op_first = ewb_rqstcnt;	/* Use request count as job number */
+	rqst.rq_opaque.op_1 = ewb_rqstcnt;	/* Use request count as job number */
 
 	ewb_send_packet(ewb_sp, &rqst);	/* Processing done by ised */
 
@@ -113,7 +113,7 @@ rt_public int background(char *cmd)
 		return -1;			/* Cannot launch command */
 	}
 
-	return rqst.rq_opaque.op_first;		/* The command's job number */
+	return rqst.rq_opaque.op_1;		/* The command's job number */
 }
 
 rt_public int app_start(char *cmd)

@@ -93,7 +93,7 @@ feature -- Target names and descriptions
 	target_trademark_name: STRING_GENERAL is do Result := locale.translation ("Trademark")	end
 	target_dialog_root_cluster: STRING_GENERAL is do Result := locale.translation ("Root Cluster")	end
 	target_dialog_root_class: STRING_GENERAL is do Result := locale.translation ("Root Class")	end
-	target_dialog_root_feature: STRING_GENERAL is do Result := locale.translation ("Root Feature")	end
+	target_dialog_root_feature: STRING_GENERAL is do Result := locale.translation ("Root Procedure")	end
 	target_dialog_root_all: STRING_GENERAL is do Result := locale.translation ("Compile All Classes?")	end
 
 	target_address_expression_name: STRING_GENERAL is do Result := locale.translation ("Address Expression")	end
@@ -498,11 +498,11 @@ feature -- Validation warnings
 	group_name_invalid: STRING is "Cannot rename group because the name is not valid."
 	group_name_duplicate: STRING is "Cannot rename group because there is already a target with the new name."
 	group_name_empty: STRING is "Cannot rename group because the name is empty."
-	root_no_class: STRING is "Cannot specify root cluster or root feature without a root class. Use all classes, specify a root class or specify nothing."
+	root_no_class: STRING is "Cannot specify root cluster or root procedure without a root class. Use all classes, specify a root class or specify nothing."
 	root_none: STRING is "Root class has to be specified if the target is not extended by another target."
 	root_invalid_cluster: STRING is "Root cluster name is invalid."
 	root_invalid_class: STRING is "Root class name is invalid."
-	root_invalid_feature: STRING is "Root feature name is invalid."
+	root_invalid_feature: STRING is "Root procedure name is invalid."
 	cluster_dependency_group_not_exist: STRING is "Cannot add dependency. There is no group with this name."
 	override_group_not_exist: STRING is "Cannot add override. There is no group with this name."
 	invalid_group_name: STRING is "The name of the group is invalid."
@@ -564,7 +564,7 @@ feature -- Parse errors
 	e_parse_incorrect_root: STRING is "Invalid root tag."
 	e_parse_incorrect_root_cluster: STRING is "Invalid root cluster."
 	e_parse_incorrect_root_class: STRING is "Invalid root class."
-	e_parse_incorrect_root_feature: STRING is "Invalid root feature."
+	e_parse_incorrect_root_feature: STRING is "Invalid root procedure."
 
 	e_parse_incorrect_setting_no_name: STRING is "Invalid setting tag, no name specified."
 	e_parse_incorrect_setting (a_setting: STRING): STRING is

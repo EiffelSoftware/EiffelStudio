@@ -551,7 +551,7 @@ feature -- Graphical changes
 					end
 					if is_auto_expression then
 						set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
-						set_context (interface_names.m_auto_expressions)
+						set_context (interface_names.m_auto_expression_context)
 					else
 						set_context (expression.context)
 					end

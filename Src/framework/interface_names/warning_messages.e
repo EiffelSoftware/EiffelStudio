@@ -100,7 +100,7 @@ feature -- Project file/directory warnings
 	w_no_compilable_target: STRING_GENERAL is do Result := locale.translation ("Cannot compile project: no valid target found.") end
 			-- Error when no compilable target was found.
 
-	w_None_system: STRING is "A system with an all classes root is not runnable."
+	w_None_system: STRING is do Result := locale.translation ("A system with an all classes root is not runnable.") end
 
 	w_unable_to_retrieve_wizard_list: STRING_GENERAL is do Result := locale.translation ("Unable to retrieve the list of installed wizard.") end
 
@@ -599,9 +599,9 @@ feature -- Backup warnings
 	w_Found_backup: STRING_GENERAL is do Result := locale.translation ("A backed up version of the file was found.%N%
 							%Do you want to open the original file or the backup file?%N%
 							%If you choose the original file, the backup file will be%N%
-							%deleted. If choose the backup file, then the original file%N%
-							%will be overwritten with the contents of the backup file%N%
-							%when you save.%N") end
+							%deleted. If you choose the backup file, then the original%N%
+							%file will be overwritten with the contents of the backup%N%
+							%file when you save.%N") end
 
 	w_Save_backup: STRING_GENERAL is do Result := locale.translation ("You are about to overwrite the original file with%N%
 					%the backup file. Previous content will be lost%N%
@@ -912,7 +912,7 @@ feature -- Warning messages
 
 	w_Invalid_folder_name: STRING_GENERAL is do Result := locale.translation ("Invalid folder name") end
 
-	w_Folder_name_cannot_contain: STRING_GENERAL is do Result := locale.translation ("%N A favorite folder name cannot contain any ot the following characters: %N ( ) * ") end
+	w_Folder_name_cannot_contain: STRING_GENERAL is do Result := locale.translation ("%N A favorite folder name cannot contain any of the following characters: %N ( ) * ") end
 
 	w_Invalid_cluster: STRING_GENERAL is
 			-- One of the clusters involved in a move operation was invalid.

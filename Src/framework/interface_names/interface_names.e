@@ -318,7 +318,10 @@ feature -- Accelerator, focus label and menu name
 	m_Context_tool: STRING_GENERAL is			do Result := locale.translation("Conte&xt")	end
 	m_Copy: STRING_GENERAL is					do Result := locale.translation("&Copy%TCtrl+C")	end
 	f_Copy: STRING_GENERAL is					do Result := locale.translation("Copy (Ctrl+C)")	end
-	m_copy_of: STRING_GENERAL is					do Result := locale.translation("Copy of ")	end
+	m_copy_of (a_string: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := locale.formatted_string (locale.translation("Copy of $1"), [a_string])
+		end
 	m_Close: STRING_GENERAL is					do Result := locale.translation("&Close Window")	end
 	m_Close_short: STRING_GENERAL is				do Result := locale.translation("&Close")	end
 	f_Create_new_cluster: STRING_GENERAL is		do Result := locale.translation("Add a cluster")	end
@@ -653,7 +656,7 @@ feature -- Formatter displayer names
 	l_domain_displayer: STRING_GENERAL do Result := locale.translation ("Domain view") end
 
 	l_formatter_header_help: STRING_GENERAL do Result := locale.translation ("Message that will be displayed in the formatter view when calculation has finished.") end
-	l_formatter_placeholder: STRING_GENERAL do Result := locale.translation ("%"$target%" serves as a placeholder which will be replaced by the input to current fomatter.") end
+	l_formatter_placeholder: STRING_GENERAL do Result := locale.translation ("%"$target%" serves as a placeholder which will be replaced by the input to current formatter.") end
 	l_formatter_temp_header_help: STRING_GENERAL do Result := locale.translation ("Message that will be displayed in the formatter view when calculation is going on.") end
 	l_formatter_filter_help: STRING_GENERAL do Result := locale.translation ("Display non visible items?") end
 	l_formatter_scope_help: STRING_GENERAL do Result := locale.translation ("Is this formatter of per EiffelStudio scope or per target scope?") end
@@ -1284,7 +1287,7 @@ feature -- Label texts
 	l_System_not_running: STRING_GENERAL is		do Result := locale.translation("System not running")	end
 	l_Tab_output: STRING_GENERAL is 			do Result := locale.translation("Output")	end
 	l_Tab_class_info: STRING_GENERAL is 		do Result := locale.translation("Class")	end
-	l_Tab_feature_info: STRING_GENERAL is 		do Result := locale.translation("Feature Relation")	end
+	l_Tab_feature_info: STRING_GENERAL is 		do Result := locale.translation("Feature")	end
 	l_Tab_diagram: STRING_GENERAL is 			do Result := locale.translation("Diagram")	end
 	l_target: STRING_GENERAL is					do Result := locale.translation("Target")	end
 	l_target_does_not_exist (a_target: STRING_GENERAL): STRING_GENERAL is
@@ -1543,7 +1546,7 @@ feature -- Label texts
 	l_type_capital: STRING_GENERAL is do Result := locale.translation ("TYPE: ") end
 	l_value_capital: STRING_GENERAL is do Result := locale.translation ("VALUE: ") end
 	l_precompiled: STRING_GENERAL is do Result := locale.translation ("  (precompiled)") end
-	l_Tab_external_output: STRING_GENERAL is    do Result := locale.translation("External Output")	end
+	l_Tab_external_output: STRING_GENERAL is    do Result := locale.translation("Console")	end
 	l_Tab_C_output: STRING_GENERAL is    		do Result := locale.translation("C Output")	end
 	l_Tab_warning_output: STRING_GENERAL is    	do Result := locale.translation("Warnings")	end
 	l_Tab_error_output: STRING_GENERAL is    	do Result := locale.translation("Errors")	end
@@ -2129,7 +2132,10 @@ feature -- Description texts
 	e_external_editor_not_defined: STRING_GENERAL is do Result := locale.translation("External editor not defined")	end
 	e_external_command_is_running: STRING_GENERAL is do Result := locale.translation("An external command is running now. %NPlease wait until it exits.")	end
 	e_external_command_list_full: STRING_GENERAL is do Result := locale.translation("Your external command list is full.%NUse Tools->External Command... to delete one.")	end
-	e_working_directory_invalid: STRING_GENERAL is do Result := locale.translation("Cannot change to directory ")	end
+	e_working_directory_invalid (a_directory: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := locale.formatted_string (locale.translation("Cannot change to directory %"$1%"."), [a_directory])
+		end
 	e_external_command_not_launched: STRING_GENERAL is do Result := locale.translation("External command not launched.")	end
 	e_refactoring_undo_sure: STRING_GENERAL is do Result := locale.translation("Are you sure you want to undo the refactoring?%N If classes have been modified since the refactoring this can lead to corrupt classes and lost information!")	end
 	e_refactoring_redo_sure: STRING_GENERAL is do Result := locale.translation("Are you sure you want to redo the refactoring?%N If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!")	end

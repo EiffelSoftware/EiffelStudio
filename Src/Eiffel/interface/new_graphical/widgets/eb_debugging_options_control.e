@@ -701,7 +701,7 @@ feature {NONE} -- Button Actions
 					if p.title = Void then
 						p.title := description_from_profile (p)
 					end
-					p.title.prepend_string (interface_names.m_copy_of)
+					p.title := interface_names.m_copy_of (p.title)
 					r := added_profile_text_row (p, True)
 --					add_profile_to_user_options (p)
 					if r.is_expandable and then not r.is_expanded then

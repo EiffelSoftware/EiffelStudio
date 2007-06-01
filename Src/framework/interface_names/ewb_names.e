@@ -198,7 +198,7 @@ feature -- Errors
 
 	cluster_does_not_exit (a_cluster_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.formatted_string (locale.translation ("Cluster $1 does ot exist."), [a_cluster_name])
+			Result := locale.formatted_string (locale.translation ("Cluster $1 does not exist."), [a_cluster_name])
 		end
 
 	class_is_not_in_cluster (a_class: STRING_GENERAL): STRING_GENERAL is

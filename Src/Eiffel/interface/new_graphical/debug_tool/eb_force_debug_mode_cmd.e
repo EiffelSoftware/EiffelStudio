@@ -13,8 +13,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND
 		redefine
-			tooltext,
-			initialize_menu_item
+			tooltext
 		end
 
 	EB_CONSTANTS
@@ -126,15 +125,6 @@ feature {NONE} -- Properties
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
-		end
-
-feature {NONE} -- Implementation
-
-	initialize_menu_item (a_menu_item: EV_MENU_ITEM)
-			-- Create a new menu entry for this command.
-		do
-			Precursor {EB_TOOLBARABLE_AND_MENUABLE_TOGGLE_COMMAND} (a_menu_item)
-			a_menu_item.remove_pixmap
 		end
 
 indexing

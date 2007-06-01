@@ -150,9 +150,9 @@ feature -- Command
 			loop
 				-- set state name
 				create l_item.make_with_text (grid_data.item (l_i).item (1).out)
-				l_item.set_pixmap (icons.pixmap_file_content (icons.icon_system_state_from))
+				l_item.set_pixmap (icons.system_state_from_icon)
 				grid_from_state.set_item (1, l_i, l_item.deep_twin)
-				l_item.set_pixmap (icons.pixmap_file_content (icons.icon_system_state_to))
+				l_item.set_pixmap (icons.system_state_to_icon)
 				grid_to_state.set_item (1, l_i, l_item)
 				-- set object count
 				create l_item.make_with_text (grid_data.item (l_i).item (2).out)
@@ -192,7 +192,7 @@ feature {NONE} -- Implemention
 				if not filter.filter_class (grid_data_increased.item_for_iteration.item (1).out) then
 					l_i := l_i + 1
 					create l_item.make_with_text (grid_data_increased.item_for_iteration.item (1).out)
-					l_item.set_pixmap (icons.pixmap_file_content (icons.icon_object_grid_class))
+					l_item.set_pixmap (icons.object_grid_class_icon)
 					grid_changed.set_item (1, l_i, l_item)
 					l_int := grid_data_increased.item_for_iteration.integer_32_item (2)
 					create l_item.make_with_text (l_int.out)

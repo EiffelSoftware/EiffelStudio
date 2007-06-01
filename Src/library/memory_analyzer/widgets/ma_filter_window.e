@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 		 	close_request_actions.extend (agent hide)
-			file_open.set_pixmap (icons.pixmap_file_content (icons.icon_open_system_states))
-			file_save.set_pixmap (icons.pixmap_file_content (icons.icon_save_current_state))
-			add_new_class_name.set_pixmap (icons.pixmap_file_content (icons.icon_new_filter_class_name))
-			del_class_name.set_pixmap (icons.pixmap_file_content (icons.icon_new_filter_class_name_x))
+			file_open.set_pixmap (icons.open_system_states_icon)
+			file_save.set_pixmap (icons.save_current_state_icon)
+			add_new_class_name.set_pixmap (icons.new_filter_class_name_icon)
+			del_class_name.set_pixmap (icons.new_filter_class_name_x_icon)
 			set_size (260,400)
 			grid.insert_new_column (1)
 			grid.column (1).set_title ("Class name")

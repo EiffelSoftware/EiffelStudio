@@ -10,7 +10,7 @@ class
 	MA_SINGLETON_FACTORY
 
 feature  -- Singletons
-	
+
 	filter: MA_FILTER_SINGLETON is
 			-- FILTER_SINGLETON instance
 		do
@@ -18,15 +18,15 @@ feature  -- Singletons
 		ensure
 			filter_not_void: Result /= Void
 		end
-	
+
 	filter_window: MA_FILTER_WINDOW is
-			-- 
+			--
 		do
 			Result := internal_filter_window.item
 		ensure
 			filter_window_not_void: Result /= Void
 		end
-	
+
 	grid_util: MA_GRID_UTIL_SINGLETON is
 			-- GRID_UTIL_SINGLETON instance
 		once
@@ -34,7 +34,7 @@ feature  -- Singletons
 		ensure
 			grid_util_not_void: Result /= Void
 		end
-		
+
 	object_finder: MA_OBJECT_FINDER_SINGLETON is
 			-- OBJECT_FINDER_SINGLETON instance
 		once
@@ -42,7 +42,7 @@ feature  -- Singletons
 		ensure
 			object_finder_not_void: Result /= Void
 		end
-		
+
 	system_util: MA_SYSTEM_UTIL_SINGLETON is
 			-- SYSTEM_UTIL_SINGLETON instance
 		once
@@ -50,7 +50,7 @@ feature  -- Singletons
 		ensure
 			system_util_not_void: Result /= Void
 		end
-		
+
 	main_window: MA_WINDOW is
 			-- MEMORY_TOOL_WINDOW instance
 		do
@@ -58,7 +58,7 @@ feature  -- Singletons
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	internal: INTERNAL is
 			-- INTERNAL instance
 		once
@@ -66,7 +66,7 @@ feature  -- Singletons
 		ensure
 			internal_made: internal /= Void
 		end
-		
+
 	memory: MEMORY is
 			-- MEMORY singleton
 		once
@@ -74,7 +74,7 @@ feature  -- Singletons
 		ensure
 			memory_not_void: Result /= Void
 		end
-	
+
 	icons: MA_ICONS_SINGLETON is
 			-- ICONS_SINGLETON instance
 		once
@@ -96,15 +96,15 @@ feature {MA_WINDOW} -- Access
 		ensure
 			a_window_set: a_window = internal_main_window.item
 		end
-		
+
 feature -- States Report
-	
+
 	main_window_not_void: BOOLEAN is
 			-- Is main_windows Void ?
 		do
 			Result := internal_main_window /= Void
 		end
-		
+
 feature -- Cursors
 
 	accept_node: EV_POINTER_STYLE is
@@ -113,29 +113,29 @@ feature -- Cursors
 			pix: EV_PIXMAP
 		once
 			create pix
-			create Result.make_with_pixmap (icons.pixmap_file_content (icons.icon_eiffel_pebble), 8, 8)
+			create Result.make_with_pixmap (icons.eiffel_pebble_icon, 8, 8)
 		ensure
 			accept_node_not_void: Result /= Void
 		end
-		
+
 	deny_node: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
 		once
 			create pix
-			create Result.make_with_pixmap (icons.pixmap_file_content (icons.icon_eiffel_pebble_X), 8, 8)
+			create Result.make_with_pixmap (icons.eiffel_pebble_x_icon, 8, 8)
 		ensure
 			deny_node_not_void: Result /= Void
-		end	
-	
+		end
+
 	accept_node_class: EV_POINTER_STYLE is
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
 		once
 			create pix
-			create Result.make_with_pixmap (icons.pixmap_file_content (icons.icon_object_grid_class), 8, 8)
+			create Result.make_with_pixmap (icons.object_grid_class_icon, 8, 8)
 		ensure
 			accept_node_class: Result /= Void
 		end
@@ -146,11 +146,11 @@ feature -- Cursors
 			pix: EV_PIXMAP
 		once
 			create pix
-			create Result.make_with_pixmap (icons.pixmap_file_content (icons.icon_object_grid_class_X), 8, 8)
+			create Result.make_with_pixmap (icons.object_grid_class_x_icon, 8, 8)
 		ensure
 			deny_node_class: Result /= Void
-		end	
-		
+		end
+
 feature -- Colors
 
 	increased_color: EV_COLOR is
@@ -160,7 +160,7 @@ feature -- Colors
 		ensure
 			red_color_set: Result /= Void
 		end
-		
+
 	decreased_color: EV_COLOR is
 			-- Color used when obejct count decreased.
 		once
@@ -168,7 +168,7 @@ feature -- Colors
 		ensure
 			green_color_set: Result /= Void
 		end
-		
+
 feature {NONE} -- misc
 
 	internal_main_window: CELL [MA_WINDOW] is
@@ -176,31 +176,31 @@ feature {NONE} -- misc
 		once
 			create Result
 		end
-		
+
 	internal_filter: CELL [MA_FILTER_SINGLETON] is
 			-- MA_FILTER_SINGLETON instance's cell.
 		once
 			create Result
 		end
-	
+
 	internal_filter_window: CELL [MA_FILTER_WINDOW] is
 			-- MA_FILTER_WINDOW instance'e cell.
 		once
 			create Result
 		end
-		
-	state_file_suffix: TUPLE [STRING, STRING] is 
+
+	state_file_suffix: TUPLE [STRING, STRING] is
 			-- Suffix of the States File name.
 		once
 			Result := ["*.ema", "Eiffel Memory Analyzer Datas (*.ema)"]
 		end
-	
-	filter_filter_suffix: TUPLE [STRING, STRING] is	
+
+	filter_filter_suffix: TUPLE [STRING, STRING] is
 			-- Suffix of the Filter File name.
 		once
 			Result := ["*.emf", "Eiffel Memory Analyzer Filter (*.emf)"]
 		end
-	
+
 invariant
 	internal_main_window_not_void: internal_main_window /= Void
 

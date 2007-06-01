@@ -1,7 +1,7 @@
 indexing
 	description: "This class is the main window of MEMORY ANALYZER.%
 		%May the memory analyzer communicate with other program which can surround the target debugged application%
-		% and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which% 
+		% and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which%
 		%we care."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ indexing
 
 class
 	MA_WINDOW
-	
+
 inherit
 	MA_WINDOW_IMP
 		redefine
 			destroy
 		end
-	
+
 	MA_SINGLETON_FACTORY
 		export
 			{NONE} all
@@ -26,10 +26,10 @@ inherit
 		end
 create
 	make
-	
+
 feature {NONE} -- Initialization
 	make (a_dir: STRING) is
-			-- 
+			--
 		require
 			a_dir_not_void: a_dir /= Void
 		do
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		ensure
 --			dir_set: icon
 		end
-		
+
 	user_initialization is
 			-- Called by `initialize'.
 			-- Any custom user initialization that
@@ -51,27 +51,27 @@ feature {NONE} -- Initialization
 			create analyze_object_gra.make_with_drawable (object_drawing)
 			create analyze_object_snap.make_with_grid (object_grid)
 			create increase_detector.make
-	
+
 			create timer
 			timer.actions.extend (agent timer_event)
 			timer.set_interval (refresh_interval)
 			main_book.drop_actions.extend (agent main_book_drop_pebble)
 			main_book.drop_actions.set_veto_pebble_function (agent main_book_dropable)
-					
+
 			refresh_interval := refresh_interval_normal
 			auto_refresh.enable_select
-			
+
 			filter_setting.drop_actions.extend (agent handle_filter_button_drop)
-			
-			init_icons	
-			
+
+			init_icons
+
 			show_actions.extend (agent analyze_gc.redraw_for_resize)
-			
+
 				-- Small hack to ensure that first time `split_incre' is shown it
 				-- is shown with the right proportion as `resize_actions' are called
 				-- when notebook tab shows its content.
 			split_incre.resize_actions.force_extend (agent update_splitter_proportion_once (split_incre, 0.5))
-	
+
 			gc_graphs.resize_actions.force_extend (agent analyze_gc.redraw_for_resize)
 		ensure then
 			main_window_set: main_window_not_void
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			update_interval_set_normal: refresh_interval = refresh_interval_normal
 			auto_refresh_button_selected: auto_refresh.is_selected
 		end
-	
+
 	init_icons is
 			-- Initialize the icons in the system.
 		require
@@ -94,19 +94,19 @@ feature {NONE} -- Initialization
 			filter_setting_button_not_void: not filter_setting.is_destroyed
 			retreive_button_not_void: not retreive.is_destroyed
 		do
-			main_book.item_tab (tab_garbage_collector_info).set_pixmap (icons.pixmap_file_content (icons.icon_gabage_collector_info))
-			main_book.item_tab (tab_object_grid).set_pixmap (icons.pixmap_file_content (icons.icon_object_grid))
-			main_book.item_tab (tab_object_graph).set_pixmap (icons.pixmap_file_content (icons.icon_object_graph))
-			main_book.item_tab (tab_states_compare).set_pixmap (icons.pixmap_file_content (icons.icon_state_change))
-			
-			refresh.set_pixmap (icons.pixmap_file_content (icons.icon_refresh_info))
-			gc_now.set_pixmap (icons.pixmap_file_content (icons.icon_gabage_clean_now))
-			save_datas.set_pixmap (icons.pixmap_file_content (icons.icon_save_current_state))
-			auto_refresh.set_pixmap (icons.pixmap_file_content (icons.icon_auto_refresh))
-			refresh_speed.set_pixmap (icons.pixmap_file_content (icons.icon_auto_refresh_speed))
-			gc_enable.set_pixmap (icons.pixmap_file_content (icons.icon_gabage_clean_enable))
-			filter_setting.set_pixmap (icons.pixmap_file_content (icons.icon_filter))
-			retreive.set_pixmap (icons.pixmap_file_content (icons.icon_open_system_states))
+			main_book.item_tab (tab_garbage_collector_info).set_pixmap (icons.gabage_collector_info_icon)
+			main_book.item_tab (tab_object_grid).set_pixmap (icons.object_grid_icon)
+			main_book.item_tab (tab_object_graph).set_pixmap (icons.object_graph_icon)
+			main_book.item_tab (tab_states_compare).set_pixmap (icons.state_change_icon)
+
+			refresh.set_pixmap (icons.refresh_info_icon)
+			gc_now.set_pixmap (icons.gabage_clean_now_icon)
+			save_datas.set_pixmap (icons.save_current_state_icon)
+			auto_refresh.set_pixmap (icons.auto_refresh_icon)
+			refresh_speed.set_pixmap (icons.auto_refresh_speed_icon)
+			gc_enable.set_pixmap (icons.gabage_clean_enable_icon)
+			filter_setting.set_pixmap (icons.filter_icon)
+			retreive.set_pixmap (icons.open_system_states_icon)
 		ensure
 			tab_garbage_collector_info_pixmap_set: main_book.item_tab (tab_garbage_collector_info).pixmap /= Void
 			tab_object_grid_pixmap_set: main_book.item_tab (tab_object_grid).pixmap /= Void
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 			filter_setting_pixmap_set: filter_setting.pixmap /= Void
 			retreive_pixmap_set: retreive.pixmap /= Void
 		end
-		
+
 feature -- Redefine
 
 	destroy is
@@ -140,7 +140,7 @@ feature -- Redefine
 			end
 			Precursor {MA_WINDOW_IMP}
 		end
-		
+
 feature {NONE} -- Implementation for agents
 
 	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL) is
@@ -163,27 +163,27 @@ feature {NONE} -- Implementation for agents
 	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Handle frame change.
 		do
-			
+
 		end
-		
+
 	retreive_states is
 			-- Retreive object states from a file.
 		do
 			increase_detector.states_open_from_file
 		end
-		
+
 	save_data_clicked is
 			-- Save current system datas to a file.
 		do
 			increase_detector.states_save_to_file
 		end
-		
+
 	filter_clicked is
 			-- When the user click the filter button.
 		do
 			filter_window.show
 		end
-		
+
 	auto_refresh_enable is
 			-- Enable or disable auto refresh memory graph.
 		do
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation for agents
 			timer_state_changed: old timer.interval /= timer.interval
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
-		
+
 	auto_refresh_change_speed is
 			-- Change the refresh speed.
 		do
@@ -216,19 +216,19 @@ feature {NONE} -- Implementation for agents
 						refresh_interval := refresh_interval_low
 						timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is low")
-				end				
+				end
 			end
 		ensure then
 			refresh_speed_toollip_changed: timer.interval /= 0 implies old refresh_speed.tooltip /= refresh_speed.tooltip
 			timer_interval_changed: timer.interval /= 0 implies old timer.interval /= timer.interval
 		end
-		
+
 	arrange_circle_clicked is
 			-- Arrage the nodes in a circle.
 		do
 			analyze_object_gra.arrange_in_grid
 		end
-		
+
 	main_book_drop_pebble (a_item: MA_OBJECT_STONE) is
 			-- Things to do when user drop a pebble on the main_boon's tab.
 		require
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation for agents
 			analyze_object_gra.drop_a_object (a_item.object)
 			main_book.select_item (tab_object_graph)
 		end
-		
+
 	main_book_dropable (a_item: MA_OBJECT_STONE): BOOLEAN is
 			-- If the tab where user pointer is at dropable?
 		do
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation for agents
 				Result :=  main_book.pointed_tab_index = main_book.index_of (tab_object_graph, 1)
 			end
 		end
-		
+
 	handle_filter_button_drop (a_stone: MA_CLASS_STONE) is
 			-- Handle when user drop a class item from object grid to filter button.
 		require
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation for agents
 		do
 			filter_window.add_class_name (a_stone.class_name)
 		end
-		
+
 --	from_object_grid_to_object_graph (x, y: INTEGER): EV_NOTEBOOK is
 --			-- Drop pebbel on object graph.
 --		do
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation for agents
 	split_incre_hori_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- When user double click the horizontal split in the memory increase dector window.
 		do
-			increase_detector.adjust_split_horizontal	
+			increase_detector.adjust_split_horizontal
 		end
 
 	split_info_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -277,19 +277,19 @@ feature {NONE} -- Implementation for agents
 		do
 			increase_detector.adjust_split_vertical
 		end
-		
+
 	show_diff_in_grid is
 			-- When button "show_diff_grid" clicked, to show the difference in grid.
 		do
 			increase_detector.show_object_count_changed
 		end
-		
+
 	add_current_state is
 			-- When button "add_current" clicked, to add current memory state.
 		do
 			increase_detector.add_current_state
 		end
-		
+
 	resize_histogram (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Do things when the eiffel_histogram size change.
 		require else
@@ -297,25 +297,25 @@ feature {NONE} -- Implementation for agents
 		do
 			analyze_gc.resize (a_x, a_y, a_width, a_height)
 		end
-		
+
 	resize_history (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Do things when the eiffel_histogram size change.
 		do
 			analyze_gc.resize_history (a_x, a_y, a_width, a_height)
 		end
-	
+
 	timer_event is
 			-- The event request by the timer.
 		do
 			analyze_gc.update_gc_info
 		end
-		
+
 	clear_graph_clicked is
 			-- Clear the object graph.
 		do
 			analyze_object_gra.clear_graph
 		end
-		
+
 	find_refers_clicked is
 			-- Find the refers to current selected node (which represent a object), then put the refers to the graph.
 		do
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation for agents
 			zoom.set_tooltip (zoom.value.out)
 			analyze_object_gra.zoom_changed (a_value)
 		end
-		
+
 	find_by_type_name is
 			-- Find all the objects which belong to the same type name.
 		local
@@ -340,38 +340,38 @@ feature {NONE} -- Implementation for agents
 		ensure then
 			type_name_recorded: type_name.count = old type_name.count + 1
 		end
-		
+
 	refresh_info_clicked is
 			-- Clients want to refresh all the infomation .
 		do
 			analyze_gc.redraw
 			analyze_object_snap.show_memory_map
 		end
-		
+
 	gc_now_clicked is
 			-- Clients want to gc now.
 		do
 			system_util.collect
 		end
-		
-	redraw_histogram (a_x, a_y, a_width, a_height: INTEGER) is 
+
+	redraw_histogram (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Redraw histogram (left side graph) in the gc statistics notebook tab.
 		do
-			analyze_gc.redraw_histogram 
+			analyze_gc.redraw_histogram
 		end
-		
-	redraw_history (a_x, a_y, a_width, a_height: INTEGER) is 
+
+	redraw_history (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Redraw history (right side graph)  in the gc statistics notebook tab.
 		do
-			analyze_gc.redraw_history 
+			analyze_gc.redraw_history
 		end
-		
+
 	find_object_by_instance_name is
 			-- Find a object by its field name.
 		local
 			l_item : EV_LIST_ITEM
 		do
-			create l_item.make_with_text (object_name_1.text)			
+			create l_item.make_with_text (object_name_1.text)
 			object_name_1.extend (l_item)
 			analyze_object_gra.find_object_by_instance_name (object_name_1.text)
 		ensure then
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation for agents
 		do
 			system_util.toggle_gc (gc_enable)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	increase_detector: MA_MEMORY_CHANGE_MEDIATOR
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 
 	analyze_gc: MA_GC_INFO_MEDIATOR
 			-- The mediator response for show histogram, history.
-			
+
 	analyze_object_gra: MA_OBJECT_GRAPH_MEDIATOR
 			-- The mediator response for show, modify object graphs.
 
@@ -403,16 +403,16 @@ feature {NONE} -- Implementation
 
 	refresh_interval: INTEGER
 			-- The time of interval between refersh.
-	
+
 	refresh_interval_hi: INTEGER is 300
 			-- The hi speed value of refresh interval.
-			
+
 	refresh_interval_normal: INTEGER is 2000
 			-- The normal speed value of refresh interval.
-			
+
 	refresh_interval_low: INTEGER is 5000
 			-- The low speed value of refresh interval.
-			
+
 invariant
 
 	analyze_object_gra_not_void: analyze_object_gra /= Void
@@ -427,7 +427,7 @@ invariant
 	main_book_has_tab_garbage_collector_info: main_book.has (tab_garbage_collector_info)
 	main_book_has_tab_object_grid: main_book.has (tab_object_grid)
 	main_book_has_tab_object_graph: main_book.has (tab_object_graph)
-	main_book_has_tab_states_compare: main_book.has (tab_states_compare)	
+	main_book_has_tab_states_compare: main_book.has (tab_states_compare)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -144,7 +144,7 @@
 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilationa of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>

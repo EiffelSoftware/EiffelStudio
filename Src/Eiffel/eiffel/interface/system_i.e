@@ -1059,6 +1059,10 @@ end
 			end
 
 			is_force_rebuild := False
+		rescue
+				-- An exception occur during system analysis, we should force a rebuild
+				-- at next compilation. This addresses bug#12911.
+			is_force_rebuild := True
 		end
 
 	check_unique_class_names is

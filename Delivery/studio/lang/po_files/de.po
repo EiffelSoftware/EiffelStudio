@@ -2,16 +2,16 @@
 # Julian <julian@tschannen.net>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: de_CH\n"
+"Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-01 14:04-0800\n"
+"PO-Revision-Date: 2007-06-01 14:13-0800\n"
+"Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: German\n"
-"X-Poedit-Country: SWITZERLAND\n"
 
 #. Source code: default_quick_melt_the_system: STRING_GENERAL is			do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45

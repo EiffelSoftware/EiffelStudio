@@ -7,11 +7,11 @@ indexing
 
 class
 	MA_SYSTEM_UTIL_SINGLETON
-	
+
 inherit
 	MA_SINGLETON_FACTORY
-		
-	
+
+
 feature -- System functions
 
 	collect is
@@ -21,7 +21,7 @@ feature -- System functions
 			memory.full_coalesce
 			memory.full_collect
 		end
-	
+
 	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Disable or enable GC
 		require
@@ -29,11 +29,11 @@ feature -- System functions
 		do
 			if a_button.is_selected then
 				memory.collection_off
-				a_button.set_pixmap (icons.pixmap_file_content (icons.icon_gabage_clean_disable))
+				a_button.set_pixmap (icons.gabage_clean_disable_icon)
 				a_button.set_tooltip ("Enable GC")
 			else
 				memory.collection_on
-				a_button.set_pixmap (icons.pixmap_file_content (icons.icon_gabage_clean_enable))
+				a_button.set_pixmap (icons.gabage_clean_enable_icon)
 				a_button.set_tooltip ("Disable GC")
 			end
 		ensure

@@ -7,21 +7,21 @@ indexing
 
 class
 	MA_OBJECT_SNAPSHOT_MEDIATOR
-	
+
 inherit
 	MA_SINGLETON_FACTORY
-	
-create 
+
+create
 	make_with_grid
 
 feature -- Initlization
-	
+
 	make_with_grid (a_grid: EV_GRID) is
 		require
 			a_grid_not_void: a_grid /= Void
 		do
-			object_grid := a_grid 
-			
+			object_grid := a_grid
+
 			object_grid.enable_single_row_selection
 			object_grid.enable_tree
 			object_grid.enable_partial_dynamic_content
@@ -34,14 +34,14 @@ feature -- Initlization
 			object_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
 			object_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
 			object_grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (3))
-			
+
 			object_grid.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1))
 			object_grid.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2))
 			object_grid.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3))
-			
+
 			object_grid.set_pick_and_drop_mode
 			object_grid.set_item_pebble_function (agent pick_item)
-			
+
 --			object_grid.set_item_pebble_function (agent pick_item_for_filter)
 			show_memory_map
 		ensure
@@ -49,7 +49,7 @@ feature -- Initlization
 			object_grid_accept_cursor_set: object_grid.accept_cursor /= Void
 			object_grid_deny_curosor_set: object_grid.deny_cursor /= Void
 		end
-	
+
 	adjust_column_width (a_column_index: INTEGER) is
 			-- adjust a column width to fix the max width of the item its contain
 		require
@@ -59,7 +59,7 @@ feature -- Initlization
 				object_grid.column (a_column_index).set_width (object_grid.column (a_column_index).required_width_of_item_span (1, object_grid.row_count))
 			end
 		end
-		
+
 feature -- Command
 
 	show_memory_map is
@@ -75,7 +75,7 @@ feature -- Command
 				-- Get the data right away.
 			system_util.collect
 			l_new_table := memory.memory_count_map
-			
+
 				-- Process `l_new_table' and fill `output_grid' with associated data.
 			from
 				create l_int
@@ -91,7 +91,7 @@ feature -- Command
 				l_count := l_new_table.item_for_iteration
 
 					-- Compute `l_delta' now.
-				if l_old_table /= Void then 
+				if l_old_table /= Void then
 					l_old_table.search (l_new_table.key_for_iteration)
 					if l_old_table.found then
 						l_delta := l_new_table.item_for_iteration - l_old_table.found_item
@@ -99,14 +99,14 @@ feature -- Command
 					else
 						l_delta := l_new_table.item_for_iteration
 					end
-				else					
+				else
 					l_delta := l_new_table.item_for_iteration
 				end
 				l_data.force ([l_name, l_count, l_delta, l_new_table.key_for_iteration], i)
-				i := i + 1							
+				i := i + 1
 				l_new_table.forth
 			end
-			
+
 			if l_old_table /= Void and then not l_old_table.is_empty then
 				from
 					l_old_table.start
@@ -121,7 +121,7 @@ feature -- Command
 					l_old_table.forth
 				end
 			end
-			
+
 			last_table := l_new_table
 			grid_data := l_data
 
@@ -129,7 +129,7 @@ feature -- Command
 		end
 
 feature {NONE} -- Implementation
-	
+
 	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE is
 			-- User pick one item from the grid.
 		do
@@ -138,16 +138,16 @@ feature {NONE} -- Implementation
 				if a_item.data /= Void then
 					create {MA_OBJECT_STONE} Result.make (a_item.data)
 					object_grid.set_accept_cursor (accept_node)
-					object_grid.set_deny_cursor (deny_node)	
+					object_grid.set_deny_cursor (deny_node)
 				else
 				-- If is an item represent a class.
 					create {MA_CLASS_STONE} Result.make (a_item.text)
 					object_grid.set_accept_cursor (accept_node_class)
 					object_grid.set_deny_cursor (deny_node_class)
-				end				
+				end
 			end
 		end
-			
+
 	on_grid_header_click (a_column_index: INTEGER) is
 			-- User click on the column header of index `a_column_index'.
 		require
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			l_sorter: DS_QUICK_SORTER [like row_data]
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like row_data]
 		do
-			inspect 
+			inspect
 				sorted_column
 				when 1 then create l_agent_sorter.make (agent sort_on_type_name)
 				when 2 then create l_agent_sorter.make (agent sort_on_count)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			create l_sorter.make (l_agent_sorter)
 			l_sorter.sort (grid_data)
 		end
-		
+
 	update_grid_content is
 			-- Fill grid using `grid_data'
 		require
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			l_grid: like object_grid
 		do
 			from
-				l_data := grid_data	
+				l_data := grid_data
 				l_grid := object_grid
 				grid_util.grid_remove_and_clear_all_rows (l_grid)
 				i := 1
@@ -215,12 +215,12 @@ feature {NONE} -- Implementation
 					check
 						l_str_not_void: l_str /= Void
 					end
-				
+
 						-- Set type name
 					create l_item.make_with_text (l_str)
-					l_item.set_pixmap (icons.pixmap_file_content (icons.icon_object_grid_class))
+					l_item.set_pixmap (icons.object_grid_class_icon)
 					l_grid.set_item (1, i, l_item)
-					
+
 						-- Set count
 					l_count := l_row_data.integer_item (2)
 					create l_item.make_with_text (l_count.out)
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 						l_row.ensure_expandable
 						l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.integer_item (4), l_row))
 					end
-					
+
 						-- Set delta
 					l_delta := l_row_data.integer_item (3)
 					if l_delta /= 0 then
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 				-- for referers.
 			system_util.collect
 		end
-		
+
 	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Add all objects of the given dynamic type of `a_dynamic_type' as subnode
 			-- of row `a_parent_row'.
@@ -266,10 +266,10 @@ feature {NONE} -- Implementation
 			l_any: ANY
 		do
 			if a_parent_row.subrow_count = 0 then
-				
+
 				l_data := memory.memory_map.item (a_dynamic_type)
 				if l_data /= Void then
-					
+
 					debug ("larry")
 						io.put_string ("%Nin MA_OBJECT_SNAPSHOT_MEDIATOR: void object? " + l_data.count.out + " orignal object is: " + internal.type_name_of_type (a_dynamic_type))
 					end
@@ -284,18 +284,18 @@ feature {NONE} -- Implementation
 					loop
 						if l_data.item /= Void then
 							create l_item.make_with_text ((i - l_row_index).out)
-							l_item.set_pixmap (icons.pixmap_file_content (icons.icon_object_grid))
+							l_item.set_pixmap (icons.object_grid_icon)
 							object_grid.set_item (1, i, l_item)
 							l_item.set_data (l_data.item)
 							l_any := l_data.item
 							create l_item.make_with_text (($l_any).out)
 							l_item.set_data (l_data.item)
 							object_grid.set_item (2, i, l_item)
-	
+
 							l_row := object_grid.row (i)
 							l_row.ensure_expandable
 							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
-							i := i + 1							
+							i := i + 1
 						end
 						l_data.forth
 					end
@@ -333,13 +333,13 @@ feature {NONE} -- Implementation
 					loop
 						create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_data.item (j)))
 						l_item.set_data (l_data.item (j))
-						l_item.set_pixmap (icons.pixmap_file_content (icons.icon_object_grid))
+						l_item.set_pixmap (icons.object_grid_icon)
 						object_grid.set_item (1, i, l_item)
 						l_any := l_data.item (j)
 						create l_item.make_with_text (($l_any).out)
 						l_item.set_data (l_data.item (j))
 						object_grid.set_item (2, i, l_item)
-						
+
 						l_row := object_grid.row (i)
 						l_row.ensure_expandable
 						l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_data.item (j), l_row))
@@ -357,7 +357,7 @@ feature -- Status report
 		do
 			Result := a_column_index > 0 and a_column_index <= object_grid.column_count
 		end
-		
+
 feature {NONE} -- Fields
 
 	row_data: TUPLE [STRING, INTEGER, INTEGER, INTEGER] is
@@ -365,22 +365,22 @@ feature {NONE} -- Fields
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		do
 		end
-		
+
 	object_grid: EV_GRID
 			-- the main grid to show object snapshot datas
-			
+
 	sorted_column: INTEGER
 			-- Column on which sorting is done.	
-	
+
 	sorting_order: BOOLEAN
 			-- If True, sorted from the smaller to the bigger.
-			
+
 	last_table: HASH_TABLE [INTEGER, INTEGER]
 			-- Result of last call to `mem.memory_map_count' in `show_memory_map'.
-			
+
 	grid_data: DS_ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
-			
+
 feature {NONE} -- Sorting Implemention
 
 	sort_on_type_name (u, v: like row_data): BOOLEAN is
@@ -429,8 +429,10 @@ feature {NONE} -- Sorting Implemention
 				Result := v.integer_item (3) < u.integer_item (3)
 			end
 		end
+
 invariant
 	object_grid_not_void: object_grid /= Void
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -716,6 +716,8 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_item, l_selected_item: EV_RADIO_MENU_ITEM
 			l_form: EB_CLASS_INFO_FORMATTER
 			l_editor: EB_SMART_EDITOR
+			l_cluster_stone: CLUSTER_STONE
+			l_class_i_stone: CLASSI_STONE
 		do
 			l_editor := dev_window.editors_manager.current_editor
 			if l_editor /= Void and then l_editor = current_editor then
@@ -741,9 +743,13 @@ feature {NONE} -- Menu section, Granularity 1.
 				if l_selected_item /= Void then
 					l_selected_item.enable_select
 				end
-				if l_editor.changed then
-						-- Editor is being edited, disble the view menu since selecting one
-						-- of the entry could discard the changes being made.
+				l_cluster_stone ?= l_editor.stone
+				l_class_i_stone ?= l_editor.stone
+				if l_editor.changed or else l_cluster_stone /= Void or else l_class_i_stone /= Void then
+						-- Editor is being edited, disable the view menu since selecting one
+						-- of the entry could discard the changes being made, if the editor is currently
+						-- showing a cluster or uncompiled class then no view can be attained so it is also
+						-- disabled.
 					l_menu.disable_sensitive
 				end
 			end

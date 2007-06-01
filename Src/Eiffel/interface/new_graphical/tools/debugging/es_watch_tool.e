@@ -715,7 +715,8 @@ feature {NONE} -- Event handling
 	auto_expressions_deltas: TUPLE [low: INTEGER; up: INTEGER]
 			-- Default might be (-)2, (+)1
 
-	show_only_auto_expression_successfully_evaluated: BOOLEAN is False
+	show_only_auto_expression_successfully_evaluated: BOOLEAN is True
+			-- Show auto expression only if successfully evaluated ?
 
 	add_auto_expressions is
 		local

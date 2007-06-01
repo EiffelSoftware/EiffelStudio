@@ -622,6 +622,7 @@ test	console-setting-change		incr280 tcf pass incrementality
 test	vtcg-add-remove-missing-error	incr281 tcf pass incrementality
 test	funky-removal-of-type			incr282 tcf pass incrementality
 test	multi-constraint-incremental-crash		incr283 tcf pass incrementality
+test	removing-formal-crashes			incr284 tcf pass incrementality
 
 
 -- Melting

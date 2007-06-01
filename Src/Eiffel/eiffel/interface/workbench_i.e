@@ -341,14 +341,7 @@ feature -- Commands
 					else
 						System.set_config_changed (False)
 					end
-					if Lace.has_group_changed then
-						System.set_rebuild (True)
-					end
-					if missing_class_error then
-						system.set_rebuild (True)
-					end
-						-- force a rebuild for the discover melt
-					if compilation_modes.is_discover then
+					if Lace.has_group_changed or missing_class_error or compilation_modes.is_discover then
 						system.set_rebuild (True)
 					end
 					System.recompile

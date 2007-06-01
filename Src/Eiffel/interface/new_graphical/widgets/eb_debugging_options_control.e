@@ -1,6 +1,10 @@
 indexing
-	description: 	"Abstraction of an control allowing adding, removal and in-place editing of%
-					%program arguments"
+	description: "[
+			Abstraction of an control allowing adding, removal and in-place editing of
+			program arguments.
+
+			]"
+	comments:"(jfiat) Left commented lines for futur implementation (postponed for now)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -66,7 +70,34 @@ feature -- Interface access
 			end
 		end
 
-feature {NONE} -- Retrieval
+--feature {NONE} -- User options access
+--
+--	profile_is_new (p: like profile_from_row): BOOLEAN is
+--			-- Is this a new profile ?
+--			-- i.e: created directly in user options.
+--		local
+--			l_user_opts: TARGET_USER_OPTIONS
+--			l_profs: ARRAYED_LIST [like profile_from_row]
+--		do
+--			l_user_opts := lace.user_options.target
+--			l_profs := l_user_opts.profiles
+--			Result := l_profs = Void or else not l_profs.has (p)
+--		end
+--
+--	add_profile_to_user_options (p: like profile_from_row) is
+--			-- Add profile `p' directly to the User options data
+--		local
+--			l_user_opts: TARGET_USER_OPTIONS
+--			l_profs: ARRAYED_LIST [like profile_from_row]
+--		do
+--			l_user_opts := lace.user_options.target
+--			l_profs := l_user_opts.profiles
+--			if l_profs /= Void then
+--				l_profs.extend (p)
+--			end
+--		end
+
+feature {EB_ARGUMENT_DIALOG} -- Retrieval
 
 	load_dbg_options is
 			-- Retrieve and initialize the arguments from user options.
@@ -84,7 +115,7 @@ feature {NONE} -- Retrieval
 			profiles_grid.set_row_count_to (0)
 
 				--| Default
-			l_row := added_profile_text_row (Void, False, False)
+			l_row := added_profile_text_row (Void, False)
 
 			l_user_opts := lace.user_options.target
 			l_profs := l_user_opts.profiles
@@ -98,7 +129,7 @@ feature {NONE} -- Retrieval
 					l_profs.after
 				loop
 					l_prof := l_profs.item
-					l_row := added_profile_text_row (l_prof, False, False)
+					l_row := added_profile_text_row (l_prof, False)
 					l_profs.forth
 				end
 				i := l_user_opts.last_profile_index
@@ -106,7 +137,7 @@ feature {NONE} -- Retrieval
 					l_prof := l_profs[i]
 					l_row := grid_row_with_profile (l_prof)
 					if l_row = Void then
-						l_row := added_profile_text_row (l_prof, False, True)
+						l_row := added_profile_text_row (l_prof, True)
 					else
 --| Issue with grid:	l_row.ensure_visible
 						l_row.enable_select
@@ -116,6 +147,9 @@ feature {NONE} -- Retrieval
 					end
 					if profiles_grid.column_count > 0 then
 						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
+						if profiles_grid.column_count > 1 then
+							profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
+						end
 					end
 				else
 					default_profile_row.enable_select
@@ -124,19 +158,38 @@ feature {NONE} -- Retrieval
 				default_profile_row.enable_select
 			end
 
-			set_changed (False)
+			set_changed (Void, False)
 		end
 
-feature -- Storage
-
 	validate is
-		require
-			not has_changed
 		local
 			l_user_opts: TARGET_USER_OPTIONS
+			l_profs: ARRAYED_LIST [like profile_from_row]
+			sp, p: like profile_from_row
 		do
 			l_user_opts := lace.user_options.target
-			l_user_opts.set_last_profile_by_title (selected_profile)
+			l_profs := l_user_opts.profiles
+			if l_profs /= Void then
+				sp := selected_profile
+				if sp /= Void then
+					from
+						l_profs.start
+					until
+						l_profs.after or p /= Void
+					loop
+						p := l_profs.item
+						if
+							p.title.is_case_insensitive_equal (sp.title)
+						then
+							--| Let's consider it as same profile.
+						else
+							p := Void
+						end
+						l_profs.forth
+					end
+				end
+			end
+			l_user_opts.set_last_profile (p)
 		end
 
 	store_dbg_options is
@@ -177,8 +230,7 @@ feature -- Storage
 			create l_user_factory
 			l_user_factory.store (lace.user_options)
 
-			synch_with_others
-			set_changed (False)
+			set_changed (Void, False)
 		end
 
 	selected_profile: like profile_from_row is
@@ -220,7 +272,6 @@ feature {NONE} -- GUI
 
 				-- Global actions.
 			widget.focus_in_actions.extend (agent on_focused)
-			widget.pointer_leave_actions.extend (agent synch_with_others)
 		end
 
 	on_focused is
@@ -274,14 +325,21 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (apply_button)
 			apply_button.disable_sensitive
 
+			create reset_button.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
+			layout_constants.set_default_width_for_button (reset_button)
+			reset_button.disable_sensitive
+
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
 			hb.extend (dup_button)
 			hb.disable_item_expand (dup_button)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
+			hb.extend (create {EV_HORIZONTAL_SEPARATOR})
 			hb.extend (apply_button)
 			hb.disable_item_expand (apply_button)
+			hb.extend (reset_button)
+			hb.disable_item_expand (reset_button)
 
 				--| Grid
 			create g
@@ -296,6 +354,7 @@ feature {NONE} -- Display profiles impl
 			g.row_select_actions.extend (agent on_row_selected)
 			g.row_deselect_actions.extend (agent on_row_unselected)
 			g.set_auto_resizing_column (1, True)
+			g.set_auto_resizing_column (2, True)
 			g.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
 			g.key_press_actions.extend (agent on_key_pressed)
 
@@ -324,7 +383,7 @@ feature {NONE} -- GUI Properties
 			-- Widget containing profile settings.
 
 	add_button, dup_button, remove_button: EV_BUTTON
-	apply_button: EV_BUTTON
+	apply_button, reset_button: EV_BUTTON
 
 feature {NONE} -- Grid events
 
@@ -460,49 +519,22 @@ feature -- Status
 
 feature -- Status Setting
 
-	set_changed (b: BOOLEAN) is
+	set_changed (p: like profile_from_row; b: BOOLEAN) is
 			-- Notify change
 		do
 			if has_changed /= b then
+--				if b and  then
+--					has_changed := p = Void or else not profile_is_new (p)
+--				else
+--					has_changed := b
+--				end
 				has_changed := b
 				if has_changed then
 					apply_button.enable_sensitive
+					reset_button.enable_sensitive
 				else
 					apply_button.disable_sensitive
-				end
-			end
-		end
-
-	synch_with_others is
-			-- Synchronize other open controls due to changes in Current.
-		local
-			mem: MEMORY
-			l_control: like Current
-			l_controls_list: SPECIAL [ANY]
-			l_counter: INTEGER
-			b: BOOLEAN
-		do
-				-- FIXME: this sounds rather dangerous to use MEMORY for such need.
-			create mem
-			b := mem.collecting
-			if b then
-				mem.collection_off
-			end
-			l_controls_list := mem.objects_instance_of (Current)
-			if b then
-				mem.collection_on
-			end
-			if l_controls_list /= Void and then l_controls_list.count > 0 then
-				from
-					l_counter := 0
-				until
-					l_counter = l_controls_list.count
-				loop
-					if l_controls_list.item (l_counter) /= Current then
-						l_control ?= l_controls_list.item (l_counter)
-						l_control.update
-					end
-					l_counter := l_counter + 1
+					reset_button.disable_sensitive
 				end
 			end
 		end
@@ -554,7 +586,7 @@ feature -- Data change
 				p.title := s
 
 				update_title_row_of (p)
-				set_changed (True)
+				set_changed (p, True)
 			end
 		end
 
@@ -572,7 +604,7 @@ feature -- Data change
 			if not same_string_value (p.cwd, s) then
 				p.cwd := s
 				update_title_row_of (p)
-				set_changed (True)
+				set_changed (p, True)
 			end
 		end
 
@@ -590,7 +622,7 @@ feature -- Data change
 			if not same_string_value (p.args, s) then
 				p.args := s
 				update_title_row_of (p)
-				set_changed (True)
+				set_changed (p, True)
 			end
 		end
 
@@ -602,7 +634,7 @@ feature -- Data change
 				p.env := v
 			end
 			update_title_row_of (p)
-			set_changed (True)
+			set_changed (p, True)
 		end
 
 	update_title_row_of (p: like profile_from_row) is
@@ -615,7 +647,7 @@ feature -- Data change
 			end
 		end
 
-feature {NONE} -- Button Actions
+feature {EB_ARGUMENT_DIALOG} -- Status change
 
 	apply_changes is
 			--
@@ -623,18 +655,33 @@ feature {NONE} -- Button Actions
 			has_changed: has_changed
 		do
 			store_dbg_options
+--			load_dbg_options
+		ensure
+			not_has_changed: not has_changed
+		end
+
+	reset_changes is
+			--
+		require
+			has_changed: has_changed
+		do
 			load_dbg_options
 		ensure
 			not_has_changed: not has_changed
 		end
 
+feature {NONE} -- Button Actions
+
 	add_new_profile is
 			-- Add a new profile
 		local
 			r: EV_GRID_ROW
+			p: like profile_from_row
 		do
 			profiles_grid.remove_selection
-			r := added_profile_text_row ([interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, Void, Void, Void], False, True)
+			p := [interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, Void, Void, Void]
+			r := added_profile_text_row (p, True)
+--			add_profile_to_user_options (p)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
 			end
@@ -655,8 +702,8 @@ feature {NONE} -- Button Actions
 						p.title := description_from_profile (p)
 					end
 					p.title.prepend_string (interface_names.m_copy_of)
-
-					r := added_profile_text_row (p, False, True)
+					r := added_profile_text_row (p, True)
+--					add_profile_to_user_options (p)
 					if r.is_expandable and then not r.is_expanded then
 						r.expand
 					end
@@ -674,7 +721,7 @@ feature {NONE} -- Button Actions
 				r := r.parent_row_root
 				profiles_grid.remove_row (r.index)
 			end
-			set_changed (True)
+			set_changed (Void, True)
 		end
 
 	profiles_count: INTEGER is
@@ -718,7 +765,7 @@ feature {NONE} -- Queries
 
 feature {NONE} -- Profile actions
 
-	added_profile_text_row (a_profile: like profile_from_row; store_right_after: BOOLEAN; is_selected: BOOLEAN): EV_GRID_ROW is
+	added_profile_text_row (a_profile: like profile_from_row; is_selected: BOOLEAN): EV_GRID_ROW is
 			-- Action to take when user chooses to add a new argument.
 			-- if `store_arguments' is true, store_arguments if any change occurred
 		do
@@ -740,12 +787,7 @@ feature {NONE} -- Profile actions
 						Result.enable_select
 						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
 					end
-					if store_right_after then
-							--| Maybe we should not store right away .. but only on Ok, or Run ...
-						store_dbg_options
-					else
-						set_changed (True)
-					end
+					set_changed (a_profile, True)
 				end
 			end
 		end
@@ -769,7 +811,9 @@ feature {NONE} -- Profile actions
 			ctrler: ES_GRID_ROW_CONTROLLER
 			was_expanded: BOOLEAN
 			s: STRING
+			was_changed: BOOLEAN
 		do
+			was_changed := has_changed
 			p := profile_from_row (a_row)
 			l_title := p.title
 			l_cwd := p.cwd
@@ -879,6 +923,11 @@ feature {NONE} -- Profile actions
 			if was_expanded and then a_row.is_expandable then
 				a_row.expand
 			end
+			profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
+			profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
+			if not was_changed then
+				set_changed (p, was_changed)
+			end
 		end
 
 	add_title_to_row (p: like profile_from_row; a_row: EV_GRID_ROW) is
@@ -902,7 +951,7 @@ feature {NONE} -- Profile actions
 			if p /= Void then
 				a_row.ensure_expandable
 			end
-			set_changed (True)
+			set_changed (p, True)
 		end
 
 	refresh_title_row_text (a_row: EV_GRID_ROW) is
@@ -1097,7 +1146,7 @@ feature {NONE} -- Environment actions
 					gei.activate
 				end
 			end
-			set_changed (True)
+			set_changed (profile_from_row (a_row), True)
 		end
 
 	refresh_environ_row (a_row: EV_GRID_ROW) is
@@ -1205,7 +1254,7 @@ feature {NONE} -- Environment actions
 				if ax + ay /= 0 then
 					m.show
 				else
-					m.show_at (profiles_grid, profiles_grid.width // 3, a_row.virtual_y_position - profiles_grid.viewable_y_offset)
+					m.show_at (profiles_grid, profiles_grid.width // 3, a_row.virtual_y_position - profiles_grid.virtual_y_position)
 				end
 			end
 		end

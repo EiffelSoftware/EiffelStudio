@@ -135,39 +135,13 @@ feature -- Update
 		require
 			valid_profile: a_profile = Void or else profiles.has (a_profile)
 		do
-			if a_profile /= Void then
+			if a_profile /= Void and profiles /= Void then
 				last_profile_index := profiles.index_of (a_profile, 1)
 			else
 				last_profile_index := -1
 			end
 		ensure
 			last_profile_set: last_profile = a_profile
-		end
-
-	set_last_profile_by_title (a_profile: like last_profile) is
-			-- Set `last_profile' to `a_profile'.
-		local
-			p: like last_profile
-			done: BOOLEAN
-		do
-			if a_profile /= Void then
-				from
-					profiles.start
-				until
-					profiles.after or done
-				loop
-					p := profiles.item
-					if p.title.is_case_insensitive_equal (a_profile.title) then
-						last_profile_index := profiles.index
-						done := True
-					end
-					profiles.forth
-				end
-			else
-				last_profile_index := -1
-			end
-		ensure
-			last_profile_set: (a_profile = Void and last_profile = Void) or else (last_profile.title = a_profile.title)
 		end
 
 	set_arguments (an_arguments: like arguments) is

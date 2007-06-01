@@ -25,6 +25,12 @@ inherit
 			copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -95,7 +101,7 @@ feature {NONE} -- Implementation
 	initialize_actions is
 			-- Setup the action sequences when the item is shown.
 		do
-			text_field.return_actions.extend (agent deactivate)
+			text_field.return_actions.extend (agent return_pressed)
 			text_field.focus_out_actions.extend (agent focus_lost)
 			button.focus_out_actions.extend (agent focus_lost)
 			button.select_actions.extend (agent call_ellipsis_actions)
@@ -239,6 +245,16 @@ feature -- Events
 			-- Actions called if the text changed.
 
 feature {NONE} -- Implementation
+
+	return_pressed is
+			-- On control+Enter call ellipsis actions, otherwise deactivate
+		do
+			if ev_application.ctrl_pressed then
+				call_ellipsis_actions
+			else
+				deactivate
+			end
+		end
 
 	call_ellipsis_actions is
 			-- Call ellipsis_actions

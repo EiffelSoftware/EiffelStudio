@@ -147,7 +147,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_parent_window: EV_WINDOW
 		do
-			if parent_tool_bar.customize_dialog /= Void then
+			if parent_tool_bar.customize_dialog /= Void and then not parent_tool_bar.customize_dialog.is_destroyed then
 				parent_tool_bar.customize_dialog.set_focus
 			else
 				create l_dialog.make

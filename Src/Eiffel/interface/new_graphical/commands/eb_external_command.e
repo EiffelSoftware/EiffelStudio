@@ -499,10 +499,8 @@ feature -- Execution
 						exec.change_working_directory (working_directory)
 						if exec.return_code /= 0 then
 							create msg.make (100)
-							msg.append (interface_names.e_working_directory_invalid)
-							msg.append_character ('%"')
-							msg.append (working_directory)
-							msg.append ("%".%N")
+							msg.append (interface_names.e_working_directory_invalid (working_directory))
+							msg.append ("%N")
 							msg.append (interface_names.e_external_command_not_launched)
 							show_warning_dialog (msg)
 							ok := False

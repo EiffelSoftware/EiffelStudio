@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that represent an expression line"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -551,8 +551,11 @@ feature -- Graphical changes
 					end
 					if is_auto_expression then
 						set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
+						set_context (interface_names.m_auto_expressions)
+					else
+						set_context (expression.context)
 					end
-					set_context (expression.context)
+
 					if row.item (col_expression_index) /= Void then
 						grid_cell_set_tooltip (row.item (Col_expression_index), l_tooltip)
 					end

@@ -109,6 +109,13 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			attached_to_row: row /= Void
 		end
 
+	safe_unattach is
+		do
+			if is_attached_to_row then
+				unattach
+			end
+		end
+
 	unattach is
 		require
 			is_attached_to_row: is_attached_to_row

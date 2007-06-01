@@ -717,7 +717,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_form: EB_CLASS_INFO_FORMATTER
 			l_editor: EB_SMART_EDITOR
 			l_cluster_stone: CLUSTER_STONE
-			l_class_i_stone: CLASSI_STONE
+			l_internal: INTERNAL
 		do
 			l_editor := dev_window.editors_manager.current_editor
 			if l_editor /= Void and then l_editor = current_editor then
@@ -744,8 +744,8 @@ feature {NONE} -- Menu section, Granularity 1.
 					l_selected_item.enable_select
 				end
 				l_cluster_stone ?= l_editor.stone
-				l_class_i_stone ?= l_editor.stone
-				if l_editor.changed or else l_cluster_stone /= Void or else l_class_i_stone /= Void then
+				create l_internal
+				if l_editor.changed or else l_cluster_stone /= Void or else (l_internal.type_of (l_editor.stone)).is_equal ({CLASSI_STONE}) then
 						-- Editor is being edited, disable the view menu since selecting one
 						-- of the entry could discard the changes being made, if the editor is currently
 						-- showing a cluster or uncompiled class then no view can be attained so it is also

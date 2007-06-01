@@ -386,6 +386,14 @@ feature {NONE} -- Interface
 		do
 			if not objects_grids.is_empty then
 				create m
+				create mi.make_with_text (interface_names.m_objects_tool_layout_menu_title)
+				m.extend (mi)
+				mi.disable_sensitive
+				m.extend (create {EV_MENU_SEPARATOR})
+				create mi.make_with_text (interface_names.m_objects_tool_layout_reset)
+				mi.select_actions.extend (agent reset_objects_grids_positions)
+				m.extend (mi)
+
 				from
 					create l_keys.make
 					objects_grids.start
@@ -419,10 +427,11 @@ feature {NONE} -- Interface
 					l_has_all := True
 					gids := gdata.ids
 					if gids /= Void and then not gids.is_empty then
-						create mall.make_with_text ("All")
+						create mall.make_with_text (interface_names.m_objects_tool_layout_remove_all)
 						mall.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
 						mall.enable_sensitive
 						sm.extend (mall)
+						sm.extend (create {EV_MENU_SEPARATOR})
 
 						from
 							gids.start
@@ -459,10 +468,11 @@ feature {NONE} -- Interface
 
 					l_has_all := missings.is_empty
 					if not l_has_all then
-						create mall.make_with_text ("All")
+						create mall.make_with_text (interface_names.m_objects_tool_layout_add_all)
 						mall.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
 						mall.enable_sensitive
 						sm.extend (mall)
+						sm.extend (create {EV_MENU_SEPARATOR})
 
 						from
 							missings.start
@@ -506,6 +516,17 @@ feature {NONE} -- Interface
 				apref := preferences.debug_tool_data.objects_tool_layout_preference
 				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
 			end
+		end
+
+	reset_objects_grids_positions is
+			-- Reset Objects tool grids positions
+		local
+			apref: ARRAY_PREFERENCE
+			lst: LIST [INTEGER]
+		do
+			reset_objects_grids_contents_to_default
+			apref := preferences.debug_tool_data.objects_tool_layout_preference
+			apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
 		end
 
 	remove_objects_grids_position (a_gid: STRING; a_pos: INTEGER) is

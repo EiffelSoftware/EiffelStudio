@@ -486,6 +486,10 @@ feature -- Accelerator, focus label and menu name
 	m_Open_project: STRING_GENERAL is			do Result := locale.translation("&Open Project...")	end
 	f_Open_watch_tool_menu: STRING_GENERAL is 	do Result := locale.translation ("Open Watch tool menu") end
 	f_Open_object_tool_menu: STRING_GENERAL is	do Result := locale.translation ("Open Objects tool menu") end
+	m_objects_tool_layout_menu_title: STRING_GENERAL is	do Result := locale.translation ("Customize Layout") end
+	m_objects_tool_layout_reset: STRING_GENERAL is	do Result := locale.translation ("Reset To Default") end
+	m_objects_tool_layout_add_all: STRING_GENERAL is	do Result := locale.translation ("Add All") end
+	m_objects_tool_layout_remove_all: STRING_GENERAL is	do Result := locale.translation ("Remove All") end
 	f_original_value_is (k, s: STRING_GENERAL): STRING_GENERAL is
 		require
 			k_not_void: k /= Void

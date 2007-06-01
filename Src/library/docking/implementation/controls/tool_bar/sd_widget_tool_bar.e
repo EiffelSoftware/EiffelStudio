@@ -63,6 +63,10 @@ inherit
 			on_expose,
 			initialize,
 			item_at_position
+		select
+			has_capture_vision2,
+			enable_capture_vision2,
+			disable_capture_vision2
 		end
 
 	EV_FIXED
@@ -71,14 +75,14 @@ inherit
 			wipe_out as wipe_out_fixed,
 			has as has_fixed,
 			prune as prune_fixed,
-			force as force_fixed
+			force as force_fixed,
+			has_capture as has_capture_not_use,
+			enable_capture as enable_capture_not_use,
+			disable_capture as disable_capture_not_use
 		export
 			{NONE} all
 			{ANY} is_destroyed
 		undefine
-			enable_capture,
-			disable_capture,
-			has_capture,
 			pointer_motion_actions,
 			pointer_button_release_actions,
 			pointer_button_press_actions,

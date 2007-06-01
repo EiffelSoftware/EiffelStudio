@@ -158,7 +158,10 @@ feature {NONE} -- Implementation functions.
 					Result := True
 					internal_docking_manager.command.lock_update (Void, True)
 					if internal_dock_mediator.caller.is_floating then
+						-- Ignore focus out actions during the process of changing from floating to docking.
+						internal_dock_mediator.set_ignore_focus_out_actions (True)
 						internal_dock_mediator.caller.dock
+						internal_dock_mediator.set_ignore_focus_out_actions (False)
 					end
 					create_new_row_by_position (a_screen_y_or_x)
 					internal_docking_manager.command.unlock_update

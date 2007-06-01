@@ -10,15 +10,18 @@ class
 
 inherit
 	SD_DRAWING_AREA
+		rename
+			has_capture as has_capture_vision2,
+			enable_capture as enable_capture_vision2,
+			disable_capture as disable_capture_vision2
 		export
 			{NONE} all
 			{ANY} width, height, minimum_width, minimum_height,
 				 set_background_color, background_color, screen_x,
 				  screen_y, hide, show, is_displayed,parent,
 					pointer_motion_actions, pointer_button_release_actions,
-					enable_capture, disable_capture, has_capture,
 					x_position, y_position, destroy, out,
-					set_minimum_width, set_minimum_height
+					set_minimum_width, set_minimum_height, is_destroyed
 			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
 			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip, font
 			{SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_TOOL_BAR, SD_TOOL_BAR_ITEM} set_pointer_style
@@ -194,6 +197,18 @@ feature -- Command
 			internal_items.wipe_out
 		end
 
+	enable_capture is
+			-- Enable capture
+		do
+			enable_capture_vision2
+		end
+
+	disable_capture is
+			-- Disable capture
+		do
+			disable_capture_vision2
+		end
+
 feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 
 	prefered_height: INTEGER is
@@ -314,6 +329,14 @@ feature -- Query
 
 				l_items.forth
 			end
+		end
+
+	has_capture: BOOLEAN is
+			-- If current has capture?
+			-- We rename `has_capture' from ancestor, because we want remove the postcondition (bridge_ok) in
+			-- SD_WIDGET_TOOL_BAR.
+		do
+			Result := has_capture_vision2
 		end
 
 feature -- Contract support

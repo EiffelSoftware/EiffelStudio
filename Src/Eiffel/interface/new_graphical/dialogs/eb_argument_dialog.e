@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		do
 			if debugging_options_control.has_changed then
 				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
-				dlg.set_buttons_and_actions (<<interface_names.b_ok, interface_names.b_no, interface_names.b_cancel>>,
+				dlg.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>,
 						<<
 							agent (a_op: PROCEDURE [ANY, TUPLE])
 								do

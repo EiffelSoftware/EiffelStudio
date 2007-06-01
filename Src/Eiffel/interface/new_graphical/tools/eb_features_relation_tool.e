@@ -68,7 +68,7 @@ feature -- Access
 			-- Special handle to flat formatters of routine. Required to properly update
 			-- breakpoint positions during debugging.
 
-	stone: FEATURE_STONE
+	stone: STONE
 			-- Currently managed stone.
 
 	predefined_formatters: like formatters is
@@ -91,7 +91,7 @@ feature -- Status setting
 	set_stone (new_stone: STONE) is
 			-- Send a stone to feature formatters.
 		local
-			fst: FEATURE_STONE
+			l_last_stone, fst: FEATURE_STONE
 			type_changed: BOOLEAN
 			l_feature_comparer: E_FEATURE_COMPARER
 		do
@@ -114,12 +114,13 @@ feature -- Status setting
 				end
 				update_viewpoints (fst.e_class)
 				create l_feature_comparer
+				l_last_stone ?= stone
 				if
-					stone = Void or else
-					(stone /= Void and then not l_feature_comparer.same_feature (stone.e_feature, fst.e_feature))
+					l_last_stone = Void or else
+					(not l_feature_comparer.same_feature (l_last_stone.e_feature, fst.e_feature))
 				then
 					set_last_stone (fst)
-					develop_window.tools.set_last_stone (stone)
+					develop_window.tools.set_last_stone (l_last_stone)
 					history_manager.extend (fst)
 				end
 			else
@@ -173,9 +174,10 @@ feature -- Status setting
 					end
 				end
 				if not found and ofst /= Void then
+					check classi_stone_not_void: classi_stone /= Void end
 						-- The dropped class does not have any feature named like the current feature.
 					output_line.set_text (Warning_messages.w_No_such_feature_in_this_class (
-						ofst.feature_name, st.class_i.name))
+						ofst.feature_name, classi_stone.class_i.name))
 				end
 			end
 

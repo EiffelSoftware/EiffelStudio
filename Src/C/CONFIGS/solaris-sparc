@@ -164,7 +164,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-D__BUILTIN_VA_ARG_INCR'
+	ccflags='-D__BUILTIN_VA_ARG_INCR -K pic'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

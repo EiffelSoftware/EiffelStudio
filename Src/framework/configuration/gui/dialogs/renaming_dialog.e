@@ -104,7 +104,7 @@ feature {NONE} -- Agents
 		require
 			initialized: is_initialized
 		local
-			l_item: TEXT_PROPERTY [STRING_32]
+			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
 			if grid.single_selected_row /= Void then
 				l_item ?= grid.single_selected_row.item (1)

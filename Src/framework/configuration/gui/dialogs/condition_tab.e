@@ -571,7 +571,7 @@ feature {NONE} -- Actions
 	remove_custom is
 			-- Remove a custom condition.
 		local
-			l_item: TEXT_PROPERTY [STRING]
+			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
 			if not custom.selected_rows.is_empty then
 				l_item ?= custom.selected_rows.first.item (1)

@@ -177,7 +177,14 @@ feature -- change properties
 
 feature -- Settings
 
+	set_auto_expression	(b: like is_auto_expression) is
+			-- Set `is_auto_expression' value
+		do
+			is_auto_expression := b
+		end
+
 	set_read_only (b: like is_readonly) is
+			-- Set current line Readonly
 		do
 			is_readonly := b
 		end
@@ -185,10 +192,16 @@ feature -- Settings
 feature -- Properties
 
 	is_readonly: BOOLEAN
+			-- Is read only line ?
+
+	is_auto_expression: BOOLEAN
+			-- Is auto expression line ?
 
 	expression: EB_EXPRESSION
+			-- Associated expression.
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR
+			-- Associated expression evaluator.
 
 	object_name: STRING_32 is
 		do
@@ -270,41 +283,48 @@ feature -- Graphical changes
 		require else
 			is_attached_to_row: row /= Void
 		local
+			glab: EV_GRID_LABEL_ITEM
 			gedit: ES_OBJECTS_GRID_EXPRESSION_CELL
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 			l_class_c: CLASS_C
 			l_feature_as: FEATURE_AS
 		do
 			title := v
-			gedit ?= cell (Col_expression_index)
-			if gedit = Void then
-				gedit := new_cell_expression
-				if not is_readonly then
+			if is_readonly then
+				glab ?= cell (Col_expression_index)
+				if glab = Void then
+					glab := new_cell_name
+				end
+			else
+				gedit ?= cell (Col_expression_index)
+				if gedit = Void then
+					gedit := new_cell_expression
 					gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
 					gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, True, ?,?,?,?,?,?,?,?))
 					gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
-				end
 
-				apply_cell_expression_text_properties_on (gedit)
-				set_cell (Col_expression_index, gedit)
-
-				if expression /= Void and then expression.context_class /= Void then
-					l_class_c := expression.context_class
-				else
-					l_class_c := eb_debugger_manager.current_debugging_class_c
-					l_feature_as := eb_debugger_manager.current_debugging_feature_as
-				end
-				if l_class_c /= Void then
-					create l_provider.make (l_class_c, l_feature_as)
-					if expression = Void or else expression.context_class = Void then
-						l_provider.set_dynamic_context_functions (
-										agent eb_debugger_manager.current_debugging_class_c,
-										agent eb_debugger_manager.current_debugging_feature_as)
+					if expression /= Void and then expression.context_class /= Void then
+						l_class_c := expression.context_class
+					else
+						l_class_c := eb_debugger_manager.current_debugging_class_c
+						l_feature_as := eb_debugger_manager.current_debugging_feature_as
 					end
-					gedit.set_completion_possibilities_provider (l_provider)
+					if l_class_c /= Void then
+						create l_provider.make (l_class_c, l_feature_as)
+						if expression = Void or else expression.context_class = Void then
+							l_provider.set_dynamic_context_functions (
+											agent eb_debugger_manager.current_debugging_class_c,
+											agent eb_debugger_manager.current_debugging_feature_as)
+						end
+						gedit.set_completion_possibilities_provider (l_provider)
+					end
 				end
+				glab := gedit
 			end
-			grid_cell_set_text (gedit, v)
+
+			apply_cell_expression_text_properties_on (glab)
+			set_cell (Col_expression_index, glab)
+			grid_cell_set_text (glab, v)
 		end
 
 	update_expression_on_deactivate (a_item: ES_OBJECTS_GRID_EXPRESSION_CELL) is
@@ -331,6 +351,9 @@ feature -- Graphical changes
 					then
 						a_item.set_text (expression.expression)
 					elseif not new_text.is_equal (expression.expression) then
+						if is_auto_expression then
+							set_auto_expression (False)
+						end
 						expression.set_expression (new_text)
 						if debugger_manager.safe_application_is_stopped  then
 							request_evaluation (True)
@@ -525,6 +548,9 @@ feature -- Graphical changes
 							set_expression_result (res)
 							set_expression_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
 						end
+					end
+					if is_auto_expression then
+						set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
 					end
 					set_context (expression.context)
 					if row.item (col_expression_index) /= Void then

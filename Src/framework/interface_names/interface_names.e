@@ -326,6 +326,7 @@ feature -- Accelerator, focus label and menu name
 	f_Create_new_class: STRING_GENERAL is		do Result := locale.translation("Create a new class")	end
 	f_Create_new_feature: STRING_GENERAL is		do Result := locale.translation("Create a new feature")	end
 	f_create_new_watch: STRING_GENERAL is		do Result := locale.translation ("Create new watch") end
+	f_clear_watch_tool_expressions: STRING_GENERAL is		do Result := locale.translation ("Clear expressions") end
 
 	m_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore Assertion Checking")	end
@@ -2083,7 +2084,7 @@ feature -- Description texts
 	e_Remove_exported_feature: STRING_GENERAL is	do Result := locale.translation("Remove the selected feature from this dynamic library definition")	end
 	e_Remove_expressions: STRING_GENERAL is		do Result := locale.translation("Remove selected expressions")	end
 	e_Remove_object: STRING_GENERAL is			do Result := locale.translation("Remove currently selected object")	end
-	e_Restore_normal_mode: STRING_GENERAL is		do Result := locale.translation("Restore the environment to normal mode")	end
+	e_Restore_normal_mode: STRING_GENERAL is	do Result := locale.translation("Restore the environment to normal mode")	end
 	e_Running: STRING_GENERAL is				do Result := locale.translation("Application is running")	end
 	e_Running_no_stop_points: STRING_GENERAL is	do Result := locale.translation("Application is running (ignoring breakpoints)")	end
 	e_Save_call_stack: STRING_GENERAL is		do Result := locale.translation("Save call stack to a text file")	end

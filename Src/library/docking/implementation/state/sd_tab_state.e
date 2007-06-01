@@ -305,7 +305,9 @@ feature -- Redefine
 				assistant.change_zone_split_area_to_docking_zone (a_target_zone, a_direction)
 				internal_docking_manager.command.update_title_bar
 			end
-
+			
+			-- We have to `remove_empty_split_area' here, see bug#12330
+			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.query.inner_container_main.update_middle_container
 			internal_docking_manager.command.unlock_update
 		ensure then

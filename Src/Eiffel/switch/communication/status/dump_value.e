@@ -583,6 +583,7 @@ feature {NONE} -- Classic specific
 
 	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): DUMP_VALUE is
 			-- Evaluation of `a_feat': STRING on object related to Current dump_value
+			--| FIXME: duplication with DBG_EVALUATOR_CLASSIC.effective_evaluate_routine...
 		local
 			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
@@ -615,14 +616,13 @@ feature {NONE} -- Classic specific
 						if a_feat.written_class.is_precompiled then
 							par := par + 2
 							rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
-							send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+							send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, l_dyntype.type_id - 1, par)
 						else
-							send_rqst_3_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
+							send_rqst_4_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, 0, par)
 						end
 							-- Receive the Result.
 						recv_value (Current)
 						if is_exception_trace then
-
 							reset_recv_value
 						else
 							if item /= Void then

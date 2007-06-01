@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-05-31 12:25-0800\n"
+"PO-Revision-Date: 2007-05-31 16:28-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=n!=1\n"
@@ -43,6 +43,8 @@ msgid ""
 "\n"
 "   + break index = $1"
 msgstr ""
+"\n"
+"   + Halteindex = $1"
 
 #. Source code: l_compilation_equal_melted: STRING_GENERAL is do Result := locale.translation ("%N   + compilation = melted") end
 #: interface_names.e:1507
@@ -1458,6 +1460,12 @@ msgid ""
 "will be overwritten with the contents of the backup file\n"
 "when you save.\n"
 msgstr ""
+"Eine Sicherheitskopie der Datei wurde gefunden.\n"
+"Möchten Sie die Originaldatei oder die Sicherheitskopie öffnen?\n"
+"Wenn Sie die Originaldatei öffnen wird die Sicherheitskopie\n"
+"gelöscht. Wenn Sie die Sicherheitskopie wählen wird die\n"
+"Originaldatei mit dem Inhalt der Sicherheitskopie überschrieben\n"
+"wenn gespeichert wird.\n"
 
 #. Source code: e_Diagram_add_class_figure_relations: STRING_GENERAL is do Result := locale.translation("A class figure(s) must either be selected%N%
 #: interface_names.e:2036
@@ -2014,9 +2022,8 @@ msgstr "Alle Klassen im gleichen Cluter"
 
 #. Source code: all_senders: STRING_GENERAL is								do Result := locale.translation ("All senders") end
 #: ewb_names.e:67
-#, fuzzy
 msgid "All senders"
-msgstr "Alle Klassen"
+msgstr "Alle Sender"
 
 #. Source code: all_subqueries: STRING_GENERAL is							do Result := locale.translation ("All subqueries:%N") end
 #: ewb_names.e:69
@@ -2505,15 +2512,13 @@ msgstr "Argument"
 
 #.   <PREF NAME="editor.general.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:584
-#, fuzzy
 msgid "Argument background color"
-msgstr "Hintergrundfarbe für Kommentare"
+msgstr "Hintergrundfarbe für Argumente"
 
 #.   <PREF NAME="editor.general.colors.argument_text_color" DESCRIPTION="Argument text color"><COLOR>145;86;84</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:585
-#, fuzzy
 msgid "Argument text color"
-msgstr "Farbe wechseln"
+msgstr "Farbe für Argumente"
 
 #. Source code: l_Arguments: STRING_GENERAL is				do Result := locale.translation("Arguments")	end
 #: interface_names.e:826
@@ -2597,9 +2602,8 @@ msgstr "Zusicherung"
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:249
-#, fuzzy
 msgid "Assertion tag background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Zusicherungsmarke"
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:248
@@ -3621,7 +3625,6 @@ msgstr "Autovervollständigung für 'inherit'?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:418
-#, fuzzy
 msgid "Autocomplete inspect"
 msgstr "Autovervollständigung für 'inspect'?"
 
@@ -3839,15 +3842,13 @@ msgstr "Sollen Leerschläge am Ende von Zeilen automatisch entfernt werden?"
 
 #. 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:86
-#, fuzzy
 msgid "Autoscroll speed"
-msgstr "Autovervollständigung für 'do'?"
+msgstr "Geschwindigkeit für automatisches Rollen"
 
 #. Source code: l_Available_assemblies_name: STRING_GENERAL is 	do Result := locale.translation ("Available assemblies Name") end
 #: interface_names.e:14
-#, fuzzy
 msgid "Available assemblies Name"
-msgstr "Assembly Name"
+msgstr "Verfügbare Assembly-Namen"
 
 #. Source code: Result := locale.translation ("Available buttons")
 #: docking_names.e:122
@@ -4079,15 +4080,13 @@ msgstr "Hintergrundfarbe für reservierte Worte."
 #. 	<PREF NAME="editor.eiffel.colors.target_text_background_color" DESCRIPTION="Background color for target text."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:268
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:269
-#, fuzzy
 msgid "Background color for target text."
-msgstr "Hintergrundfarbe von Zeichenketten."
+msgstr "Hintergrundfarbe für Ziele."
 
 #.   <PREF NAME="editor.general.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:584
-#, fuzzy
 msgid "Background color of argument text."
-msgstr "Hintergrundfarbe von Zeichenketten."
+msgstr "Hintergrundfarbe für Argumente."
 
 #. 	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:575
@@ -4096,9 +4095,8 @@ msgstr "Hintergrundfarbe von Kommentaren."
 
 #.   <PREF NAME="editor.general.colors.folder_background_color" DESCRIPTION="Background color of folder text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:582
-#, fuzzy
 msgid "Background color of folder text."
-msgstr "Hintergrundfarbe von Operatoren."
+msgstr "Hintergrundfarbe für Ordner."
 
 #. 	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:571
@@ -4147,9 +4145,8 @@ msgstr "Hintergrundfarbe von Zeichenketten."
 
 #.   <PREF NAME="editor.general.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:581
-#, fuzzy
 msgid "Background color of warning text"
-msgstr "Hintergrundfarbe von Zeichenketten."
+msgstr "Hintergrundfarbe von Warnungen."
 
 #. 	<PREF NAME="editor.general.colors.cursor_line_highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight line with cursor in it."><COLOR>255;128;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:561
@@ -5187,9 +5184,8 @@ msgstr "Autovervollständigung für Klassen"
 
 #. 	<PREF NAME="editor.eiffel.colors.class_background_color" DESCRIPTION="Background color for classes."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:259
-#, fuzzy
 msgid "Class background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Klassen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locate?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -5244,7 +5240,7 @@ msgstr "Klassenvervollständigung"
 #. 	<PREF NAME="tools.context_tool.default_class_formatter_index" DESCRIPTION="Class format that is selected by default."><INTEGER>5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:98
 msgid "Class format that is selected by default."
-msgstr ""
+msgstr "Klassenformat welches standardmässig gewählt ist."
 
 #. Source code: l_class_is_not_editable: STRING_GENERAL is	do Result := locale.translation ("Class is not editable.%N") end
 #: interface_names.e:861
@@ -5256,11 +5252,11 @@ msgstr "Klasse ist nicht editierbar.\n"
 msgid "Class label"
 msgstr "Beschriftung: Klasse"
 
+# View in customized formatter
 #. Source code: l_class_flat_displayer: STRING_GENERAL do Result := locale.translation ("Class list view") end
 #: interface_names.e:639
-#, fuzzy
 msgid "Class list view"
-msgstr "Klassenliste"
+msgstr "Ansicht als Klassenliste"
 
 #. Source code: dialog_class_option_class_name: STRING_GENERAL is do Result := locale.translation ("Class name")	end
 #: conf_interface_names.e:478
@@ -5419,20 +5415,19 @@ msgstr "Schlüsselworte der Klassenstruktur"
 
 #. 	<PREF NAME="editor.eiffel.colors.class_text_color" DESCRIPTION="Foreground color for classes."><COLOR>0;0;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:258
-#, fuzzy
 msgid "Class text color"
-msgstr "Farbe wechseln"
+msgstr "Farbe für Klassen"
 
 #. Source code: l_Syntax_error: STRING_GENERAL is			do Result := locale.translation("Class text has syntax error")	end
 #: interface_names.e:1265
 msgid "Class text has syntax error"
 msgstr "Syntaxfehler im Klassentext"
 
+# View in customized formatter
 #. Source code: l_class_tree_displayer: STRING_GENERAL do Result := locale.translation ("Class tree view") end
 #: interface_names.e:638
-#, fuzzy
 msgid "Class tree view"
-msgstr "Klassenbaum"
+msgstr "Ansicht als Klassenbaum"
 
 #. Source code: w_Class_modified_outside_diagram: STRING_GENERAL is do Result := locale.translation ("Class was modified outside the diagram.%N%
 #: warning_messages.e:1010
@@ -5720,9 +5715,8 @@ msgstr ""
 
 #. 	<PREF NAME="editor.eiffel.colors.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:263
-#, fuzzy
 msgid "Cluster background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Cluster"
 
 #. Source code: b_cluster_charts: STRING_GENERAL is					do Result := locale.translation("Cluster charts")	end
 #: interface_names.e:52
@@ -5771,9 +5765,8 @@ msgstr "Clusterpfad ist ungültig."
 
 #. 	<PREF NAME="editor.eiffel.colors.cluster_text_color" DESCRIPTION="Foreground color for clusters."><COLOR>128;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:262
-#, fuzzy
 msgid "Cluster text color"
-msgstr "Farbe für UML Clusternamen."
+msgstr "Farbe für Cluster"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Cluster with name $1 already exists in the universe."), [string_general_as_upper (name)])
 #: warning_messages.e:499
@@ -6441,9 +6434,8 @@ msgstr "Kompilierte Klassen"
 
 #. Source code: l_compiled_class_stone_name: STRING_GENERAL is do Result := locale.translation ("Compiled class stone") end
 #: interface_names.e:625
-#, fuzzy
 msgid "Compiled class stone"
-msgstr "Kompilierter Klassenstein"
+msgstr "Kompilierter Klassenkiesel"
 
 #. Source code: w_Cannot_delete_need_recompile: STRING_GENERAL is do Result := locale.translation ("Compiled configuration is not up to date, please recompile.") end
 #: warning_messages.e:523
@@ -6546,17 +6538,17 @@ msgstr "Bedingung damit diese Aufgabe ausgeführt wird."
 msgid "Config and cluster details"
 msgstr "Konfigurations- und Clusterdetails"
 
+# Titel eines Dialogs
 #. Source code: t_configuration_loading_error: STRING_GENERAL is	do Result := locale.translation("Configuration Loading Error")	end
 #: interface_names.e:1710
-#, fuzzy
 msgid "Configuration Loading Error"
-msgstr "Konfigurationsdatei"
+msgstr "Fehler beim Laden der Konfiguration"
 
+# Titel eines Dialogs
 #. Source code: t_configuration_loading_message: STRING_GENERAL is	do Result := locale.translation("Configuration Loading Message")	end
 #: interface_names.e:1711
-#, fuzzy
 msgid "Configuration Loading Message"
-msgstr "Konfigurationsdatei"
+msgstr "Nachricht beim Laden der Konfiguration"
 
 #. Source code: l_Ace_file_for_frame: STRING_GENERAL is		do Result := locale.translation("Configuration file")	end
 #: interface_names.e:813
@@ -7308,7 +7300,7 @@ msgstr "Name des Kriteriums fehlt."
 #. Source code: Result := locale.formatted_string (locale.translation ("Criterion unit %"$1%" is different from basic metric unit %"$2%"."), [a_criterion_unit, a_metric_unit])
 #: eb_metric_names.e:784
 msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
-msgstr ""
+msgstr "Einheit \"$1\" des Kriteriums stimmt nicht mit der Einheit \"$2\" der Basismetrik überein."
 
 #. 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:4
@@ -9095,9 +9087,8 @@ msgstr "In Klasse deklariert"
 
 #. 	<PREF NAME="tools.context_tool.default_class_formatter_index" DESCRIPTION="Class format that is selected by default."><INTEGER>5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:98
-#, fuzzy
 msgid "Default class formatter index"
-msgstr "Standardbibliotheken"
+msgstr "Index vom standardmässigen Klassenformatierer"
 
 #. 	<PREF NAME="tools.context_tool.default_dependency_formatter_index" DESCRIPTION="Default dependency formatter that should be popped up automatically."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
@@ -9534,9 +9525,8 @@ msgstr "Diagramm"
 
 #. 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;235</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:43
-#, fuzzy
 msgid "Diagram background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Diagramme"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;235</COLOR></PREF>
@@ -9918,7 +9908,7 @@ msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
 #. 	<PREF NAME="interface.dialogs.last_saved_call_stack_directory" DESCRIPTION="Directory of last call stack saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:160
 msgid "Directory of last call stack saved."
-msgstr "Verzeichnis wo der letzter Aufrufstack gespeichert wurde."
+msgstr "Verzeichnis wo der letzte Aufrufstack gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:161
@@ -9952,9 +9942,8 @@ msgstr "Verzeichnis wo die letzte Datei geöffnet wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition directory." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:166
-#, fuzzy
 msgid "Directory of last imported metric definition directory."
-msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
+msgstr "Verzeichnis der zuletzt importierten Metrikdefinition."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_metric_browse_archive_directory" DESCRIPTION="Directory of last metric browse archive opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:158
@@ -9964,7 +9953,7 @@ msgstr "Verzeichnis wo das letzte Metrikarchiv geöffnet wurde."
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
 msgid "Directory of last profile result saved."
-msgstr "Speichere Verzeichnis des letzen Profilresultats."
+msgstr "Verzeichnis wo das letzte Profilresultat gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
@@ -9974,7 +9963,7 @@ msgstr "Verzeichnis wo das letzte Projekt geöffnet wurde."
 #. 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:164
 msgid "Directory of last save file as saved."
-msgstr "Speichere Verzeichnis der zuletzt gepseicherten Datei."
+msgstr "Verzeichnis wo die letzte Datei gespeichert wurde."
 
 #. Source code: group_eifgens_location_description: STRING_GENERAL is do Result := locale.translation ("Directory where the EIFGENs folder is.")	end
 #: conf_interface_names.e:234
@@ -10536,10 +10525,11 @@ msgstr ""
 msgid "Domain item type is missing."
 msgstr ""
 
+# View in customized formatter
 #. Source code: l_domain_displayer: STRING_GENERAL do Result := locale.translation ("Domain view") end
 #: interface_names.e:646
 msgid "Domain view"
-msgstr ""
+msgstr "Ansicht als Bereich"
 
 #. Source code: l_Discard_finalize_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Don't ask me again and always finalize.")	end
 #: interface_names.e:982
@@ -12776,6 +12766,13 @@ msgid ""
 "\n"
 "Click Back and choose valid Eiffel names."
 msgstr ""
+"Die angegebene Wurzelklasse, die Wurzelprozedur oder beides ist nicht konform\n"
+"zur LACE-Spezifikation.\n"
+"\n"
+"Ein gültiger Name in Eiffel ist nicht leer, enthält nur Bustaben,\n"
+"Zahlen und Unterstriche. Das erste Zeichen muss ein Buchstabe sein\n"
+"\n"
+"Klicke 'Zurück' und wähle gültige Namen."
 
 #. Source code: w_element_expected_not_found (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.formatted_string (locale.translation ("Element $1 expected but not found."), [a_name]) end;
 #: warning_messages.e:1085
@@ -12876,9 +12873,8 @@ msgstr "Profile aktivieren"
 
 #. Source code: l_viewer_enable_word_wrapping: STRING_GENERAL is do Result := locale.translation("Enable Word Wrapping") end
 #: interface_names.e:1323
-#, fuzzy
 msgid "Enable Word Wrapping"
-msgstr "Haltepunkt aktivieren"
+msgstr "Zeilenumbruch aktivieren"
 
 #. Source code: f_Enable_stop_points: STRING_GENERAL is		do Result := locale.translation("Enable all breakpoints")	end
 #: interface_names.e:421
@@ -13175,9 +13171,8 @@ msgstr "Fehler"
 
 #. 	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:265
-#, fuzzy
 msgid "Error background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Fehler"
 
 #. Source code: l_error_message:  STRING_GENERAL is					do Result := locale.translation("Error message :")	end
 #: interface_names.e:1014
@@ -13486,15 +13481,13 @@ msgstr "Knoten aufklappen"
 
 #. 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:12
-#, fuzzy
 msgid "Expanded display background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr ""
 
 #. Source code: m_expanded_object_view: STRING_GENERAL is	do Result := locale.translation ("Expanded object view") end
 #: interface_names.e:760
-#, fuzzy
 msgid "Expanded object view"
-msgstr "Objekt aufklappen"
+msgstr ""
 
 #. Source code: l_Explicit_exception_pending: STRING_GENERAL is do Result := locale.translation("Explicit exception pending")	end
 #: interface_names.e:1033
@@ -13569,9 +13562,8 @@ msgstr ""
 
 #. Source code: once Result := locale.translation ("Expression evaluation") end
 #: debugger_names.e:184
-#, fuzzy
 msgid "Expression evaluation"
-msgstr "Auswertung der Metrik abbrechen"
+msgstr ""
 
 #. Source code: t_expression: STRING_GENERAL is do Result := locale.translation ("Expression:") end
 #: eb_metric_names.e:29
@@ -13907,21 +13899,20 @@ msgstr "Eingabefeld: Featurename"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:261
-#, fuzzy
 msgid "Feature background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Feature"
 
+# View in customized formatter
 #. Source code: l_feature_callee_displayer: STRING_GENERAL do Result := locale.translation ("Feature callee view") end
 #: interface_names.e:644
-#, fuzzy
 msgid "Feature callee view"
-msgstr "Feat&ure-Ansichten"
+msgstr "Ansicht als Featureaufgerufene"
 
+# View in customized formatter
 #. Source code: l_feature_caller_displayer: STRING_GENERAL do Result := locale.translation ("Feature caller view") end
 #: interface_names.e:643
-#, fuzzy
 msgid "Feature caller view"
-msgstr "Feat&ure-Ansichten"
+msgstr "Ansicht als Featureaufrufende"
 
 #. 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
@@ -13958,11 +13949,11 @@ msgstr "Beschriftung: Feature"
 msgid "Feature list"
 msgstr "Featureliste"
 
+# View in customized formatter
 #. Source code: l_class_feature_displayer: STRING_GENERAL do Result := locale.translation ("Feature list view") end
 #: interface_names.e:640
-#, fuzzy
 msgid "Feature list view"
-msgstr "Featureliste"
+msgstr "Ansicht als Featureliste"
 
 #. Source code: "Feature names may only include %N%
 #: warning_messages.e:481
@@ -13998,9 +13989,8 @@ msgstr "Feature umbenennen"
 
 #. Source code: l_feature_stone_name: STRING_GENERAL is do Result := locale.translation ("Feature stone") end
 #: interface_names.e:623
-#, fuzzy
 msgid "Feature stone"
-msgstr "Featureliste"
+msgstr "Featurekiesel"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.autocomplete_is" DESCRIPTION="Autocomplete is?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -14223,20 +14213,19 @@ msgstr "Schlüsselwörter von Features"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:260
-#, fuzzy
 msgid "Feature text color"
-msgstr "Feature in Klientenklasse"
+msgstr "Farbe für Feature"
 
 #. Source code: t_feature_version_setting: STRING_GENERAL is do Result := locale.translation ("Feature version setting:") end
 #: eb_metric_names.e:93
 msgid "Feature version setting:"
 msgstr ""
 
+# View in customized formatter
 #. Source code: l_feature_displayer: STRING_GENERAL do Result := locale.translation ("Feature version view") end
 #: interface_names.e:641
-#, fuzzy
 msgid "Feature version view"
-msgstr "Feature Beziehungen"
+msgstr "Ansicht als Featureversionen"
 
 #. Source code: l_Feature_colon: STRING_GENERAL is				do Result := locale.translation("Feature:")	end
 #: interface_names.e:1043
@@ -14383,12 +14372,12 @@ msgstr "Dateiname:"
 #. 	<PREF NAME="interface.dialogs.file_open_and_save_dialogs_remember_last_directory" DESCRIPTION="File open and save dialogs each remember their last selected directory."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:154
 msgid "File open and save dialogs each remember their last selected directory."
-msgstr ""
+msgstr "Die Dialoge zum Öffnen oder Speichern einer Datei merken sich das zuletzt gewählte Verzeichnis."
 
 #. 	<PREF NAME="interface.dialogs.file_open_and_save_dialogs_remember_last_directory" DESCRIPTION="File open and save dialogs each remember their last selected directory."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:154
 msgid "File open and save dialogs remember last directory"
-msgstr ""
+msgstr "Datei Öffnen und Datei Speichern Dialoge merken sich letztes Verzeichnis"
 
 #. 	<PREF NAME="tools.refactoring.class_rename.file_rename" DESCRIPTION="Should file be renamed to a new name?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:632
@@ -14460,7 +14449,7 @@ msgstr "Ausnahmen filtern"
 #. 	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
 msgid "Filter invisible result"
-msgstr ""
+msgstr "Unsichtbare Resultate filtern"
 
 #. Source code: f_filter_result: STRING_GENERAL is do Result := locale.translation ("Filter result which is not visible from input domain") end
 #: eb_metric_names.e:255
@@ -15592,9 +15581,8 @@ msgstr "Metriken anhand der Einheiten gruppieren"
 
 #. Source code: l_group_stone_name: STRING_GENERAL is do Result := locale.translation ("Group stone") end
 #: interface_names.e:626
-#, fuzzy
 msgid "Group stone"
-msgstr "Gruppen"
+msgstr "Gruppenkiesel"
 
 #. Source code: section_groups: STRING_GENERAL is do Result := locale.translation ("Groups")	end
 #: conf_interface_names.e:33
@@ -16172,12 +16160,12 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:251
 msgid "Indexing tag background color"
-msgstr ""
+msgstr "Hintergrundfarbe für Indexmarken"
 
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:250
 msgid "Indexing tag text color"
-msgstr ""
+msgstr "Farbe für Indexmarken"
 
 #. 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:587
@@ -16964,12 +16952,12 @@ msgstr "Sollen Schlüsselwörter vervollständigt werden? Die Vervollständigung
 #. 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:123
 msgid "Is dependency on self shown?"
-msgstr ""
+msgstr "Werden Abhängikeiten auf sich selber angezeigt?"
 
 #. 	<PREF NAME="tools.metric_tool.keep_detailed_result" DESCRIPTION="Is detailed result kept when recalculation metric archive history?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:107
 msgid "Is detailed result kept when recalculation metric archive history?"
-msgstr ""
+msgstr "Wird das detaillierte Resultat beibehalten wenn ein Metrikarchiv neu berechnet wird?"
 
 #. 	<PREF NAME="interface.development_window.is_force_debug_mode" DESCRIPTION="Last time when closing development window if it was forcing debug mode." HIDDEN="true"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:217
@@ -17350,17 +17338,17 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:196
 msgid "Last browsed cluster directory"
-msgstr ""
+msgstr "Zuletzt durchsuchtes Clusterverzeichnis"
 
 #. 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition directory." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:166
 msgid "Last imported metric definition directory"
-msgstr ""
+msgstr "Verzeichnis der letzten importierten Metrik"
 
 #. 	<PREF NAME="interface.dialogs.last_opened_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib library opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:156
 msgid "Last opened dynamic lib directory"
-msgstr ""
+msgstr "Verzeichnis der zuletzt geöffneten dynamischen Bibliothek"
 
 #. 	<PREF NAME="interface.dialogs.last_opened_file_directory" DESCRIPTION="Directory of last file opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:157
@@ -17390,17 +17378,17 @@ msgstr "Zuletzt gespeicherter Aufrufstack"
 #. 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:161
 msgid "Last saved debugger exception directory"
-msgstr ""
+msgstr "Verzeichnis der zuletzt gespeicherten Debugger-Ausnahme"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_diagram_postscript_directory" DESCRIPTION="Directory of last diagram postscript file saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:162
 msgid "Last saved diagram postscript directory"
-msgstr ""
+msgstr "Verzeichnis der zuletzt gespeicherten PostScript-Datei"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:159
 msgid "Last saved dynamic lib directory"
-msgstr ""
+msgstr "Verzeichnis der zuletzt gespeicherten dynamischen Bibliothek"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:163
@@ -17410,12 +17398,12 @@ msgstr "Zuletzt gespeicherten Ausnahme"
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
 msgid "Last saved profile result directory"
-msgstr ""
+msgstr "Verzeichnis des zuletzt gespeicherten Profilresultats"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:164
 msgid "Last saved save file as directory"
-msgstr ""
+msgstr "Verzeichnis der zuletzt gespeicherten Datei"
 
 #. 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:20
@@ -17464,14 +17452,13 @@ msgstr "Anordnung"
 
 #. 	<PREF NAME="debugger.watch_tools_layout" HIDDEN="true" DESCRIPTION="Layout of watch tools."><LIST></LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:41
-#, fuzzy
 msgid "Layout of watch tools."
-msgstr "Vorgegebene Anzahl Beobachtungswerkzeuge."
+msgstr "Anordnung der Beobachtungswerkzeuge."
 
 #. 	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Properties;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:21
 msgid "Left debug layout"
-msgstr "Debuglayout links"
+msgstr "Debuganordnung links"
 
 #. 	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:549
@@ -18396,12 +18383,12 @@ msgstr "Neueste CLR Version"
 #. 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:551
 msgid "Mouse wheel scroll full page"
-msgstr ""
+msgstr "Ganze Seite rollen mit Mausrad"
 
 #. 	<PREF NAME="editor.general.mouse_wheel_scroll_size" DESCRIPTION="Number of lines scrolled using the mouse wheel."><INTEGER>3</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:552
 msgid "Mouse wheel scroll size"
-msgstr ""
+msgstr "Rollgrösse für Mausrad"
 
 #. Source code: Result := locale.formatted_string(locale.translation("Move Class '$1'"), [a_name])
 #: interface_names.e:1782
@@ -18921,7 +18908,7 @@ msgstr ""
 #. Source code: l_No_text_text: STRING_GENERAL is 			do Result := locale.translation("No text labels")	end
 #: interface_names.e:1131
 msgid "No text labels"
-msgstr ""
+msgstr "Keine Textbeschriftungen"
 
 #. Source code: do Result := locale.translation ("No valid creation routine%N%
 #: warning_messages.e:678
@@ -19206,7 +19193,7 @@ msgstr "Occitan"
 #. Source code: Result.force (locale.translation ("Occitan (France)"), "oc_fr")
 #: locale_names.e:289
 msgid "Occitan (France)"
-msgstr ""
+msgstr "Occitan (France)"
 
 #. 	<PREF NAME="tools.class_browser.odd_row_background_color" DESCRIPTION="Backgroud color of odd rows in class browser."><COLOR>240;240;240</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:625
@@ -19231,7 +19218,7 @@ msgstr ""
 #. 	<PREF NAME="tools.metric_tool.old_archive_age_in_days" DESCRIPTION="Age in days for an archive item to be considered old"><INTEGER>30</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:108
 msgid "Old archive age in days"
-msgstr ""
+msgstr "Archivalter in Tagen für alte Archive"
 
 #. 	<PREF NAME="tools.refactoring.class_rename.old_class_name" DESCRIPTION="Old name of class" HIDDEN="True"><STRING>OLD_NAME</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:633
@@ -19418,12 +19405,12 @@ msgstr "Projekt öffnen"
 #. Source code: l_open_exception_dialog_tooltip: STRING_GENERAL is do Result := locale.translation ("Open exception dialog for more details") end
 #: interface_names.e:1640
 msgid "Open exception dialog for more details"
-msgstr ""
+msgstr "Ausnahmedialog öffnen für mehr Details"
 
 #. Source code: l_open_layout_error: STRING_GENERAL is do Result := locale.translation ("Open layout error. Opening default layout instead.") end
 #: interface_names.e:1639
 msgid "Open layout error. Opening default layout instead."
-msgstr ""
+msgstr "Fehler beim Öffnen der Anordnung. Die Standardanordnung wird geladen."
 
 #. Source code: l_Open_project: STRING_GENERAL is 			do Result := locale.translation("Open project")	end
 #: interface_names.e:1157
@@ -20552,12 +20539,12 @@ msgstr "Quechua (Peru)"
 #. Source code: l_Query: STRING_GENERAL is					do Result := locale.translation("Query")	end
 #: interface_names.e:1195
 msgid "Query"
-msgstr ""
+msgstr "Abfrage"
 
 #. Source code: query: STRING_GENERAL is									do Result := locale.translation ("Query:") end
 #: ewb_names.e:66
 msgid "Query:"
-msgstr ""
+msgstr "Abfrage:"
 
 #. Source code: t_question: STRING_GENERAL is 						do Result := locale.translation ("Question") end
 #: interface_names.e:1924
@@ -21085,7 +21072,7 @@ msgstr "Metrik entfernen..."
 #. Source code: l_removing_unneeded_items: STRING_GENERAL is do Result := locale.translation ("Removing unneeded items") end
 #: interface_names.e:1200
 msgid "Removing unneeded items"
-msgstr ""
+msgstr "Unnötige Elemente entfernen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: b_Rename: STRING_GENERAL is							do Result := locale.translation("Rename") end
@@ -21279,9 +21266,8 @@ msgstr "Rescue"
 
 #. 	<PREF NAME="editor.eiffel.colors.reserved_background_color" DESCRIPTION="Background color for reserved words."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:253
-#, fuzzy
 msgid "Reserved background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für reservierte Wörter"
 
 #. 	<PREF NAME="editor.eiffel.colors.reserved_text_color" DESCRIPTION="Foreground color for reserved words."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:252
@@ -21351,7 +21337,7 @@ msgstr "Standardeinstellungen Wiederherstellen"
 #. Source code: b_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore assertion checking")	end
 #: interface_names.e:173
 msgid "Restore assertion checking"
-msgstr ""
+msgstr "Überprüfung der Zusicherunen wiederherstellen"
 
 #. Source code: e_Restore_normal_mode: STRING_GENERAL is		do Result := locale.translation("Restore the environment to normal mode")	end
 #: interface_names.e:2079
@@ -21390,9 +21376,8 @@ msgstr "Klientenklassen finden"
 
 #. Source code: w_retrieve_default_color: STRING_GENERAL is do Result := locale.translation ("Retrieve default color.") end;
 #: warning_messages.e:1086
-#, fuzzy
 msgid "Retrieve default color."
-msgstr "Farbe für reservierten Text"
+msgstr "Standardfarbe abrufen."
 
 #. Source code: Result := locale.translation ("Retrieve indirect client classes")
 #: eb_metric_names.e:296
@@ -21456,7 +21441,7 @@ msgstr ""
 #. 	<PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Search;closed;0;0;0;0;Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:28
 msgid "Right debug layout"
-msgstr ""
+msgstr "Debuganordnung rechts"
 
 #. Source code: l_rollback_question: STRING_GENERAL is		do Result := locale.translation("Rollback?")	end
 #: interface_names.e:1211
@@ -21580,7 +21565,7 @@ msgstr "Finalisierte Version starten"
 #. Source code: b_Run_workbench: STRING_GENERAL is					do Result := locale.translation("Run Workbench")	end
 #: interface_names.e:163
 msgid "Run Workbench"
-msgstr ""
+msgstr "Werkbank ausführen"
 
 #. Source code: f_run_process_hidden_button: STRING_GENERAL is	 do Result := locale.translation ("Run command hidden") end
 #: eb_external_output_names.e:22
@@ -21619,7 +21604,7 @@ msgstr "Starten und Haltepunkte ignorieren"
 #. Source code: f_Run_workbench: STRING_GENERAL is			do Result := locale.translation("Run workbench system")	end
 #: interface_names.e:527
 msgid "Run workbench system"
-msgstr ""
+msgstr "System der Werkbank ausführen"
 
 #. Source code: l_Runtime_information_record: STRING_GENERAL is do Result := locale.translation("Run-time information record")	end
 #: interface_names.e:1220
@@ -22028,9 +22013,8 @@ msgstr "Wiederauswertbare wählen"
 
 #. Source code: l_select_viewer: STRING_GENERAL is do Result := locale.translation ("Select Viewer") end
 #: interface_names.e:1338
-#, fuzzy
 msgid "Select Viewer"
-msgstr "Datei wählen"
+msgstr "Anzeiger wählen"
 
 #. Source code: t_Select_a_directory: STRING_GENERAL is				do Result := locale.translation("Select a Directory")	end
 #: interface_names.e:1756
@@ -22093,9 +22077,8 @@ msgstr "Alle wählen"
 
 #. Source code: f_select_all_history: STRING_GENERAL is do Result := locale.translation ("Select all history items") end
 #: eb_metric_names.e:141
-#, fuzzy
 msgid "Select all history items"
-msgstr "Verzeichnis wählen"
+msgstr "Alle Verlaufselemente selektieren"
 
 #. Source code: f_select_exist_archive_file: STRING_GENERAL is do Result := locale.translation ("Select an existing metric archive file") end
 #: eb_metric_names.e:234
@@ -22114,9 +22097,8 @@ msgstr "Mindestens eine Sprache auswählen."
 
 #. Source code: w_Profiler_select_one_output_switch: STRING_GENERAL is do Result := locale.translation ("Select at least one output switch.") end
 #: warning_messages.e:747
-#, fuzzy
 msgid "Select at least one output switch."
-msgstr "Format für die Ausgabe wählen"
+msgstr ""
 
 #. 	<PREF NAME="debugger.select_call_stack_level_on_double_click" DESCRIPTION="Select call stack entry on double click?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:31
@@ -22281,7 +22263,7 @@ msgstr "Name der gewählten Assemblies."
 #. Source code: w_read_only_cluster: STRING_GENERAL is do Result := locale.translation ("Selected cluster is read only. Please select a writable cluster for class creation.") end
 #: warning_messages.e:909
 msgid "Selected cluster is read only. Please select a writable cluster for class creation."
-msgstr ""
+msgstr "Das gewählte Cluster ist schreibgeschützt. Bitte ein schreibbares Cluster für die Erstellung einer Klasse wählen."
 
 #. Source code: t_selected_metric: STRING_GENERAL is do Result := locale.translation ("Selected metric") end
 #: eb_metric_names.e:62
@@ -22400,9 +22382,8 @@ msgstr "Aktulle Anordnung als Standard setzen"
 
 #. Source code: l_set_slice_values: STRING_GENERAL is do Result := locale.translation("Set Slice Values") end
 #: interface_names.e:1333
-#, fuzzy
 msgid "Set Slice Values"
-msgstr "Metrikwert"
+msgstr ""
 
 #. Source code: once Result := locale.translation ("Set arguments") end
 #: debugger_names.e:208
@@ -23260,7 +23241,7 @@ msgstr "Soll Featurename in Strings geändert werden?"
 #. 	<PREF NAME="tools.metric_tool.hide_old_archive" DESCRIPTION="Should old archive items be hidden?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:106
 msgid "Should old archive items be hidden?"
-msgstr ""
+msgstr "Sollen alte Archivelemente verborgen werden?"
 
 #. 	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:201
@@ -23404,7 +23385,7 @@ msgstr "BON anzeigen"
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:103
 msgid "Show Detailed Result when computation done."
-msgstr ""
+msgstr "Detailliertes Resultat anzeigen wenn die Berechnung abgeschlossen ist."
 
 #. Source code: Result := locale.translation ("Show List")
 #: docking_names.e:72
@@ -23527,21 +23508,18 @@ msgstr "Gruppen anzeigen"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_disambiguated_name" DESCRIPTION="Does completion list show disambiguated name?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:241
-#, fuzzy
 msgid "Show completion disambiguated name"
-msgstr "Soll Vervollständigung eindeutige Namen anzeigen?"
+msgstr "Eindeutige Namen anzeigen in Autovervollständigung"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Does completion list show feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:239
-#, fuzzy
 msgid "Show completion signature"
-msgstr "Signatur anzeigen"
+msgstr "Signatur anzeigen in Autovervollständigung"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:240
-#, fuzzy
 msgid "Show completion type"
-msgstr "Kompilierungstyp"
+msgstr "Rückgabewert anzeigen in Autovervollständigung"
 
 #. Source code: h_show_dependency_on_self: STRING_GENERAL is do Result := locale.translation("Show dependency on self?")	end
 #: interface_names.e:1599
@@ -23620,9 +23598,8 @@ msgstr "Vererbungsbeziehung anzeigen"
 
 #. 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:122
-#, fuzzy
 msgid "Show item path"
-msgstr "Element nach oben verschieben"
+msgstr "Elementpfad anzeigen"
 
 #. Source code: f_diagram_show_labels: STRING_GENERAL is		do Result := locale.translation("Show labels")	end
 #: interface_names.e:378
@@ -24074,7 +24051,7 @@ msgstr "Angegebene Datei existiert nicht"
 #. Source code: l_formatter_invalid_metric: STRING_GENERAL do Result := locale.translation ("Specified metric is not defined or invalid, this will cause current formatter not usable") end
 #: interface_names.e:664
 msgid "Specified metric is not defined or invalid, this will cause current formatter not usable"
-msgstr ""
+msgstr "Angegebene Metrik ist nicht definiert oder ungültig. Dies macht den aktuellen Formatierer unbrauchbar"
 
 #. Source code: option_msil_application_optimize_description: STRING_GENERAL is do Result := locale.translation ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
 #: conf_interface_names.e:296
@@ -24288,15 +24265,13 @@ msgstr "Steifheit:"
 
 #. Source code: l_stone_handler: STRING_GENERAL is do Result := locale.translation ("Stone handler") end
 #: interface_names.e:667
-#, fuzzy
 msgid "Stone handler"
-msgstr "Rechte Winkel entfernen"
+msgstr ""
 
 #. Source code: l_stone_name: STRING_GENERAL is do Result := locale.translation ("Stone name") end
 #: interface_names.e:622
-#, fuzzy
 msgid "Stone name"
-msgstr "Systemname:"
+msgstr "Kieselname"
 
 #. Source code: b_Exec_kill: STRING_GENERAL is						do Result := locale.translation("Stop Application")	end
 #: interface_names.e:153
@@ -24419,9 +24394,8 @@ msgstr "Lieferantenklasse"
 
 #. 	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:94
-#, fuzzy
 msgid "Supplier depth"
-msgstr "Vorbedingungen der Aufgerufenen"
+msgstr "Zulieferertiefe"
 
 #. Source code: l_supplier_group: STRING_GENERAL is do Result := locale.translation("Supplier group")	end
 #: interface_names.e:1598
@@ -24719,21 +24693,18 @@ msgstr ""
 
 #. Source code: l_target_stone_name: STRING_GENERAL is do Result := locale.translation ("Target stone") end
 #: interface_names.e:627
-#, fuzzy
 msgid "Target stone"
-msgstr "Ziel"
+msgstr "Zielkiesel"
 
 #. 	<PREF NAME="editor.eiffel.colors.target_text_background_color" DESCRIPTION="Background color for target text."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:269
-#, fuzzy
 msgid "Target text background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Ziele"
 
 #. 	<PREF NAME="editor.eiffel.colors.target_text_color" DESCRIPTION="Background color for target text."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:268
-#, fuzzy
 msgid "Target text color"
-msgstr "Farbe wechseln"
+msgstr "Farbe für Ziele"
 
 #. Source code: f_Retarget_diagram: STRING_GENERAL is		do Result := locale.translation("Target to cluster or class")	end
 #: interface_names.e:524
@@ -24850,7 +24821,7 @@ msgstr "Text im Textkriterium ist leer."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:2
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:2
 msgid "Text mode is windows"
-msgstr ""
+msgstr "Text Modus Windows"
 
 #. Source code: t_predefined_text_not_editable: STRING_GENERAL is do Result := locale.translation ("Text not editable because current metric is predefined.") end
 #: eb_metric_names.e:84
@@ -25111,6 +25082,14 @@ msgid ""
 "\n"
 "Click Back and choose a valid root class name."
 msgstr ""
+"Der Name der Wurzelklasse den Sie angegeben ist nicht konform\n"
+"zur LACE-Spezifikation.\n"
+"\n"
+"Ein gültiger Name für die Wurzelklasse ist nicht leer, enthält nur,\n"
+"Buchstaben, Zahlen und Unterstriche. Das erste Zeichen muss ein\n"
+"ein Buchstabe sein.\n"
+"\n"
+"'Zurück' klicken und einen gültigen Namen eingeben."
 
 #. Source code: w_Invalid_options: STRING_GENERAL is do Result := locale.translation ("The selected options are invalid.%N%
 #: warning_messages.e:1050
@@ -25118,6 +25097,8 @@ msgid ""
 "The selected options are invalid.\n"
 "Please select different ones."
 msgstr ""
+"Die gewählten Optionen sind ungültig.\n"
+"Bitte andere wählen."
 
 #. 	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>20</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:179
@@ -25153,7 +25134,7 @@ msgstr "Der Text dieser Klasse konnte nicht geändert werden."
 #. 	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Class_header_hole__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Separator;Force_directed__visible;UML_visibility__visible;Force_settings__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Fit_to_screen__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Diagram_to_png__hidden;Cluster_filling__hidden;Zoom_out__hidden;Zoom_in__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:89
 msgid "The visible toolbar items for the Diagram Tool toolbar."
-msgstr ""
+msgstr "Die sichtbaren Elemente der Werkzeugleiste des Diagramms."
 
 #. Source code: do Result := locale.translation ("The wizard can not be completed because its installation is not complete.%N%
 #: interface_names.e:75
@@ -25398,6 +25379,8 @@ msgid ""
 "This view can be used to display result of all formatters\n"
 "thus it is used as a default view for formatters"
 msgstr ""
+"Diese Ansicht kann verwendet werden um Resultate aller Formatierers\n"
+"darzustellen und ist der Standard für alle Formatierer"
 
 #. Source code: l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
 #: interface_names.e:630
@@ -25405,6 +25388,8 @@ msgid ""
 "This view is suitable for displaying class hierarchy\n"
 "such as class ancestors/descendants"
 msgstr ""
+"Diese Ansicht eignet sich zur Darstellung von Klassenhierarchien\n"
+"wie Vorfahren oder Nachfahren"
 
 #. Source code: l_class_flat_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class list%Nsuch as class clients/suppliers") end
 #: interface_names.e:631
@@ -25412,6 +25397,8 @@ msgid ""
 "This view is suitable for displaying class list\n"
 "such as class clients/suppliers"
 msgstr ""
+"Diese Ansicht eignet sich zur Darstellung von Klassenlisten\n"
+"wie Klienten oder Lieferanten"
 
 #. Source code: l_feature_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying different versions of a feature%Nsuch as feature implementors/ancestor versions/descendant versions") end
 #: interface_names.e:633
@@ -25419,18 +25406,18 @@ msgid ""
 "This view is suitable for displaying different versions of a feature\n"
 "such as feature implementors/ancestor versions/descendant versions"
 msgstr ""
+"Diese Ansicht eignet sich zur Darstellung verschiedener Versionen eines Features\n"
+"wie Implementationen oder Vorfahreversionen"
 
 #. Source code: l_feature_callee_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying feature callees") end
 #: interface_names.e:635
-#, fuzzy
 msgid "This view is suitable for displaying feature callees"
-msgstr "Diese Ansicht eignet sich für die Darstellung von Featurenaufgerufenen"
+msgstr "Diese Ansicht eignet sich für die Darstellung von Aufgerufenen eines Features"
 
 #. Source code: l_feature_caller_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying feature callers") end
 #: interface_names.e:634
-#, fuzzy
 msgid "This view is suitable for displaying feature callers"
-msgstr "Diese Ansicht eignet sich für die Darstellung von Featureaufrufern"
+msgstr "Diese Ansicht eignet sich für die Darstellung von Aufrufenden eines Features"
 
 #. Source code: l_class_feature_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying features in form of list from a class%Nsuch as attributes/routines") end
 #: interface_names.e:632
@@ -25438,6 +25425,8 @@ msgid ""
 "This view is suitable for displaying features in form of list from a class\n"
 "such as attributes/routines"
 msgstr ""
+"Diese Ansicht eignet sich zur Darstellung von Features einer Klasse\n"
+"wie Attribute oder Routinen"
 
 #. Source code: Result := locale.translation ("This will discard the modifications.")
 #: warning_messages.e:716
@@ -25602,9 +25591,8 @@ msgstr ""
 
 #. Source code: Result := locale.translation ("Too many %"value_tester%" sections. Only one is expected.")
 #: eb_metric_names.e:979
-#, fuzzy
 msgid "Too many \"value_tester\" sections. Only one is expected."
-msgstr "Zu viele Kriterien angegeben unter \"Kriterium\". Es wird nur eines erwartet."
+msgstr "Zu viele \"value_tester\" Sektionen. Nur eine wird erwartet."
 
 #. Source code: err_too_many_arguments: STRING_GENERAL is 						do Result := locale.translation ("Too many arguments. The following arguments will be ignored:") end
 #: ewb_names.e:172
@@ -25618,15 +25606,13 @@ msgstr "Zu viele Kriterien angegeben unter \"Kriterium\". Es wird nur eines erwa
 
 #. Source code: Result := locale.translation ("Too many criterion sections specified. Only one criterion section is expected.")
 #: eb_metric_names.e:459
-#, fuzzy
 msgid "Too many criterion sections specified. Only one criterion section is expected."
-msgstr "Zu viele Kriterien angegeben. Es wird nur ein Kriterium erwartet."
+msgstr "Zu viele Kriteriumssektionen. Nur eine wird erwartet."
 
 #. Source code: Result := locale.translation ("Too many value retrievers nodes. Only one is expected.")
 #: eb_metric_names.e:1023
-#, fuzzy
 msgid "Too many value retrievers nodes. Only one is expected."
-msgstr "Zu viele Kriterien angegeben unter \"Kriterium\". Es wird nur eines erwartet."
+msgstr "Zu viele Werteerzeuger-Knoten. Nur einer wird erwartet."
 
 #. Source code: t_tool_name: STRING_GENERAL is do Result := locale.translation ("Tool") end
 #: interface_names.e:602
@@ -26660,9 +26646,8 @@ msgstr "Kommentierung der selektierten Linien entfernen"
 
 #. Source code: l_uncompiled_class_stone_name: STRING_GENERAL is do Result := locale.translation ("Uncompiled class stone") end
 #: interface_names.e:624
-#, fuzzy
 msgid "Uncompiled class stone"
-msgstr "Unkompilierter Klassenstein"
+msgstr "Unkompilierter Klassenkiesel"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.autocomplete_undefine" DESCRIPTION="Autocomplete undefine?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -27906,9 +27891,8 @@ msgstr "Beobachtungswerkzeug :: Fehlernachricht"
 
 #. 	<PREF NAME="debugger.watch_tools_layout" HIDDEN="true" DESCRIPTION="Layout of watch tools."><LIST></LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:41
-#, fuzzy
 msgid "Watch tools layout"
-msgstr "Beobachtungswerkzeug"
+msgstr "Anordnung der Beobachtungswerkzeuge"
 
 #. 	<PREF NAME="debugger.watches_grids_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:34
@@ -28740,9 +28724,8 @@ msgstr[1] "in $1 Klassen"
 
 #. Source code: inactivate_subquery_help: STRING_GENERAL is do Result := locale.translation ("inactivate subquery") end
 #: shared_ewb_help.e:159
-#, fuzzy
 msgid "inactivate subquery"
-msgstr "Definiere neue Unterabfrage"
+msgstr "inaktive Unterabfrage"
 
 #. Source code: l_indirect: STRING_GENERAL is do Result := locale.translation ("indirect") end
 #: eb_metric_names.e:210
@@ -28891,9 +28874,8 @@ msgstr "Verhältnissmetrik"
 
 #. Source code: reactivate_subquery_help: STRING_GENERAL is do Result := locale.translation ("reactivate subquery") end
 #: shared_ewb_help.e:157
-#, fuzzy
 msgid "reactivate subquery"
-msgstr "Definiere neue Unterabfrage"
+msgstr "reaktive Unterabfrage"
 
 #. Source code: l_All: STRING_GENERAL is					do Result := locale.translation("recursive")	end
 #: interface_names.e:821

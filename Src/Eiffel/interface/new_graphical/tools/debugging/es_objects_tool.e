@@ -382,9 +382,19 @@ feature {NONE} -- Interface
 			gids: LIST [INTEGER]
 			i: INTEGER
 			missings: ARRAYED_LIST [INTEGER]
+			l_keys: TWO_WAY_SORTED_SET [STRING]
 		do
 			if not objects_grids.is_empty then
 				create m
+				from
+					create l_keys.make
+					objects_grids.start
+				until
+					objects_grids.after
+				loop
+					l_keys.extend (objects_grids.key_for_iteration)
+					objects_grids.forth
+				end
 				from
 					create pos_titles.make (Position_entries.lower, Position_entries.upper)
 					pos_titles[position_stack] := Interface_names.l_stack_information
@@ -394,18 +404,19 @@ feature {NONE} -- Interface
 					pos_titles[position_result] := Interface_names.l_result
 					pos_titles[position_dropped] := Interface_names.l_dropped_references
 
-					objects_grids.start
+					l_keys.start
 				until
-					objects_grids.after
+					l_keys.after
 				loop
+					lid := l_keys.item
+					gdata := objects_grids.item (lid)
+
 					create missings.make_from_array (position_entries.deep_twin)
-					og := objects_grids.item_for_iteration.grid
+					og := gdata.grid
 					create sm.make_with_text (og.name)
 					m.extend (sm)
 
 					l_has_all := True
-					lid := objects_grids.key_for_iteration
-					gdata := objects_grids.item_for_iteration
 					gids := gdata.ids
 					if gids /= Void and then not gids.is_empty then
 						create mall.make_with_text ("All")
@@ -470,7 +481,7 @@ feature {NONE} -- Interface
 							missings.forth
 						end
 					end
-					objects_grids.forth
+					l_keys.forth
 				end
 
 				m.show_at (w, ax, ay)

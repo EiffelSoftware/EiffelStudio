@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 				dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			else
 				create wdlg.make_with_text (interface_names.l_Only_available_for_stopped_application)
-				wdlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				wdlg.show --| preventing X server issue, do not use: show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			end
 		end
 

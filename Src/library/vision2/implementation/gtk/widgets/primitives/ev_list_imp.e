@@ -28,7 +28,8 @@ inherit
 			item_from_coords,
 			on_mouse_button_event,
 			row_height,
-			call_selection_action_sequences
+			call_selection_action_sequences,
+			needs_event_box
 		end
 
 create
@@ -94,6 +95,9 @@ feature -- Initialize
 			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 			initialize_pixmaps
 		end
+
+	needs_event_box: BOOLEAN = True
+		-- Give event box to Current.
 
 feature -- Access
 

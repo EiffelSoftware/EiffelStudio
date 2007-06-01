@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-01 14:13-0800\n"
+"PO-Revision-Date: 2007-06-01 15:00-0800\n"
 "Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1746,7 +1746,7 @@ msgid ""
 "Use an existing variable: right click or [Ctrl+enter]"
 msgstr ""
 "Neue Variable hinzufügen: Doppelklick oder [Eingabetaste]\n"
-"Eine existierende Variable verwenden: Rechtsklick oder [Ctrl+Eingabetaste]"
+"Eine existierende Variable verwenden: Rechtsklick oder [Strg+Eingabetaste]"
 
 #. Source code: f_Create_new_precompile: STRING_GENERAL is 	do Result := locale.translation("Add a precompile")	end
 #: interface_names.e:325
@@ -1756,7 +1756,7 @@ msgstr "Eine vorkompilierte Bibliothek hinzufügen"
 #. Source code: l_add_a_valuable: STRING_GENERAL is				do Result := locale.translation("Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)")	end
 #: interface_names.e:818
 msgid "Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)"
-msgstr "Neue Variable hinzufügen (Doppelklick oder Eingabetaste); Bestehende Variable verwenden (Rechtsklick oder Ctrl+Eingabetaste)"
+msgstr "Neue Variable hinzufügen (Doppelklick oder Eingabetaste); Bestehende Variable verwenden (Rechtsklick oder Strg+Eingabetaste)"
 
 #. Source code: b_Add_all: STRING_GENERAL is				do Result := locale.translation ("Add all ->") end
 #: interface_names.e:44
@@ -4481,7 +4481,7 @@ msgstr "Immer halten"
 #. Source code: m_Break_when_hit_count_multiple_of: STRING_GENERAL is	do Result := locale.translation("Break when the hit count is a multiple of")	end
 #: interface_names.e:290
 msgid "Break when the hit count is a multiple of"
-msgstr "Halten wenn die Trefferzahl des Haltepunkts ein Vielfaches ist von"
+msgstr "Halten wenn die Trefferzahl des Haltepunktes ein Vielfaches ist von"
 
 #. Source code: m_Break_when_hit_count_equal: STRING_GENERAL is			do Result := locale.translation("Break when the hit count is equal to")	end
 #: interface_names.e:289
@@ -7015,7 +7015,7 @@ msgstr "Kopieren"
 #. Source code: f_Copy: STRING_GENERAL is					do Result := locale.translation("Copy (Ctrl+C)")	end
 #: interface_names.e:318
 msgid "Copy (Ctrl+C)"
-msgstr "Kopieren (Ctrl+C)"
+msgstr "Kopieren (Strg+C)"
 
 #. Source code: l_copy_text_to_clipboard: STRING_GENERAL is do Result := locale.translation("Copy Text To Clipboard") end
 #: interface_names.e:1324
@@ -8794,7 +8794,7 @@ msgstr "Ausschneiden"
 #. Source code: f_Cut: STRING_GENERAL is					do Result := locale.translation("Cut (Ctrl+X)")	end
 #: interface_names.e:310
 msgid "Cut (Ctrl+X)"
-msgstr "Ausschneiden (Ctrl+X)"
+msgstr "Ausschneiden (Strg+X)"
 
 #. Source code: Result.force (locale.translation ("Czech"), "cs")
 #: locale_names.e:35
@@ -10582,7 +10582,7 @@ msgstr "Doppelklick um zur Resultatanzeige zu wechseln"
 #. Source code: l_exception_double_click_text: STRING_GENERAL is do Result := locale.translation ("Double click to see Exception or Ctrl-C to copy to clipboard") end
 #: interface_names.e:1024
 msgid "Double click to see Exception or Ctrl-C to copy to clipboard"
-msgstr "Doppelklick um Ausnahme zu sehen oder Ctrl-C um zur Zwischenablage zu kopieren"
+msgstr "Doppelklick um Ausnahme zu sehen oder Strg-C um zur Zwischenablage zu kopieren"
 
 #. Source code: Result := locale.translation ("Down")
 #: docking_names.e:152
@@ -19728,7 +19728,7 @@ msgstr "Einfügen"
 #. Source code: f_Paste: STRING_GENERAL is					do Result := locale.translation("Paste (Ctrl+V)")	end
 #: interface_names.e:496
 msgid "Paste (Ctrl+V)"
-msgstr "Einfügen (Ctrl+V)"
+msgstr "Einfügen (Strg+V)"
 
 #. Source code: l_Path: STRING_GENERAL is					do Result := locale.translation("Path")	end
 #: interface_names.e:1164
@@ -20255,7 +20255,7 @@ msgstr "Den aktuellen Text drucken"
 #. Source code: m_Profile_tool: STRING_GENERAL is			do Result := locale.translation("Pro&filer...")	end
 #: interface_names.e:504
 msgid "Pro&filer..."
-msgstr "Pro&fil er..."
+msgstr "Pro&filer..."
 
 #. Source code: l_procedure: STRING_GENERAL is			do Result := locale.translation("Procedure")	end
 #: interface_names.e:1186
@@ -20280,7 +20280,7 @@ msgstr ""
 #. Source code: t_Profiler_wizard: STRING_GENERAL is				do Result := locale.translation("Profiler Wizard")	end
 #: interface_names.e:1744
 msgid "Profiler Wizard"
-msgstr "Profil er Assistent"
+msgstr "Profiler Assistent"
 
 #. Source code: l_Profiler_used: STRING_GENERAL is			do Result := locale.translation("Profiler used to produce the above record: ")	end
 #: interface_names.e:1187
@@ -20725,7 +20725,7 @@ msgstr "Wiederherstellen"
 #. Source code: f_Redo: STRING_GENERAL is					do Result := locale.translation("Redo (Ctrl+Y)")	end
 #: interface_names.e:521
 msgid "Redo (Ctrl+Y)"
-msgstr "Wiederherstellen (Ctrl+Y)"
+msgstr "Wiederherstellen (Strg+Y)"
 
 #. Source code: f_refactoring_redo: STRING_GENERAL is		do Result := locale.translation("Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
 #: interface_names.e:510
@@ -26687,7 +26687,7 @@ msgstr "Rückgängig"
 #. Source code: f_Undo: STRING_GENERAL is					do Result := locale.translation("Undo (Ctrl+Z)")	end
 #: interface_names.e:579
 msgid "Undo (Ctrl+Z)"
-msgstr "Rückgängig (Ctrl+Z)"
+msgstr "Rückgängig (Strg+Z)"
 
 #. Source code: f_refactoring_undo: STRING_GENERAL is		do Result := locale.translation("Undo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
 #: interface_names.e:509

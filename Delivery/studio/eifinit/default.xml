@@ -12,7 +12,7 @@
 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.interrupt_every_N_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the Eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.classic_debugger.timeout" DESCRIPTION="Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."><INTEGER>0</INTEGER></PREF>
 	<PREF NAME="debugger.classic_debugger.debugger_location" DESCRIPTION="Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."><STRING></STRING></PREF>
 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
@@ -169,7 +169,7 @@
 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition directory." HIDDEN="True"><STRING></STRING></PREF>
+	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
@@ -585,7 +585,7 @@
 	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of comments text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
@@ -629,8 +629,8 @@
 
 	<PREF NAME="tools.class_browser.show_unchanged_feature_from_any" DESCRIPTION="Show unchanged features in class ANY by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.show_tooltip" DESCRIPTION="Show tooltip?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="tools.class_browser.odd_row_background_color" DESCRIPTION="Backgroud color of odd rows in class browser."><COLOR>240;240;240</COLOR></PREF>
-	<PREF NAME="tools.class_browser.even_row_background_color" DESCRIPTION="Backgroud color of even rows in class browser."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="tools.class_browser.odd_row_background_color" DESCRIPTION="Background color of odd rows in class browser."><COLOR>240;240;240</COLOR></PREF>
+	<PREF NAME="tools.class_browser.even_row_background_color" DESCRIPTION="Background color of even rows in class browser."><COLOR>255;255;255</COLOR></PREF>
 
 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 	<PREF NAME="tools.refactoring.feature_rename.update_comments" DESCRIPTION="Should occurrences of the feature name in comments be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>

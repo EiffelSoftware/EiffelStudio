@@ -282,6 +282,7 @@ feature -- Accelerator, focus label and menu name
 	m_Address_toolbar: STRING_GENERAL is		do Result := locale.translation("&Address Bar")	end
 	m_Apply: STRING_GENERAL is					do Result := locale.translation("&Apply")	end
 	m_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Auto expressions")	end
+	t_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Enable auto expressions ?%N(add contextual symbols automatically)")	end
 	l_all_classes: STRING_GENERAL is			do Result := locale.translation("All Classes")	end
 	m_Breakpoints_tool: STRING_GENERAL is		do Result := locale.translation("Breakpoints")	end
 	m_Breakpoint_index: STRING_GENERAL is		do Result := locale.translation("Breakpoint index:")	end

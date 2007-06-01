@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			toggle_auto_behavior_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.watch_auto_icon_buffer)
 			toggle_auto_behavior_cmd.set_name ("AutoExpression")
 			toggle_auto_behavior_cmd.set_menu_name (interface_names.m_auto_expressions)
-			toggle_auto_behavior_cmd.set_tooltip (interface_names.m_auto_expressions)
+			toggle_auto_behavior_cmd.set_tooltip (interface_names.t_auto_expressions)
 			toggle_auto_behavior_cmd.add_action (agent toggle_auto_expressions)
 			toggle_auto_behavior_cmd.set_is_selected_function (agent auto_expression_enabled)
 			toggle_auto_behavior_cmd.enable_sensitive

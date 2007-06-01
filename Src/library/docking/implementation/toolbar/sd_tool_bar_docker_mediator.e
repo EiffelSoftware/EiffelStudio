@@ -74,6 +74,9 @@ feature -- Command
 			debug ("docking")
 				print ("%N%N%N---------------------------- SD_TOOL_BAR_DOCKER_MEDIATOR start drag ---------------------------- is_in_orignal_row: " + is_in_orignal_row.out)
 			end
+
+			focus_out_agent := agent on_focus_out
+			ev_application.focus_out_actions.extend (focus_out_agent)
 		end
 
 	is_resizing_mode: BOOLEAN
@@ -145,6 +148,26 @@ feature -- Command
 			set: start_floating = a_start_floating
 		end
 
+	set_ignore_focus_out_actions (a_bool: BOOLEAN) is
+			-- Set `ignore_next_focus_out' with True.
+		do
+			ignore_focus_out_actions := a_bool
+		ensure
+			set: ignore_focus_out_actions = a_bool
+		end
+
+	clean is
+			-- Clean global key press/release actions.
+		do
+			ev_application.key_press_actions.prune_all (internal_key_press_actions)
+			ev_application.key_release_actions.prune_all (internal_key_release_actions)
+
+			ev_application.focus_out_actions.prune_all (focus_out_agent)
+			caller := Void
+
+			cancel_actions.call ([])
+		end
+
 feature -- Query
 
 	caller: SD_TOOL_BAR_ZONE
@@ -208,7 +231,7 @@ feature {NONE} -- Implementation functions
 			when {EV_KEY_CONSTANTS}.key_ctrl then
 				on_pointer_motion (internal_last_screen_x, internal_last_screen_y)
 			when {EV_KEY_CONSTANTS}.key_escape then
-				cancel_tracing_pointer
+				clean
 			else
 
 			end
@@ -243,20 +266,6 @@ feature {NONE} -- Implementation functions
 				l_tool_bar_row.apply_change
 				a_box.forth
 			end
-		end
-
-	clean is
-			-- Clean global key press/release actions.
-		do
-			ev_application.key_press_actions.prune_all (internal_key_press_actions)
-			ev_application.key_release_actions.prune_all (internal_key_release_actions)
-		end
-
-	cancel_tracing_pointer is
-			-- Cancel tracing pointer.
-		do
-			clean
-			cancel_actions.call (Void)
 		end
 
 	switch_to_reszing_mode (a_screen_x, a_screen_y: INTEGER) is
@@ -310,7 +319,10 @@ feature {NONE} -- Implementation functions
 					caller.tool_bar.disable_capture
 				end
 
+				-- Ignore next two focus out actions, this one is caused by the floating tool bar getting focus.
+				set_ignore_focus_out_actions (True)
 				caller.float (a_screen_x - offset_x, a_screen_y - offset_y, True)
+				set_ignore_focus_out_actions (False)
 
 				if not l_platform.is_windows then
 					-- We can't enable capture immediately, seems GTK window is not ready at this point.
@@ -322,12 +334,14 @@ feature {NONE} -- Implementation functions
 																l_screen: EV_SCREEN
 																l_position: EV_COORDINATE
 															do
-																caller.tool_bar.enable_capture
+																if not caller.tool_bar.is_destroyed then
+																	caller.tool_bar.enable_capture
 
-																-- Set floating tool bar to current pointer position.
-																create l_screen
-																l_position := l_screen.pointer_position
-																on_pointer_motion (l_position.x, l_position.y)
+																	-- Set floating tool bar to current pointer position.
+																	create l_screen
+																	l_position := l_screen.pointer_position
+																	on_pointer_motion (l_position.x, l_position.y)
+																end
 															end
 														)
 				end
@@ -387,7 +401,28 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
+	on_focus_out (a_widget: EV_WIDGET) is
+			-- Handle focus out actions.
+		local
+			l_platform: PLATFORM
+		do
+			create l_platform
+			-- We ignore focus out actions on Linux is ok since on Linux when enable capture it's full capture, atl + tab, alt + f1 etc. not work (not like Windows).
+			if l_platform.is_windows then
+				if not ignore_focus_out_actions then
+					clean
+				end
+			end
+		end
+
 feature {NONE} -- Implementation attributes.
+
+	focus_out_agent: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
+			-- Focus out agent.
+
+	ignore_focus_out_actions: BOOLEAN
+			-- Times for ignore `on_focus_out' action?
+			-- We use it when dragging tool bar is changing from docking to floating, or changing from floating to docking.
 
 	orignal_row: SD_TOOL_BAR_ROW
 			-- Orignal row when start drag if exist.

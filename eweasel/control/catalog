@@ -705,6 +705,7 @@ test	int64-cast-uint64	 	melt074  tcf pass execution
 test	character_32-inspect 	melt075  tcf pass execution
 test	invariant-check-melted-agent-callee melt076  tcf pass execution
 test	dollar-with-tuple		melt077  tcf pass execution
+test	dollar-with-expanded-attribute	melt078  tcf pass execution
 
 -- Freezing
 

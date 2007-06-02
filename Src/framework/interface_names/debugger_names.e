@@ -264,6 +264,43 @@ feature -- Entries
 	e_start_without_stopping_at_breakpoints: STRING_GENERAL is
 			do Result := locale.translation ("Start without stopping at breakpoints") end
 
+feature -- Object grid line values
+
+	l_no_object: STRING_GENERAL is
+			do Result := locale.translation ("No object") end
+
+	l_no_information: STRING_GENERAL is
+			do Result := locale.translation ("No information") end
+
+	l_exceptions_details: STRING_GENERAL is
+			do Result := locale.translation ("Exception's details ...") end
+
+	l_exception_data: STRING_GENERAL is
+			do Result := locale.translation ("Exception data") end
+
+feature -- Thread tool
+
+	t_id: STRING_GENERAL is
+			do Result := locale.translation ("Id") end
+
+	t_name: STRING_GENERAL is
+			do Result := locale.translation ("Name") end
+
+	t_priority: STRING_GENERAL is
+			do Result := locale.translation ("Priority") end
+
+	t_note: STRING_GENERAL is
+			do Result := locale.translation ("Note") end
+
+	t_debuggees_active_thread: STRING_GENERAL is
+			do Result := locale.translation ("Debuggee's active thread") end
+
+	t_no_information_about_thread: STRING_GENERAL is
+			do Result := locale.translation ("Sorry no information available on Threads for now") end
+
+	t_no_information_when_not_stopped: STRING_GENERAL is
+			do Result := locale.translation ("Sorry no information when application is not stopped") end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

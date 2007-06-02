@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REFERENCE_DESC 
+class REFERENCE_DESC
 
 inherit
 	ATTR_DESC
@@ -47,7 +47,7 @@ feature -- Comparisons
 			if Precursor {ATTR_DESC} (other) then
 				l_ref ?= other
 				Result := (l_ref /= void) and then (type_i /= Void and l_ref.type_i /= Void) and then
-					type_i.same_as (l_ref.type_i)
+					type_i.is_identical (l_ref.type_i)
 			end
 		end
 

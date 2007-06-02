@@ -36,6 +36,11 @@ inherit
 			real_update
 		end
 
+	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -59,10 +64,10 @@ feature {NONE} -- Initialization
 			grid.enable_single_row_selection
 			grid.enable_border
 			grid.set_column_count_to (4)
-			grid.column (1).set_title ("Id")
-			grid.column (2).set_title ("Name")
-			grid.column (3).set_title ("Priority")
-			grid.column (4).set_title ("Note")
+			grid.column (1).set_title (debugger_names.t_id)
+			grid.column (2).set_title (debugger_names.t_name)
+			grid.column (3).set_title (debugger_names.t_priority)
+			grid.column (4).set_title (debugger_names.t_note)
 
 			grid.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
 			grid.set_auto_resizing_column (1, True)
@@ -288,7 +293,7 @@ feature {NONE} -- Implementation
 						create lab.make_with_text ("0x" + tid.to_hex_string)
 						if tid = l_status.active_thread_id then
 							lab.set_font (active_thread_font)
-							lab.set_tooltip ("Debuggee's active thread")
+							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
 						end
 
 						row.set_item (1, lab)
@@ -330,12 +335,12 @@ feature {NONE} -- Implementation
 					end
 				else
 					grid.insert_new_row (1)
-					create lab.make_with_text ("Sorry no information available on Threads for now")
+					create lab.make_with_text (debugger_names.t_no_information_about_thread)
 					grid.set_item (1, 1, lab)
 				end
 			else
 				grid.insert_new_row (1)
-				create lab.make_with_text ("Sorry no information when the application is not stopped")
+				create lab.make_with_text (debugger_names.t_no_information_when_not_stopped)
 				grid.set_item (1, 1, lab)
 			end
 			grid.request_columns_auto_resizing

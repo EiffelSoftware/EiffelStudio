@@ -22,6 +22,11 @@ inherit
 			get_items_stone_properties
 		end
 
+	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		end
+
 create
 	make_with_value
 
@@ -199,7 +204,7 @@ feature -- Graphical changes
 				dv := object
 				if dv = Void then
 					last_dump_value := Void
-					set_name ("No object")
+					set_name (debugger_names.l_no_object)
 					set_value (Void)
 					set_type (Void)
 					set_address (Void)
@@ -216,19 +221,19 @@ feature -- Graphical changes
 					if dv.kind = Error_message_value then
 						dmdv ?= dv
 						set_value (dmdv.display_message)
-						set_type (once "No information")
+						set_type (debugger_names.l_no_information)
 						set_pixmap (Icons @ (dmdv.display_kind))
 					elseif dv.kind = Exception_message_value then
 						excdv ?= dv
 						if excdv.is_wrapper_mode then
-							set_title ("Exception's details ...")
+							set_title (debugger_names.l_exceptions_details)
 						end
 						set_value (excdv.display_tag)
 						gi := value_cell
 						if gi /= Void then
 							gi.set_tooltip (excdv.display_message)
 						end
-						set_type (once "Exception data")
+						set_type (debugger_names.l_exception_data)
 						set_pixmap (Icons @ (dv.kind))
 						if excdv.debug_value /= Void then
 							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)

@@ -272,6 +272,7 @@ feature -- Implementation
 					elseif (a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then able_to_transport (a_button)) or else ready_for_pnd_menu (a_button, l_press) then
 						start_transport (a_x, a_y, a_button, l_press, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y, False)
 						l_call_events := pebble = Void
+							-- If a pick and drop has initiated then we dont want button events firing.
 					end
 				else
 					l_current := Current

@@ -1657,8 +1657,11 @@ feature {NONE} -- Implementation
 			if a_menu.count > 0 then
 				if last_type /= Void and then last_name /= Void then
 					l_text := names.m_context_menu_pick (last_type, last_name)
-					a_menu.first.set_text (l_text)
+				else
+						-- Reset "Pick" text so that it is translatable.
+					l_text := names.m_pick
 				end
+				a_menu.first.set_text (l_text)
 			end
 		end
 

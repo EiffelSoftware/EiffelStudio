@@ -58,6 +58,11 @@ feature {NONE} -- Initialization
 
 			editor_drawing_area.enable_sensitive
 			let_blink := True
+
+				-- Initialize stored values, since these values should never be smaller than 1.
+			stored_cursor_line := 1
+			stored_cursor_char := 1
+			stored_first_line := 1
 		end
 
 feature -- Access
@@ -386,7 +391,9 @@ feature -- Observation
 				if number_of_lines >= stored_cursor_line then
 					text_displayed.cursor.set_y_in_lines (stored_cursor_line)
 					set_first_line_displayed (stored_first_line, True)
-					if text_displayed.line (stored_cursor_line).image.count >= stored_cursor_char then
+						-- We add 1 to represent the last position of a line.
+						-- The position of 1 means the position before the first character of a line.
+					if text_displayed.line (stored_cursor_line).image.count + 1 >= stored_cursor_char then
 						text_displayed.cursor.set_x_in_characters (stored_cursor_char)
 					end
 					invalidate_cursor_rect (True)
@@ -1297,6 +1304,11 @@ feature {NONE} -- Private Constants
 	Token_not_selected	: INTEGER is 0
 	Token_selected		: INTEGER is 1
 	Token_half_selected	: INTEGER is 4;
+
+invariant
+	stored_cursor_line_not_negative: stored_cursor_line >= 0
+	stored_cursor_char_not_negative: stored_cursor_char >= 0
+	stored_first_line_not_negative: stored_first_line >= 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

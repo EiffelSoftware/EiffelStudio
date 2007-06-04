@@ -143,6 +143,9 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 			-- Start processing text.
 		do
 			reading_text_finished := false
+			if not append then
+				block_counter := 0
+			end
 		end
 
 	end_processing is
@@ -227,14 +230,16 @@ feature {NONE} -- Load Text handling
 					set_selection_cursor (cursor)
 				end
 			end
-			if number_of_lines > first_read_block_size then
-				on_text_block_loaded (True)
-				line_read := 0
-			else
-				if line_read > Lines_read_per_idle_action then
-					on_text_block_loaded (False)
+			if block_counter = 0 then
+				if line_read > first_read_block_size then
+					on_text_block_loaded (True)
+					block_counter := block_counter + 1
 					line_read := 0
 				end
+			elseif line_read > Lines_read_per_idle_action then
+				on_text_block_loaded (False)
+				line_read := 0
+				block_counter := block_counter + 1
 			end
 			new_line
 			append_line (last_processed_line)
@@ -340,6 +345,9 @@ feature {NONE} -- Private status
 
 	line_read: INTEGER
 			-- Lines read during loading a block
+
+	block_counter: INTEGER
+			-- Blocks loaded.
 
 feature {NONE} -- Private Constants
 

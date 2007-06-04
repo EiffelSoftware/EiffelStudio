@@ -794,7 +794,8 @@ feature -- Basic operation
 				l_ignore_event :=
 					l_popup_parent /= Void and then l_text_component_imp /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
 					not {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (l_pnd_item.c_object) or else
-					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
+					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window and then captured_widget = Void
+						-- If a widget has capture then we don't want to ignore the event.
 			end
 
 				-- Handle popup window focusing.

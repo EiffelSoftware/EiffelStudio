@@ -19,8 +19,9 @@ inherit
 
 feature -- Properties
 
-	target_class: CLASS_C
-			-- Class for which bracket expression is applied
+	target_type: TYPE_A
+			-- Target type for which bracket expression is applied
+			--| Can be a type set!
 
 	code: STRING is "VWBR"
 			-- Error code
@@ -32,7 +33,7 @@ feature -- Access
 		do
 			Result := is_class_defined and then
 				is_feature_defined and then
-				target_class /= Void
+				target_type /= Void
 		end
 
 feature -- Output
@@ -40,20 +41,39 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
+		local
+			l_type_set: TYPE_SET_A
 		do
-			a_text_formatter.add ("Target class: ")
-			target_class.append_name (a_text_formatter)
+			if target_type.has_associated_class then
+				a_text_formatter.add ("Target class: ")
+				target_type.associated_class.append_name (a_text_formatter)
+			else
+				l_type_set ?= target_type
+				if l_type_set /= Void then
+					a_text_formatter.add ("Target class set: ")
+					l_type_set.append_to (a_text_formatter)
+				else
+					check should_never_happen: false end
+						-- Code is here to fallback in case it happens in a production environment.
+					a_text_formatter.add ("Target: ")
+					target_type.append_to (a_text_formatter)
+				end
+
+			end
 			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_target_class (t: CLASS_C) is
+	set_target_type (t: TYPE_A) is
 			-- Assign `t' to `target_class'.
 		require
 			t_not_void: t /= Void
+			t_not_loose: not t.is_loose
+		local
+			cl_type_a: CL_TYPE_A
 		do
-			target_class := t
+			target_type := t
 		end
 
 indexing

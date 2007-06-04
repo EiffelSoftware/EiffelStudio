@@ -1,7 +1,7 @@
 indexing
 	description: "[
 					Do a second pass over the generic declaration of a class.
-					If its not a formal record it in the supplier list of the current class.					
+					If its not a formal record it in the supplier list of the current class.
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -184,13 +184,16 @@ feature -- Types which should not occur
 
 	process_like_id_as (l_as: LIKE_ID_AS)
 		do
-			check not_has_node_changed: not has_node_changed end
-			check this_type_should_not_occur: false end
+				-- This type is not a formal and has no generics.
+				-- Do nothing.
+				-- An error will be thrown later.
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS)
 		do
-			check this_type_should_not_occur: false end
+				-- This type is not a formal and has no generics.
+				-- Do nothing.
+				-- An error will be thrown later.
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS)

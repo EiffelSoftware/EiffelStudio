@@ -60,11 +60,15 @@ feature -- Property
 	is_multi_constrained (a_context_class: CLASS_C): BOOLEAN is
 			-- Is Current a multi constraint formal relative to current context class?
 			--
-			-- `a_context_class': Used to resolve formals to their constraints.
+			-- `a_context_class': Used to resolve formals to their constraints.		
 		require
-			a_context_class_attached: a_context_class /= Void
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_sane: a_context_class.generics /= Void and then a_context_class.generics.count >= position
+		local
+			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
 		do
-			Result := has_multi_constraints (a_context_class)
+			l_generics := a_context_class.generics
+			Result := l_generics.i_th (position).is_multi_constrained (l_generics)
 		end
 
 	is_full_named_type: BOOLEAN is True
@@ -107,18 +111,6 @@ feature -- Property
 			a_context_class_not_void: a_context_class /= Void
 		do
 			-- False
-		end
-
-	has_multi_constraints (a_context_class: CLASS_C): BOOLEAN is
-			-- Does current instance have multiple constraining types?
-			-- This means at least two constraining types.
-		require
-			a_context_class_sane: a_context_class.generics /= Void and then a_context_class.generics.count >= position
-		local
-			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
-		do
-				l_generics := a_context_class.generics
-				Result := l_generics.i_th (position).is_multi_constrained (l_generics)
 		end
 
 feature -- Comparison
@@ -338,7 +330,7 @@ feature {COMPILER_EXPORTER}
 						count_ok: System.current_class.generics.count >= position
 					end
 						-- Get the actual type for the formal generic parameter
-					l_constraints := System.current_class.constraints (position)
+					l_constraints := System.current_class.constraints_if_possible (position)
 					Result := l_constraints.constraining_types (system.current_class).conform_to_type (other)
 				end
 			end

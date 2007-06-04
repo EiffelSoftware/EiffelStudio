@@ -148,7 +148,7 @@ feature -- Status
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				check l_type_not_void: l_type /= Void end
 				create Result.make (l_type, new_renaming_a (l_constraint.renaming))
-			end
+				end
 
 		ensure
 			result_not_void: Result /= Void
@@ -579,6 +579,7 @@ feature {NONE} -- Implementation
 			l_constraints_cursor: INTEGER
 			l_type: TYPE_A
 			l_has_multi_constraints: BOOLEAN
+			l_renaming: RENAMING_A
 		do
 
 			if has_constraint then
@@ -598,7 +599,7 @@ feature {NONE} -- Implementation
 					l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
 					if l_type /= Void then
 							-- Type was found: Process the type
-						if l_constraining_type.renaming /= Void then
+						if l_constraining_type.has_at_least_one_renaming then
 							create l_renamed_type.make (l_type,
 								new_renaming_a (l_constraining_type.renaming))
 							type_output_strategy.process (l_renamed_type, a_text_formatter, a_context_class, Void)
@@ -643,7 +644,8 @@ feature {NONE} -- Implementation
 		require
 			a_context_class_not_void: a_context_class /= Void
 			a_constraint_not_void: a_constraint /= Void
-			a_rename_clause_not_void: a_constraint /= Void
+			a_constraint_has_feature_table: a_constraint.has_feature_table
+			a_rename_clause_not_void: a_rename_clause /= Void
 			a_constraint_position_in_range: a_constraint_position > 0 and then a_constraint_position <= constraints.count
 		local
 			l_renaming_cache: ARRAY [RENAMING_A]
@@ -673,10 +675,14 @@ feature {NONE} -- Implementation
 
 	new_renaming_a (a_rename_clause: RENAME_CLAUSE_AS): RENAMING_A is
 			-- Renaming lookup datastructure from `a_renaming_clause'.
-			-- `a_rename_clause' is AST for which the RENAMING_A instance is built.
+			--
+			-- `a_rename_clause': AST for which the RENAMING_A instance is built.
 		local
 			l_renaminings: LIST[RENAME_AS]
 			l_rename: RENAME_AS
+			l_new_name: FEATURE_NAME
+			l_old_name_id, l_alias_name_id: INTEGER
+			l_feature_name_id: FEAT_NAME_ID_AS
 		do
 			if a_rename_clause /= Void then
 				l_renaminings := a_rename_clause.content
@@ -688,8 +694,21 @@ feature {NONE} -- Implementation
 						l_renaminings.after
 					loop
 						l_rename := l_renaminings.item
-						Result.put (l_rename.old_name.internal_name.name_id,
-							l_rename.new_name.internal_name.name_id)
+						l_old_name_id := l_rename.old_name.internal_name.name_id
+						l_new_name := l_rename.new_name
+						l_feature_name_id ?= l_new_name
+						if l_feature_name_id /= Void then
+								-- We have a "normal" name (but in case of an object of type `FEATURE_NAME_ALIAS_AS' we can still have an alias.
+							Result.put (l_old_name_id,
+										l_new_name.internal_name.name_id)
+						end
+							-- Now check in any case for an alias
+							-- This includes the case where we have an object of type `INFIX_PREFIX_AS'
+						l_alias_name_id := l_new_name.internal_alias_name_id
+						if l_alias_name_id /= 0 then
+							Result.put_alias (l_old_name_id,
+										l_alias_name_id)
+						end
 						l_renaminings.forth
 					end
 				end

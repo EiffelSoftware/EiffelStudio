@@ -29,6 +29,14 @@ feature{NONE} -- Initialization
 			renaming_set: renaming = a_renaming
 			end_of_renaming_set: end_of_renaming = a_end_of_renaming
 		end
+feature -- Status
+
+	has_at_least_one_renaming: BOOLEAN
+			-- Does this constraining type have at least one renaming?
+			-- A rename clause which is not empty?
+		do
+			Result := renaming /= Void and then renaming.content /= Void and then not renaming.content.is_empty
+		end
 
 feature -- Setters
 

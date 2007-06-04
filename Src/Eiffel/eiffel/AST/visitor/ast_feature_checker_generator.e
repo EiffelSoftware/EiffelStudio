@@ -3341,7 +3341,7 @@ feature -- Implementation
 
 			if l_is_multi_constrained then
 				l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
-				l_result_tuple := l_type_set.feature_i_state_by_alias (l_as.prefix_feature_name)
+				l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
 				if l_result_tuple.features_found_count > 1 then
 					raise_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name), l_formal.position, l_context_current_class)
 				elseif l_result_tuple.features_found_count = 1 then
@@ -4007,7 +4007,7 @@ feature -- Implementation
 
 			if l_is_multi_constraint then
 				l_type_set := l_formal.constrained_types (l_context_current_class)
-				l_result_tuple := l_type_set.feature_i_state_by_alias (bracket_str)
+				l_result_tuple := l_type_set.feature_i_state_by_alias_name (bracket_str)
 				if l_result_tuple.features_found_count > 1 then
 					raise_vtmc_error (create {ID_AS}.initialize (bracket_str), l_formal.position, l_context_current_class)
 				elseif l_result_tuple.features_found_count = 1 then
@@ -4037,7 +4037,13 @@ feature -- Implementation
 				create {VWBR1} vwbr
 				context.init_error (vwbr)
 				vwbr.set_location (l_as.left_bracket_location)
-				vwbr.set_target_class (target_class)
+				if l_is_multi_constraint then
+					check type_set_not_loose: not l_type_set.is_loose end
+					vwbr.set_target_type (l_type_set)
+				else
+					vwbr.set_target_type (constrained_target_type)
+				end
+
 				error_handler.insert_error (vwbr)
 				error_handler.raise_error
 			end
@@ -4284,6 +4290,7 @@ feature -- Implementation
 			l_instr: INSTR_CALL_B
 			l_tuple_access: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
+			l_multi_constraint_static: TYPE_I
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -4347,6 +4354,8 @@ feature -- Implementation
 					check
 						access_b_not_void: access_b /= Void
 					end
+						-- Get the multi_constrait_static if one exists
+					l_multi_constraint_static := access_b.multi_constraint_static
 					arguments := access_b.parameters
 				elseif binary_b /= Void then
 						-- Create call chain
@@ -4401,6 +4410,12 @@ feature -- Implementation
 						-- Evaluate assigner command byte node
 					access_b := target_assigner.access (void_type.type_i, True)
 					access_b.set_parameters (assigner_arguments)
+
+					if l_multi_constraint_static /= Void then
+							-- We are in the multi constraint case, set the multi constraint static
+						access_b.set_multi_constraint_static (l_multi_constraint_static)
+					end
+
 					if external_b = Void then
 							-- Replace end of call chain with an assigner command
 						access_b.set_parent (outer_nested_b)
@@ -6288,6 +6303,7 @@ feature {NONE} -- Implementation
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_formal: FORMAL_A
 			l_is_multi_constraint_case: BOOLEAN
+			l_feature_found_count: INTEGER
 		do
 				-- Reset
 			last_calls_target_type := Void
@@ -6305,12 +6321,17 @@ feature {NONE} -- Implementation
 					check l_type_set /= Void end
 					l_result_tuple := l_type_set.feature_i_state_by_name_id (l_name.name_id)
 						-- We raise an error if there are multiple infix features found
-					if	l_result_tuple.features_found_count > 1 then
+					l_feature_found_count := l_result_tuple.features_found_count
+					if	l_feature_found_count > 1 then
 						raise_vtmc_error (l_name, l_formal.position, l_context_current_class)
+					elseif l_feature_found_count = 1 then
+						l_infix :=  l_result_tuple.feature_item
+						last_calls_target_type := l_result_tuple.class_type_of_feature
+						l_class := last_calls_target_type.associated_class
+					else
+						-- Evereything stays void, an error will be reported.
 					end
-					l_infix :=  l_result_tuple.feature_item
-					last_calls_target_type := l_result_tuple.class_type_of_feature
-					l_class := last_calls_target_type.associated_class
+
 				else
 					l_last_constrained := l_formal.constrained_type (l_context_current_class)
 				end
@@ -6394,7 +6415,7 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		ensure
-			last_calls_target_type_computed: last_calls_target_type /= Void
+			last_calls_target_type_computed: last_infix_error = Void implies last_calls_target_type /= Void
 		end
 
 	last_infix_error: ERROR

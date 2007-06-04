@@ -522,7 +522,6 @@ feature {NONE} -- Interface
 			-- Reset Objects tool grids positions
 		local
 			apref: ARRAY_PREFERENCE
-			lst: LIST [INTEGER]
 		do
 			reset_objects_grids_contents_to_default
 			apref := preferences.debug_tool_data.objects_tool_layout_preference

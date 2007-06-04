@@ -660,9 +660,6 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			not_void: a_zone /= Void
 		do
 			zone := a_zone
-			-- For on_customize issue, we disable it here
-			-- But does it work for open_configs?			
-			is_visible := True
 		ensure
 			set: zone = a_zone
 		end
@@ -695,6 +692,9 @@ feature {NONE} -- Implementation
 				zone.destroy_parent_containers
 				if zone.is_floating then
 					zone.floating_tool_bar.destroy
+					if manager /= Void then
+						manager.floating_tool_bars.prune_all (zone.floating_tool_bar)
+					end
 				end
 				zone.destroy
 			end

@@ -1096,7 +1096,7 @@ feature -- Window management
 			l_tools: ARRAYED_LIST [SD_CONTENT]
 		do
 			from
-				l_tools := docking_manager.contents
+				l_tools := docking_manager.contents.twin
 				l_tools.start
 			until
 				l_tools.after

@@ -201,7 +201,26 @@ feature {NONE} -- Error code
 
 feature {NONE} -- Error message values
 
-	Cst_error_call_on_void_target: STRING is "Error: Call on void target for "
+	message_error_call_on_void_target (fname: STRING): STRING is
+		do
+			create Result.make_from_string ("Error: Call on void target")
+			if fname /= Void then
+				Result.append_string (" for ")
+				Result.append_string (Cst_feature_name_left_limit)
+				Result.append_string (fname)
+				Result.append_string (Cst_feature_name_right_limit)
+			end
+		end
+
+	message_error_vst1_on_class_context (clname, fname: STRING): STRING is
+		do
+			create Result.make_from_string ("Error: Can not evaluate ")
+			Result.append_string (Cst_feature_name_left_limit)
+			Result.append_string (fname)
+			Result.append_string (Cst_feature_name_right_limit)
+			Result.append_string (" on `Class' context {" + clname + "}.%N")
+			Result.append_string ("Only once, constant and static call can be evaluated on 'Class' context.")
+		end
 
 	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
 

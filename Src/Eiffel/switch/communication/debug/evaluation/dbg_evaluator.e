@@ -266,6 +266,7 @@ feature -- Concrete evaluation
 					end
 					check
 						valid_dyn_type: l_dyntype /= Void
+						f_is_not_once: not f.is_once
 					end
 					if realf.is_deferred and f.is_deferred then
 						notify_error_evaluation ("Unable to evaluate deferred feature {" + f.written_class.name_in_upper + "}." + f.feature_name)

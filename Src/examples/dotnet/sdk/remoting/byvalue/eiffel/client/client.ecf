@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="client" uuid="ECA17844-6782-4C08-B3D0-50F770AC4D45">
+	<target name="client">
+		<root cluster="client" class="CLIENT" feature="main"/>
+		<option namespace="EiffelSoftware.Samples">
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="True"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<setting name="msil_use_optimized_precompile" value="true"/>
+		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<precompile name="share" location="..\share\share.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system.runtime.remoting" location="$ISE_DOTNET_FRAMEWORK\System.Runtime.Remoting.dll"/>
+		<cluster name="client" location=".\"/>
+	</target>
+</system>

@@ -1,0 +1,4 @@
+The samples contained in here are Eiffel for .NET ports of the Microsoft .NET SDK samples.
+
+More samples will be ported as releases progress and Eiffel for .NET's feature set is
+enhanced.

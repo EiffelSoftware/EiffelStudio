@@ -20,6 +20,7 @@ inherit
 		redefine
 			make,
 			reset, on_text_loaded,
+			on_text_block_loaded,
 			gain_focus,
 			on_mouse_button_down,
 			on_click_in_text, handle_extended_key,
@@ -595,6 +596,23 @@ feature {NONE} -- Text Loading
 				after_reading_text_actions.forth
 			end
 			after_reading_text_actions.wipe_out
+		end
+
+	on_text_block_loaded (was_first_block: BOOLEAN)
+			-- Update scroll bar as a new block of text as been loaded.
+		local
+			l_line: INTEGER
+		do
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (was_first_block)
+				-- Show the first block.
+			if was_first_block then
+				if first_line_displayed > 0 and then first_line_displayed <= number_of_lines then
+					l_line := first_line_displayed
+				else
+					l_line := 1
+				end
+				setup_editor (l_line)
+			end
 		end
 
 feature -- Update

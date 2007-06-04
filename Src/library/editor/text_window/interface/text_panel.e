@@ -261,9 +261,15 @@ feature -- Status Setting
 
 	setup_editor (first_line_to_display: INTEGER) is
 			-- Update `Current' to display at line `first_line_to_display' on current text.
+		local
+			l_line: INTEGER
 		do
-			first_line_displayed := first_line_to_display
-			vertical_scrollbar.set_value (1)
+			if vertical_scrollbar.value_range.has (first_line_to_display) then
+				l_line := first_line_to_display
+			else
+				l_line := 1
+			end
+			first_line_displayed := l_line
 
 				-- Setup the scroll bars.
 			vertical_scrollbar.enable_sensitive
@@ -585,7 +591,9 @@ feature -- Basic Operations
 		end
 
 	load_text (s: STRING) is
-			-- Display `s'.			
+			-- Display `s'.	
+		local
+			l_line: INTEGER
 		do
 				-- Reset the editor state
 			reset
@@ -601,8 +609,13 @@ feature -- Basic Operations
 			text_displayed.set_first_read_block_size (number_of_lines_in_block)
 			text_displayed.load_string (s)
 
-				-- Setup the editor to load first page
-			setup_editor (1)
+				-- Setup the editor to load first page and display proper first line.
+			if first_line_displayed > 0 and then first_line_displayed <= number_of_lines then
+				l_line := first_line_displayed
+			else
+				l_line := 1
+			end
+			setup_editor (l_line)
 		end
 
 	on_font_changed is

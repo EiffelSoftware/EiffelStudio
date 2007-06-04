@@ -1570,6 +1570,8 @@ feature {NONE} -- Class initialization
 				end
 			end
 			if changed_generics then
+				invalidate_caches_related_to_generics
+
 					-- Here we check `syntactical_clients' because we only need
 					-- to check that declarations are valid.
 				from
@@ -1594,6 +1596,7 @@ feature {NONE} -- Class initialization
 					end
 					syntactical_clients.forth
 				end
+
 					-- We need to reset its `types' so that they are recomputed.
 				remove_types
 

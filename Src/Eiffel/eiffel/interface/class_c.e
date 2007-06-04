@@ -3508,6 +3508,14 @@ feature {COMPILER_EXPORTER} -- Setting
 
 feature -- Genericity
 
+	invalidate_caches_related_to_generics
+			-- Invalidates the cache which stores computed renamings
+		do
+			constraint_cache := Void
+		ensure
+			constraint_cache_void: constraint_cache = Void
+		end
+
 	formal_at_position (n: INTEGER): TYPE_FEATURE_I is
 			-- Find first TYPE_FEATURE_I in `generic_features' that
 			-- matches position `n'.

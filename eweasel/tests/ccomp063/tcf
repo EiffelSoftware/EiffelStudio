@@ -2,13 +2,36 @@ test_name 	 feature-call-via-cecil
 test_description Calls to Eiffel features using CECIL in different modes should be supported.
 
 define VISIBLE ""
-copy_raw	test.e $CLUSTER test.e
+define INCREMENT "1"
+copy_sub	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
 
 compile_frozen
 compile_result	ok
 c_compile_work
 c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output00
+
+define VISIBLE "<visible class="TEST" feature="f"/><visible class="TEST" feature="g"/>"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output10
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output10
 
 define VISIBLE "<visible class="TEST" feature="g"/>"
 copy_sub	Ace $TEST Ace
@@ -19,7 +42,7 @@ c_compile_work
 c_compile_result ok
 execute_work	NONE exec_output_w
 execute_result	ok
-compare		exec_output_w output
+compare		exec_output_w output01
 
 compile_final
 compile_result	ok
@@ -27,7 +50,26 @@ c_compile_final
 c_compile_result ok
 execute_final	NONE exec_output_f
 execute_result	ok
-compare		exec_output_f output
+compare		exec_output_f output01
+
+define INCREMENT "2"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output02
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output02
 
 define VISIBLE "<visible class="TEST"/>"
 copy_sub	Ace $TEST Ace
@@ -38,7 +80,7 @@ c_compile_work
 c_compile_result ok
 execute_work	NONE exec_output_w
 execute_result	ok
-compare		exec_output_w output
+compare		exec_output_w output22
 
 compile_final
 compile_result	ok
@@ -46,6 +88,6 @@ c_compile_final
 c_compile_result ok
 execute_final	NONE exec_output_f
 execute_result	ok
-compare		exec_output_f output
+compare		exec_output_f output22
 
 test_end

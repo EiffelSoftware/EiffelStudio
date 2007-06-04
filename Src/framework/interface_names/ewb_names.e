@@ -36,7 +36,7 @@ feature -- Access
 	can_not_choose_a_target: STRING_GENERAL is 					do Result := locale.translation ("You cannot choose a target because of the -stop/-batch option.") end
 	select_the_target_you_want: STRING_GENERAL is 				do Result := locale.translation ("Select the target you want: ") end
 	invalid_target: STRING_GENERAL is 							do Result := locale.translation ("Invalid target, select the target you want: ") end
-	cannot_choose_name_because_of: STRING_GENERAL is 			do Result := locale.translation ("You cannot choose the name of the project location%Nbecause of the -stop/-batch option.%N") end
+	cannot_choose_name_because_of: STRING_GENERAL is 			do Result := locale.translation ("You cannot choose the project location%Nbecause of the -stop/-batch option.%N") end
 	enter_location_for_new_project: STRING_GENERAL is 			do Result := locale.translation ("Enter location for new project: ") end
 	precompile_will_automtically_be_built: STRING_GENERAL is 	do Result := locale.translation ("Precompile will automatically be built%Nbecause of the -stop/-batch option.%N") end
 	incorrect_options: STRING_GENERAL is 						do Result := locale.translation (": incorrect options%N") end

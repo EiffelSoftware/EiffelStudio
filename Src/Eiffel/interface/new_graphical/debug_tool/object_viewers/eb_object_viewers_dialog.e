@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			create but.make_with_text ("Select viewer")
+			create but.make_with_text (interface_names.l_select_viewer)
 			but.select_actions.extend (agent open_viewer_selector_menu (but))
 			but.drop_actions.extend (agent viewers_manager.set_stone )
 			but.drop_actions.set_veto_pebble_function (agent viewers_manager.is_stone_valid)

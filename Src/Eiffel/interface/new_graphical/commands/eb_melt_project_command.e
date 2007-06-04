@@ -354,7 +354,7 @@ feature {NONE} -- Execution
 			then
 				compile_and_run
 			else
-				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, "Recompiling project will end current run.", Interface_names.L_do_not_show_again, preferences.preferences)
+				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, interface_names.e_Exec_recompile, Interface_names.L_do_not_show_again, preferences.preferences)
 				cd.set_ok_action (agent compile_and_run)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end

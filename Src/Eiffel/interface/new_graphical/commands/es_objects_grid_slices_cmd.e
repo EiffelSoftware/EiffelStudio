@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 					--| String display size
-				create cb_disp_str_limit.make_with_text ("no limit")
+				create cb_disp_str_limit.make_with_text (Interface_names.l_no_limit)
 				create tf_disp_str_size
 
 				tf_disp_str_size.set_minimum_width (Cst_field_label_width)

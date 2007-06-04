@@ -108,6 +108,12 @@ feature -- Open inner container data.
 			l_config_data: SD_CONFIG_DATA
 			l_env: EV_ENVIRONMENT
 		do
+			-- We have to open unminimized editor data here. Because after the following codes which will INSERT `l_temp_split' to the docking tree
+			-- when editor top parent is SD_MULTI_DOCK_AREA, the docking logic tree is not a full two fork tree. Then there will be problems
+			-- in `update_middle_container' which called by `recover_normal_size_from_minimize' from SD_UPPER_ZONE. See bug#12427.
+			l_config_data := config_data_from_file (a_file)
+			open_editor_minimized_data_unminimized (l_config_data)
+
 			if not internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
 				top_container := internal_docking_manager.query.inner_container_main.editor_parent
 				if top_container = internal_docking_manager.query.inner_container_main then
@@ -126,9 +132,6 @@ feature -- Open inner container data.
 			else
 				l_has_place_holder := True
 			end
-
-			l_config_data := config_data_from_file (a_file)
-			open_editor_minimized_data_unminimized (l_config_data)
 
 			-- Different from normal `open_config', we don't clear editors related things.
 			Result := open_all_config (a_file)
@@ -654,7 +657,7 @@ feature {NONE} -- Implementation
 		end
 
 	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
-			-- Preorder recursive. (Postorder is hard to think about....)
+			-- Preorder recursive.
 		require
 			a_config_data_not_void: a_config_data /= Void
 			a_container_not_void: a_container /= Void

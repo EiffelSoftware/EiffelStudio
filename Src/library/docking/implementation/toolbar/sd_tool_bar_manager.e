@@ -329,13 +329,17 @@ feature {NONE} -- Agents
 
 	on_menu_area_click (a_widget: EV_WIDGET; a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle menu area right click.
+		local
+			l_combo_box: EV_COMBO_BOX
 		do
 			-- End user not dragging a tool bar.
 			if internal_shared.tool_bar_docker_mediator_cell.item = Void then
+				l_combo_box ?= a_widget
 				if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right
 					and then not has_pointer_actions (a_screen_x, a_screen_y)
 					and then not has_pebble_function (a_screen_x, a_screen_y)
-					and then not has_drop_function (a_screen_x, a_screen_y) then
+					and then not has_drop_function (a_screen_x, a_screen_y)
+					and then l_combo_box = Void then
 					-- We query if a button `has_drop_function' before showing the menu, because if a
 					-- pick action starts from a widget which is same as the widget receive the drop
 					-- action, then there will be an additional pointer click actions called after drop

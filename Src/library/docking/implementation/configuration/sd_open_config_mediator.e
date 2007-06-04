@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 						internal_docking_manager.tool_bar_manager.unlock
 					end
 
-					open_tool_bar_datas (l_config_data.tool_bar_datas)
+					open_tool_bar_data (l_config_data.tool_bar_datas)
 
 					check not internal_docking_manager.query.inner_container_main.full end
 					open_all_inner_containers_data (l_config_data)
@@ -839,7 +839,7 @@ feature {NONE} -- Implementation
 			l_panel.update_tab_group
 		end
 
-	open_tool_bar_datas (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+	open_tool_bar_data (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
 			-- Open four area tool bar datas.
 		require
 			a_tool_bar_datas_not_void: a_tool_bar_datas /= Void
@@ -871,7 +871,7 @@ feature {NONE} -- Implementation
 				l_data := a_tool_bar_datas.item
 				check is_floating_tool_bar_data: l_data.is_floating end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
-
+			
 				-- Reset texts if original docking vertically
 				if l_content.zone /= Void then
 					l_content.zone.change_direction (True)
@@ -962,6 +962,7 @@ feature {NONE} -- Implementation
 					check not_void: l_string /= Void end
 					l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_string)
 					check l_content_not_void: l_content /= Void end
+					l_content.set_visible (True)
 					create l_tool_bar_zone.make (False, internal_docking_manager, False)
 
 					l_state ?= l_row_item.state

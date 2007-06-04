@@ -21,7 +21,8 @@ inherit
 			record_state,
 			restore,
 			move_to_docking_zone,
-			move_to_tab_zone
+			move_to_tab_zone,
+			change_zone_split_area
 		end
 
 create
@@ -187,6 +188,25 @@ feature -- Redefine.
 			end
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
 			change_state (l_docking_state)
+			
+			internal_close
+			internal_docking_manager.command.unlock_update
+		ensure then
+			state_changed: internal_content.state /= Current
+		end
+
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+			-- Redefine.
+		local
+			l_docking_state: SD_DOCKING_STATE
+		do
+			content.set_visible (True)
+			internal_docking_manager.command.lock_update (a_target_zone, False)
+			create l_docking_state.make (internal_content, a_direction, 0)
+			l_docking_state.change_zone_split_area (a_target_zone, a_direction)
+			change_state (l_docking_state)
+
+			internal_close
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: internal_content.state /= Current
@@ -367,7 +387,12 @@ feature {NONE} -- Implementation functions.
 			l_docking_zone: SD_DOCKING_ZONE
 			l_tab_zone: SD_TAB_ZONE
 		do
-			internal_docking_manager.command.lock_update (zone, False)
+			if zone /= Void and then not zone.is_destroyed then
+				internal_docking_manager.command.lock_update (zone, False)
+			else
+				internal_docking_manager.command.lock_update (void, True)
+			end
+
 			internal_close
 			internal_docking_manager.zones.prune_zone_by_content (internal_content)
 

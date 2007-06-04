@@ -19,6 +19,7 @@ create
 feature -- Initialization
 
 	make is
+			-- Creation method
 		local
 			l_constants: EV_LAYOUT_CONSTANTS
 		do

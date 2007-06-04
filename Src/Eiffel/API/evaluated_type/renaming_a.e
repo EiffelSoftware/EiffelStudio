@@ -12,11 +12,12 @@ class
 	RENAMING_A
 
 inherit
+	
 	HASH_TABLE[INTEGER,INTEGER]
+		rename
+			put as hashtable_put
 		export
-			{NONE} force
-		redefine
-			put
+			{NONE} force, hashtable_put
 		end
 
 	SHARED_NAMES_HEAP
@@ -63,7 +64,21 @@ feature -- Element change
 				end
 				error_report.renamed_multiple_times.put(names_heap.item (a_original_name))
 			end
-			Precursor {HASH_TABLE} (a_original_name, a_new_name)
+			hashtable_put (a_original_name, a_new_name)
+			if conflict then
+				if not has_error_report then
+					error_report := new_error_report
+				end
+				error_report.renamed_to_same_name.put(names_heap.item (a_original_name))
+			end
+		end
+
+	put_alias (a_original_name: INTEGER; a_new_name: INTEGER)
+			-- Add pair to renaming and check for errors.
+			--| `a_original_name' used to be the new item to add to the hashtable.
+			--| `a_newm_name' is the key for the hashtable.
+		do
+			hashtable_put (a_original_name, a_new_name)
 			if conflict then
 				if not has_error_report then
 					error_report := new_error_report

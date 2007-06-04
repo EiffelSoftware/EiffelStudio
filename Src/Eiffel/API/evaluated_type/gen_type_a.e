@@ -720,11 +720,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 								l_generic_constraint.substitute (l_generic_parameters)
 								l_constraint_item := l_generic_constraint
 							end
-								--| Martins 14/12/06
 								--| Knowing that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
 								--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
 								--| Knowing that there is no recursion in such a case: X -> LIST[X] because either the input really matches LIST and then we _have_ to continue or then it does not and we stop.
-
 							if l_generic_parameter.conformance_type.conform_to (l_constraint_item) then
 								-- Everything is fine, we conform
 							else

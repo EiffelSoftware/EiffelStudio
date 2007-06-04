@@ -1017,6 +1017,7 @@ feature -- Label texts
 	l_Dummy: STRING_GENERAL is					do Result := locale.translation("Should not be read")	end
 	l_Not_empty: STRING_GENERAL is				do Result := locale.translation("Generate default feature clauses")	end
 	l_no_break_point: STRING_GENERAL is				do Result := locale.translation("No breakpoints")	end
+	l_no_limit: STRING_GENERAL is				do Result := locale.translation ("no limit") end
 	l_no_project: STRING_GENERAL is				do Result := locale.translation ("No project") end
 	l_edit_project: STRING_GENERAL is			do Result := locale.translation("Edit Project")	end
 	l_edit_text: STRING_GENERAL is				do Result := locale.translation("Edit Text") end
@@ -1352,6 +1353,7 @@ feature -- Label texts
 	t_viewer_object_dumper_title: STRING_GENERAL is do Result := locale.translation ("Object Dump") end
 	t_viewer_object_browser_title: STRING_GENERAL is do Result := locale.translation ("Object Browse") end
 	l_viewer_drop_object_here: STRING_GENERAL is do Result := locale.translation ("<< Drop object here >>") end
+	t_viewer_xml_display_title: STRING_GENERAL is do Result := locale.translation ("XML display") end
 	l_select_viewer: STRING_GENERAL is do Result := locale.translation ("Select Viewer") end
 
 	l_When_breakpoint_is_hit: STRING_GENERAL is	do Result := locale.translation("When the breakpoint is hit:")	end
@@ -2067,6 +2069,7 @@ feature -- Description texts
 	e_Exec_out: STRING_GENERAL is				do Result := locale.translation("Step out of a routine")	end
 	e_Exec_step: STRING_GENERAL is				do Result := locale.translation("Execute the application one line at a time")	end
 	e_Exec_stop: STRING_GENERAL is				do Result := locale.translation("Pause application at current point")	end
+	e_Exec_recompile: STRING_GENERAL is         do Result := locale.translation("Recompiling project will end current run.") end
 	e_History_back: STRING_GENERAL is			do Result := locale.translation("Back")	end
 	e_History_forth: STRING_GENERAL is			do Result := locale.translation("Forward")	end
 	e_Minimize_all: STRING_GENERAL is			do Result := locale.translation("Minimize all windows")	end

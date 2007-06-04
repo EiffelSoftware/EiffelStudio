@@ -866,7 +866,7 @@ feature -- Output
 
 	debugger_warning_message (m: STRING_GENERAL) is
 		local
-			w_dlg: EV_WARNING_DIALOG
+			w_dlg: EB_WARNING_DIALOG
 		do
 			if ev_application = Void then
 				Precursor {DEBUGGER_MANAGER} (m)

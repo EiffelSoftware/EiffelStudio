@@ -59,7 +59,7 @@ feature -- Access
 
 	name: STRING_GENERAL is
 		do
-			Result := "XML display" --Interface_names.t_viewer_object_browser_title
+			Result := Interface_names.t_viewer_xml_display_title
 		end
 
 	widget: EV_WIDGET

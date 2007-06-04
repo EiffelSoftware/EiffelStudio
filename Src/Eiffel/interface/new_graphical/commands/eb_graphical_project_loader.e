@@ -643,7 +643,7 @@ feature {NONE} -- User interaction
 	ask_compile_precompile is
 			-- Should a needed precompile be automatically built?
 		local
-			l_dial: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			l_dial: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create l_dial.make_initialized (2, preferences.dialog_data.confirm_build_precompile_string, warning_messages.w_project_build_precompile, interface_names.l_Discard_build_precompile_dialog, preferences.preferences)
 			l_dial.set_ok_action (agent

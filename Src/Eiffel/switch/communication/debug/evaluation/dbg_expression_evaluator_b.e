@@ -1067,9 +1067,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 
 			if cl = Void then
-				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + a_feature_b.feature_name + Cst_feature_name_right_limit
-					)
+				notify_error_evaluation (message_error_call_on_void_target (a_feature_b.feature_name))
 			else
 --| Not yet ready, and useless since we do a metamorph on basic type to their ref value
 --| thus no built-in evaluation			
@@ -1154,9 +1152,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 
 			if cl = Void then
-				notify_error_evaluation (Cst_error_call_on_void_target +
-							Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
-						)
+				notify_error_evaluation (message_error_call_on_void_target (a_external_b.feature_name))
 			else
 				fi := feature_i_from_call_access_b_in_context (cl, a_external_b)
 				if fi = Void then
@@ -1245,7 +1241,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 
 			if cl = Void then
-				notify_error_evaluation (Cst_error_call_on_void_target)
+				notify_error_evaluation (message_error_call_on_void_target (Void))
 			else
 				fi := feature_i_from_call_access_b_in_context (cl, a_attribute_b)
 				if fi /= Void then
@@ -1461,9 +1457,7 @@ feature {NONE} -- Concrete evaluation
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
-				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
-					)
+				notify_error_evaluation (message_error_call_on_void_target (f.feature_name))
 			else
 				prepare_evaluation
 				Dbg_evaluator.evaluate_attribute (a_addr, a_target, c, f)
@@ -1477,9 +1471,9 @@ feature {NONE} -- Concrete evaluation
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
-				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
-					)
+				notify_error_evaluation (message_error_call_on_void_target (f.feature_name))
+			elseif on_class and then not f.is_once then
+				notify_error_evaluation (message_error_vst1_on_class_context (cl.name_in_upper, f.feature_name))
 			else
 				prepare_evaluation
 				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params, False)
@@ -1493,9 +1487,7 @@ feature {NONE} -- Concrete evaluation
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
-				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
-					)
+				notify_error_evaluation (message_error_call_on_void_target (f.feature_name))
 			else
 				prepare_evaluation
 				Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params, True)

@@ -49,7 +49,7 @@ feature -- Basic operations
 		local
 			l_config: STRING
 			l_load: CONF_LOAD
-			ed: EV_ERROR_DIALOG
+			ed: EB_ERROR_DIALOG
 			wd: EB_WARNING_DIALOG
 			l_lib_conf: CONFIGURATION_WINDOW
 		do

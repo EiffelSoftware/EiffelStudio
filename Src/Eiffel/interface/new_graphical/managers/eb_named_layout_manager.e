@@ -106,7 +106,7 @@ feature -- Command
 			l_pointer_style: EV_POINTER_STYLE
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
 
-			l_err: EV_ERROR_DIALOG
+			l_err: EB_ERROR_DIALOG
 		do
 			l_pointer_style := development_window.window.pointer_style
 			create l_stock_pixmaps

@@ -72,7 +72,7 @@ feature -- Basic operations
 			-- Open the Project configuration window.
 		local
 			rescued: BOOLEAN
-			ed: EV_ERROR_DIALOG
+			ed: EB_ERROR_DIALOG
 			wd: EB_WARNING_DIALOG
 			l_debugs: SEARCH_TABLE [STRING]
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
@@ -158,7 +158,7 @@ feature {NONE} -- Actions
 			a_stone_not_void: a_stone /= Void
 		local
 			l_lib: CONF_LIBRARY
-			ed: EV_ERROR_DIALOG
+			ed: EB_ERROR_DIALOG
 			wd: EB_WARNING_DIALOG
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY

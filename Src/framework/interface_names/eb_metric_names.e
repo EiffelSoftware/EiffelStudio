@@ -53,8 +53,12 @@ feature -- Titles
 	t_discard_remove_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always remove selected metric") end
 	t_discard_save_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always save modified metric") end
 	t_name_cannot_be_empty: STRING_GENERAL is do Result := locale.translation ("Metric name is empty.") end
-	t_metric_with_name: STRING_GENERAL is do Result := locale.translation ("Metric with name") end
-	t_metric_exists: STRING_GENERAL is do Result := locale.translation ("already exists.") end
+	t_metric_with_name_already_exists (a_metric_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_metric_name_not_void: a_metric_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Metric with name '$1' already exists"), [a_metric_name])
+		end
 	t_metric_not_saved: STRING_GENERAL is do Result := locale.translation ("Note: Metric is not saved.") end
 	t_select_archive: STRING_GENERAL is do Result := locale.translation ("Select a metric archive file") end
 	t_metric_no_metric_selected: STRING_GENERAL is do Result := locale.translation ("No metric is selected") end
@@ -64,7 +68,12 @@ feature -- Titles
 	t_selected_archive_not_valid: STRING_GENERAL is do Result := locale.translation ("Metric archive in specified file is not valid, it must be cleaned") end
 	t_metric: STRING_GENERAL is do Result := locale.translation ("metric") end
 	t_metric_name_can_not_be_empty: STRING_GENERAL is do Result := locale.translation ("Metric name cannot be empty") end
-	t_remove_metric: STRING_GENERAL is do Result := locale.translation ("Remove metric ") end
+	t_remove_metric (a_metric_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_metric_name_not_void: a_metric_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Remove metric '$1'?"), [a_metric_name])
+		end
 	t_no_archive_selected: STRING_GENERAL is do Result := locale.translation ("No metric archive is selected.") end
 	t_archive_management: STRING_GENERAL is do Result := locale.translation ("Archive Management") end
 	t_archive_comparison: STRING_GENERAL is do Result := locale.translation ("Archive Comparison") end

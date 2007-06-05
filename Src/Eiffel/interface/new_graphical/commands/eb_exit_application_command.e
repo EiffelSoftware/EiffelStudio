@@ -95,7 +95,7 @@ feature {NONE} -- Callbacks
 			-- Exit the application
 			-- This application means Eiffel Studio.
 		local
-			l_err_dlg: EV_ERROR_DIALOG
+			l_err_dlg: EB_ERROR_DIALOG
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
 			l_eb_debugger_manager := eb_Debugger_manager

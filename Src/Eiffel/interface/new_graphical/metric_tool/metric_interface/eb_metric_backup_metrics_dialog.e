@@ -97,7 +97,7 @@ feature{NONE} -- Actions
 	on_backup is
 			-- Action to be performed to backup user-defined metrics to selected file
 		local
-			l_error_dlg: EV_ERROR_DIALOG
+			l_error_dlg: EB_ERROR_DIALOG
 			l_info_dlg: EV_INFORMATION_DIALOG
 		do
 			metric_manager.clear_last_error

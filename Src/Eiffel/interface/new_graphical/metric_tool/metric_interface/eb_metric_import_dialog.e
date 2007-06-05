@@ -235,7 +235,7 @@ feature {NONE} -- Actions
 			a_row_attached: a_row /= Void
 		local
 			l_name: STRING
-			l_error_dlg: EV_ERROR_DIALOG
+			l_error_dlg: EB_ERROR_DIALOG
 			l_warning_dlg: EB_WARNING_DIALOG
 		do
 			if not is_in_name_changing_mode then
@@ -553,7 +553,7 @@ feature{NONE} -- Implementation
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 		local
-			l_error_dlg: EV_ERROR_DIALOG
+			l_error_dlg: EB_ERROR_DIALOG
 		do
 			metric_manager.clear_last_error
 			Result := metric_manager.metrics_from_file (a_file_name)

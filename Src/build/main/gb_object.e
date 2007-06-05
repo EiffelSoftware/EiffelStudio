@@ -1470,7 +1470,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 			env: EV_ENVIRONMENT
 			new_type: STRING
 			a_new_object: GB_OBJECT
-			counter: INTEGER
+			i, nb: INTEGER
 			object_full: BOOLEAN
 		do
 			create env
@@ -1482,7 +1482,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 			else
 				add_new_object_in_parent (an_object)
 			end
-			if components.digit_checker.digit_pressed then
+			if components.digit_checker.is_digit_pressed then
 				new_type := an_object.type
 				if not env.application.shift_pressed then
 					object_full := is_full
@@ -1490,11 +1490,13 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 					object_full := parent_object.is_full
 				end
 				from
-					counter := 1
+						-- we start at `2' because we have already inserted an item.
+					i := 2
+					nb := components.digit_checker.digit
 				until
 						-- Ensure that we do not attempt to insert more items than
 						-- are accepted.
-					counter > components.digit_checker.digit or object_full
+					i > nb or object_full
 				loop
 					a_new_object := components.object_handler.build_object_from_string_and_assign_id (new_type)
 					if not env.application.shift_pressed then
@@ -1504,7 +1506,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 						add_new_object_in_parent (a_new_object)
 						object_full := parent_object.is_full
 					end
-					counter := counter + 1
+					i := i + 1
 				end
 			end
 		end

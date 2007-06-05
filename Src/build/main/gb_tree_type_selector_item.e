@@ -39,28 +39,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: EV_TREE_ITEM
+	item: EV_TREE_ITEM;
 		-- Graphical representation of `Current' used in the type selector.
-
-feature {NONE} -- Implementation
-
-	process_number_key is
-			-- Begin processing by `digit_checker', so that
-			-- it can be determined if a digit key is held down.
-		local
-			tree: EV_TREE
-			tree_node: EV_TREE_NODE_LIST
-		do
-			from
-				tree_node := item
-			until
-				tree /= Void
-			loop
-				tree_node ?= tree_node.parent
-				tree ?= tree_node
-			end
-			components.digit_checker.begin_processing (tree)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -93,6 +73,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end -- class GB_TREE_TYPE_SELECTOR_ITEM

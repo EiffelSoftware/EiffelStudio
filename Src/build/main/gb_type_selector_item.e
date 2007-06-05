@@ -165,20 +165,12 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 	generate_transportable: GB_OBJECT_STONE is
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
 		do
-			process_number_key
-
 				-- Note that this generates a new id, so if the pnd is cancelled, we
 				-- will have used an other id, although this should not be a problem.
 				-- As the ids will be compacted when the project is next loaded.
 			Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (components.object_handler.build_object_from_string_and_assign_id (type))
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-	process_number_key is
-			-- Begin processing by `digit_checker', so that
-			-- it can be determined if a digit key is held down.
-		deferred
 		end
 
 	replace_layout_item (object_stone: GB_STANDARD_OBJECT_STONE) is

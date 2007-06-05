@@ -45,13 +45,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_number_key is
-			-- Begin processing by `digit_checker', so that
-			-- it can be determined if a digit key is held down.
-		do
-			components.digit_checker.begin_processing (components.tools.type_selector.drawing_area)
-		end
-
 	display_type is
 			-- Display type of `Current' on status bar.
 		do

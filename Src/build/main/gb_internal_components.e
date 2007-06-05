@@ -30,7 +30,7 @@ feature -- Access
 	default_create is
 			-- Create `Current'.
 		do
-			create digit_checker.make_with_components (Current)
+			create digit_checker.make
 			create events.make_with_components (Current)
 			create status_bar.make_with_components (Current)
 			create constants.make_with_components (Current)
@@ -99,7 +99,6 @@ feature {NONE} -- Implementation
 		require
 			pebble_not_void: pebble /= Void
 		do
-			digit_checker.end_processing
 			system_status.remove_pick_and_drop_pebble
 			status_bar.clear_status_after_transport (pebble)
 			commands.update
@@ -110,7 +109,6 @@ feature {NONE} -- Implementation
 		require
 			pebble_not_void: pebble /= Void
 		do
-			digit_checker.end_processing
 			system_status.remove_pick_and_drop_pebble
 			commands.update
 		end

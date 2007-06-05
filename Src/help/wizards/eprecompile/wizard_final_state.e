@@ -195,14 +195,16 @@ feature {NONE} -- Implementation
 				time_left := 0
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name))
 				create command.make (50)
+				command.append_character ('"')
 				command.append (eiffel_layout.ec_command_name)
-				command.append (" -precompile -config ")
+				command.append ("%" ")
+				command.append (" -precompile -config %"")
 				command.append (lib_ace)
-				command.append (" -project_path ")
+				command.append ("%" -project_path %"")
 				command.append (proj_path)
-				command.append (" -output_file ")
+				command.append ("%" -output_file %"")
 				command.append (progress_file_path)
-				command.append (" -c_compile -clean")
+				command.append ("%" -c_compile -clean")
 				launch (command)
 			until
 				to_end = True

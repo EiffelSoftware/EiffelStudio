@@ -579,7 +579,6 @@ feature {NONE} -- Implementation
 			l_constraints_cursor: INTEGER
 			l_type: TYPE_A
 			l_has_multi_constraints: BOOLEAN
-			l_renaming: RENAMING_A
 		do
 
 			if has_constraint then

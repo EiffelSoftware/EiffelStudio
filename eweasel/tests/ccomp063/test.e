@@ -50,12 +50,12 @@ feature {NONE} -- Test
 			Result := a + $INCREMENT
 		end
 
-	g (a: INTEGER_32): INTEGER_32 is
-			-- Print value of `a' and return its value incremented by $INCREMENT.
-		do
-			io.put_integer (a)
-			io.put_new_line
-			Result := a + $INCREMENT
-		end
+$G	g (a: INTEGER_32): INTEGER_32 is
+$G			-- Print value of `a' and return its value incremented by $INCREMENT.
+$G		do
+$G			io.put_integer (a)
+$G			io.put_new_line
+$G			Result := a + $INCREMENT
+$G		end
 
 end

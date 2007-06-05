@@ -162,7 +162,15 @@ feature -- Access
 						l_class_type ?= l_item.type
 							-- This check is guaranteed by the precondition.
 						check l_class_type_not_void: l_class_type /= Void end
-						if l_last_class_type = Void or else (not l_last_class_type.same_as (l_class_type)) then
+							-- A "new" feature is found and we "count up" if...
+						if
+								-- we have not found anything so far,
+							l_last_class_type = Void or else
+								-- the class providing the feature changed or
+							not l_last_class_type.same_as (l_class_type) or else
+								-- the feature changed
+							not l_last_feature.equiv (l_feature)
+						then
 								-- Only if we found a true new static type we update our information.
 							l_last_class_type := l_class_type
 							l_constraint_position := cursor.index
@@ -230,7 +238,16 @@ feature -- Access
 						-- This check is guaranteed by the precondition.
 					check l_class_type_not_void: l_class_type /= Void end
 						-- See comments in `feature_i_state_by_name_id'
-					if l_last_class_type = Void or else (not l_last_class_type.same_as (l_class_type)) then
+							-- A "new" feature is found and we "count up" if...
+					if
+							-- we have not found anything so far,
+						l_last_class_type = Void or else
+							-- the class providing the feature changed or
+						not l_last_class_type.same_as (l_class_type) or else
+							-- the feature changed
+						not l_last_feature.equiv (l_feature)
+					then
+
 						l_features_found_count := l_features_found_count + 1
 					end
 					l_last_class_type := l_class_type
@@ -370,7 +387,15 @@ feature -- Access
 						l_class_type ?= l_item.type
 								-- Precondition should ensure this.
 						check class_type_not_void: l_class_type /= Void end
-						if l_last_class_type = Void or else not l_last_class_type.same_as (l_class_type)  then
+							-- A "new" feature is found and we "count up" if...
+						if
+								-- we have not found anything so far,
+							l_last_class_type = Void or else
+								-- the class providing the feature changed or
+							not l_last_class_type.same_as (l_class_type) or else
+								-- the feature changed
+							not l_last_feature.equiv (l_feature)
+						then
 							l_constraint_position := cursor.index
 							l_last_feature  :=  l_feature
 							l_last_class_type := l_class_type
@@ -440,7 +465,7 @@ feature -- Access
 		local
 			l_item: TYPE_A
 			l_last_feature: E_FEATURE
-			l_feature: FEATURE_I
+			l_feature, l_last_feature_i: FEATURE_I
 			l_last_class_type: CL_TYPE_A
 			l_class_c: CLASS_C
 			l_features_found_count: INTEGER
@@ -476,8 +501,17 @@ feature -- Access
 							l_class_type ?= item.type
 								-- This check is guaranteed by the precondition.
 							check l_class_type_not_void: l_class_type /= Void end
-							if l_last_class_type = Void or else not l_last_class_type.same_as (l_class_type) then
+							-- A "new" feature is found and we "count up" if...
+							if
+									-- we have not found anything so far,
+								l_last_class_type = Void or else
+									-- the class providing the feature changed or
+								not l_last_class_type.same_as (l_class_type) or else
+									-- the feature changed
+								not l_last_feature_i.equiv (l_feature)
+							then
 								l_constraint_position := cursor.index
+								l_last_feature_i := l_feature
 								l_last_feature  :=  l_feature.api_feature (l_class_c.class_id)
 								l_last_class_type := l_class_type
 								l_features_found_count := l_features_found_count + 1

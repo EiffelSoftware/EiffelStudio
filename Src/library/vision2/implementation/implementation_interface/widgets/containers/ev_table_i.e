@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 				internal_item_list.after
 			loop
 				internal_item_list.item.implementation.update_for_pick_and_drop (starting)
-				forth
+				internal_item_list.forth
 			end
 			internal_item_list.go_to (loc_cursor)
 		end

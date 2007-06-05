@@ -195,7 +195,14 @@ feature {DBG_EVALUATOR} -- Query
 		require
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
-		deferred
+		local
+			l_basic: BASIC_I
+		do
+			l_basic ?= cl.actual_type.type_i
+			check
+				l_basic_not_void: l_basic /= Void
+			end
+			Result := l_basic.associated_reference_class_type
 		ensure
 			associated_reference_basic_class_type_not_void: Result /= Void
 		end
@@ -300,8 +307,7 @@ feature {NONE} -- Implementation
 			l_cl_type_a: CL_TYPE_A
 		do
 			if ctype.associated_class.is_basic then
-					-- FIXME JFIAT: maybe we should return the associated _REF type ...
-				Result := ctype
+				Result := associated_reference_basic_class_type (ctype.associated_class)
 			else
 					--| Get the real class_type
 				l_f_class_c := f.written_class

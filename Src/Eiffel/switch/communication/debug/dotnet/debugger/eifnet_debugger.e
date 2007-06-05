@@ -1489,7 +1489,10 @@ feature -- Exception
 						if exception_info_message = Void then
 							--| This could means the prog did exit_process
 							--| or .. anything else
-							exception_info_message := exception_info_class_name
+							exception_info_message := exception_info_to_string
+							if exception_info_message = Void then
+								exception_info_message := exception_info_class_name
+							end
 						end
 					end
 					l_exception_info.icd_prepared_value.clean_on_dispose
@@ -1572,9 +1575,6 @@ feature -- Exception
 			l_last_thread: ICOR_DEBUG_THREAD
 		do
 			Result := active_exception_value
-			if Result /= Void then
-				Result := edv_formatter.prepared_debug_value (Result)
-			end
 			if Result = Void or else Result.item = Default_pointer then
 				l_last_thread := icor_debug_thread
 				if l_last_thread /= Void then

@@ -1357,7 +1357,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				sline ?= gline
 				if
 					gline /= Void
-					and then (sline = Void) -- or else not current_object_line.is_represented_by (gline))
+					and then (sline = Void or else not gline.is_read_only)
 				then
 					remove_debugged_object_line (gline)
 				end
@@ -1387,7 +1387,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					if
 						is_removable_debugged_object_row (line.row)
 						and then is_removable_debugged_object_address (line.object_address)
-						and then sline = Void  --(current_object_line = Void or else not current_object_line.is_represented_by (line))
+						and then (sline = Void or else not line.is_read_only) --| might be only `not line.is_read_only'
 					then
 						remove_debugged_object_line (line)
 					end

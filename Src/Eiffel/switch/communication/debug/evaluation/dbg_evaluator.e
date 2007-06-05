@@ -215,7 +215,7 @@ feature -- Concrete evaluation
 				l_target_dynclass := a_target.dynamic_class
 			end
 			if l_target_dynclass /= Void and then l_target_dynclass.is_basic then
-				l_dyntype := associated_reference_basic_class_type (l_target_dynclass)
+				l_dyntype := associated_basic_class_type (l_target_dynclass)
 			elseif l_target_dynclass /= Void and then l_target_dynclass.types.count = 1 then
 				l_dyntype := l_target_dynclass.types.first
 			elseif l_target_dynclass = Void or else l_target_dynclass.types.count > 1 then
@@ -443,39 +443,40 @@ feature {NONE} -- compiler helpers
 			ris: ROUT_ID_SET
 			rout_id: INTEGER
 		do
-			ris := fi.rout_id_set
-			from
-				n := ris.lower
-				nb := ris.count
-			until
-				n > nb or else Result /= Void
-			loop
-				rout_id := ris.item (n)
-				if
-					rout_id /= 0
-					and then an_ancestor.is_valid
-					and then an_ancestor.has_feature_table
-				then
-					Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
+			if
+				an_ancestor.is_valid
+				and then an_ancestor.has_feature_table
+			then
+				ris := fi.rout_id_set
+				from
+					n := ris.lower
+					nb := ris.count
+				until
+					n > nb or else Result /= Void
+				loop
+					rout_id := ris.item (n)
+					if rout_id > 0 then
+						Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
+					end
+					n := n + 1
 				end
-				n := n + 1
 			end
 		end
 
-	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-			-- Associated _REF classtype for type `cl'
-			--| for instance return INTEGER_REF for INTEGER
+	associated_basic_class_type (cl: CLASS_C): CLASS_TYPE is
+			-- Associated classtype for type `cl'
 		require
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
+		local
+			t: CL_TYPE_I
 		do
-			fixme ("[
-						jfiat 2004-10-06 : why do we have two different behaviors
-						depending if we are on dotnet or classic ?
-				]")
-			Result := implementation.associated_reference_basic_class_type (cl)
+			t := cl.actual_type.type_i
+			if t.has_associated_class_type then
+				Result := t.associated_class_type
+			end
 		ensure
-			associated_reference_class_type_not_void: Result /= Void
+			associated_basic_class_type_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

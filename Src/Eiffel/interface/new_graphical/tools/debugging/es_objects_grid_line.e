@@ -167,6 +167,16 @@ feature -- Properties
 
 	parent_grid: ES_OBJECTS_GRID
 
+	is_read_only: BOOLEAN
+
+feature -- Change
+
+	set_read_only (b: like is_read_only) is
+			-- set `is_read_only'
+		do
+			is_read_only := b
+		end
+
 feature -- Query
 
 	text_data_for_clipboard: STRING_32 is

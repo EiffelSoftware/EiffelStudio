@@ -33,12 +33,6 @@ feature -- Access
 		do
 		end
 
-	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-			-- Associated _REF classtype for type `cl'
-			-- (export status {DBG_EVALUATOR})
-		do
-		end
-
 	create_empty_instance_of (a_type_i: CL_TYPE_I) is
 		do
 		end

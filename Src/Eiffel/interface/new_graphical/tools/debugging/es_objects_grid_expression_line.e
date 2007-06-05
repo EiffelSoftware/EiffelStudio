@@ -183,16 +183,7 @@ feature -- Settings
 			is_auto_expression := b
 		end
 
-	set_read_only (b: like is_readonly) is
-			-- Set current line Readonly
-		do
-			is_readonly := b
-		end
-
 feature -- Properties
-
-	is_readonly: BOOLEAN
-			-- Is read only line ?
 
 	is_auto_expression: BOOLEAN
 			-- Is auto expression line ?
@@ -290,7 +281,7 @@ feature -- Graphical changes
 			l_feature_as: FEATURE_AS
 		do
 			title := v
-			if is_readonly then
+			if is_read_only then
 				glab ?= cell (Col_expression_index)
 				if glab = Void then
 					glab := new_cell_name
@@ -417,7 +408,7 @@ feature -- Graphical changes
 			r: EV_GRID_ROW
 		do
 			if
-				not is_readonly
+				not is_read_only
 				and then abutton = 1
 				and not ev_application.ctrl_pressed
 				and not ev_application.shift_pressed

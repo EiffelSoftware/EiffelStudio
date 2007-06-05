@@ -82,8 +82,18 @@ feature -- Show
 
 	show_modal_to_window (w: EV_WINDOW) is
 			-- Show modal to window
+		require
+			w_not_void: w /= Void
 		do
 			window.show_modal_to_window (w)
+		end
+
+	show_relative_to_window (w: EV_WINDOW) is
+			-- Show relative to window
+		require
+			w_not_void: w /= Void
+		do
+			window.show_relative_to_window (w)
 		end
 
 feature -- Details

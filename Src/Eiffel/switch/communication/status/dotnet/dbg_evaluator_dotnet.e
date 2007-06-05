@@ -455,17 +455,6 @@ feature {DBG_EVALUATOR} -- Interface
 			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv>>, False, True)
 		end
 
-	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-		local
-			l_basic: BASIC_I
-		do
-			l_basic ?= cl.actual_type.type_i
-			check
-				l_basic_not_void: l_basic /= Void
-			end
-			Result := l_basic.associated_reference_class_type
-		end
-
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		local
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET

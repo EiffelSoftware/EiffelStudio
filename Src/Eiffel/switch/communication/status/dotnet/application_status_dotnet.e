@@ -130,9 +130,9 @@ feature -- Update
 		require else
 			exception_occurred: exception_occurred
 		do
-			Result := Eifnet_debugger.exception_message
+			Result := exception_to_string
 			if Result = Void then
-				Result := exception_to_string
+				Result := Eifnet_debugger.exception_message
 			end
 		end
 
@@ -140,7 +140,7 @@ feature -- Update
 			-- Update data once the application is really stopped
 		do
 			if exception_occurred and is_stopped then
-				exception_tag := exception_message
+				exception_tag := Eifnet_debugger.exception_message
 			else
 				exception_tag := Void
 			end

@@ -186,17 +186,6 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-		local
-			l_basic: BASIC_I
-		do
-			l_basic ?= cl.actual_type.type_i
-			check
-				l_basic_not_void: l_basic /= Void
-			end
-			Result := l_basic.associated_reference_class_type
-		end
-
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class)

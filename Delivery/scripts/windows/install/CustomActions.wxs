@@ -12,6 +12,7 @@
     <CustomAction Id="EvaluateCCompiler" BinaryKey="setup.dll" DllEntry="evaluate_c_compiler" Return="check" Execute="immediate"/>
     <CustomAction Id="ShowCCompilerHowTo" BinaryKey="setup.dll" DllEntry="show_c_compiler_how_to" Return="ignore" Execute="immediate"/>
     <CustomAction Id="CanPerformCCompilation" BinaryKey="setup.dll" DllEntry="can_perform_c_compilation" Return="ignore" Execute="immediate"/>
+    <CustomAction Id="CheckEnvironmentVariables" BinaryKey="setup.dll" DllEntry="check_environment_variables" Return="check" Execute="immediate"/>
     <?ifdef Enterprise?>
       <CustomAction Id="RetrieveCdKey" BinaryKey="setup.dll" DllEntry="retrieve_cd_key" Return="check"  Execute="immediate"/>
       <CustomAction Id="ValidateCdKey" BinaryKey="setup.dll" DllEntry="is_cd_key_valid" Return="check"  Execute="immediate"/>

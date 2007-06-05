@@ -1061,7 +1061,7 @@ test	expanded-creation-semantics	exec273 tcf pass execution expanded creation at
 test	agent-for-expanded-derivation	exec274 tcf pass execution expanded generic agent
 test	merging-feature-with-formal	exec275 tcf pass execution expanded generic merging
 test	entry-point-defined	exec276 tcf pass execution expanded generic merging
-
+test	derivation-reverse-attachment	exec277 tcf pass execution expanded generic attachment
 
 
 -- Compiler termination (exception trace, panic, etc.)

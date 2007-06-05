@@ -1,0 +1,15 @@
+test_name deferred-to-string-constant
+test_description Finalizing a system that implements a deferred routine returning a formal into a string constant causes a C compilation error because a wrapper is expected for the polymorphic calls.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

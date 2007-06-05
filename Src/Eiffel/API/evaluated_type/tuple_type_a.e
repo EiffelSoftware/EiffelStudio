@@ -168,7 +168,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count
 			loop
 				gen_param := generics.item (i)
-				gen_param.check_constraints (context_class, a_context_feature, a_check_creation_readiness)
+					-- Creation readiness check is set to false because:
+					--  * one cannot inherit from TUPLE
+					--  * there is no expanded entity
+				gen_param.check_constraints (context_class, a_context_feature, False)
 				i := i + 1
 			end
 		end

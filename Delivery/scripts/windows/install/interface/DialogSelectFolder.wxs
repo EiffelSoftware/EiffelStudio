@@ -20,7 +20,8 @@
         <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
           <?ifdef EiffelStudio?>
             <Publish Event="NewDialog" Value="DialogCCompilerChoice"><![CDATA[CHECKCCOMPILER <> "1" AND HASMSCCOMPILER <> "1"]]></Publish>
-            <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[CHECKCCOMPILER = "1" OR HASMSCCOMPILER = "1"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogMissingMsCompilerWarning"><![CDATA[(CHECKCCOMPILER = "1" OR HASMSCCOMPILER = "1") AND SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Publish>
+            <Publish Event="NewDialog" Value="DialogPrecompileChoice"><![CDATA[(CHECKCCOMPILER = "1" OR HASMSCCOMPILER = "1") AND (SELECTEDCCOMPILER <> "msc" OR CANCCOMPILE = "1")]]></Publish>
           <?else?>
             <Publish Event="NewDialog" Value="DialogVerifyReadyInstall">1</Publish>
           <?endif?>

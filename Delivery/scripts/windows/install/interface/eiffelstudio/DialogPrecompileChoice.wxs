@@ -33,7 +33,7 @@
             <Condition Action="show"><![CDATA[SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Condition>
           </Control>
           <Control Id="Description" Type="Text" X="11" Y="70" Width="354" Height="40" Transparent="yes" NoPrefix="yes">
-            <Text>The [ProductName] installer can automatically precompile some libraries to accelerate the development of new projects. It is highly recommended to precompile at least Base.</Text>
+            <Text>The [ProductName] installer can automatically precompile some libraries to accelerate the development of new projects. It is highly recommended to precompile at least EiffelBase.</Text>
             <Condition Action="hide"><![CDATA[SELECTEDCCOMPILER = "msc" AND CANCCOMPILE = "0"]]></Condition>
             <Condition Action="show"><![CDATA[SELECTEDCCOMPILER <> "msc" OR CANCCOMPILE = "1"]]></Condition>
           </Control>

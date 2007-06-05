@@ -1089,6 +1089,16 @@ feature -- Warning messages
 
 	w_help_topic_could_not_be_displayed: STRING_GENERAL is do Result := locale.translation ("Help Topic could not be displayed, please check Eiffel Installation") end
 
+	w_Unknown_error: STRING_GENERAL is do Result := locale.translation ("An unknown error has occurred%N") end
+
+	w_file_not_valid_assembly (a_file: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_file_not_void: a_file /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("The selected file '$1' is not a valid .NET assembly."), [a_file])
+		end
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

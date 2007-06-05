@@ -267,7 +267,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Error reporting
 
-	new_error_dialog: EV_ERROR_DIALOG is
+	new_error_dialog: EB_ERROR_DIALOG is
 			-- New error dialog properly initialized.
 		do
 			create Result
@@ -280,7 +280,7 @@ feature {NONE} -- Error reporting
 	report_non_readable_configuration_file (a_file_name: STRING) is
 			-- Report an error when `a_file_name' cannot be read.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_cannot_read_file (a_file_name))
@@ -292,7 +292,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
@@ -304,7 +304,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
@@ -316,7 +316,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
@@ -328,7 +328,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_cannot_save_file (a_file_name))
@@ -339,7 +339,7 @@ feature {NONE} -- Error reporting
 	report_cannot_convert_project (a_file_name: STRING) is
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_cannot_convert_file (a_file_name))
@@ -350,7 +350,7 @@ feature {NONE} -- Error reporting
 	report_cannot_create_project (a_dir_name: STRING) is
 			-- Report an error when we cannot create project in `a_dir_name'.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_cannot_create_project_directory (a_dir_name))
@@ -362,7 +362,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (a_msg)
@@ -396,7 +396,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (a_msg)
@@ -407,7 +407,7 @@ feature {NONE} -- Error reporting
 	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when project retrieval was stopped.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (a_msg)
@@ -419,7 +419,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (a_msg)
@@ -453,7 +453,7 @@ feature {NONE} -- Error reporting
 	report_precompilation_error is
 			-- Report that the precompilation of a precompile did not work.
 		local
-			l_ev: EV_ERROR_DIALOG
+			l_ev: EB_ERROR_DIALOG
 		do
 			l_ev := new_error_dialog
 			l_ev.set_text (warning_messages.w_project_build_precompile_error)

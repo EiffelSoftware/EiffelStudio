@@ -79,17 +79,17 @@ feature {NONE} -- Initialization
 			l_assemblies.set_minimum_height (200)
 			l_assemblies.set_minimum_width (600)
 			l_assemblies.set_column_count_to (6)
-			l_assemblies.column (1).set_title ("Name")
+			l_assemblies.column (1).set_title (names.l_Name)
 			l_assemblies.column (1).set_width (162)
-			l_assemblies.column (2).set_title ("Version")
+			l_assemblies.column (2).set_title (names.l_Version)
 			l_assemblies.column (2).set_width (71)
-			l_assemblies.column (3).set_title ("Culture")
+			l_assemblies.column (3).set_title (names.l_Culture)
 			l_assemblies.column (3).set_width (62)
-			l_assemblies.column (4).set_title ("PublicKeyToken")
+			l_assemblies.column (4).set_title (names.l_Public_key_token)
 			l_assemblies.column (4).set_width (105)
-			l_assemblies.column (5).set_title ("Platform")
+			l_assemblies.column (5).set_title (names.l_Platform)
 			l_assemblies.column (5).set_width (60)
-			l_assemblies.column (6).set_title ("Path")
+			l_assemblies.column (6).set_title (names.l_Path)
 			l_assemblies.column (6).set_width (122)
 			l_assemblies.enable_single_row_selection
 
@@ -328,7 +328,7 @@ feature {NONE} -- Actions
 			l_reader: ASSEMBLY_PROPERTIES_READER
 			l_properties: ASSEMBLY_PROPERTIES
 			l_file_name: STRING
-			l_error: EV_ERROR_DIALOG
+			l_error: EB_ERROR_DIALOG
 			l_added: BOOLEAN
 		do
 				-- get clr version
@@ -349,8 +349,9 @@ feature {NONE} -- Actions
 			end
 
 			if not l_added then
-				create l_error.make_with_text (once "The selected file '" + l_file_name + "' is not a valid .NET assembly.")
-				l_error.set_buttons (<<once "Ok">>)
+
+				create l_error.make_with_text (warnings.w_file_not_valid_assembly (l_file_name))
+				l_error.set_buttons (<< names.b_ok >>)
 				l_error.show_modal_to_window (Current)
 			end
 		end

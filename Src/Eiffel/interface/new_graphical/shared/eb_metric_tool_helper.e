@@ -35,7 +35,7 @@ feature -- Access
 			a_window_attached: a_window /= Void
 		local
 			l_error: EB_METRIC_ERROR
-			l_dlg: EV_ERROR_DIALOG
+			l_dlg: EB_ERROR_DIALOG
 		do
 			l_error := a_error_agent.item (Void)
 			if l_error /= Void then

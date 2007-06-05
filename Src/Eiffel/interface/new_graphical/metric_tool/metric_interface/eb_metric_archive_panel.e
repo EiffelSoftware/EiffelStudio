@@ -294,7 +294,7 @@ feature -- Actions
 		local
 			l_selected_metrics: LIST [STRING]
 			l_msg: STRING_GENERAL
-			l_error_dialog: EV_ERROR_DIALOG
+			l_error_dialog: EB_ERROR_DIALOG
 			l_file_name: STRING
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_archive_tbl: HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]

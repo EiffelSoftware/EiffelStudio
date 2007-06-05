@@ -41,9 +41,9 @@ feature -- Execution
 		do
 			create command.make (50)
 			command.append ("%"" + eiffel_layout.Precompilation_wizard_command_name + "%"")
-			command.append (" ")
+			command.append (" %"")
 			command.append (eiffel_layout.precompilation_wizard_resources_directory)
-			command.append (" ")
+			command.append ("%" ")
 			command.append (locale.info.id.name.out)
 			launch(command)
 		end

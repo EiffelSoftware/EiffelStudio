@@ -10,6 +10,7 @@ feature
 	make 
 		do
 			create generic
+			create tuple
 		end
 
 	generic: GEN_CLASS_1 [GEN_CLASS_2 [COMPARABLE]]

@@ -379,10 +379,16 @@ feature -- Implementation
 
 				-- Call appropriate action sequences
 			l_pebble_tuple := [pebble]
-			target := pointed_target
-			if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
-				target.drop_actions.call (l_pebble_tuple)
-				App_imp.drop_actions.call (l_pebble_tuple)
+			if
+				able_to_transport (a_button) or else ready_for_pnd_menu (a_button, False)
+			then
+				target := pointed_target
+				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
+					target.drop_actions.call (l_pebble_tuple)
+					App_imp.drop_actions.call (l_pebble_tuple)
+				else
+					App_imp.cancel_actions.call (l_pebble_tuple)
+				end
 			else
 				App_imp.cancel_actions.call (l_pebble_tuple)
 			end

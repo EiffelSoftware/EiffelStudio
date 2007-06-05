@@ -1296,6 +1296,7 @@ test	last-reverse-assignment-to-expanded	ccomp060 tcf pass c_compilation expande
 test	adding-removing-classes-c-compile-error	ccomp061 tcf pass c_compilation expanded
 test	once-manifest-string-in-cpp-file	ccomp062 tcf pass c_compilation
 test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
+test	deferred-to-string-constant	ccomp064 tcf pass finalizing
 
 -- Storable tests
 

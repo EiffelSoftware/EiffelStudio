@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -79,6 +74,14 @@ feature {NONE} -- Access
 	batch_options: STRING
 			-- Option to the COMSPEC DOS prompt.
 
+	environment: ENVIRONMENT_ACCESS
+			-- Access to environment information
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Basic operations
 
 	variable_for_name (a_name: STRING): STRING is
@@ -132,7 +135,7 @@ feature {NONE} -- Basic operations
 					elseif retry_count = 1 then
 							-- CMD did not work out, try ComSpec
 							-- Retrieve command executable file name
-						l_com_spec := eiffel_layout.get_environment ("ComSpec")
+						l_com_spec := environment.get ("ComSpec")
 					end
 
 					if l_com_spec /= Void and then not l_com_spec.is_empty then
@@ -274,7 +277,7 @@ feature {NONE} -- Basic operations
 			-- File name of Command exe
 		once
 			create Result.make (256)
-			Result.append (eiffel_layout.get_environment ("SystemRoot"))
+			Result.append (environment.get ("SystemRoot"))
 			Result.append ("\system32\cmd.exe")
 			if not (create {RAW_FILE}.make (Result)).exists then
 					-- Try a command shell locatable in the user PATH variable.

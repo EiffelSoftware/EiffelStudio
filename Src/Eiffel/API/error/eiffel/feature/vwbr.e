@@ -70,8 +70,6 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			t_not_void: t /= Void
 			t_not_loose: not t.is_loose
-		local
-			cl_type_a: CL_TYPE_A
 		do
 			target_type := t
 		end

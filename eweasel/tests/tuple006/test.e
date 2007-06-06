@@ -7,14 +7,25 @@ feature
 
 	make is
 		local
-			t1, t2: TUPLE [a:STRING_8; b:STRING_32; c:HASH_TABLE [STRING, STRING]]
+			t1, t2: TUPLE [a:STRING_8; b: ANY; c:HASH_TABLE [STRING, STRING]]
 			l_table: HASH_TABLE [STRING, STRING]
+			l_obj: SPECIAL [ANY]
 			i, j: INTEGER
 		do
 			create l_table.make (10)
 			l_table.put ("ISE_EIFFEL", "/home/Eiffel60")
 
-			t1 := ["TEST", ("TEST").as_string_32, l_table]
+			from
+				i := 1
+				create l_obj.make (1000)
+			until
+				i = 1000
+			loop
+				l_obj.put (create {SPECIAL [INTEGER]}.make (128), i)
+				i := i + 1
+			end
+
+			t1 := ["TEST", l_obj, l_table]
 
 				-- Twin test
 			from
@@ -56,7 +67,7 @@ feature
 					t2.b = Void or
 					t2.c = Void or
 					not equal (t1.a, t2.a) or
-					not equal (t1.b, t2.b) or
+					not deep_equal (t1.b, t2.b) or
 					not deep_equal (t1.c, t2.c) or
 					t2.a.count /= t1.a.count
 				then

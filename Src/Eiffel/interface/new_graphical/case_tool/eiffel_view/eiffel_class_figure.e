@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class.as_string_32 + ": " + model.name,
+						interface_names.t_diagram_set_center_class (model.name),
 						[<<
 							agent old_center.set_is_fixed (False),
 							agent cg.set_new_center_class (model),
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class.as_string_32 + ": " + model.name,
+						interface_names.t_diagram_set_center_class (model.name),
 						[<<
 							agent cg.set_new_center_class (model),
 							agent layout.layout,

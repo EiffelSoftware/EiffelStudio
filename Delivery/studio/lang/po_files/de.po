@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-04 14:13-0800\n"
+"PO-Revision-Date: 2007-06-05 17:06-0800\n"
 "Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,6 +19,8 @@ msgid ""
 "\tdefault (no option): quick melt the system.\n"
 "\n"
 msgstr ""
+"\tStandard (keine Option): System schnell schmelzen.\n"
+"\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
 #: interface_names.e:1428
@@ -115,6 +117,8 @@ msgid ""
 "\n"
 "The total active query:\n"
 msgstr ""
+"\n"
+"Totale aktive Abfrage:\n"
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("   $1 replaced in $2 class", "   $1 replaced in $2 classes", a_class_num), [a_item_num, a_class_num])
 #: interface_names.e:1495
@@ -151,7 +155,7 @@ msgstr " (Haltepunkte werden ignoriert)"
 #. Source code: Result := locale.formatted_string (locale.translation (" (located in $1)"), [a_s])
 #: interface_names.e:1490
 msgid " (located in $1)"
-msgstr ""
+msgstr " (Pfad: $1)"
 
 #. Source code: once Result := locale.translation (" --> Expression: ") end
 #: debugger_names.e:90
@@ -205,9 +209,8 @@ msgstr " => Neue Bedingung angewendet. \n"
 
 #. Source code: once Result := locale.translation (" => No breakpoint addition%N") end
 #: debugger_names.e:108
-#, fuzzy
 msgid " => No breakpoint addition\n"
-msgstr "Keine Haltepunkte"
+msgstr " => Keine Haltepunkte hinzufügen\n"
 
 #. Source code: once Result := locale.translation (" => This is not a valid boolean condition. %N") end
 #: debugger_names.e:118
@@ -524,10 +527,11 @@ msgstr "&Hinzufügen..."
 msgid "&Address Bar"
 msgstr "&Adressleiste"
 
+# Name of menu entry to define display limits of STRING and SPECIAL objects.
 #. Source code: m_Set_slice_size: STRING_GENERAL is			do Result := locale.translation("&Alter size New")	end
 #: interface_names.e:740
 msgid "&Alter size New"
-msgstr ""
+msgstr "&Grenzwerte setzen"
 
 #. Source code: m_Showpast: STRING_GENERAL is				do Result := locale.translation("&Ancestor Versions")	end
 #: interface_names.e:566
@@ -557,7 +561,7 @@ msgstr "Zurück"
 #. Source code: m_Showcallers: STRING_GENERAL is			do Result := locale.translation("&Callers")	end
 #: interface_names.e:548
 msgid "&Callers"
-msgstr "&Aufrufer"
+msgstr "&Aufrufende"
 
 #. Source code: m_Close_short: STRING_GENERAL is				do Result := locale.translation("&Close")	end
 #: interface_names.e:321
@@ -862,7 +866,7 @@ msgstr "E&infügen\tCtrl+V"
 #. Source code: m_Pick: STRING_GENERAL is					do Result := locale.translation("&Pick") end
 #: interface_names.e:769
 msgid "&Pick"
-msgstr "&Aufnehmen"
+msgstr "&Greifen"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("&Pick $1 '$2'"), [a_type, a_name])
 #: interface_names.e:775
@@ -1355,6 +1359,9 @@ msgid ""
 "an optimized version as well as a workbench version.\n"
 "Would you like to create a finalized version?"
 msgstr ""
+"Vorkompilierte .NET Bibliotheken können finalisiert werden um eine\n"
+"optimierte Version zusätzlich zur Werkbankversion zu erstellen.\n"
+"Möchten Sie eine finalisierte Version erstellen?"
 
 #. Source code: incorrect_options: STRING_GENERAL is 						do Result := locale.translation (": incorrect options%N") end
 #: ewb_names.e:42
@@ -1450,6 +1457,12 @@ msgid ""
 "A Dialog-Based Application uses a sequence of dialogs.\n"
 "(This wizard is an example of Dialog-Based Application.)"
 msgstr ""
+"Eine auf Fenster basierte Anwendung benutzt ein Hauptfenster, oder \"frame\",\n"
+"welches Menüs, Unterfenster, etc. haben kann.\n"
+"(EiffelStudio ist ein Beispiel einer auf Fenstern basierten Anwendung).\n"
+"\n"
+"Eine auf Dialogen basierte Anwendung benutzt eine Sequenz aus Dialogen.\n"
+"(Dieser Assistent ist ein Beispiel einer auf Dialogen basierten Anwendung)."
 
 #. Source code: w_Found_backup: STRING_GENERAL is do Result := locale.translation ("A backed up version of the file was found.%N%
 #: warning_messages.e:602
@@ -1532,7 +1545,7 @@ msgstr "Über $1"
 #. Source code: l_about_dialogbox: STRING_GENERAL is do Result := locale.translation ("About DialogBox") end
 #: interface_names.e:19
 msgid "About DialogBox"
-msgstr ""
+msgstr "Dialog \"Über\""
 
 #. Source code: target_library_root_description: STRING_GENERAL is do Result := locale.translation ("Absolute path to use as base for relative paths.")	end
 #: conf_interface_names.e:148
@@ -1856,7 +1869,7 @@ msgstr "Neuen Erzeuger für Metrikwerte hinzufügen"
 #. Source code: l_add_stone_handler: STRING_GENERAL is do Result := locale.translation ("Add new stone handler") end
 #: interface_names.e:665
 msgid "Add new stone handler"
-msgstr ""
+msgstr "Neuen Kieselhandhaber hinzufügen"
 
 #. Source code: dialog_task_add: STRING_GENERAL is do Result := locale.translation ("Add new task")	end
 #: conf_interface_names.e:435
@@ -2106,6 +2119,8 @@ msgid ""
 "An error occurred during initialization of the ICorDebug Debugger\n"
 " or during the Process creation (.NET)."
 msgstr ""
+"Ein Fehler ist aufgetreten beim initialisieren des ICorDebug Debuggers\n"
+"oder während dem Erstellen des Prozesses (.NET)."
 
 #. Source code: do Result := locale.translation ("An error occurred on breakpoints because a feature%N%
 #: warning_messages.e:549
@@ -2131,6 +2146,8 @@ msgid ""
 "An error occurred while loading the configuration for your profiler.\n"
 "Please check with your system administrator whether your profiler is supported.\n"
 msgstr ""
+"Ein Fehler ist aufgetreten während dem Laden der Konfiguration für den Profiler.\n"
+"Bitte überprüfen Sie mit dem Systemadministrator ob Ihr Profiler unterstützt wird.\n"
 
 #. Source code: w_Could_not_parse_ace: STRING_GENERAL is do Result := locale.translation ("An error occurred while parsing the configuration file.%N%
 #: warning_messages.e:722
@@ -2480,7 +2497,7 @@ msgid ""
 " If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!"
 msgstr ""
 "Soll das Refactoring wirklich wiederholt werden?\n"
-"Falls sich seit dem Rückgängig machen des Refactorings Klassen geändert haben kann dies zu korrupten Klassen und verlorenen Informationen führen."
+"Falls sich seit dem Rückgängig machen des Refactorings Klassen geändert haben kann dies zu fehlerhaften Klassen und verlorenen Informationen führen."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1 and any children of it?"), [a_group])
 #: conf_interface_names.e:364
@@ -2504,7 +2521,7 @@ msgid ""
 " If classes have been modified since the refactoring this can lead to corrupt classes and lost information!"
 msgstr ""
 "Das Refactoring rückgängig machen?\n"
-"Falls Klassen geändert wurden seit dem letzten Refactoring kann dies zu korrupten Klassen und Informationsverlust führen."
+"Falls Klassen geändert wurden seit dem letzten Refactoring kann dies zu fehlerhaften Klassen und Informationsverlust führen."
 
 #. Source code: l_argument_unit: STRING_GENERAL is do Result := locale.translation("Argument") end
 #: eb_metric_names.e:285
@@ -4013,7 +4030,7 @@ msgstr "C-Kompilierung abgebrochen"
 #. 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:114
 msgid "Background color for archive items whose recent calculated value violates pre-defined value criterion."
-msgstr ""
+msgstr "Hintergrundfarbe für Archivelemente deren kürzlich berechneten Werte die vordefinierten Kriterien verletzen."
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:249
@@ -4675,12 +4692,12 @@ msgstr "Aufgerufene von Lieferantenklasse"
 #. Source code: l_Callers: STRING_GENERAL is				do Result := locale.translation("Callers")	end
 #: interface_names.e:837
 msgid "Callers"
-msgstr "Aufrufer"
+msgstr "Aufrufende"
 
 #. Source code: l_callers_from_client_class: STRING_GENERAL is do Result := locale.translation("Callers from client class") end
 #: interface_names.e:1577
 msgid "Callers from client class"
-msgstr "Aufrufer der Klientenklasse"
+msgstr "Aufrufende der Klientenklasse"
 
 #. Source code: t_Calling_convention: STRING_GENERAL is				do Result := locale.translation("Calling Convention")	end
 #: interface_names.e:1701
@@ -5553,7 +5570,7 @@ msgstr "Kli&enten"
 #. Source code: wb_Click_back_and_correct_error: STRING_GENERAL is do Result := locale.translation("Click Back if you can correct the problem or Click Abort.")	end
 #: interface_names.e:2197
 msgid "Click Back if you can correct the problem or Click Abort."
-msgstr "'Zurück' wählen wenn Sie das Problem korrigieren können, sonst 'Abbrechen'."
+msgstr "`Zurück' wählen wenn Sie das Problem korrigieren können, sonst 'Abbrechen'."
 
 #. Source code: Result := locale.translation ("Click Finish to generate and compile this project")
 #: interface_names.e:44
@@ -7260,7 +7277,7 @@ msgstr "Erzeugerprozedur"
 #. Source code: t_Creation_routine_name_error: STRING_GENERAL is do Result := locale.translation ("Creation Routine Name Error") end
 #: interface_names.e:144
 msgid "Creation Routine Name Error"
-msgstr "Fehler im Namen einer Erzeugerroutine"
+msgstr "Fehler im Namen einer Erzeugerprozedur"
 
 #. Source code: l_Creation: STRING_GENERAL is				do Result := locale.translation("Creation procedure:")	end
 #: interface_names.e:898
@@ -7275,7 +7292,7 @@ msgstr ""
 #. Source code: l_Creation_routine_name: STRING_GENERAL is 	do Result := locale.translation ("Creation routine name") end
 #: interface_names.e:16
 msgid "Creation routine name"
-msgstr "Name der Erzeugerroutine"
+msgstr "Name der Erzeugerprozedur"
 
 #. Source code: l_created: STRING_GENERAL is do Result := locale.translation("Creations")	end
 #: interface_names.e:1569
@@ -8929,9 +8946,8 @@ msgstr ""
 
 #. 	<PREF NAME="debugger.debugged_grid_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the debugged values (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:33
-#, fuzzy
 msgid "Debugged grid layout managed"
-msgstr "Gitterlayout beibehalten"
+msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
@@ -9098,12 +9114,12 @@ msgstr "Index vom standardmäßigen Klassenformatierer"
 #. 	<PREF NAME="tools.context_tool.default_dependency_formatter_index" DESCRIPTION="Default dependency formatter that should be popped up automatically."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
 msgid "Default dependency formatter index"
-msgstr ""
+msgstr "Index für standardmässigen Formatierer der Abhängigkeiten"
 
 #. 	<PREF NAME="tools.context_tool.default_dependency_formatter_index" DESCRIPTION="Default dependency formatter that should be popped up automatically."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
 msgid "Default dependency formatter that should be popped up automatically."
-msgstr ""
+msgstr "Formatierer der standardmässig ausgewählt wird um Abhängigkeiten zu formatieren."
 
 #. 	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:6
@@ -9118,7 +9134,7 @@ msgstr "Standardwert Länge in aufgeklappter Ansicht"
 #. 	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:99
 msgid "Default feature formatter index"
-msgstr ""
+msgstr "Index für standardmässigen Formatierer für Features"
 
 #. Source code: dialog_create_library_defaults: STRING_GENERAL is do Result := locale.translation ("Default libraries")	end
 #: conf_interface_names.e:444
@@ -9730,7 +9746,7 @@ msgstr "Diagrammwerkzeug"
 #. 	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Class_header_hole__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Separator;Force_directed__visible;UML_visibility__visible;Force_settings__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Fit_to_screen__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Diagram_to_png__hidden;Cluster_filling__hidden;Zoom_out__hidden;Zoom_in__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:89
 msgid "Diagram toolbar layout"
-msgstr ""
+msgstr "Anordnung der Werkzeugleiste im Diagramm"
 
 #. Source code: m_diagram_with: STRING_GENERAL is	do Result := locale.translation ("Diagram with") end
 #: interface_names.e:759
@@ -10644,7 +10660,7 @@ msgstr "Dynamische Featureauswertung"
 #. Source code: t_Dynamic_lib_window: STRING_GENERAL is 			do Result := locale.translation("Dynamic Library Builder")	end
 #: interface_names.e:1720
 msgid "Dynamic Library Builder"
-msgstr ""
+msgstr "Erzeuger für dynamische Bibliotheken"
 
 #. Source code: target_dynamic_runtime_name: STRING_GENERAL is do Result := locale.translation ("Dynamic Runtime")	end
 #: conf_interface_names.e:113
@@ -12775,7 +12791,7 @@ msgstr ""
 "Ein gültiger Name in Eiffel ist nicht leer, enthält nur Buchstaben,\n"
 "Zahlen und Unterstriche. Das erste Zeichen muss ein Buchstabe sein\n"
 "\n"
-"Klicke 'Zurück' und wähle gültige Namen."
+"Klicke `Zurück' und wähle gültige Namen."
 
 #. Source code: w_element_expected_not_found (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.formatted_string (locale.translation ("Element $1 expected but not found."), [a_name]) end;
 #: warning_messages.e:1085
@@ -12847,7 +12863,7 @@ msgstr "In 'If' einbetten"
 #. Source code: t_Empty_creation_routine_external_name_error: STRING_GENERAL is do Result := locale.translation ("Empty Creation Routine .NET Name Error") end
 #: interface_names.e:146
 msgid "Empty Creation Routine .NET Name Error"
-msgstr ""
+msgstr "Fehler: Leerer Name der Erzeugerprozedur in .NET"
 
 #. Source code: t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translation("Empty Development Tool")	end
 #: interface_names.e:1769
@@ -12857,7 +12873,7 @@ msgstr "Leere Entwicklungsumgebung"
 #. Source code: t_Empty_root_class_external_name_error: STRING_GENERAL is do Result := locale.translation ("Empty Root Class .NET Name Error") end
 #: interface_names.e:147
 msgid "Empty Root Class .NET Name Error"
-msgstr ""
+msgstr "Fehler: Leerer Name der Wurzelklasse in .NET"
 
 #. Source code: b_Bkpt_enable: STRING_GENERAL is					do Result := locale.translation("Enable Breakpoints")	end
 #: interface_names.e:149
@@ -13108,7 +13124,7 @@ msgstr "Name des Ordners eingeben:"
 #. Source code: l_Entry_colon: STRING_GENERAL is			do Result := locale.translation("Entry: ") end
 #: interface_names.e:1011
 msgid "Entry: "
-msgstr ""
+msgstr "Eintrag: "
 
 #. Source code: l_environment: STRING_GENERAL is					do Result := locale.translation("Environment")	end
 #: interface_names.e:1012
@@ -13145,22 +13161,22 @@ msgstr "Fehler der Umgebungsvariablen"
 #. Source code: Result := locale.formatted_string(locale.translation("Erase Class '$1'"), [a_name])
 #: interface_names.e:1873
 msgid "Erase Class '$1'"
-msgstr "Klasse '$1' löschen"
+msgstr "Klasse '$1' entfernen"
 
 #. Source code: t_Diagram_erase_classes_cmd: STRING_GENERAL is		do Result := locale.translation("Erase Classes")	end
 #: interface_names.e:1876
 msgid "Erase Classes"
-msgstr "Klassen auslöschen"
+msgstr "Klassen entfernen"
 
 #. Source code: Result := locale.formatted_string(locale.translation("Erase Cluster '$1'"), [a_name])
 #: interface_names.e:1864
 msgid "Erase Cluster '$1'"
-msgstr "Cluster '$1' auslöschen"
+msgstr "Cluster '$1' entfernen"
 
 #. Source code: t_Diagram_delete_midpoint_cmd: STRING_GENERAL is	do Result := locale.translation("Erase Midpoint")	end
 #: interface_names.e:1867
 msgid "Erase Midpoint"
-msgstr "Zwischenpunkt löschen"
+msgstr "Zwischenpunkt entfernen"
 
 #. Source code: l_error: STRING_GENERAL is					do Result := locale.translation("Error")	end
 #: interface_names.e:1013
@@ -13234,12 +13250,12 @@ msgstr "Estonian (Estonia)"
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_accelerator_allowed" DESCRIPTION="When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:187
 msgid "Estudio dbg menu accelerator allowed"
-msgstr ""
+msgstr "EiffelStudio Debugmenü Tastenkombination aktiviert"
 
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_allowed" DESCRIPTION="Is EiffelStudio Debug menu allowed?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:186
 msgid "Estudio dbg menu allowed"
-msgstr ""
+msgstr "EiffelStudio Debugmenü aktiviert"
 
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_enabled" DESCRIPTION="Should EiffelStudio Debug menu be shown" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:188
@@ -13379,7 +13395,7 @@ msgstr ""
 #. Source code: dialog_file_rule_excludes: STRING_GENERAL is do Result := locale.translation ("Excludes:")	end
 #: conf_interface_names.e:406
 msgid "Excludes:"
-msgstr ""
+msgstr "Ausschliessend:"
 
 #. Source code: l_Exe_type: STRING_GENERAL is do Result := locale.translation ("Executable") end
 #: interface_names.e:31
@@ -13469,7 +13485,7 @@ msgstr "Referenzierte Klassen aufklappen"
 #. 	<PREF NAME="tools.class_browser.expand_referencer_class" HIDDEN="false" DESCRIPTION="Should referencer classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:119
 msgid "Expand referencer class"
-msgstr ""
+msgstr "Referernzierer Klassen expandieren"
 
 #. Source code: l_expand_layer: STRING_GENERAL is do Result := locale.translation("Expand selected level(s)")	end
 #: interface_names.e:1548
@@ -13484,12 +13500,12 @@ msgstr "Knoten aufklappen"
 #. 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:12
 msgid "Expanded display background color"
-msgstr ""
+msgstr "Hintergrundfarbe für expandierte Ansicht"
 
 #. Source code: m_expanded_object_view: STRING_GENERAL is	do Result := locale.translation ("Expanded object view") end
 #: interface_names.e:760
 msgid "Expanded object view"
-msgstr ""
+msgstr "Expandierte Objektansicht"
 
 #. Source code: l_Explicit_exception_pending: STRING_GENERAL is do Result := locale.translation("Explicit exception pending")	end
 #: interface_names.e:1033
@@ -13914,7 +13930,7 @@ msgstr "Ansicht als Featureaufgerufene"
 #. Source code: l_feature_caller_displayer: STRING_GENERAL do Result := locale.translation ("Feature caller view") end
 #: interface_names.e:643
 msgid "Feature caller view"
-msgstr "Ansicht als Featureaufrufende"
+msgstr "Ansicht als Featureaufrufender"
 
 #. 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
@@ -14307,7 +14323,7 @@ msgstr "Datei '$1' kann nicht geöffnet werden"
 #. Source code: w_file_is_corrupted (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.formatted_string (locale.translation ("File $1 is corrupted"), [a_name]) end;
 #: warning_messages.e:111
 msgid "File $1 is corrupted"
-msgstr "Datei $1 ist korrumpiert"
+msgstr "Datei $1 ist fehlerhaft"
 
 #. Source code: system_file_name: STRING_GENERAL is do Result := locale.translation ("File Name")	end
 #: conf_interface_names.e:67
@@ -14575,7 +14591,7 @@ msgstr "Beenden"
 #. Source code: t_finish_freezing_status: STRING_GENERAL is			do Result := locale.translation("Finish Freezing Status")	end
 #: interface_names.e:1734
 msgid "Finish Freezing Status"
-msgstr ""
+msgstr "Endstatus des Einfrierens"
 
 #. Source code: Result.force (locale.translation ("Finnish"), "fi")
 #: locale_names.e:47
@@ -15297,7 +15313,7 @@ msgstr "Allgemein"
 #. 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_tab__visible;New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Save_all_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Editor__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden;Properties__hidden;Breakpoints__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:209
 msgid "General toolbar layout"
-msgstr ""
+msgstr "Anordnung der Standardleiste"
 
 #. Source code: m_Generate_documentation: STRING_GENERAL is do Result := locale.translation("Generate &Documentation...")	end
 #: interface_names.e:448
@@ -15857,7 +15873,7 @@ msgstr "Isländisch (Island)"
 #. Source code: l_Toolbar_select_has_gray_icons: STRING_GENERAL is do Result := locale.translation("Icon option: ")	end
 #: interface_names.e:1301
 msgid "Icon option: "
-msgstr "Symboloptionen:"
+msgstr "Symboloption:"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>240;240;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:55
@@ -16039,15 +16055,16 @@ msgstr "Eltern einbeziehen"
 msgid "Include:"
 msgstr "Einbinden:"
 
+# label in config tree view of C headers
 #. Source code: external_include_tree: STRING_GENERAL is do Result := locale.translation ("Includes")	end
 #: conf_interface_names.e:171
 msgid "Includes"
-msgstr ""
+msgstr "C Headers"
 
 #. Source code: dialog_file_rule_includes: STRING_GENERAL is do Result := locale.translation ("Includes:")	end
 #: conf_interface_names.e:407
 msgid "Includes:"
-msgstr "Beinhaltet:"
+msgstr "Einschliesslich:"
 
 #. Source code: Result.force (locale.translation ("Incompatible Types Equality"), w_vweq)
 #: conf_interface_names.e:323
@@ -16153,7 +16170,7 @@ msgstr "Syntaxfehler in der Indexklausel"
 #. 	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:97
 msgid "Indexing items that need not be included in formatted texts."
-msgstr ""
+msgstr "Indexelemente welche nicht in formattiertem Text angezeigt werden müssen."
 
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:251
@@ -16441,9 +16458,8 @@ msgstr "Eingabebereich ungültig"
 
 #. Source code: err_input_domain_item_appear: STRING_GENERAL is do Result := locale.translation ("Input domain item appears.") end
 #: eb_metric_names.e:1041
-#, fuzzy
 msgid "Input domain item appears."
-msgstr "Eingabedomäne"
+msgstr ""
 
 #. Source code: t_input_domain_title: STRING_GENERAL is do Result := locale.translation ("Input domain:") end
 #: eb_metric_names.e:81
@@ -16925,7 +16941,7 @@ msgstr "Is"
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_allowed" DESCRIPTION="Is EiffelStudio Debug menu allowed?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:186
 msgid "Is EiffelStudio Debug menu allowed?"
-msgstr ""
+msgstr "Darf das EiffelStudio Debugmenü angezeigt werden?"
 
 #. Source code: l_Is_true: STRING_GENERAL is				do Result := locale.translation("Is True")	end
 #: interface_names.e:1089
@@ -17103,7 +17119,7 @@ msgstr "Elemente/Werkzeuge die im Debugmodus im Navigationslayout angezeigt werd
 #. 	<PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Search;closed;0;0;0;0;Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:28
 msgid "Items/tools shown on editor side when in debug mode."
-msgstr ""
+msgstr "Elemente und Werkzeuge die im Debugmodus auf der Editorseite angezeigt werden."
 
 #. Source code: Result.force (locale.translation ("Japanese"), "ja")
 #: locale_names.e:69
@@ -17217,6 +17233,8 @@ msgid ""
 "Key to be able to add the generated binary to the Global Assembly Cache (GAC). \n"
 "Chose a new, non existing filename to create a new key file."
 msgstr ""
+"Schlüssel um die generierte Binärdatei zum globalen Assemblycache (GAC) hinzuzufügen. \n"
+"Einen neuen, nicht existierenden Dateinamen wählen um eine neue Schlüsseldatei zu erstellen."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -17331,7 +17349,7 @@ msgstr "Lao (Lao PDR)"
 #. 	<PREF NAME="debugger.max_slice" HIDDEN="true" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:23
 msgid "Largest number of items displayed in list data."
-msgstr ""
+msgstr "Grösste Anzahl Elemente welche in einer Listenansicht dargestellt werden."
 
 #. 	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:196
@@ -17411,7 +17429,7 @@ msgstr "Letzter gespeicherter Stack-Pfad"
 #. 	<PREF NAME="interface.development_window.is_force_debug_mode" DESCRIPTION="Last time when closing development window if it was forcing debug mode." HIDDEN="true"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:217
 msgid "Last time when closing development window if it was forcing debug mode."
-msgstr ""
+msgstr "War die Entwicklungsumgebung beim letzten Schliessen im \"Debug-Modus erzwingen\" Modus?"
 
 #. Source code: Result.force (locale.translation ("Latvian"), "lv")
 #: locale_names.e:81
@@ -17461,7 +17479,7 @@ msgstr "Debuganordnung links"
 #. 	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:549
 msgid "Left margin width"
-msgstr ""
+msgstr "Breite des linken Rands"
 
 #. Source code: external_library_tree: STRING_GENERAL is do Result := locale.translation ("Libraries")	end
 #: conf_interface_names.e:173
@@ -17585,7 +17603,7 @@ msgstr "Kontext verknüpfen"
 #. Source code: t_Diagram_link_tool: STRING_GENERAL is				do Result := locale.translation("Link Tool")	end
 #: interface_names.e:1774
 msgid "Link Tool"
-msgstr ""
+msgstr "Verbindungswerkzeug"
 
 #. Source code: e_Toggle_stone_management: STRING_GENERAL is do Result := locale.translation("Link or not the context tool to other components")	end
 #: interface_names.e:2095
@@ -17615,7 +17633,7 @@ msgstr "Werkzeuge verknüpfen? Falls ja werden geöffnete Objekte (Klassen, Feat
 #. 	<PREF NAME="tools.metric_tool.unit_order" DESCRIPTION="List of metric units in order"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:110
 msgid "List of metric units in order"
-msgstr ""
+msgstr "Sortierte Liste der Metrikeinheiten"
 
 #. 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:221
@@ -17843,7 +17861,7 @@ msgstr "Sicherstellen dass der Koeffizient der Nennermetrik eine nicht-negative 
 #. Source code: unit_in_basic_metric_not_same_to_do: STRING_GENERAL is do Result := locale.translation ("Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric.") end
 #: eb_metric_names.e:1108
 msgid "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
-msgstr ""
+msgstr "Sicherstellen dass jedes (rekursive) Kriterium in einer Basismetrik die gleiche Einheit wie die Basismetrik hat."
 
 #. Source code: Result := linear_metric_info.as_string_32 + locale.translation ("Make sure every variable metric referenced by a linear metric is defined.")
 #: eb_metric_names.e:1089
@@ -17892,12 +17910,12 @@ msgstr "Sicherstellen dass die referenzierte Metrik existiert und gültig ist."
 #. Source code: criterion_not_exist_to_do: STRING_GENERAL is do Result := locale.translation ("Make sure that the criterion of given unit exists.") end
 #: eb_metric_names.e:1109
 msgid "Make sure that the criterion of given unit exists."
-msgstr ""
+msgstr "Sicherstellen dass das Kriterium der gegebenen Einheit existiert."
 
 #. Source code: text_in_text_criterion_empty_to_do: STRING_GENERAL is do Result := locale.translation ("Make sure to specify a non-empty string for a text criterion.") end
 #: eb_metric_names.e:1111
 msgid "Make sure to specify a non-empty string for a text criterion."
-msgstr ""
+msgstr "Sicherstellen dass eine nicht leere Zeichenkette für ein Textkriterium angegeben ist."
 
 #. Source code: Result := linear_metric_info.as_string_32 + locale.translation ("Make sure unit of every variable metric is same as that of the linear metric.")
 #: eb_metric_names.e:1096
@@ -17992,7 +18010,7 @@ msgstr "Hintergrundfarbe für Rand"
 #. 	<PREF NAME="editor.general.colors.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:559
 msgid "Margin separator color"
-msgstr ""
+msgstr "Farbe für Randseparator"
 
 #. Source code: t_match_all_of_the_following: STRING_GENERAL is do Result := locale.translation ("Match all") end
 #: eb_metric_names.e:157
@@ -18047,12 +18065,12 @@ msgstr "Maximieren"
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:113
 msgid "Maximize metric result area"
-msgstr ""
+msgstr "Resultatbereich der Metrik maximieren"
 
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:113
 msgid "Maximize metric result area?"
-msgstr ""
+msgstr "Soll der Resultatbereich der Metriken maximiert werden?"
 
 #. Source code: t_Set_stack_depth: STRING_GENERAL is				do Result := locale.translation("Maximum Call Stack Depth")	end
 #: interface_names.e:1757
@@ -18108,7 +18126,7 @@ msgstr "Nachricht die in der Formatiereransicht angezeigt wird wenn die Berechnu
 #. Source code: target_metadata_cache_path_name: STRING_GENERAL is do Result := locale.translation ("Metadata Cache Path")	end
 #: conf_interface_names.e:127
 msgid "Metadata Cache Path"
-msgstr ""
+msgstr "Pfad des Metadata Cache"
 
 #. Source code: l_Tab_metrics: STRING_GENERAL is do Result := locale.translation("Metric")	end
 #: interface_names.e:1576
@@ -18158,7 +18176,7 @@ msgstr "Metrikname"
 #. Source code: t_metric_archive_calculation_finished: STRING_GENERAL is do Result := locale.translation ("Metric archive calculation finished.") end
 #: eb_metric_names.e:99
 msgid "Metric archive calculation finished."
-msgstr ""
+msgstr "Berechnung des Metrikarchivs abgeschlossen."
 
 #. Source code: t_selected_archive_not_valid: STRING_GENERAL is do Result := locale.translation ("Metric archive in specified file is not valid, it must be cleaned") end
 #: eb_metric_names.e:64
@@ -18463,6 +18481,8 @@ msgid ""
 "Moving a folder to one of its children\n"
 "is not possible."
 msgstr ""
+"Einen Ordner zu einem seiner Unterordner\n"
+"zu verschieben ist nicht möglich."
 
 #. Source code: target_multithreaded_name: STRING_GENERAL is do Result := locale.translation ("Multithreaded")	end
 #: conf_interface_names.e:139
@@ -18663,7 +18683,7 @@ msgstr "Assistent zum Erstellen eines neuen Assistenten"
 #. Source code: l_New_breakpoint: STRING_GENERAL is			do Result := locale.translation("New breakpoint(s) to commit")	end
 #: interface_names.e:1125
 msgid "New breakpoint(s) to commit"
-msgstr ""
+msgstr "Neue Haltepunkte zum Übernehmen"
 
 #. 	<PREF NAME="tools.refactoring.class_rename.new_class_name" DESCRIPTION="New name of class" HIDDEN="True"><STRING>NEW_NAME</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:634
@@ -18735,12 +18755,12 @@ msgstr "Neues Fenster"
 #. Source code: b_Next: STRING_GENERAL is							do Result := locale.translation("Next")	end
 #: interface_names.e:84
 msgid "Next"
-msgstr "Nächste"
+msgstr "Weiter"
 
 #. Source code: b_arrow_next: STRING_GENERAL is						do Result := locale.translation ("Next >") end
 #: interface_names.e:147
 msgid "Next >"
-msgstr "Nächste >"
+msgstr "Weiter >"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_8" DESCRIPTION="Ninth external command shortcut."><SHORTCUT Alt="True">8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:680
@@ -18914,6 +18934,11 @@ msgid ""
 "Please make sure the chosen class\n"
 "has a creation routine taking no argument."
 msgstr ""
+"Für diese Klasse konnte keine gültige\n"
+"Erzeugerprozedur gefunden werden.\n"
+"Bitte stellen Sie sicher dass die gewählte\n"
+"Klasse eine Erzeugerprozedur hat welche\n"
+"keine Argumente nimmt."
 
 #. Source code: do Result := locale.translation ("No value entered. Do you want to: %N%
 #: ewb_names.e:77
@@ -19025,7 +19050,7 @@ msgstr "Anzahl Zustände"
 #. 	<PREF NAME="tools.context_tool.formatters_history_size" DESCRIPTION="Number of cached formatted text in history."><INTEGER>60</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:100
 msgid "Number of cached formatted text in history."
-msgstr ""
+msgstr "Anzahl Formattierte Text des Verlaufs im Cachespeicher."
 
 #. Source code: target_msil_classes_per_module_description: STRING_GENERAL is do Result := locale.translation ("Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.")	end
 #: conf_interface_names.e:130
@@ -19207,7 +19232,7 @@ msgstr "Alte Syntax"
 #. Source code: target_old_verbatim_strings_name: STRING_GENERAL is do Result := locale.translation ("Old Verbatim Strings")	end
 #: conf_interface_names.e:141
 msgid "Old Verbatim Strings"
-msgstr ""
+msgstr "Alte \"Verbatim\" Zeichenketten"
 
 #. 	<PREF NAME="tools.metric_tool.old_archive_age_in_days" DESCRIPTION="Age in days for an archive item to be considered old"><INTEGER>30</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:108
@@ -19286,7 +19311,7 @@ msgstr "Once Routinen und Konstanten"
 #. Source code: Result.force (locale.translation ("Onces in Generics"), w_once_in_generic)
 #: conf_interface_names.e:318
 msgid "Onces in Generics"
-msgstr ""
+msgstr "Once Features in generischen Klassen"
 
 #. Source code: do Result := locale.translation ("One of the clusters is invalid.%N%N%
 #: warning_messages.e:919
@@ -19429,7 +19454,7 @@ msgstr "Angegebene Datei in externem Editor öffnen"
 #. Source code: e_Open_eac_browser: STRING_GENERAL is		do Result := locale.translation("Open the Eiffel Assembly Cache browser tool")	end
 #: interface_names.e:2063
 msgid "Open the Eiffel Assembly Cache browser tool"
-msgstr ""
+msgstr "Den Browser für den Eiffel Assembly Cache öffnen"
 
 #. Source code: f_open_metric_file_in_external_editor: STRING_GENERAL is do Result := locale.translation ("Open user defined metric file in external editor") end
 #: eb_metric_names.e:261
@@ -19479,7 +19504,7 @@ msgstr "Optionen"
 #. Source code: Result.force (locale.translation ("Options Unknown Class"), w_option_unknown_class)
 #: conf_interface_names.e:326
 msgid "Options Unknown Class"
-msgstr ""
+msgstr "Optionen für unbekannte Klassen"
 
 #. Source code: l_Options_colon: STRING_GENERAL is 				do Result := locale.translation("Options: ")	end
 #: interface_names.e:1159
@@ -19812,7 +19837,7 @@ msgstr "Plattformen"
 #. Source code: please_check_with_your_system_administator: STRING_GENERAL is do Result := locale.translation ("Please check with your system administrator whether your profiler is supported.") end
 #: ewb_names.e:62
 msgid "Please check with your system administrator whether your profiler is supported."
-msgstr ""
+msgstr "Bitte überprüfen Sie mit Ihrem Systemadministrator ob Ihr Profiler unterstützt wird."
 
 #. Source code: t_choose_directory: STRING_GENERAL is do Result := locale.translation ("Please choose a folder.") end
 #: wizard_shared.e:263
@@ -19826,6 +19851,9 @@ msgid ""
 "The .NET name is the name that will be used\n"
 "by other .NET components when calling this routine."
 msgstr ""
+"Bitte wählen Sie einen .NET Namen für die Erzeugerprozedur.\n"
+"Der .NET Name ist der Name der benutzt wird wenn\n"
+"andere .NET Komponenten diese Prozedur aufrufen."
 
 #. Source code: do Result := locale.translation ("Please chose a .NET name for the root class.%N%
 #: interface_names.e:80
@@ -19842,7 +19870,7 @@ msgstr ""
 #. Source code: w_cannot_clear_when_c_compilation_running: STRING_GENERAL is do Result := locale.translation ("Please clear this window after c compilation has exited.") end
 #: warning_messages.e:1080
 msgid "Please clear this window after c compilation has exited."
-msgstr ""
+msgstr "Bitte löschen Sie dieses Fenster nachdem die C Kompilierung beendet wurde."
 
 #. Source code: e_Diagram_class_header: STRING_GENERAL is 	do Result := locale.translation("Please drop a class on this button.%NUse right click for both%N%
 #: interface_names.e:2028
@@ -19924,6 +19952,20 @@ msgid ""
 "You can also combine subqueries with 'and' and 'or', for example:\n"
 "\tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5"
 msgstr ""
+"Bitte eine korrekte Abfrage eingeben. Zum Beispiel:\n"
+"\tfeaturename = WORD.t*\n"
+"\tfeaturename < WORD.mak?\n"
+"\tcalls > 2\n"
+"\tself <= 3.4\n"
+"\tdescendants in 23 - 34\n"
+"\ttotal >= 12.3\n"
+"\tpercentage /= 2\n"
+"\tcalls > avg\n"
+"\tself <= max\n"
+"\ttotal > min\n"
+"\n"
+"Sie können auch Unterabfragen mit 'and' und 'or' kombinieren. Zum Beispiel:\n"
+"\tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5"
 
 #. Source code: Result := locale.translation ("Please enter a feature name.")
 #: warning_messages.e:663
@@ -19948,12 +19990,12 @@ msgstr "Bitte Ganzzahligen Wert eingeben."
 #. Source code: w_Fill_in_location_field: STRING_GENERAL is do Result := locale.translation ("Please fill in the 'Location' field.") end
 #: warning_messages.e:753
 msgid "Please fill in the 'Location' field."
-msgstr ""
+msgstr "Bitte das Feld 'Pfad' ausfüllen."
 
 #. Source code: w_Fill_in_project_name_field: STRING_GENERAL is do Result := locale.translation ("Please fill in the 'System Name' field.") end
 #: warning_messages.e:755
 msgid "Please fill in the 'System Name' field."
-msgstr ""
+msgstr "Bitte das Feld 'Systemname' ausfüllen."
 
 #. Source code: do Result := locale.translation ("Please fill in:%N%
 #: bench_wizard_interface_names.e:25
@@ -20064,7 +20106,7 @@ msgstr "Portugiesisch (Portugal)"
 #. 	<PREF NAME="interface.dialogs.project_settings_split_position" DESCRIPTION="Position of the split area." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:171
 msgid "Position of the split area."
-msgstr ""
+msgstr "Position des Trennbereichs."
 
 #. Source code: t_reference_position: STRING_GENERAL is				do Result := locale.translation ("Positions") end
 #: interface_names.e:1951
@@ -20267,10 +20309,11 @@ msgstr "Produkt"
 msgid "Profile"
 msgstr "Profil"
 
+# window title for profile query window
 #. Source code: t_Profile_query_window: STRING_GENERAL is			do Result := locale.translation("Profile Query Window")	end
 #: interface_names.e:1743
 msgid "Profile Query Window"
-msgstr ""
+msgstr "Abfrage über Profilinformationen"
 
 #. Source code: t_Profiler_wizard: STRING_GENERAL is				do Result := locale.translation("Profiler Wizard")	end
 #: interface_names.e:1744
@@ -20363,7 +20406,7 @@ msgid ""
 "is corrupted. Cannot continue."
 msgstr ""
 "Projekt in '$1'\n"
-"ist korrupt. Kann nicht weiterfahren."
+"ist fehlerhaft. Kann nicht weiterfahren."
 
 #. Source code: w_Cannot_open_project: STRING_GENERAL is do Result := locale.translation ("Project is not readable. Check permissions.") end
 #: warning_messages.e:27
@@ -20413,7 +20456,7 @@ msgstr "Breite der Projekteinstellungen"
 #. 	<PREF NAME="debugger.project_toolbar_layout" HIDDEN="true" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Assertion_checking_handler__hidden;Force_debug_mode__visible;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_restart_debug__visible;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden;Override_scan__hidden;Discover_melt__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:26
 msgid "Project toolbar layout"
-msgstr ""
+msgstr "Anordnung Projektleiste"
 
 #. Source code: menu_properties: STRING_GENERAL is do Result := locale.translation ("Properties")	end
 #: conf_interface_names.e:48
@@ -20428,7 +20471,7 @@ msgstr "Proportion"
 #. 	<PREF NAME="debugger.proportion" HIDDEN="true"  DESCRIPTION="Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."><INTEGER>0.5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:27
 msgid "Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."
-msgstr ""
+msgstr "Proportionen für den lokale Variablen/Argumente Teil des `Objekte' Reiters in den Debugging-Werkzeugen"
 
 #. Source code: l_Public_key: STRING_GENERAL is 			do Result := locale.translation ("Public Key") end
 #: interface_names.e:22
@@ -20438,7 +20481,7 @@ msgstr "Öffentlicher Schlüssel"
 #. Source code: assembly_public_key_token_description: STRING_GENERAL is do Result := locale.translation ("Public key token that identifies the asssembly.")	end
 #: conf_interface_names.e:264
 msgid "Public key token that identifies the asssembly."
-msgstr ""
+msgstr "Öffentlicher Schlüsseltoken das dieses Assembly identifieziert."
 
 #. Source code: b_refactoring_pull: STRING_GENERAL is		do Result := locale.translation("Pull Up")	end
 #: interface_names.e:511
@@ -20463,12 +20506,12 @@ msgstr "Punjabi (Indien)"
 #. Source code: t_Diagram_put_one_handle_left_cmd: STRING_GENERAL is	do Result := locale.translation("Put Handle Left")	end
 #: interface_names.e:1879
 msgid "Put Handle Left"
-msgstr ""
+msgstr "Zwischenpunkt links setzen"
 
 #. Source code: t_Diagram_put_one_handle_right_cmd: STRING_GENERAL is	do Result := locale.translation("Put Handle Right")	end
 #: interface_names.e:1880
 msgid "Put Handle Right"
-msgstr ""
+msgstr "Zwischenpunkt rechts setzen"
 
 #. Source code: t_Diagram_put_right_angles_cmd: STRING_GENERAL is	do Result := locale.translation("Put Right Angles")	end
 #: interface_names.e:1877
@@ -20478,32 +20521,32 @@ msgstr "Rechte Winkel setzen"
 #. Source code: t_Diagram_put_two_handles_left_cmd: STRING_GENERAL is	do Result := locale.translation("Put Two Handles Left")	end
 #: interface_names.e:1881
 msgid "Put Two Handles Left"
-msgstr ""
+msgstr "Zwei Zwischenpunkte links setzen"
 
 #. Source code: t_Diagram_put_two_handles_right_cmd: STRING_GENERAL is	do Result := locale.translation("Put Two Handles Right")	end
 #: interface_names.e:1882
 msgid "Put Two Handles Right"
-msgstr ""
+msgstr "Zwei Zwischenpunkte rechts setzen"
 
 #. Source code: b_put_handle_left: STRING_GENERAL is				do Result := locale.translation("Put handle left")	end
 #: interface_names.e:90
 msgid "Put handle left"
-msgstr ""
+msgstr "Zwischenpunkt links setzen"
 
 #. Source code: b_put_handle_right: STRING_GENERAL is				do Result := locale.translation("Put handle right")	end
 #: interface_names.e:91
 msgid "Put handle right"
-msgstr ""
+msgstr "Zwischenpunkt rechts setzen"
 
 #. Source code: b_put_two_handle_left: STRING_GENERAL is			do Result := locale.translation("Put two handles left")	end
 #: interface_names.e:93
 msgid "Put two handles left"
-msgstr ""
+msgstr "Zwei Zwischenpunkte links setzen"
 
 #. Source code: b_put_two_handle_right: STRING_GENERAL is			do Result := locale.translation("Put two handles right")	end
 #: interface_names.e:92
 msgid "Put two handles right"
-msgstr ""
+msgstr "Zwei Zwischenpunkte rechts setzen"
 
 #. 	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Does a quadruple click select the entire document?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:553
@@ -20863,6 +20906,8 @@ msgid ""
 "Remote file will be loaded in: $1.\n"
 "This file already exists. Overwrite?"
 msgstr ""
+"Die entfernte Datei wird geladen in $1.\n"
+"Diese Datei existiert bereits, soll Sie überschrieben werden?"
 
 #. Source code: general_remove: STRING_GENERAL is do Result := locale.translation ("Remove")	end
 #: conf_interface_names.e:352
@@ -20892,7 +20937,7 @@ msgstr "Bedingung entfernen"
 #. Source code: t_Diagram_remove_handles_cmd: STRING_GENERAL is		do Result := locale.translation("Remove Handles")	end
 #: interface_names.e:1883
 msgid "Remove Handles"
-msgstr ""
+msgstr "Zwischenpunkte entfernen"
 
 #. Source code: l_remove_project: STRING_GENERAL is			do Result := locale.translation("Remove Project")	end
 #: interface_names.e:1197
@@ -20971,9 +21016,8 @@ msgstr "Aktuell gewähltes Objekt entfernen"
 
 #. Source code: delayed_domain_item_appear_to_do: STRING_GENERAL is do Result := locale.translation ("Remove delayed domain item.") end
 #: eb_metric_names.e:1163
-#, fuzzy
 msgid "Remove delayed domain item."
-msgstr "Standard-Autovervollständigung benutzen?"
+msgstr ""
 
 #. Source code: f_remove_detailed_result: STRING_GENERAL is do Result := locale.translation ("Remove detailed result?") end
 #: eb_metric_names.e:138
@@ -20988,13 +21032,12 @@ msgstr "Gruppe entfernen"
 #. Source code: b_Remove_handles: STRING_GENERAL is					do Result := locale.translation("Remove handles")	end
 #: interface_names.e:101
 msgid "Remove handles"
-msgstr ""
+msgstr "Zwischenpunkte entfernen"
 
 #. Source code: input_domain_item_appear_to_do: STRING_GENERAL is do Result := locale.translation ("Remove input domain item.") end
 #: eb_metric_names.e:1164
-#, fuzzy
 msgid "Remove input domain item."
-msgstr "Eingabebereich wählen"
+msgstr ""
 
 #. Source code: t_remove_metric: STRING_GENERAL is do Result := locale.translation ("Remove metric ") end
 #: eb_metric_names.e:67
@@ -21038,9 +21081,8 @@ msgstr "Gewählten Bereich entfernen"
 
 #. Source code: l_remove_stone_handler: STRING_GENERAL is do Result := locale.translation ("Remove selected stone handler") end
 #: interface_names.e:666
-#, fuzzy
 msgid "Remove selected stone handler"
-msgstr "Gewählten Ausdruck entfernen"
+msgstr "Gewählten Kieselhandhaber entfernen"
 
 #. Source code: t_remove_value_retriever: STRING_GENERAL is do Result := locale.translation ("Remove selected value retriever") end
 #: eb_metric_names.e:154
@@ -21642,7 +21684,7 @@ msgstr "S&ystem Information"
 #. Source code: w_source_name_attribute_expected: STRING_GENERAL is do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:903
 msgid "SOURCE name attribute expected"
-msgstr ""
+msgstr "Attribut mit Namen SOURCE erwartet"
 
 #. Source code: Result.force (locale.translation ("Same UUID"), w_same_uuid)
 #: conf_interface_names.e:321
@@ -21826,7 +21868,7 @@ msgstr "Y Position des Dialogs 'Projekteinstellungen'."
 #. 	<PREF NAME="editor.general.scrolling_common_line_count" DESCRIPTION="Number of lines that will stay visible when you perform a page down or a page up operation."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:550
 msgid "Scrolling common line count"
-msgstr ""
+msgstr "Anzahl sichtbare Zeilen beim Rollen"
 
 #. Source code: b_Search: STRING_GENERAL is							do Result := locale.translation("Search")	end
 #: interface_names.e:105
@@ -22091,7 +22133,7 @@ msgstr "Mindestens eine Sprache auswählen."
 #. Source code: w_Profiler_select_one_output_switch: STRING_GENERAL is do Result := locale.translation ("Select at least one output switch.") end
 #: warning_messages.e:747
 msgid "Select at least one output switch."
-msgstr ""
+msgstr "Mindestens eine Ausgabeoption wählen."
 
 #. 	<PREF NAME="debugger.select_call_stack_level_on_double_click" DESCRIPTION="Select call stack entry on double click?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:31
@@ -22366,7 +22408,7 @@ msgstr "&Bedingten Haltepunkt setzen"
 #. Source code: t_Diagram_set_center_class: STRING_GENERAL is		do Result := locale.translation("Set Center Class")	end
 #: interface_names.e:1772
 msgid "Set Center Class"
-msgstr ""
+msgstr "Klasse im Zentrum setzen"
 
 #. Source code: m_set_default_layout: STRING_GENERAL is do Result := locale.translation ("Set Current Layout As Default") end
 #: interface_names.e:539
@@ -22512,7 +22554,7 @@ msgstr "Erzeuger für Metrikwerte einstellen"
 #. Source code: Result := locale.formatted_string (locale.translation ("Setup stone handlers for tool %"$1%""), [l_tool_name])
 #: interface_names.e:620
 msgid "Setup stone handlers for tool \"$1\""
-msgstr ""
+msgstr "Kieselhandhaber für Werkzeug \"$1\" einstellen"
 
 #. Source code: Result := locale.translation ("Setup supplier classes")
 #: eb_metric_names.e:330
@@ -23145,7 +23187,7 @@ msgstr ""
 #. 	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locate?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:117
 msgid "Should classes be categorized in physical folders where they locate?"
-msgstr ""
+msgstr "Sollen Klassen in physischen Verzeichnissen kategorisiert werden in denen Sie liegen?"
 
 #. Source code: target_use_cluster_name_as_namespace_description: STRING_GENERAL is do Result := locale.translation ("Should cluster names be used as namespaces?")	end
 #: conf_interface_names.e:150
@@ -23205,7 +23247,7 @@ msgstr "Sollen die Namen von Ordnern in rekursiven Clustern als Namensraum verwe
 #. 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:236
 msgid "Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."
-msgstr ""
+msgstr "Sollen nicht übereinstimmende Einträge in der Vervollständigungsliste verborgen werden? Wenn nicht werden alle Einträge angezeigt und die Selektion in der Liste wechselt zum besten Treffer während der Eingabe."
 
 #. Source code: l_Dummy: STRING_GENERAL is					do Result := locale.translation("Should not be read")	end
 #: interface_names.e:1000
@@ -23250,12 +23292,12 @@ msgstr "Soll Refactoringleiste angezeigt werden?"
 #. 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:118
 msgid "Should referenced classes in dependency view be expanded by default?"
-msgstr ""
+msgstr "Sollen referenzierte Klassen in der Abhängigkeitenansicht standardmässig expandiert werden?"
 
 #. 	<PREF NAME="tools.class_browser.expand_referencer_class" HIDDEN="false" DESCRIPTION="Should referencer classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:119
 msgid "Should referencer classes in dependency view be expanded by default?"
-msgstr ""
+msgstr "Sollen referenzierende Klassen in der Abhängigkeitenansicht standardmässig expandiert werden?"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="interface.development_window.show_text_in_refactoring_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -23418,12 +23460,12 @@ msgstr "Alle Andockmarken zeigen"
 #: interface_names.e:1237
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:96
 msgid "Show all callers"
-msgstr "Alle Aufrufer anzeigen"
+msgstr "Alle Aufrufenden anzeigen"
 
 #. 	<PREF NAME="tools.context_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:96
 msgid "Show all callers (as opposed to local callers) in `callers' form."
-msgstr ""
+msgstr "Alle Aufrufenden anzeigen (im Gegensatz zu lokalen Aufrufenden) in der `Aufrufende' Ansicht."
 
 #. Source code: l_Show_all_call_stack: STRING_GENERAL is	do Result := locale.translation("Show all stack elements")	end
 #: interface_names.e:1235
@@ -23453,7 +23495,7 @@ msgstr "Vorfahren anzeigen?"
 #. 	<PREF NAME="tools.diagram_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of preference value."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:85
 msgid "Show ancestors of a class up to a level of preference value."
-msgstr "Vorfahren einer Klasse bis zu einem "
+msgstr "Vorfahren einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 #. 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:705
@@ -23683,7 +23725,7 @@ msgstr "Suche anzeigen"
 #. Source code: l_Put_text_right_text: STRING_GENERAL is 	do Result := locale.translation("Show selective text on the right of buttons")	end
 #: interface_names.e:1190
 msgid "Show selective text on the right of buttons"
-msgstr ""
+msgstr "Text auf der rechten Seite von Schaltflächen anzeigen"
 
 #. 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:123
@@ -23698,7 +23740,7 @@ msgstr "Startdialog anzeigen"
 #. Source code: l_Showcallers: STRING_GENERAL is			do Result := locale.translation("Show static callers")	end
 #: interface_names.e:1238
 msgid "Show static callers"
-msgstr "Statische Aufrufer anzeigen"
+msgstr "Statisch Aufrufende anzeigen"
 
 #. Source code: l_Showstops: STRING_GENERAL is				do Result := locale.translation("Show stop points")	end
 #: interface_names.e:1239
@@ -23708,12 +23750,12 @@ msgstr "Haltepunkte anzeigen"
 #. 	<PREF NAME="tools.diagram_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:92
 msgid "Show subclusters of a cluster down to a level of preference value."
-msgstr ""
+msgstr "Die untergeordneten Cluster standardmässig bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 #. 	<PREF NAME="tools.diagram_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of preference value."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:93
 msgid "Show superclusters of a cluster up to a level of preference value."
-msgstr ""
+msgstr "Die übergeordneten Cluster standardmässig bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 #. Source code: f_diagram_show_supplier: STRING_GENERAL is	do Result := locale.translation("Show supplier links")	end
 #: interface_names.e:368
@@ -23723,7 +23765,7 @@ msgstr "Lieferantenbeziehungen anzeigen"
 #. 	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:94
 msgid "Show suppliers of a class up to a level of preference value."
-msgstr ""
+msgstr "Lieferanten einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 #. 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:207
@@ -23798,7 +23840,7 @@ msgstr "Fenster anzeigen"
 #. Source code: target_msil_key_file_name_name: STRING_GENERAL is do Result := locale.translation ("Signing Key")	end
 #: conf_interface_names.e:135
 msgid "Signing Key"
-msgstr ""
+msgstr "Signierender Schlüssel"
 
 #. Source code: Result.force (locale.translation ("Sinhala"), "si")
 #: locale_names.e:110
@@ -23849,7 +23891,7 @@ msgstr "Slovenisch (Slovenien)"
 #. 	<PREF NAME="debugger.min_slice" HIDDEN="true" DESCRIPTION="Smallest number of items displayed in list data."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:24
 msgid "Smallest number of items displayed in list data."
-msgstr ""
+msgstr "Kleinste Anzahl Elemente welche in einer Listenansicht dargestellt werden."
 
 #. 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:588
@@ -24098,7 +24140,7 @@ msgstr "Datei angeben welche der Compiler verwendet um die exportierten Funktion
 #. 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:86
 msgid "Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."
-msgstr ""
+msgstr "Geschwindigkeit des Rollens wenn Figuren an den Rand des Diagramms gezogen werden (ein gültiger Wert ist zwischen 0 und 100)."
 
 #. Source code: m_Debug_run_new: STRING_GENERAL is			do Result := locale.translation("St&art")	end
 #: interface_names.e:341
@@ -24108,7 +24150,7 @@ msgstr "St&art"
 #. 	<PREF NAME="debugger.stack_grid_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the stack values (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:32
 msgid "Stack grid layout managed"
-msgstr ""
+msgstr "Anordnung des Stackgitters automatisch verwaltet"
 
 #. Source code: l_Stack_information: STRING_GENERAL is		do Result := locale.translation("Stack information")	end
 #: interface_names.e:1246
@@ -24271,7 +24313,7 @@ msgstr "Steifheit:"
 #. Source code: l_stone_handler: STRING_GENERAL is do Result := locale.translation ("Stone handler") end
 #: interface_names.e:667
 msgid "Stone handler"
-msgstr ""
+msgstr "Kieselhandhaber"
 
 #. Source code: l_stone_name: STRING_GENERAL is do Result := locale.translation ("Stone name") end
 #: interface_names.e:622
@@ -24375,7 +24417,7 @@ msgstr "Untercluster"
 #. 	<PREF NAME="tools.diagram_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:92
 msgid "Subcluster depth"
-msgstr ""
+msgstr "Tiefe der untergeordneten Cluster"
 
 #. Source code: l_super_cluster: STRING_GENERAL is			do Result := locale.translation("Super-clusters")	end
 #: interface_names.e:1253
@@ -24385,7 +24427,7 @@ msgstr "Übergeordnete Cluster"
 #. 	<PREF NAME="tools.diagram_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of preference value."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:93
 msgid "Supercluster depth"
-msgstr ""
+msgstr "Tiefe der übergeordneten Cluster"
 
 #. Source code: option_sup_require_name: STRING_GENERAL is do Result := locale.translation ("Supplier Precondition")	end
 #: conf_interface_names.e:285
@@ -24499,9 +24541,8 @@ msgstr "Kontext synchronisieren"
 
 #. Source code: m_synchronize_in_tools: STRING_GENERAL is	do Result := locale.translation("Synchronize in tools")	end
 #: interface_names.e:808
-#, fuzzy
 msgid "Synchronize in tools"
-msgstr "Werkzeuge neu synchronisieren"
+msgstr "In Werkzeugen synchronisieren"
 
 #. Source code: l_synchronizing_class_relations: STRING_GENERAL is do Result := locale.translation ("Synchronizing class relations") end
 #: interface_names.e:1260
@@ -24621,7 +24662,7 @@ msgstr "System läuft"
 #. Source code: w_target_name_attribute_expected: STRING_GENERAL is do Result := locale.translation ("TARGET name attribute expected") end
 #: warning_messages.e:901
 msgid "TARGET name attribute expected"
-msgstr ""
+msgstr "Attribut mit Namen TARGET erwartet"
 
 #. Source code: l_type_capital: STRING_GENERAL is do Result := locale.translation ("TYPE: ") end
 #: interface_names.e:1529
@@ -24729,7 +24770,7 @@ msgstr "Ziel: $1"
 #. Source code: l_clr_version: STRING_GENERAL is			do Result := locale.translation ("Targeted CLR Version:") end
 #: interface_names.e:27
 msgid "Targeted CLR Version:"
-msgstr ""
+msgstr "Ziel CLR Version:"
 
 #. Source code: Result := locale.translation ("Targets")
 #: docking_names.e:24
@@ -24841,7 +24882,7 @@ msgstr "Text nicht editierbar."
 #. Source code: l_Toolbar_select_text_position: STRING_GENERAL is do Result := locale.translation("Text option: ")	end
 #: interface_names.e:1300
 msgid "Text option: "
-msgstr ""
+msgstr "Textoption:"
 
 #. Source code: l_Text_saved: STRING_GENERAL is				do Result := locale.translation("Text was saved")	end
 #: interface_names.e:1283
@@ -24865,6 +24906,9 @@ msgid ""
 "\n"
 "Please click Back and choose another filename."
 msgstr ""
+"Der gewählte Dateiname für das .NET Assembly ist ungültig.\n"
+"\n"
+"Bitte `Zurück' klicken und einen anderen Dateinamen wählen."
 
 # Not correctly translatable due to bug#12983
 #. Source code: "The Eiffel debugger is not found or not executable%N%
@@ -24930,12 +24974,12 @@ msgid ""
 "\n"
 "Click Back and choose a valid creation routine name."
 msgstr ""
-"Die angegebene Erzeugerroutine entspricht nicht der Lace Spezifikation\n"
+"Die angegebene Erzeugerprozedur entspricht nicht der Lace Spezifikation\n"
 "\n"
 "Ein gültiger Name einer Erzeugerroutine ist nicht leer, enthält Buchstaben,\n"
-"Zahlen, und Unterstriche. Das erste Zeichen muss ein Buchstabe sein\n"
+"Zahlen und Unterstriche. Das erste Zeichen muss ein Buchstabe sein\n"
 "\n"
-"'Zurück' wählen und eine gültige Erzeugerroutine angeben."
+"`Zurück' wählen und eine gültige Erzeugerroutine angeben."
 
 #. Source code: Result := locale.formatted_string (locale.translation("The descending class $1 already has another feature with the new name."), [a_class])
 #: interface_names.e:958
@@ -24954,9 +24998,9 @@ msgid ""
 msgstr ""
 "Das gewählte Verzeichnis enthält bereits ein Projekt\n"
 "\n"
-"'Zurück' wählen um ein anderes Verzeichnis zu wählen.\n"
+"`Zurück' wählen um ein anderes Verzeichnis zu wählen.\n"
 "\n"
-"'Weiter' wählen um das vorhandene Projekt zu überschreiben."
+"`Weiter' wählen um das vorhandene Projekt zu überschreiben."
 
 #. Source code: do Result := locale.translation ("The directory you have chosen doesn't exist and%N%
 #: bench_wizard_interface_names.e:55
@@ -24969,7 +25013,7 @@ msgstr ""
 "Das angegebene Verzeichnis existiert nicht und\n"
 "der Assistent konnte es nicht erstellen.\n"
 "\n"
-"'Zurück' drücken und ein anderes Verzeichnis wählen."
+"`Zurück' klicken und ein anderes Verzeichnis wählen."
 
 #. Source code: l_the_feature_name_is_not_valid: STRING_GENERAL is 	do Result := locale.translation("The feature name is not valid.")	end
 #: interface_names.e:1284
@@ -25047,7 +25091,7 @@ msgid ""
 "Be patient, this can take a while!"
 msgstr ""
 "Das erstellen der vorkompilierten Bibliothek(en) wird\n"
-"gestartet wenn der 'Beenden' Knopf gedrückt wird\n"
+"gestartet wenn der `Beenden' Knopf gedrückt wird\n"
 "\n"
 "Die Kompilierung kann einige Zeit benötigen."
 
@@ -25075,10 +25119,10 @@ msgstr ""
 "Der angegebene Projektname ist nicht konform zur Lace Spezifikation.\n"
 "\n"
 "Ein gültiger Projektname ist nicht leer und enthält nur Buchstaben,\n"
-"Zahlen, und Unterstriche. Außerdem muss das erste Zeichen ein\n"
+"Zahlen und Unterstriche. Außerdem muss das erste Zeichen ein\n"
 "Buchstabe sein.\n"
 "\n"
-"'Zurück' klicken und einen neuen Namen eingeben."
+"`Zurück' klicken und einen neuen Namen eingeben."
 
 #. Source code: the_resource_editor_is_not_set: STRING_GENERAL is				do Result := locale.translation ("The resource EDITOR is not set%N") end
 #: ewb_names.e:179
@@ -25100,11 +25144,11 @@ msgstr ""
 "Der Name der Wurzelklasse den Sie angegeben ist nicht konform\n"
 "zur LACE-Spezifikation.\n"
 "\n"
-"Ein gültiger Name für die Wurzelklasse ist nicht leer, enthält nur,\n"
+"Ein gültiger Name für die Wurzelklasse ist nicht leer und enthält nur,\n"
 "Buchstaben, Zahlen und Unterstriche. Das erste Zeichen muss ein\n"
-"ein Buchstabe sein.\n"
+"Buchstabe sein.\n"
 "\n"
-"'Zurück' klicken und einen gültigen Namen eingeben."
+"`Zurück' klicken und einen gültigen Namen eingeben."
 
 #. Source code: w_Invalid_options: STRING_GENERAL is do Result := locale.translation ("The selected options are invalid.%N%
 #: warning_messages.e:1050
@@ -25131,6 +25175,12 @@ msgid ""
 "You can change this value in the preferences\n"
 " or restart after setting the $2 $3 \n"
 msgstr ""
+"Das System konnte in der zugewiesen Zeit nicht gestartet werden:\n"
+"\n"
+"Die aktuelle Auszeit ist $1 Sekunde(n) \n"
+"\n"
+"Sie können diesen Wert in den Einstellungen ändern\n"
+"oder neu Starten nachdem $2 $3 gesetzt wurde\n"
 
 #. Source code: once Result := locale.translation ("The system has no entry feature, it is not executable from EiffelStudio.") end
 #: debugger_names.e:44
@@ -25162,6 +25212,12 @@ msgid ""
 "\n"
 "Click Abort to finish the wizard."
 msgstr ""
+"Der Assistent kann nicht abgeschlossen werden weil seine Installation nicht komplett ist.\n"
+"Die COM Komponente \"ISE.VS.VisionSupport\" fehlt oder ist nicht registriert.\n"
+"\n"
+"Kontaktiere http://support.eiffel.com für weitere Informationen.\n"
+"\n"
+"`Abbrechen' klicken um den Assistenten zu beenden."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.autocomplete_then" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -25332,11 +25388,13 @@ msgid ""
 "This feature export clause contains errors.\n"
 "Try editing it to have more information."
 msgstr ""
+"Diese Exportklausel für Features enthält Fehler.\n"
+"Versuchen Sie diese zu bearbeiten um mehr Informationen zu erhalten."
 
 #. Source code: l_Only_available_for_stopped_application: STRING_GENERAL is do Result := locale.translation("This feature is only available when debugging, and when the debugged application is stopped.")	end
 #: interface_names.e:849
 msgid "This feature is only available when debugging, and when the debugged application is stopped."
-msgstr ""
+msgstr "Diese Aktion ist nur möglich während dem Debuggen und nur während die Anwendung gestoppt ist."
 
 #. Source code: t_this_file_has_been_modified: STRING_GENERAL is 	do Result := locale.translation ("This file has been modified by another editor.") end
 #: interface_names.e:1768
@@ -25349,6 +25407,8 @@ msgid ""
 "This file seems to be corrupted.\n"
 "Not all items inside could be loaded."
 msgstr ""
+"Diese Datei erscheint fehlerhaft.\n"
+"Es konnten nicht alle Elemente daraus geladen werden."
 
 #. Source code: w_Index_already_taken: STRING_GENERAL is do Result := locale.translation ("This index is already used.%N%
 #: warning_messages.e:1053
@@ -25489,11 +25549,12 @@ msgstr "Auszeit"
 msgid "Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."
 msgstr "Auszeit die beim Starten des Eiffel Debugger-Daemon verwendet wird (nur im klassischen Modus). Auf 0 lassen um die Umgebungsvariable zu verwenden."
 
+# Maybe was used in metric error wizard which shows a hint on how to solve a problem with a metric definition
+# Not used at the moment of translation.
 #. Source code: l_to_do_dialog: STRING_GENERAL is do Result := locale.translation ("To do information") end
 #: eb_metric_names.e:151
-#, fuzzy
 msgid "To do information"
-msgstr "Stackinformationen"
+msgstr "Information über Korrektur"
 
 # Label of metric error wizard which shows a hint on how to solve a problem with a metric definition
 #. Source code: t_to_do: STRING_GENERAL is do Result := locale.translation ("To do:") end
@@ -26067,7 +26128,7 @@ msgstr "Tooltip"
 #. Source code: l_Top_level: STRING_GENERAL is				do Result := locale.translation("Top-level")	end
 #: interface_names.e:1302
 msgid "Top-level"
-msgstr ""
+msgstr "Höchste Ebene"
 
 #. Source code: l_total_progress: STRING_GENERAL is			do Result := locale.translation ("Total Progress: ") end
 #: interface_names.e:24
@@ -26087,7 +26148,7 @@ msgstr "Fortschritt: $1%"
 #. Source code: option_trace_name: STRING_GENERAL is do Result := locale.translation ("Trace")	end
 #: conf_interface_names.e:290
 msgid "Trace"
-msgstr ""
+msgstr "Spur"
 
 #. Source code: target_trademark_name: STRING_GENERAL is do Result := locale.translation ("Trademark")	end
 #: conf_interface_names.e:93
@@ -26573,7 +26634,7 @@ msgstr "Linienbreite für Vererbungsbeziehungen (UML)"
 #. Source code: l_unhandled: STRING_GENERAL is 				do Result := locale.translation ("UnHandled") end
 #: interface_names.e:1307
 msgid "UnHandled"
-msgstr ""
+msgstr "Unbehandelt"
 
 #. Source code: "Unable to execute the wizard.%N%
 #: warning_messages.e:1023
@@ -26595,6 +26656,8 @@ msgid ""
 "Unable to load remote file in: $1\n"
 "Please make sure file does not exits or is writable."
 msgstr ""
+"Die entfernte Datei konnte nicht geladen werden in $1.\n"
+"Bitte stellen Sie sicher dass die Datei nicht existiert oder nicht schreibgeschützt ist."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Unable to load the ace file `$1'.%NFor the following reasons:%N$2"), [an_ace_name, a_reason])
 #: warning_messages.e:759
@@ -26740,7 +26803,7 @@ msgstr "Nicht ausgewertet"
 #. 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:210
 msgid "Unified stone"
-msgstr ""
+msgstr "Vereinigter Kiesel"
 
 #. Source code: fs_unindent: STRING_GENERAL is					do Result := locale.translation ("Unindent") end
 #: interface_names.e:1690
@@ -27302,9 +27365,8 @@ msgstr "Standard für 'when'"
 
 #. Source code: f_use_delayed_scope: STRING_GENERAL is do Result := locale.translation ("Use delayed domain") end
 #: eb_metric_names.e:248
-#, fuzzy
 msgid "Use delayed domain"
-msgstr "Standard-Autovervollständigung benutzen?"
+msgstr "Verzögerte Domäne benutzen."
 
 #. Source code: l_Use_existing_profile: STRING_GENERAL is	do Result := locale.translation("Use existing profile: ")	end
 #: interface_names.e:1310
@@ -27313,9 +27375,8 @@ msgstr "Existierendes Profil verwenden:"
 
 #. Source code: t_use_external_delayed: STRING_GENERAL is do Result := locale.translation ("Use external delayed domain") end
 #: eb_metric_names.e:164
-#, fuzzy
 msgid "Use external delayed domain"
-msgstr "Standard-Autovervollständigung benutzen?"
+msgstr "Externe verzögerte Domäne benutzen."
 
 #. Source code: l_use_inherited: STRING_GENERAL is do Result := locale.translation ("Use inherited value.")	end
 #: interface_names.e:1315
@@ -27325,7 +27386,7 @@ msgstr "Vererbten Wert anzeigen."
 #. Source code: f_delayed_scope: STRING_GENERAL is do Result := locale.translation ("Use input domain as criterion domain.") end
 #: eb_metric_names.e:247
 msgid "Use input domain as criterion domain."
-msgstr ""
+msgstr "Eingabedomäne als Domäne des Kriteriums benutzen."
 
 #. Source code: l_clr_most_recent_version: STRING_GENERAL is 	do Result := locale.translation ("Use most recent CLR Version:") end
 #: interface_names.e:28
@@ -27350,7 +27411,7 @@ msgstr "Tabulator für Einrückung verwenden"
 #. Source code: target_old_verbatim_strings_description: STRING_GENERAL is do Result := locale.translation ("Use the old format for verbatim strings?")	end
 #: conf_interface_names.e:142
 msgid "Use the old format for verbatim strings?"
-msgstr ""
+msgstr "Altes Format für \"verbatim\" Zeichenketten verwenden?"
 
 #. Source code: l_Use_wildcards: STRING_GENERAL is			do Result := locale.translation("Use wildcards")	end
 #: interface_names.e:1312
@@ -27393,7 +27454,7 @@ msgid ""
 "\n"
 "\n"
 "To continue, click Next."
-msgstr ""
+msgstr "`Weiter' drücken um fortzufahren."
 
 #. Source code: "Using this wizard you can create a Windows application%N%
 #: interface_names.e:58
@@ -27404,6 +27465,11 @@ msgid ""
 "\n"
 "To continue, click Next."
 msgstr ""
+"Mit diesem Assistenten können Sie eine Windows-Anwendung\n"
+"erstellen welche auf der WEL Bibliothek basiert.\n"
+"\n"
+"\n"
+"`Weiter' drücken um fortzufahren."
 
 #. Source code: do Result := locale.translation ("Using this wizard you can create a Wizard application%N%
 #: wizard_wizard_interface_names.e:63
@@ -27426,7 +27492,7 @@ msgstr ""
 "müssen die WIZARD_xxxx_STATE Klassen vervollständigen.\n"
 "\n"
 "\n"
-"'Weiter' drücken um fortzufahren."
+"`Weiter' drücken um fortzufahren."
 
 #. Source code: "Using this wizard you can create a graphical application%N%
 #: interface_names.e:60
@@ -27447,7 +27513,7 @@ msgstr ""
 "sowie auf jeder Plattform welche GTK unterstützt (Linux, FreeBSD, ...)\n"
 "\n"
 "\n"
-"Auf 'Weiter' drücken um fortzufahren."
+"`Weiter' drücken um fortzufahren."
 
 #. Source code: do Result := locale.translation ("Using this wizard you can create a project (executable%N%
 #: interface_names.e:125
@@ -27461,7 +27527,7 @@ msgid ""
 "\n"
 "\n"
 "To continue, click Next."
-msgstr ""
+msgstr "`Weiter' drücken um fortzufahren."
 
 #. Source code: do Result := locale.translation ("[
 #: interface_names.e:108
@@ -27488,7 +27554,7 @@ msgstr ""
 "existiert, wird sie überschrieben.\n"
 "\n"
 "\n"
-"'Weiter' drücken um fortzufahren."
+"`Weiter' drücken um fortzufahren."
 
 #. Source code: Result.force (locale.translation ("Uzbek"), "uz")
 #: locale_names.e:132
@@ -27799,7 +27865,7 @@ msgstr "Sollen Warnungen ausgegeben werden für Zuweisungsversuche an expandiert
 #. Source code: Result.force (locale.translation ("Warn about class options of unknown classes?"), w_option_unknown_class)
 #: conf_interface_names.e:345
 msgid "Warn about class options of unknown classes?"
-msgstr "Über Klassenoptionen von unbekannten Klassen warnen?"
+msgstr "Über Optionen Warnen welche für unbekannte Klassen angegeben werden?"
 
 #. Source code: Result.force (locale.translation ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
 #: conf_interface_names.e:346
@@ -27824,7 +27890,7 @@ msgstr "Warnung ausgeben für nicht benutzte lokale Variablen?"
 #. Source code: Result.force (locale.translation ("Warn about missing classes in export clauses (VTCM)?"), w_export_class_missing)
 #: conf_interface_names.e:341
 msgid "Warn about missing classes in export clauses (VTCM)?"
-msgstr "Warnung ausgeben für fehlende Klassen in Export-Klauseln (VTCM)?"
+msgstr "Warnung ausgeben für fehlende Klassen in Exportklauseln (VTCM)?"
 
 #. Source code: Result.force (locale.translation ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
 #: conf_interface_names.e:344
@@ -27839,7 +27905,7 @@ msgstr "Beim Gebrauch von veralteten Klassen warnen?"
 #. Source code: Result.force (locale.translation ("Warn about usage of obsolete features?"), w_obsolete_feature)
 #: conf_interface_names.e:336
 msgid "Warn about usage of obsolete features?"
-msgstr "Warnung ausgeben für den Gebrauch überholter Features?"
+msgstr "Warnung ausgeben für den Gebrauch veralteter Features?"
 
 #. Source code: Result.force (locale.translation ("Warn about usage of old syntax?"), w_syntax)
 #: conf_interface_names.e:338
@@ -27914,7 +27980,7 @@ msgstr "Anordnung der Beobachtungswerkzeuge"
 #. 	<PREF NAME="debugger.watches_grids_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:34
 msgid "Watches grids layout managed"
-msgstr ""
+msgstr "Anordnung des Beobachtungsgitters automatisch verwaltet"
 
 #. Source code: t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the%NPrecompilation Wizard") end
 #: interface_names.e:58
@@ -28005,7 +28071,7 @@ msgstr "Wenn Treffer ..."
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_accelerator_allowed" DESCRIPTION="When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:187
 msgid "When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?"
-msgstr ""
+msgstr "Wenn das EiffelStudio Debugmenü aktiviert ist, wird das Menu mittels Tastenkombination angezeigt?"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("When loading predefined metrics:%N$1%NPredefined metrics not loaded."), [a_real_error])
 #: eb_metric_names.e:390
@@ -28239,8 +28305,8 @@ msgid ""
 "You can choose the type of your application between\n"
 " a Frame-based or a Dialog based window"
 msgstr ""
-"Sie können bei der Anwendung wählen zwischen\n"
-"Frame- oder Dialogbasiert."
+"Sie können wählen ob Ihre Anwendung auf Fenstern\n"
+"oder auf Dialogen basiert."
 
 #. Source code: l_second_subtitle_text: STRING_GENERAL is do Result := locale.translation ("You can choose to create a .exe or a .dll file%N%
 #: interface_names.e:38
@@ -28249,7 +28315,7 @@ msgid ""
 "and select the names of the root class and its creation routine."
 msgstr ""
 "Sie können wählen ob eine .exe oder eine .dll Datei erstellt wird\n"
-"und den Namen der Wurzelklasse und der Erzeugerroutine."
+"und den Namen der Wurzelklasse und der Erzeugerprozedur."
 
 #. Source code: m_Second_state: STRING_GENERAL is do Result := locale.translation ("You can create an executable file (.exe) or  dynamic-link library (.dll)") end
 #: interface_names.e:114
@@ -28263,6 +28329,10 @@ msgid ""
 "created by a profiler, or you can reuse an existing Execution Profile if you\n"
 "have already generated one for this system."
 msgstr ""
+"Sie können das Ausführungsprofil von einer Aufzeichnung der Laufzeitinformationen\n"
+"erstellen lassen welche von einem Profiler erzeugt wurde, oder Sie können ein\n"
+"bestehendes Ausführungsprofil verwenden falls Sie für dieses System bereits\n"
+"eines erstellt haben."
 
 #. Source code: Result := locale.translation ("[
 #: interface_names.e:1184
@@ -28320,7 +28390,7 @@ msgid ""
 "You have chosen to build a Frame-Based Application.\n"
 "You can provide an icon or use the default icon"
 msgstr ""
-"Sie haben eine Frame-basierte Anwendung gewählt.\n"
+"Sie haben eine auf Fenstern basierte Anwendung gewählt.\n"
 "Sie können ein Symbol angeben oder das Vorgegebene Symbol verwenden"
 
 #. Source code: l_you_have_specified_following_settings: STRING_GENERAL is do Result := locale.translation ("You have specified the following settings:") end
@@ -28370,10 +28440,10 @@ msgid ""
 msgstr ""
 "Sie müssen mindestens eine Bibliothek wählen.\n"
 "\n"
-"Wenn Sie mehr als eine Bibliothek vorkompilieren wollen, wählen sie 'Zurück'\n"
+"Wenn Sie mehr als eine Bibliothek vorkompilieren wollen, wählen sie `Zurück' \n"
 "und fügen die Bibliotheken in die Liste auf der rechten Seite ein\n"
 "\n"
-"Wenn Sie keine Bibliothek vorkompilieren wollen, wählen Sie 'Abbrechen'"
+"Wenn Sie keine Bibliothek vorkompilieren wollen, wählen Sie `Abbrechen'"
 
 #. Source code: w_Must_compile_first: STRING_GENERAL is do Result := locale.translation ("You must compile a project first.") end
 #: warning_messages.e:941
@@ -28420,6 +28490,9 @@ msgid ""
 "The default name for the new configuration is '$1'.\n"
 "Select OK if you want to keep this name, or 'Save As...' to choose a different name."
 msgstr ""
+"Ihre Konfigurationsdatei muss in ein neues Format konvertiert werden.\n"
+"Der Standardname für die neue Konfiguration ist '$1'.\n"
+"`OK' klicken um diesen Namen zu behalten, `Speichern als...' klicken um einen neuen Namen zu wählen."
 
 #. Source code: t_Diagram_zoom_cmd: STRING_GENERAL is				do Result := locale.translation("Zoom")	end
 #: interface_names.e:1886
@@ -28509,7 +28582,7 @@ msgstr "den Booleschen Operator ändern"
 #. Source code: Result := locale.formatted_string (locale.translation ("class $1 $2 attribute expected"), [a_name, a_id])
 #: warning_messages.e:824
 msgid "class $1 $2 attribute expected"
-msgstr ""
+msgstr "Klasse $1 $2 Attribut wird erwartet"
 
 #. Source code: class_help: STRING_GENERAL is do Result := locale.translation ("class formats and information") end
 #: shared_ewb_help.e:43
@@ -28524,12 +28597,12 @@ msgstr "Klassenelement"
 #. Source code: Result := locale.formatted_string (locale.translation ("class? $1, $2 attributes expected"), [a_name, a_id])
 #: warning_messages.e:829
 msgid "class? $1, $2 attributes expected"
-msgstr ""
+msgstr "Klasse? $1, $2 Attribute werden erwartet"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("cluster? $1, $2 attribute expected"), [a_name, a_id])
 #: warning_messages.e:834
 msgid "cluster? $1, $2 attribute expected"
-msgstr ""
+msgstr "Cluster? $1, $2 Attribute werden erwartet"
 
 #. Source code: t_column: STRING_GENERAL is do Result := locale.translation ("column") end
 #: eb_metric_names.e:167
@@ -28564,7 +28637,7 @@ msgstr "Kriterium"
 #. Source code: l_current: STRING_GENERAL is do Result := locale.translation ("current") end
 #: eb_metric_names.e:206
 msgid "current"
-msgstr ""
+msgstr "aktuell"
 
 #. Source code: l_current_version: STRING_GENERAL is do Result := locale.translation ("current version") end
 #: eb_metric_names.e:207
@@ -28584,7 +28657,7 @@ msgstr "System als Befehlsschleife debuggen"
 #. Source code: l_default: STRING_GENERAL is				do Result := locale.translation ("default") end
 #: interface_names.e:949
 msgid "default"
-msgstr ""
+msgstr "Standard"
 
 # Dialog um Klasse zu erzeugen. Titel der Checkbox ob Klasse abstrakt ist.
 #. Source code: l_Deferred: STRING_GENERAL is				do Result := locale.translation("deferred")	end
@@ -28595,7 +28668,7 @@ msgstr "Aufgeschoben (deferred)"
 #. Source code: l_delayed_domain_item: STRING_GENERAL is do Result := locale.translation ("delayed item") end
 #: interface_names.e:1631
 msgid "delayed item"
-msgstr ""
+msgstr "verzögertes Element"
 
 #. Source code: clean_help: STRING_GENERAL is do Result := locale.translation ("delete existing project if any and perform a fresh compilation") end
 #: shared_ewb_help.e:47
@@ -28859,10 +28932,11 @@ msgstr "normal"
 msgid "numerator metric"
 msgstr "Zählermetrik"
 
+# breakpoints tool, index of breakpoint slot in a feature
 #. Source code: Result := locale.formatted_string (locale.translation ("offset $1"), [a_offset])
 #: interface_names.e:1605
 msgid "offset $1"
-msgstr ""
+msgstr "Index $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("or And-term $1"), [a_number.out])
 #: conf_interface_names.e:401
@@ -28927,7 +29001,7 @@ msgstr "Zeile"
 #. Source code: loop_help: STRING_GENERAL is do Result := locale.translation ("run ec as a command loop") end
 #: shared_ewb_help.e:117
 msgid "run ec as a command loop"
-msgstr ""
+msgstr "ec als Kommandoschleife ausführen"
 
 #. Source code: run_prof_help: STRING_GENERAL is do Result := locale.translation ("run the query") end
 #: shared_ewb_help.e:169
@@ -28997,7 +29071,7 @@ msgstr "Aufgerufene eines Features anzeigen"
 #. Source code: callers_help: STRING_GENERAL is do Result := locale.translation ("show the callers of a feature") end
 #: shared_ewb_help.e:37
 msgid "show the callers of a feature"
-msgstr "Aufrufer eines Features anzeigen"
+msgstr "Aufrufende eines Features anzeigen"
 
 #. Source code: implementers_help: STRING_GENERAL is do Result := locale.translation ("show the classes implementing a feature") end
 #: shared_ewb_help.e:107
@@ -29216,9 +29290,8 @@ msgstr "Typ"
 
 #. Source code: l_use_external_delayed_domain: STRING_GENERAL is do Result := locale.translation ("use external delayed domain") end
 #: eb_metric_names.e:214
-#, fuzzy
 msgid "use external delayed domain"
-msgstr "Standard-Autovervollständigung benutzen?"
+msgstr "externe Verzögerte Domäne verwenden"
 
 #. Source code: use_settings_help: STRING_GENERAL is do Result := locale.translation ("use settings for project location") end
 #: shared_ewb_help.e:195
@@ -29243,7 +29316,7 @@ msgstr "Variablenmetrik"
 #. Source code: l_wrap: STRING_GENERAL is do Result := locale.translation("wrap")	end
 #: interface_names.e:1564
 msgid "wrap"
-msgstr ""
+msgstr "Zeilenumbruch"
 
 #. Source code: yank_help: STRING_GENERAL is do Result := locale.translation ("yank (save) output of last command to a file") end
 #: shared_ewb_help.e:201

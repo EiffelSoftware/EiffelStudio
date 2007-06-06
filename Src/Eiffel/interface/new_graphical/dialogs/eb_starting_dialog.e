@@ -12,8 +12,7 @@ class
 inherit
 	EB_DIALOG
 		redefine
-			show_modal_to_window,
-			destroy
+			show_modal_to_window
 		end
 
 	EV_DIALOG_CONSTANTS
@@ -258,14 +257,6 @@ feature -- Basic operations
 
 feature {NONE} -- Execution
 
-	destroy is
-			--
-		do
-			if not controls_disabled then
-				Precursor
-			end
-		end
-
 	on_cancel is
 			-- Cancel button has been pressed
 		do
@@ -293,6 +284,7 @@ feature {NONE} -- Execution
 
 				-- Create a new project using an ISE Wizard
 			if not wizards_list.selected_rows.is_empty then
+				check parent_window_not_void: parent_window /= Void end
 				create_new_project_using_wizard
 
 				-- Open an existing project
@@ -318,6 +310,8 @@ feature {NONE} -- Execution
 
 	create_blank_project is
 			-- Create a new blank project.
+		require
+			parent_window_not_void: parent_window /= Void
 		local
 			create_project_dialog: EB_CREATE_PROJECT_DIALOG
 		do
@@ -337,6 +331,8 @@ feature {NONE} -- Execution
 
 	create_new_project_using_wizard is
 			-- Create a new project using the ISE Wizard.
+		require
+			parent_window_not_void: parent_window /= Void
 		local
 			li: EV_GRID_LABEL_ITEM
 			wd: EB_WARNING_DIALOG
@@ -560,13 +556,13 @@ feature {NONE} -- Implementation
 				compile_project := False
 
 					-- Disable all controls
-				disable_all_controls
+				disable_sensitive
 
 					-- Execute the wizard
 				a_wizard.execute
 
 					-- Enable controls
-				enable_all_controls
+				enable_sensitive
 
 				if a_wizard.successful then
 					result_parameters := a_wizard.result_parameters
@@ -598,7 +594,7 @@ feature {NONE} -- Implementation
 					destroy
 				end
 			else
-				enable_all_controls
+				enable_sensitive
 				compile_project := False
 				if not error_messages.is_empty then
 					display_error_message (Current)
@@ -607,32 +603,6 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
-		end
-
-	disable_all_controls is
-			-- Disable all controls in the window
-		do
-			ok_button.disable_sensitive
-			cancel_button.disable_sensitive
-			wizards_list.disable_sensitive
-			if show_open_project_frame then
-				open_project.disable_sensitive
-				do_not_display_dialog_button.disable_sensitive
-			end
-			controls_disabled := True
-		end
-
-	enable_all_controls is
-			-- Enable all controls in the window
-		do
-			ok_button.enable_sensitive
-			cancel_button.enable_sensitive
-			wizards_list.enable_sensitive
-			if show_open_project_frame then
-				open_project.enable_sensitive
-				do_not_display_dialog_button.enable_sensitive
-			end
-			controls_disabled := False
 		end
 
 feature {NONE} -- Private attributes

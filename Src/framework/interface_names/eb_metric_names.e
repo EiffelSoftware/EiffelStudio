@@ -24,6 +24,9 @@ feature -- Text
 	e_interrupted_by_compile: STRING_GENERAL is do Result := locale.translation ("Interrupted because Eiffel complication starts") end
 	e_no_metric_is_selected: STRING_GENERAL is do Result := locale.translation ("No metric is selected.") end
 
+	e_xml_files: STRING_GENERAL is do Result := locale.translation ("XML files") end
+	e_all_files: STRING_GENERAL is do Result := locale.translation ("All files") end
+
 feature -- Titles
 
 	t_expression: STRING_GENERAL is do Result := locale.translation ("Expression:") end
@@ -347,6 +350,12 @@ feature -- Tooltip
 	l_base_value: STRING_GENERAL is do Result := locale.translation ("Base value") end
 	l_operator: STRING_GENERAL is do Result := locale.translation ("Operator") end
 	t_drop_program_elements: STRING_GENERAL is do Result := locale.translation ("Drop target/group/class/feature here") end
+
+	f_metrics_in_archive (a_count: INTEGER): STRING_GENERAL is
+		do
+			Result := locale.formatted_string (locale.plural_translation ("There is $1 metric in archive", "There are $1 metrics in archive", a_count), [a_count])
+		end
+
 
 feature -- Error/warning message
 

@@ -878,7 +878,7 @@ feature -- Label texts
 	l_class_is_not_editable: STRING_GENERAL is	do Result := locale.translation ("Class is not editable.%N") end
 	l_class_is_not_in_anymore (a_class_name, a_group_id: STRING): STRING is
 		do
-			Result := "Class " + a_class_name + " is not in " + a_group_id + " anymore."
+			Result := locale.formatted_string (locale.translation ("Class $1 is not in $2 anymore."), [a_class_name, a_group_id])
 		end
 	l_class_name (a_class: STRING_GENERAL): STRING_GENERAL is
 		require a_class_not_void: a_class /= Void
@@ -894,7 +894,7 @@ feature -- Label texts
 	l_cluster_colon: STRING_GENERAL is			do Result := locale.translation("Cluster:")	end
 	l_cluster_is_not_in_the_system_anymore (a_cluster: STRING): STRING is
 		do
-			Result := "Cluster " + a_cluster + " is not in the system anymore."
+			Result := locale.formatted_string (locale.translation ("Cluster $1 is not in the system anymore."), [a_cluster])
 		end
 	l_Cluster_name: STRING_GENERAL is			do Result := locale.translation("Cluster name ")	end
 	l_Cluster_options: STRING_GENERAL is		do Result := locale.translation("Cluster options ")	end
@@ -1599,7 +1599,7 @@ feature -- Label texts
 	l_Tab_metrics: STRING_GENERAL is do Result := locale.translation("Metric")	end
 	l_callers_from_client_class: STRING_GENERAL is do Result := locale.translation("Callers from client class") end
 	l_callees_from_supplier_class: STRING_GENERAL is do Result := locale.translation("Callees from supplier class") end
-	l_from_x: STRING is "From "
+	l_from_x: STRING is do Result := locale.translation ("From ") end
 	h_categorize_folder: STRING_GENERAL is do Result := locale.translation("Categorize classes in folder?") end
 	h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translation("Show only syntactically referenced classes?") end
 	h_show_normal_referenced_classes: STRING_GENERAL is do Result := locale.translation("Show normal referenced classes?") end
@@ -1792,7 +1792,12 @@ feature -- Title part
 	t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translation("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translation("Auto-Complete")	end
 	t_Diagram_class_header: STRING_GENERAL is			do Result := locale.translation("Class Header")	end
-	t_Diagram_set_center_class: STRING_GENERAL is		do Result := locale.translation("Set Center Class")	end
+	t_Diagram_set_center_class (a_class_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_class_name_not_void: a_class_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Set Center Class: $1"), [a_class_name])
+		end
 	t_Diagram_context_depth: STRING_GENERAL is			do Result := locale.translation("Select Depths")	end
 	t_Diagram_link_tool: STRING_GENERAL is				do Result := locale.translation("Link Tool")	end
 	t_Diagram_delete_client_link: STRING_GENERAL is 	do Result := locale.translation("Choose Feature(s) to Delete")	end

@@ -95,8 +95,8 @@ feature {NONE} -- Initialization
 			end
 			create open_file_dialog.make_with_preference (l_pref)
 			open_file_dialog.set_title (metric_names.t_select_archive)
-			open_file_dialog.filters.extend (["*.xml", "XML files"])
-			open_file_dialog.filters.extend (["*.*", "All files"])
+			open_file_dialog.filters.extend (["*.xml", metric_names.e_xml_files])
+			open_file_dialog.filters.extend (["*.*", metric_names.e_all_files])
 			set_is_metric_reloaded (True)
 
 			append_drop_actions (
@@ -622,25 +622,12 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	tooltip_from_archive (a_archive: LIST [EB_METRIC_ARCHIVE_NODE]): STRING is
+	tooltip_from_archive (a_archive: LIST [EB_METRIC_ARCHIVE_NODE]): STRING_GENERAL is
 			-- Tooltip from `a_archive' describing how many metric are archived in `a_archive' and what are they.
 		require
 			a_archive_attached: a_archive /= Void
-		local
-			l_temp_str: STRING
-			l_cnt: INTEGER
 		do
-			create Result.make (100)
-			l_cnt := a_archive.count
-			if l_cnt > 1 then
-				Result.append ("There are ")
-				l_temp_str := " metrics in archive."
-			else
-				Result.append ("There is ")
-				l_temp_str := " metric in archive."
-			end
-			Result.append (l_cnt.out)
-			Result.append (l_temp_str)
+			Result := metric_names.f_metrics_in_archive (a_archive.count)
 		end
 
 	prepare_file_name (a_text_field: EV_TEXT_FIELD) is

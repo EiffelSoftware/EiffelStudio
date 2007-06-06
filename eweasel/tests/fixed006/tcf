@@ -12,5 +12,5 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test_me.e  $CLUSTER test_me.e
 compile_melted
-compile_result 	 ok
+compile_result 	 syntax_warning TEST 10
 test_end

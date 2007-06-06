@@ -1,7 +1,7 @@
 -- This is a test control file
 
 test_name multi-constraint-order-affects-semantic
-test_description Reveals bug#12781. The order of the constraints and the renaming affects the semantic of the program. This should not be the case.
+test_description Reveals bug#12781. The order of the constraints and the renaming affects the semantic of the program. This should not be the case: An error should be raised as no feature can be invoked (a, b and c).
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
@@ -10,5 +10,5 @@ copy_raw 	test2.e $CLUSTER test2.e
 
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST1 VTMC(2)
 test_end

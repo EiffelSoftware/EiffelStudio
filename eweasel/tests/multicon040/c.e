@@ -53,7 +53,7 @@ feature -- Output
 
 	out: STRING is
 		do
-			Result := n.out
+			Result := i.out
 		end
 
 feature {C} -- Status

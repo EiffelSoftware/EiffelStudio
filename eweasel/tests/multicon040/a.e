@@ -18,10 +18,10 @@ feature {NONE} -- Creation
 		require
 			x_attached: x /= Void	
 		do
-			x.ff := x
+			x.f := x
 			io.put_string (x.out)
 			io.put_new_line
-			x.hh (x) := x
+			x.h (x) := x
 			io.put_string (x.out)
 			io.put_new_line
 			x [x] := x

@@ -9,5 +9,5 @@ copy_raw 	test1.e $CLUSTER test1.e
 
 
 compile_melted
-compile_result ok
+compile_result syntax_error TEST1 2
 test_end

@@ -1,5 +1,5 @@
 test_name	vtcg-generic
-test_description A more complex system is used to check the proper occurnce of a VTGC error in case one inherits from a non creation ready generic class.
+test_description A more complex system is used to check the proper occurnce of a VTCG error in case one inherits from a non creation ready generic class.
 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e	$CLUSTER test.e
@@ -9,6 +9,6 @@ copy_raw	a.e	$CLUSTER a.e
 copy_raw	b.e	$CLUSTER b.e
 
 compile_melted
-compile_result validity_error TEST VTCG(2)
+compile_result validity_error TEST VTCG
 
 test_end

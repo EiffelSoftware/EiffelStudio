@@ -1,0 +1,11 @@
+test_name 	 multi-constraint-renaming-to-existing-feature
+test_description A constrained class has a renmaming which renames one of the features to an other already present in the class. This should yield in a proper error raised.
+
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST1 VTGC(2)
+
+test_end

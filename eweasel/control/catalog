@@ -1611,6 +1611,8 @@ test	elseif-with-compound		fixed129 tcf pass fixed
 test	attribute-in-inherited-assertion	fixed130 tcf pass fixed
 test	external-inline-boolean	fixed131 tcf pass fixed
 test	class-name-in-multiline-string	fixed132 tcf pass fixed
+test	generic-constraint-to-none	fixed133 tcf pass fixed
+
 
 test	roundtrip-test rdtp001 tcf pass fixed
 test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
@@ -1656,16 +1658,22 @@ test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
 test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
 test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
-test	multi-constraint-rename-alias							multicon039 tcf pass multiconstraint
+test	multi-constraint-rename-alias					multicon039 tcf pass multiconstraint
 test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
 test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint manual
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
 test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint
-test	multi-constraint-alias						multicon045 tcf pass multiconstraint
+test	multi-constraint-alias							multicon045 tcf pass multiconstraint
+test	multi-constraint-constrained-twice				multicon046 tcf pass multiconstraint
+test	multi-constraint-renaming-to-existing-feature	multicon047 tcf pass multiconstraint
+test	multi-constraint-any-numeric-crash				multicon048 tcf pass multiconstraint
+--test					multicon049 tcf pass multiconstraint
+--test					multicon050 tcf pass multiconstraint
+--test					multicon051 tcf pass multiconstraint
+--test					multicon052 tcf pass multiconstraint
 
---test					multicon047 tcf pass multiconstraint
---test					multicon048 tcf pass multiconstraint
+
 
 -- tests for expanded types
 test	expanded-array-attached-reference-array			expanded001 tcf pass expanded

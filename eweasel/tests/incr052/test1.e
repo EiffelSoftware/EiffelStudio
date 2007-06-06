@@ -7,9 +7,7 @@
 class TEST1
 inherit	
 	TEST2
-		rename
-			$RENAME
-		end
+		$RENAME
 
 end
 

@@ -66,6 +66,8 @@ inherit
 			{NONE} all
 		end
 
+	DEBUG_OUTPUT
+
 	REFACTORING_HELPER
 
 create
@@ -1979,6 +1981,31 @@ feature {NONE} -- Convenience
 				-- Bit 12: Store `is_deferred'
 			if l_class.is_deferred then
 				Result := Result | 0x1000
+			end
+		end
+
+feature {NONE} -- Debug output
+
+	debug_output: STRING is
+			-- Output displayed in debugger.
+		local
+			l_name: STRING
+		do
+			if type /= Void then
+				l_name := type.name
+				create Result.make (l_name.count + 15 )
+			else
+				create Result.make (13)
+			end
+			Result.append_character ('s')
+			Result.append_character (':')
+			Result.append_integer (static_type_id)
+			Result.append_character (',')
+			Result.append_integer (type_id)
+			if l_name /= Void then
+				Result.append_character (':')
+				Result.append_character (' ')
+				Result.append (l_name)
 			end
 		end
 

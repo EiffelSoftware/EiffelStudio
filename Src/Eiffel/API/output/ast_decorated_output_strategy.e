@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 									-- We are already in a nested call like: xyz.a.f.*
 									-- So `last_type', last_class are the ones from "a" and
 									-- `l_rout_id_set' is the one of f
-								if last_type.is_none then
+								if not last_type.is_none then
 									last_class := system.class_of_id (l_as.class_id)
 								end
 								if last_class /= Void then

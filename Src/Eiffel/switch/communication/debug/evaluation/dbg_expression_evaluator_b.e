@@ -410,7 +410,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_type_i: CL_TYPE_I
 		do
 			l_tmp_target_backup := tmp_target
-			l_type_i := a_tuple_const_b.type
+			l_type_i := resolved_real_type_in_context (a_tuple_const_b.type)
 			create_empty_instance_of (l_type_i)
 			if not error_occurred then
 				l_call_value := tmp_result_value
@@ -486,7 +486,7 @@ feature {NONE} -- EXPR_B evaluation
 			dbg: like debugger_manager
 		do
 			l_tmp_target_backup := tmp_target
-			l_type_i := a_array_const_b.type
+			l_type_i := resolved_real_type_in_context (a_array_const_b.type)
 			create_empty_instance_of (l_type_i)
 			if not error_occurred then
 				dbg := debugger_manager
@@ -986,7 +986,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_call: CALL_B
 		do
 			l_tmp_target_backup := tmp_target
-			create_empty_instance_of (a_type_i)
+			create_empty_instance_of (resolved_real_type_in_context (a_type_i))
 			if not error_occurred then
 				tmp_target := tmp_result_value
 				l_call_value := tmp_target
@@ -1521,38 +1521,31 @@ feature {NONE} -- Concrete evaluation
 			-- New empty instance of class represented by `a_type_id'.
 		require
 			a_type_i_not_void: a_type_i /= Void
+			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
 		local
-			l_type_i: TYPE_I
 			l_cl_type_i: CL_TYPE_I
 			ct: CLASS_TYPE
 			l_is_special: BOOLEAN
 		do
-			if a_type_i.has_associated_class_type then
-				if context_class_type /= Void then
-					l_type_i := byte_context.real_type_in (a_type_i, context_class_type)
-					if l_type_i /= Void then
-						l_cl_type_i ?= l_type_i
-					end
-				end
-				if l_cl_type_i = Void then
-					l_cl_type_i := a_type_i
-				end
-				if l_cl_type_i.has_associated_class_type then
-					ct := l_cl_type_i.associated_class_type
-					if ct.associated_class /= Void then
-						l_is_special := ct.associated_class.is_special
-					end
+			l_cl_type_i := a_type_i
+			if l_cl_type_i.has_associated_class_type then
+				ct := l_cl_type_i.associated_class_type
+				if ct.associated_class /= Void then
+					l_is_special := ct.associated_class.is_special
 				end
 				if l_is_special then
 					fixme ("To create SPECIAL objects, we have to use INTERNAL.new_special_any_instance ... ")
-					notify_error_evaluation ("Can not instanciate class {" + l_type_i.name + "} (SPECIAL is not yet supported)%N")
+					notify_error_evaluation ("Can not instanciate class {" + l_cl_type_i.name + "} (SPECIAL is not yet supported)%N")
 				else
 					prepare_evaluation
 					Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
 					retrieve_evaluation
+					if error_occurred and l_cl_type_i.has_true_formal then
+						notify_error_not_implemented ("Can not instanciate class {" + l_cl_type_i.name + "} (has formal type). (Not Yet Available)%N")
+					end
 				end
 			else
-				notify_error_evaluation ("Can not instanciate class {" + l_type_i.name + "} (not compiled)%N")
+				notify_error_evaluation ("Can not instanciate class {" + l_cl_type_i.name + "} (not compiled)%N")
 			end
 		end
 
@@ -1970,6 +1963,20 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Compiler helpers
+
+	resolved_real_type_in_context (a_type_i: CL_TYPE_I): CL_TYPE_I is
+		require
+			a_type_i_not_void: a_type_i /= Void
+		do
+			if context_class_type /= Void then
+				Result ?= byte_context.real_type_in (a_type_i, context_class_type)
+			end
+			if Result = Void then
+				Result := a_type_i
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is
 			-- Return FEATURE_I corresponding to `a_call_access_b' in class `cl'

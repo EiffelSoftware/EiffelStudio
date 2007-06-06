@@ -724,7 +724,6 @@ feature {NONE} -- Event handling
 			exprs: LIST [STRING]
 			s: STRING
 		do
-			remove_auto_expressions_from_watched_items
 			create l_auto
 			exprs := l_auto.auto_expressions (
 									debugger_manager.current_debugging_breakable_index,
@@ -1368,6 +1367,7 @@ feature {NONE} -- Implementation
 				process_record_layout_on_next_recording_request := False
 				watches_grid.record_layout
 			end
+			remove_auto_expressions_from_watched_items
 			from
 				witems := watched_items
 				witems.start
@@ -1516,6 +1516,7 @@ feature {NONE} -- Implementation
 			l_item: like watched_item_from
 		do
 			if watches_grid.row_count > 0 then
+				remove_auto_expressions_from_watched_items
 				from
 					r := 1
 				until
@@ -1532,6 +1533,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					r := r + 1
+				end
+				if auto_expression_enabled then
+					add_auto_expressions
 				end
 			end
 		end

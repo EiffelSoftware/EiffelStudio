@@ -208,6 +208,7 @@
     <Compile Include="content\eiffelstudio\studio_gpl_ec.wxs" />
     <Compile Include="content\eiffelstudio\studio_libraries.wxs" />
     <Compile Include="content\eiffelenvision\Redist.wxs" />
+    <Compile Include="interface\DialogMissingMsCompilerWarning.wxs" />
     <Compile Include="interface\DialogRegister.wxs" />
     <Compile Include="interface\PromptInvalidCdKey.wxs" />
     <Content Include="includes\Preprocessors.wxi" />

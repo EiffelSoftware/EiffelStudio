@@ -74,7 +74,7 @@ feature {NONE} -- Access
 	batch_options: STRING
 			-- Option to the COMSPEC DOS prompt.
 
-	environment: ENVIRONMENT_ACCESS
+	environment: EXECUTION_ENVIRONMENT
 			-- Access to environment information
 		once
 			create Result
@@ -275,10 +275,21 @@ feature {NONE} -- Basic operations
 
 	cmd_exe_file_name: STRING is
 			-- File name of Command exe
+		local
+			l_system: STRING
 		once
 			create Result.make (256)
-			Result.append (environment.get ("SystemRoot"))
-			Result.append ("\system32\cmd.exe")
+
+			l_system := system_folder
+			if l_system /= Void and then not l_system.is_empty then
+				Result.append (l_system)
+			else
+					-- Failed to retrieve folder, use fall back
+				Result.append (environment.get ("SystemRoot"))
+				Result.append ("\system32")
+			end
+			Result.append ("\cmd.exe")
+
 			if not (create {RAW_FILE}.make (Result)).exists then
 					-- Try a command shell locatable in the user PATH variable.
 				Result := "cmd.exe"
@@ -286,6 +297,35 @@ feature {NONE} -- Basic operations
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Externals
+
+	system_folder: STRING
+			-- Retrieve Windows system folder
+		external
+			"C inline use %"shlobj.h%""
+		alias
+			"[
+				CHAR path[MAX_PATH + 1];
+				BOOL bRes = FALSE;
+				HMODULE shModule = LoadLibraryA ("shell32.dll");
+				
+				if (shModule) {
+					FARPROC shProc = GetProcAddress (shModule, "SHGetSpecialFolderPathA");
+					if (shProc) {
+						bRes = (FUNCTION_CAST_TYPE (HRESULT, WINAPI, (HWND, LPSTR, int, BOOL)) shProc) (
+							NULL, path, CSIDL_SYSTEM, FALSE);
+					}
+					FreeLibrary (shModule);
+				}
+
+				if (bRes) {
+					return RTMS (path);
+				} else {
+					return NULL;
+				}
+			]"
 		end
 
 feature {NONE} -- Internal implementation cache

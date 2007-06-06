@@ -169,7 +169,11 @@ feature -- Initialization
 
 feature -- Status report
 
+	is_constraint_renaming: BOOLEAN
+			-- Is the parser parsing a constraint renaming?
+
 	is_parsing_class_head: BOOLEAN
+			-- Is the parser parsing a class hed?
 
 	il_parser: BOOLEAN
 			-- Is current Eiffel parser an IL Eiffel parser?
@@ -181,7 +185,7 @@ feature -- Status report
 			-- Is current Eiffel parser an expression parser ?
 
 	feature_parser: BOOLEAN
-			-- Feature parser
+			-- Is `Current' a feature parser?
 
 	indexing_parser: BOOLEAN
 			-- Is current Eiffel parser an indexing clause parser ?

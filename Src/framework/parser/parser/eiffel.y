@@ -966,7 +966,18 @@ Parent_clause: Parent_class_type
 	;
 
 Rename: TE_RENAME
-			{ $$ := ast_factory.new_rename_clause_as (Void, $1) }
+			{
+				$$ := ast_factory.new_rename_clause_as (Void, $1)
+				if is_constraint_renaming then
+					error_handler.insert_error (
+						create {SYNTAX_ERROR}.make ($1.line, $1.column, filename, "Empty rename clause.", False))
+					error_handler.raise_error
+				else
+					error_handler.insert_warning (
+							create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+							once "Not ECMA conform: Remove empty rename clauses."))
+				end
+			}
 	|	TE_RENAME Add_counter Rename_list Remove_counter
 			{ $$ := ast_factory.new_rename_clause_as ($3, $1) }
 	;
@@ -1786,9 +1797,9 @@ Constraint: -- Empty
 
 Single_constraint: -- Empty
 			-- { $$ := Void }
-	| Constraint_type Rename TE_END
+	| Constraint_type {is_constraint_renaming := True} Rename  {is_constraint_renaming := False}  TE_END
 			{
-				$$ := ast_factory.new_constraining_type ($1, $2, $3)
+				$$ := ast_factory.new_constraining_type ($1, $3, $5)
 			}
 	| Constraint_type
 			{

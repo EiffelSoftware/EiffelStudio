@@ -119,9 +119,15 @@ feature -- Command
 			-- Initlized group divider and regroup items
 		local
 			l_group_count: INTEGER
+			l_height: INTEGER
 		do
 			create group_divider.make_with_content (content)
-			l_group_count := group_count_by_height (height)
+			-- `l_height' is the height of inner SD_TOOL_BAR, EXCEPT the heights:
+			-- 1. floating zone title bar height (the height between the border and the tool bar buttons).
+			-- 2. border height of floating tool bar zone (one if up side border, another is bottom side border), 
+			l_height := height -  (tool_bar.screen_y - screen_y) - internal_border_box.border_width * 2
+			check positive: l_height > 0 end
+			l_group_count := group_count_by_height (l_height)
 			lock_update
 			if l_group_count > 0 then
 				assistant.position_groups (group_divider.best_grouping (l_group_count))

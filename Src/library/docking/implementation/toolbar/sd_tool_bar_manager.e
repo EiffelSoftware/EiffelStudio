@@ -41,9 +41,18 @@ feature {NONE} -- Initialization
 
 	init_right_click_menu is
 			-- Initialize right click menu.
+		local
+			l_platform: PLATFORM
 		do
 			application_right_click_agent := agent on_menu_area_click
-			ev_application.pointer_button_press_actions.extend (application_right_click_agent)
+
+			create l_platform
+			-- We will use pointe release actions only in the future. Larry 2007-6-7
+			if l_platform.is_windows then
+				ev_application.pointer_button_press_actions.extend (application_right_click_agent)
+			else
+				ev_application.pointer_button_release_actions.extend (application_right_click_agent)
+			end
 		end
 
 feature -- Query

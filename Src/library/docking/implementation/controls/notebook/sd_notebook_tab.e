@@ -389,7 +389,6 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer press.
 		local
-			l_menu: SD_ZONE_MANAGEMENT_MENU
 			l_drawer: like internal_tab_drawer
 		do
 			inspect
@@ -412,13 +411,12 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				else
 					select_actions.call (Void)
 				end
-				
+
 				-- We enable capture after calling `select_actions', this will make debugger working in client programmers `select_actions'.
 				parent.enable_capture (Current)
 			when {EV_POINTER_CONSTANTS}.right then
 				select_actions.call (Void)
-				create l_menu.make (internal_notebook)
-				l_menu.show_at (parent, a_x, a_y)
+				show_right_click_menu (False, a_x, a_y)
 			else
 
 			end
@@ -432,7 +430,9 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			is_pointer_pressed := False
 			parent.disable_capture (Current)
 			l_drawer := internal_tab_drawer
-			if
+			if a_button = {EV_POINTER_CONSTANTS}.right then
+				show_right_click_menu (True, a_x, a_y)
+			elseif
 				l_drawer.is_top_side_tab
 				and internal_width > 0
 				and then l_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y)
@@ -535,6 +535,20 @@ feature {NONE}  -- Implementation functions.
 				if l_size /= internal_width then
 					internal_width := l_size
 				end
+			end
+		end
+
+	show_right_click_menu (a_pointer_release_action: BOOLEAN; a_relative_x, a_relative_y: INTEGER) is
+			-- Show right click menu
+			-- We will use pointer release action to show the menu only in the future. Larry 2007-6-7
+		local
+			l_menu: SD_ZONE_MANAGEMENT_MENU
+			l_platform: PLATFORM
+		do
+			create l_platform
+			if (l_platform.is_windows and not a_pointer_release_action) or (not l_platform.is_windows and a_pointer_release_action) then
+				create l_menu.make (internal_notebook)
+				l_menu.show_at (parent, a_relative_x, a_relative_y)
 			end
 		end
 

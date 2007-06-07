@@ -40,7 +40,7 @@
               <!-- EiffelStudio actions -->
               <Publish Event="NewDialog" Value="DialogMissingFx"><![CDATA[PIDACCEPTED = "1" AND (FXINSTALLROOT = "0")]]></Publish>
               <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[PIDACCEPTED = "1" AND (FXINSTALLROOT <> "0" AND CHECKCCOMPILER = "1" AND HASMSCCOMPILER <> "1")]]></Publish>
-              <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[PIDACCEPTED = "1" AND (FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"))]]></Publish>
+              <Publish Event="NewDialog" Value="DialogChooseLanguage"><![CDATA[PIDACCEPTED = "1" AND (FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1"))]]></Publish>
             <?else?>
               <?ifdef EiffelEnvision?>
                 <!-- EiffelEnvision actions -->

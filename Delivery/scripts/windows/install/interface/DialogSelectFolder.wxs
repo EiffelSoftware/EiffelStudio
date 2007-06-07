@@ -5,7 +5,7 @@
       <Dialog Id="DialogSelectFolder" Width="375" Height="220" Title="[ProductName]" TrackDiskSpace="yes">
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
         <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="22" Transparent="yes" NoPrefix="yes">
-          <Text>[BigFont]Please Select an Installation Location</Text>
+          <Text>[BigFont]Select an Installation Location</Text>
         </Control>
         <Control Id="SubTitle" Type="Text" Height="13" Width="302" X="56" Y="35" Transparent="yes" NoPrefix="yes">
           <Text>[SubTitleFont]Please indicate which libraries should be precompiled</Text>
@@ -32,7 +32,7 @@
             <?ifdef Enterprise?>
               <Publish Event="NewDialog" Value="DialogRegister"><![CDATA[FXINSTALLROOT <> "0"]]></Publish>
             <?else?>
-              <Publish Event="NewDialog" Value="DialogViewLicenseAgreement"><![CDATA[FXINSTALLROOT <> "0"]]></Publish>
+              <Publish Event="NewDialog" Value="DialogChooseLanguage"><![CDATA[FXINSTALLROOT <> "0"]]></Publish>
             <?endif?>
           <?else?>
             <?ifdef Enterprise?>
@@ -45,8 +45,8 @@
         <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
         </Control>
-        <Control Id="FolderText" Type="Text" X="29" Y="106" Width="34" Height="15" Transparent="yes">
-          <Text>Folder: </Text>
+        <Control Id="FolderText" Type="Text" X="29" Y="106" Width="34" Height="15" Transparent="yes" NoPrefix="no">
+          <Text>&amp;Folder: </Text>
         </Control>
         <Control Id="FolderEdit" Type="PathEdit" X="67" Y="104" Width="237" Height="17" Property="INSTALLDIR" Sunken="no"/>
       </Dialog>

@@ -37,7 +37,7 @@
               <!-- EiffelStudio actions -->
               <Publish Event="NewDialog" Value="DialogMissingFx"><![CDATA[FXINSTALLROOT = "0"]]></Publish>
               <Publish Event="NewDialog" Value="DialogMissingMsCompiler"><![CDATA[FXINSTALLROOT <> "0" AND CHECKCCOMPILER = "1" AND HASMSCCOMPILER <> "1"]]></Publish>
-              <Publish Event="NewDialog" Value="DialogSelectFolder"><![CDATA[FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1")]]></Publish>
+              <Publish Event="NewDialog" Value="DialogChooseLanguage"><![CDATA[FXINSTALLROOT <> "0" AND (CHECKCCOMPILER = "0" OR HASMSCCOMPILER = "1")]]></Publish>
             <?else?>
               <?ifdef EiffelEnvision?>
                 <!-- EiffelEnvision actions -->

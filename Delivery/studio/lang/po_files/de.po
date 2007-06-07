@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-06 16:38-0800\n"
+"PO-Revision-Date: 2007-06-07 11:26-0800\n"
 "Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21533,7 +21533,7 @@ msgstr "Ausführungsprofil erstellen oder wiederverwenden."
 #. Source code: d_Reverse_engineering: STRING is			do Result := locale.translation("Reverse Engineering Project").out	end
 #: interface_names.e:248
 msgid "Reverse Engineering Project"
-msgstr "Reverse Engineering Projekt"
+msgstr "Projekt wird analysiert"
 
 #. 	<PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Search;closed;0;0;0;0;Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:28
@@ -23296,7 +23296,7 @@ msgstr "Sollen Vererbungsklassen angezeigt werden?"
 #. Source code: target_inlining_description: STRING_GENERAL is do Result := locale.translation ("Should inlining be enabled?")	end
 #: conf_interface_names.e:122
 msgid "Should inlining be enabled?"
-msgstr "Soll inlining aktiviert werden?"
+msgstr "Soll Inlining aktiviert werden?"
 
 #. Source code: target_dotnet_naming_convention_description: STRING_GENERAL is do Result := locale.translation ("Should names follow the .NET naming convention?")	end
 #: conf_interface_names.e:112
@@ -23859,17 +23859,17 @@ msgstr "Threads anzeigen"
 #. 	<PREF NAME="tools.class_browser.show_tooltip" DESCRIPTION="Show tooltip?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:624
 msgid "Show tooltip"
-msgstr "Tooltip anzeigen"
+msgstr "Kurzinfo anzeigen"
 
 #. 	<PREF NAME="tools.class_browser.show_tooltip" DESCRIPTION="Show tooltip?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:624
 msgid "Show tooltip?"
-msgstr "Tooltip anzeigen?"
+msgstr "Kurzinfo anzeigen?"
 
 #. Source code: h_show_tooltip: STRING_GENERAL is do Result := locale.translation("Show tooltips?")	end
 #: interface_names.e:1539
 msgid "Show tooltips?"
-msgstr "Tooltips anzeigen?"
+msgstr "Kurzinfos anzeigen?"
 
 #. 	<PREF NAME="tools.class_browser.show_unchanged_feature_from_any" DESCRIPTION="Show unchanged features in class ANY by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:623

@@ -14,6 +14,7 @@
 		<Property Id="PRECOMPILE">vision2</Property>
 		<Property Id="EIFFELPROJECTSDIR" Secure="yes" />
 		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
+    <Property Id="ISELANG">en_US</Property>
 		<!-- END PROPERTIES -->
 
 		<!-- PACKAGE CONTENT -->
@@ -26,17 +27,18 @@
 			</Component>
 				<!-- Registry settings for EiffelStudio and other tools-->
 			<Component Id="Comp.studio_registries" Guid="E6817659-E601-42F7-940B-5B8B9CC50AA3" Win64="$(var.IsWin64)">
-				<RegistryKey Id="Reg.eiffel" Root="HKLM" Key="Software\ISE\Eiffel60" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel" Root="HKLM" Key="Software\ISE\$(var.ProductKey)" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ise_eiffel" Name="ISE_EIFFEL" Value="[INSTALLDIR]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
+          <RegistryValue Id="RegVal.eiffel.ise_lang" Name="ISE_LANG" Value="[ISELANG]" Type="string"/>
 				</RegistryKey>
-				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKLM" Key="Software\ISE\Eiffel60\finish_freezing" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKLM" Key="Software\ISE\$(var.ProductKey)\finish_freezing" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ff.ise_cflags" Name="ISE_CFLAGS" Value="" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ff.ise_sharedlibs" Name="ISE_SHAREDLIBS" Value="" Type="string"/>
 				</RegistryKey>
-				<RegistryKey Id="Reg.eiffel.wizards" Root="HKLM" Key="Software\ISE\Eiffel60\wizards" Action="createAndRemoveOnUninstall">
+				<RegistryKey Id="Reg.eiffel.wizards" Root="HKLM" Key="Software\ISE\$(var.ProductKey)\wizards" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.wizard.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
 				</RegistryKey>
 			</Component>
@@ -114,7 +116,7 @@
 				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
 						<!-- Shortcuts and file association -->
 					<Component  Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D"  Win64="$(var.IsWin64)">
-						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\Eiffel60\Install" Action="createAndRemoveOnUninstall"/>
+						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
 						<RemoveFolder Id="EiffelStudio" On="uninstall" Directory="EiffelStudio"/>
 						<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="EiffelBuild"
@@ -132,7 +134,7 @@
 					</Component>
 					<Directory Id="EiffelStudio.Documentation" Name="Documentation">
 						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D"  Win64="$(var.IsWin64)">
-							<RegistryKey Id="Reg.Dummy.2" Root="HKCU" Key="Software\ISE\Eiffel60\Install" Action="createAndRemoveOnUninstall"/>
+							<RegistryKey Id="Reg.Dummy.2" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 							<CreateFolder />
 							<RemoveFolder Id="EiffelStudio.Documentation" On="uninstall" Directory="EiffelStudio.Documentation"/>
 							<Shortcut Id="eiffel.chm1" Directory="EiffelStudio.Documentation" Name="Eiffel Developer Help Center"
@@ -153,7 +155,7 @@
 					</Directory>
 					<Directory Id="EiffelStudio.Tools" Name="Tools">
 						<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6"  Win64="$(var.IsWin64)">
-							<RegistryKey Id="Reg.Dummy.3" Root="HKCU" Key="Software\ISE\Eiffel60\Install" Action="createAndRemoveOnUninstall"/>
+							<RegistryKey Id="Reg.Dummy.3" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 							<CreateFolder />
 							<RemoveFolder Id="EiffelStudio.Tools" On="uninstall" Directory="EiffelStudio.Tools"/>
 							<Shortcut Id="com_wizard.exe" Directory="EiffelStudio.Tools" Name="EiffelCOM Wizard" 
@@ -175,7 +177,7 @@
 			<Directory Id="PersonalFolder" Name="PersonalFolder">
 				<Directory Id="EIFFELPROJECTSDIR" Name="Eiffel Projects" >
 					<Component Id="Comp.eiffel_projects" Guid="0281A275-2D0F-478B-B415-648EE707E271" Win64="$(var.IsWin64)">
-						<RegistryKey Id="Reg.Dummy.4" Root="HKCU" Key="Software\ISE\Eiffel60\Install" Action="createAndRemoveOnUninstall"/>
+						<RegistryKey Id="Reg.Dummy.4" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
 						<RemoveFolder Id="EIFFELPROJECTSDIR" On="uninstall" Directory="EIFFELPROJECTSDIR"/>
 					</Component>

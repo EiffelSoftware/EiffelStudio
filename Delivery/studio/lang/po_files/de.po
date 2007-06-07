@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-07 11:26-0800\n"
+"PO-Revision-Date: 2007-06-07 16:41-0800\n"
 "Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -262,7 +262,7 @@ msgstr " Ausgabe der Featurenamen"
 #. Source code: Number_of_calls_help: STRING_GENERAL is do Result := locale.translation (" output of number of calls to a feature") end
 #: shared_ewb_help.e:129
 msgid " output of number of calls to a feature"
-msgstr " Ausgabe von der Anzahl die ein Feature aufgerufen wurde"
+msgstr " Ausgabe von der Anzahl Aufrufe für ein Feature"
 
 #. Source code: Percentage_help: STRING_GENERAL is do Result := locale.translation (" output of percentage of time spent in a feature") end
 #: shared_ewb_help.e:135
@@ -796,7 +796,7 @@ msgstr "&Schnittstelle"
 #. Source code: m_Eiffel_introduction: STRING_GENERAL is	do Result := locale.translation("&Introduction to Eiffel")	end
 #: interface_names.e:420
 msgid "&Introduction to Eiffel"
-msgstr "&Einführung zu Eiffel (Englisch)"
+msgstr "&Einführung für Eiffel (Englisch)"
 
 #. Source code: m_Minimize_all: STRING_GENERAL is			do Result := locale.translation("&Minimize All")	end
 #: interface_names.e:717
@@ -1514,9 +1514,9 @@ msgid ""
 msgstr ""
 "Eine Unterabfrage hat folgende Form: Attribut Operator Wert\n"
 "\n"
-"Attribut ist eines von: featurename, calls, total, self, descendants, percentage\n"
+"Attribut ist eines von: Feature Name, calls, total, self, descendants, percentage\n"
 "Operator ist einer von: < > <= >= = /= in\n"
-"Wert ist einer von: Ganzzahl (für calls), Zeichenkette mit Platzhalte (für featurename)\n"
+"Wert ist einer von: Ganzzahl (für calls), Zeichenkette mit Platzhalte (für Feature Name)\n"
 "\t\t Reelle Zahl (für andere Attribute) oder ein begrenzter Wert\n"
 "\t\t\tEine Zeichenkette mit Platzhalter ist eine Zeichenkette welche\n"
 "\t\t\t'*' oder '?' enthält\n"
@@ -1656,7 +1656,7 @@ msgstr "C&luster hinzufügen..."
 #. Source code: Result := locale.formatted_string(locale.translation("Add Client-Supplier Relation Between '$1' and '$2'"), [client_name, supplier_name])
 #: interface_names.e:1798
 msgid "Add Client-Supplier Relation Between '$1' and '$2'"
-msgstr "Klient-Lieferant Beziehung zwischen '$1' und '$2' hinzufügen"
+msgstr "Klient-Anbieter Beziehung zwischen '$1' und '$2' hinzufügen"
 
 #. Source code: group_add_cluster: STRING_GENERAL is do Result := locale.translation ("Add Cluster")	end
 #: conf_interface_names.e:235
@@ -1696,12 +1696,12 @@ msgstr "Objekt hinzufügen"
 #. Source code: group_add_override: STRING_GENERAL is do Result := locale.translation ("Add Override")	end
 #: conf_interface_names.e:237
 msgid "Add Override"
-msgstr "Überschreibendes Cluster hinzufügen"
+msgstr "Vorrangiges Cluster hinzufügen"
 
 #. Source code: dialog_create_override_title: STRING_GENERAL is do Result := locale.translation ("Add Override Cluster")	end
 #: conf_interface_names.e:474
 msgid "Add Override Cluster"
-msgstr "Überschreibendes Cluster hinzufügen"
+msgstr "Vorrangiges Cluster hinzufügen"
 
 #. Source code: task_add_post: STRING_GENERAL is do Result := locale.translation ("Add Post Compilation Task")	end
 #: conf_interface_names.e:201
@@ -1825,7 +1825,7 @@ msgstr "Nachfahren der Klasse dem Diagramm hinzufügen"
 #. Source code: l_diagram_add_suppliers: STRING_GENERAL is do Result := locale.translation("Add class suppliers to diagram")	end
 #: interface_names.e:374
 msgid "Add class suppliers to diagram"
-msgstr "Lieferanten der Klasse zum Diagramm hinzufügen"
+msgstr "Anbieter der Klasse zum Diagramm hinzufügen"
 
 #. Source code: once Result := locale.translation ("Add condition") end
 #: debugger_names.e:204
@@ -1880,7 +1880,7 @@ msgstr "Neuen Erzeuger für Metrikwerte hinzufügen"
 #. Source code: l_add_stone_handler: STRING_GENERAL is do Result := locale.translation ("Add new stone handler") end
 #: interface_names.e:665
 msgid "Add new stone handler"
-msgstr "Neuen Kieselhandhaber hinzufügen"
+msgstr "Neue Kiesel-Behandlungsroutine hinzufügen"
 
 #. Source code: dialog_task_add: STRING_GENERAL is do Result := locale.translation ("Add new task")	end
 #: conf_interface_names.e:435
@@ -2033,7 +2033,7 @@ msgstr "Alle Klassen"
 #. Source code: all_calees: STRING_GENERAL is								do Result := locale.translation ("All callees") end
 #: ewb_names.e:49
 msgid "All callees"
-msgstr "Alle Aufgerufene"
+msgstr "Alle Aufgerufenen"
 
 #. 	<PREF NAME="tools.refactoring.class_rename.all_classes" DESCRIPTION="Should all classes be processed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:635
@@ -4081,7 +4081,7 @@ msgstr "Hintergrundfarbe für generischen Parameter."
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:251
 msgid "Background color for indexing tags."
-msgstr "Hintergrundfarbe für Index-Tags."
+msgstr "Hintergrundfarbe für Indexmarken."
 
 #. 	<PREF NAME="editor.eiffel.colors.local_background_color" DESCRIPTION="Background color for locals."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:257
@@ -4717,7 +4717,7 @@ msgstr "Aufgerufene"
 #. Source code: l_callees_from_supplier_class: STRING_GENERAL is do Result := locale.translation("Callees from supplier class") end
 #: interface_names.e:1578
 msgid "Callees from supplier class"
-msgstr "Aufgerufene von Lieferantenklasse"
+msgstr "Aufgerufene der Anbieterklasse"
 
 #. Source code: l_Callers: STRING_GENERAL is				do Result := locale.translation("Callers")	end
 #: interface_names.e:837
@@ -4737,7 +4737,7 @@ msgstr "Aufrufkonvention"
 #. Source code: l_Calling_convention: STRING_GENERAL is		do Result := locale.translation("Calling convention:")	end
 #: interface_names.e:838
 msgid "Calling convention:"
-msgstr "Aufrufkonventionen:"
+msgstr "Aufrufkonvention:"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Can't delete class $1 because it is referenced by%N$2%N%NIf this is not the case recompile the system and try again."), [a_class_name, referenced_classes])
 #: warning_messages.e:208
@@ -5021,7 +5021,7 @@ msgstr "Definierte Warnungen überprüfen wenn Archiv neu ausgewertet wird?"
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:720
 msgid "Check overrides and compile"
-msgstr "Überschreibende Cluster überprüfen und kompilieren"
+msgstr "Vorrangige Cluster überprüfen und kompilieren"
 
 #. Source code: e_Check_exports: STRING_GENERAL is			do Result := locale.translation("Check the validity of the library definition")	end
 #: interface_names.e:2001
@@ -5945,7 +5945,7 @@ msgstr "Farbe für Klassen in BON Diagrammen."
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>69;166;11</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:52
 msgid "Color for BON client supplier links."
-msgstr "Farbe für Verknüpfungen zwischen Klient und Zulieferer in BON Diagrammen."
+msgstr "Farbe für Verbindung zwischen Klient und Anbieter in BON Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>100;97;28</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:54
@@ -5965,7 +5965,7 @@ msgstr "Farbe für UML Klassendiagramme."
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_color" DESCRIPTION="Color for UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:74
 msgid "Color for UML client supplier links."
-msgstr "Farbe für Verknüpfung zwischen Klienten und Lieferanten in UML Diagrammen."
+msgstr "Farbe für Verbindung zwischen Klienten und Anbieter in UML Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_line_color" DESCRIPTION="Color for UML cluster line."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:77
@@ -6011,12 +6011,12 @@ msgstr "Farbe für Klasseneigenschaften in UML Klassendiagrammen."
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:51
 msgid "Color for feature names on BON client supplier links."
-msgstr "Farbe für Featurenamen von Verknüpfungen zwischen Klient und Zulieferer in BON Diagrammen."
+msgstr "Farbe für Featurenamen von Verbindungen zwischen Klient und Anbieter in BON Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_label_color" DESCRIPTION="Color for feature names on UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:75
 msgid "Color for feature names on UML client supplier links."
-msgstr "Farbe für Featurenamen von Verknüpfungen zwischen Klient und Lieferant in UML Diagrammen."
+msgstr "Farbe für Featurenamen von Verbindungen zwischen Klient und Anbieter in UML Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:49
@@ -6263,7 +6263,7 @@ msgid ""
 msgstr ""
 "Befehl kann nicht ausgeführt werden weil das Projekt\n"
 "noch nicht kompiliert worden ist.\n"
-"Bitte das Projekt kompilieren bevor dieser Befehl aufgerufen wird."
+"Bitte das Projekt kompilieren bevor dieser Befehl ausgeführt wird."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Command cannot be executed unless compilation%N%
 #: warning_messages.e:538
@@ -7262,12 +7262,12 @@ msgstr "Neues Fenster erstellen"
 #. Source code: f_diagram_create_aggregate_supplier_links: STRING_GENERAL is do Result := locale.translation("Create new aggregate client-supplier links")	end
 #: interface_names.e:404
 msgid "Create new aggregate client-supplier links"
-msgstr "Neue Zulieferer-Klienten Verbindungen als Aggregat erzeugen"
+msgstr "Neue Klient-Anbieter Verbindungen als Aggregat erzeugen"
 
 #. Source code: f_diagram_create_supplier_links: STRING_GENERAL is	do Result := locale.translation("Create new client-supplier links")	end
 #: interface_names.e:403
 msgid "Create new client-supplier links"
-msgstr "Neue Klienten-Zulieferer-Beziehung erstellen"
+msgstr "Neue Klient-Anbieter-Beziehung erstellen"
 
 #. Source code: f_diagram_create_inheritance_links: STRING_GENERAL is do Result := locale.translation("Create new inheritance links")	end
 #: interface_names.e:405
@@ -10558,7 +10558,7 @@ msgstr "Soll Vervollständigung den Rückgabewert anzeigen?"
 #. 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:551
 msgid "Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"
-msgstr "Soll das Mausrad das Dokument eine ganze Seite umblättern? (Wenn Ja überschreibt dies die Option 'Zeilen pro Mausrad')"
+msgstr "Soll das Mausrad das Dokument eine ganze Seite umblättern? (Wenn Ja übergeht dies die Option 'Zeilen pro Mausrad')"
 
 #. 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:545
@@ -13343,7 +13343,7 @@ msgstr "Nachbedingungen auswerten?"
 #. Source code: option_sup_require_description: STRING_GENERAL is do Result := locale.translation ("Evaluate precondition assertions of suppliers?")	end
 #: conf_interface_names.e:286
 msgid "Evaluate precondition assertions of suppliers?"
-msgstr "Vorbedingungen von Lieferanten auswerten?"
+msgstr "Vorbedingungen von Anbietern auswerten?"
 
 #. Source code: option_require_description: STRING_GENERAL is do Result := locale.translation ("Evaluate precondition assertions?")	end
 #: conf_interface_names.e:276
@@ -13418,7 +13418,7 @@ msgstr "Ausnahmen"
 #. Source code: file_rule_name: STRING_GENERAL is do Result := locale.translation ("Exclude Rules")	end
 #: conf_interface_names.e:54
 msgid "Exclude Rules"
-msgstr "Regeln ausschließen"
+msgstr "Ausschließende Regeln "
 
 #. Source code: dial_cond_platforms_exclude: STRING_GENERAL is do Result := locale.translation ("Exclude platform(s)")	end
 #: conf_interface_names.e:382
@@ -13583,7 +13583,7 @@ msgstr "Suche Nachfahren von $1"
 #. Source code: l_exploring_suppliers_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.formatted_string (locale.translation("Exploring suppliers of $1"), [a_class])	end
 #: interface_names.e:1037
 msgid "Exploring suppliers of $1"
-msgstr "Suche Lieferanten von $1"
+msgstr "Suche Anbieter von $1"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.autocomplete_export" DESCRIPTION="Autocomplete export?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -13843,7 +13843,7 @@ msgstr "Extrahiere $1 von $target ..."
 #. Source code: Result := locale.formatted_string (locale.translation ("Extracting $1 of $2 ..."), [a_command_name, a_object_name])
 #: interface_names.e:1388
 msgid "Extracting $1 of $2 ..."
-msgstr "Extrahiere $1 von $2..."
+msgstr "Extrahiere $1 von $2 ..."
 
 #. Source code: Result := locale.formatted_string (locale.translation("Extracting $1 of class $2..."), [a_command_name, a_object_name])
 #: interface_names.e:1352
@@ -13998,7 +13998,7 @@ msgstr "Feature in Klientenklasse"
 #. Source code: l_feature_in_supplier_class: STRING_GENERAL is do Result := locale.translation("Feature in supplier class")	end
 #: interface_names.e:1615
 msgid "Feature in supplier class"
-msgstr "Feature in Zuliefererklasse"
+msgstr "Feature in Anbieterklasse"
 
 #. Source code: w_Feature_not_written_in_class: STRING_GENERAL is do Result := locale.translation ("Feature is not written in selected class.") end
 #: warning_messages.e:795
@@ -14787,7 +14787,7 @@ msgstr "Schriftart für Klasseneigenschaften in UML Klassendiagrammen."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:50
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:13
 msgid "Font for feature names on BON client supplier links."
-msgstr "Schriftart für Featurenamen von Verknüpfungen zwischen Klient und Zulieferer in BON Diagrammen."
+msgstr "Schriftart für Featurenamen von Verbindungen zwischen Klient und Anbieter in BON Diagrammen."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>Arial-r-regular-10-sans</FONT></PREF>
@@ -14796,7 +14796,7 @@ msgstr "Schriftart für Featurenamen von Verknüpfungen zwischen Klient und Zuli
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:76
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:22
 msgid "Font for feature names on UML client supplier links."
-msgstr "Schriftart für Featurenamen von Verknüpfungen zwischen Klient und Lieferant in UML Diagrammen."
+msgstr "Schriftart für Featurenamen von Verbindungen zwischen Klient und Anbieter in UML Diagrammen."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
@@ -14888,7 +14888,7 @@ msgstr "Farbe für generischen Parameter."
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:250
 msgid "Foreground color for indexing tags."
-msgstr "Farbe für Index-Tags."
+msgstr "Farbe für Indexmarken."
 
 #. 	<PREF NAME="editor.eiffel.colors.local_text_color" DESCRIPTION="Foreground color for locals."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:256
@@ -15654,12 +15654,12 @@ msgstr "Gruppen"
 #. Source code: cluster_dependencies_description: STRING_GENERAL is do Result := locale.translation ("Groups this cluster depends on.")	end
 #: conf_interface_names.e:251
 msgid "Groups this cluster depends on."
-msgstr "Gruppe von welchem dieses Cluster abhängt"
+msgstr "Gruppe von welchem dieses Cluster abhängt."
 
 #. Source code: override_override_description: STRING_GENERAL is do Result := locale.translation ("Groups this override is overriding.")	end
 #: conf_interface_names.e:267
 msgid "Groups this override is overriding."
-msgstr "Gruppe welches dieses überschreibende Cluster überschreibt."
+msgstr "Gruppe welches dieses vorrangige Cluster übergeht."
 
 #. Source code: Result.force (locale.translation ("Gujarati"), "gu")
 #: locale_names.e:56
@@ -15835,7 +15835,7 @@ msgstr "Altes Archiv verbergen"
 #. Source code: f_diagram_hide_supplier: STRING_GENERAL is	do Result := locale.translation("Hide supplier links")	end
 #: interface_names.e:367
 msgid "Hide supplier links"
-msgstr "Lieferantenbeziehungen verbergen"
+msgstr "Anbieterverbindungen verbergen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="debugger.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
@@ -17607,7 +17607,7 @@ msgstr "Farbe der Zeilennummern"
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links."><INTEGER>5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:53
 msgid "Line width for BON client supplier links."
-msgstr "Liniendicke für Verknüpfungen zwischen Klient und Zulieferer in BON Diagrammen."
+msgstr "Liniendicke für Verbindungen zwischen Klient und Anbieter in BON Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:60
@@ -17617,7 +17617,7 @@ msgstr "Liniendicke für Vererbungsbeziehungen in BON Diagrammen."
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_line_width" DESCRIPTION="Line width for UML client supplier links."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:73
 msgid "Line width for UML client supplier links."
-msgstr "Liniendicke für Verknüpfung zwischen Klient und Lieferant in UML Diagrammen."
+msgstr "Liniendicke für Verbindungen zwischen Klient und Anbieter in UML Diagrammen."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_line_width" DESCRIPTION="Line width for UML inheritance links."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:82
@@ -19750,22 +19750,22 @@ msgstr "Schutz vor Stacküberlauf"
 #. Source code: group_override: STRING_GENERAL is do Result := locale.translation ("Override")	end
 #: conf_interface_names.e:213
 msgid "Override"
-msgstr "Überschreibendes Cluster"
+msgstr "Vorrangiges Cluster"
 
 #. Source code: target_platform_description: STRING_GENERAL is do Result := locale.translation ("Override the detected platform to use in conditions.")	end
 #: conf_interface_names.e:144
 msgid "Override the detected platform to use in conditions."
-msgstr "Die gefundene Plattform in Bedingungen überschreiben."
+msgstr "Die gefundene Plattform in Bedingungen übergehen."
 
 #. Source code: group_override_tree: STRING_GENERAL is do Result := locale.translation ("Overrides")	end
 #: conf_interface_names.e:207
 msgid "Overrides"
-msgstr "Überschreibende Cluster"
+msgstr "Vorrangige Cluster"
 
 #. Source code: override_override_name: STRING_GENERAL is do Result := locale.translation ("Overriding")	end
 #: conf_interface_names.e:266
 msgid "Overriding"
-msgstr "Überschreibend"
+msgstr "Übergeht"
 
 #. Source code: b_overwrite: STRING_GENERAL is						do Result := locale.translation("Overwrite") end
 #: interface_names.e:181
@@ -19953,7 +19953,7 @@ msgid ""
 msgstr ""
 "Bitte eine Klasse oder ein Cluster auf dieser Schaltfläche loslassen\n"
 "um das entsprechende Diagramm anzuzeigen.\n"
-"Sie können die Klasse mittels Rechtsklick greifen und wieder loslassen."
+"Sie können mittels Rechtsklick greifen und wieder loslassen."
 
 #. Source code: e_Diagram_remove_anchor: STRING_GENERAL is	do Result := locale.translation("Please drop a class or a cluster with an%Nanchor on this button.%NUse right click for both%N%
 #: interface_names.e:2030
@@ -19965,7 +19965,7 @@ msgid ""
 msgstr ""
 "Bitte eine Klasse oder ein Cluster mit einem Anker auf dieser\n"
 "Schaltfläche loslassen.\n"
-"Sie können die Klasse mittels Rechtsklick greifen und wieder loslassen."
+"Sie können mittels Rechtsklick greifen und wieder loslassen."
 
 #. Source code: e_Diagram_delete_item: STRING_GENERAL is	do Result := locale.translation("Please drop a class, a cluster or a link%N%
 #: interface_names.e:2038
@@ -19976,7 +19976,7 @@ msgid ""
 msgstr ""
 "Bitte eine Klasse, ein Cluster oder eine Verbindung auf dieser\n"
 "Schaltfläche loslassen.\n"
-"Sie können die Klasse mittels Rechtsklick greifen und wieder loslassen."
+"Sie können mittels Rechtsklick greifen und wieder loslassen."
 
 #. Source code: e_Diagram_delete_figure: STRING_GENERAL is	do Result := locale.translation("Please drop a class, a cluster or a midpoint%N%
 #: interface_names.e:2034
@@ -19984,7 +19984,10 @@ msgid ""
 "Please drop a class, a cluster or a midpoint\n"
 "on this button. Use right click for both\n"
 "pick and drop actions."
-msgstr "Bitte eine Klasse, eine Cluster oder einen Zwischenpunkt über dieser Schaltfläche loslassen."
+msgstr ""
+"Bitte eine Klasse, ein Cluster oder einen Zwischenpunkt auf dieser\n"
+"Schaltfläche loslassen.\n"
+"Sie können mittels Rechtsklick greifen und wieder loslassen."
 
 #. Source code: e_Diagram_create_class: STRING_GENERAL is	do Result := locale.translation("Please drop this button on the diagram.%N%
 #: interface_names.e:2032
@@ -19994,7 +19997,7 @@ msgid ""
 "pick and drop actions."
 msgstr ""
 "Bitte diese Schaltfläche auf dem Diagramm loslassen.\n"
-"Sie können die Klasse mittels Rechtsklick greifen und wieder loslassen."
+"Sie können mittels Rechtsklick greifen und wieder loslassen."
 
 #. Source code: "Please enter a correct query, for example:%N%
 #: warning_messages.e:743
@@ -20764,17 +20767,17 @@ msgstr "Kürzliche Projekte"
 #. Source code: m_Override_scan: STRING_GENERAL is			do Result := locale.translation("Recompile &Overrides")	end
 #: interface_names.e:727
 msgid "Recompile &Overrides"
-msgstr "&Überschreibende Cluster neu kompilieren"
+msgstr "&Vorrangige Cluster neu kompilieren"
 
 #. Source code: b_override_scan: STRING_GENERAL is					do Result := locale.translation("Recompile Overrides")	end
 #: interface_names.e:121
 msgid "Recompile Overrides"
-msgstr "Überschreibende Cluster neu kompilieren"
+msgstr "Vorrangige Cluster neu kompilieren"
 
 #. Source code: e_override_scan: STRING_GENERAL is			do Result := locale.translation("Recompile override clusters")	end
 #: interface_names.e:2070
 msgid "Recompile override clusters"
-msgstr "Überschreibende Cluster neu kompilieren"
+msgstr "Vorrangige Cluster neu kompilieren"
 
 #. Source code: l_fresh_compilation: STRING_GENERAL is		do Result := locale.translation("Recompile project")	end
 #: interface_names.e:1065
@@ -21144,7 +21147,7 @@ msgstr "Gewählten Bereich entfernen"
 #. Source code: l_remove_stone_handler: STRING_GENERAL is do Result := locale.translation ("Remove selected stone handler") end
 #: interface_names.e:666
 msgid "Remove selected stone handler"
-msgstr "Gewählten Kieselhandhaber entfernen"
+msgstr "Gewählte Kiesel-Behandlungsroutine entfernen"
 
 #. Source code: t_remove_value_retriever: STRING_GENERAL is do Result := locale.translation ("Remove selected value retriever") end
 #: eb_metric_names.e:154
@@ -21484,7 +21487,7 @@ msgstr "Indirekte Klientenklassen finden"
 #. Source code: Result := locale.translation ("Retrieve indirect supplier classes")
 #: eb_metric_names.e:294
 msgid "Retrieve indirect supplier classes"
-msgstr "Finde indirekte Lieferantenklassen"
+msgstr "Finde indirekte Anbieterklassen"
 
 #. Source code: Result := locale.translation ("Retrieve normally referenced client classes")
 #: eb_metric_names.e:314
@@ -21494,7 +21497,7 @@ msgstr "Normal referenzierte Klientenklassen finden"
 #. Source code: Result := locale.translation ("Retrieve normally referenced supplier classes")
 #: eb_metric_names.e:312
 msgid "Retrieve normally referenced supplier classes"
-msgstr "Finde normal referenzierte Lieferantenklassen"
+msgstr "Finde normal referenzierte Anbieterklassen"
 
 #. Source code: Result := locale.translation ("Retrieve only syntactially referenced client classes")
 #: eb_metric_names.e:323
@@ -21504,12 +21507,12 @@ msgstr "Finde nur syntaktisch referenzierte Klassen"
 #. Source code: Result := locale.translation ("Retrieve only syntactially referenced supplier classes")
 #: eb_metric_names.e:321
 msgid "Retrieve only syntactially referenced supplier classes"
-msgstr "Nur syntaktisch referenzierte Lieferantenklassen finden"
+msgstr "Nur syntaktisch referenzierte Anbieterklassen finden"
 
 #. Source code: Result := locale.translation ("Retrieve supplier classes")
 #: eb_metric_names.e:303
 msgid "Retrieve supplier classes"
-msgstr "Lieferanten der Klasse finden"
+msgstr "Anbieter der Klasse finden"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Retrieving project in: $1%Nwas interrupted. Cannot continue."), [dir_name])
 #: warning_messages.e:97
@@ -21731,7 +21734,7 @@ msgstr "Speichern &als..."
 #. Source code: m_Showsuppliers: STRING_GENERAL is			do Result := locale.translation("S&uppliers")	end
 #: interface_names.e:570
 msgid "S&uppliers"
-msgstr "&Lieferanten"
+msgstr "&Anbieter"
 
 #. Source code: m_Send_stone_to_context: STRING_GENERAL is	do Result := locale.translation("S&ynchronize Context Tool")	end
 #: interface_names.e:737
@@ -22260,7 +22263,7 @@ msgstr "Format für die Ausgabe wählen"
 #. Source code: l_select_indexing_to_generate: STRING_GENERAL is do Result := locale.translation("Select indexing items to include in HTML meta tags")	end
 #: interface_names.e:1560
 msgid "Select indexing items to include in HTML meta tags"
-msgstr "Wähle Indexbegriffe welche zu den HTML meta tags hinzugefügt werden"
+msgstr "Wähle Indexbegriffe welche zu den HTML Metatags hinzugefügt werden"
 
 #. Source code: l_select_input_domain: STRING_GENERAL is do Result := locale.translation ("Select input domain:") end
 #: eb_metric_names.e:184
@@ -22335,7 +22338,7 @@ msgstr "Ansicht wählen die verwendet werden soll"
 #. Source code: l_diagram_create_links: STRING_GENERAL is	do Result := locale.translation("Select type of new links")	end
 #: interface_names.e:406
 msgid "Select type of new links"
-msgstr "Typ der neuen Verknüpfungen wählen"
+msgstr "Typ der neuen Verbindung wählen"
 
 #. Source code: t_select_working_directory: STRING_GENERAL is do Result := locale.translation("Select working directory")	end
 #: interface_names.e:1912
@@ -22616,12 +22619,12 @@ msgstr "Erzeuger für Metrikwerte einstellen"
 #. Source code: Result := locale.formatted_string (locale.translation ("Setup stone handlers for tool %"$1%""), [l_tool_name])
 #: interface_names.e:620
 msgid "Setup stone handlers for tool \"$1\""
-msgstr "Kieselhandhaber für Werkzeug \"$1\" einstellen"
+msgstr "Kiesel-Behandlungsroutine für Werkzeug \"$1\" einstellen"
 
 #. Source code: Result := locale.translation ("Setup supplier classes")
 #: eb_metric_names.e:330
 msgid "Setup supplier classes"
-msgstr "Lieferantenklassen einrichten"
+msgstr "Anbieterklassen einrichten"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Setup tools for formatter %"$1%""), [a_formatter_name])
 #: interface_names.e:610
@@ -22723,7 +22726,7 @@ msgstr "Tastenkombination um Kompilierung abzubrechen."
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:720
 msgid "Shortcut to check overrides and compile current project."
-msgstr "Tastenkombination um überschreibende Cluster zu überprüfen und aktuelles Projekt zu kompilieren."
+msgstr "Tastenkombination um vorrangige Cluster zu überprüfen und aktuelles Projekt zu kompilieren."
 
 #. 	<PREF NAME="shortcuts.project.compile" DESCRIPTION="Shortcut to compile current project."><SHORTCUT>F7</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:718
@@ -23824,12 +23827,12 @@ msgstr "Die übergeordneten Cluster standardmässig bis zu dem in den Einstellun
 #. Source code: f_diagram_show_supplier: STRING_GENERAL is	do Result := locale.translation("Show supplier links")	end
 #: interface_names.e:368
 msgid "Show supplier links"
-msgstr "Lieferantenbeziehungen anzeigen"
+msgstr "Anbieterverbindungen anzeigen"
 
 #. 	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:94
 msgid "Show suppliers of a class up to a level of preference value."
-msgstr "Lieferanten einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
+msgstr "Anbieter einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 #. 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:207
@@ -24377,7 +24380,7 @@ msgstr "Steifheit:"
 #. Source code: l_stone_handler: STRING_GENERAL is do Result := locale.translation ("Stone handler") end
 #: interface_names.e:667
 msgid "Stone handler"
-msgstr "Kieselhandhaber"
+msgstr "Kiesel-Behandlungsroutine"
 
 #. Source code: l_stone_name: STRING_GENERAL is do Result := locale.translation ("Stone name") end
 #: interface_names.e:622
@@ -24496,27 +24499,27 @@ msgstr "Tiefe der übergeordneten Cluster"
 #. Source code: option_sup_require_name: STRING_GENERAL is do Result := locale.translation ("Supplier Precondition")	end
 #: conf_interface_names.e:285
 msgid "Supplier Precondition"
-msgstr "Vorbedingungen der Aufgerufenen"
+msgstr "Vorbedingungen der Anbieter"
 
 #. Source code: l_supplier_class: STRING_GENERAL is do Result := locale.translation("Supplier class")	end
 #: interface_names.e:1596
 msgid "Supplier class"
-msgstr "Lieferantenklasse"
+msgstr "Anbieterklasse"
 
 #. 	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:94
 msgid "Supplier depth"
-msgstr "Zulieferertiefe"
+msgstr "Anbietertiefe"
 
 #. Source code: l_supplier_group: STRING_GENERAL is do Result := locale.translation("Supplier group")	end
 #: interface_names.e:1598
 msgid "Supplier group"
-msgstr "Lieferantengruppe"
+msgstr "Anbietergruppe"
 
 #. Source code: l_Suppliers: STRING_GENERAL is				do Result := locale.translation("Suppliers")	end
 #: interface_names.e:1256
 msgid "Suppliers"
-msgstr "Lieferanten"
+msgstr "Anbieter"
 
 #. Source code: Result.force (locale.translation ("Swahili"), "sw")
 #: locale_names.e:117
@@ -24651,7 +24654,7 @@ msgstr "Syntaktischer Klient von "
 #. Source code: l_syntactical_supplier_of: STRING is do Result := locale.translation ("Syntactical supplier of ") end
 #: interface_names.e:1591
 msgid "Syntactical supplier of "
-msgstr "Syntaktischer Lieferant von "
+msgstr "Syntaktischer Anbieter von "
 
 #. 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:242
@@ -25556,7 +25559,7 @@ msgid ""
 "such as class clients/suppliers"
 msgstr ""
 "Diese Ansicht eignet sich zur Darstellung von Klassenlisten\n"
-"wie Klienten oder Lieferanten"
+"wie Klienten oder Anbieter"
 
 #. Source code: l_feature_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying different versions of a feature%Nsuch as feature implementors/ancestor versions/descendant versions") end
 #: interface_names.e:633
@@ -25707,7 +25710,7 @@ msgstr "Sichtbarkeit vom Namen des Zuweiserbefehls umschalten"
 #. Source code: l_diagram_labels_visibility: STRING_GENERAL is	do Result := locale.translation("Toggle visibility of client link labels")	end
 #: interface_names.e:386
 msgid "Toggle visibility of client link labels"
-msgstr "Schalte die Sichtbarkeit der Beschriftungen der Client-Verknüpfungen um"
+msgstr "Schalte die Sichtbarkeit der Beschriftung der Klientenverbindungen um"
 
 #. Source code: l_diagram_legend_visibility: STRING_GENERAL is	do Result := locale.translation("Toggle visibility of cluster legend")	end
 #: interface_names.e:389
@@ -25742,7 +25745,7 @@ msgstr "Tastenkombination um Sichtbarkeit von Zeilennummern umzuschalten."
 #. Source code: l_diagram_supplier_visibility: STRING_GENERAL is do Result := locale.translation("Toggle visibility of supplier links")	end
 #: interface_names.e:370
 msgid "Toggle visibility of supplier links"
-msgstr "Sichtbarkeit von Lieferantenverbindungen umschalten"
+msgstr "Sichtbarkeit von Anbieterverbindungen umschalten"
 
 #. Source code: Result := locale.translation ("Too many %"domain%" section specified. Only one is expected.")
 #: eb_metric_names.e:452
@@ -27522,6 +27525,7 @@ msgstr "Sicherheitskopie der benutzerdefinierten Metriken beendet."
 
 #. Source code: do Result := locale.translation("Using this wizard you can analyze the result of a profiling.%N%
 #: interface_names.e:2168
+#, fuzzy
 msgid ""
 "Using this wizard you can analyze the result of a profiling.\n"
 "\n"
@@ -28249,7 +28253,7 @@ msgstr "Platzhalter"
 #. 	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:125
 msgid "Will normal referenced supplier/client classes be shown"
-msgstr "Werden normal referenzierte Lieferanten-/Klientenklassen angezeigt?"
+msgstr "Werden normal referenzierte Anbieter-/Klientenklassen angezeigt?"
 
 #. Source code: t_Windows_tool: STRING_GENERAL is					do Result := locale.translation ("Windows")	end
 #: interface_names.e:1927
@@ -29253,7 +29257,7 @@ msgstr "Kurze Form einer Klasse anzeigen"
 #. Source code: suppliers_help: STRING_GENERAL is do Result := locale.translation ("show the suppliers of a class") end
 #: shared_ewb_help.e:185
 msgid "show the suppliers of a class"
-msgstr "Lieferanten einer Klasse anzeigen"
+msgstr "Anbieter einer Klasse anzeigen"
 
 #. Source code: clusters_help: STRING_GENERAL is do Result := locale.translation ("show the system's classes, cluster by cluster") end
 #: shared_ewb_help.e:53

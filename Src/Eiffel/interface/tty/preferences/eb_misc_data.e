@@ -14,6 +14,11 @@ inherit
 
 	SHARED_FLAGS
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -251,6 +256,15 @@ feature {NONE} -- Implementation
 					l_select_lang := "en_US"
 				elseif l_select_lang.is_equal (default_string) then
 					l_is_unselected := True
+
+					check is_eiffel_layout_defined: is_eiffel_layout_defined end
+					if is_eiffel_layout_defined then
+						l_select_lang := eiffel_layout.get_environment ("ISE_LANG")
+						l_is_unselected := l_select_lang = Void or else l_select_lang.is_empty or else l_select_lang.is_equal (default_string)
+						if l_is_unselected then
+							l_select_lang := default_string
+						end
+					end
 				end
 				l_available_locales := locale_manager.available_locales
 				create l_id.make_from_string (l_select_lang)

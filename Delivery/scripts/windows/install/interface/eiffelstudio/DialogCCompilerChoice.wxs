@@ -10,6 +10,8 @@
         
         <Dialog Id="DialogCCompilerChoice" Width="375" Height="220" Title="[ProductName]">
           <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_c.bmp" />
+          <!-- Follow Label is only there to paint a background color. The RadioButtonGroup will lay over the Download button preventing it from being clicked. -->
+          <Control Id="FakeLabel" Type="Text" X="40" Y="135" Width="297" Height="36" TabSkip="yes" Transparent="no"/>
           <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
             <Text>[BigFont]C/C++ Compiler Selection</Text>
           </Control>

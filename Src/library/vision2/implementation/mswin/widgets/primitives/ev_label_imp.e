@@ -344,7 +344,10 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				l_mem_dc.select_font (l_draw_font)
 				l_color_imp ?= foreground_color.implementation
 				l_mem_dc.set_text_color (l_color_imp)
-				l_mem_dc.set_background_color (l_wel_color)
+
+					-- Set transparent because the background is drawn according to the label's set background color
+					-- or notebook theme.
+				l_mem_dc.set_background_transparent
 
 				if not is_sensitive then
 						-- Label is disabled

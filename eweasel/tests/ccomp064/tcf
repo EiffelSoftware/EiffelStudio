@@ -18,4 +18,18 @@ execute_final	NONE exec_output
 execute_result	ok
 compare		exec_output output
 
+cleanup_compile
+
+copy_sub 	Ace-mt $TEST Ace
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
 test_end

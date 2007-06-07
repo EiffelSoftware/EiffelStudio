@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <?ifdef EiffelStudio?>
+      <UI Id="UI.dialog_choose_language">
+        <Dialog Id="DialogChooseLanguage" Width="375" Height="220" Title="[ProductName]">
+          <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop.bmp" />
+          <Control Id="Title" Type="Text" X="56" Y="13" Width="310" Height="22" Transparent="yes" NoPrefix="yes">
+            <Text>[BigFont]Select a Default Language</Text>
+          </Control>
+          <Control Id="SubTitle" Type="Text" X="56" Y="35" Width="309" Height="13" Transparent="yes" NoPrefix="yes">
+            <Text>[SubTitleFont]Please select a default language.</Text>
+          </Control>
+          <Control Id="Description1" Type="Text" X="11" Y="70" Width="355" Height="30" Transparent="yes" NoPrefix="yes">
+            <Text>Select a default language for [ProductName] from the list below. All users will see [ProductName] in the selected language on first start up.</Text>
+          </Control>
+          <Control Id="LangDescripton" Type="Text" X="29" Y="96" Width="49" Height="15" Transparent="yes" NoPrefix="no">
+            <Text>&amp;Language: </Text>
+          </Control>
+          <Control Id="SelectLang" Type="ListBox" X="29" Y="111" Width="200" Height="70" Property="ISELANG" Sorted="no">
+            <ListBox Property="ISELANG">
+              <ListItem Value="en_US" Text="English (United States)"/>
+              <ListItem Value="zh_CN" Text="Chinese (Trinidad or Tobago)"/>
+              <ListItem Value="fr" Text="French (France)"/>
+              <ListItem Value="de" Text="German (Germany)"/>
+              <ListItem Value="de_CH" Text="German (Switzerland)"/>
+              <ListItem Value="ru_RU" Text="Russian (Russia)"/>
+            </ListBox>
+          </Control>
+          <Control Id="Next" Type="PushButton" X="242" Y="193" Width="56" Height="17" Default="yes" Text="[Button_Next]">
+            <Publish Event="NewDialog" Value="DialogSelectFolder">1</Publish>
+          </Control>
+          <Control Id="Back" Type="PushButton" X="187" Y="193" Width="56" Height="17" Text="[Button_Back]">
+            <Publish Event="NewDialog" Value="DialogMissingFx"><![CDATA[FXINSTALLROOT = "0"]]></Publish>
+            <?ifdef Enterprise?>
+              <Publish Event="NewDialog" Value="DialogRegister"><![CDATA[FXINSTALLROOT <> "0"]]></Publish>
+            <?else?>
+              <Publish Event="NewDialog" Value="DialogViewLicenseAgreement"><![CDATA[FXINSTALLROOT <> "0"]]></Publish>
+            <?endif?>
+          </Control>
+          <Control Id="Cancel" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
+            <Publish Event="SpawnDialog" Value="PromptCancelInstall">1</Publish>
+          </Control>
+        </Dialog>
+      </UI>
+    <?endif?>
+  </Fragment>
+</Wix>

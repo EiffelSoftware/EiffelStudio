@@ -1,0 +1,22 @@
+VIIN, Section 8.32.29 (ECMA-367, 2nd Edition)
+
+     An Integer is valid if and only if it satisfies 
+     the following conditions:
+
+        1 It contains no breaks.
+
+        2 Neither the first nor the last Digit of the 
+          Digit_sequence is an underscore "_".
+
+        3 If there is no Integer_base (decimal integer),
+          every Digit is either one of the decimal
+          digits 0 to 9 (zero to nine) or an underscore.
+
+        4 If there is an Integer_base of the form 0b or 0B 
+          (binary integer), every Digit is either 0, 1 or
+          an underscore.
+
+        5 If there is an Integer_base of the form 0c or 0C
+          (octal integer), every Digit is either one of the
+          octal digits 0 to 7 or an underscore.
+

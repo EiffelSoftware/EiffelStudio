@@ -54,10 +54,10 @@ feature -- Access
 	non_focused_title_text_color: EV_COLOR is
 			-- Non focuesd title text color
 		local
-			l_grid: EV_GRID
+			l_helper: SD_COLOR_HELPER
 		do
-			create l_grid
-			Result := l_grid.non_focused_selection_text_color
+			create l_helper
+			Result := l_helper.text_color_by (non_focused_selection_title_color)
 		end
 
 	non_focused_selection_title_color: EV_COLOR is
@@ -78,7 +78,7 @@ feature -- Access
 			l_grid: EV_GRID
 		do
 			create l_grid
-			Result := l_grid.non_focused_selection_text_color
+			Result := l_grid.focused_selection_text_color
 		end
 
 	button_text_color: EV_COLOR is

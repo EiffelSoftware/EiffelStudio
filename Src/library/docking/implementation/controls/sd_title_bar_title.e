@@ -202,9 +202,9 @@ feature {NONE} -- Implementation
 				else
 					set_background_color (hightlight_non_focus_color)
 
-					set_non_focus_active_background_color
 					clear
 					l_helper.draw_color_change_gradually (Current, hightlight_non_focus_color, hightlight_gray_color, width - internal_shared.highlight_tail_width, width)
+					set_non_focus_active_background_color
 				end
 
 				l_clipping_width := width - internal_shared.highlight_before_width - internal_shared.highlight_tail_width

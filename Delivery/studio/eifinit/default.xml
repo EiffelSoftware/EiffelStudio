@@ -414,7 +414,7 @@
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete else if?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete elseif?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.use_default_elseif" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></PREF>
@@ -456,14 +456,14 @@
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.autocomplete_until" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.autocomplete_until" DESCRIPTION="Autocomplete until?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.use_default_until" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.autocomplete_loop" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.autocomplete_loop" DESCRIPTION="Autocomplete loop?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.use_default_loop" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
@@ -519,7 +519,7 @@
 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 
-	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete Precursor?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete precursor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.use_default_precursor" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> {$cursor$}</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>

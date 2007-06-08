@@ -113,6 +113,12 @@ feature -- Status report
 			do
 			end
 
+	replace (a_widget: EV_WIDGET) is
+			do
+
+			end
+
+
 feature -- Status settings
 
 	enable_homogeneous is

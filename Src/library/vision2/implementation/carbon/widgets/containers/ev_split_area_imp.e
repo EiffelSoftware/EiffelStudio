@@ -20,8 +20,6 @@ inherit
 		end
 
 	EV_CONTAINER_IMP
-		undefine
-			replace
 		redefine
 			interface,
 			initialize,
@@ -239,6 +237,7 @@ feature {NONE} -- Implementation
 		do
 			err := hiview_set_frame_external ( subview_a.item, rect_a.item )
 			err := hiview_set_frame_external ( subview_b.item, rect_b.item )
+
 			if first /= void then
 				c ?= first.implementation
 				if c /= void then
@@ -246,12 +245,12 @@ feature {NONE} -- Implementation
 				end
 			end
 			if second /= void then
-
 				c ?= second.implementation
 				if c /= void then
 					c.setup_layout
 				end
 			end
+
 			err := hiview_set_needs_display_external ( c_object, ( true ).to_integer )
 
 		end
@@ -329,14 +328,6 @@ feature {NONE} -- Implementation
 			do
 				calculate_rects
 				adjust_subviews
---				w ?= first
---				if  w /= void then
---					w.setup_layout
---				end
---				w ?= second
---				if  w /= void then
---					w.setup_layout
---				end
 			end
 
 

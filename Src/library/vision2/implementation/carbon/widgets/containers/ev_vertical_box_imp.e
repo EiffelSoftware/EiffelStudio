@@ -61,25 +61,6 @@ feature {NONE} -- Initialization
 
 feature -- Measturement
 
---	minimum_width: INTEGER is
---			-- The minimum width of a vertical box is the maximum of the minimum_width's of its children
---	local
---		a, b, i: INTEGER
---	do
---		a := internal_minimum_width
---		from
---			b := 0
---			i := 1
---		until
---			(i = 0) or (i = count + 1)
---		loop
---			b := b.max(i_th(i).minimum_width)
---			i := i + 1
---		end
---		b := b + child_offset_left + child_offset_right
---		Result := a.max (b)
---	end
-
 	calculate_minimum_sizes is
 			local
 		min_width, min_height, i: INTEGER
@@ -96,7 +77,7 @@ feature -- Measturement
 			i := i + 1
 		end
 		min_width := min_width + child_offset_left + child_offset_right
-		min_height := min_height + (count -1) * padding + child_offset_bottom + child_offset_top
+		min_height := min_height + (count-1) * padding + child_offset_bottom + child_offset_top
 		buffered_minimum_height := min_height.max (internal_minimum_height)
 		buffered_minimum_width := min_width.max (internal_minimum_width)
 	end
@@ -110,25 +91,6 @@ feature -- Measturement
 				Result := buffered_minimum_width
 			end
 
-
---	minimum_height: INTEGER is
---			-- The minimum height of a vertical box is the sum of the minimum_heights's of its children
---	local
---		a, b, i: INTEGER
---	do
---		a := internal_minimum_height
---		from
---			b := 0
---			i := 1
---		until
---			(i = 0) or (i = count + 1)
---		loop
---			b := b + i_th(i).minimum_height
---			i := i + 1
---		end
---		b := b + (count-1) * padding + child_offset_bottom + child_offset_top
---		Result := a.max (b)
---	end
 
 feature -- Implementation
 
@@ -176,17 +138,12 @@ feature -- Implementation
 					non_expandable_height := non_expandable_height + w1.minimum_height
 				end
 				min_width := min_width.max (w1.minimum_width)
-				--size_control_external ( w1.c_object, width - child_offset_left - child_offset_right, w1.minimum_height ) -- Set optimal size here, we need it later
-				-- Ueli:  I don't see, where we need this later....
 				size_control_external ( w1.c_object, width - child_offset_left - child_offset_right, 1)
 				i := i + 1
 			end
 
 			min_height :=  expandable_height + non_expandable_height + (count-1)*padding +child_offset_bottom + child_offset_top
-			-- Set height of userpane so that it can accomodate all widgets + padding. We reset this change at the end of the feature
 			old_height := height -- save old height
-			--size_control_external ( c_object, width, min_height)
-
 
 
 			if is_homogeneous then
@@ -199,13 +156,6 @@ feature -- Implementation
 				ratio :=  (old_height - child_offset_top - child_offset_bottom - (count-1)*padding) / (min_height - child_offset_top - child_offset_bottom - (count-1)*padding)
 			end
 
-
-			--set the child recs and binding
-			--w2 ?= i_th ( 1 ).implementation
-			--check
-			--	w2_not_void : w2 /= Void
-			--end
-			--setup_binding( default_pointer, w2.c_object, child_offset_left, child_offset_right, child_offset_bottom, child_offset_top, padding )
 			from
 				i := 1
 				last_y := -padding + child_offset_top
@@ -226,7 +176,7 @@ feature -- Implementation
 					if is_homogeneous then
 						a_size.set_height ( control_height )
 					elseif (old_height < min_height) then
-						a_size.set_height (( w1.minimum_height.to_double * ratio).rounded )
+						a_size.set_height (( w1.minimum_height.to_double * ratio).ceiling )
 					elseif w1.expandable  then
 						a_size.set_height ( w1.minimum_height + control_height )
 					else
@@ -234,16 +184,9 @@ feature -- Implementation
 					end
 
 					err := hiview_set_frame_external ( w1.c_object, a_rect.item )
-				--	setup_binding( w2.c_object, w1.c_object, child_offset_left, child_offset_right, child_offset_bottom, child_offset_top, padding )
-
-					last_y := (a_point.y + a_size.height + padding).rounded
+					last_y := (a_point.y + a_size.height).ceiling
 					i := i + 1
-				--	w2 := w1
 			end
-
-			--reset original height
-			--size_control_external ( c_object, width, old_height )
-
 			buffered_minimum_width := internal_minimum_width.max (min_width + child_offset_left + child_offset_right)
 			buffered_minimum_height := internal_minimum_height.max (min_height)
 		end

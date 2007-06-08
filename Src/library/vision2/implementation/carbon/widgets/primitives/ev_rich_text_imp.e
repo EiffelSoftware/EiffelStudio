@@ -225,7 +225,7 @@ feature -- Status report
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
 		do
-
+			create Result.default_create
 		end
 
 	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP is

@@ -26,7 +26,8 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_text
 		end
 
 	EV_FONTABLE_IMP
@@ -90,18 +91,48 @@ feature -- Minimum size
 				a_size: CGSIZE_STRUCT
 				ret, size: INTEGER
 			do
-				if internal_minimum_height > 0 then
-					Result := internal_minimum_height
-				else
-					ret := get_control_data_size_external (c_object, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolstatictexttextheighttag, $size)
-					ret := get_control_data_external (c_object, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolstatictexttextheighttag, size, $Result, $size)
-				end
+			--	if internal_minimum_height > 0 then
+			--		Result := internal_minimum_height
+			--	else
+			--		ret := get_control_data_size_external (c_object, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolstatictexttextheighttag, $size)
+			--		ret := get_control_data_external (c_object, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolstatictexttextheighttag, size, $Result, $size)
+			--	end
+			Result := 15
 			end
 
 	minimum_width: INTEGER is
 			do
 				Result:= text.split ('%N').first.count * 8 + 5 -- Currently we approximate the width of the first text line
 			end
+
+		set_text (a_text: STRING_GENERAL) is
+			-- Assign `a_text' to `text'.
+		local
+			ret: INTEGER
+			a_widget : EV_WIDGET_IMP
+			old_min_height, old_min_width: INTEGER
+		do
+			a_widget ?= interface.implementation
+
+			check
+				has_imp: a_widget /= void
+			end
+
+			old_min_height := a_widget.minimum_height
+			old_min_width := a_widget.minimum_width
+
+			if accelerators_enabled then
+				create real_text.make_unshared_with_eiffel_string (u_lined_filter (a_text))
+			else
+				create real_text.make_unshared_with_eiffel_string (a_text)
+			end
+			ret := hiview_set_text_external (c_object, real_text.item)
+
+			if a_widget.parent_imp /= void then
+				a_widget.parent_imp.child_has_resized (current, (a_widget.minimum_height - old_min_height), (a_widget.minimum_width - old_min_width))
+			end
+
+		end
 
 feature -- status setting
 

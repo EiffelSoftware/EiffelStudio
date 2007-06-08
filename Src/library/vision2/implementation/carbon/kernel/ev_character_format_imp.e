@@ -40,6 +40,7 @@ feature -- Access
 	font: EV_FONT is
 			-- Font of the current format
 		do
+			create Result.default_create
 		end
 
 	color: EV_COLOR is

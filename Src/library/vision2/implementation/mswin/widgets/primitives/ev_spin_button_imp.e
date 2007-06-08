@@ -38,7 +38,6 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			on_key_down,
-			on_char,
 			on_size,
 			interface,
 			initialize,
@@ -108,6 +107,7 @@ inherit
 			on_set_focus,
 			on_key_up,
 			on_key_down,
+			on_char,
 			on_mouse_move,
 			on_mouse_wheel,
 			on_set_cursor,
@@ -120,7 +120,6 @@ inherit
 			on_getdlgcode,
 			on_wm_dropfiles
 		redefine
-			on_char,
 			on_wm_vscroll,
 			class_name,
 			on_erase_background,
@@ -689,17 +688,6 @@ feature {NONE} -- Implementation
 		-- We need this as windows sends `on_wm_vscroll' even if the value is
 		-- not changing, ie reached its maximum. We only want to call the
 		-- change actions when the value really does change.
-
-	on_char (character_code, key_data: INTEGER) is
-			-- Wm_char message
-			-- Avoid an unconvenient `bip' when the user
-			-- tab to another control.
-		do
-			Precursor {EV_GAUGE_IMP} (character_code, key_data)
-			if not has_focus then
-				disable_default_processing
-			end
-		end
 
 	on_wm_vscroll (wparam, lparam: POINTER) is
 			-- Wm_vscroll message.

@@ -43,6 +43,7 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			on_key_up,
+			on_char,
 			on_desactivate,
 			on_kill_focus,
 			on_set_cursor

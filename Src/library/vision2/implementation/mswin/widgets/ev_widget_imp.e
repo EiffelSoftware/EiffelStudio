@@ -1014,19 +1014,23 @@ feature {NONE} -- Implementation
 			-- Executed when a key is pressed.
 			--| Now outputs all displayable characters, previously
 			--| depended on process_standard_key returning a valid EV_KEY.
+		require
+			exists: exists
 		local
 			character_string: STRING_32
+			l_char: CHARACTER_32
 			l_key: EV_KEY
 			l_code: INTEGER
 		do
 			if character_code = 13 then
 					-- On Windows, the Enter key gives us "%R" but we need to
 					-- substitute this with "%N" which is the Eiffel newline character.
-				character_string := "%N"
+				l_char := '%N'
 			else
-				create character_string.make(1)
-				character_string.append_character(character_code.as_natural_32.to_character_32)
+				l_char := character_code.as_natural_32.to_character_32
 			end
+			create character_string.make(1)
+			character_string.append_character (l_char)
 			inspect character_code
 			when 8, 27, 127 then
 				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
@@ -1040,13 +1044,17 @@ feature {NONE} -- Implementation
 				end
 			end
 			if default_key_processing_handler /= Void then
-				l_code := {WEL_API}.vk_key_scan (character_string.item (1))
+				l_code := {WEL_API}.vk_key_scan (l_char)
 				if l_code /= -1 and then valid_wel_code (l_code) then
 					create l_key.make_with_code (key_code_from_wel (l_code))
 					if not default_key_processing_handler.item ([l_key]) then
 						disable_default_processing
 					end
 				end
+			elseif not has_focus or character_code = 13 then
+					-- When we loose the focus or press return, we do not perform the
+					-- default processing since it causes a beep.
+				disable_default_processing
 			end
 		end
 

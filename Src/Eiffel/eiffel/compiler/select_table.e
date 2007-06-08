@@ -51,32 +51,40 @@ feature -- Final mode
 
 feature -- Incrementality
 
-	equiv (other: like Current): BOOLEAN is
+	equiv (other: like Current; c: CLASS_C): BOOLEAN is
 			-- Incrementality test on the select table in second pass.
 		require
 			good_argument: other /= Void
 		local
 			f2: FEATURE_I
+			is_freeze_requested: BOOLEAN
 		do
-			if other.count = count then
-					-- At least the counts should be the same.
-				from
-					start
-					Result := True
-				until
-					after or else not Result
-				loop
-					f2 := other.item (key_for_iteration)
-					if f2 = Void then
-						Result := False
-					else
-						check
-							item_for_iteration.feature_name.is_equal (f2.feature_name)
-						end
-						Result := item_for_iteration.select_table_equiv (f2);
+			is_freeze_requested := system.is_freeze_requested
+				-- At least the counts should be the same.
+			from
+				start
+				Result := other.count = count
+			until
+				after or else (not Result and then is_freeze_requested)
+			loop
+				f2 := other.item (key_for_iteration)
+				if f2 = Void then
+					Result := False
+					if not is_freeze_requested and then c.visible_level.is_visible (item_for_iteration, c.class_id) then
+							-- Remove references to the old feature in CECIL data.
+						system.request_freeze
 					end
-					forth
+				else
+					check
+						item_for_iteration.feature_name.is_equal (f2.feature_name)
+					end
+					Result := item_for_iteration.select_table_equiv (f2)
+					if not Result and then not is_freeze_requested and then c.visible_level.is_visible (f2, c.class_id) then
+							-- Regenerate C code for visible feature so that it can be accessed via CECIL.
+						system.request_freeze
+					end
 				end
+				forth
 			end
 		end
 

@@ -226,7 +226,7 @@ feature -- Register
 			if not has_dollar_operator (a_class_id, a_feature_id) then
 				l_table_entry := force_new_table_entry (a_class_id, a_feature_id)
 				l_table_entry.set_has_dollar_op
-				System.set_freeze
+				System.request_freeze
 			end
 		ensure
 			has_dollar_operator (a_class_id, a_feature_id)

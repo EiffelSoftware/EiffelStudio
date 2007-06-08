@@ -8,7 +8,7 @@ inherit
 	VISIBLE_I
 		redefine
 			trace, generate_cecil_table, has_visible, mark_visible,
-			is_visible, make_byte_code
+			is_visible
 		end
 
 	SHARED_SERVER
@@ -58,41 +58,16 @@ feature
 	has_visible: BOOLEAN is True
 			-- Has the current object some visible features ?
 
-	generate_cecil_table (a_class: CLASS_C) is
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
 			-- Generate cecil table
 		local
-			types: TYPE_LIST;
 			buffer: GENERATION_BUFFER
 		do
 			buffer := generation_buffer
-			prepare_table (a_class.feature_table);
-
+			prepare_table (a_class.feature_table)
 				-- Generation
-			cecil_routine_table.generate_name_table (buffer, a_class.class_id);
-			if byte_context.final_mode then
-				from
-					types := a_class.types;
-					types.start
-				until
-					types.after
-				loop
-					cecil_routine_table.generate_final (buffer, types.item);
-					types.forth
-				end;
-			elseif a_class.is_precompiled then
-				cecil_routine_table.generate_precomp_workbench (buffer, a_class.class_id);
-			else
-				cecil_routine_table.generate_workbench (buffer, a_class.class_id);
-			end;
-		end;
-
-	make_byte_code (ba: BYTE_ARRAY; feat_table: FEATURE_TABLE) is
-			-- Produce byte code for current visible clause
-		do
-			prepare_table (feat_table);
-
-			cecil_routine_table.make_byte_code (ba);
-		end;
+			cecil_routine_table.generate (buffer, a_class, generated_wrappers)
+		end
 
 	prepare_table (feat_table: FEATURE_TABLE) is
 			-- Prepate cecil table.

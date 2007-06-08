@@ -2178,7 +2178,7 @@ end
 				-- If the $ operator is used in the class,
 				-- an encapsulation of the feature must be generated
 			if System.address_table.class_has_dollar_operator (class_id) then
-				System.set_freeze
+				System.request_freeze
 			end
 				-- Mark the class `changed4' because there is a new type
 			changed4 := True
@@ -2497,15 +2497,16 @@ feature -- Dead code removal
 
 feature -- Cecil
 
-	generate_cecil is
+	generate_cecil (generated_wrappers: DS_HASH_SET [STRING]) is
 			-- Generate cecil table for a class having visible features
 		require
 			has_visible: has_visible
+			generated_wrappers_attached: generated_wrappers /= Void
 		do
 				-- Reset hash-table size which will be computed during
 				-- generation.
 			set_visible_table_size (0)
-			visible_level.generate_cecil_table (Current)
+			visible_level.generate_cecil_table (Current, generated_wrappers)
 		end
 
 feature -- Invariant feature

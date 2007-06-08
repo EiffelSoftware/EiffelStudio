@@ -224,14 +224,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 
 	int dtype = Deif_bid(cid_to_dtype(cid));		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
-#ifdef WORKBENCH
-	int32 *feature_ptr;
-	int32 rout_id;
-	BODY_INDEX body_id;
-	int32 *cn_routids;
-#else
 	EIF_REFERENCE_FUNCTION *ref;
-#endif
 
 	if (cid == EIF_NO_TYPE)	/* No type id */
 		return (EIF_REFERENCE_FUNCTION) 0;
@@ -240,7 +233,6 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 		return (EIF_REFERENCE_FUNCTION) 0;			/* Cannot use Cecil on simple types */
 	ptr_table = &Cecil(dtype);			/* Get associated H table */
 
-#ifndef WORKBENCH
 	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
 	if (!ref) {	/* Was function found? */
 		if (!eif_visible_is_off) {	/* Is Visible exception enabled? */
@@ -251,25 +243,6 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	}
 
 	return *ref;	/* Return address of function. */
-#else
-	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0) {
-		if (!eif_visible_is_off)
-			eraise ("Unknown routine (visible?)", EN_PROG);
-		return (EIF_REFERENCE_FUNCTION) 0;
-	}
-	cn_routids = System(dtype).cn_routids;
-	if (cn_routids)
-		rout_id = cn_routids[*feature_ptr];
-	else /* precompiled routine */
-		rout_id = *feature_ptr;
-	CBodyId(body_id,rout_id,dtype);
-
-	if (egc_frozen [body_id])
-		return egc_frozen[body_id];
-	else
-		xraise(MTC EN_DOL);
-		return (EIF_REFERENCE_FUNCTION) 0;	/* NOT REACHED */
-#endif
 }
 
 /*

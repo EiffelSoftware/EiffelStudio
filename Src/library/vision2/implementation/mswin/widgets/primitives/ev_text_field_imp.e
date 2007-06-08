@@ -19,7 +19,6 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			on_key_down,
-			on_char,
 			interface,
 			initialize,
 			next_dlgtabitem
@@ -77,6 +76,7 @@ inherit
 			on_mouse_move,
 			on_mouse_wheel,
 			on_key_up,
+			on_char,
 			on_set_focus,
 			on_desactivate,
 			on_kill_focus,
@@ -99,8 +99,7 @@ inherit
 			on_en_change,
 			default_style,
 			enable,
-			disable,
-			on_char
+			disable
 		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
@@ -215,17 +214,6 @@ feature {NONE} -- WEL Implementation
 			spin_button ?= wel_parent
 			if spin_button /= Void then
 				spin_button.on_key_down (virtual_key, key_data)
-			end
-		end
-
-	on_char (character_code, key_data: INTEGER) is
-			-- Wm_char message.
-			-- Avoid an unconvenient `beep' when the user
-			-- tab to another control.
-		do
-			Precursor {EV_TEXT_COMPONENT_IMP} (character_code, key_data)
-			if not has_focus or character_code = Vk_return then
-				disable_default_processing
 			end
 		end
 

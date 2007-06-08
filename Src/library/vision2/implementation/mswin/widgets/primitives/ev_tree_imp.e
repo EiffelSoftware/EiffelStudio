@@ -30,7 +30,6 @@ inherit
 		redefine
 			on_mouse_move,
 			on_key_down,
-			on_char,
 			interface,
 			initialize,
 			set_background_color,
@@ -644,17 +643,6 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
-		end
-
-	on_char (character_code, key_data: INTEGER) is
-			-- Wm_char message
-			-- Avoid an unconvenient `beep' when the user
-			-- tab to another control.
-		do
-			Precursor {EV_PRIMITIVE_IMP} (character_code, key_data)
-			if not has_focus then
-				disable_default_processing
-			end
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is

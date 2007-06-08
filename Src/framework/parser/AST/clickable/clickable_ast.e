@@ -39,6 +39,15 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 		end
 
+	class_name: ID_AS is
+			-- Associated `feature_name' if Current represents a feature
+		require
+			is_class: is_class
+		do
+		ensure
+			feature_name_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -24,7 +24,7 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_new_line
+				-- No need to add a line, there is already one inserted by `print_short_help'.
 			st.add (warning.out)
 			st.add_new_line;
 		end;

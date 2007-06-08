@@ -180,6 +180,7 @@ feature {NONE} -- Click ast exploration
 			pos, i, j, pos_in_txt, c: INTEGER
 			a_click_ast: CLICK_AST
 			clickable: CLICKABLE_AST
+			l_precursor: PRECURSOR_AS
 			clickable_position: EB_CLICKABLE_POSITION
 			ast_list: CLICK_LIST
 			a_class: CLASS_I
@@ -225,7 +226,13 @@ feature {NONE} -- Click ast exploration
 								a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
 								if a_class /= Void then
 									create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-									clickable_position.set_class (a_class.name)
+									if clickable.is_class then
+										clickable_position.set_class (clickable.class_name.name)
+									else
+										l_precursor ?= clickable
+										check l_precursor_not_void: l_precursor /= Void end
+										clickable_position.set_class (l_precursor.parent_base_class.class_name.name)
+									end
 									prov_list.extend (clickable_position)
 								end
 							elseif clickable.is_feature then

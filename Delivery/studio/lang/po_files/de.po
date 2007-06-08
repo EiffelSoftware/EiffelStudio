@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-07 16:41-0800\n"
+"PO-Revision-Date: 2007-06-07 18:30-0800\n"
 "Language-Team: Eiffel Software\n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2449,7 +2449,7 @@ msgstr "Archivverwaltung"
 #. Source code: t_archive_comparison_result: STRING_GENERAL is do Result := locale.translation ("Archive comparison result:") end
 #: eb_metric_names.e:76
 msgid "Archive comparison result:"
-msgstr "Resultat des Archivvergleichs:"
+msgstr "Ergebnis des Archivvergleichs:"
 
 #. Source code: Result := locale.translation ("Archive value is missing.")
 #: eb_metric_names.e:716
@@ -3450,7 +3450,7 @@ msgstr "Autovervollständigung"
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete Precursor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:509
 msgid "Autocomplete Precursor?"
-msgstr "Autovervollständigung für 'Precursor'?"
+msgstr "Autovervollständigung für 'precursor'?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.autocomplete_alias" DESCRIPTION="Autocomplete alias?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:383
@@ -3560,7 +3560,7 @@ msgstr "Autovervollständigung für 'end'"
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.autocomplete_end" DESCRIPTION="Autocomplete end?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:537
 msgid "Autocomplete end?"
-msgstr "Autovervollständigung für 'end'"
+msgstr "Autovervollständigung für 'end'?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.autocomplete_ensure" DESCRIPTION="Autocomplete ensure?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:369
@@ -3655,7 +3655,7 @@ msgstr "Autovervollständigung für 'inherit'?"
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:418
 msgid "Autocomplete inspect"
-msgstr "Autovervollständigung für 'inspect'?"
+msgstr "Autovervollständigung für 'inspect'"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:418
@@ -3720,7 +3720,7 @@ msgstr "Autovervollständigung für 'once'?"
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete Precursor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:509
 msgid "Autocomplete precursor"
-msgstr "Autovervollständigung für 'Precursor'"
+msgstr "Autovervollständigung für 'precursor'"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.autocomplete_redefine" DESCRIPTION="Autocomplete redefine?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:481
@@ -3842,7 +3842,7 @@ msgstr "Automatisches Backup"
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:103
 msgid "Automatic go to result panel"
-msgstr "Automatisch zur Resultatanzeige wechseln"
+msgstr "Automatisch zur Ergebnisanzeige wechseln"
 
 #. 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:544
@@ -3862,7 +3862,7 @@ msgstr "Ein automatisches Backup während der Rekompilierung erstellen?"
 #. Source code: f_auto_go_to_result: STRING_GENERAL is do Result := locale.translation ("Automatically go to result panel after metric evaluation?") end
 #: eb_metric_names.e:269
 msgid "Automatically go to result panel after metric evaluation?"
-msgstr "Nach der Auswertung einer Metrik zur Resultatanzeige wechseln?"
+msgstr "Nach der Auswertung einer Metrik zur Ergebnisanzeige wechseln?"
 
 #. 	<PREF NAME="editor.general.remove_trailing_white_space" HIDDEN="true" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:554
@@ -4972,7 +4972,7 @@ msgstr "Diagramm"
 #. Source code: m_Check_exports: STRING_GENERAL is			do Result := locale.translation("Chec&k Export Clauses")	end
 #: interface_names.e:687
 msgid "Chec&k Export Clauses"
-msgstr "Export Klauseln über&prüfen"
+msgstr "Exportklauseln über&prüfen"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: option_check_name: STRING_GENERAL is do Result := locale.translation ("Check")	end
@@ -5046,12 +5046,12 @@ msgstr "Chinesisch (Hong Kong SAR, PRC)"
 #. Source code: Result.force (locale.translation ("Chinese (Macao SAR)"), "zh_mo")
 #: locale_names.e:349
 msgid "Chinese (Macao SAR)"
-msgstr "Chinese (Macao SAR)"
+msgstr "Chinesisch (Macao SAR)"
 
 #. Source code: Result.force (locale.translation ("Chinese (PRC)"), "zh_cn")
 #: locale_names.e:347
 msgid "Chinese (PRC)"
-msgstr "Chinese (PRC)"
+msgstr "Chinesisch (PRC)"
 
 #. Source code: Result.force (locale.translation ("Chinese (Singapore)"), "zh_sg")
 #: locale_names.e:350
@@ -5593,7 +5593,7 @@ msgstr "Definierte Domäne säubern"
 #. Source code: t_clear_result: STRING_GENERAL is do Result := locale.translation ("Clear detailed result") end
 #: eb_metric_names.e:173
 msgid "Clear detailed result"
-msgstr "Detailliertes Resultat löschen"
+msgstr "Detailliertes Ergebnis löschen"
 
 #. Source code: f_clear_output: STRING_GENERAL is				 do Result := locale.translation ("Clear output") end
 #: eb_external_output_names.e:26
@@ -7457,7 +7457,7 @@ msgstr "Aktuelle Metrik wurde geändert. Soll diese gespeichert werden?"
 #. Source code: t_result_not_up_to_date: STRING_GENERAL is do Result := locale.translation ("Current metric result may not be up-to-date") end
 #: eb_metric_names.e:92
 msgid "Current metric result may not be up-to-date"
-msgstr "Aktuelles Resultat der Metrik kann veraltet sein"
+msgstr "Aktuelles Ergebnis der Metrik kann veraltet sein"
 
 #. Source code: l_Current_object: STRING_GENERAL is			do Result := locale.translation("Current object")	end
 #: interface_names.e:904
@@ -9451,7 +9451,7 @@ msgstr "Wiederauswertbare Historienelemente abwählen"
 #. Source code: t_detail_result_tab: STRING_GENERAL is do Result := locale.translation ("Detailed Result") end
 #: eb_metric_names.e:45
 msgid "Detailed Result"
-msgstr "Detailliertes Resultat"
+msgstr "Detailliertes Ergebnis"
 
 #. Source code: l_details: STRING_GENERAL is				do Result := locale.translation("Details") end
 #: interface_names.e:348
@@ -10018,7 +10018,7 @@ msgstr "Verzeichnis wo das letzte Metrikarchiv geöffnet wurde."
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
 msgid "Directory of last profile result saved."
-msgstr "Verzeichnis wo das letzte Profilresultat gespeichert wurde."
+msgstr "Verzeichnis wo das letzte Profilergebnis gespeichert wurde."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
@@ -10338,7 +10338,7 @@ msgstr "Prozentsatz für Verhältnis anzeigen"
 #. Source code: f_display_in_percentage: STRING_GENERAL is do Result := locale.translation ("Display result in percentage? (Only applicable for ratio metrics)") end
 #: eb_metric_names.e:266
 msgid "Display result in percentage? (Only applicable for ratio metrics)"
-msgstr "Das Resultat in Prozent anzeigen? (Nur für Verhältnismetriken)"
+msgstr "Das Ergebnis in Prozent anzeigen? (Nur für Verhältnismetriken)"
 
 #. 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:190
@@ -10643,7 +10643,7 @@ msgstr "Doppelklick um zum ersten Auftreten zu gehen"
 #. Source code: f_double_click_to_go_to_result_panel: STRING_GENERAL  is do Result := locale.translation ("Double click to go to result panel") end
 #: eb_metric_names.e:140
 msgid "Double click to go to result panel"
-msgstr "Doppelklick um zur Resultatanzeige zu wechseln"
+msgstr "Doppelklick um zur Ergebnisanzeige zu wechseln"
 
 #. Source code: l_exception_double_click_text: STRING_GENERAL is do Result := locale.translation ("Double click to see Exception or Ctrl-C to copy to clipboard") end
 #: interface_names.e:1024
@@ -12891,22 +12891,22 @@ msgstr "Elseif"
 #. 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Embed current line in debug clause"
-msgstr "Aktuelle Zeile in 'debug' Klausel einbetten."
+msgstr "Aktuelle Zeile in 'debug'-Klausel einbetten."
 
 #. 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:668
 msgid "Embed current line in if clause."
-msgstr "Aktuelle Zeile in 'if' Klausel einbetten."
+msgstr "Aktuelle Zeile in 'if'-Klausel einbetten."
 
 #. 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Embed debug clause"
-msgstr "In 'Debug' einbetten"
+msgstr "In 'debug'-Klausel einbetten"
 
 #. 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:668
 msgid "Embed if clause"
-msgstr "In 'If' einbetten"
+msgstr "In 'if'-Klausel einbetten"
 
 #. Source code: t_Empty_creation_routine_external_name_error: STRING_GENERAL is do Result := locale.translation ("Empty Creation Routine .NET Name Error") end
 #: interface_names.e:146
@@ -13328,7 +13328,7 @@ msgstr "Schleifenvariante und Schleifeninvariante auswerten?"
 #. Source code: f_run_metric_again: STRING_GENERAL is do Result := locale.translation ("Evaluate metric again to get up-to-date result") end
 #: eb_metric_names.e:268
 msgid "Evaluate metric again to get up-to-date result"
-msgstr "Metrik erneut auswerten um aktuelle Resultate zu erhalten"
+msgstr "Metrik erneut auswerten um aktuelle Ergebnisse zu erhalten"
 
 #. Source code: e_evaluate_metric: STRING_GENERAL is do Result := locale.translation ("Evaluate metric: ") end
 #: eb_metric_names.e:17
@@ -14515,12 +14515,12 @@ msgstr "Ausnahmen filtern"
 #. 	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
 msgid "Filter invisible result"
-msgstr "Unsichtbare Resultate filtern"
+msgstr "Unsichtbare Ergebnisse filtern"
 
 #. Source code: f_filter_result: STRING_GENERAL is do Result := locale.translation ("Filter result which is not visible from input domain") end
 #: eb_metric_names.e:255
 msgid "Filter result which is not visible from input domain"
-msgstr "Resultate filtern welche vom Eingabebereich nicht sichtbar sind"
+msgstr "Ergebnisse filtern welche vom Eingabebereich nicht sichtbar sind"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Filter value %"$1%" is invalid."), [a_filter])
 #: eb_metric_names.e:914
@@ -15081,7 +15081,7 @@ msgstr "Von Klasse"
 #. Source code: l_formatter_metric_help: STRING_GENERAL do Result := locale.translation ("From the result of which metric is this formatter generated?") end
 #: interface_names.e:654
 msgid "From the result of which metric is this formatter generated?"
-msgstr "Vom Resultat welcher Metrik wird dieser Formatierer generiert?"
+msgstr "Vom Ergebnis welcher Metrik wird dieser Formatierer generiert?"
 
 #. Source code: option_full_class_checking_name: STRING_GENERAL is do Result := locale.translation ("Full Class Checking")	end
 #: conf_interface_names.e:292
@@ -15391,7 +15391,7 @@ msgstr "Erzeugerporzedur erstellen"
 #. Source code: l_Not_empty: STRING_GENERAL is				do Result := locale.translation("Generate default feature clauses")	end
 #: interface_names.e:1001
 msgid "Generate default feature clauses"
-msgstr "Standard Feature-Klauseln generieren"
+msgstr "Standard Featureklauseln generieren"
 
 #. Source code: target_line_generation_description: STRING_GENERAL is do Result := locale.translation ("Generate extra information for external debuggers?")	end
 #: conf_interface_names.e:126
@@ -15416,7 +15416,7 @@ msgstr "Homonyme erstellen"
 #. Source code: l_Generate_profile_from_rtir: STRING_GENERAL is do Result := locale.translation("Generate profile from Run-time information record")	end
 #: interface_names.e:1067
 msgid "Generate profile from Run-time information record"
-msgstr "Profil aus den Laufzeitinformationen erstellen"
+msgstr "Profil aus der Aufzeichnung der Laufzeitinformationen erstellen"
 
 #. Source code: option_profile_description: STRING_GENERAL is do Result := locale.translation ("Generate profiling information?")	end
 #: conf_interface_names.e:289
@@ -17019,7 +17019,7 @@ msgstr "Werden Abhängigkeiten auf sich selber angezeigt?"
 #. 	<PREF NAME="tools.metric_tool.keep_detailed_result" DESCRIPTION="Is detailed result kept when recalculation metric archive history?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:107
 msgid "Is detailed result kept when recalculation metric archive history?"
-msgstr "Wird das detaillierte Resultat beibehalten wenn ein Metrikarchiv neu berechnet wird?"
+msgstr "Wird das detaillierte Ergebnis beibehalten wenn ein Metrikarchiv neu berechnet wird?"
 
 #. 	<PREF NAME="interface.development_window.is_force_debug_mode" DESCRIPTION="Last time when closing development window if it was forcing debug mode." HIDDEN="true"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:217
@@ -17029,7 +17029,7 @@ msgstr "Debug-Modus erzwingen"
 #. 	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
 msgid "Is invisible result item filtered?"
-msgstr "Werden unsichtbare Resultatelemente gefiltert?"
+msgstr "Werden unsichtbare Ergebniselemente gefiltert?"
 
 #. 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:122
@@ -17044,7 +17044,7 @@ msgstr "Ist maximiert"
 #. 	<PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:104
 msgid "Is percentage for ratio metric displayed?"
-msgstr "Ist das Resultat einer Verhältnismetrik in Prozent angezeigt?"
+msgstr "Ist das Ergebnis einer Verhältnismetrik in Prozent angezeigt?"
 
 #. 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:190
@@ -17222,12 +17222,12 @@ msgstr "Zusicherungen beibehalten"
 #. 	<PREF NAME="tools.metric_tool.keep_detailed_result" DESCRIPTION="Is detailed result kept when recalculation metric archive history?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:107
 msgid "Keep detailed result"
-msgstr "Detailliertes Resultat behalten"
+msgstr "Detailliertes Ergebnis behalten"
 
 #. Source code: f_keep_metric_detailed_result: STRING_GENERAL is do Result := locale.translation ("Keep detailed result when evaluating metric?") end
 #: eb_metric_names.e:137
 msgid "Keep detailed result when evaluating metric?"
-msgstr "Detailliertes Resultat behalten wenn Metrik ausgewertet wird?"
+msgstr "Detailliertes Ergebnis behalten wenn Metrik ausgewertet wird?"
 
 #. Source code: f_keep_archive_detailed_result: STRING_GENERAL is do Result := locale.translation ("Keep detailed result when recalculating archive?%NIf yes, detailed result will be available by double clicking the icon in %"Result%" column in history result area after recalculation.") end
 #: eb_metric_names.e:136
@@ -17235,8 +17235,8 @@ msgid ""
 "Keep detailed result when recalculating archive?\n"
 "If yes, detailed result will be available by double clicking the icon in \"Result\" column in history result area after recalculation."
 msgstr ""
-"Detailliertes Resultat behalten wenn Archiv neu ausgewertet wird?\n"
-"Falls ja wird das detaillierte Resultat verfügbar sein mittels Doppelklick auf das Symbol in der \"Resultat\" Spalte nach der Auswertung."
+"Detailliertes Ergebnis behalten wenn Archiv neu ausgewertet wird?\n"
+"Falls ja wird das detaillierte Ergebnis verfügbar sein mittels Doppelklick auf das Symbol in der \"Ergebnis\" Spalte nach der Auswertung."
 
 #. Source code: m_keep_grid_layout: STRING_GENERAL is					do Result := locale.translation("Keep grid layout")	end
 #: interface_names.e:463
@@ -17246,12 +17246,12 @@ msgstr "Gitterlayout beibehalten"
 #. 	<PREF NAME="tools.metric_tool.keep_metric_detailed_result" DESCRIPTION="Keep metric detailed result?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:111
 msgid "Keep metric detailed result"
-msgstr "Detailliertes Resultat der Metrik behalten"
+msgstr "Detailliertes Ergebnis der Metrik behalten"
 
 #. 	<PREF NAME="tools.metric_tool.keep_metric_detailed_result" DESCRIPTION="Keep metric detailed result?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:111
 msgid "Keep metric detailed result?"
-msgstr "Detailliertes Resultat der Metrik behalten?"
+msgstr "Detailliertes Ergebnis der Metrik behalten?"
 
 #. 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:222
@@ -17462,7 +17462,7 @@ msgstr "Zuletzt gespeicherten Ausnahme"
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
 msgid "Last saved profile result directory"
-msgstr "Verzeichnis des zuletzt gespeicherten Profilresultats"
+msgstr "Verzeichnis des zuletzt gespeicherten Profilergebnis"
 
 #. 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:164
@@ -18118,12 +18118,12 @@ msgstr "Maximieren"
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:113
 msgid "Maximize metric result area"
-msgstr "Resultatbereich der Metrik maximieren"
+msgstr "Ergebnisbereich der Metrik maximieren"
 
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:113
 msgid "Maximize metric result area?"
-msgstr "Soll der Resultatbereich der Metriken maximiert werden?"
+msgstr "Soll der Ergebnisbereich der Metriken maximiert werden?"
 
 #. Source code: t_Set_stack_depth: STRING_GENERAL is				do Result := locale.translation("Maximum Call Stack Depth")	end
 #: interface_names.e:1757
@@ -18958,7 +18958,7 @@ msgstr "Kein Projekt"
 #. Source code: l_no_result_available: STRING_GENERAL is do Result := locale.translation ("No result available.") end
 #: eb_metric_names.e:199
 msgid "No result available."
-msgstr "Keine Resultat vorhanden."
+msgstr "Keine Ergebnis vorhanden."
 
 #. Source code: w_No_system_defined: STRING_GENERAL is do Result := locale.translation ("No system was defined.%N") end
 #: warning_messages.e:1072
@@ -19351,8 +19351,9 @@ msgstr ""
 "Profiler unterschiedliche Formate verwenden um Laufzeitinformationen\n"
 "aufzuzeichnen.\n"
 "\n"
-"Geben Sie die Laufzeitinformationen an die der Profiler erzeugt hat und\n"
-"wähnel Sie den Profiler aus der verwendet wurde um diese zu erstellen.\n"
+"Geben Sie die Aufzeichnung der Laufzeitinformationen an die der Profiler\n"
+"erzeugt hat und wählen Sie den Profiler aus der verwendet wurde um diese\n"
+"zu erstellen.\n"
 "Das Ausführungsprofil wird in der Datei \"profinfo.pfi\" erstellt."
 
 #. 	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Does completion change the first character of onces and constants with an upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -20282,7 +20283,7 @@ msgstr "Vorkompilierung von Bibliothek $1"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:513
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:514
 msgid "Precursor"
-msgstr "Rekordsummen"
+msgstr "Precursor"
 
 #. 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:608
@@ -20388,7 +20389,7 @@ msgstr "Profiler Assistent"
 #. Source code: l_Profiler_used: STRING_GENERAL is			do Result := locale.translation("Profiler used to produce the above record: ")	end
 #: interface_names.e:1187
 msgid "Profiler used to produce the above record: "
-msgstr "Das Profilwerkzeug das für den obigen Auszug benutzt wurde:"
+msgstr "Der Profiler der benutzt wurde um die obigen Aufzeichnung zu erstellen:"
 
 #. 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:198
@@ -21087,7 +21088,7 @@ msgstr "Verzögertes Domänenelement entfernen."
 #. Source code: f_remove_detailed_result: STRING_GENERAL is do Result := locale.translation ("Remove detailed result?") end
 #: eb_metric_names.e:138
 msgid "Remove detailed result?"
-msgstr "Detailliertes Resultat entfernen?"
+msgstr "Detailliertes Ergebnis entfernen?"
 
 #. Source code: remove_group_text: STRING_GENERAL is do Result := locale.translation ("Remove group")	end
 #: conf_interface_names.e:480
@@ -21452,12 +21453,12 @@ msgstr "Einschränkungen"
 #. Source code: t_detailed_result: STRING_GENERAL is do Result := locale.translation ("Result") end
 #: eb_metric_names.e:139
 msgid "Result"
-msgstr "Resultat"
+msgstr "Ergebnis"
 
 #. Source code: t_result: STRING_GENERAL is do Result := locale.translation ("Results:") end
 #: eb_metric_names.e:80
 msgid "Results:"
-msgstr "Resultate:"
+msgstr "Ergebnisse:"
 
 #. Source code: d_Resynchronizing_breakpoints: STRING is 	do Result := locale.translation("Resynchronizing Breakpoints").out	end
 #: interface_names.e:246
@@ -21709,12 +21710,12 @@ msgstr "System der Werkbank ausführen"
 #. Source code: l_Runtime_information_record: STRING_GENERAL is do Result := locale.translation("Run-time information record")	end
 #: interface_names.e:1220
 msgid "Run-time information record"
-msgstr "Datensatz über Laufzeitinformationen"
+msgstr "Aufzeichnung der Laufzeitinformationen"
 
 #. Source code: wt_Runtime_information_record_error: STRING_GENERAL is do Result := locale.translation("Runtime Information Record Error")	end
 #: interface_names.e:2199
 msgid "Runtime Information Record Error"
-msgstr "Fehler beim Datensatz über Laufzeitinformationen"
+msgstr "Fehler der Aufzeichnung der Laufzeitinformationen"
 
 #. Source code: Result.force (locale.translation ("Russian"), "ru")
 #: locale_names.e:105
@@ -21943,7 +21944,7 @@ msgstr "Suche"
 #. Source code: t_Search_Report_tool: STRING_GENERAL is				do Result := locale.translation ("Search Report")	end
 #: interface_names.e:1926
 msgid "Search Report"
-msgstr "Suchresultat"
+msgstr "Suchergebnis"
 
 #. 	<PREF NAME="tools.class_browser.folder_search_recursive" HIDDEN="false" DESCRIPTION="Search a folder for classes recursively"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:126
@@ -22129,12 +22130,12 @@ msgstr "Datei wählen"
 #. Source code: ws_Execution_Profile_Generation: STRING_GENERAL is do Result := locale.translation("Select a Run-time information record to generate the Execution profile")	end
 #: interface_names.e:2181
 msgid "Select a Run-time information record to generate the Execution profile"
-msgstr "Eine Laufzeitinformationen-Protokoll wählen um ein Ausführungsprofil zu erstellen"
+msgstr "Eine Aufzeichnung der Laufzeitinformationen wählen um ein Ausführungsprofil zu erstellen"
 
 #. Source code: l_Not_in_system_no_info: STRING_GENERAL is	do Result := locale.translation("Select a class which is fully compiled to have information about it.")	end
 #: interface_names.e:1136
 msgid "Select a class which is fully compiled to have information about it."
-msgstr "Klasse wählen die kompiliert ist um deren Informationen anzuzeigen."
+msgstr "Eine vollständig kompilierte Klasse wählen um Informationen anzuzeigen."
 
 #. Source code: l_select_cluster_to_display: STRING_GENERAL is do Result := locale.translation("Select a cluster to display available views")	end
 #: interface_names.e:1553
@@ -22158,7 +22159,7 @@ msgstr "Datei wählen für die Sicherheitskopie der benutzerdefinierten Metriken
 #. Source code: l_No_feature: STRING_GENERAL is				do Result := locale.translation("Select a fully compiled feature to have information about it.")	end
 #: interface_names.e:1129
 msgid "Select a fully compiled feature to have information about it."
-msgstr "Ein kompiliertes Feature wählen um Informationen anzuzeigen."
+msgstr "Ein vollständig kompiliertes Feature wählen um Informationen anzuzeigen."
 
 #. Source code: t_select_archive: STRING_GENERAL is do Result := locale.translation ("Select a metric archive file") end
 #: eb_metric_names.e:59
@@ -22830,7 +22831,7 @@ msgstr "Tastenkombination um Eigenschaften anzuzeigen."
 #. 	<PREF NAME="shortcuts.view.tools.show_search_report_tool" DESCRIPTION="Shortcut to display Search Report tool."><SHORTCUT Ctrl="True" Alt="True">R</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:689
 msgid "Shortcut to display Search Report tool."
-msgstr "Tastenkombination um Suchresultate anzuzeigen."
+msgstr "Tastenkombination um Suchrergebnisse anzuzeigen."
 
 #. 	<PREF NAME="shortcuts.view.tools.show_search_tool" DESCRIPTION="Shortcut to display Search tool."><SHORTCUT Ctrl="True" Alt="True">F</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:688
@@ -23488,7 +23489,7 @@ msgstr "BON anzeigen"
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:103
 msgid "Show Detailed Result when computation done."
-msgstr "Detailliertes Resultat anzeigen wenn die Berechnung abgeschlossen ist."
+msgstr "Detailliertes Ergebnis anzeigen wenn die Berechnung abgeschlossen ist."
 
 #. Source code: Result := locale.translation ("Show List")
 #: docking_names.e:72
@@ -23782,7 +23783,7 @@ msgstr "Such und Ersetzen Werkzeug anzeigen"
 #. 	<PREF NAME="shortcuts.view.tools.show_search_report_tool" DESCRIPTION="Shortcut to display Search Report tool."><SHORTCUT Ctrl="True" Alt="True">R</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:689
 msgid "Show search report tool"
-msgstr "Sucheresultat anzeigen"
+msgstr "Suchergebnis anzeigen"
 
 #. 	<PREF NAME="shortcuts.view.tools.show_search_tool" DESCRIPTION="Shortcut to display Search tool."><SHORTCUT Ctrl="True" Alt="True">F</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:688
@@ -25112,16 +25113,17 @@ msgid ""
 "\n"
 "Click Back and select a valid file or Click Abort."
 msgstr ""
-"Die Datei die Sie als Laufzeitinformationen angegeben haben\n"
-"existiert nicht oder ist ungültig.\n"
-"Denken Sie daran, dass die Laufzeitinformationen im Projekt-\n"
-"verzeichnis sein müssen:\n"
+"Die Datei die Sie als Aufzeichnung der Laufzeitinformationen\n"
+"angegeben haben existiert nicht oder ist ungültig.\n"
+"Denken Sie daran, dass die Aufzeichnungen der Laufzeit-\n"
+"informationen im Projektverzeichnis sein müssen:\n"
 "$1\n"
 "\n"
 "Bitt geben Sie eine gültige Datei an oder führen Sie den Profiler\n"
-"erneut aus um gültige Laufzeitinformationen zu erstellen.\n"
+"erneut aus um eine gültige Aufzeichnung der Laufzeitinformationen\n"
+"zu erstellen.\n"
 "\n"
-"Klicke `Zurück' Click Back and select a valid file or Click Abort."
+"Klicke `Zurück' um eine gültige Datei zu wählen oder klicke `Abbrechen'."
 
 #. Source code: do Result := locale.translation("The file you have supplied as existring Execution Provide does%N%
 #: interface_names.e:2219
@@ -25540,7 +25542,7 @@ msgid ""
 "This view can be used to display result of all formatters\n"
 "thus it is used as a default view for formatters"
 msgstr ""
-"Diese Ansicht kann verwendet werden um Resultate aller Formatierers\n"
+"Diese Ansicht kann verwendet werden um Ergebnisse aller Formatierer\n"
 "darzustellen und ist der Standard für alle Formatierer"
 
 #. Source code: l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
@@ -26323,12 +26325,12 @@ msgstr "Anzeige der Schnellsuch-Leiste auslösen."
 #. 	<PREF NAME="shortcuts.editor.search_selection_backward" DESCRIPTION="Trigger search on current selection and goes to next result."><SHORTCUT Ctrl="True" Shift="True">F3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:660
 msgid "Trigger search on current selection and goes to next result."
-msgstr "Suche auf aktueller Selektion auslösen und zum nächsten Resultat springen."
+msgstr "Suche auf aktueller Selektion auslösen und zum nächsten Ergebnis springen."
 
 #. 	<PREF NAME="shortcuts.editor.search_selection_forward" DESCRIPTION="Trigger search on current selection and goes to previous result."><SHORTCUT Ctrl="True">F3</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:659
 msgid "Trigger search on current selection and goes to previous result."
-msgstr "Suche auf aktueller Selektion auslösen und zum vorherigen Resultat springen."
+msgstr "Suche auf aktueller Selektion auslösen und zum vorherigen Ergebnis springen."
 
 #. Source code: l_true: STRING_GENERAL is					do Result := locale.translation ("True") end
 #: interface_names.e:1296
@@ -27525,7 +27527,6 @@ msgstr "Sicherheitskopie der benutzerdefinierten Metriken beendet."
 
 #. Source code: do Result := locale.translation("Using this wizard you can analyze the result of a profiling.%N%
 #: interface_names.e:2168
-#, fuzzy
 msgid ""
 "Using this wizard you can analyze the result of a profiling.\n"
 "\n"
@@ -27540,7 +27541,23 @@ msgid ""
 "\n"
 "\n"
 "To continue, click Next."
-msgstr "`Weiter' drücken um fortzufahren."
+msgstr ""
+"Mit diesem Assistenten können Sie das Resultat eines Profiling\n"
+"analysieren.\n"
+"\n"
+"Profiling wird verwendet um die Eigenschaften eines Systems\n"
+"zur Laufzeit zu analysieren, im speziellen die Kosten einer\n"
+"Routine: Anzahl Aufrufe, benötigte Zeit, etc. Der Profiler\n"
+"ist ein wichtiges Werkzeug um ein System zu verstehen und\n"
+"es zu optimieren.\n"
+"\n"
+"Um fortzufahren müssen Sie bereits das System ausgeführt\n"
+"haben während der Profiler aktiviert war. Falls dies nicht der\n"
+"Fall ist können Sie die Dokumentation anschauen welche das\n"
+"Profilen eines Systems erklärt.\n"
+"\n"
+"\n"
+"`Weiter' drücken um fortzufahren."
 
 #. Source code: "Using this wizard you can create a Windows application%N%
 #: interface_names.e:58
@@ -28623,7 +28640,7 @@ msgstr "Zulu/isiZulu (Südafrika)"
 #. Source code: l_No_feature_group_clause: STRING_GENERAL is do Result := locale.translation("[Unnamed feature clause]")	end
 #: interface_names.e:1130
 msgid "[Unnamed feature clause]"
-msgstr "[Unbenannte Feature-Klausel]"
+msgstr "[Unbenannte Featureklausel]"
 
 #. Source code: add_subquery_help: STRING_GENERAL is do Result := locale.translation ("add a subquery") end
 #: shared_ewb_help.e:21

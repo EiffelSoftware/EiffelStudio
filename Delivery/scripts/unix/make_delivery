@@ -217,8 +217,6 @@ cd $INIT_DIR
 cd $INSTALL_DIR
 remtrace Free add ons
 exprt $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons 
-cd $INSTALL_DIR/library
-bunzip2 -c $INSTALL_DIR/free_add_ons/gobo/gobo_35_unix.tbz2 | tar -xf -
 cd $INSTALL_DIR
 fullrd free_add_ons
 cd $INIT_DIR

@@ -244,3 +244,53 @@ iff not exist legacy.exe then
 	CANCEL
 endiff
 move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Compiling Gobo tools
+safe_md %STUDIO_DIR\library\gobo\bin
+cdd %EIFFEL_SRC\library\gobo\src
+clean_project
+remtrace geant
+finalize geant.ecf geant
+cleanup_eiffel geant geant.exe
+move geant.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gec
+finalize gec.ecf gec
+cleanup_eiffel gec gec.exe
+move gec.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gelex
+finalize gegelex.ecf gelex
+cleanup_eiffel gelex gelex.exe
+move gelex.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gelint
+finalize gelgelint.ecf gelint
+cleanup_eiffel gelint gelint.exe
+move gelint.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gepp
+finalize ggepp.ecf gepp
+cleanup_eiffel gepp gepp.exe
+move gepp.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace getest
+finalize getgetest.ecf getest
+cleanup_eiffel getest getest.exe
+move getest.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gexace
+finalize gexgexace.ecf gexace
+cleanup_eiffel gexace gexace.exe
+move gexace.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace gexslt
+finalize gexgexslt.ecf gexslt
+cleanup_eiffel gexslt gexslt.exe
+move gexslt.exe %STUDIO_DIR\library\gobo\bin
+
+remtrace geyacc
+finalize geygeyacc.ecf geyacc
+cleanup_eiffel geyacc geyacc.exe
+move geyacc.exe %STUDIO_DIR\library\gobo\bin
+

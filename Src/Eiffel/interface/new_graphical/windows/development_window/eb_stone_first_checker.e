@@ -46,7 +46,9 @@ feature -- Command
 
 			if editor /= Void then
 				l_editors_manager.editor_switched_actions.block
-				editor.docking_content.set_focus_no_maximzied (editor.docking_content.user_widget)
+				if not has_error_when_error_tool_auto_hide then
+					editor.docking_content.set_focus_no_maximzied (editor.docking_content.user_widget)
+				end
 				l_editors_manager.editor_switched_actions.resume
 			else
 				if l_editors_manager.editor_count = 0 then
@@ -148,12 +150,27 @@ feature -- Command
 					develop_window.address_manager.refresh
 				end
 			end
-			if l_editors_manager.current_editor /= Void and then not l_editors_manager.current_editor.has_focus then
+
+			if l_editors_manager.current_editor /= Void and then not l_editors_manager.current_editor.has_focus and then not has_error_when_error_tool_auto_hide then
 				develop_window.ev_application.do_once_on_idle (agent develop_window.set_focus_to_main_editor)
 			end
 		end
 
 feature{NONE} -- Implementation
+
+	has_error_when_error_tool_auto_hide: BOOLEAN is
+			-- When project has errors and Errors Tools is auto hiding, we should not set focus to editor.
+			-- Otherwise the Errors Tools sliding panel will be removed automatically, because it doesn't has focus.
+			-- See bug#12765.
+		local
+			l_error_tool: EB_ERRORS_TOOL
+			l_has_error_when_error_tool_auto_hide: BOOLEAN
+		do
+			l_error_tool := develop_window.tools.errors_tool
+			if l_error_tool /= Void and then l_error_tool.content /= Void then
+				Result := (l_error_tool.content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
+			end
+		end
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 			--Development window associate with.

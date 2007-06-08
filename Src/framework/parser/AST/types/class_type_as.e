@@ -16,7 +16,7 @@ inherit
 
 	CLICKABLE_AST
 		redefine
-			is_class
+			is_class, class_name
 		end
 
 create

@@ -22,7 +22,6 @@
 		<setting name="multithreaded" value="false"/>
 		<external_include location="some123/fake432/path567 -Od"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="gexslt" location="$ISE_LIBRARY\library\gobo\svn\src\gexslt\" recursive="true"/>
 	</target>

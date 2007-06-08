@@ -22,7 +22,6 @@
 		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="gepp" location="$ISE_LIBRARY\library\gobo\svn\src\gepp\"/>
 		<cluster name="gepp_generated" location="$ISE_LIBRARY\library\gobo\src\gepp\"/>
 	</target>

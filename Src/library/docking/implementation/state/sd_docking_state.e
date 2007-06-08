@@ -236,6 +236,7 @@ feature -- Redefine.
 			l_auto_hide_state.set_width_height (l_width_height)
 			change_state (l_auto_hide_state)
 			internal_docking_manager.query.inner_container_main.remove_empty_split_area
+			internal_docking_manager.query.inner_container_main.update_middle_container
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: content.state /= Current

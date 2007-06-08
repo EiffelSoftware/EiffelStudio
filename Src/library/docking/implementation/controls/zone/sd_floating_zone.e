@@ -377,8 +377,10 @@ feature {NONE} -- Agents
 				if not has_recursive (l_last_zone) then
 					l_zones := all_zones
 					if l_zones.count > 0 then
-						l_zones.first.on_focus_in (l_zones.first.content)
-						internal_docking_manager.property.set_last_focus_content (l_zones.first.content)
+						-- If the first content is not visible, it means the floating zone is showing for the first time.
+						if l_zones.first.content.is_visible then
+							l_zones.first.content.set_focus
+						end
 					end
 				else
 					l_last_zone.set_focus_color (True)

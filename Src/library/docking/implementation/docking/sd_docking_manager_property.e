@@ -32,11 +32,11 @@ feature -- Properties
 
 	set_last_focus_content (a_content: SD_CONTENT) is
 			-- Set `last_focus_content'.
-		require
-			a_content_not_void: a_content /= Void
 		do
 			last_focus_content := a_content
-			set_content_first (a_content)
+			if a_content /= Void then
+				set_content_first (a_content)
+			end
 		ensure
 			set: last_focus_content = a_content
 		end

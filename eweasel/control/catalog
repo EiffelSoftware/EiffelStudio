@@ -333,6 +333,7 @@ test	wrong-vgcc		valid212 tcf pass validity
 test	named-tuple-convert-conformance					valid213 tcf fail validity
 test	nested-generics-creation-readiness				valid214 tcf valid
 test	static-comparison-test							valid215 tcf fail validity
+test	generic-creation-constraint						valid216 tcf fail validity
 
 
 -- System validity tests
@@ -1668,7 +1669,7 @@ test	multi-constraint-alias							multicon045 tcf pass multiconstraint
 test	multi-constraint-constrained-twice				multicon046 tcf pass multiconstraint
 test	multi-constraint-renaming-to-existing-feature	multicon047 tcf pass multiconstraint
 test	multi-constraint-any-numeric-crash				multicon048 tcf pass multiconstraint
---test					multicon049 tcf pass multiconstraint
+test	multi-constraint-parallel-renaming				multicon049 tcf pass multiconstraint
 --test					multicon050 tcf pass multiconstraint
 --test					multicon051 tcf pass multiconstraint
 --test					multicon052 tcf pass multiconstraint

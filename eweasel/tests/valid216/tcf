@@ -1,0 +1,11 @@
+test_name 	 generic-creation-constraint
+test_description Creation constraint of a generic class has to be a procedure. If not a VTGC(3) should be reported.
+
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST1 VTGC(3)
+
+test_end

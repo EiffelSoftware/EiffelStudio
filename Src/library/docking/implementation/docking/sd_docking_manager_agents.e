@@ -67,6 +67,7 @@ feature  -- Agents
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_content: SD_CONTENT
 		do
 			l_zones := internal_docking_manager.zones.zones.twin
 			from
@@ -82,7 +83,10 @@ feature  -- Agents
 							l_zones.item.content.focus_in_actions.call (Void)
 						end
 					else
-						l_auto_hide_zone ?= internal_docking_manager.property.last_focus_content.state.zone
+						l_content := internal_docking_manager.property.last_focus_content
+						if l_content /= Void then
+							l_auto_hide_zone ?= l_content.state.zone
+						end
 						if l_auto_hide_zone = Void and not ignore_additional_click then
 							internal_docking_manager.command.remove_auto_hide_zones (True)
 						elseif l_auto_hide_zone /= Void then

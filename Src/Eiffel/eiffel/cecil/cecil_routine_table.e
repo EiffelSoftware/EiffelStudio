@@ -20,17 +20,47 @@ create
 
 feature -- C code generation
 
-	generate_final (buffer: GENERATION_BUFFER; a_class_type: CLASS_TYPE) is
-			-- Generation of the hash table
+	generate (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+			-- Generate required tables.
+		require
+			buffer_attached: buffer /= Void
+			a_class_attached: a_class /= Void
+			generated_wrappers_attached: generated_wrappers /= Void
 		local
-			i, nb: INTEGER;
-			routine_name: STRING;
-			feat: FEATURE_I;
-			written_class: CLASS_C;
-			written_type: CLASS_TYPE;
+			types: TYPE_LIST
+			is_final: BOOLEAN
+		do
+			generate_name_table (buffer, a_class.class_id)
+			if system.byte_context.workbench_mode then
+				generate_wrappers (buffer, a_class, generated_wrappers)
+			else
+				is_final := True
+			end
+			from
+				types := a_class.types
+				types.start
+			until
+				types.after
+			loop
+				generate_address_table (buffer, types.item, is_final)
+				types.forth
+			end
+		end
+
+	generate_address_table (buffer: GENERATION_BUFFER; a_class_type: CLASS_TYPE; is_final: BOOLEAN) is
+			-- Generate table of function pointers.
+		local
+			i, nb: INTEGER
+			routine_name: STRING
+			feat: FEATURE_I
+			written_class: CLASS_C
+			written_type: CLASS_TYPE
 			l_values: like values
 		do
-			buffer.put_string ("static char *(*cr");
+			if is_final then
+				buffer.put_string ("static ")
+			end
+			buffer.put_string ("char *(*cr");
 			buffer.put_integer (a_class_type.type_id);
 			buffer.put_string ("[])() = {%N");
 			from
@@ -44,7 +74,7 @@ feature -- C code generation
 				if (feat = Void) or else feat.is_external or else feat.is_deferred then
 					buffer.put_string ("(char *(*)()) 0");
 				else
-					if feat.is_constant and then not feat.is_once then
+					if is_final and then feat.is_constant and then not feat.is_once then
 							-- A non-string constant has always its feature generated in
 							-- visible class.
 						written_class := System.class_of_id (a_class_type.associated_class.class_id)
@@ -53,6 +83,9 @@ feature -- C code generation
 					end
 					written_type := written_class.meta_type (a_class_type)
 					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
+					if not is_final then
+						routine_name := routine_name + cecil_suffix
+					end
 debug ("CECIL")
     io.put_string ("Generating entry for feature: ");
     io.put_string (feat.feature_name);
@@ -77,6 +110,144 @@ end;
 			end;
 			buffer.put_string ("};%N%N");
 		end;
+
+	generate_wrappers (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+			-- Generate wrappers to be called via CECIL.
+		require
+			buffer_attached: buffer /= Void
+			a_class_attached: a_class /= Void
+			generated_wrappers_attached: generated_wrappers /= Void
+		local
+			types: TYPE_LIST
+			a_class_type: CLASS_TYPE
+			i, nb: INTEGER
+			routine_name: STRING
+			feat: FEATURE_I
+			written_class: CLASS_C
+			written_type: CLASS_TYPE
+			l_values: like values
+			return_type: TYPE_C
+			arg_type: TYPE_C
+			feat_args: FEAT_ARG
+			arg_count: INTEGER
+			arg_names: ARRAY [STRING]
+			arg_types: ARRAY [STRING]
+			j: INTEGER
+		do
+			from
+				types := a_class.types
+				types.start
+			until
+				types.after
+			loop
+				a_class_type := types.item
+				from
+					i := 0;
+					nb := capacity - 1
+					l_values := values
+				until
+					i > nb
+				loop
+					feat := l_values.item (i)
+					if feat /= Void and then not feat.is_external and then not feat.is_deferred then
+						written_class := System.class_of_id (feat.written_in);
+						written_type := written_class.meta_type (a_class_type)
+						routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index)
+						if not generated_wrappers.has (routine_name) then
+								-- The wrapper is not generated yet.
+							generated_wrappers.force (routine_name.twin)
+							buffer.put_string ("/* {")
+							buffer.put_string (written_type.type.name)
+							buffer.put_string ("}.")
+							buffer.put_string (feat.feature_name)
+							buffer.put_string (" */")
+							buffer.put_new_line
+							return_type := feat.type.type_i.instantiation_in (a_class_type).c_type
+							arg_count := feat.argument_count
+							create arg_names.make (1, arg_count + 1)
+							arg_names.put ("Current", 1)
+							create arg_types.make (1, arg_count +1)
+							arg_types.put ("EIF_REFERENCE", 1)
+							from
+								feat_args := feat.arguments
+								j := arg_count
+							until
+								j = 0
+							loop
+								arg_names.put ("arg" + j.out, j + 1)
+								arg_types.put (feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type.c_string, j + 1)
+								j := j - 1
+							end
+							buffer.generate_extern_declaration ("EIF_UNION", routine_name, <<>>)
+							buffer.generate_pure_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
+							buffer.put_character ('{')
+							buffer.indent
+							buffer.put_new_line
+							if arg_count > 0 then
+								buffer.put_string ("EIF_UNION u [")
+								buffer.put_integer (arg_count)
+								buffer.put_string ("];")
+								buffer.put_new_line
+								from
+									j := arg_count
+								until
+									j = 0
+								loop
+									arg_type := feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type
+									buffer.put_string ("u [")
+									buffer.put_integer (j - 1)
+									buffer.put_string ("].")
+									arg_type.generate_typed_tag (buffer)
+									buffer.put_character (';')
+									buffer.put_new_line
+									buffer.put_string ("u [")
+									buffer.put_integer (j - 1)
+									buffer.put_string ("].")
+									arg_type.generate_typed_field (buffer)
+									buffer.put_string (" = ")
+									buffer.put_string (arg_names [j + 1])
+									buffer.put_character (';')
+									buffer.put_new_line
+									arg_types [j + 1] := "EIF_UNION"
+									j := j - 1
+								end
+							end
+							if return_type.is_void then
+								buffer.put_character ('(')
+							else
+								buffer.put_string ("return (")
+							end
+							return_type.generate_function_cast (buffer, arg_types)
+							buffer.put_string (routine_name)
+							buffer.put_string (") (Current")
+							from
+								j := 0
+							until
+								j >= arg_count
+							loop
+								buffer.put_string (",  u [")
+								buffer.put_integer (j)
+								buffer.put_character (']')
+								j := j + 1
+							end
+							buffer.put_character (')')
+							if not return_type.is_void then
+								buffer.put_character ('.')
+								return_type.generate_typed_field (buffer)
+							end
+							buffer.put_character (';')
+							buffer.put_new_line
+							buffer.exdent
+							buffer.put_character ('}')
+							buffer.put_new_line
+							buffer.put_new_line
+						end
+					end
+					i := i + 1
+				end
+				types.forth
+			end
+		end
 
 	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
 			-- Generate workbench feature id array
@@ -170,53 +341,13 @@ end;
 			buffer.put_string ("};%N%N")
 		end
 
-feature -- Byte code generation
+feature {NONE} -- Implementation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Produce byte code for current cecil table.
-		require
-			good_argument: ba /= Void;
-		local
-			i, nb: INTEGER;
-			feat: FEATURE_I;
-			l_values: like values
-		do
-			ba.append_integer (capacity);
-			l_values := values
-
-				-- First names array
-			from
-				i := 0
-				nb := capacity - 1
-			until
-				i > nb
-			loop
-				feat := l_values.item (i);
-				if feat = Void then
-					ba.append_short_integer (0);
-				else
-					ba.append_string (feat.feature_name);
-				end;
-				i := i + 1
-			end;
-				-- Second feature id array
-			from
-				i := 0
-			until
-				i > nb
-			loop
-				feat := l_values.item (i);
-				if feat = Void then
-					ba.append_uint32_integer (0);
-				else
-					ba.append_uint32_integer (feat.feature_id);
-				end;
-				i := i + 1
-			end;
-		end;
+	cecil_suffix: STRING is "C";
+			-- Suffix for wrapper functions
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

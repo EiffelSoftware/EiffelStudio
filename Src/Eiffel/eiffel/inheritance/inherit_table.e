@@ -1031,7 +1031,7 @@ end;
 							-- the external encapsulation and have the melted code call the
 							-- tiny external encapsulation.
 						if feature_i.is_external then
-							System.set_freeze
+							System.request_freeze
 						end
 					else
 						is_the_same := old_description.is_body_equiv (yacc_feature) and

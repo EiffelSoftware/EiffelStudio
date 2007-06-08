@@ -1758,18 +1758,10 @@ feature -- Cecil generation
 			buffer.put_character ('{')
 			buffer.put_string ("(int32) ")
 			buffer.put_integer (associated_class.visible_table_size)
-			if final_mode then
-				buffer.put_string (", sizeof(char *(*)()), cl")
-			else
-				buffer.put_string (", sizeof(int32), cl")
-			end
+			buffer.put_string (", sizeof(char *(*)()), cl")
 			buffer.put_integer (associated_class.class_id)
 			buffer.put_string (", (char *) cr")
-			if final_mode then
-				buffer.put_integer (type_id)
-			else
-				buffer.put_integer (associated_class.class_id)
-			end
+			buffer.put_integer (type_id)
 			buffer.put_character ('}')
 		end
 

@@ -217,7 +217,7 @@ feature -- Properties
 			-- Has the system to be frozen again ?
 		do
 			Result := (not Lace.compile_all_classes or else il_generation)
-					and then (private_freeze or else Compilation_modes.is_freezing)
+					and then (is_freeze_requested or else Compilation_modes.is_freezing)
 		end
 
 	freezing_occurred: BOOLEAN
@@ -1662,7 +1662,7 @@ feature -- Recompilation
 			if Compilation_modes.is_precompiling and il_generation then
 					-- For a precompiled library we require a freeze in non-IL
 					-- code generation.
-				private_freeze := True
+				is_freeze_requested := True
 			end
 
 			if first_compilation then
@@ -1825,7 +1825,7 @@ end
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
 				then
-					private_freeze := private_freeze or else not externals.is_equivalent
+					is_freeze_requested := is_freeze_requested or else not externals.is_equivalent
 				end
 
 					-- Process the type system
@@ -1908,7 +1908,7 @@ end
 			if not il_generation and then freeze then
 				Degree_output.put_freezing_message
 				freeze_system
-				private_freeze := False
+				is_freeze_requested := False
 				debug ("Timing")
 					create d2.make_now
 					print ("Degree -1 duration: ")
@@ -2716,7 +2716,7 @@ feature -- IL code generation
 				remover_off := old_remover_off
 
 				if not in_final_mode then
-					private_freeze := False
+					is_freeze_requested := False
 				end
 			end
 			il_generator.deploy
@@ -4209,9 +4209,18 @@ feature -- Generation
 							buffer.put_string ("extern char *cl")
 							buffer.put_integer (j)
 							buffer.put_string ("[];%N")
-							buffer.put_string ("extern uint32 cr")
-							buffer.put_integer (j)
-							buffer.put_string ("[];%N")
+							from
+								types := a_class.types
+								types.start
+							until
+								types.after
+							loop
+								id := types.item.type_id
+								buffer.put_string ("extern uint32 cr")
+								buffer.put_integer (id)
+								buffer.put_string ("[];%N")
+								types.forth
+							end
 						end
 						if not a_class.skeleton.is_empty then
 							from
@@ -4441,6 +4450,7 @@ end
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
 			l_has_visible: BOOLEAN
+			generated_wrappers: DS_HASH_SET [STRING]
 		do
 				-- Clear buffers for current generation
 			buffer := generation_buffer
@@ -4458,6 +4468,7 @@ end
 
 			buffer.start_c_specific_code
 
+			create generated_wrappers.make_equal (10)
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
@@ -4465,7 +4476,8 @@ end
 				if a_class /= Void then
 					if a_class.has_visible then
 						l_has_visible := True
-						a_class.generate_cecil
+						set_current_class (a_class)
+						a_class.generate_cecil (generated_wrappers)
 					end
 				end
 				i := i + 1

@@ -897,7 +897,7 @@ feature {NONE} -- Implementation
 			end
 			if l_s /= Void and then (system.name = Void or else not system.name.is_equal (l_s)) then
 				system.set_name (l_s)
-				system.set_freeze
+				system.request_freeze
 			end
 
 			l_s := l_settings.item (s_il_verifiable)

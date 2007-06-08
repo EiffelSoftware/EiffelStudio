@@ -402,7 +402,7 @@ feature -- Update
 			-- Set `internal_has_multithreaded' to `b'
 		do
 			if internal_has_multithreaded /= b then
-				set_freeze
+				request_freeze
 			end
 			internal_has_multithreaded := b
 		ensure
@@ -425,7 +425,7 @@ feature -- Update
 			-- Set `is_console_application' to `b'
 		do
 			if is_console_application /= b then
-				set_freeze
+				request_freeze
 			end
 			is_console_application := b
 		ensure
@@ -436,7 +436,7 @@ feature -- Update
 			-- Set `force_32bits' to `b'
 		do
 			if force_32bits /= b then
-				set_freeze
+				request_freeze
 			end
 			force_32bits := b
 		ensure
@@ -447,7 +447,7 @@ feature -- Update
 			-- Set `is_console_application' to `b'
 		do
 			if has_dynamic_runtime /= b then
-				set_freeze
+				request_freeze
 			end
 			has_dynamic_runtime := b
 		ensure
@@ -470,10 +470,10 @@ feature -- Update
 			dynamic_def_file_set: dynamic_def_file = f
 		end
 
-	set_freeze is
+	request_freeze is
 			-- Force freezing of system.
 		do
-			private_freeze := True
+			is_freeze_requested := True
 		end
 
 	set_melt is
@@ -516,14 +516,17 @@ feature -- Update
 			platform_set: platform = a_platform
 		end
 
+feature -- Status report
+
+	is_freeze_requested: BOOLEAN
+			-- Is freeze requested by the compiler due to some
+			-- conditions like the need to generate an external
+			-- feature, a feature, called by CECIL, etc.?
+
 feature {SYSTEM_I} -- Implementation
 
 	internal_msil_classes_per_module: INTEGER
 			-- Number of classes per generated module in IL code generation
-
-	private_freeze: BOOLEAN
-			-- Freeze set if externals or new derivation
-			-- of special is generated
 
 	private_finalize: BOOLEAN
 			-- Force a finalization even if no classes have changed.

@@ -103,7 +103,7 @@ feature -- Typing
 				-- Unlike the parent version, each time a new SPECIAL derivation
 				-- is added we need to freeze so that we call the right version of
 				-- `put' and `item'.
-			system.set_freeze
+			system.request_freeze
 			if already_compiled then
 					-- Melt all the code written in the associated class of the new class type
 				melt_all

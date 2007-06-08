@@ -703,7 +703,6 @@ feature {COMPILER_EXPORTER} -- Access
 	create_info: CREATE_INFO is
 			-- Byte code information for entity type creation
 		require
-			has_current_class: system.current_class /= Void
 			is_valid: is_valid
 		deferred
 		end

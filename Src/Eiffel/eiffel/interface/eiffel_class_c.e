@@ -697,8 +697,14 @@ feature -- Third pass: byte code production and type check
 							-- Remember the melted feature information
 							-- if it is not deferred. If it is an external, then
 							-- we need to trigger a freeze.
-						if feature_i.is_external then
-							system.set_freeze
+							-- If it is visible via CECIL, we need to trigger
+							-- freeze as well.
+						if
+							not system.is_freeze_requested and then
+							(feature_i.is_external or else
+							visible_level.is_visible (feature_i, class_id))
+						then
+							system.request_freeze
 						end
 						add_feature_to_melted_set (feature_i)
 					end
@@ -1197,9 +1203,14 @@ feature -- Melting
 				feature_i := tbl.item_for_iteration
 					-- External feature and inherited one don't need to be melted.
 				if feature_i.to_generate_in (Current) then
-					if feature_i.is_external then
+					if
+						not system.is_freeze_requested and then
+						(feature_i.is_external or else
+						visible_level.is_visible (feature_i, class_id))
+					then
 							-- Feature is external, we need to trigger a freeze
-						system.set_freeze
+							-- or feature is used by CECIL, we need to trigger a freeze as well
+						system.request_freeze
 					end
 					add_feature_to_melted_set (feature_i)
 				end

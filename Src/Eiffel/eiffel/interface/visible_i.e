@@ -59,15 +59,11 @@ feature
 			-- Do nothing
 		end;
 
-	generate_cecil_table (a_class: CLASS_C) is
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING_8]) is
 			-- Generate cecil table
 		require
 			has_visible;
-		do
-		end;
-
-	make_byte_code (ba: BYTE_ARRAY; tbl: FEATURE_TABLE) is
-			-- Produce byte code for current visible clause
+			generated_wrappers_attached: generated_wrappers /= Void
 		do
 		end;
 
@@ -77,7 +73,7 @@ feature
 		end;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

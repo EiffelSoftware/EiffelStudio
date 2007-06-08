@@ -302,10 +302,18 @@ feature -- Comparison
 			f1, f2: FEATURE_I
 			depend_unit: DEPEND_UNIT
 			ext_i: EXTERNAL_I
+			c: CLASS_C
+			is_freeze_requested: BOOLEAN
 		do
+			c := system.class_of_id (feat_tbl_id)
 			if other.count = 0 then
 				Result := False
+				if not system.is_freeze_requested and then c.has_visible then
+						-- Ensure the system is frozen for CECIL.
+					system.request_freeze
+				end
 			else
+				is_freeze_requested := system.is_freeze_requested
 				from
 					start
 					Result := True
@@ -319,11 +327,18 @@ feature -- Comparison
 							-- Old feature is not in Current feature table, this
 							-- is not equivalent
 						Result := False
+						if not is_freeze_requested and then c.visible_level.is_visible (f1, feat_tbl_id) then
+								-- Remove references to the old feature in CECIL data.
+							system.request_freeze
+							is_freeze_requested := True
+						end
 					else
 						check
 							f1.feature_name_id = f2.feature_name_id
 						end
-						if not f1.equiv (f2) then
+						if f1.equiv (f2) then
+							f1.set_code_id (f2.code_id)
+						else
 	debug ("ACTIVITY")
 		io.error.put_string ("%Tfeature ")
 		io.error.put_string (f2.feature_name)
@@ -334,24 +349,26 @@ feature -- Comparison
 									-- export status. We need to freeze only if the
 									-- information specific to EXTERNAL_I is not equiv
 								ext_i ?= f1
-								if
-									not ext_i.freezing_equiv (f2)
-								then
+								if not is_freeze_requested and then not ext_i.freezing_equiv (f2) then
 										-- The external definition has changed
-									System.set_freeze
+									System.request_freeze
+									is_freeze_requested := True
 								end
 							end
 							Result := False
 							create depend_unit.make (feat_tbl_id, f2)
 							pass2_ctrl.propagators.extend (depend_unit)
-						else
-							f1.set_code_id (f2.code_id)
+							if not is_freeze_requested and then c.visible_level.is_visible (f1, feat_tbl_id) then
+									-- Regenerate C code for visible feature so that it can be accessed via CECIL.
+								system.request_freeze
+								is_freeze_requested := True
+							end
 						end
 					end
 					forth
 				end
 				if Result then
-					Result := origin_table.equiv (other.origin_table)
+					Result := origin_table.equiv (other.origin_table, c)
 debug ("ACTIVITY")
 	if not Result then
 		io.error.put_string ("%TOrigin table is not equivalent%N")
@@ -401,7 +418,7 @@ end
 						then
 							-- Force a re-freeze in order
 							-- to get a correct 'ececil.c'
-							System.set_freeze
+							System.request_freeze
 						end
 						has_same_type := old_feature_i.same_class_type (new_feature_i)
 					end
@@ -847,12 +864,13 @@ end
 				-- Reset `visible_table_size' since size is computed
 				-- during generation.
 			a_class.set_visible_table_size (0)
-			if a_class.has_visible then
-				ba.append ('%/001/')
-				a_class.visible_level.make_byte_code (ba, Current)
-			else
-				ba.append ('%U')
+			debug ("refactor_fixme")
+				(create {REFACTORING_HELPER}).fixme ("[
+					Remove information about visible features from byte code
+					format as they are supported only in frozen code.
+				]")
 			end
+			ba.append ('%U')
 		end
 
 	generate (buffer: GENERATION_BUFFER) is

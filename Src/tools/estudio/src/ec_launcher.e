@@ -220,14 +220,16 @@ feature -- Splash
 
 			if not retried then
 				create s.make_empty
-				s.append_code (169)
-				s.append_string_general (" 2006  Eiffel Software ")
-
 				splasher := new_splasher (s)
 
 				create fn.make_from_string (eiffel_layout.bitmaps_path)
 				fn.extend ("png")
-				fn.set_file_name ("splash_shadow.png")
+				if {PLATFORM}.is_windows then
+					fn.set_file_name ("splash_shadow.png")
+				else
+					fn.set_file_name ("splash.png")
+				end
+
 				if file_exists (fn) then
 					splasher.set_splash_pixmap_filename (fn)
 				end

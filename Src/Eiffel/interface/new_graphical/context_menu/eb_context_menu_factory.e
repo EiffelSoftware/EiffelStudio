@@ -1034,20 +1034,23 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_menu.last.select_actions.extend (agent favorite_manager.add_stone (a_pebble))
 			end
 
-			create l_menu2.make_with_text (names.m_input_domain)
-			l_menu.extend (l_menu2)
-			l_menu2.extend (new_menu_item (metric_names.t_evaluation_tab))
-			l_menu2.last.select_actions.extend (
-				agent (a_stone: STONE) do
-					dev_window.tools.metric_tool.metric_evaluation_panel.force_drop_stone (a_stone)
-				end (a_pebble)
-			)
-			l_menu2.extend (new_menu_item (metric_names.t_archive_tab))
-			l_menu2.last.select_actions.extend (
-				agent (a_stone: STONE) do
-					dev_window.tools.metric_tool.metric_archive_panel.force_drop_stone (a_stone)
-				end (a_pebble)
-			)
+			if dev_window.tools.metric_tool.is_ready then
+			   create l_menu2.make_with_text (names.m_input_domain)
+			   l_menu.extend (l_menu2)
+			   l_menu2.extend (new_menu_item (metric_names.t_evaluation_tab))
+			   l_menu2.last.select_actions.extend (
+			    agent (a_stone: STONE) do
+			     dev_window.tools.metric_tool.metric_evaluation_panel.force_drop_stone (a_stone)
+			    end (a_pebble)
+			   )
+			   l_menu2.extend (new_menu_item (metric_names.t_archive_tab))
+			   l_menu2.last.select_actions.extend (
+			    agent (a_stone: STONE) do
+			     dev_window.tools.metric_tool.metric_archive_panel.force_drop_stone (a_stone)
+			    end (a_pebble)
+			   )
+			end
+
 				-- Added to Watch tool, if possible.
 			l_class_stone ?= a_pebble
 			if l_class_stone /= Void then

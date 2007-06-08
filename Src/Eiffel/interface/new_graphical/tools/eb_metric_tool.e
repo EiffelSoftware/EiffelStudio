@@ -149,7 +149,6 @@ feature -- Actions
 		do
 			Precursor {EB_TOOL}
 			on_select
-			metric_notebook.set_focus
 		end
 
 	close is
@@ -364,6 +363,14 @@ feature -- Status report
 
 	last_metric_value_historied: BOOLEAN
 			-- Has last evaluated metric value been sent to history?
+
+	is_ready: BOOLEAN is
+			-- Is Metrics tool ready?
+			-- Ready means that a project is loaded and no compilation or metric calculation is undergoing, so a new metric calculation
+			-- can start.
+		do
+			Result := is_project_loaded and then not (is_eiffel_compiling or is_metric_evaluating or is_archive_calculating or is_history_recalculation_running)
+		end
 
 feature{NONE} -- Actions
 

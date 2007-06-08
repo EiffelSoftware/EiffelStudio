@@ -380,6 +380,7 @@ feature -- Actions
 			l_target_stone: TARGET_STONE
 			l_stone: STONE
 			l_domain: like domain
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			l_stone ?= a_any
 			l_classi_stone ?= a_any
@@ -389,10 +390,13 @@ feature -- Actions
 			l_domain := domain
 			if
 				(l_classi_stone /= Void or else l_cluster_stone /= Void or else l_feature_stone /= Void or else l_target_stone /= Void) and then
-				not l_domain.has_delayed_domain_item and then
-				not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
+				not l_domain.has_delayed_domain_item
 			then
-				insert_domain_item (metric_domain_item_from_stone (l_stone))
+				l_domain_item := metric_domain_item_from_stone (l_stone)
+				if l_domain_item /= Void and then not domain_has (l_domain, l_domain_item) then
+					insert_domain_item (metric_domain_item_from_stone (l_stone))
+				end
+
 			end
 		end
 

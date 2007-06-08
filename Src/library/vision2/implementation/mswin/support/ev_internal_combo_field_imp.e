@@ -119,7 +119,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_left_button_down (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -127,7 +135,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_middle_button_down (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -135,7 +151,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_right_button_down (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -143,7 +167,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_left_button_up (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -151,7 +183,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_middle_button_up (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -159,7 +199,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_right_button_up (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -167,7 +215,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_left_button_double_click (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -175,7 +231,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_middle_button_double_click (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -183,7 +247,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_right_button_double_click (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -191,7 +263,15 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_mouse_move (keys, x_pos, y_pos)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -205,7 +285,15 @@ feature {NONE} -- Implementation
 					-- be called. Without this fix, the key press or release actions
 					-- in a combo box are called twice for these two keys. Unfortunately
 					-- at the moment, I am unaware why this happens. Julian.
+				parent.increment_level
 				parent.on_key_down (virtual_key, key_data)
+				if parent.has_return_value then
+					set_message_return_value (parent.message_return_value)
+				end
+				if not parent.default_processing then
+					disable_default_processing
+				end
+				parent.decrement_level
 			end
 		end
 
@@ -214,9 +302,15 @@ feature {NONE} -- Implementation
 			-- Avoid an unconvenient `bip' when the user
 			-- tab to another control.
 		do
-			if not has_focus then
+			parent.increment_level
+			parent.on_char (character_code, key_data)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
 				disable_default_processing
 			end
+			parent.decrement_level
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is
@@ -224,27 +318,54 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
+			parent.increment_level
 			parent.on_key_up (virtual_key, key_data)
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_set_focus is
 			-- Wm_setfocus message.
 		do
+			parent.increment_level
 			parent.on_set_focus
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_kill_focus is
 			-- Wm_killfocus message.
 		do
+			parent.increment_level
 			parent.on_kill_focus
+			if parent.has_return_value then
+				set_message_return_value (parent.message_return_value)
+			end
+			if not parent.default_processing then
+				disable_default_processing
+			end
+			parent.decrement_level
 		end
 
 	on_set_cursor (hit_code: INTEGER) is
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
-			if (hit_code = ({WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = ({WEL_HT_CONSTANTS}.Htclient))
-				and then parent.cursor_pixmap /= Void then
+			if
+				(hit_code = ({WEL_HT_CONSTANTS}.Htnowhere) or else
+				hit_code = ({WEL_HT_CONSTANTS}.Htclient)) and then
+				parent.cursor_pixmap /= Void
+			then
 				parent.internal_on_set_cursor
 			end
 		end

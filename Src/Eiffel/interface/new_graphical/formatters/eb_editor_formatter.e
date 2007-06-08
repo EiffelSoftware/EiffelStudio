@@ -69,7 +69,7 @@ feature -- Setting
 	setup_viewpoint is
 			-- Setup viewpoint for formatting.
 		do
-			if viewpoints /= Void and then editor /= Void then
+			if viewpoints /= Void and then editor /= Void and then editor.text_displayed /= Void then
 				editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
 			end
 		end

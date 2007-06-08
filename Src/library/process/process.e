@@ -314,7 +314,7 @@ feature -- Interprocess data transmission
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 			input_redirect_to_stream: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
-			process_running : is_running
+			process_launched: launched
 			string_not_void: s /= Void
 		deferred
 		end

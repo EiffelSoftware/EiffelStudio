@@ -317,8 +317,7 @@ feature{PROCESS_IMP} -- Process management
 		require
 			buf_size_positive: buf_size > 0
 		do
-			if is_executing and then output_piped
-			then
+			if  output_piped then
 				shared_output_unnamed_pipe.read_stream_non_block (buf_size)
 				last_output := shared_output_unnamed_pipe.last_string
 			else
@@ -332,7 +331,7 @@ feature{PROCESS_IMP} -- Process management
 		require
 			buf_size_positive: buf_size > 0
 		do
-			if is_executing and then error_piped and then not error_same_as_output
+			if error_piped and then not error_same_as_output
 			then
 				shared_error_unnamed_pipe.read_stream_non_block (buf_size)
 				last_error := shared_error_unnamed_pipe.last_string

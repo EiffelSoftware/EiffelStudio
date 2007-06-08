@@ -1178,6 +1178,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_l_curly)
 				l_as.type.process (Current)
+				create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, << last_type >>)
 				text_formatter_decorator.process_symbol_text (ti_r_curly)
 			else
 				l_as.type.process (Current)

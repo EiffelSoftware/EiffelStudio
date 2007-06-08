@@ -51,6 +51,9 @@ feature -- Open inner container data.
 			l_data: SD_INNER_CONTAINER_DATA
 			l_split_area: EV_SPLIT_AREA
 		do
+			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
+			internal_docking_manager.command.recover_normal_state
+			
 			internal_docking_manager.command.resize (True)
 			internal_docking_manager.property.set_is_opening_config (True)
 
@@ -108,6 +111,9 @@ feature -- Open inner container data.
 			l_config_data: SD_CONFIG_DATA
 			l_env: EV_ENVIRONMENT
 		do
+			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
+			internal_docking_manager.command.recover_normal_state
+
 			-- We have to open unminimized editor data here. Because after the following codes which will INSERT `l_temp_split' to the docking tree
 			-- when editor top parent is SD_MULTI_DOCK_AREA, the docking logic tree is not a full two fork tree. Then there will be problems
 			-- in `update_middle_container' which called by `recover_normal_size_from_minimize' from SD_UPPER_ZONE. See bug#12427.
@@ -871,7 +877,7 @@ feature {NONE} -- Implementation
 				l_data := a_tool_bar_datas.item
 				check is_floating_tool_bar_data: l_data.is_floating end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
-			
+
 				-- Reset texts if original docking vertically
 				if l_content.zone /= Void then
 					l_content.zone.change_direction (True)

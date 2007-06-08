@@ -97,25 +97,25 @@ feature -- Element change
 			root_control_ptr: POINTER
 			cfstring: EV_CARBON_CF_STRING
 			point: CGPOINT_STRUCT
-			size, v_size: CGSIZE_STRUCT
-			rect, v_rect: CGRECT_STRUCT
+			c_size, v_size: CGSIZE_STRUCT
+			c_rect, v_rect: CGRECT_STRUCT
 		do
-			create rect.make_new_unshared
+			create c_rect.make_new_unshared
 			create v_rect.make_new_unshared
-			ret := hiview_get_frame_external (container, rect.item)
-			create size.make_shared (rect.size)
+			ret := hiview_get_frame_external (container, c_rect.item)
+			create c_size.make_shared (c_rect.size)
+			create v_size.make_shared (v_rect.size)
 
 			if not interface.is_empty then
 				--remove old item
-				w ?= interface.item.implementation
-				old_item ?= item.implementation
-
-				unset_child_size (w.c_object, container)
-				on_removed_item (w)
-
 				check
 					item_has_implementation: w /= Void
 				end
+				w ?= interface.item.implementation
+				old_item ?= item.implementation
+
+			--	unset_child_size (w.c_object, container)
+				on_removed_item (w)
 
 				ret := hiview_remove_from_superview_external (w.c_object)
 
@@ -124,12 +124,12 @@ feature -- Element change
 				end
 
 				item := void
-				size.set_height (1)
-				size.set_width (1)
-				ret := hiview_set_frame_external (container, rect.item)
-				setup_layout
-
+				c_size.set_height (height - child_offset_bottom - child_offset_top)
+				c_size.set_width (width - child_offset_left - child_offset_right)
+				ret := hiview_set_frame_external (container, c_rect.item)
+				--setup_layout
 			end
+
 			if v /= Void then
 				--adding v
 				w ?= v.implementation
@@ -137,24 +137,25 @@ feature -- Element change
 				ret := hiview_get_frame_external (w.c_object, v_rect.item)
 
 				--rect.set_size (v_rect.size.item)
-				size.set_height (w.minimum_height)
-				size.set_width (w.minimum_width)
+				c_size.set_height (w.minimum_height.max (height - child_offset_bottom - child_offset_top))
+				c_size.set_width (w.minimum_width.max (width - child_offset_left - child_offset_right))
 
 
-				ret := hiview_set_frame_external (container, rect.item)
+				ret := hiview_set_frame_external (container, c_rect.item)
 				ret := hiview_add_subview_external ( container, w.c_object )
 
 				--alligne_to_child_size (w.c_object, container )
-				setup_automatic_layout (w.c_object, container, 0, 0, 0, 0)
+			--	setup_automatic_layout (w.c_object, container, child_offset_top, child_offset_bottom, child_offset_right, child_offset_left)
 				check
 					view_added: ret = 0
 				end
 
-				setup_layout
+				--setup_layout
 
 				on_new_item (w)
 				item := v
 			end
+			setup_layout
 		end
 
 	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32) is
@@ -167,10 +168,12 @@ feature -- Element change
 
 				-- set the container size to at least the size of the viewport
 				-- Sets the child control's size to the container size minus some spacing
+
+				--!!!!!!!!! Implement spacing and find bug!
 		local
 			v_rect, c_rect, child_rect : CGRECT_STRUCT
 			v_size, c_size, child_size : CGSIZE_STRUCT
-			a_point : CGPOINT_STRUCT
+			c_point : CGPOINT_STRUCT
 			ret: INTEGER
 			a_widget: EV_WIDGET_IMP
 			c: EV_CONTAINER_IMP
@@ -181,32 +184,44 @@ feature -- Element change
 			create v_size.make_shared ( v_rect.size )
 			create c_size.make_shared ( c_rect.size )
 			create child_size.make_shared ( child_rect.size )
+
 			-- Get initial positions right
 			ret := hiview_get_frame_external (viewport, v_rect.item)
 			ret := hiview_get_frame_external (container, c_rect.item)
+
 			if item /= void then
 				a_widget ?= item.implementation
 				check
 					has_implementation: a_widget /= void
 				end
+
 				ret := hiview_get_frame_external (a_widget.c_object, child_rect.item)
 
-				c_size.set_height (v_size.height.max(a_widget.minimum_height))
-				c_size.set_width (v_size.width.max(a_widget.minimum_width))
-				child_size.set_width (c_size.width)
-				child_size.set_height (c_size.height)
+				c_size.set_height ((v_size.height - child_offset_bottom - child_offset_top).max(a_widget.minimum_height))
+				c_size.set_width ((v_size.width - child_offset_left - child_offset_right ).max(a_widget.minimum_width))
+
+				if a_widget.expandable then
+					child_size.set_width (c_size.width)
+					child_size.set_height (c_size.height)
+				else
+					child_size.set_width (a_widget.minimum_width)
+					child_size.set_height (a_widget.minimum_height)
+				end
+
 				ret := hiview_set_frame_external (a_widget.c_object, child_rect.item)
 			else
 				c_size.set_height (v_size.height)
 				c_size.set_width (v_size.width)
 			end
+
 			ret := hiview_set_frame_external (container, c_rect.item)
 
-
-			if item /= void then
-				c ?= item.implementation
-				if c /= void then
-					c.setup_layout
+			if c_size.width <= v_size.width or c_size.height <= v_size.height then
+				if item /= void then
+					c ?= item.implementation
+					if c /= void then
+						c.setup_layout
+					end
 				end
 			end
 		end
@@ -343,7 +358,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_set_offset (a_x, a_y: INTEGER) is
-			local
+		local
 			item_width, item_height: INTEGER
 			w_imp: EV_WIDGET_IMP
 			a_rect: CGRECT_STRUCT

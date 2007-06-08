@@ -74,41 +74,7 @@ feature -- Element change
 
 	replace (v: like item) is
 			-- Replace `item' with `v'.
-		local
-			w: EV_WIDGET_IMP
-			ret: INTEGER
-			root_control_ptr: POINTER
-			cfstring: EV_CARBON_CF_STRING
-			w2: EV_BOX_IMP
-			a_height, a_width : INTEGER
-		do
-			if not interface.is_empty then
-				w ?= interface.item.implementation
-				on_removed_item (w)
-				check
-					item_has_implementation: w /= Void
-				end
-				a_height := - w.minimum_height
-				a_width := - w.minimum_width
-				ret := hiview_remove_from_superview_external (w.c_object)
-				check
-					view_removed: ret = 0
-				end
-			end
-			if v /= Void then
-				w ?= v.implementation
-				temp_item := w
-				ret := hiview_add_subview_external ( c_object, w.c_object )
-				check
-					view_added: ret = 0
-				end
-
-				a_height := a_height + w.minimum_height
-				a_width := a_width + w.minimum_width
-				on_new_item (w)
-				--layout
-			end
-			child_has_resized (void, a_height, a_width)
+		deferred
 
 		end
 

@@ -44,6 +44,7 @@ feature -- Initialization
 			event_id := app_implementation.get_id (current)
 			target := get_control_event_target_external( c_object )
 			h_ret := app_implementation.install_event_handler ( event_id, target, {CARBONEVENTS_ANON_ENUMS}.keventclasscontrol, {CARBONEVENTS_ANON_ENUMS}.keventcontrolboundschanged )
+			set_border_width (1)
 		end
 
 feature -- Access
@@ -135,8 +136,7 @@ feature {NONE} -- Carbon implementation
 		end
 
 
-feature {EV_CONTAINER_IMP} -- Layouting
-
+feature {EV_CONTAINER_IMP}
 --	carbon_arrange_children is
 --	--		 Setup positioning constraints for all children
 --		require
@@ -161,16 +161,25 @@ feature {EV_CONTAINER_IMP} -- Layouting
 			-- propagate it to the top (or if we could resize, resize)
 			-- calculate minimum sizes
 		local
-			a_widget: EV_WIDGET_IMP
 			old_minimum_width, old_minimum_height: INTEGER
+			container: EV_CONTAINER_IMP
 		do
+			if (a_widget_imp /= void) and then a_widget_imp.expandable then
+
+			else
+			--	container ?= a_widget_imp
+			--	if container /= void then
+			--		container.setup_layout
+			--	end
+			--	layout
+			end
 			old_minimum_width := minimum_width
 			old_minimum_height := minimum_height
+			calculate_minimum_sizes
+			if parent_imp /= void then
+				parent_imp.child_has_resized (current, minimum_height - old_minimum_height,  minimum_width - old_minimum_width)
+			end
 
-				calculate_minimum_sizes
-				if parent_imp /= void then
-					parent_imp.child_has_resized (current, minimum_height - old_minimum_height,  minimum_width - old_minimum_width)
-				end
 		end
 
 	calculate_minimum_sizes is
@@ -182,21 +191,21 @@ feature --Meassurement
 
 	child_offset_bottom: INTEGER
 	do
-		Result := 1
+		Result := border_width
 	end
 
 	child_offset_right: INTEGER
 	do
-		Result := 1
+		Result := border_width
 	end
 
 	child_offset_left: INTEGER
 	do
-		Result := 1
+		Result := border_width
 	end
 	child_offset_top: INTEGER
 	do
-		Result := 1
+		Result := border_width
 	end
 
 

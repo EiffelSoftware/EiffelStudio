@@ -26,7 +26,10 @@ inherit
 			child_has_resized,
 			on_event,
 			initialize,
-			replace
+			replace,
+			child_offset_right,
+			child_offset_bottom,
+			setup_layout
 		end
 
 	HIVIEW_FUNCTIONS_EXTERNAL
@@ -65,6 +68,7 @@ feature {NONE} -- Initialization
 
 			ret := hiscroll_view_create_external ({HIVIEW_ANON_ENUMS}.kHIScrollViewOptionsVertScroll.bit_or ({HIVIEW_ANON_ENUMS}.kHIScrollViewOptionsHorizScroll), $ptr)
 			ret := hiview_set_visible_external (ptr, 1)
+			ret := hiscroll_view_set_scroll_bar_auto_hide_external (ptr, 1)
 			set_c_object (ptr)
 			ret := hiview_set_frame_external (c_object, rect.item)
 
@@ -107,6 +111,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	child_offset_right: INTEGER is
+			do
+				Result := 0
+			end
+
+	child_offset_bottom: INTEGER is
+			do
+				Result := 0
+			end
+
+
 	initialize is
 			local
 				h_ret, target: POINTER
@@ -132,6 +147,17 @@ feature -- Access
 				ret: INTEGER
 			do
 				precursor {EV_VIEWPORT_IMP} (v)
+				ret := create_event_external (null, kEventClassScrollable, kEventScrollableInfoChanged, 0, kEventAttributeUserEvent, $a_event)
+				ret := send_event_to_event_target_external (a_event, get_control_event_target_external (c_object))
+				release_event_external (a_event)
+			end
+
+	setup_layout is
+			local
+				a_event: POINTER
+				ret: INTEGER
+			do
+				precursor {EV_VIEWPORT_IMP}
 				ret := create_event_external (null, kEventClassScrollable, kEventScrollableInfoChanged, 0, kEventAttributeUserEvent, $a_event)
 				ret := send_event_to_event_target_external (a_event, get_control_event_target_external (c_object))
 				release_event_external (a_event)
@@ -217,7 +243,6 @@ feature {NONE} -- Implementation
 					create point.make_shared (rect.origin)
 					ret := set_event_parameter_external (a_inevent, kEventParamViewSize, {CARBONEVENTS_ANON_ENUMS}.typehisize, size.sizeof, size.item)
 					ret := set_event_parameter_external (a_inevent, kEventParamOrigin, {CARBONEVENTS_ANON_ENUMS}.typehipoint, point.sizeof, point.item)
-
 
 					Result := {EV_ANY_IMP}.noErr -- event handled
 				elseif event_kind = kEventScrollableScrollTo then
@@ -359,11 +384,13 @@ feature {NONE} -- Implementation
 			ret: INTEGER
 		do
 			--internal_set_container_size (item_imp.minimum_height, item_imp.minimum_width)
+
 			precursor {EV_VIEWPORT_IMP} (item_imp, a_height, a_width)
 
 			ret := create_event_external (null, kEventClassScrollable, kEventScrollableInfoChanged, 0, kEventAttributeUserEvent, $a_event)
 			ret := send_event_to_event_target_external (a_event, get_control_event_target_external (c_object))
 			release_event_external (a_event)
+
 		end
 
 

@@ -31,7 +31,11 @@ inherit
 			on_event,
 			layout,
 			setup_layout,
-			child_has_resized
+			child_has_resized,
+			child_offset_bottom,
+			child_offset_left,
+			child_offset_right,
+			child_offset_top
 		end
 
 	EV_FONTABLE_IMP
@@ -194,13 +198,49 @@ feature -- Status report
 
 feature -- Measurement
 
+	child_offset_top: INTEGER is
+			do
+				if tab_position = interface.Tab_top  then
+					Result := internal_offset + tab_offset
+				else
+					Result := internal_offset
+				end
+			end
+
+	child_offset_bottom: INTEGER is
+			do
+				if tab_position = interface.Tab_bottom  then
+					Result := internal_offset + tab_offset
+				else
+					Result := internal_offset
+				end
+			end
+
+	child_offset_right: INTEGER is
+			do
+				if tab_position = interface.Tab_right  then
+					Result := internal_offset + tab_offset
+				else
+					Result := internal_offset
+				end
+			end
+
+	child_offset_left: INTEGER is
+			do
+				if tab_position = interface.Tab_left  then
+					Result := internal_offset + tab_offset
+				else
+					Result := internal_offset
+				end
+			end
+
+
 	calculate_minimum_sizes  is
 			-- minimum_width is the largest minimum_width of all items + tab_offset if tabs are on left or right
 		local
 			i : INTEGER
 			max_width, max_height : INTEGER
 		do
-			if count > 0 then
 				max_width := 0
 				max_height := 0
 				from
@@ -213,20 +253,19 @@ feature -- Measurement
 					i := i + 1
 
 				end
+
 				if tab_position = interface.tab_left or else tab_position = interface.tab_right then
-					buffered_minimum_width := max_width + tab_offset
+					buffered_minimum_width := max_width + tab_offset + child_offset_left + child_offset_right
 				else
-					buffered_minimum_width := max_width
+					buffered_minimum_width := max_width + child_offset_left + child_offset_right
 				end
 				if tab_position = interface.tab_top or else tab_position = interface.tab_bottom then
-					buffered_minimum_height := max_height + tab_offset
+					buffered_minimum_height := max_height + tab_offset + child_offset_bottom + child_offset_top
 				else
-					buffered_minimum_width := max_height
+					buffered_minimum_width := max_height  + child_offset_bottom + child_offset_top
 				end
-			else
-				buffered_minimum_height := 0
-				buffered_minimum_width := 0
-			end
+				buffered_minimum_height := buffered_minimum_height.max (internal_minimum_height)
+				buffered_minimum_width := buffered_minimum_width.max (internal_minimum_width)
 		end
 
 	minimum_height : INTEGER is
@@ -238,6 +277,8 @@ feature -- Measurement
 		do
 			Result := buffered_minimum_width
 		end
+
+	internal_offset: INTEGER is 2
 
 feature {EV_NOTEBOOK} -- Status setting
 
@@ -377,7 +418,7 @@ feature -- Element change
 			name : EV_CARBON_CF_STRING
 			w_imp : EV_WIDGET_IMP
 			actual_size : INTEGER
-			a_rect : RECT_STRUCT
+			container: EV_CONTAINER_IMP
 		do
 			Precursor {EV_WIDGET_LIST_IMP} ( v, i )
 			create name.make_unshared_with_eiffel_string ( "Page " + i.out )
@@ -392,33 +433,21 @@ feature -- Element change
 			check
 				not_void : w_imp /=  Void
 			end
-			create a_rect.make_new_unshared
-			err := get_control_data_external ( c_object, {CONTROLS_ANON_ENUMS}.kControlEntireControl, {CONTROLDEFINITIONS_ANON_ENUMS}.kControlTabContentRectTag, a_rect.sizeof, a_rect.item, $actual_size )
-			check
-				no_overflow : err = noErr implies actual_size = a_rect.sizeof
-			end
-			if err /= 0 then
-				a_rect.set_top ( 0 ); a_rect.set_left ( 10 );
-				a_rect.set_bottom ( 0 ); a_rect.set_right ( 10 );
-			end
-
-			if tab_position = interface.tab_top then
-				a_rect.set_top ( a_rect.top + tab_offset )
-			elseif tab_position = interface.tab_left then
-				a_rect.set_left ( a_rect.left + tab_offset )
-			elseif tab_position = interface.tab_bottom then
-				a_rect.set_bottom ( a_rect.bottom - tab_offset )
-			elseif tab_position = interface.tab_right then
-				a_rect.set_right ( a_rect.right - tab_offset )
-			end
-
-			set_control_bounds_external ( w_imp.c_object, a_rect.item )
-			bind_to_tabcontrol ( w_imp.c_object, c_object )
 			hide_control_external ( w_imp.c_object )
 			if count = 1  then
-				--set_control32bit_value_external ( c_object, 1 )
 				page_switch
 			end
+			if ( (w_imp.minimum_height + child_offset_top + child_offset_bottom) > minimum_height) or ( (w_imp.minimum_width + child_offset_left + child_offset_right) > minimum_width) then
+				child_has_resized (void, 0, 0)
+			else
+				layout
+				container ?= w_imp
+				if container /= void then
+					container.setup_layout
+				end
+			end
+
+
 		end
 
 	replace (v: like item) is
@@ -468,11 +497,39 @@ feature -- Element change
 				end
 			end
 
-			layout is
-			--what should we do here?
-					do
+		layout  is
+				-- Sets the child control's size to the container site minus some spacing
+		local
+			a_rect : CGRECT_STRUCT
+			a_size : CGSIZE_STRUCT
+			a_point : CGPOINT_STRUCT
+			ret, i: INTEGER
+			a_widget : EV_WIDGET_IMP
+		do
+			from
+				i := 1
+			until
+				(i = 0) or (i = count + 1)
+			loop
+				a_widget ?= i_th (i).implementation
+				check
+					no_imp: a_widget /= void
+				end
 
-					end
+				-- Get initial positions right
+				create a_rect.make_new_unshared
+				create a_size.make_shared ( a_rect.size )
+				create a_point.make_shared ( a_rect.origin )
+
+				a_point.set_x (child_offset_right)
+				a_point.set_y (child_offset_top)
+				a_size.set_width (width - (child_offset_right + child_offset_left))
+				a_size.set_height (height - child_offset_bottom - child_offset_top)
+				ret := hiview_set_frame_external (a_widget.c_object, a_rect.item)
+
+				i := i + 1
+			end
+		end
 
 
 

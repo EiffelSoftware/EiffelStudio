@@ -15,7 +15,6 @@ inherit
 
 	EV_CONTAINER_IMP
 		undefine
-			replace,
 			x_position,
 			y_position,
 			screen_x,
@@ -23,7 +22,8 @@ inherit
 			width,
 			height,
 			is_parentable,
-			show
+			show,
+			hide
 		redefine
 			interface,
 			initialize,
@@ -54,8 +54,8 @@ inherit
 			on_key_event,
 			has_focus,
 			show,
-			hide,
-			set_size
+			set_size,
+			hide
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -170,6 +170,16 @@ feature  -- Access
 
 feature -- Status setting
 
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
+		do
+		end
+
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
+		do
+		end
+
 	internal_disable_border is
 			-- Ensure no border is displayed around `Current'.
 		do
@@ -194,29 +204,13 @@ feature -- Status setting
 			end
 		end
 
-	disable_user_resize_called: BOOLEAN
-		-- Has `disable_user_resize' been called?
-
-	disable_user_resize is
-			-- Forbid the resize of the window.
-		do
-			disable_user_resize_called := True
-			user_can_resize := False
-			if is_displayed then
-				forbid_resize
+	allow_resize is
+			do
+				enable_user_resize
 			end
-		end
+
 
 	enable_user_resize is
-			-- Allow the resize of the window.
-		do
-			user_can_resize := True
-			if is_displayed then
-				allow_resize
-			end
-		end
-		
-	allow_resize is
 			-- Allow the resize of the window.
 		local
 			res: INTEGER
@@ -225,11 +219,23 @@ feature -- Status setting
 			internal_enable_border
 		end
 
+
+	disable_user_resize is
+			-- disable the resize of the window.
+		local
+			res: INTEGER
+		do
+			res := change_window_attributes_external (c_object, {MACWINDOWS_ANON_ENUMS}.kwindownoattributes, {MACWINDOWS_ANON_ENUMS}.kwindowresizableattribute)
+			internal_disable_border
+		end
+
+
 	show is
 			-- Map the Window to the screen.
 		do
 			if not is_show_requested then
 				call_show_actions := True
+				--Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
 			end
 			if blocking_window /= Void then
@@ -288,7 +294,9 @@ feature -- Element change
 	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER) is
 			--
 		do
-			setup_layout
+
+				setup_layout
+
 		end
 
 
@@ -417,28 +425,18 @@ feature {EV_ANY_IMP} -- Implementation
 
 	destroy is
 			-- Destroy `Current'
+			-- 19.6.2006 Ueli
 		do
 			disable_capture
 			hide
 			Precursor {EV_CONTAINER_IMP}
 		end
 
-feature {NONE} -- Accelerators
-
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Connect key combination `an_accel' to this window.
-		do
-		end
-
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Disconnect key combination `an_accel' from this window.
-		do
-		end
-		
 feature {NONE} -- Implementation
 
 	on_widget_mapped is
 			-- `Current' has been mapped to the screen.
+			-- 19.6.06 Ueli
 		do
 			if show_actions_internal /= Void and call_show_actions then
 				show_actions_internal.call (Void)

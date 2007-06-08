@@ -20,7 +20,6 @@ inherit
 
 	EV_CONTAINER_IMP
 		undefine
-			replace,
 			minimum_width,
 			minimum_height
 		redefine
@@ -110,10 +109,13 @@ feature {NONE} -- Implementation
 					loop
 						c ?= i_th (i).implementation
 						if c /= void then
-							c.setup_layout
+						--	if c.expandable then
+								c.setup_layout
+						--	end
 						end
 						i := i + 1
 					end
+
 
 			end
 

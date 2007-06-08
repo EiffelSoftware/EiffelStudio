@@ -159,7 +159,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is
+        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
         	-- Start PND transport (not needed)
 		do
 
@@ -210,7 +210,7 @@ feature -- Measurement
 			-- Minimum vertical size in pixels.
 		do
 		end
-		
+
 feature {EV_HEADER_IMP} -- Implementation
 
 	set_parent_imp (par_imp: like parent_imp) is

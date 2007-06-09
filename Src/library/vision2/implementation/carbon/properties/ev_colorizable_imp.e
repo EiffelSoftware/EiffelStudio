@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision colorizable. GTK+ implementation."
+		"Eiffel Vision colorizable. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "colorizible"
@@ -47,11 +47,6 @@ feature -- Access
 			else
 				color := foreground_color_pointer
 				create Result
-			--	Result.set_rgb_with_16_bit (
-			--		{EV_GTK_EXTERNALS}.gdk_color_struct_red (color),
-			--		{EV_GTK_EXTERNALS}.gdk_color_struct_green (color),
-			--		{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
-			--	)
 			end
 		end
 
@@ -61,9 +56,6 @@ feature -- Status setting
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `background_color'
 		do
-			--if needs_event_box then
-			--	{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
-			--end
 			background_color_imp ?= a_color.implementation
 		end
 
@@ -71,10 +63,6 @@ feature -- Status setting
 			-- Implementation of `set_background_color'
 			-- Used also by classes that inherit EV_WIDGET_IMP but not
 			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
-			--| Check that the color is not already set.
-			--| Copy the existing GtkStyle, modifiy it	
-			--| and set it back into the widget.
-			--| (See gtk/docs/styles.txt)
 		do
 
 		end

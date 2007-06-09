@@ -323,7 +323,7 @@ feature {EV_ANY_I} -- Implementation
 			-- (starting from 1).
 		do
 			-- The `ev_children' array has to contain
-			-- the same rows in the same order than in the gtk
+			-- the same rows in the same order than in the g.t.k.
 			-- part.
 			Result := parent_imp.ev_children.index_of (Current, 1)
 		end

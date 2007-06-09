@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelVision fontable, gtk implementation."
+	description: "EiffelVision fontable, Carbon implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";

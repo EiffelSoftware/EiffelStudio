@@ -31,7 +31,6 @@ feature {EV_ANY_I} -- Access
 
 	set_c_object (a_c_object: POINTER) is
 			-- Assign `a_c_object' to `c_object'.
-			-- Set up Eiffel GC / GTK cooperation.
 			--| (See note at end of class)
 		require
 			a_c_object_not_null: a_c_object /= NULL

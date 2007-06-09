@@ -133,20 +133,6 @@ feature -- Access
 			a_current_filter, a_filter_list: POINTER
 			i: INTEGER
 		do
---			a_current_filter := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filter (c_object)
---			a_filter_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
-			if a_current_filter /= NULL and then a_filter_list /= NULL then
---				from
---					i := 0
---				until
---					{EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i) = a_current_filter
---				loop
---					i := i + 1
---				end
---				{EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
-				Result := i + 1
-			end
-
 		end
 
 	start_directory: STRING_32
@@ -204,21 +190,8 @@ feature -- Element change
 			remove_file_filters
 
 			if not a_filter.is_equal ("*.*") then
---				a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
---				a_cs :=  (a_filter)
---				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
---				a_cs :=  (filter_name)
---				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
---				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 			end
 
---			a_cs :=  ("*")
---					-- File filter uses a globbing pattern so this is the only filter that can show all files
---			a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
---			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
---			a_cs :=  ("All files *.*")
---			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
---			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
 	set_file_name (a_name: STRING_GENERAL) is
@@ -227,7 +200,6 @@ feature -- Element change
 			a_cs: EV_CARBON_CF_STRING
 		do
 			a_cs := a_name
---			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
 	set_start_directory (a_path: STRING_GENERAL) is
@@ -237,10 +209,6 @@ feature -- Element change
 		do
 			start_directory := a_path.twin
 			a_cs := start_directory + "/"
---			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_current_folder (
---				c_object,
---				a_cs.item
---			)
 		end
 
 feature {NONE} -- Implementation
@@ -252,18 +220,13 @@ feature {NONE} -- Implementation
 			a_filter: POINTER
 			i: INTEGER
 		do
---			a_filter_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
 			if a_filter_list /= NULL then
 				from
---					a_filter := {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
 				until
 					a_filter = NULL
 				loop
---					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_remove_filter (c_object, a_filter)
 					i := i + 1
---					a_filter := {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
 				end
---				{EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
 			end
 		end
 
@@ -288,9 +251,6 @@ feature {NONE} -- Implementation
 				if current_filter_string /= Void then
 					filter_string_list := current_filter_string.to_string_32.split (';')
 					if current_filter_description /= Void then
---						filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
---						a_cs := current_filter_description
---						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
 						from
 							filter_string_list.start
 						until
@@ -301,10 +261,8 @@ feature {NONE} -- Implementation
 							else
 								a_cs := filter_string_list.item
 							end
---							{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
 							filter_string_list.forth
 						end
---						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, filter_ptr)
 					end
 				end
 				filters.forth

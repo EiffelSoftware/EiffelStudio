@@ -235,7 +235,6 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
-				--Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
 			end
 			if blocking_window /= Void then

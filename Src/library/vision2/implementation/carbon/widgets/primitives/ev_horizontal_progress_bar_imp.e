@@ -67,13 +67,13 @@ feature {NONE} -- Implementation
 	minimum_height: INTEGER is
 			-- Minimum height that the widget may occupy.
 		do
-			Result := 15 -- Hardcode, same value as in GTK+
+			Result := 15 -- Hardcode
 		end
 
 	minimum_width: INTEGER is
 			-- Minimum width that the widget may occupy.
 		do
-			Result := 150 -- Hardcode, same value as in GTK+
+			Result := 150 -- Hardcode
 		end
 
 feature {EV_ANY_I} -- Implementation

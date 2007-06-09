@@ -103,7 +103,6 @@ feature -- Status setting
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
 	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
-			-- Used for creating a fully set GtkTextTag
 		once
 		end
 

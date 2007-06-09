@@ -1,5 +1,5 @@
 indexing
-	description: "Gtk implementation of dockable target."
+	description: "Carbon implementation of dockable target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -7,7 +7,7 @@ indexing
 
 deferred class
 	EV_DOCKABLE_TARGET_IMP
-	
+
 inherit
 	EV_DOCKABLE_TARGET_I
 

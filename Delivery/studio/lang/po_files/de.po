@@ -1,17 +1,18 @@
-# translation of de_CH.po to German
+# translation of de.po to
 # Julian <julian@tschannen.net>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-07 18:30-0800\n"
-"Language-Team: Eiffel Software\n"
+"PO-Revision-Date: 2007-06-08 15:07-0800\n"
+"Language-Team: \n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: German\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #. Source code: default_quick_melt_the_system: STRING_GENERAL is			do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
@@ -571,7 +572,7 @@ msgstr "&Schließen"
 #. Source code: m_Close: STRING_GENERAL is					do Result := locale.translation("&Close Window")	end
 #: interface_names.e:320
 msgid "&Close Window"
-msgstr "Fenster &Schließen"
+msgstr "Fenster &schließen"
 
 #. Source code: m_Cluster_tool: STRING_GENERAL is			do Result := locale.translation("&Clusters")	end
 #: interface_names.e:312
@@ -836,7 +837,7 @@ msgstr "&Objekt-Werkzeug"
 #. Source code: m_Open_project: STRING_GENERAL is			do Result := locale.translation("&Open Project...")	end
 #: interface_names.e:483
 msgid "&Open Project..."
-msgstr "Projekt &Öffnen..."
+msgstr "Projekt &öffnen..."
 
 #. Source code: m_Open: STRING_GENERAL is					do Result := locale.translation("&Open...%TCtrl+O")	end
 #: interface_names.e:480
@@ -1016,7 +1017,7 @@ msgstr "Favoriten &anzeigen"
 #. Source code: m_Show_formatting_marks: STRING_GENERAL is		do Result := locale.translation("&Show Formatting Marks")	end
 #: interface_names.e:544
 msgid "&Show Formatting Marks"
-msgstr "Markirung der Formatierung &zeigen"
+msgstr "Markierung der Formatierung &zeigen"
 
 #. Source code: m_show_diagram_history: STRING_GENERAL is	do Result := locale.translation("&Show diagram history")	end
 #: interface_names.e:806
@@ -1036,7 +1037,7 @@ msgstr "&Standardleiste"
 #. Source code: m_Exec_step: STRING_GENERAL is				do Result := locale.translation("&Step-by-Step")	end
 #: interface_names.e:426
 msgid "&Step-by-Step"
-msgstr "&Schritt-für-Schritt"
+msgstr "&Einzelnen Schritt ausführen"
 
 #. Source code: m_Debug_kill: STRING_GENERAL is				do Result := locale.translation("&Stop Application")	end
 #: interface_names.e:338
@@ -1300,7 +1301,7 @@ msgstr "--> Unterabfrage: "
 #. Source code: arrow_used_profiler: STRING_GENERAL is 						do Result := locale.translation ("--> Used profiler (default: `eiffel'): ") end
 #: ewb_names.e:20
 msgid "--> Used profiler (default: `eiffel'): "
-msgstr "--> Benutzer Profile (Standard: `eiffel'): "
+msgstr "--> Benutzter Profiler (Standard: `eiffel'): "
 
 #. Source code: once Result := locale.translation ("--> Working directory: ") end
 #: debugger_names.e:142
@@ -1514,15 +1515,15 @@ msgid ""
 msgstr ""
 "Eine Unterabfrage hat folgende Form: Attribut Operator Wert\n"
 "\n"
-"Attribut ist eines von: Feature Name, calls, total, self, descendants, percentage\n"
+"Attribut ist eines von: Featurename, Aufrufe, total, self, descendants, percentage\n"
 "Operator ist einer von: < > <= >= = /= in\n"
-"Wert ist einer von: Ganzzahl (für calls), Zeichenkette mit Platzhalte (für Feature Name)\n"
+"Wert ist einer von: Ganzzahl (für Aufrufe), Zeichenkette mit Platzhalte (für Feature Name)\n"
 "\t\t Reelle Zahl (für andere Attribute) oder ein begrenzter Wert\n"
 "\t\t\tEine Zeichenkette mit Platzhalter ist eine Zeichenkette welche\n"
 "\t\t\t'*' oder '?' enthält\n"
 "\t\t\tEin begrenzter Wert ist ein Wert gefolgt von '-' gefolgt von\n"
 "\t\t\teinem weiteren Wert\n"
-"\t\t\t\tKeine Zeichenkette sind hier erlabut.\n"
+"\t\t\t\tKeine Zeichenkette sind hier erlaubt.\n"
 
 #. Source code: Result := locale.translation ("A valid metric name is a non-empty string which doesn't start with space, enter or tab, and doesn't end with space, enter or tab.%NMake sure specified metric name is valid.")
 #: eb_metric_names.e:1128
@@ -3857,7 +3858,7 @@ msgstr "Feature-Baum automatisch aufklappen."
 #. Source code: target_automatic_backup_description: STRING_GENERAL is do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
 #: conf_interface_names.e:102
 msgid "Automatically generate a backup during recompilation?"
-msgstr "Ein automatisches Backup während der Rekompilierung erstellen?"
+msgstr "Ein automatisches Backup beim erneuten Kompilieren erstellen?"
 
 #. Source code: f_auto_go_to_result: STRING_GENERAL is do Result := locale.translation ("Automatically go to result panel after metric evaluation?") end
 #: eb_metric_names.e:269
@@ -4066,7 +4067,7 @@ msgstr "Hintergrundfarbe für Fehler."
 #. 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:12
 msgid "Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."
-msgstr "Hintergrundfarbe für expandierte Ansicht. Standard ist Weiss. Ändern Sie das um Leerzeichen am Ende von dargestellten Text besser zu sehen."
+msgstr "Hintergrundfarbe für expandierte Ansicht. Standard ist Weiß. Ändern Sie das um Leerzeichen am Ende von dargestellten Text besser zu sehen."
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:261
@@ -4606,14 +4607,14 @@ msgid ""
 "Are you sure you want to keep the assertions in your\n"
 "finalized executable?"
 msgstr ""
-"Standardmässig werden Zusicherungen welche in der Konfiguration\n"
+"Standardmäßig werden Zusicherungen welche in der Konfiguration\n"
 "aktiviert sind auch im finalisierten Modus beibehalten.\n"
 "\n"
 "Zusicherungen zu behalten verhindert jegliche Optimierungen\n"
 "welche in der Konfiguration angegeben wurden (Inlining, Array\n"
-"Optimierungen, Entfernung unbenutzen Codes) und produziert\n"
+"Optimierungen, Entfernung unbenutzten Codes) und produziert\n"
 "ausführbare Dateien die nicht optimiert in Geschwindigkeit und\n"
-"Grösse sind.\n"
+"Größe sind.\n"
 "\n"
 "Sind Sie sicher dass die Zusicherungen in der finalisierten\n"
 "Anwendung beibehalten werden sollen?"
@@ -4676,13 +4677,13 @@ msgstr ""
 "Führen Sie das Programm für Makedateien im Verzeichnis `$1`\n"
 "aus um zu sehen wo das Problem liegt.\n"
 "\n"
-"`Ok' klicken um zu beenden.\n"
+"`OK' klicken um zu beenden.\n"
 "`Abbrechen' klicken um eine Kommandozeile zu öffnen.\n"
 
 #. Source code: target_cls_compliant_name: STRING_GENERAL is do Result := locale.translation ("CLS Compliant")	end
 #: conf_interface_names.e:107
 msgid "CLS Compliant"
-msgstr "CLS-kompatiebel"
+msgstr "CLS-kompatibel"
 
 #. Source code: t_calculated_time: STRING_GENERAL is do Result := locale.translation ("Calculated time") end
 #: eb_metric_names.e:126
@@ -5718,7 +5719,7 @@ msgstr "Schließe $1"
 #. 	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:15
 msgid "Close dbg daemon on end of debugging"
-msgstr "Debug daemon am Ende vom Debuggen beenden"
+msgstr "Debug-Daemon am Ende vom Debuggen beenden"
 
 #. 	<PREF NAME="shortcuts.general.close_focusing_docking_tool_or_editor" DESCRIPTION="Close focusing docking tool or editor."><SHORTCUT Ctrl="True">F4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:640
@@ -5733,7 +5734,7 @@ msgstr "Fokussierten Editor oder Werkzeug schließen."
 #. 	<PREF NAME="debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging" DESCRIPTION="Close the eiffel debugger daemon (classic) after each debug session (recommended)"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:15
 msgid "Close the eiffel debugger daemon (classic) after each debug session (recommended)"
-msgstr "Den Eiffel Debugger Daemon (classic) nach jeder Debugsitzung schließen (empfohlen)"
+msgstr "Den Eiffel Debug-Daemon (klassisch) nach jeder Debugsitzung schließen (empfohlen)"
 
 #. Source code: fs_close_window: STRING_GENERAL is				do Result := locale.translation ("Close window") end
 #: interface_names.e:1684
@@ -7257,7 +7258,7 @@ msgstr "Neues Feature erstellen"
 #. Source code: f_New_window: STRING_GENERAL is				do Result := locale.translation("Create a new window")	end
 #: interface_names.e:473
 msgid "Create a new window"
-msgstr "Neues Fenster erstellen"
+msgstr "Neues Fenster"
 
 #. Source code: f_diagram_create_aggregate_supplier_links: STRING_GENERAL is do Result := locale.translation("Create new aggregate client-supplier links")	end
 #: interface_names.e:404
@@ -10434,7 +10435,7 @@ msgstr "Nicht nochmals fragen und immer alte Projekte konvertieren"
 #. Source code: l_Discard_finalize_assertions: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always discard assertions when finalizing")	end
 #: interface_names.e:981
 msgid "Do not ask again, and always discard assertions when finalizing"
-msgstr "Nicht nochmals fragen und Zusicherungen immer verwerfen wenn Finalisiert wird."
+msgstr "Nicht nochmals fragen und Zusicherungen immer verwerfen wenn finalisiert wird."
 
 #. Source code: l_Discard_save_before_compile_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always save files before compiling")	end
 #: interface_names.e:984
@@ -10612,7 +10613,7 @@ msgid ""
 "Don't ask me again and discard\n"
 "unsaved target scope customized formatters."
 msgstr ""
-"Nicht nochmals fragen und ungespeicherten\n"
+"Nicht nochmals fragen und ungesicherten\n"
 "benutzerdefinierten Formatierer für Zielbereich verwerfen."
 
 #. Source code: l_Discard_starting_dialog: STRING_GENERAL is do Result := locale.translation("Don't show this dialog at startup")	end
@@ -10748,7 +10749,7 @@ msgstr "Bedingung &Bearbeiten"
 #. Source code: m_Debug_block: STRING_GENERAL is			do Result := locale.translation("E&mbed in %"Debug...%"%TCtrl+D")	end
 #: interface_names.e:417
 msgid "E&mbed in \"Debug...\"\tCtrl+D"
-msgstr "In \"&Debug...\" einbetten\tCtrl+D"
+msgstr "In \"&debug...\" einbetten\tCtrl+D"
 
 #. Source code: m_Exit_project: STRING_GENERAL is			do Result := locale.translation("E&xit")	end
 #: interface_names.e:428
@@ -10758,7 +10759,7 @@ msgstr "B&eenden"
 #. Source code: m_Export_XMI: STRING_GENERAL is 			do Result := locale.translation("E&xport XMI...")	end
 #: interface_names.e:432
 msgid "E&xport XMI..."
-msgstr "E&xport XMI..."
+msgstr "XMI e&xportieren ..."
 
 #. Source code: m_Showexternals: STRING_GENERAL is			do Result := locale.translation("E&xternals")	end
 #: interface_names.e:558
@@ -13433,17 +13434,17 @@ msgstr "Ausschließen:"
 #. 	<PREF NAME="tools.diagram_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:90
 msgid "Excluded class figures"
-msgstr "Klassenfiguren ausschliessen"
+msgstr "Klassenfiguren ausschließen"
 
 #. 	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:97
 msgid "Excluded indexing items"
-msgstr "Indexelemente ausschliessen"
+msgstr "Indexelemente ausschließen"
 
 #. Source code: dialog_file_rule_excludes: STRING_GENERAL is do Result := locale.translation ("Excludes:")	end
 #: conf_interface_names.e:406
 msgid "Excludes:"
-msgstr "Ausschliessend:"
+msgstr "Ausschließend:"
 
 #. Source code: l_Exe_type: STRING_GENERAL is do Result := locale.translation ("Executable") end
 #: interface_names.e:31
@@ -15718,7 +15719,7 @@ msgstr "Höhe"
 #. 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:218
 msgid "Height of completion list.  Used if 'remember_completion_list_size' is set to True."
-msgstr "Höhe der Vervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'True' gesetzt wird."
+msgstr "Höhe der Vervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'Wahr' gesetzt wird."
 
 #. 	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:214
@@ -17717,7 +17718,7 @@ msgstr "Lade von..."
 #. Source code: l_Loaded_project: STRING_GENERAL is			do Result := locale.translation("Loaded project: ")	end
 #: interface_names.e:1096
 msgid "Loaded project: "
-msgstr "Geladenes Projekt:"
+msgstr "Geladenes Projekt: "
 
 #. Source code: t_loading_metrics: STRING_GENERAL is do Result := locale.translation ("Loading metrics...") end
 #: eb_metric_names.e:88
@@ -20423,7 +20424,7 @@ msgstr "Projekt"
 #. Source code: m_System_new: STRING_GENERAL is				do Result := locale.translation("Project &Settings...")	end
 #: interface_names.e:572
 msgid "Project &Settings..."
-msgstr "Projekt &Einstellungen..."
+msgstr "Projekt&einstellungen..."
 
 #. Source code: t_Project_toolbar: STRING_GENERAL is				do Result := locale.translation ("Project Bar") end
 #: interface_names.e:1939
@@ -21745,7 +21746,7 @@ msgstr "S&ynchronisiere Kontextwerkzeug"
 #. Source code: m_Display_system_info: STRING_GENERAL is	do Result := locale.translation("S&ystem Info")	end
 #: interface_names.e:698
 msgid "S&ystem Info"
-msgstr "S&ystem Information"
+msgstr "S&ysteminformation"
 
 #. Source code: w_source_name_attribute_expected: STRING_GENERAL is do Result := locale.translation ("SOURCE name attribute expected") end
 #: warning_messages.e:903
@@ -21854,7 +21855,7 @@ msgstr "Ausgabe der C-Kompilierung in Datei speichern"
 #. Source code: m_Export_to: STRING_GENERAL is				do Result := locale.translation("Save Cop&y As...")	end
 #: interface_names.e:431
 msgid "Save Cop&y As..."
-msgstr "Speichere &Kopie Als..."
+msgstr "Speichere &Kopie als..."
 
 #. Source code: m_save_layout_as: STRING_GENERAL is do Result := locale.translation ("Save Layout As...") end
 #: interface_names.e:534
@@ -24312,7 +24313,7 @@ msgstr "Schritt"
 #. Source code: m_Exec_into: STRING_GENERAL is				do Result := locale.translation("Step In&to")	end
 #: interface_names.e:427
 msgid "Step In&to"
-msgstr "In Routine eintreten"
+msgstr "In Routine ein&treten"
 
 #. Source code: b_Exec_into: STRING_GENERAL is						do Result := locale.translation("Step Into")	end
 #: interface_names.e:154
@@ -24327,7 +24328,7 @@ msgstr "Aus Routine austreten"
 #. 	<PREF NAME="shortcuts.debug.step_by_step" DESCRIPTION="Shortcut to step."><SHORTCUT>F10</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:725
 msgid "Step by step"
-msgstr "Schritt für Schritt"
+msgstr "Einzelner Schritt"
 
 #. Source code: l_Stepped: STRING_GENERAL is				do Result := locale.translation("Step completed")	end
 #: interface_names.e:1248
@@ -26955,7 +26956,7 @@ msgstr "Unbekannte Option $1.\n"
 #. Source code: m_Separate_stone: STRING_GENERAL is			do Result := locale.translation("Unlin&k Context Tool")	end
 #: interface_names.e:742
 msgid "Unlin&k Context Tool"
-msgstr "Verbindung des Kontextwerkzeugs auf&heben"
+msgstr "Bindung des Kontextwerkzeugs auf&heben"
 
 #. Source code: e_Separate_stone: STRING_GENERAL is			do Result := locale.translation("Unlink the context tool from the other components")	end
 #: interface_names.e:2088
@@ -29254,7 +29255,7 @@ msgstr "Liste der Abfragen anzeigen"
 #. Source code: once_help: STRING_GENERAL is do Result := locale.translation ("show the once & constant features of a class") end
 #: shared_ewb_help.e:131
 msgid "show the once & constant features of a class"
-msgstr "Once Features und Konstanten einer Klasse anzeigen"
+msgstr "Once-Features und Konstanten einer Klasse anzeigen"
 
 #. Source code: switches_help: STRING_GENERAL is do Result := locale.translation ("show the output switches") end
 #: shared_ewb_help.e:187
@@ -29401,10 +29402,11 @@ msgstr "externe Verzögerte Domäne verwenden"
 msgid "use settings for project location"
 msgstr "Einstellungen für Projektpfad verwenden"
 
+# Indicator in preferences list if a setting is default or user set
 #. Source code: l_user_set: STRING_GENERAL is				do Result := locale.translation ("user set") end
 #: interface_names.e:1314
 msgid "user set"
-msgstr "benutzerdefiniert"
+msgstr "Benutzerdefiniert"
 
 #. Source code: l_value_tester: STRING_GENERAL is do Result := locale.translation ("value tester") end
 #: eb_metric_names.e:205

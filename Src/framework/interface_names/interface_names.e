@@ -1444,6 +1444,11 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 (from $2)"), [a_one, a_two])
 		end
 
+	l_feature_has_rescue_clause: STRING_GENERAL is
+		do
+			Result := locale.translation ("%N   + feature has a rescue clause")
+		end
+
 	l_module_is (a_module: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_module_not_void: a_module /= Void

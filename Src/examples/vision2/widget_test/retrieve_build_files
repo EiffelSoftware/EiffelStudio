@@ -8,13 +8,13 @@ else
 fi
 
 # Check out Build source.
-until svn co $svntag/Src/build Src/build; do echo ""; done
+until svn co $svntag/Src/build Src/build; do echo "svn failure, retrying..."; done
 
 # Check out bitmaps from Build delivery
-until svn co $svntag/Delivery/esbuilder/bitmaps Delivery/esbuilder/bitmaps; do echo ""; done
+until svn co $svntag/Delivery/esbuilder/bitmaps Delivery/esbuilder/bitmaps; do echo "svn failure, retrying..."; done
 
 # Check out files from vision2_tour
-until svn co $svntag/Delivery/vision2_demo Delivery/vision2_demo; do echo ""; done
+until svn co $svntag/Delivery/vision2_demo Delivery/vision2_demo; do echo "svn failure, retrying..."; done
 
 # Copy template files
 cp -r Delivery/vision2_demo/templates ./

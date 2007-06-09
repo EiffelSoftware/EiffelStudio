@@ -1,28 +1,19 @@
-if .%1. == .. goto no_command_line
+if .%1. == .. (
+set SVN_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
+)
+else (
+set SVN_URL=%1
+)
 
 REM Check out Build source.
-svn co %1/Src/build Src\build
+call svn_command.btm co %SVN_URL%/Src/build Src\build
 
 REM Check out bitmaps from Build delivery
-svn co %1/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
+call svn_command.btm co %SVN_URL%/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
 REM Check out files from vision2_demo
-svn co %1/Delivery/vision2_demo Delivery/vision2_demo
+call svn_command.btm co %SVN_URL%/Delivery/vision2_demo Delivery/vision2_demo
 
-GOTO files_checked_out
-
-:no_command_line
-
-REM Check out Build source.
-svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Src/build Src\build
-
-REM Check out bitmaps from Build delivery
-svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
-
-REM Check out files from vision2_demo
-svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/vision2_demo Delivery\vision2_demo
-
-:files_checked_out
 REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_demo\templates .\templates
 

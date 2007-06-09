@@ -828,7 +828,7 @@ feature {NONE} -- Implementation
 					--| Routine name
 				l_has_rescue := e_cse.has_rescue
 				if l_has_rescue then
-					l_tooltip.append_string ("%N   + feature has a rescue clause")
+					l_tooltip.append_string (interface_names.l_feature_has_rescue_clause)
 				end
 				l_is_melted := e_cse.is_melted
 				if l_is_melted then

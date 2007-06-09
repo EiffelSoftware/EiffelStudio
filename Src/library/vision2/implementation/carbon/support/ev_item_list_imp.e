@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision item list. GTK+ implementation."
+		"Eiffel Vision item list. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

@@ -1,5 +1,5 @@
 indexing
-	description: "Eiffel Vision radio peer. GTK+ implementation."
+	description: "Eiffel Vision radio peer. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -62,7 +62,7 @@ feature {EV_ANY_I} -- Implementation
 			-- List of all radio item implementations
 		deferred
 		end
-		
+
 	interface: EV_RADIO_PEER;
 
 indexing

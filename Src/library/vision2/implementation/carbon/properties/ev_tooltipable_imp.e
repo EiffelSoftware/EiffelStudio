@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision tooltipable. GTK+ implementation."
+		"Eiffel Vision tooltipable. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "tooltip, popup"

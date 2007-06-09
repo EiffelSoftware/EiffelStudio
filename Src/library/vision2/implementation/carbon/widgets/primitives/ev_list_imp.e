@@ -191,8 +191,6 @@ feature {NONE} -- Implementation
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
-			--| FIXME IEK Add pixmap scaling code with gtk+ 2
-			--| For now, do nothing.
 		end
 
 	vertical_adjustment_struct: POINTER is

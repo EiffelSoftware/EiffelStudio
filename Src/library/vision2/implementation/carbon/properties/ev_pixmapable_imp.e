@@ -21,7 +21,6 @@ inherit
 feature -- Initialization
 
 	pixmapable_imp_initialize is
-			-- Create a GtkHBox to hold a GtkPixmap.
 		do
 		end
 

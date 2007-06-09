@@ -1,5 +1,5 @@
 indexing
-	description: "Intermediary routines between gtk and eiffel."
+	description: "Intermediary routines between ... and eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -8,9 +8,6 @@ indexing
 
 class
 	EV_INTERMEDIARY_ROUTINES
-
---inherit
---	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
 
 feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 

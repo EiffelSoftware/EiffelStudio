@@ -1,6 +1,6 @@
 
 indexing
-	description: "Eiffel Vision print dialog. GTK+ implementation."
+	description: "Eiffel Vision print dialog. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -60,9 +60,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_title ("Print")
 			set_is_initialized (False)
---			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
---			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
---			{EV_GTK_EXTERNALS}.gtk_container_add (client_area_from_c_object (c_object), hbox)
 			create main_dialog_container
 			main_dialog_container.set_padding (5)
 			main_dialog_container.set_border_width (5)
@@ -181,7 +178,6 @@ feature {NONE} -- Initialization
 			main_dialog_container.extend (button_hbox)
 
 			container_imp ?= main_dialog_container.implementation
---			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, container_imp.c_object)
 
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
@@ -189,7 +185,6 @@ feature {NONE} -- Initialization
 			print_btn_imp.enable_can_default
 			cancel_btn_imp ?= cancel_btn.implementation
 			cancel_btn_imp.enable_can_default
---			{EV_GTK_EXTERNALS}.gtk_widget_grab_default (print_btn_imp.visual_widget)
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1

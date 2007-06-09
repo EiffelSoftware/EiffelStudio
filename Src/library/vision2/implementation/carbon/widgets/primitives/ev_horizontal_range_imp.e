@@ -66,7 +66,7 @@ feature {NONE} -- Layout
 	minimum_width: INTEGER is
 			-- Minimum width that the widget may occupy.
 		do
-			Result := 37 -- Hardcoded value, same as GTK+
+			Result := 37 -- Hardcoded value
 		end
 
 

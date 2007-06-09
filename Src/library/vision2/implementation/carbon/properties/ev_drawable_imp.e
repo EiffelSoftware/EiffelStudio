@@ -35,47 +35,47 @@ inherit
 		end
 
 	MATH_CONST
-		
+
 	HIVIEW_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CONTROLDEFINITIONS_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CONTROLS_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CARBONEVENTS_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CARBONEVENTSCORE_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CGCONTEXT_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CGGEOMETRY_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CGPATH_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	CGAFFINETRANSFORM_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
@@ -702,7 +702,7 @@ feature {NONE} -- Implemention
 			same_size: pts.count = Result.count / 2
 		end
 
-feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	pixbuf_from_drawable: POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure

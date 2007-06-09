@@ -53,14 +53,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
-		do
-		end
-
-	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER is
-		do
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT_DIALOG;

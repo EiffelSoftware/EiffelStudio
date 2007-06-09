@@ -61,7 +61,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	HIGEOMETRY_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
@@ -165,11 +165,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
-			--| GTK sends both GDK_BUTTON_PRESS and GDK_2BUTTON_PRESS events
-			--| when a handler is attached to "button-press-event".
-			--| We attach the signal to this switching feature to look at the
-			--| event type and pass the event data to the appropriate action
-			--| sequence.
 		do
 		end
 

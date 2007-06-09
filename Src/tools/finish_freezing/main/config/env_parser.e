@@ -307,6 +307,11 @@ feature {NONE} -- Externals
 			"C inline use %"shlobj.h%""
 		alias
 			"[
+					/* This is necessary because in VC++6.0 this is not defined. */
+				#ifndef CSIDL_SYSTEM
+				#define CSIDL_SYSTEM 0x0025
+				#endif
+				
 				CHAR path[MAX_PATH + 1];
 				BOOL bRes = FALSE;
 				HMODULE shModule = LoadLibraryA ("shell32.dll");

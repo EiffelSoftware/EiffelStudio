@@ -1,7 +1,6 @@
 if .%1. == .. (
 set SVN_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
-)
-else (
+) else (
 set SVN_URL=%1
 )
 

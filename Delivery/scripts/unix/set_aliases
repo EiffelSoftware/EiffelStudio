@@ -116,15 +116,11 @@ CANCEL
 # SVN Commands: checkout, export
 co ()
 {
-svn co $* >> $INSTALL_LOG
+until  svn co $* >> $INSTALL_LOG; do echo "svn failed, retrying..."; done
 }
 exprt ()
 {
-svn export $* >> $INSTALL_LOG
-}
-revert ()
-{
-svn -R revert . >> $INSTALL_LOG
+until  svn export $* >> $INSTALL_LOG; do echo "svn failed, retrying..."; done
 }
 
 # C Compilation

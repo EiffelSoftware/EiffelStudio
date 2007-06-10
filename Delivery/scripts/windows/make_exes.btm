@@ -260,37 +260,37 @@ cleanup_eiffel gec gec.exe
 move gec.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace gelex
-finalize gegelex.ecf gelex
+finalize gelex.ecf gelex
 cleanup_eiffel gelex gelex.exe
 move gelex.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace gelint
-finalize gelgelint.ecf gelint
+finalize gelint.ecf gelint
 cleanup_eiffel gelint gelint.exe
 move gelint.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace gepp
-finalize ggepp.ecf gepp
+finalize gepp.ecf gepp
 cleanup_eiffel gepp gepp.exe
 move gepp.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace getest
-finalize getgetest.ecf getest
+finalize getest.ecf getest
 cleanup_eiffel getest getest.exe
 move getest.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace gexace
-finalize gexgexace.ecf gexace
+finalize gexace.ecf gexace
 cleanup_eiffel gexace gexace.exe
 move gexace.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace gexslt
-finalize gexgexslt.ecf gexslt
+finalize gexslt.ecf gexslt
 cleanup_eiffel gexslt gexslt.exe
 move gexslt.exe %STUDIO_DIR\library\gobo\bin
 
 remtrace geyacc
-finalize geygeyacc.ecf geyacc
+finalize geyacc.ecf geyacc
 cleanup_eiffel geyacc geyacc.exe
 move geyacc.exe %STUDIO_DIR\library\gobo\bin
 

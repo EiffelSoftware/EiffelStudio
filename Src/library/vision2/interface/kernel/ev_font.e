@@ -139,6 +139,16 @@ feature -- Access
 			bridge_ok: Result = implementation.height_in_points
 		end
 
+	line_height: INTEGER is
+			-- Preferred text editor line height in pixels for `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.line_height
+		ensure
+			bridge_ok: Result = implementation.line_height
+		end
+
 	preferred_families: EV_ACTIVE_LIST [STRING_32] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on

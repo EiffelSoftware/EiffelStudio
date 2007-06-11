@@ -209,7 +209,7 @@ feature -- Access
 			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
 			-- Use features from the family `info_about_feature*' to get detailed information.
 		require
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		local
 			l_last_feature, l_feature: FEATURE_I
 			l_class_type: CL_TYPE_A
@@ -273,7 +273,7 @@ feature -- Access
 			-- `a_routine_id' is a routine id for which we query all types in the type set.
 			--| An assignment attempt is needed.
 		require
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		local
 			l_class: CLASS_C
 			l_feat: FEATURE_I
@@ -302,7 +302,7 @@ feature -- Access
 			-- `a_routine_id' is the routine ID of the routine for which the list is built.
 			--| If you are just interested in any feature for a given routine id use `first_feature_i'
 		require
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		local
 			l_class: CLASS_C
 			l_feat: FEATURE_I
@@ -337,7 +337,7 @@ feature -- Access
 			-- Use features from the family `info_about_feature*' to get detailed information.
 		require
 			an_alias_name_not_void: an_alias_name /= Void
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		do
 			Result := feature_i_state_by_alias_name_id (names_heap.id_of (an_alias_name))
 		ensure
@@ -355,7 +355,7 @@ feature -- Access
 			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
 			-- Use features from the family `info_about_feature*' to get detailed information.
 		require
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		local
 			l_last_feature, l_feature: FEATURE_I
 			l_class_c: CLASS_C
@@ -588,7 +588,7 @@ feature -- Access
 	e_feature_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A [TYPE_A]]]
 			--
 		require
-			not_loose: not is_loose
+			not_has_formal: not has_formal
 		local
 			l_class: CLASS_C
 			l_feat: E_FEATURE

@@ -1171,19 +1171,17 @@ feature -- Implementation
 					error_handler.insert_error (l_vkcn3)
 						-- Cannot go on here
 					error_handler.raise_error
-				elseif l_last_type.is_none then
-					create l_vuex.make_for_none (l_feature_name.name)
-					context.init_error (l_vuex)
-					l_vuex.set_location (l_feature_name)
-					error_handler.insert_error (l_vuex)
-						-- Cannot go on here
-					error_handler.raise_error
 				end
-						-- We have no formal, therefore we don't need to replace anything
+					-- We have no formal, therefore we don't need to recompute `l_last_constrained'
 				l_last_constrained := l_last_type
-				l_last_class := l_last_type.associated_class
-				l_last_id := l_last_class.class_id
-				l_last_feature_table := l_last_class.feature_table
+					-- Protect if constrained type is NONE.
+				if l_last_constrained.has_associated_class then
+					l_last_class := l_last_type.associated_class
+					l_last_id := l_last_class.class_id
+					l_last_feature_table := l_last_class.feature_table
+				else
+					check l_last_constrained_is_none: l_last_constrained.is_none end
+				end
 			else
 				l_formal ?= l_last_type
 				if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
@@ -1195,11 +1193,27 @@ feature -- Implementation
 				else
 						-- Resolve formal type
 					l_last_constrained := l_formal.constrained_type (l_context_current_class)
-					check  l_last_constrained.associated_class /= Void end
-					l_last_class := l_last_constrained.associated_class
-					l_last_id := l_last_class.class_id
-					l_last_feature_table := l_last_class.feature_table
+						-- Protect if constrained type is NONE.
+					if  l_last_constrained.has_associated_class then
+						l_last_class := l_last_constrained.associated_class
+						l_last_id := l_last_class.class_id
+						l_last_feature_table := l_last_class.feature_table
+					else
+						check l_last_constrained_is_none: l_last_constrained.is_none end
+					end
 				end
+			end
+				-- Check for `NONE'
+			if
+				(l_last_constrained /= Void and then l_last_constrained.is_none) or
+				(l_last_type_set /= Void and then l_last_type_set.has_none)
+			then
+				create l_vuex.make_for_none (l_feature_name.name)
+				context.init_error (l_vuex)
+				l_vuex.set_location (l_feature_name)
+				error_handler.insert_error (l_vuex)
+					-- Cannot go on here
+				error_handler.raise_error
 			end
 
 			l_parameters := a_params
@@ -6319,7 +6333,7 @@ feature {NONE} -- Implementation
 						-- this is the multi constraint case
 					l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
 					check l_type_set /= Void end
-					l_result_tuple := l_type_set.feature_i_state_by_name_id (l_name.name_id)
+					l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
 						-- We raise an error if there are multiple infix features found
 					l_feature_found_count := l_result_tuple.features_found_count
 					if	l_feature_found_count > 1 then

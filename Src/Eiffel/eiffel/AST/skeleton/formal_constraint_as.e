@@ -50,12 +50,14 @@ feature -- Status
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
-			-- Assume that we are past degree 4, so that one can be sure that it works.
+			-- Assumes that we are past degree 4, so that one can be sure that it works.
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
 			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
+			l_constraint_position: INTEGER
+			l_renaming_cache: ARRAY [RENAMING_A]
 		do
 			if not has_constraint then
 					-- Default constraint to ANY
@@ -66,6 +68,8 @@ feature -- Status
 				create Result.make (l_constraints.count)
 				from
 					l_constraints_cursor := l_constraints.index
+					l_constraint_position := 1
+					l_renaming_cache := a_context_class.constraint_renaming (Current)
 					l_constraints.start
 				until
 					l_constraints.after
@@ -73,8 +77,10 @@ feature -- Status
 					l_constraining_type := l_constraints.item
 					create l_renamed_type.make (
 						type_a_generator.evaluate_type_if_possible (l_constraining_type.type,
-							a_context_class), new_renaming_a (l_constraining_type.renaming))
+							a_context_class), l_renaming_cache.item (l_constraint_position))
 					Result.extend (l_renamed_type)
+
+					l_constraint_position := l_constraint_position + 1
 					l_constraints.forth
 				end
 				l_constraints.go_i_th (l_constraints_cursor)
@@ -99,6 +105,8 @@ feature -- Status
 			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
+			l_constraint_position: INTEGER
+			l_renaming_cache: ARRAY [RENAMING_A]
 		do
 			if not has_constraint then
 					-- Default constraint to ANY
@@ -109,6 +117,8 @@ feature -- Status
 				create Result.make (l_constraints.count)
 				from
 					l_constraints_cursor := l_constraints.index
+					l_constraint_position := 1
+					l_renaming_cache := a_context_class.constraint_renaming (Current)
 					l_constraints.start
 				until
 					l_constraints.after
@@ -116,9 +126,10 @@ feature -- Status
 					l_constraining_type := l_constraints.item
 					l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
 					if l_type /= Void then
-						create l_renamed_type.make (l_type, new_renaming_a (l_constraining_type.renaming))
+						create l_renamed_type.make (l_type, l_renaming_cache.item (l_constraint_position))
 						Result.extend (l_renamed_type)
 					end
+					l_constraint_position := l_constraint_position + 1
 					l_constraints.forth
 				end
 				l_constraints.go_i_th (l_constraints_cursor)
@@ -147,7 +158,7 @@ feature -- Status
 			else
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				check l_type_not_void: l_type /= Void end
-				create Result.make (l_type, new_renaming_a (l_constraint.renaming))
+				create Result.make (l_type, a_context_class.constraint_renaming (Current).item (1))
 				end
 
 		ensure
@@ -173,7 +184,7 @@ feature -- Status
 					-- a valid class.				
 				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
 				if l_type /= Void then
-					create Result.make (l_type, new_renaming_a (l_constraint.renaming))
+					create Result.make (l_type, a_context_class.constraint_renaming (Current).item (1))
 				end
 			end
 		end
@@ -342,71 +353,33 @@ feature -- Output
 				if a_short then
 					a_text_formatter.add_string (once "...")
 				else
-						-- The following code handels the single and multi constraint cases separately.
-					if not has_multi_constraints then
-							-- Single constraint
-						l_type := constraint_type_if_possible (a_context_class)
-						if l_type /= Void then
-							type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
-						else
-							a_text_formatter.add_string (constraints.dump (true))
-						end
-						if has_creation_constraint then
-							from
-								creation_feature_list.start
-								a_text_formatter.add_space
-								a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
-							until
-								creation_feature_list.after
-							loop
-								a_text_formatter.add_space
-								eiffel_name := creation_feature_list.item.internal_name.name
-								if l_type = Void then
-									a_text_formatter.add_feature_name (eiffel_name, a_context_class)
-								elseif l_type.has_associated_class then
-									a_text_formatter.add_feature_name (eiffel_name, l_type.associated_class)
-								else
-										-- MTNTODO: If it's a formal one could take it's constraint?
-										-- Until now I just do the same as if one could not resolve the type.
-								a_text_formatter.add_feature_name (eiffel_name, a_context_class)
-								end
-								creation_feature_list.forth
-								if not creation_feature_list.after then
-									a_text_formatter.process_symbol_text (ti_Comma)
-								end
-							end
-							a_text_formatter.add_space
-							a_text_formatter.process_keyword_text (ti_End_keyword, Void)
-						end
-					else
-							-- Multi constraints									
-						append_multi_constraints (a_text_formatter, a_short, a_context_class)
-						l_type_set := constraint_types_if_possible (a_context_class).constraining_types_if_possible (a_context_class)
 
-						if has_creation_constraint then
-							from
-								creation_feature_list.start
-								a_text_formatter.add_space
-								a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
-							until
-								creation_feature_list.after
-							loop
-								a_text_formatter.add_space
-								eiffel_name := creation_feature_list.item.internal_name.name
-								l_feature := l_type_set.e_feature_state (creation_feature_list.item.internal_name).feature_item
-								if l_feature /= Void then
-									a_text_formatter.process_feature_text (eiffel_name, l_feature, false)
-								else
-									a_text_formatter.add_feature_name (eiffel_name, a_context_class)
-								end
-								creation_feature_list.forth
-								if not creation_feature_list.after then
-									a_text_formatter.process_symbol_text (ti_Comma)
-								end
-							end
+					append_constraints (a_text_formatter, a_short, a_context_class)
+					l_type_set := constraint_types_if_possible (a_context_class).constraining_types_if_possible (a_context_class)
+
+					if has_creation_constraint then
+						from
+							creation_feature_list.start
 							a_text_formatter.add_space
-							a_text_formatter.process_keyword_text (ti_End_keyword, Void)
+							a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
+						until
+							creation_feature_list.after
+						loop
+							a_text_formatter.add_space
+							eiffel_name := creation_feature_list.item.internal_name.name
+							l_feature := l_type_set.e_feature_state (creation_feature_list.item.internal_name).feature_item
+							if l_feature /= Void then
+								a_text_formatter.process_feature_text (eiffel_name, l_feature, false)
+							else
+								a_text_formatter.add_feature_name (eiffel_name, a_context_class)
+							end
+							creation_feature_list.forth
+							if not creation_feature_list.after then
+								a_text_formatter.process_symbol_text (ti_Comma)
+							end
 						end
+						a_text_formatter.add_space
+						a_text_formatter.process_keyword_text (ti_End_keyword, Void)
 					end
 				end
 
@@ -459,7 +432,7 @@ feature -- Validity checking
 							create l_vtmc3
 							l_vtmc3.set_class (a_context_class)
 							l_vtmc3.set_type (l_type)
-							l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic.")
+							l_vtmc3.set_message ("It is not allowed to apply a renaming to constraint which is a formal generic or NONE.")
 							Error_handler.insert_error (l_vtmc3)
 						end
 					else
@@ -566,72 +539,132 @@ feature -- Validity checking
 
 feature {NONE} -- Implementation
 
-	append_multi_constraints (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C)
-			-- Append multi constraints to a text decorator.
+	append_constraints (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C) is
+			-- Append constraints to a text decorator.
 			--
 			-- Output is appended to a`a_text_formatter'
 			-- `a_short' set to true will not print the renaming.
-			-- `a_context_class' is used to evaluate the types.
+			-- `a_context_class' is used to evaluate the types and formal constraint chains.
+		require
+			a_text_formatter_attached: a_text_formatter /= Void
+			a_context_class_attached: a_context_class /= Void
+			has_constraint: has_constraint
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 			l_type: TYPE_A
 			l_has_multi_constraints: BOOLEAN
+			l_constraint_class: CLASS_C
 		do
+			l_has_multi_constraints := has_multi_constraints
+			if l_has_multi_constraints then
+				a_text_formatter.process_symbol_text ("{")
+			end
 
-			if has_constraint then
-				l_has_multi_constraints := has_constraint
-				if l_has_multi_constraints then
-					a_text_formatter.process_symbol_text ("{")
-				end
-
-				l_constraints := constraints
-				from
-					l_constraints_cursor := l_constraints.index
-					l_constraints.start
-				until
-					l_constraints.after
-				loop
-					l_constraining_type := l_constraints.item
-					l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
-					if l_type /= Void then
-							-- Type was found: Process the type
-						if l_constraining_type.has_at_least_one_renaming then
-							create l_renamed_type.make (l_type,
-								new_renaming_a (l_constraining_type.renaming))
-							type_output_strategy.process (l_renamed_type, a_text_formatter, a_context_class, Void)
-						else
-							type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
+			l_constraints := constraints
+			from
+				l_constraints_cursor := l_constraints.index
+				l_constraints.start
+			until
+				l_constraints.after
+			loop
+				l_constraining_type := l_constraints.item
+				l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
+				if l_type /= Void then
+						-- Type was found: Process the type
+					type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
+					if l_constraining_type.has_at_least_one_renaming then
+						if l_type.has_associated_class then
+							l_constraint_class := l_type.associated_class
 						end
-					else
-							-- Type was not found: Simply dump it
-						a_text_formatter.add (l_constraining_type.type.dump)
-						if
-							l_constraining_type.renaming /= Void and then
-							l_constraining_type.renaming.content /= Void
-						then
-							if a_short then
-								a_text_formatter.process_keyword_text ("rename", Void)
-								a_text_formatter.add (" ... ")
-								a_text_formatter.process_keyword_text ("end", Void)
-							else
-								new_renaming_a (l_constraining_type.renaming).append_to (a_text_formatter)
-							end
-						end
+						a_text_formatter.add_space
+						append_rename_clause (a_text_formatter, l_constraining_type.renaming , l_constraint_class, a_short)
 					end
-					l_constraints.forth
-					if l_has_multi_constraints and not l_constraints.after then
-						a_text_formatter.add (", ")
+				else
+						-- Type was not found: Simply dump it
+					a_text_formatter.add (l_constraining_type.type.dump)
+					if l_constraining_type.has_at_least_one_renaming then
+						a_text_formatter.add_space
+						append_rename_clause (a_text_formatter, l_constraining_type.renaming , Void, a_short)
 					end
 				end
-				l_constraints.go_i_th (l_constraints_cursor)
-				if l_has_multi_constraints then
-					a_text_formatter.process_symbol_text ("}")
+				l_constraints.forth
+				if l_has_multi_constraints and not l_constraints.after then
+					a_text_formatter.add (", ")
 				end
 			end
+			l_constraints.go_i_th (l_constraints_cursor)
+			if l_has_multi_constraints then
+				a_text_formatter.process_symbol_text ("}")
+			end
 		end
+
+
+	append_rename_clause (a_text_formatter: TEXT_FORMATTER; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_class: CLASS_C; a_short: BOOLEAN) is
+			-- Prints renaming
+			--
+			-- `a_text_formatter': Used to append the renaming to.
+			-- `a_rename_clause': Rename clause which is printed
+			-- `a_constraint_class': Class to which the renaming is applied to. Used to link to features. Can be `Void'.
+			-- `a_short': States whether we print a short version (rename ... end) or not.
+		require
+			a_text_formatter_attached: a_text_formatter /= Void
+			a_rename_clause_attached: a_rename_clause /= Void
+			a_rename_clause_has_content: a_rename_clause.content /= Void and then not a_rename_clause.content.is_empty
+		local
+			l_content: EIFFEL_LIST [RENAME_AS]
+			l_old_name, l_new_name: ID_AS
+			l_e_feature: E_FEATURE
+			l_alias_name: STRING_AS
+			l_as, l_quote: STRING
+		do
+			l_as := " as "
+			l_quote := "%""
+			a_text_formatter.process_keyword_text ("rename", Void)
+			if a_short then
+				a_text_formatter.add (" ... ")
+			else
+				a_text_formatter.add_space
+				l_content := a_rename_clause.content
+				from
+					l_content.start
+				until
+					l_content.after
+				loop
+					l_old_name := l_content.item.old_name.internal_name
+					l_new_name := l_content.item.new_name.internal_name
+					l_alias_name := l_content.item.new_name.alias_name
+					if a_constraint_class /= Void and then a_constraint_class.has_feature_table then
+						l_e_feature := a_constraint_class.feature_with_id (l_old_name)
+					end
+					if l_e_feature /= Void then
+						a_text_formatter.process_feature_text (l_old_name.name, l_e_feature, false)
+					else
+						a_text_formatter.add (l_old_name.name)
+					end
+
+					a_text_formatter.add (l_as)
+					a_text_formatter.add (l_new_name.name)
+					if l_alias_name /= Void then
+						a_text_formatter.add_space
+						a_text_formatter.process_keyword_text ("alias", Void)
+						a_text_formatter.add_space
+						a_text_formatter.process_symbol_text (l_quote)
+						a_text_formatter.add (l_alias_name.value)
+						a_text_formatter.process_symbol_text (l_quote)
+					end
+
+					l_content.forth
+					if not l_content.after then
+						a_text_formatter.add (once ", ")
+					end
+				end
+			end
+			a_Text_formatter.add_space
+			a_text_formatter.process_keyword_text ("end", Void)
+		end
+
 
 	check_rename_clause (a_context_class, a_constraint: CLASS_C; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_position: INTEGER)
 			-- Checks a rename clause and inserts a `RENAMING_A' instance into the cache.
@@ -660,7 +693,9 @@ feature {NONE} -- Implementation
 					if l_renaming.has_error_report then
 						create l_vtgc2
 						l_vtgc2.set_class (system.current_class)
-						l_vtgc2.set_constraint_class (a_constraint)
+						l_vtgc2.set_formal_constraint (Current)
+						l_vtgc2.set_constraint (a_constraint, a_constraint_position)
+						l_vtgc2.set_renaming (a_rename_clause)
 						l_vtgc2.set_features_renamed_multiple_times (l_renaming.error_report.renamed_multiple_times)
 						l_vtgc2.set_features_renamed_to_the_same_name (l_renaming.error_report.renamed_to_same_name)
 						l_vtgc2.set_non_existent_features (l_renaming.error_report.non_existent)
@@ -697,7 +732,7 @@ feature {NONE} -- Implementation
 						l_new_name := l_rename.new_name
 						l_feature_name_id ?= l_new_name
 						if l_feature_name_id /= Void then
-								-- We have a "normal" name (but in case of an object of type `FEATURE_NAME_ALIAS_AS' we can still have an alias.
+								-- We have a "normal" name (but in case of an object of type `FEATURE_NAME_ALIAS_AS' we can still have an alias.)
 							Result.put (l_old_name_id,
 										l_new_name.internal_name.name_id)
 						end
@@ -705,8 +740,7 @@ feature {NONE} -- Implementation
 							-- This includes the case where we have an object of type `INFIX_PREFIX_AS'
 						l_alias_name_id := l_new_name.internal_alias_name_id
 						if l_alias_name_id /= 0 then
-							Result.put_alias (l_old_name_id,
-										l_alias_name_id)
+							Result.put_delayed_alias (l_old_name_id, l_new_name)
 						end
 						l_renaminings.forth
 					end

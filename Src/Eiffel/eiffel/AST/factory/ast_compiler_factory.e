@@ -186,6 +186,7 @@ feature -- Access
 					if feature_name.is_prefix or else feature_name.is_infix then
 							-- Infix and prefix features will be checked for VFFD(5,6) later
 					elseif alias_name /= Void then
+							-- TODO This code occurs in almost the same fashion in `{RENAMING_A}.adapt_alias_feature_name_properties'
 						vfav := Void
 						operator := alias_name.value
 						arguments := b.arguments

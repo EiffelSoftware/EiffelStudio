@@ -52,6 +52,12 @@ feature -- Access
 		deferred
 		end
 
+	line_height: INTEGER is
+			-- Preferred text editor line height in pixels for `Current'.
+		do
+			Result := ascent + descent + {PLATFORM}.is_windows.to_integer
+		end
+
 	preferred_families: EV_ACTIVE_LIST [STRING_32]
 			-- Preferred user fonts.
 			-- `family' will be ignored when not Void.

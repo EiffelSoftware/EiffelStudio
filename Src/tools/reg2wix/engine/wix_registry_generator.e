@@ -123,7 +123,7 @@ feature {NONE} -- Generation
 			if l_key_parts.key /= Void then
 				l_elm.add_attribute (key_attribute_name, default_namespace, l_key_parts.key)
 			end
-			l_elm.add_attribute (action_attribute_name, default_namespace, action_value_create_and_remove_on_uninstall)
+			l_elm.add_attribute (action_attribute_name, default_namespace, action_value_create)
 
 			l_default := a_key.default_value
 			if l_default.has_value then
@@ -364,6 +364,7 @@ feature {NONE} -- Constants
 	type_value_string: STRING = "string"
 	type_value_integer: STRING = "integer"
 	action_value_create_and_remove_on_uninstall: STRING = "createAndRemoveOnUninstall"
+	action_value_create: STRING = "create"
 	is_win64_value: STRING = "$(var.IsWin64)"
 
 invariant

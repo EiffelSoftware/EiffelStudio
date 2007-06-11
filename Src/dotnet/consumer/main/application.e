@@ -66,6 +66,11 @@ feature {NONE} -- Initialization
 
 			l_writer := writer
 
+			l_writer.put_string ("Using runtime directory: ")
+			l_writer.put_string ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
+			l_writer.new_line
+			l_writer.new_line
+
 			if a_parser.add_assemblies then
 				l_assemblies := a_parser.assemblies
 				l_references := a_parser.reference_paths
@@ -73,6 +78,7 @@ feature {NONE} -- Initialization
 				l_info_only := a_parser.add_information_only
 
 				create l_resolver.make (l_assemblies)
+				l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 				if not l_references.is_empty then
 					l_references.do_all (agent (a_resolver: AR_RESOLVER; a_path: STRING)
 						require

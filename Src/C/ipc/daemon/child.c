@@ -407,7 +407,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
-		startpath = malloc (strlen (exe_path)); /* we shorten the `exe_path', then do not +1 for \0 */ 
+		startpath = malloc (strlen (exe_path) + 1);
 		strcpy (startpath, exe_path);
 		*(strrchr (startpath, '\\')) = '\0';
 	}

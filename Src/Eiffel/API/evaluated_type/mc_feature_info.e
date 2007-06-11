@@ -36,6 +36,8 @@ feature -- Access
 	context_class: CLASS_C
 		-- Context class, is inter alla used to resolve formal positions into actual objects.
 
+	my_list: LIST [like Current]
+
 feature -- Setters
 
 	set_data (a_feature_name: STRING; a_formal_position: INTEGER; a_context_class: CLASS_C)
@@ -102,9 +104,11 @@ feature -- Command
 					print_feature_name(a_text_formatter, item.e_feature, item.feature_i)
 
 					a_text_formatter.add_space
-					a_text_formatter.add ("from formal:")
+					a_text_formatter.add ("from formal")
 					a_text_formatter.add_space
 					a_text_formatter.process_generic_text (context_class.generics.i_th (item.formal_position).name.name)
+					a_text_formatter.add_space
+					a_text_formatter.add ("at constraint position #" + item.constraint_position.out + ".")
 
 					forth
 				end

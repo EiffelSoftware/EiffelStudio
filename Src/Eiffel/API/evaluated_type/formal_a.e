@@ -134,7 +134,7 @@ feature -- Access
 			Result := a_context_class.constrained_type (position)
 		ensure
 			Result_not_void: Result /= Void
-			Result_is_named_but_not_formal:  Result.is_named_type and not Result.is_formal
+			Result_is_named_but_not_formal:  (Result.is_none or Result.is_named_type) and not Result.is_formal
 		end
 
 	constrained_types (a_context_class: CLASS_C): TYPE_SET_A

@@ -46,6 +46,66 @@ feature -- Output
 			Result.append (" end")
 		end
 
+feature -- Access
+
+	new_names (a_original_name: STRING): LIST [STRING]
+			-- Computes list of new names of `a_original_name' if any or Void
+			--
+			-- `a_original_name': Old name of a feature for which the list of new names will be computed.
+		require
+			a_original_name_not_void: a_original_name /= Void
+		do
+			if content /= Void and then not content.is_empty then
+				create {LINKED_LIST [STRING]} Result.make
+				from
+					content.start
+				until
+					content.after
+				loop
+					if
+						content.item.old_name.internal_name.name.is_equal (a_original_name)
+					then
+						Result.extend (content.item.new_name.internal_name.name)
+					end
+					content.forth
+				end
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		ensure
+			result_not_void_implies_not_empty: Result /= Void implies not Result.is_empty
+		end
+
+	original_names (a_new_name: STRING): LIST [STRING]
+			-- Computes list of original names for `a_new_name' if any or Void
+			--
+			-- `a_new_name': New name for which a list of old/original names will be computed.
+		require
+			a_new_name_not_void: a_new_name /= Void
+		do
+			if content /= Void and then not content.is_empty then
+				create {LINKED_LIST [STRING]} Result.make
+				from
+					content.start
+				until
+					content.after
+				loop
+					if
+						content.item.new_name.internal_name.name.is_equal (a_new_name)
+					then
+						Result.extend (content.item.old_name.internal_name.name)
+					end
+					content.forth
+				end
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		ensure
+			result_not_void_implies_not_empty: Result /= Void implies not Result.is_empty
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -48,7 +48,7 @@ feature -- Access
 			l_criterion_factory := criterion_factory_table.item (a_scope)
 			l_domain := domain.actual_domain
 			if l_domain.is_empty then
-				Result := l_criterion_factory.criterion_with_name (name, [dummy_domain])
+				Result := l_criterion_factory.criterion_with_name (name, [dummy_domain, indirect_referenced_class_retrieved, normal_referenced_class_retrieved, only_syntactically_referencedd_class_retrieved])
 			else
 				from
 					l_domain.start

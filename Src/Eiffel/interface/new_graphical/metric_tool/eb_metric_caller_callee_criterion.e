@@ -41,7 +41,7 @@ feature -- Access
 			l_criterion_factory := criterion_factory_table.item (a_scope)
 			l_domain := domain.actual_domain
 			if l_domain.is_empty then
-				Result := l_criterion_factory.criterion_with_name (name, [dummy_domain])
+				Result := l_criterion_factory.criterion_with_name (name, [dummy_domain, only_current_version])
 			else
 				from
 					l_domain.start

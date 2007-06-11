@@ -80,7 +80,7 @@ feature {NONE} -- Initialize
 			replace_box.extend (replace_button)
 			replace_box.disable_item_expand (replace_button)
 
-				-- Ensures alignments of combo boxes by making sure that their preceeding 
+				-- Ensures alignments of combo boxes by making sure that their preceeding
 				-- labels have the same width.
 			label_search.set_minimum_width (label.width.max (label_search.minimum_width))
 			label.set_minimum_width (label_search.minimum_width)
@@ -375,8 +375,8 @@ feature -- EB_TOOL
 				end
 			end
 			if currently_replacing /= Void and then not currently_replacing.is_empty then
-				if not replace_field.is_destroyed and currently_replacing /= Void and not currently_replacing.has_code (('%R').natural_32_code) then
-					replace_field.set_text (currently_replacing)
+				if not replace_combo_box.is_destroyed and currently_replacing /= Void and not currently_replacing.has_code (('%R').natural_32_code) then
+					replace_combo_box.set_text (currently_replacing)
 				end
 			end
 			keyword_field.set_focus
@@ -407,9 +407,6 @@ feature -- Widgets
 
 	keyword_field: EV_COMBO_BOX
 			-- Text field where the user type in the word he's looking for.
-
-	replace_field: EV_TEXT_FIELD
-			-- Text field where the user type in the replacement word.
 
 	case_sensitive_button: EV_CHECK_BUTTON
 			-- button to choose case sensitivity or not
@@ -604,7 +601,6 @@ feature {NONE} -- Destroy behavior.
 			scope := Void
 			choose_dialog := Void
 			keyword_field := Void
-			replace_field := Void
 			case_sensitive_button := Void
 			replace_all_click_button := Void
 			add_button := Void

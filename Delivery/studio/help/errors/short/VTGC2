@@ -1,4 +1,4 @@
-Error: An error occured in the renaming clause of a formal generic.
+Error: An error occurred in the renaming clause of a formal generic.
 What to do:
   In the case of a multi-constraint generic (like in  'G -> {A,B}')
   one has to ensure that for every used feature there are no ambiguities.

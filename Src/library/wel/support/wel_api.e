@@ -236,7 +236,7 @@ feature -- Processes
 	frozen wait_for_input_idle (hprocess: POINTER; ms: INTEGER): INTEGER is
 			-- SDK WaitForInputIdle
 		external
-			"C inline use <windows.h>"
+			"C blocking inline use <windows.h>"
 		alias
 			"return (EIF_INTEGER) WaitForInputIdle ((HANDLE) $hprocess, (DWORD) $ms);"
 		end
@@ -244,7 +244,7 @@ feature -- Processes
 	frozen msg_wait_for_multiple_objects (n: INTEGER; phandles: POINTER; waitall: BOOLEAN; ms, mask: INTEGER): INTEGER is
 			-- SDK MsgWaitForMultipleObjects
 		external
-			"C inline use <windows.h>"
+			"C blocking inline use <windows.h>"
 		alias
 			"[
 				return (EIF_INTEGER) MsgWaitForMultipleObjects(

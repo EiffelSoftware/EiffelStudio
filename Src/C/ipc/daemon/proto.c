@@ -534,8 +534,7 @@ rt_private void run_command(EIF_PSTREAM sp)
 	if (!appname)
 		strcpy (meltpath, ".");
 #endif
-	envstring = (char *)malloc (strlen (meltpath)
- 		 + strlen ("MELT_PATH=") + 1);
+	envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
 	if (!envstring){
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);

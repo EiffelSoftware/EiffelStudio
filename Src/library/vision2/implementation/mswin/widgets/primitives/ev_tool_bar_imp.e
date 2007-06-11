@@ -24,7 +24,7 @@ inherit
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
-			update_for_pick_and_drop, is_dockable_source, show, hide, is_show_requested
+			is_dockable_source, show, hide, is_show_requested
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP

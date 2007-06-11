@@ -28,7 +28,6 @@ inherit
 			initialize,
 			enable_sensitive,
 			disable_sensitive,
-			update_for_pick_and_drop,
 			on_set_cursor,
 			next_tabstop_widget
 		end

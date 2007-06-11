@@ -17,7 +17,6 @@ inherit
 			disable_sensitive,
 			propagate_foreground_color,
 			propagate_background_color,
-			update_for_pick_and_drop,
 			on_size,
 			next_tabstop_widget
 		end

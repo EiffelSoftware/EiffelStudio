@@ -134,11 +134,11 @@ rt_private char* safe_unquoted_path (char* a_path)
 		res[n - 2] = '\0';
 	} else if (a_path[0] == '"') {
 		res = (char*)malloc (n - 0);
-		strncpy (res, a_path + 1, n - 2);
+		strncpy (res, a_path + 1, n - 1);
 		res[n - 1] = '\0';
 	} else if (a_path[n - 1] == '"') {
 		res = (char*)malloc (n - 0);
-		strncpy (res, a_path, n - 2);
+		strncpy (res, a_path, n - 1);
 		res[n - 1] = '\0';
 	} else {
 		res = (char*)malloc (n + 1);
@@ -294,8 +294,8 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	quoted_exe_path = safe_quoted_path (exe_path);
 
 #ifdef EIF_WINDOWS
-		/* We encode 2 pointers, plus '\"?' and '?\"' plus a space and a null terminating character. */
-	uu_buffer_size = uuencode_buffer_size(2) + 6;
+		/* We encode 2 pointers, plus '"?' and '?"' plus a space and a null terminating character. */
+	uu_buffer_size = uuencode_buffer_size(2) + 6; /* 6 = "? + space + ?" + \0 */
 	if ((exe_args != NULL) && strlen(exe_args) > 0) {
 		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + uu_buffer_size);
 		strcpy (cmdline, quoted_exe_path);
@@ -308,12 +308,12 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 #else
 	if ((exe_args != NULL) && strlen(exe_args) > 0) {
-		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args));
+		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + 1);
 		strcpy (cmdline, quoted_exe_path);
 		strcat (cmdline, " ");
 		strcat (cmdline, exe_args);
 	} else {
-		cmdline = malloc (strlen (quoted_exe_path));
+		cmdline = malloc (strlen (quoted_exe_path) + 1);
 		strcpy (cmdline, quoted_exe_path);
 	}
 	argv = ipc_shword(cmdline);					/* Split command into words */
@@ -407,7 +407,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
-		startpath = malloc (strlen (exe_path));
+		startpath = malloc (strlen (exe_path)); /* we shorten the `exe_path', then do not +1 for \0 */ 
 		strcpy (startpath, exe_path);
 		*(strrchr (startpath, '\\')) = '\0';
 	}

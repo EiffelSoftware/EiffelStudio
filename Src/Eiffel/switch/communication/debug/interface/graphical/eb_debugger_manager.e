@@ -237,7 +237,7 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (exception_handler_cmd)
 
 			create assertion_checking_handler_cmd.make
-			assertion_checking_handler_cmd.enable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 			toolbarable_commands.extend (assertion_checking_handler_cmd)
 
 			create force_debug_mode_cmd.make (Current)

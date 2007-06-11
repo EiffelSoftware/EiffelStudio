@@ -41,8 +41,8 @@ feature -- Execution
 	reset is
 		do
 			assertion_checking_changed := False
-			disable_sensitive
 			update_graphical
+			set_select (assertion_checking_changed)
 		end
 
 	execute is
@@ -85,6 +85,7 @@ feature -- Change text
 		local
 			menu_items: like internal_managed_menu_items
 			toolbar_items: like internal_managed_toolbar_items
+			sd_toolbar_items: like internal_managed_sd_toolbar_items
 			t: STRING_GENERAL
 			p: like pixmap
 		do
@@ -115,6 +116,19 @@ feature -- Change text
 					toolbar_items.item.set_text (t)
 					toolbar_items.item.set_pixmap (p)
 					toolbar_items.forth
+				end
+			end
+
+			sd_toolbar_items := internal_managed_sd_toolbar_items
+			if sd_toolbar_items /= Void then
+				from
+					sd_toolbar_items.start
+				until
+					sd_toolbar_items.after
+				loop
+					sd_toolbar_items.item.set_text (t)
+					sd_toolbar_items.item.set_pixmap (p)
+					sd_toolbar_items.forth
 				end
 			end
 		end

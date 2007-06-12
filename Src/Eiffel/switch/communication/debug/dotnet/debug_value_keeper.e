@@ -32,6 +32,7 @@ feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, DEBUGGER_MANAGER} -- Ope
 
 	terminate is
 		do
+			recycle
 		end
 
 	recycle is
@@ -41,7 +42,7 @@ feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, DEBUGGER_MANAGER} -- Ope
 			end
 		end
 
-feature -- Access
+feature -- Change
 
 	keep (dv: ABSTRACT_DEBUG_VALUE) is
 		require
@@ -71,6 +72,8 @@ feature -- Access
 			end
 		end
 
+feature -- Access
+
 	know_about (l_k: STRING): BOOLEAN is
 			-- Has a Debug Value object address by `l_k'
 		do
@@ -82,15 +85,27 @@ feature -- Access
 		end
 
 	item (l_k: STRING): ABSTRACT_DEBUG_VALUE is
-			-- Debug Value object address by `l_k'
+			-- Refreshed debug value object address by `l_k'.
 		require
 			know_about (l_k)
 		do
-			if debug_value_kept /= Void then
-				Result := debug_value_kept.item (l_k)
-			end
+			Result := raw_item (l_k, True)
 		ensure
 			Result /= Void
+		end
+
+	raw_item (l_k: STRING; a_refresh_requested: BOOLEAN): ABSTRACT_DEBUG_VALUE is
+			-- Debug Value object address by `l_k'
+			-- refreshed if `a_refresh_requested' is True.
+		require
+			know_about (l_k)
+		do
+			Result := debug_value_kept.item (l_k)
+			if a_refresh_requested then
+				Result.reset_children
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
@@ -99,6 +114,7 @@ feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 			-- Clean all the value except the one from l_addresses
 		local
 			l_add: STRING
+			l_val: like item
 		do
 			if debug_value_kept /= Void then
 				from
@@ -110,6 +126,10 @@ feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 					if l_addresses = Void or else not l_addresses.has (l_add) then
 						debug_value_kept.remove (l_add)
 					else
+						l_val := debug_value_kept.item_for_iteration
+						if l_val /= Void then
+							l_val.reset_children
+						end
 						debug_value_kept.forth
 					end
 				end

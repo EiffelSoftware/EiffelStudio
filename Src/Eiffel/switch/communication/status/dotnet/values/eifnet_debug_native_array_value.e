@@ -18,9 +18,12 @@ inherit
 		end
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
+		rename
+			reset_children as reset_items
 		undefine
 			address,
-			sorted_children
+			sorted_children,
+			reset_items
 		redefine
 			extra_output_details
 		end

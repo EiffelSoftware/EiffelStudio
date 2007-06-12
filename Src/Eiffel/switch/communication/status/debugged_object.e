@@ -62,6 +62,11 @@ feature -- Helpers
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
+	reset is
+			-- Reset internal data
+		deferred
+		end
+
 	refresh (sp_lower, sp_upper: INTEGER) is
 		require
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else

@@ -12,6 +12,7 @@ class
 inherit
 	ABSTRACT_REFERENCE_VALUE
 		redefine
+			reset_children,
 			kind
 		end
 
@@ -19,6 +20,7 @@ inherit
 		undefine
 			address
 		redefine
+			reset_children,
 			kind
 		end
 
@@ -166,6 +168,13 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_for_dotnet_value (Current)
+		end
+
+feature -- Change
+
+	reset_children is
+		do
+			attributes := Void
 		end
 
 feature {NONE} -- Output

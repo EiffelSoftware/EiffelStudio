@@ -105,6 +105,11 @@ feature -- Change
 			static_class := cl
 		end
 
+	reset_children is
+			-- Reset internal data related to children
+		do
+		end
+
 feature -- Comparison
 
 	infix "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is

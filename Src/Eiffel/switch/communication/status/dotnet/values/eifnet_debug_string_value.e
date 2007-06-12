@@ -13,14 +13,16 @@ inherit
 
 	ABSTRACT_REFERENCE_VALUE
 		redefine
-			output_value, kind, expandable
+			output_value, kind, expandable,
+			reset_children
 		end
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address
 		redefine
-			output_value, kind, expandable
+			output_value, kind, expandable,
+			reset_children
 		end
 
 	COMPILER_EXPORTER
@@ -118,6 +120,13 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_string_for_dotnet_value (Current)
+		end
+
+feature -- Change
+
+	reset_children is
+		do
+			attributes := Void
 		end
 
 feature {NONE} -- Output

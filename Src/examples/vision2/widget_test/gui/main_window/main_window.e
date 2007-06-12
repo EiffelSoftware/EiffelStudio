@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	clear_idle_actions (a_widget: EV_WIDGET) is
 			-- Clear `idle_actions' from EV_APPLICATION.
 		do
-			application.idle_actions.wipe_out
+--			application.idle_actions.wipe_out
 		ensure
 			actions_empty: application.idle_actions.is_empty
 		end

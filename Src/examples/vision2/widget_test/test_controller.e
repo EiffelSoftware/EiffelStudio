@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			-- Retrieve all test class files, and
 			-- store them in `class_texts'.
 		do
-			application.idle_actions.extend (agent real_load_texts (a_type))
+			application.do_once_on_idle (agent real_load_texts (a_type))
 				-- We defer this so that it is executed on the idle actions of EV_APPLICATION.
 				-- This speeds up the appearence of the type change to a user, as they are not
 				-- waiting for the file to load before being able to interact with the interface.
@@ -255,7 +255,6 @@ feature {NONE} -- Implementation
 			current_file_name:  STRING
 			error_label: EV_LABEL
 		do
-			application.idle_actions.prune (application.idle_actions.first)
 			create directory_name.make_from_string (eiffel_layout.shared_application_path)
 			directory_name.extend ("tests")
 			directory_string := a_type.substring (4, a_type.count)

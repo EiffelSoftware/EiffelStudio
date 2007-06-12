@@ -78,6 +78,12 @@ feature {NONE} -- Creation
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
+	reset is
+			-- Reset internal data
+		do
+			attributes := Void
+		end
+
 	refresh (sp_lower, sp_upper: INTEGER) is
 		local
 			rqst: ATTR_REQUEST
@@ -85,6 +91,7 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 			debug ("debug_recv")
 				print (generator + ".refresh (" + sp_lower.out + ", " + sp_upper.out + ") : address=" + object_address + "%N")
 			end
+			reset
 			create rqst.make (object_address)
 			rqst.set_sp_bounds (sp_lower, sp_upper);
 			rqst.send;

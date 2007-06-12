@@ -80,9 +80,18 @@ feature -- Access
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
-	refresh (sp_lower, sp_upper: INTEGER) is
+	reset is
+			-- Reset internal data
 		do
 			internal_attributes := Void
+			if debug_value /= Void then
+				debug_value.reset_children
+			end
+		end
+
+	refresh (sp_lower, sp_upper: INTEGER) is
+		do
+			reset
 		end
 
 feature -- Properties

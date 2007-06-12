@@ -12,9 +12,12 @@ deferred class
 inherit
 
 	ABSTRACT_DEBUG_VALUE
+		rename
+			reset_children as reset_items
 		redefine
 			address, sorted_children,
-			debug_value_type_id
+			debug_value_type_id,
+			reset_items
 		end
 
 feature -- Items
@@ -38,7 +41,7 @@ feature -- Items
 				create items.make (0)
 			end
 			items_computed := False
-		ensure
+		ensure then
 			not items_computed
 		end
 

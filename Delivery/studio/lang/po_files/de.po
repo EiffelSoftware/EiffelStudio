@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-10 15:32-0800\n"
+"PO-Revision-Date: 2007-06-11 16:11-0800\n"
 "Language-Team: \n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -686,7 +686,7 @@ msgstr "&Debugging Werkzeuge"
 #. Source code: m_Showdeferreds: STRING_GENERAL is			do Result := locale.translation("&Deferred")	end
 #: interface_names.e:565
 msgid "&Deferred"
-msgstr "&Aufgeschobene"
+msgstr "&Aufgeschoben"
 
 #. Source code: m_diagram_delete_view: STRING_GENERAL is		do Result := locale.translation("&Delete Current View")	end
 #: interface_names.e:368
@@ -891,7 +891,7 @@ msgstr "&Objekt"
 #. Source code: m_Object_tools: STRING_GENERAL is			do Result := locale.translation("&Object Tools")	end
 #: interface_names.e:733
 msgid "&Object Tools"
-msgstr "&Objekt-Werkzeug"
+msgstr "&Objektwerkzeug"
 
 #. Source code: m_Open_project: STRING_GENERAL is			do Result := locale.translation("&Open Project...")	end
 #: interface_names.e:489
@@ -2247,7 +2247,7 @@ msgid ""
 "Please try using the project settings tool."
 msgstr ""
 "Ein Fehler ist aufgetreten während dem Laden der Konfiguration.\n"
-"Versuchen Sie das Projekteinstellungen Werkzeug."
+"Versuchen Sie die Projektkonfiguration mit dem graphischen Editor zu bearbeiten."
 
 #. Source code: do Result := locale.translation("An external command is currently running.%N%
 #: interface_names.e:964
@@ -3930,7 +3930,7 @@ msgstr "Autovervollständigung für 'when'?"
 #. Source code: target_automatic_backup_name: STRING_GENERAL is do Result := locale.translation ("Automatic Backup")	end
 #: conf_interface_names.e:101
 msgid "Automatic Backup"
-msgstr "Automatisches Backup"
+msgstr "Automatische Sicherheitskopien"
 
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:103
@@ -3950,7 +3950,7 @@ msgstr "Feature-Baum automatisch aufklappen."
 #. Source code: target_automatic_backup_description: STRING_GENERAL is do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
 #: conf_interface_names.e:102
 msgid "Automatically generate a backup during recompilation?"
-msgstr "Ein automatisches Backup beim erneuten Kompilieren erstellen?"
+msgstr "Eine automatische Sicherheitskopie beim erneuten Kompilieren erstellen?"
 
 #. Source code: f_auto_go_to_result: STRING_GENERAL is do Result := locale.translation ("Automatically go to result panel after metric evaluation?") end
 #: eb_metric_names.e:281
@@ -4069,7 +4069,7 @@ msgstr "C-Kompilation läuft im Hintergrund"
 #. 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:43
 msgid "Background Color for Diagram Tool"
-msgstr "Hintergrundfarbe für Diagrammwerkzeug"
+msgstr "Hintergrundfarbe für Diagramm"
 
 #. Source code: e_finalizing_launch_failed: STRING_GENERAL is		do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
 #: interface_names.e:2041
@@ -4218,7 +4218,7 @@ msgstr "Hintergrundfarbe für Ordner."
 #. 	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:584
 msgid "Background color of keyword text."
-msgstr "Hintergrundfarbe von Schlüsselworten."
+msgstr "Hintergrundfarbe von Schlüsselwörtern."
 
 #. 	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:571
@@ -5588,7 +5588,7 @@ msgstr "Klassenspezifische Optionen."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:316
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:317
 msgid "Class structure keywords"
-msgstr "Schlüsselworte der Klassenstruktur"
+msgstr "Schlüsselwörter der Klassenstruktur"
 
 #. 	<PREF NAME="editor.eiffel.colors.class_text_color" DESCRIPTION="Foreground color for classes."><COLOR>0;0;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:265
@@ -6971,7 +6971,7 @@ msgstr "Kontext..."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:100
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
 msgid "Context tool"
-msgstr "Kontextwerkzeug"
+msgstr "Kontextwerkzeuge"
 
 #. Source code: b_Continue: STRING_GENERAL is						do Result := locale.translation("Continue")	end
 #: interface_names.e:117
@@ -7239,7 +7239,7 @@ msgstr "Vertragsansicht"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:484
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:485
 msgid "Control structure keywords"
-msgstr "Schlüsselworte der Kontrollstrukturen"
+msgstr "Schlüsselwörter der Kontrollstrukturen"
 
 #. Source code: b_Copy: STRING_GENERAL is							do Result := locale.translation("Copy")	end
 #: interface_names.e:124
@@ -9962,7 +9962,7 @@ msgstr "Hintergrundfarbe für Diagramme"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:22
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:23
 msgid "Diagram tool"
-msgstr "Diagrammwerkzeug"
+msgstr "Diagramm"
 
 #. 	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Class_header_hole__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Separator;Force_directed__visible;UML_visibility__visible;Force_settings__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Fit_to_screen__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Diagram_to_png__hidden;Cluster_filling__hidden;Zoom_out__hidden;Zoom_in__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:89
@@ -10452,7 +10452,7 @@ msgstr "Bestätigungsdialog anzeigen bevor eine Anwendung im Debugger abgebroche
 #. 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:154
 msgid "Display dialog before killing a debugged application."
-msgstr "Bestätigungsdialog anzeigen bevor ein Anwendung im Debugger abgebrochen wird."
+msgstr "Bestätigungsdialog anzeigen bevor eine Anwendung im Debugger abgebrochen wird."
 
 #. 	<PREF NAME="interface.dialogs.confirm_remove_metric" DESCRIPTION="Display dialog before removing a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:156
@@ -14521,7 +14521,7 @@ msgstr "Featurekiesel"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:400
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:401
 msgid "Feature structure keywords"
-msgstr "Schlüsselwörter von Features"
+msgstr "Schlüsselwörter der Featurestruktur"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:267
@@ -15862,7 +15862,7 @@ msgstr "Anordnung des Beobachtungswerkzeugs"
 #. Source code: t_group: STRING_GENERAL is do Result := locale.translation ("Group") end
 #: eb_metric_names.e:51
 msgid "Group"
-msgstr "Gruppieren"
+msgstr "Gruppen"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Group %"$1%" (ID = %"$2%") is invalid."), [a_group_name, a_domain_item_id])
 #: eb_metric_names.e:880
@@ -16063,7 +16063,7 @@ msgstr "Beschriftungen verbergen"
 #. 	<PREF NAME="tools.metric_tool.hide_old_archive" DESCRIPTION="Should old archive items be hidden?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:106
 msgid "Hide old archive"
-msgstr "Altes Archiv verbergen"
+msgstr "Alte Archivelemente verbergen"
 
 #. Source code: f_diagram_hide_supplier: STRING_GENERAL is	do Result := locale.translation("Hide supplier links")	end
 #: interface_names.e:373
@@ -16610,7 +16610,7 @@ msgstr "Inherit"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:519
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:520
 msgid "Inherit clauses keywords"
-msgstr "Schlüsselwörter für Vererbung"
+msgstr "Schlüsselwörter der Vererbung"
 
 #. 	<PREF NAME="tools.class_browser.inheritance_classes" HIDDEN="false" DESCRIPTION="Should inheritance classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:122
@@ -17556,7 +17556,7 @@ msgstr "Hintergrundfarbe für Schlüsselwörter"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:561
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:10
 msgid "Keyword editor font"
-msgstr "Schrift für Schlüsselworte."
+msgstr "Schrift für Schlüsselwörter."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-modern</FONT></PREF>
@@ -17565,7 +17565,7 @@ msgstr "Schrift für Schlüsselworte."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:561
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:10
 msgid "Keyword font"
-msgstr "Schrift für Schlüsselworte"
+msgstr "Schrift für Schlüsselwörter"
 
 #. 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:583
@@ -17910,12 +17910,12 @@ msgstr "Kontextwerkzeuge mit anderen Komponenten verknüpfen (oder nicht)"
 #. Source code: e_Unify_stone: STRING_GENERAL is			do Result := locale.translation("Link the context tool to the other components")	end
 #: interface_names.e:2132
 msgid "Link the context tool to the other components"
-msgstr "Kontextwerkzeug mit den anderen Komponenten verknüpfen"
+msgstr "Kontextwerkzeuge mit den anderen Komponenten verknüpfen"
 
 #. 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:217
 msgid "Link the context tool with other components by default?"
-msgstr "Das Kontextwerkzeug mit den anderen Komponenten standardmäßig verknüpfen?"
+msgstr "Die Kontextwerkzeuge mit den anderen Komponenten standardmäßig verknüpfen?"
 
 #. 	<PREF NAME="interface.development_window.link_tools" DESCRIPTION="Link tools? True means that a tool propagates stone to other tools if possible."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:218
@@ -18019,7 +18019,7 @@ msgstr "Sprache"
 #. 	<PREF NAME="general.locale" DESCRIPTION="Locale current system uses. (Restart to take effect)" HIDDEN="False"><LIST>[en_US]</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:617
 msgid "Locale current system uses. (Restart to take effect)"
-msgstr "Sprache des aktuellen Systems. (Neustart benötigt um Änderungen wirksam zu machen)"
+msgstr "Sprache des aktuellen Systems. (Neustart benötigt um Änderung wirksam zu machen)"
 
 #. Source code: l_locale: STRING_GENERAL is do Result := locale.translation ("Locale:") end
 #: interface_names.e:1679
@@ -18592,7 +18592,7 @@ msgstr "Metrik des Typs \"$1\" existiert nicht oder diese Metrik ist ungültig."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:115
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:116
 msgid "Metric tool"
-msgstr "Metrikwerkzeug"
+msgstr "Metriken"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Metric with name '$1' already exists"), [a_metric_name])
 #: eb_metric_names.e:63
@@ -18742,12 +18742,12 @@ msgstr "Nach unten"
 #. Source code: f_move_item_down: STRING_GENERAL is				do Result := locale.translation ("Move item down") end
 #: interface_names.e:484
 msgid "Move item down"
-msgstr "Element nach unten verschieben"
+msgstr "Nach unten verschieben"
 
 #. Source code: f_move_item_up: STRING_GENERAL is				do Result := locale.translation ("Move item up") end
 #: interface_names.e:483
 msgid "Move item up"
-msgstr "Element nach oben verschieben"
+msgstr "Nach oben verschieben"
 
 #. Source code: f_move_unit_down: STRING_GENERAL is do Result := locale.translation ("Move metric unit down.%N") end
 #: eb_metric_names.e:284
@@ -18757,7 +18757,7 @@ msgstr "Metrikeinheit nach unten verschieben.\n"
 #. Source code: f_move_unit_up: STRING_GENERAL is do Result := locale.translation ("Move metric unit up.%N") end
 #: eb_metric_names.e:283
 msgid "Move metric unit up.\n"
-msgstr "Metrik nach oben verschieben.\n"
+msgstr "Metrikeinheit nach oben verschieben.\n"
 
 #. Source code: f_move_row_down: STRING_GENERAL is do Result := locale.translation ("Move selected row down") end
 #: eb_metric_names.e:236
@@ -19492,7 +19492,7 @@ msgstr "Objektwerkzeug: links"
 #. Source code: l_object_tool_right: STRING_GENERAL is		do Result := locale.translation("Objects tool: right")	end
 #: interface_names.e:1168
 msgid "Objects tool: right"
-msgstr "Objektwerkzeuge: Rechts"
+msgstr "Objektwerkzeug: Rechts"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.autocomplete_obsolete" DESCRIPTION="Autocomplete obsolete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -19865,7 +19865,7 @@ msgstr "Favoriten Organisieren"
 #. Source code: t_metric_original_name: STRING_GENERAL is do Result := locale.translation ("Original metric name") end
 #: eb_metric_names.e:118
 msgid "Original metric name"
-msgstr "Original Metrikname"
+msgstr "Ursprünglicher Metrikname"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Original value is %"$1=$2%""), [k, s])
 #: interface_names.e:501
@@ -19979,7 +19979,7 @@ msgstr "Verschiedenes"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:554
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:555
 msgid "Other keywords"
-msgstr "Andere Schlüsselworte"
+msgstr "Andere Schlüsselwörter"
 
 #. Source code: l_output: STRING_GENERAL is						 do Result := locale.translation ("Output") end
 #: eb_external_output_names.e:32
@@ -22352,7 +22352,7 @@ msgstr "Selektion vorwärts durchsuchen"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:627
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:628
 msgid "Search tool"
-msgstr "Suchwerkzeug"
+msgstr "Suche"
 
 #. Source code: l_searching_selected_file: STRING_GENERAL is do Result := locale.translation("Searching selected file...")	end
 #: interface_names.e:1579
@@ -22572,7 +22572,7 @@ msgstr "Verzeichnis wählen in dem die Dokumentation generiert werden soll"
 #. Source code: t_select_domain_scope: STRING_GENERAL is do Result := locale.translation ("Select domain scope") end
 #: eb_metric_names.e:95
 msgid "Select domain scope"
-msgstr "Domänenbereich wählen"
+msgstr "Bezugsbereich wählen"
 
 #. Source code: l_select_feature_type: STRING_GENERAL is do Result := locale.translation("Select feature type")	end
 #: interface_names.e:1585
@@ -22672,7 +22672,7 @@ msgstr "Arbeitsverzeichnis wählen"
 #. Source code: f_select_predefined_metrics: STRING_GENERAL is do Result := locale.translation ("Select/deselect predefined metrics") end
 #: eb_metric_names.e:253
 msgid "Select/deselect predefined metrics"
-msgstr "Anwählen/Abwählen von vordefinierten Metriken"
+msgstr "Wählen/Abwählen von vordefinierten Metriken"
 
 #. Source code: f_select_userdefined_metrics: STRING_GENERAL is do Result := locale.translation ("Select/deselect user-defined metrics") end
 #: eb_metric_names.e:252
@@ -24096,7 +24096,7 @@ msgstr "Refactoringleiste anzeigen"
 #. 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Show search and replace panel"
-msgstr "Such und Ersetzen Werkzeug anzeigen"
+msgstr "\"Suchen und Ersetzen\" anzeigen"
 
 #. 	<PREF NAME="shortcuts.view.tools.show_search_report_tool" DESCRIPTION="Shortcut to display Search Report tool."><SHORTCUT Ctrl="True" Alt="True">R</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:696
@@ -26659,7 +26659,7 @@ msgstr "Zuklappen des aktuellen Knotens auslösen."
 #. 	<PREF NAME="shortcuts.editor.show_search_and_replace_panel" DESCRIPTION="Trigger display of search panel focused on replace."><SHORTCUT Ctrl="True">H</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:669
 msgid "Trigger display of search panel focused on replace."
-msgstr "Anzeige des Suchen und Ersetzen Werkzeugs auslösen."
+msgstr "Anzeige des \"Suchen und Ersetzen\"-Dialogs auslösen."
 
 #. 	<PREF NAME="shortcuts.editor.expand_all_levels" DESCRIPTION="Trigger expansion of all tree nodes."><SHORTCUT Shift="True">NumPad *</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:662

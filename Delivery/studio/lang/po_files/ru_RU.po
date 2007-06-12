@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-11 21:37+0300\n"
+"PO-Revision-Date: 2007-06-12 20:14+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,9 @@ msgid ""
 " A favorite folder name cannot contain any of the following characters: \n"
 " ( ) * "
 msgstr ""
+"\n"
+" Имя папки избранного не может содержать любой из следующих символов: \n"
+" ( ) * "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N$1 is not writable.%NPlease check permissions."), [file_name])
 #: warning_messages.e:200
@@ -289,17 +292,17 @@ msgstr " запрещено"
 #. Source code: l_space_enabled: STRING_GENERAL is 			do Result := locale.translation(" enabled")	end
 #: interface_names.e:1264
 msgid " enabled"
-msgstr ""
+msgstr " разрешено"
 
 #. Source code: l_space_error: STRING_GENERAL is 			do Result := locale.translation(" error")	end
 #: interface_names.e:1265
 msgid " error"
-msgstr ""
+msgstr " ошибка"
 
 #. Source code: l_of: STRING_GENERAL is do Result := locale.translation(" of ")	end
 #: interface_names.e:1628
 msgid " of "
-msgstr ""
+msgstr " из "
 
 #. Source code: Featurename_help: STRING_GENERAL is do Result := locale.translation (" output of feature names") end
 #: shared_ewb_help.e:85
@@ -334,7 +337,7 @@ msgstr " вывод времени, проведённом в потомках �
 #. Source code: l_Number_of_state2: STRING_GENERAL is do Result := locale.translation (" states.") end
 #: wizard_wizard_interface_names.e:31
 msgid " states."
-msgstr ""
+msgstr " состояний."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%"$1%"%N%
 #: warning_messages.e:638
@@ -376,27 +379,27 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1  in cluster $2  (not in system)  located in $3"), [a_sig, a_group_name, a_file_name])
 #: interface_names.e:1494
 msgid "$1  in cluster $2  (not in system)  located in $3"
-msgstr ""
+msgstr "$1 в кластере $2  (не в системе), находящемся в $3"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1  in cluster $2  (precompiled)"), [a_sig, a_group_name])
 #: interface_names.e:1511
 msgid "$1  in cluster $2  (precompiled)"
-msgstr ""
+msgstr "$1 в кластере $2  (прекомпилирован)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1  in cluster $2  located in $3"), [a_sig, a_group_name, a_file_name])
 #: interface_names.e:1503
 msgid "$1  in cluster $2  located in $3"
-msgstr ""
+msgstr "$1 в кластере $2, находящемся в $3"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 $2 $3 is active"), [a_column, a_operator, a_value])
 #: ewb_names.e:154
 msgid "$1 $2 $3 is active"
-msgstr ""
+msgstr "$1 $2 $3 активно"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 $2 $3 is inactive"), [a_column, a_operator, a_value])
 #: ewb_names.e:156
 msgid "$1 $2 $3 is inactive"
-msgstr ""
+msgstr "$1 $2 $3 неактивно"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 (from $2)"), [a_one, a_two])
 #: interface_names.e:1444
@@ -409,6 +412,8 @@ msgid ""
 "$1 does not exist.\n"
 "Cannot invoke C compilation."
 msgstr ""
+"$1 не существует.\n"
+"Невозможно вызвать компиляцию C."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 does not exist.%NExecution impossible.%N"), [a_file_name])
 #: warning_messages.e:164
@@ -416,6 +421,8 @@ msgid ""
 "$1 does not exist.\n"
 "Execution impossible.\n"
 msgstr ""
+"$1 не существует.\n"
+"Выполнение невозможно.\n"
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("$1 feature", "$1 features", a_count), [a_count])
 #: interface_names.e:1065
@@ -524,7 +531,7 @@ msgstr "$1 класса $2"
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 of feature `$2' of class $3"), [a_command_name, a_feat_name, a_class_name])
 #: interface_names.e:1395
 msgid "$1 of feature `$2' of class $3"
-msgstr ""
+msgstr "$1 компонента `$2' класса $3"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 preferences"), [a_count])
 #: interface_names.e:1136
@@ -542,7 +549,7 @@ msgstr[2] "$1 переменных"
 #. Source code: Result := locale.formatted_string (locale.translation ("$1(not an Eiffel class file)   located in $2"), [a_stone_signature, a_file_name])
 #: interface_names.e:1485
 msgid "$1(not an Eiffel class file)   located in $2"
-msgstr ""
+msgstr "$1 (не файл класса Эйфеля), находящийся в $2"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1: File does not exist!%N%N"), [a_file])
 #: ewb_names.e:241
@@ -656,12 +663,12 @@ msgstr ""
 #. Source code: m_diagram_crop: STRING_GENERAL is			do Result := locale.translation("&Crop Diagram")	end
 #: interface_names.e:357
 msgid "&Crop Diagram"
-msgstr ""
+msgstr "&Обрезать диаграмму"
 
 #. Source code: m_Customize_general: STRING_GENERAL is		do Result := locale.translation("&Customize Standard Toolbar...")	end
 #: interface_names.e:308
 msgid "&Customize Standard Toolbar..."
-msgstr ""
+msgstr "&Настроить стандартную панель инструментов..."
 
 #. Source code: m_Debug: STRING_GENERAL is					do Result := locale.translation("&Debug")	end
 #: interface_names.e:704
@@ -676,12 +683,12 @@ msgstr "Средства &отладки"
 #. Source code: m_Showdeferreds: STRING_GENERAL is			do Result := locale.translation("&Deferred")	end
 #: interface_names.e:565
 msgid "&Deferred"
-msgstr ""
+msgstr "&Отложенный"
 
 #. Source code: m_diagram_delete_view: STRING_GENERAL is		do Result := locale.translation("&Delete Current View")	end
 #: interface_names.e:368
 msgid "&Delete Current View"
-msgstr ""
+msgstr "&Удалить текущий вид"
 
 #. Source code: m_Showfuture: STRING_GENERAL is				do Result := locale.translation("&Descendant Versions")	end
 #: interface_names.e:571
@@ -701,7 +708,7 @@ msgstr "&Запретить эту точку останова"
 #. Source code: m_New_dynamic_lib: STRING_GENERAL is		do Result := locale.translation("&Dynamic Library Builder...")	end
 #: interface_names.e:481
 msgid "&Dynamic Library Builder..."
-msgstr ""
+msgstr "&Построитель динамической библиотеки..."
 
 #. Source code: m_Edit: STRING_GENERAL is					do Result := locale.translation("&Edit")	end
 #: interface_names.e:709
@@ -746,7 +753,7 @@ msgstr "&Внешние команды..."
 #. Source code: m_Features_tool: STRING_GENERAL is			do Result := locale.translation("&Features")	end
 #: interface_names.e:442
 msgid "&Features"
-msgstr ""
+msgstr "&Компоненты"
 
 #. Source code: m_File: STRING_GENERAL is					do Result := locale.translation("&File")	end
 #: interface_names.e:716
@@ -881,7 +888,7 @@ msgstr "&Объект"
 #. Source code: m_Object_tools: STRING_GENERAL is			do Result := locale.translation("&Object Tools")	end
 #: interface_names.e:733
 msgid "&Object Tools"
-msgstr ""
+msgstr "Инструменты &объекта"
 
 #. Source code: m_Open_project: STRING_GENERAL is			do Result := locale.translation("&Open Project...")	end
 #: interface_names.e:489
@@ -906,7 +913,7 @@ msgstr "В&ыйти наружу"
 #. Source code: m_Output: STRING_GENERAL is					do Result := locale.translation("&Output")	end
 #: interface_names.e:505
 msgid "&Output"
-msgstr ""
+msgstr "&Вывод"
 
 #. Source code: m_Paste: STRING_GENERAL is					do Result := locale.translation("&Paste%TCtrl+V")	end
 #: interface_names.e:507
@@ -951,7 +958,7 @@ msgstr "Панель &проекта"
 #. Source code: m_diagram_link_tool: STRING_GENERAL is		do Result := locale.translation("&Put Right Angles")	end
 #: interface_names.e:361
 msgid "&Put Right Angles"
-msgstr ""
+msgstr "&Поставить угловые скобки"
 
 #. Source code: m_Raise: STRING_GENERAL is					do Result := locale.translation("&Raise")	end
 #: interface_names.e:739
@@ -1026,12 +1033,12 @@ msgstr "&Выполнять\tCtrl+R"
 #. Source code: m_Run_finalized: STRING_GENERAL is			do Result := locale.translation("&Run Finalized System")	end
 #: interface_names.e:536
 msgid "&Run Finalized System"
-msgstr ""
+msgstr "&Запустить окончательную систему"
 
 #. Source code: m_Run_workbench: STRING_GENERAL is			do Result := locale.translation("&Run Workbench System")	end
 #: interface_names.e:538
 msgid "&Run Workbench System"
-msgstr ""
+msgstr "&Запустить рабочую систему"
 
 #. Source code: m_Run_to_this_point: STRING_GENERAL is		do Result := locale.translation("&Run to This Point")	end
 #: interface_names.e:746
@@ -1163,11 +1170,13 @@ msgid ""
 "'$1' is not a valid directory and/or cannot be created\n"
 "Please choose a valid and writable directory."
 msgstr ""
+"'$1' не является допустимым каталогом и/или не может быть создан\n"
+"Пожалуйста, выберите допустимый каталог с правами записи."
 
 #. Source code: l_str := locale.formatted_string (locale.translation ("'$1' is not a valid feature name.%N"), [feature_name])
 #: warning_messages.e:475
 msgid "'$1' is not a valid feature name.\n"
-msgstr ""
+msgstr "'$1' не является допустимым именем компонента.\n"
 
 #. Source code: f_double_click_to_go_to_definition: STRING_GENERAL is do Result := locale.translation ("(Double click to go to definition)") end
 #: eb_metric_names.e:277
@@ -1192,7 +1201,7 @@ msgstr "(кластер не выбран)"
 #. Source code: l_no_feature_bra: STRING_GENERAL is 		do Result := locale.translation ("(no_feature)") end
 #: interface_names.e:1151
 msgid "(no_feature)"
-msgstr ""
+msgstr "(нет компонента)"
 
 #. Source code: f_compile_help: STRING_GENERAL is do Result := locale.translation ("(re)compile the C code generated by finalize") end
 #: shared_ewb_help.e:81
@@ -1277,7 +1286,7 @@ msgstr "--> Имя класса: "
 #. Source code: arrow_compile_type: STRING_GENERAL is 						do Result := locale.translation ("--> Compile type (default: `workbench'): ") end
 #: ewb_names.e:19
 msgid "--> Compile type (default: `workbench'): "
-msgstr ""
+msgstr "--> Тип компиляции (по умолчанию: `рабочая'): "
 
 #. Source code: do Result := locale.translation ("--> Environment variables: ") end
 #: debugger_names.e:158
@@ -1287,7 +1296,7 @@ msgstr "--> Переменные среды: "
 #. Source code: arrow_feature_name: STRING_GENERAL is 						do Result := locale.translation ("--> Feature name: ") end
 #: ewb_names.e:16
 msgid "--> Feature name: "
-msgstr ""
+msgstr "--> Имя компонента: "
 
 #. Source code: arrow_file_name: STRING_GENERAL is							do Result := locale.translation ("--> File name: ") end
 #: ewb_names.e:29
@@ -1332,7 +1341,7 @@ msgstr "--> Пожалуйста, введите индекс оператора
 #. Source code: arrow_profile_infomation_file_name: STRING_GENERAL is 		do Result := locale.translation ("--> Profile information file name (default: `profinfo'): ") end
 #: ewb_names.e:18
 msgid "--> Profile information file name (default: `profinfo'): "
-msgstr ""
+msgstr "--> Имя файла с информацией профайлера (по умолчанию: `profinfo'): "
 
 #. Source code: do Result := locale.translation ("--> Remove current value") end
 #: debugger_names.e:162
@@ -1342,7 +1351,7 @@ msgstr "--> Удалить текущее значение"
 #. Source code: arrow_subquery_index: STRING_GENERAL is						do Result := locale.translation ("--> Subquery index: ") end
 #: ewb_names.e:28
 msgid "--> Subquery index: "
-msgstr ""
+msgstr "--> Индекс подзапроса: "
 
 #. Source code: arrow_subquery: STRING_GENERAL is							do Result := locale.translation ("--> Subquery: ") end
 #: ewb_names.e:21
@@ -1352,7 +1361,7 @@ msgstr "--> Подзапрос: "
 #. Source code: arrow_used_profiler: STRING_GENERAL is 						do Result := locale.translation ("--> Used profiler (default: `eiffel'): ") end
 #: ewb_names.e:20
 msgid "--> Used profiler (default: `eiffel'): "
-msgstr ""
+msgstr "--> Используемый профайлер (по умолчанию: `eiffel'): "
 
 #. Source code: do Result := locale.translation ("--> Working directory: ") end
 #: debugger_names.e:160
@@ -1602,6 +1611,9 @@ msgid ""
 "referenced from configuration file: '$2' cannot be read.\n"
 "Select a 5.6 or older version of an Eiffel project."
 msgstr ""
+"Файл Ace: '$1'\n"
+"упоминаемый в файле конфигурации '$2' не может быть прочитан.\n"
+"Выберите версию проекта Эйфеля 5.6 или старше."
 
 #. 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:144
@@ -1625,7 +1637,7 @@ msgstr "Действие:"
 #. Source code: l_Active_query: STRING_GENERAL is			do Result := locale.translation("Active query")	end
 #: interface_names.e:832
 msgid "Active query"
-msgstr ""
+msgstr "Активный запрос"
 
 #. Source code: m_Advanced: STRING_GENERAL is				do Result := locale.translation("Ad&vanced")	end
 #: interface_names.e:267
@@ -1780,7 +1792,7 @@ msgstr "Добавить новую команду"
 #. Source code: e_Add_exported_feature: STRING_GENERAL is	do Result := locale.translation("Add a new feature to this dynamic library definition")	end
 #: interface_names.e:2032
 msgid "Add a new feature to this dynamic library definition"
-msgstr ""
+msgstr "Добавить новый компонент к этому определению динамической библиотеки"
 
 #. Source code: Result := locale.translation ("[
 #: interface_names.e:278
@@ -1799,7 +1811,7 @@ msgstr ""
 #. Source code: l_add_a_valuable: STRING_GENERAL is				do Result := locale.translation("Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)")	end
 #: interface_names.e:835
 msgid "Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)"
-msgstr ""
+msgstr "Добавить переменную (двойной щелчок или Enter); Использовать существующую переменную (правый щелчок или Ctrl+Enter)"
 
 #. Source code: b_Add_all: STRING_GENERAL is				do Result := locale.translation ("Add all ->") end
 #: interface_names.e:44
@@ -1859,27 +1871,27 @@ msgstr ""
 #. Source code: f_add_formatter: STRING_GENERAL is do Result := locale.translation ("Add customized formatter") end
 #: interface_names.e:608
 msgid "Add customized formatter"
-msgstr ""
+msgstr "Добавить собственный форматировщик"
 
 #. Source code: f_add_tool: STRING_GENERAL is do Result := locale.translation ("Add customized tool") end
 #: interface_names.e:625
 msgid "Add customized tool"
-msgstr ""
+msgstr "Добавить собственный инструмент"
 
 #. Source code: dialog_visible_add_feature: STRING_GENERAL is do Result := locale.translation ("Add feature")	end
 #: conf_interface_names.e:423
 msgid "Add feature"
-msgstr ""
+msgstr "Добавить компонент"
 
 #. Source code: m_add_first_breakpoints_in_class: STRING_GENERAL is 	do Result := locale.translation("Add first breakpoints in class" )	end
 #: interface_names.e:269
 msgid "Add first breakpoints in class"
-msgstr ""
+msgstr "Добавить первые точки останова в классе"
 
 #. Source code: m_add_first_breakpoints_in_feature: STRING_GENERAL is 	do Result := locale.translation("Add first breakpoints in feature" )	end
 #: interface_names.e:270
 msgid "Add first breakpoints in feature"
-msgstr ""
+msgstr "Добавить первые точки останова в компоненте"
 
 #. Source code: t_add_new_constant_value_retriever: STRING is do Result := locale.translation ("Add new constant value retriever") end
 #: eb_metric_names.e:165
@@ -2111,12 +2123,12 @@ msgstr "Класс уже редактируется"
 #. Source code: Result.force (locale.translation ("Alsatian"), "gsw")
 #: locale_names.e:55
 msgid "Alsatian"
-msgstr ""
+msgstr "Эльзасский"
 
 #. Source code: Result.force (locale.translation ("Alsatian (France)"), "gsw_fr")
 #: locale_names.e:242
 msgid "Alsatian (France)"
-msgstr ""
+msgstr "Эльзасский (Франция)"
 
 #. 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:18
@@ -2126,12 +2138,12 @@ msgstr "Всегда компилировать перед отладкой"
 #. Source code: Result.force (locale.translation ("Amharic"), "am")
 #: locale_names.e:21
 msgid "Amharic"
-msgstr ""
+msgstr "Амхарский"
 
 #. Source code: Result.force (locale.translation ("Amharic (Ethiopia)"), "am_et")
 #: locale_names.e:146
 msgid "Amharic (Ethiopia)"
-msgstr ""
+msgstr "Амхарский (Эфиопия)"
 
 #. Source code: l_str := locale.translation ("An empty class name is not valid.%N")
 #: warning_messages.e:429
@@ -2146,7 +2158,7 @@ msgstr "Пустое имя кластера не допустимо.\n"
 #. Source code: l_str := locale.translation ("An empty feature name is not valid.%N")
 #: warning_messages.e:473
 msgid "An empty feature name is not valid.\n"
-msgstr ""
+msgstr "Пустое имя компонента недопустимо.\n"
 
 #. Source code: "An error occurred during initialization of the ICorDebug Debugger%N%
 #: debugger_names.e:49
@@ -2165,6 +2177,10 @@ msgid ""
 "\n"
 "Recompiling the project completely will solve the problem."
 msgstr ""
+"Произошла ошибка на точке останова, т.к. компонент\n"
+"не был корректно откомпилирован.\n"
+"\n"
+"Полная перекомпиляция проекта решит эту проблему."
 
 #. Source code: an_error_occurred_while_loading_profiler: STRING_GENERAL is	do Result := locale.translation ("An error occurred while loading the configuration for your profiler.") end
 #: ewb_names.e:61
@@ -2588,7 +2604,7 @@ msgstr "Как объект"
 #. Source code: Result.force (locale.translation ("Assamese"), "as")
 #: locale_names.e:24
 msgid "Assamese"
-msgstr ""
+msgstr "Ассамский"
 
 #. Source code: Result.force (locale.translation ("Assamese (India)"), "as_in")
 #: locale_names.e:164
@@ -2718,12 +2734,12 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:237
 msgid "Auto auto-complete"
-msgstr ""
+msgstr "Автоматическое завершение после точки"
 
 #. 	<PREF NAME="editor.eiffel.auto_complete_words" DESCRIPTION="Should completion automatically complete words when a single best match is available?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:238
 msgid "Auto complete words"
-msgstr ""
+msgstr "Автоматическое завершение слова"
 
 #. Source code: m_auto_expression_context: STRING_GENERAL is		do Result := locale.translation("Auto expression")	end
 #: interface_names.e:285
@@ -2733,7 +2749,7 @@ msgstr "Автоматическое выражение"
 #. Source code: m_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Auto expressions")	end
 #: interface_names.e:284
 msgid "Auto expressions"
-msgstr ""
+msgstr "Автоматические выражения"
 
 #. 	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>20</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:186
@@ -2748,17 +2764,17 @@ msgstr "Автоматически удалять завершающие про�
 #. Source code: t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translation("Auto-Complete")	end
 #: interface_names.e:1798
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Автоматическое завершение"
 
 #. 	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Are brackets and parentheses closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:235
 msgid "Auto-complete brackets and parentheses"
-msgstr ""
+msgstr "Автоматическое завершение квадратных и круглых скобок"
 
 #. 	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:236
 msgid "Auto-complete quotes"
-msgstr ""
+msgstr "Автоматическое завершение кавычек"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -3466,7 +3482,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:555
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:654
 msgid "Autocomplete"
-msgstr ""
+msgstr "Автоматическое завершение"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.autocomplete_alias" DESCRIPTION="Autocomplete alias?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:396
@@ -3861,12 +3877,12 @@ msgstr ""
 #. Source code: target_automatic_backup_name: STRING_GENERAL is do Result := locale.translation ("Automatic Backup")	end
 #: conf_interface_names.e:101
 msgid "Automatic Backup"
-msgstr ""
+msgstr "Автоматическое резервное копирование"
 
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:103
 msgid "Automatic go to result panel"
-msgstr ""
+msgstr "Автоматический переход к панели результатов"
 
 #. 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:557
@@ -3876,7 +3892,7 @@ msgstr "Автоматическое обновление"
 #. 	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:196
 msgid "Automatically expand the feature tree."
-msgstr ""
+msgstr "Автоматически раскрывать дерево компонентов."
 
 #. Source code: target_automatic_backup_description: STRING_GENERAL is do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
 #: conf_interface_names.e:102
@@ -3891,7 +3907,7 @@ msgstr "Переходить на панель результата после �
 #. 	<PREF NAME="editor.general.remove_trailing_white_space" HIDDEN="true" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:567
 msgid "Automatically remove trailing white space from lines?"
-msgstr ""
+msgstr "Удалять пробелы на конце строк автоматически?"
 
 #. 	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:86
@@ -3921,17 +3937,17 @@ msgstr "Доступные библиотеки:"
 #. Source code: Result.force (locale.translation ("Azeri"), "az")
 #: locale_names.e:25
 msgid "Azeri"
-msgstr ""
+msgstr "Азербайджанский"
 
 #. Source code: Result.force (locale.translation ("Azeri (Azerbaijan, Cyrillic)"), "az_cyrl_az")
 #: locale_names.e:165
 msgid "Azeri (Azerbaijan, Cyrillic)"
-msgstr ""
+msgstr "Азербайджанский (Азербайджан, кириллица)"
 
 #. Source code: Result.force (locale.translation ("Azeri (Azerbaijan, Latin)"), "az_latn_az")
 #: locale_names.e:166
 msgid "Azeri (Azerbaijan, Latin)"
-msgstr ""
+msgstr "Азербайджанский (Азербайджан, латиница)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>254;253;203</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:56
@@ -4085,7 +4101,7 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:268
 msgid "Background color for features."
-msgstr ""
+msgstr "Цвет фона для компонентов."
 
 #. 	<PREF NAME="editor.eiffel.colors.generic_background_color" DESCRIPTION="Background color for generics."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:262
@@ -4252,7 +4268,7 @@ msgstr ""
 #. Source code: l_base_value: STRING_GENERAL is do Result := locale.translation ("Base value") end
 #: eb_metric_names.e:350
 msgid "Base value"
-msgstr ""
+msgstr "Основное значение"
 
 #. Source code: Result := locale.translation ("Base value %"$1%" of a value tester is invalid. A real number is expected.")
 #: eb_metric_names.e:1034
@@ -4291,12 +4307,12 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Basque"), "eu")
 #: locale_names.e:45
 msgid "Basque"
-msgstr ""
+msgstr "Баскский"
 
 #. Source code: Result.force (locale.translation ("Basque (Basque)"), "eu_es")
 #: locale_names.e:227
 msgid "Basque (Basque)"
-msgstr ""
+msgstr "Баскский (Страна Басков)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Batch/Stop mode: saving new configuration format as '$1'."), [a_string])
 #: ewb_names.e:103
@@ -4638,7 +4654,7 @@ msgstr ""
 #. Source code: b_C_functions: STRING_GENERAL is					do Result := locale.translation("C Functions")	end
 #: interface_names.e:46
 msgid "C Functions"
-msgstr ""
+msgstr "Функции C"
 
 #. Source code: l_Tab_C_output: STRING_GENERAL is    		do Result := locale.translation("C Output")	end
 #: interface_names.e:1561
@@ -4671,6 +4687,8 @@ msgid ""
 "C-compilation manager launch failed.\n"
 "Check if finish_freezing$1 exists and works correctly."
 msgstr ""
+"Не удалось запустить планировщик C компиляции.\n"
+"Проверьте, что finish_freezing$1 существует и корректно работает."
 
 #. Source code: "C-compilation produced errors.%N%
 #: interface_names.e:946
@@ -4910,7 +4928,7 @@ msgstr "Невозможно записать файл: $1."
 #. Source code: l_capture: STRING_GENERAL is 				do Result := locale.translation ("Capture") end
 #: interface_names.e:853
 msgid "Capture"
-msgstr ""
+msgstr "Захват"
 
 #. Source code: l_use_case_sensitive: STRING_GENERAL is do Result := locale.translation ("Case sensitive") end
 #: eb_metric_names.e:213
@@ -4935,12 +4953,12 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Catalan"), "ca")
 #: locale_names.e:33
 msgid "Catalan"
-msgstr ""
+msgstr "Каталанский"
 
 #. Source code: Result.force (locale.translation ("Catalan (Catalan)"), "ca_es")
 #: locale_names.e:176
 msgid "Catalan (Catalan)"
-msgstr ""
+msgstr "Каталанский (Каталония)"
 
 #. Source code: h_categorize_folder: STRING_GENERAL is do Result := locale.translation("Categorize classes in folder?") end
 #: interface_names.e:1608
@@ -4950,12 +4968,12 @@ msgstr "Распределять классы по папкам?"
 #. Source code: l_center_attraction_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string (locale.translation("Center attraction ($1%%)"), [a_value])	end
 #: interface_names.e:857
 msgid "Center attraction ($1%)"
-msgstr ""
+msgstr "Притяжение к центру ($1%)"
 
 #. Source code: l_center_attraction: STRING_GENERAL is		do Result := locale.translation("Center attraction:")	end
 #: interface_names.e:856
 msgid "Center attraction:"
-msgstr ""
+msgstr "Притяжение к центру:"
 
 #. Source code: m_center_diagram: STRING_GENERAL is			do Result := locale.translation ("Center target in diagram") end
 #: interface_names.e:765
@@ -4990,7 +5008,7 @@ msgstr "Изменить установки проекта, правый щел�
 #. Source code: l_chart: STRING_GENERAL is					do Result := locale.translation("Chart") end
 #: ewb_names.e:163
 msgid "Chart"
-msgstr ""
+msgstr "Схема"
 
 #. Source code: m_Check_exports: STRING_GENERAL is			do Result := locale.translation("Chec&k Export Clauses")	end
 #: interface_names.e:697
@@ -5034,17 +5052,17 @@ msgstr ""
 #. 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:113
 msgid "Check defined warning"
-msgstr ""
+msgstr "Проверять определённые предупреждения"
 
 #. Source code: f_check_warning: STRING_GENERAL is do Result := locale.translation ("Check defined warnings when archive is recalculated?") end
 #: eb_metric_names.e:289
 msgid "Check defined warnings when archive is recalculated?"
-msgstr ""
+msgstr "Проверять определённые предупреждения, когда архив перевычисляется?"
 
 #. 	<PREF NAME="shortcuts.project.check_overrides_and_compile" DESCRIPTION="Shortcut to check overrides and compile current project."><SHORTCUT Shift="True">F8</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:726
 msgid "Check overrides and compile"
-msgstr ""
+msgstr "Проверить замещения и скомпилировать"
 
 #. Source code: e_Check_exports: STRING_GENERAL is			do Result := locale.translation("Check the validity of the library definition")	end
 #: interface_names.e:2034
@@ -5064,17 +5082,17 @@ msgstr "Китайский"
 #. Source code: Result.force (locale.translation ("Chinese (Hong Kong SAR, PRC)"), "zh_hk")
 #: locale_names.e:348
 msgid "Chinese (Hong Kong SAR, PRC)"
-msgstr ""
+msgstr "Китайский (САР Гонконг, КНР)"
 
 #. Source code: Result.force (locale.translation ("Chinese (Macao SAR)"), "zh_mo")
 #: locale_names.e:349
 msgid "Chinese (Macao SAR)"
-msgstr ""
+msgstr "Китайский (САР Макао)"
 
 #. Source code: Result.force (locale.translation ("Chinese (PRC)"), "zh_cn")
 #: locale_names.e:347
 msgid "Chinese (PRC)"
-msgstr ""
+msgstr "Китайский (КНР)"
 
 #. Source code: Result.force (locale.translation ("Chinese (Singapore)"), "zh_sg")
 #: locale_names.e:350
@@ -5255,7 +5273,7 @@ msgstr "Адрес класса"
 #. 	<PREF NAME="shortcuts.code_completion.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:655
 msgid "Class autocomplete"
-msgstr ""
+msgstr "Автоматическое завершение имени класса"
 
 #. 	<PREF NAME="editor.eiffel.colors.class_background_color" DESCRIPTION="Background color for classes."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:266
@@ -5319,7 +5337,7 @@ msgstr "Обозреватель класса"
 #. 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:190
 msgid "Class completion"
-msgstr ""
+msgstr "Завершение имени класса"
 
 #. 	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:130
@@ -5602,7 +5620,7 @@ msgstr "Очистить архив?"
 #. Source code: f_clear_defined_domain: STRING_GENERAL is do Result := locale.translation ("Clear defined domain") end
 #: eb_metric_names.e:288
 msgid "Clear defined domain"
-msgstr ""
+msgstr "Очистить заданную область"
 
 #. Source code: t_clear_result: STRING_GENERAL is do Result := locale.translation ("Clear detailed result") end
 #: eb_metric_names.e:185
@@ -18481,7 +18499,7 @@ msgstr "Монгольский (Монголия)"
 #. Source code: Result.force (locale.translation ("Mongolian (PRC)"), "mn_mong_cn")
 #: locale_names.e:276
 msgid "Mongolian (PRC)"
-msgstr ""
+msgstr "Монгольский (КНР)"
 
 #. Source code: l_clr_most_recent_version_summary: STRING_GENERAL is 	do Result := locale.translation ("Most recent CLR Version") end
 #: interface_names.e:29
@@ -25534,7 +25552,7 @@ msgstr "Тибетский (Бутан)"
 #. Source code: Result.force (locale.translation ("Tibetan (PRC)"), "bo_cn")
 #: locale_names.e:172
 msgid "Tibetan (PRC)"
-msgstr ""
+msgstr "Тибетский (КНР)"
 
 #. 	<PREF NAME="debugger.classic_debugger.timeout" DESCRIPTION="Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:16
@@ -26390,7 +26408,7 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Uighur (PRC)"), "ug_cn")
 #: locale_names.e:337
 msgid "Uighur (PRC)"
-msgstr ""
+msgstr "Уйгурский (КНР)"
 
 #. Source code: Result.force (locale.translation ("Ukrainian"), "uk")
 #: locale_names.e:130
@@ -28169,12 +28187,12 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Wolof"), "wo")
 #: locale_names.e:135
 msgid "Wolof"
-msgstr ""
+msgstr "Волоф"
 
 #. Source code: Result.force (locale.translation ("Wolof (Senegal)"), "wo_sn")
 #: locale_names.e:344
 msgid "Wolof (Senegal)"
-msgstr ""
+msgstr "Волоф (Сенегал)"
 
 #. Source code: l_Workbench_mode: STRING_GENERAL is 		do Result := locale.translation("Workbench mode")	end
 #: interface_names.e:1367
@@ -28209,12 +28227,12 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Xhosa/isiXhosa"), "xh")
 #: locale_names.e:136
 msgid "Xhosa/isiXhosa"
-msgstr ""
+msgstr "Коса/исикоса"
 
 #. Source code: Result.force (locale.translation ("Xhosa/isiXhosa (South Africa)"), "xh_za")
 #: locale_names.e:345
 msgid "Xhosa/isiXhosa (South Africa)"
-msgstr ""
+msgstr "Коса/исикоса (ЮАР)"
 
 #. 	<PREF NAME="interface.development_window.y_position" DESCRIPTION="Screen y position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:223
@@ -28239,22 +28257,22 @@ msgstr "Да"
 #. Source code: Result.force (locale.translation ("Yi"), "ii")
 #: locale_names.e:65
 msgid "Yi"
-msgstr ""
+msgstr "И"
 
 #. Source code: Result.force (locale.translation ("Yi (PRC)"), "ii_cn")
 #: locale_names.e:253
 msgid "Yi (PRC)"
-msgstr ""
+msgstr "И (КНР)"
 
 #. Source code: Result.force (locale.translation ("Yoruba"), "yo")
 #: locale_names.e:137
 msgid "Yoruba"
-msgstr ""
+msgstr "Йоруба"
 
 #. Source code: Result.force (locale.translation ("Yoruba (Nigeria)"), "yo_ng")
 #: locale_names.e:346
 msgid "Yoruba (Nigeria)"
-msgstr ""
+msgstr "Йоруба (Нигерия)"
 
 #. Source code: w_Save_backup: STRING_GENERAL is do Result := locale.translation ("You are about to overwrite the original file with%N%
 #: warning_messages.e:608
@@ -28478,12 +28496,12 @@ msgstr "Уменьшить"
 #. Source code: Result.force (locale.translation ("Zulu/isiZulu"), "zu")
 #: locale_names.e:139
 msgid "Zulu/isiZulu"
-msgstr ""
+msgstr "Зулу"
 
 #. Source code: Result.force (locale.translation ("Zulu/isiZulu (South Africa)"), "zu_za")
 #: locale_names.e:352
 msgid "Zulu/isiZulu (South Africa)"
-msgstr ""
+msgstr "Зулу (ЮАР)"
 
 #. Source code: l_No_feature_group_clause: STRING_GENERAL is do Result := locale.translation("[Unnamed feature clause]")	end
 #: interface_names.e:1149
@@ -28573,7 +28591,7 @@ msgstr "критерий"
 #. Source code: l_current: STRING_GENERAL is do Result := locale.translation ("current") end
 #: eb_metric_names.e:218
 msgid "current"
-msgstr ""
+msgstr "текущий"
 
 #. Source code: l_current_version: STRING_GENERAL is do Result := locale.translation ("current version") end
 #: eb_metric_names.e:219
@@ -28598,7 +28616,7 @@ msgstr "по умолчанию"
 #. Source code: l_Deferred: STRING_GENERAL is				do Result := locale.translation("deferred")	end
 #: interface_names.e:968
 msgid "deferred"
-msgstr ""
+msgstr "отложенный"
 
 #. Source code: l_delayed_domain_item: STRING_GENERAL is do Result := locale.translation ("delayed item") end
 #: interface_names.e:1659
@@ -28613,7 +28631,7 @@ msgstr ""
 #. Source code: l_denominator_metric: STRING_GENERAL is do Result := locale.translation ("denominator metric") end
 #: eb_metric_names.e:202
 msgid "denominator metric"
-msgstr ""
+msgstr "метрика-знаменатель"
 
 #. Source code: l_desendent_versions: STRING_GENERAL is do Result := locale.translation ("descendent versions") end
 #: eb_metric_names.e:220
@@ -28658,7 +28676,7 @@ msgstr "редактировать текст класса"
 #. Source code: l_Elements: STRING_GENERAL is				do Result := locale.translation("elements.")	end
 #: interface_names.e:1027
 msgid "elements."
-msgstr ""
+msgstr "элементы."
 
 #. Source code: l_empty_domain: STRING_GENERAL is do Result := locale.translation ("empty domain") end
 #: eb_metric_names.e:225
@@ -28688,7 +28706,7 @@ msgstr ""
 #. Source code: feature_help: STRING_GENERAL is do Result := locale.translation ("feature formats and information") end
 #: shared_ewb_help.e:83
 msgid "feature formats and information"
-msgstr ""
+msgstr "форматы и информация о компоненте"
 
 #. Source code: l_feature_domain_item: STRING_GENERAL is do Result := locale.translation ("feature item") end
 #: interface_names.e:1658
@@ -28728,7 +28746,7 @@ msgstr ""
 #. Source code: Generate_help: STRING_GENERAL is do Result := locale.translation ("generate profile information for latest run") end
 #: shared_ewb_help.e:99
 msgid "generate profile information for latest run"
-msgstr ""
+msgstr "сгенерировать информацию профайлера для последнего запуска"
 
 #. Source code: main_help: STRING_GENERAL is do Result := locale.translation ("go back to main menu") end
 #: shared_ewb_help.e:123
@@ -28738,7 +28756,7 @@ msgstr "вернуться к основному меню"
 #. Source code: parent_help: STRING_GENERAL is do Result := locale.translation ("go back to parent menu") end
 #: shared_ewb_help.e:133
 msgid "go back to parent menu"
-msgstr ""
+msgstr "вернуться в родительское меню"
 
 #. Source code: l_group_domain_item: STRING_GENERAL is do Result := locale.translation ("group item") end
 #: interface_names.e:1655
@@ -28761,7 +28779,7 @@ msgstr[2] "в $1 классах"
 #. Source code: inactivate_subquery_help: STRING_GENERAL is do Result := locale.translation ("inactivate subquery") end
 #: shared_ewb_help.e:159
 msgid "inactivate subquery"
-msgstr ""
+msgstr "деактивировать подзапрос"
 
 #. Source code: l_indirect: STRING_GENERAL is do Result := locale.translation ("indirect") end
 #: eb_metric_names.e:222
@@ -28771,7 +28789,7 @@ msgstr "коственный"
 #. Source code: Profile_help: STRING_GENERAL is do Result := locale.translation ("information about a profiled run") end
 #: shared_ewb_help.e:141
 msgid "information about a profiled run"
-msgstr ""
+msgstr "информация о запуске с профайлером"
 
 #. Source code: l_Flatshort: STRING_GENERAL is				do Result := locale.translation("interface view")	end
 #: ewb_names.e:167
@@ -28781,7 +28799,7 @@ msgstr ""
 #. Source code: t_metric_is_not_valid: STRING_GENERAL is do Result := locale.translation ("is invalid") end
 #: eb_metric_names.e:68
 msgid "is invalid"
-msgstr ""
+msgstr "недопустимо"
 
 #. Source code: c_compile_help: STRING_GENERAL is do Result := locale.translation ("launch C compilation if needed") end
 #: shared_ewb_help.e:33
@@ -28791,7 +28809,7 @@ msgstr "Запустить компиляцию C кода, если необх�
 #. Source code: batch_help: STRING_GENERAL is do Result := locale.translation ("launch the compilation without user request") end
 #: shared_ewb_help.e:31
 msgid "launch the compilation without user request"
-msgstr ""
+msgstr "запускать компиляцию без запроса пользователя"
 
 #. Source code: l_Library: STRING_GENERAL is				do Result := locale.translation("library")	end
 #: interface_names.e:1110
@@ -28821,7 +28839,7 @@ msgstr ""
 #. Source code: t_metric: STRING_GENERAL is do Result := locale.translation ("metric") end
 #: eb_metric_names.e:72
 msgid "metric"
-msgstr ""
+msgstr "метрика"
 
 #. Source code: l_metric_archive_node: STRING_GENERAL is do Result := locale.translation ("metric archive node") end
 #: eb_metric_names.e:205
@@ -28856,7 +28874,7 @@ msgstr "нормальный"
 #. Source code: l_numerator_metric: STRING_GENERAL is do Result := locale.translation ("numerator metric") end
 #: eb_metric_names.e:203
 msgid "numerator metric"
-msgstr ""
+msgstr "метрика-числитель"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("offset $1"), [a_offset])
 #: interface_names.e:1633
@@ -28906,7 +28924,7 @@ msgstr "метрика отношения"
 #. Source code: reactivate_subquery_help: STRING_GENERAL is do Result := locale.translation ("reactivate subquery") end
 #: shared_ewb_help.e:157
 msgid "reactivate subquery"
-msgstr ""
+msgstr "активизировать подзапрос"
 
 #. Source code: l_All: STRING_GENERAL is					do Result := locale.translation("recursive")	end
 #: interface_names.e:838
@@ -28921,7 +28939,7 @@ msgstr "установить все значения в значения по у
 #. Source code: t_row: STRING_GENERAL is do Result := locale.translation ("row") end
 #: eb_metric_names.e:178
 msgid "row"
-msgstr ""
+msgstr "строка"
 
 #. Source code: loop_help: STRING_GENERAL is do Result := locale.translation ("run ec as a command loop") end
 #: shared_ewb_help.e:117
@@ -28976,7 +28994,7 @@ msgstr "показать статистику системы"
 #. Source code: aversions_help: STRING_GENERAL is do Result := locale.translation ("show the ancestor versions of a feature") end
 #: shared_ewb_help.e:27
 msgid "show the ancestor versions of a feature"
-msgstr ""
+msgstr "показать версии предков компонента"
 
 #. Source code: ancestors_help: STRING_GENERAL is do Result := locale.translation ("show the ancestors of a class") end
 #: shared_ewb_help.e:23
@@ -29001,7 +29019,7 @@ msgstr ""
 #. Source code: implementers_help: STRING_GENERAL is do Result := locale.translation ("show the classes implementing a feature") end
 #: shared_ewb_help.e:107
 msgid "show the classes implementing a feature"
-msgstr ""
+msgstr "показать классы, реализующие компонент"
 
 #. Source code: class_list_help: STRING_GENERAL is do Result := locale.translation ("show the classes in alphabetic order") end
 #: shared_ewb_help.e:45
@@ -29026,12 +29044,12 @@ msgstr "показать процедуры создания класса"
 #. Source code: deferred_help: STRING_GENERAL is do Result := locale.translation ("show the deferred features of a class") end
 #: shared_ewb_help.e:63
 msgid "show the deferred features of a class"
-msgstr ""
+msgstr "показать отложенные компоненты класса"
 
 #. Source code: dversions_help: STRING_GENERAL is do Result := locale.translation ("show the descendant versions of a feature") end
 #: shared_ewb_help.e:71
 msgid "show the descendant versions of a feature"
-msgstr ""
+msgstr "показать версии потомков компонента"
 
 #. Source code: descendants_help: STRING_GENERAL is do Result := locale.translation ("show the descendants of a class") end
 #: shared_ewb_help.e:65
@@ -29046,7 +29064,7 @@ msgstr ""
 #. Source code: externals_help: STRING_GENERAL is do Result := locale.translation ("show the external features of a class") end
 #: shared_ewb_help.e:79
 msgid "show the external features of a class"
-msgstr ""
+msgstr "показать внешние компоненты класса"
 
 #. Source code: flat_help: STRING_GENERAL is do Result := locale.translation ("show the flat form of a class") end
 #: shared_ewb_help.e:93
@@ -29081,7 +29099,7 @@ msgstr ""
 #. Source code: switches_help: STRING_GENERAL is do Result := locale.translation ("show the output switches") end
 #: shared_ewb_help.e:187
 msgid "show the output switches"
-msgstr ""
+msgstr "показать ключи вывода"
 
 #. Source code: routines_help: STRING_GENERAL is do Result := locale.translation ("show the routines of a class") end
 #: shared_ewb_help.e:161
@@ -29111,7 +29129,7 @@ msgstr "показать текст класса"
 #. Source code: r_text_help: STRING_GENERAL is do Result := locale.translation ("show the text of a feature") end
 #: shared_ewb_help.e:155
 msgid "show the text of a feature"
-msgstr ""
+msgstr "показать текст компонента"
 
 #. Source code: help_help: STRING_GENERAL is do Result := locale.translation ("show this help message") end
 #: shared_ewb_help.e:103
@@ -29121,7 +29139,7 @@ msgstr "показать эту помощь"
 #. Source code: homonyms_help: STRING_GENERAL is do Result := locale.translation ("shown the homonyms of a feature") end
 #: shared_ewb_help.e:105
 msgid "shown the homonyms of a feature"
-msgstr ""
+msgstr "показать омонимы компонента"
 
 #. Source code: single_file_compilation_help: STRING_GENERAL is do Result := locale.translation ("specify a class file for single file compilation") end
 #: shared_ewb_help.e:173
@@ -29181,7 +29199,7 @@ msgstr "остановиться при ошибке"
 #. Source code: storage_help: STRING_GENERAL is do Result := locale.translation ("store in EiffelCase format") end
 #: shared_ewb_help.e:183
 msgid "store in EiffelCase format"
-msgstr ""
+msgstr "сохранить в формате EiffelCase"
 
 #. Source code: l_syntactical_referenced: STRING_GENERAL is do Result := locale.translation ("syntactical") end
 #: eb_metric_names.e:224
@@ -29231,7 +29249,7 @@ msgstr ""
 #. Source code: l_variable_metric: STRING_GENERAL is do Result := locale.translation ("variable metric") end
 #: eb_metric_names.e:204
 msgid "variable metric"
-msgstr ""
+msgstr "метрика-переменная"
 
 #. Source code: l_wrap: STRING_GENERAL is do Result := locale.translation("wrap")	end
 #: interface_names.e:1592

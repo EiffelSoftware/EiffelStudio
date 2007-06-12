@@ -232,8 +232,13 @@ feature {NONE} -- Implementation
 			filter_invisible_result_preference := l_manager.new_boolean_preference_value (l_manager, filter_invisible_result_string, False)
 			display_percentage_for_ratio_preference := l_manager.new_boolean_preference_value (l_manager, display_percentage_for_ratio_string, True)
 			automatic_go_to_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, automatic_go_to_result_panel_string, True)
-			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, initial_unit_order)
+			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, "")
 			unit_order_preference.set_hidden (True)
+				-- Default value is a list of hashes which is not stored in the 'eifinit.xml' file, thus it is set here
+			unit_order_preference.set_default_value (initial_unit_order)
+			if unit_order_preference.value = Void or else unit_order_preference.value.is_empty then
+				unit_order_preference.set_value (initial_unit_order)
+			end
 			criterion_completion_list_width_preference.set_hidden (True)
 			criterion_completion_list_height_preference.set_hidden (True)
 			tree_view_for_history_preference := l_manager.new_boolean_preference_value (l_manager, tree_view_for_history_string, False)

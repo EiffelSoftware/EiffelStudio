@@ -89,6 +89,13 @@ inherit
 			copy
 		end
 
+	EVS_UTILITY
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -181,6 +188,7 @@ feature {NONE} -- Initialization
 			open_address_manager_btn.set_pixmap (pixmaps.icon_pixmaps.tool_search_icon)
 			open_address_manager_btn.select_actions.extend (agent on_show_address_manager)
 			open_address_manager_btn.set_tooltip (metric_names.f_search_for_class)
+			grid.set_row_height (grid_support.grid_row_height_for_tokens (False))
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
@@ -700,7 +708,7 @@ feature{NONE} -- Implementation/Sorting
 			token_writer.new_line
 			l_editor_token_item.set_text_with_tokens (token_name_from_domain_item (a_domain_item))
 			l_editor_token_item.set_data (Current)
-			l_editor_token_item.set_overriden_fonts (label_font_table)
+			l_editor_token_item.set_overriden_fonts (label_font_table, label_font_height)
 			grid.insert_new_row (grid.row_count + 1)
 			l_grid_row := grid.row (grid.row_count)
 			l_grid_row.set_data (a_domain_item)

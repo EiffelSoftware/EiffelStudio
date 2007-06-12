@@ -117,7 +117,7 @@ feature -- Query
 		do
 			l_style := local_style
 			create Result
-			Result.set_overriden_fonts (label_font_table)
+			Result.set_overriden_fonts (label_font_table, label_font_height)
 			if has_child then
 				Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
 			else

@@ -480,6 +480,7 @@ feature{NONE} -- Implementation
 			l_ql_item: QL_ITEM
 			l_fixed_fonts: like label_font_table
 			l_domain: like domain
+			l_line_height: INTEGER
 		do
 			l_ql_item := a_item.ql_item
 			create l_item.make (l_ql_item, 1, a_y, False)
@@ -490,8 +491,9 @@ feature{NONE} -- Implementation
 			end
 			if is_fixed_fonts_used then
 				l_fixed_fonts := label_font_table
-				l_item.set_overriden_fonts (l_fixed_fonts)
-				l_path_item.set_overriden_fonts (l_fixed_fonts)
+				l_line_height := label_font_height
+				l_item.set_overriden_fonts (l_fixed_fonts, l_line_height)
+				l_path_item.set_overriden_fonts (l_fixed_fonts, l_line_height)
 			end
 
 			l_item.set_stone (stone_from_ql_item (l_ql_item))

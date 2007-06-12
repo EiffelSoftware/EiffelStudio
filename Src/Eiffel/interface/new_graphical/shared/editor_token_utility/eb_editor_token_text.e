@@ -88,8 +88,8 @@ feature -- Setting
 			text_wrap_disabled: not is_text_wrap_enabled
 		end
 
-	set_overriden_font (a_font: like overriden_fonts) is
-			-- Set `overriden_fonts' with `a_font'.
+	set_overriden_font (a_font: like overriden_fonts; a_height: INTEGER) is
+			-- Set `overriden_fonts' with `a_font' and the according height in pixel.
 		require
 			a_font_attached: a_font /= Void
 		do
@@ -97,6 +97,7 @@ feature -- Setting
 			overriden_fonts := a_font
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
+			set_overriden_line_height (a_height)
 			unlock_update
 			try_call_setting_change_actions
 		ensure
@@ -110,6 +111,7 @@ feature -- Setting
 			overriden_fonts := Void
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
+			remove_overriden_line_height
 			unlock_update
 			try_call_setting_change_actions
 		ensure
@@ -136,6 +138,7 @@ feature -- Setting
 		do
 			lock_update
 			overriden_line_height := 0
+			is_overriden_line_height_set := False
 			is_position_up_to_date := False
 			unlock_update
 			try_call_setting_change_actions

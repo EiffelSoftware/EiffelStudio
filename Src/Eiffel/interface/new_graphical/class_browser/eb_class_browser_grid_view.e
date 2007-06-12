@@ -722,31 +722,8 @@ feature {NONE} -- Implementation
 
 	default_row_height: INTEGER is
 			-- Default height to set grid rows.
-		local
-			l_height: INTEGER
-			l_font_table: like label_font_table
-			l_index, l_count: INTEGER
 		do
-			if is_fixed_fonts_used then
-				from
-					l_font_table := label_font_table
-					l_count := l_font_table.count
-				until
-					l_index = l_count
-				loop
-					if l_font_table.item (l_index) /= Void then
-						l_height := l_font_table.item (l_index).height
-						if l_height > Result then
-							Result := l_height
-						end
-					end
-					l_index := l_index + 1
-				end
-				Result := Result.max (pixmap_height) + 1
-			else
-				Result := line_height.max (pixmap_height) + 1
-					-- We make sure we give enough space to display the pixmap.
-			end
+			Result := grid_row_height_for_tokens (not is_fixed_fonts_used)
 		end
 
 	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL

@@ -564,7 +564,6 @@ feature {NONE} -- Implementation
 				internal_line := starting_line
 				internal_token := starting_token
 			end
-
 		end
 
 	go_to_next_non_blank_token is

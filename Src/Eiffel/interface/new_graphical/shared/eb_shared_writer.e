@@ -39,6 +39,14 @@ feature -- Font tables
 			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
 		end
 
+	label_font_height: INTEGER is
+			-- Height in pixel of `label_font_table'
+		local
+			l_utility: EVS_UTILITY
+		do
+			Result := (create {EVS_UTILITY}).grid_row_height_for_fonts (label_font_table)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

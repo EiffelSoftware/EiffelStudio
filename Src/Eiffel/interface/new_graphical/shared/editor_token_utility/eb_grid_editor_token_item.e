@@ -98,7 +98,7 @@ feature -- Access
 	stone: STONE is
 			-- Stone attached to Current item
 			-- Result `stone_internal' if `stone_function' is not set,
-			-- otherwise invoke `stone_function' to get the actual stone.
+			-- otherwise invoke `stone_function' to get the actual stone.			
 		do
 			if stone_function = Void then
 				Result := stone_internal
@@ -245,12 +245,12 @@ feature -- Setting
 			text_set: text.is_equal (a_text)
 		end
 
-	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]) is
-			-- Set fonts of current tokens with `a_fonts'.
+	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]; a_height: INTEGER) is
+			-- Set fonts of current tokens with `a_fonts' and according height.
 			-- If `a_fonts' is Void, tokens will be displayed in default editor token fonts.
 		do
 			lock_update
-			editor_token_text.set_overriden_font (a_fonts)
+			editor_token_text.set_overriden_font (a_fonts, a_height)
 			unlock_update
 			try_call_setting_change_actions
 		end

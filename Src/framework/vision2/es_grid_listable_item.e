@@ -13,9 +13,6 @@ inherit
 	EVS_TEXT_ALIGNABLE
 
 	EVS_BORDERED
-		export
-			{NONE}all
-		end
 
 	EVS_GRID_ITEM_HELPER
 		export

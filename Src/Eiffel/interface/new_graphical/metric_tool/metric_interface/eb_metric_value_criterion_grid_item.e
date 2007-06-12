@@ -199,7 +199,7 @@ feature{NONE} -- Implementation
 			l_tokens.append (editor_token_output.generated_output)
 			if is_for_archive then
 				create l_component.make (l_tokens, 2)
-				l_component.set_overriden_fonts (label_font_table)
+				l_component.set_overriden_fonts (label_font_table, label_font_height)
 				append_component (l_component)
 			else
 					-- Prepare metric part
@@ -220,7 +220,7 @@ feature{NONE} -- Implementation
 				end
 				l_tokens.append (l_writer.last_line.content)
 				create l_component.make (l_tokens, 2)
-				l_component.set_overriden_fonts (label_font_table)
+				l_component.set_overriden_fonts (label_font_table, label_font_height)
 				append_component (l_component)
 
 					-- Prepare input domain part.

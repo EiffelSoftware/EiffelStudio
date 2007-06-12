@@ -31,6 +31,8 @@ inherit
 			enable_grid_item_pnd_support
 		end
 
+	EVS_UTILITY
+
 create
 	make_with_grid
 
@@ -55,6 +57,27 @@ feature -- Access
 			Result := color_or_font_change_actions_internal
 		ensure
 			result_attached: Result /= Void
+		end
+
+	grid_row_height_for_tokens (a_preferenced_font_used: BOOLEAN): INTEGER is
+			-- Suitable row height of grid to display editor tokens (Taken heading pixmap height into consideration)
+			-- If `a_preferenced_font_used' is True, use fonts specified in preferences for editors,
+			-- otherwise use default font.
+		local
+			l_pixmap_height: INTEGER
+			l_border_height: INTEGER
+			l_token: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			create l_token
+			l_border_height := l_token.top_border + l_token.bottom_border + l_token.border_line_width * 2
+			l_pixmap_height := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.pixel_height
+
+			if a_preferenced_font_used then
+				Result := (create {SHARED_EDITOR_FONT}).line_height
+			else
+				Result := (create{EB_SHARED_WRITER}).label_font_height
+			end
+			Result := (Result + l_border_height).max (l_pixmap_height)
 		end
 
 feature -- Pick and drop support for grid items

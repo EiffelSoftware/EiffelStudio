@@ -95,6 +95,31 @@ feature -- Focus
 			end
 		end
 
+feature -- Fonts
+
+	grid_row_height_for_fonts (a_fonts: SPECIAL [EV_FONT]): INTEGER is
+			-- Suitable row height in pixel to display all fonts in `a_fonts' and pixmaps with height `a_pixmap_height'
+		require
+			a_fonts_attached: a_fonts /= Void
+		local
+			l_font: EV_FONT
+			l_index: INTEGER
+			l_upper: INTEGER
+		do
+			from
+				l_index := a_fonts.lower
+				l_upper := a_fonts.upper
+			until
+				l_index > l_upper
+			loop
+				l_font := a_fonts.item (l_index)
+				if l_font /= Void then
+					Result := Result.max (l_font.line_height)
+				end
+				l_index := l_index + 1
+			end
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

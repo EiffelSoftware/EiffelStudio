@@ -80,10 +80,10 @@ feature{ES_GRID_LIST_ITEM} -- Drawing
 
 feature -- Setting
 
-	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]) is
-			-- Set overriden fonts used to display Current instead default fonts for editor tokens.
+	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]; a_height: INTEGER) is
+			-- Set overriden fonts and according height used to display Current instead default fonts for editor tokens.
 		do
-			editor_token_text.set_overriden_font (a_fonts)
+			editor_token_text.set_overriden_font (a_fonts, a_height)
 		end
 
 feature{NONE} -- Impelementation

@@ -28,7 +28,7 @@ feature{NONE} -- Initialization
 		do
 			domain_item := a_domain_item
 			create editor_token_text
-			editor_token_text.set_overriden_font (label_font_table)
+			editor_token_text.set_overriden_font (label_font_table, label_font_height)
 			token_writer.new_line
 			editor_token_text.set_tokens (token_name_from_domain_item (domain_item))
 			editor_token_text.disable_text_wrap

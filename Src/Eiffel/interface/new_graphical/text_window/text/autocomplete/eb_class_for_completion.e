@@ -88,7 +88,7 @@ feature -- Access
 				l_style.set_class_i (associated_class)
 			end
 			create Result
-			Result.set_overriden_fonts (label_font_table)
+			Result.set_overriden_fonts (label_font_table, label_font_height)
 			Result.set_pixmap (icon)
 			Result.set_text_with_tokens (l_style.text)
 		end

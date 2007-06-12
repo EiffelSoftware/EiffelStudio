@@ -1298,6 +1298,7 @@ test	adding-removing-classes-c-compile-error	ccomp061 tcf pass c_compilation exp
 test	once-manifest-string-in-cpp-file	ccomp062 tcf pass c_compilation
 test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
 test	deferred-to-string-constant	ccomp064 tcf pass finalizing
+test	built-in-unary-plus	ccomp065 tcf fail c_compilation
 
 -- Storable tests
 

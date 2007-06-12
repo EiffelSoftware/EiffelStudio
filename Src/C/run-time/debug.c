@@ -601,9 +601,10 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
  						 * when the application is started from the command line
  						 */
 		if (!d_data.db_discard_breakpoints) {
-			DBGMTX_LOCK;	/* Enter critical section */
 			int stopped = 0;
 			BODY_INDEX bodyid = exvect->ex_bodyid;
+
+			DBGMTX_LOCK;	/* Enter critical section */
  
 			if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
 					/* update previous value for next call */
@@ -674,8 +675,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	   					*/
 
 		if (!d_data.db_discard_breakpoints) {
-			DBGMTX_LOCK;	/* Enter critical section */
 			BODY_INDEX bodyid = exvect->ex_bodyid;
+			DBGMTX_LOCK;	/* Enter critical section */
 				
 			if (previous_bodyid == bodyid && previous_break_index == break_index) {
 				/* We are in a middle of a qualified call, then ignore stop */
@@ -691,7 +692,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 
 			/* we don't test the other case: breakpoint & interruption to avoid
 			 * stopping in the middle of a nested call */
-		DBGMTX_UNLOCK; /* Leave critical section */
+			DBGMTX_UNLOCK; /* Leave critical section */
 		}
 	}
 }

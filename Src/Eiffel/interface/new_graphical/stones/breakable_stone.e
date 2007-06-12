@@ -19,7 +19,7 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
-	EB_CONSTANTS
+	SHARED_BENCH_NAMES
 		export
 			{NONE} all
 		end
@@ -615,24 +615,39 @@ feature -- operation on message
 			end
 
 				-- Set up actions
-			okb.select_actions.extend (agent (a_bp: BREAKPOINT; a_combo: EV_COMBO_BOX; a_tf: EV_TEXT_FIELD)
+			okb.select_actions.extend (agent (a_dlg:EV_DIALOG; a_bp: BREAKPOINT; a_combo: EV_COMBO_BOX; a_tf: EV_TEXT_FIELD)
 					local
 						s: STRING_32
 						mr: INTEGER_REF
 						m,v: INTEGER
+						l_invalid: BOOLEAN
+						edlg: EB_WARNING_DIALOG
 					do
 						mr ?= a_combo.selected_item.data
 						if mr /= Void then
 							m := mr.item
 						end
 						s := a_tf.text
+
 						if s.is_integer then
 							v := s.to_integer
-							a_bp.set_hits_count_condition (m, v)
+							if m = {BREAKPOINT}.Hits_count_condition_multiple and v = 0 then
+								l_invalid := True
+							else
+								a_bp.set_hits_count_condition (m, v)
+								a_dlg.destroy
+							end
+						else
+							l_invalid := True
 						end
-					end(bp, combo, tf)
+						if l_invalid then
+							create edlg.make_with_text (debugger_names.w_Invalid_hit_count_condition_target)
+							edlg.show_modal_to_window (a_dlg)
+							a_tf.set_focus
+						end
+					end(d, bp, combo, tf)
 				)
-			okb.select_actions.extend (agent d.destroy)
+
 			cancelb.select_actions.extend (agent d.destroy)
 			resetb.select_actions.extend (agent (a_bp: BREAKPOINT; a_lab: EV_LABEL)
 					do

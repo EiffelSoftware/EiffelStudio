@@ -6476,7 +6476,7 @@ end
 				else
 					error_handler.insert_warning (
 							create {SYNTAX_WARNING}.make (yyvs12.item (yyvsp12).line, yyvs12.item (yyvsp12).column, filename,
-							once "Not ECMA conform: Remove empty rename clauses."))
+							"Remove empty rename clauses."))
 				end
 			
 if yy_parsing_status = yyContinue then

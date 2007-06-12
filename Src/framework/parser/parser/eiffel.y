@@ -975,7 +975,7 @@ Rename: TE_RENAME
 				else
 					error_handler.insert_warning (
 							create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-							once "Not ECMA conform: Remove empty rename clauses."))
+							"Remove empty rename clauses."))
 				end
 			}
 	|	TE_RENAME Add_counter Rename_list Remove_counter

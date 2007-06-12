@@ -162,6 +162,7 @@ feature -- Initialization
 			feature_stack.wipe_out
 			add_feature_frame
 			is_supplier_recorded := True
+			is_constraint_renaming := False
 			once_manifest_string_count := 0
 			counters.wipe_out
 			last_rsqure.wipe_out

@@ -495,7 +495,8 @@ feature {EV_ANY_I} -- Implementation
 							if l_gtk_widget_ptr /= default_pointer then
 								if not is_in_transport then
 									l_pnd_imp ?= eif_object_from_gtk_object (l_gtk_widget_ptr)
-									if l_pnd_imp /= Void then
+									if l_pnd_imp /= Void and then l_pnd_imp.c_object = l_gtk_widget_ptr then
+											-- We only want the pointer events for the backing widget.
 										l_top_level_window_imp := l_pnd_imp.top_level_window_imp
 										if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
 											l_widget_imp ?= l_pnd_imp

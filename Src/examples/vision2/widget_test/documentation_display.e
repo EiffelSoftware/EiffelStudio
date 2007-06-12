@@ -33,7 +33,7 @@ feature -- Status setting
 	update_for_type_change (widget: EV_WIDGET) is
 			-- Update documentation for type matching `widget'.
 		do
-			application.idle_actions.extend (agent real_update_for_type_change (widget))
+			application.do_once_on_idle (agent real_update_for_type_change (widget))
 				-- We defer this so that it is executed on the idle actions of EV_APPLICATION.
 				-- This speeds up the appearence of the type change to a user, as they are not
 				-- waiting for the file to load before being able to interact with the interface.
@@ -47,7 +47,6 @@ feature -- Status setting
 			full_filename: FILE_NAME
 			file: PLAIN_TEXT_FILE
 		do
-			application.idle_actions.prune (application.idle_actions.first)
 			file_name := class_name (widget)
 			file_name.to_lower
 			file_name.append ("_flatshort.rtf")

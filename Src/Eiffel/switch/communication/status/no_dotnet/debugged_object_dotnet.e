@@ -19,6 +19,11 @@ feature
 		do
 		end;	
 
+	reset is
+			-- Reset internal data
+		do
+		end		
+
 	refresh (sp_lower, sp_upper: INTEGER) is
 		do
 		end

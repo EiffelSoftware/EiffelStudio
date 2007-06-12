@@ -1178,13 +1178,11 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_l_curly)
 				l_as.type.process (Current)
-				create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, << last_type >>)
 				text_formatter_decorator.process_symbol_text (ti_r_curly)
 			else
 				l_as.type.process (Current)
-				create {GEN_TYPE_A} last_type.make (
-					system.type_class.compiled_class.class_id, << last_type >>)
 			end
+			create {GEN_TYPE_A} last_type.make (system.type_class.compiled_class.class_id, << last_type >>)
 		end
 
 	process_routine_as (l_as: ROUTINE_AS) is
@@ -1726,10 +1724,10 @@ feature {NONE} -- Implementation
 				if last_type.is_formal then
 					l_formal ?= last_type
 					if l_formal.is_multi_constrained (current_class) then
-							l_is_multi_constrained := True
-							l_left_type_set := l_formal.constrained_types (current_class)
+						l_is_multi_constrained := True
+						l_left_type_set := l_formal.constrained_types (current_class)
 					else
-							l_left_type := l_formal.constrained_type (current_class)
+						l_left_type := l_formal.constrained_type (current_class)
 					end
 				end
 

@@ -11,7 +11,7 @@
     <Property Id="Button_Cancel">Cancel</Property>
 
     <Property Id="Button_Browse">Br&amp;owse...</Property>
-    <Property Id="Button_Exit">&amp;Exit</Property>
+    <Property Id="Button_Exit">E&amp;xit</Property>
     <Property Id="Button_Ignore">&amp;Ignore</Property>
     <Property Id="Button_Install">&amp;Install</Property>
     <Property Id="Button_Remove">&amp;Remove</Property>

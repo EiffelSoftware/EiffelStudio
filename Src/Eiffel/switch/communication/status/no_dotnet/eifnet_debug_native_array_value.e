@@ -13,8 +13,10 @@ inherit
 	ABSTRACT_SPECIAL_VALUE
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
+		rename
+			reset_children as reset_items
 		undefine
-			address, sorted_children
+			address, sorted_children, reset_items
 		end
 
 feature -- Access

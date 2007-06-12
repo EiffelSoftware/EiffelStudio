@@ -1,0 +1,15 @@
+test_name 	 built-in-unary-plus
+test_description A generic class with a multi constrained formal is derrived with DOUBLE. The unary the unary plus uf numeric is renamed into something else and `out' us rebaned into the new unary plus. This causes a c compilation error
+
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+compile_result	validity_error TEST1 VTGC(2)
+
+test_end

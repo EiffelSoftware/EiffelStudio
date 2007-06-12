@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-11 16:11-0800\n"
+"PO-Revision-Date: 2007-06-12 11:11-0800\n"
 "Language-Team: \n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1940,7 +1940,7 @@ msgstr "Ersten Haltepunkt im Feature hinzufügen"
 #. Source code: t_add_new_constant_value_retriever: STRING is do Result := locale.translation ("Add new constant value retriever") end
 #: eb_metric_names.e:165
 msgid "Add new constant value retriever"
-msgstr "Neuen Erzeuger für konstante Werte hinzufügen"
+msgstr "Neuen Abrufer für Konstanten hinzufügen"
 
 #. Source code: dialog_external_add: STRING_GENERAL is do Result := locale.translation ("Add new external")	end
 #: conf_interface_names.e:439
@@ -1950,7 +1950,7 @@ msgstr "Neues externes Objekt hinzufügen"
 #. Source code: t_add_new_metric_value_retriever: STRING_GENERAL is do Result := locale.translation ("Add new metric value retriever") end
 #: eb_metric_names.e:175
 msgid "Add new metric value retriever"
-msgstr "Neuen Erzeuger für Metrikwerte hinzufügen"
+msgstr "Neuen Abrufer für Metrikwerte hinzufügen"
 
 #. Source code: l_add_stone_handler: STRING_GENERAL is do Result := locale.translation ("Add new stone handler") end
 #: interface_names.e:675
@@ -9421,7 +9421,7 @@ msgstr "Deferred"
 #. Source code: l_Deferreds: STRING_GENERAL is				do Result := locale.translation("Deferred features")	end
 #: interface_names.e:969
 msgid "Deferred features"
-msgstr "Aufgeschobene Features (deferred)"
+msgstr "Aufgeschobene Features"
 
 #. Source code: l_Subquery: STRING_GENERAL is				do Result := locale.translation("Define new subquery")	end
 #: interface_names.e:1276
@@ -21350,7 +21350,7 @@ msgstr "Alle Bereiche entfernen"
 #. Source code: t_remove_all_value_retriever: STRING_GENERAL is do Result := locale.translation ("Remove all value retriever") end
 #: eb_metric_names.e:167
 msgid "Remove all value retriever"
-msgstr "Alle Werteerzeuger entfernen"
+msgstr "Alle Abrufer für Werte entfernen"
 
 #. Source code: l_Remove_object_desc: STRING_GENERAL is		do Result := locale.translation("Remove an object from the tree")	end
 #: interface_names.e:1220
@@ -21460,7 +21460,7 @@ msgstr "Gewählte Kiesel-Behandlungsroutine entfernen"
 #. Source code: t_remove_value_retriever: STRING_GENERAL is do Result := locale.translation ("Remove selected value retriever") end
 #: eb_metric_names.e:166
 msgid "Remove selected value retriever"
-msgstr "Gewählten Werteerzeuger entfernen"
+msgstr "Gewählten Abrufer für Werte entfernen"
 
 #. Source code: e_Remove_exported_feature: STRING_GENERAL is	do Result := locale.translation("Remove the selected feature from this dynamic library definition")	end
 #: interface_names.e:2110
@@ -22458,7 +22458,7 @@ msgstr "Eine Aufzeichnung der Laufzeitinformationen wählen um ein Ausführungsp
 #. Source code: l_Not_in_system_no_info: STRING_GENERAL is	do Result := locale.translation("Select a class which is fully compiled to have information about it.")	end
 #: interface_names.e:1155
 msgid "Select a class which is fully compiled to have information about it."
-msgstr "Eine vollständig kompilierte Klasse wählen um Informationen anzuzeigen."
+msgstr "Eine vollständig kompilierte Klasse wählen um Informationen darüber anzuzeigen."
 
 #. Source code: l_select_cluster_to_display: STRING_GENERAL is do Result := locale.translation("Select a cluster to display available views")	end
 #: interface_names.e:1581
@@ -22482,7 +22482,7 @@ msgstr "Datei wählen für die Sicherheitskopie der benutzerdefinierten Metriken
 #. Source code: l_No_feature: STRING_GENERAL is				do Result := locale.translation("Select a fully compiled feature to have information about it.")	end
 #: interface_names.e:1148
 msgid "Select a fully compiled feature to have information about it."
-msgstr "Ein vollständig kompiliertes Feature wählen um Informationen anzuzeigen."
+msgstr "Ein vollständig kompiliertes Feature wählen um Informationen darüber anzuzeigen."
 
 #. Source code: t_select_archive: STRING_GENERAL is do Result := locale.translation ("Select a metric archive file") end
 #: eb_metric_names.e:66
@@ -22938,7 +22938,7 @@ msgstr "Eingabebereich setzen:"
 #. Source code: l_setup_metric_value_retriever: STRING_GENERAL is do Result := locale.translation ("Setup metric value retriever") end
 #: eb_metric_names.e:174
 msgid "Setup metric value retriever"
-msgstr "Erzeuger für Metrikwerte einstellen"
+msgstr "Abrufer für Metrikwerte einstellen"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Setup stone handlers for tool %"$1%""), [l_tool_name])
 #: interface_names.e:630
@@ -23906,7 +23906,7 @@ msgstr "Klassenpfad anzeigen?"
 #. 	<PREF NAME="shortcuts.view.tools.show_class_tool" DESCRIPTION="Shortcut to display Class tool."><SHORTCUT Ctrl="True" Alt="True">C</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:708
 msgid "Show class tool"
-msgstr "Klasseninformationen anzeigen"
+msgstr "Informationen über Klasse anzeigen"
 
 #. 	<PREF NAME="tools.diagram_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:87
@@ -23986,7 +23986,7 @@ msgstr "Favoriten anzeigen"
 #. 	<PREF NAME="shortcuts.view.tools.show_feature_relation_tool" DESCRIPTION="Shortcut to display Feature Relation tool."><SHORTCUT Ctrl="True" Alt="True">V</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:709
 msgid "Show feature relation tool"
-msgstr "Featureinformationen anzeigen"
+msgstr "Informationen über Feature anzeigen"
 
 #. 	<PREF NAME="shortcuts.view.tools.show_features_tool" DESCRIPTION="Shortcut to display Features tool."><SHORTCUT Ctrl="True" Alt="True">T</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:703
@@ -26147,7 +26147,7 @@ msgstr "Zu viele Kriteriumssektionen. Nur eine wird erwartet."
 #. Source code: Result := locale.translation ("Too many value retrievers nodes. Only one is expected.")
 #: eb_metric_names.e:1041
 msgid "Too many value retrievers nodes. Only one is expected."
-msgstr "Zu viele Werteerzeuger-Knoten. Nur einer wird erwartet."
+msgstr "Zu viele Abrufer-Knoten. Nur einer wird erwartet."
 
 #. Source code: t_tool_name: STRING_GENERAL is do Result := locale.translation ("Tool") end
 #: interface_names.e:612
@@ -28121,7 +28121,7 @@ msgstr "Wert des Elements $1 ist ungültig."
 #. Source code: err_value_retriever_missing: STRING_GENERAL is do Result := locale.translation ("Value retriever is missing.") end
 #: eb_metric_names.e:1048
 msgid "Value retriever is missing."
-msgstr "Werteerzeuger fehlt."
+msgstr "Abrufer für Werte fehlt."
 
 #. Source code: err_value_tester_missing: STRING_GENERAL is do Result := locale.translation ("Value tester is missing.") end
 #: eb_metric_names.e:1047
@@ -29142,7 +29142,7 @@ msgstr "Standard"
 #. Source code: l_Deferred: STRING_GENERAL is				do Result := locale.translation("deferred")	end
 #: interface_names.e:968
 msgid "deferred"
-msgstr "Aufgeschoben (deferred)"
+msgstr "Aufgeschoben"
 
 #. Source code: l_delayed_domain_item: STRING_GENERAL is do Result := locale.translation ("delayed item") end
 #: interface_names.e:1659

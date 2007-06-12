@@ -412,6 +412,10 @@ struct dbinfo {
 	uint32 db_callstack_depth;			/* number of routines on the eiffel stack */
 	uint32 db_callstack_depth_stop;		/* depth from which we must stop (step-by-step, stepinto..) */
 	char db_stepinto_mode;				/* is stepinto activated ? */
+	char db_discard_breakpoints;		/* when set, discard all breakpoints. (not used for run-no-stop)*/
+                                        /* and after the end of the root creation. it avoids the    	*/
+                                        /* application to stop after its end when garbage collector 	*/
+                                        /* destroys objects                                         	*/
 };
 
 /* List of offset. It tells where the breakpoint inside a feature are */
@@ -432,10 +436,6 @@ struct db_bpinfo {
 
 /* Debugger information (global to all threads) */
 struct dbglobalinfo {
-	char db_discard_breakpoints;		/* when set, discard all breakpoints. used for run-no-stop, */
-										/* and after the end of the root creation. it avoids the    */
-										/* application to stop after its end when garbage collector */
-										/* destroys objects                                         */
 	struct db_bpinfo **db_bpinfo;		/* breakpoints hash table */
 };
 

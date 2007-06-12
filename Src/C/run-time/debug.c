@@ -600,8 +600,8 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-		DBGMTX_LOCK;	/* Enter critical section */
 		if (!d_data.db_discard_breakpoints) {
+			DBGMTX_LOCK;	/* Enter critical section */
 			int stopped = 0;
 			BODY_INDEX bodyid = exvect->ex_bodyid;
  
@@ -654,8 +654,8 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 				previous_break_index = break_index;
 				stopped = 1;
 			}
+			DBGMTX_UNLOCK; /* Leave critical section */
 		}
-		DBGMTX_UNLOCK; /* Leave critical section */
 	}
 }
 
@@ -673,8 +673,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	   					* when the application is started from the command line
 	   					*/
 
-		DBGMTX_LOCK;	/* Enter critical section */
 		if (!d_data.db_discard_breakpoints) {
+			DBGMTX_LOCK;	/* Enter critical section */
 			BODY_INDEX bodyid = exvect->ex_bodyid;
 				
 			if (previous_bodyid == bodyid && previous_break_index == break_index) {
@@ -691,9 +691,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 
 			/* we don't test the other case: breakpoint & interruption to avoid
 			 * stopping in the middle of a nested call */
-		}
-
 		DBGMTX_UNLOCK; /* Leave critical section */
+		}
 	}
 }
 /*************************************************************************************************************************

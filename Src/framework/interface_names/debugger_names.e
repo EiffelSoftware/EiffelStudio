@@ -74,6 +74,9 @@ feature -- warnings
 				)
 		end
 
+	w_Invalid_hit_count_condition_target: STRING_GENERAL is
+		do Result := locale.translation ("The specified hit count target is not valid.") end
+
 feature -- Messages
 
 	m_Not_yet_called: STRING_GENERAL is

@@ -220,7 +220,8 @@ feature -- Breakpoints management
 					when {BREAKPOINT}.hits_count_condition_equal then
 						bp_reached := bp.hits_count = bp.hits_count_condition.value
 					when {BREAKPOINT}.hits_count_condition_multiple then
-						bp_reached := bp.hits_count \\ bp.hits_count_condition.value = 0
+						bp_reached := bp.hits_count_condition.value = 0
+									or else (bp.hits_count \\ bp.hits_count_condition.value = 0)
 					when {BREAKPOINT}.hits_count_condition_greater then
 						bp_reached := bp.hits_count >= bp.hits_count_condition.value
 					else

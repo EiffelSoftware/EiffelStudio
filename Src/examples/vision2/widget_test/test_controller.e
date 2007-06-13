@@ -239,13 +239,20 @@ feature {NONE} -- Implementation
 			-- Retrieve all test class files, and
 			-- store them in `class_texts'.
 		do
-			application.do_once_on_idle (agent real_load_texts (a_type))
+			if real_load_texts_agent = Void then
+				real_load_texts_agent := agent real_load_texts
+			end
+			type_to_retrieve := a_type
+			application.do_once_on_idle (real_load_texts_agent)
 				-- We defer this so that it is executed on the idle actions of EV_APPLICATION.
 				-- This speeds up the appearence of the type change to a user, as they are not
 				-- waiting for the file to load before being able to interact with the interface.
 		end
 
-	real_load_texts (a_type: STRING) is
+	real_load_texts_agent: PROCEDURE [TEST_CONTROLLER, TUPLE]
+	type_to_retrieve: STRING
+
+	real_load_texts is
 			-- Actually perform the loading of the file.
 		local
 			directory: DIRECTORY
@@ -254,10 +261,12 @@ feature {NONE} -- Implementation
 			filenames: ARRAYED_LIST [STRING]
 			current_file_name:  STRING
 			error_label: EV_LABEL
+			l_type: STRING
 		do
+			l_type := type_to_retrieve
 			create directory_name.make_from_string (eiffel_layout.shared_application_path)
 			directory_name.extend ("tests")
-			directory_string := a_type.substring (4, a_type.count)
+			directory_string := l_type.substring (4, l_type.count)
 			directory_string.to_lower
 			directory_name.extend (directory_string)
 			create directory.make_open_read (directory_name)

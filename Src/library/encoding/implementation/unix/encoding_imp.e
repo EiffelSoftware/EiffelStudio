@@ -95,13 +95,19 @@ feature -- Status report
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN is
 			-- Is `a_code_page' valid?
-		local
-			l_pointer: POINTER
+			-- We don't care this on Unix. What we are really interested is `is_code_page_convertable'.
 		do
-			if a_code_page /= Void and then a_code_page /= Void then
-				l_pointer := multi_byte_to_pointer (a_code_page)
-				Result := is_codeset_convertable (l_pointer, l_pointer)
-			end
+			Result := a_code_page /= Void and then not a_code_page.is_empty
+		end
+
+	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING_8): BOOLEAN
+			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+		local
+			l_from_pointer, l_to_pointer: POINTER
+		do
+			l_from_pointer := multi_byte_to_pointer (a_from_code_page)
+			l_to_pointer := multi_byte_to_pointer (a_to_code_page)
+			Result := is_codeset_convertable (l_from_pointer, l_to_pointer)
 		end
 
 feature {NONE} -- Implementation

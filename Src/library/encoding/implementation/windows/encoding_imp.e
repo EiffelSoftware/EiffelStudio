@@ -124,9 +124,17 @@ feature -- Status report
 	is_code_page_valid (a_code_page: STRING): BOOLEAN is
 			-- Is `a_code_page' valid?
 		do
-			if a_code_page /= Void and then a_code_page /= Void then
+			if a_code_page /= Void and then not a_code_page.is_empty then
 				Result := code_pages.has (a_code_page)
 			end
+		end
+
+	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN is
+			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+		do
+				-- Always true. It is not really interesting here on windows without converting strings.
+				-- `last_conversion_successful' reflects correct result.
+			Result := True
 		end
 
 feature {NONE} -- Implementation

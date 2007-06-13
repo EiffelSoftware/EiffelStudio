@@ -200,14 +200,19 @@ feature -- Process
 			-- Print `text_block' on `console'.
 		local
 			str: STRING
+			str_general: STRING_GENERAL
 		do
 			str ?= text_block.data
 			if str /= Void then
 				if source_encoding /= Void and then destination_encoding /= Void then
-					output_text.append_text (source_encoding.convert_to (destination_encoding, str))
+					str_general := source_encoding.convert_to (destination_encoding, str)
+					if not source_encoding.last_conversion_successful then
+					 	str_general := str
+					end
 				else
-					output_text.append_text (str)
+					str_general := str
 				end
+				output_text.append_text (str_general)
 			end
 		end
 

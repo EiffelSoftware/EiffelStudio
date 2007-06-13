@@ -207,7 +207,7 @@ feature -- Setting
 			error_not_file: error_file_name = Void
 		end
 
-feature{PROCESS_IMP} -- Process management
+feature {PROCESS_IMP} -- Process management
 
 	wait_for_process (pid: INTEGER; is_block: BOOLEAN) is
 			-- Wait for any process specified by process
@@ -259,45 +259,55 @@ feature{PROCESS_IMP} -- Process management
 			-- new process will inherit all environment variables from its parent process.
 			-- If `a_new_process_group' is True, launch process in a new process group.
 			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
-		local
-			ee: EXECUTION_ENVIRONMENT
-			cur_dir: STRING
-			exceptions: EXCEPTIONS
-		do
-			build_argument_list
-			open_files_and_pipes
-			create ee
-			if working_directory /= Void then
-				create cur_dir.make_from_string ( ee.current_working_directory)
-				ee.change_working_directory (working_directory)
-			end
-			process_id := fork_process
-			if process_id = 0 then
-				collection_off
-				if a_new_process_group then
-					new_process_group
-					if is_control_terminal_enabled then
-						attach_terminals (process_id)
-					end
-				end
-				setup_child_process_files
-				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files, evnptr)
-			else
-				if process_id /= -1 then
-					setup_parent_process_files
-					arguments_for_exec := Void
-					set_is_executing (True)
-				end
-				if working_directory /= Void then
-					ee.change_working_directory (cur_dir)
-				end
-			end
-		rescue
-			if process_id = 0 then
-				create exceptions
-				exceptions.die (1)
-			end
-		end
+        local
+            ee: EXECUTION_ENVIRONMENT
+            cur_dir: STRING
+            exceptions: EXCEPTIONS
+            d: like internal_debug_mode
+        do
+            build_argument_list
+            open_files_and_pipes
+            create ee
+            if working_directory /= Void then
+                create cur_dir.make_from_string ( ee.current_working_directory)
+                ee.change_working_directory (working_directory)
+            end
+            d := internal_debug_mode
+            internal_set_debug_mode (0)
+            process_id := fork_process
+            inspect process_id
+            when -1 then --| Error
+                internal_set_debug_mode (d)
+                -- Error ... no fork allowed
+                if working_directory /= Void then
+                    ee.change_working_directory (cur_dir)
+                end
+            when 0 then --| Child process
+                collection_off
+                if a_new_process_group then
+                    new_process_group
+                    if is_control_terminal_enabled then
+                        attach_terminals (process_id)
+                    end
+                end
+                setup_child_process_files
+                exec_process (program_file_name, arguments_for_exec, close_nonstandard_files, evnptr)
+            else --| Parent process
+                internal_set_debug_mode (d)
+                setup_parent_process_files
+                arguments_for_exec := Void
+                set_is_executing (True)
+                if working_directory /= Void then
+                    ee.change_working_directory (cur_dir)
+                end
+            end
+        rescue
+            if process_id = 0 then
+                create exceptions
+                exceptions.die (1)
+            end
+            internal_set_debug_mode (d)
+        end
 
 	terminate_hard (is_tree: BOOLEAN) is
 			-- Send a kill signal (SIGKILL) to process(es).
@@ -356,7 +366,7 @@ feature{PROCESS_IMP} -- Process management
 	last_error: STRING
 			-- Last read data from error pipe
 
-feature{NONE} -- Properties
+feature {NONE} -- Properties
 
 	program_file_name: STRING;
 			-- Name of file containing program which will be
@@ -575,7 +585,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	in_file: RAW_FILE
 			-- File to be used by child process for standard input
@@ -598,7 +608,7 @@ feature{NONE} -- Implementation
 	Stderr_descriptor: INTEGER is 2
 			-- File descriptor for standard error
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	shared_input_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect input of process
@@ -656,6 +666,24 @@ feature{NONE} -- Implementation
 		ensure
 			is_executing_set: is_executing = b
 		end
+
+feature {NONE} -- Debugger access
+
+    internal_set_debug_mode (a_debug_mode: INTEGER) is
+            --
+        external
+            "C inline use%"eif_main.h%""
+        alias
+            "set_debug_mode ($a_debug_mode);"
+        end
+
+    internal_debug_mode: INTEGER is
+            -- State of debugger.
+        external
+            "C inline use %"eif_main.h%""
+        alias
+			"return is_debug_mode();"
+        end
 
 invariant
 	input_piped_no_file: input_piped implies input_file_name = Void

@@ -406,6 +406,17 @@ rt_public int is_debug_mode (void){
 	return debug_mode;
 }
 
+/*
+doc:	<routine name="set_debug_mode" return_type="void" export="public">
+doc:		<summary>Public assigner to `debug_mode'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
+rt_public void set_debug_mode (int v){
+	debug_mode = v;
+}
+
 rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT

@@ -163,6 +163,10 @@ feature {NONE} -- Initialization
 			move_unit_down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
 			move_unit_down_btn.set_tooltip (metric_names.f_move_unit_down.as_string_32 + metric_names.f_rearrange_unit)
 			move_unit_down_btn.select_actions.extend (agent on_move_unit (False, True))
+
+			metric_grid.row_deselect_actions.extend (agent on_row_deselected)
+			move_unit_up_btn.disable_sensitive
+			move_unit_down_btn.disable_sensitive
 		ensure then
 			metric_selected_actions_attached: metric_selected_actions /= Void
 			group_selected_actions_attached: group_selected_actions /= Void
@@ -494,6 +498,16 @@ feature{NONE} -- Actions
 			l_dest_unit ?= a_item.row.data
 			if l_dest_unit /= Void and then a_unit /= l_dest_unit then
 				change_unit_order (a_unit, l_dest_unit, True)
+			end
+		end
+
+	on_row_deselected (a_row: EV_GRID_ROW) is
+			-- Action to be performed when `a_row' is deselected
+		do
+			if metric_grid.selected_rows.is_empty then
+				move_unit_down_btn.disable_sensitive
+				move_unit_up_btn.disable_sensitive
+				metric_selected_actions.call ([Void])
 			end
 		end
 

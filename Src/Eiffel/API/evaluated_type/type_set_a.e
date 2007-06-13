@@ -585,6 +585,35 @@ feature -- Access
 			feature_i_relation: feature_i_state_by_rout_id (a_routine_id).features_found_count = Result.features_found_count
 		end
 
+	any_e_feature_by_routine_id (a_routine_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type: RENAMED_TYPE_A [TYPE_A]]
+			-- Returns the first matching feature and its class type
+			--
+			-- `a_routine_id' is a routine id for which we query all types in the type set.
+			--| An assignment attempt is needed.
+		require
+			not_has_formal: not has_formal
+		local
+			l_class: CLASS_C
+			l_feat: E_FEATURE
+			l_item: RENAMED_TYPE_A [TYPE_A]
+		do
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				l_item := item
+					-- implied by precondition: not_loose
+				check has_associated_class: l_item.has_associated_class end
+				l_class := l_item.associated_class
+				l_feat := l_class.feature_with_rout_id (a_routine_id)
+				if l_feat /= Void then
+					Result := [l_feat, l_item]
+				end
+				forth
+			end
+		end
+
 	e_feature_list_by_rout_id (a_routine_id: INTEGER): ARRAYED_LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A [TYPE_A]]]
 			--
 		require

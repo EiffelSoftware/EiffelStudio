@@ -140,6 +140,7 @@ feature {NONE} -- Initialization
 			create tb_exception.make
 			create tb_but.make
 			exception_dialog_button := tb_but
+			tb_but.disable_sensitive
 			tb_but.set_pixmap (pixmaps.icon_pixmaps.debug_exception_dialog_icon)
 			tb_but.set_pixel_buffer (pixmaps.icon_pixmaps.debug_exception_dialog_icon_buffer)
 			tb_but.set_tooltip (interface_names.l_open_exception_dialog_tooltip)
@@ -655,7 +656,7 @@ feature {NONE} -- Implementation
 			exception_dialog_button.enable_sensitive
 		end
 
-	show_call_stack_message (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	show_call_stack_message is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
 			wdlg: EB_WARNING_DIALOG

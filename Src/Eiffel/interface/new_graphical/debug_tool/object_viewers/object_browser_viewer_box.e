@@ -64,6 +64,9 @@ feature {NONE} -- Implementation
 			viewer.enable_layout_management
 			viewer.set_pre_activation_action (agent pre_activate_cell)
 
+			viewer.set_configurable_target_menu_mode
+			viewer.set_configurable_target_menu_handler (agent context_menu_handler)
+
 			viewerborder.extend (viewer)
 			vb.extend (viewerborder)
 
@@ -148,6 +151,17 @@ feature {NONE} -- Implementation
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			viewer.set_row_count_to (0)
+		end
+
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Context menu handler
+		local
+			l_dev_window: EB_DEVELOPMENT_WINDOW
+		do
+			l_dev_window := window_manager.last_focused_development_window
+			if l_dev_window /= Void then
+				l_dev_window.menus.context_menu_factory.object_viewer_browser_view_menu (a_menu, a_target_list, a_source, a_pebble)
+			end
 		end
 
 feature {NONE} -- Event handling

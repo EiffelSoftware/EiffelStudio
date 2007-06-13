@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-12 20:14+0300\n"
+"PO-Revision-Date: 2007-06-13 22:53+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -3487,392 +3487,392 @@ msgstr "Автоматическое завершение"
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.autocomplete_alias" DESCRIPTION="Autocomplete alias?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:396
 msgid "Autocomplete alias"
-msgstr ""
+msgstr "Завершать alias"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.autocomplete_alias" DESCRIPTION="Autocomplete alias?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:396
 msgid "Autocomplete alias?"
-msgstr ""
+msgstr "Завершать alias?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.autocomplete_check" DESCRIPTION="Autocomplete check?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:480
 msgid "Autocomplete check"
-msgstr ""
+msgstr "Завершать check"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.autocomplete_check" DESCRIPTION="Autocomplete check?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:480
 msgid "Autocomplete check?"
-msgstr ""
+msgstr "Завершать check?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.autocomplete_class" DESCRIPTION="Autocomplete class?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:291
 msgid "Autocomplete class"
-msgstr ""
+msgstr "Завершать class"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.autocomplete_class" DESCRIPTION="Autocomplete class?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:291
 msgid "Autocomplete class?"
-msgstr ""
+msgstr "Завершать class?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.autocomplete_create" DESCRIPTION="Autocomplete create?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:529
 msgid "Autocomplete create"
-msgstr ""
+msgstr "Завершать create"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.autocomplete_create" DESCRIPTION="Autocomplete create?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:529
 msgid "Autocomplete create?"
-msgstr ""
+msgstr "Завершать create?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.autocomplete_creation" DESCRIPTION="Autocomplete creation?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:305
 msgid "Autocomplete creation"
-msgstr ""
+msgstr "Завершать creation"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.autocomplete_creation" DESCRIPTION="Autocomplete creation?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:305
 msgid "Autocomplete creation?"
-msgstr ""
+msgstr "Завершать creation?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.autocomplete_debug" DESCRIPTION="Autocomplete debug?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:473
 msgid "Autocomplete debug"
-msgstr ""
+msgstr "Завершать debug"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.autocomplete_debug" DESCRIPTION="Autocomplete debug?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:473
 msgid "Autocomplete debug?"
-msgstr ""
+msgstr "Завершать debug?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.autocomplete_deferred" DESCRIPTION="Autocomplete deferred?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:361
 msgid "Autocomplete deferred"
-msgstr ""
+msgstr "Завершать deferred"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.autocomplete_deferred" DESCRIPTION="Autocomplete deferred?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:361
 msgid "Autocomplete deferred?"
-msgstr ""
+msgstr "Завершать deferred?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:347
 msgid "Autocomplete do"
-msgstr ""
+msgstr "Завершать do"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:347
 msgid "Autocomplete do?"
-msgstr ""
+msgstr "Завершать do?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.autocomplete_else" DESCRIPTION="Autocomplete else?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:424
 msgid "Autocomplete else"
-msgstr ""
+msgstr "Завершать else"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.autocomplete_else" DESCRIPTION="Autocomplete else?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:424
 msgid "Autocomplete else?"
-msgstr ""
+msgstr "Завершать else?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete elseif?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:417
 msgid "Autocomplete elseif"
-msgstr ""
+msgstr "Завершать elseif"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete elseif?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:417
 msgid "Autocomplete elseif?"
-msgstr ""
+msgstr "Завершать elseif?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.autocomplete_end" DESCRIPTION="Autocomplete end?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:550
 msgid "Autocomplete end"
-msgstr ""
+msgstr "Завершать end"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.autocomplete_end" DESCRIPTION="Autocomplete end?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:550
 msgid "Autocomplete end?"
-msgstr ""
+msgstr "Завершать end?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.autocomplete_ensure" DESCRIPTION="Autocomplete ensure?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:382
 msgid "Autocomplete ensure"
-msgstr ""
+msgstr "Завершать ensure"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.autocomplete_ensure_then" DESCRIPTION="Autocomplete ensure then?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:389
 msgid "Autocomplete ensure then"
-msgstr ""
+msgstr "Завершать ensure then"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.autocomplete_ensure_then" DESCRIPTION="Autocomplete ensure then?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:389
 msgid "Autocomplete ensure then?"
-msgstr ""
+msgstr "Завершать ensure then?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.autocomplete_ensure" DESCRIPTION="Autocomplete ensure?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:382
 msgid "Autocomplete ensure?"
-msgstr ""
+msgstr "Завершать ensure?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.autocomplete_export" DESCRIPTION="Autocomplete export?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:515
 msgid "Autocomplete export"
-msgstr ""
+msgstr "Завершать export"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.autocomplete_export" DESCRIPTION="Autocomplete export?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:515
 msgid "Autocomplete export?"
-msgstr ""
+msgstr "Завершать export?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.autocomplete_external" DESCRIPTION="Autocomplete external?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:368
 msgid "Autocomplete external"
-msgstr ""
+msgstr "Завершать external"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.autocomplete_external" DESCRIPTION="Autocomplete external?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:368
 msgid "Autocomplete external?"
-msgstr ""
+msgstr "Завершать external?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.autocomplete_feature" DESCRIPTION="Autocomplete feature?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:312
 msgid "Autocomplete feature"
-msgstr ""
+msgstr "Завершать feature"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.autocomplete_feature" DESCRIPTION="Autocomplete feature?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:312
 msgid "Autocomplete feature?"
-msgstr ""
+msgstr "Завершать feature?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.autocomplete_from" DESCRIPTION="Autocomplete from?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:445
 msgid "Autocomplete from"
-msgstr ""
+msgstr "Завершать from"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.autocomplete_from" DESCRIPTION="Autocomplete from?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:445
 msgid "Autocomplete from?"
-msgstr ""
+msgstr "Завершать from?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.autocomplete_if" DESCRIPTION="Autocomplete if?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:403
 msgid "Autocomplete if"
-msgstr ""
+msgstr "Завершать if"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.autocomplete_if" DESCRIPTION="Autocomplete if?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:403
 msgid "Autocomplete if?"
-msgstr ""
+msgstr "Завершать if?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:284
 msgid "Autocomplete indexing"
-msgstr ""
+msgstr "Завершать indexing"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:284
 msgid "Autocomplete indexing?"
-msgstr ""
+msgstr "Завершать indexing?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.autocomplete_inherit" DESCRIPTION="Autocomplete inherit?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:298
 msgid "Autocomplete inherit"
-msgstr ""
+msgstr "Завершать inherit"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.autocomplete_inherit" DESCRIPTION="Autocomplete inherit?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:298
 msgid "Autocomplete inherit?"
-msgstr ""
+msgstr "Завершать inherit?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:431
 msgid "Autocomplete inspect"
-msgstr ""
+msgstr "Завершать inspect"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.autocomplete_inspect" DESCRIPTION="Autocomplete inspect?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:431
 msgid "Autocomplete inspect?"
-msgstr ""
+msgstr "Завершать inspect?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.autocomplete_invariant" DESCRIPTION="Autocomplete invariant?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:543
 msgid "Autocomplete invariant"
-msgstr ""
+msgstr "Завершать invariant"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.autocomplete_invariant" DESCRIPTION="Autocomplete invariant?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:543
 msgid "Autocomplete invariant?"
-msgstr ""
+msgstr "Завершать invariant?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.autocomplete_is" DESCRIPTION="Autocomplete is?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:319
 msgid "Autocomplete is"
-msgstr ""
+msgstr "Завершать is"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.autocomplete_is" DESCRIPTION="Autocomplete is?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:319
 msgid "Autocomplete is?"
-msgstr ""
+msgstr "Завершать is?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.autocomplete_local" DESCRIPTION="Autocomplete local?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:340
 msgid "Autocomplete local"
-msgstr ""
+msgstr "Завершать local"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.autocomplete_local" DESCRIPTION="Autocomplete local?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:340
 msgid "Autocomplete local?"
-msgstr ""
+msgstr "Завершать local?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.autocomplete_loop" DESCRIPTION="Autocomplete loop?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:466
 msgid "Autocomplete loop"
-msgstr ""
+msgstr "Завершать loop"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.autocomplete_loop" DESCRIPTION="Autocomplete loop?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:466
 msgid "Autocomplete loop?"
-msgstr ""
+msgstr "Завершать loop?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.autocomplete_obsolete" DESCRIPTION="Autocomplete obsolete?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:536
 msgid "Autocomplete obsolete"
-msgstr ""
+msgstr "Завершать obsolete"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.autocomplete_obsolete" DESCRIPTION="Autocomplete obsolete?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:536
 msgid "Autocomplete obsolete?"
-msgstr ""
+msgstr "Завершать obsolete?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.autocomplete_once" DESCRIPTION="Autocomplete once?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:354
 msgid "Autocomplete once"
-msgstr ""
+msgstr "Завершать once"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.autocomplete_once" DESCRIPTION="Autocomplete once?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:354
 msgid "Autocomplete once?"
-msgstr ""
+msgstr "Завершать once?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete precursor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:522
 msgid "Autocomplete precursor"
-msgstr ""
+msgstr "Завершать precursor"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.autocomplete_precursor" DESCRIPTION="Autocomplete precursor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:522
 msgid "Autocomplete precursor?"
-msgstr ""
+msgstr "Завершать precursor?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.autocomplete_redefine" DESCRIPTION="Autocomplete redefine?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:494
 msgid "Autocomplete redefine"
-msgstr ""
+msgstr "Завершать redefine"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.autocomplete_redefine" DESCRIPTION="Autocomplete redefine?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:494
 msgid "Autocomplete redefine?"
-msgstr ""
+msgstr "Завершать redefine?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.autocomplete_rename" DESCRIPTION="Autocomplete rename?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:487
 msgid "Autocomplete rename"
-msgstr ""
+msgstr "Завершать rename"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.autocomplete_rename" DESCRIPTION="Autocomplete rename?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:487
 msgid "Autocomplete rename?"
-msgstr ""
+msgstr "Завершать rename?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.autocomplete_require" DESCRIPTION="Autocomplete require?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:326
 msgid "Autocomplete require"
-msgstr ""
+msgstr "Завершать require"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.autocomplete_require_else" DESCRIPTION="Autocomplete require else?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:333
 msgid "Autocomplete require else"
-msgstr ""
+msgstr "Завершать require else"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.autocomplete_require_else" DESCRIPTION="Autocomplete require else?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:333
 msgid "Autocomplete require else?"
-msgstr ""
+msgstr "Завершать require else?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.autocomplete_require" DESCRIPTION="Autocomplete require?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:326
 msgid "Autocomplete require?"
-msgstr ""
+msgstr "Завершать require?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.autocomplete_rescue" DESCRIPTION="Autocomplete rescue?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:375
 msgid "Autocomplete rescue"
-msgstr ""
+msgstr "Завершать rescue"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.autocomplete_rescue" DESCRIPTION="Autocomplete rescue?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:375
 msgid "Autocomplete rescue?"
-msgstr ""
+msgstr "Завершать rescue?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.autocomplete_select" DESCRIPTION="Autocomplete select?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:508
 msgid "Autocomplete select"
-msgstr ""
+msgstr "Завершать select"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.autocomplete_select" DESCRIPTION="Autocomplete select?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:508
 msgid "Autocomplete select?"
-msgstr ""
+msgstr "Завершать select?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.autocomplete_then" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:410
 msgid "Autocomplete then"
-msgstr ""
+msgstr "Завершать then"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.autocomplete_then" DESCRIPTION="Autocomplete then?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:410
 msgid "Autocomplete then?"
-msgstr ""
+msgstr "Завершать then?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.autocomplete_undefine" DESCRIPTION="Autocomplete undefine?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:501
 msgid "Autocomplete undefine"
-msgstr ""
+msgstr "Завершать undefine"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.autocomplete_undefine" DESCRIPTION="Autocomplete undefine?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:501
 msgid "Autocomplete undefine?"
-msgstr ""
+msgstr "Завершать undefine?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.autocomplete_until" DESCRIPTION="Autocomplete until?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:459
 msgid "Autocomplete until"
-msgstr ""
+msgstr "Завершать until"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.autocomplete_until" DESCRIPTION="Autocomplete until?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:459
 msgid "Autocomplete until?"
-msgstr ""
+msgstr "Завершать until?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.autocomplete_variant" DESCRIPTION="Autocomplete variant?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:452
 msgid "Autocomplete variant"
-msgstr ""
+msgstr "Завершать variant"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.autocomplete_variant" DESCRIPTION="Autocomplete variant?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:452
 msgid "Autocomplete variant?"
-msgstr ""
+msgstr "Завершать variant?"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.autocomplete_when" DESCRIPTION="Autocomplete when?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:438
 msgid "Autocomplete when"
-msgstr ""
+msgstr "Завершать when"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.autocomplete_when" DESCRIPTION="Autocomplete when?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:438
 msgid "Autocomplete when?"
-msgstr ""
+msgstr "Завершать when?"
 
 #. Source code: target_automatic_backup_name: STRING_GENERAL is do Result := locale.translation ("Automatic Backup")	end
 #: conf_interface_names.e:101
@@ -4021,52 +4021,52 @@ msgstr "Цвет фона диаграммы"
 #. Source code: e_finalizing_launch_failed: STRING_GENERAL is		do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
 #: interface_names.e:2041
 msgid "Background Finalized C Compilation Launch Failed"
-msgstr ""
+msgstr "Не удалось запустить фоновую окончательную компиляцию C "
 
 #. Source code: e_finalizing_launched: STRING_GENERAL is 	do Result := locale.translation("Background Finalized C Compilation Launched")	end
 #: interface_names.e:2043
 msgid "Background Finalized C Compilation Launched"
-msgstr ""
+msgstr "Фоновая окончательная компиляция C запущена"
 
 #. Source code: e_finalizing_succeeded: STRING_GENERAL is	do Result := locale.translation("Background Finalized C Compilation Succeeded")	end
 #: interface_names.e:2045
 msgid "Background Finalized C Compilation Succeeded"
-msgstr ""
+msgstr "Фоновая окончательная компиляция C успешно завершена"
 
 #. Source code: e_finalizing_terminated: STRING_GENERAL is 	do Result := locale.translation("Background Finalized C Compilation Terminated")	end
 #: interface_names.e:2047
 msgid "Background Finalized C Compilation Terminated"
-msgstr ""
+msgstr "Фоновая окончательная компиляция C прервана"
 
 #. Source code: e_finalizing_failed: STRING_GENERAL is		do Result := locale.translation("Background Finalized C compilation Failed")	end
 #: interface_names.e:2038
 msgid "Background Finalized C compilation Failed"
-msgstr ""
+msgstr "Фоновая окончательная компиляция C завершилась с ошибкой"
 
 #. Source code: e_freezing_failed: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
 #: interface_names.e:2037
 msgid "Background Workbench C Compilation Failed"
-msgstr ""
+msgstr "Фоновая рабочая компиляция C завершилась с ошибкой"
 
 #. Source code: e_freezing_launch_failed: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Launch Failed")	end
 #: interface_names.e:2040
 msgid "Background Workbench C Compilation Launch Failed"
-msgstr ""
+msgstr "Не удалось запустить фоновая рабочую компиляцию C"
 
 #. Source code: e_freezing_launched: STRING_GENERAL is 		do Result := locale.translation("Background Workbench C Compilation Launched")	end
 #: interface_names.e:2042
 msgid "Background Workbench C Compilation Launched"
-msgstr ""
+msgstr "Фоновая рабочая компиляция C запущена"
 
 #. Source code: e_freezing_succeeded: STRING_GENERAL is 	do Result := locale.translation("Background Workbench C Compilation Succeeded")	end
 #: interface_names.e:2044
 msgid "Background Workbench C Compilation Succeeded"
-msgstr ""
+msgstr "Фоновая рабочая компиляция C успешно завершена"
 
 #. Source code: e_freezing_terminated: STRING_GENERAL is 	do Result := locale.translation("Background Workbench C Compilation Terminated")	end
 #: interface_names.e:2046
 msgid "Background Workbench C Compilation Terminated"
-msgstr ""
+msgstr "Фоновая рабочая компиляция C прервана"
 
 #. 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:115
@@ -4649,7 +4649,7 @@ msgstr ""
 #. Source code: l_bye: STRING_GENERAL is					do Result := locale.translation ("Bye") end
 #: interface_names.e:23
 msgid "Bye"
-msgstr ""
+msgstr "До свидания"
 
 #. Source code: b_C_functions: STRING_GENERAL is					do Result := locale.translation("C Functions")	end
 #: interface_names.e:46
@@ -5037,7 +5037,7 @@ msgstr "Проверять предложения &экспорта"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:484
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:485
 msgid "Check"
-msgstr "Проверка"
+msgstr "check"
 
 #. Source code: target_check_vape_name: STRING_GENERAL is do Result := locale.translation ("Check VAPE")	end
 #: conf_interface_names.e:103
@@ -5107,7 +5107,7 @@ msgstr "Китайский (Тайвань)"
 #. Source code: t_Diagram_delete_client_link: STRING_GENERAL is 	do Result := locale.translation("Choose Feature(s) to Delete")	end
 #: interface_names.e:1808
 msgid "Choose Feature(s) to Delete"
-msgstr ""
+msgstr "Выберите компонент(ы) для удаления"
 
 #. Source code: t_choose_libraries: STRING_GENERAL is		do Result := locale.translation ("Choose Libraries to precompile") end
 #: interface_names.e:55
@@ -5650,12 +5650,12 @@ msgstr "Щёлкните Назад, если можете устранить п
 #. Source code: Result := locale.translation ("Click Finish to generate and compile this project")
 #: interface_names.e:44
 msgid "Click Finish to generate and compile this project"
-msgstr ""
+msgstr "Нажмите Закончить, чтобы сгенерировать и скомпилировать этот проект"
 
 #. Source code: Result := locale.translation ("Click Finish to generate and compile this project.")
 #: interface_names.e:133
 msgid "Click Finish to generate and compile this project."
-msgstr ""
+msgstr "Нажмите Закончить, чтобы сгенерировать и скомпилировать этот проект."
 
 #. Source code: Result := locale.translation ("Click Finish to generate this project")
 #: interface_names.e:46
@@ -5665,12 +5665,12 @@ msgstr "Нажмите Закончить, чтобы сгенерировать
 #. Source code: Result := locale.translation ("Click Finish to generate this project.")
 #: interface_names.e:135
 msgid "Click Finish to generate this project."
-msgstr ""
+msgstr "Нажмите Закончить, чтобы сгенерировать этот проект."
 
 #. Source code: l_finish_to_generate: STRING_GENERAL is 	do Result := locale.translation("Click `Finish' to generate the documentation.")	end
 #: interface_names.e:1078
 msgid "Click `Finish' to generate the documentation."
-msgstr ""
+msgstr "Нажмите `Закончить', чтобы сгенерировать документацию."
 
 #. Source code: f_add_new_expression: STRING_GENERAL is 	do Result := locale.translation ("Click here to add a new expression") end
 #: interface_names.e:271
@@ -5978,42 +5978,42 @@ msgstr "Свернуть узел дерева"
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>204;204;253</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:46
 msgid "Color for BON class figures."
-msgstr ""
+msgstr "Цвет изображения класса (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>69;166;11</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:52
 msgid "Color for BON client supplier links."
-msgstr ""
+msgstr "Цвет клиентской связи (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>100;97;28</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:54
 msgid "Color for BON cluster line."
-msgstr ""
+msgstr "Цвет границы кластера (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links."><COLOR>230;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:59
 msgid "Color for BON inheritance links."
-msgstr ""
+msgstr "Цвет связи наследования (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_fill_color" DESCRIPTION="Color for UML class figures."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:66
 msgid "Color for UML class figures."
-msgstr ""
+msgstr "Цвет изображения клаccа (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_color" DESCRIPTION="Color for UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:74
 msgid "Color for UML client supplier links."
-msgstr ""
+msgstr "Цвет клиентской связи (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_line_color" DESCRIPTION="Color for UML cluster line."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:77
 msgid "Color for UML cluster line."
-msgstr ""
+msgstr "Цвет границы кластера (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:83
 msgid "Color for UML inheritance links."
-msgstr ""
+msgstr "Цвет связи наследования (UML)."
 
 #. 	<PREF NAME="editor.eiffel.colors.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:254
@@ -6023,48 +6023,48 @@ msgstr "Цвет точек останова."
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_color" DESCRIPTION="Color for class feature sections in UML class figures."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:72
 msgid "Color for class feature sections in UML class figures."
-msgstr ""
+msgstr "Цвет разделов компонент в изображении класса (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_features_color" DESCRIPTION="Color for class features in UML class figures."><COLOR>0;127;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:70
 msgid "Color for class features in UML class figures."
-msgstr ""
+msgstr "Цвет компонент в изображении класса (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>17;3;80</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:45
 msgid "Color for class names in BON class figures."
-msgstr ""
+msgstr "Цвет имени класса в изображении класса (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_name_color" DESCRIPTION="Color for class names in UML class figures."><COLOR>0;25;127</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:65
 msgid "Color for class names in UML class figures."
-msgstr ""
+msgstr "Цвет имени класса в изображении класса (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures."><COLOR>127;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:64
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:18
 msgid "Color for class properties in UML class figures."
-msgstr ""
+msgstr "Цвет свойств класса в изображении класса (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:51
 msgid "Color for feature names on BON client supplier links."
-msgstr ""
+msgstr "Цвет имени компонента на клиентской связи (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_client_label_color" DESCRIPTION="Color for feature names on UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:75
 msgid "Color for feature names on UML client supplier links."
-msgstr ""
+msgstr "Цвет имени компонента на клиентской связи (UML)."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:49
 msgid "Color for generics in BON class figures."
-msgstr ""
+msgstr "Цвет параметра в изображении класса (BON)."
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_generics_color" DESCRIPTION="Color for generics in UML class figures."><COLOR>180;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:68
 msgid "Color for generics in UML class figures."
-msgstr ""
+msgstr "Цвет параметра в изображении класса (UML)."
 
 #. 	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:576
@@ -6074,12 +6074,12 @@ msgstr "Цвет обычного текста."
 #. 	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:205
 msgid "Color for progress bar."
-msgstr ""
+msgstr "Цвет полосы продвижения."
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>234;234;234</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:47
 msgid "Color for uncompiled BON class figures."
-msgstr ""
+msgstr "Цвет изображения неоткомпилированного класса (BON)."
 
 #. 	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:587
@@ -6454,12 +6454,12 @@ msgstr ""
 #. Source code: t_Extended_explanation: STRING_GENERAL is			do Result := locale.translation("Compilation Error Wizard")	end
 #: interface_names.e:1754
 msgid "Compilation Error Wizard"
-msgstr ""
+msgstr "Мастер ошибок компиляции"
 
 #. Source code: d_Compilation_progress: STRING is			do Result := locale.translation("Compilation Progress for ").out	end
 #: interface_names.e:240
 msgid "Compilation Progress for "
-msgstr ""
+msgstr "Продвижение компиляции для "
 
 #. Source code: target_compilation_type_name: STRING_GENERAL is do Result := locale.translation ("Compilation Type")	end
 #: conf_interface_names.e:80
@@ -6493,12 +6493,12 @@ msgstr "Компилировать все классы?"
 #. Source code: m_Compilation_C_Final: STRING_GENERAL is		do Result := locale.translation("Compile F&inalized C Code")	end
 #: interface_names.e:306
 msgid "Compile F&inalized C Code"
-msgstr ""
+msgstr "Компилировать &окончательный C код"
 
 #. Source code: m_Compilation_C_Workbench: STRING_GENERAL is	do Result := locale.translation("Compile W&orkbench C Code")	end
 #: interface_names.e:305
 msgid "Compile W&orkbench C Code"
-msgstr ""
+msgstr "Компилировать &рабочий C код"
 
 #. Source code: f_Melt: STRING_GENERAL is					do Result := locale.translation("Compile current project")	end
 #: interface_names.e:475
@@ -6586,12 +6586,12 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
 msgid "Completion list height"
-msgstr ""
+msgstr "Высота списка завершения"
 
 #. 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:226
 msgid "Completion list width"
-msgstr ""
+msgstr "Ширина списка продвижения"
 
 #. Source code: external_condition_name: STRING_GENERAL is do Result := locale.translation ("Condition")	end
 #: conf_interface_names.e:162
@@ -6601,7 +6601,7 @@ msgstr "Условие"
 #. Source code: do Result := locale.formatted_string (locale.translation("Condition is [$1:Is True] or [$2:Has Changed] ?"), [a_it, a_hc])	end
 #: debugger_names.e:129
 msgid "Condition is [$1:Is True] or [$2:Has Changed] ?"
-msgstr ""
+msgstr "Условие [$1:Истинно] или [$2:Изменилосьd] ?"
 
 #. Source code: dialog_file_rule_condition: STRING_GENERAL is do Result := locale.translation ("Condition:")	end
 #: conf_interface_names.e:409
@@ -6616,17 +6616,17 @@ msgstr ""
 #. Source code: group_condition_description: STRING_GENERAL is do Result := locale.translation ("Conditions for this group to be used.")	end
 #: conf_interface_names.e:222
 msgid "Conditions for this group to be used."
-msgstr ""
+msgstr "Условия, которые должны использоваться для этой группы."
 
 #. Source code: task_condition_description: STRING_GENERAL is do Result := locale.translation ("Conditions for this task to be executed.")	end
 #: conf_interface_names.e:199
 msgid "Conditions for this task to be executed."
-msgstr ""
+msgstr "Условия, которые должны исполняться для этой задачи."
 
 #. Source code: system_help: STRING_GENERAL is do Result := locale.translation ("Config and cluster details") end
 #: shared_ewb_help.e:189
 msgid "Config and cluster details"
-msgstr ""
+msgstr "Подробности конфигурации и кластера"
 
 #. Source code: t_configuration_loading_error: STRING_GENERAL is	do Result := locale.translation("Configuration Loading Error")	end
 #: interface_names.e:1738
@@ -6682,7 +6682,7 @@ msgstr "Подтверждать компиляцию перед выполне�
 #. 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:133
 msgid "Confirm apply debugger profiles"
-msgstr ""
+msgstr "Подтверждать применение профилей отладчика"
 
 #. 	<PREF NAME="interface.dialogs.confirm_build_precompile" DESCRIPTION="Display confirmation dialog before building a needed precompile."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:143
@@ -6757,12 +6757,12 @@ msgstr ""
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:148
 msgid "Confirm on terminate process"
-msgstr ""
+msgstr "Подтвеждать остановку процесса"
 
 #. 	<PREF NAME="interface.dialogs.confirm_remove_metric" DESCRIPTION="Display dialog before removing a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:156
 msgid "Confirm remove metric"
-msgstr ""
+msgstr "Подтверждать удаление метрики"
 
 #. 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:135
@@ -6777,7 +6777,7 @@ msgstr ""
 #. 	<PREF NAME="interface.dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:138
 msgid "Confirm save before compile"
-msgstr ""
+msgstr "Подтвеждать сохранение перед компиляцией"
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_metric" DESCRIPTION="Display dialog before saving a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:157
@@ -6816,12 +6816,12 @@ msgstr ""
 #. Source code: l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 #: interface_names.e:912
 msgid "Constructing diagram for $1"
-msgstr ""
+msgstr "Создание диаграммы для $1"
 
 #. Source code: t_containing: STRING_GENERAL is do Result := locale.translation ("Containing") end
 #: eb_metric_names.e:181
 msgid "Containing"
-msgstr ""
+msgstr "Содержащий"
 
 #. Source code: m_Context_tool: STRING_GENERAL is			do Result := locale.translation("Conte&xt")	end
 #: interface_names.e:318
@@ -7150,7 +7150,7 @@ msgstr "Копировать стек вызовов в буфер обмена"
 #. Source code: Result := locale.formatted_string (locale.translation("Copy of $1"), [a_string])
 #: interface_names.e:323
 msgid "Copy of $1"
-msgstr ""
+msgstr "Копия $1"
 
 #. Source code: target_copyright_name: STRING_GENERAL is do Result := locale.translation ("Copyright")	end
 #: conf_interface_names.e:92
@@ -7160,12 +7160,12 @@ msgstr ""
 #. Source code: Result.force (locale.translation ("Corsican"), "co")
 #: locale_names.e:34
 msgid "Corsican"
-msgstr ""
+msgstr "Корсиканский"
 
 #. Source code: Result.force (locale.translation ("Corsican (France)"), "co_fr")
 #: locale_names.e:177
 msgid "Corsican (France)"
-msgstr ""
+msgstr "Корсиканский (Франция)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Could not convert file '$1' into new configuration format."), [a_file_name])
 #: warning_messages.e:857
@@ -7295,7 +7295,7 @@ msgstr "Создать новый класс"
 #. Source code: e_New_dynamic_lib_definition: STRING_GENERAL is	do Result := locale.translation("Create a new dynamic library definition")	end
 #: interface_names.e:2091
 msgid "Create a new dynamic library definition"
-msgstr ""
+msgstr "Создат новое определение динамической библиотеки"
 
 #. Source code: e_New_expression: STRING_GENERAL is			do Result := locale.translation("Create a new expression")	end
 #: interface_names.e:2093
@@ -7305,7 +7305,7 @@ msgstr "Создат новое выражение"
 #. Source code: f_Create_new_feature: STRING_GENERAL is		do Result := locale.translation("Create a new feature")	end
 #: interface_names.e:332
 msgid "Create a new feature"
-msgstr ""
+msgstr "Создать новый компонент"
 
 #. Source code: f_New_window: STRING_GENERAL is				do Result := locale.translation("Create a new window")	end
 #: interface_names.e:479
@@ -7335,7 +7335,7 @@ msgstr "Создать новый проект в '$1'?"
 #. Source code: f_create_new_watch: STRING_GENERAL is		do Result := locale.translation ("Create new watch") end
 #: interface_names.e:333
 msgid "Create new watch"
-msgstr ""
+msgstr "Создать новый элемент наблюдения"
 
 #. Source code: l_Use_wizard: STRING_GENERAL is 			do Result := locale.translation("Create project")	end
 #: interface_names.e:1334
@@ -7366,7 +7366,7 @@ msgstr "Пожалуйста подождите, создаётся новый �
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:309
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:310
 msgid "Creation"
-msgstr ""
+msgstr "Создание"
 
 #. Source code: t_Creation_routine: STRING_GENERAL is				do Result := locale.translation("Creation Procedure")	end
 #: interface_names.e:1737
@@ -7446,7 +7446,7 @@ msgstr "Хорватский (Хорватия)"
 #. Source code: f_diagram_crop: STRING_GENERAL is			do Result := locale.translation("Crop diagram")	end
 #: interface_names.e:356
 msgid "Crop diagram"
-msgstr ""
+msgstr "Обрезать диаграмму"
 
 #. 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_tab_editor];new_window;current_editor;context;external</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:191
@@ -7476,7 +7476,7 @@ msgstr "Текущий редактор"
 #. Source code: t_archive_not_up_to_date: STRING_GENERAL is do Result := locale.translation ("Current archive value may not up-to-date") end
 #: eb_metric_names.e:135
 msgid "Current archive value may not up-to-date"
-msgstr ""
+msgstr "Текущее значение архива может быть устаревшим"
 
 #. Source code: w_Class_syntax_error: STRING_GENERAL is do Result := locale.translation ("Current class text has a syntax error.%NCode generation was cancelled.") end
 #: warning_messages.e:1014
@@ -7484,6 +7484,8 @@ msgid ""
 "Current class text has a syntax error.\n"
 "Code generation was cancelled."
 msgstr ""
+"Текст текущего класса содержит синтаксическую ошибку.\n"
+"Генерация кода прекращена."
 
 #. Source code: l_Current_editor: STRING_GENERAL is			do Result := locale.translation("Current editor")	end
 #: interface_names.e:919
@@ -7493,7 +7495,7 @@ msgstr "Текущий редактор"
 #. Source code: l_Current_context: STRING_GENERAL is		do Result := locale.translation("Current feature")	end
 #: interface_names.e:918
 msgid "Current feature"
-msgstr ""
+msgstr "Текущий компонент"
 
 #. Source code: l_Current_hit_count: STRING_GENERAL is		do Result := locale.translation("Current hit count:")	end
 #: interface_names.e:920
@@ -8864,17 +8866,17 @@ msgstr ""
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_1" DESCRIPTION="Trigger insertion of customized string #1."><SHORTCUT>F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:659
 msgid "Customized insertion 1"
-msgstr ""
+msgstr "Клавиша вставки индивидульной строки 1"
 
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_2" DESCRIPTION="Trigger insertion of customized string #2."><SHORTCUT Ctrl="True">F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:660
 msgid "Customized insertion 2"
-msgstr ""
+msgstr "Клавиша вставки индивидульной строки 2"
 
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_3" DESCRIPTION="Trigger insertion of customized string #3."><SHORTCUT Shift="True">F2</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:661
 msgid "Customized insertion 3"
-msgstr ""
+msgstr "Клавиша вставки индивидульной строки 3"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8883,7 +8885,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:231
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:240
 msgid "Customized string 1"
-msgstr ""
+msgstr "Индивидуальная строка 1"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8892,7 +8894,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:232
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:241
 msgid "Customized string 2"
-msgstr ""
+msgstr "Индивидуальная строка 2"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -8901,7 +8903,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:233
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:242
 msgid "Customized string 3"
-msgstr ""
+msgstr "Индивидуальная строка 3"
 
 #. Source code: b_Cut: STRING_GENERAL is							do Result := locale.translation("Cut")	end
 #: interface_names.e:123
@@ -8936,7 +8938,7 @@ msgstr "Датский (Дания)"
 #. Source code: Result.force (locale.translation ("Dari"), "gbz")
 #: locale_names.e:53
 msgid "Dari"
-msgstr ""
+msgstr "Дари"
 
 #. Source code: Result.force (locale.translation ("Dari (Afghanistan)"), "gbz_af")
 #: locale_names.e:240
@@ -9173,7 +9175,7 @@ msgstr "Отладчик :: Сообщение исключения"
 #. Source code: do Result := locale.translation ("Debugger environment closed%N") end
 #: debugger_names.e:142
 msgid "Debugger environment closed\n"
-msgstr ""
+msgstr "Среда отладчика закрыта\n"
 
 #. Source code: do Result := locale.translation ("Debugger environment started%N") end
 #: debugger_names.e:140
@@ -9203,27 +9205,27 @@ msgstr "Настройки отладчика"
 #. Source code: l_version_from: STRING_GENERAL is do Result := locale.translation("Declared in class")	end
 #: interface_names.e:1572
 msgid "Declared in class"
-msgstr ""
+msgstr "Объявлено в классе"
 
 #. 	<PREF NAME="tools.context_tool.default_class_formatter_index" DESCRIPTION="Class format that is selected by default."><INTEGER>5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:98
 msgid "Default class formatter index"
-msgstr ""
+msgstr "Индекс форматировщика класса по умолчанию"
 
 #. 	<PREF NAME="tools.context_tool.default_dependency_formatter_index" DESCRIPTION="Default dependency formatter that should be popped up automatically."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
 msgid "Default dependency formatter index"
-msgstr ""
+msgstr "Индекс форматировщика зависимости по умолчанию"
 
 #. 	<PREF NAME="tools.context_tool.default_dependency_formatter_index" DESCRIPTION="Default dependency formatter that should be popped up automatically."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:101
 msgid "Default dependency formatter that should be popped up automatically."
-msgstr ""
+msgstr "Форматировщик зависимостей по умолчанию, который должен всплывать автоматически."
 
 #. 	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:6
 msgid "Default displayed string size"
-msgstr ""
+msgstr "Отображаемая длина строки по умолчанию"
 
 #. 	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:7
@@ -9233,7 +9235,7 @@ msgstr "Размер развёрнутого вида по умолчанию"
 #. 	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:99
 msgid "Default feature formatter index"
-msgstr ""
+msgstr "Индекс формаьтровщика компонента по умолчанию"
 
 #. Source code: dialog_create_library_defaults: STRING_GENERAL is do Result := locale.translation ("Default libraries")	end
 #: conf_interface_names.e:444
@@ -9248,7 +9250,7 @@ msgstr "Максимальная глубина стека по умолчани
 #. 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:635
 msgid "Default name for a renamed feature."
-msgstr ""
+msgstr "Имя переименованного компонента по умолчанию."
 
 #. 	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:8
@@ -9268,12 +9270,12 @@ msgstr ""
 #. 	<PREF NAME="debugger.number_of_watch_tools" HIDDEN="true" DESCRIPTION="Default number of watch tools."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:25
 msgid "Default number of watch tools."
-msgstr ""
+msgstr "Число панелей наблюдения по умолчанию."
 
 #. Source code: dialog_create_precompile_defaults: STRING_GENERAL is do Result := locale.translation ("Default precompiles")	end
 #: conf_interface_names.e:451
 msgid "Default precompiles"
-msgstr ""
+msgstr "Прекомпилированные модули по умолчанию."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.autocomplete_deferred" DESCRIPTION="Autocomplete deferred?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -9294,12 +9296,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:365
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:366
 msgid "Deferred"
-msgstr ""
+msgstr "deferred"
 
 #. Source code: l_Deferreds: STRING_GENERAL is				do Result := locale.translation("Deferred features")	end
 #: interface_names.e:969
 msgid "Deferred features"
-msgstr ""
+msgstr "Отложенные компоненты"
 
 #. Source code: l_Subquery: STRING_GENERAL is				do Result := locale.translation("Define new subquery")	end
 #: interface_names.e:1276
@@ -9369,7 +9371,7 @@ msgstr "Удалить текущий вид"
 #. Source code: l_diagram_remove: STRING_GENERAL is			do Result := locale.translation("Delete graphical items")	end
 #: interface_names.e:408
 msgid "Delete graphical items"
-msgstr ""
+msgstr "Удалить графические элементы"
 
 #. Source code: l_diagram_delete: STRING_GENERAL is			do Result := locale.translation("Delete graphical items, remove code from system")	end
 #: interface_names.e:355
@@ -9389,7 +9391,7 @@ msgstr "Удаление файлов"
 #. Source code: Result := locale.formatted_string (locale.translation ("Denominator metric %"$1%" is not defined."), [a_denominator])
 #: eb_metric_names.e:791
 msgid "Denominator metric \"$1\" is not defined."
-msgstr ""
+msgstr "Метрика-знаменатель \"$1\" не определена."
 
 #. Source code: Result := locale.translation ("Denominator metric is missing.")
 #: eb_metric_names.e:530
@@ -9484,7 +9486,7 @@ msgstr "Снять отметки со всех метрик"
 #. Source code: t_deselect_integral_metrics: STRING_GENERAL is do Result := locale.translation ("Deselect Integral Metrics") end
 #: eb_metric_names.e:125
 msgid "Deselect Integral Metrics"
-msgstr ""
+msgstr "Снять выделение с целочисленных метрик"
 
 #. Source code: t_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translation ("Deselect Recalculatable") end
 #: eb_metric_names.e:160
@@ -9635,7 +9637,7 @@ msgstr "Подробности"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:226
 msgid "Development window"
-msgstr ""
+msgstr "Окно разработки"
 
 #. Source code: l_Tab_diagram: STRING_GENERAL is 			do Result := locale.translation("Diagram")	end
 #: interface_names.e:1295
@@ -9645,7 +9647,7 @@ msgstr "Диаграмма"
 #. 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:43
 msgid "Diagram background color"
-msgstr ""
+msgstr "Цвет фона диаграммы"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;255</COLOR></PREF>
@@ -9840,7 +9842,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:22
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:23
 msgid "Diagram tool"
-msgstr ""
+msgstr "Диаграмма"
 
 #. 	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Class_header_hole__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Separator;Force_directed__visible;UML_visibility__visible;Force_settings__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Fit_to_screen__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Diagram_to_png__hidden;Cluster_filling__hidden;Zoom_out__hidden;Zoom_in__hidden</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:89
@@ -10011,7 +10013,7 @@ msgstr "Диалоговое приложение"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:181
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:182
 msgid "Dialogs"
-msgstr ""
+msgstr "Диалоги"
 
 #. Source code: t_difference: STRING_GENERAL is do Result := locale.translation ("Difference") end
 #: eb_metric_names.e:41
@@ -10030,42 +10032,42 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:203
 msgid "Directory of last browsed cluster."
-msgstr ""
+msgstr "Каталог последнего просмотренного кластера."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_call_stack_directory" DESCRIPTION="Directory of last call stack saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:166
 msgid "Directory of last call stack saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого стека вызовов."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:167
 msgid "Directory of last debugger exception saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого исключения в отладчике."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_diagram_postscript_directory" DESCRIPTION="Directory of last diagram postscript file saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:168
 msgid "Directory of last diagram postscript file saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого файла диаграммы."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib library opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:162
 msgid "Directory of last dynamic lib library opened."
-msgstr ""
+msgstr "Каталог последней открытой динамической библиотеки."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:165
 msgid "Directory of last dynamic lib saved."
-msgstr ""
+msgstr "Каталог последней сохранённой динамической библиотеки."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:169
 msgid "Directory of last exception saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого исключения."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_file_directory" DESCRIPTION="Directory of last file opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:163
 msgid "Directory of last file opened."
-msgstr ""
+msgstr "Каталог последнего открытого файла."
 
 #. 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:172
@@ -10075,22 +10077,22 @@ msgstr "Каталог последнего импортированного о�
 #. 	<PREF NAME="interface.dialogs.last_opened_metric_browse_archive_directory" DESCRIPTION="Directory of last metric browse archive opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:164
 msgid "Directory of last metric browse archive opened."
-msgstr ""
+msgstr "Каталог последнего открытого архива метрик."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:171
 msgid "Directory of last profile result saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого результата профилирования."
 
 #. 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:161
 msgid "Directory of last project opened."
-msgstr ""
+msgstr "Каталог последнего открытого проекта."
 
 #. 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:170
 msgid "Directory of last save file as saved."
-msgstr ""
+msgstr "Каталог последнего сохранённого файла."
 
 #. Source code: group_eifgens_location_description: STRING_GENERAL is do Result := locale.translation ("Directory where the EIFGENs folder is.")	end
 #: conf_interface_names.e:234
@@ -10100,7 +10102,7 @@ msgstr "Каталог, в котором находится папка EIFGENs.
 #. Source code: task_working_directory_description: STRING_GENERAL is do Result := locale.translation ("Directory where the command will be executed.")	end
 #: conf_interface_names.e:195
 msgid "Directory where the command will be executed."
-msgstr ""
+msgstr "Каталог, где будет выполняться команда."
 
 #. Source code: m_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable Assertion Checking")	end
 #: interface_names.e:336
@@ -10140,7 +10142,7 @@ msgstr "Запретить точку останова"
 #. 	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:201
 msgid "Disable graphical output."
-msgstr ""
+msgstr "Запретить графический вывод."
 
 #. Source code: e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable or restore Assertion checking handling during debugging")	end
 #: interface_names.e:2136
@@ -10165,27 +10167,27 @@ msgstr "Удалить индивидуальный форматировщик �
 #. Source code: e_discover_melt: STRING_GENERAL is			do Result := locale.translation("Discover unreferenced externally added classes and recompile.")	end
 #: interface_names.e:2105
 msgid "Discover unreferenced externally added classes and recompile."
-msgstr ""
+msgstr "Обнаружить добавленные извне неизвестные классы и перекомпилировать."
 
 #. 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:20
 msgid "Disk location of last saved stack path information."
-msgstr ""
+msgstr "Местоположение на диске последней сохранённой информации о стеке."
 
 #. Source code: l_viewer_display_complete_object: STRING_GENERAL is do Result := locale.translation("Display Complete Object") end
 #: interface_names.e:1344
 msgid "Display Complete Object"
-msgstr ""
+msgstr "Показывать объект целиком"
 
 #. 	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:5
 msgid "Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."
-msgstr ""
+msgstr "Показывать DEBUG_OUTPUT.debug_output для объектов, чей базовый класс наследует DEBUG_OUTPUT."
 
 #. Source code: b_Display_Exception_Trace: STRING_GENERAL is		do Result := locale.translation("Display Exception Trace")	end
 #: interface_names.e:63
 msgid "Display Exception Trace"
-msgstr ""
+msgstr "Показывать трассу исключения"
 
 #. 	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:150
@@ -10195,7 +10197,7 @@ msgstr "Показывать диалог создания/открытия пр
 #. Source code: f_show_to_do_message: STRING_GENERAL is do Result := locale.translation ("Display a message about how to deal with the metric definition error") end
 #: eb_metric_names.e:286
 msgid "Display a message about how to deal with the metric definition error"
-msgstr ""
+msgstr "Показывать сообщение, как быть с ошибкой определения метрики"
 
 #. Source code: l_Display_call_stack_warning: STRING_GENERAL is	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 #: interface_names.e:1011
@@ -10205,7 +10207,7 @@ msgstr "Показывать предупреждение, когда глуби
 #. 	<PREF NAME="debugger.display_agent_details" DESCRIPTION="Should the info about the agent object be displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:10
 msgid "Display agent details"
-msgstr ""
+msgstr "Показывать подробности агента"
 
 #. 	<PREF NAME="interface.development_window.features_tool.is_alias_enabled" DESCRIPTION="Display alias name ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:198
@@ -10225,7 +10227,7 @@ msgstr "Отображать объекты в раскрытом виде"
 #. 	<PREF NAME="interface.development_window.features_tool.is_assigner_enabled" DESCRIPTION="Display assigner command ?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:199
 msgid "Display assigner command ?"
-msgstr ""
+msgstr "Показывать команду присваивания?"
 
 #. Source code: f_display_breakpoints: STRING_GENERAL is	do Result := locale.translation("Display breakpoints separated by status")	end
 #: interface_names.e:420
@@ -10235,137 +10237,137 @@ msgstr "Отображать точки останова, сгруппирова
 #. 	<PREF NAME="interface.dialogs.confirm_build_precompile" DESCRIPTION="Display confirmation dialog before building a needed precompile."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:143
 msgid "Display confirmation dialog before building a needed precompile."
-msgstr ""
+msgstr "Показывать диалог предупреждения перед созданием необходимого прекомпилированного модуля."
 
 #. 	<PREF NAME="interface.dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:142
 msgid "Display confirmation dialog before converting an old project."
-msgstr ""
+msgstr "Показывать диалог предупреждения перед преобразованием старого проекта."
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:136
 msgid "Display confirmation dialog for C compilation on finalize operation."
-msgstr ""
+msgstr "Показывать диалог предупреждения для компиляции C в окончательном варианте."
 
 #. 	<PREF NAME="interface.dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:137
 msgid "Display confirmation dialog for C compilation on freeze operation."
-msgstr ""
+msgstr "Показывать диалог предупреждения для компиляции C в рабочем варианте."
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:139
 msgid "Display confirmation dialog for assertions on finalize operation."
-msgstr ""
+msgstr "Показывать диалог предупреждения для утверждений в окончательном варианте."
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:145
 msgid "Display confirmation dialog for finalizing a .NET precompiled library."
-msgstr ""
+msgstr "Показывать диалог предупреждения для окончательного варианта прекомпилированной библиотеки .NET."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:149
 msgid "Display confirmation dialog for terminating an external command."
-msgstr ""
+msgstr "Показывать диалог предупреждения для прерывания внешней команды."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:148
 msgid "Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."
-msgstr ""
+msgstr "Показывать диалог предупреждения для прерывания идущей компиляции C при выходе EiffelStudio."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:147
 msgid "Display confirmation dialog for terminating the C compilation of a finalize."
-msgstr ""
+msgstr "Показывать диалог предупреждения для прерывания окончательной компиляции C."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:146
 msgid "Display confirmation dialog for terminating the C compilation of a freeze."
-msgstr ""
+msgstr "Показывать диалог предупреждения для прерывания рабочей компиляции C."
 
 #. 	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:182
 msgid "Display confirmation dialog of discarding target scope customized formatter."
-msgstr ""
+msgstr "Показывать диалог предупреждения при удалении индивидуального форматировщика целевой области."
 
 #. 	<PREF NAME="interface.dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:140
 msgid "Display confirmation dialog on clearing breakpoints."
-msgstr ""
+msgstr "Показывать диалог подтверждения при очистке точек останова."
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:138
 msgid "Display confirmation dialog on compilation when some files have not been saved."
-msgstr ""
+msgstr "Показывать диалог подтверждения при компиляции, когда некоторые файлы не были сохранены."
 
 #. 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:132
 msgid "Display confirmation dialog on execution."
-msgstr ""
+msgstr "Показывать диалог подтвеждения при выполнении."
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:134
 msgid "Display confirmation dialog on exit."
-msgstr ""
+msgstr "Показывать диалог подтверждения при выходе."
 
 #. 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:135
 msgid "Display confirmation dialog on replacing all."
-msgstr ""
+msgstr "Показывать диалог предупреждения при вызове \"Заменить все\"."
 
 #. 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:133
 msgid "Display confirmation dialog when applying debugger profiles."
-msgstr ""
+msgstr "Показывать диалог предупреждения при применении профилей отладчика."
 
 #. 	<PREF NAME="interface.dialogs.confirm_ignore_all_breakpoints" DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:141
 msgid "Display confirmation dialog when starting the application without stopping at breakpoints."
-msgstr ""
+msgstr "Показывать диалог предупреждения при запуске приложения без остановок на точках останова."
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill_and_restart" DESCRIPTION="Display dialog before killing a debugged application and restarting a new one."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
 msgid "Display dialog before killing a debugged application and restarting a new one."
-msgstr ""
+msgstr "Показывать диалог перед принудительным завершением отлаживаемого приложения и запуском нового."
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:154
 msgid "Display dialog before killing a debugged application."
-msgstr ""
+msgstr "Показывать диалог перед принудительным завершением отлаживаемого приложения."
 
 #. 	<PREF NAME="interface.dialogs.confirm_remove_metric" DESCRIPTION="Display dialog before removing a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:156
 msgid "Display dialog before removing a metric."
-msgstr ""
+msgstr "Показывать диалог перед удалением метрики."
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_metric" DESCRIPTION="Display dialog before saving a metric."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:157
 msgid "Display dialog before saving a metric."
-msgstr ""
+msgstr "Показывать диалог перед сохранением метрики."
 
 #. 	<PREF NAME="interface.dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:152
 msgid "Display dialog that warns that homonym format can take a long time."
-msgstr ""
+msgstr "Показывать диалог предупреждения, что формирование списка омонимов может занять много времени."
 
 #. 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:144
 msgid "Display dialog that warns that text is being loaded and is not editable or clickable."
-msgstr ""
+msgstr "Показывать диалог предупреждения, что текст загружается и не доступен для редактирования и манипуляций."
 
 #. 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:153
 msgid "Display dialog when an application is running and a compilation is launched."
-msgstr ""
+msgstr "Показывать диалог, когда приложение выполняется и запускается компиляция."
 
 #. 	<PREF NAME="interface.dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:158
 msgid "Display dialog when editing the same class in two development windows."
-msgstr ""
+msgstr "Показывать диалог при редактировании одного и того же класса в двух окнах разработки."
 
 #. 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:159
 msgid "Display dialog while running an external command."
-msgstr ""
+msgstr "Показывать диалог при выполнении внешней команды."
 
 #. 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:192
@@ -10385,7 +10387,7 @@ msgstr "Показывать информацию"
 #. Source code: e_Display_system_info: STRING_GENERAL is	do Result := locale.translation("Display information concerning current system")	end
 #: interface_names.e:2073
 msgid "Display information concerning current system"
-msgstr ""
+msgstr "Показать информацию о текущей системе"
 
 #. Source code: l_More_items: STRING_GENERAL is				do Result := locale.translation("Display limit reached")	end
 #: interface_names.e:1141
@@ -10395,7 +10397,7 @@ msgstr "Достигнуто ограничение отображения"
 #. Source code: option_trace_description: STRING_GENERAL is do Result := locale.translation ("Display name of all called features during execution?")	end
 #: conf_interface_names.e:291
 msgid "Display name of all called features during execution?"
-msgstr ""
+msgstr "Показывать имена всех компонентов, вызванных во время выполнения?"
 
 #. Source code: l_formatter_filter_help: STRING_GENERAL do Result := locale.translation ("Display non visible items?") end
 #: interface_names.e:661
@@ -10405,7 +10407,7 @@ msgstr "Показывать невидимые элементы?"
 #. Source code: l_Switch_num_format_desc: STRING_GENERAL is do Result := locale.translation("Display numerical value as Hexadecimal or Decimal formating")	end
 #: interface_names.e:1279
 msgid "Display numerical value as Hexadecimal or Decimal formating"
-msgstr ""
+msgstr "Показывать численные значения в шестнадцатеричной или десятичной нотации."
 
 #. Source code: do Result := locale.translation ("Display parameters") end
 #: debugger_names.e:261
@@ -10415,7 +10417,7 @@ msgstr "Показывать параметры"
 #. 	<PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:104
 msgid "Display percentage for ratio"
-msgstr ""
+msgstr "Показывать процент для отношения"
 
 #. Source code: f_display_in_percentage: STRING_GENERAL is do Result := locale.translation ("Display result in percentage? (Only applicable for ratio metrics)") end
 #: eb_metric_names.e:278
@@ -10430,12 +10432,12 @@ msgstr "Показывать сигнатуру?"
 #. 	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:13
 msgid "Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."
-msgstr ""
+msgstr "Показывать базовый тип объекта, если включено, иначе показывать только базовый класс (это может ускорить отладку). Например, будет показывать ARRAY [STRING], если Да, но только ARRAY, если Нет."
 
 #. 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:151
 msgid "Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective."
-msgstr ""
+msgstr "Показывать предупреждающий диалог при смене ресурсов, которые требуют перезагрузки EiffelStudio до того, как они вступят в силу."
 
 #. Source code: l_display: STRING_GENERAL is do Result := locale.translation ("Display?") end
 #: interface_names.e:614
@@ -10455,12 +10457,12 @@ msgstr "Показывается в"
 #. Source code: Result.force (locale.translation ("Divehi"), "dv")
 #: locale_names.e:40
 msgid "Divehi"
-msgstr ""
+msgstr "Мальдивский"
 
 #. Source code: Result.force (locale.translation ("Divehi (Maldives)"), "dv_mv")
 #: locale_names.e:187
 msgid "Divehi (Maldives)"
-msgstr ""
+msgstr "Мальдивский (Мальдивы)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.autocomplete_do" DESCRIPTION="Autocomplete do?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -10481,7 +10483,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:351
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:352
 msgid "Do"
-msgstr ""
+msgstr "do"
 
 #. 	<PREF NAME="editor.eiffel.show_ANY_features" DESCRIPTION="Do features of class ANY appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:245
@@ -10491,22 +10493,22 @@ msgstr ""
 #. Source code: l_Discard_build_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always build precompile")	end
 #: interface_names.e:998
 msgid "Do not ask again, and always build precompile"
-msgstr ""
+msgstr "Не спрашивать больше и всегда создавать прекомпилированный кластер."
 
 #. Source code: l_discard_cancel_c_compilation: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always cancel C Compilation when exiting.")	end
 #: interface_names.e:1009
 msgid "Do not ask again, and always cancel C Compilation when exiting."
-msgstr ""
+msgstr "Не спрашивать больше и всегда отменять компиляцию C при выходе."
 
 #. Source code: l_discard_cancel_c_compilation_and_external_command: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always cancel C compilation, terminate external command when exiting.")	end
 #: interface_names.e:1008
 msgid "Do not ask again, and always cancel C compilation, terminate external command when exiting."
-msgstr ""
+msgstr "Не спрашивать больше и всегда отменять компиляцию C, прерывать выполнение внешней команды при выходе."
 
 #. Source code: l_Discard_freeze_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always compile C code")	end
 #: interface_names.e:1001
 msgid "Do not ask again, and always compile C code"
-msgstr ""
+msgstr "Не спрашивать больше и всегда компилировать C код"
 
 #. Source code: l_Discard_convert_project_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always convert old projects")	end
 #: interface_names.e:997
@@ -10516,12 +10518,12 @@ msgstr "Больше не спрашивать и всегда преобраз�
 #. Source code: l_Discard_finalize_assertions: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always discard assertions when finalizing")	end
 #: interface_names.e:999
 msgid "Do not ask again, and always discard assertions when finalizing"
-msgstr ""
+msgstr "Не спрашивать больше и всегда отбрасывать утверждения в окончательной версии"
 
 #. Source code: l_Discard_save_before_compile_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always save files before compiling")	end
 #: interface_names.e:1002
 msgid "Do not ask again, and always save files before compiling"
-msgstr ""
+msgstr "Не спрашивать больше и всегда сохранять файлы перед компиляцией"
 
 #. Source code: l_discard_terminate_external_command_when_exit: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always terminate external command when exiting.")	end
 #: interface_names.e:1010
@@ -10531,27 +10533,27 @@ msgstr "Больше не спрашивать и всегда прекраща�
 #. Source code: l_Discard_terminate_finalizing: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate finalizing when needed.")	end
 #: interface_names.e:1007
 msgid "Do not ask again, and always terminate finalizing when needed."
-msgstr ""
+msgstr "Не спрашивать больше и всегда прерывать окончательную компиляцию, когда необходимо."
 
 #. Source code: l_Discard_terminate_freezing: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate freezing when needed.")	end
 #: interface_names.e:1005
 msgid "Do not ask again, and always terminate freezing when needed."
-msgstr ""
+msgstr "Не спрашивать больше и всегда прерывать рабочую компиляцию, когда необходимо."
 
 #. Source code: l_Discard_terminate_external_command: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate running external command.")	end
 #: interface_names.e:1006
 msgid "Do not ask again, and always terminate running external command."
-msgstr ""
+msgstr "Не спрашивать больше и всегда прерывать выполняющуюся внешнюю команду."
 
 #. Source code: l_Dont_ask_me_again: STRING_GENERAL is		do Result := locale.translation("Do not ask me again")	end
 #: interface_names.e:1014
 msgid "Do not ask me again"
-msgstr ""
+msgstr "Больше не спрашивать меня"
 
 #. Source code: t_discard_remove_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always remove selected metric") end
 #: eb_metric_names.e:56
 msgid "Do not ask me again and always remove selected metric"
-msgstr ""
+msgstr "Не спрашивать больше и всегда удалять выделенную метрику"
 
 #. Source code: t_discard_save_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always save modified metric") end
 #: eb_metric_names.e:57
@@ -10618,7 +10620,7 @@ msgstr "Документация"
 #. 	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Does a quadruple click select the entire document?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:566
 msgid "Does a quadruple click select the entire document?"
-msgstr ""
+msgstr "Четверной щелчок выделяет весь документ?"
 
 #. 	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Does completion change the first character of onces and constants with an upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:244
@@ -10638,7 +10640,7 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:247
 msgid "Does completion list show query return type?"
-msgstr ""
+msgstr "Список завершения показывает тип, возвращаемый запросом?"
 
 #. 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:564
@@ -10725,12 +10727,12 @@ msgstr "Щёлкните дважды для перехода на первое 
 #. Source code: f_double_click_to_go_to_result_panel: STRING_GENERAL  is do Result := locale.translation ("Double click to go to result panel") end
 #: eb_metric_names.e:152
 msgid "Double click to go to result panel"
-msgstr ""
+msgstr "Щёлкните дважды, чтобы перейти в панель результатов"
 
 #. Source code: l_exception_double_click_text: STRING_GENERAL is do Result := locale.translation ("Double click to see Exception or Ctrl-C to copy to clipboard") end
 #: interface_names.e:1043
 msgid "Double click to see Exception or Ctrl-C to copy to clipboard"
-msgstr ""
+msgstr "Щёлкните дважды, чтобы посмотреть исключение, или нажмите Ctrl-C, чтобы скопировать в буфер обмена"
 
 #. Source code: Result := locale.translation ("Down")
 #: docking_names.e:152
@@ -10740,12 +10742,12 @@ msgstr "Вниз"
 #. Source code: e_open_c_file: STRING_GENERAL is do Result := locale.translation ("Drop a class/feature here to open its corresponding C file/function in external editor.") end
 #: interface_names.e:2142
 msgid "Drop a class/feature here to open its corresponding C file/function in external editor."
-msgstr ""
+msgstr "Бросьте сюда класс/компонент, чтобы открыть соответствующие C файл/функцию во внешнем редакторе."
 
 #. Source code: t_drop_program_elements: STRING_GENERAL is do Result := locale.translation ("Drop target/group/class/feature here") end
 #: eb_metric_names.e:352
 msgid "Drop target/group/class/feature here"
-msgstr ""
+msgstr "Бросьте сюда задание/группу/класс/компонент"
 
 #. Source code: l_Dropped_references: STRING_GENERAL is		do Result := locale.translation("Dropped references")	end
 #: interface_names.e:1017
@@ -10760,7 +10762,7 @@ msgstr ""
 #. Source code: b_duplicate: STRING_GENERAL is						do Result := locale.translation ("Duplicate") end
 #: interface_names.e:174
 msgid "Duplicate"
-msgstr ""
+msgstr "Дублировать"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Duplicated metric name %"$1%" in metric definition."), [a_metric_name])
 #: eb_metric_names.e:514
@@ -12008,12 +12010,12 @@ msgstr "Шрифт редактора"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:560
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:9
 msgid "Editor header font."
-msgstr ""
+msgstr "Шрифт заголовка редактора."
 
 #. 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:192
 msgid "Editor left side"
-msgstr ""
+msgstr "Показывать редактор слева"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
@@ -12958,7 +12960,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:428
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:429
 msgid "Else"
-msgstr ""
+msgstr "else"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.autocomplete_elseif" DESCRIPTION="Autocomplete elseif?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -12979,7 +12981,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:421
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:422
 msgid "Elseif"
-msgstr ""
+msgstr "elseif"
 
 #. 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:676
@@ -13029,7 +13031,7 @@ msgstr "Разрешить высокое качество"
 #. Source code: b_enable_profiles: STRING_GENERAL is				do Result := locale.translation("Enable Profiles")	end
 #: interface_names.e:159
 msgid "Enable Profiles"
-msgstr ""
+msgstr "Разрешит профили"
 
 #. Source code: l_viewer_enable_word_wrapping: STRING_GENERAL is do Result := locale.translation("Enable Word Wrapping") end
 #: interface_names.e:1345
@@ -13047,6 +13049,8 @@ msgid ""
 "Enable auto expressions ?\n"
 "(add contextual symbols automatically)"
 msgstr ""
+"Разрешить автоматические выражения?\n"
+"(добавлять контекстные символы автоматически)"
 
 #. Source code: do Result := locale.translation ("Enable breakpoint") end
 #: debugger_names.e:235
@@ -13097,7 +13101,7 @@ msgstr "Разрешено"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:554
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:555
 msgid "End"
-msgstr ""
+msgstr "end"
 
 #. Source code: target_check_vape_description: STRING_GENERAL is do Result := locale.translation ("Enforce VAPE validity constraint?")	end
 #: conf_interface_names.e:104
@@ -13137,7 +13141,7 @@ msgstr "Английский (Канада)"
 #. Source code: Result.force (locale.translation ("English (Caribbean)"), "en_029")
 #: locale_names.e:189
 msgid "English (Caribbean)"
-msgstr ""
+msgstr "Английский (Вест-Индия)"
 
 #. Source code: Result.force (locale.translation ("English (India)"), "en_in")
 #: locale_names.e:196
@@ -13182,7 +13186,7 @@ msgstr "Английский (Южная Африка)"
 #. Source code: Result.force (locale.translation ("English (Trinidad and Tobago)"), "en_tt")
 #: locale_names.e:202
 msgid "English (Trinidad and Tobago)"
-msgstr ""
+msgstr "Английский (Тринидад и Тобаго)"
 
 #. Source code: Result.force (locale.translation ("English (United Kingdom)"), "en_gb")
 #: locale_names.e:194
@@ -13221,7 +13225,7 @@ msgstr "Английский (Зимбабве)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:386
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:387
 msgid "Ensure"
-msgstr "Постусловие"
+msgstr "ensure"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.autocomplete_ensure_then" DESCRIPTION="Autocomplete ensure then?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -13242,12 +13246,12 @@ msgstr "Постусловие"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:393
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:394
 msgid "Ensure then"
-msgstr ""
+msgstr "ensure then"
 
 #. Source code: t_Enter_condition: STRING_GENERAL is				do Result := locale.translation("Enter Condition")	end
 #: interface_names.e:1750
 msgid "Enter Condition"
-msgstr ""
+msgstr "Введите условие"
 
 #. Source code: enter_location_for_new_project: STRING_GENERAL is 			do Result := locale.translation ("Enter location for new project: ") end
 #: ewb_names.e:40
@@ -13294,6 +13298,12 @@ msgid ""
 "\n"
 "Should the new value be used?"
 msgstr ""
+"Переменная среды '$1' изменилась\n"
+"\n"
+"Старое значение: $2\n"
+"Новое значение: $3\n"
+"\n"
+"Следует использовать новое значение?"
 
 #. Source code: m_environment_variables: STRING_GENERAL is		do Result := locale.translation("Environment variables")	end
 #: interface_names.e:429
@@ -13313,12 +13323,12 @@ msgstr "Очистить класс '$1'"
 #. Source code: t_Diagram_erase_classes_cmd: STRING_GENERAL is		do Result := locale.translation("Erase Classes")	end
 #: interface_names.e:1909
 msgid "Erase Classes"
-msgstr ""
+msgstr "Очистить классы"
 
 #. Source code: Result := locale.formatted_string(locale.translation("Erase Cluster '$1'"), [a_name])
 #: interface_names.e:1897
 msgid "Erase Cluster '$1'"
-msgstr ""
+msgstr "Очистить кластер '$1'"
 
 #. Source code: t_Diagram_delete_midpoint_cmd: STRING_GENERAL is	do Result := locale.translation("Erase Midpoint")	end
 #: interface_names.e:1900
@@ -13338,7 +13348,7 @@ msgstr "Ошибка"
 #. 	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:272
 msgid "Error background color"
-msgstr ""
+msgstr "Цвет фона ошибки"
 
 #. Source code: l_error_message:  STRING_GENERAL is					do Result := locale.translation("Error message :")	end
 #: interface_names.e:1033
@@ -13363,7 +13373,7 @@ msgstr "Ошибка в выражении : \"$1\""
 #. 	<PREF NAME="editor.eiffel.colors.error_text_color" DESCRIPTION="Foreground color for errors."><COLOR>255;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:271
 msgid "Error text color"
-msgstr ""
+msgstr "Цвет текста ошибки"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Error with $1 line $2"), [a_name, a_line])
 #: interface_names.e:1552
@@ -13485,7 +13495,7 @@ msgstr "Обработка исключений"
 #. Source code: target_exception_trace_name: STRING_GENERAL is do Result := locale.translation ("Exception Trace")	end
 #: conf_interface_names.e:117
 msgid "Exception Trace"
-msgstr ""
+msgstr "Трасса исключения"
 
 #. Source code: do Result := locale.translation ("Exception data") end
 #: debugger_names.e:279
@@ -13560,12 +13570,12 @@ msgstr ""
 #. Source code: l_Exe_type: STRING_GENERAL is do Result := locale.translation ("Executable") end
 #: interface_names.e:31
 msgid "Executable"
-msgstr ""
+msgstr "Исполняемый модуль"
 
 #. Source code: e_Up_to_date: STRING_GENERAL is				do Result := locale.translation("Executable is up-to-date")	end
 #: interface_names.e:2131
 msgid "Executable is up-to-date"
-msgstr ""
+msgstr "Исполняемый модуль не устарел"
 
 #. Source code: e_Exec_step: STRING_GENERAL is				do Result := locale.translation("Execute the application one line at a time")	end
 #: interface_names.e:2084
@@ -13580,22 +13590,22 @@ msgstr "Команда выполняется"
 #. Source code: wt_Execution_Profile: STRING_GENERAL is do Result := locale.translation("Execution Profile")	end
 #: interface_names.e:2210
 msgid "Execution Profile"
-msgstr ""
+msgstr "Профиль выполнения"
 
 #. Source code: wt_Execution_profile_error: STRING_GENERAL is do Result := locale.translation("Execution Profile Error")	end
 #: interface_names.e:2251
 msgid "Execution Profile Error"
-msgstr ""
+msgstr "Ощибка профиля выполнения"
 
 #. Source code: wt_Execution_Profile_Generation: STRING_GENERAL is do Result := locale.translation("Execution Profile Generation")	end
 #: interface_names.e:2217
 msgid "Execution Profile Generation"
-msgstr ""
+msgstr "Генерация профиля выполнения"
 
 #. Source code: l_Execution_interrupted: STRING_GENERAL is	do Result := locale.translation("Execution interrupted")	end
 #: interface_names.e:1042
 msgid "Execution interrupted"
-msgstr ""
+msgstr "Выполнение прервано"
 
 #. Source code: l_existing_layout_names: STRING_GENERAL is do Result := locale.translation ("Existing Layouts:") end
 #: interface_names.e:1665
@@ -13736,7 +13746,7 @@ msgstr "Выражение"
 #. Source code: m_Expression_evaluation: STRING_GENERAL is	do Result := locale.translation("Expression Evaluation")	end
 #: interface_names.e:439
 msgid "Expression Evaluation"
-msgstr ""
+msgstr "Вычисление выражения"
 
 #. Source code: do Result := locale.translation ("Expression evaluation") end
 #: debugger_names.e:225
@@ -13993,12 +14003,12 @@ msgstr "Нет"
 #. Source code: Result.force (locale.translation ("Faroese"), "fo-FO")
 #: locale_names.e:49
 msgid "Faroese"
-msgstr ""
+msgstr "Фарерский"
 
 #. Source code: Result.force (locale.translation ("Faroese (Faroe Islands)"), "fo_fo")
 #: locale_names.e:231
 msgid "Faroese (Faroe Islands)"
-msgstr ""
+msgstr "Фарерский (Фарерские острова)"
 
 #. Source code: m_Favorites: STRING_GENERAL is				do Result := locale.translation("Fav&orites")	end
 #: interface_names.e:714
@@ -14037,37 +14047,37 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:316
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:317
 msgid "Feature"
-msgstr ""
+msgstr "feature"
 
 #. Source code: s_Feature_stone: STRING_GENERAL is			do Result := locale.translation("Feature ")	end
 #: interface_names.e:1701
 msgid "Feature "
-msgstr ""
+msgstr "Компонент "
 
 #. Source code: b_Feature_name: STRING_GENERAL is					do Result := locale.translation("Feature Name")	end
 #: interface_names.e:72
 msgid "Feature Name"
-msgstr ""
+msgstr "Имя компонента"
 
 #. Source code: t_Feature_properties: STRING_GENERAL is				do Result := locale.translation("Feature Properties")	end
 #: interface_names.e:1759
 msgid "Feature Properties"
-msgstr ""
+msgstr "Свойства компонента"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Feature `$1' (ID = %"$2%") is invalid."), [a_feature_name, a_domain_item_id])
 #: eb_metric_names.e:858
 msgid "Feature `$1' (ID = \"$2\") is invalid."
-msgstr ""
+msgstr "Компонент `$1' (ID = \"$2\") недопустим."
 
 #. Source code: l_feature_address: STRING_GENERAL is				do Result := locale.translation("Feature address")	end
 #: interface_names.e:1067
 msgid "Feature address"
-msgstr ""
+msgstr "Адрес компонента"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:268
 msgid "Feature background color"
-msgstr ""
+msgstr "Цвет фона компонента"
 
 #. Source code: l_feature_callee_displayer: STRING_GENERAL do Result := locale.translation ("Feature callee view") end
 #: interface_names.e:654
@@ -14087,32 +14097,32 @@ msgstr ""
 #. 	<PREF NAME="tools.context_tool.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:99
 msgid "Feature format that is selected by default."
-msgstr ""
+msgstr "Формат компонента, который выбран по умолчанию."
 
 #. Source code: l_feature_in_client_class: STRING_GENERAL is do Result := locale.translation("Feature in client class")	end
 #: interface_names.e:1642
 msgid "Feature in client class"
-msgstr ""
+msgstr "Компонент в классе-клиенте"
 
 #. Source code: l_feature_in_supplier_class: STRING_GENERAL is do Result := locale.translation("Feature in supplier class")	end
 #: interface_names.e:1643
 msgid "Feature in supplier class"
-msgstr ""
+msgstr "Компонент в классе-поставщике"
 
 #. Source code: w_Feature_not_written_in_class: STRING_GENERAL is do Result := locale.translation ("Feature is not written in selected class.") end
 #: warning_messages.e:797
 msgid "Feature is not written in selected class."
-msgstr ""
+msgstr "Компонент не записан в выбранном классе."
 
 #. Source code: l_feature_label: STRING_GENERAL is				do Result := locale.translation("Feature label")	end
 #: interface_names.e:1068
 msgid "Feature label"
-msgstr ""
+msgstr "Метка компонента"
 
 #. Source code: l_feature_list: STRING_GENERAL is				do Result := locale.translation("Feature list")	end
 #: interface_names.e:1069
 msgid "Feature list"
-msgstr ""
+msgstr "Список компонентов"
 
 #. Source code: l_class_feature_displayer: STRING_GENERAL do Result := locale.translation ("Feature list view") end
 #: interface_names.e:650
@@ -14128,11 +14138,16 @@ msgid ""
 "and cannot be a reserved word.\n"
 "Please select a different feature name."
 msgstr ""
+"Имя компонета может содержать только \n"
+"цифро-буквенные символы и подчёркивания,\n"
+"должно начинаться с буквенного символа\n"
+"и не может быть зарезервированным словом.\n"
+"Пожалуйста, выберите другое имя компонента."
 
 #. Source code: l_Feature_properties: STRING_GENERAL is		do Result := locale.translation("Feature properties")	end
 #: interface_names.e:1070
 msgid "Feature properties"
-msgstr ""
+msgstr "Свойства компонента"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
@@ -14144,7 +14159,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:636
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:637
 msgid "Feature rename"
-msgstr ""
+msgstr "Переименование компонента"
 
 #. Source code: l_feature_stone_name: STRING_GENERAL is do Result := locale.translation ("Feature stone") end
 #: interface_names.e:633
@@ -14368,37 +14383,37 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:400
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:401
 msgid "Feature structure keywords"
-msgstr ""
+msgstr "Ключевые слова структуры компонента"
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:267
 msgid "Feature text color"
-msgstr ""
+msgstr "Цвет текста компонента"
 
 #. Source code: t_feature_version_setting: STRING_GENERAL is do Result := locale.translation ("Feature version setting:") end
 #: eb_metric_names.e:105
 msgid "Feature version setting:"
-msgstr ""
+msgstr "Установка версии компонента:"
 
 #. Source code: l_feature_displayer: STRING_GENERAL do Result := locale.translation ("Feature version view") end
 #: interface_names.e:651
 msgid "Feature version view"
-msgstr ""
+msgstr "Вид версий компонента"
 
 #. Source code: l_Feature_colon: STRING_GENERAL is				do Result := locale.translation("Feature:")	end
 #: interface_names.e:1062
 msgid "Feature:"
-msgstr ""
+msgstr "Компонент:"
 
 #. Source code: t_Features_tool: STRING_GENERAL is					do Result := locale.translation ("Features")	end
 #: interface_names.e:1964
 msgid "Features"
-msgstr ""
+msgstr "Компоненты"
 
 #. Source code: l_show_feature_from_any: STRING_GENERAL is  do Result := locale.translation("Features from ANY")	end
 #: interface_names.e:1564
 msgid "Features from ANY"
-msgstr ""
+msgstr "Компоненты из ANY"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -14410,7 +14425,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:198
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:199
 msgid "Features tool"
-msgstr ""
+msgstr "Панель компонентов"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_4" DESCRIPTION="Fifth external command shortcut."><SHORTCUT Alt="True">4</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:683
@@ -14549,6 +14564,8 @@ msgid ""
 "File: $1 already exists.\n"
 "Do you wish to overwrite it?"
 msgstr ""
+"Файл: $1 уже существует.\n"
+"Хотите его перезаписать?"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("File: $1 cannot be created.%NPlease check permissions."), [file_name])
 #: warning_messages.e:186
@@ -14565,6 +14582,8 @@ msgid ""
 "File: $1 is not writable, neither .swp file.\n"
 "Please choose a place to save."
 msgstr ""
+"Файл: $1 недоступен для записи, как и файл .swp.\n"
+"Пожалуйста, выберите место для сохранения."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("File: '$1' cannot be read."), [file_name])
 #: warning_messages.e:135
@@ -14589,7 +14608,7 @@ msgstr "Фильтр"
 #. 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:243
 msgid "Filter completion list"
-msgstr ""
+msgstr "Фильтровать список завершения"
 
 #. Source code: l_Filter_exceptions: STRING_GENERAL is		do Result := locale.translation ("Filter exceptions") end
 #: interface_names.e:1075
@@ -14599,7 +14618,7 @@ msgstr "Фильтровать исключения"
 #. 	<PREF NAME="tools.metric_tool.filter_invisible_result" DESCRIPTION="Is invisible result item filtered?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
 msgid "Filter invisible result"
-msgstr ""
+msgstr "Фильтровать невидимый результат"
 
 #. Source code: f_filter_result: STRING_GENERAL is do Result := locale.translation ("Filter result which is not visible from input domain") end
 #: eb_metric_names.e:267
@@ -14638,7 +14657,7 @@ msgstr ""
 #. Source code: l_Finalized_mode: STRING_GENERAL is 		do Result := locale.translation("Finalized mode")	end
 #: interface_names.e:1077
 msgid "Finalized mode"
-msgstr ""
+msgstr "Окончательный режим"
 
 #. Source code: "Finalizing implies some C compilation and linking.%N%
 #: warning_messages.e:890
@@ -14728,7 +14747,7 @@ msgstr "Финский (Финляндия)"
 #. Source code: l_first_chance: STRING_GENERAL is 			do Result := locale.translation ("First chance") end
 #: interface_names.e:1079
 msgid "First chance"
-msgstr ""
+msgstr "Первый случай"
 
 #. 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:679
@@ -14748,7 +14767,7 @@ msgstr ""
 #. Source code: do Result := locale.translation ("Fix the problem and restart the wizard.") end
 #: interface_names.e:74
 msgid "Fix the problem and restart the wizard."
-msgstr ""
+msgstr "Исправить проблему и перезагрузить мастер."
 
 #. Source code: l_flat_contracts:  STRING_GENERAL is		do Result := locale.translation("Flat contracts")	end
 #: interface_names.e:862
@@ -14902,62 +14921,62 @@ msgstr ""
 #. Source code: target_force_32bits_name: STRING_GENERAL is do Result := locale.translation ("Force 32bits")	end
 #: conf_interface_names.e:153
 msgid "Force 32bits"
-msgstr ""
+msgstr "Установить для 32 бит"
 
 #. Source code: b_Force_debug_mode: STRING_GENERAL is				do Result := locale.translation("Force Debug Mode")	end
 #: interface_names.e:70
 msgid "Force Debug Mode"
-msgstr ""
+msgstr "Установить режим отладки"
 
 #. Source code: target_force_32bits_description: STRING_GENERAL is do Result := locale.translation ("Force compilation for 32bits?")	end
 #: conf_interface_names.e:154
 msgid "Force compilation for 32bits?"
-msgstr ""
+msgstr "Установить компиляцию для 32 бит?"
 
 #. Source code: l_force_inheritance: STRING_GENERAL is do Result := locale.translation ("Force inheritance on child elements.")	end
 #: interface_names.e:1071
 msgid "Force inheritance on child elements."
-msgstr ""
+msgstr "Вставлять наследование детских элементов."
 
 #. Source code: f_diagram_put_right_angles: STRING_GENERAL is		do Result := locale.translation("Force right angles")	end
 #: interface_names.e:359
 msgid "Force right angles"
-msgstr ""
+msgstr "Вставлять угловые скобки"
 
 #. Source code: e_Force_debug_mode: STRING_GENERAL is		do Result := locale.translation("Force the environment to stay in debug mode")	end
 #: interface_names.e:2039
 msgid "Force the environment to stay in debug mode"
-msgstr ""
+msgstr "Оставить среду в режиме отладки"
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:255
 msgid "Foreground color for assertion tags."
-msgstr ""
+msgstr "Цвет тэга утверждения."
 
 #. 	<PREF NAME="editor.eiffel.colors.class_text_color" DESCRIPTION="Foreground color for classes."><COLOR>0;0;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:265
 msgid "Foreground color for classes."
-msgstr ""
+msgstr "Цвет класса."
 
 #. 	<PREF NAME="editor.eiffel.colors.cluster_text_color" DESCRIPTION="Foreground color for clusters."><COLOR>128;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:269
 msgid "Foreground color for clusters."
-msgstr ""
+msgstr "Цвет кластера."
 
 #. 	<PREF NAME="editor.eiffel.colors.error_text_color" DESCRIPTION="Foreground color for errors."><COLOR>255;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:271
 msgid "Foreground color for errors."
-msgstr ""
+msgstr "Цвет ошибки."
 
 #. 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:267
 msgid "Foreground color for features."
-msgstr ""
+msgstr "Цвет компонента."
 
 #. 	<PREF NAME="editor.eiffel.colors.generic_text_color" DESCRIPTION="Foreground color for generics."><COLOR>255;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:261
 msgid "Foreground color for generics."
-msgstr ""
+msgstr "Цвет параметра."
 
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_text_color" DESCRIPTION="Foreground color for indexing tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:257
@@ -14967,17 +14986,17 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.colors.local_text_color" DESCRIPTION="Foreground color for locals."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:263
 msgid "Foreground color for locals."
-msgstr ""
+msgstr "Цвет локальной переменной."
 
 #. 	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for object addresses."><COLOR>0;0;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:273
 msgid "Foreground color for object addresses."
-msgstr ""
+msgstr "Цвет адреса объекта."
 
 #. 	<PREF NAME="editor.eiffel.colors.reserved_text_color" DESCRIPTION="Foreground color for reserved words."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:259
 msgid "Foreground color for reserved words."
-msgstr ""
+msgstr "Цвет зарезервированного слова."
 
 #. Source code: w_Clear_breakpoints: STRING_GENERAL is do Result := locale.translation ("Forget all breakpoints?") end
 #: warning_messages.e:488
@@ -15024,12 +15043,12 @@ msgstr "Четвёртая внешняя команда."
 #. Source code: e_History_forth: STRING_GENERAL is			do Result := locale.translation("Forward")	end
 #: interface_names.e:2088
 msgid "Forward"
-msgstr ""
+msgstr "Вперёд"
 
 #. Source code: l_found: STRING_GENERAL is 					do Result := locale.translation ("Found") end
 #: interface_names.e:1082
 msgid "Found"
-msgstr ""
+msgstr "Найдено"
 
 #. Source code: l_frame_application: STRING_GENERAL is do Result := locale.translation ("Frame application") end
 #: interface_names.e:16
@@ -15106,12 +15125,12 @@ msgstr "Французский (Швейцария)"
 #. Source code: Result.force (locale.translation ("Frisian"), "fy")
 #: locale_names.e:51
 msgid "Frisian"
-msgstr ""
+msgstr "Фризский"
 
 #. Source code: Result.force (locale.translation ("Frisian (Netherlands)"), "fy_nl")
 #: locale_names.e:238
 msgid "Frisian (Netherlands)"
-msgstr ""
+msgstr "Фризский (Голландия)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.autocomplete_from" DESCRIPTION="Autocomplete from?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -15132,32 +15151,32 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:449
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:450
 msgid "From"
-msgstr ""
+msgstr "from"
 
 #. Source code: l_from_x: STRING is do Result := locale.translation ("From ") end
 #: interface_names.e:1607
 msgid "From "
-msgstr ""
+msgstr "Из "
 
 #. Source code: Result := locale.formatted_string (locale.translation("From $1"), [Workbench_name])
 #: interface_names.e:1744
 msgid "From $1"
-msgstr ""
+msgstr "Из $1"
 
 #. Source code: t_Static_type: STRING_GENERAL is					do Result := locale.translation("From Class")	end
 #: interface_names.e:1787
 msgid "From Class"
-msgstr ""
+msgstr "Из класса"
 
 #. Source code: l_formatter_metric_help: STRING_GENERAL do Result := locale.translation ("From the result of which metric is this formatter generated?") end
 #: interface_names.e:664
 msgid "From the result of which metric is this formatter generated?"
-msgstr ""
+msgstr "По результатам какой метрики сгенерирован этот форматировщик?"
 
 #. Source code: option_full_class_checking_name: STRING_GENERAL is do Result := locale.translation ("Full Class Checking")	end
 #: conf_interface_names.e:292
 msgid "Full Class Checking"
-msgstr ""
+msgstr "Полная проверка класса"
 
 #. Source code: assembly_name_description: STRING_GENERAL is do Result := locale.translation ("Full name of the assembly as found in the GAC.")	end
 #: conf_interface_names.e:258
@@ -15167,7 +15186,7 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("Full string length = $1"), [n])
 #: interface_names.e:1351
 msgid "Full string length = $1"
-msgstr ""
+msgstr "Полная длина строки = $1"
 
 #. Source code: l_function: STRING_GENERAL is do Result := locale.translation("Function")	end
 #: interface_names.e:1599
@@ -15177,17 +15196,17 @@ msgstr "Функция"
 #. Source code: b_Function_time: STRING_GENERAL is					do Result := locale.translation("Function Time")	end
 #: interface_names.e:74
 msgid "Function Time"
-msgstr ""
+msgstr "Время функции"
 
 #. Source code: Result.force (locale.translation ("Galician"), "gl")
 #: locale_names.e:54
 msgid "Galician"
-msgstr ""
+msgstr "Галисийский"
 
 #. Source code: Result.force (locale.translation ("Galician (Spain)"), "gl_es")
 #: locale_names.e:241
 msgid "Galician (Spain)"
-msgstr ""
+msgstr "Галисийский (Испания)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. Source code: section_general: STRING_GENERAL is do Result := locale.translation ("General")	end
@@ -15424,17 +15443,17 @@ msgstr "Генерировать &документацию..."
 #. Source code: l_Eiffel_formatting: STRING_GENERAL is 		do Result := locale.translation ("Generate Eiffel-friendly names") end
 #: interface_names.e:20
 msgid "Generate Eiffel-friendly names"
-msgstr ""
+msgstr "Генерировать имена, дружественные для Эйфеля"
 
 #. Source code: target_multithreaded_description: STRING_GENERAL is do Result := locale.translation ("Generate a multithreaded application?")	end
 #: conf_interface_names.e:140
 msgid "Generate a multithreaded application?"
-msgstr ""
+msgstr "Генерировать многопоточное приложение?"
 
 #. Source code: l_Number_of_state1: STRING_GENERAL is do Result := locale.translation ("Generate a wizard with ") end
 #: wizard_wizard_interface_names.e:29
 msgid "Generate a wizard with "
-msgstr ""
+msgstr "Генерировать мастер с "
 
 #. Source code: l_Generate_creation: STRING_GENERAL is		do Result := locale.translation("Generate creation procedure")	end
 #: interface_names.e:1087
@@ -16018,7 +16037,7 @@ msgstr "Идентичный"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:407
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:408
 msgid "If"
-msgstr ""
+msgstr "if"
 
 #. Source code: Result.force (locale.translation ("Igbo"), "ig")
 #: locale_names.e:64
@@ -16596,7 +16615,7 @@ msgstr "Вставить текст здесь"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:435
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:436
 msgid "Inspect"
-msgstr ""
+msgstr "inspect"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
@@ -17010,7 +17029,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:547
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:548
 msgid "Invariant"
-msgstr "Инвариант"
+msgstr "invariant"
 
 #. Source code: l_invariants: STRING_GENERAL is				do Result := locale.translation("Invariants")	end
 #: interface_names.e:1107
@@ -17046,7 +17065,7 @@ msgstr "Ирландский (Ирландия)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:323
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:324
 msgid "Is"
-msgstr ""
+msgstr "is"
 
 #. 	<PREF NAME="interface.development_window.estudio_dbg_menu_allowed" DESCRIPTION="Is EiffelStudio Debug menu allowed?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:193
@@ -17561,7 +17580,7 @@ msgstr "Запустить без остановки"
 #. Source code: l_launch_failed: STRING_GENERAL is				 do Result := locale.translation ("Launch failed") end
 #: eb_external_output_names.e:29
 msgid "Launch failed"
-msgstr ""
+msgstr "Запуск не удался"
 
 #. Source code: l_launching: STRING_GENERAL is					 do Result := locale.translation ("Launching...") end
 #: eb_external_output_names.e:27
@@ -17656,7 +17675,7 @@ msgstr "Номер строки"
 #. Source code: l_line_number_range (a_number: STRING_GENERAL): STRING_GENERAL is		do Result := locale.formatted_string (locale.translation ("Line number (1 - $1)"), [a_number]) end
 #: interface_names.e:1113
 msgid "Line number (1 - $1)"
-msgstr ""
+msgstr "Номер строки (1 - $1)"
 
 #. 	<PREF NAME="editor.general.colors.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:573
@@ -17809,17 +17828,17 @@ msgstr "Загружаются метрики..."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:344
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:345
 msgid "Local"
-msgstr ""
+msgstr "local"
 
 #. 	<PREF NAME="editor.eiffel.colors.local_background_color" DESCRIPTION="Background color for locals."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:264
 msgid "Local background color"
-msgstr ""
+msgstr "Цвет фона локальной переменной"
 
 #. 	<PREF NAME="editor.eiffel.colors.local_text_color" DESCRIPTION="Foreground color for locals."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:263
 msgid "Local text color"
-msgstr ""
+msgstr "Цвет текста локальной переменной"
 
 #. 	<PREF NAME="general.locale" DESCRIPTION="Locale current system uses. (Restart to take effect)" HIDDEN="False"><LIST>[en_US]</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:617
@@ -17839,7 +17858,7 @@ msgstr ""
 #. Source code: do Result := locale.translation ("Locals") end
 #: debugger_names.e:215
 msgid "Locals"
-msgstr ""
+msgstr "Локальные переменные"
 
 #. Source code: e_Show_class_cluster: STRING_GENERAL is		do Result := locale.translation("Locate currently edited class or cluster")	end
 #: interface_names.e:2119
@@ -17923,7 +17942,7 @@ msgstr "Блокировать инструменты"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:470
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:471
 msgid "Loop"
-msgstr "Цикл"
+msgstr "loop"
 
 #. Source code: Result.force (locale.translation ("Lower Sorbian"), "dsb")
 #: locale_names.e:39
@@ -18177,12 +18196,12 @@ msgstr "Максимизировать"
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:114
 msgid "Maximize metric result area"
-msgstr ""
+msgstr "Максимизировать область результатов метрики"
 
 #. 	<PREF NAME="tools.metric_tool.maximize_metric_result_area" DESCRIPTION="Maximize metric result area?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:114
 msgid "Maximize metric result area?"
-msgstr ""
+msgstr "Максимизировать область результатов метрики?"
 
 #. Source code: t_Set_stack_depth: STRING_GENERAL is				do Result := locale.translation("Maximum Call Stack Depth")	end
 #: interface_names.e:1785
@@ -18292,7 +18311,7 @@ msgstr "Вычисление архива метрик завершено."
 #. Source code: t_selected_archive_not_valid: STRING_GENERAL is do Result := locale.translation ("Metric archive in specified file is not valid, it must be cleaned") end
 #: eb_metric_names.e:71
 msgid "Metric archive in specified file is not valid, it must be cleaned"
-msgstr ""
+msgstr "Архив метрик в указанном файле недопустим, он должен быть очищен"
 
 #. Source code: t_metric_definition: STRING_GENERAL is do Result := locale.translation ("Metric definition") end
 #: eb_metric_names.e:98
@@ -18302,7 +18321,7 @@ msgstr "Определение метрики"
 #. Source code: t_metric_definition_error_wizard: STRING_GENERAL is do Result := locale.translation ("Metric definition error wizard") end
 #: eb_metric_names.e:110
 msgid "Metric definition error wizard"
-msgstr ""
+msgstr "Мастер ошибок определения метрик"
 
 #. Source code: t_metric_valid: STRING_GENERAL is do Result := locale.translation ("Metric is valid.") end
 #: eb_metric_names.e:54
@@ -18332,7 +18351,7 @@ msgstr "Имя метрики пусто."
 #. Source code: Result :=  locale.translation ("Metric name is missing in metric archive node.")
 #: eb_metric_names.e:504
 msgid "Metric name is missing in metric archive node."
-msgstr ""
+msgstr "Имя метрики отсутствует в узле архива метрик."
 
 #. Source code: Result :=  locale.translation ("Metric name is missing in metric definition.")
 #: eb_metric_names.e:496
@@ -18352,7 +18371,7 @@ msgstr "Метрика с именем \"$1\" уже есть в метрика�
 #. Source code: Result := locale.formatted_string (locale.translation ("Metric of type %"$1%" doesn't exist or that metric is invalid."), [a_type])
 #: eb_metric_names.e:922
 msgid "Metric of type \"$1\" doesn't exist or that metric is invalid."
-msgstr ""
+msgstr "Метрика типа \"$1\" не существует или она недопустима."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.metric_tool.automatic_go_to_result_panel" HIDDEN="true" DESCRIPTION="Show Detailed Result when computation done."><BOOLEAN>True</BOOLEAN></PREF>
@@ -18425,6 +18444,8 @@ msgid ""
 "Metrics loading error:\n"
 "$1"
 msgstr ""
+"Ошибка загрузки метрик:\n"
+"$1"
 
 #. Source code: m_Minimize: STRING_GENERAL is				do Result := locale.translation("Mi&nimize")	end
 #: interface_names.e:726
@@ -18621,7 +18642,7 @@ msgstr "Имя текущего проекта"
 #. Source code: target_executable_description: STRING_GENERAL is do Result := locale.translation ("Name of the generated binary.")	end
 #: conf_interface_names.e:85
 msgid "Name of the generated binary."
-msgstr ""
+msgstr "Имя сгенерированного исполняемого модуля."
 
 #. Source code: group_name_description: STRING_GENERAL is do Result := locale.translation ("Name of the group.")	end
 #: conf_interface_names.e:218
@@ -18726,12 +18747,12 @@ msgstr "Новый класс в Избранном..."
 #. Source code: m_Create_new_feature: STRING_GENERAL is		do Result := locale.translation("New Fea&ture...")	end
 #: interface_names.e:703
 msgid "New Fea&ture..."
-msgstr ""
+msgstr "Новый к&омпонент..."
 
 #. Source code: b_Create_new_feature: STRING_GENERAL is				do Result := locale.translation("New Feature")	end
 #: interface_names.e:140
 msgid "New Feature"
-msgstr ""
+msgstr "Новый компонент"
 
 #. Source code: mapping_new_name: STRING_GENERAL is do Result := locale.translation ("New Name")	end
 #: conf_interface_names.e:356
@@ -18771,7 +18792,7 @@ msgstr "Новая закладка"
 #. Source code: t_new_vision2_wizard: STRING_GENERAL is	do Result := locale.translation ("New Vision2 Application Wizard") end
 #: interface_names.e:23
 msgid "New Vision2 Application Wizard"
-msgstr ""
+msgstr "Мастер нового приложения Vision2"
 
 #. Source code: t_new_wel_wizard: STRING_GENERAL is	do Result := locale.translation ("New WEL Application Wizard") end
 #: interface_names.e:22
@@ -18786,7 +18807,7 @@ msgstr "Новое окно"
 #. Source code: t_new_wizard_application_wizard: STRING_GENERAL is do Result := locale.translation ("New Wizard Application Wizard") end
 #: wizard_wizard_interface_names.e:25
 msgid "New Wizard Application Wizard"
-msgstr ""
+msgstr "Мастер нового приложения мастера"
 
 #. Source code: l_New_breakpoint: STRING_GENERAL is			do Result := locale.translation("New breakpoint(s) to commit")	end
 #: interface_names.e:1144
@@ -18804,6 +18825,8 @@ msgid ""
 "New environment value for $1 will be used\n"
 "because of the -stop/-batch option.\n"
 msgstr ""
+"Новое значение переменной среды будет использовано для $1\n"
+"из-за опции -stop/-batch.\n"
 
 #. Source code: w_New_feature_syntax_error: STRING_GENERAL is do Result := locale.translation ("New feature has syntax error.%NCode generation cancelled.") end
 #: warning_messages.e:1016
@@ -18811,11 +18834,13 @@ msgid ""
 "New feature has syntax error.\n"
 "Code generation cancelled."
 msgstr ""
+"Новый компонент имеет синтаксические ошибки.\n"
+"Генерация кода отменена."
 
 #. 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:635
 msgid "New feature name"
-msgstr ""
+msgstr "Новое имя компонента"
 
 #. Source code: f_new: STRING_GENERAL is do Result := locale.translation ("New metric") end
 #: eb_metric_names.e:262
@@ -18884,7 +18909,7 @@ msgstr "Нет"
 #. Source code: no_active_queries: STRING_GENERAL is						do Result := locale.translation ("No active queries") end
 #: ewb_names.e:64
 msgid "No active queries"
-msgstr ""
+msgstr "Нет активных запросов"
 
 #. Source code: l_no_break_point: STRING_GENERAL is				do Result := locale.translation("No breakpoints")	end
 #: interface_names.e:1020
@@ -18899,12 +18924,12 @@ msgstr "Ни один класс никакого кластера не соот
 #. Source code: w_Unknown_cluster_name: STRING_GENERAL is do Result := locale.translation ("No cluster in the system has this name.") end;
 #: warning_messages.e:909
 msgid "No cluster in the system has this name."
-msgstr ""
+msgstr "Ни у какого кластера в системе нет такого имени."
 
 #. Source code: w_No_cluster_matches: STRING_GENERAL is do Result := locale.translation ("No cluster in the system matches this name.") end
 #: warning_messages.e:949
 msgid "No cluster in the system matches this name."
-msgstr ""
+msgstr "Ни одногму кластеру в системе не соответствует это имя."
 
 #. Source code: w_no_cluster_selected_for_class_creation: STRING_GENERAL is do Result := locale.translation ("No cluster was selected. Please select a cluster to create a class.") end;
 #: warning_messages.e:910
@@ -18954,7 +18979,7 @@ msgstr ""
 #. Source code: do Result := locale.translation ("No errors were found.") end
 #: warning_messages.e:631
 msgid "No errors were found."
-msgstr ""
+msgstr "Ошибок не найдено."
 
 #. Source code: w_No_feature_matches: STRING_GENERAL is do Result := locale.translation ("No feature in this class matches this name.") end
 #: warning_messages.e:951
@@ -19186,7 +19211,7 @@ msgstr ""
 #. 	<PREF NAME="debugger.number_of_watch_tools" HIDDEN="true" DESCRIPTION="Default number of watch tools."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:25
 msgid "Number of watch tools"
-msgstr ""
+msgstr "Число панелей наблюдения"
 
 #. 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:591
@@ -19494,7 +19519,7 @@ msgstr ""
 #. Source code: f_Open_watch_tool_menu: STRING_GENERAL is 	do Result := locale.translation ("Open Watch tool menu") end
 #: interface_names.e:490
 msgid "Open Watch tool menu"
-msgstr ""
+msgstr "Открыть меню панели наблюдения"
 
 #. Source code: e_Open_dynamic_lib_definition: STRING_GENERAL is do Result := locale.translation("Open a dynamic library definition")	end
 #: interface_names.e:2095
@@ -20281,7 +20306,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:526
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:527
 msgid "Precursor"
-msgstr ""
+msgstr "precursor"
 
 #. 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:615
@@ -21349,7 +21374,7 @@ msgstr "Отталкивание:"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:330
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:331
 msgid "Require"
-msgstr "Предусловие"
+msgstr "require"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.autocomplete_require_else" DESCRIPTION="Autocomplete require else?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -21370,7 +21395,7 @@ msgstr "Предусловие"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:337
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:338
 msgid "Require else"
-msgstr ""
+msgstr "require else"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.autocomplete_rescue" DESCRIPTION="Autocomplete rescue?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -22882,7 +22907,7 @@ msgstr ""
 #. 	<PREF NAME="shortcuts.debug.show_watch_tool" DESCRIPTION="Shortcut to display Watch tool."><SHORTCUT Ctrl="True" Alt="True">H</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:743
 msgid "Shortcut to display Watch tool."
-msgstr ""
+msgstr "Клавиша быстрого доступа к панели наблюдения."
 
 #. 	<PREF NAME="shortcuts.view.tools.show_windows_tool" DESCRIPTION="Shortcut to display Windows tool."><SHORTCUT Ctrl="True" Alt="True">N</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:711
@@ -25283,7 +25308,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:414
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:415
 msgid "Then"
-msgstr ""
+msgstr "then"
 
 #. Source code: do Result := locale.translation ("There are problems in this library definition.%N%
 #: warning_messages.e:616
@@ -26573,7 +26598,7 @@ msgstr "Цвет имени класcа (UML)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:61
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:15
 msgid "Uml class name font"
-msgstr "Ihban имени класcа (UML)"
+msgstr "Шрифт имени класcа (UML)"
 
 #. 	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures."><COLOR>127;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:64
@@ -26935,7 +26960,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:463
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:464
 msgid "Until"
-msgstr ""
+msgstr "until"
 
 #. Source code: Result.force (locale.translation ("Unused Locals"), w_unused_local)
 #: conf_interface_names.e:315
@@ -27692,7 +27717,7 @@ msgstr "Переменные"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:456
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:457
 msgid "Variant"
-msgstr ""
+msgstr "variant"
 
 #. Source code: target_version_name: STRING_GENERAL is do Result := locale.translation ("Version")	end
 #: conf_interface_names.e:88
@@ -27838,12 +27863,12 @@ msgstr "Видимые классы"
 #. Source code: t_vision2_application_appearance: STRING_GENERAL is do Result := locale.translation ("Vision2 Application Appearance") end
 #: interface_names.e:26
 msgid "Vision2 Application Appearance"
-msgstr ""
+msgstr "Внешний вид приложения Vision2"
 
 #. Source code: do Result := locale.translation ("WARNING: the console based debugger is experimental!!%N") end
 #: debugger_names.e:150
 msgid "WARNING: the console based debugger is experimental!!\n"
-msgstr ""
+msgstr "ПРЕДУПРЕЖДЕНИЕ: консольный отладчик является экспериментальным!\n"
 
 #. Source code: t_wel_app_type: STRING_GENERAL is do Result := locale.translation ("WEL Application Type") end
 #: interface_names.e:25
@@ -27868,7 +27893,7 @@ msgstr "Предупреждать о настройках для неизвес
 #. Source code: Result.force (locale.translation ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
 #: conf_interface_names.e:346
 msgid "Warn about classes where the filename does not match the classname?"
-msgstr ""
+msgstr "Предупреждать о классах, где имя файла не соответствует имени класса?"
 
 #. Source code: Result.force (locale.translation ("Warn about different files with the same UUID?"), w_same_uuid)
 #: conf_interface_names.e:340
@@ -27903,7 +27928,7 @@ msgstr "Предупреждать об использовании устаре�
 #. Source code: Result.force (locale.translation ("Warn about usage of obsolete features?"), w_obsolete_feature)
 #: conf_interface_names.e:336
 msgid "Warn about usage of obsolete features?"
-msgstr ""
+msgstr "Предупреждать об использовании устаревших компонентов?"
 
 #. Source code: Result.force (locale.translation ("Warn about usage of old syntax?"), w_syntax)
 #: conf_interface_names.e:338
@@ -27957,17 +27982,17 @@ msgstr "Предупреждения"
 #. Source code: t_Watch_tool: STRING_GENERAL is						do Result := locale.translation ("Watch")	end
 #: interface_names.e:1961
 msgid "Watch"
-msgstr ""
+msgstr "Наблюдение"
 
 #. Source code: m_Watch_tool: STRING_GENERAL is				do Result := locale.translation("Watch Tool")	end
 #: interface_names.e:593
 msgid "Watch Tool"
-msgstr ""
+msgstr "Панель наблюдения"
 
 #. Source code: t_watch_tool_error_message: STRING_GENERAL is		do Result := locale.translation ("Watch tool :: error message")	end
 #: interface_names.e:1962
 msgid "Watch tool :: error message"
-msgstr ""
+msgstr "Панель наблюдения :: сообщение об ошибке"
 
 #. 	<PREF NAME="debugger.watch_tools_layout" HIDDEN="true" DESCRIPTION="Layout of watch tools."><LIST></LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:41
@@ -27977,7 +28002,7 @@ msgstr "Компоновка инструментов наблюдения"
 #. 	<PREF NAME="debugger.watches_grids_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:34
 msgid "Watches grids layout managed"
-msgstr ""
+msgstr "Управление расположением сетки наблюдения"
 
 #. Source code: t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the%NPrecompilation Wizard") end
 #: interface_names.e:58
@@ -27985,6 +28010,8 @@ msgid ""
 "Welcome to the\n"
 "Precompilation Wizard"
 msgstr ""
+"Добро пожаловать в\n"
+"мастер прекомпиляции"
 
 #. Source code: m_Welcome_title: STRING_GENERAL is do Result := locale.translation ("Welcome to the%Nnew .NET Application Wizard") end
 #: interface_names.e:127
@@ -27992,6 +28019,8 @@ msgid ""
 "Welcome to the\n"
 "new .NET Application Wizard"
 msgstr ""
+"Добро пожаловать в\n"
+"мастер нового приложения .NET"
 
 #. Source code: t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New Vision2%NApplication Wizard") end
 #: interface_names.e:24
@@ -27999,6 +28028,8 @@ msgid ""
 "Welcome to the New Vision2\n"
 "Application Wizard"
 msgstr ""
+"Добро пожаловать в\n"
+"мастер нового приложения Vision2"
 
 #. Source code: t_welcome_to_the_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New WEL%NApplication Wizard") end
 #: interface_names.e:23
@@ -28015,11 +28046,13 @@ msgid ""
 "Welcome to the New Wizard\n"
 "Application Wizard"
 msgstr ""
+"Добро пожаловать в\n"
+"мастер нового мастера"
 
 #. Source code: wt_Profiler_welcome: STRING_GENERAL is do Result := locale.translation("Welcome to the Profiler Wizard")	end
 #: interface_names.e:2191
 msgid "Welcome to the Profiler Wizard"
-msgstr ""
+msgstr "Добро пожаловать в мастер профайлера"
 
 #. Source code: Result.force (locale.translation ("Welsh"), "cy")
 #: locale_names.e:36
@@ -28050,7 +28083,7 @@ msgstr "Валлийский (Великобритания)"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:442
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:443
 msgid "When"
-msgstr ""
+msgstr "when"
 
 #. Source code: m_When_hits: STRING_GENERAL is				do Result := locale.translation("When Hits ...")	end
 #: interface_names.e:756
@@ -28182,7 +28215,7 @@ msgstr "Ошибка установки мастера"
 #. Source code: f_Wizard_precompile: STRING_GENERAL is		do Result := locale.translation("Wizard to precompile libraries")	end
 #: interface_names.e:597
 msgid "Wizard to precompile libraries"
-msgstr ""
+msgstr "Мастер прекомпиляции библиотек"
 
 #. Source code: Result.force (locale.translation ("Wolof"), "wo")
 #: locale_names.e:135
@@ -28197,7 +28230,7 @@ msgstr "Волоф (Сенегал)"
 #. Source code: l_Workbench_mode: STRING_GENERAL is 		do Result := locale.translation("Workbench mode")	end
 #: interface_names.e:1367
 msgid "Workbench mode"
-msgstr ""
+msgstr "Рабочий режим"
 
 #. Source code: task_working_directory_name: STRING_GENERAL is do Result := locale.translation ("Working Directory")	end
 #: conf_interface_names.e:194
@@ -28217,12 +28250,12 @@ msgstr "Координата X"
 #. Source code: t_viewer_xml_display_title: STRING_GENERAL is do Result := locale.translation ("XML display") end
 #: interface_names.e:1360
 msgid "XML display"
-msgstr ""
+msgstr "Показ XML"
 
 #. Source code: e_xml_files: STRING_GENERAL is do Result := locale.translation ("XML files") end
 #: eb_metric_names.e:27
 msgid "XML files"
-msgstr ""
+msgstr "Файлы XML"
 
 #. Source code: Result.force (locale.translation ("Xhosa/isiXhosa"), "xh")
 #: locale_names.e:136

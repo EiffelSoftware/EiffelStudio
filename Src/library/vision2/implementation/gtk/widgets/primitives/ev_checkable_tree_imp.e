@@ -107,19 +107,16 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 
-
 	initialize_model is
 			-- Create our data model for `Current'
 		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
+			a_type_array: MANAGED_POINTER
 		do
-			create a_type_array.make (0, 2)
-			a_type_array.put ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
-			a_type_array.put ({EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
-			a_type_array.put ({EV_GTK_DEPENDENT_EXTERNALS}.g_type_boolean, 2)
-			a_type_array_c := a_type_array.to_c
-			tree_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (3, $a_type_array_c)
+			create a_type_array.make (3 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, 1 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_boolean (a_type_array.item, 2 * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+			tree_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (3, a_type_array.item)
 		end
 
 feature -- Access

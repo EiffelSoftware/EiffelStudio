@@ -770,7 +770,7 @@ feature {NONE} -- Implementation (`type_from')
 			else
 					-- Non formal status.
 				if not a_parent_type.is_tuple then
-					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, l_class.class_id)
+					last_target_type := a_type.actual_type.instantiation_in (a_parent_type, a_class.class_id)
 				else
 					last_target_type := a_type
 				end

@@ -372,128 +372,10 @@ feature {NONE} -- Interface
 
 	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
 		local
-			m, sm,subm: EV_MENU
-			mi,msi,mall: EV_MENU_ITEM
-			l_has_all: BOOLEAN
-			og: like objects_grid
-			lid: STRING
-			pos_titles: ARRAY [STRING_GENERAL]
-			gdata: like objects_grid_data
-			gids: LIST [INTEGER]
-			i: INTEGER
-			missings: ARRAYED_LIST [INTEGER]
-			l_keys: TWO_WAY_SORTED_SET [STRING]
+			m: EV_MENU
 		do
-			if not objects_grids.is_empty then
-				create m
-				create mi.make_with_text (interface_names.m_objects_tool_layout_menu_title)
-				m.extend (mi)
-				mi.disable_sensitive
-				m.extend (create {EV_MENU_SEPARATOR})
-				create mi.make_with_text (interface_names.m_objects_tool_layout_reset)
-				mi.select_actions.extend (agent reset_objects_grids_positions)
-				m.extend (mi)
-
-				from
-					create l_keys.make
-					objects_grids.start
-				until
-					objects_grids.after
-				loop
-					l_keys.extend (objects_grids.key_for_iteration)
-					objects_grids.forth
-				end
-				from
-					create pos_titles.make (Position_entries.lower, Position_entries.upper)
-					pos_titles[position_stack] := Interface_names.l_stack_information
-					pos_titles[position_current] := Interface_names.l_current_object
-					pos_titles[position_arguments] := Interface_names.l_arguments
-					pos_titles[position_locals] := Interface_names.l_locals
-					pos_titles[position_result] := Interface_names.l_result
-					pos_titles[position_dropped] := Interface_names.l_dropped_references
-
-					l_keys.start
-				until
-					l_keys.after
-				loop
-					lid := l_keys.item
-					gdata := objects_grids.item (lid)
-
-					create missings.make_from_array (position_entries.deep_twin)
-					og := gdata.grid
-					create sm.make_with_text (og.name)
-					m.extend (sm)
-
-					l_has_all := True
-					gids := gdata.ids
-					if gids /= Void and then not gids.is_empty then
-						create mall.make_with_text (interface_names.m_objects_tool_layout_remove_all)
-						mall.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
-						mall.enable_sensitive
-						sm.extend (mall)
-						sm.extend (create {EV_MENU_SEPARATOR})
-
-						from
-							gids.start
-						until
-							gids.after
-						loop
-							i := gids.item
-							if i > 0 then
-								mall.select_actions.extend (agent remove_objects_grids_position (lid, i))
-								missings.prune_all (i)
-								create subm.make_with_text (pos_titles[i])
-								if not gids.isfirst then
-									create msi.make_with_text (interface_names.f_move_item_up)
-									msi.select_actions.extend (agent move_objects_grids_position (lid, i, -1))
-									msi.set_pixmap (pixmaps.mini_pixmaps.general_up_icon)
-									subm.extend (msi)
-								end
-								create msi.make_with_text (interface_names.b_remove)
-								msi.select_actions.extend (agent remove_objects_grids_position (lid, i))
-								msi.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
-								subm.extend (msi)
-								if not gids.islast then
-									create msi.make_with_text (interface_names.f_move_item_down)
-									msi.select_actions.extend (agent move_objects_grids_position (lid, i, +1))
-									msi.set_pixmap (pixmaps.mini_pixmaps.general_down_icon)
-									subm.extend (msi)
-								end
-								sm.extend (subm)
-							end
-							gids.forth
-						end
-						sm.extend (create {EV_MENU_SEPARATOR})
-					end
-
-					l_has_all := missings.is_empty
-					if not l_has_all then
-						create mall.make_with_text (interface_names.m_objects_tool_layout_add_all)
-						mall.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
-						mall.enable_sensitive
-						sm.extend (mall)
-						sm.extend (create {EV_MENU_SEPARATOR})
-
-						from
-							missings.start
-						until
-							missings.after
-						loop
-							i := missings.item
-							if i > 0 then
-								create mi.make_with_text (pos_titles[i])
-								mi.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
-								mi.select_actions.extend (agent assign_objects_grids_position (lid, i))
-								sm.extend (mi)
-
-								mall.select_actions.extend (agent assign_objects_grids_position (lid, i))
-							end
-							missings.forth
-						end
-					end
-					l_keys.forth
-				end
-
+			m := tool_menu (True)
+			if m /= Void then
 				m.show_at (w, ax, ay)
 			end
 		end
@@ -570,7 +452,7 @@ feature {NONE} -- Interface
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
 			-- Context menu handler
 		do
-			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble)
+			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current)
 		end
 
 feature -- preference
@@ -699,6 +581,142 @@ feature -- Access
 
 	stone: STONE
 			-- Not used.
+
+feature -- Menu
+
+	tool_menu (for_tool: BOOLEAN): EV_MENU is
+			-- Menu for Current tool.
+		local
+			m, sm,subm: EV_MENU
+			mi,msi,mall: EV_MENU_ITEM
+			l_has_all: BOOLEAN
+			og: like objects_grid
+			lid: STRING
+			pos_titles: ARRAY [STRING_GENERAL]
+			gdata: like objects_grid_data
+			gids: LIST [INTEGER]
+			i: INTEGER
+			missings: ARRAYED_LIST [INTEGER]
+			l_keys: TWO_WAY_SORTED_SET [STRING]
+		do
+			if not objects_grids.is_empty then
+				create m
+				Result := m
+				if for_tool then
+					create mi.make_with_text (interface_names.m_objects_tool_layout_menu_title)
+					m.extend (mi)
+					mi.disable_sensitive
+					m.extend (create {EV_MENU_SEPARATOR})
+				else
+					m.set_text (interface_names.m_objects_tool_layout_menu_title)					
+				end
+				create mi.make_with_text (interface_names.m_objects_tool_layout_reset)
+				mi.select_actions.extend (agent reset_objects_grids_positions)
+				m.extend (mi)
+
+				from
+					create l_keys.make
+					objects_grids.start
+				until
+					objects_grids.after
+				loop
+					l_keys.extend (objects_grids.key_for_iteration)
+					objects_grids.forth
+				end
+				from
+					create pos_titles.make (Position_entries.lower, Position_entries.upper)
+					pos_titles[position_stack] := Interface_names.l_stack_information
+					pos_titles[position_current] := Interface_names.l_current_object
+					pos_titles[position_arguments] := Interface_names.l_arguments
+					pos_titles[position_locals] := Interface_names.l_locals
+					pos_titles[position_result] := Interface_names.l_result
+					pos_titles[position_dropped] := Interface_names.l_dropped_references
+
+					l_keys.start
+				until
+					l_keys.after
+				loop
+					lid := l_keys.item
+					gdata := objects_grids.item (lid)
+
+					create missings.make_from_array (position_entries.deep_twin)
+					og := gdata.grid
+					create sm.make_with_text (og.name)
+					m.extend (sm)
+
+					l_has_all := True
+					gids := gdata.ids
+					if gids /= Void and then not gids.is_empty then
+						create mall.make_with_text (interface_names.m_objects_tool_layout_remove_all)
+						mall.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+						mall.enable_sensitive
+						sm.extend (mall)
+						sm.extend (create {EV_MENU_SEPARATOR})
+
+						from
+							gids.start
+						until
+							gids.after
+						loop
+							i := gids.item
+							if i > 0 then
+								mall.select_actions.extend (agent remove_objects_grids_position (lid, i))
+								missings.prune_all (i)
+								create subm.make_with_text (pos_titles[i])
+								if not gids.isfirst then
+									create msi.make_with_text (interface_names.f_move_item_up)
+									msi.select_actions.extend (agent move_objects_grids_position (lid, i, -1))
+									msi.set_pixmap (pixmaps.mini_pixmaps.general_up_icon)
+									subm.extend (msi)
+								end
+								create msi.make_with_text (interface_names.b_remove)
+								msi.select_actions.extend (agent remove_objects_grids_position (lid, i))
+								msi.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+								subm.extend (msi)
+								if not gids.islast then
+									create msi.make_with_text (interface_names.f_move_item_down)
+									msi.select_actions.extend (agent move_objects_grids_position (lid, i, +1))
+									msi.set_pixmap (pixmaps.mini_pixmaps.general_down_icon)
+									subm.extend (msi)
+								end
+								sm.extend (subm)
+							end
+							gids.forth
+						end
+						sm.extend (create {EV_MENU_SEPARATOR})
+					end
+
+					l_has_all := missings.is_empty
+					if not l_has_all then
+						create mall.make_with_text (interface_names.m_objects_tool_layout_add_all)
+						mall.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
+						mall.enable_sensitive
+						sm.extend (mall)
+						sm.extend (create {EV_MENU_SEPARATOR})
+
+						from
+							missings.start
+						until
+							missings.after
+						loop
+							i := missings.item
+							if i > 0 then
+								create mi.make_with_text (pos_titles[i])
+								mi.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
+								mi.select_actions.extend (agent assign_objects_grids_position (lid, i))
+								sm.extend (mi)
+
+								mall.select_actions.extend (agent assign_objects_grids_position (lid, i))
+							end
+							missings.forth
+						end
+					end
+					l_keys.forth
+				end
+			end
+		end
+
+
 
 feature {NONE} -- Notebook item's behavior
 

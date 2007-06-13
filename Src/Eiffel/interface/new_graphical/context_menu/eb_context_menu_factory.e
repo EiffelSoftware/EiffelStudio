@@ -18,8 +18,6 @@ inherit
 
 	SHARED_BENCH_NAMES
 
-	EB_SHARED_MANAGERS
-
 create
 	make
 
@@ -364,7 +362,7 @@ feature -- Call stack menu
 			end
 		end
 
-feature -- Object and Watch tool menus
+feature -- Object tool, Object Viewer and Watch tool menus
 
 	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
 			-- Object tool menu
@@ -409,6 +407,17 @@ feature -- Object and Watch tool menus
 					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
 				end
 				extend_property_menu (a_menu, a_pebble)
+			end
+		end
+
+	object_viewer_browser_view_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+			-- Object viewer browser view menu.
+		do
+			if menu_displayable (a_pebble) then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, a_pebble)
+				extend_separator (a_menu)
+				extend_standard_compiler_item_menu (a_menu, a_pebble)
 			end
 		end
 

@@ -47,6 +47,9 @@ feature -- Attributes
 	class_id: INTEGER
 			-- The class id of the qualified call.
 
+	is_left_type_converted: BOOLEAN
+			-- Is the left type converted to the right type?
+
 feature -- Roundtrip
 
 	operator: AST_EIFFEL
@@ -103,6 +106,14 @@ feature -- Setting
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
 		do
 			class_id := a_class_id
+		end
+
+	set_left_type_converted (a_value: BOOLEAN)
+			-- Set `is_left_type_converted' to `a_value'
+		do
+			is_left_type_converted := a_value
+		ensure
+			is_left_type_converted_set: is_left_type_converted = a_value
 		end
 
 invariant

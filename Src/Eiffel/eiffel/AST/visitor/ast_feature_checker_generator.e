@@ -3664,6 +3664,7 @@ feature -- Implementation
 						if  is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name) then
 							l_right_constrained := last_calls_target_type
 							l_left_constrained := l_right_constrained
+							l_as.set_left_type_converted (True)
 						else
 							l_target_conv_info := Void
 						end
@@ -3683,7 +3684,7 @@ feature -- Implementation
 						no_conversion_if_right_type_is_formal: not l_right_type.is_formal
 						therefore_l_right_constrained_not_void: l_right_constrained /= Void
 					end
-					l_left_id := l_right_constrained.associated_class.class_id -- DEFINED
+					l_left_id := l_right_constrained.associated_class.class_id
 					if l_target_conv_info.has_depend_unit then
 						context.supplier_ids.extend (l_target_conv_info.depend_unit)
 					end
@@ -3692,14 +3693,14 @@ feature -- Implementation
 						l_left_expr := l_target_conv_info.byte_node (l_left_expr)
 					end
 				else
-						l_left_id := l_left_constrained.associated_class.class_id -- DEFINED
+						l_left_id := l_left_constrained.associated_class.class_id
 						l_target_type := l_left_type
 				end
 
 				if not is_inherited then
 						-- Set type informations
 					l_as.set_routine_ids (last_infix_feature.rout_id_set)
-					l_as.set_class_id (l_left_id) -- USED					
+					l_as.set_class_id (l_left_id)
 				end
 
 				if last_infix_argument_conversion_info /= Void then
@@ -3712,7 +3713,7 @@ feature -- Implementation
 				end
 
 					-- Suppliers update
-				create l_depend_unit.make_with_level (l_left_id, last_infix_feature, depend_unit_level) -- USED
+				create l_depend_unit.make_with_level (l_left_id, last_infix_feature, depend_unit_level)
 				context.supplier_ids.extend (l_depend_unit)
 
 					-- Update the type stack: instantiate result type of the
@@ -3728,11 +3729,11 @@ feature -- Implementation
 				else
 						-- Usual case
 					l_infix_type := adapted_type (l_infix_type, l_left_type.actual_type, l_left_constrained)
-					l_infix_type := l_infix_type.instantiation_in (l_target_type, l_left_id).actual_type -- USED
+					l_infix_type := l_infix_type.instantiation_in (l_target_type, l_left_id).actual_type
 				end
 
 				if l_is_assigner_call then
-					process_assigner_command (l_left_id, last_infix_feature) -- USED
+					process_assigner_command (l_left_id, last_infix_feature)
 				end
 
 				if l_needs_byte_node then

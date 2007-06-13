@@ -799,8 +799,8 @@ feature {NONE} -- Implementation
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
 					text_formatter_decorator.process_symbol_text (ti_dot)
-					text_formatter_decorator.process_local_text (l_as.access_name)
-				end
+						text_formatter_decorator.process_local_text (l_as.access_name)
+					end
 			else
 				if not has_error_internal then
 					if last_type /= Void then
@@ -890,7 +890,9 @@ feature {NONE} -- Implementation
 				end
 				if not expr_type_visiting then
 					if l_feat /= Void then
-						if l_feat.is_infix then
+						if l_feat.is_infix and then not l_as.is_qualified  then
+								-- We are in the case where a feature was renamed into an infix. It is an unqualified call so
+								-- we print (Current + b) for example.
 							text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 							l_right_parenthesis_needed := True
 							text_formatter_decorator.process_keyword_text (ti_current, Void)
@@ -905,6 +907,7 @@ feature {NONE} -- Implementation
 								text_formatter_decorator.process_keyword_text (ti_current, Void)
 							end
 						else
+								-- This includes the case where a qualified call on a feature which was renamed into an infix (or aliased).
 							if l_as.is_qualified or text_formatter_decorator.dot_needed then
 								text_formatter_decorator.process_symbol_text (ti_dot)
 							end
@@ -1590,8 +1593,11 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
+			l_last_type: TYPE_A
 			l_name: STRING
 			l_expr_type: TYPE_A
+			l_formal: FORMAL_A
+			l_feature_list: like feature_from_type_set
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1603,7 +1609,24 @@ feature {NONE} -- Implementation
 				l_expr_type := expr_type (l_as.expr)
 			end
 			if not has_error_internal then
-				l_feat := feature_in_class (l_expr_type.actual_type.associated_class, l_as.routine_ids)
+				if l_expr_type.is_formal then
+					l_formal ?= l_expr_type
+					if l_formal.is_multi_constrained (current_class) then
+						l_feature_list := feature_from_type_set (l_formal.constrained_types (current_class), l_as.routine_ids)
+						if not has_error_internal then
+								-- TODO: We simply pick the first even though there could be more than one.
+								-- In the future one could display them all on right click.
+							l_feat := l_feature_list.first.feature_item
+							l_last_type := l_feature_list.first.class_type.type
+						end
+					else
+						l_last_type := l_formal.constrained_type (current_class)
+						l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+					end
+				else
+					l_last_type := l_expr_type.actual_type
+					l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+				end
 			end
 			if not has_error_internal then
 				if l_feat.is_prefix or l_feat.has_alias_name then
@@ -1647,10 +1670,10 @@ feature {NONE} -- Implementation
 			if not has_error_internal then
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
-				check last_type_not_void: last_type /= Void end
-				last_class := last_type.associated_class
+				check l_last_type_not_void: l_last_type /= Void end
+				last_class := l_last_type.associated_class
 				if l_type.is_loose then
-					last_type := l_type.instantiation_in (last_type, last_class.class_id)
+					last_type := l_type.instantiation_in (l_last_type, last_class.class_id)
 				else
 					last_type := l_type
 				end
@@ -1698,11 +1721,11 @@ feature {NONE} -- Implementation
 					-- Temporary usage only!
 			l_type: TYPE_A
 			l_left_type: TYPE_A
-			l_is_multi_constrained: BOOLEAN
+			l_is_left_multi_constrained, l_is_right_multi_constrained: BOOLEAN
 			l_left_type_set, l_right_type_set: TYPE_SET_A
 			l_left_class: CLASS_C
 			l_right_type: TYPE_A
-			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
+			l_feature_list: like feature_from_type_set
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1714,22 +1737,19 @@ feature {NONE} -- Implementation
 					last_type /= Void
 				end
 				last_type := last_type.actual_type
-				if last_type.is_formal then
-					l_formal ?= last_type
-					last_type := type_from_ancestor (source_class, l_formal)
-				else
-					l_left_type := last_type
-				end
-					-- Find correct left type and left class.
-				if last_type.is_formal then
-					l_formal ?= last_type
+					-- Find correct left type.
+				l_left_type := last_type
+				if l_left_type.is_formal then
+					l_formal ?= l_left_type
 					if l_formal.is_multi_constrained (current_class) then
-						l_is_multi_constrained := True
+						l_is_left_multi_constrained := True
 						l_left_type_set := l_formal.constrained_types (current_class)
 					else
 						l_left_type := l_formal.constrained_type (current_class)
 					end
 				end
+
+				check l_left_type_valid: (not l_is_left_multi_constrained) implies (l_left_type /= Void and l_left_type.has_associated_class) end
 
 				l_right_type := expr_type (l_as.right)
 				if not has_error_internal then
@@ -1740,52 +1760,43 @@ feature {NONE} -- Implementation
 					if l_right_type.is_formal then
 						l_formal ?= l_right_type
 						if l_formal.is_multi_constrained (current_class) then
+							l_is_right_multi_constrained := True
 							l_right_type_set := l_formal.constrained_types (current_class)
 						else
 							l_right_type := l_formal.constrained_type (current_class)
 						end
 					end
 
-					if current_class = source_class and then not l_is_multi_constrained then
-							-- Taking into account possible conversion of the target. If it is the
-							-- same class ID as the one recorded in BINARY_AS, it means that target
-							-- was not converted, otherwise target was converted and its type is the
-							-- one from the right-hand side.
-						if l_left_type.associated_class.class_id = l_as.class_id then
-							last_type := l_left_type
-						else
-							last_type := l_right_type
+						-- Was the left type converted to the right type?
+					if l_as.is_left_type_converted then
+						l_left_type := l_right_type
+						l_is_left_multi_constrained := l_is_right_multi_constrained
+						l_left_type_set := l_right_type_set
+					end
+
+					if l_is_left_multi_constrained then
+						check
+							l_left_type_set_not_void: l_left_type_set /= Void
+							l_left_type_is_formal: l_left_type.is_formal
+						end
+						l_feature_list := feature_from_type_set (l_left_type_set, l_as.routine_ids)
+						if not has_error_internal then
+								-- TODO: We simply pick the first even though there could be more than one.
+								-- In the future one could display them all on right click.
+							l_feat := l_feature_list.first.feature_item
+							l_left_type := l_feature_list.first.class_type.type
 						end
 					else
-							-- We are not in the same class, so we cannot rely on `class_id' since
-							-- the type of the left target might be different in descendant class. Instead
-							-- we rely on the computed routine ID which will never change in descendants.
-						if l_is_multi_constrained then
-							check l_left_type_void: l_left_type = Void end
-							 -- MTNASK: why can we go over the name? Should one not use the routine ID?
-							l_result := l_left_type_set.e_feature_state_by_name_id (names_heap.id_of (l_as.infix_function_name))
-							l_feat := l_result.feature_item
-							l_left_type := l_result.class_type_of_feature
-						else
-							check l_left_type_set_void: l_left_type_set = Void end
-							l_feat := l_left_type.associated_class.feature_with_rout_id (l_as.routine_ids.first)
+						check
+							l_left_type_set_void: l_left_type_set = Void
+							l_left_type_has_associated_class: l_left_type.has_associated_class
 						end
-
-						if l_feat /= Void then
-							check l_left_type /= Void end
-							last_type := l_left_type
-						elseif not l_right_type.is_type_set then
-							last_type := l_right_type
-						end
+						l_feat := feature_in_class (l_left_type.associated_class, l_as.routine_ids)
 					end
-					last_class := last_type.associated_class
-					l_left_type := last_type
-					l_left_class := last_class
-
-						-- Minor optimization in case `l_feat' is computed when `source_class' is
-						-- an ancestor of `current_class'.
-					if l_feat = Void then
-						l_feat := feature_in_class (l_left_class, l_as.routine_ids)
+					check not has_error_internal implies l_left_type /= Void end
+					if not has_error_internal then
+						l_left_class := l_left_type.associated_class
+						last_type := l_left_type
 					end
 				end
 			end
@@ -3412,6 +3423,9 @@ feature -- Expression visitor
 				has_error_internal := True
 				set_error_message ("Expression type evaluating failed.")
 			end
+		ensure
+			no_error_implies_result_is_not_void: not has_error_internal implies Result /= Void
+			Result_is_not_a_type_set: not has_error_internal implies (not Result.is_type_set)
 		end
 
 	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A] is
@@ -3901,7 +3915,7 @@ feature {NONE} -- Implementation: helpers
 				set_error_message ("Feature with routine id " + a_id_set.first.out + " could not be found.")
 			end
 		ensure
-			feature_in_class_not_void: not has_error_internal implies Result /= Void
+			feature_in_class_not_void: not has_error_internal implies (Result /= Void and then not Result.is_empty)
 		end
 
 	feature_in_class (a_class_c: CLASS_C; a_id_set: ID_SET): E_FEATURE is

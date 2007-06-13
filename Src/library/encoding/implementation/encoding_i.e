@@ -16,23 +16,32 @@ inherit
 			{NONT} all
 		end
 
-feature -- String encoding convertion
+feature {ENCODING} -- String encoding convertion
 
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
+			code_page_convertable: is_code_page_convertable (a_from_code_page, a_to_code_page)
 			a_from_string_not_void: a_from_string /= Void
 		deferred
 		ensure
 			success_implies_not_void: last_conversion_successful implies Result /= Void
 		end
 
-feature -- Status report
+feature {ENCODING} -- Status report
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN is
 			-- Is `a_code_page' valid?
+		deferred
+		end
+
+	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN is
+			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+		require
+			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
+			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
 		deferred
 		end
 

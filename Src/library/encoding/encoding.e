@@ -40,7 +40,7 @@ feature -- Conversion
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
 		do
-			if a_to_encoding.is_valid and then is_valid then
+			if a_to_encoding.is_valid and then is_valid and then is_conversion_possible (a_to_encoding) then
 				Result := encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
 				last_conversion_successful := encoding_i.last_conversion_successful
 			else
@@ -52,14 +52,26 @@ feature -- Conversion
 
 feature -- Status report
 
+	last_conversion_successful: BOOLEAN
+			-- Was last conversion successful?
+
+feature {ENCODING} -- Status report
+
 	is_valid: BOOLEAN is
 			-- Is current valid?
 		do
 			Result := encoding_i.is_code_page_valid (code_page)
 		end
 
-	last_conversion_successful: BOOLEAN
-			-- Was last conversion successful?
+	is_conversion_possible (a_to_encoding: ENCODING): BOOLEAN is
+			-- Is conversion possible?
+		require
+			a_to_encoding_not_void: a_to_encoding /= Void
+			a_to_encoding_valid: a_to_encoding.is_valid
+			is_valid: is_valid
+		do
+			Result := encoding_i.is_code_page_convertable (code_page, a_to_encoding.code_page)
+		end
 
 feature {NONE} -- Implementation
 

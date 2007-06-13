@@ -276,13 +276,13 @@ feature -- Actions
 
 	on_metric_selected (a_metric: EB_METRIC) is
 			-- Action to be performed when a metric is selected
-		require
-			a_metric_attached: a_metric /= Void
 		do
-			set_is_metric_changed (False)
-			load_metric_definition (a_metric, metric_type_id (a_metric), a_metric.unit, False)
-			set_is_up_to_date (False)
-			update_ui
+			if a_metric /= Void then
+				set_is_metric_changed (False)
+				load_metric_definition (a_metric, metric_type_id (a_metric), a_metric.unit, False)
+				set_is_up_to_date (False)
+				update_ui
+			end
 		end
 
 	on_save_metric is

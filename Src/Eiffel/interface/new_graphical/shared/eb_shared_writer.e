@@ -41,8 +41,6 @@ feature -- Font tables
 
 	label_font_height: INTEGER is
 			-- Height in pixel of `label_font_table'
-		local
-			l_utility: EVS_UTILITY
 		do
 			Result := (create {EVS_UTILITY}).grid_row_height_for_fonts (label_font_table)
 		end

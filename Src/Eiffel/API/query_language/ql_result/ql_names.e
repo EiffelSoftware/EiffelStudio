@@ -99,7 +99,7 @@ feature -- Criterion names
 	ql_cri_is_always_compiled: STRING is "is_always_compiled"
 	ql_cri_is_partial: STRING is "is_partial"
 	ql_cri_is_read_only: STRING is "is_read_only"
-	ql_cri_is_overriden: STRING is "is_overriden"
+	ql_cri_is_overridden: STRING is "is_overridden"
 	ql_cri_is_overrider: STRING is "is_overrider"
 	ql_cri_is_visible: STRING is "is_visible"
 	ql_cri_is_from_any: STRING is "is_from_any"

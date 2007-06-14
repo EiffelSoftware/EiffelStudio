@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 				file_browser_command_preference := l_manager.new_string_preference_value (l_manager, file_browser_command_string, "xterm -geometry 80x40")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			end
-			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"[en];">>)
+			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
 
@@ -251,20 +251,22 @@ feature {NONE} -- Implementation
 		do
 			if is_gui then
 				l_select_lang := locale_id_preference.selected_value
-				if l_select_lang = Void then
-						-- If selected locale is Void, we try looking for en_US.
-					l_select_lang := "en_US"
-				elseif l_select_lang.is_equal (default_string) then
+				if l_select_lang = Void or else l_select_lang.is_equal (default_string) then
 					l_is_unselected := True
 
 					if is_eiffel_layout_defined then
 						l_select_lang := eiffel_layout.get_environment ("ISE_LANG")
 						l_is_unselected := l_select_lang = Void or else l_select_lang.is_empty or else l_select_lang.is_equal (default_string)
-						if l_is_unselected then
-							l_select_lang := default_string
-						end
+					end
+
+					if l_is_unselected then
+						l_select_lang := default_string
 					end
 				end
+				check
+					l_select_lang_attached: l_select_lang /= Void
+				end
+
 				l_available_locales := locale_manager.available_locales
 				create l_id.make_from_string (l_select_lang)
 				if not locale_manager.has_translations (l_id) then

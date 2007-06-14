@@ -19,11 +19,10 @@
           </Control>
           <Control Id="SelectLang" Type="ListBox" X="29" Y="111" Width="200" Height="70" Property="ISELANG" Sorted="no">
             <ListBox Property="ISELANG">
-              <ListItem Value="en_US" Text="English (United States)"/>
               <ListItem Value="zh_CN" Text="Chinese (PRC)"/>
-              <ListItem Value="fr" Text="French (France)"/>
-              <ListItem Value="de" Text="German (Germany)"/>
-              <ListItem Value="de_CH" Text="German (Switzerland)"/>
+              <ListItem Value="en_US" Text="English (United States)"/>
+              <ListItem Value="fr_FR" Text="French (France)"/>
+              <ListItem Value="de_DE" Text="German (Germany)"/>
               <ListItem Value="ru_RU" Text="Russian (Russia)"/>
             </ListBox>
           </Control>

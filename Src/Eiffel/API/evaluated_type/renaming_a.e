@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 							end
 							if
 								predefined_names.is_semi_strict_id (l_new_name.internal_alias_name_id) and then
-								a_feature_table.associated_class /= system.boolean_class
+								a_feature_table.associated_class.original_class /= system.boolean_class
 							then
 									-- Semistrict operator alias name is declared in a class that is not BOOLEAN
 								create {VFAV4_SYNTAX} vfav.make (l_new_name)

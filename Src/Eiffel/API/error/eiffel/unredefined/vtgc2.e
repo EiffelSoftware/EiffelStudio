@@ -60,8 +60,6 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
-		local
-			l_output: STRING_8
 		do
 			if constraint_class /= Void then
 				a_text_formatter.add ("Renaming of constraint class: ")

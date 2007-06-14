@@ -296,7 +296,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_always_compiled), query_language_names.ql_cri_is_always_compiled)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_partial), query_language_names.ql_cri_is_partial)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_read_only), query_language_names.ql_cri_is_read_only)
-			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_overriden), query_language_names.ql_cri_is_overriden)
+			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_overridden), query_language_names.ql_cri_is_overridden)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_overrider), query_language_names.ql_cri_is_overrider)
 
 			l_hash_table.put (agent new_path_criterion (class_scope, query_language_names.ql_cri_path_in), query_language_names.ql_cri_path_in)

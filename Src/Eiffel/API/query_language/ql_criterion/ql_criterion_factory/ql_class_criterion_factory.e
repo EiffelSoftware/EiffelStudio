@@ -96,7 +96,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_always_compiled, query_language_names.ql_cri_is_always_compiled)
 			name_table.put (c_is_partial, query_language_names.ql_cri_is_partial)
 			name_table.put (c_is_read_only, query_language_names.ql_cri_is_read_only)
-			name_table.put (c_is_overriden, query_language_names.ql_cri_is_overriden)
+			name_table.put (c_is_overriden, query_language_names.ql_cri_is_overridden)
 			name_table.put (c_is_overrider, query_language_names.ql_cri_is_overrider)
 			name_table.put (c_is_visible, query_language_names.ql_cri_is_visible)
 

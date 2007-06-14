@@ -19,7 +19,6 @@ feature{NONE} -- Initialization
 			-- Initialize `name' with `a_name' and `id' with `a_id'.
 		require
 			a_name_attached: a_name /= Void
-			a_name_valid: not a_name.is_empty
 			a_id_attached: a_id /= Void
 			a_id_valid: not a_id.is_empty
 		do
@@ -68,7 +67,6 @@ feature -- Setting
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
-			a_name_valid: not a_name.is_empty
 		do
 			name := a_name.twin
 		ensure

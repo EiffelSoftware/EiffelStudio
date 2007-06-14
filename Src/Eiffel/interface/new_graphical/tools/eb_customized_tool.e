@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		require
 			a_develop_window_attached: a_develop_window /= Void
-			a_title_valid: a_title /= Void and then not a_title.is_empty
+			a_title_valid: a_title /= Void
 			a_id_attached: a_id /= Void
 			a_pixmap_location_attached: a_pixmap_location /= Void
 			a_handlers_attached: a_handlers /= Void
@@ -217,12 +217,15 @@ feature -- Setting
 	set_title (a_title: like title) is
 			-- Set `title' with `a_title'.
 		require
-			a_title_valid: a_title /= Void and then not a_title.is_empty
+			a_title_valid: a_title /= Void
 		do
-			title_internal := a_title
+			if a_title.is_empty then
+				title_internal := default_title
+			else
+				title_internal := a_title
+			end
 		ensure
-			title_internal_set: title_internal = a_title
-			title_set: title = a_title
+			title_internal_set: (a_title.is_empty implies title_internal = default_title) and then (not a_title.is_empty implies title_internal = a_title)
 		end
 
 	set_is_pixmap_loaded (b: BOOLEAN) is
@@ -245,6 +248,9 @@ feature{NONE} -- Implementation/Data
 
 	title_internal: like title
 			-- Implementation of `title'
+
+	default_title: STRING is "Unnamed tool"
+			-- Default tool title
 
 	pixmap_internal: like pixmap
 			-- Implementation of `pixmap'

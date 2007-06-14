@@ -73,19 +73,3 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             );
 }
 
-/* To store previous value of `debug_mode' */
-static int saved_debug_mode = 0;
-
-void set_debug_mode (int a_debug_mode)
-{
-	if (a_debug_mode == 0) {
-			/* We are disabling debugger here, therefore we need to save
-			 * previous state of debugger so that we can correctly restore
-			 * it later when we want to enable it again. */
-		saved_debug_mode = debug_mode;
-		debug_mode = a_debug_mode;
-	} else {
-			/* Restore previous state of debugger. */
-		debug_mode = saved_debug_mode;
-	}
-}

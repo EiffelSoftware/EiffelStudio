@@ -333,7 +333,6 @@ feature -- Output
 		local
 			c_name: STRING
 			eiffel_name: STRING
-			l_type: TYPE_A
 			l_type_set: TYPE_SET_A
 			l_feature: E_FEATURE
 		do

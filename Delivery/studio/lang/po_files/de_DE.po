@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-13 09:46-0800\n"
+"PO-Revision-Date: 2007-06-14 10:13-0800\n"
 "Language-Team: \n"
 "Last-Translator: Eiffel Software\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -861,7 +861,7 @@ msgstr "&Einführung für Eiffel (Englisch)"
 #. Source code: m_Minimize_all: STRING_GENERAL is			do Result := locale.translation("&Minimize All")	end
 #: interface_names.e:727
 msgid "&Minimize All"
-msgstr "Alle &Minimieren"
+msgstr "Alle &minimieren"
 
 #. Source code: m_New: STRING_GENERAL is					do Result := locale.translation("&New")	end
 #: interface_names.e:477
@@ -971,7 +971,7 @@ msgstr "&Hervorheben"
 #. Source code: m_Raise_all: STRING_GENERAL is				do Result := locale.translation("&Raise All")	end
 #: interface_names.e:740
 msgid "&Raise All"
-msgstr "Alle &Hervorheben"
+msgstr "Alle &hervorheben"
 
 #. Source code: m_Recent_project: STRING_GENERAL is			do Result := locale.translation("&Recent Projects")	end
 #: interface_names.e:529
@@ -6698,12 +6698,12 @@ msgstr ""
 #. 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
 msgid "Completion list height"
-msgstr "Höhe der Vervollständigungsliste"
+msgstr "Höhe der Autovervollständigungsliste"
 
 #. 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:226
 msgid "Completion list width"
-msgstr "Breite der Vervollständigungsliste"
+msgstr "Breite der Autovervollständigungsliste"
 
 #. Source code: external_condition_name: STRING_GENERAL is do Result := locale.translation ("Condition")	end
 #: conf_interface_names.e:162
@@ -7540,7 +7540,7 @@ msgstr "Einheit \"$1\" des Kriteriums stimmt nicht mit der Einheit \"$2\" der Ba
 #. 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:4
 msgid "Critical stack depth"
-msgstr "Kritische Stack-Tiefe"
+msgstr "Kritische Tiefe des Aufrufstacks"
 
 #. Source code: Result.force (locale.translation ("Croatian"), "hr")
 #: locale_names.e:60
@@ -8489,10 +8489,11 @@ msgstr "Re&factoringleiste anpassen..."
 msgid "Customize Toolbar"
 msgstr "Symbolleiste anpassen"
 
+# FIXME: after string freeze, this can be changed as the string "customzized formatters" is introduced
 #. Source code: f_customize_formatter: STRING_GENERAL is do Result := locale.translation ("Customize formatters") end
 #: interface_names.e:607
 msgid "Customize formatters"
-msgstr "Formatierer anpassen"
+msgstr "Benutzerdefinierte Formatierer"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
@@ -8980,7 +8981,7 @@ msgid ""
 "Customized formatters with target scope won't be saved\n"
 "because no project has been loaded. Go ahead anyway?"
 msgstr ""
-"Angepasste Formatierer mit einem Ziel als Bereich werden nicht gespeichert\n"
+"Benutzerdefinierte Formatierer mit einem Ziel als Bereich werden nicht gespeichert\n"
 "weil kein Projekt geladen ist. Trotzdem fortfahren?"
 
 #. 	<PREF NAME="shortcuts.editor.customized_insertion_1" DESCRIPTION="Trigger insertion of customized string #1."><SHORTCUT>F2</SHORTCUT></PREF>
@@ -9365,7 +9366,7 @@ msgstr "Standardbibliotheken"
 #. 	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:8
 msgid "Default maximum stack depth"
-msgstr "Standardwert maximale Stack-Tiefe"
+msgstr "Standardwert maximale Tiefe des Aufrufstacks"
 
 #. 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:635
@@ -10282,7 +10283,7 @@ msgstr "Zusicherungen verwerfen"
 #. 	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:182
 msgid "Discard target scope customized formatter"
-msgstr "Zielbereich bei angepassten Formatierer verwerfen"
+msgstr "Zielbereich bei benutzerdefinierten Formatierer verwerfen"
 
 #. Source code: e_discover_melt: STRING_GENERAL is			do Result := locale.translation("Discover unreferenced externally added classes and recompile.")	end
 #: interface_names.e:2105
@@ -10407,7 +10408,7 @@ msgstr "Bestätigungsdialog anzeigen um C Kompilierung beim Einfrieren abzubrech
 #. 	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:182
 msgid "Display confirmation dialog of discarding target scope customized formatter."
-msgstr "Bestätigungsdialog anzeigen beim verwerfen des Zielbereichs eines angepassten Formatierers."
+msgstr "Bestätigungsdialog anzeigen beim verwerfen eines benutzerdefinierten Formatierers über einen Zielbereich."
 
 #. 	<PREF NAME="interface.dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:140
@@ -10608,7 +10609,7 @@ msgstr "Do"
 #. 	<PREF NAME="editor.eiffel.show_ANY_features" DESCRIPTION="Do features of class ANY appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:245
 msgid "Do features of class ANY appear in the feature call complete window?"
-msgstr "Sollen Features von ANY im Vervollständigungsfenster angezeigt werden?"
+msgstr "Sollen Features von ANY in der Autovervollständigung angezeigt werden?"
 
 #. Source code: l_Discard_build_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always build precompile")	end
 #: interface_names.e:998
@@ -10747,27 +10748,27 @@ msgstr "Soll ein Vierfach-Klick das gesamte Dokument anwählen?"
 #. 	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Does completion change the first character of onces and constants with an upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:244
 msgid "Does completion change the first character of onces and constants with an upper case character?"
-msgstr "Soll Vervollständigung den ersten Buchstaben von Konstanten und 'once'-Features in einen Großbuchstaben ändern?"
+msgstr "Soll Autovervollständigung den ersten Buchstaben von Konstanten und 'once'-Features in einen Großbuchstaben ändern?"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_disambiguated_name" DESCRIPTION="Does completion list show disambiguated name?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:248
 msgid "Does completion list show disambiguated name?"
-msgstr "Soll Vervollständigung eindeutige Namen anzeigen?"
+msgstr "Soll Autovervollständigung eindeutige Namen anzeigen?"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Does completion list show feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:246
 msgid "Does completion list show feature signatures?"
-msgstr "Soll Vervollständigung Feature Signaturen anzeigen?"
+msgstr "Soll Autovervollständigung Feature Signaturen anzeigen?"
 
 #. 	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:247
 msgid "Does completion list show query return type?"
-msgstr "Soll Vervollständigung den Rückgabewert anzeigen?"
+msgstr "Soll Autovervollständigung den Rückgabewert anzeigen?"
 
 #. 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:564
 msgid "Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"
-msgstr "Soll das Mausrad das Dokument eine ganze Seite umblättern? (Wenn Ja übergeht dies die Option 'Zeilen pro Mausrad')"
+msgstr "Soll das Mausrad das Dokument eine ganze Seite umblättern? (Wenn Ja übergeht dies die Option 'Rollgrösse für Mausrad')"
 
 #. 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:558
@@ -14751,7 +14752,7 @@ msgstr "Filter"
 #. 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:243
 msgid "Filter completion list"
-msgstr "Vervollständigungsliste filtern"
+msgstr "Liste def Autovervollständigung filtern"
 
 #. Source code: l_Filter_exceptions: STRING_GENERAL is		do Result := locale.translation ("Filter exceptions") end
 #: interface_names.e:1075
@@ -14840,7 +14841,7 @@ msgstr ""
 #. Source code: m_Discover_melt: STRING_GENERAL is			do Result := locale.translation("Find &Added Classes && Recompile")	end
 #: interface_names.e:738
 msgid "Find &Added Classes && Recompile"
-msgstr "Hinzugefügte Klassen finden && Neu kompilieren"
+msgstr "Hinzugefügte Klassen finden && neu kompilieren"
 
 #. Source code: m_Find_next: STRING_GENERAL is				do Result := locale.translation("Find &Next")	end
 #: interface_names.e:447
@@ -15951,7 +15952,7 @@ msgstr "Höhe"
 #. 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
 msgid "Height of completion list.  Used if 'remember_completion_list_size' is set to True."
-msgstr "Höhe der Vervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'Wahr' gesetzt wird."
+msgstr "Höhe der Autovervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'Wahr' gesetzt wird."
 
 #. 	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:221
@@ -17256,7 +17257,7 @@ msgstr "Sind Zuweiser aktiviert"
 #. 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:249
 msgid "Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."
-msgstr "Sollen Schlüsselwörter vervollständigt werden? Die Vervollständigung von Schlüsselwörtern kann im Abschnitt Editor->Eiffel->Autovervollständigung geändert werden."
+msgstr "Sollen Schlüsselwörter vervollständigt werden? Die Autovervollständigung von Schlüsselwörtern kann im Abschnitt Editor->Eiffel->Autovervollständigung geändert werden."
 
 #. 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:124
@@ -17570,7 +17571,7 @@ msgstr "Schrift für Schlüsselwörter"
 #. 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:583
 msgid "Keyword text color"
-msgstr "Schrift für Schlüsselwörter"
+msgstr "Farbe für Schlüsselwörter"
 
 #. Source code: Result.force (locale.translation ("Khmer"), "kh")
 #: locale_names.e:71
@@ -21266,7 +21267,7 @@ msgstr "Verbleibend:"
 #. 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:206
 msgid "Remember completion list size"
-msgstr "Größe Vervollständigungsliste beibehalten"
+msgstr "Größe Autovervollständigungsliste beibehalten"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Remote file will be loaded in: $1.%NThis file already exists. Overwrite?"), [a_file_name])
 #: eb_metric_names.e:1072
@@ -23588,12 +23589,12 @@ msgstr "Sollen Clusternamen als Namensraum verwendet werden?"
 #. 	<PREF NAME="editor.eiffel.auto_complete_words" DESCRIPTION="Should completion automatically complete words when a single best match is available?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:238
 msgid "Should completion automatically complete words when a single best match is available?"
-msgstr "Soll die Vervollständigung ein Wort automatisch vervollständigen wenn es nur eine gute Möglichkeit kennt."
+msgstr "Soll die Autovervollständigung ein Wort automatisch vervollständigen wenn es nur eine gute Möglichkeit kennt."
 
 #. 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:237
 msgid "Should completion window appear automatically after typing a `.'?"
-msgstr "Soll die Vervollständigung nach dem eingeben eines Punktes automatisch erscheinen?"
+msgstr "Soll die Autovervollständigung nach dem eingeben eines Punktes automatisch erscheinen?"
 
 #. 	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:568
@@ -23638,7 +23639,7 @@ msgstr "Sollen die Namen von Ordnern in rekursiven Clustern als Namensraum verwe
 #. 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:243
 msgid "Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."
-msgstr "Sollen nicht übereinstimmende Einträge in der Vervollständigungsliste verborgen werden? Wenn nicht werden alle Einträge angezeigt und die Selektion in der Liste wechselt zum besten Treffer während der Eingabe."
+msgstr "Sollen nicht übereinstimmende Einträge in der Autovervollständigungsliste verborgen werden? Wenn nicht werden alle Einträge angezeigt und die Selektion in der Liste wechselt zum besten Treffer während der Eingabe."
 
 #. Source code: l_Dummy: STRING_GENERAL is					do Result := locale.translation("Should not be read")	end
 #: interface_names.e:1018
@@ -23697,12 +23698,12 @@ msgstr "Sollen referenzierende Klassen in der Abhängigkeitenansicht standardmä
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:210
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:214
 msgid "Should selective text of toolbar items in general toolbar?"
-msgstr "Soll Text der Elemente in der Symbolleiste angezeigt werden?"
+msgstr "Sollen ausgewählte Texte der Elemente in der Standardleiste angezeigt werden?"
 
 #. 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:206
 msgid "Should size of completion list be remembered between completions in the editor?"
-msgstr "Soll die Größe der Vervollständigungsliste beibehalten werden?"
+msgstr "Soll die Größe der Autovervollständigungsliste beibehalten werden?"
 
 #. 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:125
@@ -23861,17 +23862,17 @@ msgstr "Alle Stackelemente anzeigen"
 #. 	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:215
 msgid "Show all text in general toolbar"
-msgstr "Text in Standardleiste"
+msgstr "Alle Texte in Standardleiste anzeigen"
 
 #. 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:40
 msgid "Show all text in project toolbar"
-msgstr "Text in Projektleiste"
+msgstr "Alle Texte in Projektleiste anzeigen"
 
 #. 	<PREF NAME="interface.development_window.show_all_text_in_refactoring_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:211
 msgid "Show all text in refactoring toolbar"
-msgstr "Text in Refactoringleiste"
+msgstr "Alle Texte in Refactoringleiste anzeigen"
 
 #. Source code: h_show_ancestor_classes: STRING_GENERAL is do Result := locale.translation("Show ancestor classes?") end
 #: interface_names.e:1611
@@ -24571,7 +24572,7 @@ msgstr "Stackinformationen"
 #. 	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:4
 msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
-msgstr "Erkennung von Stack-Überlauf: Tiefe des Stacks bei dem die Ausführung pausiert wird und für die weitere Ausführung nachgefragt wird (funktioniert nur im klassischen Eiffel)."
+msgstr "Erkennung von Stack-Überlauf: Tiefe des Aufrufstacks bei dem die Ausführung pausiert wird und für die weitere Ausführung nachgefragt wird (funktioniert nur im klassischen Eiffel)."
 
 #. Source code: target_compilation_type_standard: STRING_GENERAL is do Result := locale.translation ("Standard (C/byte code)")	end
 #: conf_interface_names.e:82
@@ -25003,7 +25004,7 @@ msgstr "Syntaktischer Anbieter von "
 #. 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:249
 msgid "Syntax complete enabled"
-msgstr "Autovervollständigung aktiviert"
+msgstr "Autovervollständigung für Syntax aktiviert"
 
 #. Source code: Result.force (locale.translation ("Syriac"), "syr")
 #: locale_names.e:118
@@ -27354,7 +27355,7 @@ msgstr "Nicht selektiert"
 #. 	<PREF NAME="debugger.row_unsensitive_foreground_color" DESCRIPTION="Unsensitive foreground color"><COLOR>150;150;150</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:30
 msgid "Unsensitive foreground color"
-msgstr "Farbe für insensitives"
+msgstr "Farbe für insensitives."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.autocomplete_until" DESCRIPTION="Autocomplete until?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -28439,7 +28440,7 @@ msgstr "Warnungen"
 #. Source code: t_Watch_tool: STRING_GENERAL is						do Result := locale.translation ("Watch")	end
 #: interface_names.e:1961
 msgid "Watch"
-msgstr "Beobachte"
+msgstr "Beobachten"
 
 #. Source code: m_Watch_tool: STRING_GENERAL is				do Result := locale.translation("Watch Tool")	end
 #: interface_names.e:593

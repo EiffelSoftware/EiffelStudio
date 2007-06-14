@@ -164,7 +164,6 @@ feature -- Command
 
 			ev_application.focus_out_actions.prune_all (focus_out_agent)
 			caller := Void
-
 			cancel_actions.call ([])
 		end
 
@@ -334,7 +333,9 @@ feature {NONE} -- Implementation functions
 																l_screen: EV_SCREEN
 																l_position: EV_COORDINATE
 															do
-																if not caller.tool_bar.is_destroyed then
+																if caller /= Void and then
+																	caller.tool_bar /= Void and then
+																	not caller.tool_bar.is_destroyed then
 																	caller.tool_bar.enable_capture
 
 																	-- Set floating tool bar to current pointer position.

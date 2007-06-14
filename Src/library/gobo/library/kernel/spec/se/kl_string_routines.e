@@ -11,8 +11,8 @@ indexing
 		%whenever a STRING is expected."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -182,7 +182,9 @@ feature -- Status report
 		end
 
 	is_integer (a_string: STRING): BOOLEAN is
-			-- Is `a_string' only made up of digits?
+			-- Is `a_string' only made up of characters 0-9?
+		obsolete
+			"[070302] Use `is_decimal' instead."
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -206,8 +208,105 @@ feature -- Status report
 			end
 		end
 
+	is_decimal (a_string: STRING): BOOLEAN is
+			-- Is `a_string' only made up of characters 0-9?
+			-- (Not in ELKS 2001 STRING)
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			nb := a_string.count
+			if nb = 0 then
+				Result := False
+			else
+				Result := True
+				from i := 1 until i > nb loop
+					c := a_string.item (i)
+					if c < '0' or c > '9' then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_integer_64 (a_string: STRING): BOOLEAN is
+			-- Does `a_string' represent a positive INTEGER_64?
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, j, k, l, m: INTEGER
+			l_is_negative: BOOLEAN
+			c: CHARACTER
+		do
+			i := a_string.count
+			if i > 0 then
+				k := 1
+				c := a_string.item (1)
+				if c = '+' then
+					k := k + 1
+				elseif c = '-' then
+					k := k + 1
+					l_is_negative := True
+				end
+				from
+					j := k
+				until
+					k /= j or j > i
+				loop
+					if a_string.item (j) = '0' then
+						k := k + 1
+					end
+					j := j + 1
+				end
+				i := i - k + 1
+				if i < 20 then
+					Result := True
+					from
+						l := k
+					until
+						l > i + k - 1
+					loop
+						c := a_string.item (l)
+						if c < '0' or c > '9' then
+							Result := False
+							l := i + k + 1 -- Jump out of the loop.
+						else
+							l := l + 1
+						end
+					end
+					if Result and i = 19 then
+						from
+							l := a_string.count
+							m := l - i
+						until
+							not Result or k > l
+						loop
+							j := a_string.item_code (k) - code_zero
+							if l_is_negative then
+								i := min_negative_integer_64_digits.item (k - m)
+							else
+								i := max_integer_64_digits.item (k - m)
+							end
+							if  j < i then
+								Result := True
+								k := l + 1
+							else
+								Result := j = i
+								k := k + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
 	is_hexadecimal (a_string: STRING): BOOLEAN is
-			-- Is a string made up of digits or A-F or a-f?
+			-- Is a string made up of characters 0-9 or A-F or a-f?
 			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
@@ -233,7 +332,7 @@ feature -- Status report
 		end
 
 	is_base64 (a_string: STRING): BOOLEAN is
-			-- Is a string made up of +, /, =, XML whitespace, digits or A-Z or a-z?
+			-- Is a string made up of characters +, /, =, XML whitespace, 0-9 or A-Z or a-z?
 			-- (Not in ELKS 2001 STRING)
 		require
 			a_string_not_void: a_string /= Void
@@ -1661,9 +1760,76 @@ feature -- Resizing
 			count_set: a_string.count = n
 		end
 
+feature -- Conversion
+
+	to_integer_64 (a_string: STRING): INTEGER_64 is
+			-- `a_string' as `INTEGER_64'
+		require
+			a_string_not_void: a_string /= Void
+			integer_64_string: is_integer_64 (a_string)
+
+
+
+
+
+
+		local
+			i, nb: INTEGER
+			v: INTEGER_64
+			c: CHARACTER
+			l_is_negative: BOOLEAN
+		do
+			i := 1
+			c := a_string.item (1)
+			if c = '+' then
+				i := i + 1
+			elseif c = '-' then
+				i := i + 1
+				l_is_negative := True
+			end
+			from
+				nb := a_string.count
+			until
+				i > nb
+			loop
+				v := a_string.item_code (i) - code_zero
+				if l_is_negative then
+					Result := 10 * Result - v
+				else
+					Result := 10 * Result + v
+				end
+				i := i + 1
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	dummy_string: STRING is ""
 			-- Dummy string
 
+	max_integer_64_digits: ARRAY [INTEGER] is
+			-- Digits of maximum INTEGER_64 value
+		once
+			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
+		ensure
+			result_not_void: Result /= Void
+			ninteen_digits: Result.count = 19
+		end
+
+	min_negative_integer_64_digits: ARRAY [INTEGER] is
+			-- Digits of minimum INTEGER_64 value
+		once
+			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
+		ensure
+			result_not_void: Result /= Void
+			ninteen_digits: Result.count = 19
+		end
+
+	code_zero: INTEGER is
+			-- code for '0'
+		once
+			Result := ('0').code
+		end
+		
 end

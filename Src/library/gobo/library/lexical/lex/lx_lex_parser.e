@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -1360,6 +1360,7 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
+			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -1394,6 +1395,7 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
+			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,   42,   43,   44,   44,   44,   48,   48,   48,   48,
@@ -1405,6 +1407,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    3,    3,    1,    1,    1,
@@ -1419,6 +1422,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    2,    2,    2,
@@ -1428,6 +1432,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
+			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    3,   11,   14,   10,    0,   54,    3,    0,
@@ -1442,6 +1447,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			    5,    6,   26,   27,   28,   29,   30,   31,   40,   44,
@@ -1449,6 +1455,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
+			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			   65, -32768, -32768,   15, -32768,   57,   27,   64, -32768,    0,
@@ -1463,6 +1470,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -32768, -32768,   60,  -11,   46,  -30, -32768, -32768, -32768,   31,
@@ -1470,6 +1478,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
+			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			   50,   25,   66,   66,   24,   78,   39,   62,   77,   23,
@@ -1484,6 +1493,7 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
+			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			   30,    1,   10,   10,    4,   11,   17,   10,   14,    9,

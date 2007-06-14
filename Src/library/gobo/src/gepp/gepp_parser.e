@@ -5,7 +5,7 @@ indexing
 		"Parsers for 'gepp' preprocessors"
 
 	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +35,6 @@ create
 
 	make
 
-feature
 
 feature {NONE} -- Implementation
 
@@ -195,9 +194,9 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 57 "gepp_parser.y"
+--|#line 56 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 57")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 56")
 end
 
 
@@ -206,9 +205,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 2 then
---|#line 60 "gepp_parser.y"
+--|#line 59 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 59")
 end
 
 
@@ -234,9 +233,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 3 then
---|#line 61 "gepp_parser.y"
+--|#line 60 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 61")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 60")
 end
 
 
@@ -245,9 +244,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 4 then
---|#line 62 "gepp_parser.y"
+--|#line 61 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 62")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 61")
 end
 
 
@@ -257,9 +256,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 5 then
---|#line 66 "gepp_parser.y"
+--|#line 65 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 66")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 65")
 end
 
 
@@ -269,9 +268,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 6 then
---|#line 67 "gepp_parser.y"
+--|#line 66 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 67")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 66")
 end
 
 
@@ -281,9 +280,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 7 then
---|#line 68 "gepp_parser.y"
+--|#line 67 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 68")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 67")
 end
 
 			if not ignored then
@@ -297,9 +296,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 8 then
---|#line 74 "gepp_parser.y"
+--|#line 73 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 74")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 73")
 end
 
 			if not ignored then
@@ -313,9 +312,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 9 then
---|#line 80 "gepp_parser.y"
+--|#line 79 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 80")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 79")
 end
 
 			if not ignored then
@@ -329,9 +328,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 10 then
---|#line 88 "gepp_parser.y"
+--|#line 87 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 88")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 87")
 end
 
 			if_level := if_level + 1
@@ -346,9 +345,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 11 then
---|#line 95 "gepp_parser.y"
+--|#line 94 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 95")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 94")
 end
 
 			if_level := if_level + 1
@@ -363,9 +362,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 12 then
---|#line 104 "gepp_parser.y"
+--|#line 103 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 104")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 103")
 end
 
 			yyval3 := is_defined (yyvs2.item (yyvsp2))
@@ -393,9 +392,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 13 then
---|#line 108 "gepp_parser.y"
+--|#line 107 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 108")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 107")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -406,9 +405,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 14 then
---|#line 112 "gepp_parser.y"
+--|#line 111 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 112")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 111")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) and yyvs3.item (yyvsp3)
@@ -420,9 +419,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 15 then
---|#line 116 "gepp_parser.y"
+--|#line 115 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 116")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 115")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) or yyvs3.item (yyvsp3)
@@ -434,9 +433,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 16 then
---|#line 120 "gepp_parser.y"
+--|#line 119 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 120")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 119")
 end
 
 			yyval3 := not yyvs3.item (yyvsp3)
@@ -447,9 +446,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 17 then
---|#line 126 "gepp_parser.y"
+--|#line 125 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 126")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 125")
 end
 
 			if ignored_level = if_level then
@@ -463,9 +462,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 18 then
---|#line 135 "gepp_parser.y"
+--|#line 134 "gepp_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 135")
+	std.error.put_line ("Executing parser user-code from file 'gepp_parser.y' at line 134")
 end
 
 			if not ignored then
@@ -505,6 +504,7 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
+			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -540,6 +540,7 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
+			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,   20,   21,   21,   21,   22,   22,   22,   22,   22,
@@ -547,6 +548,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -557,6 +559,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -564,6 +567,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
+			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			    2,    0,    0,    0,    0,    0,    1,    3,    2,    0,
@@ -574,12 +578,14 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			   15,   39,    6,    7,    8,   30,   31, yyDummy>>)
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
+			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			   29,   40,   39,   37,   11,   11,   29, -32768,   29,   36,
@@ -590,12 +596,14 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			   -3, -32768,   -7,   -6, -32768,   12, -32768, yyDummy>>)
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
+			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			   17,   18,   16,   41,    5,    4,    3,    2,    1,   22,
@@ -607,6 +615,7 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
+			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			    6,    8,    5,    0,    3,    4,    5,    6,    7,   12,

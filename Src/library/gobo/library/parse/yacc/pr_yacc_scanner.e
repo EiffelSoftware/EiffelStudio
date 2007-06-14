@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Parse Library"
 	copyright: "Copyright (c) 1999, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -626,31 +626,39 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 222")
 end
 
-					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
-					if rule /= Void then
-						if start_condition = ERROR_ACTION then
-							process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+					if text_substring (2, text_count).is_integer then
+						if rule /= Void then
+							if start_condition = ERROR_ACTION then
+								process_dollar_n (text_substring (2, text_count).to_integer, last_error - 1, rule)
+							else
+								process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+							end
 						else
-							process_dollar_n (text_substring (2, text_count).to_integer, rule.rhs.count, rule)
+							action_buffer.append_string (text)
 						end
 					else
+						report_integer_too_large_error (text_substring (2, text_count))
 						action_buffer.append_string (text)
 					end
 				
 else
---|#line 234 "pr_yacc_scanner.l"
+--|#line 238 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 234")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 238")
 end
 
-					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
-					if rule /= Void then
-						if start_condition = ERROR_ACTION then
-							process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+					if text_substring (3, text_count).is_integer then
+						if rule /= Void then
+							if start_condition = ERROR_ACTION then
+								process_dollar_n (- text_substring (3, text_count).to_integer, last_error - 1, rule)
+							else
+								process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+							end
 						else
-							process_dollar_n (- text_substring (3, text_count).to_integer, rule.rhs.count, rule)
+							action_buffer.append_string (text)
 						end
 					else
+						report_integer_too_large_error (text_substring (3, text_count))
 						action_buffer.append_string (text)
 					end
 				
@@ -659,18 +667,18 @@ end
 else
 if yy_act <= 63 then
 if yy_act = 62 then
---|#line 246 "pr_yacc_scanner.l"
+--|#line 254 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 246")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 254")
 end
 
 					action_buffer.append_character ('{')
 					nb_open_brackets := nb_open_brackets + 1
 				
 else
---|#line 250 "pr_yacc_scanner.l"
+--|#line 258 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 250")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 258")
 end
 
 					if nb_open_brackets = 0 then
@@ -686,9 +694,9 @@ end
 end
 else
 if yy_act = 64 then
---|#line 270 "pr_yacc_scanner.l"
+--|#line 278 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 270")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 278")
 end
 
 					last_token := text_item (1).code

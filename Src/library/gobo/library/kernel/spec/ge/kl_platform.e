@@ -13,7 +13,7 @@ indexing
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -185,4 +185,18 @@ feature -- Values
 			Result := old_maximum_integer
 		end
 
+
+	Minimum_integer_64: INTEGER_64 is
+			-- Smallest supported value of type INTEGER_64
+		once
+			Result := -9223372036854775808
+		end
+
+	Maximum_integer_64: INTEGER_64 is
+			-- Largest supported value of type INTEGER_64
+		once
+			Result := 9223372036854775807
+		end
+
+	
 end

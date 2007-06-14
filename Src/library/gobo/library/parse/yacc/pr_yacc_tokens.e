@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.5"
+	generator: "geyacc version 3.6"
 
 class PR_YACC_TOKENS
 

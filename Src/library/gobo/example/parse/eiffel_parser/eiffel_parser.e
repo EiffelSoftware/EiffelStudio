@@ -5,7 +5,7 @@ indexing
 		"Eiffel parsers"
 
 	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -5558,6 +5558,7 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
+			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -5603,6 +5604,7 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
+			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,  128,  128,  129,  129,  138,  130,  130,  139,  139,
@@ -5648,6 +5650,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -5716,6 +5719,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    2,    3,    4,    5,    5,    5,    5,
@@ -5735,6 +5739,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
+			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			    1,    6,    8,    2,   24,    0,    0,  355,  356,  364,
@@ -5803,6 +5808,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			    1,    3,    4,   29,   41,   53,   75,   82,  118,   65,
@@ -5822,6 +5828,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
+			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			 -32768,   47, 1232, -32768,  227,  371,  359, -32768, -32768, -32768,
@@ -5890,6 +5897,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -32768, -32768, -32768, -32768, -32768,  171,  486,  472,  -93, -32768,
@@ -5909,6 +5917,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
+			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			   20,  208,  131,  253,  337,  341,  276,  342,   24,   12,
@@ -6084,6 +6093,7 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
+			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			    2,  124,   95,  155,  274,  277,  177,  279,    2,    6,
@@ -6397,7 +6407,7 @@ feature {NONE} -- Initialization
 			make
 			if
 				Arguments.argument_count < 2 or else
-				not STRING_.is_integer (Arguments.argument (1))
+				not Arguments.argument (1).is_integer
 			then
 				std.error.put_string ("usage: eiffel_parser nb filename%N")
 				Exceptions.die (1)

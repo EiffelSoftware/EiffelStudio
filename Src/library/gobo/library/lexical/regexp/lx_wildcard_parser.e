@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +32,6 @@ create
 
 	make, make_from_description
 
-feature
 
 feature {NONE} -- Implementation
 
@@ -243,9 +242,9 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 51 "lx_wildcard_parser.y"
+--|#line 50 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 51")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 50")
 end
 
 			if description.equiv_classes /= Void then
@@ -259,9 +258,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 2 then
---|#line 60 "lx_wildcard_parser.y"
+--|#line 59 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 59")
 end
 
 			if description.equiv_classes_used then
@@ -293,9 +292,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 3 then
---|#line 71 "lx_wildcard_parser.y"
+--|#line 70 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 71")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 70")
 end
 
 			process_rule (yyvs5.item (yyvsp5))
@@ -323,9 +322,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 4 then
---|#line 75 "lx_wildcard_parser.y"
+--|#line 74 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 75")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 74")
 end
 
 			report_unrecognized_rule_error
@@ -335,9 +334,9 @@ if yy_parsing_status = yyContinue then
 	yyvs1.put (yyval1, yyvsp1)
 end
 when 5 then
---|#line 81 "lx_wildcard_parser.y"
+--|#line 80 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 81")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 80")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -352,9 +351,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 6 then
---|#line 92 "lx_wildcard_parser.y"
+--|#line 91 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 92")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 91")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -364,9 +363,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 7 then
---|#line 96 "lx_wildcard_parser.y"
+--|#line 95 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 96")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 95")
 end
 
 			yyval5 := yyvs5.item (yyvsp5 - 1)
@@ -379,9 +378,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 8 then
---|#line 103 "lx_wildcard_parser.y"
+--|#line 102 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 103")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 102")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -391,9 +390,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 9 then
---|#line 107 "lx_wildcard_parser.y"
+--|#line 106 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 107")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 106")
 end
 
 			yyval5 := yyvs5.item (yyvsp5 - 1)
@@ -405,9 +404,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 10 then
---|#line 114 "lx_wildcard_parser.y"
+--|#line 113 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 114")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 113")
 end
 
 			yyval5 := new_nfa_from_character (yyvs2.item (yyvsp2))
@@ -435,9 +434,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 11 then
---|#line 118 "lx_wildcard_parser.y"
+--|#line 117 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 118")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 117")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -449,9 +448,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 12 then
---|#line 123 "lx_wildcard_parser.y"
+--|#line 122 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 123")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 122")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -463,9 +462,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 13 then
---|#line 128 "lx_wildcard_parser.y"
+--|#line 127 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 128")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 127")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -477,9 +476,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 14 then
---|#line 133 "lx_wildcard_parser.y"
+--|#line 132 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 133")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 132")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -490,9 +489,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 15 then
---|#line 137 "lx_wildcard_parser.y"
+--|#line 136 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 137")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 136")
 end
 
 			yyval5 := new_symbol_class_nfa (question_character_class)
@@ -521,9 +520,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 16 then
---|#line 142 "lx_wildcard_parser.y"
+--|#line 141 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 142")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 141")
 end
 
 			yyval5 := new_symbol_class_nfa (question_character_class)
@@ -551,9 +550,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 17 then
---|#line 146 "lx_wildcard_parser.y"
+--|#line 145 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 146")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 145")
 end
 
 			yyval5 := new_symbol_class_nfa (question_character_class)
@@ -584,9 +583,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 18 then
---|#line 153 "lx_wildcard_parser.y"
+--|#line 152 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 153")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 152")
 end
 
 			yyval5 := new_symbol_class_nfa (yyvs3.item (yyvsp3))
@@ -614,9 +613,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 19 then
---|#line 157 "lx_wildcard_parser.y"
+--|#line 156 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 157")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 156")
 end
 
 			yyval5 := new_nfa_from_character_class (yyvs3.item (yyvsp3))
@@ -644,9 +643,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 20 then
---|#line 161 "lx_wildcard_parser.y"
+--|#line 160 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 161")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 160")
 end
 
 			yyval5 := yyvs5.item (yyvsp5)
@@ -657,9 +656,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 21 then
---|#line 167 "lx_wildcard_parser.y"
+--|#line 166 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 167")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 166")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -672,9 +671,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 22 then
---|#line 172 "lx_wildcard_parser.y"
+--|#line 171 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 172")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 171")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
@@ -688,9 +687,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 23 then
---|#line 180 "lx_wildcard_parser.y"
+--|#line 179 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 180")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 179")
 end
 
 			yyval3 := append_character_to_character_class (yyvs2.item (yyvsp2), new_character_class)
@@ -718,9 +717,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 24 then
---|#line 184 "lx_wildcard_parser.y"
+--|#line 183 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 184")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 183")
 end
 
 			yyval3 := append_character_to_character_class (yyvs2.item (yyvsp2), yyvs3.item (yyvsp3))
@@ -731,9 +730,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 25 then
---|#line 188 "lx_wildcard_parser.y"
+--|#line 187 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 188")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 187")
 end
 
 			yyval3 := append_character_set_to_character_class
@@ -763,9 +762,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 26 then
---|#line 193 "lx_wildcard_parser.y"
+--|#line 192 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 193")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 192")
 end
 
 			yyval3 := append_character_set_to_character_class (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs3.item (yyvsp3))
@@ -777,9 +776,9 @@ if yy_parsing_status = yyContinue then
 	yyvs3.put (yyval3, yyvsp3)
 end
 when 27 then
---|#line 199 "lx_wildcard_parser.y"
+--|#line 198 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 199")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 198")
 end
 
 			yyval5 := new_epsilon_nfa
@@ -806,9 +805,9 @@ if yy_parsing_status = yyContinue then
 	yyvs5.put (yyval5, yyvsp5)
 end
 when 28 then
---|#line 203 "lx_wildcard_parser.y"
+--|#line 202 "lx_wildcard_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 203")
+	std.error.put_line ("Executing parser user-code from file 'lx_wildcard_parser.y' at line 202")
 end
 
 			yyval5 := append_character_to_string (yyvs2.item (yyvsp2), yyvs5.item (yyvsp5))
@@ -844,6 +843,7 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
+			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -878,6 +878,7 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
+			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,   26,   27,   28,   28,   19,   20,   20,   21,   21,
@@ -886,6 +887,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    4,    3,    2,
@@ -896,6 +898,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
+			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    2,    3,    4,    1,    1,
@@ -903,6 +906,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
+			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			    2,    0,   27,   15,    0,   16,    0,    0,   18,   10,
@@ -913,12 +917,14 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			   13,   25,   26,   15,   18,   24,   16,   47,    1,   17, yyDummy>>)
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
+			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			 -32768,    2, -32768, -32768,   43,   42,   41,    6, -32768, -32768,
@@ -929,12 +935,14 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
+			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -32768,   20,   -1,  -13, -32768,   34, -32768, -32768, -32768, -32768, yyDummy>>)
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
+			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			   14,   27,   46,   12,   49,   11,   10,    9,    8,    7,
@@ -946,6 +954,7 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
+			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			    1,   14,    5,    1,    0,    3,    4,    5,    6,    7,

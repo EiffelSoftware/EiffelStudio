@@ -1306,9 +1306,9 @@ feature {NONE} -- External implementation
 	internal_set_debug_mode (a_debug_mode: INTEGER) is
 			-- Set `debug_mode' to `a_debug_mode'.
 		external
-			"C inline use %"ev_any_imp.h%""
+			"C inline use %"eif_main.h%""
 		alias
-			"debug_mode = $a_debug_mode"
+			"set_debug_mode ($a_debug_mode);"
 		end
 
 	saved_debug_mode: INTEGER
@@ -1317,9 +1317,9 @@ feature {NONE} -- External implementation
 	debug_mode: INTEGER is
 			-- State of debugger.
 		external
-			"C inline use %"ev_any_imp.h%""
+			"C inline use %"eif_main.h%""
 		alias
-			"debug_mode"
+			"return is_debug_mode();"
 		end
 
 	enable_ev_gtk_log (a_mode: INTEGER) is

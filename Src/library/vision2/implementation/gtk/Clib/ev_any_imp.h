@@ -26,7 +26,4 @@ void c_ev_any_imp_set_eif_oid_in_c_object
 EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id
 	(GtkWidget* c_object);
 
-extern int debug_mode;
-void set_debug_mode (int);
-	// Used for turning Eiffel debugger on and off
 #endif

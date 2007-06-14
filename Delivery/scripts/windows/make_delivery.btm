@@ -133,8 +133,6 @@ exprt %DEFAULT_ORIGO_SVN/Src/C_library C_library
 fullrd C_library\.libs
 remtrace Free add ons
 exprt %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
-remtrace .NET assemblies
-exprt %DEFAULT_ORIGO_SVN/Delivery/dotnet %ISE_PLATFORM-dotnet
 remtrace root
 exprt -N %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG

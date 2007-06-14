@@ -236,7 +236,7 @@ feature {SD_NOTEBOOK_TAB_AREA} -- Implementation
 			-- Redraw Current
 		do
 			is_need_redraw := True
-			if tool_bar /= Void then
+			if tool_bar /= Void and then not tool_bar.is_destroyed then
 				tool_bar.update
 			end
 		end

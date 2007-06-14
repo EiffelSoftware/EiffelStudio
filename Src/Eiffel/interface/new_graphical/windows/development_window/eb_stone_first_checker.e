@@ -164,7 +164,6 @@ feature{NONE} -- Implementation
 			-- See bug#12765.
 		local
 			l_error_tool: EB_ERRORS_TOOL
-			l_has_error_when_error_tool_auto_hide: BOOLEAN
 		do
 			l_error_tool := develop_window.tools.errors_tool
 			if l_error_tool /= Void and then l_error_tool.content /= Void then

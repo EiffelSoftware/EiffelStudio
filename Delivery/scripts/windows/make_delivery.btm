@@ -84,8 +84,6 @@ remtrace esbuilder
 exprt %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder
 remtrace vision2 tour
 exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
-remtrace .NET libraries
-exprt %DEFAULT_ORIGO_SVN/Src/library.net library.net
 remtrace examples
 exprt %DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples

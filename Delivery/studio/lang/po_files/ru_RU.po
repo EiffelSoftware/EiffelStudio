@@ -1,10 +1,14 @@
+# description: "EiffelStudio translation into Russian."
+# copyright:   "Copyright (c) 2007, Eiffel Software."
+# license:     "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+# licensing_options: "Commercial license is available at http://www.eiffel.com/licensing"
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-06-13 22:53+0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2007-06-14 21:31+0300\n"
+"Last-Translator: Alexander Kogtenkov [ES] <alexk@eiffel.com>\n"
+"Language-Team: Russian Support [ES] <support@eiffel.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1652,12 +1656,12 @@ msgstr "Добавить"
 #. Source code: m_Create_new_assembly: STRING_GENERAL is	do Result := locale.translation("Add &Assembly...")	end
 #: interface_names.e:701
 msgid "Add &Assembly..."
-msgstr ""
+msgstr "Добавить &сборку..."
 
 #. Source code: m_Create_new_precompile: STRING_GENERAL is	do Result := locale.translation("Add &Precompile")	end
 #: interface_names.e:700
 msgid "Add &Precompile"
-msgstr ""
+msgstr "Добавить &прекомпилированный модуль"
 
 #. Source code: m_add_subcluster: STRING_GENERAL is			do Result := locale.translation("Add &subcluster")	end
 #: interface_names.e:763
@@ -1677,7 +1681,7 @@ msgstr "Добавить все"
 #. Source code: group_add_assembly: STRING_GENERAL is do Result := locale.translation ("Add Assembly")	end
 #: conf_interface_names.e:238
 msgid "Add Assembly"
-msgstr ""
+msgstr "Добавить сборку"
 
 #. Source code: m_Create_new_cluster: STRING_GENERAL is		do Result := locale.translation("Add C&luster...")	end
 #: interface_names.e:698
@@ -1747,7 +1751,7 @@ msgstr "Добавить задачу перед компиляцией"
 #. Source code: group_add_precompile: STRING_GENERAL is do Result := locale.translation ("Add Precompile")	end
 #: conf_interface_names.e:240
 msgid "Add Precompile"
-msgstr ""
+msgstr "Добавить прекомпилированный модуль"
 
 #. Source code: l_add_project_config_file: STRING_GENERAL is	do Result := locale.translation("Add Project...")	end
 #: interface_names.e:836
@@ -1806,7 +1810,7 @@ msgstr ""
 #. Source code: f_Create_new_precompile: STRING_GENERAL is 	do Result := locale.translation("Add a precompile")	end
 #: interface_names.e:330
 msgid "Add a precompile"
-msgstr ""
+msgstr "Добавить прекомпилированный модуль"
 
 #. Source code: l_add_a_valuable: STRING_GENERAL is				do Result := locale.translation("Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)")	end
 #: interface_names.e:835
@@ -1971,7 +1975,7 @@ msgstr "Адрес"
 #. Source code: t_Address_toolbar: STRING_GENERAL is				do Result := locale.translation ("Address Bar") end
 #: interface_names.e:1970
 msgid "Address Bar"
-msgstr ""
+msgstr "Адресная панель "
 
 #. Source code: target_address_expression_name: STRING_GENERAL is do Result := locale.translation ("Address Expression")	end
 #: conf_interface_names.e:99
@@ -2614,47 +2618,47 @@ msgstr "Ассамский (Индия)"
 #. Source code: group_assembly_tree: STRING_GENERAL is do Result := locale.translation ("Assemblies")	end
 #: conf_interface_names.e:204
 msgid "Assemblies"
-msgstr ""
+msgstr "Сборки"
 
 #. Source code: group_assembly: STRING_GENERAL is do Result := locale.translation ("Assembly")	end
 #: conf_interface_names.e:210
 msgid "Assembly"
-msgstr ""
+msgstr "Сборка"
 
 #. Source code: s_Assembly_stone: STRING_GENERAL is			do Result := locale.translation("Assembly ")	end
 #: interface_names.e:1702
 msgid "Assembly "
-msgstr ""
+msgstr "Сборка "
 
 #. Source code: assembly_culture_name: STRING_GENERAL is do Result := locale.translation ("Assembly Culture")	end
 #: conf_interface_names.e:259
 msgid "Assembly Culture"
-msgstr ""
+msgstr "Культура сборки"
 
 #. Source code: dialog_create_assembly_a_key: STRING_GENERAL is do Result := locale.translation ("Assembly Key")	end
 #: conf_interface_names.e:464
 msgid "Assembly Key"
-msgstr ""
+msgstr "Ключ сборки"
 
 #. Source code: assembly_name_name: STRING_GENERAL is do Result := locale.translation ("Assembly Name")	end
 #: conf_interface_names.e:257
 msgid "Assembly Name"
-msgstr ""
+msgstr "Имя сборки"
 
 #. Source code: assembly_public_key_token_name: STRING_GENERAL is do Result := locale.translation ("Assembly Public Key Token")	end
 #: conf_interface_names.e:263
 msgid "Assembly Public Key Token"
-msgstr ""
+msgstr "Свёртка открытого ключа сборки"
 
 #. Source code: assembly_version_name: STRING_GENERAL is do Result := locale.translation ("Assembly Version")	end
 #: conf_interface_names.e:261
 msgid "Assembly Version"
-msgstr ""
+msgstr "Версия сборки"
 
 #. Source code: t_Third_state: STRING_GENERAL is do Result := locale.translation ("Assembly selection") end
 #: interface_names.e:152
 msgid "Assembly selection"
-msgstr ""
+msgstr "Выбор сборки"
 
 #. Source code: l_assertion_unit: STRING_GENERAL is do Result := locale.translation("Assertion") end
 #: eb_metric_names.e:296
@@ -2664,12 +2668,12 @@ msgstr "Утверждение"
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:256
 msgid "Assertion tag background color"
-msgstr ""
+msgstr "Цвет фона тэга утверждения"
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:255
 msgid "Assertion tag text color"
-msgstr ""
+msgstr "Цвет текста тэга утверждения"
 
 #. Source code: section_assertions: STRING_GENERAL is do Result := locale.translation ("Assertions")	end
 #: conf_interface_names.e:32
@@ -2729,7 +2733,7 @@ msgstr "Атрибуты"
 #. Source code: Result := locale.translation ("Auto Hide")
 #: docking_names.e:30
 msgid "Auto Hide"
-msgstr ""
+msgstr "Скрывать автоматически"
 
 #. 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:237
@@ -2754,7 +2758,7 @@ msgstr "Автоматические выражения"
 #. 	<PREF NAME="interface.development_window.auto_hide_animation_speed" DESCRIPTION="The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."><BOOLEAN>20</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:186
 msgid "Auto hide animation speed"
-msgstr ""
+msgstr "Скорость амнимации автоматического скрытия"
 
 #. 	<PREF NAME="editor.eiffel.auto_remove_trailing_blank_when_saving" DESCRIPTION="Should trailing blanks be auto-removed when saving?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:239
@@ -3917,7 +3921,7 @@ msgstr "Скорость автоматического скроллирован
 #. Source code: l_Available_assemblies_name: STRING_GENERAL is 	do Result := locale.translation ("Available assemblies Name") end
 #: interface_names.e:14
 msgid "Available assemblies Name"
-msgstr ""
+msgstr "Имена доступных сборок"
 
 #. Source code: Result := locale.translation ("Available buttons")
 #: docking_names.e:122
@@ -4071,7 +4075,7 @@ msgstr "Фоновая рабочая компиляция C прервана"
 #. 	<PREF NAME="tools.metric_tool.warning_background_color" DESCRIPTION="Background color for archive items whose recent calculated value violates pre-defined value criterion."><COLOR>253;209;199</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:115
 msgid "Background color for archive items whose recent calculated value violates pre-defined value criterion."
-msgstr ""
+msgstr "Цвет фона для элементов архива, чьи недавно вычисленные значения нарушают заданный критерий."
 
 #. 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:256
@@ -4106,7 +4110,7 @@ msgstr "Цвет фона для компонентов."
 #. 	<PREF NAME="editor.eiffel.colors.generic_background_color" DESCRIPTION="Background color for generics."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:262
 msgid "Background color for generics."
-msgstr ""
+msgstr "Цвет фона для параметров."
 
 #. 	<PREF NAME="editor.eiffel.colors.indexing_tag_background_color" DESCRIPTION="Background color for indexing tags."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:258
@@ -4408,17 +4412,17 @@ msgstr "Мигающий курсор"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:13
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:14
 msgid "Bon"
-msgstr ""
+msgstr "BON"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>204;204;253</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:46
 msgid "Bon class fill color"
-msgstr ""
+msgstr "Цвет заливки класса (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:49
 msgid "Bon class generics color"
-msgstr ""
+msgstr "Цвет параметров класса (BON)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
@@ -4427,7 +4431,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:48
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:12
 msgid "Bon class generics font"
-msgstr ""
+msgstr "Шрифт параметров класса (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>17;3;80</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:45
@@ -4446,17 +4450,17 @@ msgstr "Шрифт имени класса (BON)"
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>234;234;234</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:47
 msgid "Bon class uncompiled fill color"
-msgstr ""
+msgstr "Цвет заливки неоткомпилированного класса (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>69;166;11</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:52
 msgid "Bon client color"
-msgstr ""
+msgstr "Цвет клиента (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:51
 msgid "Bon client label color"
-msgstr ""
+msgstr "Цвет метки клиента (BON)"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>Arial-r-regular-10-sans</FONT></PREF>
@@ -4465,27 +4469,27 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:50
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:13
 msgid "Bon client label font"
-msgstr ""
+msgstr "Шрифт метки клиента (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links."><INTEGER>5</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:53
 msgid "Bon client line width"
-msgstr ""
+msgstr "Толщина линии клиента (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>240;240;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:55
 msgid "Bon cluster iconified fill color"
-msgstr ""
+msgstr "Цвет заливки свёрнутого кластера (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>100;97;28</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:54
 msgid "Bon cluster line color"
-msgstr ""
+msgstr "Цвет границы кластера (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>254;253;203</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:56
 msgid "Bon cluster name area color"
-msgstr ""
+msgstr "Цвет области имени кластера (BON)"
 
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_color" DESCRIPTION="BON cluster name color."><COLOR>0;0;0</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:57
@@ -4509,7 +4513,7 @@ msgstr "Цвет наследования (BON)"
 #. 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links."><INTEGER>2</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:60
 msgid "Bon inheritance line width"
-msgstr ""
+msgstr "Толщина линии наследования (BON)"
 
 #. Source code: Result.force (locale.translation ("Bosnian"), "bs")
 #: locale_names.e:32
@@ -4645,6 +4649,16 @@ msgid ""
 "Are you sure you want to keep the assertions in your\n"
 "finalized executable?"
 msgstr ""
+"Поумолчанию утверждения, разрешённые в файле конфигурации,\n"
+"сохраняются в окончательном режиме.\n"
+"\n"
+"Сохранение проверки утверждений подавляет любые оптимизации,\n"
+"указанные в конфигурации (подстановка, оптимизация доступа к массиву,\n"
+"удаление мёртвого кода), и будет причиной того, что окончательный\n"
+"исполняемый модуль  не будет оптимальным по скорости и размеру.\n"
+"\n"
+"Вы уверены, что хотите сохранить утверждения в\n"
+"окончательном исполняемом модуле?"
 
 #. Source code: l_bye: STRING_GENERAL is					do Result := locale.translation ("Bye") end
 #: interface_names.e:23
@@ -4664,7 +4678,7 @@ msgstr "Вывод C"
 #. 	<PREF NAME="interface.development_window.c_output_panel_prompted" DESCRIPTION="Should the C output panel be shown when a C compilation is launched?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:184
 msgid "C output panel prompted"
-msgstr ""
+msgstr "Показывать вывод C при запуске C компиляции"
 
 #. Source code: m_Showclick: STRING_GENERAL is				do Result := locale.translation("C&lickable")	end
 #: interface_names.e:562
@@ -5391,6 +5405,11 @@ msgid ""
 "and cannot be a reserved word.\n"
 "Please select a different class name."
 msgstr ""
+"Имя класса может включать только\n"
+"цифро-буквенные символы и подчёркивания,\n"
+"должно начинаться с буквенного символа\n"
+"и не может быть зарезервированным словом.\n"
+"Пожалуйста, выберите другое имя класса."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="tools.refactoring.class_rename.file_rename" DESCRIPTION="Should file be renamed to a new name?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
@@ -5532,6 +5551,8 @@ msgid ""
 "Class was modified outside the diagram.\n"
 "Previous commands are not undoable any longer."
 msgstr ""
+"Класс был модифицирован вне диаграммы.\n"
+"Предыдущие команды больше не могут быть отменены."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Class with file name $1 already exists."), [base_name])
 #: warning_messages.e:412
@@ -5544,6 +5565,8 @@ msgid ""
 "Class with name: '$1' already exists.\n"
 "Please select a different class name."
 msgstr ""
+"Класс с именем '$1' уже существует.\n"
+"Пожалуйста, выберите другое имя класса."
 
 #. Source code: d_Compilation_class: STRING is				do Result := locale.translation("Class:").out	end
 #: interface_names.e:238
@@ -5577,6 +5600,9 @@ msgid ""
 "Running the last compiled application in these conditions\n"
 "may lead to inconsistent information, or to an unexpected behavior."
 msgstr ""
+"Классы были удалены вручную со времени последней компиляции.\n"
+"Запуск скомпилированного приложения в этих условиях\n"
+"может привести к недостоверной информации или к неожиданному поведению."
 
 #. Source code: "Classes:  $1%N%
 #: interface_names.e:992
@@ -5605,7 +5631,7 @@ msgstr "Отладчик (\"классический\" режим)"
 #. Source code: Result.force (locale.translation ("Classname/filename mismatch"), w_classname_filename_mismatch)
 #: conf_interface_names.e:327
 msgid "Classname/filename mismatch"
-msgstr ""
+msgstr "Несоответствие имён класса и файла"
 
 #. Source code: t_clean: STRING_GENERAL is do Result := locale.translation ("Clean") end
 #: eb_metric_names.e:89
@@ -5810,6 +5836,10 @@ msgid ""
 "\n"
 "Are you sure this is what you want?"
 msgstr ""
+"Кластер $1 будет насовсем\n"
+"удалён из системы.\n"
+"\n"
+"Вы действительно хотите этого?"
 
 #. 	<PREF NAME="editor.eiffel.colors.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>255;255;255</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:270
@@ -5819,7 +5849,7 @@ msgstr "Цвет фона кластера"
 #. Source code: b_cluster_charts: STRING_GENERAL is					do Result := locale.translation("Cluster charts")	end
 #: interface_names.e:52
 msgid "Cluster charts"
-msgstr ""
+msgstr "Схемы кластеров"
 
 #. Source code: b_cluster_diagram: STRING_GENERAL is				do Result := locale.translation("Cluster diagrams (may take a long time!)")	end
 #: interface_names.e:53
@@ -5889,7 +5919,7 @@ msgstr "Кластеры"
 #. Source code: d_Clusters_to_go: STRING_GENERAL is					do Result := locale.translation("Clusters to Go:")	end
 #: interface_names.e:237
 msgid "Clusters to Go:"
-msgstr ""
+msgstr "Осталось кластеров:"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="shortcuts.code_completion.toggle_filter" DESCRIPTION="Toggle filter button in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
@@ -5923,12 +5953,12 @@ msgstr "Коэффициент"
 #. Source code: Result := locale.formatted_string (locale.translation ("Coefficient %"$1%" for denominator metric is invalid. A real number is expected."), [a_value])
 #: eb_metric_names.e:952
 msgid "Coefficient \"$1\" for denominator metric is invalid. A real number is expected."
-msgstr ""
+msgstr "Коэффициент \"$1\" для метрики-знаменателя недопустим. Ожидается вещественное число."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Coefficient %"$1%" for numerator metric is invalid. A real number is expected."), [a_value])
 #: eb_metric_names.e:942
 msgid "Coefficient \"$1\" for numerator metric is invalid. A real number is expected."
-msgstr ""
+msgstr "Коэффициент \"$1\" для метрики-числителя недопустим. Ожидается вещественное число."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Coefficient %"$1%" of variable metric is invalid. A real number is expected."), [a_coefficient])
 #: eb_metric_names.e:572
@@ -6299,6 +6329,9 @@ msgid ""
 "has never been compiled.\n"
 "Please compile the project before calling this command."
 msgstr ""
+"Команда не может быть выполнена, потому что\n"
+"проект ни разу не был откомпилирован.\n"
+"Пожалуйста, скомпилируйте проект перед вызовом этой команды."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Command cannot be executed unless compilation%N%
 #: warning_messages.e:540
@@ -6449,7 +6482,7 @@ msgstr "Компиляция"
 #. Source code: m_Display_error_help: STRING_GENERAL is		do Result := locale.translation("Compilation Error &Wizard...")	end
 #: interface_names.e:707
 msgid "Compilation Error &Wizard..."
-msgstr ""
+msgstr "&Мастер ошибок компиляции..."
 
 #. Source code: t_Extended_explanation: STRING_GENERAL is			do Result := locale.translation("Compilation Error Wizard")	end
 #: interface_names.e:1754
@@ -6543,7 +6576,7 @@ msgstr "Компилятор"
 #. Source code: m_Complete_word: STRING_GENERAL is			do Result := locale.translation("Complete &Word")	end
 #: interface_names.e:316
 msgid "Complete &Word"
-msgstr ""
+msgstr "Завершить &слово"
 
 #. Source code: m_Complete_class_name: STRING_GENERAL is		do Result := locale.translation("Complete Class &Name")	end
 #: interface_names.e:317
@@ -6560,28 +6593,28 @@ msgstr ""
 msgid ""
 "Completing the New .NET\n"
 "Application Wizard"
-msgstr ""
+msgstr "Завершение мастера нового проиложения .NET"
 
 #. Source code: t_completing_wizard: STRING_GENERAL is	do Result := locale.translation ("Completing the New Vision2%NApplication Wizard") end
 #: interface_names.e:25
 msgid ""
 "Completing the New Vision2\n"
 "Application Wizard"
-msgstr ""
+msgstr "Завершение мастера нового приложения Vision2"
 
 #. Source code: t_completing_wizard: STRING_GENERAL is	do Result := locale.translation ("Completing the New WEL%NApplication Wizard") end
 #: interface_names.e:24
 msgid ""
 "Completing the New WEL\n"
 "Application Wizard"
-msgstr ""
+msgstr "Завершение мастера нового приложения WEL"
 
 #. Source code: t_Final_state: STRING_GENERAL is do Result := locale.translation ("Completing the New Wizard %NApplication Wizard") end
 #: wizard_wizard_interface_names.e:19
 msgid ""
 "Completing the New Wizard \n"
 "Application Wizard"
-msgstr ""
+msgstr "Завершение мастера нового приложения мастера"
 
 #. 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:225
@@ -6636,7 +6669,7 @@ msgstr "Ошибка при загрузке конфигурации"
 #. Source code: t_configuration_loading_message: STRING_GENERAL is	do Result := locale.translation("Configuration Loading Message")	end
 #: interface_names.e:1739
 msgid "Configuration Loading Message"
-msgstr ""
+msgstr "Загрузка конфигурации"
 
 #. Source code: l_Ace_file_for_frame: STRING_GENERAL is		do Result := locale.translation("Configuration file")	end
 #: interface_names.e:830
@@ -6687,7 +6720,7 @@ msgstr "Подтверждать применение профилей отла�
 #. 	<PREF NAME="interface.dialogs.confirm_build_precompile" DESCRIPTION="Display confirmation dialog before building a needed precompile."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:143
 msgid "Confirm build precompile"
-msgstr ""
+msgstr "Подтверждать прекомпиляцию"
 
 #. 	<PREF NAME="interface.dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:140
@@ -6702,17 +6735,17 @@ msgstr "Подтверждат преобразование проекта"
 #. 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:136
 msgid "Confirm finalize"
-msgstr ""
+msgstr "Подтверждать окончательную версию"
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:139
 msgid "Confirm finalize assertions"
-msgstr ""
+msgstr "Подтверждать окончательную версию с утверждениями"
 
 #. 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:145
 msgid "Confirm finalize precompile"
-msgstr ""
+msgstr "Подтверждать окончательную версию прекомпилированного модуля"
 
 #. 	<PREF NAME="interface.dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:137
@@ -6727,12 +6760,12 @@ msgstr "Подтверждать игнорирование всех точек 
 #. 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:154
 msgid "Confirm kill"
-msgstr ""
+msgstr "Подтверждать завершение приложения"
 
 #. 	<PREF NAME="interface.dialogs.confirm_kill_and_restart" DESCRIPTION="Display dialog before killing a debugged application and restarting a new one."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:155
 msgid "Confirm kill and restart"
-msgstr ""
+msgstr "Подтверждать завершение приложения и запуск нового"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:134
@@ -6742,12 +6775,12 @@ msgstr "Подтверждать при выходе"
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:149
 msgid "Confirm on terminate external command"
-msgstr ""
+msgstr "Подтверждать прерывание внешней команды"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:147
 msgid "Confirm on terminate finalizing"
-msgstr ""
+msgstr "Подтверждать прерывание окончательной версии"
 
 #. 	<PREF NAME="interface.dialogs.confirm_on_terminate_freezing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a freeze."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:146
@@ -6772,7 +6805,7 @@ msgstr "Подтверждать замену всех"
 #. 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:151
 msgid "Confirm resource change needs restart"
-msgstr ""
+msgstr "Подтверждать изменение ресурса, требующего перезапуска"
 
 #. 	<PREF NAME="interface.dialogs.confirm_save_before_compile" DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:138
@@ -7193,7 +7226,7 @@ msgstr ""
 #. Source code: w_project_build_precompile_error: STRING_GENERAL is do Result := locale.translation ("Could not generate needed precompile.") end
 #: warning_messages.e:91
 msgid "Could not generate needed precompile."
-msgstr ""
+msgstr "Не удалось сгенерировать необходимый прекомпилированный модуль."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Could not launch system in %"$1%"."), [wd])
 #: warning_messages.e:297
@@ -7451,7 +7484,7 @@ msgstr "Обрезать диаграмму"
 #. 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_tab_editor];new_window;current_editor;context;external</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:191
 msgid "Ctrl right click receiver"
-msgstr ""
+msgstr "Получатель Ctrl-правый щелчок"
 
 #. Source code: m_Cut: STRING_GENERAL is						do Result := locale.translation("Cu&t%TCtrl+X")	end
 #: interface_names.e:311
@@ -7466,7 +7499,7 @@ msgstr "Культура"
 #. Source code: assembly_culture_description: STRING_GENERAL is do Result := locale.translation ("Culture of the assembly.")	end
 #: conf_interface_names.e:260
 msgid "Culture of the assembly."
-msgstr ""
+msgstr "Культура сборки."
 
 #. Source code: c_editor: STRING_GENERAL is 			do Result := locale.translation ("Current Editor") end
 #: interface_names.e:201
@@ -7522,7 +7555,7 @@ msgstr "Текущий объект"
 msgid ""
 "Current text is being loaded. It is therefore\n"
 "not editable nor pickable."
-msgstr ""
+msgstr "Текущий текст загружается. Поэтомуон не редактируется и не поддерживает навигацию."
 
 #. Source code: w_Text_not_editable: STRING_GENERAL is do Result := locale.translation ("Current text is not editable.") end
 #: warning_messages.e:1001
@@ -7545,6 +7578,8 @@ msgid ""
 "Current version of system has not been successfully compiled.\n"
 "Cannot use debugging facilities."
 msgstr ""
+"Текущая версия системы не была успешно скомпилирована.\n"
+"Невозможно использовать средства отладки."
 
 #. 	<PREF NAME="editor.general.colors.cursor_line_highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight line with cursor in it."><COLOR>255;128;128</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:574
@@ -7564,782 +7599,782 @@ msgstr ""
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.custom_alias_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:399
 msgid "Custom alias return"
-msgstr ""
+msgstr "Автопродолжение alias<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.custom_alias_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:401
 msgid "Custom alias return later"
-msgstr ""
+msgstr "Автопродолжение alias...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.custom_alias_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$"</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:398
 msgid "Custom alias space"
-msgstr ""
+msgstr "Автопродолжение alias<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.alias.custom_alias_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:400
 msgid "Custom alias space later"
-msgstr ""
+msgstr "Автопродолжение alias...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.custom_check_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:483
 msgid "Custom check return"
-msgstr ""
+msgstr "Автопродолжение check<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.custom_check_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:485
 msgid "Custom check return later"
-msgstr ""
+msgstr "Автопродолжение check...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.custom_check_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:482
 msgid "Custom check space"
-msgstr ""
+msgstr "Автопродолжение check<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.check.custom_check_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:484
 msgid "Custom check space later"
-msgstr ""
+msgstr "Автопродолжение check...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.custom_class_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:294
 msgid "Custom class return"
-msgstr ""
+msgstr "Автопродолжение class<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.custom_class_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:296
 msgid "Custom class return later"
-msgstr ""
+msgstr "Автопродолжение class...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.custom_class_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:293
 msgid "Custom class space"
-msgstr ""
+msgstr "Автопродолжение class<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.class.custom_class_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:295
 msgid "Custom class space later"
-msgstr ""
+msgstr "Автопродолжение class...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.custom_create_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:532
 msgid "Custom create return"
-msgstr ""
+msgstr "Автопродолжение create<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.custom_create_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:534
 msgid "Custom create return later"
-msgstr ""
+msgstr "Автопродолжение create...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.custom_create_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:531
 msgid "Custom create space"
-msgstr ""
+msgstr "Автопродолжение create<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.create.custom_create_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:533
 msgid "Custom create space later"
-msgstr ""
+msgstr "Автопродолжение create...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.custom_creation_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:308
 msgid "Custom creation return"
-msgstr ""
+msgstr "Автопродолжение creation<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.custom_creation_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:310
 msgid "Custom creation return later"
-msgstr ""
+msgstr "Автопродолжение creation...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.custom_creation_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:307
 msgid "Custom creation space"
-msgstr ""
+msgstr "Автопродолжение creation<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.creation.custom_creation_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:309
 msgid "Custom creation space later"
-msgstr ""
+msgstr "Автопродолжение creation...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.custom_debug_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:476
 msgid "Custom debug return"
-msgstr ""
+msgstr "Автопродолжение debug<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.custom_debug_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:478
 msgid "Custom debug return later"
-msgstr ""
+msgstr "Автопродолжение debug...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.custom_debug_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:475
 msgid "Custom debug space"
-msgstr ""
+msgstr "Автопродолжение debug<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.debug.custom_debug_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:477
 msgid "Custom debug space later"
-msgstr ""
+msgstr "Автопродолжение debug...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.custom_deferred_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$end$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:364
 msgid "Custom deferred return"
-msgstr ""
+msgstr "Автопродолжение deferred<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.custom_deferred_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:366
 msgid "Custom deferred return later"
-msgstr ""
+msgstr "Автопродолжение deferred...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.custom_deferred_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> end$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:363
 msgid "Custom deferred space"
-msgstr ""
+msgstr "Автопродолжение deferred<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.deferred.custom_deferred_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:365
 msgid "Custom deferred space later"
-msgstr ""
+msgstr "Автопродолжение deferred...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.custom_do_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:350
 msgid "Custom do return"
-msgstr ""
+msgstr "Автопродолжение do<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.custom_do_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:352
 msgid "Custom do return later"
-msgstr ""
+msgstr "Автопродолжение do...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.custom_do_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:349
 msgid "Custom do space"
-msgstr ""
+msgstr "Автопродолжение do<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.do.custom_do_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:351
 msgid "Custom do space later"
-msgstr ""
+msgstr "Автопродолжение do...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.custom_else_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:427
 msgid "Custom else return"
-msgstr ""
+msgstr "Автопродолжение else<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.custom_else_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:429
 msgid "Custom else return later"
-msgstr ""
+msgstr "Автопродолжение else...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.custom_else_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:426
 msgid "Custom else space"
-msgstr ""
+msgstr "Автопродолжение else<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.custom_else_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:428
 msgid "Custom else space later"
-msgstr ""
+msgstr "Автопродолжение else...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:420
 msgid "Custom elseif return"
-msgstr ""
+msgstr "Автопродолжение elseif<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:422
 msgid "Custom elseif return later"
-msgstr ""
+msgstr "Автопродолжение elseif...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:419
 msgid "Custom elseif space"
-msgstr ""
+msgstr "Автопродолжение elseif<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.elseif.custom_elseif_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:421
 msgid "Custom elseif space later"
-msgstr ""
+msgstr "Автопродолжение elseif...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:553
 msgid "Custom end return"
-msgstr ""
+msgstr "Автопродолжение end<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:555
 msgid "Custom end return later"
-msgstr ""
+msgstr "Автопродолжение end...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:552
 msgid "Custom end space"
-msgstr ""
+msgstr "Автопродолжение end<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:554
 msgid "Custom end space later"
-msgstr ""
+msgstr "Автопродолжение end...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.custom_ensure_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:385
 msgid "Custom ensure return"
-msgstr ""
+msgstr "Автопродолжение ensure<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.custom_ensure_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:387
 msgid "Custom ensure return later"
-msgstr ""
+msgstr "Автопродолжение ensure...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.custom_ensure_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:384
 msgid "Custom ensure space"
-msgstr ""
+msgstr "Автопродолжение ensure<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure.custom_ensure_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:386
 msgid "Custom ensure space later"
-msgstr ""
+msgstr "Автопродолжение ensure...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.custom_ensure_then_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:392
 msgid "Custom ensure then return"
-msgstr ""
+msgstr "Автопродолжение ensure then<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.custom_ensure_then_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:394
 msgid "Custom ensure then return later"
-msgstr ""
+msgstr "Автопродолжение ensure then...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.custom_ensure_then_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:391
 msgid "Custom ensure then space"
-msgstr ""
+msgstr "Автопродолжение ensure then<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.ensure_then.custom_ensure_then_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:393
 msgid "Custom ensure then space later"
-msgstr ""
+msgstr "Автопродолжение ensure then...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:518
 msgid "Custom export return"
-msgstr ""
+msgstr "Автопродолжение export<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:520
 msgid "Custom export return later"
-msgstr ""
+msgstr "Автопродолжение export...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:517
 msgid "Custom export space"
-msgstr ""
+msgstr "Автопродолжение export<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.export.custom_export_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:519
 msgid "Custom export space later"
-msgstr ""
+msgstr "Автопродолжение export...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.custom_external_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:371
 msgid "Custom external return"
-msgstr ""
+msgstr "Автопродолжение external<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.custom_external_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:373
 msgid "Custom external return later"
-msgstr ""
+msgstr "Автопродолжение external...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.custom_external_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$" end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:370
 msgid "Custom external space"
-msgstr ""
+msgstr "Автопродолжение external<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.external.custom_external_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:372
 msgid "Custom external space later"
-msgstr ""
+msgstr "Автопродолжение external...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.custom_feature_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:315
 msgid "Custom feature return"
-msgstr ""
+msgstr "Автопродолжение feature<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.custom_feature_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:317
 msgid "Custom feature return later"
-msgstr ""
+msgstr "Автопродолжение feature...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.custom_feature_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:314
 msgid "Custom feature space"
-msgstr ""
+msgstr "Автопродолжение feature<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.custom_feature_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:316
 msgid "Custom feature space later"
-msgstr ""
+msgstr "Автопродолжение feature...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.custom_from_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$until%N$indent$%T%N$indent$loop%N$indent$%T%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:448
 msgid "Custom from return"
-msgstr ""
+msgstr "Автопродолжение from<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.custom_from_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:450
 msgid "Custom from return later"
-msgstr ""
+msgstr "Автопродолжение from...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.custom_from_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$%N$indent$until%N$indent$loop%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:447
 msgid "Custom from space"
-msgstr ""
+msgstr "Автопродолжение from<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.from.custom_from_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:449
 msgid "Custom from space later"
-msgstr ""
+msgstr "Автопродолжение from...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.custom_if_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:406
 msgid "Custom if return"
-msgstr ""
+msgstr "Автопродолжение if<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.custom_if_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:408
 msgid "Custom if return later"
-msgstr ""
+msgstr "Автопродолжение if...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.custom_if_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:405
 msgid "Custom if space"
-msgstr ""
+msgstr "Автопродолжение if<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.if.custom_if_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:407
 msgid "Custom if space later"
-msgstr ""
+msgstr "Автопродолжение if...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:287
 msgid "Custom indexing return"
-msgstr ""
+msgstr "Автопродолжение indexing<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:289
 msgid "Custom indexing return later"
-msgstr ""
+msgstr "Автопродолжение indexing...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:286
 msgid "Custom indexing space"
-msgstr ""
+msgstr "Автопродолжение indexing<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:288
 msgid "Custom indexing space later"
-msgstr ""
+msgstr "Автопродолжение indexing...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.custom_inherit_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:301
 msgid "Custom inherit return"
-msgstr ""
+msgstr "Автопродолжение inherit<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.custom_inherit_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:303
 msgid "Custom inherit return later"
-msgstr ""
+msgstr "Автопродолжение inherit...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.custom_inherit_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:300
 msgid "Custom inherit space"
-msgstr ""
+msgstr "Автопродолжение inherit<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.inherit.custom_inherit_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:302
 msgid "Custom inherit space later"
-msgstr ""
+msgstr "Автопродолжение inherit...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.custom_inspect_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:434
 msgid "Custom inspect return"
-msgstr ""
+msgstr "Автопродолжение inspect<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.custom_inspect_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:436
 msgid "Custom inspect return later"
-msgstr ""
+msgstr "Автопродолжение inspect...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.custom_inspect_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:433
 msgid "Custom inspect space"
-msgstr ""
+msgstr "Автопродолжение inspect<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.inspect.custom_inspect_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:435
 msgid "Custom inspect space later"
-msgstr ""
+msgstr "Автопродолжение inspect...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.custom_invariant_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:546
 msgid "Custom invariant return"
-msgstr ""
+msgstr "Автопродолжение invariant<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.custom_invariant_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:548
 msgid "Custom invariant return later"
-msgstr ""
+msgstr "Автопродолжение invariant...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.custom_invariant_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:545
 msgid "Custom invariant space"
-msgstr ""
+msgstr "Автопродолжение invariant<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.invariant.custom_invariant_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:547
 msgid "Custom invariant space later"
-msgstr ""
+msgstr "Автопродолжение invariant...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T%T-- $cursor$%N$indent$%T</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:322
 msgid "Custom is return"
-msgstr ""
+msgstr "Автопродолжение is<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:324
 msgid "Custom is return later"
-msgstr ""
+msgstr "Автопродолжение is...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:321
 msgid "Custom is space"
-msgstr ""
+msgstr "Автопродолжение is<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.is.custom_is_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:323
 msgid "Custom is space later"
-msgstr ""
+msgstr "Автопродолжение is...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:343
 msgid "Custom local return"
-msgstr ""
+msgstr "Автопродолжение local<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:345
 msgid "Custom local return later"
-msgstr ""
+msgstr "Автопродолжение local...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:342
 msgid "Custom local space"
-msgstr ""
+msgstr "Автопродолжение local<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.local.custom_local_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:344
 msgid "Custom local space later"
-msgstr ""
+msgstr "Автопродолжение local...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:469
 msgid "Custom loop return"
-msgstr ""
+msgstr "Автопродолжение loop<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:471
 msgid "Custom loop return later"
-msgstr ""
+msgstr "Автопродолжение loop...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:468
 msgid "Custom loop space"
-msgstr ""
+msgstr "Автопродолжение loop<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.loop.custom_loop_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:470
 msgid "Custom loop space later"
-msgstr ""
+msgstr "Автопродолжение loop...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.custom_obsolete_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T"$cursor$"</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:539
 msgid "Custom obsolete return"
-msgstr ""
+msgstr "Автопродолжение obsolete<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.custom_obsolete_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:541
 msgid "Custom obsolete return later"
-msgstr ""
+msgstr "Автопродолжение obsolete...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.custom_obsolete_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> "$cursor$"</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:538
 msgid "Custom obsolete space"
-msgstr ""
+msgstr "Автопродолжение obsolete<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.obsolete.custom_obsolete_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:540
 msgid "Custom obsolete space later"
-msgstr ""
+msgstr "Автопродолжение obsolete...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.custom_once_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$end</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:357
 msgid "Custom once return"
-msgstr ""
+msgstr "Автопродолжение once<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.custom_once_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:359
 msgid "Custom once return later"
-msgstr ""
+msgstr "Автопродолжение once...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.custom_once_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:356
 msgid "Custom once space"
-msgstr ""
+msgstr "Автопродолжение once<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.once.custom_once_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:358
 msgid "Custom once space later"
-msgstr ""
+msgstr "Автопродолжение once...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:525
 msgid "Custom precursor return"
-msgstr ""
+msgstr "Автопродолжение precursor<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:527
 msgid "Custom precursor return later"
-msgstr ""
+msgstr "Автопродолжение precursor...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> {$cursor$}</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:524
 msgid "Custom precursor space"
-msgstr ""
+msgstr "Автопродолжение precursor<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.precursor.custom_precursor_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:526
 msgid "Custom precursor space later"
-msgstr ""
+msgstr "Автопродолжение precursor...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.custom_redefine_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:497
 msgid "Custom redefine return"
-msgstr ""
+msgstr "Автопродолжение redefine<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.custom_redefine_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:499
 msgid "Custom redefine return later"
-msgstr ""
+msgstr "Автопродолжение redefine...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.custom_redefine_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:496
 msgid "Custom redefine space"
-msgstr ""
+msgstr "Автопродолжение redefine<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.redefine.custom_redefine_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:498
 msgid "Custom redefine space later"
-msgstr ""
+msgstr "Автопродолжение redefine...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.custom_rename_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:490
 msgid "Custom rename return"
-msgstr ""
+msgstr "Автопродолжение rename<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.custom_rename_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:492
 msgid "Custom rename return later"
-msgstr ""
+msgstr "Автопродолжение rename...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.custom_rename_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:489
 msgid "Custom rename space"
-msgstr ""
+msgstr "Автопродолжение rename<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.rename.custom_rename_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:491
 msgid "Custom rename space later"
-msgstr ""
+msgstr "Автопродолжение rename...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.custom_require_else_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:336
 msgid "Custom require else return"
-msgstr ""
+msgstr "Автопродолжение require else<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.custom_require_else_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:338
 msgid "Custom require else return later"
-msgstr ""
+msgstr "Автопродолжение require else...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.custom_require_else_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:335
 msgid "Custom require else space"
-msgstr ""
+msgstr "Автопродолжение require else<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require_else.custom_require_else_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:337
 msgid "Custom require else space later"
-msgstr ""
+msgstr "Автопродолжение require else...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.custom_require_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:329
 msgid "Custom require return"
-msgstr ""
+msgstr "Автопродолжение require<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.custom_require_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:331
 msgid "Custom require return later"
-msgstr ""
+msgstr "Автопродолжение require...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.custom_require_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:328
 msgid "Custom require space"
-msgstr ""
+msgstr "Автопродолжение require<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.require.custom_require_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:330
 msgid "Custom require space later"
-msgstr ""
+msgstr "Автопродолжение require...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.custom_rescue_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:378
 msgid "Custom rescue return"
-msgstr ""
+msgstr "Автопродолжение rescue<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.custom_rescue_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:380
 msgid "Custom rescue return later"
-msgstr ""
+msgstr "Автопродолжение rescue...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.custom_rescue_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:377
 msgid "Custom rescue space"
-msgstr ""
+msgstr "Автопродолжение rescue<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.feature_structure_keywords.rescue.custom_rescue_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:379
 msgid "Custom rescue space later"
-msgstr ""
+msgstr "Автопродолжение rescue...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.custom_select_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:511
 msgid "Custom select return"
-msgstr ""
+msgstr "Автопродолжение select<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.custom_select_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:513
 msgid "Custom select return later"
-msgstr ""
+msgstr "Автопродолжение select...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.custom_select_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:510
 msgid "Custom select space"
-msgstr ""
+msgstr "Автопродолжение select<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.select.custom_select_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:512
 msgid "Custom select space later"
-msgstr ""
+msgstr "Автопродолжение select...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:413
 msgid "Custom then return"
-msgstr ""
+msgstr "Автопродолжение then<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:415
 msgid "Custom then return later"
-msgstr ""
+msgstr "Автопродолжение then...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:412
 msgid "Custom then space"
-msgstr ""
+msgstr "Автопродолжение then<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.then.custom_then_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:414
 msgid "Custom then space later"
-msgstr ""
+msgstr "Автопродолжение then...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.custom_undefine_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:504
 msgid "Custom undefine return"
-msgstr ""
+msgstr "Автопродолжение undefine<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.custom_undefine_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:506
 msgid "Custom undefine return later"
-msgstr ""
+msgstr "Автопродолжение undefine...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.custom_undefine_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:503
 msgid "Custom undefine space"
-msgstr ""
+msgstr "Автопродолжение undefine<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.inherit_clauses_keywords.undefine.custom_undefine_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:505
 msgid "Custom undefine space later"
-msgstr ""
+msgstr "Автопродолжение undefine...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:462
 msgid "Custom until return"
-msgstr ""
+msgstr "Автопродолжение until<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:464
 msgid "Custom until return later"
-msgstr ""
+msgstr "Автопродолжение until...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:461
 msgid "Custom until space"
-msgstr ""
+msgstr "Автопродолжение until<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.until.custom_until_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:463
 msgid "Custom until space later"
-msgstr ""
+msgstr "Автопродолжение until...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:455
 msgid "Custom variant return"
-msgstr ""
+msgstr "Автопродолжение variant<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:457
 msgid "Custom variant return later"
-msgstr ""
+msgstr "Автопродолжение variant...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:454
 msgid "Custom variant space"
-msgstr ""
+msgstr "Автопродолжение variant<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.variant.custom_variant_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:456
 msgid "Custom variant space later"
-msgstr ""
+msgstr "Автопродолжение variant...<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.custom_when_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:441
 msgid "Custom when return"
-msgstr ""
+msgstr "Автопродолжение when<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.custom_when_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:443
 msgid "Custom when return later"
-msgstr ""
+msgstr "Автопродолжение when...<Enter>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.custom_when_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ then%N$indent$%T</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:440
 msgid "Custom when space"
-msgstr ""
+msgstr "Автопродолжение when<Пробел>"
 
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.when.custom_when_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:442
 msgid "Custom when space later"
-msgstr ""
+msgstr "Автопродолжение when...<Пробел>"
 
 #. Source code: Result := locale.translation ("Customize")
 #: docking_names.e:178
@@ -8494,7 +8529,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:546
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:553
 msgid "Customized autocomplete (Return after keyword was typed)"
-msgstr ""
+msgstr "Автопродолжение по <Enter> сразу после ввода ключевого слова"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
@@ -8614,7 +8649,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:548
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:555
 msgid "Customized autocomplete (Return, other cases)"
-msgstr ""
+msgstr "Автопродолжение по <Enter> в других случаях"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
@@ -8734,7 +8769,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:545
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:552
 msgid "Customized autocomplete (Space after keyword was typed)"
-msgstr ""
+msgstr "Автопродолжение по <Пробел> сразу после ввода ключевого слова"
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
@@ -8854,7 +8889,7 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:547
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:554
 msgid "Customized autocomplete (Space, other cases)"
-msgstr ""
+msgstr "Автопродолжение по <Пробел> в других случаях"
 
 #. Source code: l_target_scope_customzied_formatter_not_saved: STRING_GENERAL is do Result := locale.translation ("Customized formatters with target scope won't be saved%Nbecause no project has been loaded. Go ahead anyway?") end
 #: interface_names.e:1680
@@ -9331,7 +9366,7 @@ msgstr ""
 #. 	<PREF NAME="debugger.delay_before_cleaning_objects_grid" DESCRIPTION="Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."><INTEGER>500</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:9
 msgid "Delay before cleaning objects grid"
-msgstr ""
+msgstr "Задержка перед очисткой сетки объектов"
 
 #. Source code: err_delayed_domain_item_appear: STRING_GENERAL is do Result := locale.translation ("Delayed domain item appears.") end
 #: eb_metric_names.e:1058
@@ -10488,7 +10523,7 @@ msgstr "do"
 #. 	<PREF NAME="editor.eiffel.show_ANY_features" DESCRIPTION="Do features of class ANY appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:245
 msgid "Do features of class ANY appear in the feature call complete window?"
-msgstr ""
+msgstr "Компоненты ANY появляются в окне автозавершения?"
 
 #. Source code: l_Discard_build_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always build precompile")	end
 #: interface_names.e:998
@@ -10573,7 +10608,7 @@ msgstr "Больше не показывать"
 #. 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:18
 msgid "Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."
-msgstr ""
+msgstr "Не показывать диалог, спрашивающий, надо ли запускать компиляцию перед отладкой, если были изменения в классах."
 
 #. Source code: b_do_nothing: STRING_GENERAL is 					do Result := locale.translation("Do nothing")	end
 #: interface_names.e:64
@@ -10606,6 +10641,8 @@ msgid ""
 "Do you want to save your changes\n"
 "before closing the window?"
 msgstr ""
+"Хотите сохранить изменения\n"
+"перед закрытием окна?"
 
 #. Source code: want_to_update_new_compiler: STRING_GENERAL is 				do Result := locale.translation ("Do you want to update to new version of compiler?") end
 #: ewb_names.e:32
@@ -10767,7 +10804,7 @@ msgstr "Дублировать"
 #. Source code: Result := locale.formatted_string (locale.translation ("Duplicated metric name %"$1%" in metric definition."), [a_metric_name])
 #: eb_metric_names.e:514
 msgid "Duplicated metric name \"$1\" in metric definition."
-msgstr ""
+msgstr "Задублированное имя метрики \"$1\" в определении метрики."
 
 #. Source code: Result.force (locale.translation ("Dutch"), "nl")
 #: locale_names.e:92
@@ -10867,7 +10904,7 @@ msgstr "ПРОИЗОШЛА ОШИБКА: \n"
 #. Source code: l_expression_capital: STRING_GENERAL is do Result := locale.translation ("EXPRESSION: ") end
 #: interface_names.e:1537
 msgid "EXPRESSION: "
-msgstr ""
+msgstr "ВЫРАЖЕНИЕ: "
 
 #. Source code: b_Edit_ace: STRING_GENERAL is						do Result := locale.translation("Edit")	end
 #: interface_names.e:66
@@ -10877,12 +10914,12 @@ msgstr "Правка"
 #. Source code: Result := locale.formatted_string (locale.translation ("Edit $1"), [a_name])
 #: interface_names.e:1977
 msgid "Edit $1"
-msgstr ""
+msgstr "Редактировать $1"
 
 #. Source code: menu_edit_config: STRING_GENERAL is do Result := locale.translation ("Edit Configuration")	end
 #: conf_interface_names.e:49
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Редактировать конфигурацию"
 
 #. Source code: t_Edit_expression: STRING_GENERAL is				do Result := locale.translation("Edit Expression")	end
 #: interface_names.e:1767
@@ -10892,17 +10929,17 @@ msgstr "Редактировать выражение"
 #. Source code: library_edit_configuration: STRING_GENERAL is do Result := locale.translation ("Edit Library Configuration")	end
 #: conf_interface_names.e:242
 msgid "Edit Library Configuration"
-msgstr ""
+msgstr "Редактировать конфигурацию библиотеки"
 
 #. Source code: m_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object Content")	end
 #: interface_names.e:341
 msgid "Edit Object Content"
-msgstr ""
+msgstr "Редактировать содержимое объекта"
 
 #. Source code: f_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object content")	end
 #: interface_names.e:340
 msgid "Edit Object content"
-msgstr ""
+msgstr "Редактировать содержимое объекта"
 
 #. Source code: l_edit_project: STRING_GENERAL is			do Result := locale.translation("Edit Project")	end
 #: interface_names.e:1023
@@ -10917,7 +10954,7 @@ msgstr "Редактировать текст"
 #. Source code: f_edit_cmd_detail_button: STRING_GENERAL is		 do Result := locale.translation ("Edit command") end
 #: eb_external_output_names.e:23
 msgid "Edit command"
-msgstr ""
+msgstr "Редактировать команду"
 
 #. Source code: dialog_file_rule_edit_condition: STRING_GENERAL is do Result := locale.translation ("Edit condition")	end
 #: conf_interface_names.e:410
@@ -10927,7 +10964,7 @@ msgstr "Изменить условие"
 #. Source code: e_Edit_exported_feature: STRING_GENERAL is	do Result := locale.translation("Edit the properties of the selected feature")	end
 #: interface_names.e:2075
 msgid "Edit the properties of the selected feature"
-msgstr ""
+msgstr "Редактировать свойства выбранного компонента"
 
 #. Source code: e_Edit_expression: STRING_GENERAL is		do Result := locale.translation("Edit the selected expression")	end
 #: interface_names.e:2076
@@ -12896,17 +12933,17 @@ msgstr "Компиляция Эйфель-кода не удалась"
 #. Source code: e_Compilation_succeeded: STRING_GENERAL is	do Result := locale.translation("Eiffel Compilation Succeeded")	end
 #: interface_names.e:2036
 msgid "Eiffel Compilation Succeeded"
-msgstr ""
+msgstr "Компиляция Эйфеля успешно завершена"
 
 #. Source code: l_eiffel_conf_file: STRING_GENERAL is 		do Result := locale.translation ("Eiffel Configuration Files (*.ecf)") end
 #: interface_names.e:26
 msgid "Eiffel Configuration Files (*.ecf)"
-msgstr ""
+msgstr "Файл конфигурации Эйфеля (*.ecf)"
 
 #. Source code: b_Eiffel_features: STRING_GENERAL is				do Result := locale.translation("Eiffel Features")	end
 #: interface_names.e:68
 msgid "Eiffel Features"
-msgstr ""
+msgstr "Компоненты Эйфеля"
 
 #. Source code: l_eiffelstudio: STRING_GENERAL is do Result := locale.translation ("EiffelStudio") end
 #: interface_names.e:1678
@@ -12939,7 +12976,7 @@ msgstr ""
 #. Source code: w_element_expected_not_found (a_name: STRING_GENERAL): STRING_GENERAL is do Result := locale.formatted_string (locale.translation ("Element $1 expected but not found."), [a_name]) end;
 #: warning_messages.e:1087
 msgid "Element $1 expected but not found."
-msgstr ""
+msgstr "Ожидаемый элемент $1 не обнаружен."
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.else.autocomplete_else" DESCRIPTION="Autocomplete else?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -13011,7 +13048,7 @@ msgstr ""
 #. Source code: t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translation("Empty Development Tool")	end
 #: interface_names.e:1797
 msgid "Empty Development Tool"
-msgstr ""
+msgstr "Пустое окно разработки"
 
 #. Source code: t_Empty_root_class_external_name_error: STRING_GENERAL is do Result := locale.translation ("Empty Root Class .NET Name Error") end
 #: interface_names.e:147
@@ -13111,7 +13148,7 @@ msgstr ""
 #. Source code: target_enforce_unique_class_names_description: STRING_GENERAL is do Result := locale.translation ("Enforce all class names to be system wide unique?")	end
 #: conf_interface_names.e:116
 msgid "Enforce all class names to be system wide unique?"
-msgstr ""
+msgstr "Требовать, чтобы все имена классов были уникальны в системе?"
 
 #. Source code: target_enforce_unique_class_names_name: STRING_GENERAL is do Result := locale.translation ("Enforce unique class names")	end
 #: conf_interface_names.e:115
@@ -13281,7 +13318,7 @@ msgstr "Введите имя новой папки: "
 #. Source code: l_Entry_colon: STRING_GENERAL is			do Result := locale.translation("Entry: ") end
 #: interface_names.e:1030
 msgid "Entry: "
-msgstr ""
+msgstr "Элемент: "
 
 #. Source code: l_environment: STRING_GENERAL is					do Result := locale.translation("Environment")	end
 #: interface_names.e:1031
@@ -13358,7 +13395,7 @@ msgstr "Сообщение об ошибке: "
 #. Source code: l_error_occurred_click: STRING_GENERAL is do Result := locale.translation ("Error occurred (double click to see details)") end
 #: interface_names.e:1549
 msgid "Error occurred (double click to see details)"
-msgstr ""
+msgstr "Произошла ошибка (двойной щелчок для просмотра подробностей)"
 
 #. Source code: do Result := locale.translation ("Error occurred...") end
 #: debugger_names.e:92

@@ -146,11 +146,11 @@ feature -- Metric calculation
 				l_den_metric.disable_filter_result
 			end
 			if denominator_coefficient =0.0 then
-				raise ("Devided by 0")
+				raise ("Divided by 0")
 			else
 				l_den_value := l_den_metric.value_item (a_scope)
 				if l_den_value = 0.0 then
-					raise ("Devided by 0")
+					raise ("Divided by 0")
 				else
 					create Result.make
 					Result.extend (create {QL_QUANTITY}.make_with_value ((numerator_coefficient * (l_num_metric.value_item (a_scope))) /  (denominator_coefficient * l_den_value)))

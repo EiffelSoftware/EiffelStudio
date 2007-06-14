@@ -60,7 +60,11 @@ feature{NONE} -- Initialization
 			a_viewer_attached: a_viewer /= Void
 			a_tooltip_attached: a_tooltip /= Void
 		do
-			set_command_name_internal (a_cmd_name)
+			if a_cmd_name.is_empty then
+				set_command_name_internal (default_name)
+			else
+				set_command_name_internal (a_cmd_name)
+			end
 			set_header_internal (a_header)
 			set_temp_header_internal (a_temp_header)
 			set_menu_name_internal (a_menu_name)
@@ -583,6 +587,9 @@ feature{NONE} -- Implementation/Setting
 		ensure
 			is_pixmap_loaded_set: is_pixmap_loaded = b
 		end
+
+	default_name: STRING is "Unnamed formatter"
+			-- Default formatter name
 
 invariant
 	command_name_internal_attached: command_name_internal /= Void

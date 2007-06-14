@@ -158,6 +158,8 @@ feature{NONE} -- Implementation
 		do
 			if locale_table_internal = Void then
 				locale_table_internal := locale_names.locales_from_array (preferences.misc_data.locale_id_preference.value)
+					-- Add name for "Unselected" entry.
+				locale_table_internal.force (names.l_unselected, "Unselected")
 			end
 			Result := locale_table_internal
 		ensure

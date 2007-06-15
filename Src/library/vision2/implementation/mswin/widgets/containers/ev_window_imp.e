@@ -1163,12 +1163,8 @@ feature {EV_ANY_I} -- Implementation
 				create a_menu.make_by_pointer (wparam)
 				on_menu_opened (a_menu)
 			when Wm_enteridle then
-					--| FIXME This message is sent when `Current' has a modal dialog
-					--| as a child. This message is only sent once, and not repeatedly as
-					--| we require for the idle actions.
-				if application_imp.idle_actions /= Void then
-					application_imp.idle_actions.call (Void)
-				end
+					--| This message is sent when `Current' has a modal dialog as a child.
+				application_imp.process_event_queue (False)
 				fire_dialog_show_actions (lparam)
 			else
 				Result := Precursor {WEL_FRAME_WINDOW} (hwnd, msg, wparam, lparam)

@@ -73,6 +73,8 @@ feature {NONE} -- Initialization
 			create item_grid
 			create item_grid_wrapper.make (item_grid)
 			create descriptor_row_table.make (10)
+			create helper_label
+			create property_grid.make_with_description (helper_label)
 			item_grid.set_column_count_to (item_grid_column_count)
 			default_create
 			next_new_item_index := 1
@@ -99,7 +101,6 @@ feature {NONE} -- Initialization
 			remove_button.select_actions.extend (agent on_remove_item)
 			remove_button.disable_sensitive
 
-			create helper_label
 			helper_label.set_minimum_height (50)
 			helper_label.align_text_left
 			help_area.extend (helper_label)
@@ -124,9 +125,7 @@ feature {NONE} -- Initialization
 			setup_item_grid
 
 				-- Setup `property_grid'.
-			create property_grid.make_with_description (helper_label)
 			property_grid_area.extend (property_grid)
-
 			property_grid.set_minimum_width (350)
 			property_grid.hide
 

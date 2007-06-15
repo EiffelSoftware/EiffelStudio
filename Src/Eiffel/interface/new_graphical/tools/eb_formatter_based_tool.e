@@ -73,11 +73,12 @@ feature{NONE} -- Initialization
 	build_interface is
 			-- Build interface
 		do
+			initialize
+
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
 			address_manager.set_context_menu_factory (develop_window.menus.context_menu_factory)
 
-			initialize
 			build_formatters
 			fill_in
 			on_select

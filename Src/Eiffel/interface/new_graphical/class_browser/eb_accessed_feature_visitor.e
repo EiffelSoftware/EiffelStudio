@@ -381,19 +381,27 @@ feature{NONE} -- Implementation
 			a_feature_attached: a_feature /= Void
 		local
 			l_class: CLASS_C
+			l_retried: BOOLEAN
 		do
-			l_class := system.class_of_id (a_class_id)
-			if l_class /= Void then
-				Result := a_feature.ancestor_version (l_class)
-				if Result /= Void then
-					if
-						Result.name.is_case_insensitive_equal (a_feature.name) and then
-						((not Result.has_alias_name) and then (not a_feature.has_alias_name))
-					then
-						Result := Void
+				-- Fixme: This protection is to avoid a strange crash when invoking `ancestor_version' on `a_feature'.
+				-- Try to find the real reason later.
+			if not l_retried then
+				l_class := system.class_of_id (a_class_id)
+				if l_class /= Void then
+					Result := a_feature.ancestor_version (l_class)
+					if Result /= Void then
+						if
+							Result.name.is_case_insensitive_equal (a_feature.name) and then
+							((not Result.has_alias_name) and then (not a_feature.has_alias_name))
+						then
+							Result := Void
+						end
 					end
 				end
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 invariant

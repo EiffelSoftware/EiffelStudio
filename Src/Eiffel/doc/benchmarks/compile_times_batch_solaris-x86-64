@@ -1,4 +1,68 @@
 Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
+Def:
+HT = HASH_TABLE
+CG = Code Generation
+
+6.0
+===
+
+# New expanded generic reattachment:
+6.0.6.8702 RTEA (2440 classes, EIFGEN size: 150MB, exe size: 19307000 bytes):
+297.81u 9.24s 5:38.60 90.6%
+300.50u 9.20s 5:44.74 89.8%
+
+intermediate result:
+277.46u 8.86s 5:22.44 88.7%
+
+6.0.6.8277 RTEA (2440 classes, EIFGEN size: 389MB exe size: 18835016 bytes):
+275.33u 9.15s 5:58.79 79.2%
+275.02u 9.09s 6:01.48 78.5%
+
+#Normal compilation:
+6.0.0527 RTEA (new EiffelBase):
+262.98u 8.02s 5:04.18 89.0%
+244.15u 8.04s 4:44.42 88.6%
+243.70u 7.99s 4:45.62 88.1%
+
+6.0.0527 RTEA (old EiffelBase):
+
+6.0.0318 RTEA (new SPECIAL with copy_data inlined):
+227.43u 8.05s 4:21.09 90.1%
+228.28u 7.53s 4:21.36 90.2%
+
+6.0.0318 RTEA (old SPECIAL without copy_data inlined):
+236.81u 7.39s 4:14.69 95.8%
+
+6.0.0312 RTEA (with new HASH_TABLE):
+224.42u 8.09s 4:23.36 88.2%
+
+6.0.302 RTEA (with less HASH_TABLE creation):
+240.18u 7.84s 4:51.13 85.1%
+239.94u 8.13s 4:33.06 90.8%
+238.65u 8.15s 4:28.87 91.7%
+
+6.0.302 RTEA:
+239.84u 8.56s 4:36.23 89.9%
+244.01u 7.75s 4:36.72 90.9%
+243.92u 8.29s 4:36.66 91.1%
+
+6.0.0221 RTEA (2348 classes, old HT, new CG, COMP size=283412):
+231.90u 7.73s 4:25.28 90.3%
+
+6.0.0221 RTEA (old HT, old CG):
+233.39u 8.16s 4:28.07 90.1%
+
+6.0.64920 RTEA (old HT, COMP size=302802):
+244.23u 8.05s 5:08.34 81.8%
+
+6.0.0221 RTEA (2348 classes, new HT, new CG, COMP size=284250):
+239.85u 7.72s 4:30.45 91.5%
+
+6.0.0221 RTEA (new HT, old CG):
+241.63u 7.66s 4:33.91 91.0%
+
+6.0.64920 RTEA (new HT):
+246.40u 8.80s 4:41.28 90.7%
 
 5.7
 ===

@@ -519,7 +519,7 @@ feature {NONE}  -- Implementation
 			l_zones := internal_tool_bar_row.zones
 			l_zones.delete (internal_mediator.caller)
 			if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 then
-				if  positions_and_sizes_try.first.integer_32_item (1) < 0 then
+				if positions_and_sizes_try.first.integer_32_item (1) < 0 then
 					position_front_to_back (a_hot_index)
 				end
 				l_size := l_zones.item (positions_and_sizes_try.count).size
@@ -567,7 +567,9 @@ feature {NONE}  -- Implementation
 					if positions_and_sizes_try.last.integer_32_item (1) + l_size > internal_tool_bar_row.size then
 						-- Check if last out of border
 						Result := internal_sizer.try_solve_no_space_right (positions_and_sizes_try, a_hot_index, a_hot_pointer_position)
-						position_front_to_back (a_hot_index)
+						if Result then
+							position_front_to_back (a_hot_index)
+						end
 					end
 				end
 			end

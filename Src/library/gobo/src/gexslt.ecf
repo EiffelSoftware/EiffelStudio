@@ -24,7 +24,7 @@
 			<condition>
 				<platform value="windows"/>
 			</condition>
-		</external>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="gexslt" location="$ISE_LIBRARY\library\gobo\svn\src\gexslt\" recursive="true"/>

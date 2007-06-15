@@ -227,22 +227,24 @@ feature {NONE} -- Quick search bar.
 		local
 			l_editor: EB_EDITOR
 		do
-			if not is_empty and search_tool.is_incremental_search then
-				if search_bar.keyword_field.text_length /= 0 then
-					l_editor := search_tool.old_editor
-					search_tool.set_old_editor (Current)
-					search_tool.incremental_search (search_bar.keyword_field.text, search_tool.incremental_search_start_pos, False)
-					if search_tool.has_result then
-						search_tool.select_in_current_editor
+			if not search_tool.is_recycled then
+				if not is_empty and search_tool.is_incremental_search then
+					if search_bar.keyword_field.text_length /= 0 then
+						l_editor := search_tool.old_editor
+						search_tool.set_old_editor (Current)
+						search_tool.incremental_search (search_bar.keyword_field.text, search_tool.incremental_search_start_pos, False)
+						if search_tool.has_result then
+							search_tool.select_in_current_editor
+						else
+							search_tool.retrieve_cursor
+						end
+						search_tool.set_old_editor (l_editor)
 					else
 						search_tool.retrieve_cursor
 					end
-					search_tool.set_old_editor (l_editor)
-				else
-					search_tool.retrieve_cursor
 				end
+				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
-			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
 	trigger_advanced_search is

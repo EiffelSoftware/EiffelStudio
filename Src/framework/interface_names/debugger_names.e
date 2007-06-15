@@ -304,6 +304,254 @@ feature -- Thread tool
 	t_no_information_when_not_stopped: STRING_GENERAL is
 			do Result := locale.translation ("Sorry no information when application is not stopped") end
 
+feature -- Expression evaluation messages
+
+	msg_error_call_on_void_target (fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Error: Call on void target for `$1'."), [fname]) end
+
+	msg_error_vst1_on_class_context (clname, fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			clname_not_void: clname /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Error: Can not evaluate `{$1}.$2'.%NOnly once, constant and static call can be evaluated on 'Class' context.%N"), [clname, fname]) end
+
+	msg_error_during_context_preparation (s: STRING_GENERAL): STRING_GENERAL is
+		require
+			s_not_void: s /= Void
+		do Result := locale.formatted_string (locale.translation ("$1%N$2"), [cst_error_during_context_preparation, s]) end
+
+	msg_error_not_yet_ready (a: ANY; s: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+			s_not_void: s /= Void
+		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready."), [a.generating_type, s]) end
+
+	msg_error_not_yet_ready_for (a: ANY; s, f: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+			s_not_void: s /= Void
+			f_not_void: f /= Void
+		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generating_type, s, f]) end
+
+	msg_error_evaluating_parameter (a: ANY): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of parameter(s)"), [a.generating_type]) end
+
+	msg_error_unknown_constant_type_for (fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Unknown constant type for `$1'"), [fname]) end
+
+	msg_error_during_evaluation_of_call (a: ANY; fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of call : `$2'"), [a.generating_type, fname]) end
+
+	msg_error_unable_to_get_valid_target_for (add: STRING_GENERAL): STRING_GENERAL is
+		require
+			add_not_void: add /= Void
+		do Result := locale.formatted_string (locale.translation ("Unable to get valid target object for $1"), [add]) end
+
+	msg_error_can_not_instanciate_type (tname, s: STRING_GENERAL): STRING_GENERAL is
+		require
+			tname_not_void: tname /= Void
+			s_not_void: s /= Void
+		do Result := locale.formatted_string (locale.translation ("Can not instanciate type {$1} : $2."), [tname, s]) end
+
+	msg_error_instanciation_of_type_raised_error (tname: STRING_GENERAL): STRING_GENERAL is
+		require
+			tname_not_void: tname /= Void
+		do Result := locale.formatted_string (locale.translation ("Creation of type {$1} raised an error."), [tname]) end
+
+	msg_error_with_retrieving_attribute (aname: STRING_GENERAL): STRING_GENERAL is
+		require
+			aname_not_void: aname /= Void
+		do Result := locale.formatted_string (locale.translation ("Error: issue with attribute `$1'."), [aname]) end
+
+	msg_error_instruction_eval_not_yet_available (a: ANY): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1:  Instruction evaluation not yet available."), [a.generating_type]) end
+
+	msg_error_expression_not_yet_available (a: ANY): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1:  Not yet available."), [a.generating_type]) end
+
+	msg_error_report_to_support (a: ANY): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1 => ERROR : please report to support."), [a.generating_type]) end
+
+	msg_error_other_than_func_cst_once_not_available (a: ANY): STRING_GENERAL is
+		require
+			a_not_void: a /= Void
+		do Result := locale.formatted_string (locale.translation ("$1 => ERROR : other than function, constant and once : not available."), [a.generating_type]) end
+
+	cst_error_evaluation_limited_for_auto_expression: STRING_GENERAL is
+		do Result := locale.translation ("Evaluation failed due to auto expression limitation.") end
+
+	cst_error_context_corrupted_or_not_found: STRING_GENERAL is
+		do Result := locale.translation ("Context corrupted or not found") end
+
+	cst_error_during_context_preparation: STRING_GENERAL is
+		do Result := locale.translation ("An error occurred while retrieving the expression's context.") end
+
+	cst_error_during_expression_analyse: STRING_GENERAL is
+		do Result := locale.translation ("An error occurred during the analysis of the expression.") end
+
+	cst_error_type_checking_failed : STRING_GENERAL is
+		do Result := locale.translation ("Type checking failed") end
+
+	cst_error_evaluation_failed_with_internal_exception: STRING_GENERAL is
+		do Result := locale.translation ("Evaluation failed due to internal exception") end
+
+	cst_unable_to_get_current_object: STRING_GENERAL is
+		do Result := locale.translation ("Unable to get Current object.") end
+
+	cst_error_special_not_yet_supported: STRING_GENERAL is
+		do Result := locale.translation ("{SPECIAL} is not yet supported") end
+
+	cst_error_formal_type_not_yet_supported: STRING_GENERAL is
+		do Result := locale.translation ("formal type is not yet supported") end
+
+	cst_error_not_compiled: STRING_GENERAL is
+		do Result := locale.translation ("not compiled") end
+
+	cst_error_not_yet_available: STRING_GENERAL is
+		do Result := locale.translation ("not compiled") end
+
+
+	Cst_error_evaluation_aborted: STRING_GENERAL is
+		once Result := locale.translation ("Evaluation aborted") end
+	Cst_error_exception_during_evaluation: STRING_GENERAL is
+		once Result := locale.translation ("Exception occurred during evaluation") end
+	Cst_error_occurred: STRING_GENERAL is
+		once Result := locale.translation ("Error occurred") end
+	Cst_error_unable_to_get_target_object: STRING_GENERAL is
+		once Result := locale.translation ("Unable to get target object") end
+	Cst_error_occurred_during_parameters_preparation: STRING_GENERAL is
+		once Result := locale.translation ("Error during parameters preparation") end
+	Cst_error_unable_to_get_icd_function: STRING_GENERAL is
+		once Result := locale.translation ("Unable to get ICorDebugFunction") end
+
+	Cst_error_cannot_find_complete_dynamic_type_of_expanded_type: STRING_GENERAL is
+		do Result := locale.translation ("Cannot find complete dynamic type of an expanded type.") end
+
+	msg_error_native_array_partially_supported (fname: STRING_GENERAL): STRING_GENERAL is
+		do 
+			if fname = Void then
+				Result := locale.translation ("NATIVE_ARRAY is not yet fully supported.")
+			else
+				Result := locale.formatted_string (locale.translation ("NATIVE_ARRAY is not yet fully supported, unable to evaluate `$1'."), [fname])
+			end
+		end
+
+	msg_error_unable_to_evaluate_call (cname,fname: STRING_GENERAL; addr: STRING_GENERAL; desc: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+		local
+			s32: STRING_32
+		do
+			if desc = Void then
+				s32 := ""
+			else
+				s32 := "%N"
+				s32.append_string_general (desc)
+			end
+			if addr = Void then
+				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2$3"), [cname, fname, s32]) 
+			else
+				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2 on <$3>$4"), [cname, fname, addr, s32]) 
+			end
+		end
+
+	msg_error_evaluation_aborted (cname,fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Evaluation aborted: {$1}.$2"), [cname, fname]) end
+
+	msg_error_unable_to_evaluate_once_call (cname,fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Unable to evaluate once routine {$1}.$2"), [cname, fname]) end
+
+	msg_error_unable_to_evaluate_non_once_call_with_any_object (cname,fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Unable to evaluate (non once) routine {$1}.$2 on Void object or type name"), [cname, fname]) end
+			
+	msg_error_exception_occurred_during_evaluation (cname, fname: STRING_GENERAL; a_trace: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+			trace_not_void: a_trace /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Exception occurred during evaluation of {$1}.$2:%N$3"), [cname, fname, a_trace])
+		end
+
+	msg_error_once_evaluation_failed (fname: STRING_GENERAL; msg: STRING_GENERAL): STRING_GENERAL is
+		require
+			fname_not_void: fname /= Void
+		do
+			if msg = Void then
+				Result := locale.formatted_string (locale.translation ("Once function `$1': an exception occurred."), [fname])
+			else
+				Result := locale.formatted_string (locale.translation ("Once function `$1': $2."), [fname, msg])
+			end
+		end
+
+	msg_error_once_routine_not_yet_called (fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			fname_not_void: fname /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Once routine `$1': not yet called."), [fname])
+		end
+
+	msg_error_once_procedure_evaluation_not_yet_available (fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			fname_not_void: fname /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Once procedure `$1': once procedure evaluation is not yet available."), [fname])
+		end
+
+	msg_error_unable_to_evaluate_deferred_call (cname,fname: STRING_GENERAL): STRING_GENERAL is
+		require
+			cname_not_void: cname /= Void
+			fname_not_void: fname /= Void
+		do Result := locale.formatted_string (locale.translation ("Unable to evaluate deferred routine {$1}.$2"), [cname, fname]) end
+
+	msg_error_cannot_find_attribute (aname: STRING_GENERAL): STRING_GENERAL is
+		require
+			aname_not_void: aname /= Void
+		do Result := locale.formatted_string (locale.translation ("Could not find attribute value for `$1'"), [aname]) end			
+
+	msg_error_cannot_evaluate_attribute_of_expanded (aname: STRING_GENERAL): STRING_GENERAL is
+		require
+			aname_not_void: aname /= Void
+		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of an expanded value."), [aname]) end			
+
+	msg_error_cannot_find_context_object (addr: STRING_GENERAL): STRING_GENERAL is
+		require
+			addr_not_void: addr /= Void
+		do Result := locale.formatted_string (locale.translation ("Error occurred: unable to find the context object <$1>."), [addr]) end			
+
+	msg_error_type_not_compiled (tname: STRING_GENERAL): STRING_GENERAL is
+		require
+			tname_not_void: tname /= Void
+		do Result := locale.formatted_string (locale.translation ("Type {$1} is not compiled."), [tname]) end			
+
+			
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

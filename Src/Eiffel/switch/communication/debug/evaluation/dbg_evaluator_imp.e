@@ -20,6 +20,8 @@ inherit
 			context as byte_context
 		end
 
+	SHARED_BENCH_NAMES
+
 	SHARED_DEBUGGER_MANAGER
 
 	SHARED_WORKBENCH
@@ -78,10 +80,10 @@ feature -- Status
 			Result := error & cst_error_exception_during_evaluation /= 0
 		end
 
-	error_message: STRING is
+	error_message: STRING_32 is
 		local
-			details: TUPLE [INTEGER, STRING]
-			l_msg: STRING
+			details: TUPLE [code: INTEGER; msg: STRING_32]
+			l_msg: STRING_GENERAL
 			l_code: INTEGER
 		do
 			if error /= 0 and not error_messages.is_empty then
@@ -92,37 +94,47 @@ feature -- Status
 					error_messages.after
 				loop
 					details := error_messages.item
-					l_code := details.integer_32_item (1)
-					l_msg ?= details.item (2)
+					l_code := details.code
+					l_msg := details.msg
 					if l_msg = Void and l_code /= 0 then
-						l_msg := cst_error_messages.item (l_code)
+						l_msg := error_code_to_message (l_code)
 					end
 					if l_msg /= Void then
-						Result.append_string (l_msg)
+						Result.append_string_general (l_msg)
 					end
 					error_messages.forth
 					if not error_messages.after then
-						Result.append_string (once "%N--------------------------%N")
+						Result.append ("%N--------------------------%N")
 					end
 				end
 			end
 		end
 
-	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING]]
-			-- List of [Code, Tag, Message]
+	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING_32]]
+			-- List of [Code, Message]
 			-- Error's message if any otherwise Void
 
-	notify_error (a_code: INTEGER; a_msg: STRING) is
+	notify_error (a_code: INTEGER; a_msg: STRING_GENERAL) is
 		require
 			a_code /= 0
+		local
+			m: STRING_32
 		do
+			if a_msg /= Void then
+				m := a_msg.as_string_32
+			end
 			error := error | a_code
-			error_messages.extend ([a_code, a_msg])
+			error_messages.extend ([a_code, m])
 		end
 
-	notify_error_evaluation	(a_msg: STRING) is
+	notify_error_evaluation	(a_msg: STRING_GENERAL) is
 		do
-			notify_error (cst_error_occurred, a_msg)
+			notify_error (Cst_error_occurred, a_msg)
+		end
+
+	notify_error_exception (a_msg: STRING_GENERAL) is
+		do
+			notify_error (Cst_error_exception_during_evaluation, a_msg)
 		end
 
 feature {NONE} -- Error code id
@@ -133,14 +145,23 @@ feature {NONE} -- Error code id
 	Cst_error_unable_to_get_target_object: INTEGER is 0x8
 	Cst_error_occurred_during_parameters_preparation: INTEGER is 0x10
 
-	Cst_error_messages: HASH_TABLE [STRING, INTEGER] is
-		once
-			create Result.make (6)
-			Result.force ("Evaluation aborted", Cst_error_evaluation_aborted)
-			Result.force ("Exception occurred during evaluation", Cst_error_exception_during_evaluation)
-			Result.force ("Error occurred", Cst_error_occurred)
-			Result.force ("Unable to get target object", Cst_error_unable_to_get_target_object)
-			Result.force ("Error during parameters preparation", Cst_error_occurred_during_parameters_preparation)
+	error_code_to_message (a_code: INTEGER): STRING_GENERAL
+		require
+			code_not_zero: a_code /= 0
+		do
+			inspect a_code
+				when Cst_error_evaluation_aborted then
+					Result := Debugger_names.cst_error_evaluation_aborted
+				when Cst_error_exception_during_evaluation then
+					Result := Debugger_names.cst_error_exception_during_evaluation
+				when Cst_error_occurred then
+					Result := Debugger_names.cst_error_occurred
+				when Cst_error_unable_to_get_target_object then
+					Result := Debugger_names.cst_error_unable_to_get_target_object
+				when Cst_error_occurred_during_parameters_preparation then
+					Result := Debugger_names.cst_error_occurred_during_parameters_preparation
+				else
+			end
 		end
 
 feature {DBG_EVALUATOR} -- Interface

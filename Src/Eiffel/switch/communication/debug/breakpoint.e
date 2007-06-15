@@ -131,7 +131,7 @@ feature -- Output
 
 feature -- Properties
 
-	hits_count_condition: TUPLE [mode:INTEGER; value:INTEGER]
+	hits_count_condition: TUPLE [mode: INTEGER; value: INTEGER]
 			--| mode: 0x0 always
 			--| mode: 0x2 equal
 			--| mode: 0x4 multiple of

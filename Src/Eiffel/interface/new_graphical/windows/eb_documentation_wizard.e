@@ -679,7 +679,9 @@ feature {NONE} -- Implementation
 		do
 			if i /= Void then
 				from i.start until i.after loop
-					t := i.item.tag.name
+					if i.item.tag /= Void then
+						t := i.item.tag.name
+					end
 					if t /= Void and then not l.has (t) then
 						l.extend (t.twin)
 					end

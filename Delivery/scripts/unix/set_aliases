@@ -120,7 +120,7 @@ until  svn co $* >> $INSTALL_LOG; do echo "svn failed, retrying..."; done
 }
 exprt ()
 {
-until  svn export $* >> $INSTALL_LOG; do echo "svn failed, retrying..."; done
+until  svn --force export $* >> $INSTALL_LOG; do echo "svn failed, retrying..."; done
 }
 
 # C Compilation

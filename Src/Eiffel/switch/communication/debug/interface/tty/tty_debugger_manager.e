@@ -290,14 +290,16 @@ feature -- Interaction
 			Result.add_entry ("E", debugger_names.e_expression_evaluation, agent
 					local
 						x: EB_EXPRESSION
+						s: STRING_GENERAL
 					do
 						localized_print (debugger_names.m_expression)
 						io.read_line
 						create x.make_for_context (io.last_string.twin)
 						x.evaluate
 						if x.error_occurred then
-							if x.expression_evaluator.short_text_from_error_messages /= Void then
-								localized_print (x.expression_evaluator.short_text_from_error_messages)
+							s := x.expression_evaluator.short_text_from_error_messages
+							if s /= Void then
+								localized_print (s)
 							else
 								localized_print (debugger_names.m_error_occurred)
 							end

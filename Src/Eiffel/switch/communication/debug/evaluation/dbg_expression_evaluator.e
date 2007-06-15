@@ -18,6 +18,8 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
+	SHARED_BENCH_NAMES
+
 feature {NONE} -- Initialization
 
 	make_as_object (addr: like context_address) is
@@ -110,6 +112,9 @@ feature -- Properties
 	context_address: STRING
 			-- Object's address related to the expression	
 
+	as_auto_expression: BOOLEAN
+			-- Evaluate as auto expression ?
+
 feature -- Change
 
 	reset_error is
@@ -118,26 +123,39 @@ feature -- Change
 			error_messages.wipe_out
 		end
 
-	notify_error (a_code: INTEGER; a_tag, a_msg: STRING) is
+	set_as_auto_expression (b: like as_auto_expression) is
+			-- Set `as_auto_expression' with `b'
+		do
+			as_auto_expression := b
+		end
+
+feature -- Error notification
+
+	notify_error (a_code: INTEGER; a_tag, a_msg: STRING_GENERAL) is
 		require
 			valid_code: a_code /= 0
 			valid_message: a_msg /= Void
+		local
+			l_tag: STRING_32
 		do
 			error := error | a_code
-			error_messages.extend ([a_code, a_tag, a_msg])
+			if a_tag /= Void then
+				l_tag := a_tag.as_string_32
+			end
+			error_messages.extend ([a_code, l_tag, a_msg.as_string_32])
 		end
 
-	notify_error_evaluation (mesg: STRING) is
+	notify_error_evaluation (mesg: STRING_GENERAL) is
 		do
 			notify_error (cst_error_evaluation, Void, mesg)
 		end
 
-	notify_error_exception (mesg: STRING) is
+	notify_error_exception (mesg: STRING_GENERAL) is
 		do
 			notify_error (cst_error_exception, Void, mesg)
 		end
 
-	notify_error_expression_and_tag (mesg: STRING; t: STRING) is
+	notify_error_expression_and_tag (mesg: STRING_GENERAL; t: STRING_GENERAL) is
 		do
 			notify_error (cst_error_expression, t, mesg)
 		end
@@ -155,31 +173,91 @@ feature -- Change
 					error_list.after
 				loop
 					l_error := error_list.item
-					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					notify_error_expression_error (l_error)
 					error_list.forth
 				end
 				error_list.go_to (l_cursor)
 			end
 		end
 
-	notify_error_expression (mesg: STRING) is
+	notify_error_expression_error (err: ERROR) is
+		local
+			msg32: STRING_32
+			tag: STRING
+		do
+			msg32 := "Error "
+			msg32.append_string (err.code)
+			msg32.append_character ('%N')
+			msg32.append_string_general (error_to_string (err))
+			tag := err.code
+			if tag /= Void then
+				notify_error_expression_and_tag (msg32, tag.as_string_32)
+			else
+				notify_error_expression (msg32)
+			end
+		end
+
+	notify_error_expression (mesg: STRING_GENERAL) is
 		do
 			notify_error (cst_error_expression, Void, mesg)
 		end
 
-	notify_error_syntax (mesg: STRING) is
+	notify_error_syntax (mesg: STRING_GENERAL) is
 		do
 			notify_error (cst_error_syntax, Void, mesg)
 		end
 
-	notify_error_not_implemented (mesg: STRING) is
+	notify_error_not_implemented (mesg: STRING_GENERAL) is
 		do
 			notify_error (cst_error_not_implemented, Void, mesg)
 		end
 
+	notify_error_evaluation_limited_for_auto_expression is
+		do
+			notify_error (cst_error_evaluation, Void, debugger_names.cst_error_evaluation_limited_for_auto_expression)
+		end
+
+	notify_error_evaluation_call_on_void (fname: STRING_GENERAL) is
+		do
+			notify_error_evaluation (Debugger_names.msg_error_call_on_void_target (fname))
+		end
+
+	notify_error_evaluation_report_to_support (a: ANY) is
+		require
+			a_not_void: a /= Void
+		do
+			notify_error_evaluation (Debugger_names.msg_error_report_to_support (a))
+		end
+
+	notify_error_evaluation_during_call_evaluation (a: ANY; fname: STRING_GENERAL) is
+		require
+			a_not_void: a /= Void
+			fname_not_void: fname /= Void
+		do
+			notify_error_evaluation (Debugger_names.msg_error_during_evaluation_of_call (a, fname))
+		end
+
+	notify_error_not_implemented_and_ready (a: ANY; s: STRING_GENERAL; t: STRING_GENERAL) is
+		require
+			a_not_void: a /= Void
+		local
+			s32: STRING_32
+		do
+			if s = Void then
+				s32 := ""
+			else
+				s32 := s.as_string_32
+			end
+			if t = Void then
+				notify_error_not_implemented (Debugger_names.msg_error_not_yet_ready (a, s32))
+			else
+				notify_error_not_implemented (Debugger_names.msg_error_not_yet_ready_for (a, s32, t))
+			end
+		end
+
 feature {NONE} -- Utility Implementation
 
-	error_to_string (e: ERROR): STRING is
+	error_to_string (e: ERROR): STRING_32 is
 			-- Convert Error code to Error description STRING
 		require
 			error_not_void: e /= Void
@@ -198,54 +276,6 @@ feature {NONE} -- Error code
 	cst_error_exception: INTEGER is  		0x04		--|  0b00000100 -> 0x04
 	cst_error_syntax: INTEGER is     		0x08		--|  0b00001000 -> 0x08
 	cst_error_not_implemented: INTEGER is 	0x10		--|  0b00010000 -> 0x10
-
-feature {NONE} -- Error message values
-
-	message_error_call_on_void_target (fname: STRING): STRING is
-		do
-			create Result.make_from_string ("Error: Call on void target")
-			if fname /= Void then
-				Result.append_string (" for ")
-				Result.append_string (Cst_feature_name_left_limit)
-				Result.append_string (fname)
-				Result.append_string (Cst_feature_name_right_limit)
-			end
-		end
-
-	message_error_vst1_on_class_context (clname, fname: STRING): STRING is
-		do
-			create Result.make_from_string ("Error: Can not evaluate ")
-			Result.append_string (Cst_feature_name_left_limit)
-			Result.append_string (fname)
-			Result.append_string (Cst_feature_name_right_limit)
-			Result.append_string (" on `Class' context {" + clname + "}.%N")
-			Result.append_string ("Only once, constant and static call can be evaluated on 'Class' context.")
-		end
-
-	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
-
-	Cst_error_during_context_preparation: STRING is "An error occurred while retrieving the expression's context"
-
-	Cst_error_during_expression_analyse: STRING is "An error occurred during the analysis of the expression."
-
-	Cst_error_type_checking_failed : STRING is "Type checking failed"
-
-	Cst_error_evaluation_failed_with_exception: STRING is "Evaluation failed with an exception"
-
-	Cst_error_evaluation_failed_with_internal_exception: STRING is "Evaluation failed due to internal exception"
-
-	Cst_error_not_yet_ready: STRING is " : sorry not yet ready"
-
-	Cst_error_report_to_support: STRING is " => ERROR : please report to support"
-
-	Cst_error_other_than_func_cst_once_not_available: STRING is " => ERROR : other than function, constant and once : not available"
-
-	Cst_error_during_evaluation_of_external_call: STRING is " => An error occurred during the evaluation of external call : "
-
-	Cst_error_evaluating_parameter: STRING is " => An error occurred during the evaluation of parameter(s)"
-
-	Cst_feature_name_left_limit: STRING is "`"
-	Cst_feature_name_right_limit: STRING is "'"
 
 feature -- Access
 
@@ -276,25 +306,25 @@ feature -- Access
 
 	error: INTEGER
 
-	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING, STRING]]
+	error_messages: LINKED_LIST [TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]]
 			-- List of [Code, Tag, Message]
 			-- Error's message if any otherwise Void
 
-	short_text_from_error_messages: STRING is
+	short_text_from_error_messages: STRING_32 is
 		local
-			details: TUPLE [INTEGER, STRING, STRING]
+			details: TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]
 		do
 			if not error_messages.is_empty then
 				details := error_messages.first
-				Result ?= details.reference_item (2)
+				Result := details.tag
 			end
 		end
 
-	text_from_error_messages: STRING is
+	text_from_error_messages: STRING_32 is
 		local
-			details: TUPLE [INTEGER, STRING, STRING]
+			details: TUPLE [code: INTEGER; tag: STRING_32; msg: STRING_32]
 			l_code: INTEGER
-			l_tag, l_msg: STRING
+			l_tag, l_msg: STRING_32
 		do
 			create Result.make (0)
 			from
@@ -303,18 +333,20 @@ feature -- Access
 				error_messages.after
 			loop
 				details := error_messages.item
-				l_code := details.integer_32_item (1)
-				l_tag ?= details.reference_item (2)
-				l_msg ?= details.reference_item (3)
+				l_code := details.code
+				l_tag := details.tag
+				l_msg := details.msg
 				if l_tag /= Void then
-					Result.append_string ("[")
-					Result.append_string (l_tag)
-					Result.append_string ("] ")
+					Result.append_character ('[')
+					Result.append (l_tag)
+					Result.append ("] ")
 				end
-				Result.append_string (l_msg)
+				if l_msg /= Void then
+					Result.append (l_msg)
+				end
 				error_messages.forth
 				if not error_messages.after then
-					Result.append_string (once "%N-----------------------------------%N")
+					Result.append ("%N-----------------------------------%N")
 				end
 			end
 		end

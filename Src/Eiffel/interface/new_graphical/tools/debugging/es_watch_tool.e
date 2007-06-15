@@ -1110,7 +1110,7 @@ feature {NONE} -- Event handling
 			if is_auto then
 				if debugger_manager.safe_application_is_stopped then
 					if not expr.is_evaluated then
-						expr.evaluate
+						expr.evaluate_as_auto_expression
 					end
 				end
 				if not show_only_auto_expression_successfully_evaluated or else not expr.error_occurred then

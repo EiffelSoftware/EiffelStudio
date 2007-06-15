@@ -15,6 +15,8 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
+	SHARED_BENCH_NAMES
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -72,9 +74,9 @@ feature {SHARED_DBG_EVALUATOR} -- Variables
 
 	last_result_static_type: CLASS_C
 
-	error_evaluation_message: STRING
+	error_evaluation_message: STRING_32
 
-	error_exception_message: STRING
+	error_exception_message: STRING_32
 
 	error_occurred: BOOLEAN is
 		do
@@ -91,21 +93,23 @@ feature {SHARED_DBG_EVALUATOR, DBG_EVALUATOR_IMP} -- Variables preparation
 			last_result_static_type := trs
 		end
 
-	notify_error_evaluation (mesg: STRING) is
+	notify_error_evaluation (mesg: STRING_GENERAL) is
 		do
 			if error_evaluation_message /= Void then
-				error_evaluation_message.append_string ("%N" + mesg)
-			else
-				error_evaluation_message := mesg
+				error_evaluation_message.append_character ('%N')
+				error_evaluation_message.append_string_general (mesg)
+			elseif mesg /= Void then
+				error_evaluation_message := mesg.as_string_32
 			end
 		end
 
-	notify_error_exception (mesg: STRING) is
+	notify_error_exception (mesg: STRING_GENERAL) is
 		do
 			if error_exception_message /= Void then
-				error_exception_message.append_string ("%N" + mesg)
-			else
-				error_exception_message := mesg
+				error_exception_message.append_character ('%N')
+				error_exception_message.append_string_general (mesg)
+			elseif mesg /= Void then
+				error_exception_message := mesg.as_string_32
 			end
 		end
 
@@ -129,7 +133,7 @@ feature -- Concrete evaluation
 			if last_result_value /= Void then
 				last_result_static_type := class_c_from_type_a (f.type, cl)
 			else
-				notify_error_evaluation ("Unable to evaluate {" + cl.name_in_upper + "}." + f.feature_name)
+				notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_call (cl.name_in_upper, f.feature_name, Void, Void))
 			end
 		end
 
@@ -169,10 +173,10 @@ feature -- Concrete evaluation
 
 				last_result_static_type := class_c_from_type_a (f.type, c)
 				if dv = Void then
-					if f.feature_name.is_equal ("Void") then
+					if f.feature_name.is_equal (once "Void") then
 						last_result_value := Debugger_manager.Dump_value_factory.new_void_value (last_result_static_type)
 					else
-						notify_error_evaluation ("Could not find attribute value for " + f.feature_name)
+						notify_error_evaluation (Debugger_names.msg_error_cannot_find_attribute (f.feature_name))
 					end
 				else
 					last_result_value := dv.dump_value
@@ -181,7 +185,7 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.feature_name +"] of a expanded value")
+				notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_expanded (f.feature_name))
 			end
 		end
 
@@ -193,7 +197,6 @@ feature -- Concrete evaluation
 			l_target_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE
 			realf: FEATURE_I
-			l_err_msg: STRING
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".evaluate_routine :%N")
@@ -223,7 +226,7 @@ feature -- Concrete evaluation
 						-- The type has generic derivations: we need to find the precise type.
 					l_dyntype := class_type_from_object_relative_to (a_addr, l_target_dynclass)
 					if l_dyntype = Void then
-						notify_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
+						notify_error_evaluation (Debugger_names.msg_error_cannot_find_context_object (a_addr))
 					elseif l_target_dynclass = Void then
 						l_target_dynclass := l_dyntype.associated_class
 					end
@@ -233,7 +236,7 @@ feature -- Concrete evaluation
 					l_dyntype := Void
 				else
 						--| Shouldn't happen: basic types are not generic.
-					notify_error_evaluation ("Cannot find complete dynamic type of an expanded type")
+					notify_error_evaluation (Debugger_names.cst_error_cannot_find_complete_dynamic_type_of_expanded_type)
 				end
 			else
 				check l_target_dynclass /= Void and then l_target_dynclass.types.count = 0 end
@@ -241,14 +244,16 @@ feature -- Concrete evaluation
 			if f.is_once then
 				effective_evaluate_once_function (f)
 				if last_result_value = Void then
-					notify_error_evaluation ("Unable to evaluate once {" + f.written_class.name_in_upper + "}." + f.feature_name)
+					notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_once_call (f.written_class.name_in_upper, f.feature_name))
 				end
 			elseif not error_occurred then
 				check l_target_dynclass /= Void end
 				if l_dyntype = Void then
-					l_err_msg := "Unable to evaluate {" + f.written_class.name_in_upper + "}." + f.feature_name
-					l_err_msg.append_string ("%NThe compiled system does not include class type for " + l_target_dynclass.name_in_upper + ".")
-					notify_error_evaluation (l_err_msg)
+					notify_error_evaluation (
+								Debugger_names.msg_error_unable_to_evaluate_call (f.written_class.name_in_upper, f.feature_name, Void, 
+										Debugger_names.msg_error_type_not_compiled (l_target_dynclass.name_in_upper)
+									)
+							)
 				else
 						-- Get real feature
 					realf := ancestor_version_of (f, f.written_class)
@@ -269,15 +274,13 @@ feature -- Concrete evaluation
 						f_is_not_once: not f.is_once
 					end
 					if realf.is_deferred and f.is_deferred then
-						notify_error_evaluation ("Unable to evaluate deferred feature {" + f.written_class.name_in_upper + "}." + f.feature_name)
+						notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
 					else
 						effective_evaluate_routine (a_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
 						if last_result_value = Void then
-							l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
-							if a_addr /= Void then
-								l_err_msg.append_string (" on <" + a_addr + ">")
-							end
-							notify_error_evaluation (l_err_msg)
+							notify_error_evaluation (
+										Debugger_names.msg_error_unable_to_evaluate_call (l_dyntype.associated_class.name_in_upper, f.feature_name, a_addr, Void)
+									)
 						end
 					end
 				end

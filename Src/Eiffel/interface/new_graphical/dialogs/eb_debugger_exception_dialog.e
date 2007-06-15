@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exception_tag, a_exception_message: STRING_32) is
+	make (a_exception_tag, a_exception_message: STRING_GENERAL) is
 			-- Create Current with Exception message
 		do
 			default_create
@@ -101,24 +101,33 @@ feature -- Details
 	set_title_and_label (t,l: STRING_GENERAL) is
 			-- Set the title and the label of the window
 		require
-			t /= Void
-			l /= Void
+			title_not_void: t /= Void
+			label_not_void: l /= Void
 		do
 			window.set_title (t)
 			label.set_text (l)
 		end
 
-	set_exception_tag (t: STRING_32) is
+	set_exception_tag (t: STRING_GENERAL) is
 			-- Set tag and refresh display
 		do
-			tag := t
+			if t /= Void then
+				tag := t.as_string_32
+			else
+				tag := Void
+			end
 			display_exception_tag_and_message
 		end
 
-	set_exception_message (t: STRING_32) is
+	set_exception_message (t: STRING_GENERAL) is
 			-- Set message and refresh display
 		do
-			message := t
+			if t /= Void then
+				message := t.as_string_32
+			else
+				message := Void
+			end
+
 			display_exception_tag_and_message
 		end
 
@@ -150,16 +159,18 @@ feature -- Details
 			end
 		end
 
-	set_details (d: STRING_32) is
+	set_details (d: STRING_GENERAL) is
 			-- Add additional details
+		require
+			d_not_void: d /= Void
 		local
-			s: STRING_32
+			s32: STRING_32
 		do
-			s := d.twin
-			if s.occurrences ('%R') > 0 then
-				s.prune_all ('%R')
+			s32 := d.twin.as_string_32
+			if s32.occurrences ('%R') > 0 then
+				s32.prune_all ('%R')
 			end
-			details_text.set_text (s)
+			details_text.set_text (s32)
 			details_box.show
 		end
 

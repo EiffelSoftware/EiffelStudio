@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 				show_tooltips_if_activated := False
 				tooltip_repeater.set_interval (0)
 			end
-			if l_show_tooltips then
+			if l_show_tooltips and then not internal_tooltip.is_empty then
 				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
 			else

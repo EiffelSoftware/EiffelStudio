@@ -52,6 +52,18 @@
 						<label>Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6</label>
 					</link>
 				</item>
+				<item>
+					<link>
+						<url>07_57_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.6 and ISE Eiffel 5.7</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>08_60_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.7 and ISE Eiffel 6.0</label>
+					</link>
+				</item>
 			</list>
 		</output>
 		<output output="envision">
@@ -78,6 +90,18 @@
 					<link>
 						<url>06_56_release/index.xml</url>
 						<label>Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>07_57_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.6 and ISE Eiffel 5.7</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>08_60_release/index.xml</url>
+						<label>Major changes between ISE Eiffel 5.7 and ISE Eiffel 6.0</label>
 					</link>
 				</item>
 			</list>

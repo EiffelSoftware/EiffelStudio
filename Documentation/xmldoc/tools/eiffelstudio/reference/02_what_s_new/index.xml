@@ -13,6 +13,12 @@
 		<list ordered="false">
 			<item>
 				<link>
+					<url>Eiffel60.xml</url>
+					<label>EiffelStudio 6.0</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>Eiffel57.xml</url>
 					<label>EiffelStudio 5.7</label>
 				</link>

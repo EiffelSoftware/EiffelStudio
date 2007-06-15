@@ -1114,6 +1114,12 @@ rt_public void eif_synchronize_for_gc (void)
 	}
 }
 
+rt_public int eif_is_in_eiffel_code () 
+{
+	RT_GET_CONTEXT
+	return ((gc_thread_status == EIF_THREAD_RUNNING) ? 1 : 0);
+}
+
 rt_public void eif_enter_eiffel_code()
 	/* Synchronize current thread as we enter some Eiffel code */
 {

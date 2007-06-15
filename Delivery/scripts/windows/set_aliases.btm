@@ -48,7 +48,7 @@ alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PA
 
 REM CVS Commands: checkout, export
 alias co `call  %INIT_DIR\svn_command.bat co %$ >>& %INSTALL_LOG`
-alias exprt `call %INIT_DIR\svn_command.bat export %$ >>& %INSTALL_LOG`
+alias exprt `call %INIT_DIR\svn_command.bat --force export %$ >>& %INSTALL_LOG`
 alias exprtfile `call %INIT_DIR\svn_command.bat cat %$` 
 
 REM C Compilation

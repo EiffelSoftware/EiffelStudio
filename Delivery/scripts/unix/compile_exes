@@ -216,6 +216,56 @@ cd $EXPORT_DIR
 untgz_ccode estudio
 move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/estudio
 
+remtrace Compiling Gobo tools
+safe_md $INSTALL_DIR/library/gobo/spec/
+safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin
+
+remtrace geant
+cd $EXPORT_DIR
+untgz_ccode geant
+move geant $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geant
+
+remtrace gec
+cd $EXPORT_DIR
+untgz_ccode gec
+move gec $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gec
+
+remtrace gelex
+cd $EXPORT_DIR
+untgz_ccode gelex
+move gelex $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelex
+
+remtrace gelint
+cd $EXPORT_DIR
+untgz_ccode gelint
+move gelint $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gelint
+
+remtrace gepp
+cd $EXPORT_DIR
+untgz_ccode gepp
+move gepp $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gepp
+
+remtrace getest
+cd $EXPORT_DIR
+untgz_ccode getest
+move getest $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/getest
+
+remtrace gexace
+cd $EXPORT_DIR
+untgz_ccode gexace
+move gexace $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexace
+
+remtrace gexslt
+cd $EXPORT_DIR
+untgz_ccode gexslt
+move gexslt $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexslt
+
+remtrace geyacc
+cd $EXPORT_DIR
+untgz_ccode geyacc
+move geyacc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geyacc
+
 cd $EXPORT_DIR
 . compile_wizards
 

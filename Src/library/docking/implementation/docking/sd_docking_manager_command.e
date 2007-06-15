@@ -264,11 +264,13 @@ feature -- Commands
 			l_dialog: SD_ZONE_NAVIGATION_DIALOG
 			l_x, l_y: INTEGER
 		do
-			create l_dialog.make (a_shift_pressed, internal_docking_manager)
-			l_x := internal_docking_manager.main_window.screen_x + internal_docking_manager.main_window.width // 2 - l_dialog.width // 2
-			l_y := internal_docking_manager.main_window.screen_y + internal_docking_manager.main_window.height // 2 - l_dialog.height // 2
-			l_dialog.set_position (l_x, l_y)
-			l_dialog.show
+			if internal_docking_manager.query.has_content_visible then
+				create l_dialog.make (a_shift_pressed, internal_docking_manager)
+				l_x := internal_docking_manager.main_window.screen_x + internal_docking_manager.main_window.width // 2 - l_dialog.width // 2
+				l_y := internal_docking_manager.main_window.screen_y + internal_docking_manager.main_window.height // 2 - l_dialog.height // 2
+				l_dialog.set_position (l_x, l_y)
+				l_dialog.show
+			end
 		end
 
 	propagate_accelerators is

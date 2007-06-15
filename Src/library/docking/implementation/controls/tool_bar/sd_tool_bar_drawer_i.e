@@ -23,6 +23,8 @@ feature -- Commands
 			-- `a_rectangle' is rectangle area to be double buffered.
 		require
 			not_called: not is_start_draw_called
+			not_void: a_rectangle /= Void
+			not_void: tool_bar /= Void
 		deferred
 		ensure
 			called: is_start_draw_called
@@ -39,6 +41,9 @@ feature -- Commands
 
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
 			-- Draw `a_item' on `a_tool_bar' at `a_position'.
+		require
+			not_void: a_arguments /= Void
+			not_void: tool_bar /= Void
 		deferred
 		end
 
@@ -63,6 +68,9 @@ feature -- Query
 			-- If `start_draw' called?
 		deferred
 		end
+
+	tool_bar: SD_TOOL_BAR;
+			-- Tool bar which to draw.
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -85,24 +85,29 @@ feature -- Access
 		do
 			Result := interface_names.l_class
 		end
+
 	grid_head_line_number: STRING_GENERAL is
 		do
 			Result := interface_names.l_line
 		end
+
 	grid_head_found: STRING_GENERAL is
 		do
 			Result := interface_names.l_found
 		end
+
 	grid_head_context: STRING_GENERAL is
 		do
 			Result := interface_names.l_context
 		end
+
 	grid_head_file_location: STRING_GENERAL is
 		do
 			Result := interface_names.l_file_location
 		end
 
 	search_tool: EB_MULTI_SEARCH_TOOL
+			-- The search tool
 
 feature {EB_MULTI_SEARCH_TOOL} -- Access
 
@@ -116,13 +121,15 @@ feature {EB_MULTI_SEARCH_TOOL} -- Access
 			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space + 10)
 		end
 
-		column_border_space: INTEGER is 8
-				-- Padding space for column content	
+	column_border_space: INTEGER is 8
+			-- Padding space for column content	
 
-		multi_search_performer: MSR is
-			--
+	multi_search_performer: MSR is
+			-- Search performer from the search tool.
 		do
 			Result := search_tool.multi_search_performer
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {EB_MULTI_SEARCH_TOOL} -- Redraw
@@ -585,7 +592,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_item: MSR_ITEM
 		do
-			search_tool.set_check_class_succeed (true)
+			search_tool.set_check_class_succeed (True)
 			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
 				a_row.parent_row.expand
 				adjust_grid_column_width
@@ -611,8 +618,10 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_saving_string: STRING_GENERAL
 			l_start, l_end: INTEGER
 		do
-			search_tool.set_new_search_set (false)
-			l_text_item ?= multi_search_performer.item
+			search_tool.set_new_search_set (False)
+			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+				l_text_item ?= multi_search_performer.item
+			end
 			if l_text_item /= Void then
 				if search_tool.old_editor /= Void and then not search_tool.old_editor.is_recycled then
 					l_editor := search_tool.old_editor
@@ -706,7 +715,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_row: EV_GRID_ROW
 			loop_end: BOOLEAN
 		do
-			loop_end := false
+			loop_end := False
 			from
 				i := 1
 			until
@@ -715,7 +724,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				l_row := row (i)
 				if l_row.data /= Void and then l_row.data = a_data then
 					Result := l_row
-					loop_end := true
+					loop_end := True
 				end
 				i := i + 1
 			end
@@ -724,6 +733,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 invariant
 	report_summary_string_not_void: report_summary_string /= Void
 	search_tool_set: search_tool /= Void
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

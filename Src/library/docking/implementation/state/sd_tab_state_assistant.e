@@ -151,12 +151,12 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 						l_contents.item.user_widget.parent.prune (l_contents.item.user_widget)
 					end
 					create l_tab_state.make (l_contents.item, a_target_zone, l_orignal_direction)
-					l_contents.item.change_state (l_tab_state)
 					first_move_to_docking_zone := False
 				else
 					l_tab_zone ?= l_tab_state.zone
 					create l_tab_state.make_with_tab_zone (l_contents.item, l_tab_zone, l_orignal_direction)
 				end
+				l_contents.item.change_state (l_tab_state)
 				l_tab_state.set_direction (l_orignal_direction)
 				l_contents.forth
 			end

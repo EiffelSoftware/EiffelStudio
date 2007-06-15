@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 					-- Simulate a click on the default_cancel_button
 				process_standard_key_press (vk_escape)
 					-- Do not actually close the window.
-				if close_request_actions_internal /= Void then
+				if not is_destroyed and then close_request_actions_internal /= Void then
 					close_request_actions_internal.call (Void)
 				end
 				set_default_processing (False)

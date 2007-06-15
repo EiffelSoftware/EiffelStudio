@@ -74,6 +74,7 @@ feature  -- Redefine
 
 			l_floating_zone ?= l_caller
 			if not Result and  l_floating_zone = Void then
+				check same_caller: l_caller = l_caller.state.zone end
 				l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
 				Result := True
 			end

@@ -350,7 +350,7 @@ feature {NONE} -- Events
 	on_start_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
 			-- User pressed pointer button on `Current'.
 		do
-			if world.capture_figure = Void then
+			if world /= Void and then world.capture_figure = Void then
 
 				if (ev_application /= Void and then not ev_application.ctrl_pressed) or else ev_application = Void then
 

@@ -63,7 +63,7 @@ feature -- Property
 			-- `a_context_class': Used to resolve formals to their constraints.		
 		require
 			a_context_class_not_void: a_context_class /= Void
-			a_context_class_sane: a_context_class.generics /= Void and then a_context_class.generics.count >= position
+			a_context_class_valid: a_context_class.is_generic and then a_context_class.is_valid_formal_position (position)
 		local
 			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
 		do

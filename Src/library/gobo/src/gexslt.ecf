@@ -20,7 +20,11 @@
 		<setting name="msil_generation" value="false"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="false"/>
-		<external_include location="some123/fake432/path567 -Od"/>
+		<external_include location="some123/fake432/path567 -Od">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<cluster name="gexslt" location="$ISE_LIBRARY\library\gobo\svn\src\gexslt\" recursive="true"/>

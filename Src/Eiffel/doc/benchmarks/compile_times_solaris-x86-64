@@ -1,9 +1,25 @@
 Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 
+6.0
+===
+
+#New expanded generic reattachment:
+6.0.6.8702 RTEA (4773 classes, EIFGEN size: 333MB, exe size: 47432808 bytes):
+962.27u 27.11s 21:45.42 75.7%
+954.39u 26.94s 21:24.48 76.3%
+
+intermediate bootstrap:
+920.08u 26.09s 20:16.07 77.8%
+902.98u 26.19s 20:30.43 75.5%
+
+6.0.6.8277 RTEA (4773 classes, EIFGEN size 1.2GB, exe size: 46221128 bytes ):
+883.88u 26.65s 24:27.95 62.0%
+866.44u 26.02s 20:55.18 71.1%
+
 5.7
 ===
 
-5.7.1328 RTA (4243 classes):
+5.7.1328 RTEA (4243 classes):
 589.05u 19.81s 14:32.67 69.7%
 595.36u 18.70s 14:27.55 70.7%
 591.82u 18.74s 14:40.54 69.3%

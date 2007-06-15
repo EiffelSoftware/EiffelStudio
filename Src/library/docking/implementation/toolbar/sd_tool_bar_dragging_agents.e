@@ -107,7 +107,8 @@ feature -- Agents
 			end
 		ensure
 			capture_enable: internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating)
-				implies zone.tool_bar.has_capture and internal_docker_mediator /= Void
+				implies internal_docker_mediator /= Void
+			-- We can't not guaranntee caller have capture on GTK, since we disable it temporty when floating from docking(or docking from floating).
 		end
 
 	on_drag_area_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

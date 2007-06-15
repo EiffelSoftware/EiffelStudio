@@ -170,7 +170,7 @@ feature -- Query
 			-- Content which `Current' holded.
 		deferred
 		ensure
-			not_void: Result /= Void
+			not_void: not is_floating_zone implies Result /= Void
 		end
 
 	extend (a_content: SD_CONTENT) is
@@ -197,6 +197,15 @@ feature -- Query
 			-- If current maximized?
 		do
 			Result := False
+		end
+
+	is_floating_zone: BOOLEAN is
+			-- If current an instance of SD_FLOATNG_ZONE?
+		local
+			l_floating_zone: SD_FLOATING_ZONE
+		do
+			l_floating_zone ?= Current
+			Result := l_floating_zone /= Void
 		end
 
 feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config.

@@ -53,7 +53,7 @@ feature -- Open inner container data.
 		do
 			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
 			internal_docking_manager.command.recover_normal_state
-			
+
 			internal_docking_manager.command.resize (True)
 			internal_docking_manager.property.set_is_opening_config (True)
 
@@ -356,7 +356,9 @@ feature {NONE} -- Implementation
 						l_old_split_position := l_top_split_area.split_position
 						l_top_split_area.prune (l_temp_item)
 						l_top_split_area.extend (l_temp_split_area)
-						l_top_split_area.set_split_position (l_old_split_position)
+						if l_old_split_position >= l_top_split_area.minimum_split_position and l_old_split_position <= l_top_split_area.maximum_split_position then
+							l_top_split_area.set_split_position (l_old_split_position)
+						end
 						Result := l_temp_split_area
 					else
 					-- If top parent both side only have editors zones

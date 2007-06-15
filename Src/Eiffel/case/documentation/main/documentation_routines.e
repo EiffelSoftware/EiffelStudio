@@ -419,7 +419,9 @@ feature -- Routines
 					until
 						invariants.after
 					loop
-						s := invariants.item.tag.name
+						if invariants.item.tag /= Void then
+							s := invariants.item.tag.name
+						end
 						if s /= Void and then not s.is_empty then
 							s := s.twin
 							s.replace_substring_all ("_", " ")
@@ -827,7 +829,9 @@ feature {NONE} -- Indexing clauses
 					indexes.after
 				loop
 					ii := indexes.item
-					t := ii.tag.name
+					if ii.tag /= Void then
+						t := ii.tag.name
+					end
 					if t = Void then
 						t := "description"
 							-- It is legal Eiffel syntax to omit first tag

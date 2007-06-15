@@ -198,14 +198,14 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 				l_left := text_left
 				l_width := text_width
 
-				l_top := tool_bar.item_y (Current) + tool_bar.border_width - 1
+				l_top := tool_bar.item_y (Current) + internal_shared.tool_bar_border_width - 1
 
 				create l_platform
 				if l_platform.is_windows then
 					l_top := l_top - internal_shared.tool_bar_font.height // 3 + 1
 				end
 
-				l_height := tool_bar.row_height - tool_bar.border_width
+				l_height := tool_bar.row_height - internal_shared.tool_bar_border_width
 
 				create Result.make (l_left, l_top, l_width, l_height)
 

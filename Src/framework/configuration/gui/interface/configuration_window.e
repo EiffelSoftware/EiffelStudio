@@ -195,7 +195,6 @@ feature {NONE}-- Initialization
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
 
-			close_request_actions.extend (agent on_cancel)
 			show_actions.extend (agent section_tree.set_focus)
 
 				-- add accelerator for opening the context menu

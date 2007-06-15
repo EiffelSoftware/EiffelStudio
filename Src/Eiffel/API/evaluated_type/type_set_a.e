@@ -449,8 +449,7 @@ feature -- Access
 		do
 			Result := e_feature_state_by_name_id (names_heap.id_of (a_name))
 		ensure
-			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (a_name)).features_found_count = Result.features_found_count and then
-								feature_i_state_by_name_id (names_heap.id_of (a_name)).class_type_of_feature.same_as (Result.class_type_of_feature)
+			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (a_name)).features_found_count = Result.features_found_count 
 		end
 
 	e_feature_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is

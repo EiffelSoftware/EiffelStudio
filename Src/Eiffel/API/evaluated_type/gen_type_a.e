@@ -889,7 +889,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- A creation procedure has to be specified, so if none is
 						-- specified or if there is no creation procedure in the class
 						-- corresponding to `to_check', this is not valid.
-
 					if
 						creators_table /= Void and then not creators_table.is_empty
 					then

@@ -369,6 +369,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := develop_window.commands.editor_paste_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (develop_window.commands.editor_paste_cmd)
+			l_command_controller.add_edition_command (develop_window.commands.editor_paste_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------

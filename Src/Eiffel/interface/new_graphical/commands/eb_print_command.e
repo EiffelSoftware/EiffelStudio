@@ -77,18 +77,22 @@ feature -- Execution
 		local
 			printer: EB_PRINTER
 			l_txt_gen: EB_PRINTER_TEXT_GENERATOR
+			l_editor: EB_CLICKABLE_EDITOR
 		do
-			create l_txt_gen.make (dev_window.editors_manager.current_editor)
-			if not dev_window.is_empty then
-				create printer.make
-				printer.set_text (l_txt_gen.text_for_printing)
-				printer.set_window (dev_window.window)
-				printer.set_job_name (dev_window.stone.history_name)
-				if not use_external_editor then
-					printer.ask_and_print
-				else
-					printer.set_external_command (external_editor)
-					printer.print_via_command
+			l_editor := dev_window.editors_manager.current_editor
+			if l_editor /= Void then
+				create l_txt_gen.make (l_editor)
+				if not dev_window.is_empty then
+					create printer.make
+					printer.set_text (l_txt_gen.text_for_printing)
+					printer.set_window (dev_window.window)
+					printer.set_job_name (dev_window.stone.history_name)
+					if not use_external_editor then
+						printer.ask_and_print
+					else
+						printer.set_external_command (external_editor)
+						printer.print_via_command
+					end
 				end
 			end
 		end

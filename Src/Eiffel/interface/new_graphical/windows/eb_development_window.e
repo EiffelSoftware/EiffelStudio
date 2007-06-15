@@ -829,8 +829,8 @@ feature -- Resource Update
 		local
 			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 		do
-			l_commands := commands.editor_commands
-			if editors_manager.editors.count = 0 then
+			if editors_manager.editors.is_empty then
+				l_commands := commands.editor_commands
 				from
 					l_commands.start
 				until
@@ -839,6 +839,7 @@ feature -- Resource Update
 					l_commands.item.disable_sensitive
 					l_commands.forth
 				end
+				commands.print_cmd.disable_sensitive
 			end
 		end
 
@@ -2113,17 +2114,23 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 
 	cut_selection is
 			-- Cut the selection in the current editor.
+		local
+			l_editor: EB_CLICKABLE_EDITOR
 		do
-			if ui.current_editor /= Void then
-				ui.current_editor.cut_selection
+			l_editor := ui.current_editor
+			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then
+				l_editor.run_if_editable (agent l_editor.cut_selection)
 			end
 		end
 
 	copy_selection is
 			-- Cut the selection in the current editor.
+		local
+			l_editor: EB_CLICKABLE_EDITOR
 		do
-			if ui.current_editor /= Void then
-				ui.current_editor.copy_selection
+			l_editor := ui.current_editor
+			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then
+				l_editor.copy_selection
 			end
 		end
 

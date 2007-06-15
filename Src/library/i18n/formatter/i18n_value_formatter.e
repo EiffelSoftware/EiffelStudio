@@ -32,9 +32,9 @@ feature -- Integer Formatting functions
 	format_integer_8 (a_integer_8: INTEGER_8): STRING_32 is
 		do
 			if a_integer_8 < 0 then
-				create Result.make_from_string (negative_sign+format_integer_part (a_integer_8.abs.out))
+				create Result.make_from_string (negative_sign + format_integer_part (a_integer_8.abs.out))
 			else
-				create Result.make_from_string (positive_sign+format_integer_part (a_integer_8.abs.out))
+				create Result.make_from_string (positive_sign + format_integer_part (a_integer_8.abs.out))
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -43,9 +43,9 @@ feature -- Integer Formatting functions
 	format_integer_16 (a_integer_16: INTEGER_16): STRING_32 is
 		do
 			if a_integer_16 < 0 then
-				create Result.make_from_string (negative_sign+format_integer_part (a_integer_16.abs.out))
+				create Result.make_from_string (negative_sign + format_integer_part (a_integer_16.abs.out))
 			else
-				create Result.make_from_string (positive_sign+format_integer_part (a_integer_16.abs.out))
+				create Result.make_from_string (positive_sign + format_integer_part (a_integer_16.abs.out))
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -54,9 +54,9 @@ feature -- Integer Formatting functions
 	format_integer_32 (a_integer_32: INTEGER_32): STRING_32 is
 		do
 			if a_integer_32 < 0 then
-				create Result.make_from_string (negative_sign+format_integer_part (a_integer_32.abs.out))
+				create Result.make_from_string (negative_sign + format_integer_part (a_integer_32.abs.out))
 			else
-				create Result.make_from_string (positive_sign+format_integer_part (a_integer_32.abs.out))
+				create Result.make_from_string (positive_sign + format_integer_part (a_integer_32.abs.out))
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -65,9 +65,9 @@ feature -- Integer Formatting functions
 	format_integer_64 (a_integer_64: INTEGER_64): STRING_32 is
 		do
 			if a_integer_64 < 0 then
-				create Result.make_from_string (negative_sign+format_integer_part (a_integer_64.abs.out))
+				create Result.make_from_string (negative_sign + format_integer_part (a_integer_64.abs.out))
 			else
-				create Result.make_from_string (positive_sign+format_integer_part (a_integer_64.abs.out))
+				create Result.make_from_string (positive_sign + format_integer_part (a_integer_64.abs.out))
 			end
 		ensure
 			Result_exists: Result /= Void
@@ -87,7 +87,7 @@ feature -- Real formatting functions
 				sign := positive_sign
 			end
 			integer_part := a_real_32.truncated_to_integer
-			fractional_part := ((a_real_32 - integer_part)*10^numbers_after_decimal_separator).rounded
+			fractional_part := ((a_real_32 - integer_part) * 10^numbers_after_decimal_separator).rounded
 			create Result.make_from_string (sign +
 											format_integer_part (integer_part.abs.out) +
 											decimal_separator +
@@ -108,7 +108,7 @@ feature -- Real formatting functions
 				sign := positive_sign
 			end
 			integer_part := a_real_64.truncated_to_integer
-			fractional_part := ((a_real_64 - integer_part)*10^numbers_after_decimal_separator).rounded
+			fractional_part := ((a_real_64 - integer_part) * 10^numbers_after_decimal_separator).rounded
 			create Result.make_from_string (sign +
 											format_integer_part (integer_part.abs.out) +
 											decimal_separator +
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 						-- Current item is the number of digits that comprise the current group.
 					if pos - grouping.item (i) > 0 then
 							-- there are enougth elements for a new group
-						Result.prepend (a_string.substring (pos-grouping.item (i)+1,pos))
+						Result.prepend (a_string.substring (pos - grouping.item (i) + 1, pos))
 						Result.prepend (group_separator)
 						pos := pos-grouping.item (i)
 					else
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 						Result.prepend (a_string.substring (1, pos))
 						pos := 0
 					end
-				elseif i-1 >= grouping.lower then
+				elseif i - 1 >= grouping.lower then
 						-- The previous element has to be repeatedly used for the remainder of the digits.
 					from
 					variant
@@ -173,21 +173,21 @@ feature {NONE} -- Implementation
 					until
 						pos < 1	-- no more digits
 					loop
-						if pos - grouping.item (i-1) > 0 then
+						if pos - grouping.item (i - 1) > 0 then
 							-- there are enougth elements for a new group
-							Result.prepend (a_string.substring (pos-grouping.item (i-1)+1, pos))
+							Result.prepend (a_string.substring (pos - grouping.item (i - 1) + 1, pos))
 							Result.prepend (group_separator)
-							pos := pos-grouping.item (i-1)
+							pos := pos - grouping.item (i - 1)
 						else
 								--run out of digits, append rest and finish
-							Result.prepend (a_string.substring (1,pos))
+							Result.prepend (a_string.substring (1, pos))
 							pos := 0
 						end
 					end
 					i := grouping.upper -- to terminate loop
 				else	-- grouping.item (i) <= 0 and i-1 < grouping.lower
 						-- i.e. no valid grouping array. Append rest to result and finish
-					Result.prepend (a_string.substring (1,pos))
+					Result.prepend (a_string.substring (1, pos))
 					i := grouping.upper -- to terminate loop
 				end
 				i := i + 1
@@ -202,12 +202,11 @@ feature {NONE} -- Implementation
 			a_string_exists: a_string /= Void
 			is_integer: a_string.is_integer
 		do
-
 			if a_string.is_equal ("0") then
 					-- real part is equal 0
-				create Result.make_filled ('0',numbers_after_decimal_separator)
+				create Result.make_filled ('0', numbers_after_decimal_separator)
 			else
-				create Result.make_from_string (a_string.substring (1,numbers_after_decimal_separator))
+				create Result.make_from_string (a_string.substring (1, numbers_after_decimal_separator))
 			end
 		ensure
 			Result_exists: Result /= Void

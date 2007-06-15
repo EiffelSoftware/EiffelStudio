@@ -135,3 +135,96 @@ if [ ! -f estudio.tar.bz2 ]; then
 fi
 clean_project
 move estudio.tar.bz2 $EXPORT_DIR
+
+remtrace Compiling Gobo tools
+cd $EIFFEL_SRC/library/gobo/src
+clean_project
+remtrace geant
+finalize geant.ecf geant
+tgz_ccode geant geant.tar.bz2
+if [ ! -f geant.tar.bz2 ]; then
+    echo Could not finalize a new geant 
+    CANCEL
+fi
+clean_project
+move geant.tar.bz2 $EXPORT_DIR
+
+remtrace gec
+finalize gec.ecf gec
+tgz_ccode gec gec.tar.bz2
+if [ ! -f gec.tar.bz2 ]; then
+	echo Could not finalize a new gec
+	CANCEL
+fi
+clean_project
+move gec.tar.bz2 $EXPORT_DIR
+
+remtrace gelex
+finalize gelex.ecf gelex
+tgz_ccode gelex gelex.tar.bz2
+if [ ! -f gelex.tar.bz2 ]; then
+	echo Could not finalize a new gelex
+	CANCEL
+fi
+clean_project
+move gelex.tar.bz2 $EXPORT_DIR
+
+remtrace gelint
+finalize gelint.ecf gelint
+tgz_ccode gelint gelint.tar.bz2
+if [ ! -f gelint.tar.bz2 ]; then
+	echo Could not finalize a new gelint
+	CANCEL
+fi
+clean_project
+move gelint.tar.bz2 $EXPORT_DIR
+
+remtrace gepp
+finalize gepp.ecf gepp
+tgz_ccode gepp gepp.tar.bz2
+if [ ! -f gepp.tar.bz2 ]; then
+	echo Could not finalize a new gepp
+	CANCEL
+fi
+clean_project
+move gepp.tar.bz2 $EXPORT_DIR
+
+remtrace getest
+finalize getest.ecf getest
+tgz_ccode getest getest.tar.bz2
+if [ ! -f getest.tar.bz2 ]; then
+	echo Could not finalize a new getest
+	CANCEL
+fi
+clean_project
+move getest.tar.bz2 $EXPORT_DIR
+
+remtrace gexace
+finalize gexace.ecf gexace
+tgz_ccode gexace gexace.tar.bz2
+if [ ! -f gexace.tar.bz2 ]; then
+	echo Could not finalize a new gexace
+	CANCEL
+fi
+clean_project
+move gexace.tar.bz2 $EXPORT_DIR
+
+remtrace gexslt
+finalize gexslt.ecf gexslt
+tgz_ccode gexslt gexslt.tar.bz2
+if [ ! -f gexslt.tar.bz2 ]; then
+	echo Could not finalize a new gexslt
+	CANCEL
+fi
+clean_project
+move gexslt.tar.bz2 $EXPORT_DIR
+
+remtrace geyacc
+finalize geyacc.ecf geyacc
+tgz_ccode geyacc geyacc.tar.bz2
+if [ ! -f geyacc.tar.bz2 ]; then
+	echo Could not finalize a new geyacc
+	CANCEL
+fi
+clean_project
+move geyacc.tar.bz2 $EXPORT_DIR

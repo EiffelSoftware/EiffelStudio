@@ -75,6 +75,25 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
+	has_content_visible: BOOLEAN is
+			--  Has visible contents except editor place holder content?
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+
+				l_contents := internal_docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after or Result
+			loop
+				if l_contents.item.is_visible and then l_contents.item /= internal_docking_manager.zones.place_holder_content then
+					Result := True
+				end
+				l_contents.forth
+			end
+		end
+
 	content_by_title_for_restore (a_unique_title: STRING_GENERAL): SD_CONTENT is
 			-- Content by a_unique_title. Result = Void if not found.
 		require

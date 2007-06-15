@@ -71,9 +71,6 @@ feature{NONE} -- Initlization
 			
 feature -- Redefine
 
-	tool_bar: SD_TOOL_BAR
-			-- Tool bar which to draw on.
-
 	internal_buffered_dc: WEL_DC
 			-- Buffered dc.
 

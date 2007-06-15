@@ -110,6 +110,7 @@ RT_LNK void * eif_pointer_identity (void *);
 #if defined(ISE_GC) && defined(EIF_THREADS)
 RT_LNK int volatile eif_is_gc_collecting;
 RT_LNK void eif_synchronize_for_gc(void);
+RT_LNK int eif_is_in_eiffel_code(void);
 RT_LNK void eif_enter_eiffel_code(void);
 RT_LNK void eif_exit_eiffel_code(void);
 #define RTGC	if (eif_is_gc_collecting) eif_synchronize_for_gc()
@@ -117,12 +118,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define EIF_EXIT_EIFFEL		eif_exit_eiffel_code()
 #define	EIF_ENTER_C			EIF_EXIT_EIFFEL
 #define	EIF_EXIT_C			EIF_ENTER_EIFFEL
+#define	EIF_IS_IN_EIFFEL_CODE		eif_is_in_eiffel_code()
 #else
 #define RTGC
 #define EIF_ENTER_EIFFEL
 #define EIF_EXIT_EIFFEL
 #define EIF_ENTER_C
 #define EIF_EXIT_C
+#define	EIF_IS_IN_EIFFEL_CODE		1
 #endif
 
 /* Function pointer call from C to Eiffel which makes sure that all arguments are correctly

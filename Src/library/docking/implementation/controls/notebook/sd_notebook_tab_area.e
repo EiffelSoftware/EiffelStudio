@@ -185,8 +185,9 @@ feature -- Command
 			-- `a_width' is tab areas' width, not include other EV_TOOL_BAR.
 		do
 			if is_displayed then
-				if not ignore_resize then
+				if not ignore_resize and a_width /= last_resize_width then
 					resize_tabs (a_width)
+					last_resize_width := a_width
 					debug ("docking")
 						print ("%N SD_NOTEBOOK_TAB_AREA on_resize")
 					end
@@ -463,6 +464,10 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Internal attributes
 			-- Notebook which Current belong to.
 
 feature {NONE}  -- Implementation attributes
+
+	last_resize_width: INTEGER
+			-- We have to remember last width in `on_resize', otherwise there will be infinite loop.
+			-- See bug#13065.
 
 	internal_one_not_enough_space: BOOLEAN
 			-- If current space not enough to draw selected tab?

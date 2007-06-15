@@ -77,6 +77,7 @@ feature{NONE} -- Actions
 			if tools_dialog.has_changed then
 				customized_tool_manager.store_descriptors (tools_dialog.descriptors)
 				reload_customized_tool (True)
+				reload_customized_formatter (True)
 			end
 		end
 

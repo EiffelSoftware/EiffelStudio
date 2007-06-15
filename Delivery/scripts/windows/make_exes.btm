@@ -246,6 +246,8 @@ endiff
 move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Gobo tools
+safe_md %STUDIO_DIR\library\gobo\spec
+safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM
 safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 cdd %EIFFEL_SRC\library\gobo\src
 clean_project

@@ -79,9 +79,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_manager)
 			create multi_search_performer.make
-			new_search_set := true
-			is_text_new_loaded := true
-			check_class_succeed := true
+			new_search_set := True
+			is_text_new_loaded := True
+			check_class_succeed := True
 			create changed_classes.make (0)
 			build_actions
 			prepare_interface
@@ -242,10 +242,10 @@ feature -- Status report
 					(a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index_in_unix_text) and
 					(a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index_in_unix_text + 1)
 				then
-					Result := true
+					Result := True
 				end
 				if l_text_item = Void then
-					Result := true
+					Result := True
 				end
 			end
 		end
@@ -283,7 +283,7 @@ feature -- Status setting
 	force_new_search is
 			-- Force new search.
 		do
-			new_search_set := true
+			new_search_set := True
 		end
 
 	enable_incremental_search is
@@ -346,9 +346,9 @@ feature -- Action
 			-- Highlight previous found item if possible.
 			-- If search is not launched, launch it.
 		do
-			temp_reverse := true
+			temp_reverse := True
 			go_to_next_found
-			temp_reverse := false
+			temp_reverse := False
 		end
 
 	replace_current is
@@ -363,7 +363,7 @@ feature -- Action
 		do
 			l_start := 0
 			l_end := 1
-			check_class_succeed := true
+			check_class_succeed := True
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_item ?= multi_search_performer.item
 				if l_item /= Void then
@@ -384,7 +384,7 @@ feature -- Action
 				 l_class_i ?= multi_search_performer.item.data
 				 if l_class_i /= Void then
 				 	 if not is_class_i_editing (l_class_i) then
-				 	 	l_check := true
+				 	 	l_check := True
 				 	 end
 				 end
 			end
@@ -423,7 +423,7 @@ feature -- Action
 		do
 			if is_current_editor_searched then
 				if is_editor_ready and then not editor.is_editable then
-					hindered := true
+					hindered := True
 					editor.display_not_editable_warning_message
 				end
 			end
@@ -542,10 +542,10 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 		end
 
 	force_not_changed is
-			-- Set `new_search' and `is_text_changed_in_editor' to false.
+			-- Set `new_search' and `is_text_changed_in_editor' to False.
 		do
-			new_search_set := false
-			is_text_changed_in_editor := false
+			new_search_set := False
+			is_text_changed_in_editor := False
 		end
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
@@ -623,7 +623,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 				custom_button.enable_select
 			else
 				check
-					default_xml_not_correctly_done: false
+					default_xml_not_correctly_done: False
 				end
 			end
 		end
@@ -634,7 +634,7 @@ feature {NONE} -- Shortcut button actions
 			-- New search
 		do
 			force_new_search
-			changed_by_replace := false
+			changed_by_replace := False
 			new_search_or_go_next
 		end
 
@@ -679,7 +679,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 	new_search_or_go_next is
 			-- If new search is not necessary, go to next found.
 		do
-			check_class_succeed := true
+			check_class_succeed := True
 			if new_search_set or not multi_search_performer.is_search_launched then
 				dispatch_search
 				select_and_show
@@ -731,10 +731,10 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 							end
 						elseif search_backward_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
 							if not keyword_field.text.is_empty and then search_only then
-								temp_reverse := true
+								temp_reverse := True
 								new_search_or_go_next
 								ev_application.do_once_on_idle (agent editor.set_focus)
-								temp_reverse := false
+								temp_reverse := False
 							end
 						elseif search_previous_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
 							if editor.has_selection then
@@ -747,10 +747,10 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 								end
 							end
 							if not keyword_field.text.is_empty and then search_only then
-								temp_reverse := true
+								temp_reverse := True
 								new_search_or_go_next
 								ev_application.do_once_on_idle (agent editor.set_focus)
-								temp_reverse := false
+								temp_reverse := False
 							end
 						elseif search_next_selection_shortcut.matches (k, l_alt, l_ctrl, l_shift) then
 							if editor.has_selection then
@@ -951,22 +951,22 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			l_class_stone: CLASSI_STONE
 		do
 			force_new_search
-			is_text_changed_in_editor := true
+			is_text_changed_in_editor := True
 			if is_text_new_loaded and then multi_search_performer.is_search_launched and then not multi_search_performer.is_empty then
 				l_class_stone ?= develop_window.stone
 				if l_class_stone /= Void and not changed_by_replace then
 					class_changed (l_class_stone.class_i)
 				end
-				is_text_new_loaded := false
+				is_text_new_loaded := False
 			end
-			set_changed_by_replace (false)
+			set_changed_by_replace (False)
 		end
 
 	on_text_reset is
 			-- Obsever reset action.
 		do
-			is_text_changed_in_editor := false
-			is_text_new_loaded := true
+			is_text_changed_in_editor := False
+			is_text_new_loaded := True
 		end
 
 	enable_disable_search_button is
@@ -1040,12 +1040,12 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			if notebook /= Void and then not notebook.is_destroyed then
 				inspect notebook.pointed_tab_index
 				when 1 then
-					Result := true
+					Result := True
 				when 2 then
 					l_classi_stone ?= a_stone
 					l_cluster_stone ?= a_stone
 					if l_classi_stone /= Void or else l_cluster_stone /= Void then
-						Result := true
+						Result := True
 					end
 				else
 				end
@@ -1276,7 +1276,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 						text_strategy.set_case_insensitive
 					end
 					text_strategy.set_regular_expression_used (is_regular_expression_used)
-					text_strategy.set_whole_word_matched (false)
+					text_strategy.set_whole_word_matched (False)
 					if class_i /= Void then
 						text_strategy.set_data (class_i)
 						text_strategy.set_date (class_i.date)
@@ -1477,7 +1477,7 @@ feature {NONE} -- Replacement Implementation
 		local
 			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
 		do
-			check_class_succeed := true
+			check_class_succeed := True
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_replacing := replace_combo_box.text
 			if is_current_editor_searched then
@@ -1551,7 +1551,7 @@ feature -- Custom search scope
 		local
 			l_item: EV_LIST_ITEM
 		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			l_item := scope_list.retrieve_item_by_data (a_class, False)
 			if l_item = Void then
 				create l_item.make_with_text (a_class.name)
 				l_item.set_tooltip (group_name_presentation (".", "", a_class.group) + "." + a_class.name)
@@ -1574,7 +1574,7 @@ feature -- Custom search scope
 		local
 			l_item: EV_LIST_ITEM
 		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			l_item := scope_list.retrieve_item_by_data (a_class, False)
 			scope_list.prune (l_item)
 			force_new_search
 		end
@@ -1587,7 +1587,7 @@ feature -- Custom search scope
 			l_item: EV_LIST_ITEM
 		do
 			if not a_group.is_assembly and not a_group.is_physical_assembly then
-				l_item := scope_list.retrieve_item_by_data (a_group, false)
+				l_item := scope_list.retrieve_item_by_data (a_group, False)
 				if l_item = Void then
 					create l_item.make_with_text (a_group.name)
 					l_item.set_tooltip (group_name_presentation (".", "", a_group))
@@ -1611,7 +1611,7 @@ feature -- Custom search scope
 		local
 			l_item: EV_LIST_ITEM
 		do
-			l_item := scope_list.retrieve_item_by_data (a_group, false)
+			l_item := scope_list.retrieve_item_by_data (a_group, False)
 			scope_list.prune (l_item)
 			force_new_search
 		end
@@ -1726,19 +1726,19 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 					if l_text_item /= Void and then ((old_editor = Void or old_editor = editor) implies is_item_source_changed (l_text_item)) then
 						multi_search_performer.go_to_next_text_item (b)
 						select_current_row
-						l_selected := true
+						l_selected := True
 					end
 				end
 				if not l_selected then
 					multi_search_performer.go_to_closest_item (l_pos, b, l_class_i, (is_main_editor and develop_window.class_name /= Void) or not is_current_editor_searched)
-					go_to_next_need_select_and_show := true
+					go_to_next_need_select_and_show := True
 					if (not multi_search_performer.off) and then is_item_source_changed (multi_search_performer.item) then
 						multi_search_performer.start
 						if l_text_item /= Void then
 							multi_search_performer.search (l_text_item)
 						end
 						multi_search_performer.go_to_next_text_item (b)
-						go_to_next_need_select_and_show := false
+						go_to_next_need_select_and_show := False
 						select_current_row
 					end
 				end
@@ -1750,7 +1750,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		do
 			if go_to_next_need_select_and_show then
 				select_and_show
-				go_to_next_need_select_and_show := false
+				go_to_next_need_select_and_show := False
 			end
 		end
 
@@ -1765,7 +1765,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			l_stone, l_new_stone: STONE
 			l_class_i: CLASS_I
 		do
-			check_class_succeed := true
+			check_class_succeed := True
 			if not multi_search_performer.off then
 				l_stone := develop_window.stone
 				l_item := multi_search_performer.item
@@ -1776,17 +1776,17 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 						if l_class_i /= Void then
 							develop_window.set_stone (l_new_stone)
 							if l_stone /= develop_window.stone then
-								is_text_changed_in_editor := false
+								is_text_changed_in_editor := False
 							else
 								loaded_actions.wipe_out
-								check_class_succeed := false
+								check_class_succeed := False
 							end
 						end
 					elseif not is_current_editor_searched then
 						develop_window.set_stone (l_new_stone)
 						if l_stone = develop_window.stone then
 							loaded_actions.wipe_out
-							check_class_succeed := false
+							check_class_succeed := False
 						end
 					end
 				end
@@ -1840,7 +1840,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 						loaded_actions.remove
 						l_pro.call (Void)
 					else
-						loop_end := true
+						loop_end := True
 					end
 				end
 				if blocking_actions_times <= 1 then
@@ -2029,7 +2029,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				loop
 					l_editor := l.item.editors_manager.current_editor
 					if l_editor /= Void and then l_editor.is_editable and l.item /= Void then
-						Result := true
+						Result := True
 					end
 					l.forth
 				end
@@ -2169,6 +2169,9 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		do
 			saved_cursor := multi_search_performer.index
 		end
+
+invariant
+	multi_search_performer_not_void: multi_search_performer /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

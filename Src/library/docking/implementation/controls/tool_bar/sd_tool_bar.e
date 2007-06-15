@@ -636,7 +636,9 @@ feature {NONE} -- Agents
 				loop
 					l_item := l_items.item
 					l_item.on_pointer_release (a_x, a_y)
-					if l_item.is_need_redraw then
+					if l_item.is_displayed and then l_item.is_need_redraw and then l_item.tool_bar /= Void and then not l_item.tool_bar.is_destroyed then
+						--| FIXME According to LarryL, if l_item.is_displayed is False, then the toolbar is Void, this appears to not be the case in
+						--| some circumstances so the protection has been added.
 						drawer.start_draw (l_item.rectangle)
 						redraw_item (l_item)
 						drawer.end_draw

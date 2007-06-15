@@ -169,7 +169,7 @@ feature -- Access
 	items_getter: FUNCTION [ANY, TUPLE, LIST [G]]
 			-- Agent to get information of `items'
 
-	tool_table: HASH_TABLE [TUPLE [display_name: STRING_GENERAL; pixmap: EV_PIXMAP], STRING] is
+	tool_table: HASH_TABLE [TUPLE [display_name: STRING_32; pixmap: EV_PIXMAP], STRING] is
 			-- Table of supported tools			
 		local
 			l_tool_info: like tool_info
@@ -189,7 +189,7 @@ feature -- Access
 				l_tools.after
 			loop
 				l_tool_info := tool_info (l_tools.item)
-				Result.put ([l_tool_info.display_name, l_tool_info.pixmap], l_tool_info.store_name)
+				Result.put ([l_tool_info.display_name.as_string_32, l_tool_info.pixmap], l_tool_info.store_name)
 				l_tools.forth
 			end
 		ensure
@@ -601,10 +601,10 @@ feature{NONE} -- Implementation/Sorting
 			-- Tester to decide order between `a_item' and `a_item' according sorting order specified by `a_order'
 		do
 			if a_order = ascending_order then
-				Result := name_of_item (a_item) <= name_of_item (b_item)
+				Result := name_of_item (a_item).as_string_32 <= name_of_item (b_item).as_string_32
 			elseif a_order = descending_order then
 
-				Result := name_of_item (a_item) > name_of_item (b_item)
+				Result := name_of_item (a_item).as_string_32 > name_of_item (b_item).as_string_32
 			end
 		end
 
@@ -632,4 +632,5 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 end
+
 

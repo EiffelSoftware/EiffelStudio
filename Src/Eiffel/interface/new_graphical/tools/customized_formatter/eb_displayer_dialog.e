@@ -40,7 +40,6 @@ feature{NONE} -- Initialization
 		do
 			create display_tool_names.make (10)
 			create tool_name_table.make (10)
-			create display_name_table.make (10)
 			set_formatter_name (a_formatter_name)
 			set_tools (a_tools)
 			default_create
@@ -60,7 +59,7 @@ feature{NONE} -- Initialization
 			grid.column (2).set_title (interface_names.t_tool_name)
 			grid.column (3).set_title (interface_names.t_formatter_displayer_name)
 			grid.key_press_actions.extend (agent on_key_pressed_in_grid)
-			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [STRING_GENERAL]}.make (agent tool_name_tester, ascending_order))
+			grid_wrapper.set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [STRING_32, STRING]]}.make (agent tool_name_tester, ascending_order))
 			grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string ("2:1"))
 			grid_wrapper.set_sort_action (agent sort_agent)
 			create l_box
@@ -74,14 +73,11 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	display_tool_names: DS_ARRAYED_LIST [STRING_GENERAL]
+	display_tool_names: DS_ARRAYED_LIST [TUPLE [display_name: STRING_32; store_name: STRING]]
 			-- Displayed names for tools
 
-	tool_name_table: HASH_TABLE [STRING, STRING_GENERAL]
+	tool_name_table: HASH_TABLE [STRING, STRING_32]
 			-- [Store name, Display name]
-
-	display_name_table: HASH_TABLE [STRING_GENERAL, STRING]
-			-- [Display name, Store name]
 
 	tools: HASH_TABLE [TUPLE [display_name: STRING_GENERAL; pixmap: EV_PIXMAP], STRING]
 			-- Supported tools
@@ -108,19 +104,22 @@ feature -- Setting
 			-- Set `tools' with `a_tools'.
 		require
 			a_tools_attached: a_tools /= Void
+		local
+			l_displayed_name: STRING_32
+			l_tool_id: STRING
 		do
 			display_tool_names.wipe_out
 			tool_name_table.wipe_out
-			display_name_table.wipe_out
 			tools := a_tools
 			from
 				a_tools.start
 			until
 				a_tools.after
 			loop
-				display_tool_names.force_last (a_tools.item_for_iteration.display_name)
-				tool_name_table.put (a_tools.key_for_iteration, a_tools.item_for_iteration.display_name)
-				display_name_table.put (a_tools.item_for_iteration.display_name, a_tools.key_for_iteration)
+				l_displayed_name := a_tools.item_for_iteration.display_name.as_string_32
+				l_tool_id := a_tools.key_for_iteration
+				display_tool_names.force_last ([l_displayed_name, l_tool_id])
+				tool_name_table.put (l_tool_id, l_displayed_name)
 				a_tools.forth
 			end
 		end
@@ -201,7 +200,7 @@ feature{NONE} -- Implementation
 	grid: ES_GRID
 			-- Grid to display tools
 
-	grid_wrapper: EVS_GRID_WRAPPER [STRING_GENERAL]
+	grid_wrapper: EVS_GRID_WRAPPER [TUPLE [STRING_32, STRING]]
 			-- Grid wrapper for `grid' to support sorting
 
 	value_from_grid: like value is
@@ -305,26 +304,26 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	tool_name_tester (a_tool, b_tool: STRING_GENERAL; a_order: INTEGER): BOOLEAN is
+	tool_name_tester (a_tool, b_tool: TUPLE [display_name: STRING_32; store_name: STRING]; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_tool' and `b_tool' according to `a_order'
 		require
-			a_tool_attached: a_tool /= Void
-			b_tool_attached: b_tool /= Void
+			a_tool_attached: a_tool /= Void and then a_tool.display_name /= Void
+			b_tool_attached: b_tool /= Void and then b_tool.display_name  /= Void
 		do
 			if a_order = ascending_order then
-				Result := a_tool <= b_tool
+				Result := a_tool.display_name <= b_tool.display_name
 			else
-				Result := a_tool > b_tool
+				Result := a_tool.display_name > b_tool.display_name
 			end
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [STRING_GENERAL]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [STRING_32, STRING]]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [STRING_GENERAL]
+			l_sorter: DS_QUICK_SORTER [TUPLE [STRING_32, STRING]]
 		do
 			if last_value_from_grid = Void then
 				if value = Void then
@@ -347,7 +346,7 @@ feature{NONE} -- Implementation/Binding
 	bind_grid is
 			-- Bind grid.
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING_GENERAL]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [TUPLE [display_name: STRING_32; store_name:STRING]]
 			l_grid: like grid
 			l_value: like value
 			l_grid_row: EV_GRID_ROW
@@ -373,7 +372,7 @@ feature{NONE} -- Implementation/Binding
 			loop
 				l_grid.insert_new_row (l_grid.row_count + 1)
 				l_grid_row := l_grid.row (l_grid.row_count)
-				l_tool_name := tool_name_table.item (l_cursor.item)
+				l_tool_name := l_cursor.item.store_name
 				l_info := l_value.item (l_tool_name)
 				if l_info = Void then
 					bind_row (l_grid_row, l_tool_name, False, l_displayers.domain_displayer, "")
@@ -409,7 +408,7 @@ feature{NONE} -- Implementation/Binding
 			l_checkbox.checked_changed_actions.extend (agent on_tool_checkbox_change)
 			a_grid_row.set_item (1, l_checkbox)
 
-			create l_tool.make_with_text (display_name_table.item (a_tool))
+			create l_tool.make_with_text (tools.item (a_tool).display_name)
 			l_tool.set_pixmap (tools.item (a_tool).pixmap)
 			l_tool.set_data (a_tool)
 			a_grid_row.set_item (2, l_tool)
@@ -426,4 +425,5 @@ feature{NONE} -- Implementation/Binding
 		end
 
 end
+
 

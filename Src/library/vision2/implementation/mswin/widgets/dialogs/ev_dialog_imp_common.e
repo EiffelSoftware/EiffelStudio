@@ -507,10 +507,19 @@ feature {NONE} -- Implementation
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
-			if msg = Wm_initdialog then
+			inspect msg
+			when Wm_initdialog then
 				setup_dialog
-			elseif msg = wm_ctlcolordialog then
+			when wm_ctlcolordialog then
 				on_wm_ctlcolordialog (wparam, lparam)
+			when wm_close then
+					-- Simulate a click on the default_cancel_button
+				process_standard_key_press (vk_escape)
+					-- Do not actually close the window.
+				if not is_destroyed and then close_request_actions_internal /= Void then
+					close_request_actions_internal.call (Void)
+				end
+				set_default_processing (False)
 			else
 				Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)
 			end

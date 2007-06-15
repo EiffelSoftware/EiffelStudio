@@ -70,6 +70,7 @@ feature -- Access
 		local
 			routine_as: ROUTINE_AS
 			feature_as: FEATURE_AS
+			built_in_as: BUILT_IN_AS
 		do
 			if is_inline_agent then
 				feature_as := Body_server.item (enclosing_body_id)
@@ -81,7 +82,20 @@ feature -- Access
 				routine_as ?= Body_server.item (body_index).body.content
 			end
 			if routine_as /= Void then
-				Result := routine_as.locals
+				if routine_as.is_built_in then
+					built_in_as ?= routine_as.routine_body
+					if built_in_as /= Void then
+						feature_as := built_in_as.body
+						if feature_as /= Void then
+							routine_as ?= feature_as.body.content
+							if routine_as /= Void then
+								Result := routine_as.locals
+							end
+						end
+					end
+				else
+					Result := routine_as.locals
+				end
 			end
 		end
 

@@ -236,6 +236,7 @@ feature {NONE} -- Implementation
 			l_button ?= a_arguments.item
 			l_width_button ?= a_arguments.item
 			l_font_button ?= a_arguments.item
+
 			if l_font_button /= Void and then l_font_button.text /= Void and l_font_button.font /= Void and a_arguments.tool_bar /= Void then
 				l_tool_bar := a_arguments.tool_bar
 				l_orignal_font := l_tool_bar.font
@@ -246,7 +247,7 @@ feature {NONE} -- Implementation
 			elseif l_width_button /= Void and then l_width_button.text /= Void and a_arguments.tool_bar /= Void then
 				l_text_rect := l_width_button.text_rectangle
 				a_arguments.tool_bar.draw_ellipsed_text_top_left (l_text_rect.x, l_text_rect.y, l_width_button.text, l_text_rect.width)
-			elseif l_button /= Void and then l_button.text /= Void then
+			elseif l_button /= Void and then l_button.tool_bar /= Void and then l_button.text /= Void then
 				create l_env
 				l_app_imp ?= l_env.application.implementation
 				check not_void: l_app_imp /= Void end

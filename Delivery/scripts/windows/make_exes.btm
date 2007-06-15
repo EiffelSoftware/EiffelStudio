@@ -246,51 +246,51 @@ endiff
 move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Gobo tools
-safe_md %STUDIO_DIR\library\gobo\bin
+safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 cdd %EIFFEL_SRC\library\gobo\src
 clean_project
 remtrace geant
 finalize geant.ecf geant
 cleanup_eiffel geant geant.exe
-move geant.exe %STUDIO_DIR\library\gobo\bin
+move geant.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gec
 finalize gec.ecf gec
 cleanup_eiffel gec gec.exe
-move gec.exe %STUDIO_DIR\library\gobo\bin
+move gec.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gelex
 finalize gelex.ecf gelex
 cleanup_eiffel gelex gelex.exe
-move gelex.exe %STUDIO_DIR\library\gobo\bin
+move gelex.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gelint
 finalize gelint.ecf gelint
 cleanup_eiffel gelint gelint.exe
-move gelint.exe %STUDIO_DIR\library\gobo\bin
+move gelint.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gepp
 finalize gepp.ecf gepp
 cleanup_eiffel gepp gepp.exe
-move gepp.exe %STUDIO_DIR\library\gobo\bin
+move gepp.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace getest
 finalize getest.ecf getest
 cleanup_eiffel getest getest.exe
-move getest.exe %STUDIO_DIR\library\gobo\bin
+move getest.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gexace
 finalize gexace.ecf gexace
 cleanup_eiffel gexace gexace.exe
-move gexace.exe %STUDIO_DIR\library\gobo\bin
+move gexace.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace gexslt
 finalize gexslt.ecf gexslt
 cleanup_eiffel gexslt gexslt.exe
-move gexslt.exe %STUDIO_DIR\library\gobo\bin
+move gexslt.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace geyacc
 finalize geyacc.ecf geyacc
 cleanup_eiffel geyacc geyacc.exe
-move geyacc.exe %STUDIO_DIR\library\gobo\bin
+move geyacc.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 

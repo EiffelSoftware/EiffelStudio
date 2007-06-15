@@ -99,22 +99,24 @@ feature {NONE} -- Agents
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer motion actions.
 		do
-			if has_position (a_relative_x, a_relative_y) and is_sensitive then
-				if state = {SD_TOOL_BAR_ITEM_STATE}.normal then
-					state := {SD_TOOL_BAR_ITEM_STATE}.hot
-					is_need_redraw := True
-				elseif state = {SD_TOOL_BAR_ITEM_STATE}.checked then
-					state := {SD_TOOL_BAR_ITEM_STATE}.hot_checked
-					is_need_redraw := True
+			if tool_bar /= Void then
+				if has_position (a_relative_x, a_relative_y) and is_sensitive then
+					if state = {SD_TOOL_BAR_ITEM_STATE}.normal then
+						state := {SD_TOOL_BAR_ITEM_STATE}.hot
+						is_need_redraw := True
+					elseif state = {SD_TOOL_BAR_ITEM_STATE}.checked then
+						state := {SD_TOOL_BAR_ITEM_STATE}.hot_checked
+						is_need_redraw := True
+					else
+						is_need_redraw := False
+					end
 				else
-					is_need_redraw := False
-				end
-			else
-				if state /= last_state then
-					state := last_state
-					is_need_redraw := True
-				else
-					is_need_redraw := False
+					if state /= last_state then
+						state := last_state
+						is_need_redraw := True
+					else
+						is_need_redraw := False
+					end
 				end
 			end
 		end

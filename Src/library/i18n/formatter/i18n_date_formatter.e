@@ -25,12 +25,12 @@ feature	-- Creation
 
 feature	-- Access
 
-	format_date (date:DATE): STRING_32 is
+	format_date (date: DATE): STRING_32 is
 			-- formats an EiffelTime date according to the long date format
 		require
 			date_not_void: date /= Void
 		do
-			Result := long_date_format.filled (DATE,create {TIME}.make_now)
+			Result := long_date_format.filled (date, create {TIME}.make_now)
 		end
 
 	format_time (time: TIME): STRING_32 is
@@ -46,7 +46,7 @@ feature	-- Access
 		require
 			date_time_not_void: date_time /= Void
 		do
-			Result := date_time_format.filled(date_time.date, date_time.time)
+			Result := date_time_format.filled (date_time.date, date_time.time)
 		end
 
 feature {NONE} -- Implementation
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 invariant
 	long_date_format_exists: long_date_format /= Void
 	long_time_format_exists: long_time_format /= Void
-	date_time_format_exists: date_time_format /= VOid
+	date_time_format_exists: date_time_format /= Void
 
 indexing
 	library:   "Internationalization library"

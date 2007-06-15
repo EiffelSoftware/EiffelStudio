@@ -62,8 +62,11 @@ feature -- Basic operations
 		local
 			l_list: LIST [STRING_32]
 			i : INTEGER
+			l_list_item, 
 			l_string: STRING_32
+			l_id: INTEGER
 			test: STRING_GENERAL
+			a_arg: ANY
 		do
 			l_list := a_string.split (escape_character)
 			create Result.make_empty
@@ -75,37 +78,42 @@ feature -- Basic operations
 			until
 				l_list.after
 			loop
-				if l_list.item.is_empty then
+				l_list_item := l_list.item
+				if l_list_item.is_empty then
 						-- It wasn't an escape_character
-					Result.append (escape_character.out)
+					Result.append_character (escape_character)
 				else
 						-- it's possibly an escape_character
 					from
 						i := 1
-						l_string := l_list.item.substring (i,i)
+						l_string := l_list_item.substring (i, i)
 					until
-						i > l_list.item.count or not l_string.is_integer
+						i > l_list_item.count or not l_string.is_integer
 					loop	--extract the number
 						i := i + 1
-						l_string := l_list.item.substring (i,i)
+						l_string := l_list_item.substring (i, i)
 					end
-					l_string := l_list.item.substring (1, i-1)
+					l_string := l_list_item.substring (1, i - 1)
 					if l_string.is_integer then
 							-- It was en escape character
+						l_id := l_string.to_integer
 
 							--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
-						test ?= args_tuple.item(l_string.to_integer)
+						test ?= args_tuple.item (l_id)
 						if test /= Void then
 							Result.append (test.as_string_32)
 						else
-							Result.append (args_tuple.item (l_string.to_integer).out)
+							a_arg := args_tuple.item (l_id)
+							if a_arg /= Void then
+								Result.append (a_arg.out)
+							end
 						end
 
-						Result.append (l_list.item.substring (i, l_list.item.count).twin)
+						Result.append (l_list_item.substring (i, l_list_item.count).twin)
 					else
 							-- It should not be considered as escape character
-						Result.append (escape_character.out)
-						Result.append (l_list.item)
+						Result.append_character (escape_character)
+						Result.append (l_list_item)
 					end
 				end
 				l_list.forth
@@ -139,7 +147,8 @@ feature -- Check functions
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_list: LIST[STRING_32]
+			l_list: LIST [STRING_32]
+			l_list_item: STRING_32
 			i : INTEGER
 			l_string: STRING_32
 		do
@@ -151,17 +160,18 @@ feature -- Check functions
 			until
 				l_list.after
 			loop
-				if not l_list.item.is_empty then
+				l_list_item := l_list.item
+				if not l_list_item.is_empty then
 					from
 						i := 1
-						l_string := l_list.item.substring(i,i)
+						l_string := l_list_item.substring (i, i)
 					until
-						i > l_list.item.count or not l_string.is_integer
+						i > l_list_item.count or not l_string.is_integer
 					loop	--extract the number
 						i := i + 1
-						l_string := l_list.item.substring(i,i)
+						l_string := l_list_item.substring (i, i)
 					end
-					l_string := l_list.item.substring(1,i-1)
+					l_string := l_list_item.substring (1, i-1)
 					Result := Result.max (l_string.to_integer)
 				end
 				l_list.forth

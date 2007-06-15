@@ -39,11 +39,11 @@ feature -- Status report
 		do
 			l_area := area.twin
 			if internal_vertical then
-				l_area.set_left (l_area.left - {SD_SHARED}.tool_bar_size)
-				l_area.set_right (l_area.right + {SD_SHARED}.tool_bar_size)
+				l_area.set_left (l_area.left - internal_shared.tool_bar_size)
+				l_area.set_right (l_area.right + internal_shared.tool_bar_size)
 			else
-				l_area.set_top (l_area.top - {SD_SHARED}.tool_bar_size)
-				l_area.set_bottom (l_area.bottom + {SD_SHARED}.tool_bar_size)
+				l_area.set_top (l_area.top - internal_shared.tool_bar_size)
+				l_area.set_bottom (l_area.bottom + internal_shared.tool_bar_size)
 			end
 			Result := l_area
 		ensure

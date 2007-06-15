@@ -260,26 +260,13 @@ feature -- Query
 			Result := internal_items.has (a_item)
 		end
 
-	border_width: INTEGER is
-			-- Border width.
-		local
-			l_platform: PLATFORM
-		once
-			Result := (internal_shared.tool_bar_font.height / 2).floor
-
-			create l_platform
-			if l_platform.is_windows then
-				Result := Result + 1
-			end
-		end
-
 	padding_width: INTEGER is 4
 			-- Padding width.
 
 	standard_height: INTEGER is
 			-- Standard tool bar height.
 		once
-			Result := internal_shared.tool_bar_font.height + 2 * border_width
+			Result := internal_shared.tool_bar_size
 		end
 
 	row_height: INTEGER is

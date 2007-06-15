@@ -59,15 +59,15 @@ feature -- Command
 			extend_fixed (a_zone.tool_bar)
 
 			if is_vertical then
-				if a_zone.tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
-					a_zone.tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
+				if a_zone.tool_bar.minimum_width > internal_shared.tool_bar_size then
+					a_zone.tool_bar.set_minimum_width (internal_shared.tool_bar_size)
 				end
-				set_item_width (a_zone.tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_width (a_zone.tool_bar, internal_shared.tool_bar_size)
 			else
-				if a_zone.tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
-					a_zone.tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
+				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
+					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
 				end
-				set_item_height (a_zone.tool_bar, {SD_SHARED}.tool_bar_size)
+				set_item_height (a_zone.tool_bar, internal_shared.tool_bar_size)
 			end
 
 			set_item_position_fixed (a_zone.tool_bar, 0, 0)

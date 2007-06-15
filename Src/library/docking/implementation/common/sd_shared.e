@@ -445,8 +445,24 @@ feature -- Constants
 			Result := Title_bar_height + 1
 		end
 
-	Tool_bar_size: INTEGER is 24
+	Tool_bar_size: INTEGER is
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
+		once
+			Result := tool_bar_font.height + 2 * Tool_bar_border_width
+		end
+
+	Tool_bar_border_width: INTEGER is
+			-- Tool bar border width
+		local
+			l_platform: PLATFORM
+		do
+			Result := (tool_bar_font.height / 2).floor
+
+			create l_platform
+			if l_platform.is_windows then
+				Result := Result + 1
+			end
+		end
 
 	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
 			-- Tool bar hidden item dialog maximum allowed width.

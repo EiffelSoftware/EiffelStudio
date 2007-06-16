@@ -525,7 +525,6 @@ feature {NONE} -- Implementation
 
 		end
 
-
 	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
 			-- Pointer button right click hander instance.
 

@@ -164,15 +164,15 @@ feature -- Access
 			if_not_available_result_is_negative: (Result = -1) implies (has_item (a_feature_id) and not has (a_feature_id))
 		end
 
-		new_name (a_feature_id: INTEGER): INTEGER
-				-- Renames `a_feature_id' into it's new name or leaves it unchanged.
+		new_name (a_feature_name_id: INTEGER): INTEGER
+				-- Renames `a_feature_name_id' into it's new name or leaves it unchanged.
 		do
 				from
 					start
 				until
 					after or Result /= 0
 				loop
-					if item_for_iteration = a_feature_id then
+					if item_for_iteration = a_feature_name_id then
 						Result := key_for_iteration
 					end
 					forth
@@ -180,7 +180,7 @@ feature -- Access
 				if Result = 0 then
 						-- No new name found for this feature
 						-- Just keep the old one
-					Result := a_feature_id
+					Result := a_feature_name_id
 				end
 		end
 

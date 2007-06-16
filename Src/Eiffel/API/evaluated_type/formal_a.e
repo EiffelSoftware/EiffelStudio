@@ -102,17 +102,6 @@ feature -- Property
 				Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
 		end
 
-			is_single_constrained_formal_without_renaming (a_context_class: CLASS_C): BOOLEAN is
-			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?
-			--| G -> A -> True
-			--| G -> A rename a as b end -> False
-			--| G -> {A, B} -> False
-		require
-			a_context_class_not_void: a_context_class /= Void
-		do
-			-- False
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

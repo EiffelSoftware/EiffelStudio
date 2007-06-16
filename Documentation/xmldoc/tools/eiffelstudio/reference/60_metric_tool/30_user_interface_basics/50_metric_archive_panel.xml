@@ -2,7 +2,7 @@
 	<meta_data>
 	</meta_data>
 	<paragraph>
-		<paragraph>Metric archive panel is used to calculate and restore metric archive and to do metric archive comparison.</paragraph>
+		<paragraph>The metric archive panel is used to calculate and restore metric archives and to do metric archive comparison.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Metric Archiv Calculation</content>
@@ -14,7 +14,7 @@
 				<alt_text>calculate archive</alt_text>
 			</image>
 			Start metric archive calculation<line_break/>
-			After selecting the metrics you want to archive and the input domain, use this button to start metric archive calculation.
+			After selecting the metrics you want to archive and the input domain, use this button to start a metric archive calculation.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -22,7 +22,7 @@
 				<alt_text>stop archive</alt_text>
 			</image>
 			Stop metric archive calculation<line_break/>
-			Use this button to stop metric archive calculation.
+			Use this button to stop a metric archive calculation.
 		</paragraph>		
 		<paragraph>
 			<image>
@@ -30,7 +30,7 @@
 				<alt_text>archive file location</alt_text>
 			</image>
 			Specify archive file<line_break/>
-			The file to store metric archive result is specified here.
+			The file to store metric archive results is specified here.
 		</paragraph>		
 		<paragraph>
 			<image>
@@ -39,12 +39,12 @@
 			</image>
 			Reset archive file<line_break/>
 			If the specified archive file already contains some archive information, this option will be sensitive. If it's enabled, the information contained in that archive file will be cleaned before new archive information is written to that file, otherwise, new archive information will be appended to that file.
-		</paragraph>						\		
+		</paragraph>	
 		<heading>
 			<size>2</size>
 			<content>Metric Archive Comparison</content>
 		</heading>
-		<paragraph>After you specify two archive files, you can compare them, shown as follows:</paragraph>
+		<paragraph>After you specify two archive files you can compare them, as shown in the following image:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/interface24.png</url>

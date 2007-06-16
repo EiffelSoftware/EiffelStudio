@@ -1,7 +1,7 @@
 <document title="User interface basics" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>EiffelStudio includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users' needs and handling archives to compare projects</paragraph>
+		<paragraph>EiffelStudio includes a Metric tool based on the previously defined metric theory. This tool provides many facilities like computing measures over a project, including smaller scopes, defining new metrics according to users needs and handling archives to compare projects</paragraph>
 		<list ordered="false">
 			<item>
 				<link>

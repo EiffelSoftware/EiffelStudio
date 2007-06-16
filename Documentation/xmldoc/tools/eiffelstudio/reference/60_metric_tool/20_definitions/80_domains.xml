@@ -34,7 +34,7 @@
 				<alt_text>Defining an input domain</alt_text>
 			</image>
 		</paragraph>		
-		<paragraph>After running the metric, you should see the following result in Detailed Result panel shown in the following figure:</paragraph>
+		<paragraph>After running the metric, you should see the following result in the Detailed Result panel shown in the following figure:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/domain_example2.png</url>
@@ -67,7 +67,7 @@
 				<alt_text>Input domain item</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>And when this metric is calculated over input domain {<class_name>APPLICATION</class_name>}, the domain criterion Input domain in ancestor_is criterion will be replaced by the specified input domain, i.e., {<class_name>APPLICATION</class_name>}, and the metric will use Current application target as its input domain instead. Put another way, the metric is semantically equal to the following one shown in the following figure:</paragraph>
+		<paragraph>And when this metric is calculated over input domain {<class_name>APPLICATION</class_name>}, the domain criterion Input domain in ancestor_is criterion will be replaced by the specified input domain, i.e., {<class_name>APPLICATION</class_name>}, and the metric will use the current application target as its input domain instead. Put another way, the metric is semantically equal to the following one shown in the following figure:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/domain_example6.png</url>

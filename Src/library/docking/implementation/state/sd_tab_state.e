@@ -257,6 +257,9 @@ feature -- Redefine
 			l_auto_hide_panel:= internal_docking_manager.query.auto_hide_panel (direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
 			l_auto_hide_panel.select_tab_by_content (internal_content)
+			-- We have to clear last focus content. Otherwise, when user select it in ctrl + tab dialog, it will not appear.
+			-- See bug#13101
+			internal_docking_manager.property.set_last_focus_content (Void)
 			internal_docking_manager.command.unlock_update
 		ensure then
 			pruned: not internal_docking_manager.zones.has_zone (tab_zone)
@@ -305,7 +308,7 @@ feature -- Redefine
 				assistant.change_zone_split_area_to_docking_zone (a_target_zone, a_direction)
 				internal_docking_manager.command.update_title_bar
 			end
-			
+
 			-- We have to `remove_empty_split_area' here, see bug#12330
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.query.inner_container_main.update_middle_container

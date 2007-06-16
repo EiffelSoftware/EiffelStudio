@@ -148,7 +148,7 @@
 			<size>2</size>
 			<content>Criterion Connector</content>
 		</heading>			
-		<paragraph>There are three criterion connectors: and, or, not. They are self-explained. Just a simple example, see the following figure:</paragraph>
+		<paragraph>There are three criterion connectors: and, or, not. They are self-explanatory. Just a simple example, see the following figure:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/metrics_tool/selection_cri8.png</url>

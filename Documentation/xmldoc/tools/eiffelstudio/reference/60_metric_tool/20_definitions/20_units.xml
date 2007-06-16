@@ -77,7 +77,7 @@
 		<paragraph>The units listed here are 
 			<bold>minimal</bold> in the sense that it is not possible to add the properties measured by any two of them; for example it makes no sense to add a number of features to a number of classes.
 		</paragraph> 
-		<paragraph>In the future, it might be desirable to include more specific units, such as "features per class" , and an associated calculus of units (as in the physical sciences, where multiplying a quantity expressed in g /cm by one in cm yields a result in g). This has not appeared necessary for the typical uses of division envisioned in this note, answering such questions as "What percentage of routines have a header comment" and all expressed as simply as Ratio.</paragraph>
+		<paragraph>In the future, it might be desirable to include more specific units, such as "features per class" , and an associated calculus of units (as in the physical sciences, where multiplying a quantity expressed in g /cm by one in cm yields a result in g). This has not appeared necessary for the typical uses of division envisioned in this note, answering such questions as "What percentage of routines have a header comment" can all be expressed simply as ratio.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Code Element</content>
@@ -122,7 +122,7 @@
 			<row>
 				<cell>Argument</cell>
 				<cell>Argument</cell>
-				<cell>Represents an formal argument in features</cell>
+				<cell>Represents a formal argument in features</cell>
 			</row>
 			<row>
 				<cell>Local</cell>
@@ -137,7 +137,7 @@
 			<row>
 				<cell>Folder</cell>
 				<cell>-</cell>
-				<cell>Represents a physical concept to store classes. The semantic of a fold in metrics tool is equal to a list all classes which (not recursively) locate in that folder. So a folder item doesn't provide new functionality, it just facilitates the operation to select a set of classes.</cell>
+				<cell>Represents a physical concept to store classes. The semantic of a folder in metrics tool is equal to a list all classes which are located in that folder (not recursively). So a folder item doesn't provide new functionality, it just facilitates the operation to select a set of classes.</cell>
 			</row>
 			<row>
 				<cell>Delayed item</cell>
@@ -147,12 +147,12 @@
 			<row>
 				<cell>Input domain item</cell>
 				<cell>-</cell>
-				<cell> An input domain item is a place holder, it will be replaced by the domain selected as input to the metric. In the case that input domain presents in a basic metric definition, when that metric is calculated, that metric will use current application target as it input domain.</cell>
+				<cell> An input domain item is a place holder, it will be replaced by the domain selected as input to the metric. In the case that the input domain is presents in a basic metric definition, when that metric is calculated, the metric will use the current application target as the input domain.</cell>
 			</row>
 			<row>
 				<cell>Current application item</cell>
 				<cell>Target</cell>
-				<cell>Represents application target of the current Eiffel system</cell>
+				<cell>Represents the application target of the current Eiffel system</cell>
 			</row>
 		</table>				
 	</paragraph></document>

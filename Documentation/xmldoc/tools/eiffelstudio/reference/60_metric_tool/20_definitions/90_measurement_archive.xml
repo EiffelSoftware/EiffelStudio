@@ -29,7 +29,7 @@
 			</item>
 		</list>
 		<paragraph>
-			The metric tool provides an easy way to create, update or compare archives in the Metric Archive tab. Simply select to archives.
+			The metric tool provides an easy way to create, update or compare archives in the Metric Archive tab. Simply select tab archives.
 		</paragraph>
 		<paragraph>The metric tool automatically creates a sub folder named "Metrics" in the current location of the loaded project. It is recommended, but not compulsory, to save created archives in that folder, since it has been provided for metric needs.</paragraph>
 		<span/>

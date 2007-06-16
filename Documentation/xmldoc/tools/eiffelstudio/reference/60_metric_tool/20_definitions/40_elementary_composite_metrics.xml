@@ -1,9 +1,9 @@
 <document title="Elementary and composite metrics" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Some of our metrics will be elementary and some composite. An elementary metric is measured directly from the product or project record:</paragraph>
+		<paragraph>Some of our metrics will be elementary and some composite. An elementary metric is measured directly from the product or a project record:</paragraph>
 		<note>
-			<bold>Elementary_metric</bold>
+			<bold>Elementary_metric</bold>: 
 			<line_break/>- An  
 			<bold>elementary product metric</bold> is a product metric whose values (integers) indicate the number of occurrences of a certain pattern in a product. 
 			<line_break/>- An  
@@ -24,7 +24,7 @@
 			<line_break/> - A  
 			<bold>composite process metric</bold> is a composite metric whose definition involves one or more process metrics. 
 		</note>
-		<paragraph>By convention, this definition treats as process metric a composite metric involving both product and process components.</paragraph>
+		<paragraph>By convention, this definition treats as process metric as a composite metric involving both product and process components.</paragraph>
 		<paragraph>The classification introduced for metrics extends to measures, so that we may talk about an elementary product measure, a composite process measure and so on.</paragraph>
 		<seealso>
 			<bold>See Also</bold>

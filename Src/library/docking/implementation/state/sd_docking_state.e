@@ -237,6 +237,9 @@ feature -- Redefine.
 			change_state (l_auto_hide_state)
 			internal_docking_manager.query.inner_container_main.remove_empty_split_area
 			internal_docking_manager.query.inner_container_main.update_middle_container
+			-- We have to clear last focus content. Otherwise, when user select it in ctrl + tab dialog, it will not appear.
+			-- See bug#13101
+			internal_docking_manager.property.set_last_focus_content (Void)
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: content.state /= Current

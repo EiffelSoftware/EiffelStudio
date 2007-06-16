@@ -75,7 +75,7 @@ feature -- Query
 	rectangle: EV_RECTANGLE is
 			--  Button rectangle area
 		do
-			if tool_bar /= Void then
+			if tool_bar /= Void and then tool_bar.has (Current) then
 				create Result.make (tool_bar.item_x (Current), tool_bar.item_y (Current), width, tool_bar.row_height)
 			else
 				-- Current is hidden when current line is not enough horizontal space.

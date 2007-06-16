@@ -481,6 +481,7 @@ invariant
 	internal_main_container_not_void: main_container /= Void
 	internal_inner_container_not_void: inner_containers /= Void and inner_containers.count >= 1
 	internal_contents_not_void: contents /= Void
+	tool_bar_manager_not_void: tool_bar_manager /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

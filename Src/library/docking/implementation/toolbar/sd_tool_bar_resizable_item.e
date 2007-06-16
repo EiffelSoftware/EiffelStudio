@@ -108,7 +108,6 @@ feature {NONE} -- Agents
 
 				if l_widget_tool_bar /= Void then
 					l_widget_tool_bar.resize_for_sizeble_item
-					l_widget_tool_bar.record_width (name, l_width)
 				end
 			end
 		end

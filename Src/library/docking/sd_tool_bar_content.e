@@ -706,6 +706,10 @@ feature {NONE} -- Implementation
 	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Actions to perfrom when close requested.
 
+invariant
+
+	items_not_void: items /= Void
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -270,37 +270,7 @@ feature -- Command
 				end
 			end
 		end
-
-	record_width (a_name: STRING_GENERAL; a_width: INTEGER) is
-			-- Record the with of item for store.
-		require
-			not_void: a_name /= Void
-			valid: a_width >= 0
-		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
-			l_found: BOOLEAN
-		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
-				l_data := l_tool_bar_row.docking_manager.property.resizable_items_data
-				from
-					l_data.start
-				until
-					l_data.after or l_found
-				loop
-					if l_data.item.name.as_string_32.is_equal (a_name.as_string_32) then
-						l_data.item.width := a_width
-						l_found := True
-					end
-					l_data.forth
-				end
-				if not l_found then
-					l_data.extend ([a_name, a_width])
-				end
-			end
-		end
-
+		
 	screen_x_end_row: INTEGER is
 			-- Maximum x position.
 		local

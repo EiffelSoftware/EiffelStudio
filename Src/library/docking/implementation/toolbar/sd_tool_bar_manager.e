@@ -539,6 +539,7 @@ invariant
 	not_void: internal_shared /= Void
 	not_void: contents /= Void
 	not_void: floating_tool_bars /= Void
+	items_not_void: contents.for_all (agent (v: SD_TOOL_BAR_CONTENT): BOOLEAN do Result := v /= Void end)
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -250,7 +250,7 @@ feature -- Concrete evaluation
 				check l_target_dynclass /= Void end
 				if l_dyntype = Void then
 					notify_error_evaluation (
-								Debugger_names.msg_error_unable_to_evaluate_call (f.written_class.name_in_upper, f.feature_name, Void, 
+								Debugger_names.msg_error_unable_to_evaluate_call (f.written_class.name_in_upper, f.feature_name, Void,
 										Debugger_names.msg_error_type_not_compiled (l_target_dynclass.name_in_upper)
 									)
 							)
@@ -433,7 +433,7 @@ feature {NONE} -- List helpers
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
 		end
 
-feature {NONE} -- compiler helpers
+feature {DBG_EXPRESSION_EVALUATOR} -- compiler helpers
 
 	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
 			-- Feature in `an_ancestor' of which `Current' is derived.
@@ -480,6 +480,16 @@ feature {NONE} -- compiler helpers
 			end
 		ensure
 			associated_basic_class_type_not_void: Result /= Void
+		end
+
+	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
+			-- Associated _REF classtype for type `cl'
+			--| for instance return INTEGER_REF for INTEGER
+		require
+			cl_not_void: cl /= Void
+			cl_is_basic: cl.is_basic
+		do
+			Result := implementation.associated_reference_basic_class_type (cl)
 		end
 
 feature {NONE} -- Implementation

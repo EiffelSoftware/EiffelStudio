@@ -360,10 +360,7 @@ feature {NONE} -- EXPR_B evaluation
 
 	evaluate_void_b	(a_void_b: VOID_B) is
 			-- Evaluate Void keyword value
-		local
-			t: TYPE_I
 		do
-			t := a_void_b.type
 			tmp_result_value := Void
 			tmp_result_value := Void
 			tmp_result_value := Debugger_manager.Dump_value_factory.new_void_value (Void)
@@ -586,10 +583,9 @@ feature {NONE} -- EXPR_B evaluation
 				l_type := l_integer.type
 				if
 					l_cl = Void
-					and then l_type.type_a /= Void
-					and then l_type.type_a.has_associated_class
+					and then l_type /= Void
 				then
-					l_cl := l_type.type_a.associated_class
+					l_cl := class_c_from_type_i (l_type)
 				end
 				if l_cl /= Void then
 					if l_type.is_natural then
@@ -1135,12 +1131,8 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			if a_external_b.is_static_call then
 				ti := a_external_b.static_class_type
-				if
-					ti /= Void
-					and then ti.type_a /= Void
-					and then ti.type_a.has_associated_class
-				then
-					cl := ti.type_a.associated_class
+				if ti /= Void then
+					cl := class_c_from_type_i (ti)
 				end
 			elseif on_class then
 				cl := context_class
@@ -2005,20 +1997,91 @@ feature {NONE} -- Compiler helpers
 			a_call_access_b_not_void: a_call_access_b /= Void
 		local
 			wcl: CLASS_C
+			l_cl: CLASS_C
 		do
-			if cl.class_id = a_call_access_b.written_in then
-				Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
+			if cl.is_basic then
+				l_cl := dbg_evaluator.associated_reference_basic_class_type (cl).associated_class
+				Result := l_cl.feature_of_rout_id (a_call_access_b.routine_id)
 			else
-				wcl := system.class_of_id (a_call_access_b.written_in)
-				Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
-				if Result = Void then
-						--| Better try to find the feature by any way
-					fixme ("We should redesign this part to do exactly what should be done")
+				if cl.class_id = a_call_access_b.written_in then
+						--| if same class, this is straight forward
 					Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
+				else
+						--| let's search from written_class
+					wcl := system.class_of_id (a_call_access_b.written_in)
+					check wcl_not_void: wcl /= Void end
+					Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
+					if Result /= Void and then wcl /= cl then
+						Result := fi_version_of_class (Result, cl)
+					end
+					if Result = Void then
+							--| from _B target static type ...
+						if a_call_access_b.parent /= Void and then a_call_access_b.parent.target /= Void then
+							l_cl := class_c_from_expr_b (a_call_access_b.parent.target)
+							if l_cl /= Void then
+								Result := l_cl.feature_of_rout_id (a_call_access_b.routine_id)
+								if Result /= Void and then l_cl /= cl then
+									Result := fi_version_of_class (Result, cl)
+								end
+							end
+						end
+
+						--| else giveup, no need to find an erroneous feature whic lead to debuggee crash
+					end
 				end
 			end
-			if Result /= Void and then wcl /= cl then
-				Result := fi_version_of_class (Result, cl)
+		end
+
+	class_c_from_expr_b (a_expr_b: EXPR_B): CLASS_C is
+			-- Class C related to `a_expr_b' if exists.
+		require
+			a_expr_b_not_void: a_expr_b /= Void
+		local
+			l_type_i: TYPE_I
+		do
+			l_type_i := a_expr_b.type
+			if l_type_i /= Void then
+				Result := class_c_from_type_i (l_type_i)
+			end
+		end
+
+	class_c_from_type_i (a_type_i: TYPE_I): CLASS_C is
+			-- Class C related to `a_type_i' if exists.
+		require
+			a_type_i_not_void: a_type_i /= Void
+		local
+			l_type_a: TYPE_A
+		do
+			if a_type_i /= Void then
+				l_type_a := a_type_i.type_a
+				if l_type_a.has_associated_class then
+					Result := l_type_a.associated_class
+				end
+			end
+		end
+
+	class_type_from_expr_b (a_expr_b: EXPR_B): CLASS_TYPE is
+			-- Class type related to `a_expr_b' if exists.
+			--| NOT USED FOR NOW.
+		require
+			a_expr_b_not_void: a_expr_b /= Void
+		local
+			l_cl_type_i: CL_TYPE_I
+		do
+			l_cl_type_i ?= a_expr_b.type
+			if l_cl_type_i /= Void then
+				l_cl_type_i := resolved_real_type_in_context (l_cl_type_i)
+				if l_cl_type_i.has_associated_class_type then
+					Result := l_cl_type_i.associated_class_type
+				end
+			else
+				--| might be :
+				--| FORMAL_I
+				--| LIKE_CURRENT_I
+				--| MULTI_FORMAL_I
+				--| NONE_I
+				--| REFERENCE_I																
+				--| VOID_I
 			end
 		end
 

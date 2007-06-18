@@ -117,15 +117,16 @@ feature -- Access
 			ecs: EIFFEL_CALL_STACK
 			cs: CALL_STACK_ELEMENT
 		do
-			Result := fvalid and then Precursor {OBJECT_STONE}
-					and then debugger_manager.application_is_executing
-					and then debugger_manager.application_status.current_call_stack.count >= level_number
-			if Result then
+			if
+				fvalid
+				and then Precursor {OBJECT_STONE}
+				and then debugger_manager.safe_application_is_stopped
+			then
 				ecs := debugger_manager.application_status.current_call_stack
-				if ecs /= Void then
+				if ecs /= Void and then ecs.count >= level_number then
 					cs := ecs.i_th (level_number)
+					Result := cs /= Void and then cs.is_eiffel_call_stack_element
 				end
-				Result := cs /= Void and then cs.is_eiffel_call_stack_element
 			end
 		end
 

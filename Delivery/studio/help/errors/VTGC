@@ -9,9 +9,9 @@ VTGC, ECMA Eiffel, chapter 8.12.9
 
         1 `T' involves no anchored type.
 
-		2 If a  Renaming  clause `rename rename_list end' is
+        2 If a  Renaming  clause `rename rename_list end' is
           present, a class  definition of the form class NEW
-		  inherit  BT rename  rename_list  end  (preceded by
+          inherit  BT rename  rename_list  end  (preceded by
           deferred if the base classof T is deferred), where
           BT is the base class of T, would be valid.
 

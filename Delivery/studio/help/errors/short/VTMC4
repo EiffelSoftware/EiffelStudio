@@ -4,42 +4,45 @@ Error: A features result type was redefined differently.
 
 What to do:
   Consider the following example:
+
     class A
-      feature
-        f: ANY
-	  end
+    feature
+      f: ANY
+    end
 
     class B
       inherit A redefine f end
-	feature
+    feature
       f: INTEGER
-	end
+    end
 
     class C
       inherit A redefine f end
     feature
-	  f: STRING
-	end
+      f: STRING
+    end
 	  
     class NON_MULTI
-      feature
-	    a: A
-		example: ANY
-          do
-            Result := a.f.is_equal (3) -- @1
-          end
+    feature
+      a: A
+      example: ANY
+        do
+          Result := a.f.is_equal (3) -- @1
+        end
+    end
 
     class MULTI [G -> {B, C}]
       inherit NON_MULTI redefine a end
     feature
       a: G
-	end
-		  
+    end
+
   The problem is that in the context of `MULTI' the feature
   `example' has an ambigous call @1. This is because f occurs
   redefined in B and C and, assuming that the signature of
   `is_equal' is `like Current' this would yield to a CAT call
   in case an actual formal derivation would not select the
-  version of from B but the one from C (which is STRING, not INTEGER).
-  So what you can do is change the signature or the constraints or
-  reimplement the feature.
+  version of from B but the one from C (which is STRING,
+  not INTEGER). So what you can do is change the signature or
+  the constraints or reimplement the feature.
+

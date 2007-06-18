@@ -10,7 +10,7 @@ VSRT, ECMA Standard 367, section: 8.3.9, page 32
 
       2 `T' only involves classes in `U'.
 
-      3 `T’s base class is not deferred.
+      3 `T's base class is not deferred.
 
       4 The base class of any type on which `T' depends is in `U'.
-.
+

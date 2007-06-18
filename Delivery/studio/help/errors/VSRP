@@ -7,7 +7,7 @@ VSRP, ECMA Standard 367, section 8.3.10, page 32
    following conditions:
 
       1 `pn' is the name of a creation procedure `p' of 
-        `S’s root type.
+        `S's root type.
 
       2 `p' has no formal argument.
 

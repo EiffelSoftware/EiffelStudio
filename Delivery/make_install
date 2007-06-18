@@ -1,10 +1,10 @@
 #!/bin/sh
 
-echo Welcome to the ISE Eiffel 5 installer
+echo Welcome to the EiffelStudio installer
 
 ERROR_ENV=""
 if [ ! "$ISE_EIFFEL" ]; then
-	echo "The environment variable ISE_EIFFEL should be set to the directory where ISE Eiffel 5 is installed (typically the current directory: `pwd`)"
+	echo "The environment variable ISE_EIFFEL should be set to the directory where EiffelStudio is installed (typically the current directory: `pwd`)"
 	ERROR_ENV=TRUE
 fi
 if [ ! "$ISE_PLATFORM" ]; then
@@ -12,7 +12,7 @@ if [ ! "$ISE_PLATFORM" ]; then
 	echo linux-x86, linux-x86-64 irix-mips, irix-mips-64, solaris-sparc, solaris-sparc-64, solaris-x86, ...
 	ERROR_ENV=TRUE
 fi
-if [ "ERROR_ENV" = "TRUE" ]; then
+if [ "$ERROR_ENV" = "TRUE" ]; then
 	echo "When the needed environment variable(s) are set, launch $0 again."
 	exit
 fi

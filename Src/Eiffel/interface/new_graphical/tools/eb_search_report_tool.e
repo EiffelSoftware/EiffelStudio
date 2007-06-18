@@ -182,7 +182,11 @@ feature -- Command
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
-			search_report_grid.set_focus
+				-- We need to do this in shown_actions when it is available in docking library.
+				-- Or the widget in a tool will not get focus at auto-hide mode.
+			if search_report_grid /= Void then
+				set_focus_if_possible (search_report_grid)
+			end
 		end
 
 feature -- Element Change

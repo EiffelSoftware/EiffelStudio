@@ -281,6 +281,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	set_focus_if_possible (a_widget: EV_WIDGET) is
+			-- Set focus to `a_widget' when possble.
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			if
+				not a_widget.is_destroyed and then
+				a_widget.is_displayed and then
+				a_widget.is_sensitive
+			then
+				a_widget.set_focus
+			end
+		end
+
 feature {NONE} -- Memory management
 
 	internal_recycle is

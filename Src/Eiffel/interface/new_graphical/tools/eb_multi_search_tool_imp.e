@@ -379,14 +379,14 @@ feature -- EB_TOOL
 					replace_combo_box.set_text (currently_replacing)
 				end
 			end
-			keyword_field.set_focus
+			set_focus_if_possible (keyword_field)
 		end
 
 	show is
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
-			keyword_field.set_focus
+			set_focus_if_possible (keyword_field)
 		end
 
 feature -- Access

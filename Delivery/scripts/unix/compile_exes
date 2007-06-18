@@ -274,4 +274,8 @@ if [ ! -z "$MULTIPLE_EDITIONS" ]; then
 	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/*.so
 fi
 
+remtrace Make some space
+cd $EXPORT_DIR
+fullrf library
+
 CANCEL

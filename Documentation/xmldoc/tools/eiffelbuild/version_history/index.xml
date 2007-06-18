@@ -1,16 +1,26 @@
-<document title="Version History">
+<document title="EiffelBuild Version History">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Version History</envision_title>
+				<envision_title>EiffelBuild Version History</envision_title>
 				<envision_location>EiffelEnvision\Tools\EiffelBuild</envision_location>
 				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph>EiffelBuild
-		<line_break/>Platform: Any
-		<line_break/>
+	<paragraph>
+		<heading>
+			<size>2</size>6.0 Release
+		</heading>
+		<list ordered="false">
+			<item>Code generation includes the facility of closing the application when last window is closed.</item>
+			<item>The EiffelBuild binary has been renamed into <bold>esbuilder</bold>.</item>
+			<item>Fixed crash when generating code which included a combo box in read-only mode.</item>
+			<item>Fixed bug#12920 where pressing a digit while dropping was not adding x-time the selected widgets (where x is the digit pressed).</item>
+			<item>Fixed bug#12210 where pixmaps set on a menu would be incorrectly displayed in the generated executable (The last added one will always be shown for all menu entries with a pixmap).</item>
+			<item>Fixed bug#11878 where EiffelBuild would crash when saving a project just after removing an event.</item>
+			<item>Fixed bug#11738 where EiffelBuild would crash  when picking and dropping a top level widget into the Generate button.</item>
+		</list>
 		<heading>
 			<size>2</size>5.7 Release
 		</heading>

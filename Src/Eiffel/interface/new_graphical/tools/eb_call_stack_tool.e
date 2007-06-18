@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 				if oc /= Void then
 					l_orig_class_info := oc.name_in_upper
 					l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
-					l_same_name := oc.is_equal (dc)
+					l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)
 				else
 					l_orig_class_info := Interface_names.l_Same_class_name
 				end

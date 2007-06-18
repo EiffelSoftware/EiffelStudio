@@ -720,7 +720,7 @@ feature{NONE} -- Actions
 	on_project_loaded is
 			-- Action to be performed when project is loaded into EiffelStudio
 		do
-			reload_customized_formatter (False)
+			reload_customized_formatter (True)
 		end
 
 feature{NONE} -- Implementation

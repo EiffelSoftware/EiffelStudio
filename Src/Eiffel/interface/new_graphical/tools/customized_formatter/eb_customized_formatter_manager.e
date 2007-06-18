@@ -164,9 +164,11 @@ feature -- Setting
 			formatter_descriptors.wipe_out
 
 			load_formatters (global_formatter_file, True, a_error_agent)
-			create l_file.make (target_formatter_file)
-			if l_file.exists then
-				load_formatters (target_formatter_file, False, a_error_agent)
+			if workbench.universe_defined then
+				create l_file.make (target_formatter_file)
+				if l_file.exists then
+					load_formatters (target_formatter_file, False, a_error_agent)
+				end
 			end
 			set_is_loaded (True)
 			change_actions.call (Void)
@@ -247,7 +249,7 @@ feature{NONE} -- Implementation/Data
 	target_formatter_file_path: FILE_NAME is
 			-- Path to store target formatter file
 		require
-			system_defined: workbench.system_defined and then workbench.is_already_compiled
+			system_defined: workbench.universe_defined
 		do
 			Result := formatter_file_path (project_location.data_path)
 		ensure
@@ -263,7 +265,7 @@ feature{NONE} -- Implementation/Data
 	target_formatter_file: STRING is
 			-- File to store target customized formatters information
 		require
-			system_defined: workbench.system_defined and then workbench.is_already_compiled
+			system_defined: workbench.universe_defined
 		do
 			Result := absolute_file_name (target_formatter_file_path, formatter_file_name)
 		end

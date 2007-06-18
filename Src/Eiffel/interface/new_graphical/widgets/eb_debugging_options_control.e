@@ -171,7 +171,7 @@ feature {EB_ARGUMENT_DIALOG} -- Retrieval
 			l_profs := l_user_opts.profiles
 			if l_profs /= Void then
 				sp := selected_profile
-				if sp /= Void then
+				if sp /= Void and then sp.title /= Void then
 					from
 						l_profs.start
 					until
@@ -179,7 +179,8 @@ feature {EB_ARGUMENT_DIALOG} -- Retrieval
 					loop
 						p := l_profs.item
 						if
-							p.title.is_case_insensitive_equal (sp.title)
+							p.title /= Void
+							and then p.title.is_case_insensitive_equal (sp.title)
 						then
 							--| Let's consider it as same profile.
 						else

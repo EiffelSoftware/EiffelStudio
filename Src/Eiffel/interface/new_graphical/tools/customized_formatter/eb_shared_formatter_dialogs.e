@@ -14,16 +14,11 @@ inherit
 
 feature -- Access
 
-	formatter_dialog_internal: like formatter_dialog
-
 	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG is
 			-- Dialog to setup customized formatters
-		do
-			if formatter_dialog_internal = Void then
-				create formatter_dialog_internal.make (agent customized_formatter_manager.formatter_descriptors)
-				formatter_dialog_internal.ok_actions.extend (agent on_ok_from_formatter_dialog)
-			end
-			Result := formatter_dialog_internal
+		once
+			create Result.make (agent customized_formatter_manager.formatter_descriptors)
+			Result.ok_actions.extend (agent on_ok_from_formatter_dialog)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -46,7 +41,7 @@ feature -- Display
 		do
 			if not formatter_dialog.is_displayed then
 				load_metrics (False, metric_names.t_loading_metrics, a_develop_window)
-				formatter_dialog.show_relative_to_window (a_develop_window.window)
+				formatter_dialog.show_modal_to_window (a_develop_window.window)
 			end
 		end
 
@@ -56,7 +51,7 @@ feature -- Display
 			a_develop_window_attached: a_develop_window /= Void
 		do
 			if not tools_dialog.is_displayed then
-				tools_dialog.show_relative_to_window (a_develop_window.window)
+				tools_dialog.show_modal_to_window (a_develop_window.window)
 			end
 		end
 

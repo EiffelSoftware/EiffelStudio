@@ -181,7 +181,7 @@ feature{NONE} -- Actions
 		do
 			if
 				has_changed and then
-				not workbench.system_defined and then
+				not workbench.universe_defined and then
 				descriptors.there_exists (agent (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN do Result := a_descriptor.is_target_scope end)
 			then
 				create l_dialog.make_initialized (

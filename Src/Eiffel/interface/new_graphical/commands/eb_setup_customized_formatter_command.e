@@ -25,6 +25,7 @@ feature -- Execution
 
 	execute is
 		do
+			reload_customized_formatter (False)
 			popup_formatter_dialog (window_manager.last_focused_development_window)
 		end
 

@@ -138,22 +138,23 @@ feature -- Access
 		-- Error report for renaming clause. Contains all problematic cases.
 		--| Is Void if no error occured.
 
-	renamed (a_feature_id: INTEGER): INTEGER
-			-- Renames `a_feature_id' into it's old name or leaves it unchanged if it is not renamed.
+	renamed (a_name_id: INTEGER): INTEGER
+			-- Renames `a_name_id' into it's old name or leaves it unchanged if it is not renamed.
 			--| This feature calls `search' and is therefore not sideeffect free.
-			--| This feature can return -1 if it finds out that this `a_feature_id' has benn renamed into another name.
+			--| This feature can return -1 if it finds out that this `a_name_id' has been
+			--| renamed into another name.
 		do
-				-- We're looking for f (a_feature_id)
-			search (a_feature_id)
+				-- We're looking for f (a_name_id)
+			search (a_name_id)
 			if found then
 					-- Someone renamed x into f
 					-- Result is now x
 				Result := found_item
 			else
-				if not has_item (a_feature_id) then
+				if not has_item (a_name_id) then
 						-- Nobody touched our feature:
 						-- Result is therefore f (unchanged)
-					Result := a_feature_id
+					Result := a_name_id
 				else
 						-- f got actually renamed into y
 						-- Therefore we return -1
@@ -161,32 +162,33 @@ feature -- Access
 				end
 			end
 		ensure
-			if_not_available_result_is_negative: (Result = -1) implies (has_item (a_feature_id) and not has (a_feature_id))
+			if_not_available_result_is_negative:
+				(Result = -1) implies (has_item (a_name_id) and not has (a_name_id))
 		end
 
-		new_name (a_feature_name_id: INTEGER): INTEGER
-				-- Renames `a_feature_name_id' into it's new name or leaves it unchanged.
+	new_name (a_feature_name_id: INTEGER): INTEGER
+			-- Renames `a_feature_name_id' into it's new name or leaves it unchanged.
 		do
-				from
-					start
-				until
-					after or Result /= 0
-				loop
-					if item_for_iteration = a_feature_name_id then
-						Result := key_for_iteration
-					end
-					forth
+			from
+				start
+			until
+				after or Result /= 0
+			loop
+				if item_for_iteration = a_feature_name_id then
+					Result := key_for_iteration
 				end
-				if Result = 0 then
-						-- No new name found for this feature
-						-- Just keep the old one
-					Result := a_feature_name_id
-				end
+				forth
+			end
+			if Result = 0 then
+					-- No new name found for this feature
+					-- Just keep the old one
+				Result := a_feature_name_id
+			end
 		end
 
 feature -- Status
 
-	is_feature_renamed_by_name_id	 (a_feature_name_id: INTEGER): BOOLEAN is
+	is_feature_renamed_by_name_id (a_feature_name_id: INTEGER): BOOLEAN is
 			-- Is `a_feature' renamed under renaming of `Current'?
 		do
 			Result := has_item (a_feature_name_id)
@@ -244,14 +246,14 @@ feature -- Output
 				until
 					after
 				loop
-					 if l_comma_space = Void then
-					 	l_comma_space := ", "
-					 else
-					 	Result.append (l_comma_space)
-					 end
-					 Result.append  (names_heap.item (item_for_iteration))
-					 Result.append  (l_as_keyword)
-					 Result.append  (names_heap.item (key_for_iteration))
+					if l_comma_space = Void then
+						l_comma_space := ", "
+					else
+						Result.append (l_comma_space)
+					end
+					Result.append (names_heap.item (item_for_iteration))
+					Result.append (l_as_keyword)
+					Result.append (names_heap.item (key_for_iteration))
 					forth
 				end
 				Result.append (" end")
@@ -379,7 +381,7 @@ feature {NONE} -- Implementation
 	alias_mapping_attribute: like alias_mapping
 			-- Reference to alias mapping.
 
-	append_to_impl (a_text_formatter: TEXT_FORMATTER;  a_class_c: CLASS_C) is
+	append_to_impl (a_text_formatter: TEXT_FORMATTER; a_class_c: CLASS_C) is
 			-- Append `Current' renaming.
 			--
 			-- `a_text_formatter' is the object where the current renaming is appended to.			
@@ -400,28 +402,28 @@ feature {NONE} -- Implementation
 				until
 					after
 				loop
-					 if l_comma_space = Void then
-					 	l_comma_space := ", "
-					 else
-					 	a_text_formatter.add (l_comma_space)
-					 end
-					 if a_class_c /= Void and then a_class_c.has_feature_table then
-					 	l_feature := a_class_c.feature_with_name_id (item_for_iteration)
-					 end
-					 if l_feature /= Void then
-					 	a_text_formatter.process_feature_text (names_heap.item (item_for_iteration), l_feature, false)
-					 else
-					 	a_text_formatter.add (names_heap.item (item_for_iteration))
-					 end
-					 a_text_formatter.process_keyword_text (l_as_keyword, Void)
-					 a_text_formatter.add (names_heap.item (key_for_iteration))
+					if l_comma_space = Void then
+						l_comma_space := ", "
+					else
+						a_text_formatter.add (l_comma_space)
+					end
+					if a_class_c /= Void and then a_class_c.has_feature_table then
+						l_feature := a_class_c.feature_with_name_id (item_for_iteration)
+					end
+					if l_feature /= Void then
+						a_text_formatter.process_feature_text (names_heap.item (item_for_iteration), l_feature, false)
+					else
+						a_text_formatter.add (names_heap.item (item_for_iteration))
+					end
+					a_text_formatter.process_keyword_text (l_as_keyword, Void)
+					a_text_formatter.add (names_heap.item (key_for_iteration))
 					forth
 				end
 				a_text_formatter.process_keyword_text (" end", Void)
 			end
 		end
 
-	new_error_report:  TUPLE [SEARCH_TABLE[STRING], SEARCH_TABLE[STRING], SEARCH_TABLE[STRING]]
+	new_error_report: TUPLE [SEARCH_TABLE[STRING], SEARCH_TABLE[STRING], SEARCH_TABLE[STRING]]
 			-- Create a new instance of an error report.
 		require
 			no_error_report_exists: error_report = Void

@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 						Result := create_class_list_and_insert (found_class)
 					else
 							-- Multi constaint case
-						if last_type /= Void then
+						if not error and then last_type /= Void then
 							Result := create_class_list_and_insert_associated_classes_from_type (last_type)
 						end
 					end
@@ -570,14 +570,20 @@ feature {NONE} -- Implementation
 			-- Create new class list and insert all associated classes from `a_type'
 			--
 			-- `a_type's associated_classes are inserted into the class list of `Result'
+		require
+			a_type_not_void: a_type /= Void
 		local
 			l_type_set: TYPE_SET_A
+			l_class: CLASS_C
 		do
 			if a_type.is_type_set then
 				l_type_set ?= a_type
 				Result := l_type_set.associated_classes
 			else
-				Result := create_class_list_and_insert (a_type.associated_class)
+				if a_type.has_associated_class then
+					l_class := a_type.associated_class
+				end
+				Result := create_class_list_and_insert (l_class)
 			end
 		ensure
 			create_class_list_and_insert_associated_classes_from_type_not_void: Result /= Void
@@ -959,7 +965,9 @@ feature {NONE} -- Implementation
 							found_class := Void
 	            		else
 	            			last_type := type
-		            		found_class := type.associated_class
+		            		if type.has_associated_class then
+			            		found_class := type.associated_class
+		            		end
 	            		end
 		            else
 		            	found_class := Void
@@ -1316,62 +1324,61 @@ feature {NONE} -- Implementation
 			-- a_type_set is flattened.
 		require
 			a_type_set_not_void: a_type_set /= Void
+			a_type_set_not_formal: not a_type_set.has_formal
 			a_feat_not_void: a_feat /= Void
 			a_extended_class_not_void: a_extended_class /= Void
 		local
 			l_renaming: RENAMING_A
+			l_pos: INTEGER
 			l_name_id, l_new_name_id: INTEGER
-			l_stop: BOOLEAN
-			l_stat: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER_32; constraint_position: INTEGER_32]
+			l_features_found_count: INTEGER
 			l_type_set: TYPE_SET_A
 			l_name_for_completion: EB_FEATURE_FOR_COMPLETION
+			l_stop: BOOLEAN
+			l_stat: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER_32; constraint_position: INTEGER_32]
 		do
 			l_name_id := a_feat.name_id
 			from
 				l_type_set := a_type_set
-				l_stat := l_type_set.e_feature_state_by_name_id (l_name_id)
 				l_type_set.start
 			until
+					-- We stop when the feature was added.
+					-- It *should* always be found. So `l_type_set.after' implies `l_stop'.
+					-- If we find more than one feature we do not want to display it.
 				l_type_set.after or l_stop
 			loop
 				if a_extended_class.class_id = l_type_set.item.associated_class.class_id then
+						-- Ok, so we have three cases:
+						-- * The feature was not found. It has to be renamed in that case, otherwise we have internal errors.
+						-- * The feature was found and it has _not_ been renamed at all.
+						-- * The feature was found but there is a switch of feature names like "rename a as b, b as a end"
+						--   and we have to find out it's new name.
+						-- The code below has to handle these cases correctly.
 					l_renaming := l_type_set.item.renaming
-					if l_renaming /= Void and then l_stat.features_found_count = 1 then
-						l_stop := True
-						l_new_name_id := new_name_from_renaming_a (l_renaming, l_name_id)
-						if l_new_name_id /= -1 then
-							create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id))
-							insert_in_completion_possibilities (l_name_for_completion)
+					if l_renaming /= Void then
+						l_new_name_id := l_renaming.new_name (l_name_id)
+							-- Now we check that under this (possibly renamed) name the feature occurs only once.
+						l_features_found_count := l_type_set.e_feature_state_by_name_id (l_new_name_id).features_found_count
+						if l_features_found_count = 1 then
+							if l_new_name_id /= l_name_id then
+								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id))
+								insert_in_completion_possibilities (l_name_for_completion)
+							else
+								add_feature_to_completion_possibilities (a_feat)
+							end
 						else
-							add_feature_to_completion_possibilities (a_feat)
+								-- The feature occurs more than oce, we do not want to add it.
+							check no_internal_error: l_features_found_count > 1 end
 						end
-					end
-				else
-					if l_stat.features_found_count = 1 then
+					else
 						add_feature_to_completion_possibilities (a_feat)
 					end
+					l_stop := True
+				else
+						-- This calls is in the else part as a call to forth is not ok in the
+						-- case we called `e_feature_state_by_name_id' because it uses the internal cursor as well.
+					l_type_set.forth
 				end
-				l_type_set.forth
-			end
-		end
-
-	new_name_from_renaming_a (a_renaming: RENAMING_A; a_old_name: INTEGER): INTEGER is
-			-- New name from renaming.
-			-- -1 if not found.
-		require
-			a_old_name_exists: names_heap.has (a_old_name)
-			a_renaming_not_void: a_renaming /= Void
-		do
-			Result := -1
-			from
-				a_renaming.start
-			until
-				a_renaming.after or Result /= -1
-			loop
-				if a_renaming.item_for_iteration = a_old_name then
-					Result := a_renaming.key_for_iteration
-				end
-				a_renaming.forth
 			end
 		end
 

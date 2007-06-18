@@ -755,7 +755,7 @@ feature {NONE} -- Implementation (`type_from')
 					last_was_constrained := last_target_type.is_formal
 					last_formal ?= last_target_type
 					if last_was_constrained then
-						last_was_multi_constrained := last_formal.is_multi_constrained (l_class)
+						last_was_multi_constrained := not last_formal.is_single_constraint_without_renaming (l_class)
 						if last_was_multi_constrained then
 								-- We're in the multi constraint case, let's compute a flat version (without formals) of all constraints.							
 							last_constraints := last_formal.constraints (l_class).constraining_types_if_possible (l_class)
@@ -1289,6 +1289,7 @@ feature {NONE}-- Implementation
 			current_class_c_not_void: current_class_c /= Void
 		local
 			sub_exp, recur_exp: LINKED_LIST[EDITOR_TOKEN]
+			l_type_set: TYPE_SET_A
 			type: TYPE_A
 			par_cnt: INTEGER
 			name: STRING
@@ -1376,23 +1377,47 @@ feature {NONE}-- Implementation
 							error := True
 						else
 							name := sub_exp.item.image.as_lower
-							l_processed_class := type.associated_class
-							type := Void
-							if l_processed_class /= Void and then l_processed_class.has_feature_table then
-								processed_feature := l_processed_class.feature_with_name (name)
-								if processed_feature /= Void and then processed_feature.type /= Void then
-									if processed_feature.type.is_formal then
-										formal ?= processed_feature.type
-										if
-											type /= Void and then
-											type.has_generics and then
-											type.generics.valid_index (formal.position)
-										then
-											type := type.generics @ (formal.position)
-										end
+							if type.is_formal then
+								formal ?= type
+								if l_current_class_c.is_valid_formal_position (formal.position) then
+									if formal.is_single_constraint_without_renaming (l_current_class_c) then
+										type := formal.constrained_type_if_possible (l_current_class_c)
 									else
-										type := processed_feature.type
+										l_type_set := formal.constrained_types_if_possible (l_current_class_c)
 									end
+								else
+									-- TODO: Can this case ever occur in a valid system?
+								end
+							end
+							if type.has_associated_class then
+									-- This case includes the ordinary case and the case were we had
+									-- a single constrained formal without a renaming (constrained_type has been called).
+								l_processed_class := type.associated_class
+								if l_processed_class /= Void and then l_processed_class.has_feature_table then
+									processed_feature := l_processed_class.feature_with_name (name)
+								end
+							else
+									-- Maybe we computed a type set?
+								if l_type_set /= Void then
+									processed_feature := l_type_set.e_feature_state_by_name (name).feature_item
+								end
+							end
+								-- Set to `Void' as we are in a loop.
+							type := Void
+							l_type_set := Void
+								-- If we found a feature continue...
+							if processed_feature /= Void and then processed_feature.type /= Void then
+								if processed_feature.type.is_formal then
+									formal ?= processed_feature.type
+									if
+										type /= Void and then
+										type.has_generics and then
+										type.generics.valid_index (formal.position)
+									then
+										type := type.generics @ (formal.position)
+									end
+								else
+									type := processed_feature.type
 								end
 							end
 							sub_exp.forth

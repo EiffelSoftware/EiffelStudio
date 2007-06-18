@@ -1137,19 +1137,23 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			l_text: STRING
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
-			if is_editor_ready and then not editor.is_empty then
-				currently_searched := a_word
-				class_stone ?= editor.stone
-				if class_stone /= Void then
-					class_i := class_stone.class_i
-					file_name:= class_i.file_name
-					class_name := class_i.name
-				else
-					class_name := ""
-					create file_name.make
-				end
+			if is_editor_ready then
 				if editor.text_displayed.reading_text_finished then
 					l_text := editor.text_displayed.text
+				end
+					-- "not editor.is_empty" doesn't imply l_text is not empty string.
+				if l_text /= Void and then not l_text.is_empty then
+					currently_searched := a_word
+					class_stone ?= editor.stone
+					if class_stone /= Void then
+						class_i := class_stone.class_i
+						file_name:= class_i.file_name
+						class_name := class_i.name
+					else
+						class_name := ""
+						create file_name.make
+					end
+
 					create incremental_search_strategy.make_with_start (currently_searched,
 																		surrounding_text_number,
 																		class_name,

@@ -1392,9 +1392,9 @@ feature {NONE}-- Implementation
 							if type.has_associated_class then
 									-- This case includes the ordinary case and the case were we had
 									-- a single constrained formal without a renaming (constrained_type has been called).
-								l_processed_class := type.associated_class
-								if l_processed_class /= Void and then l_processed_class.has_feature_table then
-									processed_feature := l_processed_class.feature_with_name (name)
+							l_processed_class := type.associated_class
+							if l_processed_class /= Void and then l_processed_class.has_feature_table then
+								processed_feature := l_processed_class.feature_with_name (name)
 								end
 							else
 									-- Maybe we computed a type set?
@@ -1406,20 +1406,20 @@ feature {NONE}-- Implementation
 							type := Void
 							l_type_set := Void
 								-- If we found a feature continue...
-							if processed_feature /= Void and then processed_feature.type /= Void then
-								if processed_feature.type.is_formal then
-									formal ?= processed_feature.type
-									if
-										type /= Void and then
-										type.has_generics and then
-										type.generics.valid_index (formal.position)
-									then
-										type := type.generics @ (formal.position)
+								if processed_feature /= Void and then processed_feature.type /= Void then
+									if processed_feature.type.is_formal then
+										formal ?= processed_feature.type
+										if
+											type /= Void and then
+											type.has_generics and then
+											type.generics.valid_index (formal.position)
+										then
+											type := type.generics @ (formal.position)
+										end
+									else
+										type := processed_feature.type
 									end
-								else
-									type := processed_feature.type
 								end
-							end
 							sub_exp.forth
 						end
 					else
@@ -1542,6 +1542,9 @@ feature {NONE}-- Implementation
 			name_id: INTEGER
 			retried: BOOLEAN
 			l_current_class_c: CLASS_C
+			l_class_type_as: CLASS_TYPE_AS
+			l_class_name_as: ID_AS
+			l_name: STRING
 		do
 			if retried then
 				Result := Void
@@ -1574,6 +1577,18 @@ feature {NONE}-- Implementation
 									Result := local_evaluated_type (entities_list.item.type,
 										l_current_class_c,
 										current_feature)
+									if Result = Void then
+										l_class_type_as ?= entities_list.item.type
+										if l_class_type_as /= Void then
+											l_class_name_as := l_class_type_as.class_name
+											if l_class_name_as /= Void then
+												l_name := l_class_name_as.name
+												if l_name /= Void then
+													Result := type_of_generic (l_name)
+								end
+											end
+										end
+									end
 								end
 								id_list.forth
 							end

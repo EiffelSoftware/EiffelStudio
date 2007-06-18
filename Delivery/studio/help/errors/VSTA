@@ -6,8 +6,9 @@ VSTA, not defined in ETL
     conditions:
 
         1 `C' is a valid Class_type with no formals
-		  and no anchors
+          and no anchors
 
         2 `f' is a frozen external routine without
-		   assertions, a .NET static external or a
-		   constant.
+          assertions, a .NET static external or a
+          constant.
+

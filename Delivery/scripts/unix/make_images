@@ -40,18 +40,6 @@ if [ ! -d cdrom ]; then
 	mkdir cdrom
 fi
 
-if [ ! -f Eiffel60_deliv.tar.bz2 ]; then
-	remtrace Saving empty delivery in Eiffel60_deliv.tar.bz2
-	tar -cf Eiffel60_deliv.tar Eiffel60 
-	bzip2 Eiffel60_deliv.tar
-fi
-
-if [ ! -d Eiffel60 ]; then
-	remtrace Extracting current delivery
-	bunzip2 -c Eiffel60_deliv.tar.bz2 | tar -xf -
-fi
-
-
 # Copy runtime files
 cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 

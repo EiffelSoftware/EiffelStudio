@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
 				l_item.set_description (interface_names.l_class_label)
 
-				l_item.set_name (l_item.description)
+				l_item.set_name ("class label")
 
 				tool_bar_items.extend (l_item)
 			end
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 				-- Then we build a `class_addre
 				create {SD_TOOL_BAR_RESIZABLE_ITEM} l_item.make (class_address)
 				l_item.set_description (interface_names.l_class_address)
-				l_item.set_name (l_item.description)
+				l_item.set_name ("class address combo")
 
 				tool_bar_items.extend (l_item)
 			end
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
 				l_item.set_description (interface_names.l_feature_label)
 
-				l_item.set_name (l_item.description)
+				l_item.set_name ("feature label")
 
 				tool_bar_items.extend (l_item)
 			end
@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 			else
 				create {SD_TOOL_BAR_RESIZABLE_ITEM} l_item.make (feature_address)
 				l_item.set_description (interface_names.l_feature_address)
-				l_item.set_name (l_item.description)
+				l_item.set_name ("feature address combo")
 				tool_bar_items.extend (l_item)
 			end
 			if not mode then
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
 
 				l_item.set_description (interface_names.l_view_label)
-				l_item.set_name (l_item.description)
+				l_item.set_name ("view label")
 
 				tool_bar_items.extend (l_item)
 			end
@@ -280,8 +280,8 @@ feature -- Access
 				l_combo.parent.prune (l_combo)
 			end
 			create {SD_TOOL_BAR_RESIZABLE_ITEM} Result.make (l_combo)
-			Result.set_name (interface_names.l_viewpoints)
-			Result.set_description (Result.name)
+			Result.set_name ("view combo")
+			Result.set_description (interface_names.l_viewpoints)
 		ensure
 			not_void: Result /= Void
 		end

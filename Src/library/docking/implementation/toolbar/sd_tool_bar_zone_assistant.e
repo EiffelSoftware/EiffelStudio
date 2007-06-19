@@ -334,7 +334,7 @@ feature -- Command
 				l_name ?= l_datas.item @ 1
 				check not_void: l_name /= Void end
 				l_item := Void
-				if l_name.as_string_8.is_equal (l_separator.name.as_string_8) then
+				if l_name.as_string_32.is_equal (l_separator.name.as_string_32) then
 					-- First check if it's a separator
 					l_content.items.extend (l_separator)
 					create l_separator.make
@@ -344,7 +344,7 @@ feature -- Command
 					until
 						l_all_items.after or l_item /= Void
 					loop
-						if l_all_items.item.name.as_string_8.is_equal (l_name.as_string_8) then
+						if l_all_items.item.name.as_string_32.is_equal (l_name.as_string_32) then
 							l_item := l_all_items.item
 							if not l_datas.item.boolean_item (2) then
 								l_item.disable_displayed

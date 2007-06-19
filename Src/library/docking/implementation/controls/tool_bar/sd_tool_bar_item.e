@@ -183,6 +183,7 @@ feature -- Properties
 
 	name: STRING_GENERAL
 			-- Name which is used for store configuration
+			-- This name should be fixed in all locales.
 
 	set_name (a_name: STRING_GENERAL) is
 			-- Set `name'

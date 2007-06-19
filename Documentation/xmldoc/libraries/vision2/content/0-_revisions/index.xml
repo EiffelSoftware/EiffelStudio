@@ -46,16 +46,16 @@
 				<bold>EV_PIXEL_BUFFER</bold> - Added conversion to/from EV_PIXMAP and added 'save_to_named_file' for saving buffer to disk.
 			</item>
 			<item>
-				<bold>EV_POINTER_STYLE_CONSTANTS</bold> Added header_sizewe cursor
+				<bold>EV_POINTER_STYLE_CONSTANTS</bold> - Added header_sizewe cursor
 			</item>
 			<item>
-				<bold>EV_FIXED</bold> Added extend_with_size_and_position and set_with_size_and_position for flicker free update of fixed children.
+				<bold>EV_FIXED</bold> - Added extend_with_size_and_position and set_with_size_and_position for flicker free update of fixed children.
 			</item>
 			<item>
-				<bold>EV_GRID</bold> Added `visible_row_count' for querying the number of currently visible rows.
+				<bold>EV_GRID</bold> - Added `visible_row_count' for querying the number of currently visible rows.
 			</item>
 			<item>
-				<bold>EV_TEXT_FIELD</bold>Added inheritance from EV_TEXT_ALIGNABLE
+				<bold>EV_TEXT_FIELD</bold> - Added inheritance from EV_TEXT_ALIGNABLE
 			</item>
 
 		</list>
@@ -73,7 +73,7 @@
 							<item>Fixed navigation and selection handling for trees</item>
 						</list>
 					</item>
-					<item><bold>EV_PICK_AND_DROPABLE</bold>Fixed 'memory leak' when calling 'pebble_function'.</item>
+					<item><bold>EV_PICK_AND_DROPABLE</bold> - Fixed 'memory leak' when calling 'pebble_function'.</item>
 				</list>
 			</item>
 			<item>
@@ -97,7 +97,7 @@
 			<item>
 				<bold>Linux/Solaris</bold>
 				<list ordered="false">
-					<item><bold>EV_ACCELERATOR</bold>Reimplemented accelerator implementation so that it works with all key combinations that were previously being unprocessed by gtk</item>
+					<item><bold>EV_ACCELERATOR</bold> - Reimplemented accelerator implementation so that it works with all key combinations that were previously being unprocessed by gtk</item>
 					<item>Completely reimplemented and optimized event handling for faster response, scaled down use of agents for event connection for decreased memory consumption</item>
 				</list>
 			</item>

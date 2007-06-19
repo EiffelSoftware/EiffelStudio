@@ -6,19 +6,34 @@
 		<heading><size>2</size>Graphical environment</heading>
 		<heading><size>3</size>What's new</heading>
 		<list ordered="false">
-			<item></item>
+			<item>New docking facilities which let you control the layout of tools in EiffelStudio. One can also lock the layout to prevent unwanted changes.</item>
+			<item>New tabbed editor.</item>
+			<item>Added configurable pick and drop which lets you choose between traditional context menu or pick and drop for a mouse right click operation.</item>
+			<item>EiffelStudio is now internationalized, it fully supports English, Chinese and German. A partial translation for French and Russian is provided.</item>
+			<item>Shortcuts can now be customized.</item>
+			<item>Added dependency view so supplier/client dependency of a group/folder/class can be investigated. Feature calls are included in dependency view.</item>
 		</list>		
 		<heading><size>3</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>The combo boxes in the address bar can now be resized to see more text (useful with long class names).</item>
+			<item>Added ability to add new classes/clusters/assemblies early on in the compilation phase instead of waiting for a successful compilation.</item>
+			<item>Faster rendering of EiffelStudio when running it through Remote Desktop.</item>
+			<item>Auto-completion after bracketed expression. i.e. arr [i].*</item>
+			<item>Added preference "Maximum processor usage" to dictate the maximum number of processors/cores to use when compile c-code.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Changed the diagram default color from light yellow to white for consistency with the other tools background color.</item>
+			<item>Improved history behaviors.</item>
+			<item>Project settings such as arguments/working directory/location are now stored in a user specific location that does not depend on the UUID of the project, but on its path.</item>
+			<item>Favorites are now stored in the user settings.</item>
 		</list>
 		<heading><size>3</size>Bug fixes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>EiffelStudio and various tools should handle better paths with spaces.</item>
+			<item>Fixed add assemblies dialog not showing assemblies such as mscorlib on 64 bit systems.</item>
+			<item>Fixed bug#12083 where classes in override clusters would not get recompiled properly when automatically saved by EiffelStudio when requesting a compilation.</item>
+			<item>More bug fixes can be seen at <link><label>the EiffelStudio open source site</label><url>http://dev.eiffel.com/EiffelStudio_6.0_Releases</url></link>.</item>
 		</list>
 		<heading><size>2</size>Compiler</heading>
 		<list ordered="false">

@@ -19,7 +19,7 @@ inherit
 			prune as prune_fixed
 		export
 			{NONE} all
-			{ANY} has, parent, count, prunable
+			{ANY} has, parent, count, prunable, is_destroyed
 			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		end
@@ -106,8 +106,13 @@ feature -- Command
 		local
 			l_relative_position: INTEGER
 		do
-			l_relative_position := to_relative_position (a_screen_position)
-			internal_positioner.on_pointer_motion (l_relative_position)
+			-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
+			-- not be called immediately.
+			-- See bug#13196.			
+			if internal_positioner.is_dragging then
+				l_relative_position := to_relative_position (a_screen_position)
+				internal_positioner.on_pointer_motion (l_relative_position)
+			end
 		end
 
 	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is

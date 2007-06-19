@@ -1,5 +1,5 @@
 
-class TEST1 [G -> {TEST2 rename a as b, b as a end, TEST2 rename a as c, c as a end} create make end]
+class TEST1 [G -> {H, I} create make end, H -> TEST2 rename a as b, b as a end, I -> TEST2 rename a as c, c as a end]
 create
 	default_create
 feature

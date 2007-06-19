@@ -75,7 +75,7 @@
 				</cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
-				<cell>No</cell>
+				<cell>Yes</cell>
 			</row>
 			<row>
 				<cell>Expandedness restriction on formal generic</cell>
@@ -267,7 +267,7 @@
 				<cell><code><local_variable>list</local_variable><symbol>.</symbol><feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print</feature_name> <symbol>(</symbol><symbol>?</symbol><symbol>)</symbol><symbol>)</symbol></code></cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
-				<cell>Yes, except for inline agents</cell>
+				<cell>Yes</cell>
 			</row>
 			<row>
 				<cell>Once manifest string</cell>

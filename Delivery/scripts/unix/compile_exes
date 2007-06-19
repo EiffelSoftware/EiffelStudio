@@ -276,6 +276,6 @@ fi
 
 remtrace Make some space
 cd $EXPORT_DIR
-fullrf library
+fullrd library
 
 CANCEL

@@ -20,6 +20,7 @@
 			<item>Faster rendering of EiffelStudio when running it through Remote Desktop.</item>
 			<item>Auto-completion after bracketed expression. i.e. arr [i].*</item>
 			<item>Added preference "Maximum processor usage" to dictate the maximum number of processors/cores to use when compiling c-code.</item>
+			<item>Updated metrics documentation, see <link><label>for more details</label><url>../60_metric_tool/index.xml</url></link>.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
@@ -78,6 +79,7 @@
 		</list>
 		<heading><size>3</size>WEL</heading>
 		<list ordered="false">
+			<item>Raised compatibility bar to Windows 2000 or greater. No more support for Windows 98 or NT 4.0.</item>
 			<item>Added ability to convert image formats among all image formats on Windows (using <class_name>WEL_GDIP_BITMAP</class_name>).</item>
 		</list>
 		<paragraph>

@@ -1087,8 +1087,10 @@ feature -- Window management
 			menus.update_menu_lock_items
 			menus.update_show_tool_bar_items
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	close_all_tools is

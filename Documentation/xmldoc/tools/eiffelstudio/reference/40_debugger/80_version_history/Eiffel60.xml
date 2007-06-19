@@ -1,0 +1,39 @@
+<document title="Release notes for EiffelStudio 6.0 related to the debugger" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+			<list ordered="false">
+				<item>Added auto expressions on watch tools, it suffices to toggle the auto button in any of the watch tool's toolbar.</item>
+				<item>Enhanced breakpoint mechanism by adding print message, hit count (condition), and provide <bold>Is True</bold> and <bold>Has Changed</bold> condition.</item>
+				<item>Improved the debugging options dialog with the ability to define the environment variables passed down to the debugged application.</item>
+				<item>Added some configuration of the Objects tool grid. It is now possible to change the order of 'Current, arguments, locals, ...'.</item>
+				<item>Added start workbench and finalized system on Debugging option dialogs.</item>
+				<item>Added a new way to look at objects with the object viewer.</item>
+				<item>Added a <code><keyword>rescue</keyword></code> clause indicator in call stack tool's grid.</item>
+				<item>One can decide to stay in debugging mode even when compiling.</item>
+				<item>Added possibility to continue on conditional breakpoint evaluation failure.</item>
+				<item>Removed useless <italic>Attributes</italic> row in debugger's objects tree.</item>
+				<item>The once routines node now shows states of once procedures in addition of the state of once functions.</item>
+				<item>Improved cosmetic of debugger's exception handling dialog.</item>
+			</list>
+		<heading><size>2</size>Debugger engine</heading>
+			<list ordered="false">
+				<item>Added support for creation of instance of class (including generic).</item>
+				<item>Added support for manifest TUPLE, and manifest ARRAY.</item>
+				<item>Added support for static routine evaluation.</item>
+				<item>Added ability to disable/restore assertion checking during debugging.</item>
+				<item>Added evaluation of instructions with the debugger (i.e: procedure call).</item>
+				<item>Fixed bug#12934 where the debugger would cause a memory corruption in a running multithreaded program.</item>
+				<item>Fixed bug#12750 where the stack overflow detection was not working on Linux.</item>
+				<item>Fixed bug#11755 where empty strings with a large capacity were slow to be displayed.</item>
+			</list>
+			
+		<heading><size>2</size>Current restrictions and known issues</heading>
+			<list ordered="false">
+				<item>You will find a list <link><url>../80_debugger_limitations.xml</url><label>here</label></link></item>
+			</list>
+			
+	</paragraph>
+</document>

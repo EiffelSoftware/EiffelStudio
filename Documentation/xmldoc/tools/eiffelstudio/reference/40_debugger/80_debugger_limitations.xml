@@ -3,13 +3,13 @@
 	<paragraph>
 		<paragraph>General  limitations:</paragraph>
 		<list ordered="false" >
-			<item>Watch expression: Creation expressions are not supported (for instance "create {MY_CLASS}.make"  is not supported").</item>
 			<item>Watch expression: Agent are not supported (for instance "agent my_function" is not supported".</item>
+			<item>You cannot yet create an instance of SPECIAL.</item>
 			<item>The debugger is not very helpful when the execution is stopped in an invariant.</item>
 		</list>
 		<paragraph>Limitations or known bugs for the Classic debugger:</paragraph>
 		<list ordered="false" >
-			<item>Evaluate "Precusor" will result the current feature's result (not the precursor)</item>
+			<item>Evaluate <code><keyword>Precursor</keyword></code> will result the current feature's result (not the precursor)</item>
 			<item>If you use any of the previous non supported expression in a breakpoint condition, the condition will always return True, and the debugger will stop on such condition breakpoint</item>
 		</list>
 		<paragraph>Limitations or known bugs for the .Net debugger:</paragraph>

@@ -7,7 +7,102 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This document contains details of modifications and bug fixes to the vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
+		<paragraph>This document contains details of modifications and bug fixes to the Vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
+
+
+		<heading>
+			<size>2</size> EiffelStudio 6.0
+		</heading>
+		<paragraph>
+			<bold>Interface modifications</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>EV_PICK_AND_DROPABLE</bold> - Added context menu capabilities with 'set_configurable_target_menu_mode', 'set_configurable_target_menu_handler' and 'show_configurable_target_menu' that can be used to override the existing Pick and Drop mechanism.
+			</item>
+			<item>
+				<bold>EV_ACTION_SEQUENCE</bold> - Now event_data is defined with named tuples for easier reading of the action sequence parameters.
+			</item>
+			<item>
+				<bold>EV_APPLICATION_ACTION_SEQUENCES</bold>
+						<list ordered="false">
+							<item>Added 'file_drop_actions' for OS based file drag and drop from exterior applications to a Vision2 application.</item>
+							<item>Made 'idle_actions' obsolete as it is not thread-safe</item>
+							<item>Now a full garbage collection occurs if the application has been idle for 30 seconds</item>
+						</list>
+			</item>
+			<item>
+				<bold>EV_APPLICATION</bold>
+			       			<list ordered="false">
+							<item>Added 'transport_in_progress' for querying if a pebble transport is currently taking place.</item>
+							<item>Added caps_lock_on for querying if the caps lock key is currently toggled</item>
+							<item>`process_events' will now call idle actions when no more events are left in the pending queue</item>
+						</list>
+			</item>
+			<item>
+				<bold>EV_FONT</bold> - Added 'line_height' to retrieve an appropriate text editor line height in pixels for a font.
+			</item>
+			<item>
+				<bold>EV_PIXEL_BUFFER</bold> - Added conversion to/from EV_PIXMAP and added 'save_to_named_file' for saving buffer to disk.
+			</item>
+			<item>
+				<bold>EV_POINTER_STYLE_CONSTANTS</bold> Added header_sizewe cursor
+			</item>
+			<item>
+				<bold>EV_FIXED</bold> Added extend_with_size_and_position and set_with_size_and_position for flicker free update of fixed children.
+			</item>
+			<item>
+				<bold>EV_GRID</bold> Added `visible_row_count' for querying the number of currently visible rows.
+			</item>
+			<item>
+				<bold>EV_TEXT_FIELD</bold>Added inheritance from EV_TEXT_ALIGNABLE
+			</item>
+
+		</list>
+
+		<paragraph>
+			<bold>Bug fixes</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Platform independent</bold>
+				<list ordered="false">
+					<item><bold>EV_GRID</bold>
+						<list ordered="false">
+							<item>Fixed refresh issues and certain crashes when removing items from grid</item>
+							<item>Fixed navigation and selection handling for trees</item>
+						</list>
+					</item>
+					<item><bold>EV_PICK_AND_DROPABLE</bold>Fixed 'memory leak' when calling 'pebble_function'.</item>
+				</list>
+			</item>
+			<item>
+				<bold>Windows</bold>
+				<list ordered="false">
+					<item><bold>EV_DIALOG</bold>
+						<list ordered="false">
+							<item>Fixed resizing bug that led to a difference in behavior from regular EV_WINDOW descendents</item>
+							<item>Corrected calling of cancel actions when closing via the Cross which previously was broken for modeless and modal dialogs</item>
+						</list>
+					</item>
+					<item><bold>EV_PIXMAP</bold>
+						<list ordered="false">
+							<item>Now correctly copying all agents over when the pixmap implementation internally changes state, previously some agents were being lost after certain operations on a pixmap</item>
+							<item>Now mask is correctly queried when saving pixmap</item>
+						</list>
+					</item>
+				</list>
+
+			</item>
+			<item>
+				<bold>Linux/Solaris</bold>
+				<list ordered="false">
+					<item><bold>EV_ACCELERATOR</bold>Reimplemented accelerator implementation so that it works with all key combinations that were previously being unprocessed by gtk</item>
+					<item>Completely reimplemented and optimized event handling for faster response, scaled down use of agents for event connection for decreased memory consumption</item>
+				</list>
+			</item>
+		</list>
+		
 		<heading>
 			<size>2</size> EiffelStudio 5.7
 		</heading>

@@ -19,18 +19,18 @@
 			<item>Added ability to add new classes/clusters/assemblies early on in the compilation phase instead of waiting for a successful compilation.</item>
 			<item>Faster rendering of EiffelStudio when running it through Remote Desktop.</item>
 			<item>Auto-completion after bracketed expression. i.e. arr [i].*</item>
-			<item>Added preference "Maximum processor usage" to dictate the maximum number of processors/cores to use when compile c-code.</item>
+			<item>Added preference "Maximum processor usage" to dictate the maximum number of processors/cores to use when compiling c-code.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
-			<item>Changed the diagram default color from light yellow to white for consistency with the other tools background color.</item>
-			<item>Improved history behaviors.</item>
+			<item>Changed the diagram default color from light yellow to white for consistency with the background color of other tools.</item>
+			<item>Improved history behavior.</item>
 			<item>Project settings such as arguments/working directory/location are now stored in a user specific location that does not depend on the UUID of the project, but on its path.</item>
 			<item>Favorites are now stored in the user settings.</item>
 		</list>
 		<heading><size>3</size>Bug fixes</heading>
 		<list ordered="false">
-			<item>EiffelStudio and various tools should handle better paths with spaces.</item>
+			<item>EiffelStudio and various tools should better handle paths with spaces.</item>
 			<item>Fixed add assemblies dialog not showing assemblies such as mscorlib on 64 bit systems.</item>
 			<item>Fixed bug#12083 where classes in override clusters would not get recompiled properly when automatically saved by EiffelStudio when requesting a compilation.</item>
 			<item>More bug fixes can be seen at <link><label>the EiffelStudio open source site</label><url>http://dev.eiffel.com/EiffelStudio_6.0_Releases</url></link>.</item>
@@ -66,7 +66,7 @@
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">
-			<item>Updated reading routines of EiffelNet so that for all basic types they would read all the required bytes, not just stop after the first reading. This is important as in some very bad network situation or if you have some signals you could mess up the reading by only reading half of the expected bytes.</item>
+			<item>Updated reading routines of EiffelNet so that for all basic types they would read all the required bytes, not just stop after reading the first. This is important as in some very bad network situation or if you have some signals you could mess up the reading by only reading half of the expected bytes.</item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">

@@ -12,6 +12,6 @@ feature
 			x.try
 		end
 
-	x: TEST1 [TEST2]
+	x: TEST1 [TEST2, TEST2, TEST2]
 
 end

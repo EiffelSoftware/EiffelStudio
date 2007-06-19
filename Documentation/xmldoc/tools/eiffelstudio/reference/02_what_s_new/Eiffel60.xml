@@ -47,7 +47,7 @@
 		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
-			<item></item>
+			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
 		</list>
 		<heading><size>3</size>Process</heading>
 		<list ordered="false">

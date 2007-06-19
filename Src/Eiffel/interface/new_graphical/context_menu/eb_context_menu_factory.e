@@ -316,26 +316,32 @@ feature -- Metrics tool
 			-- Metrics domain selector context menu
 		local
 			l_unit: QL_METRIC_UNIT
-			l_basic: EB_METRIC_BASIC
+			l_metric: EB_METRIC
+			l_basic_metric: EB_METRIC_BASIC
 		do
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				l_unit ?= a_pebble
-				l_basic ?= a_pebble
+				l_metric ?= a_pebble
+				l_basic_metric ?= a_pebble
 				if l_unit /= Void then
 					extend_metric_selector_move_up_and_down (a_menu, a_selector, l_unit)
-				elseif l_basic /= Void then
-					extend_metric_clone_metric (a_menu, l_basic)
-					extend_metric_quick_metric (a_menu, l_basic)
+				elseif l_metric /= Void then
+-- Does not work at the moment. See bug#13214					
+--					extend_metric_clone_metric (a_menu, l_metric)
+						-- Only basic metric can be used as a template for quick metrics
+					if l_basic_metric /= Void then
+						extend_metric_quick_metric (a_menu, l_basic_metric)
+					end
 					extend_separator (a_menu)
 					extend_new_metric (a_menu)
 					extend_reload_metrics (a_menu)
 					extend_metric_open_user_metric (a_menu)
 					extend_import_metric_from_file (a_menu)
 					extend_separator (a_menu)
-					extend_metric_delete (a_menu, l_basic)
+					extend_metric_delete (a_menu, l_metric)
 				end
 			end
 		end
@@ -1535,7 +1541,7 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 
 feature {NONE} -- Metrics tool section, Granularity 1.
 
-	extend_metric_delete (a_menu: EV_MENU; a_basic: EB_METRIC_BASIC) is
+	extend_metric_delete (a_menu: EV_MENU; a_basic: EB_METRIC) is
 			-- Extend metric Delete.
 		require
 			a_menu_not_void: a_menu /= Void
@@ -1567,7 +1573,7 @@ feature {NONE} -- Metrics tool section, Granularity 1.
 			a_menu.last.select_actions.extend (agent l_metric_panel.on_create_quick_metric (a_basic))
 		end
 
-	extend_metric_clone_metric (a_menu: EV_MENU; a_basic: EB_METRIC_BASIC) is
+	extend_metric_clone_metric (a_menu: EV_MENU; a_basic: EB_METRIC) is
 			-- Extend Open user defined metrics externally.
 		require
 			a_menu_not_void: a_menu /= Void

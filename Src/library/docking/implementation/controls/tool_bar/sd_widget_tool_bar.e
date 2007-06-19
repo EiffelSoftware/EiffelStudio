@@ -270,7 +270,7 @@ feature -- Command
 				end
 			end
 		end
-		
+
 	screen_x_end_row: INTEGER is
 			-- Maximum x position.
 		local
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			loop
 				if l_items.item.has_rectangle (l_rect) then
 					l_widget_item ?= l_items.item
-					if l_widget_item /= Void then
+					if l_widget_item /= Void and then has_fixed (l_widget) then
 						l_widget := l_widget_item.widget
 						set_item_width (l_widget, l_widget.minimum_width)
 					end
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 					 then l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and has (l_item) then
 						l_item_x := item_x (l_item)
 						l_item_y := item_y (l_item)
-						if l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position then
+						if (l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position) and then has_fixed (l_item.widget) then
 							set_item_position (l_item.widget, l_item_x, l_item_y)
 						end
 				end

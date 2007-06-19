@@ -146,7 +146,13 @@ feature {NONE} -- Agents
 			-- Handle pointer release actions.
 		do
 			is_pointer_pressed := False
-			tool_bar.disable_capture
+			-- Tool bar may be already void, such as we popup a new dialog in pointer press actions.
+			-- This action cause parent SD_TOOL_BAR destroyed if current stays in tool bar option dialog which
+			-- destroyed by focus out actions.			
+			-- See bug#13195.
+			if tool_bar /= Void then
+				tool_bar.disable_capture
+			end
 		end
 
 indexing

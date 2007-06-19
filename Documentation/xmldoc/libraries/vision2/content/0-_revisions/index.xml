@@ -79,6 +79,8 @@
 			<item>
 				<bold>Windows</bold>
 				<list ordered="false">
+					<item>Raised compatibility bar to Windows 2000 or greater. No more support for Windows 98 or NT 4.0.</item>
+
 					<item><bold>EV_DIALOG</bold>
 						<list ordered="false">
 							<item>Fixed resizing bug that led to a difference in behavior from regular EV_WINDOW descendents</item>

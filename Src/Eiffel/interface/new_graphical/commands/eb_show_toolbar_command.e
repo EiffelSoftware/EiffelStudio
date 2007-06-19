@@ -63,7 +63,7 @@ feature -- Status setting
 			menu_items: like managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
-			if not is_visible then
+			if not is_visible and not is_recycled then
 				is_visible := True
 				target.show
 
@@ -92,8 +92,7 @@ feature -- Status setting
 			menu_items: like managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
-
-			if is_visible then
+			if is_visible and not is_recycled then
 				menu_items := managed_menu_items
 				if menu_items /= Void then
 					from

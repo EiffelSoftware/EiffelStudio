@@ -133,7 +133,18 @@ feature -- Command
 
 	destroy is
 			-- Release hooks.
+		local
+			l_floating_tool_bars: like floating_tool_bars
 		do
+			from
+				l_floating_tool_bars := floating_tool_bars
+				l_floating_tool_bars.start
+			until
+				l_floating_tool_bars.after
+			loop
+				l_floating_tool_bars.item.destroy
+				l_floating_tool_bars.forth
+			end
 			ev_application.pointer_button_press_actions.prune_all (application_right_click_agent)
 			contents.wipe_out
 		end

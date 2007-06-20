@@ -342,16 +342,19 @@ feature {NONE} -- Agents for docker
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			is_drag_title_bar := True
-			internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
-			enable_capture
-			l_tab_state ?= content.state
-			check l_tab_state /= Void end
+			if not is_destroyed and then is_displayed then
+				is_drag_title_bar := True
+				internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+				internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+
+				enable_capture
+				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+
+				l_tab_state ?= content.state
+				check l_tab_state /= Void end
+			end
 		ensure
-			internal_docker_mediator_not_void: internal_docker_mediator /= Void
-			internal_docker_mediator_tracing_pointer: internal_docker_mediator.is_tracing_pointer
+			internal_docker_mediator_tracing_pointer: internal_docker_mediator /= Void implies internal_docker_mediator.is_tracing_pointer
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

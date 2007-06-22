@@ -39,7 +39,7 @@ initialize is
 			--l_app_imp := app_implementation
 			create preferred_families
 			family := Family_sans
-			--set_face_name (l_app_imp.default_font_name)
+			set_face_name ("Arial") --l_app_imp.default_font_name
 			--set_height_in_points (l_app_imp.default_font_point_height_internal)
 			--set_shape (l_app_imp.default_font_style_internal)
 			--set_weight (l_app_imp.default_font_weight_internal)
@@ -81,37 +81,41 @@ feature -- Element change
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
 		do
-
+			family := a_family
 		end
 
 	set_face_name (a_face: STRING_GENERAL) is
 			-- Set the face name for current.
 		do
-
+			name := a_face
+			calculate_font_metrics
 		end
 
 	set_weight (a_weight: INTEGER) is
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
+			calculate_font_metrics
 		end
 
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
+			calculate_font_metrics
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height := a_height
+			calculate_font_metrics
 		end
 
 	set_height_in_points (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-
+			calculate_font_metrics
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
@@ -119,6 +123,7 @@ feature -- Element change
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
 		do
+			calculate_font_metrics
 		end
 
 feature -- Status report
@@ -132,6 +137,8 @@ feature -- Status report
 	calculate_font_metrics is
 			-- Calculate metrics for font
 		do
+			ascent := 1
+			descent := 1
 		end
 
 	ascent: INTEGER

@@ -41,19 +41,19 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is True
-		-- Does `Current' need a GtkEventBox as its `c_object' to receive events.
-
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
 		do
-
+			base_make (an_interface)
 		end
 
 	initialize is
 			-- Initialize `Current'
 		do
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 
+			set_is_initialized (True)
 		end
 
 	dummy_item: EV_HEADER_ITEM
@@ -68,14 +68,24 @@ feature
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
+		local
+			item_imp: EV_HEADER_ITEM_IMP
 		do
-
+			item_imp ?= v.implementation
+			child_array.go_i_th (i)
+			child_array.put_left (v)
+			item_imp.set_parent_imp (Current)
 		end
 
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item a`a_position'
+		local
+			item_imp: EV_HEADER_ITEM_IMP
 		do
-
+			child_array.go_i_th (a_position)
+			item_imp ?= child_array.item.implementation
+			item_imp.set_parent_imp (Void)
+			child_array.remove
 		end
 
 feature {EV_HEADER_ITEM_IMP} -- Implemnentation

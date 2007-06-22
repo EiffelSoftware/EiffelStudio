@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create with size.
 		do
+			create internal_pixmap.make_with_size (a_width, a_height)
 		end
 
 	make (an_interface: EV_PIXEL_BUFFER) is
@@ -47,6 +48,7 @@ feature -- Command
 	set_with_named_file (a_file_name: STRING) is
 			-- Load pixel data file `a_file_name'.
 		do
+			internal_pixmap.set_with_named_file (a_file_name)
 		end
 
 	save_to_named_file (a_file_name: STRING) is
@@ -58,11 +60,14 @@ feature -- Command
 	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
 			-- Draw Current to `a_drawable'
 		do
+			-- TODO!
+			create Result
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
 			-- Create a new sub pixel buffer object.
 		do
+			create Result
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is

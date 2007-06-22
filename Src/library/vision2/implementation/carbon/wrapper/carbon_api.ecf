@@ -23,7 +23,7 @@
 				<cluster name="ise" location="$|ise"/>
 			</cluster>
 		</cluster>
-		<cluster name="gobo" location="${GOBO}\library\">
+		<cluster name="gobo" location="/Applications/MacPorts/Eiffel57/library/gobo/library/">
 			<cluster name="kl_kernel" location="$|kernel\">
 				<cluster name="kl_basic" location="$|basic\"/>
 				<cluster name="kl_elks" location="$|elks\"/>

@@ -267,11 +267,19 @@ feature {NONE} -- Basic operations
 			result_compares_objects: Result.object_comparison
 		end
 
-	temp_batch_file_name: STRING = "finish_freezing.bat"
+	temp_batch_file_name: STRING
 			-- File name of evaluated environment variables
+		once
+			Result := (create {FILE_NAME}.make_temporary_name).out
+			Result.append ("_espawn.bat")
+		end
 
-	env_eval_tmp_file_name: STRING = "env_eval.tmp"
+	env_eval_tmp_file_name: STRING
 			-- File name of evaluated environment variables
+		once
+			Result := (create {FILE_NAME}.make_temporary_name).out
+			Result.append ("_espawn.tmp")
+		end
 
 	cmd_exe_file_name: STRING is
 			-- File name of Command exe

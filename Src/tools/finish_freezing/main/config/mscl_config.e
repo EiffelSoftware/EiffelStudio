@@ -18,6 +18,11 @@ inherit
 			on_dispose
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initalization
 
 	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description) is
@@ -55,6 +60,12 @@ feature {NONE} -- Initalization
 				else
 						-- Reset `internal_reg_key' to default value.
 					reset_key
+				end
+
+				if is_eiffel_layout_defined and then eiffel_layout.is_valid_environment then
+						-- Added runtime include and lib paths
+					extend_variable (include_var_name, eiffel_layout.runtime_include_path)
+					extend_variable (lib_var_name, eiffel_layout.runtime_lib_path)
 				end
 			end
 		end

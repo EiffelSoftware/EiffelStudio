@@ -1,21 +1,21 @@
 indexing
-	description: 
+	description:
 		"EiffelVision primitive, Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "primitive, base, widget"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_PRIMITIVE_IMP
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
 			interface
 		end
-	
+
 	EV_WIDGET_IMP
 		redefine
 			interface,
@@ -52,6 +52,7 @@ feature -- Status report
 	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
 		do
+			Result := true
 		end
 
 	is_tabable_from: BOOLEAN

@@ -28,11 +28,15 @@ feature -- Initialization
 	make (an_interface: like interface) is
 			-- Create an empty drawing area.
 		do
+			base_make (an_interface)
 		end
 
 	initialize is
 			-- Set up action sequence connections and create graphics context.
 		do
+			set_default_colors
+			init_default_values
+			set_is_initialized (True)
 		end
 
 feature -- Status Setting

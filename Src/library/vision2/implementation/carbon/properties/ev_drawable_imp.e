@@ -168,6 +168,11 @@ feature -- Access
 	font: EV_FONT is
 			-- Font used for drawing text.
 		do
+			if internal_font_imp /= Void then
+				Result := internal_font_imp.interface.twin
+			else
+				create Result
+			end
 		end
 
 	foreground_color: EV_COLOR is
@@ -215,7 +220,9 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
-
+			if internal_font_imp /= a_font.implementation then
+				internal_font_imp ?= a_font.implementation
+			end
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -583,6 +590,8 @@ feature -- Drawing operations
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
 			-- Pixmap region of `Current' represented by rectangle `area'
 		do
+			-- TODO
+			create Result
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is

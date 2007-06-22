@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
-		GTK implementation.
+		Carbon implementation.
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,9 +57,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	needs_event_box: BOOLEAN is False
-		-- Needs to be set to True so that `screen_x' and `screen_y' give correct values.
 
 	make (an_interface: like interface) is
 			-- Create grid
@@ -151,18 +148,6 @@ feature {EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
-
+	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end
 

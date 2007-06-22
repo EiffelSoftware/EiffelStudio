@@ -1799,3 +1799,4 @@ if DOTNET test ca-custom-attribute-with-create dotnet100	tcf fail dotnet custom_
 if DOTNET test application-optimizations-enabled dotnet101	tcf pass dotnet optimization
 if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet consumer
 if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes
+if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass constructor generic external creation

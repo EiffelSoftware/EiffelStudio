@@ -59,6 +59,7 @@ feature {NONE} -- Access
 			else
 				Result.append ("/x64")
 			end
+			Result.append (" /XP")
 		end
 
 	batch_file_options: STRING is

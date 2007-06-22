@@ -140,7 +140,7 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel Environment Command Spawn Utility"
 			-- Full name of application
 
-	version: STRING_8 = "6.0b"
+	version: STRING_8 = "6.0c"
 			-- Version number of application
 
 	loose_argument_description: STRING_8 = "Command or application to execute."

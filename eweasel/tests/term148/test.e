@@ -11,7 +11,7 @@ feature -- Initialization
 		local
 			l_multi: GENERIC [DOUBLE, EXPNDT]
 		do
-			--| Add your code here
+			create l_multi
 		end
 
-end -- class APPLICATION
+end

@@ -23,19 +23,7 @@
 				<cluster name="ise" location="$|ise"/>
 			</cluster>
 		</cluster>
-		<cluster name="gobo" location="/Applications/MacPorts/Eiffel57/library/gobo/library/">
-			<cluster name="kl_kernel" location="$|kernel\">
-				<cluster name="kl_basic" location="$|basic\"/>
-				<cluster name="kl_elks" location="$|elks\"/>
-				<cluster name="kl_io" location="$|io\"/>
-				<cluster name="kl_misc" location="$|misc\"/>
-				<cluster name="kl_spec" location="$|spec\">
-					<cluster name="kl_spec_ise" location="$|ise\"/>
-				</cluster>
-				<cluster name="kl_support" location="$|support\"/>
-				<cluster name="kl_unicode" location="$|unicode\"/>
-			</cluster>
-		</cluster>
+		<library name="gobo" location="$ISE_LIBRARY/library/gobo/gobo.ecf" readonly="True"/>
 		<cluster name="carbon" location="generated_wrapper\eiffel\">
 			<cluster name="abstraction" location="$|abstraction\">
 				<cluster name="abstraction_callback" location="$|callback\"/>

@@ -17,9 +17,9 @@ OBJS = wel_hook.obj
 
 wel_hook.dll: $(OBJS)
     $(LINK) $(LFLAGS) $(OBJS) $(LIBS)
-	if not exist ..\spec\bcb mkdir ..\spec\bcb
-	if not exist ..\spec\bcb\dll mkdir ..\spec\bcb\dll
-	copy $@ ..\spec\bcb\dll
+	if not exist ..\spec\bcb\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)
+	if not exist ..\spec\bcb\$(ISE_PLATFORM)\dll mkdir ..\spec\bcb\$(ISE_PLATFORM)\dll
+	copy $@ ..\spec\bcb\$(ISE_PLATFORM)\dll
 	del $@
 	del wel_hook.obj
 	del wel_hook.tds

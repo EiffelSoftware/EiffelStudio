@@ -42,6 +42,8 @@ feature -- Basic operations
 		do
 			add_import (Eif_com_h)
 			add_import (Eif_eiffel_h)
+			add_import (Eif_setup_h)
+			add_import (Eif_macros_h)
 		end
 
 	header_protector (a_header_file_name: STRING): STRING is

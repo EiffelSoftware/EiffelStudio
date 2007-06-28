@@ -25,9 +25,9 @@ feature -- Access
 			-- Number of steps involved in task
 		do
 			if environment.compile_eiffel then
-				Result := 3
+				Result := 4
 			else
-				Result := 2 -- C compilations
+				Result := 3 -- C compilations
 			end
 		end
 
@@ -42,16 +42,26 @@ feature {NONE} -- Implementation
 			Env.change_working_directory (environment.destination_folder)
 			if not environment.abort then
 				progress_report.set_title (C_client_compilation_title)
-				compiler.compile_folder ("Client\Clib")
+				compiler.compile_folder (environment.destination_folder + "Client\Clib", False)
 				progress_report.step
+				if not environment.abort then
+					progress_report.set_title (C_client_compilation_title_mt)
+					compiler.compile_folder (environment.destination_folder + "Client\Clib", True)
+					progress_report.step
+				end
 			end
 			if not environment.abort then
 				progress_report.set_title (C_server_compilation_title)
-				compiler.compile_folder ("Server\Clib")
+				compiler.compile_folder (environment.destination_folder + "Server\Clib", False)
 				progress_report.step
+				if not environment.abort then
+					progress_report.set_title (C_server_compilation_title_mt)
+					compiler.compile_folder (environment.destination_folder + "Server\Clib", True)
+					progress_report.step
+				end
 			end
-			if not environment.abort then		
-			
+			if not environment.abort then
+
 				-- Compiling Eiffel
 				if environment.compile_eiffel then
 					message_output.add_title (Compilation_title_eiffel)
@@ -81,6 +91,15 @@ feature {NONE} -- Private Access
 			-- C compilation message.
 
 	C_server_compilation_title: STRING is "Compiling C server code"
+			-- C compilation message.
+
+	C_client_compilation_title_mt: STRING is "Compiling multi-threaded C client code"
+			-- C compilation message.
+
+	C_common_compilation_title_mt: STRING is "Compiling multi-threaded C common code"
+			-- C compilation message.
+
+	C_server_compilation_title_mt: STRING is "Compiling multi-threaded C server code"
 			-- C compilation message.
 
 	Eiffel_compilation_title: STRING is "Compiling Eiffel code";

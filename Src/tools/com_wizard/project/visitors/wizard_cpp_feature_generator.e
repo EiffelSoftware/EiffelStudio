@@ -39,8 +39,8 @@ feature {NONE} -- Implementation
 	check_interface_pointer (a_interface_name, a_variable_name: STRING): STRING is
 			-- Code for interface pointer checking
 		require
-			non_void_interface_name: a_interface_name /= Void 
-			valid_interface_name: not a_interface_name.is_empty 
+			non_void_interface_name: a_interface_name /= Void
+			valid_interface_name: not a_interface_name.is_empty
 		do
 			create Result.make (400)
 			Result.append ("%THRESULT hr;%N%T")
@@ -122,23 +122,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (400)
 
-			Result.append ("%Tif (FAILED (")
-			Result.append (variable_name)
-			Result.append ("))%N%T{%N%T%T")
-			Result.append ("if ((HRESULT_FACILITY (")
-			Result.append (variable_name)
-			Result.append (") == FACILITY_ITF) && (HRESULT_CODE  (")
-			Result.append (variable_name)
-			Result.append (") > 1024) && (HRESULT_CODE  (")
-			Result.append (variable_name)
-			Result.append (") < 1053))%N%T%T%T")
-			Result.append ("com_eraise (rt_ec.ccom_ec_lpstr (eename (HRESULT_CODE (")
-			Result.append (variable_name)
-			Result.append (") - 1024), NULL), HRESULT_CODE (")
-			Result.append (variable_name)
-			Result.append (") - 1024);%N%T%T")
-			Result.append (raise_com_error (variable_name))
-			Result.append ("};")
+			Result.append ("%Trt.ccom_check_hresult (" + variable_name + ");")
 		ensure
 			non_void_examine_hresult: Result /= Void
 			valid_examine_hresult: not Result.is_empty
@@ -158,7 +142,7 @@ feature {NONE} -- Implementation
 			non_void_raise: Result /= Void
 			valid_raise: not Result.is_empty
 		end
-		
+
 	initialize_excepinfo: STRING is
 			-- Code to initialize excepinfo
 		do
@@ -174,9 +158,9 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			type := visitor.vt_type
-			
+
 			create Result.make (500)
- 
+
 			if visitor.is_enumeration or visitor.is_basic_type and type /= Vt_void then
 				Result.append (visitor.cecil_type)
 				Result.append (" result = (")
@@ -192,7 +176,7 @@ feature {NONE} -- Implementation
 				Result.append (retval_value_set_up (vartype_namer.variant_field_name (visitor)))
 				Result.append (");")
 
-			elseif type = Vt_void or is_hresult (type) or is_error (type) then 
+			elseif type = Vt_void or is_hresult (type) or is_error (type) then
 				Result := (" ")
 			elseif is_variant (type) then
 				Result.append ("VARIANT* pVar = (VARIANT*)CoTaskMemAlloc (sizeof (VARIANT));%N%T")
@@ -221,8 +205,8 @@ feature {NONE} -- Implementation
 				end
 				Result.append (");")
 			end
-			
-			if not (type = Vt_void or is_hresult (type) or is_error (type)) then 
+
+			if not (type = Vt_void or is_hresult (type) or is_error (type)) then
 				Result.append ("%N%Treturn result;")
 			end
 		ensure
@@ -231,7 +215,7 @@ feature {NONE} -- Implementation
 		end
 
 	retval_value_set_up (attribute_name: STRING): STRING is
-			-- Set up code for return variable 
+			-- Set up code for return variable
 		require
 			non_void_name: attribute_name /= Void
 			valid_name: not attribute_name.is_empty

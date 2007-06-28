@@ -41,110 +41,22 @@ inherit
 			{NONE} all
 		end
 
-feature -- Miscellaneous
-
-	makefile_macros_msc: STRING is
-			-- Makefile macros for msc compiler
-		"CC = cl%N%
-		%OUTPUT_CMD = -Fo%N"
-
-	makefile_macros_bcb: STRING is
-			-- Makefile macros for msc compiler
-		"CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%N OUTPUT_CMD = -o%N"
-
-	lib_generation (a_library_name, obj_name, c_compiler: STRING): STRING is
-			-- lib generation part of Makefile
-		require
-			non_void_library_name: a_library_name /= Void
-			valid_library_name: not a_library_name.is_empty
-			non_void_obj_name: obj_name /= Void
-			valid_obj_name: not obj_name.is_empty
-			non_void_c_compiler: c_compiler /= Void
-			valid_c_compiler: c_compiler.is_equal ("msc") or
-						c_compiler.is_equal ("bcb")
-		do
-			create Result.make (200)
-			Result.append (a_library_name + ".lib: $(" + obj_name+ ")%N%
-					%	if exist $@ del $@%N")
-			if c_compiler.is_equal ("msc") then
-				Result.append ("	lib -OUT:$@ $(" + obj_name+ ")%N")
-			else
-				check
-					c_compiler.is_equal ("bcb")
-				end
-				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**%N")
-			end
-
-			Result.append ("	del *.obj%N%
-					%	if not exist " + c_compiler + " mkdir " + c_compiler + "%N%
-					%	$(MV) $@ " + c_compiler + "%N%
-					%	del $@%N%N")
-		ensure
-			non_void_result: Result /= Void
-			valid_result: not Result.is_empty
-		end
-
-	make_file (obj_list, wobj_list, a_library_name, wobj_generation, c_compiler: STRING): STRING is
-			-- Makefile text.
-		require
-			non_void_obj_list: obj_list /= Void
-			valid_obj_list: not obj_list.is_empty
-		do
-			create Result.make (1000)
-			Result.append ("# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File%N%NMV = copy%N")
-			if c_compiler.is_equal ("msc") then
-				Result.append (makefile_macros_msc)
-			else
-				check
-					c_compiler.is_equal ("bcb")
-				end
-				Result.append (makefile_macros_bcb)
-			end
-			Result.append (	"CFLAGS = ")
-			if c_compiler.is_equal ("msc") then
-				Result.append ("-MT -W0 -Ox ")
-				Result.append_character (' ')
-			else
-				Result.append (bcb_compiler_flags)
-			end
-			Result.append (c_compiler_flags)
-			Result.append ("%N%NOBJ = " + obj_list + "%N%NWOBJ = ")
-			Result.append (wobj_list)
-			Result.append ("%N%Nall:: ")
-			Result.append (a_library_name)
-			Result.append (".lib ")
-			Result.append (a_library_name)
-			Result.append ("_final.lib%N%N")
-			Result.append (lib_generation (a_library_name, "WOBJ", c_compiler))
-			Result.append (lib_generation (a_library_name + "_final", "OBJ", c_compiler))
-			Result.append (".cpp.obj:")
-			if c_compiler.is_equal ("msc") then
-				Result.append (":")
-			end
-			Result.append ("%N	$(CC) $(CFLAGS) ")
-			if c_compiler.is_equal ("msc") then
-				Result.append (" /nologo ")
-			end
-			Result.append ("$<%N%N")
-			Result.append (wobj_generation)
-		ensure
-			non_void_make_file: Result /= Void
-			valid_make_file: not Result.is_empty
-		end
-
 feature -- Basic operations
 
 	generate (a_folder_name, a_library_name: STRING) is
 			-- Generates `Makefile' in folder `a_folder_name'.
 		require
-			non_void_folder_name: a_folder_name /= Void
-			valid_folder_name: is_valid_folder_name (a_folder_name)
+			a_folder_name_attached: a_folder_name /= Void
+			valid_a_folder_name: is_valid_folder_name (a_folder_name)
+			a_library_name_attached: a_library_name /= Void
+			not_a_library_name_is_empty: not a_library_name.is_empty
 		local
 			a_directory: DIRECTORY
 			a_file_list: LIST [STRING]
 			a_working_directory: STRING
 			obj_list: STRING
-			wobj_list, wobj_generation: STRING
+			wobj_list: STRING
+			files: ARRAYED_LIST [STRING]
 		do
 			a_working_directory := Env.current_working_directory.twin
 			create a_directory.make_open_read (a_folder_name)
@@ -154,60 +66,117 @@ feature -- Basic operations
 				a_file_list.start
 				create obj_list.make (100)
 				create wobj_list.make (100)
-				create wobj_generation.make (1000)
+				create files.make (100)
 			until
 				a_file_list.after or environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
 					obj_list.append (c_to_obj (a_file_list.item) + Space + "\%N")
 					wobj_list.append ("w" + c_to_obj (a_file_list.item) + Space + "\%N")
-					wobj_generation.append (wobj_string (a_file_list.item))
+					files.extend (a_file_list.item)
 				end
 				a_file_list.forth
 			end
 			if not obj_list.is_empty then
-				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "msc"), "Makefile.msc")
-				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "bcb"), "Makefile.bcb")
-				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc", "make_msc.bat")
-				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcb", "make_bcb.bat")
+				save_file (make_file (files, a_library_name, "msc", False), "Makefile.msc")
+				save_file (make_file (files, a_library_name, "msc", True), "Makefile-mt.msc")
+				save_file (make_file (files, a_library_name, "bcb", False), "Makefile.bcb")
+				save_file (make_file (files, a_library_name, "bcb", True), "Makefile-mt.bcb")
+				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc%Nnmake /f Makefile-mt.msc", "make_msc.bat")
+				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcbN%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile-mt.bcb", "make_bcb.bat")
 			end
 			Env.change_working_directory (a_working_directory)
 		end
 
-	wobj_string (c_file_name: STRING): STRING is
-			-- String to generate wobj file.
+feature {NONE} -- Basic operations
+
+	make_file (a_file_list: LIST [STRING]; a_library_name, a_c_compiler: STRING; a_multi_threaded: BOOLEAN): STRING is
+			-- Makefile text.
 		require
-			nonvoid_name: c_file_name /= Void
-			nonempty_name: not c_file_name.is_empty
-			valid_name: is_c_file (c_file_name)
+			a_file_list_attached: a_file_list /= Void
+			not_a_file_list_is_empty: not a_file_list.is_empty
+			a_file_list_contains_attached_items: not a_file_list.has (Void)
+			a_library_name_attached: a_library_name /= Void
+			not_a_library_name_is_empty: not a_library_name.is_empty
+			a_c_compiler_attached: a_c_compiler /= Void
+			not_a_c_compiler_is_empty: not a_c_compiler.is_empty
+			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler) or
+				a_c_compiler.is_equal (bcb_compiler)
+		local
+			l_cursor: CURSOR
+			l_file: STRING
 		do
-			create Result.make (100)
-			Result.append ("w" + c_to_obj (c_file_name) +
-							": " + c_file_name + "%N%
-							%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if not eiffel_layout.has_borland then
-				Result.append (" -nologo ")
+			create Result.make (1000)
+			Result.append ("# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File%N%NMV = copy%N")
+
+				-- Basic macros
+			if a_c_compiler.is_equal (msc_compiler) then
+				Result.append (makefile_macros_msc)
+			else
+				check
+					a_c_compiler.is_equal (bcb_compiler)
+				end
+				Result.append (makefile_macros_bcb)
 			end
-			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")
+
+				-- C flags
+			Result.append (	"CFLAGS = ")
+			if a_c_compiler.is_equal ("msc") then
+					-- Note, we always compile in multithreaded mode
+				Result.append (msc_compiler_flags)
+			else
+				Result.append (bcb_compiler_flags)
+			end
+			Result.append_character (' ')
+			if a_multi_threaded then
+					-- Add multi-threaded define
+				Result.append ("-DEIF_THREADS ")
+			end
+			Result.append (c_compiler_flags)
+
+				-- File macros
+			Result.append ("%N%NOBJ = " + object_files (a_file_list, False) + "%N%NWOBJ = " + object_files (a_file_list, True))
+			Result.append ("%N%Nall:: ")
+			Result.append (library_name (a_library_name, True, a_multi_threaded))
+			Result.append (".lib ")
+			Result.append (library_name (a_library_name, False, a_multi_threaded))
+			Result.append (".lib%N%N")
+			Result.append (lib_generation (library_name (a_library_name, True, a_multi_threaded), "WOBJ", a_c_compiler))
+			Result.append (lib_generation (library_name (a_library_name, False, a_multi_threaded), "OBJ", a_c_compiler))
+			Result.append (".cpp.obj:")
+			if a_c_compiler.is_equal ("msc") then
+				Result.append (":")
+			end
+			Result.append ("%N	$(CC) $(CFLAGS) ")
+			if a_c_compiler.is_equal (msc_compiler) then
+				Result.append (" /nologo ")
+			end
+			Result.append ("$<%N%N")
+			Result.append (wobj_generation (a_file_list))
 		ensure
-			non_void_result: Result /= Void
-			valid_result: not Result.is_empty
+			non_void_make_file: Result /= Void
+			valid_make_file: not Result.is_empty
 		end
 
-	save_file (content, a_file_name: STRING) is
+	save_file (a_content, a_file_name: STRING) is
 			-- Save file with content `content' and file name `a_file_name'.
+		require
+			a_content_attached: a_content /= Void
+			not_a_content_is_empty: not a_content.is_empty
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			retried: BOOLEAN
-			a_file: PLAIN_TEXT_FILE
-			a_string: STRING
+			l_file: PLAIN_TEXT_FILE
+			l_string: STRING
 		do
 			if not retried then
-				a_string := Env.current_working_directory.twin
-				a_string.append_character (Directory_separator)
-				a_string.append (a_file_name)
-				create a_file.make_open_write (a_string)
-				a_file.put_string (content)
-				a_file.close
+				l_string := Env.current_working_directory.twin
+				l_string.append_character (Directory_separator)
+				l_string.append (a_file_name)
+				create l_file.make_open_write (l_string)
+				l_file.put_string (a_content)
+				l_file.close
 			else
 				environment.set_abort (Makefile_write_error)
 			end
@@ -218,18 +187,199 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Query
+
+	library_name (a_base: STRING; a_workbench, a_multi_threaded: BOOLEAN): STRING
+			-- Generates a library name base on a base name `a_base'
+		require
+			a_base_attached: a_base /= Void
+			not_a_base_is_empty: not a_base.is_empty
+		do
+			create Result.make (a_base.count + 10)
+			if a_workbench then
+				Result.append (workbench_prefix)
+			end
+			Result.append (a_base)
+			if a_multi_threaded then
+				Result.append (multi_threaded_suffix)
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	lib_generation (a_library_name, a_obj_name, a_c_compiler: STRING): STRING is
+			-- lib generation part of Makefile
+		require
+			a_library_name_attached: a_library_name /= Void
+			valid_library_name: not a_library_name.is_empty
+			a_obj_name_attached: a_obj_name /= Void
+			not_a_obj_name_is_empty: not a_obj_name.is_empty
+			a_c_compiler_attached: a_c_compiler /= Void
+			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler) or
+				a_c_compiler.is_equal (bcb_compiler)
+		local
+			l_lib_name: STRING
+		do
+			create Result.make (200)
+
+			l_lib_name := a_library_name.twin
+			Result.append (a_library_name + ".lib: $(" + a_obj_name+ ")%N%
+					%	if exist $@ del $@%N")
+			if a_c_compiler.is_equal ("msc") then
+				Result.append ("	lib -OUT:$@ $(" + a_obj_name+ ")%N")
+			else
+				check
+					a_c_compiler.is_equal ("bcb")
+				end
+				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**%N")
+			end
+
+			Result.append ("	del *.obj%N%
+					%	if not exist " + a_c_compiler + " mkdir " + a_c_compiler + "%N%
+					%	$(MV) $@ " + a_c_compiler + "%N%
+					%	del $@%N%N")
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	object_files (a_files: LIST [STRING]; a_workbench: BOOLEAN): STRING
+			-- Retrieve a list of object files
+		require
+			a_files_attached: a_files /= Void
+			not_a_files_is_empty: not a_files.is_empty
+			a_files_contained_attached_items: not a_files.has (Void)
+		local
+			l_cursor: CURSOR
+		do
+			create Result.make (1024)
+			l_cursor := a_files.cursor
+			from a_files.start until a_files.after loop
+				if a_workbench then
+					Result.append (workbench_prefix)
+				end
+				Result.append (c_to_obj (a_files.item))
+				if not a_files.islast then
+					Result.append (" \%N")
+				end
+				a_files.forth
+			end
+			a_files.go_to (l_cursor)
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
+		end
+
+	wobj_generation (a_files: LIST [STRING]): STRING is
+			-- String to generate wobj generation string.
+		require
+			a_files_attached: a_files /= Void
+			not_a_files_is_empty: not a_files.is_empty
+			a_files_contained_attached_items: not a_files.has (Void)
+		local
+			l_cursor: CURSOR
+		do
+			create Result.make (1024)
+			l_cursor := a_files.cursor
+			from a_files.start until a_files.after loop
+				Result.append (wobj_string (a_files.item))
+				a_files.forth
+			end
+			a_files.go_to (l_cursor)
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
+		end
+
+	wobj_string (a_c_file_name: STRING): STRING is
+			-- String to generate wobj file.
+		require
+			a_c_file_name_attached: a_c_file_name /= Void
+			not_a_c_file_name_is_empty: not a_c_file_name.is_empty
+			a_c_file_name_is_valid_name: is_c_file (a_c_file_name)
+		do
+			create Result.make (100)
+			Result.append (workbench_prefix)
+			Result.append (c_to_obj (a_c_file_name) +
+					": " + a_c_file_name + "%N%
+					%	$(CC) $(CFLAGS) -DWORKBENCH	")
+			if not eiffel_layout.has_borland then
+				Result.append (" -nologo ")
+			end
+			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Constants
+
+	msc_compiler: STRING = "msc"
+	bcb_compiler: STRING = "bcb"
+			-- C compiler constants
+
+	makefile_macros_msc: STRING is
+			-- Makefile macros for msc compiler
+		"CC = cl%N%
+		%OUTPUT_CMD = -Fo%N"
+
+	makefile_macros_bcb: STRING is
+			-- Makefile macros for msc compiler
+		require
+			layout_defined: is_eiffel_layout_defined
+		once
+			create Result.make (512)
+			Result.append ("CC = %"")
+			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append ("\Bcc55\Bin\bcc32.exe%"%N OUTPUT_CMD = -o%N")
+		ensure
+			result_attached: Result /= Void
+		end
 
 	c_compiler_flags: STRING is
 			-- C compiler options to compile generated code.
-			"-D_WIN32_DCOM %
-			%-c -I..\..\client\include -I..\..\server\include -I..\..\common\include %
-			%-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include %
-			%-I%D(ISE_EIFFEL)\library\com\spec\windows\include "
+		require
+			layout_defined: is_eiffel_layout_defined
+		once
+			create Result.make (512)
+			Result.append ("-D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I%"")
+			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append ("\studio\spec\")
+			Result.append (eiffel_layout.eiffel_platform)
+			Result.append ("\include%" -I%"")
+			Result.append (eiffel_layout.eiffel_library)
+			Result.append ("\library\com\spec\windows\include%" ")
+		ensure
+			result_attached: Result /= Void
+		end
+
+	msc_compiler_flags: STRING is
+			-- Additional Borland C flags.
+			"-MT -W0 -Ox"
 
 	bcb_compiler_flags: STRING is
 			-- Additional Borland C flags.
-			"-w- -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib ";
+		require
+			layout_defined: is_eiffel_layout_defined
+		once
+			create Result.make (512)
+			Result.append ("-w- -I%"")
+			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append ("\BCC55\include%" -L%"")
+			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append ("\BCC55\lib%"")
+		ensure
+			result_attached: Result /= Void
+		end
+
+	workbench_prefix: STRING is "w";
+			-- Library workbench prefix
+
+	multi_threaded_suffix: STRING is "-mt";
+			-- Multithreaded library name suffix
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

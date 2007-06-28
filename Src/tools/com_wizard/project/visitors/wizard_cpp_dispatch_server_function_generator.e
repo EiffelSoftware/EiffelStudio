@@ -45,11 +45,11 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (1000)
-			if 
-				func_desc.arguments.is_empty and 
-				not does_routine_have_result (func_desc) 
+			if
+				func_desc.arguments.is_empty and
+				not does_routine_have_result (func_desc)
 			then
-				Result.append (Void_c_keyword)					
+				Result.append (Void_c_keyword)
 			else
 				from
 					func_desc.arguments.start
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 					func_desc.arguments.forth
 				end
 
-				if 
+				if
 					not does_routine_have_result (func_desc) and
 					not func_desc.arguments.is_empty
 				then
@@ -111,11 +111,11 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (100000)
-			Result.append (Ecatch)
-
-			if 
-				func_desc.argument_count = 0 and 
-				not does_routine_have_result (func_desc) 
+			Result.append (eif_initialize_aux_thread)
+			Result.append (ecom_enter_stub)
+			if
+				func_desc.argument_count = 0 and
+				not does_routine_have_result (func_desc)
 			then
 				Result.append (New_line_tab)
 				Result.append (empty_argument_procedure_body)
@@ -149,10 +149,10 @@ feature {NONE} -- Implementation
 						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
 						add_to_cecil_call_arguments (visitor, func_desc.arguments.item.name)
-	
-						if 
-							not visitor.is_basic_type and 
-							not (visitor.vt_type = Vt_bool) and 
+
+						if
+							not visitor.is_basic_type and
+							not (visitor.vt_type = Vt_bool) and
 							not visitor.is_enumeration
 						then
 							add_free_object_code (func_desc.arguments.item.name)
@@ -167,12 +167,11 @@ feature {NONE} -- Implementation
 				visitor := func_desc.return_type.visitor
 				if not does_routine_have_result (func_desc) then
 					cecil_call := cecil_procedure_set_up
-					cecil_call.append (arguments)
 				else
 					cecil_call := cecil_function_declaration (visitor)
 					cecil_call.append (cecil_function_call)
 				end
-				
+
 				Result.append (New_line_tab)
 				if variables.count > 0 then
 					Result.append (variables)
@@ -206,16 +205,18 @@ feature {NONE} -- Implementation
 					Result.append ("%N%N%T")
 				end
 
-				if 
-					func_desc.arguments.count > 0 or 
-					does_routine_have_result (func_desc) 
+				if
+					func_desc.arguments.count > 0 or
+					does_routine_have_result (func_desc)
 				then
 					Result.append (out_value)
 					Result.append (free_object)
 				end
 			end
 
-			Result.append ("%N%TEND_ECATCH;%N%Treturn S_OK;")
+			Result.append (new_line_tab)
+			Result.append (ecom_exit_stub)
+			Result.append ("return S_OK;")
 		end
 
 indexing

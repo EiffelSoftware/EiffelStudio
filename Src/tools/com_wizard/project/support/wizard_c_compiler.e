@@ -44,7 +44,7 @@ inherit
 
 feature -- Basic Operations
 
-	compile_folder (a_folder_name: STRING) is
+	compile_folder (a_folder_name: STRING; a_multi_threaded: BOOLEAN) is
 			-- Compiler C files in folder `a_folder_name'.
 			-- Report progress with `a_progress_report' if not void.
 		require
@@ -54,23 +54,29 @@ feature -- Basic Operations
 			l_directory: DIRECTORY
 			l_string: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
+			l_file_name: STRING
 		do
-			create l_directory.make_open_read (a_folder_name)
-			if eiffel_layout.has_borland then
-				if l_directory.has_entry ("makefile.bcb") then
-					l_string := "make /f makefile.bcb"
-				end
+			if a_multi_threaded then
+				l_file_name := "Makefile-mt"
 			else
-				if l_directory.has_entry ("makefile.msc") then
-					l_string := "nmake /f makefile.msc"
-				end
+				l_file_name := "Makefile"
+			end
+			if eiffel_layout.has_borland then
+				l_file_name.append (".bcb")
+			else
+				l_file_name.append (".msc")
+			end
+
+			create l_directory.make_open_read (a_folder_name)
+			if l_directory.has_entry (l_file_name) then
+				l_string := "nmake /f " + l_file_name
 			end
 			if l_string /= Void then
-			create l_process_launcher
+				create l_process_launcher
 				l_process_launcher.run_hidden
 				environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
-				if not l_process_launcher.last_launch_successful or not l_directory.has_entry ("msc") then
+				if not l_process_launcher.last_launch_successful or not l_directory.has_entry (eiffel_layout.get_environment (eiffel_layout.ise_c_compiler_env)) then
 					environment.set_abort (C_compilation_failed)
 					environment.set_error_data ("in folder " + Env.current_working_directory + "\" + a_folder_name)
 				end

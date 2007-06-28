@@ -29,8 +29,8 @@ feature -- Basic Operations
 		do
 			Result := a_file_name.twin
 			dot_index := Result.index_of ('.', 1)
-			Result.keep_head (dot_index)
-			Result.append ("obj")
+			Result.keep_head (dot_index - 1)
+			Result.append (".obj")
 		ensure
 			changed: Result.substring (Result.count - 3, Result.count).is_equal (".obj")
 		end

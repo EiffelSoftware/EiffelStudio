@@ -12,23 +12,35 @@ indexing
 		]"
 */
 
-#ifndef __ECOM_RUNTIME_GLOBALS_H_INC__
-#define __ECOM_RUNTIME_GLOBALS_H_INC__
+#ifndef __ECOM_RUNTIME_H_INC__
+#define __ECOM_RUNTIME_H_INC__
 
+#ifdef __cplusplus
+class ecom_runtime;
+#endif
+
+#include "eif_com.h"
+#include <assert.h>
+#include "eif_eiffel.h"
+#include "eif_except.h"
 #include "ecom_exception.h"
 #include "ecom_runtime_c_e.h"
 #include "ecom_runtime_e_c.h"
-#include "ecom_runtime.h"
+
 #ifdef __cplusplus
+extern "C" {
+#endif
 
-extern "C" Formatter  f;
+#ifdef __cplusplus
+class ecom_runtime
+{
+  public:
+    void ccom_check_hresult (HRESULT hr);
+};
+#endif
 
-extern "C" ecom_runtime_ce rt_ce;
+#ifdef __cplusplus
+}
+#endif
 
-extern "C" ecom_runtime_ec rt_ec;
-
-extern "C" ecom_runtime rt;
-
-#endif // __cplusplus
-
-#endif // !__ECOM_RUNTIME_GLOBALS_H_INC__
+#endif // !__ECOM_RUNTIME_H_INC__

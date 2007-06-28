@@ -3,7 +3,7 @@
 CC = cl
 CFLAGS = -c -Ox -MT -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
-OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
+OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj ecom_runtime.obj
 
 com_runtime.lib: $(OBJ)
 	if exist $@ del $@

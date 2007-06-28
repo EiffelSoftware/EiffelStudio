@@ -42,7 +42,7 @@ feature {NONE} -- Access
 
 	component_desc: WIZARD_COMPONENT_DESCRIPTOR
 			-- Component.
-	
+
 	coclass_name: STRING
 			-- Coclass name
 
@@ -67,45 +67,48 @@ feature {NONE} -- Implementation
 		end
 
 	cecil_call: STRING
-			-- 
-	
-	arguments: STRING 
-			-- 
-	
+			--
+
+	arguments: STRING
+			--
+
 	variables: STRING
-			-- 
-	
+			--
+
 	return_value: STRING
-			-- 
-	
+			--
+
 	free_object: STRING
-			-- 
-	
+			--
+
 	protect_object: STRING
-			-- 
+			--
 
 	return_type: STRING
-			-- 
-	
+			--
+
 	body: STRING is
 			-- Feature body
 		local
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (2000)
+			Result.append (eif_initialize_aux_thread)
 			if is_return_hresult then
-				Result.append (Ecatch)
+				Result.append (ecom_enter_stub)
+				Result.append ("%N%T")
 			end
 			create cecil_call.make (1000)
 			create return_value.make (1000)
 			create free_object.make (1000)
 			create variables.make (1000)
-			
+
 			if func_desc.argument_count > 0 or is_return_data then
 				generate_cecil_call_code
-				Result.append ("%N%T")
-				Result.append (variables)
-				Result.append ("%N%T")
+				if not variables.is_empty then
+					Result.append (variables)
+					Result.append ("%N%T")
+				end
 				Result.append (cecil_call)
 				Result.append ("%N%T")
 
@@ -115,7 +118,7 @@ feature {NONE} -- Implementation
 				end
 
 				Result.append (return_value)
-				Result.append (free_object)			
+				Result.append (free_object)
 			else
 				Result.append (empty_argument_procedure_body)
 			end
@@ -123,7 +126,8 @@ feature {NONE} -- Implementation
 			Result.append ("%N%T")
 
 			if is_return_hresult then
-				Result.append ("END_ECATCH;%N%Treturn S_OK;")
+				Result.append (ecom_exit_stub)
+				Result.append ("return S_OK;")
 			elseif is_return_data then
 				Result.append ("return (")
 				Result.append (func_desc.return_type.visitor.c_type)
@@ -167,7 +171,7 @@ feature {NONE} -- Implementation
 					func_desc.arguments.after
 				loop
 					cursor := func_desc.arguments.cursor
-					
+
 					process_argument (func_desc.arguments.item)
 
 					func_desc.arguments.go_to (cursor)
@@ -182,14 +186,12 @@ feature {NONE} -- Implementation
 			end
 			if cecil_call.is_empty then
 				cecil_call.append (cecil_procedure_set_up)
-				cecil_call.append (arguments)
 			else
 				cecil_call.append (cecil_function_call)
 			end
-
 		ensure
 		end
-		
+
 	add_to_cecil_call_arguments (visitor: WIZARD_DATA_TYPE_VISITOR; an_argument_name: STRING) is
 			-- Add to CECIL call arguments.
 		require
@@ -197,8 +199,8 @@ feature {NONE} -- Implementation
 			non_void_an_argument_name: an_argument_name /= Void
 			valid_an_argument_name: not an_argument_name.is_empty
 		do
-			if 
-				visitor.is_basic_type or 
+			if
+				visitor.is_basic_type or
 				visitor.is_enumeration or
 				visitor.vt_type = Vt_bool
 			then
@@ -208,11 +210,11 @@ feature {NONE} -- Implementation
 				arguments.append (an_argument_name)
 
 			else
-				arguments.append (", ((" + Tmp_clause + an_argument_name + 
+				arguments.append (", ((" + Tmp_clause + an_argument_name +
 							" != NULL) ? eif_access (" + Tmp_clause + an_argument_name + ") : NULL)")
 			end
 		end
-		
+
 	add_free_object_code (a_argument_name: STRING)is
 			-- Add code for freeing object.
 		require
@@ -226,7 +228,7 @@ feature {NONE} -- Implementation
 			free_object.append (a_argument_name)
 			free_object.append (");%N%T")
 		end
-		
+
 	process_argument (an_argument: WIZARD_PARAM_DESCRIPTOR) is
 			-- Process argument.
 		require
@@ -255,8 +257,8 @@ feature {NONE} -- Implementation
 				variables.append (New_line_tab)
 
 				add_to_cecil_call_arguments (visitor, an_argument.name)
-				
-				if is_paramflag_fout (an_argument.flags) and (visitor.is_pointed or visitor.is_array_type) then					
+
+				if is_paramflag_fout (an_argument.flags) and (visitor.is_pointed or visitor.is_array_type) then
 					return_value.append (out_value_set_up (an_argument.name, visitor, an_argument.type))
 					return_value.append (New_line_tab)
 
@@ -267,7 +269,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set variable.
 		require
@@ -299,7 +301,7 @@ feature {NONE} -- Implementation
 				Result.append (arg_name)
 				Result.append (" = NULL;%N%T")
 
-				if not visitor.is_structure then 
+				if not visitor.is_structure then
 					Result.append ("if (" + arg_name + " != NULL)%N%T{%N%T%T")
 				end
 				Result.append ("tmp_")
@@ -325,7 +327,7 @@ feature {NONE} -- Implementation
 					Result.append (", NULL")
 				end
 				Result.append ("));")
-				if not visitor.is_structure then 
+				if not visitor.is_structure then
 					if visitor.is_interface_pointer or visitor.is_coclass_pointer then
 						Result.append ("%N%T%T")
 						Result.append (arg_name)
@@ -340,10 +342,10 @@ feature {NONE} -- Implementation
 					Result.append ("%N%T}")
 				end
 			end
-			
+
 		end
 
-	out_value_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR; 
+	out_value_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR;
 					descriptor: WIZARD_DATA_TYPE_DESCRIPTOR): STRING is
 			-- Code to return out value
 		require
@@ -356,10 +358,10 @@ feature {NONE} -- Implementation
 			l_generate_ec: BOOLEAN
 		do
 			create Result.make (1000)
-				
-			if 
-				not visitor.is_array_basic_type and 
-				not visitor.is_structure_pointer and 
+
+			if
+				not visitor.is_array_basic_type and
+				not visitor.is_structure_pointer and
 				not visitor.is_interface_pointer and
 				not is_void (visitor.vt_type) and
 				not (is_byref (visitor.vt_type) and is_void (visitor.vt_type - vt_byref))
@@ -368,7 +370,7 @@ feature {NONE} -- Implementation
 					Result.append ("%N%Tif (*" + arg_name + " != NULL)%N%T%T(*")
 					Result.append (arg_name)
 					Result.append (")->Release ();%N%T")
-			
+
 				elseif visitor.is_pointed then
 					pointed_descriptor ?= descriptor
 					if pointed_descriptor /= Void then
@@ -420,9 +422,9 @@ feature {NONE} -- Implementation
 			else
 				visitor := type_descriptor.visitor
 			end
-			
+
 			create Result.make (1000)
-			if 
+			if
 				not visitor.is_basic_type and
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
@@ -430,13 +432,13 @@ feature {NONE} -- Implementation
 				Result.append ("if (" + Tmp_variable_name + " != NULL)%N%T{%N%T%T")
 				Result.append ("EIF_OBJECT tmp_object = eif_protect (" + Tmp_variable_name + ");%N%T%T")
 				if visitor.is_structure_pointer then
-					Result.append ("EIF_TYPE_ID retval_type_id = eif_type_id (%"" + 
+					Result.append ("EIF_TYPE_ID retval_type_id = eif_type_id (%"" +
 								visitor.eiffel_type + "%");%N%T%T")
 					Result.append ("EIF_PROCEDURE set_shared = eif_procedure (%"set_shared%", retval_type_id);%N%T%T")
 					Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) set_shared) (eif_access (tmp_object));%N%T%T")
 				end
 			end
-			
+
 			if visitor.is_structure then
 				Result.append (visitor.c_type)
 				Result.append (" * tmp")
@@ -444,7 +446,7 @@ feature {NONE} -- Implementation
 				Result.append (" = (")
 				Result.append (visitor.c_type)
 				Result.append (" *) eif_field (eif_access(tmp_object), %"item%", EIF_POINTER);%N%T%T")
-				
+
 				if is_variant (visitor.vt_type) then
 					Result.append ("VariantCopy (" + arg_name + ", tmp" + arg_name + ");%N%T%T")
 				else
@@ -484,7 +486,7 @@ feature {NONE} -- Implementation
 					Result.append (Semicolon)
 				end
 			end
-			if 
+			if
 				not visitor.is_basic_type and
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
@@ -514,7 +516,7 @@ feature {NONE} -- Implementation
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-			
+
 			Result.append (func_desc.component_eiffel_name (component_desc))
 
 			Result.append (Double_quote)
@@ -526,9 +528,19 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 
 			-- (FUNCTION_CAST (void, (EIF_REFERENCE, ...)) eiffel_procedure)
+			Result.append ("EIF_ENTER_C")
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
 			Result.append (function_cast_code (Void_c_keyword))
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Close_parenthesis)
+			if not arguments.is_empty then
+				Result.append (New_line_tab)
+				Result.append (arguments)
+			end
+			Result.append (New_line_tab)
+			Result.append ("EIF_EXIT_C")
+			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
@@ -541,41 +553,41 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (1000)
 			if visitor.is_basic_type or visitor.is_enumeration then
-				if 
-					is_int (visitor.vt_type) or 
-					is_integer2 (visitor.vt_type) or 
-					is_integer4 (visitor.vt_type) or 
-					is_unsigned_int (visitor.vt_type) or 
-					is_unsigned_long (visitor.vt_type) or 
+				if
+					is_int (visitor.vt_type) or
+					is_integer2 (visitor.vt_type) or
+					is_integer4 (visitor.vt_type) or
+					is_unsigned_int (visitor.vt_type) or
+					is_unsigned_long (visitor.vt_type) or
 					is_unsigned_short (visitor.vt_type) or
 					is_long_long (visitor.vt_type) or
-					is_unsigned_long_long(visitor.vt_type) 
+					is_unsigned_long_long(visitor.vt_type)
 				then
 					Result := cecil_function_declaration_code (Eif_integer_function, Eif_integer_function_name)
 
 				elseif is_character (visitor.vt_type) or is_unsigned_char (visitor.vt_type) then
-					Result := cecil_function_declaration_code (Eif_character_function, Eif_character_function_name)	
-					
+					Result := cecil_function_declaration_code (Eif_character_function, Eif_character_function_name)
+
 				elseif is_real (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_real_function, Eif_real_function_name)
-					
+
 				elseif is_double (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_double_function, Eif_double_function_name)
-					
+
 				elseif is_byref (visitor.vt_type) or is_void (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_pointer_function, Eif_pointer_function_name)
 				end
 			elseif (visitor.vt_type = Vt_bool) then
 				Result := cecil_function_declaration_code (Eif_boolean_function, Eif_boolean_function_name)
-				
+
 			else
 				Result := cecil_function_declaration_code (Eif_reference_function, Eif_reference_function_name)
 			end
-			
+
 			Result.append (New_line_tab)
-			if 
-				visitor.is_basic_type or 
-				visitor.is_enumeration or 
+			if
+				visitor.is_basic_type or
+				visitor.is_enumeration or
 				visitor.vt_type = Vt_bool
 			then
 				Result.append (visitor.cecil_type)
@@ -597,20 +609,30 @@ feature {NONE} -- Implementation
 			non_void_arguments: arguments /= Void
 		do
 			create Result.make (1000)
-			Result.append ("if (" + Eiffel_function_variable_name + " != NULL)")
+			Result.append ("if (" + Eiffel_function_variable_name + " != NULL) {")
 			Result.append (New_line_tab_tab)
-			
+
+			Result.append ("EIF_ENTER_C")
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (function_cast_code (return_type))
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Close_parenthesis)
-			Result.append (Arguments)
+			if not arguments.is_empty then
+				Result.append (Arguments)
+				Result.append (New_line_tab_tab)
+			end
+			Result.append ("EIF_EXIT_C")
+			Result.append (Semicolon)
 			Result.append (New_line_tab)
-			
+			Result.append_character ('}')
+
 			Result.append (Else_keyword)
+			Result.append (" {")
 			Result.append (New_line_tab_tab)
-			
+
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
 			Result.append ("eif_field (")
@@ -626,6 +648,8 @@ feature {NONE} -- Implementation
 			Result.append (return_type)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			Result.append_character ('}')
 		end
 
 	cecil_function_declaration_code (cecil_function_return_type, cecil_function_type: STRING): STRING is
@@ -643,7 +667,7 @@ feature {NONE} -- Implementation
 			Result.append (" = 0")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
-			
+
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (cecil_function_type)
@@ -678,7 +702,7 @@ feature {NONE} -- Implementation
 			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
-			
+
 			Result.append (func_desc.component_eiffel_name (component_desc))
 
 			Result.append (Double_quote)
@@ -687,6 +711,9 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line)
+			Result.append (New_line_tab)
+			Result.append ("EIF_ENTER_C")
+			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE))")
 			Result.append (Eiffel_procedure_variable_name)
@@ -697,6 +724,9 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_object)
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			Result.append ("EIF_EXIT_C")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 		ensure
@@ -729,8 +759,8 @@ feature {NONE} -- Implementation
 				if not is_paramflag_fretval (func_desc.arguments.item.flags) then
 					visitor := func_desc.arguments.item.type.visitor
 					Result.append (Comma_space)
-					if 
-						visitor.is_basic_type or 
+					if
+						visitor.is_basic_type or
 						visitor.is_enumeration or
 						visitor.vt_type = Vt_bool
 					then

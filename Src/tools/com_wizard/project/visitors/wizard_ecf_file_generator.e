@@ -149,8 +149,10 @@ feature {NONE} -- Implementation
 			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
 
 				-- external libs
-			add_libs (l_target, client)
-			add_libs (l_target, server)
+			add_libs (l_target, client, False)
+			add_libs (l_target, client, True)
+			add_libs (l_target, server, False)
+			add_libs (l_target, server, True)
 
 				-- store it
 			create l_fn.make_from_string (environment.destination_folder)
@@ -184,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_libs (a_target: CONF_TARGET; a_folder: STRING) is
+	add_libs (a_target: CONF_TARGET; a_folder: STRING; a_multi_threaded: BOOLEAN) is
 			-- Add libraries of `a_folder' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -193,18 +195,26 @@ feature {NONE} -- Implementation
 			l_dir: STRING
 			l_ex_obj: CONF_EXTERNAL_OBJECT
 			l_cond: CONF_CONDITION
+			l_lib_name: STRING
 		do
 			if not is_empty_clib_folder (a_folder) then
+				if a_multi_threaded then
+					l_lib_name := "ecom-mt.lib"
+				else
+					l_lib_name := "ecom.lib"
+				end
 				create l_dir.make (50)
 				l_dir := environment.destination_folder + a_folder + "\Clib\$(ISE_C_COMPILER)\"
-				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "ecom_final.lib"), a_target)
+				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + l_lib_name), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_finalize)
+				l_cond.set_multithreaded (a_multi_threaded)
 				l_ex_obj.add_condition (l_cond)
 				a_target.add_external_object (l_ex_obj)
-				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "ecom.lib"), a_target)
+				l_ex_obj := conf_factory.new_external_object (quote_path (l_dir + "w" + l_lib_name), a_target)
 				create l_cond.make
 				l_cond.add_build (conf_constants.build_workbench)
+				l_cond.set_multithreaded (a_multi_threaded)
 				l_ex_obj.add_condition (l_cond)
 				a_target.add_external_object (l_ex_obj)
 			end

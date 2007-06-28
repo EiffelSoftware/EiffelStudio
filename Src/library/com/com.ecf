@@ -60,18 +60,19 @@
 			<visible class="ECOM_UNKNOWN_INTERFACE"/>
 			<visible class="ECOM_STREAM"/>
 			<visible class="ECOM_STUB"/>
+			<visible class="ECOM_INTERFACE"/>
 		</cluster>
 		<cluster name="structures" location="Structures\" recursive="true">
+			<visible class="ECOM_LARGE_INTEGER"/>
 			<visible class="ECOM_CURRENCY"/>
 			<visible class="ECOM_HRESULT"/>
-			<visible class="ECOM_LARGE_INTEGER"/>
+			<visible class="ECOM_EXCEP_INFO"/>
 			<visible class="ECOM_VARIANT"/>
 			<visible class="ECOM_ULARGE_INTEGER"/>
-			<visible class="ECOM_DECIMAL"/>
-			<visible class="ECOM_EXCEP_INFO"/>
-			<visible class="ECOM_DISP_PARAMS"/>
-			<visible class="ECOM_ARRAY"/>
 			<visible class="ECOM_STATSTG"/>
+			<visible class="ECOM_DECIMAL"/>
+			<visible class="ECOM_ARRAY"/>
+			<visible class="ECOM_DISP_PARAMS"/>
 			<visible class="ECOM_GUID"/>
 		</cluster>
 		<cluster name="support" location="Support\" recursive="true"/>

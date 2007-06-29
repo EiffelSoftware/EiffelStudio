@@ -120,6 +120,7 @@ feature {NONE} -- Event loop
 			create timer.make_new_unshared
 			ret := install_event_loop_idle_timer_external (get_main_event_loop_external, 1, 1, idle_dispatcher.c_dispatcher, int_to_pointer(0), timer.item)
 
+			post_launch_actions.call ([])
 			run_application_event_loop_external
 --			target := get_event_dispatcher_target_external
 --			from

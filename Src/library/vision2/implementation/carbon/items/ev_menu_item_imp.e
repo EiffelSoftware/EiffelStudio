@@ -13,12 +13,16 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			internal_set_pixmap,
+			internal_remove_pixmap
 		end
 
 	EV_SENSITIVE_IMP
 		redefine
-			interface
+			interface,
+			enable_sensitive,
+			disable_sensitive
 		end
 
 	EV_TEXTABLE_IMP
@@ -78,6 +82,36 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_IMP}
 		end
 
+feature -- Status setting
+
+	enable_sensitive is
+			-- Make the menu item avtive
+		local
+			pos: INTEGER
+			a_menu: EV_MENU_IMP
+		do
+			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
+			a_menu ?= parent_imp
+			if a_menu /= Void then
+				pos := a_menu.index_of (current.interface, 1)
+				enable_menu_item_external (a_menu.c_object, pos)
+			end
+		end
+
+	disable_sensitive is
+			-- Make the menu item grayed out and ignore commands
+		local
+			pos: INTEGER
+			a_menu: EV_MENU_IMP
+		do
+			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
+			a_menu ?= parent_imp
+			if a_menu /= Void then
+				pos := a_menu.index_of (current.interface, 1)
+				disable_menu_item_external (a_menu.c_object, pos)
+			end
+		end
+
 feature -- Element change
 
 	set_text (a_text: STRING_GENERAL) is
@@ -114,6 +148,17 @@ feature -- Element change
 	text: STRING_32
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+			--
+		do
+			-- SetMenuItemIconHandle
+		end
+
+	internal_remove_pixmap is
+			-- Remove pixmap from Current
+		do
+		end
 
 	accelerators_enabled: BOOLEAN is True
 

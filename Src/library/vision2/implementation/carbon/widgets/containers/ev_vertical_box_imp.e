@@ -265,7 +265,7 @@ feature {NONE} -- Events
 			-- Handler for the bounds changed event
 		do
 			if count > 0 then
-				layout
+				--layout
 			end
 		end
 

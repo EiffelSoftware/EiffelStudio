@@ -102,7 +102,18 @@ feature {NONE} -- Implementation
 
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
+		local
+			item_imp: EV_ITEM_IMP
 		do
+			item_imp ?= child_array.i_th (a_position).implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end
+			--{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
+			child_array.go_i_th (a_position)
+			child_array.remove
+			item_imp.set_item_parent_imp (Void)
+
 		end
 
 feature -- Implementation

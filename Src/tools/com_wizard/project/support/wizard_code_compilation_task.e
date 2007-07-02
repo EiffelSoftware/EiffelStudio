@@ -25,9 +25,9 @@ feature -- Access
 			-- Number of steps involved in task
 		do
 			if environment.compile_eiffel then
-				Result := 4
+				Result := 5
 			else
-				Result := 3 -- C compilations
+				Result := 4 -- C compilations
 			end
 		end
 

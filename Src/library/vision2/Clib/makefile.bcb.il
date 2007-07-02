@@ -21,7 +21,8 @@ ilvision2.lib: $(OBJ)
 	if exist $@ -del $@
 	$(AR) $@ +$(OBJ)
 	if not exist ..\spec\bcb mkdir ..\spec\bcb
-	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
-	copy $@ ..\spec\bcb\lib
+	if not exist ..\spec\bcb\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)
+	if not exist ..\spec\bcb\$(ISE_PLATFORM)\lib mkdir ..\spec\bcb\$(ISE_PLATFORM)\lib
+	copy $@ ..\spec\bcb\$(ISE_PLATFORM)\lib
 	-del $@
 	-del *.obj

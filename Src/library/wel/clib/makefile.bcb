@@ -24,6 +24,7 @@ wel.lib: $(OBJ)
 	$(AR) $@ +drawstate.obj
 	$(AR) $@ +mousehook.obj
 	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)
 	if not exist ..\spec\bcb\$(ISE_PLATFORM)\lib mkdir ..\spec\bcb\$(ISE_PLATFORM)\lib
 	copy $@ ..\spec\bcb\$(ISE_PLATFORM)\lib

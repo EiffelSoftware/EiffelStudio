@@ -24,6 +24,8 @@ mtwel.lib: $(OBJ)
 	$(AR) $@ +choose_folder.obj
 	$(AR) $@ +mousehook.obj
 	$(AR) $@ +wel_thr_init.obj
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)
 	if not exist ..\spec\bcb\$(ISE_PLATFORM)\lib\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)\lib\$(ISE_PLATFORM)
 	copy $@ ..\spec\bcb\$(ISE_PLATFORM)\lib

@@ -69,7 +69,11 @@ feature -- Basic Operations
 
 			create l_directory.make_open_read (a_folder_name)
 			if l_directory.has_entry (l_file_name) then
-				l_string := "nmake /f " + l_file_name
+				if eiffel_layout.has_borland then
+					l_string := "%"" + eiffel_layout.borland_directory.out + "\bin\make%" /f " + l_file_name
+				else
+					l_string := "nmake /f " + l_file_name
+				end
 			end
 			if l_string /= Void then
 				create l_process_launcher

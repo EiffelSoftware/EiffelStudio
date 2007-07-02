@@ -82,8 +82,8 @@ feature -- Basic operations
 				save_file (make_file (files, a_library_name, "msc", True), "Makefile-mt.msc")
 				save_file (make_file (files, a_library_name, "bcb", False), "Makefile.bcb")
 				save_file (make_file (files, a_library_name, "bcb", True), "Makefile-mt.bcb")
-				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc%Nnmake /f Makefile-mt.msc", "make_msc.bat")
-				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcbN%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile-mt.bcb", "make_bcb.bat")
+				save_file (environment_set_string (msc_compiler) + "%Nnmake /f Makefile.msc%Nnmake /f Makefile-mt.msc", "make_msc.bat")
+				save_file (environment_set_string (bcb_compiler) + "%N%"%%ISE_EIFFEL%%\BCC55\bin\make%" /f Makefile.bcb%N%"%%ISE_EIFFEL%%\BCC55\bin\make%" /f Makefile-mt.bcb", "make_bcb.bat")
 			end
 			Env.change_working_directory (a_working_directory)
 		end
@@ -232,7 +232,7 @@ feature {NONE} -- Query
 				check
 					a_c_compiler.is_equal ("bcb")
 				end
-				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**%N")
+				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe %"$@%" /p256 +-$**%N")
 			end
 
 			Result.append ("	del *.obj%N%
@@ -315,6 +315,26 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
+	environment_set_string (a_compile: STRING): STRING is
+			-- Environment setting header
+		require
+			layout_defined: is_eiffel_layout_defined
+			a_compile_attached: a_compile /= Void
+			a_compile_is_valid: a_compile = msc_compiler or a_compile = bcb_compiler
+		do
+			create Result.make (512)
+			Result.append ("@ECHO OFF%N")
+			Result.append ("IF %"%%ISE_EIFFEL%%.%" == %".%" SET ISE_EIFFEL=")
+			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append ("%NIF %"%%ISE_PLATFORM%%.%" == %".%" SET ISE_PLATFORM=")
+			Result.append (eiffel_layout.eiffel_platform)
+			Result.append ("%NIF %"%%ISE_LIBRARY%%.%" == %".%" SET ISE_LIBRARY=")
+			Result.append (eiffel_layout.eiffel_library)
+			Result.append ("%NSET ISE_C_COMPILER=" + a_compile + "%N")
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Constants
 
 	msc_compiler: STRING = "msc"
@@ -326,35 +346,17 @@ feature {NONE} -- Constants
 		"CC = cl%N%
 		%OUTPUT_CMD = -Fo%N"
 
-	makefile_macros_bcb: STRING is
+	makefile_macros_bcb: STRING =
 			-- Makefile macros for msc compiler
-		require
-			layout_defined: is_eiffel_layout_defined
-		once
-			create Result.make (512)
-			Result.append ("CC = %"")
-			Result.append (eiffel_layout.eiffel_installation_dir_name)
-			Result.append ("\Bcc55\Bin\bcc32.exe%"%N OUTPUT_CMD = -o%N")
-		ensure
-			result_attached: Result /= Void
-		end
+		"CC = %"$(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%"%N OUTPUT_CMD = -o%N"
 
-	c_compiler_flags: STRING is
+
+	c_compiler_flags: STRING =
 			-- C compiler options to compile generated code.
-		require
-			layout_defined: is_eiffel_layout_defined
-		once
-			create Result.make (512)
-			Result.append ("-D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I%"")
-			Result.append (eiffel_layout.eiffel_installation_dir_name)
-			Result.append ("\studio\spec\")
-			Result.append (eiffel_layout.eiffel_platform)
-			Result.append ("\include%" -I%"")
-			Result.append (eiffel_layout.eiffel_library)
-			Result.append ("\library\com\spec\windows\include%" ")
-		ensure
-			result_attached: Result /= Void
-		end
+		"-D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I%"%
+		%$(ISE_EIFFEL)\studio\spec\%
+		%$(ISE_PLATFORM)\include%" -I%"%
+		%$(ISE_LIBRARY)\library\com\spec\windows\include%" "
 
 	msc_compiler_flags: STRING is
 			-- Additional Borland C flags.
@@ -362,18 +364,9 @@ feature {NONE} -- Constants
 
 	bcb_compiler_flags: STRING is
 			-- Additional Borland C flags.
-		require
-			layout_defined: is_eiffel_layout_defined
-		once
-			create Result.make (512)
-			Result.append ("-w- -I%"")
-			Result.append (eiffel_layout.eiffel_installation_dir_name)
-			Result.append ("\BCC55\include%" -L%"")
-			Result.append (eiffel_layout.eiffel_installation_dir_name)
-			Result.append ("\BCC55\lib%"")
-		ensure
-			result_attached: Result /= Void
-		end
+		"-w- -I%"%
+		%$(ISE_EIFFEL)\BCC55\include%" -L%"%
+		%$(ISE_EIFFEL)\BCC55\lib%""
 
 	workbench_prefix: STRING is "w";
 			-- Library workbench prefix

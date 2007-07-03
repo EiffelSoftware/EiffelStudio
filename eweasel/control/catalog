@@ -1300,6 +1300,7 @@ test	once-manifest-string-in-cpp-file	ccomp062 tcf pass c_compilation
 test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
 test	deferred-to-string-constant	ccomp064 tcf pass finalizing
 test	built-in-unary-plus	ccomp065 tcf fail c_compilation
+test	 expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
 
 -- Storable tests
 

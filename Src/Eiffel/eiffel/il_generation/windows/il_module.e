@@ -1482,6 +1482,7 @@ feature -- Metadata description
 
 				il_code_generator.start_new_body (l_meth_token)
 				l_method_body := il_code_generator.method_body
+				l_arg_count := signature.parameter_count
 
 				il_code_generator.generate_current
 				if class_type.is_expanded then
@@ -1489,30 +1490,45 @@ feature -- Metadata description
 					l_method_body.put_opcode_mdtoken ({MD_OPCODES}.initobj, actual_class_type_token (class_type.implementation_id))
 				else
 						-- Call constructor from super-class for reference type
-					l_arg_count := signature.parameter_count
 					if external_token = 0 then
 						l_parent_type_id := single_parent_mapping.item (class_type.implementation_id)
 						if il_code_generator.class_types.item (l_parent_type_id).is_generic then
-							il_code_generator.generate_argument (1)
+								-- Pass an argument that keeps Eiffel run-time type information
+								-- to the parent constructor.
+							il_code_generator.generate_argument (l_arg_count + 1)
 							l_method_body.put_call ({MD_OPCODES}.Call, constructor_token (l_parent_type_id), 1, False)
 						else
 							l_method_body.put_call ({MD_OPCODES}.Call, constructor_token (l_parent_type_id), 0, False)
 						end
 					else
-						put_args_on_stack (l_arg_count, l_method_body)
-						l_method_body.put_call ({MD_OPCODES}.Call, external_token, l_arg_count, False)
+						if l_class.is_generic then
+								-- Avoid passing an argument that keeps Eiffel run-time type information
+								-- to an external constructor.
+							put_args_on_stack (l_arg_count - 1)
+							l_method_body.put_call ({MD_OPCODES}.Call, external_token, l_arg_count - 1, False)
+						else
+							put_args_on_stack (l_arg_count)
+							l_method_body.put_call ({MD_OPCODES}.Call, external_token, l_arg_count, False)
+						end
 					end
 					if eiffel_token /= 0 then
 						il_code_generator.generate_current
-						put_args_on_stack (l_arg_count, l_method_body)
-						l_method_body.put_call ({MD_OPCODES}.Callvirt, eiffel_token, l_arg_count, False)
+						if l_class.is_generic and then not l_class.parents_classes.first.is_generic then
+								-- Avoid passing an argument that keeps Eiffel run-time type information
+								-- to a non-generic parent constructor.
+							put_args_on_stack (l_arg_count - 1)
+							l_method_body.put_call ({MD_OPCODES}.Callvirt, eiffel_token, l_arg_count - 1, False)
+						else
+							put_args_on_stack (l_arg_count)
+							l_method_body.put_call ({MD_OPCODES}.Callvirt, eiffel_token, l_arg_count, False)
+						end
 					end
 				end
 
 					-- Record type information if required.
 				if class_type.is_generic then
 					il_code_generator.generate_current
-					il_code_generator.generate_argument (1)
+					il_code_generator.generate_argument (l_arg_count)
 						-- Set signature of `$$____type' field.
 					l_field_sig := field_sig
 					l_field_sig.reset
@@ -1558,10 +1574,8 @@ feature -- Metadata description
 			end
 		end
 
-	put_args_on_stack (a_count: INTEGER; a_body: MD_METHOD_BODY) is
+	put_args_on_stack (a_count: INTEGER) is
 			-- Put arguments on stack
-		require
-			attached_body: a_body /= Void
 		local
 			i: INTEGER
 		do
@@ -1570,24 +1584,7 @@ feature -- Metadata description
 			until
 				i > a_count
 			loop
-				inspect i
-				when 0 then
-					check
-						already_defined: False
-					end
-				when 1 then
-					a_body.put_opcode ({MD_OPCODES}.ldarg_1)
-				when 2 then
-					a_body.put_opcode ({MD_OPCODES}.ldarg_2)
-				when 3 then
-					a_body.put_opcode ({MD_OPCODES}.ldarg_3)
-				else
-					if i <= 255 then
-						a_body.put_opcode_integer_8 ({MD_OPCODES}.ldarg_s, i.to_integer_8)
-					else
-						a_body.put_opcode_integer_16 ({MD_OPCODES}.ldarg, i.to_integer_16)
-					end
-				end
+				il_code_generator.generate_argument (i)
 				i := i + 1
 			end
 		end
@@ -1626,6 +1623,7 @@ feature -- Metadata description
 			i: INTEGER
 			l_constructors: LIST [STRING]
 			l_eiffel_constructor: BOOLEAN
+			l_is_generic: BOOLEAN
 		do
 			l_class := class_type.associated_class
 
@@ -1638,6 +1636,7 @@ feature -- Metadata description
 				if l_class.ast.top_indexes /= Void then
 					l_constructors := l_class.ast.top_indexes.dotnet_constructors
 				end
+				l_is_generic := l_class.is_generic
 				from
 					i := l_creators.lower
 					l_creators_count := l_creators.upper
@@ -1649,11 +1648,15 @@ feature -- Metadata description
 						l_feature_attached: l_feature /= Void
 					end
 					l_eiffel_constructor := l_constructors /= Void and then l_constructors.has (l_creators [i])
-					if l_feature.is_il_external or l_eiffel_constructor then
+					if l_feature.is_il_external or else l_eiffel_constructor then
 						if l_feature.has_arguments then
 							create l_sig.make
 							l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
-							l_sig.set_parameter_count (l_feature.argument_count)
+							if l_is_generic then
+								l_sig.set_parameter_count (l_feature.argument_count + 1)
+							else
+								l_sig.set_parameter_count (l_feature.argument_count)
+							end
 							l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 							from
 								l_feat_arg := l_feature.arguments
@@ -1665,6 +1668,11 @@ feature -- Metadata description
 								set_signature_type (l_sig, l_type_i)
 								l_feat_arg.forth
 							end
+							if l_is_generic then
+								l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
+							end
+						elseif l_is_generic then
+							l_sig := generic_ctor_sig
 						else
 							l_sig := default_sig
 						end
@@ -1891,7 +1899,11 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				l_argument_count := l_feature.argument_count
 				create l_meth_sig.make
 				l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-				l_meth_sig.set_parameter_count (l_argument_count)
+				if l_class_type.is_generic and then not l_class_type.is_external then
+					l_meth_sig.set_parameter_count (l_argument_count + 1)
+				else
+					l_meth_sig.set_parameter_count (l_argument_count)
+				end
 				l_meth_sig.set_return_type (
 					{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				if l_argument_count > 0 then
@@ -1905,6 +1917,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						il_code_generator.set_signature_type (l_meth_sig, l_type_i)
 						l_arguments.forth
 					end
+				end
+				if l_class_type.is_generic and then not l_class_type.is_external then
+					l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
 				end
 				define_constructor (l_class_type, l_meth_sig, True, 0, 0, a_feature_id)
 				l_tokens := internal_constructors [a_type_id]

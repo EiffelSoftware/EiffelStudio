@@ -2961,7 +2961,6 @@ feature -- IL Generation
 			l_is_il_external: BOOLEAN
 			l_type_i: TYPE_I
 			l_meth_token, l_meth_attr: INTEGER
-			l_count: INTEGER
 			i, nb: INTEGER
 		do
 			nb := feat.argument_count
@@ -3015,9 +3014,8 @@ feature -- IL Generation
 
 			start_new_body (l_meth_token)
 
-				-- Generate constructor arguments
-			if l_is_il_external and then nb > 0 then
-				l_count := feat.argument_count
+			if l_is_il_external then
+					-- Generate constructor arguments
 				from
 					i := 0
 				until
@@ -3026,10 +3024,12 @@ feature -- IL Generation
 					generate_argument (i)
 					i := i + 1
 				end
-			end
-
-			if l_is_il_external then
-				create_object_with_args (current_class_type.implementation_id, feat.feature_id, feat.argument_count)
+				if is_generic then
+					generate_argument (nb)
+					create_object_with_args (current_class_type.implementation_id, feat.feature_id, nb + 1)
+				else
+					create_object_with_args (current_class_type.implementation_id, feat.feature_id, nb)
+				end
 			else
 				if is_generic then
 					generate_argument (nb)
@@ -3794,11 +3794,18 @@ feature -- IL Generation
 		local
 			l_type_id: INTEGER
 			l_type_token: INTEGER
+			l_argument_types: ARRAY [STRING]
 		do
 			l_type_id := a_actual_type.implementation_id
 			l_type_token := actual_class_type_token (l_type_id)
+			l_argument_types := Names_heap.convert_to_string_array (parameters_type)
+			if not a_actual_type.is_external and then a_actual_type.meta_generic /= Void and then ext_kind = creator_type then
+					-- Supply generic type information.
+				generate_generic_type_info (a_actual_type)
+				l_argument_types.force (generic_type_class_name, l_argument_types.upper + 1)
+			end
 			internal_generate_external_call (0, l_type_token, Void, name, ext_kind,
-					Names_heap.convert_to_string_array (parameters_type),
+					l_argument_types,
 					Names_heap.item (return_type), False)
 		end
 
@@ -4205,6 +4212,59 @@ feature -- Object creation
 			generate_load_from_address (t)
 		end
 
+	generate_creation (cl_type_i: CL_TYPE_I) is
+			-- Generate IL code for a hardcoded creation type `cl_type_i'.
+			-- Expanded object will be boxed after creation.
+		local
+			gen_type_i: GEN_TYPE_I
+			local_index: INTEGER
+		do
+			if cl_type_i.is_expanded and then cl_type_i.is_external then
+					-- Load a default value of a local variable.
+				byte_context.add_local (cl_type_i)
+				local_index := byte_context.local_list.count
+				put_dummy_local_info (cl_type_i, local_index)
+				generate_local (local_index)
+			else
+					-- Create object using default constructor.
+				gen_type_i ?= cl_type_i
+				if gen_type_i = Void then
+					create_object (cl_type_i.implementation_id)
+				else
+					generate_generic_type_info (gen_type_i)
+					create_generic_object (cl_type_i.implementation_id)
+				end
+			end
+			if cl_type_i.is_expanded then
+					-- Box expanded object.
+				generate_metamorphose (cl_type_i)
+			end
+		end
+
+feature {NONE} -- Object creation
+
+	generate_generic_type_info (t: CL_TYPE_I) is
+			-- Generate code that evaluates and puts
+			-- generic type information on the stack
+		require
+			t_attached: t /= Void
+		local
+			generic_type_token: INTEGER
+		do
+			t.generate_gen_type_il (Current, True)
+			generate_current_as_reference
+			method_body.put_call ({MD_OPCODES}.callvirt,
+				current_module.ise_get_type_token, 0, True)
+			generic_type_token := actual_class_type_token (generic_type_id)
+			internal_generate_external_call (current_module.ise_runtime_token,
+				generic_type_token, Void,
+				"evaluated_type", normal_type, <<generic_type_class_name>>,
+				type_class_name, True)
+			if is_verifiable then
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, generic_type_token)
+			end
+		end
+
 feature {IL_MODULE} -- Initialization of expanded attributes
 
 	initialize_expanded_attributes (class_type: CLASS_TYPE) is
@@ -4570,47 +4630,6 @@ feature -- Variables access
 		do
 			generate_load_address_as_external (type_i)
 			generate_load_from_address (type_i)
-		end
-
-	generate_creation (cl_type_i: CL_TYPE_I) is
-			-- Generate IL code for a hardcoded creation type `cl_type_i'.
-			-- Expanded object will be boxed after creation.
-		local
-			gen_type_i: GEN_TYPE_I
-			local_index: INTEGER
-			generic_type_token: INTEGER
-		do
-			if cl_type_i.is_expanded and then cl_type_i.is_external then
-					-- Load a default value of a local variable.
-				byte_context.add_local (cl_type_i)
-				local_index := byte_context.local_list.count
-				put_dummy_local_info (cl_type_i, local_index)
-				generate_local (local_index)
-			else
-					-- Create object using default constructor.
-				gen_type_i ?= cl_type_i
-				if gen_type_i = Void then
-					create_object (cl_type_i.implementation_id)
-				else
-					gen_type_i.generate_gen_type_il (Current, True)
-					generate_current_as_reference
-					method_body.put_call ({MD_OPCODES}.callvirt,
-						current_module.ise_get_type_token, 0, True)
-					generic_type_token := actual_class_type_token (generic_type_id)
-					internal_generate_external_call (current_module.ise_runtime_token,
-						generic_type_token, Void,
-						"evaluated_type", normal_type, <<generic_type_class_name>>,
-						type_class_name, True)
-					if is_verifiable then
-						method_body.put_opcode_mdtoken ({MD_OPCODES}.castclass, generic_type_token)
-					end
-					create_generic_object (cl_type_i.implementation_id)
-				end
-			end
-			if cl_type_i.is_expanded then
-					-- Box expanded object.
-				generate_metamorphose (cl_type_i)
-			end
 		end
 
 feature -- Addresses

@@ -987,6 +987,14 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 
 feature {NONE} -- Implementation
 
+	ignore_character_code (a_char_code: INTEGER): BOOLEAN
+			-- Should default processing for `a_char_code' be cancelled?
+		do
+				-- By default we ignore default processing for the Enter key.
+				-- This prevents unnecessary system beeps in some controls.
+			Result := a_char_code = 13
+		end
+
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
 		do
@@ -1051,9 +1059,9 @@ feature {NONE} -- Implementation
 						disable_default_processing
 					end
 				end
-			elseif not has_focus or character_code = 13 then
+			elseif not has_focus or ignore_character_code (character_code) then
 					-- When we loose the focus or press return, we do not perform the
-					-- default processing since it causes a beep.
+					-- default processing since it causes a system beep.
 				disable_default_processing
 			end
 		end

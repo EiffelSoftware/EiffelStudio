@@ -84,10 +84,10 @@ feature {EV_ANY_I} -- Implementation
 			-- Process all posted events on the event queue.
 			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
 		local
-			l_retry_count: INTEGER
 			l_locked: BOOLEAN
+			retried: BOOLEAN
 		do
-			if l_retry_count = 0 then
+			if not retried then
 				process_underlying_toolkit_event_queue
 					-- There are no more events left so call idle actions if read lock can be attained.
 				if user_events_processed_from_underlying_toolkit then
@@ -118,19 +118,19 @@ feature {EV_ANY_I} -- Implementation
 						wait_for_input (cpu_relinquishment_time)
 					end
 				end
-			elseif l_retry_count = 1 then
-				on_exception_action (new_exception)
 			else
-				-- We have an exception from the exception handler so are in an unstable state and should exit cleanly.
+				on_exception_action (new_exception)
 			end
 		rescue
-			if l_locked then
-					-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
-				unlock
-				l_locked := False
+			if not retried then
+				if l_locked then
+						-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
+					unlock
+					l_locked := False
+				end
+				retried := True
+				retry
 			end
-			l_retry_count := l_retry_count + 1
-			retry
 		end
 
 feature {NONE} -- Implementation
@@ -680,8 +680,10 @@ feature -- Implementation
 				on_exception_action (new_exception)
 			end
 		rescue
-			retried := True
-			retry
+			if not retried then
+				retried := True
+				retry
+			end
 		end
 
 	on_exception_action (an_exception: EXCEPTION) is

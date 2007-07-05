@@ -36,7 +36,8 @@ inherit
 			insert_text,
 			on_key_down,
 			select_region,
-			selected_text
+			selected_text,
+			ignore_character_code
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -449,6 +450,12 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
+
+	ignore_character_code (a_character_code: INTEGER): BOOLEAN
+			-- Should default processing for `a_character_code' be ignored?
+		do
+			-- All characters need to be default processed.
+		end
 
 	convert_string (a_string: STRING_GENERAL): STRING_32 is
 			-- Replace all "%N" with "%R%N" which is the Windows new line

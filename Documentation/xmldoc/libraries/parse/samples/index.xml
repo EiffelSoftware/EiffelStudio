@@ -1,11 +1,11 @@
-<document output="studio" title="Lex Sample">
+<document output="studio" title="Parse Sample">
 	<meta_data/>
 	<paragraph>
 		<list ordered="false">
 			<item>
 				<link>
-					<url>eiffel_scan/index.xml</url>
-					<label>Eiffel scanner</label>
+					<url>polynomial/index.xml</url>
+					<label>Eiffel polynomial parser</label>
 				</link>
 			</item>
 		</list>

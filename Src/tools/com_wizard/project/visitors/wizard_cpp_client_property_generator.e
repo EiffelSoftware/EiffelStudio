@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-create 
+create
 	generate
 
 feature {NONE} -- Implementation
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			c_setting_feature_exist: not a_property.is_read_only implies c_setting_feature /= Void
 		end
 
-	create_access_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; 
+	create_access_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING;
 						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
 						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Create access feature.
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			set_access_body (a_interface_name, a_variable_name, a_lcid, a_property.member_id, a_visitor)
 		end
 
-	create_set_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; 
+	create_set_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING;
 						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
 						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- -- Create set feature.
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			l_comment, l_signature, l_setter_name: STRING
 		do
 			create c_setting_feature.make
-			
+
 			create l_setter_name.make (100)
 			l_setter_name.append (Set_clause)
 			l_setter_name.append (a_property.component_eiffel_name (a_component))
@@ -156,9 +156,9 @@ feature {NONE} -- Implementation
 			l_body.append_integer (a_lcid)
 			l_body.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
-			l_body.append ("%N%Tunsigned int nArgErr;%N%N%Thr = ")
+			l_body.append ("%N%Tunsigned int nArgErr;%N%N%TEIF_ENTER_C;%N%Thr = ")
 			l_body.append (a_variable_name)
-			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%N%T")
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%N%TEIF_EXIT_C;%N%T")
 
 			-- if argument error
 			l_body.append (examine_parameter_error ("hr"))
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_setting_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
-			-- 
+			--
 		require
 			non_void_visitor: a_visitor /= Void
 			non_void_interface_name: a_interface_name /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 					l_body.append (a_visitor.c_type)
 				end
 				l_body.append (" tmp_value")
-				
+
 				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer or a_visitor.is_structure_pointer then
 					l_body.append (" = 0")
 				end
@@ -270,9 +270,9 @@ feature {NONE} -- Implementation
 			l_body.append ("VARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
 			l_body.append ("%N%Tunsigned int nArgErr;")
-			l_body.append ("%N%N%Thr = ")
+			l_body.append ("%N%N%TEIF_ENTER_C;%N%Thr = ")
 			l_body.append (variable_name (a_interface_name))
-			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%N%T")
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%N%TEIF_EXIT_C;%N%T")
 
 			-- if argument error
 			l_body.append (examine_parameter_error ("hr"))

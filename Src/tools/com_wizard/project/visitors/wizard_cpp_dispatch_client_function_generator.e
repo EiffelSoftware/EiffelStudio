@@ -22,8 +22,8 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
-				a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER; 
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
+				a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER;
 				a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			create {ARRAYED_LIST [STRING]} free_arguments.make (20)
 			create l_return_value.make (2000)
 			create Result.make (2000)
-			
+
 			Result.append (check_interface_pointer (a_interface_name, a_variable_name))
 			Result.append ("%N%TDISPID disp = (DISPID) ")
 			Result.append_integer (func_desc.member_id)
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 				loop
 					l_type := l_arguments.item.type
 					l_visitor := l_type.visitor
-					
+
 					-- Since VARIANT is treated as VARIANT *,
 					-- we need to check what it was originally,
 					-- to find out whether if [in] or [in, out] parameter.
@@ -140,9 +140,9 @@ feature {NONE} -- Implementation
 						l_type_id := l_type.type
 					else
 						l_type_id := l_visitor.vt_type
-					end			
+					end
 					if is_byref (l_type_id) then
-						l_is_out := True  
+						l_is_out := True
 						if is_paramflag_fin (l_arguments.item.flags) then
 							Result.append (inout_parameter_set_up (l_arguments.item.name, l_counter, l_visitor))
 						else
@@ -157,13 +157,13 @@ feature {NONE} -- Implementation
 					end
 					l_visitor := Void
 					l_arguments.forth
-					l_counter := l_counter - 1			
+					l_counter := l_counter - 1
 				end
 
 				Result.append ("%N%Tdispparams.rgvarg = args;")
 			end
 
-			Result.append ("%N%N%Thr = ")
+			Result.append ("%N%N%TEIF_ENTER_C;%N%Thr = ")
 			Result.append (variable_name (a_interface_name))
 			if a_invoke_kind = invoke_func then
 				l_invoke_flag := "DISPATCH_METHOD"
@@ -181,6 +181,7 @@ feature {NONE} -- Implementation
 			Result.append ("->Invoke (disp, IID_NULL, lcid, ")
 			Result.append (l_invoke_flag)
 			Result.append (", &dispparams, &pResult, excepinfo, &nArgErr);%N%T")
+			Result.append ("EIF_EXIT_C;%N%T")
 
 			-- if argument error
 			Result.append (examine_parameter_error ("hr"))
@@ -286,7 +287,7 @@ feature {NONE} -- Implementation
 				Result.append (argument_type_set_up (position, l_type))
 
 				if visitor.is_array_basic_type or visitor.is_structure_pointer or visitor.is_interface_pointer or visitor.is_coclass_pointer then
-					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))	
+					Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))
 				else
 					Result.append (visitor.c_type)
 					Result.remove (Result.count)
@@ -297,7 +298,7 @@ feature {NONE} -- Implementation
 					create l_string.make (100)
 					l_string.append ("&tmp_")
 					l_string.append (name)
-					Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), l_string, visitor))	
+					Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), l_string, visitor))
 				end
 			end
 		end
@@ -350,7 +351,7 @@ feature {NONE} -- Implementation
 				-- so there is no need to setup the type
 				Result.append (argument_type_set_up (position, l_type))
 			end
-			
+
 			if visitor.is_basic_type or visitor.is_enumeration or is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
 				create l_value.make (100)
 				l_value.append (name)
@@ -464,7 +465,7 @@ feature {NONE} -- Implementation
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), l_value, visitor))
 			end
 		end
-		
+
 	out_value_set_up (position: INTEGER; attribute_name: STRING): STRING is
 			-- Set up code for argument variable
 		require
@@ -478,7 +479,7 @@ feature {NONE} -- Implementation
 			Result.append ("].")
 			Result.append (attribute_name)
 		end
-			
+
 	argument_type_set_up (position, type: INTEGER): STRING is
 			-- Code to set parameter type for dispatch function call
 		require

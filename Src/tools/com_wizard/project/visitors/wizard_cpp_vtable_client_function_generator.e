@@ -8,7 +8,7 @@ indexing
 class
 	WIZARD_CPP_VTABLE_CLIENT_FUNCTION_GENERATOR
 
-inherit	
+inherit
 	WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 
 feature -- Basic operations
@@ -76,9 +76,9 @@ feature {NONE} -- Implementation
 	feature_body (a_interface_name, a_variable_name: STRING): STRING is
 			-- Ccom client feature body
 		require
-			non_void_interface_name: a_interface_name /= Void 
+			non_void_interface_name: a_interface_name /= Void
 			valid_interface_name: not a_interface_name.is_empty
-			non_void_variable_name: a_variable_name /= Void 
+			non_void_variable_name: a_variable_name /= Void
 			valid_variable_name: not a_variable_name.is_empty
 		local
 			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
@@ -92,16 +92,16 @@ feature {NONE} -- Implementation
 
 			if func_desc.argument_count > 0 then
 				arguments := func_desc.arguments
-	
+
 				create out_value.make (1000)
 				out_value.append (New_line_tab)
-				
+
 				create signature.make (1000)
 				signature.append (Open_parenthesis)
-				
+
 				create free_memory.make (1000)
 				free_memory.append (New_line_tab)
-				
+
 				create variables.make (1000)
 				variables.append (New_line_tab)
 
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 							variables.append (" = 0;%N%T")
 							return_value.append (return_value_setup (visitor, "ret_value"))
 						end
-					else 
+					else
 						if visitor.is_interface_pointer or visitor.is_coclass_pointer then
 							signature.append (arguments.item.name)
 						elseif visitor.is_structure_pointer or visitor.is_array_basic_type then
@@ -159,10 +159,10 @@ feature {NONE} -- Implementation
 								variables.append (visitor.c_post_type)
 							end
 							variables.append (" = 0;%N%T")
-							
+
 							signature.append ("tmp_")
 							signature.append (arguments.item.name)
-	
+
 							variables.append (in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 							variables.append ("%N%T")
 							if is_paramflag_fout (arguments.item.flags) then
@@ -178,11 +178,11 @@ feature {NONE} -- Implementation
 						end
 						signature.append (Comma)
 					end
-					
+
 					arguments.forth
 					visitor := Void
 				end -- loop
-				
+
 				-- Format signature
 				if not signature.is_empty then
 					signature.remove (signature.count)
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 
 				-- Set up body
 				Result.append (variables)
-				Result.append ("%N%T")
+				Result.append ("%N%TEIF_ENTER_C;%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -204,6 +204,7 @@ feature {NONE} -- Implementation
 				Result.append ("->")
 				Result.append (func_desc.name)
 				Result.append (signature)
+				Result.append ("%TEIF_EXIT_C;%N")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult ("hr"))
 				end
@@ -214,7 +215,7 @@ feature {NONE} -- Implementation
 					Result.append (return_value)
 				end
 			else
-				Result.append ("%N%T")
+				Result.append ("%N%TEIF_ENTER_C;%N%T")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append ("hr = ")
 				elseif not (func_desc.return_type.type = Vt_void) then
@@ -226,7 +227,8 @@ feature {NONE} -- Implementation
 				Result.append (a_variable_name)
 				Result.append ("->")
 				Result.append (func_desc.name)
-				Result.append (" ();%N")
+				Result.append (" ();")
+				Result.append ("%N%TEIF_EXIT_C;%N")
 				if  (func_desc.return_type.type = Vt_hresult) then
 					Result.append (examine_hresult ("hr"))
 				end
@@ -237,8 +239,8 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			non_void_feature_body: Result /= Void
-			valid_feature_body: not Result.is_empty	
-		end 
+			valid_feature_body: not Result.is_empty
+		end
 
 	free_memory_set_up (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING is
 			-- Free memory.
@@ -261,7 +263,7 @@ feature {NONE} -- Implementation
 			non_void_free: Result /= Void
 			valid_free: not Result.is_empty
 		end
-	
+
 	return_value_setup (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_name: STRING): STRING is
 			-- Set up return value.
 		require
@@ -269,10 +271,10 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (1000)
 			Result.append (Tab)
-			
-			if 
-				a_visitor.is_basic_type or 
-				a_visitor.is_enumeration or 
+
+			if
+				a_visitor.is_basic_type or
+				a_visitor.is_enumeration or
 				(a_visitor.vt_type = Vt_bool)
 			then
 				Result.append (a_visitor.cecil_type)
@@ -280,10 +282,10 @@ feature {NONE} -- Implementation
 				Result.append (Eif_object)
 			end
 			Result.append (" eiffel_result = ")
-			
-			if 
-				a_visitor.is_basic_type or 
-				a_visitor.is_enumeration 
+
+			if
+				a_visitor.is_basic_type or
+				a_visitor.is_enumeration
 			then
 				Result.append (Space_open_parenthesis)
 				Result.append (a_visitor.cecil_type)
@@ -318,14 +320,14 @@ feature {NONE} -- Implementation
 				end
 			end
 			Result.append (Semicolon)
-			
+
 			if a_visitor.need_free_memory then
 				Result.append (New_line_tab)
 				if a_visitor.need_generate_free_memory then
 					Result.append (a_visitor.ce_mapper.variable_name)
 					Result.append (".")
 				end
-				Result.append (a_visitor.free_memory_function_name) 
+				Result.append (a_visitor.free_memory_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (a_name)
 				Result.append (Close_parenthesis)
@@ -340,9 +342,9 @@ feature {NONE} -- Implementation
 			end
 			Result.append (New_line_tab)
 			Result.append ("return ")
-			if 
-				not a_visitor.is_basic_type and 
-				not a_visitor.is_enumeration and 
+			if
+				not a_visitor.is_basic_type and
+				not a_visitor.is_enumeration and
 				(a_visitor.vt_type /= Vt_bool)
 			then
 				Result.append ("eif_wean ")
@@ -353,7 +355,7 @@ feature {NONE} -- Implementation
 			valid_result: not Result.is_empty
 		end
 
-	in_out_parameter_set_up (name: STRING; data_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	in_out_parameter_set_up (name: STRING; data_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 					visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up "in/out" parameter
 			--	Arguments
@@ -366,9 +368,9 @@ feature {NONE} -- Implementation
 			non_void_visitor: visitor /= Void
 		do
 			create Result.make (1000)
-			if 
-				visitor.is_basic_type or 
-				visitor.is_enumeration 
+			if
+				visitor.is_basic_type or
+				visitor.is_enumeration
 			then
 				Result.append (Tmp_clause)
 				Result.append (name)
@@ -392,10 +394,10 @@ feature {NONE} -- Implementation
 				Result.append (name)
 				Result.append (");")
 
-			elseif 
-				visitor.is_structure_pointer or 
-				visitor.is_interface_pointer or 
-				visitor.is_coclass_pointer 
+			elseif
+				visitor.is_structure_pointer or
+				visitor.is_interface_pointer or
+				visitor.is_coclass_pointer
 			then
 			else
 
@@ -437,11 +439,11 @@ feature {NONE} -- Implementation
 			non_void_visitor: visitor /= Void
 		do
 			create Result.make (1000)
-			
-			if 
-				not visitor.is_basic_type and 
+
+			if
+				not visitor.is_basic_type and
 				not visitor.is_enumeration and
-				not visitor.is_structure_pointer and 
+				not visitor.is_structure_pointer and
 				visitor.vt_type /= Vt_bool
 			then
 				if visitor.need_generate_ce then

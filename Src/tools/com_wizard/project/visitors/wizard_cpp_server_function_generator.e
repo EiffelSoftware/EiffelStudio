@@ -528,9 +528,6 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 
 			-- (FUNCTION_CAST (void, (EIF_REFERENCE, ...)) eiffel_procedure)
-			Result.append ("EIF_ENTER_C")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
 			Result.append (function_cast_code (Void_c_keyword))
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Close_parenthesis)
@@ -538,9 +535,6 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				Result.append (arguments)
 			end
-			Result.append (New_line_tab)
-			Result.append ("EIF_EXIT_C")
-			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
@@ -612,9 +606,6 @@ feature {NONE} -- Implementation
 			Result.append ("if (" + Eiffel_function_variable_name + " != NULL) {")
 			Result.append (New_line_tab_tab)
 
-			Result.append ("EIF_ENTER_C")
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (function_cast_code (return_type))
@@ -624,9 +615,6 @@ feature {NONE} -- Implementation
 				Result.append (Arguments)
 				Result.append (New_line_tab_tab)
 			end
-			Result.append ("EIF_EXIT_C")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
 			Result.append_character ('}')
 
 			Result.append (Else_keyword)
@@ -712,7 +700,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
-			Result.append ("EIF_ENTER_C")
+--			Result.append ("EIF_ENTER_C")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE))")
@@ -726,7 +714,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
-			Result.append ("EIF_EXIT_C")
+--			Result.append ("EIF_EXIT_C")
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 		ensure

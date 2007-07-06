@@ -199,7 +199,14 @@ feature {NONE} -- Implementation
 			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_data: SD_INNER_CONTAINER_DATA
 			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+			l_env: EV_ENVIRONMENT
 		do
+			-- On GTK, process events is important. Otherwise, following `l_inner_containers.item.parent_floating_zone.width'
+			-- and `l_inner_containers.item.parent_floating_zone.height' may not have enough time to be set if cpu is busy.
+			-- See bug#12340
+			create l_env
+			l_env.application.process_events
+
 			l_inner_containers := internal_docking_manager.inner_containers
 			from
 				l_inner_containers.start

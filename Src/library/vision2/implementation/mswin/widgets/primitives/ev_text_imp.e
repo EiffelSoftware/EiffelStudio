@@ -292,7 +292,6 @@ feature -- Status Report
 			Result := {WEL_API}.send_message_result_integer (wel_item, em_linefromchar,
 				to_wparam (l_actual_caret_position + 1), to_lparam (0)) + 1
 		end
-d
 
 	selection_start: INTEGER is
 			-- Index of first character selected.

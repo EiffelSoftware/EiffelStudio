@@ -15,12 +15,12 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WIZARD_WRITER_CPP_EXPORT_STATUS
 		export
 			{NONE} all
 		end
-	
+
 create
 	generate
 
@@ -48,13 +48,13 @@ feature -- Basic operations
 		do
 			create Result.make
 			Result.set_name (external_feature_name (enable_feature_name (a_interface)))
-			
+
 			create a_signature.make (100)
 			a_signature.append (Eif_pointer)
 			a_signature.append (Space)
 			a_signature.append ("p_events")
 			Result.set_signature (a_signature)
-			
+
 			Result.set_result_type (Void_c_keyword)
 			Result.set_comment ("Hook up call back interface.")
 			Result.set_body (enable_body (a_interface))
@@ -76,45 +76,49 @@ feature -- Basic operations
 			Result.append ("IConnectionPointContainer * pcpc = 0;%N%T")
 			Result.append (Hresult_variable)
 			Result.append (Tab)
-			
+
 			Result.append (Hresult_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Iunknown_variable_name)
 			Result.append (Struct_selection_operator)
 			Result.append (Query_interface)
 			Result.append ("(IID_IConnectionPointContainer, (void**)&pcpc);%N")
-			
+
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
-			
+
 			Result.append ("IConnectionPoint * pcp = 0;%N%T")
-			
+
 			Result.append ("IID temp_IID = ")
 			Result.append (a_interface.guid.to_definition_string)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
-			
+
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcpc->FindConnectionPoint (temp_IID, &pcp);%N")
-			
+
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
-			
+
+			Result.append ("EIF_ENTER_C;")
+			Result.append (New_line_tab)
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcp->Advise ((IUnknown *)p_events, &")
 			Result.append (cookie_name (a_interface))
-			Result.append (");%N")
-			
+			Result.append (");")
+			Result.append (New_line_tab)
+			Result.append ("EIF_EXIT_C;%N")
+
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
-			
+
 			Result.append ("pcp->Release ();%N%T")
 			Result.append ("pcpc->Release ();")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
 		end
-		
+
 	disable_routine (a_interface: WIZARD_INTERFACE_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
 			-- Disable call back routine.
 		require
@@ -123,7 +127,7 @@ feature -- Basic operations
 			valid_interface_name: not a_interface.name.is_empty
 		do
 			create Result.make
-			
+
 			Result.set_name (external_feature_name (disable_feature_name (a_interface)))
 			Result.set_result_type (Void_c_keyword)
 			Result.set_comment ("Tear down call back interface.")
@@ -132,7 +136,7 @@ feature -- Basic operations
 			non_void_routine: Result /= Void
 			valid_routine: Result.can_generate
 		end
-	
+
 	disable_body (a_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
 			-- Body of disable call back routine.
 		require
@@ -193,7 +197,7 @@ feature -- Basic operations
 			valid_interface_name: not a_interface.name.is_empty
 		do
 			create Result.make
-			
+
 			Result.set_name (cookie_name (a_interface))
 			Result.set_result_type (Dword)
 			Result.set_comment ("Call back interface cookie.")
@@ -201,7 +205,7 @@ feature -- Basic operations
 			non_void_member: Result /= Void
 			valid_member: Result.can_generate
 		end
-	
+
 	cookie_name (a_interface: WIZARD_INTERFACE_DESCRIPTOR):STRING is
 			-- Name of cookie member.
 		require
@@ -216,7 +220,7 @@ feature -- Basic operations
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

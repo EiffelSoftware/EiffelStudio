@@ -169,9 +169,7 @@ feature -- Basic Operations
 			Result.append ("eiffel_object = eif_create (type_id);%N%T")
 			Result.append ("EIF_PROCEDURE eiffel_procedure;%N%T")
 			Result.append ("eiffel_procedure = eif_procedure (%"make_from_pointer%", type_id);%N%N%T")
-			Result.append ("EIF_ENTER_C;%N%T")
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);")
-			Result.append ("EIF_EXIT_C;%N%T")
 			if dispatch_interface then
 				Result.append ("%N%TpTypeInfo = 0;")
 			end
@@ -203,16 +201,19 @@ feature -- Basic Operations
 			l_body: STRING
 		do
 			create l_body.make (2000)
+			l_body.append (eif_initialize_aux_thread)
+			l_body.append (ecom_enter_proc_stub)
+			l_body.append (new_line)
 			l_body.append ("%TEIF_PROCEDURE eiffel_procedure;%N%T")
 			l_body.append ("eiffel_procedure = eif_procedure (%"set_item%", type_id);%N%N%T")
-			l_body.append ("EIF_ENTER_C;%N%T")
 			l_body.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);%N%T")
-			l_body.append ("EIF_EXIT_C;%N%T")
 			l_body.append ("eif_wean (eiffel_object);")
 			if dispatch_interface then
 				l_body.append ("%N%Tif (pTypeInfo)%N%T%TpTypeInfo->Release ();")
 			end
 			l_body.append (destructor_addition (a_component))
+			l_body.append (new_line_tab)
+			l_body.append (ecom_exit_proc_stub)
 			cpp_class_writer.set_destructor (l_body)
 		end
 

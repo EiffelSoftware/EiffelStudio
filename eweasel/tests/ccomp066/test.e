@@ -10,11 +10,12 @@ feature
 		local
 			a: DYNAMIC_DOUBLE_EXPRESSION
 			b: DYNAMIC_EXPRESSION [ANY]
-			l_any: ANY
+			x: ANY
 		do
 			create a
 			b := a
-			l_any := b.at (Void)
+			x := b.at (Void)
+			x := b.f (Void)
 		end
 
 end

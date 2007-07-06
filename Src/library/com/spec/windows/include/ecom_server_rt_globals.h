@@ -20,6 +20,7 @@ indexing
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 #include "eif_macros.h"
+#include "eif_cecil.h"
 
 
 #ifdef __cplusplus
@@ -28,21 +29,45 @@ extern "C" {
 
 extern int return_hr_value;
 extern jmp_buf exenv;
+extern int eif_visible_is_off;
 
 // Enter Eiffel COM stub code
 #define ECOM_ENTER_STUB \
+	unsigned char is_eif_visible_is_off = eif_visible_is_off; \
 	int entered_in_eiffel_code = EIF_IS_IN_EIFFEL_CODE; \
 	if (0 == entered_in_eiffel_code){ \
 		EIF_ENTER_EIFFEL; \
 	} \
-	ECOM_CATCH(entered_in_eiffel_code);
-	
+	ECOM_CATCH(entered_in_eiffel_code);\
+	eif_enable_visible_exception();
+
 // Exit Eiffel COM stub code
 #define ECOM_EXIT_STUB \
+	if (is_eif_visible_is_off) { \
+		eif_disable_visible_exception(); \
+	} \
 	if (0 == entered_in_eiffel_code) { \
 		EIF_EXIT_EIFFEL; \
 	}\
 	ECOM_END_CATCH(entered_in_eiffel_code);
+
+// Enter Eiffel COM procedure stub code
+#define ECOM_ENTER_PROC_STUB \
+	unsigned char is_eif_visible_is_off = eif_visible_is_off; \
+	int entered_in_eiffel_code = EIF_IS_IN_EIFFEL_CODE; \
+	if (0 == entered_in_eiffel_code){ \
+		EIF_ENTER_EIFFEL; \
+	} \
+	eif_enable_visible_exception();
+
+// Exit Eiffel COM procedure stub code
+#define ECOM_EXIT_PROC_STUB \
+	if (is_eif_visible_is_off) { \
+		eif_disable_visible_exception(); \
+	} \
+	if (0 == entered_in_eiffel_code) { \
+		EIF_EXIT_EIFFEL; \
+	}
 
 #define ECOM_CATCH(in_eiffel_code)  struct ex_vect *exvect;\
   jmp_buf exenv;\

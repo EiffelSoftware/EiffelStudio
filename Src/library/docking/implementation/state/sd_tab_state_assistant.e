@@ -12,6 +12,7 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make (a_tab_state: SD_TAB_STATE; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
@@ -182,7 +183,6 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			-- Move one tab from a tab zone to a docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
-			valid: a_index > 0
 		local
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER

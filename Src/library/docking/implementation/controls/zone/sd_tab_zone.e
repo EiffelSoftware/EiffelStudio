@@ -109,6 +109,7 @@ feature -- Query
 
 	is_drag_title_bar: BOOLEAN
 			-- If user dragging title bar?
+			-- If true, then we move all the contents, otherwise only move selected content.
 
 	title_area: EV_RECTANGLE is
 			-- Title bar area.
@@ -227,9 +228,8 @@ feature -- Command
 			-- Set a_content's position to a_index.
 		require
 			has: has (a_content)
-			valid: a_index > 0
 		do
-			if a_index >= contents.count then
+			if not contents.valid_index (a_index) then
 				internal_notebook.set_content_position (a_content, contents.count)
 			else
 				internal_notebook.set_content_position (a_content, a_index)
@@ -270,6 +270,16 @@ feature {SD_TAB_STATE} -- Internal issues.
 			on_select_tab
 		ensure
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
+		end
+
+feature {SD_FLOATING_STATE} -- Internal issues
+
+	set_drag_title_bar (a_bool: BOOLEAN) is
+			-- Set `is_drag_title_bar' with `a_bool'
+		do
+			is_drag_title_bar := a_bool
+		ensure
+			set: is_drag_title_bar = a_bool
 		end
 
 feature {NONE} -- Agents for user

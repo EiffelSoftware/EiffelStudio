@@ -245,6 +245,7 @@ feature -- Basic operations
 		require
 			a_metric_not_void: a_metric /= Void
 		do
+			metric_selector.remove_selection
 			a_metric.set_name (metric_manager.next_metric_name_with_unit (a_metric.unit))
 			load_metric_definition (a_metric, metric_type_id (a_metric), a_metric.unit, True)
 		end
@@ -260,7 +261,6 @@ feature -- Actions
 			l_editor := current_metric_editor
 			if l_editor /= Void then
 				l_metric := l_editor.metric
-				metric_selector.remove_selection
 				clone_and_load_metric (l_metric)
 			end
 		end

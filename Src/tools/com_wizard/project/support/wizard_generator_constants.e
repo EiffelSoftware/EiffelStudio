@@ -157,11 +157,15 @@ feature -- Access
 
 	ecom_enter_stub: STRING is "%TECOM_ENTER_STUB;%N"
 
+	ecom_enter_proc_stub: STRING is "%TECOM_ENTER_PROC_STUB;%N"
+
 	Ecatch_auto: STRING is "ECATCH_AUTO"
 
 	End_ecatch: STRING is "END_ECATCH;%N%T"
 
 	ecom_exit_stub: STRING is "ECOM_EXIT_STUB;%N%T"
+
+	ecom_exit_proc_stub: STRING is "ECOM_EXIT_PROC_STUB;%N%T"
 
 	Lock_module_function: STRING is "LockModule ();"
 

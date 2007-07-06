@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			Result.append (iid_name (a_interface_name))
 			Result.append (", (void **)&")
 			Result.append (a_variable_name)
-			Result.append (");%N")
+			Result.append (");%N%T")
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append ("%N%T};")
 		ensure

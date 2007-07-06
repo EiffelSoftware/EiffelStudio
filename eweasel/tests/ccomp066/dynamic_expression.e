@@ -7,4 +7,8 @@ feature
 		do
 		end
 
+	f (x: K): ANY is
+		do
+		end
+
 end

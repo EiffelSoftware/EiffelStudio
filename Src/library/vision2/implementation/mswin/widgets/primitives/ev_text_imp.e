@@ -285,10 +285,14 @@ feature -- Status Report
 
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
+		local
+			l_actual_caret_position: INTEGER
 		do
+			l_actual_caret_position := actual_position_from_caret_position (i)
 			Result := {WEL_API}.send_message_result_integer (wel_item, em_linefromchar,
-				to_wparam (i + 1), to_lparam (0)) + 1
+				to_wparam (l_actual_caret_position + 1), to_lparam (0)) + 1
 		end
+d
 
 	selection_start: INTEGER is
 			-- Index of first character selected.
@@ -378,36 +382,8 @@ feature -- Status Settings
 	set_caret_position (pos: INTEGER) is
 			-- set current caret position.
 			--| This position is used for insertions.
-		local
-			new_lines: INTEGER
-			counter: INTEGER
-			l_r_code: NATURAL_32
-			nb: INTEGER
-			l_text: like wel_text
 		do
-				-- We cannot simply call `occurrences' on `wel_text' to determine how
-				-- many new line characters there are before `pos' as each time one is
-				-- found, we must increase `pos' by one. This is because from the interface,
-				-- new lines are "%N" but on Windows they are "%R%N".
-			from
-				l_r_code := ('%R').natural_32_code
-				l_text := wel_text
-				counter := 1
-				nb := pos - 1
-			until
-				counter >= nb
-			loop
-				if l_text.code (counter) = l_r_code then
-					new_lines := new_lines + 1
-					nb := nb + 1
-					counter := counter + 2
-				else
-					counter := counter + 1
-				end
-			end
-				-- We store `pos' so caret position can be restored
-				-- after operations that should not move caret, but do.
-			internal_set_caret_position (pos - 1 + new_lines)
+			internal_set_caret_position (actual_position_from_caret_position (pos))
 		end
 
 	select_region (start_pos, end_pos: INTEGER) is
@@ -456,6 +432,39 @@ feature {NONE} -- Implementation
 		do
 			-- All characters need to be default processed.
 		end
+
+	actual_position_from_caret_position (pos: INTEGER): INTEGER
+			-- Return the actual caret position from the logical character position.
+		local
+			new_lines: INTEGER
+			counter: INTEGER
+			l_r_code: NATURAL_32
+			nb: INTEGER
+			l_text: like wel_text
+		do
+				-- We cannot simply call `occurrences' on `wel_text' to determine how
+				-- many new line characters there are before `pos' as each time one is
+				-- found, we must increase `pos' by one. This is because from the interface,
+				-- new lines are "%N" but on Windows they are "%R%N".
+			from
+				l_r_code := ('%R').natural_32_code
+				l_text := wel_text
+				counter := 1
+				nb := pos - 1
+			until
+				counter >= nb
+			loop
+				if l_text.code (counter) = l_r_code then
+					new_lines := new_lines + 1
+					nb := nb + 1
+					counter := counter + 2
+				else
+					counter := counter + 1
+				end
+			end
+			Result := pos - 1 + new_lines
+		end
+
 
 	convert_string (a_string: STRING_GENERAL): STRING_32 is
 			-- Replace all "%N" with "%R%N" which is the Windows new line

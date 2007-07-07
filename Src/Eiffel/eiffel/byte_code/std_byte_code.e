@@ -560,7 +560,14 @@ feature -- Analyzis
 								end
 								if basic_i = Void then
 									buf.put_string ("return ")
+									if not type_c.is_pointer and then real_type (result_type).c_type.is_pointer then
+											-- "Unbox" result value.
+										buf.put_string ("/* Should not get here */ ")
+										buf.put_character ('*')
+										type_c.generate_access_cast (buf)
+									end
 								else
+										-- "Box" result value.
 									context.mark_result_used
 									type_c.generate (buf)
 									context.result_register.print_register
@@ -583,13 +590,25 @@ feature -- Analyzis
 								if i > 1 then
 									buf.put_character (',')
 									t := seed_arguments.item.type_i
-									if t.is_formal and then not real_type (arguments.item (i - 1)).c_type.is_pointer then
-										buf.put_character ('*')
-										real_type (arguments.item (i - 1)).c_type.generate_access_cast (buf)
+									if t.is_formal then
+										if not real_type (arguments.item (i - 1)).c_type.is_pointer then
+												-- "Unbox" argument value.
+											buf.put_character ('*')
+											real_type (arguments.item (i - 1)).c_type.generate_access_cast (buf)
+										end
+										buf.put_string (args.item (i))
+									elseif not t.is_anchored and then not t.c_type.is_pointer and then real_type (arguments.item (i - 1)).c_type.is_pointer then
+											-- "Box" argument value.
+										buf.put_string ("/* Should not get here */ ")
+										reference_c_type.generate_cast (buf)
+										buf.put_character ('0')
+									else
+										buf.put_string (args.item (i))
 									end
 									seed_arguments.forth
+								else
+									buf.put_string (args.item (i))
 								end
-								buf.put_string (args.item (i))
 								i := i + 1
 							end
 							buf.put_string (gc_rparan_semi_c)

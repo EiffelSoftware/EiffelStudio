@@ -166,12 +166,14 @@ feature {NONE} -- Implementation
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			l_output_manager := world.context_editor.develop_window.output_manager
-			l_output_manager.add_indexing_string (names.l_Loading_diagram)
-			l_output_manager.add_new_line
-			l_output_manager.add_indent
-			l_output_manager.add_string (names.l_class_is_not_in_anymore (class_name, group_id))
-			l_output_manager.add_new_line
+			if world /= Void and then world.context_editor /= Void then
+				l_output_manager := world.context_editor.develop_window.output_manager
+				l_output_manager.add_indexing_string (names.l_Loading_diagram)
+				l_output_manager.add_new_line
+				l_output_manager.add_indent
+				l_output_manager.add_string (names.l_class_is_not_in_anymore (class_name, group_id))
+				l_output_manager.add_new_line
+			end
 		end
 
 	put_cluster_not_exist_warning (cluster_name: STRING) is
@@ -179,12 +181,14 @@ feature {NONE} -- Implementation
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			l_output_manager := world.context_editor.develop_window.output_manager
-			l_output_manager.add_indexing_string (names.l_Loading_diagram)
-			l_output_manager.add_new_line
-			l_output_manager.add_indent
-			l_output_manager.add_string (names.l_cluster_is_not_in_the_system_anymore (cluster_name))
-			l_output_manager.add_new_line
+			if world /= Void and then world.context_editor /= Void then
+				l_output_manager := world.context_editor.develop_window.output_manager
+				l_output_manager.add_indexing_string (names.l_Loading_diagram)
+				l_output_manager.add_new_line
+				l_output_manager.add_indent
+				l_output_manager.add_string (names.l_cluster_is_not_in_the_system_anymore (cluster_name))
+				l_output_manager.add_new_line
+			end
 		end
 
 indexing

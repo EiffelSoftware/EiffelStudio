@@ -131,8 +131,6 @@ fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
 exprt %DEFAULT_ORIGO_SVN/Src/C_library C_library
 fullrd C_library\.libs
-remtrace Free add ons
-exprt %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 remtrace root
 exprt -N %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG

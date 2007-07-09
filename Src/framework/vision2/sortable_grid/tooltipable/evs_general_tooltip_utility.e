@@ -12,6 +12,15 @@ class
 inherit
 	EVS_UTILITY
 
+
+feature -- Access
+
+	tooltip_window: EVS_GENERAL_TOOLTIP_WINDOW is
+			-- Window to display tooltip
+		once
+			create Result
+		end
+
 feature{NONE} -- Implementation
 
 	tooltip_delay_time: INTEGER is

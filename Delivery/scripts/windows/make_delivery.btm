@@ -87,6 +87,7 @@ exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
 remtrace examples
 exprt %DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
+fullrd obsolete
 fullrd eiffeltest
 fullrd math
 fullrd matisse

@@ -480,16 +480,38 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_item: MSR_ITEM
 			l_class_name: STRING
 			l_list: LIST [CLASS_I]
+			l_text_item: MSR_TEXT_ITEM
+			l_start, l_end: INTEGER
+			l_class: CLASS_I
+			l_class_c: CLASS_C
+			l_compiled_line_stone: COMPILED_LINE_STONE
+			l_uncompiled_line_stone: UNCOMPILED_LINE_STONE
 		do
 			if a_item /= Void then
 				l_row := a_item.row
 				l_item ?= l_row.data
 				if l_item /= Void then
-					create l_class_name.make_from_string (l_item.class_name)
-					l_class_name.to_upper
+					l_class_name := l_item.class_name.as_upper
 					l_list := universe.classes_with_name (l_class_name)
 					if l_list /= Void and then not l_list.is_empty then
-						Result := stone_from_class_i (l_list.first)
+						l_class := l_list.first
+						l_text_item ?= l_row.data
+						if l_text_item /= Void then
+							l_start := l_text_item.start_index_in_unix_text
+							l_end := l_text_item.end_index_in_unix_text + 1
+							l_class_c := l_class.compiled_representation
+							if l_class_c /= Void then
+								create l_compiled_line_stone.make_with_line (l_class_c, 1, True)
+								l_compiled_line_stone.set_selection ([l_start, l_end])
+								Result := l_compiled_line_stone
+							else
+								create l_uncompiled_line_stone.make_with_line (l_class, 1, True)
+								l_uncompiled_line_stone.set_selection ([l_start, l_end])
+								Result := l_uncompiled_line_stone
+							end
+						else
+							Result := stone_from_class_i (l_class)
+						end
 					end
 				end
 			end

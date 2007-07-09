@@ -304,6 +304,8 @@ feature {NONE} -- Implementation functions
 
 	handle_class_stone (a_stone: STONE) is
 			-- Handle `a_stone' which is a class stone.
+		local
+			l_selection: TUPLE [pos_start, pos_end: INTEGER]
 		do
 			if class_text_exists then
 				if feature_stone /= Void and not develop_window.feature_stone_already_processed then  -- and not same_class then
@@ -329,7 +331,12 @@ feature {NONE} -- Implementation functions
 						if not develop_window.managed_main_formatters.first.selected then
 							select_basic_main_formatter
 						end
-						develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.should_line_be_selected)
+						l_selection := line_stone.selection
+						if l_selection /= Void then
+							develop_window.scroll_to_selection (l_selection, True)
+						else
+							develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.should_line_be_selected)
+						end
 					end
 				else
 					cl_syntax_stone ?= a_stone

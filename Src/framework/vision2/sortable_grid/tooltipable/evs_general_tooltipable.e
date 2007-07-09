@@ -419,10 +419,10 @@ feature{NONE} -- Actions
 			is_pointer_on_owner := False
 			if is_tooltip_enabled and then is_my_tooltip_displayed and then not is_picking_from_tooltip then
 				if tooltip_remain_delay_time > 0 then
-					setup_timer (tooltip_remain_delay_time, agent hide_tooltip)
+					setup_timer (tooltip_remain_delay_time, agent safe_hide_tooltip)
 				else
 					setup_timer (0, Void)
-					hide_tooltip
+					safe_hide_tooltip
 				end
 			else
 				setup_timer (0, Void)
@@ -466,7 +466,7 @@ feature{NONE} -- Tooltip show/hide
 						l_window.attach_owner (Current)
 					end
 					l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
-					setup_timer (tooltip_status_check_time, agent hide_tooltip)
+					setup_timer (tooltip_status_check_time, agent safe_hide_tooltip)
 				end
 			end
 		end
@@ -495,7 +495,7 @@ feature{NONE} -- Tooltip show/hide
 					end
 				end
 			end
-		ensure
+	ensure
 			-- Tooltip should be hidden if the following satisfied:
 			-- 	1. Tooltip is not pined and
 			-- 	2. Pointer is not on tooltip while `is_pointer_on_tooltip_enabled' is True or tooltip is not on owner
@@ -520,6 +520,16 @@ feature{NONE} -- Tooltip show/hide
 			end
 		ensure
 			tooltip_hidden: not is_my_tooltip_displayed
+		end
+
+	safe_hide_tooltip is
+			-- Hide tooltip if it's displayed.
+		require
+			tooltip_enabled: is_tooltip_enabled
+		do
+			if is_my_tooltip_displayed then
+				hide_tooltip
+			end
 		end
 
 feature{NONE} -- Status report
@@ -595,14 +605,6 @@ feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
 			timer.set_interval (timeout)
 		ensure
 			timer_set: timer.interval = timeout and a_agent /= Void implies timer.actions.has (a_agent)
-		end
-
-feature{NONE} -- Access
-
-	tooltip_window: EVS_GENERAL_TOOLTIP_WINDOW is
-			-- Window to display tooltip
-		once
-			create Result
 		end
 
 feature{NONE} -- Implementation

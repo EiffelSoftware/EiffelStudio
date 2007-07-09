@@ -38,6 +38,9 @@ feature -- Access
 	class_c: CLASS_C
 			-- Compiled class associated with that line, if the associated class is compiled
 
+	selection: TUPLE [pos_start, pos_end: INTEGER]
+			-- If set, `should_line_be_selected' should be ignored.
+
 feature -- Status report
 
 	should_line_be_selected: BOOLEAN
@@ -71,6 +74,14 @@ feature -- Setting
 			line_number := a_line_number
 		ensure
 			line_number_set: line_number = a_line_number
+		end
+
+	set_selection (a_selection: like selection) is
+			-- Set `selection' with `a_selection'.
+		do
+			selection := a_selection
+		ensure
+			selection_set: selection = a_selection
 		end
 
 indexing

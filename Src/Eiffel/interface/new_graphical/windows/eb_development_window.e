@@ -1597,10 +1597,19 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 				end_index := a_ast.end_position
 			end
 			offset := relative_location_offset ([begin_index, end_index], displayed_class)
+			scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
+		end
+
+	scroll_to_selection (a_selection: TUPLE [pos_start, pos_end: INTEGER]; a_selected: BOOLEAN) is
+			-- Scroll to the region of `a_selection'.
+			-- If `a_selected' is True, `a_selection' is selected.
+		require
+			a_selection_not_void: a_selection /= Void
+		do
 			if a_selected then
-				editors_manager.current_editor.select_region_when_ready (begin_index - offset.start_offset, end_index - offset.end_offset + 1)
+				editors_manager.current_editor.select_region_when_ready (a_selection.pos_start, a_selection.pos_end)
 			else
-				editors_manager.current_editor.scroll_to_when_ready (begin_index - offset.start_offset)
+				editors_manager.current_editor.scroll_to_when_ready (a_selection.pos_start)
 			end
 		end
 

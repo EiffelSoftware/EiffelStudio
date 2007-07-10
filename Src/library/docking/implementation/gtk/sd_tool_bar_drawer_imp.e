@@ -76,7 +76,7 @@ feature -- Redefine
 			l_rect: EV_RECTANGLE
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			if not tool_bar.is_destroyed then
+			if not tool_bar.is_destroyed and then tool_bar.is_displayed then
 				l_tool_bar_imp ?= a_arguments.tool_bar.implementation
 				check not_void: l_tool_bar_imp /= Void end
 				l_rect := a_arguments.item.rectangle

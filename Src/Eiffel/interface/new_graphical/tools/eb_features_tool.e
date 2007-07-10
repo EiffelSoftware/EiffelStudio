@@ -23,7 +23,8 @@ inherit
 			mini_toolbar,
 			build_mini_toolbar,
 			internal_recycle,
-			show
+			show,
+			force_last_stone
 		end
 
 	EB_SHARED_PREFERENCES
@@ -264,83 +265,10 @@ feature -- Element change
 
 	set_stone (c: STONE) is
 			-- Set `current_class' if c is instance of CLASSC_STONE, `Void' otherwise.
-		local
-			classc_stone: CLASSC_STONE
-			external_classc: EXTERNAL_CLASS_C
-			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			conv_cst: CLASSI_STONE
 		do
-			debug ("docking_integration")
-				print ("%N EB_FEATURES_TOOL set_stone")
-			end
-			conv_cst ?= c
-			if conv_cst /= Void then
-				current_stone := conv_cst
-			end
-			classc_stone ?= c
-			if shown then
-					-- We put the tree off-screen to optimize performance only when something
-					-- will happen to the tree (check calls to `widget.wipe_out' and
-					-- `widget.extend (tree)'.
-				if classc_stone /= Void then
-					if
-						not classc_stone.e_class.is_external and then
-						classc_stone.e_class.has_ast
-					then
-						if classc_stone.e_class /= current_compiled_class then
-							widget.wipe_out
-							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							if classc_stone.e_class.is_precompiled then
-								current_class := classc_stone.e_class.ast
-							elseif classc_stone.e_class.eiffel_class_c.file_is_readable then
-								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
-							end
-							if current_class /= Void then
-								feature_clauses := current_class.features
-									-- Build the tree
-								if tree.selected_item /= Void then
-									tree.selected_item.disable_select
-								end
-								tree.wipe_out
-								current_compiled_class := classc_stone.e_class
-								if feature_clauses /= Void then
-									tree.build_tree (feature_clauses)
-								else
-									tree.extend (create {EV_TREE_ITEM}.make_with_text
-										(Warning_messages.W_no_feature_to_display))
-								end
-								Eiffel_system.System.set_current_class (Void)
-								widget.extend (tree)
-								if not tree.is_empty and then tree.is_displayed then
-									tree.ensure_item_visible (tree.first)
-								end
-							end
-						end
-					elseif classc_stone.class_i.is_external_class then
-							-- Special processing for a .NET type since has no 'ast' in the normal
-							-- sense.
-						external_classc ?= classc_stone.e_class
-						if
-							external_classc /= current_compiled_class and external_classc /= Void
-						then
-							Eiffel_system.System.set_current_class (classc_stone.e_class)
-									-- Build the tree
-							if tree.selected_item /= Void then
-								tree.selected_item.disable_select
-							end
-							tree.wipe_out
-							current_compiled_class := classc_stone.e_class
-							tree.build_tree_for_external (current_compiled_class)
-						end
-					else
-						tree.wipe_out
-						current_compiled_class := Void
-					end
-				else
-						-- Invalid stone, wipe out window content.
-					tree.wipe_out
-					current_compiled_class := Void
-				end
+			set_last_stone (c)
+			if widget.is_displayed or else is_auto_hide then
+				force_last_stone
 			end
 		end
 
@@ -440,6 +368,90 @@ feature {NONE} -- Implementation
 
 	current_stone: CLASSI_STONE
 			-- Classc stone that was last dropped into `Current'.
+
+	force_last_stone is
+			-- Set `current_class' if `last_stone' is instance of CLASSC_STONE, `Void' otherwise.
+		local
+			classc_stone: CLASSC_STONE
+			external_classc: EXTERNAL_CLASS_C
+			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			conv_cst: CLASSI_STONE
+		do
+			if not is_last_stone_processed then
+				debug ("docking_integration")
+					print ("%N EB_FEATURES_TOOL set_stone")
+				end
+				conv_cst ?= last_stone
+				if conv_cst /= Void then
+					current_stone := conv_cst
+				end
+				classc_stone ?= last_stone
+
+					-- We put the tree off-screen to optimize performance only when something
+					-- will happen to the tree (check calls to `widget.wipe_out' and
+					-- `widget.extend (tree)'.
+				if classc_stone /= Void then
+					if
+						not classc_stone.e_class.is_external and then
+						classc_stone.e_class.has_ast
+					then
+						if classc_stone.e_class /= current_compiled_class then
+							widget.wipe_out
+							Eiffel_system.System.set_current_class (classc_stone.e_class)
+							if classc_stone.e_class.is_precompiled then
+								current_class := classc_stone.e_class.ast
+							elseif classc_stone.e_class.eiffel_class_c.file_is_readable then
+								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
+							end
+							if current_class /= Void then
+								feature_clauses := current_class.features
+									-- Build the tree
+								if tree.selected_item /= Void then
+									tree.selected_item.disable_select
+								end
+								tree.wipe_out
+								current_compiled_class := classc_stone.e_class
+								if feature_clauses /= Void then
+									tree.build_tree (feature_clauses)
+								else
+									tree.extend (create {EV_TREE_ITEM}.make_with_text
+										(Warning_messages.W_no_feature_to_display))
+								end
+								Eiffel_system.System.set_current_class (Void)
+								widget.extend (tree)
+								if not tree.is_empty and then tree.is_displayed then
+									tree.ensure_item_visible (tree.first)
+								end
+							end
+						end
+					elseif classc_stone.class_i.is_external_class then
+							-- Special processing for a .NET type since has no 'ast' in the normal
+							-- sense.
+						external_classc ?= classc_stone.e_class
+						if
+							external_classc /= current_compiled_class and external_classc /= Void
+						then
+							Eiffel_system.System.set_current_class (classc_stone.e_class)
+									-- Build the tree
+							if tree.selected_item /= Void then
+								tree.selected_item.disable_select
+							end
+							tree.wipe_out
+							current_compiled_class := classc_stone.e_class
+							tree.build_tree_for_external (current_compiled_class)
+						end
+					else
+						tree.wipe_out
+						current_compiled_class := Void
+					end
+				else
+						-- Invalid stone, wipe out window content.
+					tree.wipe_out
+					current_compiled_class := Void
+				end
+				Precursor
+			end
+		end
 
 	character_line (pos: INTEGER; s: STRING): INTEGER is
 			-- Line number of character number `pos' in `s'.

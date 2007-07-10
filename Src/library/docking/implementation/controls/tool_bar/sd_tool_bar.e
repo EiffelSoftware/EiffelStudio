@@ -247,9 +247,21 @@ feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 feature -- Query
 
 	items: like internal_items is
-			-- `internal_items''s snapshot.
+			-- Visible items
 		do
 			Result := internal_items.twin
+		ensure
+			not_void: Result /= Void
+		end
+
+	all_items: like internal_items is
+			-- All items
+		do
+			if content /= Void then
+				Result := content.items.twin
+			else
+				Result := items
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -748,6 +760,17 @@ feature {NONE} -- Agents
 		end
 
 feature {SD_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
+
+	set_content (a_content: like content) is
+			-- Set `content' with `a_content'.
+		do
+			content := a_content
+		ensure
+			content_set: content = a_content
+		end
+
+	content: SD_TOOL_BAR_CONTENT
+			-- Related tool bar content
 
 	redraw_item (a_item: SD_TOOL_BAR_ITEM) is
 			-- Redraw `a_item'.

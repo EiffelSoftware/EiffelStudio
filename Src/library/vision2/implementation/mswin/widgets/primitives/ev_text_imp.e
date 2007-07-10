@@ -332,36 +332,14 @@ feature -- Status Settings
 
 	enable_word_wrapping is
 			-- Ensure `has_word_wrap' is True.
-		local
-			old_text: like text
 		do
-			old_text := text
-			wel_destroy
-			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
-			set_default_font
-			set_text (old_text)
-			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
-			show_vertical_scroll_bar
-			if parent_imp /= Void then
-				parent_imp.notify_change (nc_minsize, Current)
-			end
+			recreate_current (0)
 		end
 
 	disable_word_wrapping is
 			-- Ensure `has_word_wrap' is False.
-		local
-			old_text: like text
 		do
-			old_text := text
-			wel_destroy
-			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
-			set_default_font
-			set_text (old_text)
-			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
-			show_vertical_scroll_bar
-			if parent_imp /= Void then
-				parent_imp.notify_change (nc_minsize, Current)
-			end
+			recreate_current (ws_hscroll)
 		end
 
 	append_text (txt: STRING_GENERAL) is
@@ -603,6 +581,68 @@ feature {NONE} -- WEL Implementation
 					process_navigation_key (virtual_key)
 				end
 				Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
+			end
+		end
+
+	recreate_current (a_additional_style: INTEGER) is
+			-- Destroy the existing widget and recreate current using the new style added with `a_additional_style'.
+		local
+			par_imp: WEL_WINDOW
+			cur_x: INTEGER
+			cur_y: INTEGER
+			cur_width: INTEGER
+			cur_height: INTEGER
+			l_sensitive: like is_sensitive
+			l_tooltip: like tooltip
+			l_text: like text
+			l_caret: like caret_position
+			l_is_read_only: like read_only
+		do
+			l_sensitive := is_sensitive
+			l_tooltip := tooltip
+			l_text := text
+			l_caret := caret_position
+			l_is_read_only := read_only
+			set_tooltip ("")
+
+				-- We keep some useful informations that will be
+				-- destroyed when calling `wel_destroy'
+			par_imp ?= parent_imp
+				-- `Current' may not have been actually phsically parented
+				-- within windows yet.
+			if par_imp = Void then
+				par_imp ?= default_parent
+			end
+			cur_x := x_position
+			cur_y := y_position
+			cur_width := ev_width
+			cur_height := ev_height
+
+					-- We destroy the widget
+			wel_destroy
+
+				-- We create the new combo.
+			internal_window_make (par_imp, "", default_style + a_additional_style, cur_x, cur_y, cur_width, cur_height, 0, default_pointer)
+			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
+			show_vertical_scroll_bar
+
+				-- Restore the previous settings.
+			if private_font /= Void then
+				set_font (private_font)
+			else
+				set_default_font
+			end
+			if not l_sensitive then
+				disable_sensitive
+			end
+			if foreground_color_imp /= Void then
+				set_foreground_color (foreground_color)
+			end
+			set_tooltip (l_tooltip)
+			set_text (l_text)
+			set_caret_position (l_caret)
+			if l_is_read_only then
+				set_read_only
 			end
 		end
 

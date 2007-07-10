@@ -26,6 +26,12 @@ inherit
 			copy
 		end
 
+	EV_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -81,19 +87,19 @@ feature {NONE} -- Initialization
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_class, agent add_class)
 			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
-			l_btn.set_minimum_width (100)
+			set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_feature, agent add_feature)
 			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
-			l_btn.set_minimum_width (100)
+			set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_remove, agent remove)
 			l_btn.set_pixmap (conf_pixmaps.general_remove_icon)
-			l_btn.set_minimum_width (100)
+			set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 

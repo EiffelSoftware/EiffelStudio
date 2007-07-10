@@ -20,6 +20,8 @@ inherit
 
 	WRAPPER_HELPER
 
+	PROPERTY_HELPER
+
 feature -- Access
 
 	conf_factory: CONF_PARSE_FACTORY is
@@ -71,7 +73,7 @@ feature {NONE} -- Implementation
 			properties.add_section (conf_interface_names.section_general)
 
 				-- Profiling option
-			create l_bool_prop.make_with_value (conf_interface_names.option_profile_name, an_inherited_options.is_profile)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_profile_name, an_inherited_options.is_profile)
 			l_bool_prop.set_description (conf_interface_names.option_profile_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_profile)
 			if a_inherits then
@@ -91,7 +93,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- Tracing option
-			create l_bool_prop.make_with_value (conf_interface_names.option_trace_name, an_inherited_options.is_trace)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_trace_name, an_inherited_options.is_trace)
 			l_bool_prop.set_description (conf_interface_names.option_trace_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_trace)
 			if a_inherits then
@@ -111,7 +113,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- Full checking option
-			create l_bool_prop.make_with_value (conf_interface_names.option_full_class_checking_name, an_inherited_options.is_full_class_checking)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_full_class_checking_name, an_inherited_options.is_full_class_checking)
 			l_bool_prop.set_description (conf_interface_names.option_full_class_checking_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_full_class_checking)
 			if a_inherits then
@@ -131,7 +133,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- Cat call detection
-			create l_bool_prop.make_with_value (conf_interface_names.option_cat_call_detection_name, an_inherited_options.is_cat_call_detection)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_cat_call_detection_name, an_inherited_options.is_cat_call_detection)
 			l_bool_prop.set_description (conf_interface_names.option_cat_call_detection_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_cat_call_detection)
 			if a_inherits then
@@ -170,42 +172,42 @@ feature {NONE} -- Implementation
 			end
 			properties.add_section (conf_interface_names.section_assertions)
 
-			create l_require.make_with_value (conf_interface_names.option_require_name, l_inh_assertions.is_precondition)
+			l_require := new_boolean_property (conf_interface_names.option_require_name, l_inh_assertions.is_precondition)
 			l_require.set_description (conf_interface_names.option_require_description)
 			l_require.set_refresh_action (agent l_inh_assertions.is_precondition)
 			l_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_require_name, ?))
 			l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_require)
 
-			create l_ensure.make_with_value (conf_interface_names.option_ensure_name, l_inh_assertions.is_postcondition)
+			l_ensure := new_boolean_property (conf_interface_names.option_ensure_name, l_inh_assertions.is_postcondition)
 			l_ensure.set_description (conf_interface_names.option_ensure_description)
 			l_ensure.set_refresh_action (agent l_inh_assertions.is_postcondition)
 			l_ensure.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_ensure_name, ?))
 			l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_ensure)
 
-			create l_check.make_with_value (conf_interface_names.option_check_name, l_inh_assertions.is_check)
+			l_check := new_boolean_property (conf_interface_names.option_check_name, l_inh_assertions.is_check)
 			l_check.set_description (conf_interface_names.option_check_description)
 			l_check.set_refresh_action (agent l_inh_assertions.is_check)
 			l_check.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_check_name, ?))
 			l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_check)
 
-			create l_invariant.make_with_value (conf_interface_names.option_invariant_name, l_inh_assertions.is_invariant)
+			l_invariant := new_boolean_property (conf_interface_names.option_invariant_name, l_inh_assertions.is_invariant)
 			l_invariant.set_description (conf_interface_names.option_invariant_description)
 			l_invariant.set_refresh_action (agent l_inh_assertions.is_invariant)
 			l_invariant.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_invariant_name, ?))
 			l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_invariant)
 
-			create l_loop.make_with_value (conf_interface_names.option_loop_name, l_inh_assertions.is_loop)
+			l_loop := new_boolean_property (conf_interface_names.option_loop_name, l_inh_assertions.is_loop)
 			l_loop.set_description (conf_interface_names.option_loop_description)
 			l_loop.set_refresh_action (agent l_inh_assertions.is_loop)
 			l_loop.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_loop_name, ?))
 			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_loop)
 
-			create l_sup_require.make_with_value (conf_interface_names.option_sup_require_name, l_inh_assertions.is_supplier_precondition)
+			l_sup_require := new_boolean_property (conf_interface_names.option_sup_require_name, l_inh_assertions.is_supplier_precondition)
 			l_sup_require.set_description (conf_interface_names.option_sup_require_description)
 			l_sup_require.set_refresh_action (agent l_inh_assertions.is_supplier_precondition)
 			l_sup_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_sup_require_name, ?))
@@ -262,7 +264,7 @@ feature {NONE} -- Implementation
 		do
 			properties.add_section (conf_interface_names.section_warning)
 
-			create l_bool_prop.make_with_value (conf_interface_names.option_warnings_name, an_inherited_options.is_warning)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_warnings_name, an_inherited_options.is_warning)
 			l_bool_prop.set_description (conf_interface_names.option_warnings_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_warning)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
@@ -287,7 +289,7 @@ feature {NONE} -- Implementation
 			loop
 				l_warning := valid_warnings.item_for_iteration
 
-				create l_bool_prop.make_with_value (conf_interface_names.warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
+				l_bool_prop := new_boolean_property (conf_interface_names.warning_names.item (l_warning), an_inherited_options.is_warning_enabled (l_warning))
 				l_bool_prop.set_description (conf_interface_names.warning_descriptions.item (l_warning))
 				l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
@@ -315,7 +317,7 @@ feature {NONE} -- Implementation
 		do
 			properties.add_section (conf_interface_names.section_debug)
 
-			create l_bool_prop.make_with_value (conf_interface_names.option_debug_name, an_inherited_options.is_debug)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_debug_name, an_inherited_options.is_debug)
 			l_bool_prop.set_description (conf_interface_names.option_debug_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_debug)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
@@ -332,7 +334,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.option_unnamed_debug_name, an_inherited_options.is_debug_enabled (unnamed_debug))
+			l_bool_prop := new_boolean_property (conf_interface_names.option_unnamed_debug_name, an_inherited_options.is_debug_enabled (unnamed_debug))
 			l_bool_prop.change_value_actions.extend (agent an_options.add_debug (unnamed_debug, ?))
 			if not an_inherited_options.is_debug then
 				l_bool_prop.enable_readonly
@@ -346,7 +348,7 @@ feature {NONE} -- Implementation
 			loop
 				l_debug := debug_clauses.item_for_iteration
 
-				create l_bool_prop.make_with_value (l_debug, an_inherited_options.is_debug_enabled (l_debug))
+				l_bool_prop := new_boolean_property (l_debug, an_inherited_options.is_debug_enabled (l_debug))
 				l_bool_prop.change_value_actions.extend (agent an_options.add_debug (l_debug, ?))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 	 			if not an_inherited_options.is_debug then
@@ -384,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_string_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.option_msil_application_optimize_name, an_inherited_options.is_msil_application_optimize)
+			l_bool_prop := new_boolean_property (conf_interface_names.option_msil_application_optimize_name, an_inherited_options.is_msil_application_optimize)
 			l_bool_prop.set_description (conf_interface_names.option_msil_application_optimize_description)
 			l_bool_prop.change_value_actions.extend (agent an_options.set_msil_application_optimize)
 			if a_inherits then

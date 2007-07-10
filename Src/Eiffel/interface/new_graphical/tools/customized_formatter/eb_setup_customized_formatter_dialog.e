@@ -13,6 +13,12 @@ inherit
 			on_ok
 		end
 
+	PROPERTY_HELPER
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -389,7 +395,7 @@ feature{NONE} -- Implementation
 			metric_property := l_metric
 			l_grid.add_property (l_metric)
 
-			create l_metric_filter.make_with_value (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
+			l_metric_filter := new_boolean_property (interface_names.l_metric_filter, a_descriptor.is_filter_enabled)
 			l_metric_filter.change_value_actions.extend (agent on_filter_change (a_descriptor, ?))
 			l_metric_filter.set_description (interface_names.l_formatter_filter_help)
 			l_grid.add_property (l_metric_filter)

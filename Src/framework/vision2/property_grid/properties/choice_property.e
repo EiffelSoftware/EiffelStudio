@@ -77,20 +77,21 @@ feature {NONE} -- Agents
 		local
 			l_done: BOOLEAN
 			l_item: like value
+			l_converted_data: like value
 		do
 			from
 				item_strings.start
 			until
 				l_done or item_strings.after
 			loop
-				if text_field.text.is_equal (item_strings.item.out) then
+				l_converted_data := convert_to_data (text_field.text)
+				if l_converted_data /= Void and then l_converted_data.is_equal (item_strings.item) then
 					if item_strings.islast then
 						l_item := item_strings.first
 					else
 						item_strings.forth
 						l_item := item_strings.item
 					end
-					text_field.set_text (l_item.out)
 					if is_valid_value (l_item) then
 						set_value (l_item)
 					end
@@ -134,7 +135,7 @@ feature {NONE} -- Agents
 			until
 				item_strings.after
 			loop
-				create l_item.make_with_text (item_strings.item.out)
+				create l_item.make_with_text (to_displayed_value (item_strings.item))
 				l_item.set_value (item_strings.item)
 				combo_grid.set_item (1, item_strings.index, l_item)
 				l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))

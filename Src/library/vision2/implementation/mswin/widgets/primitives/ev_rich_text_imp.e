@@ -1157,7 +1157,11 @@ feature -- Status setting
 			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
 				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
 			set_text_limit (2560000)
-			set_default_font
+			if private_font /= Void then
+				set_font (private_font)
+			else
+				set_default_font
+			end
 			if parent_imp /= Void then
 				parent_imp.notify_change (nc_minsize, Current)
 			end

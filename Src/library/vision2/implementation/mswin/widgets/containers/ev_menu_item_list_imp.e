@@ -531,7 +531,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 				do
 					l_menu ?= a_menu_item
 					if l_menu /= Void then
-						Result := l_menu.wel_item = a_wel_menu
+						Result := l_menu.wel_item = a_wel_menu.item
 					end
 				end (?, a_menu)
 			l_menu_item := menu_item_from_comparator (l_comparator)

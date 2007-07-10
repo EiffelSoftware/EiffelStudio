@@ -63,7 +63,7 @@ feature -- Access
 	sort_name: STRING is
 			-- Name for sorting
 		do
-			Result := full_insert_name.as_lower
+			Result := string
 		ensure
 			result_not_void: Result /= Void
 		end

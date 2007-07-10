@@ -42,8 +42,11 @@ create {EB_FEATURE_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_name: STRING) is
+	make (a_feature: E_FEATURE; a_name: STRING; a_name_is_ambiguated: BOOLEAN) is
 			-- Create and initialize a new completion feature using `a_feature'
+			-- `a_name' is either an ambiguated name when `a_name_is_ambiguated',
+			-- or a fixed name when not `a_name_is_ambiguated'.
+			-- When `a_name' is Void, `a_name_is_ambiguated' is discarded.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
@@ -75,12 +78,18 @@ feature {NONE} -- Initialization
 			insert_name_internal.append (name)
 			insert_name_internal.append (feature_signature)
 
-			create full_insert_name_internal.make (associated_feature.name.count + feature_signature.count)
-			full_insert_name_internal.append (associated_feature.name)
-			full_insert_name_internal.append (feature_signature)
+			if a_name_is_ambiguated then
+				create full_insert_name_internal.make (associated_feature.name.count + feature_signature.count)
+				full_insert_name_internal.append (associated_feature.name)
+				full_insert_name_internal.append (feature_signature)
+			else
+				full_insert_name_internal := insert_name_internal
+			end
+			name_is_ambiguated := a_name_is_ambiguated
 		ensure
 			associated_feature_set: associated_feature = a_feature
 			return_type_set: return_type = a_feature.type
+			name_is_ambiguated_set: name_is_ambiguated = a_name_is_ambiguated
 		end
 
 feature -- Access
@@ -153,7 +162,7 @@ feature -- Access
 				l_style.enable_argument
 				l_style.enable_return_type
 			end
-			if show_disambiguated_name then
+			if show_disambiguated_name and name_is_ambiguated then
 				l_style.disable_use_overload_name
 			else
 				l_style.enable_use_overload_name
@@ -180,7 +189,7 @@ feature -- Comparison
 	begins_with (s: STRING): BOOLEAN is
 			-- Does this feature name begins with `s'?
 		do
-			if show_disambiguated_name then
+			if show_disambiguated_name and name_is_ambiguated then
 				Result := Precursor {EB_NAME_FOR_COMPLETION} (s)
 			else
 				if name_matcher = Void then
@@ -222,6 +231,9 @@ feature {NONE} -- Implementation
 	insert_name_internal: STRING
 
 	full_insert_name_internal: STRING
+
+	name_is_ambiguated: BOOLEAN
+			-- Is this name ambiguated. If not we always use the received name rather than the feature name.
 
 	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
 			-- Feature style to generate text for `associated_feature'.

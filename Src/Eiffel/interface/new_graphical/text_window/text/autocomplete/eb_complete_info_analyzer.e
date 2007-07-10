@@ -644,11 +644,11 @@ feature {NONE} -- Implementation
 			l_feature: EB_FEATURE_FOR_COMPLETION
 		do
 			if feat.is_infix then
-				create l_feature.make (feat, Void)
+				create l_feature.make (feat, Void, False)
 				l_feature.set_has_dot (False)
 				insert_in_completion_possibilities (l_feature)
 			elseif not feat.is_prefix then
-				create l_feature.make (feat, Void)
+				create l_feature.make (feat, Void, False)
 				if (feat.is_once or feat.is_constant) and preferences.editor_data.once_and_constant_in_upper then
 					l_feature.put ((l_feature @ 1).upper, 1)
 				end
@@ -751,7 +751,8 @@ feature {NONE} -- Implementation
 							end
 								-- Create child node and insert it into father node.
 							create l_feature.make (l_e_feature,
-													names_heap.item (l_overloaded_names.key_for_iteration))
+													names_heap.item (l_overloaded_names.key_for_iteration),
+													True)
 							l_father.add_child (l_feature)
 								-- Remove child feature from inserted_feature_table.
 							inserted_feature_table.remove (l_features.item)
@@ -1329,17 +1330,16 @@ feature {NONE} -- Implementation
 			a_extended_class_not_void: a_extended_class /= Void
 		local
 			l_renaming: RENAMING_A
-			l_pos: INTEGER
 			l_name_id, l_new_name_id: INTEGER
 			l_features_found_count: INTEGER
 			l_type_set: TYPE_SET_A
 			l_name_for_completion: EB_FEATURE_FOR_COMPLETION
 			l_stop: BOOLEAN
-			l_stat: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER_32; constraint_position: INTEGER_32]
 		do
 			l_name_id := a_feat.name_id
 			from
-				l_type_set := a_type_set
+					-- `e_feature_state_by_name_id' doesn't ensure the cursor position, so we twin here.
+				l_type_set := a_type_set.twin
 				l_type_set.start
 			until
 					-- We stop when the feature was added.
@@ -1361,17 +1361,22 @@ feature {NONE} -- Implementation
 						l_features_found_count := l_type_set.e_feature_state_by_name_id (l_new_name_id).features_found_count
 						if l_features_found_count = 1 then
 							if l_new_name_id /= l_name_id then
-								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id))
+								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id), False)
 								insert_in_completion_possibilities (l_name_for_completion)
 							else
 								add_feature_to_completion_possibilities (a_feat)
 							end
 						else
-								-- The feature occurs more than oce, we do not want to add it.
+								-- The feature occurs more than once, we do not want to add it.
 							check no_internal_error: l_features_found_count > 1 end
 						end
 					else
-						add_feature_to_completion_possibilities (a_feat)
+							-- If there is no renaming, we still need to ensure the feature added is unique,
+							-- or we don't add it to the list, because the code will be rejected by the compiler.
+						l_features_found_count := l_type_set.e_feature_state_by_name_id (l_name_id).features_found_count
+						if l_features_found_count = 1 then
+							add_feature_to_completion_possibilities (a_feat)
+						end
 					end
 					l_stop := True
 				else

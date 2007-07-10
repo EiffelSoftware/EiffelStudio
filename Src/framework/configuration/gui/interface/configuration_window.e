@@ -82,6 +82,12 @@ inherit
 			default_create
 		end
 
+	PROPERTY_HELPER
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make,
 	make_for_target
@@ -1116,7 +1122,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_choice_prop)
 
 				-- readonly
-			create l_bool_prop.make_with_value (conf_interface_names.system_readonly_name, conf_system.is_readonly)
+			l_bool_prop := new_boolean_property (conf_interface_names.system_readonly_name, conf_system.is_readonly)
 			l_bool_prop.set_description (conf_interface_names.system_readonly_description)
 			l_bool_prop.change_value_actions.extend (agent conf_system.set_readonly)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
@@ -1280,7 +1286,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_dir_prop)
 
 				-- must succeed
-			create l_bool_prop.make_with_value (conf_interface_names.task_succeed_name, a_task.must_succeed)
+			l_bool_prop := new_boolean_property (conf_interface_names.task_succeed_name, a_task.must_succeed)
 			l_bool_prop.set_description (conf_interface_names.task_succeed_description)
 			l_bool_prop.change_value_actions.extend (agent a_task.set_must_succeed)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))

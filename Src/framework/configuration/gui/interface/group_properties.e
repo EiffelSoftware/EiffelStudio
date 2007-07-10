@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_mls_prop)
 
 				-- readonly
-			create l_bool_prop.make_with_value (conf_interface_names.group_readonly_name, a_group.internal_read_only)
+			l_bool_prop := new_boolean_property (conf_interface_names.group_readonly_name, a_group.internal_read_only)
 			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
 			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 
 			if l_library /= Void then
 					-- use application options
-				create l_bool_prop.make_with_value (conf_interface_names.library_use_application_options_name, l_library.use_application_options)
+				l_bool_prop := new_boolean_property (conf_interface_names.library_use_application_options_name, l_library.use_application_options)
 				l_bool_prop.set_description (conf_interface_names.library_use_application_options_description)
 				l_bool_prop.change_value_actions.extend (agent l_library.set_use_application_options)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
@@ -140,14 +140,14 @@ feature {NONE} -- Implementation
 
 			if l_cluster /= Void then
 					-- recursive
-				create l_bool_prop.make_with_value (conf_interface_names.cluster_recursive_name, l_cluster.is_recursive)
+				l_bool_prop := new_boolean_property (conf_interface_names.cluster_recursive_name, l_cluster.is_recursive)
 				l_bool_prop.set_description (conf_interface_names.cluster_recursive_description)
 				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
 				properties.add_property (l_bool_prop)
 
 					-- hidden
-				create l_bool_prop.make_with_value (conf_interface_names.cluster_hidden_name, l_cluster.is_hidden)
+				l_bool_prop := new_boolean_property (conf_interface_names.cluster_hidden_name, l_cluster.is_hidden)
 				l_bool_prop.set_description (conf_interface_names.cluster_hidden_description)
 				l_bool_prop.change_value_actions.extend (agent l_cluster.set_hidden)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))

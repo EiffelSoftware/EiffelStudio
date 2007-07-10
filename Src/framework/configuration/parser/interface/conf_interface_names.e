@@ -778,6 +778,20 @@ feature -- Parse errors
 
 	e_parse_incorrect_description: STRING is "Invalid description tag.";
 
+feature -- Boolean values
+
+	boolean_true: STRING_GENERAL is do Result := locale.translation ("True") end
+
+	boolean_false: STRING_GENERAL is do Result := locale.translation ("False") end
+
+	boolean_values: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
+			-- Boolean values mapping
+		once
+			create Result.make (2)
+			Result.force (True, boolean_true)
+			Result.force (False, boolean_false)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

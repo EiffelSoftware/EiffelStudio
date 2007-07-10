@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_mls_prop)
 
 				-- abstract target
-			create l_bool_prop.make_with_value (conf_interface_names.target_abstract_name, current_target.is_abstract)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_abstract_name, current_target.is_abstract)
 			l_bool_prop.set_description (conf_interface_names.target_abstract_description)
 			l_bool_prop.change_value_actions.extend (agent current_target.set_abstract)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
 			add_boolean_setting_actions (l_bool_prop, s_line_generation, False)
 			properties.add_property (l_bool_prop)
@@ -180,27 +180,27 @@ feature {NONE} -- Implementation
 
 			properties.add_section (conf_interface_names.section_advanced)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
 			l_bool_prop.set_description (conf_interface_names.target_address_expression_description)
 			add_boolean_setting_actions (l_bool_prop, s_address_expression, False)
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_automatic_backup_name, current_target.setting_automatic_backup)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_automatic_backup_name, current_target.setting_automatic_backup)
 			l_bool_prop.set_description (conf_interface_names.target_automatic_backup_description)
 			add_boolean_setting_actions (l_bool_prop, s_automatic_backup, False)
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
 			l_bool_prop.set_description (conf_interface_names.target_check_vape_description)
 			add_boolean_setting_actions (l_bool_prop, s_check_vape, True)
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_console_application_name, current_target.setting_console_application)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_console_application_name, current_target.setting_console_application)
 			l_bool_prop.set_description (conf_interface_names.target_console_application_description)
 			add_boolean_setting_actions (l_bool_prop, s_console_application, False)
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (conf_interface_names.target_dead_code_removal_description)
 			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, True)
 			if l_il_generation then
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
 			l_bool_prop.set_description (conf_interface_names.target_dynamic_runtime_description)
 			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime, False)
 			if l_il_generation then
@@ -216,12 +216,12 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
 			l_bool_prop.set_description (conf_interface_names.target_enforce_unique_class_names_description)
 			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names, False)
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
 			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
 			add_boolean_setting_actions (l_bool_prop, s_exception_trace, False)
 			if l_il_generation then
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_inlining_name, current_target.setting_inlining)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
 			add_boolean_setting_actions (l_bool_prop, s_inlining, True)
 			if l_il_generation then
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_string_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_multithreaded_name, current_target.setting_multithreaded)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_multithreaded_name, current_target.setting_multithreaded)
 			l_bool_prop.set_description (conf_interface_names.target_multithreaded_description)
 			add_boolean_setting_actions (l_bool_prop, s_multithreaded, False)
 			if l_il_generation then
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_old_verbatim_strings_name, current_target.setting_old_verbatim_strings)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_old_verbatim_strings_name, current_target.setting_old_verbatim_strings)
 			l_bool_prop.set_description (conf_interface_names.target_old_verbatim_strings_description)
 			add_boolean_setting_actions (l_bool_prop, s_old_verbatim_strings, False)
 			properties.add_property (l_bool_prop)
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 				-- .NET section
 			properties.add_section (conf_interface_names.section_dotnet)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
 			l_bool_prop.set_description (conf_interface_names.target_msil_use_optimized_precompile_description)
 			add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile, False)
 			if not l_il_generation then
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_cluster_name_as_namespace_description)
 			add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace, True)
 			if not l_il_generation then
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_all_cluster_name_as_namespace_description)
 			add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace, True)
 			if not l_il_generation then
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
 			l_bool_prop.set_description (conf_interface_names.target_dotnet_naming_convention_description)
 			add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention, False)
 			if not l_il_generation then
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_il_verifiable_name, current_target.setting_il_verifiable)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_il_verifiable_name, current_target.setting_il_verifiable)
 			l_bool_prop.set_description (conf_interface_names.target_il_verifiable_description)
 			add_boolean_setting_actions (l_bool_prop, s_il_verifiable, True)
 			if not l_il_generation then
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_cls_compliant_name, current_target.setting_cls_compliant)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_cls_compliant_name, current_target.setting_cls_compliant)
 			l_bool_prop.set_description (conf_interface_names.target_cls_compliant_description)
 			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, True)
 			if not l_il_generation then
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			l_key_file_prop.add_filters (all_files_filter, all_files_description)
 			properties.add_property (l_key_file_prop)
 
-			create l_bool_prop.make_with_value (conf_interface_names.target_force_32bits_name, current_target.setting_force_32bits)
+			l_bool_prop := new_boolean_property (conf_interface_names.target_force_32bits_name, current_target.setting_force_32bits)
 			l_bool_prop.set_description (conf_interface_names.target_force_32bits_description)
 			add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
 			if not l_il_generation then

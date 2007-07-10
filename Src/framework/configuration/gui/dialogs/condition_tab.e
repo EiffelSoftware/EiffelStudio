@@ -154,7 +154,7 @@ feature {NONE} -- Initialization
 			append_small_margin (vb)
 			create dynamic_runtime_enabled.make_with_text (conf_interface_names.dial_cond_dynamic_runtime)
 			vb.extend (dynamic_runtime_enabled)
-			create dynamic_runtime.make_with_strings (<<"True", "False">>)
+			create dynamic_runtime.make_with_strings (boolean_list)
 			dynamic_runtime.disable_edit
 			vb.extend (dynamic_runtime)
 			vb.disable_item_expand (dynamic_runtime)
@@ -180,7 +180,7 @@ feature {NONE} -- Initialization
 			hb.extend (vb)
 			create dotnet_enabled.make_with_text (conf_interface_names.dial_cond_dotnet)
 			vb.extend (dotnet_enabled)
-			create dotnet.make_with_strings (<<"True", "False">>)
+			create dotnet.make_with_strings (boolean_list)
 			dotnet.disable_edit
 			vb.extend (dotnet)
 			vb.disable_item_expand (dotnet)
@@ -199,7 +199,7 @@ feature {NONE} -- Initialization
 			append_small_margin (vb)
 			create multithreaded_enabled.make_with_text (conf_interface_names.dial_cond_multithreaded)
 			vb.extend (multithreaded_enabled)
-			create multithreaded.make_with_strings (<<"True", "False">>)
+			create multithreaded.make_with_strings (boolean_list)
 			multithreaded.disable_edit
 			vb.extend (multithreaded)
 			vb.disable_item_expand (multithreaded)
@@ -444,19 +444,28 @@ feature {NONE} -- Actions
 	on_dotnet is
 			-- Dotnet value was changed, update data.
 		do
-			data.set_dotnet (dotnet.text.to_boolean)
+			check
+				has_boolean_text: conf_interface_names.boolean_values.has (dotnet.text)
+			end
+			data.set_dotnet (boolean_value_from_name (dotnet.text))
 		end
 
 	on_multithreaded is
 			-- Multithreaded value hsas changed, udpate data.
 		do
-			data.set_multithreaded (multithreaded.text.to_boolean)
+			check
+				has_boolean_text: conf_interface_names.boolean_values.has (multithreaded.text)
+			end
+			data.set_multithreaded (boolean_value_from_name (multithreaded.text))
 		end
 
 	on_dynamic_runtime is
 			-- Dynamic_runtime value was changed, update data.
 		do
-			data.set_dynamic_runtime (dynamic_runtime.text.to_boolean)
+			check
+				has_boolean_text: conf_interface_names.boolean_values.has (dynamic_runtime.text)
+			end
+			data.set_dynamic_runtime (boolean_value_from_name (dynamic_runtime.text))
 		end
 
 	on_compiler_version is
@@ -691,6 +700,24 @@ feature {NONE} -- Implementation
 					l_cust.forth
 				end
 			end
+		end
+
+	boolean_list: ARRAY [STRING_GENERAL] is
+			-- Array with boolean names
+		do
+			Result := <<conf_interface_names.boolean_true, conf_interface_names.boolean_false>>
+		ensure
+			Result_not_void: Result /= Void
+			Result_has_two_value: Result @ 1 /= Void and Result @ 2 /= Void
+		end
+
+	boolean_value_from_name (a_string: STRING_GENERAL): BOOLEAN is
+			-- Boolean value from translated string.
+		require
+			a_string_not_void: a_string /= Void
+			has_a_string: conf_interface_names.boolean_values.has (a_string)
+		do
+			Result := conf_interface_names.boolean_values.item (a_string)
 		end
 
 indexing

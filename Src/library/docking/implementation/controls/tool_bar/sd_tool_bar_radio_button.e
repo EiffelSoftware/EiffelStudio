@@ -21,7 +21,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Command
 
 	enable_select is
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			l_item: SD_TOOL_BAR_RADIO_BUTTON
 		do
 			if tool_bar /= Void then
-				l_items := tool_bar.items
+				l_items := tool_bar.all_items
 				from
 					l_items.start
 				until

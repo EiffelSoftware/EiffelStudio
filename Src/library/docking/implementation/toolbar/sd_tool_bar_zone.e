@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 		ensure
 			set: is_vertical = a_vertical
 			set: docking_manager = a_docking_manager
+			tool_bar_not_void: tool_bar /= Void
 		end
 
 	init_drag_area is
@@ -244,6 +245,7 @@ feature -- Command
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			content := a_content
+			tool_bar.set_content (a_content)
 			a_content.set_zone (Current)
 			l_items := a_content.items.twin
 			from
@@ -612,6 +614,7 @@ invariant
 
 	not_void: internal_shared /= Void
 	not_void: assistant /= Void
+	tool_bar_not_void: tool_bar /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

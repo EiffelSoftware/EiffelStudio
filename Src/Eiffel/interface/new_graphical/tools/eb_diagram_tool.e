@@ -1420,21 +1420,6 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 
 feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 
-	on_select is
-			-- Current became selected in notebook.
-		do
-			if class_stone /= Void then
-				set_stone (class_stone)
-			elseif cluster_stone /= Void then
-				set_stone (cluster_stone)
-			end
-			if is_synchronization_needed then
-				graph.synchronize
-				reset_history
-				is_synchronization_needed := False
-			end
-		end
-
 	set_focus is
 			-- Give the focus to the drawing_area.
 		require
@@ -1490,36 +1475,40 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 					stone := last_stone
 					class_stone ?= last_stone
 					cluster_stone ?= last_stone
-					if widget.is_displayed then
-						if class_stone /= Void then
-							-- create a new class view
+					if class_stone /= Void then
+						-- create a new class view
+						if
+							is_rebuild_world_needed or else
+							class_graph = Void or else
+							class_graph.center_class = Void or else
+							class_graph.center_class.class_i /= class_stone.class_i
+						then
+							is_rebuild_world_needed := False
+							store
+							create_class_view (class_stone.class_i, True)
+							is_synchronization_needed := False
+						end
+					else
+						if cluster_stone /= Void then
+							-- create a cluster view
 							if
 								is_rebuild_world_needed or else
-								class_graph = Void or else
-								class_graph.center_class = Void or else
-								class_graph.center_class.class_i /= class_stone.class_i
+								cluster_graph = Void or else
+								cluster_graph.center_cluster = Void or else
+								cluster_graph.center_cluster.group /= cluster_stone.group
 							then
 								is_rebuild_world_needed := False
 								store
-								create_class_view (class_stone.class_i, True)
+								create_cluster_view (cluster_stone.group, True)
 								is_synchronization_needed := False
 							end
-						else
-							if cluster_stone /= Void then
-								-- create a cluster view
-								if
-									is_rebuild_world_needed or else
-									cluster_graph = Void or else
-									cluster_graph.center_cluster = Void or else
-									cluster_graph.center_cluster.group /= cluster_stone.group
-								then
-									is_rebuild_world_needed := False
-									store
-									create_cluster_view (cluster_stone.group, True)
-									is_synchronization_needed := False
-								end
-							end
 						end
+					end
+						-- Synchronization was not done when invisible.
+					if is_synchronization_needed then
+						graph.synchronize
+						reset_history
+						is_synchronization_needed := False
 					end
 				else
 					clear_area

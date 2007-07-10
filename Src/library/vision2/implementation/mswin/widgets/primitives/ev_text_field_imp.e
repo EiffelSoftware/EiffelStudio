@@ -112,6 +112,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create `Current' with inteface `an_interface'.
 		do
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
@@ -121,7 +122,6 @@ feature {NONE} -- Initialization
 			-- (export status {NONE})
 		do
 			set_default_font
-			align_text_left
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
@@ -143,35 +143,29 @@ feature -- Alignment
 
 	align_text_center
 			-- Display text centered.
-		local
-			l_style: like style
 		do
-			l_style := clear_flag (style, ss_left | ss_right)
-			l_style := l_style | ss_center
-			set_style (l_style)
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center  then
+				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
+				recreate_current
+			end
 		end
 
 	align_text_right
 			-- Display text right aligned.
-		local
-			l_style: like style
 		do
-			l_style := clear_flag (style, ss_left | ss_center)
-			l_style := l_style | ss_right
-			set_style (l_style)
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right  then
+				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
+				recreate_current
+			end
 		end
 
 	align_text_left
 			-- Display text left aligned.
-		local
-			l_style: like style
 		do
-			l_style := clear_flag (style, ss_center | ss_right)
-			l_style := l_style | ss_left
-			set_style (l_style)
-			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			if text_alignment /= {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left  then
+				text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+				recreate_current
+			end
 		end
 
 feature {EV_ANY_I} -- Status setting
@@ -192,8 +186,79 @@ feature {NONE} -- WEL Implementation
 			-- the system beeps when we press the return key.
 		do
 			Result := Ws_child | Ws_visible| Ws_tabstop
-					| Ws_group | Es_left | Es_autohscroll
+					| Ws_group | Es_autohscroll
 					| Ws_clipchildren | Ws_clipsiblings
+				-- Set proper style depending on alignment.
+			inspect text_alignment
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left  then
+				Result := Result | es_left
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right  then
+				Result := Result | es_right
+			when {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center  then
+				Result := Result | es_center
+			else
+				check False end
+			end
+		end
+
+	recreate_current is
+			-- Destroy the existing widget and recreate current using the new style.
+		local
+			par_imp: WEL_WINDOW
+			cur_x: INTEGER
+			cur_y: INTEGER
+			cur_width: INTEGER
+			cur_height: INTEGER
+			l_sensitive: like is_sensitive
+			l_tooltip: like tooltip
+			l_text: like text
+			l_caret: like caret_position
+			l_is_read_only: like read_only
+		do
+			l_sensitive := is_sensitive
+			l_tooltip := tooltip
+			l_text := text
+			l_caret := caret_position
+			l_is_read_only := read_only
+			set_tooltip ("")
+
+				-- We keep some useful informations that will be
+				-- destroyed when calling `wel_destroy'
+			par_imp ?= parent_imp
+				-- `Current' may not have been actually phsically parented
+				-- within windows yet.
+			if par_imp = Void then
+				par_imp ?= default_parent
+			end
+			cur_x := x_position
+			cur_y := y_position
+			cur_width := ev_width
+			cur_height := ev_height
+
+					-- We destroy the widget
+			wel_destroy
+
+				-- We create the new combo.
+			wel_make (par_imp, "", cur_x, cur_y, cur_width, cur_height, 0)
+
+				-- Restore the previous settings.
+			if private_font /= Void then
+				set_font (private_font)
+			else
+				set_default_font
+			end
+			if not l_sensitive then
+				disable_sensitive
+			end
+			if foreground_color_imp /= Void then
+				set_foreground_color (foreground_color)
+			end
+			set_tooltip (l_tooltip)
+			set_text (l_text)
+			set_caret_position (l_caret)
+			if l_is_read_only then
+				set_read_only
+			end
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is

@@ -10,6 +10,7 @@ mtcom_runtime.lib: $(OBJ)
 	$(AR) $@ +ecom_runtime_c_e.obj
 	$(AR) $@ +ecom_runtime_ce_arrays.obj
 	$(AR) $@ +ecom_runtime_e_c.obj
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
 	if not exist ..\spec\bcb\$(ISE_PLATFORM) mkdir ..\spec\bcb\$(ISE_PLATFORM)
 	if not exist ..\spec\bcb\$(ISE_PLATFORM)\lib mkdir ..\spec\bcb\$(ISE_PLATFORM)\lib
 	copy $@ ..\spec\bcb\$(ISE_PLATFORM)\lib

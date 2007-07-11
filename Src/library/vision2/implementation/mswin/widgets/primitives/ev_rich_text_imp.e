@@ -14,10 +14,9 @@ inherit
 	EV_RICH_TEXT_I
 		rename
 			last_load_successful as implementation_last_load_successful
-		undefine
-			selected_text
 		redefine
 			interface,
+			selected_text,
 			text_length
 		end
 
@@ -62,7 +61,8 @@ inherit
 			text_length,
 			wel_text_length,
 			set_background_color,
-			scroll_to_end
+			scroll_to_end,
+			selected_text
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -124,7 +124,6 @@ inherit
 			set_height,
 			set_width,
 			insert_text,
-			selected_text,
 			current_line_number,
 			on_en_change,
 			set_text_limit,
@@ -159,7 +158,8 @@ inherit
 			rtf_stream_in,
 			on_erase_background,
 			enable_redraw,
-			on_en_change
+			on_en_change,
+			selected_text
 		end
 
 	WEL_CFM_CONSTANTS
@@ -739,6 +739,27 @@ feature -- Status report
 			else
 				-- If no wrapping we can calculate this the quick way.
 				Result := cwin_get_window_text_length (wel_item) - line_count + 1
+			end
+		end
+
+	selected_text: STRING_32 is
+			-- Text currently selected in `Current'.
+		local
+			i, nb: INTEGER
+		do
+				-- Get the text from WEL
+			Result := Precursor {WEL_RICH_EDIT}
+				-- Replace all %R with %N since that's what we have from Windows.
+			from
+				i := 1
+				nb := Result.count
+			until
+				i > nb
+			loop
+				if Result.item (i) = '%R' then
+					Result.put ('%N', i)
+				end
+				i := i + 1
 			end
 		end
 

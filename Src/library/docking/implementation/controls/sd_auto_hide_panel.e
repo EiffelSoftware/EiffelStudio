@@ -254,7 +254,13 @@ feature -- Command
 				search (l_friend)
 				put_right (a_tab)
 				disable_item_expand (a_tab)
-				l_tab_group.extend (a_tab)
+
+				-- tab stubs' order in the EV_BOX must same as the tab stubs' order in `l_tab_group'
+				-- Otherwise, it will cause bug#13240.
+				l_tab_group.start
+				l_tab_group.search (l_friend)
+				l_tab_group.put_right (a_tab)
+
 				select_tab (a_tab)
 				update_tab_group
 

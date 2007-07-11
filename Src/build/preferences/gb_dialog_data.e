@@ -90,16 +90,16 @@ feature {NONE} -- Implementation
 		do		
 			create l_manager.make (preferences, "graphical_elements.dialogs")
 			
-			show_deleting_keyboard_warning_preference := l_manager.new_boolean_resource_value (l_manager, show_deleting_keyboard_warning_string, True)		
-			show_deleting_directories_warning_preference := l_manager.new_boolean_resource_value (l_manager, show_deleting_directories_warning_string, True)		
-			show_deleting_final_directory_warning_preference := l_manager.new_boolean_resource_value (l_manager, show_deleting_final_directory_warning_string, True)		
-			show_changing_client_type_warning_preference := l_manager.new_boolean_resource_value (l_manager, show_changing_client_type_warning_string, True)	
+			show_deleting_keyboard_warning_preference := l_manager.new_boolean_preference_value (l_manager, show_deleting_keyboard_warning_string, True)		
+			show_deleting_directories_warning_preference := l_manager.new_boolean_preference_value (l_manager, show_deleting_directories_warning_string, True)		
+			show_deleting_final_directory_warning_preference := l_manager.new_boolean_preference_value (l_manager, show_deleting_final_directory_warning_string, True)		
+			show_changing_client_type_warning_preference := l_manager.new_boolean_preference_value (l_manager, show_changing_client_type_warning_string, True)	
 
-			l_pref := l_manager.new_boolean_resource_value (l_manager, show_repeated_absolute_constant_warning, True)
-			l_pref := l_manager.new_boolean_resource_value (l_manager, show_invalid_constant_selection_warning, True)
-			l_pref := l_manager.new_boolean_resource_value (l_manager, show_constant_manifest_conversion_warning, True)
-			l_pref := l_manager.new_boolean_resource_value (l_manager, show_project_location_changed_warning, True)
-			l_pref := l_manager.new_boolean_resource_value (l_manager, show_adding_existing_directory_warning, True)
+			l_pref := l_manager.new_boolean_preference_value (l_manager, show_repeated_absolute_constant_warning, True)
+			l_pref := l_manager.new_boolean_preference_value (l_manager, show_invalid_constant_selection_warning, True)
+			l_pref := l_manager.new_boolean_preference_value (l_manager, show_constant_manifest_conversion_warning, True)
+			l_pref := l_manager.new_boolean_preference_value (l_manager, show_project_location_changed_warning, True)
+			l_pref := l_manager.new_boolean_preference_value (l_manager, show_adding_existing_directory_warning, True)
 		end
 	
 	preferences: PREFERENCES

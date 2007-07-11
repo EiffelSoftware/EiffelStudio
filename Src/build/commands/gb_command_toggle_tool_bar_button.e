@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	GB_COMMAND_TOGGLE_TOOL_BAR_BUTTON 
+	GB_COMMAND_TOGGLE_TOOL_BAR_BUTTON
 
 inherit
 	GB_COMMAND_TOOL_BAR_BUTTON
@@ -23,7 +23,7 @@ inherit
 			create_implementation
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

@@ -169,19 +169,19 @@ feature {NONE} -- Implementation
 		do		
 			create l_manager.make (preferences, "global_preferences")			
 			
-			show_tip_of_the_day_preference := l_manager.new_boolean_resource_value (l_manager, show_tip_of_the_day_string, True)		
-			number_of_recent_projects_preference := l_manager.new_integer_resource_value (l_manager, number_of_recent_projects_string, 10)		
-			build_window_height_preference := l_manager.new_integer_resource_value (l_manager, build_window_height_string, 600)
-			build_window_width_preference := l_manager.new_integer_resource_value (l_manager, build_window_width_string, 800)
-			build_window_x_position_preference := l_manager.new_integer_resource_value (l_manager, build_window_x_position_string, 50)
-			build_window_y_position_preference := l_manager.new_integer_resource_value (l_manager, build_window_y_position_string, 50)
-			main_split_position_preference := l_manager.new_integer_resource_value (l_manager, main_split_position_string, 250)
-			tip_of_day_index_preference := l_manager.new_integer_resource_value (l_manager, tip_of_day_index_string, 1)
-			tool_order_preference := l_manager.new_array_resource_value (l_manager, tool_order_string, <<"typeselector_normal_100_100","componentselector_normal_100_100","widgetselector_normal_100_100">>)
-			external_tool_order_preference := l_manager.new_array_resource_value (l_manager, external_tool_order_string, <<"">>)
-			recent_projects_string_preference := l_manager.new_array_resource_value (l_manager, recent_projects_string_string, <<"">>)
-			tools_on_top_preference := l_manager.new_boolean_resource_value (l_manager, tools_on_top_string, True)
-			type_selector_classic_mode_preference := l_manager.new_boolean_resource_value (l_manager, type_selector_classic_mode_string, True)
+			show_tip_of_the_day_preference := l_manager.new_boolean_preference_value (l_manager, show_tip_of_the_day_string, True)		
+			number_of_recent_projects_preference := l_manager.new_integer_preference_value (l_manager, number_of_recent_projects_string, 10)		
+			build_window_height_preference := l_manager.new_integer_preference_value (l_manager, build_window_height_string, 600)
+			build_window_width_preference := l_manager.new_integer_preference_value (l_manager, build_window_width_string, 800)
+			build_window_x_position_preference := l_manager.new_integer_preference_value (l_manager, build_window_x_position_string, 50)
+			build_window_y_position_preference := l_manager.new_integer_preference_value (l_manager, build_window_y_position_string, 50)
+			main_split_position_preference := l_manager.new_integer_preference_value (l_manager, main_split_position_string, 250)
+			tip_of_day_index_preference := l_manager.new_integer_preference_value (l_manager, tip_of_day_index_string, 1)
+			tool_order_preference := l_manager.new_array_preference_value (l_manager, tool_order_string, <<"typeselector_normal_100_100","componentselector_normal_100_100","widgetselector_normal_100_100">>)
+			external_tool_order_preference := l_manager.new_array_preference_value (l_manager, external_tool_order_string, <<"">>)
+			recent_projects_string_preference := l_manager.new_array_preference_value (l_manager, recent_projects_string_string, <<"">>)
+			tools_on_top_preference := l_manager.new_boolean_preference_value (l_manager, tools_on_top_string, True)
+			type_selector_classic_mode_preference := l_manager.new_boolean_preference_value (l_manager, type_selector_classic_mode_string, True)
 		end
 	
 	preferences: PREFERENCES

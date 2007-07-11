@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 		do
 			preferences.global_data.show_tip_of_the_day_preference.set_value (show_tips_button.is_selected)
 			preferences.global_data.tip_of_day_index_preference.set_value (get_next_tip_index (tip_counter))
-			preferences.preferences.save_resources
+			preferences.preferences.save_preferences
 			hide
 		end
 

@@ -41,10 +41,10 @@ feature -- Access
 			a_prefix_not_void: a_prefix /= Void
 			a_value_not_void: a_value /= Void
 		local
-			attribute: XM_ATTRIBUTE
+			l_attribute: XM_ATTRIBUTE
 		do
-			create attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element)
-			element.force_last (attribute)
+			create l_attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element)
+			element.force_last (l_attribute)
 		end
 	
 	add_element_containing_integer (element: XM_ELEMENT; element_name: STRING; value: INTEGER) is

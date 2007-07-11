@@ -80,7 +80,7 @@ feature -- Basic operations
 				recent_projects.put (l_string, 1)
 			end
 			preferences.global_data.recent_projects_string_preference.set_value (recent_projects)
-			preferences.preferences.save_resources
+			preferences.preferences.save_preferences
 		end
 
 	clip_recent_projects is

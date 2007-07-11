@@ -713,7 +713,7 @@ feature {NONE} -- Implementation
 						warning_dialog.set_title ("Constant still referenced")
 						warning_dialog.set_cancel_action (agent cancelled.set_item (True))
 						warning_dialog.show_modal_to_window (Current)
-						preferences.preferences.save_resources
+						preferences.preferences.save_preferences
 						referers_dialog_already_displayed := True
 					end
 					ordered_selected_items.forth

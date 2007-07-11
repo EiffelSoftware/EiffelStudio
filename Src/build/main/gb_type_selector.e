@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 				extend (tree)
 			end
 			preferences.global_data.type_selector_classic_mode_preference.set_value (not view_mode_button.is_selected)
-			preferences.preferences.save_resource (preferences.global_data.type_selector_classic_mode_preference)
+			preferences.preferences.save_preference (preferences.global_data.type_selector_classic_mode_preference)
 		ensure
 			mode_toggled: is_in_classic_view_mode = not old is_in_classic_view_mode
 		end

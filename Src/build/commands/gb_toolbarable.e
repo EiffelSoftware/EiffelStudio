@@ -24,7 +24,7 @@ feature -- Basic operations
 		deferred
 		end
 
-feature {GB_CUSTOMIZABLE_LIST_ITEM, GB_CUSTOM_TOOLBAR_LIST} -- Implementation
+feature {NONE} -- Implementation
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the item (one for the

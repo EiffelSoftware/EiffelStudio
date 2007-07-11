@@ -170,11 +170,18 @@ feature -- Command
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_parent: EV_CONTAINER
 			l_floating_zone: SD_FLOATING_TOOL_BAR_ZONE
+			l_old_size: INTEGER
 		do
-			compute_minimum_size
 			l_tool_bar_row ?= parent
 			if l_tool_bar_row /= Void then
+				-- After `compute_minimum_size', `l_tool_bar_row' size will changed, we record it here.
+				-- Otherwise it will cause bug#13164.
+				l_old_size := l_tool_bar_row.size
+			end
+			compute_minimum_size
+			if l_tool_bar_row /= Void then
 				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
+				l_tool_bar_row.on_resize (l_old_size)
 			else
 				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent.
 				l_parent := parent

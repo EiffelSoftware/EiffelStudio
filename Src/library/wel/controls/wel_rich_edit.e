@@ -206,6 +206,7 @@ feature -- Status report
 			nb := {WEL_API}.send_message_result_integer (item, Em_getseltext, to_wparam (0), a_wel_string.item)
 			Result := a_wel_string.substring (1, nb)
 		ensure
+			selected_text_not_void: Result /= Void
 --			valid_length: Result.count =
 --				selection_end - selection_start
 		end

@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			end
 
 					-- Actually save the preferences.
-			preferences.preferences.save_resources;
+			preferences.preferences.save_preferences
 
 			lock_update
 				-- Remove the tools from `Current'.
@@ -948,7 +948,7 @@ feature {NONE} -- Implementation
 				preferences.global_data.build_window_y_position_preference.set_value (y_position)
 
 					-- Actually save the preferences.
-				preferences.preferences.save_resources;
+				preferences.preferences.save_preferences
 
 					-- Destroy the application.
 				application.destroy

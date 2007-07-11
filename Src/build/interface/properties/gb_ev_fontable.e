@@ -145,13 +145,13 @@ feature {GB_CODE_GENERATOR} -- Output
 						end		
 						value := element_info.data.to_integer
 						inspect value
-						when feature {EV_FONT_CONSTANTS}.weight_thin then
+						when {EV_FONT_CONSTANTS}.weight_thin then
 							temp_string.append ("Weight_thin)")
-						when feature {EV_FONT_CONSTANTS}.weight_regular then
+						when {EV_FONT_CONSTANTS}.weight_regular then
 							temp_string.append ("Weight_regular)")
-						when feature {EV_FONT_CONSTANTS}.weight_bold then
+						when {EV_FONT_CONSTANTS}.weight_bold then
 							temp_string.append ("Weight_bold)")
-						when feature {EV_FONT_CONSTANTS}.weight_black then
+						when {EV_FONT_CONSTANTS}.weight_black then
 							temp_string.append ("Weight_black)")
 						else
 							check
@@ -169,9 +169,9 @@ feature {GB_CODE_GENERATOR} -- Output
 						end		
 						value := element_info.data.to_integer
 						inspect value
-						when feature {EV_FONT_CONSTANTS}.shape_regular then
+						when {EV_FONT_CONSTANTS}.shape_regular then
 							temp_string.append ("Shape_regular)")
-						when feature {EV_FONT_CONSTANTS}.shape_italic then
+						when {EV_FONT_CONSTANTS}.shape_italic then
 							temp_string.append ("Shape_italic)")
 						else
 							check

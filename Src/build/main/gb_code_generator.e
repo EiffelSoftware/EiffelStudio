@@ -420,10 +420,8 @@ feature {NONE} -- Implementation
 			-- as `file_name'. `template_file_name' is full path, but `file_name' is
 			-- just name of ace file.
 		local
-			temp_string: STRING
 			ace_file_name: FILE_NAME
 			ace_template_file, ace_output_file: PLAIN_TEXT_FILE
-			i, j: INTEGER
 			l_uuid: UUID_GENERATOR
 		do
 			ace_template_file := open_text_file_for_read (template_file_name)

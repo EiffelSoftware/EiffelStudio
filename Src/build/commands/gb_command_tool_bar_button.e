@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	GB_COMMAND_TOOL_BAR_BUTTON 
+	GB_COMMAND_TOOL_BAR_BUTTON
 
 inherit
 	EV_TOOL_BAR_BUTTON
@@ -16,7 +16,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -38,7 +38,7 @@ feature -- Cleaning
 			select_actions.wipe_out
 			pick_actions.wipe_out
 		end
-	
+
 feature {NONE} -- Implementation
 
 	command: GB_TOOLBARABLE_COMMAND;

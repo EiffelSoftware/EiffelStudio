@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 			-- line for different launches. Each starts with a check to ensure that the
 			-- system never gets compiled with more than one command option available.
 		local
-			environment_dialog: INVALID_ENVIRONMENT_DIALOG
 			l_env: GB_EIFFEL_LAYOUT
 		do
 				-- Initialize the environment

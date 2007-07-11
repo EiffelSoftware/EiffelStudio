@@ -19,21 +19,21 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EV_LAYOUT_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	GB_ABOUT_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -41,7 +41,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -72,11 +72,11 @@ feature -- Initialization
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
 			info_label.set_background_color (White)
-			
+
 			create version_label.make_with_text (t_version_info)
 			version_label.align_text_left
 			version_label.set_background_color (White)
-			
+
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
 			copyright_label.set_background_color (White)

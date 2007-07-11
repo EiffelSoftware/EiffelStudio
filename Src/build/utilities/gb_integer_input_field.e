@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Invalid Constant Selected")
 					warning_dialog.show_modal_to_window (parent_window (Current))
-					preferences.preferences.save_resources
+					preferences.preferences.save_preferences
 					if not has_select_item then
 						add_select_item
 					end

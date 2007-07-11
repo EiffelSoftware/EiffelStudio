@@ -110,7 +110,7 @@ feature -- Execution
 				counter := counter + 1
 			end
 			preferences.global_data.tools_on_top_preference.set_value (is_selected)
-			preferences.preferences.save_resource (preferences.global_data.tools_on_top_preference)
+			preferences.preferences.save_preference (preferences.global_data.tools_on_top_preference)
 		end
 
 	update_tool (tool_window: EV_DIALOG) is

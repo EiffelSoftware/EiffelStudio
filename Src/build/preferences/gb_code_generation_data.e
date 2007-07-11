@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 		do		
 			create l_manager.make (preferences, "dialogs")			
 							
-			generate_empty_directories_preference := l_manager.new_boolean_resource_value (l_manager, generate_empty_directories_string, True)		
+			generate_empty_directories_preference := l_manager.new_boolean_preference_value (l_manager, generate_empty_directories_string, True)		
 		end
 	
 	preferences: PREFERENCES

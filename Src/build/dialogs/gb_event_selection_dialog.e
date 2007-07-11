@@ -528,13 +528,10 @@ feature {NONE} -- Implementation
 			-- the state of check button corresponding to `index' in
 			-- `all_check_buttons'.
 		local
-			horizontal_box: EV_HORIZONTAL_BOX
 			vertical_box: EV_VERTICAL_BOX
-			label: EV_LABEL
 			current_check_button: EV_CHECK_BUTTON
 			frame: EV_FRAME
 			current_text_field: EV_TEXT_FIELD
-			cell: EV_CELL
 		do
 			lock_update
 			current_check_button := all_check_buttons @ index

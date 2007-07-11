@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			display_object.child.drop_actions.set_veto_pebble_function (Void)
 		end
 
-feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_WINDOW_SELECTOR, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
+feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
 
 	update_representations_for_name_or_type_change is
 			-- Update all representations of `Current' to reflect a change

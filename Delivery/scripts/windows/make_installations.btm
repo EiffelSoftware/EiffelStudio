@@ -87,10 +87,10 @@ remtrace ----------------------------------------------
 cdd %INSTALL_DIR
 move EiffelStudio %STUDIO_NAME%
 copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-7z a -tzip %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.zip %STUDIO_NAME% >>& %INSTALL_LOG
+7z a %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% >>& %INSTALL_LOG
 
 copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-7z a -tzip %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.zip %STUDIO_NAME% >>& %INSTALL_LOG
+7z a %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% >>& %INSTALL_LOG
 
 remtrace Restoring the layout to its original state
 cdd %INSTALL_DIR

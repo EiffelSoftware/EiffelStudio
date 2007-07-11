@@ -13,7 +13,7 @@ feature -- Access
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild 6.0."
+			Result := "EiffelBuild 6.1."
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
 				-- will get replaced by the delivery scripts (see comments for `snv_revision').
 			Result.append ((svn_revision // (9999 + 1).as_natural_32).as_natural_16.out)

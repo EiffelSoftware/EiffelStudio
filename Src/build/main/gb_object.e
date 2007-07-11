@@ -1034,9 +1034,9 @@ feature {GB_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operation
 			context_not_void: context /= Void
 			context_object_is_current: context.object = Current
 		do
-			constants.force (context, context.property + context.attribute)
+			constants.force (context, context.property + context.field)
 		ensure
-			constants.has (context.property + context.attribute)
+			constants.has (context.property + context.field)
 		end
 
 feature -- Basic operations

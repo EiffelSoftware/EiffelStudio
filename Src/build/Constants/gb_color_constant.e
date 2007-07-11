@@ -103,7 +103,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 				referers.off
 			loop
 				constant_context := referers.item
-				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.attribute)
+				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.field)
 				check
 					execution_agent_not_void: execution_agent /= Void
 				end

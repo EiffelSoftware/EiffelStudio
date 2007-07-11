@@ -169,7 +169,7 @@ feature -- Text Loading
 	load_file (a_filename: STRING) is
 	        -- Load contents of `a_filename'
 		local
-		    test_file, test_file_2: RAW_FILE
+	--	    test_file, test_file_2: RAW_FILE
 		    l_filename: FILE_NAME
   	   	do
   	   		reset

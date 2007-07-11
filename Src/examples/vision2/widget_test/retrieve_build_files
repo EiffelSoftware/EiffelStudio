@@ -26,7 +26,7 @@ cp ./Src/build/utilities/gb_general_utilities.e ./interface/
 cp ./Src/build/utilities/gb_widget_utilities.e ./interface/
 cp ./Src/build/utilities/ordered_string_handler.e ./interface/
 cp ./Src/build/main/gb_supported_events.e ./interface/
-cp ./Src/build/utilities/object_default_state_checker.e ./interface/
+cp ./Src/build/utilities/default_object_state_checker.e ./interface/
 cp ./Src/build/utilities/gb_color_stone.e ./interface/
 
 

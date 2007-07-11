@@ -48,10 +48,6 @@ feature {NONE} -- Initialization
 			editor: GB_OBJECT_EDITOR
 			event_selector: EVENT_SELECTOR
 		do
-			register_type_change_agent (agent clear_idle_actions)
-				-- Clear any agents from the idle actions, as a new widget
-				-- type is being selected.
-
 			register_type_change_agent (agent update_title)
 
 				-- The first type change agent that we register locks the update, so
@@ -119,15 +115,6 @@ feature {NONE} -- Implementation
 			-- Update `title' based on type of `a_widget'.
 		do
 			set_title ("Vision2 Demo - " + a_widget.generating_type)
-		end
-
-
-	clear_idle_actions (a_widget: EV_WIDGET) is
-			-- Clear `idle_actions' from EV_APPLICATION.
-		do
---			application.idle_actions.wipe_out
-		ensure
-			actions_empty: application.idle_actions.is_empty
 		end
 
 	update_text_size (value: INTEGER) is

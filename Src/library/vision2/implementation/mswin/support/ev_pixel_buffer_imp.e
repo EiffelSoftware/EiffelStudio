@@ -58,6 +58,9 @@ feature {NONE} -- Initlization
 			l_source_dc := l_source_graphics.dc
 
 			create {EV_PIXMAP_IMP_DRAWABLE} l_drawable.make_with_pixel_buffer (l_source_dc)
+			-- We have to set drawing mode here, otherwise if `a_pixmap' doesn't have mask bitmap, drawing mode will not correct.
+			-- It will cause bug#13249.
+			l_drawable.set_drawing_mode (l_drawable.drawing_mode_copy)
 			l_drawable.draw_pixmap (0, 0, a_pixmap)
 
 			l_source_graphics.release_dc (l_source_dc)

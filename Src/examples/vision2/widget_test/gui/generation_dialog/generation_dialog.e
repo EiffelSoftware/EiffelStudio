@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 			clashing_files: STRING
 			warning_dialog: WARNING_DIALOG
 			supress_generation: BOOLEAN
-			error_dialog: EV_ERROR_DIALOG
 		do
 			create directory.make (directory_display.text)
 			contents := directory.linear_representation

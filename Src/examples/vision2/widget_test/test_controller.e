@@ -260,7 +260,6 @@ feature {NONE} -- Implementation
 			directory_string: STRING
 			filenames: ARRAYED_LIST [STRING]
 			current_file_name:  STRING
-			error_label: EV_LABEL
 			l_type: STRING
 		do
 			l_type := type_to_retrieve

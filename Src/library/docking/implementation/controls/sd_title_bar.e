@@ -406,7 +406,7 @@ feature {NONE} -- Agents
 	on_fixed_resize (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32) is
 			-- Handle fixed resize actions.
 		do
-			if a_width > 0 and a_height > 0 and not fixed.is_destroyed then
+			if a_width > 0 and a_height > 0 and not fixed.is_destroyed and not internal_tool_bar.is_destroyed then
 				fixed.set_minimum_width (a_width)
 				viewport.set_item_width (a_width)
 

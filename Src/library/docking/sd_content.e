@@ -709,7 +709,7 @@ invariant
 
 	the_user_widget_not_void: internal_user_widget /= Void
 	internal_shared_not_void: internal_shared /= Void
-	drop_actions_not_void: show_actions /= Void
+	drop_actions_not_void: drop_actions /= Void
 	show_actions_not_void: show_actions /= Void
 
 indexing

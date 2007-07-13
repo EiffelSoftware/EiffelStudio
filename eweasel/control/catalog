@@ -1283,10 +1283,10 @@ test	finalize-ext-exp-inline-create	ccomp045 tcf pass c_compilation
 test	inline-c-ten-pass-local		ccomp046 tcf pass c_compilation
 test	inline-c-arg-prefix-other	ccomp047 tcf pass c_compilation
 test	pass-void-to-double		ccomp048 tcf pass c_compilation
-test 	slash-power-on-formal-bad-code	ccomp049 tcf pass c_compilation
-test 	print-pointer-local-address	ccomp050 tcf pass c_compilation
-test 	inline-expanded-conversion	ccomp051 tcf pass c_compilation
-test 	create-generic-conform-double	ccomp052 tcf pass c_compilation
+test	slash-power-on-formal-bad-code	ccomp049 tcf pass c_compilation
+test	print-pointer-local-address	ccomp050 tcf pass c_compilation
+test	inline-expanded-conversion	ccomp051 tcf pass c_compilation
+test	create-generic-conform-double	ccomp052 tcf pass c_compilation
 test	long-string-generation		ccomp053 tcf pass c_compilation
 test	inline-incorrect-with-cpp	ccomp054 tcf pass c_compilation
 test	polymorphic-dollar-agent-incorrect-wrapper	ccomp055 tcf pass c_compilation
@@ -1300,7 +1300,8 @@ test	once-manifest-string-in-cpp-file	ccomp062 tcf pass c_compilation
 test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
 test	deferred-to-string-constant	ccomp064 tcf pass finalizing
 test	built-in-unary-plus	ccomp065 tcf fail c_compilation
-test	 expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
+test	expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
+if WINDOWS test	dll-generation-failure		ccomp067 tcf fail c_compilation
 
 -- Storable tests
 

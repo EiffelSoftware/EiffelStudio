@@ -135,6 +135,10 @@ feature -- Status setting
 				l_pebble_function.clear_last_result
 				pebble := Void
 			end
+		ensure
+			pebble_function_preserved: pebble_function = old pebble_function
+			pebble_without_function: pebble_function = Void implies (pebble = old pebble)
+			pebble_with_function: pebble_function /= Void implies pebble = Void
 		end
 
 	enable_transport is

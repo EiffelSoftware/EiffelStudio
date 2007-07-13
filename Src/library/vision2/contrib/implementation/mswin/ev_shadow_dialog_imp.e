@@ -10,16 +10,66 @@ class
 	EV_SHADOW_DIALOG_IMP
 
 inherit
+	EV_WINDOW_IMP
+		rename
+			make as make_not_use_1
+		undefine
+			set_title,
+			destroy,
+			show_relative_to_window,
+			is_displayed,
+			show,
+			compute_minimum_height,
+			compute_minimum_size,
+			on_destroy,
+			on_size,
+			default_style,
+			on_show,
+			set_x_position,
+			process_message,
+			has_title_bar,
+			set_y_position,
+			execute_resize_actions,
+			title,
+			class_name,
+			set_position,
+			minimize,
+			maximize,
+			class_style,
+			default_ex_style
+		select
+			interface
+		end
+
 	EV_UNTITLED_DIALOG_IMP
+		rename
+			make as make_not_use_2,
+			interface as interface_not_use
 		redefine
 			class_style,
 			default_ex_style,
 			new_class_name
+		select
+			minimize,
+			maximize,
+			make_not_use_2
 		end
 create
 	make,
 	make_with_real_dialog
 
+feature {NONE} -- Initlization
+
+	make (an_interface: EV_WINDOW) is
+			-- Creation method
+		do
+			internal_class_name := new_class_name + "_AS_DIALOG"
+			internal_icon_name := ""
+			base_make (an_interface)
+			make_top ("EV_SHADOW_DIALOG")
+			create accel_list.make (10)
+			apply_center_dialog := True
+		end
 
 feature {NONE} -- Implementation
 

@@ -10,7 +10,7 @@ class
 	EV_SHADOW_DIALOG
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_WINDOW
 		redefine
 			create_implementation
 		end

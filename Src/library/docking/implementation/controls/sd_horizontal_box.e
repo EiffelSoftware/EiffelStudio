@@ -20,7 +20,8 @@ inherit
 			is_equal,
 			is_in_default_state
 		redefine
-			initialize
+			initialize,
+			set_splitter_visible
 		select
 			count_except_spliter,
 			full_docking
@@ -171,6 +172,18 @@ feature -- Setting
 			split_position := a_pos
 		ensure then
 			set: split_position = a_pos
+		end
+
+	set_splitter_visible (a_visible: BOOLEAN) is
+			-- Redefine
+		do
+			if fake_spliter /= Void then
+				if a_visible then
+					fake_spliter.show
+				else
+					fake_spliter.hide
+				end
+			end
 		end
 
 indexing

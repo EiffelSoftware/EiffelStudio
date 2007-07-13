@@ -16,6 +16,7 @@ inherit
 			change_zone_split_area,
 			move_to_docking_zone,
 			move_to_tab_zone,
+			auto_hide_tab_with,
 			restore,
 			zone,
 			change_title,
@@ -330,6 +331,21 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
+	auto_hide_tab_with (a_target_content: SD_CONTENT) is
+			-- Redefine
+		do
+			if zone /= Void then
+				internal_docking_manager.command.lock_update (zone, False)
+				internal_docking_manager.command.recover_normal_state
+				internal_docking_manager.command.remove_auto_hide_zones (False)
+				internal_docking_manager.zones.prune_zone (zone)
+				internal_docking_manager.command.remove_empty_split_area
+				internal_docking_manager.command.update_title_bar
+				internal_docking_manager.command.unlock_update
+			end
+			Precursor {SD_STATE} (a_target_content)
+		end
+
 	show is
 			-- Redefine.
 		local
@@ -358,6 +374,8 @@ feature -- Redefine.
 				end
 				l_floating_zone.show
 				l_multi_dock_area.update_title_bar
+			else
+				l_multi_dock_area.update_middle_container
 			end
 
 			if not zone.is_displayed then
@@ -389,8 +407,12 @@ feature -- Redefine.
 			end
 
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
-			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
-				l_multi_dock_area.update_title_bar
+			if l_multi_dock_area /= Void then
+				if not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
+					l_multi_dock_area.update_title_bar
+				else
+					l_multi_dock_area.update_middle_container
+				end
 			end
 			docking_manager.command.resize (False)
 		end

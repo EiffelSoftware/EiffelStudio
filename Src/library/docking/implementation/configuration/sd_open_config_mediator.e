@@ -86,10 +86,11 @@ feature -- Open inner container data.
 				end
 
 				-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
+				internal_docking_manager.property.set_is_opening_config (False)
 				internal_docking_manager.query.inner_container_main.remove_empty_split_area
 
 				internal_docking_manager.query.inner_container_main.update_middle_container
-				internal_docking_manager.property.set_is_opening_config (False)
+
 				internal_docking_manager.command.resize (True)
 				internal_docking_manager.command.unlock_update
 			end
@@ -316,7 +317,7 @@ feature {NONE} -- Implementation
 	editor_top_parent_for_restore: EV_CONTAINER is
 			-- Editor top parent for restore
 		local
-			l_top_split_area: EV_SPLIT_AREA
+			l_top_split_area: SD_MIDDLE_CONTAINER
 			l_left_zones, l_right_zones: ARRAYED_LIST [SD_ZONE]
 			l_temp_split_area: SD_HORIZONTAL_SPLIT_AREA
 			l_temp_item: EV_WIDGET
@@ -368,7 +369,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			empty: Result /= Void implies Result.is_empty
+			not_full: Result /= Void implies not Result.full
 			parented: Result /= Void implies Result.parent /= Void
 		end
 

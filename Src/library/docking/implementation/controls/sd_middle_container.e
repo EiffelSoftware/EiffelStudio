@@ -128,6 +128,11 @@ feature -- Setting
 		deferred
 		end
 
+	set_splitter_visible (a_visible: BOOLEAN) is
+			-- Set splitter bar visible base on chidren visibilities.
+		do
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

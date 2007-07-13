@@ -111,15 +111,17 @@ feature -- Command
 			l_item: SD_MIDDLE_CONTAINER
 			l_is_all_minimized: BOOLEAN
 		do
-			if readable then
-				l_item ?= item
-				if l_item /= Void then
-					l_is_all_minimized := update_middle_container_imp (l_item)
-					if l_is_all_minimized then
-						-- All zone are minimized, we should do nothing.
+			if not internal_docking_manager.property.is_opening_config then
+				if readable then
+					l_item ?= item
+					if l_item /= Void then
+						l_is_all_minimized := update_middle_container_imp (l_item)
+						if l_is_all_minimized then
+							-- All zone are minimized, we should do nothing.
+						end
+					else
+						recover_normal_for_only_one
 					end
-				else
-					recover_normal_for_only_one
 				end
 			end
 		end
@@ -459,10 +461,10 @@ feature {NONE} -- Implementation
 			else
 				check not_void: l_zone /= Void end
 				l_upper_zone_left ?= l_zone
-				if l_upper_zone_left /= Void then
+				if l_upper_zone_left /= Void and then l_upper_zone_left.is_displayed then
 					l_left_all_minimized := l_upper_zone_left.is_minimized
 				else
-					l_left_all_minimized := False
+					l_left_all_minimized := not l_zone.is_displayed
 				end
 			end
 
@@ -475,10 +477,10 @@ feature {NONE} -- Implementation
 			else
 				check not_void: l_zone /= Void end
 				l_upper_zone_right ?= l_zone
-				if l_upper_zone_right /= Void then
+				if l_upper_zone_right /= Void and then l_upper_zone_right.is_displayed then
 					l_right_all_minimized := l_upper_zone_right.is_minimized
 				else
-					l_right_all_minimized := False
+					l_right_all_minimized := not l_zone.is_displayed
 				end
 			end
 
@@ -490,8 +492,19 @@ feature {NONE} -- Implementation
 
 				if l_parent /= Void then
 					l_is_in_first := l_parent.first = a_middle_container
+
 					if not l_parent.is_minimized then
-						disable_item_expand (change_parent_to_minized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
+						-- If one child is hidden, then the splitter bar is hidden by EV_VERTICAL_SPLIT_AREA/EV_HORIZONTAL_SPLIT_AREA automatically, we don't need to change it.	
+						if l_parent.first.is_displayed and l_parent.second.is_displayed then
+							disable_item_expand (change_parent_to_minized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
+						end
+					else
+						-- When `l_parent' is minized container already and a child tool container just hidden, we should update splitter bar visible.
+						if l_parent.first.is_displayed and l_parent.second.is_displayed then
+							l_parent.set_splitter_visible (True)
+						else
+							l_parent.set_splitter_visible (False)
+						end
 					end
 				end
 			else

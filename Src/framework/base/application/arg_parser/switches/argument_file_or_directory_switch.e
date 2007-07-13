@@ -32,7 +32,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 	create_value_option (a_value: STRING): ARGUMENT_FILE_OR_DIRECTORY_OPTION is
 			-- Creates a new argument option given a value `a_value'
 		do
-			create Result.make (a_value, Current)
+			create Result.make_with_value (a_value, Current)
 		end
 
 indexing

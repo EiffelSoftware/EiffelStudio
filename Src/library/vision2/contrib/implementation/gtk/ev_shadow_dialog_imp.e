@@ -9,10 +9,22 @@ class
 	EV_SHADOW_DIALOG_IMP
 
 inherit
-	EV_UNTITLED_DIALOG_IMP
+	EV_WINDOW_IMP
+		redefine
+			show
+		end
 
 create
 	make
+
+feature {NONE} -- Implementation
+
+	show is
+			--Redefine
+		do
+			Precursor {EV_WINDOW_IMP}
+			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -14,40 +14,39 @@ create {ARGUMENT_SWITCH}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_switch: like switch) is
+	make (a_switch: like switch) is
 			-- Initializes option with just a name `a_name'
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
 			a_switch_attached: a_switch /= Void
 		do
-			name  := a_name
 			switch := a_switch
 		ensure
-			name_set: name = a_name
 			switch_set: switch = a_switch
 		end
 
-	make_with_value (a_name: like name; a_value: like value; a_switch: like switch) is
+	make_with_value (a_value: like value; a_switch: like switch) is
 			-- Initializes option with a name and an associated value.
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
 			a_value_attached: a_value /= Void
 			a_switch_attached: a_switch /= Void
 		do
-			make (a_name, a_switch)
+			make (a_switch)
 			set_value (a_value)
 		ensure
-			name_set: name = a_name
 			value_set: value = a_value
 			switch_set: switch = a_switch
 		end
 
 feature -- Access
 
-	name: STRING
+	switch_id: STRING
 			-- Option name
+		do
+			Result := switch.id
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
 
 	value: STRING assign set_value
 			-- Option value, if any
@@ -76,8 +75,7 @@ feature -- Status Report
 		end
 
 invariant
-	name_attached: name /= Void
-	not_name_is_empty: not name.is_empty
+	not_name_is_empty: not switch_id.is_empty
 	switch_attached: switch /= Void
 
 indexing

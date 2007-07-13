@@ -19,20 +19,17 @@ create {ARGUMENT_FLAG_SWITCH}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_value: like value; a_flags: LIST [CHARACTER]; a_cs: BOOLEAN; a_switch: like switch) is
+	make (a_value: like value; a_flags: LIST [CHARACTER]; a_cs: BOOLEAN; a_switch: like switch) is
 			-- Initializes option with a name, an associated value and a list of available flags.
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
 			a_value_attached: a_value /= Void
 			a_flags_attached: a_flags /= Void
 			a_switch_attached: a_switch /= Void
 		do
-			make_with_value (a_name, a_value, a_switch)
+			make_with_value (a_value, a_switch)
 			flags := a_flags
 			case_sensitive := a_cs
 		ensure
-			name_set: name = a_name
 			value_set: value = a_value
 			flags_set: flags = a_flags
 			case_sensitive_set: case_sensitive = a_cs

@@ -32,7 +32,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 	create_value_option (a_value: STRING): ARGUMENT_PROPERTY_OPTION is
 			-- Creates a new argument option given a value `a_value', for current switch
 		do
-			create Result.make_with_value (name, a_value, Current)
+			create Result.make_with_value (a_value, Current)
 		end
 
 indexing

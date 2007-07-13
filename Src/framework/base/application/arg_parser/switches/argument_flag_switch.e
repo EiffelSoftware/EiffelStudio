@@ -25,22 +25,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_flags: like flag_descriptions; a_cs_flags: like case_sensitive_flags) is
+	make (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_flags: like flag_descriptions; a_cs_flags: like case_sensitive_flags) is
 			-- Initialize a new flags option.
 			-- Note: Flags are single characters. This is passed through `a_flags', which should be paired with a flag description.
+			--
+			-- Note: To use long and short names set name `a_id' := "s|long"
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+			a_id_is_valid_id: is_valid_id (a_id)
 			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
 			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		do
-			make_value_base (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, full_arg_description (a_arg_desc, a_flags), a_val_optional)
+			make_value_base (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, full_arg_description (a_arg_desc, a_flags), a_val_optional)
 			flag_descriptions := a_flags
 			case_sensitive_flags := a_cs_flags
 		ensure
-			name_set: name = a_name
+			id_set: id = a_id
 			description_set: description = a_desc
 			optional: optional = a_optional
 			arg_name_set: arg_name = a_arg_name
@@ -51,21 +54,24 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_flags: like flag_descriptions; a_cs_flags: like case_sensitive_flags) is
+	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_flags: like flag_descriptions; a_cs_flags: like case_sensitive_flags) is
 			-- Initialize a new value option.
 			-- Note: Flags are single characters. This is passed through `a_flags', which should be paired with a flag description.
+			--
+			-- Note: To use long and short names set name `a_id' := "s|long"
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+			a_id_is_valid_id: is_valid_id (a_id)
 			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
 			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		do
-			make (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional, a_flags, a_cs_flags)
+			make (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional, a_flags, a_cs_flags)
 			is_hidden := True
 		ensure
-			name_set: name = a_name
+			id_set: id = a_id
 			description_set: description = a_desc
 			optional: optional = a_optional
 			arg_name_set: arg_name = a_arg_name
@@ -111,7 +117,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 	create_option: ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name, "", create {ARRAYED_LIST [CHARACTER]}.make (0), case_sensitive_flags, Current)
+			create Result.make ("", create {ARRAYED_LIST [CHARACTER]}.make (0), case_sensitive_flags, Current)
 		end
 
 	create_value_option (a_value: STRING): ARGUMENT_FLAG_OPTION is
@@ -127,7 +133,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 				do
 					a_flags.extend (a_item)
 				end (?, l_flags))
-			create Result.make (name, a_value, l_flags, case_sensitive_flags, Current)
+			create Result.make (a_value, l_flags, case_sensitive_flags, Current)
 		end
 
 feature {NONE} -- Usage

@@ -17,54 +17,85 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+	make (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
 			-- Initialize a new basic option.
+			--
+			-- Note: To use long and short names set name `a_id' := "s|long"
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+			a_id_is_valid_id: is_valid_id (a_id)
 			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
+		local
+			l_names: like canonical_name
 		do
-			name := a_name
+			l_names := canonical_name (a_id)
+			short_name := l_names.short_name
+			long_name := l_names.long_name
+
+			id := a_id
 			description := a_desc
 			optional := a_optional
 			allow_multiple := a_allow_mutliple
-			lower_case_name := name.as_lower
+			lower_case_id := a_id.as_lower
 		ensure
-			name_set: name = a_name
+			id_set: id = a_id
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
+			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
+	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
 			-- Initialize a new basic option.
 		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+			a_id_is_valid_id: is_valid_id (a_id)
 			a_desc_attached: a_desc /= Void
 			not_a_desc_is_empty: not a_desc.is_empty
 		do
-			make (a_name, a_desc, a_optional, a_allow_mutliple)
+			make (a_id, a_desc, a_optional, a_allow_mutliple)
 			is_hidden := True
 		ensure
-			name_set: name = a_name
+			id_set: id = a_id
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
+			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
 			is_hidden: is_hidden
 		end
 
 feature -- Access
 
+	id: STRING
+			-- Option name id
+
 	name: STRING
-			-- Option name
+			-- Priority option name
+		do
+			if has_short_name then
+				Result := short_name.out
+			else
+				Result := long_name
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	short_name: CHARACTER
+			-- Option short name
+
+	long_name: STRING
+			-- Option long name
 
 	description: STRING
 			-- Option description
 
-	lower_case_name: STRING
+	lower_case_id: STRING
 			-- Option name in lower-case
 
 	hash_code: INTEGER
@@ -87,6 +118,12 @@ feature -- Status Report
 	is_special: BOOLEAN
 			-- Indicates if switch is to be treated with "special" care
 
+	frozen has_short_name: BOOLEAN
+			-- Indicates if a short name has been specified
+		do
+			Result := short_name /= '%U'
+		end
+
 feature {ARGUMENT_BASE_PARSER} -- Status Setting
 
 	set_is_special is
@@ -102,18 +139,72 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 	create_option: ARGUMENT_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name, Current)
+			create Result.make (Current)
 		ensure
 			result_attached: Result /= Void
 		end
 
+feature -- Query
+
+	is_valid_id (a_id: STRING): BOOLEAN is
+			-- Determines if `a_id' is a valid identifier
+		require
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+		local
+			c: CHARACTER
+			l_count, i: INTEGER
+		do
+			i := a_id.index_of (canocial_name_separator, 1)
+			Result := i = 0 or i = 2
+			if Result then
+				from
+					i := 1
+					l_count := a_id.count
+				until
+					i > l_count
+				loop
+					c := a_id.item (i)
+					Result := c.is_printable and not c.is_space
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Query
+
+	canonical_name (a_id: STRING): TUPLE [long_name: STRING; short_name: CHARACTER] is
+			-- Splits canonical name `a_id'
+			--
+			-- Note: When no short name is found `Result.short_name' will be null
+		local
+			i: INTEGER
+		do
+			i := a_id.index_of (canocial_name_separator, 1)
+			if i > 0 and i + 1 <= a_id.count then
+				Result := [a_id.substring (i + 1, a_id.count), a_id.item (1)]
+			else
+				Result := [a_id, '%U']
+			end
+		ensure
+			result_attached: Result /= Void
+			result_long_name_attached: Result.long_name /= Void
+			not_result_long_name_is_empty: not Result.long_name.is_empty
+		end
+
+	canocial_name_separator: CHARACTER = '|'
+			-- Character used to separate canonical names
+
 invariant
-	name_attached: name /= Void
-	not_name_is_empty: not name.is_empty
+	id_attached: id /= Void
+	not_id_is_empty: not id.is_empty
+	id_is_valid_id: is_valid_id (id)
+	long_name_attached: long_name /= Void
+	not_long_name_is_empty: not long_name.is_empty
 	description_attached: description /= Void
 	not_description_is_empty: not description.is_empty
-	lower_case_name_attached: lower_case_name /= Void
-	lower_case_name_is_name_in_lower: name.as_lower.is_equal (lower_case_name)
+	lower_case_id_attached: lower_case_id /= Void
+	lower_case_id_is_name_in_lower: name.as_lower.is_equal (lower_case_id)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

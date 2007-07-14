@@ -406,6 +406,10 @@ feature{NONE} -- Actions
 	on_project_loaded is
 			-- Action to be performed when project loaded
 		do
+			if content.user_widget.is_displayed then
+				set_is_shown (True)
+			end
+			on_tab_change
 			project_load_actions.call (Void)
 		end
 

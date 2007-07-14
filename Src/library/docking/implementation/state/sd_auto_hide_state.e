@@ -229,6 +229,7 @@ feature -- Redefine.
 					auto_hide_panel.tab_stubs.extend (tab_stub)
 				end
 				animation.show (True)
+				content.show_actions.call ([])
 				internal_docking_manager.command.unlock_update
 			end
 		ensure then

@@ -78,10 +78,12 @@ feature -- Incrementality
 					check
 						item_for_iteration.feature_name.is_equal (f2.feature_name)
 					end
-					Result := item_for_iteration.select_table_equiv (f2)
-					if not Result and then not is_freeze_requested and then c.visible_level.is_visible (f2, c.class_id) then
-							-- Regenerate C code for visible feature so that it can be accessed via CECIL.
-						system.request_freeze
+					if not item_for_iteration.select_table_equiv (f2) then
+						Result := False
+						if not is_freeze_requested and then c.visible_level.is_visible (f2, c.class_id) then
+								-- Regenerate C code for visible feature so that it can be accessed via CECIL.
+							system.request_freeze
+						end
 					end
 				end
 				forth

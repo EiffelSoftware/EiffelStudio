@@ -902,6 +902,7 @@ feature{NONE} -- Implementation
 			create l_metric_tool.make (develop_window)
 			develop_window.tools.set_metric_tool (l_metric_tool)
 			setup_tool (l_metric_tool, "show_metric_tool")
+			l_metric_tool.content.show_actions.extend (agent l_metric_tool.on_select)
 		end
 
 	build_external_output_tool is

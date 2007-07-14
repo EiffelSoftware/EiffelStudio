@@ -12,14 +12,14 @@ inherit
 		redefine
 			is_dll, is_equal, need_encapsulation
 		end
-		
+
 	EXTERNAL_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			is_equal
 		end
-		
+
 	SHARED_INCLUDE
 		export
 			{NONE} all
@@ -47,12 +47,12 @@ feature {NONE} -- Initialization
 			index_set: index = i
 			name_set: name = n
 		end
-		
+
 feature -- Status report
 
 	is_dll: BOOLEAN is True
 			-- Current is a DLL external
-			
+
 	need_encapsulation: BOOLEAN is True
 			-- We always need to call encapsulation.
 
@@ -117,7 +117,7 @@ feature {NONE} -- Internal generation
 			buf.put_new_line
 			buf.put_string ("static EIF_POINTER fp = NULL;")
 			buf.put_new_line
-	
+
 			buf.put_string ("if (!done) {")
 			buf.indent
 			buf.put_new_line
@@ -133,7 +133,7 @@ feature {NONE} -- Internal generation
 			buf.put_string ("if (a_result == NULL) eraise(%"Cannot load library%",EN_PROG);")
 			buf.put_new_line
 			buf.put_string ("fp = (EIF_POINTER) GetProcAddress(a_result,")
-			if index > -1 then 
+			if index > -1 then
 				buf.put_string ("MAKEINTRESOURCE (")
 				buf.put_integer (index)
 				buf.put_string (")")
@@ -176,17 +176,17 @@ feature {NONE} -- Internal generation
 				-- signature. Some C compiler might optimize incorrectly otherwise.
 			if is_win_32 then
 				if has_arg_list then
-					l_ret_type.c_type.generate_function_cast_type (buf, stdcall,
+					l_ret_type.c_type.generate_external_function_cast_type (buf, stdcall,
 						l_names_heap.convert_to_string_array (argument_types))
 				else
-					l_ret_type.c_type.generate_function_cast_type (buf, stdcall, <<"void">>)
+					l_ret_type.c_type.generate_external_function_cast_type (buf, stdcall, <<"void">>)
 				end
 			else
 				if has_arg_list then
-					l_ret_type.c_type.generate_function_cast (buf,
+					l_ret_type.c_type.generate_external_function_cast_type (buf, Void,
 						l_names_heap.convert_to_string_array (argument_types))
 				else
-					l_ret_type.c_type.generate_function_cast (buf, <<"void">>)
+					l_ret_type.c_type.generate_external_function_cast_type (buf, Void, <<"void">>)
 				end
 			end
 			buf.put_string ("fp )(")

@@ -478,8 +478,6 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 			l_item: MSR_ITEM
-			l_class_name: STRING
-			l_list: LIST [CLASS_I]
 			l_text_item: MSR_TEXT_ITEM
 			l_start, l_end: INTEGER
 			l_class: CLASS_I
@@ -491,10 +489,8 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				l_row := a_item.row
 				l_item ?= l_row.data
 				if l_item /= Void then
-					l_class_name := l_item.class_name.as_upper
-					l_list := universe.classes_with_name (l_class_name)
-					if l_list /= Void and then not l_list.is_empty then
-						l_class := l_list.first
+					l_class ?= l_item.data
+					if l_class /= Void then
 						l_text_item ?= l_row.data
 						if l_text_item /= Void then
 							l_start := l_text_item.start_index_in_unix_text

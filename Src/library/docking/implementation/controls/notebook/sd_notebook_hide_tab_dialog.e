@@ -9,10 +9,7 @@ class
 	SD_NOTEBOOK_HIDE_TAB_DIALOG
 
 inherit
-	EV_SHADOW_DIALOG
-		rename
-			extend as extend_dialog,
-			has as has_dialog
+	EV_POPUP_WINDOW
 		redefine
 			show
 		end
@@ -37,7 +34,7 @@ feature {NONE}  -- Initlization
 			create internal_scroll_area
 			create {EV_VERTICAL_BOX} top_box
 
-			extend_dialog (top_box)
+			extend (top_box)
 			top_box.extend (internal_vertical_box)
 			top_box.set_border_width (internal_shared.border_width)
 			top_box.set_background_color (internal_shared.border_color)
@@ -68,7 +65,7 @@ feature {NONE}  -- Initlization
 			disable_user_resize
 		ensure
 			set: internal_notebook = a_note_book
-			extended: has_dialog (top_box) and internal_vertical_box.has (internal_text_box)
+			extended: has (top_box) and internal_vertical_box.has (internal_text_box)
 				and internal_vertical_box.has (internal_scroll_area) and internal_scroll_area.has (internal_tool_bar)
 		end
 
@@ -84,7 +81,7 @@ feature -- Command
 	show is
 			-- Redefine
 		do
-			Precursor {EV_SHADOW_DIALOG}
+			Precursor {EV_POPUP_WINDOW}
 			internal_text_box.set_focus
 		end
 

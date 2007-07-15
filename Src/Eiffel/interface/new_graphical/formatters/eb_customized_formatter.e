@@ -352,7 +352,9 @@ feature -- Setting
 						widget.show
 					end
 					setup_viewpoint
-					generate_result
+					if browser /= Void then
+						generate_result
+					end
 					display_header
 				end
 			end
@@ -360,6 +362,8 @@ feature -- Setting
 
 	generate_result is
 			-- Generate result for `stone'.
+		require
+			browser_attached: browser /= Void
 		local
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 			l_retried: BOOLEAN
@@ -596,7 +600,6 @@ invariant
 	header_internal_attached: header_internal /= Void
 	temp_header_internal_attached: temp_header_internal /= Void
 	menu_name_internal_attached: menu_name_internal /= Void
-	browser_attached: browser /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

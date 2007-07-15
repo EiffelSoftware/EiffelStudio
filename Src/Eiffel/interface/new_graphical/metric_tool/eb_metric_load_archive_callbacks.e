@@ -29,6 +29,7 @@ feature{NONE} -- Initialization
 		require
 			a_factory_attached: a_factory /= Void
 		do
+			make_null
 			initialize
 			factory := a_factory
 			create {LINKED_LIST [EB_METRIC_ARCHIVE_NODE]}archive.make
@@ -380,4 +381,5 @@ indexing
                 ]"
 
 end
+
 

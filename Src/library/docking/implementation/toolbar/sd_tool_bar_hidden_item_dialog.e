@@ -9,7 +9,7 @@ class
 	SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 
 inherit
-	EV_SHADOW_DIALOG
+	EV_POPUP_WINDOW
 		export
 			{NONE}	all
 			{ANY} show

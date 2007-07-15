@@ -15,7 +15,7 @@ deferred class
 	SD_ZONE_NAVIGATION_DIALOG_IMP
 
 inherit
-	EV_SHADOW_DIALOG
+	EV_POPUP_WINDOW
 		redefine
 			initialize, is_in_default_state
 		end
@@ -31,7 +31,7 @@ feature {NONE}-- Initialization
 		do
 			create l_shared
 
-			Precursor {EV_SHADOW_DIALOG}
+			Precursor {EV_POPUP_WINDOW}
 
 				-- Create all widgets.
 			create internal_vertical_box_top_top

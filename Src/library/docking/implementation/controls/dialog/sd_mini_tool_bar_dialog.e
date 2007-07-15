@@ -9,7 +9,7 @@ class
 	SD_MINI_TOOL_BAR_DIALOG
 
 inherit
-	EV_SHADOW_DIALOG
+	EV_POPUP_WINDOW
 
 create
 	make

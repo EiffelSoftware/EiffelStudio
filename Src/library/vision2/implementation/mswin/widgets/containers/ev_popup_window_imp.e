@@ -14,6 +14,8 @@ inherit
 			interface,
 			default_style,
 			default_ex_style,
+			class_name,
+			class_style,
 			make,
 			initialize
 		end
@@ -52,6 +54,24 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	class_name: STRING_32 is
+			-- Class name for current type of window.
+		once
+			Result := "EV_POPUP_WINDOW_IMP"
+		end
+
+	class_style: INTEGER is
+			-- Redefine
+		local
+			l_win: WEL_WINDOWS_VERSION
+		do
+			Result := Precursor {EV_WINDOW_IMP}
+			create l_win
+			if l_win.is_windows_xp_compatible then
+				Result := Result | cs_dropshadow
+			end
+		end
 
 	default_style: INTEGER is
 			-- Default style of `Current'.

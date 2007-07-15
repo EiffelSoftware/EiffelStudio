@@ -675,10 +675,12 @@ feature {NONE} -- Mouse copy cut
 				former_mouse_y := a_screen_y
 				mouse_copy_cut := True
 				mouse_left_button_down := True
-				if ctrled_key then
-					editor_drawing_area.set_pointer_style (Cursors.Cur_copy_selection)
-				else
-					editor_drawing_area.set_pointer_style (Cursors.Cur_cut_selection)
+				if cursors /= Void then
+					if ctrled_key then
+						editor_drawing_area.set_pointer_style (Cursors.Cur_copy_selection)
+					else
+						editor_drawing_area.set_pointer_style (Cursors.Cur_cut_selection)
+					end
 				end
 			else
 				mouse_copy_cut := False

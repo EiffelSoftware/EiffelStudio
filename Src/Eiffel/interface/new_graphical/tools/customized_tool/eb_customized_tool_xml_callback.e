@@ -20,6 +20,7 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
+			make_null
 			initialize
 			create handler_receiver.make
 			create tool_receiver.make

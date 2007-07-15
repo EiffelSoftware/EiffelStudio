@@ -22,8 +22,8 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize Current.
 		do
+			make_null
 			initialize
-
 			create formatters.make
 			create formatter_receiver.make
 			create content_receiver.make

@@ -645,9 +645,18 @@ feature -- Observer management
 
 	on_new_tab_command is
 			-- Handle EB_NEW_TAB_EDITOR_COMMAND.
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_editor: EB_SMART_EDITOR
 		do
 			if class_address.is_displayed and class_address.is_sensitive then
-				ev_application.do_once_on_idle (agent class_address.set_focus)
+				l_window := window_manager.last_focused_development_window
+				if l_window /= Void then
+					l_editor :=  l_window.editors_manager.current_editor
+					if l_editor /= Void and then not l_editor.file_loaded then
+						ev_application.do_once_on_idle (agent class_address.set_focus)
+					end
+				end
 			end
 		end
 

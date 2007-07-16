@@ -331,7 +331,6 @@ rt_public void rout_obj_call_procedure_dynamic (
 	int open_idx = 1;
 	int closed_idx = 1;
 	EIF_TYPED_ELEMENT* first_arg = 0;
-	EIF_TYPED_ELEMENT* arg = 0;
 	EIF_INTEGER* open_positions = 0;
 
 	if (closed_count > 0) {

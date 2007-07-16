@@ -170,7 +170,6 @@ rt_public char **eget(register int num)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char **top = loc_set.st_top;	/* The top of the stack */
-	char **saved_top = top;		/* Save current top of stack */
 	static EIF_REFERENCE null_object = NULL;
 	register int i;
 

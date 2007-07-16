@@ -103,7 +103,6 @@ rt_private int nfds = 0;					/* Number of fd to be selected */
 #ifdef EIF_WINDOWS
 rt_private HANDLE rd_mask [NOFILE] = {0};		/* Read mask */
 rt_private HANDLE rd_tmask [NOFILE] = {0};		/* Temporary mask */
-rt_private HANDLE read_mask [NOFILE] = {0};		/* Mask used for select */
 #else
 rt_private fd_set rd_mask;			/* Read mask */
 rt_private fd_set rd_tmask;		/* Temporary mask */

@@ -43,9 +43,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Run the program.
 		local
-			l_cls: COMMAND_LINE_SYNTAX
-			l_clp: COMMAND_LINE_PARSER
-			l_valid_options: HASH_TABLE [LIST [STRING], STRING]
+			l_parser: ARGUMENT_PARSER
 			l_definition_file, l_text: STRING
 			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
@@ -53,100 +51,89 @@ feature {NONE} -- Initialization
 			l_layout.check_environment_variable
 			set_eiffel_layout (l_layout)
 
-			create l_cls.make (option_specifications)
-			create l_clp.make (l_cls)
-			l_clp.parse ((create {ARGUMENTS}).argument_array)
-			exe_name := l_clp.executable_without_suffix
-			l_valid_options := l_clp.valid_options
-			if l_clp.invalid_options_found then
-				print (l_clp.error_message)
-				print (l_cls.program_usage (exe_name) + "%N")
-				print ("Use -h/--help for more help." + "%N")
+			default_create
+
+			create l_parser.make
+			l_parser.execute (agent start (l_parser))
+
+			if not l_parser.successful then
+				(create {EXCEPTIONS}).die (1)
+			end
+		end
+
+	start (a_parser: ARGUMENT_PARSER) is
+			-- Launch application from command line
+		require
+			a_parser_attached: a_parser /= Void
+			a_parser_successful: a_parser.successful
+		local
+			l_definition_file, l_text: STRING
+		do
+			if a_parser.show_graphical_wizard then
+				make_and_launch
 			else
-				if l_valid_options.has ("-g") then
-					make_and_launch
+				check
+					generating_code: a_parser.generate_for_client or a_parser.generate_for_server or a_parser.add_to_eiffel_project
+				end
+
+				if a_parser.add_to_eiffel_project then
+					environment.set_source_ecf_file_name (a_parser.eiffel_configuration_file)
+					if a_parser.use_facade_class then
+						environment.set_eiffel_class_name (a_parser.facade_class)
+						if a_parser.use_facade_cluster then
+							environment.set_class_cluster_name (a_parser.facade_class_cluster)
+						end
+					end
+
+					environment.set_is_eiffel_interface
+					environment.set_eiffel_target (a_parser.eiffel_target)
+					environment.set_project_name (a_parser.eiffel_target.twin)
+
+					if a_parser.use_eiffel_project_path then
+						environment.set_eiffel_project_path (a_parser.eiffel_project_path)
+					end
+				end
+
+				environment.set_backup (a_parser.backup_files)
+				environment.set_compile_eiffel (False)
+				environment.set_compile_c (a_parser.compile_c_code)
+				environment.set_compile_eiffel (a_parser.compile_eiffel_code)
+				if a_parser.use_destination_folder then
+					environment.set_destination_folder (a_parser.destination)
 				else
-					if l_valid_options.has ("-v") then
-						print_version_info
-					elseif l_valid_options.has ("-h") then
-						print (l_cls.program_help (exe_name, Void, Void))
-					elseif not l_valid_options.is_empty then
-						if l_valid_options.has ("-e") and not (l_valid_options.has ("-a") and l_valid_options.has ("-f") and l_valid_options.has ("-u")) then
-							print ("Options '-a', '-f' and '-u' required by option '-e'.")
-							print (l_cls.program_usage (exe_name) + "%N")
-							print ("Use -h/--help for more help." + "%N")
+					environment.set_destination_folder (a_parser.eiffel_project_path.twin)
+				end
+
+				if a_parser.generate_for_client then
+					l_definition_file := a_parser.library_definition.as_lower
+					environment.set_is_client
+				elseif a_parser.generate_for_server then
+					l_definition_file := a_parser.library_definition.as_lower
+					environment.set_is_new_component
+					if a_parser.use_custom_marshaller then
+						if l_definition_file.count > 4 and then l_definition_file.substring (l_definition_file.count - 3, l_definition_file.count).is_equal (".idl") then
+							environment.set_marshaller_generated (True)
 						else
-							if l_valid_options.has ("-m") and not l_valid_options.has ("-s") then
-								print ("Option '-s' required by option '-m'.")
-								print (l_cls.program_usage (exe_name) + "%N")
-								print ("Use -h/--help for more help." + "%N")
-							else
-								l_valid_options.search ("-a")
-								if l_valid_options.found then
-									environment.set_source_ecf_file_name (l_valid_options.found_item.first.twin)
-								end
-								environment.set_backup (l_valid_options.has ("-b"))
-								l_valid_options.search ("-u")
-								if l_valid_options.found then
-									environment.set_class_cluster_name (l_valid_options.found_item.first.twin)
-								end
-								environment.set_compile_c (l_valid_options.has ("-i") or l_valid_options.has ("-l"))
-								environment.set_compile_eiffel (l_valid_options.has ("-l"))
-								l_valid_options.search ("-d")
-								if l_valid_options.found then
-									environment.set_destination_folder (l_valid_options.found_item.first.twin)
-								else
-									environment.set_destination_folder ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-								end
-								l_valid_options.search ("-f")
-								if l_valid_options.found then
-									environment.set_eiffel_class_name (l_valid_options.found_item.first.twin)
-								end
-								l_valid_options.search ("-e")
-								if l_valid_options.found then
-									l_text := l_valid_options.found_item.first.twin
-									environment.set_is_eiffel_interface
-									environment.set_eiffel_project (l_text)
-									environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
-								end
-								l_valid_options.search ("-c")
-								if l_valid_options.found then
-									l_definition_file := l_valid_options.found_item.first.as_lower
-									environment.set_is_client
-								end
-								l_valid_options.search ("-s")
-								if l_valid_options.found then
-									l_definition_file := l_valid_options.found_item.first.as_lower
-									environment.set_is_new_component
-									if l_valid_options.has ("-m") then
-										if l_definition_file.count > 4 and then l_definition_file.substring (l_definition_file.count - 3, l_definition_file.count).is_equal (".idl") then
-											environment.set_marshaller_generated (True)
-										else
-											print ("%NWARNING: Option -m ignored because definition file is not an IDL file%N")
-										end
-									end
-								end
-								if l_valid_options.has ("-o") then
-									environment.set_is_out_of_process
-								else
-									environment.set_is_in_process
-								end
-								environment.set_cleanup (l_valid_options.has ("-p"))
-								if l_definition_file /= Void then
-									if l_definition_file.substring_index (".idl", l_definition_file.count - 3) = l_definition_file.count - 3 then
-										environment.set_idl_file_name (l_definition_file)
-									else
-										environment.set_type_library_file_name (l_definition_file)
-										environment.set_idl (False)
-									end
-									environment.set_project_name (l_definition_file.substring (l_definition_file.last_index_of ('\', l_definition_file.count) + 1, l_definition_file.count))
-								end
-								no_logo := l_valid_options.has ("-n")
-								generate
-							end
+							print ("%NWARNING: Option -m ignored because definition file is not an IDL file%N")
 						end
 					end
 				end
+				if a_parser.out_of_process then
+					environment.set_is_out_of_process
+				else
+					environment.set_is_in_process
+				end
+				environment.set_cleanup (a_parser.clean_up_destination)
+				if l_definition_file /= Void then
+					if l_definition_file.substring_index (".idl", l_definition_file.count - 3) = l_definition_file.count - 3 then
+						environment.set_idl_file_name (l_definition_file)
+					else
+						environment.set_type_library_file_name (l_definition_file)
+						environment.set_idl (False)
+					end
+					environment.set_project_name (l_definition_file.substring (l_definition_file.last_index_of ('\', l_definition_file.count) + 1, l_definition_file.count))
+				end
+				generate
 			end
 		end
 
@@ -154,7 +141,6 @@ feature {NONE} -- Initialization
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		do
-			default_create
 			create main_window.make
 			main_window.show
 			launch
@@ -170,25 +156,12 @@ feature {NONE} -- Implementation
 			set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (agent dummy_process))
 			set_message_output (create {WIZARD_MESSAGE_OUTPUT}.make (agent display_output))
 			create l_manager
-			if not no_logo then
-				print_version_info
-			end
 			l_manager.run
 			if environment.abort then
 				(create {EXCEPTIONS}).die (1)
 			else
 				(create {EXCEPTIONS}).die (0)
 			end
-		end
-
-	print_version_info is
-			-- Print version information.
-		local
-			s: STRING
-		do
-			s := "EiffelCOM Wizard " + version_number + "%N"
-			s.append ("Copyright (c) 2006, Eiffel Software. All rights reserved." + "%N")
-			print (s)
 		end
 
 	dummy_process (a_event: EV_THREAD_EVENT) is
@@ -240,37 +213,7 @@ feature {NONE} -- Private Access
 	main_window: WIZARD_MAIN_WINDOW
 		-- Main window of `Current'.
 
-	option_specifications: ARRAY [STRING] is
-			-- The recognized options of this program
-		once
-			Result := <<"-v,--version#Print version information.",
-				    "-h,--help#Print help on how to use the program.",
-				    "-c,--client=DEFINITION_FILE!#Build client to access COM component described by DEFINITION_FILE.",
-				    "-s,--server=DEFINITION_FILE!#Build new COM component as described by DEFINITION_FILE.",
-				    "-e,--eiffel=PROJECT_FILE!#Add COM interface to Eiffel project with project file (*.epr) PROJECT_FILE.",
-				    "-a,--ace=ECF_FILE!#Path to ecf file of Eiffel project PROJECT_FILE. Use with '-e'.",
-				    "-f,--facade=FACADE_CLASS!#Expose features from FACADE_CLASS to COM. Use with '-e'.",
-				    "-u,--cluster=CLUSTER!#Cluster containing FACADE_CLASS given with option '-f'.",
-				    "-m,--marshaller#Build marshaller DLL, can only be used with '--server' and if definition file is an IDL file.",
-				    "-d,--destination=DESTINATION!#Generate files in DESTINATION folder. By default files are generated in current folder.",
-				    "-o,--outofprocess#Access or build out of process component. By default access or build in-process component (DLL).",
-				    "-i,--compilec#Compile generated C code.",
-				    "-l,--compileeiffel#Compile eiffel code, also compile C code (implies -i).",
-				    "-b,--backup#Backup overriden files by adding extension '.bac'.",
-				    "-p,--cleanup#Cleanup destination folder prior to generation.",
-				    "-n,--nologo#Do not display copyright information.",
-				    "-g,--graphical#Launch GUI.",
-				    "(-c|-s|-e)",
-				    "(-p|-b)">>
-		end
-
-	exe_name: STRING
-			-- Name of this executable
-
-	no_logo: BOOLEAN;
-			-- Should no logo be displayed?
-
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

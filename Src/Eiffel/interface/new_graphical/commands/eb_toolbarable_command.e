@@ -322,10 +322,10 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON, EB_SD_COMMAND_TOOL_BAR_BUTTON} -- Implement
 			managed_toolbar_items_not_void: Result /= Void
 		end
 
-feature {EB_SD_COMMAND_TOOL_BAR_BUTTON} -- Implementaiton
+feature {EB_SD_COMMAND_TOOL_BAR_BUTTON, EB_DEBUGGER_MANAGER} -- Implementaiton
 
 	managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item] is
-			--
+			-- Managed Smart Docking lib tool bar items.
 		do
 			if internal_managed_sd_toolbar_items = Void then
 				create internal_managed_sd_toolbar_items.make (1)

@@ -7,14 +7,20 @@ echo make ...
 echo     Options:
 echo        clean          - remove unecessary files including desc
 echo        win32 b        - build a Win32 run-time for Borland
+echo        win32 g        - build a Win32 run-time for MinGW
 echo        win32 m  [dll] - build a Win32 run-time for Microsoft C++ 2005 [as DLL if specified]
 echo        win32 m6 [dll] - build a Win32 run-time for Microsoft C++ 6.0 [as DLL if specified]
 echo        win64 m  [dll] - build a Win64 run-time for Microsoft C++ 2005 [as DLL if specified]
 goto end
 :win32
 if .%2. == .. goto usage
-if NOT .%2. == .b. goto msc
+if NOT .%2. == .b. goto mingw
 copy CONFIGS\windows-bcb-x86 config.sh
+set remove_desc=1
+goto process
+:mingw
+if NOT .%2. == .g. goto msc
+copy CONFIGS\windows-mingw-x86 config.sh
 set remove_desc=1
 goto process
 :msc

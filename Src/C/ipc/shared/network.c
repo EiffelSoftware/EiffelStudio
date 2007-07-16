@@ -149,26 +149,26 @@ rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 		len += length;
 	}
 
-	if (reset)
+	if (reset) {
 		/* There is a problem when there are 0 bytes t send
 		 * Literally 0 bytes are sent and the Semaphore is set
 		 * We need to release the semaphore in this case
 		 */
 		if (size == 0) {
 				/* Wait to get back in sync. */
-			if (WaitForSingleObject (readev(cs), INFINITE) != WAIT_OBJECT_0)
+			if (WaitForSingleObject (readev(cs), INFINITE) != WAIT_OBJECT_0) {
 #ifdef USE_ADD_LOG
 				add_log (8, "network:97 Bad wait");
-#else
-				;
 #endif
-		} else
-			if (WaitForSingleObject (readev(cs), 0) != WAIT_OBJECT_0)
+			}
+		} else {
+			if (WaitForSingleObject (readev(cs), 0) != WAIT_OBJECT_0) {
 #ifdef USE_ADD_LOG
 				add_log (8, "network:101 Wait on %d failed", size);
-#else
-				;
 #endif
+			}
+		}
+	}
 
 	return 0;
 
@@ -276,7 +276,7 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 			amount = BUFSIZ;
 		fSuccess = WriteFile(writefd(cs), buf, (DWORD) amount, &error, NULL);
 		if (!fSuccess){
-			fprintf (stderr, "net_send: write failed. fdesc = %p, errno = %i\n", writefd(cs),  GetLastError());
+			fprintf (stderr, "net_send: write failed. fdesc = %p, errno = %u\n", writefd(cs), (unsigned int) GetLastError());
 			return -1;
 		}
 	}

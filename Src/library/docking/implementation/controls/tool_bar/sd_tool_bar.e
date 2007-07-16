@@ -602,22 +602,28 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_TOOL_BAR on_pointer_press")
 			end
-			if a_button = {EV_POINTER_CONSTANTS}.left then
-				enable_capture
-				from
-					l_items := items
-					l_items.start
-				until
-					l_items.after
-				loop
-					l_item := l_items.item
-					l_item.on_pointer_press (a_x, a_y)
-					if l_item.is_need_redraw then
-						drawer.start_draw (l_item.rectangle)
-						redraw_item (l_item)
-						drawer.end_draw
+			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).			
+			-- Otherwise it will cause bug#12549.
+			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
+
+				if a_button = {EV_POINTER_CONSTANTS}.left then
+					enable_capture
+					from
+						l_items := items
+						l_items.start
+					until
+						l_items.after
+					loop
+						l_item := l_items.item
+						l_item.on_pointer_press (a_x, a_y)
+						if l_item.is_need_redraw then
+							drawer.start_draw (l_item.rectangle)
+							redraw_item (l_item)
+							drawer.end_draw
+						end
+						l_items.forth
 					end
-					l_items.forth
 				end
 			end
 		end
@@ -644,25 +650,31 @@ feature {NONE} -- Agents
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
 		do
-			if a_button = {EV_POINTER_CONSTANTS}.left then
-				disable_capture
-				internal_pointer_pressed := False
-				from
-					l_items := items
-					l_items.start
-				until
-					l_items.after
-				loop
-					l_item := l_items.item
-					l_item.on_pointer_release (a_x, a_y)
-					if l_item.is_displayed and then l_item.is_need_redraw and then l_item.tool_bar /= Void and then not l_item.tool_bar.is_destroyed then
-						--| FIXME According to LarryL, if l_item.is_displayed is False, then the toolbar is Void, this appears to not be the case in
-						--| some circumstances so the protection has been added.
-						drawer.start_draw (l_item.rectangle)
-						redraw_item (l_item)
-						drawer.end_draw
+			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).			
+			-- Otherwise it will cause bug#12549.
+			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
+
+				if a_button = {EV_POINTER_CONSTANTS}.left then
+					disable_capture
+					internal_pointer_pressed := False
+					from
+						l_items := items
+						l_items.start
+					until
+						l_items.after
+					loop
+						l_item := l_items.item
+						l_item.on_pointer_release (a_x, a_y)
+						if l_item.is_displayed and then l_item.is_need_redraw and then l_item.tool_bar /= Void and then not l_item.tool_bar.is_destroyed then
+							--| FIXME According to LarryL, if l_item.is_displayed is False, then the toolbar is Void, this appears to not be the case in
+							--| some circumstances so the protection has been added.
+							drawer.start_draw (l_item.rectangle)
+							redraw_item (l_item)
+							drawer.end_draw
+						end
+						l_items.forth
 					end
-					l_items.forth
 				end
 			end
 		end

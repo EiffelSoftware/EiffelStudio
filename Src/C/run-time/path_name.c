@@ -212,7 +212,7 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER *p)
 
 		/* Test to see if `p' is a valid file name (no directory part) */
 	size_t len;
-	char *s, valid [] = "_^$~!#%&-{}@'`()";
+	char *s;
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 

@@ -1763,7 +1763,7 @@ rt_public void exclear(void)
 	 * "New level" pseudo-vector.
 	 */
 
-	while (trace = extop(&eif_trace)) {
+	while ((trace = extop(&eif_trace))) {
 		if (trace->ex_type == EN_ILVL) {
 			echlvl--;	/* Decrease exception level */
 		}

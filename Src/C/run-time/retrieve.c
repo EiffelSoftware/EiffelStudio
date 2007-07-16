@@ -4083,7 +4083,7 @@ rt_public size_t retrieve_read_with_compression (void)
 	char* dcmps_out_ptr = (char *)0;
 	char* pdcmps_in_size = (char *)0;
 	int dcmps_in_size = 0;
-	int dcmps_out_size = 0;
+	unsigned long dcmps_out_size = 0;
 	char cmps_head [EIF_CMPS_HEAD_SIZE];
 	char* ptr = (char *)0;
 	int read_size = 0;
@@ -4119,7 +4119,7 @@ rt_public size_t retrieve_read_with_compression (void)
 					(unsigned long*)&dcmps_out_size);
 	
 	CHECK("dcmps_out_size_positive", dcmps_out_size > 0);
-	return dcmps_out_size;
+	return (size_t) dcmps_out_size;
 }
 
 /*

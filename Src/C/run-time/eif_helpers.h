@@ -65,12 +65,6 @@ rt_private EIF_REAL_64 eif_uint64_to_real64 (EIF_NATURAL_64 v) {
 #endif
 }
 
-/* NaN test macros */
-#define EIF_IS_NAN_REAL_32(x) ( ((*((EIF_NATURAL_32 *)(&(x))) & 0x7F800000)==0x7F800000) && \
-	                             (*((EIF_NATURAL_32 *)(&(x))) & 0x007FFFFF) )
-#define EIF_IS_NAN_REAL_64(x) ( ((*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) && \
-	                             (*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x000FFFFFFFFFFFFF)) )
-
 /* Absolute value computation */
 rt_private EIF_INTEGER_8 eif_abs_int8 (EIF_INTEGER_8 i) {
 	return (i > 0 ? i : -i);
@@ -207,60 +201,75 @@ rt_private EIF_INTEGER_32 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 
 /* INF and NaN tests */
 rt_private EIF_BOOLEAN eif_is_inf_real_32 (EIF_REAL_32 x) {
-	return ( ((*((EIF_NATURAL_32 *)(&(x))) & 0x7F800000)==0x7F800000) &&
-             ((*((EIF_NATURAL_32 *)(&(x))) & 0x007FFFFF)==0x00000000) );
+	EIF_REAL_32 *l_x = &x;
+	return ( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7F800000)==0x7F800000) &&
+             ((*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF)==0x00000000) );
 }
 rt_private EIF_BOOLEAN eif_is_inf_real_64 (EIF_REAL_64 x) {
-	return ( ((*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) &&
-             ((*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x000FFFFFFFFFFFFF))==RTU64C(0x0000000000000000)) );
+	EIF_REAL_64 *l_x = &x;
+	return ( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) &&
+             ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF))==RTU64C(0x0000000000000000)) );
 }
 rt_private EIF_BOOLEAN eif_is_nan_real_32 (EIF_REAL_32 x) {
-	return EIF_IS_NAN_REAL_32 (x);
+	EIF_REAL_32 *l_x = &x;
+	return( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7F800000)==0x7F800000) &&
+	         (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
 }
+
 rt_private EIF_BOOLEAN eif_is_nan_real_64 (EIF_REAL_64 x) {
-	return EIF_IS_NAN_REAL_64 (x);
+	EIF_REAL_64 *l_x = &x;
+	return ( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) &&
+	          (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
 }
 rt_private EIF_BOOLEAN eif_is_quiet_nan_real_32 (EIF_REAL_32 x) {
-	return ( ((*((EIF_NATURAL_32 *)(&(x))) & 0x7FC00000)==0x7FC00000) &&
-              (*((EIF_NATURAL_32 *)(&(x))) & 0x007FFFFF) );
+	EIF_REAL_32 *l_x = &x;
+	return ( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7FC00000)==0x7FC00000) &&
+              (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
 }
 rt_private EIF_BOOLEAN eif_is_quiet_nan_real_64 (EIF_REAL_64 x) {
-	return ( ((*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF8000000000000)) &&
-              (*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x000FFFFFFFFFFFFF)) );
+	EIF_REAL_64 *l_x = &x;
+	return ( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF8000000000000)) &&
+              (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
 }
 rt_private EIF_BOOLEAN eif_is_signaling_nan_real_32 (EIF_REAL_32 x) {
-	return ( ((*((EIF_NATURAL_32 *)(&(x))) & 0x7FC00000)==0x7F800000) &&
-	          (*((EIF_NATURAL_32 *)(&(x))) & 0x007FFFFF) );
+	EIF_REAL_32 *l_x = &x;
+	return ( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7FC00000)==0x7F800000) &&
+	          (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
 }
 rt_private EIF_BOOLEAN eif_is_signaling_nan_real_64 (EIF_REAL_64 x) {
-	return ( ((*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF0000000000000)) &&
-              (*((EIF_NATURAL_64 *)(&(x))) & RTU64C(0x000FFFFFFFFFFFFF)) );
+	EIF_REAL_64 *l_x = &x;
+	return ( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF0000000000000)) &&
+              (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
 }
 
 /* Floating point is_equal computation */
 rt_private EIF_BOOLEAN eif_fpeq_real_32 (EIF_REAL_32 i, EIF_REAL_32 j) {
-	return (EIF_IS_NAN_REAL_32(i) ? EIF_IS_NAN_REAL_32(j) : i == j);
+	return (eif_is_nan_real_32(i) ? eif_is_nan_real_32(j) : i == j);
 }
 rt_private EIF_BOOLEAN eif_fpeq_real_64 (EIF_REAL_64 i, EIF_REAL_64 j) {
-	return (EIF_IS_NAN_REAL_64(i) ? EIF_IS_NAN_REAL_64(j) : i == j);
+	return (eif_is_nan_real_64(i) ? eif_is_nan_real_64(j) : i == j);
 }
 
 /* NaN constants */
 rt_private EIF_REAL_32 eif_signaling_nan_real_32 () {
 	EIF_NATURAL_32 s_nan = 0x7FA00000;
-	return * ((EIF_REAL_32 *) &s_nan);
+	EIF_NATURAL_32 *l_s_nan = &s_nan;
+	return * ((EIF_REAL_32 *) l_s_nan);
 }
 rt_private EIF_REAL_64 eif_signaling_nan_real_64 () {
 	EIF_NATURAL_64 s_nan = RTU64C(0x7FF4000000000000);
-	return * ((EIF_REAL_64 *) &s_nan);
+	EIF_NATURAL_64 *l_s_nan = &s_nan;
+	return * ((EIF_REAL_64 *) l_s_nan);
 }
 rt_private EIF_REAL_32 eif_quiet_nan_real_32 () {
 	EIF_NATURAL_32 q_nan = 0x7FC00000;
-	return * ((EIF_REAL_32 *) &q_nan);
+	EIF_NATURAL_32 *l_q_nan = &q_nan;
+	return * ((EIF_REAL_32 *) l_q_nan);
 }
 rt_private EIF_REAL_64 eif_quiet_nan_real_64 () {
 	EIF_NATURAL_64 q_nan = RTU64C(0x7FF8000000000000);
-	return * ((EIF_REAL_64 *) &q_nan);
+	EIF_NATURAL_64 *l_q_nan = &q_nan;
+	return * ((EIF_REAL_64 *) l_q_nan);
 }
 
 #ifdef __cplusplus

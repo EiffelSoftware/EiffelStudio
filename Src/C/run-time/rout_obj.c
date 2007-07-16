@@ -419,7 +419,6 @@ rt_public void rout_obj_call_function_dynamic (
 	EIF_TYPED_ELEMENT* open_args, int open_count, 
 	EIF_REFERENCE open_map, void* res)
 {
-	EIF_GET_CONTEXT
 	struct item* it = 0;
 
 	rout_obj_call_procedure_dynamic (stype_id, feature_id, is_precompiled, is_basic_type, is_inline_agent,

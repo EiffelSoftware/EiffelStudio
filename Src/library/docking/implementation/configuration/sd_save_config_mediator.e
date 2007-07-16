@@ -481,6 +481,7 @@ feature {NONE} -- Implementation
 					l_tool_bars.after
 				loop
 					l_zone := l_tool_bars.item_for_iteration
+					l_zone.assistant.save_items_layout (Void)
 					l_row_data.extend ([l_zone.content.unique_title, l_zone.position, l_zone.assistant.last_state])
 					l_tool_bars.forth
 				end

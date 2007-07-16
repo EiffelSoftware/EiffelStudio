@@ -82,9 +82,9 @@ extern unsigned int TIMEOUT;	/* Time to let the child initialize */
 extern void dexit (int);
 #define SPAWN_CHILD_FAILED(i) dexit(i);
 
+#ifndef EIF_WINDOWS
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-#ifndef EIF_WINDOWS
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 #endif
 
@@ -695,9 +695,9 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	 */
 
 #ifdef EIF_WINDOWS
-	sprintf (event_str, "eif_event_r%x_%s", piProcInfo.dwProcessId, id);
+	sprintf (event_str, "eif_event_r%x_%s", (unsigned int) piProcInfo.dwProcessId, id);
 	child_event_r = CreateSemaphore (NULL, 0, 32767, event_str);
-	sprintf (event_str, "eif_event_w%x_%s", piProcInfo.dwProcessId, id);
+	sprintf (event_str, "eif_event_w%x_%s", (unsigned int) piProcInfo.dwProcessId, id);
 	child_event_w = CreateSemaphore (NULL, 0, 32767, event_str);
 #ifdef USE_ADD_LOG
 	add_log(12, "Opened Semaphores as %d %d",child_event_r,child_event_w);

@@ -46,12 +46,24 @@ feature -- Basic operations
 			create l_cmd.make (100)
 			l_cmd.append ("ec -short -filter com ")
 			l_cmd.append (environment.eiffel_class_name)
-			l_cmd.append (" -config ")
+			l_cmd.append (" -config %"")
 			l_cmd.append (environment.source_ecf_file_name)
-			l_cmd.append (" -target ")
-			l_cmd.append (environment.eiffel_target)
-			l_cmd.append (" -project_path ")
-			l_cmd.append (environment.eiffel_project_name)
+			l_cmd.append_character ('%"')
+
+			if environment.eiffel_target /= Void and then not environment.eiffel_target.is_empty then
+				l_cmd.append (" -target %"")
+				l_cmd.append (environment.eiffel_target)
+				l_cmd.append_character ('%"')
+			end
+
+			if environment.eiffel_project_path /= Void and then not environment.eiffel_project_path.is_empty then
+				l_cmd.append (" -project_path %"")
+				l_cmd.append (environment.eiffel_project_path)
+				l_cmd.append_character ('%"')
+			else
+				l_cmd.append (" -use_settings")
+			end
+
 			create l_file.make (Output_file_name)
 			if l_file.exists then
 				l_file.delete

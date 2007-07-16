@@ -146,6 +146,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_parent_window: EV_WINDOW
+			l_assit: SD_TOOL_BAR_ZONE_ASSISTANT
 		do
 			if parent_tool_bar.customize_dialog /= Void and then not parent_tool_bar.customize_dialog.is_destroyed then
 				parent_tool_bar.customize_dialog.set_focus
@@ -164,14 +165,13 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 				l_dialog.customize_toolbar (l_parent_window, True, True, l_items)
 				parent_tool_bar.set_customize_dialog (Void)
 				if l_dialog.valid_data then
-					save_items_layout (l_dialog.final_toolbar)
-
-					parent_tool_bar.assistant.open_items_layout
+					l_assit := parent_tool_bar.assistant
+					l_assit.save_items_layout (l_dialog.final_toolbar)
+					l_assit.open_items_layout
 
 					if not parent_tool_bar.is_floating then
 						parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
 					end
-					save_items_layout (l_dialog.final_toolbar)
 					parent_tool_bar.compute_minmum_size
 				end
 			end

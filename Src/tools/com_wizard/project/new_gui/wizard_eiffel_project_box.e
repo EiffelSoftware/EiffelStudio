@@ -51,7 +51,7 @@ feature -- Basic Operations
 		do
 			l_text := epr_box.value
 			if is_valid_file (l_text) then
-				environment.set_eiffel_project (l_text)
+				environment.set_eiffel_project_path (l_text)
 				environment.set_project_name (l_text.substring (l_text.last_index_of ('\', l_text.count) + 1, l_text.count))
 			end
 			l_text := ecf_file_box.value
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			if is_valid_folder (a_project_file) then
 				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
-				environment.set_eiffel_project (a_project_file)
+				environment.set_eiffel_project_path (a_project_file)
 				environment.set_project_name (a_project_file.substring (a_project_file.last_index_of ('\', a_project_file.count) + 1, a_project_file.count))
 			else
 				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)

@@ -362,8 +362,9 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (100)
 			Result.append (eiffel_layout.ec_command_name)
-			Result.append (" -batch -clean -c_compile -config ")
+			Result.append (" -batch -clean -c_compile -config %"")
 			Result.append (environment.ecf_file_name)
+			Result.append ("%"")
 		end
 
 	user_def_file_name: STRING is

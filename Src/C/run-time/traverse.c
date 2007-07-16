@@ -287,10 +287,11 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 		 */
 
 		if (p_accounting & TR_MAP) {
+			struct mstack *l_stack = &map_stack;
 			RT_GC_PROTECT(object);		/* Protection against GC */
 			new = eclone(object);
 			mapped = hrecord(new);
-			if (-1 == epush((struct stack *) &map_stack, (char *) mapped))
+			if (-1 == epush((struct stack *) l_stack, (char *) mapped))
 				eraise("map table recording", EN_MEM);
 			zone = HEADER(object);			/* Object may have moved */
 			flags = zone->ov_flags;			/* Flags may have changed */

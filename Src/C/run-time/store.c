@@ -2156,9 +2156,11 @@ void store_write(size_t cmps_in_size)
 	RT_GET_CONTEXT
 	char* cmps_in_ptr = general_buffer;
 	char* cmps_out_ptr = cmps_general_buffer;
-	size_t cmps_out_size = cmp_buffer_size;
+	unsigned long cmps_out_size = (unsigned long) cmp_buffer_size;
 	int number_left;
 	int number_written;
+
+	REQUIRE("cmp_buffer_size not too big", cmp_buffer_size < 0x7FFFFFFF);
 
 	eif_compress ((unsigned char*)cmps_in_ptr,
 					(unsigned long)cmps_in_size,

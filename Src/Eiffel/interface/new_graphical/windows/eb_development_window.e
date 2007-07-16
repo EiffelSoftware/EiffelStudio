@@ -971,7 +971,7 @@ feature -- Window management
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
 			l_tool: EB_TOOL
-			l_tool_bar_content: SD_TOOL_BAR_CONTENT
+			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_no_locked_window: BOOLEAN
 		do
 			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
@@ -981,39 +981,61 @@ feature -- Window management
 			close_all_tools
 
 			-- Right bottom tools
-			l_tool := tools.output_tool
+			l_tool := tools.c_output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			l_tool := tools.diagram_tool
-			l_tool.content.set_tab_with (tools.output_tool.content, False)
-			l_tool := tools.class_tool
-			l_tool.content.set_tab_with (tools.diagram_tool.content, False)
+
+			l_tool := tools.warnings_tool
+			l_tool.content.set_tab_with (tools.c_output_tool.content, True)
+
+			l_tool := tools.errors_tool
+			l_tool.content.set_tab_with (tools.warnings_tool.content, True)
+
+			l_tool := tools.output_tool
+			l_tool.content.set_tab_with (tools.errors_tool.content, True)
+
 			l_tool := tools.features_relation_tool
-			l_tool.content.set_tab_with (tools.class_tool.content, False)
+			l_tool.content.set_tab_with (tools.output_tool.content, True)
+
+			l_tool := tools.class_tool
+			l_tool.content.set_tab_with (tools.features_relation_tool.content, True)
+
+			l_tool.content.set_split_proportion (0.6)
+
+			-- Right tools
+			l_tool := tools.favorites_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.right)
+			l_tool := tools.features_tool
+			l_tool.content.set_tab_with (tools.favorites_tool.content, True)
+			l_tool := tools.cluster_tool
+			l_tool.content.set_tab_with (tools.features_tool.content, True)
+			l_tool.content.set_split_proportion (0.73)
+
+			-- Auto hide tools
+			l_tool := tools.diagram_tool
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				-- Docking library will add a feature to set auto hide tab stub order directly in the future. -- Larry 2007/7/13
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
 
 			l_tool := tools.dependency_tool
-			l_tool.content.set_tab_with (tools.features_relation_tool.content, False)
+			if l_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
 
 			l_tool := tools.metric_tool
 			l_tool.content.set_tab_with (tools.dependency_tool.content, False)
-			l_tool := tools.external_output_tool
-			l_tool.content.set_tab_with (tools.metric_tool.content, False)
-			l_tool := tools.c_output_tool
-			l_tool.content.set_tab_with (tools.external_output_tool.content, False)
-			l_tool := tools.errors_tool
-			l_tool.content.set_tab_with (tools.c_output_tool.content, False)
-			l_tool := tools.warnings_tool
-			l_tool.content.set_tab_with (tools.errors_tool.content, False)
-			l_tool.content.set_split_proportion (0.7)
-
-			-- Left tools
-			l_tool := tools.features_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.left)
-			l_tool := tools.cluster_tool
-			l_tool.content.set_relative (tools.features_tool.content, {SD_ENUMERATION}.bottom)
-			l_tool.content.set_split_proportion (0.2)
 
 			-- Tool bars
 			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)
+			l_tool_bar_content_2 := l_tool_bar_content
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 
@@ -1023,11 +1045,13 @@ feature -- Window management
 
 			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
 			check not_void: l_tool_bar_content /= Void end
-			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+			l_tool_bar_content.set_top_with (l_tool_bar_content_2)
 
 			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_refactory_toolbar)
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+			-- We first call `set_top' because we want set a default location for the tool bar.
+			l_tool_bar_content.hide
 
 			if l_no_locked_window then
 				window.unlock_update

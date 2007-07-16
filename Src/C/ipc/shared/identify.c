@@ -109,7 +109,7 @@ rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_ev
 	ewbout = uu_handles [0];
 	ewbin = uu_handles [1];
 
-	sprintf (event_str, "eif_event_w%x_%s", GetCurrentProcessId(), id);
+	sprintf (event_str, "eif_event_w%x_%s", (unsigned int) GetCurrentProcessId(), id);
 	event_r = NULL;
 
 /*      NT 3.51 is really fast - at this point we know we were launched by ebench.
@@ -126,7 +126,7 @@ rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_ev
 #endif
 		return -1;
 	}
-	sprintf (event_str, "eif_event_r%x_%s", GetCurrentProcessId(), id);
+	sprintf (event_str, "eif_event_r%x_%s", (unsigned int) GetCurrentProcessId(), id);
 	event_w = OpenSemaphore (SEMAPHORE_ALL_ACCESS, FALSE, event_str);
 	if (event_w == NULL) {
 #ifdef USE_ADD_LOG

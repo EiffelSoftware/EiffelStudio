@@ -221,23 +221,26 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			not_void: a_content /= Void
 			main_window_not_has:
 		local
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar_row: SD_TOOL_BAR_ROW
 			l_container: EV_CONTAINER
 		do
-			a_content.set_manager (Current)
-			create l_tool_bar_zone.make (False, docking_manager, a_content.is_menu_bar)
-			l_tool_bar_zone.extend (a_content)
-
 			create l_tool_bar_row.make (docking_manager, False)
-			l_tool_bar_row.set_ignore_resize (True)
-			l_tool_bar_row.extend (l_tool_bar_zone)
-			l_tool_bar_row.record_state
-			l_tool_bar_row.set_ignore_resize (False)
-
 			l_container := tool_bar_container (a_direction)
 			l_container.extend (l_tool_bar_row)
-			docking_manager.command.resize (True)
+			set_top_imp (a_content, l_tool_bar_row)
+		end
+
+	set_top_with (a_source_content, a_target_content: SD_TOOL_BAR_CONTENT) is
+			-- Set `a_source_content' docking at same row/column of `a_target_content'.
+		require
+			not_void: a_source_content /= Void and a_target_content /= Void
+			docking: a_target_content.is_docking
+			not_floating: not a_target_content.is_floating
+		local
+			l_tool_bar_row: SD_TOOL_BAR_ROW
+		do
+			l_tool_bar_row := a_target_content.zone.row
+			set_top_imp (a_source_content, l_tool_bar_row)
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
@@ -534,6 +537,26 @@ feature {NONE} -- Implementation
 				contents.forth
 			end
 
+		end
+
+	set_top_imp (a_content: SD_TOOL_BAR_CONTENT; a_row: SD_TOOL_BAR_ROW) is
+			-- Common part of `set_top' and `set_top_with'.
+		require
+			not_void: a_content /= Void
+			not_void: a_row /= Void
+		local
+			l_tool_bar_zone: SD_TOOL_BAR_ZONE
+		do
+			a_content.set_manager (Current)
+			create l_tool_bar_zone.make (False, docking_manager, a_content.is_menu_bar)
+			l_tool_bar_zone.extend (a_content)
+
+			a_row.set_ignore_resize (True)
+			a_row.extend (l_tool_bar_zone)
+			a_row.record_state
+			a_row.set_ignore_resize (False)
+
+			docking_manager.command.resize (True)
 		end
 
 	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]

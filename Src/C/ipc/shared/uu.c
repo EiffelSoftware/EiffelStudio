@@ -46,7 +46,7 @@
 #include "windows.h"
 #include "uu.h"
 
-#define ENC(c) (((c) & 077) + ' ')
+#define ENC(c) (char)(((c) & 0x3F) + ' ')
 
 /*
 	uuencode a string `s' and put the result in `Result'
@@ -55,13 +55,13 @@
 void uuencode (char s[], char *Result)
 {
 	/* s is 3 characters to be uuencode */
-	*Result = (char) (ENC(s[0] >> 2));
-	*(Result+1) = (char) (ENC(s[0] << 4 & 060 | s[1] >> 4 & 017));
-	*(Result+2) = (char) (ENC(s[1] << 2 & 074 | s[2] >> 6 & 03));
-	*(Result+3) = (char) (ENC(s[2] & 077));
+	*Result = ENC(s[0] >> 2);
+	*(Result+1) = ENC(((s[0] << 4) & 0x30) | ((s[1] >> 4) & 0x0F));
+	*(Result+2) = ENC(((s[1] << 2) & 0x3C) | ((s[2] >> 6) & 0x03));
+	*(Result+3) = ENC(s[2] & 0x3F);
 }
 
-#define DEC(c) (((c) - ' ') & 077)
+#define DEC(c) (((c) - ' ') & 0x3F)
 
 
 /*
@@ -71,9 +71,9 @@ void uuencode (char s[], char *Result)
 void uudecode (char s[], char *Result)
 {
 	/* s is 4 characters to be uudecoded */
-	*Result = (char) (DEC(s[0]) << 2 | DEC(s[1]) >> 4);
-	*(Result+1) = (char) (DEC(s[1]) << 4 | DEC(s[2]) >> 2);
-	*(Result+2) = (char) (DEC(s[2]) << 6 | DEC(s[3]));
+	*Result = (char) ((DEC(s[0]) << 2) | (DEC(s[1]) >> 4));
+	*(Result+1) = (char) ((DEC(s[1]) << 4) | (DEC(s[2]) >> 2));
+	*(Result+2) = (char) ((DEC(s[2]) << 6) | DEC(s[3]));
 }
 
 

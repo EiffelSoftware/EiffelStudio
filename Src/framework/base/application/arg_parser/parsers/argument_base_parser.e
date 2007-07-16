@@ -760,7 +760,7 @@ feature {NONE} -- Validation
 			from l_switches.start until l_switches.after loop
 				l_succ := True
 				l_switch := l_switches.item
-				l_options := options_of_name (l_switch.name)
+				l_options := options_of_name (l_switch.id)
 
 					-- Check optional
 				if (l_switch_groups = Void and l_switch_appurtenances = Void)and then not l_switch.optional and l_options.is_empty then

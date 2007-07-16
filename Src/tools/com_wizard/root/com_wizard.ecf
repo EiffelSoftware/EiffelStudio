@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
 	<target name="com_wizard">
 		<root class="WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
@@ -14,6 +15,7 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="True"/>
 		<external_object location="htmlhelp.lib"/>
+		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
 		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf"/>
 		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
@@ -24,11 +26,6 @@
 		<library name="vision2" location="$EIFFEL_SRC\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\vision2_extension.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\" readonly="true" recursive="true">
-			<file_rule>
-				<exclude>/examples$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="eiffel_to_idl" location="$EIFFEL_SRC\tools\com_wizard\eiffeltoidl\" recursive="true"/>
 		<cluster name="help_engine" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\help\" recursive="true">
 			<file_rule>
@@ -43,15 +40,23 @@
 			</file_rule>
 		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\com_wizard\root\"/>
-		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\" recursive="true"/>
+		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\" recursive="true">
+			<file_rule>
+				<exclude>argument_parser.e</exclude>
+				<exclude>borland_setup.e</exclude>
+				<exclude>finish_freezing.e</exclude>
+				<exclude>makefile_translator.e</exclude>
+				<exclude>path_converter.e</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="wizard" location="$EIFFEL_SRC\tools\com_wizard\project\" recursive="true">
 			<file_rule>
 				<exclude>/new_gui$</exclude>
 			</file_rule>
-			<visible class="ECOM_CUST_DATA_ITEM"/>
-			<visible class="ECOM_DLL_ENTRY"/>
-			<visible class="ECOM_TYPE_LIB_FIND_NAME_RESULT"/>
 			<visible class="ECOM_DOCUMENTATION"/>
+			<visible class="ECOM_TYPE_LIB_FIND_NAME_RESULT"/>
+			<visible class="ECOM_DLL_ENTRY"/>
+			<visible class="ECOM_CUST_DATA_ITEM"/>
 			<visible class="ECOM_SAFE_ARRAY_BOUND" feature="make_by_pointer"/>
 		</cluster>
 	</target>

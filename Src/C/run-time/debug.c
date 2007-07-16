@@ -244,9 +244,6 @@ rt_public void dmove(int offset);					/* Move inside calling context stack */
 rt_private void call_down(int level);				/* Move cursor downwards */
 rt_private void call_up(int level);					/* Move cursor upwards */
 
-/* Updating once supermelted routines */
-rt_private void write_long(char *where, long int value);
-
 
 /*
 doc:	<attribute name="breakpoint_count" return_type="int" export="private">
@@ -1746,25 +1743,6 @@ rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register 
 
 	return opop();				/* Return the result of the once function */
 								/* and remove it from the operational stack */
-}
-
-rt_private void write_long(char *where, long int value)
-{
-	/* Routine taken from `update.c' and this one should be modified in relation
-	 * to the content of `update.c' */
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(long)];
-		long value;
-	} xlong;
-	char *p = (char *) &xlong;
-	int i;
-
-	xlong.value = value;
-
-	for (i = 0; i < sizeof(long); i++)
-		where [i] = *p++;
 }
 
 /************************************************************************ 

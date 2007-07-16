@@ -681,10 +681,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 */
 
 #ifdef EIF_WINDOWS
-	static char module_name [255] = {0};
-#endif
-
-#ifdef EIF_WINDOWS
 	set_windows_exception_filter();
 #endif
 

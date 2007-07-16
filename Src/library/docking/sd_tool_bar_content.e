@@ -204,6 +204,30 @@ feature -- Command
 			manager.set_top (Current, a_direction)
 		end
 
+	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT) is
+			-- Set Current dock at same row/column with `a_other_content'.
+		require
+			not_void: a_target_content /= Void
+			added: is_added
+			target_docking: a_target_content.is_docking
+		do
+			if zone /= Void then
+				-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
+				zone.change_direction (True)
+			end
+			destroy_container
+
+			manager.set_top_with (Current, a_target_content)
+		end
+
+	refresh is
+			-- Refresh tool bar if items visible changed.
+		do
+			if zone /= Void then
+				zone.assistant.refresh_items_visible
+			end
+		end
+
 feature -- Query
 
 	unique_title: STRING_GENERAL
@@ -426,6 +450,20 @@ feature -- Query
 
 	is_visible: BOOLEAN
 			-- If Current visible?
+
+	is_docking: BOOLEAN
+			-- If current docking at four side of main container?
+		do
+			Result := zone /= Void and then zone.row /= Void
+		end
+
+	is_floating: BOOLEAN
+			-- If current floating?
+		do
+			if zone /= Void then
+				Result := zone.is_floating
+			end
+		end
 
 	is_menu_bar: BOOLEAN is
 			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM.

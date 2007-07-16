@@ -220,7 +220,6 @@ int pthread_cond_broadcast (pthread_cond_t *cv)
     /* We are broadcasting, even if there     */
     /* is just one waiter...                  */
     {
-      int result = 0;
       /* Record that we are broadcasting.     */
       /* This helps optimize cond_wait().     */
       cv->was_broadcast_ = 1;

@@ -40,7 +40,7 @@ debug=''
 #debug='-Zi'
 
 link_flags=''
-warning_level='-W3 -Wp64 -D_CRT_SECURE_NO_DEPRECATE'
+warning_level='-W3 -Wp64 -D_CRT_SECURE_NO_DEPRECATE -wd4996'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc'
 #
 cc='cl'

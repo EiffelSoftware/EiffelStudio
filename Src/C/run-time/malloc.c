@@ -3363,7 +3363,7 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c)
 			/* Compute new list number for coalesced block */
 			old_i = i;					/* Save old index */
 			r = flags & B_SIZE;			/* Size of coalesced block */
-			if (max_size < (int) r)
+			if (max_size < r)
 				max_size = r;			/* Update maximum size yielded */
 			i = HLIST_INDEX(r);
 

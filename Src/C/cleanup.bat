@@ -1,0 +1,23 @@
+@echo off
+del *.err > cleanup_output.txt 2>&1
+del *.tr2 > cleanup_output.txt 2>&1
+del *.ob? > cleanup_output.txt 2>&1
+del *.l?b > cleanup_output.txt 2>&1
+del *.l?k > cleanup_output.txt 2>&1
+del *.ex? > cleanup_output.txt 2>&1
+del *.res > cleanup_output.txt 2>&1
+del *.map > cleanup_output.txt 2>&1
+del *.$$$ > cleanup_output.txt 2>&1
+del *.bak > cleanup_output.txt 2>&1
+del *.zip > cleanup_output.txt 2>&1
+del *.pdb > cleanup_output.txt 2>&1
+del *.pch > cleanup_output.txt 2>&1
+del *.dll > cleanup_output.txt 2>&1
+del *.tds > cleanup_output.txt 2>&1
+del *.a > cleanup_output.txt 2>&1
+del *.o > cleanup_output.txt 2>&1
+del *.il? > cleanup_output.txt 2>&1
+del config.sh > cleanup_output.txt 2>&1
+del Makefile > cleanup_output.txt 2>&1
+del make.bat > cleanup_output.txt 2>&1
+if exist cleanup_output.txt del cleanup_output.txt

@@ -69,7 +69,6 @@ FINAL_OBJECTS = \
 	$(INDIR)\gen_conf.$obj \
 	$(INDIR)\eif_type_id.$obj \
 	$(INDIR)\rout_obj.$obj \
-	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
 	$(TOP)\console\winconsole.$lib
 
@@ -178,7 +177,6 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)\MTgen_conf.$obj \
 	$(INDIR)\MTeif_type_id.$obj \
 	$(INDIR)\MTrout_obj.$obj \
-	$(TOP)\ipc\shared\MTnetworku.$obj \
 	$(TOP)\ipc\shared\MTshword.$obj \
 	$(TOP)\console\mtwinconsole.$lib
 

@@ -50,7 +50,6 @@
 #include "rt_debug.h"
 #include "eif_except.h"
 #include "server.h"
-#include "rt_interp.h"
 #include "rt_wbench.h"
 #include "rt_malloc.h"
 #include "select.h"
@@ -202,7 +201,10 @@ static int curr_modify = NO_CURRMODIF;
 		sp_upper = arg_3;
 		break;
 	case METAMORPHOSE:					/* Converts the top-level item on the operational stack to a reference type */
-		metamorphose_top();
+		{
+			RT_GET_CONTEXT
+			metamorphose_top(op_stack.st_cur, op_stack.st_top);
+		}
 		break;
 	case CHANGE_THREAD:					/* Thread id used to precise current thread in debugger */
 		dthread_id = (rt_uint_ptr) arg_1;

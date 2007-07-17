@@ -3,7 +3,7 @@
 #
 mingwecdbgd='ecdbgd'
 make='mingw32-make.exe'
-del='rm -f'
+del='cmd.exe /c del'
 #
 output_exe_cmd='-o'
 output_cmd='-o'
@@ -30,6 +30,7 @@ output_libraries='standard mtstandard'
 #Link Lines in non debug mode:
 #-----------------------------
 link_line='ar rc $@ $^'
+alib_line='ld -r -o $@ $^'
 #
 #
 optimize='-O3'

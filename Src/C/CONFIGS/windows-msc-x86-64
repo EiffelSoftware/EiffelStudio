@@ -32,6 +32,7 @@ output_libraries='standard mtstandard'
 #Link Lines in non debug mode:
 #-----------------------------
 link_line='lib -OUT:$@ $** $link_flags'
+alib_line='lib -OUT:$@ $** $link_flags'
 #
 #
 optimize='-O2 -GS-'

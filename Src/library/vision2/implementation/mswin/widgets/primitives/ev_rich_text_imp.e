@@ -249,11 +249,9 @@ feature {NONE} -- Initialization
 
 	default_style: INTEGER is
 			-- Default style used to create the control
-			-- (from WEL_RICH_EDIT)
-			-- (export status {NONE})
 		once
 			Result := Ws_visible + Ws_child + Ws_border + Ws_vscroll + Es_savesel +
-				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn + ws_tabstop
+				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn + ws_tabstop + es_nohidesel
 		end
 
 	default_ex_style: INTEGER is

@@ -1736,7 +1736,7 @@ rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register 
 	if (egc_frozen [body_id]) { 
 			/* Frozen feature */
 		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id], 0);		/* Call pattern */
+		(pattern[pid].toc)(egc_frozen[body_id]);		/* Call pattern */
 	} else
 		xinterp(melt[body_id]);
 	IC = OLD_IC;				/* Restore IC back-up */

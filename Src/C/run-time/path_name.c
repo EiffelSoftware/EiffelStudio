@@ -105,6 +105,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
 	strcpy (s, p);
 	c = s + len - 1;
 	last_bslash = 0;
+		/* FIXME: Manu: 07/16/2007: this loop will never terminate because i >= 0 is always true. */
 	for (i = len;i >= 0; i--, c--)
 		if (*c == '\\')
 			if (strlen(c+1) && !eif_is_directory_name_valid (c+1)) {
@@ -284,6 +285,7 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *p)
 		/* FIXME: memory leak */
 	strcpy (s, p);
 	c = s + len -1;
+		/* FIXME: Manu: 07/16/2007: this loop will never terminate because i >= 0 is always true. */
 	for (i = len; i >= 0; i --, c--)
 		if (*c == '\\')
 			{

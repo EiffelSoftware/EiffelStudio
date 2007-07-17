@@ -146,6 +146,8 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_parent_window: EV_WINDOW
+			l_vertical_docking: BOOLEAN
+			l_docking_manager: SD_DOCKING_MANAGER
 			l_assit: SD_TOOL_BAR_ZONE_ASSISTANT
 		do
 			if parent_tool_bar.customize_dialog /= Void and then not parent_tool_bar.customize_dialog.is_destroyed then
@@ -167,11 +169,24 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 				if l_dialog.valid_data then
 					l_assit := parent_tool_bar.assistant
 					l_assit.save_items_layout (l_dialog.final_toolbar)
+
+					l_vertical_docking := parent_tool_bar.content.is_docking and then parent_tool_bar.is_vertical
+					if l_vertical_docking then
+						l_docking_manager := parent_tool_bar.docking_manager
+						l_docking_manager.command.lock_update (Void, True)
+					end
+
 					l_assit.open_items_layout
 
 					if not parent_tool_bar.is_floating then
 						parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
 					end
+					if l_vertical_docking then
+						parent_tool_bar.change_direction (False)
+						l_docking_manager.command.resize (True)
+						l_docking_manager.command.unlock_update
+					end
+					
 					parent_tool_bar.compute_minmum_size
 				end
 			end

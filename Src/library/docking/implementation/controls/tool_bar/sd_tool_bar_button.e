@@ -92,7 +92,7 @@ feature -- Query
 			-- Redefine
 		do
 			Result := {SD_TOOL_BAR}.padding_width
-			if text /= Void then
+			if text /= Void and then not text.is_empty then
 				if tool_bar /= Void then
 					Result := Result + {SD_TOOL_BAR}.padding_width + text_width
 				end

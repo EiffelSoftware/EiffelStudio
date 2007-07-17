@@ -989,7 +989,7 @@ feature {NONE} -- Tree view behavior
 			l_selected_items: like selected_items
 			l_grid_row: EV_GRID_ROW
 		do
-			if is_single_row_selection_enabled then
+			if is_single_row_selection_enabled or is_multiple_row_selection_enabled then
 				Result := selected_rows
 			else
 				l_selected_items := selected_items
@@ -1000,7 +1000,7 @@ feature {NONE} -- Tree view behavior
 					l_selected_items.after
 				loop
 					l_grid_row := l_selected_items.item.row
-					if Result.has (l_grid_row) then
+					if not Result.has (l_grid_row) then
 						Result.extend (l_grid_row)
 					end
 					l_selected_items.forth

@@ -99,12 +99,12 @@ feature {NONE} -- Externals
 			"C [macro %"rebarinfo.h%"]"
 		end
 
-	cwel_rebarinfo_get_cbsize (ptr: POINTER) is
+	cwel_rebarinfo_get_cbsize (ptr: POINTER): INTEGER is
 		external
 			"C [macro %"rebarinfo.h%"]"
 		end
 
-	cwel_rebarinfo_get_himl (ptr: POINTER) is
+	cwel_rebarinfo_get_himl (ptr: POINTER): POINTER is
 		external
 			"C [macro %"rebarinfo.h%"]"
 		end

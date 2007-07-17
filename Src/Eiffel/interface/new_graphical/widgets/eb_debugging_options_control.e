@@ -52,7 +52,6 @@ feature {NONE} -- Initialization
 			parent_not_void: a_parent /= Void
 		do
 			parent_window := a_parent
-			create row_unselected_actions
 			build_interface
 			update
 		end
@@ -70,34 +69,7 @@ feature -- Interface access
 			end
 		end
 
---feature {NONE} -- User options access
---
---	profile_is_new (p: like profile_from_row): BOOLEAN is
---			-- Is this a new profile ?
---			-- i.e: created directly in user options.
---		local
---			l_user_opts: TARGET_USER_OPTIONS
---			l_profs: ARRAYED_LIST [like profile_from_row]
---		do
---			l_user_opts := lace.user_options.target
---			l_profs := l_user_opts.profiles
---			Result := l_profs = Void or else not l_profs.has (p)
---		end
---
---	add_profile_to_user_options (p: like profile_from_row) is
---			-- Add profile `p' directly to the User options data
---		local
---			l_user_opts: TARGET_USER_OPTIONS
---			l_profs: ARRAYED_LIST [like profile_from_row]
---		do
---			l_user_opts := lace.user_options.target
---			l_profs := l_user_opts.profiles
---			if l_profs /= Void then
---				l_profs.extend (p)
---			end
---		end
-
-feature {EB_ARGUMENT_DIALOG} -- Retrieval
+feature {EB_ARGUMENT_DIALOG} -- Storage
 
 	load_dbg_options is
 			-- Retrieve and initialize the arguments from user options.
@@ -161,36 +133,15 @@ feature {EB_ARGUMENT_DIALOG} -- Retrieval
 			set_changed (Void, False)
 		end
 
-	validate is
+	validate_and_store is
 		local
-			l_user_opts: TARGET_USER_OPTIONS
-			l_profs: ARRAYED_LIST [like profile_from_row]
-			sp, p: like profile_from_row
+			l_user_factory: USER_OPTIONS_FACTORY
 		do
-			l_user_opts := lace.user_options.target
-			l_profs := l_user_opts.profiles
-			if l_profs /= Void then
-				sp := selected_profile
-				if sp /= Void and then sp.title /= Void then
-					from
-						l_profs.start
-					until
-						l_profs.after or p /= Void
-					loop
-						p := l_profs.item
-						if
-							p.title /= Void
-							and then p.title.is_case_insensitive_equal (sp.title)
-						then
-							--| Let's consider it as same profile.
-						else
-							p := Void
-						end
-						l_profs.forth
-					end
-				end
-			end
-			l_user_opts.set_last_profile (p)
+				--| Validate (i.e: update selected profile)
+			validate
+				--| And store
+			create l_user_factory
+			l_user_factory.store (lace.user_options)
 		end
 
 	store_dbg_options is
@@ -250,6 +201,8 @@ feature {EB_ARGUMENT_DIALOG} -- Retrieval
 
 			set_changed (Void, False)
 		end
+
+feature -- Query
 
 	selected_profile: like profile_from_row is
 		local
@@ -448,12 +401,10 @@ feature {NONE} -- Grid events
 				r := a_row.parent_row_root
 				check r /= Void end
 
---				r.set_background_color (selected_background_color)
 				if r = a_row then
 					r.set_background_color (profiles_grid.focused_selection_color)
 					r.set_foreground_color (profiles_grid.focused_selection_text_color)
 				end
---				propagate_background_color_on (r, selected_background_color)
 
 				set_row_root_as_selected (True, r)
 
@@ -486,8 +437,6 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	row_unselected_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ROW]]
-
 	on_row_unselected (a_row: EV_GRID_ROW) is
 			-- `a_row' has been unselected
 		local
@@ -503,7 +452,6 @@ feature {NONE} -- Grid events
 						r.set_background_color (profiles_grid.separator_color)
 						r.set_foreground_color (profiles_grid.foreground_color)
 					end
-	--				propagate_background_color_on (r, Void)
 					if r.count > 0 then
 						gi ?= r.item (1)
 						if gi /= Void then
@@ -512,7 +460,6 @@ feature {NONE} -- Grid events
 						end
 					end
 				end
-				row_unselected_actions.call ([a_row])
 				set_row_root_as_selected (True, default_profile_row)
 			end
 		end
@@ -541,11 +488,6 @@ feature -- Status Setting
 			-- Notify change
 		do
 			if has_changed /= b then
---				if b and  then
---					has_changed := p = Void or else not profile_is_new (p)
---				else
---					has_changed := b
---				end
 				has_changed := b
 				if has_changed then
 					apply_button.enable_sensitive
@@ -673,7 +615,6 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 			has_changed: has_changed
 		do
 			store_dbg_options
---			load_dbg_options
 		ensure
 			not_has_changed: not has_changed
 		end
@@ -688,6 +629,44 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 			not_has_changed: not has_changed
 		end
 
+	validate is
+			-- Update the selected profile in user options
+		local
+			l_user_opts: TARGET_USER_OPTIONS
+			l_profs: ARRAYED_LIST [like profile_from_row]
+			old_sp, sp, p: like profile_from_row
+		do
+			l_user_opts := lace.user_options.target
+			old_sp := l_user_opts.last_profile
+			l_profs := l_user_opts.profiles
+			if l_profs /= Void then
+				sp := selected_profile
+				if sp = Void then
+					l_user_opts.set_last_profile (Void) -- Default profile
+				elseif sp.title /= Void then
+					from
+						l_profs.start
+					until
+						l_profs.after or p /= Void
+					loop
+						p := l_profs.item
+						if
+							p.title /= Void
+							and then p.title.is_case_insensitive_equal (sp.title)
+						then
+							--| Let's consider it as same profile.
+						else
+							p := Void
+						end
+						l_profs.forth
+					end
+					if p /= Void then
+						l_user_opts.set_last_profile (p)
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Button Actions
 
 	add_new_profile is
@@ -699,7 +678,6 @@ feature {NONE} -- Button Actions
 			profiles_grid.remove_selection
 			p := [interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, Void, Void, Void]
 			r := added_profile_text_row (p, True)
---			add_profile_to_user_options (p)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
 			end
@@ -721,7 +699,6 @@ feature {NONE} -- Button Actions
 					end
 					p.title := interface_names.m_copy_of (p.title)
 					r := added_profile_text_row (p, True)
---					add_profile_to_user_options (p)
 					if r.is_expandable and then not r.is_expanded then
 						r.expand
 					end
@@ -1387,12 +1364,6 @@ feature {NONE} -- Environment actions
 					end
 					refresh_environ_row	(a_row)
 					change_env_on (env, p)
---					if safe_grid_operation then
---						safe_remove_env_row (a_row)
---					else
---						error_on_env_row (a_row)
-----						row_unselected_actions.extend_kamikaze (agent safe_remove_env_row)
---					end
 				end
 			end
 			validate_env_row (a_row)
@@ -1448,9 +1419,6 @@ feature {NONE} -- Environment actions
 			if r > 1 then
 				g.select_row (r - 1)
 			end
---			if par /= Void and par.parent /= Void then
---				profiles_grid.select_row (par.index)
---			end
 		end
 
 	validate_env_row (a_row: EV_GRID_ROW) is
@@ -1555,40 +1523,6 @@ feature {NONE} -- Implementation
 			)
 			pop.accelerators.extend (acc)
 		end
-
---	set_sensitive_state_on_grid (a_grid: EV_GRID; a_is_sensitive: BOOLEAN) is
---		do
---			if a_is_sensitive then
---				a_grid.enable_sensitive
---				a_grid.set_background_color (stock_colors.color_read_write)
---			else
---				a_grid.disable_sensitive
---				a_grid.set_background_color (stock_colors.Color_read_only)
---			end
---		end
-
---	propagate_background_color_on (a_row: EV_GRID_ROW; a_color: EV_COLOR) is
---		require
---			a_row /= Void
---			a_row.parent /= Void
---		local
---			g: EV_GRID
---			ri, rmax: INTEGER
---		do
---			g := a_row.parent
---			if a_row.subrow_count > 0 then
---				from
---					ri := a_row.index
---					rmax := a_row.index + a_row.subrow_count_recursive
---				until
---					ri > rmax
---				loop
---					check g.row (ri) /= Void end
---					g.row (ri).set_background_color (a_color)
---					ri := ri + 1
---				end
---			end
---		end
 
 invariant
 	parent_not_void: parent_window /= Void

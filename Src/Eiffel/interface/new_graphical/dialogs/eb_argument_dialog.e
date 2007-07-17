@@ -185,11 +185,11 @@ feature {NONE} -- Actions
 				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
 				dlg.set_buttons_and_actions (
 					<<interface_names.b_yes, interface_names.b_no>>,
-					<<agent debugging_options_control.store_dbg_options, Void>>
+					<<agent debugging_options_control.store_dbg_options, agent debugging_options_control.validate_and_store>>
 					)
 				dlg.show_modal_to_window (Current)
 			else
-				debugging_options_control.validate
+				debugging_options_control.validate_and_store
 			end
 			hide
 		end
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 								end (op),
 							agent (a_op: PROCEDURE [ANY, TUPLE])
 								do
-									debugging_options_control.validate
+									debugging_options_control.validate_and_store
 									debugging_options_control.reset_changes
 									a_op.call (Void)
 								end (op),
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 
 				dlg.show_modal_to_window (Current)
 			else
-				debugging_options_control.validate
+				debugging_options_control.validate_and_store
 				op.call (Void)
 			end
 		end

@@ -1,41 +1,44 @@
 --
--- Config.eif for cygwin gcc beta 20.1 or greater
+-- Config.eif for mingw
 --
 
 -- Directory separator
 directory_separator: "/"
 subcommand_separator: " && "
+quick_compilation: True
+smart_checking: False
 
 -- include_path
 include_path: "$(INCLUDE_PATH)"
 
 -- C-compiler
-cc: "gcc"
-cpp: "gcc"
+cc: "c:/apps/mingw/bin/gcc"
+cpp: "c:/apps/mingw/bin/gcc"
 
 -- C-linker
-sharedlink: "gcc"
+sharedlink: "c:/apps/mingw/bin/gcc"
 
 -- optimization flags
 optimize: "-O2"
-wkoptimize: "-O0 -g"
+wkoptimize: "-O0"
 
 -- compiler flags
-ccflags: "-mno-cygwin -DCYGWIN"
-mtccflags: "-mno-cygwin -MT -DCYGWIN -DEIF_THREADS"
-cppflags: "-mno-cygwin -DCYGWIN"
-mtcppflags: "-mno-cygwin -MT -DCYGWIN -DEIF_THREADS"
-shared_flags: "-mno-cygwin -DCYGWIN -DEIF_USE_DLL"
+ccflags: "-D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+mtccflags: "-D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+mtcppflags: "-D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS)"
+shared_flags: "-DEIF_USE_DLL"
+il_flags: "-DEIF_IL_DLL"
 
 large: ""
 
 -- linker flags
-ar: ""
-ld: "ld"
-ldflags: "-mno-cygwin"
-mtldflags: "-mno-cygwin -NODEFAULTLIB:libc"
-console_flags: ""
-windows_flags: ""
+ar: "c:/apps/mingw/bin/ar"
+ld: "c:/apps/mingw/bin/ld"
+ldflags: ""
+mtldflags: ""
+console_flags: "-mconsole"
+windows_flags: "-mwindows"
 ldsharedflags: "-shared"
 mtldsharedflags: "-shared"
 
@@ -51,7 +54,8 @@ shared_suffix: ".so"
 -- libraries
 libs: ""
 mtlibs: ""
-sharedlibs: ""
+sharedlibs: "-luser32 -lwsock32 -ladvapi32 -lgdi32 -lshell32 -lmsimg32 -lcomdlg32 -luuid -lole32 %
+			%-loleaut32 -lcomctl32 -lmpr $(ISE_SHAREDLIBS)"
 
 mkdep: ""
 
@@ -59,24 +63,24 @@ mkdep: ""
 mv: "cp"
 cp: "cp"
 
-ranlib: "echo"
+ranlib: "c:/apps/mingw/bin/ranlib.exe"
 
 -- platform remove command
 rm: "rm -f"
 rmdir: "rd"
 
 -- make program
-make: "make"
+make: "c:/apps/msys/1.0/bin/make.exe"
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -f %%i%""
 dpflags: ""
 
 continuation: "\"
 
-appl_make: "$appl.exe: E1/emain.o $precompile_libs_command $(OBJECTS) $appl.res $(EXTERNALS) $library $sharedlibs%N%
+appl_make: "$appl.exe: E1/emain.o $(PRECOMP_OBJECTS) $(OBJECTS) $appl.res %N%
 %%T$(COMMAND_MAKEFILE)%N%
 %%T$(RM) $@%N%
-%%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $sharedlibs $precompile_libs_command %
-%$appl.res $(OBJECTS) $(EXTERNALS) $library%N%
+%%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $(PRECOMP_OBJECTS) %
+%$appl.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%N%
 %../../../$appl.rc:%N%
 %%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico ../../../gnu.ico ; fi %N%
@@ -91,7 +95,7 @@ appl_make: "$appl.exe: E1/emain.o $precompile_libs_command $(OBJECTS) $appl.res 
 %%Tif [ -f ../../../*.bmp ] ; then $(MV) ../../../*.bmp . ; fi %N%
 %%Tif [ -f ../../../*.tlb ] ; then $(MV) ../../../*.tlb . ; fi %N%
 %%Tif [ -f ../../../*.h ] ; then $(MV) ../../../*.h . ; fi %N%
-%%Twindres $appl.rc -O coff -o $appl.res%N%
+%%Tc:/apps/mingw/bin/windres $appl.rc -O coff -o $appl.res%N%
 %"
 
 -- precompilation
@@ -127,7 +131,7 @@ precompile: "driver.exe: driver.lnk driver.rc%N%
 %driver.res: driver.rc%N%
 %%Trc -r driver.rc%N%
 %%N%
-%precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
+%precomp.lib: $(OBJECTS)%N%
 %%T$(RM) $@%N%
 %%Tlib -OUT:precomp.lib $(OBJECTS) $(EXTERNALS)%N%
 %%N%
@@ -137,14 +141,16 @@ precompile: "driver.exe: driver.lnk driver.rc%N%
 %%Techo precomp.lib >> $@%N%
 %%Techo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
 %%T@echo UUID.lib OLE32.lib OLEAUT32.lib>> $@%N%
-%$precompile_libs_command%
+%$(PRECOMP_OBJECTS)%
 %%Techo $(EIFLIB) >> $@%N%
 %%Techo driver.res >> $@"
 
 -- cecil
-cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs%N%
-%%T$(RM) $@%N%
-%%Tlib -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
+cecil_make: "$(STATIC_CECIL): $(OBJECTS)%N%
+%%T$(AR) x $(EIFLIB)%N%
+%%T$(AR) rc $(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(PRECOMP_OBJECTS) $(RCECIL)%N%
+%%T$(RANLIB) $(STATIC_CECIL)%N%
+%%T$(RM) $(RCECIL)"
 
 cecil_def: "%
 %DEF_FILE= c_$appl.def %N%
@@ -152,7 +158,7 @@ cecil_def: "%
 %%T$(RM) $@%N%
 %%T@echo LIBRARY c_$appl.dll > $@%N%
 %%T@echo DESCRIPTION %'c_$appl.dll%' >> $@%N%
-%%T@type $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def  >> $@"
+%%T@type $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def >> $@"
 
 cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
 	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"
@@ -168,7 +174,7 @@ all: "all:: "
 intermediate_file_ext: "o"
 
 make_intermediate: "%T$(RM) $@%N%
-%%T$(LD) -r -o $@ $obj"
+%%T$(LD) -r -o $@ $(OBJECTS)%N%T$(CREATE_TEST)"
 
 -- options below are for config internal use
 -- mind the spaces!

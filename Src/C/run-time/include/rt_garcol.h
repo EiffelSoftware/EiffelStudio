@@ -87,7 +87,7 @@ extern "C" {
 #ifdef WORKBENCH
 #define DISP(x,y) call_disp(x,y)
 #else
-#define DISP(x,y) ((void *(*)())Dispose(x))(y)
+#define DISP(x,y) ((void *(*)(EIF_REFERENCE))Dispose(x))(y)
 #endif
 
 #ifdef EIF_THREADS
@@ -169,8 +169,8 @@ extern void st_reset(register struct stack *stk);/* Clean stack */
  * 	FREE_ONCE_INDEXES frees array of once indexes
  */
 #if defined(WORKBENCH) || defined(EIF_THREADS)
-extern void alloc_once_indexes ();
-extern void free_once_indexes ();
+extern void alloc_once_indexes (void);
+extern void free_once_indexes (void);
 #define ALLOC_ONCE_INDEXES	alloc_once_indexes()
 #define FREE_ONCE_INDEXES	free_once_indexes()
 #else
@@ -183,7 +183,7 @@ extern void free_once_indexes ();
  * 	FREE_OMS(a) frees previously allocated array `a'
  */
 #if defined(WORKBENCH) || defined(EIF_THREADS)
-extern EIF_REFERENCE **alloc_oms ();
+extern EIF_REFERENCE **alloc_oms (void);
 extern void free_oms (EIF_REFERENCE **oms_array);
 #define ALLOC_OMS(a)	{a = alloc_oms ();}
 #define FREE_OMS(a)	{free_oms (a); a = NULL;}

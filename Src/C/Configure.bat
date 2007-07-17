@@ -149,29 +149,6 @@ echo cd ..>> make.bat
 call make
 goto end
 :clean
-del cleanup.bat
-echo del *.err >> cleanup.bat
-echo del *.tr2 >> cleanup.bat
-echo del *.ob? >> cleanup.bat
-echo del *.l?b >> cleanup.bat
-echo del *.l?k >> cleanup.bat
-echo del *.ex? >> cleanup.bat
-echo del *.res >> cleanup.bat
-echo del *.map >> cleanup.bat
-echo del *.$$$ >> cleanup.bat
-echo del *.bak >> cleanup.bat
-echo del *.zip >> cleanup.bat
-echo del *.pdb >> cleanup.bat
-echo del *.pch >> cleanup.bat
-echo del *.dll >> cleanup.bat
-echo del *.tds >> cleanup.bat
-echo del *.o >> cleanup.bat
-echo del *.il? >> cleanup.bat
-echo del config.sh >> cleanup.bat
-echo del Makefile >> cleanup.bat
-echo del make.bat >> cleanup.bat
-echo del cleanup.bat >> cleanup.bat
-
 copy cleanup.bat console\
 copy cleanup.bat bench\
 copy cleanup.bat desc\
@@ -186,48 +163,57 @@ if exist run-time\OBJDIR copy cleanup.bat run-time\OBJDIR\
 if exist run-time\LIB copy cleanup.bat run-time\LIB\
 
 cd bench
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\console
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\desc
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\ipc\app
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\daemon
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\ewb
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\shared
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\..\platform
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\idrs
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..\run-time
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 if exist OBJDIR (
 cd OBJDIR
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..
 )
 if exist LIB (
 cd LIB
-call cleanup
+call cleanup.bat
+if exist cleanup.bat del cleanup.bat
 cd ..
 )
 cd ..
 
-del run-time\eif_config.h
-del run-time\eif_size.h
-del run-time\eif_portable.h
-del config.sh
-del confmagc.h
-del eif_config.h
-del make.bat
-del eif_size.h
-del *.$$$
-
-del cleanup.bat
+if exist run-time\eif_config.h del run-time\eif_config.h
+if exist run-time\eif_size.h del run-time\eif_size.h
+if exist run-time\eif_portable.h del run-time\eif_portable.h
+if exist config.sh del config.sh
+if exist confmagc.h del confmagc.h
+if exist eif_config.h del eif_config.h
+if exist make.bat del make.bat
+if exist eif_size.h del eif_size.h
 
 :end
 set remove_desc=

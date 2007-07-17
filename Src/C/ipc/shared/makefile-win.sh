@@ -17,7 +17,6 @@ OBJECTS = \
 	lock.$obj \
 	logfile.$obj \
 	network.$obj \
-	networku.$obj \
 	select.$obj \
 	shword.$obj \
 	stack.$obj \
@@ -33,7 +32,6 @@ MT_OBJECTS = \
 	MTlock.$obj \
 	MTlogfile.$obj \
 	MTnetwork.$obj \
-	MTnetworku.$obj \
 	MTselect.$obj \
 	MTshword.$obj \
 	MTstack.$obj \
@@ -72,9 +70,6 @@ MTlogfile.$obj: logfile.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTnetwork.$obj: network.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
-MTnetworku.$obj: networku.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTselect.$obj: select.c

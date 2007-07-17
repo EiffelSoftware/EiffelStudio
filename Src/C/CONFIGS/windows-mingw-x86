@@ -5,6 +5,7 @@ mingwecdbgd='ecdbgd'
 make='mingw32-make.exe'
 del='rm -f'
 #
+output_exe_cmd='-o'
 output_cmd='-o'
 input_cmd=''
 resource_compiler='windres'

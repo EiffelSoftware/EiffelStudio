@@ -270,7 +270,7 @@ extern struct opstack op_stack;               /* Operational stack */
 
 #define MAX_CODE                169    /* Maximum legal byte code */
 
-extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
+extern void metamorphose_top(struct stochunk *, struct item *); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
 extern void call_disp(uint32 dtype, char *object);				/* Function to call dispose routines */ 
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */

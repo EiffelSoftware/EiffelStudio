@@ -190,11 +190,11 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFEREN
 
 	OLD_IC = IC;								/* Save old IC */
 	if (egc_frozen [body_id])
-		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
+		((void (*)(EIF_REFERENCE)) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
 	else {
 		IC = melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+		((void (*)(EIF_REFERENCE)) (pattern[MPatId(body_id)].toi)) (object);
 									/* Call melted creation routine */
 	}
 	IC = OLD_IC;					/* Restore old IC.
@@ -223,11 +223,11 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE obj
 
 	OLD_IC = IC;								/* Save old IC */
 	if (egc_frozen [body_id])
-		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
+		((void (*)(EIF_REFERENCE)) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
 	else {
 		IC = melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+		((void (*)(EIF_REFERENCE)) (pattern[MPatId(body_id)].toi)) (object);
 									/* Call melted creation routine */
 	}
 	IC = OLD_IC;					/* Restore old IC.

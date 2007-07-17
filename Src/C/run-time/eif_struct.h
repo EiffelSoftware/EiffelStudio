@@ -194,7 +194,7 @@ RT_LNK uint32 eif_nb_org_routines;
 #define INVARIANT_ID	1
 
 struct p_interface {
-	void (*toc)();		/* Pattern from interpreter to C code */
+	void (*toc)(fnptr);		/* Pattern from interpreter to C code */
 	fnptr toi;			/* Pattern from C code to interpreter */
 };
 

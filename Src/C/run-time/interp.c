@@ -2808,7 +2808,7 @@ rt_private void interpret(int flag, int where)
 				u_lower.value.EIF_INTEGER_32_value = 1;
 				u_upper.type = SK_INT32;
 				u_upper.value.EIF_INTEGER_32_value = nbr_of_items;
-				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, u_lower, u_upper);
+				((void (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION)) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, u_lower, u_upper);
 			} else {
 				EIF_UNION u_lower;
 				EIF_UNION u_upper;
@@ -2829,7 +2829,7 @@ rt_private void interpret(int flag, int where)
 				u_lower.value.EIF_INTEGER_32_value = 1;
 				u_upper.type = SK_INT32;
 				u_upper.value.EIF_INTEGER_32_value = nbr_of_items;
-				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, u_lower, u_upper);
+				((void (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION)) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, u_lower, u_upper);
 			}
 
 			IC = OLD_IC;
@@ -3574,7 +3574,7 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 			if (egc_frozen [body_id]) {		/* Frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
 	
-				((void (*)()) egc_frozen[body_id])(obj, where);
+				((void (*)(EIF_REFERENCE, int)) egc_frozen[body_id])(obj, where);
 	
 				if (tagval != stagval)			/* Resynchronize registers */
 					sync_registers(MTC scur, stop);

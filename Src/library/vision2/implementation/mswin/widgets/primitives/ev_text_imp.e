@@ -532,7 +532,7 @@ feature {NONE} -- WEL Implementation
 					+ Ws_tabstop + Ws_border + Es_left
 					+ Es_multiline + Es_wantreturn
 					+ Es_autovscroll + Ws_clipchildren
-					+ Ws_clipsiblings
+					+ Ws_clipsiblings + es_nohidesel
 		end
 
 	default_ex_style: INTEGER is

@@ -28,7 +28,6 @@
 				<cluster name="windows" location=".\implementation\windows\">
 					<condition>
 						<platform value="windows"/>
-						<dotnet value="false"/>
 					</condition>
 					<option namespace="Windows">
 					</option>

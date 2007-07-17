@@ -48,6 +48,7 @@ feature -- Agents
 				internal_shared.set_tool_bar_docker_mediator (Void)
 
 				setter.before_enable_capture
+				-- Following `enable_capture' will cancel pointer double press actions of SD_TOOL_BAR_TITLE_BAR on GTK.				
 				zone.tool_bar.enable_capture
 			end
 		ensure
@@ -86,7 +87,7 @@ feature -- Agents
 					setted := False
 				end
 			end
-			if internal_pointer_pressed and (zone.drag_area_rectangle.has_x_y (a_x, a_y) or zone.is_floating) then
+			if internal_pointer_pressed then
 				if internal_docker_mediator = Void then
 					-- Capture is alreadyed enable when `on_drag_area_pressed'
 					zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
@@ -100,6 +101,12 @@ feature -- Agents
 					else
 						l_offset_x := a_screen_x - zone.tool_bar.screen_x
 						l_offset_y := a_screen_y - zone.tool_bar.screen_y
+						if l_offset_x < 0 then
+							l_offset_x := 0
+						end
+						if l_offset_y < 0 then
+							l_offset_y := 0
+						end
 					end
 					internal_docker_mediator.set_offset (zone.is_floating, l_offset_x, l_offset_y)
 					internal_docker_mediator.cancel_actions.extend (agent on_cancel)
@@ -176,7 +183,7 @@ feature {NONE} -- Implementation functions
 				on_cancel
 			end
 		ensure
-			disable_capture: a_button = {EV_POINTER_CONSTANTS}.left implies not zone.tool_bar.has_capture
+			disable_capture: (internal_docker_mediator /= Void and a_button = {EV_POINTER_CONSTANTS}.left) implies not zone.tool_bar.has_capture
 			not_pointer_pressed: a_button = {EV_POINTER_CONSTANTS}.left and internal_docker_mediator /= Void implies not internal_pointer_pressed
 			cleared: a_button = {EV_POINTER_CONSTANTS}.left implies internal_shared.tool_bar_docker_mediator_cell.item = Void
 		end

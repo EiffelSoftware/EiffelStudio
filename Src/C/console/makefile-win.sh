@@ -26,16 +26,16 @@ standard:: winconsole.$lib wwinconsole.$lib
 mtstandard:: mtwinconsole.$lib mtwwinconsole.$lib
 
 winconsole.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 mtwinconsole.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 wwinconsole.$lib: $(WOBJECTS)
-	$link_line
+	$alib_line
 
 mtwwinconsole.$lib: $(MT_WOBJECTS)
-	$link_line
+	$alib_line
 
 weconsole.$obj: econsole.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?

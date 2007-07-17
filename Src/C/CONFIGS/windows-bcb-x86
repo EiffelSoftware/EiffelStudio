@@ -7,6 +7,7 @@ lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make'
 del='del'
 #
+output_exe_cmd='-e'
 output_cmd='-o'
 input_cmd=''
 resource_compiler='$compiler_path\bin\brc32'

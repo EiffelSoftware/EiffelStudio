@@ -4,6 +4,7 @@ INDIR = .\OBJDIR
 RTSRC = .
 CC = $cc
 CTAGS = ctags
+OUTPUT_EXE_CMD = $output_exe_cmd
 OUTPUT_CMD = $output_cmd
 INPUT_CMD = $input_cmd
 JCFLAGS = $(CFLAGS) $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
@@ -333,7 +334,7 @@ $(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 all:: x2c.exe
 
 x2c.exe: x2c.c eif_size.h
-	$(CC) $ccflags $optimize -I./include -I$(TOP) x2c.c
+	$(CC) $ccflags $optimize -I./include -I. -I$(TOP) $(OUTPUT_EXE_CMD)$@ x2c.c
 
 all:: eif_config.h eif_portable.h
 

@@ -7,6 +7,7 @@ lib_path='%MSVCDir%\lib'
 make='"%MSVCDir%\bin\nmake"'
 del='-del'
 #
+output_exe_cmd='-Fe'
 output_cmd='-Fo'
 input_cmd='-Fd$(INDIR)\\'
 resource_compiler='rc'

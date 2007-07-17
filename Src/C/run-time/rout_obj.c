@@ -325,8 +325,8 @@ rt_public void rout_obj_call_procedure_dynamic (
 	EIF_REFERENCE open_map)
 {
 	EIF_GET_CONTEXT
-	size_t i = 2;
-	size_t args_count = open_count + closed_count;
+	int i = 2;
+	int args_count = open_count + closed_count;
 	int next_open = 0xFFFF;
 	int open_idx = 1;
 	int closed_idx = 1;

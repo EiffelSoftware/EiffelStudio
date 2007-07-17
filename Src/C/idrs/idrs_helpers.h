@@ -106,7 +106,7 @@ doc:	</routine>
 
 rt_private bool_t idr_string(IDR *idrs, char **sp, int maxlen)
 {
-	size_t len;		/* String length */
+	size_t len = 0;		/* String length */
 	char *string;	/* Allocated string pointer */
 
 	if (idrs->i_op == IDR_ENCODE) {

@@ -209,7 +209,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	long saved_file_pos = 0;
 	long saved_object_count = a_object_count;
 
-	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)())need_index)(server,object);
+	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_REFERENCE))need_index)(server,object);
 
 	if (object_needs_index) {
 			/* If the object needs an index, the buffer is flushed so that

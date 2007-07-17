@@ -73,7 +73,7 @@ static  void    analyze_options (void);
 static  void    analyze_routinfo (void);
 static  void    analyze_desc (void);
 static  void    read_byte_code (void);
-static  void    panic ();
+static  void    panic (void);
 
 /*------------------------------------------------------------------*/
 
@@ -132,6 +132,7 @@ int main (int argc, char **argv)
 	printf ("Files \"melted.txt\" and \"bytecode.eif\" generated\n");
 
 	exit (0);
+	return 0;
 }
 /*------------------------------------------------------------------*/
 

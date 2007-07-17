@@ -171,18 +171,33 @@ feature -- Clipboard related
 			dv: ABSTRACT_DEBUG_VALUE
 			s, text_data: STRING_32
 			lrows: LIST [EV_GRID_ROW]
+			lrows_index: SORTED_TWO_WAY_LIST [INTEGER]
 			lrow: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_LINE
+			c: INTEGER
+			gi: EV_GRID_LABEL_ITEM
 		do
 			lrows := grid.selected_rows
 			if lrows.count > 0 then
 				from
-					create text_data.make_empty
+					create lrows_index.make
 					lrows.start
 				until
 					lrows.after
 				loop
 					lrow := lrows.item
+					if lrow /= Void and then lrow.is_show_requested then
+						lrows_index.extend (lrow.index)
+					end
+					lrows.forth
+				end
+				from
+					create text_data.make_empty
+					lrows_index.start
+				until
+					lrows_index.after
+				loop
+					lrow := grid.row (lrows_index.item)
 					if lrow /= Void then
 						gline ?= lrow.data
 						if gline /= Void then
@@ -195,12 +210,27 @@ feature -- Clipboard related
 								s ?= lrow.data
 							end
 						end
+						if s = Void then
+							from
+								create s.make_empty
+								c := 1
+							until
+								c > lrow.count
+							loop
+								gi ?= lrow.item (c)
+								if gi /= Void then
+									s.append (gi.text)
+								end
+								s.append_character ('%T')
+								c := c + 1
+							end
+						end
 						if s /= Void then
 							text_data.append_string (s)
 							text_data.append_string ("%N")
 						end
 					end
-					lrows.forth
+					lrows_index.forth
 				end
 			end
 			if text_data /= Void and then not text_data.is_empty then

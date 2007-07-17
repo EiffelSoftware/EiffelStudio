@@ -156,13 +156,16 @@ feature -- Query
 		local
 			dv: DUMP_VALUE
 		do
-			create Result.make (10)
-			if object_name /= Void then
-				Result.append_string (object_name.as_string_32 + ": ")
+			dv := last_dump_value
+			if dv = Void then
+				dv := associated_dump_value
 			end
-			dv := associated_dump_value
 			if dv /= Void then
-				Result.append_string (": " + dv.generating_type_representation (generating_type_evaluation_enabled))
+				create Result.make (10)
+				if object_name /= Void then
+					Result.append (object_name + ": ")
+				end
+				Result.append (dv.generating_type_representation (generating_type_evaluation_enabled))
 				Result.append_string (" = ")
 				Result.append_string (dv.full_output)
 			end

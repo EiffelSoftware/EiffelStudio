@@ -490,7 +490,7 @@ feature -- Query
 
 	text_data_for_clipboard: STRING_32 is
 		do
-			Result := "..."
+			Result := Void
 		end
 
 indexing

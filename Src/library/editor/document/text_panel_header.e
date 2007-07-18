@@ -44,12 +44,11 @@ create
 
 feature -- Creation
 
-	make_with_panel (a_text_panel: TEXT_PANEL; a_icons: like icons) is
+	make_with_panel (a_text_panel: TEXT_PANEL) is
 			-- Make with `a_text_panel'
 		require
 			panel_not_void: a_text_panel /= Void
 		do
-			icons := a_icons
 			make (0)
 			panel := a_text_panel
 			create open_linked_list.make
@@ -61,7 +60,6 @@ feature -- Creation
 			a_text_panel.text_displayed.add_edition_observer (Current)
 		ensure
 			has_panel: panel /= Void
-			icons_set: icons = a_icons
 		end
 
 feature -- Basic Operations
@@ -141,9 +139,6 @@ feature -- Access
 	previous_selected_index: INTEGER
 			-- Index of previously selected item
 
-	icons: EDITOR_ICONS
-			-- Editor icons
-
 feature -- Actions
 
 	selection_actions: ACTION_SEQUENCE [TUPLE]
@@ -176,19 +171,19 @@ feature {NONE} -- Initialization
 			create l_toolbar
 
 			create left_scroll_button
-			left_scroll_button.set_pixmap (icons.header_left_scroll_pixmap)
+			left_scroll_button.set_pixmap (panel.icons.header_left_scroll_pixmap)
 			left_scroll_button.select_actions.force_extend (agent scroll_left)
 			left_scroll_button.disable_sensitive
 			l_toolbar.extend (left_scroll_button)
 
 			create right_scroll_button
-			right_scroll_button.set_pixmap (icons.header_right_scroll_pixmap)
+			right_scroll_button.set_pixmap (panel.icons.header_right_scroll_pixmap)
 			right_scroll_button.select_actions.force_extend (agent scroll_right)
 			right_scroll_button.disable_sensitive
 			l_toolbar.extend (right_scroll_button)
 
 			create close_button
-			close_button.set_pixmap (icons.header_close_current_document_pixmap)
+			close_button.set_pixmap (panel.icons.header_close_current_document_pixmap)
 			close_button.select_actions.force_extend (agent close_document)
 			close_button.disable_sensitive
 			l_toolbar.extend (close_button)

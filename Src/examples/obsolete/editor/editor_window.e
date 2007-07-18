@@ -28,20 +28,19 @@ feature -- Access
 			l_editor_data: EDITOR_DATA
 			l_env: EXECUTION_ENVIRONMENT
 			l_path: FILE_NAME
-			l: INTEGER
 		do
 			create l_env
 			create l_path.make_from_string (l_env.current_working_directory)
 			l_path.extend ("default.xml")
-			create preferences.make_with_default_values_and_location (l_path.string, "HKEY_CURRENT_USER\Software\ISE\Eiffel\EditorPrefs")
+			create preferences.make_with_defaults_and_location (<< l_path.string >>, "HKEY_CURRENT_USER\Software\ISE\Eiffel\EditorPrefs")
 			create l_editor_data.make (preferences)
 			goto_line_button.select_actions.extend (agent goto_line)
 			select_char_button.select_actions.extend (agent select_chars)
 			select_line_button.select_actions.extend (agent select_lines)
 			close_request_actions.extend (agent close_window)
 		end
-			
-	preferences: PREFERENCES	
+
+	preferences: PREFERENCES
 
 feature {NONE} -- Initialization
 
@@ -53,40 +52,46 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			initialize_preferences
-			editor_container.extend (text_panel.widget)	 		
+			editor_container.extend (text_panel.widget)
 			add_header
-			--preferences_button.select_actions.extend (agent show_preferences_window)
-			preferences_button.select_actions.extend (agent test_drawing)
+			preferences_button.select_actions.extend (agent show_preferences_window)
 			open_file.select_actions.extend (agent open_document)
+			close_file.select_actions.extend (agent destroy_and_exit_if_last)
 			cut_tb.select_actions.extend (agent text_panel.cut_selection)
 			copy_tb.select_actions.extend (agent text_panel.copy_selection)
 			paste_tb.select_actions.extend (agent text_panel.paste)
 			editable_check.select_actions.extend (agent toggle_editable)
+			if text_panel.editor_preferences.show_line_numbers.item then
+				line_number_check.enable_select
+				text_panel.enable_line_numbers
+			else
+				line_number_check.disable_select
+				text_panel.disable_line_numbers
+			end
 			line_number_check.select_actions.extend (agent toggle_show_line_numbers)
-			invisible_symbol_check.select_actions.extend (agent toggle_invisible_symbols)		
+			invisible_symbol_check.select_actions.extend (agent toggle_invisible_symbols)
 			text_panel.vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
 			text_panel.horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 		end
 
 	add_header is
-			-- 
+			--
 		do
 			create header.make_with_panel (text_panel)
 			editor_container.extend (header.container)
-			editor_container.disable_item_expand (header.container)	
+			editor_container.disable_item_expand (header.container)
 			header.selection_actions.extend (agent on_document_change)
-			--header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\testtiny.txt"))
-			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\Eiffel56\library\base\kernel\stringtest.e"))
-		end	
-		
+		end
+
 	header: TEXT_PANEL_HEADER
 
 	test_drawing is
-			-- 
+			--
 		local
 			cnt: INTEGER
 			prof: PROFILING_SETTING
-		do		
+		do
+				-- To perform speed test on editor.
 			create prof.make
 			prof.start_profiling
 			from
@@ -96,12 +101,12 @@ feature {NONE} -- Initialization
 			loop
 				text_panel.set_first_line_displayed (cnt, True)
 				cnt := cnt + 1
-			end	
+			end
 			prof.stop_profiling
-		end		
+		end
 
 feature {NONE} -- Preference information	
-		
+
 	show_preferences_window is
 	        -- Display available preferences
 	   	do
@@ -112,66 +117,72 @@ feature {NONE} -- Preference information
 					-- Preference is currently displayed, raise it.
 				preference_window.raise
 			end
-	   	end		
-		
+	   	end
+
 	system_preferences_location: FILE_NAME is
 			-- System preferences location
 		do
 			create Result.make_from_string ("")
 		ensure
 			Result_not_void: Result /= Void
-		end	
+		end
 
 	preference_window: PREFERENCES_WINDOW
 	        -- Preference window
 
 feature {NONE} -- Events
-		
+
 	on_document_change is
 			-- Document was changed in header
 		do
 			text_panel.text_displayed.add_cursor_observer (Current)
-			text_panel.text_displayed.add_selection_observer (Current)		
-		end		
-		
+			text_panel.text_displayed.add_selection_observer (Current)
+		end
+
 	toggle_editable is
 	        -- Toggle if editor panel is user editable
-		do		
+		do
 			if text_panel.is_editable then
 				text_panel.disable_editable
 		   	else
 		   		text_panel.enable_editable
-			end			
+			end
 		end
-		
+
 	toggle_show_line_numbers is
 	        -- Toggle line number display
-		do	
-			text_panel.toggle_line_number_display
+		do
+			if text_panel.line_numbers_enabled then
+				text_panel.editor_preferences.show_line_numbers_preference.set_value (False)
+				text_panel.disable_line_numbers
+			else
+				text_panel.editor_preferences.show_line_numbers_preference.set_value (True)
+				text_panel.enable_line_numbers
+			end
 		end
-		
+
 	toggle_invisible_symbols is
 	        -- Toggle invisible panel symbols (new lines, tabs, etc)
-		do		    
+		do
 			text_panel.toggle_view_invisible_symbols
 		end
 
 	goto_line is
-			-- 
+			--
 		do
 			text_panel.set_first_line_displayed (goto_line_text.text.to_integer, False)
 --			text_panel.position_cursor (text_panel.text_displayed.cursor, 1, (goto_line_text.text.to_integer * text_panel.line_height) - text_panel.editor_viewport.y_offset - 2)
 			text_panel.set_focus
 		end
-	
+
 	select_chars is
-			-- 
+			--
 		do
-			
+
 		end
-		
+
 	select_lines is
-			-- 
+			--
 		do
 			text_panel.select_lines (select_line_start_text.text.to_integer, select_line_end_text.text.to_integer)
 			text_panel.set_first_line_displayed (select_line_start_text.text.to_integer.min (select_line_end_text.text.to_integer), False)
@@ -190,8 +201,8 @@ feature {NONE} -- Implementation
 			if l_open_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) then
 				header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make (l_open_dialog.file_name))
 			end
-		end	
-	 	
+		end
+
 	 text_panel: GENERIC_EDITOR is
 	        -- Editor.
 	 	once
@@ -211,8 +222,8 @@ feature {NONE} -- Implementation
 	 	   	if java_class /= Void then
 	 	   		a_panel.register_document ("java", java_class)
 	 	   	end
-	 	end	 	
-	 	
+	 	end
+
 	 eiffel_class: DOCUMENT_CLASS is
 	         -- Eiffel syntax definition
 	   	once
@@ -220,22 +231,22 @@ feature {NONE} -- Implementation
 	   	    	create Result.make ("eiffel", "e", eiffel_syntax_file_location)
 	   	   	end
 	   	end
-	 
+
 	 xml_class: DOCUMENT_CLASS is
 	         -- XML syntax definition     	
 	   	once
 	   		if xml_syntax_file_location /= Void then
 		   	    create Result.make ("xml", "xml", xml_syntax_file_location)
 		   	end
-	   	end	
-	   	
+	   	end
+
 	 java_class: DOCUMENT_CLASS is
 	         -- Java syntax definition      	
 	   	once
 	   		if java_syntax_file_location /= Void then
 		   	    create Result.make ("xml", "xml", java_syntax_file_location)
 		  	end
-	   	end	
+	   	end
 
 	eiffel_syntax_file_location: STRING is
 			-- Location to find file containing syntax definition for Eiffel files.  Redefine this if necessary to point to the right file.
@@ -246,14 +257,14 @@ feature {NONE} -- Implementation
 		once
 			create l_exec
 			inst_dir := l_exec.get ("EIFFEL_SRC")
-			if inst_dir /= Void then				
+			if inst_dir /= Void then
 				create l_filename.make_from_string (inst_dir)
 				l_filename.extend_from_array (<<"library", "editor", "text_window", "text", "lexer", "syntax_definitions" >>)
 				l_filename.extend ("eiffel.syn")
 				Result := l_filename.string
 			end
-		end		
-		
+		end
+
 	xml_syntax_file_location: STRING is
 			-- Location to find file containing syntax definition for XML files.  Redefine this if necessary to point to the right file.
 		local
@@ -263,14 +274,14 @@ feature {NONE} -- Implementation
 		once
 			create l_exec
 			inst_dir := l_exec.get ("EIFFEL_SRC")
-			if inst_dir /= Void then				
+			if inst_dir /= Void then
 				create l_filename.make_from_string (inst_dir)
 				l_filename.extend_from_array (<<"library", "editor", "text_window", "text", "lexer", "syntax_definitions" >>)
 				l_filename.extend ("xml.syn")
 				Result := l_filename.string
 			end
-		end		
-		
+		end
+
 	java_syntax_file_location: STRING is
 			-- Location to find file containing syntax definition for Java files.  Redefine this if necessary to point to the right file.
 		local
@@ -280,13 +291,13 @@ feature {NONE} -- Implementation
 		once
 			create l_exec
 			inst_dir := l_exec.get ("EIFFEL_SRC")
-			if inst_dir /= Void then				
+			if inst_dir /= Void then
 				create l_filename.make_from_string (inst_dir)
 				l_filename.extend_from_array (<<"library", "editor", "text_window", "text", "lexer", "syntax_definitions" >>)
 				l_filename.extend ("java.syn")
 				Result := l_filename.string
 			end
-		end		
+		end
 
 feature {NONE} -- Observation
 
@@ -300,38 +311,38 @@ feature {NONE} -- Observation
 			l_label: EV_LABEL
 			l_line_count: INTEGER
 		do
-			create internal	
-			
+			create internal
+
 				-- Cursor information
-			cursor_text_position.set_text (text_panel.text_displayed.cursor.pos_in_characters.out)	
+			cursor_text_position.set_text (text_panel.text_displayed.cursor.pos_in_characters.out)
 			cursor_line_number.set_text (text_panel.text_displayed.current_line_number.out)
 			cursor_line_pos.set_text (text_panel.text_displayed.cursor.x_in_characters.out)
-			line_width_label.set_text (text_panel.text_displayed.cursor.line.width.out)			
-			if text_panel.has_selection then				
-				status_label.set_text ("Selected text (" + text_panel.text_displayed.selection_cursor.pos_in_text.out + " - " + 
-					text_panel.text_displayed.cursor.pos_in_text.out + ")")		
+			line_width_label.set_text (text_panel.text_displayed.cursor.line.width.out)
+			if text_panel.has_selection then
+				status_label.set_text ("Selected text (" + text_panel.text_displayed.selection_cursor.pos_in_text.out + " - " +
+					text_panel.text_displayed.cursor.pos_in_text.out + ")")
 			else
 				status_label.set_text ("No text selected")
 			end
-			
+
 				-- Line information
-			line :=	text_panel.text_displayed.line (text_panel.text_displayed.current_line_number) 
+			line :=	text_panel.text_displayed.line (text_panel.text_displayed.current_line_number)
 			if line /= Void and then line_info_check.is_selected then
 				from
 					line.start
 					line_info_box.wipe_out
 					l_string := ""
-				until							
+				until
 					line.after
 				loop
 					create l_label.make_with_text
 					(
-							line.item.image + 
-							" (" + 
-							internal.type_name_of_type (internal.dynamic_type (line.item)) + 
-							")"						
-					)		
-					l_label.align_text_left					
+							line.item.image +
+							" (" +
+							internal.type_name_of_type (internal.dynamic_type (line.item)) +
+							")"
+					)
+					l_label.align_text_left
 					line_info_box.extend (l_label)
 					line_info_box.disable_item_expand (l_label)
 					line.forth
@@ -339,13 +350,13 @@ feature {NONE} -- Observation
 			else
 				line_info_box.wipe_out
 			end
-			
+
 				-- Current token information				
 			token := text_panel.text_displayed.cursor.token
 			if token = Void then
 				token_info_label.set_text ("No current token")
-			else							
-				token_info_label.set_text 
+			else
+				token_info_label.set_text
 					(
 						internal.type_name_of_type (internal.dynamic_type (token)) + "%N" +
 						"Line pos: " + token.position.out + "%N" +
@@ -353,38 +364,38 @@ feature {NONE} -- Observation
 						"Width: " + token.width.out + "%N" +
 						"Margin: " + token.is_margin_token.out + "%N" +
 						"Image: " + token.image + "%N" +
-						"Position: " + token.position.out + "%N"						
+						"Position: " + token.position.out + "%N"
 					)
-					
+
 			end
-			
+
 				-- Line information
 			l_line_count := text_panel.text_displayed.number_of_lines
-				
-			goto_line_text.value_range.resize_exactly (1, l_line_count)	
-			
+
+			goto_line_text.value_range.resize_exactly (1, l_line_count)
+
 --			select_char_start_text.value_range.resize_exactly (1, text_panel.text_displayed.las)
 --			select_char_end_text.value_range.resize_exactly (1, l_line_count)
-			
+
 			select_line_start_text.value_range.resize_exactly (1, l_line_count)
 			select_line_end_text.value_range.resize_exactly (1, l_line_count)
-		end			
-	
+		end
+
 	on_vertical_scroll (vscroll_pos: INTEGER) is
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
- 		do 	
+ 		do
  			first_line_displayed_label.set_text (text_panel.first_line_displayed.out)
  			last_line_displayed_label.set_text ((text_panel.first_line_displayed + (text_panel.viewable_height // text_panel.line_height)).out)
  			buff_screen_size_label.set_text (text_panel.buffered_drawable_width.out + " x " + text_panel.buffered_drawable_height.out)
  			flip_count_label.set_text (text_panel.flip_count.out)
  			viewport_offset_label.set_text (text_panel.editor_viewport.y_offset.out)
  		end
- 		
+
  	on_horizontal_scroll (hscroll_pos: INTEGER) is
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		do
 		end
-	
+
 	close_window is
 			-- The user wants to close the window
 		do
@@ -393,7 +404,7 @@ feature {NONE} -- Observation
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

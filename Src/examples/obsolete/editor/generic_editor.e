@@ -17,31 +17,31 @@ inherit
 		end
 
 feature -- Initialization		
-	
+
 	initialize_editor_context is
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
-			cursors.set_editor_installation_dir_name (cursor_path)
-			icons.set_editor_installation_dir_name (icons_path)						
-		end	
-		
+			set_cursors (create {SAMPLE_EDITOR_CURSORS})
+			set_icons (create {SAMPLE_EDITOR_ICONS})
+		end
+
 	icons_path, cursor_path: DIRECTORY_NAME is
 			-- Paths
 		local
 			l_env: EXECUTION_ENVIRONMENT
 		once
 			create l_env
-			create Result.make_from_string (l_env.current_working_directory)	
+			create Result.make_from_string (l_env.current_working_directory)
 			Result.extend ("bitmaps")
-		end		
-		
+		end
+
 	reference_window: EV_WINDOW is
 			-- Reference window
 		once
 			create Result
-		end		
-		
+		end
+
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
  			-- Process the push on Ctrl + an extended key.
 		do
@@ -54,7 +54,7 @@ feature -- Initialization
 				Precursor (ev_key)
 			end
 		end
-		
+
 	save_current_document is
 			-- Save the document currently loaded
 		local
@@ -65,22 +65,22 @@ feature -- Initialization
 			if l_save_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_save) then
 				write_to_disk (l_save_dialog.file_name)
 			end
-		end		
-		
+		end
+
 	write_to_disk (a_filename: STRING) is
 			-- Write Current text to disk
 		local
 			file: PLAIN_TEXT_FILE
-		do			
+		do
 			create file.make_open_write (a_filename)
-			if file.is_open_write then					
+			if file.is_open_write then
 				file.putstring (text_displayed.text)
 				date_of_file_when_loaded := file.date
 				file.flush
 				file.close
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -16,7 +16,7 @@ cc: "c:/apps/mingw/bin/gcc"
 cpp: "c:/apps/mingw/bin/gcc"
 
 -- C-linker
-sharedlink: "c:/apps/mingw/bin/gcc"
+sharedlink: "c:/apps/mingw/bin/dllwrap"
 
 -- optimization flags
 optimize: "-O2"
@@ -37,10 +37,11 @@ ar: "c:/apps/mingw/bin/ar"
 ld: "c:/apps/mingw/bin/ld"
 ldflags: ""
 mtldflags: ""
+ccldflags: ""
 console_flags: "-mconsole"
 windows_flags: "-mwindows"
-ldsharedflags: "-shared"
-mtldsharedflags: "-shared"
+ldsharedflags: ""
+mtldsharedflags: ""
 
 -- eiffel run-time specification
 prefix: "$(ISE_C_COMPILER)/"
@@ -48,8 +49,10 @@ shared_prefix: "$(ISE_C_COMPILER)/dll_"
 mt_prefix: "mt"
 eiflib: "finalized"
 wkeiflib: "wkbench"
+boehmgclib: "gc"
 suffix: ".a"
-shared_suffix: ".so"
+shared_suffix: ".dll"
+shared_rt_suffix: ".dll"
 
 -- libraries
 libs: ""
@@ -67,16 +70,18 @@ ranlib: "c:/apps/mingw/bin/ranlib.exe"
 
 -- platform remove command
 rm: "rm -f"
+file_exist: "" 
 rmdir: "rd"
 
 -- make program
 make: "c:/apps/msys/1.0/bin/make.exe"
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -f %%i%""
+
 dpflags: ""
 
 continuation: "\"
 
-appl_make: "$appl.exe: E1/emain.o $(PRECOMP_OBJECTS) $(OBJECTS) $appl.res %N%
+appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 %%T$(COMMAND_MAKEFILE)%N%
 %%T$(RM) $@%N%
 %%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $(PRECOMP_OBJECTS) %
@@ -91,51 +96,27 @@ appl_make: "$appl.exe: E1/emain.o $(PRECOMP_OBJECTS) $(OBJECTS) $appl.res %N%
 %"
 
 -- precompilation
-precompile: "driver.exe: driver.lnk driver.rc%N%
-%%T$(RM) driver.exe%N%
-%%Tlink @driver.lnk%N%
-%%T$(RM) *.err%N%
-%%T$(RM) driver.lnk%N%
-%%T$(RM) driver.res%N%
-%%T$(RM) driver.map%N%
-%%T$(RM) *.ico%N%
-%%T$(RM) *.rc%N%
-%%T$(RM) Makefile%N%
-%%T$(RM) TRANSLAT%N%
-%%T$(RM) Makefile.SH%N%
-%%T$(RM) estudio.pch%N%
-%%Tmkdir $(ISE_C_COMPILER)%N%
+precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
+%%Tmkdir -p $(ISE_C_COMPILER)%N%
+%%T$(RM) $@%N%
+%%T$(CC) $(LDFLAGS) -o driver.exe E1/emain.o $(PRECOMP_OBJECTS) %
+%driver.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%T$(MV) driver.exe $(ISE_C_COMPILER)/driver.exe%N%
 %%T$(MV) precomp.lib $(ISE_C_COMPILER)/precomp.lib%N%
 %%T$(RM) driver.exe%N%
 %%T$(RM) precomp.lib%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.o%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.c%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.x%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.lib%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.pch%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/Makefile.*%N%
-%%Tfor %%i in ($(SUBDIRS)) do $(RMDIR) %%i%N%
 %%N%
-%driver.rc: $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%N%
+%driver.res: %N%
 %%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc driver.rc%N%
-%%N%
-%driver.res: driver.rc%N%
-%%Trc -r driver.rc%N%
+%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico gnu.ico%N%
+%%Tc:/apps/mingw/bin/windres driver.rc -O coff -o driver.res%N%
+%%T$(RM) driver.rc%N%
+%%T$(RM) gnu.ico%N%
 %%N%
 %precomp.lib: $(OBJECTS)%N%
 %%T$(RM) $@%N%
-%%Tlib -OUT:precomp.lib $(OBJECTS) $(EXTERNALS)%N%
-%%N%
-%driver.lnk: E1/emain.o precomp.lib driver.res $precompilelibs%N%
-%%Techo $(LDFLAGS) -OUT:driver.exe > $@%N%
-%%Techo E1/emain.o >> $@%N%
-%%Techo precomp.lib >> $@%N%
-%%Techo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
-%%T@echo UUID.lib OLE32.lib OLEAUT32.lib>> $@%N%
-%$(PRECOMP_OBJECTS)%
-%%Techo $(EIFLIB) >> $@%N%
-%%Techo driver.res >> $@"
+%%Tld -r -o precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
+%%N"
 
 -- cecil
 cecil_make: "$(STATIC_CECIL): $(OBJECTS)%N%
@@ -152,11 +133,22 @@ cecil_def: "%
 %%T@echo DESCRIPTION %'c_$appl.dll%' >> $@%N%
 %%T@type $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def >> $@"
 
-cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
-	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"
+cecil_dynlib: "%T--def $(DEF_FILE) --output-lib c_dll_$appl.lib -o $(SHARED_CECIL)%N"
 
-system_dynlib: "%T/def:$(DEF_FILE) \%N%
-	%%T/OUT:$(SYSTEM_IN_DYNAMIC_LIB) /IMPLIB:dll_$appl.lib%N"
+system_dynlib: "%T--def $(DEF_FILE) --output-lib dll_$appl.lib -o $(SYSTEM_IN_DYNAMIC_LIB)%N"
+
+il_system_compilation_line: "%
+	%$(IL_SYSTEM): $(OBJECTS) $(IL_RESOURCE).res%N%
+	%%T$(RM) $(IL_SYSTEM) %N%
+	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) -o $(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res %N%
+	%%T$(RM) $(OBJECTS)%N%
+	%%Techo Success > completed.eif%N%N%
+	%../../../$(IL_RESOURCE).rc:%N%
+	%%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" ../../../$(IL_RESOURCE).rc%N%
+	%%N%
+	%$(IL_RESOURCE).res: ../../../$(IL_RESOURCE).rc Makefile%N%
+	%%TC:/apps/mingw/bin/windres -I ../../../ ../../../$(IL_RESOURCE).rc  -O coff -o $(IL_RESOURCE).res%N"
+
 
 -- done
 completed: "%Techo done > completed.eif"
@@ -196,11 +188,6 @@ eobj_text: "$(EOBJ"
 
 objects__text: "$(OBJECTS)"
 
--- text for precompilation
-precompile_text: "precompile $appl"
-
-appl_text: "appl_make $appl"
-
 cecil_text: "cecil_make $appl"
 
 -- platform 'parent' directory
@@ -212,8 +199,6 @@ emain_obj_text: "emain.o"
 
 objects_text: "OBJECTS = "
 c_objects_text: "C_OBJECTS = "
-d_objects_text: "D_OBJECTS = "
-f_objects_text: "F_OBJECTS = "
 
 eobjects_text: "EOBJECTS = "
 
@@ -221,15 +206,13 @@ obj_file_ext: "o"
 
 executable_file_ext: ".exe"
 
-driver_text: "/driver"
+driver_text: "\driver"
 
 driver_filename: "driver.exe"
 
 externals_text: "EXTERNALS"
 
 externals_continuation_text: "EXTERNALS =  \"
-
-precomp_lib_command_text: "@echo $precompiled_library >> $@%N%T"
 
 start_test: "if [ ! -f finished ] ; then"
 
@@ -242,5 +225,5 @@ create_test: "touch finished"
 rt_include: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include"
 rt_lib: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib"
 rt_templates: "$ISE_EIFFEL/studio/config/$ISE_PLATFORM/templates"
-x2c: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c"
+x2c: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c.exe"
 

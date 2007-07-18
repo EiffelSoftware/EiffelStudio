@@ -34,7 +34,7 @@ feature {NONE}  -- Initlization
 			not_void: a_hidden_items /= Void
 			not_void: a_tool_bar /= Void
 		do
-			default_create
+			make_with_shadow
 			disable_user_resize
 			disable_border
 			create internal_vertical_box

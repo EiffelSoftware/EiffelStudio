@@ -23,7 +23,16 @@ inherit
 			default_create
 		end
 
+create
+	make
+
 feature{NONE} -- Initialization
+
+	make is
+			-- Create current tooltip window
+		do
+			make_with_shadow
+		end
 
 	initialize is
 			-- Initialize current tooltip window

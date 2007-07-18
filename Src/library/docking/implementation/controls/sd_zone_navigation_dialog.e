@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			is_shift_pressed := a_is_shift_pressed
-			default_create
+			make_with_shadow
 			internal_docking_manager := a_docking_manager
 
 			add_all_content_label

@@ -57,8 +57,12 @@ feature {NONE} -- Implementation
 
 	class_name: STRING_32 is
 			-- Class name for current type of window.
-		once
-			Result := "EV_POPUP_WINDOW_IMP"
+		do
+			if interface.has_shadow then
+				Result := "EV_POPUP_WINDOW_IMP_with_shadow"
+			else
+				Result := "EV_POPUP_WINDOW_IMP"
+			end
 		end
 
 	class_style: INTEGER is
@@ -67,9 +71,11 @@ feature {NONE} -- Implementation
 			l_win: WEL_WINDOWS_VERSION
 		do
 			Result := Precursor {EV_WINDOW_IMP}
-			create l_win
-			if l_win.is_windows_xp_compatible then
-				Result := Result | cs_dropshadow
+			if interface.has_shadow then
+				create l_win
+				if l_win.is_windows_xp_compatible then
+					Result := Result | cs_dropshadow
+				end
 			end
 		end
 

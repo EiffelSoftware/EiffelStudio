@@ -128,7 +128,7 @@ feature -- Visitor
 			a_visitor.process_editor_token_line_number (Current)
 		end
 
-feature {MARGIN_WIDGET, PRINTER_TOKEN_VISITOR} -- Implementation
+feature {MARGIN_WIDGET, MARGIN} -- Implementation
 
 	update_width is
 			-- Update value of `width'

@@ -9,15 +9,15 @@ indexing
 class
 	MARGIN
 
-inherit	
+inherit
 	TEXT_OBSERVER
 		export
 			{NONE} all
 		redefine
 			on_text_loaded,
 			on_text_block_loaded
-		end		
-		
+		end
+
 	SHARED_EDITOR_DATA
 
 create
@@ -34,8 +34,8 @@ feature -- Initialization
 			build_margin_area
 			a_text_panel.text_displayed.add_lines_observer (Current)
 			a_text_panel.text_displayed.add_edition_observer (Current)
-		end	
-		
+		end
+
 	build_margin_area is
 			-- Initialize variables and objects related to display.	
 		do
@@ -43,7 +43,7 @@ feature -- Initialization
 			margin_area.set_minimum_size (1, 1)
 
 			margin_area.expose_actions.extend (agent on_repaint)
-			margin_area.resize_actions.extend (agent on_size)						
+			margin_area.resize_actions.extend (agent on_size)
 
 				-- Add widgets to our margin area
 			create widget
@@ -51,14 +51,14 @@ feature -- Initialization
 			widget.enable_item_expand (margin_area)
 
 				-- Set up the screen.
-			create buffered_screen.make_with_size (margin_area.width, text_panel.editor_area.height)
-			buffered_screen.set_background_color (editor_preferences.margin_background_color)			
+			create buffered_screen.make_with_size (margin_area.width, text_panel.editor_drawing_area.height)
+			buffered_screen.set_background_color (editor_preferences.margin_background_color)
 			hide_breakpoints
 --			hide_line_numbers
 		end
 
 feature -- Access
-		
+
 	width: INTEGER is
 			-- Width in pixels calculated based on which tokens should be displayed
 		local
@@ -66,20 +66,20 @@ feature -- Access
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
 --			l_bptok: EDITOR_TOKEN_BREAKPOINT
 			l_spacer: STRING
-		do	
+		do
 		    Result := 1
-			if line_numbers_visible then				
+			if line_numbers_visible then
 				Result := Result + internal_line_number_area_width
 			end
 --			if not hidden_breakpoints then					
 --				create l_bptok.make
 --				Result := Result + l_bptok.width
 --			end
-		end	
-		
+		end
+
 	hidden_breakpoints: BOOLEAN
 			-- Are breakpoints hidden? (Default: True)
-			
+
 	line_numbers_visible: BOOLEAN is
 			-- Are line numbers hidden?
 		do
@@ -104,14 +104,14 @@ feature -- Status setting
 			-- If `a_width' is greater than `width', assign `a_width' to `width'
 			-- update display if necessary.
 		do
-			widget.set_minimum_width (a_width)						
+			widget.set_minimum_width (a_width)
 			if width /= buffered_screen.width then
 				buffered_screen.set_size (a_width, margin_area.height)
-				update_buffered_screen (0, margin_area.height)								
+				update_buffered_screen (0, margin_area.height)
 				update_display
-			end			
+			end
 		end
-		
+
 	set_first_line_displayed (fld: INTEGER) is
 			-- Assign `fld' to `first_line_displayed'.
 		require
@@ -167,24 +167,24 @@ feature {NONE} -- Text Loading
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
 			-- Update scroll bar as a new block of text as been loaded.
-		do			
-			refresh_now					
+		do
+			refresh_now
 		end
 
 feature -- Basic operations
 
 	destroy is
 			-- Destroy
-		do	
-			if widget /= Void then				
-				widget.wipe_out	
+		do
+			if widget /= Void then
+				widget.wipe_out
 				widget := Void
 			end
 			if margin_area /= Void then
 				margin_area.destroy
 				margin_area := Void
 			end
-		end		
+		end
 
 	refresh is
 			-- Refresh
@@ -192,7 +192,7 @@ feature -- Basic operations
 			set_margin_width (width)
 			margin_area.redraw
 		end
-		
+
 	refresh_now is
 			-- Update display without waiting for next idle
 		do
@@ -202,7 +202,7 @@ feature -- Basic operations
 
 	setup_margin is
 			-- Update `Current' as the first page of the new content has been loaded.
-		do			
+		do
 			refresh_now
 		end
 
@@ -223,12 +223,12 @@ feature {NONE} -- Implementation
 			l_no_lines: INTEGER
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
 			l_spacer: STRING
-		once		
+		once
 			create Result
 			create l_max_token.make
 			l_no_lines := text_panel.text_displayed.number_of_lines
 			create l_spacer.make_filled ('0', default_width)
-			l_max_token.set_internal_image (l_spacer)	
+			l_max_token.set_internal_image (l_spacer)
 			l_max_token.update_width
 			Result.put (l_max_token.width)
 		end
@@ -240,13 +240,13 @@ feature {NONE} -- Implementation
 		do
 			if text_panel.text_displayed.number_of_lines < 100_000 then
 				Result := default_line_number_area_width_cell.item
-			else			
-				create l_max_token.make		
-				l_max_token.set_internal_image (text_panel.text_displayed.number_of_lines.out)						
+			else
+				create l_max_token.make
+				l_max_token.set_internal_image (text_panel.text_displayed.number_of_lines.out)
 				l_max_token.update_width
-				Result := Result + l_max_token.width	
+				Result := Result + l_max_token.width
 			end
-		end		
+		end
 
 feature {TEXT_PANEL} -- Display functions
 
@@ -277,7 +277,7 @@ feature {TEXT_PANEL} -- Display functions
  			first_line_to_draw := (text_panel.first_line_displayed + top // text_panel.line_height ).max (1)
  			last_line_to_draw := (text_panel.first_line_displayed + (bottom - 1) // text_panel.line_height).min (text_panel.text_displayed.number_of_lines)
  			curr_y := top
- 
+
  			if first_line_to_draw <= last_line_to_draw then
  				text_panel.text_displayed.go_i_th (first_line_to_draw)
  				from
@@ -289,7 +289,7 @@ feature {TEXT_PANEL} -- Display functions
  					curr_line := curr_line + 1
  					text_panel.text_displayed.forth
  				end
- 
+
  				curr_y := (curr_line - text_panel.first_line_displayed) * text_panel.line_height
  			end
  			if curr_y < bottom then
@@ -303,12 +303,12 @@ feature {TEXT_PANEL} -- Display functions
 	update_display is
 			-- Update display by drawing the buffered pixmap on `margin_area'.
 		do
-			margin_area.draw_sub_pixmap (0,	0, buffered_screen, create {EV_RECTANGLE}.make (0, 0, width, buffered_screen.height))					
+			margin_area.draw_sub_pixmap (0,	0, buffered_screen, create {EV_RECTANGLE}.make (0, 0, width, buffered_screen.height))
 		end
 
 	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
-			-- new size (`a_width', `a_height'). 
+			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
 		local
 			fld: INTEGER
@@ -317,7 +317,7 @@ feature {TEXT_PANEL} -- Display functions
 		do
 				-- Resize & redraw the buffered screen.
 			if buffered_screen /= Void then -- System initialized.
-				in_resize := True				
+				in_resize := True
 
 				if buffered_screen.width < a_width then
 --					if in_resize then
@@ -356,20 +356,20 @@ feature {TEXT_PANEL} -- Display functions
  			curr_y, max_chars	: INTEGER
  			spacer_text			: STRING
  		do
- 			if text_panel.text_displayed.number_of_lines > 99999 then 				
-	 			max_chars := text_panel.number_of_lines.out.count		
- 			else 				
+ 			if text_panel.text_displayed.number_of_lines > 99999 then
+	 			max_chars := text_panel.number_of_lines.out.count
+ 			else
 	 			max_chars := default_width
  			end
- 			
+
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
- 			
+
  				-- Set the correct image for line number
  			line_token ?= text_panel.text_displayed.line (xline).number_token
 			if line_token /= Void then
 				line_token.set_internal_image (spacer_text + xline.out)
 			end
- 			
+
    			curr_y := (xline - text_panel.first_line_displayed) * text_panel.line_height
   			from
 					-- Display the first applicable token in the margin
@@ -377,7 +377,7 @@ feature {TEXT_PANEL} -- Display functions
 				curr_token := a_line.item
  			until
  				a_line.after or else not curr_token.is_margin_token
- 			loop 						
+ 			loop
 				if curr_token.is_margin_token then
 --					bp_token ?= curr_token
 --					if bp_token /= Void and then not hidden_breakpoints then						
@@ -387,13 +387,13 @@ feature {TEXT_PANEL} -- Display functions
 --					else
 						line_token ?= curr_token
 						if line_token /= Void and then line_numbers_visible then
-							line_token.display (curr_y, buffered_screen, text_panel) 	
-						elseif line_token /= Void then						
+							line_token.display (curr_y, buffered_screen, text_panel)
+						elseif line_token /= Void then
 							line_token.hide
 						end
 --					end
 				end
-				a_line.forth 				
+				a_line.forth
 				curr_token := a_line.item
 			end
 		end

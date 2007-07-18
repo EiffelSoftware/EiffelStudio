@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -30,10 +30,17 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local
 			internal_pixmap: EV_PIXMAP
+			l_env: EXECUTION_ENVIRONMENT
+			l_path: STRING
 		do
+			create l_env
+			l_path := l_env.get ("ISE_LIBRARY")
+			if l_path = Void then
+				l_path := "."
+			end
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
@@ -124,7 +131,7 @@ feature {NONE}-- Initialization
 			create status_label
 			create l_ev_cell_1
 			create internal_pixmap
-			
+
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
@@ -214,20 +221,20 @@ feature {NONE}-- Initialization
 			l_ev_frame_4.extend (l_ev_horizontal_box_16)
 			l_ev_horizontal_box_16.extend (status_label)
 			l_ev_horizontal_box_16.extend (l_ev_cell_1)
-			
+
 			l_ev_menu_2.set_text ("File")
 			open_file.set_text ("Open")
 			close_file.set_text ("Close")
 			l_ev_vertical_box_1.disable_item_expand (tool_bar)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_15)
 			cut_tb.set_tooltip ("Cut")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico")
+			internal_pixmap.set_with_named_file (l_path + "/tools/doc_builder/resources/icons/icon_cut_color.ico")
 			cut_tb.set_pixmap (internal_pixmap)
 			copy_tb.set_tooltip ("Copy")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico")
+			internal_pixmap.set_with_named_file (l_path + "/tools/doc_builder/resources/icons/icon_copy_color.ico")
 			copy_tb.set_pixmap (internal_pixmap)
 			paste_tb.set_tooltip ("Paste")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_paste.ico")
+			internal_pixmap.set_with_named_file (l_path + "/tools/doc_builder/resources/icons/icon_paste.ico")
 			paste_tb.set_pixmap (internal_pixmap)
 			editor_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 128, 0))
 			editor_container.set_minimum_width (550)
@@ -373,7 +380,7 @@ feature {NONE}-- Initialization
 			set_minimum_width (800)
 			set_minimum_height (600)
 			set_title ("Display window")
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -432,12 +439,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

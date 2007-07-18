@@ -201,9 +201,12 @@ feature -- Status setting
 	enable_user_resize is
 			-- Allow the resize of the window.
 		do
-			user_can_resize := True
-			if is_displayed then
-				allow_resize
+			if not user_can_resize then
+				disable_user_resize_called := False
+				user_can_resize := True
+				if is_displayed then
+					allow_resize
+				end
 			end
 		end
 
@@ -256,7 +259,10 @@ feature -- Status setting
 				disable_capture
 				Precursor {EV_GTK_WINDOW_IMP}
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
-				allow_resize
+				if disable_user_resize_called then
+					allow_resize
+				end
+
 				set_position (a_x_pos, a_y_pos)
 			end
 		end

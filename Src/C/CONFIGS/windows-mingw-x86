@@ -39,7 +39,7 @@ debug=''
 #debug='-g'
 
 warning_level='-Wall'
-dllflags='-mwindows -dll -incremental:no -nodefaultlib:libc'
+dllflags='-mwindows -shared'
 #
 link32='gcc'
 cc='gcc'

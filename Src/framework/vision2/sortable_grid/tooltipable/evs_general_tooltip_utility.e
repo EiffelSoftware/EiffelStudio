@@ -18,7 +18,7 @@ feature -- Access
 	tooltip_window: EVS_GENERAL_TOOLTIP_WINDOW is
 			-- Window to display tooltip
 		once
-			create Result
+			create Result.make
 		end
 
 feature{NONE} -- Implementation

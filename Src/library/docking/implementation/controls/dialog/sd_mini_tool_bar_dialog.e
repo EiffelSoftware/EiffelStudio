@@ -21,7 +21,7 @@ feature {NONE}  -- Initlization
 		require
 			not_void: a_widget /= Void
 		do
-			default_create
+			make_with_shadow
 			disable_user_resize
 			focus_out_actions.extend (agent on_focus_out)
 			create internal_shared

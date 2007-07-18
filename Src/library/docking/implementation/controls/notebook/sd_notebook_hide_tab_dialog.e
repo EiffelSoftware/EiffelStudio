@@ -23,7 +23,7 @@ feature {NONE}  -- Initlization
 		require
 			a_note_book_not_void: a_note_book /= Void
 		do
-			default_create
+			make_with_shadow
 			create internal_shared
 			internal_notebook := a_note_book
 			create items_and_tabs.make (50)

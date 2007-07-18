@@ -21,6 +21,26 @@ inherit
 			is_border_enabled_default_state
 		end
 
+create
+	default_create,
+	make_with_shadow
+
+feature {NONE} -- Initialization
+
+	make_with_shadow is
+			-- Current current with a shadow if the underlying platform supports it.
+		do
+			has_shadow := True
+			default_create
+		ensure
+			has_shadow_set: has_shadow
+		end
+
+feature -- Status report
+
+	has_shadow: BOOLEAN
+			-- Does current display a shadow if the underlying platform supports it?
+
 feature -- Status Setting
 
 	disconnect_from_window_manager is

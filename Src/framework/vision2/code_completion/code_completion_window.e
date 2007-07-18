@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			choice_list.virtual_position_changed_actions.extend (agent on_scroll)
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 
-			default_create
+			make_with_shadow
 			enable_user_resize
 			option_bar_box := build_option_bar
 			create vbox

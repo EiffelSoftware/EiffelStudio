@@ -16,6 +16,7 @@ inherit
 	SD_TOOL_BAR_TOGGLE_BUTTON
 		redefine
 			enable_select,
+			on_pointer_press,
 			on_pointer_release
 		end
 
@@ -34,12 +35,22 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER_32) is
+			-- Handle pointer press actions
+		do
+			if not is_selected then
+				Precursor {SD_TOOL_BAR_TOGGLE_BUTTON}(a_relative_x, a_relative_y)
+			end
+		end
+
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer release actions
 		do
-			Precursor {SD_TOOL_BAR_TOGGLE_BUTTON} (a_relative_x, a_relative_y)
-			if state = {SD_TOOL_BAR_ITEM_STATE}.checked or state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-				set_other_radio_button (False)
+			if not is_selected then
+				Precursor {SD_TOOL_BAR_TOGGLE_BUTTON} (a_relative_x, a_relative_y)
+				if is_selected then
+					set_other_radio_button (False)
+				end
 			end
 		end
 

@@ -46,9 +46,9 @@ if .%3. == .dll. (
 	mv config.sh.modif config.sh
 )
 
-bash eif_config_h.SH
+sh eif_config_h.SH
 cd run-time
-bash eif_size_h.SH
+sh eif_size_h.SH
 cd ..
 
 echo @echo off > make.w32

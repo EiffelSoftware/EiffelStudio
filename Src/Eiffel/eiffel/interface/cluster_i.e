@@ -53,12 +53,64 @@ feature -- Access
 			Result := cluster_name.as_upper
 		end
 
+	actual_namespace: STRING is
+			-- Associated full namespace of current cluster.
+		local
+			l_namespace: STRING
+			l_local_namespace: STRING
+		do
+
+			if is_precompile then
+				Result := internal_actual_namespace
+			else
+
+				if parent_cluster /= Void then
+						-- Start with parent cluster namespace
+					Result := parent_cluster.actual_namespace
+				else
+						-- Use target namespace
+					Result := target.options.local_namespace
+				end
+
+				if Result = Void then
+					create Result.make_empty
+				else
+					Result := Result.twin
+				end
+
+					-- Add cluster name/namespace part
+				l_local_namespace := options.local_namespace
+				if l_local_namespace = Void or else l_local_namespace.is_empty then
+					if target.setting_use_cluster_name_as_namespace then
+						if not Result.is_empty then
+							Result.append_character ('.')
+						end
+						Result.append (cluster_name)
+					end
+				else
+					if not Result.is_empty then
+						Result.append_character ('.')
+					end
+					Result.append (l_local_namespace)
+				end
+
+				internal_actual_namespace := Result
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Type anchors
 
 	class_anchor: CLASS_I;
 			-- Type of classes one can insert in Current
 
-indexing
+feature {NONE} -- Internal implementation cache
+
+	internal_actual_namespace: like actual_namespace
+			-- Cached version of `actual_namespace'
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

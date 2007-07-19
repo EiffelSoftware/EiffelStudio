@@ -23,7 +23,7 @@ optimize: "-O2"
 wkoptimize: "-O0"
 
 -- compiler flags
-ccflags: "-D%"RTI64C(x)=CAT2(x,LL)%" -D%"RTU64C(x)=CAT2(x,ULL)%" -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+ccflags: "-imacros %"$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/eif_config.mingw.h%" -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
 mtccflags: "$ccflags -DEIF_THREADS"
 cppflags: "$ccflags"
 mtcppflags: "$mtccflags"
@@ -218,7 +218,7 @@ start_test: "if [ ! -f finished ] ; then"
 
 end_test: "; fi"
 
-create_test: "touch finished"
+create_test: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/touch%" finished"
 
 -- Layout variables
 

@@ -2,9 +2,7 @@
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
 microsoftecdbgd='ecdbgd'
-include_path='%MSVCDir%\include'
-lib_path='%MSVCDir%\lib'
-make='"%MSVCDir%\bin\nmake"'
+make='"%MSVCDir%\bin\nmake" -nologo'
 del='-del'
 dir_sep='\ '
 #
@@ -45,8 +43,8 @@ link_flags=''
 warning_level='-W3'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc'
 #
-link32='"$(MSVCDIR)\bin\link"'
 cc='"$(MSVCDIR)\bin\cl"'
+link32='"$(MSVCDIR)\bin\link"'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #
 

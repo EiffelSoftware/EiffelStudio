@@ -84,7 +84,7 @@ continuation: "\"
 appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 %%T$(COMMAND_MAKEFILE)%N%
 %%T$(RM) $@%N%
-%%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $(PRECOMP_OBJECTS) %
+%%T$(CC) $(LDFLAGS) $(CCLDFLAGS) -o $appl.exe E1/emain.o $(PRECOMP_OBJECTS) %
 %$appl.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%N%
 %../../../$appl.rc:%N%
@@ -99,7 +99,7 @@ appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
 %%Tmkdir -p $(ISE_C_COMPILER)%N%
 %%T$(RM) $@%N%
-%%T$(CC) $(LDFLAGS) -o driver.exe E1/emain.o $(PRECOMP_OBJECTS) %
+%%T$(CC) $(LDFLAGS) $(CCLDFLAGS) -o driver.exe E1/emain.o $(PRECOMP_OBJECTS) %
 %driver.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%T$(MV) driver.exe $(ISE_C_COMPILER)/driver.exe%N%
 %%T$(MV) precomp.lib $(ISE_C_COMPILER)/precomp.lib%N%

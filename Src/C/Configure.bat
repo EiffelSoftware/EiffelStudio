@@ -59,7 +59,7 @@ rem Get the actual make name
 echo echo $make > make_name.bat
 shell\bin\rt_converter.exe make_name.bat make_name.bat
 rem Replace $(XX) into %X%
-shell\bin\sed -e "s/\$(\(.*\))/%%\1%%/g" make_name.bat >> make_name.modif
+shell\bin\sed -e "s/\$(\([^)]*\))/%%\1%%/g" make_name.bat >> make_name.modif
 shell\bin\mv make_name.modif make_name.bat
 
 rem Generate the make.w32 file with the above name

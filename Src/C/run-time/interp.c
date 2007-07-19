@@ -323,7 +323,7 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 		}                                                             \
 	}
 
-rt_public void metamorphose_top(struct stochunk * volatile scur, struct item * volatile stop)
+rt_public void metamorphose_top(struct stochunk * scur, struct item * stop)
 {
 	RT_GET_CONTEXT
 

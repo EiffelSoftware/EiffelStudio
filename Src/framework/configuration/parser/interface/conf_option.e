@@ -371,10 +371,6 @@ feature -- Merging
 				else
 					namespace := Void
 				end
-					-- Update `local_namespace' to use `other' in case it is not set.
-				if local_namespace = Void then
-					local_namespace := other.local_namespace
-				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured
 					is_profile := other.is_profile

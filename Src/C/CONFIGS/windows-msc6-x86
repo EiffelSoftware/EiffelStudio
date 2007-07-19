@@ -6,6 +6,7 @@ include_path='%MSVCDir%\include'
 lib_path='%MSVCDir%\lib'
 make='"%MSVCDir%\bin\nmake"'
 del='-del'
+dir_sep='\ '
 #
 output_exe_cmd='-Fe'
 output_cmd='-Fo'

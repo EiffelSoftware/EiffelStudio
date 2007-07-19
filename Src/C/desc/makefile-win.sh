@@ -1,3 +1,4 @@
+DIR = $dir_sep
 MTL=MkTypLib.exe
 CPP= $cc
 RSC= $rc
@@ -22,8 +23,8 @@ ise_desc.dll : $(DEF_FILE) $(LINK32_OBJS)
 
 # Begin Source File
 
-SOURCE=.\ise_desc.c
-DEP_DESC_=.\ise_desc.h
+SOURCE=.$(DIR)ise_desc.c
+DEP_DESC_=.$(DIR)ise_desc.h
 
 ise_desc.$obj :  $(SOURCE)  $(DEP_DESC_)
 	$(CPP) $(CPP_PROJ) ise_desc.c

@@ -1,10 +1,11 @@
-TOP = ..\..
+TOP = ..$(DIR)..
+DIR = $dir_sep
 OUTDIR = .
 INDIR = .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-RUN_TIME = $(TOP)\run-time
-CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)\include -I$(TOP)\console -I$(LIBIDR)
+RUN_TIME = $(TOP)$(DIR)run-time
+CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)$(DIR)include -I$(TOP)$(DIR)console -I$(LIBIDR)
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DEIF_IPC
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IPC
 MAKE = make
@@ -12,8 +13,8 @@ MV = copy
 RM = del
 
 # Where shared archive is located (path and name)
-LIBDIR = ..\shared
-LIBIDR = $(TOP)\idrs
+LIBDIR = ..$(DIR)shared
+LIBIDR = $(TOP)$(DIR)idrs
 
 # Files used to build the ewb
 SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_transfer.c ewb_init.c ewb_dumped.c ewb_child.c

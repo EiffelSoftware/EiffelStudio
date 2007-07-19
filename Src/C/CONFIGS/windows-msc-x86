@@ -4,6 +4,7 @@
 microsoftecdbgd='ecdbgd'
 make='nmake'
 del='-del'
+dir_sep='\ '
 #
 output_exe_cmd='-Fe'
 output_cmd='-Fo'

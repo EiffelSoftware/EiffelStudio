@@ -2,13 +2,14 @@
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
 mingwecdbgd='ecdbgd'
-make='mingw32-make.exe'
-del='cmd.exe /c del'
+make='$make_path/bin/make'
+del='$make_path/bin/rm -f'
+dir_sep='/'
 #
 output_exe_cmd='-o'
 output_cmd='-o'
 input_cmd=''
-resource_compiler='windres'
+resource_compiler='$compiler_path/bin/windres'
 #
 obj='o'
 lib='a'
@@ -16,23 +17,24 @@ lib='a'
 #
 # Standard runtime:
 #------------------
-ccflags='$warning_level $debug'
-mtccflags='$warning_level $debug -DEIF_THREADS'
+mtccflags='$ccflags -DEIF_THREADS'
+ccflags='$warning_level $override_macros $debug'
 output_libraries='standard mtstandard'
 #
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL $warning_level $debug'
-#mtccflags='-DEIF_MAKE_DLL $warning_level $debug -DEIF_THREADS'
+#mtccflags='$ccflags -DEIF_THREADS'
+#ccflags='-DEIF_MAKE_DLL $warning_level $override_macros $debug'
 #output_libraries='dll mtdll'
 #
 #
 #Link Lines in non debug mode:
 #-----------------------------
-link_line='ar rc $@ $^'
-alib_line='ld -r -o $@ $^'
+link_line='$compiler_path/bin/ar rc $@ $^'
+alib_line='$compiler_path/bin/ld -r -o $@ $^'
 #
 #
+override_macros='-D"RTI64C(x)=CAT2(x,LL)" -D"RTU64C(x)=CAT2(x,ULL)"'
 optimize='-O3'
 debug=''
 #optimize='-O0'
@@ -41,8 +43,10 @@ debug=''
 warning_level='-Wall'
 dllflags='-mwindows -shared'
 #
-link32='gcc'
-cc='gcc'
+link32='$compiler_path/bin/gcc'
+cc='$compiler_path/bin/gcc'
+compiler_path='$(ISE_EIFFEL)/studio/gcc/mingw'
+make_path='$(ISE_EIFFEL)/studio/gcc/msys/1.0'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #
 
@@ -64,12 +68,12 @@ lngpad_2='8'
 
 #Formatting
 inttypes_include=''
-eif_integer_64_display='"lld"'
-eif_natural_64_display='"llu"'
-eif_pointer_display='"X"'
-eif_integer_64_constant='CAT2(x,LL)'
-eif_natural_64_constant='CAT2(x,ULL)'
-d_uint64_to_real='define'
+eif_integer_64_display='"I64d"'
+eif_natural_64_display='"I64u"'
+eif_pointer_display='"lX"'
+eif_integer_64_constant='x##i64'
+eif_natural_64_constant='x##ui64'
+d_uint64_to_real='undef'
 
 #File system
 nofile='60'
@@ -179,4 +183,4 @@ eif_64_bits='undef'
 eif_os='EIF_WINNT'
 eif_arch='EIF_X86'
 voidflags='15'
-d_tls='undef'
+d_tls='define'

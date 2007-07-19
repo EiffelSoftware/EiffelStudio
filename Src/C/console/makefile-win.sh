@@ -1,9 +1,10 @@
 TOP = ..
+DIR = $dir_sep
 OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I$(TOP)\run-time -I$(TOP)\run-time\include -I$(TOP) -I$(TOP)\ipc\app -I$(TOP)\idrs
+CFLAGS = -I$(TOP)$(DIR)run-time -I$(TOP)$(DIR)run-time$(DIR)include -I$(TOP) -I$(TOP)$(DIR)ipc$(DIR)app -I$(TOP)$(DIR)idrs
 DPFLAGS = -I$(TOP)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize

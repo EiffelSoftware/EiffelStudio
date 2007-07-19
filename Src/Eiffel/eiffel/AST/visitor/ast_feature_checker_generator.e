@@ -235,11 +235,28 @@ feature -- Type checking
 		require
 			a_feature_not_void: a_feature /= Void
 			an_ast_not_void: an_ast /= Void
+		local
+			l_cl, l_wc: CLASS_C
+			l_ft: FEATURE_TABLE
+			l_ctx: AST_CONTEXT
 		do
-			type_a_checker.init_for_checking (a_feature, context.current_class, Void, error_handler)
+			reset
 			is_byte_node_enabled := True
 			current_feature := a_feature
-			reset
+
+			l_cl := context.current_class
+			l_wc := current_feature.written_class
+			if l_wc /= l_cl then
+				l_ft := context.current_feature_table
+				l_ctx := context.twin
+				context.initialize (l_wc, l_wc.actual_type, l_ft)
+				type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
+				an_ast.process (Current)
+				reset
+				is_inherited := True
+				context.restore (l_ctx)
+			end
+			type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
 			an_ast.process (Current)
 		end
 

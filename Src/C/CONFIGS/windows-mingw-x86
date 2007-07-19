@@ -45,8 +45,8 @@ dllflags='-mwindows -shared'
 #
 link32='$compiler_path/bin/gcc'
 cc='$compiler_path/bin/gcc'
-compiler_path='$(ISE_EIFFEL)/studio/gcc/mingw'
-make_path='$(ISE_EIFFEL)/studio/gcc/msys/1.0'
+compiler_path='$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw'
+make_path='$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #
 

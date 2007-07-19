@@ -34,7 +34,7 @@ link_line='$compiler_path/bin/ar rc $@ $^'
 alib_line='$compiler_path/bin/ld -r -o $@ $^'
 #
 #
-override_macros='-D"RTI64C(x)=CAT2(x,LL)" -D"RTU64C(x)=CAT2(x,ULL)"'
+override_macros='-imacros $(TOP)/run-time/eif_config.mingw.h'
 optimize='-O3'
 debug=''
 #optimize='-O0'

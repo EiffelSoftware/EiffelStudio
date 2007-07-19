@@ -305,56 +305,35 @@ feature -- Status report
 			l_path: STRING
 			l_namespace: STRING
 			l_local_namespace: STRING
+			l_cluster: CLUSTER_I
+			l_stack: DS_ARRAYED_STACK [CONF_CLUSTER]
 		do
 			if compiled_class.is_precompiled then
 				Result := internal_namespace
 			else
-					-- We need to clone as the result maybe used for string operation and we do not
-					-- want it to change some internal data from Current.
-				l_namespace := options.namespace
-				if l_namespace /= Void then
-					l_namespace := l_namespace.twin
-				end
-
-				if
-					not target.setting_use_all_cluster_name_as_namespace and then
-					not target.setting_use_cluster_name_as_namespace
-				then
-						-- Simply use given namespace if any.
-					Result := l_namespace
-				else
-						-- Now either one or both of `target.setting_use_cluster_name_as_namespace' or
-						-- `target.setting_use_all_cluster_name_as_namespace' is True.
-					if l_namespace /= Void then
-						Result := l_namespace
-					else
-						Result := ""
-					end
-					l_local_namespace := options.local_namespace
-					if
-						(l_local_namespace = Void or else l_local_namespace.is_empty) and then
-						target.setting_use_cluster_name_as_namespace
-					then
-							-- Only add cluster namespace if there's not local namespace set.
-						if not Result.is_empty then
-							Result.append_character ('.')
-						end
-						Result.append (group.name)
-					end
-
-					if target.setting_use_all_cluster_name_as_namespace then
-						l_path := path.twin
-						l_path.replace_substring_all ("/", ".")
-						Result.append (l_path)
-						if Result.item (1) = '.' then
-							Result.remove_head (1)
-						end
-					end
+				l_cluster ?= group
+				if l_cluster /= Void then
+					Result := l_cluster.actual_namespace.twin
 				end
 
 				if Result = Void then
-					Result := ""
+					create Result.make_empty
 				end
+
+				if target.setting_use_all_cluster_name_as_namespace then
+					l_path := path.twin
+					l_path.replace_substring_all ("/", ".")
+					if l_path.item (1) = '.' then
+						l_path.remove_head (1)
+					end
+					if not l_path.is_empty then
+						if not Result.is_empty then
+							Result.append_character ('.')
+						end
+						Result.append (l_path)
+					end
+				end
+
 				internal_namespace := Result
 			end
 		ensure

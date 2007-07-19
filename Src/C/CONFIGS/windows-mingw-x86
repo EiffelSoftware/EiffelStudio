@@ -2,14 +2,14 @@
 # This is the configuration file for MICROSOFT'S VISUAL C++
 #
 mingwecdbgd='ecdbgd'
-make='$make_path/bin/make'
-del='$make_path/bin/rm -f'
+make='"$make_path/bin/make"'
+del='"$make_path/bin/rm" -f'
 dir_sep='/'
 #
 output_exe_cmd='-o'
 output_cmd='-o'
 input_cmd=''
-resource_compiler='$compiler_path/bin/windres'
+resource_compiler='"$compiler_path/bin/windres"'
 #
 obj='o'
 lib='a'
@@ -30,8 +30,8 @@ output_libraries='standard mtstandard'
 #
 #Link Lines in non debug mode:
 #-----------------------------
-link_line='$compiler_path/bin/ar rc $@ $^'
-alib_line='$compiler_path/bin/ld -r -o $@ $^'
+link_line='"$compiler_path/bin/ar" rc $@ $^'
+alib_line='"$compiler_path/bin/ld" -r -o $@ $^'
 #
 #
 override_macros='-imacros eif_config.mingw.h'
@@ -43,8 +43,8 @@ debug=''
 warning_level='-Wall'
 dllflags='-mwindows -shared'
 #
-link32='$compiler_path/bin/gcc'
-cc='$compiler_path/bin/gcc'
+link32='"$compiler_path/bin/gcc"'
+cc='"$compiler_path/bin/gcc"'
 compiler_path='$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw'
 make_path='$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'

@@ -1,5 +1,5 @@
 #
-# This is the configuration file for MICROSOFT'S VISUAL C++
+# This is the configuration file for MinGW
 #
 mingwecdbgd='ecdbgd'
 make='"$make_path/bin/make"'

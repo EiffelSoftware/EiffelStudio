@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			-- Case 3: LL_RR
 			-- Case 4: LL_RR.Enc
 			-- Case 5: LL_RR@SS  [sometimes the SS is simply variant information]
+			-- Case 6: LL_RR.Enc@SS
 			-- LL is a two-letter language identifier from ISO 639-1 or, if there is none, a three-letter
 			-- identifier from ISO 639-2/T
 			-- RR is a two-letter country coding from ISO 3166-1, except when it is not (en-029 ('English (Carribean)') under Windows)
@@ -72,13 +73,7 @@ feature {NONE} -- Initialization
 			index: INTEGER
 			splits: LIST [STRING_32]
 		do
-
-				-- first throw away everything after and with a dot
 			create temp.make_from_string(identifier)
-			index :=  temp.index_of ('.', 1)
-			if index > 0 then
-				temp.keep_head (index-1)
-			end
 				-- remove @ and keep SS if there
 			index := temp.index_of ('@',1)
 			if index > 0 then
@@ -89,6 +84,14 @@ feature {NONE} -- Initialization
 --				end
 				temp.keep_head (index-1)
 			end
+
+				-- Keep Enc, and remove dot and anything after dot.
+			index :=  temp.index_of ('.', 1)
+			if index > 0 then
+				encoding := temp.substring(index+1, temp.count)
+				temp.keep_head (index-1)
+			end
+
 				-- So - do we have case 1,2 or 3 now?
 				-- check if we have dashes or underscores
 			index := temp.index_of ('_',1)
@@ -128,6 +131,9 @@ feature  -- Access
 			-- RR is region code and
 			-- SS is optional script
 
+	full_name: STRING_32
+			-- `name' plus encoding
+
 	language: STRING_32
 			-- Language of locale id
 
@@ -157,11 +163,15 @@ feature	 -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := language.is_equal (other.language) and region.is_equal (other.region) and
-						( (script /= Void and other.script /= Void) implies script.is_equal (other.script))
+			Result := language.is_equal (other.language) and
+						region.is_equal (other.region) and
+						equal (script, other.script)
 		end
 
 feature {NONE} -- Implementation
+
+	encoding: STRING_32
+			-- Encoding of locale id (optional)
 
 	set_name is
 			-- Set `name' to a platform independent name.
@@ -170,19 +180,27 @@ feature {NONE} -- Implementation
 			region_not_void: region /= Void
 		do
 			name := language.twin
+			full_name := language.twin
 			if not region.is_empty then
 				name.append ("_"+region)
+				full_name.append ("_"+region)
+			end
+			if encoding /= Void then
+				full_name.append ("."+encoding)
 			end
 			if script /= Void then
 				name.append("@"+script)
+				full_name.append("@"+script)
 			end
 		ensure
 			name_not_void: name /= Void
+			name_not_void: full_name /= Void
 		end
 
 invariant
 
 	name_not_void: name /= Void
+	name_not_void: full_name /= Void
 	language_not_void: language /= Void
 	region_not_void: region /= Void
 

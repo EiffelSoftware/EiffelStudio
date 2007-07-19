@@ -8,6 +8,12 @@ indexing
 class
 	ENCODING
 
+inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -54,6 +60,15 @@ feature -- Status report
 
 	last_conversion_successful: BOOLEAN
 			-- Was last conversion successful?
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := code_page.is_case_insensitive_equal (other.code_page)
+		end
 
 feature {ENCODING} -- Status report
 

@@ -58,18 +58,6 @@ feature -- Access
 	source_encoding: ENCODING
 			-- Source encoding of process output
 
-	destination_encoding: ENCODING is
-			-- Destination encoding to display process output
-		do
-			if destination_encoding_internal = Void then
-				create destination_encoding_internal.make ((create{CODE_PAGE_CONSTANTS}).utf16)
-			end
-			Result := destination_encoding_internal
-		end
-
-	destination_encoding_internal: like destination_encoding
-			-- Implementation of `destination_encoding'
-
 	locale_combo: EV_COMBO_BOX is
 			-- Combo box to display locale list
 		local
@@ -121,9 +109,11 @@ feature{NONE} -- Actions
 			-- Action to be peroformed when selected encoding changes
 		local
 			l_locale: I18N_LOCALE
+			l_id: STRING
 		do
-			if locale_id_table.item (locale_combo.text) /= Void then
-				l_locale := locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (locale_id_table.item (locale_combo.text)))
+			l_id := locale_id_table.item (locale_combo.text)
+			if l_id /= Void then
+				l_locale := locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_id))
 				if l_locale = Void or else l_locale.info.code_page = Void then
 					source_encoding := Void
 				else
@@ -206,12 +196,10 @@ feature -- Process
 		do
 			str ?= text_block.data
 			if str /= Void then
-				if source_encoding /= Void and then destination_encoding /= Void then
-					str_general := source_encoding.convert_to (destination_encoding, str)
-					if not source_encoding.last_conversion_successful then
-					 	str_general := str
-					end
-				else
+				if source_encoding /= Void then
+					str_general := console_encoding_to_utf16 (source_encoding, str)
+				end
+				if str_general = Void then
 					str_general := str
 				end
 				output_text.append_text (str_general)

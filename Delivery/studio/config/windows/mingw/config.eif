@@ -12,11 +12,11 @@ smart_checking: False
 include_path: "$(INCLUDE_PATH)"
 
 -- C-compiler
-cc: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/gcc"
-cpp: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/gcc"
+cc: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/gcc%""
+cpp: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/gcc%""
 
 -- C-linker
-sharedlink: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/dllwrap"
+sharedlink: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/dllwrap%""
 
 -- optimization flags
 optimize: "-O2"
@@ -33,8 +33,8 @@ il_flags: "-DEIF_IL_DLL"
 large: ""
 
 -- linker flags
-ar: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/ar"
-ld: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/ld"
+ar: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/ar%""
+ld: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/ld%""
 ldflags: ""
 mtldflags: ""
 ccldflags: ""
@@ -63,18 +63,18 @@ sharedlibs: "-luser32 -lwsock32 -ladvapi32 -lgdi32 -lshell32 -lmsimg32 -lcomdlg3
 mkdep: ""
 
 -- platform $(MV) command
-mv: "$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/cp"
-cp: "$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/cp"
+mv: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/cp%""
+cp: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/cp%""
 
-ranlib: "$(ISE_EIFFEL)/studio/gcc/mingw/bin/ranlib.exe"
+ranlib: "%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/ranlib.exe%""
 
 -- platform remove command
-rm: "$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/rm -f"
+rm: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/rm%" -f"
 file_exist: "" 
-rmdir: "$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/rd"
+rmdir: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/rd%""
 
 -- make program
-make: "$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/make.exe"
+make: "%"$(ISE_EIFFEL)/studio/gcc/msys/1.0/bin/make.exe%""
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -f %%i%""
 
 dpflags: ""
@@ -88,11 +88,11 @@ appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 %$appl.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%N%
 %../../../$appl.rc:%N%
-%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico ../../../gnu.ico ; fi %N%
-%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc ../../../$appl.rc ; fi %N%
+%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico%" ../../../gnu.ico ; fi %N%
+%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" ../../../$appl.rc ; fi %N%
 %%N%
 %$appl.res: ../../../$appl.rc Makefile%N%
-%%T$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres -I../../.. ../../../$appl.rc -O coff -o $appl.res%N%
+%%T%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres%" -I../../.. ../../../$appl.rc -O coff -o $appl.res%N%
 %"
 
 -- precompilation
@@ -107,9 +107,9 @@ precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
 %%T$(RM) precomp.lib%N%
 %%N%
 %driver.res: %N%
-%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc driver.rc%N%
-%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico gnu.ico%N%
-%%T$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres driver.rc -O coff -o driver.res%N%
+%%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" driver.rc%N%
+%%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico%" gnu.ico%N%
+%%T%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres%" driver.rc -O coff -o driver.res%N%
 %%T$(RM) driver.rc%N%
 %%T$(RM) gnu.ico%N%
 %%N%
@@ -131,7 +131,7 @@ cecil_def: "%
 %%T$(RM) $@%N%
 %%T@echo LIBRARY c_$appl.dll > $@%N%
 %%T@echo DESCRIPTION %'c_$appl.dll%' >> $@%N%
-%%T@type $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def >> $@"
+%%T@type %"$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def%" >> $@"
 
 cecil_dynlib: "%T--def $(DEF_FILE) --output-lib c_dll_$appl.lib -o $(SHARED_CECIL)%N"
 
@@ -147,7 +147,7 @@ il_system_compilation_line: "%
 	%%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" ../../../$(IL_RESOURCE).rc%N%
 	%%N%
 	%$(IL_RESOURCE).res: ../../../$(IL_RESOURCE).rc Makefile%N%
-	%%T$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres -I ../../../ ../../../$(IL_RESOURCE).rc  -O coff -o $(IL_RESOURCE).res%N"
+	%%T%"$(ISE_EIFFEL)/studio/gcc/mingw/bin/windres%" -I ../../../ ../../../$(IL_RESOURCE).rc  -O coff -o $(IL_RESOURCE).res%N"
 
 
 -- done

@@ -1,0 +1,14 @@
+  GNU make port to mingw32
+  Version: 3.81
+
+This version is compiled with the following:
+
+../../$PACKAGE/configure \
+  --disable-dependency-tracking \
+  --disable-nls \
+  --enable-case-insensitive-file-system \
+  --disable-job-server \
+  --disable-rpath \
+  --program-prefix=mingw32-
+
+make CFLAGS="-s -O2 -mms-bitfields -mtune=i686"

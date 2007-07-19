@@ -39,13 +39,18 @@ feature -- Initialization
 			-- Creation procedure
 			-- Create locale with a_locale_id
 		do
-			unix_set_locale (a_locale_id.name)
+			if c_is_solaris then
+				unix_set_locale (guess_proper_locale (a_locale_id.full_name))
+			else
+				unix_set_locale (a_locale_id.full_name)
+			end
 			create Result.make
 			fill (Result)
 			Result.set_id(a_locale_id)
 		ensure then
-			locale_set: locale_name.is_equal(a_locale_id.name) or
-						locale_name.is_equal ("C") and a_locale_id.name.is_equal ("POSIX")
+			locale_set: locale_name.is_equal(a_locale_id.full_name) or
+						locale_name.is_equal (guess_proper_locale (a_locale_id.full_name)) or
+						locale_name.is_equal ("C")  and a_locale_id.full_name.is_equal ("POSIX")
 		end
 
 feature -- Informations
@@ -53,7 +58,11 @@ feature -- Informations
 	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
 			-- is 'a_locale' available?
 		do
-			Result := unix_is_available (a_locale_id.name)
+			if c_is_solaris then
+				Result := unix_is_available (guess_proper_locale (a_locale_id.full_name))
+			else
+				Result := unix_is_available (a_locale_id.full_name)
+			end
 		end
 
 	available_locales : LINKED_LIST[I18N_LOCALE_ID] is
@@ -80,7 +89,9 @@ feature -- Informations
 					dir_entries.after
 				loop
 					create l_locale_id.make_from_string (dir_entries.item)
-					if is_available (l_locale_id) then
+						-- The locale id is from file name,
+						-- so there is no need to use `is_available' where guess is possibly done.
+					if unix_is_available (l_locale_id.full_name) then
 						Result.extend (l_locale_id)
 					end
 					dir_entries.forth
@@ -107,20 +118,8 @@ feature -- Informations
 
 	locale_name : STRING_32 is
 			-- name of current locale
-		local
-			dot_index,
-			at_index: INTEGER
 		do
 			Result := unix_locale_name
-				-- remove codeset from name
-			dot_index := Result.index_of ('.', 1)
-			at_index := Result.index_of ('@', 1)
-			if dot_index > 0 then
-					-- there is a codeset but not a skript
-				Result.remove_substring (dot_index, Result.count)
-			elseif dot_index > 0 and at_index > 0 then
-				Result.remove_substring (dot_index, at_index)
-			end
 		end
 
  feature {NONE} -- fill
@@ -534,6 +533,20 @@ feature {NONE} --Implementation
 			"strlen"
 		end
 
+	c_is_solaris: BOOLEAN is
+			-- Is current OS Solaris?
+		external
+			"C inline use <eif_eiffel.h>"
+		alias
+			"[
+				#if EIF_OS == EIF_SUNOS
+					return (EIF_BOOLEAN)1;
+				#else
+					return (EIF_BOOLEAN)0;
+				#endif
+			]"
+		end
+
 	utf8_pointer_to_string (ptr:POINTER): STRING_32 is
 			-- convert a C UTF-8 string
 		local
@@ -546,6 +559,57 @@ feature {NONE} --Implementation
 			else
 				create Result.make_empty
 			end
+		end
+
+	guess_proper_locale (a_name: STRING): STRING is
+			-- We try to guess a locale from `a_name', when `a_name', for example in LL_RR style, can 
+			-- not be recognized by `setlocale' on Solaris, but LL_RR.ENC does exist as system locale mostly.
+			-- First take the system locale, then try to find a most matching one.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_str: C_STRING
+			l_ptr, l_null: POINTER
+			l_s, l_name: STRING
+			l_available_locales: like available_locales
+		do
+			if a_name.has ('_') then
+				create l_str.make (a_name)
+				l_ptr := c_setlocale (c_lc_all, l_str.item)
+				if l_ptr = l_null then
+					l_name := a_name.as_lower
+						-- Try to match system locale.
+					create l_str.make ("")
+					l_ptr := c_setlocale (c_lc_all, l_str.item)
+					if l_ptr /= l_null then
+						create l_str.share_from_pointer (l_ptr)
+						l_s := l_str.string
+						if l_s.as_lower.has_substring (l_name) then
+							Result := l_s
+						end
+					end
+						-- Try to find a most matching locale supported.
+					if Result = Void then
+						l_available_locales := available_locales
+						from
+							l_available_locales.start
+						until
+							l_available_locales.after or Result /= Void
+						loop
+							l_s := l_available_locales.item.full_name
+							if l_s.as_lower.has_substring (l_name) then
+								Result := l_s
+							end
+							l_available_locales.forth
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := a_name
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 indexing

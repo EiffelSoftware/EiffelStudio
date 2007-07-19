@@ -82,7 +82,7 @@ feature -- Output
 			l_string: STRING_GENERAL
 		do
 			if a_str /= Void then
-				l_string := encoding_utf16.convert_to (console_encoding, a_str)
+				l_string := utf16_to_console_encoding (console_encoding, a_str)
 				if l_string /= Void then
 					check
 						l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
@@ -100,7 +100,7 @@ feature -- Output
 		local
 			l_string: STRING_GENERAL
 		do
-			l_string := encoding_utf16.convert_to (console_encoding, a_str)
+			l_string := utf16_to_console_encoding (console_encoding, a_str)
 			if l_string /= Void then
 				check
 					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
@@ -108,6 +108,44 @@ feature -- Output
 				io.error.put_string (l_string.as_string_8)
 			else
 				io.error.put_string (a_str.as_string_8)
+			end
+		end
+
+feature -- Conversion
+
+	utf16_to_console_encoding (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+			-- Convert `a_str' to console encoding if possible.
+			-- `a_str' is taken as a UTF-16 string.
+		require
+			a_console_encoding_not_void: a_console_encoding /= Void
+			a_str_not_void: a_str /= Void
+		do
+			Result := encoding_utf16.convert_to (a_console_encoding, a_str)
+				-- This is a hack, since some OSes don't support convertion from/to UTF-16 to `a_console_encoding'.
+				-- We convert UTF-16 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
+			if not encoding_utf16.last_conversion_successful and not encoding_utf8.is_equal (a_console_encoding) then
+				Result := encoding_utf16.convert_to (encoding_utf8, a_str)
+				if encoding_utf16.last_conversion_successful then
+					Result := encoding_utf8.convert_to (a_console_encoding, Result)
+				end
+			end
+		end
+
+	console_encoding_to_utf16 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+			-- Convert `a_str' to console encoding if possible.
+			-- `a_str' is taken as a UTF-16 string.
+		require
+			a_console_encoding_not_void: a_console_encoding /= Void
+			a_str_not_void: a_str /= Void
+		do
+			Result := a_console_encoding.convert_to (encoding_utf16, a_str)
+				-- This is a hack, since some OSes don't support convertion from/to UTF-16 to `a_console_encoding'.
+				-- We convert `a_console_encoding' to UTF-8 first, then convert UTF-8 to UTF-16.
+			if not a_console_encoding.last_conversion_successful and not encoding_utf8.is_equal (a_console_encoding) then
+				Result := a_console_encoding.convert_to (encoding_utf8, a_str)
+				if a_console_encoding.last_conversion_successful then
+					Result := encoding_utf8.convert_to (encoding_utf16, Result)
+				end
 			end
 		end
 
@@ -328,4 +366,5 @@ indexing
 		]"
 
 end
+
 

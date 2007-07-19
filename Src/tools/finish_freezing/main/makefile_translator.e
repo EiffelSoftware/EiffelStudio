@@ -183,6 +183,8 @@ feature -- Execution
 				-- the command to execute the make utility on this platform
 			command := options.get_string ("make", Void)
 			subst_eiffel (command)
+			subst_platform (command)
+			subst_compiler (command)
 
 				-- Launch building of `E1\estructure.h' in case it is not built and we are not
 				-- in .NET mode

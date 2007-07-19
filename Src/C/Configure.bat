@@ -1,4 +1,7 @@
 @echo off
+set OLD_PATH=%PATH%
+set PATH=%~dp0\shell\bin;%PATH%
+
 if .%1. == .clean. goto clean
 if .%1. == .win32. goto win32
 if .%1. == .win64. goto win64
@@ -15,6 +18,7 @@ goto end
 :win32
 if .%2. == .. goto usage
 if NOT .%2. == .b. goto mingw
+set PATH=%ISE_EIFFEL%\BCC55\bin;%PATH%
 copy CONFIGS\windows-bcb-x86 config.sh
 set remove_desc=1
 goto process
@@ -40,20 +44,32 @@ goto process
 :process
 
 if .%3. == .dll. (
-	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
-	mv config.sh.modif config.sh
-	sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
-	mv config.sh.modif config.sh
+	shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
+	shell\bin\mv config.sh.modif config.sh
+	shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
+	shell\bin\mv config.sh.modif config.sh
 )
 
-sh eif_config_h.SH
+shell\bin\sh.exe eif_config_h.SH
 cd run-time
-sh eif_size_h.SH
+..\shell\bin\sh.exe eif_size_h.SH
 cd ..
 
-echo @echo off > make.w32
-echo $make %%1>> make.w32
-rt_converter.exe make.w32 make.w32
+rem Get the actual make name
+echo echo $make > make_name.bat
+shell\bin\rt_converter.exe make_name.bat make_name.bat
+rem Replace $(XX) into %X%
+shell\bin\sed -e "s/\$(\(.*\))/%%\1%%/g" make_name.bat >> make_name.modif
+shell\bin\mv make_name.modif make_name.bat
+
+rem Generate the make.w32 file with the above name
+echo @echo off > make.w32 
+call make_name.bat >> make.w32
+del make_name.bat
+rem Replace all / by \
+shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
+shell\bin\mv make.w32.modif make.w32
+
 if exist run-time\eif_config.h del run-time\eif_config.h
 rem
 rem Copy the config 
@@ -94,29 +110,29 @@ rem
 rem Call the converter tranforming the makefile-win.sh to Makefile
 rem
 cd ipc\shared
-..\..\rt_converter.exe makefile-win.sh Makefile
+..\..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\..\run-time
-..\rt_converter.exe makefile-win.sh Makefile
+..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\platform
-..\rt_converter.exe makefile-win.sh Makefile
+..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\idrs
-..\rt_converter.exe makefile-win.sh Makefile
+..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\console
-..\rt_converter.exe makefile-win.sh Makefile
+..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\bench
-..\rt_converter.exe makefile-win.sh Makefile
+..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 if not "%remove_desc%" == "1" (
 	cd ..\desc
-	..\rt_converter.exe makefile-win.sh Makefile
+	..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 )
 cd ..\ipc\daemon
-..\..\rt_converter.exe makefile-win.sh Makefile
+..\..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\ewb
-..\..\rt_converter.exe makefile-win.sh Makefile
+..\..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\app
-..\..\rt_converter.exe makefile-win.sh Makefile
+..\..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\shared
-..\..\rt_converter.exe makefile-win.sh Makefile
+..\..\shell\bin\rt_converter.exe makefile-win.sh Makefile
 cd ..\..
 rem
 rem Call make
@@ -216,5 +232,6 @@ if exist make.bat del make.bat
 if exist eif_size.h del eif_size.h
 
 :end
+set PATH=%OLD_PATH%
 set remove_desc=
 echo Make completed

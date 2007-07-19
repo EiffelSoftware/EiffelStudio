@@ -1,12 +1,13 @@
-TOP=..\..
+TOP=..$(DIR)..
+DIR = $dir_sep
 OUTDIR= .
 INDIR= .
 CC=$cc
 RM=del
 OUTPUT_CMD= $output_cmd
-LIBRUN = $(TOP)\run-time
-LIBIDR = $(TOP)\idrs
-DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)\include -I.
+LIBRUN = $(TOP)$(DIR)run-time
+LIBIDR = $(TOP)$(DIR)idrs
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)$(DIR)include -I.
 CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize

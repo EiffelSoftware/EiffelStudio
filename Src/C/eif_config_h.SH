@@ -674,8 +674,12 @@ $inttypes_include
 #$d_uint64_to_real	HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT	/* NC */
 
 /* INTEGER_64 constant definition: */
+#ifndef RTI64C
 #define RTI64C(x)	$eif_integer_64_constant
+#endif
+#ifndef RTU64C
 #define RTU64C(x)	$eif_natural_64_constant
+#endif
 
 /* Define EIF_OS Constants */
 

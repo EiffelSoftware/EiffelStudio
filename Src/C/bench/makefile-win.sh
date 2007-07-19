@@ -1,6 +1,7 @@
 TOP = ..
-OUTDIR = .\LIB
-INDIR = .\OBJDIR
+DIR = $dir_sep
+OUTDIR = .$(DIR)LIB
+INDIR = .$(DIR)OBJDIR
 RTSRC = .
 CC = $cc
 CTAGS = ctags
@@ -12,7 +13,7 @@ RM = del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I. -I$(TOP) -I$(TOP)\run-time -I$(TOP)\run-time\include -I$(TOP)\minilzo -I$(TOP)\idrs
+CFLAGS = -I. -I$(TOP) -I$(TOP)$(DIR)run-time -I$(TOP)$(DIR)run-time$(DIR)include -I$(TOP)$(DIR)minilzo -I$(TOP)$(DIR)idrs
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 
@@ -41,8 +42,8 @@ mtdll: mtstandard
 standard: compiler.$lib wcompiler.$lib meltdump.exe bytedump.exe
 mtstandard: mtcompiler.$lib mtwcompiler.$lib meltdump.exe bytedump.exe
 
-meltdump.exe: ..\run-time\eif_interp.h
-bytedump.exe: ..\run-time\eif_interp.h
+meltdump.exe: ..$(DIR)run-time$(DIR)eif_interp.h
+bytedump.exe: ..$(DIR)run-time$(DIR)eif_interp.h
 
 compiler.$lib: $(OBJECTS)
 	$link_line

@@ -95,6 +95,7 @@ feature -- For DATABASE_FORMAT
 			if object /= Void and then not object.is_empty then
 				if not is_binary (object) then
 					Result := object.twin
+					Result.replace_substring_all ("\", "\\")
 					Result.replace_substring_all ("'", "''")
 					Result.precede ('%'')
 					Result.extend ('%'')

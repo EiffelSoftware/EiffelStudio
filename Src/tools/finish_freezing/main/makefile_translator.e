@@ -187,7 +187,7 @@ feature -- Execution
 				-- Launch building of `E1\estructure.h' in case it is not built and we are not
 				-- in .NET mode
 			if not is_il_code then
-				env.system (command + " E1\estructure.h")
+				env.system (command + " E1" + directory_separator + "estructure.h")
 			end
 
 				-- Launch distributed make.

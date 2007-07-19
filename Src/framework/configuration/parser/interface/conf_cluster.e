@@ -143,13 +143,14 @@ feature -- Access queries
 				l_lib := target.system.application_target_library
 				if l_lib /= Void then
 					Result := l_lib.options
-						-- Remove namespace, we use the one defined in the library if any.
-					Result.set_local_namespace (Void)
 				end
 			end
 
 			if Result /= Void then
 				Result.merge (l_local)
+				
+					-- Need to set local namespace, because local namespaces cannot be merged
+				Result.set_local_namespace (l_local.local_namespace)
 			else
 				Result := l_local
 			end

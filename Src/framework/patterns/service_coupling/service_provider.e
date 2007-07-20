@@ -28,8 +28,6 @@ feature -- Query
 		require
 			a_type_attached: a_type /= Void
 		deferred
-		ensure
-			result_is_concealer: Result /= Void implies (({SERVICE_CONCEALER}) #? Result) = Void
 		end
 
 indexing

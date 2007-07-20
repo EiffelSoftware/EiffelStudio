@@ -1759,9 +1759,9 @@ if DOTNET test expected-any-type-name	dotnet058	tcf pass dotnet namespace dotnet
 if DOTNET test expected-basic-type-names	dotnet059	tcf pass dotnet namespace dotnet_names
 if DOTNET test dotnet-name-generation	dotnet060	tcf fail dotnet dotnet_names
 if DOTNET test external-name-conflict-validation	dotnet061	tcf pass dotnet dotnet_names
-if DOTNET test target-namespace-generation-rules	dotnet062	tcf fail dotnet namespace
+if DOTNET test target-namespace-generation-rules	dotnet062	tcf pass dotnet namespace
 if DOTNET test target-named-namespace-generation-rules	dotnet063	tcf pass dotnet namespace
-if DOTNET test library-namespace-generation-rules	dotnet064	tcf fail dotnet namespace
+if DOTNET test library-namespace-generation-rules	dotnet064	tcf pass dotnet namespace
 if DOTNET test library-named-namespace-generation-rules	dotnet065	tcf pass dotnet namespace
 if DOTNET test uncompiled-managed-resource-embeddeding	dotnet066	tcf pass dotnet resources
 if DOTNET test compiled-managed-resource-embeddeding	dotnet067	tcf pass dotnet resources
@@ -1779,7 +1779,7 @@ if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet propert
 if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality
 if DOTNET test property-on-procedure dotnet080	tcf pass dotnet property
 if DOTNET test ctor-basic dotnet081	tcf fail dotnet constructor
-if DOTNET test ctor-basic-dynamic dotnet082	tcf pass dotnet constructor
+if DOTNET test ctorif DOTNET test overridden-cluster-namespace-preserved dotnet104	tcf pass namespace-basic-dynamic dotnet082	tcf pass dotnet constructor
 if DOTNET test ctor-non-existing-create dotnet083	tcf pass dotnet constructor
 if DOTNET test ctor-single-default-ctor dotnet084	tcf pass dotnet constructor
 if DOTNET test ctor-parent-ctor-reference dotnet085	tcf pass dotnet constructor
@@ -1802,3 +1802,4 @@ if DOTNET test application-optimizations-enabled dotnet101	tcf pass dotnet optim
 if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet consumer
 if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes
 if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass constructor generic external creation
+if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass namespace

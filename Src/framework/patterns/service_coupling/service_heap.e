@@ -25,6 +25,8 @@ inherit
 			provider_add_service_with_activator,
 			provider_revoke_service,
 			provider_proffers_service
+		redefine
+			internal_query_service
 		end
 
 	SERVICE_PROVIDER
@@ -87,8 +89,11 @@ feature -- Query
 
 feature -- Query
 
-	query_service (a_type: TYPE [ANY]): ANY
-			-- Queries for service `a_type' and returns result if service was found on Current
+	internal_query_service (a_type: TYPE [ANY]): ANY
+			-- Queries for service `a_type' and returns result if service was found on Current.
+			--
+			-- Note: Typically will retrieve a concealed service as the result, which must be
+			--       revealed using `reveal_service'
 		do
 			if proffers_service (a_type) then
 				Result := services [type_hash_code (a_type)]

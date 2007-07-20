@@ -59,6 +59,56 @@ feature -- Query
 			Result := services.has (type_hash_code (a_type))
 		end
 
+feature -- Query
+
+	frozen query_service (a_type: TYPE [ANY]): ANY
+			-- Queries for service `a_type' and returns result if service was found on Current
+		do
+			Result := internal_query_service (a_type)
+			if Result /= Void then
+				Result := reveal_service (Result)
+			end
+		ensure then
+				-- If this contract is violated when you need to reveal the service. See `reveal_service'
+			not_result_is_concealer: Result /= Void implies (({SERVICE_CONCEALER}) #? Result) = Void
+		end
+
+feature {NONE} -- Query
+
+	internal_query_service (a_type: TYPE [ANY]): ANY
+			-- Queries for service `a_type' and returns result if service was found on Current.
+			--
+			-- Note: Typically will retrieve a concealed service as the result, which must be
+			--       revealed using `reveal_service'
+		require
+			a_type_attached: a_type /= Void
+		do
+			if proffers_service (a_type, True) then
+				Result := services [type_hash_code (a_type)]
+			end
+		end
+
+feature {NONE} -- Basic operations
+
+	reveal_service (a_service: ANY): ANY
+			-- Extracts `a_service' from a possible concealed service.s
+			--
+			-- `a_service': The service to reveal.
+			-- `Result': A revealed service or Void is no service could be revealed.
+		require
+			a_service_attached: a_service /= Void
+		local
+			l_concealer: SERVICE_CONCEALER
+		do
+			l_concealer ?= a_service
+			if l_concealer = Void then
+				Result := a_service
+			else
+					-- Reveal service
+				Result := l_concealer.service
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	services: HASH_TABLE [SERVICE_CONCEALER, STRING_8]

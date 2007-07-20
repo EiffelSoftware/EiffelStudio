@@ -24,7 +24,7 @@ if not exist ..\spec\%ISE_C_COMPILER%\%ISE_PLATFORM% mkdir ..\spec\%ISE_C_COMPIL
 if not exist ..\spec\%ISE_C_COMPILER%\%ISE_PLATFORM%\lib mkdir ..\spec\%ISE_C_COMPILER%\%ISE_PLATFORM%\lib
 
 rem Copy the platform/compiler configuration file
-copy "%ISE_EIFFEL%\studio\config\%ISE_PLATFORM%\%ISE_C_COMPILER%\config.sh" config.sh
+if not exist config.sh copy "%ISE_EIFFEL%\studio\config\%ISE_PLATFORM%\%ISE_C_COMPILER%\config.sh" config.sh
 rem Generate the Makefile using the portable Makefile-win.SH
 "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\rt_converter.exe" Makefile-win.SH Makefile
 

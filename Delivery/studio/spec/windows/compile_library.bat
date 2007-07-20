@@ -1,6 +1,21 @@
+@echo off
 rem Eiffel Software script utility to compile the C code of some Eiffel libraries.
 rem It assumes a standard layout which is that you are in a Clib directory and that 
 rem the C libraries will be created under ../spec/$ISE_C_COMPILER/$ISE_PLATFORM/lib
+
+rem Check environment
+if not exist "%ISE_EIFFEL%\studio\config\%ISE_PLATFORM%\%ISE_C_COMPILER%\config.sh" (
+	echo Missing config.sh file in "%ISE_EIFFEL%\studio\config\%ISE_PLATFORM%\%ISE_C_COMPILER%"
+	goto error
+)
+if not exist "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\rt_converter.exe" (
+	echo Missing converter tool "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\rt_converter.exe"
+	goto error
+)
+if not exist "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\sed.exe" (
+	echo Missing sed command "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\sed.exe"
+	goto error
+)
 
 rem Create the layout
 if not exist ..\spec mkdir ..\spec
@@ -37,7 +52,15 @@ rename make2.bat.modif make2.bat
 rem Now we can call our platform make utility.
 call make2.bat
 
-rem Delete files that were created in the process.
-del make2.bat
-del config.sh
-del Makefile
+if .%ERRORLEVEL%.==.0. (
+	rem Delete files that were created in the process.
+	del make2.bat
+	del config.sh
+	del Makefile
+)
+goto end
+
+:error
+echo Exiting...
+
+:end

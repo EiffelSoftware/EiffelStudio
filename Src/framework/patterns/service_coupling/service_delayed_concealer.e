@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make (a_activator: like activator) is
 			-- Initialize concealer with activator function `activator'
 		require
-			a_activator_attached: activator /= Void
+			a_activator_attached: a_activator /= Void
 		do
 			activator := a_activator
 		ensure

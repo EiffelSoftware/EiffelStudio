@@ -56,12 +56,10 @@ rename make2.bat.modif make2.bat
 rem Now we can call our platform make utility.
 call make2.bat
 
-if .%ERRORLEVEL%.==.0. (
-	rem Delete files that were created in the process.
-	del make2.bat
-	del config.sh
-	del Makefile
-)
+rem Delete files that were created in the process.
+del make2.bat
+del config.sh
+del Makefile
 goto end
 
 :error

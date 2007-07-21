@@ -82,7 +82,7 @@ feature -- Redefine querys
 	rectangle: EV_RECTANGLE is
 			-- Redefine
 		do
-			if is_wrap then
+			if tool_bar /= Void and then is_wrap then
 				create Result.make (0, tool_bar.item_y (Current), tool_bar.minimum_width, width)
 			else
 				Result := Precursor {SD_TOOL_BAR_ITEM}

@@ -43,7 +43,7 @@ ecdbgd.lmk: $(DBGOBJECTS)
 	echo GDI32.LIB ADVAPI32.LIB USER32.LIB >> ecdbgd.lmk
 
 $borlandecdbgd.exe: $(LIBS)  $(DBGOBJECTS)
-	$compiler_path$(DIR)bin$(DIR)ilink32 $compiler_path$(DIR)lib$(DIR)c0w32.$obj $(DBGOBJECTS), \
+	"$compiler_path$(DIR)bin$(DIR)ilink32" -L"$compiler_path$(DIR)lib"  "$compiler_path$(DIR)lib$(DIR)c0w32.$obj" $(DBGOBJECTS), \
 	ecdbgd.exe,, CW32 IMPORT32 $(LIBS),, 
 
 listen.$obj: ..$(DIR)shared$(DIR)select.h

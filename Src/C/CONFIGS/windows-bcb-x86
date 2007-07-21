@@ -2,27 +2,27 @@
 # This is the configuration file for BORLAND C++
 #
 borlandecdbgd='ecdbgd'
-make='$compiler_path\bin\make'
+make='"$compiler_path\bin\make.exe"'
 del='del'
 dir_sep='\\'
 #
 output_exe_cmd='-e'
 output_cmd='-o'
 input_cmd=''
-resource_compiler='$compiler_path\bin\brc32'
+resource_compiler='"$compiler_path\bin\brc32.exe"'
 #
 obj='obj'
 lib='lib'
 #
 # Standard runtime
 #-----------------
-ccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -I$compiler_path\include -L$compiler_path\lib'
-mtccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -DEIF_THREADS -I$compiler_path\include -L$compiler_path\lib'
+ccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -I"$compiler_path\include" -L"$compiler_path\lib"'
+mtccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -DEIF_THREADS -I"$compiler_path\include" -L"$compiler_path\lib"'
 output_libraries='standard mtstandard'
 #
 #
-link_line='&$compiler_path\bin\tlib /p512 $@ +$**'
-alib_line='&$compiler_path\bin\tlib /p512 $@ +$**'
+link_line='&"$compiler_path\bin\tlib.exe" /p512 $@ -+$**'
+alib_line='&"$compiler_path\bin\tlib.exe" /p512 $@ -+$**'
 #
 #
 optimize='-O2'
@@ -31,7 +31,7 @@ debug=''
 #debug='-v'
 warning_level='-w-8004 -w-8057'
 #
-cc='$compiler_path\bin\bcc32'
+cc='"$compiler_path\bin\bcc32.exe"'
 compiler_path='$(ISE_EIFFEL)\BCC55'
 all_dependency=''
 #

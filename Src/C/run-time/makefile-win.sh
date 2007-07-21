@@ -11,10 +11,7 @@ INPUT_CMD = $input_cmd
 JCFLAGS = $(CFLAGS) $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
-LN = copy
 MAKE = $make
-MV = move
-RM = $del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 
@@ -247,19 +244,15 @@ standard:: $(OUTDIR)finalized.$lib $(OUTDIR)wkbench.$lib
 mtstandard:: $(OUTDIR)mtfinalized.$lib $(OUTDIR)mtwkbench.$lib
 
 $(OUTDIR)finalized.$lib: $(OBJECTS)
-	$(RM) $(OUTDIR)finalized.$lib
 	$link_line
 
 $(OUTDIR)wkbench.$lib: $(WOBJECTS)
-	$(RM) $(OUTDIR)wkbench.$lib
 	$link_line
 
 $(OUTDIR)mtfinalized.$lib: $(MT_OBJECTS)
-	$(RM) $(OUTDIR)mtfinalized.$lib
 	$link_line
 
 $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
-	$(RM) $(OUTDIR)mtwkbench.$lib
 	$link_line
 
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
@@ -270,22 +263,18 @@ dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll
 
 $(OUTDIR)mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
-	$(RM) $(OUTDIR)mtwkbench.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)mtwkbench.dll \
 		-IMPLIB:$(OUTDIR)dll_mtwkbench.lib $(MT_WOBJECTS)
 
 $(OUTDIR)mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
-	$(RM) $(OUTDIR)mtfinalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)mtfinalized.dll \
 		-IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS)
 
 $(OUTDIR)wkbench.dll : $(OUTDIR) $(WOBJECTS)
-	$(RM) $(OUTDIR)wkbench.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)wkbench.dll \
 		-IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS) 
 
 $(OUTDIR)finalized.dll : $(OUTDIR) $(OBJECTS)
-	$(RM) $(OUTDIR)finalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)finalized.dll \
 		-IMPLIB:$(OUTDIR)dll_finalized.lib $(OBJECTS)
 
@@ -334,14 +323,6 @@ all:: x2c.exe
 
 x2c.exe: x2c.c eif_size.h
 	$(CC) $ccflags $optimize -I./include -I. -I$(TOP) $(OUTPUT_EXE_CMD)$@ x2c.c
-
-all:: eif_config.h eif_portable.h
-
-eif_config.h : $(TOP)$(DIR)eif_config.h
-	$(LN) $(TOP)$(DIR)eif_config.h .
-
-eif_portable.h : $(TOP)$(DIR)eif_portable.h
-	$(LN) $(TOP)$(DIR)eif_portable.h .
 
 $all_dependency
 

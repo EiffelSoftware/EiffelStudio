@@ -8,9 +8,7 @@ RUN_TIME = $(TOP)$(DIR)run-time
 CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)$(DIR)include -I$(TOP)$(DIR)console -I$(LIBIDR)
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DEIF_IPC
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IPC
-MAKE = make
-MV = copy
-RM = del
+MAKE = $make
 
 # Where shared archive is located (path and name)
 LIBDIR = ..$(DIR)shared

@@ -2,8 +2,6 @@ TOP = ..$(DIR)..
 DIR = $dir_sep
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
-MV = copy
-RM = del
 
 # Where shared archive is located (path and name)
 LIBDIR = ..$(DIR)shared

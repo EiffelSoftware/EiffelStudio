@@ -8,8 +8,6 @@ CFLAGS = -I$(TOP) -I..$(DIR)shared -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)$(DIR)incl
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH -DEIF_IPC
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize -DWORKBENCH -DEIF_IPC
 MAKE = $make
-MV = copy
-RM = del
 # Where shared archive is located (path and name)
 LIBDIR = ..$(DIR)shared
 LIBRUN = $(TOP)$(DIR)run-time

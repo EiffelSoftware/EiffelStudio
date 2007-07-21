@@ -259,16 +259,16 @@ $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
 dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll
 
-$(OUTDIR)mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
+$(OUTDIR)mtwkbench.dll : $(MT_WOBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtwkbench.lib $(MT_WOBJECTS) $(DLL_LIBS)
 
-$(OUTDIR)mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
+$(OUTDIR)mtfinalized.dll : $(MT_OBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS) $(DLL_LIBS)
 
-$(OUTDIR)wkbench.dll : $(OUTDIR) $(WOBJECTS)
+$(OUTDIR)wkbench.dll : $(WOBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS)  $(DLL_LIBS)
 
-$(OUTDIR)finalized.dll : $(OUTDIR) $(OBJECTS)
+$(OUTDIR)finalized.dll : $(OBJECTS)
 	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_finalized.lib $(OBJECTS) $(DLL_LIBS)
 
 ..$(DIR)console$(DIR)winconsole.$lib: ..$(DIR)console$(DIR)econsole.c ..$(DIR)console$(DIR)argcargv.c

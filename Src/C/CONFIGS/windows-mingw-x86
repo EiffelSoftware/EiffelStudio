@@ -4,6 +4,8 @@
 mingwecdbgd='ecdbgd'
 make='"$make_path/bin/make"'
 del='"$make_path/bin/rm" -f'
+mv='"$make_path/bin/cp" -f'
+mkdir_target='if [ ! -d $@ ]; then "$make_path/bin/mkdir" $@; fi'
 dir_sep='/'
 #
 output_exe_cmd='-o'
@@ -41,7 +43,8 @@ debug=''
 #debug='-g'
 
 warning_level='-Wall'
-dllflags='-mwindows -shared'
+dll_flags='-mwindows -shared -o $@'
+dll_libs=''
 #
 link32='"$compiler_path/bin/gcc"'
 cc='"$compiler_path/bin/gcc"'

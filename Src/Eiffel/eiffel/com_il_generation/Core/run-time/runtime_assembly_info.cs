@@ -50,7 +50,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eiffel Software Inc.")]
 [assembly: AssemblyProduct("EiffelStudio/ENViSioN!")]
-[assembly: AssemblyCopyright("Eiffel Software Inc. 2004")]
+[assembly: AssemblyCopyright("Eiffel Software Inc. 2007")]
 [assembly: AssemblyTrademark("Eiffel Software Inc.")]
 [assembly: AssemblyCulture("")]		
 

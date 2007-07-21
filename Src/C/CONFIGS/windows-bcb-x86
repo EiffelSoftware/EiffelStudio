@@ -4,6 +4,8 @@
 borlandecdbgd='ecdbgd'
 make='"$compiler_path\bin\make.exe"'
 del='del'
+mv='copy'
+mkdir_target='if not exist $@ mkdir $@'
 dir_sep='\\'
 #
 output_exe_cmd='-e'
@@ -30,8 +32,11 @@ debug=''
 #optimize=''
 #debug='-v'
 warning_level='-w-8004 -w-8057'
+dll_flags='-Tpd -o$@'
+dll_libs='CW32.lib IMPORT32.lib OLE2w32.lib'
 #
 cc='"$compiler_path\bin\bcc32.exe"'
+link32='"$compiler_path\bin\ilink32.exe" -q -x -Gn -L"$compiler_path\lib" '
 compiler_path='$(ISE_EIFFEL)\BCC55'
 all_dependency=''
 #

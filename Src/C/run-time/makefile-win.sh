@@ -13,7 +13,8 @@ JMTCFLAGS = $(CFLAGS) $mtccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
 MAKE = $make
 LINK32 = $link32
-DLLFLAGS = $dllflags
+DLL_FLAGS = $dll_flags
+DLL_LIBS = $dll_libs
 
 CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)network.$lib
@@ -255,28 +256,20 @@ $(OUTDIR)mtfinalized.$lib: $(MT_OBJECTS)
 $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
 	$link_line
 
-LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
-		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
-	$(DLLFLAGS)
-
 dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll
 
 $(OUTDIR)mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)mtwkbench.dll \
-		-IMPLIB:$(OUTDIR)dll_mtwkbench.lib $(MT_WOBJECTS)
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtwkbench.lib $(MT_WOBJECTS) $(DLL_LIBS)
 
 $(OUTDIR)mtfinalized.dll : $(OUTDIR) $(MT_OBJECTS)
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)mtfinalized.dll \
-		-IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS)
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_mtfinalized.lib $(MT_OBJECTS) $(DLL_LIBS)
 
 $(OUTDIR)wkbench.dll : $(OUTDIR) $(WOBJECTS)
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)wkbench.dll \
-		-IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS) 
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_wkbench.lib $(WOBJECTS)  $(DLL_LIBS)
 
 $(OUTDIR)finalized.dll : $(OUTDIR) $(OBJECTS)
-	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)finalized.dll \
-		-IMPLIB:$(OUTDIR)dll_finalized.lib $(OBJECTS)
+	$(LINK32) $(DLL_FLAGS) -IMPLIB:$(OUTDIR)dll_finalized.lib $(OBJECTS) $(DLL_LIBS)
 
 ..$(DIR)console$(DIR)winconsole.$lib: ..$(DIR)console$(DIR)econsole.c ..$(DIR)console$(DIR)argcargv.c
 	cd ..$(DIR)console

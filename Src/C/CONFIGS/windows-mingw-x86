@@ -44,7 +44,7 @@ debug=''
 
 warning_level='-Wall'
 dll_flags='-mwindows -shared -o $@'
-dll_libs=''
+dll_libs='-lwsock32'
 #
 link32='"$compiler_path/bin/gcc"'
 cc='"$compiler_path/bin/gcc"'

@@ -6,8 +6,6 @@ OUTPUT_CMD= $output_cmd
 CC = $cc
 JCFLAGS = $ccflags -I$(TOP)$(DIR)run-time -I$(TOP)$(DIR)ipc$(DIR)shared $optimize -I$(TOP)
 JMTCFLAGS = $mtccflags -I$(TOP)$(DIR)run-time -I$(TOP)$(DIR)ipc$(DIR)shared $optimize -I$(TOP)
-MV = copy
-RM = del
 
 OBJECTS = \
 	idrs.$obj

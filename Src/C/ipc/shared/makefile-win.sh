@@ -3,7 +3,6 @@ DIR = $dir_sep
 OUTDIR= .
 INDIR= .
 CC=$cc
-RM=del
 OUTPUT_CMD= $output_cmd
 LIBRUN = $(TOP)$(DIR)run-time
 LIBIDR = $(TOP)$(DIR)idrs

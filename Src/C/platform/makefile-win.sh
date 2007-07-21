@@ -8,8 +8,6 @@ JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 CFLAGS = -I$(TOP) -I$(TOP)$(DIR)run-time -I$(TOP)$(DIR)run-time$(DIR)include -I$(TOP)$(DIR)ipc$(DIR)shared
 MAKE = $make
-MV = ren
-RM = del
 
 OBJECTS = names.$obj commands.$obj
 

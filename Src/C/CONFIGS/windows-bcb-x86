@@ -18,9 +18,15 @@ lib='lib'
 #
 # Standard runtime
 #-----------------
+mtccflags='$ccflags -DEIF_THREADS'
 ccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -I"$compiler_path\include" -L"$compiler_path\lib"'
-mtccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -DEIF_THREADS -I"$compiler_path\include" -L"$compiler_path\lib"'
 output_libraries='standard mtstandard'
+#
+#-- DLL:
+#-------
+#mtccflags='$ccflags -DEIF_THREADS'
+#ccflags='-q $debug $warning_level -tWM -DEIF_BORLAND -DEIF_MAKE_DLL -I"$compiler_path\include" -L"$compiler_path\lib"'
+#output_libraries='dll mtdll'
 #
 #
 link_line='&"$compiler_path\bin\tlib.exe" /p512 $@ -+$**'

@@ -554,9 +554,11 @@ feature {NONE} -- Implementation
 			loop
 				if l_items.item.has_rectangle (l_rect) then
 					l_widget_item ?= l_items.item
-					if l_widget_item /= Void and then has_fixed (l_widget) then
+					if l_widget_item /= Void then
 						l_widget := l_widget_item.widget
-						set_item_width (l_widget, l_widget.minimum_width)
+						if has_fixed (l_widget) then
+							set_item_width (l_widget, l_widget.minimum_width)
+						end
 					end
 				end
 				l_items.forth

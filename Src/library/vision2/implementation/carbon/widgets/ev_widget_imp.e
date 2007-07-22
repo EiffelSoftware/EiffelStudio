@@ -203,13 +203,13 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			hide_control_external (c_object)
-			is_show_requested := false
+--			is_show_requested := false
 		end
 
 	show is
 		do
 			show_control_external (c_object)
-			is_show_requested := true
+--			is_show_requested := true
 		end
 
 

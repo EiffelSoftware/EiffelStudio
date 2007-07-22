@@ -203,20 +203,23 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			hide_control_external (c_object)
+			is_show_requested := false
 		end
 
 	show is
 		do
 			show_control_external (c_object)
+			is_show_requested := true
 		end
 
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN --is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'
 		do
 			Result :=hiview_is_visible_external ( c_object ).to_boolean
 		end
+
 
 feature -- Element change
 

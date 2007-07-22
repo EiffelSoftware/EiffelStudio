@@ -242,12 +242,13 @@ feature {NONE} -- Implementation
 			any: EV_ANY_IMP
 			w: EV_CARBON_WIDGET_IMP
 			p: POINTER
+			box: EV_BOX_IMP
+			str: STRING
 		do
 			w ?= a_widget.implementation
 			selected_widget := a_widget
 			p := $a_widget
-			info_label.set_text (
-				"Address: " + p.out + "%N" +
+			str := "Address: " + p.out + "%N" +
 				"%N" +
 				"Relative Position: " + a_widget.x_position.out + "x" + a_widget.y_position.out + "%N" +
 				"Screen Position: " + a_widget.screen_x.out + "x" + a_widget.screen_y.out + "%N" +
@@ -255,7 +256,15 @@ feature {NONE} -- Implementation
 				"Minimum Size: " + a_widget.minimum_width.out + "x" + a_widget.minimum_height.out + "%N" +
 				"Actual Size: "+ a_widget.width.out + "x" + a_widget.height.out + "%N" +
 				"%N" +
-				"Expandable: " + w.expandable.out )
+				"Expandable: " + w.expandable.out
+			box ?= w
+			if  box /= void then
+				str.append ("%N" +
+				"Padding: " + box.padding.out + "%N"+
+				"homogenous: " + box.is_homogeneous.out)
+			end
+			info_label.set_text (str)
+
 		end
 
 	selected_widget: EV_WIDGET

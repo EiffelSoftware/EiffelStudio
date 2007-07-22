@@ -104,7 +104,7 @@ feature -- Implementation
 			initial_control_width: INTEGER
 			non_expandable_width : INTEGER
 			expandable_width : INTEGER
-			last_x : INTEGER
+			next_x : INTEGER
 			min_width, min_height: INTEGER
 			ratio : DOUBLE
 		do
@@ -148,7 +148,7 @@ feature -- Implementation
 			end
 
 			from
-				last_x := -padding + child_offset_right
+				next_x := child_offset_right
 				i := 1
 			until
 				(i = 0) or (i = count + 1)
@@ -159,7 +159,7 @@ feature -- Implementation
 				end
 
 				--calculate rect
-				a_point.set_x ( last_x + padding )
+				a_point.set_x ( next_x )
 				a_point.set_y ( child_offset_top )
 				a_size.set_height ( height - child_offset_right - child_offset_left)
 
@@ -174,7 +174,7 @@ feature -- Implementation
 				end
 				err := hiview_set_frame_external ( w1.c_object, a_rect.item )
 
-				last_x := (a_point.x + a_size.width + padding).rounded
+				next_x := (a_point.x + a_size.width + padding).rounded
 				i := i + 1
 			end
 			buffered_minimum_height := internal_minimum_height.max (min_height + child_offset_top + child_offset_bottom)

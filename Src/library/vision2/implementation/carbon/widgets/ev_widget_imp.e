@@ -74,8 +74,8 @@ feature {NONE} -- Initialization
 			-- Initialize default options, colors and sizes.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			internal_minimum_width := -1
-			internal_minimum_height := -1
+			internal_minimum_width := 0
+			internal_minimum_height := 0
 			set_is_initialized (True)
 
 			expandable := True -- default
@@ -215,7 +215,7 @@ feature -- Status setting
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'
 		do
-			Result := true
+			Result :=hiview_is_visible_external ( c_object ).to_boolean
 		end
 
 feature -- Element change
@@ -223,10 +223,17 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			internal_set_minimum_size (a_minimum_width, internal_minimum_height)
+			set_minimum_size (a_minimum_width, internal_minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
+			-- Set the minimum vertical size to `a_minimum_height'.
+		do
+			set_minimum_size ( internal_minimum_width, a_minimum_height)
+		end
+
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
 			c: EV_CONTAINER_IMP
@@ -234,7 +241,7 @@ feature -- Element change
 		do
 			old_height := minimum_height
 			old_width := minimum_width
-			internal_set_minimum_size (internal_minimum_width, a_minimum_height)
+			internal_set_minimum_size (a_minimum_width, a_minimum_height)
 			if parent /= void then
 				c ?= parent.implementation
 				check
@@ -242,13 +249,7 @@ feature -- Element change
 				end
 				c.child_has_resized (current, minimum_height - old_height, minimum_width - old_width)
 			end
-		end
 
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Set the minimum horizontal size to `a_minimum_width'.
-			-- Set the minimum vertical size to `a_minimum_height'.
-		do
-			internal_set_minimum_size (a_minimum_width, a_minimum_height)
 		end
 
 feature -- Measurement

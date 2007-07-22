@@ -68,8 +68,8 @@ feature {NONE} -- Initialization
 			rect.set_top (0)
 			ret := create_user_pane_control_external ( null, rect.item, {CONTROLS_ANON_ENUMS}.kControlSupportsEmbedding, $container )
 
-			ret := hiview_set_visible_external (viewport, 1)
-			ret := hiview_set_visible_external (container, 1)
+			ret := hiview_set_visible_external (viewport, (true).to_integer)
+			ret := hiview_set_visible_external (container, (true).to_integer)
 			ret := hiview_add_subview_external (viewport, container)
 
 		end

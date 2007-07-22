@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	CONTROLS_FUNCTIONS_EXTERNAL
 		export
 			{NONE} all
@@ -121,7 +121,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create maximum_size.make_new_unshared
 			create minimum_size.make_new_unshared
 			err := hiview_get_size_constraints_external ( c_object, minimum_size.item, maximum_size.item )
-			Result := minimum_size.width.rounded
+			Result := minimum_size.width.rounded.max (1)
 		end
 
 	minimum_height, real_minimum_height: INTEGER is
@@ -136,10 +136,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create maximum_size.make_new_unshared
 			create minimum_size.make_new_unshared
 			err := hiview_get_size_constraints_external ( c_object, minimum_size.item, maximum_size.item )
-			Result := minimum_size.height.rounded
+			Result := minimum_size.height.rounded.max(1)
 		end
 
-		
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
@@ -190,6 +190,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			err := hiview_get_frame_external ( c_object, a_rect.item )
 			create a_size.make_shared ( a_rect.size )
 			Result := a_size.width.rounded
+
+			Result := Result.max( minimum_width )
 		end
 
 	height: INTEGER is
@@ -203,6 +205,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			err := hiview_get_frame_external ( c_object, a_rect.item )
 			create a_size.make_shared ( a_rect.size )
 			Result := a_size.height.rounded
+
+			Result := Result.max (minimum_height)
 		end
 
 	show is
@@ -254,7 +258,7 @@ feature -- Status report
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-
+				Result := hiview_is_latently_visible_external ( c_object ).to_boolean
 		end
 
 indexing

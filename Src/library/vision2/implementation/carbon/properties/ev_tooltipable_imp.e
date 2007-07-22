@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 					    OSStatus status;
 					    HMHelpContentRec helpTag;
 					    status = HMGetControlHelpContent ($a_object, &helpTag);
-					    $out_cfstring = helpTag.content[kHMMinimumContentIndex].u.tagCFString;
+					    $out_cfstring = (EIF_POINTER)helpTag.content[kHMMinimumContentIndex].u.tagCFString;
 					    return status;
 				}
 			]"

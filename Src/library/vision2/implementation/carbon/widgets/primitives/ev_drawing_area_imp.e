@@ -36,8 +36,8 @@ inherit
 			destroy,
 			call_button_event_actions,
 			initialize,
-			set_tooltip,
-			tooltip,
+			--set_tooltip,
+			--tooltip,
 			on_pointer_enter_leave,
 			on_key_event,
 			set_focus
@@ -52,6 +52,7 @@ inherit
 		export
 			{NONE} all
 		end
+
 
 create
 	make
@@ -136,15 +137,15 @@ feature {NONE} -- Implementation
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
 
-	set_tooltip (a_text: STRING_GENERAL) is
-			-- Set `tooltip' to `a_text'.
-		do
-		end
+	--set_tooltip (a_text: STRING_GENERAL) is
+	--		-- Set `tooltip' to `a_text'.
+	--	do
+	--	end
 
-	tooltip: STRING_32 is
-			-- Tooltip for `Current'.
-		do
-		end
+	--tooltip: STRING_32 is
+	--		-- Tooltip for `Current'.
+	--	do
+	--	end
 
 	internal_tooltip: STRING_32
 		-- Used for storing `tooltip' of `Current'.

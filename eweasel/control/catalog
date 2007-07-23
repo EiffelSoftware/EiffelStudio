@@ -1779,7 +1779,7 @@ if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet propert
 if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality
 if DOTNET test property-on-procedure dotnet080	tcf pass dotnet property
 if DOTNET test ctor-basic dotnet081	tcf fail dotnet constructor
-if DOTNET test ctorif DOTNET test overridden-cluster-namespace-preserved dotnet104	tcf pass namespace-basic-dynamic dotnet082	tcf pass dotnet constructor
+if DOTNET test ctor-basic-dynamic dotnet082	tcf pass dotnet constructor
 if DOTNET test ctor-non-existing-create dotnet083	tcf pass dotnet constructor
 if DOTNET test ctor-single-default-ctor dotnet084	tcf pass dotnet constructor
 if DOTNET test ctor-parent-ctor-reference dotnet085	tcf pass dotnet constructor

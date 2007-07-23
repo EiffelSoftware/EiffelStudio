@@ -837,19 +837,7 @@ Test valid-generic-derivation (valid207): passed
 Test creation-constraint-like-current-deferred (valid208): passed
 Test creation-constraint-like-current-deferred2 (valid209): passed
 Test vtcg-expanded (valid210): passed
-Test vtcg-generic (valid211): failed
-	Description: A more complex system is used to check the proper occurnce of a VTGC error in case one inherits from a non creation ready generic class.
-	Execution error in file C:\work\eweasel\eweasel\tests\valid211\tcf at line 12
-	Original text:    compile_result validity_error TEST VTCG(2)
-	Substituted text: compile_result validity_error TEST VTCG(2)
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class TEST code VTCG
-		Final status:  paused 
-	Expected result:
-		Validity error in class TEST code VTCG(2)
-		Final status:  paused 
-
+Test vtcg-generic (valid211): passed
 Test wrong-vgcc (valid212): passed
 Test named-tuple-convert-conformance (valid213): failed
 	Description: A named TUPLE should conform to a matching unamed TUPLE even through conversion.
@@ -864,6 +852,20 @@ Test named-tuple-convert-conformance (valid213): failed
 		Final status:  completed 
 
 Test nested-generics-creation-readiness (valid214): passed
+Test static-comparison-test (valid215): passed
+Test generic-creation-constraint (valid216): failed
+	Description: Creation constraint of a generic class has to be a procedure. If not a VTGC(3) should be reported.
+	Execution error in file C:\work\eweasel\eweasel\tests\valid216\tcf at line 9
+	Original text:    compile_result validity_error TEST1 VTGC(3)
+	Substituted text: compile_result validity_error TEST1 VTGC(3)
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VTCG
+		Final status:  paused 
+	Expected result:
+		Validity error in class TEST1 code VTGC(3)
+		Final status:  paused 
+
 Test svalid-infix-with-conversion (svalid001): failed
 	Description: An infix routine call with a conversion fails to type check in descendant class due to the lost of the conversion structure.
 	Execution error in file C:\work\eweasel\eweasel\tests\svalid001\tcf at line 9
@@ -1335,13 +1337,7 @@ Test replicated-once-recompilation (incr246): failed
 
 Test change-manifest-type-expr (incr247): passed
 Test manifest-type-expr-none (incr248): passed
-Test internal-incrementality (incr249): failed
-	Description: After initial compilation, a function used as an anchor for an attribute type changes, but INTERNAL still reports the old type for the attribute, not the new one.
-	Execution error in file C:\work\eweasel\eweasel\tests\incr249\tcf at line 21
-	Original text:    compare exec_output2 output2
-	Substituted text: compare exec_output2 output2
-	Reason: files being compared do not have identical contents
-
+Test internal-incrementality (incr249): passed
 Test move-implementation (incr250): passed
 Test assigner-for-synonym (incr251): passed
 Test add-unique (incr252): passed
@@ -1386,6 +1382,7 @@ Test vtcg-add-remove-missing-error (incr281): failed
 
 Test funky-removal-of-type (incr282): passed
 Test multi-constraint-incremental-crash (incr283): passed
+Test removing-formal-crashes (incr284): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
 Test manifest-array-with-old (melt003): passed
@@ -1530,6 +1527,20 @@ Test increment-character (melt073): passed
 Test int64-cast-uint64 (melt074): passed
 Test character_32-inspect (melt075): passed
 Test invariant-check-melted-agent-callee (melt076): passed
+Test dollar-with-tuple (melt077): failed
+	Description: When the $ operator is used on a pointer, the tuple value is set to default pointer in melted mode.
+	Execution error in file C:\work\eweasel\eweasel\tests\melt077\tcf at line 12
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
+Test dollar-with-expanded-attribute (melt078): failed
+	Description: When the $ operator is used on an attribute and assigned to an entity of type ANY, in melted mode we get a generating type of TEST1 instead of getting POINTER.
+	Execution error in file C:\work\eweasel\eweasel\tests\melt078\tcf at line 13
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file C:\work\eweasel\eweasel\tests\freez001\tcf at line 28
@@ -2245,6 +2256,7 @@ Test entry-point-defined (exec276): failed
 	Substituted text: compare exec_output output
 	Reason: files being compared do not have identical contents
 
+Test derivation-reverse-attachment (exec277): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -2414,6 +2426,18 @@ Test inspect-using-static-procedure (term144): passed
 Test constraint-type-comparison (term145): passed
 Test missing-actual-generic-crash (term146): passed
 Test actual-generic-none-crash (term147): passed
+Test complex-generics-crash (term148): failed
+	Description: Generics of the form GENERIC [G, H ->V [G]] are able to crash the compilers code generation (degree -1).
+	Execution error in file C:\work\eweasel\eweasel\tests\term148\tcf at line 12
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  system_failed had_exception (Segmentation violation
+	) 
+	Expected result:
+		Final status:  completed 
+
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -2555,6 +2579,25 @@ Test last-reverse-assignment-to-expanded (ccomp060): failed
 
 Test adding-removing-classes-c-compile-error (ccomp061): passed
 Test once-manifest-string-in-cpp-file (ccomp062): passed
+Test feature-call-via-cecil (ccomp063): failed
+	Description: Calls to Eiffel features using CECIL in different modes should be supported.
+	Execution error in file C:\work\eweasel\eweasel\tests\ccomp063\tcf at line 54
+	Original text:    compare exec_output_w output10
+	Substituted text: compare exec_output_w output10
+	Reason: files being compared do not have identical contents
+
+Test deferred-to-string-constant (ccomp064): passed
+Test built-in-unary-plus (ccomp065): failed
+	Description: A generic class with a multi constrained formal is derrived with DOUBLE. The unary the unary plus uf numeric is renamed into something else and `out' us rebaned into the new unary plus. This causes a c compilation error
+	Execution error in file C:\work\eweasel\eweasel\tests\ccomp065\tcf at line 11
+	Original text:    c_compile_result ok
+	Substituted text: c_compile_result ok
+	Reason: actual C compilation result does not match expected result
+	Actual result: failure C_compilation_not_completed
+	Expected result: no_failure C_compilation_completed
+
+Test expanded-generic-conformance-c-bad-finalization (ccomp066): passed
+Test dll-generation-failure (ccomp067): passed
 Test freeze-retrieval-mismatch (store001): passed
 Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
@@ -2846,6 +2889,7 @@ Test elseif-with-compound (fixed129): passed
 Test attribute-in-inherited-assertion (fixed130): passed
 Test external-inline-boolean (fixed131): passed
 Test class-name-in-multiline-string (fixed132): passed
+Test generic-constraint-to-none (fixed133): passed
 Test roundtrip-test (rdtp001): passed
 Test roundtrip-number-denoted-character (rdtp002): passed
 Test supplier-preconditions (assert001): passed
@@ -2887,58 +2931,17 @@ Test multi-constraint-nested-calls (multicon035): passed
 Test multi-constraint-vtmc4 (multicon036): passed
 Test multi-constraint-tuples (multicon037): passed
 Test multi-constraint-tuples2 (multicon038): passed
-Test multi-constraint-rename-alias (multicon039): failed
-	Description: Feature can get an alias as a result of renaming in formal generic constraint.
-	Execution error in file C:\work\eweasel\eweasel\tests\multicon039\tcf at line 11
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class B code VWOE
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
-Test multi-constraint-assigner (multicon040): failed
-	Description: Feature can get an assigner command as a result of renaming in formal generic constraint.
-	Execution error in file C:\work\eweasel\eweasel\tests\multicon040\tcf at line 11
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class B code VWBR(1)
-		Validity error in class B code VWBR(1)
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test multi-constraint-rename-alias (multicon039): passed
+Test multi-constraint-assigner (multicon040): passed
 Test multi-constraint-recursive-generic (multicon041): manual
 Test multi-constraint-rename-clause-crash (multicon042): passed
 Test multi-constraint-order-affects-semantic (multicon043): passed
-Test multi-constraint-rename-to-infix (multicon044): failed
-	Description: Reveals bug#12776. A renaming of a feature to an infix causes the compiler to crash.
-	Execution error in file C:\work\eweasel\eweasel\tests\multicon044\tcf at line 12
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  system_failed had_exception (Segmentation violation
-	) 
-	Expected result:
-		Final status:  completed 
-
-Test multi-constraint-alias (multicon045): failed
-	Description: Feature call on a formal generic type using an operator notation should be supported.
-	Execution error in file C:\work\eweasel\eweasel\tests\multicon045\tcf at line 11
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Validity error in class B code VTMC(1)
-		Final status:  paused 
-	Expected result:
-		Final status:  completed 
-
+Test multi-constraint-rename-to-infix (multicon044): passed
+Test multi-constraint-alias (multicon045): passed
+Test multi-constraint-constrained-twice (multicon046): passed
+Test multi-constraint-renaming-to-existing-feature (multicon047): passed
+Test multi-constraint-any-numeric-crash (multicon048): passed
+Test multi-constraint-parallel-renaming (multicon049): passed
 Test expanded-array-attached-reference-array (expanded001): passed
 Test expanded-reverse-assignment (expanded002): passed
 Test array-of-user-defined-expanded (expanded003): passed
@@ -2962,8 +2965,8 @@ Test real-output-no-locale (dotnet036): passed
 Test replicated-from-generic-type (dotnet050): passed
 Test implicit-type-cause-crash-on-cast (dotnet051): passed
 
-Passed:  1383 / 1553  (89%)
-Failed:  150 / 1553  (10%)
-Manual:  17 / 1553  (2%)
-Skipped:  3 / 1553  (1%)
+Passed:  1400 / 1570  (90%)
+Failed:  150 / 1570  (10%)
+Manual:  17 / 1570  (2%)
+Skipped:  3 / 1570  (1%)
 

@@ -243,6 +243,20 @@ feature -- Carbon constants
 	alias
 		"typeQDRgnHandle"
 	end
+	
+	frozen typeQDPoint: INTEGER is
+	external
+		"C inline use <Carbon/Carbon.h>"
+	alias
+		"typeQDPoint"
+	end
+	
+	frozen typeUInt32: INTEGER is
+	external
+		"C inline use <Carbon/Carbon.h>"
+	alias
+		"typeUInt32"
+	end
 
 	frozen typeOSStatus: INTEGER is
 	external

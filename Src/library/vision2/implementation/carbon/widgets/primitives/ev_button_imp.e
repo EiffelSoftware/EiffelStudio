@@ -89,9 +89,10 @@ feature {NONE} -- Initialization
 		do
 			pixmapable_imp_initialize
 			Precursor {EV_PRIMITIVE_IMP}
-			event_id := app_implementation.get_id (current)
-			target := get_control_event_target_external( c_object )
-			h_ret := app_implementation.install_event_handler (event_id, target, {CARBONEVENTS_ANON_ENUMS}.kEventClassControl, {CARBONEVENTS_ANON_ENUMS}.kEventMouseDown )
+			initialize_events
+		--	event_id := app_implementation.get_id (current)
+		--	target := get_control_event_target_external( c_object )
+		--	h_ret := app_implementation.install_event_handler (event_id, target, {CARBONEVENTS_ANON_ENUMS}.kEventClassControl, {CARBONEVENTS_ANON_ENUMS}.kEventMouseDown )
 		end
 
 feature -- Access
@@ -184,7 +185,7 @@ feature {NONE} -- implementation
 					Result := noErr -- event handled
 					--io.put_string ("Actions in queue" + select_actions.count.out)
 				else
-					Result := {CARBON_EVENTS_CORE_ANON_ENUMS}.eventnothandlederr
+					Result := Precursor {EV_PRIMITIVE_IMP} (a_inhandlercallref, a_inevent, a_inuserdata)
 				end
 		end
 

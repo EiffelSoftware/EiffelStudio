@@ -27,8 +27,7 @@ inherit
 			foreground_color,
 			background_color,
 			set_foreground_color,
-			set_background_color,
-			on_event
+			set_background_color
 		redefine
 			interface,
 			default_key_processing_blocked,
@@ -40,7 +39,8 @@ inherit
 			--tooltip,
 			on_pointer_enter_leave,
 			on_key_event,
-			set_focus
+			set_focus,
+			on_event
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 		do
 
 			Precursor {EV_PRIMITIVE_IMP}
-
+			initialize_events
 			ret := hiview_set_drawing_enabled_external (c_object, 1)
 			event_id := app_implementation.get_id (current)  --getting an id from the application
 			target := get_control_event_target_external(c_object)
@@ -212,6 +212,26 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_focus is
 			-- Grab keyboard focus.
 		do
+		end
+
+
+feature {EV_APPLICATION_IMP}
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+			-- Feature that is called if an event occurs
+		local
+			event_class, event_kind : INTEGER
+			c_imp: EV_WIDGET_IMP
+			ret : INTEGER
+		do
+				event_class := get_event_class_external (a_inevent)
+				event_kind := get_event_kind_external (a_inevent)
+				if event_kind = {CARBONEVENTS_ANON_ENUMS}.kEventControlDraw and event_class = {CARBONEVENTS_ANON_ENUMS}.kEventClassControl then
+					ret := call_next_event_handler_external (a_inhandlercallref, a_inevent)
+					draw ( a_inevent )
+					Result := {EV_ANY_IMP}.noErr -- event handled
+				else
+					Result := Precursor {EV_PRIMITIVE_IMP}(a_inhandlercallref, a_inevent, a_inuserdata)
+				end
 		end
 
 feature {NONE} -- Implementation

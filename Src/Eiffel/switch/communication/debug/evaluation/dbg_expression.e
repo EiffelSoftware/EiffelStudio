@@ -60,6 +60,8 @@ feature -- Debug output
 		do
 			if expression /= Void then
 				Result := expression.as_string_8
+			else
+				create Result.make_empty
 			end
 		end
 

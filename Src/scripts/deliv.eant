@@ -125,6 +125,10 @@
 		<geant target="get_bin__ec" />
 		-->
 
+		<!-- ecbatch -->
+		<available resource="${OUTPUT_DIR}${path_separator}ecbatch${exe}" variable="tmp_available"/>
+		<geant target="get_bin__ecbatch" if="$tmp_available=false" />
+
 		<!-- estudio -->
 		<available resource="${OUTPUT_DIR}${path_separator}estudio${exe}" variable="tmp_available"/>
 		<geant target="get_bin__estudio" if="$tmp_available=false" />
@@ -221,6 +225,12 @@
 		<echo message="Error occurred during 'finalize_ec' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ec${exe}" if="${return_code}=0" />
 	</target>
+	<target name="get_bin__ecbatch" >
+		<echo message="Finalize ec batch ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_ec_batch" />
+		<echo message="Error occurred during 'finalize_ec_batch' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}batch${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ecbatch${exe}" if="${return_code}=0" />
+	</target>
 	<target name="get_bin__estudio" >
 		<echo message="Finalize estudio ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_estudio" />
@@ -233,23 +243,25 @@
 		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}F_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
 	</target>
-	<target name="get_bin__compile_all" >
-		<echo message="Finalize compile_all ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_compile_all" />
-		<echo message="Error occurred during 'finalize_compile_all' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}compile_all${path_separator}F_code${path_separator}compile_all${exe}" to_file="${OUTPUT_DIR}${path_separator}compile_all${exe}" if="${return_code}=0" />
-	</target>
 	<target name="get_bin__esbuilder" >
 		<echo message="Finalize esbuilder ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_esbuilder" />
 		<echo message="Error occurred during 'finalize_esbuilder' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}esbuilder${path_separator}F_code${path_separator}esbuilder${exe}" to_file="${OUTPUT_DIR}${path_separator}esbuilder${exe}" if="${return_code}=0" />
 	</target>
+	<target name="get_bin__compile_all" >
+		<echo message="Finalize compile_all ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_compile_all" reuse_variables="true" />
+		<echo message="Error occurred during 'finalize_compile_all' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}compile_all${path_separator}F_code${path_separator}compile_all${exe}" to_file="${OUTPUT_DIR}${path_separator}compile_all${exe}" if="${return_code}=0" accept_errors="true" exit_code_variable="return_code" />
+		<set name="return_code" value="0" />
+	</target>
 	<target name="get_bin__escln" >
 		<echo message="Finalize es_cleaner ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_es_cleaner" />
+		<geant target="finalize_es_cleaner" reuse_variables="true" />
 		<echo message="Error occurred during 'finalize_es_cleaner' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}escln_graphical${path_separator}F_code${path_separator}escln${exe}" to_file="${OUTPUT_DIR}${path_separator}escln${exe}" if="${return_code}=0" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}escln_graphical${path_separator}F_code${path_separator}escln${exe}" to_file="${OUTPUT_DIR}${path_separator}escln${exe}" if="${return_code}=0" accept_errors="true" exit_code_variable="return_code" />
+		<set name="return_code" value="0" />
 	</target>
 
 	<target name="install_es" depend="init_deliv" >
@@ -260,6 +272,10 @@
 
 		<available dir="${OUTPUT_DIR}" resource="ec${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="ec${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="ecbatch${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="ecbatch${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
 		<available dir="${OUTPUT_DIR}" resource="estudio${exe}" variable="tmp_available"/>
@@ -298,6 +314,15 @@
 	</target>
 
 	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >
+		<!-- install tool to compile libraries -->
+		<copy dir="${EIFFEL_SRC}\C\shell\bin" to_directory="${tmp_install_dir}${path_separator}bin" >
+			<fileset include="@(*.dll)" />
+			<fileset include="@(*.exe)" />
+		</copy>
+		<mkdir directory="${tmp_install_dir}\..\etc"/>
+		<copy file="${EIFFEL_SRC}\..\Delivery\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}${path_separator}bin${path_separator}compile_library.bat" />
+
+		<!-- continue with binaries -->
 		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
 			<fileset include="@(*.dll)" />
 		</copy>

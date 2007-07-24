@@ -960,7 +960,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 				loop
 					all_dependents.forth
 				end
-				Result := Result and not all_dependents.has (Current.id)
+				Result := Result and not all_dependents.has (id)
 				instance_objects.forth
 			end
 		end
@@ -1922,7 +1922,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 					-- when the top level object has its referers connected.
 				if not inside_nested then
 						-- Add `Current' as an instance referer of `l_object'.
-					l_object.instance_referers.put (Current.id, Current.id)
+					l_object.instance_referers.put (id, id)
 					connect_instance_referers (l_object, Current)
 				end
 

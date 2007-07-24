@@ -94,14 +94,14 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current interval strictly before `other'?
 		do
-			Result := (Current.start_bound < other.start_bound) and then 
-				(Current.end_bound < other.end_bound)
+			Result := (start_bound < other.start_bound) and then 
+				(end_bound < other.end_bound)
 		end
 	
 	infix "<=" (other: like Current): BOOLEAN is
 			-- Is current interval before `other'?
 		do
-			Result := (Current < other) or else (Current.is_equal (other))
+			Result := (Current < other) or else (is_equal (other))
 		end
 
 	infix ">" (other: like Current): BOOLEAN is

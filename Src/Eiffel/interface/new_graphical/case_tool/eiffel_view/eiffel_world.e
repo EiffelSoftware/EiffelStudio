@@ -506,7 +506,7 @@ feature -- Store/Retrive
 		local
 			f: RAW_FILE
 		do
-			create f.make (context_editor.diagram_file_name (Current.model))
+			create f.make (context_editor.diagram_file_name (model))
 			if f.exists then
 				f.open_read
 			else
@@ -517,7 +517,7 @@ feature -- Store/Retrive
 			f.close
 
 			current_view := default_view_name
-			create f.make (context_editor.diagram_file_name (Current.model))
+			create f.make (context_editor.diagram_file_name (model))
 			if f.exists then
 				f.open_read
 				if f.readable then
@@ -551,7 +551,7 @@ feature -- Store/Retrive
 			f: RAW_FILE
 		do
 			 	-- Save current view.
-			create f.make (context_editor.diagram_file_name (Current.model))
+			create f.make (context_editor.diagram_file_name (model))
 			if f.exists then
 				f.open_read
 			else
@@ -561,7 +561,7 @@ feature -- Store/Retrive
 			f.close
 				-- Restore view `name' if possible.
 			current_view := name
-			create f.make (context_editor.diagram_file_name (Current.model))
+			create f.make (context_editor.diagram_file_name (model))
 			if f.exists then
 				f.open_read
 				if f.readable and then has_view_with_name (f, name) then

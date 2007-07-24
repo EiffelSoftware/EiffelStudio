@@ -177,7 +177,7 @@ feature -- Status setting
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
-				parent_imp.interface.prune (Current.interface)
+				parent_imp.interface.prune (interface)
 			end
 			if interface.prunable then
 				interface.wipe_out

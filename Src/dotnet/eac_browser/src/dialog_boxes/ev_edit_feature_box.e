@@ -53,8 +53,8 @@ feature {NONE} -- Initialization
 --				-- Create `key' representing q.
 --			create key.make_with_code (key_constants.key_q)
 --			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent Current.destroy)
---			Current.accelerators.extend (accelerator)
+--			accelerator.actions.extend (agent destroy)
+--			accelerators.extend (accelerator)
 
 				--Connect events.
 			l_feature.key_press_actions.extend (agent on_key_pressed (?))

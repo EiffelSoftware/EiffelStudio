@@ -119,7 +119,7 @@ feature -- Access
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
-			create Result.make (Current.count + feature_signature.count + completion_type.count)
+			create Result.make (count + feature_signature.count + completion_type.count)
 			Result.append (Current)
 			Result.append (feature_signature)
 			Result.append (completion_type)

@@ -165,7 +165,7 @@ feature -- Roundtrip/Text
 		require
 			a_match_list_attached: a_match_list /= Void
 		do
-			Result := a_match_list.text (create {ERT_TOKEN_REGION}.make (Current.index, Current.index))
+			Result := a_match_list.text (create {ERT_TOKEN_REGION}.make (index, index))
 		end
 
 feature -- Access

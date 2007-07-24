@@ -71,7 +71,7 @@ feature -- Access
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
-			Result := Current.out.twin
+			Result := out.twin
 		end
 
 	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is

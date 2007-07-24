@@ -132,7 +132,7 @@ feature -- Access
 		do
 			create l_domain_generator
 			l_domain_generator.enable_fill_domain
-			l_target_domain ?= Current.wrapped_domain.new_domain (l_domain_generator)
+			l_target_domain ?= wrapped_domain.new_domain (l_domain_generator)
 			check
 				l_target_domain /= Void and then l_target_domain.count = 1
 			end

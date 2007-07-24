@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
-			close_request_actions.extend (agent Current.destroy)
+			close_request_actions.extend (agent destroy)
 
 			user_initialization
 		end

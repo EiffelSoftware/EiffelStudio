@@ -771,7 +771,7 @@ feature {NONE}
 		require
 			class_header_not_void: class_header /= Void
 		do
-			class_header.append_class_by_type_id (Current.type_id)
+			class_header.append_class_by_type_id (type_id)
 		end
 			
 	append_parents is

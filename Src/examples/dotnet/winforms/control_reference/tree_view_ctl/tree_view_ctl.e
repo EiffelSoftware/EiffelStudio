@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			l_decimal: DECIMAL
 			l_bitmap: DRAWING_BITMAP
 		do
-			create resources.make_from_resource_source (Current.get_type)
+			create resources.make_from_resource_source (get_type)
 
 			create components.make
 			create check_box_7.make

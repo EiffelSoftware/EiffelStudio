@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			maximum_width := interface.maximum_dimension
 			maximum_height := interface.maximum_dimension
 
-			app_implementation.windows.extend (current.interface)
+			app_implementation.windows.extend (interface)
 
 			initialize_client_area
 

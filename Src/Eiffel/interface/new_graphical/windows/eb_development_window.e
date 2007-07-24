@@ -2053,7 +2053,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			if ed /= Void then
 				create l_dialog.make (ed)
 				ui.set_goto_dialog (l_dialog)
-				l_dialog.show_modal_to_window (Current.window)
+				l_dialog.show_modal_to_window (window)
 			end
 		end
 

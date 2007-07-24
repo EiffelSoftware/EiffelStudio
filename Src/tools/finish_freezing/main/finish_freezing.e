@@ -51,6 +51,7 @@ feature -- Initialization
 			gen_only: BOOLEAN
 			l_library_cmd: STRING
 			l_c_setup: COMPILER_SETUP
+			l_options: RESOURCE_TABLE
 		do
 			if not retried then
 					-- if location has been specified, update it
@@ -85,8 +86,11 @@ feature -- Initialization
 					l_processors := 0
 				end
 
+
+				create l_options.make (20)
+				read_options_in (l_options)
 				if a_parser.is_for_library then
-					create l_c_setup.initialize (create {RESOURCE_TABLE}.make (20), a_parser.force_32bit_code_generation)
+					create l_c_setup.initialize (l_options, a_parser.force_32bit_code_generation)
 						-- Simply execute our batch script to compile the C code of libraries.
 					create l_library_cmd.make (256)
 						-- The double quote twice are there because the command is executed through COMSPEC.
@@ -97,7 +101,7 @@ feature -- Initialization
 					l_library_cmd.append_character ('"')
 					env.system (l_library_cmd)
 				else
-					create translator.make (mapped_path, a_parser.force_32bit_code_generation, l_processors)
+					create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
 					translator.translate
 					if not gen_only and translator.has_makefile_sh then
@@ -169,6 +173,22 @@ feature -- Access
 				completed.delete
 				Result := False
 			end
+		end
+
+feature -- Implementation
+
+	read_options_in (a_options: RESOURCE_TABLE) is
+			-- read options from config.eif
+		require
+			a_options_not_void: a_options /= Void
+		local
+			reader: RESOURCE_PARSER
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
+		do
+			create reader
+			l_layout ?= eiffel_layout
+			check layout_not_void: l_layout /= Void end
+			reader.parse_file (l_layout.config_eif, a_options)
 		end
 
 feature -- Externals

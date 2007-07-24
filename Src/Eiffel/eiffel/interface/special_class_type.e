@@ -715,8 +715,7 @@ feature {NONE} -- C code generation
 			gen_param, result_type: TYPE_I
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
-			final_mode: BOOLEAN
-			encoded_name: STRING
+			encoded_name, result_type_name: STRING
 		do
 			gen_param := first_generic
 			l_param_is_expanded := gen_param.is_true_expanded
@@ -730,16 +729,38 @@ feature {NONE} -- C code generation
 
 			System.used_features_log_file.add (Current, "base_address", encoded_name)
 
-			buffer.generate_function_signature (result_type.c_type.c_string, encoded_name, True,
+			if byte_context.workbench_mode then
+				result_type_name := "EIF_UNION"
+			else
+				result_type_name := result_type.c_type.c_string
+			end
+
+			buffer.generate_function_signature (result_type_name, encoded_name, True,
 				byte_context.header_buffer,
 				<<"Current">>, <<"EIF_REFERENCE">>)
 
-			final_mode := byte_context.final_mode;
+			buffer.indent
 
-			buffer.put_string ("%Treturn ")
+			if byte_context.workbench_mode then
+				buffer.put_string ("EIF_UNION r;")
+				buffer.put_new_line
+				buffer.put_string ("r.")
+				result_type.c_type.generate_typed_tag (buffer)
+				buffer.put_character (';')
+				buffer.put_new_line
+				buffer.put_string ("r.")
+				result_type.c_type.generate_typed_field (buffer)
+				buffer.put_string (" = ")
+			else
+				buffer.put_string ("return ")
+			end
 			result_type.c_type.generate_cast (buffer)
 			buffer.put_string (" Current;")
 
+			if byte_context.workbench_mode then
+				buffer.put_new_line
+				buffer.put_string ("return r;")
+			end
 			buffer.put_string ("%N}%N%N")
 
 			byte_context.clear_feature_data

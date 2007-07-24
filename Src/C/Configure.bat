@@ -19,26 +19,26 @@ goto end
 if .%2. == .. goto usage
 if NOT .%2. == .b. goto mingw
 set PATH=%ISE_EIFFEL%\BCC55\bin;%PATH%
-copy CONFIGS\windows-bcb-x86 config.sh
+copy CONFIGS\windows-x86-bcb config.sh
 set remove_desc=1
 goto process
 :mingw
 if NOT .%2. == .g. goto msc
-copy CONFIGS\windows-mingw-x86 config.sh
+copy CONFIGS\windows-x86-mingw config.sh
 set remove_desc=1
 goto process
 :msc
 if NOT .%2. == .m. goto msc6
-copy CONFIGS\windows-msc-x86 config.sh
+copy CONFIGS\windows-x86-msc config.sh
 goto process
 :msc6
 if NOT .%2. == .m6. goto usage
-copy CONFIGS\windows-msc6-x86 config.sh
+copy CONFIGS\windows-x86-msc6 config.sh
 goto process
 :win64
 if .%2. == .. goto usage
 if NOT .%2. == .m. goto usage
-copy CONFIGS\windows-msc-x86-64 config.sh
+copy CONFIGS\windows-x86-64-msc config.sh
 set remove_desc=1
 goto process
 :process

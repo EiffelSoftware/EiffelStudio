@@ -75,6 +75,14 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
+	is_for_library: BOOLEAN is
+			-- Is `finish_freezing' launched to compile the C code for an Eiffel library?
+		require
+			successful: successful
+		do
+			Result := has_option (library_switch)
+		end
+
 feature -- Query
 
 	has_location: BOOLEAN is
@@ -116,9 +124,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (nproc_switch, "Maximum number of processors to use", True, False, "n", "Number of processors", False, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
-
-				-- For development purposes only.
-			Result.extend (create {ARGUMENT_SWITCH}.make_hidden (library_switch, "Does nothing, for UNIX compatibility only", True, True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Compile the C code of an Eiffel library", True, True))
 		end
 
 feature {NONE} -- Switches

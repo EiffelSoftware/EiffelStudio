@@ -470,7 +470,7 @@ void ora_start_order (int no_desc) {
 all select–list items before doing the oexec. */
 	if (sql_function == FT_SELECT) {
 		if ((ncol [no_desc] = describe_define(cda[no_desc], no_desc)) == -1) {
-			(cda[no_desc]);
+			ora_error_handler(cda[no_desc]);
 			//continue;
 		}
 	}
@@ -786,8 +786,6 @@ char date[19];
 char d[3] = { (char) 0, (char) 0, (char) 0 };
 char y[5] = { (char) 0, (char) 0, (char) 0, (char) 0, (char) 0 };
 
-static char *default_date = "11/11/1111 11:11:11";
-
 int ora_get_date_data (int no_des, int i)
 {
 	int size;
@@ -797,7 +795,6 @@ int ora_get_date_data (int no_des, int i)
 		size = desc [no_des] [i-1].buflen;
 		if (*(def [no_des] [i-1].buf) == '\0')
 		{
-			//memcpy (&date, default_date, sizeof(date));
 			return 0;
 		} else {
 			memcpy (&date, def [no_des] [i-1].buf, sizeof(date));

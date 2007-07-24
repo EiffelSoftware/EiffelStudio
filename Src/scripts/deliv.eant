@@ -321,6 +321,11 @@
 		</copy>
 		<mkdir directory="${tmp_install_dir}\..\etc"/>
 		<copy file="${EIFFEL_SRC}\..\Delivery\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}${path_separator}bin${path_separator}compile_library.bat" />
+		<set name="tmp_config_fn" value="windows-${ISE_C_COMPILER}-x86" if="${ISE_PLATFORM}=windows" />
+		<set name="tmp_config_fn" value="windows-${ISE_C_COMPILER}-x86-64" if="${ISE_PLATFORM}=win64" />
+		<copy file="${EIFFEL_SRC}\C\CONFIGS\${tmp_config_fn}" to_file="${INSTALL_DIR}\studio\config\${ISE_PLATFORM}\${ISE_C_COMPILER}\${tmp_config_fn}" />
+		<unset name="tmp_config_fn" />
+
 
 		<!-- continue with binaries -->
 		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >

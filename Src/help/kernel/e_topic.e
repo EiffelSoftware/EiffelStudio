@@ -284,7 +284,7 @@ feature -- Implementation
 		require
 			ht /= Void
 		do
-			ht.force(Current, Current.id)
+			ht.force(Current, id)
 			if contains_subtopics then
 				from
 					subtopics.start

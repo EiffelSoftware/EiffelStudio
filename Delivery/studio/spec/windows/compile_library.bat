@@ -26,6 +26,14 @@ if not exist "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\sed.exe" (
 	echo Missing sed command "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\sed.exe"
 	goto error
 )
+if not exist "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\etc" (
+	echo Missing etc directory. Create etc in "%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\"
+	goto error
+)
+if not exist "Makefile-win.SH" (
+	echo Missing Makefile-win.SH file in current directory
+	goto error
+)
 
 rem Copy the platform/compiler configuration file
 if not exist config.sh copy "%ISE_EIFFEL%\studio\config\%ISE_PLATFORM%\%ISE_C_COMPILER%\config.sh" config.sh

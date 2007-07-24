@@ -55,19 +55,19 @@
 		<!-- library -->
 	<target name="compile_library" depend="init">
 		<echo message="Compile net clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/net/Clib" if="${is_windows}" 
+		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/net/Clib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/net/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2 clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/vision2/Clib" if="${is_windows}"
+		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/vision2/Clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile wel clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/wel/clib" if="${is_windows}"
+		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/wel/clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2/gtk clib" />

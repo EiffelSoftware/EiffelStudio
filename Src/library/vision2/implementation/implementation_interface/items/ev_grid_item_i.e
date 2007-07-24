@@ -45,7 +45,7 @@ feature {EV_ANY} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			hash_code := -1
+			hash_code := 0
 			set_is_initialized (True)
 		end
 
@@ -178,6 +178,10 @@ feature -- Access
 	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
+
+	hash_code: INTEGER
+		-- Used to uniquely identify grid item within `parent_i'.
+		-- Should be set to -1 if `Current' is not parented.
 
 feature -- Status setting
 
@@ -504,7 +508,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i := Void
 			column_i := Void
 			row_i := Void
-			hash_code := -1
+			hash_code := 0
 		ensure
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
@@ -512,10 +516,6 @@ feature {EV_GRID_I} -- Implementation
 		end
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
-
-	hash_code: INTEGER
-		-- Used to uniquely identify grid item within `parent_i'.
-		-- Should be set to -1 if `Current' is not parented.
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in if any.

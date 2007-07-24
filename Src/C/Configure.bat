@@ -43,32 +43,39 @@ set remove_desc=1
 goto process
 :process
 
-if .%3. == .dll. (
-	shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
-	shell\bin\mv config.sh.modif config.sh
-	shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
-	shell\bin\mv config.sh.modif config.sh
+rem A workaround for getting MSYS tools run on all x64 Windows platform.
+rem See http://www.mingw.org/MinGWiki/index.php/MsysShell for more details.
+rem Only needed when executing: sh, mv, sed
+if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
+	SET COMSPEC=%WINDIR%\SysWOW64\cmd.exe
 )
 
-shell\bin\sh.exe eif_config_h.SH
+if .%3. == .dll. (
+	"%COMSPEC%" /c shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
+	"%COMSPEC%" /c shell\bin\mv config.sh.modif config.sh
+	"%COMSPEC%" /c shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
+	"%COMSPEC%" /c shell\bin\mv config.sh.modif config.sh
+)
+
+"%COMSPEC%" /c shell\bin\sh.exe eif_config_h.SH
 cd run-time
-..\shell\bin\sh.exe eif_size_h.SH
+"%COMSPEC%" /c ..\shell\bin\sh.exe eif_size_h.SH
 cd ..
 
 rem Get the actual make name
 echo echo $make > make_name.bat
 shell\bin\rt_converter.exe make_name.bat make_name.bat
 rem Replace $(XX) into %X%
-shell\bin\sed -e "s/\$(\([^)]*\))/%%\1%%/g" make_name.bat >> make_name.modif
-shell\bin\mv make_name.modif make_name.bat
+"%COMSPEC%" /c shell\bin\sed -e "s/\$(\([^)]*\))/%%\1%%/g" make_name.bat >> make_name.modif
+"%COMSPEC%" /c shell\bin\mv make_name.modif make_name.bat
 
 rem Generate the make.w32 file with the above name
 echo @echo off > make.w32 
 call make_name.bat >> make.w32
 del make_name.bat
 rem Replace all / by \
-shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
-shell\bin\mv make.w32.modif make.w32
+"%COMSPEC%" /c shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
+"%COMSPEC%" /c shell\bin\mv make.w32.modif make.w32
 
 if exist run-time\eif_config.h del run-time\eif_config.h
 rem

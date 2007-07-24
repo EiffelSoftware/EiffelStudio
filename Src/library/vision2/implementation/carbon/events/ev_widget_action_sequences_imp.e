@@ -181,7 +181,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					create wherewin.make_new_unshared
 					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparammouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, where.sizeof, $actual_size, where.item )
 					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparamwindowmouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, wherewin.sizeof, $actual_size, wherewin.item )
-
+					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparammousebutton,  {AEDATA_MODEL_ANON_ENUMS}.typeWildCard, $actual_type, 4, $actual_size, $button)
 
 
 					event_data.put_integer_32 (where.x.rounded, 1)
@@ -196,6 +196,51 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					event_data.put_integer_32 (where.x.rounded, 7)
 					event_data.put_integer_32 (where.y.rounded, 8)
 					pointer_button_release_actions.call ( event_data )
+					Result := noErr -- event handled
+				elseif event_kind = {CARBONEVENTS_ANON_ENUMS}.kEventMouseEntered and event_class = {CARBONEVENTS_ANON_ENUMS}.kEventClassControl then
+					create where.make_new_unshared
+					create wherewin.make_new_unshared
+					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparammouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, where.sizeof, $actual_size, where.item )
+					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparamwindowmouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, wherewin.sizeof, $actual_size, wherewin.item )
+
+
+
+					event_data.put_integer_32 (where.x.rounded, 1)
+					event_data.put_integer_32 (where.y.rounded, 2)
+					event_data.put_integer_32 (button.as_integer_32, 3)
+
+					--don't know how to get them
+					event_data.put_integer_32 (0, 4)
+					event_data.put_integer_32 (0, 5)
+					event_data.put_integer_32 (1, 6)
+
+					event_data.put_integer_32 (where.x.rounded, 7)
+					event_data.put_integer_32 (where.y.rounded, 8)
+					-- don't know which Event data are needed for enter_actions
+					pointer_enter_actions.call ( event_data )
+					Result := noErr -- event handled
+
+				elseif event_kind = {CARBONEVENTS_ANON_ENUMS}.keventmouseexited and event_class = {CARBONEVENTS_ANON_ENUMS}.kEventClassControl then
+					create where.make_new_unshared
+					create wherewin.make_new_unshared
+					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparammouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, where.sizeof, $actual_size, where.item )
+					ret := get_event_parameter_external (a_inevent, {CARBONEVENTS_ANON_ENUMS}.keventparamwindowmouselocation, {CARBONEVENTS_ANON_ENUMS}.typehipoint, $actual_type, wherewin.sizeof, $actual_size, wherewin.item )
+
+
+
+					event_data.put_integer_32 (where.x.rounded, 1)
+					event_data.put_integer_32 (where.y.rounded, 2)
+					event_data.put_integer_32 (button.as_integer_32, 3)
+
+					--don't know how to get them
+					event_data.put_integer_32 (0, 4)
+					event_data.put_integer_32 (0, 5)
+					event_data.put_integer_32 (1, 6)
+
+					event_data.put_integer_32 (where.x.rounded, 7)
+					event_data.put_integer_32 (where.y.rounded, 8)
+					-- don't know which Event data are needed for enter_actions
+					pointer_leave_actions.call ( event_data )
 					Result := noErr -- event handled
 
 				elseif event_kind = {CARBONEVENTS_ANON_ENUMS}.kEventMouseDragged and event_class = {CARBONEVENTS_ANON_ENUMS}.kEventClassControl then

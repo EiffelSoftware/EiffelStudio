@@ -60,7 +60,7 @@ feature -- Basic operations
 
 invariant
 
-	neutral_addition: Current.is_equal (Current + zero)
+	neutral_addition: is_equal (Current + zero)
 	self_subtraction: zero.is_equal (Current - Current)
 
 indexing

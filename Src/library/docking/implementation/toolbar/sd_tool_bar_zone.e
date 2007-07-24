@@ -498,7 +498,7 @@ feature {NONE} -- Implmentation
 	hash_code: INTEGER is
 			-- Hash code is index in all tool bar zones.
 		do
-			Result := docking_manager.tool_bar_manager.contents.index_of (Current.content, 1)
+			Result := docking_manager.tool_bar_manager.contents.index_of (content, 1)
 		end
 
 	internal_shared: SD_SHARED

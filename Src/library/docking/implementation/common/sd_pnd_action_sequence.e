@@ -42,7 +42,7 @@ feature -- Basic operations
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
 		do
-			create snapshot.make (Current.count)
+			create snapshot.make (count)
 			snapshot.fill (Current)
 			inspect
 				state

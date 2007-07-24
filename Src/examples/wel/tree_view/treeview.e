@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			tv_item1.set_text ("Root 1")
 			tv_item1.set_image (bitmap_folder_normal, bitmap_folder_selected)
 			tvis1.set_tree_view_item (tv_item1)
-			Current.insert_item (tvis1)
+			insert_item (tvis1)
 			root_h := last_item
 
 			-- Buttons
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			tv_item2.set_text ("Subtree 1")
 			tv_item2.set_image (bitmap_folder_normal, bitmap_folder_selected)
 			tvis2.set_tree_view_item (tv_item2)
-			Current.insert_item (tvis2)
+			insert_item (tvis2)
 			handle := last_item
 
 			create tvis3.make
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			tv_item3.set_text ("Item 1")
 			tv_item3.set_image (bitmap_document_normal, bitmap_document_selected)
 			tvis3.set_tree_view_item (tv_item3)
-			Current.insert_item (tvis3)
+			insert_item (tvis3)
 
 			create tvis3.make
 			tvis3.set_last
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			tv_item3.set_text ("Item 2")
 			tv_item3.set_image (bitmap_document_normal, bitmap_document_selected)
 			tvis3.set_tree_view_item (tv_item3)
-			Current.insert_item (tvis3)
+			insert_item (tvis3)
 
 			create tvis2.make
 			tvis2.set_last
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			tv_item2.set_text ("Subtree 2")
 			tv_item2.set_image (bitmap_folder_normal, bitmap_folder_selected)
 			tvis2.set_tree_view_item (tv_item2)
-			Current.insert_item (tvis2)
+			insert_item (tvis2)
 
 			create tvis3.make
 			tvis3.set_last
@@ -140,7 +140,7 @@ feature {NONE} -- Initialization
 			tv_item3.set_text ("Item 3")
 			tv_item3.set_image (bitmap_document_normal, bitmap_document_selected)
 			tvis3.set_tree_view_item (tv_item3)
-			Current.insert_item (tvis3)
+			insert_item (tvis3)
 
 			create tvis2.make
 			tvis2.set_last
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			tv_item2.set_text ("Item 4")
 			tv_item2.set_image (bitmap_document_normal, bitmap_document_selected)
 			tvis2.set_tree_view_item (tv_item2)
-			Current.insert_item (tvis2)
+			insert_item (tvis2)
 
 			create tvis3.make
 			tvis3.set_last
@@ -158,7 +158,7 @@ feature {NONE} -- Initialization
 			tv_item3.set_text ("Item 5")
 			tv_item3.set_image (bitmap_document_normal, bitmap_document_selected)
 			tvis3.set_tree_view_item (tv_item3)
-			Current.insert_item (tvis3)
+			insert_item (tvis3)
 
 			create tvis2.make
 			tvis2.set_last
@@ -166,7 +166,7 @@ feature {NONE} -- Initialization
 			tv_item2.set_text ("Root 2")
 			tv_item2.set_image (bitmap_folder_normal, bitmap_folder_selected)
 			tvis2.set_tree_view_item (tv_item2)
-			Current.insert_item (tvis2)
+			insert_item (tvis2)
 
 			create tvis3.make
 			tvis3.set_last
@@ -175,7 +175,7 @@ feature {NONE} -- Initialization
 			tv_item3.set_text ("item 6")
 			tv_item3.set_image (bitmap_icon_application, bitmap_icon_application)
 			tvis3.set_tree_view_item (tv_item3)
-			Current.insert_item (tvis3)
+			insert_item (tvis3)
 		end
 
 feature -- Access

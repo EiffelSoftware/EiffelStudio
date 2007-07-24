@@ -62,7 +62,7 @@ feature -- Order definition
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := Current.original_singular < other.original_singular
+			Result := original_singular < other.original_singular
 		end
 
 invariant

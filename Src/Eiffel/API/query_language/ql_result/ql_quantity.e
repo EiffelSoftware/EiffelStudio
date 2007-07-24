@@ -126,9 +126,9 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := Current.value = other.value
+			Result := value = other.value
 		ensure then
-			good_result: Result implies (Current.value = other.value)
+			good_result: Result implies (value = other.value)
 		end
 
 invariant

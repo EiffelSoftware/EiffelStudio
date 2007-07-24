@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			horizontal_box.extend (filler_label)
 			horizontal_box.disable_item_expand (modify_button)
 			create pixmap_container
-			Current.extend (frame)
+			extend (frame)
 			vertical_box.extend (pixmap_container)
 			a_parent.extend (Current)
 

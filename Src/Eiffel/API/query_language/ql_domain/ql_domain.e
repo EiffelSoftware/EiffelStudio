@@ -307,7 +307,7 @@ feature -- Set operation
 			-- An new domain containing all the elements from both `Current' and `other'.
 		require
 			other_attached: other /= Void
-			current_and_other_of_same_type: current.same_type (other)
+			current_and_other_of_same_type: same_type (other)
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -317,7 +317,7 @@ feature -- Set operation
 			-- A new domain containing all the elements that are in both `Current' and `other'.			
 		require
 			other_attached: other /= Void
-			current_and_other_of_same_type: current.same_type (other)
+			current_and_other_of_same_type: same_type (other)
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -327,7 +327,7 @@ feature -- Set operation
 			-- A new domain containing all the elements of `Current', with the elements from `other' removed.
 		require
 			other_attached: other /= Void
-			current_and_other_of_same_type: current.same_type (other)
+			current_and_other_of_same_type: same_type (other)
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -344,7 +344,7 @@ feature -- Set operation
 			-- Is current domain a subset of `other'?
 		require
 			other_attached: other /= Void
-			current_and_other_are_of_same_type: current.scope = other.scope
+			current_and_other_are_of_same_type: scope = other.scope
 		local
 			l_other_set: DS_HASH_SET [like item_type]
 			l_cur_content: like content

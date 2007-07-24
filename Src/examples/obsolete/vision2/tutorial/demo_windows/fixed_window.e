@@ -67,9 +67,9 @@ feature -- Execution features
 			-- Executed when we press the first button
 		do
 			button2.set_x_y (button2.x + xvel, button2.y + yvel)
-			if (button2.x>=current.width-button2.width-xvel) or (button2.x<=-xvel) then
+			if (button2.x>=width-button2.width-xvel) or (button2.x<=-xvel) then
 				xvel:=0-xvel
-			elseif (button2.y>=current.height-button2.height-yvel) or (button2.y<=-yvel) then
+			elseif (button2.y>=height-button2.height-yvel) or (button2.y<=-yvel) then
 				yvel:=0-yvel
 			end
 

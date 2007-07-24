@@ -307,7 +307,7 @@ feature {EV_ANY_I} -- Status settings
 				valid_child: child_imp /= Void
 			end
 				-- Set the parent of `child_imp'.
-			child_imp.set_parent (Current.interface)
+			child_imp.set_parent (interface)
 				-- Create `table_child' to hold `child_imp'.
 			create table_child.make (child_imp, Current)
 				-- Add the table child to `ev_children'.
@@ -773,7 +773,7 @@ feature {NONE} -- Implementation
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
-				parent_imp.interface.prune (Current.interface)
+				parent_imp.interface.prune (interface)
 			end
 			internal_array.discard_items
 			wel_destroy

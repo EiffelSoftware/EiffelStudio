@@ -109,7 +109,7 @@ feature -- Access
 		do
 			create l_group_domain_generator
 			l_group_domain_generator.enable_fill_domain
-			Result ?= Current.wrapped_domain.new_domain (l_group_domain_generator)
+			Result ?= wrapped_domain.new_domain (l_group_domain_generator)
 		ensure
 			result_attached: Result /= Void
 		end

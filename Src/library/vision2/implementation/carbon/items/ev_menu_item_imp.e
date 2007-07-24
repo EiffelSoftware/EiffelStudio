@@ -93,7 +93,7 @@ feature -- Status setting
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
 			a_menu ?= parent_imp
 			if a_menu /= Void then
-				pos := a_menu.index_of (current.interface, 1)
+				pos := a_menu.index_of (interface, 1)
 				enable_menu_item_external (a_menu.c_object, pos)
 			end
 		end
@@ -107,7 +107,7 @@ feature -- Status setting
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
 			a_menu ?= parent_imp
 			if a_menu /= Void then
-				pos := a_menu.index_of (current.interface, 1)
+				pos := a_menu.index_of (interface, 1)
 				disable_menu_item_external (a_menu.c_object, pos)
 			end
 		end
@@ -138,7 +138,7 @@ feature -- Element change
 			-- If this is a menu item we have to change the text through associated parent menu reference and this item's index
 			a_menu ?= parent_imp
 			if a_menu /= Void then
-				pos := a_menu.index_of (current.interface, 1)
+				pos := a_menu.index_of (interface, 1)
 				ret := set_menu_item_text_with_cfstring_external (a_menu.c_object, pos, cfstring.item)
 			end
 

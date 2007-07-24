@@ -155,7 +155,7 @@ feature -- Access
 	wrapped_domain: QL_DOMAIN is
 			-- A domain which has current as the only item
 		require
-			current_is_valid: Current.is_valid_domain_item
+			current_is_valid: is_valid_domain_item
 		deferred
 		ensure
 			result_attached: Result /= Void

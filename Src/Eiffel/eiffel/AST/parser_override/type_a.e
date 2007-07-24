@@ -502,7 +502,7 @@ feature {COMPILER_EXPORTER} -- Access
 					-- to check converitibility without having to go through a full
 					-- degree 4
 				reset_constraint_error_list
-				generate_constraint_error (a_gen_type, Current.to_type_set, l_target_type.to_type_set, i, Void)
+				generate_constraint_error (a_gen_type, to_type_set, l_target_type.to_type_set, i, Void)
 				create l_vtcg7
 				l_vtcg7.set_in_constraint (True)
 				l_vtcg7.set_class (a_class)

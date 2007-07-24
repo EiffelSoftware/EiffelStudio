@@ -52,10 +52,10 @@ if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
 )
 
 if .%3. == .dll. (
-	"%COMSPEC%" /c shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
-	"%COMSPEC%" /c shell\bin\mv config.sh.modif config.sh
-	"%COMSPEC%" /c shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
-	"%COMSPEC%" /c shell\bin\mv config.sh.modif config.sh
+	shell\bin\sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.sh >> config.sh.modif
+	shell\bin\mv config.sh.modif config.sh
+	shell\bin\sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.sh >> config.sh.modif
+	shell\bin\mv config.sh.modif config.sh
 )
 
 "%COMSPEC%" /c shell\bin\sh.exe eif_config_h.SH
@@ -67,16 +67,16 @@ rem Get the actual make name
 echo echo $make > make_name.bat
 shell\bin\rt_converter.exe make_name.bat make_name.bat
 rem Replace $(XX) into %X%
-"%COMSPEC%" /c shell\bin\sed -e "s/\$(\([^)]*\))/%%\1%%/g" make_name.bat >> make_name.modif
-"%COMSPEC%" /c shell\bin\mv make_name.modif make_name.bat
+shell\bin\sed -e "s/\$(\([^)]*\))/%%\1%%/g" make_name.bat >> make_name.modif
+shell\bin\mv make_name.modif make_name.bat
 
 rem Generate the make.w32 file with the above name
 echo @echo off > make.w32 
 call make_name.bat >> make.w32
 del make_name.bat
 rem Replace all / by \
-"%COMSPEC%" /c shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
-"%COMSPEC%" /c shell\bin\mv make.w32.modif make.w32
+shell\bin\sed -e "s/\//\\\/g" make.w32 >> make.w32.modif
+shell\bin\mv make.w32.modif make.w32
 
 if exist run-time\eif_config.h del run-time\eif_config.h
 rem

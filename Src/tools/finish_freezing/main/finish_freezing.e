@@ -49,15 +49,16 @@ feature -- Initialization
 			l_exception: EXCEPTIONS
 			l_processors: NATURAL_8
 			gen_only: BOOLEAN
+			l_library_cmd: STRING
+			l_c_setup: COMPILER_SETUP
 		do
 			if not retried then
-					-- Location defaults to the current directory
-				location := current_working_directory
-
 					-- if location has been specified, update it
-
 				if a_parser.has_location then
 					location := a_parser.location
+				else
+						-- Location defaults to the current directory
+					location := current_working_directory
 				end
 
 					-- if generate_only is specified then only generate makefile
@@ -83,13 +84,49 @@ feature -- Initialization
 						-- Use default
 					l_processors := 0
 				end
-				create translator.make (mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
-				translator.translate
-				if not gen_only and translator.has_makefile_sh then
-						-- We don't want to be launched when there is no Makefile.SH file.
-					translator.run_make
-					c_error := c_compilation_error
+				if a_parser.is_for_library then
+					create l_c_setup.initialize (create {RESOURCE_TABLE}.make (20), a_parser.force_32bit_code_generation)
+						-- Simply execute our batch script to compile the C code of libraries.
+					create l_library_cmd.make (256)
+						-- The double quote twice are there because the command is executed through COMSPEC.
+					l_library_cmd.append_character ('"')
+					l_library_cmd.append_character ('"')
+					l_library_cmd.append (eiffel_layout.compile_library_command_name)
+					l_library_cmd.append_character ('"')
+					l_library_cmd.append_character ('"')
+					env.system (l_library_cmd)
+				else
+					create translator.make (mapped_path, a_parser.force_32bit_code_generation, l_processors)
+
+					translator.translate
+					if not gen_only and translator.has_makefile_sh then
+							-- We don't want to be launched when there is no Makefile.SH file.
+						translator.run_make
+						c_error := c_compilation_error
+					end
+
+					if not gen_only then
+						if translator = Void then
+							l_msg := "Internal error during Makefile translation preparation.%N%N%
+									%Please report this problem to Eiffel Software at:%N%
+									%http://support.eiffel.com"
+							io.put_string (l_msg)
+							io.default_output.flush
+						else
+							if translator.has_makefile_sh then
+								if not c_error then
+										-- For eweasel processing
+									io.put_string ("C compilation completed%N")
+								end
+								io.default_output.flush
+							elseif translator.is_il_code and not c_error then
+									-- For eweasel processing
+								io.put_string ("C compilation completed%N")
+								io.default_output.flush
+							end
+						end
+					end
 				end
 
 					-- Destroy network path mapping if any
@@ -97,29 +134,8 @@ feature -- Initialization
 					unc_mapper.destroy
 					unc_mapper := Void
 				end
-
-				if not gen_only then
-					if translator = Void then
-						l_msg := "Internal error during Makefile translation preparation.%N%N%
-								%Please report this problem to Eiffel Software at:%N%
-								%http://support.eiffel.com"
-						io.put_string (l_msg)
-						io.default_output.flush
-					else
-						if translator.has_makefile_sh then
-							if not c_error then
-									-- For eweasel processing
-								io.put_string ("C compilation completed%N")
-							end
-							io.default_output.flush
-						elseif translator.is_il_code and not c_error then
-								-- For eweasel processing
-							io.put_string ("C compilation completed%N")
-							io.default_output.flush
-						end
-					end
-				end
 			end
+
 			if retried or else (c_error and not gen_only) then
 					-- Make the application return a non-zero value to OS to flag an error
 					-- to calling process.

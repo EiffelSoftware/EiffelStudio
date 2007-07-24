@@ -918,6 +918,19 @@ feature -- Access: command name
 			result_not_void_or_empty: Result /= Void and then not Result.is_empty
 		end
 
+	compile_library_command_name: FILE_NAME is
+			-- Complete path to `compile_library.bat'.
+		require
+			is_valid_environment: is_valid_environment
+			is_windows: platform.is_windows
+		once
+			create Result.make_from_string (bin_path)
+			Result.set_file_name ("compile_library")
+			Result.add_extension ("bat")
+		ensure
+			result_not_void_or_empty: Result /= Void and then not Result.is_empty
+		end
+
 	x2c_command_name: FILE_NAME is
 			-- Complete path to `x2c'.
 		require

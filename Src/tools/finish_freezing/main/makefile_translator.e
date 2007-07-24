@@ -26,6 +26,7 @@ feature -- Initialization
 			error: BOOLEAN
 			error_msg: STRING
 			status_box: STATUS_BOX
+			l_c_setup: COMPILER_SETUP
 		do
 			create options.make (25)
 			create system_dependent_directories.make (5)
@@ -56,14 +57,8 @@ feature -- Initialization
 					launch_quick_compilation
 				end
 
-				smart_checking := options.get_boolean ("smart_checking", True)
-				if eiffel_layout.eiffel_c_compiler.is_equal ("msc") and smart_checking then
-						-- Visual Studio C compiler.
-					create vs_setup.make (a_force_32bit)
-				elseif eiffel_layout.eiffel_c_compiler.is_equal ("bcb") then
-						-- Borland C compiler.
-					create borland_setup
-				end
+					-- Initialize the C compiler environment.
+				create l_c_setup.initialize (options, a_force_32bit)
 			else
 				error_msg.append ("Could not launch finish_freezing. Make%N")
 				error_msg.append ("sure that the ISE EiffelStudio environment%N")
@@ -112,10 +107,6 @@ feature -- Access
 
 	quick_compilation: BOOLEAN
 			-- Is the current compilation a quick one?
-
-	smart_checking: BOOLEAN
-			-- Does the current compilation require that environment variables
-			-- are automatically set for Visual Studio (i.e. should we run vcvars32.bat)?
 
 	delete_next: BOOLEAN
 			-- Is the next line to be deleted?
@@ -1449,12 +1440,6 @@ feature {NONE}	-- substitutions
 		end
 
 feature {NONE} -- Implementation
-
-	vs_setup: VS_SETUP
-			-- Visual Studio setup details.
-
-	borland_setup: BORLAND_SETUP
-			-- Borland setup details.
 
 	env: EXECUTION_ENVIRONMENT is
 			-- Execution environment

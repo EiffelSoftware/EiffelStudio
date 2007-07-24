@@ -550,7 +550,6 @@ void odbc_start_order (int no_desc)
 	SQLSMALLINT indColName;
 	SQLSMALLINT tmpScale;
 	SQLSMALLINT tmpNullable;
-	int bufSize;
 	char *dataBuf;
 	// Added by Jacques. 5/14/98
 	SQLCHAR     szCatalog[DB_REP_LEN], szSchema[DB_REP_LEN];
@@ -688,7 +687,6 @@ void odbc_start_order (int no_desc)
 	SetVarNum(dap,i);
 	SetColNum(dap, colNum);
 
-	bufSize = 0;
 	for (i=0; i < colNum && !error_number; i++) {
 	/* fill in the describing information for each column, and calculate */
 	/* the total length of the data buffer                               */
@@ -713,17 +711,14 @@ void odbc_start_order (int no_desc)
 				//case SQL_C_DATE:
 				case SQL_C_TYPE_DATE:
 					SetDbColLength(dap, i, sizeof(DATE_STRUCT));
-					/*bufSize += sizeof(DATE_STRUCT) + 1; */
 					break;
 				//case SQL_C_TIME:
 				case SQL_C_TYPE_TIME:
 					SetDbColLength(dap, i, sizeof(TIME_STRUCT));
-					/*bufSize += sizeof(TIME_STRUCT) + 1; */
 					break;
 				//case SQL_C_TIMESTAMP:
 				case SQL_C_TYPE_TIMESTAMP:
 					SetDbColLength(dap, i, sizeof(TIMESTAMP_STRUCT));
-					/*bufSize += sizeof(TIMESTAMP_STRUCT) + 1; */
 					break;
 				case SQL_C_STINYINT:
 					SetDbColLength(dap, i, DB_SIZEOF_CHAR);
@@ -741,7 +736,6 @@ void odbc_start_order (int no_desc)
 					SetDbColLength(dap, i, DB_SIZEOF_DOUBLE);
 					break;
 				default:
-					/*bufSize += GetDbColLength(dap, i) + 1;*/
 					break;
 			}
 			type = GetDbColType(dap, i);
@@ -751,7 +745,6 @@ void odbc_start_order (int no_desc)
 					SetDbColLength(dap, i, DB_MAX_STRING_LEN);
 					break;
 			}
-			bufSize += GetDbColLength(dap, i) + 1;
 		}
 	}
 
@@ -768,13 +761,11 @@ void odbc_start_order (int no_desc)
 		return;
 	}
 
-	/* allocate the data  buffer, and then assign the data buffer to */
-	/* each database table field.                                    */
 	if (colNum) {
-		ODBC_SAFE_ALLOC(dataBuf, (char *) malloc(bufSize+2));
+			/* Allocate for each column the buffer that will hold its value. */
 		for (i=0; i<colNum; i++) {
+			ODBC_SAFE_ALLOC(dataBuf, (char *) malloc(GetDbColLength(dap, i) + 1));
 			SetDbColPtr(dap, i, dataBuf);
-			dataBuf += GetDbColLength(dap, i) + 1;
 		}
 	}
 
@@ -801,15 +792,18 @@ void odbc_start_order (int no_desc)
 /*****************************************************************/
 void odbc_terminate_order (int no_des)
 {
-	//int i;
+	int i;
 	ODBCSQLDA *dap = odbc_descriptor[no_des];
 	int colNum;
 
 	if (dap != NULL) {
 		if (dap != (ODBCSQLDA *)(0x1)) {
 		colNum = GetColNum(dap);
-		if (colNum)
-			free(GetDbColPtr(dap,0));
+		if (colNum) {
+			for (i=0; i < colNum; i++) {
+				free(GetDbColPtr(dap,i));
+			}
+		}
 		free(dap);
 		free(odbc_indicator[no_des]);
 		odbc_indicator[no_des] = NULL;
@@ -885,9 +879,42 @@ int odbc_next_row (int no_des)
 	else {
 		for (i=0; i<colNum && error_number == 0; i++) {
 			odbc_indicator[no_des][i] = 0;
-			rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), GetDbColPtr(dap, i), GetDbColLength(dap, i)+1, &(odbc_indicator[no_des][i]));
-			if (rc)
+			rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), GetDbColPtr(dap, i),
+				GetDbColLength(dap, i)+1, &(odbc_indicator[no_des][i]));
+			if (rc) {
+					/* Check if it failed because we did not have enough space to store the data. */
+				if (rc == SQL_SUCCESS_WITH_INFO) {
+					UCHAR tmpSQLSTATE[6];
+					if
+						(SQLGetDiagRec(SQL_HANDLE_STMT, hstmt[no_des], 1, tmpSQLSTATE,
+							NULL, NULL, 0, NULL) != SQL_NO_DATA)
+					{
+							/* If `tmpSQLSTATE' is 01004 then we just make our buffer bigger and
+							 * reissue the call. */
+						if
+							((tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[1] == '1') && (tmpSQLSTATE[0] == '0') &&
+							(tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[0] == '4'))
+						{
+							size_t additional_length = odbc_indicator[no_des][i];
+							size_t old_length = GetDbColLength(dap, i);
+							char *l_buffer = GetDbColPtr(dap,i);
+							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
+							SetDbColPtr(dap, i, l_buffer);
+							SetDbColLength(dap, i, old_length + additional_length);
+								/* Reissue the call, this time starting from the end of `l_buffer' since we want to get
+								 * the remaining data. */
+							rc = SQLGetData(hstmt[no_des], i+1, GetDbCType(dap, i), l_buffer + old_length,
+								additional_length, &(odbc_indicator[no_des][i]));
+								/* In addition of what we just retrieved, we need to add what we retrieved on the first call
+								 * to SQLGetData. */
+							odbc_indicator [no_des][i] += old_length;
+						}
+					}
+				}
+			}
+			if (rc) {
 				odbc_error_handler(hstmt[no_des],9);
+			}
 		}
 		if (error_number)
 			return 1;

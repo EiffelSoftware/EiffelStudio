@@ -46,6 +46,7 @@ goto process
 rem A workaround for getting MSYS tools run on all x64 Windows platform.
 rem See http://www.mingw.org/MinGWiki/index.php/MsysShell for more details.
 rem Only needed when executing: sh, mv, sed
+set OLD_COMSPEC=%COMSPEC%
 if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
 	SET COMSPEC=%WINDIR%\SysWOW64\cmd.exe
 )
@@ -240,5 +241,6 @@ if exist eif_size.h del eif_size.h
 
 :end
 set PATH=%OLD_PATH%
+set COMSPEC=%OLD_COMSPEC%
 set remove_desc=
 echo Make completed

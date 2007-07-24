@@ -1,11 +1,11 @@
 REM Define some user parameters here
 
 REM The file where all output is stored
-set INSTALL_LOG=c:\work\60dev_deliv\install.log
+set INSTALL_LOG=c:\work\61dev_deliv\install.log
 REM NB: The following directory is where a new version of ec.exe will be finalized.
-set FINALIZATION_DIR=c:\work\60dev_deliv
+set FINALIZATION_DIR=c:\work\61dev_deliv
 REM NB: The following directory must contain document.exe
-set DOCUMENT_DIR=c:\work\Deliv_60
+set DOCUMENT_DIR=c:\work\Deliv_61
 REM Tag to export files in SVN at ETHZ
 set DEFAULT_ORIGO_SVN=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
 REM Tag to export files in SVN at ISE
@@ -13,9 +13,9 @@ set DEFAULT_ISE_SVN=svn://%USERNAME%@svn.ise/ise_svn/trunk
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=c:\work\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-set INSTALL_DIR=c:\work\InstalledEiffel60
+set INSTALL_DIR=c:\work\InstalledEiffel61
 set STUDIO_DIR=%INSTALL_DIR\EiffelStudio
-set STUDIO_NAME=Eiffel60
+set STUDIO_NAME=Eiffel61
 
 REM Check for Windows 64 bits.
 iff "%ISE_PLATFORM%" == "win64" then

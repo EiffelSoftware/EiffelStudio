@@ -2403,7 +2403,7 @@ feature {NONE} -- Externals
 
 	cwin_track_mouse_event (struct: POINTER): BOOLEAN is
 		external
-			"C [macro %"wel.h%"] (TRACKMOUSEEVENT*): EIFBOOLEAN"
+			"C [macro %"wel.h%"] (TRACKMOUSEEVENT*): EIF_BOOLEAN"
 		alias
 			"_TrackMouseEvent"
 		end

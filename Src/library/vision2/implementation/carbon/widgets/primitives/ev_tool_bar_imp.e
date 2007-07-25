@@ -20,7 +20,9 @@ inherit
 		redefine
 			interface,
 			initialize,
-			set_parent_imp
+			set_parent_imp,
+			minimum_width,
+			minimum_height
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -40,22 +42,9 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	remove_i_th (i: INTEGER) is
-			-- Remove item at `i'-th position.
-		local
-			imp: EV_ITEM_IMP
-			item_ptr: POINTER
-			ret: INTEGER
-		do
-			child_array.go_i_th (i)
-			imp ?= child_array.i_th (i).implementation
-			item_ptr := imp.c_object
-			ret := hiview_remove_from_superview_external (item_ptr)
-			child_array.remove
-			imp.set_item_parent_imp (Void)
-		end
+
 
 	make (an_interface: like interface) is
 			-- Create the tool-bar.
@@ -65,16 +54,15 @@ feature {NONE} -- Implementation
 			ptr: POINTER
 			control_ptr : POINTER
 		do
+
 			base_make (an_interface)
 			create rect.make_new_unshared
-			rect.set_right (300)
-			rect.set_bottom (30)
+			rect.set_right (1)
+			rect.set_bottom (1)
 			ret := create_user_pane_control_external ( null, rect.item, {CONTROLS_ANON_ENUMS}.kControlSupportsEmbedding, $ptr )
 			ret := create_radio_group_control_external (null,rect.item, $radio_group)
-			set_c_object ( radio_group )
-
-
-
+			ret := hiview_add_subview_external (ptr, radio_group)
+			set_c_object ( ptr )
 
 
 			event_id := app_implementation.get_id (current)
@@ -88,10 +76,7 @@ feature {NONE} -- Implementation
 			has_vertical_button_style := True
 		end
 
-	list_widget: POINTER is
-			--
-		do
-		end
+
 
 	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
 			-- Set `parent_imp' to `a_container_imp'.
@@ -113,44 +98,235 @@ feature -- Status setting
 
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
+		local
+			button: EV_TOOL_BAR_BUTTON_IMP
 		do
+			from
+				child_array.start
+			until
+				child_array.after
+			loop
+				button ?= child_array.item
+				if
+					button /= Void
+				then
+					button.disable_vertical_button_style
+				end
+
+				child_array.forth
+			end
+			has_vertical_button_style := True
+
+			layout
 		end
 
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
+				local
+			button_imp: EV_TOOL_BAR_BUTTON_IMP
 		do
+			from
+				child_array.start
+			until
+				child_array.after
+			loop
+				button_imp ?= child_array.item
+				if
+					button_imp /= Void
+				then
+					button_imp.set_vertical_button_style
+				end
+
+				child_array.forth
+
+			end
+			has_vertical_button_style := False
+			layout
 		end
 
 	enable_vertical is
 			-- Enable vertical toolbar style.
 		do
+			is_vertical := True
+
+			layout
 		end
 
 	disable_vertical is
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
+			is_vertical := False
+
+			layout
 		end
 
-feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	block_selection_for_docking is
-			--
-		do
-		end
 
 feature -- Implementation
 
-	update_toolbar_style is
-			-- Set the style of `Current' relative to items
+
+	minimum_width: INTEGER is
+			-- Minimum width that the widget may occupy.
+
 		do
+			Result := get_embedded_width
 		end
 
-	insertion_position: INTEGER is
-			-- `Result' is index - 1 of item beneath the
-			-- current mouse pointer or count + 1 if over the toolbar
-			-- and not over a button.
+	minimum_height: INTEGER is
+			-- Minimum width that the widget may occupy.
+
 		do
+			Result := get_embedded_height
 		end
+
+
+	layout is
+			-- Set the style of `Current' relative to items
+		local
+			button_imp: EV_TOOL_BAR_BUTTON_IMP
+			sep_imp: EV_TOOL_BAR_SEPARATOR_IMP
+			rect: RECT_STRUCT
+			ret: INTEGER
+		do
+			from
+				child_array.start
+			until
+				child_array.after
+			loop
+				if child_array.item /= Void and child_array.item.implementation /= Void then
+					button_imp ?= child_array.item.implementation
+					sep_imp ?= child_array.item.implementation
+				end
+
+				if
+					button_imp /= Void
+				then
+					rect := get_insertion_coords (child_array.index)
+					move_control_external (button_imp.c_object, rect.left, rect.top)
+				elseif
+					sep_imp /= Void
+				then
+					--sep_imp.layout
+					--rect := get_insertion_coords (child_array.index)
+					--move_control_external (sep_imp.c_object, rect.left, rect.top)
+				end
+				button_imp := Void
+				sep_imp := Void
+				child_array.forth
+			end
+
+			-- Radio Group does not adjust size automatically...
+			size_control_external (radio_group, height, width)
+
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (current, minimum_width, minimum_height)
+			end
+
+		end
+
+	get_insertion_coords (an_index: INTEGER): RECT_STRUCT is
+			-- Get the coordinates for insertion of the current tool bar item
+		local
+			carbon_item: EV_CARBON_WIDGET_IMP
+		do
+			create Result.make_new_unshared
+			from
+				child_array.start
+			until
+				child_array.index >= an_index
+			loop
+				carbon_item ?= child_array.item.implementation
+				if
+					carbon_item /= Void
+				then
+					if
+						is_vertical
+					then
+						Result.set_top (Result.top + carbon_item.height)
+						Result.set_left (0)
+					else
+						Result.set_left (Result.left + carbon_item.width)
+						Result.set_top (0)
+					end
+				end
+				child_array.forth
+			end
+		end
+
+	get_embedded_width: INTEGER is
+			-- Get the width of all embedded items
+		local
+			carbon_item: EV_CARBON_WIDGET_IMP
+		do
+			if is_vertical then
+				from
+					child_array.start
+				until
+					child_array.after
+				loop
+					carbon_item ?= child_array.item.implementation
+					if
+						carbon_item /= Void
+					then
+						Result := Result.max (carbon_item.width)
+					end
+					child_array.forth
+				end
+			else
+				from
+					child_array.start
+				until
+					child_array.after
+				loop
+					carbon_item ?= child_array.item.implementation
+					if
+						carbon_item /= Void
+					then
+						Result := Result + carbon_item.width
+					end
+					child_array.forth
+				end
+			end
+		end
+
+	get_embedded_height: INTEGER is
+			-- Get the height of all embedded items
+		local
+			carbon_item: EV_CARBON_WIDGET_IMP
+		do
+			if not is_vertical then
+				from
+					child_array.start
+				until
+					child_array.after
+				loop
+					carbon_item ?= child_array.item.implementation
+					if
+						carbon_item /= Void
+					then
+						Result := Result.max (carbon_item.height)
+					end
+					child_array.forth
+				end
+			else
+				from
+					child_array.start
+				until
+					child_array.after
+				loop
+					carbon_item ?= child_array.item.implementation
+					if
+						carbon_item /= Void
+					then
+						Result := Result + carbon_item.height
+					end
+					child_array.forth
+				end
+			end
+		end
+
+
+
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
@@ -158,6 +334,8 @@ feature -- Implementation
 			v_imp: EV_ITEM_IMP
 			ret: INTEGER
 			radio_peer_imp: EV_RADIO_PEER_IMP
+			rect, rect_1: RECT_STRUCT
+			ptr: POINTER
 		do
 
 			-- Special treatment for radio buttons
@@ -166,19 +344,41 @@ feature -- Implementation
 			if
 				radio_peer_imp /= Void
 			then
-				ret := embed_control_external (v_imp.c_object, radio_group)
+				add_radio_button (radio_peer_imp)
 			else
 				ret := embed_control_external (v_imp.c_object, c_object)
 			end
 			v_imp.set_item_parent_imp (Current)
-			move_control_external (v_imp.c_object, (i - 1) * 100, 0)
+
 
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-			if parent_imp /= Void then
-				update_toolbar_style
-			end
+
+
+
+			layout
+
 		end
+
+
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		local
+			imp: EV_ITEM_IMP
+			item_ptr: POINTER
+			ret: INTEGER
+		do
+			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+			item_ptr := imp.c_object
+			ret := hiview_remove_from_superview_external (item_ptr)
+			child_array.remove
+			imp.set_item_parent_imp (Void)
+		end
+
+
+
+feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Radio button handling
 
 	add_radio_button (w: EV_RADIO_PEER_IMP) is
 			-- Connect radio button to tool bar group.
@@ -187,16 +387,34 @@ feature -- Implementation
 		local
 			ret: INTEGER
 		do
+			ret := embed_control_external (w.c_object, radio_group)
 
 		end
 
-feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
-
 	radio_group: POINTER
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation (obsolete?)
+
+	block_selection_for_docking is
+			--
+		do
+		end
+	insertion_position: INTEGER is
+			-- `Result' is index - 1 of item beneath the
+			-- current mouse pointer or count + 1 if over the toolbar
+			-- and not over a button.
+		do
+		end
+
+	list_widget: POINTER is
+			--
+		do
+		end
+
+feature {EV_ANY_I} -- Interface
 
 	interface: EV_TOOL_BAR;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

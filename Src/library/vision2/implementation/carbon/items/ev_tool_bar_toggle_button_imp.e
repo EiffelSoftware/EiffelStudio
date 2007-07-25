@@ -44,6 +44,7 @@ feature -- Initialization
 				null, 0, 0, 0, $ptr )
 			set_c_object ( ptr )
 
+			set_vertical_button_style
 
 		end
 

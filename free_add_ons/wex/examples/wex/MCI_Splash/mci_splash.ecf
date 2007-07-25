@@ -7,7 +7,7 @@
 		<external_include location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\spec\windows\include"/>
 		<external_include location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\clib"/>
 		<external_object location="winmm.lib"/>
-		<external_object location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\clib\cwex.lib"/>
+		<external_object location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cwex.lib"/>
 		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>

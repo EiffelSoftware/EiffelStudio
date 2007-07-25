@@ -15,8 +15,6 @@ feature -- Access
 	service: ANY is
 			-- Actual service
 		deferred
-		ensure
-			result_attached: Result /= Void
 		end
 
 indexing

@@ -290,7 +290,7 @@ feature {NONE} -- Externals
 
 	cwel_tv_item_get_hitem (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvitem.h>] (TV_ITEM*): POINTER"
+			"C [macro <tvitem.h>] (TV_ITEM*): EIF_POINTER"
 		end
 
 	cwel_tv_item_get_state (ptr: POINTER): INTEGER is

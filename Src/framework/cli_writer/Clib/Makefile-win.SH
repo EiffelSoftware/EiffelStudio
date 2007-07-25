@@ -1,0 +1,57 @@
+TOP = ..
+DIR = $dir_sep
+OUTDIR= .
+INDIR= .
+CC = $cc
+OUTPUT_CMD = $output_cmd
+CFLAGS = -I"$rt_include" -I. -D_UNICODE -DUNICODE
+JCFLAGS = $(CFLAGS) $ccflags $optimize
+JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
+JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
+OPT_CFLAGS = 
+#OPT_CFLAGS = -DASSERTIONS 
+#OPT_CFLAGS = -DASSERTIONS -DDBGTRACE_ENABLED
+#OPT_CFLAGS = -DDBGTRACE_ENABLED
+LN = copy
+MV = $mv
+RM = $del
+MKDIR_TARGET = $mkdir_target
+LINK = $link32
+DLL_FLAGS = $dll_flags
+DLL_LIBS = $dll_libs
+OBJECTS = cli_writer.$obj metadata_consumer.$obj
+
+.c.$obj:
+	$(CC) -c $(JCFLAGS) $<
+
+.cpp.$obj:
+	$(CC) -c $(JCFLAGS) $<
+
+all:: lib_dir cli_writer.lib clean
+
+..$(DIR)spec:
+	$(MKDIR_TARGET)
+
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
+	$(MKDIR_TARGET)
+
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
+	$(MKDIR_TARGET)
+
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
+	$(MKDIR_TARGET)
+
+lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+
+clean:
+	$(RM) *.$obj
+	$(RM) *.lib
+	$(RM) *.BAK
+
+cli_writer.lib: $(OBJECTS)
+	$alib_line
+	$(MV) $@  ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+
+#Note that the line below will only work if you have `midl' in your PATH.
+metadata_consumer.c: metadata_consumer.idl
+	midl -notlb -header metadata_consumer.h -iid metadata_consumer.c metadata_consumer.idl

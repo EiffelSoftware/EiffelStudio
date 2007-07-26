@@ -196,7 +196,7 @@ feature -- Execution
 						if
 							cse = Void
 							or else not cse.is_not_valid
-							or else cse.routine /= Void
+							or else cse.routine = Void
 						then
 							need_to_stop := True
 							need_to_resend_bp := True

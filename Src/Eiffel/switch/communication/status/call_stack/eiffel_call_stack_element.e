@@ -26,6 +26,8 @@ feature -- Properties
 
 	body_index: INTEGER is
 			-- body index of the associated routine
+		require
+			routine_not_void: routine /= Void
 		do
 			if private_body_index = -1 then
 				private_body_index := routine.body_index

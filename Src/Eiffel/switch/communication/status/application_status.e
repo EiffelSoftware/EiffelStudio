@@ -481,6 +481,7 @@ feature -- Access
 					current_execution_stack_number := Application.current_execution_stack_number
 					stack_elem ?= l_ccs.i_th (Application.current_execution_stack_number)
 					Result := stack_elem /= Void
+							and then stack_elem.routine /= Void
 							and then f_body_index = stack_elem.body_index
 							and then index = stack_elem.break_index
 				end
@@ -500,6 +501,7 @@ feature -- Access
 				if l_ccs /= Void and then not l_ccs.is_empty then
 					stack_elem ?= l_ccs.i_th (1)
 					Result := stack_elem /= Void
+							and then stack_elem.routine /= Void
 							and then f_body_index = stack_elem.body_index
 							and then index = stack_elem.break_index
 				end

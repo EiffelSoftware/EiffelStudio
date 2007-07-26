@@ -614,6 +614,14 @@ feature -- operation on message
 				li.enable_select
 			end
 
+			create li.make_with_text (Interface_names.m_Break_when_hit_count_continue_execution)
+			combo.extend (li)
+			li.select_actions.extend (agent tf.hide)
+			li.set_data ({BREAKPOINT}.Hits_count_condition_continue_execution)
+			if hcc.mode = {BREAKPOINT}.Hits_count_condition_continue_execution then
+				li.enable_select
+			end
+
 				-- Set up actions
 			okb.select_actions.extend (agent (a_dlg:EV_DIALOG; a_bp: BREAKPOINT; a_combo: EV_COMBO_BOX; a_tf: EV_TEXT_FIELD)
 					local

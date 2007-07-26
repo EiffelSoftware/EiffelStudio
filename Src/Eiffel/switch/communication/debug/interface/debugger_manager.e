@@ -198,6 +198,7 @@ feature -- Breakpoints management
 			expr: EB_EXPRESSION
 			evaluator: DBG_EXPRESSION_EVALUATOR
 			bp_reached: BOOLEAN
+			bp_continue: BOOLEAN
 		do
 			bp_reached := True
 			if bp.has_condition then
@@ -211,6 +212,7 @@ feature -- Breakpoints management
 				bp_reached := bp.condition_respected --| evaluator.final_result_is_true_boolean_value				
 			end
 
+			bp_continue := bp.continue_execution
 			if bp_reached then
 				bp.increase_hits_count
 
@@ -224,6 +226,9 @@ feature -- Breakpoints management
 									or else (bp.hits_count \\ bp.hits_count_condition.value = 0)
 					when {BREAKPOINT}.hits_count_condition_greater then
 						bp_reached := bp.hits_count >= bp.hits_count_condition.value
+					when {BREAKPOINT}.hits_count_condition_continue_execution then
+						bp_reached := True
+						bp_continue := True
 					else
 					end
 				end
@@ -232,7 +237,7 @@ feature -- Breakpoints management
 					debugger_message (computed_breakpoint_message (bp))
 				end
 			end
-			Result := bp_reached and not bp.continue_execution
+			Result := bp_reached and not bp_continue
 		end
 
 	computed_breakpoint_message (bp: BREAKPOINT): STRING is

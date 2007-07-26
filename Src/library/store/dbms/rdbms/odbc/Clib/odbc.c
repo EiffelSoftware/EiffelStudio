@@ -892,8 +892,8 @@ int odbc_next_row (int no_des)
 							/* If `tmpSQLSTATE' is 01004 then we just make our buffer bigger and
 							 * reissue the call. */
 						if
-							((tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[1] == '1') && (tmpSQLSTATE[0] == '0') &&
-							(tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[0] == '4'))
+							((tmpSQLSTATE[0] == '0') && (tmpSQLSTATE[1] == '1') && (tmpSQLSTATE[2] == '0') &&
+							(tmpSQLSTATE[3] == '0') && (tmpSQLSTATE[4] == '4'))
 						{
 							size_t additional_length = odbc_indicator[no_des][i];
 							size_t old_length = GetDbColLength(dap, i);

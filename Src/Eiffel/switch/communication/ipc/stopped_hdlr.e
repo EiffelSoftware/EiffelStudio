@@ -195,7 +195,7 @@ feature -- Execution
 
 						if
 							cse = Void
-							or else not cse.is_not_valid
+							or else cse.is_not_valid
 							or else cse.routine = Void
 						then
 							need_to_stop := True

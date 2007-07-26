@@ -291,6 +291,7 @@ feature -- Accelerator, focus label and menu name
 	m_Break_when_hit_count_equal: STRING_GENERAL is			do Result := locale.translation("Break when the hit count is equal to")	end
 	m_Break_when_hit_count_multiple_of: STRING_GENERAL is	do Result := locale.translation("Break when the hit count is a multiple of")	end
 	m_Break_when_hit_count_greater: STRING_GENERAL is		do Result := locale.translation("Break when the hit count is greater than or equal to")	end
+	m_Break_when_hit_count_continue_execution: STRING_GENERAL is		do Result := locale.translation("Always continue execution")	end
 	m_Object_viewer_tool: STRING_GENERAL is		do Result := locale.translation("Object Viewer")	end
 
 	l_class_tree_assemblies: STRING_GENERAL is	do Result := locale.translation("Assemblies")	end
@@ -2315,4 +2316,5 @@ indexing
 		]"
 
 end -- class INTERFACE_NAMES
+
 

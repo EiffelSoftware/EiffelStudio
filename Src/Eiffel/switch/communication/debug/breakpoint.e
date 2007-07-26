@@ -34,6 +34,7 @@ inherit
 		undefine
 			is_equal
 		end
+
 create
 	make
 
@@ -82,7 +83,7 @@ feature -- debug output
 
 feature -- Output
 
-	string_representation (wih_details: BOOLEAN): STRING is
+	string_representation (with_details: BOOLEAN): STRING is
 			-- String representation of current Breakpoint.
 		local
 			lcl: CLASS_C
@@ -109,7 +110,7 @@ feature -- Output
 			if has_message then
 				Result.append_string ("(M)")
 			end
-			if wih_details then
+			if with_details then
 				if is_corrupted then
 					Result.append_string (" <corrupted> ")
 				end
@@ -598,6 +599,7 @@ feature -- Public constants
 	Hits_count_condition_equal: INTEGER is 1
 	Hits_count_condition_multiple: INTEGER is 2
 	Hits_count_condition_greater: INTEGER is 3
+	Hits_count_condition_continue_execution: INTEGER is 4
 
 feature {NONE} -- Private constants
 

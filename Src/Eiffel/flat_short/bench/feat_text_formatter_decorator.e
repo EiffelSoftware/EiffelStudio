@@ -149,7 +149,7 @@ feature {NONE} -- Feature comments
 			l_array: ARRAYED_LIST [STRING]
 		do
 			l_array := ast_output_strategy.error_message
-			process_comment_text ("-- Error(s) occured, which was due to a compilation failure.", Void)
+			process_comment_text ("-- Error(s) occurred, which was due to a compilation failure.", Void)
 			put_new_line
 			from
 				l_array.start

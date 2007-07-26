@@ -1,5 +1,6 @@
 @echo off
 set OLD_PATH=%PATH%
+set OLD_COMSPEC=%COMSPEC%
 set PATH=%~dp0\shell\bin;%PATH%
 
 if .%1. == .clean. goto clean
@@ -46,7 +47,6 @@ goto process
 rem A workaround for getting MSYS tools run on all x64 Windows platform.
 rem See http://www.mingw.org/MinGWiki/index.php/MsysShell for more details.
 rem Only needed when executing: sh, mv, sed
-set OLD_COMSPEC=%COMSPEC%
 if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
 	SET COMSPEC=%WINDIR%\SysWOW64\cmd.exe
 )

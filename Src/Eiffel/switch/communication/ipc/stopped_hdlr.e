@@ -193,7 +193,14 @@ feature -- Execution
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
 
-						if Debugger_manager.debugger_data.is_breakpoint_set (cse.routine, cse.break_index) then
+						if
+							cse = Void
+							or else not cse.is_not_valid
+							or else cse.routine /= Void
+						then
+							need_to_stop := True
+							need_to_resend_bp := True
+						elseif Debugger_manager.debugger_data.is_breakpoint_set (cse.routine, cse.break_index) then
 							bp := Debugger_manager.debugger_data.breakpoint (cse.routine, cse.break_index)
 							need_to_stop := debugger_manager.process_breakpoint (bp)
 							need_to_resend_bp := need_to_stop

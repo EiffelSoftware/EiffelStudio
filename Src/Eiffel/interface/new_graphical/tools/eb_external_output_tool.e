@@ -416,15 +416,12 @@ feature -- Basic operation
 		end
 
 	set_focus is
-			-- Give the focus to the editor.
+			-- Give the focus to the editor.		
+		local
+			l_env: EV_ENVIRONMENT
 		do
-			if cmd_lst.is_displayed and then cmd_lst.is_sensitive then
-				cmd_lst.set_focus
-			else
-				if input_field.is_displayed and then input_field.is_sensitive then
-					input_field.set_focus
-				end
-			end
+			create l_env
+			l_env.application.do_once_on_idle (agent set_focus_on_idle)
 		end
 
 	quick_refresh_editor is
@@ -903,6 +900,37 @@ feature {NONE} -- Implementation
 
 	edit_external_commands_cmd_btn: EB_SD_COMMAND_TOOL_BAR_BUTTON;
 			-- Button to recycle
+
+	set_focus_on_idle is
+			-- Set focus on idle actions.
+		local
+			l_env: EV_ENVIRONMENT
+			l_container: EV_CONTAINER
+			l_focused_already: BOOLEAN
+			l_widget: EV_WIDGET
+		do
+			create l_env
+			l_container ?= widget
+			if l_container /= Void then
+				if not l_env.application.is_destroyed then
+					l_widget := l_env.application.focused_widget
+				end
+				if not l_container.is_destroyed and then l_container.has_recursive (l_widget) then
+					-- If out tool has focus already, then we don't need set focus again later.
+					l_focused_already := True
+				end
+			end
+
+			if not l_focused_already then
+				if cmd_lst.is_displayed and then cmd_lst.is_sensitive then
+					cmd_lst.set_focus
+				else
+					if input_field.is_displayed and then input_field.is_sensitive then
+						input_field.set_focus
+					end
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

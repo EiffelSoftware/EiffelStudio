@@ -277,6 +277,17 @@ feature{NONE} -- Process
 			l_output.put_normal_text (ti_r_parenthesis.as_string_32)
 		end
 
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_output: like output
+		do
+			l_output := output
+			l_output.put_normal_text ("satisfies command (")
+			a_criterion.tester.process (Current)
+			l_output.put_normal_text (")")
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		local
@@ -469,6 +480,68 @@ feature{NONE} -- Process
 				output.put_warning (metric_names.l_empty_domain)
 			else
 				a_domain.process (Current)
+			end
+		end
+
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+			-- Process `a_item'.
+		local
+			l_first: BOOLEAN
+			l_output: like output
+		do
+			l_output := output
+			l_output.put_string (a_item.command)
+			l_first := True
+			if not a_item.input.is_empty then
+				l_output.put_normal_text (ti_comma.as_string_32)
+				l_output.put_normal_text (ti_space.as_string_32)
+				l_first := False
+				if a_item.is_input_as_file then
+					l_output.put_modifier ("input as file")
+				else
+					l_output.put_modifier ("input")
+				end
+			end
+			if a_item.is_output_enabled then
+				if not l_first then
+					l_output.put_operator (" + ")
+				else
+					l_output.put_normal_text (ti_comma.as_string_32)
+					l_output.put_normal_text (ti_space.as_string_32)
+					l_first := False
+				end
+				if a_item.is_output_as_file then
+					l_output.put_modifier ("output as file")
+				else
+					l_output.put_modifier ("output")
+				end
+			end
+			if a_item.is_error_enabled then
+				if not l_first then
+					l_output.put_operator (" + ")
+				else
+					l_output.put_normal_text (ti_comma.as_string_32)
+					l_output.put_normal_text (ti_space.as_string_32)
+					l_first := False
+				end
+				if not a_item.is_error_redirected_to_output then
+					if a_item.is_error_as_file then
+						l_output.put_modifier ("error as file")
+					else
+						l_output.put_modifier ("error")
+					end
+				end
+			end
+			if a_item.is_exit_code_enabled then
+				if not l_first then
+					l_output.put_operator (" + ")
+				else
+					l_output.put_normal_text (ti_comma.as_string_32)
+					l_output.put_normal_text (ti_space.as_string_32)
+				end
+				l_output.put_modifier ("exit code (")
+				l_output.put_integer (a_item.exit_code)
+				l_output.put_modifier (")")
 			end
 		end
 

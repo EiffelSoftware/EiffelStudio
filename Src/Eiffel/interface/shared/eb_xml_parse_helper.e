@@ -20,6 +20,9 @@ feature -- Access
 	last_tested_double: DOUBLE
 			-- Last double value successfully tested by `test_non_void_double_attribute'
 
+	last_tested_integer: INTEGER
+			-- Last integer value successfully tested by `test_integer_attribute'
+
 feature -- Error raising
 
 	create_last_error (a_message: STRING_GENERAL) is
@@ -113,6 +116,37 @@ feature -- Value validity testing
 			end
 		ensure
 			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
+		end
+
+	test_integer_attribute (a_integer_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]) is
+			-- Test if `a_integer_str' represents a valid integer value. If so, store the integer value in `last_tested_integer'.
+			-- Otherwise if `a_integer_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
+			-- if `a_integer_str' is non-Void but is not a valid integer, fire an error with error message given by `a_invalid_error_message'.
+		require
+			a_missing_error_message_attached: a_missing_error_message /= Void
+			a_error_message_agent_attached: a_invalid_error_message_agent /= Void
+		do
+			if a_integer_str = Void then
+				create_last_error (a_missing_error_message)
+			else
+				test_non_void_integer_attribute (a_integer_str, a_invalid_error_message_agent.item ([a_integer_str]))
+			end
+		end
+
+	test_non_void_integer_attribute (a_integer_str: STRING; a_error_message: STRING_GENERAL) is
+			-- Test if `a_integer_str' represents a valid integer value. If so, store the integer value in `last_integer_boolean'.
+			-- Otherwise fire an error with error message given by `a_error_message'.
+		require
+			a_integer_str_attached: a_integer_str /= Void
+			a_error_message_attached: a_error_message /= Void
+		do
+			if a_integer_str.is_integer then
+				last_tested_integer := a_integer_str.to_integer
+			else
+				create_last_error (a_error_message)
+			end
+		ensure
+			last_tested_integer_set: a_integer_str.is_integer implies last_tested_integer = a_integer_str.to_integer
 		end
 
 indexing

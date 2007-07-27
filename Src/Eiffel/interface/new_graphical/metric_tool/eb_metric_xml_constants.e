@@ -38,6 +38,13 @@ feature{NONE} -- Element constants
 	t_constant_value: INTEGER is 25
 	t_metric_value: INTEGER is 26
 	t_pixmap: INTEGER is 27
+	t_input: INTEGER is 28
+	t_output: INTEGER is 29
+	t_error: INTEGER is 30
+	t_command: INTEGER is 31
+	t_command_criterion: INTEGER is 32
+	t_exit_code: INTEGER is 33
+	t_working_directory: INTEGER is 34
 
 feature{NONE} -- Attribute constants
 
@@ -69,6 +76,9 @@ feature{NONE} -- Attribute constants
 	at_use_external_delayed: INTEGER is 1026
 	at_location: INTEGER is 1027
 	at_matching_strategy: INTEGER is 1028
+	at_enabled: INTEGER is 1029
+	at_redirected_to_output: INTEGER is 1030
+	at_as_file_name: INTEGER is 1031
 
 feature{NONE} -- Text
 
@@ -135,6 +145,16 @@ feature{NONE} -- Text
 	n_use_external_delayed: STRING is "use_external_delayed"
 	n_location: STRING is "location"
 	n_matching_strategy: STRING is "matching_strategy"
+	n_input: STRING is "input"
+	n_output: STRING is "output"
+	n_error: STRING is "error"
+	n_enabled: STRING is "enabled"
+	n_command: STRING is "command"
+	n_command_criterion: STRING is "command_criterion"
+	n_exit_code: STRING is "exit_code"
+	n_redirected_to_output: STRING is "redirected_to_output"
+	n_as_file_name: STRING is "as_file_name"
+	n_working_directory: STRING is "working_directory"
 
 feature -- Names of matching strategies
 

@@ -150,6 +150,17 @@ feature -- Criterion creation
 			result_attached: Result /= Void
 		end
 
+	new_external_command_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_EXTERNAL_COMMAND_CRITERION is
+			-- New external command criterion
+		require
+			a_name_attached: a_name /= Void
+			a_scope_attached: a_scope /= Void
+		do
+			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Domain item creation
 
 	new_application_target_item (a_id: STRING): EB_METRIC_TARGET_DOMAIN_ITEM is

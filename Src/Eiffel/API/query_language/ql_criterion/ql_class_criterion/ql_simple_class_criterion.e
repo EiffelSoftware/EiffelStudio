@@ -18,7 +18,8 @@ inherit
 	QL_CLASS_CRITERION
 
 create
-	make
+	make,
+	make_without_evaluate_agent
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

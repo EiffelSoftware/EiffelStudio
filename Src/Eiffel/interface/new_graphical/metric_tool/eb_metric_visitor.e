@@ -111,6 +111,13 @@ feature -- Process
 		deferred
 		end
 
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+			-- Process `a_criterion'.
+		require
+			a_criterion_attached: a_criterion /= Void
+		deferred
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		require
@@ -217,6 +224,13 @@ feature -- Process
 		end
 
 	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		deferred
+		end
+
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void

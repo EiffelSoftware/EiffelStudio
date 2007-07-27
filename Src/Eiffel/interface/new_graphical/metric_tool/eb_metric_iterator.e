@@ -120,6 +120,13 @@ feature -- Process
 			a_criterion.value_tester.process (Current)
 		end
 
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			invoke_callback_agents (a_criterion)
+			a_criterion.tester.process (Current)
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -233,6 +240,12 @@ feature -- Process
 		do
 			invoke_callback_agents (a_item)
 			a_item.input_domain.process (Current)
+		end
+
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+			-- Process `a_item'.
+		do
+			invoke_callback_agents (a_item)
 		end
 
 feature{NONE} -- Implementation

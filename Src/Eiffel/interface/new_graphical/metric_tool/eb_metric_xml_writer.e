@@ -368,6 +368,23 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_criterion: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+		do
+				-- Generate element.
+			l_parent := element_stack.item
+			create l_criterion.make (l_parent, n_command_criterion, namespace)
+			l_parent.force_last (l_criterion)
+			element_stack.extend (l_criterion)
+			process_criterion_common (a_criterion, l_criterion)
+			a_criterion.tester.process (Current)
+			target_element := l_criterion
+			element_stack.remove
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -599,6 +616,64 @@ feature{NONE} -- Process
 
 			target_element := l_retriever
 			element_stack.remove
+		end
+
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+			-- Process `a_item'.
+		local
+			l_command: XM_ELEMENT
+			l_dir: XM_ELEMENT
+			l_input: XM_ELEMENT
+			l_output: XM_ELEMENT
+			l_error: XM_ELEMENT
+			l_command_content: XM_CHARACTER_DATA
+			l_dir_content: XM_CHARACTER_DATA
+			l_input_content: XM_CHARACTER_DATA
+			l_output_content: XM_CHARACTER_DATA
+			l_error_content: XM_CHARACTER_DATA
+			l_exit_code: XM_ELEMENT
+			l_parent: XM_COMPOSITE
+			l_namespace: like namespace
+		do
+			l_namespace := namespace
+			l_parent := element_stack.item
+				-- Create "command" node.
+			create l_command.make (l_parent, n_command, l_namespace)
+			create l_command_content.make_last (l_command, a_item.command)
+			l_parent.force_last (l_command)
+
+				-- Create "working_directory" node.
+			create l_dir.make (l_parent, n_working_directory, l_namespace)
+			create l_dir_content.make_last (l_dir, a_item.working_directory)
+			l_parent.force_last (l_dir)
+
+				-- Create "input" node.
+			create l_input.make (l_parent, n_input, l_namespace)
+			l_input.add_unqualified_attribute (n_as_file_name, a_item.is_input_as_file.out)
+			create l_input_content.make_last (l_input, a_item.input)
+			l_parent.force_last (l_input)
+
+				-- Create "output" node.
+			create l_output.make (l_parent, n_output, l_namespace)
+			l_output.add_unqualified_attribute (n_enabled, a_item.is_output_enabled.out)
+			l_output.add_unqualified_attribute (n_as_file_name, a_item.is_output_as_file.out)
+			create l_output_content.make_last (l_output, a_item.output)
+			l_parent.force_last (l_output)
+
+				-- Create "error" node.
+			create l_error.make (l_parent, n_error, l_namespace)
+			l_error.add_unqualified_attribute (n_enabled, a_item.is_error_enabled.out)
+			l_error.add_unqualified_attribute (n_as_file_name, a_item.is_error_as_file.out)
+			l_error.add_unqualified_attribute (n_redirected_to_output, a_item.is_error_redirected_to_output.out)
+			create l_error_content.make_last (l_error, a_item.error)
+			l_parent.force_last (l_error)
+
+				-- Create "exit_code" node.
+			create l_exit_code.make (l_parent, n_exit_code, l_namespace)
+			l_exit_code.add_unqualified_attribute (n_value, a_item.exit_code.out)
+			l_exit_code.add_unqualified_attribute (n_enabled, a_item.is_exit_code_enabled.out)
+			l_parent.force_last (l_exit_code)
+			target_element := l_exit_code
 		end
 
 invariant

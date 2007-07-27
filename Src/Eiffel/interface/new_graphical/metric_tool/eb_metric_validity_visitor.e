@@ -21,6 +21,8 @@ inherit
 			metric_manager as metric_manager_internal
 		end
 
+	SHARED_BENCH_NAMES
+
 create
 	make
 
@@ -449,6 +451,17 @@ feature{NONE} -- Process
 			end
 		end
 
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			if not has_error then
+				process_criterion (a_criterion)
+				if not has_error then
+					a_criterion.tester.process (Current)
+				end
+			end
+		end
+
 	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -602,6 +615,42 @@ feature{NONE} -- Process
 					a_item.input_domain.process (Current)
 				end
 				location_stack.remove
+			end
+		end
+
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+			-- Process `a_item'.
+			-- An external command tester is valid if and only if:
+			-- 	* If input is redirected to file, a file is specified
+			--  * If output is redirected to file, a file is specified
+			--	* If error is redirected to file, a file is specified
+		do
+			if not has_error then
+				if not a_item.is_command_specified then
+					create_last_error (metric_names.err_external_command_empty)
+				end
+				if 	not has_error and then
+					a_item.is_input_as_file and then
+					a_item.input.is_empty
+				then
+					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (external_output_names.l_input)))
+				end
+				if 	not has_error and then
+					a_item.is_output_enabled and then
+					a_item.is_output_as_file and then
+					a_item.output.is_empty
+				then
+					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (external_output_names.l_output)))
+				end
+
+				if  not has_error and then
+					a_item.is_error_enabled and then
+					not a_item.is_error_redirected_to_output and then
+					a_item.is_error_as_file and then
+					a_item.error.is_empty
+				then
+					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (names.l_error)))
+				end
 			end
 		end
 

@@ -185,6 +185,12 @@ feature -- Titles
 	t_clear_result: STRING_GENERAL is do Result := locale.translation ("Clear detailed result") end
 	t_case_sensitive: STRING_GENERAL is do Result := locale.translation ("Case-sensitive") end
 	t_case_insensitive: STRING_GENERAL is do Result := locale.translation ("Case-insensitive") end
+	l_external_command_tester: STRING_GENERAL is do Result := locale.translation ("External command tester") end
+	l_as_file_name: STRING_GENERAL is do Result := locale.translation ("As file name?") end
+	l_enabled: STRING_GENERAL is do Result := locale.translation ("Enabled?") end
+	l_exit_code: STRING_GENERAL is do Result := locale.translation ("Exit code") end
+	l_redirected_to_output: STRING_GENERAL is do Result := locale.translation ("Redirected to output?") end
+	l_setup_external_command: STRING_GENERAL is do Result := locale.translation ("Setup external command for criterion") end
 
 feature -- Titles for editor token
 
@@ -1091,6 +1097,69 @@ feature -- Error/warning message
 			a_reason_attached: a_reason /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Unable to transfer remote file.%NReason: $1"), [a_reason])
+		end
+
+	err_integer_attribute_invalid (a_attribute_name, a_value: STRING_GENERAL): STRING_GENERAL is
+			-- Integer attribute value invalid
+		require
+			a_attribute_name_attached: a_attribute_name /= Void
+			a_value_attached: a_value /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Value %"$2%" of attribute %"$1%" is invalid. An integer is expected."), [a_attribute_name, a_value])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_attribute_missing (a_attribute: STRING_GENERAL): STRING_GENERAL is
+			-- `a_attribute' missing error
+		require
+			a_attribute_attached: a_attribute /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Attribute %"$1%" is missing."), [a_attribute])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_boolean_attribute_invalid (a_attribute_name, a_value: STRING_GENERAL): STRING_GENERAL is
+			-- Value `a_value' of boolean attribute `a_attribute_name' invalid error
+		require
+			a_attribute_name_attached: a_attribute_name /= Void
+			a_value_attached: a_value /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Value %"$2%" of attribute %"$1%" is invalid. A boolean is expected."), [a_attribute_name, a_value])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_too_many_sections (a_section_name: STRING_GENERAL): STRING_GENERAL is
+			-- Too many `a_section_name' sections error
+		require
+			a_section_name_attached: a_section_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Too many %"$1%" sections. Only one is expcted."), [a_section_name])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_section_missing (a_section_name: STRING_GENERAL): STRING_GENERAL is
+			-- `a_section_name' section missing error
+		require
+			a_section_name_attached: a_section_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Section %"$1%" is missing."), [a_section_name])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_external_command_empty: STRING_GENERAL is do Result := locale.translation ("External command is not specified.") end
+
+	err_external_command_file_not_specified (a_file_type: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_file_type_attached: a_file_type /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("File as external command $1 is not specified."), [a_file_type])
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- To do messages

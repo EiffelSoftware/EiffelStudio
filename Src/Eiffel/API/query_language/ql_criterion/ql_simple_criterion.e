@@ -30,6 +30,14 @@ feature{NONE} -- Initialization
 			require_compiled_internal_set: require_compiled_internal = a_require_compiled
 		end
 
+	make_without_evaluate_agent (a_require_compiled: BOOLEAN) is
+			-- Initialize `require_compiled' with `a_require_compiled'.
+		do
+			require_compiled_internal := a_require_compiled
+		ensure
+			require_compiled_internal_set: require_compiled_internal = a_require_compiled
+		end
+
 feature -- Status report
 
 	require_compiled: BOOLEAN is
@@ -42,8 +50,23 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: like item_type): BOOLEAN is
 			-- Evaluate `a_item'.
+		local
+			l_evaluate_agent: like evaluate_agent
 		do
-			Result := evaluate_agent.item ([a_item])
+			l_evaluate_agent := evaluate_agent
+			if l_evaluate_agent /= Void  then
+				Result := l_evaluate_agent.item ([a_item])
+			end
+		end
+
+feature -- Setting
+
+	set_evaluate_agent (a_evaluate_agent: like evaluate_agent) is
+			-- Set `evaluate_agent' with `a_evaluate_agent'.
+		do
+			evaluate_agent := a_evaluate_agent
+		ensure
+			evaluate_agent_set: evaluate_agent = a_evaluate_agent
 		end
 
 feature{NONE} -- Implementation
@@ -55,7 +78,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `require_compiled"
 
 invariant
-	evaluate_agent_attached: evaluate_agent /= Void
+--	evaluate_agent_attached: evaluate_agent /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

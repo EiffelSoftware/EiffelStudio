@@ -576,6 +576,38 @@ feature{NONE} -- Process
 			l_item.is_called := True
 		end
 
+feature -- XML element validity testing
+
+	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): BOOLEAN is
+			-- Retrieve boolean value from attribute `a_attribute_name from `current_attributes'.
+			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid boolean,
+			-- raise an error.
+		require
+			a_attribute_name_attached: a_attribute_name /= Void
+		do
+			test_boolean_attribute (
+				current_attributes.item (a_attribute),
+				metric_names.err_attribute_missing (a_attribute_name),
+				agent metric_names.err_boolean_attribute_invalid (a_attribute_name, ?)
+			)
+			Result := last_tested_boolean
+		end
+
+	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): INTEGER is
+			-- Retrieve integer value from attribute `a_attribute_name from `current_attributes'.
+			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid integer,
+			-- raise an error.
+		require
+			a_attribute_name_attached: a_attribute_name /= Void
+		do
+			test_integer_attribute (
+				current_attributes.item (a_attribute),
+				metric_names.err_attribute_missing (a_attribute_name),
+				agent metric_names.err_integer_attribute_invalid (a_attribute_name, ?)
+			)
+			Result := last_tested_integer
+		end
+
 invariant
 	factory_attached: factory /= Void
 	element_stack_attached: element_stack /= Void

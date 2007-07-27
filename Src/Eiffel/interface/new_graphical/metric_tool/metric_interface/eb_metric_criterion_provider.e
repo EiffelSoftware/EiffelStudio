@@ -75,10 +75,11 @@ feature{NONE} -- Implementation
 			-- The number of characters in the insertion remaining from the cursor position to the
 			-- end of the token
 		local
-			l_text: STRING_32
+--			l_text: STRING_32
 		do
-			l_text := code_completable.text
-			Result := l_text.count - code_completable.caret_position + 1
+			Result := 0
+--			l_text := code_completable.text
+--			Result := l_text.count - code_completable.caret_position + 1
 		end
 
 invariant

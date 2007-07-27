@@ -90,7 +90,7 @@ feature -- Status report
 				if can_complete_agent /= Void then
 					Result := can_complete_agent.item ([a_key, a_ctrl, a_alt, a_shift])
 				end
-				if Result then
+				if not Result then
 					l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
 					check l_shortcut_pref /= Void end
 					if
@@ -197,7 +197,9 @@ feature{NONE} -- Implementation
 	handle_character (a_char: CHARACTER) is
 			-- Handle `a_char'
 		do
-			insert_char (a_char)
+			if not unwanted_characters.item (a_char.code) then
+				insert_char (a_char)
+			end
 		end
 
 	handle_extended_ctrled_key (ev_key: EV_KEY) is

@@ -148,8 +148,8 @@ feature -- Access queries
 
 			if Result /= Void then
 				Result.merge (l_local)
-				
-					-- Need to set local namespace, because local namespaces cannot be merged
+
+					-- Need to set local namespace, because local namespaces cannot be merged for libraries
 				Result.set_local_namespace (l_local.local_namespace)
 			else
 				Result := l_local

@@ -129,6 +129,11 @@ feature -- Status report
 			Result := is_name_valid and then is_parameter_valid
 		end
 
+	is_external_command_criterion: BOOLEAN is
+			-- Is current an external command criterion?
+		do
+		end
+
 feature -- Setting
 
 	set_name (a_name: STRING) is

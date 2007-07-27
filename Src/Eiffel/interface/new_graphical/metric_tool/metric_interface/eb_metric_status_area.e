@@ -68,6 +68,7 @@ feature -- Setting
 			-- `a_error' is Void means the metric is valid.
 		local
 			l_text: EV_TEXT
+			l_message: STRING_32
 		do
 			error := a_error
 			if error = Void then
@@ -81,7 +82,10 @@ feature -- Setting
 			else
 					-- Invalid case
 				status_text.set_background_color (preferences.metric_tool_data.warning_background_color)
-				status_text.set_text (error.message_with_location)
+				l_message := error.message_with_location.as_string_32
+				l_message.replace_substring_all ("%R", "")
+				l_message.replace_substring_all ("%N", " ")
+				status_text.set_text (l_message)
 				status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
 				show_to_do_message_btn.enable_sensitive
 				to_do_dialog.load_text (error.message, error.location, error.to_do)

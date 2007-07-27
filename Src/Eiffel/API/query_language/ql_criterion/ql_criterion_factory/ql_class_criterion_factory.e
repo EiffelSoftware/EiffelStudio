@@ -73,6 +73,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_bottom_indexing_has_tag_criterion, c_bottom_indexing_has_tag)
 			agent_table.put (agent new_indexing_has_tag_criterion, c_indexing_has_tag)
 			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
+			agent_table.put (agent new_value_criterion, c_is_satisfied_by)
 
 			create name_table.make (45)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -123,6 +124,8 @@ feature{NONE} -- Initialization
 			name_table.put (c_indexing_has_tag, query_language_names.ql_cri_indexing_has_tag)
 
 			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
+			name_table.put (c_is_satisfied_by, query_language_names.ql_cri_is_satisfied_by)
+
 		end
 
 feature{NONE} -- Implementation
@@ -590,6 +593,7 @@ feature -- Criterion index
 	c_is_visible: INTEGER is 43
 	c_contain_ast: INTEGER is 44
 	c_value_of_metric_is: INTEGER is 45
+	c_is_satisfied_by: INTEGER is 46
 
 feature{NONE} -- Implementation/Evaluate agent
 

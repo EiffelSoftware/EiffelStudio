@@ -118,6 +118,8 @@ feature -- Loading
 				create {EB_METRIC_PATH_CRITERION_GRID_ITEM} property_manager.make
 			elseif a_criterion.is_text_criterion then
 				create {EB_METRIC_TEXT_CRITERION_GRID_ITEM} property_manager.make
+			elseif a_criterion.is_external_command_criterion then
+				create {EB_METRIC_COMMAND_CRITERION_GRID_ITEM} property_manager.make
 			end
 			property_manager.change_value_actions.extend (agent (grid.change_actions).call (Void))
 			property_manager.change_value_actions.extend (agent resize_grid)

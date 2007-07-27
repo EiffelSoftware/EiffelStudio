@@ -136,12 +136,15 @@ feature{NONE} -- Actions
 
 		do
 			synchronize_on_external_start
+			start_actions.call (Void)
 		end
 
 	on_exit is
 		do
 			external_output_manager.display_state (l_command_has_exited_with_code (external_launcher.exit_code), False)
 			synchronize_on_external_exit
+			exited_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 	on_terminate is
@@ -149,6 +152,8 @@ feature{NONE} -- Actions
 			external_storage.wipe_out
 			external_output_manager.display_state (l_command_has_been_terminated, False)
 			synchronize_on_external_exit
+			terminated_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 	on_launch_failed is
@@ -156,11 +161,14 @@ feature{NONE} -- Actions
 			external_storage.wipe_out
 			external_output_manager.display_state (l_launch_failed, True)
 			synchronize_on_external_exit
+			launch_failed_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 	on_launch_successed is
 		do
 			external_output_manager.display_state (l_command_is_running, False)
+			launched_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

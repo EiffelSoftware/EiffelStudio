@@ -219,6 +219,18 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	new_external_command_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_EXTERNAL_COMMAND_CRITERION is
+			-- New external command criterion whose `type' is `a_scope' and `name' is `a_name'
+		require
+			a_scope_attached: a_scope /= Void
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			create Result.make (a_scope, a_name)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Initialization
 
 	initialize_target_criteria is
@@ -238,6 +250,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (target_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (target_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (target_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_group_criteria is
@@ -264,6 +278,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (group_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (group_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (group_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_class_criteria is
@@ -326,6 +342,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (class_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (class_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (class_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_generic_criteria is
@@ -351,6 +369,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (generic_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (generic_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (generic_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_feature_criteria is
@@ -418,6 +438,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (feature_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (feature_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (feature_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_argument_criteria is
@@ -441,6 +463,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (argument_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (argument_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (argument_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_local_criteria is
@@ -465,6 +489,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (local_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (local_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (local_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_assertion_criteria is
@@ -498,6 +524,7 @@ feature{NONE} -- Initialization
 
 			l_hash_table.put (agent new_value_criterion (assertion_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
 
+			l_hash_table.put (agent new_external_command_criterion (assertion_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 	initialize_line_criteria is
@@ -522,6 +549,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (line_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_value_criterion (line_scope, query_language_names.ql_cri_value_of_metric_is), query_language_names.ql_cri_value_of_metric_is)
+
+			l_hash_table.put (agent new_external_command_criterion (line_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
 invariant

@@ -116,6 +116,7 @@ feature{NONE} -- Initialization
 			input_toolbar: SD_TOOL_BAR
 			tbs: SD_TOOL_BAR_SEPARATOR
 			l_del_tool_bar: SD_TOOL_BAR
+			l_provider: EB_EXTERNAL_CMD_COMPLETION_PROVIDER
 		do
 			create del_cmd_btn.make
 			create tbs.make
@@ -139,6 +140,9 @@ feature{NONE} -- Initialization
 			create terminate_btn.make
 			create run_btn.make
 			create cmd_lst
+			create l_provider.make (Void)
+			l_provider.set_code_completable (cmd_lst)
+			cmd_lst.set_completion_possibilities_provider (l_provider)
 			create edit_cmd_detail_btn.make
 			create hidden_btn.make
 			create state_label.make_with_text (l_no_command_is_running)
@@ -270,8 +274,8 @@ feature{NONE} -- Initialization
 			cmd_lst.change_actions.extend (agent on_cmd_lst_text_change)
 			cmd_lst.set_text ("")
 
-			cmd_lst.drop_actions.extend (agent drop_class)
-			cmd_lst.drop_actions.extend (agent drop_feature)
+--			cmd_lst.drop_actions.extend (agent drop_class)
+--			cmd_lst.drop_actions.extend (agent drop_feature)
 			cmd_lst.drop_actions.extend (agent drop_cluster)
 			cmd_lst.drop_actions.extend (agent drop_breakable)
 
@@ -320,6 +324,7 @@ feature{NONE} -- Initialization
 			cmd_toolbar.compute_minimum_size
 			toolbar.compute_minimum_size
 			l_del_tool_bar.compute_minimum_size
+			cmd_lst.drop_actions.extend (agent on_stone_dropped_at_cmd_list)
 		end
 
 feature -- Docking
@@ -711,6 +716,42 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_stone_dropped_at_cmd_list (a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped at `cmd_lst'
+		local
+			l_classi_stone: CLASSI_STONE
+			l_feature_stone: FEATURE_STONE
+			l_group_stone: CLUSTER_STONE
+			l_done: BOOLEAN
+			l_new_text: STRING
+		do
+			l_feature_stone ?= a_pebble
+			if l_feature_stone /= Void then
+				l_new_text := "{" + l_feature_stone.class_name + "}." + l_feature_stone.feature_name
+				l_done := True
+			end
+			if not l_done then
+				l_classi_stone ?= a_pebble
+				if l_classi_stone /= Void then
+					l_new_text := "{" + l_classi_stone.class_name + "}"
+					l_done := True
+				end
+			end
+			if not l_done then
+				l_group_stone ?= a_pebble
+				if l_group_stone /= Void then
+					l_new_text := l_group_stone.group.location.evaluated_path
+				end
+			end
+			if l_new_text /= Void then
+				if cmd_lst.has_selection then
+					cmd_lst.delete_selection
+					cmd_lst.remove_selection
+				end
+				cmd_lst.insert_text (l_new_text)
+			end
+		end
+
 feature -- Status reporting
 
 	corresponding_external_command: EB_EXTERNAL_COMMAND is
@@ -836,7 +877,7 @@ feature {NONE} -- Implementation
 
 	main_frame: EV_VERTICAL_BOX
 
-	cmd_lst: EV_COMBO_BOX
+	cmd_lst: EB_EXTERNAL_CMD_COMBO_BOX
 			-- List of external commands.
 
 	edit_cmd_detail_btn: SD_TOOL_BAR_BUTTON

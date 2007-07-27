@@ -199,6 +199,18 @@ feature -- Comparison
 			end
 		end
 
+feature -- Setting
+
+	set_insert_name (a_name: like insert_name) is
+			-- Set `insert_name' with `a_name'.
+		require
+			a_name_attached: a_name /= Void
+		do
+			insert_name_internal := a_name.twin
+		ensure
+			insert_name_set: insert_name /= Void and then insert_name.is_equal (a_name)
+		end
+
 feature {NONE} -- Implementation
 
 	associated_feature: E_FEATURE

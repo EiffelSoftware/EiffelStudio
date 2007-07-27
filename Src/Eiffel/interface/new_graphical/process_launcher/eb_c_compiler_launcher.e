@@ -150,6 +150,7 @@ feature{NONE}  -- Actions
 			-- Handler called before c compiler starts
 		do
 			synchronize_on_c_compilation_start
+			start_actions.call (Void)
 		end
 
 	on_exit is
@@ -173,11 +174,14 @@ feature{NONE}  -- Actions
 					display_message_on_main_output (c_compilation_succeeded_msg, True)
 				end
 			end
+			exited_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 	on_launch_successed is
 			-- Handler called when c compiler launch successed
 		do
+			launched_actions.call (Void)
 		end
 
 	on_launch_failed is
@@ -188,6 +192,8 @@ feature{NONE}  -- Actions
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
+			launch_failed_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 	on_terminate is
@@ -199,6 +205,8 @@ feature{NONE}  -- Actions
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_c_compilation_terminated)
 			display_message_on_main_output (c_compilation_terminated_msg, True)
+			terminated_actions.call (Void)
+			finished_actions.call (Void)
 		end
 
 feature{NONE} -- Implementation

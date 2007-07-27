@@ -322,6 +322,16 @@ feature -- Setting
 			stone_function_set: stone_function = a_function
 		end
 
+	set_text_wrap (b: BOOLEAN) is
+			-- If `b' is True, enable text wrap, otherwise disable text wrap.
+		do
+			if b then
+				editor_token_text.enable_text_wrap
+			else
+				editor_token_text.disable_text_wrap
+			end
+		end
+
 feature -- Searchable
 
 	set_image (a_image: like image) is

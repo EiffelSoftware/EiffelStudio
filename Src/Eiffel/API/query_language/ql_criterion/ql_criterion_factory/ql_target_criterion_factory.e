@@ -30,6 +30,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_true_criterion, c_true)
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
+			agent_table.put (agent new_value_criterion, c_is_satisfied_by)
 
 			create name_table.make (4)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -37,6 +38,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
+			name_table.put (c_is_satisfied_by, query_language_names.ql_cri_is_satisfied_by)
 		end
 
 feature{NONE} -- Implementation
@@ -101,6 +103,7 @@ feature -- Criterion index
 	c_name_is: INTEGER is 3
 	c_is_compiled: INTEGER is 4
 	c_value_of_metric_is: INTEGER is 5
+	c_is_satisfied_by: INTEGER is 6
 
 feature{NONE} -- Implementation
 

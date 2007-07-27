@@ -164,6 +164,8 @@ feature -- Criterion names
 	ql_cri_value_of_metric_is: STRING is "value_of_metric_is"
 	ql_cri_is_implementation_comment: STRING is "is_implementation_comment"
 
+	ql_cri_is_satisfied_by: STRING is "is_satisfied_by"
+
 feature -- Metric names
 
 	ql_metric_target: STRING is "Number of targets"

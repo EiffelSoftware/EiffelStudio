@@ -73,8 +73,7 @@ feature{NONE} -- Initialization
 			-- Build docking content.
 		do
 			Precursor {EB_OUTPUT_TOOL}(a_docking_manager)
-			content.drop_actions.extend (agent drop_class)
-			content.drop_actions.extend (agent drop_feature)
+			content.drop_actions.extend (agent set_stone)
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
@@ -244,6 +243,12 @@ feature -- Command
 			check friend_tool_created: develop_window.tools.external_output_tool /= Void end
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
+		end
+
+	set_stone (a_stone: ANY) is
+			-- Set `a_stone' into Current.
+		do
+			on_open_c_file (a_stone, True)
 		end
 
 feature -- Basic operation

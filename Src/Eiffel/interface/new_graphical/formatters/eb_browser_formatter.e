@@ -65,6 +65,17 @@ feature -- Access
 			end
 		end
 
+	text: STRING is
+			-- Text in current formatter
+		do
+		end
+
+	selection: STRING is
+			-- Selection in `text'
+			-- An empty string if no selection is found.
+		do
+		end
+
 feature -- status report
 
 	is_browser_formatter: BOOLEAN is

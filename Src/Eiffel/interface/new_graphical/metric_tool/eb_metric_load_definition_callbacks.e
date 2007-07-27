@@ -43,6 +43,7 @@ feature{NONE} -- Initialization
 			create domain_receiver_stack.make
 			create tester_receiver_stack.make
 			create value_retriever_stack.make
+			create external_command_tester_stack.make
 			set_is_for_whole_file (True)
 		ensure
 			factory_set: factory = a_factory
@@ -131,9 +132,22 @@ feature{NONE} -- Callbacks
 			when t_metric_value then
 				process_metric_value
 				set_first_parsed_node (current_metric_value_retriever)
+			when t_command_criterion then
+				process_external_command_criterion
+				set_first_parsed_node (current_command_criterion)
+			when t_input then
+				process_input
+			when t_output then
+				process_output
+			when t_error then
+				process_error
+			when t_exit_code then
+				process_exit_code
 			when t_description then
 			when t_text then
 			when t_path then
+			when t_command then
+			when t_working_directory then
 			else
 				set_first_parsed_node (Void)
 			end
@@ -159,6 +173,8 @@ feature{NONE} -- Callbacks
 					metric_names.err_value_tester_missing
 				)
 				remove_domain_receiver_from_stack
+			when t_command_criterion then
+				external_command_tester_stack.remove
 			when t_text then
 				process_text_finish
 			when t_path then
@@ -196,6 +212,16 @@ feature{NONE} -- Callbacks
 				process_domain_finish
 			when t_constant_value then
 				process_value_retriever_finish
+			when t_command then
+				process_command_finish
+			when t_input then
+				process_input_finish
+			when t_output then
+				process_output_finish
+			when t_error then
+				process_error_finish
+			when t_working_directory then
+				process_working_directory_finish
 			else
 			end
 			create current_content.make_empty
@@ -212,7 +238,12 @@ feature{NONE} -- Callbacks
 			if
 				l_current_state = t_description or
 				l_current_state = t_path or
-				l_current_state = t_text
+				l_current_state = t_text or
+				l_current_state = t_command or
+				l_current_state = t_input or
+				l_current_state = t_output or
+				l_current_state = t_error or
+				l_current_state = t_working_directory
 			then
 				current_content.append (a_content)
 			end
@@ -538,6 +569,19 @@ feature{NONE} -- Process
 			tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
 		end
 
+	process_external_command_criterion is
+			-- Proces "command" node.
+		local
+			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+		do
+			l_id := current_criterion_identifier
+			current_command_criterion := factory.new_external_command_criterion (l_id.name, l_id.scope)
+			last_criterion := current_command_criterion
+			setup_criterion (current_command_criterion, l_id.negation)
+			register_criterion (current_command_criterion)
+			external_command_tester_stack.extend (current_command_criterion.tester)
+		end
+
 	process_nary_criterion (a_for_and: BOOLEAN) is
 			-- Process nary criterion.
 			-- If `a_for_and' is True, treat that nary criterion as an "AND" criterion,
@@ -599,6 +643,85 @@ feature{NONE} -- Process
 			end
 		end
 
+	process_input is
+			-- Process when start tag of "input" finished.
+		do
+			external_command_tester_stack.item.set_input_as_file (boolean_attribute_value (at_as_file_name, n_as_file_name))
+		end
+
+	process_output is
+			-- Process when start tag of "output" finishes.
+		local
+			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
+		do
+			l_tester := external_command_tester_stack.item
+			l_tester.set_is_output_enabled (boolean_attribute_value (at_enabled, n_enabled))
+			l_tester.set_input_as_file (boolean_attribute_value (at_as_file_name, n_as_file_name))
+		end
+
+	process_error is
+			-- Process when start tag of "error" finishes.
+		local
+			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
+		do
+			l_tester := external_command_tester_stack.item
+			l_tester.set_is_output_enabled (boolean_attribute_value (at_enabled, n_enabled))
+			l_tester.set_input_as_file (boolean_attribute_value (at_as_file_name, n_as_file_name))
+			l_tester.set_input_as_file (boolean_attribute_value (at_redirected_to_output, n_redirected_to_output))
+		end
+
+	process_working_directory_finish is
+			-- Process when "working_directory" node finishes.
+		do
+			process_command_related_finish (t_working_directory, agent (external_command_tester_stack.item).set_working_directory)
+		end
+
+	process_exit_code is
+			-- Process when start tag of "exit_code" finishes.
+		local
+			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
+		do
+			l_tester := external_command_tester_stack.item
+			l_tester.set_is_exit_code_enabled (boolean_attribute_value (at_enabled, n_enabled))
+			l_tester.set_exit_code (integer_attribute_value (at_value, n_value))
+		end
+
+	process_command_finish is
+			-- Process when "command" node finishes.
+		do
+			process_command_related_finish (t_command, agent (external_command_tester_stack.item).set_command)
+		end
+
+	process_input_finish is
+			-- Process when "input" node finishes.
+		do
+			process_command_related_finish (t_input, agent (external_command_tester_stack.item).set_input)
+		end
+
+	process_output_finish is
+			-- Process when "output" node finishes.
+		do
+			process_command_related_finish (t_output, agent (external_command_tester_stack.item).set_output)
+		end
+
+	process_error_finish is
+			-- Process when "error" node finishes.
+		do
+			process_command_related_finish (t_error, agent (external_command_tester_stack.item).set_error)
+		end
+
+	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- Process.
+		require
+			a_agent_attached: a_agent /= Void
+		do
+			if current_tag.item /= a_tag then
+				create_last_error (metric_names.err_invalid_tag)
+			else
+				a_agent.call ([current_content.twin])
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	current_content: STRING
@@ -645,6 +768,12 @@ feature{NONE} -- Implementation
 
 	last_criterion: EB_METRIC_CRITERION
 			-- Last processed criterion
+
+	current_command_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION
+			-- Current external command criterion
+
+	external_command_tester_stack: LINKED_STACK [EB_METRIC_EXTERNAL_COMMAND_TESTER]
+			-- Stack of external command tester
 
 feature{NONE} -- Implementation/XML structure
 
@@ -700,9 +829,10 @@ feature{NONE} -- Implementation/XML structure
 				-- => caller_criterion
 				-- => client_criterion
 				-- => value_criterion
+				-- => command_criterion
 				-- => and_criterion
 				-- => or_criterion
-			create l_trans.make (8)
+			create l_trans.make (10)
 			l_trans.force (t_normal_criterion, n_normal_criterion)
 			l_trans.force (t_domain_criterion, n_domain_criterion)
 			l_trans.force (t_text_criterion, n_text_criterion)
@@ -710,6 +840,7 @@ feature{NONE} -- Implementation/XML structure
 			l_trans.force (t_caller_criterion, n_caller_criterion)
 			l_trans.force (t_client_criterion, n_client_criterion)
 			l_trans.force (t_value_criterion, n_value_criterion)
+			l_trans.force (t_command_criterion, n_command_criterion)
 			l_trans.force (t_and_criterion, n_and_criterion)
 			l_trans.force (t_or_criterion, n_or_criterion)
 			Result.force (l_trans, t_criterion)
@@ -751,6 +882,22 @@ feature{NONE} -- Implementation/XML structure
 			l_trans.force (t_tester, n_tester)
 			Result.force (l_trans, t_value_criterion)
 
+				-- command_criterion
+				-- => command
+				-- => working_directory
+				-- => input
+				-- => output
+				-- => error
+				-- => exit_code
+			create l_trans.make (5)
+			l_trans.force (t_command, n_command)
+			l_trans.force (t_working_directory, n_working_directory)
+			l_trans.force (t_input, n_input)
+			l_trans.force (t_output, n_output)
+			l_trans.force (t_error, n_error)
+			l_trans.force (t_exit_code, n_exit_code)
+			Result.force (l_trans, t_command_criterion)
+
 				-- and_criterion
 				-- => normal_criterion
 				-- => domain_criterion
@@ -758,10 +905,11 @@ feature{NONE} -- Implementation/XML structure
 				-- => path_criterion
 				-- => caller_criterion
 				-- => client_criterion
+				-- => command_criterion
 				-- => value_criterion
 				-- => and_criterion
 				-- => or_criterion
-			create l_trans.make (7)
+			create l_trans.make (10)
 			l_trans.force (t_normal_criterion, n_normal_criterion)
 			l_trans.force (t_domain_criterion, n_domain_criterion)
 			l_trans.force (t_text_criterion, n_text_criterion)
@@ -769,6 +917,7 @@ feature{NONE} -- Implementation/XML structure
 			l_trans.force (t_caller_criterion, n_caller_criterion)
 			l_trans.force (t_client_criterion, n_client_criterion)
 			l_trans.force (t_value_criterion, n_value_criterion)
+			l_trans.force (t_command_criterion, n_command_criterion)
 			l_trans.force (t_and_criterion, n_and_criterion)
 			l_trans.force (t_or_criterion, n_or_criterion)
 			Result.force (l_trans, t_and_criterion)
@@ -781,9 +930,10 @@ feature{NONE} -- Implementation/XML structure
 				-- => caller_criterion
 				-- => client_criterion
 				-- => value_criterion
+				-- => command_criterion
 				-- => and_criterion
 				-- => or_criterion
-			create l_trans.make (7)
+			create l_trans.make (10)
 			l_trans.force (t_normal_criterion, n_normal_criterion)
 			l_trans.force (t_domain_criterion, n_domain_criterion)
 			l_trans.force (t_text_criterion, n_text_criterion)
@@ -791,6 +941,7 @@ feature{NONE} -- Implementation/XML structure
 			l_trans.force (t_caller_criterion, n_caller_criterion)
 			l_trans.force (t_client_criterion, n_client_criterion)
 			l_trans.force (t_value_criterion, n_value_criterion)
+			l_trans.force (t_command_criterion, n_command_criterion)
 			l_trans.force (t_and_criterion, n_and_criterion)
 			l_trans.force (t_or_criterion, n_or_criterion)
 			Result.force (l_trans, t_or_criterion)
@@ -946,13 +1097,23 @@ feature{NONE} -- Implementation/XML structure
 				-- * negation
 				-- * metric_name
 				-- * use_external_delayed
-			create l_attr.make (4)
+			create l_attr.make (5)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
 			l_attr.force (at_negation, n_negation)
 			l_attr.force (at_metric_name, n_metric_name)
 			l_attr.force (at_use_external_delayed, n_use_external_delayed)
 			Result.force (l_attr, t_value_criterion)
+
+				-- command_criterion
+				-- * name
+				-- * unit
+				-- * negation
+			create l_attr.make (4)
+			l_attr.force (at_name, n_name)
+			l_attr.force (at_unit, n_unit)
+			l_attr.force (at_negation, n_negation)
+			Result.force (l_attr, t_command_criterion)
 
 				-- and_criterion
 				-- * name
@@ -1017,6 +1178,38 @@ feature{NONE} -- Implementation/XML structure
 			l_attr.force (at_metric_name, n_metric_name)
 			l_attr.force (at_use_external_delayed, n_use_external_delayed)
 			Result.force (l_attr, t_metric_value)
+
+				-- command input
+				-- * as_file_name
+			create l_attr.make (1)
+			l_attr.force (at_as_file_name, n_as_file_name)
+			Result.force (l_attr, t_input)
+
+				-- command output
+				-- * enabled
+				-- * as_file_name
+			create l_attr.make (2)
+			l_attr.force (at_enabled, n_enabled)
+			l_attr.force (at_as_file_name, n_as_file_name)
+			Result.force (l_attr, t_output)
+
+				-- command error
+				-- * enabled
+				-- * redirected_to_output
+				-- * as_file_name
+			create l_attr.make (3)
+			l_attr.force (at_enabled, n_enabled)
+			l_attr.force (at_redirected_to_output, n_redirected_to_output)
+			l_attr.force (at_as_file_name, n_as_file_name)
+			Result.force (l_attr, t_error)
+
+				-- command exit code
+				-- * enabled
+				-- * value
+			create l_attr.make (2)
+			l_attr.force (at_enabled, n_enabled)
+			l_attr.force (at_value, n_value)
+			Result.force (l_attr, t_exit_code)
 		end
 
 	element_index_table: HASH_TABLE [INTEGER, STRING] is
@@ -1194,6 +1387,7 @@ invariant
 	current_attributes_attached: current_attributes /= Void
 	metrics_attached: metrics /= Void
 	domain_receiver_stack_attached: domain_receiver_stack /= Void
+	external_command_tester_stack_attached: external_command_tester_stack /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

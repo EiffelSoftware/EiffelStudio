@@ -41,7 +41,9 @@ feature -- Access
 				Result := buffer.temp_file_name.twin
 			end
 		ensure then
-			good_result: Result.is_equal (buffer.temp_file_name)
+			good_result:
+				new_text_function /= Void implies Result.is_equal (new_text_function.item ([buffer.temp_file_name])) and then
+				new_text_function = Void implies Result.is_equal (buffer.temp_file_name)
 		end
 
 	buffer: EB_BUFFER

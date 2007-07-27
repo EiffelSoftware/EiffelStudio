@@ -114,6 +114,14 @@ feature -- Access
 			Result := basic_text_fragment (a_scanner)
 		end
 
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+			-- New "$group_name" fragment
+		do
+			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent group_name (item, ?), agent is_true)
+			Result.set_normalized_text_function (agent lower_case_text_normalizer)
+			Result.set_location (a_scanner.position)
+		end
+
 feature{NONE} -- Implementation
 
 	path (a_item: QL_ITEM; a_text: STRING): STRING is
@@ -210,6 +218,37 @@ feature{NONE} -- Implementation
 			end
 			if l_conf_group /= Void then
 				Result := l_conf_group.location.evaluated_directory.twin
+			else
+				Result := a_text.twin
+			end
+		end
+
+	group_name (a_item: QL_ITEM; a_text: STRING): STRING
+			-- Group name of `a_item'
+		require
+			a_item_attached: a_item /= Void
+			a_text_attached: a_text /= Void
+		local
+			l_code_item: QL_CODE_STRUCTURE_ITEM
+			l_line: QL_LINE
+			l_group: QL_GROUP
+			l_conf_group: CONF_GROUP
+		do
+			if a_item.is_code_structure then
+				l_code_item ?= a_item
+				l_conf_group := l_code_item.class_i.group
+			elseif a_item.is_line then
+				l_line ?= a_item
+				l_code_item ?= l_line.parent
+				if l_code_item /= Void then
+					l_conf_group := l_code_item.class_i.group
+				end
+			elseif a_item.is_group then
+				l_group ?= a_item
+				l_conf_group := l_group.group
+			end
+			if l_conf_group /= Void then
+				Result := l_conf_group.name.twin
 			else
 				Result := a_text.twin
 			end

@@ -56,7 +56,6 @@ feature -- Access
 	actual_namespace: STRING is
 			-- Associated full namespace of current cluster.
 		local
-			l_namespace: STRING
 			l_local_namespace: STRING
 		do
 

@@ -704,6 +704,70 @@
 		<bold>Remark:</bold> This criterion will evaluate to True if the candidate assertion is in require else clause.<line_break/>
 	</paragraph>
 	<paragraph>
+		<bold>is_satisfied_by</bold><line_break/>
+		<bold>Syntax:</bold> is_satisfied_by command specification<line_break/>
+		<bold>Applicable on:</bold> Target, Group, Class, Generic, Feature, Assertion, Argument, Local, Line<line_break/>
+		<bold>Remark:</bold>
+		<paragraph>This criterion will invoke external command given in command specification to decide whether current item is evaluated to True. Placeholders are used as interface between current item and the external command. The following placeholders are supported:</paragraph>
+		<paragraph>
+		<list ordered="false">
+			<item>$class_name: this will be replaced by class name of current item</item>
+			<item>$directory_name: this will be replaced by the directory location of current item</item>
+			<item>$file: this will be replaced by file name part, i.e., without heading directory, of $path of current item</item>
+			<item>$file_name: this will be replaced by the path of current item</item>
+			<item>$f_code: this will be replaced by the F_code directory of current target, if defined</item>
+			<item>$group_directory: this will be replaced by the directory of the group of current item</item>
+			<item>$group_name: this will be replaced by the group name of current item</item>
+			<item>$path: same as $file_name</item>
+			<item>$project_directory: this will be replaced by the directory of current project, if defined</item>
+			<item>$target_directory: this will be replaced by the directory of current target, if defined</item>
+			<item>$target_name: this will be replaced by name of current target, if defined</item>			
+			<item>$w_code: this will be replaced by the W_code directory of current target, if defined</item>
+		</list>
+		</paragraph>
+		<paragraph>Command specification can be set in the dialog associated to this criterion, shown in the following picture:
+			<image>
+				<url>../../../../../images/eiffelstudio/metrics_tool/is_satisfied_by.png</url>
+				<alt_text>system hierarchy</alt_text>
+			</image>		
+		</paragraph>
+		<paragraph>
+			<bold>Command name</bold><line_break/>
+			External command is specified here. <line_break/>
+			The command shown in the picture will test the subversion status of the current class (suppose we are running a class metric). The class path is given by "$path". And the output of the "svn stat $path" command is redirected to grep so we can check if the output starts with a letter "M" which indicates tha the class is changed locally.
+		</paragraph>
+		<paragraph>
+			<bold>Workding directory</bold><line_break/>
+			Working directory for the command is set here.
+		</paragraph>
+		<paragraph>
+			<bold>Input</bold><line_break/>
+			Input, if any, of the command is set here. <line_break/>
+			If the option "As file name" is checked, the text specified is treated as a file name in which actual input is stored.
+		</paragraph>
+		<paragraph>
+			<bold>Output</bold><line_break/>
+			Expected output, if any, of the command is set here.<line_break/>
+			If the option "As file name" is checked, the text specified is treated as a file name in which actual output is stored.<line_break/>
+			If the option "Enabled" is not checked, the output will be ignored.
+		</paragraph>
+		<paragraph>
+			<bold>Error</bold><line_break/>
+			Expected error, if any, of the command is set here. <line_break/>
+			If the option "As file name" is checked, the text specified is treated as a file name in which actual error is stored. <line_break/>
+			If the option "Enabled" is not checked, the error will be ignored.<line_break/>
+			If the option "Redirected to output" is checked, error of the command will be redirected to output.
+		</paragraph>		
+		<paragraph>
+			<bold>Exit code</bold><line_break/>
+			Expected exit code of the command is set here.<line_break/>
+			If the option "Enabled" is not checked, the exit code will be ignored.<line_break/>			
+		</paragraph>				
+		<paragraph>
+			In the above output, error, exit code sections, if more than one are enabled, they are treated as "and-ed". For example if output and exit code are enabled, this criterion is evaluated to True only if the actual output from the command matches the expected output and the exit code from the command matches the expected exit code.
+		</paragraph>
+	</paragraph>
+	<paragraph>
 		<bold>is_unique</bold><line_break/>
 		<bold>Syntax:</bold> is_unique<line_break/>
 		<bold>Applicable on:</bold> Feature<line_break/>

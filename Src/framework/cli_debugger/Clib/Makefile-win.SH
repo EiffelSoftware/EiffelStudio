@@ -25,10 +25,19 @@ OBJECTS = cli_debugger.$obj cli_debugger_callback.$obj cli_debugger_callback_id.
 
 all:: lib_dir cli_debugger.lib clean
 
-OBJ:
+..$(DIR)spec:
 	$(MKDIR_TARGET)
 
-lib_dir: OBJ
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
+	$(MKDIR_TARGET)
+
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
+	$(MKDIR_TARGET)
+
+..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
+	$(MKDIR_TARGET)
+
+lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
 clean:
 	$(RM) *.$obj
@@ -37,5 +46,5 @@ clean:
 
 cli_debugger.lib: $(OBJECTS)
 	$alib_line
-	$(MV) $@ OBJ$(DIR)$@
+	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 

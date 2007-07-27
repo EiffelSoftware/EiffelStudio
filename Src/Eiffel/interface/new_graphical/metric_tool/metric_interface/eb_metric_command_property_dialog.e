@@ -503,6 +503,7 @@ feature{NONE} -- Implementation
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$f_code"), 10)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$w_code"), 11)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$target_name"), 12)
+				placeholder_list_internal.sort
 			end
 			Result := placeholder_list_internal
 		ensure

@@ -234,6 +234,18 @@ feature -- Access
 			end
 		end
 
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+			-- New "$group_name" fragment
+		local
+			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
+		do
+			create l_fragment.make (a_scanner.text, agent new_group_name_replacement, agent is_true)
+			l_fragment.set_location (a_scanner.position)
+			Result := l_fragment
+			Result.set_normalized_text_function (agent lower_case_text_normalizer)
+			Result.set_data (a_scanner.t_group_directory)
+		end
+
 feature{NONE} -- Implementation
 
 	is_class_buffer_name_valid (a_class_buffer_name: STRING): BOOLEAN is
@@ -340,6 +352,43 @@ feature{NONE} -- Implementation
 		require
 			a_text_attached: a_text /= Void
 		local
+			l_group: CONF_GROUP
+		do
+			l_group := group_from_current_class
+			if l_group /= Void then
+				Result := l_group.location.evaluated_directory.twin
+			end
+			if Result = Void then
+				Result := a_text.twin
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_group_name_replacement (a_text: STRING): STRING is
+			-- New group name replacement for `a_text'
+			-- Return the path of the group where the currently focused class in editor is defined,
+			-- if there is no such class, return a copy of `a_text'.
+		require
+			a_text_attached: a_text /= Void
+		local
+			l_group: CONF_GROUP
+		do
+			l_group := group_from_current_class
+			if l_group /= Void then
+				Result := l_group.name.twin
+			end
+			if Result = Void then
+				Result := a_text.twin
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	group_from_current_class: CONF_GROUP is
+			-- Group from current class in editor
+			-- Void if no class is found.
+		local
 			cv_cst: CLASSI_STONE
 			dev: EB_DEVELOPMENT_WINDOW
 		do
@@ -347,14 +396,9 @@ feature{NONE} -- Implementation
 			if dev /= Void then
 				cv_cst ?= dev.stone
 				if cv_cst /= Void then
-					Result := cv_cst.class_i.group.location.evaluated_directory.twin
+					Result := cv_cst.class_i.group
 				end
 			end
-			if Result = Void then
-				Result := a_text.twin
-			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 	new_class_name_replacement (a_text: STRING): STRING is

@@ -496,7 +496,7 @@ feature{NONE} -- Implementation
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$file"), 3)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$class_name"), 4)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$directory_name"), 5)
-				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$group_path"), 6)
+				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$group_name"), 6)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$group_directory"), 7)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$project_directory"), 8)
 				placeholder_list_internal.put (create {NAME_FOR_COMPLETION}.make ("$target_directory"), 9)

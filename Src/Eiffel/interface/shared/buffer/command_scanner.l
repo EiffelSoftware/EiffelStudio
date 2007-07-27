@@ -94,10 +94,10 @@ ID		{A}{X}*
 								last_token := T_GROUP_DIRECTORY
 						}
 
-"$"[gG][rR][oO][uU][pP]"_"[pP][aA][tT][hH] {
-								set_last_text_fragment (factory.new_group_directory (Current))
+"$"[gG][rR][oO][uU][pP]"_"[nN][aA][mM][eE] {
+								set_last_text_fragment (factory.new_group_name (Current))
 								register_text_fragment (last_text_fragment)
-								last_token := T_GROUP_DIRECTORY
+								last_token := T_GROUP_NAME
 						}
 "$"[lL][iI][nN][eE] {
 

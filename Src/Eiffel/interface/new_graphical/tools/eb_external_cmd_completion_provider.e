@@ -188,7 +188,7 @@ feature{NONE} -- Implementation
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$file"), 3)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$class_name"), 4)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$directory_name"), 5)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$group_path"), 6)
+			Result.put (create {NAME_FOR_COMPLETION}.make ("$group_name"), 6)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$group_directory"), 7)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$line"), 8)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$project_directory"), 9)

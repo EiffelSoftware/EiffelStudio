@@ -95,6 +95,7 @@ feature -- Constants
 	T_FILE: INTEGER is 15
 	T_PATH: INTEGER is 16
 	T_TARGET_NAME: INTEGER is 17
+	T_GROUP_NAME: INTEGER is 18
 	T_UNRECOGNIZED: INTEGER is 100
 
 feature{NONE} -- Implementation

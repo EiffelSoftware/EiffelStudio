@@ -122,6 +122,15 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+			-- New "$group_name" fragment
+		require
+			a_scanner_attached: a_scanner /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
 			-- New "$class_name" fragment
 		require

@@ -12,7 +12,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(EIFFEL_SRC)\framework\cli_debugger\spec\msc\lib\cli_debugger.lib">
+		<external_object location="$(EIFFEL_SRC)\framework\cli_debugger\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_debugger.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

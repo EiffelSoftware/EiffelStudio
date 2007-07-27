@@ -272,7 +272,10 @@ feature{NONE} -- Initialization
 
 			cmd_lst.key_press_actions.extend (agent on_external_cmd_list_key_down (?))
 			cmd_lst.change_actions.extend (agent on_cmd_lst_text_change)
+			cmd_lst.focus_in_actions.extend (agent on_focus_in_in_cmd_lst)
 			cmd_lst.set_text ("")
+			check not_void: cmd_lst.choices /= Void end
+			cmd_lst.choices.focus_in_actions.extend (agent on_focus_in_completion_window)
 
 --			cmd_lst.drop_actions.extend (agent drop_class)
 --			cmd_lst.drop_actions.extend (agent drop_feature)
@@ -678,6 +681,34 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_focus_in_in_cmd_lst is
+			-- Agent called when focus goes to `input_field'
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			l_env.application.do_once_on_idle (agent on_idle_action_for_cmd_lst)
+		end
+
+	on_idle_action_for_cmd_lst is
+			-- Handle focus issue of `cmd_lst' in idle action.
+		local
+			l_position: INTEGER
+		do
+			if last_focus_at_completion_window then
+				last_focus_at_completion_window := False
+				if cmd_lst /= Void and then not cmd_lst.is_destroyed then
+					cmd_lst.set_caret_position (cmd_lst.text.count + 1)
+				end
+			end
+		end
+
+	on_focus_in_completion_window is
+			-- Agent called when focus goes to completion window.
+		do
+			last_focus_at_completion_window := True
+		end
+
 	on_save_output_to_file is
 			-- Called when user press Save output button.
 		local
@@ -901,6 +932,9 @@ feature {NONE} -- Implementation
 	edit_external_commands_cmd_btn: EB_SD_COMMAND_TOOL_BAR_BUTTON;
 			-- Button to recycle
 
+	last_focus_at_completion_window: BOOLEAN
+		-- Did last focus stayed in code completation window?
+		
 	set_focus_on_idle is
 			-- Set focus on idle actions.
 		local

@@ -245,6 +245,18 @@ feature -- Setting
 			text_set: text.is_equal (a_text)
 		end
 
+    set_text_wrap (a_wrap: BOOLEAN) is
+            -- If `a_wrap' is True, enable text wrap, otherwise disable text wrap.
+        do
+            if a_wrap then
+                editor_token_text.enable_text_wrap
+            else
+                editor_token_text.disable_text_wrap
+            end
+        ensure
+            text_wrap_set: editor_token_text.is_text_wrap_enabled = a_wrap
+        end
+
 	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]; a_height: INTEGER) is
 			-- Set fonts of current tokens with `a_fonts' and according height.
 			-- If `a_fonts' is Void, tokens will be displayed in default editor token fonts.

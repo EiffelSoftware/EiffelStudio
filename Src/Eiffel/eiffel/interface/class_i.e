@@ -303,10 +303,7 @@ feature -- Status report
 			compiled_class: is_compiled
 		local
 			l_path: STRING
-			l_namespace: STRING
-			l_local_namespace: STRING
 			l_cluster: CLUSTER_I
-			l_stack: DS_ARRAYED_STACK [CONF_CLUSTER]
 		do
 			if compiled_class.is_precompiled then
 				Result := internal_namespace

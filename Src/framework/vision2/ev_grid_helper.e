@@ -58,6 +58,28 @@ feature -- Access
 			end
 		end
 
+	grid_row_fill_empty_cells (a_row: EV_GRID_ROW) is
+			-- Fills a grid row with items if no items exist at any cell location
+		require
+			a_row_attached: a_row /= Void
+		local
+			l_item: EV_GRID_LABEL_ITEM
+			i, l_count: INTEGER
+		do
+			from
+				 i := 1
+				 l_count := a_row.count
+			until
+				i > l_count
+			loop
+				if a_row.item (i) = Void then
+					create l_item
+					a_row.set_item (i, l_item)
+				end
+				i := i + 1
+			end
+		end
+
 	grid_move_to_end_of_grid (a_row: EV_GRID_ROW) is
 		require
 			a_row /= Void

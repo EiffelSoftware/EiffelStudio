@@ -6,13 +6,19 @@ md %INSTALL_DIR\releases\gpl_version
 
 remtrace Compile the run-times
 iff not defined WIN64 then
-	remtrace Compile a run-time for Borland
-	cdd %EIFFEL_SRC
-	cd C
+	remtrace Compile a run-time for MinGW
+	cdd %EIFFEL_SRC\C
 	call configure clean >>& %INSTALL_LOG
-	call configure win32 b >>& %INSTALL_LOG
+	call configure win32 g >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
+	copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
+
+	remtrace Compile a dynamic run-time for MinGW
+	cdd %EIFFEL_SRC\C
+	call configure clean >>& %INSTALL_LOG
+	call configure win32 g dll >>& %INSTALL_LOG
+	cd %EIFFEL_SRC
+	copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 endiff
 
 remtrace Compile a dynamic run-time for Microsoft
@@ -75,11 +81,11 @@ safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace CLI writer
 cd %EIFFEL_SRC\framework\cli_writer\Clib
-call nmake
+default_make 
 
 remtrace CLI debugger
 cd %EIFFEL_SRC\framework\cli_debugger\Clib
-call nmake
+default_make
 
 remtrace Compiling .NET components
 cdd %INIT_DIR

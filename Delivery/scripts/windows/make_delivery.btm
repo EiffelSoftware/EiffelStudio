@@ -138,12 +138,9 @@ move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 
-remtrace Borland files
+remtrace MinGW files
 cdd %INSTALL_DIR
-exprt %DEFAULT_ISE_SVN/Src/tools/BCC55.tar.gz BCC55.tar.gz
-tar xfz BCC55.tar.gz >>& %INSTALL_LOG
-fullrf BCC55\bin\bcc32.cfg
-fullrf BCC55.tar.gz
+exprt %DEFAULT_ORIGO_SVN/free_add_ons/gcc gcc
 
 cdd %STUDIO_DIR
 remtrace Create documentation directory
@@ -165,7 +162,7 @@ safe_md %STUDIO_DIR\wizards\com\config
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
-safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
+safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 safe_md %STUDIO_DIR\rb
 
 cdd %INIT_DIR

@@ -52,8 +52,12 @@ alias exprt `call %INIT_DIR\svn_command.bat --force export %$ >>& %INSTALL_LOG`
 alias exprtfile `call %INIT_DIR\svn_command.bat cat %$` 
 
 REM C Compilation
-alias default_make `if exist make_msc.bat (save_path & call make_msc.bat >>& %INSTALL_LOG & cd %TMP_PATH)`
-alias all_makes `save_path & iff exist make_msc.bat then & call make_msc.bat >>& %INSTALL_LOG & endiff & iff exist make_bcb.bat then & cd %TMP_PATH & call make_bcb.bat >>& %INSTALL_LOG & endiff & cd %TMP_PATH`
+alias default_make `save_path & call compile_library.bat msc >>& %INSTALL_LOG & cd %TMP_PATH`
+iff defined WIN64 then
+alias all_makes default_make
+else
+alias all_makes `save_path & call compile_library.bat msc >>& %INSTALL_LOG & cd %TMP_PATH & call compile_library.bat mingw >>& %INSTALL_LOG & cd %TMP_PATH`
+endiff
 
 REM Eiffel Compilation
 REM Remove a project from the current directory, if any

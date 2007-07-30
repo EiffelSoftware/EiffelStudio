@@ -636,7 +636,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					end
 				end
 			end
-			targets.go_to (cur)
+			if targets.valid_cursor (cur) then
+				targets.go_to (cur)
+			end
 		end
 
 	menu_placement_offset: INTEGER = 3

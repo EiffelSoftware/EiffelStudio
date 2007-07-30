@@ -70,6 +70,7 @@ echo INSTALL_DIR is %INSTALL_DIR
 echo STUDIO_DIR is %STUDIO_DIR
 echo DOCUMENT_DIR is %DOCUMENT_DIR
 echo Log file is %INSTALL_LOG
+echo The revision that will be generated will be %ORIGO_SVN_REVISION
 echo ec version is:
 ec -version
 echo -----------------------------

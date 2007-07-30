@@ -74,7 +74,7 @@ md %INSTALL_DIR
 md %STUDIO_DIR
 cdd %STUDIO_DIR
 remtrace studio
-exprt %DEFAULT_ORIGO_SVN/Delivery/studio studio
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
@@ -83,11 +83,11 @@ cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
 cdd %STUDIO_DIR
 remtrace esbuilder
-exprt %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder
 remtrace vision2 tour
-exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
 remtrace examples
-exprt %DEFAULT_ORIGO_SVN/Src/examples examples
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
 fullrd obsolete
 fullrd eiffeltest
@@ -124,25 +124,25 @@ remtrace precomp
 safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
-exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %STUDIO_DIR
 remtrace wizards
-exprt %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
 fullrf %STUDIO_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
-exprt %DEFAULT_ORIGO_SVN/Src/C_library C_library
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library C_library
 fullrd C_library\.libs
 remtrace root
-exprt -N %DEFAULT_ORIGO_SVN/Delivery Delivery
+exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 
 remtrace MinGW files
 cdd %INSTALL_DIR
-exprt %DEFAULT_ORIGO_SVN/free_add_ons/gcc gcc
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons/gcc gcc
 
 cdd %STUDIO_DIR
 remtrace Create documentation directory
@@ -186,7 +186,7 @@ iff not defined NO_COMPILE then
 	REM Clean up the files
 	remtrace Update all source files.
 	cdd %EIFFEL_SRC\..
-	co %DEFAULT_ORIGO_SVN/Src %EIFFEL_SRC
+	co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src %EIFFEL_SRC
 
 	remtrace ISE specific files
 	cdd %EIFFEL_SRC

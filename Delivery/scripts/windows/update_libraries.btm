@@ -2,7 +2,7 @@ remtrace Update the Eiffel libraries source
 
 remtrace free_add_ons
 cdd %EIFFEL_SRC
-co %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
 cdd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code

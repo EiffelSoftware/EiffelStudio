@@ -3,52 +3,52 @@ cdd %STUDIO_DIR
 md library
 cd library
 remtrace base
-exprt %DEFAULT_ORIGO_SVN/Src/library/base base
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/base base
 remtrace base2
-exprt %DEFAULT_ORIGO_SVN/Src/library/base_original base_original
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/base_original base_original
 remtrace com
-exprt %DEFAULT_ORIGO_SVN/Src/library/com com
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/com com
 remtrace Eiffel2Java
-exprt %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
 remtrace gobo
-exprt %DEFAULT_ORIGO_SVN/Src/library/gobo gobo
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo gobo
 remtrace gobo_extension
-exprt %DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension
 remtrace graph
-exprt %DEFAULT_ORIGO_SVN/Src/library/graph graph
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/graph graph
 remtrace lex
-exprt %DEFAULT_ORIGO_SVN/Src/library/lex lex
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/lex lex
 remtrace memory_analyzer
-exprt %DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer
 remtrace net
-exprt %DEFAULT_ORIGO_SVN/Src/library/net net
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/net net
 remtrace obsolete
-exprt %DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete
 remtrace parse
-exprt %DEFAULT_ORIGO_SVN/Src/library/parse parse
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/parse parse
 remtrace preferences
-exprt %DEFAULT_ORIGO_SVN/Src/library/preferences preferences
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/preferences preferences
 remtrace process
-exprt %DEFAULT_ORIGO_SVN/Src/library/process process
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/process process
 remtrace store
-exprt %DEFAULT_ORIGO_SVN/Src/library/store store
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/store store
 remtrace thread
-exprt %DEFAULT_ORIGO_SVN/Src/library/thread thread
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/thread thread
 remtrace time
-exprt %DEFAULT_ORIGO_SVN/Src/library/time time
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/time time
 remtrace vision
-exprt %DEFAULT_ORIGO_SVN/Src/library/vision vision
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision vision
 remtrace vision2
-exprt %DEFAULT_ORIGO_SVN/Src/library/vision2 vision2
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision2 vision2
 fullrd vision2\implementation\gtk
 remtrace vision2_extension
-exprt %DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension
 remtrace uuid
-exprt %DEFAULT_ORIGO_SVN/Src/library/uuid uuid
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/uuid uuid
 remtrace web
-exprt %DEFAULT_ORIGO_SVN/Src/library/web web
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/web web
 remtrace wel
-exprt %DEFAULT_ORIGO_SVN/Src/library/wel wel
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/wel wel
 
 iff not defined NO_COMPILE then
 	remtrace Retrieve the header files

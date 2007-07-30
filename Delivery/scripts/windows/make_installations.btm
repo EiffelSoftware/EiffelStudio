@@ -6,7 +6,7 @@ iff not defined INIT_DIR then
 	set INIT_DIR=%@EXECSTR[cd]
 endiff
 
-set SVN_VERSION=%@EXECSTR[bash set_version.sh %DEFAULT_ORIGO_SVN]
+set SVN_VERSION=%@EXECSTR[bash set_version.sh %EIFFEL_SRC]
 
 cdd %INIT_DIR\install
 safe_md %INIT_DIR\install\bin
@@ -24,7 +24,7 @@ iff .%1.==.. then
 	remtrace ---------------------------------------------
 
 	cdd %EIFFEL_SRC\tools
-	co %DEFAULT_ORIGO_SVN/Src/tools/hallow hallow
+	co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/hallow hallow
 	cd %EIFFEL_SRC\tools\hallow
 	clean_project
 	finalize hallow.ecf

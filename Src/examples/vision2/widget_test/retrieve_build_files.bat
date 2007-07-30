@@ -1,7 +1,8 @@
+@echo off
 if .%1. == .. (
 set SVN_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
 ) else (
-set SVN_URL=%1
+set SVN_URL=%*
 )
 
 REM Check out Build source.

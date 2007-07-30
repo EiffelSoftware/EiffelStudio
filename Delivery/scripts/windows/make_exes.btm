@@ -63,6 +63,18 @@ copy %EIFFEL_SRC\C\run-time\*.h %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
+remtrace Copy the configuration file
+copy %EIFFEL_SRC\C\CONFIGS\%ISE_PLATFORM-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
+if not defined WIN64 then
+	copy %EIFFEL_SRC\C\CONFIGS\%ISE_PLATFORM-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
+end
+
+remtrace Copy the MSYS part
+copy %EIFFEL_SRC\C\shell\bin\rt_converter.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
+copy %EIFFEL_SRC\C\shell\bin\sed.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
+copy %EIFFEL_SRC\C\shell\bin\msys-1.0.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
+safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\etc
+
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library
 fullrd .libs

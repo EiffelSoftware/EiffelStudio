@@ -199,7 +199,7 @@
     <Compile Include="content\eiffelenvision\Schema.wxs" />
     <Compile Include="content\eiffelenvision\Snippets.wxs" />
     <Compile Include="content\eiffelenvision\Specifications.wxs" />
-    <Compile Include="content\eiffelstudio\studio_borland.wxs" />
+    <Compile Include="content\eiffelstudio\studio_gcc.wxs" />
     <Compile Include="content\eiffelstudio\studio_core.wxs" />
     <Compile Include="content\eiffelstudio\EiffelStudioPackage.wxs" />
     <Compile Include="content\eiffelstudio\studio_ent_ec.wxs" />

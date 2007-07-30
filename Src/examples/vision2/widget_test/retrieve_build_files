@@ -4,7 +4,7 @@
 if [ $# -eq 0 ]; then
 	svntag="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk"
 else
-	svntag=$1
+	svntag=$*
 fi
 
 # Check out Build source.

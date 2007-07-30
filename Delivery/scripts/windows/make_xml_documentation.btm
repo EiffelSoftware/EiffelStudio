@@ -23,7 +23,7 @@ remtrace --------------------------------------------------------
 cdd %DOCUMENT_DIR
 if isdir xmldoc fullrd xmldoc
 if exist xmldoc fullrd xmldoc
-co %DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
 
 
 remtrace ---------------------------------------------
@@ -31,7 +31,7 @@ remtrace Checkout and compile the Documentation tool |
 remtrace ---------------------------------------------
 
 cdd %EIFFEL_SRC\tools
-co %DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
 finalize doc_builder.ecf

@@ -20,7 +20,7 @@ all:: build
 ###################################################################
 
 WXS = \
-	studio_borland.wxs \
+	studio_gcc.wxs \
 	studio_core.wxs \
 	studio_examples.wxs \
 	studio_libraries.wxs \
@@ -31,8 +31,8 @@ WXS = \
 
 build: $(WXS)
 
-studio_borland.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\BCC55" -dr:"Dir.BCC55" -g:"Borland" -r -n:"Borland." > $@.tmp
+studio_gcc.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\gcc" -dr:"Dir.gcc" -g:"gcc" -r -n:"gcc." > $@.tmp
 	move $@.tmp $@
 
 studio_core.wxs:

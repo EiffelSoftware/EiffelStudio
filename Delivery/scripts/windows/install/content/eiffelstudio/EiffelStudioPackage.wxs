@@ -68,7 +68,7 @@
 				</RegistryKey>
 			</Component>
 			<?ifndef x64?>
-				<Directory Id="Dir.BCC55" Name="BCC55"/>
+				<Directory Id="Dir.gcc" Name="gcc"/>
 			<?endif?>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.library" Name="library"/>
@@ -220,9 +220,9 @@
 			</Feature>
 
 			<?ifndef x64?>
-			<Feature Id="Borland_feature" Title="Borland" TypicalDefault="install" Display="hidden" Level="1" >
-				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "bcb"]]></Condition>
-				<ComponentGroupRef Id="Borland"/>
+			<Feature Id="gcc_feature" Title="gcc" TypicalDefault="install" Display="hidden" Level="1" >
+				<Condition Level="0"><![CDATA[SELECTEDCCOMPILER <> "mingw"]]></Condition>
+				<ComponentGroupRef Id="gcc"/>
 			</Feature>
 			<?endif?>
 		</Feature>

@@ -100,7 +100,7 @@ feature -- General tooltip
 			a_item_attached: a_item /= Void
 			a_veto_function_attached: a_veto_function /= Void
 		do
-			create Result.make (a_item.pointer_enter_actions, a_item.pointer_leave_actions, agent a_item.is_destroyed)
+			create Result.make (a_item.pointer_enter_actions, a_item.pointer_leave_actions, a_item.select_actions, agent a_item.is_destroyed)
 			Result.veto_tooltip_display_functions.extend (a_veto_function)
 		ensure
 			result_attached: Result /= Void

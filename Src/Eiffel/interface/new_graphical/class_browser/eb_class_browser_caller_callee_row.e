@@ -462,7 +462,7 @@ feature{NONE} -- Actions
 
 				-- Setup general tooltip.
 			if a_written_class.class_id /= feature_item.class_c.class_id then
-				create l_tooltip.make (l_component.pointer_enter_actions, l_component.pointer_leave_actions, agent l_component.is_owner_destroyed)
+				create l_tooltip.make (l_component.pointer_enter_actions, l_component.pointer_leave_actions, Void, agent l_component.is_owner_destroyed)
 				plain_text_style.set_source_text (interface_names.l_from_x)
 				complete_generic_class_style.set_class_c (a_written_class)
 				l_tooltip.set_tooltip_text ((plain_text_style + complete_generic_class_style).text)

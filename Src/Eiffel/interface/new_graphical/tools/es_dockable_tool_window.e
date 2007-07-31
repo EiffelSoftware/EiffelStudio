@@ -14,13 +14,13 @@ inherit
 	EB_TOOL
 		rename
 			title_for_pre as tool_ref_id,
-			pixmap as tool_pixmap,
-			pixel_buffer as tool_pixel_buffer,
+			pixmap as icon_pixmap,
+			pixel_buffer as icon,
 			build_interface as on_before_initialize
 		redefine
 			build_mini_toolbar,
-			tool_pixmap,
-			tool_pixel_buffer,
+			icon,
+			icon_pixmap,
 			show
 		end
 
@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- Use to perform additional creation initializations
 		do
+			--tool_pixel_buffer := pixel_buffer
 		end
 
 feature {NONE} -- User interface initialization
@@ -77,6 +78,32 @@ feature -- Access
 			Result := generating_type.as_lower
 		end
 
+	frozen title: STRING_GENERAL is
+			-- Title of the tool which for show, it maybe not in English.
+		do
+			Result := internal_title
+			if Result = Void then
+					-- Retrieve default title
+				Result := tool_title
+				internal_title := Result
+			end
+		ensure then
+			result_consistent: Result = Result
+		end
+
+	frozen icon: EV_PIXEL_BUFFER assign set_icon
+			-- The icon that appears in tabbed tools and menu items
+		do
+			Result := internal_icon
+			if Result = Void then
+				Result := tool_icon_buffer
+				internal_icon := Result
+			end
+		ensure then
+			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
 	frozen widget: EV_VERTICAL_BOX
 			-- Tool's visual root container element.
 		local
@@ -91,13 +118,6 @@ feature -- Access
 		ensure then
 			result_attached: Result /= Void
 			result_consistent: Result = widget
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER
-			-- Pixel buffer as it appears in toolbars and menu
-		deferred
-		ensure then
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Access
@@ -199,7 +219,22 @@ feature {NONE} -- Access
 			result_consistent: Result = right_tool_bar_widget
 		end
 
-	stock_pixmaps: ES_PIXMAPS_16X16
+	tool_icon_buffer: like icon
+			-- The tool's original icon as a pixel buffer.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	tool_title: like title
+			-- The tool's original title.
+		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	frozen stock_pixmaps: ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
@@ -207,7 +242,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-	stock_mini_pixmaps: ES_PIXMAPS_10X10
+	frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
@@ -215,26 +250,56 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Concealed access
-
-	frozen tool_pixmap: EV_PIXMAP is
-			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
-		do
-			Result := internal_tool_pixmap
-			if Result = Void then
-				Result := pixel_buffer.to_pixmap
-				internal_tool_pixmap := Result
-			end
-		ensure then
+	frozen preferences: EB_PREFERENCES
+		require
+			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized
+		once
+			Result := (create {EB_SHARED_PREFERENCES}).preferences
+		ensure
 			result_attached: Result /= Void
 		end
 
-	frozen tool_pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer as it appears in toolbars and menu, there is no pixmap by default.
+feature {NONE} -- Concealed access
+
+	frozen icon_pixmap: EV_PIXMAP
+			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
 		do
-			Result := pixel_buffer
+			Result := internal_icon_pixmap
+			if Result = Void then
+				Result := icon.to_pixmap
+				internal_icon_pixmap := Result
+			end
 		ensure then
 			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
+feature -- Element change
+
+	set_title (a_title: like title)
+			-- Set tool's label title
+			--
+			-- `a_title': Title to set
+		do
+			internal_title := a_title
+			content.set_long_title (a_title)
+		ensure
+			title_set: title = a_title
+		end
+
+	set_icon (a_buffer: like icon)
+			-- Sets tool icon to `a_buffer'
+			--
+			-- `a_buffer': A pixel buffer that presents the tool's icon.
+		do
+				-- Set pixmap icon to void to ensure it's updated on next call
+			internal_icon_pixmap := Void
+			internal_icon := a_buffer
+
+			content.set_pixel_buffer (a_buffer)
+			content.set_pixmap (icon_pixmap)
+		ensure
+			icon_set: icon = a_buffer
 		end
 
 feature -- Basic operations
@@ -244,7 +309,11 @@ feature -- Basic operations
 		do
 			if not is_initialized then
 					-- Delayed initialization may mean the user interface has not been shown yet.
-				initialize
+					-- Call to user_widget should create the widget
+				if user_widget = Void then
+						-- Just in case user_widget does not retrieve a widget, try initialize.
+					initialize
+				end
 			end
 			Precursor {EB_TOOL}
 		ensure then
@@ -282,8 +351,6 @@ feature {NONE} -- Factory
 	create_widget: G
 			-- Create a new container widget upon request.
 			-- Note: You may build the tool elements here or in `build_too_interface'
-		require
-			not_is_initialized: not is_initialized
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -291,8 +358,6 @@ feature {NONE} -- Factory
 
 	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display on the window title
-		require
-			not_is_initialized: not is_initialized
 		do
 		ensure
 			not_reuslt_is_empty: Result /= Void implies not Result.is_empty
@@ -301,8 +366,6 @@ feature {NONE} -- Factory
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
-		require
-			not_is_initialized: not is_initialized
 		deferred
 		ensure
 			not_reuslt_is_empty: Result /= Void implies not Result.is_empty
@@ -312,8 +375,6 @@ feature {NONE} -- Factory
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
 			-- Note: Redefine to add a right tool bar.
-		require
-			not_is_initialized: not is_initialized
 		do
 		ensure
 			not_reuslt_is_empty: Result /= Void implies not Result.is_empty
@@ -327,7 +388,6 @@ feature {NONE} -- Factory
 		require
 			a_widget_attached: a_widget /= Void
 			has_tool_bar: has_tool_bar
-			not_is_initialized: not is_initialized
 		local
 			l_top_padding: EV_CELL
 			l_padding: EV_CELL
@@ -382,8 +442,14 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_tool_pixmap: like tool_pixmap
+	internal_icon_pixmap: like icon_pixmap
 			-- Cached version of `pixmap'
+
+	internal_icon: like icon
+			-- Cached version of `icon'
+
+	internal_title: like title
+			-- Mutable version of `title'
 
 	internal_widget: like widget
 			-- Cached version of `widget'

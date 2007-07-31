@@ -64,10 +64,12 @@ copy %EIFFEL_SRC\C\eif_confmagic.h %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace Copy the configuration file
-copy %EIFFEL_SRC\C\CONFIGS\%ISE_PLATFORM-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
-if not defined WIN64 then
-	copy %EIFFEL_SRC\C\CONFIGS\%ISE_PLATFORM-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
-end
+iff not defined WIN64 then
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
+else
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
+endiff
 
 remtrace Copy the MSYS part
 copy %EIFFEL_SRC\C\shell\bin\rt_converter.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\

@@ -93,6 +93,10 @@ feature -- Status report
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.set_veto_pebble_function (agent (a_pebble: ANY): BOOLEAN
+				do
+					Result := (({ERROR_STONE}) #? a_pebble) /= Void
+				end)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
@@ -103,6 +107,10 @@ feature -- Status report
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.set_veto_pebble_function (agent (a_pebble: ANY): BOOLEAN
+				do
+					Result := (({ERROR_STONE}) #? a_pebble) /= Void
+				end)
 		end
 
 feature {NONE} -- Implementation

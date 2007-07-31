@@ -92,8 +92,6 @@ fullrd fancy
 cd ..
 remtrace time
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/time time 
-remtrace vision
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision vision 
 remtrace vision2
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision2 vision2 
 cd vision2

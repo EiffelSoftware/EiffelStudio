@@ -24,6 +24,8 @@ inherit
 			set_tooltip_maximum_width,
 			set_tooltip_maximum_height,
 			set_tooltip_maximum_size
+		redefine
+			initialize_tooltip_defaults
 		select
 			tooltip_widget,
 			required_tooltip_width,
@@ -37,6 +39,7 @@ feature{NONE} -- Initialization
 
 	make (a_enter_actions: like pointer_enter_actions;
 	      a_leave_actions: like pointer_leave_actions;
+	      a_select_actions: like select_actions;
 	      a_destroy_function: like owner_destroy_function) is
 			-- Initialize agents used for current tooltip.
 			-- See `pointer_enter_actions', `pointer_leave_actions',
@@ -48,10 +51,31 @@ feature{NONE} -- Initialization
 		do
 			old_make (a_enter_actions,
 					  a_leave_actions,
+					  a_select_actions,
 					  agent editor_token_tooltip_widget,
 					  a_destroy_function,
 					  agent editor_token_required_tooltip_width,
 					  agent editor_token_required_tooltip_height)
+		end
+
+	initialize_tooltip_defaults
+			-- Initializes tool tip defaults for all EiffelStudio tool tips
+		do
+			Precursor
+
+			set_border_line_width (1)
+			set_top_border (2)
+			set_bottom_border (2)
+			set_left_border (4)
+			set_right_border (4)
+
+			set_picking_from_tooltip (True)
+			set_pointer_on_tooltip (True)
+
+			enable_tooltip_shadow
+			enable_repeat_tooltip_display
+
+			enable_pointer_on_tooltip
 		end
 
 feature -- Status report
@@ -62,6 +86,17 @@ feature -- Status report
 			Result := tokens.count > 0
 		ensure then
 			good_result: Result implies tokens.count > 0
+		end
+
+feature -- Status setting
+
+	enable_label_font
+			-- Enables the tool tip to use the label-styled font instead of a editor mono-spaced font
+		local
+			l_writer: EB_SHARED_WRITER
+		do
+			create l_writer
+			set_overriden_font (l_writer.label_font_table, l_writer.label_font_height)
 		end
 
 indexing

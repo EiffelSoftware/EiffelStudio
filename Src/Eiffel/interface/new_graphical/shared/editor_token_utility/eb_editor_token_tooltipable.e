@@ -38,8 +38,39 @@ inherit
 		end
 
 	EVS_BORDERED
+		export
+			{NONE} all
+			{ANY}
+				set_border_line_color,
+				set_border_line_width,
+				set_left_border,
+				set_right_border,
+				set_top_border,
+				set_bottom_border
+		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
+feature -- Access
+
+	required_tooltip_width: INTEGER is
+			-- Required width in pixel to display tooltip
+			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
+			-- tooltip is displayed.
+		do
+			Result := required_width + border_line_width * 2 + left_border + right_border
+		end
+
+	required_tooltip_height: INTEGER is
+			-- Required height in pixel to display tooltip
+			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
+			-- tooltip is displayed.
+		do
+			Result := required_height + border_line_width * 2 + top_border + bottom_border
+		end
 
 feature -- Setting
 
@@ -124,16 +155,6 @@ feature{NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
 			-- Drawing area to draw tooltip
-
-	required_tooltip_width: INTEGER is
-		do
-			Result := required_width + border_line_width * 2 + left_border + right_border
-		end
-
-	required_tooltip_height: INTEGER is
-		do
-			Result := required_height + border_line_width * 2 + top_border + bottom_border
-		end
 
 	actual_tooltip_width: INTEGER is
 			-- Actual width in pixel of tooltip

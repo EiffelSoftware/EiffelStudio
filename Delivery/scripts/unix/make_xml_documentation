@@ -2,13 +2,13 @@
 
 remtrace Checkout up to date version of XML documentation files
 cd $DOCUMENT_DIR
-exprt $DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
 
 remtrace Checkout and compile the Documentation tool
 cd $EIFFEL_SRC
 safe_md tools
 cd $EIFFEL_SRC/tools
-co $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
+co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
 ec -local -batch -finalize -config doc_builder.ecf -c_compile >> $INSTALL_LOG 2>&1
 if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then

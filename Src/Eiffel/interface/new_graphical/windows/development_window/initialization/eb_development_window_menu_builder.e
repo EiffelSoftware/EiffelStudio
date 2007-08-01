@@ -850,11 +850,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.add_recyclable (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
-				-- Error information
-			l_command_menu_item := develop_window.commands.display_error_help_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
-			l_project_menu.extend (l_command_menu_item)
-
 			if develop_window.has_documentation_generation or develop_window.has_xmi_generation then
 					-- Separator -------------------------------------------------
 				l_project_menu.extend (create {EV_MENU_SEPARATOR})
@@ -1009,8 +1004,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			fill_show_menu_for_tool (Result, develop_window.tools.c_output_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.external_output_tool)
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.errors_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.warnings_tool)
+			fill_show_menu_for_tool (Result, develop_window.tools.errors_and_warnings_tool)
 			Result.extend (create {EV_MENU_SEPARATOR})
 			fill_show_menu_for_tool (Result, develop_window.tools.search_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.search_report_tool)

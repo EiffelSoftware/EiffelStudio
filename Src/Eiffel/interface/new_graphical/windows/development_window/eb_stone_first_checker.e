@@ -163,11 +163,11 @@ feature{NONE} -- Implementation
 			-- Otherwise the Errors Tools sliding panel will be removed automatically, because it doesn't has focus.
 			-- See bug#12765.
 		local
-			l_error_tool: EB_ERRORS_TOOL
+			l_tool: ES_ERRORS_AND_WARNINGS_TOOL
 		do
-			l_error_tool := develop_window.tools.errors_tool
-			if l_error_tool /= Void and then l_error_tool.content /= Void then
-				Result := (l_error_tool.content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
+			l_tool := develop_window.tools.errors_and_warnings_tool
+			if l_tool /= Void and then not l_tool.is_recycled and then l_tool.content /= Void then
+				Result := (l_tool.content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
 			end
 		end
 

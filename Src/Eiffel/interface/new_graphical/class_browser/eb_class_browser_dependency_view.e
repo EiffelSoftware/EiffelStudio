@@ -689,6 +689,7 @@ feature{NONE} -- Grid binding
 		do
 			create l_trailer.make (a_pixmap)
 			create l_tooltip.make (l_trailer.pointer_enter_actions , l_trailer.pointer_leave_actions, Void, agent a_grid_item.is_destroyed)
+			l_tooltip.enable_pointer_on_tooltip
 			plain_text_style.set_source_text (a_text)
 			complete_generic_class_style.set_ql_class (a_class)
 			l_tooltip.set_tooltip_text ((plain_text_style + complete_generic_class_style).text)

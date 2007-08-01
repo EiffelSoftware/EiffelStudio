@@ -16,6 +16,7 @@ feature{NONE} -- Initialization
 
 	make (a_enter_actions: like pointer_enter_actions;
 	      a_leave_actions: like pointer_leave_actions;
+	      a_select_actions: like select_actions;
 	      a_widget_function: like widget_function;
 	      a_destroy_function: like owner_destroy_function;
 	      a_width_function: like required_width_function;
@@ -34,26 +35,64 @@ feature{NONE} -- Initialization
 		do
 			pointer_enter_actions := a_enter_actions
 			pointer_leave_actions := a_leave_actions
+			select_actions := a_select_actions
 			widget_function := a_widget_function
 			owner_destroy_function := a_destroy_function
 			required_width_function := a_width_function
 			required_height_function := a_height_function
+
+			initialize_tooltip_defaults
 		ensure
 			pointer_enter_actions_set: pointer_enter_actions = a_enter_actions
 			pointer_leave_actions_set: pointer_leave_actions = a_leave_actions
+			select_actions_set: select_actions = a_select_actions
 			widget_function_set: widget_function = a_widget_function
 			owner_destroy_function_set: owner_destroy_function = a_destroy_function
 			required_width_function_set: required_width_function = a_width_function
 			required_height_function_set: required_height_function = a_height_function
 		end
 
+	initialize_tooltip_defaults
+			-- Initializes tooltip defaults
+		do
+		end
+
 feature -- Access
+
+	required_tooltip_width: INTEGER is
+			-- Required width in pixel to display tooltip
+			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
+			-- tooltip is displayed.
+		local
+			l_func: like required_width_function
+		do
+			l_func := required_width_function
+			l_func.call (Void)
+			Result := l_func.last_result
+		end
+
+	required_tooltip_height: INTEGER is
+			-- Required height in pixel to display tooltip
+			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
+			-- tooltip is displayed.
+		local
+			l_func: like required_height_function
+		do
+			l_func := required_height_function
+			l_func.call (Void)
+			Result := l_func.last_result
+		end
+
+feature {NONE} -- Access
 
 	pointer_enter_actions: like owner_pointer_enter_actions
 			-- Actions to be performed when screen pointer enters widget.
 
 	pointer_leave_actions: like owner_pointer_leave_actions
 			-- Actions to be performed when screen pointer leaves widget.
+
+	select_actions: like owner_select_actions
+			-- Actions to be performed when a selection is made.
 
 	widget_function: FUNCTION [ANY, TUPLE, EV_WIDGET]
 			-- Function to return widget for current tooltip
@@ -77,7 +116,7 @@ feature -- Status report
 		deferred
 		end
 
-feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
+feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
 	is_owner_destroyed: BOOLEAN is
 			-- If owner destroyed
@@ -116,28 +155,11 @@ feature{NONE} -- Implementation
 			Result := pointer_leave_actions
 		end
 
-	required_tooltip_width: INTEGER is
-			-- Required width in pixel to display tooltip
-			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
-			-- tooltip is displayed.
-		local
-			l_func: like required_width_function
+	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Select actions of owner of current tooltip
+			-- Attach this to owner's `select_actions'.
 		do
-			l_func := required_width_function
-			l_func.call (Void)
-			Result := l_func.last_result
-		end
-
-	required_tooltip_height: INTEGER is
-			-- Required height in pixel to display tooltip
-			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
-			-- tooltip is displayed.
-		local
-			l_func: like required_height_function
-		do
-			l_func := required_height_function
-			l_func.call (Void)
-			Result := l_func.last_result
+			Result := select_actions
 		end
 
 invariant

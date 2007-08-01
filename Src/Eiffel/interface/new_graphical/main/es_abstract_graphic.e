@@ -40,6 +40,22 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_SERVICE_PROVIDER
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	initialize_services
+			-- Initializes graphical services
+		local
+			l_container: SERVICE_CONTAINER
+		do
+			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
+			add_core_services (l_container)
+		end
+
 feature {NONE} -- Implementation (preparation of all widgets)
 
 	prepare (an_app: EV_APPLICATION) is
@@ -69,6 +85,8 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				--| Also note that `error_window' is a
 				--| once-function!!
 
+			initialize_services
+
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
@@ -82,7 +100,8 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			create a_c_compilation_output_manager
 			set_c_compilation_output_manager (a_c_compilation_output_manager)
 
-			Eiffel_project.set_error_displayer (an_output_manager)
+				-- Set the error display for graphical output
+			eiffel_project.set_error_displayer (create_error_displayer)
 
 				-- Create and setup the degree output window.
 			if not preferences.development_window_data.graphical_output_disabled then
@@ -165,6 +184,25 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			project_dialog.show_modal_to_window (first_window.window)
 		end
 
+feature {NONE} -- Services
+
+	add_core_services (a_container: SERVICE_CONTAINER)
+			-- Initialize core services for the graphical IDE.
+			--
+			-- `a_container': The service container to add services to.
+		require
+			a_container_attached: a_container /= Void
+		do
+			a_container.add_service_with_activator ({EVENT_LIST_SERVICE_S}, agent create_event_list_service, False)
+		end
+
+feature {NONE} -- Service factories
+
+	create_event_list_service: EVENT_LIST_SERVICE_I
+			-- Creates the event list service
+		deferred
+		end
+
 feature {NONE} -- Exception handling
 
 	handle_exception (a_exception: EXCEPTION) is
@@ -224,6 +262,18 @@ feature {NONE} -- Exception handling
 		do
 			create error_dlg.make (trace)
 			error_dlg.show_modal_to_window (parent_for_dialog)
+		end
+
+feature {NONE} -- Factory
+
+	create_error_displayer: ERROR_DISPLAYER
+			-- Create a new error displayer, used to display error information in the graphical environment
+		require
+			window_manager_attached: window_manager /= Void
+		do
+			create {ES_ERROR_DISPLAYER}Result.make (window_manager)
+		ensure
+			result_attached: Result /= Void
 		end
 
 indexing

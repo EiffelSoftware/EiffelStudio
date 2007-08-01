@@ -131,32 +131,6 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
-	process_errors (errors: LINKED_LIST [ERROR]) is
-			-- Print `errors' on all output tools.
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				managed_output_tools.item.process_errors (errors)
-				managed_output_tools.forth
-			end
-		end
-
-	process_warnings (warnings: LINKED_LIST [ERROR]) is
-			-- Print `warnings' on all output tools.
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				managed_output_tools.item.process_warnings (warnings)
-				managed_output_tools.forth
-			end
-		end
-
 feature -- Basic Operations / Information message
 
 	display_system_info is
@@ -275,13 +249,13 @@ feature -- Basic Operations / Compiler messages
 	trace_warnings (handler: ERROR_HANDLER) is
 			-- Display warnings messages from `handler'.
 		do
-			process_warnings (handler.warning_list)
+			--| See {ES_ERROR_DISPLAYER}
 		end
 
 	trace_errors (handler: ERROR_HANDLER) is
 			-- Display error messages from `handler'.
 		do
-			process_errors (handler.error_list)
+			--| See {ES_ERROR_DISPLAYER}
 		end
 
 feature -- Element change

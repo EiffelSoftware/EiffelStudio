@@ -22,6 +22,7 @@ feature{NONE} -- Initialization
 
 	make (a_enter_actions: like pointer_enter_actions;
 	      a_leave_actions: like pointer_leave_actions;
+	      a_select_actions: like select_actions;
 	      a_destroy_function: like owner_destroy_function; a_widget: like widget) is
 			-- Initialize agents used for current tooltip.
 			-- See `pointer_enter_actions', `pointer_leave_actions',
@@ -63,7 +64,7 @@ feature{NONE} -- Initialization
 			set_border_line_width (1)
 
 			old_make (
-				a_enter_actions, a_leave_actions,
+				a_enter_actions, a_leave_actions, a_select_actions,
 				agent actual_widget,
 				a_destroy_function,
 				agent tooltip_width,

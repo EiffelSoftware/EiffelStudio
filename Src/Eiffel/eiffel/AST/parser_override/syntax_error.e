@@ -12,7 +12,7 @@ class SYNTAX_ERROR
 inherit
 	ERROR
 		redefine
-			trace, file_name
+			trace, file_name, trace_single_line, trace_primary_context
 		end
 
 	SYNTAX_MESSAGE
@@ -78,6 +78,12 @@ feature -- Properties
 	is_in_use_file: BOOLEAN
 			-- Did error occurred when parsing `Use' clause of an Ace file.
 
+	associated_class: CLASS_C
+			-- Associate class, if any
+		do
+			Result := System.current_class
+		end
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
@@ -100,9 +106,9 @@ feature -- Output
 			a_text_formatter.add ("Syntax error at line ")
 			a_text_formatter.add_int (line)
 				-- Error happened in a class
-			if System.current_class /= Void then
+			if associated_class /= Void then
 				a_text_formatter.add (" in class ")
-				a_text_formatter.add_class_syntax (Current, System.current_class,
+				a_text_formatter.add_class_syntax (Current, associated_class,
 						System.current_class.class_signature)
 			elseif file_name /= Void then
 				-- `current_class' May be void at degree 6 when parsing partial classes
@@ -123,6 +129,31 @@ feature -- Output
 			else
 				a_text_formatter.add (" (source code is not available)")
 				a_text_formatter.add_new_line
+			end
+		end
+
+	trace_single_line (a_text_formatter: TEXT_FORMATTER) is
+			-- Display short error, single line message in `a_text_formatter'.
+		do
+			initialize_output
+			print_single_line_error_code (a_text_formatter)
+			if error_message /= Void then
+				a_text_formatter.add (error_message)
+			end
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		local
+			l_class_c: CLASS_C
+		do
+			l_class_c := system.current_class
+			if l_class_c /= Void then
+				a_text_formatter.add_group (l_class_c.group, l_class_c.group.name)
+				a_text_formatter.add (".")
+				a_text_formatter.add_class (l_class_c.lace_class)
+			elseif file_name /= Void then
+				Precursor {ERROR} (a_text_formatter)
 			end
 		end
 

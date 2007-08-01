@@ -24,6 +24,16 @@ inherit
 			show
 		end
 
+	ES_SHARED_COLORS
+		export
+			{NONE} all
+		end
+
+	SHARED_SERVICE_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	frozen initialize
@@ -45,7 +55,6 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- Use to perform additional creation initializations
 		do
-			--tool_pixel_buffer := pixel_buffer
 		end
 
 feature {NONE} -- User interface initialization
@@ -78,7 +87,7 @@ feature -- Access
 			Result := generating_type.as_lower
 		end
 
-	frozen title: STRING_GENERAL is
+	frozen title: STRING_GENERAL assign set_title
 			-- Title of the tool which for show, it maybe not in English.
 		do
 			Result := internal_title
@@ -106,9 +115,6 @@ feature -- Access
 
 	frozen widget: EV_VERTICAL_BOX
 			-- Tool's visual root container element.
-		local
-			l_tb: SD_TOOL_BAR
-			l_button: SD_TOOL_BAR_BUTTON
 		do
 			Result := internal_widget
 			if Result = Void then
@@ -147,7 +153,6 @@ feature {NONE} -- Access
 		local
 			l_cell: like internal_mini_tool_bar_widget
 			l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_BUTTON
 		do
 			l_cell := internal_mini_tool_bar_widget
 			if l_cell = Void then
@@ -173,7 +178,6 @@ feature {NONE} -- Access
 		local
 			l_cell: like internal_tool_bar_widget
 			l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_BUTTON
 		do
 			l_cell := internal_tool_bar_widget
 			if l_cell = Void then
@@ -342,7 +346,7 @@ feature {NONE} -- Status report
 	is_tool_bar_bottom_aligned: BOOLEAN
 			-- Indicates if the tool bar should be presented at the bottom of the tool
 			-- Redefine to change this.
-		once
+		do
 			Result := False
 		end
 

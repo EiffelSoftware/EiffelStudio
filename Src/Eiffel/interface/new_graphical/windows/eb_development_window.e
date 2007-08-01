@@ -603,9 +603,6 @@ feature -- Stone process
 			tools.c_output_tool.quick_refresh_editor
 			tools.class_tool.quick_refresh_editor
 			tools.features_relation_tool.quick_refresh_editor
-
-			tools.errors_tool.quick_refresh_editor
-			tools.warnings_tool.quick_refresh_editor
 		end
 
 	quick_refresh_margins is
@@ -619,9 +616,6 @@ feature -- Stone process
 			tools.c_output_tool.quick_refresh_margin
 			tools.class_tool.quick_refresh_margin
 			tools.features_relation_tool.quick_refresh_margin
-
-			tools.errors_tool.quick_refresh_margin
-			tools.warnings_tool.quick_refresh_margin
 		end
 
 feature -- Position provider
@@ -984,14 +978,11 @@ feature -- Window management
 			l_tool := tools.c_output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 
-			l_tool := tools.warnings_tool
+			l_tool := tools.errors_and_warnings_tool
 			l_tool.content.set_tab_with (tools.c_output_tool.content, True)
 
-			l_tool := tools.errors_tool
-			l_tool.content.set_tab_with (tools.warnings_tool.content, True)
-
 			l_tool := tools.output_tool
-			l_tool.content.set_tab_with (tools.errors_tool.content, True)
+			l_tool.content.set_tab_with (tools.errors_and_warnings_tool.content, True)
 
 			l_tool := tools.features_relation_tool
 			l_tool.content.set_tab_with (tools.output_tool.content, True)

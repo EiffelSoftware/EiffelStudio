@@ -303,6 +303,7 @@
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
+			<mapping old_name="EVENT_LIST_SERVICE_S" new_name="EVENT_LIST_SERVICE_I"/>
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">

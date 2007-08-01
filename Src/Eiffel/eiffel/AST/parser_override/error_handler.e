@@ -68,6 +68,14 @@ feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
 
 feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
+	clear_display
+			-- Clears any error handler display
+		do
+			if error_displayer /= Void then
+				error_displayer.clear_display
+			end
+		end
+
 	trace is
 			-- Trace the output of the errors if there are any.
 		require
@@ -162,12 +170,15 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 	force_display is
 			-- Make sure the user can see the messages we send.
 		do
-			error_displayer.force_display
+			if error_displayer /= Void then
+				error_displayer.force_display
+			end
 		end
 
 	wipe_out is
 			-- Empty `error_list'.
 		do
+			clear_display
 			error_list.wipe_out
 			warning_list.wipe_out
 		end

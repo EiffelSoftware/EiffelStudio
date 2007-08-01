@@ -55,12 +55,6 @@ feature -- Query
 			Result := develop_window.Eb_debugger_manager.system_info_cmd
 		end
 
-	display_error_help_cmd: EB_ERROR_INFORMATION_CMD is
-			-- Command to pop up a dialog giving help on compilation errors.
-		do
-			Result := develop_window.Eb_debugger_manager.display_error_help_cmd
-		end
-
 	send_stone_to_context_cmd: EB_STANDARD_CMD
 			-- Command to send the current stone to the context tool.
 

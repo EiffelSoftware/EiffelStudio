@@ -26,6 +26,14 @@ feature {NONE} -- Initialization
 			an_app.uncaught_exception_actions.extend (agent handle_exception)
 		end
 
+feature {NONE} -- Service factories
+
+	create_event_list_service: EVENT_LIST_SERVICE_I
+			-- Creates the event list service
+		do
+			create {EVENT_LIST_SERVICE}Result.make
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

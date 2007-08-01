@@ -305,6 +305,9 @@ feature -- Commands
 			degree_6_done: BOOLEAN
 			l_pre_actions_done: BOOLEAN
 		do
+			if retried = 0 then
+				error_handler.clear_display
+			end
 			not_actions_successful := False
 			if retried = 0 and then (system = Void or else system.automatic_backup) then
 					-- Even if backup is not enabled, we will always create a BACKUP

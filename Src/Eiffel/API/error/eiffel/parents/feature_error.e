@@ -10,7 +10,7 @@ deferred class FEATURE_ERROR
 inherit
 	EIFFEL_ERROR
 		redefine
-			trace, is_defined, file_name
+			trace, is_defined, file_name, trace_primary_context
 		end
 
 feature -- Properties
@@ -102,6 +102,16 @@ feature -- Output
 				end
 			end
 			a_text_formatter.set_context_group (l_group)
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if e_feature /= Void then
+				a_text_formatter.add (".")
+				a_text_formatter.add_feature (e_feature, e_feature.name)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Implementation

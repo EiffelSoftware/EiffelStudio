@@ -161,6 +161,112 @@ feature -- Output
 			build_explain (a_text_formatter);
 		end;
 
+	trace_single_line (a_text_formatter: TEXT_FORMATTER) is
+			-- Display short error, single line message in `a_text_formatter'.
+		require
+			valid_st: a_text_formatter /= Void;
+			is_defined: is_defined
+		do
+			print_single_line_error_code (a_text_formatter)
+			print_single_line_error_message (a_text_formatter)
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		require
+			valid_st: a_text_formatter /= Void
+		do
+			if has_associated_file then
+				a_text_formatter.add_string (file_name)
+			end
+		end
+
+feature {NONE} -- Printing for single lines
+
+	print_single_line_error_code (a_text_formatter: TEXT_FORMATTER)
+			-- Display a short error code in `a_text_formatter'.
+		require
+			valid_st: a_text_formatter /= Void
+		do
+			a_text_formatter.add_error (Current, code)
+			if subcode /= 0 then
+				a_text_formatter.add ("(")
+				a_text_formatter.add_int (subcode)
+				a_text_formatter.add ("):")
+			else
+				a_text_formatter.add (":")
+			end
+			a_text_formatter.add_space
+		end
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		require
+			valid_st: a_text_formatter /= Void
+		local
+			l_path: STRING;
+			l_file_name: FILE_NAME;
+			l_file: PLAIN_TEXT_FILE;
+			l_text, l_line: STRING
+			l_stop: BOOLEAN
+			i: INTEGER
+		do
+			create l_file_name.make_from_string (eiffel_layout.error_path);
+			l_file_name.extend ("short");
+			l_file_name.set_file_name (help_file_name);
+			l_path := l_file_name.string
+			if subcode /= 0 then
+				l_path.append_integer (subcode)
+			end;
+			create l_file.make (l_path);
+			if l_file.exists then
+				create l_text.make (255)
+				from
+					l_file.open_read
+				until
+					l_file.end_of_file or l_stop
+				loop
+					l_file.read_line;
+					l_line := l_file.last_string
+					l_stop := not l_text.is_empty and then not l_line.is_empty and then not l_line.item (1).is_space
+					if not l_stop then
+						l_line.prune_all_leading (' ')
+						l_line.prune_all_trailing (' ')
+						if not l_text.is_empty then
+							l_text.append_character (' ')
+						end
+						l_text.append (l_line)
+					end
+				end
+				l_file.close
+
+					-- Remove error part
+				i := l_text.index_of (':', 1)
+				if i > 0 then
+					l_text.keep_tail (l_text.count - i)
+				end
+				l_text.prune_all_leading (' ')
+				if not l_text.is_empty then
+					if l_text.item (l_text.count) /= '.' and then not l_text.item (l_text.count).is_alpha_numeric then
+							-- Append missing punctuation
+						l_text.append_character ('.')
+					end
+					if l_text.item (1).is_alpha then
+							-- Change initial character to upper case
+						l_text.put (l_text.item (1).as_upper, 1)
+					end
+				end
+			end
+
+			if l_text = Void or else l_text.is_empty then
+				l_text := once "Unable to retrieve error help information."
+			end
+
+			a_text_formatter.add (l_text)
+		end
+
+feature {NONE} -- Print for multiple lines
+
 	print_error_message (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error in `a_text_formatter'.
 		require

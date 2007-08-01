@@ -46,14 +46,6 @@ feature -- Editor token
 			a_tooltip_attached: a_tooltip /= Void
 		do
 			a_tooltip.enable_pointer_on_tooltip
-			a_tooltip.set_border_line_width (1)
-			a_tooltip.set_left_border (4)
-			a_tooltip.set_top_border (1)
-			a_tooltip.set_right_border (3)
-			a_tooltip.set_bottom_border (1)
-			a_tooltip.set_tooltip_remain_delay_time (200)
-			a_tooltip.enable_text_wrap
-			a_tooltip.enable_repeat_tooltip_display
 				-- FIXME: Querying the width of the main display is not good at creation time,
 				-- because the parent window could be on a different display, and moreover it
 				-- could be moved later to a different display.

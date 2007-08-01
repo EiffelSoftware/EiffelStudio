@@ -229,9 +229,6 @@ feature {NONE} -- Initialization
 			set_critical_stack_depth_cmd.add_agent (agent change_critical_stack_depth)
 			set_critical_stack_depth_cmd.enable_sensitive
 
-			create display_error_help_cmd.make
-			toolbarable_commands.extend (display_error_help_cmd)
-
 			create exception_handler_cmd.make
 			exception_handler_cmd.disable_sensitive
 			toolbarable_commands.extend (exception_handler_cmd)
@@ -1789,9 +1786,6 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
 	system_info_cmd: EB_STANDARD_CMD
 			-- Command that displays information about current system in the output tool.
 
-	display_error_help_cmd: EB_ERROR_INFORMATION_CMD
-			-- Command to pop up a dialog giving help on compilation errors.
-
 feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
@@ -1868,13 +1862,11 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_created is
 			-- Enable commands when a new project has been created (not yet compiled)
 		do
-			display_error_help_cmd.enable_sensitive
 		end
 
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
-			display_error_help_cmd.enable_sensitive
 			enable_debugging_commands
 		end
 
@@ -1913,7 +1905,6 @@ feature {NONE} -- Implementation
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 
-			display_error_help_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
 
 			options_cmd.disable_sensitive

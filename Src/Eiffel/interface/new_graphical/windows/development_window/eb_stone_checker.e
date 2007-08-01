@@ -113,8 +113,6 @@ feature {NONE} -- Implementation functions
 					bpm.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				develop_window.Debugger_manager.notify_breakpoints_changes
-			elseif conv_errst /= Void then
-				develop_window.commands.display_error_help_cmd.execute_with_stone (conv_errst)
 			elseif ef_stone /= Void then
 				if not text_loaded and then current_editor /= Void then
 					f := ef_stone.file

@@ -609,8 +609,7 @@ feature -- Command
 			build_metric_tool  -- This line cause mini toolbar problem?
 			build_external_output_tool
 			build_c_output_tool
-			build_errors_tool
-			build_warnings_tool
+			build_errors_and_warnings_tool
 
 				-- Build the refactoring tools
 			develop_window.commands.toolbarable_commands.extend (develop_window.refactoring_manager.pull_command)
@@ -925,26 +924,6 @@ feature{NONE} -- Implementation
 			setup_tool (l_c_output_tool, "show_c_output_tool")
 		end
 
-	build_warnings_tool is
-			-- Build warnings tool.
-		local
-			l_warnings_tool: EB_WARNINGS_TOOL
-		do
-			create l_warnings_tool.make (develop_window)
-			develop_window.tools.set_warnings_tool (l_warnings_tool)
-			setup_tool (l_warnings_tool, "show_warning_tool")
-		end
-
-	build_errors_tool is
-			-- Build errors tool.
-		local
-			l_errors_tool: EB_ERRORS_TOOL
-		do
-			create l_errors_tool.make (develop_window)
-			develop_window.tools.set_errors_tool (l_errors_tool)
-			setup_tool (l_errors_tool, "show_error_tool")
-		end
-
 	build_search_and_report_tool is
 			-- Build search tool.
 		local
@@ -1046,6 +1025,16 @@ feature{NONE} -- Implementation
 					l_descriptors.forth
 				end
 			end
+		end
+
+	build_errors_and_warnings_tool is
+			-- Build warnings tool.
+		local
+			l_tool: ES_ERRORS_AND_WARNINGS_TOOL
+		do
+			create l_tool.make (develop_window)
+			develop_window.tools.set_errors_and_warnings_tool (l_tool)
+			setup_tool (l_tool, "show_errors_and_warnings_tool")
 		end
 
 	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING) is

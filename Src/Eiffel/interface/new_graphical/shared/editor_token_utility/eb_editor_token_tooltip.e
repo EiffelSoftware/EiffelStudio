@@ -65,7 +65,7 @@ feature{NONE} -- Initialization
 
 			set_border_line_width (1)
 			set_top_border (2)
-			set_bottom_border (2)
+			set_bottom_border (0)
 			set_left_border (4)
 			set_right_border (4)
 
@@ -75,7 +75,8 @@ feature{NONE} -- Initialization
 			enable_tooltip_shadow
 			enable_repeat_tooltip_display
 
-			enable_pointer_on_tooltip
+			enable_label_font
+			enable_text_wrap
 		end
 
 feature -- Status report
@@ -97,6 +98,12 @@ feature -- Status setting
 		do
 			create l_writer
 			set_overriden_font (l_writer.label_font_table, l_writer.label_font_height)
+		end
+
+	disable_label_font
+			-- Disables the tool tip to use the label-styled font instead of a editor mono-spaced font
+		do
+			remove_overriden_font
 		end
 
 indexing

@@ -238,6 +238,9 @@ feature -- Query
 			if windows_tool /= Void then
 				Result.extend (windows_tool)
 			end
+			if errors_and_warnings_tool /= Void then
+				Result.extend (errors_and_warnings_tool)
+			end
 			if output_tool /= Void then
 				Result.extend (output_tool)
 			end
@@ -261,12 +264,6 @@ feature -- Query
 			end
 			if c_output_tool /= Void then
 				Result.extend (c_output_tool)
-			end
-			if errors_tool /= Void then
-				Result.extend (errors_tool)
-			end
-			if warnings_tool /= Void then
-				Result.extend (warnings_tool)
 			end
 			Result.append (develop_window.eb_debugger_manager.all_tools)
 			Result.append (customized_tools)
@@ -329,13 +326,8 @@ feature -- Query
 			-- C output tool
 			-- This tool was orignal belong to context_tool
 
-	errors_tool: EB_ERRORS_TOOL
-			-- Errors tool
-			-- This tool was orignal belong to context_tool
-
-	warnings_tool: EB_WARNINGS_TOOL
-			-- Warnings tool
-			-- This tool was orignal belong to context_tool
+	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL
+			-- Errors and warnings tool
 
 	customized_tools: LIST [EB_CUSTOMIZED_TOOL] is
 			-- Customized tools
@@ -537,12 +529,11 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW} -- Setting
 			set: c_output_tool = a_tool
 		end
 
-	set_errors_tool (a_tool: like errors_tool) is
-			-- Set `errors_tool'
+	set_errors_and_warnings_tool (a_tool: like errors_and_warnings_tool)
 		do
-			errors_tool := a_tool
+			errors_and_warnings_tool := a_tool
 		ensure
-			set: errors_tool = a_tool
+			errors_and_warnings_tool_set: errors_and_warnings_tool = a_tool
 		end
 
 	set_search_tool (a_tool: like search_tool) is
@@ -559,14 +550,6 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW} -- Setting
 			search_report_tool := a_tool
 		ensure
 			set: search_report_tool /= Void
-		end
-
-	set_warnings_tool (a_tool: like warnings_tool) is
-			-- Set `warnings_tool'
-		do
-			warnings_tool := a_tool
-		ensure
-			set: warnings_tool = a_tool
 		end
 
 	set_breakpoints_tool (a_tool: like breakpoints_tool) is
@@ -621,11 +604,23 @@ feature {NONE} -- Recycle
 
 	internal_recycle is
 		do
-			set_windows_tool (Void)
-			set_favorites_tool (Void)
 			set_features_tool (Void)
-			set_breakpoints_tool (Void)
+			set_cluster_tool (Void)
+			set_output_tool (Void)
+			set_diagram_tool (Void)
+			set_class_tool (Void)
+			set_features_relation_tool (Void)
+			set_dependency_tool (Void)
+			set_metric_tool (Void)
+			set_external_output_tool (Void)
+			set_c_output_tool (Void)
+			set_errors_and_warnings_tool (Void)
 			set_search_tool (Void)
+			set_search_tool (Void)
+			set_breakpoints_tool (Void)
+			set_favorites_tool (Void)
+			set_properties_tool (Void)
+			set_windows_tool (Void)
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 

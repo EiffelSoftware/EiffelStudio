@@ -11,7 +11,7 @@ deferred class
 inherit
 	WARNING
 		redefine
-			has_associated_file
+			has_associated_file, trace_primary_context
 		end
 
 feature -- Properties
@@ -24,9 +24,23 @@ feature -- Properties
 		do
 			Result := associated_class.file_name
 		end
-		
+
 	has_associated_file: BOOLEAN is True
 			-- Current is associated to a file/class
+
+feature -- Output
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if associated_class = Void then
+				Precursor {WARNING} (a_text_formatter)
+			else
+				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
+				a_text_formatter.add (".")
+				a_text_formatter.add_class (associated_class.lace_class)
+			end
+		end
 
 invariant
 	associated_class_not_void: associated_class /= Void

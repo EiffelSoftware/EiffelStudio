@@ -11,7 +11,8 @@ class
 inherit
 	WARNING
 		redefine
-			trace, file_name
+			trace, file_name, has_associated_file, trace_primary_context,
+			trace_single_line
 		end
 
 	SYNTAX_MESSAGE
@@ -26,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-create
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -62,6 +63,9 @@ feature -- Properties
 	associated_class: CLASS_C
 			-- Class in which syntax warning occurred.
 
+	has_associated_file: BOOLEAN = True
+			-- Current is associated to a file/class
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
@@ -93,6 +97,31 @@ feature -- Output
 			else
 				a_text_formatter.add (" (source code is not available)")
 				a_text_formatter.add_new_line
+			end
+		end
+
+	trace_single_line (a_text_formatter: TEXT_FORMATTER) is
+			-- Display short error, single line message in `a_text_formatter'.
+		do
+			initialize_output
+
+			a_text_formatter.add (code)
+			a_text_formatter.add_error (Current, " Obsolete")
+			a_text_formatter.add (" syntax used at line ")
+			a_text_formatter.add_int (line)
+			a_text_formatter.add (". ")
+			a_text_formatter.add (warning_message)
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if associated_class = Void then
+				Precursor {WARNING} (a_text_formatter)
+			else
+				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
+				a_text_formatter.add (".")
+				a_text_formatter.add_class (associated_class.lace_class)
 			end
 		end
 

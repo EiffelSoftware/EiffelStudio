@@ -14,103 +14,66 @@ deferred class
 
 inherit
 	EVS_GENERAL_TOOLTIP_UTILITY
+		export
+			{NONE} all
+		end
 
 	EVS_SETTING_CHANGE_ACTIONS
-
-feature -- Setting
-
-	enable_tooltip is
-			-- Enable tooltip.
-		do
-			safe_register_agent (pointer_enter_agent, owner_pointer_enter_actions)
-			safe_register_agent (pointer_leave_agent, owner_pointer_leave_actions)
-			is_tooltip_enabled := True
-		ensure
-			tooltip_enabled: is_tooltip_enabled
-			agents_registered:
-				owner_pointer_enter_actions.has (pointer_enter_agent) and
-				owner_pointer_leave_actions.has (pointer_leave_agent)
+		export
+			{NONE} all
 		end
 
-	disable_tooltip is
-			-- Enable tooltip.
+feature -- Access
+
+	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]] is
+			-- Functions used to determine whether or not to display tooltip when other condition
+			-- such as `is_tooltip_enabled', pointer on owner are all satisfied.
+			-- A True value returned by a function indicates that tooltip should be displayed,
+			-- a False value indicates that tooltip should not be displayed.
+			-- So if any function in the list returns False, tooltip display is vetoed.
+			-- This is useful for example when you want tooltip to display only when certain keys
+			-- are pressed.
 		do
-			if is_tooltip_enabled then
-				if is_my_tooltip then
-					if is_my_tooltip_displayed then
-						tooltip_window.hide_tooltip
-					end
-					tooltip_window.detach_owner
-				end
-				setup_timer (0, Void)
-				safe_remove_agent (pointer_enter_agent, owner_pointer_enter_actions)
-				safe_remove_agent (pointer_leave_agent, owner_pointer_leave_actions)
-				is_tooltip_enabled := False
+			if veto_tooltip_display_functions_internal = Void then
+				create veto_tooltip_display_functions_internal.make
 			end
+			Result := veto_tooltip_display_functions_internal
 		ensure
-			my_tooltip_do_not_exist: not is_my_tooltip
-			tooltip_enabled: not is_tooltip_enabled
-			agents_removed:
-				not owner_pointer_enter_actions.has (pointer_enter_agent) and
-				not owner_pointer_leave_actions.has (pointer_leave_agent)
+			result_attached: Result /= Void
 		end
 
-	enable_pointer_on_tooltip is
-			-- Enable that tooltip will remain displayed when pointer is on tooltip region,
-			-- even pointer is not on owner region.
+feature {NONE} -- Access
+
+	tooltip_remain_delay_time: INTEGER
+			-- Time (in milliseconds) for tooltip to remain displayed when pointer is out of owner
+			-- Default value is 0, meaning tooltip will disappear once pointer leaves owner region.
+
+	tooltip_background_color: EV_COLOR
+			-- Background color of tooltip window	
+
+	force_tooltip_disappear_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+			-- Function used to determine whether or not to hide tooltip when other condition
+			-- are all satisfied.
+			-- This is useful for example when you want tooltip to disappear right away when certain keys
+			-- are not pressed.
+
+	tooltip_window_related_window: EV_WINDOW is
+			-- Tooltip window related window
 		do
-			is_pointer_on_tooltip_enabled := True
+			Result := tooltip_window.related_window
 		ensure
-			pointer_on_tooltip_enabled: is_pointer_on_tooltip_enabled
+			result_set: Result = tooltip_window.related_window
 		end
 
-	disable_pointer_on_tooltip is
-			-- Make sure that tooltip will disappear once pointer is out of owner region.
+	tooltip_window_related_window_agent: FUNCTION [ANY, TUPLE, EV_WINDOW] is
+			-- Tooltip window related window agent
 		do
-			is_pointer_on_tooltip_enabled := False
-			is_pointer_on_tooltip := False
+			Result := tooltip_window.related_window_agent
 		ensure
-			pointer_on_tooltip_disabled: not is_pointer_on_tooltip_enabled
+			result_set: Result = tooltip_window.related_window_agent
 		end
 
-	enable_tooltip_shadow is
-			-- Enable shadow of pop-up tooltip window.
-		do
-			lock_update
-			is_tooltip_shadow_enabled := True
-			unlock_update
-			try_call_setting_change_actions
-		ensure
-			tooltip_shadow_enabled: is_tooltip_shadow_enabled
-		end
-
-	disable_tooltip_shadow is
-			-- Disable shadow of pop-up tooltip window.
-		do
-			lock_update
-			is_tooltip_shadow_enabled := False
-			unlock_update
-			try_call_setting_change_actions
-		ensure
-			tooltip_shadow_disabled: not is_tooltip_shadow_enabled
-		end
-
-	enable_repeat_tooltip_display is
-			-- Enable that tooltip will be displayed repeatedly when pointer is on tooltip region,
-			-- even pointer is not on owner region.
-		do
-			is_repeat_tooltip_display_enabled := True
-		ensure
-			repeat_tooltip_display_enabled: is_repeat_tooltip_display_enabled
-		end
-
-	disable_repeat_tooltip_display is
-			-- Make sure that tooltip will be displayed once when pointer is out of owner region.
-		do
-			is_repeat_tooltip_display_enabled := False
-		ensure
-			repeat_tooltip_display_disabled: not is_repeat_tooltip_display_enabled
-		end
+feature -- Element change
 
 	set_tooltip_remain_delay_time (a_delay: INTEGER) is
 			-- Set `tooltip_remain_delay_time' with `a_delay' (in milliseconds).
@@ -201,23 +164,7 @@ feature -- Setting
 			related_window_set: tooltip_window.related_window_agent = a_agent
 		end
 
-	force_enter is
-			-- Force `pointer_enter_agent' to be called.
-		do
-			if is_tooltip_enabled then
-				pointer_enter_agent.call (Void)
-			end
-		end
-
-	force_leave is
-			-- Force `pointer_leave_agent' to be called.
-		do
-			if is_tooltip_enabled then
-				pointer_leave_agent.call (Void)
-			end
-		end
-
-feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
+feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 
 	set_is_pointer_on_tooltip (b: BOOLEAN) is
 			-- Set `is_pointer_on_tooltip' with `b'.
@@ -235,6 +182,158 @@ feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
 			is_tooltip_pined := b
 		ensure
 			is_tooltip_pined_set: is_tooltip_pined = b
+		end
+
+	set_pointer_on_tooltip (b: BOOLEAN) is
+			-- Set `is_pointer_on_tooltip' with `b'.
+		do
+			is_pointer_on_tooltip := b
+		ensure
+			is_pointer_on_tooltip_set: is_pointer_on_tooltip = b
+		end
+
+	set_picking_from_tooltip (b: BOOLEAN) is
+			-- Set `is_picking_from_tooltip' with `b'.
+		do
+			is_picking_from_tooltip := b
+		ensure
+			is_picking_from_tooltip_set: is_picking_from_tooltip = b
+		end
+
+	setup_timer (timeout: INTEGER; a_agent: PROCEDURE [ANY, TUPLE]) is
+			-- Setup `timer' with `timeout' and `a_agent'.
+			-- Used to start `timer' or stop it (when `timeout' is 0 and `a_agent' is Void)
+		require
+			timeout_non_negative: timeout >= 0
+		do
+			timer.actions.wipe_out
+			if a_agent /= Void then
+				timer.actions.extend (a_agent)
+			end
+			timer.set_interval (timeout)
+		ensure
+			timer_set: timer.interval = timeout and a_agent /= Void implies timer.actions.has (a_agent)
+		end
+
+feature -- Status setting
+
+	enable_tooltip is
+			-- Enable tooltip.
+		do
+			safe_register_agent (pointer_enter_agent, owner_pointer_enter_actions)
+			safe_register_agent (pointer_leave_agent, owner_pointer_leave_actions)
+			if owner_select_actions /= Void then
+				safe_register_agent (select_agent, owner_select_actions)
+			end
+			is_tooltip_enabled := True
+		ensure
+			tooltip_enabled: is_tooltip_enabled
+			agents_registered:
+				owner_pointer_enter_actions.has (pointer_enter_agent) and
+				owner_pointer_leave_actions.has (pointer_leave_agent) and
+				owner_select_actions /= Void implies owner_select_actions.has (select_agent)
+		end
+
+	disable_tooltip is
+			-- Enable tooltip.
+		do
+			if is_tooltip_enabled then
+				if is_my_tooltip then
+					if is_my_tooltip_displayed then
+						tooltip_window.hide_tooltip
+					end
+					tooltip_window.detach_owner
+				end
+				setup_timer (0, Void)
+				safe_remove_agent (pointer_enter_agent, owner_pointer_enter_actions)
+				safe_remove_agent (pointer_leave_agent, owner_pointer_leave_actions)
+				if owner_select_actions /= Void then
+					safe_remove_agent (select_agent, owner_select_actions)
+				end
+				is_tooltip_enabled := False
+			end
+		ensure
+			my_tooltip_do_not_exist: not is_my_tooltip
+			tooltip_enabled: not is_tooltip_enabled
+			agents_removed:
+				not owner_pointer_enter_actions.has (pointer_enter_agent) and
+				not owner_pointer_leave_actions.has (pointer_leave_agent) and
+				owner_select_actions /= Void implies not owner_select_actions.has (select_agent)
+		end
+
+	enable_pointer_on_tooltip is
+			-- Enable that tooltip will remain displayed when pointer is on tooltip region,
+			-- even pointer is not on owner region.
+		do
+			is_pointer_on_tooltip_enabled := True
+		ensure
+			pointer_on_tooltip_enabled: is_pointer_on_tooltip_enabled
+		end
+
+	disable_pointer_on_tooltip is
+			-- Make sure that tooltip will disappear once pointer is out of owner region.
+		do
+			is_pointer_on_tooltip_enabled := False
+			is_pointer_on_tooltip := False
+		ensure
+			pointer_on_tooltip_disabled: not is_pointer_on_tooltip_enabled
+		end
+
+	enable_tooltip_shadow is
+			-- Enable shadow of pop-up tooltip window.
+		do
+			lock_update
+			is_tooltip_shadow_enabled := True
+			unlock_update
+			try_call_setting_change_actions
+		ensure
+			tooltip_shadow_enabled: is_tooltip_shadow_enabled
+		end
+
+	disable_tooltip_shadow is
+			-- Disable shadow of pop-up tooltip window.
+		do
+			lock_update
+			is_tooltip_shadow_enabled := False
+			unlock_update
+			try_call_setting_change_actions
+		ensure
+			tooltip_shadow_disabled: not is_tooltip_shadow_enabled
+		end
+
+	enable_repeat_tooltip_display is
+			-- Enable that tooltip will be displayed repeatedly when pointer is on tooltip region,
+			-- even pointer is not on owner region.
+		do
+			is_repeat_tooltip_display_enabled := True
+		ensure
+			repeat_tooltip_display_enabled: is_repeat_tooltip_display_enabled
+		end
+
+	disable_repeat_tooltip_display is
+			-- Make sure that tooltip will be displayed once when pointer is out of owner region.
+		do
+			is_repeat_tooltip_display_enabled := False
+		ensure
+			repeat_tooltip_display_disabled: not is_repeat_tooltip_display_enabled
+		end
+
+feature -- Advanced operations
+
+	force_enter is
+			-- Force `pointer_enter_agent' to be called.
+		do
+			if is_tooltip_enabled then
+				pointer_enter_agent.call (Void)
+			end
+		end
+
+	force_leave is
+			-- Force `pointer_leave_agent' to be called.
+		do
+			if is_tooltip_enabled then
+				pointer_leave_agent.call (Void)
+			end
 		end
 
 feature -- Status report
@@ -270,65 +369,48 @@ feature -- Status report
 			-- Will tooltip be displayed repeatedly when pointer on owner's region?
 			-- If disabled, once a tooltip disappears, you have to move your pointer out of owner's region,
 			-- and then move it back to reactivate the tooltip again.
-			-- Default: False
+			-- Default: False		
 
-	tooltip_remain_delay_time: INTEGER
-			-- Time (in milliseconds) for tooltip to remain displayed when pointer is out of owner
-			-- Default value is 0, meaning tooltip will disappear once pointer leaves owner region.
+feature {NONE} -- Status report
 
-	tooltip_background_color: EV_COLOR
-			-- Background color of tooltip window			
-
-feature -- Access
-
-	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]] is
-			-- Functions used to determine whether or not to display tooltip when other condition
-			-- such as `is_tooltip_enabled', pointer on owner are all satisfied.
-			-- A True value returned by a function indicates that tooltip should be displayed,
-			-- a False value indicates that tooltip should not be displayed.
-			-- So if any function in the list returns False, tooltip display is vetoed.
-			-- This is useful for example when you want tooltip to display only when certain keys
-			-- are pressed.
+	is_my_tooltip_displayed: BOOLEAN is
+			-- Is tooltip for current displayed?
+		require
+			tooltip_enabled: is_tooltip_enabled
 		do
-			if veto_tooltip_display_functions_internal = Void then
-				create veto_tooltip_display_functions_internal.make
-			end
-			Result := veto_tooltip_display_functions_internal
+			Result := tooltip_window.owner = Current and then tooltip_window.is_displayed
 		ensure
-			result_attached: Result /= Void
+			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner = Current)
 		end
 
-	force_tooltip_disappear_function: FUNCTION [ANY, TUPLE, BOOLEAN]
-			-- Function used to determine whether or not to hide tooltip when other condition
-			-- are all satisfied.
-			-- This is useful for example when you want tooltip to disappear right away when certain keys
-			-- are not pressed.
-
-	tooltip_window_related_window: EV_WINDOW is
-			-- Tooltip window related window
+	is_others_tooltip_displayed: BOOLEAN is
+			-- Is tooltip for others displayed?
+		require
+			tooltip_enabled: is_tooltip_enabled
 		do
-			Result := tooltip_window.related_window
+			Result := tooltip_window.owner /= Current and then tooltip_window.is_displayed
 		ensure
-			result_set: Result = tooltip_window.related_window
+			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner /= Current)
 		end
 
-	tooltip_window_related_window_agent: FUNCTION [ANY, TUPLE, EV_WINDOW] is
-			-- Tooltip window related window agent
+	is_tooltip_displayed: BOOLEAN is
+			-- Is tooltip displayed, no mater whether it's mine or other's?
+		require
+			tooltip_enabled: is_tooltip_enabled
 		do
-			Result := tooltip_window.related_window_agent
+			Result := tooltip_window.is_displayed
 		ensure
-			result_set: Result = tooltip_window.related_window_agent
+			good_result: Result implies tooltip_window.is_displayed
 		end
 
-	before_display_actions: ACTION_SEQUENCE [TUPLE] is
-			-- Actions to be performed just before current tooltip is displayed
+	is_my_tooltip: BOOLEAN is
+			-- Does tooltip belong to current?
+		require
+			tooltip_enabled: is_tooltip_enabled
 		do
-			if before_display_actions_internal = Void then
-				create before_display_actions_internal
-			end
-			Result := before_display_actions_internal
+			Result := tooltip_window.has_owner and then tooltip_window.owner = Current
 		ensure
-			result_attached: Result /= Void
+			good_result: Result implies (tooltip_window.has_owner and then tooltip_window.owner = Current)
 		end
 
 feature -- Measure
@@ -361,11 +443,11 @@ feature -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	pointer_offset: INTEGER is 20
+	pointer_offset: INTEGER = 20
 			-- y offset to display tooltip window
 			-- This is the offset for tooltip window to be displayed below or in some cases above pointer.
 
-feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
+feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
 	is_owner_destroyed: BOOLEAN is
 			-- If owner destroyed
@@ -380,7 +462,20 @@ feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 			result_attached: Result /= Void
 		end
 
-feature{NONE} -- Owner actions
+feature -- Actions
+
+	before_display_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed just before current tooltip is displayed
+		do
+			if before_display_actions_internal = Void then
+				create before_display_actions_internal
+			end
+			Result := before_display_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Owner actions
 
 	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Pointer enter actions of owner of current tooltip
@@ -398,7 +493,13 @@ feature{NONE} -- Owner actions
 			result_attached: Result /= Void
 		end
 
-feature{NONE} -- Actions
+	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Select actions of owner of current tooltip
+			-- Attach this to owner's `select_actions'.
+		deferred
+		end
+
+feature {NONE} -- Actions
 
 	on_pointer_enter is
 			-- Action to be performed when pointer enters current tooltip owner
@@ -431,7 +532,31 @@ feature{NONE} -- Actions
 			pointer_not_on_owner: not is_pointer_on_owner
 		end
 
-feature{NONE} -- Tooltip show/hide
+	on_selected is
+			-- Actions to be performed when tooltip owner is selected
+		do
+			if is_tooltip_enabled then
+					-- User performed an action and is not expecting a tooltip for the default
+					-- tooltip duration. We reset the timer
+				restart_tooltip_timer
+			end
+		end
+
+feature -- Basic operations
+
+	restart_tooltip_timer
+			-- Restarts tooltip timer so the timer must complete a full time out duration before being displayed
+		require
+			is_tooltip_enabled: is_tooltip_enabled
+		local
+			l_interval: INTEGER
+		do
+			l_interval := timer.interval
+			timer.reset_count
+			timer.set_interval (l_interval)
+		end
+
+feature {NONE} -- Tooltip show/hide
 
 	show_tooltip is
 			-- Show tooltip.
@@ -495,7 +620,7 @@ feature{NONE} -- Tooltip show/hide
 					end
 				end
 			end
-	ensure
+		ensure
 			-- Tooltip should be hidden if the following satisfied:
 			-- 	1. Tooltip is not pined and
 			-- 	2. Pointer is not on tooltip while `is_pointer_on_tooltip_enabled' is True or tooltip is not on owner
@@ -532,81 +657,6 @@ feature{NONE} -- Tooltip show/hide
 			end
 		end
 
-feature{NONE} -- Status report
-
-	is_my_tooltip_displayed: BOOLEAN is
-			-- Is tooltip for current displayed?
-		require
-			tooltip_enabled: is_tooltip_enabled
-		do
-			Result := tooltip_window.owner = Current and then tooltip_window.is_displayed
-		ensure
-			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner = Current)
-		end
-
-	is_others_tooltip_displayed: BOOLEAN is
-			-- Is tooltip for others displayed?
-		require
-			tooltip_enabled: is_tooltip_enabled
-		do
-			Result := tooltip_window.owner /= Current and then tooltip_window.is_displayed
-		ensure
-			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner /= Current)
-		end
-
-	is_tooltip_displayed: BOOLEAN is
-			-- Is tooltip displayed, no mater whether it's mine or other's?
-		require
-			tooltip_enabled: is_tooltip_enabled
-		do
-			Result := tooltip_window.is_displayed
-		ensure
-			good_result: Result implies tooltip_window.is_displayed
-		end
-
-	is_my_tooltip: BOOLEAN is
-			-- Does tooltip belong to current?
-		require
-			tooltip_enabled: is_tooltip_enabled
-		do
-			Result := tooltip_window.has_owner and then tooltip_window.owner = Current
-		ensure
-			good_result: Result implies (tooltip_window.has_owner and then tooltip_window.owner = Current)
-		end
-
-feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
-
-	set_pointer_on_tooltip (b: BOOLEAN) is
-			-- Set `is_pointer_on_tooltip' with `b'.
-		do
-			is_pointer_on_tooltip := b
-		ensure
-			is_pointer_on_tooltip_set: is_pointer_on_tooltip = b
-		end
-
-	set_picking_from_tooltip (b: BOOLEAN) is
-			-- Set `is_picking_from_tooltip' with `b'.
-		do
-			is_picking_from_tooltip := b
-		ensure
-			is_picking_from_tooltip_set: is_picking_from_tooltip = b
-		end
-
-	setup_timer (timeout: INTEGER; a_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Setup `timer' with `timeout' and `a_agent'.
-			-- Used to start `timer' or stop it (when `timeout' is 0 and `a_agent' is Void)
-		require
-			timeout_non_negative: timeout >= 0
-		do
-			timer.actions.wipe_out
-			if a_agent /= Void then
-				timer.actions.extend (a_agent)
-			end
-			timer.set_interval (timeout)
-		ensure
-			timer_set: timer.interval = timeout and a_agent /= Void implies timer.actions.has (a_agent)
-		end
-
 feature{NONE} -- Implementation
 
 	timer: EV_TIMEOUT is
@@ -626,10 +676,11 @@ feature{NONE} -- Implementation
 	pointer_enter_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent to wrap `on_pointer_enter'
 		do
-			if pointer_enter_agent_internal = Void then
-				pointer_enter_agent_internal := agent on_pointer_enter
-			end
 			Result := pointer_enter_agent_internal
+			if Result = Void then
+				Result := agent on_pointer_enter
+				pointer_enter_agent_internal := Result
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -637,10 +688,23 @@ feature{NONE} -- Implementation
 	pointer_leave_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent to wrap `on_pointer_leave'
 		do
-			if pointer_leave_agent_internal = Void then
-				pointer_leave_agent_internal := agent on_pointer_leave
-			end
 			Result := pointer_leave_agent_internal
+			if Result = Void then
+				Result := agent on_pointer_leave
+				pointer_leave_agent_internal := Result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	select_agent: PROCEDURE [ANY, TUPLE] is
+			-- Agent to wrap `on_selected'
+		do
+			Result := select_agent_internal
+			if Result = Void then
+				Result := agent on_selected
+				select_agent_internal := Result
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -650,6 +714,9 @@ feature{NONE} -- Implementation
 
 	pointer_leave_agent_internal: like pointer_leave_agent
 			-- Implementation of once per object  `pointer_leave_agent'
+
+	select_agent_internal: like select_agent
+			-- Implementation of once per object `select_agent'
 
 	before_display_actions_internal: like before_display_actions
 			-- Implementation of `before_display_actions'

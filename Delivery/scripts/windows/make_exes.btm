@@ -11,7 +11,7 @@ iff not defined WIN64 then
 	call configure clean >>& %INSTALL_LOG
 	call configure win32 g >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
+	copy C\run-time\LIB\*.a %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 
 	remtrace Compile a dynamic run-time for MinGW
 	cdd %EIFFEL_SRC\C

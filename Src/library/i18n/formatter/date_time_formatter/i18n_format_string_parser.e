@@ -12,6 +12,8 @@ class
 	I18N_FORMAT_STRING_PARSER
 
 inherit
+	ANY
+
 	I18N_FORMATTING_CHARACTERS
 		export
 			{NONE} all

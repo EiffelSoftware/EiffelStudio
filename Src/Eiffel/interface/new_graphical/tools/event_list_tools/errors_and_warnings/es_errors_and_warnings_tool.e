@@ -22,6 +22,11 @@ inherit
 			update_content_applicable_widgets
 		end
 
+	ES_ERRORS_AND_WARNINGS_COMMANDER_I
+		export
+			{ES_ERRORS_AND_WARNINGS_COMMAND} all
+		end
+
 create
 	make
 
@@ -149,6 +154,60 @@ feature -- Status report
 			-- Indicates if errors should be shown
 		do
 			Result := warnings_button.is_selected
+		end
+
+feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
+
+	go_to_next_error (a_cycle: BOOLEAN)
+			-- Goes to next error in the list.
+			--
+			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
+			--            not action when the end has been reached.
+		do
+			if show_errors then
+				if error_count > 0 then
+					move_next (agent is_error_event)
+				end
+			end
+		end
+
+	go_to_previous_error (a_cycle: BOOLEAN)
+			-- Goes to previous error in the list.
+			--
+			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
+			--            not action when the start has been reached.
+		do
+			if show_errors then
+				if error_count > 0 then
+					move_previous (agent is_error_event)
+				end
+			end
+		end
+
+	go_to_next_warning (a_cycle: BOOLEAN)
+			-- Goes to next warning in the list.
+			--
+			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
+			--            not action when the end has been reached.
+		do
+			if show_warnings then
+				if warning_count > 0 then
+					move_next (agent is_warning_event)
+				end
+			end
+		end
+
+	go_to_previous_warning (a_cycle: BOOLEAN)
+			-- Goes to previous warning in the list.
+			--
+			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
+			--            not action when the start has been reached.
+		do
+			if show_warnings then
+				if warning_count > 0 then
+					move_previous (agent is_warning_event)
+				end
+			end
 		end
 
 feature {NONE} -- Basic operations
@@ -366,20 +425,46 @@ feature {NONE} -- Factory
 
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Available tool bar items
+		local
+			l_cmd: ES_ERRORS_AND_WARNINGS_COMMAND
+			l_button: SD_TOOL_BAR_BUTTON
 		do
+			create Result.make (7)
+
+				-- Navigation buttons
+			create {ES_PREVIOUS_ERROR_COMMAND}l_cmd.make (Current)
+			l_button := l_cmd.new_sd_toolbar_item (False)
+			l_button.enable_sensitive
+			Result.put_last (l_button)
+
+			create {ES_NEXT_ERROR_COMMAND}l_cmd.make (Current)
+			l_button := l_cmd.new_sd_toolbar_item (False)
+			l_button.enable_sensitive
+			Result.put_last (l_button)
+
+			create {ES_PREVIOUS_WARNING_COMMAND}l_cmd.make (Current)
+			l_button := l_cmd.new_sd_toolbar_item (False)
+			l_button.enable_sensitive
+			Result.put_last (l_button)
+
+			create {ES_NEXT_WARNING_COMMAND}l_cmd.make (Current)
+			l_button := l_cmd.new_sd_toolbar_item (False)
+			l_button.enable_sensitive
+			Result.put_last (l_button)
+
+				-- Separator
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
 			create error_info_command.make
 			error_info_button := error_info_command.new_sd_toolbar_item (False)
-
 				-- We need to do something else, like handle grid selection
 			error_info_button.select_actions.wipe_out
 			error_info_button.select_actions.extend (agent on_error_info)
+			Result.put_last (error_info_button)
 
 			create filter_button.make
 			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
 			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
-
-			create Result.make (2)
-			Result.put_last (error_info_button)
 			Result.put_last (filter_button)
 		ensure then
 			filter_button_attached: filter_button /= Void
@@ -439,7 +524,6 @@ feature {NONE} -- User interface manipulation
 		do
 			if item_count = 0 then
 				l_title := "Error List"
-				l_buffer := stock_pixmaps.general_copy_icon_buffer
 			else
 				l_title := "Error List (" + error_count.out + "|" + warning_count.out + ")"
 				if error_count > 0 and warning_count > 0 then
@@ -468,11 +552,13 @@ feature {NONE} -- User interface manipulation
 			--
 			-- `a_enable': True to indicate there is content available, False otherwise
 		do
+				-- No filter actions yet so we disable it.
+			filter_button.disable_sensitive
 			if a_enable then
-				filter_button.enable_sensitive
+				--filter_button.enable_sensitive
 				error_info_button.enable_sensitive
 			else
-				filter_button.disable_sensitive
+				--filter_button.disable_sensitive
 			end
 		end
 

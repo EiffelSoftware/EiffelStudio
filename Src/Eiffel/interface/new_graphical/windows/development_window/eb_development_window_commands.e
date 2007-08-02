@@ -130,7 +130,19 @@ feature -- Query
 			-- Command to setup customzied formatter
 
 	customized_tool_command: EB_SETUP_CUSTOMIZED_TOOL_COMMAND
-			-- Command to setup customzied formatter			
+			-- Command to setup customzied formatter
+
+	go_to_next_error_command: ES_NEXT_ERROR_COMMAND
+			-- Go to next error command
+
+	go_to_previous_error_command: ES_PREVIOUS_ERROR_COMMAND
+			-- Go to previous error command
+
+	go_to_next_warning_command: ES_NEXT_WARNING_COMMAND
+			-- Go to next warningcommand
+
+	go_to_previous_warning_command: ES_PREVIOUS_WARNING_COMMAND
+			-- Go to previous warning command
 
 feature -- Commands
 
@@ -449,6 +461,38 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			customized_tool_command_set: customized_tool_command = a_cmd
 		end
 
+	set_go_to_next_error_command (a_command: like go_to_next_error_command)
+			-- Sets `go_to_next_error_command' with `a_command'
+		do
+			go_to_next_error_command := a_command
+		ensure
+			go_to_next_error_command_set: go_to_next_error_command = a_command
+		end
+
+	set_go_to_previous_error_command (a_command: like go_to_previous_error_command)
+			-- Sets `go_to_previous_error_command' with `a_command'
+		do
+			go_to_previous_error_command := a_command
+		ensure
+			go_to_previous_error_command_set: go_to_previous_error_command = a_command
+		end
+
+	set_go_to_next_warning_command (a_command: like go_to_next_warning_command)
+			-- Sets `go_to_next_warning_command' with `a_command'
+		do
+			go_to_next_warning_command := a_command
+		ensure
+			go_to_next_warning_command_set: go_to_next_warning_command = a_command
+		end
+
+	set_go_to_previous_warning_command (a_command: like go_to_previous_warning_command)
+			-- Sets `go_to_previous_warning_command' with `a_command'
+		do
+			go_to_previous_warning_command := a_command
+		ensure
+			go_to_previous_warning_command_set: go_to_previous_warning_command = a_command
+		end
+
 feature -- Recycle
 
 	internal_recycle is
@@ -486,6 +530,12 @@ feature -- Recycle
 			toggle_stone_cmd.recycle
 			delete_class_cluster_cmd.recycle
 			print_cmd.recycle
+
+			go_to_next_error_command.recycle
+			go_to_previous_error_command.recycle
+			go_to_next_warning_command.recycle
+			go_to_previous_warning_command.recycle
+
 			from
 				show_tool_commands.start
 			until

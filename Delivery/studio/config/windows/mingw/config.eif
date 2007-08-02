@@ -97,7 +97,7 @@ appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 
 -- precompilation
 precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
-%%Tmkdir -p $(ISE_C_COMPILER)%N%
+%%T%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/mkdir%" -p $(ISE_C_COMPILER)%N%
 %%T$(RM) $@%N%
 %%T$(CC) $(LDFLAGS) $(CCLDFLAGS) -o driver.exe E1/emain.o $(PRECOMP_OBJECTS) %
 %driver.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
@@ -115,7 +115,7 @@ precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
 %%N%
 %precomp.lib: $(OBJECTS)%N%
 %%T$(RM) $@%N%
-%%Tld -r -o precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
+%%T%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/ld%" -r -o precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N"
 
 -- cecil

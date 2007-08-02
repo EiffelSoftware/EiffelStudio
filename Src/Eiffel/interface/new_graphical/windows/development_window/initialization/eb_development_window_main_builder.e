@@ -325,6 +325,36 @@ feature -- Command
 			setup_class_address_accelerators
 		end
 
+	init_tool_commands
+			-- Initializes all command that require associated tools to be initialized prior to use
+		local
+			l_go_to_next_error_cmd: ES_NEXT_ERROR_COMMAND
+			l_go_to_previous_error_cmd: ES_PREVIOUS_ERROR_COMMAND
+			l_go_to_next_warning_cmd: ES_NEXT_WARNING_COMMAND
+			l_go_to_previous_warning_cmd: ES_PREVIOUS_WARNING_COMMAND
+			l_ear_commander: ES_ERRORS_AND_WARNINGS_COMMANDER_I
+		do
+				-- Error navigation
+			l_ear_commander := develop_window.tools.errors_and_warnings_tool
+			if l_ear_commander /= Void then
+				create l_go_to_previous_error_cmd.make (l_ear_commander)
+				develop_window.commands.set_go_to_previous_error_command (l_go_to_previous_error_cmd)
+				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_previous_error_command)
+				
+				create l_go_to_next_error_cmd.make (l_ear_commander)
+				develop_window.commands.set_go_to_next_error_command (l_go_to_next_error_cmd)
+				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_next_error_command)
+
+				create l_go_to_previous_warning_cmd.make (l_ear_commander)
+				develop_window.commands.set_go_to_previous_warning_command (l_go_to_previous_warning_cmd)
+				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_previous_warning_command)
+
+				create l_go_to_next_warning_cmd.make (l_ear_commander)
+				develop_window.commands.set_go_to_next_warning_command (l_go_to_next_warning_cmd)
+				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_next_warning_command)
+			end
+		end
+
 	setup_history_back_and_forth_commands is
 			-- Setup accelerators for back and forth commands.
 		local
@@ -661,11 +691,15 @@ feature -- Command
 
 			l_window.resize_actions.force_extend (agent develop_window.save_size)
 			l_window.move_actions.force_extend (agent develop_window.save_position)
+
 				-- Initialize commands and connect them.
 			init_commands
 
 				-- Build widget system & menus.
 			build_interface
+
+				-- Initialize commands and connect them.
+			init_tool_commands
 		end
 
 	build_help_engine is

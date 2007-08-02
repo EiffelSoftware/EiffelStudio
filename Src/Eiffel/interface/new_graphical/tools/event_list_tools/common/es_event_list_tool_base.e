@@ -159,6 +159,172 @@ feature {NONE} -- Basic operations
 		deferred
 		end
 
+feature {NONE} -- Navigation
+
+	move_next (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
+			-- Moves to the next item in the errors and warnings list based on some fundamental conditions.
+			--
+			-- `a_query_function': The function to determine if a matched event list item is applicable.
+		require
+			a_query_action_attached: a_query_action /= Void
+		local
+			l_grid: like grid_events
+			l_row_count: INTEGER
+			l_index: INTEGER
+			l_stop_index: INTEGER
+			l_row: EV_GRID_ROW
+			l_item: EVENT_LIST_ITEM_I
+			l_found: BOOLEAN
+		do
+			l_grid := grid_events
+			l_row_count := l_grid.row_count
+			if l_row_count > 0 then
+				if l_grid.selected_rows.is_empty then
+					l_index := 0
+				else
+					l_row := l_grid.selected_rows.last
+					l_index := l_row.index + l_row.subrow_count_recursive
+				end
+				l_index := l_index + 1
+				if l_index > l_row_count then
+						-- Cycle index
+					l_index := 1
+				end
+
+				from
+					l_row := Void
+				until
+					l_found or
+					l_index = l_stop_index
+				loop
+					l_found := False
+
+					l_row := l_grid.row (l_index)
+					if l_row.is_show_requested and l_row.is_selectable then
+						l_item ?= l_row.data
+						l_found := l_item /= Void and then a_query_action.item ([l_item])
+					end
+
+					if l_stop_index = 0 then
+							-- Set stop index here so the active item gets a chance
+							-- to be the next item, which happens when there is only one error item
+						l_stop_index := l_index
+					end
+
+						-- Increment index
+					l_index := l_index + l_row.subrow_count_recursive + 1
+
+					if l_index > l_row_count then
+							-- Cycle, if requested
+						l_index := 1
+					end
+				end
+
+				if l_found then
+					check l_row_attached: l_row /= Void end
+					move_to_row (l_row)
+				end
+			end
+		end
+
+	move_previous (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
+			-- Moves to the previous item in the errors and warnings list based on some fundamental conditions.
+			--
+			-- `a_query_function': The function to determine if a matched event list item is applicable.
+		require
+			a_query_action_attached: a_query_action /= Void
+		local
+			l_grid: like grid_events
+			l_row_count: INTEGER
+			l_index: INTEGER
+			l_stop_index: INTEGER
+			l_row: EV_GRID_ROW
+			l_item: EVENT_LIST_ITEM_I
+			l_found: BOOLEAN
+		do
+			l_grid := grid_events
+			l_row_count := l_grid.row_count
+			if l_row_count > 0 then
+				if l_grid.selected_rows.is_empty then
+					l_index := l_row_count + 1
+				else
+					l_index := l_grid.selected_rows.first.index
+				end
+				l_index := l_index - 1
+				if l_index < l_row_count then
+						-- Cycle index
+					l_index := l_row_count
+				end
+
+					-- Retrieve index of root row
+				l_row := l_grid.row (l_index)
+				if l_row.parent_row_root /= Void then
+					l_row := l_row.parent_row_root
+					l_index := l_row.index
+				end
+
+				from
+					l_row := Void
+				until
+					l_found or
+					l_index = l_stop_index
+				loop
+					l_found := False
+
+					l_row := l_grid.row (l_index)
+					check
+						l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
+					end
+					if l_row.is_show_requested and l_row.is_selectable then
+						l_item ?= l_row.data
+						l_found := l_item /= Void and then a_query_action.item ([l_item])
+					end
+
+					if l_stop_index = 0 then
+							-- Set stop index here so the active item gets a chance
+							-- to be the next item, which happens when there is only one error item
+						l_stop_index := l_index
+					end
+
+						-- Increment index
+					l_index := l_index - 1
+					if l_index > l_row_count then
+							-- Cycle, if requested
+						l_index := l_row_count
+					end
+
+						-- Retrieve index of root row
+					l_row := l_grid.row (l_index)
+					if l_row.parent_row_root /= Void then
+						l_row := l_row.parent_row_root
+						l_index := l_row.index
+					end
+				end
+
+				if l_found then
+					check l_row_attached: l_row /= Void end
+					move_to_row (l_row)
+				end
+			end
+		end
+
+	move_to_row (a_row: EV_GRID_ROW)
+			-- Navigates to a row
+			--
+			-- `a_row': A row to navigate to, and process default actions for
+		require
+			a_row_attached: a_row /= Void
+			a_row_has_parent: a_row.parent /= Void
+			a_row_is_in_grid_events: a_row.index <= grid_events.row_count and then grid_events.row (a_row.index) = a_row
+		do
+				-- Select the row to indicate the error moved to
+			grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+			a_row.enable_select
+			
+				-- Perform default action on row, which should open it in an editor
+			do_default_action (a_row)
+		end
+
 feature {NONE} -- UI manipulation
 
 	update_content_applicable_widgets (a_enable: BOOLEAN)
@@ -267,6 +433,9 @@ feature {NONE} -- Events
 		local
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
+			l_row_count: INTEGER
+			l_index: INTEGER
+			l_selected: BOOLEAN
 		do
 			if is_appliable_event (a_event_item) then
 				check
@@ -277,13 +446,42 @@ feature {NONE} -- Events
 
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
-					l_grid := grid_events
-					l_grid.remove_row (l_row.index)
+					l_selected := l_row.is_selected
 
-					if scroll_list_automatically and l_grid.row_count > 0 then
-						l_row := l_grid.row (l_grid.row_count)
-						l_row.ensure_visible
+					l_grid := grid_events
+					l_index := l_row.index
+					l_grid.remove_row (l_index)
+
+					if item_count > 0 and then l_selected then
+							-- The row was selected so we need to change the selection
+						l_row := Void
+
+						l_row_count := l_grid.row_count
+						if l_row_count > 0 then
+							if l_index > l_row_count then
+								l_index := l_row_count
+							end
+
+							from until
+								l_index = 0 or (l_row /= Void and then l_row.is_show_requested and l_row.is_selectable)
+							loop
+								l_row := l_grid.row (l_index)
+								if l_row.parent_row_root /= Void then
+										-- Select top most rows only
+									l_row := l_row.parent_row_root
+									l_index := l_row.index
+								end
+								l_index := l_index - 1
+							end
+
+							if l_row /= Void and then l_row.is_show_requested and then l_row.is_selectable then
+								check l_row_visible: l_row.is_show_requested end
+									-- Select most applicable row
+								l_grid.select_row (l_row.index)
+							end
+						end
 					end
+
 				end
 
 				if item_count = 0 then
@@ -321,11 +519,11 @@ feature {NONE} -- Events
 
 	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Called when the user double clicks the grid
-		require
-			a_item_attahched: a_item /= Void
-			a_item_is_parented: a_item.is_parented
 		do
-			do_default_action (a_item.row)
+			if a_item /= Void and then a_item.row /= Void then
+					-- Row can be void because the header raises the double press events.
+				do_default_action (a_item.row)
+			end
 		end
 
 feature {NONE} -- Factory

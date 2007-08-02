@@ -69,7 +69,7 @@ feature{NONE} -- Initialization
 			set_left_border (4)
 			set_right_border (4)
 
-			set_picking_from_tooltip (True)
+			set_tooltip_remain_delay_time (200)
 			set_pointer_on_tooltip (True)
 
 			enable_tooltip_shadow

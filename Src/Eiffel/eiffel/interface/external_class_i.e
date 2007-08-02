@@ -91,6 +91,11 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	class_to_recompile: EXTERNAL_CLASS_C
+		do
+			create Result.make (Current)
+		end
+
 feature -- Status Report
 
 	is_external_class: BOOLEAN is True

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: CLASS_I; a_is_typed_pointer: like is_typed_pointer) is
+	make (l: like original_class; a_is_typed_pointer: like is_typed_pointer) is
 			-- Creation of POINTER_B instance where `is_typed_pointer' is initialized
 			-- with `a_is_typed_pointer'.
 		do

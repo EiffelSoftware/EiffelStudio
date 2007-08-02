@@ -551,6 +551,8 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Current ?
 		require
 			type_not_void: type /= Void
+			type_has_class: type.has_associated_class
+			has_associated_class: has_associated_class
 			conforming_type: type.associated_class.conform_to (associated_class)
 		do
 		end

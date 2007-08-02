@@ -2584,6 +2584,54 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 9))
 		end
 
+	frozen errors_and_warnings_next_error_icon: EV_PIXMAP is
+			-- Access to 'next error' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (24, 9))
+		end
+
+	frozen errors_and_warnings_next_error_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'next error' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 9))
+		end
+
+	frozen errors_and_warnings_previous_error_icon: EV_PIXMAP is
+			-- Access to 'previous error' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (25, 9))
+		end
+
+	frozen errors_and_warnings_previous_error_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'previous error' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (25, 9))
+		end
+
+	frozen errors_and_warnings_next_warning_icon: EV_PIXMAP is
+			-- Access to 'next warning' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (26, 9))
+		end
+
+	frozen errors_and_warnings_next_warning_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'next warning' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 9))
+		end
+
+	frozen errors_and_warnings_previous_warning_icon: EV_PIXMAP is
+			-- Access to 'previous warning' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (27, 9))
+		end
+
+	frozen errors_and_warnings_previous_warning_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'previous warning' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 9))
+		end
+
 	frozen view_previous_icon: EV_PIXMAP is
 			-- Access to 'previous' pixmap.
 		once

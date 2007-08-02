@@ -697,8 +697,7 @@
 	<PREF NAME="shortcuts.view.tools.show_output_tool" DESCRIPTION="Shortcut to display Output tool."><SHORTCUT Ctrl="True" Alt="True">O</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_c_output_tool" DESCRIPTION="Shortcut to display C Output tool."><SHORTCUT Ctrl="True" Alt="True">0</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_external_output_tool" DESCRIPTION="Shortcut to display External output tool."><SHORTCUT Ctrl="True" Alt="True">X</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_error_tool" DESCRIPTION="Shortcut to display Error tool."><SHORTCUT Ctrl="True" Alt="True">E</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_warning_tool" DESCRIPTION="Shortcut to display Warning tool."><SHORTCUT Ctrl="True" Alt="True">W</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_errors_and_warnings_tool" DESCRIPTION="Shortcut to display Error and Warnings tool."><SHORTCUT Ctrl="True" Alt="True">E</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_properties_tool" DESCRIPTION="Shortcut to display Properties tool."><SHORTCUT>F4</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_features_tool" DESCRIPTION="Shortcut to display Features tool."><SHORTCUT Ctrl="True" Alt="True">T</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_clusters_tool" DESCRIPTION="Shortcut to display Clusters tool."><SHORTCUT Ctrl="True" Alt="True">U</SHORTCUT></PREF>
@@ -727,6 +726,10 @@
 	<PREF NAME="shortcuts.project.freeze" DESCRIPTION="Shortcut to freeze current project."><SHORTCUT Ctrl="True">F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.finalize" DESCRIPTION="Shortcut to finalize current project."><SHORTCUT Ctrl="True" Shift="True">F7</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.project.cancel" DESCRIPTION="Shortcut to cancel compilation."><SHORTCUT Ctrl="True">Pause</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.project.go_to_next_error" DESCRIPTION="Shortcut to jump to the next compilation error."><SHORTCUT Ctrl="True">F8</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.project.go_to_previous_error" DESCRIPTION="Shortcut to jump to the previous compilation error."><SHORTCUT Ctrl="True" Shift="True">F8</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.project.go_to_next_warning" DESCRIPTION="Shortcut to jump to the next compilation warning."><SHORTCUT Ctrl="True" Alt="True">F8</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.project.go_to_previous_warning" DESCRIPTION="Shortcut to jump to the previous compilation warning."><SHORTCUT Ctrl="True" Shift="True" Alt="True">F8</SHORTCUT></PREF>
 	
 	<PREF NAME="shortcuts.debug.step_by_step" DESCRIPTION="Shortcut to step."><SHORTCUT>F10</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.debug.step_into" DESCRIPTION="Shortcut to step into a routine."><SHORTCUT>F11</SHORTCUT></PREF>

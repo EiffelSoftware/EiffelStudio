@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {ARGUMENT_OPTION_PARSER} (a_cs, a_usage_on_error)
 			set_use_separated_switch_values (True)
+			set_show_switch_arguments_inline (True)
 		end
 
 feature -- Access

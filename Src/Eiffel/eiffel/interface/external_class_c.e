@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: CLASS_I) is
+	make (l: like original_class) is
 			-- Create instance of a compiled class using 'l'.
 		do
 			Precursor {CLASS_C} (l)

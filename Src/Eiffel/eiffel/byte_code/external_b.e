@@ -21,8 +21,6 @@ inherit
 	SHARED_INCLUDE
 
 	SHARED_IL_CONSTANTS
-		rename
-			static_type as il_static_type
 		export
 			{NONE} all
 		end

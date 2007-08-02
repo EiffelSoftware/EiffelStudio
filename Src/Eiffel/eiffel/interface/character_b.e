@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Internal representation of class CHARACTER
 
-class CHARACTER_B 
+class CHARACTER_B
 
 inherit
 	CLASS_B
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (l: CLASS_I; w: BOOLEAN) is
+	make (l: like original_class; w: BOOLEAN) is
 			-- Create instance of CHARACTER_A. If `w' a normal character.
 			-- Otherwise a wide character.
 		do

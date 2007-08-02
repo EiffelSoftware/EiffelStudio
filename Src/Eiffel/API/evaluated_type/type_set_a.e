@@ -1307,7 +1307,7 @@ feature -- Access
 		-- Last type checked.
 		-- Use this feature for error reporting.
 
-feature {NONE} -- Not anymore applicable: a type set has most likley not one, but many associated classes.
+feature -- Not anymore applicable: a type set has most likley not one, but many associated classes.
 
 	associated_class: CLASS_C is
 			-- Class associated to the current type.

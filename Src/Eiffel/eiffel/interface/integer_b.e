@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Internal representation of class INTEGER
 
-class INTEGER_B 
+class INTEGER_B
 
 inherit
 	CLASS_B
@@ -15,10 +15,10 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
-	make (l: CLASS_I; n: INTEGER) is
+	make (l: like original_class; n: INTEGER) is
 			-- Creation of basic class
 		require
 			good_argument: l /= Void

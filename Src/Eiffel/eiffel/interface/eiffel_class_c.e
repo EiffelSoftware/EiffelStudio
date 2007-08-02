@@ -42,7 +42,7 @@ create
 
 feature -- Initialization
 
-	make (l: CLASS_I) is
+	make (l: like original_class) is
 			-- Creation of Current class
 		require
 			good_argument: l /= Void

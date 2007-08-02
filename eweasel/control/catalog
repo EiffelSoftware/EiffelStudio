@@ -339,6 +339,7 @@ test	precursor-once						valid217 tcf fail validity
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system validity
+test	svalid-rename-constant-inspect	svalid002 tcf pass system validity
 
 -- Incrementality tests
 

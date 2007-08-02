@@ -390,6 +390,10 @@ feature {NONE} -- Implementation
 			develop_window.commands.delete_class_cluster_cmd.enable_sensitive
 			develop_window.commands.c_workbench_compilation_cmd.enable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive
+			develop_window.commands.go_to_next_error_command.enable_sensitive
+			develop_window.commands.go_to_previous_error_command.enable_sensitive
+			develop_window.commands.go_to_next_warning_command.enable_sensitive
+			develop_window.commands.go_to_previous_warning_command.enable_sensitive
 			develop_window.refactoring_manager.enable_sensitive
 			develop_window.commands.customized_formatter_command.enable_sensitive
 			develop_window.commands.customized_tool_command.enable_sensitive
@@ -415,6 +419,10 @@ feature {NONE} -- Implementation
 			develop_window.commands.delete_class_cluster_cmd.disable_sensitive
 			develop_window.commands.c_workbench_compilation_cmd.disable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.disable_sensitive
+			develop_window.commands.go_to_next_error_command.disable_sensitive
+			develop_window.commands.go_to_previous_error_command.disable_sensitive
+			develop_window.commands.go_to_next_warning_command.disable_sensitive
+			develop_window.commands.go_to_previous_warning_command.disable_sensitive
 			develop_window.refactoring_manager.disable_sensitive
 			develop_window.refactoring_manager.forget_undo_redo
 			develop_window.commands.customized_formatter_command.disable_sensitive

@@ -840,6 +840,29 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Separator -------------------------------------------------
 			l_project_menu.extend (create {EV_MENU_SEPARATOR})
 
+				-- Go to next error
+			l_command_menu_item := develop_window.commands.go_to_next_error_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+				-- Go to previous error
+			l_command_menu_item := develop_window.commands.go_to_previous_error_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+				-- Go to next warning
+			l_command_menu_item := develop_window.commands.go_to_next_warning_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+				-- Go to previous warning
+			l_command_menu_item := develop_window.commands.go_to_previous_warning_command.new_menu_item
+			develop_window.add_recyclable (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+				-- Separator -------------------------------------------------
+			l_project_menu.extend (create {EV_MENU_SEPARATOR})
+
 				-- System Tool window
 			l_command_menu_item := develop_window.system_cmd.new_menu_item
 			develop_window.add_recyclable (l_command_menu_item)

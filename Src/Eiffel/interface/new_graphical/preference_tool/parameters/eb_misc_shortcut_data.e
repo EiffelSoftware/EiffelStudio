@@ -222,6 +222,10 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([False, True, False, key_strings.item (key_f7).twin.as_string_8], "freeze")
 			l_hash.put ([False, True, True, key_strings.item (key_f7).twin.as_string_8], "finalize")
 			l_hash.put ([False, True, False, key_strings.item (key_pause).twin.as_string_8], "cancel")
+			l_hash.put ([False, True, False, key_strings.item (key_f8).twin.as_string_8], "go_to_next_error")
+			l_hash.put ([False, True, True, key_strings.item (key_f8).twin.as_string_8], "go_to_previous_error")
+			l_hash.put ([True, True, False, key_strings.item (key_f8).twin.as_string_8], "go_to_next_warning")
+			l_hash.put ([True, True, True, key_strings.item (key_f8).twin.as_string_8], "go_to_previous_warning")
 			Result.extend ([l_hash, main_window_group])
 		end
 

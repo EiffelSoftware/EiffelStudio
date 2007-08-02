@@ -147,12 +147,12 @@ feature {NONE} -- Factory
 				end
 				create Result.make (a_item.pointer_enter_actions, a_item.pointer_leave_actions, l_select_actions, agent a_item.is_destroyed)
 				Result.enable_pointer_on_tooltip
---				Result.set_tooltip_window_related_window_agent (agent: EV_WINDOW
---					do
---						if shown and not develop_window.is_recycled and then develop_window.is_visible then
---							Result := develop_window.window
---						end
---					end)
+				Result.set_tooltip_window_related_window_agent (agent: EV_WINDOW
+					do
+						if shown and not develop_window.is_recycled and then develop_window.is_visible then
+							Result := develop_window.window
+						end
+					end)
 				a_item.set_data (Result)
 			end
 

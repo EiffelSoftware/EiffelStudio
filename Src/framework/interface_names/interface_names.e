@@ -182,6 +182,11 @@ feature -- Button texts
 	b_append: STRING_GENERAL is							do Result := locale.translation("Append") end
 	b_ignore: STRING_GENERAL is							do Result := locale.translation("Ignore") end
 
+	b_error: STRING_GENERAL is							do Result := locale.translation("Error") end
+	b_errors: STRING_GENERAL is							do Result := locale.translation("Errors") end
+	b_warning: STRING_GENERAL is						do Result := locale.translation("Warning") end
+	b_warnings: STRING_GENERAL is						do Result := locale.translation("Warnings") end
+
 feature -- Choices
 
 	c_right_click_receiver: HASH_TABLE [STRING_GENERAL, STRING] is
@@ -637,7 +642,23 @@ feature -- Accelerator, focus label and menu name
 	l_group_stone_name: STRING_GENERAL is do Result := locale.translation ("Group stone") end
 	l_target_stone_name: STRING_GENERAL is do Result := locale.translation ("Target stone") end
 
+feature -- Menu entries
+
+	m_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Go to next &error") end
+	m_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Go to previous &error") end
+	m_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to next &warning") end
+	m_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous &warning") end
+
+feature -- Tool tips
+
+	f_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end
+	f_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Navigates to the previous error or the last error found if the start of the list is reached") end
+	f_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Navigates to the next warning or the first warning found if the end of the list is reached") end
+	f_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Navigates to the next warning or the last warning found if the start of the list is reached") end
+	f_filter_warnings: STRING_GENERAL is 				do Result := locale.translation ("Filter shown and navigatable warnings") end
+
 feature -- Formatter displayer names
+
 	l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end
 	l_class_flat_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class list%Nsuch as class clients/suppliers") end
 	l_class_feature_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying features in form of list from a class%Nsuch as attributes/routines") end
@@ -1681,6 +1702,11 @@ feature -- Label texts
 	l_target_scope_customzied_formatter_not_saved: STRING_GENERAL is do Result := locale.translation ("Customized formatters with target scope won't be saved%Nbecause no project has been loaded. Go ahead anyway?") end
 	l_discard_target_scope_customized_formatter: STRING_GENERAL is do Result := locale.translation ("Don't ask me again and discard%Nunsaved target scope customized formatters.") end
 
+	l_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Go to next error") end
+	l_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Go to previous error") end
+	l_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to next warning") end
+	l_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous warning") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING is " (version from)"
@@ -1984,6 +2010,7 @@ feature -- Title part
 	t_open_c_file: STRING_GENERAL is					do Result := locale.translation ("Open C file") end
 	t_reference_position: STRING_GENERAL is				do Result := locale.translation ("Positions") end
 	t_customized_formatter_setup: STRING_GENERAL is 	do Result := locale.translation ("Setup customized formatters") end
+	t_errors_and_warnings_tool: STRING_GENERAL is		do Result := locale.translation ("Error List") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

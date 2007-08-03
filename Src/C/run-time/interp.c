@@ -5654,7 +5654,7 @@ rt_private struct item *oitem(uint32 n)
 		return access_item;
 
 	/* It seems the item is at the left edge of a chunk. Look for previous chunk then... */
-	prev = cop_stack.st_cur;
+	prev = op_stack.st_cur;
 
 	do
 		{

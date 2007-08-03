@@ -10,7 +10,7 @@ class VEEN
 inherit
 	FEATURE_ERROR
 		redefine
-			build_explain
+			print_single_line_error_message, build_explain
 		end
 
 feature -- Access
@@ -70,6 +70,27 @@ feature -- Output
 				end
 				a_text_formatter.add_new_line
 			end
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		local
+			l_text: STRING_32
+		do
+			Precursor (a_text_formatter)
+			create l_text.make (50)
+			l_text.append (" `")
+			l_text.append (identifier)
+			l_text.append ("' taking ")
+			if parameter_count > 0 then
+				l_text.append_integer (parameter_count)
+			else
+				l_text.append ("no")
+			end
+			l_text.append (" arguments.")
+			a_text_formatter.add (l_text)
 		end
 
 feature {NONE} -- Implementation

@@ -2,7 +2,7 @@
 	description: "A set of routines to plug the run-time in the generated C code."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,12 +108,12 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 #ifdef WORKBENCH
 	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
 	{
-		EIF_UNION u_lower;
-		EIF_UNION u_upper;
+		EIF_TYPED_VALUE u_lower;
+		EIF_TYPED_VALUE u_upper;
 		u_lower.type = SK_INT32;
-		u_lower.value.EIF_INTEGER_32_value = 0;
+		u_lower.it_i4 = 0;
 		u_upper.type = SK_INT32;
-		u_upper.value.EIF_INTEGER_32_value = argc-1;
+		u_upper.it_i4 = argc-1;
 		(egc_arrmake)(array, u_lower, u_upper);	/* Call the `make' routine of ARRAY */
 	}
 #else
@@ -200,12 +200,12 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	nstcall = 0;
 #ifdef WORKBENCH
 	{
-		EIF_UNION u_lower;
-		EIF_UNION u_upper;
+		EIF_TYPED_VALUE u_lower;
+		EIF_TYPED_VALUE u_upper;
 		u_lower.type = SK_INT32;
-		u_lower.value.EIF_INTEGER_32_value = 1;
+		u_lower.it_i4 = 1;
 		u_upper.type = SK_INT32;
-		u_upper.value.EIF_INTEGER_32_value = stripped_nbr;
+		u_upper.it_i4 = stripped_nbr;
 		(egc_arrmake)(array, u_lower, u_upper); /* Call feature `make' in class ARRAY[ANY] */
 	}
 #else
@@ -525,7 +525,7 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 #else
 	{
 		BODY_INDEX body_id;
-		struct item *last;
+		EIF_TYPED_VALUE *last;
 
 		CBodyId(body_id,INVARIANT_ID,dtype);
 		if (body_id != INVALID_ID) {

@@ -2,7 +2,7 @@
 	description: "Implementation of copying/cloning routines of ANY."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -423,12 +423,12 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		 */
 
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) clone;
-			EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
+			EIF_TYPED_VALUE * l_target = (EIF_TYPED_VALUE *) clone;
+			EIF_TYPED_VALUE * l_source = (EIF_TYPED_VALUE *) source;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
-			for (offset = 0; count > 0; count--, l_target++, l_source++, offset +=sizeof(EIF_TYPED_ELEMENT)) {
-				if (eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) {
+			for (offset = 0; count > 0; count--, l_target++, l_source++, offset +=sizeof(EIF_TYPED_VALUE)) {
+				if (eif_is_reference_tuple_item(l_source)) {
 					c_field = eif_reference_tuple_item(l_target);
 					if (c_field) {
 						rdeepclone(c_field, clone, offset);

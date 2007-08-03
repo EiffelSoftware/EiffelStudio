@@ -2,7 +2,7 @@
 	description: "Routines for printing an Eiffel object."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -748,7 +748,7 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
  * build_out, as it expects a true object, not a simple type...
  */
 
-rt_shared char *simple_out(struct item *val) 
+rt_shared char *simple_out(EIF_TYPED_VALUE *val) 
 	/* Interpreter value cell */
 {
 	/* Hand build a tagged out representation for simple types. The

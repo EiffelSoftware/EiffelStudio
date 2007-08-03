@@ -2,7 +2,7 @@
 	description: "Garbage collection routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1810,13 +1810,13 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 	 * mark all the references found.
 	 */
 
-	struct item *last;	/* For looping over subsidiary roots */
+	EIF_TYPED_VALUE *last;	/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
 	struct stochunk *s;	/* To walk through each stack's chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 #ifdef DEBUG
-	int saved_roots; struct item *saved_last;
+	int saved_roots; EIF_TYPED_VALUE *saved_last;
 	dprintf(1)("mark_op_stack: scanning operational stack for %s collector\n",
 		marker == GEN_SWITCH ? "generation" : "traditional");
 	flush;
@@ -1840,7 +1840,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 			roots, done ? "last" : "current");
 		saved_roots = roots; saved_last = last;
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; struct item *lst = last;
+			int i; EIF_TYPED_VALUE *lst = last;
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
@@ -1894,7 +1894,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 		dprintf(2)("mark_op_stack: after GC: %d objects in %s chunk\n",
 			roots, done ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; struct item *lst = last;
+			int i; EIF_TYPED_VALUE *lst = last;
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
@@ -2273,26 +2273,26 @@ marked: /* Goto label needed to avoid code duplication */
 			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # of items */
 
 			if (flags & EO_TUPLE) {
-				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
+				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) current;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
 					 * `object_comparison' attribute. */
 				l_item++;
 				offset--;
 				if (rt_g_data.status & (GC_PART | GC_GEN)) {
 					for (; offset > 1; offset--, l_item++ ) {
-						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						if (eif_is_reference_tuple_item(l_item)) {
 							eif_reference_tuple_item(l_item) =
 								hybrid_mark (&eif_reference_tuple_item(l_item));
 						}
 					}
 				} else {
 					for (; offset > 1; offset--, l_item++ ) {
-						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						if (eif_is_reference_tuple_item(l_item)) {
 							(void) hybrid_mark(&eif_reference_tuple_item(l_item));
 						}
 					}		
 				}
-				if ((count >= 1) && (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE)) {
+				if ((count >= 1) && (eif_is_reference_tuple_item(l_item))) {
 						/* If last element of TUPLE is a reference, then we continue the
 						 * iteration. */
 					prev = &eif_reference_tuple_item(l_item);
@@ -3767,26 +3767,26 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # items */
 
 			if (flags & EO_TUPLE) {
-				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
+				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) current;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
 					 * `object_comparison' attribute. */
 				l_item++;
 				offset--;
 				if (gen_scavenge & GS_ON) {
 					for (; offset > 1; offset--, l_item++ ) {
-						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						if (eif_is_reference_tuple_item(l_item)) {
 							eif_reference_tuple_item(l_item) =
 								hybrid_gen_mark (&eif_reference_tuple_item(l_item));
 						}
 					}
 				} else {
 					for (; offset > 1; offset--, l_item++ ) {
-						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						if (eif_is_reference_tuple_item(l_item)) {
 							(void) hybrid_gen_mark(&eif_reference_tuple_item(l_item));
 						}
 					}		
 				}
-				if ((count >= 1) && (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE)) {
+				if ((count >= 1) && eif_is_reference_tuple_item(l_item)) {
 						/* If last element of TUPLE is a reference, then we continue the
 						 * iteration. */
 					prev = &eif_reference_tuple_item(l_item);
@@ -4448,11 +4448,11 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 		o_ref = RT_SPECIAL_INFO(object);
 		refs = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+			EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 			l_item ++;
 			refs--;
 			for (; refs > 0; refs--, l_item++) {
-				if (eif_tuple_item_type (l_item) == EIF_REFERENCE_CODE) {
+				if (eif_is_reference_tuple_item(l_item)) {
 					root = eif_reference_tuple_item(l_item);
 					if (root) {
 						if (!(HEADER(root)->ov_flags & EO_OLD)) {

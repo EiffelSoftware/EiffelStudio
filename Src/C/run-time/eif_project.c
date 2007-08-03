@@ -89,7 +89,7 @@ doc:		<eiffel_classes>STRING</eiffel_classes>
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_UNION);
+rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #else
 rt_public void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);
 #endif
@@ -103,7 +103,7 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>STRING</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_strset)(EIF_REFERENCE, EIF_UNION);
+rt_public void (*egc_strset)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #else
 
 /*
@@ -136,7 +136,7 @@ doc:		<eiffel_classes>ARRAY [ANY]</eiffel_classes>
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_UNION, EIF_UNION);
+rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 #else
 rt_public void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);
 #endif
@@ -161,8 +161,8 @@ doc:		<synchronization>None</synchronization>
 doc:		<eiffel_classes>ROUTINE, PROCEDURE, FUNCTION, PREDICATE</eiffel_classes>
 doc:	</attribute>
 */
-rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION,
-                                  EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION);
+rt_public void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
+                                  EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 
 #else
 /*
@@ -271,8 +271,8 @@ rt_public long *egc_fsize;
 #endif
 
 #ifdef WORKBENCH
-	rt_public EIF_UNION (*egc_equal)(EIF_REFERENCE, EIF_UNION, EIF_UNION); /* {ANY}.equal */
-	rt_public EIF_UNION (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+	rt_public EIF_TYPED_VALUE (*egc_equal)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* {ANY}.equal */
+	rt_public EIF_TYPED_VALUE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #else
 	rt_public EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
 	rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */

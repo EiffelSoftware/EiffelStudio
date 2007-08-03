@@ -9,7 +9,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -173,8 +173,8 @@ rt_public void c_recv_value (EIF_OBJ target)
  */
 {
 	Request pack;
-	struct  item item;
-	uint32  type_flag;
+	EIF_TYPED_VALUE item;
+	uint32 type_flag;
 
 	Request_Clean (pack);
 #ifdef EIF_WINDOWS

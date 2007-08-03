@@ -2,7 +2,7 @@
 	description: "Generic conformance routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1001,7 +1001,7 @@ rt_public int eif_tuple_count (EIF_REFERENCE obj)
 
 rt_shared int eif_tuple_is_atomic (EIF_REFERENCE obj)
 {
-	EIF_ARG_UNION *l_item = (EIF_ARG_UNION *) obj;
+	EIF_VALUE *l_item = (EIF_VALUE *) obj;
 	unsigned int count;
 	
 	if (obj == NULL) {
@@ -1016,7 +1016,7 @@ rt_shared int eif_tuple_is_atomic (EIF_REFERENCE obj)
 		 * `object_comparison' attribute. */
 	l_item++;
 	for (; count > 0 ; count--) {
-		if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+		if (eif_is_reference_tuple_item(l_item)) {
 				/* It has a reference. This is therefore not atomic */
 			return 0;
 		}

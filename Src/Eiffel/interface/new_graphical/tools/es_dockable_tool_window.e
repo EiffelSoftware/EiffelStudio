@@ -237,6 +237,23 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
+feature {NONE} -- Helpers
+
+	frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
+			-- Shared access to a stone redirection helper
+		require
+			not_development_window_is_recycled: not develop_window.is_recycled
+		do
+			Result := internal_stone_director
+			if Result = Void then
+				create Result.make (develop_window)
+				internal_stone_director := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
 	frozen stock_pixmaps: ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
@@ -444,6 +461,9 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Internal implementation cache
+
+	internal_stone_director: like stone_director
+			-- Cached version of `stone_director'
 
 	internal_icon_pixmap: like icon_pixmap
 			-- Cached version of `pixmap'

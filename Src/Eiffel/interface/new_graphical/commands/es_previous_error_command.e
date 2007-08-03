@@ -47,20 +47,20 @@ feature -- Access
 	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with '&' symbol).
 		do
-			Result := "Go to previous &error"
+			Result := interface_names.m_go_to_previous_error
 		end
 
 	description: STRING_GENERAL
 			-- Description of the command as it appears in the
 			-- "customize" dialog.
 		do
-			Result := "Go to previous error"
+			Result := interface_names.l_go_to_previous_error
 		end
 
 	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
-			Result := "Navigates to the previous error or the last error found if the start of the list is reached."
+			Result := interface_names.f_go_to_previous_error
 		end
 
 feature -- Execution

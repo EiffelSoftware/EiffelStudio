@@ -178,7 +178,6 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 	wipe_out is
 			-- Empty `error_list'.
 		do
-			clear_display
 			error_list.wipe_out
 			warning_list.wipe_out
 		end

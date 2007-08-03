@@ -2,7 +2,7 @@
 	description: "Routine to control the debugging behavior."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,7 +82,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include "rt_globals.h"
 
 
-#define ITEM_SZ			sizeof(struct item)
+#define ITEM_SZ			sizeof(EIF_TYPED_ADDRESS)
 
 #define clocnum exvect->ex_locnum
 #define cargnum exvect->ex_argnum
@@ -149,18 +149,18 @@ doc:	</attribute>
 rt_shared struct pgcontext d_cxt;	/* Main program context */
 
 /*
-doc:	<attribute name="cop_stack" return_type="struct opstack" export="public">
+doc:	<attribute name="cop_stack" return_type="struct c_opstack" export="public">
 doc:		<summary>Store local/argument values in debugger.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct opstack cop_stack = {
-	(struct stochunk *) 0,	/* st_hd */
-	(struct stochunk *) 0,	/* st_tl */
-	(struct stochunk *) 0,	/* st_cur */
-	(struct item *) 0,	/* st_top */
-	(struct item *) 0,	/* st_end */
+rt_public struct c_opstack cop_stack = {
+	(struct c_stochunk *) 0,	/* st_hd */
+	(struct c_stochunk *) 0,	/* st_tl */
+	(struct c_stochunk *) 0,	/* st_cur */
+	(EIF_TYPED_ADDRESS *) 0,	/* st_top */
+	(EIF_TYPED_ADDRESS *) 0,	/* st_end */
 };
 #endif /* !EIF_THREADS */
 /*
@@ -401,7 +401,7 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 
 	context->dc_start = IC;				/* Current interpreter counter */
 	context->dc_cur = (struct stochunk *) 0;
-	context->dc_top = (struct item *) 0;
+	context->dc_top = (EIF_TYPED_ADDRESS *) 0;
 	context->dc_exec = (struct ex_vect *) 0;
 }
 
@@ -1709,7 +1709,7 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
  * Once list handling.
  */
 
-rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num) /* %%ss mt last caller */
+rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num) /* %%ss mt last caller */
                          		/* body id of the once function */
                       			/* Number of arguments */
 {
@@ -1752,7 +1752,7 @@ rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register 
  * AUTHOR:  Jerome BOUAZIZ - Arnaud PICHERY
  ************************************************************************/
 
-rt_public struct item *c_stack_allocate(EIF_CONTEXT register int size)
+rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register int size)
 				   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -1760,35 +1760,35 @@ rt_public struct item *c_stack_allocate(EIF_CONTEXT register int size)
 	 */
 
 	EIF_GET_CONTEXT
-	struct item *arena;		/* Address for the arena */
-	struct stochunk *chunk;	/* Address of the chunk */
+	EIF_TYPED_ADDRESS *arena;		/* Address for the arena */
+	struct c_stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
-	chunk = (struct stochunk *) cmalloc(size);
-	if (chunk == (struct stochunk *) 0)
-		return (struct item *) 0;		/* Malloc failed for some reason */
+	chunk = (struct c_stochunk *) cmalloc(size);
+	if (chunk == (struct c_stochunk *) 0)
+		return (EIF_TYPED_ADDRESS *) 0;		/* Malloc failed for some reason */
 
 	cop_stack.st_hd = chunk;						/* New stack (head of list) */
 	cop_stack.st_tl = chunk;						/* One chunk for now */
 	cop_stack.st_cur = chunk;					/* Current chunk */
-	arena = (struct item *) (chunk + 1);		/* Header of chunk */
+	arena = (EIF_TYPED_ADDRESS *) (chunk + 1);		/* Header of chunk */
 	cop_stack.st_top = arena;					/* Empty stack */
 	chunk->sk_arena = arena;					/* Base address */
-	cop_stack.st_end = chunk->sk_end = (struct item *)
+	cop_stack.st_end = chunk->sk_end = (EIF_TYPED_ADDRESS *)
 		((char *) chunk + size);		/* First free location beyond stack */
-	chunk->sk_next = (struct stochunk *) 0;
-	chunk->sk_prev = (struct stochunk *) 0;
+	chunk->sk_next = (struct c_stochunk *) 0;
+	chunk->sk_prev = (struct c_stochunk *) 0;
 
 	return arena;			/* Stack allocated */
 }
 
 rt_public void insert_local_var (uint32 type, void *ptr)
 {
-	struct item *new_local;
+	EIF_TYPED_ADDRESS *new_local;
 	
 	/* insert new local variable/argument on the stack */
-	new_local = c_opush((struct item *)0);
+	new_local = c_opush((EIF_TYPED_ADDRESS *)0);
 	new_local->type = type;
 	new_local->it_addr = ptr;
 }
@@ -1796,10 +1796,10 @@ rt_public void insert_local_var (uint32 type, void *ptr)
 /* Stack handling routine. The following code has been cut/paste from the one
  * found in garcol.c and local.c as of this day. Hence the similarities and the
  * possible differences. What changes basically is that instead of storing
- * (char *) elements, we now store (struct item) ones.
+ * (char *) elements, we now store (EIF_TYPED_ADDRESS) ones.
  */
 
-rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
+rt_public EIF_TYPED_ADDRESS *c_opush(EIF_CONTEXT register EIF_TYPED_ADDRESS *val)
 {
 	/* Push value 'val' on top of the operational stack. If it fails, raise
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
@@ -1807,11 +1807,11 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct item *top = cop_stack.st_top;	/* Top of stack */
+	EIF_TYPED_ADDRESS *top = cop_stack.st_top;	/* Top of stack */
 	
-	if (top == (struct item *) 0)	{			/* No stack yet? */
+	if (top == (EIF_TYPED_ADDRESS *) 0)	{			/* No stack yet? */
 		top = c_stack_allocate(eif_stack_chunk);	/* Create one */
-		if (top == (struct item *) 0)	 		/* Could not create stack */
+		if (top == (EIF_TYPED_ADDRESS *) 0)	 		/* Could not create stack */
 			enomem(MTC_NOARG);					/* No more memory */
 	}
 
@@ -1826,7 +1826,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 				enomem(MTC_NOARG);
 			top = cop_stack.st_top;					/* New top */
 		} else {
-			struct stochunk *current;		/* New current chunk */
+			struct c_stochunk *current;		/* New current chunk */
 
 			/* Update the new stack context (main structure) */
 			current = cop_stack.st_cur = cop_stack.st_cur->sk_next;
@@ -1837,7 +1837,7 @@ rt_public struct item *c_opush(EIF_CONTEXT register struct item *val)
 	}
 
 	cop_stack.st_top = top + 1;			/* Points to next free location */
-	if (val != (struct item *) 0)		/* If value was provided */
+	if (val != (EIF_TYPED_ADDRESS *) 0)		/* If value was provided */
 		memcpy(top, val, ITEM_SZ);		/* Push it on the stack */
 
 	return top;				/* Address of allocated item */
@@ -1851,23 +1851,23 @@ rt_public int c_stack_extend(EIF_CONTEXT register int size)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct item *arena;		/* Address for the arena */
-	struct stochunk *chunk;	/* Address of the chunk */
+	EIF_TYPED_ADDRESS *arena;		/* Address for the arena */
+	struct c_stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
-	chunk = (struct stochunk *) cmalloc(size);
-	if (chunk == (struct stochunk *) 0)
+	chunk = (struct c_stochunk *) cmalloc(size);
+	if (chunk == (struct c_stochunk *) 0)
 		return -1;		/* Malloc failed for some reason */
 
 	SIGBLOCK;									/* Critical section */
-	arena = (struct item *) (chunk + 1);		/* Header of chunk */
-	chunk->sk_next = (struct stochunk *) 0;		/* Last chunk in list */
+	arena = (EIF_TYPED_ADDRESS *) (chunk + 1);		/* Header of chunk */
+	chunk->sk_next = (struct c_stochunk *) 0;		/* Last chunk in list */
 	chunk->sk_prev = cop_stack.st_tl;			/* Preceded by the old tail */
 	cop_stack.st_tl->sk_next = chunk;			/* Maintain link w/previous */
 	cop_stack.st_tl = chunk;						/* New tail */
 	chunk->sk_arena = arena;					/* Where items are stored */
-	chunk->sk_end = (struct item *)
+	chunk->sk_end = (EIF_TYPED_ADDRESS *)
 		((char *) chunk + size);				/* First item beyond chunk */
 	cop_stack.st_top = arena;					/* New top */
 	cop_stack.st_end = chunk->sk_end;			/* End of current chunk */
@@ -1882,16 +1882,16 @@ rt_public void clean_local_vars (int n)
 	c_npop(n);
 }
 
-rt_public struct item *c_opop(void)
+rt_public EIF_TYPED_ADDRESS *c_opop(void)
 {
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct item *top = cop_stack.st_top;	/* Top of the stack */
-	struct stochunk *s;			/* To walk through stack chunks */
-	struct item *arena;			/* Base address of current chunk */
+	EIF_TYPED_ADDRESS *top = cop_stack.st_top;	/* Top of the stack */
+	struct c_stochunk *s;			/* To walk through stack chunks */
+	EIF_TYPED_ADDRESS *arena;			/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -1910,7 +1910,7 @@ rt_public struct item *c_opop(void)
 	s = cop_stack.st_cur = cop_stack.st_cur->sk_prev;
 
 #ifdef MAY_PANIC
-	if (s == (struct stochunk *) 0)
+	if (s == (struct c_stochunk *) 0)
 		eif_panic("operational stack underflow");
 #endif
 
@@ -1929,9 +1929,9 @@ rt_public void c_npop(register int nb_items)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	struct item *top;			/* Current top of operational stack */
-	struct stochunk *s;		/* To walk through stack chunks */
-	struct item *arena;		/* Base address of current chunk */
+	EIF_TYPED_ADDRESS *top;			/* Current top of operational stack */
+	struct c_stochunk *s;		/* To walk through stack chunks */
+	EIF_TYPED_ADDRESS *arena;		/* Base address of current chunk */
 	rt_int_ptr nb = nb_items;
 
 	/* Optimization: try to update the top, hoping it will remain in the
@@ -1983,7 +1983,7 @@ rt_public void c_npop(register int nb_items)
 		
 #ifdef MAY_PANIC
 	/* Consistency check: we cannot have reached the end of the stack */
-	if (s == (struct stochunk *) 0)
+	if (s == (struct c_stochunk *) 0)
 		eif_panic("operational stack underflow");
 #endif
 
@@ -2004,7 +2004,7 @@ rt_public void c_npop(register int nb_items)
 		c_stack_truncate();			/* Eventually remove unused chunks */
 }
 
-rt_public struct item *c_otop(EIF_CONTEXT_NOARG)
+rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)
 {
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
@@ -2012,8 +2012,8 @@ rt_public struct item *c_otop(EIF_CONTEXT_NOARG)
 	 */
 	
 	EIF_GET_CONTEXT
-	struct item *last_item;		/* Address of last item stored */
-	struct stochunk *prev;		/* Previous chunk in stack */
+	EIF_TYPED_ADDRESS *last_item;		/* Address of last item stored */
+	struct c_stochunk *prev;		/* Previous chunk in stack */
 
 	last_item = cop_stack.st_top - 1;
 	if (last_item >= cop_stack.st_cur->sk_arena)
@@ -2025,21 +2025,21 @@ rt_public struct item *c_otop(EIF_CONTEXT_NOARG)
 	prev = cop_stack.st_cur->sk_prev;
 
 #ifdef MAY_PANIC
-	if (prev == (struct stochunk *) 0)
+	if (prev == (struct c_stochunk *) 0)
 		eif_panic("operational stack is empty");
 #endif
 	
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
-rt_public struct item *c_oitem(uint32 n)
+rt_public EIF_TYPED_ADDRESS *c_oitem(uint32 n)
 	{
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
 	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
 	EIF_GET_CONTEXT
-	struct item		*access_item;	/* Address of item we try to access */
-	struct stochunk	*prev;			/* Previous chunk in stack */
-	struct stochunk	*curr;			/* Current chunk in stack */
+	EIF_TYPED_ADDRESS		*access_item;	/* Address of item we try to access */
+	struct c_stochunk	*prev;			/* Previous chunk in stack */
+	struct c_stochunk	*curr;			/* Current chunk in stack */
 
 	access_item = (cop_stack.st_top - 1 - n);
 	if (access_item >= (cop_stack.st_cur->sk_arena))
@@ -2071,8 +2071,8 @@ rt_public void c_stack_truncate(EIF_CONTEXT_NOARG)
 	 */
 
 	EIF_GET_CONTEXT
-	struct item *top;		/* The current top of the stack */
-	struct stochunk *next;			/* Address of next chunk */
+	EIF_TYPED_ADDRESS *top;		/* The current top of the stack */
+	struct c_stochunk *next;			/* Address of next chunk */
 
 	/* We know the program is running, because this function is only called
 	 * via c_npop(), and c_npop() cannot be called by the debugger--RAM.
@@ -2084,28 +2084,28 @@ rt_public void c_stack_truncate(EIF_CONTEXT_NOARG)
 		c_wipe_out(cop_stack.st_cur->sk_next);	/* Free starting at next chunk */
 	} else {								/* Current chunk is nearly full */
 		next = cop_stack.st_cur->sk_next;	/* We are followed by 'next' */
-		if (next != (struct stochunk *) 0) {/* There is indeed a next chunk */
+		if (next != (struct c_stochunk *) 0) {/* There is indeed a next chunk */
 			cop_stack.st_tl = next;			/* New tail chunk */
 			c_wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
 		}
 	}
 }
 
-rt_public void c_wipe_out(register struct stochunk *chunk)
+rt_public void c_wipe_out(register struct c_stochunk *chunk)
 									/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
 
-	struct stochunk *next;	/* Address of next chunk */
+	struct c_stochunk *next;	/* Address of next chunk */
 
-	if (chunk == (struct stochunk *) 0)	/* No chunk */
+	if (chunk == (struct c_stochunk *) 0)	/* No chunk */
 		return;							/* Nothing to be done */
 
-	chunk->sk_prev->sk_next = (struct stochunk *) 0;	/* Previous is last */
+	chunk->sk_prev->sk_next = (struct c_stochunk *) 0;	/* Previous is last */
 
 	for (
 		next = chunk->sk_next;
-		chunk != (struct stochunk *) 0;
+		chunk != (struct c_stochunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
 		eif_rt_xfree((char *) chunk);

@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1033,7 +1033,7 @@ rt_public EIF_REFERENCE tuple_malloc (uint32 ftype)
 
 /*
 doc:	<routine name="tuple_malloc_specific" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Allocated new TUPLE object of type `ftype', of count `count' and `atomic'. TUPLE is alloated through `spmalloc', but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_ELEMENT).</summary>
+doc:		<summary>Allocated new TUPLE object of type `ftype', of count `count' and `atomic'. TUPLE is alloated through `spmalloc', but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_VALUE).</summary>
 doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
 doc:		<param name="count" type="uint32">Number of elements in TUPLE object to create.</param>
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current TUPLE object to create has reference or not? True means no.</param>
@@ -1047,9 +1047,10 @@ doc:	</routine>
 rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
 {
 	EIF_REFERENCE object;
+	uint32 t;
 	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
 
-	object = spmalloc (count * sizeof(EIF_TYPED_ELEMENT) + LNGPAD_2, atomic);
+	object = spmalloc (count * sizeof(EIF_TYPED_VALUE) + LNGPAD_2, atomic);
 
 	if (object == NULL) {
 		eraise ("Tuple allocation", EN_MEM);	/* signals no more memory */
@@ -1057,10 +1058,10 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 			/* Initialize TUPLE headers and end of special object */
 		union overhead * zone = HEADER(object);
 		unsigned int i;
-		EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+		EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 		EIF_REFERENCE ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		RT_SPECIAL_COUNT_WITH_INFO(ref) = count;
-		RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = sizeof(EIF_TYPED_ELEMENT);
+		RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = sizeof(EIF_TYPED_VALUE);
 			/* Mark it is a tuple object */
 		zone->ov_flags |= EO_TUPLE;
 		zone->ov_flags |= ftype;
@@ -1070,10 +1071,27 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 			/* Initialize type information held in TUPLE instance*/
 			/* Don't forget that first element of TUPLE is the BOOLEAN
 			 * `object_comparison' attribute. */
-		l_item->type = EIF_BOOLEAN_CODE;
+		eif_tuple_item_sk_type(l_item) = SK_BOOL;
 		l_item++;
 		for (i = 1; i < count; i++,l_item++) {
-			l_item->type = eif_gen_typecode_with_dftype((int16)ftype, i);
+			switch (eif_gen_typecode_with_dftype((int16)ftype, i)) {
+				case EIF_BOOLEAN_CODE:    t = SK_BOOL; break;
+				case EIF_CHARACTER_CODE:  t = SK_CHAR; break;
+				case EIF_WIDE_CHAR_CODE:  t = SK_WCHAR; break;
+				case EIF_INTEGER_8_CODE:  t = SK_INT8; break;
+				case EIF_INTEGER_16_CODE: t = SK_INT16; break;
+				case EIF_INTEGER_32_CODE: t = SK_INT32; break;
+				case EIF_INTEGER_64_CODE: t = SK_INT64; break;
+				case EIF_NATURAL_8_CODE:  t = SK_UINT8; break;
+				case EIF_NATURAL_16_CODE: t = SK_UINT16; break;
+				case EIF_NATURAL_32_CODE: t = SK_UINT32; break;
+				case EIF_NATURAL_64_CODE: t = SK_UINT64; break;
+				case EIF_REAL_32_CODE:    t = SK_REAL32; break;
+				case EIF_REAL_64_CODE:    t = SK_REAL64; break;
+				case EIF_POINTER_CODE:    t = SK_POINTER; break;
+				case EIF_REFERENCE_CODE:  t = SK_REF; break;
+			}
+			eif_tuple_item_sk_type(l_item) = t;
 		}
 	}
 	return object;
@@ -3829,7 +3847,7 @@ rt_shared void sc_stop(void)
 /*
 doc:	<routine name="eif_box" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Create a boxed version of a basic value.</summary>
-doc:		<param name="v" type="EIF_UNION">Value to be boxed.</param>
+doc:		<param name="v" type="EIF_TYPED_VALUE">Value to be boxed.</param>
 doc:		<return>A newly allocated object if successful.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -3837,26 +3855,26 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE eif_box (EIF_UNION v)
+rt_public EIF_REFERENCE eif_box (EIF_TYPED_VALUE v)
 {
 	EIF_REFERENCE Result;
 	switch (v.type)
 	{
-		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                   Result = v.value.EIF_BOOLEAN_value; break;
-		case SK_CHAR:    Result = RTLN(egc_char_dtype);   *                   Result = v.value.EIF_CHARACTER_value; break;
-		case SK_WCHAR:   Result = RTLN(egc_wchar_dtype);  *(EIF_WIDE_CHAR *)  Result = v.value.EIF_WIDE_CHAR_value; break;
-		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)  Result = v.value.EIF_NATURAL_8_value; break;
-		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) Result = v.value.EIF_NATURAL_16_value; break;
-		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) Result = v.value.EIF_NATURAL_32_value; break;
-		case SK_UINT64:  Result = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) Result = v.value.EIF_NATURAL_64_value; break;
-		case SK_INT8:    Result = RTLN(egc_int8_dtype);   *(EIF_INTEGER_8 *)  Result = v.value.EIF_INTEGER_8_value; break;
-		case SK_INT16:   Result = RTLN(egc_int16_dtype);  *(EIF_INTEGER_16 *) Result = v.value.EIF_INTEGER_16_value; break;
-		case SK_INT32:   Result = RTLN(egc_int32_dtype);  *(EIF_INTEGER_32 *) Result = v.value.EIF_INTEGER_32_value; break;
-		case SK_INT64:   Result = RTLN(egc_int64_dtype);  *(EIF_INTEGER_64 *) Result = v.value.EIF_INTEGER_64_value; break;
-		case SK_REAL32:  Result = RTLN(egc_real32_dtype); *(EIF_REAL_32 *)    Result = v.value.EIF_REAL_32_value; break;
-		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)    Result = v.value.EIF_REAL_64_value; break;
-		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.value.EIF_POINTER_value; break;
-		case SK_REF:     Result = v.value.EIF_REFERENCE_value; break;
+		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                   Result = v.it_b; break;
+		case SK_CHAR:    Result = RTLN(egc_char_dtype);   *                   Result = v.it_c1; break;
+		case SK_WCHAR:   Result = RTLN(egc_wchar_dtype);  *(EIF_WIDE_CHAR *)  Result = v.it_c4; break;
+		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)  Result = v.it_n1; break;
+		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) Result = v.it_n2; break;
+		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) Result = v.it_n4; break;
+		case SK_UINT64:  Result = RTLN(egc_uint64_dtype); *(EIF_NATURAL_64 *) Result = v.it_n8; break;
+		case SK_INT8:    Result = RTLN(egc_int8_dtype);   *(EIF_INTEGER_8 *)  Result = v.it_i1; break;
+		case SK_INT16:   Result = RTLN(egc_int16_dtype);  *(EIF_INTEGER_16 *) Result = v.it_i2; break;
+		case SK_INT32:   Result = RTLN(egc_int32_dtype);  *(EIF_INTEGER_32 *) Result = v.it_i4; break;
+		case SK_INT64:   Result = RTLN(egc_int64_dtype);  *(EIF_INTEGER_64 *) Result = v.it_i8; break;
+		case SK_REAL32:  Result = RTLN(egc_real32_dtype); *(EIF_REAL_32 *)    Result = v.it_r4; break;
+		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)    Result = v.it_r8; break;
+		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.it_p; break;
+		case SK_REF:     Result = v.it_r; break;
 		default: 
 			Result = NULL;	/* To avoid C warnings. */
 			eif_panic("illegal value type");

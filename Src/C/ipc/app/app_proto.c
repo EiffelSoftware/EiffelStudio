@@ -2,7 +2,7 @@
 	description: "Protocol handling. Send requests and wait for answers."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,7 +93,7 @@ rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspec
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
-extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
+extern char *simple_out(EIF_TYPED_VALUE *);	/* Out routine for simple time (from run-time) */
 
 /* debugging macro */
 #ifdef EIF_THREADS
@@ -113,19 +113,19 @@ rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous 
 extern void set_breakpoint_count(int num);	/* Sets the breakpoint interrupt number */
 
 /* Object/local modification routines */
-extern unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, struct item *new_value); /* modify a local variable/ an argument */
-rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, struct item *ip);
-rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, struct item *new_value);
-rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value);
+extern unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local variable/ an argument */
+rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip);
+rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF_TYPED_VALUE *new_value);
+rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value);
 
 /* Dynamic function evaluation */
-rt_private void opush_dmpitem(struct item *item);
-rt_private struct item *previous_otop = NULL;
+rt_private void opush_dmpitem(EIF_TYPED_VALUE *item);
+rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
-extern struct item *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
+extern EIF_TYPED_VALUE *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -505,7 +505,7 @@ rt_shared void dnotify(int evt_type, int evt_data)
 }
 
 /* Encapsulate the 'modify_local' function */
-rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, struct item *ip)
+rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip)
 {
 	static long stack_depth = 0;
 	static long loc_type = 0;
@@ -532,7 +532,7 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 }
 
 /* Encapsulate the 'modify_attr' function */
-rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value)
+rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, EIF_TYPED_VALUE *new_value)
 {
 	static EIF_REFERENCE object = NULL;
 	static long attr_number = 0;
@@ -570,7 +570,7 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 
 
 	char *out = NULL;				/* Buffer where out form is stored */
-	struct item *val = NULL;		/* Value in operational stack */
+	EIF_DEBUG_VALUE val;			/* Value in operational stack */
 	char *addr;				/* Address of EIF_OBJ */
 
 	switch (what->op_1) {		/* First value describes request */
@@ -599,23 +599,23 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		out = dview(addr);
 		break;
 	case IN_LOCAL:					/* Local inspection */
-		val = ivalue(IV_LOCAL, what->op_2,0);
+		ivalue(&val, IV_LOCAL, what->op_2,0);
 		break;
 	case IN_ARG:					/* Argument inspection */
-		val = ivalue(IV_ARG, what->op_2,0);
+		ivalue(&val, IV_ARG, what->op_2,0);
 		break;
 	case IN_CURRENT:				/* Value of Current */
-		val = ivalue(IV_CURRENT,0,0);		/* %%zs misuse, added ",0" */
+		ivalue(&val, IV_CURRENT,0,0);		/* %%zs misuse, added ",0" */
 		break;
 	case IN_RESULT:					/* Value of Result */
-		val = ivalue(IV_RESULT,0,0);		/* %%zs misuse, added ",0" */
+		ivalue(&val, IV_RESULT,0,0);		/* %%zs misuse, added ",0" */
 		break;
 	default:
 		eif_panic("BUG inspect");
 	}
 
 	if (what->op_1 != IN_ADDRESS)	/* Not an address request */
-		out = simple_out(val);			/* May be a simple type */
+		out = simple_out(&val.value);			/* May be a simple type */
 
 	/* Now we got a string, holding the appropriate representation of the
 	 * object. Send it to the remote process verbatim and free it.
@@ -1233,89 +1233,75 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 
 		/* Send the items within the bounds */
 	if (count > 0) {
-		EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+		EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 			/* Don't forget that first element of TUPLE is the BOOLEAN
 			 * `object_comparison' attribute which we don't display for now. */
 		l_item++;
 		for (i = 1; count > 0; count--, i++, l_item++) {
 			sprintf (buffer, "%d", i);
 			app_twrite (buffer, strlen(buffer));
-			switch (eif_tuple_item_type(l_item)) {
-				case EIF_NATURAL_8_CODE:
-					sk_type = SK_UINT8;
+			sk_type = eif_tuple_item_sk_type(l_item);
+			switch (sk_type) {
+				case SK_UINT8:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_natural_8_tuple_item(l_item), sizeof(EIF_NATURAL_8));
 					break;
-				case EIF_NATURAL_16_CODE:
-					sk_type = SK_UINT16;
+				case SK_UINT16:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_natural_16_tuple_item(l_item), sizeof(EIF_NATURAL_16));
 					break;
-				case EIF_NATURAL_32_CODE:
-					sk_type = SK_UINT32;
+				case SK_UINT32:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_natural_32_tuple_item(l_item), sizeof(EIF_NATURAL_32));
 					break;
-				case EIF_NATURAL_64_CODE:
-					sk_type = SK_UINT64;
+				case SK_UINT64:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_natural_64_tuple_item(l_item), sizeof(EIF_NATURAL_64));
 					break;
-				case EIF_INTEGER_8_CODE:
-					sk_type = SK_INT8;
+				case SK_INT8:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_integer_8_tuple_item(l_item), sizeof(EIF_INTEGER_8));
 					break;
-				case EIF_INTEGER_16_CODE:
-					sk_type = SK_INT16;
+				case SK_INT16:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_integer_16_tuple_item(l_item), sizeof(EIF_INTEGER_16));
 					break;
-				case EIF_INTEGER_32_CODE:
-					sk_type = SK_INT32;
+				case SK_INT32:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_integer_32_tuple_item(l_item), sizeof(EIF_INTEGER_32));
 					break;
-				case EIF_INTEGER_64_CODE:
-					sk_type = SK_INT64;
+				case SK_INT64:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_integer_64_tuple_item(l_item), sizeof(EIF_INTEGER_64));
 					break;
-				case EIF_BOOLEAN_CODE:
-					sk_type = SK_BOOL;
+				case SK_BOOL:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_boolean_tuple_item(l_item), sizeof(EIF_BOOLEAN));
 					break;
-				case EIF_CHARACTER_CODE:
-					sk_type = SK_CHAR;
+				case SK_CHAR:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
 					break;
-				case EIF_REAL_64_CODE:
-					sk_type = SK_REAL64;
+				case SK_REAL64:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_real_64_tuple_item(l_item), sizeof(EIF_REAL_64));
 					break;
-				case EIF_REAL_32_CODE:
-					sk_type = SK_REAL32;
+				case SK_REAL32:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_real_32_tuple_item(l_item), sizeof(EIF_REAL_32));
 					break;
-				case EIF_POINTER_CODE:
-					sk_type = SK_POINTER;
+				case SK_POINTER:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_pointer_tuple_item(l_item), sizeof(EIF_POINTER));
 					break;
-				case EIF_WIDE_CHAR_CODE:
-					sk_type = SK_WCHAR;
+				case SK_WCHAR:
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_WIDE_CHAR));
 					break;
-				case EIF_REFERENCE_CODE:
+				case SK_REF:
 					{
 						EIF_BOOLEAN is_special = EIF_FALSE, is_void = FALSE;
 						EIF_REFERENCE reference = eif_reference_tuple_item(l_item);
-						sk_type = SK_REF;
 						app_twrite (&sk_type, sizeof(uint32));
 
 						if (reference) {
@@ -1395,7 +1381,7 @@ rt_private void string_inspect(EIF_OBJ object)
 	app_twrite (string_area, string_count);
 }
 
-rt_private unsigned char smodify_attr(char *object, long attr_number, struct item *new_value)
+rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_VALUE *new_value)
 	{
 	/* Modify an attribute of a special object */
 
@@ -1470,7 +1456,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 /* addr: address of the object where attribute to modify lies */
 /* attr_number: */
 /* new_value: */
-rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, struct item *new_value)
+rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF_TYPED_VALUE *new_value)
 {
 	/* modify recursively `object''s attribute */
 
@@ -1564,7 +1550,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, str
 	return 0;
 }
 
-rt_private void opush_dmpitem(struct item *item)
+rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 	{
 	if (otop_recorded==0)
 		{
@@ -1620,7 +1606,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 {
 	/* Must be the typeid of a Reference class */
 
-	struct item *ip = NULL;
+	EIF_TYPED_VALUE *ip = NULL;
 	Request rqst;				/* What we receive and send back */
 	struct dump dumped;			/* Item returned */
 	EIF_REFERENCE tmp = NULL;
@@ -1655,8 +1641,8 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 		send_ack(sp, AK_OK);
 	}
 	
-	ip = (struct item*) malloc (sizeof (struct item));
-	memset (ip, 0, sizeof(struct item));	
+	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
+	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
 	if (s != NULL) {
 		tid = eif_type_id(s);
 		if (tid != -1) {
@@ -1669,11 +1655,9 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 		loc1 = (EIF_REFERENCE)RTCCL(tmp);
 		ip->it_ref = (EIF_REFERENCE) loc1;
 		ip->type = SK_REF | Dtype(ip->it_ref);
-		ip->it_addr = NULL;
 	} else {
 		ip->it_ref = (EIF_REFERENCE) 0;
 		ip->type = SK_VOID;
-		ip->it_addr = NULL;
 	}
 
 	Request_Clean (rqst);
@@ -1686,7 +1670,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 
 rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
-	struct item *ip;
+	EIF_TYPED_VALUE *ip;
 	Request rqst;					/* What we send back */
 	struct dump dumped;			/* Item returned */
 	int exception_occured = 0;	/* Exception occurred ? */
@@ -1697,7 +1681,7 @@ rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_
 	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
 	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
 	c_opop();
-	if (ip == (struct item *) 0) {
+	if (ip == (EIF_TYPED_VALUE *) 0) {
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
 		dumped.dmp_item = NULL;			/* arguments to be sent. */
 	} else {

@@ -159,7 +159,7 @@ feature -- Command
 			Result.draw_pixel_buffer (interface, a_rect)
 		end
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
+	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -171,9 +171,9 @@ feature -- Command
 
 			if is_gdi_plus_installed then
 				create l_graphics.make_from_image (gdip_bitmap)
-				create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
+				create l_src_rect.make (0, 0, a_pixel_buffer.width, a_pixel_buffer.height)
 				create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
-				l_graphics.draw_image_with_src_rect_dest_rect (l_imp.gdip_bitmap, l_src_rect, l_dest_rect)
+				l_graphics.draw_image_with_dest_rect_src_rect (l_imp.gdip_bitmap, l_dest_rect, l_src_rect)
 
 				l_dest_rect.dispose
 				l_src_rect.dispose
@@ -376,6 +376,33 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			Result.set_m_row (<<-1, -1, -1, 0, 0>>, 4)
 		ensure
 			not_void: Result /= Void
+		end
+
+feature -- Obsolete
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
+		local
+			l_imp: EV_PIXEL_BUFFER_IMP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_dest_rect, l_src_rect: WEL_RECT
+		do
+			l_imp ?= a_pixel_buffer.implementation
+			check not_void: l_imp /= Void end
+
+			if is_gdi_plus_installed then
+				create l_graphics.make_from_image (gdip_bitmap)
+				create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
+				create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
+				l_graphics.draw_image_with_src_rect_dest_rect (l_imp.gdip_bitmap, l_src_rect, l_dest_rect)
+
+				l_dest_rect.dispose
+				l_src_rect.dispose
+				l_graphics.destroy_item
+				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
+			else
+				pixmap.draw_pixmap (a_dest_rect.x, a_dest_rect.y, l_imp.pixmap)
+			end
 		end
 
 indexing

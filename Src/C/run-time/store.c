@@ -780,8 +780,8 @@ rt_shared void internal_store(char *object)
 			printf ("Storing in new recoverable format\n");
 #endif
 			if (eif_is_new_recoverable_format) {
-				c = INDEPENDENT_STORE_5_5;
-				rt_kind_version = INDEPENDENT_STORE_5_5;
+				c = INDEPENDENT_STORE_6_0;
+				rt_kind_version = INDEPENDENT_STORE_6_0;
 			}
 		}
 		else {

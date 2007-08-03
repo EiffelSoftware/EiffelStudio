@@ -1037,6 +1037,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 			break;
 		case RECOVERABLE_STORE_5_3:
 		case INDEPENDENT_STORE_5_5:
+		case INDEPENDENT_STORE_6_0:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = RECOVERABLE_STORE;
 			rt_kind_version = rt_type;
@@ -1115,6 +1116,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		case INDEPENDENT_STORE_5_0:
 		case RECOVERABLE_STORE_5_3:
 		case INDEPENDENT_STORE_5_5:
+		case INDEPENDENT_STORE_6_0:
 			independent_retrieve_reset ();
 			break;
 	}
@@ -4975,6 +4977,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	EIF_TYPED_VALUE *l_item;
 	char l_type;
 
+	REQUIRE ("TUPLE object", (!object) || (HEADER(object)->ov_flags & EO_TUPLE));
+
 	if (object != NULL)
 		addr = object;
 	else {
@@ -4987,7 +4991,12 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 
 	l_item = (EIF_TYPED_VALUE *) addr;
 		/* Don't forget that first element of TUPLE is the BOOLEAN
-		 * `object_comparison' attribute. */
+		 * `object_comparison' attribute. Version prior to INDEPENDENT_STORE_6_0 did
+		 * not store it, so we simply skip it and leave it to its default value, i.e. False */
+	if (rt_kind_version < INDEPENDENT_STORE_6_0) {
+		l_item++;
+		count--;
+	}
 	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
 		for (; count > 0; count--, l_item++) {
 			ridr_multi_char(&l_type, 1);

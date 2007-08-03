@@ -41,15 +41,19 @@ feature {NONE} -- Initialization
 		require
 			not_is_initialized: not is_initialized
 		do
-			if has_tool_bar then
-				widget.extend (create_tool_container_widget (user_widget))
-			else
-				widget.extend (user_widget)
+			if not is_initializing then
+				is_initializing := True
+				if has_tool_bar then
+					widget.extend (create_tool_container_widget (user_widget))
+				else
+					widget.extend (user_widget)
+				end
+				build_tool_interface (user_widget)
+				is_initializing := False
+				is_initialized := True
 			end
-			build_tool_interface (user_widget)
-			is_initialized := True
 		ensure
-			is_initialized: is_initialized
+			is_initialized: not is_initializing implies is_initialized
 		end
 
 	on_before_initialize
@@ -136,11 +140,6 @@ feature {NONE} -- Access
 			if Result = Void then
 				Result := create_widget
 				internal_user_widget := Result
-
-				if not is_initialized then
-						-- Initialize if necessary.
-					initialize
-				end
 			end
 		ensure then
 			result_attached: Result /= Void
@@ -314,10 +313,7 @@ feature -- Basic operations
 			if not is_initialized then
 					-- Delayed initialization may mean the user interface has not been shown yet.
 					-- Call to user_widget should create the widget
-				if user_widget = Void then
-						-- Just in case user_widget does not retrieve a widget, try initialize.
-					initialize
-				end
+				initialize
 			end
 			Precursor {EB_TOOL}
 		ensure then
@@ -328,6 +324,9 @@ feature -- Status report
 
 	is_initialized: BOOLEAN
 			-- Indicates if the user interface has been initialized
+
+	is_initializing: BOOLEAN
+			-- Indicates if the user interface is currently being initialized
 
 feature {NONE} -- Status report
 
@@ -469,6 +468,9 @@ feature {NONE} -- Internal implementation cache
 
 	internal_right_tool_bar_widget: CELL [like right_tool_bar_widget]
 			-- Cached version of `right_tool_bar_widget'
+
+invariant
+	not_is_initialized: is_initializing implies not is_initialized
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

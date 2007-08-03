@@ -398,7 +398,7 @@ feature {NONE} -- Agents
 		do
 			create l_dialog.make (internal_custom_widget)
 			create l_helper.make
-			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
+			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_shared.title_bar_height)
 			l_dialog.show
 			l_dialog.set_focus
 		end

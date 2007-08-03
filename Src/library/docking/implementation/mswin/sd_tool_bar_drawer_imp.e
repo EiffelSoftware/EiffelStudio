@@ -68,7 +68,7 @@ feature{NONE} -- Initlization
 
 	base_make_called: BOOLEAN is True
 			-- Not breaking the invariant.
-			
+
 feature -- Redefine
 
 	internal_buffered_dc: WEL_DC
@@ -163,15 +163,34 @@ feature -- Redefine
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
 			-- Redefine
 		local
-			l_rect: WEL_RECT
+			l_rect, l_rect_2: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
+			l_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 		do
 		 	if internal_buffered_dc /= Void then
 				l_vision_rect := a_arguments.item.rectangle
 
 				create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-				draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
+				l_button ?= a_arguments.item
+				if l_button = Void then
+					draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
+				else
+					-- Specail handling for SD_TOOL_BAR_DUAL_POPUP_BUTTON background
+					if l_button.is_dropdown_area then
+						-- Draw the background as a whole without separator
+						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+					else
+						-- Draw dropdown area which cover the whole background
+						create l_rect_2.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
+						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+
+						-- Draw front area, overwrite the front
+						create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right - l_button.dropdrown_width - l_button.gap // 2, l_vision_rect.bottom)
+						draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, {WEL_THEME_PART_CONSTANTS}.tp_splitbutton)
+					end
+				end
+
 				draw_pixmap (internal_buffered_dc, a_arguments)
 				draw_text (internal_buffered_dc, a_arguments)
 		 	end
@@ -284,18 +303,26 @@ feature {NONE} -- Implementation
 		local
 			l_coordinate: EV_COORDINATE
 			l_button: SD_TOOL_BAR_BUTTON
-
+			l_dropdown_button: SD_TOOL_BAR_POPUP_BUTTON
 			l_graphics: WEL_GDIP_GRAPHICS
-			l_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_buffer_imp, l_dropdown_imp: EV_PIXEL_BUFFER_IMP
 			l_dest_rect, l_src_rect: WEL_RECT
+			l_dropdown: EV_PIXEL_BUFFER
+			l_left: INTEGER
 		do
 			l_button ?= a_arguments.item
+			l_dropdown_button ?= a_arguments.item
 			if l_button /= Void and then l_button.pixel_buffer /= Void and l_button.tool_bar /= Void then
 				if not a_arguments.item.is_sensitive then
 					arguments := a_arguments
 					dc_to_draw := a_dc_to_draw
 					pixmap_coordinate := l_button.pixmap_position
 					desaturation_pixel_buffer (l_button.pixel_buffer)
+
+					if l_dropdown_button /= Void then
+						pixmap_coordinate.set_x (l_dropdown_button.dropdown_left)
+						desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer)
+					end
 				else
 					create l_graphics.make_from_dc (a_dc_to_draw)
 					l_buffer_imp ?= l_button.pixel_buffer.implementation
@@ -303,6 +330,17 @@ feature {NONE} -- Implementation
 					create l_dest_rect.make (l_coordinate.x, l_coordinate.y, l_coordinate.x + l_buffer_imp.width, l_coordinate.y + l_buffer_imp.height)
 					create l_src_rect.make (0, 0, l_buffer_imp.width, l_buffer_imp.height)
 					l_graphics.draw_image_with_src_rect_dest_rect (l_buffer_imp.gdip_bitmap, l_dest_rect, l_src_rect)
+
+					if l_dropdown_button /= Void then
+						l_dropdown := l_dropdown_button.dropdown_pixel_buffer
+						l_dropdown_imp ?= l_dropdown.implementation
+						l_left := l_dropdown_button.dropdown_left
+
+						create l_dest_rect.make (l_left, l_coordinate.y, l_left + l_dropdown.width , l_coordinate.y + l_dropdown.height)
+						create l_src_rect.make (0, 0, l_dropdown.width, l_dropdown.height)
+						l_graphics.draw_image_with_src_rect_dest_rect (l_dropdown_imp.gdip_bitmap, l_dest_rect, l_src_rect)
+					end
+
 					l_graphics.dispose
 				end
 			end

@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			grid_token_support.synchronize_color_or_font_change_with_editor
 			grid_token_support.enable_grid_item_pnd_support
 			grid_token_support.enable_ctrl_right_click_to_open_new_window
+			grid_token_support.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
 		end
 
 feature {NONE} -- Clean up

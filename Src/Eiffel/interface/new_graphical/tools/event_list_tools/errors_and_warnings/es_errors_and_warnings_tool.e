@@ -54,7 +54,7 @@ feature {NONE} -- Iniitalization
 
 			l_col := a_widget.column (context_column)
 			l_col.set_title ("Context")
-			l_col.set_width (250)
+			l_col.set_width (200)
 
 			l_col := a_widget.column (lines_column)
 			l_col.set_title ("Line")
@@ -66,6 +66,9 @@ feature {NONE} -- Iniitalization
 
 			grid_events.enable_tree
 			grid_events.disable_row_height_fixed
+
+				-- Bind redirecting pick and drop actions
+			stone_director.bind (grid_events)
 		end
 
 feature -- Access
@@ -150,6 +153,42 @@ feature {NONE} -- Command items
 
 feature {NONE} -- Query
 
+	event_context_stone (a_event_item: EVENT_LIST_ITEM_I): STONE
+			-- Retrieve an event item's context stone, if one is available
+			--
+			-- `a_event_item': An event item to retrieve a strone from.
+			-- `Result': A context stone, if any.
+		require
+			a_event_item_attached: a_event_item /= Void
+			is_appliable_event: is_appliable_event (a_event_item)
+		local
+			l_row: EV_GRID_ROW
+			l_error: ERROR
+			l_line: INTEGER
+			l_classi_stone: CLASSI_STONE
+			l_classC_stone: CLASSC_STONE
+		do
+			l_row := find_event_row (a_event_item)
+			if l_row /= Void then
+				Result ?= l_row.item (context_column).data
+				if Result /= Void then
+					l_error ?= a_event_item.data
+					if l_error /= Void then
+						l_line := l_error.line
+						if l_line > 0 then
+							l_classc_stone ?= Result
+							if l_classc_stone /= Void then
+								create {COMPILED_LINE_STONE}Result.make_with_line (l_classc_stone.e_class, l_line, True)
+							else
+								l_classi_stone ?= Result
+								create {UNCOMPILED_LINE_STONE}Result.make_with_line (l_classi_stone.class_i, l_line, True)
+							end
+						end
+					end
+				end
+			end
+		end
+
 	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' can be shown with the current event list tool
 		do
@@ -170,6 +209,16 @@ feature {NONE} -- Query
 			a_event_item_attached: a_event_item /= Void
 		do
 			Result := (({WARNING}) #? a_event_item.data) /= Void
+		ensure
+			not_is_error_event: Result implies not is_error_event (a_event_item)
+		end
+
+	is_event_context_available (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Determines if event `a_event_item' has a context available
+		require
+			a_event_item_attached: a_event_item /= Void
+		do
+
 		ensure
 			not_is_error_event: Result implies not is_error_event (a_event_item)
 		end
@@ -198,7 +247,12 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 		do
 			if show_errors then
 				if error_count > 0 then
-					move_next (agent is_error_event)
+					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_error_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
 				end
 			end
 		end
@@ -211,7 +265,12 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 		do
 			if show_errors then
 				if error_count > 0 then
-					move_previous (agent is_error_event)
+					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_error_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
 				end
 			end
 		end
@@ -224,7 +283,12 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 		do
 			if show_warnings then
 				if warning_count > 0 then
-					move_next (agent is_warning_event)
+					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
 				end
 			end
 		end
@@ -237,7 +301,12 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 		do
 			if show_warnings then
 				if warning_count > 0 then
-					move_previous (agent is_warning_event)
+					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+						require
+							a_item_attached: a_item /= Void
+						do
+							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
+						end)
 				end
 			end
 		end
@@ -251,53 +320,12 @@ feature {NONE} -- Basic operations
 		local
 			l_event_item: EVENT_LIST_ITEM_I
 			l_stone: STONE
-			l_error: ERROR
-			l_eiffel_error: EIFFEL_ERROR
-			l_eiffel_warning: EIFFEL_WARNING
-			l_syntax_warning: SYNTAX_WARNING
-			l_syntax_error: SYNTAX_ERROR
-			l_line: INTEGER
-			l_class_c: CLASS_C
 		do
 			l_event_item ?= a_row.data
 			if l_event_item /= Void then
-				l_error ?= l_event_item.data
-				if l_error /= Void then
-					l_line := l_error.line
-					l_eiffel_error ?= l_error
-					if l_eiffel_error /= Void then
-						l_class_c := l_eiffel_error.class_c
-					else
-						l_eiffel_warning ?= l_error
-						if l_eiffel_warning /= Void then
-							l_class_c := l_eiffel_warning.associated_class
-						else
-							l_syntax_warning ?= l_error
-							if l_syntax_warning /= Void then
-								l_class_c := l_syntax_warning.associated_class
-							else
-								l_syntax_error ?= l_error
-								if l_syntax_error /= Void then
-									l_class_c := l_syntax_error.associated_class
-								end
-							end
-						end
-					end
-
-					if l_class_c /= Void then
-							-- Create stone to a compiled class
-						if l_line > 0 then
-							create {COMPILED_LINE_STONE}l_stone.make_with_line (l_class_c, l_line, True)
-						else
-							create {CLASSC_STONE}l_stone.make (l_class_c)
-						end
-					else
-						-- Need to locate a class using a file name, maybe
-					end
-
-					if l_stone /= Void and then l_stone.is_valid then
-						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
-					end
+				l_stone := event_context_stone (l_event_item)
+				if l_stone /= Void and then l_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
 		end
@@ -322,6 +350,7 @@ feature {NONE} -- Events
 				else
 					check False end
 				end
+				update_content_applicable_navigation_buttons
 			end
 		end
 
@@ -343,6 +372,7 @@ feature {NONE} -- Events
 				else
 					check False end
 				end
+				update_content_applicable_navigation_buttons
 			end
 		end
 
@@ -583,7 +613,11 @@ feature {NONE} -- User interface manipulation
 			else
 				error_info_command.disable_sensitive
 			end
+		end
 
+	update_content_applicable_navigation_buttons
+			-- Updates content applicable navigation buttons
+		do
 			if error_count > 0 then
 				go_to_next_error_command.enable_sensitive
 				go_to_previous_error_command.enable_sensitive
@@ -613,6 +647,7 @@ feature {NONE} -- User interface manipulation
 			l_error: ERROR
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
+			l_content: LIST [EDITOR_TOKEN]
 			l_pixmap: EV_PIXMAP
 			l_row: EV_GRID_ROW
 		do
@@ -673,6 +708,11 @@ feature {NONE} -- User interface manipulation
 				if l_gen.last_line /= Void then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line)
 					a_row.set_item (context_column, l_editor_item)
+					l_content := l_gen.last_line.content
+					if not l_content.is_empty then
+							-- Set context pebble
+						l_editor_item.set_data (l_gen.last_line.content.last.pebble)
+					end
 				end
 
 					-- Line number

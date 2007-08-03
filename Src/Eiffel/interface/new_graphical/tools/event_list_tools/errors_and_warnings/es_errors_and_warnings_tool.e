@@ -105,11 +105,11 @@ feature {NONE} -- User interface items
 	warnings_button: SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to show/hide warning events
 
-	filter_button: SD_TOOL_BAR_BUTTON
-			-- Filter button to filter information in list
-
 	error_info_button: SD_TOOL_BAR_BUTTON
 			-- Error information button
+
+	filter_button: SD_TOOL_BAR_POPUP_BUTTON
+			-- Filter button to filter information in list
 
 feature {NONE} -- Command items
 
@@ -313,6 +313,7 @@ feature {NONE} -- Events
 			if not is_initialized then
 				initialize
 			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count + 1)
@@ -322,7 +323,6 @@ feature {NONE} -- Events
 					check False end
 				end
 			end
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 		end
 
 	on_event_removed (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I) is
@@ -334,6 +334,7 @@ feature {NONE} -- Events
 			if not is_initialized then
 				initialize
 			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count - 1)
@@ -343,7 +344,6 @@ feature {NONE} -- Events
 					check False end
 				end
 			end
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 		end
 
 feature {NONE} -- Events
@@ -460,7 +460,7 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (7)
+			create Result.make (6)
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)

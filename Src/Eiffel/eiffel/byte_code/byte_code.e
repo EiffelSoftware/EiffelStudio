@@ -441,7 +441,7 @@ feature -- Settings
 					i > count
 				loop
 					if context.workbench_mode then
-						type_name := once "EIF_UNION"
+						type_name := once "EIF_TYPED_VALUE"
 					else
 						type_name := real_type (arguments.item (i)).c_type.c_string
 					end
@@ -872,7 +872,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

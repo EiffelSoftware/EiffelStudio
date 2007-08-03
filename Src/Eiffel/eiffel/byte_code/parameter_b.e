@@ -141,7 +141,7 @@ feature -- Status report
 			-- Name of the target C type
 		do
 			if is_compaund then
-				Result := "EIF_UNION"
+				Result := "EIF_TYPED_VALUE"
 			else
 				Result := real_type (attachment_type).c_type.c_string
 			end

@@ -234,7 +234,7 @@ feature -- C code generation
 
 					-- Generation of function's header
 				if byte_context.workbench_mode then
-					return_type_name := once "EIF_UNION"
+					return_type_name := once "EIF_TYPED_VALUE"
 				else
 					return_type_name := type_c.c_string
 				end
@@ -264,7 +264,7 @@ feature -- C code generation
 					buffer.put_character (')')
 				else
 					if byte_context.workbench_mode then
-						buffer.put_string ("EIF_UNION r;")
+						buffer.put_string ("EIF_TYPED_VALUE r;")
 						buffer.put_new_line
 						buffer.put_string ("r.")
 						type_c.generate_typed_tag (buffer)
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

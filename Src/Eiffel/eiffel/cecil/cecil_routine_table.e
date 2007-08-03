@@ -178,13 +178,13 @@ end;
 								arg_types.put (feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type.c_string, j + 1)
 								j := j - 1
 							end
-							buffer.generate_extern_declaration ("EIF_UNION", routine_name, <<>>)
+							buffer.generate_extern_declaration ("EIF_TYPED_VALUE", routine_name, <<>>)
 							buffer.generate_pure_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
 							buffer.put_character ('{')
 							buffer.indent
 							buffer.put_new_line
 							if arg_count > 0 then
-								buffer.put_string ("EIF_UNION u [")
+								buffer.put_string ("EIF_TYPED_VALUE u [")
 								buffer.put_integer (arg_count)
 								buffer.put_string ("];")
 								buffer.put_new_line
@@ -208,7 +208,7 @@ end;
 									buffer.put_string (arg_names [j + 1])
 									buffer.put_character (';')
 									buffer.put_new_line
-									arg_types [j + 1] := "EIF_UNION"
+									arg_types [j + 1] := "EIF_TYPED_VALUE"
 									j := j - 1
 								end
 							end

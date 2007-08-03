@@ -172,7 +172,7 @@ feature -- Element Change
 				add_in_log (class_type, internal_name)
 
 				if byte_context.workbench_mode then
-					return_type_name := once "EIF_UNION"
+					return_type_name := once "EIF_TYPED_VALUE"
 				else
 					return_type_name := result_type.c_type.c_string
 				end
@@ -181,7 +181,7 @@ feature -- Element Change
 					<<"Current">>, <<"EIF_REFERENCE">>)
 				buffer.indent
 				if byte_context.workbench_mode then
-					buffer.put_string ("EIF_UNION r;")
+					buffer.put_string ("EIF_TYPED_VALUE r;")
 					buffer.put_new_line
 					buffer.put_string ("r.")
 					result_type.c_type.generate_typed_tag (buffer)

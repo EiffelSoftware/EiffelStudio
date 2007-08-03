@@ -10,7 +10,7 @@ class UNUSED_LOCAL_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain
+			build_explain, trace_primary_context, print_single_line_error_message
 		end
 
 	SHARED_NAMES_HEAP
@@ -41,7 +41,7 @@ feature -- Properties
 	associated_feature: E_FEATURE
 			-- Feature containing the unused local variable
 
-	unused_locals: LINKED_LIST [TUPLE [STRING, TYPE_A]]
+	unused_locals: LINKED_LIST [TUPLE [name: STRING; type: TYPE_A]]
 			-- List of unused local names and type.
 
 	code: STRING is
@@ -51,6 +51,20 @@ feature -- Properties
 		end
 
 feature -- Output
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if associated_feature = Void then
+				Precursor (a_text_formatter)
+			else
+				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
+				a_text_formatter.add (".")
+				a_text_formatter.add_class (associated_class.lace_class)
+				a_text_formatter.add (".")
+				a_text_formatter.add_feature (associated_feature, associated_feature.name)
+			end
+		end
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
@@ -92,6 +106,35 @@ feature -- Output
 				unused_locals.forth
 			end
 			a_text_formatter.set_context_group (l_group)
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		local
+			l_locals: like unused_locals
+			l_cursor: CURSOR
+			l_text: STRING_32
+		do
+			Precursor (a_text_formatter)
+			create l_text.make (100)
+			l_text.append_character (' ')
+
+			l_locals := unused_locals
+			l_cursor := l_locals.cursor
+			from l_locals.start until l_locals.after loop
+				l_text.append_character ('`')
+				l_text.append (l_locals.item.name)
+				l_text.append_character ('%'')
+				if not l_locals.islast then
+					l_text.append (", ")
+				end
+				l_locals.forth
+			end
+			l_locals.go_to (l_cursor)
+
+			a_text_formatter.add (l_text)
 		end
 
 feature {COMPILER_EXPORTER}

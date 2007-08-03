@@ -460,7 +460,7 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (6)
+			create Result.make (7)
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)

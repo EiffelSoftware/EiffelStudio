@@ -21,8 +21,9 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER) is
+	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_base_height: INTEGER) is
 			-- Set dialog position base on screen size.
+			-- `a_base_height' means the height to minus with y position when impossible showing `a_dialog' at bottom.
 		require
 			a_dialog_not_void: a_dialog /= Void
 		local
@@ -31,18 +32,18 @@ feature -- Command
 		do
 			create l_screen
 			create l_rect.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.virtual_width, l_screen.virtual_height)
-			if l_rect.has_x_y (a_dialog.width + a_prefer_x, a_dialog.height + a_prefer_y + internal_shared.title_bar_height) then
+			if l_rect.has_x_y (a_dialog.width + a_prefer_x, a_dialog.height + a_prefer_y + a_base_height) then
 				-- If enough space set position base on left top corner.
-				a_dialog.set_position (a_prefer_x, a_prefer_y + internal_shared.title_bar_height)
-			elseif l_rect.has_x_y (a_prefer_x, a_prefer_y + a_dialog.height + internal_shared.title_bar_height) then
+				a_dialog.set_position (a_prefer_x, a_prefer_y + a_base_height)
+			elseif l_rect.has_x_y (l_screen.virtual_right, a_prefer_y + a_dialog.height + a_base_height) then
 				-- If enough space set position base on right top corner.
-				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y + internal_shared.title_bar_height)
+				a_dialog.set_position (l_screen.virtual_right - a_dialog.width, a_prefer_y + a_base_height)
 			elseif l_rect.has_x_y (a_prefer_x + a_dialog.width, a_prefer_y - a_dialog.height) then
 				-- If enough space set position base on left bottom corner.
 				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
-			elseif l_rect.has_x_y (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height) then
+			elseif l_rect.has_x_y (l_screen.virtual_right - a_dialog.width, a_prefer_y - a_dialog.height) then
 				-- If enough space set positon base on right bottom corner.
-				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height)
+				a_dialog.set_position (l_screen.virtual_right - a_dialog.width, a_prefer_y - a_dialog.height)
 			else
 				check not_possible_in_this_case: False end
 			end
@@ -100,7 +101,7 @@ feature -- Command
 				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
 			else
 				-- There's not suitable position.
-				a_dialog.set_position (a_prefer_x - a_dialog.width + internal_shared.tool_bar_size, a_prefer_y + a_indicator_width)				
+				a_dialog.set_position (a_prefer_x - a_dialog.width + internal_shared.tool_bar_size, a_prefer_y + a_indicator_width)
 			end
 		end
 

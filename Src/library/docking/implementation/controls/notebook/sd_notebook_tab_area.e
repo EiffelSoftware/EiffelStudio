@@ -299,7 +299,7 @@ feature {NONE}  -- Implementation functions
 			end
 			l_dialog.init
 			create l_helper.make
-			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
+			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_tool_bar.height)
 			l_dialog.show
 		end
 

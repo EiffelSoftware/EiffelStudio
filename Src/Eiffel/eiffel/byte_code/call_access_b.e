@@ -296,13 +296,17 @@ feature -- Byte code generation
 				context.print_argument_register (result_register, buf)
 				buf.put_string (".type == SK_REF)? (EIF_REFERENCE) 0: (")
 				context.print_argument_register (result_register, buf)
-				buf.put_string (".value.EIF_REFERENCE_value = RTBU(")
+				buf.put_character ('.')
+				return_type.generate_typed_field (buf)
+				buf.put_string (" = RTBU(")
 				context.print_argument_register (result_register, buf)
 				buf.put_string ("))), (")
 				context.print_argument_register (result_register, buf)
 				buf.put_string (".type = SK_POINTER), ")
 				context.print_argument_register (result_register, buf)
-				buf.put_string (".value.EIF_REFERENCE_value)")
+				buf.put_character ('.')
+				return_type.generate_typed_field (buf)
+				buf.put_character (')')
 			elseif not return_type.is_void then
 					-- Return value should be of an expected basic type.
 					-- It can be used as it is.
@@ -454,7 +458,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

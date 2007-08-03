@@ -113,12 +113,13 @@ feature -- Access
 			end
 		end
 
-	union_tag: STRING is
+	typed_field: STRING is
+			-- Value field of a C structure corresponding to this type
 		do
 			if is_character_32 then
-				Result := Union_wide_char_tag
+				Result := "it_c4"
 			else
-				Result := Union_character_tag
+				Result := "it_c1"
 			end
 		end
 
@@ -168,19 +169,8 @@ feature -- Access
 			end
 		end
 
-	generate_typed_field (buffer: GENERATION_BUFFER) is
-			-- Generate field of C structure "EIF_UNION" associated
-			-- to the current C type in `buffer'.
-		do
-			if is_character_32 then
-				buffer.put_string ("value.EIF_WIDE_CHAR_value")
-			else
-				buffer.put_string ("value.EIF_CHARACTER_value")
-			end
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_UNION" associated
+			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		do
 			if is_character_32 then
@@ -223,13 +213,10 @@ feature -- Code generation
 feature {NONE} -- Constants
 
 	Character_string: STRING is "EIF_CHARACTER"
-	Wide_char_string: STRING is "EIF_WIDE_CHAR"
-
-	Union_character_tag: STRING is "carg"
-	Union_wide_char_tag: STRING is "wcarg";
+	Wide_char_string: STRING is "EIF_WIDE_CHAR";
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

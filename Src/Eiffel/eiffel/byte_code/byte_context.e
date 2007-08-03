@@ -1728,7 +1728,7 @@ feature -- Access
 			if ctype >= c_nb_types 	then
 					-- This is a register to hold generic argument value
 				is_generic := True
-				variable_type := once "EIF_UNION"
+				variable_type := once "EIF_TYPED_VALUE"
 			else
 				variable_type := value_type.c_string
 			end
@@ -2155,7 +2155,7 @@ invariant
 	class_type_stack_not_void: class_type_stack /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

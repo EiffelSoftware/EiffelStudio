@@ -280,8 +280,12 @@ feature {NONE} -- Implementation
 					end
 				end
 
-					-- Replace `$$_result_type' if used by return type of current inlined function
+					-- Replace `$$_result_type' if used by return type of current inlined function.
 				l_code.replace_substring_all ("$$_result_type", a_ret_type.c_type.c_string)
+				if not a_ret_type.is_void then
+						-- Replace `$$_result_value' if used by return value field of current inlined function.
+					l_code.replace_substring_all ("$$_result_value", a_ret_type.c_type.typed_field)
+				end
 
 					-- FIXME: Manu 03/26/2003:
 					-- When verbatim strings are used, on Windows we get a %R%N which

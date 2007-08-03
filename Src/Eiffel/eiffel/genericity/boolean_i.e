@@ -63,7 +63,8 @@ feature
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
 
-	union_tag: STRING is "barg"
+	typed_field: STRING is "it_b"
+			-- Value field of a C structure corresponding to this type
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -95,15 +96,8 @@ feature
 			buffer.put_string ("it_char")
 		end
 
-	generate_typed_field (buffer: GENERATION_BUFFER) is
-			-- Generate field of C structure "EIF_UNION" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("value.EIF_BOOLEAN_value")
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_UNION" associated
+			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		do
 			buffer.put_string ("type = SK_BOOL")
@@ -119,7 +113,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -327,7 +327,7 @@ feature {NONE} -- C code generation
 			buf.put_integer (expressions.count)
 			buf.put_string ("L;")
 			buf.put_new_line
-			buf.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_UNION, EIF_UNION))");
+			buf.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE))");
 			if
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
@@ -389,7 +389,7 @@ feature {NONE} -- C code generation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

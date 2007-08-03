@@ -486,7 +486,7 @@ feature -- Generation helpers
 				i > nb
 			loop
 				if is_for_agent and then system.byte_context.workbench_mode then
-					t := "EIF_UNION"
+					t := "EIF_TYPED_VALUE"
 				elseif seed /= Void then
 					type_i := seed.arguments.i_th (i).type_i
 					if type_i.is_anchored then
@@ -709,10 +709,10 @@ feature {NONE} -- Generation
 
 			if is_for_agent then
 				if is_target_closed or omap.is_empty then
-					l_current_name := "closed [1].element.rarg"
+					l_current_name := "closed [1]." + reference_c_type.typed_field
 				else
 					if a_oargs_encapsulated then
-						l_current_name := "open [1].element.rarg"
+						l_current_name := "open [1]." + reference_c_type.typed_field
 					else
 						l_current_name := "op_1"
 					end
@@ -746,7 +746,7 @@ feature {NONE} -- Generation
 				feature_return_type := c_return_type
 				if not c_return_type.is_void then
 					if is_for_agent and then not final_mode then
-						return_type_string := "EIF_UNION"
+						return_type_string := "EIF_TYPED_VALUE"
 						agent_type_string := return_type_string
 					elseif seed /= Void and then seed.type.is_formal then
 						feature_return_type := reference_c_type
@@ -802,7 +802,7 @@ feature {NONE} -- Generation
 				buffer.indent
 				if not final_mode and then args_count > 0 then
 						-- Declare structure to be used for passing arguments.
-					buffer.put_string ("EIF_UNION u [")
+					buffer.put_string ("EIF_TYPED_VALUE u [")
 					buffer.put_integer (args_count)
 					buffer.put_string ("];")
 					buffer.put_new_line
@@ -912,7 +912,7 @@ feature {NONE} -- Generation
 					is_for_agent
 				then
 					buffer.put_string ("f_ptr (")
-					if final_mode and then has_creation then
+					if has_creation then
 						buffer.put_string (l_current_name)
 						from
 							i := 1
@@ -1005,30 +1005,6 @@ feature {NONE} -- Generation
 			end
 		end
 
-	arg_tags (context_type: CLASS_TYPE; args: FEAT_ARG): ARRAY [STRING] is
-			-- Generate union tag names for the argument types.
-		require
-			context_type_non_void: context_type /= Void
-		local
-			i, nb: INTEGER
-		do
-			if args /= Void then
-				nb := args.count + 1
-			else
-				nb := 1
-			end
-			create Result.make (1, nb)
-			Result.put ("rarg", 1)
-			from
-				i := 1
-			until
-				i = nb
-			loop
-				Result.put (solved_type (context_type, args.i_th (i)).union_tag, i + 1)
-				i := i + 1
-			end
-		end
-
 	generate_final_c_body (buffer: GENERATION_BUFFER; a_feature: FEATURE_I; a_current_name: STRING;
 						   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types): BOOLEAN is
 		local
@@ -1112,7 +1088,7 @@ feature {NONE} -- Generation
 			until
 				i < 2
 			loop
-				l_types [i] := "EIF_UNION"
+				l_types [i] := "EIF_TYPED_VALUE"
 				i := i - 1
 			end
 			c_return_type.generate_function_cast (buffer, l_types)
@@ -1143,12 +1119,17 @@ feature {NONE} -- Generation
 								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN) is
 			-- Generate declaration of `n' arguments for routine objects.
 		local
+			n: INTEGER
 			i, j, k, o: INTEGER
 			sep: STRING
 			tags : ARRAY [STRING]
 			arg_type: TYPE_C
 		do
-			tags := arg_tags (a_type, a_args)
+			if a_args = Void then
+				n := 1
+			else
+				n := a_args.count + 1
+			end
 			from
 				i := 1
 				j := 1
@@ -1161,12 +1142,28 @@ feature {NONE} -- Generation
 				end
 				sep := ", "
 			until
-				i > tags.count
+				i > n
 			loop
 				if i > 1 then
+					arg_type := solved_type (a_type, a_args.i_th (i - 1))
 					a_buf.put_string (sep)
-					if not final_mode then
-						arg_type := solved_type (a_type, a_args.i_th (i - 1))
+				else
+					arg_type := reference_c_type
+				end
+				if i = o then
+					if a_oargs_encapsulated then
+						a_buf.put_string ("open [")
+						a_buf.put_string (k.out)
+						a_buf.put_string ("]")
+						if i <=1 or else final_mode then
+							a_buf.put_character ('.')
+							arg_type.generate_typed_field (a_buf)
+						end
+						k := k + 1
+					elseif i <=1 or else final_mode then
+						a_buf.put_string ("op_")
+						a_buf.put_String (o.out)
+					else
 						a_buf.put_string ("((u [")
 						a_buf.put_integer (i - 2)
 						a_buf.put_string ("].")
@@ -1176,18 +1173,11 @@ feature {NONE} -- Generation
 						a_buf.put_string ("].")
 						arg_type.generate_typed_field (a_buf)
 						a_buf.put_string (" = ")
-					end
-				end
-				if i = o then
-					if a_oargs_encapsulated then
-						a_buf.put_string ("open [")
-						a_buf.put_string (k.out)
-						a_buf.put_string ("].element.")
-						a_buf.put_string (tags.item (i))
-						k := k + 1
-					else
 						a_buf.put_string ("op_")
 						a_buf.put_String (o.out)
+						a_buf.put_string ("), u [")
+						a_buf.put_integer (i - 2)
+						a_buf.put_string ("])")
 					end
 					a_omap.forth
 					if not a_omap.after then
@@ -1198,14 +1188,12 @@ feature {NONE} -- Generation
 				else
 					a_buf.put_string ("closed [")
 					a_buf.put_integer (j)
-					a_buf.put_string ("].element.")
-					a_buf.put_string (tags.item (i))
+					a_buf.put_string ("]")
+					if i <=1 or else final_mode then
+						a_buf.put_character ('.')
+						arg_type.generate_typed_field (a_buf)
+					end
 					j := j + 1
-				end
-				if i > 1 and then not final_mode then
-					a_buf.put_string ("), u [")
-					a_buf.put_integer (i - 2)
-					a_buf.put_string ("])")
 				end
 				i := i + 1
 			end
@@ -1215,10 +1203,17 @@ feature {NONE} -- Generation
 								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): ARRAY [STRING] is
 			-- Generate declaration of `n' arguments for routine objects.
 		local
+			n: INTEGER
 			i, j, k, o: INTEGER
 			name: STRING
+			arg_type: TYPE_C
 		do
-			Result := arg_tags (a_type, a_args)
+			if a_args = Void then
+				n := 1
+			else
+				n := a_args.count + 1
+			end
+			create Result.make (1, n)
 			from
 				i := 1
 				j := 1
@@ -1230,14 +1225,19 @@ feature {NONE} -- Generation
 					o := {INTEGER}.max_value
 				end
 			until
-				i > Result.count
+				i > n
 			loop
+				if i = 1 then
+					arg_type := reference_c_type
+				else
+					arg_type := solved_type (a_type, a_args.i_th (i - 1))
+				end
 				if i = o then
 					if a_oargs_encapsulated then
 						name := "open ["
 						name.append_integer (k)
-						name.append_string ("].element.")
-						name.append_string (Result.item (i))
+						name.append_string ("].")
+						name.append_string (arg_type.typed_field)
 						k := k + 1
 					else
 						name := "op_"
@@ -1252,8 +1252,8 @@ feature {NONE} -- Generation
 				else
 					name := "closed ["
 					name.append_integer (j)
-					name.append_string ("].element.")
-					name.append_string (Result.item (i))
+					name.append_string ("].")
+					name.append_string (arg_type.typed_field)
 					j := j + 1
 				end
 				Result [i] := name
@@ -1287,11 +1287,11 @@ feature {NONE} -- Generation
 				-- The name of the pointer is embedded in its type
 			l_arg_names.put ("", 1)
 
-			l_arg_types.put ("EIF_TYPED_ELEMENT *", 2)
+			l_arg_types.put ("EIF_TYPED_VALUE *", 2)
 			l_arg_names.put ("closed", 2)
 
 			if a_oargs_encapsulated then
-				l_arg_types.put ("EIF_TYPED_ELEMENT *", 3)
+				l_arg_types.put ("EIF_TYPED_VALUE *", 3)
 				l_arg_names.put ("open", 3)
 			else
 				from
@@ -1352,7 +1352,7 @@ feature {NONE}	--implementation
 	new_frozen_age: INTEGER;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

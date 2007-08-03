@@ -579,7 +579,7 @@ feature -- Plug and Makefile file
 			if final_mode then
 				buffer.put_string ("%Tegc_equal = (EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 			else
-				buffer.put_string ("%Tegc_equal = (EIF_UNION (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION)) ")
+				buffer.put_string ("%Tegc_equal = (EIF_TYPED_VALUE (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 			end
 			buffer.put_string (equal_name)
 			buffer.put_string (";%N")
@@ -588,7 +588,7 @@ feature -- Plug and Makefile file
 			if final_mode then
 				buffer.put_string ("%Tegc_twin = (EIF_REFERENCE (*)(EIF_REFERENCE)) ")
 			else
-				buffer.put_string ("%Tegc_twin = (EIF_UNION (*)(EIF_REFERENCE)) ")
+				buffer.put_string ("%Tegc_twin = (EIF_TYPED_VALUE (*)(EIF_REFERENCE)) ")
 			end
 			buffer.put_string (twin_name)
 			buffer.put_string (";%N")
@@ -597,7 +597,7 @@ feature -- Plug and Makefile file
 			if final_mode then
 				buffer.put_string ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
 			else
-				buffer.put_string ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_UNION)) ")
+				buffer.put_string ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
 			end
 			buffer.put_string (str_make_name)
 			buffer.put_string (";%N")
@@ -606,7 +606,7 @@ feature -- Plug and Makefile file
 			if final_mode then
 				buffer.put_string ("%Tegc_arrmake = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) ")
 			else
-				buffer.put_string ("%Tegc_arrmake = (void (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION)) ")
+				buffer.put_string ("%Tegc_arrmake = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 			end
 			buffer.put_string (arr_make_name)
 			buffer.put_string (";%N")
@@ -622,7 +622,7 @@ feature -- Plug and Makefile file
 				string_cl.types.first.skeleton.generate_offset (buffer, internal_hash_code_feat.feature_id, False)
 				buffer.put_string (";%N")
 			else
-				buffer.put_string ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_UNION)) ")
+				buffer.put_string ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
 				buffer.put_string (set_count_name)
 				buffer.put_string (";%N")
 			end
@@ -632,7 +632,7 @@ feature -- Plug and Makefile file
 				if final_mode then
 					buffer.put_string ("%Tegc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) ")
 				else
-					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION)) ")
+					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 				end
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string (";%N")
@@ -909,7 +909,7 @@ feature -- Plug and Makefile file
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

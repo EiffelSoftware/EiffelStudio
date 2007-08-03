@@ -252,7 +252,7 @@ feature
 							-- doing this for an inline C/C++ since the code of the inline routine will be
 							-- generated again.
 						if context.workbench_mode then
-							return_type_string := "EIF_UNION"
+							return_type_string := "EIF_TYPED_VALUE"
 						else
 							return_type_string := type_c.c_string
 						end
@@ -439,7 +439,7 @@ feature
 	allocates_memory: BOOLEAN is True;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

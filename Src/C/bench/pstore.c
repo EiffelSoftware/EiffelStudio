@@ -6,7 +6,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -243,13 +243,13 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			o_ptr = RT_SPECIAL_INFO_WITH_ZONE (object, zone);
 			count = RT_SPECIAL_COUNT_WITH_INFO (o_ptr);
 			if (flags & EO_TUPLE) {
-				EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+				EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
 					 * `object_comparison' attribute. */
 				l_item++;
 				count--;
 				for (; count > 0; count--, l_item++) {
-					if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+					if (eif_is_reference_tuple_item(l_item)) {
 						ref = eif_reference_tuple_item(l_item);
 						if (ref) {
 							a_object_count = pst_store (ref, a_object_count);

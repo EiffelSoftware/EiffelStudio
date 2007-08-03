@@ -2,7 +2,7 @@
 	description: "Routines for Request Internal Data Representation."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -54,7 +54,7 @@ rt_private bool_t idr_Acknlge(IDR *idrs, void *ext);
 rt_private bool_t idr_Where(IDR *idrs, void *ext);
 rt_private bool_t idr_Stop(IDR *idrs, void *ext);
 rt_private bool_t idr_Dumped(IDR *idrs, void *ext);
-rt_private bool_t idr_Item (IDR *idrs, struct item *ext);
+rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext);
 rt_private bool_t idr_Notif(IDR *idrs, void *ext);
 rt_private bool_t idr_void(IDR *idrs, void *ext);
 
@@ -208,9 +208,9 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 {
 	Dump *dum = (Dump *)ext;
 	static struct ex_vect *last_exv;
-	static struct item *last_exi;
+	static EIF_TYPED_VALUE *last_exi;
 	struct ex_vect *exv;
-	struct item *exi;
+	EIF_TYPED_VALUE *exi;
 
 	if (!idr_int (idrs, &dum->dmp_type))
 		return FALSE;
@@ -256,9 +256,9 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 			last_exi = NULL;
 		}
 		if (!exi){
-			exi = (struct item *) malloc (sizeof (struct item));
+			exi = (EIF_TYPED_VALUE *) malloc (sizeof (EIF_TYPED_VALUE));
 			last_exi = exi;
-			memset (exi, 0, sizeof (struct item));
+			memset (exi, 0, sizeof (EIF_TYPED_VALUE));
 			dum -> dmpu.dmpu_item = exi;
 		}
 		if (!exi) {
@@ -274,7 +274,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 }
 
 
-rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
+rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
 {
 	if (idrs->i_op == IDR_ENCODE) {
 		memcpy (idrs->i_ptr, &ext->type, sizeof(EIF_INTEGER_32));

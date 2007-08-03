@@ -1,0 +1,20 @@
+test_name        tuple-57-unretrievable
+test_description A tuple object stored in 5.7 cannot be retrieved by later version.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+copy_bin	data $WCODE data
+
+execute_work   NONE exec_output
+execute_result ok
+compare        exec_output output
+
+test_end

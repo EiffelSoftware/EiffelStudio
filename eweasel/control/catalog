@@ -1210,6 +1210,7 @@ test	constraint-type-comparison	term145 tcf pass termination generic
 test	missing-actual-generic-crash	term146 tcf pass termination generic
 test	actual-generic-none-crash	term147 tcf pass termination generic
 test	complex-generics-crash		term148 tcf fail termination generic
+test	agent-with-anchor-crash		term149 tcf fail termination generic
 
 -- Config
 

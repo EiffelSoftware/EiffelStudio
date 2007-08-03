@@ -12,7 +12,7 @@ class SYNTAX_ERROR
 inherit
 	ERROR
 		redefine
-			trace, file_name, trace_single_line, trace_primary_context
+			file_name, trace, trace_primary_context, print_single_line_error_message
 		end
 
 	SYNTAX_MESSAGE
@@ -132,16 +132,6 @@ feature -- Output
 			end
 		end
 
-	trace_single_line (a_text_formatter: TEXT_FORMATTER) is
-			-- Display short error, single line message in `a_text_formatter'.
-		do
-			initialize_output
-			print_single_line_error_code (a_text_formatter)
-			if error_message /= Void then
-				a_text_formatter.add (error_message)
-			end
-		end
-
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		local
@@ -154,6 +144,22 @@ feature -- Output
 				a_text_formatter.add_class (l_class_c.lace_class)
 			elseif file_name /= Void then
 				Precursor {ERROR} (a_text_formatter)
+			end
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'
+		do
+			initialize_output
+			print_single_line_error_code (a_text_formatter)
+			if syntax_message /= Void and then not syntax_message.is_empty then
+				a_text_formatter.add (syntax_message)
+			else
+				a_text_formatter.add ("Syntax error at line ")
+				a_text_formatter.add_int (line)
+				a_text_formatter.add (".")
 			end
 		end
 

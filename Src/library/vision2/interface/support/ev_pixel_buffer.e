@@ -114,13 +114,13 @@ feature -- Command
 			not_locked: not is_locked
 		end
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		require
 			not_void: a_pixel_buffer /= Void
 			not_void: a_rect /= Void
 		do
-			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
+			implementation.draw_pixel_buffer_with_rect (a_pixel_buffer, a_rect)
 		end
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
@@ -178,6 +178,16 @@ feature -- Implementation
 
 	implementation: EV_PIXEL_BUFFER_I;
 			-- Implementation interface
+
+feature -- Obsolete
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
+		obsolete
+			"Use draw_pixel_buffer_with_rect instead"
+		do
+			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

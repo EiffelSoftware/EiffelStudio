@@ -80,7 +80,7 @@ feature -- Command
 			is_locked := False
 		end
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		deferred
 		end
@@ -121,6 +121,15 @@ feature {NONE} -- Implementation
 
 	interface: EV_PIXEL_BUFFER;
 		-- Interface object for `Current'.
+
+feature -- Obsolete
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
+		obsolete
+			"Use draw_pixel_buffer_with_rect instead"
+		deferred
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

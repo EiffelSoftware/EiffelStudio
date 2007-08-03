@@ -68,13 +68,13 @@ feature -- Command
 			create l_dest_rect.make (a_dest_x, a_dest_y, a_dest_x + a_image.width, a_image.height)
 			create l_src_rect.make (0, 0, a_image.width, a_image.height)
 
-			draw_image_with_src_rect_dest_rect (a_image, l_dest_rect, l_src_rect)
+			draw_image_with_dest_rect_src_rect (a_image, l_dest_rect, l_src_rect)
 
 			l_dest_rect.dispose
 			l_src_rect.dispose
 		end
 
-	draw_image_with_src_rect_dest_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT) is
+	draw_image_with_dest_rect_src_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT) is
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		require
 			not_void: a_image /= Void
@@ -100,6 +100,7 @@ feature -- Command
 			else
 				c_gdip_draw_image_rect_rect_i (gdi_plus_handle, item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, a_image_attributes.item, l_null_pointer, l_null_pointer, $l_result)
 			end
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
 	draw_string (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL) is
@@ -403,6 +404,16 @@ feature {NONE} -- C externals
 				}
 			}
 			]"
+		end
+
+feature -- Obsolete
+
+	draw_image_with_src_rect_dest_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT) is
+			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
+		obsolete
+			"Use draw_image_with_dest_rect_src_rect instead"
+		do
+			draw_image_with_dest_rect_src_rect (a_image, a_dest_rect, a_src_rect)
 		end
 
 indexing

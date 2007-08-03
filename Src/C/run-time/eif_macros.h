@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -221,7 +221,7 @@ RT_LNK int fcount;
  */
 #define RTCL(x)		rtclone(x)
 #define RTCB(x)		b_clone(x)
-#define RTCCL(x)	((x && eif_is_boxed_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
+#define RTCCL(x)	((x && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 #ifdef WORKBENCH
 #	define RTRCL(x)	((egc_twin(x)).value.EIF_REFERENCE_value)
 #else
@@ -335,7 +335,7 @@ RT_LNK int fcount;
 	EIF_REFERENCE * volatile l = loc_set.st_top; \
 	RTYL
 #define RTLXD \
-	struct item * EIF_VOLATILE lv
+	EIF_TYPED_ADDRESS * EIF_VOLATILE lv
 #define RTLXL \
 	lv = cop_stack.st_top
 #define RTLXE \

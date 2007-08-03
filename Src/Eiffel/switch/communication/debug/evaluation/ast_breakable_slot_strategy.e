@@ -1779,15 +1779,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	like_current_type: LIKE_CURRENT is
-			-- Fake type used for printing `like Current' as `instantiation_in' on
-			-- a `like Current' returns the actual type.
-		once
-			create Result
-		ensure
-			like_current_not_void: Result /= Void
-		end
-
 	process_formal_as (l_as: FORMAL_AS) is
 		do
 			process_type_as (l_as)

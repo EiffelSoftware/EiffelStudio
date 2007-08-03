@@ -171,12 +171,12 @@ feature {NONE} -- C code generation
 						expr.generate
 					end
 					-- Generate initializations of values.
-					buf.put_string ("((EIF_TYPED_ELEMENT *)")
+					buf.put_string ("((EIF_TYPED_VALUE *)")
 					print_register
 					buf.put_character('+');
 					buf.put_integer (i)
-					buf.put_string (")->element.")
-					buf.put_string (actual_type.c_type.union_tag)
+					buf.put_string (")->")
+					actual_type.c_type.generate_typed_field (buf)
 					buf.put_string (" = ")
 					if metamorphosed then
 						metamorphose_reg.print_register
@@ -207,7 +207,7 @@ feature {NONE} -- C code generation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

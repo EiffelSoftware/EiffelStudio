@@ -296,8 +296,8 @@ feature {NONE} -- C code generation
 				value_arg_name := "arg1"
 				index_arg_name := "arg2"
 			else
-				value_type_name := "EIF_UNION"
-				index_type_name := "EIF_UNION"
+				value_type_name := "EIF_TYPED_VALUE"
+				index_type_name := "EIF_TYPED_VALUE"
 				value_arg_name := "arg1x"
 				index_arg_name := "arg2x"
 			end
@@ -314,15 +314,15 @@ feature {NONE} -- C code generation
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
-					buffer.put_string ("arg1x.value.EIF_REFERENCE_value;")
+					buffer.put_string ("arg1x.it_r;")
 				end
-				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.value.EIF_INTEGER_32_value = * (EIF_INTEGER_32 *) arg2x.value.EIF_REFERENCE_value;")
+				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
 				buffer.put_new_line
 				buffer.left_margin
 				buffer.put_string ("#define arg1 arg1x.")
 				type_c.generate_typed_field (buffer)
 				buffer.put_new_line
-				buffer.put_string ("#define arg2 arg2x.value.EIF_INTEGER_32_value")
+				buffer.put_string ("#define arg2 arg2x.it_i4")
 				buffer.put_new_line
 				buffer.restore_margin
 			end
@@ -452,9 +452,9 @@ feature {NONE} -- C code generation
 				arg_name := "arg1"
 				arg_type_name := "EIF_INTEGER"
 			else
-				result_type_name := "EIF_UNION"
+				result_type_name := "EIF_TYPED_VALUE"
 				arg_name := "arg1x"
-				arg_type_name := "EIF_UNION"
+				arg_type_name := "EIF_TYPED_VALUE"
 			end
 
 			buffer.generate_function_signature (result_type_name, encoded_name, True,
@@ -474,16 +474,16 @@ feature {NONE} -- C code generation
 			end
 
 			if not final_mode then
-				buffer.put_string ("EIF_UNION r;")
+				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
 				type_c.generate_typed_tag (buffer)
 				buffer.put_character (';')
 				buffer.put_new_line
-				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.value.EIF_INTEGER_32_value = * (EIF_INTEGER_32 *) arg1x.value.EIF_REFERENCE_value;")
+				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
 				buffer.put_new_line
 				buffer.left_margin
-				buffer.put_string ("#define arg1 arg1x.value.EIF_INTEGER_32_value")
+				buffer.put_string ("#define arg1 arg1x.it_i4")
 				buffer.put_new_line
 				buffer.restore_margin
 			end
@@ -624,8 +624,8 @@ feature {NONE} -- C code generation
 			System.used_features_log_file.add (Current, "item_address", encoded_name)
 
 			if byte_context.workbench_mode then
-				result_type_name := "EIF_UNION"
-				index_type_name := "EIF_UNION"
+				result_type_name := "EIF_TYPED_VALUE"
+				index_type_name := "EIF_TYPED_VALUE"
 				index_arg_name := "arg1x"
 			else
 				result_type_name := result_type.c_type.c_string
@@ -640,16 +640,16 @@ feature {NONE} -- C code generation
 			buffer.indent
 
 			if byte_context.workbench_mode then
-				buffer.put_string ("EIF_UNION r;")
+				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
 				result_type.c_type.generate_typed_tag (buffer)
 				buffer.put_character (';')
 				buffer.put_new_line
-				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.value.EIF_INTEGER_32_value = * (EIF_INTEGER_32 *) arg1x.value.EIF_REFERENCE_value;")
+				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
 				buffer.put_new_line
 				buffer.left_margin
-				buffer.put_string ("#define arg1 arg1x.value.EIF_INTEGER_32_value")
+				buffer.put_string ("#define arg1 arg1x.it_i4")
 				buffer.put_new_line
 				buffer.restore_margin
 			end

@@ -97,7 +97,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #ifdef WORKBENCH
 		/* debug.c */
 	struct dbinfo d_data_cx;			/* Global debugger information */
-	struct opstack cop_stack_cx;
+	struct c_opstack cop_stack_cx;
 
 		/* interp.c */
 	unsigned char *IC_cx;				/* Interpreter Counter (like PC on a CPU) */

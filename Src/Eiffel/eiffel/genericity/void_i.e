@@ -79,7 +79,12 @@ feature
 	name, c_string: STRING is "void"
 			-- String generated for the type.
 
-	union_tag: STRING is "rarg"
+	typed_field: STRING is
+			-- Value field of a C structure corresponding to this type
+		do
+		ensure then
+			False
+		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -101,16 +106,8 @@ feature
 			False
 		end
 
-	generate_typed_field (buffer: GENERATION_BUFFER) is
-			-- Generate field of C structure "EIF_UNION" associated
-			-- to the current C type in `buffer'.
-		do
-		ensure then
-			False
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_UNION" associated
+			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		do
 		ensure then
@@ -129,7 +126,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

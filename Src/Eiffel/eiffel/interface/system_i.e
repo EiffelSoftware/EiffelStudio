@@ -4831,10 +4831,10 @@ feature -- Pattern table generation
 					"[
 						if (egc_rcorigin != -1) {
 							if (egc_rcarg) {
-								EIF_UNION u_args;
+								EIF_TYPED_VALUE u_args;
 								u_args.type = SK_REF;
-								u_args.value.EIF_REFERENCE_value = argarr(argc, argv);
-								(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_UNION)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
+								u_args.it_r = argarr(argc, argv);
+								(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
 							} else {
 								(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
 							}
@@ -5281,7 +5281,7 @@ feature {NONE} -- External features
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

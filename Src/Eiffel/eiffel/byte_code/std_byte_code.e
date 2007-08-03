@@ -291,7 +291,7 @@ feature -- Analyzis
 			end
 			args := argument_names
 			if not type_c.is_void and then context.workbench_mode then
-				return_type_name := once "EIF_UNION"
+				return_type_name := once "EIF_TYPED_VALUE"
 			else
 				return_type_name := type_c.c_string
 			end
@@ -695,7 +695,7 @@ end
 				if context.workbench_mode then
 						-- Note: in workbench, we always return the result. It may
 						--       have been changed by the user (see class EDIT_ITEM)
-					buf.put_string ("{ EIF_UNION r; r.")
+					buf.put_string ("{ EIF_TYPED_VALUE r; r.")
 					type_c.generate_typed_tag (buf)
 					buf.put_string ("; r.")
 					type_c.generate_typed_field (buf)
@@ -1278,7 +1278,9 @@ end
 							c_type.generate_access_cast (buf)
 							buf.put_string (" arg")
 							buf.put_integer (i)
-							buf.put_string ("x.value.EIF_REFERENCE_value;")
+							buf.put_string ("x.")
+							reference_c_type.generate_typed_field (buf)
+							buf.put_character (';')
 							buf.put_new_line
 						end
 						buf.left_margin

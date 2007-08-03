@@ -199,7 +199,7 @@ feature -- Command
 			check not_implemented: False end
 		end
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
@@ -272,6 +272,19 @@ feature {NONE} -- Dispose
 			-- Dispose current.
 		do
 			set_gdkpixbuf (default_pointer)
+		end
+
+feature {NONE} -- Obsolete
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' to current at `a_rect'.
+		obsolete
+			"Use draw_pixel_buffer instead"
+		local
+			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+		do
+			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 
 indexing

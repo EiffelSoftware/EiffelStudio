@@ -2,7 +2,7 @@
 	description: "Traversal of objects. Useful for storing objects and/or recursively coying them."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -343,7 +343,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
 			for (i = 1; i < count ; i++) {
-				if (eif_item_type(object, i) == EIF_REFERENCE_CODE) {
+				if (eif_item_sk_type(object, i) == SK_REF) {
 					reference = eif_reference_item(object, i);
 					if (reference) {
 						traversal(reference, p_accounting);	
@@ -895,14 +895,14 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 		CHECK ("Not a SPECIAL of expanded objects", !(flags & EO_COMP));
 
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+			EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
 			l_item++;
 			count = RT_SPECIAL_COUNT(object) - 1;
 			for (; count > 0; count--, l_item++) {
 				if
-					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+					(eif_is_reference_tuple_item(l_item) &&
 					(eif_reference_tuple_item(l_item)))
 				{
 					action_fnptr (object, eif_reference_tuple_item(l_item));
@@ -995,14 +995,14 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+			EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
 			l_item++;
 			count--;
 			for (; count > 0; count--, l_item++) {
 				if
-					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+					(eif_is_reference_tuple_item(l_item) &&
 				 	(eif_reference_tuple_item(l_item)))
 				{
 					object_count = chknomark(eif_reference_tuple_item(l_item), tbl, object_count);	

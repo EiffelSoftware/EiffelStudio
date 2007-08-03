@@ -2,7 +2,7 @@
 	description: "Eiffel based C storing mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -897,13 +897,13 @@ rt_private void st_store(EIF_REFERENCE object)
 			o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 			if (flags & EO_TUPLE) {
-				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+				EIF_TYPED_VALUE *l_item = (EIF_TYPED_VALUE *) object;
 					/* Don't forget that first element of TUPLE is the BOOLEAN
 					 * `object_comparison' attribute. */
 				l_item++;
 				count--;
 				for (; count > 0; count--, l_item++) {
-					if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+					if (eif_is_reference_tuple_item(l_item)) {
 						o_ref = eif_reference_tuple_item(l_item);
 						if (o_ref) {
 							st_store(o_ref);
@@ -1215,7 +1215,7 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 
 			if (flags & EO_TUPLE) {
-				buffer_write (object, count * sizeof(EIF_TYPED_ELEMENT));
+				buffer_write (object, count * sizeof(EIF_TYPED_VALUE));
 			} else {
 				uint32 dgen;
 				int16 *dynamic_types;
@@ -1314,7 +1314,7 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 rt_private void object_tuple_write (EIF_REFERENCE object)
 	/* Storing TUPLE. Version for independent store */
 {
-	EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+	EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 	unsigned int count = RT_SPECIAL_COUNT(object);
 	char l_type;
 
@@ -1324,7 +1324,23 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 		 * `object_comparison' attribute. */
 	for (; count > 0; count--, l_item++) {
 			/* For each tuple element we store its type first, and then the associated value */
-		l_type = eif_tuple_item_type(l_item);
+		switch (eif_tuple_item_sk_type(l_item)) {
+			case SK_BOOL:    l_type = EIF_BOOLEAN_CODE; break;
+			case SK_CHAR:    l_type = EIF_CHARACTER_CODE; break;
+			case SK_WCHAR:   l_type = EIF_WIDE_CHAR_CODE; break;
+			case SK_INT8:    l_type = EIF_INTEGER_8_CODE; break;
+			case SK_INT16:   l_type = EIF_INTEGER_16_CODE; break;
+			case SK_INT32:   l_type = EIF_INTEGER_32_CODE; break;
+			case SK_INT64:   l_type = EIF_INTEGER_64_CODE; break;
+			case SK_UINT8:   l_type = EIF_NATURAL_8_CODE; break;
+			case SK_UINT16:  l_type = EIF_NATURAL_16_CODE; break;
+			case SK_UINT32:  l_type = EIF_NATURAL_32_CODE; break;
+			case SK_UINT64:  l_type = EIF_NATURAL_64_CODE; break;
+			case SK_REAL32:  l_type = EIF_REAL_32_CODE; break;
+			case SK_REAL64:  l_type = EIF_REAL_64_CODE; break;
+			case SK_REF:     l_type = EIF_REFERENCE_CODE; break;
+			case SK_POINTER: l_type = EIF_POINTER_CODE; break;
+		}
 		widr_multi_char (&l_type, 1);
 		switch (l_type) {
 			case EIF_REFERENCE_CODE: widr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;

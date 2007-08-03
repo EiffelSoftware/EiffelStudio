@@ -115,7 +115,8 @@ feature -- C code generation
 	c_string: STRING is "EIF_REAL_32"
 			-- String generated for the type.
 
-	union_tag: STRING is "farg"
+	typed_field: STRING is "it_r4"
+			-- Value field of a C structure corresponding to this type
 
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
@@ -124,15 +125,8 @@ feature -- C code generation
 			buffer.put_string ("it_real32")
 		end
 
-	generate_typed_field (buffer: GENERATION_BUFFER) is
-			-- Generate field of C structure "EIF_UNION" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("value.EIF_REAL_32_value")
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_UNION" associated
+			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		do
 			buffer.put_string ("type = SK_REAL32")
@@ -156,7 +150,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1624,7 +1624,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			uint32 count, elm_size;
 			rt_uint_ptr nb_byte;
 			if (flags & EO_TUPLE) {
-				spec_size = sizeof(EIF_TYPED_ELEMENT);
+				spec_size = sizeof(EIF_TYPED_VALUE);
 			} else {
 				uint32 dgen, spec_type;
 
@@ -1805,7 +1805,7 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
 			if (flags & EO_TUPLE) {
-				spec_size = sizeof(EIF_TYPED_ELEMENT);
+				spec_size = sizeof(EIF_TYPED_VALUE);
 			} else {
 				uint32 dgen, spec_type;
 
@@ -2338,14 +2338,14 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 		o_ref = RT_SPECIAL_INFO_WITH_ZONE(new_obj, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 		if (flags & EO_TUPLE) {
-			EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) new_obj;
+			EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) new_obj;
 				/* Don't forget that first element of TUPLE is the BOOLEAN
 				 * `object_comparison' attribute. */
 			l_item++;
 			count--;
 			for (; count > 0; count--, l_item++) {
 				if
-					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+					(eif_is_reference_tuple_item(l_item) &&
 					(eif_reference_tuple_item(l_item)))
 				{
 						/* Update reference value to new value in retrieved system */
@@ -4222,7 +4222,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
 
 			if (flags & EO_TUPLE) {
-				buffer_read(object, count * sizeof(EIF_TYPED_ELEMENT));
+				buffer_read(object, count * sizeof(EIF_TYPED_VALUE));
 			} else if (!(flags & EO_REF)) {			/* Special of simple types */
 				uint32 dgen;
 				dgen = special_generic_type (o_type);
@@ -4972,26 +4972,44 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	RT_GET_CONTEXT
 
 	EIF_REFERENCE addr, trash = NULL;
-	EIF_TYPED_ELEMENT *l_item;
+	EIF_TYPED_VALUE *l_item;
 	char l_type;
 
 	if (object != NULL)
 		addr = object;
 	else {
-		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (EIF_TYPED_ELEMENT), C_T, GC_OFF);
+		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (EIF_TYPED_VALUE), C_T, GC_OFF);
 		if (!trash) {
 			xraise(EN_MEM);
 		}
 		addr = trash;
 	}
 
-	l_item = (EIF_TYPED_ELEMENT *) addr;
+	l_item = (EIF_TYPED_VALUE *) addr;
 		/* Don't forget that first element of TUPLE is the BOOLEAN
 		 * `object_comparison' attribute. */
 	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
 		for (; count > 0; count--, l_item++) {
 			ridr_multi_char(&l_type, 1);
-			CHECK("Same type", l_type == eif_tuple_item_type(l_item));
+#ifdef EIF_ASSERTIONS
+			switch (eif_tuple_item_sk_type(l_item)) {
+				case SK_BOOL:    CHECK("Same type", l_type == EIF_BOOLEAN_CODE); break;
+				case SK_CHAR:    CHECK("Same type", l_type == EIF_CHARACTER_CODE); break;
+				case SK_WCHAR:   CHECK("Same type", l_type == EIF_WIDE_CHAR_CODE); break;
+				case SK_INT8:    CHECK("Same type", l_type == EIF_INTEGER_8_CODE); break;
+				case SK_INT16:   CHECK("Same type", l_type == EIF_INTEGER_16_CODE); break;
+				case SK_INT32:   CHECK("Same type", l_type == EIF_INTEGER_32_CODE); break;
+				case SK_INT64:   CHECK("Same type", l_type == EIF_INTEGER_64_CODE); break;
+				case SK_UINT8:   CHECK("Same type", l_type == EIF_NATURAL_8_CODE); break;
+				case SK_UINT16:  CHECK("Same type", l_type == EIF_NATURAL_16_CODE); break;
+				case SK_UINT32:  CHECK("Same type", l_type == EIF_NATURAL_32_CODE); break;
+				case SK_UINT64:  CHECK("Same type", l_type == EIF_NATURAL_64_CODE); break;
+				case SK_REAL32:  CHECK("Same type", l_type == EIF_REAL_32_CODE); break;
+				case SK_REAL64:  CHECK("Same type", l_type == EIF_REAL_64_CODE); break;
+				case SK_REF:     CHECK("Same type", l_type == EIF_REFERENCE_CODE); break;
+				case SK_POINTER: CHECK("Same type", l_type == EIF_POINTER_CODE); break;
+			}
+#endif
 			switch (l_type) {
 				case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 				case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;

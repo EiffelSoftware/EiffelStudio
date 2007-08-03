@@ -116,6 +116,38 @@ feature {NONE} -- Command items
 	error_info_command: EB_ERROR_INFORMATION_CMD
 			-- Error information command
 
+	go_to_next_error_command: ES_NEXT_ERROR_COMMAND
+			-- Go to next error command
+		do
+			Result := develop_window.commands.go_to_next_error_command
+		ensure
+			result_attached: Result /= Void
+		end
+
+	go_to_previous_error_command: ES_PREVIOUS_ERROR_COMMAND
+			-- Go to previous error command
+		do
+			Result := develop_window.commands.go_to_previous_error_command
+		ensure
+			result_attached: Result /= Void
+		end
+
+	go_to_next_warning_command: ES_NEXT_WARNING_COMMAND
+			-- Go to next warning command
+		do
+			Result := develop_window.commands.go_to_next_warning_command
+		ensure
+			result_attached: Result /= Void
+		end
+
+	go_to_previous_warning_command: ES_PREVIOUS_WARNING_COMMAND
+			-- Go to previous warning command
+		do
+			Result := develop_window.commands.go_to_previous_warning_command
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Query
 
 	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
@@ -277,12 +309,11 @@ feature {NONE} -- Events
 			--
 			-- `a_service': Event service where event was added.
 			-- `a_event_item': The event item added to the service.
-		local
-			l_count: like item_count
 		do
-			l_count := item_count
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
-			if is_appliable_event (a_event_item) and l_count /= item_count then
+			if not is_initialized then
+				initialize
+			end
+			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count + 1)
 				elseif is_warning_event (a_event_item) then
@@ -291,6 +322,7 @@ feature {NONE} -- Events
 					check False end
 				end
 			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 		end
 
 	on_event_removed (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I) is
@@ -298,12 +330,11 @@ feature {NONE} -- Events
 			--
 			-- `a_service': Event service where the event was removed.
 			-- `a_event_item': The event item removed from the service.
-		local
-			l_count: like item_count
 		do
-			l_count := item_count
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
-			if is_appliable_event (a_event_item) and l_count /= item_count then
+			if not is_initialized then
+				initialize
+			end
+			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count - 1)
 				elseif is_warning_event (a_event_item) then
@@ -312,6 +343,7 @@ feature {NONE} -- Events
 					check False end
 				end
 			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 		end
 
 feature {NONE} -- Events
@@ -426,30 +458,21 @@ feature {NONE} -- Factory
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Available tool bar items
 		local
-			l_cmd: ES_ERRORS_AND_WARNINGS_COMMAND
 			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create Result.make (7)
 
 				-- Navigation buttons
-			create {ES_PREVIOUS_ERROR_COMMAND}l_cmd.make (Current)
-			l_button := l_cmd.new_sd_toolbar_item (False)
-			l_button.enable_sensitive
+			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
-			create {ES_NEXT_ERROR_COMMAND}l_cmd.make (Current)
-			l_button := l_cmd.new_sd_toolbar_item (False)
-			l_button.enable_sensitive
+			l_button := go_to_previous_error_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
-			create {ES_PREVIOUS_WARNING_COMMAND}l_cmd.make (Current)
-			l_button := l_cmd.new_sd_toolbar_item (False)
-			l_button.enable_sensitive
+			l_button := go_to_next_warning_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
-			create {ES_NEXT_WARNING_COMMAND}l_cmd.make (Current)
-			l_button := l_cmd.new_sd_toolbar_item (False)
-			l_button.enable_sensitive
+			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
 				-- Separator
@@ -465,6 +488,7 @@ feature {NONE} -- Factory
 			create filter_button.make
 			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
 			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
+			filter_button.set_tooltip (interface_names.f_filter_warnings)
 			Result.put_last (filter_button)
 		ensure then
 			filter_button_attached: filter_button /= Void
@@ -484,12 +508,13 @@ feature {NONE} -- User interface manipulation
 			l_text.append_natural_8 (a_count)
 			l_text.append_character (' ')
 			if a_count = 1 then
-				l_text.append_string ("Error")
+				l_text.append_string (interface_names.b_error)
 			else
-				l_text.append_string ("Errors")
+				l_text.append_string (interface_names.b_errors)
 			end
 			errors_button.set_text (l_text)
 			update_tool_title_and_pixmap
+
 		ensure
 			error_count_set: error_count = a_count
 		end
@@ -506,9 +531,9 @@ feature {NONE} -- User interface manipulation
 			l_text.append_natural_8 (a_count)
 			l_text.append_character (' ')
 			if a_count = 1 then
-				l_text.append_string ("Warning")
+				l_text.append_string (interface_names.b_warning)
 			else
-				l_text.append_string ("Warnings")
+				l_text.append_string (interface_names.b_warnings)
 			end
 			warnings_button.set_text (l_text)
 			update_tool_title_and_pixmap
@@ -522,10 +547,9 @@ feature {NONE} -- User interface manipulation
 			l_title: STRING_32
 			l_buffer: EV_PIXEL_BUFFER
 		do
-			if item_count = 0 then
-				l_title := "Error List"
-			else
-				l_title := "Error List (" + error_count.out + "|" + warning_count.out + ")"
+			l_title := interface_names.t_errors_and_warnings_tool.twin
+			if item_count > 0 then
+				l_title := l_title + " (" + error_count.out + "|" + warning_count.out + ")"
 				if error_count > 0 and warning_count > 0 then
 					l_buffer := stock_pixmaps.tool_errors_list_with_errors_and_warnings_icon_buffer
 				elseif error_count > 0 then
@@ -555,10 +579,25 @@ feature {NONE} -- User interface manipulation
 				-- No filter actions yet so we disable it.
 			filter_button.disable_sensitive
 			if a_enable then
-				--filter_button.enable_sensitive
-				error_info_button.enable_sensitive
+				error_info_command.enable_sensitive
 			else
-				--filter_button.disable_sensitive
+				error_info_command.disable_sensitive
+			end
+
+			if error_count > 0 then
+				go_to_next_error_command.enable_sensitive
+				go_to_previous_error_command.enable_sensitive
+			else
+				go_to_next_error_command.disable_sensitive
+				go_to_previous_error_command.disable_sensitive
+			end
+
+			if warning_count > 0 then
+				go_to_next_warning_command.enable_sensitive
+				go_to_previous_warning_command.enable_sensitive
+			else
+				go_to_next_warning_command.disable_sensitive
+				go_to_previous_warning_command.disable_sensitive
 			end
 		end
 

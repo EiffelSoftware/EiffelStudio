@@ -2,7 +2,7 @@
 	description: "Private runtime global variables handling."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -125,13 +125,13 @@ typedef struct tag_rt_globals
 		/* interp.c */
 #ifdef WORKBENCH
 	struct opstack op_stack_cx;			/* Operational stack */
-	struct item **iregs_cx;				/* Interpreter registers */
+	EIF_TYPED_VALUE **iregs_cx;				/* Interpreter registers */
 	int iregsz_cx;						/* Size of 'iregs' array (bytes) */
 	uint32 argnum_cx;					/* Number of arguments */
 	uint32 locnum_cx;					/* Number of locals */
 	unsigned long tagval_cx;			/* Records number of interpreter's call */
 	struct stochunk *saved_scur_cx; 	/* current feature context */
-	struct item *saved_stop_cx;			/* current feature context */
+	EIF_TYPED_VALUE *saved_stop_cx;			/* current feature context */
 	char *inv_mark_table_cx;			/* Marking table to avoid checking the same invariant several times */
 #endif
 

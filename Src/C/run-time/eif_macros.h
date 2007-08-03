@@ -177,7 +177,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTXB(x,y) copies bit `x' to `y'
  *  RTMB(x,y) creates bit of length y bits from string value x
  *  RTEB(x,y) are bits `x' and `y' equal?
- *  RTBU(x) box a basic value stored in EIF_UNION and return EIF_REFERENCE
+ *  RTBU(x) box a basic value stored in EIF_TYPED_VALUE and return EIF_REFERENCE
  */
 #define RTLN(x)				emalloc(x)
 #define RTLNS(x,y,z)		emalloc_size(x,y,z)
@@ -223,7 +223,7 @@ RT_LNK int fcount;
 #define RTCB(x)		b_clone(x)
 #define RTCCL(x)	((x && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 #ifdef WORKBENCH
-#	define RTRCL(x)	((egc_twin(x)).value.EIF_REFERENCE_value)
+#	define RTRCL(x)	((egc_twin(x)).it_r)
 #else
 #	define RTRCL(x)	egc_twin(x)
 #endif
@@ -542,15 +542,15 @@ RT_LNK int fcount;
 #define RTOTC(name, body_id, v)                                              \
 	RTOTDV(name)                                                         \
 	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
-	EIF_UNION r;                                                         \
+	EIF_TYPED_VALUE r;                                                   \
 	r.type = SK_REF;                                                     \
 	if (PResult) {                                                       \
-		r.value.EIF_REFERENCE_value = *PResult;                      \
+		r.it_r = *PResult;                                           \
 		return r;                                                    \
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
 	MTOM(OResult);                                                       \
-	r.value.EIF_REFERENCE_value = RTOTRR = v;                          \
+	r.it_r = RTOTRR = v;                                                 \
 	return r;
 
 #define RTOTOK

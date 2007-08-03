@@ -2,7 +2,7 @@
 	description: "Data structures and functions used by debugger."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,7 +108,7 @@ extern void dmove(int offset);							/* Move active routine cursor */
 extern void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
 
 /* Once result evaluation */
-extern struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/
+extern EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/
 
 /* Downloading byte code from compiler */
 extern void drecord_bc(BODY_INDEX body_idx, BODY_INDEX body_id, unsigned char *addr);		/* Record new byte code in run-time tables */
@@ -117,14 +117,14 @@ extern void drecord_bc(BODY_INDEX body_idx, BODY_INDEX body_id, unsigned char *a
 extern void ewhere(struct where *where);
 
 /* frozen stack (used to record local variables address) */ 
-extern struct item	*c_stack_allocate(register int size);
-extern struct item	*c_opush(register struct item *val);
-extern struct item	*c_opop(void);
-extern struct item	*c_otop(void);
-extern struct item 	*c_oitem(uint32 n);
+extern EIF_TYPED_ADDRESS	*c_stack_allocate(register int size);
+extern EIF_TYPED_ADDRESS	*c_opush(register EIF_TYPED_ADDRESS *val);
+extern EIF_TYPED_ADDRESS	*c_opop(void);
+extern EIF_TYPED_ADDRESS	*c_otop(void);
+extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n);
 extern int			c_stack_extend(register int size);
 extern void 		c_npop(register int nb_items);
-extern void			c_wipe_out(register struct stochunk *chunk);
+extern void			c_wipe_out(register struct c_stochunk *chunk);
 extern void 		c_stack_truncate(void);
 RT_LNK void 		clean_local_vars (int n);
 RT_LNK void 		insert_local_var (uint32 type, void *ptr);
@@ -154,7 +154,6 @@ RT_LNK void 		insert_local_var (uint32 type, void *ptr);
 /**************/
 /* newdebug.h */
 /**************/
-#define ITEM_SZ			sizeof(struct item)
 
 #define clocnum exvect->ex_locnum
 #define cargnum exvect->ex_argnum

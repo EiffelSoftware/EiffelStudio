@@ -2,7 +2,7 @@
 	description: "Include file for printing an Eiffel object."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -39,7 +39,7 @@
 
 #include "eif_portable.h"
 #include "eif_cecil.h"		/* %%zs added for EIF_OBJECT definition line 26... */
-#include "eif_interp.h"		/* %%zs added for 'struct item' definition line 48 */
+#include "eif_interp.h"		/* %%zs added for 'EIF_TYPED_VALUE' definition line 48 */
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,7 +77,7 @@ RT_LNK EIF_REFERENCE c_outp(EIF_POINTER p);
  * build_out, as it expects a true object, not a simple type...
  */
 
-extern char *simple_out(struct item *val);		/* Tagged out form for simple types */	/* %%zs need to include 'item' definition */
+extern char *simple_out(EIF_TYPED_VALUE *val);		/* Tagged out form for simple types */	/* %%zs need to include 'item' definition */
 
 #endif /* WORKBENCH */
 

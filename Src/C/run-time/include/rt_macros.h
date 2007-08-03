@@ -2,7 +2,7 @@
 	description: "Private Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -51,17 +51,17 @@ extern "C" {
 #ifdef WORKBENCH
 #define RT_STRING_MAKE(string,len) \
 	{ \
-		EIF_UNION u; \
+		EIF_TYPED_VALUE u; \
 		u.type = SK_INT32; \
-		u.value.EIF_INTEGER_32_value = (EIF_INTEGER) (len); \
+		u.it_i4 = (EIF_INTEGER) (len); \
 		(egc_strmake)((EIF_REFERENCE) (string), u); \
 	}
 #define RT_STRING_SET_COUNT(string,count) \
 	nstcall = 0; \
 	{ \
-		EIF_UNION u; \
+		EIF_TYPED_VALUE u; \
 		u.type = SK_INT32; \
-		u.value.EIF_INTEGER_32_value = (EIF_INTEGER) count; \
+		u.it_i4 = (EIF_INTEGER) count; \
 		(egc_strset)((EIF_REFERENCE) string, u); \
 	}
 #define RT_STRING_SET_HASH_CODE(string, hash)

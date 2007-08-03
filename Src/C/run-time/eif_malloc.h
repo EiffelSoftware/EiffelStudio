@@ -2,7 +2,7 @@
 	description: "Declarations for malloc routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,7 +101,7 @@ RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 RT_LNK EIF_REFERENCE cmalloc(size_t nbytes);				/* Allocate a C object */
 RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems);			/* Reallocate an Eiffel special object */
 
-RT_LNK EIF_REFERENCE eif_box(EIF_UNION v);                  /* Create a boxed version of a basic value */
+RT_LNK EIF_REFERENCE eif_box(EIF_TYPED_VALUE v);                  /* Create a boxed version of a basic value */
 
 #ifdef __cplusplus
 }

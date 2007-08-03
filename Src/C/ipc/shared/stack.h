@@ -2,7 +2,7 @@
 	description: "Definition and declaration for stack dumping package."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -57,7 +57,7 @@ struct once {					/* A once object */
 struct dump {
 	int dmp_type;					/* Union discriminent */
 	union {
-		struct item *dmpu_item;		/* Operational stack cell */
+		EIF_TYPED_VALUE *dmpu_item;	/* Operational stack cell */
 		struct ex_vect *dmpu_vect;	/* Exception vector */
 		struct once dmpu_obj;		/* Once address */
 	} dmpu;

@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -48,36 +48,36 @@ extern "C" {
 
 #ifndef EIF_THREADS
 #ifdef WORKBENCH
-RT_LNK struct opstack cop_stack;	/* Operational stack */
+RT_LNK struct c_opstack cop_stack;	/* Operational stack */
 RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #endif
 #endif
 
 /* Macros for easy reference */
-#define it_bool		itu.itu_char
-#define it_char		itu.itu_char
-#define it_int8		itu.itu_int8
-#define it_int16	itu.itu_int16
-#define it_wchar	itu.itu_wchar
-#define it_int32	itu.itu_int32
-#define it_int64	itu.itu_int64
-#define it_real32	itu.itu_real32
-#define it_real64	itu.itu_real64
-#define	it_uint8	itu.itu_uint8
-#define	it_uint16	itu.itu_uint16
-#define	it_uint32	itu.itu_uint32
-#define	it_uint64	itu.itu_uint64
-#define it_ref		itu.itu_ref
-#define it_ptr		itu.itu_ptr
-#define it_bit		itu.itu_bit
+#define it_bool		item.b
+#define it_char		item.c1
+#define it_wchar	item.c4
+#define it_int8		item.i1
+#define it_int16	item.i2
+#define it_int32	item.i4
+#define it_int64	item.i8
+#define it_real32	item.r4
+#define it_real64	item.r8
+#define	it_uint8	item.n1
+#define	it_uint16	item.n2
+#define	it_uint32	item.n4
+#define	it_uint64	item.n8
+#define it_ref		item.r
+#define it_ptr		item.p
+#define it_bit		item.r
 
 /* Interpreter interface to outside world */
 RT_LNK void xinterp(unsigned char *icval);					/* Compound from a given address */
-RT_LNK struct item *opush(register struct item *val);			/* Push value on operational stack */
-RT_LNK struct item *opop(void);									/* Remove value from operational stack */
+RT_LNK EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);			/* Push value on operational stack */
+RT_LNK EIF_TYPED_VALUE *opop(void);									/* Remove value from operational stack */
 
 /* Macro used to prepare a cell on top of the stack */
-#define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
+#define iget()	opush((EIF_TYPED_VALUE *) 0)	/* Push empty cell on stack */
 
 #ifdef __cplusplus
 }

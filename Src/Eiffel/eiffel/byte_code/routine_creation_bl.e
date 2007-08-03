@@ -252,9 +252,10 @@ feature
 
 	generate_current is
 		do
-			buffer.put_string ("((EIF_TYPED_ELEMENT *)")
+			buffer.put_string ("((EIF_TYPED_VALUE *)")
 			arguments.print_register
-			buffer.put_string (")[1].element.rarg")
+			buffer.put_string (")[1].")
+			reference_c_type.generate_typed_field (buffer)
 		end
 
 	generate_precalc_routine_address is
@@ -310,7 +311,7 @@ feature
 							l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						end
 						if context.workbench_mode then
-							l_return_type_string := "EIF_UNION"
+							l_return_type_string := "EIF_TYPED_VALUE"
 						else
 							l_return_type_string := l_c_return_type.c_string
 						end
@@ -339,7 +340,7 @@ feature
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

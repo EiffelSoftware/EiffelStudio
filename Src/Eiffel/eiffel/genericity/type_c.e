@@ -175,16 +175,17 @@ feature
 		deferred
 		end
 
-	generate_typed_field (buffer: GENERATION_BUFFER) is
-			-- Generate field of C structure "EIF_UNION" associated
+	frozen generate_typed_field (buffer: GENERATION_BUFFER) is
+			-- Generate field of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		require
 			buffer_attached: buffer /= Void
-		deferred
+		do
+			buffer.put_string (typed_field)
 		end
 
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_UNION" associated
+			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		require
 			buffer_attached: buffer /= Void
@@ -203,9 +204,12 @@ feature
 		deferred
 		end
 
-	union_tag: STRING is
-			-- Union tag name for type in EIF_ARG_UNIONs.
+	typed_field: STRING is
+			-- Value field of a C structure corresponding to this type
 		deferred
+		ensure
+			result_attached: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Constants
@@ -213,7 +217,7 @@ feature {NONE} -- Constants
 	Sizeof: STRING is "sizeof("
 			-- Used for generation.
 
-	union_string: STRING is "EIF_UNION"
+	union_string: STRING is "EIF_TYPED_VALUE"
 			-- Name for union structure.
 
 	function_cast_string: STRING is "FUNCTION_CAST"
@@ -221,7 +225,7 @@ feature {NONE} -- Constants
 			-- Name of different function casts.
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

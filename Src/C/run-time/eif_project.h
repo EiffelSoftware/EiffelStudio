@@ -56,9 +56,9 @@ extern "C" {
 
 	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
 #ifdef WORKBENCH
-	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_UNION);	/* STRING creation feature */
-	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_UNION);
-	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_UNION, EIF_UNION);/* ARRAY creation feature */
+	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* STRING creation feature */
+	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_TYPED_VALUE);
+	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);/* ARRAY creation feature */
 #else
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK uint32 egc_str_count_offset;
@@ -68,8 +68,8 @@ extern "C" {
 	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER, EIF_INTEGER,
 							    EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
 #ifdef WORKBENCH
-	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION,
-		EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION, EIF_UNION); 	/* ROUTINE `set_rout_disp' feature */
+	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
+		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp' feature */
 #else
 	RT_LNK void (*egc_routdisp_fl)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER); /* ROUTINE `set_rout_disp_final' feature */
 #endif
@@ -161,8 +161,8 @@ extern "C" {
 #endif
 
 #ifdef WORKBENCH
-	RT_LNK EIF_UNION (*egc_equal)(EIF_REFERENCE, EIF_UNION, EIF_UNION); /* {ANY}.equal */
-	RT_LNK EIF_UNION (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+	RT_LNK EIF_TYPED_VALUE (*egc_equal)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* {ANY}.equal */
+	RT_LNK EIF_TYPED_VALUE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
 #else
 	RT_LNK EIF_BOOLEAN   (*egc_equal)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); /* {ANY}.equal */
 	RT_LNK EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */

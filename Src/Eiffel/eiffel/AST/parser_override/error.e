@@ -246,8 +246,9 @@ feature {NONE} -- Printing for single lines
 					l_text.keep_tail (l_text.count - i)
 				end
 				l_text.prune_all_leading (' ')
+				l_text.prune_all_trailing (' ')
 				if not l_text.is_empty then
-					if l_text.item (l_text.count) /= '.' and then not l_text.item (l_text.count).is_alpha_numeric then
+					if l_text.item (l_text.count) /= '.' and then l_text.item (l_text.count).is_alpha_numeric then
 							-- Append missing punctuation
 						l_text.append_character ('.')
 					end

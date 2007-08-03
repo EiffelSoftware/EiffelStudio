@@ -13,7 +13,7 @@ inherit
 
 	OBS_CLASS_WARN
 		redefine
-			build_explain, code, help_file_name, is_defined
+			trace_primary_context, build_explain, code, help_file_name, is_defined
 		end;
 
 feature -- Properties
@@ -47,6 +47,20 @@ feature -- Access
 		end
 
 feature -- Output
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if a_feature = Void then
+				Precursor (a_text_formatter)
+			else
+				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
+				a_text_formatter.add (".")
+				a_text_formatter.add_class (associated_class.lace_class)
+				a_text_formatter.add (".")
+				a_text_formatter.add_feature (a_feature, a_feature.name)
+			end
+		end
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local

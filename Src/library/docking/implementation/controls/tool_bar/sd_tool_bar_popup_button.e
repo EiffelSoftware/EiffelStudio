@@ -44,9 +44,6 @@ feature -- Command
 
 	set_dropdown_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Set `pixel_buffer_imp' with `a_pixel_buffer'.
-		local
-			l_dropdown: EV_PIXEL_BUFFER
-			l_rect: EV_RECTANGLE
 		do
 			dropdown_pixel_buffer_imp := a_pixel_buffer
 		ensure

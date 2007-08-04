@@ -30,6 +30,11 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	SHARED_SERVICE_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature{NONE}	-- Initialization
 
 	make is
@@ -49,6 +54,14 @@ feature{NONE}	-- Initialization
 		ensure
 			buffer_size_set: buffer_size = initial_buffer_size
 			time_interval_set: time_interval = initial_time_interval
+		end
+
+feature {NONE} -- Access
+
+	c_compiiled_context: UUID
+			-- Event list service context id
+		once
+			create Result.make_from_string ("E1FFE1CC-D45B-4A56-87C5-B64535BAFE1B")
 		end
 
 feature -- Setting
@@ -148,13 +161,22 @@ feature{NONE}  -- Actions
 
 	on_start is
 			-- Handler called before c compiler starts
+		local
+			l_service: EVENT_LIST_SERVICE_I
 		do
+			l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_I})
+			if l_service /= Void then
+				l_service.prune_event_items (c_compiiled_context)
+			end
 			synchronize_on_c_compilation_start
 			start_actions.call (Void)
 		end
 
 	on_exit is
 			-- Handler called when c compiler exits
+		local
+			l_service: EVENT_LIST_SERVICE_I
+			l_error: C_COMPILER_ERROR
 		do
 			if launched then
 				if exit_code /= 0 then
@@ -168,7 +190,13 @@ feature{NONE}  -- Actions
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
-					show_compilation_error_dialog
+					l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_I})
+					if l_service /= Void then
+						create l_error.make ("Please review the C Output Pane.")
+						l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
+					else
+						show_compilation_error_dialog
+					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
 					display_message_on_main_output (c_compilation_succeeded_msg, True)
@@ -186,12 +214,21 @@ feature{NONE}  -- Actions
 
 	on_launch_failed is
 			-- Handler called when c compiler launch failed
+		local
+			l_service: EVENT_LIST_SERVICE_I
+			l_error: C_COMPILER_ERROR
 		do
 			c_compilation_successful_cell.put (False)
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
-			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
+			l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_I})
+			if l_service /= Void then
+				create l_error.make ("Could not launch C/C++ compiler.")
+				l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
+			else
+				show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
+			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)
 		end

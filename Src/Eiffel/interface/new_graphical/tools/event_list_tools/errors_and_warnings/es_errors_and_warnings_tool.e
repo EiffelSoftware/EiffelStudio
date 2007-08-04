@@ -251,7 +251,10 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 						require
 							a_item_attached: a_item /= Void
 						do
-							Result := is_error_event (a_item) and then event_context_stone (a_item) /= Void
+							Result := is_error_event (a_item) and then
+								(event_context_stone (a_item) /= Void or
+									-- C compiler errors have not context stone so we need to account for this.
+								({C_COMPILER_ERROR}) #? a_item.data /= Void)
 						end)
 				end
 			end
@@ -269,7 +272,10 @@ feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
 						require
 							a_item_attached: a_item /= Void
 						do
-							Result := is_error_event (a_item) and then event_context_stone (a_item) /= Void
+							Result := is_error_event (a_item) and then
+								(event_context_stone (a_item) /= Void or
+									-- C compiler errors have not context stone so we need to account for this.
+								({C_COMPILER_ERROR}) #? a_item.data /= Void)
 						end)
 				end
 			end

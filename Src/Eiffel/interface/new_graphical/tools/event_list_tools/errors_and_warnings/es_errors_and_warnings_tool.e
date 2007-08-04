@@ -320,12 +320,24 @@ feature {NONE} -- Basic operations
 		local
 			l_event_item: EVENT_LIST_ITEM_I
 			l_stone: STONE
+			l_error: C_COMPILER_ERROR
+			l_tool: EB_C_OUTPUT_TOOL
 		do
 			l_event_item ?= a_row.data
 			if l_event_item /= Void then
-				l_stone := event_context_stone (l_event_item)
-				if l_stone /= Void and then l_stone.is_valid then
-					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+				l_error ?= l_event_item.data
+				if l_error /= Void then
+						-- Show the C/C++ compiler output
+					l_tool := develop_window.tools.c_output_tool
+					if l_tool /= Void then
+						l_tool.scroll_to_end
+						l_tool.force_display
+					end
+				else
+					l_stone := event_context_stone (l_event_item)
+					if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+					end
 				end
 			end
 		end

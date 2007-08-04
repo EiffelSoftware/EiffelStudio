@@ -251,7 +251,7 @@ feature {NONE} -- Navigation
 					l_index := l_grid.selected_rows.first.index
 				end
 				l_index := l_index - 1
-				if l_index < l_row_count then
+				if l_index = 0 then
 						-- Cycle index
 					l_index := l_row_count
 				end
@@ -288,7 +288,7 @@ feature {NONE} -- Navigation
 
 						-- Increment index
 					l_index := l_index - 1
-					if l_index > l_row_count then
+					if l_index = 0 then
 							-- Cycle, if requested
 						l_index := l_row_count
 					end
@@ -320,7 +320,7 @@ feature {NONE} -- Navigation
 				-- Select the row to indicate the error moved to
 			grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
 			a_row.enable_select
-			
+
 				-- Perform default action on row, which should open it in an editor
 			do_default_action (a_row)
 		end

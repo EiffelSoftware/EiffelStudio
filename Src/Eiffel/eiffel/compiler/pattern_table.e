@@ -188,7 +188,7 @@ feature -- Generation
 			until
 				i > nb
 			loop
-				buffer.put_string ("{(void (*)()) toc")
+				buffer.put_string ("{(void (*)(fnptr)) toc")
 				buffer.put_integer (i)
 				buffer.put_string (", (fnptr) toi")
 				buffer.put_integer (i)

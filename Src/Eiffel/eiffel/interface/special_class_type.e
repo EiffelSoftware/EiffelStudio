@@ -730,7 +730,7 @@ feature {NONE} -- C code generation
 			System.used_features_log_file.add (Current, "base_address", encoded_name)
 
 			if byte_context.workbench_mode then
-				result_type_name := "EIF_UNION"
+				result_type_name := "EIF_TYPED_VALUE"
 			else
 				result_type_name := result_type.c_type.c_string
 			end
@@ -742,7 +742,7 @@ feature {NONE} -- C code generation
 			buffer.indent
 
 			if byte_context.workbench_mode then
-				buffer.put_string ("EIF_UNION r;")
+				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
 				result_type.c_type.generate_typed_tag (buffer)

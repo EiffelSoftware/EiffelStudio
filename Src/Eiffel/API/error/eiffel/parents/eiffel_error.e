@@ -74,7 +74,7 @@ feature -- Output
 			else
 				a_text_formatter.add_group (class_c.group, class_c.group.name)
 				a_text_formatter.add (".")
-				a_text_formatter.add_class (class_c.lace_class)
+				class_c.append_name (a_text_formatter)
 			end
 		end
 

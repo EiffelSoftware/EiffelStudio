@@ -110,7 +110,7 @@ feature -- Output
 			Precursor {EIFFEL_ERROR} (a_text_formatter)
 			if e_feature /= Void then
 				a_text_formatter.add (".")
-				a_text_formatter.add_feature (e_feature, e_feature.name)
+				e_feature.append_name (a_text_formatter)
 			end
 		end
 

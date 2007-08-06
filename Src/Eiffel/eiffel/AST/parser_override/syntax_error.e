@@ -63,7 +63,7 @@ feature -- Properties
 	file_name: STRING
 			-- Path to file where syntax issue happened
 
-	code: STRING is "Syntax error"
+	code: STRING is "Syntax Error"
 			-- Error code
 
 	syntax_message: STRING is

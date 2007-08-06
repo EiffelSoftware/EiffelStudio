@@ -272,6 +272,7 @@ feature -- Possibly delayed operations
 				end
 				l_text.cursor.set_y_in_lines (a_line_number)
 				l_text.cursor.go_start_line
+				l_text.cursor.go_smart_home
 				if a_top then
 					display_line_at_top_when_ready  (a_line_number)
 				else

@@ -2632,6 +2632,30 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 9))
 		end
 
+	frozen errors_and_warnings_filter_icon: EV_PIXMAP is
+			-- Access to 'filter' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (28, 9))
+		end
+
+	frozen errors_and_warnings_filter_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'filter' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (28, 9))
+		end
+
+	frozen errors_and_warnings_filter_active_icon: EV_PIXMAP is
+			-- Access to 'filter active' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (29, 9))
+		end
+
+	frozen errors_and_warnings_filter_active_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'filter active' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (29, 9))
+		end
+
 	frozen view_previous_icon: EV_PIXMAP is
 			-- Access to 'previous' pixmap.
 		once

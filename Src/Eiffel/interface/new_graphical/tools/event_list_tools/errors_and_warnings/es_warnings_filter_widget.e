@@ -1,0 +1,284 @@
+indexing
+	description: "[
+		A widget for the Errors and Warnings tool to filter warnings.
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$date$";
+	revision: "$revision$"
+
+class
+	ES_WARNINGS_FILTER_WIDGET
+
+inherit
+	EV_VERTICAL_BOX
+		export
+			{NONE} all
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make-- (a_change_action: like filter_changed_action)
+			-- Initialize filter widget
+		require
+		--	a_change_action_attached: a_change_action /= Void
+		do
+			default_create
+			build_interface
+	--		filter_changed_action := a_change_action
+		ensure
+	--	filter_changed_action_set: filter_changed_action = a_change_action
+		end
+
+	build_interface
+			-- Constructs the window's interface
+		local
+			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+			l_label: EV_LABEL
+		do
+			set_background_color ((create{EV_STOCK_COLORS}).black)
+			set_border_width (1)
+
+			create l_vbox
+			l_vbox.set_padding (4)
+			l_vbox.set_border_width (4)
+
+			create l_label.make_with_text ("Filtered Warnings:")
+			l_label.align_text_left
+
+			create l_hbox
+			l_hbox.set_border_width (1)
+			l_hbox.set_background_color ((create{EV_STOCK_COLORS}).black)
+
+			create grid_warnings
+			grid_warnings.hide_header
+			grid_warnings.set_column_count_to (1)
+			l_hbox.extend (grid_warnings)
+
+			l_vbox.extend (l_label)
+			l_vbox.disable_item_expand (l_label)
+			l_vbox.extend (l_hbox)
+
+			extend (l_vbox)
+
+			initialize_warning_items
+
+			grid_warnings.set_minimum_size (200, grid_warnings.row_count * 15)
+		end
+
+	initialize_warning_items
+			-- Initializes items for filter
+		local
+			l_grid: like grid_warnings
+			l_types: like warning_types
+			l_cursor: DS_BILINEAR_CURSOR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+			l_item: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
+			l_internal: like internal
+			l_id: INTEGER
+			l_warning: WARNING
+			l_name: STRING
+			l_row: EV_GRID_ROW
+			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
+			i: INTEGER
+		do
+			l_types := warning_types
+			l_grid := grid_warnings
+			l_grid.set_row_count_to (l_types.count)
+
+			l_internal := internal
+			l_cursor := warning_types.new_cursor
+			from l_cursor.start; i := 1 until l_cursor.after loop
+				l_item := l_cursor.item
+				l_id := l_internal.generic_dynamic_type (l_item.type, 1)
+				if l_item.exact_only then
+					l_warning ?= l_internal.new_instance_of (l_id)
+				end
+				if l_warning /= Void then
+					l_name := l_warning.code
+				else
+					l_name := l_internal.type_name_of_type (l_id)
+				end
+				create l_check_item.make_with_text (l_name)
+				l_check_item.set_data (l_item)
+				l_check_item.checked_changed_actions.extend (agent on_filter_changed)
+				l_row := l_grid.row (i)
+				l_row.set_item (1, l_check_item)
+
+				i := i + 1
+				l_cursor.forth
+			end
+		end
+
+feature -- Access
+
+	filtered: DS_BILINEAR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+			-- List of currently filtered types.
+		local
+			l_grid: like grid_warnings
+			l_row: EV_GRID_ROW
+			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
+			l_data: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
+			l_count, i: INTEGER
+			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+		do
+			Result := internal_filtered
+			if Result = Void then
+				l_grid := grid_warnings
+				create l_result.make (0)
+				from l_count := l_grid.row_count; i := 1 until i > l_count loop
+					l_row := l_grid.row (i)
+					l_item ?= l_row.item (1)
+					if l_item /= Void and l_item.is_checked then
+						l_data ?= l_item.data
+						if l_data /= Void then
+							l_result.force_last (l_data)
+						end
+					end
+					i := i + 1
+				end
+				Result := l_result
+				internal_filtered := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+			result_items_locatable_in_warning_types: Result.for_all (agent warning_types.has)
+		end
+
+feature {NONE} -- User interface elements
+
+	grid_warnings: ES_GRID
+			-- Warnings grid
+
+feature {NONE} -- Access
+
+	warning_types: DS_BILINEAR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+			-- List of warning applicable for filtering
+			-- Note: Result.exact_only indicates if the warning types has to match excatly, otherwise
+			--       filtering should be based on conformance.
+		local
+			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+		once
+			create l_result.make (17)
+			l_result.put_last ([{CAT_CALL_WARNING}, True])
+			l_result.put_last ([{OBS_CLASS_WARN}, True])
+			l_result.put_last ([{OBS_FEAT_WARN}, True])
+			l_result.put_last ([{ONCE_IN_GENERIC_WARNING}, True])
+			l_result.put_last ([{UNUSED_LOCAL_WARNING}, True])
+			l_result.put_last ([{SYNTAX_WARNING}, True])
+			l_result.put_last ([{VTCM}, True])
+			l_result.put_last ([{VD43}, True])
+			l_result.put_last ([{VD80}, True])
+			l_result.put_last ([{VD83}, True])
+			l_result.put_last ([{VD85}, True])
+			l_result.put_last ([{VIAC}, True])
+			l_result.put_last ([{VICF}, True])
+			l_result.put_last ([{VIIK}, True])
+			l_result.put_last ([{VIOP}, True])
+			l_result.put_last ([{VIRC}, True])
+			l_result.put_last ([{VJRV}, False])
+
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	frozen internal: INTERNAL
+			-- Shared access to {INTERNAL}
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Status report
+
+	is_filtered_out (a_warning: WARNING): BOOLEAN
+			-- Determines if a warning has been filtered out
+		local
+			l_cursor: DS_BILINEAR_CURSOR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
+			l_item: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
+			l_type: TYPE [ANY]
+			l_internal: INTERNAL
+		do
+			l_internal := internal
+			l_cursor := filtered.new_cursor
+			from l_cursor.start until l_cursor.after or Result loop
+				l_item := l_cursor.item
+				l_type := l_internal.type_of (a_warning)
+				if l_item.exact_only then
+					Result := l_type.is_equal (l_item.type)
+				else
+					Result := l_type.conforms_to (l_item.type)
+				end
+				l_cursor.forth
+			end
+		end
+
+feature -- Actions
+
+	filter_changed_action: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
+			-- Action called when a filter has been changed.
+
+feature {NONE} -- Action handlers
+
+	on_filter_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
+			-- Call when a filter state has changed
+		local
+			l_data: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
+		do
+			internal_filtered := Void
+			l_data ?= a_item.data
+			if l_data /= Void then
+				filter_changed_action.call ([l_data.type, l_data.exact_only, a_item.is_checked])
+			end
+		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_filtered: like filtered
+			-- Cached version of `filtered'
+			-- Note: Do not use directly!
+
+invariant
+	grid_warnings_attached: grid_warnings /= Void
+	filter_changed_action_attached: filter_changed_action /= Void
+
+;indexing
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+end

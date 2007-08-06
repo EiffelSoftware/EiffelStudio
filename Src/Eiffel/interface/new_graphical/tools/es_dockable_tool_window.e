@@ -18,6 +18,7 @@ inherit
 			pixel_buffer as icon,
 			build_interface as on_before_initialize
 		redefine
+			internal_recycle,
 			build_mini_toolbar,
 			icon,
 			icon_pixmap,
@@ -59,6 +60,21 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- Use to perform additional creation initializations
 		do
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- Recycle tool.
+		local
+			l_site: SITE [EB_DEVELOPMENT_WINDOW]
+		do
+			Precursor {EB_TOOL}
+			l_site ?= user_widget
+			if l_site /= Void then
+					-- Invalidated site.
+				l_site.set_site (Void)
+			end
 		end
 
 feature {NONE} -- User interface initialization
@@ -135,10 +151,18 @@ feature {NONE} -- Access
 	frozen user_widget: G
 			-- Access to user widget, as `widget' may not be the indicated user widget due to
 			-- tool bar additions
+		local
+			l_site: SITE [EB_DEVELOPMENT_WINDOW]
 		do
 			Result := internal_user_widget
 			if Result = Void then
 				Result := create_widget
+
+					-- If user widget is siteable then site with the development window
+				l_site ?= Result
+				if l_site /= Void then
+					l_site.set_site (develop_window)
+				end
 				internal_user_widget := Result
 			end
 		ensure then

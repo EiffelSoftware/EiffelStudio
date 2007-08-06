@@ -21,16 +21,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make-- (a_change_action: like filter_changed_action)
+	make
 			-- Initialize filter widget
-		require
-		--	a_change_action_attached: a_change_action /= Void
 		do
 			default_create
 			build_interface
-	--		filter_changed_action := a_change_action
-		ensure
-	--	filter_changed_action_set: filter_changed_action = a_change_action
+			create filter_changed_actions
 		end
 
 	build_interface
@@ -222,7 +218,7 @@ feature -- Status report
 
 feature -- Actions
 
-	filter_changed_action: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
+	filter_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
 			-- Action called when a filter has been changed.
 
 feature {NONE} -- Action handlers
@@ -235,7 +231,7 @@ feature {NONE} -- Action handlers
 			internal_filtered := Void
 			l_data ?= a_item.data
 			if l_data /= Void then
-				filter_changed_action.call ([l_data.type, l_data.exact_only, a_item.is_checked])
+				filter_changed_actions.call ([l_data.type, l_data.exact_only, a_item.is_checked])
 			end
 		end
 
@@ -247,7 +243,7 @@ feature {NONE} -- Internal implementation cache
 
 invariant
 	grid_warnings_attached: grid_warnings /= Void
-	filter_changed_action_attached: filter_changed_action /= Void
+	filter_changed_actions_attached: filter_changed_actions /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

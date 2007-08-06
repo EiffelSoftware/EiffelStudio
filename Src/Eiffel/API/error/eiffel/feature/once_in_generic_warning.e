@@ -10,6 +10,7 @@ class ONCE_IN_GENERIC_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
+			trace_primary_context,
 			build_explain,
 			help_file_name
 		end
@@ -41,13 +42,27 @@ feature -- Properties
 	associated_feature: E_FEATURE
 			-- Once feature
 
-	code: STRING is "Once in generic"
+	code: STRING is "Once In Generic"
 			-- Error code
 
 	help_file_name: STRING is "once_in_generic_warning"
 			-- Name of file with error description
 
 feature -- Output
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if associated_feature = Void then
+				Precursor (a_text_formatter)
+			else
+				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
+				a_text_formatter.add (".")
+				associated_class.append_name (a_text_formatter)
+				a_text_formatter.add (".")
+				associated_feature.append_name (a_text_formatter)
+			end
+		end
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do

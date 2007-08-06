@@ -40,8 +40,6 @@ feature {NONE} -- Iniitalization
 			-- `a_widget': A widget to build the tool interface using.
 		local
 			l_col: EV_GRID_COLUMN
-			l_wrapper: EVS_GRID_WRAPPER [EV_GRID_ITEM]
-			l_sorter: EVS_GRID_TWO_WAY_SORTING_INFO [EV_GRID_ITEM]
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_widget)
 			a_widget.set_column_count_to (column_column)
@@ -82,7 +80,7 @@ feature {NONE} -- Clean up
 			-- Recycle tool.
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE}
-			filter_widget.filter_changed_action.prune (agent on_warnings_filter_changed)
+			filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
 		end
 
 feature -- Access
@@ -604,7 +602,7 @@ feature {NONE} -- Factory
 
 				-- Filter pop up widget
 			create filter_widget.make
-			filter_widget.filter_changed_action.extend (agent on_warnings_filter_changed)
+			filter_widget.filter_changed_actions.extend (agent on_warnings_filter_changed)
 
 				-- Filter button
 			create filter_button.make
@@ -823,10 +821,10 @@ feature {NONE} -- User interface manipulation
 				end
 				a_row.set_item (column_column, l_item)
 
-				if is_error_event (a_event_item) then
-						-- If the item is an error then expand it by default.
-					a_row.expand
-				end
+--				if is_error_event (a_event_item) then
+--						-- If the item is an error then expand it by default.
+--					a_row.expand
+--				end
 			end
 
 				-- Fill empty items

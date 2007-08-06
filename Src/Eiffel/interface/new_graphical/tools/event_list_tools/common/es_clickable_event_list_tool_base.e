@@ -106,9 +106,7 @@ feature {NONE} -- Factory
 			l_shared_writer: EB_SHARED_WRITER
 		do
 			create Result
-			if a_lines.count > 0 then
-				Result.set_text_wrap (True)
-			end
+			Result.set_text_wrap (a_lines.count > 1)
 			l_tokens := tokens_list_from_lines (a_lines)
 			if not l_tokens.is_empty then
 				create l_shared_writer

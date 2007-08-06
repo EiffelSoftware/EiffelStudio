@@ -48,13 +48,6 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_widget': A widget to build the tool interface using.
 		do
-			create grid_search_component.make (grid_events)
-
-				-- Prepare search facilities
-			create quick_search_bar.make (develop_window)
-			quick_search_bar.attach_tool (grid_search_component)
-			grid_search_component.enable_search
-
 			update_content_applicable_widgets (item_count > 0)
 		end
 
@@ -86,14 +79,6 @@ feature {NONE} -- Access
 
 	frozen event_service: EVENT_LIST_SERVICE_I
 			-- Event service the user interface is connected to
-
-	grid_search_component: EVS_SEARCHABLE_COMPONENT [STRING]
-			-- Helper component to enable grid searching
-
-feature {NONE} -- User interface elements
-
-	quick_search_bar: EB_GRID_QUICK_SEARCH_TOOL
-			-- Tool to quick search items
 
 feature -- Status report
 

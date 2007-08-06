@@ -13,7 +13,7 @@ class
 inherit
 	ERROR
 		redefine
-			has_associated_file, print_single_line_error_message
+			help_file_name, has_associated_file, print_single_line_error_message
 		end
 
 create
@@ -52,8 +52,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING = "C_COMPILER_ERROR"
+	code: STRING = "C Compiler Error"
 			-- Code error
+
+	help_file_name: STRING = "C_COMPILER_ERROR"
+			-- Help file name
 
 	message: STRING_GENERAL
 			-- Message from C compiler

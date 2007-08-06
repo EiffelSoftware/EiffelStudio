@@ -13,7 +13,7 @@ inherit
 	EIFFEL_WARNING
 		redefine
 			build_explain, help_file_name,
-			is_defined
+			is_defined, print_single_line_error_message
 		end;
 
 feature -- Properties
@@ -24,7 +24,7 @@ feature -- Properties
 	code: STRING is
 			-- Error code
 		do
-			Result := "Obsolete";
+			Result := "Obsolete Class";
 		end;
 
 	help_file_name: STRING is
@@ -71,6 +71,23 @@ feature -- Output
 			end
 			a_text_formatter.add_multiline_string (m, 1)
 			a_text_formatter.add_new_line
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor (a_text_formatter)
+			print_single_line_error_message_extended (a_text_formatter)
+		end
+
+	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			a_text_formatter.add (" Use of class ")
+			associated_class.append_name (a_text_formatter)
+			a_text_formatter.add (".")
 		end
 
 feature {COMPILER_EXPORTER}

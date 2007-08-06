@@ -12,7 +12,7 @@ class CAT_CALL_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain
+			build_explain, help_file_name
 		end
 
 	SHARED_NAMES_HEAP
@@ -48,6 +48,12 @@ feature -- Access
 			-- Feature which is called and produces the cat-call
 
 	code: STRING is
+			-- Error code
+		do
+			Result := "CAT Call";
+		end
+
+	help_file_name: STRING is
 			-- Error code
 		do
 			Result := "catcall";

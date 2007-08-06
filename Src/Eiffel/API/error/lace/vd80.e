@@ -34,14 +34,19 @@ feature {NONE} -- Output
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
 			-- Displays single line help in `a_text_formatter'.
 		local
-			l_text: STRING_32
+			l_text: STRING_8
+			l_lines: LIST [STRING_8]
 		do
 			Precursor (a_text_formatter)
 
 			l_text := warning.out
-			l_text.replace_substring_all ("%N", " ")
-			a_text_formatter.add_space
-			a_text_formatter.add (l_text)
+			l_text.prune_all_trailing ('%N')
+			l_lines := l_text.split ('%N')
+			if not l_lines.is_empty then
+				l_text := l_lines.last
+				a_text_formatter.add_space
+				a_text_formatter.add (l_text)
+			end
 		end
 
 feature {SYSTEM_I, LACE_I} -- Setting

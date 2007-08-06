@@ -14,6 +14,7 @@ inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_BASE
 		redefine
 			build_tool_interface,
+			internal_recycle,
 			create_right_tool_bar_items,
 			is_appliable_event,
 			maximum_item_count,
@@ -39,6 +40,8 @@ feature {NONE} -- Iniitalization
 			-- `a_widget': A widget to build the tool interface using.
 		local
 			l_col: EV_GRID_COLUMN
+			l_wrapper: EVS_GRID_WRAPPER [EV_GRID_ITEM]
+			l_sorter: EVS_GRID_TWO_WAY_SORTING_INFO [EV_GRID_ITEM]
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_widget)
 			a_widget.set_column_count_to (column_column)
@@ -69,6 +72,17 @@ feature {NONE} -- Iniitalization
 
 				-- Bind redirecting pick and drop actions
 			stone_director.bind (grid_events)
+
+			update_content_applicable_navigation_buttons
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- Recycle tool.
+		do
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE}
+			filter_widget.filter_changed_action.prune (agent on_warnings_filter_changed)
 		end
 
 feature -- Access
@@ -113,6 +127,9 @@ feature {NONE} -- User interface items
 
 	filter_button: SD_TOOL_BAR_POPUP_BUTTON
 			-- Filter button to filter information in list
+
+	filter_widget: ES_WARNINGS_FILTER_WIDGET
+			-- Filter widget
 
 feature {NONE} -- Command items
 
@@ -422,6 +439,8 @@ feature {NONE} -- Events
 				end
 				i := i + 1
 			end
+
+			update_content_applicable_navigation_buttons
 		end
 
 	on_toogle_warnings_button is
@@ -450,6 +469,8 @@ feature {NONE} -- Events
 				end
 				i := i + 1
 			end
+
+			update_content_applicable_navigation_buttons
 		end
 
 	on_error_info
@@ -472,6 +493,54 @@ feature {NONE} -- Events
 					l_error_attached: l_error /= Void
 				end
 				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
+			end
+		end
+
+	on_warnings_filter_changed (a_type: TYPE [ANY]; a_exact_only: BOOLEAN; a_exclude: BOOLEAN)
+			-- Called when the filter has been changed
+		local
+			l_filter: ES_WARNINGS_FILTER_WIDGET
+			l_grid: like grid_events
+			l_row: EV_GRID_ROW
+			l_event: EVENT_LIST_ITEM_I
+			l_warning: WARNING
+			l_count, i: INTEGER
+		do
+			l_filter := filter_widget
+			l_grid := grid_events
+			from l_count := l_grid.row_count; i := 1 until i > l_count loop
+				l_row := l_grid.row (i)
+				if a_exclude /= not l_row.is_show_requested then
+					l_event ?= l_row.data
+					if l_event /= Void and then is_warning_event (l_event) then
+						l_warning ?= l_event.data
+						if l_warning /= Void then
+							if l_filter.is_filtered_out (l_warning) then
+								if a_exclude then
+									l_row.hide
+								end
+							else
+								if not a_exclude then
+									l_row.show
+								end
+							end
+						end
+					end
+				end
+
+				if l_row.subrow_count_recursive > 1 then
+					i := i + l_row.subrow_count_recursive
+				else
+					i := i + 1
+				end
+			end
+
+			if l_filter.filtered.is_empty then
+				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_icon_buffer)
+				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_icon)
+			else
+				filter_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_filter_active_icon_buffer)
+				filter_button.set_pixmap (stock_pixmaps.errors_and_warnings_filter_active_icon)
 			end
 		end
 
@@ -533,10 +602,17 @@ feature {NONE} -- Factory
 			error_info_button.select_actions.extend (agent on_error_info)
 			Result.put_last (error_info_button)
 
+				-- Filter pop up widget
+			create filter_widget.make
+			filter_widget.filter_changed_action.extend (agent on_warnings_filter_changed)
+
+				-- Filter button
 			create filter_button.make
 			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
 			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
 			filter_button.set_tooltip (interface_names.f_filter_warnings)
+			filter_button.set_popup_widget (filter_widget)
+
 			Result.put_last (filter_button)
 		ensure then
 			filter_button_attached: filter_button /= Void
@@ -624,8 +700,6 @@ feature {NONE} -- User interface manipulation
 			--
 			-- `a_enable': True to indicate there is content available, False otherwise
 		do
-				-- No filter actions yet so we disable it.
-			filter_button.disable_sensitive
 			if a_enable then
 				error_info_command.enable_sensitive
 			else
@@ -636,7 +710,7 @@ feature {NONE} -- User interface manipulation
 	update_content_applicable_navigation_buttons
 			-- Updates content applicable navigation buttons
 		do
-			if error_count > 0 then
+			if error_count > 0 and errors_button.is_selected then
 				go_to_next_error_command.enable_sensitive
 				go_to_previous_error_command.enable_sensitive
 			else
@@ -644,12 +718,14 @@ feature {NONE} -- User interface manipulation
 				go_to_previous_error_command.disable_sensitive
 			end
 
-			if warning_count > 0 then
+			if warning_count > 0  and warnings_button.is_selected then
 				go_to_next_warning_command.enable_sensitive
 				go_to_previous_warning_command.enable_sensitive
+				filter_button.enable_sensitive
 			else
 				go_to_next_warning_command.disable_sensitive
 				go_to_previous_warning_command.disable_sensitive
+				filter_button.disable_sensitive
 			end
 		end
 
@@ -746,6 +822,11 @@ feature {NONE} -- User interface manipulation
 					l_item.set_text (l_error.column.out)
 				end
 				a_row.set_item (column_column, l_item)
+
+				if is_error_event (a_event_item) then
+						-- If the item is an error then expand it by default.
+					a_row.expand
+				end
 			end
 
 				-- Fill empty items

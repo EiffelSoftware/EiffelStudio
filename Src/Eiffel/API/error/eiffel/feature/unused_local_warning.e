@@ -10,7 +10,8 @@ class UNUSED_LOCAL_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain, trace_primary_context, print_single_line_error_message
+			help_file_name, build_explain, trace_primary_context,
+			print_single_line_error_message
 		end
 
 	SHARED_NAMES_HEAP
@@ -44,11 +45,11 @@ feature -- Properties
 	unused_locals: LINKED_LIST [TUPLE [name: STRING; type: TYPE_A]]
 			-- List of unused local names and type.
 
-	code: STRING is
+	code: STRING = "Unused Local Warning"
 			-- Error code
-		do
-			Result := "Unused_local_warning"
-		end
+
+	help_file_name: STRING = "Unused_local_warning"
+			-- Help file name
 
 feature -- Output
 

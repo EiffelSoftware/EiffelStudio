@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -57,7 +57,7 @@ feature -- Properties
 	file_name: STRING
 			-- Path to file where syntax issue happened
 
-	code: STRING is "Syntax warning"
+	code: STRING is "Syntax Warning"
 			-- Error code
 
 	associated_class: CLASS_C

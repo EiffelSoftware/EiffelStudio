@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 			initialize_warning_items
 
-			grid_warnings.set_minimum_size (200, grid_warnings.row_count * 15)
+			grid_warnings.set_minimum_size (200, 180)
 		end
 
 	initialize_warning_items
@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 			from l_cursor.start; i := 1 until l_cursor.after loop
 				l_item := l_cursor.item
 				l_id := l_internal.generic_dynamic_type (l_item.type, 1)
+				l_warning := Void
 				if l_item.exact_only then
 					l_warning ?= l_internal.new_instance_of (l_id)
 				end
@@ -98,7 +99,7 @@ feature {NONE} -- Initialization
 				else
 					l_name := l_internal.type_name_of_type (l_id)
 				end
-				create l_check_item.make_with_text (l_name)
+				create l_check_item.make_with_text (" " + l_name)
 				l_check_item.set_data (l_item)
 				l_check_item.checked_changed_actions.extend (agent on_filter_changed)
 				l_row := l_grid.row (i)
@@ -164,8 +165,8 @@ feature {NONE} -- Access
 			l_result.put_last ([{OBS_CLASS_WARN}, True])
 			l_result.put_last ([{OBS_FEAT_WARN}, True])
 			l_result.put_last ([{ONCE_IN_GENERIC_WARNING}, True])
-			l_result.put_last ([{UNUSED_LOCAL_WARNING}, True])
 			l_result.put_last ([{SYNTAX_WARNING}, True])
+			l_result.put_last ([{UNUSED_LOCAL_WARNING}, True])
 			l_result.put_last ([{VTCM}, True])
 			l_result.put_last ([{VD43}, True])
 			l_result.put_last ([{VD80}, True])

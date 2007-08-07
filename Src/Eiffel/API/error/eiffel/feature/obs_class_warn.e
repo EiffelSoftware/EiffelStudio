@@ -86,7 +86,7 @@ feature {NONE} -- Output
 			-- Displays single line help in `a_text_formatter'.
 		do
 			a_text_formatter.add (" Use of class ")
-			associated_class.append_name (a_text_formatter)
+			obsolete_class.append_name (a_text_formatter)
 			a_text_formatter.add (".")
 		end
 

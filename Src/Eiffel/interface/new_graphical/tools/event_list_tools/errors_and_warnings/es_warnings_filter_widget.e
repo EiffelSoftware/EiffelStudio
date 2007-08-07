@@ -64,6 +64,10 @@ feature {NONE} -- Initialization
 			initialize_warning_items
 
 			grid_warnings.set_minimum_size (200, 180)
+			grid_warnings.enable_multiple_row_selection
+			grid_warnings.enable_default_tree_navigation_behavior (True, True, True, True)
+			grid_warnings.key_release_actions.extend (agent on_grid_key_release)
+			grid_warnings.set_focus
 		end
 
 	initialize_warning_items
@@ -108,6 +112,10 @@ feature {NONE} -- Initialization
 				i := i + 1
 				l_cursor.forth
 			end
+
+			if l_grid.row_count > 0 then
+				l_grid.select_row (1)
+			end
 		end
 
 feature -- Access
@@ -145,11 +153,6 @@ feature -- Access
 			result_contains_attached_items: not Result.has (Void)
 			result_items_locatable_in_warning_types: Result.for_all (agent warning_types.has)
 		end
-
-feature {NONE} -- User interface elements
-
-	grid_warnings: ES_GRID
-			-- Warnings grid
 
 feature {NONE} -- Access
 
@@ -193,6 +196,19 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
+	frozen keys: EV_KEY_CONSTANTS
+			-- Shared access to {EV_KEY_CONSTANTS}
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- User interface elements
+
+	grid_warnings: ES_GRID
+			-- Warnings grid
+
 feature -- Status report
 
 	is_filtered_out (a_warning: WARNING): BOOLEAN
@@ -217,6 +233,22 @@ feature -- Status report
 			end
 		end
 
+feature {NONE} -- Basic operations
+
+	toggle_selected_rows
+			-- Toggles all selected rows
+		do
+			grid_warnings.selected_items.do_all (agent (a_item: EV_GRID_ITEM)
+				local
+					l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
+				do
+					l_check_item ?= a_item
+					if l_check_item /= Void then
+						l_check_item.set_is_checked (not l_check_item.is_checked)
+					end
+				end)
+		end
+
 feature -- Actions
 
 	filter_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
@@ -225,7 +257,9 @@ feature -- Actions
 feature {NONE} -- Action handlers
 
 	on_filter_changed (a_item: EV_GRID_CHECKABLE_LABEL_ITEM)
-			-- Call when a filter state has changed
+			-- Call when a filter state has changed.
+			--
+			-- `a_item': Changed item.
 		local
 			l_data: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
 		do
@@ -233,6 +267,20 @@ feature {NONE} -- Action handlers
 			l_data ?= a_item.data
 			if l_data /= Void then
 				filter_changed_actions.call ([l_data.type, l_data.exact_only, a_item.is_checked])
+			end
+		end
+
+	on_grid_key_release (a_key: EV_KEY) is
+			-- Called after a key has been released
+			--
+			-- `a_key': Key that was released
+		do
+			if a_key /= Void then
+				if a_key.code = keys.key_escape then
+					parent.hide
+				elseif a_key.code = keys.key_space or a_key.code = keys.key_enter then
+					toggle_selected_rows
+				end
 			end
 		end
 

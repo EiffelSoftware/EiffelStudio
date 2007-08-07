@@ -296,7 +296,9 @@ feature -- Pattern generation
 			generate_toi_push (buffer)
 			buffer.put_string ("%Txinterp(IC);%N")
 			if not result_type.is_void then
-				buffer.put_string ("%Treturn * opop();%N")
+				buffer.put_string ("%Tit = opop();%N%Tit->")
+				result_type.generate_typed_tag (buffer)
+				buffer.put_string (";%N%Treturn *it;%N")
 			end
 			buffer.put_string ("}%N%N") -- ss MT
 		end

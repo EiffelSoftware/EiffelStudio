@@ -100,7 +100,7 @@ feature {NONE} -- Output
 			-- Displays single line help in `a_text_formatter'.
 		do
 			a_text_formatter.add (" Call to feature `")
-			a_feature.append_name (a_text_formatter)
+			obsolete_feature.append_name (a_text_formatter)
 			a_text_formatter.add ("'.")
 		end
 

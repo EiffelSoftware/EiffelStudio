@@ -719,11 +719,9 @@ feature {NONE} -- User interface manipulation
 			if warning_count > 0  and warnings_button.is_selected then
 				go_to_next_warning_command.enable_sensitive
 				go_to_previous_warning_command.enable_sensitive
-				filter_button.enable_sensitive
 			else
 				go_to_next_warning_command.disable_sensitive
 				go_to_previous_warning_command.disable_sensitive
-				filter_button.disable_sensitive
 			end
 		end
 
@@ -737,6 +735,7 @@ feature {NONE} -- User interface manipulation
 			l_gen: EB_EDITOR_TOKEN_GENERATOR
 			l_item: EV_GRID_LABEL_ITEM
 			l_error: ERROR
+			l_warning: WARNING
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_content: LIST [EDITOR_TOKEN]
@@ -820,11 +819,6 @@ feature {NONE} -- User interface manipulation
 					l_item.set_text (l_error.column.out)
 				end
 				a_row.set_item (column_column, l_item)
-
---				if is_error_event (a_event_item) then
---						-- If the item is an error then expand it by default.
---					a_row.expand
---				end
 			end
 
 				-- Fill empty items
@@ -841,7 +835,11 @@ feature {NONE} -- User interface manipulation
 					a_row.hide
 				end
 			elseif is_warning_event (a_event_item) then
-				if not show_warnings then
+				l_warning ?= l_error
+				check
+					l_warning_attached: l_warning /= Void
+				end
+				if not show_warnings or else filter_widget /= Void and then filter_widget.is_filtered_out (l_warning) then
 					a_row.hide
 				end
 			else

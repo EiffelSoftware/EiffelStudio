@@ -14,6 +14,7 @@ inherit
 			is_valid,
 			is_equivalent,
 			same_as,
+			has_associated_class,
 			associated_class,
 			ext_append_to,
 			dump,
@@ -36,6 +37,8 @@ feature -- Properties
 		do
 			Result := True
 		end
+
+	has_associated_class: BOOLEAN is False
 
 feature -- Comparison
 

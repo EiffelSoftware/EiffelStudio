@@ -153,7 +153,6 @@ feature {NONE} -- Output
 			-- Displays single line help in `a_text_formatter'
 		do
 			initialize_output
-			print_single_line_error_code (a_text_formatter)
 			if syntax_message /= Void and then not syntax_message.is_empty then
 				a_text_formatter.add (syntax_message)
 			else

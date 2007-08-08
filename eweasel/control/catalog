@@ -781,6 +781,7 @@ test	dynamic-deferred-routine-implemented-in-generic	final035  tcf pass finalizi
 test	inline-deferred-routine-with-one-external-implementation	final036  tcf pass finalizing
 test	inline-deferred-routine-with-constants-implementations	final037  tcf pass finalizing
 test	agent_to_feature_of_generic_class final038 tcf pass finalizing
+test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

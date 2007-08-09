@@ -168,6 +168,46 @@ feature {NONE} -- Basic operations
 		deferred
 		end
 
+	selected_text: STRING_8
+			-- Retrieves selected row's text
+		local
+			l_grid: like grid_events
+			l_rows: LIST [EV_GRID_ROW]
+			l_items: LIST [EV_GRID_ITEM]
+			l_text: STRING_8
+		do
+			create Result.make_empty
+			l_grid := grid_events
+			if l_grid.is_multiple_row_selection_enabled or l_grid.is_single_row_selection_enabled then
+				l_rows := l_grid.selected_rows
+				if not l_rows.is_empty then
+					from l_rows.start until l_rows.after loop
+						l_text := row_text (l_rows.item)
+						if not l_text.is_empty then
+							Result.append (l_text)
+							Result.append_character ('%N')
+						end
+						l_rows.forth
+					end
+					Result.prune_all_trailing ('%N')
+				end
+			else
+				l_items := l_grid.selected_items
+				if not l_items.is_empty then
+					from l_items.start until l_items.after loop
+						l_text := row_item_text (l_items.item)
+						if not l_text.is_empty then
+							Result.append (l_text)
+							Result.append_character ('%T')
+						end
+						l_items.forth
+					end
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Navigation
 
 	move_next (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
@@ -336,7 +376,7 @@ feature {NONE} -- Navigation
 
 feature {NONE} -- Sort handling
 
-	enable_sorting_on_columns (a_columns: ARRAY [EV_GRID_COLUMN])
+	frozen enable_sorting_on_columns (a_columns: ARRAY [EV_GRID_COLUMN])
 			-- Enables sorting on a selected set of columns
 			--
 			-- `a_columns': The columns to enable sorting on.
@@ -367,6 +407,13 @@ feature {NONE} -- Sort handling
 				end
 				i := i + 1
 			end
+		end
+
+	frozen enable_copy_to_clipboard
+			-- Enables copying of grid items to the clipboard
+		do
+			grid_wrapper.set_selection_function (agent selected_text)
+			grid_wrapper.enable_copy
 		end
 
 	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN is
@@ -519,7 +566,7 @@ feature {NONE} -- Query
 			Result := True
 		end
 
-	row_item_text (a_item: EV_GRID_ITEM): STRING_GENERAL
+	row_item_text (a_item: EV_GRID_ITEM): STRING_32
 			-- Extracts a string representation of a grid row's cell item.
 			--
 			-- `a_item': Grid item to retrieve string representation for.
@@ -530,6 +577,7 @@ feature {NONE} -- Query
 			a_item_is_parented: a_item.is_parented
 		local
 			l_label_item: EV_GRID_LABEL_ITEM
+			l_string: STRING_GENERAL
 		do
 			l_label_item ?= a_item
 			if l_label_item /= Void then
@@ -537,8 +585,49 @@ feature {NONE} -- Query
 			end
 			if Result = Void or else Result.is_empty then
 					-- There might be string information in the item data, use that.
-				Result ?= a_item.data
+				l_string ?= a_item.data
+				if l_string /= Void then
+					Result := l_string.to_string_32
+				end
 			end
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	row_text (a_row: EV_GRID_ROW): STRING_32
+			-- Retrieves text for a given row.
+			--
+			-- `a_row': A row to retrieve a textual representation of.
+			-- `Result': The textual representation of `a_row'.
+		require
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+		local
+			l_text: STRING_32
+			l_item: EV_GRID_ITEM
+			l_count, i: INTEGER
+		do
+			create Result.make_empty
+			l_count := a_row.count
+			from i := 1 until i > l_count loop
+				l_item := a_row.item (i)
+				if l_item /= Void then
+					l_text := row_item_text (l_item)
+				end
+				if l_text /= Void and then not l_text.is_empty then
+					Result.append (l_text)
+					Result.append_character ('%T')
+				end
+				i := i + 1
+			end
+			if not Result.is_empty then
+				Result.prune_all_trailing ('%T')
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	category_pixmap_from_task (a_task: EVENT_LIST_ITEM_I): EV_PIXMAP

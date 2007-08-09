@@ -14,6 +14,7 @@ inherit
 	ES_EVENT_LIST_TOOL_BASE
 		redefine
 			build_tool_interface,
+			row_item_text,
 			create_widget,
 			internal_recycle
 		end
@@ -63,6 +64,24 @@ feature {NONE} -- Access
 			-- An editor token generator for generating editor token on grid items
 		once
 			Result := (create {EB_SHARED_WRITER}).token_writer
+		end
+
+feature {NONE} -- Query
+
+	row_item_text (a_item: EV_GRID_ITEM): STRING_32
+			-- Extracts a string representation of a grid row's cell item.
+			--
+			-- `a_item': Grid item to retrieve string representation for.
+			-- `Result': A string representation of the item or Void if not string representation could be created.
+		local
+			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_editor_item ?= a_item
+			if l_editor_item /= Void then
+				Result := l_editor_item.text
+			else
+				Result := Precursor {ES_EVENT_LIST_TOOL_BASE} (a_item)
+			end
 		end
 
 feature {NONE} -- Factory

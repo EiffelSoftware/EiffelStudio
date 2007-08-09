@@ -332,7 +332,7 @@ feature -- Pattern generation
 					buffer.put_string ("%Tit->type = ");
 					arg.generate_sk_value (buffer);
 					buffer.put_string (";%N%Tit->");
-					arg.generate_union (buffer);
+					arg.generate_typed_field (buffer);
 					buffer.put_string (" = (arg");
 					buffer.put_integer (i);
 					buffer.put_string (".type == SK_REF)? * ")

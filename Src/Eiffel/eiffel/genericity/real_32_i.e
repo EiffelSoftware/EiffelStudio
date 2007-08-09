@@ -118,13 +118,6 @@ feature -- C code generation
 	typed_field: STRING is "it_r4"
 			-- Value field of a C structure corresponding to this type
 
-	generate_union (buffer: GENERATION_BUFFER) is
-			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("it_real32")
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
 			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.

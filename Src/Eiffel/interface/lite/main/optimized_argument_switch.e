@@ -26,7 +26,7 @@ feature {ARGUMENT_LITE_PARSER} -- Factory functions
 	create_option: OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name, "", create {ARRAYED_LIST [CHARACTER_8]}.make (0), case_sensitive_flags, Current)
+			create Result.make ("", create {ARRAYED_LIST [CHARACTER_8]}.make (0), case_sensitive_flags, Current)
 		end
 
 	create_value_option (a_value: STRING_8): OPTIMIZED_ARGUMENT_OPTION
@@ -42,7 +42,7 @@ feature {ARGUMENT_LITE_PARSER} -- Factory functions
 				do
 					a_flags.extend (a_item)
 				end (?, l_flags))
-			create Result.make (name, a_value, l_flags, case_sensitive_flags, Current)
+			create Result.make (a_value, l_flags, case_sensitive_flags, Current)
 		end
 
 feature -- Flags

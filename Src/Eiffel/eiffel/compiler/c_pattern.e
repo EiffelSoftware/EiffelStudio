@@ -295,10 +295,15 @@ feature -- Pattern generation
 			buffer.put_string ("%TEIF_TYPED_VALUE *it;%N")
 			generate_toi_push (buffer)
 			buffer.put_string ("%Txinterp(IC);%N")
-			if not result_type.is_void then
+			if result_type.is_pointer then
+					-- Mask type-specific bits of the type tag
+					-- because they are not expected on the C side.
 				buffer.put_string ("%Tit = opop();%N%Tit->")
 				result_type.generate_typed_tag (buffer)
 				buffer.put_string (";%N%Treturn *it;%N")
+			elseif not result_type.is_void then
+					-- Use basic type tag as is.
+				buffer.put_string ("%Treturn * opop();%N")
 			end
 			buffer.put_string ("}%N%N") -- ss MT
 		end

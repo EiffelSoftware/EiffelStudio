@@ -91,6 +91,19 @@ feature {NONE} -- Access
 	frozen event_service: EVENT_LIST_SERVICE_I
 			-- Event service the user interface is connected to
 
+	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
+			-- A grid helper class
+		do
+			Result := internal_grid_wrapper
+			if Result = Void then
+				create Result.make (grid_events)
+				internal_grid_wrapper := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = Result
+		end
+
 feature -- Status report
 
 	scroll_list_automatically: BOOLEAN
@@ -321,6 +334,171 @@ feature {NONE} -- Navigation
 			do_default_action (a_row)
 		end
 
+feature {NONE} -- Sort handling
+
+	enable_sorting_on_columns (a_columns: ARRAY [EV_GRID_COLUMN])
+			-- Enables sorting on a selected set of columns
+			--
+			-- `a_columns': The columns to enable sorting on.
+		require
+			a_columns_attached: a_columns /= Void
+		local
+			l_wrapper: like grid_wrapper
+			l_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EV_GRID_ROW]
+			l_column: EV_GRID_COLUMN
+			l_upper, i: INTEGER
+		do
+			l_wrapper := grid_wrapper
+			l_wrapper.enable_auto_sort_order_change
+			if l_wrapper.sort_action = Void then
+				l_wrapper.set_sort_action (agent sort_handler)
+			end
+
+			from
+				i := a_columns.lower
+				l_upper := a_columns.upper
+			until i > l_upper loop
+				l_column := a_columns [i]
+				check l_column_attached: l_column /= Void end
+				if l_column /= Void then
+					create l_sort_info.make (agent sorting_row_comparer (?, ?, ?, l_column.index), {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order)
+					l_sort_info.enable_auto_indicator
+					l_wrapper.set_sort_info (l_column.index, l_sort_info)
+				end
+				i := i + 1
+			end
+		end
+
+	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN is
+			-- Agent function used to determine row order.
+			--
+			-- `a_row': The primary row to check.
+			-- `a_row': The secondary row to check.
+			-- `a_order': An order determined by order constants from {EVS_GRID_TWO_WAY_SORTING_ORDER}.
+			-- `a_column': The column index requested to be sorted.
+			-- `Result': True to indicate `a_row' is less than `a_other_row', False otherwise.
+		require
+			row_a_valid: a_row /= Void
+			row_b_valid: a_other_row /= Void
+			a_order_is_valid: a_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order or a_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order
+			a_column_is_valid_index: a_column > 0 and a_column <= grid_events.column_count
+		local
+			l_res: like compare_rows
+		do
+			l_res := compare_rows (a_row, a_other_row, a_column)
+			if a_order = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order then
+				Result := not l_res
+			else
+				Result := l_res
+			end
+		end
+
+	compare_rows (a_row, a_other_row: EV_GRID_ROW; a_column: INTEGER): BOOLEAN is
+			-- Compares two rows from the local grid and returns an index based on their comparative result.
+			--
+			-- Note: Basic implementation handles both string and integer string checking. Items with special
+			--       rendering should have redefined implementation in `row_item_text' to retrieve a sortable
+			--       text string.
+			--
+			-- `a_row': The primary row to check.
+			-- `a_other_row': The secondary row to check.
+			-- `a_column': The column index requested to be sorted.
+			-- `Result': True to indicate `a_row' is less than `a_other_row', False otherwise.
+		require
+			row_a_valid: a_row /= Void
+			row_b_valid: a_other_row /= Void
+			a_column_is_valid_index: a_column > 0 and a_column <= grid_events.column_count
+		local
+			l_item: EV_GRID_ITEM
+				-- Should to STRING_GENERAL, but it requires a change in elks
+			l_text: STRING_32
+			l_other_text: STRING_32
+		do
+			l_item := a_row.item (a_column)
+			if l_item /= Void then
+				l_text := row_item_text (l_item)
+			end
+			l_item := a_other_row.item (a_column)
+			if l_item /= Void then
+				l_other_text := row_item_text (l_item)
+			end
+			if l_text /= Void and l_other_text /= Void then
+				if l_text.is_integer_64 and l_other_text.is_integer_64 then
+					Result := l_text.to_integer_64 < l_other_text.to_integer_64
+				else
+					Result := l_text < l_other_text
+				end
+			elseif l_text = Void then
+				Result := True
+			end
+		ensure
+			asymmetric: Result implies not compare_rows (a_other_row, a_row, a_column)
+		end
+
+	frozen sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
+		require
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty: not a_column_list.is_empty
+			a_comparator_attached: a_comparator /= Void
+		local
+			l_grid: like grid_events
+			l_sorter: DS_QUICK_SORTER [EV_GRID_ROW]
+			l_rows: DS_ARRAYED_LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_count, i: INTEGER
+			l_event_items: DS_ARRAYED_LIST [TUPLE [event_item: EVENT_LIST_ITEM_I; expand: BOOLEAN]]
+			l_event_item: EVENT_LIST_ITEM_I
+		do
+			create l_sorter.make (a_comparator)
+
+			l_grid := grid_events
+			l_count := l_grid.row_count
+
+				-- Retrieve top level grid items
+			create l_rows.make ((l_count / 2).truncated_to_integer)
+
+			from i := 1 until i > l_count loop
+				l_row := l_grid.row (i)
+				l_rows.force_last (l_row)
+				i := i + l_row.subrow_count_recursive + 1
+			end
+
+				-- Perform sort
+			l_sorter.sort (l_rows)
+
+				-- Extract all event item data for repopulation
+			create l_event_items.make (l_rows.count)
+			from l_rows.start until l_rows.after loop
+				l_row := l_rows.item_for_iteration
+				l_event_item ?= l_row.data
+				check l_event_item_attached: l_event_item /= Void end
+				l_event_items.force_last ([l_event_item, l_row.is_expanded])
+				l_rows.forth
+			end
+
+				-- Repopulate grid
+			l_grid.lock_update
+			l_grid.remove_and_clear_all_rows
+
+			from i := 1; l_event_items.start until l_event_items.after loop
+				l_grid.set_row_count_to (i)
+				l_row := l_grid.row (i)
+				l_event_item := l_event_items.item_for_iteration.event_item
+
+				l_row.set_data (l_event_item)
+				populate_event_grid_row_items (l_event_item, l_row)
+				if l_event_items.item_for_iteration.expand then
+					l_row.expand
+				end
+
+				i := i + 1 + l_row.subrow_count_recursive
+				l_event_items.forth
+			end
+
+			l_grid.unlock_update
+		end
+
 feature {NONE} -- UI manipulation
 
 	update_content_applicable_widgets (a_enable: BOOLEAN)
@@ -341,6 +519,28 @@ feature {NONE} -- Query
 			Result := True
 		end
 
+	row_item_text (a_item: EV_GRID_ITEM): STRING_GENERAL
+			-- Extracts a string representation of a grid row's cell item.
+			--
+			-- `a_item': Grid item to retrieve string representation for.
+			-- `Result': A string representation of the item or Void if not string representation could be created.
+		require
+			a_item_attached: a_item /= Void
+			not_a_item_is_destroyed: not a_item.is_destroyed
+			a_item_is_parented: a_item.is_parented
+		local
+			l_label_item: EV_GRID_LABEL_ITEM
+		do
+			l_label_item ?= a_item
+			if l_label_item /= Void then
+				Result := l_label_item.text
+			end
+			if Result = Void or else Result.is_empty then
+					-- There might be string information in the item data, use that.
+				Result ?= a_item.data
+			end
+		end
+
 	category_pixmap_from_task (a_task: EVENT_LIST_ITEM_I): EV_PIXMAP
 			-- Retrieves a pixmap associated with a tasks category
 			--
@@ -351,7 +551,7 @@ feature {NONE} -- Query
 		do
 			inspect a_task.category
 			when {EVENT_LIST_ITEM_CATEGORIES}.compilation then
-				Result := stock_pixmaps.compile_animation_8_icon
+				Result := stock_pixmaps.compile_animation_7_icon
 			else
 				-- No matching category
 			end
@@ -551,6 +751,12 @@ feature {NONE} -- Factory
 		ensure
 			a_row_has_event_item_data: a_row.data = a_event_item
 		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_grid_wrapper: like grid_wrapper
+			-- Cached version of `grid_wrapper'
+			-- Note: Do not use directly!
 
 invariant
 	grid_events_attached: is_initialized implies grid_events /= Void

@@ -66,14 +66,18 @@ feature {NONE} -- Iniitalization
 			l_col.set_title ("Column")
 			l_col.set_width (50)
 
+			grid_events.enable_tree
+			grid_events.disable_row_height_fixed
+
+				-- Enable sorting
 			enable_sorting_on_columns (<<a_widget.column (category_column),
 				a_widget.column (error_column),
 				a_widget.column (context_column),
 				a_widget.column (lines_column),
 				a_widget.column (column_column)>>)
 
-			grid_events.enable_tree
-			grid_events.disable_row_height_fixed
+				-- Enable copying to clipboard
+			enable_copy_to_clipboard
 
 				-- Bind redirecting pick and drop actions
 			stone_director.bind (grid_events)

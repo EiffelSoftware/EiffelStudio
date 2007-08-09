@@ -1122,7 +1122,6 @@ feature {NONE} -- Generation
 			n: INTEGER
 			i, j, k, o: INTEGER
 			sep: STRING
-			tags : ARRAY [STRING]
 			arg_type: TYPE_C
 		do
 			if a_args = Void then

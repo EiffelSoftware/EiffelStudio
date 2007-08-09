@@ -25,6 +25,11 @@ inherit
 			show
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 	ES_SHARED_COLORS
 		export
 			{NONE} all

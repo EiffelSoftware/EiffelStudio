@@ -500,6 +500,7 @@ feature -- Access
 		local
 			l_cursor: CURSOR
 			l_tokens: like tokens
+			l_eol: EDITOR_TOKEN_EOL
 		do
 			l_tokens := tokens
 			l_cursor := l_tokens.cursor
@@ -509,7 +510,12 @@ feature -- Access
 			until
 				l_tokens.after
 			loop
-				Result.append (l_tokens.item.image)
+				l_eol ?= l_tokens.item
+				if l_eol = Void then
+					Result.append (l_tokens.item.image)
+				else
+					Result.append_character ('%N')
+				end
 				l_tokens.forth
 			end
 			if l_cursor /= Void then

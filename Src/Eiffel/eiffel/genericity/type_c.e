@@ -167,14 +167,6 @@ feature
 			end
 		end
 
-	generate_union (buffer: GENERATION_BUFFER) is
-			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `buffer'.
-		require
-			good_argument: buffer /= Void
-		deferred
-		end
-
 	frozen generate_typed_field (buffer: GENERATION_BUFFER) is
 			-- Generate field of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.

@@ -89,13 +89,6 @@ feature
 			create Result
 		end
 
-	generate_union (buffer: GENERATION_BUFFER) is
-			-- Generate discriminant of C structure "item" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("it_char")
-		end
-
 	generate_typed_tag (buffer: GENERATION_BUFFER) is
 			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.

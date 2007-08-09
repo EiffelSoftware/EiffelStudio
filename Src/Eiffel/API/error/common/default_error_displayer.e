@@ -43,11 +43,13 @@ feature -- Output
 		local
 			warning_list: LINKED_LIST [ERROR];
 			a_text_formatter: TEXT_FORMATTER
+			l_cursor: CURSOR
 		do
 			a_text_formatter := output_window
 			if not retried then
 				from
 					warning_list := handler.warning_list
+					l_cursor := warning_list.cursor
 					warning_list.start
 				until
 					warning_list.after
@@ -58,6 +60,7 @@ feature -- Output
 					a_text_formatter.add_new_line;
 					warning_list.forth;
 				end;
+				warning_list.go_to (l_cursor)
 				if handler.error_list.is_empty then
 						-- There is no error in the list
 						-- put a separation before the next message
@@ -79,11 +82,13 @@ feature -- Output
 		local
 			error_list: LINKED_LIST [ERROR]
 			a_text_formatter: TEXT_FORMATTER
+			l_cursor: CURSOR
 		do
 			a_text_formatter := output_window
 			if not retried then
 				from
 					error_list := handler.error_list
+					l_cursor := error_list.cursor
 					error_list.start
 				until
 					error_list.after
@@ -94,6 +99,7 @@ feature -- Output
 					a_text_formatter.add_new_line
 					error_list.forth
 				end
+				error_list.go_to (l_cursor)
 				display_separation_line (a_text_formatter)
 				display_additional_info (a_text_formatter)
 			else

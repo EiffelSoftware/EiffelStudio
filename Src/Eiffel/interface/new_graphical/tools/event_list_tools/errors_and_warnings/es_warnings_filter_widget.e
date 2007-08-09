@@ -14,6 +14,7 @@ inherit
 	EV_VERTICAL_BOX
 		export
 			{NONE} all
+			{ANY} is_show_requested
 		end
 
 create
@@ -67,7 +68,6 @@ feature {NONE} -- Initialization
 			grid_warnings.enable_multiple_row_selection
 			grid_warnings.enable_default_tree_navigation_behavior (True, True, True, True)
 			grid_warnings.key_release_actions.extend (agent on_grid_key_release)
-			grid_warnings.set_focus
 		end
 
 	initialize_warning_items
@@ -253,6 +253,16 @@ feature -- Actions
 
 	filter_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
 			-- Action called when a filter has been changed.
+
+feature {ES_ERRORS_AND_WARNINGS_TOOL} -- Action handlers
+
+	on_shown is
+			-- Called when widget is display
+		require
+			is_show_requested: is_show_requested
+		do
+			grid_warnings.set_focus
+		end
 
 feature {NONE} -- Action handlers
 

@@ -20,7 +20,8 @@ inherit
 			maximum_item_count,
 			on_event_added,
 			on_event_removed,
-			update_content_applicable_widgets
+			update_content_applicable_widgets,
+			on_shown
 		end
 
 	ES_ERRORS_AND_WARNINGS_COMMANDER_I
@@ -64,6 +65,12 @@ feature {NONE} -- Iniitalization
 			l_col := a_widget.column (column_column)
 			l_col.set_title ("Column")
 			l_col.set_width (50)
+
+			enable_sorting_on_columns (<<a_widget.column (category_column),
+				a_widget.column (error_column),
+				a_widget.column (context_column),
+				a_widget.column (lines_column),
+				a_widget.column (column_column)>>)
 
 			grid_events.enable_tree
 			grid_events.disable_row_height_fixed
@@ -365,6 +372,15 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Events
 
+	on_shown
+			-- Perform update actions when the tool is displayed.
+		do
+			Precursor
+			if filter_widget /= Void then
+				filter_widget.on_shown
+			end
+		end
+
 	on_event_added (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called when a event item is added to the event service.
 			--
@@ -408,8 +424,6 @@ feature {NONE} -- Events
 				update_content_applicable_navigation_buttons
 			end
 		end
-
-feature {NONE} -- Events
 
 	on_toogle_errors_button is
 			-- Called when `errors_button' is selected
@@ -750,6 +764,9 @@ feature {NONE} -- User interface manipulation
 			l_pixmap := category_pixmap_from_task (a_event_item)
 			if l_pixmap /= Void then
 				l_item.set_pixmap (l_pixmap)
+
+					-- Set string data for pixmap index, so it can be sorted.
+				l_item.set_data (a_event_item.category.out)
 			end
 			a_row.set_item (category_column, l_item)
 

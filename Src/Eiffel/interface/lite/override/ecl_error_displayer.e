@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 
 			a_window.put_new_line
-			a_error.build_explain (a_window)
+			a_error.trace (a_window)
 		end
 
 	short_help_file_name (a_error: ERROR): STRING is

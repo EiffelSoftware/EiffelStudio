@@ -106,7 +106,7 @@ feature {NONE} -- Basic operations
 		do
 			if not a_window.is_recycled and then a_window.is_visible then
 				l_tool := a_window.tools.errors_and_warnings_tool
-				if l_tool /= Void and then not l_tool.is_recycled and then not l_tool.shown then
+				if l_tool /= Void and then not l_tool.is_recycled then
 						-- Force tool to be shown
 					l_tool.show
 				end

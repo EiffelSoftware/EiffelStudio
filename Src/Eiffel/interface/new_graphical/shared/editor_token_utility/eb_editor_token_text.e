@@ -891,6 +891,7 @@ feature{NONE} -- Implementation
 								l_token_in_current_line := 0
 								l_width_left := l_max_width - l_x_offset
 							else
+								x := x + l_ell_pos.x + l_ell_pos.width - 1
 								l_finished := not (l_is_max_height_set implies (y + 2 * l_line_height <= l_max_height))
 							end
 							l_should_go_forward := True

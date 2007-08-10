@@ -810,7 +810,7 @@ feature {NONE} -- User interface manipulation
 						-- Sub row full error
 					a_row.insert_subrow (1)
 					l_row := a_row.subrow (1)
-					l_editor_item := create_multiline_clickable_grid_item (l_lines)
+					l_editor_item := create_multiline_clickable_grid_item (l_lines, False)
 					l_row.set_height (l_tip.required_tooltip_height)
 					l_row.set_item (error_column, l_editor_item)
 				end

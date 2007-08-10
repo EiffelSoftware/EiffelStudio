@@ -108,12 +108,12 @@ feature {NONE} -- Factory
 		do
 			create l_lines.make (1)
 			l_lines.extend (a_line)
-			Result := create_multiline_clickable_grid_item (l_lines)
+			Result := create_multiline_clickable_grid_item (l_lines, False)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	create_multiline_clickable_grid_item (a_lines: LIST [EIFFEL_EDITOR_LINE]): EB_GRID_EDITOR_TOKEN_ITEM
+	create_multiline_clickable_grid_item (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_use_text_wrapping: BOOLEAN): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a new grid item to host the context of `a_lines'.
 			--
 			-- `a_lines': The editor lines containing tokens to render on the resulting grid item.
@@ -125,7 +125,7 @@ feature {NONE} -- Factory
 			l_shared_writer: EB_SHARED_WRITER
 		do
 			create Result
-			Result.set_text_wrap (a_lines.count > 1)
+			Result.set_text_wrap (a_use_text_wrapping)
 			l_tokens := tokens_list_from_lines (a_lines)
 			if not l_tokens.is_empty then
 				create l_shared_writer

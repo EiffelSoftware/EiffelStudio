@@ -1410,7 +1410,6 @@ feature {NONE} -- Implementation
 						-- We keep the palette
 					private_palette := dib.palette
 					private_palette.enable_reference_tracking
-					private_palette.increment_reference
 
 					dib.dispose
 					dib := Void

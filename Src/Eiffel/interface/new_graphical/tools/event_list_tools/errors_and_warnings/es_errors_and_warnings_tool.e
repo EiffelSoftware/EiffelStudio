@@ -91,7 +91,9 @@ feature {NONE} -- Clean up
 			-- Recycle tool.
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE}
-			filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
+			if filter_widget /= Void then
+				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
+			end
 		end
 
 feature -- Access

@@ -692,8 +692,6 @@ feature{NONE} -- Actions
 
 	on_idle_action_for_cmd_lst is
 			-- Handle focus issue of `cmd_lst' in idle action.
-		local
-			l_position: INTEGER
 		do
 			if last_focus_at_completion_window then
 				last_focus_at_completion_window := False
@@ -934,7 +932,7 @@ feature {NONE} -- Implementation
 
 	last_focus_at_completion_window: BOOLEAN
 		-- Did last focus stayed in code completation window?
-		
+
 	set_focus_on_idle is
 			-- Set focus on idle actions.
 		local

@@ -401,10 +401,12 @@ feature -- Access: file name
 			-- Docking config data folder name
 		once
 			if not is_workbench then
-				Result := "docking"
+				Result := "docking_"
 			else
-				Result := "docking_wb"
+				Result := "docking_wb_"
 			end
+			Result.append_integer (major_version)
+			Result.append_integer (minor_version)
 		end
 
 	Standard_tools_layout_name: STRING is

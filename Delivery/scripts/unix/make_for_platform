@@ -17,9 +17,9 @@ if [ $# -ge 3 ]; then
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
 		# Do the compilation
-	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; bash ./compile_exes $platform"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; sh ./compile_exes $platform"
 		# Build the delivery
-	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; bash ./make_images $platform"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; sh ./make_images $platform"
 
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel61_enterprise*bz2" .
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel61_gpl*bz2" .

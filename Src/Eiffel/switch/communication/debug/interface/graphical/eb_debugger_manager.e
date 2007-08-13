@@ -2144,6 +2144,16 @@ feature {NONE} -- Implementation
 
 			l_tools.metric_tool.content.set_tab_with (l_tools.dependency_tool.content, False)
 
+			l_tool := l_tools.errors_and_warnings_tool
+			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
+				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
+				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			else
+				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			end
+
 			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
 			l_window := debugging_window.window
 			l_tools.favorites_tool.content.set_tab_with (call_stack_tool.content, False)

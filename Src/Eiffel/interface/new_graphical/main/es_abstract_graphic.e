@@ -200,7 +200,8 @@ feature {NONE} -- Service factories
 
 	create_event_list_service: EVENT_LIST_SERVICE_I
 			-- Creates the event list service
-		deferred
+		do
+			create {EVENT_LIST_SERVICE}Result.make
 		end
 
 feature {NONE} -- Exception handling

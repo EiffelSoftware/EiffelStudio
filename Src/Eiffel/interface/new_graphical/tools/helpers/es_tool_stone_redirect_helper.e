@@ -48,6 +48,20 @@ feature -- Basic operations
 			a_widget.drop_actions.extend (agent drop_cluster)
 		end
 
+	unbind (a_widget: EV_WIDGET)
+			-- Unbinds drop actions to a widget.
+			--
+			-- `a_widget': Widget to unbind common drop actions to.
+		require
+			a_widget_attached: a_widget /= Void
+		do
+			a_widget.drop_actions.compare_objects
+			a_widget.drop_actions.prune (agent drop_breakable)
+			a_widget.drop_actions.prune (agent drop_class)
+			a_widget.drop_actions.prune (agent drop_feature)
+			a_widget.drop_actions.prune (agent drop_cluster)
+		end
+
 feature {NONE} -- Redirects
 
 	drop_breakable (a_stone: BREAKABLE_STONE) is

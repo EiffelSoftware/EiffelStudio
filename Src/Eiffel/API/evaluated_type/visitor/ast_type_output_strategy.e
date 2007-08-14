@@ -106,6 +106,13 @@ feature {TYPE_A} -- Visitors
 		local
 			l_class: CLASS_C
 		do
+			if a_type.has_attached_mark then
+				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_symbol_text (ti_question)
+				text_formatter.add_space
+			end
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
 				text_formatter.add_space
@@ -172,6 +179,13 @@ feature {TYPE_A} -- Visitors
 	process_like_argument (a_type: LIKE_ARGUMENT) is
 			-- Process `a_type'.
 		do
+			if a_type.has_attached_mark then
+				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_symbol_text (ti_question)
+				text_formatter.add_space
+			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
@@ -185,6 +199,13 @@ feature {TYPE_A} -- Visitors
 	process_like_current (a_type: LIKE_CURRENT) is
 			-- Process `a_type'.
 		do
+			if a_type.has_attached_mark then
+				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_symbol_text (ti_question)
+				text_formatter.add_space
+			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			text_formatter.process_keyword_text (ti_current, Void)
@@ -195,6 +216,13 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat: E_FEATURE
 		do
+			if a_type.has_attached_mark then
+				text_formatter.process_symbol_text (ti_exclamation)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_symbol_text (ti_question)
+				text_formatter.add_space
+			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.routine_id)
@@ -340,7 +368,7 @@ feature {TYPE_A} -- Visitors
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

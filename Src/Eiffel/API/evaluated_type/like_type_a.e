@@ -43,6 +43,18 @@ feature -- Properties
 			Result := actual_type.conformance_type
 		end
 
+	has_attached_mark: BOOLEAN is
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_attached_mark_mask /= 0
+		end
+
+	has_detachable_mark: BOOLEAN is
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_detachable_mark_mask /= 0
+		end
+
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
 		do
@@ -116,6 +128,22 @@ feature -- Primitives
 			actual_type := a
 		end
 
+	set_attached_mark is
+			-- Set class type declaration as having an explicit attached mark.
+		do
+			attachment_bits := has_attached_mark_mask
+		ensure
+			has_attached_mark
+		end
+
+	set_detachable_mark is
+			-- Set class type declaration as having an explicit detachable mark.
+		do
+			attachment_bits := has_detachable_mark_mask
+		ensure
+			has_detachable_mark
+		end
+
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
@@ -168,8 +196,19 @@ feature -- Primitives
 			Result := actual_type.meta_type
 		end
 
+feature {NONE} -- Attachment properties
+
+	attachment_bits: NATURAL_8
+			-- Associated attachment flags
+
+	has_detachable_mark_mask: NATURAL_8 is 1
+			-- Mask in `attachment_bits' that tells whether the type has an explicit detachanble mark
+
+	has_attached_mark_mask: NATURAL_8 is 2;
+			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -737,12 +737,22 @@ feature {TYPE_A} -- Visitors
 			if l_anchor_feature /= Void then
 					-- Create instance of LIKE_FEATURE
 				create l_like_feature.make (l_anchor_feature, current_class.class_id)
+				if a_type.has_attached_mark then
+					l_like_feature.set_attached_mark
+				elseif a_type.has_detachable_mark then
+					l_like_feature.set_detachable_mark
+				end
 				update_like_feature (l_anchor_feature, l_like_feature)
 			else
 				l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
 				if l_argument_position /= 0 then
 					create l_like_argument
 					l_like_argument.set_position (l_argument_position)
+					if a_type.has_attached_mark then
+						l_like_argument.set_attached_mark
+					elseif a_type.has_detachable_mark then
+						l_like_argument.set_detachable_mark
+					end
 					update_like_argument (current_feature, l_like_argument)
 				else
 					last_type := Void
@@ -909,7 +919,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

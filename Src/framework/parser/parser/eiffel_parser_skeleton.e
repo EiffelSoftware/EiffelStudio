@@ -589,7 +589,7 @@ feature {NONE} -- Type factory
 	is_supplier_recorded: BOOLEAN
 			-- Are suppliers recorded in `suppliers'?
 
-	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS; attachment_mark: SYMBOL_AS): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -629,12 +629,14 @@ feature {NONE} -- Type factory
 					end
 					if Result = Void then
 							-- It is a common class type.
-						class_type := ast_factory.new_class_type_as (class_name, generics)
+						class_type := ast_factory.new_class_type_as (class_name, generics, attachment_mark)
 						if is_supplier_recorded then
 								-- Put the supplier in `suppliers'.
 							suppliers.insert_supplier_id (class_name)
 						end
 						Result := class_type
+					elseif attachment_mark /= Void then
+						report_error ("Attachment mark in front of formal generic")
 					end
 				end
 			end
@@ -814,7 +816,7 @@ invariant
 	is_partial_class_not_set: not il_parser implies not is_partial_class
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

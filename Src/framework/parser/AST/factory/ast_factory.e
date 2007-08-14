@@ -851,11 +851,11 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 			if n /= Void then
-				create Result.initialize (n, g)
+				create Result.initialize (n, g, attachment_mark)
 			end
 		end
 
@@ -1451,18 +1451,18 @@ feature -- Access
 			create Result.initialize (a, once_manifest_string_count, i_as)
 		end
 
-	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS): LIKE_ID_AS is
+	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_ID_AS is
 			-- New LIKE_ID AST node
 		do
 			if a /= Void then
-				create Result.initialize (a, l_as)
+				create Result.initialize (a, l_as, attachment_mark)
 			end
 		end
 
-	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS): LIKE_CUR_AS is
+	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_CUR_AS is
 			-- New LIKE_CURRENT AST node
 		do
-			create Result.make (other, l_as)
+			create Result.make (other, l_as, attachment_mark)
 		end
 
 	new_location_as (l, c, p, s: INTEGER): LOCATION_AS is
@@ -1855,7 +1855,7 @@ feature -- Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

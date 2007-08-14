@@ -2860,6 +2860,14 @@ feature {NONE} -- Implementation
 				if last_type /= Void then
 					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
+					if l_as.attachment_mark /= Void then
+						if l_as.attachment_mark.is_bang then
+							text_formatter_decorator.process_symbol_text (ti_exclamation)
+						else
+							text_formatter_decorator.process_symbol_text (ti_question)
+						end
+						text_formatter_decorator.add_space
+					end
 					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					text_formatter_decorator.add_space
 					text_formatter_decorator.process_local_text (l_as.anchor.name)
@@ -2874,17 +2882,8 @@ feature {NONE} -- Implementation
 				last_actual_local_type := last_type
 			end
 			if not expr_type_visiting then
-				type_output_strategy.process (like_current_type, text_formatter_decorator, current_class, current_feature)
+				type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 			end
-		end
-
-	like_current_type: LIKE_CURRENT is
-			-- Fake type used for printing `like Current' as `instantiation_in' on
-			-- a `like Current' returns the actual type.
-		once
-			create Result
-		ensure
-			like_current_not_void: Result /= Void
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
@@ -4238,7 +4237,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -524,7 +524,7 @@ feature -- Access
 		do
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 		end
@@ -844,12 +844,12 @@ feature -- Access
 		do
 		end
 
-	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS): LIKE_ID_AS is
+	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_ID_AS is
 			-- New LIKE_ID AST node
 		do
 		end
 
-	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS): LIKE_CUR_AS is
+	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_CUR_AS is
 			-- New LIKE_CURRENT AST node
 		do
 		end
@@ -1113,7 +1113,7 @@ feature -- Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

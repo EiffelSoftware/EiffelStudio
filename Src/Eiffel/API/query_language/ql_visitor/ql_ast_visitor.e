@@ -1254,6 +1254,7 @@ feature{NONE} -- Implementation
 			if not is_matching_finished then
 				match_ast (like_id)
 				safe_process (l_as.lcurly_symbol)
+				safe_process (l_as.attachment_mark)
 				safe_process (l_as.like_keyword)
 				safe_process (l_as.anchor)
 				safe_process (l_as.rcurly_symbol)
@@ -1265,6 +1266,7 @@ feature{NONE} -- Implementation
 			if not is_matching_finished then
 				match_ast (like_cur)
 				safe_process (l_as.lcurly_symbol)
+				safe_process (l_as.attachment_mark)
 				safe_process (l_as.like_keyword)
 				safe_process (l_as.current_keyword)
 				safe_process (l_as.rcurly_symbol)
@@ -1311,6 +1313,7 @@ feature{NONE} -- Implementation
 			if not is_matching_finished then
 				match_ast (class_type)
 				safe_process (l_as.lcurly_symbol)
+				safe_process (l_as.attachment_mark)
 				safe_process (l_as.expanded_keyword)
 				safe_process (l_as.separate_keyword)
 				safe_process (l_as.class_name)
@@ -1673,7 +1676,7 @@ invariant
 	ast_array_attached: ast_array /= Void
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2007, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

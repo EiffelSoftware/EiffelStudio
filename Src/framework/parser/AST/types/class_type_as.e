@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics) is
+	initialize (n: like class_name; g: like generics; m: SYMBOL_AS) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -32,9 +32,11 @@ feature {NONE} -- Initialization
 		do
 			class_name := n
 			internal_generics := g
+			attachment_mark := m
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
 			internal_generics_set: internal_generics = g
+			attachment_mark_set: attachment_mark = m
 		end
 
 feature -- Visitor
@@ -71,6 +73,9 @@ feature -- Attributes
 
 feature -- Roundtrip
 
+	attachment_mark: SYMBOL_AS
+			-- Attachment symbol (if any)
+
 	expanded_keyword: KEYWORD_AS
 			-- Keyword "expanded" associated with this structure.
 
@@ -89,7 +94,9 @@ feature -- Roundtrip/Token
 				if a_list = Void then
 					Result := class_name.first_token (a_list)
 				else
-					if expanded_keyword /= Void then
+					if attachment_mark /= Void then
+						Result := attachment_mark.first_token (a_list)
+					elseif expanded_keyword /= Void then
 						Result := expanded_keyword.first_token (a_list)
 					elseif separate_keyword /= Void then
 						Result := separate_keyword.first_token (a_list)
@@ -125,9 +132,16 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (class_name, other.class_name) and then
-				equivalent (generics, other.generics) and then
-				is_expanded = other.is_expanded
+			if attachment_mark = Void then
+				Result := other.attachment_mark = Void
+			else
+				Result := attachment_mark.	is_equivalent (other.attachment_mark)
+			end
+			if Result then
+				Result := equivalent (class_name, other.class_name) and then
+					equivalent (generics, other.generics) and then
+					is_expanded = other.is_expanded
+			end
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
@@ -162,6 +176,14 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			-- Dumped string
 		do
 			create Result.make (class_name.name.count)
+			if attachment_mark /= Void then
+				if attachment_mark.is_bang then
+					Result.append_character ('!')
+				else
+					Result.append_character ('?')
+				end
+				Result.append_character (' ')
+			end
 			Result.append (class_name.name)
 			if generics /= Void then
 				from
@@ -181,7 +203,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

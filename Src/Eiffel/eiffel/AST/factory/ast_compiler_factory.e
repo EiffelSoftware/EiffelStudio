@@ -101,10 +101,10 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS): CLASS_TYPE_AS is
 		do
 			if n /= Void then
-				create Result.initialize (n, g)
+				create Result.initialize (n, g, attachment_mark)
 			end
 		end
 
@@ -345,7 +345,7 @@ feature {NONE} -- Validation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

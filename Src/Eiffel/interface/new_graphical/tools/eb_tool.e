@@ -1,7 +1,12 @@
 indexing
-	description	: "$EiffelGraphicalCompiler$ tool. Ancestor of all tools in the workbench, %
-				  %providing dragging capabilities (transport). A tool is %
-				  %composed of a container and manager"
+	description	: "[
+		EiffelGraphicalCompiler$ tool. Ancestor of all tools in the workbench,
+		providing dragging capabilities (transport). A tool is
+		composed of a container and manager
+		
+		Note: DO NOT USE as a base class for new tools in EiffelStudio!
+		      Please use {ES_DOCKABLE_TOOL_WINDOW} instead.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"

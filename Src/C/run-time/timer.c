@@ -51,6 +51,10 @@ doc:<file name="timer.c" header="rt_timer.h" version="$Id$" summary="Time relate
 #include <sys/machd.h>
 #endif
 
+#ifdef EIF_WINDOWS
+#include <windows.h>
+#endif
+
 #ifdef HAS_GETTIMEOFDAY
 rt_public void gettime(struct timeval *stamp)
 {
@@ -144,8 +148,23 @@ rt_public void getcputime(double *usertime, double *systime)
 #else
 rt_public void getcputime(double *usertime, double *systime)
 {
+#ifdef EIF_WINDOWS
+	BOOL l_success;
+	FILETIME l_creation, l_exit, l_user, l_kernel;
+
+	l_success = GetProcessTimes(GetCurrentProcess(), &l_creation, &l_exit, &l_kernel, &l_user);
+	if (l_success) {
+			/* The times are given in nanoseconds, thus the division by 10000000 to get the seconds. */
+		*usertime = ((*(EIF_NATURAL_64*) &l_user) / 10000000.);
+		*systime = ((*(EIF_NATURAL_64*) &l_kernel) / 10000000.);
+	} else {
+		*usertime = 0;
+		*systime = 0;
+	}
+#else
 	*usertime = 0;
 	*systime = 0;
+#endif
 }
 #endif
 

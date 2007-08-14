@@ -45,6 +45,7 @@ feature {NONE} -- Iniitalization
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_widget)
 			a_widget.set_column_count_to (column_column)
 
+				-- Create columns
 			l_col := a_widget.column (1)
 			l_col.set_width (20)
 			l_col := a_widget.column (category_column)
@@ -66,8 +67,8 @@ feature {NONE} -- Iniitalization
 			l_col.set_title ("Column")
 			l_col.set_width (50)
 
-			grid_events.enable_tree
-			grid_events.disable_row_height_fixed
+			a_widget.enable_tree
+			a_widget.disable_row_height_fixed
 
 				-- Enable sorting
 			enable_sorting_on_columns (<<a_widget.column (category_column),
@@ -80,8 +81,9 @@ feature {NONE} -- Iniitalization
 			enable_copy_to_clipboard
 
 				-- Bind redirecting pick and drop actions
-			stone_director.bind (grid_events)
+			stone_director.bind (a_widget)
 
+				-- Set UI based on initial state
 			update_content_applicable_navigation_buttons
 		end
 
@@ -90,10 +92,14 @@ feature {NONE} -- Clean up
 	internal_recycle is
 			-- Recycle tool.
 		do
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE}
-			if filter_widget /= Void then
+			if is_initialized then
+				stone_director.unbind (grid_events)
+
 				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
+				errors_button.select_actions.prune (agent on_toogle_errors_button)
+				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
 			end
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE}
 		end
 
 feature -- Access
@@ -573,6 +579,7 @@ feature {NONE} -- Factory
 			errors_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
 			errors_button.enable_select
 			errors_button.select_actions.extend (agent on_toogle_errors_button)
+			errors_button.select_actions.compare_objects
 
 			create warnings_button.make
 			warnings_button.set_text ("0 Warnings")
@@ -580,6 +587,7 @@ feature {NONE} -- Factory
 			warnings_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
 			warnings_button.enable_select
 			warnings_button.select_actions.extend (agent on_toogle_warnings_button)
+			warnings_button.select_actions.compare_objects
 
 			create Result.make (3)
 			Result.put_last (errors_button)

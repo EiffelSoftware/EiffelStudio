@@ -37,7 +37,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := position = other.position and then
-				equivalent (actual_type, other.actual_type)
+				equivalent (actual_type, other.actual_type) and then
+				has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark
 		end
 
 feature -- Access
@@ -48,8 +50,11 @@ feature -- Access
 			other_like_arg: LIKE_ARGUMENT
 		do
 			other_like_arg ?= other
-			Result := other_like_arg /= Void
-					and then other_like_arg.position = position
+			if other_like_arg /= Void then
+				Result := other_like_arg.position = position and then
+					has_attached_mark = other_like_arg.has_attached_mark and then
+					has_detachable_mark = other_like_arg.has_detachable_mark
+			end
 		end
 
 	position: INTEGER
@@ -72,7 +77,15 @@ feature -- Output
 		do
 			actual_dump := actual_type.dump
 			create Result.make (16 + actual_dump.count)
-			Result.append ("[like arg#")
+			Result.append_character ('[')
+			if has_attached_mark then
+				Result.append_character ('!')
+				Result.append_character (' ')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+				Result.append_character (' ')
+			end
+			Result.append ("like arg#")
 			Result.append_integer (position)
 			Result.append ("] ")
 			Result.append (actual_dump)
@@ -81,6 +94,13 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			st.process_symbol_text (ti_L_bracket)
+			if has_attached_mark then
+				st.process_symbol_text (ti_exclamation)
+				st.add_space
+			elseif has_detachable_mark then
+				st.process_symbol_text (ti_question)
+				st.add_space
+			end
 			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
 			--Martins 2/6/2007: this code here does not work anymore because of switch from E_FAETURE to CLASS_C
@@ -138,7 +158,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

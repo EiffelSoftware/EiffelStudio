@@ -84,9 +84,13 @@ feature -- Access
 			other_like_feat: LIKE_FEATURE
 		do
 			other_like_feat ?= other
-			Result := 	other_like_feat /= Void
-					and then other_like_feat.routine_id = routine_id
-					and then other_like_feat.feature_id = feature_id
+			if other_like_feat /= Void then
+				Result :=
+					other_like_feat.routine_id = routine_id and then
+					other_like_feat.feature_id = feature_id and then
+					other_like_feat.has_attached_mark = has_attached_mark and then
+					other_like_feat.has_detachable_mark = has_detachable_mark
+			end
 		end
 
 	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
@@ -111,8 +115,16 @@ feature -- Output
 			s: STRING
 		do
 			s := actual_type.dump
-			create Result.make (18 + s.count)
-			Result.append ("[like " + feature_name +"] ")
+			create Result.make (20 + s.count)
+			Result.append_character ('[')
+			if has_attached_mark then
+				Result.append_character ('!')
+				Result.append_character (' ')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+				Result.append_character (' ')
+			end
+			Result.append ("like " + feature_name +"] ")
 			Result.append (s)
 		end
 
@@ -123,6 +135,13 @@ feature -- Output
 		do
 			ec := Eiffel_system.class_of_id (class_id)
 			st.process_symbol_text (ti_l_bracket)
+			if has_attached_mark then
+				st.process_symbol_text (ti_exclamation)
+				st.add_space
+			elseif has_detachable_mark then
+				st.process_symbol_text (ti_question)
+				st.add_space
+			end
 			st.process_keyword_text (ti_like_keyword, Void)
 			st.add_space
 			if ec.has_feature_table then
@@ -160,6 +179,11 @@ feature -- Primitives
 				check l_anchor_not_void: l_anchor /= Void end
 				create Result.make (l_anchor, a_descendant.class_id)
 				Result.set_actual_type (l_anchor.type.actual_type)
+				if has_attached_mark then
+					Result.set_attached_mark
+				elseif has_detachable_mark then
+					Result.set_detachable_mark
+				end
 			else
 				Result := Current
 			end
@@ -180,11 +204,13 @@ feature -- Comparison
 				class_id = other.class_id and then
 				feature_id = other.feature_id and then
 				equivalent (actual_type, other.actual_type) and then
-				feature_name_id = other.feature_name_id
+				feature_name_id = other.feature_name_id and then
+				other.has_attached_mark = has_attached_mark and then
+				other.has_detachable_mark = has_detachable_mark
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

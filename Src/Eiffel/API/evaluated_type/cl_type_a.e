@@ -74,6 +74,18 @@ feature -- Properties
 			definition: Result = (declaration_mark = separate_mark)
 		end
 
+	has_attached_mark: BOOLEAN is
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_attached_mark_mask /= 0
+		end
+
+	has_detachable_mark: BOOLEAN is
+			-- Is type explicitly marked as attached?
+		do
+			Result := attachment_bits & has_detachable_mark_mask /= 0
+		end
+
 	is_expanded: BOOLEAN is
 			-- Is the type expanded?
 		do
@@ -90,6 +102,12 @@ feature -- Properties
 			-- Is the type separate?
 		do
 			Result := has_separate_mark
+		end
+
+	is_attached: BOOLEAN is
+			-- Is the type attached?
+		do
+			Result := attachment_bits & is_attached_mask /= 0
 		end
 
 	is_valid: BOOLEAN is
@@ -144,6 +162,7 @@ feature -- Comparison
 		do
 			Result := declaration_mark = other.declaration_mark and then
 				class_declaration_mark = other.class_declaration_mark and then
+				is_attached = other.is_attached and then
 				class_id = other.class_id
 		end
 
@@ -179,6 +198,13 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
+			if has_attached_mark then
+				st.process_symbol_text (ti_exclamation)
+				st.add_space
+			elseif has_detachable_mark then
+				st.process_symbol_text (ti_question)
+				st.add_space
+			end
 			if has_expanded_mark then
 				st.process_keyword_text (ti_expanded_keyword, Void)
 				st.add_space
@@ -196,19 +222,30 @@ feature -- Output
 			-- Dumped trace
 		local
 			class_name: STRING
+			n: INTEGER
 		do
 			class_name := associated_class.name_in_upper
+			n := class_name.count
+			if has_attached_mark or else has_detachable_mark then
+				n := n + 2
+			end
+			if not has_no_mark then
+				n := n + 10
+			end
+			create Result.make (n)
+			if has_attached_mark then
+				Result.append_character ('!')
+				Result.append_character (' ')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+				Result.append_character (' ')
+			end
 			if has_expanded_mark then
-				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
 			elseif has_reference_mark then
-				create Result.make (class_name.count + 10)
 				Result.append ("reference ")
 			elseif has_separate_mark then
-				create Result.make (class_name.count + 9)
 				Result.append ("separate ")
-			else
-				create Result.make (class_name.count)
 			end
 			Result.append (class_name)
 		end
@@ -245,6 +282,34 @@ feature {COMPILER_EXPORTER} -- Settings
 			declaration_mark := separate_mark
 		ensure
 			has_separate_mark: has_separate_mark
+		end
+
+	set_attached_mark is
+			-- Set class type declaration as having an explicit attached mark.
+		do
+			attachment_bits := has_attached_mark_mask | is_attached_mask
+		ensure
+			has_attached_mark
+			is_attached
+		end
+
+	set_detachable_mark is
+			-- Set class type declaration as having an explicit detachable mark.
+		do
+			attachment_bits := has_detachable_mark_mask
+		ensure
+			has_detachable_mark
+			not is_attached
+		end
+
+	set_is_attached is
+			-- Set attached type property.
+		require
+			not has_detachable_mark
+		do
+			attachment_bits := attachment_bits | is_attached_mask
+		ensure
+			is_attached
 		end
 
 	type_i: CL_TYPE_I is
@@ -543,7 +608,7 @@ feature -- Debugging
 			end
 		end
 
-feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} -- Implementation: class type declaration marks
+feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} --Class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)
@@ -575,6 +640,20 @@ feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} -- Implementation: class type decl
 	separate_mark: NATURAL_8 is 3
 			-- Separate declaration mark
 
+feature {NONE} -- Attachment properties
+
+	attachment_bits: NATURAL_8
+			-- Associated attachment flags
+
+	has_detachable_mark_mask: NATURAL_8 is 1
+			-- Mask in `attachment_bits' that tells whether the type has an explicit detachanble mark
+
+	has_attached_mark_mask: NATURAL_8 is 2
+			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
+
+	is_attached_mask: NATURAL_8 is 4
+			-- Mask in `attachment_bits' that tells whether the type is attached
+
 invariant
 	class_id_positive: class_id > 0
 	valid_declaration_mark: declaration_mark = no_mark or declaration_mark = expanded_mark or
@@ -586,7 +665,7 @@ invariant
 		class_declaration_mark = separate_mark
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

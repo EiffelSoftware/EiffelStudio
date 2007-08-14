@@ -244,6 +244,12 @@ feature -- Access
 		do
 		end
 
+	is_void_safe: BOOLEAN is
+			-- Does class use void-safe constructs?
+		do
+				-- False by default
+		end
+
 	file_date: INTEGER is
 			-- Date of last modification date of Current.
 		do
@@ -458,7 +464,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -88,7 +88,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := anchor_name_id = other.anchor_name_id and then
-				is_like_current = other.is_like_current
+				is_like_current = other.is_like_current and then
+				has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark
 		end
 
 feature -- Output
@@ -96,6 +98,13 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 			-- Append Current type to `st'.
 		do
+			if has_attached_mark then
+				st.process_symbol_text (ti_exclamation)
+				st.add_space
+			elseif has_detachable_mark then
+				st.process_symbol_text (ti_question)
+				st.add_space
+			end
 			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
 			st.add (anchor)
@@ -103,7 +112,14 @@ feature -- Output
 
 	dump: STRING is
 		do
-			create Result.make (0)
+			create Result.make_empty
+			if has_attached_mark then
+				Result.append_character ('!')
+				Result.append_character (' ')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+				Result.append_character (' ')
+			end
 			Result.append ("like ")
 			Result.append (anchor)
 		end
@@ -116,7 +132,11 @@ feature {NONE} -- Implementation
 			l_other: like Current
 		do
 			l_other ?= other
-			Result := l_other /= Void and then anchor_name_id = l_other.anchor_name_id
+			if l_other /= Void then
+				Result := anchor_name_id = l_other.anchor_name_id and then
+					has_attached_mark = l_other.has_attached_mark and then
+					has_detachable_mark = l_other.has_detachable_mark
+			end
 		end
 
 	create_info: CREATE_INFO is
@@ -154,7 +174,7 @@ invariant
 	is_like_current_implies_current_anchor: is_like_current implies anchor.is_equal (Like_current)
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

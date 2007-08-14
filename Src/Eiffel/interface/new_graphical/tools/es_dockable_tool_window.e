@@ -1,7 +1,10 @@
 indexing
 	description: "[
 		An EiffelStudio dockable tool window base implementation for EiffelStudio tools.
+		
+		Note: For help on developing tools for EiffelStudio see the wiki link below.
 	]"
+	wiki: "http://dev.eiffel.com/Tool_Integration_Development"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
@@ -271,7 +274,7 @@ feature {NONE} -- Helpers
 	frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
 			-- Shared access to a stone redirection helper
 		require
-			not_development_window_is_recycled: not develop_window.is_recycled
+			not_development_window_is_recycled: internal_stone_director /= Void or not develop_window.is_recycled
 		do
 			Result := internal_stone_director
 			if Result = Void then

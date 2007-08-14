@@ -949,6 +949,7 @@ feature
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
 			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.attachment_mark)
 			safe_process (l_as.like_keyword)
 			safe_process (l_as.anchor)
 			safe_process (l_as.rcurly_symbol)
@@ -957,6 +958,7 @@ feature
 	process_like_cur_as (l_as: LIKE_CUR_AS) is
 		do
 			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.attachment_mark)
 			safe_process (l_as.like_keyword)
 			safe_process (l_as.current_keyword)
 			safe_process (l_as.rcurly_symbol)
@@ -985,6 +987,7 @@ feature
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
 			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.attachment_mark)
 			safe_process (l_as.expanded_keyword)
 			safe_process (l_as.separate_keyword)
 			safe_process (l_as.class_name)
@@ -1325,7 +1328,7 @@ feature{NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -163,7 +163,7 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type Type_no_id Constraint_type
+%type <TYPE_AS>				Type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Class_type Tuple_type Type_no_id Constraint_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -309,6 +309,10 @@ Class_declaration:
 					temp_string_as2 := Void
 				end
 				
+				if $5 /= Void and then $5.count > 65536 then
+					error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536", False))
+					error_handler.raise_error
+				end
 				root_node := new_class_description ($4, temp_string_as1,
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
 					$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
@@ -936,7 +940,7 @@ Parent: Parent_clause ASemi
 	;
 
 Parent_class_type: Class_identifier Generics_opt
-			{ $$ := ast_factory.new_class_type_as ($1, $2) }
+			{ $$ := ast_factory.new_class_type_as ($1, $2, Void) }
 	;
 
 Parent_clause: Parent_class_type
@@ -1466,16 +1470,24 @@ Type: Class_or_tuple_type
 			{ $$ := $1 }
 	;
 	
-Type_no_id: 
-		Class_identifier Generics
-			{ $$ := new_class_type ($1, $2) }
+Attached_type: Attached_class_type
+			{ $$ := $1 }
 	|	Tuple_type
 			{ $$ := $1 }
 	|	Non_class_type
 			{ $$ := $1 }
 	;
 	
-Non_class_type: TE_EXPANDED Class_type
+Type_no_id: 
+		Class_identifier Generics
+			{ $$ := new_class_type ($1, $2, Void) }
+	|	Tuple_type
+			{ $$ := $1 }
+	|	Non_class_type
+			{ $$ := $1 }
+	;
+	
+Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
@@ -1499,9 +1511,17 @@ Non_class_type: TE_EXPANDED Class_type
 	|	TE_BIT Identifier_as_lower
 			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
 	|	TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($2, $1) }
+			{ $$ := ast_factory.new_like_id_as ($2, $1, Void) }
+	|	TE_BANG TE_LIKE Identifier_as_lower
+			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
+	|	TE_QUESTION TE_LIKE Identifier_as_lower
+			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
 	|	TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($2, $1) }
+			{ $$ := ast_factory.new_like_current_as ($2, $1, Void) }
+	|	TE_BANG TE_LIKE TE_CURRENT
+			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
+	|	TE_QUESTION TE_LIKE TE_CURRENT
+			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
 	;
 
 Class_or_tuple_type: Class_type
@@ -1510,8 +1530,16 @@ Class_or_tuple_type: Class_type
 			{ $$ := $1 }
 	;
 
-Class_type: Class_identifier Generics_opt
-			{ $$ := new_class_type ($1, $2) }
+Attached_class_type: Class_identifier Generics_opt
+			{ $$ := new_class_type ($1, $2, Void) }
+	;
+
+Class_type: Attached_class_type
+			{ $$ := $1 }
+	| TE_BANG Class_identifier Generics_opt
+			{ $$ := new_class_type ($2, $3, $1) }
+	| TE_QUESTION Class_identifier Generics_opt
+			{ $$ := new_class_type ($2, $3, $1) }
 	;
 
 Generics_opt: -- Empty
@@ -1560,14 +1588,14 @@ Type_list_impl: Type
 	;
 
 Tuple_type: TE_TUPLE
-			{ $$ := ast_factory.new_class_type_as ($1, Void) }
+			{ $$ := ast_factory.new_class_type_as ($1, Void, Void) }
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
 			  	last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
 					last_type_list.set_positions ($4, $5)
 				end
-				$$ := ast_factory.new_class_type_as ($1, last_type_list)
+				$$ := ast_factory.new_class_type_as ($1, last_type_list, Void)
 				last_type_list := Void
 				remove_counter
 				remove_counter2
@@ -1577,7 +1605,7 @@ Tuple_type: TE_TUPLE
 				if $5 /= Void then
 					$5.set_positions ($4, last_rsqure.item)
 				end
-				$$ := ast_factory.new_class_type_as ($1, $5)
+				$$ := ast_factory.new_class_type_as ($1, $5, Void)
 				last_rsqure.remove
 				remove_counter
 				remove_counter2
@@ -1605,7 +1633,7 @@ Actual_parameter_list:	Type TE_RSQURE
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$1.to_upper		
-					$$.reverse_extend (new_class_type ($1, Void))
+					$$.reverse_extend (new_class_type ($1, Void, Void))
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
@@ -2358,7 +2386,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 						$3.start_location.column, filename, "Use keyword `create' instead."))
 				end
 			}
-	|	TE_BANG Type TE_BANG Creation_target Creation_call
+	|	TE_BANG Attached_type TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as ($2, $4, $5, $1, $3)
 				if has_syntax_warning and $4 /= Void then
@@ -2375,7 +2403,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 
 Creation_expression: TE_CREATE Typed Creation_call
 			{ $$ := ast_factory.new_create_creation_expr_as ($2, $3, $1) }
-	|	TE_BANG Type TE_BANG Creation_call
+	|	TE_BANG Attached_type TE_BANG Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_expr_as ($2, $4, $1, $3)
 				if has_syntax_warning and $2 /= Void then
@@ -2571,7 +2599,7 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
 			{
-				temp_class_type_as := ast_factory.new_class_type_as ($3, Void)
+				temp_class_type_as := ast_factory.new_class_type_as ($3, Void, Void)
 				if temp_class_type_as /= Void then
 					temp_class_type_as.set_lcurly_symbol ($2)
 					temp_class_type_as.set_rcurly_symbol ($4)

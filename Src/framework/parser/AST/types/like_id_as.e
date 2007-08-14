@@ -19,16 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like anchor; l_as: like like_keyword) is
+	initialize (a: like anchor; l_as: like like_keyword; m_as: like attachment_mark) is
 			-- Create a new LIKE_ID AST node.
 		require
 			a_not_void: a /= Void
 		do
 			anchor := a
 			like_keyword := l_as
+			attachment_mark := m_as
 		ensure
 			anchor_set: anchor = a
 			like_keyword_set: like_keyword = l_as
+			attachment_mark_set: attachment_mark = m_as
 		end
 
 feature -- Visitor
@@ -40,6 +42,9 @@ feature -- Visitor
 		end
 
 feature -- Roundtrip
+
+	attachment_mark: SYMBOL_AS
+			-- Attachment symbol (if any)
 
 	like_keyword: KEYWORD_AS
 		-- Keyword "like" associated with this structure
@@ -57,6 +62,8 @@ feature -- Roundtrip/Token
 			if Result = Void then
 				if a_list = Void then
 					Result := anchor.first_token (a_list)
+				elseif attachment_mark /= Void then
+					Result := attachment_mark.first_token (a_list)
 				else
 					Result := like_keyword.first_token (a_list)
 				end
@@ -76,7 +83,14 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (anchor, other.anchor)
+			if attachment_mark = Void then
+				Result := other.attachment_mark = Void
+			else
+				Result := attachment_mark.	is_equivalent (other.attachment_mark)
+			end
+			if Result then
+				Result := equivalent (anchor, other.anchor)
+			end
 		end
 
 feature -- Output
@@ -84,7 +98,15 @@ feature -- Output
 	dump: STRING is
 			-- Dump string
 		do
-			create Result.make (5 + anchor.name.count)
+			create Result.make (7 + anchor.name.count)
+			if attachment_mark /= Void then
+				if attachment_mark.is_bang then
+					Result.append_character ('!')
+				else
+					Result.append_character ('?')
+				end
+				Result.append_character (' ')
+			end
 			Result.append ("like ")
 			Result.append (anchor.name)
 		end
@@ -97,7 +119,7 @@ feature {LIKE_ID_AS} -- Replication
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

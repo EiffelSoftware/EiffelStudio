@@ -65,7 +65,7 @@ feature -- Comparison
 		do
 			if attachment_mark = Void then
 				Result := other.attachment_mark = Void
-			else
+			elseif other.attachment_mark /= Void then
 				Result := attachment_mark.is_equivalent (other.attachment_mark)
 			end
 		end

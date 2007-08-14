@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			default_create
 			build_interface
 			create filter_changed_actions
+			filter_changed_actions.compare_objects
 		end
 
 	build_interface

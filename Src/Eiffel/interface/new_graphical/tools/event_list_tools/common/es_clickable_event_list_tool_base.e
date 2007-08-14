@@ -39,10 +39,10 @@ feature {NONE} -- Clean up
 	internal_recycle is
 			-- Recycle tool.
 		do
-			Precursor {ES_EVENT_LIST_TOOL_BASE}
 			if is_initialized then
 				grid_token_support.desynchronize_color_or_font_change_with_editor
 			end
+			Precursor {ES_EVENT_LIST_TOOL_BASE}
 		end
 
 feature {NONE} -- Access

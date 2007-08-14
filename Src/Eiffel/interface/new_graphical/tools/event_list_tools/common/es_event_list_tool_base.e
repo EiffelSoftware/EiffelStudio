@@ -58,8 +58,6 @@ feature {NONE} -- Clean up
 		local
 			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_SERVICE_I; event_item: EVENT_LIST_ITEM_I]]
 		do
-			Precursor {ES_DOCKABLE_TOOL_WINDOW}
-
 			if event_service /= Void then
 				l_agent := agent on_event_added
 				if event_service.item_added_events.is_subscribed (l_agent) then
@@ -74,6 +72,8 @@ feature {NONE} -- Clean up
 					event_service.item_changed_events.unsubscribe (l_agent)
 				end
 			end
+
+			Precursor {ES_DOCKABLE_TOOL_WINDOW}
 		end
 
 feature {NONE} -- Access

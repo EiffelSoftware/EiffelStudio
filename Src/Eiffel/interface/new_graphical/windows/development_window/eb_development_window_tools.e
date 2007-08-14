@@ -326,7 +326,7 @@ feature -- Query
 			-- C output tool
 			-- This tool was orignal belong to context_tool
 
-	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL
+	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL assign set_errors_and_warnings_tool
 			-- Errors and warnings tool
 
 	customized_tools: LIST [EB_CUSTOMIZED_TOOL] is

@@ -55,6 +55,7 @@ feature {NONE} -- Clean up
 				accelerator.actions.wipe_out
 				accelerator := Void
 			end
+			collect_destroyed_accelerators
 		end
 
 feature -- Access

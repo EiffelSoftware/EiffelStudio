@@ -137,6 +137,7 @@ rt_shared struct gacstat rt_g_stat[GST_NBR] = {	/* Run-time statistics */
 		0.,		/* cpu_iavg */			0.,		/* sys_iavg */
 		0.,		/* cpu_time */			0.,		/* sys_time */
 		0.,		/* cpu_itime */			0.,		/* sys_itime */
+		0.,		/* cpu_total_time */	0.,		/* sys_total_time */
 	},
 	{
 		0L,		/* count */				0L,		/* mem_used */
@@ -147,6 +148,7 @@ rt_shared struct gacstat rt_g_stat[GST_NBR] = {	/* Run-time statistics */
 		0.,		/* cpu_iavg */			0.,		/* sys_iavg */
 		0.,		/* cpu_time */			0.,		/* sys_time */
 		0.,		/* cpu_itime */			0.,		/* sys_itime */
+		0.,		/* cpu_total_time */	0.,		/* sys_total_time */
 	}
 };
 
@@ -1051,6 +1053,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		gstat->real_time = elapsed(&realtime, &realtime2);
 		gstat->cpu_time = usertime2 - usertime;			/* CPU time (user) */
 		gstat->sys_time = systime2 - systime;			/* CPU time (kernel) */
+		gstat->cpu_total_time = usertime2;
+		gstat->sys_total_time = systime2;
 	} else {
 		gstat->real_time = gstat->real_avg;		/* Adding the average */
 		gstat->cpu_time = gstat->cpu_avg;		/* will not change the */

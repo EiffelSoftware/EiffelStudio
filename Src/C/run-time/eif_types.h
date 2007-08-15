@@ -199,6 +199,8 @@ struct gacstat {
 	double sys_time;		/* Average kernel time used by last plsc() */
 	double cpu_itime;		/* CPU time between two collections */
 	double sys_itime;		/* Average kernel time between collections */
+	double cpu_total_time;	/* Total CPU time since beginning of application */
+	double sys_total_time;	/* Total CPU time since beginning of application */
 };
 
 /*

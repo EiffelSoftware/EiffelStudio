@@ -1095,6 +1095,7 @@ feature -- Label texts
 	l_File_name: STRING_GENERAL is				do Result := locale.translation("File name:")	end
 	l_file_changed_by_other_tool: STRING_GENERAL is do Result := locale.translation ("File has been changed by another tool/editor%NDo you want to load the changes?") end
 	l_Filter_exceptions: STRING_GENERAL is		do Result := locale.translation ("Filter exceptions") end
+	l_filter_warnings: STRING_GENERAL is		do Result := locale.translation ("Show warnings:") end
 	l_finalize: STRING_GENERAL is				do Result := locale.translation("Finalize")	end
 	l_Finalized_mode: STRING_GENERAL is 		do Result := locale.translation("Finalized mode")	end
 	l_finish_to_generate: STRING_GENERAL is 	do Result := locale.translation("Click `Finish' to generate the documentation.")	end
@@ -1204,6 +1205,7 @@ feature -- Label texts
 	l_parents: STRING_GENERAL is				do Result := locale.translation("Parents:")	end
 	l_Path: STRING_GENERAL is					do Result := locale.translation("Path")	end
 	l_Platform: STRING_GENERAL is				do Result := locale.translation ("Platform") end
+	l_position: STRING_GENERAL is 				do Result := locale.translation ("Position") end
 	l_Possible_overflow: STRING_GENERAL is		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_GENERAL is				do Result := locale.translation("Precompile")	end
 	l_preferences_delayed_resources: STRING_GENERAL is do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.%N%N") end
@@ -1269,6 +1271,8 @@ feature -- Label texts
 	l_Search_options_hide: STRING_GENERAL is	do Result := locale.translation("Scope <<")	end
 	l_Search_report_show: STRING_GENERAL is		do Result := locale.translation("Report >>")	end
 	l_Search_report_hide: STRING_GENERAL is 	do Result := locale.translation("Report <<")	end
+	l_select_all: STRING_GENERAL is 			do Result := locale.translation("Select all")	end
+	l_select_none: STRING_GENERAL is 			do Result := locale.translation("Select none")	end
 	l_Set_as_default: STRING_GENERAL is			do Result := locale.translation("Set as default")	end
 	l_Set_slice_limits: STRING is				do Result := locale.translation ("Slice limits") end
 	l_Set_slice_limits_desc: STRING_GENERAL is	do Result := locale.translation("Set which values are shown in special objects")	end

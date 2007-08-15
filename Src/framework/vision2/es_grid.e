@@ -76,6 +76,65 @@ feature {NONE} -- Initialization
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
 
+feature -- Access
+
+	auto_size_best_fit_column: INTEGER
+			-- Column index automatically resized to ensure all columns fit in view.
+			-- Note: 0 indicates no best-fitting
+
+feature -- Status report
+
+	use_auto_size_best_fit: BOOLEAN
+			-- Indicates if there a column that will be automatically resized to fit the visible width
+		do
+			Result := auto_size_best_fit_column > 0
+		end
+
+	last_column_use_all_width_enabled: BOOLEAN
+			-- Indicates if the last column width should be automatically ajusted
+
+feature -- Status setting
+
+	enable_last_column_use_all_width is
+			-- Enables last column with to be automatically adjust to fit the viewable width of the grid
+		do
+			last_column_use_all_width_enabled := True
+			auto_size_best_fit_column := 0
+		ensure
+			last_column_use_all_width_enabled: last_column_use_all_width_enabled
+			not_use_auto_size_best_fit: not use_auto_size_best_fit
+		end
+
+	disable_last_column_use_all_width is
+			-- Disables last column with to be automatically adjust to fit the viewable width of the grid
+		do
+			last_column_use_all_width_enabled := False
+		ensure
+			not_last_column_use_all_width_enabled: not last_column_use_all_width_enabled
+		end
+
+	enable_auto_size_best_fit_column (a_column: INTEGER)
+			-- Enabled auto sizing of column `a_column' to best fit the viewiable area of the grid.
+		require
+			a_column_positive: a_column > 0
+			a_column_small_enough: a_column <= column_count
+		do
+			auto_size_best_fit_column := a_column
+			last_column_use_all_width_enabled := False
+		ensure
+			not_last_column_use_all_width_enabled: not last_column_use_all_width_enabled
+			use_auto_size_best_fit: use_auto_size_best_fit
+			auto_size_best_fit_column_set: auto_size_best_fit_column = a_column
+		end
+
+	disable_auto_size_best_fit_column
+			-- Disables auto sizing of a specified column so the columns will no longer auto-fit the grid's viewable width.
+		do
+			auto_size_best_fit_column := 0
+		ensure
+			not_use_auto_size_best_fit: not use_auto_size_best_fit
+		end
+
 feature -- properties
 
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
@@ -483,16 +542,6 @@ feature {NONE} -- Borders drawing
 
 feature -- column resizing access
 
-	enable_last_column_use_all_width is
-		do
-			last_column_use_all_width_enabled := True
-		end
-
-	disable_last_column_use_all_width is
-		do
-			last_column_use_all_width_enabled := False
-		end
-
 	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
 		do
 			if column_has_auto_resizing (c) then
@@ -515,9 +564,69 @@ feature -- column resizing access
 
 feature {NONE} -- column resizing impl
 
-	last_column_use_all_width_enabled: BOOLEAN
+	ensure_auto_size_best_fit is
+			-- Automatically resized a selected column to fit the grid's viewable area
+		local
+			l_index: INTEGER
+			l_columns: ARRAYED_LIST [EV_GRID_COLUMN]
+			l_col: EV_GRID_COLUMN
+			l_count, i: INTEGER
+			l_total_width: INTEGER
+			l_new_width: INTEGER
+		do
+			if use_auto_size_best_fit then
+				if not implementation.is_header_item_resizing then
+					debug
+						print (generator + ".ensure_last_column_use_all_width %N")
+					end
+					l_index := auto_size_best_fit_column
+					if column_count > l_index then
+						if column (l_index).is_displayed then
+							from
+								i := 1
+								l_count := column_count
+								create l_columns.make (l_count)
+							until
+								i > l_count
+							loop
+								l_col := column (i)
+								if l_col.is_displayed then
+									l_columns.extend (l_col)
+									if i /= l_index then
+											-- Ingore the width of the column we want to change
+										l_total_width := l_total_width + l_col.width
+									end
+								end
+								i := i + 1
+							end
+
+							if not l_columns.is_empty then
+								l_col := column (l_index)
+								l_new_width := viewable_width - l_total_width
+								if l_new_width /= l_col.width then
+									if l_new_width < 0 then
+										l_new_width := 0
+									end
+									resize_actions.block
+									virtual_size_changed_actions.block
+									l_col.set_width (l_new_width)
+									virtual_size_changed_actions.resume
+									resize_actions.resume
+								end
+							end
+						else
+								-- Use last, if possible
+							if last_column_use_all_width_enabled then
+								ensure_last_column_use_all_width
+							end
+						end
+					end
+				end
+			end
+		end
 
 	ensure_last_column_use_all_width is
+			-- Ensures the last column width fits the containing grid.
 		local
 			c: INTEGER
 			last_col: EV_GRID_COLUMN
@@ -568,6 +677,7 @@ feature {NONE} -- column resizing impl
 			end
 		end
 
+
 	delayed_columns_auto_resizing: ES_DELAYED_ACTION
 
 	build_delayed_columns_auto_resizing is
@@ -586,7 +696,14 @@ feature {NONE} -- column resizing impl
 		do
 			if delayed_last_column_auto_resizing = Void then
 				create delayed_last_column_auto_resizing.make (
-									agent ensure_last_column_use_all_width,
+									agent
+										do
+											if use_auto_size_best_fit then
+												ensure_auto_size_best_fit
+											elseif last_column_use_all_width_enabled then
+												ensure_last_column_use_all_width
+											end
+										end,
 									100
 							)
 			end

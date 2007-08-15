@@ -17,6 +17,15 @@ inherit
 			{ANY} is_show_requested
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy,
+			default_create,
+			is_equal
+		end
+
 create
 	make
 
@@ -37,6 +46,7 @@ feature {NONE} -- Initialization
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
+			l_link: EVS_LINK_LABEL
 		do
 			set_background_color ((create{EV_STOCK_COLORS}).black)
 			set_border_width (1)
@@ -45,7 +55,7 @@ feature {NONE} -- Initialization
 			l_vbox.set_padding (4)
 			l_vbox.set_border_width (4)
 
-			create l_label.make_with_text ("Filtered Warnings:")
+			create l_label.make_with_text (interface_names.l_filter_warnings)
 			l_label.align_text_left
 
 			create l_hbox
@@ -59,6 +69,22 @@ feature {NONE} -- Initialization
 
 			l_vbox.extend (l_label)
 			l_vbox.disable_item_expand (l_label)
+			l_vbox.extend (l_hbox)
+
+			create l_hbox
+			l_hbox.set_padding (4)
+			l_hbox.extend (create {EV_CELL})
+			create l_link.make_with_text (interface_names.l_select_all)
+			l_link.select_actions.extend (agent on_select_all)
+			l_hbox.extend (l_link)
+			l_hbox.disable_item_expand (l_link)
+			create l_label.make_with_text ("|")
+			l_hbox.extend (l_label)
+			l_hbox.disable_item_expand (l_label)
+			create l_link.make_with_text (interface_names.l_select_none)
+			l_link.select_actions.extend (agent on_select_none)
+			l_hbox.extend (l_link)
+			l_hbox.disable_item_expand (l_link)
 			l_vbox.extend (l_hbox)
 
 			extend (l_vbox)
@@ -106,6 +132,7 @@ feature {NONE} -- Initialization
 				end
 				create l_check_item.make_with_text (" " + l_name)
 				l_check_item.set_data (l_item)
+				l_check_item.set_is_checked (True)
 				l_check_item.checked_changed_actions.extend (agent on_filter_changed)
 				l_row := l_grid.row (i)
 				l_row.set_item (1, l_check_item)
@@ -122,7 +149,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	filtered: DS_BILINEAR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
-			-- List of currently filtered types.
+			-- List of currently filtered out types.
 		local
 			l_grid: like grid_warnings
 			l_row: EV_GRID_ROW
@@ -138,7 +165,7 @@ feature -- Access
 				from l_count := l_grid.row_count; i := 1 until i > l_count loop
 					l_row := l_grid.row (i)
 					l_item ?= l_row.item (1)
-					if l_item /= Void and l_item.is_checked then
+					if l_item /= Void and not l_item.is_checked then
 						l_data ?= l_item.data
 						if l_data /= Void then
 							l_result.force_last (l_data)
@@ -212,7 +239,7 @@ feature {NONE} -- User interface elements
 
 feature -- Status report
 
-	is_filtered_out (a_warning: WARNING): BOOLEAN
+	is_filtered_in (a_warning: WARNING): BOOLEAN
 			-- Determines if a warning has been filtered out
 		local
 			l_cursor: DS_BILINEAR_CURSOR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
@@ -250,6 +277,34 @@ feature {NONE} -- Basic operations
 				end)
 		end
 
+	check_all_rows (a_checked: BOOLEAN)
+			-- Checks all rows according to `a_checked'.
+			--
+			-- `a_checked': True to check all items, False to uncheck.
+		local
+			l_grid: like grid_warnings
+			l_row: EV_GRID_ROW
+			l_count, i: INTEGER
+			l_item: EV_GRID_CHECKABLE_LABEL_ITEM
+		do
+			l_grid := grid_warnings
+			from
+				i := 1
+				l_count := l_grid.row_count
+			until
+				i > l_count
+			loop
+				l_row := l_grid.row (i)
+				l_item ?= l_row.item (1)
+				if l_item /= Void then
+					if a_checked /= l_item.is_checked then
+						l_item.set_is_checked (a_checked)
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Actions
 
 	filter_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
@@ -277,7 +332,7 @@ feature {NONE} -- Action handlers
 			internal_filtered := Void
 			l_data ?= a_item.data
 			if l_data /= Void then
-				filter_changed_actions.call ([l_data.type, l_data.exact_only, a_item.is_checked])
+				filter_changed_actions.call ([l_data.type, l_data.exact_only, not a_item.is_checked])
 			end
 		end
 
@@ -293,6 +348,18 @@ feature {NONE} -- Action handlers
 					toggle_selected_rows
 				end
 			end
+		end
+
+	on_select_all
+			-- Called when user selects all filters
+		do
+			check_all_rows (True)
+		end
+
+	on_select_none
+			-- Called when user selects no filters
+		do
+			check_all_rows (False)
 		end
 
 feature {NONE} -- Internal implementation cache

@@ -143,7 +143,7 @@ feature -- Status settings
 			-- until feature `restore_subscription' is called.
 			--
 			-- Note: Suspension is based on a stacked number of calls. 3 calls to `suspend_subscription'
-			--       must be match with 3 calls to `restore_subscription' for publication to happen.
+			--       must be match with 3 calls to `restore_subscription' for publication to occur.
 		require
 			not_is_zombie: not is_zombie
 		do

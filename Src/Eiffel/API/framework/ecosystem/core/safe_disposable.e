@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Safe version of DISPOSABLE and IDISPOSABLE.
+		Safe version of DISPOSABLE.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

@@ -43,7 +43,7 @@ feature {NONE} -- Iniitalization
 			l_col: EV_GRID_COLUMN
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_widget)
-			a_widget.set_column_count_to (column_column)
+			a_widget.set_column_count_to (position_column)
 
 				-- Create columns
 			l_col := a_widget.column (1)
@@ -52,30 +52,26 @@ feature {NONE} -- Iniitalization
 			l_col.set_width (20)
 
 			l_col := a_widget.column (error_column)
-			l_col.set_title ("Description")
-			l_col.set_width (500)
+			l_col.set_title (interface_names.l_description)
+			l_col.set_width (100)
 
 			l_col := a_widget.column (context_column)
-			l_col.set_title ("Context")
+			l_col.set_title (interface_names.l_context)
 			l_col.set_width (200)
 
-			l_col := a_widget.column (lines_column)
-			l_col.set_title ("Line")
-			l_col.set_width (40)
-
-			l_col := a_widget.column (column_column)
-			l_col.set_title ("Column")
-			l_col.set_width (50)
+			l_col := a_widget.column (position_column)
+			l_col.set_title (interface_names.l_position)
+			l_col.set_width (80)
 
 			a_widget.enable_tree
 			a_widget.disable_row_height_fixed
+			a_widget.enable_auto_size_best_fit_column (error_column)
 
 				-- Enable sorting
 			enable_sorting_on_columns (<<a_widget.column (category_column),
 				a_widget.column (error_column),
 				a_widget.column (context_column),
-				a_widget.column (lines_column),
-				a_widget.column (column_column)>>)
+				a_widget.column (position_column)>>)
 
 				-- Enable copying to clipboard
 			enable_copy_to_clipboard
@@ -539,7 +535,7 @@ feature {NONE} -- Events
 					if l_event /= Void and then is_warning_event (l_event) then
 						l_warning ?= l_event.data
 						if l_warning /= Void then
-							if l_filter.is_filtered_out (l_warning) then
+							if not l_filter.is_filtered_in (l_warning) then
 								if a_exclude then
 									l_row.hide
 								end
@@ -837,19 +833,13 @@ feature {NONE} -- User interface manipulation
 					end
 				end
 
-					-- Line number
+					-- Line and column number
+
 				create l_item
 				if l_error.line > 0 then
-					l_item.set_text (l_error.line.out)
+					l_item.set_text (l_error.line.out + ", " + l_error.column.min (1).out)
 				end
-				a_row.set_item (lines_column, l_item)
-
-					-- Column number
-				create l_item
-				if l_error.line > 0 and then l_error.column > 0 then
-					l_item.set_text (l_error.column.out)
-				end
-				a_row.set_item (column_column, l_item)
+				a_row.set_item (position_column, l_item)
 			end
 
 				-- Fill empty items
@@ -870,7 +860,7 @@ feature {NONE} -- User interface manipulation
 				check
 					l_warning_attached: l_warning /= Void
 				end
-				if not show_warnings or else filter_widget /= Void and then filter_widget.is_filtered_out (l_warning) then
+				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_filtered_in (l_warning) then
 					a_row.hide
 				end
 			else
@@ -883,8 +873,7 @@ feature {NONE} -- Constants
 	category_column: INTEGER = 2
 	error_column: INTEGER = 3
 	context_column: INTEGER = 4
-	lines_column: INTEGER = 5
-	column_column: INTEGER = 6
+	position_column: INTEGER = 5
 
 invariant
 	errors_button_attached: is_initialized implies errors_button /= Void

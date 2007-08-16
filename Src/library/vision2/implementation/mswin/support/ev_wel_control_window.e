@@ -58,10 +58,17 @@ inherit
 			on_sys_key_up,
 			default_process_message
 		redefine
-			class_name
+			class_name, class_style
 		end
 
 feature {NONE} -- Implementation
+
+	class_style: INTEGER is
+			-- Standard style used to create the window class.
+			-- Can be redefined to return a user-defined style.
+		once
+			Result := Cs_dblclks
+		end
 
 	class_name: STRING_32 is
 			-- Window class name to create

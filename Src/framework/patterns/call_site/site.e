@@ -50,17 +50,13 @@ feature {NONE} -- Access
 
 feature -- Query
 
-	is_valid_site (a_site: like site): BOOLEAN is
+	is_valid_site (a_site: ANY): BOOLEAN is
 			-- Determines if `a_site' is a valid site object
 		local
 			l_ot: G
 		do
-			Result := a_site = Void
-			if not Result then
-					-- Prevents catcalls
-				l_ot ?= a_site
-				Result := l_ot /= Void
-			end
+			l_ot ?= a_site
+			Result := l_ot /= Void
 		end
 
 indexing

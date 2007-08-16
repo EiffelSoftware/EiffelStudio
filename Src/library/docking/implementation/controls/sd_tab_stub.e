@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 		do
 			if is_vertical then
-				l_size := content.pixmap.height + padding_width
+				l_size := content.pixmap.height + 2 * padding_width
 				if is_show_text then
 					l_size := l_size + text_size + padding_width
 				end

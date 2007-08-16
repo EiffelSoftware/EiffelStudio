@@ -168,7 +168,7 @@ feature -- Status setting
 
 feature -- Possibly delayed operations
 
-	display_line_when_ready (l_num: INTEGER; highlight: BOOLEAN) is
+	display_line_when_ready (l_num: INTEGER; a_col: INTEGER; highlight: BOOLEAN) is
 			-- same as select_region but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded			
@@ -176,17 +176,17 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				if l_num > 0 and then l_num <= number_of_lines then
 					if highlight then
-						text_displayed.select_line (l_num)
+						text_displayed.select_token (l_num, a_col)
 					end
 					display_line_with_context (l_num)
 					refresh_now
 				end
 			else
-				after_reading_text_actions.extend (agent display_line_when_ready (l_num, highlight))
+				after_reading_text_actions.extend (agent display_line_when_ready (l_num, a_col, highlight))
 			end
 		end
 
-	display_line_at_top_when_ready (l_num: INTEGER) is
+	display_line_at_top_when_ready (l_num: INTEGER; a_col: INTEGER) is
 			-- same as select_region but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded
@@ -196,9 +196,10 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				ln := l_num.min (maximum_top_line_index)
 				set_first_line_displayed (ln, True)
+				text_displayed.cursor.set_x_in_characters (a_col)
 				refresh_now
 			else
-				after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
+				after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num, a_col))
 			end
 		end
 
@@ -258,12 +259,13 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	scroll_to_start_of_line_when_ready_if_top (a_line_number: INTEGER; a_selected: BOOLEAN; a_top: BOOLEAN) is
+	scroll_to_start_of_line_when_ready_if_top (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN; a_top: BOOLEAN) is
 			-- Scroll to `a_line_number'-th line.
 			-- If `a_selected' is True, select that line.
 			-- If `a_top' then display `a_line_number' at top.
 		local
 			l_text: like text_displayed
+			l_col: INTEGER
 		do
 			if text_is_fully_loaded then
 				l_text := text_displayed
@@ -272,22 +274,27 @@ feature -- Possibly delayed operations
 				end
 				l_text.cursor.set_y_in_lines (a_line_number)
 				l_text.cursor.go_start_line
-				l_text.cursor.go_smart_home
-				if a_top then
-					display_line_at_top_when_ready  (a_line_number)
+				if a_column_number = 0 then
+					l_text.cursor.go_smart_home
+					l_col := l_text.cursor.pos_in_characters
 				else
-					display_line_when_ready (a_line_number, a_selected)
+					l_col := a_column_number
+				end
+				if a_top then
+					display_line_at_top_when_ready  (a_line_number, l_col)
+				else
+					display_line_when_ready (a_line_number, l_col, a_selected)
 				end
 			else
-				after_reading_text_actions.extend (agent scroll_to_start_of_line_when_ready (a_line_number, a_selected))
+				after_reading_text_actions.extend (agent scroll_to_start_of_line_when_ready (a_line_number, a_column_number, a_selected))
 			end
 		end
 
-	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_selected: BOOLEAN) is
+	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN) is
 			-- Scroll to `a_line_number'-th line.
 			-- If `a_selected' is True, select that line.
 		do
-			scroll_to_start_of_line_when_ready_if_top (a_line_number, a_selected, False)
+			scroll_to_start_of_line_when_ready_if_top (a_line_number, a_column_number, a_selected, False)
 		end
 
 	scroll_to_end_when_ready is

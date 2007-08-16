@@ -282,7 +282,7 @@ feature {SD_FLOATING_STATE} -- Internal issues
 			set: is_drag_title_bar = a_bool
 		end
 
-feature {NONE} -- Agents for user
+feature -- Agents for user
 
 	on_focus_in (a_content: SD_CONTENT) is
 			-- Redefine.

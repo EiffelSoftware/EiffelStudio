@@ -2295,7 +2295,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			then
 				l_line := editors_manager.current_editor.first_line_displayed
 				l_formatter.execute
-				editors_manager.current_editor.display_line_at_top_when_ready (l_line)
+				editors_manager.current_editor.display_line_at_top_when_ready (l_line, 0)
 			end
 		end
 

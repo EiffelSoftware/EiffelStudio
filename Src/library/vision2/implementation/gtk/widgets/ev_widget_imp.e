@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
 		end
 

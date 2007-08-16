@@ -1,21 +1,20 @@
 indexing
 
-	description: 
+	description:
 		"Error when a non-deferred class has a deferred feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VCCH1 
+class VCCH1
 
 inherit
-
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode, is_defined
+			build_explain, subcode, is_defined, print_single_line_error_message
 		end
-	
+
 feature -- Properties
 
 	deferred_feature: E_FEATURE;
@@ -52,6 +51,24 @@ feature -- Output
 			wclass.append_name (a_text_formatter);
 			a_text_formatter.add_new_line;
 		end;
+
+feature {NONE} -- Ouput
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if is_defined then
+				a_text_formatter.add_space
+				a_text_formatter.add ("Check deferred feature ")
+				deferred_feature.append_name (a_text_formatter)
+				if deferred_feature.written_class /= class_c then
+					a_text_formatter.add (" from class ")
+					deferred_feature.written_class.append_name (a_text_formatter)
+				end
+				a_text_formatter.add (".")
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 

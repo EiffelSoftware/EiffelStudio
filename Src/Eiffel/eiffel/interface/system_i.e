@@ -5257,13 +5257,14 @@ feature {NONE} -- Conveniences.
 			l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
 			print ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
 			print ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
-			print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
-			print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
+--| FIXME IEK Uncomment when added to base.
+--			print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
+	--		print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
 			print ("Full Collection period " + l_mem.collection_period.out + "%N")
-			print ("GC percentage time " +
-				(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
-				 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
-				 l_part_gc_info.cpu_total_time)).out + "%N%N")
+--			print ("GC percentage time " +
+--				(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
+--				 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
+--				 l_part_gc_info.cpu_total_time)).out + "%N%N")
 		end
 
 feature {NONE} -- Implementation

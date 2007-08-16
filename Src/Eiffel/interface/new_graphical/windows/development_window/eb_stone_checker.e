@@ -274,7 +274,7 @@ feature {NONE} -- Implementation functions
 					end
 					formatted_context_for_group (cluster_st.group, cluster_st.path)
 					if cluster_st.position > 0 and then current_editor /= Void then
-						current_editor.display_line_at_top_when_ready (cluster_st.position)
+						current_editor.display_line_at_top_when_ready (cluster_st.position, 0)
 					end
 
 				end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation functions
 						main_formatter.enable_select
 					end
 					if current_editor /= Void and then not text_loaded and then new_class_stone.position > 0 then
-						current_editor.display_line_at_top_when_ready (new_class_stone.position)
+						current_editor.display_line_at_top_when_ready (new_class_stone.position, 0)
 					end
 				end
 			end
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation functions
 						if l_selection /= Void then
 							develop_window.scroll_to_selection (l_selection, True)
 						else
-							develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.should_line_be_selected)
+							develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.column_number, line_stone.should_line_be_selected)
 						end
 					end
 				else
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation functions
 							end
 						end
 						if current_editor /= Void then
-							current_editor.display_line_when_ready (error_line, True)
+							current_editor.display_line_when_ready (error_line, 0, True)
 						end
 					end
 				end

@@ -313,11 +313,11 @@ feature {EB_FEATURES_TREE, EB_CONTEXT_MENU_FACTORY} -- Status setting
 					l_pos := a_clause.start_position
 					l_line := character_line (l_pos, s)
 					if not a_focus then
-						l_current_editor.display_line_at_top_when_ready  (l_line)
+						l_current_editor.display_line_at_top_when_ready  (l_line, 0)
 					else
 						l_current_editor.docking_content.set_focus
 						l_current_editor.set_focus
-						l_current_editor.scroll_to_start_of_line_when_ready_if_top (l_line, False, True)
+						l_current_editor.scroll_to_start_of_line_when_ready_if_top (l_line, 0, False, True)
 					end
 				end
 			end
@@ -335,7 +335,7 @@ feature {EB_FEATURES_TREE, EB_CONTEXT_MENU_FACTORY} -- Status setting
 					develop_window.managed_main_formatters.first.execute
 				end
 				develop_window.editors_manager.current_editor.display_line_at_top_when_ready (
-					a_line)
+					a_line, 0)
 			end
 		end
 

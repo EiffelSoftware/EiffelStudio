@@ -154,7 +154,7 @@ feature -- Command
 					a_session_data.editor_position > 0
 					and then develop_window.editors_manager.current_editor /= Void
 				then
-					develop_window.editors_manager.current_editor.display_line_when_ready (a_session_data.editor_position, False)
+					develop_window.editors_manager.current_editor.display_line_when_ready (a_session_data.editor_position, 0, False)
 				end
 			end
 

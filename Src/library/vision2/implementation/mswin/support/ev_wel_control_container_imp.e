@@ -70,6 +70,7 @@ inherit
 			default_style,
 			default_ex_style,
 			class_name,
+			class_style,
 			on_erase_background
 		end
 
@@ -87,6 +88,13 @@ feature {NONE} -- Implementation
 			-- Top level window that contains `Current'.
 
 feature {NONE} -- WEL Implementation
+
+	class_style: INTEGER is
+			-- Standard style used to create the window class.
+			-- Can be redefined to return a user-defined style.
+		once
+			Result := Cs_dblclks
+		end
 
 	default_style: INTEGER is
 			-- Default style used by windows at creation.

@@ -9,6 +9,7 @@ class
 	EB_STONE_CHECKER
 
 inherit
+	ANY
 
 	SHARED_TEXT_ITEMS
 		export

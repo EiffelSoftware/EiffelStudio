@@ -141,7 +141,7 @@ fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 
 remtrace MinGW files
-cdd %STUDIO_DIR
+cdd %INSTALL_DIR
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons/gcc gcc
 
 cdd %STUDIO_DIR

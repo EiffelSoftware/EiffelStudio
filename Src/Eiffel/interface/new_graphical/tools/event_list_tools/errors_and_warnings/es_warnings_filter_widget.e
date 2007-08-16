@@ -239,26 +239,29 @@ feature {NONE} -- User interface elements
 
 feature -- Status report
 
-	is_filtered_in (a_warning: WARNING): BOOLEAN
-			-- Determines if a warning has been filtered out
+	is_unfiltered (a_warning: WARNING): BOOLEAN
+			-- Determines if a warning should not be filtered.
 		local
 			l_cursor: DS_BILINEAR_CURSOR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
 			l_item: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
 			l_type: TYPE [ANY]
 			l_internal: INTERNAL
+			l_matched: BOOLEAN
 		do
 			l_internal := internal
 			l_cursor := filtered.new_cursor
-			from l_cursor.start until l_cursor.after or Result loop
+			from l_cursor.start until l_cursor.after or l_matched loop
 				l_item := l_cursor.item
 				l_type := l_internal.type_of (a_warning)
 				if l_item.exact_only then
-					Result := l_type.is_equal (l_item.type)
+					l_matched := l_type.is_equal (l_item.type)
 				else
-					Result := l_type.conforms_to (l_item.type)
+					l_matched := l_type.conforms_to (l_item.type)
 				end
 				l_cursor.forth
 			end
+
+			Result := not l_matched
 		end
 
 feature {NONE} -- Basic operations

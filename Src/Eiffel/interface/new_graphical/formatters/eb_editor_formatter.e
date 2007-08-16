@@ -84,6 +84,8 @@ feature -- Positioning
 
 	go_to_position is
 			-- Save manager position and go to position in `editor' if possible.
+		local
+			l_line_stone: LINE_STONE
 		do
 			save_manager_position
 			if
@@ -92,7 +94,13 @@ feature -- Positioning
 				stone.pos_container = current and then
 				stone.position > 0
 			then
-				editor.display_line_at_top_when_ready (stone.position)
+				l_line_stone ?= stone
+				if l_line_stone /= Void then
+					editor.display_line_at_top_when_ready (l_line_stone.line_number, l_line_stone.column_number)
+				else
+					editor.display_line_at_top_when_ready (stone.position, 0)
+				end
+
 			end
 		end
 

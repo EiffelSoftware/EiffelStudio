@@ -121,7 +121,7 @@ feature -- Command
 					if develop_window.feature_stone_already_processed and conv_ferrst /= Void then
 							-- Scroll to the line of the error.
 						if not develop_window.during_synchronization and then l_editors_manager.current_editor /= Void then
-							l_editors_manager.current_editor.display_line_when_ready (conv_ferrst.line_number, True)
+							l_editors_manager.current_editor.display_line_when_ready (conv_ferrst.line_number, 0, True)
 						end
 					end
 				end

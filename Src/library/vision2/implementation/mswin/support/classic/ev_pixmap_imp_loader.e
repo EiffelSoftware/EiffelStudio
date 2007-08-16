@@ -14,7 +14,7 @@ deferred class
 
 inherit
 	ANY
-	
+
 	EXCEPTIONS
 		rename
 			raise as exception_raise,
@@ -26,12 +26,12 @@ inherit
 feature -- Status report
 
 	pixmap_filename: STRING is
-			-- Filename for the pixmap. 
+			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 		deferred
 		end
-		
+
 	disable_initialized is
 			-- Set `is_initialized' to `False'.
 		deferred
@@ -60,9 +60,9 @@ feature {NONE} -- Implementation
 				exception_raise ("Unable to load the file")
 			end
 		end
-		
+
 	update_fields(
-		error_code		: INTEGER -- Loadpixmap_error_xxxx 
+		error_code		: INTEGER -- Loadpixmap_error_xxxx
 		data_type		: INTEGER -- Loadpixmap_hicon, ...
 		pixmap_width	: INTEGER -- Height of the loaded pixmap
 		pixmap_height	: INTEGER -- Width of the loaded pixmap
@@ -72,15 +72,15 @@ feature {NONE} -- Implementation
 		is
 		deferred
 		end
-	
+
 	last_pixmap_loading_had_error: BOOLEAN
 			-- Did the last pixmap load result in an error?
 
 feature {NONE} -- Externals
 
 	c_ev_load_pixmap(
-		curr_object: POINTER; 
-		file_name: POINTER; 
+		curr_object: POINTER;
+		file_name: POINTER;
 		update_fields_routine: POINTER
 		) is
 		external

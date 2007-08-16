@@ -18,8 +18,11 @@ inherit
 
 feature -- Access
 
-	line_number: INTEGER
+	line_number: INTEGER assign set_line_number
 			-- Line number
+
+	column_number: INTEGER assign set_column_number
+			-- Optional column number
 
 	stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
@@ -76,6 +79,16 @@ feature -- Setting
 			line_number_set: line_number = a_line_number
 		end
 
+	set_column_number (a_column: like column_number) is
+			-- Set `column_number' with `a_column'.
+		require
+			a_column_positive: a_column > 0
+		do
+			column_number := a_column
+		ensure
+			column_number_set: column_number = a_column
+		end
+
 	set_selection (a_selection: like selection) is
 			-- Set `selection' with `a_selection'.
 		do
@@ -83,6 +96,10 @@ feature -- Setting
 		ensure
 			selection_set: selection = a_selection
 		end
+
+invariant
+	line_number_positive: line_number > 0
+	column_number_non_negative: column_number >= 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

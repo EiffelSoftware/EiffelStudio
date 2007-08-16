@@ -116,7 +116,8 @@ inherit
 			on_wm_setting_change,
 			hide,
 			class_requires_icon,
-			show_internal
+			show_internal,
+			class_style
 		end
 
 	WEL_CONSTANTS
@@ -148,6 +149,13 @@ feature {NONE} -- Initialization
 			application_imp.add_root_window (Current)
 			set_is_initialized (True)
 			internal_is_border_enabled := True
+		end
+
+	class_style: INTEGER is
+			-- Standard style used to create the window class.
+			-- Can be redefined to return a user-defined style.
+		once
+			Result := Cs_dblclks
 		end
 
 	init_bars is

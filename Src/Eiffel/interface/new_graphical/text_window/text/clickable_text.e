@@ -205,6 +205,27 @@ feature -- Initialization
 			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.x_in_characters = 1
 		end
 
+	select_token (l_line: INTEGER; l_col: INTEGER) is
+			-- Selects a single token on line `a_line' at character position `l_col'
+		require
+			l_line_large_enough: l_line > 0
+			l_line_small_enough: l_line <= number_of_lines
+			l_col_large_enough: l_col > 0
+		local
+			l_token: EDITOR_TOKEN
+		do
+			cursor.make_from_character_pos (l_col, l_line, Current)
+			l_token := cursor.token
+			if l_token /= cursor.line.eol_token then
+				selection_cursor.make_from_character_pos (l_col, l_line, Current)
+				cursor.set_current_char (l_token.next, 1)
+				enable_selection
+			end
+		ensure
+			cursor_positioned: cursor.y_in_lines = l_line
+			selection_cursor_positioned: selection_cursor.y_in_lines = l_line
+		end
+
 feature -- Load Text handling
 
 	process_new_line is

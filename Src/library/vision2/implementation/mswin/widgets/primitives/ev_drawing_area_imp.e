@@ -282,13 +282,8 @@ feature {NONE} -- Implementation
 	class_style: INTEGER is
    			-- Standard style used to create the window class.
    			-- Can be redefined to return a user-defined style.
-   			-- (from WEL_FRAME_WINDOW).
    		once
-			Result :=
-				cs_hredraw |
-				cs_vredraw |
-				cs_dblclks |
-				Cs_owndc
+			Result := cs_dblclks | cs_owndc
  		end
 
 feature -- Commands.

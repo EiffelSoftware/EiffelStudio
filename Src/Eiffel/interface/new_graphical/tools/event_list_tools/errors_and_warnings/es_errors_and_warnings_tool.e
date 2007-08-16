@@ -196,7 +196,8 @@ feature {NONE} -- Query
 			l_error: ERROR
 			l_line: INTEGER
 			l_classi_stone: CLASSI_STONE
-			l_classC_stone: CLASSC_STONE
+			l_classc_stone: CLASSC_STONE
+			l_line_stone: LINE_STONE
 		do
 			l_row := find_event_row (a_event_item)
 			if l_row /= Void then
@@ -212,6 +213,13 @@ feature {NONE} -- Query
 							else
 								l_classi_stone ?= Result
 								create {UNCOMPILED_LINE_STONE}Result.make_with_line (l_classi_stone.class_i, l_line, True)
+							end
+							l_line_stone ?= Result
+							if l_line_stone /= Void then
+								l_line_stone.set_should_line_be_selected (True)
+								if l_error.column > 0 then
+									l_line_stone.set_column_number (l_error.column)
+								end
 							end
 						end
 					end
@@ -468,8 +476,13 @@ feature {NONE} -- Events
 		local
 			l_row: EV_GRID_ROW
 			l_event_item: EVENT_LIST_ITEM_I
+			l_warning: WARNING
+			l_filter_widget: like filter_widget
+			l_show: BOOLEAN
 			l_count, i: INTEGER
 		do
+			l_filter_widget := filter_widget
+			l_show := show_warnings
 			from
 				i := 1
 				l_count := grid_events.row_count
@@ -480,7 +493,9 @@ feature {NONE} -- Events
 				l_event_item ?= l_row.data
 				if l_event_item /= Void then
 					if is_warning_event (l_event_item) then
-						if show_warnings then
+						l_warning ?= l_event_item.data
+						check l_warning_attached: l_warning /= Void end
+						if l_warning /= Void and then l_show and l_filter_widget.is_unfiltered (l_warning) then
 							l_row.show
 						else
 							l_row.hide
@@ -535,7 +550,7 @@ feature {NONE} -- Events
 					if l_event /= Void and then is_warning_event (l_event) then
 						l_warning ?= l_event.data
 						if l_warning /= Void then
-							if not l_filter.is_filtered_in (l_warning) then
+							if not l_filter.is_unfiltered (l_warning) then
 								if a_exclude then
 									l_row.hide
 								end
@@ -837,7 +852,7 @@ feature {NONE} -- User interface manipulation
 
 				create l_item
 				if l_error.line > 0 then
-					l_item.set_text (l_error.line.out + ", " + l_error.column.min (1).out)
+					l_item.set_text (l_error.line.out + ", " + l_error.column.max (1).out)
 				end
 				a_row.set_item (position_column, l_item)
 			end
@@ -860,7 +875,7 @@ feature {NONE} -- User interface manipulation
 				check
 					l_warning_attached: l_warning /= Void
 				end
-				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_filtered_in (l_warning) then
+				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_warning) then
 					a_row.hide
 				end
 			else

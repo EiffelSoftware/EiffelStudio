@@ -15,7 +15,8 @@ inherit
 	EV_DRAWING_AREA_IMP
 		redefine
 			update_for_pick_and_drop,
-			interface
+			interface,
+			class_style
 		end
 
 	EV_SHARED_APPLICATION
@@ -25,6 +26,17 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	class_style: INTEGER is
+			-- Standard style used to create the window class.
+			-- Can be redefined to return a user-defined style.
+		once
+			Result := Cs_dblclks
+			| Cs_hredraw --| FIXME: IEK This line should not be needed.
+			--| If resized smaller then drawing area should perform a full redraw where required.
+		end
 
 feature {NONE} -- Implementation
 

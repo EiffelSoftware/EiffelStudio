@@ -53,10 +53,12 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
 		end
 
+feature {NONE} -- Initialization
+
 	initialize is
 			-- Initialize `Current'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, True)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- When false, this means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values

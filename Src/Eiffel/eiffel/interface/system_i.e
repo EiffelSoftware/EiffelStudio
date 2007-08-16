@@ -5242,12 +5242,28 @@ feature {NONE} -- Conveniences.
 		local
 			l_mem: MEMORY
 			l_mem_info: MEM_INFO
+			l_full_gc_info, l_part_gc_info: GC_INFO
 		do
 			create l_mem
 			l_mem_info := l_mem.memory_statistics ({MEM_CONST}.eiffel_memory)
 			print ("Total memory is " + l_mem_info.total.out + "%N")
 			print ("Used memory is " + (l_mem_info.used + l_mem_info.overhead).out + "%N")
-			print ("Free memory is " + l_mem_info.free.out + "%N%N")
+			print ("Free memory is " + l_mem_info.free.out + "%N")
+
+			l_full_gc_info := l_mem.gc_statistics ({MEM_CONST}.full_collector)
+			print ("GC full cycle is " + l_full_gc_info.cycle_count.out + "%N")
+			print ("GC full cycle is " + l_full_gc_info.cpu_time_average.out + "%N")
+
+			l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
+			print ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
+			print ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
+			print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
+			print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
+			print ("Full Collection period " + l_mem.collection_period.out + "%N")
+			print ("GC percentage time " +
+				(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
+				 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
+				 l_part_gc_info.cpu_total_time)).out + "%N%N")
 		end
 
 feature {NONE} -- Implementation

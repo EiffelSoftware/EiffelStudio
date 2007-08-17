@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 							print_usage
 							l_has_error := True
 						else
-							make_utility := l_make
+							make_utility := "%"" + l_make + "%""
 						end
 					end
 
@@ -285,6 +285,7 @@ feature {NONE} -- Implementation
 			make_utility_not_empty: not make_utility.is_empty
 		local
 			l_process: PROCESS
+			l_util: STRING
 		do
 			l_process := process_launcher (make_utility, Void, a_dir)
 			l_process.launch

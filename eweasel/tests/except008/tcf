@@ -1,0 +1,14 @@
+test_name 	invariant-violation-on-exit
+test_description Raise exception of invariant violation, recipient is current routine
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	application.e $CLUSTER application.e
+compile_frozen
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+ 
+test_end

@@ -57,6 +57,20 @@ test	replace_key_replace_item	table004 tcf pass table
 test	iteration-with-default-key	table005 tcf pass table
 test	infinite-loop-on-removal-then-addition	table006 tcf pass table
 
+-- Exceptions
+test	old-expression-exception	except001 tcf pass exception
+test	invariant-violation-on-entry	except002 tcf pass exception
+test	exception-during-evaluation-of-invariant-on-entry	except003 tcf pass exception
+test	exception-during-evaluation-of-precondition	except004 tcf pass exception
+test	precondition-violation		except005 tcf pass exception
+test	attached-target-violation-in-routine-body	except006 tcf pass exception
+test	exception-during-evaluation-of-invariant-on-exit	except007 tcf pass exception
+test	invariant-violation-on-exit	except008 tcf pass exception
+test	exception-during-evaluation-of-postcondition-on-exit except009 tcf pass exception
+test	postcondition-violation		except010 tcf pass exception
+test	exception-in-rescue		except011 tcf pass exception
+test	raise-and-catch-user-defined-exception	except012 tcf pass exception
+
 -- For testing only
 
 -- test	keep-recompiling		fake001 tcf testing

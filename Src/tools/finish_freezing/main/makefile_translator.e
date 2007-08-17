@@ -159,7 +159,7 @@ feature -- Execution
 				-- Launch building of `E1\estructure.h' in case it is not built and we are not
 				-- in .NET mode
 			if not is_il_code then
-				env.system (command + " E1" + directory_separator + "estructure.h")
+				env.system ("%"" + command + " E1" + directory_separator + "estructure.h%"")
 			end
 
 				-- Launch distributed make.
@@ -171,9 +171,9 @@ feature -- Execution
 			end
 			eiffel_make.append (" -target %"")
 			eiffel_make.append (env.current_working_directory)
-			eiffel_make.append ("%" -make %"")
+			eiffel_make.append ("%" -make ")
 			eiffel_make.append (command)
-			eiffel_make.append ("%"")
+			eiffel_make.append ("")
 
 				-- On Windows, we need to surround the command with " since it is executed
 				-- by COMSPEC.

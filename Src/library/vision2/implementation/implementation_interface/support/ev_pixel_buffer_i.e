@@ -66,6 +66,8 @@ feature -- Command
 	set_pixel (a_x, a_y, rgba: NATURAL_32) is
 			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
 		deferred
+		ensure
+			pixel_set: get_pixel (a_x, a_y) = rgba
 		end
 
 	lock is

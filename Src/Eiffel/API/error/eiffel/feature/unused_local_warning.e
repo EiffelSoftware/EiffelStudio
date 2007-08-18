@@ -45,7 +45,7 @@ feature -- Properties
 	unused_locals: LINKED_LIST [TUPLE [name: STRING; type: TYPE_A]]
 			-- List of unused local names and type.
 
-	code: STRING = "Unused Local Warning"
+	code: STRING = "Unused_local_warning"
 			-- Error code
 
 	help_file_name: STRING = "Unused_local_warning"

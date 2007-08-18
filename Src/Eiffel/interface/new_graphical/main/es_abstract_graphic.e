@@ -272,7 +272,7 @@ feature {NONE} -- Factory
 		require
 			window_manager_attached: window_manager /= Void
 		do
-			create {ES_ERROR_DISPLAYER}Result.make (window_manager)
+			create {ES_ERROR_DISPLAYER} Result.make (window_manager)
 		ensure
 			result_attached: Result /= Void
 		end

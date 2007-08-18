@@ -116,12 +116,10 @@ feature {NONE} -- Implementation
 	area_type: GEN_TYPE_A is
 			-- Type SPECIAL [CHARACTER]
 		local
-			f: CHARACTER_A
 			gen: ARRAY [TYPE_A]
 		do
-			create f.make (False)
 			create gen.make (1, 1)
-			gen.put (f, 1)
+			gen.put (character_type, 1)
 			create Result.make (System.special_id, gen)
 		ensure
 			area_type_not_void: area_type /= Void

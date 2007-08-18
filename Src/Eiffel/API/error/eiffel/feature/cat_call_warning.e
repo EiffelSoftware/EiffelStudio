@@ -50,7 +50,7 @@ feature -- Access
 	code: STRING is
 			-- Error code
 		do
-			Result := "CAT Call";
+			Result := "Catcall";
 		end
 
 	help_file_name: STRING is

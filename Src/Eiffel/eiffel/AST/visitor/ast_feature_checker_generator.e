@@ -7236,11 +7236,9 @@ feature {NONE} -- Agents
 			-- Representation of an array of INTEGER
 		local
 			generics : ARRAY [TYPE_A]
-			int_a: INTEGER_A
 		once
 			create generics.make (1,1)
-			create  int_a.make (32)
-			generics.put (int_a, 1)
+			generics.put (integer_type, 1)
 			create Result.make (System.array_id, generics)
 		end
 

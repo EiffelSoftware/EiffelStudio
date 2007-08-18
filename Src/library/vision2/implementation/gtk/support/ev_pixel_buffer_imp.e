@@ -1,5 +1,5 @@
 indexing
-	description: "Windows implementation for EV_PIXEL_BUFFER_I."
+	description: "Gtk implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
@@ -178,7 +178,8 @@ feature -- Command
 			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
 			l_managed_pointer := reusable_managed_pointer
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
-			Result := l_managed_pointer.read_natural_32 (byte_pos)
+				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
+			Result := l_managed_pointer.read_natural_32_be (byte_pos)
 		end
 
 	set_pixel (a_x, a_y, rgba: NATURAL_32) is
@@ -189,8 +190,9 @@ feature -- Command
 		do
 			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
 			l_managed_pointer := reusable_managed_pointer
+				-- Data is stored at a byte evel of RGBA which is big endian, so we need to set natural 32 as big endian.
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
-			l_managed_pointer.put_natural_32 (rgba, byte_pos)
+			l_managed_pointer.put_natural_32_be (rgba, byte_pos)
 		end
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is

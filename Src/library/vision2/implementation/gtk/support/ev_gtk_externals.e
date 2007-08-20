@@ -235,6 +235,39 @@ feature
 			]"
 		end
 
+	frozen gdk_pixbuf_get_rowstride (a_pixbuf: POINTER): NATURAL is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_rowstride ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_get_n_channels (a_pixbuf: POINTER): NATURAL is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_n_channels ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_get_bits_per_sample (a_pixbuf: POINTER): NATURAL is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_bits_per_sample ((GdkPixbuf*)$a_pixbuf);
+				#endif
+			]"
+		end
+
 	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"

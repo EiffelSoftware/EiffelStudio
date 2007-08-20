@@ -43,6 +43,9 @@ feature -- Access
 			create Result.make
 		end
 
+	parent_window: EV_WINDOW assign set_parent_window
+			-- Parent window, used to evaluate where the compilation list should be shown.
+
 	possibilities_provider: COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider.
 
@@ -59,6 +62,18 @@ feature -- Access
 	save_list_position_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
+
+feature -- Element change
+
+	set_parent_window (a_window: like parent_window)
+			-- Set parent window (used for screen location adjustments) to `a_window'.
+		require
+			a_window_attached: a_window /= Void
+		do
+			parent_window := a_window
+		ensure
+			parent_window_set: parent_window = a_window
+		end
 
 feature -- Status change
 
@@ -233,11 +248,22 @@ feature -- Basic operation
 		local
 			l_x, l_y: INTEGER
 			l_width, l_height: INTEGER
+			l_helpers: EVS_HELPERS
+			l_coords: TUPLE [x, y: INTEGER]
 		do
 			l_width := calculate_completion_list_width
 			l_height := calculate_completion_list_height
 			l_x := calculate_completion_list_x_position
 			l_y := calculate_completion_list_y_position
+
+			if parent_window /= Void and then not parent_window.is_destroyed and then parent_window.is_show_requested then
+					-- Reposition based on screen coords
+				create l_helpers
+				l_coords := l_helpers.suggest_pop_up_widget_location_with_size (parent_window, l_x, l_y, l_width, l_height)
+				l_x := l_coords.x
+				l_y := l_coords.y
+			end
+
 			choices.set_size (l_width, l_height)
 			choices.set_position (l_x, l_y)
 		end
@@ -312,7 +338,6 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			i: INTEGER
 			l_name: NAME_FOR_COMPLETION
 		do
-			create l_screen
 			l_grid := choices.choice_list
 				-- Calculate correct size to fit
 			if not l_grid.is_destroyed and then l_grid.column_count >= 1 and then l_grid.row_count > 0 then
@@ -338,7 +363,8 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			else
 				Result := default_window_width
 			end
-				-- FIXME: Querying the width of the main display is not good enough.
+
+			create l_screen
 			Result := l_screen.width.min (Result)
 		end
 
@@ -479,11 +505,23 @@ feature {NONE} -- Timer
 	completion_timeout: EV_TIMEOUT
 			-- Timeout for showing completion list
 
-	default_timer_interval: INTEGER is 1500
+	default_timer_interval: INTEGER is
+			-- Default completion window appearance time out interval
+		once
+			Result := 10
+		end
 
-	default_window_width: INTEGER is 300
+	default_window_width: INTEGER
+			-- Default completion window width
+		once
+			Result := 300
+		end
 
-	default_window_height: INTEGER is 400;
+	default_window_height: INTEGER
+			-- Default completion window height
+		once
+			Result := 400
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

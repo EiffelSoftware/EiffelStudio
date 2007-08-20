@@ -335,6 +335,7 @@ feature {NONE} -- Element initialization
 			not_properties_and_grid: properties = Void or grid = Void
 		local
 			l_frame: EV_FRAME
+			l_vbox: EV_VERTICAL_BOX
 			l_text: ES_LABEL
 		do
 			if properties = Void then
@@ -362,11 +363,20 @@ feature {NONE} -- Element initialization
 				l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 
 				create l_text
-				l_frame.extend (l_text)
 				properties.set_description_field (l_text)
-				l_text.set_minimum_height (description_height)
+				l_text.set_minimum_width (100)
 				l_text.set_and_wrap_text ("")
 				l_text.align_text_left
+
+					-- Create description container and padding
+				create l_vbox
+				l_vbox.set_border_width (4)
+				l_vbox.extend (l_text)
+				l_vbox.disable_item_expand (l_text)
+				l_vbox.extend (create {EV_CELL})
+				l_vbox.set_minimum_height (description_height)
+
+				l_frame.extend (l_vbox)
 
 					-- remove grid
 				if grid /= Void then

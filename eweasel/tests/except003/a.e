@@ -10,6 +10,6 @@ feature
 	s: STRING
 
 invariant
-	invari: not s.is_emtpy
+	invari: not s.is_empty
 
 end

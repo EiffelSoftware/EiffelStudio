@@ -17,7 +17,7 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create a.make
+				create a
 				a.f
 			end
 		rescue

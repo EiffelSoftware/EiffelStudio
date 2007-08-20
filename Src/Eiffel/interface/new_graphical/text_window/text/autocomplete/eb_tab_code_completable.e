@@ -413,7 +413,7 @@ feature -- Trigger completion
 
 feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 
-	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- If `is_feature_signature' then try to complete arguments and remove the type.
 			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
@@ -444,10 +444,12 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 						insert_char (appended_character)
 					end
 				else
-					complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+					complete_feature_call (completed, is_feature_signature, appended_character, remainder, a_continue_completion)
 					if is_feature_signature then
 						if need_tabbing or else completed.last_index_of (')',completed.count) = completed.count then
-							place_post_cursor
+							if not a_continue_completion then
+								place_post_cursor
+							end
 						end
 					end
 				end
@@ -481,7 +483,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
  			-- Finish completion process by inserting the completed expression.
 		local
 			i: INTEGER

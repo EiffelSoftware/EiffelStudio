@@ -115,7 +115,7 @@ feature {NONE}-- Initialization
 			external_editor_command := a_editor
 			default_create
 			config_windows.force (Current, conf_system.file_name)
-			set_split_position (300)
+			set_split_position (220)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory

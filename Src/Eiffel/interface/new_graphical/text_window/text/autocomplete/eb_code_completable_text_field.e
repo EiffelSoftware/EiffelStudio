@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 			initialize_code_complete
 			key_completable := agent can_complete
 			set_discard_feature_signature (true)
+
+				-- Add handler to trap completion
+			set_default_key_processing_handler (agent on_default_key_processing)
 		end
 
 	make_with_text (a_text: STRING) is
@@ -207,6 +210,9 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 			-- Handle `a_char'
 		do
 			insert_char (a_char)
+			if a_char = '.' then
+				complete_code
+			end
 		end
 
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
@@ -223,6 +229,46 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 				delete_char
 			end
  		end
+
+feature {NONE} -- Action handlers
+
+	on_default_key_processing (a_key: EV_KEY): BOOLEAN
+			-- Process default key handling so any displayable character can be ignored.
+		local
+			l_shortcut_pref: SHORTCUT_PREFERENCE
+			l_alt, l_ctrl, l_shift: BOOLEAN
+		do
+			Result := True
+
+			l_alt := alt_key
+			l_ctrl := ctrled_key
+			l_shift := shifted_key
+
+			if can_complete (a_key, l_ctrl, l_alt, l_shift) then
+					-- Ignore any keys for completion shortcuts
+
+					-- Check feature completion
+				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
+				check l_shortcut_pref /= Void end
+				Result := not (
+					l_shortcut_pref /= Void and then
+					a_key.code = l_shortcut_pref.key.code and
+					l_ctrl = l_shortcut_pref.is_ctrl and
+					l_alt = l_shortcut_pref.is_alt and
+					l_shift = l_shortcut_pref.is_shift)
+
+				if Result then
+						-- Check class completion
+					l_shortcut_pref := preferences.editor_data.shortcuts.item ("class_autocomplete")
+					Result := not (
+						l_shortcut_pref /= Void and then
+						a_key.code = l_shortcut_pref.key.code and
+						l_ctrl = l_shortcut_pref.is_ctrl and
+						l_alt = l_shortcut_pref.is_alt and
+						l_shift = l_shortcut_pref.is_shift)
+				end
+			end
+		end
 
 feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 
@@ -596,11 +642,7 @@ feature {NONE} -- Implementation
 					Result := not completing_feature
 				end
 
-					-- We remove the 'key' character on windows platform.
-					-- On linux the key has not been inserted.
-					-- Fix needed.
 				precompletion_actions.wipe_out
-				precompletion_actions.extend_kamikaze (agent remove_keyed_character (a_key))
 			end
 		end
 

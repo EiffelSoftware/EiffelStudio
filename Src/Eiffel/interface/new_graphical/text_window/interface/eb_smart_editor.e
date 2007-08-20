@@ -1339,10 +1339,10 @@ feature {NONE} -- Code completable implementation
 
 	saved_cursor: EDITOR_CURSOR
 
-	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
+	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER; a_continue_completion: BOOLEAN) is
 			--
 		do
-			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder, not a_continue_completion)
 		end
 
 	select_from_cursor_to_saved is

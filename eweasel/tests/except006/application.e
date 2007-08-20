@@ -14,7 +14,7 @@ feature -- Initialization
 			l_exception: ATTACHED_TARGET_VIOLATION
 		do
 			if not retried then
-				a.f		-- An ATTACHED_TARGET_VIOLATION is raised here
+				a.do_nothing		-- An ATTACHED_TARGET_VIOLATION is raised here
 			end
 		rescue
 			l_exception ?= last_exception

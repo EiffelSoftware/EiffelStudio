@@ -1,5 +1,8 @@
 Class A
 
+create
+	f
+
 feature
 
 	f is

@@ -11,8 +11,9 @@ feature -- Initialization
         local
             a: A
             l_exception: ROUTINE_FAILURE
+            retried: BOOLEAN
         do
-            create a.make
+            create a
             a.f        -- 4. Exception of ROUTINE_FAILURE
         rescue
             retried := True

@@ -14,7 +14,7 @@ feature
 	f is
 		local
 			retried: BOOLEAN
-			l_exception: ATTACHED_TYPE_VIOLATION
+			l_exception: ATTACHED_TARGET_VIOLATION
 		do
 			if not retried then
 				s := Void
@@ -28,7 +28,7 @@ feature
 			end
 			retried := True
 			retry
-		end	-- A ATTACHED_TYPE_VIOLATION exception is raised here.
+		end	-- A ATTACHED_TARGET_VIOLATION exception is raised here.
 
 	s: STRING
 

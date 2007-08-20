@@ -11,7 +11,7 @@ feature -- Initialization
 		local
 			a: A
 		do
-			create a.make
+			create a
 			a.f
 		end
 

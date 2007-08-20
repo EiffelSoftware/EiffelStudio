@@ -110,6 +110,9 @@ feature {NONE} -- GUI
 			create l_provider.make (Void, Void)
 			l_provider.set_group_callback (group_internal)
 			create text_field.make
+			if has_parent then
+				text_field.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (parent, False))
+			end
 			text_field.set_completing_feature (false)
 			text_field.set_completion_possibilities_provider (l_provider)
 			l_provider.set_code_completable (text_field)

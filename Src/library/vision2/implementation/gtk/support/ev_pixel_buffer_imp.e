@@ -174,12 +174,29 @@ feature -- Command
 		local
 			byte_pos: INTEGER_32
 			l_managed_pointer: MANAGED_POINTER
+			l_n_channels: NATURAL
+			l_row_stride: NATURAL_32
+			l_bytes_per_sample: NATURAL
+			l_x, l_y: NATURAL_32
+			l_red, l_green, l_blue, l_alpha: NATURAL_8
 		do
-			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
+			l_n_channels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
+			l_bytes_per_sample := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+
+			l_row_stride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+			l_x := a_x - 1
+			l_y := a_y - 1
+
+			byte_pos := (l_y * l_row_stride + (l_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+
 			l_managed_pointer := reusable_managed_pointer
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
+			if l_n_channels = 3 then
+					-- If there is no alpha channel internally then we set the pixel as opaque.
+				Result := Result | 0x000000FF
+			end
 		end
 
 	set_pixel (a_x, a_y, rgba: NATURAL_32) is
@@ -187,12 +204,36 @@ feature -- Command
 		local
 			byte_pos: INTEGER_32
 			l_managed_pointer: MANAGED_POINTER
+			l_n_channels: NATURAL
+			l_row_stride: NATURAL_32
+			l_bytes_per_sample: NATURAL
+			l_x, l_y: NATURAL_32
+			l_red, l_green, l_blue: NATURAL_8
 		do
-			byte_pos := (((a_y - 1) * width.to_natural_32 + a_x - 1) * 4).to_integer_32
+			l_n_channels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
+			l_bytes_per_sample := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+
+			l_row_stride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+			l_x := a_x - 1
+			l_y := a_y - 1
+
+			byte_pos := (l_y * l_row_stride + (l_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+
 			l_managed_pointer := reusable_managed_pointer
-				-- Data is stored at a byte evel of RGBA which is big endian, so we need to set natural 32 as big endian.
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
-			l_managed_pointer.put_natural_32_be (rgba, byte_pos)
+				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
+
+			if l_n_channels = 4 then
+					-- We have an alpha channel so we can insert the values directly.
+				l_managed_pointer.put_natural_32_be (rgba, byte_pos)
+			else
+				l_red := (rgba |>> 24).as_natural_8
+				l_green := ((rgba & 0x00FF0000) |>> 16).as_natural_8
+				l_blue := ((rgba & 0x0000FF00) |>> 8).as_natural_8
+				l_managed_pointer.put_natural_8 (l_red, byte_pos)
+				l_managed_pointer.put_natural_8 (l_green, byte_pos + 1)
+				l_managed_pointer.put_natural_8 (l_blue, byte_pos + 2)
+			end
 		end
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is

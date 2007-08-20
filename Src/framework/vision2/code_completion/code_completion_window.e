@@ -159,6 +159,10 @@ feature -- Status report
 			Result := scrolling_common_line_count_internal
 		end
 
+	continue_completion: BOOLEAN
+			-- Indicates if completion will be reactived automatically when the completion list is closed.
+			-- This is the result of a '.' being entered when completion is active.
+
 feature -- Status Setting
 
 	show is
@@ -276,6 +280,13 @@ feature {NONE} -- Events handling
 				when key_end then
 					if choice_list.row_count > 0 then
 						select_row (choice_list.row_count)
+					end
+				when key_period then
+					if code_completable.is_completing then
+						continue_completion := True
+						close_and_complete
+						code_completable.handle_extended_key (ev_key)
+						exit
 					end
 				else
 					-- Do nothing
@@ -937,6 +948,7 @@ feature {NONE} -- Implementation
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
+			continue_completion := False
 			l_list := choice_list
 			l_rows := l_list.selected_rows
 			if not l_rows.is_empty then

@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			if is_master then
 				l_text := text
 				if pixmap /= Void then
-					a_drawable.draw_pixmap (2 + w, 2, pixmap)
+					a_drawable.draw_pixmap (3 + w, 2, pixmap)
 					w := w + pixmap.width + extra_space_after_pixmap
 				end
 			else
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 					end
 					w := w - prev_width
 				end
-				a_drawable.draw_text_top_left (2 + w, 2, l_text)
+				a_drawable.draw_text_top_left (3 + w, 2, l_text)
 			end
 		end
 

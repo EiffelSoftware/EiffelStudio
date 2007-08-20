@@ -622,11 +622,19 @@ feature {NONE} -- Implementation
 				elseif c = ' ' and ev_application.ctrl_pressed then
 						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
 				elseif not code_completable.unwanted_characters.item (c.code) then
-					close_and_complete
-					if not code_completable.has_selection then
-						code_completable.handle_character (c)
+					if not continue_completion or else c /= '.' then
+						continue_completion := True
+						close_and_complete
+						if not code_completable.has_selection then
+							code_completable.handle_character (c)
+						end
+						exit
+					else
+						continue_completion := c = '.'
+						if not code_completable.has_selection then
+							code_completable.handle_character (c)
+						end
 					end
-					exit
 				end
 			end
 		end
@@ -749,7 +757,7 @@ feature {NONE} -- Implementation
 						local_name := " " + l_name_item.insert_name
 					end
 				end
-				code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder)
+				code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
 				local_feature ?= l_name_item
 				if local_feature /= Void then
 					last_completed_feature_had_arguments := local_feature.has_arguments

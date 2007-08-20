@@ -246,6 +246,7 @@ feature -- operation on conditions
 			Layout_constants.set_default_width_for_button (cancelb)
 			Layout_constants.set_default_width_for_button (removeb)
 			create tf.make
+			tf.set_parent_window (d)
 			create rb_is_true.make_with_text (Interface_names.l_Is_true)
 			create rb_has_changed.make_with_text (Interface_names.l_Has_changed)
 			create cb_cont_on_cond_failure.make_with_text (Interface_names.b_Continue_on_condition_failure)

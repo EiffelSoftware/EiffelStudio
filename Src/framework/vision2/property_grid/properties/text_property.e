@@ -39,6 +39,8 @@ feature {NONE} -- Initialization
 			pointer_button_press_actions.force_extend (agent activate)
 			deactivate_actions.extend (agent update_text_on_deactivation)
 			Precursor {EV_GRID_EDITABLE_ITEM}
+			set_left_border (3)
+			set_right_border (3)
 		end
 
 feature -- Access
@@ -121,8 +123,8 @@ feature {NONE} -- Agents
 			popup_window.extend (text_field)
 
 			popup_window.show_actions.extend (agent initialize_actions)
-			popup_window.set_x_position (popup_window.x_position + 1)
-			popup_window.set_size (popup_window.width - 2, popup_window.height -1 )
+			popup_window.set_x_position (popup_window.x_position + (left_border - 1))
+			popup_window.set_size (popup_window.width - (left_border - 1) - (right_border - 1), popup_window.height - 1)
 		end
 
 	save_set_text (a_text: G) is

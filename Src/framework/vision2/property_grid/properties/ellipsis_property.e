@@ -129,8 +129,8 @@ feature {NONE} -- Agents
 			l_hb: EV_HORIZONTAL_BOX
 		do
 			popup_window := a_popup_window
-			popup_window.set_x_position (popup_window.x_position + 1)
-			popup_window.set_size (popup_window.width - 1, popup_window.height -1 )
+			popup_window.set_x_position (popup_window.x_position + (left_border - 1))
+			popup_window.set_size (popup_window.width - (left_border - 1) - (right_border - 1), popup_window.height - 1)
 
 			if is_text_editing then
 				create text_field

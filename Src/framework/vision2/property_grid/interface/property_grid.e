@@ -78,18 +78,20 @@ feature -- Update
 	reset is
 			-- Reset to empty property grid.
 		local
-			l_column_width1, l_column_width2: INTEGER
+			l_column_width1, l_column_width2, l_column_width3: INTEGER
 		do
-			if not is_destroyed and then column_count = 2 then
+			if not is_destroyed and then column_count = 3 then
 				l_column_width1 := column (1).width
-				l_column_width2 := column (2).width
+				l_column_width2 := column (name_column).width
+				l_column_width3 := column (value_column).width
 				wipe_out
-				set_column_count_to (2)
+				set_column_count_to (3)
 				column (1).set_width (l_column_width1)
-				column (2).set_width (l_column_width2)
+				column (name_column).set_width (l_column_width2)
+				column (value_column).set_width (l_column_width3)
 			else
 				wipe_out
-				set_column_count_to (2)
+				set_column_count_to (3)
 			end
 			enable_last_column_use_all_width
 			clear_description
@@ -125,17 +127,22 @@ feature -- Update
 			if not sections.found then
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
-				create l_item.make_master (1)
-				l_item.set_font (bold_font)
-				l_item.set_text (a_name)
+				create l_item.make_span (name_column)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				l_item.select_actions.extend (agent clear_description)
 				l_row.set_item (1, l_item)
 
-				create l_item.make_span (1)
+				create l_item.make_master (name_column)
+				l_item.set_font (bold_font)
+				l_item.set_text (a_name)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				l_item.select_actions.extend (agent clear_description)
-				l_row.set_item (2, l_item)
+				l_row.set_item (name_column, l_item)
+
+				create l_item.make_span (name_column)
+				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
+				l_item.select_actions.extend (agent clear_description)
+				l_row.set_item (value_column, l_item)
 
 				l_row.set_background_color (separator_color)
 				sections.force (l_row, a_name)
@@ -168,14 +175,17 @@ feature -- Update
 			l_row ?= current_section.subrow (l_index)
 			l_row.set_property (a_property)
 			create l_name_item.make_with_text (a_property.name)
+			l_name_item.set_left_border (3)
 			l_name_item.select_actions.extend (agent show_description (a_property))
 			a_property.select_actions.extend (agent show_description (a_property))
 			if a_property.description /= Void then
 				l_name_item.set_tooltip (a_property.description)
 			end
 			l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
-			l_row.set_item (1, l_name_item)
-			l_row.set_item (2, a_property)
+			l_row.set_item (1, create {EV_GRID_ITEM})
+			l_row.item (1).set_background_color (separator_color)
+			l_row.set_item (name_column, l_name_item)
+			l_row.set_item (value_column, a_property)
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
 			l_name_item.deselect_actions.extend (agent clear_description)
 			a_property.set_name_item (l_name_item)
@@ -243,7 +253,7 @@ feature -- Update
 				until
 					i > cnt
 				loop
-					l_prop ?= l_section.subrow (i).item (2)
+					l_prop ?= l_section.subrow (i).item (value_column)
 					if l_prop /= Void then
 						l_prop.enable_readonly
 					end
@@ -257,7 +267,8 @@ feature -- Update
 			-- Update widths of columns.
 		do
 			if parent /= Void and then not is_destroyed and then row_count > 0 then
-				column (1).set_width (column (1).required_width_of_item_span (1, row_count) + 3)
+				column (1).set_width (20)
+				column (name_column).set_width (column (name_column).required_width_of_item_span (1, row_count) + 6)
 			end
 		end
 
@@ -376,7 +387,7 @@ feature {NONE} -- Actions
 			if l_y >= 0 and l_y <= virtual_height then
 				l_row ?= row_at_virtual_position (l_y, False)
 				if l_row /= Void and then l_row.property /= Void then
-					l_row.item (1).enable_select
+					l_row.item (name_column).enable_select
 				end
 			end
 		end
@@ -409,8 +420,8 @@ feature {NONE} -- Contract support
 feature {NONE} -- Constants
 
 		-- columns
-	name_column: INTEGER is 1
-	value_column: INTEGER is 2
+	name_column: INTEGER is 2
+	value_column: INTEGER is 3
 
 feature {NONE} -- Implementation
 

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Warning for incompletely C compiled precompiled system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,8 @@ class VD43
 inherit
 	LACE_WARNING
 		redefine
-			build_explain
+			build_explain,
+			print_single_line_error_message
 		end;
 
 feature -- Properties
@@ -28,6 +29,18 @@ feature -- Output
 			a_text_formatter.add (path);
 			a_text_formatter.add_new_line;
 		end;
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {LACE_WARNING} (a_text_formatter)
+			a_text_formatter.add_space
+			if path /= Void and then not path.is_empty then
+				a_text_formatter.add_string ("File '" + path + "'.")
+			end
+		end
 
 feature {REMOTE_PROJECT_DIRECTORY} -- Setting
 

@@ -58,13 +58,13 @@ feature -- Command
 		deferred
 		end
 
-	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
-			-- Get the RGBA pixel value at `a_x', `a_y'.
+	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
 		deferred
 		end
 
-	set_pixel (a_x, a_y, rgba: NATURAL_32) is
-			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+			-- Draw `a_text' with `a_font' at `a_rect'.
 		deferred
 		ensure
 			pixel_set: get_pixel (a_x, a_y) = rgba
@@ -82,13 +82,21 @@ feature -- Command
 			is_locked := False
 		end
 
-	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
-			-- Draw `a_pixel_buffer' at `a_rect'.
+feature {EV_PIXEL_BUFFER_PIXEL} -- Implementation
+
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+			-- Get the platform dependent pixel value at `a_x', `a_y' (zero based for speed)
+		require
+			a_x_valid: a_x >= 0 and then a_x < width.as_natural_32
+			a_y_valid: a_y >=0 and then a_y <= height.as_natural_32
 		deferred
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
-			-- Draw `a_text' with `a_font' at `a_rect'.
+	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+			-- Set the platform dependent pixel value at `a_x', `a_y' (zero based for speed) to `rgba'.
+		require
+			a_x_valid: a_x >= 0 and then a_x < width.as_natural_32
+			a_y_valid: a_y >=0 and then a_y <= height.as_natural_32
 		deferred
 		end
 

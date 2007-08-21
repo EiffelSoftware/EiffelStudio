@@ -53,19 +53,6 @@ feature -- Access
 			bridge_ok: Result = implementation.interval
 		end
 
-	set_interval (an_interval: INTEGER) is
-			-- Assign `an_interval' in milliseconds to `interval'.
-			-- If `an_interval' is 0, `actions' are disabled.
-		require
-			not_destroyed: not is_destroyed
-			an_interval_not_negative: an_interval >= 0
-		do
-			implementation.set_interval (an_interval)
-		ensure
-			interval_assigned: interval = an_interval
-			count_not_changed: count = old count
-		end
-
 	actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions to be performed at a regular `interval'.
 		-- Only called when `interval' is greater than 0.
@@ -84,6 +71,19 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_interval (an_interval: INTEGER) is
+			-- Assign `an_interval' in milliseconds to `interval'.
+			-- If `an_interval' is 0, `actions' are disabled.
+		require
+			not_destroyed: not is_destroyed
+			an_interval_not_negative: an_interval >= 0
+		do
+			implementation.set_interval (an_interval)
+		ensure
+			interval_assigned: interval = an_interval
+			count_not_changed: count = old count
+		end
 
 	reset_count is
 			-- Set `count' to 0.

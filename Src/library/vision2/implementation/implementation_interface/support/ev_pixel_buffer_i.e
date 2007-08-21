@@ -66,8 +66,6 @@ feature -- Command
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
 			-- Draw `a_text' with `a_font' at `a_rect'.
 		deferred
-		ensure
-			pixel_set: get_pixel (a_x, a_y) = rgba
 		end
 
 	lock is
@@ -98,6 +96,8 @@ feature {EV_PIXEL_BUFFER_PIXEL} -- Implementation
 			a_x_valid: a_x >= 0 and then a_x < width.as_natural_32
 			a_y_valid: a_y >=0 and then a_y <= height.as_natural_32
 		deferred
+		ensure
+			pixel_set: get_pixel (a_x, a_y) = rgba
 		end
 
 feature -- Query

@@ -156,7 +156,7 @@ feature -- Command
 			-- Create a new sub pixel buffer object.
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
-			Result.draw_pixel_buffer (interface, a_rect)
+			Result.draw_pixel_buffer_with_rect (interface, a_rect)
 		end
 
 	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
@@ -211,7 +211,7 @@ feature -- Command
 			-- Get the RGBA pixel value at `a_x', `a_y'.
 		do
 			if is_gdi_plus_installed then
-				Result := gdip_bitmap.get_pixel (a_x - 1, a_y - 1)
+				Result := gdip_bitmap.get_pixel (a_x, a_y)
 			else
 				--| FIXME IEK Implement me
 			end
@@ -221,7 +221,7 @@ feature -- Command
 			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
 		do
 			if is_gdi_plus_installed then
-				gdip_bitmap.set_pixel (a_x - 1, a_y - 1, rgba)
+				gdip_bitmap.set_pixel (a_x, a_y, rgba)
 			else
 				--| FIXME IEK Implement me
 			end
@@ -394,7 +394,7 @@ feature -- Obsolete
 				create l_graphics.make_from_image (gdip_bitmap)
 				create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
 				create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
-				l_graphics.draw_image_with_src_rect_dest_rect (l_imp.gdip_bitmap, l_src_rect, l_dest_rect)
+				l_graphics.draw_image_with_dest_rect_src_rect (l_imp.gdip_bitmap, l_dest_rect, l_src_rect)
 
 				l_dest_rect.dispose
 				l_src_rect.dispose

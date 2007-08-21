@@ -23,8 +23,8 @@ feature {NONE} -- Creation
 
 			create internal_item
 			internal_item.set_pixel_buffer (pixel_buffer)
-			max_row_value := a_pixel_buffer.height.to_natural_32
-			max_column_value := a_pixel_buffer.width.to_natural_32
+			max_row_value := a_pixel_buffer.height.to_natural_32 - 1
+			max_column_value := a_pixel_buffer.width.to_natural_32 - 1
 		end
 
 feature
@@ -32,10 +32,10 @@ feature
 	start
 			-- Move to first position if any.
 		do
-			max_row_value := pixel_buffer.height.to_natural_32
-			max_column_value := pixel_buffer.width.to_natural_32
-			column_value := 1
-			row_value := 1
+			max_row_value := pixel_buffer.height.to_natural_32 - 1
+			max_column_value := pixel_buffer.width.to_natural_32 - 1
+			column_value := 0
+			row_value := 0
 		end
 
 	after: BOOLEAN
@@ -56,7 +56,7 @@ feature
 			-- ensure that exhausted will be true.
 		do
 			if column_value = max_column_value then
-				column_value := 1
+				column_value := 0
 				row_value := row_value + 1
 			else
 				column_value := column_value + 1
@@ -66,13 +66,13 @@ feature
 	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
-			Result := row_value < 1
+			Result := row_value < 0
 		end
 
 	back
 			-- Move to previous position.
 		do
-			if column_value = 1 then
+			if column_value = 0 then
 				column_value := max_column_value
 				row_value := row_value - 1
 			else
@@ -91,7 +91,7 @@ feature
 		require
 			a_column_valid: a_column >= 1 and then a_column <= max_column_value
 		do
-			column_value := a_column
+			column_value := a_column - 1
 		end
 
 	column: NATURAL_32
@@ -99,7 +99,7 @@ feature
 		assign
 			set_column
 		do
-			Result := column_value
+			Result := column_value + 1
 		end
 
 	set_row (a_row: NATURAL_32)
@@ -107,7 +107,7 @@ feature
 		require
 			a_row_valid: a_row >= 1 and then a_row <= max_row_value
 		do
-			row_value := a_row
+			row_value := a_row - 1
 		end
 
 	row: NATURAL_32
@@ -115,7 +115,7 @@ feature
 		assign
 			set_row
 		do
-			Result := row_value
+			Result := row_value + 1
 		end
 
 	item: EV_PIXEL_BUFFER_PIXEL
@@ -145,7 +145,7 @@ feature
 	index: INTEGER is
 			-- Index of current position.
 		do
-			Result := ((row_value - 1) * max_column_value + column_value).to_integer_32
+			Result := (row_value * max_column_value + column_value).to_integer_32
 		end
 
 	max_column_value: NATURAL_32
@@ -162,9 +162,9 @@ feature {NONE} -- Implementation
 		-- Pixel buffer for which `Current' is iterating.
 
 	column_value: NATURAL_32
-		-- Current column being iterated.
+		-- Current column being iterated (zero based)
 
 	row_value: NATURAL_32
-		-- Current row being iterated.
+		-- Current row being iterated (zero based)
 
 end

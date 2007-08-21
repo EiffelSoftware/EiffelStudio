@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			preferences_not_void: a_preferences /= Void
 		do
 			create debugger_data.make (a_preferences)
+			is_dbg_mode := True
 		end
 
 feature -- Access
@@ -26,8 +27,13 @@ feature -- Access
 	debugger_data: EB_DEBUGGER_DATA
 			-- Preference data for debugger.		
 
+feature -- Status report
+
+	is_dbg_mode: BOOLEAN
+			-- Are we in debug mode?
+
 invariant
-	debugger_data_not_void: debugger_data /= Void
+	debugger_data_not_void: is_dbg_mode implies debugger_data /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

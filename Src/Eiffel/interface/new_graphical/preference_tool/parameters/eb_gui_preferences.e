@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			create external_command_data.make (a_preferences)
 			create metric_tool_data.make (a_preferences)
 			create misc_shortcut_data.make (a_preferences)
+			is_gui_mode := True
 		end
 
 feature -- Access
@@ -70,16 +71,19 @@ feature -- Access
 	misc_shortcut_data: EB_MISC_SHORTCUT_DATA
 			-- Shortcuts other than editor shortcuts and external command shortcuts.
 
+	is_gui_mode: BOOLEAN
+			-- Is current in gui mode?
+
 invariant
-	dialog_data_not_void: dialog_data /= Void
-	context_tool_data_not_void: context_tool_data /= Void
-	debug_tool_data_not_void: debug_tool_data /= Void
-	development_window_data_not_void: development_window_data /= Void
-	recent_projects_data_not_void: recent_projects_data /= Void
-	editor_data_not_void: editor_data /= Void
-	search_tool_data_not_void: search_tool_data /= Void
-	metric_tool_data_attached: metric_tool_data /= Void
-	class_browser_data_attached: class_browser_data /= Void
+	dialog_data_not_void: is_gui_mode implies dialog_data /= Void
+	context_tool_data_not_void: is_gui_mode implies context_tool_data /= Void
+	debug_tool_data_not_void: is_gui_mode implies debug_tool_data /= Void
+	development_window_data_not_void: is_gui_mode implies development_window_data /= Void
+	recent_projects_data_not_void: is_gui_mode implies recent_projects_data /= Void
+	editor_data_not_void: is_gui_mode implies editor_data /= Void
+	search_tool_data_not_void: is_gui_mode implies search_tool_data /= Void
+	metric_tool_data_attached: is_gui_mode implies metric_tool_data /= Void
+	class_browser_data_attached: is_gui_mode implies class_browser_data /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

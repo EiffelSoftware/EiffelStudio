@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="image_eiffel_code" uuid="F467B9B0-F727-4CAB-9878-25C294973DD7">
+	<target name="image_eiffel_code">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<option trace="false" profile="false" debug="false" warning="true">
+			<debug name="__unnamed_debug__" enabled="false"/>
+			<debug name="dlg_dispatcher" enabled="false"/>
+			<debug name="refactor_fixme" enabled="false"/>
+			<debug name="vision2_windows" enabled="false"/>
+			<debug name="vision2_windows_gdi" enabled="false"/>
+			<debug name="wel" enabled="false"/>
+			<debug name="wel_gdi_count" enabled="false"/>
+			<debug name="wel_gdi_references" enabled="false"/>
+			<debug name="win_dispatcher" enabled="false"/>
+			<assertions/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+		</option>
+		<setting name="address_expression" value="false"/>
+		<setting name="array_optimization" value="false"/>
+		<setting name="check_vape" value="true"/>
+		<setting name="console_application" value="false"/>
+		<setting name="dead_code_removal" value="true"/>
+		<setting name="dynamic_runtime" value="false"/>
+		<setting name="exception_trace" value="false"/>
+		<setting name="inlining" value="false"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="multithreaded" value="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="root_cluster" location=".\">
+			<cluster name="images" location="$|icons\" recursive="true"/>
+		</cluster>
+	</target>
+</system>

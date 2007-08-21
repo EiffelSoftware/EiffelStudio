@@ -1226,7 +1226,7 @@ feature {NONE} -- open new class
 			matcher: KMP_WILD
 			matching: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
-			if workbench.is_in_stable_state then
+			if workbench.is_universe_ready then
 				current_group := Void
 				fname := cluster_address.text
 				if fname /= Void then
@@ -1288,7 +1288,7 @@ feature {NONE} -- open new class
 			wd: EB_WARNING_DIALOG
 			l_classes: DS_HASH_SET [CLASS_I]
 		do
-			if workbench.is_in_stable_state then
+			if workbench.is_universe_ready then
 				class_i := Void
 				cname := class_address.text
 				if cname /= Void then
@@ -1690,7 +1690,7 @@ feature {NONE} -- open new class
 			ccname: STRING
 		do
 			current_typed_class := Void
-			if Workbench.is_in_stable_state and enable_feature_complete then
+			if Workbench.is_universe_ready and enable_feature_complete then
 				clist := system.classes
 				ccname := class_address.text
 				ccname.to_upper
@@ -1745,7 +1745,7 @@ feature {NONE} -- open new class
 				do_not_complete :=	last_key_was_delete or
 									not enable_complete or
 									last_caret_position /= nb + 1 or
-									not Workbench.is_in_stable_state
+									not Workbench.is_universe_ready
 				if nb > 0 and not do_not_complete and last_key_was_backspace and had_selection then
 					str.keep_head (nb - 1)
 					nb := nb - 1

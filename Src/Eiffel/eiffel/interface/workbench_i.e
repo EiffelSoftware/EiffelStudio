@@ -155,6 +155,14 @@ feature -- Additional properties
 			-- add new classes, search for classes,...
 		do
 			Result := system_defined and then not is_compiling and then last_reached_degree <= 5
+		ensure
+			is_in_stable_state_implies_ready: Result implies is_universe_ready
+		end
+
+	is_universe_ready: BOOLEAN is
+			-- Is project in such a state that one can search for classes/clusters/libraries.
+		do
+			Result := system_defined and then last_reached_degree <= 5
 		end
 
 	last_reached_degree: INTEGER is
@@ -680,4 +688,5 @@ indexing
 		]"
 
 end
+
 

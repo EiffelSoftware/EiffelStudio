@@ -69,11 +69,17 @@ feature -- Access
 			-- RGBA value of pixel.
 		assign
 			set_rgba_value
+		local
+			l_color_value, l_alpha_value: NATURAL_32
 		do
-			Result := red.to_natural_32 |<< 24
-			Result := Result | (green.to_natural_32 |<< 16)
-			Result := Result | (blue.to_natural_32 |<< 8)
-			Result := Result | alpha
+			Result := internal_color_value
+			if {PLATFORM}.is_windows then
+					-- Convert from ARGB to 'RGB'0
+				l_color_value := Result |<< 8
+					-- Convert to 000'A'
+				l_alpha_value := Result |>> 24
+				Result := l_color_value | l_alpha_value
+			end
 		end
 
 feature -- Element Change
@@ -123,6 +129,7 @@ feature -- Element Change
             -- Set RGBA value to `a_rgba_value'.
         local
             l_color_value, l_alpha: NATURAL_32
+            l_internal_pixel_buffer: like internal_pixel_buffer
         do
             if {PLATFORM}.is_windows then
                     -- We need to perform a circular shift from RGBA to ARGB
@@ -136,17 +143,13 @@ feature -- Element Change
                 l_color_value := a_rgba_value
                     -- No need for shifting
             end
-            if internal_pixel_buffer /= Void and then internal_pixel_buffer.is_locked then
-                internal_pixel_buffer.set_pixel (current_column_value, current_row_value, l_color_value)
+            l_internal_pixel_buffer := internal_pixel_buffer
+            if l_internal_pixel_buffer /= Void and then l_internal_pixel_buffer.is_locked then
+                l_internal_pixel_buffer.set_pixel (current_column_value, current_row_value, l_color_value)
             end
             internal_color_value := a_rgba_value
-            --| This is the original code however setting it all at once is far more optimal.
-            --            set_red ((a_rgba_value |>> 24).to_natural_8)
-            --            set_green ((a_rgba_value |>> 16).to_natural_8)
-            --            set_blue ((a_rgba_value |>> 8).to_natural_8)
-            --            set_alpha (a_rgba_value.to_natural_8)
         ensure
-            rgba_value_set: rgba_value = a_rgba_value
+            rgba_value_set: internal_pixel_buffer /= Void and then internal_pixel_buffer.is_locked implies internal_pixel_buffer.get_pixel (current_column_value, current_row_value) = a_rgba_value
         end
 
 feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation

@@ -177,17 +177,13 @@ feature -- Command
 			l_n_channels: NATURAL
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
-			l_x, l_y: NATURAL_32
-			l_red, l_green, l_blue, l_alpha: NATURAL_8
 		do
 			l_n_channels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
 
 			l_row_stride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
-			l_x := a_x - 1
-			l_y := a_y - 1
 
-			byte_pos := (l_y * l_row_stride + (l_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
@@ -207,17 +203,14 @@ feature -- Command
 			l_n_channels: NATURAL
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
-			l_x, l_y: NATURAL_32
 			l_red, l_green, l_blue: NATURAL_8
 		do
 			l_n_channels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
 
 			l_row_stride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
-			l_x := a_x - 1
-			l_y := a_y - 1
 
-			byte_pos := (l_y * l_row_stride + (l_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 
 			l_managed_pointer := reusable_managed_pointer
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)

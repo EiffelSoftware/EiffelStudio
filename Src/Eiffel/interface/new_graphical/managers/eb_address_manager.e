@@ -889,7 +889,8 @@ feature {NONE} -- Execution
 				if
 					not ctxt.is_empty and then
 					not ctxt.has ('*') and then
-					not ctxt.has ('?')
+					not ctxt.has ('?') and then
+					workbench.is_in_stable_state
 				then
 					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (ctxt) then
 						create new_class_win.make_default (parent)
@@ -2431,6 +2432,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			if output_line /= Void then
 				output_line.set_foreground_color (preferences.editor_data.error_text_color)
 				output_line.set_text (a_message)
+				output_line.refresh_now
 			else
 				-- FIXME: how do we warn the user?
 			end

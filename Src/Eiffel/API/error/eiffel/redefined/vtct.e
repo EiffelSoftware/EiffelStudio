@@ -5,14 +5,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VTCT 
+class VTCT
 
 inherit
 	EIFFEL_ERROR
 		redefine
-			build_explain
+			build_explain,
+			print_single_line_error_message
 		end
-	
+
 feature -- Properties
 
 	class_name: STRING
@@ -30,7 +31,7 @@ feature -- Status report
 		do
 			Result := class_c.name < other.class_c.name
 		end
-		
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
@@ -40,6 +41,18 @@ feature -- Output
 			a_text_formatter.add ("Unknown class name: ")
 			a_text_formatter.add (class_name)
 			a_text_formatter.add_new_line
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor (a_text_formatter)
+			a_text_formatter.add_space
+			a_text_formatter.add ("Unknown class ")
+			a_text_formatter.add (class_name)
+			a_text_formatter.add (".")
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -134,30 +134,34 @@ feature {NONE} -- Implementation
 			i, j: INTEGER
 			blank: ARRAY [NATURAL_32]
 		do
-			if ignore_leading_blank then
-				from
-					create blank.make (0, 3)
-					blank.put ((' ').natural_32_code, 0)
-					blank.put (('%T').natural_32_code, 1)
-					blank.put (('%N').natural_32_code, 2)
-					blank.put (('%R').natural_32_code, 3)
-					i := 1
-				until
-					not blank.has (s.code (i))
-				loop
-					i := i + 1
-				end
-			end
 			if t.count <= s.count then
-				from
-					j := 1
-					Result := True
-				until
-					not Result or j > t.count
-				loop
-					Result := s.code (i) = t.code (j)
-					i := i + 1
-					j := j + 1
+					--| `s' should contains at least the length of `t'
+					--| even with blank character
+				if ignore_leading_blank then
+					from
+						create blank.make (0, 3)
+						blank.put ((' ').natural_32_code, 0)
+						blank.put (('%T').natural_32_code, 1)
+						blank.put (('%N').natural_32_code, 2)
+						blank.put (('%R').natural_32_code, 3)
+						i := 1
+					until
+						not s.valid_index (i) or else not blank.has (s.code (i))
+					loop
+						i := i + 1
+					end
+				end
+				if t.count <= s.count - (i - 1) then
+					from
+						j := 1
+						Result := True
+					until
+						not Result or j > t.count
+					loop
+						Result := s.code (i) = t.code (j)
+						i := i + 1
+						j := j + 1
+					end
 				end
 			end
 		end

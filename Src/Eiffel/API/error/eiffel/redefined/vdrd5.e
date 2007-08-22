@@ -10,7 +10,7 @@ class VDRD5
 inherit
 	EIFFEL_ERROR
 		redefine
-			build_explain, is_defined
+			build_explain, is_defined, trace_primary_context
 		end
 
 	SHARED_WORKBENCH
@@ -62,6 +62,16 @@ feature -- Output
 			a_text_formatter.add (" From: ")
 			p_class.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if redeclaration /= Void then
+				a_text_formatter.add (".")
+				redeclaration.append_name (a_text_formatter)
+			end
 		end
 
 feature {COMPILER_EXPORTER}

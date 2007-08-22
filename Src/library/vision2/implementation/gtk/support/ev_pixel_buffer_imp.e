@@ -189,10 +189,6 @@ feature -- Command
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
-			if l_n_channels = 3 then
-					-- If there is no alpha channel internally then we set the pixel as opaque.
-				Result := Result | 0x000000FF
-			end
 		end
 
 	set_pixel (a_x, a_y, rgba: NATURAL_32) is
@@ -203,7 +199,6 @@ feature -- Command
 			l_n_channels: NATURAL
 			l_row_stride: NATURAL_32
 			l_bytes_per_sample: NATURAL
-			l_red, l_green, l_blue: NATURAL_8
 		do
 			l_n_channels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
@@ -216,17 +211,7 @@ feature -- Command
 			l_managed_pointer.set_from_pointer ({EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
-			if l_n_channels = 4 then
-					-- We have an alpha channel so we can insert the values directly.
-				l_managed_pointer.put_natural_32_be (rgba, byte_pos)
-			else
-				l_red := (rgba |>> 24).as_natural_8
-				l_green := ((rgba & 0x00FF0000) |>> 16).as_natural_8
-				l_blue := ((rgba & 0x0000FF00) |>> 8).as_natural_8
-				l_managed_pointer.put_natural_8 (l_red, byte_pos)
-				l_managed_pointer.put_natural_8 (l_green, byte_pos + 1)
-				l_managed_pointer.put_natural_8 (l_blue, byte_pos + 2)
-			end
+			l_managed_pointer.put_natural_32_be (rgba, byte_pos)
 		end
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
@@ -278,9 +263,21 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementa
 			-- Set `gdk_pixbuf' to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
+					-- Unref previous gdkpixbuf
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
-			gdk_pixbuf := a_pixbuf
+			if a_pixbuf /= default_pointer then
+				if not {EV_GTK_EXTERNALS}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
+						-- Make sure that the pixel data is internally stored as R G B A
+					gdk_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_add_alpha (a_pixbuf, False, 0, 0, 0)
+					{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+				else
+					gdk_pixbuf := a_pixbuf
+				end
+			else
+				gdk_pixbuf := default_pointer
+			end
+
 		end
 
 	set_internal_pixmap (a_pixmap: like internal_pixmap) is

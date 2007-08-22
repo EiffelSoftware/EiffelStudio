@@ -88,20 +88,27 @@ feature {NONE} -- Initialization
 			grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			vb.extend (grid_container)
 			create status_box
+			status_box.set_padding_width (tiny_padding_size)
+
+			create description_location
+			status_box.extend (description_location)
 			create status_label
 			status_box.extend (status_label)
 			status_label.align_text_right
+			status_box.disable_item_expand (status_label)
 			vb.extend (status_box)
 			vb.disable_item_expand (status_box)
 			fgrid.extend (vb)
 
 			create fdesc.make_with_text (l_description)
 			create vb
-			vb.set_padding_width (small_padding_size)
+			vb.set_padding_width (tiny_padding_size)
 			vb.set_border_width (small_border_size)
+
 			create description_text
 			description_text.set_minimum_height (40)
 			vb.extend (description_text)
+
 			fdesc.extend (vb)
 
 			split_area.extend (fgrid)
@@ -111,18 +118,34 @@ feature {NONE} -- Initialization
 			box.extend (split_area)
 
 			create hb
-			vb.set_padding_width (small_padding_size)
-			vb.set_border_width (small_border_size)
+			hb.set_padding_width (small_padding_size)
+			hb.set_border_width (small_border_size)
 			create restore_button.make_with_text (l_restore_defaults)
+			create import_button.make_with_text (l_import_preferences)
+			create export_button.make_with_text (l_export_preferences)
+
 			create apply_or_close_button.make_with_text (l_apply)
-			apply_or_close_button.set_minimum_width (default_button_width)
+			set_default_width_for_button (restore_button)
+			set_default_width_for_button (import_button)
+			set_default_width_for_button (export_button)
+			set_default_width_for_button (apply_or_close_button)
 			hb.extend (restore_button)
+			hb.extend (import_button)
+			hb.extend (export_button)
 			hb.extend (create {EV_CELL})
 			hb.extend (apply_or_close_button)
 			hb.disable_item_expand (restore_button)
+			hb.disable_item_expand (import_button)
+			hb.disable_item_expand (export_button)
 			hb.disable_item_expand (apply_or_close_button)
 			box.extend (hb)
 			box.disable_item_expand (hb)
+
+				--| Widget properties
+			description_location.set_background_color (description_location.parent.background_color)
+			description_location.disable_edit
+			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			description_text.disable_edit
 
 				--| Dynamic behavior
 
@@ -138,6 +161,7 @@ feature {NONE} -- Initialization
 			grid.column (col_value_index).set_title (l_literal_value)
 			enable_tree_view
 
+
 				-- Agents
 			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			grid.key_press_actions.extend (agent on_grid_key_pressed)
@@ -146,10 +170,11 @@ feature {NONE} -- Initialization
 			grid.header.item_resize_end_actions.force_extend (agent on_header_item_resize)
 			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
-			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			description_text.disable_edit
 			restore_button.select_actions.extend (agent on_restore)
+			import_button.select_actions.extend (agent on_import)
+			export_button.select_actions.extend (agent on_export)
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
+			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			box.resize_actions.force_extend (agent on_resize)
 			display_update_agent := agent on_preference_changed_externally
@@ -165,6 +190,7 @@ feature {NONE} -- Initialization
 	init_shortcuts is
 		do
 			filter_text_box.key_press_actions.extend (agent accelerator_on_key_pressed)
+			description_location.key_press_actions.extend (agent accelerator_on_key_pressed)
 			description_text.key_press_actions.extend (agent accelerator_on_key_pressed)
 		end
 
@@ -177,10 +203,23 @@ feature -- Access
 			-- Action called when "Close" button is pressed.
 
 	parent_window: EV_WINDOW
-			-- Parent window.  Used to display this view relative to.	
+			-- Parent window.  Used to display this view relative to.
+
+	parent_window_of (w: EV_WIDGET): EV_WINDOW is
+			-- Computed parent window of `w'.
+		do
+			Result ?= w
+			if Result = Void and w.parent /= Void then
+				Result := parent_window_of (w.parent)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	restore_button, apply_or_close_button: EV_BUTTON
+	export_button, import_button: EV_BUTTON
 	description_text: EV_TEXT
+	description_location: EV_TEXT_FIELD
 	view_toggle_button: EV_TOOL_BAR_BUTTON
 	split_area: EV_VERTICAL_SPLIT_AREA
 	filter_box,
@@ -393,6 +432,47 @@ feature {NONE} -- Events
 			show_dialog_modal (l_confirmation_dialog)
 			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				preferences.restore_defaults
+			end
+		end
+
+	on_export is
+		local
+			dlg: EV_FILE_SAVE_DIALOG
+			s: STRING_32
+			stor: PREFERENCES_STORAGE_XML
+			p: EV_WINDOW
+		do
+			create dlg.make_with_title (l_export_preferences)
+			p := parent_window
+			if p = Void then
+				p := parent_window_of (widget)
+			end
+			dlg.show_modal_to_window (p)
+			s := dlg.file_name
+			if s /= Void then
+				create stor.make_with_location (s)
+				preferences.export_to_storage (stor, False)
+			end
+		end
+
+	on_import is
+		local
+			dlg: EV_FILE_OPEN_DIALOG
+			s: STRING_32
+			stor: PREFERENCES_STORAGE_XML
+			p: EV_WINDOW
+		do
+			create dlg.make_with_title (l_import_preferences)
+			p := parent_window
+			if p = Void then
+				p := parent_window_of (widget)
+			end
+			dlg.show_modal_to_window (p)
+			s := dlg.file_name
+			if s /= Void then
+				create stor.make_with_location (s)
+				preferences.import_from_storage (stor)
+				rebuild
 			end
 		end
 
@@ -1085,6 +1165,7 @@ feature {NONE} -- Implementation
 			grid.clear
 			grid.set_row_count_to (0)
 			description_text.remove_text
+			description_location.remove_text
 		end
 
 	enable_flat_view is
@@ -1126,6 +1207,7 @@ feature {NONE} -- Implementation
 			else
 				status_label.set_text (l_count_preferences (preferences.preferences.count.out))
 			end
+			status_label.refresh_now
 		end
 
 	resize_columns is
@@ -1170,6 +1252,7 @@ feature {NONE} -- Implementation
 		local
 			l_text: STRING_GENERAL
 		do
+			description_location.set_text (a_preference.name)
 			if a_preference.description /= Void then
 					-- We know that descriptions of preference have been extacted out
 					-- from the config file.
@@ -1188,6 +1271,7 @@ feature {NONE} -- Implementation
 	clear_edit_widget is
 			-- Clear the edit widget
 		do
+			description_text.remove_text
 			description_text.remove_text
 		end
 
@@ -1430,6 +1514,7 @@ feature {NONE} -- Filtering
 			a_row.set_data (a_preference)
 			a_row.select_actions.extend (agent show_preference_description (a_preference))
 			a_row.deselect_actions.extend (agent description_text.remove_text)
+			a_row.deselect_actions.extend (agent description_location.remove_text)
 			if a_preference.is_hidden then
 				a_row.set_foreground_color (hidden_fg_color)
 			end

@@ -43,7 +43,8 @@ feature -- Preference Testing
 			df: EV_FONT
 		do
 			create l_factory
-			create basic_preferences.make
+			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, create {PREFERENCES_STORAGE_REGISTRY}.make_empty)
+--			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, create {PREFERENCES_STORAGE_XML}.make_with_location ("user.conf"))
 
 			create df.make_with_values (1, 6, 10, 8)
 			df.preferred_families.extend ("verdana")
@@ -63,6 +64,8 @@ feature -- Preference Testing
 
 			l_manager := basic_preferences.new_manager ("graphics")
 			br := l_factory.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
+
+--			basic_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
 		end
 
 	initialize_custom_preferences is
@@ -74,7 +77,10 @@ feature -- Preference Testing
 			dr: DIRECTORY_RESOURCE
 			cr: COLOR_PREFERENCE
 		do
-			create custom_preferences.make
+--			create custom_preferences.make
+--			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_REGISTRY}.make_empty)
+--			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_XML}.make_empty)
+			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_REGISTRY}.make_with_location ("default.conf"))
 
 			create l_manager.make (custom_preferences, "display")
 			br := l_manager.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
@@ -85,7 +91,7 @@ feature -- Preference Testing
 			br := l_manager.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 		end
 
-	preference_window: PREFERENCES_GRID
+	preference_window: PREFERENCES_GRID_DIALOG
 			-- The default preference interface widget
 
 	custom_preference_window: CUSTOM_PREFERENCE_DIALOG
@@ -176,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Show preference window basic view
 		do
 			initialize_basic_preferences
-			create preference_window.make (basic_preferences, Current)
+			create preference_window.make (basic_preferences)
 			preference_window.show
 		end
 
@@ -184,7 +190,7 @@ feature {NONE} -- Implementation
 			-- Show preference window customized view
 		do
 			initialize_custom_preferences
-			create custom_preference_window.make (custom_preferences, Current)
+			create custom_preference_window.make_with_parent (custom_preferences, Current)
 			custom_preference_window.show
 		end
 

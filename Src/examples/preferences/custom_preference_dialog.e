@@ -14,33 +14,30 @@ class
 inherit
 	CUSTOM_PREFERENCE_DIALOG_IMP
 
-	PREFERENCE_VIEW		
+	PREFERENCE_VIEW
 		undefine
 			copy, default_create
-		redefine
-			make
 		end
-		
+
 create
-	make
-	
+	make_with_parent
+
 feature {NONE} -- Initialization
 
-	make (a_preferences: like preferences; a_parent_window: like parent_window) is
+	make_with_parent (a_preferences: like preferences; a_parent_window: like parent_window) is
 				-- Initialize
 		do
-			default_create			
-			preferences := a_preferences
-			parent_window := Current	
-			fill_list			
+			make (a_preferences)
+			parent_window := a_parent_window
+			default_create
+			fill_list
 			close_request_actions.extend (agent on_cancel)
 			cancel_button.select_actions.extend (agent on_cancel)
 			ok_button.select_actions.extend (agent on_close)
-			restore_button.select_actions.extend (agent on_restore)			
+			restore_button.select_actions.extend (agent on_restore)
 			create grid
 			main_preference_box.extend (grid)
-			grid.set_item (2, 1, Void)
-			show						
+			show
 		end
 
 	user_initialization is
@@ -49,7 +46,62 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			p: EV_BOX
+			but_export, but_import: EV_BUTTON
 		do
+			p ?= restore_button.parent
+			create but_export.make_with_text_and_action ("Export", agent export_preferences)
+			create but_import.make_with_text_and_action ("Import", agent import_preferences)
+			p.put_front (but_export)
+			p.put_front (but_import)
+			p.disable_item_expand (but_export)
+			p.disable_item_expand (but_import)
+		end
+
+	export_preferences is
+		local
+			dlg: EV_FILE_SAVE_DIALOG
+			s: STRING_32
+			stor: PREFERENCES_STORAGE_XML
+		do
+			create dlg.make_with_title ("Export preferences to file")
+			dlg.show_modal_to_window (Current)
+			s := dlg.file_name
+			if s /= Void then
+				create stor.make_with_location (s)
+				preferences.export_to_storage (stor, False)
+			end
+		end
+
+	import_preferences is
+		local
+			dlg: EV_FILE_OPEN_DIALOG
+			s: STRING_32
+			stor: PREFERENCES_STORAGE_XML
+		do
+			create dlg.make_with_title ("Import preferences from file")
+			dlg.show_modal_to_window (Current)
+			s := dlg.file_name
+			if s /= Void then
+				create stor.make_with_location (s)
+				preferences.import_from_storage (stor)
+				if selected_preference_name /= Void then
+					fill_container (selected_preference_name)
+				end
+			end
+		end
+
+feature -- Access
+
+	parent_window: EV_WINDOW
+
+feature -- Change
+
+	set_parent_window (p: like parent_window) is
+			-- Set `parent_window'
+		do
+			parent_window := p
 		end
 
 feature {NONE} -- Implementation
@@ -72,10 +124,10 @@ feature {NONE} -- Implementation
 		do
 				-- Retrieve known preferences
 			l_known_pref_hash := preferences.preferences
-			
-			if not l_known_pref_hash.is_empty then				
-				create l_pref_hash.make (l_known_pref_hash.count)					
-				
+
+			if not l_known_pref_hash.is_empty then
+				create l_pref_hash.make (l_known_pref_hash.count)
+
 				from
 					l_known_pref_hash.start
 					l_row_index := 1
@@ -85,7 +137,7 @@ feature {NONE} -- Implementation
 				loop
 					l_pref_name := l_known_pref_hash.key_for_iteration
 					if l_pref_name.has ('.') then
-						l_split_string := l_pref_name.split ('.')						
+						l_split_string := l_pref_name.split ('.')
 						l_pref_parent_short_name := l_split_string.i_th (1)
 						if not l_pref_hash.has (l_pref_parent_short_name) then
 							create l_root_pixmap
@@ -94,14 +146,19 @@ feature {NONE} -- Implementation
 							l_filename.extend (l_pref_parent_short_name)
 							l_filename.add_extension ("png")
 							l_root_pixmap.set_with_named_file (l_filename.string)
-							l_root_pixmap.pointer_button_press_actions.force_extend (agent fill_container (l_pref_parent_short_name))
+							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: like selected_preference_name)
+										do
+											selected_preference_name := a_pre;
+											fill_container (a_pre)
+										end (l_pref_parent_short_name)
+									)
 							l_hbox.extend (l_root_pixmap)
 							l_hbox.set_minimum_size (120, 120)
 							l_hbox.set_background_color ((create {EV_STOCK_COLORS}).white)
 							parent_pixmap_box.extend (l_hbox)
-							parent_pixmap_box.disable_item_expand (l_hbox)							
+							parent_pixmap_box.disable_item_expand (l_hbox)
 							l_pref_hash.put (l_root_pixmap, l_pref_parent_short_name)
-						end						
+						end
 					end
 					l_known_pref_hash.forth
 				end
@@ -112,13 +169,14 @@ feature {NONE} -- Implementation
 			-- Show parent preferences.
 		require
 			parent_not_void: parent_preference /= Void
-		local		
+		local
 			l_preference: PREFERENCE
 			l_preferences: HASH_TABLE [PREFERENCE, STRING]
 			l_row_index: INTEGER
 		do
 			grid.wipe_out
-			grid.set_item (2, 1, Void)
+			grid.set_row_count_to (0)
+
 			parent_title_label.set_text (parent_preference)
 				-- Retrieve known preferences
 			l_preferences := preferences.preferences
@@ -129,14 +187,15 @@ feature {NONE} -- Implementation
 				l_preferences.after
 			loop
 				l_preference := l_preferences.item_for_iteration
-				if l_preference.name.substring (1, parent_preference.count).is_equal (parent_preference) then					
-					show_preference_in_container (l_preference, l_row_index)	
+				if l_preference.name.substring (1, parent_preference.count).is_equal (parent_preference) then
+					show_preference_in_container (l_preference, l_row_index)
+					l_row_index := l_row_index + 1
 				end
-				l_row_index := l_row_index + 1
 				l_preferences.forth
 			end
-		end		
-		
+			grid.refresh_now
+		end
+
 	show_preference_in_container (a_preference: PREFERENCE; a_row_index: INTEGER) is
 				-- Show selected list preference in main container.
 		require
@@ -144,21 +203,21 @@ feature {NONE} -- Implementation
 		local
 			l_preference_widget: PREFERENCE_WIDGET
 			l_dr: DIRECTORY_RESOURCE
-			l_cr: COLOR_PREFERENCE	
-			l_br: BOOLEAN_PREFERENCE		
+			l_cr: COLOR_PREFERENCE
+			l_br: BOOLEAN_PREFERENCE
 		do
 			l_dr ?= a_preference
 			if l_dr = Void then
 				l_cr ?= a_preference
 				if l_cr /= Void then
-					create {COLOR_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_cr)						
+					create {COLOR_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_cr)
 					l_preference_widget.set_caller (Current)
 					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
 					grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
 				else
 					l_br ?= a_preference
 					if l_br /= Void then
-						create {BOOLEAN_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_br)						
+						create {BOOLEAN_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_br)
 						l_preference_widget.set_caller (Current)
 						grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
 						grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
@@ -169,13 +228,13 @@ feature {NONE} -- Implementation
 				l_preference_widget.set_caller (Current)
 				grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
 				grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
-			end									
-			
+			end
+
 			grid.column (1).set_title ("Preference Name")
 			grid.column (2).set_title ("Value")
 			grid.column (1).resize_to_content
 			grid.column (1).set_width (grid.column (1).width + padding_width)
-		end	
+		end
 
 feature {NONE} -- Events
 
@@ -185,10 +244,10 @@ feature {NONE} -- Events
 		do
 			preferences.save_preferences
 			destroy
-		end 
+		end
 
 	on_cancel is
-			-- Cancel button has been pushed: retrieve previous preference values to cancel those which 
+			-- Cancel button has been pushed: retrieve previous preference values to cancel those which
 			-- were just modified.
 		do
 			destroy
@@ -205,10 +264,12 @@ feature {NONE} -- Events
 			l_confirmation_dialog.show_modal_to_window (parent_window)
 			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				preferences.restore_defaults
-				fill_container (selected_preference_name)
+				if selected_preference_name /= Void then
+					fill_container (selected_preference_name)
+				end
 			end
-		end		
-		
+		end
+
 feature {NONE} -- Private Attributes
 
 	selected_preference_name: STRING

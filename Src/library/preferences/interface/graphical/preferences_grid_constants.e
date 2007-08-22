@@ -8,35 +8,8 @@ indexing
 class
 	PREFERENCES_GRID_CONSTANTS
 
-feature -- Access (button size constants)
-
-	default_button_width: INTEGER is
-			-- Default width for buttons
-		once
-			Result := 80
-		end
-
-feature -- Access (padding constants)
-
-	small_padding_size: INTEGER is
-			-- Small size for padding
-		once
-			Result := 10
-		end
-
-	tiny_padding_size: INTEGER is
-			-- Tiny size for padding
-		once
-			Result := 3
-		end
-
-feature -- Access (border constants)
-
-	small_border_size: INTEGER is
-			-- Small size for borders
-		once
-			Result := 5
-		end
+inherit
+	EV_LAYOUT_CONSTANTS
 
 feature -- Access
 
@@ -66,6 +39,8 @@ feature -- Access
 	l_filter: STRING_GENERAL is				do Result := "Filter:" end
 	l_tree_or_flat_view: STRING_GENERAL		do Result := "Tree/Flat View" end
 	l_restore_defaults: STRING_GENERAL 		do Result := "Restore Defaults" end
+	l_import_preferences: STRING_GENERAL 	do Result := "Import ..." end
+	l_export_preferences: STRING_GENERAL 	do Result := "Export ..." end
 	l_restore_default: STRING_GENERAL		do Result := "Restore Default" end
 	l_no_default_value: STRING_GENERAL 		do Result := "No default value" end
 	l_close: STRING_GENERAL					do Result := "Close" end

@@ -17,6 +17,7 @@ inherit
 			pixmap,
 			attach_to_docking_manager,
 			build_docking_content,
+			build_mini_toolbar,
 			internal_recycle,
 			show
 		end
@@ -55,6 +56,23 @@ feature {NONE} -- Initialization
 			content.drop_actions.extend (agent l_tree.add_stone)
 			content.drop_actions.extend (agent l_tree.add_folder)
 			content.drop_actions.extend (agent on_drop)
+		end
+
+	build_mini_toolbar is
+			-- Build `mini_toolbar'
+		local
+			sd: SD_TOOL_BAR
+			sdb: SD_TOOL_BAR_BUTTON
+		do
+			create sd.make
+			mini_toolbar := sd
+
+			create sdb.make
+			sdb.set_tooltip (Interface_names.t_organize_favorites)
+			sdb.select_actions.extend (agent favorites_manager.organize_favorites)
+			sdb.set_pixmap (pixmaps.mini_pixmaps.general_edit_icon)
+			sd.extend (sdb)
+			sd.update_size
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization

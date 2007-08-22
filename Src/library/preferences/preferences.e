@@ -166,6 +166,43 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature -- Importation
+
+	import_from_storage (a_storage: PREFERENCES_STORAGE_I) is
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		local
+			vals: like session_values
+			k,v: STRING_32
+			p: PREFERENCE
+		do
+			a_storage.initialize_with_preferences (Current)
+			vals := a_storage.session_values
+			from
+				vals.start
+			until
+				vals.after
+			loop
+				k := vals.key_for_iteration.twin
+				v := vals.item_for_iteration.twin
+				session_values.force (v, k)
+				if preferences.has (k) then
+					p := preferences.item (k)
+					p.set_value_from_string (v)
+				end
+				vals.forth
+			end
+		end
+
+	export_to_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN) is
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			save_preferences_using_storage (a_storage, a_save_modified_values_only)
+		end
+
 feature -- Access
 
 	error_message: STRING
@@ -312,17 +349,23 @@ feature -- Preference
 			end
 		end
 
-	save_resource (a_preference: PREFERENCE) is
-		obsolete "use save_preference instead of save_resource"
-		do
-			save_preference (a_preference)
-		end
-
 	save_preferences is
 			-- Commit all changes by saving the underlying data store.  Only save preferences
 			-- which are not using the default value.
 		do
-			preferences_storage.save_preferences (preferences.linear_representation, True)
+			save_preferences_using_storage (preferences_storage, True)
+		end
+
+	save_preferences_using_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN) is
+			-- Save all preferences value using `a_storage'.
+		do
+			a_storage.save_preferences (preferences.linear_representation, a_save_modified_values_only)
+		end
+
+	save_resource (a_preference: PREFERENCE) is
+		obsolete "use save_preference instead of save_resource"
+		do
+			save_preference (a_preference)
 		end
 
 	save_resources is

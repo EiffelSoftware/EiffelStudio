@@ -31,9 +31,12 @@ feature {NONE} -- Initialization
 		require
 		    location_not_void: a_location /= Void
 		    location_not_empty: not a_location.is_empty
-	   	deferred
+	   	do
+			create session_values.make (5)
+			location := a_location
 	   	ensure
 	   		has_location: location /= Void
+			location_set: location = a_location
 		end
 
 feature {PREFERENCES} -- Initialization

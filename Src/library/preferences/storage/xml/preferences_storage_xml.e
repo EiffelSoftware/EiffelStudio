@@ -12,6 +12,7 @@ inherit
 	PREFERENCES_STORAGE_I
 		redefine
 			initialize_with_preferences,
+			make_with_location,
 			save_preferences
 		end
 
@@ -59,11 +60,8 @@ feature {NONE} -- Initialization
 			-- Create preference storage in the XML file at location `a_location'.
 			-- If file does not exist create new one.
 		do
-			create session_values.make (5)
+			Precursor {PREFERENCES_STORAGE_I} (a_location)
 			create xml_structure.make_with_root_named ("EIFFEL_DOCUMENT", create {XM_NAMESPACE}.make_default)
-			location := a_location
-		ensure then
-			location_set: location = a_location
 		end
 
 feature {PREFERENCES} -- Initialization

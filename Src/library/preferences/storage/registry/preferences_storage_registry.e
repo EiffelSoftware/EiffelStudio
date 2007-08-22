@@ -39,14 +39,6 @@ feature {PREFERENCES} -- Initialization
 			make_with_location (l_loc)
 		end
 
-	make_with_location (a_location: STRING) is
-			-- Create preferences storage in the registry at location `a_location'.
-			-- Try to read key at `a_location' if it exists, if not create new one.
-		do
-			create session_values.make (5)
-			location := a_location
-		end
-
 feature {PREFERENCES} -- Initialization
 
 	initialize_with_preferences (a_preferences: PREFERENCES) is

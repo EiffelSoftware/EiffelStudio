@@ -186,7 +186,7 @@ feature -- Obsolete
 		obsolete
 			"Use draw_pixel_buffer_with_rect instead"
 		do
-			implementation.draw_pixel_buffer_with_rect (a_pixel_buffer, a_rect)
+			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
 		end
 
 indexing

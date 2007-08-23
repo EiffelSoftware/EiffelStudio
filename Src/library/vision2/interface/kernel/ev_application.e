@@ -307,6 +307,15 @@ feature -- Status report
 			Result := implementation.caps_lock_on
 		end
 
+	is_display_remote: BOOLEAN
+			-- Is application display remote?
+			-- This function is primarily to determine if drawing to the display is optimal.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_display_remote
+		end
+
 feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is

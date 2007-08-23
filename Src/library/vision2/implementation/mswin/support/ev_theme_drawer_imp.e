@@ -123,8 +123,6 @@ feature -- Basic operations
 			draw_state_flags: INTEGER
 			buffer_dc: WEL_MEMORY_DC
 			wel_bitmap: WEL_BITMAP
-			image_buffer_dc: WEL_MEMORY_DC
-			wel_bitmap_image: WEL_BITMAP
 		do
 				-- Initialize `draw_state_flags' dependent on current state of `is_sensitive'.
 			if is_sensitive then
@@ -141,45 +139,15 @@ feature -- Basic operations
 				create buffer_dc.make_by_dc (dc)
 				create wel_bitmap.make_compatible (dc, a_bitmap.width, a_bitmap.height)
 				buffer_dc.select_bitmap (wel_bitmap)
-				if buffer_dc.mask_blt_supported then
-						-- If Windows platform supports mask_blt then we can draw the image the
-						-- simple way.
+					-- As there is a mask, we must draw the image to a buffer, and then
+					-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
+					-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
+					--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
+				buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
+					-- Copy the image from `buffer_dc' to `dc'.
+				dc.mask_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
+					{WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
 
-						-- As there is a mask, we must draw the image to a buffer, and then
-						-- blit it onto `dc'. This is because `draw_state_bitmap' does not allow
-						-- you to use a mask. We then use `mask_blt' to copy the buffered image back.
-
-						--	Draw the state bitmap on `buffer_dc' with style `draw_state_flags'.
-					buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
-						-- Copy the image from `buffer_dc' to `dc'.
-					dc.mask_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
-						{WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
-				else
-						-- Windows platform does not support mask_blt, so we must simulate this ourselves with `bit_blt'.
-
-						-- Create `image_buffer_dc' which is used to draw the state image onto.
-					create image_buffer_dc.make_by_dc (dc)
-					create wel_bitmap_image.make_compatible (dc, a_bitmap.width, a_bitmap.height)
-					image_buffer_dc.select_bitmap (wel_bitmap_image)
-
-						-- Blt the current background of the button, onto `buffer_dc'. This is necessary, as a toggle
-						-- button will have a checked background when selected.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, dc, an_x, a_y, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
-						-- Draw the image to `image_buffer_dc' using `draw_state_flags'.
-						-- Note that we must draw the image to another dc, as it is not possible to use any masking
-						-- with `draw_state_bitmap'.
-					image_buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
-						-- We now and `mask_bitmap' onto `buffer_dc'.
-					buffer_dc.draw_bitmap_with_raster_operation (mask_bitmap, 0, 0, a_bitmap.width, a_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcand)
-						-- Copy the actual image already drawn on `image_buffer_dc' to `buffer_dc'. Due to the previous operation, this
-						-- will be effectively masked.
-					buffer_dc.bit_blt (0, 0, a_bitmap.width, a_bitmap.height, image_buffer_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint)
-						-- Copy the final image from `buffer_dc' to `dc'.
-					dc.bit_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
-					wel_bitmap_image.dispose
-					image_buffer_dc.unselect_all
-					image_buffer_dc.delete
-				end
 				wel_bitmap.dispose
 				buffer_dc.unselect_all
 				buffer_dc.delete

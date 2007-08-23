@@ -219,6 +219,12 @@ feature -- Access
 			Result := pick_and_drop_source /= Void
 		end
 
+	is_display_remote: BOOLEAN
+			-- Is application display remote?
+			-- This function is primarily to determine if drawing to the display is optimal.
+		deferred
+		end
+
 feature -- Element Change
 
 	set_invoke_garbage_collection_when_inactive (a_enabled: BOOLEAN)

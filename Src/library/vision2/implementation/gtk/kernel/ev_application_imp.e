@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
+			l_image: POINTER
 		do
 			base_make (an_interface)
 
@@ -87,6 +88,15 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gdk_error_trap_push
 
 				init_connection_number
+
+					-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
+				l_image := {EV_GTK_EXTERNALS}.gdk_image_new (1, {EV_GTK_EXTERNALS}.gdk_rgb_get_visual, 1, 1)
+					-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
+					-- then the display will be slow anyway so the usage of this function will remain the same.
+				is_display_remote := l_image = default_pointer
+				{EV_GTK_EXTERNALS}.object_unref (l_image)
+
+
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
@@ -113,16 +123,6 @@ feature {EV_ANY_I} -- Implementation
 	is_display_remote: BOOLEAN
 			-- Is application display remote?
 			-- This function is primarily to determine if drawing to the display is optimal.
-		local
-			l_image: POINTER
-		once
-				-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
-			l_image := {EV_GTK_EXTERNALS}.gdk_image_new (1, {EV_GTK_EXTERNALS}.gdk_rgb_get_visual, 1, 1)
-				-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
-				-- then the display will be slow anyway so the usage of this function will remain the same.
-			Result := l_image = default_pointer
-			{EV_GTK_EXTERNALS}.object_unref (l_image)
-		end
 
 	set_currently_shown_control (a_control: EV_PICK_AND_DROPABLE)
 			-- Set `currently_shown_control' to `a_control'.

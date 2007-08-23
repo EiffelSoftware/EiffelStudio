@@ -141,6 +141,12 @@ feature -- Access
 			Result := key_toggled (vk_capital)
 		end
 
+	is_display_remote: BOOLEAN is
+			-- Is display for application remote?
+		do
+
+		end
+
 feature -- Basic operation
 
 	process_graphical_events is

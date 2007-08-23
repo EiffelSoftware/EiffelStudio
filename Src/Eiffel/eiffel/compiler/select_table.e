@@ -165,6 +165,30 @@ feature -- Melting
 			descriptors (c).melt
 		end
 
+
+feature {NONE} -- Implementation
+
+	is_consistent: BOOLEAN is
+			-- Is Current consistent?
+		local
+			l_cursor: CURSOR
+		do
+			l_cursor := cursor
+			from
+				Result := True
+				start
+			until
+				after or not Result
+			loop
+				Result := item_for_iteration.rout_id_set.has (key_for_iteration)
+				forth
+			end
+			go_to (l_cursor)
+		end
+
+invariant
+	is_consistent: is_consistent
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

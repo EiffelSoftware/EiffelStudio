@@ -510,13 +510,8 @@ feature -- Status report
 			Result := device_caps (Vertical_resolution)
 		end
 
-	mask_blt_supported: BOOLEAN is
-		once
-			if not mask_blt_funcaddr_retrieved then
-				retrieve_mask_blt_funcaddr
-			end
-			Result := (internal_mask_blt_funcaddr /= default_pointer)
-		end
+	mask_blt_supported: BOOLEAN is True
+			-- It is since we only support Windows NT or greater.
 
 feature -- Status setting
 
@@ -1562,13 +1557,10 @@ feature -- Basic operations
 		local
 			l_dc_item: POINTER
 		do
-			if not mask_blt_funcaddr_retrieved then
-				retrieve_mask_blt_funcaddr
-			end
 			if dc_source /= Void then
 				l_dc_item := dc_source.item
 			end
-			cwin_mask_blt (mask_blt_funcaddr, item, x_destination, y_destination,
+			cwin_mask_blt (item, x_destination, y_destination,
 				a_width, a_height, l_dc_item, x_source, y_source,
 				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
@@ -2509,38 +2501,14 @@ feature {NONE} -- Externals
 			"C (HDC, LPCTSTR, int, LPRECT, UINT) | %"wel_drawstate.h%""
 		end
 
-	cwin_mask_blt (function_addr: POINTER; hdc_dest: POINTER; x_dest, y_dest, a_width,
+	cwin_mask_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
 			a_height: INTEGER; hdc_src: POINTER; x_src,
 			y_src: INTEGER; hbm_mask: POINTER; x_mask, y_mask, rop: INTEGER) is
 			-- SDK MaskBlt
 		external
-			"C (FARPROC, HDC, int, int, int, int, HDC, int, int, HBITMAP, int, int, DWORD) | %"wel_dynload.h%""
-		end
-
-	mask_blt_funcaddr: POINTER is
-			-- Address of the function "MaskBlt" if it exists.
-		require
-			mask_blt_is_supported: mask_blt_supported
-		do
-			Result := internal_mask_blt_funcaddr
-		end
-
-	mask_blt_funcaddr_retrieved: BOOLEAN
-			-- Have we already retrieved the address of the function "MaskBlt" ?
-
-	internal_mask_blt_funcaddr: POINTER
-			-- Address of the function "MaskBlt" if it exists.
-			-- Void if the function is not present on the current system.
-
-	retrieve_mask_blt_funcaddr is
-		local
-			module_name_ptr: WEL_STRING
-			function_name_ptr: C_STRING
-		do
-			create module_name_ptr.make ("Gdi32.dll")
-				-- Remember that the function name is no unicode.
-			create function_name_ptr.make ("MaskBlt")
-			internal_mask_blt_funcaddr := cwin_get_function_address(module_name_ptr.item, function_name_ptr.item)
+			"C macro signature (HDC, int, int, int, int, HDC, int, int, HBITMAP, int, int, DWORD) use <windows.h>"
+		alias
+			"MaskBlt"
 		end
 
 feature {WEL_FONT} -- Externals

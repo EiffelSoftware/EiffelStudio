@@ -55,6 +55,8 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SHARED_METRICS
+
 create
 	make
 
@@ -144,7 +146,7 @@ feature -- Access
 	is_display_remote: BOOLEAN is
 			-- Is display for application remote?
 		do
-
+			Result := metrics.is_remote_session
 		end
 
 feature -- Basic operation

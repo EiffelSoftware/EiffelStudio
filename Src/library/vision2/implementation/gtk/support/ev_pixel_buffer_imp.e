@@ -216,8 +216,45 @@ feature -- Command
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
 			-- Draw `a_text' using `a_font' at `a_point'.
+		local
+			l_x, l_y, l_width, l_height: INTEGER
+			l_string_size: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
+			l_pixmap: EV_PIXMAP
+			l_pixmap_imp: EV_PIXMAP_IMP
+			l_pixbuf_ptr, l_pixbuf_ptr2: POINTER
+			l_pixbuf: EV_PIXEL_BUFFER
+			l_pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			l_color: EV_COLOR
+			l_grey_value, l_composite_alpha: NATURAL_8
 		do
-			check not_implemented: False end
+			l_x := a_point.x
+			l_y := a_point.y
+			l_string_size := a_font.string_size (a_text)
+			l_width := (l_x + l_string_size.width).min (width) - l_x
+			l_height := (l_y + l_string_size.height).min (height) - l_y
+
+			create l_pixmap.make_with_size (l_width, l_height)
+			l_pixmap.set_font (a_font)
+
+			l_grey_value := 75
+			l_composite_alpha := 200
+
+			create l_color.make_with_8_bit_rgb (l_grey_value, l_grey_value, l_grey_value)
+			l_pixmap.set_background_color (l_color)
+			l_pixmap.clear
+			l_pixmap.draw_text_top_left (0, 0, a_text)
+
+			l_pixmap_imp ?= l_pixmap.implementation
+
+			create l_pixbuf
+			l_pixbuf_imp ?= l_pixbuf.implementation
+
+			l_pixbuf_ptr := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
+			l_pixbuf_ptr2 := {EV_GTK_EXTERNALS}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
+			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf_ptr)
+			l_pixbuf_ptr := default_pointer
+
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
 		end
 
 	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
@@ -251,7 +288,7 @@ feature -- Query
 			end
 		end
 
-feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation
+feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
 	reusable_managed_pointer: MANAGED_POINTER
 		-- Managed pointer used for inspecting current.

@@ -240,6 +240,8 @@ feature -- Command
 			l_composite_alpha := 200
 
 			create l_color.make_with_8_bit_rgb (l_grey_value, l_grey_value, l_grey_value)
+
+				-- Create a pixmap with a grey background so that anti-aliasing is not so harsh.
 			l_pixmap.set_background_color (l_color)
 			l_pixmap.clear
 			l_pixmap.draw_text_top_left (0, 0, a_text)
@@ -249,12 +251,18 @@ feature -- Command
 			create l_pixbuf
 			l_pixbuf_imp ?= l_pixbuf.implementation
 
+				-- Retrieve pixbuf from drawable and set the previous background color 'l_grey_value' to transparent alpha.
 			l_pixbuf_ptr := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
 			l_pixbuf_ptr2 := {EV_GTK_EXTERNALS}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
+				-- Clean up
 			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf_ptr)
 			l_pixbuf_ptr := default_pointer
 
+				-- Composite pixbuf with alpha on to `Current'
 			{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (l_pixbuf_ptr2, gdk_pixbuf, l_x, l_y, l_width, l_height, 0, 0, 1, 1, 0, l_composite_alpha)
+				-- Clean up
+			{EV_GTK_EXTERNALS}.object_unref (l_pixbuf_ptr2)
+			l_pixbuf_ptr2 := default_pointer
 		end
 
 	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is

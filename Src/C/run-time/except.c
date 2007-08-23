@@ -3249,7 +3249,7 @@ rt_public char *eeoclass(void)	/* %%zmt never called in C dir. */
 	if (echorg == 0)		/* No original exception */
 		return (char *) 0;
 
-	if (echoclass != 0) {
+	if (echoclass >= 0) {
 		cl_name = Origin(echoclass);
 		return makestr(cl_name, strlen(cl_name)); /* Last exception tag */
 	}

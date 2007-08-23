@@ -14,7 +14,7 @@ inherit
 			actual_type, associated_class, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, instantiated_in,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
-			meta_type, set_actual_type, type_i, evaluated_type_in_descendant
+			meta_type, set_actual_type, type_i, evaluated_type_in_descendant, is_tuple
 		end
 
 feature -- Visitor
@@ -57,6 +57,14 @@ feature -- Properties
 		do
 			if conformance_type /= Void then
 				Result := conformance_type.is_reference
+			end
+		end
+
+	is_tuple: BOOLEAN is
+			-- Is type reference?
+		do
+			if conformance_type /= Void then
+				Result := conformance_type.is_tuple
 			end
 		end
 

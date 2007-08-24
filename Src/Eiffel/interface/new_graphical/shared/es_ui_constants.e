@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Access to shared EiffelStudio color information
+		User interface contant values.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,25 +8,38 @@ indexing
 	revision: "$revision$"
 
 class
-	ES_SHARED_COLORS
+	ES_UI_CONSTANTS
 
 feature -- Access
 
-	frozen colors: ES_COLORS
-			-- Shared access to EiffelStudio colors
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+	horizontal_padding: INTEGER = 4
+	vertical_padding: INTEGER = 4
+	cell_vertical_separator_width: INTEGER = 6
+	cell_horizontal_separator_height: INTEGER = 6
 
-	frozen fonts_and_colors: ES_COLORS
-			-- Shared access to EiffelStudio colors
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+feature -- Button
+
+	button_height: INTEGER = 23
+
+feature -- Frames
+
+	frame_border: INTEGER = 6
+
+feature -- Notebook
+
+	notebook_border: INTEGER = 4
+
+feature -- Dialog
+
+	dialog_border: INTEGER = 6
+	dialog_button_vertical_padding: INTEGER = 8
+	dialog_button_horizontal_padding: INTEGER = 10
+	dialog_button_width: INTEGER = 75
+	dialog_button_height: INTEGER = 23
+
+	prompt_border: INTEGER = 15
+	prompt_vertical_padding: INTEGER = 8
+	prompt_horizontal_icon_spacing: INTEGER = 10
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

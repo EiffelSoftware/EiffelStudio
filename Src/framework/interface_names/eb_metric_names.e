@@ -53,8 +53,8 @@ feature -- Titles
 	t_coefficient: STRING_GENERAL is do Result := locale.translation ("Coefficient") end
 	t_metric_valid: STRING_GENERAL is do Result := locale.translation ("Metric is valid.") end
 	t_save_metric: STRING_GENERAL is do Result := locale.translation ("Current metric has been modified, save it?") end
-	t_discard_remove_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always remove selected metric") end
-	t_discard_save_prompt: STRING_GENERAL is do Result := locale.translation ("Do not ask me again and always save modified metric") end
+	t_discard_remove_prompt: STRING_GENERAL is do Result := locale.translation ("always remove selected metric") end
+	t_discard_save_prompt: STRING_GENERAL is do Result := locale.translation ("always save modified metric") end
 	t_name_cannot_be_empty: STRING_GENERAL is do Result := locale.translation ("Metric name is empty.") end
 	t_metric_with_name_already_exists (a_metric_name: STRING_GENERAL): STRING_GENERAL is
 		require

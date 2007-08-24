@@ -311,6 +311,14 @@ feature {NONE} -- Helpers
 			result_attached: Result /= Void
 		end
 
+	frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+			-- Factory for generating pixmaps for class data
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Concealed access
 
 	frozen icon_pixmap: EV_PIXMAP

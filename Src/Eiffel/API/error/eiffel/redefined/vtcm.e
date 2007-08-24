@@ -11,7 +11,8 @@ class
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain
+			build_explain,
+			print_single_line_error_message
 		end
 
 feature -- Properties
@@ -44,6 +45,20 @@ feature -- Output
 			a_text_formatter.add ("Unknown class name: ")
 			a_text_formatter.add (class_name)
 			a_text_formatter.add_new_line
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor (a_text_formatter)
+			if class_name /= Void then
+				a_text_formatter.add_space
+				a_text_formatter.add ("Unknown class ")
+				a_text_formatter.add (class_name)
+				a_text_formatter.add (".")
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

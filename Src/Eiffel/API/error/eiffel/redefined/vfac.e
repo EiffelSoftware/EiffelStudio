@@ -1,5 +1,4 @@
 indexing
-
 	description: "Assigner command error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,12 +8,13 @@ indexing
 deferred class VFAC
 
 inherit
-	
 	EIFFEL_ERROR
 		undefine
 			subcode
 		redefine
-			build_explain, is_defined
+			build_explain, is_defined,
+			trace_primary_context,
+			print_single_line_error_message
 		end
 
 feature {NONE} -- Creation
@@ -90,6 +90,29 @@ feature -- Output
 				assigner.append_signature (a_text_formatter)
 			end
 			a_text_formatter.add_new_line
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if a_feature /= Void then
+				a_text_formatter.add (".")
+				a_feature.append_name (a_text_formatter)
+			end
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if assigner /= Void then
+				a_text_formatter.add_space
+				a_text_formatter.add ("Assigner ")
+				assigner.append_name (a_text_formatter)
+			end
 		end
 
 indexing

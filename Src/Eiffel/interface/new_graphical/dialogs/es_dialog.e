@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 		do
 			create show_actions
 			create close_actions
+			create button_actions.make_default
 		end
 
 feature {NONE} -- User interface initialization
@@ -131,6 +132,8 @@ feature {NONE} -- Clean up
 				dialog.key_press_actions.prune (agent on_key_pressed)
 				dialog.key_release_actions.prune (agent on_key_release)
 				dialog.show_actions.prune (agent show_actions.call ([]))
+
+				button_actions.wipe_out
 
 				dialog.destroy
 				is_initialized := False
@@ -221,6 +224,9 @@ feature {NONE} -- Access
 			result_consistent: Result = dialog_window_buttons
 		end
 
+	frozen button_actions: DS_HASH_TABLE [like button_action, INTEGER]
+			-- Dialog button actions
+
 feature {NONE} -- Helpers
 
 	frozen interface_names: INTERFACE_NAMES
@@ -275,6 +281,22 @@ feature -- Element change
 			button_text_set: dialog_window_buttons.item (a_id).text.is_equal (a_text)
 		end
 
+	set_button_action (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+			-- Assigns an action to a specific button.
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+			-- `a_action': An action to be performed when the button is pressed.
+		require
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			buttons_contains_a_id: buttons.has (a_id)
+			a_action_attached: a_action /= Void
+		do
+			button_actions.force (a_action, a_id)
+		ensure
+			button_action_set: button_action (a_id) = a_action
+		end
+
 feature -- Status report
 
 	is_shown: BOOLEAN
@@ -303,6 +325,23 @@ feature {NONE} -- Status report
 
 	is_initializing: BOOLEAN
 			-- Indicates if the user interface is currently being initialized
+
+feature -- Query
+
+	button_action (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
+			-- Button action for a specific button
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+			-- `Result': An action to be performed when the button is pressed.
+		require
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			buttons_contains_a_id: buttons.has (a_id)
+		do
+			if button_actions.has (a_id) then
+				Result := button_actions.item (a_id)
+			end
+		end
 
 feature {NONE} -- Query
 
@@ -446,8 +485,14 @@ feature {NONE} -- Action handlers
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
+		local
+			l_action: like button_action
 		do
 			dialog_result := a_id
+			l_action := button_action (a_id)
+			if l_action /= Void then
+				l_action.call ([])
+			end
 		end
 
 	on_close_requested (a_id: INTEGER)
@@ -664,6 +709,7 @@ invariant
 		buttons.has (default_cancel_button)
 	show_actions_attached: show_actions /= Void
 	close_actions_attached: close_actions /= Void
+	button_actions_attached: button_actions /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

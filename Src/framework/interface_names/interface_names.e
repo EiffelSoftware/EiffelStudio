@@ -16,6 +16,7 @@ indexing
 		%n_: widget Names; %
 		%s_: Stone names; %
 		%t_: Title (part); %
+		%st_: Sub title (part); %
 		%e_: Short description, explanation; %
 		%s_: Stone names; %
 		%fs_: Fixed shortcut names; %
@@ -928,8 +929,8 @@ feature -- Label texts
 	l_Compile_first: STRING_GENERAL is			do Result := locale.translation("Compile to have information")	end
 	l_Compile_project: STRING_GENERAL is		do Result := locale.translation("Compile project")	end
 	l_Condition: STRING_GENERAL is				do Result := locale.translation("Condition")	end
-	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Stop the application?")	end
-	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Stop and restart the application?")	end
+	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop debugging the application?")	end
+	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop and restart the application?")	end
 
 	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_GENERAL is				do Result := locale.translation("Context")	end
@@ -1016,20 +1017,21 @@ feature -- Label texts
 						[a_nclass, a_ncslink, a_nilink, a_ncluster, a_physics, a_draw, a_draws])
 		end
 
-	l_Discard_convert_project_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always convert old projects")	end
-	l_Discard_build_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always build precompile")	end
-	l_Discard_finalize_assertions: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always discard assertions when finalizing")	end
-	l_Discard_finalize_precompile_dialog: STRING_GENERAL is do Result := locale.translation("Don't ask me again and always finalize.")	end
-	l_Discard_freeze_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always compile C code")	end
-	l_Discard_save_before_compile_dialog: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always save files before compiling")	end
-	l_Discard_starting_dialog: STRING_GENERAL is do Result := locale.translation("Don't show this dialog at startup")	end
-	l_Discard_replace_all_warning_dialog: STRING_GENERAL is do Result := locale.translation("Don't ask me again and always replace all")	end
-	l_Discard_terminate_freezing: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate freezing when needed.")	end
-	l_Discard_terminate_external_command: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate running external command.")	end
-	l_Discard_terminate_finalizing: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always terminate finalizing when needed.")	end
-	l_discard_cancel_c_compilation_and_external_command: STRING_GENERAL is do Result := locale.translation("Do not ask again, and always cancel C compilation, terminate external command when exiting.")	end
-	l_discard_cancel_c_compilation: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always cancel C Compilation when exiting.")	end
-	l_discard_terminate_external_command_when_exit: STRING_GENERAL is	do Result := locale.translation("Do not ask again, and always terminate external command when exiting.")	end
+	l_Discard_convert_project_dialog: STRING_GENERAL is	do Result := locale.translation("always convert old projects.")	end
+	l_Discard_build_precompile_dialog: STRING_GENERAL is do Result := locale.translation("always build precompile.")	end
+	l_Discard_finalize_assertions: STRING_GENERAL is do Result := locale.translation("always discard assertions when finalizing.")	end
+	l_Discard_finalize_precompile_dialog: STRING_GENERAL is do Result := locale.translation("always finalize.")	end
+	l_Discard_freeze_dialog: STRING_GENERAL is	do Result := locale.translation("always compile C/++ code.")	end
+	l_Discard_save_before_compile_dialog: STRING_GENERAL is	do Result := locale.translation("always save files before compiling.")	end
+	l_Discard_starting_dialog: STRING_GENERAL is do Result := locale.translation("hide this dialog at startup.")	end
+	l_Discard_replace_all_warning_dialog: STRING_GENERAL is do Result := locale.translation("always replace all.")	end
+	l_Discard_terminate_freezing: STRING_GENERAL is do Result := locale.translation("always terminate freezing when needed.")	end
+	l_Discard_terminate_external_command: STRING_GENERAL is do Result := locale.translation("always terminate running external command.")	end
+	l_Discard_terminate_finalizing: STRING_GENERAL is do Result := locale.translation("always terminate finalizing when needed.")	end
+	l_discard_cancel_c_compilation_and_external_command: STRING_GENERAL is do Result := locale.translation("always cancel C/C++ compilation, terminate external command when exiting.")	end
+	l_discard_cancel_c_compilation: STRING_GENERAL is	do Result := locale.translation("always cancel C/C++ compilation when exiting.")	end
+	l_discard_terminate_external_command_when_exit: STRING_GENERAL is	do Result := locale.translation("always terminate external command when exiting.")	end
+
 	l_Display_call_stack_warning: STRING_GENERAL is	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 	l_Displayed_buttons_text: STRING_GENERAL is do Result := locale.translation("Displayed buttons")	end
 	l_display_window: STRING_GENERAL is			do Result := "Display window" end
@@ -1069,7 +1071,7 @@ feature -- Label texts
 		once
 			Result := locale.formatted_string(locale.translation("Are you sure you want to quit $1?"), [Workbench_name])
 		end
-	l_Exit_warning: STRING_GENERAL is			do Result := locale.translation("Some files have not been saved.%NDo you want to save them before exiting?")	end
+	l_Exit_warning: STRING_GENERAL is			do Result := locale.translation("Some files have not been saved. Do you want to save them before exiting?")	end
 	l_Expanded: STRING_GENERAL is				do Result := locale.translation("expanded")	end
 	l_Explicit_exception_pending: STRING_GENERAL is do Result := locale.translation("Explicit exception pending")	end
 	l_exploring_ancestor_of (a_class: STRING_GENERAL): STRING_GENERAL is				do Result := locale.formatted_string (locale.translation("Exploring ancestors of $1"), [a_class])	end
@@ -1113,7 +1115,7 @@ feature -- Label texts
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
 	l_Has_changed: STRING_GENERAL is			do Result := locale.translation("Has Changed")	end
 	l_Homonyms: STRING_GENERAL is				do Result := locale.translation("Homonyms")	end
-	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translation("Extracting the homonyms%Nmay take a long time.")	end
+	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translation("Extracting the homonyms may take a long time.%NAre you sure you want to continue?")	end
 	l_Identification: STRING_GENERAL is			do Result := locale.translation("Identification")	end
 	l_Ignore_external_exceptions: STRING_GENERAL is do Result := locale.translation ("Ignore external exceptions") end
 	l_inheritance_cycle_was_created: STRING_GENERAL is			do Result := locale.translation("An inheritance cycle was created.%NDo you still want to add this link?")	end
@@ -1208,7 +1210,7 @@ feature -- Label texts
 	l_position: STRING_GENERAL is 				do Result := locale.translation ("Position") end
 	l_Possible_overflow: STRING_GENERAL is		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_GENERAL is				do Result := locale.translation("Precompile")	end
-	l_preferences_delayed_resources: STRING_GENERAL is do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.%N%N") end
+	l_preferences_delayed_resources: STRING_GENERAL is do Result := locale.translation ("The changes you have made to the following resources%Nwill be taken into account after you restart.") end
 	l_Print_message: STRING_GENERAL is			do Result := locale.translation("Print a message:")	end
 	l_Print_message_help: STRING_GENERAL is
 		do
@@ -1703,13 +1705,15 @@ feature -- Label texts
 	l_metric_filter: STRING_GENERAL is do Result := locale.translation ("Metric Filter") end
 	l_eiffelstudio: STRING_GENERAL is do Result := locale.translation ("EiffelStudio") end
 	l_locale: STRING_GENERAL is do Result := locale.translation ("Locale:") end
-	l_target_scope_customzied_formatter_not_saved: STRING_GENERAL is do Result := locale.translation ("Customized formatters with target scope won't be saved%Nbecause no project has been loaded. Go ahead anyway?") end
+	l_target_scope_customzied_formatter_not_saved: STRING_GENERAL is do Result := locale.translation ("The customized formatters with target scope will not be saved because a project has not been loaded.") end
 	l_discard_target_scope_customized_formatter: STRING_GENERAL is do Result := locale.translation ("Don't ask me again and discard%Nunsaved target scope customized formatters.") end
 
 	l_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Go to next error") end
 	l_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Go to previous error") end
 	l_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to next warning") end
 	l_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous warning") end
+
+	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before debugging.") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -2015,6 +2019,24 @@ feature -- Title part
 	t_reference_position: STRING_GENERAL is				do Result := locale.translation ("Positions") end
 	t_customized_formatter_setup: STRING_GENERAL is 	do Result := locale.translation ("Setup customized formatters") end
 	t_errors_and_warnings_tool: STRING_GENERAL is		do Result := locale.translation ("Error List") end
+
+	t_eiffelstudio_error: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Error") end
+	t_eiffelstudio_warning: STRING_GENERAL is			do Result := locale.translation ("EiffelStudio Warning") end
+	t_eiffelstudio_question: STRING_GENERAL is			do Result := locale.translation ("EiffelStudio Question") end
+	t_eiffelstudio_info: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Information") end
+	t_debugger_error: STRING_GENERAL is					do Result := locale.translation ("EiffelStudio Error") end
+	t_debugger_warning: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Warning") end
+	t_debugger_question: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Question") end
+	t_debugger_info: STRING_GENERAL is					do Result := locale.translation ("EiffelStudio Information") end
+
+feature -- Sub titles
+
+		-- Debugger
+	st_debugging_not_recommended: STRING_GENERAL is		do Result := locale.translation ("Debugging not recommended") end
+	st_stop_debugger: STRING_GENERAL is		do Result := locale.translation ("Stop debugging") end
+	st_compile_changes: STRING_GENERAL is		do Result := locale.translation ("Uncompile changes") end
+	st_exit_eiffelstudio: STRING_GENERAL is		do Result := locale.translation ("Exit EiffelStudio") end
+	st_unsaved_changed: STRING_GENERAL is		do Result := locale.translation ("You have unsaved changes") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

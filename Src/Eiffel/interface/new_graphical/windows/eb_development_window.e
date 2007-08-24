@@ -106,6 +106,7 @@ inherit
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
+			{NONE} all
 			{EB_STONE_FIRST_CHECKER} pixmap_from_class_i
 		end
 
@@ -419,7 +420,7 @@ feature -- Stone process
 	set_stone (a_stone: STONE) is
 			-- Change the currently focused stone.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 			cv_cst: CLASSI_STONE
 			ef_stone: EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
@@ -441,13 +442,9 @@ feature -- Stone process
 						-- We're not editing the class in another window.
 					set_stone_after_first_check (a_stone)
 				else
-					create cd.make_initialized (2,
-						preferences.dialog_data.already_editing_class_string,
-						warning_messages.w_class_already_edited,
-						Interface_names.l_do_not_show_again,
-						preferences.preferences)
-					cd.set_ok_action (agent set_stone_after_first_check (a_stone))
-					cd.show_modal_to_window (window)
+					create l_warning.make_standard (warning_messages.w_class_already_edited, "", preferences.dialog_data.already_editing_class_string)
+					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent set_stone_after_first_check (a_stone))
+					l_warning.show (window)
 				end
 			else
 				set_stone_after_first_check (a_stone)

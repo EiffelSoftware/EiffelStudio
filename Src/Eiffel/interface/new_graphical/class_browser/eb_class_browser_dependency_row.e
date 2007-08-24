@@ -16,7 +16,10 @@ inherit
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-
+		export
+			{NONE} all
+		end
+		
 	EB_SHARED_EDITOR_TOKEN_UTILITY
 
 	QL_UTILITY

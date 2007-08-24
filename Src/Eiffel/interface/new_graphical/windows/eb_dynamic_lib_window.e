@@ -28,7 +28,10 @@ inherit
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-
+		export
+			{NONE} all
+		end
+		
 	PLATFORM_CONSTANTS
 
 	EB_FILE_DIALOG_CONSTANTS

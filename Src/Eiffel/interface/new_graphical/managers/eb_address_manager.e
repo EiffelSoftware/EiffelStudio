@@ -39,6 +39,9 @@ inherit
 	EB_SHARED_PREFERENCES
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
+		end
 
 	EV_UTILITIES
 		export

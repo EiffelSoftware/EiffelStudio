@@ -16,6 +16,9 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
+		end
 
 	EB_SHARED_ID_SOLUTION
 
@@ -310,6 +313,44 @@ feature -- Access
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+	changed_classes: ARRAYED_LIST [CLASS_I] is
+			-- All classes with unsaved changes
+		require
+			changed: changed
+		local
+			l_classc_stone: CLASSC_STONE
+			l_classi_stone: CLASSI_STONE
+			l_editors: like editors
+			l_cursor: CURSOR
+		do
+			create Result.make (editors_internal.count)
+			l_editors := editors
+			l_cursor := l_editors.cursor
+			from
+				l_editors.start
+			until
+				l_editors.after
+			loop
+				if l_editors.item.changed then
+					l_classc_stone ?= l_editors.item.stone
+					if l_classc_stone /= Void then
+						Result.extend (l_classc_stone.class_i)
+					else
+						l_classi_stone ?= l_editors.item.stone
+						if l_classi_stone /= Void then
+							Result.extend (l_classi_stone.class_i)
+						end
+					end
+				end
+				l_editors.forth
+			end
+			l_editors.go_to (l_cursor)
+		ensure
+			not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			editors_unmoved: editors.cursor.is_equal (editors.cursor)
 		end
 
 feature -- Access actions

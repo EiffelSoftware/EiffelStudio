@@ -196,7 +196,9 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				ln := l_num.min (maximum_top_line_index)
 				set_first_line_displayed (ln, True)
-				text_displayed.cursor.set_x_in_characters (a_col)
+				if a_col > 0 then
+					text_displayed.cursor.set_x_in_characters (a_col)
+				end
 				refresh_now
 			else
 				after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num, a_col))

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when a creation procedure is not a procedure or %
 		%a once procedure."
 	legal: "See notice at end of class."
@@ -8,13 +8,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VGCP21 
+class VGCP21
 
 inherit
 
 	VGCP
 		redefine
-			subcode, build_explain
+			subcode, build_explain, print_single_line_error_message
 		end;
 
 feature -- Properties
@@ -35,6 +35,16 @@ feature -- Output
 			a_text_formatter.add (creation_feature);
 			a_text_formatter.add_new_line;
 		end;
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {VGCP} (a_text_formatter)
+			a_text_formatter.add_space
+			a_text_formatter.add ("Creation procedure `" + creation_feature + "'.")
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 

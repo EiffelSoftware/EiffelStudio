@@ -49,10 +49,12 @@ feature {NONE} -- Output
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor (a_text_formatter)
-			a_text_formatter.add_space
-			a_text_formatter.add ("Unknown class ")
-			a_text_formatter.add (class_name)
-			a_text_formatter.add (".")
+			if class_name /= Void then
+				a_text_formatter.add_space
+				a_text_formatter.add ("Unknown class ")
+				a_text_formatter.add (class_name)
+				a_text_formatter.add (".")
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

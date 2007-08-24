@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when a name of a creation clause is not a final name %
 		%of the associated class."
 	legal: "See notice at end of class."
@@ -8,13 +8,12 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VGCP2 
+class VGCP2
 
 inherit
-
 	VGCP
 		redefine
-			subcode, build_explain
+			subcode, build_explain, print_single_line_error_message
 		end;
 
 feature -- Properties
@@ -33,6 +32,16 @@ feature -- Output
 			a_text_formatter.add (feature_name);
 			a_text_formatter.add_new_line;
 		end;
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {VGCP} (a_text_formatter)
+			a_text_formatter.add_space
+			a_text_formatter.add ("Invalid creation procedure `" + feature_name + "'.")
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 

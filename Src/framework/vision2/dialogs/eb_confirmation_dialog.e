@@ -8,6 +8,9 @@ indexing
 class
 	EB_CONFIRMATION_DIALOG
 
+obsolete
+	"Use ES_QUESTION_DIALOG instead"
+
 inherit
 	EV_CONFIRMATION_DIALOG
 		redefine

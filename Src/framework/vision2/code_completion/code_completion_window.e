@@ -201,6 +201,12 @@ feature -- Query
 			Result := choice_list.row_count > 0
 		end
 
+	is_applicable_item (a_item: like name_type): BOOLEAN
+			-- Determines if `a_item' is an applicable item to show in the completion list
+		do
+			Result := a_item /= Void
+		end
+
 feature {NONE} -- Events handling
 
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
@@ -723,40 +729,42 @@ feature {NONE} -- Implementation
 				l_count > l_upper
 			loop
 				match_item := l_matches.item (l_count)
-				parent_item := Void
-				if match_item.has_parent then
-					parent_item := match_item.parent
-				else
-					if not match_item.has_child then
-						l_row := l_list.row (row_index)
-						l_row.set_data (match_item)
-						row_index := row_index + 1
+				if is_applicable_item (match_item) then
+					parent_item := Void
+					if match_item.has_parent then
+						parent_item := match_item.parent
 					else
-						parent_item := match_item
+						if not match_item.has_child then
+							l_row := l_list.row (row_index)
+							l_row.set_data (match_item)
+							row_index := row_index + 1
+						else
+							parent_item := match_item
+						end
 					end
-				end
-				if parent_item /= Void and then not l_parents_inserted.has (parent_item) then
-					l_row := l_list.row (row_index)
-					l_row.set_data (parent_item)
-					row_index := row_index + 1
-					if parent_item.has_child then
-						if not l_tree_view then
-							l_tree_view := True
-							if not l_list.is_tree_enabled then
-								l_list.enable_tree
+					if parent_item /= Void and then not l_parents_inserted.has (parent_item) then
+						l_row := l_list.row (row_index)
+						l_row.set_data (parent_item)
+						row_index := row_index + 1
+						if parent_item.has_child then
+							if not l_tree_view then
+								l_tree_view := True
+								if not l_list.is_tree_enabled then
+									l_list.enable_tree
+								end
+							end
+							l_row.ensure_expandable
+							l_row.expand_actions.extend (agent parent_item.set_is_expanded (True))
+							l_row.expand_actions.extend (agent on_row_expand (l_row))
+							l_row.collapse_actions.extend (agent parent_item.set_is_expanded (False))
+							l_row.collapse_actions.extend (agent on_row_collapse (l_row))
+							if parent_item.is_expanded and then l_row.is_expandable then
+								l_row.expand
+								row_index := row_index + l_row.subrow_count
 							end
 						end
-						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent parent_item.set_is_expanded (True))
-						l_row.expand_actions.extend (agent on_row_expand (l_row))
-						l_row.collapse_actions.extend (agent parent_item.set_is_expanded (False))
-						l_row.collapse_actions.extend (agent on_row_collapse (l_row))
-						if parent_item.is_expanded and then l_row.is_expandable then
-							l_row.expand
-							row_index := row_index + l_row.subrow_count
-						end
+						l_parents_inserted.force (parent_item, parent_item)
 					end
-					l_parents_inserted.force (parent_item, parent_item)
 				end
 				l_count := l_count + 1
 			end
@@ -1257,9 +1265,9 @@ feature {NONE} -- String matching
 					l_row := l_list.row (1)
 					l_name ?= l_row.data
 					check
-						l_name_not_void: l_name /= Void
+						--l_name_not_void: l_name /= Void
 					end
-					if l_name.has_child then
+					if l_name /= Void and then l_name.has_child then
 						on_row_expand (l_row)
 						if not l_name.begins_with (buffered_input) then
 							l_row.expand

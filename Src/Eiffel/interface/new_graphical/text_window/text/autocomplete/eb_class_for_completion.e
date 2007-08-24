@@ -18,7 +18,8 @@ inherit
 			tooltip_text,
 			is_class,
 			insert_name,
-			grid_item
+			grid_item,
+			is_obsolete
 		end
 
 	EB_SHARED_EDITOR_TOKEN_UTILITY
@@ -91,6 +92,19 @@ feature -- Access
 			Result.set_overriden_fonts (label_font_table, label_font_height)
 			Result.set_pixmap (icon)
 			Result.set_text_with_tokens (l_style.text)
+		end
+
+feature -- Status report
+
+	is_obsolete: BOOLEAN is
+			-- Is item obsolete?
+		local
+			l_class: like associated_class
+		do
+			l_class := associated_class
+			if l_class.is_compiled then
+				Result := l_class.compiled_class.is_obsolete
+			end
 		end
 
 feature {NONE} -- Implementation

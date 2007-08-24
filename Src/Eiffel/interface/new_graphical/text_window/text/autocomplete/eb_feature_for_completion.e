@@ -21,7 +21,8 @@ inherit
 			grid_item,
 			full_insert_name,
 			begins_with,
-			completion_type
+			completion_type,
+			is_obsolete
 		end
 
 	PREFIX_INFIX_NAMES
@@ -184,6 +185,13 @@ feature -- Query
 			Result := associated_feature.has_arguments
 		end
 
+feature -- Status report
+
+	is_obsolete: BOOLEAN is
+			-- Is item obsolete?
+		do
+			Result := associated_feature.is_obsolete
+		end
 feature -- Comparison
 
 	begins_with (s: STRING): BOOLEAN is

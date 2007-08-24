@@ -34,12 +34,6 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- The dialog's icon
-		do
-			Result := large_icon
-		end
-
 	large_icon: EV_PIXEL_BUFFER
 			-- The dialog's large icon, shown on the left
 		do

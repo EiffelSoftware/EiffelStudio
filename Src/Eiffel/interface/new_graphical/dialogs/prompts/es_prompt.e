@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 			is_initializing := l_init
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = a_default
 			buttons_set: buttons = a_buttons
 		end
@@ -206,6 +206,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	icon: EV_PIXEL_BUFFER
+			-- The dialog's large icon, shown on the left
+		do
+			Result := large_icon
+		end
+
 	large_icon: EV_PIXEL_BUFFER
 			-- The dialog's large icon, shown on the left
 		deferred
@@ -257,11 +263,11 @@ feature -- Element change
 				prompt_text.set_text ("")
 				prompt_text.hide
 			else
-				prompt_text.set_text (a_text)
+				prompt_text.set_text (format_text (a_text))
 				prompt_text.show
 			end
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			prompt_text_label_visible_respected: prompt_text.is_show_requested = not a_text.is_empty
 		end
 
@@ -461,6 +467,22 @@ feature {NONE} -- Basic operations
 					end
 				end
 			end
+		end
+
+feature {NONE} -- Formatting
+
+	format_text (a_text: STRING_32): STRING_32
+			-- Format text to remove trailing new lines
+		require
+			a_text_attached: a_text /= Void
+		do
+			Result := a_text.twin
+			if not Result.is_empty then
+				Result.prune_all_trailing ('%N')
+			end
+		ensure
+			result_attached: Result /= Void
+			result_free_of_trailing_new_lines: not Result.is_empty implies Result.item (Result.count) /= '%N'
 		end
 
 feature {NONE} -- Action handlers

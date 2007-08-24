@@ -11,9 +11,9 @@ class
 	ES_DISCARDABLE_COMPILE_SAVE_FILES_PROMPT
 
 inherit
-	ES_DISCARDABLE_WARNING_PROMPT
+	ES_DISCARDABLE_QUESTION_PROMPT
 		rename
-			make as make_warning_prompt
+			make as make_question_prompt
 		redefine
 			build_prompt_interface
 		end
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			not_a_class_list_is_empty: not a_class_list.is_empty
 		do
 			class_list := a_class_list
-			make_warning_prompt ("Would you like to save the following classes before compiling?", dialog_buttons.yes_no_cancel_buttons, dialog_buttons.yes_button, "save all classes in the future", dialog_buttons.yes_button, "confirm_save_before_compile")
+			make_standard_with_cancel ((create {WARNING_MESSAGES}).w_files_not_saved_before_compiling, interface_names.l_discard_save_before_compile_dialog, preferences.dialog_data.confirm_save_before_compile_string)
 			set_sub_title (interface_names.st_unsaved_changed)
 		end
 
@@ -47,7 +47,7 @@ feature {NONE} -- User interface initialization
 			l_tabbable: EV_TAB_CONTROLABLE
 			i: INTEGER
 		do
-			Precursor {ES_DISCARDABLE_WARNING_PROMPT} (a_container)
+			Precursor {ES_DISCARDABLE_QUESTION_PROMPT} (a_container)
 
 			if class_list /= Void and then not class_list.is_empty then
 				create l_list

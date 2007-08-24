@@ -11,9 +11,9 @@ class
 	ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
 
 inherit
-	ES_WARNING_PROMPT
+	ES_QUESTION_PROMPT
 		rename
-			make as make_warning_prompt
+			make as make_question_prompt
 		redefine
 			build_prompt_interface
 		end
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			not_a_class_list_is_empty: not a_class_list.is_empty
 		do
 			class_list := a_class_list
-			make_warning_prompt (interface_names.l_exit_warning, dialog_buttons.yes_no_cancel_buttons, dialog_buttons.cancel_button)
+			make_standard (interface_names.l_exit_warning)
 			set_sub_title (interface_names.st_unsaved_changed)
 		end
 
@@ -47,7 +47,7 @@ feature {NONE} -- User interface initialization
 			l_tabbable: EV_TAB_CONTROLABLE
 			i: INTEGER
 		do
-			Precursor {ES_WARNING_PROMPT} (a_container)
+			Precursor {ES_QUESTION_PROMPT} (a_container)
 
 			if class_list /= Void and then not class_list.is_empty then
 				create l_list

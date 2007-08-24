@@ -13,12 +13,19 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
-	EV_SHARED_APPLICATION
+	ES_SHARED_DIALOG_BUTTONS
+
+-- inherit {NONE}
+
+	EV_BUILDER
 		export
 			{NONE} all
 		end
 
-	ES_SHARED_DIALOG_BUTTONS
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
 
 	ES_SHARED_COLORS
 		export
@@ -83,6 +90,7 @@ feature {NONE} -- User interface initialization
 			l_container.set_border_width (dialog_border_width)
 			l_main_container.extend (l_container)
 			build_dialog_interface (l_container)
+			dialog.show_actions.extend (agent adjust_dialog_button_widths)
 
  			create l_container
 			l_container.set_border_width (dialog_border_width)
@@ -275,8 +283,12 @@ feature -- Element change
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			a_text_attached: a_text /= Void
 			not_a_text_is_empty: not a_text.is_empty
+			not_is_shown: not is_shown
 		do
 			dialog_window_buttons.item (a_id).set_text (a_text)
+			if is_shown then
+				adjust_dialog_button_widths
+			end
 		ensure
 			button_text_set: dialog_window_buttons.item (a_id).text.is_equal (a_text)
 		end
@@ -387,6 +399,7 @@ feature -- Basic operations
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= to_dialog
 		do
+			--adjust_dialog_button_widths
 			if is_modal then
 				dialog.show_modal_to_window (a_window)
 			else
@@ -424,6 +437,7 @@ feature -- Basic operations
 			if l_window /= Void then
 				show (l_window)
 			else
+				--adjust_dialog_button_widths
 				dialog.show
 			end
 		ensure
@@ -465,6 +479,45 @@ feature {NONE} -- Basic operations
 			a_button_attached: a_button /= Void
 			not_a_button_is_destroyed: not a_button.is_destroyed
 		do
+		end
+
+	adjust_dialog_button_widths
+			-- Automatically adjusts dialog window button widths to fit the largest button text
+		require
+			dialog_window_buttons_attached: dialog_window_buttons /= Void
+			not_dialog_window_buttons_is_empty: not dialog_window_buttons.is_empty
+		local
+			l_buttons: DS_HASH_TABLE_CURSOR [EV_BUTTON, INTEGER]
+			l_button: EV_BUTTON
+			l_min_width: INTEGER
+			l_padding: INTEGER
+		do
+			l_min_width := {ES_UI_CONSTANTS}.dialog_button_width
+
+				-- Determine minimum width
+			l_buttons := dialog_window_buttons.new_cursor
+			from l_buttons.start until l_buttons.after loop
+				l_button := l_buttons.item
+				check l_button_attached: l_button /= Void end
+
+				if l_padding = 0 then
+						-- Retrieve padding for buttons
+					l_padding := l_button.minimum_width - l_button.font.string_width (l_button.text)
+				end
+				l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding)
+				l_buttons.forth
+			end
+
+				-- Set min width
+			from l_buttons.start until l_buttons.after loop
+				l_button := l_buttons.item
+				check l_button_attached: l_button /= Void end
+				if l_min_width > l_button.minimum_width then
+					l_button.reset_minimum_width
+					l_button.set_minimum_width (l_min_width)
+				end
+				l_buttons.forth
+			end
 		end
 
 feature -- Actions
@@ -645,12 +698,22 @@ feature {NONE} -- Factory
 		local
 			l_buttons: DS_SET_CURSOR [INTEGER]
 			l_button: EV_BUTTON
+			l_id: INTEGER
 		do
 			create Result.make (3)
 			l_buttons := buttons.new_cursor
 			from l_buttons.start until l_buttons.after loop
-				l_button := create_dialog_button (l_buttons.item)
-				Result.force (l_button, l_buttons.item)
+				l_id := l_buttons.item
+
+				l_button := create_dialog_button (l_id)
+					-- Add close action
+				l_button.select_actions.extend (agent on_close_requested (l_id))
+					-- Add action to ensure the dialog result is set
+				l_button.select_actions.extend (agent on_dialog_button_pressed (l_id))
+					-- Bind other actions
+				bind_dialog_button (l_id, l_button)
+
+				Result.force (l_button, l_id)
 				l_buttons.forth
 			end
 		ensure
@@ -675,15 +738,6 @@ feature {NONE} -- Factory
 			l_label := dialog_button_label (a_id)
 			create Result.make_with_text (l_label)
 			Result.set_minimum_size ({ES_UI_CONSTANTS}.dialog_button_width, {ES_UI_CONSTANTS}.dialog_button_height)
-
-				-- Add action to ensure the dialog result is set
-			Result.select_actions.extend (agent on_dialog_button_pressed (a_id))
-
-				-- Bind other actions
-			bind_dialog_button (a_id, Result)
-
-				-- Add close action
-			Result.select_actions.extend (agent on_close_requested (a_id))
 		ensure
 			result_attached: Result /= Void
 		end

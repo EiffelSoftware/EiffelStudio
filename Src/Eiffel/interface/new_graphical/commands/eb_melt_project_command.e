@@ -64,6 +64,11 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
+	ES_SHARED_DIALOG_BUTTONS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -87,6 +92,11 @@ feature -- Properties
 		do
 			-- False for a standard compilation
 		end
+
+feature -- Status report
+
+	run_after_melt: BOOLEAN
+			-- Should we execute the system after sucessful melt?
 
 feature -- Status Setting
 
@@ -221,9 +231,6 @@ feature {NONE} -- Attributes
 	start_c_compilation: BOOLEAN
 			-- Do we have to start the C compilation after C Code generation?
 
-	run_after_melt: BOOLEAN
-			-- Should we execute the system after sucessful melt?
-
 	run_after_melt2: BOOLEAN
 			-- Should we execute the system after sucessful melt?
 			-- This boolean value is only reliable at the beginning
@@ -290,8 +297,9 @@ feature {NONE} -- Execution
 			-- Recompile the project and start C compilation if `c_compilation_enabled'
 			-- is True.
 		local
-			wd: EB_WARNING_DIALOG
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_WARNING_PROMPT
+			l_save_confirm: ES_DISCARDABLE_COMPILE_SAVE_FILES_PROMPT
+			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
 			start_c_compilation := c_compilation_enabled
 			if c_compilation_enabled then
@@ -302,19 +310,17 @@ feature {NONE} -- Execution
 				run_after_melt := false
 			end
 			if Eiffel_project.is_read_only then
-				create wd.make_with_text (Warning_messages.w_Cannot_compile)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
+				create l_warning.make (warning_messages.w_cannot_compile, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
+				l_warning.show_on_development_window
 			elseif Eiffel_project.initialized then
 				if not_saved then
-					create cd.make_initialized (
-						3, preferences.dialog_data.confirm_save_before_compile_string,
-						Warning_messages.w_Files_not_saved_before_compiling,
-						Interface_names.l_Discard_save_before_compile_dialog,
-						preferences.preferences
-					)
-					cd.set_ok_action (agent save_and_compile)
-					cd.set_no_action (agent compile_no_save)
-					cd.show_modal_to_window (window_manager.last_focused_window.window)
+					create l_classes.make_default
+					window_manager.all_modified_classes.do_all (agent l_classes.force_last)
+					create l_save_confirm.make (l_classes)
+					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.yes_button, agent save_and_compile)
+					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.no_button, agent compile_no_save)
+					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.cancel_button, agent set_run_after_melt (False))
+					l_save_confirm.show_on_development_window
 				else
 					compile_no_save
 				end
@@ -347,16 +353,17 @@ feature {NONE} -- Execution
 			-- user so and ask for a confirmation.
 			-- If confirmation successful then compile.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if
 				not Debugger_manager.application_is_executing
 			then
 				compile_and_run
 			else
-				create cd.make_initialized (2, preferences.dialog_data.stop_execution_when_compiling_string, interface_names.e_Exec_recompile, Interface_names.L_do_not_show_again, preferences.preferences)
-				cd.set_ok_action (agent compile_and_run)
-				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				create l_confirm.make_standard (interface_names.e_exec_recompile, "", preferences.dialog_data.stop_execution_when_compiling_string)
+				l_confirm.set_title (interface_names.t_debugger_question)
+				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent compile_and_run)
+				l_confirm.show_on_development_window
 			end
 		end
 

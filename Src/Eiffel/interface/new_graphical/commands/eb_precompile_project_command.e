@@ -47,17 +47,12 @@ feature {NONE} -- Implementation
 	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			start_c_compilation := True
 			if is_dotnet_project then
-				create cd.make_initialized (3, preferences.dialog_data.confirm_finalize_precompile_string,
-					Warning_messages.w_Finalize_precompile,
-					interface_names.l_discard_finalize_precompile_dialog,
-					preferences.preferences)
-				cd.set_ok_action (agent confirm_finalization_and_compile (True))
-				cd.set_no_action (agent confirm_finalization_and_compile (False))
-				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				create l_confirm.make_standard (warning_messages.w_finalize_precompile, interface_names.l_discard_finalize_precompile_dialog, preferences.dialog_data.confirm_finalize_precompile_string)
+				l_confirm.show_on_development_window
 			else
 				confirm_finalization_and_compile (False)
 			end

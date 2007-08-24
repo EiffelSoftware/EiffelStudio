@@ -267,126 +267,71 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Error reporting
 
-	new_error_dialog: EB_ERROR_DIALOG is
-			-- New error dialog properly initialized.
-		do
-			create Result
-			Result.set_title (interface_names.t_configuration_loading_error)
-			Result.set_buttons (<< interface_names.b_ok >>)
-			Result.set_default_push_button (Result.button (interface_names.b_ok))
-			Result.set_default_cancel_button (Result.button (interface_names.b_ok))
-		end
-
 	report_non_readable_configuration_file (a_file_name: STRING) is
 			-- Report an error when `a_file_name' cannot be read.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_cannot_read_file (a_file_name))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_cannot_read_file (a_file_name))
 		end
 
 	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING) is
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
 		end
 
 	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
 		end
 
 	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
 		end
 
 	report_cannot_save_converted_file (a_file_name: STRING) is
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_cannot_save_file (a_file_name))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_cannot_save_file (a_file_name))
 		end
 
 	report_cannot_convert_project (a_file_name: STRING) is
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_cannot_convert_file (a_file_name))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name))
 		end
 
 	report_cannot_create_project (a_dir_name: STRING) is
 			-- Report an error when we cannot create project in `a_dir_name'.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_cannot_create_project_directory (a_dir_name))
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (warning_messages.w_cannot_create_project_directory (a_dir_name))
 		end
+
 
 	report_cannot_open_project (a_msg: STRING_GENERAL) is
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (a_msg)
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (a_msg)
 		end
 
 	report_incompatible_project (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-				-- Ace file included in the header of the .epr file...we can recompile if needed.
-			create cd.make_initialized (
-				2, preferences.dialog_data.confirm_convert_project_string,
-				Warning_messages.w_project_incompatible_version (config_file_name, version_number,
-					Eiffel_project.incompatible_version_number),
-				Interface_names.l_discard_convert_project_dialog,
-				preferences.preferences
-			)
-			cd.set_ok_action (agent set_should_override_project (True))
-			cd.set_cancel_action (agent set_has_error)
-			cd.show_modal_to_window (parent_window)
+			create l_question.make_standard (warning_messages.w_project_incompatible_version (config_file_name, version_number, eiffel_project.incompatible_version_number),
+				interface_names.l_discard_convert_project_dialog, preferences.dialog_data.confirm_convert_project_string)
+			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent set_should_override_project (True))
+			l_question.set_button_action (l_question.dialog_buttons.no_button, agent set_has_error)
+			l_question.show (parent_window)
 			if should_override_project then
 				is_compilation_requested := True
 			end
@@ -395,36 +340,21 @@ feature {NONE} -- Error reporting
 	report_project_corrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (a_msg)
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (a_msg)
 		end
 
 	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when project retrieval was stopped.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (a_msg)
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (a_msg)
 		end
 
 	report_project_incomplete (a_msg: STRING_GENERAL) is
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (a_msg)
-			l_ev.show_modal_to_window (parent_window)
-			set_has_error
+			report_loading_error (a_msg)
 		end
 
 	report_project_loaded_successfully is
@@ -452,12 +382,22 @@ feature {NONE} -- Error reporting
 
 	report_precompilation_error is
 			-- Report that the precompilation of a precompile did not work.
-		local
-			l_ev: EB_ERROR_DIALOG
 		do
-			l_ev := new_error_dialog
-			l_ev.set_text (warning_messages.w_project_build_precompile_error)
-			l_ev.show_modal_to_window (parent_window)
+			report_loading_error (warning_messages.w_project_build_precompile_error)
+		end
+
+	report_loading_error (a_msg: STRING_GENERAL) is
+			-- Report an error when project is incomplete and possibly propose
+			-- user to recompile from scratch.
+		require
+			a_msg_attached: a_msg /= Void
+			not_a_msg_is_empty: not a_msg.is_empty
+		local
+			l_error: ES_ERROR_PROMPT
+		do
+			create l_error.make_standard (a_msg)
+			l_error.set_sub_title (interface_names.t_configuration_loading_error)
+			l_error.show (parent_window)
 			set_has_error
 		end
 
@@ -643,25 +583,22 @@ feature {NONE} -- User interaction
 	ask_compile_precompile is
 			-- Should a needed precompile be automatically built?
 		local
-			l_dial: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_dial.make_initialized (2, preferences.dialog_data.confirm_build_precompile_string, warning_messages.w_project_build_precompile, interface_names.l_Discard_build_precompile_dialog, preferences.preferences)
-			l_dial.set_ok_action (agent
-				do
-					is_user_wants_precompile := True
-				end)
-			l_dial.show_modal_to_window (parent_window)
+			create l_question.make_standard (warning_messages.w_project_build_precompile, interface_names.l_discard_build_precompile_dialog, preferences.dialog_data.confirm_build_precompile_string)
+			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do is_user_wants_precompile := True end)
+			l_question.show (parent_window)
 		end
 
 	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
 			-- Should new environment values be accepted?
 		local
-			l_cd: EB_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_cd.make_with_text (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
-			l_cd.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no>>,
-				<<agent do is_update_environment := True end, agent do is_update_environment := False end>>)
-			l_cd.show_modal_to_window (parent_window)
+			create l_question.make_standard (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val), interface_names.l_discard_build_precompile_dialog, preferences.dialog_data.confirm_build_precompile_string)
+			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do is_update_environment := True end)
+			l_question.set_button_action (l_question.dialog_buttons.no_button, agent do is_update_environment := False end)
+			l_question.show (parent_window)
 		end
 
 feature {NONE} -- Actions

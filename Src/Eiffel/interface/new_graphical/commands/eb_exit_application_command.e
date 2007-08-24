@@ -38,19 +38,24 @@ inherit
 	SHARED_FLAGS
 		export {NONE} all end
 
+	ES_SHARED_DIALOG_BUTTONS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	execute is
 			-- Exit application. Ask the user to save unsaved files and ask for
 			-- confirmation on exit.
 		local
-			wd: EB_WARNING_DIALOG
+			l_warning: ES_WARNING_PROMPT
 		do
 			already_confirmed := False
 			if Workbench.is_compiling then
 				already_confirmed := True
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
+				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
+				l_warning.show_on_development_window
 			else
 				if process_manager.is_process_running then
 					process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
@@ -73,17 +78,13 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 	ask_confirmation is
 			-- Display a confirmation dialog box
 		local
-			exit_confirmation_dialog: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if not already_confirmed then
 				already_confirmed := True
-				create exit_confirmation_dialog.make_initialized (
-					2, preferences.dialog_data.confirm_on_exit_string,
-					Interface_names.l_Exit_application, Interface_names.l_Dont_ask_me_again,
-					preferences.preferences
-				)
-				exit_confirmation_dialog.set_ok_action (agent exit_application)
-				exit_confirmation_dialog.show_modal_to_window (window_manager.last_focused_window.window)
+				create l_confirm.make_standard (interface_names.l_exit_application, "", preferences.dialog_data.confirm_on_exit_string)
+				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent exit_application)
+				l_confirm.show_on_development_window
 			else
 				exit_application
 			end
@@ -95,7 +96,7 @@ feature {NONE} -- Callbacks
 			-- Exit the application
 			-- This application means Eiffel Studio.
 		local
-			l_err_dlg: EB_ERROR_DIALOG
+			l_error: ES_ERROR_PROMPT
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 		do
 			l_eb_debugger_manager := eb_Debugger_manager
@@ -125,9 +126,9 @@ feature {NONE} -- Callbacks
 				metric_manager.store_archive_history
 			end
 			if metric_manager.has_error then
-				create l_err_dlg.make_with_text (metric_manager.last_error.message)
-				l_err_dlg.set_buttons (<<interface_names.b_ok>>)
-				l_err_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+					-- Metric error
+				create l_error.make_standard (metric_manager.last_error.message)
+				l_error.show_on_development_window
 			end
 
 				-- Store customized formatters
@@ -147,16 +148,17 @@ feature {NONE} -- Callbacks
 	confirm_stop_debug is
 			-- Exit application. Ask the user to kill the debugger if it is running
 		local
-			cd: EB_CONFIRMATION_DIALOG
+			l_confirm: ES_QUESTION_PROMPT
 		do
 			if process_manager.is_process_running then
 				process_manager.terminate_process
 			end
 			if Debugger_manager.application_is_executing then
 				already_confirmed := True
-				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
-				cd.button (cd.OK).select_actions.extend (agent confirm_and_exit)
-				cd.show_modal_to_window (window_manager.last_focused_window.window)
+				create l_confirm.make_standard (warning_messages.w_exiting_stops_debugger)
+				if l_confirm.dialog_result = dialog_buttons.yes_button then
+					confirm_and_exit
+				end
 			else
 				confirm_and_exit
 			end
@@ -165,14 +167,23 @@ feature {NONE} -- Callbacks
 	confirm_and_exit is
 			-- Ask to save files, to confirm if necessary and exit.
 		local
-			qd: EB_QUESTION_DIALOG
+			l_exit_save_prompt: ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
+			l_list: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if window_manager.has_modified_windows then
 				already_confirmed := True
-				create qd.make_with_text (Interface_names.l_Exit_warning)
-				qd.button (interface_names.b_yes).select_actions.extend (agent save_and_exit)
-				qd.button (interface_names.b_no).select_actions.extend (agent ask_confirmation)
-				qd.show_modal_to_window (window_manager.last_focused_development_window.window)
+
+				create l_list.make_default
+				window_manager.all_modified_classes.do_all (agent l_list.force_last)
+				create l_exit_save_prompt.make (l_list)
+				l_exit_save_prompt.show_on_development_window
+				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
+					save_and_exit
+				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then
+					exit_application
+				else
+					-- Do not exit
+				end
 			else
 				ask_confirmation
 			end
@@ -181,14 +192,15 @@ feature {NONE} -- Callbacks
 	save_and_exit is
 			-- Save all windows and exit.
 		local
-			wd: EB_WARNING_DIALOG
+			l_error: ES_ERROR_PROMPT
 		do
 			window_manager.save_all
-			if not Window_manager.has_modified_windows then
+			if not window_manager.has_modified_windows then
 				ask_confirmation
 			else
-				create wd.make_with_text (Warning_messages.W_could_not_save_all)
-				wd.show_modal_to_window (Window_manager.last_focused_window.window)
+					-- Was unable to save all, so do not exit
+				create l_error.make_standard (warning_messages.w_could_not_save_all)
+				l_error.show_on_development_window
 			end
 		end
 

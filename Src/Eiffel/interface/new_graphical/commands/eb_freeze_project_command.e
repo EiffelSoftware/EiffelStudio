@@ -39,16 +39,12 @@ feature {NONE} -- Implementation
 	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create cd.make_initialized (
-				3, preferences.dialog_data.confirm_freeze_string,
-				Warning_messages.w_Freeze_warning, Interface_names.l_Discard_freeze_dialog,
-				preferences.preferences
-			)
-			cd.set_ok_action (agent set_c_compilation_and_compile (True))
-			cd.set_no_action (agent set_c_compilation_and_compile (False))
-			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			create l_confirm.make_standard_with_cancel (warning_messages.w_freeze_warning, interface_names.l_discard_freeze_dialog, preferences.dialog_data.confirm_freeze_string)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_c_compilation_and_compile (True))
+			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_c_compilation_and_compile (False))
+			l_confirm.show_on_development_window
 		end
 
 	set_c_compilation_and_compile (c_comp: BOOLEAN) is

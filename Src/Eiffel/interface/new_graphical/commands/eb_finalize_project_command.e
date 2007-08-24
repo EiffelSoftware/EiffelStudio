@@ -41,12 +41,12 @@ feature -- Callbacks
 			-- Question the user whether he wants to keep assertions or not.
 			-- If the question is answered with discard, it will come to here aswell.
 		local
-			cd: EB_CONFIRM_FINALIZE_ASSERTIONS_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create cd
-			cd.set_ok_action (agent set_assertion_flag_and_compile (False))
-			cd.set_no_action (agent set_assertion_flag_and_compile (True))
-			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			create l_confirm.make_standard_with_cancel (Warning_messages.w_assertion_warning, interface_names.l_discard_finalize_assertions, preferences.dialog_data.confirm_finalize_assertions_string)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_assertion_flag_and_compile (False))
+			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_assertion_flag_and_compile (True))
+			l_confirm.show_on_development_window
 		end
 
 	set_assertion_flag_and_compile (keep_assertions: BOOLEAN) is
@@ -86,16 +86,14 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create cd.make_initialized (
-				3, preferences.dialog_data.confirm_finalize_string,
-				Warning_messages.w_Finalize_warning, Interface_names.l_Discard_freeze_dialog,
-				preferences.preferences
-			)
-			cd.set_ok_action (agent set_c_compilation_and_compile (True))
-			cd.set_no_action (agent set_c_compilation_and_compile (False))
-			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			create l_confirm.make_standard_with_cancel (warning_messages.w_finalize_warning, interface_names.l_discard_finalize_assertions, preferences.dialog_data.confirm_finalize_string)
+			l_confirm.set_button_text (l_confirm.dialog_buttons.yes_button, Interface_names.b_discard_assertions)
+			l_confirm.set_button_text (l_confirm.dialog_buttons.no_button, Interface_names.b_keep_assertions)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_c_compilation_and_compile (True))
+			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_c_compilation_and_compile (False))
+			l_confirm.show_on_development_window
 		end
 
 	set_c_compilation_and_compile (c_comp: BOOLEAN) is

@@ -99,14 +99,13 @@ feature {NONE} -- Implementation
 	ask_and_kill is
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 			l_window: EB_WINDOW
 		do
-			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string,
-					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again,
-					preferences.preferences)
-			cd.set_ok_action (agent kill)
-			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			create l_confirm.make_standard (interface_names.l_confirm_kill, "", preferences.dialog_data.confirm_kill_string)
+			l_confirm.set_title (interface_names.t_debugger_question)
+			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent kill)
+			l_confirm.show_on_development_window
 			l_window := window_manager.last_focused_window
 			if l_window /= Void then
 				l_window.show

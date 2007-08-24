@@ -31,6 +31,8 @@ inherit
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
 		undefine
 			copy,
 			is_equal,
@@ -100,6 +102,12 @@ feature -- Query
 
 	is_class: BOOLEAN is
 			-- Is a class?
+		do
+			Result := False
+		end
+
+	is_obsolete: BOOLEAN is
+			-- Is item obsolete?
 		do
 			Result := False
 		end

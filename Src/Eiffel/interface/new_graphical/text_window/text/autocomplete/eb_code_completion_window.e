@@ -32,7 +32,8 @@ inherit
 			on_key_down,
 			on_key_released,
 			set_expanded_row_icon,
-			show
+			show,
+			is_applicable_item
 		end
 
 	EB_CONSTANTS
@@ -143,6 +144,14 @@ feature {NONE} -- Initialization
 			end
 			option_bar.extend (show_disambiguated_name_button)
 
+			create show_obsolete_items_button
+			show_obsolete_items_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_obsolete_icon)
+			l_tooltip := preferences.editor_data.show_completion_obsolete_items_preference.description
+			if l_tooltip /= Void then
+				show_disambiguated_name_button.set_tooltip (l_tooltip)
+			end
+			option_bar.extend (show_obsolete_items_button)
+
 			create remember_size_button
 			remember_size_button.set_pixmap (pixmaps.mini_pixmaps.completion_remember_size_icon)
 			l_tooltip := preferences.development_window_data.remember_completion_list_size_preference.description
@@ -177,6 +186,11 @@ feature {NONE} -- Initialization
 			else
 				show_disambiguated_name_button.disable_select
 			end
+			if show_obsolete_items then
+				show_obsolete_items_button.enable_select
+			else
+				show_obsolete_items_button.disable_select
+			end
 			if remember_window_size then
 				remember_size_button.enable_select
 			else
@@ -188,6 +202,7 @@ feature {NONE} -- Initialization
 			show_return_type_button.select_actions.extend (agent on_option_button_selected (show_return_type_button))
 			show_signature_button.select_actions.extend (agent on_option_button_selected (show_signature_button))
 			show_disambiguated_name_button.select_actions.extend (agent on_option_button_selected (show_disambiguated_name_button))
+			show_obsolete_items_button.select_actions.extend (agent on_option_button_selected (show_obsolete_items_button))
 			remember_size_button.select_actions.extend (agent on_option_button_selected (remember_size_button))
 
 				-- Preference change
@@ -195,12 +210,14 @@ feature {NONE} -- Initialization
 			show_return_type_agent := agent on_option_changed (show_return_type_button)
 			show_completion_signature_agent := agent on_option_changed (show_signature_button)
 			show_completion_disambiguated_name_agent := agent on_option_changed (show_disambiguated_name_button)
+			show_completion_obsolete_items_agent := agent on_option_changed (show_obsolete_items_button)
 			remember_window_size_agent := agent on_option_changed (remember_size_button)
 
 			preferences.editor_data.filter_completion_list_preference.change_actions.extend (filter_completion_list_agent)
 			preferences.editor_data.show_completion_type_preference.change_actions.extend (show_return_type_agent)
 			preferences.editor_data.show_completion_signature_preference.change_actions.extend (show_completion_signature_agent)
 			preferences.editor_data.show_completion_disambiguated_name_preference.change_actions.extend (show_completion_disambiguated_name_agent)
+			preferences.editor_data.show_completion_obsolete_items_preference.change_actions.extend (show_completion_obsolete_items_agent)
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.extend (remember_window_size_agent)
 		end
 
@@ -310,8 +327,29 @@ feature -- Widget
 	show_disambiguated_name_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show disambiguated name
 
+	show_obsolete_items_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Button to show obsolete features/classes
+
 	remember_size_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to remember window size
+
+feature -- Query
+
+	is_applicable_item (a_item: like name_type): BOOLEAN
+			-- Determines if `a_item' is an applicable item to show in the completion list
+		local
+			l_eb_name: EB_NAME_FOR_COMPLETION
+		do
+			Result := Precursor {CODE_COMPLETION_WINDOW} (a_item)
+			if Result then
+				l_eb_name ?= a_item
+				if l_eb_name /= Void then
+					if not show_obsolete_items then
+						Result := not l_eb_name.is_obsolete
+					end
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -362,6 +400,11 @@ feature {NONE} -- Option Preferences
 	show_completion_disambiguated_name: BOOLEAN is
 		do
 			Result := preferences.editor_data.show_completion_disambiguated_name
+		end
+
+	show_obsolete_items: BOOLEAN is
+		do
+			Result := preferences.editor_data.show_completion_obsolete_items
 		end
 
 	remember_window_size: BOOLEAN is
@@ -454,6 +497,13 @@ feature {NONE} -- Option behaviour
 					l_prefernce.change_actions.block
 					l_prefernce.set_value (a_button.is_selected)
 					apply_show_completion_disambiguated_name (show_completion_disambiguated_name)
+				end
+			elseif a_button = show_obsolete_items_button then
+				if show_obsolete_items /= a_button.is_selected then
+					l_prefernce := preferences.editor_data.show_completion_obsolete_items_preference
+					l_prefernce.change_actions.block
+					l_prefernce.set_value (a_button.is_selected)
+					apply_show_obsolete_items (show_obsolete_items)
 				end
 			elseif a_button = remember_size_button then
 				if remember_window_size /= a_button.is_selected then
@@ -551,6 +601,12 @@ feature {NONE} -- Option behaviour
 			apply_show_return_type (a_b)
 		end
 
+	apply_show_obsolete_items (a_b: BOOLEAN) is
+			-- Apply showing completion obsolete items.
+		do
+			apply_show_return_type (a_b)
+		end
+
 	apply_remember_window_size (a_b: BOOLEAN) is
 			-- Apply remembering window size.
 		do
@@ -574,6 +630,7 @@ feature {NONE} -- Recyclable
 			preferences.editor_data.show_completion_type_preference.change_actions.prune_all (show_return_type_agent)
 			preferences.editor_data.show_completion_signature_preference.change_actions.prune_all (show_completion_signature_agent)
 			preferences.editor_data.show_completion_disambiguated_name_preference.change_actions.prune_all (show_completion_disambiguated_name_agent)
+			preferences.editor_data.show_completion_obsolete_items_preference.change_actions.prune (show_completion_obsolete_items_agent)
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.prune_all (remember_window_size_agent)
 			unregister_accelerator_preference_change_actions
 		end
@@ -590,6 +647,8 @@ feature {NONE} -- Recyclable
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 		end
@@ -603,6 +662,8 @@ feature {NONE} -- Recyclable
 	show_completion_signature_agent: PROCEDURE [ANY, TUPLE]
 
 	show_completion_disambiguated_name_agent: PROCEDURE [ANY, TUPLE]
+
+	show_completion_obsolete_items_agent: PROCEDURE [ANY, TUPLE]
 
 	remember_window_size_agent: PROCEDURE [ANY, TUPLE]
 

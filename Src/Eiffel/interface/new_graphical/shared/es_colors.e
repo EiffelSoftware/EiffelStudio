@@ -68,11 +68,59 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+feature -- Prompts
+
+	prompt_sub_title_forground_color: EV_COLOR
+			-- Forground color for title text on prompt dialogs
+		once
+			create Result.make_with_8_bit_rgb (117, 143, 198)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	prompt_text_forground_color: EV_COLOR
+			-- Foreground color for all other text on prompt dialog
+		once
+			create Result.make_with_8_bit_rgb (107, 123, 138)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	prompt_banner_color: EV_COLOR
+			-- Background banner color for prompt dialogs
+		once
+			create Result.make_with_8_bit_rgb (255, 255, 255)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	prompt_sub_title_font: EV_FONT
+			-- Font for prompt text
+		once
+			Result := (create {EV_LABEL}).font
+			Result.set_height (14)
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	prompt_text_font: EV_FONT
+			-- Font for prompt sub text
+		once
+			Result := (create {EV_LABEL}).font
+			Result.set_height (12)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Access
 
 	stock_colors: EV_STOCK_COLORS is
+			-- EiffelVision2 stock colors
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 ;indexing

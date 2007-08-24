@@ -146,7 +146,6 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 			l_output, l_discard_msg: STRING_GENERAL
 		do

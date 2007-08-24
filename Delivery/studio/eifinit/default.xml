@@ -647,11 +647,12 @@
 	<PREF NAME="shortcuts.general.focus_on_class_address" DESCRIPTION="Focus on class address input field."><SHORTCUT>F6</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.general.close_focusing_docking_tool_or_editor" DESCRIPTION="Close focusing docking tool or editor."><SHORTCUT Ctrl="True">F4</SHORTCUT></PREF>
 
-	<PREF NAME="shortcuts.code_completion.toggle_filter" DESCRIPTION="Toggle filter button in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_show_type" DESCRIPTION="Toggle show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Toggle signature in completion list."><SHORTCUT>F3</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Toggle disambiguated name in completion list."><SHORTCUT>F4</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Toggle remember size in completion list."><SHORTCUT>F5</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_filter" DESCRIPTION="Toggle filtering in completion list."><SHORTCUT>F1</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_type" DESCRIPTION="Show/hide show type in completion list."><SHORTCUT>F2</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_signature" DESCRIPTION="Show/hide signature in completion list."><SHORTCUT>F3</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_disambiguated_name" DESCRIPTION="Show/hide disambiguated name in completion list."><SHORTCUT>F4</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_show_obsolete_items" DESCRIPTION="Show/hide obsolete features in completion list."><SHORTCUT>F5</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Remember/forget size in completion list."><SHORTCUT>F6</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.autocomplete" DESCRIPTION="Trigger feature completion."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.code_completion.class_autocomplete" DESCRIPTION="Trigger class completion"><SHORTCUT Ctrl="True" Shift="True">Space</SHORTCUT></PREF>
 	

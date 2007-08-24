@@ -59,6 +59,8 @@ inherit
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
 		undefine
 			is_equal,
 			copy,

@@ -12,7 +12,7 @@ class
 inherit
 	EB_CONSTANTS
 
-feature {NONE} -- Implementation
+feature -- Query
 
 	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP
 		require
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8] is
 			-- Class icon map
@@ -338,6 +338,8 @@ feature {NONE} -- Implementation
 		ensure
 			result_attached: Result /= VOid
 		end
+
+feature {NONE} -- Implementation
 
 	none_flag:  NATURAL_8 is 0x01
 	compiled_flag: NATURAL_8 is 0x02

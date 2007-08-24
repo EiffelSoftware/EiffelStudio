@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			not_a_class_list_is_empty: not a_class_list.is_empty
 		do
 			class_list := a_class_list
-			make_warning_prompt ("Would you like to save the following classes before compiling?", dialog_buttons_helper.yes_no_cancel_buttons, dialog_buttons_helper.yes_button, "save all classes in the future", "confirm_save_before_compile")
-			set_sub_title ("You have unsaved changes")
+			make_warning_prompt ("Would you like to save the following classes before compiling?", dialog_buttons.yes_no_cancel_buttons, dialog_buttons.yes_button, "save all classes in the future", dialog_buttons.yes_button, "confirm_save_before_compile")
+			set_sub_title (interface_names.st_unsaved_changed)
 		end
 
 feature {NONE} -- User interface initialization

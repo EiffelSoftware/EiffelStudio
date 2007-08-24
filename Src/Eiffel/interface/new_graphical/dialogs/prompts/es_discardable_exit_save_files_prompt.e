@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			class_list := a_class_list
 			make_warning_prompt (interface_names.l_exit_warning, dialog_buttons.yes_no_cancel_buttons, dialog_buttons.cancel_button)
-			set_sub_title (interface_names.st_exit_eiffelstudio)
+			set_sub_title (interface_names.st_unsaved_changed)
 		end
 
 feature {NONE} -- User interface initialization

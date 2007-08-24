@@ -41,8 +41,9 @@ feature {NONE} -- Initialization
 			text_set: a_text.is_equal (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
-			discard_message_set: discard_message = a_discard_message
-			preference_name_set: preference_name = a_pref_name
+			discard_message_set: a_discard_message.is_equal (discard_message)
+			discard_button_set: discard_button = standard_discard_button
+			preference_name_set: a_pref_name.is_equal (preference_name)
 		end
 
 feature {NONE} -- User interface initialization
@@ -89,6 +90,12 @@ feature {NONE} -- Access
 			else
 				Result := dialog_buttons.no_button
 			end
+		end
+
+	standard_discard_button: INTEGER
+			-- Standard buttons `standard_buttons' discard button
+		do
+			Result := dialog_buttons.yes_button
 		end
 
 feature {NONE} -- Status report

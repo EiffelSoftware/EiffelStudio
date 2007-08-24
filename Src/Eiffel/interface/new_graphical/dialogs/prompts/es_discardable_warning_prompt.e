@@ -58,6 +58,12 @@ feature {NONE} -- Access
 			Result := dialog_buttons.cancel_button
 		end
 
+	standard_discard_button: INTEGER
+			-- Standard buttons `standard_buttons' discard button
+		do
+			Result := dialog_buttons.ok_button
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

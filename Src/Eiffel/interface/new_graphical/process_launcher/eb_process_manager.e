@@ -126,23 +126,17 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if is_c_compilation_running then
 				if is_freezing_running then
-					create cd.make_initialized (
-						2, preferences.dialog_data.confirm_on_terminate_freezing_string,
-						Warning_messages.w_Freezing_running, Interface_names.l_Discard_terminate_freezing,
-						preferences.preferences)
+					create l_question.make_standard (warning_messages.w_freezing_running, interface_names.l_discard_terminate_freezing, preferences.dialog_data.confirm_on_terminate_freezing_string)
 				elseif is_finalizing_running then
-					create cd.make_initialized (
-						2, preferences.dialog_data.confirm_on_terminate_finalizing_string,
-						Warning_messages.w_Finalizing_running, Interface_names.l_Discard_terminate_finalizing,
-						preferences.preferences)
+					create l_question.make_standard (warning_messages.w_finalizing_running, interface_names.l_discard_terminate_finalizing, preferences.dialog_data.confirm_on_terminate_finalizing_string)
 				end
-				if cd /= Void then
-					cd.set_ok_action (ok_agent)
-					cd.show_modal_to_window (a_window)
+				if l_question /= Void then
+					l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
+					l_question.show (a_window)
 				end
 			end
 		end
@@ -153,6 +147,7 @@ feature -- Execution
 			a_window_not_void: a_window /= Void
 		local
 			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 			l_output, l_discard_msg: STRING_GENERAL
 		do
 			if is_process_running then
@@ -166,14 +161,9 @@ feature -- Execution
 					l_output := interface_names.l_external_command_running
 					l_discard_msg := interface_names.l_discard_terminate_external_command_when_exit
 				end
-
-				create cd.make_initialized (
-					2, preferences.dialog_data.confirm_on_terminate_process_string,
-					l_output, l_discard_msg,
-					preferences.preferences)
-				cd.set_ok_action (ok_agent)
-				cd.show_modal_to_window (a_window)
-
+				create l_question.make_standard (l_output, l_discard_msg, preferences.dialog_data.confirm_on_terminate_process_string)
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
+				l_question.show (a_window)
 			end
 		end
 
@@ -182,16 +172,12 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if is_external_command_running then
-				create cd.make_initialized (
-					2, preferences.dialog_data.confirm_on_terminate_external_command_string,
-					Warning_messages.w_external_command_running_in_development_window,
-					Interface_names.l_Discard_terminate_external_command,
-					preferences.preferences)
-					cd.set_ok_action (ok_agent)
-					cd.show_modal_to_window (a_window)
+				create l_question.make_standard (warning_messages.w_external_command_running_in_development_window, interface_names.l_discard_terminate_external_command, preferences.dialog_data.confirm_on_terminate_external_command_string)
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
+				l_question.show (a_window)
 			end
 		end
 

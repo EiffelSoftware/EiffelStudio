@@ -79,16 +79,19 @@ feature
 	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
 			a_button_count: INTEGER; a_pref_string: STRING) is
 		local
-			dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create dlg.make_initialized (a_button_count,
-							a_pref_string,
-							msg,
-							Interface_names.l_Do_not_show_again,
-							preferences.preferences
-						)
-			dlg.set_ok_action (a_action)
-			dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+			if a_button_count = 2 then
+				create l_question.make_standard (msg, "", a_pref_string)
+			elseif a_button_count = 3 then
+				create l_question.make_standard_with_cancel (msg, "", a_pref_string)
+			else
+				check False end
+			end
+			if l_question /= Void then
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, a_action)
+				l_question.show_on_development_window
+			end
 		end
 
 	activate_debugger_environment (b: BOOLEAN) is

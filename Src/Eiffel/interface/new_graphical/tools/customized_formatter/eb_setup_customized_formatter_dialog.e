@@ -183,26 +183,16 @@ feature{NONE} -- Actions
 	on_ok is
 			-- Action to be performed when "OK" button is pressed
 		local
-			l_dialog: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 		do
 			if
 				has_changed and then
 				not workbench.universe_defined and then
 				descriptors.there_exists (agent (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN do Result := a_descriptor.is_target_scope end)
 			then
-				create l_dialog.make_initialized (
-					2,
-					preferences.dialog_data.discard_target_scope_customized_formatter_string,
-					interface_names.l_target_scope_customzied_formatter_not_saved,
-					Interface_names.l_discard_target_scope_customized_formatter, preferences.preferences
-				)
-				l_dialog.set_ok_action (
-					agent do
-						on_confirmed_ok
-						set_is_loaded (False)
-					end
-				)
-				l_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
+				create l_warning.make_standard (interface_names.l_target_scope_customzied_formatter_not_saved, interface_names.l_discard_target_scope_customized_formatter, preferences.dialog_data.discard_target_scope_customized_formatter_string)
+				l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent on_confirmed_ok)
+				l_warning.show_on_development_window
 			else
 				on_confirmed_ok
 			end

@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_DIALOG_BUTTONS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -246,6 +251,32 @@ feature -- Access
 			Result := compile_start_actions_internal
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
+
+	all_modified_classes: ARRAYED_LIST [CLASS_I] is
+			-- Retrieves a list of all modified classes
+		local
+			a_dev: EB_DEVELOPMENT_WINDOW
+			l_index: INTEGER
+		do
+			create Result.make (0)
+			from
+				l_index := managed_windows.index
+				managed_windows.start
+			until
+				managed_windows.after
+			loop
+				a_dev ?= managed_windows.item
+				if a_dev /= Void and not a_dev.is_recycled then
+					if a_dev.editors_manager.changed then
+						Result.append (a_dev.editors_manager.changed_classes)
+					end
+				end
+				managed_windows.forth
+			end
+			managed_windows.go_i_th (l_index)
 		end
 
 feature -- Status report
@@ -737,21 +768,28 @@ feature {NONE} -- Exit implementation
 	confirm_and_quit is
 			-- If a compilation is under way, do not exit.
 		local
-			wd: EB_WARNING_DIALOG
-			qd: EB_QUESTION_DIALOG
-			evcsts: EV_DIALOG_CONSTANTS
+			l_warning: ES_WARNING_PROMPT
+			l_exit_save_prompt: ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
+			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
 				Exit_application_cmd.set_already_confirmed (True)
-				create wd.make_with_text (Warning_messages.W_exiting_stops_compilation)
-				wd.show_modal_to_window (last_focused_development_window.window)
+				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
+				l_warning.show_on_development_window
 			elseif has_modified_windows then
-				Exit_application_cmd.set_already_confirmed (True)
-				create qd.make_with_text (Interface_names.L_exit_warning)
-				create evcsts
-				qd.button (interface_names.b_yes).select_actions.extend (agent save_and_quit)
-				qd.button (interface_names.b_no).select_actions.extend (agent quit)
-				qd.show_modal_to_window (last_focused_development_window.window)
+				exit_application_cmd.set_already_confirmed (True)
+
+				create l_classes.make_default
+				all_modified_classes.do_all (agent l_classes.force_last)
+				create l_exit_save_prompt.make (l_classes)
+				l_exit_save_prompt.show_on_development_window
+				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
+					save_and_quit
+				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then
+					quit
+				else
+					-- Do not exit
+				end
 			else
 				quit
 			end

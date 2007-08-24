@@ -320,7 +320,7 @@ feature -- Action
 			save_tool: EB_SAVE_STRING_TOOL
 		do
 			if process_manager.is_c_compilation_running then
-				show_warning_dialog (Warning_messages.w_cannot_save_when_c_compilation_running, develop_window.window)
+				show_error_dialog (Warning_messages.w_cannot_save_when_c_compilation_running, develop_window.window)
 			else
 				create save_tool.make_and_save (output_text.text, develop_window.window)
 			end
@@ -330,7 +330,7 @@ feature -- Action
 			-- Clear output window.
 		do
 			if process_manager.is_c_compilation_running then
-				show_warning_dialog (Warning_messages.w_cannot_clear_when_c_compilation_running, develop_window.window)
+				show_error_dialog (Warning_messages.w_cannot_clear_when_c_compilation_running, develop_window.window)
 			else
 				clear
 			end
@@ -582,24 +582,21 @@ feature{NONE}	-- Implementation
 
 	show_no_system_defined_dlg is
 			-- Show a dialog warning no eiffel system defined.
-		local
-			wd: EB_WARNING_DIALOG
 		do
-			create wd.make_with_text (Warning_messages.w_No_system_defined)
-			wd.show_modal_to_window (develop_window.window)
+			show_error_dialog (warning_messages.w_no_system_defined, develop_window.window)
 		end
 
-	show_warning_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW) is
-			-- Show a warning dialog containing message `msg' in `a_window'.
+	show_error_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW) is
+			-- Show a error dialog containing message `msg' in `a_window'.
 		require
 			msg_not_void: msg /= Void
 			msg_not_empty: not msg.is_empty
 			a_window_not_void: a_window /= Void
 		local
-			wd: EB_WARNING_DIALOG
+			l_error: ES_ERROR_PROMPT
 		do
-			create wd.make_with_text (msg)
-			wd.show_modal_to_window (a_window)
+			create l_error.make_standard (msg)
+			l_error.show (a_window)
 		end
 
 	has_selected_file: BOOLEAN is

@@ -69,6 +69,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_DIALOG_BUTTONS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -106,9 +111,10 @@ feature -- Execution
 	execute_with_mode (execution_mode: INTEGER) is
 			-- Launch program in debugger with mode `execution_mode'.
 		local
-			wd: EB_WARNING_DIALOG
-			l_dial: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_WARNING_PROMPT
+			l_compile_request: ES_DISCARDABLE_QUESTION_PROMPT
 			l_wb: WORKBENCH_I
+			l_cancel_debug: BOOLEAN
 		do
 				--| At this point we define the 'type' on debug operation
 				--| either step next, step into, step out, continue ...
@@ -128,31 +134,37 @@ feature -- Execution
 						-- ask to compile if we changed some classes inside eiffel studio
 					l_wb := eiffel_project.workbench
 					if l_wb.is_changed or window_manager.has_modified_windows then
-						create l_dial.make_initialized (2, preferences.dialog_data.confirm_always_compile_before_executing_string, warning_messages.w_Compile_before_debug, interface_names.l_dont_ask_me_again, preferences.preferences)
-						l_dial.set_ok_action (agent melt_project_cmd.execute_and_wait)
-						l_dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+						create l_compile_request.make_standard_with_cancel (warning_messages.w_compile_before_debug,
+							interface_names.l_always_compile_before_debug,
+							preferences.dialog_data.confirm_always_compile_before_executing_string)
+						l_compile_request.set_title (interface_names.t_debugger_question)
+						l_compile_request.set_button_action (dialog_buttons.yes_button, agent melt_project_cmd.execute_and_wait)
+						l_compile_request.show_on_development_window
+						if l_compile_request.dialog_result = dialog_buttons.cancel_button then
+							l_cancel_debug := True
+						end
 					end
 
-					if not Eiffel_project.Workbench.successful then
-							-- The last compilation was not successful.
-							-- It is VERY dangerous to launch the debugger in these conditions.
-							-- However, forbidding it completely may be too frustating.
-						create wd.make_with_text (Warning_messages.w_Debug_not_compiled)
-						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
-						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application (execution_mode))
-						wd.set_default_push_button (wd.button (interface_names.b_cancel))
-						wd.show_modal_to_window (Window_manager.last_focused_window.window)
-					elseif not Debugger_manager.can_debug then
-							-- A class was removed since the last compilation.
-							-- It is VERY dangerous to launch the debugger in these conditions.
-							-- However, forbidding it completely may be too frustating.
-						create wd.make_with_text (Warning_messages.w_Removed_class_debug)
-						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
-						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application (execution_mode))
-						wd.set_default_push_button (wd.button (interface_names.b_cancel))
-						wd.show_modal_to_window (Window_manager.last_focused_window.window)
-					else
-						launch_application (execution_mode)
+					if not l_cancel_debug then
+						if not Eiffel_project.Workbench.successful then
+								-- The last compilation was not successful.
+								-- It is VERY dangerous to launch the debugger in these conditions.
+								-- However, forbidding it completely may be too frustating.
+							create l_warning.make (warning_messages.w_debug_not_compiled, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
+							l_warning.set_title (interface_names.t_debugger_warning)
+							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
+							l_warning.show_on_development_window
+						elseif not Debugger_manager.can_debug then
+								-- A class was removed since the last compilation.
+								-- It is VERY dangerous to launch the debugger in these conditions.
+								-- However, forbidding it completely may be too frustating.
+							create l_warning.make (warning_messages.w_removed_class_debug, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
+							l_warning.set_title (interface_names.t_debugger_warning)
+							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
+							l_warning.show_on_development_window
+						else
+							launch_application (execution_mode)
+						end
 					end
 				elseif debugger_manager.safe_application_is_stopped then
 						--| Application is already launched and is stopped |--

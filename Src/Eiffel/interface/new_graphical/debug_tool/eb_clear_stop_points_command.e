@@ -133,7 +133,6 @@ feature -- Events
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
-			id: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := bs.routine
@@ -142,10 +141,8 @@ feature -- Events
 				index := bs.index
 				bpm := Debugger_manager
 				bpm.remove_breakpoint (f, index)
-				if bpm.error_in_bkpts then
-					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					id.show_modal_to_window (window_manager.last_focused_development_window.window)
-				end
+				show_message_on_error (bpm)
+
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
 			end
@@ -155,18 +152,14 @@ feature -- Events
 			-- Process feature stone.
 		local
 			f: E_FEATURE
-			id: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature
 			bpm := Debugger_manager
 			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set (f) then
 				bpm.remove_breakpoints_in_feature (f)
+				show_message_on_error (bpm)
 
-				if bpm.error_in_bkpts then
-					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					id.show_modal_to_window (window_manager.last_focused_development_window.window)
-				end
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
 			end
@@ -175,7 +168,6 @@ feature -- Events
 	drop_class (cs: CLASSC_STONE) is
 			-- Process class stone.
 		local
-			id: EV_INFORMATION_DIALOG
 			conv_fst: FEATURE_STONE
 			bpm: BREAKPOINTS_MANAGER
 		do
@@ -183,11 +175,8 @@ feature -- Events
 			if conv_fst = Void then
 				bpm := Debugger_manager
 				bpm.remove_breakpoints_in_class (cs.e_class)
+				show_message_on_error (bpm)
 
-				if bpm.error_in_bkpts then
-					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					id.show_modal_to_window (window_manager.last_focused_development_window.window)
-				end
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
 			end
@@ -198,18 +187,15 @@ feature -- Execution
 	execute is
 			-- Execute with confirmation dialog.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager
 			if bpm.has_breakpoints then
-				create cd.make_initialized (
-					2, preferences.dialog_data.confirm_clear_breakpoints_string,
-					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again,
-					preferences.preferences
-				)
-				cd.set_ok_action (agent clear_breakpoints)
-				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				create l_question.make_standard (warning_messages.w_clear_breakpoints, "", preferences.dialog_data.confirm_clear_breakpoints_string)
+				l_question.set_title (interface_names.t_debugger_question)
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent clear_breakpoints)
+				l_question.show_on_development_window
 
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
@@ -233,17 +219,28 @@ feature {NONE} -- Implementation
 	clear_breakpoints is
 			-- Execute with confirmation dialog.
 		local
-			id: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager
 			bpm.clear_breakpoints
-			if bpm.error_in_bkpts then
-				create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-				id.show_modal_to_window (window_manager.last_focused_development_window.window)
-			end
+			show_message_on_error (bpm)
+
 				-- Update output tools
 			Debugger_manager.notify_breakpoints_changes
+		end
+
+	show_message_on_error (a_manager: BREAKPOINTS_MANAGER)
+			-- Shows an error message on an error in `a_manager'
+		require
+			a_manager_attached: a_manager /= Void
+		local
+			l_error: ES_ERROR_PROMPT
+		do
+			if a_manager.error_in_bkpts then
+				create l_error.make_standard (warning_messages.w_feature_is_not_compiled)
+				l_error.set_title (interface_names.t_debugger_error)
+				l_error.show_on_development_window
+			end
 		end
 
 indexing

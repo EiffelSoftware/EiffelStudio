@@ -81,16 +81,16 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		local
-			cf: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 		do
 			if associated_feature /= Void and then selected and then displayed and then actual_veto_format_result then
 				retrieve_sorting_order
 				display_temp_header
 				setup_viewpoint
 				confirmed := False
-				create cf.make_initialized (2, preferences.dialog_data.generate_homonyms_string, Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again, preferences.preferences)
-				cf.set_ok_action (agent confirm_generate)
-				cf.show_modal_to_window (Window_manager.last_focused_development_window.window)
+				create l_warning.make_standard (Interface_names.l_homonym_confirmation, "", preferences.dialog_data.generate_homonyms_string)
+				l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent confirm_generate)
+				l_warning.show_on_development_window
 				if not widget.is_displayed then
 					widget.show
 				end

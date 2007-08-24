@@ -418,7 +418,7 @@ feature -- Action
 	confirm_and_replace_all is
 			-- Ask for confirmation, then replace all.
 		local
-			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
+			l_warning: ES_DISCARDABLE_WARNING_PROMPT
 			hindered: BOOLEAN
 		do
 			if is_current_editor_searched then
@@ -429,9 +429,9 @@ feature -- Action
 			end
 			if not hindered then
 				if not is_current_editor_searched then
-					create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
-					cd.set_ok_action (agent extend_and_run_loaded_action (agent replace_all))
-					cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					create l_warning.make_standard (warning_messages.w_replace_all, interface_names.l_discard_replace_all_warning_dialog, preferences.dialog_data.confirm_replace_all_string)
+					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent extend_and_run_loaded_action (agent replace_all))
+					l_warning.show_on_development_window
 				else
 					extend_and_run_loaded_action (agent replace_all)
 				end

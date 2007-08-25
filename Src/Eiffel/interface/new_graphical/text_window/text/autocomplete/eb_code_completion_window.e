@@ -234,6 +234,8 @@ feature {NONE} -- Initialization
 			l_pre.change_actions.extend (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
 			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
+			l_pre.change_actions.extend (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
 			l_pre.change_actions.extend (setup_accelerators_agent)
 		end

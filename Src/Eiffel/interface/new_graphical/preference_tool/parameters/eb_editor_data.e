@@ -1095,7 +1095,8 @@ feature -- Keybord shortcuts Customization
 			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "toggle_show_type")
 			l_hash.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "toggle_show_signature")
 			l_hash.put ([False, False, False, key_strings.item (Key_F4).twin.as_string_8], "toggle_show_disambiguated_name")
-			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], "toggle_remember_size")
+			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], "toggle_show_obsolete_items")
+			l_hash.put ([False, False, False, key_strings.item (Key_F6).twin.as_string_8], "toggle_remember_size")
 			Result.extend ([l_hash, completion_window_group])
 		end
 

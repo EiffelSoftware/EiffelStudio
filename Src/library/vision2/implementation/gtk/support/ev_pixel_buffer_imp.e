@@ -296,6 +296,13 @@ feature -- Query
 			end
 		end
 
+	data_ptr: POINTER is
+			--Memory acess point to image data.
+			-- This feature is NOT platform independent.
+		do
+			Result :={EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf)
+		end
+
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
 	reusable_managed_pointer: MANAGED_POINTER

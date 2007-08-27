@@ -39,7 +39,7 @@ feature {NONE}  -- Initlization
 			internal_close_others.select_actions.extend (agent on_close_others (internal_notebook.selected_item))
 			extend (internal_close_others)
 			create internal_close_all
-			internal_close_all.set_pixmap (internal_shared.icons.close_others)
+			internal_close_all.set_pixmap (internal_shared.icons.close_all)
 			internal_close_all.set_text ("Close All")
 			internal_close_all.select_actions.extend (agent on_close_all (internal_notebook.selected_item))
 			extend (internal_close_all)

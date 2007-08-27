@@ -66,7 +66,6 @@ feature {NONE} -- Initialization
 		do
 				-- Build the Docking Manager.
 			create docking_manager.make (docking_container, Current)
-			sd_shared.set_icons (create {ICONS}.make)
 		end
 
 	is_in_default_state: BOOLEAN is

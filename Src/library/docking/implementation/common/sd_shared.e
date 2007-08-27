@@ -15,10 +15,12 @@ feature -- Access
 
 	icons: SD_ICONS_SINGLETON is
 			-- SD_ICONS_SINGLETON instance.
-		require
-			icons_set: icons_set
 		do
 			Result := internal_icons_cell.item
+			if Result = Void then
+				create {SD_DEFAULT_ICONS} Result.make
+				internal_icons_cell.put (Result)
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -172,6 +174,7 @@ feature -- Status setting
 
 	set_icons (a_icons: like icons) is
 			-- Set the SD_ICONS_SINGLETON instance.
+			-- Client programmers don't have to call this feature since SD_DEFAULT_ICONS will be used by default.
 		require
 			a_icons_not_void: a_icons /= Void
 		do

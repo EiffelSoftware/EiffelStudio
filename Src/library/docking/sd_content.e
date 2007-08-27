@@ -91,6 +91,7 @@ feature -- Access
 
 	pixmap: like internal_pixmap is
 			-- Client programmer's widget's pixmap.
+			-- The icon showing on content notebook tab and auto hide tab if Gdi+ not available on Windows platform.
 		do
 			Result := internal_pixmap
 		ensure

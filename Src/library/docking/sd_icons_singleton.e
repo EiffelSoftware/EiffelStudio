@@ -341,13 +341,7 @@ feature -- Tool bars icons.
 
 	tool_bar_dropdown_buffer: EV_PIXEL_BUFFER is
 			-- SD_TOOL_BAR_POPUP_BUTTON's dropdown icon.
-		local
-			l_rect: EV_RECTANGLE
 		do
-			-- We shift the dropdown arrow.
-			create l_rect.make (-1, -2, tool_bar_customize_indicator_buffer.width, tool_bar_customize_indicator_buffer.height)
-			create Result.make_with_size (tool_bar_customize_indicator_buffer.width, tool_bar_customize_indicator_buffer.height)
-			Result.draw_pixel_buffer_with_rect (tool_bar_customize_indicator_buffer, l_rect)
 		end
 
 feature -- Zone management icons.

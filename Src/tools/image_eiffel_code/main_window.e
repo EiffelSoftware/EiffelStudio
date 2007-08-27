@@ -336,9 +336,10 @@ feature {NONE} -- Implementation / Constants
 
 			class_file.append (code_producer.build_top_code (file_name))
 			class_file.append (code_producer.build_initialization_code (a_pixmap.width, a_pixmap.height))
-			class_file.append (code_producer.build_implementation_code (colors, a_pixmap.height))
+			class_file.append (code_producer.build_c_external_data_code (a_pixmap))
+			class_file.append (code_producer.build_colors_code)
 			class_file.append (code_producer.new_line)
-			class_file.append (code_producer.build_constants_code)
+			class_file.append (code_producer.build_fill_memory_code (colors, a_pixmap.width, a_pixmap.height))
 			class_file.append (code_producer.new_line)
 			class_file.append ("end -- " + file_name.as_upper +"%N")
 		end

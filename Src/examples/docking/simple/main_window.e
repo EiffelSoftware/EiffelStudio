@@ -21,10 +21,7 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_icons: ICONS
 		do
-			create l_icons.make
 			create manager.make (Current, Current)
 			prepare_content_1
 			prepare_content_2

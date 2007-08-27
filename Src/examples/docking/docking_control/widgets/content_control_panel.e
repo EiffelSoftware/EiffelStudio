@@ -1,8 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description: "Control panel which hold sub widgets to control the target docking content."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,12 +78,6 @@ feature -- Creation
 			general_panel.build_docking_editor_content
 		end
 
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
 feature -- Element change
 
 	content_focused (a_content: SD_CONTENT) is
@@ -95,24 +88,6 @@ feature -- Element change
 			attribute_panel.content_focused (a_content)
 			transform_panel.content_focused (a_content)
 		end
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 

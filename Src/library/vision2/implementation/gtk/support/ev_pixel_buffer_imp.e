@@ -265,7 +265,7 @@ feature -- Command
 			l_pixbuf_ptr2 := default_pointer
 		end
 
-		draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP

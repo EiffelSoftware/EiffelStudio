@@ -996,6 +996,7 @@ feature {NONE} -- Implementation
 			-- Exit editor complete mode.
 		do
 			code_completable.exit_complete_mode
+			continue_completion := False
 		end
 
 	save_window_position is

@@ -27,12 +27,14 @@ indexing
 			of the constants that should have been loaded. Therefore, you must ensure that either the
 			file is accessible or you do not specify to load from a file.
 		]"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants is
@@ -93,7 +95,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING is
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -103,9 +105,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER is
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -117,10 +119,10 @@ feature -- Access
 			check
 				is_integer: l_string.is_integer
 			end
-			
+
 			Result := l_string.to_integer
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN is
 			-- Does constant `a_name' exist?
 		require
@@ -137,35 +139,35 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING] is
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING is
 			-- File name from which constants must be loaded.
 		do
 			Result := file_name_cell.item
 		end
-		
+
 	file_name_cell: CELL [STRING] is
 		once
 			create Result
 			Result.put ("constants.txt")
 		end
-		
+
 	set_file_name (a_file_name: STRING) is
 			-- Assign `a_file_name' to `file_name'.
 		do
 			file_name_cell.put (a_file_name)
 		end
-		
+
 	String_constant: STRING is "STRING"
-	
+
 	Integer_constant: STRING is "INTEGER"
-		
+
 	parse_file_contents (content: STRING) is
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -195,7 +197,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING is
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -203,7 +205,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then
@@ -235,5 +237,16 @@ feature {NONE} -- Implementation
 
 invariant
 	all_constants_not_void: all_constants /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

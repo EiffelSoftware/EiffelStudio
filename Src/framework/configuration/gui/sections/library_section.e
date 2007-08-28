@@ -49,8 +49,6 @@ feature -- Basic operations
 		local
 			l_config: STRING
 			l_load: CONF_LOAD
-			ed: EB_ERROR_DIALOG
-			wd: EB_WARNING_DIALOG
 			l_lib_conf: CONFIGURATION_WINDOW
 		do
 			l_config := group.location.evaluated_path
@@ -63,18 +61,13 @@ feature -- Basic operations
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_configuration (l_config)
 				if l_load.is_error then
-					create ed.make_with_text (l_load.last_error.out)
-					ed.set_buttons (<<names.b_ok>>)
-					ed.show_modal_to_window (configuration_window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, configuration_window, Void)
 				elseif l_load.last_system.library_target = Void then
-					create ed.make_with_text ((create {CONF_ERROR_NOLIB}.make (group.name)).out)
-					ed.set_buttons (<<names.b_ok>>)
-					ed.show_modal_to_window (configuration_window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (group.name)).out, configuration_window, Void)
 				else
 					if l_load.is_warning then
 							-- add warnings
-						create wd.make_with_text (l_load.last_warning_messages)
-						wd.show_modal_to_window (configuration_window)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_load.last_warning_messages, configuration_window, Void)
 					end
 
 					create l_lib_conf.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)

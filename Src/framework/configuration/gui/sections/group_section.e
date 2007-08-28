@@ -66,14 +66,16 @@ feature -- Element update
 	ask_remove_group is
 			-- Ask for confirmation and remove `Current'.
 		local
-			l_cd: EB_CONFIRMATION_DIALOG
+			l_msg: STRING_32
 		do
 			if group.is_library then
-				create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_library (name), <<agent remove_group>>)
+				l_msg := conf_interface_names.target_remove_library (name)
 			else
-				create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_group (name), <<agent remove_group>>)
+				l_msg := conf_interface_names.target_remove_group (name)
 			end
-			l_cd.show_modal_to_window (configuration_window)
+
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+				l_msg, configuration_window, agent remove_group, Void)
 		end
 
 	update_pixmap is

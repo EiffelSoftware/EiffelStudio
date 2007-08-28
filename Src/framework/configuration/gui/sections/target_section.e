@@ -90,14 +90,17 @@ feature -- Element update
 	ask_remove_target is
 			-- Ask for confirmation and remove Current.
 		local
-			l_cd: EB_CONFIRMATION_DIALOG
-			l_wd: EB_WARNING_DIALOG
+			l_prompts: ES_PROMPT_PROVIDER
 			l_targets: ARRAYED_LIST [CONF_TARGET]
+			l_shown: BOOLEAN
 		do
+			l_prompts := (create {ES_SHARED_PROMPT_PROVIDER}).prompts
 			if target.system.targets.count = 1 then
-				create l_wd.make_with_text (conf_interface_names.target_remove_last)
+				l_prompts.show_warning_prompt (conf_interface_names.target_remove_last, configuration_window, Void)
+				l_shown := True
 			elseif target.system.library_target = target then
-				create l_wd.make_with_text (conf_interface_names.target_remove_library_target)
+				l_prompts.show_warning_prompt (conf_interface_names.target_remove_library_target, configuration_window, Void)
+				l_shown := True
 			else
 				from
 					l_targets := target.system.target_order
@@ -107,20 +110,18 @@ feature -- Element update
 						found: not l_targets.exhausted
 					end
 				until
-					l_wd /= Void or l_targets.after
+					l_shown or l_targets.after
 				loop
 					if l_targets.item.extends = target then
-						create l_wd.make_with_text (conf_interface_names.target_remove_extends (l_targets.item.name))
+						l_prompts.show_warning_prompt (conf_interface_names.target_remove_extends (l_targets.item.name), configuration_window, Void)
+						l_shown := True
 					end
 					l_targets.forth
 				end
 			end
 
-			if l_wd /= Void then
-				l_wd.show_modal_to_window (configuration_window)
-			else
-				create l_cd.make_with_text_and_actions (conf_interface_names.remove_target (name), <<agent remove_target>>)
-				l_cd.show_modal_to_window (configuration_window)
+			if not l_shown then
+				l_prompts.show_question_prompt (conf_interface_names.remove_target (name), configuration_window, agent remove_target, Void)
 			end
 		end
 

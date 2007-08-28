@@ -75,16 +75,21 @@ feature -- Redefine
 			l_tool_bar_imp: EV_DRAWING_AREA_IMP
 			l_rect: EV_RECTANGLE
 			l_button: SD_TOOL_BAR_BUTTON
+			l_popup_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 		do
 			if not tool_bar.is_destroyed and then tool_bar.is_displayed then
 				l_tool_bar_imp ?= a_arguments.tool_bar.implementation
 				check not_void: l_tool_bar_imp /= Void end
 				l_rect := a_arguments.item.rectangle
 				l_button ?= a_arguments.item
+				l_popup_button ?= a_arguments.item
 				if l_button /= Void then
 					-- Paint background
 					if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
 						c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
+						if l_popup_button /= Void and then not l_popup_button.is_dropdown_area then
+							c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width - l_popup_button.dropdrown_width, l_rect.height, True)
+						end
 					end
 
 					-- Paint pixmap
@@ -193,12 +198,14 @@ feature {NONE} -- Implementation
 			exist: a_gtk_object /= default_pointer
 		local
 			l_button: SD_TOOL_BAR_BUTTON
+			l_popup_button: SD_TOOL_BAR_POPUP_BUTTON
 			l_position: EV_COORDINATE
 			l_temp_pixmap: EV_PIXMAP
 			l_temp_imp: EV_PIXMAP_IMP
 			l_pixbuf: POINTER
 		do
 			l_button ?= a_arguments.item
+			l_popup_button ?= a_arguments.item
 			if l_button /= Void and l_button.pixmap /= Void and l_button.tool_bar /= Void then
 				-- We should render pixmap by theme.
 
@@ -206,6 +213,10 @@ feature {NONE} -- Implementation
 
 				if a_arguments.item.is_sensitive then
 					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_button.pixmap)
+					if l_popup_button /= Void then
+						-- cache `l_popup_button.dropdown_pixel_buffer.to_pixmap'?
+						a_arguments.tool_bar.draw_pixmap (l_popup_button.dropdown_left, l_position.y, l_popup_button.dropdown_pixel_buffer.to_pixmap)
+					end
 				else
 					l_temp_pixmap := l_button.pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_button.pixmap.width, l_button.pixmap.height))
 					l_temp_imp ?= l_temp_pixmap.implementation

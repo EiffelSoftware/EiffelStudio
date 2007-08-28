@@ -103,7 +103,6 @@ feature -- Implementation
 		local
 			l_font: EV_FONT
 			l_orignal: EV_PIXEL_BUFFER
-			l_orignal_rect: EV_RECTANGLE
 			l_point: EV_COORDINATE
 		do
 			l_orignal := icons_10_10.tool_bar_hidden_dropdown_small_icon_buffer
@@ -116,8 +115,7 @@ feature -- Implementation
 				create Result.make_with_size (24, 16)
 			end
 
-			create l_orignal_rect.make (0, 0, l_orignal.width, l_orignal.height)
-			Result.draw_pixel_buffer (l_orignal, l_orignal_rect)
+			Result.draw_pixel_buffer_with_x_y (0, 0, l_orignal)
 
 			create l_font
 			l_font.set_height_in_points (7)

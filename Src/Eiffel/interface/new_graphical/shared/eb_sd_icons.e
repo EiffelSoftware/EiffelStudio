@@ -19,7 +19,8 @@ inherit
 			maximize_buffer,
 			normal_buffer,
 			close_buffer,
-			tool_bar_indicator_buffer
+			tool_bar_indicator_buffer,
+			tool_bar_dropdown_buffer
 		end
 
 	EB_SHARED_PIXMAPS
@@ -256,6 +257,15 @@ feature -- Implementation
 			-- Redefine.
 		do
 			Result := icons_8_16.tool_bar_customize_indicator_hidden_items_icon
+		end
+
+	tool_bar_dropdown_buffer: EV_PIXEL_BUFFER is
+			-- Redefine
+		local
+			l_icons: SD_ICONS_8_16
+		once
+			create l_icons.make
+			Result := l_icons.tool_bar_dropdown_icon_buffer
 		end
 
 	tool_bar_floating_customize: EV_PIXMAP is

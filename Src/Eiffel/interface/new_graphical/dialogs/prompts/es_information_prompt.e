@@ -39,12 +39,6 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- The dialog's icon
-		do
-			Result := large_icon
-		end
-
 	large_icon: EV_PIXEL_BUFFER
 			-- The dialog's large icon, shown on the left
 		do
@@ -54,13 +48,13 @@ feature {NONE} -- Access
 	standard_buttons: DS_HASH_SET [INTEGER]
 			-- Standard set of buttons for a current prompt
 		once
-			Result := dialog_buttons_helper.ok_buttons
+			Result := dialog_buttons.ok_buttons
 		end
 
 	standard_default_button: INTEGER
 			-- Standard buttons `standard_buttons' default button
 		once
-			Result := dialog_buttons_helper.ok_button
+			Result := dialog_buttons.ok_button
 		end
 
 ;indexing

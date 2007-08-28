@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			is_standard_prompt_with_cancel := True
 			make_standard (a_text)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 		end
 
 feature {NONE} -- Access

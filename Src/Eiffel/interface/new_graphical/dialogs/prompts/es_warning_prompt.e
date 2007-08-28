@@ -18,7 +18,24 @@ inherit
 
 create
 	make,
-	make_standard
+	make_standard,
+	make_standard_with_cancel
+
+feature {NONE} -- Initialization
+
+	make_standard_with_cancel (a_text: like text)
+			-- Initialize a standard warning prompt, with an additional cancel button, using required information.
+			--
+			-- `a_text': The text to display on the prompt.
+		require
+			a_text_attached: a_text /= Void
+			not_a_text_is_empty: not a_text.is_empty
+		do
+			is_standard_prompt_with_cancel := True
+			make_standard (a_text)
+		ensure
+			text_set: format_text (a_text).is_equal (text)
+		end
 
 feature {NONE} -- User interface initialization
 
@@ -43,14 +60,27 @@ feature {NONE} -- Access
 	standard_buttons: DS_HASH_SET [INTEGER]
 			-- Standard set of buttons for a current prompt
 		do
-			Result := dialog_buttons.ok_cancel_buttons
+			if is_standard_prompt_with_cancel then
+				Result := dialog_buttons.ok_cancel_buttons
+			else
+				Result := dialog_buttons.ok_buttons
+			end
 		end
 
 	standard_default_button: INTEGER
 			-- Standard buttons `standard_buttons' default button
 		do
-			Result := dialog_buttons.cancel_button
+			if is_standard_prompt_with_cancel then
+				Result := dialog_buttons.cancel_button
+			else
+				Result := dialog_buttons.ok_button
+			end
 		end
+
+feature {NONE} -- Status report
+
+	is_standard_prompt_with_cancel: BOOLEAN
+			-- Indicates if a cancel button should be present
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 		do
 			make (a_text, standard_buttons, standard_default_button)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
 		end
@@ -315,6 +315,7 @@ feature -- Element change
 			buttons_contains_a_id: buttons.has (a_id)
 		do
 			default_cancel_button := a_id
+			dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
 		ensure
 			default_cancel_button_set: default_cancel_button = a_id
 		end

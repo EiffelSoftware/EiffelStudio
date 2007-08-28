@@ -125,8 +125,7 @@ feature -- Icons
 
 	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
 			-- Hide tab indicator.
-			-- If `hide_tab_indicator_buffer' available, then docking library will not use this feature.
-			-- Because on Linux draw text on EV_PIXEL_BUFFER is not available now, then Smart Docking library will use this feature.
+			-- On GTK, because of drawing text on EV_PIXEL_BUFFER doesn't have a good result, Smart Docking library use this feature instead of `hide_tab_indicator_buffer'.
 		do
 		end
 

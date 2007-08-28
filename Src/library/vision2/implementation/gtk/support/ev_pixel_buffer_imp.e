@@ -265,13 +265,13 @@ feature -- Command
 			l_pixbuf_ptr2 := default_pointer
 		end
 
-	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
-			-- Draw `a_pixel_buffer' to current at `a_rect'.
+		draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
 		do
 			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
+			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_pixel_buffer.width, a_pixel_buffer.height, gdk_pixbuf, a_x, a_y)
 		end
 
 feature -- Query
@@ -364,7 +364,7 @@ feature {NONE} -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
 		obsolete
-			"Use draw_pixel_buffer instead"
+			"Use draw_pixel_buffer_with_x_y instead"
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
 		do

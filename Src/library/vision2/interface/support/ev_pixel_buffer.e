@@ -114,13 +114,13 @@ feature -- Command
 			not_locked: not is_locked
 		end
 
-	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
-			-- Draw `a_pixel_buffer' at `a_rect'.
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		require
 			not_void: a_pixel_buffer /= Void
-			not_void: a_rect /= Void
+			vaild: a_x >= 0 and a_y >= 0 and a_x < width and a_y < height
 		do
-			implementation.draw_pixel_buffer_with_rect (a_pixel_buffer, a_rect)
+			implementation.draw_pixel_buffer_with_x_y (a_x, a_y, a_pixel_buffer)
 		end
 
 	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
@@ -184,7 +184,7 @@ feature -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		obsolete
-			"Use draw_pixel_buffer_with_rect instead"
+			"Use draw_pixel_buffer_with_x_y instead"
 		do
 			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
 		end

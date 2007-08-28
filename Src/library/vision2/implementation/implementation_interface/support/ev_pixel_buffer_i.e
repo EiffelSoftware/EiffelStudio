@@ -58,8 +58,8 @@ feature -- Command
 		deferred
 		end
 
-	draw_pixel_buffer_with_rect (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
-			-- Draw `a_pixel_buffer' at `a_rect'.
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		deferred
 		end
 
@@ -137,7 +137,7 @@ feature -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		obsolete
-			"Use draw_pixel_buffer_with_rect instead"
+			"Use draw_pixel_buffer_with_x_y instead"
 		deferred
 		end
 

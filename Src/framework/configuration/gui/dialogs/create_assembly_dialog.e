@@ -328,7 +328,6 @@ feature {NONE} -- Actions
 			l_reader: ASSEMBLY_PROPERTIES_READER
 			l_properties: ASSEMBLY_PROPERTIES
 			l_file_name: STRING
-			l_error: EB_ERROR_DIALOG
 			l_added: BOOLEAN
 		do
 				-- get clr version
@@ -349,10 +348,7 @@ feature {NONE} -- Actions
 			end
 
 			if not l_added then
-
-				create l_error.make_with_text (warnings.w_file_not_valid_assembly (l_file_name))
-				l_error.set_buttons (<< names.b_ok >>)
-				l_error.show_modal_to_window (Current)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (warnings.w_file_not_valid_assembly (l_file_name), Current, Void)
 			end
 		end
 

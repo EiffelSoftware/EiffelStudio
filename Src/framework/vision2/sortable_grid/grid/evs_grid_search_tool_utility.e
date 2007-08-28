@@ -29,15 +29,8 @@ feature -- Message dialog
 		require
 			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
-		local
-			l_dlg: EV_WARNING_DIALOG
 		do
-			create l_dlg.make_with_text (a_msg)
-			if a_window /= Void then
-				l_dlg.show_modal_to_window (a_window)
-			else
-				l_dlg.show
-			end
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_msg, a_window, Void)
 		end
 
 feature{NONE} -- Implementation

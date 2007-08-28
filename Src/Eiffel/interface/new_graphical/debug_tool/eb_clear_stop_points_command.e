@@ -195,7 +195,7 @@ feature -- Execution
 				create l_question.make_standard (warning_messages.w_clear_breakpoints, "", preferences.dialog_data.confirm_clear_breakpoints_string)
 				l_question.set_title (interface_names.t_debugger_question)
 				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent clear_breakpoints)
-				l_question.show_on_development_window
+				l_question.show_on_active_window
 
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			if a_manager.error_in_bkpts then
 				create l_error.make_standard (warning_messages.w_feature_is_not_compiled)
 				l_error.set_title (interface_names.t_debugger_error)
-				l_error.show_on_development_window
+				l_error.show_on_active_window
 			end
 		end
 

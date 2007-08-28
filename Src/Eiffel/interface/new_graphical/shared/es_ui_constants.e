@@ -32,6 +32,7 @@ feature -- Notebook
 feature -- Dialog
 
 	dialog_border: INTEGER = 6
+	dialog_button_border: INTEGER = 10
 	dialog_button_vertical_padding: INTEGER = 8
 	dialog_button_horizontal_padding: INTEGER = 10
 	dialog_button_width: INTEGER = 75

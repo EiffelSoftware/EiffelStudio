@@ -96,21 +96,13 @@ feature{NONE} -- Actions
 
 	on_backup is
 			-- Action to be performed to backup user-defined metrics to selected file
-		local
-			l_error_dlg: EB_ERROR_DIALOG
-			l_info_dlg: EV_INFORMATION_DIALOG
 		do
 			metric_manager.clear_last_error
 			metric_manager.store_metric_definitions (file_name_area.text)
 			if metric_manager.has_error then
-				create l_error_dlg
-				l_error_dlg.set_text (metric_manager.last_error.message_with_location)
-				l_error_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
-				l_error_dlg.show_modal_to_window (Current)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (metric_manager.last_error.message_with_location, Current, Void)
 			else
-				create l_info_dlg
-				l_info_dlg.set_text (metric_names.t_metric_backuped)
-				l_info_dlg.show_modal_to_window (Current)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (metric_names.t_metric_backuped, Current, Void)
 			end
 		end
 

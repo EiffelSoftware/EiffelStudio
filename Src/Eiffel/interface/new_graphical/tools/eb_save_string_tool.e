@@ -105,9 +105,7 @@ feature -- Save
 		local
 			f: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			str: STRING
-			con_dlg: EB_CONFIRMATION_DIALOG
 			filter_str: STRING
 			l_count, l_count2: INTEGER
 			l_selected_filter_index: INTEGER
@@ -134,11 +132,8 @@ feature -- Save
 					save_file_dlg.destroy
 					create f.make (str)
 					if f.exists then
-						create actions.make (1,1)
-						actions.put (agent on_overwrite_file (str), 1)
-						create con_dlg.make_with_text_and_actions (Warning_messages.w_File_exists (str), actions)
-						con_dlg.show_modal_to_window (owner_window)
-						con_dlg.destroy
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+							Warning_messages.w_File_exists (str), owner_window, agent on_overwrite_file (str), Void)
 					else
 						on_overwrite_file (str)
 					end

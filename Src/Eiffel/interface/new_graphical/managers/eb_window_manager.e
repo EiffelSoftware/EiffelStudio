@@ -769,20 +769,20 @@ feature {NONE} -- Exit implementation
 			-- If a compilation is under way, do not exit.
 		local
 			l_warning: ES_WARNING_PROMPT
-			l_exit_save_prompt: ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
+			l_exit_save_prompt: ES_EXIT_SAVE_FILES_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
 				Exit_application_cmd.set_already_confirmed (True)
 				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_development_window
+				l_warning.show_on_active_window
 			elseif has_modified_windows then
 				exit_application_cmd.set_already_confirmed (True)
 
 				create l_classes.make_default
 				all_modified_classes.do_all (agent l_classes.force_last)
 				create l_exit_save_prompt.make (l_classes)
-				l_exit_save_prompt.show_on_development_window
+				l_exit_save_prompt.show_on_active_window
 				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
 					save_and_quit
 				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then

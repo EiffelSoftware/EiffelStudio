@@ -29,7 +29,8 @@ feature -- Basic operations
 		require
 			a_relative_windows_not_void: a_relative_window /= Void
 		local
-			error_dialog: EB_ERROR_DIALOG
+			error_dialog: ES_ERROR_PROMPT
+			l_dialog_buttons: ES_DIALOG_BUTTONS
 			error_string: STRING
 		do
 				-- Set up the error message.
@@ -45,18 +46,16 @@ feature -- Basic operations
 					error_messages.forth
 				end
 			end
-			create error_dialog.make_with_text (error_string)
-			error_dialog.set_buttons (<<Interface_names.b_ok>>)
+			
+			create error_dialog.make_standard (error_string)
 			set_catch_exception (True)
 			debug ("display_exception_trace")
-				error_dialog.set_buttons (<<Interface_names.b_ok,
-					Interface_names.b_Display_Exception_Trace>>)
-				error_dialog.button (Interface_names.b_Display_Exception_Trace).select_actions.
-					extend (agent set_catch_exception(False))
+				create l_dialog_buttons
+				create error_dialog.make (error_string, l_dialog_buttons.ok_cancel_buttons, l_dialog_buttons.ok_button)
+				error_dialog.set_button_text (l_dialog_buttons.cancel_button, Interface_names.b_Display_Exception_Trace)
+				error_dialog.set_button_action (l_dialog_buttons.cancel_button, agent set_catch_exception (False))
 			end
-			error_dialog.set_default_push_button (error_dialog.button (Interface_names.b_ok))
-			error_dialog.set_default_cancel_button (error_dialog.button (Interface_names.b_ok))
-			error_dialog.show_modal_to_window (a_relative_window)
+			error_dialog.show (a_relative_window)
 			clear_error_messages
 		end
 

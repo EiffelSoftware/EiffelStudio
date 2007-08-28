@@ -98,11 +98,9 @@ feature -- Execution
 
 	execute is
 			-- Execute.
-		local
-			l_cd: EB_CONFIRMATION_DIALOG
 		do
-			create l_cd.make_with_text_and_actions (interface_names.e_refactoring_redo_sure, <<agent manager.redo_last>>)
-			l_cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+				interface_names.e_refactoring_redo_sure, Void, agent manager.redo_last, Void)
 		end
 
 feature {NONE} -- Implementation

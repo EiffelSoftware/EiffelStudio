@@ -224,15 +224,8 @@ feature {NONE} -- Events
 
 	on_restore is
 			-- Restore all preferences to their default values.
-		local
-			l_confirmation_dialog: EB_CONFIRMATION_DIALOG
 		do
-			create l_confirmation_dialog
-			l_confirmation_dialog.set_text (restore_preference_string)
-			show_dialog_modal (l_confirmation_dialog)
-			if l_confirmation_dialog.selected_button.is_equal (l_confirmation_dialog.ok) then
-				view_preferences.restore_defaults
-			end
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (restore_preference_string, parent_window, agent view_preferences.restore_defaults, Void)
 		end
 
 feature {NONE} -- Implementation

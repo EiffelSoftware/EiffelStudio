@@ -90,7 +90,7 @@ feature -- Formatting
 				confirmed := False
 				create l_warning.make_standard (Interface_names.l_homonym_confirmation, "", preferences.dialog_data.generate_homonyms_string)
 				l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent confirm_generate)
-				l_warning.show_on_development_window
+				l_warning.show_on_active_window
 				if not widget.is_displayed then
 					widget.show
 				end

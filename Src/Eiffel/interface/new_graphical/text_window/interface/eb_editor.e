@@ -124,13 +124,8 @@ feature -- Warning messages display
 
 	show_warning_message (a_message: STRING_GENERAL) is
 			-- show `a_message' in a dialog window		
-		local
-			wd: EB_WARNING_DIALOG
 		do
-			create wd.make_with_text (a_message)
-			wd.pointer_button_release_actions.force_extend (agent wd.destroy)
-			wd.key_press_actions.force_extend (agent wd.destroy)
-			wd.show_modal_to_window (reference_window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_message, reference_window, Void)
 		end
 
 feature -- Access

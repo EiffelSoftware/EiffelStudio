@@ -228,7 +228,6 @@ feature -- Window management / Status Setting
 	destroy is
 			-- Destroy Current window.
 		local
-			cd: EB_CONFIRMATION_DIALOG
 			l_window: EB_WINDOW
 		do
 			if not destroyed then
@@ -240,12 +239,12 @@ feature -- Window management / Status Setting
 				then
 					Exit_application_cmd.set_already_confirmed (True)
 					if Window_manager.development_windows_count > 1 then
-						create cd.make_with_text (Warning_messages.w_Closing_stops_debugger)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+							Warning_messages.w_Closing_stops_debugger, window, agent window_manager.try_to_destroy_window (Current), Void)
 					else
-						create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+							Warning_messages.w_Exiting_stops_debugger, window, agent window_manager.try_to_destroy_window (Current), Void)
 					end
-					cd.button (cd.ok).select_actions.extend (agent window_manager.try_to_destroy_window (Current))
-					cd.show_modal_to_window (window)
 				else
 					if Window_manager.development_windows_count > 1 and then
 						Eb_debugger_manager.debugging_window = l_window and then

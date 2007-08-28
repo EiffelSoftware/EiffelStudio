@@ -139,7 +139,7 @@ feature -- Execution
 							preferences.dialog_data.confirm_always_compile_before_executing_string)
 						l_compile_request.set_title (interface_names.t_debugger_question)
 						l_compile_request.set_button_action (dialog_buttons.yes_button, agent melt_project_cmd.execute_and_wait)
-						l_compile_request.show_on_development_window
+						l_compile_request.show_on_active_window
 						if l_compile_request.dialog_result = dialog_buttons.cancel_button then
 							l_cancel_debug := True
 						end
@@ -153,7 +153,7 @@ feature -- Execution
 							create l_warning.make (warning_messages.w_debug_not_compiled, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
 							l_warning.set_title (interface_names.t_debugger_warning)
 							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
-							l_warning.show_on_development_window
+							l_warning.show_on_active_window
 						elseif not Debugger_manager.can_debug then
 								-- A class was removed since the last compilation.
 								-- It is VERY dangerous to launch the debugger in these conditions.
@@ -161,7 +161,7 @@ feature -- Execution
 							create l_warning.make (warning_messages.w_removed_class_debug, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
 							l_warning.set_title (interface_names.t_debugger_warning)
 							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
-							l_warning.show_on_development_window
+							l_warning.show_on_active_window
 						else
 							launch_application (execution_mode)
 						end

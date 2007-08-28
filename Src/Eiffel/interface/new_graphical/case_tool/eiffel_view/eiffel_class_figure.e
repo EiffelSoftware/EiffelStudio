@@ -375,24 +375,20 @@ feature {NONE} -- Implementation (adding relations)
 	on_class_drop (a_stone: CLASSI_FIGURE_STONE) is
 			-- `a_stone' was dropped on `Current'.
 		local
-			dial: EB_CONFIRMATION_DIALOG
 			class_file: PLAIN_TEXT_FILE
-			l_error_window: EB_WARNING_DIALOG
 		do
 			create class_file.make (a_stone.class_i.file_name)
 			if not class_file.exists then
-				create l_error_window.make_with_text (interface_names.l_class_is_not_editable.as_string_32 +
-					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
-				l_error_window.show_modal_to_window (world.context_editor.develop_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
+					interface_names.l_class_is_not_editable.as_string_32 + warning_messages.w_file_not_exist (a_stone.class_i.file_name),
+					world.context_editor.develop_window.window, Void)
 			elseif class_file.is_writable and then not a_stone.class_i.group.is_readonly then
 				if world.context_editor.is_link_inheritance then
 					if drop_allowed (a_stone) then
 						add_inheritance_relation (a_stone.source)
 					else
-						create dial.make_with_text_and_actions (
-							interface_names.l_inheritance_cycle_was_created,
-								<<agent add_inheritance_relation (a_stone.source)>>)
-						dial.show_modal_to_window (world.context_editor.develop_window.window)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+							interface_names.l_inheritance_cycle_was_created, world.context_editor.develop_window.window, agent add_inheritance_relation (a_stone.source), Void)
 					end
 				elseif world.context_editor.is_link_client then
 					add_client_relation (a_stone.source, False)
@@ -400,8 +396,8 @@ feature {NONE} -- Implementation (adding relations)
 					add_client_relation (a_stone.source, True)
 				end
 			else
-				create l_error_window.make_with_text (interface_names.l_class_is_not_editable)
-				l_error_window.show_modal_to_window (world.context_editor.develop_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
+					interface_names.l_class_is_not_editable, world.context_editor.develop_window.window, Void)
 			end
 		end
 

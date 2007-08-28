@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			create l_confirm.make_standard (interface_names.l_confirm_kill_and_restart, "", preferences.dialog_data.confirm_kill_and_restart_string)
 			l_confirm.set_title (interface_names.t_debugger_question)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent kill)
-			l_confirm.show_on_development_window
+			l_confirm.show_on_active_window
 			window_manager.last_focused_window.show
 		end
 

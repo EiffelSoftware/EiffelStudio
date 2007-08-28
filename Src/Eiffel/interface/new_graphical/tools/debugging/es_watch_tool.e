@@ -1440,13 +1440,8 @@ feature {NONE} -- Implementation
 		end
 
 	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM) is
-			--
-			-- (export status {NONE})
-		local
-			w_dlg: EB_INFORMATION_DIALOG
 		do
-			create w_dlg.make_with_text (txt)
-			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (txt, debugger_manager.debugging_window.window, Void)
 		end
 
 	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE is

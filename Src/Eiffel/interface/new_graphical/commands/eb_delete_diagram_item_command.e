@@ -70,8 +70,7 @@ feature -- Access
 	execute is
 			-- Display information about `Current'.
 		do
-			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_item)
-			explain_dialog.show_modal_to_window (tool.develop_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_Diagram_hole, tool.develop_window.window, Void)
 		end
 
 	drop_class (st: CLASSI_STONE) is
@@ -79,7 +78,6 @@ feature -- Access
 		local
 			fs: CLASSI_FIGURE_STONE
 			es_class: ES_CLASS
-			wd: EB_WARNING_DIALOG
 			referenced_classes: STRING
 			msg: STRING_GENERAL
 			l_ss: LIST [CLASS_C]
@@ -105,8 +103,7 @@ feature -- Access
 							Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
 						else
 							msg := warning_messages.w_still_referenced (es_class.name, referenced_classes)
-							create wd.make_with_text (msg)
-							wd.show_modal_to_window (window.window)
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (msg, window.window, Void)
 						end
 					else
 						-- there are now clients and now descendants, otherwise it would be compiled
@@ -478,9 +475,6 @@ feature {NONE} -- Implementation
 		do
 			create Result
 		end
-
-	explain_dialog: EB_INFORMATION_DIALOG;
-			-- Dialog explaining how to use `Current'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

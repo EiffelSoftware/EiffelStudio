@@ -583,16 +583,11 @@ feature {NONE} -- Callbacks
 	retrieve_ace_file (dialog: EV_FILE_OPEN_DIALOG) is
 			-- Get callback information from `dialog', then send it to the ace file name field.
 		local
-			cd: EB_CONFIRMATION_DIALOG
 			file_name: STRING
 		do
 			file_name := dialog.file_name
 			if file_name.is_empty then
-				create cd.make_with_text (Warning_messages.w_Not_a_file_retry (file_name))
-				cd.show_modal_to_window (Current)
-				if cd.is_ok_selected then
-					browse_ace_file
-				end
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (Warning_messages.w_Not_a_file_retry (file_name), Current, agent browse_ace_file, Void)
 			else
 				ace_filename_field.set_text (file_name)
 			end

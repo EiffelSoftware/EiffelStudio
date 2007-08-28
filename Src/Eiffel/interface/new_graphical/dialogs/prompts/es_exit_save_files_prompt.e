@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 class
-	ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
+	ES_EXIT_SAVE_FILES_PROMPT
 
 inherit
 	ES_QUESTION_PROMPT

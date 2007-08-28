@@ -172,25 +172,29 @@ feature {NONE} -- Implementation
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		local
 			l_retried, l_user_ask_for_retry: BOOLEAN
-			l_ed: EB_ERROR_DIALOG
+			l_ed: ES_ERROR_PROMPT
+			l_buttons: ES_DIALOG_BUTTONS
 			l_win: EV_WINDOW
 			l_editor: EB_SMART_EDITOR
 		do
 			if l_retried then
 				l_editor := window_manager.last_focused_development_window.editors_manager.current_editor
-				create l_ed.make_with_text (warning_messages.w_Not_rename_swp (a_file.name, a_new_name))
-				l_ed.set_buttons (<<ev_retry, ev_ignore>>)
+				create l_buttons
+				create l_ed.make (warning_messages.w_Not_rename_swp (a_file.name, a_new_name), l_buttons.ok_cancel_buttons, l_buttons.ok_button)
+				l_ed.set_button_text (l_buttons.ok_button, interface_names.b_retry)
+				l_ed.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
+
 				l_win := window_manager.last_focused_development_window.window
 				l_win.focus_in_actions.block
 				if l_editor /= Void then
 					l_editor.editor_drawing_area.focus_in_actions.block
 				end
-				l_ed.show_modal_to_window (l_win)
+				l_ed.show (l_win)
 				l_win.focus_in_actions.resume
 				if l_editor /= Void then
 					l_editor.editor_drawing_area.focus_in_actions.resume
 				end
-				l_user_ask_for_retry := l_ed.selected_button.is_equal (ev_retry)
+				l_user_ask_for_retry := l_ed.dialog_result = l_buttons.ok_button
 				l_retried := False
 			else
 				l_user_ask_for_retry := True

@@ -297,24 +297,16 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
-		local
-			l_warning_window: EB_WARNING_DIALOG
 		do
-			create l_warning_window.make_with_text (a_warning_msg)
-			l_warning_window.show
-			--l_warning_window.show_modal_to_window (relative_window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_warning_msg, Void, Void)
 		end
 
 	display_error_message (an_error_msg: STRING_GENERAL) is
 			-- Display `an_error_msg' in an error popup window.
 		require
 			valid_error_message: an_error_msg /= Void and then not an_error_msg.is_empty
-		local
-			l_error_window: EB_ERROR_DIALOG
 		do
-			create l_error_window.make_with_text (an_error_msg)
-			l_error_window.show
-			--l_warning_window.show_modal_to_window (relative_window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (an_error_msg, Void, Void)
 		end
 
 	display_warning_message_relative (a_warning_msg: STRING_GENERAL; a_parent_window: EV_WINDOW) is
@@ -322,11 +314,8 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
 			non_void_parent_window: a_parent_window /= Void
-		local
-			l_warning_window: EB_WARNING_DIALOG
 		do
-			create l_warning_window.make_with_text (a_warning_msg)
-			l_warning_window.show_modal_to_window (a_parent_window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_warning_msg, a_parent_window, Void)
 		end
 
 indexing

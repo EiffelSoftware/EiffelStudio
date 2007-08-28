@@ -290,7 +290,6 @@ feature -- Actions
 		local
 			l_old_metric: EB_METRIC
 			l_new_metric: EB_METRIC
-			l_dlg: EB_ERROR_DIALOG
 			l_ok: BOOLEAN
 			l_message: STRING_32
 		do
@@ -327,9 +326,7 @@ feature -- Actions
 				set_is_up_to_date (False)
 				update_ui
 			else
-				create l_dlg.make_with_text (l_message + "%N" + metric_names.t_metric_not_saved)
-				l_dlg.set_buttons (<<metric_names.t_ok>>)
-				l_dlg.show_modal_to_window (metric_tool_window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_message + "%N" + metric_names.t_metric_not_saved, metric_tool_window, Void)
 			end
 		end
 

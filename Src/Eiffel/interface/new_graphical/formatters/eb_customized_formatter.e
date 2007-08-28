@@ -301,7 +301,7 @@ feature -- Setting
 			l_right_size_buffer: EV_PIXEL_BUFFER
 		do
 			create l_right_size_buffer.make_with_size (16, 16)
-			l_right_size_buffer.draw_pixel_buffer (a_pixel_buffer, create {EV_RECTANGLE}.make (0, 0, a_pixel_buffer.width, a_pixel_buffer.height))
+			l_right_size_buffer.draw_pixel_buffer_with_x_y (0, 0, a_pixel_buffer)
 			pixel_buffer_internal := l_right_size_buffer
 
 			pixmap := a_pixmap

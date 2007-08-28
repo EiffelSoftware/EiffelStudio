@@ -90,10 +90,9 @@ feature {NONE} -- User interface initialization
 			l_container.set_border_width (dialog_border_width)
 			l_main_container.extend (l_container)
 			build_dialog_interface (l_container)
-			dialog.show_actions.extend (agent adjust_dialog_button_widths)
 
  			create l_container
-			l_container.set_border_width (dialog_border_width)
+			l_container.set_border_width (dialog_button_border_width)
 			l_main_container.extend (l_container)
 			l_main_container.disable_item_expand (l_container)
 			l_container.extend (create_dialog_button_ribbon)
@@ -210,6 +209,14 @@ feature {NONE} -- Access
 			-- Dialog border width
 		do
 			Result := {ES_UI_CONSTANTS}.dialog_border
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	dialog_button_border_width: INTEGER
+			-- Dialog border width for buttons
+		do
+			Result := {ES_UI_CONSTANTS}.dialog_button_border
 		ensure
 			result_non_negative: Result >= 0
 		end
@@ -399,7 +406,7 @@ feature -- Basic operations
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= to_dialog
 		do
-			--adjust_dialog_button_widths
+			adjust_dialog_button_widths
 			if is_modal then
 				dialog.show_modal_to_window (a_window)
 			else
@@ -413,7 +420,7 @@ feature -- Basic operations
 			dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
 		end
 
-	show_on_development_window is
+	show_on_active_window is
 			-- Attempts to show the dialog parented to the last active window.
 		require
 			not_is_recycled: not is_recycled
@@ -437,7 +444,7 @@ feature -- Basic operations
 			if l_window /= Void then
 				show (l_window)
 			else
-				--adjust_dialog_button_widths
+				adjust_dialog_button_widths
 				dialog.show
 			end
 		ensure
@@ -487,6 +494,7 @@ feature {NONE} -- Basic operations
 			dialog_window_buttons_attached: dialog_window_buttons /= Void
 			not_dialog_window_buttons_is_empty: not dialog_window_buttons.is_empty
 		local
+			l_padding_button: EV_BUTTON
 			l_buttons: DS_HASH_TABLE_CURSOR [EV_BUTTON, INTEGER]
 			l_button: EV_BUTTON
 			l_min_width: INTEGER
@@ -494,16 +502,15 @@ feature {NONE} -- Basic operations
 		do
 			l_min_width := {ES_UI_CONSTANTS}.dialog_button_width
 
+				-- Retrieve padding for buttons
+			create l_padding_button
+			l_padding := l_padding_button.minimum_width
+
 				-- Determine minimum width
 			l_buttons := dialog_window_buttons.new_cursor
 			from l_buttons.start until l_buttons.after loop
 				l_button := l_buttons.item
 				check l_button_attached: l_button /= Void end
-
-				if l_padding = 0 then
-						-- Retrieve padding for buttons
-					l_padding := l_button.minimum_width - l_button.font.string_width (l_button.text)
-				end
 				l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding)
 				l_buttons.forth
 			end

@@ -162,7 +162,9 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			destroy_item
 			create l_wel_string.make (a_file_name)
 			item := c_gdip_load_image_from_file (gdi_plus_handle, l_wel_string.item, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			if l_result /= {WEL_GDIP_STATUS}.ok then
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			end
 		end
 
 	find_format: WEL_GDIP_IMAGE_FORMAT is

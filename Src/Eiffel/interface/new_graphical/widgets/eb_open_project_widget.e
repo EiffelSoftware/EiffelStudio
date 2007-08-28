@@ -910,22 +910,17 @@ feature {NONE} -- Actions
 			l_load: CONF_LOAD
 			l_system: CONF_SYSTEM
 			l_window: CONFIGURATION_WINDOW
-			l_wd: EB_WARNING_DIALOG
-			l_ed: EB_ERROR_DIALOG
 			l_row: like last_selected_row
 		do
 			create l_fact
 			create l_load.make (l_fact)
 			l_load.retrieve_configuration (selected_path)
 			if l_load.is_error then
-				create l_ed.make_with_text (l_load.last_error.out)
-				l_ed.set_buttons (<<interface_names.b_ok>>)
-				l_ed.show_modal_to_window (parent_window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, parent_window, Void)
 			else
 					-- display warnings
 				if l_load.is_warning then
-					create l_wd.make_with_text (l_load.last_warning_messages)
-					l_wd.show_modal_to_window (parent_window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_load.last_warning_messages, parent_window, Void)
 				end
 
 				l_system := l_load.last_system

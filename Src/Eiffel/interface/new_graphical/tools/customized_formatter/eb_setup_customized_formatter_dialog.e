@@ -192,7 +192,7 @@ feature{NONE} -- Actions
 			then
 				create l_warning.make_standard (interface_names.l_target_scope_customzied_formatter_not_saved, interface_names.l_discard_target_scope_customized_formatter, preferences.dialog_data.discard_target_scope_customized_formatter_string)
 				l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent on_confirmed_ok)
-				l_warning.show_on_development_window
+				l_warning.show_on_active_window
 			else
 				on_confirmed_ok
 			end

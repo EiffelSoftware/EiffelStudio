@@ -41,8 +41,7 @@ feature -- Basic operations
 					clu := clu_s.group --.parent_cluster
 				end
 			else
-				create explain_dialog.make_with_text (Interface_names.e_Diagram_hole)
-				explain_dialog.show_modal_to_window (tool.develop_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_Diagram_hole, tool.develop_window.window, Void)
 				warned := True
 			end
 			if clu /= Void then
@@ -51,8 +50,7 @@ feature -- Basic operations
 					tool.develop_window.tools.set_stone (clu_s)
 				end
 			elseif not warned then
-				create explain_dialog.make_with_text (Warning_messages.W_does_not_have_enclosing_cluster)
-				explain_dialog.show_modal_to_window (tool.develop_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Warning_messages.W_does_not_have_enclosing_cluster, tool.develop_window.window, Void)
 			end
 		end
 
@@ -171,10 +169,7 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	explain_dialog: EB_INFORMATION_DIALOG;
-			-- Dialog explaining how to use `Current'.
-
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

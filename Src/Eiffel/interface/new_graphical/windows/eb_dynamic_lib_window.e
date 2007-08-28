@@ -31,7 +31,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	PLATFORM_CONSTANTS
 
 	EB_FILE_DIALOG_CONSTANTS
@@ -426,13 +426,10 @@ feature -- Status setting
 
 	destroy is
 			-- Destroy `Current'.
-		local
-			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed and not confirmed then
-				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button (cd.OK).select_actions.extend (agent force_destroy)
-				cd.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					Warning_messages.w_Unsaved_changes, window, agent force_destroy, Void)
 			else
 				Precursor {EB_WINDOW}
 			end
@@ -497,13 +494,10 @@ feature {NONE} -- Implementation: File operations
 	open_def_file is
 			-- Let the user select a `.def' file and open it.
 			-- Cancelling is possible.
-		local
-			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed then
-				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button (cd.ok).select_actions.extend (agent ask_for_file_name (True, agent load_dynamic_lib))
-				cd.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					Warning_messages.w_Unsaved_changes, window, agent ask_for_file_name (True, agent load_dynamic_lib), Void)
 			else
 				ask_for_file_name (True, agent load_dynamic_lib)
 			end
@@ -514,16 +508,14 @@ feature {NONE} -- Implementation: File operations
 			-- Prompt the user for a file name otherwise.
 			-- Cancelling is possible.
 		local
-			qd: EB_QUESTION_DIALOG
 			pb: INTEGER
 		do
 			pb := export_definition_problem
 			if pb = 0 then
 				actually_save
 			else
-				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button (interface_names.b_yes).select_actions.extend (agent actually_save)
-				qd.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					Warning_messages.w_Save_invalid_definition, window, agent actually_save, Void)
 			end
 		end
 
@@ -531,29 +523,24 @@ feature {NONE} -- Implementation: File operations
 			-- Prompt the user for a file name and save the contents of `Current' to it.
 			-- Cancelling is possible.
 		local
-			qd: EB_QUESTION_DIALOG
 			pb: INTEGER
 		do
 			pb := export_definition_problem
 			if pb = 0 then
 				ask_for_file_name (False, agent actually_save)
 			else
-				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button (interface_names.b_yes).select_actions.extend (agent ask_for_file_name (False, agent actually_save))
-				qd.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					Warning_messages.w_Save_invalid_definition, window, agent ask_for_file_name (False, agent actually_save), Void)
 			end
 		end
 
 	new_def_file is
 			-- Prompt the user for a file name and create a new `.def' file.
 			-- Cancelling is possible.
-		local
-			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed then
-				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button (cd.ok).select_actions.extend (agent reset)
-				cd.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+					Warning_messages.w_Unsaved_changes, window, agent reset, Void)
 			else
 				reset
 			end

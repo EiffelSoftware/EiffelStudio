@@ -194,8 +194,6 @@ feature{NONE}  -- Actions
 					if l_service /= Void then
 						create l_error.make ("Please review the C Output Pane.")
 						l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
-					else
-						show_compilation_error_dialog
 					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
@@ -226,8 +224,6 @@ feature{NONE}  -- Actions
 			if l_service /= Void then
 				create l_error.make ("Could not launch C/C++ compiler.")
 				l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
-			else
-				show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
 			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)
@@ -301,42 +297,6 @@ feature{NONE} -- Implementation
 	do_not_open_console is
 			-- Empty agent.
 		do
-		end
-
-	show_compilation_error_dialog is
-			-- Dialog box showed when c compilation generates any error
-		local
-			dlg: EB_CONFIRMATION_DIALOG
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-			maps: EV_STOCK_PIXMAPS
-		do
-				-- C compilation failed.
-				-- Ask user whether open a console.
-			create actions.make (1, 2)
-			actions.put (agent do_not_open_console, 1)
-			actions.put (agent open_console, 2)
-			create dlg.make_with_text_and_actions (interface_names.l_c_compilation_produced_errors (working_directory), actions)
-			dlg.set_title (interface_names.t_finish_freezing_status)
-			create maps
-			dlg.set_icon_pixmap (maps.warning_pixmap)
-			dlg.set_pixmap (maps.warning_pixmap)
-			dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
-		end
-
-	show_compiler_launch_fail_dialog (win: EV_WINDOW) is
-			-- Dialog box showed when c compiler launch failed
-		local
-			dlg: EB_WARNING_DIALOG
-			--actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-			maps: EV_STOCK_PIXMAPS
-		do
-				-- C compilation launch failed.
-			create dlg.make_with_text (interface_names.l_c_compilation_manager_launch_failed (platform_constants.is_windows))
-			dlg.set_title (interface_names.t_finish_freezing_launch_error)
-			create maps
-			dlg.set_icon_pixmap (maps.warning_pixmap)
-			dlg.set_pixmap (maps.warning_pixmap)
-			dlg.show_modal_to_window (win)
 		end
 
 	c_compilation_successful_cell: CELL [BOOLEAN] is

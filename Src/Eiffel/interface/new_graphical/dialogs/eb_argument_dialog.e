@@ -178,16 +178,10 @@ feature {NONE} -- Actions
 
 	on_close is
 	 		-- Action to take when user presses 'Cancel' button.
-		local
-			dlg: EB_CONFIRMATION_DIALOG
 		do
 			if debugging_options_control.has_changed then
-				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
-				dlg.set_buttons_and_actions (
-					<<interface_names.b_yes, interface_names.b_no>>,
-					<<agent debugging_options_control.store_dbg_options, agent debugging_options_control.validate_and_store>>
-					)
-				dlg.show_modal_to_window (Current)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+					warning_messages.w_apply_debugger_profiles_before_continuing, Current, agent debugging_options_control.store_dbg_options, agent debugging_options_control.validate_and_store)
 			else
 				debugging_options_control.validate_and_store
 			end
@@ -229,13 +223,10 @@ feature {NONE} -- Implementation
 
 	execute_operation (op: PROCEDURE [ANY, TUPLE]) is
 			-- Execute operation `op'
-		local
-			dlg: EB_CONFIRMATION_DIALOG
 		do
 			if debugging_options_control.has_changed then
-				create dlg.make_with_text (warning_messages.w_apply_debugger_profiles_before_continuing)
-				dlg.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>,
-						<<
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt_with_cancel (
+					warning_messages.w_apply_debugger_profiles_before_continuing, Current,
 							agent (a_op: PROCEDURE [ANY, TUPLE])
 								do
 									debugging_options_control.apply_changes
@@ -247,11 +238,8 @@ feature {NONE} -- Implementation
 									debugging_options_control.reset_changes
 									a_op.call (Void)
 								end (op),
-							agent do_nothing
-						>>
+							Void
 						)
-
-				dlg.show_modal_to_window (Current)
 			else
 				debugging_options_control.validate_and_store
 				op.call (Void)

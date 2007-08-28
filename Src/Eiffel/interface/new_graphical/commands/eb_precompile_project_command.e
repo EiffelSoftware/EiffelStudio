@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			start_c_compilation := True
 			if is_dotnet_project then
 				create l_confirm.make_standard (warning_messages.w_finalize_precompile, interface_names.l_discard_finalize_precompile_dialog, preferences.dialog_data.confirm_finalize_precompile_string)
-				l_confirm.show_on_development_window
+				l_confirm.show_on_active_window
 			else
 				confirm_finalization_and_compile (False)
 			end

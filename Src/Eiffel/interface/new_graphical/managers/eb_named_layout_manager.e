@@ -105,8 +105,6 @@ feature -- Command
 			l_r: BOOLEAN
 			l_pointer_style: EV_POINTER_STYLE
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
-
-			l_err: EB_ERROR_DIALOG
 		do
 			l_pointer_style := development_window.window.pointer_style
 			create l_stock_pixmaps
@@ -115,9 +113,8 @@ feature -- Command
 			l_fn := file_name_of (a_name)
 			l_r := development_window.docking_manager.open_tools_config (l_fn)
 			if not l_r then
-				-- If opening failed, we open orignal layout before opening.		
-				create l_err.make_with_text (interface_names.l_open_layout_error)
-				l_err.show_modal_to_window (development_window.window)
+				-- If opening failed, we open orignal layout before opening.
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (interface_names.l_open_layout_error, development_window.window, Void)
 				development_window.restore_standard_tools_docking_layout
 			end
 

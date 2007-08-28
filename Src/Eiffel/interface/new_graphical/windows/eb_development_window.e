@@ -712,8 +712,6 @@ feature -- Resource Update
 			-- Perform any pre-save operations with `a_editor'
 		require
 			a_editor_not_void: a_editor /= Void
-		local
-			dial: EB_CONFIRMATION_DIALOG
 		do
 				-- Remove trailing blanks.
 			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
@@ -724,8 +722,8 @@ feature -- Resource Update
 			a_editor.refresh_now
 
 			if a_editor.open_backup then
-				dial := ui.save_backup_dialog
-				dial.show_modal_to_window (window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					Warning_messages.w_save_backup, window, agent continue_save, agent cancel_save)
 			else
 				check_passed := True
 			end

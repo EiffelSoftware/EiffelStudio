@@ -30,18 +30,6 @@ feature -- Query
 			-- Different from EB_EDITORS_MANAEGER.current_editor
 			-- Result is not only class text editors used by end users, but also maybe is the EB_SMART_EDITOR in Feature Relation Tool or Class Tool...
 
-	save_backup_dialog: EB_CONFIRMATION_DIALOG is
-			-- Save backup_dialog
-		do
-			create Result.make_with_text (develop_window.Warning_messages.w_save_backup)
-			Result.set_buttons_and_actions(<<develop_window.interface_names.b_continue, develop_window.interface_names.b_cancel>>, <<agent develop_window.continue_save, agent develop_window.cancel_save>>)
-			Result.set_default_push_button(Result.button(develop_window.interface_names.b_continue))
-			Result.set_default_cancel_button(Result.button(develop_window.interface_names.b_cancel))
-			Result.set_title (develop_window.interface_names.t_save_backup)
-		ensure
-			save_backup_dialog_attached: Result /= Void
-		end
-
 feature -- Settings
 
 	set_current_editor (a_editor: like current_editor) is

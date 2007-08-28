@@ -294,7 +294,6 @@ feature -- Actions
 		local
 			l_selected_metrics: LIST [STRING]
 			l_msg: STRING_GENERAL
-			l_error_dialog: EB_ERROR_DIALOG
 			l_file_name: STRING
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_archive_tbl: HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]
@@ -303,9 +302,7 @@ feature -- Actions
 			l_selected_metrics := metric_selector.selected_metrics
 			l_msg := check_selected_metrics (l_selected_metrics)
 			if l_msg /= Void then
-				create l_error_dialog.make_with_text (l_msg)
-				l_error_dialog.set_buttons (<<metric_names.t_ok>>)
-				l_error_dialog.show_modal_to_window (metric_tool_window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_msg, metric_tool_window, Void)
 			else
 				l_file_name := new_archive_file_name_text.text
 				create {ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]} l_archive.make (l_selected_metrics.count)
@@ -677,7 +674,6 @@ feature {NONE} -- Implementation
 			target_file: STRING
 			directory: DIRECTORY
 			file: PLAIN_TEXT_FILE
-			error_dialog: EB_INFORMATION_DIALOG
 		do
 			create directory.make (metric_manager.userdefined_metrics_path)
 			if not directory.exists then
@@ -688,8 +684,8 @@ feature {NONE} -- Implementation
 			create file.make (file_name)
 
 			if file.exists then
-				create confirm_dialog.make_with_text_and_actions (metric_names.err_archive_file_name_exists (file_name), actions_array)
-				confirm_dialog.show_modal_to_window (metric_tool_window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
+					metric_names.err_archive_file_name_exists (file_name), metric_tool_window, agent overwrite_action, agent abort_overwrite_action)
 			end
 			if not file.exists or overwrite then
 				target_file := "file://" + file_name
@@ -697,11 +693,11 @@ feature {NONE} -- Implementation
 				transfer_manager_builder.wipe_out
 				transfer_manager_builder.add_transaction (a_url_address, target_file)
 				if not transfer_manager_builder.last_added_source_correct then
-					create error_dialog.make_with_text (metric_names.err_unable_to_read_from_url (a_url_address))
-					error_dialog.show_modal_to_window (metric_tool_window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
+						metric_names.err_unable_to_read_from_url (a_url_address), metric_tool_window, Void)
 				elseif not transfer_manager_builder.last_added_target_correct then
-					create error_dialog.make_with_text (metric_names.err_unable_to_load_archive_file (file_name))
-					error_dialog.show_modal_to_window (metric_tool_window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
+						metric_names.err_unable_to_load_archive_file (file_name), metric_tool_window, Void)
 				else
 					transfer_manager_builder.build_manager
 					metric_tool_window.set_pointer_style (metric_tool.develop_window.Wait_cursor)
@@ -710,8 +706,8 @@ feature {NONE} -- Implementation
 					if transfer_manager_builder.transfer_succeeded then
 						Result := file_name
 					else
-						create error_dialog.make_with_text (metric_names.err_transfer_file (transfer_manager_builder.error_reason))
-						error_dialog.show_modal_to_window (metric_tool_window)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
+							metric_names.err_transfer_file (transfer_manager_builder.error_reason), metric_tool_window, Void)
 					end
 				end
 			end
@@ -745,19 +741,6 @@ feature -- Overwritting
 
 	overwrite: BOOLEAN
 		-- Overwrite file?
-
-	confirm_dialog: EB_CONFIRMATION_DIALOG
-			-- Dialog to confirm file overwritting.
-
-	actions_array: ARRAY [PROCEDURE [ANY, TUPLE]] is
-			-- Actions to be performed for `confirm_dialog'.
-		do
-			create Result.make (1, 2)
-			Result.put (agent overwrite_action, 1)
-			Result.put (agent abort_overwrite_action, 2)
-		ensure
-			filled_array: Result @ 1 /= Void and Result @ 2 /= Void
-		end
 
 	overwrite_action is
 			-- Action to be performed on clicking on `yes_button' in `confirm_dialog'.

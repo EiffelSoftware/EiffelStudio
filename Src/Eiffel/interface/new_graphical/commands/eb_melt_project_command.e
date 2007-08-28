@@ -311,7 +311,7 @@ feature {NONE} -- Execution
 			end
 			if Eiffel_project.is_read_only then
 				create l_warning.make (warning_messages.w_cannot_compile, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_development_window
+				l_warning.show_on_active_window
 			elseif Eiffel_project.initialized then
 				if not_saved then
 					create l_classes.make_default
@@ -320,7 +320,7 @@ feature {NONE} -- Execution
 					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.yes_button, agent save_and_compile)
 					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.no_button, agent compile_no_save)
 					l_save_confirm.set_button_action (l_save_confirm.dialog_buttons.cancel_button, agent set_run_after_melt (False))
-					l_save_confirm.show_on_development_window
+					l_save_confirm.show_on_active_window
 				else
 					compile_no_save
 				end
@@ -363,7 +363,7 @@ feature {NONE} -- Execution
 				create l_confirm.make_standard (interface_names.e_exec_recompile, "", preferences.dialog_data.stop_execution_when_compiling_string)
 				l_confirm.set_title (interface_names.t_debugger_question)
 				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent compile_and_run)
-				l_confirm.show_on_development_window
+				l_confirm.show_on_active_window
 			end
 		end
 

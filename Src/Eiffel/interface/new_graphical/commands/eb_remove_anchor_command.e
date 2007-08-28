@@ -26,8 +26,7 @@ feature -- Basic operations
 	execute is
 			-- Perform operation.
 		do
-			create explain_dialog.make_with_text (Interface_names.e_diagram_remove_anchor)
-			explain_dialog.show_modal_to_window (tool.develop_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_diagram_remove_anchor, tool.develop_window.window, Void)
 		end
 
 	execute_with_class (a_stone: CLASSI_FIGURE_STONE) is
@@ -109,10 +108,7 @@ feature -- Basic operations
 			Result.drop_actions.extend (agent execute_with_cluster)
 		end
 
-feature {NONE} -- Implementation
-
-	explain_dialog: EB_INFORMATION_DIALOG
-			-- Dialog explaining how to use `Current'.
+feature {NONE} -- Implementation.
 
 	pixmap: EV_PIXMAP is
 			-- Pixmaps representing the command.

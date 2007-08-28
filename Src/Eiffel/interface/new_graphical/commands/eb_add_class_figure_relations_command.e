@@ -68,7 +68,6 @@ feature -- Basic operations
 			l_class_list: ARRAYED_LIST [ES_CLASS]
 			l_class: ES_CLASS
 			l_class_added: BOOLEAN
-			explain_dialog: EB_INFORMATION_DIALOG
 		do
 			if is_sensitive then
 					-- Show relations for selected classes.
@@ -93,8 +92,7 @@ feature -- Basic operations
 						calculate_relations_for_classes (l_class_list)
 					end
 				else
-					create explain_dialog.make_with_text (Interface_names.e_Diagram_add_class_figure_relations)
-					explain_dialog.show_modal_to_window (tool.develop_window.window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_Diagram_add_class_figure_relations, tool.develop_window.window, Void)
 				end
 			end
 		end

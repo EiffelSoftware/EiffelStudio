@@ -55,7 +55,7 @@ feature -- Basic operations
 			if Workbench.is_compiling then
 				already_confirmed := True
 				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_development_window
+				l_warning.show_on_active_window
 			else
 				if process_manager.is_process_running then
 					process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
@@ -84,7 +84,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 				already_confirmed := True
 				create l_confirm.make_standard (interface_names.l_exit_application, "", preferences.dialog_data.confirm_on_exit_string)
 				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent exit_application)
-				l_confirm.show_on_development_window
+				l_confirm.show_on_active_window
 			else
 				exit_application
 			end
@@ -128,7 +128,7 @@ feature {NONE} -- Callbacks
 			if metric_manager.has_error then
 					-- Metric error
 				create l_error.make_standard (metric_manager.last_error.message)
-				l_error.show_on_development_window
+				l_error.show_on_active_window
 			end
 
 				-- Store customized formatters
@@ -167,7 +167,7 @@ feature {NONE} -- Callbacks
 	confirm_and_exit is
 			-- Ask to save files, to confirm if necessary and exit.
 		local
-			l_exit_save_prompt: ES_DISCARDABLE_EXIT_SAVE_FILES_PROMPT
+			l_exit_save_prompt: ES_EXIT_SAVE_FILES_PROMPT
 			l_list: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if window_manager.has_modified_windows then
@@ -176,7 +176,7 @@ feature {NONE} -- Callbacks
 				create l_list.make_default
 				window_manager.all_modified_classes.do_all (agent l_list.force_last)
 				create l_exit_save_prompt.make (l_list)
-				l_exit_save_prompt.show_on_development_window
+				l_exit_save_prompt.show_on_active_window
 				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
 					save_and_exit
 				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then
@@ -200,7 +200,7 @@ feature {NONE} -- Callbacks
 			else
 					-- Was unable to save all, so do not exit
 				create l_error.make_standard (warning_messages.w_could_not_save_all)
-				l_error.show_on_development_window
+				l_error.show_on_active_window
 			end
 		end
 

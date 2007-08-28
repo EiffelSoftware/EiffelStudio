@@ -34,13 +34,10 @@ feature -- Basic operations
 
 	execute is
 			-- Display `confirmation' and reset current view if OK pressed.
-		local
-			dial: EB_CONFIRMATION_DIALOG
 		do
 			if is_sensitive then
-				dial := confirmation
-				dial.disable_user_resize
-				dial.show_modal_to_window (tool.develop_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+					Interface_names.l_Diagram_reset_view_cmd, tool.develop_window.window, agent ok_pressed, Void)
 			end
 		end
 
@@ -73,14 +70,6 @@ feature {NONE} -- Implementation
 	name: STRING is "Reset_view"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-
-	confirmation: EB_CONFIRMATION_DIALOG is
-			-- Associated widget.
-		do
-			create Result.make_with_text_and_actions (
-				Interface_names.l_Diagram_reset_view_cmd,
-				<<agent ok_pressed>>)
-		end
 
 feature {NONE} -- Events
 

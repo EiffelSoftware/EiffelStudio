@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_file: FILE_NAME
-			l_warn: EV_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -39,8 +38,7 @@ feature {NONE} -- Initialization
 				create raw_buffer
 				raw_buffer.set_with_named_file (l_file)
 			else
-				create l_warn.make_with_text ("Cannot read pixmap file:%N" + l_file + ".%NPlease make sure the installation is not corrupted.")
-				l_warn.show
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt ("Cannot read pixmap file:%N" + l_file + ".%N%NPlease make sure the installation is not corrupted.", Void, Void)
 
 					-- Fail safe, use blank pixmap
 				create raw_buffer.make_with_size ((33 * 16) + 1,(18 * 16) + 1)

@@ -22,7 +22,7 @@ inherit
 			build_discardable_check_interface,
 			on_close_requested,
 			show,
-			show_on_development_window
+			show_on_active_window
 		end
 
 feature {NONE} -- Initialization
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			preference_name := a_pref_name
 			make_prompt (a_text, a_buttons, a_default)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = a_default
 			buttons_set: buttons = a_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 		do
 			make (a_text, standard_buttons, standard_default_button, a_discard_message, standard_discard_button, a_pref_name)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)
@@ -167,7 +167,7 @@ feature {NONE} -- Access
 						-- No preference found, show error dialog
 					create l_error.make_standard ("There is no internal preference for " + full_preference_name + "!")
 					l_error.set_sub_title ("Missing preference")
-					l_error.show_on_development_window
+					l_error.show_on_active_window
 				end
 
 				l_cache.put (Result)
@@ -260,7 +260,7 @@ feature -- Basic operations
 			end
 		end
 
-	show_on_development_window is
+	show_on_active_window is
 			-- Attempts to show the dialog parented to the last active window.
 		do
 			if not is_discarded then

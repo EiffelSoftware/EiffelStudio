@@ -18,7 +18,33 @@ inherit
 
 create
 	make,
-	make_standard
+	make_standard,
+	make_standard_with_cancel
+
+feature {NONE} -- Initialization
+
+	make_standard_with_cancel (a_text: like text; a_discard_message: like discard_message; a_pref_name: like preference_name)
+			-- Initialize a discardable warning prompt, with a cancel button, using required information.
+			--
+			-- `a_text': The text to display on the prompt.
+			-- `a_discard_message': A message to inform the user what the discard option will do as a default.
+			-- `a_pref_name': Name of preference resource.
+		require
+			a_text_attached: a_text /= Void
+			a_discard_message_attached: a_discard_message /= Void
+			a_pref_name_attached: a_pref_name /= Void
+			not_a_pref_name_is_empty: not a_pref_name.is_empty
+		do
+			is_standard_prompt_with_cancel := True
+			make_standard (a_text, a_discard_message, a_pref_name)
+		ensure
+			text_set: format_text (a_text).is_equal (text)
+			default_button_set: default_button = standard_default_button
+			buttons_set: buttons = standard_buttons
+			discard_message_set: a_discard_message.is_equal (discard_message)
+			discard_button_set: discard_button = standard_discard_button
+			preference_name_set: a_pref_name.is_equal (preference_name)
+		end
 
 feature {NONE} -- User interface initialization
 
@@ -43,13 +69,21 @@ feature {NONE} -- Access
 	standard_buttons: DS_HASH_SET [INTEGER]
 			-- Standard set of buttons for a current prompt
 		do
-			Result := dialog_buttons.ok_cancel_buttons
+			if is_standard_prompt_with_cancel then
+				Result := dialog_buttons.ok_cancel_buttons
+			else
+				Result := dialog_buttons.ok_buttons
+			end
 		end
 
 	standard_default_button: INTEGER
 			-- Standard buttons `standard_buttons' default button
 		do
-			Result := dialog_buttons.cancel_button
+			if is_standard_prompt_with_cancel then
+				Result := dialog_buttons.cancel_button
+			else
+				Result := dialog_buttons.ok_button
+			end
 		end
 
 	standard_discard_button: INTEGER
@@ -57,6 +91,11 @@ feature {NONE} -- Access
 		do
 			Result := dialog_buttons.ok_button
 		end
+
+feature {NONE} -- Status report
+
+	is_standard_prompt_with_cancel: BOOLEAN
+			-- Indicates if a cancel button should be present
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

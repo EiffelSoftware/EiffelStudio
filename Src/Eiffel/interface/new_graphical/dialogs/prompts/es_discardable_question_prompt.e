@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			is_standard_prompt_with_cancel := True
 			make_standard (a_text, a_discard_message, a_pref_name)
 		ensure
-			text_set: a_text.is_equal (text)
+			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)

@@ -69,11 +69,9 @@ feature
 		end
 
 	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
-		local
-			dlg: EB_CONFIRMATION_DIALOG
 		do
-			create dlg.make_with_text_and_actions (msg, <<a_action>>)
-			dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
+				msg, Void, a_action, Void)
 		end
 
 	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
@@ -90,7 +88,7 @@ feature
 			end
 			if l_question /= Void then
 				l_question.set_button_action (l_question.dialog_buttons.yes_button, a_action)
-				l_question.show_on_development_window
+				l_question.show_on_active_window
 			end
 		end
 

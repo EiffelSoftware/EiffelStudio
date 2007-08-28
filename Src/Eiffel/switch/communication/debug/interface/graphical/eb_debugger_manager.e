@@ -1648,10 +1648,13 @@ feature -- Debugging events
 			--| Fixme: we might try to prevent debugging tools to refresh before poping up this dialog...				
 			ev_application.do_once_on_idle (agent
 					local
-						cd: EB_CONFIRMATION_DIALOG
+						l_warning: ES_WARNING_PROMPT
 					do
-						create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent resume_application>>)
-						cd.show_modal_to_window (debugging_window.window)
+						create l_warning.make_standard_with_cancel (Warning_messages.w_Overflow_detected)
+						l_warning.set_button_text (l_warning.dialog_buttons.ok_button, interface_names.b_ok)
+						l_warning.set_button_text (l_warning.dialog_buttons.cancel_button, interface_names.b_ignore)
+						l_warning.set_button_action (l_warning.dialog_buttons.cancel_button, agent resume_application)
+						l_warning.show_on_active_window
 					end
 				)
 		end

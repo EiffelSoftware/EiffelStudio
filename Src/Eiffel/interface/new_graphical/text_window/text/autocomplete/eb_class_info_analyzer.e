@@ -784,6 +784,12 @@ feature {NONE} -- Implementation (`type_from')
 
 	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
 			-- is "create" preceeding current position ?
+		do
+			Result := locate_create_before_position (a_line, a_token) /= Void
+		end
+
+	locate_create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): EDITOR_TOKEN is
+			-- Attempts to locate "create" before token `a_token'
 		local
 			line: EDITOR_LINE
 			token: EDITOR_TOKEN
@@ -796,12 +802,14 @@ feature {NONE} -- Implementation (`type_from')
 			if not token_image_is_same_as_word (current_token, closing_brace) then
 				go_to_previous_token
 			end
-			Result := token_image_is_same_as_word (current_token, Create_word)
-			if not Result and then token_image_is_same_as_word (current_token, closing_brace) then
+			if token_image_is_same_as_word (current_token, Create_word) then
+				Result := current_token
+			end
+			if Result = Void and then token_image_is_same_as_word (current_token, closing_brace) then
 				from
 					par_cnt := 1
 				until
-					par_cnt = 0 or else current_token = Void
+					par_cnt = 0 or else current_token = Void or else Result /= Void
 				loop
 					go_to_previous_token
 					if token_image_is_same_as_word (current_token, Opening_brace) then
@@ -815,7 +823,9 @@ feature {NONE} -- Implementation (`type_from')
 				if not error then
 					go_to_previous_token
 					go_to_previous_token
-					Result := token_image_is_same_as_word (current_token, Create_word)
+					if token_image_is_same_as_word (current_token, create_word) then
+						Result := current_token
+					end
 				end
 			end
 			current_token := token

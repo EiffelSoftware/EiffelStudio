@@ -407,7 +407,7 @@ feature -- Constants
 
 	title_bar_height: INTEGER is
 			-- Size of zone's title bar.
-		do
+		once
 			Result := tool_bar_font.height * 3 // 2 + 2
 		end
 
@@ -450,6 +450,8 @@ feature -- Constants
 
 	Tool_bar_size: INTEGER is
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
+			-- Note: SD_WIDGET_TOOL_BAR's size may bigger than this size when font size is very small.
+			-- For example, on Linux Desktop when using font Scans 8.
 		once
 			Result := tool_bar_font.height + 2 * Tool_bar_border_width
 		end

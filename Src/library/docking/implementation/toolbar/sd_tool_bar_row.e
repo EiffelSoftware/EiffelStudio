@@ -64,10 +64,14 @@ feature -- Command
 				end
 				set_item_width (a_zone.tool_bar, internal_shared.tool_bar_size)
 			else
-				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
-					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
-				end
-				set_item_height (a_zone.tool_bar, internal_shared.tool_bar_size)
+				-- We can't use `internal_shared.tool_bar_size' as tool bar's height.  And we don't need care about it since `a_zone.tool_bar' calculated correctly itself.
+				-- Otherwise when desktop system font is very small (ie, Scans 8 on Linux Desktop),  `SD_WIDGET_TOOL_BAR.height' may larger than `internal_shared.tool_bar_size'.
+				-- If we force to use `internal_shared.tool_bar_size', it will lead to notebook tab cut-off problem after just shown a SD_WIDGET_TOOL_BAR.
+--				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
+--					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
+--				end
+
+				set_item_height (a_zone.tool_bar, a_zone.tool_bar.minimum_height )
 			end
 
 			set_item_position_fixed (a_zone.tool_bar, 0, 0)

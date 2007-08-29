@@ -457,6 +457,7 @@ feature {NONE} -- Implementation
 			gone_back_two: BOOLEAN
 			token: like a_token
 			l_swapped: BOOLEAN
+			l_create_token: EDITOR_TOKEN
 		do
 			token := a_token
 			if token /= Void then
@@ -478,6 +479,10 @@ feature {NONE} -- Implementation
 						if token_image_is_in_array (token, Feature_call_separators) then
 								-- Token is dot or tilda					
 							is_create := create_before_position (current_line, prev_token)
+							if is_create then
+									-- Fetch create token, used later
+								l_create_token := locate_create_before_position (current_line, prev_token)
+							end
 							is_static := static_call_before_position (current_line, prev_token)
 							is_parenthesized := parenthesized_before_position (current_line, prev_token)
 						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
@@ -530,9 +535,19 @@ feature {NONE} -- Implementation
 						if current_feature_as = Void then
 							current_feature_as := feature_containing (prev_token, current_line)
 						end
-						type := type_from (prev_token, current_line)
-						if type /= Void then
-							Result := create_class_list_and_insert_associated_classes_from_type (type)
+						if prev_token /= Void then
+							if is_parenthesized then
+								if l_create_token /= Void then
+									type := type_from (l_create_token, current_line)
+									is_create := False
+								end
+							else
+								type := type_from (prev_token, current_line)
+							end
+
+							if type /= Void then
+								Result := create_class_list_and_insert_associated_classes_from_type (type)
+							end
 						end
 					end
 					last_type := type

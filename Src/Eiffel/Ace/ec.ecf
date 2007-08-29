@@ -369,7 +369,7 @@
 			</file_rule>
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
-		<override name="graphical_overrides" location="R:\development61_eth\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
+		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 	</target>
 	<target name="bench_unix" extends="bench">

@@ -340,7 +340,7 @@ feature -- Command
 				create l_go_to_previous_error_cmd.make (l_ear_commander)
 				develop_window.commands.set_go_to_previous_error_command (l_go_to_previous_error_cmd)
 				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_previous_error_command)
-				
+
 				create l_go_to_next_error_cmd.make (l_ear_commander)
 				develop_window.commands.set_go_to_next_error_command (l_go_to_next_error_cmd)
 				develop_window.commands.toolbarable_commands.extend (develop_window.commands.go_to_next_error_command)
@@ -658,8 +658,6 @@ feature -- Command
 	prepare_editor_tool is
 			-- Build address toolbar and docking manager.
 		local
-			l_icons: EB_SD_ICONS
-			l_shared: SD_SHARED
 			l_editors_widget_for_docking: EV_HORIZONTAL_BOX
 			l_editors_widget: EV_VERTICAL_BOX
 		do
@@ -669,9 +667,6 @@ feature -- Command
 			develop_window.ui.set_editors_widget (l_editors_widget)
 
 			l_editors_widget.extend (l_editors_widget_for_docking)
-			create l_icons.make
-			create l_shared
-			l_shared.set_icons (l_icons)
 		end
 
 	build_vision_window is

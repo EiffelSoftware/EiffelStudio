@@ -753,7 +753,7 @@ feature {NONE} -- Initialization
 
 				if l_member.is_static then
 					if l_member.is_attribute then
-						if l_return_type.associated_class.is_enum then
+						if l_member.is_literal and l_return_type.associated_class.is_enum then
 							l_ext.set_type ({SHARED_IL_CONSTANTS}.Enum_field_type)
 						else
 							l_ext.set_type ({SHARED_IL_CONSTANTS}.Static_field_type)

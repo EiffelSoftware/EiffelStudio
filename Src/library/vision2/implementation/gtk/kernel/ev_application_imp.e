@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 					-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
 					-- then the display will be slow anyway so the usage of this function will remain the same.
 				is_display_remote := l_image = default_pointer
-				{EV_GTK_EXTERNALS}.object_unref (l_image)
-
-
+				if not is_display_remote then
+					{EV_GTK_EXTERNALS}.object_unref (l_image)
+				end
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")

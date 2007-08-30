@@ -35,13 +35,13 @@ feature {NONE} -- Initlization
 			not_void: a_content /= Void
 		do
 			default_create
-			internal_content := a_content
-			internal_docking_manager := internal_content.docking_manager
-			extend (a_content)
-
 			-- Not breaking the invariant
 			create internal_shared_not_used
 			create internal_shared
+
+			internal_content := a_content
+			internal_docking_manager := internal_content.docking_manager
+			extend (a_content)
 		ensure
 			set: internal_content = a_content
 		end

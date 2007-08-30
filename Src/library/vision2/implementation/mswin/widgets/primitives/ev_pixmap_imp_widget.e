@@ -53,7 +53,7 @@ inherit
 		redefine
 			interface, on_parented, on_orphaned, set_size, destroy,
 			translate_coordinates, on_middle_button_down,
-			on_left_button_down, on_right_button_down
+			on_left_button_down, on_right_button_down, on_size
 		end
 
 	EV_WEL_CONTROL_WINDOW
@@ -545,6 +545,14 @@ feature {NONE} -- Implementation
 				end
 				l_background_brush.delete
 			end
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER_32)
+			-- Wm_size message
+		do
+				-- We want the widget to fully redraw on resize.
+			update_display
+			Precursor (size_type, a_width, a_height)
 		end
 
 feature {NONE} -- Implementation

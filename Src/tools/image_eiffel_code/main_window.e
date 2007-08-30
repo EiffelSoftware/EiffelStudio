@@ -23,6 +23,13 @@ inherit
 			default_create, copy
 		end
 
+	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	default_create
 
@@ -53,15 +60,19 @@ feature {NONE} -- Initialization
 			set_title (Window_title)
 			set_icon_pixmap ((create {SUN_ICON}.make).to_pixmap)
 
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), true, false, false)
+			tool_bar.file_drop_actions.extend (agent on_file_dropped)
+			class_name_field.file_drop_actions.extend (agent on_file_dropped)
+			text_panel.file_drop_actions.extend (agent on_file_dropped)
+
+			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, False, False)
 			l_acc.actions.extend (agent select_all)
 			accelerators.extend (l_acc)
 
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s), true, false, false)
+			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s), True, False, False)
 			l_acc.actions.extend (agent save)
 			accelerators.extend (l_acc)
 
-			saved := true
+			saved := True
 			toggle_save
 
 			default_title := title
@@ -109,15 +120,43 @@ feature {NONE} -- Implementation
 			-- Create and populate `main_container'.
 		require
 			main_container_not_yet_created: main_container = Void
+		local
+			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 		do
 			create main_container
-
-			main_container.extend (tool_bar)
-			main_container.disable_item_expand (tool_bar)
+			create hb
+			hb.set_padding_width (default_padding_size)
+			hb.extend (tool_bar)
+			hb.disable_item_expand (tool_bar)
+			create class_name_field
+			class_name_field.return_actions.extend (agent
+					local
+						t: STRING
+					do
+						if class_name /= Void then
+							t := class_name_field.text
+							if t /= Void and then not t.is_equal (class_name) then
+								class_name := t.as_string_8.as_upper
+								build_file (origin_pixmap)
+								text_panel.set_text (class_file)
+							end
+						end
+					end
+				)
+			create vb
+			vb.set_border_width (small_border_size)
+			vb.extend (create {EV_CELL})
+			vb.extend (class_name_field)
+			vb.extend (create {EV_CELL})
+			vb.disable_item_expand (class_name_field)
+			hb.extend (vb)
+			main_container.extend (hb)
+			main_container.disable_item_expand (hb)
 
 			create text_panel
 			text_panel.set_font (create {EV_FONT}.make_with_values ({EV_FONT_CONSTANTS}.family_screen, {EV_FONT_CONSTANTS}.weight_regular, {EV_FONT_CONSTANTS}.shape_regular, 12))
-			text_panel.change_actions.extend (agent set_change (true))
+			text_panel.change_actions.extend (agent set_change (True))
 			main_container.extend (text_panel)
 		ensure
 			main_container_created: main_container /= Void
@@ -129,9 +168,11 @@ feature {NONE} -- Implementation
 			tool_bar_item: EV_TOOL_BAR_BUTTON
 			l_color: EV_COLOR
 			l_save_icon: SAVE_ICON
+			l_copy_to_clipboard_icon: COPY_TO_CLIPBOARD_ICON
 			l_image_icon: IMAGE_ICON
 		do
 			create l_save_icon.make_top_to_bottom (l_color)
+			create l_copy_to_clipboard_icon.make
 
 			create l_image_icon.make_top_to_bottom (Void)
 			create tool_bar
@@ -147,6 +188,11 @@ feature {NONE} -- Implementation
 			save_button.set_pixmap (l_save_icon)
 			save_button.select_actions.extend (agent save)
 			tool_bar.extend (save_button)
+
+			create copy_to_clipboard_button.make_with_text ("Copy")
+			copy_to_clipboard_button.set_pixmap (l_copy_to_clipboard_icon.to_pixmap)
+			copy_to_clipboard_button.select_actions.extend (agent copy_to_clipboard)
+			tool_bar.extend (copy_to_clipboard_button)
 		end
 
 	open_file_dialog: EV_FILE_OPEN_DIALOG
@@ -155,11 +201,16 @@ feature {NONE} -- Implementation
 	save_file_dialog: EV_FILE_SAVE_DIALOG
 			-- Dialog for saving classes
 
+	class_name_field: EV_TEXT_FIELD
+
 	text_panel: EV_TEXT
 			-- Text panel to present generated class.
 
 	save_button: EV_TOOL_BAR_BUTTON
 			-- Tool bar button for saving a class
+
+	copy_to_clipboard_button: EV_TOOL_BAR_BUTTON
+			-- Tool bar button to copy to clipboard
 
 	changed: BOOLEAN
 			-- Text in `text_panel' changed?
@@ -167,9 +218,15 @@ feature {NONE} -- Implementation
 	saved: BOOLEAN
 			-- Current class text saved?
 
+	on_file_dropped (fns: LIST [STRING_32]) is
+		do
+			if fns.count = 1 then
+				open_image_file (Void, fns.first.to_string_8)
+			end
+		end
+
 	open is
 			-- Execute when push open button.
-		local
 		do
 			create open_file_dialog.make_with_title ("Open Image")
 			open_file_dialog.open_actions.extend (agent open_image)
@@ -178,7 +235,7 @@ feature {NONE} -- Implementation
 			open_file_dialog.filters.extend (["*.jpg","JPG Image (*.jpg)"])
 			open_file_dialog.filters.extend (["*.gif","GIF Image (*.gif)"])
 			open_file_dialog.filters.extend (["*.*","All files"])
-			open_file_dialog.show_modal_to_window (current)
+			open_file_dialog.show_modal_to_window (Current)
 		end
 
 	save is
@@ -191,7 +248,7 @@ feature {NONE} -- Implementation
 					create save_file_dialog.make_with_title ("Save created class")
 					save_file_dialog.filters.extend (["*.e", "Eiffel class (*.e)"])
 					save_file_dialog.filters.extend (["*", "All files (*.*)"])
-					save_file_dialog.set_file_name (file_name.as_lower + ".e")
+					save_file_dialog.set_file_name (class_name.as_lower + ".e")
 					save_file_dialog.save_actions.extend (agent save_file)
 					save_file_dialog.show_modal_to_window (Current)
 				else
@@ -199,42 +256,62 @@ feature {NONE} -- Implementation
 						create l_file.make_open_write (file_path)
 						l_file.put_string (class_file)
 						l_file.close
-						set_change (false)
+						set_change (False)
 					end
 				end
 			end
 		end
 
+	copy_to_clipboard is
+			-- copy to clipboard
+		do
+			ev_application.clipboard.set_text (class_file)
+		end
+
 	open_image is
-			-- Excute when an image is selected in open dialog.
+			-- Execute when an image is selected in open dialog.
+		do
+			open_image_file (open_file_dialog.file_title, open_file_dialog.file_name)
+		end
+
+	open_image_file	(sfn: STRING; fn: STRING) is
+			-- Execute when an image is opened
+			-- if `sfn' is Void retrieve the short file name from `fn'.
 		local
-			l_pixmap: EV_PIXEL_BUFFER
 			prompt: EV_WARNING_DIALOG
 			subfix: STRING
 		do
-			file_name := open_file_dialog.file_title
+			if sfn = Void then
+				create file_name.make_from_string (fn.substring (fn.last_index_of (Operating_environment.directory_separator, fn.count) + 1, fn.count))
+			else
+				create file_name.make_from_string (sfn)
+			end
 			if file_name.has ('.') then
+				set_busy_pointer
 				subfix := file_name.as_lower
 				subfix.keep_tail (file_name.count - file_name.last_index_of ('.', file_name.count))
 
-				create l_pixmap
-				l_pixmap.set_with_named_file (open_file_dialog.file_name)
+				create origin_pixmap
+				origin_pixmap.set_with_named_file (fn)
 
 				pixmap_window.set_title (file_name)
-				file_name.keep_head (file_name.last_index_of ('.', file_name.count) - 1)
+				class_name := file_name.as_upper
+				class_name.keep_head (class_name.last_index_of ('.', class_name.count) - 1)
+				class_name_field.set_text (class_name)
 
-				build_file (l_pixmap)
-				saved := false
+				build_file (origin_pixmap)
+				saved := False
 				toggle_save
 				text_panel.set_text (class_file)
-				file_path := open_file_dialog.file_name
+				create file_path.make_from_string (fn)
 
 				set_title (default_title + " -- (Text not saved)")
 
 					-- Load picture and show in the window.
-				pixmap_window.set_pixmap (l_pixmap)
+				pixmap_window.set_pixmap (origin_pixmap)
 				pixmap_window.show
-				pixmap_window.set_size (l_pixmap.width + (pixmap_window.width - pixmap_window.client_width), l_pixmap.height + (pixmap_window.height - pixmap_window.client_height))
+				pixmap_window.update_size
+				set_standard_pointer
 			else
 				create prompt.make_with_text ("Is it an image file?")
 				prompt.show_modal_to_window (Current)
@@ -249,8 +326,8 @@ feature {NONE} -- Implementation
 			create l_file.make_open_write (save_file_dialog.file_name)
 			l_file.put_string (class_file)
 			l_file.close
-			set_change (false)
-			saved := true
+			set_change (False)
+			saved := True
 			set_title (default_title + " -- " + save_file_dialog.file_name)
 		end
 
@@ -261,6 +338,16 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation / Constants
+
+	set_busy_pointer is
+		do
+			set_pointer_style ((create {EV_STOCK_PIXMAPS}).Busy_cursor)
+		end
+
+	set_standard_pointer is
+		do
+			set_pointer_style ((create {EV_STOCK_PIXMAPS}).Standard_cursor)
+		end
 
 	Window_title: STRING is "Image Eiffel Code"
 			-- Title of the window.
@@ -288,8 +375,10 @@ feature {NONE} -- Implementation / Constants
 		do
 			if saved then
 				save_button.disable_sensitive
+				copy_to_clipboard_button.disable_sensitive
 			else
 				save_button.enable_sensitive
+				copy_to_clipboard_button.enable_sensitive
 			end
 		end
 
@@ -334,18 +423,20 @@ feature {NONE} -- Implementation / Constants
 			end
 			a_pixmap.unlock
 
-			class_file.append (code_producer.build_top_code (file_name))
+			class_file.append (code_producer.build_top_code (class_name))
 			class_file.append (code_producer.build_initialization_code (a_pixmap.width, a_pixmap.height))
 			class_file.append (code_producer.build_c_external_data_code (a_pixmap))
 			class_file.append (code_producer.build_colors_code)
 			class_file.append (code_producer.new_line)
 			class_file.append (code_producer.build_fill_memory_code (colors, a_pixmap.width, a_pixmap.height))
 			class_file.append (code_producer.new_line)
-			class_file.append ("end -- " + file_name.as_upper +"%N")
+			class_file.append ("end -- " + class_name +"%N")
 		end
 
 	class_file: STRING
 			-- String to contain class text to be generated
+
+	class_name: STRING
 
 	file_name: STRING
 			-- File name of the image
@@ -358,6 +449,9 @@ feature {NONE} -- Implementation / Constants
 
 	code_producer: CODE_PRODUCER;
 			-- Source code generator.
+
+	origin_pixmap: EV_PIXEL_BUFFER;
+			-- Original pixmap.
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

@@ -341,6 +341,16 @@ feature -- Drawing operations
 			implementation.draw_sub_pixmap (x, y, a_pixmap, area)
 		end
 
+	draw_sub_pixel_buffer (x, y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixel_buffer with upper-left corner on (`x', `y').
+		require
+			not_destroyed: not is_destroyed
+			a_pixel_buffer_not_void: a_pixel_buffer /= Void
+			area_not_void: area /= Void
+		do
+			implementation.draw_sub_pixel_buffer (x, y, a_pixel_buffer, area)
+		end
+
 	draw_arc (x, y, a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL) is
 			-- Draw part of an ellipse defined by a rectangular area with an

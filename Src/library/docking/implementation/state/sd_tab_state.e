@@ -92,6 +92,7 @@ feature {NONE} -- Initlization
 				end
 			end
 			internal_content := a_content
+			initialized := True
 		ensure
 			set: internal_content = a_content
 		end
@@ -206,6 +207,7 @@ feature -- Redefine
 
 				update_floating_zone_visible (internal_content.state.zone, a_data.is_visible)
 			end
+			initialized := True
 		ensure then
 			restored:
 		end
@@ -583,8 +585,8 @@ feature {SD_TAB_STATE_ASSISTANT} -- Internal attibutes.
 			-- Assistant for Current.
 
 invariant
-	not_void: tab_zone /= Void
-	not_void: assistant /= Void
+	tab_zone_not_void: initialized implies tab_zone /= Void
+	assistant_not_void: initialized implies assistant /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

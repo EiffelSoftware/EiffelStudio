@@ -10,18 +10,17 @@ class
 			--FIXIT: Rename to SD_INITIAL_STATE?
 inherit
 	SD_STATE
-
-	redefine
-		dock_at_top_level,
-		change_zone_split_area,
-		stick,
-		float,
-		move_to_tab_zone,
-		move_to_docking_zone,
-		show,
-		restore,
-		close
-	end
+		redefine
+			dock_at_top_level,
+			change_zone_split_area,
+			stick,
+			float,
+			move_to_tab_zone,
+			move_to_docking_zone,
+			show,
+			restore,
+			close
+		end
 
 create
 	make
@@ -39,6 +38,7 @@ feature {NONE}  -- Initlization
 			internal_docking_manager := a_content.docking_manager
 			last_floating_height := internal_shared.default_floating_window_height
 			last_floating_width := internal_shared.default_floating_window_width
+			initialized := True
 		ensure
 			set: a_content = internal_content
 			set: internal_docking_manager = a_content.docking_manager
@@ -55,6 +55,7 @@ feature -- Redefine.
 			-- Redefine.
 		do
 			content.set_visible (False)
+			initialized := True
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -245,7 +246,7 @@ feature -- Contract support
 
 invariant
 
-	direction_valid: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
+	direction_valid: initialized implies direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
 indexing

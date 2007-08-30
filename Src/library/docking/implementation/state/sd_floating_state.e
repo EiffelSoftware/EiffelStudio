@@ -39,6 +39,7 @@ feature {NONE} -- Initlization
 			end
 			internal_zone.set_position (a_screen_x, a_screen_y)
 			internal_docking_manager.command.add_inner_container (internal_zone.inner_container)
+			initialized := True
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -162,7 +163,7 @@ feature -- Redefine.
 				if l_tab_zone_source /= Void then
 					l_tab_zone_source.set_drag_title_bar (True)
 				end
-				
+
 				l_zones.item.state.move_to_tab_zone (a_target_zone, 0)
 
 				if l_tab_zone_source /= Void then

@@ -642,11 +642,8 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	internal_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR
+	internal_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR;
 			-- Tool bar docker mendiator.
-
-invariant
-	not_void: internal_mediator /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

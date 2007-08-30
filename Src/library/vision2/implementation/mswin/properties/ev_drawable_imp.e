@@ -567,6 +567,21 @@ feature -- Drawing operations
 			create Result
 		end
 
+	draw_sub_pixel_buffer (x, y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
+			-- Draw area of `a_pixel_buffer' with upper-left corner on (`x', `y').
+		local
+			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_src_rect, l_dest_rect: WEL_RECT
+		do
+			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
+			create l_src_rect.make (area.left, area.top, area.right, area.bottom)
+			create l_dest_rect.make (x, y, x + area.width, y + area.height)
+			l_pixel_buffer_imp.draw_to_drawable_with_dest_rect_src_rect (interface, l_dest_rect, l_src_rect)
+			l_src_rect.dispose
+			l_dest_rect.dispose
+		end
+
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local

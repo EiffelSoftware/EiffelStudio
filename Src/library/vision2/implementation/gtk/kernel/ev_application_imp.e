@@ -255,6 +255,7 @@ feature {EV_ANY_I} -- Implementation
 			l_no_more_events: BOOLEAN
 			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y, l_button_number: INTEGER
 			l_has_grab_widget: BOOLEAN
+			l_event_string: STRING
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -502,7 +503,7 @@ feature {EV_ANY_I} -- Implementation
 						if
 							l_gdk_window /= default_pointer
 							and then {EV_GTK_EXTERNALS}.gdk_event_any_struct_send_event (gdk_event) = 0
-							and then {EV_GTK_EXTERNALS}.gdk_event_crossing_struct_mode (gdk_event) = 0
+--							and then {EV_GTK_EXTERNALS}.gdk_event_crossing_struct_mode (gdk_event) = 0
 						then
 							{EV_GTK_EXTERNALS}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget_ptr)
 
@@ -615,6 +616,13 @@ feature {EV_ANY_I} -- Implementation
 							print ("GDK_SETTING")
 					 	end
 						l_call_event := False
+						create l_event_string.make_from_c ({EV_GTK_EXTERNALS}.gdk_event_setting_struct_name (gdk_event))
+						if l_event_string.is_equal ("gtk-theme-name") then
+							-- Theme change
+						elseif l_event_string.is_equal ("gtk-font-name") then
+							-- Font change
+						end
+						l_event_string := Void
 						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 					else
 						l_call_event := False

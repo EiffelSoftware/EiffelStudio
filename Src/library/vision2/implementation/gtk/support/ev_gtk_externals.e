@@ -8295,6 +8295,20 @@ feature
 			"width"
 		end
 
+	frozen gdk_event_setting_struct_action (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventSetting): EIF_INTEGER"
+		alias
+			"action"
+		end
+
+	frozen gdk_event_setting_struct_name (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventSetting): EIF_POINTER"
+		alias
+			"name"
+		end
+
 	frozen gdk_event_configure_struct_window (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GdkEventConfigure): EIF_POINTER"

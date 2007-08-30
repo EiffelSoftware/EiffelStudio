@@ -23,6 +23,13 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			create manager.make (Current, Current)
+			close_request_actions.extend (agent
+																					local
+																						l_env: EV_ENVIRONMENT
+																					do
+																						create l_env
+																						l_env.application.destroy
+																					end)
 			prepare_content_1
 			prepare_content_2
 			prepare_tool_bar_content

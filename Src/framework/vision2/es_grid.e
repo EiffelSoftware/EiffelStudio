@@ -270,6 +270,10 @@ feature {NONE} -- Grid Events
 						scrolling_behavior.scroll_page (+1)
 					when {EV_KEY_CONSTANTS}.key_page_down then
 						scrolling_behavior.scroll_page (-1)
+					when {EV_KEY_CONSTANTS}.key_home then
+						scrolling_behavior.scroll_to_top
+					when {EV_KEY_CONSTANTS}.key_end then
+						scrolling_behavior.scroll_to_end
 					else
 					end
 				end

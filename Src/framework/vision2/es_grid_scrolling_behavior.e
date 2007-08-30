@@ -95,6 +95,28 @@ feature -- change
 
 feature -- Scrolling
 
+	scroll_to_top is
+			-- Scroll to top
+		local
+			g: EV_GRID
+		do
+			g := grid
+			if g.is_displayed then
+				g.set_virtual_position (g.virtual_x_position, 0)
+			end
+		end
+
+	scroll_to_end is
+			-- Scroll to end
+		local
+			g: EV_GRID
+		do
+			g := grid
+			if g.is_displayed then
+				g.set_virtual_position (g.virtual_x_position, g.maximum_virtual_y_position)
+			end
+		end
+
 	scroll_page (a_step: INTEGER) is
 			-- Scroll `a_step' pages
 		do

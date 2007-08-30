@@ -12,7 +12,8 @@ deferred class
 inherit
 	EV_DRAWABLE_I
 		redefine
-			interface
+			interface,
+			draw_sub_pixel_buffer
 		end
 
 	EV_DRAWABLE_CONSTANTS
@@ -579,6 +580,35 @@ feature -- Drawing operations
 				)
 				update_if_needed
 			end
+		end
+
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
+		local
+			a_pixbuf_imp: EV_PIXEL_BUFFER_IMP
+			l_pixels: POINTER
+			l_rowstride: NATURAL
+			l_back_buffer: POINTER
+		do
+			a_pixbuf_imp ?= a_pixel_buffer.implementation
+			if supports_pixbuf_alpha then
+				{EV_GTK_EXTERNALS}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x, a_y, area.width, area.height, 0, 0, 0)
+			else
+					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
+				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
+				{EV_GTK_EXTERNALS}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
+				l_pixels := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (l_back_buffer)
+				l_rowstride := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_rowstride (l_back_buffer)
+				{EV_GTK_EXTERNALS}.gdk_draw_rgb_32_image (drawable, gc, a_x, a_y, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
+				{EV_GTK_EXTERNALS}.object_unref (l_back_buffer)
+			end
+		end
+
+	supports_pixbuf_alpha: BOOLEAN
+			-- Does drawable support direct GdkPixbuf alpha blending?
+		do
+				-- For the moment EV_SCREEN doesn't support direct alpha blending.
+			Result := drawable /= {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is

@@ -155,6 +155,24 @@ feature -- Command
 			end
 		end
 
+	draw_to_drawable_with_dest_rect_src_rect (a_drawable: EV_DRAWABLE; a_dest_rect, a_src_rect: WEL_RECT) is
+			-- Draw Current to `a_drawable'
+		local
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_drawable_imp: EV_DRAWABLE_IMP
+		do
+			l_drawable_imp ?= a_drawable.implementation
+			if is_gdi_plus_installed then
+				l_drawable_imp.get_dc
+				create l_graphics.make_from_dc (l_drawable_imp.dc)
+				l_graphics.draw_image_with_dest_rect_src_rect (gdip_bitmap, a_dest_rect, a_src_rect)
+				l_graphics.destroy_item
+				l_drawable_imp.release_dc
+			else
+				a_drawable.draw_sub_pixmap (a_dest_rect.x, a_dest_rect.y, pixmap, create {EV_RECTANGLE}.make (a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height))
+			end
+		end
+
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
 			-- Create a new sub pixel buffer object.
 		local

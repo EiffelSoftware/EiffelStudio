@@ -54,10 +54,11 @@ feature {NONE} -- Initialization
 					end)
 
 			make_dialog
+			dialog.show_actions.extend (agent dialog.disable_user_resize)
 			set_text (a_text)
 
-				-- Prompts cannot be resized
-			dialog.disable_user_resize
+				-- Prompts cannot be resized (can't do it here, there's a bug in EiffelVision2)
+			--dialog.disable_user_resize
 
 			is_initializing := l_init
 		ensure
@@ -124,6 +125,11 @@ feature {NONE} -- User interface initialization
 
 			a_container.extend (l_hbox)
 			a_container.parent.extend (create {EV_HORIZONTAL_SEPARATOR})
+			l_vbox ?= a_container.parent
+			check l_vbox_attached: l_vbox /= Void end
+			if l_vbox /= Void then
+				l_vbox.disable_item_expand (l_vbox.last)
+			end
 
 			a_container.propagate_background_color
 		end

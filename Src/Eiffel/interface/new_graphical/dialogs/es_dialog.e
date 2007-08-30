@@ -216,7 +216,7 @@ feature {NONE} -- Access
 	dialog_button_border_width: INTEGER
 			-- Dialog border width for buttons
 		do
-			Result := {ES_UI_CONSTANTS}.dialog_button_border
+			Result := {ES_UI_CONSTANTS}.dialog_border
 		ensure
 			result_non_negative: Result >= 0
 		end
@@ -504,7 +504,8 @@ feature {NONE} -- Basic operations
 
 				-- Retrieve padding for buttons
 			create l_padding_button
-			l_padding := l_padding_button.minimum_width
+			l_padding_button.set_text ("dummy")
+			l_padding := l_padding_button.minimum_width - l_padding_button.font.string_width ("dummy")
 
 				-- Determine minimum width
 			l_buttons := dialog_window_buttons.new_cursor
@@ -520,7 +521,6 @@ feature {NONE} -- Basic operations
 				l_button := l_buttons.item
 				check l_button_attached: l_button /= Void end
 				if l_min_width > l_button.minimum_width then
-					l_button.reset_minimum_width
 					l_button.set_minimum_width (l_min_width)
 				end
 				l_buttons.forth

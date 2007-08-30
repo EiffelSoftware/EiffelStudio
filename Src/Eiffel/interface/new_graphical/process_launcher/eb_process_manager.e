@@ -126,16 +126,16 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			l_question: ES_DISCARDABLE_QUESTION_PROMPT
+			l_question: ES_DISCARDABLE_WARNING_PROMPT
 		do
 			if is_c_compilation_running then
 				if is_freezing_running then
-					create l_question.make_standard (warning_messages.w_freezing_running, interface_names.l_discard_terminate_freezing, preferences.dialog_data.confirm_on_terminate_freezing_string)
+					create l_question.make_standard_with_cancel (warning_messages.w_freezing_running, interface_names.l_discard_terminate_freezing, preferences.dialog_data.confirm_on_terminate_freezing_string)
 				elseif is_finalizing_running then
-					create l_question.make_standard (warning_messages.w_finalizing_running, interface_names.l_discard_terminate_finalizing, preferences.dialog_data.confirm_on_terminate_finalizing_string)
+					create l_question.make_standard_with_cancel (warning_messages.w_finalizing_running, interface_names.l_discard_terminate_finalizing, preferences.dialog_data.confirm_on_terminate_finalizing_string)
 				end
 				if l_question /= Void then
-					l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
+					l_question.set_button_action (l_question.dialog_buttons.ok_button, ok_agent)
 					l_question.show (a_window)
 				end
 			end
@@ -146,7 +146,7 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			l_question: ES_DISCARDABLE_QUESTION_PROMPT
+			l_question: ES_DISCARDABLE_WARNING_PROMPT
 			l_output, l_discard_msg: STRING_GENERAL
 		do
 			if is_process_running then
@@ -160,8 +160,8 @@ feature -- Execution
 					l_output := interface_names.l_external_command_running
 					l_discard_msg := interface_names.l_discard_terminate_external_command_when_exit
 				end
-				create l_question.make_standard (l_output, l_discard_msg, preferences.dialog_data.confirm_on_terminate_process_string)
-				l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
+				create l_question.make_standard_with_cancel (l_output, l_discard_msg, preferences.dialog_data.confirm_on_terminate_process_string)
+				l_question.set_button_action (l_question.dialog_buttons.ok_button, ok_agent)
 				l_question.show (a_window)
 			end
 		end

@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			make_with_grid (Current)
 			Precursor {ES_GRID}
+			make_with_grid (Current)
 
 			col_pixmap_index := 1
 			col_name_index := 1

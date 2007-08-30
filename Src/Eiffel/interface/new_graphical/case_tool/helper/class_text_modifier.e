@@ -296,8 +296,7 @@ feature -- Modification (Add/Remove feature)
 			if valid_syntax then
 				execute_wizard (create {EB_FEATURE_COMPOSITION_WIZARD}.make)
 			else
-				create warning_dialog.make_with_text (Warning_messages.w_Class_syntax_error)
-				warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error, context_editor.develop_window.window, Void)
 			end
 		end
 
@@ -551,10 +550,7 @@ feature -- Modification (Add/Remove feature)
 				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
 				execute_wizard_from_diagram (qcw)
 			else
-				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
-				warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-				warning_dialog := Void
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
 				extend_from_diagram_successful := False
 				invalidate_text
 				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
@@ -591,10 +587,7 @@ feature -- Modification (Add/Remove feature)
 				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
 				execute_wizard_from_diagram (qcw)
 			else
-				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
-				warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-				warning_dialog := Void
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
 				extend_from_diagram_successful := False
 				invalidate_text
 				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
@@ -632,22 +625,15 @@ feature -- Modification (Add/Remove feature)
 						if valid_syntax then
 							commit_modification
 						else
-							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-							warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
-							warning_dialog := Void
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, Void, Void)
 							invalidate_text
 						end
 					else
-						create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-						warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
-						warning_dialog := Void
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, Void, Void)
 						invalidate_text
 					end
 				else
-					create warning_dialog.make_with_text (
-						Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
-					warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
-					warning_dialog := Void
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), Void, Void)
 					invalidate_text
 				end
 			end
@@ -1215,9 +1201,6 @@ feature {NONE} -- Implementation
 	context_editor: EB_DIAGRAM_TOOL
 			--
 
-	warning_dialog: EB_WARNING_DIALOG
-			-- Window that warns user of incorrect syntax or file modification.
-
 	invalidate_text is
 			-- Errors were found during last parsing.
 			-- Class text will have to be reloaded.
@@ -1296,31 +1279,22 @@ feature {NONE} -- Implementation
 						if valid_syntax then
 							commit_modification
 						else
-							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-							warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-							warning_dialog := Void
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
 							extend_from_diagram_successful := False
 							invalidate_text
 						end
 					else
-						create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-						warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-						warning_dialog := Void
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
 						extend_from_diagram_successful := False
 						invalidate_text
 					end
 				else
-					create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
-					warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-					warning_dialog := Void
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_New_feature_syntax_error, context_editor.develop_window.window, Void)
 					extend_from_diagram_successful := False
 					invalidate_text
 				end
 			else
-				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
-				warning_dialog.show_modal_to_window (context_editor.develop_window.window)
-				warning_dialog := Void
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Class_syntax_error_before_generation (class_i.name), context_editor.develop_window.window, Void)
 				extend_from_diagram_successful := False
 				invalidate_text
 			end

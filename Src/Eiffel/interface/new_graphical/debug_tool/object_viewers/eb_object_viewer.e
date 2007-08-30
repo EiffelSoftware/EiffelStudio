@@ -9,6 +9,12 @@ indexing
 deferred class
 	EB_OBJECT_VIEWER
 
+inherit
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature
 
 	make (m: EB_OBJECT_VIEWERS_MANAGER) is

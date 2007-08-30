@@ -33,6 +33,13 @@ inherit
 			default_create
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_for_documentation,
 	make_for_wizard
@@ -139,7 +146,6 @@ feature {DOCUMENTATION} -- Basic operations
 			str: STRING
 			ptf: PLAIN_TEXT_FILE
 			minimum_pixmap: EV_PIXMAP
-			wd: EB_WARNING_DIALOG
 			layout: EIFFEL_INHERITANCE_LAYOUT
 		do
 			check
@@ -197,7 +203,7 @@ feature {DOCUMENTATION} -- Basic operations
 
 			minimum_pixmap := projector.world_as_pixmap (border)
 			if projector.is_world_too_large then
-				create wd.make_with_text (Warning_messages.W_cannot_generate_png.as_string_32+"%N"+cluster.name)
+				prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png.as_string_32 + " " + cluster.name, Void, Void)
 				create minimum_pixmap.make_with_size (1, 1)
 			end
 			minimum_pixmap.save_to_named_file (png_format, png_file)

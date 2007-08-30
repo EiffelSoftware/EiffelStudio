@@ -17,6 +17,14 @@ inherit
 			copy
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_target: CONF_TARGET; a_factory: like factory) is

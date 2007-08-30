@@ -2298,19 +2298,13 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 
 	destroy is
 			-- check if current text has been saved and destroy
-		local
-			dialog_w: EB_WARNING_DIALOG
 		do
 			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
 				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
 			else
 				if changed and then not confirmed then
 					if Window_manager.development_windows_count > 1 then
-						create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
-						dialog_w.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
-						dialog_w.set_default_push_button (dialog_w.button(interface_names.b_yes))
-						dialog_w.set_default_cancel_button (dialog_w.button(interface_names.b_cancel))
-						dialog_w.show_modal_to_window (window)
+						(create {EB_EXIT_APPLICATION_COMMAND}).execute
 					else
 							-- We let the window manager handle the saving, along with other windows
 							-- (not development windows)

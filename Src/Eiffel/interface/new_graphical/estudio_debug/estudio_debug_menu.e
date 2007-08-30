@@ -58,18 +58,12 @@ feature {NONE} -- Actions
 			l_env: EXECUTION_ENVIRONMENT
 			l_path: STRING
 			l_dir: DIRECTORY_NAME
-			l_dlg: EV_INFORMATION_DIALOG
 		do
 			if ma_window = Void or ma_window.is_destroyed then
 				create l_env
 				l_path := l_env.get ("EIFFEL_SRC")
 				if l_path = Void then
-					create l_dlg.make_with_text ("EIFFEL_SRC not defined.")
-					if window /= Void then
-						l_dlg.show_modal_to_window (window)
-					else
-						l_dlg.show
-					end
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt ("EIFFEL_SRC not defined!", window, Void)
 				else
 					create l_dir.make_from_string (l_path)
 					l_dir.extend_from_array (<<"library", "memory_analyzer" >>)

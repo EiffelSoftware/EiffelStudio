@@ -186,17 +186,11 @@ feature {NONE} -- Implementation functions
 			-- On `ok' button pressed.
 		local
 			l_str: STRING_GENERAL
-			l_warning: EB_QUESTION_DIALOG
 		do
 			l_str := text_for_name.text
 			if l_str /= Void and then not l_str.as_string_8.is_equal ("") then
 				if manager.layouts.has (l_str) then
-					create l_warning.make_with_text (interface_names.l_overwrite_layout (l_str))
-					l_warning.set_title (interface_names.t_Overwite_layout)
-
-					l_warning.set_buttons_and_actions (<<interface_names.b_ok, interface_names.b_no, interface_names.b_cancel>>,
-							<<agent on_overwirte_and_destory (l_str), agent l_warning.destroy, agent destroy>>)
-					l_warning.show_modal_to_window (Current)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt_with_cancel (interface_names.l_overwrite_layout (l_str), Current, agent on_overwirte_and_destory (l_str), Void, agent destroy)
 				else
 					manager.add_layout (l_str)
 					destroy

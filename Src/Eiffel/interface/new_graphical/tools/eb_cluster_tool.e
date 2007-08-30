@@ -238,7 +238,6 @@ feature {NONE} -- Implementation
 		local
 			conv_class: CLASSI_STONE
 			conv_cluster: CLUSTER_STONE
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -251,14 +250,12 @@ feature {NONE} -- Implementation
 						widget.show_subfolder (conv_cluster.group, conv_cluster.path)
 					else
 							-- The current stone is neither a class stone nor a cluster stone.
-						create wd.make_with_text (Warning_messages.w_Choose_class_or_cluster)
-						wd.show_modal_to_window (window.window)
+						prompts.show_warning_prompt (Warning_messages.w_Choose_class_or_cluster, window.window, Void)
 					end
 				end
 			else
 				if window.stone /= Void then
-					create wd.make_with_text (Warning_messages.w_Could_not_locate (window.stone.stone_signature))
-					wd.show_modal_to_window (window.window)
+					prompts.show_error_prompt (Warning_messages.w_Could_not_locate (window.stone.stone_signature), window.window, Void)
 				end
 			end
 		rescue

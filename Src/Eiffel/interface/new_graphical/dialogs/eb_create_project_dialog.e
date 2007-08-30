@@ -568,13 +568,11 @@ feature {NONE} -- Callbacks
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG) is
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
-			wd: EB_WARNING_DIALOG
 			dir_name: STRING
 		do
 			dir_name := dialog.directory
 			if dir_name.is_empty then
-				create wd.make_with_text (Warning_messages.w_directory_not_exist (dir_name))
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_directory_not_exist (dir_name), Current, Void)
 			else
 				directory_field.set_text (dir_name)
 			end

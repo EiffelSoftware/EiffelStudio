@@ -31,7 +31,6 @@ feature {NONE} -- Implementation
 			-- Handle all classes in `affected_classes'.
 		local
 			chk_writable: ERF_CLASSES_WRITABLE
-			wd: EB_WARNING_DIALOG
 			l_class: CLASS_I
 			i: INTEGER
 		do
@@ -40,8 +39,7 @@ feature {NONE} -- Implementation
         	chk_writable.execute
         	if not chk_writable.success then
         		rollback
-        		create wd.make_with_text (chk_writable.error_message)
-        		wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+        		prompts.show_error_prompt (chk_writable.error_message, Void, Void)
         	else
         			-- apply the refactoring to each class in the list
 				from

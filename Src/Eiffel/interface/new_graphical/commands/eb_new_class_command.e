@@ -30,15 +30,13 @@ feature -- Basic operations
 			-- Pop up class wizard.
 		local
 			dial: EB_CREATE_CLASS_DIALOG
-			wd: EB_WARNING_DIALOG
 		do
 			if Workbench.is_in_stable_state then
 				create dial.make_default (target)
 				dial.set_stone_when_finished
 				dial.call_default
 			else
-				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
-				wd.show_modal_to_window (target.window)
+				prompts.show_error_prompt (Warning_messages.w_Unsufficient_compilation (6), target.window, Void)
 			end
 		end
 
@@ -46,15 +44,13 @@ feature -- Basic operations
 			-- Pop up class wizard with location of `a_stone'.
 		local
 			dial: EB_CREATE_CLASS_DIALOG
-			wd: EB_WARNING_DIALOG
 		do
 			if Workbench.is_in_stable_state then
 				create dial.make_default (target)
 				dial.set_stone_when_finished
 				dial.call_stone (a_stone)
 			else
-				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
-				wd.show_modal_to_window (target.window)
+				prompts.show_warning_prompt (Warning_messages.w_Unsufficient_compilation (6), target.window, Void)
 			end
 		end
 

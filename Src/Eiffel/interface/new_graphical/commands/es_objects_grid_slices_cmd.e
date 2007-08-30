@@ -556,7 +556,6 @@ feature {NONE} -- Implementation
 			str1, str2, str3: STRING
 			i: INTEGER
 			disp_size: INTEGER
-			errd: EB_WARNING_DIALOG
 			ok: BOOLEAN
 		do
 			ok := True
@@ -565,16 +564,14 @@ feature {NONE} -- Implementation
 			elseif tf_disp_str_size /= Void then
 				str1 := tf_disp_str_size.text
 				if not str1.is_integer then
-					create errd.make_with_text (Warning_messages.w_Not_an_integer)
 					tf_disp_str_size.select_all
-					errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Not_an_integer, Void, Void)
 					ok := False
 				else
 					i := str1.to_integer
 					if i <= 0 then
-						create errd.make_with_text (Warning_messages.w_Not_a_positive_integer)
 						tf_disp_str_size.select_all
-						errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						prompts.show_error_prompt (Warning_messages.w_Not_a_positive_integer, Void, Void)
 						ok := False
 					else
 						disp_size := i
@@ -583,16 +580,14 @@ feature {NONE} -- Implementation
 			end
 			str2 := tf_minf.text
 			if not str2.is_integer then
-				create errd.make_with_text (Warning_messages.w_Not_an_integer)
 				tf_minf.select_all
-				errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Not_an_integer, Void, Void)
 				ok := False
 			end
 			str3 := tf_maxf.text
 			if not str3.is_integer then
-				create errd.make_with_text (Warning_messages.w_Not_an_integer)
 				tf_maxf.select_all
-				errd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Not_an_integer, Void, Void)
 				ok := False
 			end
 			if ok then

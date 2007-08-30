@@ -80,6 +80,14 @@ inherit
 			default_create
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make, make_with_hidden
 
@@ -326,12 +334,8 @@ feature {NONE} -- Implementation
 
 	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
 			-- Shortcut modification denied.
-		local
-			l_error_dialog: EB_WARNING_DIALOG
 		do
-			create l_error_dialog
-			l_error_dialog.set_text (shortcut_modification_denied)
-			show_dialog_modal (l_error_dialog)
+			prompts.show_error_prompt (shortcut_modification_denied, Void, Void)
 		end
 
 feature {NONE} -- Widget initialization

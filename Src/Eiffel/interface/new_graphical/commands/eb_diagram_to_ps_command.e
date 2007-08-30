@@ -55,7 +55,6 @@ feature -- Basic operations
 			dial: EB_FILE_SAVE_DIALOG
 			test_file: RAW_FILE
 			error: INTEGER
-			wd: EB_WARNING_DIALOG
 			l_pref: STRING_PREFERENCE
 		do
 			if is_sensitive then
@@ -93,11 +92,10 @@ feature -- Basic operations
 					end
 				else
 					if error = 1 then
-						create wd.make_with_text (Warning_messages.w_cannot_save_png_file (dial.file_name))
+						prompts.show_error_prompt (Warning_messages.w_cannot_save_png_file (dial.file_name), tool.develop_window.window, Void)
 					elseif error = 2 then
-						create wd.make_with_text (Warning_messages.W_cannot_generate_png)
+						prompts.show_error_prompt (Warning_messages.W_cannot_generate_png, tool.develop_window.window, Void)
 					end
-					wd.show_modal_to_window (tool.develop_window.window)
 				end
 			end
 		rescue

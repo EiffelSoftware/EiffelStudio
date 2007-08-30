@@ -142,7 +142,6 @@ feature {NONE} -- Agents
 		local
 			l_root: CONF_ROOT
 			l_cluster, l_class, l_feature: STRING
-			wd: EB_WARNING_DIALOG
 			l_checker: EIFFEL_SYNTAX_CHECKER
 		do
 			if all_classes.is_selected then
@@ -155,11 +154,11 @@ feature {NONE} -- Agents
 					-- Check validity of l_cluster, l_class and l_feature.
 				create l_checker
 				if not l_cluster.is_empty and not l_checker.is_valid_group_name (l_cluster) then
-					create wd.make_with_text (conf_interface_names.root_invalid_cluster)
+					prompts.show_error_prompt (conf_interface_names.root_invalid_cluster, Current, Void)
 				elseif not l_class.is_empty and not l_checker.is_valid_class_type_name (l_class) then
-					create wd.make_with_text (conf_interface_names.root_invalid_class)
+					prompts.show_error_prompt (conf_interface_names.root_invalid_class, Current, Void)
 				elseif not l_feature.is_empty and not l_checker.is_valid_feature_name (l_feature) then
-					create wd.make_with_text (conf_interface_names.root_invalid_feature)
+					prompts.show_error_prompt (conf_interface_names.root_invalid_feature, Current, Void)
 				else
 					if l_cluster.is_empty then
 						l_cluster := Void
@@ -170,19 +169,17 @@ feature {NONE} -- Agents
 					if not l_class.is_empty then
 						create l_root.make (l_cluster, l_class, l_feature, False)
 					elseif l_cluster /= Void or l_feature /= Void then
-						create wd.make_with_text (conf_interface_names.root_no_class)
+						prompts.show_error_prompt (conf_interface_names.root_no_class, Current, Void)
 					elseif target.child_targets.is_empty then
 							-- we don't have any child targets, so we need a root class.
-						create wd.make_with_text (conf_interface_names.root_none)
+						prompts.show_error_prompt (conf_interface_names.root_none, Current, Void)
 					end
 				end
 			end
 
-			if wd = Void then
+			if l_root /= Void then
 				set_value (l_root)
 				Precursor {PROPERTY_DIALOG}
-			else
-				wd.show_modal_to_window (Current)
 			end
 		end
 

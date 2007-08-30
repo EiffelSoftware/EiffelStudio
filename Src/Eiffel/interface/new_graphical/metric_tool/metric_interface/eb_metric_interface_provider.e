@@ -193,11 +193,8 @@ feature -- Dialog
 		require
 			a_msg_attached: a_msg /= Void
 			a_window_attached: a_window /= Void
-		local
-			l_dialog: EB_WARNING_DIALOG
 		do
-			create l_dialog.make_with_text (a_msg)
-			l_dialog.show_modal_to_window (a_window)
+			prompts.show_warning_prompt (a_msg, a_window, Void)
 		end
 
 feature -- Actions binding

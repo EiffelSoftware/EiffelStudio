@@ -51,6 +51,11 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	init_size_and_position is
@@ -417,13 +422,10 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 			-- Pop up the eiffelstudio chm at the URL corresponding to `ctxt'.
 		require
 			valid_ctxt: ctxt /= Void
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			help_engine.show (ctxt)
 			if not help_engine.last_show_successful then
-				create wd.make_with_text (help_engine.last_error_message)
-				wd.show_modal_to_window (window)
+				prompts.show_error_prompt (help_engine.last_error_message, window, Void)
 			end
 		end
 

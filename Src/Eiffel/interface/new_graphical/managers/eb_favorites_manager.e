@@ -16,6 +16,11 @@ inherit
 
 	EB_RECYCLABLE
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -150,7 +155,6 @@ feature -- Basic Operations
 		local
 			folder_name_dialog: EB_TYPE_FOLDER_DIALOG
 			folder_name: STRING
-			wd: EB_WARNING_DIALOG
 		do
 			create folder_name_dialog.make
 			if a_window /= Void then
@@ -165,12 +169,7 @@ feature -- Basic Operations
 					or folder_name.has (')')
 					or folder_name.has ('*')
 				then
-					create wd.make_with_text (Warning_messages.w_Invalid_folder_name.as_string_32 + warning_messages.w_Folder_name_cannot_contain)
-					if a_window /= Void then
-						wd.show_modal_to_window (a_window)
-					else
-						wd.show_modal_to_window (development_window.window)
-					end
+					prompts.show_error_prompt (Warning_messages.w_Invalid_folder_name.as_string_32 + warning_messages.w_Folder_name_cannot_contain, a_window, Void)
 				else
 					favorites.add_folder (folder_name)
 				end
@@ -187,7 +186,6 @@ feature -- Basic Operations
 			source: EB_FAVORITES_ITEM_LIST
 			conv_folder: EB_FAVORITES_FOLDER
 			conv_item: EB_FAVORITES_ITEM
-			wd: EB_WARNING_DIALOG
 			l_window: EV_WINDOW
 		do
 			if a_window /= Void then
@@ -196,8 +194,7 @@ feature -- Basic Operations
 				l_window := development_window.window
 			end
 			if a_item.is_feature then
-				create wd.make_with_text (Warning_messages.w_Cannot_move_feature_alone)
-				wd.show_modal_to_window (l_window)
+				prompts.show_error_prompt (Warning_messages.w_Cannot_move_feature_alone, l_window, Void)
 			else
 				source := a_item.parent
 
@@ -215,8 +212,7 @@ feature -- Basic Operations
 						conv_item /= Void and then
 						conv_folder.has_recursive_child (conv_item)
 					then
-						create wd.make_with_text (Warning_messages.w_Cannot_move_favorite_to_a_child)
-						wd.show_modal_to_window (l_window)
+						prompts.show_error_prompt (Warning_messages.w_Cannot_move_favorite_to_a_child, l_window, Void)
 					else
 						source.prune_all (a_item)
 						destination.extend (a_item)

@@ -630,7 +630,6 @@ feature -- operation on message
 						mr: INTEGER_REF
 						m,v: INTEGER
 						l_invalid: BOOLEAN
-						edlg: EB_WARNING_DIALOG
 					do
 						mr ?= a_combo.selected_item.data
 						if mr /= Void then
@@ -650,8 +649,7 @@ feature -- operation on message
 							l_invalid := True
 						end
 						if l_invalid then
-							create edlg.make_with_text (debugger_names.w_Invalid_hit_count_condition_target)
-							edlg.show_modal_to_window (a_dlg)
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (debugger_names.w_Invalid_hit_count_condition_target, a_dlg, Void)
 							a_tf.set_focus
 						end
 					end(d, bp, combo, tf)

@@ -15,6 +15,11 @@ inherit
 
 	EB_SHARED_MANAGERS
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	has_modified_classes: BOOLEAN is

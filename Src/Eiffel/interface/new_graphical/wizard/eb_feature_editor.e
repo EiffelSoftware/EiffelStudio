@@ -19,6 +19,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 feature -- Access
 
 	code: STRING is
@@ -74,15 +81,12 @@ feature -- Error
 			not_valid: not valid_content
 			a_parent_window_not_void: a_parent_window /= Void
 			a_parent_window_not_destroyed: not a_parent_window.is_destroyed
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			check
 				field_not_void: feature_name_field /= Void
 				field_not_destroyed: not feature_name_field.is_destroyed
 			end
-			create wd.make_with_text (warning_messages.w_invalid_feature_name (feature_name_field.text))
-			wd.show_modal_to_window (a_parent_window)
+			prompts.show_error_prompt (warning_messages.w_invalid_feature_name (feature_name_field.text), a_parent_window, Void)
 		end
 
 feature {NONE} -- Implementation

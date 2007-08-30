@@ -89,7 +89,6 @@ feature -- Execution
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
-			wd: EB_WARNING_DIALOG
 			file: RAW_FILE
 			ebench_name: STRING
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
@@ -100,8 +99,7 @@ feature -- Execution
 			else
 				create file.make (valid_file_name (a_project_file_name))
 				if not file.exists or else file.is_directory then
-					create wd.make_with_text (warning_messages.w_file_not_exist (a_project_file_name))
-					wd.show_modal_to_window (parent_window)
+					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name), parent_window, Void)
 				else
 					ebench_name := "%"" + eiffel_layout.Estudio_command_name + "%""
 					ebench_name.append (" ")

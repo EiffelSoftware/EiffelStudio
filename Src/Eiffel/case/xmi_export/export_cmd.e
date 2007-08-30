@@ -55,7 +55,6 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			xe: XMI_EXPORT
-			dial: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -65,9 +64,7 @@ feature {NONE} -- Implementation
 				xe.generate (Degree_output)
 			end
 		rescue
-			create dial.make_with_text (
-				(create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name))
-			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
+			prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
 			retried := True
 			retry
 		end

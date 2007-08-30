@@ -231,25 +231,20 @@ feature {NONE} -- Exception handling
 	try_to_save_files is
 			-- In case of a crash, try to make a backup of all edited files.
 		local
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
 				if window_manager.has_modified_windows then
-					create wd.make_with_text (warning_messages.w_crashed)
-					wd.show_modal_to_window (parent_for_dialog)
+					prompts.show_error_prompt (warning_messages.w_crashed, parent_for_dialog, Void)
 					window_manager.backup_all
 					if window_manager.not_backuped = 0 then
-						create wd.make_with_text (warning_messages.w_backup_succeeded)
-						wd.show_modal_to_window (parent_for_dialog)
+						prompts.show_info_prompt (warning_messages.w_backup_succeeded, parent_for_dialog, Void)
 					else
-						create wd.make_with_text (warning_messages.w_backup_partial (window_manager.not_backuped))
-						wd.show_modal_to_window (parent_for_dialog)
+						prompts.show_warning_prompt (warning_messages.w_backup_partial (window_manager.not_backuped), parent_for_dialog, Void)
 					end
 				end
 			else
-				create wd.make_with_text (warning_messages.w_backup_failed)
-				wd.show_modal_to_window (parent_for_dialog)
+				prompts.show_error_prompt (warning_messages.w_backup_failed, parent_for_dialog, Void)
 			end
 		rescue
 			retried := True

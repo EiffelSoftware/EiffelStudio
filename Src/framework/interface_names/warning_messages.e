@@ -267,7 +267,7 @@ feature -- Project settings warnings
 
 feature -- Debug warnings
 
-	w_apply_debugger_profiles_before_continuing: STRING_GENERAL is do Result := locale.translation ("Profiles are modified.%NDo you want to apply the changes before continuing?") end
+	w_apply_debugger_profiles_before_continuing: STRING_GENERAL is do Result := locale.translation ("The debug profiles have been modified.%NDo you want to apply the changes before continuing?") end
 
 	w_Compile_before_debug: STRING_GENERAL is do Result := locale.translation ("Do you want to compile before debugging?") end
 
@@ -321,8 +321,7 @@ feature -- Debug warnings
 			end
 		end
 
-	w_Overflow_detected: STRING_GENERAL is	do Result := locale.translation ("Possible stack overflow detected.%N%
-									%The application was paused to let you%N%
+	w_Overflow_detected: STRING_GENERAL is	do Result := locale.translation ("Possible stack overflow detected. The application has been paused to let you%N%
 									%examine its current status.") end
 
 	w_Syntax_error_in_expression (expr: STRING_GENERAL): STRING_GENERAL is
@@ -339,11 +338,10 @@ feature -- Cluster tree warnings
 			-- A class involved in a move operation could not be moved.
 		do
 			Result := locale.translation (
-				"Source file cannot be moved.%N%
-				%Please make sure that:%N%
-				%the source file exists,%N%
-				%the source file is not being edited,%N%
-				%the destination directory can be written in.")
+				"Source file cannot be moved. Please make sure that:%N%
+				%- The source file exists,%N%
+				%- The source file is not being edited,%N%
+				%- The destination directory can be written in.")
 		end
 
 	w_Cannot_delete_read_only_class (class_name: STRING_GENERAL): STRING_GENERAL is
@@ -352,7 +350,7 @@ feature -- Cluster tree warnings
 		do
 			Result := locale.formatted_string (
 				locale.translation (
-					"Cannot delete class $1%Nbecause it is either precompiled%Nor in a library cluster."),
+					"Cannot delete class $1%Nbecause it is either precompiled or in a library cluster."),
 					[string_general_as_upper (class_name)]
 				)
 		end
@@ -363,7 +361,7 @@ feature -- Cluster tree warnings
 		do
 			Result := locale.formatted_string (
 				locale.translation (
-					"Cannot delete cluster $1%Nbecause it is read only."),
+					"Cannot delete cluster $1 because it is read only."),
 					[string_general_as_upper (cluster_name)]
 				)
 		end
@@ -374,7 +372,7 @@ feature -- Cluster tree warnings
 		do
 			Result := locale.formatted_string (
 				locale.translation (
-					"Cannot delete cluster $1%Nbecause cluster is not empty"),
+					"Cannot delete cluster $1 because cluster is not empty"),
 					[string_general_as_upper (cluster_name)]
 				)
 		end
@@ -385,7 +383,7 @@ feature -- Cluster tree warnings
 		do
 			Result := locale.formatted_string (
 				locale.translation (
-					"Cannot add a cluster to cluster%N$1%Nbecause it is read only."),
+					"Cannot add a cluster to cluster $1 because it is read only."),
 					[string_general_as_upper (cluster_name)]
 				)
 		end
@@ -406,7 +404,7 @@ feature -- Cluster tree warnings
 
 	w_Choose_class_or_cluster: STRING_GENERAL is
 			-- No class/cluster stone was selected in the development window.
-		do Result := locale.translation ("Please first select in the editor the class or cluster%Nthat you want to locate.") end
+		do Result := locale.translation ("Please first select in the editor the class or cluster that you want to locate.") end
 
 	w_Class_already_in_cluster (base_name: STRING_GENERAL): STRING_GENERAL is
 		require
@@ -636,8 +634,7 @@ feature -- Dynamic library warnings
 			-- The `cl_name' does not represent a valid class.
 		do
 			if cl_name /= Void then
-				Result := locale.formatted_string (locale.translation ("%"$1%"%N%
-				%is not a compiled class."), [cl_name])
+				Result := locale.formatted_string (locale.translation ("%"$1%" is not a compiled class."), [cl_name])
 			else
 				Result := locale.translation ("Please specify a class name.")
 			end
@@ -647,8 +644,7 @@ feature -- Dynamic library warnings
 			-- The `cl_name' does not represent a valid class.
 		do
 			if cl_name /= Void then
-				Result := locale.formatted_string (locale.translation ("%"$1%" %
-				%is not a compiled class."), [cl_name])
+				Result := locale.formatted_string (locale.translation ("%"$1%" is not a compiled class."), [cl_name])
 			else
 				Result := locale.translation ("Please specify a class name.")
 			end
@@ -969,8 +965,7 @@ feature -- Warning messages
 
 	w_Not_a_positive_integer: STRING_GENERAL is do Result := locale.translation ("Please enter a positive integer value.") end
 
-	w_Select_class_cluster_to_remove: STRING_GENERAL is do Result := locale.translation ("Please select a class or a cluster %N%
-										%before calling this command.%N%
+	w_Select_class_cluster_to_remove: STRING_GENERAL is do Result := locale.translation ("Please select a class or a cluster before calling this command.%N%
 										%It will then be removed.") end
 
 	w_Specify_a_class: STRING_GENERAL is do Result := locale.translation ("Please specify a compiled class (or * for all classes).") end

@@ -67,7 +67,7 @@ inherit
 			{NONE} all
 		end
 
-	EV_SHARED_APPLICATION
+	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all
 		end
@@ -447,7 +447,6 @@ feature {NONE} -- User interaction
 			a_action_not_void: a_action /= Void
 		local
 			file_name: STRING
-			wd: EB_WARNING_DIALOG
 			file: RAW_FILE
 		do
 				-- This is a callback from the name chooser when user click OK.
@@ -455,17 +454,7 @@ feature {NONE} -- User interaction
 			check file_name_not_empty: not file_name.is_empty end
 			create file.make (file_name)
 			if file.exists then
-				create wd.make_with_text (Warning_messages.w_file_exists (file_name))
-				wd.set_buttons (<< interface_names.b_ok, interface_names.b_cancel >>)
-				wd.set_default_push_button (wd.button (interface_names.b_ok))
-				wd.set_default_cancel_button (wd.button (interface_names.b_cancel))
-				wd.button (interface_names.b_cancel).select_actions.extend (agent a_dlg.show_modal_to_window (parent_window))
-				wd.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([file_name]))
-
-					-- Display the warning window. If user presses `Cancel' we ask him again
-					-- for a file name, otherwise if he presses `OK' we simply override
-					-- the selected `file_name'.
-				wd.show_modal_to_window (parent_window)
+				prompts.show_warning_prompt_with_cancel (Warning_messages.w_file_exists (file_name), parent_window, agent a_action.call ([file_name]), agent a_dlg.show_modal_to_window (parent_window))
 			else
 				a_action.call ([file_name])
 			end
@@ -476,7 +465,6 @@ feature {NONE} -- User interaction
 			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_dialog: EV_DIALOG
-			l_error_dialog: EB_WARNING_DIALOG
 			l_list: EV_LIST
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
@@ -495,8 +483,7 @@ feature {NONE} -- User interaction
 			end
 			if l_need_choice then
 				if a_targets.is_empty then
-					create l_error_dialog.make_with_text (warning_messages.w_project_constains_no_compilable_target)
-					l_error_dialog.show_modal_to_window (parent_window)
+					prompts.show_error_prompt (warning_messages.w_project_constains_no_compilable_target, parent_window, Void)
 					has_error := True
 					l_need_choice := False
 				end

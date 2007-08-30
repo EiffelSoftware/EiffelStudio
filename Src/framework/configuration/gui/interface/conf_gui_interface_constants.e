@@ -25,6 +25,14 @@ inherit
 			default_create
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature -- Update
 
 	set_pixmaps (a_pixmaps: CONF_PIXMAPS)

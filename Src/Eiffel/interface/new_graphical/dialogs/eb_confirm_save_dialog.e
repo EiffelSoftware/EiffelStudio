@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			clsi_stone: CLASSI_STONE
 			cls_name: STRING
+			l_question: ES_QUESTION_PROMPT
 		do
 			target := a_target
 			caller := a_caller
@@ -38,7 +39,11 @@ feature {NONE} -- Initialization
 			if clsi_stone /= Void then
 				cls_name := clsi_stone.class_name
 			end
-			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (Warning_messages.w_File_changed (cls_name), Void, agent save_text, agent dont_save_text)
+			create l_question.make_standard (Warning_messages.w_File_changed (cls_name))
+			l_question.set_default_button (l_question.dialog_buttons.yes_button)
+			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent save_text)
+			l_question.set_button_action (l_question.dialog_buttons.no_button, agent dont_save_text)
+			l_question.show_on_active_window
 		end
 
 feature -- Access

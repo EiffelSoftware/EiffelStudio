@@ -179,7 +179,6 @@ feature -- Execution
 			trigger: EV_CONTAINABLE
 			cont: EV_ANY
 			window: EV_WINDOW
-			wd: EB_WARNING_DIALOG
 		do
 			from
 				trigger := widget
@@ -200,8 +199,7 @@ feature -- Execution
 					window_manager.development_window_from_window (window)
 				)
 			else
-				create wd.make_with_text ("Could not initialize debugging tools")
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt ("Could not initialize debugging tools", Void, Void)
 			end
 		end
 
@@ -211,7 +209,6 @@ feature -- Execution
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
-			wd: EB_WARNING_DIALOG
 			bp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
 			bp: BREAKPOINT
@@ -264,8 +261,7 @@ feature -- Execution
 						)
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Cannot_debug)
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Cannot_debug, Void, Void)
 			end
 		end
 

@@ -52,8 +52,13 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
 	EB_CONTEXT_MENU_HANDLER
+
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -883,7 +888,6 @@ feature {NONE} -- Execution
 			-- Finish processing the class after the user chose it.
 		local
 			ctxt: STRING
-			wd: EB_WARNING_DIALOG
 			l_classc: CLASS_C
 		do
 			remove_error_message
@@ -900,8 +904,7 @@ feature {NONE} -- Execution
 						new_class_win.set_stone_when_finished
 						new_class_win.call (class_address.text)
 					else
-						create wd.make_with_text (Warning_messages.w_Invalid_class_name (ctxt))
-						wd.show_modal_to_window (parent.window)
+						prompts.show_error_prompt (Warning_messages.w_Invalid_class_name (ctxt), parent.window, Void)
 					end
 				else
 					display_error_message (Warning_messages.w_No_class_matches)
@@ -1289,7 +1292,6 @@ feature {NONE} -- open new class
 			cluster: CLUSTER_I
 			cluster_name: STRING
 			matcher: KMP_WILD
-			wd: EB_WARNING_DIALOG
 			l_classes: DS_HASH_SET [CLASS_I]
 		do
 			if workbench.is_universe_ready then
@@ -1348,8 +1350,7 @@ feature {NONE} -- open new class
 							end
 							cluster := Universe.cluster_of_name (cluster_name)
 							if cluster = Void then
-								create wd.make_with_text (Warning_messages.w_Cannot_find_cluster (cluster_name))
-								wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+								prompts.show_error_prompt (Warning_messages.w_Cannot_find_cluster (cluster_name), parent.window, Void)
 								if class_address.is_displayed then
 									class_address.set_focus
 									class_address.select_region (at_pos + 1, class_address.text_length)

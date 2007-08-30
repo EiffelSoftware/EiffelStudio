@@ -11,8 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [HASH_TABLE [CONF_OPTION, STRING_32]]
 		redefine
-			initialize,
-			on_ok
+			initialize
 		end
 
 	OPTION_PROPERTIES
@@ -150,18 +149,6 @@ feature {NONE} -- Agents
 			initialized: is_initialized
 		do
 			refresh
-		end
-
-	on_ok is
-			-- Ok was pressed.
-		local
-			wd: EB_WARNING_DIALOG
-		do
-			if wd = Void then
-				Precursor {PROPERTY_DIALOG}
-			else
-				wd.show_modal_to_window (Current)
-			end
 		end
 
 	add_class is

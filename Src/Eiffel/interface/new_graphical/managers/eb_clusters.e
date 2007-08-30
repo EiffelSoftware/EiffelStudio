@@ -46,6 +46,13 @@ inherit
 			default_create
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -361,7 +368,6 @@ feature -- Element change
 			old_file: RAW_FILE
 			new_file: RAW_FILE
 			input: STRING
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			fname: FILE_NAME
 			tdirsrc, tdirdes: KL_DIRECTORY
@@ -449,23 +455,19 @@ feature -- Element change
 									-- Notify observers.
 								on_class_moved (a_class, old_group, l_old_relative_path)
 							else
-								create wd.make_with_text (Warning_messages.w_Cannot_move_class)
-								wd.show_modal_to_window (Window_manager.last_focused_window.window)
+								prompts.show_error_prompt (Warning_messages.w_Cannot_move_class, Void, Void)
 							end
 						else
 							-- The source and destination are identical: do nothing.
 						end
 					else
-						create wd.make_with_text (Warning_messages.w_Invalid_cluster)
-						wd.show_modal_to_window (Window_manager.last_focused_window.window)
+						prompts.show_error_prompt (Warning_messages.w_Invalid_cluster, Void, Void)
 					end
 				else
-					create wd.make_with_text (Warning_messages.w_Invalid_cluster)
-					wd.show_modal_to_window (Window_manager.last_focused_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Invalid_cluster, Void, Void)
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Cannot_move_class)
-				wd.show_modal_to_window (Window_manager.last_focused_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Cannot_move_class, Void, Void)
 			end
 		rescue
 			retried := True
@@ -518,15 +520,12 @@ feature -- Element change
 		require
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			if not error_in_config then
 				remove_group_from_config (a_group, a_path)
 				on_cluster_removed (a_group, a_path)
 			else
-				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
-				wd.show_modal_to_window (Window_manager.last_focused_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Could_not_parse_ace, Void, Void)
 			end
 		end
 

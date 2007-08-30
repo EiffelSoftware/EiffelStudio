@@ -26,12 +26,18 @@ inherit
 		export
 			{NONE} all
 		end
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		end
 
 	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	ES_SHARED_PROMPT_PROVIDER
 		export
 			{NONE} all
 		end
@@ -62,7 +68,6 @@ feature -- Basic operations
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok, create_backup, new_created: BOOLEAN
 			tmp_name: STRING
-			wd: EB_WARNING_DIALOG
 			l_retry: BOOLEAN
 		do
 			if not l_retry then
@@ -75,8 +80,7 @@ feature -- Basic operations
 					if not new_file.is_creatable then
 						aok := False
 						last_saving_success := False
-						create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
-						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						prompts.show_error_prompt (warning_messages.w_not_creatable (new_file.name), Void, Void)
 					else
 						new_created := True
 					end
@@ -84,13 +88,11 @@ feature -- Basic operations
 					if not new_file.is_plain then
 						aok := False
 						last_saving_success := False
-						create wd.make_with_text (warning_messages.w_not_a_plain_file (new_file.name))
-						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						prompts.show_error_prompt (warning_messages.w_not_a_plain_file (new_file.name), Void, Void)
 					elseif not new_file.is_writable then
 						aok := False
 						last_saving_success := False
-						create wd.make_with_text (warning_messages.w_not_writable (new_file.name))
-						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						prompts.show_error_prompt (warning_messages.w_not_writable (new_file.name), Void, Void)
 					end
 				end
 
@@ -136,8 +138,7 @@ feature -- Basic operations
 				if new_file /= Void and then not new_file.is_closed then
 					new_file.close
 				end
-				create wd.make_with_text (warning_messages.w_Not_creatable_choose_to_save (new_file.name))
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (warning_messages.w_Not_creatable_choose_to_save (new_file.name), Void, Void)
 				file_save_as (a_text)
 				last_saving_success := False
 			end

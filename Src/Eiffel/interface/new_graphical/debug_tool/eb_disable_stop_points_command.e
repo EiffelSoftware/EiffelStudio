@@ -129,7 +129,6 @@ feature -- Execution
 	execute is
 			-- Disable all stop points.
 		local
-			wd: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager
@@ -137,8 +136,7 @@ feature -- Execution
 				bpm.disable_all_breakpoints
 
 				if bpm.error_in_bkpts then
-					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			end
@@ -152,7 +150,6 @@ feature -- Update
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
-			wd: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := bs.routine
@@ -163,8 +160,7 @@ feature -- Update
 				bpm.disable_breakpoint (f, index)
 
 				if bpm.error_in_bkpts then
-					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			end
@@ -174,7 +170,6 @@ feature -- Update
 			-- Process feature stone.
 		local
 			f: E_FEATURE
-			wd: EV_INFORMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature
@@ -183,8 +178,7 @@ feature -- Update
 				bpm.disable_breakpoints_in_feature (f)
 
 				if bpm.error_in_bkpts then
-					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			end
@@ -205,7 +199,6 @@ feature -- Update
 	drop_class (cs: CLASSC_STONE) is
 			-- Process class stone
 		local
-			wd: EV_INFORMATION_DIALOG
 			conv_fst: FEATURE_STONE
 			bpm: BREAKPOINTS_MANAGER
 		do
@@ -215,8 +208,7 @@ feature -- Update
 				bpm.disable_breakpoints_in_class (cs.e_class)
 
 				if bpm.error_in_bkpts then
-					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			end

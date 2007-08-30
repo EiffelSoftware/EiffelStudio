@@ -32,13 +32,11 @@ feature -- Basic operations
 			c: CLASSI_STONE
 			class_i: CLASS_I
 			cg: CLASS_TEXT_MODIFIER
-			wd: EB_WARNING_DIALOG
 			class_c: CLASS_C
 			retried: BOOLEAN
 		do
 			if retried then
-				create wd.make_with_text (Warning_messages.w_could_not_modify_class)
-				wd.show_modal_to_window (target.window)
+				prompts.show_error_prompt (Warning_messages.w_could_not_modify_class, target.window, Void)
 			else
 				if
 					Workbench.last_reached_degree <= 2
@@ -52,14 +50,12 @@ feature -- Basic operations
 								create cg.make (class_i)
 								cg.new_feature
 							else
-								create wd.make_with_text (Warning_messages.W_class_not_modifiable)
-								wd.show_modal_to_window (target.window)
+								prompts.show_error_prompt (Warning_messages.W_class_not_modifiable, target.window, Void)
 							end
 						end
 					end
 				else
-					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
-					wd.show_modal_to_window (target.window)
+					prompts.show_error_prompt (Warning_messages.w_Unsufficient_compilation (3), target.window, Void)
 				end
 			end
 		rescue

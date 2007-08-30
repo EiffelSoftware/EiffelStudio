@@ -19,6 +19,11 @@ inherit
 
 	EB_SHARED_SHORTCUT_MANAGER
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	accelerator: EV_ACCELERATOR;

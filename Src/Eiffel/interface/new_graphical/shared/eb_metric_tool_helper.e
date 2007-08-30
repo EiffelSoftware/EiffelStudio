@@ -24,6 +24,11 @@ inherit
 
 	QL_SHARED_UNIT
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	show_error_message (a_error_agent: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
@@ -38,7 +43,7 @@ feature -- Access
 		do
 			l_error := a_error_agent.item (Void)
 			if l_error /= Void then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_error.message_with_location, a_window, Void)
+				prompts.show_error_prompt (l_error.message_with_location, a_window, Void)
 				a_clear_error_agent.call (Void)
 			end
 		end

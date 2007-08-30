@@ -29,6 +29,8 @@ feature{NONE} -- Initlization
 	make is
 			-- Creation method
 		do
+					-- Make user not break the invariant from EV_ANY_I
+					set_state_flag (base_make_called_flag, True)
 		end
 
 feature -- Redefine

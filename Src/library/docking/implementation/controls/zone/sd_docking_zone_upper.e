@@ -46,7 +46,9 @@ feature -- Initlization
 		do
 			default_create
 			create internal_shared
-
+			-- Not breaking the invariant
+			create internal_shared_not_used
+			
 			internal_content := a_content
 			internal_docking_manager := a_content.docking_manager
 			create notebook.make (a_content.docking_manager)
@@ -65,9 +67,6 @@ feature -- Initlization
 			notebook.set_item_text (a_content, a_content.short_title)
 
 			set_minimum_height (internal_shared.tab_zone_upper_minimum_height)
-			
-			-- Not breaking the invariant
-			create internal_shared_not_used
 		ensure
 			set: internal_content = a_content
 			set: internal_docking_manager = a_content.docking_manager

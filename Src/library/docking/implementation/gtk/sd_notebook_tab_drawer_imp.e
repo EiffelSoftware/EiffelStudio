@@ -13,6 +13,7 @@ class
 inherit
 	SD_NOTEBOOK_TAB_DRAWER_I
 		redefine
+			make,
 			draw_pixmap_text_selected,
 			draw_pixmap_text_unselected,
 			expose_unselected,
@@ -36,6 +37,16 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initlialization
+		make is
+				-- Creation method
+			do
+					Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
+
+					-- Make user not break the invariant from EV_ANY_I
+					set_state_flag (base_make_called_flag, True)
+			end
 
 feature -- Command
 

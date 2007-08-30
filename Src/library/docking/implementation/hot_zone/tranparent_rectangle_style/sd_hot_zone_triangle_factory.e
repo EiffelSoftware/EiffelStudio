@@ -38,8 +38,6 @@ feature -- Factory method
 			elseif l_tab_zone /= Void then
 				Result := hot_zone_tab (l_tab_zone)
 			end
-
-			Result.set_type (a_zone.content.type)
 		end
 
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is

@@ -36,7 +36,6 @@ feature {NONE} -- Initlization
 			create bottom_rectangle.make (l_area.left, l_area.bottom, l_area.width, l_height)
 			create left_rectangle.make (l_area.left - l_width + 2, l_area.top, l_width, l_area.height)
 			create right_rectangle.make (l_area.right - 2, l_area.top, l_width, l_area.height)
-			type := {SD_ENUMERATION}.tool
 		ensure
 			set: internal_mediator = a_docker_mediator
 			set: internal_docking_manager = a_docking_manager

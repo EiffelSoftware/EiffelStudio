@@ -47,6 +47,7 @@ feature {NONE}-- Initlization
 			internal_docking_manager.zones.add_zone (zone)
 			last_floating_height := a_content.state.last_floating_height
 			last_floating_width := a_content.state.last_floating_width
+			initialized := True
 		ensure
 			set: internal_content = a_content
 			set: direction = a_direction
@@ -110,6 +111,7 @@ feature -- Redefine.
 			if zone /= Void then
 				update_floating_zone_visible (zone, a_data.is_visible)
 			end
+			initialized := True
 		end
 
 	record_state is
@@ -551,7 +553,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	internal_zone_not_void: zone /= Void
+	internal_zone_not_void: initialized implies zone /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

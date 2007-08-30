@@ -62,14 +62,16 @@ inherit
 			on_pointer_release,
 			on_expose,
 			initialize,
-			item_at_position
+			item_at_position,
+			line_width,
+			drawing_mode
 		select
 			has_capture_vision2,
 			enable_capture_vision2,
 			disable_capture_vision2
 		end
 
-	EV_FIXED
+	SD_FIXED
 		rename
 			extend as extend_fixed,
 			wipe_out as wipe_out_fixed,
@@ -114,6 +116,9 @@ feature {NONE} -- Initlization
 			extend_fixed (tool_bar)
 
 			tool_bar.expose_actions.extend (agent on_tool_bar_expose_actions)
+
+			-- We create this only for making sure the invariant not borken.
+			create internal_items.make (0)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -590,6 +595,20 @@ feature {NONE} -- Implementation
 				end
 				l_items.forth
 			end
+		end
+
+feature -- Contract support
+
+	line_width: INTEGER is
+			-- Redefine `line_width' from {EV_DRAWABLE} to make sure invariant not broken.
+			-- See bug#13387.
+		do
+		end
+
+	drawing_mode: INTEGER is
+			-- Redefine `drawing_mode' from {EV_DRAWABLE} to make sure invariant not broken.
+			-- See bug#13387.
+		do
 		end
 
 invariant

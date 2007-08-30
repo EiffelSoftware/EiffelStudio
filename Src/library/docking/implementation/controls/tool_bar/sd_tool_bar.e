@@ -891,8 +891,8 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			-- Need recalcualte current `row_height'? Because some thing changed?
 
 invariant
-	not_void: items /= Void
-	not_void: internal_items /= Void
+	items_not_void: items /= Void
+	internal_items_not_void: internal_items /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

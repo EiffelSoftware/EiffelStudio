@@ -494,11 +494,16 @@ feature {NONE} -- Implementation
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 
+feature -- Contract support
+
+	initialized: BOOLEAN
+			-- If ready to be used?
+
 invariant
 
-	not_void: internal_shared /= Void
-	valid: last_floating_height > 0
-	valid: last_floating_width > 0
+	internal_shared_not_void: initialized implies internal_shared /= Void
+	last_floating_height_valid: initialized implies last_floating_height > 0
+	last_floating_width_valid: initialized implies last_floating_width > 0
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

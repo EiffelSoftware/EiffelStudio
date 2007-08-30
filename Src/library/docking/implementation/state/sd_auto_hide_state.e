@@ -62,6 +62,8 @@ feature {NONE} -- Initlization
 			create animation.make (Current, internal_docking_manager)
 			last_floating_height := a_content.state.last_floating_height
 			last_floating_width := a_content.state.last_floating_width
+
+			initialized := True
 		ensure
 			set: internal_content = a_content
 			set: direction = a_direction
@@ -158,6 +160,7 @@ feature -- Redefine.
 			change_state (Current)
 			direction := a_data.direction
 			Precursor {SD_STATE} (a_data, a_container)
+			initialized := True
 		end
 
 	record_state is
@@ -472,12 +475,12 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Implemation
 
 invariant
 
-	not_void: internal_content /= Void
-	not_void: internal_shared /= Void
-	not_void: tab_stub /= Void
-	not_void: auto_hide_panel /= Void
-	not_void: animation /= Void
-	direction_valid: direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
+	internal_content_not_void: initialized implies internal_content /= Void
+	internal_shared_not_void: initialized implies internal_shared /= Void
+	tab_stub_not_void: initialized implies tab_stub /= Void
+	auto_hide_panel_not_void: initialized implies auto_hide_panel /= Void
+	animation_not_void: initialized implies animation /= Void
+	direction_valid: initialized implies direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
 indexing

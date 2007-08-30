@@ -581,6 +581,15 @@ feature {EV_ANY_I} -- Delegated features
 				)
 		end
 
+	draw_sub_pixel_buffer (x, y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
+			-- Draw area of `a_pixel_buffer' with upper-left corner on (`x', `y').
+		do
+			promote_to_drawable
+			interface.implementation.draw_sub_pixel_buffer (
+				x, y, a_pixel_buffer, area
+			)
+		end
+
 	draw_rectangle (
 		a_x					: INTEGER
 		a_y					: INTEGER

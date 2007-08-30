@@ -15,7 +15,10 @@ inherit
 			unstick_buffer,
 			maximize_buffer,
 			minimize_buffer,
+			normal_buffer,
+			close_buffer,
 			tool_bar_dropdown_buffer,
+			tool_bar_indicator_buffer,
 			hide_tab_indicator
 		end
 
@@ -39,67 +42,79 @@ feature -- Implementation
 		end
 
 	unstick: EV_PIXMAP is
-			-- Unstick icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_unpin_icon
 		end
 
 	unstick_buffer: EV_PIXEL_BUFFER is
-			-- Redefine
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_unpin_icon_buffer
 		end
 
 	stick: 	EV_PIXMAP is
-			-- Stick icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_pin_icon
 		end
 
 	stick_buffer: EV_PIXEL_BUFFER is
-			-- Stick icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_pin_icon_buffer
 		end
 
 	minimize: EV_PIXMAP is
-			-- Minimize icon pixmap
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_minimize_icon
 		end
 
 	minimize_buffer: EV_PIXEL_BUFFER is
-			-- Minimize icon pixmap
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_minimize_icon_buffer
 		end
 
 	maximize: EV_PIXMAP is
-			-- Maximize icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_maximize_icon
 		end
 
 	maximize_buffer: EV_PIXEL_BUFFER is
-			-- Maximize icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_maximize_icon_buffer
 		end
 
 	normal: EV_PIXMAP is
-			-- Minimize icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_normalize_icon
 		end
 
+	normal_buffer: EV_PIXEL_BUFFER is
+			-- Redefine.
+		once
+			Result := icons_10_10.tool_bar_normalize_icon_buffer
+		end
+
 	close: EV_PIXMAP is
-			-- Close icon pixmap.
+			-- Redefine.
 		once
 			Result := icons_10_10.tool_bar_close_icon
 		end
 
+	close_buffer: EV_PIXEL_BUFFER is
+			-- Redefine.
+		once
+			Result := icons_10_10.tool_bar_close_icon_buffer
+		end
+
 	hide_tab_indicator_buffer (a_hide_number: INTEGER): EV_PIXEL_BUFFER is
-			-- Hide tab indicator.
+			-- Redefine.
 		local
 			l_font: EV_FONT
 			l_orignal: EV_PIXEL_BUFFER
@@ -133,7 +148,7 @@ feature -- Implementation
 		end
 
 	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
-			-- Hide tab indicator.
+			-- Redefine.
 		local
 			l_orignal: EV_PIXMAP
 			l_colors: EV_STOCK_COLORS
@@ -171,6 +186,12 @@ feature -- Implementation
 			-- Redefine.
 		do
 			Result := icons_10_10.tool_bar_hidden_dropdown_icon
+		end
+
+	tool_bar_indicator_buffer: EV_PIXEL_BUFFER is
+			-- Redefine.
+		do
+			Result := icons_10_10.tool_bar_hidden_dropdown_icon_buffer
 		end
 
 	tool_bar_separator_icon: EV_PIXMAP is

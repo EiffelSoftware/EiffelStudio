@@ -44,6 +44,17 @@ feature -- Access
 
 feature -- Change element
 
+	update_size is
+			--
+		local
+			p: like pixmap
+		do
+			p := pixmap
+			if p /= Void then
+				set_size (p.width + (width - client_width), p.height + (height - client_height))
+			end
+		end
+
 	set_pixmap (a_pixmap: like pixmap) is
 			--Set `pixmap' with `a_pixmap'.
 		require

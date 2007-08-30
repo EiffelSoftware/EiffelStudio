@@ -34,6 +34,7 @@ feature {NONE}  -- Initlization
 			not_void: a_hidden_items /= Void
 			not_void: a_tool_bar /= Void
 		do
+			parent_tool_bar := a_tool_bar
 			make_with_shadow
 			disable_user_resize
 			disable_border
@@ -49,8 +50,6 @@ feature {NONE}  -- Initlization
 			init_customize_label
 			init_close
 			internal_tool_bar.compute_minimum_size
-
-			parent_tool_bar := a_tool_bar
 
 			-- If we don't call this, the height will be 2 pixels less on Windows.
 			set_height (item.minimum_height)
@@ -186,7 +185,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 						l_docking_manager.command.resize (True)
 						l_docking_manager.command.unlock_update
 					end
-					
+
 					parent_tool_bar.compute_minmum_size
 				end
 			end
@@ -245,7 +244,7 @@ feature {NONE} -- Implementation
 			-- All singletons.
 
 invariant
-	not_void: parent_tool_bar /= Void
+	parent_tool_bar_not_void: parent_tool_bar /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

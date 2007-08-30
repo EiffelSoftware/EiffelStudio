@@ -335,7 +335,6 @@ feature {NONE} -- Execution
 			parent_window_not_void: parent_window /= Void
 		local
 			li: EV_GRID_LABEL_ITEM
-			wd: EB_WARNING_DIALOG
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
 		do
 			if not wizards_list.selected_rows.is_empty then
@@ -350,8 +349,7 @@ feature {NONE} -- Execution
 					end
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Select_project_to_create)
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_Select_project_to_create, Current, Void)
 			end
 		end
 

@@ -948,7 +948,6 @@ feature {NONE} -- Events on notification
 	notify_execution_on_debugger_error is
 			-- Notify the system is exiting on debugger error
 		local
-			wd: EB_WARNING_DIALOG
 --			st: TEXT_FORMATTER
 			l_err_msg: STRING
 			dbg_info: EIFNET_DEBUGGER_INFO
@@ -966,8 +965,7 @@ feature {NONE} -- Events on notification
 --			st.add_string (l_err_msg)
 --			output_manager.process_text (st)
 
-			create wd.make_with_text (l_err_msg)
-			wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_err_msg, Void, Void)
 
 			status.set_is_stopped (True)
 			Eifnet_debugger.terminate_debugging

@@ -65,7 +65,6 @@ feature -- Execution
 			-- Save a file with the chosen name.
 		local
 			compileok: BOOLEAN
-			wd: EB_WARNING_DIALOG
 		do
 				-- FIXME XR: We add a test `is_sensitive' to prevent calls from the accelerator.
 				-- It would be nicer to use the `executable' feature but that's 5.1 :)
@@ -75,8 +74,7 @@ feature -- Execution
 					Workbench.is_compiling and then
 					Workbench.last_reached_degree > 4
 				then
-					create wd.make_with_text (Warning_messages.w_Degree_needed (5))
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Degree_needed (5), Void, Void)
 					compileok := False
 				else
 					compileok := True

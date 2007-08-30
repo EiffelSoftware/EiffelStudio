@@ -176,20 +176,16 @@ feature {NONE} -- implementation
 		local
 			char: CHARACTER
 			new_file: PLAIN_TEXT_FILE
-			wd: EB_WARNING_DIALOG
 		do
 			saved := False
 			if not a_filename.is_empty then
 				create new_file.make (a_filename)
 				if new_file.exists and then not new_file.is_plain then
-					create wd.make_with_text (Warning_messages.w_Not_a_plain_file (new_file.name))
-					wd.show_modal_to_window (dev_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Not_a_plain_file (new_file.name), dev_window.window, Void)
 				elseif new_file.exists and then not new_file.is_writable then
-					create wd.make_with_text (Warning_messages.w_Not_writable (new_file.name))
-					wd.show_modal_to_window (dev_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Not_writable (new_file.name), dev_window.window, Void)
 				elseif not new_file.exists and then not new_file.is_creatable then
-					create wd.make_with_text (Warning_messages.w_Not_creatable (new_file.name))
-					wd.show_modal_to_window (dev_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Not_creatable (new_file.name), dev_window.window, Void)
 				else
 					new_file.create_read_write
 					if not a_text.is_empty then

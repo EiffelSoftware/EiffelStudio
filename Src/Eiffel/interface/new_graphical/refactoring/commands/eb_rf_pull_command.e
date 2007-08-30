@@ -110,7 +110,6 @@ feature -- Events
 		local
 			feature_i: FEATURE_I
 			rf: ERF_FEATURE_PULL
-			wd: EB_WARNING_DIALOG
 		do
 			feature_i := fs.class_i.compiled_class.feature_of_feature_id (fs.e_feature.feature_id)
 			if feature_i /= Void and then fs.e_feature.associated_class.class_id = feature_i.written_in then
@@ -118,8 +117,7 @@ feature -- Events
 				rf.set_feature (feature_i)
 				manager.execute_refactoring (rf)
 			else
-				create wd.make_with_text (warning_messages.w_feature_not_written_in_class)
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (warning_messages.w_feature_not_written_in_class, Void, Void)
 			end
 		end
 
@@ -129,7 +127,6 @@ feature -- Execution
 			-- Execute.
 		local
 			fs: FEATURE_STONE
-			wd: EB_WARNING_DIALOG
 			window: EB_DEVELOPMENT_WINDOW
 		do
 			window := window_manager.last_focused_development_window
@@ -137,8 +134,7 @@ feature -- Execution
 			if fs /= Void then
 				drop_feature (fs)
 			else
-				create wd.make_with_text (warning_messages.w_Select_feature_to_pull)
-				wd.show_modal_to_window (window.window)
+				prompts.show_info_prompt (warning_messages.w_Select_feature_to_pull, window.window, Void)
 			end
 		end
 

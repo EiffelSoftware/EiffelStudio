@@ -275,7 +275,6 @@ feature {NONE} -- Implementation
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
 			clu: EB_SORTED_CLUSTER
-			wd: EB_WARNING_DIALOG
 		do
 			is_top_level := False
 			if cluster_list.selected_item /= Void then
@@ -293,12 +292,10 @@ feature {NONE} -- Implementation
 					end
 					if clu = Void or else not (clu.is_cluster or clu.is_library) then
 						aok := False
-						create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
-						wd.show_modal_to_window (Current)
+						prompts.show_error_prompt (Warning_messages.w_unknown_cluster_name, Current, Void)
 					elseif clu.actual_group.is_readonly then
 						aok := False
-						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (clu.actual_group.name))
-						wd.show_modal_to_window (Current)
+						prompts.show_error_prompt (Warning_messages.w_Cannot_add_to_library_cluster (clu.actual_group.name), Current, Void)
 					else
 						aok := True
 						group := clu.actual_group
@@ -319,7 +316,6 @@ feature {NONE} -- Implementation
 			dir: DIRECTORY
 			test_file: RAW_FILE
 			base_name: STRING
-			wd: EB_WARNING_DIALOG
 			in_recursive: BOOLEAN
 			l_clu: CONF_CLUSTER
 		do
@@ -335,8 +331,7 @@ feature {NONE} -- Implementation
 				base_name := cluster_name
 				aok := Eiffel_universe.group_of_name (base_name) = Void
 				if not aok then
-					create wd.make_with_text (Warning_messages.w_cluster_name_already_exists (base_name))
-					wd.show_modal_to_window (target.window)
+					prompts.show_error_prompt (Warning_messages.w_cluster_name_already_exists (base_name), target.window, Void)
 				end
 			end
 			if aok then
@@ -360,16 +355,14 @@ feature {NONE} -- Implementation
 						aok := not group.target.system.date_has_changed
 					end
 					if not aok then
-						create wd.make_with_text (warning_messages.w_cannot_delete_need_recompile)
-						wd.show_modal_to_window (Current)
+						prompts.show_error_prompt (warning_messages.w_cannot_delete_need_recompile, Current, Void)
 					end
 				end
 				if aok then
 					create dir.make (chosen_dir)
 					create test_file.make (chosen_dir)
 					if test_file.exists and then not dir.exists then
-						create wd.make_with_text (Warning_messages.w_Not_a_directory (chosen_dir))
-						wd.show_modal_to_window (Current)
+						prompts.show_error_prompt (Warning_messages.w_Not_a_directory (chosen_dir), Current, Void)
 					elseif not dir.exists then
 						create_directory (dir)
 						if aok then
@@ -380,8 +373,7 @@ feature {NONE} -- Implementation
 								real_create_cluster (base_name)
 							end
 						else
-							create wd.make_with_text (Warning_messages.w_Cannot_create_directory (chosen_dir))
-							wd.show_modal_to_window (Current)
+							prompts.show_error_prompt (Warning_messages.w_Cannot_create_directory (chosen_dir), Current, Void)
 						end
 					else
 							-- if we are in a recursive cluster we don't need to do anything except refreshing
@@ -428,13 +420,11 @@ feature {NONE} -- Implementation
 			current_state_is_valid: aok
 		local
 			cn: STRING
-			wd: EB_WARNING_DIALOG
 		do
 			cn := cluster_name
 			aok := not cn.is_empty and then (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (cn)
 			if not aok then
-				create wd.make_with_text (Warning_messages.w_invalid_cluster_name (cn))
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_invalid_cluster_name (cn), Current, Void)
 			end
 		end
 
@@ -446,15 +436,13 @@ feature {NONE} -- Implementation
 		local
 			cp: STRING
 			icp: STRING
-			wd: EB_WARNING_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			cp := folder_entry.text
 				-- top level clusters need a path
 			if is_top_level and cp.is_empty then
 				aok := False
-				create wd.make_with_text (warning_messages.w_cluster_path_not_valid)
-				wd.show_modal_to_window (target.window)
+				prompts.show_error_prompt (warning_messages.w_cluster_path_not_valid, target.window, Void)
 			elseif cp.is_empty then
 				create chosen_dir.make_from_string (group.location.build_path (path, ""))
 				chosen_dir.set_file_name (cluster_name)
@@ -467,8 +455,7 @@ feature {NONE} -- Implementation
 				icp := l_loc.evaluated_directory
 				aok := Eiffel_universe.cluster_of_location (icp).is_empty
 				if not aok then
-					create wd.make_with_text (Warning_messages.w_cluster_path_already_exists (icp))
-					wd.show_modal_to_window (target.window)
+					prompts.show_error_prompt (Warning_messages.w_cluster_path_already_exists (icp), target.window, Void)
 				else
 					create chosen_dir.make_from_string (icp)
 					original_path := cp

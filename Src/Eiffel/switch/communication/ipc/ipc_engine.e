@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -233,7 +238,6 @@ feature {NONE} -- ecdbgd status
 		local
 			retried: BOOLEAN
 			old_delay: INTEGER
-			dlg: EB_WARNING_DIALOG
 		do
 			if not retried then
 				if ecdbgd_alive_checking_timer /= Void then
@@ -244,9 +248,8 @@ feature {NONE} -- ecdbgd status
 					debug ("ipc")
 						print ("ecdbgd is not alive anymore !!! %N")
 					end
-					create dlg.make_with_text ("The Eiffel debugger daemon is dead,%N" +
-						"If you were debugging, the session is about to be terminated")
-					dlg.show
+					prompts.show_error_prompt ("The Eiffel debugger daemon is dead,%N" +
+						"If you were debugging, the session is about to be terminated", Void, Void)
 					if dead_handler /= Void then
 							--| It occurs on linux, dead_handler is Void
 							--| it seems even if the debugger is stopped

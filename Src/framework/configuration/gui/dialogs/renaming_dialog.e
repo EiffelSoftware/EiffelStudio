@@ -11,8 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING_32, STRING_32]]
 		redefine
-			initialize,
-			on_ok
+			initialize
 		end
 
 	CONF_GUI_INTERFACE_CONSTANTS
@@ -113,18 +112,6 @@ feature {NONE} -- Agents
 					value := Void
 				end
 				refresh
-			end
-		end
-
-	on_ok is
-			-- Ok was pressed.
-		local
-			wd: EB_WARNING_DIALOG
-		do
-			if wd = Void then
-				Precursor {PROPERTY_DIALOG}
-			else
-				wd.show_modal_to_window (Current)
 			end
 		end
 

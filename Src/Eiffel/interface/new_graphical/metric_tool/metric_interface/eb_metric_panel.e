@@ -290,12 +290,8 @@ feature{NONE} -- Implementation
 			-- Display `a_message' in a prompt-out information dialog.
 		require
 			a_message_attached: a_message /= Void
-		local
-			l_dialog: EV_INFORMATION_DIALOG
 		do
-			create l_dialog.make_with_text (a_message)
-			l_dialog.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent l_dialog.destroy>>)
-			l_dialog.show_relative_to_window (metric_tool_window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (a_message, metric_tool_window, Void)
 		end
 
 	update_ui is

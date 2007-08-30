@@ -32,7 +32,6 @@ feature -- Basic operations
 			-- Pop up cluster wizard.
 		local
 			dial: CREATE_ASSEMBLY_DIALOG
-			wd: EB_WARNING_DIALOG
 			l_factory: CONF_COMP_FACTORY
 		do
 			if Workbench.is_in_stable_state then
@@ -46,8 +45,7 @@ feature -- Basic operations
 					manager.refresh
 				end
 			else
-				create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (6))
-				wd.show_modal_to_window (target.window)
+				prompts.show_error_prompt (Warning_messages.w_Unsufficient_compilation (6), target.window, Void)
 			end
 		end
 

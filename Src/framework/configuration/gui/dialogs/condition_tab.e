@@ -51,6 +51,15 @@ inherit
 			is_equal
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -473,7 +482,6 @@ feature {NONE} -- Actions
 		local
 			l_ver: STRING
 			l_min, l_max: CONF_VERSION
-			wd: EB_WARNING_DIALOG
 		do
 			l_ver := version_min_compiler.text
 			if not l_ver.is_empty then
@@ -485,13 +493,11 @@ feature {NONE} -- Actions
 			end
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
-				fill_compiler_version
-				create wd.make_with_text (conf_interface_names.version_valid_format)
-				wd.show_modal_to_window (parent_window (Current))
+				fill_compiler_version;
+				prompts.show_error_prompt (conf_interface_names.version_valid_format, parent_window (Current), Void)
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
-				fill_compiler_version
-				create wd.make_with_text (conf_interface_names.version_min_max)
-				wd.show_modal_to_window (parent_window (Current))
+				fill_compiler_version;
+				prompts.show_error_prompt (conf_interface_names.version_min_max, parent_window (Current), Void)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_compiler)
 			else
@@ -504,7 +510,6 @@ feature {NONE} -- Actions
 		local
 			l_ver: STRING
 			l_min, l_max: CONF_VERSION
-			wd: EB_WARNING_DIALOG
 		do
 			l_ver := version_min_msil_clr.text
 			if not l_ver.is_empty then
@@ -516,13 +521,11 @@ feature {NONE} -- Actions
 			end
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
-				fill_msil_clr_version
-				create wd.make_with_text (conf_interface_names.version_valid_format)
-				wd.show_modal_to_window (parent_window (Current))
+				fill_msil_clr_version;
+				prompts.show_error_prompt (conf_interface_names.version_valid_format, parent_window (Current), Void)
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
-				fill_msil_clr_version
-				create wd.make_with_text (conf_interface_names.version_min_max)
-				wd.show_modal_to_window (parent_window (Current))
+				fill_msil_clr_version;
+				prompts.show_error_prompt (conf_interface_names.version_min_max, parent_window (Current), Void)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_msil_clr)
 			else

@@ -7,7 +7,7 @@ indexing
 
 class
 	ES_PIXMAPS_CURSORS
-	
+
 inherit
 	EIFFEL_LAYOUT
 		export
@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_file: FILE_NAME
-			l_warn: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -39,8 +38,7 @@ feature {NONE} -- Initialization
 				create raw_buffer
 				raw_buffer.set_with_named_file (l_file)
 			else
-				create l_warn.make_with_text ("Cannot read pixmap file:%N" + l_file + ".%NPlease make sure the installation is not corrupted.")
-				l_warn.show
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt ("Cannot read pixmap file:%N" + l_file + ".%N%NPlease make sure the installation is not corrupted.", Void, Void)
 
 					-- Fail safe, use blank pixmap
 				create raw_buffer.make_with_size ((17 * 32) + 1,(3 * 32) + 1)
@@ -49,7 +47,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	pixel_width: INTEGER is 32
@@ -712,7 +710,7 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 4))
 		end
 
-		
+
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is

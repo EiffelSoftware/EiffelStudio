@@ -264,7 +264,6 @@ feature -- Change
 	refresh is
 			-- Recompute the displayed text.
 		local
-			l_dlg: EB_WARNING_DIALOG
 			l_trunc_str: STRING_32
 			l_real_str_length: INTEGER
 			l_length_str: STRING_32
@@ -308,8 +307,7 @@ feature -- Change
 						set_title (l_length_str)
 						upper_slice_field.set_tooltip (l_length_str)
 					else
-						create l_dlg.make_with_text (Interface_names.l_dbg_unable_to_get_value_message)
-						l_dlg.show_modal_to_window (parent_window (widget))
+						prompts.show_error_prompt (Interface_names.l_dbg_unable_to_get_value_message, parent_window (widget), Void)
 					end
 				end
 			end
@@ -376,14 +374,12 @@ feature {NONE} -- Event handling
 		local
 			l_lower, l_upper: INTEGER
 			valid: BOOLEAN
-			error_dialog: EB_WARNING_DIALOG
 		do
 			valid := True
 			if lower_slice_field.text.is_integer then
 				l_lower := lower_slice_field.text.to_integer
 			else
-				create error_dialog.make_with_text (warning_messages.w_not_an_integer)
-				error_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (warning_messages.w_not_an_integer, Void, Void)
 				valid := False
 				if lower_slice_field.text_length /= 0 then
 					lower_slice_field.select_all
@@ -393,8 +389,7 @@ feature {NONE} -- Event handling
 			if upper_slice_field.text.is_integer then
 				l_upper := upper_slice_field.text.to_integer
 			elseif valid then
-				create error_dialog.make_with_text (warning_messages.w_not_an_integer)
-				error_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (warning_messages.w_not_an_integer, Void, Void)
 				valid := False
 				if upper_slice_field.text_length /= 0 then
 					upper_slice_field.select_all

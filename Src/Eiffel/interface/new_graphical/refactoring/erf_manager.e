@@ -20,6 +20,11 @@ inherit
 
 	EB_CONSTANTS
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -81,7 +86,6 @@ feature -- Element change
 		local
 			compiler_check: ERF_COMPILATION_SUCCESSFUL
 			l_actions: LIST [ERF_ACTION]
-			wd: EB_WARNING_DIALOG
 		do
 			disable_sensitive
 			window_manager.on_refactoring_start
@@ -106,8 +110,7 @@ feature -- Element change
 			compiler_check.execute
 			if not compiler_check.success then
 				redo_last
-				create wd.make_with_text (compiler_check.error_message.as_string_32+" " + interface_names.l_undo_not_possible)
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (compiler_check.error_message.as_string_32+" " + interface_names.l_undo_not_possible, Void, Void)
 			end
 
 			window_manager.on_refactoring_end

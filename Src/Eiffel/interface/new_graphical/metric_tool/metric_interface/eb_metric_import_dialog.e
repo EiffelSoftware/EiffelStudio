@@ -365,7 +365,6 @@ feature {NONE} -- Actions
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_METRIC_IMPORT_GRID_ROW]
 			l_library_tbl: like library_uuid_table
-			l_dlg: EV_INFORMATION_DIALOG
 		do
 			library_uuid_table_internal := Void
 			l_library_tbl := library_uuid_table
@@ -384,9 +383,9 @@ feature {NONE} -- Actions
 			metric_tool.store_metrics
 			metric_tool.load_metrics_and_display_error (True, metric_names.t_importing_metrics)
 			grid.disable_sensitive
-			import_btn.disable_sensitive
-			create l_dlg.make_with_text (metric_names.t_metrics_imported)
-			l_dlg.show_modal_to_window (Current)
+			import_btn.disable_sensitive;
+
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (metric_names.t_metrics_imported, Current, Void)
 		end
 
 	on_backup_user_defined_metrics is

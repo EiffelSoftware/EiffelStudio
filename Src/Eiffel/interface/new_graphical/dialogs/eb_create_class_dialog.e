@@ -315,7 +315,6 @@ feature {NONE} -- Access
 		local
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			clu: EB_SORTED_CLUSTER
-			wd: EB_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
 				l_folder ?= cluster_list.selected_item
@@ -329,12 +328,10 @@ feature {NONE} -- Access
 				end
 				if clu = Void or else not clu.is_cluster then
 					aok := False
-					create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
-					wd.show_modal_to_window (Current)
+					prompts.show_error_prompt (Warning_messages.w_unknown_cluster_name, Current, Void)
 				elseif not clu.is_writable then
 					aok := False
-					create wd.make_with_text (Warning_messages.w_read_only_cluster)
-					wd.show_modal_to_window (Current)
+					prompts.show_error_prompt (Warning_messages.w_read_only_cluster, Current, Void)
 				else
 					aok := True
 					cluster := clu.actual_cluster
@@ -342,8 +339,7 @@ feature {NONE} -- Access
 				end
 			else
 				aok := False
-				create wd.make_with_text (warning_messages.w_no_cluster_selected_for_class_creation)
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (warning_messages.w_no_cluster_selected_for_class_creation, Current, Void)
 			end
 		end
 
@@ -407,7 +403,6 @@ feature {NONE} -- Implementation
 			f_name: FILE_NAME
 			file: RAW_FILE -- Windows specific
 			base_name: STRING
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -428,12 +423,10 @@ feature {NONE} -- Implementation
 					base_name := file_name
 					create file.make (f_name)
 					if file.exists then
-						create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
-						wd.show_modal_to_window (Current)
+						prompts.show_error_prompt (Warning_messages.w_class_already_in_cluster (base_name), target.window, Void)
 						class_entry.set_focus
 					elseif not file.is_creatable then
-						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
-						wd.show_modal_to_window (target.window)
+						prompts.show_error_prompt (Warning_messages.w_cannot_create_file (f_name), target.window, Void)
 					else
 						destroy
 						load_default_class_text (file)
@@ -463,7 +456,6 @@ feature {NONE} -- Implementation
 			input: RAW_FILE
 			in_buf: STRING
 			cr: STRING
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			writing: BOOLEAN
 			clf: FILE_NAME
@@ -559,17 +551,15 @@ feature {NONE} -- Implementation
 					output.close
 					could_not_load_file := False
 				else
-					create wd.make_with_text (Warning_messages.w_cannot_read_file (input.name))
-					wd.show_modal_to_window (target.window)
+					prompts.show_error_prompt (Warning_messages.w_cannot_read_file (input.name), target.window, Void)
 					could_not_load_file := True
 				end
 			else
 				if not writing then
-					create wd.make_with_text (Warning_messages.w_cannot_read_file (input.name))
+					prompts.show_error_prompt (Warning_messages.w_cannot_read_file (input.name), target.window, Void)
 				else
-					create wd.make_with_text (Warning_messages.w_cannot_create_file (output.name))
+					prompts.show_error_prompt (Warning_messages.w_cannot_create_file (output.name), target.window, Void)
 				end
-				wd.show_modal_to_window (target.window)
 			end
 		rescue
 			retried := True
@@ -599,14 +589,12 @@ feature {NONE} -- Implementation
 		require
 			current_state_is_valid: aok
 		local
-			wd: EB_WARNING_DIALOG
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			l_classes := cluster.classes
 			if l_classes.has_key (class_name) and then l_classes.found_item.is_valid then
 				aok := False
-				create wd.make_with_text (Warning_messages.w_class_already_exists (class_name))
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_class_already_exists (class_name), Current, Void)
 			end
 		end
 
@@ -616,13 +604,11 @@ feature {NONE} -- Implementation
 			current_state_is_valid: aok
 		local
 			cn: STRING
-			wd: EB_WARNING_DIALOG
 		do
 			cn := class_name
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (cn)
 			if not aok then
-				create wd.make_with_text (Warning_messages.w_invalid_class_name (cn))
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_invalid_class_name (cn), Current, Void)
 			end
 		end
 
@@ -633,13 +619,11 @@ feature {NONE} -- Implementation
 			creation_check_selected: creation_check.is_selected
 		local
 			fn: STRING
-			wd: EB_WARNING_DIALOG
 		do
 			fn := creation_entry.text
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (fn)
 			if not aok then
-				create wd.make_with_text (Warning_messages.w_invalid_feature_name (fn))
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_invalid_feature_name (fn), Current, Void)
 			end
 		end
 

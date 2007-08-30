@@ -295,7 +295,6 @@ feature {NONE} -- Implementation
 			-- Remove `class_i' from the system.
 		local
 			file: PLAIN_TEXT_FILE
-			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			es_class: ES_CLASS
 			es_classes: ARRAYED_LIST [ES_CLASS]
@@ -320,8 +319,7 @@ feature {NONE} -- Implementation
 			end
 			if could_not_delete then
 					-- We were not able to delete the file.
-				create wd.make_with_text (Warning_messages.w_Not_writable (class_i.file_name))
-				wd.show_modal_to_window (window.window)
+				prompts.show_error_prompt (Warning_messages.w_Not_writable (class_i.file_name), window.window, Void)
 			else
 				es_classes := tool.graph.class_from_interface (class_i)
 				from

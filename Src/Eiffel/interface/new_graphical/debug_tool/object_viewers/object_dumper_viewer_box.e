@@ -110,7 +110,6 @@ feature -- Change
 	refresh is
 			-- Recompute the displayed text.
 		local
-			l_dlg: EB_WARNING_DIALOG
 			dobj: DEBUGGED_OBJECT
 		do
 			editor.clear_window
@@ -124,8 +123,7 @@ feature -- Change
 						(create {DEBUGGER_TEXT_FORMATTER_OUTPUT}.make).append_object (dobj, "Object", editor.text_displayed)
 						editor.handle_after_processing
 					else
-						create l_dlg.make_with_text (Interface_names.l_dbg_unable_to_get_value_message)
-						l_dlg.show_modal_to_window (parent_window (widget))
+						prompts.show_warning_prompt (Interface_names.l_dbg_unable_to_get_value_message, parent_window (widget), Void)
 					end
 				end
 			end

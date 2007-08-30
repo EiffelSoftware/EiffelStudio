@@ -52,7 +52,6 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			doc: DOCUMENTATION
-			dial: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			l_str: STRING
 		do
@@ -85,9 +84,7 @@ feature {NONE} -- Implementation
 				window_manager.display_message (l_str)
 			end
 		rescue
-			create dial.make_with_text (
-				(create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name))
-			dial.show_modal_to_window (Window_manager.last_focused_development_window.window)
+			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
 			Error_handler.error_list.wipe_out
 			retried := True
 			retry

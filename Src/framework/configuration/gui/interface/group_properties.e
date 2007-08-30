@@ -564,21 +564,17 @@ feature {NONE} -- Validation and warning generation
 			a_name_valid_as_string_8: a_name.is_valid_as_string_8
 		local
 			l_groups: HASH_TABLE [CONF_GROUP, STRING]
-			wd: EB_WARNING_DIALOG
 			l_name: STRING_8
 		do
 			l_groups := a_target.groups
 			l_name := a_name.as_string_8.as_lower
 			l_groups.search (l_name.as_lower)
 			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (l_name) then
-				create wd.make_with_text (conf_interface_names.group_name_invalid)
-				wd.show_modal_to_window (window)
+				prompts.show_error_prompt (conf_interface_names.group_name_invalid, window, Void)
 			elseif l_groups.found and then l_groups.found_item /= a_group then
-				create wd.make_with_text (conf_interface_names.group_name_duplicate)
-				wd.show_modal_to_window (window)
+				prompts.show_error_prompt (conf_interface_names.group_name_duplicate, window, Void)
 			elseif l_name.is_empty then
-				create wd.make_with_text (conf_interface_names.group_name_empty)
-				wd.show_modal_to_window (window)
+				prompts.show_error_prompt (conf_interface_names.group_name_empty, window, Void)
 			else
 				Result := True
 			end

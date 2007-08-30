@@ -9,7 +9,7 @@ class
 	EB_DOCUMENTATION_WIZARD
 
 inherit
-	EV_DIALOG
+	EB_DIALOG
 		redefine
 			initialize
 		end
@@ -476,7 +476,6 @@ feature {NONE} -- Implementation
 
 	show_indexing_selection is
 		local
-			dial: EB_WARNING_DIALOG
 			err: SYNTAX_ERROR
 			retried: BOOLEAN
 		do
@@ -496,11 +495,10 @@ feature {NONE} -- Implementation
 		rescue
 			if not Error_handler.error_list.is_empty then
 				err ?= Error_handler.error_list.first
-					if err /= void then
-						Error_handler.error_list.wipe_out
-						create dial.make_with_text (interface_names.l_indexing_clause_error)
-						dial.show_modal_to_window (Window_manager.last_focused_development_window.window)
-					end
+				if err /= void then
+					Error_handler.error_list.wipe_out
+					prompts.show_error_prompt (interface_names.l_indexing_clause_error, Void, Void)
+				end
 			end
 			retried := True
 			retry

@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature {ERF_REFACTORING} -- Initialization
 
 	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
@@ -60,9 +65,6 @@ feature -- Basic actions
 		local
 			all_checks_ok: BOOLEAN
 			compiler_check: ERF_COMPILATION_SUCCESSFUL
-			wd: EB_WARNING_DIALOG
-			qd: EB_QUESTION_DIALOG
-			evcsts: EV_DIALOG_CONSTANTS
 		do
 			success := False
 			status_bar := window_manager.last_focused_development_window.status_bar
@@ -71,8 +73,7 @@ feature -- Basic actions
 				-- check if compilation is ok
 			compiler_check.execute
 			if not compiler_check.success then
-				create wd.make_with_text (compiler_check.error_message)
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (compiler_check.error_message, Void, Void)
 			else
 					-- Get open classes
 				window_manager.for_all_development_windows (agent add_window_to_open_classes)
@@ -102,12 +103,7 @@ feature -- Basic actions
 						if not success then
 								-- success, because, now the user can choose to keep the changes or if he rollbacks, success will be set to False
 							success := True
-							create qd.make_with_text (compiler_check.error_message.as_string_32+" " + interface_names.l_rollback_question)
-							create evcsts
-							qd.button (interface_names.b_yes).select_actions.extend (agent rollback)
-							qd.button (interface_names.b_no).select_actions.extend (agent commit)
-							qd.button (interface_names.b_cancel).hide
-							qd.show_modal_to_window (window_manager.last_focused_development_window.window)
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (compiler_check.error_message.as_string_32+" " + interface_names.l_rollback_question, Void, agent rollback, agent commit)
 						else
 							commit
 						end
@@ -299,14 +295,11 @@ feature {NONE} -- Implementation
 			-- Was `c' successful?
 		require
 			c_not_void: c /= Void
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			c.execute
 			Result := c.success
 			if retry_ask_run_settings and not Result then
-				create wd.make_with_text (c.error_message)
-				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				prompts.show_error_prompt (c.error_message, Void, Void)
 			end
 		end
 

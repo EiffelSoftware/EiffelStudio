@@ -1889,7 +1889,6 @@ feature {NONE} -- execution
 			parser: EB_QUERY_PARSER
 			txt: STRING
 			operator: SUBQUERY_OPERATOR
-			error_dialog: EB_WARNING_DIALOG
 		do
 			txt := subquery
 			if txt /= Void and then not txt.is_empty then
@@ -1903,8 +1902,7 @@ feature {NONE} -- execution
 					update_query_frame
 					subquery_text.remove_text
 				else
-					create error_dialog.make_with_text (Warning_messages.w_Profiler_bad_query)
-					error_dialog.show_modal_to_window (Current)
+					prompts.show_error_prompt (Warning_messages.w_Profiler_bad_query, Current, Void)
 				end
 			end
 		end

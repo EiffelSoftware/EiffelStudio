@@ -12,6 +12,11 @@ class
 inherit
 	EB_CONSTANTS
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -192,7 +197,6 @@ feature {NONE} -- Implementation: graphical interface
 			text_set: text /= Void
 			window_set: window /= Void
 		local
-			wd: EB_WARNING_DIALOG
 			fn: FILE_NAME
 			f: FILE
 		do
@@ -200,13 +204,11 @@ feature {NONE} -- Implementation: graphical interface
 			create fn.make_from_string (context.file_name)
 			if context.output_to_file then
 				if fn = Void then
-					create wd.make_with_text (Warning_messages.w_Cannot_create_file (""))
-					wd.show_modal_to_window (window)
+					prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (""), window, Void)
 				else
 					create {RAW_FILE} f.make (fn)
 					if f.exists or not f.is_creatable then
-						create wd.make_with_text (Warning_messages.w_Cannot_create_file (fn))
-						wd.show_modal_to_window (window)
+						prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (fn), window, Void)
 					else
 						print_text
 					end

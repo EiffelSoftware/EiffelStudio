@@ -191,11 +191,8 @@ feature{NONE} -- Command substitution
 
 	show_warning_dialog (msg: STRING_GENERAL) is
 			-- Show a warning dialog to display `msg'.
-		local
-			wdlg: EB_WARNING_DIALOG
 		do
-			create wdlg.make_with_text (msg)
-			wdlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+			prompts.show_warning_prompt (msg, Void, Void)
 		end
 
 feature -- Execution
@@ -586,17 +583,14 @@ feature {NONE} -- Implementation
 			-- User pressed OK in `dialog'.
 			-- Try to update `Current's status.
 		local
-			wd: EB_WARNING_DIALOG
 			ix: INTEGER
 		do
 			ix := index_field.value
 			if name_field.text.is_empty or command_field.text.is_empty or ix < 0 or ix > 9 then
-				create wd.make_with_text (Warning_messages.w_Invalid_options)
-				wd.show_modal_to_window (dialog)
+				prompts.show_error_prompt (Warning_messages.w_Invalid_options, dialog, Void)
 			else
 				if commands.item (ix) /= Void and then commands.item (ix) /= Current then
-					create wd.make_with_text (Warning_messages.w_Index_already_taken)
-					wd.show_modal_to_window (dialog)
+					prompts.show_error_prompt (Warning_messages.w_Index_already_taken, dialog, Void)
 				else
 					name := name_field.text
 					external_command := command_field.text

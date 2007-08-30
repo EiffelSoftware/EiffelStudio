@@ -46,7 +46,6 @@ feature {NONE} -- Implementation
 		local
 			full_path: FILE_NAME
 			retried: BOOLEAN
-			warning_dialog: EB_WARNING_DIALOG
 		do
 			if not retried then
 					-- Initialize the pathname & load the file
@@ -56,10 +55,8 @@ feature {NONE} -- Implementation
 				full_path.add_extension (Pixmap_suffix)
 				Result.set_with_named_file (full_path)
 			else
-				create warning_dialog.make_with_text (
-					"Cannot read pixmap file:%N" + full_path + ".%N%
-					%Please make sure the installation is not corrupted.")
-				warning_dialog.show
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt ("Cannot read pixmap file:%N" + full_path + ".%N%
+					%Please make sure the installation is not corrupted.", Void, Void)
 				create Result.make_with_size (pixmap_width, pixmap_height) -- Default pixmap size
 			end
 		ensure

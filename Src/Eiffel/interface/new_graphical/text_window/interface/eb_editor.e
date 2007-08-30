@@ -105,7 +105,7 @@ feature -- Warning messages display
 				-- display warning message : text is not editable...
 		local
 			wm: STRING_32
-			w: EB_TEXT_LOADING_WARNING_DIALOG
+			l_prompt: ES_DISCARDABLE_WARNING_PROMPT
 		do
 			if text_displayed /= Void then
 				if is_read_only and then not allow_edition then
@@ -116,8 +116,8 @@ feature -- Warning messages display
 					end
 					show_warning_message (wm)
 				else
-					create w.make
-					w.show_modal_to_window (reference_window)
+					create l_prompt.make_standard (Interface_names.l_Text_loading, "", preferences.dialog_data.acknowledge_not_loaded_string)
+					l_prompt.show (reference_window)
 				end
 			end
 		end
@@ -217,9 +217,7 @@ feature -- Text Loading
 	check_document_modifications_and_reload is
 			-- Check if current stone is changed and reload.
 		local
-			dialog: EV_INFORMATION_DIALOG
-			button_labels: ARRAY [STRING_GENERAL]
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+			l_question: ES_QUESTION_PROMPT
 			l_class_stone: CLASSI_STONE
 		do
 			is_checking_modifications := True
@@ -238,18 +236,12 @@ feature -- Text Loading
 			elseif not file_is_up_to_date then
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
-					create dialog.make_with_text (interface_names.t_this_file_has_been_modified)
-					create button_labels.make (1, 2)
-					create actions.make (1, 2)
-					button_labels.put (interface_names.b_Reload, 1)
-					actions.put (agent reload, 1)
-					button_labels.put (interface_names.b_Continue_anyway, 2)
-					actions.put (agent continue_editing, 2)
-					dialog.set_buttons_and_actions (button_labels, actions)
-					dialog.set_default_push_button (dialog.button (button_labels @ 1))
-					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
-					dialog.set_title (interface_names.t_External_edition)
-					dialog.show_modal_to_window (reference_window)
+					create l_question.make_standard (interface_names.t_this_file_has_been_modified)
+					l_question.set_button_text (l_question.dialog_buttons.yes_button, interface_names.b_Reload)
+					l_question.set_button_action (l_question.dialog_buttons.yes_button, agent reload)
+					l_question.set_button_text (l_question.dialog_buttons.no_button, interface_names.b_Continue_anyway)
+					l_question.set_button_action (l_question.dialog_buttons.no_button, agent continue_editing)
+					l_question.show (reference_window)
 				elseif editor_preferences.automatic_update and not changed then
 					reload
 				end
@@ -316,14 +308,14 @@ feature {NONE} -- Retrieving backup
 			-- Display a dialog asking the user whether he wants to open
 			-- the original file or the backup one, and set `open_backup' accordingly.
 		local
-			dial: EB_WARNING_DIALOG
+			l_warning: ES_WARNING_PROMPT
 		do
-			create dial.make_with_text (Warning_messages.w_Found_backup)
-			dial.set_buttons_and_actions (<<Interface_names.b_Open_backup, Interface_names.b_Open_original>>, <<agent open_backup_selected, agent open_normal_selected>>)
-			dial.set_default_push_button (dial.button (Interface_names.b_Open_backup))
-			dial.set_default_cancel_button (dial.button (Interface_names.b_Open_original))
-			dial.set_title (Interface_names.t_Open_backup)
-			dial.show_modal_to_window (reference_window)
+			create l_warning.make_standard_with_cancel (Warning_messages.w_Found_backup)
+			l_warning.set_button_text (l_warning.dialog_buttons.ok_button, Interface_names.b_Open_backup)
+			l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent open_backup_selected)
+			l_warning.set_button_text (l_warning.dialog_buttons.cancel_button, Interface_names.b_Open_original)
+			l_warning.set_button_action (l_warning.dialog_buttons.cancel_button, agent open_normal_selected)
+			l_warning.show (reference_window)
 		end
 
 feature {NONE} -- Implementation

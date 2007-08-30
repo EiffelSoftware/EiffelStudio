@@ -1435,13 +1435,11 @@ feature {NONE} -- Validation and warning generation
 			target_of_system: a_target /= Void and then not a_target.is_empty implies conf_system.targets.has (a_target)
 		local
 			l_target: CONF_TARGET
-			wd: EB_WARNING_DIALOG
 		do
 			if a_target /= Void and then not a_target.is_empty then
 				l_target := conf_system.targets.item (a_target)
 				if not l_target.overrides.is_empty then
-					create wd.make_with_text (conf_interface_names.library_target_override)
-					wd.show_modal_to_window (Current)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.library_target_override, Current, Void)
 				else
 					Result := True
 				end

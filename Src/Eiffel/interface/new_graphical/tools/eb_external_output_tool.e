@@ -556,7 +556,6 @@ feature{NONE} -- Actions
 		local
 			str: STRING
 			ec: EB_EXTERNAL_COMMAND
-			warn_dlg: EB_WARNING_DIALOG
 		do
 			ec := corresponding_external_command
 			if ec /= Void then
@@ -569,8 +568,7 @@ feature{NONE} -- Actions
 					-- If user has just input a new external command,
 					-- first check whether we have room for this command.
 				if develop_window.commands.edit_external_commands_cmd.menus.count = 10 then
-					create warn_dlg.make_with_text (interface_names.e_external_command_list_full)
-					warn_dlg.show_modal_to_window (develop_window.window)
+					prompts.show_error_prompt (interface_names.e_external_command_list_full, develop_window.window, Void)
 				else
 						-- If we have room for this command, pop up a new command
 						-- dialog and let user add this new command.
@@ -841,11 +839,8 @@ feature{NONE}
 			msg_not_void: msg /= Void
 			msg_not_empty: not msg.is_empty
 			a_window_not_void: a_window /= Void
-		local
-			wd: EB_WARNING_DIALOG
 		do
-			create wd.make_with_text (msg)
-			wd.show_modal_to_window (a_window)
+			prompts.show_warning_prompt (msg, a_window, Void)
 		end
 
 feature {NONE} -- Recycle

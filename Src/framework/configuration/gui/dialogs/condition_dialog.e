@@ -12,8 +12,7 @@ inherit
 	PROPERTY_DIALOG [CONF_CONDITION_LIST]
 		redefine
 			is_in_default_state,
-			initialize,
-			on_ok
+			initialize
 		end
 
 	CONF_GUI_INTERFACE_CONSTANTS
@@ -153,18 +152,6 @@ feature {NONE} -- Agents
 			notebook.select_item (l_tab)
 			remove_button.enable_sensitive
 			unlock_update
-		end
-
-	on_ok is
-			-- Ok was pressed.
-		local
-			wd: EB_WARNING_DIALOG
-		do
-			if wd = Void then
-				Precursor {PROPERTY_DIALOG}
-			else
-				wd.show_modal_to_window (Current)
-			end
 		end
 
 	is_in_default_state: BOOLEAN is True

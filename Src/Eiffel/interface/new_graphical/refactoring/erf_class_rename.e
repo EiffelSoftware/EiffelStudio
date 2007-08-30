@@ -149,7 +149,6 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
 			file_rename: ERF_CLASS_FILE_RENAME
-			wd: EB_WARNING_DIALOG
         do
         		-- if the renamed class was the root class
         	if system.root_class.name.is_equal (preferences.new_class_name) then
@@ -169,8 +168,7 @@ feature {NONE} -- Implementation
         		create file_rename.make (preferences.new_class_name.as_lower, class_i)
         		file_rename.redo
         		if file_rename.is_error then
-					create wd.make_with_text (file_rename.error_message)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+        			prompts.show_error_prompt (file_rename.error_message, Void, Void)
         		else
         			current_actions.extend (file_rename)
         		end

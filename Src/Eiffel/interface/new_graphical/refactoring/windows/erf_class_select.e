@@ -28,6 +28,13 @@ inherit
 			default_create, copy
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -183,15 +190,12 @@ feature {NONE} -- Implementation
 
 	on_ok_pressed is
 			-- The user pressed OK.
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			if selected_class /= Void then
 				ok_pressed := True
 				destroy
 			else
-				create wd.make_with_text ("No class selected.")
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt ("No class selected.", Current, Void)
 			end
 		end
 

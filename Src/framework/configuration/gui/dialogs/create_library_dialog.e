@@ -219,17 +219,14 @@ feature {NONE} -- Actions
 			-- Add library and close the dialog.
 		local
 			l_loc: CONF_FILE_LOCATION
-			wd: EB_WARNING_DIALOG
 			l_sys: CONF_SYSTEM
 		do
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
 				if not is_valid_group_name (name.text) then
-					create wd.make_with_text (conf_interface_names.invalid_group_name)
-					wd.show_modal_to_window (Current)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.invalid_group_name, Current, Void)
 				elseif group_exists (name.text, target) then
-					create wd.make_with_text (conf_interface_names.group_already_exists (name.text))
-					wd.show_modal_to_window (Current)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
 				else
 					l_loc := factory.new_location_from_full_path (location.text, target)
 					last_group := factory.new_library (name.text, l_loc, target)

@@ -59,6 +59,15 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make,
 	make_without_targets
@@ -575,7 +584,6 @@ feature {NONE} -- Implementation
 			conv_cluster: EB_CLASSES_TREE_FOLDER_ITEM
 			titem: EV_TREE_NODE
 			testfile: RAW_FILE
-			wd: EB_WARNING_DIALOG
 		do
 			titem := selected_item
 			if
@@ -589,9 +597,7 @@ feature {NONE} -- Implementation
 					if testfile.exists and then testfile.is_readable then
 						window.set_stone (conv_class.stone)
 					else
-						create wd.make_with_text ("Class file could not be read.%N%
-											%Removing class from the system.")
-						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						prompts.show_warning_prompt ("Class file could not be read. Removing class from the system.", Void, Void)
 						manager.remove_class (conv_class.data)
 					end
 				else

@@ -26,6 +26,14 @@ inherit
 			copy
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	default_create,
 	make_with_title

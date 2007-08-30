@@ -50,6 +50,11 @@ inherit
 
 	EB_METRIC_SHARED
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_manager: like develop_window) is

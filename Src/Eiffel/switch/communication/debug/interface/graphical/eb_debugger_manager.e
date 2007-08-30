@@ -10,7 +10,6 @@ class
 	EB_DEBUGGER_MANAGER
 
 inherit
-
 	DEBUGGER_MANAGER
 		redefine
 			make,
@@ -862,18 +861,11 @@ feature -- Output
 		end
 
 	debugger_warning_message (m: STRING_GENERAL) is
-		local
-			w_dlg: EB_WARNING_DIALOG
 		do
 			if ev_application = Void then
 				Precursor {DEBUGGER_MANAGER} (m)
 			else
-				create w_dlg.make_with_text (m)
-				if window_manager.last_focused_development_window /= Void then
-					w_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
-				else
-					w_dlg.show
-				end
+				prompts.show_warning_prompt (m, Void, Void)
 			end
 		end
 

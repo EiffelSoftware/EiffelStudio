@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make_new_expression,
 	make_with_expression_text,
@@ -541,7 +546,6 @@ feature {NONE} -- Event handling
 			ci: CLASS_I
 			cl: CLASS_C
 			t: STRING
-			wd: EB_WARNING_DIALOG
 			oe: STRING_32
 			do_not_close_dialog: BOOLEAN
 		do
@@ -576,20 +580,17 @@ feature {NONE} -- Event handling
 					end
 					if ci = Void then
 						set_focus (class_field)
-						create wd.make_with_text (Warning_messages.w_Cannot_find_class (t))
-						wd.show_modal_to_window (dialog)
+						prompts.show_error_prompt (Warning_messages.w_Cannot_find_class (t), dialog, Void)
 					else
 						if cl = Void then
 							set_focus (class_field)
-							create wd.make_with_text (Warning_messages.w_Not_a_compiled_class (t))
-							wd.show_modal_to_window (dialog)
+							prompts.show_error_prompt (Warning_messages.w_Not_a_compiled_class (t), dialog, Void)
 						else
 								--| Now we have the class, create the expression.
 							create new_expression.make_with_class (cl, expression_field.text)
 							if new_expression.syntax_error_occurred then
 								set_focus (expression_field)
-								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8))
-								wd.show_modal_to_window (dialog)
+								prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8), dialog, Void)
 							end
 						end
 					end
@@ -618,23 +619,20 @@ feature {NONE} -- Event handling
 						end
 						if new_expression.syntax_error_occurred then
 							set_focus (expression_field)
-							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
-							wd.show_modal_to_window (dialog)
+							prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8), dialog, Void)
 						else
 							check debugger_manager.application_status /= Void end
 							Debugger_manager.application_status.keep_object (t)
 						end
 					else
 						set_focus (address_field)
-						create wd.make_with_text (Warning_messages.w_Invalid_address (t))
-						wd.show_modal_to_window (dialog)
+						prompts.show_error_prompt (Warning_messages.w_Invalid_address (t), dialog, Void)
 					end
 				else
 					create new_expression.make_for_context (expression_field.text)
 					if new_expression.syntax_error_occurred then
 						set_focus (expression_field)
-						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
-						wd.show_modal_to_window (dialog)
+						prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 					end
 				end
 			else
@@ -654,8 +652,7 @@ feature {NONE} -- Event handling
 							-- Restore the previous expression, since the new one is broken.
 						modified_expression.set_expression (oe)
 						set_focus (expression_field)
-						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
-						wd.show_modal_to_window (dialog)
+						prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 						do_not_close_dialog := True
 					end
 				end

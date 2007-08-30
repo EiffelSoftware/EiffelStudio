@@ -55,7 +55,6 @@ feature -- Execution
 		local
 			makefile_sh_name: FILE_NAME
 			file: PLAIN_TEXT_FILE
-			wd: EB_WARNING_DIALOG
 		do
 			if is_workbench then
 				create makefile_sh_name.make_from_string (project_location.workbench_path)
@@ -67,8 +66,7 @@ feature -- Execution
 			if file.exists then
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else
-				create wd.make_with_text (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name))
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name), Void, Void)
 			end
 		end
 

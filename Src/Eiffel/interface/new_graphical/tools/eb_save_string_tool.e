@@ -14,6 +14,11 @@ inherit
 
 	FILE_DIALOG_CONSTANTS
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_and_save
@@ -61,9 +66,6 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	warning_dialog: EB_WARNING_DIALOG
-		-- Warning to display message.	
-
 	owner_window: EV_WINDOW
 		-- Onwer window.
 
@@ -82,8 +84,7 @@ feature -- Save
 			-- Save `text' to file.
 		do
 			if text.is_empty then
-				create warning_dialog.make_with_text ("No text to save.")
-				warning_dialog.show_modal_to_window (owner_window)
+				prompts.show_warning_prompt ("No text to save.", owner_window, Void)
 			else
 				select_file_and_save
 			end
@@ -142,9 +143,7 @@ feature -- Save
 			end
 		rescue
 			retried := True
-			create warning_dialog.make_with_text (Warning_messages.w_cannot_save_file (str))
-			warning_dialog.show_modal_to_window (owner_window)
-			warning_dialog.destroy
+			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (str), owner_window, Void)
 			retry
 		end
 
@@ -161,9 +160,7 @@ feature -- Save
 			end
 		rescue
 			retried := True
-			create warning_dialog.make_with_text (Warning_messages.w_cannot_save_file (file_name))
-			warning_dialog.show_modal_to_window (owner_window)
-			warning_dialog.destroy
+			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (file_name), owner_window, Void)
 			retry
 		end
 

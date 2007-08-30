@@ -55,6 +55,11 @@ inherit
 			real_update
 		end
 
+	ES_SHARED_PROMPT_PROVIDER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -659,7 +664,6 @@ feature {NONE} -- Implementation
 	show_call_stack_message is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
-			wdlg: EB_WARNING_DIALOG
 			w: EV_WINDOW
 		do
 			w := Eb_debugger_manager.debugging_window.window
@@ -669,8 +673,7 @@ feature {NONE} -- Implementation
 				dlg.set_exception_message (exception_message_text)
 				dlg.show_modal_to_window (w)
 			else
-				create wdlg.make_with_text (interface_names.l_Only_available_for_stopped_application)
-				wdlg.show_modal_to_window (w)
+				prompts.show_error_prompt (interface_names.l_Only_available_for_stopped_application, w, Void)
 			end
 		end
 
@@ -1016,9 +1019,8 @@ feature {NONE} -- Implementation
 		local
 			f: RAW_FILE
 			fn, fp: STRING
+			l_prompt: ES_QUESTION_PROMPT
 			retried: BOOLEAN
-			wd: EB_WARNING_DIALOG
-			dlg: EB_QUESTION_DIALOG
 		do
 			if not retried then
 				if debugger_manager.safe_application_is_stopped then
@@ -1027,27 +1029,22 @@ feature {NONE} -- Implementation
 					fp := fd.file_path
 					create f.make (fn)
 					if f.exists then
-						create dlg.make_with_text (interface_names.l_file_exits (fn))
-						dlg.set_buttons_and_actions (<<interface_names.b_overwrite, interface_names.b_append, interface_names.b_cancel>>,
-								<<
-									agent save_call_stack_to_filename	(fp, fn, False),
-									agent save_call_stack_to_filename	(fp, fn, True),
-									agent dlg.destroy
-								 >>
-							)
-						dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+						create l_prompt.make_standard (interface_names.l_file_exits (fn))
+						l_prompt.set_button_text (l_prompt.dialog_buttons.yes_button, interface_names.b_overwrite)
+						l_prompt.set_button_text (l_prompt.dialog_buttons.no_button, interface_names.b_append)
+						l_prompt.set_button_action (l_prompt.dialog_buttons.yes_button, agent save_call_stack_to_filename (fp, fn, False))
+						l_prompt.set_button_action (l_prompt.dialog_buttons.no_button, agent save_call_stack_to_filename (fp, fn, True))
+						l_prompt.show (Eb_debugger_manager.debugging_window.window)
 					else
 						save_call_stack_to_filename	(fp, fn, False)
 					end
 				else
-					create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
-					wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+					prompts.show_error_prompt (interface_names.l_only_available_for_stopped_application, Eb_debugger_manager.debugging_window.window, Void)
 				end
 			else
 					-- The file name was probably incorrect (not creatable).
 				if fd /= Void then
-					create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
-					wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+					prompts.show_error_prompt (Warning_messages.w_Not_creatable (fd.file_name), Eb_debugger_manager.debugging_window.window, Void)
 				end
 			end
 		rescue
@@ -1062,7 +1059,6 @@ feature {NONE} -- Implementation
 		local
 			fn: FILE_WINDOW
 			retried: BOOLEAN
-			wd: EB_WARNING_DIALOG
 		do
 			if not retried then
 					--| We create a file (or open it).
@@ -1084,8 +1080,7 @@ feature {NONE} -- Implementation
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).
-				create wd.make_with_text (Warning_messages.w_Not_creatable (a_fn))
-				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
+				prompts.show_error_prompt (Warning_messages.w_Not_creatable (a_fn), Eb_debugger_manager.debugging_window.window, Void)
 			end
 		rescue
 			retried := True
@@ -1146,7 +1141,6 @@ feature {NONE} -- Implementation
 			mi: EV_MENU_ITEM
 			tid: INTEGER
 			arr: LIST [INTEGER]
-			wd: EB_WARNING_DIALOG
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do
@@ -1185,16 +1179,13 @@ feature {NONE} -- Implementation
 						end
 						m.show_at (lab, 0, thread_id.height)
 					else
-						create wd.make_with_text ("Sorry no information available on Threads for now")
-						wd.show
+						prompts.show_info_prompt ("Sorry no information available on Threads for now", Eb_debugger_manager.debugging_window.window, Void)
 					end
 				else
-					create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
-					wd.show
+					prompts.show_error_prompt (interface_names.l_Only_available_for_stopped_application, Eb_debugger_manager.debugging_window.window, Void)
 				end
 			else
-				create wd.make_with_text (interface_names.l_only_available_for_stopped_application)
-				wd.show
+				prompts.show_error_prompt (interface_names.l_Only_available_for_stopped_application, Eb_debugger_manager.debugging_window.window, Void)
 			end
 		end
 

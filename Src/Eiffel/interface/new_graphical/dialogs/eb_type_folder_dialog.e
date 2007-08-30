@@ -93,13 +93,10 @@ feature {NONE} -- Vision2 events
 
 	on_ok is
 			-- Terminate the dialog
-		local
-			wd: EB_WARNING_DIALOG
 		do
 			folder_name := folder_name_entry.text
 			if folder_name.is_empty then
-				create wd.make_with_text (Warning_messages.w_Invalid_folder_name)
-				wd.show_modal_to_window (Current)
+				prompts.show_error_prompt (Warning_messages.w_Invalid_folder_name, Current, Void)
 			else
 				selected := True
 				destroy

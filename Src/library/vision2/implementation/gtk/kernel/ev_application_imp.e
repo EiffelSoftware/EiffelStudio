@@ -256,6 +256,7 @@ feature {EV_ANY_I} -- Implementation
 			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y, l_button_number: INTEGER
 			l_has_grab_widget: BOOLEAN
 			l_event_string: STRING
+			l_call_theme_events: BOOLEAN
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -619,11 +620,18 @@ feature {EV_ANY_I} -- Implementation
 						create l_event_string.make_from_c ({EV_GTK_EXTERNALS}.gdk_event_setting_struct_name (gdk_event))
 						if l_event_string.is_equal ("gtk-theme-name") then
 							-- Theme change
+							l_call_theme_events := True
 						elseif l_event_string.is_equal ("gtk-font-name") then
 							-- Font change
+							l_call_theme_events := True
 						end
 						l_event_string := Void
 						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+
+						if l_call_theme_events and then theme_changed_actions_internal /= Void then
+							theme_changed_actions_internal.call (Void)
+						end
+						l_call_theme_events := False
 					else
 						l_call_event := False
 					end
@@ -1183,16 +1191,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		once
 			Result := default_window_imp.c_object
 			window_oids.prune_all (Default_window_imp.object_id)
-			default_window_imp.real_signal_connect (default_window_imp.c_object, "style-set", agent gtk_style_has_changed, Void)
-		end
-
-	gtk_style_has_changed is
-			-- The current gtk style has changed.
-		do
-			-- This is called when the user externally changes the gtk style.
-			if theme_changed_actions_internal /= Void then
-				theme_changed_actions_internal.call (Void)
-			end
 		end
 
 	default_gdk_window: POINTER is

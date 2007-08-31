@@ -42,10 +42,11 @@ inherit
 		export
 			{NONE} all
 			{ANY} height, set_minimum_height, set_minimum_width, has_recursive
+		redefine
+			is_background_color_void
 		end
 
 create
-
 	init
 
 feature {NONE} -- Initlization
@@ -385,8 +386,16 @@ feature {NONE} -- Implementation
 	internal_vertical_style: BOOLEAN
 			-- If current box show vertically? Otherwise is show horizontally.
 
-	horizontal_box: EV_HORIZONTAL_BOX;
+	horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box in the Current when show horizontally.
+
+feature {NONE} -- Contract Support
+
+	is_background_color_void: BOOLEAN is False;
+		-- Redefine
+		-- We have to disable the invariant {EV_COLORIZABLE} background_color_not_void when executing `background_color'. Otherwise there is stack overflow when executing `background_color'.
+		-- Because in the descendant SD_AUTO_HIDE_ZONE, this `background_color' is selected to replace the original `background_color' in the invariant.
+		-- For example: When start Eiffel Studio 6.1 without empty application data, stack overflow will happen.
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

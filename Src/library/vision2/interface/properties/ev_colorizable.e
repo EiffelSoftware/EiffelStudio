@@ -6,8 +6,8 @@ indexing
 	keywords: "color, colored, colorable, colorizable, colorize"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_COLORIZABLE
 
 inherit
@@ -15,7 +15,7 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 feature -- Access
 
 	foreground_color: EV_COLOR is
@@ -70,17 +70,31 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 		do
 			implementation.set_default_colors
-		end	
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_COLORIZABLE_I
 			-- Responsible for interaction with native graphics toolkit.
 
+feature -- Contract support
+
+	is_background_color_void: BOOLEAN is
+			-- If `background_color' void?
+		do
+			Result := background_color = Void
+		end
+
+	is_foreground_color_void: BOOLEAN is
+			-- If `foreground_color' void?
+		do
+			Result := foreground_color = Void
+		end
+
 invariant
 
-	background_color_not_void: is_usable implies background_color /= Void
-	foreground_color_not_void: is_usable implies foreground_color /= Void
+	background_color_not_void: is_usable implies not is_background_color_void
+	foreground_color_not_void: is_usable implies not is_foreground_color_void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

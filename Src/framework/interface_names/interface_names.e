@@ -536,6 +536,7 @@ feature -- Accelerator, focus label and menu name
 	m_Recent_project: STRING_GENERAL is			do Result := locale.translation("&Recent Projects")	end
 	m_Redo: STRING_GENERAL is					do Result := locale.translation("Re&do%TCtrl+Y")	end
 	f_Redo: STRING_GENERAL is					do Result := locale.translation("Redo (Ctrl+Y)")	end
+	m_Restore_Editor_Area: STRING_GENERAL is	do Result := locale.translation("&Restore Editor Area")	end
 	m_Replace: STRING_GENERAL is				do Result := locale.translation("&Replace...")	end
 	m_reset_layout: STRING_GENERAL is do Result := locale.translation ("Reset Tools layout") end
 	f_Retarget_diagram: STRING_GENERAL is		do Result := locale.translation("Target to cluster or class")	end
@@ -746,6 +747,7 @@ feature -- Menu mnenomics
 	m_History: STRING_GENERAL is				do Result := locale.translation("&Go to")	end
 	m_Hit_count: STRING_GENERAL is				do Result := locale.translation("Hit Count")	end
 	m_Maximize: STRING_GENERAL is				do Result := locale.translation("Ma&ximize")	end
+	m_Maximize_Editor_Area: STRING_GENERAL is	do Result := locale.translation("Ma&ximize Editor Area")	end
 	m_Minimize: STRING_GENERAL is				do Result := locale.translation("Mi&nimize")	end
 	m_Minimize_all: STRING_GENERAL is			do Result := locale.translation("&Minimize All")	end
 	f_New_tab: STRING_GENERAL is 				do Result := locale.translation("New Tab")	end

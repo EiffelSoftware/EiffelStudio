@@ -42,7 +42,8 @@ inherit
 			on_focus_out,
 			pointer_enter_actions,
 			set_background_color,
-			background_color
+			background_color,
+			is_background_color_void
 		redefine
 			set_focus_color,
 			destroy

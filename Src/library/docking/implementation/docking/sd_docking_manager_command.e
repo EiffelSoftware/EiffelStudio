@@ -171,6 +171,7 @@ feature -- Commands
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
+			restore_editor_area
 			from
 				l_zones := internal_docking_manager.zones.zones.twin
 				l_zones.start
@@ -191,6 +192,10 @@ feature -- Commands
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
+			if is_main_inner_container (a_dock_area) then
+				restore_editor_area
+			end
+
 			from
 				l_zones := internal_docking_manager.zones.zones.twin
 				l_zones.start
@@ -212,6 +217,9 @@ feature -- Commands
 			if a_zone /= Void then
 				l_area := internal_docking_manager.query.inner_container_include_hidden (a_zone)
 				if l_area /= Void then
+					if is_main_inner_container (l_area) then
+						restore_editor_area
+					end
 					recover_normal_state_in (l_area)
 				end
 			end
@@ -294,6 +302,75 @@ feature -- Commands
 			end
 		end
 
+	maximize_editor_area is
+			-- Maximize whole editor area.
+		local
+			l_editor_parent: EV_CONTAINER
+			l_editor_area: SD_MULTI_DOCK_AREA
+			l_has_maximized_zone: BOOLEAN
+		do
+			l_editor_parent := internal_docking_manager.query.inner_container_main.editor_parent
+			l_editor_area := internal_docking_manager.query.inner_container_main
+
+			l_has_maximized_zone := internal_docking_manager.zones.maximized_zone_in_main_window /= Void
+
+			if l_editor_parent /= Void and not l_has_maximized_zone then
+				if l_editor_parent = l_editor_area then
+					-- Only editor zone in container main area now. Nothing to do.
+				else
+					orignal_editor_parent := l_editor_parent.parent
+
+					orignal_whole_item := l_editor_area.item
+					l_editor_area.save_spliter_position (orignal_whole_item)
+
+					orignal_editor_parent.prune (l_editor_parent)
+
+					l_editor_area.wipe_out
+					l_editor_area.extend (l_editor_parent)
+
+					internal_docking_manager.command.resize (True)
+				end
+			end
+		end
+
+	restore_editor_area is
+			-- Restore editors area to normal.
+		local
+			l_editor_area: EV_WIDGET
+			l_main_area: SD_MULTI_DOCK_AREA
+		do
+			if orignal_editor_parent /= Void then
+				l_main_area := internal_docking_manager.query.inner_container_main
+				l_editor_area := l_main_area.item
+				l_main_area.wipe_out
+
+				orignal_editor_parent.extend (l_editor_area)
+
+				l_main_area.extend (orignal_whole_item)
+
+				internal_docking_manager.command.resize (True)
+				l_main_area.restore_spliter_position (orignal_whole_item)
+
+				orignal_editor_parent := Void
+				orignal_whole_item := Void
+
+				if internal_docking_manager.query.internal_restore_whole_editor_area_actions /= Void then
+					internal_docking_manager.query.internal_restore_whole_editor_area_actions.call (Void)
+				end
+			end
+		ensure
+			cleared: orignal_editor_parent = Void
+			cleared: orignal_whole_item = Void
+		end
+
+feature -- Query
+
+	orignal_editor_parent: EV_CONTAINER
+			-- The orignal editor area parent which stored by `maximize_editor_area'
+
+	orignal_whole_item: EV_WIDGET
+			-- The orignal whole widget in main docking area which stored by `maximize_editor_area'.
+			
 feature -- Contract Support
 
 	is_main_inner_container (a_container: SD_MULTI_DOCK_AREA): BOOLEAN is

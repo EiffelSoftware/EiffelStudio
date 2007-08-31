@@ -84,6 +84,29 @@ feature -- Zones managements
 			end
 		end
 
+	upper_zones: ARRAYED_LIST [SD_UPPER_ZONE] is
+			-- ALl upper zones existing.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_upper_zone: SD_UPPER_ZONE
+		do
+			from
+				l_zones := zones
+				create Result.make (l_zones.count)
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_upper_zone ?= l_zones.item
+				if l_upper_zone /= Void then
+					Result.extend (l_upper_zone)
+				end
+				l_zones.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	zone_by_content (a_content: SD_CONTENT): SD_ZONE is
 			-- If main container has zone with a_content?
 		do

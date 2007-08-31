@@ -147,10 +147,13 @@ feature -- Querys
 				-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
 				Result := maximized_inner_container (a_zone)
 			end
+			if Result = Void then
+				Result := maiximized_hidden_main_container (a_zone)
+			end
 		end
 
 	maximized_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
-			-- Find `a_zone' only in main areas which have maxized zone.
+			-- Find `a_zone' only in main areas which have maximized zone.
 			-- Maybe void if not found.
 		require
 			not_void: a_zone /= Void
@@ -178,6 +181,28 @@ feature -- Querys
 					end
 				end
 				l_zones.forth
+			end
+		end
+
+	maiximized_hidden_main_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
+			-- Find the item in main area hidden widget when whole editor area maximized.
+		local
+			l_item: EV_WIDGET
+			l_container: EV_CONTAINER
+		do
+			l_item := internal_docking_manager.command.orignal_whole_item
+			if l_item /= Void then
+				check not_void_at_same_tiem: internal_docking_manager.command.orignal_editor_parent /= Void end
+				l_container ?= l_item
+				if l_container = Void then
+					if l_item = a_zone then
+						Result := inner_container_main
+					end
+				else
+					if l_container.has_recursive (a_zone) then
+						Result := inner_container_main
+					end
+				end
 			end
 		end
 
@@ -448,6 +473,20 @@ feature -- Querys
 				Result := internal_docking_manager.tool_bar_container.right.has_recursive (a_tool_bar)
 			end
 		end
+
+	restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- When whole editor area restored automatically, actions will be invoked.
+		do
+			if internal_restore_whole_editor_area_actions = Void then
+				create internal_restore_whole_editor_area_actions
+			end
+			Result := internal_restore_whole_editor_area_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- When whole editor area restored automatically, actions will be invoked.
 
 feature {NONE} -- Implemnetation
 

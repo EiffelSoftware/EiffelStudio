@@ -1074,7 +1074,7 @@ feature -- Warning messages
 
 	w_Freezing_running: STRING_GENERAL is do Result := locale.translation (
 		"A freezing C/C++ compilation is current in progress. Starting the Eiffel compilation?%N%
-		%may terminate current freezing.%NDo you want to continue?")
+		%may terminate current freezing. Do you want to continue?")
 		end
 
 	w_cannot_clear_when_c_compilation_running: STRING_GENERAL is do Result := locale.translation ("Please clear this window after c compilation has exited.") end

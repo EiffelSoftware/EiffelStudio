@@ -11,13 +11,12 @@ class
 inherit
 	SD_HOT_ZONE_DOCKING
 		rename
-			make as make_docking,
-			internal_zone as internal_zone_docking
-
+			make as make_docking
 		redefine
 			apply_change,
 			set_rectangle,
-			update_for_feedback
+			update_for_feedback,
+			zone_type_valid
 		end
 
 create
@@ -66,7 +65,7 @@ feature -- Redefine
 					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.move_to_tab_zone (internal_zone, internal_zone.contents.count + 1)
+					l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), tab_zone_of (internal_zone).contents.count + 1)
 					Result := True
 				else
 					from
@@ -79,7 +78,7 @@ feature -- Redefine
 							debug ("docking")
 								print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 							end
-							l_caller.state.move_to_tab_zone (internal_zone, internal_tab_area.key_for_iteration)
+							l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), internal_tab_area.key_for_iteration)
 						end
 						internal_tab_area.forth
 					end
@@ -112,6 +111,22 @@ feature -- Redefine
 			end
 		end
 
+feature -- Query
+
+	tab_zone_of (a_zone: SD_ZONE): SD_TAB_ZONE is
+			-- Type convertion.
+		require
+			not_void: a_zone /= Void
+		do
+			Result ?= a_zone
+		end
+
+	zone_type_valid (a_zone: SD_ZONE): BOOLEAN is
+			-- Redefine.
+		do
+			Result := tab_zone_of (a_zone) /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	set_rectangle (a_rect: EV_RECTANGLE) is
@@ -122,7 +137,7 @@ feature {NONE} -- Implementation
 			l_tab_behind_last: EV_RECTANGLE
 		do
 
-			l_tabs := internal_zone.tabs_shown
+			l_tabs := tab_zone_of (internal_zone).tabs_shown
 			create internal_tab_area.make (1)
 			from
 				l_tabs.start
@@ -153,18 +168,11 @@ feature {NONE} -- Implementation
 			internal_rectangle_bottom.grow_bottom (-10)
 			internal_rectangle_right.grow_right (-2)
 
-			internal_rectangle_title_area := internal_zone.title_area
+			internal_rectangle_title_area := tab_zone_of (internal_zone).title_area
 		end
 
-	internal_zone: SD_TAB_ZONE
-			-- Caller.
-
-	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER]
+	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
-
-invariant
-
-	internal_zone_not_void: internal_zone /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

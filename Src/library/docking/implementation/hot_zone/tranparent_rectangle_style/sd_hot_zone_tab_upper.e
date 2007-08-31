@@ -66,7 +66,7 @@ feature {NONE} -- Redefine
 					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.move_to_tab_zone (internal_zone, internal_zone.contents.count + 1)
+					l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), tab_zone_of (internal_zone).contents.count + 1)
 					Result := True
 				else
 					from
@@ -79,7 +79,7 @@ feature {NONE} -- Redefine
 							debug ("docking")
 								print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 							end
-							l_caller.state.move_to_tab_zone (internal_zone, internal_tab_area.key_for_iteration)
+							l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), internal_tab_area.key_for_iteration)
 						end
 						internal_tab_area.forth
 					end

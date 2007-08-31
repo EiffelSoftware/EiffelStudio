@@ -48,7 +48,7 @@ feature -- Commands
 		deferred
 		end
 
-feature {NONE}
+feature {NONE} -- Implementations.
 
 	need_clear: BOOLEAN
 			-- If Current need clear indicator?
@@ -57,7 +57,7 @@ feature {NONE}
 			-- All singletons.
 
 	internal_zone: SD_ZONE
-			-- SD_ZONE which `Current' belong to.
+			-- SD_ZONE which `Current' managed.
 
 	internal_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator which Current is managed by.

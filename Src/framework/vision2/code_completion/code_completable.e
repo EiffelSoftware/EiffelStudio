@@ -63,6 +63,13 @@ feature -- Access
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
 
+	completion_activator_characters: ARRAYED_LIST [CHARACTER]
+			-- List of completion activating keys
+		once
+			create Result.make (1)
+			Result.extend ('.')
+		end
+
 feature -- Element change
 
 	set_parent_window (a_window: like parent_window)

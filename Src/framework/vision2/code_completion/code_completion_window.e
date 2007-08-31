@@ -287,15 +287,16 @@ feature {NONE} -- Events handling
 					if choice_list.row_count > 0 then
 						select_row (choice_list.row_count)
 					end
-				when key_period then
-					if code_completable.is_completing then
-						continue_completion := True
-						close_and_complete
-						code_completable.handle_extended_key (ev_key)
-						exit
-					end
 				else
-					-- Do nothing
+					if code_completable.is_completing then
+						if code_completable.completion_activator_characters.has (ev_key.out.item (1)) then
+								-- Continue completing
+							continue_completion := True
+							close_and_complete
+							code_completable.handle_extended_key (ev_key)
+							exit
+						end
+					end
 				end
 			end
 		end

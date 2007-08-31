@@ -1029,7 +1029,7 @@ feature {NONE} -- Code completable implementation
 			if a_key /= Void then
 				if
 					auto_complete_after_dot and then
-					a_key.code = {EV_KEY_CONSTANTS}.key_period and
+					completion_activator_characters.has (a_key.out.item (1)) and
 					not a_ctrl and
 					not a_alt and
 					not a_shift
@@ -1397,7 +1397,11 @@ feature {NONE} -- Code completable implementation
 					l_tok := l_tok.previous
 				end
 				if l_tok /= Void and then l_tok.is_text then
-					Result := not l_tok.image.is_equal (".")
+					if not l_tok.image.is_empty then
+						Result := not completion_activator_characters.has (l_tok.image.item (1))
+					else
+						Result := True
+					end
 					if not Result then
 							-- is a '.'
 						Result := not completing_automatically

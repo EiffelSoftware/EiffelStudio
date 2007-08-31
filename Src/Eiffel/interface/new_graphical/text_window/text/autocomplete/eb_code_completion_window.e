@@ -685,8 +685,14 @@ feature {NONE} -- Implementation
 				elseif c = ' ' and ev_application.ctrl_pressed then
 						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
 				elseif not code_completable.unwanted_characters.item (c.code) then
+					if not code_completable.completion_activator_characters.has (c) then
+						close_and_complete
+					end
 					if not code_completable.has_selection then
 						code_completable.handle_character (c)
+					end
+					if not code_completable.completion_activator_characters.has (c) then
+						exit
 					end
 				end
 			end

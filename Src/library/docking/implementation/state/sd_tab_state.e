@@ -92,6 +92,7 @@ feature {NONE} -- Initlization
 				end
 			end
 			internal_content := a_content
+
 			initialized := True
 		ensure
 			set: internal_content = a_content
@@ -169,7 +170,6 @@ feature -- Redefine
 						Precursor {SD_STATE} (a_data, a_container)
 						create l_docking_state.make_for_tab_zone (l_content, a_container, a_data.direction)
 						l_content.change_state (l_docking_state)
-
 						l_docking_state.set_direction (a_data.direction)
 						l_first_tab := False
 					elseif not l_third_time then
@@ -207,7 +207,9 @@ feature -- Redefine
 
 				update_floating_zone_visible (internal_content.state.zone, a_data.is_visible)
 			end
-			initialized := True
+			
+			-- `initialized' can't set `True' here since this instance not really initialized,
+			-- this feature ONLY initialized OTHER SD_STATE objects.
 		ensure then
 			restored:
 		end

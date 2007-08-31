@@ -1,5 +1,8 @@
 indexing
-	description: "All icons used in the docking library. Client programmer should inherit this."
+	description: "[
+					All icons used in the docking library. 
+					Client programmer may inherit this class if you want to use your own icons.
+																								]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

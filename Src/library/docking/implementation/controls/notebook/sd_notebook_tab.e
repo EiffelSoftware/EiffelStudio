@@ -501,7 +501,7 @@ feature {NONE}  -- Implementation agents
 			l_drawer: like internal_tab_drawer
 		do
 			if pixmap /= Void then
-				if width > 0 and height > 0 then
+				if width > 0 and height > 0 and a_width > 0 then
 					l_drawer := internal_tab_drawer
 					if is_selected then
 						l_drawer.expose_selected (a_width, info)

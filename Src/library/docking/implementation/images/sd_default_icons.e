@@ -1,5 +1,5 @@
 indexing
-	description: "Defautl icons for Smart Docking library."
+	description: "Default icons for Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date       : "$Date$"

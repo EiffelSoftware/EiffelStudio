@@ -166,7 +166,6 @@ feature -- Properties
 		local
 			l_font: EV_FONT
 		do
-			is_selected := a_selected
 			if a_selected then
 				l_font := internal_tab.font
 				if l_font /= Void then
@@ -181,6 +180,7 @@ feature -- Properties
 			if l_font /= Void then
 				internal_tab.set_font (l_font)
 			end
+			is_selected := a_selected
 		ensure
 			set: is_selected = a_selected
 		end

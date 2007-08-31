@@ -58,7 +58,7 @@ feature {NONE} -- Initlization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-feature  -- Redefine
+feature  -- Command
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
@@ -240,6 +240,8 @@ feature  -- Redefine
 			left_indicator.show
 			right_indicator.show
 		end
+
+feature -- Query
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.

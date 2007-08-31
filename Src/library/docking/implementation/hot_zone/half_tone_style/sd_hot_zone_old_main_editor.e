@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-feature -- Redefine
+feature -- Command
 
 	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine

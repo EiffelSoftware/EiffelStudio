@@ -10,10 +10,8 @@ class
 
 inherit
 	SD_HOT_ZONE
-
 		redefine
-			has_x_y,
-			internal_zone
+			has_x_y
 		end
 
 create
@@ -60,7 +58,7 @@ feature -- Redefine
 					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.move_to_docking_zone (internal_zone, False)
+					l_caller.state.move_to_docking_zone (docking_zone_of (internal_zone), False)
 					Result := True
 				end
 			end
@@ -139,6 +137,22 @@ feature -- Redefine
 			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
 			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
 			internal_indicator.show
+		end
+
+feature -- Query
+
+	docking_zone_of (a_zone: SD_ZONE): SD_DOCKING_ZONE is
+			-- Type convertion.
+		do
+			Result ?= a_zone
+		end
+
+	zone_type_valid (a_zone: SD_ZONE): BOOLEAN is
+			-- If `a_zone''s type fit for current class?
+		require
+			not_void: a_zone /= Void
+		do
+			Result := docking_zone_of (a_zone) /= Void
 		end
 
 feature {NONE} -- Implementation functions.
@@ -226,7 +240,7 @@ feature {NONE} -- Implementation functions.
 			internal_rectangle_bottom.grow_bottom (-10)
 			internal_rectangle_right.grow_right (-2)
 
-			internal_rectangle_title_area := internal_zone.title_area
+			internal_rectangle_title_area := docking_zone_of (internal_zone).title_area
 		ensure
 			set: a_rect = internal_rectangle
 			left_rectangle_created: internal_rectangle_left /= Void
@@ -237,9 +251,6 @@ feature {NONE} -- Implementation functions.
 		end
 
 feature {NONE} -- Implementation attributes.
-
-	internal_zone: SD_DOCKING_ZONE
-			-- Dokcing zone `Current' belong to.
 
 	pixmap_center_width: INTEGER is 34
 			-- Width and height of the area in center figure area.
@@ -260,7 +271,7 @@ invariant
 
 	internal_docker_mediator_not_void: internal_mediator /= Void
 	internal_shared_not_void: internal_shared /= Void
-	internal_zone_not_void: internal_zone /= Void
+	internal_zone_type_valid: internal_zone /= Void and then zone_type_valid (internal_zone)
 	internal_rectangle_not_void: internal_rectangle /= Void
 	not_void: internal_indicator /= Void
 

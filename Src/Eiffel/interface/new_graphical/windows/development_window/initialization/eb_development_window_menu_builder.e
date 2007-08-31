@@ -735,6 +735,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
 			develop_window.add_recyclable (l_new_menu_item)
+
+				-- Separator --------------------------------------
+			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
 		end
 
 	build_favorites_menu is

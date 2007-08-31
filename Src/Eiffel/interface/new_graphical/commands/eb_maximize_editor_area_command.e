@@ -62,8 +62,6 @@ feature -- Command
 				l_manager.maximize_editor_area
 			end
 			update_maximized_state
-		ensure then
-			changed: old is_maximized /= is_maximized
 		end
 
 	update_maximized_state is

@@ -543,6 +543,12 @@ feature -- Drawing operations
 			draw_pixmap (x, y, new_pixmap)
 		end
 
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
+		do
+			draw_sub_pixmap (a_x, a_y, a_pixel_buffer, area)
+		end
+
 	draw_arc (x, y, a_bounding_width, a_bounding_height: INTEGER;
 						a_start_angle, an_aperture: REAL) is
 			-- Draw a part of an ellipse defined by a rectangular area with an

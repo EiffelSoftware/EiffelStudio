@@ -165,6 +165,22 @@ feature -- Items layout
 			-- Items layout, first is item name, second is whether item `is_displayed'
 			-- Order of this list, it's order items displayed.
 
+feature -- Customize dialog data.
+
+	customize_dialog_width, customize_dialog_height: INTEGER
+			-- Tool Bar customize dialog last width/height shown on the screen.
+
+	set_cutomize_dialog_size (a_width, a_height: INTEGER) is
+			-- Set `customize_dialog_width' and `customize_dialog_height' with `a_width' and `a_height'.
+		require
+			valid: a_width >= 0 and a_height >= 0
+		do
+			customize_dialog_width := a_width
+			customize_dialog_height := a_height
+		ensure
+			set: customize_dialog_width = a_width and customize_dialog_height = a_height
+		end
+
 feature -- Query
 
 	is_docking_state_recorded: BOOLEAN is

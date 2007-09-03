@@ -472,6 +472,12 @@ feature -- Constants
 	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
 			-- Tool bar hidden item dialog maximum allowed width.
 
+	Tool_bar_customize_dialog_default_width: INTEGER is 560
+			-- Tool bar customize dialog default width.
+
+	Tool_bar_customize_dialog_default_height: INTEGER is 360
+			-- Tool bar customize dialog default height.
+
 	Default_floating_window_width: INTEGER is 470
 			-- Default floating window width.
 

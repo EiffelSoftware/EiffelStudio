@@ -125,7 +125,7 @@ feature {NONE} -- For redocker.
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Forward pointer motion datas to SD_DOCKER_MEDIATOR.
+			-- Forward pointer motion data to SD_DOCKER_MEDIATOR.
 		do
 			if docker_mediator /= Void then
 				docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)

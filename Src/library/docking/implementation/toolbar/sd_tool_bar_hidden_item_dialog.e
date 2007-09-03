@@ -198,18 +198,18 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_items /= Void
 		local
-			l_datas: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 		do
 			from
-				create l_datas.make (a_items.count)
+				create l_data.make (a_items.count)
 				a_items.start
 			until
 				a_items.after
 			loop
-				l_datas.extend ([a_items.item.name, a_items.item.is_displayed])
+				l_data.extend ([a_items.item.name, a_items.item.is_displayed])
 				a_items.forth
 			end
-			parent_tool_bar.assistant.last_state.set_items_layout (l_datas)
+			parent_tool_bar.assistant.last_state.set_items_layout (l_data)
 		ensure
 			saved: parent_tool_bar.assistant.last_state.items_layout /= Void
 		end

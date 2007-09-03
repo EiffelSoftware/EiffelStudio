@@ -232,7 +232,7 @@ feature -- Query
 
 	unique_title: STRING_GENERAL
 			-- Unique tool bar title.
-			-- It's used for store/open layout datas, so it should not be changed.
+			-- It's used for store/open layout data, so it should not be changed.
 
 	title: STRING_GENERAL
 			-- Title for display.

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 feature -- Open inner container data.
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN is
-			-- Open all docking library datas from `a_file'.
+			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		local
@@ -40,7 +40,7 @@ feature -- Open inner container data.
 		end
 
 	open_editors_config (a_file: STRING_GENERAL) is
-			-- Open main window eidtor config datas.
+			-- Open main window eidtor config data.
 		require
 			not_void: a_file /= Void
 		local
@@ -234,7 +234,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	open_all_config (a_file: STRING_GENERAL): BOOLEAN is
-			-- Open all docking library datas from `a_file'.
+			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		local
@@ -277,13 +277,13 @@ feature {NONE} -- Implementation
 						internal_docking_manager.tool_bar_manager.unlock
 					end
 
-					open_tool_bar_data (l_config_data.tool_bar_datas)
+					open_tool_bar_data (l_config_data.tool_bar_data)
 
 					check not internal_docking_manager.query.inner_container_main.full end
 					open_all_inner_containers_data (l_config_data)
 
 					-- Restore auto hide zone.
-					open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
+					open_auto_hide_panel_data (l_config_data.auto_hide_panels_data)
 
 					l_cmd := internal_docking_manager.command
 					l_cmd.resize (True)
@@ -393,35 +393,35 @@ feature {NONE} -- Implementation
 		end
 
 	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
-			-- Open all SD_MULTI_DOCK_AREA datas, include main dock area in main window and floating zones.
+			-- Open all SD_MULTI_DOCK_AREA data, include main dock area in main window and floating zones.
 		require
 			a_config_data: a_config_data /= Void
 			container_not_full: not internal_docking_manager.query.inner_container_main.full
 		local
-			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
-			l_datas_item: SD_INNER_CONTAINER_DATA
+			l_data: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+			l_data_item: SD_INNER_CONTAINER_DATA
 			l_split: EV_SPLIT_AREA
 			l_floating_state: SD_FLOATING_STATE
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			l_datas := a_config_data.inner_container_datas
+			l_data := a_config_data.inner_container_data
 			from
-				l_datas.start
+				l_data.start
 			until
-				l_datas.after
+				l_data.after
 			loop
-				l_datas_item := l_datas.item
-				if l_datas.index = 1 then
-					if l_datas_item /= Void then
-						open_inner_container_data (l_datas_item, internal_docking_manager.query.inner_container_main)
+				l_data_item := l_data.item
+				if l_data.index = 1 then
+					if l_data_item /= Void then
+						open_inner_container_data (l_data_item, internal_docking_manager.query.inner_container_main)
 					end
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
-					create l_floating_state.make (l_datas_item.screen_x, l_datas_item.screen_y, internal_docking_manager, l_datas_item.is_visible)
-					l_floating_state.set_last_floating_height (l_datas_item.height)
-					l_floating_state.set_last_floating_width (l_datas_item.width)
-					l_floating_state.set_size (l_datas_item.width, l_datas_item.height)
-					open_inner_container_data (l_datas_item, l_floating_state.inner_container)
+					create l_floating_state.make (l_data_item.screen_x, l_data_item.screen_y, internal_docking_manager, l_data_item.is_visible)
+					l_floating_state.set_last_floating_height (l_data_item.height)
+					l_floating_state.set_last_floating_width (l_data_item.width)
+					l_floating_state.set_size (l_data_item.width, l_data_item.height)
+					open_inner_container_data (l_data_item, l_floating_state.inner_container)
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
@@ -429,9 +429,9 @@ feature {NONE} -- Implementation
 					l_split ?= l_multi_dock_area.item
 				end
 				if l_split /= Void then
-					open_inner_container_data_split_position (l_datas_item, l_split)
+					open_inner_container_data_split_position (l_data_item, l_split)
 				end
-				l_datas.forth
+				l_data.forth
 			end
 		end
 
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 
 			l_zones := internal_docking_manager.zones.zones
 			if top_container /= Void then
-				-- We are only restore tools datas now.
+				-- We are only restore tools data now.
                 from
                     l_zones.start
                 until
@@ -770,7 +770,7 @@ feature {NONE} -- Implementation
 		end
 
 	open_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA) is
-			-- Open all auto hide zone datas.
+			-- Open all auto hide zone data.
 		require
 			a_data_not_void: a_data /= Void
 		do
@@ -848,10 +848,10 @@ feature {NONE} -- Implementation
 			l_panel.update_tab_group
 		end
 
-	open_tool_bar_data (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
-			-- Open four area tool bar datas.
+	open_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+			-- Open four area tool bar data.
 		require
-			a_tool_bar_datas_not_void: a_tool_bar_datas /= Void
+			a_tool_bar_data_not_void: a_tool_bar_data /= Void
 		local
 			l_data: SD_TOOL_BAR_DATA
 			l_tool_bar: SD_TOOL_BAR_ZONE
@@ -859,25 +859,25 @@ feature {NONE} -- Implementation
 			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
 			-- Top
-			a_tool_bar_datas.start
-			open_one_tool_bar_data ({SD_ENUMERATION}.top, a_tool_bar_datas.item)
+			a_tool_bar_data.start
+			open_one_tool_bar_data ({SD_ENUMERATION}.top, a_tool_bar_data.item)
 			-- Bottom
-			a_tool_bar_datas.forth
-			open_one_tool_bar_data ({SD_ENUMERATION}.bottom, a_tool_bar_datas.item)
+			a_tool_bar_data.forth
+			open_one_tool_bar_data ({SD_ENUMERATION}.bottom, a_tool_bar_data.item)
 			-- Left
-			a_tool_bar_datas.forth
-			open_one_tool_bar_data ({SD_ENUMERATION}.left, a_tool_bar_datas.item)
+			a_tool_bar_data.forth
+			open_one_tool_bar_data ({SD_ENUMERATION}.left, a_tool_bar_data.item)
 			-- Right
-			a_tool_bar_datas.forth
-			open_one_tool_bar_data ({SD_ENUMERATION}.right, a_tool_bar_datas.item)
+			a_tool_bar_data.forth
+			open_one_tool_bar_data ({SD_ENUMERATION}.right, a_tool_bar_data.item)
 
 			-- Floating tool_bars
 			from
-				a_tool_bar_datas.forth
+				a_tool_bar_data.forth
 			until
-				a_tool_bar_datas.after or else not a_tool_bar_datas.item.is_floating
+				a_tool_bar_data.after or else not a_tool_bar_data.item.is_floating
 			loop
-				l_data := a_tool_bar_datas.item
+				l_data := a_tool_bar_data.item
 				check is_floating_tool_bar_data: l_data.is_floating end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
 
@@ -895,15 +895,15 @@ feature {NONE} -- Implementation
 				if l_state.floating_group_info /= Void then
 					l_tool_bar.floating_tool_bar.assistant.position_groups (l_state.floating_group_info)
 				end
-				a_tool_bar_datas.forth
+				a_tool_bar_data.forth
 			end
 
 			-- Hidden docking tool bars
 			from
 			until
-				a_tool_bar_datas.after
+				a_tool_bar_data.after
 			loop
-				l_data := a_tool_bar_datas.item
+				l_data := a_tool_bar_data.item
 				check is_hidden_docking: not l_data.is_floating and not l_data.is_visible end
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_data.title)
 
@@ -925,12 +925,12 @@ feature {NONE} -- Implementation
 				if l_state /= Void and then l_state.is_docking_state_recorded then
 					l_content.zone.assistant.set_last_state (l_state)
 				end
-				a_tool_bar_datas.forth
+				a_tool_bar_data.forth
 			end
 		end
 
 	open_one_tool_bar_data (a_direction: INTEGER; a_tool_bar_data: SD_TOOL_BAR_DATA) is
-			-- Open one tool bar area config datas.
+			-- Open one tool bar area config data.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
@@ -1054,7 +1054,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_open_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
-			-- Open tool bar resizable item datas.
+			-- Open tool bar resizable item data.
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]

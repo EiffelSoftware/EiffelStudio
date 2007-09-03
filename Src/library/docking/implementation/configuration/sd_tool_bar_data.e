@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that contain datas about tool bars in docking library."
+	description: "Objects that contain data about tool bars in docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -32,7 +32,7 @@ feature -- Visible
 			set: is_visible = a_bool
 		end
 
-feature -- Floating datas
+feature -- Floating data
 
 	is_floating: BOOLEAN
 		-- If `Current' data about a floating zone?
@@ -70,10 +70,10 @@ feature -- Floating datas
 			set: screen_x = a_screen_x and screen_y = a_screen_y
 		end
 
-feature -- Docking datas
+feature -- Docking data
 
 	rows: ARRAYED_LIST [like tool_bar_data]
-			-- All row datas in `Current'.
+			-- All row data in `Current'.
 
 	row (a_title: STRING_GENERAL): like tool_bar_data is
 			-- Row data contain a_title. If not found, create a new one.

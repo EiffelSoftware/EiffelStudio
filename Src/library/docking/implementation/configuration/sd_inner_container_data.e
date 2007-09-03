@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that store config datas about inner container which is SD_MULTI_DOCK_AREA."
+	description: "Objects that store config data about inner container which is SD_MULTI_DOCK_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 	SD_INNER_CONTAINER_DATA
 
 
-feature -- Tab and Docking datas.
+feature -- Tab and Docking data.
 
 	titles: ARRAYED_LIST [STRING_GENERAL]
 			-- All titles. If it's a docking zone, there is only one title.
@@ -118,7 +118,7 @@ feature -- Tab and Docking datas.
 			set: is_horizontal_split_area = a_value
 		end
 
-feature -- Minimized datas
+feature -- Minimized data
 
 	is_minimized: BOOLEAN
 			-- If is SD_UPPER_ZONE, if it is minized?
@@ -132,7 +132,7 @@ feature -- Minimized datas
 			set: is_minimized = a_bool
 		end
 
-feature -- Floating datas.
+feature -- Floating data.
 
 	set_screen_x (a_screen_x: INTEGER) is
 			-- Set `screen_x'.

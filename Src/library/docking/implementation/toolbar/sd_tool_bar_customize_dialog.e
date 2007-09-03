@@ -27,8 +27,7 @@ feature -- Initialization
 			create internal_shared
 			make_with_title (internal_shared.interface_names.tool_bar_customize_title)
 			set_icon_pixmap (internal_shared.icons.tool_bar_customize_dialog)
-			w_width := l_constants.dialog_unit_to_pixels(560)
-			w_height := l_constants.dialog_unit_to_pixels(360)
+
 			close_request_actions.wipe_out
 			close_request_actions.extend (agent exit)
 			prepare
@@ -162,8 +161,7 @@ feature -- Initialization
 			fill_lists (toolbar)
 
 			valid_data := False
-			set_width (w_width)
-			set_height (w_height)
+
 			show_modal_to_window (a_parent)
 		end
 
@@ -197,6 +195,18 @@ feature -- Result
 			end
 		end
 
+	w_height: INTEGER
+			-- current height of the window.
+			--
+			-- Useful only because Vision2 currently does not remember the size
+			-- of the window after a hide/show.
+
+	w_width: INTEGER
+			-- current width of the window.
+			--
+			-- Useful only because Vision2 currently does not remember the size
+			-- of the window after a hide/show.
+			
 feature {NONE} -- Graphical interface
 
 	pool_list: SD_CUSTOM_TOOLBAR_LIST -- EV_LIST
@@ -226,18 +236,6 @@ feature {NONE} -- Graphical interface
 	text_combo: EV_COMBO_BOX
 			-- box to select whether text is displayed on the right of buttons
 			-- or not.
-
-	w_height: INTEGER
-			-- current height of the window.
-			--
-			-- Useful only because Vision2 currently does not remember the size
-			-- of the window after a hide/show.
-
-	w_width: INTEGER
-			-- current width of the window.
-			--
-			-- Useful only because Vision2 currently does not remember the size
-			-- of the window after a hide/show.
 
 	all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All tool bar items in one SD_TOOL_BAR_CONTENT.

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			ev_application.theme_changed_actions.put_front (agent init_colors)
+			ev_application.theme_changed_actions.put_right (agent update_all_tool_bars)
 			init_colors
 
 			create internal_shared
@@ -134,6 +135,29 @@ feature -- Query
 
 feature -- Implementation
 
+	update_all_tool_bars is
+			-- Update all tool bars background color.
+		local
+			l_mem: MEMORY
+			l_tool_bar: SD_TOOL_BAR
+			l_tool_bars: SPECIAL [ANY]
+			l_i: INTEGER
+		do
+			create l_mem
+			create l_tool_bar.make
+			l_tool_bars := l_mem.objects_instance_of (l_tool_bar)
+
+			from
+			until
+				l_i >= l_tool_bars.count
+			loop
+				l_tool_bar ?= l_tool_bars.item (l_i)
+				check  not_void: l_tool_bar /= Void end
+				l_tool_bar.set_background_color (internal_shared.default_background_color)
+				l_i := l_i + 1
+			end
+		end
+		
 	non_focused_color_cell: CELL [EV_COLOR] is
 			-- Singelton cell for `non_focus_color'
 		once

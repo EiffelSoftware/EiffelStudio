@@ -90,7 +90,7 @@ feature -- Properties
 		end
 
 	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]] is
-			-- SD_TOOL_BAR_RESIABLE_ITEM datas.
+			-- SD_TOOL_BAR_RESIABLE_ITEM data.
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_item: SD_TOOL_BAR_RESIZABLE_ITEM

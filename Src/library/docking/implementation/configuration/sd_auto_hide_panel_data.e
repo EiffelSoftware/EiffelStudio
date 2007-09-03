@@ -16,49 +16,49 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method.
 		local
-			l_top, l_bottom, l_left, l_right: like internal_panel_data
+			l_top, l_bottom, l_left, l_right: like internal_panel_datum
 		do
-			create internal_panel_datas.make (4)
+			create internal_panel_data.make (4)
 			create l_top.make (1)
 			create l_bottom.make (1)
 			create l_left.make (1)
 			create l_right.make (1)
-			internal_panel_datas.extend (l_top)
-			internal_panel_datas.extend (l_bottom)
-			internal_panel_datas.extend (l_left)
-			internal_panel_datas.extend (l_right)
+			internal_panel_data.extend (l_top)
+			internal_panel_data.extend (l_bottom)
+			internal_panel_data.extend (l_left)
+			internal_panel_data.extend (l_right)
 		end
 
 feature -- Properties
 
-	top: like internal_panel_data is
+	top: like internal_panel_datum is
 			-- Top SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_panel_datas.i_th (1)
+			Result := internal_panel_data.i_th (1)
 		ensure
 			not_void: Result /= Void
 		end
 
-	bottom: like internal_panel_data is
+	bottom: like internal_panel_datum is
 			-- Bottom SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_panel_datas.i_th (2)
+			Result := internal_panel_data.i_th (2)
 		ensure
 			not_void: Result /= Void
 		end
 
-	left: like internal_panel_data is
+	left: like internal_panel_datum is
 			-- Left SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_panel_datas.i_th (3)
+			Result := internal_panel_data.i_th (3)
 		ensure
 			not_void: Result /= Void
 		end
 
-	right: like internal_panel_data is
+	right: like internal_panel_datum is
 			-- Right SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_panel_datas.i_th (4)
+			Result := internal_panel_data.i_th (4)
 		ensure
 			not_void: Result /= Void
 		end
@@ -70,18 +70,18 @@ feature -- Properties
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 			not_void: a_data /= Void
 		local
-			l_data: like internal_panel_data
+			l_data: like internal_panel_datum
 		do
 			inspect
 				a_direction
 			when {SD_ENUMERATION}.top then
-				l_data := internal_panel_datas.i_th (1)
+				l_data := internal_panel_data.i_th (1)
 			when {SD_ENUMERATION}.bottom then
-				l_data := internal_panel_datas.i_th (2)
+				l_data := internal_panel_data.i_th (2)
 			when {SD_ENUMERATION}.left then
-				l_data := internal_panel_datas.i_th (3)
+				l_data := internal_panel_data.i_th (3)
 			when {SD_ENUMERATION}.right then
-				l_data := internal_panel_datas.i_th (4)
+				l_data := internal_panel_data.i_th (4)
 			end
 			l_data.extend (a_data)
 		ensure
@@ -90,10 +90,10 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	internal_panel_datas: ARRAYED_LIST [like internal_panel_data]
+	internal_panel_data: ARRAYED_LIST [like internal_panel_datum]
 			-- Four auto hide tab stubs area config data. 1st is top one, 2nd is bottom one, 3rd is left one, 4th is right one.
 
-	internal_panel_data: ARRAYED_LIST [like internal_tab_group] is
+	internal_panel_datum: ARRAYED_LIST [like internal_tab_group] is
 			--
 			-- In tuple, first argument is title of content. second is width/height of zone.
 		require
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	internal_panel_datas_not_void: internal_panel_datas /= Void
+	internal_panel_data_not_void: internal_panel_data /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

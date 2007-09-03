@@ -317,7 +317,7 @@ feature -- Command
 			l_item: SD_TOOL_BAR_ITEM
 			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_name: STRING_GENERAL
-			l_datas: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
@@ -326,12 +326,12 @@ feature -- Command
 				l_all_items :=  zone.content.items.twin
 				l_content := zone.content
 				l_content.wipe_out
-				l_datas := last_state.items_layout
-				l_datas.start
+				l_data := last_state.items_layout
+				l_data.start
 			until
-				l_datas.after
+				l_data.after
 			loop
-				l_name ?= l_datas.item @ 1
+				l_name ?= l_data.item @ 1
 				check not_void: l_name /= Void end
 				l_item := Void
 				if l_name.as_string_32.is_equal (l_separator.name.as_string_32) then
@@ -346,7 +346,7 @@ feature -- Command
 					loop
 						if l_all_items.item.name.as_string_32.is_equal (l_name.as_string_32) then
 							l_item := l_all_items.item
-							if not l_datas.item.boolean_item (2) then
+							if not l_data.item.boolean_item (2) then
 								l_item.disable_displayed
 							else
 								l_item.enable_displayed
@@ -357,16 +357,16 @@ feature -- Command
 					check must_found: l_item /= Void end
 					l_content.items.extend (l_item)
 				end
-				l_datas.forth
+				l_data.forth
 			end
 			refresh_items_visible
 		end
 
 	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Save items layout to it's data.
+			-- Save items layout.
 			-- (export status {NONE})
 		local
-			l_datas: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			from
@@ -375,15 +375,15 @@ feature -- Command
 				else
 					l_items := zone.content.items
 				end
-				create l_datas.make (l_items.count)
+				create l_data.make (l_items.count)
 				l_items.start
 			until
 				l_items.after
 			loop
-				l_datas.extend ([l_items.item.name, l_items.item.is_displayed])
+				l_data.extend ([l_items.item.name, l_items.item.is_displayed])
 				l_items.forth
 			end
-			last_state.set_items_layout (l_datas)
+			last_state.set_items_layout (l_data)
 		ensure
 			saved: last_state.items_layout /= Void
 		end

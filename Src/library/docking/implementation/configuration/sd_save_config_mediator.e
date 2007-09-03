@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 feature -- Save inner container data.
 
 	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
-			-- Save all docking library datas to `a_file' with `a_name'
+			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
@@ -39,7 +39,7 @@ feature -- Save inner container data.
 		end
 
 	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN) is
-			-- Save all docking library datas to `a_file' with `a_name'
+			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_name /= Void
@@ -60,9 +60,9 @@ feature -- Save inner container data.
 			save_all_inner_containers_data (a_config_data)
 
 			-- Second save auto hide zones data.
-			save_auto_hide_panel_data (a_config_data.auto_hide_panels_datas)
+			save_auto_hide_panel_data (a_config_data.auto_hide_panels_data)
 
-			save_tool_bar_datas (a_config_data.tool_bar_datas)
+			save_tool_bar_data (a_config_data.tool_bar_data)
 
 			a_config_data.set_name (a_name)
 			a_config_data.set_is_docking_locked (internal_docking_manager.is_locked)
@@ -75,7 +75,7 @@ feature -- Save inner container data.
 		end
 
 	save_config (a_file: STRING_GENERAL) is
-			-- Save all docking library datas to `a_file'.
+			-- Save all docking library data to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -83,7 +83,7 @@ feature -- Save inner container data.
 		end
 
 	save_editors_config (a_file: STRING_GENERAL)is
-			-- Save main window editor config datas.
+			-- Save main window editor config data.
 		require
 			not_void: a_file /= Void
 			has_editor:
@@ -192,37 +192,37 @@ feature -- Save inner container data.
 feature {NONE} -- Implementation
 
 	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
-			-- Save all SD_MULTI_DOCK_AREA datas, include main dock area in main window and floating zones.
+			-- Save all SD_MULTI_DOCK_AREA data, include main dock area in main window and floating zones.
 		require
 			a_config_data_not_void: a_config_data /= Void
 		local
 			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
-			l_data: SD_INNER_CONTAINER_DATA
-			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+			l_datum: SD_INNER_CONTAINER_DATA
+			l_data: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
 		do
 			l_inner_containers := internal_docking_manager.inner_containers
 			from
 				l_inner_containers.start
-				create l_datas.make (1)
+				create l_data.make (1)
 			until
 				l_inner_containers.after
 			loop
 				if l_inner_containers.item.readable then
-					create l_data
-					save_inner_container_data (l_inner_containers.item.item, l_data)
+					create l_datum
+					save_inner_container_data (l_inner_containers.item.item, l_datum)
 					if l_inner_containers.item.parent_floating_zone /= Void then
-						l_data.set_screen_x (l_inner_containers.item.parent_floating_zone.screen_x)
-						l_data.set_screen_y (l_inner_containers.item.parent_floating_zone.screen_y)
-						l_data.set_width (l_inner_containers.item.parent_floating_zone.width)
-						l_data.set_height (l_inner_containers.item.parent_floating_zone.height)
+						l_datum.set_screen_x (l_inner_containers.item.parent_floating_zone.screen_x)
+						l_datum.set_screen_y (l_inner_containers.item.parent_floating_zone.screen_y)
+						l_datum.set_width (l_inner_containers.item.parent_floating_zone.width)
+						l_datum.set_height (l_inner_containers.item.parent_floating_zone.height)
 					end
 				else
-					l_data := Void
+					l_datum := Void
 				end
-				l_datas.extend (l_data)
+				l_data.extend (l_datum)
 				l_inner_containers.forth
 			end
-			a_config_data.set_inner_container_datas (l_datas)
+			a_config_data.set_inner_container_data (l_data)
 		end
 
 	save_inner_container_data (a_widget: EV_WIDGET; a_config_data: SD_INNER_CONTAINER_DATA) is
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			l_upper_zone: SD_UPPER_ZONE
 		do
 			if a_widget = top_container then
-				-- We are saving tools config datas.
+				-- We are saving tools config data.
 				save_place_holder_data (a_config_data)
 			else
 				l_split_area ?= a_widget
@@ -373,10 +373,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_tool_bar_datas (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
-			-- Save four area tool bar and floating tool bar config datas.
+	save_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+			-- Save four area tool bar and floating tool bar config data.
 		require
-			not_void: a_tool_bar_datas /= Void
+			not_void: a_tool_bar_data /= Void
 		local
 			l_tool_bar_data: SD_TOOL_BAR_DATA
 			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
@@ -387,18 +387,18 @@ feature {NONE} -- Implementation
 		do
 			-- Top
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.top)
-			a_tool_bar_datas.extend (l_tool_bar_data)
+			a_tool_bar_data.extend (l_tool_bar_data)
 			-- Bottom
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.bottom)
-			a_tool_bar_datas.extend (l_tool_bar_data)
+			a_tool_bar_data.extend (l_tool_bar_data)
 			-- Left
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.left)
-			a_tool_bar_datas.extend (l_tool_bar_data)
+			a_tool_bar_data.extend (l_tool_bar_data)
 			-- Right	
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.right)
-			a_tool_bar_datas.extend (l_tool_bar_data)
+			a_tool_bar_data.extend (l_tool_bar_data)
 
-			-- Floating tool bars datas
+			-- Floating tool bars data
 			l_float_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
 				l_float_tool_bars.start
@@ -413,11 +413,11 @@ feature {NONE} -- Implementation
 				l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
 				l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
 				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
-				a_tool_bar_datas.extend (l_tool_bar_data)
+				a_tool_bar_data.extend (l_tool_bar_data)
 				l_float_tool_bars.forth
 			end
 
-			-- Hidden docking tool bar datas.
+			-- Hidden docking tool bar data.
 			from
 				l_tool_bar_contents := internal_docking_manager.tool_bar_manager.hidden_docking_contents
 				l_tool_bar_contents.start
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 					then
 						l_tool_bar_data.set_last_state (l_tool_bar_contents_item.zone.assistant.last_state)
 					end
-					a_tool_bar_datas.extend (l_tool_bar_data)
+					a_tool_bar_data.extend (l_tool_bar_data)
 				end
 				l_tool_bar_contents.forth
 			end
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 		end
 
 	save_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
-			-- Save tool bar resizable item datas.
+			-- Save tool bar resizable item data.
 		do
 			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end

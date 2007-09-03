@@ -137,7 +137,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	rgba_dib: WEL_BITMAP is
-			-- Load a image which has RGBA DIB datas.
+			-- Load a image which has RGBA DIB data.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
 			l_pixmap: EV_PIXMAP_IMP

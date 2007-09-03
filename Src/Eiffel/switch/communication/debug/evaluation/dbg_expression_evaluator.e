@@ -388,7 +388,12 @@ feature -- Access
 		do
 			if final_result_type.is_basic then
 				dmvb ?= final_result_value
-				Result := dmvb.is_type_boolean and then dmvb.value_boolean
+				if dmvb = Void then
+					dmvb ?= final_result_value.to_basic
+				end
+				if dmvb /= Void then
+					Result := dmvb.is_type_boolean and then dmvb.value_boolean
+				end
 			end
 		end
 

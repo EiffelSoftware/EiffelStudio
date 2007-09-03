@@ -15,7 +15,8 @@ inherit
 			output_value,
 			hexa_output_value,
 			is_basic,
-			is_type_boolean, is_type_integer_32
+			is_type_boolean, is_type_integer_32,
+			to_basic
 		end
 
 create {DUMP_VALUE_FACTORY}
@@ -396,6 +397,13 @@ feature -- Access
 			else
 				Result := Precursor
 			end
+		end
+
+feature -- Status report		
+
+	to_basic: DUMP_VALUE is
+		do
+			Result := Current
 		end
 
 indexing

@@ -690,6 +690,7 @@ feature {NONE} -- Button Actions
 			p: like profile_from_row
 		do
 			r := profiles_grid.single_selected_row
+			profiles_grid.remove_selection
 			if r /= Void then
 				p := profile_from_row (r)
 				if p /= Void then

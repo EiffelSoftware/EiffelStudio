@@ -38,14 +38,16 @@ feature {NONE} -- Initlization
 
 			create viewport
 			internal_border.extend (viewport)
-			viewport.set_minimum_height (internal_shared.title_bar_height - 1)
+
 			viewport.extend (fixed)
 
 			create internal_title.make
-			internal_title.set_font (internal_shared.tool_bar_font)
+
 			internal_title.set_focused_color (True)
-			internal_title.set_minimum_height (internal_shared.title_bar_height)
+
 			fixed.extend (internal_title)
+
+			update_size_and_font
 
 			create stick.make
 			stick.set_pixmap (internal_shared.icons.unstick)
@@ -305,6 +307,16 @@ feature -- Command
 			-- FIXIT: Vision2 bug
 			-- If we don't destory it, it'll not be collected.
 			internal_tool_bar.destroy
+		end
+
+	update_size_and_font is
+			-- Update size and font
+		do
+			viewport.set_minimum_height (internal_shared.title_bar_height - 1)
+			internal_title.set_minimum_height (internal_shared.title_bar_height)
+			internal_title.set_font (internal_shared.tool_bar_font)
+
+			set_minimum_height (internal_shared.title_bar_height)
 		end
 
 feature -- Query

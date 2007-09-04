@@ -517,7 +517,7 @@ feature -- Constants
 			Result_not_void: Result /= Void
 		end
 
-feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR} -- Implementation
+feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES} -- Implementation
 
 	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
 			-- Set tool bar docker mediator singleton.

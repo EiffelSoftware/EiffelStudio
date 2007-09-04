@@ -96,7 +96,7 @@ feature -- Font
 			-- Redefine.
 		local
 			l_drawing_area: EV_DRAWING_AREA
-		once
+		do
 			create l_drawing_area
 			Result := l_drawing_area.font
 		end

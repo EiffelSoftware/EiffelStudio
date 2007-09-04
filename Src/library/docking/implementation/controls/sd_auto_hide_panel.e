@@ -310,6 +310,27 @@ feature -- Command
 			Precursor {SD_HOR_VER_BOX}(a_color)
 		end
 
+	update_size is
+			--Update sizes based on font size.
+		do
+			if count = 0 then
+				if internal_vertical_style then
+					set_minimum_width (0)
+				else
+					set_minimum_height (0)
+				end
+				internal_docking_manager.main_container.set_gap (internal_direction, False)
+			else
+				if internal_vertical_style then
+					set_minimum_width (internal_shared.auto_hide_panel_size)
+				else
+					set_minimum_height (internal_shared.auto_hide_panel_size)
+				end
+				internal_docking_manager.main_container.set_gap (internal_direction, True)
+			end
+			internal_docking_manager.command.resize (True)
+		end
+
 feature -- States report
 
 	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN is
@@ -460,15 +481,7 @@ feature {NONE} -- Implementation functions.
 				extend (l_spacer)
 				disable_item_expand (l_spacer)
 
-				if count /= 0 then
-					if internal_vertical_style then
-						set_minimum_width (internal_shared.auto_hide_panel_size)
-					else
-						set_minimum_height (internal_shared.auto_hide_panel_size)
-					end
-					internal_docking_manager.main_container.set_gap (internal_direction, True)
-					internal_docking_manager.command.resize (True)
-				end
+				update_size
 			end
 		ensure
 			added_stub_and_space: not internal_ignore_added_action implies old count = count - 2 and has (a_stub)
@@ -513,15 +526,7 @@ feature {NONE} -- Implementation functions.
 				end
 			end
 
-			if count = 0 then
-				if internal_vertical_style then
-					set_minimum_width (0)
-				else
-					set_minimum_height (0)
-				end
-				internal_docking_manager.main_container.set_gap (internal_direction, False)
-				internal_docking_manager.command.resize (True)
-			end
+			update_size
 
 		ensure
 			removed: not has (a_stub)

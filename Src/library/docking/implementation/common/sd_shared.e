@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that contain all the singletons in the smart docking library."
+	description: "Objects that contain all the singletons in Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -85,11 +85,10 @@ feature -- Access
 
 	tool_bar_font: EV_FONT is
 			-- Tool bar font
-		local
-			l_color: SD_SYSTEM_COLOR
-		once
-			create {SD_SYSTEM_COLOR_IMP} l_color.make
-			Result := l_color.tool_bar_font
+		do
+			Result := sizes.tool_bar_font_cell.item
+		ensure
+			not_void: Result /= Void
 		end
 
 	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
@@ -386,14 +385,8 @@ feature -- Constants
 
 	Auto_hide_panel_size: INTEGER is
 			-- Width of auto hide panel.
-		local
-			l_platform: PLATFORM
-		once
-			Result := notebook_tab_height
-			create l_platform
-			if l_platform.is_windows then
-				Result := Result + 2
-			end
+		do
+			Result := sizes.auto_hide_panel_size_cell.item
 		end
 
 	Auto_hide_panel_gap_size: INTEGER is 4
@@ -407,27 +400,21 @@ feature -- Constants
 
 	title_bar_height: INTEGER is
 			-- Size of zone's title bar.
-		once
-			Result := tool_bar_font.height * 3 // 2 + 2
+		do
+			Result := sizes.title_bar_height_cell.item
 		end
 
 	Notebook_tab_height: INTEGER is
 			-- Notebook tab height.
-		local
-			l_platform: PLATFORM
-		once
-			Result := tool_bar_font.height * 3 // 2
-			create l_platform
-			if l_platform.is_windows then
-				Result := Result + 2
-			end
+		do
+			Result := sizes.notebook_tab_height_cell.item
 		end
 
 	Notebook_tab_maximum_size: INTEGER is
 			-- Maximum size of a notebook tab.
 			-- If the title on the tab would exceed this size, it is cropped.
 		do
-			Result := tool_bar_font.width * 35
+			Result := sizes.notebook_tab_maximum_size_cell.item
 		end
 
 	tab_zone_upper_minimum_height: INTEGER is
@@ -436,37 +423,30 @@ feature -- Constants
 			Result := notebook_tab_height + 5
 		end
 
-	Zone_minmum_width: INTEGER is
-			-- Minmum width of a zone.
-		once
-			Result := Title_bar_height * 5
+	zone_minimum_width: INTEGER is
+			-- Minimum width of a zone.
+		do
+			Result := sizes.zone_minimum_width_cell.item
 		end
 
-	Zone_minmum_height: INTEGER is
-			-- Minmum height of a zone.
-		once
-			Result := Title_bar_height + 1
+	zone_minimum_height: INTEGER is
+			-- Minimum height of a zone.
+		do
+			Result := sizes.zone_minimum_height_cell.item
 		end
 
 	Tool_bar_size: INTEGER is
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
 			-- Note: SD_WIDGET_TOOL_BAR's size may bigger than this size when font size is very small.
 			-- For example, on Linux Desktop when using font Scans 8.
-		once
-			Result := tool_bar_font.height + 2 * Tool_bar_border_width
+		do
+			Result := sizes.tool_bar_size_cell.item
 		end
 
 	Tool_bar_border_width: INTEGER is
 			-- Tool bar border width
-		local
-			l_platform: PLATFORM
 		do
-			Result := (tool_bar_font.height / 2).floor
-
-			create l_platform
-			if l_platform.is_windows then
-				Result := Result + 1
-			end
+			Result := sizes.tool_bar_border_width_cell.item
 		end
 
 	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
@@ -510,8 +490,8 @@ feature -- Constants
 
 	title_bar_text_start_y: INTEGER is
 			-- When title bar drawing text, start y position.
-		once
-			Result := (title_bar_height / 2 - tool_bar_font.height / 2).rounded
+		do
+			Result := sizes.title_bar_text_start_y_cell.item
 		end
 
 	Padding_width: INTEGER is 4
@@ -585,6 +565,12 @@ feature {NONE} -- Implementation
 
 	color: SD_COLORS is
 			-- Colors query class.
+		once
+			create Result.make
+		end
+
+	sizes: SD_SIZES is
+			-- Sizes query class.
 		once
 			create Result.make
 		end
@@ -696,10 +682,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

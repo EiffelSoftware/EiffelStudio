@@ -48,7 +48,7 @@ feature {NONE} -- Initlization
 
 			extend (internal_border_box)
 
-			set_minimum_size (internal_shared.Zone_minmum_width, internal_shared.title_bar_height)
+			set_minimum_size (internal_shared.zone_minimum_width, internal_shared.title_bar_height)
 			internal_border_box.set_border_color (internal_shared.border_color)
 		ensure
 			extended: has (internal_title_bar)

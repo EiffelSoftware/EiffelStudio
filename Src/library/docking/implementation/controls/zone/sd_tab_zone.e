@@ -95,8 +95,8 @@ feature {NONE} -- Initlization
 
 			resize_actions.extend (agent internal_notebook.on_resize)
 
-			set_minimum_width (internal_shared.zone_minmum_width)
-			set_minimum_height (internal_shared.zone_minmum_height)
+			set_minimum_width (internal_shared.zone_minimum_width)
+			set_minimum_height (internal_shared.zone_minimum_height)
 		end
 
 feature -- Query

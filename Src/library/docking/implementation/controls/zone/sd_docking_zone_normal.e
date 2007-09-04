@@ -55,8 +55,8 @@ feature	{NONE} -- Initlization
 			window.set_stick (True)
 			extend_cell (window)
 
-			set_minimum_width (internal_shared.zone_minmum_width)
-			set_minimum_height (internal_shared.zone_minmum_height)
+			set_minimum_width (internal_shared.zone_minimum_width)
+			set_minimum_height (internal_shared.zone_minimum_height)
 		ensure
 			set: internal_docking_manager = a_content.docking_manager
 			added: has_cell (window)

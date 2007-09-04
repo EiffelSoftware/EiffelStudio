@@ -1228,6 +1228,7 @@ test	missing-actual-generic-crash	term146 tcf pass termination generic
 test	actual-generic-none-crash	term147 tcf pass termination generic
 test	complex-generics-crash		term148 tcf fail termination generic
 test	agent-with-anchor-crash		term149 tcf fail termination generic
+test	expanded-generic-crash		term150 tcf fail termination generic
 
 -- Config
 

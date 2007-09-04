@@ -51,11 +51,8 @@ feature {NONE} -- Initialization
 			report_toolbar: EV_TOOL_BAR
 			hbox: EV_HORIZONTAL_BOX
 		do
-			create report_button.make_with_text (Interface_names.l_Search_report_hide)
-			report_button.select_actions.extend (agent toggle_search_report)
 			create report_toolbar
 			report_toolbar.disable_vertical_button_style
-			report_toolbar.extend (report_button)
 			create frm
 				-- This is a small workaround for a bug on Windows, where a toolbar
 				-- directly inserted within an EV_FRAME, overlaps the bottom of the frame.
@@ -75,7 +72,6 @@ feature {NONE} -- Initialization
 			create new_search_button.make_with_text (interface_names.b_new_search)
 			new_search_tool_bar.extend (new_search_button)
 			new_search_tool_bar.disable_vertical_button_style
-			new_search_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 			new_search_tool_bar.hide
 
 			create shortcut_tool_bar
@@ -83,7 +79,6 @@ feature {NONE} -- Initialization
 			hbox.extend (create {EV_CELL})
 			hbox.extend (shortcut_tool_bar)
 			hbox.disable_item_expand (shortcut_tool_bar)
-			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 			create expand_all_button.make_with_text (interface_names.b_expand_all)
 			create collapse_all_button.make_with_text (interface_names.b_collapse_all)
 			shortcut_tool_bar.extend (expand_all_button)
@@ -211,9 +206,6 @@ feature -- Element Change
 
 feature {EB_MULTI_SEARCH_TOOL, EB_SEARCH_REPORT_GRID} -- Widgets
 
-	report_button : EV_TOOL_BAR_BUTTON
-			-- Button to hide or show report.
-
 	summary_label : EV_LABEL
 			-- Label to show search summary.
 
@@ -243,20 +235,6 @@ feature {NONE} -- Recyclable
 			search_tool := Void
 			search_report_grid.wipe_out
 			Precursor {EB_TOOL}
-		end
-
-feature {NONE} -- Implementation
-
-	toggle_search_report is
-			-- Hide report if it is shown, show it if it is hidden.
-		do
-			if report.is_show_requested then
-				report.hide
-				report_button.set_text (Interface_names.l_Search_report_show)
-			else
-				report.show
-				report_button.set_text (Interface_names.l_Search_report_hide)
-			end
 		end
 
 indexing

@@ -284,7 +284,7 @@ feature -- Query
 
 	standard_height: INTEGER is
 			-- Standard tool bar height.
-		once
+		do
 			Result := internal_shared.tool_bar_size
 		end
 
@@ -396,7 +396,7 @@ feature -- Contract support
 								and a_screen_x < width + screen_x and a_screen_y < height + screen_y
 		end
 
-feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
+feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR, SD_SIZES, SD_TOOL_BAR_ZONE} -- Internal issues
 
 	need_calculate_size is
 			-- Set if need recalculate `row_height'.

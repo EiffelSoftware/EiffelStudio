@@ -55,9 +55,7 @@ feature {NONE}  -- Initlization
 			extend_vertical_box (internal_border_for_tab_area)
 			set_minimum_width ({SD_SHARED}.Notebook_minimum_width)
 
-			-- set_minimum_height is not needed on Windows.
-			-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
-			set_minimum_height (internal_shared.notebook_tab_height + 3)
+			update_size
 
 			internal_border_for_tab_area.extend (internal_tab_box)
 			internal_tab_box.set_gap (False)
@@ -271,7 +269,7 @@ feature -- Command
 		end
 
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER) is
-			--
+			-- Position `a_content' at `a_index'.
 		require
 			has: has (a_content)
 			valid: a_index > 0 and a_index <= contents.count
@@ -310,6 +308,38 @@ feature -- Command
 			-- Enable client programmers' widget expand
 		do
 			enable_item_expand (internal_border_box)
+		end
+
+	update_size is
+			-- Update minimum height base on font size.
+		do
+				-- set_minimum_height is not needed on Windows.
+				-- But on Linux, if we don't set it, docking (not tabbed) zone minimum height will be 1 when zone is minimized.
+				set_minimum_height (internal_shared.notebook_tab_height + 3)
+		end
+
+	update_size_and_font is
+			-- Update tabs, tab box, tab area's size base on font size.
+		local
+			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+		do
+			from
+				l_tabs := internal_tab_box.all_tabs
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				l_tabs.item.set_font (internal_shared.tool_bar_font)
+				l_tabs.forth
+			end
+
+			internal_tab_box.tab_box.set_font (internal_shared.tool_bar_font)
+			internal_tab_box.tab_box.update_size
+			internal_tab_box.update_size
+
+			internal_tab_box.resize_tabs (internal_tab_box.width)
+
+			update_size
 		end
 
 feature -- Query

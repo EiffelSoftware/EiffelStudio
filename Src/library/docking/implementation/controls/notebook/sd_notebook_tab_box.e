@@ -44,7 +44,8 @@ feature {NONE} -- Initialization
 			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_double_press_actions.force_extend (agent clear_pressed_flag)
-			set_minimum_height (internal_shared.Notebook_tab_height)
+
+			update_size
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_drop_actions_veto_pebble)
@@ -58,6 +59,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Command
+
+	update_size is
+			--Update minimum height.
+		do
+			set_minimum_height (internal_shared.Notebook_tab_height)
+		end
 
 	extend (a_tab: SD_NOTEBOOK_TAB) is
 			-- Extend `a_tab' into Current

@@ -104,141 +104,41 @@ feature {NONE} -- Implementation
 	update_widgets_sizes is
 			-- Update existing widgets sizes just after font changed
 		local
-			l_mem: MEMORY
-			l_internal: INTERNAL
-			l_type_id: INTEGER
-			l_widgets: SPECIAL [ANY]
-			l_tool_bar, l_tool_bar_2: SD_TOOL_BAR
-			l_tool_bar_zone, l_tool_bar_zone_2: SD_TOOL_BAR_ZONE
-			l_title, l_title_2: SD_TITLE_BAR
-			l_notebook, l_notebook_2: SD_NOTEBOOK
-			l_notebook_upper, l_notebook_upper_2: SD_NOTEBOOK_UPPER
-			l_auto_hide_panel, l_auto_hide_panel_2: SD_AUTO_HIDE_PANEL
-			l_i: INTEGER
+			l_widgets: SD_WIDGETS
 		do
-			create l_internal
-			create l_mem
+			l_widgets := internal_shared.widgets
+			l_widgets.all_tool_bars.do_all (agent (a_item: SD_TOOL_BAR)
+												do
+													a_item.need_calculate_size
+													a_item.update_size
+												end)
 
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_TOOL_BAR")
-				check exists: l_type_id /= -1 end
-				l_tool_bar ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_tool_bar /= Void end
-				l_widgets := l_mem.objects_instance_of (l_tool_bar)
-			until
-				l_i >= l_widgets.count
-			loop
-				l_tool_bar_2 ?= l_widgets.item (l_i)
-				check not_void: l_tool_bar_2 /= Void end
-				if l_tool_bar_2 /= l_tool_bar then
-					l_tool_bar_2.need_calculate_size
-					l_tool_bar_2.update_size
-				end
+			l_widgets.all_tool_bar_zones.do_all (agent (a_item: SD_TOOL_BAR_ZONE)
+													do
+														a_item.update_drag_area
+													end)
 
-				l_i := l_i + 1
-			end
 
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_TOOL_BAR_ZONE")
-				check exists: l_type_id /= -1 end
-				l_tool_bar_zone ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_tool_bar_zone /= Void end
-				l_widgets := l_mem.objects_instance_of (l_tool_bar_zone)
-				l_i := 0
-			until
-				l_i >= l_widgets.count
-			loop
-				l_tool_bar_zone_2 ?= l_widgets.item (l_i)
-				check not_void: l_tool_bar_zone_2 /= Void end
-				if l_tool_bar_zone_2 /= l_tool_bar_zone then
-					l_tool_bar_zone_2.update_drag_area
-				end
+			l_widgets.all_title_bars.do_all (agent (a_item: SD_TITLE_BAR)
+												do
+													a_item.update_size_and_font
+												end)
 
-				l_i := l_i + 1
-			end
+			l_widgets.all_notebooks.do_all (agent (a_item: SD_NOTEBOOK)
+												do
+													a_item.update_size_and_font
+												end)
 
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_TITLE_BAR")
-				check exists: l_type_id /= -1 end
-				l_title ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_title /= Void end
-				l_widgets := l_mem.objects_instance_of (l_title)
-				l_i := 0
-			until
-				l_i >= l_widgets.count
-			loop
-				l_title_2 ?= l_widgets.item (l_i)
-				check not_void: l_title_2 /= Void end
-				if l_title_2 /= l_title then
-					l_title_2.update_size_and_font
-				end
-
-				l_i := l_i + 1
-			end
-
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_NOTEBOOK")
-				check exists: l_type_id /= -1 end
-				l_notebook ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_notebook /= Void end
-				l_widgets := l_mem.objects_instance_of (l_notebook)
-				l_i := 0
-			until
-				l_i >= l_widgets.count
-			loop
-				l_notebook_2 ?= l_widgets.item (l_i)
-				check not_void: l_notebook_2 /= Void end
-				if l_notebook_2 /= l_notebook then
-					l_notebook_2.update_size_and_font
-				end
-
-				l_i := l_i + 1
-			end
-
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_NOTEBOOK_UPPER")
-				check exists: l_type_id /= -1 end
-				l_notebook_upper ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_notebook_upper /= Void end
-				l_widgets := l_mem.objects_instance_of (l_notebook_upper)
-				l_i := 0
-			until
-				l_i >= l_widgets.count
-			loop
-				l_notebook_upper_2 ?= l_widgets.item (l_i)
-				check not_void: l_notebook_upper_2 /= Void end
-				if l_notebook_upper_2 /= l_notebook_upper then
-					l_notebook_upper_2.update_size_and_font
-				end
-
-				l_i := l_i + 1
-			end
-
-			from
-				l_type_id := l_internal.dynamic_type_from_string ("SD_AUTO_HIDE_PANEL")
-				check exists: l_type_id /= -1 end
-				l_auto_hide_panel ?= l_internal.new_instance_of (l_type_id)
-				check not_void: l_auto_hide_panel /= Void end
-				l_widgets := l_mem.objects_instance_of (l_auto_hide_panel)
-				l_i := 0
-			until
-				l_i >= l_widgets.count
-			loop
-				l_auto_hide_panel_2 ?= l_widgets.item (l_i)
-				check not_void: l_auto_hide_panel_2 /= Void end
-				if l_auto_hide_panel_2 /= l_auto_hide_panel then
-					l_auto_hide_panel_2.update_size
-					l_auto_hide_panel_2.tab_stubs.do_all (agent (a_tab_stub: SD_TAB_STUB)
-																														require
-																															not_void: a_tab_stub /= Void
-																														do
-																															a_tab_stub.set_text (a_tab_stub.text)
-																														end
-																														)
-				end
-
-				l_i := l_i + 1
-			end
+			l_widgets.all_auto_hide_panels.do_all (agent (a_item: SD_AUTO_HIDE_PANEL)
+													do
+														a_item.update_size
+														a_item.tab_stubs.do_all (agent (a_tab_stub: SD_TAB_STUB)
+															require
+																not_void: a_tab_stub /= Void
+															do
+																a_tab_stub.set_text (a_tab_stub.text)
+															end)
+													end)
 		end
 
 	update_all_docking_managers is

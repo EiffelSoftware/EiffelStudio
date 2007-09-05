@@ -19,7 +19,8 @@ inherit
 		undefine
 			create_implementation,
 			is_in_default_state,
-			is_equal
+			is_equal,
+			destroy
 		redefine
 			row_height,
 			extend,
@@ -91,6 +92,8 @@ inherit
 			pointer_double_press_actions,
 			is_displayed,
 			initialize
+		redefine
+			destroy
 		select
 			implementation
 		end
@@ -119,6 +122,8 @@ feature {NONE} -- Initlization
 
 			-- We create this only for making sure the invariant not borken.
 			create internal_items.make (0)
+
+			internal_shared.widgets.all_tool_bars.extend (Current)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -347,6 +352,13 @@ feature -- Command
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			tool_bar.set_tooltip (a_tooltip)
+		end
+
+	destroy is
+			-- Redefine
+		do
+			internal_shared.widgets.all_tool_bars.prune_all (Current)
+			Precursor {SD_FIXED}
 		end
 
 feature -- Query

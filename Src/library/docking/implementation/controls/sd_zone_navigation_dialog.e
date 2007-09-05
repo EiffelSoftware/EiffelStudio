@@ -34,9 +34,10 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			is_shift_pressed := a_is_shift_pressed
-			make_with_shadow
 			internal_docking_manager := a_docking_manager
 
+			make_with_shadow
+			
 			add_all_content_label
 			key_release_actions.extend (agent on_key_release)
 			key_press_actions.extend (agent on_key_press)

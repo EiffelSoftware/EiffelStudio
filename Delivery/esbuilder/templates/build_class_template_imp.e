@@ -6,7 +6,7 @@ indexing
 		You should not modify this code by hand, as it will be re-generated every time
 		 modifications are made to the project.
 		 	]"
-	generated: "yes"
+	generator: "EiffelBuild"
 	date: "$Date$"
 	revision: "$Revision$"
 

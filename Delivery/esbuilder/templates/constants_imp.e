@@ -27,6 +27,7 @@ indexing
 			of the constants that should have been loaded. Therefore, you must ensure that either the
 			file is accessible or you do not specify to load from a file.
 		]"
+	generated: "yes"
 	date: "$Date$"
 	revision: "$Revision$"
 

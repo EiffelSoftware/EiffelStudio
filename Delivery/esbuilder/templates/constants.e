@@ -6,6 +6,7 @@ indexing
 			change the location of the file, redefine `initialize_constants' in this
 			class to load from the desired location.
 			]"
+	generated: "yes"
 	date: "$Date$"
 	revision: "$Revision$"
 

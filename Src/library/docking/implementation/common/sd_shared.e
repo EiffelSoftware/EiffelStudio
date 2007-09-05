@@ -517,7 +517,8 @@ feature -- Constants
 			Result_not_void: Result /= Void
 		end
 
-feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES} -- Implementation
+feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
+		SD_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL} -- Implementation
 
 	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
 			-- Set tool bar docker mediator singleton.
@@ -555,6 +556,14 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 
 	is_set_show_tab_stub_text_called: CELL [BOOLEAN] is
 			-- If `set_show_tab_stub_text' has been called?
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	widgets: SD_WIDGETS is
+			-- Widget lists.
 		once
 			create Result
 		ensure

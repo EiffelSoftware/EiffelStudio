@@ -69,6 +69,8 @@ feature {NONE}  -- Initlization
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
+
+			internal_shared.widgets.all_notebooks.extend (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -251,6 +253,7 @@ feature -- Command
 	destroy is
 			-- Redefine.
 		do
+			internal_shared.widgets.all_notebooks.prune_all (Current)
 			from
 				internal_tabs.start
 			until

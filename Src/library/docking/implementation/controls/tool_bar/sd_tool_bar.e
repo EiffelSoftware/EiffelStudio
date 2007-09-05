@@ -32,7 +32,8 @@ inherit
 			{SD_TOOL_BAR} is_initialized
 		redefine
 			update_for_pick_and_drop,
-			initialize
+			initialize,
+			destroy
 		end
 
 create
@@ -44,6 +45,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
+			internal_shared.widgets.all_tool_bars.extend (Current)
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization
@@ -214,6 +216,13 @@ feature -- Command
 			-- Disable capture
 		do
 			disable_capture_vision2
+		end
+
+	destroy	is
+			-- Redefine
+		do
+			internal_shared.widgets.all_tool_bars.prune_all (Current)
+			Precursor {SD_DRAWING_AREA}
 		end
 
 feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting

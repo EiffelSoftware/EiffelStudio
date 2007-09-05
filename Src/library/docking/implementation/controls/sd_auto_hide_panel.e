@@ -15,7 +15,8 @@ inherit
 	SD_HOR_VER_BOX
 		redefine
 			has,
-			set_background_color
+			set_background_color,
+			destroy
 		end
 
 create
@@ -46,6 +47,8 @@ feature {NONE} -- Initlization
 			create tab_groups
 
 			set_background_color (internal_shared.non_focused_color_lightness)
+
+			internal_shared.widgets.all_auto_hide_panels.extend (Current)
 		ensure
 			set: internal_direction = a_direction
 			set: internal_docking_manager = a_docking_manager
@@ -329,6 +332,13 @@ feature -- Command
 				internal_docking_manager.main_container.set_gap (internal_direction, True)
 			end
 			internal_docking_manager.command.resize (True)
+		end
+
+	destroy is
+			-- Redefine
+		do
+			internal_shared.widgets.all_auto_hide_panels.prune_all (Current)
+			Precursor {SD_HOR_VER_BOX}
 		end
 
 feature -- States report

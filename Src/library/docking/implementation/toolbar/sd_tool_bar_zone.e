@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	DISPOSABLE
+		rename
+			dispose as destroy
+		end
+		
 create
 	make
 
@@ -42,6 +47,8 @@ feature {NONE} -- Initialization
 			create assistant.make (Current)
 
 			init_drag_area
+
+			internal_shared.widgets.all_tool_bar_zones.extend (Current)
 		ensure
 			set: is_vertical = a_vertical
 			set: docking_manager = a_docking_manager
@@ -319,6 +326,7 @@ feature -- Command
 	destroy is
 			-- Destroy
 		do
+			internal_shared.widgets.all_tool_bar_zones.prune_all (Current)
 			tool_bar.destroy
 		end
 

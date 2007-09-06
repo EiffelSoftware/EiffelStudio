@@ -15,26 +15,26 @@ inherit
 
 feature -- Default pixmaps
 
-	Information_pixmap: EV_PIXMAP is
-			-- Pixmap symbolizing a piece of information.
+	Information_pixmap: EV_PIXEL_BUFFER is
+			-- Pixel Buffer symbolizing a piece of information.
 		do
 			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_information)
 		end
 
-	Error_pixmap: EV_PIXMAP is
-			-- Pixmap symbolizing an error.
+	Error_pixmap: EV_PIXEL_BUFFER is
+			-- Pixel Buffer symbolizing an error.
 		do
 			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_error)
 		end
 
-	Warning_pixmap: EV_PIXMAP is
-			-- Pixmap symbolizing a warning.
+	Warning_pixmap: EV_PIXEL_BUFFER is
+			-- Pixel Buffer symbolizing a warning.
 		do
 			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_warning)
 		end
 
-	Question_pixmap: EV_PIXMAP is
-			-- Pixmap symbolizing a question.
+	Question_pixmap: EV_PIXEL_BUFFER is
+			-- Pixel Buffer symbolizing a question.
 		do
 			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_question)
 		end
@@ -55,11 +55,11 @@ feature -- Default pixmaps
 
 feature {NONE} -- Implementation
 
-	build_default_icon (Idi_constant: POINTER): EV_PIXMAP is
+	build_default_icon (Idi_constant: POINTER): EV_PIXEL_BUFFER is
 			-- Create the pixmap corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
+			pixbuf_imp: EV_PIXEL_BUFFER_IMP
 			wel_icon: WEL_ICON
 		do
 				-- Create a default pixmap
@@ -69,9 +69,9 @@ feature {NONE} -- Implementation
 			create wel_icon.make_by_predefined_id (Idi_constant)
 			wel_icon.enable_reference_tracking
 
-				-- Initialize the pixmap with the icon
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_with_resource (wel_icon)
+				-- Initialize the pixel buffer with the icon
+			pixbuf_imp ?= Result.implementation
+			pixbuf_imp.set_from_icon (wel_icon)
 
 			wel_icon.decrement_reference
 		end

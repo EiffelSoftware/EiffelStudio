@@ -109,6 +109,20 @@ feature -- Command
 			end
 		end
 
+	set_from_icon (a_wel_icon: WEL_ICON) is
+			-- Load pixel data from `a_wel_icon'.
+		local
+			l_pixmap_imp: EV_PIXMAP_IMP
+		do
+			if is_gdi_plus_installed then
+				gdip_bitmap.set_with_icon (a_wel_icon)
+			else
+				l_pixmap_imp ?= pixmap.implementation
+				l_pixmap_imp.set_with_resource (a_wel_icon)
+			end
+		end
+
+
 	save_to_named_file (a_file_name: STRING) is
 			-- Save pixel datas to `a_file_name'
 		local

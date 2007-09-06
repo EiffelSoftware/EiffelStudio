@@ -17,7 +17,8 @@ inherit
 
 create
 	make_with_size,
-	make_with_graphics
+	make_with_graphics,
+	make_from_icon
 
 feature {NONE} -- Initlization
 
@@ -48,7 +49,28 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+	make_from_icon (a_icon: WEL_ICON) is
+			-- Creation method.
+		require
+			a_icon_not_void: a_icon /= Void
+		local
+			l_result: INTEGER
+		do
+			default_create
+			item := c_gdip_create_bitmap_from_hicon  (gdi_plus_handle, a_icon.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 feature -- Command
+
+	set_with_icon (a_icon: WEL_ICON) is
+			-- Creation method.
+		require
+			a_icon_not_void: a_icon /= Void
+		do
+			destroy_item
+			make_from_icon (a_icon)
+		end
 
 	load_image_from_file (a_file_name: STRING) is
 			-- Redefine
@@ -228,6 +250,32 @@ feature -- C externals
 								((INT) $a_width,
 								(INT) $a_height,
 								(GpGraphics *) $a_target_graphics,
+								(GpBitmap **) &l_result);
+				}
+				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
+	c_gdip_create_bitmap_from_hicon (a_gdiplus_handle: POINTER; a_hicon: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+			-- Create a bitmap object.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipCreateBitmapFromHICON = NULL;
+				GpBitmap *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipCreateBitmapFromHICON)	{
+					GdipCreateBitmapFromHICON = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateBitmapFromHICON");
+				}
+				if (GdipCreateBitmapFromHICON) {
+					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (HICON, GpBitmap **)) GdipCreateBitmapFromHICON)
+								((HICON) $a_hicon,
 								(GpBitmap **) &l_result);
 				}
 				return (EIF_POINTER) l_result;

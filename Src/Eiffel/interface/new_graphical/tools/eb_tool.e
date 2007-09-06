@@ -189,9 +189,9 @@ feature -- Status report
 		end
 
 	is_auto_hide: BOOLEAN is
-			-- Is current auto hide status?
+			-- Is current auto hide status and content visible?
 		do
-			if content /= Void then
+			if content /= Void and then content.is_visible then
 				Result := content.state_value = {SD_ENUMERATION}.auto_hide
 			end
 		end

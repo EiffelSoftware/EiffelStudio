@@ -303,6 +303,27 @@ feature -- Query
 			Result :={EV_GTK_EXTERNALS}.gdk_pixbuf_get_pixels (gdk_pixbuf)
 		end
 
+feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
+
+	set_from_stock_id (a_stock_id: POINTER) is
+			-- Pixmap symbolizing a piece of information
+		require
+			a_stock_id_not_null: a_stock_id /= default_pointer
+		local
+			stock_pixbuf: POINTER
+			l_label: POINTER
+		do
+			l_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
+			stock_pixbuf := {EV_GTK_EXTERNALS}.gtk_widget_render_icon (l_label, a_stock_id, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_icon_size_dialog_enum, default_pointer)
+			{EV_GTK_EXTERNALS}.object_unref (l_label)
+			l_label := default_pointer
+			if stock_pixbuf /= default_pointer then
+					-- If a stock pixmap can be found then set it, else do nothing.
+				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (stock_pixbuf))
+				{EV_GTK_EXTERNALS}.object_unref (stock_pixbuf)
+			end
+		end
+
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
 	reusable_managed_pointer: MANAGED_POINTER

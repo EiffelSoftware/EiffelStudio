@@ -89,7 +89,7 @@ feature {NONE} -- Initlization
 		 	disable_focus_color
 		 	viewport.resize_actions.extend (agent on_fixed_resize)
 
-		 	internal_shared.widgets.all_title_bars.extend (Current)
+		 	internal_shared.widgets.add_title_bar (Current)
 		end
 
 feature -- Command
@@ -305,7 +305,7 @@ feature -- Command
 	destroy is
 			-- Destroy
 		do
-			internal_shared.widgets.all_title_bars.prune_all (Current)
+			internal_shared.widgets.prune_title_bar (Current)
 			Precursor {EV_HORIZONTAL_BOX}
 			-- FIXIT: Vision2 bug
 			-- If we don't destory it, it'll not be collected.

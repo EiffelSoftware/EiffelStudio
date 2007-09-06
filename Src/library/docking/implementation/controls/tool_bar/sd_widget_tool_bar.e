@@ -123,7 +123,7 @@ feature {NONE} -- Initlization
 			-- We create this only for making sure the invariant not borken.
 			create internal_items.make (0)
 
-			internal_shared.widgets.all_tool_bars.extend (Current)
+			internal_shared.widgets.add_tool_bar (Current)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -357,7 +357,7 @@ feature -- Command
 	destroy is
 			-- Redefine
 		do
-			internal_shared.widgets.all_tool_bars.prune_all (Current)
+			internal_shared.widgets.prune_tool_bar (Current)
 			Precursor {SD_FIXED}
 		end
 

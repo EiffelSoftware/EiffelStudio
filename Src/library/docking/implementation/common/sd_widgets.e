@@ -29,8 +29,9 @@ feature -- Query
 					l_list.after
 				loop
 					l_item ?= id_object (l_list.item)
-					check not_void: l_item /= Void end
-					Result.extend (l_item)
+					if l_item /= Void then
+						Result.extend (l_item)
+					end
 					l_list.forth
 				end
 			end
@@ -54,8 +55,9 @@ feature -- Query
 					l_list.after
 				loop
 					l_item ?= id_object (l_list.item)
-					check not_void: l_item /= Void end
-					Result.extend (l_item)
+					if l_item /= Void then
+						Result.extend (l_item)
+					end
 					l_list.forth
 				end
 			end
@@ -79,8 +81,9 @@ feature -- Query
 					l_list.after
 				loop
 					l_item ?= id_object (l_list.item)
-					check not_void: l_item /= Void end
-					Result.extend (l_item)
+					if l_item /= Void then
+						Result.extend (l_item)
+					end
 					l_list.forth
 				end
 			end
@@ -104,8 +107,9 @@ feature -- Query
 					l_list.after
 				loop
 					l_item ?= id_object (l_list.item)
-					check not_void: l_item /= Void end
-					Result.extend (l_item)
+					if l_item /= Void then
+						Result.extend (l_item)
+					end
 					l_list.forth
 				end
 			end
@@ -129,8 +133,9 @@ feature -- Query
 					l_list.after
 				loop
 					l_item ?= id_object (l_list.item)
-					check not_void: l_item /= Void end
-					Result.extend (l_item)
+					if l_item /= Void then
+						Result.extend (l_item)
+					end
 					l_list.forth
 				end
 			end

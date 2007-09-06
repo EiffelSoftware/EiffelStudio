@@ -184,6 +184,7 @@ feature -- Access
 
 	state_value: INTEGER is
 			-- Current state.
+			-- Note, it's possible result is {SD_ENUMERATION}.auto_hide, but `is_visible' return False. See bug#13339.
 		local
 			l_void: SD_STATE_VOID
 			l_docking: SD_DOCKING_STATE

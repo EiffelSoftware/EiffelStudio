@@ -14,25 +14,25 @@ inherit
 
 feature -- Access
 
-	Information_pixmap: EV_PIXMAP is
+	Information_pixmap: EV_PIXEL_BUFFER is
 			-- Pixmap symbolizing a piece of information.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-info")
 		end
 
-	Error_pixmap: EV_PIXMAP is
+	Error_pixmap: EV_PIXEL_BUFFER is
 			-- Pixmap symbolizing an error.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-error")
 		end
 
-	Warning_pixmap: EV_PIXMAP is
+	Warning_pixmap: EV_PIXEL_BUFFER is
 			-- Pixmap symbolizing a warning.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-warning")
 		end
 
-	Question_pixmap: EV_PIXMAP is
+	Question_pixmap: EV_PIXEL_BUFFER is
 			-- Pixmap symbolizing a question.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-question")
@@ -92,18 +92,18 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_from_stock_id (a_stock_id: EV_GTK_C_STRING): EV_PIXMAP is
+	pixmap_from_stock_id (a_stock_id: EV_GTK_C_STRING): EV_PIXEL_BUFFER is
 			-- Retrieve pixmap from gtk stock id
 		local
 			a_cs: EV_GTK_C_STRING
-			pixmap_imp: EV_PIXMAP_IMP
+			pixbuf_imp: EV_PIXEL_BUFFER_IMP
 			retried: BOOLEAN
 		do
 			if not retried then
 				a_cs := a_stock_id
 				create Result
-				pixmap_imp ?= Result.implementation
-				pixmap_imp.set_from_stock_id (a_cs.item)
+				pixbuf_imp ?= Result.implementation
+				pixbuf_imp.set_from_stock_id (a_cs.item)
 			else
 				create Result
 			end

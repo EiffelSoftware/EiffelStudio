@@ -332,7 +332,9 @@ feature -- Command
 			-- Destroy
 		do
 			internal_shared.widgets.prune_tool_bar_zone (Current)
-			tool_bar.destroy
+			if tool_bar /= Void then
+				tool_bar.destroy
+			end
 			Precursor {IDENTIFIED}
 		end
 

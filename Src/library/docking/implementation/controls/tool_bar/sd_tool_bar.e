@@ -21,7 +21,8 @@ inherit
 				  screen_y, hide, show, is_displayed,parent,
 					pointer_motion_actions, pointer_button_release_actions,
 					x_position, y_position, destroy, out,
-					set_minimum_width, set_minimum_height, is_destroyed
+					set_minimum_width, set_minimum_height, is_destroyed,
+					object_id
 			{SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE, SD_TOOL_BAR} implementation, draw_pixmap, clear_rectangle
 			{SD_TOOL_BAR_ITEM, SD_TOOL_BAR} tooltip, set_tooltip, remove_tooltip, font
 			{SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_TOOL_BAR, SD_TOOL_BAR_ITEM} set_pointer_style
@@ -45,7 +46,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
-			internal_shared.widgets.all_tool_bars.extend (Current)
+			internal_shared.widgets.add_tool_bar (Current)
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization
@@ -221,7 +222,7 @@ feature -- Command
 	destroy	is
 			-- Redefine
 		do
-			internal_shared.widgets.all_tool_bars.prune_all (Current)
+			internal_shared.widgets.prune_tool_bar (Current)
 			Precursor {SD_DRAWING_AREA}
 		end
 

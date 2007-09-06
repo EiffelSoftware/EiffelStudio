@@ -15,11 +15,16 @@ inherit
 			{NONE} all
 		end
 
-	DISPOSABLE
+	IDENTIFIED
 		rename
 			dispose as destroy
+		undefine
+			is_equal,
+			copy
+		redefine
+			destroy
 		end
-		
+
 create
 	make
 
@@ -48,7 +53,7 @@ feature {NONE} -- Initialization
 
 			init_drag_area
 
-			internal_shared.widgets.all_tool_bar_zones.extend (Current)
+			internal_shared.widgets.add_tool_bar_zone (Current)
 		ensure
 			set: is_vertical = a_vertical
 			set: docking_manager = a_docking_manager
@@ -326,8 +331,9 @@ feature -- Command
 	destroy is
 			-- Destroy
 		do
-			internal_shared.widgets.all_tool_bar_zones.prune_all (Current)
+			internal_shared.widgets.prune_tool_bar_zone (Current)
 			tool_bar.destroy
+			Precursor {IDENTIFIED}
 		end
 
 	show is

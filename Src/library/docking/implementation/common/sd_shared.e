@@ -562,7 +562,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	widgets: SD_WIDGETS is
+	widgets: SD_WIDGETS_LISTS is
 			-- Widget lists.
 		once
 			create Result

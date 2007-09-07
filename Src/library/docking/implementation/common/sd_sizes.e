@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	update_widgets_sizes is
 			-- Update existing widgets sizes just after font changed
 		local
-			l_widgets: SD_WIDGETS
+			l_widgets: SD_WIDGETS_LISTS
 		do
 			l_widgets := internal_shared.widgets
 			l_widgets.all_tool_bars.do_all (agent (a_item: SD_TOOL_BAR)

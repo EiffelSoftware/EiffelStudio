@@ -21,6 +21,13 @@ inherit
 			destroy
 		end
 
+	SD_WIDGETS_LISTS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -50,7 +57,7 @@ feature {NONE} -- Initlization
 
 			set_background_color (internal_shared.non_focused_color_lightness)
 
-			internal_shared.widgets.add_auto_hide_panel (Current)
+			add_auto_hide_panel (Current)
 		ensure
 			set: internal_direction = a_direction
 			set: internal_docking_manager = a_docking_manager
@@ -339,7 +346,7 @@ feature -- Command
 	destroy is
 			-- Redefine
 		do
-			internal_shared.widgets.prune_auto_hide_panel (Current)
+			prune_auto_hide_panel (Current)
 			Precursor {SD_HOR_VER_BOX}
 		end
 

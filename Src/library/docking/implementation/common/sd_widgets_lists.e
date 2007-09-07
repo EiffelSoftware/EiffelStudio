@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_WIDGETS
+	SD_WIDGETS_LISTS
 
 inherit
 	IDENTIFIED

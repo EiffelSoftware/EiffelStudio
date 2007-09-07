@@ -21,6 +21,13 @@ inherit
 			destroy
 		end
 
+	SD_WIDGETS_LISTS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -70,7 +77,7 @@ feature {NONE}  -- Initlization
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 
-			internal_shared.widgets.add_notebook (Current)
+			add_notebook (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -253,7 +260,7 @@ feature -- Command
 	destroy is
 			-- Redefine.
 		do
-			internal_shared.widgets.prune_notebook (Current)
+			prune_notebook (Current)
 			from
 				internal_tabs.start
 			until

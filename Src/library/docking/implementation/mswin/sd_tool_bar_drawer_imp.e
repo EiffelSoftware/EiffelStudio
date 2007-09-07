@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 					l_coordinate := l_button.pixmap_position
 					create l_dest_rect.make (l_coordinate.x, l_coordinate.y, l_coordinate.x + l_buffer_imp.width, l_coordinate.y + l_buffer_imp.height)
 					create l_src_rect.make (0, 0, l_buffer_imp.width, l_buffer_imp.height)
-					l_graphics.draw_image_with_src_rect_dest_rect (l_buffer_imp.gdip_bitmap, l_dest_rect, l_src_rect)
+					l_graphics.draw_image_with_dest_rect_src_rect (l_buffer_imp.gdip_bitmap, l_dest_rect, l_src_rect)
 
 					if l_dropdown_button /= Void then
 						l_dropdown := l_dropdown_button.dropdown_pixel_buffer
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 
 						create l_dest_rect.make (l_left, l_coordinate.y, l_left + l_dropdown.width , l_coordinate.y + l_dropdown.height)
 						create l_src_rect.make (0, 0, l_dropdown.width, l_dropdown.height)
-						l_graphics.draw_image_with_src_rect_dest_rect (l_dropdown_imp.gdip_bitmap, l_dest_rect, l_src_rect)
+						l_graphics.draw_image_with_dest_rect_src_rect (l_dropdown_imp.gdip_bitmap, l_dest_rect, l_src_rect)
 					end
 
 					l_graphics.dispose

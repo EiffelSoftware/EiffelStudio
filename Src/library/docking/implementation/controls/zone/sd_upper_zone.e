@@ -388,63 +388,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature -- Minimize all implementation
-
-	on_minimize_all is
-			-- Handle minimize all eidtors actions
-		do
-			if not is_all_zone_minimized then
-				is_all_zone_minimized := True
-			else
-				is_all_zone_minimized := False
-			end
-
-			minimize_all_imp (is_all_zone_minimized)
-			set_all_zone_icons (not is_all_zone_minimized)
-		end
-
-	is_all_zone_minimized: BOOLEAN
-			-- If all zone minimized?
-
-	set_all_zone_icons (a_is_minimize: BOOLEAN) is
-			-- Update all zones minimize icons.
-		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_upper_zone: SD_DOCKING_ZONE_UPPER
-		do
-			l_zones := internal_docking_manager.query.inner_container_main.all_editors
-			from
-				l_zones.start
-			until
-				l_zones.after
-			loop
-				l_upper_zone ?= l_zones.item
-				if l_upper_zone /= Void then
-					l_upper_zone.set_minimize_all_pixmap (a_is_minimize)
-				end
-				l_zones.forth
-			end
-		end
-
-	minimize_all_imp (a_is_minimize: BOOLEAN) is
-			-- Minimize all implementation.
-		local
-			l_editors: ARRAYED_LIST [SD_ZONE]
-			l_upper_zone: SD_UPPER_ZONE
-		do
-			l_editors := internal_docking_manager.query.inner_container_main.all_editors
-			from
-				l_editors.start
-			until
-				l_editors.after
-			loop
-				l_upper_zone ?= l_editors.item
-				check not_void: l_upper_zone /= Void end
-				l_upper_zone.on_minimize
-				l_editors.forth
-			end
-		end
-
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

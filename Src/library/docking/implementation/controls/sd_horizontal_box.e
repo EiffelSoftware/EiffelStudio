@@ -158,7 +158,9 @@ feature -- Access
 
 	maximum_split_position: INTEGER is
 			-- Redefine
+			-- This value is useful when executing SD_MULTI_DOCK_AREA.restore_spliter_position.
 		do
+			Result := {INTEGER}.max_value
 		end
 
 	split_position: INTEGER

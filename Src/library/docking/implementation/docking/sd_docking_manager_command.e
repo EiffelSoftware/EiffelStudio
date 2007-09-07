@@ -363,6 +363,46 @@ feature -- Commands
 			cleared: orignal_whole_item = Void
 		end
 
+	minimize_editors is
+			-- Minimize all editors.
+		local
+			l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
+		do
+			if not internal_docking_manager.is_editor_area_maximized then
+				from
+					l_upper_zones := internal_docking_manager.zones.upper_zones
+					l_upper_zones.start
+				until
+					l_upper_zones.after
+				loop
+					if not l_upper_zones.item.is_minimized then
+						l_upper_zones.item.on_minimize
+					end
+					l_upper_zones.forth
+				end
+			end
+		end
+
+	restore_minimized_editors IS
+			-- Restore all minimized editors
+			local
+				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
+			do
+				if not internal_docking_manager.is_editor_area_maximized then
+					from
+						l_upper_zones := internal_docking_manager.zones.upper_zones
+						l_upper_zones.finish
+					until
+						l_upper_zones.before
+					loop
+						if l_upper_zones.item.is_minimized then
+							l_upper_zones.item.on_minimize
+						end
+						l_upper_zones.back
+					end
+				end
+			end
+
 feature -- Query
 
 	orignal_editor_parent: EV_CONTAINER
@@ -370,7 +410,7 @@ feature -- Query
 
 	orignal_whole_item: EV_WIDGET
 			-- The orignal whole widget in main docking area which stored by `maximize_editor_area'.
-			
+
 feature -- Contract Support
 
 	is_main_inner_container (a_container: SD_MULTI_DOCK_AREA): BOOLEAN is

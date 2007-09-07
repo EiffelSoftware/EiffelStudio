@@ -48,12 +48,11 @@ feature -- Initlization
 			create internal_shared
 			-- Not breaking the invariant
 			create internal_shared_not_used
-			
+
 			internal_content := a_content
 			internal_docking_manager := a_content.docking_manager
 			create notebook.make (a_content.docking_manager)
 			notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
-			notebook.minimize_all_actions.extend (agent on_minimize_all)
 			notebook.normal_max_actions.extend (agent on_normal_max_window)
 			notebook.minimize_actions.extend (agent on_minimize)
 			notebook.tab_drag_actions.extend (agent on_tab_drag)
@@ -167,14 +166,6 @@ feature -- Redefine
 			else
 				notebook.disable_widget_expand
 			end
-		end
-
-feature -- Command
-
-	set_minimize_all_pixmap (a_is_minimize: BOOLEAN) is
-			-- Set minimize all pixmap icon
-		do
-			notebook.set_minimize_all_pixmap (a_is_minimize)
 		end
 
 feature {SD_DOCKING_STATE} -- Query

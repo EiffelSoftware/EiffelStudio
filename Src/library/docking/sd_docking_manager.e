@@ -374,6 +374,18 @@ feature -- Command
 			command.restore_editor_area
 		end
 
+	minimize_editors is
+			-- Minimize all editors.
+		do
+			command.minimize_editors
+		end
+
+	restore_minimized_editors is
+			-- Restore all minimized editors to normal state.
+		do
+			command.restore_minimized_editors
+		end
+
 	destroy is
 			-- Destroy all underline objects.
 		local

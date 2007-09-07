@@ -150,7 +150,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		require
 			has_parent: tool_bar /= Void
 		do
-			if tool_bar /= Void then
+			if tool_bar /= Void and then tool_bar.has (Current) then
 				create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + pixmap_y_position)
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					Result.set_x (Result.x + 1)

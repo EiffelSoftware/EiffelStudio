@@ -742,6 +742,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
 			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
 		end
 
 	build_favorites_menu is

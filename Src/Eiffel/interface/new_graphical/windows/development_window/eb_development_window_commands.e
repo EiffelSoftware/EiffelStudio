@@ -129,6 +129,12 @@ feature -- Query
 	maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
 			-- Command that maximize whole editor area.
 
+	minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
+			-- Command that minimized all editors.
+
+	restore_editors_command: EB_RESTORE_EDITORS_COMMAND
+			-- Command that restore all minimized editors.
+			
 	customized_formatter_command: EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND
 			-- Command to setup customzied formatter
 
@@ -454,6 +460,22 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			maximize_editor_area_command := a_cmd
 		ensure
 			set: maximize_editor_area_command = a_cmd
+		end
+
+	set_minimize_editors_command (a_cmd: like minimize_editors_command) is
+			-- Set `minimize_editors_command'
+		do
+			minimize_editors_command := a_cmd
+		ensure
+			set: minimize_editors_command = a_cmd
+		end
+
+	set_restore_editors_command (a_cmd: like restore_editors_command) is
+			-- Set `restore_editors_command'
+		do
+			restore_editors_command := a_cmd
+		ensure
+			set: restore_editors_command = a_cmd
 		end
 
 	set_customized_formatter_command (a_cmd: like customized_formatter_command) is

@@ -51,12 +51,6 @@ feature {NONE} -- Initlization
 			internal_top_box.disable_item_expand (custom_area)
 
 			create internal_tool_bar.make
-			create internal_minimize_all_button.make
-			internal_minimize_all_button.set_pixmap (internal_shared.icons.minimize)
-			if internal_shared.icons.minimize_buffer /= Void then
-				internal_minimize_all_button.set_pixel_buffer (internal_shared.icons.minimize_buffer)
-			end
-			internal_minimize_all_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_minimize)
 			create internal_minimize_button.make
 			internal_minimize_button.set_pixmap (internal_shared.icons.minimize)
 			if internal_shared.icons.minimize_buffer /= Void then
@@ -70,8 +64,6 @@ feature {NONE} -- Initlization
 			end
 			internal_normal_max_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
 
--- FIXIT: Currently minimize functionality not works good, so we hide this button now.
---			internal_tool_bar.extend (internal_minimize_all_button)
 			internal_tool_bar.extend (internal_minimize_button)
 			internal_tool_bar.extend (internal_normal_max_button)
 			internal_tool_bar.compute_minimum_size
@@ -89,10 +81,8 @@ feature {NONE} -- Initlization
 		do
 			create normal_max_actions
 			create minimize_actions
-			create minimize_all_actions
 			create drag_tab_area_actions
 
-			internal_minimize_all_button.select_actions.extend (agent on_minimize_all)
 			internal_normal_max_button.select_actions.extend (agent on_normal_max_window)
 			internal_minimize_button.select_actions.extend (agent on_minimize)
 			internal_tab_box.pointer_button_press_actions.extend (agent on_tab_area_pointer_press)
@@ -110,9 +100,6 @@ feature -- Query
 
 	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Minimize actions.
-
-	minimize_all_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Minimize all actions.
 
 	drag_tab_area_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Tab area drag actions.
@@ -206,24 +193,6 @@ feature -- Command
 			end
 		end
 
-	set_minimize_all_pixmap (a_is_minimize: BOOLEAN) is
-			-- Set `internal_minimize_all_button' button pixmap
-		do
-			if a_is_minimize then
-				internal_minimize_all_button.set_pixmap (internal_shared.icons.minimize)
-				if internal_shared.icons.minimize_buffer /= Void then
-					internal_minimize_all_button.set_pixel_buffer (internal_shared.icons.minimize_buffer)
-				end
-				internal_minimize_all_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_minimize)
-			else
-				internal_minimize_all_button.set_pixmap (internal_shared.icons.normal)
-				if internal_shared.icons.normal_buffer /= Void then
-					internal_minimize_all_button.set_pixel_buffer (internal_shared.icons.normal_buffer)
-				end
-				internal_minimize_all_button.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_restore)
-			end
-		end
-
 	extend (a_content: SD_CONTENT) is
 			-- Redefine.
 		do
@@ -256,12 +225,6 @@ feature {NONE}  -- Agents
 			-- Handle minimize actions.
 		do
 			minimize_actions.call (Void)
-		end
-
-	on_minimize_all is
-			-- Handle minimize all actions.
-		do
-			minimize_all_actions.call (Void)
 		end
 
 	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
@@ -321,9 +284,6 @@ feature {NONE}  -- Implementation
 	internal_normal_max_button: SD_TOOL_BAR_BUTTON
 			-- Normal\max button
 
-	internal_minimize_all_button: SD_TOOL_BAR_BUTTON
-			-- Minimize all button.
-			-- Which is normally for minimized all editors
 invariant
 
 	internal_tool_bar_not_void: internal_tool_bar /= Void
@@ -335,7 +295,6 @@ invariant
 
 	normal_max_actions_not_void: normal_max_actions /= Void
 	minimize_actions_not_void: minimize_actions /= Void
-	minimize_all_actions_not_void: minimize_all_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

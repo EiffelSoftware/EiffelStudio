@@ -37,6 +37,13 @@ inherit
 			destroy
 		end
 
+	SD_WIDGETS_LISTS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make
 
@@ -46,7 +53,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
-			internal_shared.widgets.add_tool_bar (Current)
+			add_tool_bar (Current)
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization
@@ -222,7 +229,7 @@ feature -- Command
 	destroy	is
 			-- Redefine
 		do
-			internal_shared.widgets.prune_tool_bar (Current)
+			prune_tool_bar (Current)
 			Precursor {SD_DRAWING_AREA}
 		end
 

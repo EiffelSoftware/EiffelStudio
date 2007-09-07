@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-	IDENTIFIED
+	SD_WIDGETS_LISTS
 		rename
 			dispose as destroy
 		undefine
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 			init_drag_area
 
-			internal_shared.widgets.add_tool_bar_zone (Current)
+			add_tool_bar_zone (Current)
 		ensure
 			set: is_vertical = a_vertical
 			set: docking_manager = a_docking_manager
@@ -331,11 +331,10 @@ feature -- Command
 	destroy is
 			-- Destroy
 		do
-			internal_shared.widgets.prune_tool_bar_zone (Current)
-			if tool_bar /= Void then
-				tool_bar.destroy
-			end
-			Precursor {IDENTIFIED}
+			prune_tool_bar_zone (Current)
+			tool_bar := Void
+
+			Precursor {SD_WIDGETS_LISTS}
 		end
 
 	show is

@@ -1523,20 +1523,12 @@ feature -- Polymorphism
  					-- This is a routine.
  					-- The seed is a routine as well.
  				create {ROUT_TABLE} Result.make (rout_id)
- 			elseif has_formal then
- 					-- This is an attribute of a formal generic type.
- 					-- The seed is also of a formal generic type.
+ 			elseif system.seed_of_routine_id (rout_id).has_formal then
+ 					-- This is an attribute with a seed of a formal generic type.
  				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
  			else
- 				seed := system.seed_of_routine_id (rout_id)
- 				if seed = Current or else not seed.has_formal then
-	 					-- This is an attribute that is not of a formal generic type
-	 					-- and its seed is not of a formal generic type.
-	 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
- 				else
-	 					-- This is an attribute with a seed of a formal generic type.
-	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id)
- 				end
+ 					-- This is an attribute with a seed that is not of a formal generic type.
+ 				create {ATTR_TABLE [ATTR_ENTRY]} Result.make (rout_id)
  			end
  		end
 

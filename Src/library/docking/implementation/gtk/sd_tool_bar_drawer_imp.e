@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			inspect
 				a_state
 			when {SD_TOOL_BAR_ITEM_STATE}.checked then
-				Result := {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum
+				Result := {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.disabled then
 				Result := {EV_GTK_EXTERNALS}.gtk_shadow_none_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot then

@@ -356,6 +356,7 @@ feature -- Redefine.
 			l_platform: PLATFORM
 			l_floating_zone: SD_FLOATING_ZONE
 			l_is_main_container: BOOLEAN
+			l_old_screen_y: INTEGER
 		do
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			l_is_main_container :=  l_multi_dock_area /= Void and then internal_docking_manager.query.is_main_inner_container (l_multi_dock_area)
@@ -373,8 +374,14 @@ feature -- Redefine.
 					-- On GTK, windows size will not be remembered after hide.
 					l_floating_zone.set_width (last_floating_width)
 					l_floating_zone.set_height (last_floating_height)
+					-- On GTK, screen y is not correct after shown sometimes, see bug#12375.
+					-- We have to set it again later.
+					l_old_screen_y := l_floating_zone.screen_y
 				end
 				l_floating_zone.show
+				if not l_platform.is_windows then
+					l_floating_zone.set_position (l_floating_zone.screen_x, l_old_screen_y)
+				end
 				l_multi_dock_area.update_title_bar
 			else
 				l_multi_dock_area.update_middle_container

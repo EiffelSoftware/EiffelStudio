@@ -81,10 +81,10 @@ feature -- Creation
 			l_tuple ?= Result
 			if l_tuple /= Void then
 					-- Create `native_array' field from TUPLE, otherwise we would violate
-					-- TUPLE invariant.
-					-- Since TUPLE has only one attribute, thus `1' as position for `native_array'.
+					-- TUPLE invariant. Note that the `native_array' has one more element than
+					-- the number of generic parameters (see TUPLE.default_create).
 				tuple_native_array_field_info.set_value (l_tuple,
-					create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (generic_count (l_tuple)))
+					create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (generic_count (l_tuple) + 1))
 			end
 		ensure
 			not_special_type: not is_special (Result)

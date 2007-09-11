@@ -27,6 +27,7 @@ feature -- Factory
 			create l_error.make_standard (a_message)
 			safe_set_button_action (l_error, l_error.dialog_buttons.ok_button, a_ok_action)
 			safe_show_prompt (l_error, a_window)
+			l_error.recycle
 		end
 
 	show_info_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE])
@@ -44,6 +45,7 @@ feature -- Factory
 			create l_info.make_standard (a_message)
 			safe_set_button_action (l_info, l_info.dialog_buttons.ok_button, a_ok_action)
 			safe_show_prompt (l_info, a_window)
+			l_info.recycle
 		end
 
 	show_warning_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE])
@@ -61,6 +63,7 @@ feature -- Factory
 			create l_warning.make_standard (a_message)
 			safe_set_button_action (l_warning, l_warning.dialog_buttons.ok_button, a_ok_action)
 			safe_show_prompt (l_warning, a_window)
+			l_warning.recycle
 		end
 
 	show_warning_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: PROCEDURE [ANY, TUPLE]; a_cancel_action: PROCEDURE [ANY, TUPLE])
@@ -80,6 +83,7 @@ feature -- Factory
 			safe_set_button_action (l_warning, l_warning.dialog_buttons.ok_button, a_ok_action)
 			safe_set_button_action (l_warning, l_warning.dialog_buttons.cancel_button, a_cancel_action)
 			safe_show_prompt (l_warning, a_window)
+			l_warning.recycle
 		end
 
 	show_question_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: PROCEDURE [ANY, TUPLE]; a_no_action: PROCEDURE [ANY, TUPLE];)
@@ -99,6 +103,7 @@ feature -- Factory
 			safe_set_button_action (l_question, l_question.dialog_buttons.yes_button, a_yes_action)
 			safe_set_button_action (l_question, l_question.dialog_buttons.no_button, a_no_action)
 			safe_show_prompt (l_question, a_window)
+			l_question.recycle
 		end
 
 	show_question_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: PROCEDURE [ANY, TUPLE]; a_no_action: PROCEDURE [ANY, TUPLE]; a_cancel_action: PROCEDURE [ANY, TUPLE])
@@ -120,6 +125,7 @@ feature -- Factory
 			safe_set_button_action (l_question, l_question.dialog_buttons.no_button, a_no_action)
 			safe_set_button_action (l_question, l_question.dialog_buttons.cancel_button, a_cancel_action)
 			safe_show_prompt (l_question, a_window)
+			l_question.recycle
 		end
 
 feature {NONE} -- Display

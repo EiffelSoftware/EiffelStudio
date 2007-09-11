@@ -128,8 +128,13 @@ feature {NONE} -- Clean up
 			-- To be called when the button has became useless.
 		local
 			l_buttons: DS_SET_CURSOR [INTEGER]
+			l_recycled: BOOLEAN
 		do
 			if is_initialized then
+				l_recycled := is_recycled
+
+					-- We are not recycled yet!
+				is_recycled := False
 				l_buttons := buttons.new_cursor
 				from l_buttons.start until l_buttons.after loop
 					unbind_dialog_button (l_buttons.item, dialog_window_buttons.item (l_buttons.item))
@@ -144,6 +149,7 @@ feature {NONE} -- Clean up
 
 				dialog.destroy
 				is_initialized := False
+				is_recycled := l_recycled
 			end
 		end
 
@@ -176,11 +182,22 @@ feature -- Access
 	default_button: INTEGER
 			-- The dialog's default action button
 		deferred
+		ensure
+			buttons_contains_result: buttons.has (Result)
+		end
+
+	default_confirm_button: INTEGER
+			-- The dialog's default confirm button
+		deferred
+		ensure
+			buttons_contains_result: buttons.has (Result)
 		end
 
 	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		deferred
+		ensure
+			buttons_contains_result: buttons.has (Result)
 		end
 
 	dialog_result: INTEGER
@@ -203,6 +220,29 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 			result_consistent: Result = dialog
+		end
+
+	development_window: EB_DEVELOPMENT_WINDOW
+			-- Access to top-level parent window
+		require
+			not_is_recycled: not is_recycled
+			dialog_has_parent: dialog.has_parent
+		local
+			l_window: EV_WINDOW
+			l_windows: BILINEAR [EB_WINDOW]
+		do
+			l_window := helpers.widget_top_level_window (dialog, True)
+			if l_window /= Void then
+				l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
+				from l_windows.start until l_windows.after or Result /= Void loop
+					if l_window = l_windows.item.window then
+						Result ?= l_windows.item
+					end
+					l_windows.forth
+				end
+			end
+		ensure
+			not_result_is_recycled: Result /= Void implies not Result.is_recycled
 		end
 
 	dialog_border_width: INTEGER
@@ -277,6 +317,14 @@ feature {NONE} -- Helpers
 			result_attached: Result /= Void
 		end
 
+	frozen helpers: EVS_HELPERS
+			-- Helpers to extend the operations of EiffelVision2
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Element change
 
 	set_button_text (a_id: INTEGER; a_text: STRING_32)
@@ -327,6 +375,14 @@ feature -- Status report
 	is_modal: BOOLEAN assign set_is_modal
 			-- Indicates if dialog is a modal dialog
 
+feature {NONE} -- Status report
+
+	is_initialized: BOOLEAN
+			-- Indicates if the user interface has been initialized
+
+	is_initializing: BOOLEAN
+			-- Indicates if the user interface is currently being initialized
+
 feature -- Status setting
 
 	set_is_modal (a_modal: BOOLEAN)
@@ -336,14 +392,6 @@ feature -- Status setting
 		ensure
 			is_modal_set: is_modal = a_modal
 		end
-
-feature {NONE} -- Status report
-
-	is_initialized: BOOLEAN
-			-- Indicates if the user interface has been initialized
-
-	is_initializing: BOOLEAN
-			-- Indicates if the user interface is currently being initialized
 
 feature -- Query
 
@@ -455,7 +503,7 @@ feature -- Basic operations
 			dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
 		end
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Basic operation
 
 	bind_dialog_button (a_id: INTEGER; a_button: EV_BUTTON)
 			-- Binds any other actions to a dialog button
@@ -499,6 +547,7 @@ feature {NONE} -- Basic operations
 			l_button: EV_BUTTON
 			l_min_width: INTEGER
 			l_padding: INTEGER
+			l_resize: BOOLEAN
 		do
 			l_min_width := {ES_UI_CONSTANTS}.dialog_button_width
 
@@ -569,6 +618,18 @@ feature {NONE} -- Action handlers
 			close_actions.call ([])
 		end
 
+	on_confirm_dialog
+			-- Called when the user presses CTRL+ENTER to discard the dialog
+		do
+			on_dialog_button_pressed (default_confirm_button)
+		end
+
+	on_cancel_dialog
+			-- Called when the user presses ESC
+		do
+			on_dialog_button_pressed (default_cancel_button)
+		end
+
 	frozen on_key_pressed (a_key: EV_KEY)
 			-- Called when the dialog recieves a key press
 			--
@@ -608,16 +669,13 @@ feature {NONE} -- Action handlers
 			-- `Result': True to indicate the key was handled
 		require
 			a_key_attached: a_key /= Void
-		local
-			l_button: EV_BUTTON
 		do
 			if a_released then
 				if not a_alt and not a_ctrl and not a_shift then
 					Result := True
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_escape then
-						dialog_result := default_cancel_button
-						dialog.hide
+						on_cancel_dialog
 					else
 						Result := False
 					end
@@ -627,11 +685,7 @@ feature {NONE} -- Action handlers
 					Result := True
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_enter then
-							-- Regular dialogs require CTRL+ENTER to exit
-						l_button := dialog_window_buttons.item (default_button)
-						if l_button /= Void then
-							l_button.select_actions.call ([])
-						end
+						on_confirm_dialog
 					else
 						Result := False
 					end
@@ -766,8 +820,8 @@ feature {NONE} -- Internal implementation cache
 invariant
 	dialog_result_is_valid_button_id: buttons.has (dialog_result)
 	default_button_is_valid_button_id: buttons.has (default_button)
-	default_cancel_button_is_valid_button_id: dialog_buttons.default_cancel_buttons.has (default_cancel_button) and
-		buttons.has (default_cancel_button)
+	default_confirm_button_is_valid_button_id: buttons.has (default_confirm_button)
+	default_cancel_button_is_valid_button_id: buttons.has (default_cancel_button)
 	show_actions_attached: show_actions /= Void
 	close_actions_attached: close_actions /= Void
 	button_actions_attached: button_actions /= Void

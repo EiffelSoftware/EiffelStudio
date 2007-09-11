@@ -43,7 +43,7 @@ feature {NONE} -- Access
 	large_icon: EV_PIXEL_BUFFER
 			-- The dialog's large icon, shown on the left
 		do
-			Result := os_stock_pixmaps.information_pixmap
+			Result := os_stock_pixmaps.information_pixel_buffer
 		end
 
 	standard_buttons: DS_HASH_SET [INTEGER]
@@ -56,6 +56,18 @@ feature {NONE} -- Access
 			-- Standard buttons `standard_buttons' default button
 		once
 			Result := dialog_buttons_helper.ok_button
+		end
+
+	standard_default_confirm_button: INTEGER
+			-- Standard buttons `standard_buttons' default confirm button
+		do
+			Result := dialog_buttons.ok_button
+		end
+
+	standard_default_cancel_button: INTEGER
+			-- Standard buttons `standard_buttons' default cancel button
+		do
+			Result := dialog_buttons.ok_button
 		end
 
 ;indexing

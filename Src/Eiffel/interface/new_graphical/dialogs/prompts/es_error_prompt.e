@@ -18,7 +18,26 @@ inherit
 
 create
 	make,
-	make_standard
+	make_standard,
+	make_abort_retry_ignore
+
+feature {NONE} -- Initialization
+
+	make_abort_retry_ignore (a_text: like text)
+			-- Initialize an error prompt, with Abort|Retry|Ignore buttons, using required information.
+			--
+			-- `a_text': The text to display on the prompt.
+		require
+			a_text_attached: a_text /= Void
+		do
+			make (a_text, dialog_buttons.abort_retry_ignore_buttons, dialog_buttons.abort_button, dialog_buttons.abort_button, dialog_buttons.ignore_button)
+		ensure
+			text_set: format_text (a_text).is_equal (text)
+			default_button_set: default_button = dialog_buttons.abort_button
+			default_confirm_button_set: default_confirm_button = dialog_buttons.abort_button
+			default_cancel_button_set: default_cancel_button = dialog_buttons.ignore_button
+			buttons_set: buttons = dialog_buttons.abort_retry_ignore_buttons
+		end
 
 feature {NONE} -- User interface initialization
 
@@ -37,7 +56,7 @@ feature {NONE} -- Access
 	large_icon: EV_PIXEL_BUFFER
 			-- The dialog's large icon, shown on the left
 		do
-			Result := os_stock_pixmaps.error_pixmap
+			Result := os_stock_pixmaps.error_pixel_buffer
 		end
 
 	standard_buttons: DS_HASH_SET [INTEGER]
@@ -49,6 +68,18 @@ feature {NONE} -- Access
 	standard_default_button: INTEGER
 			-- Standard buttons `standard_buttons' default button
 		once
+			Result := dialog_buttons.ok_button
+		end
+
+	standard_default_confirm_button: INTEGER
+			-- Standard buttons `standard_buttons' default confirm button
+		do
+			Result := dialog_buttons.ok_button
+		end
+
+	standard_default_cancel_button: INTEGER
+			-- Standard buttons `standard_buttons' default cancel button
+		do
 			Result := dialog_buttons.ok_button
 		end
 

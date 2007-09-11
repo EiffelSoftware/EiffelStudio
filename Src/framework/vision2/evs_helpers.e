@@ -10,10 +10,53 @@ indexing
 class
 	EVS_HELPERS
 
-inherit
+inherit -- {NONE}
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
+		end
+
+feature -- Basic operations
+
+	peform_window_locking_action (a_action: PROCEDURE [ANY, TUPLE]; a_container: EV_CONTAINER)
+			-- Performs an operation locking the user interface.
+			-- Note: If the UI is already locked by another window then locking will be skipped.
+			--
+			-- `a_action': An action to be performed whilst locking any window update.
+			-- `a_container': A container to attempt to locate a parent window for (the parent window will be locked)
+			--                The container can be Void but no locking will occur if it is.
+		require
+			a_action_attached: a_action /= Void
+			not_a_container_is_destroyed: a_container /= Void implies not a_container.is_destroyed
+			a_container_has_parent: a_container /= Void implies a_container.has_parent
+		local
+			l_window: EV_WINDOW
+			l_locked: BOOLEAN
+			retried: BOOLEAN
+		do
+			if not retried then
+				if a_container /= Void then
+					l_window := widget_top_level_window (a_container, False)
+					if l_window /= Void and then not l_window.is_destroyed and then ev_application.locked_window = Void then
+							-- Lock window updates
+						l_window.lock_update
+						l_locked := True
+					end
+				end
+
+				a_action.call ([])
+			end
+
+			if l_locked then
+					-- Unlock window
+				check l_window_attached: l_window /= Void end
+				l_window.unlock_update
+			end
+		ensure
+			ev_application_locked_window_unchanged: ev_application.locked_window = old ev_application.locked_window
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Query

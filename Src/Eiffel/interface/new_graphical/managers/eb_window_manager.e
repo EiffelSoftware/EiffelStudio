@@ -253,6 +253,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	windows: BILINEAR [EB_WINDOW]
+			-- All development windows managed by Current
+		do
+			Result := managed_windows.twin
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
 
 	all_modified_classes: ARRAYED_LIST [CLASS_I] is
@@ -768,14 +776,12 @@ feature {NONE} -- Exit implementation
 	confirm_and_quit is
 			-- If a compilation is under way, do not exit.
 		local
-			l_warning: ES_WARNING_PROMPT
 			l_exit_save_prompt: ES_EXIT_SAVE_FILES_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
 				Exit_application_cmd.set_already_confirmed (True)
-				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_active_window
+				prompts.show_warning_prompt (warning_messages.w_exiting_stops_compilation, Void, Void)
 			elseif has_modified_windows then
 				exit_application_cmd.set_already_confirmed (True)
 

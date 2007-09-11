@@ -213,6 +213,10 @@ feature -- Status setting
 			l_parent_i := parent_i
 			l_row := row
 			l_column := column
+
+			if l_parent_i.is_single_item_selection_enabled then
+				l_parent_i.remove_selection
+			end
 			enable_select_internal
 
 			if not l_selected then

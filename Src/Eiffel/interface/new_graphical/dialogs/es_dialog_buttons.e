@@ -108,19 +108,6 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	default_cancel_buttons: DS_HASH_SET [INTEGER]
-			-- Default cancel button ids
-		once
-			create Result.make (3)
-			Result.put_last (cancel_button)
-			Result.put_last (ignore_button)
-			Result.put_last (no_button)
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
-		end
-
 feature -- Query
 
 	is_valid_button_id (a_id: INTEGER): BOOLEAN

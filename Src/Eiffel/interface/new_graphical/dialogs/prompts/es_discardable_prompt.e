@@ -27,14 +27,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_discard_message: like discard_message; a_discard_button: like discard_button; a_pref_name: like preference_name)
+	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button; a_discard_message: like discard_message; a_pref_name: like preference_name)
 			-- Initialize a prompt using required information
 			--
 			-- `a_text': The text to display on the prompt.
 			-- `a_buttons': A list of button ids corresponding created from {ES_DIALOG_BUTTONS}.
-			-- `a_default': The prompt's default button.
+			-- `a_default': The prompt's default active button.
+			-- `a_default_confirm': The prompt's default confirmation button (selected using CTRL+ENTER).
+			-- `a_default_cancel': The prompt's default cancel button (selected using ESC).
 			-- `a_discard_message': A message to inform the user what the discard option will do as a default.
-			-- `a_discard_button': A discard button, indicating the default discard action.
 			-- `a_pref_name': Name of preference resource.
 		require
 			a_text_attached: a_text /= Void
@@ -42,21 +43,21 @@ feature {NONE} -- Initialization
 			not_a_buttons_is_empty: not a_buttons.is_empty
 			a_buttons_contains_valid_ids: a_buttons.for_all (agent dialog_buttons.is_valid_button_id)
 			a_buttons_contains_a_default: a_buttons.has (a_default)
+			a_buttons_contains_a_default_confirm: a_buttons.has (a_default_confirm)
+			a_buttons_contains_a_default_cancel: a_buttons.has (a_default_cancel)
 			a_discard_message_attached: a_discard_message /= Void
-			a_buttons_contains_a_discard_button: a_buttons.has (a_discard_button)
 			a_pref_name_attached: a_pref_name /= Void
 			not_a_pref_name_is_empty: not a_pref_name.is_empty
 		do
 			discard_message := a_discard_message
-			discard_button := a_discard_button
+			discard_button := a_default_confirm
 			preference_name := a_pref_name
-			make_prompt (a_text, a_buttons, a_default)
+			make_prompt (a_text, a_buttons, a_default, a_default_confirm, a_default_cancel)
 		ensure
 			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = a_default
 			buttons_set: buttons = a_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)
-			discard_button_set: discard_button = a_discard_button
 			preference_name_set: a_pref_name.is_equal (preference_name)
 		end
 
@@ -72,13 +73,12 @@ feature {NONE} -- Initialization
 			a_pref_name_attached: a_pref_name /= Void
 			not_a_pref_name_is_empty: not a_pref_name.is_empty
 		do
-			make (a_text, standard_buttons, standard_default_button, a_discard_message, standard_discard_button, a_pref_name)
+			make (a_text, standard_buttons, standard_default_button, standard_default_confirm_button, standard_default_cancel_button, a_discard_message, a_pref_name)
 		ensure
 			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)
-			discard_button_set: discard_button = standard_discard_button
 			preference_name_set: a_pref_name.is_equal (preference_name)
 		end
 
@@ -176,14 +176,6 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_consistent: Result = discard_preference
-		end
-
-	standard_discard_button: INTEGER
-			-- Standard buttons `standard_buttons' discard button
-		deferred
-		ensure
-			result_is_valid_button_id: dialog_buttons.is_valid_button_id (Result)
-			standard_buttons_contains_result: standard_buttons.has (Result)
 		end
 
 feature -- Element change

@@ -506,6 +506,8 @@ feature -- Status setting
 			end
 			locked_row.drawing_area.drop_actions.set_veto_pebble_function (agent parent_i.veto_pebble_function_intermediary)
 			locked_row.drawing_area.drop_actions.extend (agent parent_i.drop_action_intermediary)
+			locked_row.drawing_area.set_accept_cursor (parent_i.interface.accept_cursor)
+			locked_row.drawing_area.set_deny_cursor (parent_i.interface.deny_cursor)
 		ensure
 			is_locked: is_locked
 			locked_position_set: locked_position = a_position
@@ -1002,6 +1004,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			if not is_selected then
 				l_parent_i := parent_i
 				if l_parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
+					if l_parent_i.is_single_row_selection_enabled then
+						l_parent_i.remove_selection
+					end
 					internal_is_selected := True
 					l_parent_i.add_row_to_selected_rows (Current)
 					if l_parent_i.row_select_actions_internal /= Void then

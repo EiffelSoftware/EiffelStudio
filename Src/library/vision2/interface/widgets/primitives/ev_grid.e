@@ -1979,6 +1979,8 @@ feature -- Status report
 			-- Indexes of all rows that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
+			-- This list only returns valid values if variable row heights, tree functionality or
+			-- hidden nodes are enabled in the grid, otherwise the returned list is empty.
 		require
 			not_destroyed: not is_destroyed
 		do

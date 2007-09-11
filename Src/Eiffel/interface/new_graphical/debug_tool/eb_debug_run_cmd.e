@@ -150,7 +150,7 @@ feature -- Execution
 								-- The last compilation was not successful.
 								-- It is VERY dangerous to launch the debugger in these conditions.
 								-- However, forbidding it completely may be too frustating.
-							create l_warning.make (warning_messages.w_debug_not_compiled, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
+							create l_warning.make_standard_with_cancel (warning_messages.w_debug_not_compiled)
 							l_warning.set_title (interface_names.t_debugger_warning)
 							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
 							l_warning.show_on_active_window
@@ -158,7 +158,7 @@ feature -- Execution
 								-- A class was removed since the last compilation.
 								-- It is VERY dangerous to launch the debugger in these conditions.
 								-- However, forbidding it completely may be too frustating.
-							create l_warning.make (warning_messages.w_removed_class_debug, dialog_buttons.ok_cancel_buttons, dialog_buttons.cancel_button)
+							create l_warning.make_standard_with_cancel (warning_messages.w_removed_class_debug)
 							l_warning.set_title (interface_names.t_debugger_warning)
 							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
 							l_warning.show_on_active_window

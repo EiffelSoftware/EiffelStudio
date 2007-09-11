@@ -81,7 +81,7 @@ feature -- Basic operations
 					from
 						column_offsets.start
 					until
-						last_column_index_set or column_offsets.off
+						last_column_index_set or column_offsets.index > grid.column_count + 1
 					loop
 						i := column_offsets.item
 						if not first_column_index_set and then i > invalid_x_start then

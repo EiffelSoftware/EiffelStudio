@@ -258,6 +258,8 @@ feature -- Status setting
 			end
 			locked_column.drawing_area.drop_actions.set_veto_pebble_function (agent parent_i.veto_pebble_function_intermediary)
 			locked_column.drawing_area.drop_actions.extend (agent parent_i.drop_action_intermediary)
+			locked_column.drawing_area.set_accept_cursor (parent_i.interface.accept_cursor)
+			locked_column.drawing_area.set_deny_cursor (parent_i.interface.deny_cursor)
 		ensure
 			is_locked: is_locked
 			locked_position_set: locked_position = a_position

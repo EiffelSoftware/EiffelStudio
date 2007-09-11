@@ -813,11 +813,11 @@ feature {NONE} -- User interface manipulation
 				else
 					check False end
 				end
-				l_editor_item.set_spacing (8)
+				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_editor_item_spacing)
 				a_row.set_item (error_column, l_editor_item)
 
 					-- Set row hieght
-				a_row.set_height (l_editor_item.label_font_height.max (15))
+				a_row.set_height (l_editor_item.label_font_height.max ({ES_UI_CONSTANTS}.grid_row_height))
 
 					-- Build full error text
 				create l_gen.make

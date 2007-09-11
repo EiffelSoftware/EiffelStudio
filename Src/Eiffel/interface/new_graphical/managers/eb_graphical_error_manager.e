@@ -46,12 +46,12 @@ feature -- Basic operations
 					error_messages.forth
 				end
 			end
-			
+
 			create error_dialog.make_standard (error_string)
 			set_catch_exception (True)
 			debug ("display_exception_trace")
 				create l_dialog_buttons
-				create error_dialog.make (error_string, l_dialog_buttons.ok_cancel_buttons, l_dialog_buttons.ok_button)
+				create error_dialog.make (error_string, l_dialog_buttons.ok_cancel_buttons, l_dialog_buttons.ok_button, l_dialog_buttons.ok_button, l_dialog_buttons.cancel_button)
 				error_dialog.set_button_text (l_dialog_buttons.cancel_button, Interface_names.b_Display_Exception_Trace)
 				error_dialog.set_button_action (l_dialog_buttons.cancel_button, agent set_catch_exception (False))
 			end

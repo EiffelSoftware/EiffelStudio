@@ -42,6 +42,12 @@ feature -- Dialog
 	prompt_vertical_padding: INTEGER = 8
 	prompt_horizontal_icon_spacing: INTEGER = 10
 
+feature -- Grid
+
+	grid_row_height: INTEGER = 14
+	grid_item_spacing: INTEGER = 3
+	grid_editor_item_spacing: INTEGER = 8
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

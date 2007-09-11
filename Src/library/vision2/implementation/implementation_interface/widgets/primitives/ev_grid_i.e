@@ -789,6 +789,16 @@ feature -- Pick and Drop
 			Precursor {EV_CELL_I} (a_cursor)
 				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_accept_cursor (a_cursor)
+
+				-- Set cursor on the locked rows and columns.
+			from
+				locked_indexes.start
+			until
+				locked_indexes.off
+			loop
+				locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
+				locked_indexes.forth
+			end
 		end
 
 	set_deny_cursor (a_cursor: like deny_cursor) is
@@ -799,6 +809,16 @@ feature -- Pick and Drop
 			Precursor {EV_CELL_I} (a_cursor)
 				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_deny_cursor (a_cursor)
+
+				-- Set cursor on the locked rows and columns.
+			from
+				locked_indexes.start
+			until
+				locked_indexes.off
+			loop
+				locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
+				locked_indexes.forth
+			end
 		end
 
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
@@ -2121,12 +2141,14 @@ feature -- Status report
 			-- Row indexes that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
+			-- This list only returns valid values if variable row heights, tree functionality or
+			-- hidden nodes are enabled in the grid, otherwise the returned list is empty.
 		local
 			l_visible_row_count: INTEGER
 		do
 			perform_vertical_computation
 			l_visible_row_count := visible_row_count
-			if visible_indexes_to_row_indexes /= Void and then l_visible_row_count > 0 then
+			if uses_row_offsets /= Void and then l_visible_row_count > 0 then
 				create Result.make_from_array (visible_indexes_to_row_indexes.subarray (1, l_visible_row_count))
 			else
 				create Result.make (0)
@@ -6117,7 +6139,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			-- Does `Current' rely on `row_offsets' to calculate the current position of a row?
 			-- If not, then it is possible to calculate a rows' position based on the row heights
 			-- and it's index. `row_offsets' are only required when variable row heights, tree functionality or
-			-- hidden nodes are enabeld in the grid.
+			-- hidden nodes are enabled in the grid.
 		do
 			Result := not is_row_height_fixed or is_tree_enabled or non_displayed_row_count > 0
 		end

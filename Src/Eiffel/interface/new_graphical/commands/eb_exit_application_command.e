@@ -48,14 +48,11 @@ feature -- Basic operations
 	execute is
 			-- Exit application. Ask the user to save unsaved files and ask for
 			-- confirmation on exit.
-		local
-			l_warning: ES_WARNING_PROMPT
 		do
 			already_confirmed := False
 			if Workbench.is_compiling then
 				already_confirmed := True
-				create l_warning.make (warning_messages.w_exiting_stops_compilation, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_active_window
+				prompts.show_warning_prompt (warning_messages.w_exiting_stops_compilation, Void, Void)
 			else
 				if process_manager.is_process_running then
 					process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)

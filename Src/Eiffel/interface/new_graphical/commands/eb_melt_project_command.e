@@ -297,7 +297,6 @@ feature {NONE} -- Execution
 			-- Recompile the project and start C compilation if `c_compilation_enabled'
 			-- is True.
 		local
-			l_warning: ES_WARNING_PROMPT
 			l_save_confirm: ES_DISCARDABLE_COMPILE_SAVE_FILES_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
@@ -310,8 +309,7 @@ feature {NONE} -- Execution
 				run_after_melt := false
 			end
 			if Eiffel_project.is_read_only then
-				create l_warning.make (warning_messages.w_cannot_compile, dialog_buttons.ok_buttons, dialog_buttons.ok_button)
-				l_warning.show_on_active_window
+				prompts.show_warning_prompt (warning_messages.w_cannot_compile, Void, Void)
 			elseif Eiffel_project.initialized then
 				if not_saved then
 					create l_classes.make_default

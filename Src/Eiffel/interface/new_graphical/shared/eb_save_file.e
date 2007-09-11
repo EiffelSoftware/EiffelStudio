@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			if l_retried then
 				l_editor := window_manager.last_focused_development_window.editors_manager.current_editor
 				create l_buttons
-				create l_ed.make (warning_messages.w_Not_rename_swp (a_file.name, a_new_name), l_buttons.ok_cancel_buttons, l_buttons.ok_button)
+				create l_ed.make (warning_messages.w_Not_rename_swp (a_file.name, a_new_name), l_buttons.ok_cancel_buttons, l_buttons.ok_button, l_buttons.ok_button, l_buttons.cancel_button)
 				l_ed.set_button_text (l_buttons.ok_button, interface_names.b_retry)
 				l_ed.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
 

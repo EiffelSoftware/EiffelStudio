@@ -36,10 +36,10 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE) is
+	make (a_content: SD_CONTENT) is
 			-- Redefine.
 		do
-			Precursor {SD_TAB_ZONE} (a_content, a_target_zone)
+			Precursor {SD_TAB_ZONE} (a_content)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 			internal_notebook.minimize_actions.extend (agent on_minimize)

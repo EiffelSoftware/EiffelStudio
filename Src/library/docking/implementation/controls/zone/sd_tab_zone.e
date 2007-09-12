@@ -57,12 +57,11 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE) is
+	make (a_content: SD_CONTENT) is
 			-- Creation method. When first time insert a SD_CONTENT.
 			-- FIXIT: should add a_content and a_target_zone in this function?
 		require
 			a_content_not_void: a_content /= Void
-			a_target_zone_not_void: a_target_zone /= Void
 			a_content_parent_void: a_content.user_widget.parent = Void
 		do
 			create internal_shared
@@ -263,7 +262,7 @@ feature {SD_TAB_STATE} -- Internal issues.
 			-- Select `a_item' on the notebook.
 		require
 			a_content_not_void: a_content /= Void
-			has (a_content)
+			has: has (a_content)
 		do
 			internal_notebook.select_item (a_content, a_focus)
 			update_mini_tool_bar (a_content)

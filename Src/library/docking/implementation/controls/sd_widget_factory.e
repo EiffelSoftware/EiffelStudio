@@ -92,20 +92,19 @@ feature -- Factory method.
 			end
 		end
 
-	tab_zone (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE): SD_TAB_ZONE is
+	tab_zone (a_content: SD_CONTENT): SD_TAB_ZONE is
 			-- Tab zone.
 		require
 			a_content_not_void: a_content /= Void
-			a_target_zone_not_void: a_target_zone /= Void
 		do
 			if internal_style = style_all_same then
-				create Result.make (a_content, a_target_zone)
+				create Result.make (a_content)
 			elseif internal_style = style_different then
 			    check style_valid: style_valid (a_content.type) end
 				if a_content.type = {SD_ENUMERATION}.tool then
-					create Result.make (a_content, a_target_zone)
+					create Result.make (a_content)
 				elseif a_content.type = {SD_ENUMERATION}.editor then
-					Result := create {SD_TAB_ZONE_UPPER}.make (a_content, a_target_zone)
+					Result := create {SD_TAB_ZONE_UPPER}.make (a_content)
 				end
 			end
 		ensure

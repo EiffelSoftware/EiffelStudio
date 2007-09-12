@@ -25,7 +25,8 @@ inherit
 			build_mini_toolbar,
 			icon,
 			icon_pixmap,
-			show
+			show,
+			build_docking_content
 		end
 
 -- inherit {NONE}
@@ -60,6 +61,7 @@ feature {NONE} -- Initialization
 					widget.extend (user_widget)
 				end
 				build_tool_interface (user_widget)
+
 				is_initializing := False
 				is_initialized := True
 			end
@@ -70,6 +72,21 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- Use to perform additional creation initializations
 		do
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Redefine
+		do
+			Precursor {EB_TOOL}(a_docking_manager)
+
+			-- Initialize when showing for the first time.
+			-- This is useful when `content' is auto hide.
+			content.show_actions.extend_kamikaze (agent
+													do
+														if not is_initialized then
+															initialize
+														end
+													end)
 		end
 
 feature {NONE} -- Clean up
@@ -443,7 +460,7 @@ feature {NONE} -- Factory
 
 	create_widget: G
 			-- Create a new container widget upon request.
-			-- Note: You may build the tool elements here or in `build_too_interface'
+			-- Note: You may build the tool elements here or in `build_tool_interface'
 		deferred
 		ensure
 			result_attached: Result /= Void

@@ -118,6 +118,7 @@ feature -- Command
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
+			internal_tabs.item.on_expose
 			-- The text let tab size changed, so it need resize.
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
@@ -134,6 +135,7 @@ feature -- Command
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_pixmap (a_pixmap)
+			internal_tabs.item.on_expose
 		ensure
 			set:
 		end
@@ -170,16 +172,42 @@ feature -- Command
 			l_tab: SD_NOTEBOOK_TAB
 		do
 			internal_contents.extend (a_content)
-			create l_tab.make (Current, internal_tab_box.is_gap_at_top, internal_docking_manager)
+			l_tab := tab_factory_method (a_content)
 			internal_tabs.extend (l_tab)
-			l_tab.set_drop_actions (a_content.drop_actions)
-			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
-			l_tab.close_actions.extend (agent (a_content.close_request_actions).call (Void))
-			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
-			l_tab.set_tool_tip (a_content.tab_tooltip)
+
 			internal_tab_box.extend (l_tab)
 
 			select_item (a_content, True)
+		end
+
+	extend_contents (a_contents: ARRAYED_LIST [SD_CONTENT]) is
+			-- Extend `a_contents'.
+			-- This feature is faster than extend content one by one.
+		require
+			not_void: a_contents /= Void
+		local
+			l_tab: SD_NOTEBOOK_TAB
+			l_new_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+		do
+			from
+				a_contents.start
+				create l_new_tabs.make (a_contents.count)
+			until
+				a_contents.after
+			loop
+				if not has (a_contents.item) then
+					internal_contents.extend (a_contents.item)
+					l_tab := tab_factory_method (a_contents.item)
+					internal_tabs.extend (l_tab)
+					l_new_tabs.extend (l_tab)
+
+					if a_contents.islast then
+						internal_tab_box.extend_tabs (l_new_tabs)
+						select_item (a_contents.item, True)
+					end
+				end
+				a_contents.forth
+			end
 		end
 
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN) is
@@ -650,6 +678,24 @@ feature {NONE}  -- Implementation
 					l_tabs_snapshot.forth
 				end
 			end
+		end
+
+	tab_factory_method (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
+			-- Factory method for SD_NOTEBOOK_TAB.
+		require
+			not_void: a_content /= Void
+		do
+			create Result.make (Current, internal_tab_box.is_gap_at_top, internal_docking_manager)
+			Result.set_drop_actions (a_content.drop_actions)
+			Result.select_actions.extend (agent on_tab_selected (Result))
+			Result.close_actions.extend (agent (a_content.close_request_actions).call (Void))
+			Result.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, Result))
+			Result.set_tool_tip (a_content.tab_tooltip)
+
+			Result.set_text (a_content.short_title)
+			Result.set_pixmap (a_content.pixmap)
+		ensure
+			not_void: Result /= Void
 		end
 
 	tabs_rects: DS_HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]

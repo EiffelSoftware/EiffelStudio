@@ -83,14 +83,26 @@ feature -- Command
 		do
 			if not contents.has (a_content) then
 				internal_notebook.extend (a_content)
-				internal_notebook.set_item_text (a_content, a_content.short_title)
-				internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
+
 				internal_notebook.select_item (a_content, True)
 			end
 		ensure then
 			extended: contents.has (a_content)
 			internal_notebook.has (a_content)
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
+		end
+
+	extend_contents (a_contents: ARRAYED_LIST [SD_CONTENT]) is
+			-- Extend `a_contents'
+			-- This feature is faster than extend one by one.
+		require
+			not_void: a_contents /= Void
+		do
+			internal_notebook.extend_contents (a_contents)
+			if not a_contents.is_empty then
+				internal_notebook.select_item (a_contents.last, True)
+			end
+			internal_notebook.set_focus_color (False)
 		end
 
 	replace_user_widget (a_content: SD_CONTENT) is

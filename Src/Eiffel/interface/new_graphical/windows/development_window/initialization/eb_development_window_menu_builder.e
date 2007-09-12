@@ -416,8 +416,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Go to
 			create l_cmd.make
 			l_cmd.set_menu_name (develop_window.Interface_names.m_go_to)
-			l_cmd.add_agent (agent develop_window.goto)
 			l_cmd.set_is_for_main_editors (True)
+			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("show_goto_dialog")
+			l_cmd.set_accelerator ((create {EV_ACCELERATOR}.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)))
+			l_cmd.set_referred_shortcut (l_shortcut)
+			l_cmd.add_agent (agent develop_window.goto)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.add_recyclable (l_command_menu_item)

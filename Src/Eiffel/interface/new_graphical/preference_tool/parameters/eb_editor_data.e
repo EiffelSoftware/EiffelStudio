@@ -513,7 +513,7 @@ feature {NONE} -- Preference Strings
 feature {NONE} -- Init colors and fonts.
 
 	init_colors is
-			--
+			-- Initialize colors.
 		do
 			Precursor
 			colors.put (breakpoint_background_color_preference.value, breakpoint_background_color_id)
@@ -1074,6 +1074,8 @@ feature -- Keybord shortcuts Customization
 
 			l_hash.put ([False,  True, False, key_strings.item (Key_i).twin.as_string_8], "embed_if_clause")
 			l_hash.put ([False,  True, False, key_strings.item (Key_d).twin.as_string_8], "embed_debug_clause")
+
+			l_hash.put ([False, True, False, key_strings.item (Key_g).twin.as_string_8], "show_goto_dialog")
 
 			Result.extend ([l_hash, main_window_group])
 		end

@@ -34,8 +34,10 @@ inherit
 			restore
 		end
 create
-	make,
-	make_with_tab_zone
+	{ANY} make, make_with_tab_zone
+
+create
+	{SD_TAB_STATE} make_for_restore, make_for_restore_internal
 
 feature {NONE} -- Initlization
 
@@ -62,7 +64,7 @@ feature {NONE} -- Initlization
 			end
 			l_parent := a_target_zone.parent
 			internal_docking_manager.zones.prune_zone (a_target_zone)
-			tab_zone := internal_shared.widget_factory.tab_zone (a_content, a_target_zone)
+			tab_zone := internal_shared.widget_factory.tab_zone (a_content)
 			internal_docking_manager.zones.add_zone (tab_zone)
 
 			-- Sometimes, `l_parent' maybe void, don't know the reason yet.
@@ -121,6 +123,49 @@ feature {NONE} -- Initlization
 			set: internal_content = a_content
 		end
 
+	make_for_restore (a_contents: ARRAYED_LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+			-- Creation method for restoring.
+		require
+			at_least_two: a_contents /= Void and then a_contents.count >= 2
+			not_full: a_container /= Void and then not a_container.full
+			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
+		local
+			l_tab_state: SD_TAB_STATE
+		do
+			init_common (a_contents.first, a_direction)
+
+			tab_zone := internal_shared.widget_factory.tab_zone (a_contents.item)
+			internal_docking_manager.zones.add_zone (tab_zone)
+
+			a_container.extend (tab_zone)
+			tab_zone.extend_contents (a_contents)
+			from
+				a_contents.start
+			until
+				a_contents.after
+			loop
+				if a_contents.isfirst then
+					a_contents.item.change_state (Current)
+				else
+					create l_tab_state.make_for_restore_internal (a_contents.item, tab_zone, a_direction)
+					a_contents.item.change_state (Current)
+				end
+
+				a_contents.forth
+			end
+		end
+
+	make_for_restore_internal (a_content: SD_CONTENT; a_tab_zone: SD_TAB_ZONE; a_direction: INTEGER) is
+			-- Creation method, only called by `make_for_restore'.
+		require
+			not_void: a_content /= Void
+			not_void: a_tab_zone /= Void
+			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
+		do
+			init_common (a_content, a_direction)
+			tab_zone := a_tab_zone
+		end
+
 	init_common (a_content: SD_CONTENT; a_direction: INTEGER) is
 			-- Initlization common parts.
 		require
@@ -138,7 +183,6 @@ feature {NONE} -- Initlization
 			set: a_direction = direction
 		end
 
-
 feature -- Redefine
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
@@ -152,6 +196,7 @@ feature -- Redefine
 			l_tab_zone: SD_TAB_ZONE
 			l_titles: ARRAYED_LIST [STRING_GENERAL]
 			l_selected_index: INTEGER
+			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			direction := a_data.direction
 			l_titles := a_data.titles
@@ -160,32 +205,41 @@ feature -- Redefine
 			from
 				l_titles.start
 				l_first_tab := True
+				create l_contents.make (l_titles.count)
 			until
 				l_titles.after
 			loop
 				l_content := internal_docking_manager.query.content_by_title_for_restore (l_titles.item)
 				if l_content /= Void then
-					if l_first_tab then
-						internal_content := l_content
-						Precursor {SD_STATE} (a_data, a_container)
-						create l_docking_state.make_for_tab_zone (l_content, a_container, a_data.direction)
-						l_content.change_state (l_docking_state)
-						l_docking_state.set_direction (a_data.direction)
-						l_first_tab := False
-					elseif not l_third_time then
-	 					create l_tab_state.make (l_content, l_docking_state.zone, direction)
-	 					l_content.set_visible (True)
-						l_content.change_state (l_tab_state)
-						l_tab_state.set_direction (a_data.direction)
-						l_third_time := True
-					elseif l_third_time then
-						create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone, direction)
-						l_content.set_visible (True)
-						l_content.change_state (l_tab_state)
-						l_tab_state.set_direction (a_data.direction)
-					end
+					l_contents.extend (l_content)
 				end
 				l_titles.forth
+			end
+
+			internal_content := l_contents.first
+
+			if l_contents.count = 1 then
+				Precursor {SD_STATE} (a_data, a_container)
+				create l_docking_state.make_for_tab_zone (l_contents.first, a_container, a_data.direction)
+				l_content.change_state (l_docking_state)
+				l_docking_state.set_direction (a_data.direction)
+			elseif l_contents.count > 1 then
+				from
+					l_contents.start
+				until
+					l_contents.after
+				loop
+					if l_contents.isfirst then
+						create l_tab_state.make_for_restore (l_contents.twin, a_container, a_data.direction)
+						l_tab_zone := l_tab_state.zone
+					else
+						create l_tab_state.make_for_restore_internal (l_contents.item, l_tab_zone, a_data.direction)
+					end
+					l_contents.item.change_state (l_tab_state)
+					l_contents.item.set_visible (True)
+
+					l_contents.forth
+				end
 			end
 
 			-- At least found one content?
@@ -207,7 +261,7 @@ feature -- Redefine
 
 				update_floating_zone_visible (internal_content.state.zone, a_data.is_visible)
 			end
-			
+
 			-- `initialized' can't set `True' here since this instance not really initialized,
 			-- this feature ONLY initialized OTHER SD_STATE objects.
 		ensure then

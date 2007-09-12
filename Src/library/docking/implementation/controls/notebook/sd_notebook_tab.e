@@ -242,7 +242,6 @@ feature -- Properties
 		do
 			text := a_text
 			update_minmum_size
-			on_expose
 		ensure
 			set: a_text = text
 		end
@@ -257,7 +256,6 @@ feature -- Properties
 		do
 			pixmap := a_pixmap
 			update_minmum_size
-			on_expose
 		ensure
 			set: pixmap = a_pixmap
 		end
@@ -306,6 +304,12 @@ feature -- Properties
 			set: font = a_font
 		end
 
+	on_expose is
+			-- Handle expose actions.
+		do
+			on_expose_with_width (drawing_width)
+		end
+
 feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	set_parent (a_parent: like parent) is
@@ -314,12 +318,6 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			parent := a_parent
 		ensure
 			set: parent = a_parent
-		end
-
-	on_expose is
-			-- Handle expose actions.
-		do
-			on_expose_with_width (drawing_width)
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -494,7 +492,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 feature {NONE}  -- Implementation agents
 
 	on_expose_with_width (a_width: INTEGER) is
-			-- Handle expose with a_width. a_width is total width current should be.
+			-- Handle expose with `a_width'. `a_width' is total width current should be.
 		require
 			a_width_valid: a_width >= 0
 		local

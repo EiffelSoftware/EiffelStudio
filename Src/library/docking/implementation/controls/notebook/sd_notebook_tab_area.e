@@ -83,6 +83,16 @@ feature -- Redefine
 			extended: tab_box.has (a_widget)
 		end
 
+	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]) is
+			-- Extend `a_tabs'
+			-- This feature is faster than extend one by one
+		require
+			not_void: a_tabs /= Void
+		do
+			tab_box.extend_tabs (a_tabs)
+			resize_tabs (tab_box_predered_width)
+		end
+
 feature -- Command
 
 	update_size is

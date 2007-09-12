@@ -676,7 +676,7 @@
 	<PREF NAME="shortcuts.editor.set_to_lowercase" DESCRIPTION="Set current selection to lowercase."><SHORTCUT Ctrl="True" Shift="True">U</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.embed_if_clause" DESCRIPTION="Embed current line in if clause."><SHORTCUT Ctrl="True">I</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.embed_debug_clause" DESCRIPTION="Embed current line in debug clause"><SHORTCUT Ctrl="True">D</SHORTCUT></PREF>
-	
+	<PREF NAME="shortcuts.editor.show_goto_dialog" DESCRIPTION="Show dialog to set current editor cursor line."><SHORTCUT Ctrl="True">G</SHORTCUT></PREF>
 	
 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>

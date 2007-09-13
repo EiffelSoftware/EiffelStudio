@@ -203,44 +203,21 @@ feature -- Command
 		end
 
 	enable_focus_color is
-			-- Enable focus color.
+			-- Enable focus color in applicaiton idle actions.
 		do
-			internal_title.set_focus_color_enable (True)
-			internal_title.set_focused_color (True)
-
-			internal_title.set_focus_background_color
-			internal_title.refresh
-
-			internal_border.set_border_color (internal_title.hightlight_color)
-			update_baseline
-		ensure
-			is_focus_color_enable_set: is_focus_color_enable
+			set_color_in_idle (agent enable_focus_color_imp)
 		end
 
 	enable_non_focus_active_color is
-			-- Enable non-focused active color.
+			-- Enable non-focused active color in applicaiton idle actions.
 		do
-
-			internal_title.set_focus_color_enable (True)
-			internal_title.set_focused_color (False)
-
-			internal_title.set_non_focus_active_background_color
-			internal_title.refresh
-
-			internal_border.set_border_color (internal_title.hightlight_non_focus_color)
-			update_baseline
+			set_color_in_idle (agent enable_non_focus_active_color_imp)
 		end
 
 	disable_focus_color is
-			-- Disable focus color.
+			-- Disable focus color in applicaiton idle actions.
 		do
-			internal_title.set_focus_color_enable (False)
-			internal_title.set_disable_focus_background_color
-			internal_title.refresh
-			internal_border.set_border_color (internal_shared.border_color)
-			update_baseline
-		ensure
-			is_focus_color_enable_set: not is_focus_color_enable
+			set_color_in_idle (agent disable_focus_color_imp)
 		end
 
 	extend_custom_area (a_widget: EV_WIDGET) is
@@ -361,6 +338,18 @@ feature -- Query
 			-- If show highlight color now?
 		do
 			Result := internal_title.is_focus_color_enable
+		end
+
+	is_focused_active_color_enable: BOOLEAN is
+			-- Is active focused drawing style enabled?
+		do
+			Result := is_focus_color_enable and then internal_title.is_focused_color
+		end
+
+	is_non_focused_active_color_enable: BOOLEAN is
+			-- Is active non-focused drawing style enabled?
+		do
+			Result := is_focus_color_enable and then not internal_title.is_focused_color
 		end
 
 	is_baseline_enalbed: BOOLEAN
@@ -620,6 +609,80 @@ feature {NONE} -- Implementation
 			-- Otherwise we use non-focused color.
 		do
 			Result := internal_title.is_focused_color
+		end
+
+	enable_focus_color_imp is
+			-- Enable focus color.
+		do
+			if not is_focused_active_color_enable then
+				internal_title.set_focus_color_enable (True)
+				internal_title.set_focused_color (True)
+
+				internal_title.set_focus_background_color
+				internal_title.refresh
+
+				internal_border.set_border_color (internal_title.hightlight_color)
+				update_baseline
+			end
+		ensure
+			focused_color_enabled: is_focused_active_color_enable
+		end
+
+	enable_non_focus_active_color_imp is
+			-- Enable non-focused active color.
+		do
+			if not is_non_focused_active_color_enable  then
+				internal_title.set_focus_color_enable (True)
+				internal_title.set_focused_color (False)
+
+				internal_title.set_non_focus_active_background_color
+				internal_title.refresh
+
+				internal_border.set_border_color (internal_title.hightlight_non_focus_color)
+				update_baseline
+			end
+		ensure
+			non_focused_active_color_enabled: is_non_focused_active_color_enable
+		end
+
+	disable_focus_color_imp is
+			-- Disable focus color.
+		do
+			if is_focus_color_enable then
+				internal_title.set_focus_color_enable (False)
+				internal_title.set_disable_focus_background_color
+				internal_title.refresh
+				internal_border.set_border_color (internal_shared.border_color)
+				update_baseline
+			end
+		ensure
+			focused_color_enabled: not is_focus_color_enable
+		end
+
+	set_color_in_idle (a_agent: like last_color_setting_agent) is
+			-- Add `a_agent' to application idle actions and removed `last_color_setting_agent' if possible.
+		do
+			if last_color_setting_agent /= Void then
+				application.remove_idle_action (last_color_setting_agent)
+			end
+			last_color_setting_agent := a_agent
+			application.do_once_on_idle (last_color_setting_agent)
+		ensure
+			set: last_color_setting_agent = a_agent
+		end
+
+	last_color_setting_agent: PROCEDURE [SD_TITLE_BAR, TUPLE]
+			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'.
+
+	application: EV_APPLICATION is
+			-- Application instance.
+		local
+			l_env: EV_ENVIRONMENT
+		once
+			create l_env
+			Result := l_env.application
+		ensure
+			not_void: Result /= Void
 		end
 
 invariant

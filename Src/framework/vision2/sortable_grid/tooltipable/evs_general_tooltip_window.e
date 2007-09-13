@@ -52,6 +52,8 @@ feature -- Show
 		local
 			l_pos: EV_COORDINATE
 			l_window: EV_WINDOW
+			l_env: EV_ENVIRONMENT
+			l_focused_widget: EV_WIDGET
 		do
 			set_size (owner.required_tooltip_width, owner.required_tooltip_height)
 			l_pos := tooltip_left_top_position (pointer_x, pointer_y)
@@ -64,6 +66,10 @@ feature -- Show
 					l_window := related_window
 				end
 			end
+
+			create l_env
+			l_focused_widget := l_env.application.focused_widget
+
 			if l_window /= Void then
 					-- With a related window set, we can ensure that displayed tooltip is always visiable.
 				show_relative_to_window (l_window)
@@ -71,7 +77,12 @@ feature -- Show
 					-- Without `related_window' set, displayed tooltip maybe invisiable after current application loses focus.
 				show
 			end
-			set_focus
+
+			if l_focused_widget /= Void and then not l_focused_widget.is_destroyed
+				and then l_focused_widget.is_displayed and then l_focused_widget.is_sensitive then
+				-- Tooltip window should not change orignal focus, so we set focus back.
+				l_focused_widget.set_focus
+			end
 		end
 
 	hide_tooltip is
@@ -262,6 +273,7 @@ feature -- Owner
 feature{NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
+			-- Redefine
 		do
 			Result := True
 		end

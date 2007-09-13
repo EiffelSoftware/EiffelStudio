@@ -296,7 +296,6 @@ feature -- Agents for user
 				internal_notebook.select_item (a_content, True)
 			end
 		ensure then
-			title_bar_focus: internal_title_bar.is_focus_color_enable
 			content_set: a_content /= Void implies internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
@@ -306,8 +305,6 @@ feature -- Agents for user
 			Precursor {SD_MULTI_CONTENT_ZONE}
 			internal_title_bar.disable_focus_color
 			internal_notebook.set_focus_color (False)
-		ensure then
-			title_bar_not_focus: not internal_title_bar.is_focus_color_enable
 		end
 
 	on_stick is

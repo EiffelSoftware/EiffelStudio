@@ -607,6 +607,7 @@ feature {EV_ANY_I} -- Implementation
 				set_heavy_capture
 				if not has_heavy_capture then
 						-- If wel_hook.dll is not available the we fallback to an application wide capture.
+					print ("wel_hook.dll is not present, please copy over from $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin to where application is situated%N")
 					set_capture
 				end
 			when {EV_APPLICATION_IMP}.Capture_normal then

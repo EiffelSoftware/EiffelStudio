@@ -189,14 +189,12 @@ feature -- Redefine
 			-- Redefine.
 		local
 			l_content: SD_CONTENT
-			l_tab_state: SD_TAB_STATE
-			l_first_tab: BOOLEAN
+			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_docking_state: SD_DOCKING_STATE
-			l_third_time: BOOLEAN
+			l_tab_state: SD_TAB_STATE
 			l_tab_zone: SD_TAB_ZONE
 			l_titles: ARRAYED_LIST [STRING_GENERAL]
 			l_selected_index: INTEGER
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			direction := a_data.direction
 			l_titles := a_data.titles
@@ -204,7 +202,6 @@ feature -- Redefine
 			create internal_shared
 			from
 				l_titles.start
-				l_first_tab := True
 				create l_contents.make (l_titles.count)
 			until
 				l_titles.after

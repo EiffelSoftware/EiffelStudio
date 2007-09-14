@@ -176,7 +176,7 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				if l_num > 0 and then l_num <= number_of_lines then
 					if highlight then
-						text_displayed.select_token (l_num, a_col)
+						text_displayed.select_token (l_num, a_col.max (1))
 					end
 					display_line_with_context (l_num)
 					refresh_now

@@ -69,6 +69,8 @@ feature -- Access
 		local
 			cs: CLASSI_STONE
 			fs: FEATURE_STONE
+			ls: LINE_STONE
+			ast: AST_STONE
 			cl_syntax_s: CL_SYNTAX_STONE
 		do
 			fs ?= s
@@ -79,9 +81,19 @@ feature -- Access
 				if cl_syntax_s /= Void then
 					process_class_syntax (cl_syntax_s)
 				else
-					cs ?= s
-					if cs /= Void then
-						process_class (cs)
+					ast ?= s
+					if ast /= Void then
+						process_ast (ast)
+					else
+						cs ?= s
+						if cs /= Void then
+							process_class (cs)
+						else
+							ls ?= s
+							if ls /= Void then
+								process_line (ls)
+							end
+						end
 					end
 				end
 			end
@@ -113,6 +125,59 @@ feature {NONE} -- Implementation
 			if conv_f = Void then
 				create req
 				req.execute (preferences.misc_data.external_editor_cli (cs.file_name, 1))
+			end
+		end
+
+	process_line (ls: LINE_STONE) is
+			-- Process line stone.
+		require
+			ls_not_void: ls /= Void
+		local
+			req: COMMAND_EXECUTOR
+			cl: CLASS_C
+		do
+			cl := ls.class_c
+			if cl /= Void then
+				create req
+				req.execute (preferences.misc_data.external_editor_cli (cl.file_name, ls.line_number))
+			end
+		end
+
+	process_ast (ast: AST_STONE) is
+			-- Process AST stone
+		require
+			ast_not_void: ast /= Void
+		local
+			req: COMMAND_EXECUTOR
+			fn: STRING
+			ln: INTEGER
+			p: INTEGER
+			f: RAW_FILE
+			loc: LOCATION_AS
+		do
+			fn := ast.file_name
+			if fn /= Void then
+					--| Maybe there is a better way to find line number from an AST_NODE...
+				loc ?= ast.ast
+				if loc /= Void then
+					create f.make (fn)
+					if f.exists and f.is_readable then
+						f.open_read
+						from
+							p := loc.position
+							ln := 0
+						until
+							f.end_of_file or f.position >= p
+						loop
+							ln := ln + 1
+							f.next_line
+						end
+						f.close
+					end
+				end
+
+				create req
+				req.execute (preferences.misc_data.external_editor_cli (fn, ln.max (1)))
 			end
 		end
 

@@ -191,7 +191,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS)
+	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS) is
 			-- Generated a VTCG7 error if there are any constraint errors.
 			-- Otherwise it does nothing.
 		require
@@ -199,19 +199,20 @@ feature {COMPILER_EXPORTER} -- Primitives
 		local
 			l_vtcg7: VTCG7
 		do
-				if not constraint_error_list.is_empty then
-						-- The feature listed in the creation constraint have
-						-- not been declared in the constraint class.			
-					create l_vtcg7
-					l_vtcg7.set_location (a_location_as)
-					l_vtcg7.set_class (a_context_class)
-					l_vtcg7.set_error_list (constraint_error_list)
-					l_vtcg7.set_parent_type (Current)
-					if a_context_feature /= Void then
-						l_vtcg7.set_feature (a_context_feature)
-					end
-					Error_handler.insert_error (l_vtcg7)
+			if not constraint_error_list.is_empty then
+					-- The feature listed in the creation constraint have
+					-- not been declared in the constraint class.			
+				create l_vtcg7
+				l_vtcg7.set_location (a_location_as)
+				l_vtcg7.set_class (a_context_class)
+				l_vtcg7.set_error_list (constraint_error_list)
+				l_vtcg7.set_parent_type (Current)
+				if a_context_feature /= Void then
+					l_vtcg7.set_feature (a_context_feature)
+					l_vtcg7.set_written_class (a_context_feature.written_class)
 				end
+				Error_handler.insert_error (l_vtcg7)
+			end
 		end
 
 	update_dependance (feat_depend: FEATURE_DEPENDANCE) is

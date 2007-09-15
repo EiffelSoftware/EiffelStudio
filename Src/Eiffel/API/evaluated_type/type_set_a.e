@@ -146,7 +146,7 @@ feature -- Access
 				-- Example for comments: rename f as g end
 				-- `l_name_id' is the name id of `g'
 				l_item := item
-				if l_item.has_associated_class then
+				if l_item.has_associated_class and then l_item.associated_class.has_feature_table then
 					l_feature_table := l_item.associated_class.feature_table
 					if l_renaming /= Void then
 						l_feature_table.search_id_under_renaming (a_name_id, l_renaming)
@@ -347,7 +347,7 @@ feature -- Access
 			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
-	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name
+	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name is
 			-- Compute feature state.
 			--
 			-- `an_alias' is a feature alias for which the state is computed.
@@ -365,6 +365,7 @@ feature -- Access
 			l_features_found_count: INTEGER
 			l_item: RENAMED_TYPE_A [TYPE_A]
 			l_renaming: RENAMING_A
+			l_name_id: INTEGER
 		do
 			from
 				start
@@ -378,7 +379,10 @@ feature -- Access
 					if l_renaming = Void then
 						l_feature :=  l_class_c.feature_table.item_alias_id (an_alias_name_id)
 					else
-						l_feature :=  l_class_c.feature_table.item_id (l_renaming.renamed (an_alias_name_id))
+						l_name_id := l_renaming.renamed (an_alias_name_id)
+						if l_name_id > 0 then
+							l_feature :=  l_class_c.feature_table.item_id (l_name_id)
+						end
 					end
 
 					if

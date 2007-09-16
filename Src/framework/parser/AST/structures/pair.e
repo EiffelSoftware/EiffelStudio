@@ -2,7 +2,6 @@ indexing
 	description: "Objects that contain 2 objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Emmanuel Stapf"
 	date: "$Date$"
 	revision: "$Revision$"
 

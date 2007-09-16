@@ -29,6 +29,7 @@ mkdir $compile_type
 echo "Stage 1:"
 (time ec -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp1 )>> e_comp1
 echo "  Size is: `du -sh EIFGENs/$target/COMP`"
+echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 echo "  Time is: `tail -1 e_comp1`"
 chdir EIFGENs/$target/$compile_type
 echo "  Launching C compilation"
@@ -45,6 +46,7 @@ if ( -e ec_stage1 ) then
 	echo "Stage 2:"
 	(time ./ec_stage1 -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp2 )>> e_comp2
 	echo "  Size is: `du -sh EIFGENs/$target/COMP`"
+	echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 	echo "  Time is: `tail -1 e_comp2`"
 	chdir EIFGENs/$target/$compile_type
 	echo "  Launching C compilation"
@@ -61,6 +63,7 @@ if ( -e ec_stage1 ) then
 		echo "Stage 3:"
 		(time ./ec_stage2 -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp3 )>> e_comp3
 		echo "  Size is: `du -sh EIFGENs/$target/COMP`"
+		echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 		echo "  Time is: `tail -1 e_comp3`"
 		chdir EIFGENs/$target/$compile_type
 		echo "  Launching C compilation"

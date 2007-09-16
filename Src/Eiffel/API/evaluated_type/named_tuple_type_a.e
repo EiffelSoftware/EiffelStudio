@@ -137,7 +137,8 @@ feature -- Checking
 				end
 					-- Check that we do not conflict with a feature of the TUPLE class.
 				if l_is_tuple_class_available then
-					if l_feat_tbl.has_key_id (l_name_id) then
+					l_feat_tbl.search_id (l_name_id)
+					if l_feat_tbl.found then
 						create l_vrft
 						context.init_error (l_vrft)
 						if l_named_tuple_node /= Void then
@@ -175,7 +176,8 @@ feature {NONE} -- Checking
 			l_vrft: VRFT
 		do
 			l_feat_tbl := system.tuple_class.compiled_class.feature_table
-			if l_feat_tbl.has_key_id (a_name_id) then
+			l_feat_tbl.search_id (a_name_id)
+			if l_feat_tbl.found then
 				create l_vrft
 				l_vrft.set_class (a_context_class)
 				if a_context_feature /= Void then

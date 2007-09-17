@@ -24,7 +24,6 @@ feature {NONE} -- Initialization
 	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: STRING; parent_window: EV_WINDOW) is
 			-- Initialize with parent window `a_parent'
 		local
-			aok: BOOLEAN
 			warning_message: STRING_GENERAL
 			file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 		do

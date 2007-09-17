@@ -57,22 +57,6 @@ feature {NONE} -- Access
 			-- This is useful for example when you want tooltip to disappear right away when certain keys
 			-- are not pressed.
 
-	tooltip_window_related_window: EV_WINDOW is
-			-- Tooltip window related window
-		do
-			Result := tooltip_window.related_window
-		ensure
-			result_set: Result = tooltip_window.related_window
-		end
-
-	tooltip_window_related_window_agent: FUNCTION [ANY, TUPLE, EV_WINDOW] is
-			-- Tooltip window related window agent
-		do
-			Result := tooltip_window.related_window_agent
-		ensure
-			result_set: Result = tooltip_window.related_window_agent
-		end
-
 feature -- Element change
 
 	set_tooltip_remain_delay_time (a_delay: INTEGER) is
@@ -146,22 +130,6 @@ feature -- Element change
 			force_tooltip_disappear_function := a_veto_function
 		ensure
 			force_tooltip_disappear_function_set: force_tooltip_disappear_function = a_veto_function
-		end
-
-	set_tooltip_window_related_window (a_window: EV_WINDOW) is
-			-- Set `tooltip_window'.`related_window' with `a_window'.
-		do
-			tooltip_window.set_related_window (a_window)
-		ensure
-			related_window_set: tooltip_window.related_window = a_window
-		end
-
-	set_tooltip_window_related_window_agent (a_agent: FUNCTION [ANY, TUPLE, EV_WINDOW]) is
-			-- Set `tooltip_window'.`related_window_agent' with `a_agent'.
-		do
-			tooltip_window.set_related_window_agent (a_agent)
-		ensure
-			related_window_set: tooltip_window.related_window_agent = a_agent
 		end
 
 feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change

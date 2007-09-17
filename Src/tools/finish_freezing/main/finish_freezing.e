@@ -101,14 +101,14 @@ feature -- Initialization
 					l_library_cmd.append_character ('"')
 					env.system (l_library_cmd)
 				else
-					--create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
+					create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
-					--translator.translate
-					--if not gen_only and translator.has_makefile_sh then
+					translator.translate
+					if not gen_only and translator.has_makefile_sh then
 							-- We don't want to be launched when there is no Makefile.SH file.
-					--	translator.run_make
-					--	c_error := c_compilation_error
-					--end
+						translator.run_make
+						c_error := c_compilation_error
+					end
 
 					if not gen_only then
 							-- Reduce execution priority

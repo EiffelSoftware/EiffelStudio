@@ -101,16 +101,21 @@ feature -- Initialization
 					l_library_cmd.append_character ('"')
 					env.system (l_library_cmd)
 				else
-					create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
+					--create translator.make (l_options, mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
-					translator.translate
-					if not gen_only and translator.has_makefile_sh then
+					--translator.translate
+					--if not gen_only and translator.has_makefile_sh then
 							-- We don't want to be launched when there is no Makefile.SH file.
-						translator.run_make
-						c_error := c_compilation_error
-					end
+					--	translator.run_make
+					--	c_error := c_compilation_error
+					--end
 
 					if not gen_only then
+							-- Reduce execution priority
+						if a_parser.has_priority then
+							set_execution_priority (a_parser.execution_priority)
+						end
+
 						if translator = Void then
 							l_msg := "Internal error during Makefile translation preparation.%N%N%
 									%Please report this problem to Eiffel Software at:%N%
@@ -175,6 +180,32 @@ feature -- Access
 			end
 		end
 
+feature {NONE} -- Basic operations
+
+	set_execution_priority (a_priority: NATURAL_8)
+			-- Sets process' priority so it does not impact the foreground
+			-- applications
+		require
+			a_priority_big_enough: a_priority >= 1
+			a_priority_small_enough: a_priority <= 5
+		local
+			l_priority: INTEGER
+		do
+			inspect a_priority
+			when 1 then
+				l_priority := c_win_thread_priority_lowest
+			when 2 then
+				l_priority := c_win_thread_priority_below_normal
+			when 3 then
+				l_priority := c_win_thread_priority_normal
+			when 4 then
+				l_priority := c_win_thread_priority_above_normal
+			when 5 then
+				l_priority := c_win_thread_priority_highest
+			end
+			c_win_set_thread_priority (l_priority)
+		end
+
 feature -- Implementation
 
 	read_options_in (a_options: RESOURCE_TABLE) is
@@ -199,6 +230,64 @@ feature -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"EIF_IS_64_BITS"
+		end
+
+feature {NONE} -- Externals
+
+	c_win_set_thread_priority (a_priority: INTEGER)
+			-- Set executing thread's priority so below normal, if the priority
+			-- is set above that.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				// Set thread priority instead of process class so
+				// Windows will determine the relative priority based on a user set
+				// process class.
+				DWORD dwThreadPri;
+				dwThreadPri = GetThreadPriority(GetCurrentThread()); 
+				
+				if ((EIF_INTEGER) dwThreadPri != $a_priority)
+				{
+					// Only set thread priority if it's not already below normal.
+					SetThreadPriority(GetCurrentThread(), (DWORD)$a_priority);
+				}
+			]"
+		end
+
+	c_win_thread_priority_lowest: INTEGER
+		external
+			"C [macro <windows.h>] : EIF_INTEGER"
+		alias
+			"THREAD_PRIORITY_LOWEST"
+		end
+
+	c_win_thread_priority_below_normal: INTEGER
+		external
+			"C [macro <windows.h>] : EIF_INTEGER"
+		alias
+			"THREAD_PRIORITY_BELOW_NORMAL"
+		end
+
+	c_win_thread_priority_normal: INTEGER
+		external
+			"C [macro <windows.h>] : EIF_INTEGER"
+		alias
+			"THREAD_PRIORITY_NORMAL"
+		end
+
+	c_win_thread_priority_above_normal: INTEGER
+		external
+			"C [macro <windows.h>] : EIF_INTEGER"
+		alias
+			"THREAD_PRIORITY_ABOVE_NORMAL"
+		end
+
+	c_win_thread_priority_highest: INTEGER
+		external
+			"C [macro <windows.h>] : EIF_INTEGER"
+		alias
+			"THREAD_PRIORITY_HIGHEST"
 		end
 
 indexing

@@ -76,6 +76,21 @@ feature -- Access
 			result_positive: Result > 0
 		end
 
+	execution_priority: NATURAL_8 is
+			-- Execution priority level from 1 (low) to 5 (high)
+		require
+			successful: successful
+			has_priority: has_priority
+		local
+			l_value: ARGUMENT_NATURAL_OPTION
+		once
+			l_value ?= option_of_name (priority_switch)
+			Result := l_value.natural_8_value
+		ensure
+			result_big_enough: Result >=1
+			result_small_enought: Result <= 5
+		end
+
 	is_for_library: BOOLEAN is
 			-- Is `finish_freezing' launched to compile the C code for an Eiffel library?
 		require
@@ -102,6 +117,14 @@ feature -- Query
 			Result := has_option (nproc_switch)
 		end
 
+	has_priority: BOOLEAN is
+			-- Indicates if user specified a priority index
+		require
+			successful: successful
+		once
+			Result := has_option (priority_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING is
@@ -123,6 +146,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Alternative location to compile C code in.", True, False, "directory", "Location to compile C code in", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_only_switch, "Informs tool to only generate a Makefile.", True, False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (nproc_switch, "Maximum number of processors to use", True, False, "n", "Number of processors", False, 1, {NATURAL_16}.max_value))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (priority_switch, "Sets execution priority level.", True, True, "priority", "An execution priority option, 1 (low) to 5 (high)", False, 1, 5))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Compile the C code of an Eiffel library", True, True))
@@ -135,6 +159,7 @@ feature {NONE} -- Switches
 	library_switch: STRING is "library"
 	nproc_switch: STRING is "nproc"
 	x86_switch: STRING is "x86"
+	priority_switch: STRING is "priority"
 			-- Argument switches
 
 	silent_switch: STRING is "silent";

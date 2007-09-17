@@ -38,7 +38,7 @@ convert
 feature {NONE} -- Initialization
 
 	make
-			-- Initialilze dialog
+			-- Initialize dialog
 		local
 			l_init: BOOLEAN
 		do

@@ -1516,8 +1516,6 @@ feature -- Polymorphism
  		require
 			positive_rout_id: rout_id > 0
 			valid_rout_id: rout_id_set.has (rout_id)
-		local
-			seed: FEATURE_I
  		do
  			if not is_attribute or else not Routine_id_counter.is_attribute (rout_id) then
  					-- This is a routine.

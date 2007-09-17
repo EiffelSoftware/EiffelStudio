@@ -584,7 +584,6 @@ feature{NONE} -- Implementation
 			create l_tooltip.make (a_component.pointer_enter_actions, a_component.pointer_leave_actions, Void, agent (a_item.grid_item).is_destroyed, create {EV_LABEL}.make_with_text (l_toolname))
 			l_tooltip.unify_background_color
 			l_tooltip.enable_repeat_tooltip_display
-			l_tooltip.set_tooltip_window_related_window_agent (agent (window_manager.last_focused_development_window).window)
 			Result := l_tooltip
 		ensure
 			result_attached: Result /= Void

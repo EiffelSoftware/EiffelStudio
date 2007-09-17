@@ -18,7 +18,7 @@ feature -- Initialization
 				a.f		-- An PRECONDITION_VIOLATION is raised here
 			end
 		rescue
-			l_exception ?= last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
 				print ("True")
 			else

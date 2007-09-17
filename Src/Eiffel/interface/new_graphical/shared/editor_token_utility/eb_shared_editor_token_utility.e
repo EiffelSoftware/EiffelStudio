@@ -51,7 +51,6 @@ feature -- Editor token
 				-- could be moved later to a different display.
 			a_tooltip.set_tooltip_maximum_width (ev_screen.width - 30)
 			a_tooltip.set_tooltip_maximum_height (ev_screen.height - 30)
-			a_tooltip.set_tooltip_window_related_window_agent (agent last_focused_window)
 		end
 
 	last_focused_window: EV_WINDOW is

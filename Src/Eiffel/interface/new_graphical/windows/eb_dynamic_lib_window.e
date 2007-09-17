@@ -321,49 +321,53 @@ feature {NONE} -- Initialization
 	build_tool_bar is
 			-- Create `toolbar' and display it.
 		local
-			tb: EV_TOOL_BAR
-			tbit: EB_COMMAND_TOOL_BAR_BUTTON
+			tb: SD_TOOL_BAR
+			tbit: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			sep: EV_VERTICAL_SEPARATOR
 		do
 			create tool_bar
-			create tb
-			tbit := new_cmd.new_toolbar_item (False)
+			create tb.make
+			tbit := new_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := open_cmd.new_toolbar_item (False)
+			tbit := open_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := save_cmd.new_toolbar_item (False)
+			tbit := save_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)
+			tb.compute_minimum_size
+
 			create sep
 			tool_bar.extend (sep)
 			tool_bar.disable_item_expand (sep)
 
-			create tb
-			tbit := check_exports_cmd.new_toolbar_item (False)
+
+			create tb.make
+			tbit := check_exports_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := add_feature_cmd.new_toolbar_item (False)
+			tbit := add_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := edit_feature_cmd.new_toolbar_item (False)
+			tbit := edit_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := remove_feature_cmd.new_toolbar_item (False)
+			tbit := remove_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)
+			tb.compute_minimum_size
 		end
 
 	enable_accelerators is

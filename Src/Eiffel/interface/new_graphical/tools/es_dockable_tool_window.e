@@ -97,7 +97,7 @@ feature {NONE} -- Clean up
 			l_site: SITE [EB_DEVELOPMENT_WINDOW]
 		do
 			Precursor {EB_TOOL}
-			l_site ?= user_widget
+			l_site ?= internal_user_widget
 			if l_site /= Void then
 					-- Invalidated site.
 				l_site.set_site (Void)

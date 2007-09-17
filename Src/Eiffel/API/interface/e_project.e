@@ -619,6 +619,8 @@ feature -- Update
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)
 			end
+				-- Set below normal priority.
+			l_cmd.append (" -low")
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 

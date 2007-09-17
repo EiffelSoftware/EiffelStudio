@@ -112,8 +112,8 @@ feature -- Initialization
 
 					if not gen_only then
 							-- Reduce execution priority
-						if a_parser.has_priority then
-							set_execution_priority (a_parser.execution_priority)
+						if a_parser.use_low_priority_mode then
+							demote_execution_priority
 						end
 
 						if translator = Void then
@@ -182,28 +182,11 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	set_execution_priority (a_priority: NATURAL_8)
-			-- Sets process' priority so it does not impact the foreground
-			-- applications
-		require
-			a_priority_big_enough: a_priority >= 1
-			a_priority_small_enough: a_priority <= 5
-		local
-			l_priority: INTEGER
+	demote_execution_priority
+			-- Demotes execution priority for low-execution priority, yeilding to processes
+			-- with a normal or higher execution priority.
 		do
-			inspect a_priority
-			when 1 then
-				l_priority := c_win_thread_priority_lowest
-			when 2 then
-				l_priority := c_win_thread_priority_below_normal
-			when 3 then
-				l_priority := c_win_thread_priority_normal
-			when 4 then
-				l_priority := c_win_thread_priority_above_normal
-			when 5 then
-				l_priority := c_win_thread_priority_highest
-			end
-			c_win_set_thread_priority (l_priority)
+			c_win_set_thread_priority (c_win_thread_priority_below_normal)
 		end
 
 feature -- Implementation
@@ -247,7 +230,7 @@ feature {NONE} -- Externals
 				DWORD dwThreadPri;
 				dwThreadPri = GetThreadPriority(GetCurrentThread()); 
 				
-				if ((EIF_INTEGER) dwThreadPri != $a_priority)
+				if ((EIF_INTEGER) dwThreadPri >= $a_priority)
 				{
 					// Only set thread priority if it's not already below normal.
 					SetThreadPriority(GetCurrentThread(), (DWORD)$a_priority);
@@ -255,39 +238,11 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_win_thread_priority_lowest: INTEGER
-		external
-			"C [macro <windows.h>] : EIF_INTEGER"
-		alias
-			"THREAD_PRIORITY_LOWEST"
-		end
-
 	c_win_thread_priority_below_normal: INTEGER
 		external
 			"C [macro <windows.h>] : EIF_INTEGER"
 		alias
 			"THREAD_PRIORITY_BELOW_NORMAL"
-		end
-
-	c_win_thread_priority_normal: INTEGER
-		external
-			"C [macro <windows.h>] : EIF_INTEGER"
-		alias
-			"THREAD_PRIORITY_NORMAL"
-		end
-
-	c_win_thread_priority_above_normal: INTEGER
-		external
-			"C [macro <windows.h>] : EIF_INTEGER"
-		alias
-			"THREAD_PRIORITY_ABOVE_NORMAL"
-		end
-
-	c_win_thread_priority_highest: INTEGER
-		external
-			"C [macro <windows.h>] : EIF_INTEGER"
-		alias
-			"THREAD_PRIORITY_HIGHEST"
 		end
 
 indexing

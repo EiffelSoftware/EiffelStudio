@@ -955,27 +955,33 @@ feature {NONE} -- Agents
 		local
 			l_fake_editor: EB_FAKE_SMART_EDITOR
 			l_editor: EB_SMART_EDITOR
+			l_ignore: BOOLEAN
 		do
 			if not is_opening_editors then
 				l_fake_editor ?= a_editor
 				if l_fake_editor /= Void then
-					check not_has: not has_editor_with_long_title (l_fake_editor.content.long_title) end
-					init_editor
-					change_fake_to_real (last_created_editor, l_fake_editor, l_fake_editor.content)
-					l_editor := last_created_editor
+					-- Maybe called by `on_show_imp' (`on_show_imp' called by `on_show') on same editor more than once.
+					l_ignore := has_editor_with_long_title (l_fake_editor.content.long_title)
+					if not l_ignore then
+						init_editor
+						change_fake_to_real (last_created_editor, l_fake_editor, l_fake_editor.content)
+						l_editor := last_created_editor
+					end
 				else
 					l_editor := a_editor
 				end
 
-				if not editors_internal.is_empty and then not editors_internal.off then
-					last_focused_editor := a_editor
-				else
-					last_focused_editor := Void
-				end
-				validate_editor (l_editor)
-				editor_switched_actions.call ([l_editor])
-				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
-					l_editor.editor_drawing_area.set_focus
+				if not l_ignore then
+					if not editors_internal.is_empty and then not editors_internal.off then
+						last_focused_editor := a_editor
+					else
+						last_focused_editor := Void
+					end
+					validate_editor (l_editor)
+					editor_switched_actions.call ([l_editor])
+					if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
+						l_editor.editor_drawing_area.set_focus
+					end
 				end
 			end
 		end

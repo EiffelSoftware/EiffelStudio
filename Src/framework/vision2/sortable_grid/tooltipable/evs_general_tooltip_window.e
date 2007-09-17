@@ -2,7 +2,6 @@ indexing
 	description: "Object that represents a tooltip window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,9 @@ inherit
 	EV_POPUP_WINDOW
 		redefine
 			initialize,
-			is_in_default_state
+			implementation,
+			is_in_default_state,
+			create_implementation
 		end
 
 	EVS_GENERAL_TOOLTIP_UTILITY
@@ -51,38 +52,13 @@ feature -- Show
 			has_owner: has_owner
 		local
 			l_pos: EV_COORDINATE
-			l_window: EV_WINDOW
-			l_env: EV_ENVIRONMENT
-			l_focused_widget: EV_WIDGET
 		do
 			set_size (owner.required_tooltip_width, owner.required_tooltip_height)
 			l_pos := tooltip_left_top_position (pointer_x, pointer_y)
 			set_position (l_pos.x, l_pos.y)
 			safe_register_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
 
-			if related_window_agent /= Void then
-				l_window := related_window_agent.item (Void)
-				if l_window = Void then
-					l_window := related_window
-				end
-			end
-
-			create l_env
-			l_focused_widget := l_env.application.focused_widget
-
-			if l_window /= Void then
-					-- With a related window set, we can ensure that displayed tooltip is always visiable.
-				show_relative_to_window (l_window)
-			else
-					-- Without `related_window' set, displayed tooltip maybe invisiable after current application loses focus.
-				show
-			end
-
-			if l_focused_widget /= Void and then not l_focused_widget.is_destroyed
-				and then l_focused_widget.is_displayed and then l_focused_widget.is_sensitive then
-				-- Tooltip window should not change orignal focus, so we set focus back.
-				l_focused_widget.set_focus
-			end
+			show
 		end
 
 	hide_tooltip is
@@ -236,39 +212,10 @@ feature{NONE} -- Measure
 			result_attached: Result /= Void
 		end
 
-feature -- Setting
-
-	set_related_window (a_window: EV_WINDOW) is
-			-- Set `related_window' with `a_window'.
-		require
-			a_window_attached: a_window /= Void
-			a_window_not_destroyed: not a_window.is_destroyed
-		do
-			related_window := a_window
-		ensure
-			related_window_set: related_window = a_window
-		end
-
-	set_related_window_agent (a_agent: like related_window_agent) is
-			-- Set `related_window_agent' with `a_agent'.
-		do
-			related_window_agent := a_agent
-		ensure
-			related_window_agent_attached: related_window_agent = a_agent
-		end
-
 feature -- Owner
 
 	owner: EVS_GENERAL_TOOLTIPABLE
 			-- owner of current tooltip window
-
-	related_window: EV_WINDOW
-			-- Related window used to display tooltip
-			-- It isn't necessory, but with it, we can ensure that a displayed tooltip is always visiable.
-
-	related_window_agent: FUNCTION [ANY, TUPLE, EV_WINDOW]
-			-- Agent to get related window when Current tooltip is to be displayed.
-			-- If this is set, it wil be used first, and then value from `related_window'.
 
 feature{NONE} -- Implementation
 
@@ -308,6 +255,15 @@ feature{NONE} -- Implementation
 			Result := pointer_motion_agent_internal
 		ensure
 			result_attached: Result /= Void
+		end
+
+	implementation: EVS_GENERAL_TOOLTIP_WINDOW_IMP;
+			-- Implementation.
+
+	create_implementation is
+			-- Redefine.
+		do
+			create {EVS_GENERAL_TOOLTIP_WINDOW_IMP} implementation.make (Current)
 		end
 
 indexing

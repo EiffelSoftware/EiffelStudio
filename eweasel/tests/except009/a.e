@@ -6,11 +6,11 @@ feature
 	f is
 		local
 			retried: BOOLEAN
-			l_exception: ATTACHED_TARGET_VIOLATION
+			l_exception: VOID_TARGET
 		do
 		ensure
 			s_not_empty: not s.is_empty
-				-- A ATTACHED_TARGET_VIOLATION exception is raised here.
+				-- A VOID_TARGET exception is raised here.
 		rescue
 			l_exception ?= last_exception
 			if l_exception /= Void then

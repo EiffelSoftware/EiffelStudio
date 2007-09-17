@@ -22,13 +22,13 @@ feature -- Initialization
 			end
 		rescue
 			retried := True
-			l_exception ?= last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
 				print ("True" + "%N")
 			else
 				print ("False" + "%N")
 			end
-			if last_exception = my_exception then
+			if l_exception /= Void and then l_exception.original = my_exception then
 				print ("True" + "%N")
 			else
 				print ("False" + "%N")

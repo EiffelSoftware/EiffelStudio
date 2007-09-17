@@ -11,7 +11,7 @@ feature
 				my_exception.raise
 			end
 		rescue
-			if last_exception = my_exception then
+			if (create {EXCEPTION_MANAGER}).last_exception = my_exception then
 				print ("True" + "%N")
 			else
 				print ("False" + "%N")

@@ -14,13 +14,15 @@ feature
 	f is
 		local
 			retried: BOOLEAN
-			l_exception: ATTACHED_TARGET_VIOLATION
+			l_exception: VOID_TARGET
 		do
 			if not retried then
 				s := Void
+			else
+				s := "a"
 			end
 		rescue
-			l_exception ?= last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
 				print ("True")
 			else
@@ -28,7 +30,7 @@ feature
 			end
 			retried := True
 			retry
-		end	-- A ATTACHED_TARGET_VIOLATION exception is raised here.
+		end	-- A VOID_TARGET exception is raised here.
 
 	s: STRING
 

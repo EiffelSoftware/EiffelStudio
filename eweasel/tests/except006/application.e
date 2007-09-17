@@ -11,13 +11,13 @@ feature -- Initialization
 		local
 			a: STRING
 			retried: BOOLEAN
-			l_exception: ATTACHED_TARGET_VIOLATION
+			l_exception: VOID_TARGET
 		do
 			if not retried then
-				a.do_nothing		-- An ATTACHED_TARGET_VIOLATION is raised here
+				a.do_nothing		-- An VOID_TARGET is raised here
 			end
 		rescue
-			l_exception ?= last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
 				print ("True")
 			else

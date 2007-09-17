@@ -2,6 +2,6 @@ class
 	MY_EXCEPTION
 
 inherit
-	EXCEPTION
+	DEVELOPER_EXCEPTION
 
 end

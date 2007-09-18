@@ -37,6 +37,8 @@ feature -- Open inner container data.
 			l_config_data := config_data_from_file (a_file)
 			internal_open_maximized_tool_data (l_config_data)
 			internal_docking_manager.command.resize (True)
+
+			call_show_actions
 		end
 
 	open_editors_config (a_file: STRING_GENERAL) is
@@ -94,6 +96,8 @@ feature -- Open inner container data.
 				internal_docking_manager.command.resize (True)
 				internal_docking_manager.command.unlock_update
 			end
+
+			call_show_actions
 		end
 
 	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
@@ -183,6 +187,8 @@ feature -- Open inner container data.
 			-- We have to do it on idle, otherwise, maximized mini tool bar buttons positions in floating zone not correct.
 			create l_env
 			l_env.application.do_once_on_idle (agent internal_open_maximized_tool_data (l_config_data))
+
+			call_show_actions
 		ensure
 			cleared: top_container = Void
 		end
@@ -1095,6 +1101,36 @@ feature {NONE} -- Implementation
 					end
 					l_contents.forth
 				end
+			end
+		end
+
+	call_show_actions
+			-- Call SD_CONTENT.show_action inner containers.
+		local
+			l_all_contents: ARRAYED_LIST [SD_CONTENT]
+			l_item: SD_CONTENT
+			l_docking_state: SD_DOCKING_STATE
+			l_tab_state: SD_TAB_STATE
+		do
+			from
+				l_all_contents := internal_docking_manager.contents
+				l_all_contents.start
+			until
+				l_all_contents.after
+			loop
+				l_item := l_all_contents.item
+				if l_item.is_visible then
+					l_docking_state ?= l_item.state
+					l_tab_state ?= l_item.state
+					if l_docking_state /= Void then
+						l_item.show_actions.call (Void)
+					elseif l_tab_state /= Void then
+						if l_tab_state.is_selected then
+							l_item.show_actions.call (Void)
+						end
+					end
+				end
+				l_all_contents.forth
 			end
 		end
 

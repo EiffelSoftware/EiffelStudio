@@ -462,6 +462,14 @@ feature -- Query
 			end
 		end
 
+	is_content_selected (a_content: SD_CONTENT): BOOLEAN is
+			-- If `a_content''s widget selected in notebook?
+		do
+			if a_content /= Void and then internal_cell.readable then
+				Result := internal_cell.item = a_content.user_widget
+			end
+		end
+
 	item_pixmap (a_content: SD_CONTENT): EV_PIXMAP is
 			-- `a_content''s pixmap.
 		require

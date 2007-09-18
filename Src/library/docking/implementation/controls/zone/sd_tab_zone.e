@@ -271,6 +271,14 @@ feature {SD_TAB_STATE} -- Internal issues.
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
+	is_content_selected (a_content: SD_CONTENT): BOOLEAN is
+			-- If `a_content''s widget selected in notebook?
+		do
+			if a_content /= Void then
+				Result := internal_notebook.is_content_selected (a_content)
+			end
+		end
+
 feature {SD_FLOATING_STATE} -- Internal issues
 
 	set_drag_title_bar (a_bool: BOOLEAN) is

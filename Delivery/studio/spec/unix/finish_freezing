@@ -25,10 +25,11 @@ if [ $# -gt 0 ]; then
 				fi
 				;;
 			"-x86") ;; # No effect on Unix yet
+			"-low") ;; # No effect on Unix yet
 			"-silent") ;; #Nothing anymore, kept for backward compatibility
 			"-nologo") nologo="nologo" ;;	# Keep or remove display of logo.
 			*)
-				echo "Usage: finish_freezing [-cecil | -library | -nproc VAL | -x86 | -silent ]"
+				echo "Usage: finish_freezing [-cecil | -library | -nproc VAL | -x86 | -silent | -low]"
 				exit 1
 				;;
 		esac

@@ -569,8 +569,8 @@ feature {TYPE_A} -- Visitors
 			if current_class.class_id /= a_type.class_id then
 				l_orig_feat := System.class_of_id (a_type.class_id).feature_table.item_id (a_type.feature_name_id)
 				if l_orig_feat /= Void then
-					l_anchor_feature := current_feature_table.
-						origin_table.item (l_orig_feat.rout_id_set.first)
+					l_anchor_feature := current_feature_table.feature_of_rout_id
+						(l_orig_feat.rout_id_set.first)
 				end
 			else
 				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)

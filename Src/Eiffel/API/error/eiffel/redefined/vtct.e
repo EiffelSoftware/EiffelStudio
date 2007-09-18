@@ -40,6 +40,8 @@ feature -- Output
 		do
 			a_text_formatter.add ("Unknown class name: ")
 			a_text_formatter.add (class_name)
+			a_text_formatter.add (" in ")
+			a_text_formatter.add (class_c.group.target.name)
 			a_text_formatter.add_new_line
 		end
 

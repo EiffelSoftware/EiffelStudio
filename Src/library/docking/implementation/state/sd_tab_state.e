@@ -617,6 +617,12 @@ feature -- Query
 			end
 		end
 
+	is_selected: BOOLEAN is
+			-- If Current selected in notebook widget?
+		do
+			Result := tab_zone.is_content_selected (content)
+		end
+
 feature -- Command
 
 	select_tab (a_content: SD_CONTENT; a_focus: BOOLEAN) is

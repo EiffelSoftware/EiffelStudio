@@ -175,12 +175,14 @@ feature -- Access
 		local
 			feat_tbl: FEATURE_TABLE
 			encapsulated_feat: ENCAPSULATED_I
+			l_written_class: CLASS_C
 		do
-				-- Load feature table associated to class id `written_in'.
-			feat_tbl := Feat_tbl_server.item (written_in)
+			l_written_class := system.class_of_id (written_in)
 			check
-				feat_tbl_not_void: feat_tbl /= Void
+				has_feature_table: l_written_class.has_feature_table
 			end
+				-- Load feature table associated to class id `written_in'.
+			feat_tbl := l_written_class.feature_table
 
 				-- Slow part, but we do not have any other way to find the
 				-- associated feature with current information.

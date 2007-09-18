@@ -533,7 +533,7 @@ feature -- Third pass: byte code production and type check
 					new_suppliers := suppliers.same_suppliers
 				end
 
-				feat_table := Feat_tbl_server.item (class_id)
+				feat_table := feature_table
 				def_resc := default_rescue_feature
 
 				ast_context.initialize (Current, actual_type, feat_table)

@@ -23,6 +23,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	written_class: CLASS_C is
+		do
+			Result := System.class_of_id (written_in)
+		ensure
+			written_class_not_void: Result /= Void
+		end
+
 	written_in: INTEGER
 			-- Written_in id of the routine that has assertion
 

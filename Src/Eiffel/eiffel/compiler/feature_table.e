@@ -99,6 +99,7 @@ feature {NONE} -- Creation
 		do
 			Precursor (n)
 			create alias_table.make (0)
+			create select_table.make (n)
 		end
 
 feature -- Access
@@ -1039,14 +1040,6 @@ feature -- API
 				forth
 			end
 			Result := list
-		end
-
-feature {FORMAT_REGISTRATION} -- Init
-
-	init_select_table is
-			-- Initialize the origin table (for formatting).
-		do
-			create select_table.make (0)
 		end
 
 feature -- Debugging

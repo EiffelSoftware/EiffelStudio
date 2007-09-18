@@ -418,8 +418,7 @@ feature -- Inlining
 			nb_generics, i	: INTEGER
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			original_feature := context_type.type_a.associated_class.
-									feature_table.origin_table.item (routine_id)
+			original_feature := context_type.type_a.associated_class.feature_of_rout_id (routine_id)
 			written_class := original_feature.written_class
 
 			if written_class.generics = Void then

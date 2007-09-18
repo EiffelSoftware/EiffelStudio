@@ -13,30 +13,58 @@ class
 inherit
 	EV_ANY_HANDLER
 
+	WEL_SYSTEM_METRICS
+
+feature {NONE} -- Initialization
+
 feature -- Default pixmaps
 
-	Information_pixmap: EV_PIXEL_BUFFER is
+	Information_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel Buffer symbolizing a piece of information.
 		do
-			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_information)
+			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_information)
 		end
 
-	Error_pixmap: EV_PIXEL_BUFFER is
+	Error_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel Buffer symbolizing an error.
 		do
-			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_error)
+			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_error)
 		end
 
-	Warning_pixmap: EV_PIXEL_BUFFER is
+	Warning_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel Buffer symbolizing a warning.
 		do
-			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_warning)
+			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_warning)
 		end
 
-	Question_pixmap: EV_PIXEL_BUFFER is
+	Question_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel Buffer symbolizing a question.
 		do
-			Result := build_default_icon ({WEL_IDI_CONSTANTS}.Idi_question)
+			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_question)
+		end
+
+	Information_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing a piece of information.
+		do
+			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_information)
+		end
+
+	Error_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing an error.
+		do
+			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_error)
+		end
+
+	Warning_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing a warning.
+		do
+			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_warning)
+		end
+
+	Question_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing a question.
+		do
+			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_question)
 		end
 
 	Default_window_icon: EV_PIXMAP is
@@ -55,23 +83,77 @@ feature -- Default pixmaps
 
 feature {NONE} -- Implementation
 
-	build_default_icon (Idi_constant: POINTER): EV_PIXEL_BUFFER is
-			-- Create the pixmap corresponding to the
+	build_default_pixel_buffer (Idi_constant: POINTER): EV_PIXEL_BUFFER is
+			-- Create the pixel buffer corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
 			pixbuf_imp: EV_PIXEL_BUFFER_IMP
 			wel_icon: WEL_ICON
+--			l_iterator: EV_PIXEL_BUFFER_ITERATOR
 		do
-				-- Create a default pixmap
+				-- Create a default pixel buffer
 			create Result
+
 
 				-- Read the predefined Cursor.
 			create wel_icon.make_by_predefined_id (Idi_constant)
 			wel_icon.enable_reference_tracking
 
-				-- Initialize the pixel buffer with the icon
 			pixbuf_imp ?= Result.implementation
+
 			pixbuf_imp.set_from_icon (wel_icon)
+
+
+			wel_icon.decrement_reference
+
+
+
+--			Result.lock
+
+--			l_iterator := Result.pixel_iterator
+--			from
+--				l_iterator.start
+--			until
+--				l_iterator.after
+--			loop
+--				print (l_iterator.item.alpha.to_hex_string + ",")
+--				l_iterator.forth
+--			end
+
+--			Result.unlock
+		end
+
+ILD_NORMAL: NATURAL_32 = 0x00000000
+ILD_TRANSPARENT: NATURAL_32   =      0x00000001
+ILD_MASK: NATURAL_32    =            0x00000010
+ILD_IMAGE: NATURAL_32   =            0x00000020
+
+ILD_ROP: NATURAL_32     =            0x00000040
+
+ILD_BLEND25: NATURAL_32  =          0x00000002
+ILD_BLEND50: NATURAL_32     =        0x00000004
+ILD_OVERLAYMASK: NATURAL_32    =     0x00000F00
+ILD_PRESERVEALPHA: NATURAL_32   =    0x00001000
+
+
+	build_default_pixmap (Idi_constant: POINTER): EV_PIXMAP is
+			-- Create the pixmap corresponding to the
+			-- Windows Icon constants `Idi_constant'.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+			wel_icon: WEL_ICON
+		do
+				-- Create a default pixmap
+			create Result
+
+
+				-- Read the predefined Cursor.
+			create wel_icon.make_by_predefined_id (Idi_constant)
+			wel_icon.enable_reference_tracking
+
+				-- Initialize the pixmap with the icon
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_with_resource (wel_icon)
 
 			wel_icon.decrement_reference
 		end

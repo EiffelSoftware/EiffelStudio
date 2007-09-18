@@ -79,7 +79,7 @@ feature -- IL Generation
 				-- Initialize implementation.
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := actual_class_type_token (current_type_id)
-			current_select_tbl := class_c.feature_table.origin_table
+			current_select_tbl := class_c.feature_table.select_table
 
 				-- First generate anchored features as they might be needed by current class
 				-- features for code generation when current class is frozen.
@@ -256,7 +256,7 @@ feature -- IL Generation
 				-- Generate code
 			from
 				features := class_interface.features
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				l_class_id := current_class_type.type.class_id
 				features.start
 			until
@@ -309,7 +309,7 @@ feature -- IL Generation
 				-- Generate code
 			from
 				features := class_interface.features
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				l_class_id := current_class_type.type.class_id
 				features.start
 			until

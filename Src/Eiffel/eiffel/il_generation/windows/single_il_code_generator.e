@@ -72,7 +72,7 @@ feature -- IL Generation
 				-- Initialize implementation.
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := actual_class_type_token (current_type_id)
-			current_select_tbl := class_c.feature_table.origin_table
+			current_select_tbl := class_c.feature_table.select_table
 
 				-- Clean IL recorded information
 			clean_debug_information (class_type)
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 				-- Generate code
 			from
 				features := class_interface.features
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				l_class_id := current_class_type.type.class_id
 				features.start
 			until
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 				-- Generate code
 			from
 				features := class_interface.features
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				l_class_id := current_class_type.type.class_id
 				features.start
 			until
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 				-- Generate code
 			from
 				features := class_interface.features
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				l_class_id := current_class_type.type.class_id
 				features.start
 			until

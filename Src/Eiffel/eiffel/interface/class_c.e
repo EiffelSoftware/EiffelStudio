@@ -3776,7 +3776,7 @@ feature -- Anchored types
 			from
 				l_old := anchored_features
 				create l_anchored_features.make (10)
-				l_select := l_feat_tbl.origin_table
+				l_select := l_feat_tbl.select_table
 				l_select.start
 			until
 				l_select.after

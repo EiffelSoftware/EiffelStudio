@@ -164,7 +164,7 @@ feature -- Initialization
 
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
-			l_feat_tbl.set_origin_table (create {SELECT_TABLE}.make (nb))
+			l_feat_tbl.set_select_table (create {SELECT_TABLE}.make (nb))
 
 				-- To store overloaded features.
 			create overloaded_names.make (10)
@@ -596,7 +596,7 @@ feature {NONE} -- Initialization
 		require
 			a_feat_not_void: a_feat /= Void
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			has_select_table: a_feat_tbl.origin_table /= Void
+			has_select_table: a_feat_tbl.select_table /= Void
 		local
 			i: INTEGER
 			l_base_name, l_new_name, l_feat_name: STRING
@@ -628,14 +628,14 @@ feature {NONE} -- Initialization
 			end
 
 			a_feat_tbl.put (a_feat, a_feat.feature_name_id)
-			a_feat_tbl.origin_table.put (a_feat, a_feat.rout_id_set.first)
+			a_feat_tbl.select_table.put (a_feat, a_feat.rout_id_set.first)
 		end
 
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			has_origin_table: a_feat_tbl.origin_table /= Void
+			has_origin_table: a_feat_tbl.select_table /= Void
 			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
@@ -1134,7 +1134,7 @@ feature {NONE} -- Implementation
 			-- Set `written_feature_id'.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			a_feat_tbl_has_origin_table: a_feat_tbl.origin_table /= Void
+			a_feat_tbl_has_select_table: a_feat_tbl.select_table /= Void
 			a_feat_not_void: a_feat /= Void
 			a_feat_with_no_rout_id_set: a_feat.rout_id_set = Void
 			a_member_not_void: a_member /= Void

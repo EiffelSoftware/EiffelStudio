@@ -128,7 +128,7 @@ feature {NONE} -- Array optimization
 			loop
 				a_class := array_descendants.item
 				ftable := a_class.feature_table
-				select_table := ftable.origin_table
+				select_table := ftable.select_table
 				class_depend := Depend_server.item (a_class.class_id)
 
 				from
@@ -231,7 +231,7 @@ end
 				array_descendants.forth
 				an_id := a_class.class_id
 				ftable := a_class.feature_table
-				select_table := ftable.origin_table
+				select_table := ftable.select_table
 
 				create dep.make (an_id, select_table.item (put_rout_id))
 				special_features.extend (dep)
@@ -375,7 +375,7 @@ feature -- Contexts
 				array_type ?= bc.arguments.item (id)
 			end
 			array_type_a := array_type.type_a
-			f := array_type.base_class.feature_table.origin_table.item (item_rout_id)
+			f := array_type.base_class.feature_table.select_table.item (item_rout_id)
 
 			type_a ?= f.type
 			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.class_id)

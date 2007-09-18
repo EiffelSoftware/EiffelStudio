@@ -103,7 +103,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	origin_table: SELECT_TABLE
+	select_table: SELECT_TABLE
 			-- Table of features sorted by origin
 
 	overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
@@ -218,12 +218,12 @@ feature -- Status report
 
 feature -- Settings
 
-	set_origin_table (t: like origin_table) is
-			-- Assign `t' to `origin_table'.
+	set_select_table (t: like select_table) is
+			-- Assign `t' to `seletc_table'.
 		do
-			origin_table := t
+			select_table := t
 		ensure
-			origin_table_set: origin_table = t
+			select_table_set: select_table = t
 		end
 
 	set_overloaded_names (o: like overloaded_names) is
@@ -368,7 +368,7 @@ feature -- Comparison
 					forth
 				end
 				if Result then
-					Result := origin_table.equiv (other.origin_table, c)
+					Result := select_table.equiv (other.select_table, c)
 debug ("ACTIVITY")
 	if not Result then
 		io.error.put_string ("%TOrigin table is not equivalent%N")
@@ -626,16 +626,16 @@ end
 			non_deferred, deferred_found: BOOLEAN
 			feature_i: FEATURE_I
 			vcch1: VCCH1
-			select_table: SELECT_TABLE
+			l_select_table: SELECT_TABLE
 		do
 			from
 				non_deferred := not associated_class.is_deferred
-				select_table := origin_table
-				select_table.start
+				l_select_table := select_table
+				l_select_table.start
 			until
-				select_table.after
+				l_select_table.after
 			loop
-				feature_i := select_table.item_for_iteration
+				feature_i := l_select_table.item_for_iteration
 				if feature_i.is_deferred then
 					deferred_found := True
 					if non_deferred then
@@ -646,7 +646,7 @@ end
 					end
 				end
 				check_feature (feature_i)
-				select_table.forth
+				l_select_table.forth
 			end
 		end
 
@@ -740,7 +740,7 @@ end
 		require
 			valid_rout_id: rout_id > 0
 		do
-			Result := origin_table.item (rout_id)
+			Result := select_table.item (rout_id)
 		end
 
 	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I is
@@ -756,7 +756,7 @@ end
 			until
 				i > nb or Result /= Void
 			loop
-				Result := origin_table.item (rout_id_set.item (i))
+				Result := select_table.item (rout_id_set.item (i))
 				i := i + 1
 			end
 		end
@@ -1043,10 +1043,10 @@ feature -- API
 
 feature {FORMAT_REGISTRATION} -- Init
 
-	init_origin_table is
+	init_select_table is
 			-- Initialize the origin table (for formatting).
 		do
-			create origin_table.make (0)
+			create select_table.make (0)
 		end
 
 feature -- Debugging

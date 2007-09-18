@@ -1603,13 +1603,14 @@ feature {NONE} -- Implementation
 	new_family_export (written_in: INTEGER): EXPORT_SET_I is
 			-- New export clause to
 		local
-			l_clients: ARRAYED_LIST [STRING]
+			l_clients: ID_LIST
+			l_names_heap: like names_heap
 		do
-			create Result.make
-			Result.compare_objects
-			create l_clients.make (1)
-			l_clients.extend (system.class_of_id (written_in).name)
-			Result.put (create {CLIENT_I}.make (l_clients, written_in))
+			create l_clients.make
+			l_names_heap := names_heap
+			l_names_heap.put (system.class_of_id (written_in).name)
+			l_clients.extend (l_names_heap.found_item)
+			create Result.make (create {CLIENT_I}.make (l_clients, written_in))
 		ensure
 			Result_not_void: Result /= Void
 		end

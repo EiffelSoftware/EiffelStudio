@@ -690,7 +690,7 @@ end;
 					feature_clause := clauses.item;
 						-- Evaluation of the export status
 					l_export_status := export_status_generator.
-						feature_clause_export_status (a_class, feature_clause)
+						feature_clause_export_status (system, a_class, feature_clause)
 					from
 							-- Iteration of the feature written in class
 							-- `a_class'.

@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 						name.right_adjust
 						create l_section.make (name, features, compiled_class)
 						l_export_status := export_status_generator.
-							feature_clause_export_status (compiled_class, l_item)
+							feature_clause_export_status (system, compiled_class, l_item)
 						if l_export_status = Void then
 							l_section.enable_is_none
 						elseif l_export_status.is_none then

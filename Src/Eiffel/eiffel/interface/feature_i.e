@@ -143,8 +143,20 @@ feature -- Access
 	rout_id_set: ROUT_ID_SET
 			-- Routine table to which feature belongs to.
 
-	export_status: EXPORT_I
+	export_status: EXPORT_I is
 			-- Export status of feature
+		do
+			Result := internal_export_status
+			if Result = Void then
+				if (feature_flags & is_export_status_none_mask) = is_export_status_none_mask then
+					Result := export_none_status
+				else
+					Result := export_all_status
+				end
+			end
+		ensure
+			export_status_not_void: export_status /= Void
+		end
 
 	origin_feature_id: INTEGER
 			-- Feature ID of Current in associated CLASS_INTERFACE
@@ -596,10 +608,17 @@ feature -- Setting
 
 	set_export_status (e: EXPORT_I) is
 			-- Assign `e' to `export_status'.
+		require
+			e_not_void: e /= Void
 		do
-			export_status := e
+			if e.is_all or e.is_none then
+				internal_export_status := Void
+				feature_flags := feature_flags.set_bit_with_mask (e.is_none, is_export_status_none_mask)
+			else
+				internal_export_status := e
+			end
 		ensure
-			export_status_set: export_status = e
+			export_status_set: export_status.same_as (e)
 		end
 
 	frozen set_is_origin (b: BOOLEAN) is
@@ -2726,29 +2745,49 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	feature_flags: INTEGER_32
+	feature_flags: NATURAL_32
 			-- Property of Current feature, i.e. frozen,
 			-- infix, origin, prefix, selected...
 
-	is_frozen_mask: INTEGER_32 is 0x0001
-	is_origin_mask: INTEGER_32 is 0x0002
-	is_empty_mask: INTEGER_32 is 0x0004
-	is_infix_mask: INTEGER_32 is 0x0008
-	is_prefix_mask: INTEGER_32 is 0x0010
-	is_require_else_mask: INTEGER_32 is 0x0020
-	is_ensure_then_mask: INTEGER_32 is 0x0040
-	has_precondition_mask: INTEGER_32 is 0x0080
-	has_postcondition_mask: INTEGER_32 is 0x0100
-	is_bracket_mask: INTEGER_32 is 0x0200
-	is_binary_mask: INTEGER_32 is 0x0400
-	is_unary_mask: INTEGER_32 is 0x0800
-	has_convert_mark_mask: INTEGER_32 is 0x1000
-	has_property_mask: INTEGER_32 is 0x2000
-	has_property_getter_mask: INTEGER_32 is 0x4000
-	has_property_setter_mask: INTEGER_32 is 0x8000
-	is_fake_inline_agent_mask: INTEGER_32 is 0x10000
-	has_rescue_clause_mask: INTEGER_32 is 0x20000
+	is_frozen_mask: NATURAL_32 is 0x0001
+	is_origin_mask: NATURAL_32 is 0x0002
+	is_empty_mask: NATURAL_32 is 0x0004
+	is_infix_mask: NATURAL_32 is 0x0008
+	is_prefix_mask: NATURAL_32 is 0x0010
+	is_require_else_mask: NATURAL_32 is 0x0020
+	is_ensure_then_mask: NATURAL_32 is 0x0040
+	has_precondition_mask: NATURAL_32 is 0x0080
+	has_postcondition_mask: NATURAL_32 is 0x0100
+	is_bracket_mask: NATURAL_32 is 0x0200
+	is_binary_mask: NATURAL_32 is 0x0400
+	is_unary_mask: NATURAL_32 is 0x0800
+	has_convert_mark_mask: NATURAL_32 is 0x1000
+	has_property_mask: NATURAL_32 is 0x2000
+	has_property_getter_mask: NATURAL_32 is 0x4000
+	has_property_setter_mask: NATURAL_32 is 0x8000
+	is_fake_inline_agent_mask: NATURAL_32 is 0x10000
+	has_rescue_clause_mask: NATURAL_32 is 0x20000
+	is_export_status_none_mask: NATURAL_32 is 0x40000
 			-- Mask used for each feature property.
+
+	internal_export_status: like export_status
+			-- Internal export status object. When it is ANY or NONE
+			-- it is Void to save some space, what help us distinguish
+			-- is the `is_export_status_none_mask'.
+
+	export_all_status: EXPORT_ALL_I is
+		once
+			create Result
+		ensure
+			export_all_status_not_void: Result /= Void
+		end
+
+	export_none_status: EXPORT_NONE_I is
+		once
+			create Result
+		ensure
+			export_none_status_not_void: Result /= Void
+		end
 
 feature {INHERIT_TABLE} -- Access
 

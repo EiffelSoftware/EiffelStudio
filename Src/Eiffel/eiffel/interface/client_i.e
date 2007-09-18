@@ -14,12 +14,17 @@ inherit
 		end
 
 	SHARED_WORKBENCH
-		redefine
+		undefine
 			is_equal
 		end
 
 	SHARED_TEXT_ITEMS
-		redefine
+		undefine
+			is_equal
+		end
+
+	SHARED_NAMES_HEAP
+		undefine
 			is_equal
 		end
 
@@ -34,7 +39,6 @@ feature {NONE} -- Initialization
 			c_not_void: c /= Void
 			i_positive: i > 0
 		do
-			c.compare_objects
 			clients := c
 			written_in := i
 		ensure
@@ -47,8 +51,8 @@ feature -- Access
 	written_in: INTEGER
 			-- Id of the class where the client list is written in
 
-	clients: LIST [STRING]
-			-- Client list
+	clients: ID_LIST
+			-- Client list IDs (indexed in names_heap)
 
 feature -- Comparison
 
@@ -82,21 +86,22 @@ feature -- Query
 		local
 			supplier_class: CLASS_I
 			group: CONF_GROUP
+			l_names_heap: like names_heap
+			i, nb: INTEGER
 		do
 			from
+				l_names_heap := names_heap
 				group := System.class_of_id (written_in).group
-				clients.start
+				i := 1
+				nb := clients.count
 			until
-				clients.after or else Result
+				i > nb or else Result
 			loop
-				supplier_class := Universe.class_named (clients.item, group)
-				if
-					supplier_class /= Void and then
-					supplier_class.is_compiled
-				then
+				supplier_class := Universe.class_named (l_names_heap.item (clients.item (i)), group)
+				if supplier_class /= Void and then supplier_class.is_compiled then
 					Result := client.conform_to (supplier_class.compiled_class)
 				end
-				clients.forth
+				i := i + 1
 			end
 		end
 
@@ -110,24 +115,19 @@ feature -- Incrementality
 			consistency: other.written_in = written_in
 		local
 			other_clients: like clients
-			cur, other_cur: CURSOR
+			i, nb: INTEGER
 		do
-			cur := clients.cursor
-			other_clients := other.clients
 			from
+				other_clients := other.clients
 				Result := True
-				clients.start
+				i := 1
+				nb := clients.count
 			until
-				clients.after or else not Result
+				i > nb or else not Result
 			loop
-				other_cur := other_clients.cursor
-				other_clients.start
-				other_clients.search (clients.item)
-				Result := not other_clients.after
-				other_clients.go_to (other_cur)
-				clients.forth
+				Result := other_clients.has (clients.item (i))
+				i := i + 1
 			end
-			clients.go_to (cur)
 		end
 
 	same_as (other: CLIENT_I): BOOLEAN is
@@ -137,24 +137,20 @@ feature -- Incrementality
 			same_written_in: written_in = other.written_in
 		local
 			other_clients: like clients
-			i, pos, c: INTEGER
+			i, c: INTEGER
 		do
 			c := clients.count
 			other_clients := other.clients
 			if c = other_clients.count then
-				pos := other_clients.index
 				from
 					Result := True
 					i := 1
 				until
 					i > c or else not Result
 				loop
-					other_clients.start
-					other_clients.search (clients.i_th (i))
-					Result := not other_clients.after
+					Result := other_clients.has (clients.item (i))
 					i := i + 1
 				end
-				other_clients.go_i_th (pos)
 			end
 		end
 
@@ -162,19 +158,22 @@ feature -- Debug purpose
 
 	trace is
 			-- Debug purpose
+		local
+			i, nb: INTEGER
 		do
 			io.error.put_character ('[')
 			io.error.put_string (System.class_of_id (written_in).group.location.evaluated_path)
 			io.error.put_string ("] : ")
 			from
-				clients.start
+				i := 1
+				nb := clients.count
 			until
-				clients.after
+				i > nb
 			loop
 				io.error.put_character ('%T')
-				io.error.put_string (clients.item)
+				io.error.put_string (names_heap.item (clients.item (i)))
 				io.error.put_character (' ')
-				clients.forth
+				i := i + 1
 			end
 		end
 
@@ -184,19 +183,24 @@ feature -- formatter
 		require
 			good_argument: other /= Void
 		local
-			other_clients: LIST [STRING]
+			other_clients: like clients
 			other_group: CONF_GROUP
+			l_names_heap: like names_heap
+			i, nb: INTEGER
 		do
+			l_names_heap := names_heap
 			other_clients := other.clients
 			other_group := system.class_of_id (other.written_in).group
 			from
-				other_clients.start
+				i := 1
+				nb := other_clients.count
 				Result := True
 			until
-				other_clients.after or Result = False
+				i > nb or Result = False
 			loop
 				Result := valid_for (Universe.class_named
-					(other_clients.item, other_group).compiled_class)
+					(l_names_heap.item (other_clients.item (i)), other_group).compiled_class)
+				i := i + 1
 			end
 		end
 
@@ -205,23 +209,26 @@ feature -- formatter
 			temp: STRING
 			group: CONF_GROUP
 			client_classi: CLASS_I
+			l_names_heap: like names_heap
+			i, nb: INTEGER
 		do
+			l_names_heap := names_heap
 			group := System.class_of_id (written_in).group
 			from
-				clients.start
+				i := 1
+				nb := clients.count
 			until
-				clients.after
+				i > nb
 			loop
-				temp := clients.item.twin
+				temp := l_names_heap.item (clients.item (i))
 				client_classi := Universe.class_named (temp, group)
 				if client_classi /= Void then
 					ctxt.put_classi (client_classi)
 				else
-					temp.to_upper
-					ctxt.process_string_text (temp, Void)
+					ctxt.process_string_text (temp.as_upper, Void)
 				end
-				clients.forth
-				if not clients.after then
+				i := i + 1
+				if i <= nb then
 					ctxt.process_symbol_text (Ti_comma)
 					ctxt.put_space
 				end
@@ -230,7 +237,6 @@ feature -- formatter
 
 invariant
 	clients_not_void: clients /= Void
-	clients_compare_objects: clients.object_comparison
 	written_in_positive: written_in > 0
 
 indexing

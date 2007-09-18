@@ -30,7 +30,7 @@ inherit
 
 feature -- Status report
 
-	compiled_parent (a_class: CLASS_C; a_parent: PARENT_AS): PARENT_C is
+	compiled_parent (a_system: SYSTEM_I; a_class: CLASS_C; a_parent: PARENT_AS): PARENT_C is
 			-- Compiled version of a parent. The second pass needs:
 			-- 1. Internal name for features, that means infix/prefix
 			--	features must have a string name
@@ -41,9 +41,11 @@ feature -- Status report
 			a_class_not_void: a_class /= Void
 			a_parent_not_void: a_parent /= Void
 		do
+			current_system := a_system
 			current_class := a_class
 			process_parent_as (a_parent)
 			Result := last_parent_c
+			reset
 		ensure
 			compiled_parent_not_void: Result /= Void
 		end
@@ -52,10 +54,9 @@ feature {NONE} -- Implementation: Reset
 
 	reset is
 		do
+			Precursor {AST_EXPORT_STATUS_GENERATOR}
 			last_parent_c := Void
-			current_class := Void
 			last_export_adaptation := Void
-			last_export_status := Void
 		end
 
 feature {NONE} -- Implementation: Access

@@ -10,8 +10,6 @@ class
 
 inherit
 	ANY
-		export
-			{NONE} all
 		redefine
 			default_create
 		end

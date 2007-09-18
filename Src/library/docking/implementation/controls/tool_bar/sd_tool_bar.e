@@ -43,7 +43,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -666,11 +666,15 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
+			l_platform: PLATFORM
 		do
 			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).			
 			-- Otherwise it will cause bug#12549.
-			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
-				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
+			-- We only do this for GTK but not Windows. Otherwise capture will still enabled on Windows if end user released the pointer button outside current.
+			create l_platform
+			if not l_platform.is_windows and then
+				(a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height) then
 
 				if a_button = {EV_POINTER_CONSTANTS}.left then
 					disable_capture

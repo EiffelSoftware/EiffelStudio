@@ -14,7 +14,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode, is_defined
+			build_explain, subcode, is_defined, print_single_line_error_message, trace_primary_context
 		end
 
 feature -- Properties
@@ -62,6 +62,37 @@ feature -- Output
 			end;
 			a_text_formatter.add_new_line
 		end;
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if a_feature /= Void then
+				a_text_formatter.add (".")
+				a_feature.append_name (a_text_formatter)
+			end
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			if a_feature /= Void then
+				a_text_formatter.add_space
+				if postcondition then
+					if precondition then
+						a_text_formatter.add ("Invalid precondition and postcondition in feature ")
+					else
+						a_text_formatter.add ("Invalid postcondition in feature ")
+					end;
+				else
+					a_text_formatter.add ("Invalid precondition in feature ")
+				end;
+				a_feature.append_name (a_text_formatter)
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 

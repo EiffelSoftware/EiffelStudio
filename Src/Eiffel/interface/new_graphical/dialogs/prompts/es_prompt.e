@@ -91,6 +91,7 @@ feature {NONE} -- User interface initialization
 			l_hbox: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			l_icon: EV_PIXMAP
+			l_large_icon: EV_PIXEL_BUFFER
 		do
 			create l_vbox
 			create l_hbox
@@ -99,11 +100,12 @@ feature {NONE} -- User interface initialization
 			a_container.set_background_color (colors.prompt_banner_color)
 
 				-- Prompt icon
-			create l_icon.make_with_size (32, 32)
+			l_large_icon := large_icon
+			create l_icon.make_with_size (l_large_icon.width, l_large_icon.height)
 			l_icon.set_background_color (colors.prompt_banner_color)
 			l_icon.clear
-			l_icon.draw_sub_pixel_buffer (0, 0, large_icon, create {EV_RECTANGLE}.make (0, 0, 32, 32))
-			l_icon.set_minimum_size (32, 32)
+			l_icon.draw_sub_pixel_buffer (0, 0, l_large_icon, create {EV_RECTANGLE}.make (0, 0, l_large_icon.width, l_large_icon.height))
+			l_icon.set_minimum_size (l_large_icon.width, l_large_icon.height)
 			l_vbox.extend (l_icon)
 			l_vbox.disable_item_expand (l_icon)
 			l_vbox.extend (create {EV_CELL})

@@ -457,8 +457,7 @@ feature -- Basic operations
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= to_dialog
 		do
-			adjust_dialog_button_widths
-			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
+			on_before_show
 			if is_modal then
 				dialog.show_modal_to_window (a_window)
 			else
@@ -496,8 +495,7 @@ feature -- Basic operations
 			if l_window /= Void then
 				show (l_window)
 			else
-				adjust_dialog_button_widths
-				dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
+				on_before_show
 				dialog.show
 			end
 		ensure
@@ -552,7 +550,13 @@ feature {NONE} -- Basic operation
 			l_button: EV_BUTTON
 			l_min_width: INTEGER
 			l_padding: INTEGER
+			l_allow_resize: BOOLEAN
 		do
+			l_allow_resize := dialog.user_can_resize
+			if not l_allow_resize then
+				dialog.enable_user_resize
+			end
+
 			l_min_width := {ES_UI_CONSTANTS}.dialog_button_width
 
 				-- Retrieve padding for buttons
@@ -577,6 +581,10 @@ feature {NONE} -- Basic operation
 					l_button.set_minimum_width (l_min_width)
 				end
 				l_buttons.forth
+			end
+
+			if not l_allow_resize then
+				dialog.disable_user_resize
 			end
 		end
 
@@ -695,6 +703,13 @@ feature {NONE} -- Action handlers
 					end
 				end
 			end
+		end
+
+	on_before_show
+			-- Called prior to the dialog being shown
+		do
+			adjust_dialog_button_widths
+			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
 		end
 
 feature -- Conversion

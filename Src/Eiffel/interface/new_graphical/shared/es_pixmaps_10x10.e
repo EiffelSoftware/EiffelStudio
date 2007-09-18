@@ -452,10 +452,23 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 3))
 		end
+
+	frozen viewer_formatting_icon: EV_PIXMAP is
+			-- Access to 'formatting' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 3))
+		end
+
+	frozen viewer_formatting_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'formatting' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 3))
+		end
+
 	frozen watch_auto_icon: EV_PIXMAP is
 			-- Access to 'auto' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 3))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 3))
 		end
 
 	frozen watch_auto_icon_buffer: EV_PIXEL_BUFFER is
@@ -463,6 +476,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 3))
 		end
+		
 	frozen callstack_send_to_external_editor_icon: EV_PIXMAP is
 			-- Access to 'send to external editor' pixmap.
 		once

@@ -14,25 +14,49 @@ inherit
 
 feature -- Access
 
-	Information_pixmap: EV_PIXEL_BUFFER is
+	Information_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a piece of information.
+		do
+			Result := pixmap_from_stock_id ("gtk-dialog-info")
+		end
+
+	Error_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing an error.
+		do
+			Result := pixmap_from_stock_id ("gtk-dialog-error")
+		end
+
+	Warning_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a warning.
+		do
+			Result := pixmap_from_stock_id ("gtk-dialog-warning")
+		end
+
+	Question_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a question.
+		do
+			Result := pixmap_from_stock_id ("gtk-dialog-question")
+		end
+
+	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-info")
 		end
 
-	Error_pixmap: EV_PIXEL_BUFFER is
+	Error_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing an error.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-error")
 		end
 
-	Warning_pixmap: EV_PIXEL_BUFFER is
+	Warning_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a warning.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-warning")
 		end
 
-	Question_pixmap: EV_PIXEL_BUFFER is
+	Question_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a question.
 		do
 			Result := pixmap_from_stock_id ("gtk-dialog-question")

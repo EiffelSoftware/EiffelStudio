@@ -268,7 +268,7 @@ feature {NONE} -- Access
 			green_color_set: Result /= Void
 		end
 
-	row_data: TUPLE [STRING, INTEGER, INTEGER, INTEGER] is
+	row_data: TUPLE [type_name: STRING; nb: INTEGER; delta: INTEGER; type_id:INTEGER] is
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		do
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 				l_data.after
 			loop
 				l_row_data := l_data.item_for_iteration
-				l_str ?= l_row_data.item (1)
+				l_str := l_row_data.type_name
 				check
 					l_str_not_void: l_str /= Void
 				end
@@ -383,17 +383,17 @@ feature {NONE} -- Implementation
 				l_grid.set_item (1, i, l_item)
 
 					-- Set count
-				l_count := l_row_data.integer_item (2)
+				l_count := l_row_data.nb
 				create l_item.make_with_text (l_count.out)
 				l_grid.set_item (2, i, l_item)
 				if l_count >= 1 then
 					l_row := l_grid.row (i)
 					l_row.ensure_expandable
-					l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.integer_item (4), l_row))
+					l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
 				end
 
 					-- Set delta
-				l_delta := l_row_data.integer_item (3)
+				l_delta := l_row_data.delta
 				if l_delta /= 0 then
 					create l_item.make_with_text (l_delta.out)
 					if l_delta > 0 then
@@ -522,8 +522,8 @@ feature {NONE} -- Implementation
 		local
 			l_string1, l_string2: STRING
 		do
-			l_string1 ?= u.item (1)
-			l_string2 ?= v.item (1)
+			l_string1 := u.type_name
+			l_string2 := v.type_name
 			check
 				l_string1_not_void: l_string1 /= Void
 				l_string2_not_void: l_string2 /= Void
@@ -542,9 +542,9 @@ feature {NONE} -- Implementation
 			v_not_void: v /= Void
 		do
 			if sorting_order then
-				Result := u.integer_item (2) < v.integer_item (2)
+				Result := u.nb < v.nb
 			else
-				Result := v.integer_item (2) < u.integer_item (2)
+				Result := v.nb < u.nb
 			end
 		end
 
@@ -555,9 +555,9 @@ feature {NONE} -- Implementation
 			v_not_void: v /= Void
 		do
 			if sorting_order then
-				Result := u.integer_item (3) < v.integer_item (3)
+				Result := u.delta < v.delta
 			else
-				Result := v.integer_item (3) < u.integer_item (3)
+				Result := v.delta < u.delta
 			end
 		end
 

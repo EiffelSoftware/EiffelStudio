@@ -246,15 +246,13 @@ feature {NONE} -- Implementation
 			t_feat, s_feat: FEATURE_I;
 			rout_id: INTEGER;
 			feature_as, new_feature_as: FEATURE_AS
-			select_table: SELECT_TABLE;
 			adapter: like Current
 			l_match_list: LEAF_AS_LIST
 		do
-			select_table := format_reg.target_feature_table.origin_table;
 			s_feat := format_reg.current_feature_table.item_id (old_name.internal_name.name_id)
 			if s_feat /= Void then
 				rout_id := s_feat.rout_id_set.first;
-				t_feat := select_table.item (rout_id);
+				t_feat := format_reg.target_feature_table.feature_of_rout_id (rout_id)
 				if t_feat /= Void then
 					body_index := s_feat.body_index;
 					source_feature := s_feat;

@@ -195,6 +195,9 @@ feature -- Access
 
 	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
+			-- Note: The default cancel button is set on show, so if you want to change the
+			--       default cancel button after the dialog has been shown, please see the implmentation
+			--       of `show' to see how it is done.
 		deferred
 		ensure
 			buttons_contains_result: buttons.has (Result)
@@ -455,6 +458,7 @@ feature -- Basic operations
 			a_window_not_current: a_window /= to_dialog
 		do
 			adjust_dialog_button_widths
+			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
 			if is_modal then
 				dialog.show_modal_to_window (a_window)
 			else
@@ -493,6 +497,7 @@ feature -- Basic operations
 				show (l_window)
 			else
 				adjust_dialog_button_widths
+				dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
 				dialog.show
 			end
 		ensure
@@ -547,7 +552,6 @@ feature {NONE} -- Basic operation
 			l_button: EV_BUTTON
 			l_min_width: INTEGER
 			l_padding: INTEGER
-			l_resize: BOOLEAN
 		do
 			l_min_width := {ES_UI_CONSTANTS}.dialog_button_width
 

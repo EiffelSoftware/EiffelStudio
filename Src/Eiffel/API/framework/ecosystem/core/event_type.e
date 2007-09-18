@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 		do
 			subscribers := create_subscribers
 			subscribers.set_equality_tester (create {KL_EQUALITY_TESTER [PROCEDURE [ANY, EVENT_DATA]]})
+			suicide_actions := create_subscribers
+			suicide_actions.set_equality_tester (create {KL_EQUALITY_TESTER [PROCEDURE [ANY, EVENT_DATA]]})
 		end
 
 feature {NONE} -- Clean up
@@ -37,9 +39,13 @@ feature {NONE} -- Clean up
 				-- Remove all subscribers to prevent potential memory leaks.
 			subscribers.wipe_out
 			subscribers := Void
+			suicide_actions.wipe_out
+			suicide_actions := Void
 		ensure then
 			subscribers_emptied: (old subscribers).is_empty
 			subscribers_detached: subscribers /= Void
+			suicide_actions_emptied:  (old suicide_actions).is_empty
+			suicide_actions_detached: suicide_actions = Void
 		end
 
 feature -- Query
@@ -68,6 +74,26 @@ feature -- Element change
 		do
 			subscribers.force_last (a_action)
 		ensure
+			a_action_subscribed:
+				is_subscribed (a_action) and then
+				subscribers.count = old subscribers.count + 1
+			subscribers_cursor_unmoved: subscribers.index = old subscribers.index
+		end
+
+	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA]) is
+			-- Subscribes an action to the event for a single publication only.
+			--
+			-- `a_action': The action to subscribe.
+		require
+			not_is_zombie: not is_zombie
+			a_action_attached: a_action /= Void
+			not_a_action_is_subscribed: not is_subscribed (a_action)
+		do
+			suicide_actions.force_last (a_action)
+			subscribe (a_action)
+		ensure
+			a_action_added_as_suicidal: suicide_actions.has (a_action)
+			suicide_actions_cursor_unmoved: suicide_actions.index = old suicide_actions.index
 			a_action_subscribed:
 				is_subscribed (a_action) and then
 				subscribers.count = old subscribers.count + 1
@@ -116,6 +142,11 @@ feature -- Publication
 		do
 			if not is_suspended then
 				subscribers.do_all (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
+				if not suicide_actions.is_empty then
+						-- Remove actions
+					suicide_actions.do_all (agent unsubscribe)
+					suicide_actions.wipe_out
+				end
 			end
 		ensure
 			subscribers_index_unmoved: subscribers.index = old subscribers.index
@@ -183,11 +214,16 @@ feature {NONE} -- Factory
 feature {NONE} -- Implementation
 
 	frozen subscribers: DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
-			-- List of routines currently subscribed to the event
+			-- List of actions currently subscribed to the event
+
+	frozen suicide_actions: DS_LIST [PROCEDURE [ANY, EVENT_DATA]]
+			-- List of actions that will be removed after they have been called for the first time
 
 invariant
 	subscribers_attached: not is_zombie implies subscribers /= Void
+	suicide_actions_attached: suicide_actions /= Void
 	subscribers_equality_tester_attached: not is_zombie implies subscribers.equality_tester /= Void
+	suicide_actions_tester_attached: not is_zombie implies suicide_actions.equality_tester /= Void
 	is_suspended_implies_has_suspensions: is_suspended implies suspension_count > 0
 	not_is_suspended_implies_has_no_suspensions: not is_suspended implies suspension_count = 0
 

@@ -666,7 +666,6 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 			l_item: SD_TOOL_BAR_ITEM
-			l_platform: PLATFORM
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
 				-- Reset state value and disable capture should not care about the pointer position. Otherwise capture will still enabled if end user released the pointer button outside current.

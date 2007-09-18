@@ -352,6 +352,7 @@ feature -- Element change
 			buttons_contains_a_id: buttons.has (a_id)
 		do
 			default_cancel_button := a_id
+			dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
 		ensure
 			default_cancel_button_set: default_cancel_button = a_id
 		end

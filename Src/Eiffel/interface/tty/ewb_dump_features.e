@@ -75,10 +75,11 @@ feature {NONE} -- Properties
 		local
 			gs: LINEAR [FORMAL_DEC_AS]
 			gts: ARRAY [STRING]
-			l: LINEAR [FEATURE_I]
+			l_tbl: FEATURE_TABLE
 			i: INTEGER
 			s: STRING
 			c: CONSTANT_I
+			l_item: FEATURE_I
 			tl: TYPE_LIST
 		do
 			if e_class.generics /= Void then
@@ -97,19 +98,20 @@ feature {NONE} -- Properties
 			end
 
 			from
-				l := e_class.feature_table.linear_representation
-				l.start
+				l_tbl := e_class.feature_table
+				l_tbl.start
 			until
-				l.after
+				l_tbl.after
 			loop
+				l_item := l_tbl.item_for_iteration
 				if
-					not l.item.is_obsolete and
-					not l.item.is_deferred and
-					not l.item.is_external
+					not l_item.is_obsolete and
+					not l_item.is_deferred and
+					not l_item.is_external
 				then
-					print (l.item.feature_name + ": ")
-					if l.item.type /= Void then
-						s := l.item.type.dump
+					print (l_item.feature_name + ": ")
+					if l_item.type /= Void then
+						s := l_item.type.dump
 					else
 						s := "Void"
 					end
@@ -128,34 +130,34 @@ feature {NONE} -- Properties
 					end
 					print (s+ "%N")
 					if extra_dump then
-						if l.item.is_attribute then
+						if l_item.is_attribute then
 							print ("attribute%N")
 						else
 							tl := e_class.types
 							from tl.start until tl.after loop
 								if tl.item.type_id - 1 = dtype then
 									print (
-										System.Execution_table.real_body_index (l.item.body_index, tl.item).out
+										System.Execution_table.real_body_index (l_item.body_index, tl.item).out
 										+ "%N"
 									)
 								end
 								tl.forth
 							end
 						end
-						if l.item.is_constant then
-							c ?= l.item
+						if l_item.is_constant then
+							c ?= l_item
 							check c /= Void end
 							print ("constant " + c.value.dump + "%N")
 						end
 					end
 					if operand_dump then
-						(create {EWB_DUMP_OPERANDS}.make (e_class.name, l.item.feature_name, Void)).execute
+						(create {EWB_DUMP_OPERANDS}.make (e_class.name, l_item.feature_name, Void)).execute
 					end
 					if operand_dump or extra_dump then
 						print ("%N")
 					end
 				end
-				l.forth
+				l_tbl.forth
 			end
 		end
 

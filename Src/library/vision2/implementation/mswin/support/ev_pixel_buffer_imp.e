@@ -113,15 +113,74 @@ feature -- Command
 			-- Load pixel data from `a_wel_icon'.
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP
+			l_bitmap: WEL_BITMAP
+			l_icon_info: WEL_ICON_INFO
+			l_header_info: WEL_BITMAP_INFO_HEADER
+			l_new_bitmap: WEL_BITMAP
+			l_mem_dc: WEL_MEMORY_DC
+--			i: INTEGER
+--			l_managed_ptr: MANAGED_POINTER
+--			l_pixel_buffer_iterator: EV_PIXEL_BUFFER_ITERATOR
+--			l_pixel_value, l_rgb_value, l_alpha_value: NATURAL_32
+			l_rect: WEL_GDIP_RECT
+			l_current_data: WEL_GDIP_BITMAP_DATA
 		do
 			if is_gdi_plus_installed then
-				gdip_bitmap.set_with_icon (a_wel_icon)
+					-- Retrieve color bitmap.
+				l_icon_info := a_wel_icon.get_icon_info
+				l_bitmap := l_icon_info.color_bitmap
+
+				make_with_size (l_icon_info.width, l_icon_info.height)
+
+				create l_header_info.make
+				l_header_info.set_width (l_icon_info.width)
+					-- If we set a negative height value the bitmap gets automagically flipped as scan0 is from the bottom.
+				l_header_info.set_height (-l_icon_info.height)
+				l_header_info.set_planes (1)
+					-- Set alpha meta information
+				l_header_info.set_bit_count (32)
+				l_header_info.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb)
+
+					-- Optimized version.
+					-- Create new dib and set bit information from icon with GetDIBits.
+				create l_new_bitmap.make_dib (l_header_info)
+				create l_mem_dc.make
+				cwin_get_di_bits (l_mem_dc.item, l_bitmap.item, 0, l_icon_info.height, l_new_bitmap.ppv_bits, l_header_info.item, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)
+
+					-- Do a memory copy of the ARGB data straight in to the gdipbitmap.
+				create l_rect.make_with_size (0, 0, l_icon_info.width, l_icon_info.height)
+					-- Data is not pre-multipled alpha so we set the pixel format for 'format32bppargb'.
+				l_current_data := gdip_bitmap.lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.write_only, {WEL_GDIP_PIXEL_FORMAT}.format32bppargb)
+				l_current_data.scan_0.memory_copy (l_new_bitmap.ppv_bits, l_icon_info.width * l_icon_info.height * {PLATFORM}.natural_32_bytes)
+				gdip_bitmap.unlock_bits (l_current_data)
+
+					-- Pixel buffer interface version should gdip_bitmap implementation be replaced with DIBs for less dependence/maintenance.
+--					-- Iterate through pixel values via managed pointer and set in to pixel buffer.
+--				from
+--					create l_managed_ptr.make_from_pointer (l_new_bitmap.ppv_bits, (l_icon_info.width * l_icon_info.height) * {PLATFORM}.natural_32_bytes)
+--					lock
+--					l_pixel_buffer_iterator := pixel_iterator
+--				until
+--					i = (l_icon_info.width * l_icon_info.height) * {PLATFORM}.natural_32_bytes
+--				loop
+--					l_pixel_value := l_managed_ptr.read_natural_32 (i)
+--					l_rgb_value := l_pixel_value |<< 8
+--						-- Convert to 000'A'
+--					l_alpha_value := l_pixel_value |>> 24
+--					l_pixel_buffer_iterator.item.set_rgba_value (l_rgb_value | l_alpha_value)
+--					l_pixel_buffer_iterator.forth
+--					i := i + {PLATFORM}.natural_32_bytes
+--				end
+--				unlock
+
+				l_header_info.dispose
+				l_new_bitmap.delete
+				l_mem_dc.release
 			else
 				l_pixmap_imp ?= pixmap.implementation
 				l_pixmap_imp.set_with_resource (a_wel_icon)
 			end
 		end
-
 
 	save_to_named_file (a_file_name: STRING) is
 			-- Save pixel datas to `a_file_name'
@@ -497,6 +556,18 @@ feature -- Obsolete
 			else
 				pixmap.draw_pixmap (a_dest_rect.x, a_dest_rect.y, l_imp.pixmap)
 			end
+		end
+
+feature {NONE} -- Externals
+
+	cwin_get_di_bits (hdc, bitmap: POINTER;start_line, no_scanlines: INTEGER;
+			 bits, info: POINTER; mode: INTEGER) is
+			-- SDK GetDIBits
+		external
+			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
+				%BITMAPINFO *, UINT)"
+		alias
+			"GetDIBits"
 		end
 
 indexing

@@ -474,44 +474,69 @@ feature -- Access
 	frozen watch_auto_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'auto' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 3))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 3))
 		end
 		
 	frozen callstack_send_to_external_editor_icon: EV_PIXMAP is
 			-- Access to 'send to external editor' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 3))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 4))
 		end
 
 	frozen callstack_send_to_external_editor_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'send to external editor' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 3))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 4))
 		end
 
 	frozen callstack_is_melted_icon: EV_PIXMAP is
 			-- Access to 'is melted' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 4))
 		end
 
 	frozen callstack_is_melted_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'is melted' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 4))
 		end
 
 	frozen callstack_has_rescue_icon: EV_PIXMAP is
 			-- Access to 'has rescue' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 4))
 		end
 
 	frozen callstack_has_rescue_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'has rescue' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 4))
 		end
+
+	frozen execution_record_icon: EV_PIXMAP is
+			-- Access to 'record' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (4, 4))
+		end
+
+	frozen execution_record_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'record' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 4))
+		end
+
+	frozen execution_replay_icon: EV_PIXMAP is
+			-- Access to 'replay' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 4))
+		end
+
+	frozen execution_replay_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'replay' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 4))
+		end
+
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once

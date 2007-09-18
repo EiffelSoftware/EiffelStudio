@@ -1,19 +1,19 @@
 indexing
 
-	description: 
+	description:
 		"Error when the compiler cannot find an effective redefinition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VDRS4 
-	
+class VDRS4
+
 inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain, subcode, print_single_line_error_message
 		end
 
 feature -- Properties
@@ -36,6 +36,15 @@ feature -- Output
 			a_text_formatter.add (feature_name);
 			a_text_formatter.add_new_line;
 		end;
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor {EIFFEL_ERROR} (a_text_formatter)
+			a_text_formatter.add ("Redefined feature `" + feature_name + "'.")
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 

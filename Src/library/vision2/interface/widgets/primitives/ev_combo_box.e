@@ -76,8 +76,31 @@ feature -- Element change
 			text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 			combo_box_is_editable: is_editable
+		local
+			l_cursor: EV_DYNAMIC_LIST_CURSOR [EV_LIST_ITEM]
+			l_str: STRING_32
+			l_found: BOOLEAN
 		do
 			set_editable_text (a_text)
+
+			-- Update items selection.
+			-- In this way, we can make Windows and GTK implementations consistent. See bug#12683.
+			-- Default selection of GTK combo box is Void. But default selection of Windows combo box is the first item.
+			-- This behavior is what client programmers expected.
+			from
+				l_cursor := cursor
+				start
+			until
+				after or l_found
+			loop
+				l_str := item.text
+				if l_str /= Void and then l_str.is_equal (a_text.as_string_32) then
+					item.enable_select
+					l_found := True
+				end
+				forth
+			end
+			go_to (l_cursor)
 		ensure
 			text_set: check_text_modification ("", a_text)
 		end

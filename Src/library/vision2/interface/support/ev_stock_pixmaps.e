@@ -16,25 +16,25 @@ feature -- Default pixmaps
 	Information_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer symbolizing a piece of information.
 		once
-			Result := Implementation.Information_pixmap
+			Result := Implementation.Information_pixel_buffer
 		end
 
 	Error_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer symbolizing an error.
 		once
-			Result := Implementation.Error_pixmap
+			Result := Implementation.Error_pixel_buffer
 		end
 
 	Warning_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer symbolizing a warning.
 		once
-			Result := Implementation.Warning_pixmap
+			Result := Implementation.Warning_pixel_buffer
 		end
 
 	Question_pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer symbolizing a question.
 		once
-			Result := Implementation.Question_pixmap
+			Result := Implementation.Question_pixel_buffer
 		end
 
 	Information_pixmap: EV_PIXMAP is

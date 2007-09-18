@@ -209,16 +209,23 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	long saved_file_pos = 0;
 	long saved_object_count = a_object_count;
 
-	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_REFERENCE))need_index)(server,object);
+	REQUIRE ("valid need_index and make_index", (need_index && make_index) || (!need_index && !make_index));
 
-	if (object_needs_index) {
-			/* If the object needs an index, the buffer is flushed so that
-			 * a new compression header is stored just before the object
-			 * thus the decompression will work when starting the retrieve
-			 * there */
-		flush_st_buffer();
-		saved_file_pos = file_position + parsing_position;
+	if (need_index) {
+		object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_REFERENCE))need_index)
+			(server,object);
+		if (object_needs_index) {
+				/* If the object needs an index, the buffer is flushed so that
+				 * a new compression header is stored just before the object
+				 * thus the decompression will work when starting the retrieve
+				 * there */
+			flush_st_buffer();
+			saved_file_pos = file_position + parsing_position;
+		}
+	} else {
+		object_needs_index = 0;
 	}
+
 
 	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
@@ -293,9 +300,9 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 		st_write(object, HEADER(object)->ov_flags);		/* Write the object on the disk */
 
 	/* Call `make_index' on `server' with `object' */
-    if (object_needs_index)
+    if (object_needs_index) {
 		(make_index)(server, object, saved_file_pos, a_object_count - saved_object_count);
-
+	}
 
 	return a_object_count;
 }

@@ -24,6 +24,12 @@ feature -- Access
 	obsolete_message: STRING
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+		do
+			Result := names_heap.item (obsolete_message_id)
+		end
+
+	obsolete_message_id: INTEGER
+			-- Id of `obsolete_message' in `names_heap' table.
 
 	assert_id_set: ASSERT_ID_SET
 			-- Assertions to which the procedure belongs to
@@ -67,10 +73,24 @@ feature -- Settings
 
 	set_obsolete_message (s: STRING) is
 			-- Assign `s' to `obsolete_message'
+		require
+			s_not_void: s /= Void
+		local
+			l_names_heap: like names_heap
 		do
-			obsolete_message := s
+			l_names_heap := names_heap
+			l_names_heap.put (s)
+			obsolete_message_id := l_names_heap.found_item
 		ensure
-			obsolete_message_set: obsolete_message = s
+			obsolete_message_set: equal (obsolete_message, s)
+		end
+
+	set_obsolete_message_id (v: like obsolete_message_id) is
+			-- Assign `v' to `obsolete_message_id'
+		do
+			obsolete_message_id := v
+		ensure
+			obsolete_message_id_set: obsolete_message_id = v
 		end
 
 feature -- Initialization
@@ -112,7 +132,7 @@ feature -- Initialization
 			argument_as_not_void: argument_as /= Void
 			a_context_class_not_void: a_context_class /= Void
 		local
-			i, j, count, dec_count, nb_arg: INTEGER
+			i, j, l_count, dec_count, nb_arg: INTEGER
 			arg_type: TYPE_A
 			arg_dec: TYPE_DEC_AS
 			id_list: ARRAYED_LIST [INTEGER]
@@ -120,9 +140,9 @@ feature -- Initialization
 				-- Calculate the number of arguments.
 			from
 				i := 1
-				count := argument_as.count
+				l_count := argument_as.count
 			until
-				i > count
+				i > l_count
 			loop
 				nb_arg := nb_arg + argument_as.i_th (i).id_list.count
 				i := i + 1
@@ -134,7 +154,7 @@ feature -- Initialization
 			from
 				i := 1
 			until
-				i > count
+				i > l_count
 			loop
 				arg_dec := argument_as.i_th (i)
 				from
@@ -161,7 +181,7 @@ feature -- Initialization
 			other.set_arguments (arguments)
 			other.set_is_require_else (is_require_else)
 			other.set_is_ensure_then (is_ensure_then)
-			other.set_obsolete_message (obsolete_message)
+			other.set_obsolete_message_id (obsolete_message_id)
 			other.set_has_precondition (has_precondition)
 			other.set_has_postcondition (has_postcondition)
 			other.set_assert_id_set (assert_id_set)

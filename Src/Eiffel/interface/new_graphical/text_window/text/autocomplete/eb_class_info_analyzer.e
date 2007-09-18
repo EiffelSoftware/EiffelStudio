@@ -57,6 +57,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	group: CONF_GROUP
@@ -1520,7 +1525,7 @@ feature {NONE}-- Implementation
 		do
 			name := a_name.as_lower
 			if name.is_equal (Equal_sign) or name.is_equal (Different_sign) then
-				create {BOOLEAN_A} Result
+				Result := boolean_type
 			else
 				cls_c := a_type.associated_class
 				if cls_c /= Void and then cls_c.has_feature_table then
@@ -1637,20 +1642,20 @@ feature {NONE}-- Implementation
 						Result := current_feature.type
 					end
 				elseif token_image_is_in_array (token, boolean_values) then
-					create {BOOLEAN_A} Result
+					Result := boolean_type
 				end
 			else
 				nb ?= token
 				if nb /= Void then
 					if nb.image.occurrences('.') > 0 then
-						create {REAL_64_A} Result
+						Result := real_64_type
 					else
-						create {INTEGER_A} Result.make (8)
+						Result := integer_type
 					end
 				else
 					ch ?= token
 					if ch /= Void then
-						create {CHARACTER_A} Result.make (False)
+						Result := character_type
 					end
 				end
 			end

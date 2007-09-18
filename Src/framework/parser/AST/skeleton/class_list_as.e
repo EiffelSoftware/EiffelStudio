@@ -73,6 +73,12 @@ feature -- Roundtrip
 			rcurly_symbol_set: rcurly_symbol = a_symbol
 		end
 
+invariant
+	all_upper: for_all (agent (v: ID_AS): BOOLEAN
+		do
+			Result := v = Void or else v.name.as_upper.is_equal (v.name)
+		end)
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

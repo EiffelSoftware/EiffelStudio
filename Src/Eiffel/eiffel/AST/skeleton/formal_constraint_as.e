@@ -214,7 +214,7 @@ feature -- Status
 					class_type ?= l_constraint_types.item
 
 					if class_type /= Void then
-						Result := Result and Feat_tbl_server.item (class_type.class_id) /= Void
+						Result := Result and class_type.associated_class.has_feature_table
 					end
 					l_constraint_types.forth
 				end
@@ -783,4 +783,5 @@ indexing
 		]"
 
 end
+
 

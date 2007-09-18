@@ -152,14 +152,11 @@ feature -- Element change
 			class_id: INTEGER
 		do
 			class_id := target_class.class_id
-			if Tmp_feat_tbl_server.has (class_id) then
-				target_feature_table := Tmp_feat_tbl_server.item (class_id);
-			elseif Feat_tbl_server.server_has (class_id) then
-				target_feature_table := Feat_tbl_server.server_item (class_id);
+			if target_class.has_feature_table then
+				target_feature_table := target_class.feature_table
 			else
-				create target_feature_table.make (0);
-				target_feature_table.init_select_table
-			end;
+				create target_feature_table.make (0)
+			end
 
 			if not current_class_only then
 				target_replicated_feature_table :=
@@ -387,14 +384,11 @@ io.error.put_new_line;
 end;
 			class_id := current_class.class_id
 
-			if Tmp_feat_tbl_server.has (class_id) then
-				current_feature_table := Tmp_feat_tbl_server.item (class_id)
-			elseif Feat_tbl_server.server_has (class_id) then
-				current_feature_table := Feat_tbl_server.server_item (class_id)
+			if current_class.has_feature_table then
+				current_feature_table := current_class.feature_table
 			else
-				create current_feature_table.make (0);
-				current_feature_table.init_select_table
-			end;
+				create current_feature_table.make (0)
+			end
 
 			if ast_server.has (class_id) then
 				Result := ast_server.item (class_id)
@@ -431,13 +425,10 @@ end;
 				current_class := ancestors.item
 				if not current_class.is_true_external then
 					class_id := current_class.class_id
-					if Tmp_feat_tbl_server.has (class_id) then
-						current_feature_table := Tmp_feat_tbl_server.item (class_id)
-					elseif Feat_tbl_server.server_has (class_id) then
-						current_feature_table := Feat_tbl_server.server_item (class_id)
+					if current_class.has_feature_table then
+						current_feature_table := current_class.feature_table
 					else
 						create current_feature_table.make (0)
-						current_feature_table.init_select_table
 					end
 
 					System.set_current_class (current_class)

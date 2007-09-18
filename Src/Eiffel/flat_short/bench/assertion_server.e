@@ -13,21 +13,21 @@ inherit
 	COMPILER_EXPORTER
 
 create
-	make, 
-	make_for_class_only, 
+	make,
+	make_for_class_only,
 	make_for_feature
 
 feature -- Initialization
 
 	make (count: INTEGER) is
 			-- Initialize Current assertion server with
-			-- features from feature_table `f' that is exported to 
+			-- features from feature_table `f' that is exported to
 			-- `client'.
 		do
 			create feature_adapter_table.make (count)
 		end
 
-	make_for_class_only is 
+	make_for_class_only is
 			-- Initialize structures for processing one class.
 		do
 			create feature_adapter_table.make (0)
@@ -69,9 +69,8 @@ feature -- Initialization
 						-- the feature table
 					inh_f := assert_id_set.item (i)
 					body_index := inh_f.body_index
-					f_table := Feat_tbl_server.item (inh_f.written_in)
-
-					if f_table /= Void then
+					if inh_f.written_class.has_feature_table then
+						f_table := inh_f.written_class.feature_table
 						feat := f_table.feature_of_body_index (body_index)
 						if feat /= Void then
 							other_feat_as := feat.body
@@ -97,9 +96,9 @@ feature -- Initialization
 		end
 
 feature -- Properties
-						
+
 	current_assertion: CHAINED_ASSERTIONS
-			-- Chained assertion for a feature 
+			-- Chained assertion for a feature
 
 	feature_adapter_table: HASH_TABLE [FEATURE_ADAPTER, INTEGER]
 			-- Feature adapters hash on `body_index'
@@ -151,11 +150,11 @@ feature -- Element change
 					loop
 							-- Retrieve the inherited assertion info.
 						inh_f := assert_id_set.item (i)
-						
+
 						if inh_f.body_index /= 0 then
-				
+
 							inh_feat_adapter := feature_adapter_table.item (inh_f.body_index)
-	
+
 							if inh_feat_adapter /= Void then
 								feat := inh_feat_adapter.source_feature
 								other_feat_as := inh_feat_adapter.ast
@@ -168,9 +167,9 @@ feature -- Element change
 									processed_features.extend (feat.body_index)
 								end
 							end
-							
+
 						end
-						
+
 							-- Prepare next iteration
 						i := i + 1
 					end
@@ -196,7 +195,7 @@ feature -- Element change
 feature -- Debug
 
 	trace is
-		do	
+		do
 			io.error.put_string ("*** Feature Table ***%N")
 			from
 				feature_adapter_table.start
@@ -209,7 +208,7 @@ feature -- Debug
 				feature_adapter_table.forth
 			end
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -242,4 +241,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end	
+end

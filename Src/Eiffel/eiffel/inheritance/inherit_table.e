@@ -509,13 +509,9 @@ end;
 
 	Empty_table: FEATURE_TABLE is
 			-- Empty feature table
-		local
-			select_table: SELECT_TABLE;
 		once
-			create select_table.make (1);
-			create Result.make (1);
-			Result.set_select_table (select_table);
-		end;
+			create Result.make (1)
+		end
 
 	merge (parent_c: PARENT_C) is
 			-- Merge feature table of parent `cl' into
@@ -537,7 +533,7 @@ end;
 				create parent_type
 				parent_type.set_actual_type (parent_c.parent_type)
 					-- Look for the parent table on the disk
-				parent_table := Feat_tbl_server.item (parent.class_id)
+				parent_table := parent.feature_table
 				check
 					parent_table_exists: parent_table /= Void;
 						-- Because of topological sort, the parents are

@@ -164,7 +164,6 @@ feature -- Initialization
 
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
-			l_feat_tbl.set_select_table (create {SELECT_TABLE}.make (nb))
 
 				-- To store overloaded features.
 			create overloaded_names.make (10)
@@ -560,12 +559,14 @@ feature {NONE} -- Initialization
 			-- Get all features of ANY and add them in `a_feat_tbl'.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
+			any_compiled: system.any_class.is_compiled
+			any_has_feature_table: system.any_class.compiled_class.has_feature_table
 		local
 			l_any_tbl: like feature_table
 			l_feat: FEATURE_I
 			any_parent_type: LIKE_CURRENT
 		do
-			l_any_tbl := feat_tbl_server.item (system.any_id)
+			l_any_tbl := system.any_class.compiled_class.feature_table
 			create any_parent_type
 			any_parent_type.set_actual_type (any_type)
 			check

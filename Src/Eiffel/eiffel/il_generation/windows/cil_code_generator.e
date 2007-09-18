@@ -1554,7 +1554,7 @@ feature -- Class info
 
 				-- Gets current feature table.
 			l_feat_tbl := class_type.associated_class.feature_table
-			l_select_tbl := l_feat_tbl.origin_table
+			l_select_tbl := l_feat_tbl.select_table
 			l_class_id := class_type.associated_class.class_id
 
 				-- Process `equals'
@@ -1752,7 +1752,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 		do
 			l_hashable_class_id := hashable_class_id
 			if l_hashable_class_id > 0 then
-				if class_type.associated_class.feature_table.origin_table.has (hash_code_rout_id) then
+				if class_type.associated_class.feature_table.select_table.has (hash_code_rout_id) then
 					class_c := hashable_type.base_class
 					feature_i := class_c.feature_table.item_id ({PREDEFINED_NAMES}.hash_code_name_id)
 					debug ("fixme")
@@ -1989,7 +1989,7 @@ feature -- Features info
 				-- as this order is expected by COM Interop that defines
 				-- the virtual table this way.
 			from
-				select_tbl := class_c.feature_table.origin_table
+				select_tbl := class_c.feature_table.select_table
 				features := class_type.class_interface.features
 				i := features.count
 				create sorted_array.make (1, i)

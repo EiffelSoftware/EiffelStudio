@@ -275,7 +275,7 @@ feature
 
 				-- Compute selection table
 			Origin_table.compute_feature_table (parents, feature_table, resulting_table);
-			resulting_table.set_origin_table (Origin_table.computed);
+			resulting_table.set_select_table (Origin_table.computed);
 				-- Check sum error: because of possible bad selections,
 				-- anchored types on features could not be evaluated here.
 			Error_handler.checksum;
@@ -514,7 +514,7 @@ end;
 		once
 			create select_table.make (1);
 			create Result.make (1);
-			Result.set_origin_table (select_table);
+			Result.set_select_table (select_table);
 		end;
 
 	merge (parent_c: PARENT_C) is

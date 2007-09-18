@@ -137,7 +137,7 @@ feature -- Control
 						-- Do not recheck twice the same parent.
 					l_list.force (id)
 					parent_class := System.class_of_id (id)
-					par_feats.put (parent_class.feature_table.origin_table, i)
+					par_feats.put (parent_class.feature_table.select_table, i)
 					i := i + 1
 				end
 				l_parents.forth

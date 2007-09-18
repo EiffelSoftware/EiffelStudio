@@ -158,7 +158,7 @@ feature -- Element change
 				target_feature_table := Feat_tbl_server.server_item (class_id);
 			else
 				create target_feature_table.make (0);
-				target_feature_table.init_origin_table
+				target_feature_table.init_select_table
 			end;
 
 			if not current_class_only then
@@ -393,7 +393,7 @@ end;
 				current_feature_table := Feat_tbl_server.server_item (class_id)
 			else
 				create current_feature_table.make (0);
-				current_feature_table.init_origin_table
+				current_feature_table.init_select_table
 			end;
 
 			if ast_server.has (class_id) then
@@ -437,7 +437,7 @@ end;
 						current_feature_table := Feat_tbl_server.server_item (class_id)
 					else
 						create current_feature_table.make (0)
-						current_feature_table.init_origin_table
+						current_feature_table.init_select_table
 					end
 
 					System.set_current_class (current_class)

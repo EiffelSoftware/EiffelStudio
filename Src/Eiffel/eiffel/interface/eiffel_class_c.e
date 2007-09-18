@@ -1244,7 +1244,7 @@ feature -- Melting
 			end
 
 				-- Melt descriptor tables
-			feature_table.origin_table.melt (Current)
+			feature_table.select_table.melt (Current)
 		end
 
 feature -- Workbench feature and descriptor table generation
@@ -1297,7 +1297,7 @@ feature -- Workbench feature and descriptor table generation
 		do
 			System.set_current_class (Current)
 			if has_types then
-				feature_table.origin_table.generate (Current)
+				feature_table.select_table.generate (Current)
 			end
 		end
 
@@ -2106,7 +2106,7 @@ feature -- Conformance table generation
 	process_polymorphism is
 		do
 			System.set_current_class (Current)
-			feature_table.origin_table.add_units (class_id)
+			feature_table.select_table.add_units (class_id)
 		end
 
 feature {NONE} -- Backup implementation

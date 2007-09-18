@@ -410,7 +410,7 @@ feature -- Comparison
 			if assigner_name_id = 0 or else other.assigner_name_id = 0 then
 				Result := True
 			else
-				origin_table := tbl.origin_table
+				origin_table := tbl.select_table
 				if written_in = system.current_class.class_id then
 					assigner_command :=  tbl.item_id (assigner_name_id)
 				else
@@ -2259,7 +2259,7 @@ end
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
 				assigner := feature_table.item_id (assigner_name_id)
 			else
-				assigner := feature_table.origin_table.item
+				assigner := feature_table.select_table.item
 					(written_class.feature_named (assigner_name).rout_id_set.first)
 			end
 			if assigner = Void or else assigner.has_return_value then

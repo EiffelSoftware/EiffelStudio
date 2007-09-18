@@ -974,14 +974,12 @@ feature
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.formal_para)
+			safe_process (l_as.formal)
 			safe_process (l_as.constrain_symbol)
 			safe_process (l_as.constraints)
 			safe_process (l_as.create_keyword)
 			safe_process (l_as.creation_feature_list)
 			safe_process (l_as.end_keyword)
-			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is

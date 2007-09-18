@@ -8,12 +8,7 @@ indexing
 class FORMAL_DEC_AS
 
 inherit
-	FORMAL_AS
-		rename
-			initialize as initialize_formal_as
-		redefine
-			process, is_equivalent, last_token
-		end
+	AST_EIFFEL
 
 create
 	initialize
@@ -25,30 +20,22 @@ feature {NONE} -- Initialization
 		require
 			f_not_void: f /= Void
 		do
-			name := f.name
 			if c = Void then
 				create constraints.make (0)
 			else
 				constraints := c
 			end
 			creation_feature_list := cf
-			position := f.position
-			is_reference := f.is_reference
-			is_expanded := f.is_expanded
 			constrain_symbol := c_as
-			formal_para := f
+			formal := f
 			create_keyword := ck_as
 			end_keyword := ek_as
 		ensure
-			name_set: name = f.name
 			constraints_set: c /= Void implies constraints = c
 			constraints_not_void: constraints /= Void
 			creation_feature_list_set: creation_feature_list = cf
-			position_set: position = f.position
-			is_reference_set: is_reference = f.is_reference
-			is_expanded_set: is_expanded = f.is_expanded
 			constrain_symbol_set: constrain_symbol = c_as
-			formal_para_set: formal_para = f
+			formal_set: formal = f
 			create_keyword_set: create_keyword = ck_as
 			end_keyword_set: end_keyword = ek_as
 		end
@@ -66,7 +53,7 @@ feature -- Roundtrip
 	constrain_symbol: SYMBOL_AS
 			-- Symbol "->" associated with this structure
 
-	formal_para: FORMAL_AS
+	formal: FORMAL_AS
 			-- Formal generic parameter associated with this structure		
 
 	create_keyword: KEYWORD_AS
@@ -74,6 +61,31 @@ feature -- Roundtrip
 
 	end_keyword: KEYWORD_AS
 			-- Keyword "end" associated with this structure
+
+feature -- Convenience
+
+	name: ID_AS is
+			--
+		do
+			Result := formal.name
+		end
+
+	is_reference: BOOLEAN
+		do
+			Result := formal.is_reference
+		end
+
+	is_expanded: BOOLEAN
+		do
+			Result := formal.is_expanded
+		end
+
+	position: INTEGER is
+			--
+		do
+			Result := formal.position
+		end
+
 
 feature -- Attributes
 
@@ -98,20 +110,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := formal.first_token (a_list)
+		end
+
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := Precursor (a_list)
+			if end_keyword /= Void then
+				Result := end_keyword.last_token (a_list)
+			elseif constraints /= Void then
+				Result := constraints.last_token (a_list)
 			else
-				if rcurly_symbol /= Void then
-					Result := rcurly_symbol.last_token (a_list)
-				elseif end_keyword /= Void then
-					Result := end_keyword.last_token (a_list)
-				elseif constraints /= Void then
-					Result := constraints.last_token (a_list)
-				else
-					Result := Precursor (a_list)
-				end
+				Result := formal.last_token (a_list)
 			end
 		end
 
@@ -333,10 +344,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (name, other.name)
+			Result := equivalent (formal, other.formal)
 				and then equivalent (constraints, other.constraints)
 				and then equivalent (creation_feature_list, other.creation_feature_list)
-				and then Precursor {FORMAL_AS} (other)
 		end
 
 	equiv (other: like Current): BOOLEAN is
@@ -345,14 +355,9 @@ feature -- Comparison
 		require
 			good_argument: other /= Void
 		do
-			Result := position = other.position and then
-				is_reference = other.is_reference and then
-				is_expanded = other.is_expanded
-			if Result then
-				Result := constraints.is_equivalent (other.constraints)
-				Result := Result and then
-							equivalent (creation_feature_list, other.creation_feature_list)
-
+			if formal.is_equivalent (other.formal) then
+				Result := constraints.is_equivalent (other.constraints) and then
+					equivalent (creation_feature_list, other.creation_feature_list)
 			end
 		end
 
@@ -391,8 +396,8 @@ feature -- Output
 		end
 
 invariant
-
 	constraints_not_void: constraints /= Void
+	formal_not_void: formal /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

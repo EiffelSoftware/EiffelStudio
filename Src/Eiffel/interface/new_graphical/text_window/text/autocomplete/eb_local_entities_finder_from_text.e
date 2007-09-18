@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 					until
 						formal_dec_list.after
 					loop
-						entity_declaration_parser.formal_parameters.extend (formal_dec_list.item.twin)
+						entity_declaration_parser.formal_parameters.extend (formal_dec_list.item.formal.twin)
 						formal_dec_list.forth
 					end
 				end

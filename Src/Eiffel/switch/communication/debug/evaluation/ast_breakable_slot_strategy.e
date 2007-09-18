@@ -1904,7 +1904,7 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			cluster := system.class_of_id (current_class.class_id).group
-			l_export_status := export_status_generator.export_status (current_class, l_as)
+			l_export_status := export_status_generator.export_status (system, current_class, l_as)
 			from
 				l_as.clients.start
 			until

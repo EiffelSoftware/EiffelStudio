@@ -37,24 +37,28 @@ inherit
 
 feature -- Status report
 
-	feature_clause_export_status (a_class: CLASS_C; a_clause: FEATURE_CLAUSE_AS): EXPORT_I is
-			-- Export status for `a_Client' in `a_class'.
+	feature_clause_export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_clause: FEATURE_CLAUSE_AS): EXPORT_I is
+			-- Export status for `a_Client' in `a_class' in `a_system'.
 		require
+			a_system_not_void: a_system /= Void
 			a_class_not_void: a_class /= Void
 			a_clause_not_void: a_clause /= Void
 		do
+			current_system := a_system
 			current_class := a_class
 			a_clause.process (Current)
 			Result := last_export_status
 			reset
 		end
 
-	export_status (a_class: CLASS_C; a_client: CLIENT_AS): EXPORT_I is
-			-- Export status for `a_Client' in `a_class'.
+	export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_client: CLIENT_AS): EXPORT_I is
+			-- Export status for `a_Client' in `a_class' in `a_system'.
 		require
+			a_system_not_void: a_system /= Void
 			a_class_not_void: a_class /= Void
 			a_client_not_void: a_client /= Void
 		do
+			current_system := a_system
 			current_class := a_class
 			a_client.process (Current)
 			Result := last_export_status
@@ -65,6 +69,7 @@ feature {NONE} -- Implementation: Reset
 
 	reset is
 		do
+			current_system := Void
 			current_class := Void
 			last_export_status := Void
 		end
@@ -74,6 +79,9 @@ feature {NONE} -- Implementation: Access
 	current_class: CLASS_C
 			-- Class in which analysis is done
 
+	current_system: SYSTEM_I
+			-- System in which `current_class' is in.
+
 	last_export_status: EXPORT_I
 			-- Last computed export status
 
@@ -81,30 +89,37 @@ feature {NONE} -- Implementation
 
 	process_client_as (l_as: CLIENT_AS) is
 		local
-			l_export_set: EXPORT_SET_I
-			l_client_i: CLIENT_I
 			l_clients: CLASS_LIST_AS
-			l_lst: ARRAYED_LIST [STRING]
+			l_lst: ID_LIST
+			l_class: CLASS_I
 		do
-			if l_as.clients.count = 1 and then ("NONE").is_equal (l_as.clients.first.name) then
-			   last_export_status := export_none
+			l_clients := l_as.clients
+			if l_clients.count = 1 then
+				l_class := current_system.universe.class_named (l_clients.first.name, current_class.group)
+				if l_class = Void then
+						-- Class not in system, assume it is Void (we get a warning anyway from the parser
+						-- if they are enabled).
+					last_export_status := export_none
+				elseif l_class = current_system.any_class then
+					last_export_status := export_all
+				else
+					create l_lst.make
+					l_lst.extend (l_clients.first.name_id)
+					create {EXPORT_SET_I} last_export_status.make (
+						create {CLIENT_I}.make (l_lst, current_class.class_id))
+				end
 			else
-				fixme ("temporary fix to get a string list")
 				from
-					l_clients := l_as.clients
-					create l_lst.make (l_clients.count)
+					create l_lst.make
 					l_clients.start
 				until
 					l_clients.after
 				loop
-					l_lst.extend (l_clients.item.name)
+					l_lst.extend (l_clients.item.name_id)
 					l_clients.forth
 				end
-				create l_client_i.make (l_lst, current_class.class_id)
-				create l_export_set.make
-				l_export_set.compare_objects
-				l_export_set.put (l_client_i)
-				last_export_status := l_export_set
+				create {EXPORT_SET_I} last_export_status.make (
+					create {CLIENT_I}.make (l_lst, current_class.class_id))
 			end
 		end
 

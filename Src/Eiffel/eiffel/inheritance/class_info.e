@@ -95,7 +95,7 @@ feature -- Access
 						from
 							clients := c_reation.clients;
 							if clients /= Void then
-								l_export_status := export_status_generator.export_status (a_class, clients)
+								l_export_status := export_status_generator.export_status (system, a_class, clients)
 							else
 								l_export_status := Export_all;
 							end;

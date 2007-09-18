@@ -19,21 +19,43 @@ inherit
 
 	LINKED_SET [CLIENT_I]
 		rename
-			is_subset as ll_is_subset
+			is_subset as ll_is_subset,
+			make as ll_make
 		end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 	SHARED_TEXT_ITEMS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_client: like item) is
+			-- Create set.
+		do
+			ll_make
+			compare_objects
+			put (a_client)
+		end
 
 feature -- Property
 
@@ -93,7 +115,7 @@ feature -- Comparison
 			end
 		end
 
-feature {COMPILER_EXPORTER}
+feature {COMPILER_EXPORTER} -- Compiler features
 
 	equiv (other: EXPORT_I): BOOLEAN is
 			-- Is 'other' equivalent to Current ?
@@ -142,18 +164,14 @@ feature {COMPILER_EXPORTER}
 			-- Concatenation of Current and `other'
 		local
 			other_set, new: EXPORT_SET_I
-			old_cursor: CURSOR
 		do
 			if other.is_set then
-					-- Duplication
-				old_cursor := cursor
-				start
-				Result := duplicate (count)
-					-- Merge
 				other_set ?= other
-				new ?= Result
+					-- Duplication
+				new := duplicate_internal (count)
+					-- Merge
 				new.merge (other_set)
-				go_to (old_cursor)
+				Result := new
 			elseif other.is_none then
 				Result := Current
 			else
@@ -170,11 +188,12 @@ feature {COMPILER_EXPORTER}
 		local
 			other_set: EXPORT_SET_I
 			l_client: CLIENT_I
-			l_clients: LIST [STRING]
+			l_clients: ID_LIST
+			i, nb: INTEGER
 			current_group: CONF_GROUP
 			l_class: CLASS_I
-			l_index: INTEGER
-			l_cursor: like cursor
+			l_cursor: LINKED_LIST_CURSOR [CLIENT_I]
+			l_names_heap: like names_heap
 		do
 			if other.is_none then
 				Result := False
@@ -187,6 +206,7 @@ feature {COMPILER_EXPORTER}
 				end
 				Result := True
 				from
+					l_names_heap := names_heap
 					start
 				until
 					after or else not Result
@@ -195,18 +215,18 @@ feature {COMPILER_EXPORTER}
 					from
 						l_client := item
 						l_clients := l_client.clients
+						i := 1
+						nb := l_clients.count
 						current_group := l_client.written_class.group
-						l_clients.start
 					until
-						l_clients.after or else not Result
+						i > nb or else not Result
 					loop
-						l_class := Universe.class_named (l_clients.item, current_group)
-						l_index := l_clients.index
+						l_class := Universe.class_named (
+							l_names_heap.item (l_clients.item (i)), current_group)
 						if l_class /= Void and then l_class.is_compiled then
 							Result := other_set.valid_for (l_class.compiled_class)
 						end
-						l_clients.go_i_th (l_index)
-						l_clients.forth
+						i := i + 1
 					end
 					go_to (l_cursor)
 					forth
@@ -254,7 +274,10 @@ feature {COMPILER_EXPORTER}
 			until
 				after
 			loop
-				if not (item.clients.count = 1 and then item.clients.first.is_equal ("any")) then
+				if
+					not (item.clients.count = 1 and then
+					names_heap.item (item.clients.first).is_equal ("any"))
+				then
 					ctxt.process_symbol_text (Ti_l_curly)
 					item.format (ctxt)
 					ctxt.set_without_tabs
@@ -262,6 +285,19 @@ feature {COMPILER_EXPORTER}
 				end
 				forth
 			end
+		end
+
+feature {EXPORT_SET_I} -- Implementation
+
+	duplicate_internal (a_count: INTEGER): like Current is
+			-- Duplicate current.
+		local
+			l_cursor: CURSOR
+		do
+			l_cursor := cursor
+			start
+			Result := duplicate (a_count)
+			go_to (l_cursor)
 		end
 
 indexing

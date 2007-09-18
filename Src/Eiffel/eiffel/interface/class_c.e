@@ -1129,7 +1129,7 @@ feature -- Parent checking
 						-- Evaluation of the parent type
 					l_parent_as := l_parents_as.item
 					l_raw_type := l_parent_as.type
-					l_parent_c := l_compiled_parent_generator.compiled_parent (Current, l_parent_as)
+					l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as)
 						-- Check if there is no anchor and no bit symbol in the parent type.
 					if not l_parent_c.parent_type.is_valid or else l_parent_c.parent_type.has_like then
 						create l_ve04

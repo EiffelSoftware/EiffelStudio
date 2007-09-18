@@ -3170,7 +3170,7 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.process_symbol_text (ti_l_curly)
 			text_formatter_decorator.set_separator (ti_comma)
 			text_formatter_decorator.set_space_between_tokens
-			l_export_status := export_status_generator.export_status (current_class, l_as)
+			l_export_status := export_status_generator.export_status (system, current_class, l_as)
 			from
 				l_as.clients.start
 			until

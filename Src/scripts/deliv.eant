@@ -141,6 +141,10 @@
 		<available resource="${OUTPUT_DIR}${path_separator}compile_all${exe}" variable="tmp_available"/>
 		<geant target="get_bin__compile_all" if="$tmp_available=false" />
 
+		<!-- espawn -->
+		<available resource="${OUTPUT_DIR}${path_separator}espawn${exe}" variable="tmp_available"/>
+		<geant target="get_bin__espawn" if="$tmp_available=false" />
+
 		<!-- es_cleaner -->
 		<available resource="${OUTPUT_DIR}${path_separator}escln${exe}" variable="tmp_available"/>
 		<geant target="get_bin__escln" if="$tmp_available=false" />
@@ -256,6 +260,13 @@
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}compile_all${path_separator}F_code${path_separator}compile_all${exe}" to_file="${OUTPUT_DIR}${path_separator}compile_all${exe}" if="${return_code}=0" accept_errors="true" exit_code_variable="return_code" />
 		<set name="return_code" value="0" />
 	</target>
+	<target name="get_bin__espawn" >
+		<echo message="Finalize espawn ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_espawn" reuse_variables="true" />
+		<echo message="Error occurred during 'finalize_espawn' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}espawn${path_separator}F_code${path_separator}espawn${exe}" to_file="${OUTPUT_DIR}${path_separator}espawn${exe}" if="${return_code}=0" accept_errors="true" exit_code_variable="return_code" />
+		<set name="return_code" value="0" />
+	</target>
 	<target name="get_bin__escln" >
 		<echo message="Finalize es_cleaner ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_es_cleaner" reuse_variables="true" />
@@ -282,14 +293,17 @@
 		<copy dir="${OUTPUT_DIR}" file="estudio${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
-		<available dir="${OUTPUT_DIR}" resource="escln${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="escln${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
 		<available dir="${OUTPUT_DIR}" resource="quick_finalize${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="quick_finalize${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
+		<available dir="${OUTPUT_DIR}" resource="escln${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="escln${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="espawn${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="espawn${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
 
 		<available dir="${OUTPUT_DIR}" resource="compile_all${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="compile_all${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
@@ -321,8 +335,8 @@
 		</copy>
 		<mkdir directory="${tmp_install_dir}\..\etc"/>
 		<copy file="${EIFFEL_SRC}\..\Delivery\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}${path_separator}bin${path_separator}compile_library.bat" />
-		<set name="tmp_config_fn" value="windows-${ISE_C_COMPILER}-x86" if="${ISE_PLATFORM}=windows" />
-		<set name="tmp_config_fn" value="windows-${ISE_C_COMPILER}-x86-64" if="${ISE_PLATFORM}=win64" />
+		<set name="tmp_config_fn" value="windows-x86-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=windows" />
+		<set name="tmp_config_fn" value="windows-x86-64-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=win64" />
 		<copy file="${EIFFEL_SRC}\C\CONFIGS\${tmp_config_fn}" to_file="${INSTALL_DIR}\studio\config\${ISE_PLATFORM}\${ISE_C_COMPILER}\${tmp_config_fn}" />
 		<unset name="tmp_config_fn" />
 
@@ -466,6 +480,12 @@
 				exclude="@(**/.svn/**/*)"
 			/>
 		</copy>
+
+		<!-- Unix tools -->
+		<copy file="${EIFFEL_SRC}/C/shell/bin/rt_converter${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/rt_converter${exe}" />
+		<copy file="${EIFFEL_SRC}/C/shell/bin/sed${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/sed${exe}" />
+		<copy file="${EIFFEL_SRC}/C/shell/bin/msys-1.0.dll" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/msys-1.0.dll" />
+		<mkdir directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/etc"  />
 	</target>
 
 	<target name="make_delivery_unix" depend="init_deliv" >

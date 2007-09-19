@@ -15,6 +15,7 @@ echo        win32 g        - build a Win32 run-time for MinGW
 echo        win32 m  [dll] - build a Win32 run-time for Microsoft C++ 2005 [as DLL if specified]
 echo        win32 m6 [dll] - build a Win32 run-time for Microsoft C++ 6.0 [as DLL if specified]
 echo        win64 m  [dll] - build a Win64 run-time for Microsoft C++ 2005 [as DLL if specified]
+echo        win64 l        - build a Win64 run-time for LCC
 goto end
 :win32
 if .%2. == .. goto usage
@@ -38,10 +39,14 @@ copy CONFIGS\windows-x86-msc6 config.sh
 goto process
 :win64
 if .%2. == .. goto usage
-if NOT .%2. == .m. goto usage
+if NOT .%2. == .m. goto lcc
 copy CONFIGS\windows-x86-64-msc config.sh
 set remove_desc=1
 goto process
+:lcc
+if NOT .%2. == .l. goto usage
+copy CONFIGS\windows-x86-64-lcc config.sh
+set remove_desc=1
 :process
 
 rem A workaround for getting MSYS tools run on all x64 Windows platform.

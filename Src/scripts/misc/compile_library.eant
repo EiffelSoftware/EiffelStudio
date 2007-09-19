@@ -15,7 +15,12 @@
 	
 	<target name="help">
 		<echo message="usage:"/>
+		<echo message=" geant  compile_all" />
+		<echo message=" ----" />
 		<echo message=" geant  compile_library" />
+		<echo message=" geant  compile_c_library" />
+		<echo message=" geant  compile_eiffel_framework" />
+		<echo message=" geant  compile_gobo_tools" />
 	</target>	
 
 	<!--
@@ -28,46 +33,34 @@
 		<geant target="compile_c_library" />
 		<geant target="compile_library" />
 		<geant target="compile_eiffel_framework" />
-
-		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}library" variable="gobo_available"/>
-		<echo message="GOBO is already installed ${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}library" if="${gobo_available}=true" />
-		<geant target="extract_gobo" if="${gobo_available}=false" />
-		<unset name="gobo_available" />
+		<geant target="compile_gobo_tools" />
 	</target>
 
 		<!-- C_library -->
 	<target name="compile_c_library" depend="init" if="${is_windows}" >
-		<set name="old_ISE_EIFFEL" value="${ISE_EIFFEL}" />
-		<setenv name="ISE_EIFFEL" value="${ISE_LIBRARY}" />
 
 		<echo message="Compiler zlib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/C_library/zlib" if="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/C_library/zlib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compiler libpng" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/C_library/libpng" if="${is_windows}"
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/C_library/libpng" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 
-		<setenv name="ISE_EIFFEL" value="${old_ISE_EIFFEL}" />
-		<unset name="old_ISE_EIFFEL" />
 	</target>
 
 		<!-- library -->
 	<target name="compile_library" depend="init">
 		<echo message="Compile net clib" />
-		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/net/Clib" if="${is_windows}" 
-			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/net/Clib" unless="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/net/Clib" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2 clib" />
-		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/vision2/Clib" if="${is_windows}"
-			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/Clib" unless="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/Clib" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile wel clib" />
-		<exec executable="compile_library.bat" dir="${ISE_LIBRARY}/library/wel/clib" if="${is_windows}"
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/wel/Clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2/gtk clib" />
@@ -75,30 +68,86 @@
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
 
-	<target name="extract_gobo" depend="init">
-		<echo message="Extracting Gobo"/>
-		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_35_win.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" if="${is_windows}" />
-		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_35_unix.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" unless="${is_windows}" />
+	<target name="compile_gobo_tools" depend="init" >
+		<echo message="Compile Gobo Eiffel tools" />
+		<set name="GOBO_LIB" value="${ISE_LIBRARY}/library/gobo" />
+		<set name="GOBO_BIN" value="${GOBO_LIB}/spec/$ISE_PLATFORM/bin" />
 
-		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" variable="tmp_available"/>
-		<exec executable="bzip2 -dc gobo.tbz2 | tar xf -" dir="${ISE_LIBRARY}${path_separator}library"
-			accept_errors="true" exit_code_variable="return_code" if="$tmp_available" />
-		<delete file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" if="$tmp_available" />
+		<mkdir directory="${GOBO_LIB}/spec" accept_errors="true" exit_code_variable="return_code" />
+		<mkdir directory="${GOBO_LIB}/spec/$ISE_PLATFORM" accept_errors="true" exit_code_variable="return_code" />
+		<mkdir directory="${GOBO_BIN}" accept_errors="true" exit_code_variable="return_code" />
+
+		<set name="GOBO_COMP_DIR" value="${compile_dir}${path_separator}gobo" />
+		<mkdir directory="${GOBO_COMP_DIR}" />
+
+		<!-- geant -->
+		<set name="GOBO_EXECNAME" value="geant"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gec -->
+		<set name="GOBO_EXECNAME" value="gec"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gelex -->
+		<set name="GOBO_EXECNAME" value="gelex"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- geyacc -->
+		<set name="GOBO_EXECNAME" value="geyacc"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gelint -->
+		<set name="GOBO_EXECNAME" value="gelint"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gepp -->
+		<set name="GOBO_EXECNAME" value="gepp"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- getest -->
+		<set name="GOBO_EXECNAME" value="getest"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gexace -->
+		<set name="GOBO_EXECNAME" value="gexace"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+		<!-- gexslt -->
+		<set name="GOBO_EXECNAME" value="gexslt"/>
+		<available resource="${GOBO_BIN}${path_separator}${GOBO_EXECNAME}${exe}" variable="tmp_available"/>
+		<geant target="get_bin__gobo_exec" if="$tmp_available=false" reuse_variables="true" />
+
+		<delete directory="${GOBO_COMP_DIR}" />
+		<unset name="GOBO_COMP_DIR" />
+		<unset name="GOBO_EXECNAME" />
+		<unset name="GOBO_BIN" />
+		<unset name="GOBO_LIB" />
+	</target>
+
+	<target name="get_bin__gobo_exec" >
+		<set name="system_dir" value="${GOBO_COMP_DIR}" />
+		<set name="system" value="${GOBO_EXECNAME}" />
+		<set name="system_target" value="${GOBO_EXECNAME}" />
+		<set name="system_ecf" value="${GOBO_LIB}${path_separator}src${path_separator}${system}.ecf" />
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+		<echo message="Error occurred during 'finalize_gobo_${system}' (${return_code})" unless="${return_code}=0" />
+		<copy file="${system_dir}${path_separator}EIFGENs${path_separator}${system}${path_separator}F_code${path_separator}${system}${exe}" to_file="${GOBO_BIN}${path_separator}${system}${exe}" if="${return_code}=0" />
 	</target>
 
 	<target name="compile_eiffel_framework" depend="init" if="${is_windows}" >
 		<echo message="Compile Eiffel framework externals lib" />
 		<echo message="Compile dotnet IL runtime" />
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" if="${is_windows}" 
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile cli_writer" />
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_writer\Clib" if="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}\framework\cli_writer\Clib"
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile cli_debugger" />
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_debugger\Clib" if="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}\framework\cli_debugger\Clib"
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
+
 	
 </project>

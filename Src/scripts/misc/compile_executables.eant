@@ -313,6 +313,22 @@
 		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
 	</target>
 
+	<!-- espawn -->
+	<target name="init_espawn" depend="init_system">
+		<set name="system" value="espawn"/>
+		<set name="system_target" value="espawn" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}espawn${path_separator}espawn.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_espawn" depend="init_espawn">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_espawn" depend="init_espawn">
+		<echo message="Compilation : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
 	<!-- compile_all -->
 	<target name="init_compile_all" depend="init_system">
 		<set name="system" value="compile_all"/>

@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_confirm.make_standard_with_cancel (warning_messages.w_finalize_warning, interface_names.l_discard_finalize_assertions, preferences.dialog_data.confirm_finalize_string)
+			create l_confirm.make_standard_with_cancel (warning_messages.w_finalize_warning, interface_names.l_discard_freeze_dialog, preferences.dialog_data.confirm_finalize_string)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_c_compilation_and_compile (True))
 			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_c_compilation_and_compile (False))
 			l_confirm.show_on_active_window

@@ -30,6 +30,7 @@ indexing
 HHOOK hMouseHook = NULL;	// HHOOK from SetWindowsHook
 HWND hHookWindow = NULL;	// Handle to the window that hook the mouse
 #pragma data_seg()			// Back to regular, nonshared data
+#pragma comment(linker, "-section:.shared,rws")
 
 // Per process data
 HINSTANCE hDllInstance = 0;

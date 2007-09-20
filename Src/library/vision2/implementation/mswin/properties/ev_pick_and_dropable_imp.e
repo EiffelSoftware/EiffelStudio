@@ -603,6 +603,7 @@ feature {EV_ANY_I} -- Implementation
 			--| Not accessible through the interface of widget.
 		local
 			l_arguments: ARGUMENTS
+			l_path: STRING
 		do
 			inspect application_imp.capture_type
 			when {EV_APPLICATION_IMP}.Capture_heavy then
@@ -611,7 +612,9 @@ feature {EV_ANY_I} -- Implementation
 						-- If wel_hook.dll is not available the we fallback to an application wide capture.
 						-- We need to print out an error message
 					create l_arguments
-					io.error.put_string ("'wel_hook.dll' is not present, please copy it over from $ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin to folder where '" + l_arguments.argument (0).split ('\').last + "' is located.%N")
+					l_path := l_arguments.argument (0);
+					l_path.keep_head (l_arguments.argument (0).count - l_arguments.argument (0).split ('\').last.count);
+					io.error.put_string ("'wel_hook.dll' is not present, please copy it over from '%%ISE_EIFFEL%%\studio\spec\%%ISE_PLATFORM%%\bin' to '" + l_path + "'.%N")
 					set_capture
 				end
 			when {EV_APPLICATION_IMP}.Capture_normal then

@@ -28,7 +28,8 @@ inherit
 	EV_PIXMAP_IMP_STATE
 		redefine
 			interface,
-			gdi_compact
+			gdi_compact,
+			init_from_pixel_buffer
 		end
 
 	EV_PIXMAP_IMP_LOADER
@@ -65,6 +66,32 @@ feature {NONE} -- Initialization
 		do
 			l_imp ?= a_pointer_style.implementation
 			set_with_resource (l_imp.wel_cursor)
+		end
+
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Redefine
+		local
+			l_pixel_buffer: EV_PIXEL_BUFFER_IMP
+			l_gdip_bitmap: WEL_GDIP_BITMAP
+		do
+			l_pixel_buffer ?= a_pixel_buffer.implementation
+			check not_void: l_pixel_buffer /= Void end
+			l_gdip_bitmap := l_pixel_buffer.gdip_bitmap
+			if l_gdip_bitmap /= Void then
+				-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
+				-- Because EV_PIXMAP_IMP_STATE doesn't have `private_bitmap' and `private_mask_bitmap' features,
+				-- we have to implement it in this class.				
+				if private_bitmap /= Void then
+					private_bitmap.delete
+				end
+				if private_mask_bitmap /= Void then
+					private_mask_bitmap.delete
+				end
+				set_bitmap_and_mask (l_gdip_bitmap.new_bitmap, Void, a_pixel_buffer.width, a_pixel_buffer.height)
+			else
+				Precursor {EV_PIXMAP_IMP_STATE}	(a_pixel_buffer)
+			end
+
 		end
 
 feature -- Basic Operation

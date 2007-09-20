@@ -2148,7 +2148,7 @@ feature -- Status report
 		do
 			perform_vertical_computation
 			l_visible_row_count := visible_row_count
-			if uses_row_offsets /= Void and then l_visible_row_count > 0 then
+			if uses_row_offsets and then l_visible_row_count > 0 then
 				create Result.make_from_array (visible_indexes_to_row_indexes.subarray (1, l_visible_row_count))
 			else
 				create Result.make (0)

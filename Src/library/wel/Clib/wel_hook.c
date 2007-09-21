@@ -32,6 +32,11 @@ HWND hHookWindow = NULL;	// Handle to the window that hook the mouse
 #pragma data_seg()			// Back to regular, nonshared data
 #pragma comment(linker, "-section:.shared,rws")
 
+// Note that for GCC the shared data should probably defined as but this needs testing:
+// HHOOK hMouseHook __attribute__((section(".shared"))) = NULL;
+// HWND hHookWindow __attribute__((section(".shared"))) = NULL;
+// See http://cygwin.com/ml/cygwin/1999-08/msg00124.html for more details.
+
 // Per process data
 HINSTANCE hDllInstance = 0;
 

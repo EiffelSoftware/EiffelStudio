@@ -92,7 +92,7 @@ feature
 
 	type_a: POINTER_A is
 		do
-			create Result
+			Result := pointer_type
 		end
 
 feature

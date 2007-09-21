@@ -202,7 +202,12 @@ feature -- Access
 
 	type_a: NATURAL_A is
 		do
-			create Result.make (size)
+			inspect size
+			when 8 then Result := natural_8_type
+			when 16 then Result := natural_16_type
+			when 32 then Result := natural_32_type
+			when 64 then Result := natural_64_type
+			end
 		end
 
 feature -- Code generation

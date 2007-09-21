@@ -112,7 +112,7 @@ feature
 
 	type_a: REAL_64_A is
 		do
-			create Result
+			Result := real_64_type
 		end
 
 feature

@@ -86,7 +86,7 @@ feature
 
 	type_a: BOOLEAN_A is
 		do
-			create Result
+			Result := boolean_type
 		end
 
 	generate_typed_tag (buffer: GENERATION_BUFFER) is

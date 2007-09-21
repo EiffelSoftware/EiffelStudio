@@ -195,7 +195,12 @@ feature -- Access
 
 	type_a: INTEGER_A is
 		do
-			create Result.make (size)
+			inspect size
+			when 8 then Result := integer_8_type
+			when 16 then Result := integer_16_type
+			when 32 then Result := integer_type
+			when 64 then Result := integer_64_type
+			end
 		end
 
 feature -- Code generation

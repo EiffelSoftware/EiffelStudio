@@ -155,7 +155,11 @@ feature -- Access
 
 	type_a: CHARACTER_A is
 		do
-			create Result.make (is_character_32)
+			if is_character_32 then
+				Result := wide_char_type
+			else
+				Result := character_type
+			end
 		end
 
 	generate_typed_tag (buffer: GENERATION_BUFFER) is

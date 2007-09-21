@@ -280,6 +280,22 @@ feature {NONE} -- Helpers
 			result_attached: Result /= Void
 		end
 
+	frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
+			-- Shared access to stock 10x10 EiffelStudio pixmaps
+		once
+			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen cursor_factory: EVS_CURSOR_FACTORY
+			-- Shared access to cursor factory for generating stone cursors from an icon
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 	frozen preferences: EB_PREFERENCES
 		require
 			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized

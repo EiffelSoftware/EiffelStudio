@@ -32,6 +32,13 @@ inherit
 
 	BYTE_CONST
 
+	SHARED_TYPES
+		rename
+			none_type as none_type_a
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	c_type: TYPE_C is

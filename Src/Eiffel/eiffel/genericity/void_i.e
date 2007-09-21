@@ -20,6 +20,13 @@ inherit
 
 	SHARED_C_LEVEL
 
+	SHARED_TYPES
+		rename
+			none_type as none_type_a
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	element_type: INTEGER_8 is
@@ -114,7 +121,7 @@ feature
 
 	type_a: TYPE_A is
 		do
-			create {VOID_A} Result
+			Result := void_type
 		end
 
 indexing

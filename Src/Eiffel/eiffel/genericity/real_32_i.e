@@ -64,7 +64,7 @@ feature -- Access
 
 	type_a: REAL_32_A is
 		do
-			create Result
+			Result := real_32_type
 		end
 
 	element_type: INTEGER_8 is

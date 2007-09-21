@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (a_default_cancel)
 
 			make_dialog
-			dialog.show_actions.extend (agent dialog.disable_user_resize)
 			set_text (a_text)
 
 				-- Prompts cannot be resized (can't do it here, there's a bug in EiffelVision2)
